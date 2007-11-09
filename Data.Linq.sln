@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.DomainObjects.Linq", "DomainObjects.Linq\Data.DomainObjects.Linq.csproj", "{DD9AA076-BE37-4A42-BA9E-C35ECC6955C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.DomainObjects.Linq.UnitTests", "DomainObjects.Linq.UnitTests\Data.DomainObjects.Linq.UnitTests.csproj", "{BAACFB24-6EF8-4EA7-B385-3F8DAF085A4E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DD9AA076-BE37-4A42-BA9E-C35ECC6955C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD9AA076-BE37-4A42-BA9E-C35ECC6955C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD9AA076-BE37-4A42-BA9E-C35ECC6955C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD9AA076-BE37-4A42-BA9E-C35ECC6955C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BAACFB24-6EF8-4EA7-B385-3F8DAF085A4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAACFB24-6EF8-4EA7-B385-3F8DAF085A4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAACFB24-6EF8-4EA7-B385-3F8DAF085A4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAACFB24-6EF8-4EA7-B385-3F8DAF085A4E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
