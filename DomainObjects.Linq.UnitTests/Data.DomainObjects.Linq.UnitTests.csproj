@@ -53,10 +53,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExpressionHelper.cs" />
+    <Compile Include="FromClauseTest.cs" />
+    <Compile Include="JoinClauseTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="NUnitIntroduction.cs" />
-    <Compile Include="QueryModelTest.cs" />
-    <Compile Include="SelectedColumnTest.cs" />
+    <Compile Include="QueryExpressionTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DomainObjects.Linq\Data.DomainObjects.Linq.csproj">
