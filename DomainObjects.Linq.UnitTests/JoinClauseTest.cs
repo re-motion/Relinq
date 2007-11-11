@@ -43,7 +43,6 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
       Assert.AreSame (equalityExpression, joinClause.EqualityExpression);
       Assert.AreSame (intoIdentifier, joinClause.IntoIdentifier);
 
-     
     }
   }
 }

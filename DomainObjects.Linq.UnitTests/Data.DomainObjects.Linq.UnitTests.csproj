@@ -39,6 +39,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\libraries\Commons\trunk\prereq\Assemblies\Rhino.Mocks.dll</HintPath>
     </Reference>
+    <Reference Include="Rubicon.Core, Version=1.7.56.202, Culture=neutral, PublicKeyToken=ad97c3e83e217fcd, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\libraries\Commons\trunk\Core\bin\Debug\Rubicon.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -55,10 +59,14 @@
   <ItemGroup>
     <Compile Include="ExpressionHelper.cs" />
     <Compile Include="FromClauseTest.cs" />
+    <Compile Include="GroupClauseTest.cs" />
     <Compile Include="JoinClauseTest.cs" />
+    <Compile Include="OrderByTest.cs" />
+    <Compile Include="OrderingTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="NUnitIntroduction.cs" />
     <Compile Include="QueryExpressionTest.cs" />
+    <Compile Include="SelectClauseTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DomainObjects.Linq\Data.DomainObjects.Linq.csproj">

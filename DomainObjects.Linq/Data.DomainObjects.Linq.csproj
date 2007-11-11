@@ -49,11 +49,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GroupClause.cs" />
     <Compile Include="JoinClause.cs" />
+    <Compile Include="OrderBy.cs" />
+    <Compile Include="Ordering.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FromClause.cs" />
     <Compile Include="QueryBody.cs" />
     <Compile Include="QueryExpression.cs" />
+    <Compile Include="SelectClause.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
