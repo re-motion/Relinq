@@ -2,6 +2,7 @@ using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Rhino.Mocks;
 
 namespace Rubicon.Data.DomainObjects.Linq.UnitTests
 {
@@ -42,10 +43,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void AddJoinClause()
     {
-      ParameterExpression id = ExpressionHelper.CreateParameterExpression ();
-      Expression expression = ExpressionHelper.CreateExpression ();
-
-      FromClause fromClause = new FromClause (id, expression);
+      FromClause fromClause = CreateFromClause();
 
       JoinClause joinClause1 = CreateJoinClause();
       JoinClause joinClause2 = CreateJoinClause();
@@ -57,8 +55,9 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
       Assert.AreEqual (2, fromClause.JoinClauseCount);
     }
 
+    
     [Test]
-    public void ImplementInterface()
+    public void ImplementInterface_IFromLetWhereClause()
     {
       ParameterExpression id = ExpressionHelper.CreateParameterExpression ();
       Expression expression = ExpressionHelper.CreateExpression ();
@@ -66,6 +65,31 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
       FromClause fromClause = new FromClause (id, expression);
 
       Assert.IsInstanceOfType (typeof (IFromLetWhereClause), fromClause);
+    }
+
+    [Test]
+    public void FromClause_ImplementsIQueryElement()
+    {
+      FromClause fromClause = CreateFromClause();
+      Assert.IsInstanceOfType (typeof (IQueryElement), fromClause);
+    }
+
+    [Test]
+    public void Accept()
+    {
+      FromClause fromClause = CreateFromClause();
+
+      MockRepository repository = new MockRepository();
+      IQueryVisitor visitorMock = repository.CreateMock<IQueryVisitor>();
+
+      visitorMock.VisitFromClause(fromClause);
+
+      repository.ReplayAll();
+
+      fromClause.Accept (visitorMock);
+
+      repository.VerifyAll();
+
     }
 
 
@@ -78,6 +102,16 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
 
       return new JoinClause (identifier, inExpression, onExpression, equalityExpression);
     }
+
+    private FromClause CreateFromClause ()
+    {
+      ParameterExpression id = ExpressionHelper.CreateParameterExpression ();
+      Expression expression = ExpressionHelper.CreateExpression ();
+
+      return new FromClause (id, expression);
+    }
+
+    
 
   }
 }

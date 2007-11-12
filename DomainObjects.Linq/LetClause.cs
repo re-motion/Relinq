@@ -4,7 +4,7 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.DomainObjects.Linq
 {
-  public class LetClause : IFromLetWhereClause
+  public class LetClause : IFromLetWhereClause,IQueryElement
   {
     private readonly ParameterExpression _identifier;
     private readonly Expression _expression;
@@ -26,6 +26,12 @@ namespace Rubicon.Data.DomainObjects.Linq
     public ParameterExpression Identifier
     {
       get { return _identifier; }
+    }
+
+    public void Accept (IQueryVisitor visitor)
+    {
+      ArgumentUtility.CheckNotNull ("visitor", visitor);
+      visitor.VisitLetClause (this);
     }
   }
 }

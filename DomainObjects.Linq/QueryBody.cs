@@ -3,36 +3,33 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.DomainObjects.Linq
 {
-  public class QueryBody
+  public class QueryBody : IQueryElement
   {
-    private readonly ISelectGroupClause _SelectOrGroupClause;
-    private readonly OrderingClause _orderingClause;
+    private readonly ISelectGroupClause _selectOrGroupClause;
+    private readonly OrderByClause _orderByClause;
     private readonly List<IFromLetWhereClause> _fromLetWhere = new List<IFromLetWhereClause>();
 
-    public QueryBody (ISelectGroupClause SelectOrGroupClause)
+    public QueryBody (ISelectGroupClause selectOrGroupClause)
     {
-      ArgumentUtility.CheckNotNull ("SelectOrGroupClause", SelectOrGroupClause);
-
-      _SelectOrGroupClause = SelectOrGroupClause;
+      ArgumentUtility.CheckNotNull ("SelectOrGroupClause", selectOrGroupClause);
+      _selectOrGroupClause = selectOrGroupClause;
     }
 
-    public QueryBody (ISelectGroupClause SelectOrGroupClause, OrderingClause orderingClause)
-    {
-      ArgumentUtility.CheckNotNull ("SelectOrGroupClause", SelectOrGroupClause);
-      ArgumentUtility.CheckNotNull ("orderingClause", orderingClause);
-
-      _SelectOrGroupClause = SelectOrGroupClause;
-      _orderingClause = orderingClause;
+    public QueryBody (ISelectGroupClause selectOrGroupClause, OrderByClause orderByClause) 
+      : this (selectOrGroupClause)
+  {
+    ArgumentUtility.CheckNotNull ("orderByClause", orderByClause);
+    _orderByClause = orderByClause;
     }
 
     public ISelectGroupClause ISelectOrGroupClause
     {
-      get { return _SelectOrGroupClause; }
+      get { return _selectOrGroupClause; }
     }
 
-    public OrderingClause OrderingClause
+    public OrderByClause OrderByClause
     {
-      get { return _orderingClause; }
+      get { return _orderByClause; }
     }
 
     public IEnumerable<IFromLetWhereClause> FromLetWhere
@@ -42,7 +39,19 @@ namespace Rubicon.Data.DomainObjects.Linq
 
     public void Add (IFromLetWhereClause fromLetWhere)
     {
+      ArgumentUtility.CheckNotNull ("fromLetWhere", fromLetWhere);
       _fromLetWhere.Add (fromLetWhere);
+    }
+
+    public int FromLetWhereCount
+    {
+      get { return _fromLetWhere.Count; }
+    }
+
+    public void Accept (IQueryVisitor visitor)
+    {
+      ArgumentUtility.CheckNotNull ("visitor", visitor);
+      visitor.VisitQueryBody (this);
     }
   }
 }

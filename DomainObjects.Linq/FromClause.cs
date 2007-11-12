@@ -5,7 +5,7 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.DomainObjects.Linq
 {
-  public class FromClause : IFromLetWhereClause
+  public class FromClause : IFromLetWhereClause,IQueryElement
   {
     private readonly ParameterExpression _identifier;
     private readonly Expression _expression;
@@ -45,5 +45,13 @@ namespace Rubicon.Data.DomainObjects.Linq
       ArgumentUtility.CheckNotNull ("joinClause", joinClause);
       _joinClauses.Add (joinClause);
     }
+
+    public void Accept (IQueryVisitor visitor)
+    {
+      ArgumentUtility.CheckNotNull ("visitor", visitor);
+      visitor.VisitFromClause (this);
+    }
+
+
   }
 }

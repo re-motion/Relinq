@@ -1,6 +1,7 @@
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace Rubicon.Data.DomainObjects.Linq.UnitTests
 {
@@ -20,14 +21,43 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
-    public void ImplementInterface ()
+    public void GroupClause_ImplementISelectGroupClause ()
+    {
+      GroupClause groupClause = CreateGroupClause();
+
+      Assert.IsInstanceOfType (typeof (ISelectGroupClause), groupClause);
+    }
+
+    [Test]
+    public void GroupClause_ImplementIQueryElement()
+    {
+      GroupClause groupClause = CreateGroupClause ();
+      Assert.IsInstanceOfType (typeof (IQueryElement), groupClause);
+    }
+
+    [Test]
+    public void Accept()
+    {
+      GroupClause groupClause = CreateGroupClause ();
+
+      MockRepository repository = new MockRepository();
+      IQueryVisitor visitorMock = repository.CreateMock<IQueryVisitor>();
+      visitorMock.VisitGroupClause (groupClause);
+
+      repository.ReplayAll();
+
+      groupClause.Accept (visitorMock);
+
+      repository.VerifyAll();
+    }
+
+
+    private GroupClause CreateGroupClause ()
     {
       Expression groupExpression = ExpressionHelper.CreateExpression ();
       Expression byExpression = ExpressionHelper.CreateExpression ();
 
-      GroupClause groupClause = new GroupClause (groupExpression, byExpression);
-
-      Assert.IsInstanceOfType (typeof (ISelectGroupClause), groupClause);
+      return new GroupClause (groupExpression, byExpression);
     }
   }
 }

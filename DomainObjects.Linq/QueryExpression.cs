@@ -4,7 +4,7 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.DomainObjects.Linq
 {
-  public class QueryExpression
+  public class QueryExpression : IQueryElement
   {
     private readonly FromClause _fromClause;
     private readonly QueryBody _queryBody;
@@ -26,6 +26,13 @@ namespace Rubicon.Data.DomainObjects.Linq
     public QueryBody QueryBody
     {
       get { return _queryBody; }
+    }
+
+    public void Accept (IQueryVisitor visitor)
+    {
+      ArgumentUtility.CheckNotNull ("visitor", visitor);
+
+      visitor.VisitQueryExpression (this);
     }
   }
 }

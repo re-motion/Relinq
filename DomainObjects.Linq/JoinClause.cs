@@ -3,7 +3,7 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.DomainObjects.Linq
 {
-  public class JoinClause
+  public class JoinClause : IQueryElement
   {
     private readonly ParameterExpression _identifier;
     private readonly Expression _inExpression;
@@ -57,6 +57,12 @@ namespace Rubicon.Data.DomainObjects.Linq
     public ParameterExpression IntoIdentifier
     {
       get { return _intoIdentifier; }
+    }
+
+    public void Accept (IQueryVisitor visitor)
+    {
+      ArgumentUtility.CheckNotNull ("visitor", visitor);
+      visitor.VisitJoinClause (this);
     }
   }
 }

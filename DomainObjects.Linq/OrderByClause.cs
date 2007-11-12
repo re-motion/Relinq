@@ -4,7 +4,7 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.DomainObjects.Linq
 {
-  public class OrderByClause
+  public class OrderByClause :IQueryElement
   {
     private readonly List<OrderingClause> _orderingList = new List<OrderingClause>();
 
@@ -25,5 +25,15 @@ namespace Rubicon.Data.DomainObjects.Linq
       _orderingList.Add (ordering);
     }
 
+    public int OrderByClauseCount
+    {
+      get { return _orderingList.Count; }
+    }
+
+    public void Accept (IQueryVisitor visitor)
+    {
+      ArgumentUtility.CheckNotNull ("visitor", visitor);
+      visitor.VisitOrderByClause (this);
+    }
   }
 }

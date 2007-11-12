@@ -1,6 +1,7 @@
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace Rubicon.Data.DomainObjects.Linq.UnitTests
 {
@@ -14,17 +15,51 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
       Expression expression = ExpressionHelper.CreateExpression();
 
       LetClause letClause = new LetClause(identifier,expression);
+
+      Assert.AreSame (identifier, letClause.Identifier);
+      Assert.AreSame (expression, letClause.Expression);
     }
 
     [Test]
     public void ImplementInterface()
     {
+      LetClause letClause = CreateLetClause();
+
+      Assert.IsInstanceOfType (typeof (IFromLetWhereClause), letClause);
+    }
+        
+
+    [Test]
+    public void LetClause_ImplementsIQueryElement()
+    {
+      LetClause letClause = CreateLetClause();
+      Assert.IsInstanceOfType (typeof (IQueryElement), letClause);
+    }
+
+    [Test]
+    public void Accept ()
+    {
+      LetClause letClause = CreateLetClause ();
+
+      MockRepository repository = new MockRepository ();
+      IQueryVisitor visitorMock = repository.CreateMock<IQueryVisitor> ();
+
+      visitorMock.VisitLetClause (letClause);
+
+      repository.ReplayAll ();
+
+      letClause.Accept (visitorMock);
+
+      repository.VerifyAll ();
+
+    }
+
+    private LetClause CreateLetClause ()
+    {
       ParameterExpression identifier = ExpressionHelper.CreateParameterExpression ();
       Expression expression = ExpressionHelper.CreateExpression ();
 
-      LetClause letClause = new LetClause (identifier, expression);
-
-      Assert.IsInstanceOfType (typeof (IFromLetWhereClause), letClause);
+      return new LetClause (identifier, expression);
     }
   }
 }

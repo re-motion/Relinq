@@ -1,6 +1,7 @@
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using Rhino.Mocks;
 using OrderDirection=Rubicon.Data.DomainObjects.Linq.OrderDirection;
 
 namespace Rubicon.Data.DomainObjects.Linq.UnitTests
@@ -27,7 +28,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     public void InitializeWithExpressionAndOrderDirectionDesc ()
     {
       Expression expression = ExpressionHelper.CreateExpression ();
-      OrderDirection directionAsc = OrderDirection.Desc;
+      OrderDirection directionAsc = OrderDirection.Asc;
 
 
       OrderingClause ordering = new OrderingClause (expression, directionAsc);
@@ -36,5 +37,40 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
       Assert.AreSame (expression, ordering.Expression);
       Assert.AreEqual (directionAsc, ordering.OrderDirection);
     }
+
+    [Test]
+    public void OrderingClause_ImplementsIQueryElement()
+    {
+      OrderingClause orderingClause = CreateOrderingClause();
+      Assert.IsInstanceOfType (typeof (IQueryElement), orderingClause);
+    }
+
+    [Test]
+    public void Accept()
+    {
+      OrderingClause orderingClause = CreateOrderingClause ();
+
+      MockRepository repository = new MockRepository();
+      IQueryVisitor visitorMock = repository.CreateMock<IQueryVisitor>();
+
+      visitorMock.VisitOrderingClause (orderingClause);
+
+      repository.ReplayAll();
+
+      orderingClause.Accept (visitorMock);
+
+      repository.VerifyAll();
+    }
+    
+
+    public OrderingClause CreateOrderingClause()
+    {
+      Expression expression = ExpressionHelper.CreateExpression ();
+      OrderDirection directionAsc = OrderDirection.Asc;
+      return new OrderingClause (expression, directionAsc);
+    }
+
+
+
   }
 }

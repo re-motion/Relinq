@@ -1,6 +1,7 @@
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace Rubicon.Data.DomainObjects.Linq.UnitTests
 {
@@ -44,5 +45,44 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
       Assert.AreSame (intoIdentifier, joinClause.IntoIdentifier);
 
     }
+
+    [Test]
+    public void JoinClause_ImplementsIQueryElement()
+    {
+      JoinClause joinClause = CreateJoinClause();
+      Assert.IsInstanceOfType (typeof (IQueryElement), joinClause);
+    }
+
+    [Test]
+    public void Accept ()
+    {
+      JoinClause joinClause = CreateJoinClause ();
+
+      MockRepository repository = new MockRepository ();
+      IQueryVisitor visitorMock = repository.CreateMock<IQueryVisitor> ();
+
+      visitorMock.VisitJoinClause (joinClause);
+
+      repository.ReplayAll ();
+
+      joinClause.Accept (visitorMock);
+
+      repository.VerifyAll ();
+
+    }
+
+    public JoinClause CreateJoinClause()
+    {
+      ParameterExpression identifier = ExpressionHelper.CreateParameterExpression ();
+      Expression inExpression = ExpressionHelper.CreateExpression ();
+      Expression onExpression = ExpressionHelper.CreateExpression ();
+      Expression equalityExpression = ExpressionHelper.CreateExpression ();
+      ParameterExpression intoIdentifier = ExpressionHelper.CreateParameterExpression ();
+
+      return new JoinClause (identifier, inExpression, onExpression, equalityExpression, intoIdentifier);
+
+    }
+
+
   }
 }

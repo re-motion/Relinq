@@ -4,7 +4,7 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.DomainObjects.Linq
 {
-  public class OrderingClause
+  public class OrderingClause : IQueryElement
   {
     private readonly Expression _expression;
     private readonly OrderDirection _orderDirection;
@@ -25,6 +25,12 @@ namespace Rubicon.Data.DomainObjects.Linq
     public OrderDirection OrderDirection
     {
       get { return _orderDirection; }
+    }
+
+    public void Accept (IQueryVisitor visitor)
+    {
+      ArgumentUtility.CheckNotNull ("visitor", visitor);
+      visitor.VisitOrderingClause (this);
     }
   }
 
