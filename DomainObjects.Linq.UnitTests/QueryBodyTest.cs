@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using Rhino.Mocks;
 using OrderDirection=Rubicon.Data.DomainObjects.Linq.OrderDirection;
+using NUnit.Framework.SyntaxHelpers;
 
 namespace Rubicon.Data.DomainObjects.Linq.UnitTests
 {
@@ -51,6 +52,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
       queryBody.Add (iFromLetWhereCLause);
 
       Assert.AreEqual (1, queryBody.FromLetWhereCount);
+      Assert.That (queryBody.FromLetWhere, List.Contains (iFromLetWhereCLause));
     }
 
     [Test]
