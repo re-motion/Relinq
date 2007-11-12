@@ -15,7 +15,16 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
       SelectClause selectClause = new SelectClause (expression);
 
       Assert.AreSame (expression, selectClause.Expression);
+    }
 
+    [Test]
+    public void ImplementInterface()
+    {
+      Expression expression = ExpressionHelper.CreateExpression ();
+
+      SelectClause selectClause = new SelectClause (expression);
+
+      Assert.IsInstanceOfType (typeof(ISelectGroupClause),selectClause);
     }
   }
 }

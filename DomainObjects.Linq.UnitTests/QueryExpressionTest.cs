@@ -11,7 +11,9 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     public void Initialize_WithFromClauseAndBody ()
     {
       FromClause fromClause = CreateFromClause();
-      QueryBody queryBody = new QueryBody ();
+      Expression expression = ExpressionHelper.CreateExpression();
+      ISelectGroupClause iSelectGroupClause = new SelectClause(expression);
+      QueryBody queryBody = new QueryBody (iSelectGroupClause);
       QueryExpression model = new QueryExpression (fromClause, queryBody);
       Assert.AreSame (fromClause, model.FromClause);
       Assert.AreSame (queryBody, model.QueryBody);
@@ -21,7 +23,9 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     [ExpectedException (typeof (ArgumentNullException))]
     public void Initialization_ThrowsOnNullFromClause ()
     {
-      new QueryExpression (null, new QueryBody());
+      Expression expression = ExpressionHelper.CreateExpression ();
+      ISelectGroupClause iSelectGroupClause = new SelectClause (expression);
+      new QueryExpression (null, new QueryBody (iSelectGroupClause));
     }
 
     [Test]

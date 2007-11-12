@@ -1,39 +1,40 @@
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using OrderDirection=Rubicon.Data.DomainObjects.Linq.OrderDirection;
 
 namespace Rubicon.Data.DomainObjects.Linq.UnitTests
 {
   [TestFixture]
-  public class OrderingTest
+  public class OrderingClauseTest
   {
    
     [Test]
     public void InitializeWithExpressionAndOrderDirectionAsc()
     {
       Expression expression = ExpressionHelper.CreateExpression();
-      Ordering.OrderDirection directionAsc  = Ordering.OrderDirection.Asc;
+      OrderDirection directionAsc  = OrderDirection.Asc;
       
 
-      Ordering ordering = new Ordering(expression,directionAsc);
+      OrderingClause ordering = new OrderingClause(expression,directionAsc);
       
 
       Assert.AreSame (expression, ordering.Expression);
-      Assert.AreEqual (directionAsc, Ordering.OrderDirection.Asc);
+      Assert.AreEqual (directionAsc, ordering.OrderDirection);
     }
 
     [Test]
     public void InitializeWithExpressionAndOrderDirectionDesc ()
     {
       Expression expression = ExpressionHelper.CreateExpression ();
-      Ordering.OrderDirection directionAsc = Ordering.OrderDirection.Desc;
+      OrderDirection directionAsc = OrderDirection.Desc;
 
 
-      Ordering ordering = new Ordering (expression, directionAsc);
+      OrderingClause ordering = new OrderingClause (expression, directionAsc);
 
 
       Assert.AreSame (expression, ordering.Expression);
-      Assert.AreEqual (directionAsc, Ordering.OrderDirection.Desc);
+      Assert.AreEqual (directionAsc, ordering.OrderDirection);
     }
   }
 }

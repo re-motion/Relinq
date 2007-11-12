@@ -57,6 +57,18 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
       Assert.AreEqual (2, fromClause.JoinClauseCount);
     }
 
+    [Test]
+    public void ImplementInterface()
+    {
+      ParameterExpression id = ExpressionHelper.CreateParameterExpression ();
+      Expression expression = ExpressionHelper.CreateExpression ();
+
+      FromClause fromClause = new FromClause (id, expression);
+
+      Assert.IsInstanceOfType (typeof (IFromLetWhereClause), fromClause);
+    }
+
+
     private JoinClause CreateJoinClause ()
     {
       ParameterExpression identifier = ExpressionHelper.CreateParameterExpression ();
@@ -66,5 +78,6 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
 
       return new JoinClause (identifier, inExpression, onExpression, equalityExpression);
     }
+
   }
 }

@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace Rubicon.Data.DomainObjects.Linq
 {
-  public class SelectClause
+  public class SelectClause : ISelectGroupClause
   {
     private readonly Expression _expression;
 

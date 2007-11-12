@@ -3,7 +3,7 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.DomainObjects.Linq
 {
-  public class GroupClause
+  public class GroupClause : ISelectGroupClause
   {
 
     private readonly Expression _groupExpression;
@@ -20,12 +20,12 @@ namespace Rubicon.Data.DomainObjects.Linq
     }
 
 
-    public Expression groupExpression
+    public Expression GroupExpression
     {
       get { return _groupExpression; }
     }
 
-    public Expression byExpression
+    public Expression ByExpression
     {
       get { return _byExpression; }
     }

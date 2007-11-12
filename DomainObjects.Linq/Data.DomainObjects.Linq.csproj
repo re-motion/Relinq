@@ -50,14 +50,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GroupClause.cs" />
+    <Compile Include="IFromLetWhereClause.cs" />
     <Compile Include="JoinClause.cs" />
-    <Compile Include="OrderBy.cs" />
-    <Compile Include="Ordering.cs" />
+    <Compile Include="LetClause.cs" />
+    <Compile Include="OrderByClause.cs" />
+    <Compile Include="OrderingClause.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FromClause.cs" />
     <Compile Include="QueryBody.cs" />
     <Compile Include="QueryExpression.cs" />
     <Compile Include="SelectClause.cs" />
+    <Compile Include="ISelectGroupClause.cs" />
+    <Compile Include="WhereClause.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="QueryExpressionModel.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
