@@ -2,7 +2,7 @@
 
 namespace Rubicon.Data.DomainObjects.Linq
 {
-  public interface IFromLetWhereClause
+  public interface IFromLetWhereClause : IQueryElement
   {
   }
 }

@@ -22,7 +22,7 @@ namespace Rubicon.Data.DomainObjects.Linq
     _orderByClause = orderByClause;
     }
 
-    public ISelectGroupClause ISelectOrGroupClause
+    public ISelectGroupClause SelectOrGroupClause
     {
       get { return _selectOrGroupClause; }
     }
@@ -32,7 +32,7 @@ namespace Rubicon.Data.DomainObjects.Linq
       get { return _orderByClause; }
     }
 
-    public IEnumerable<IFromLetWhereClause> FromLetWhere
+    public IEnumerable<IFromLetWhereClause> FromLetWhereClauses
     {
       get { return _fromLetWhere; }
     }
@@ -48,7 +48,7 @@ namespace Rubicon.Data.DomainObjects.Linq
       get { return _fromLetWhere.Count; }
     }
 
-    public void Accept (IQueryVisitor visitor)
+    public virtual void Accept (IQueryVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       visitor.VisitQueryBody (this);

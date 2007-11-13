@@ -3,7 +3,7 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.DomainObjects.Linq
 {
-  public class GroupClause : ISelectGroupClause,IQueryElement
+  public class GroupClause : ISelectGroupClause
   {
 
     private readonly Expression _groupExpression;

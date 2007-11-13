@@ -65,10 +65,10 @@
     <Compile Include="OrderByClauseTest.cs" />
     <Compile Include="OrderingClauseTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="NUnitIntroduction.cs" />
     <Compile Include="QueryBodyTest.cs" />
     <Compile Include="QueryExpressionTest.cs" />
     <Compile Include="SelectClauseTest.cs" />
+    <Compile Include="VisitorTest\StringVisitorTest.cs" />
     <Compile Include="WhereClauseTest.cs" />
   </ItemGroup>
   <ItemGroup>

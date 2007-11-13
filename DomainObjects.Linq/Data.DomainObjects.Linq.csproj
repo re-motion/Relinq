@@ -63,7 +63,11 @@
     <Compile Include="QueryExpression.cs" />
     <Compile Include="SelectClause.cs" />
     <Compile Include="ISelectGroupClause.cs" />
+    <Compile Include="Visitor\StringVisitor.cs" />
     <Compile Include="WhereClause.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -20,21 +20,21 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void ImplementInterface()
     {
-      WhereClause whereClause = CreateWhereClause();
+      WhereClause whereClause = ExpressionHelper.CreateWhereClause();
       Assert.IsInstanceOfType (typeof (IFromLetWhereClause), whereClause);
     }
     
     [Test]
     public void WhereClause_ImplementIQueryElement()
     {
-      WhereClause whereClause = CreateWhereClause();
+      WhereClause whereClause = ExpressionHelper.CreateWhereClause();
       Assert.IsInstanceOfType (typeof (IQueryElement), whereClause);
     }
 
     [Test]
     public void Accept()
     {
-      WhereClause whereClause = CreateWhereClause();
+      WhereClause whereClause = ExpressionHelper.CreateWhereClause();
 
       MockRepository repository = new MockRepository ();
       IQueryVisitor visitorMock = repository.CreateMock<IQueryVisitor> ();
@@ -46,12 +46,6 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
       whereClause.Accept (visitorMock);
 
       repository.VerifyAll();
-    }
-
-    private WhereClause CreateWhereClause ()
-    {
-      Expression boolExpression = ExpressionHelper.CreateExpression ();
-      return new WhereClause (boolExpression);
     }
   }
 }

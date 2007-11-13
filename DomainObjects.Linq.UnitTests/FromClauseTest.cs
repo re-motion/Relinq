@@ -43,10 +43,10 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void AddJoinClause()
     {
-      FromClause fromClause = CreateFromClause();
+      FromClause fromClause = ExpressionHelper.CreateFromClause();
 
-      JoinClause joinClause1 = CreateJoinClause();
-      JoinClause joinClause2 = CreateJoinClause();
+      JoinClause joinClause1 = ExpressionHelper.CreateJoinClause();
+      JoinClause joinClause2 = ExpressionHelper.CreateJoinClause();
 
       fromClause.Add (joinClause1);
       fromClause.Add (joinClause2);
@@ -70,14 +70,14 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void FromClause_ImplementsIQueryElement()
     {
-      FromClause fromClause = CreateFromClause();
+      FromClause fromClause = ExpressionHelper.CreateFromClause();
       Assert.IsInstanceOfType (typeof (IQueryElement), fromClause);
     }
 
     [Test]
     public void Accept()
     {
-      FromClause fromClause = CreateFromClause();
+      FromClause fromClause = ExpressionHelper.CreateFromClause();
 
       MockRepository repository = new MockRepository();
       IQueryVisitor visitorMock = repository.CreateMock<IQueryVisitor>();
@@ -91,27 +91,5 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
       repository.VerifyAll();
 
     }
-
-
-    private JoinClause CreateJoinClause ()
-    {
-      ParameterExpression identifier = ExpressionHelper.CreateParameterExpression ();
-      Expression inExpression = ExpressionHelper.CreateExpression ();
-      Expression onExpression = ExpressionHelper.CreateExpression ();
-      Expression equalityExpression = ExpressionHelper.CreateExpression ();
-
-      return new JoinClause (identifier, inExpression, onExpression, equalityExpression);
-    }
-
-    private FromClause CreateFromClause ()
-    {
-      ParameterExpression id = ExpressionHelper.CreateParameterExpression ();
-      Expression expression = ExpressionHelper.CreateExpression ();
-
-      return new FromClause (id, expression);
-    }
-
-    
-
   }
 }

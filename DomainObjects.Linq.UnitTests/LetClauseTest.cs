@@ -23,7 +23,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void ImplementInterface()
     {
-      LetClause letClause = CreateLetClause();
+      LetClause letClause = ExpressionHelper.CreateLetClause();
 
       Assert.IsInstanceOfType (typeof (IFromLetWhereClause), letClause);
     }
@@ -32,14 +32,14 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void LetClause_ImplementsIQueryElement()
     {
-      LetClause letClause = CreateLetClause();
+      LetClause letClause = ExpressionHelper.CreateLetClause();
       Assert.IsInstanceOfType (typeof (IQueryElement), letClause);
     }
 
     [Test]
     public void Accept ()
     {
-      LetClause letClause = CreateLetClause ();
+      LetClause letClause = ExpressionHelper.CreateLetClause ();
 
       MockRepository repository = new MockRepository ();
       IQueryVisitor visitorMock = repository.CreateMock<IQueryVisitor> ();
@@ -52,14 +52,6 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
 
       repository.VerifyAll ();
 
-    }
-
-    private LetClause CreateLetClause ()
-    {
-      ParameterExpression identifier = ExpressionHelper.CreateParameterExpression ();
-      Expression expression = ExpressionHelper.CreateExpression ();
-
-      return new LetClause (identifier, expression);
     }
   }
 }

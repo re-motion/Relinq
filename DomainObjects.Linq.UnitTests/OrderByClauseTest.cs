@@ -14,7 +14,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void InitializeWithOneOrdering()
     {
-      OrderingClause ordering = CreateOrderingClause();
+      OrderingClause ordering = ExpressionHelper.CreateOrderingClause();
       OrderByClause orderBy = new OrderByClause (ordering);
 
       Assert.AreEqual (1, orderBy.OrderByClauseCount);
@@ -24,12 +24,12 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void AddMoreOrderings()
     {
-      OrderingClause ordering1 = CreateOrderingClause ();
-      OrderingClause ordering2 = CreateOrderingClause ();
+      OrderingClause ordering1 = ExpressionHelper.CreateOrderingClause ();
+      OrderingClause ordering2 = ExpressionHelper.CreateOrderingClause ();
       OrderByClause orderBy = new OrderByClause (ordering1);
       orderBy.Add (ordering2);
 
-      Assert.That (orderBy.OrderList, Is.EqualTo (new object[] { ordering1, ordering2 }));
+      Assert.That (orderBy.OrderingList, Is.EqualTo (new object[] { ordering1, ordering2 }));
       Assert.AreEqual (2, orderBy.OrderByClauseCount);
 
     }
@@ -37,14 +37,14 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void OrderByClause_ImplementsIQueryElement()
     {
-      OrderByClause orderByClause = CreateOrderByClause();
+      OrderByClause orderByClause = ExpressionHelper.CreateOrderByClause();
       Assert.IsInstanceOfType (typeof (IQueryElement), orderByClause);
     }
 
     [Test]
     public void Accept()
     {
-      OrderByClause orderByClause = CreateOrderByClause ();
+      OrderByClause orderByClause = ExpressionHelper.CreateOrderByClause ();
 
       MockRepository repository = new MockRepository();
       IQueryVisitor visitorMock = repository.CreateMock<IQueryVisitor>();
@@ -57,18 +57,6 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
 
       repository.VerifyAll();
 
-    }
-    
-    public OrderingClause CreateOrderingClause()
-    {
-      Expression expression = ExpressionHelper.CreateExpression ();
-      return new OrderingClause (expression, OrderDirection.Asc);
-    }
-
-    public OrderByClause CreateOrderByClause()
-    {
-      OrderingClause ordering = CreateOrderingClause ();
-      return new OrderByClause (ordering);
     }
   }
 }

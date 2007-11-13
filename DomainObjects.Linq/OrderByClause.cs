@@ -14,7 +14,7 @@ namespace Rubicon.Data.DomainObjects.Linq
       _orderingList.Add (ordering);
     }
 
-    public IEnumerable<OrderingClause> OrderList
+    public IEnumerable<OrderingClause> OrderingList
     {
       get { return _orderingList; }
     }
@@ -30,7 +30,7 @@ namespace Rubicon.Data.DomainObjects.Linq
       get { return _orderingList.Count; }
     }
 
-    public void Accept (IQueryVisitor visitor)
+    public virtual void Accept (IQueryVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       visitor.VisitOrderByClause (this);

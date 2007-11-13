@@ -49,14 +49,14 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void JoinClause_ImplementsIQueryElement()
     {
-      JoinClause joinClause = CreateJoinClause();
+      JoinClause joinClause = ExpressionHelper.CreateJoinClause();
       Assert.IsInstanceOfType (typeof (IQueryElement), joinClause);
     }
 
     [Test]
     public void Accept ()
     {
-      JoinClause joinClause = CreateJoinClause ();
+      JoinClause joinClause = ExpressionHelper.CreateJoinClause ();
 
       MockRepository repository = new MockRepository ();
       IQueryVisitor visitorMock = repository.CreateMock<IQueryVisitor> ();
@@ -70,19 +70,5 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
       repository.VerifyAll ();
 
     }
-
-    public JoinClause CreateJoinClause()
-    {
-      ParameterExpression identifier = ExpressionHelper.CreateParameterExpression ();
-      Expression inExpression = ExpressionHelper.CreateExpression ();
-      Expression onExpression = ExpressionHelper.CreateExpression ();
-      Expression equalityExpression = ExpressionHelper.CreateExpression ();
-      ParameterExpression intoIdentifier = ExpressionHelper.CreateParameterExpression ();
-
-      return new JoinClause (identifier, inExpression, onExpression, equalityExpression, intoIdentifier);
-
-    }
-
-
   }
 }

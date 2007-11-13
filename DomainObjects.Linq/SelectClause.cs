@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace Rubicon.Data.DomainObjects.Linq
 {
-  public class SelectClause : ISelectGroupClause,IQueryElement
+  public class SelectClause : ISelectGroupClause
   {
     private readonly Expression _expression;
 
@@ -20,7 +20,7 @@ namespace Rubicon.Data.DomainObjects.Linq
       get { return _expression; }
     }
 
-    public void Accept (IQueryVisitor visitor)
+    public virtual void Accept (IQueryVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       visitor.VisitSelectClause (this);

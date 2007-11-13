@@ -3,7 +3,7 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.DomainObjects.Linq
 {
-  public class WhereClause : IFromLetWhereClause,IQueryElement
+  public class WhereClause : IFromLetWhereClause
   {
     private readonly Expression _boolExpression;
 
@@ -18,7 +18,7 @@ namespace Rubicon.Data.DomainObjects.Linq
       get { return _boolExpression; }
     }
 
-    public void Accept (IQueryVisitor visitor)
+    public virtual void Accept (IQueryVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       visitor.VisitWhereClause (this);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Rubicon.Data.DomainObjects.Linq.Visitor;
 using Rubicon.Utilities;
 
 namespace Rubicon.Data.DomainObjects.Linq
@@ -33,6 +34,13 @@ namespace Rubicon.Data.DomainObjects.Linq
       ArgumentUtility.CheckNotNull ("visitor", visitor);
 
       visitor.VisitQueryExpression (this);
+    }
+
+    public override string ToString ()
+    {
+      StringVisitor sv = new StringVisitor();
+      sv.VisitQueryExpression (this);
+      return sv.ToString();
     }
   }
 }

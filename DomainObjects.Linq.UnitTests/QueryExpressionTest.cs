@@ -2,6 +2,7 @@
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Rubicon.Data.DomainObjects.Linq.Visitor;
 
 namespace Rubicon.Data.DomainObjects.Linq.UnitTests
 {
@@ -11,8 +12,8 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void Initialize_WithFromClauseAndBody ()
     {
-      FromClause fromClause = CreateFromClause();
-      QueryBody queryBody = CreateQueryBody();
+      FromClause fromClause = ExpressionHelper.CreateFromClause();
+      QueryBody queryBody = ExpressionHelper.CreateQueryBody();
       QueryExpression model = new QueryExpression (fromClause, queryBody);
       Assert.AreSame (fromClause, model.FromClause);
       Assert.AreSame (queryBody, model.QueryBody);
@@ -22,27 +23,27 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     [ExpectedException (typeof (ArgumentNullException))]
     public void Initialization_ThrowsOnNullFromClause ()
     {
-      new QueryExpression (null, CreateQueryBody ());
+      new QueryExpression (null, ExpressionHelper.CreateQueryBody ());
     }
 
     [Test]
     [ExpectedException (typeof (ArgumentNullException))]
     public void Initialization_ThrowsOnNullQueryBody ()
     {
-      new QueryExpression (CreateFromClause(), null);
+      new QueryExpression (ExpressionHelper.CreateFromClause(), null);
     }
 
     [Test]
     public void QueryExpression_ImplementsIQueryElement()
     {
-      QueryExpression instance = new QueryExpression (CreateFromClause (), CreateQueryBody ());
+      QueryExpression instance = new QueryExpression (ExpressionHelper.CreateFromClause (), ExpressionHelper.CreateQueryBody ());
       Assert.IsInstanceOfType (typeof (IQueryElement), instance);
     }
 
     [Test]
     public void Accept()
     {
-      QueryExpression instance = new QueryExpression (CreateFromClause(), CreateQueryBody());
+      QueryExpression instance = new QueryExpression (ExpressionHelper.CreateFromClause(), ExpressionHelper.CreateQueryBody());
 
       MockRepository repository = new MockRepository ();
       IQueryVisitor testVisitor = repository.CreateMock<IQueryVisitor> ();
@@ -57,18 +58,18 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
       repository.VerifyAll ();
     }
 
-    private FromClause CreateFromClause ()
+    [Test]
+    public void Override_ToString()
     {
-      ParameterExpression id = Expression.Parameter (typeof (int), "i");
-      Expression expression = Expression.NewArrayInit (typeof (int));
-      return new FromClause (id, expression);
-    }
+      QueryExpression queryExpression = new QueryExpression (ExpressionHelper.CreateFromClause (), ExpressionHelper.CreateQueryBody ());
 
-    private QueryBody CreateQueryBody ()
-    {
-      Expression expression = ExpressionHelper.CreateExpression ();
-      ISelectGroupClause iSelectGroupClause = new SelectClause (expression);
-      return new QueryBody (iSelectGroupClause);
+      StringVisitor sv = new StringVisitor();
+
+      sv.VisitQueryExpression (queryExpression);
+
+      Assert.AreEqual (sv.ToString (), queryExpression.ToString ());
+
     }
+    
   }
 }

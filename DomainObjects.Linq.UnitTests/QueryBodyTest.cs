@@ -18,7 +18,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
 
       QueryBody queryBody = new QueryBody (iSelectOrGroupClause);
 
-      Assert.AreSame(iSelectOrGroupClause,queryBody.ISelectOrGroupClause);
+      Assert.AreSame(iSelectOrGroupClause,queryBody.SelectOrGroupClause);
     }
 
     [Test]
@@ -34,7 +34,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
 
       QueryBody queryBody = new QueryBody (iSelectOrGroupClause, orderByClause);
 
-      Assert.AreSame (iSelectOrGroupClause, queryBody.ISelectOrGroupClause);
+      Assert.AreSame (iSelectOrGroupClause, queryBody.SelectOrGroupClause);
       Assert.AreSame (orderByClause, queryBody.OrderByClause);
 
     }
@@ -52,20 +52,20 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
       queryBody.Add (iFromLetWhereCLause);
 
       Assert.AreEqual (1, queryBody.FromLetWhereCount);
-      Assert.That (queryBody.FromLetWhere, List.Contains (iFromLetWhereCLause));
+      Assert.That (queryBody.FromLetWhereClauses, List.Contains (iFromLetWhereCLause));
     }
 
     [Test]
     public void QueryBody_ImplementsIQueryElement()
     {
-      QueryBody queryBody = CreateQueryBody();
+      QueryBody queryBody = ExpressionHelper.CreateQueryBody();
       Assert.IsInstanceOfType (typeof (IQueryElement), queryBody);
     }
 
     [Test]
     public void Accept()
     {
-      QueryBody queryBody = CreateQueryBody ();
+      QueryBody queryBody = ExpressionHelper.CreateQueryBody ();
       MockRepository repository = new MockRepository();
 
       IQueryVisitor visitorMock = repository.CreateMock<IQueryVisitor>();
@@ -75,15 +75,6 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
       repository.ReplayAll();
       queryBody.Accept (visitorMock);
       repository.VerifyAll();
-    }
-
-    public QueryBody CreateQueryBody()
-    {
-      Expression expression = ExpressionHelper.CreateExpression ();
-      ISelectGroupClause iSelectOrGroupClause = new SelectClause (expression);
-
-      return new QueryBody (iSelectOrGroupClause);
-
     }
   }
 }

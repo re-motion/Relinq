@@ -21,7 +21,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void SelectClause_ImplementISelectGroupClause()
     {
-      SelectClause selectClause = CreateSelectClause();
+      SelectClause selectClause = ExpressionHelper.CreateSelectClause();
 
       Assert.IsInstanceOfType (typeof(ISelectGroupClause),selectClause);
     }
@@ -29,7 +29,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void SelectClause_ImplementIQueryElement()
     {
-      SelectClause selectClause = CreateSelectClause();
+      SelectClause selectClause = ExpressionHelper.CreateSelectClause();
       Assert.IsInstanceOfType (typeof (IQueryElement), selectClause);
     }
 
@@ -37,7 +37,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void Accept()
     {
-      SelectClause selectClause = CreateSelectClause();
+      SelectClause selectClause = ExpressionHelper.CreateSelectClause();
 
       MockRepository repository = new MockRepository();
       IQueryVisitor visitorMock = repository.CreateMock<IQueryVisitor>();
@@ -51,14 +51,5 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
       repository.VerifyAll();
 
     }
-
-    private SelectClause CreateSelectClause ()
-    {
-      Expression expression = ExpressionHelper.CreateExpression ();
-
-      return new SelectClause (expression);
-    }
-
-
   }
 }

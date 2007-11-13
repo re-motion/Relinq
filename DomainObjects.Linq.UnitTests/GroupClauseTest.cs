@@ -23,7 +23,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void GroupClause_ImplementISelectGroupClause ()
     {
-      GroupClause groupClause = CreateGroupClause();
+      GroupClause groupClause = ExpressionHelper.CreateGroupClause();
 
       Assert.IsInstanceOfType (typeof (ISelectGroupClause), groupClause);
     }
@@ -31,14 +31,14 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void GroupClause_ImplementIQueryElement()
     {
-      GroupClause groupClause = CreateGroupClause ();
+      GroupClause groupClause = ExpressionHelper.CreateGroupClause ();
       Assert.IsInstanceOfType (typeof (IQueryElement), groupClause);
     }
 
     [Test]
     public void Accept()
     {
-      GroupClause groupClause = CreateGroupClause ();
+      GroupClause groupClause = ExpressionHelper.CreateGroupClause ();
 
       MockRepository repository = new MockRepository();
       IQueryVisitor visitorMock = repository.CreateMock<IQueryVisitor>();
@@ -49,15 +49,6 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
       groupClause.Accept (visitorMock);
 
       repository.VerifyAll();
-    }
-
-
-    private GroupClause CreateGroupClause ()
-    {
-      Expression groupExpression = ExpressionHelper.CreateExpression ();
-      Expression byExpression = ExpressionHelper.CreateExpression ();
-
-      return new GroupClause (groupExpression, byExpression);
     }
   }
 }

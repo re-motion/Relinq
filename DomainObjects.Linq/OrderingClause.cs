@@ -27,7 +27,7 @@ namespace Rubicon.Data.DomainObjects.Linq
       get { return _orderDirection; }
     }
 
-    public void Accept (IQueryVisitor visitor)
+    public virtual void Accept (IQueryVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       visitor.VisitOrderingClause (this);

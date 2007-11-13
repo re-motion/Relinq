@@ -2,7 +2,7 @@
 
 namespace Rubicon.Data.DomainObjects.Linq
 {
-  public interface ISelectGroupClause
+  public interface ISelectGroupClause : IQueryElement
   {
   }
 }

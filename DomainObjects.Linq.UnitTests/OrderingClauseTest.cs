@@ -41,14 +41,14 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void OrderingClause_ImplementsIQueryElement()
     {
-      OrderingClause orderingClause = CreateOrderingClause();
+      OrderingClause orderingClause = ExpressionHelper.CreateOrderingClause();
       Assert.IsInstanceOfType (typeof (IQueryElement), orderingClause);
     }
 
     [Test]
     public void Accept()
     {
-      OrderingClause orderingClause = CreateOrderingClause ();
+      OrderingClause orderingClause = ExpressionHelper.CreateOrderingClause ();
 
       MockRepository repository = new MockRepository();
       IQueryVisitor visitorMock = repository.CreateMock<IQueryVisitor>();
@@ -63,12 +63,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     }
     
 
-    public OrderingClause CreateOrderingClause()
-    {
-      Expression expression = ExpressionHelper.CreateExpression ();
-      OrderDirection directionAsc = OrderDirection.Asc;
-      return new OrderingClause (expression, directionAsc);
-    }
+    
 
 
 
