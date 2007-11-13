@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
 using Rubicon.Utilities;
 
-namespace Rubicon.Data.DomainObjects.Linq
+namespace Rubicon.Data.DomainObjects.Linq.Clauses
 {
   public class GroupClause : ISelectGroupClause
   {

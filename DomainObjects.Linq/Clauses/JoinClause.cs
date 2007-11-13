@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
 using Rubicon.Utilities;
 
-namespace Rubicon.Data.DomainObjects.Linq
+namespace Rubicon.Data.DomainObjects.Linq.Clauses
 {
   public class JoinClause : IQueryElement
   {
@@ -26,7 +26,7 @@ namespace Rubicon.Data.DomainObjects.Linq
 
 
     public JoinClause (ParameterExpression identifier, Expression inExpression, Expression onExpression, 
-      Expression equalityExpression,ParameterExpression intoIdentifier)
+                       Expression equalityExpression,ParameterExpression intoIdentifier)
         : this (identifier, inExpression, onExpression, equalityExpression)
     {
       ArgumentUtility.CheckNotNull ("intoIdentifier", intoIdentifier);

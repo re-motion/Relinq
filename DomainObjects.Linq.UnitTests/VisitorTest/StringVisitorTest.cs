@@ -1,6 +1,7 @@
 using System;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Rubicon.Data.DomainObjects.Linq.Clauses;
 using Rubicon.Data.DomainObjects.Linq.Visitor;
 
 namespace Rubicon.Data.DomainObjects.Linq.UnitTests.VisitorTest

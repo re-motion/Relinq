@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Rubicon.Data.DomainObjects.Linq.Clauses;
 using Rubicon.Data.DomainObjects.Linq.Visitor;
 using Rubicon.Utilities;
 

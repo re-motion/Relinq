@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Rubicon.Data.DomainObjects.Linq.Clauses;
 
 namespace Rubicon.Data.DomainObjects.Linq.UnitTests
 {

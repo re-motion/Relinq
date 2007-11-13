@@ -2,20 +2,21 @@ using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Rubicon.Data.DomainObjects.Linq.Clauses;
 
-namespace Rubicon.Data.DomainObjects.Linq.UnitTests
+namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ClausesTest
 {
   [TestFixture]
   public class WhereClauseTest
   {
-   [Test] 
-   public void InitializeWithboolExpression()
-   {
-     Expression boolExpression = ExpressionHelper.CreateExpression();
-     WhereClause whereClause = new WhereClause(boolExpression);
+    [Test] 
+    public void InitializeWithboolExpression()
+    {
+      Expression boolExpression = ExpressionHelper.CreateExpression();
+      WhereClause whereClause = new WhereClause(boolExpression);
 
-     Assert.AreSame (boolExpression, whereClause.BoolExpression);
-   }
+      Assert.AreSame (boolExpression, whereClause.BoolExpression);
+    }
 
     [Test]
     public void ImplementInterface()

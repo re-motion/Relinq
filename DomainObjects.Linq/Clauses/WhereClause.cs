@@ -1,7 +1,8 @@
 using System.Linq.Expressions;
+using Rubicon.Data.DomainObjects.Linq.Clauses;
 using Rubicon.Utilities;
 
-namespace Rubicon.Data.DomainObjects.Linq
+namespace Rubicon.Data.DomainObjects.Linq.Clauses
 {
   public class WhereClause : IFromLetWhereClause
   {

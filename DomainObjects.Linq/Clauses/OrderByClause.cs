@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Rubicon.Utilities;
 
-namespace Rubicon.Data.DomainObjects.Linq
+namespace Rubicon.Data.DomainObjects.Linq.Clauses
 {
   public class OrderByClause :IQueryElement
   {

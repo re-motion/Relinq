@@ -1,7 +1,8 @@
 using System.Collections.Generic;
+using Rubicon.Data.DomainObjects.Linq.Clauses;
 using Rubicon.Utilities;
 
-namespace Rubicon.Data.DomainObjects.Linq
+namespace Rubicon.Data.DomainObjects.Linq.Clauses
 {
   public class QueryBody : IQueryElement
   {
@@ -16,10 +17,10 @@ namespace Rubicon.Data.DomainObjects.Linq
     }
 
     public QueryBody (ISelectGroupClause selectOrGroupClause, OrderByClause orderByClause) 
-      : this (selectOrGroupClause)
-  {
-    ArgumentUtility.CheckNotNull ("orderByClause", orderByClause);
-    _orderByClause = orderByClause;
+        : this (selectOrGroupClause)
+    {
+      ArgumentUtility.CheckNotNull ("orderByClause", orderByClause);
+      _orderByClause = orderByClause;
     }
 
     public ISelectGroupClause SelectOrGroupClause

@@ -1,4 +1,5 @@
 using System.Text;
+using Rubicon.Data.DomainObjects.Linq.Clauses;
 using Rubicon.Utilities;
 
 namespace Rubicon.Data.DomainObjects.Linq.Visitor

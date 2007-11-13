@@ -2,8 +2,9 @@ using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Rubicon.Data.DomainObjects.Linq.Clauses;
 
-namespace Rubicon.Data.DomainObjects.Linq.UnitTests
+namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ClausesTest
 {
   [TestFixture]
   public class GroupClauseTest

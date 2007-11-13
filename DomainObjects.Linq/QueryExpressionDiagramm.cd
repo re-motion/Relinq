@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="Rubicon.Data.DomainObjects.Linq.FromClause" BaseTypeListCollapsed="true">
+  <Class Name="Rubicon.Data.DomainObjects.Linq.Clauses.FromClause" BaseTypeListCollapsed="true">
     <Position X="6.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AIIBACAAAAAAAAAAAAAAgCAAAAAAAAAQAAAAwAAAAAA=</HashCode>
-      <FileName>FromClause.cs</FileName>
+      <FileName>Clauses\FromClause.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
       <Property Name="JoinClauses" />
@@ -15,7 +15,7 @@
     <Position X="9.75" Y="5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AIAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
-      <FileName>WhereClause.cs</FileName>
+      <FileName>Clauses\WhereClause.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
@@ -23,7 +23,7 @@
     <Position X="8" Y="5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AIAAAAAAAAAAAAAACIAAAAAAAAAAAAAAAAAABABAAAA=</HashCode>
-      <FileName>GroupClause.cs</FileName>
+      <FileName>Clauses\GroupClause.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
@@ -31,7 +31,7 @@
     <Position X="4.5" Y="3.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AIAAAAAAAAAAAIAMAAAAgAAAAEACAAAAAAACQAAAAAE=</HashCode>
-      <FileName>JoinClause.cs</FileName>
+      <FileName>Clauses\JoinClause.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
@@ -39,7 +39,7 @@
     <Position X="11.5" Y="5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AIAAAAAAAAAAAAAAAAAAgAAAAAAAAAAQAAAAwAAAAAA=</HashCode>
-      <FileName>LetClause.cs</FileName>
+      <FileName>Clauses\LetClause.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
@@ -47,7 +47,7 @@
     <Position X="14.75" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AIIAAAACAAAAAAAgAAAAAAAAACAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>OrderByClause.cs</FileName>
+      <FileName>Clauses\OrderByClause.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
       <Property Name="OrderingList" />
@@ -58,7 +58,7 @@
     <Position X="14.75" Y="4.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AIgAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAgAABAAA=</HashCode>
-      <FileName>OrderingClause.cs</FileName>
+      <FileName>Clauses\OrderingClause.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="OrderDirection" />
@@ -69,11 +69,11 @@
     <Position X="12" Y="0.5" Width="2" />
     <TypeIdentifier>
       <HashCode>AIIAAACAAAAAAAAAAAEAAAIAAAAECAAAAIAAIAAAAAA=</HashCode>
-      <FileName>QueryBody.cs</FileName>
+      <FileName>Clauses\QueryBody.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="OrderByClause" />
       <Property Name="SelectOrGroupClause" />
+      <Property Name="OrderByClause" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
       <Property Name="FromLetWhereClauses" />
@@ -96,7 +96,7 @@
     <Position X="6.25" Y="5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAgAAAAAA=</HashCode>
-      <FileName>SelectClause.cs</FileName>
+      <FileName>Clauses\SelectClause.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
@@ -104,7 +104,7 @@
     <Position X="9.5" Y="3.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>IFromLetWhereClause.cs</FileName>
+      <FileName>Clauses\IFromLetWhereClause.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="Rubicon.Data.DomainObjects.Linq.IQueryElement" Collapsed="true">
@@ -118,14 +118,14 @@
     <Position X="7.75" Y="3.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>ISelectGroupClause.cs</FileName>
+      <FileName>Clauses\ISelectGroupClause.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Enum Name="Rubicon.Data.DomainObjects.Linq.OrderDirection">
     <Position X="14.75" Y="6.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAQAAAAAA=</HashCode>
-      <FileName>OrderingClause.cs</FileName>
+      <FileName>Clauses\OrderingClause.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Font Name="Tahoma" Size="8.25" />

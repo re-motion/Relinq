@@ -1,3 +1,5 @@
+using Rubicon.Data.DomainObjects.Linq.Clauses;
+
 namespace Rubicon.Data.DomainObjects.Linq
 {
   public interface IQueryVisitor

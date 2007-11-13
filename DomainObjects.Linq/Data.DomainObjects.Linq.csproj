@@ -49,22 +49,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GroupClause.cs" />
-    <Compile Include="IFromLetWhereClause.cs" />
+    <Compile Include="Clauses\GroupClause.cs" />
+    <Compile Include="Clauses\IFromLetWhereClause.cs" />
     <Compile Include="IQueryElement.cs" />
     <Compile Include="IQueryVisitor.cs" />
-    <Compile Include="JoinClause.cs" />
-    <Compile Include="LetClause.cs" />
-    <Compile Include="OrderByClause.cs" />
-    <Compile Include="OrderingClause.cs" />
+    <Compile Include="Clauses\JoinClause.cs" />
+    <Compile Include="Clauses\LetClause.cs" />
+    <Compile Include="Clauses\OrderByClause.cs" />
+    <Compile Include="Clauses\OrderingClause.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="FromClause.cs" />
-    <Compile Include="QueryBody.cs" />
+    <Compile Include="Clauses\FromClause.cs" />
+    <Compile Include="Clauses\QueryBody.cs" />
     <Compile Include="QueryExpression.cs" />
-    <Compile Include="SelectClause.cs" />
-    <Compile Include="ISelectGroupClause.cs" />
+    <Compile Include="Clauses\SelectClause.cs" />
+    <Compile Include="Clauses\ISelectGroupClause.cs" />
     <Compile Include="Visitor\StringVisitor.cs" />
-    <Compile Include="WhereClause.cs" />
+    <Compile Include="Clauses\WhereClause.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="QueryExpressionDiagramm.cd" />

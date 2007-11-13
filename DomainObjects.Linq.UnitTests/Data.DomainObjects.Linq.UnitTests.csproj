@@ -58,18 +58,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExpressionHelper.cs" />
-    <Compile Include="FromClauseTest.cs" />
-    <Compile Include="GroupClauseTest.cs" />
-    <Compile Include="JoinClauseTest.cs" />
-    <Compile Include="LetClauseTest.cs" />
-    <Compile Include="OrderByClauseTest.cs" />
-    <Compile Include="OrderingClauseTest.cs" />
+    <Compile Include="ClausesTest\FromClauseTest.cs" />
+    <Compile Include="ClausesTest\GroupClauseTest.cs" />
+    <Compile Include="ClausesTest\JoinClauseTest.cs" />
+    <Compile Include="ClausesTest\LetClauseTest.cs" />
+    <Compile Include="ClausesTest\OrderByClauseTest.cs" />
+    <Compile Include="ClausesTest\OrderingClauseTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QueryBodyTest.cs" />
+    <Compile Include="ClausesTest\QueryBodyTest.cs" />
     <Compile Include="QueryExpressionTest.cs" />
-    <Compile Include="SelectClauseTest.cs" />
+    <Compile Include="ClausesTest\SelectClauseTest.cs" />
     <Compile Include="VisitorTest\StringVisitorTest.cs" />
-    <Compile Include="WhereClauseTest.cs" />
+    <Compile Include="ClausesTest\WhereClauseTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DomainObjects.Linq\Data.DomainObjects.Linq.csproj">
