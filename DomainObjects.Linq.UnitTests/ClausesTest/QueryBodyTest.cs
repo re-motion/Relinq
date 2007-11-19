@@ -52,7 +52,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ClausesTest
 
       queryBody.Add (iFromLetWhereCLause);
 
-      Assert.AreEqual (1, queryBody.FromLetWhereCount);
+      Assert.AreEqual (1, queryBody.FromLetWhereClauseCount);
       Assert.That (queryBody.FromLetWhereClauses, List.Contains (iFromLetWhereCLause));
     }
 

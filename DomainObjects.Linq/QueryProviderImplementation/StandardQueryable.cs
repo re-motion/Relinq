@@ -9,6 +9,12 @@ namespace Rubicon.Data.DomainObjects.Linq.QueryProviderImplementation
 {
   public class StandardQueryable<T> : IOrderedQueryable<T>
   {
+    public StandardQueryable (IQueryExecutor executor)
+    {
+      Provider = new QueryProvider (executor);
+      Expression = Expression.Constant (this);
+    }
+
     public StandardQueryable (IQueryProvider provider, Expression expression)
     {
       ArgumentUtility.CheckNotNull ("provider", provider);

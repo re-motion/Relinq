@@ -27,7 +27,7 @@ namespace Rubicon.Data.DomainObjects.Linq.Visitor
     public void VisitFromClause (FromClause fromClause)
     {
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
-      _sb.AppendFormat ("from {0} {1} in {2}", fromClause.Identifier.Type, fromClause.Identifier.Name, fromClause.Expression);
+      _sb.AppendFormat ("from {0} {1} in {2} ", fromClause.Identifier.Type, fromClause.Identifier.Name, fromClause.QuerySource);
 
       foreach (JoinClause jc in fromClause.JoinClauses)
       {
@@ -38,7 +38,7 @@ namespace Rubicon.Data.DomainObjects.Linq.Visitor
     public void VisitJoinClause (JoinClause joinClause)
     {
       ArgumentUtility.CheckNotNull ("joinClause", joinClause);
-      _sb.AppendFormat("join {0} {1} in {2} on {3} equals {4} into {5}",
+      _sb.AppendFormat("join {0} {1} in {2} on {3} equals {4} into {5} ",
         joinClause.Identifier.Type,joinClause.Identifier,joinClause.InExpression,
         joinClause.OnExpression,joinClause.EqualityExpression,joinClause.IntoIdentifier);
     }
@@ -47,14 +47,14 @@ namespace Rubicon.Data.DomainObjects.Linq.Visitor
     {
       ArgumentUtility.CheckNotNull ("letClause", letClause);
 
-      _sb.AppendFormat ("let {0} = {1}", letClause.Identifier, letClause.Expression);
+      _sb.AppendFormat ("let {0} = {1} ", letClause.Identifier, letClause.Expression);
     }
 
     public void VisitWhereClause (WhereClause whereClause)
     {
       ArgumentUtility.CheckNotNull ("whereClause", whereClause);
 
-      _sb.AppendFormat ("where {0}", whereClause.BoolExpression);
+      _sb.AppendFormat ("where {0} ", whereClause.BoolExpression);
     }
 
     public void VisitOrderByClause (OrderByClause orderByClause)
@@ -74,10 +74,10 @@ namespace Rubicon.Data.DomainObjects.Linq.Visitor
       switch( orderingClause.OrderDirection)
       {
         case OrderDirection.Asc:
-          _sb.AppendFormat ("{0} ascending", orderingClause.Expression);
+          _sb.AppendFormat ("{0} ascending ", orderingClause.Expression);
           break;
         case OrderDirection.Desc:
-          _sb.AppendFormat ("{0} descending", orderingClause.Expression);
+          _sb.AppendFormat ("{0} descending ", orderingClause.Expression);
           break;
       }
       

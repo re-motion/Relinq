@@ -36,6 +36,17 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.QueryProviderImplementationT
     }
 
     [Test]
+    public void InitializeWithDefaultConstructor ()
+    {
+      IQueryExecutor executor = _mockRepository.CreateMock<IQueryExecutor>();
+      StandardQueryable<int> queryable = new StandardQueryable<int> (executor);
+
+      Assert.IsNotNull (queryable.Provider);
+      Assert.IsNotNull (queryable.Expression);
+      Assert.AreEqual (ExpressionType.Constant, queryable.Expression.NodeType);
+    }
+
+    [Test]
     [ExpectedException (typeof (ArgumentTypeException))]
     public void ConstructorThrowsTypeException ()
     {

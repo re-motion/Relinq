@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
@@ -14,12 +15,12 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ClausesTest
     public void Initialize_WithIDAndExpression()
     {
       ParameterExpression id = ExpressionHelper.CreateParameterExpression ();
-      Expression expression = ExpressionHelper.CreateExpression();
+      IQueryable querySource = ExpressionHelper.CreateQuerySource();
       
-      FromClause fromClause = new FromClause (id, expression);
+      FromClause fromClause = new FromClause (id, querySource);
       
       Assert.AreSame (id, fromClause.Identifier);
-      Assert.AreSame (expression, fromClause.Expression);
+      Assert.AreSame (querySource, fromClause.QuerySource);
       
       Assert.That (fromClause.JoinClauses, Is.Empty);
       Assert.AreEqual (0, fromClause.JoinClauseCount);
@@ -29,13 +30,13 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ClausesTest
     [ExpectedException (typeof (ArgumentNullException))]
     public void Initialize_ThrowsOnNullID ()
     {
-      Expression expression = ExpressionHelper.CreateExpression();
-      new FromClause (null, expression);
+      IQueryable querySource = ExpressionHelper.CreateQuerySource ();
+      new FromClause (null, querySource);
     }
 
     [Test]
     [ExpectedException (typeof (ArgumentNullException))]
-    public void Initialize_ThrowsOnNullExpression ()
+    public void Initialize_ThrowsOnNullQuerySource ()
     {
       ParameterExpression id = ExpressionHelper.CreateParameterExpression();
       new FromClause (id, null);
@@ -61,9 +62,10 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ClausesTest
     public void ImplementInterface_IFromLetWhereClause()
     {
       ParameterExpression id = ExpressionHelper.CreateParameterExpression ();
-      Expression expression = ExpressionHelper.CreateExpression ();
+      IQueryable querySource = ExpressionHelper.CreateQuerySource ();
+      
 
-      FromClause fromClause = new FromClause (id, expression);
+      FromClause fromClause = new FromClause (id, querySource);
 
       Assert.IsInstanceOfType (typeof (IFromLetWhereClause), fromClause);
     }

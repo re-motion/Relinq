@@ -19,6 +19,7 @@ namespace Rubicon.Data.DomainObjects.Linq
 
     public IQueryable CreateQuery (Expression expression)
     {
+      ArgumentUtility.CheckNotNull ("expression", expression);
       MethodInfo genericCreateQueryMethod = typeof (QueryProvider).GetMethod ("GenericCreateQuery", BindingFlags.NonPublic | BindingFlags.Instance);
       
       Type elementType = TypeSystem.GetElementType(expression.Type);
@@ -34,21 +35,25 @@ namespace Rubicon.Data.DomainObjects.Linq
 
     public IQueryable<T> CreateQuery<T> (Expression expression)
     {
+      ArgumentUtility.CheckNotNull ("expression", expression);
       return GenericCreateQuery<T> (expression);
     }
 
     private IQueryable<T> GenericCreateQuery<T> (Expression expression)
     {
+      ArgumentUtility.CheckNotNull ("expression", expression);
       return new StandardQueryable<T> (this, expression);
     }
 
     public object Execute (Expression expression)
     {
+      ArgumentUtility.CheckNotNull ("expression", expression);
       return _executor.Execute (expression);
     }
 
     public TResult Execute<TResult> (Expression expression)
     {
+      ArgumentUtility.CheckNotNull ("expression", expression);
       return _executor.Execute<TResult> (expression);
     }
     

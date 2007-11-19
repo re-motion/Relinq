@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using Rubicon.Utilities;
 
@@ -8,16 +9,16 @@ namespace Rubicon.Data.DomainObjects.Linq.Clauses
   public class FromClause : IFromLetWhereClause
   {
     private readonly ParameterExpression _identifier;
-    private readonly Expression _expression;
+    private readonly IQueryable _querySource;
     private readonly List<JoinClause> _joinClauses = new List<JoinClause>();
 
-    public FromClause (ParameterExpression id, Expression expression)
+    public FromClause (ParameterExpression id, IQueryable querySource)
     {
       ArgumentUtility.CheckNotNull ("id", id);
-      ArgumentUtility.CheckNotNull ("expression", expression);
+      ArgumentUtility.CheckNotNull ("querySource", querySource);
 
       _identifier = id;
-      _expression = expression;
+      _querySource = querySource;
     }
 
     public ParameterExpression Identifier
@@ -25,9 +26,9 @@ namespace Rubicon.Data.DomainObjects.Linq.Clauses
       get { return _identifier; }
     }
 
-    public Expression Expression
+    public IQueryable QuerySource
     {
-      get { return _expression; }
+      get { return _querySource; }
     }
 
     public IEnumerable<JoinClause> JoinClauses

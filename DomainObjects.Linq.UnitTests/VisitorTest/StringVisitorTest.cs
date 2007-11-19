@@ -236,7 +236,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.VisitorTest
         repository.CreateMock<OrderByClause> (ExpressionHelper.CreateOrderingClause());
 
       FromClause fromClause1 = 
-        repository.CreateMock<FromClause> (ExpressionHelper.CreateParameterExpression(), ExpressionHelper.CreateExpression());
+        repository.CreateMock<FromClause> (ExpressionHelper.CreateParameterExpression(), ExpressionHelper.CreateQuerySource());
 
       WhereClause whereClause1 =
           repository.CreateMock<WhereClause> (ExpressionHelper.CreateExpression());

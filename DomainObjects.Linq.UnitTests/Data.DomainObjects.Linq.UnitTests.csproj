@@ -64,7 +64,7 @@
     <Compile Include="ClausesTest\LetClauseTest.cs" />
     <Compile Include="ClausesTest\OrderByClauseTest.cs" />
     <Compile Include="ClausesTest\OrderingClauseTest.cs" />
-    <Compile Include="ParsingTest\SimpleQuery.cs" />
+    <Compile Include="ParsingTest\QueryParserTest\SimpleQueryTest.cs" />
     <Compile Include="ParsingTest\Student.cs" />
     <Compile Include="ParsingTest\TestQueryGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -81,6 +81,9 @@
       <Project>{DD9AA076-BE37-4A42-BA9E-C35ECC6955C9}</Project>
       <Name>Data.DomainObjects.Linq</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ParsingTest\ExpressionTrees\simpleQuery.JPG" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

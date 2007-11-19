@@ -44,7 +44,7 @@ namespace Rubicon.Data.DomainObjects.Linq.Clauses
       _fromLetWhere.Add (fromLetWhere);
     }
 
-    public int FromLetWhereCount
+    public int FromLetWhereClauseCount
     {
       get { return _fromLetWhere.Count; }
     }
