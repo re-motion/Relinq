@@ -67,6 +67,7 @@
     <Compile Include="ParsingTest\QueryParserTest\QueryTestBase.cs" />
     <Compile Include="ParsingTest\QueryParserTest\SimpleQueryTest.cs" />
     <Compile Include="ParsingTest\QueryParserTest\SimpleQueryWithProjectionTest.cs" />
+    <Compile Include="ParsingTest\QueryParserTest\SimpleWhereQueryTest.cs" />
     <Compile Include="ParsingTest\Student.cs" />
     <Compile Include="ParsingTest\TestQueryGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -86,6 +87,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ParsingTest\ExpressionTrees\simpleQuery.JPG" />
+    <Content Include="ParsingTest\ExpressionTrees\simpleQueryWithProjection.JPG" />
+    <Content Include="ParsingTest\ExpressionTrees\simpleWhereQuery.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

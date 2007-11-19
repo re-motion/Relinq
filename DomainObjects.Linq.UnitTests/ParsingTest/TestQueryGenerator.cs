@@ -18,5 +18,10 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest
     {
       return from s in source select s.First;
     }
+
+    public static IQueryable<Student> CreateSimpleWhereQuery (IQueryable<Student> source)
+    {
+      return from s in source where s.Last == "Garcia" select s;
+    }
   }
 }
