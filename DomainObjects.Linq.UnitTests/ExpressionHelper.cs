@@ -7,6 +7,11 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
   {
     public static Expression CreateExpression ()
     {
+      return CreateNewIntArrayExpression();
+    }
+
+    public static Expression CreateNewIntArrayExpression ()
+    {
       return Expression.NewArrayInit (typeof (int));
     }
 

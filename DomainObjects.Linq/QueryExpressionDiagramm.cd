@@ -11,7 +11,7 @@
     </ShowAsCollectionAssociation>
     <Lollipop Position="0.169" />
   </Class>
-  <Class Name="Rubicon.Data.DomainObjects.Linq.WhereClause" BaseTypeListCollapsed="true">
+  <Class Name="Rubicon.Data.DomainObjects.Linq.Clauses.WhereClause" BaseTypeListCollapsed="true">
     <Position X="9.75" Y="5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AIAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
@@ -19,7 +19,7 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Rubicon.Data.DomainObjects.Linq.GroupClause" BaseTypeListCollapsed="true">
+  <Class Name="Rubicon.Data.DomainObjects.Linq.Clauses.GroupClause" BaseTypeListCollapsed="true">
     <Position X="8" Y="5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AIAAAAAAAAAAAAAACIAAAAAAAAAAAAAAAAAABABAAAA=</HashCode>
@@ -27,7 +27,7 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Rubicon.Data.DomainObjects.Linq.JoinClause" BaseTypeListCollapsed="true">
+  <Class Name="Rubicon.Data.DomainObjects.Linq.Clauses.JoinClause" BaseTypeListCollapsed="true">
     <Position X="4.5" Y="3.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AIAAAAAAAAAAAIAMAAAAgAAAAEACAAAAAAACQAAAAAE=</HashCode>
@@ -35,7 +35,7 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="Rubicon.Data.DomainObjects.Linq.LetClause" BaseTypeListCollapsed="true">
+  <Class Name="Rubicon.Data.DomainObjects.Linq.Clauses.LetClause" BaseTypeListCollapsed="true">
     <Position X="11.5" Y="5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AIAAAAAAAAAAAAAAAAAAgAAAAAAAAAAQAAAAwAAAAAA=</HashCode>
@@ -43,7 +43,7 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Rubicon.Data.DomainObjects.Linq.OrderByClause" BaseTypeListCollapsed="true">
+  <Class Name="Rubicon.Data.DomainObjects.Linq.Clauses.OrderByClause" BaseTypeListCollapsed="true">
     <Position X="14.75" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AIIAAAACAAAAAAAgAAAAAAAAACAAAAAAAAAAAAAAAAA=</HashCode>
@@ -54,7 +54,7 @@
     </ShowAsCollectionAssociation>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="Rubicon.Data.DomainObjects.Linq.OrderingClause" BaseTypeListCollapsed="true">
+  <Class Name="Rubicon.Data.DomainObjects.Linq.Clauses.OrderingClause" BaseTypeListCollapsed="true">
     <Position X="14.75" Y="4.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AIgAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAgAABAAA=</HashCode>
@@ -65,19 +65,15 @@
     </ShowAsAssociation>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="Rubicon.Data.DomainObjects.Linq.QueryBody" BaseTypeListCollapsed="true">
+  <Class Name="Rubicon.Data.DomainObjects.Linq.Clauses.QueryBody" BaseTypeListCollapsed="true">
     <Position X="12" Y="0.5" Width="2" />
     <TypeIdentifier>
       <HashCode>AIIAAACAAAAAAAAAAAEAAAIAAAAECAAAAIAAIAAAAAA=</HashCode>
       <FileName>Clauses\QueryBody.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="SelectOrGroupClause" />
       <Property Name="OrderByClause" />
     </ShowAsAssociation>
-    <ShowAsCollectionAssociation>
-      <Property Name="FromLetWhereClauses" />
-    </ShowAsCollectionAssociation>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="Rubicon.Data.DomainObjects.Linq.QueryExpression" BaseTypeListCollapsed="true">
@@ -92,7 +88,7 @@
     </ShowAsAssociation>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Rubicon.Data.DomainObjects.Linq.SelectClause" BaseTypeListCollapsed="true">
+  <Class Name="Rubicon.Data.DomainObjects.Linq.Clauses.SelectClause" BaseTypeListCollapsed="true">
     <Position X="6.25" Y="5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAgAAAAAA=</HashCode>
@@ -100,13 +96,6 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Interface Name="Rubicon.Data.DomainObjects.Linq.IFromLetWhereClause" Collapsed="true">
-    <Position X="9.5" Y="3.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Clauses\IFromLetWhereClause.cs</FileName>
-    </TypeIdentifier>
-  </Interface>
   <Interface Name="Rubicon.Data.DomainObjects.Linq.IQueryElement" Collapsed="true">
     <Position X="8.75" Y="2.75" Width="1.5" />
     <TypeIdentifier>
@@ -114,14 +103,21 @@
       <FileName>IQueryElement.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="Rubicon.Data.DomainObjects.Linq.ISelectGroupClause" Collapsed="true">
-    <Position X="7.75" Y="3.75" Width="1.5" />
+  <Interface Name="Rubicon.Data.DomainObjects.Linq.Clauses.IFromLetWhereClause" Collapsed="true">
+    <Position X="10.75" Y="3.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Clauses\IFromLetWhereClause.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Rubicon.Data.DomainObjects.Linq.Clauses.ISelectGroupClause" Collapsed="true">
+    <Position X="6.75" Y="3.75" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Clauses\ISelectGroupClause.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Enum Name="Rubicon.Data.DomainObjects.Linq.OrderDirection">
+  <Enum Name="Rubicon.Data.DomainObjects.Linq.Clauses.OrderDirection">
     <Position X="14.75" Y="6.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAQAAAAAA=</HashCode>

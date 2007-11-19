@@ -52,6 +52,7 @@
     <Compile Include="Clauses\GroupClause.cs" />
     <Compile Include="Clauses\IFromLetWhereClause.cs" />
     <Compile Include="IQueryElement.cs" />
+    <Compile Include="IQueryExecutor.cs" />
     <Compile Include="IQueryVisitor.cs" />
     <Compile Include="Clauses\JoinClause.cs" />
     <Compile Include="Clauses\LetClause.cs" />
@@ -63,11 +64,17 @@
     <Compile Include="QueryExpression.cs" />
     <Compile Include="Clauses\SelectClause.cs" />
     <Compile Include="Clauses\ISelectGroupClause.cs" />
+    <Compile Include="QueryProvider.cs" />
+    <Compile Include="QueryProviderImplementation\StandardQueryable.cs" />
+    <Compile Include="QueryProviderImplementation\TypeSystem.cs" />
     <Compile Include="Visitor\StringVisitor.cs" />
     <Compile Include="Clauses\WhereClause.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="QueryExpressionDiagramm.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Parsing\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

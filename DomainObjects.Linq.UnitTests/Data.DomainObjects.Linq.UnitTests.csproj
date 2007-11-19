@@ -64,10 +64,15 @@
     <Compile Include="ClausesTest\LetClauseTest.cs" />
     <Compile Include="ClausesTest\OrderByClauseTest.cs" />
     <Compile Include="ClausesTest\OrderingClauseTest.cs" />
+    <Compile Include="ParsingTest\SimpleQuery.cs" />
+    <Compile Include="ParsingTest\Student.cs" />
+    <Compile Include="ParsingTest\TestQueryGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ClausesTest\QueryBodyTest.cs" />
     <Compile Include="QueryExpressionTest.cs" />
     <Compile Include="ClausesTest\SelectClauseTest.cs" />
+    <Compile Include="QueryProviderImplementationTest\StandardQueryableTest.cs" />
+    <Compile Include="QueryProviderTest.cs" />
     <Compile Include="VisitorTest\StringVisitorTest.cs" />
     <Compile Include="ClausesTest\WhereClauseTest.cs" />
   </ItemGroup>
