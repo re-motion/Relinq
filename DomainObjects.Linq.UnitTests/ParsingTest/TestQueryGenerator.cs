@@ -13,5 +13,10 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest
     {
       return from s in source select s;
     }
+
+    public static IQueryable<string> CreateSimpleQueryWithProjection (IQueryable<Student> source)
+    {
+      return from s in source select s.First;
+    }
   }
 }

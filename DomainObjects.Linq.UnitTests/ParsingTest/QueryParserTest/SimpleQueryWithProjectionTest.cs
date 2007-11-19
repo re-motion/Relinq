@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 using NUnit.Framework;
 using Rubicon.Data.DomainObjects.Linq.Clauses;
 using Rubicon.Data.DomainObjects.Linq.UnitTests.Parsing;
@@ -7,15 +8,15 @@ using Rubicon.Data.DomainObjects.Linq.UnitTests.Parsing;
 namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.QueryParserTest
 {
   [TestFixture]
-  public class SimpleQueryTest : QueryTestBase<Student>
+  public class SimpleQueryWithProjectionTest: QueryTestBase<string>
   {
-    protected override IQueryable<Student> CreateQuery ()
+    protected override IQueryable<string> CreateQuery ()
     {
-      return TestQueryGenerator.CreateSimpleQuery (QuerySource);
+      return TestQueryGenerator.CreateSimpleQueryWithProjection (QuerySource);
     }
 
     [Test]
-    public void ParseResultIsNotNull()
+    public void ParseResultIsNotNull ()
     {
       Assert.IsNotNull (ParsedQuery);
     }
@@ -31,7 +32,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.QueryParserTest
     }
 
     [Test]
-    public void HasQueryBody()
+    public void HasQueryBody ()
     {
       Assert.IsNotNull (ParsedQuery.QueryBody);
       Assert.AreEqual (0, ParsedQuery.QueryBody.FromLetWhereClauseCount);
@@ -40,19 +41,21 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.QueryParserTest
     }
 
     [Test]
-    public void HasSelectClause()
+    public void HasSelectClause ()
     {
       SelectClause clause = ParsedQuery.QueryBody.SelectOrGroupClause as SelectClause;
       Assert.IsNotNull (clause);
       Assert.IsNotNull (clause.Expression);
-      Assert.AreSame (ParsedQuery.FromClause.Identifier, clause.Expression,
-          "from s in ... select s => select expression must be same as from-identifier"); 
+      Assert.IsInstanceOfType (typeof(MemberExpression),clause.Expression,
+          "from s in ... select s.First => select expression must be MemberAccess");
     }
 
     [Test]
-    public void OutputResult()
+    public void OutputResult ()
     {
       Console.WriteLine (ParsedQuery);
     }
+  
+    
   }
 }

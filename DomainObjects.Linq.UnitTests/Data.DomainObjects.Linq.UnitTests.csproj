@@ -64,7 +64,9 @@
     <Compile Include="ClausesTest\LetClauseTest.cs" />
     <Compile Include="ClausesTest\OrderByClauseTest.cs" />
     <Compile Include="ClausesTest\OrderingClauseTest.cs" />
+    <Compile Include="ParsingTest\QueryParserTest\QueryTestBase.cs" />
     <Compile Include="ParsingTest\QueryParserTest\SimpleQueryTest.cs" />
+    <Compile Include="ParsingTest\QueryParserTest\SimpleQueryWithProjectionTest.cs" />
     <Compile Include="ParsingTest\Student.cs" />
     <Compile Include="ParsingTest\TestQueryGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
