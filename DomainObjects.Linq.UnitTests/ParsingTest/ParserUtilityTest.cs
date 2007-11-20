@@ -29,7 +29,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest
     [Test]
     public void CheckMethodCallExpression()
     {
-      MethodCallExpression selectExpression = ExpressionHelper.CreateSimpleQuerySelectExpression(ExpressionHelper.CreateQuerySource());
+      MethodCallExpression selectExpression = TestQueryGenerator.CreateSimpleQuerySelectExpression(ExpressionHelper.CreateQuerySource());
       string result = ParserUtility.CheckMethodCallExpression (selectExpression, ExpressionHelper.CreateExpression (), "SelectMany", "Select", "Where");
       Assert.AreEqual ("Select", result);
       result = ParserUtility.CheckMethodCallExpression (selectExpression, ExpressionHelper.CreateExpression (), "Select");
@@ -42,7 +42,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest
         + "Parsing.Student]).Select(s => s) in tree new [] {}.")]
     public void CheckMethodCallExpression_InvalidName ()
     {
-      MethodCallExpression selectExpression = ExpressionHelper.CreateSimpleQuerySelectExpression (ExpressionHelper.CreateQuerySource ());
+      MethodCallExpression selectExpression = TestQueryGenerator.CreateSimpleQuerySelectExpression (ExpressionHelper.CreateQuerySource ());
       ParserUtility.CheckMethodCallExpression (selectExpression, ExpressionHelper.CreateExpression (), "SelectMany", "Where");
     }
   }

@@ -114,18 +114,6 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
       return executor;
     }
 
-    public static MethodCallExpression CreateSimpleQuerySelectExpression (IQueryable<Student> source)
-    {
-      IQueryable<Student> simpleQuery = TestQueryGenerator.CreateSimpleQuery (source);
-      return (MethodCallExpression) simpleQuery.Expression;
-    }
-
-    public static MethodCallExpression CreateSimpleWhereQueryWhereExpression (IQueryable<Student> source)
-    {
-      IQueryable<Student> simpleWhereQuery = TestQueryGenerator.CreateSimpleWhereQuery (source);
-      return (MethodCallExpression) simpleWhereQuery.Expression;
-    }
-
     private static List<Student> CreateStudents ()
     {
       List<Student> students = new List<Student>

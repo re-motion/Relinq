@@ -6,10 +6,10 @@ using NUnit.Framework.SyntaxHelpers;
 using Rubicon.Data.DomainObjects.Linq.Parsing;
 using Rubicon.Data.DomainObjects.Linq.UnitTests.Parsing;
 
-namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest
+namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.WhereExpressionParserTest
 {
   [TestFixture]
-  public class WhereExpressionParserTest
+  public class RecursiveWhereExpressionParserTest
   {
     private IQueryable<Student> _querySource;
     private MethodCallExpression _expression;
@@ -19,32 +19,16 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest
     public void SetUp ()
     {
       _querySource = ExpressionHelper.CreateQuerySource ();
-      _expression = ExpressionHelper.CreateSimpleWhereQueryWhereExpression (_querySource);
+      _expression = TestQueryGenerator.CreateMultiWhereQueryWhereExpression (_querySource);
       _parser = new WhereExpressionParser (_expression, _expression);
     }
 
     [Test]
-    public void Initialize ()
-    {
-      Assert.AreSame (_expression, _parser.SourceExpression);
-    }
-
-    [Test]
-    [ExpectedException (typeof (QueryParserException), ExpectedMessage = "Expected one of 'Where', but found 'Select' at position "
-        + "value(Rubicon.Data.DomainObjects.Linq.QueryProviderImplementation.StandardQueryable`1[Rubicon.Data.DomainObjects.Linq.UnitTests.Parsing."
-        + "Student]).Select(s => s) in tree value(Rubicon.Data.DomainObjects.Linq.QueryProviderImplementation.StandardQueryable`1[Rubicon.Data."
-        + "DomainObjects.Linq.UnitTests.Parsing.Student]).Select(s => s).")]
-    public void Initialize_FromWrongExpression ()
-    {
-      MethodCallExpression expression = ExpressionHelper.CreateSimpleQuerySelectExpression (ExpressionHelper.CreateQuerySource ());
-      new WhereExpressionParser (expression, expression);
-    }
-
-    [Test]
-    public void ParsesFromExpressions()
+    public void ParsesFromExpressions ()
     {
       Assert.IsNotNull (_parser.FromExpressions);
-      Assert.That (_parser.FromExpressions, Is.EqualTo (new object[] { _expression.Arguments[0] }));
+      Assert.That (_parser.FromExpressions, 
+          Is.EqualTo (new object[] { ((MethodCallExpression)((MethodCallExpression) _expression.Arguments[0]).Arguments[0]).Arguments[0] }));
       Assert.IsInstanceOfType (typeof (ConstantExpression), _parser.FromExpressions[0]);
       Assert.AreSame (_querySource, ((ConstantExpression) _parser.FromExpressions[0]).Value);
     }
@@ -54,7 +38,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest
     {
       Assert.IsNotNull (_parser.FromIdentifiers);
       Assert.That (_parser.FromIdentifiers,
-          Is.EqualTo (new object[] { ((LambdaExpression) ((UnaryExpression) _expression.Arguments[1]).Operand).Parameters[0] }));
+          Is.EqualTo (new object[] { ((LambdaExpression) ((UnaryExpression) ((MethodCallExpression) ((MethodCallExpression) _expression.Arguments[0]).Arguments[0]).Arguments[1]).Operand).Parameters[0] }));
       Assert.IsInstanceOfType (typeof (ParameterExpression), _parser.FromIdentifiers[0]);
       Assert.AreEqual ("s", ((ParameterExpression) _parser.FromIdentifiers[0]).Name);
     }
@@ -63,8 +47,14 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest
     public void ParsesBoolExpressions ()
     {
       Assert.IsNotNull (_parser.BoolExpressions);
-      Assert.That (_parser.BoolExpressions, Is.EqualTo (new object[] { ((UnaryExpression) _expression.Arguments[1]).Operand }));
+      Assert.That (_parser.BoolExpressions, Is.EqualTo (new object[] 
+        { ((UnaryExpression)((MethodCallExpression) ((MethodCallExpression) _expression.Arguments[0]).Arguments[0]).Arguments[1]).Operand,
+        ((UnaryExpression)((MethodCallExpression) _expression.Arguments[0]).Arguments[1]).Operand,
+        ((UnaryExpression) _expression.Arguments[1]).Operand
+        }));
       Assert.IsInstanceOfType (typeof (LambdaExpression), _parser.BoolExpressions[0]);
+      Assert.IsInstanceOfType (typeof (LambdaExpression), _parser.BoolExpressions[1]);
+      Assert.IsInstanceOfType (typeof (LambdaExpression), _parser.BoolExpressions[2]);
     }
 
     [Test]
@@ -74,8 +64,9 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest
       Assert.AreEqual (1, _parser.ProjectionExpressions.Count);
       Assert.IsInstanceOfType (typeof (LambdaExpression), _parser.ProjectionExpressions[0]);
       Assert.IsInstanceOfType (typeof (ParameterExpression), _parser.ProjectionExpressions[0].Body);
-      Assert.AreSame (((LambdaExpression) ((UnaryExpression) _expression.Arguments[1]).Operand).Parameters[0], _parser.ProjectionExpressions[0].Body);
+      Assert.AreSame (((LambdaExpression) ((UnaryExpression) ((MethodCallExpression) ((MethodCallExpression) _expression.Arguments[0]).Arguments[0]).Arguments[1]).Operand).Parameters[0], _parser.ProjectionExpressions[0].Body);
       Assert.AreEqual ("s", ((ParameterExpression) _parser.ProjectionExpressions[0].Body).Name);
     }
+
   }
 }

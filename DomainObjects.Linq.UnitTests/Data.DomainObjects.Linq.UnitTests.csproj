@@ -65,15 +65,18 @@
     <Compile Include="ClausesTest\OrderByClauseTest.cs" />
     <Compile Include="ClausesTest\OrderingClauseTest.cs" />
     <Compile Include="ParsingTest\ParserUtilityTest.cs" />
+    <Compile Include="ParsingTest\QueryParserIntegrationTest\MultiWhereQueryTest.cs" />
     <Compile Include="ParsingTest\QueryParserIntegrationTest\QueryTestBase.cs" />
     <Compile Include="ParsingTest\QueryParserIntegrationTest\SimpleQueryTest.cs" />
     <Compile Include="ParsingTest\QueryParserIntegrationTest\SimpleQueryWithProjectionTest.cs" />
     <Compile Include="ParsingTest\QueryParserIntegrationTest\SimpleWhereQueryTest.cs" />
     <Compile Include="ParsingTest\QueryParserTest.cs" />
     <Compile Include="ParsingTest\SelectExpressionParserTest.cs" />
-    <Compile Include="ParsingTest\WhereExpressionParserTest.cs" />
+    <Compile Include="ParsingTest\WhereExpressionParserTest\GeneralWhereExpressionParserTest.cs" />
+    <Compile Include="ParsingTest\WhereExpressionParserTest\RecursiveWhereExpressionParserTest.cs" />
+    <Compile Include="ParsingTest\WhereExpressionParserTest\SimpleWhereExpressionParserTest.cs" />
     <Compile Include="ParsingTest\Student.cs" />
-    <Compile Include="TestQueryGenerator.cs" />
+    <Compile Include="ParsingTest\TestQueryGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ClausesTest\QueryBodyTest.cs" />
     <Compile Include="QueryExpressionTest.cs" />
@@ -90,6 +93,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ParsingTest\ExpressionTrees\multiWhereQuery.jpg" />
     <Content Include="ParsingTest\ExpressionTrees\simpleQuery.JPG" />
     <Content Include="ParsingTest\ExpressionTrees\simpleQueryWithProjection.JPG" />
     <Content Include="ParsingTest\ExpressionTrees\simpleWhereQuery.jpg" />

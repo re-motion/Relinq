@@ -19,7 +19,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest
     public void SetUp()
     {
       _querySource = ExpressionHelper.CreateQuerySource();
-      _expression = ExpressionHelper.CreateSimpleQuerySelectExpression (_querySource);
+      _expression = TestQueryGenerator.CreateSimpleQuerySelectExpression (_querySource);
       _parser = new SelectExpressionParser (_expression, _expression);
     }
 
@@ -36,7 +36,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest
         + "[Rubicon.Data.DomainObjects.Linq.UnitTests.Parsing.Student]).Where(s => (s.Last = \"Garcia\")).")]
     public void Initialize_FromWrongExpression ()
     {
-      MethodCallExpression expression = ExpressionHelper.CreateSimpleWhereQueryWhereExpression(ExpressionHelper.CreateQuerySource ());
+      MethodCallExpression expression = TestQueryGenerator.CreateSimpleWhereQueryWhereExpression(ExpressionHelper.CreateQuerySource ());
       new SelectExpressionParser (expression, expression);
     }
 

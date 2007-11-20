@@ -10,11 +10,16 @@ namespace Rubicon.Data.DomainObjects.Linq.Parsing
     {
       if (!(expression is T))
       {
-        string message = string.Format ("Expected {0} for {1}, found {2} ({3}).", typeof (T).Name, context, expression.GetType().Name, expression);
-        throw new QueryParserException (message, expression, expressionTreeRoot);
+        throw CreateParserException (typeof (T).Name, expression, context, expressionTreeRoot);
       }
       else
         return (T) expression;
+    }
+
+    public static QueryParserException CreateParserException (object expected, object expression, string context, Expression expressionTreeRoot)
+    {
+      string message = string.Format ("Expected {0} for {1}, found {2} ({3}).", expected, context, expression.GetType ().Name, expression);
+      return new QueryParserException (message, expression, expressionTreeRoot);
     }
 
     public static string CheckMethodCallExpression (MethodCallExpression methodCallExpression, Expression expressionTreeRoot,
