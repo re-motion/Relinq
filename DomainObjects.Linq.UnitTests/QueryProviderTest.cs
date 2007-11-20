@@ -3,6 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Rubicon.Utilities;
 
 namespace Rubicon.Data.DomainObjects.Linq.UnitTests
 {
@@ -35,6 +36,14 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
 
       Assert.IsNotNull (queryable);
       Assert.IsInstanceOfType (typeof (IQueryable<int>), queryable);
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentTypeException))]
+    public void CreateQueryUnwrapsException ()
+    {
+      Expression expression = ExpressionHelper.CreateLambdaExpression ();
+      _queryProvider.CreateQuery (expression);
     }
 
     [Test]

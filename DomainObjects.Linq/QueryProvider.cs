@@ -29,7 +29,7 @@ namespace Rubicon.Data.DomainObjects.Linq
       }
       catch (System.Reflection.TargetInvocationException tie)
       {
-          throw tie.InnerException;
+        throw tie.InnerException;
       }
     }
 
