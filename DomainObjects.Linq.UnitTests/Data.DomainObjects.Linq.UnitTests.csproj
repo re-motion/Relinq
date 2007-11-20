@@ -90,6 +90,9 @@
     <Content Include="ParsingTest\ExpressionTrees\simpleQueryWithProjection.JPG" />
     <Content Include="ParsingTest\ExpressionTrees\simpleWhereQuery.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="ParsingTest\ExpressionTrees\ExpressionTree_Grammar.docx" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
