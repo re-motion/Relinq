@@ -101,14 +101,13 @@ namespace Rubicon.Data.DomainObjects.Linq.Visitor
     {
       ArgumentUtility.CheckNotNull ("queryBody", queryBody);
       
-      queryBody.SelectOrGroupClause.Accept (this);
-
-      if (queryBody.OrderByClause != null)      
-        queryBody.OrderByClause.Accept (this);
       foreach (IFromLetWhereClause fromLetWhereClause in queryBody.FromLetWhereClauses)
-      {
-        fromLetWhereClause.Accept(this);
-      }
+        fromLetWhereClause.Accept (this);
+
+      if (queryBody.OrderByClause != null)
+        queryBody.OrderByClause.Accept (this);
+
+      queryBody.SelectOrGroupClause.Accept (this);
     }
 
     #endregion

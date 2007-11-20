@@ -9,10 +9,10 @@ namespace Rubicon.Data.DomainObjects.Linq.Parsing
 {
   public class QueryParser
   {
-    private List<Expression> _fromExpressions = new List<Expression> ();
-    private List<ParameterExpression> _fromIdentifiers = new List<ParameterExpression> ();
-    private List<LambdaExpression> _whereIdentifiers = new List<LambdaExpression> ();
-    private List<LambdaExpression> _projectionExpressions = new List<LambdaExpression> ();
+    private readonly List<Expression> _fromExpressions = new List<Expression> ();
+    private readonly List<ParameterExpression> _fromIdentifiers = new List<ParameterExpression> ();
+    private readonly List<LambdaExpression> _whereExpressions = new List<LambdaExpression> ();
+    private readonly List<LambdaExpression> _projectionExpressions = new List<LambdaExpression> ();
 
     public QueryParser (Expression expressionTreeRoot)
     {
@@ -22,14 +22,21 @@ namespace Rubicon.Data.DomainObjects.Linq.Parsing
 
       SourceExpression = expressionTreeRoot;
 
-      switch (ParserUtility.CheckMethodCallExpression (rootExpression, expressionTreeRoot, "Select"))
+      switch (ParserUtility.CheckMethodCallExpression (rootExpression, expressionTreeRoot, "Select", "Where"))
       {
         case "Select":
           SelectExpressionParser se = new SelectExpressionParser(rootExpression, expressionTreeRoot);
           _fromExpressions.AddRange (se.FromExpressions);
           _fromIdentifiers.AddRange (se.FromIdentifiers);
-          _whereIdentifiers.AddRange (se.WhereExpressions);
+          _whereExpressions.AddRange (se.WhereExpressions);
           _projectionExpressions.AddRange (se.ProjectionExpressions);
+          break;
+        case "Where":
+          WhereExpressionParser we = new WhereExpressionParser (rootExpression, expressionTreeRoot);
+          _fromExpressions.AddRange (we.FromExpressions);
+          _fromIdentifiers.AddRange (we.FromIdentifiers);
+          _whereExpressions.AddRange (we.BoolExpressions);
+          _projectionExpressions.AddRange (we.ProjectionExpressions);
           break;
       }
     }
@@ -41,6 +48,11 @@ namespace Rubicon.Data.DomainObjects.Linq.Parsing
       FromClause fromClause = new FromClause (_fromIdentifiers[0], (IQueryable)((ConstantExpression)_fromExpressions[0]).Value);
       SelectClause selectClause = new SelectClause (_projectionExpressions.ToArray());
       QueryBody queryBody = new QueryBody (selectClause);
+      foreach (LambdaExpression whereExpression in _whereExpressions)
+      {
+        WhereClause whereClause = new WhereClause (whereExpression);
+        queryBody.Add (whereClause);
+      }
       return new QueryExpression (fromClause, queryBody);
     }
   }

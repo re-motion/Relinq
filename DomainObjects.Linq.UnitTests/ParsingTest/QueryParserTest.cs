@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Rubicon.Data.DomainObjects.Linq.Parsing;
@@ -25,13 +26,11 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest
     }
 
     [Test]
-    [ExpectedException (typeof (QueryParserException), ExpectedMessage = "Expected one of 'Select', but found 'Where' at position "
-        + "value(Rubicon.Data.DomainObjects.Linq.QueryProviderImplementation.StandardQueryable`1[Rubicon.Data.DomainObjects.Linq.UnitTests.Parsing."
-        + "Student]).Where(s => (s.Last = \"Garcia\")) in tree value(Rubicon.Data.DomainObjects.Linq.QueryProviderImplementation.StandardQueryable`1"
-        + "[Rubicon.Data.DomainObjects.Linq.UnitTests.Parsing.Student]).Where(s => (s.Last = \"Garcia\")).")]
+    [ExpectedException (typeof (QueryParserException), ExpectedMessage = "Expected one of 'Select, Where', but found 'WriteLine' at position "
+        + "WriteLine() in tree WriteLine().")]
     public void Initialize_FromWrongExpression ()
     {
-      MethodCallExpression expression = ExpressionHelper.CreateSimpleWhereQueryWhereExpression ();
+      MethodCallExpression expression = Expression.Call (typeof (Console), "WriteLine", Type.EmptyTypes);
       new QueryParser (expression);
     }
 

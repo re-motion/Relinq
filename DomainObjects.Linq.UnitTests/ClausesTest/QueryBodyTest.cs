@@ -43,13 +43,10 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ClausesTest
     [Test]
     public void AddIFromLetWhereClause()
     {
-      Expression expression = ExpressionHelper.CreateExpression ();
       ISelectGroupClause iSelectOrGroupClause = ExpressionHelper.CreateSelectClause ();
-
       QueryBody queryBody = new QueryBody (iSelectOrGroupClause);
 
-      IFromLetWhereClause iFromLetWhereCLause = new WhereClause (expression);
-
+      IFromLetWhereClause iFromLetWhereCLause = ExpressionHelper.CreateWhereClause();
       queryBody.Add (iFromLetWhereCLause);
 
       Assert.AreEqual (1, queryBody.FromLetWhereClauseCount);

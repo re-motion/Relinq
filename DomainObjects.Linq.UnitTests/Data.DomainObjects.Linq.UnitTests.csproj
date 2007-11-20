@@ -71,6 +71,7 @@
     <Compile Include="ParsingTest\QueryParserIntegrationTest\SimpleWhereQueryTest.cs" />
     <Compile Include="ParsingTest\QueryParserTest.cs" />
     <Compile Include="ParsingTest\SelectExpressionParserTest.cs" />
+    <Compile Include="ParsingTest\WhereExpressionParserTest.cs" />
     <Compile Include="ParsingTest\Student.cs" />
     <Compile Include="TestQueryGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

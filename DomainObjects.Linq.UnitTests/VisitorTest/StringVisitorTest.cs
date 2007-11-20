@@ -240,7 +240,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.VisitorTest
         repository.CreateMock<FromClause> (ExpressionHelper.CreateParameterExpression(), ExpressionHelper.CreateQuerySource());
 
       WhereClause whereClause1 =
-          repository.CreateMock<WhereClause> (ExpressionHelper.CreateExpression());
+          repository.CreateMock<WhereClause> (ExpressionHelper.CreateLambdaExpression());
 
       QueryBody queryBody = new QueryBody (selectClause1, orderByClause1);
       
@@ -252,10 +252,10 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.VisitorTest
       //expectations
       using(repository.Ordered())
       {
-        selectClause1.Accept(sv);
-        orderByClause1.Accept (sv);
         fromClause1.Accept (sv);
         whereClause1.Accept (sv);
+        orderByClause1.Accept (sv);
+        selectClause1.Accept (sv);
       }
 
       repository.ReplayAll ();

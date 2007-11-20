@@ -36,7 +36,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest
         + "[Rubicon.Data.DomainObjects.Linq.UnitTests.Parsing.Student]).Where(s => (s.Last = \"Garcia\")).")]
     public void Initialize_FromWrongExpression ()
     {
-      MethodCallExpression expression = ExpressionHelper.CreateSimpleWhereQueryWhereExpression();
+      MethodCallExpression expression = ExpressionHelper.CreateSimpleWhereQueryWhereExpression(ExpressionHelper.CreateQuerySource ());
       new SelectExpressionParser (expression, expression);
     }
 
@@ -56,7 +56,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest
       Assert.That (_parser.FromIdentifiers,
           Is.EqualTo (new object[] { ((LambdaExpression)((UnaryExpression)_expression.Arguments[1]).Operand).Parameters[0] }));
       Assert.IsInstanceOfType (typeof (ParameterExpression), _parser.FromIdentifiers[0]);
-      Assert.AreSame ("s", ((ParameterExpression)_parser.FromIdentifiers[0]).Name);
+      Assert.AreEqual ("s", ((ParameterExpression) _parser.FromIdentifiers[0]).Name);
     }
 
     [Test]

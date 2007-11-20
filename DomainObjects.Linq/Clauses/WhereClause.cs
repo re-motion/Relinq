@@ -6,15 +6,15 @@ namespace Rubicon.Data.DomainObjects.Linq.Clauses
 {
   public class WhereClause : IFromLetWhereClause
   {
-    private readonly Expression _boolExpression;
+    private readonly LambdaExpression _boolExpression;
 
-    public WhereClause (Expression boolExpression)
+    public WhereClause (LambdaExpression boolExpression)
     {
       ArgumentUtility.CheckNotNull ("boolExpression", boolExpression);
       _boolExpression = boolExpression;
     }
 
-    public Expression BoolExpression
+    public LambdaExpression BoolExpression
     {
       get { return _boolExpression; }
     }

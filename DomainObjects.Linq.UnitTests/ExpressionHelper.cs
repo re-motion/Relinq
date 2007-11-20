@@ -97,7 +97,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
 
     public static WhereClause CreateWhereClause ()
     {
-      Expression boolExpression = ExpressionHelper.CreateExpression ();
+      LambdaExpression boolExpression = ExpressionHelper.CreateLambdaExpression ();
       return new WhereClause (boolExpression);
     }
 
@@ -120,9 +120,9 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
       return (MethodCallExpression) simpleQuery.Expression;
     }
 
-    public static MethodCallExpression CreateSimpleWhereQueryWhereExpression ()
+    public static MethodCallExpression CreateSimpleWhereQueryWhereExpression (IQueryable<Student> source)
     {
-      IQueryable<Student> simpleWhereQuery = TestQueryGenerator.CreateSimpleWhereQuery (CreateQuerySource ());
+      IQueryable<Student> simpleWhereQuery = TestQueryGenerator.CreateSimpleWhereQuery (source);
       return (MethodCallExpression) simpleWhereQuery.Expression;
     }
 
