@@ -15,7 +15,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ClausesTest
     public void InitializeWithISelectOrGroupClause()
     {
       Expression expression = ExpressionHelper.CreateExpression();
-      ISelectGroupClause iSelectOrGroupClause = new SelectClause (expression);
+      ISelectGroupClause iSelectOrGroupClause = ExpressionHelper.CreateSelectClause();
 
       QueryBody queryBody = new QueryBody (iSelectOrGroupClause);
 
@@ -26,7 +26,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ClausesTest
     public void InitializeWithISelectOrGroupClauseAndOrderByClause()
     {
       Expression expression = ExpressionHelper.CreateExpression ();
-      ISelectGroupClause iSelectOrGroupClause = new SelectClause (expression);
+      ISelectGroupClause iSelectOrGroupClause = ExpressionHelper.CreateSelectClause ();
       
       OrderingClause ordering = new OrderingClause (expression, OrderDirection.Asc);
 
@@ -44,7 +44,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ClausesTest
     public void AddIFromLetWhereClause()
     {
       Expression expression = ExpressionHelper.CreateExpression ();
-      ISelectGroupClause iSelectOrGroupClause = new SelectClause (expression);
+      ISelectGroupClause iSelectOrGroupClause = ExpressionHelper.CreateSelectClause ();
 
       QueryBody queryBody = new QueryBody (iSelectOrGroupClause);
 

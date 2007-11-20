@@ -1,7 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Runtime.InteropServices;
 using Rubicon.Data.DomainObjects.Linq.Clauses;
 using Rubicon.Utilities;
 
@@ -9,56 +9,39 @@ namespace Rubicon.Data.DomainObjects.Linq.Parsing
 {
   public class QueryParser
   {
-    private readonly Expression _expression;
+    private List<Expression> _fromExpressions = new List<Expression> ();
+    private List<ParameterExpression> _fromIdentifiers = new List<ParameterExpression> ();
+    private List<LambdaExpression> _whereIdentifiers = new List<LambdaExpression> ();
+    private List<LambdaExpression> _projectionExpressions = new List<LambdaExpression> ();
 
-    public QueryParser (Expression expression)
+    public QueryParser (Expression expressionTreeRoot)
     {
-      ArgumentUtility.CheckNotNull ("expression", expression);
-      _expression = expression;
+      ArgumentUtility.CheckNotNull ("expressionTreeRoot", expressionTreeRoot);
+      MethodCallExpression rootExpression = ParserUtility.GetTypedExpression<MethodCallExpression> (expressionTreeRoot,
+          "expression tree root", expressionTreeRoot);
+
+      SourceExpression = expressionTreeRoot;
+
+      switch (ParserUtility.CheckMethodCallExpression (rootExpression, expressionTreeRoot, "Select"))
+      {
+        case "Select":
+          SelectExpressionParser se = new SelectExpressionParser(rootExpression, expressionTreeRoot);
+          _fromExpressions.AddRange (se.FromExpressions);
+          _fromIdentifiers.AddRange (se.FromIdentifiers);
+          _whereIdentifiers.AddRange (se.WhereExpressions);
+          _projectionExpressions.AddRange (se.ProjectionExpressions);
+          break;
+      }
     }
+
+    public Expression SourceExpression { get; private set; }
 
     public QueryExpression GetParsedQuery ()
     {
-      MethodCallExpression selectExpression = GetTypedExpression<MethodCallExpression> (_expression, "Select");
-      ConstantExpression querySourceExpression = GetTypedExpression<ConstantExpression> (selectExpression.Arguments[0], "query source");
-      IQueryable querySource = GetTypedExpression<IQueryable> (querySourceExpression.Value, "query source");
-      UnaryExpression selectUnaryExpression = GetTypedExpression<UnaryExpression> (selectExpression.Arguments[1], "select lambda");
-      LambdaExpression selectLambdaExpression = GetTypedExpression<LambdaExpression> (selectUnaryExpression.Operand, "select lambda");
-      if (selectLambdaExpression.Parameters.Count != 1)
-        throw new QueryParserException ("Expected lambda expression with one argument for select clause, found "
-            + selectLambdaExpression.Parameters.Count + " arguments.", selectLambdaExpression, _expression);
-      
-      ParameterExpression fromIdentifier = selectLambdaExpression.Parameters[0];
-      Expression selectBody = selectLambdaExpression.Body;
-
-      FromClause fromClause = new FromClause (fromIdentifier, querySource);
-      SelectClause selectClause = new SelectClause (selectBody);
+      FromClause fromClause = new FromClause (_fromIdentifiers[0], (IQueryable)((ConstantExpression)_fromExpressions[0]).Value);
+      SelectClause selectClause = new SelectClause (_projectionExpressions.ToArray());
       QueryBody queryBody = new QueryBody (selectClause);
       return new QueryExpression (fromClause, queryBody);
     }
-
-    private T GetTypedExpression<T> (object expression, string context)
-    {
-      if (!(expression is T))
-      {
-        string message = string.Format ("Expected {0} for {1}, found {2} ({3}).", typeof (T).Name, context, expression.GetType().Name, expression);
-        throw new QueryParserException (message, expression, _expression);
-      }
-      else
-        return (T) expression;
-    }
-  }
-
-  internal class QueryParserException : Exception
-  {
-    public QueryParserException (string message, object parsedExpression, Expression expressionTree)
-        : base (message)
-    {
-      ParsedExpression = parsedExpression;
-      ExpressionTree = expressionTree;
-    }
-
-    public object ParsedExpression { get; private set; }
-    public object ExpressionTree { get; private set; }
   }
 }

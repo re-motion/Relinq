@@ -5,7 +5,7 @@ using NUnit.Framework;
 using Rubicon.Data.DomainObjects.Linq.Clauses;
 using Rubicon.Data.DomainObjects.Linq.UnitTests.Parsing;
 
-namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.QueryParserTest
+namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.QueryParserIntegrationTest
 {
   [TestFixture]
   public class SimpleQueryWithProjectionTest: QueryTestBase<string>
@@ -33,8 +33,8 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.QueryParserTest
       Assert.IsNotNull (ParsedQuery.QueryBody.SelectOrGroupClause);
       SelectClause clause = ParsedQuery.QueryBody.SelectOrGroupClause as SelectClause;
       Assert.IsNotNull (clause);
-      Assert.IsNotNull (clause.Expression);
-      Assert.IsInstanceOfType (typeof(MemberExpression),clause.Expression,
+      Assert.IsNotNull (clause.ProjectionExpressions);
+      Assert.IsInstanceOfType (typeof(MemberExpression) ,clause.ProjectionExpressions[0].Body,
           "from s in ... select s.First => select expression must be MemberAccess");
     }
   }

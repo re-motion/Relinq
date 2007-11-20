@@ -1,4 +1,5 @@
 using System;
+using System.Linq.Expressions;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Rubicon.Data.DomainObjects.Linq.Clauses;
@@ -69,7 +70,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.VisitorTest
     [Test]
     public void StringVisitorForSelectClause()
     {
-      SelectClause selectClause = new SelectClause(ExpressionHelper.CreateExpression());
+      SelectClause selectClause = ExpressionHelper.CreateSelectClause();
       StringVisitor sv = new StringVisitor();
 
       sv.VisitSelectClause (selectClause);
@@ -230,7 +231,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.VisitorTest
       MockRepository repository = new MockRepository();
 
       SelectClause selectClause1 = 
-        repository.CreateMock<SelectClause> (ExpressionHelper.CreateExpression());
+        repository.CreateMock<SelectClause> (new object[] {new LambdaExpression[] {ExpressionHelper.CreateLambdaExpression()}});
 
       OrderByClause orderByClause1 = 
         repository.CreateMock<OrderByClause> (ExpressionHelper.CreateOrderingClause());
@@ -270,7 +271,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.VisitorTest
       MockRepository repository = new MockRepository ();
 
       SelectClause selectClause1 =
-        repository.CreateMock<SelectClause> (ExpressionHelper.CreateExpression ());
+        repository.CreateMock<SelectClause> (new object[] { new LambdaExpression[] { ExpressionHelper.CreateLambdaExpression () } });
 
       QueryBody queryBody = new QueryBody (selectClause1);
 

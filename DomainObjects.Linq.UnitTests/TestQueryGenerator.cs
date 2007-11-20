@@ -5,7 +5,7 @@ using Rhino.Mocks;
 using Rubicon.Data.DomainObjects.Linq.QueryProviderImplementation;
 using Rubicon.Data.DomainObjects.Linq.UnitTests.Parsing;
 
-namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest
+namespace Rubicon.Data.DomainObjects.Linq.UnitTests
 {
   public static class TestQueryGenerator
   {

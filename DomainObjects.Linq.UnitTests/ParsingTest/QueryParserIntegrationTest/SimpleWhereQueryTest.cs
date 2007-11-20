@@ -5,7 +5,7 @@ using NUnit.Framework;
 using Rubicon.Data.DomainObjects.Linq.Clauses;
 using Rubicon.Data.DomainObjects.Linq.UnitTests.Parsing;
 
-namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.QueryParserTest
+namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.QueryParserIntegrationTest
 {
   [TestFixture][Ignore("TODO: implement parsing of simple where clauses")]
   public class SimpleWhereQueryTest : SimpleQueryTest

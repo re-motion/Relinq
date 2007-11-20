@@ -6,7 +6,7 @@ using Rubicon.Data.DomainObjects.Linq.Clauses;
 using Rubicon.Data.DomainObjects.Linq.Parsing;
 using Rubicon.Data.DomainObjects.Linq.UnitTests.Parsing;
 
-namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.QueryParserTest
+namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.QueryParserIntegrationTest
 {
   public abstract class QueryTestBase<T>
   {

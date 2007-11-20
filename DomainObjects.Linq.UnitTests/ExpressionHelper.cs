@@ -17,6 +17,11 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
       return CreateNewIntArrayExpression();
     }
 
+    public static LambdaExpression CreateLambdaExpression ()
+    {
+      return Expression.Lambda (Expression.Constant (0));
+    }
+
     public static Expression CreateNewIntArrayExpression ()
     {
       return Expression.NewArrayInit (typeof (int));
@@ -45,8 +50,6 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
       
       return new FromClause (id, querySource);
     }
-
-
 
     public static GroupClause CreateGroupClause ()
     {
@@ -79,8 +82,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
 
     public static QueryBody CreateQueryBody()
     {
-      Expression expression = ExpressionHelper.CreateExpression ();
-      ISelectGroupClause iSelectOrGroupClause = new SelectClause (expression);
+      ISelectGroupClause iSelectOrGroupClause = CreateSelectClause();
 
       return new QueryBody (iSelectOrGroupClause);
 
@@ -88,9 +90,9 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
 
     public static SelectClause CreateSelectClause ()
     {
-      Expression expression = ExpressionHelper.CreateExpression ();
+      LambdaExpression expression = ExpressionHelper.CreateLambdaExpression ();
 
-      return new SelectClause (expression);
+      return new SelectClause (new LambdaExpression[] {expression});
     }
 
     public static WhereClause CreateWhereClause ()
@@ -110,6 +112,18 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
       IQueryExecutor executor = repository.CreateMock<IQueryExecutor>();
       // Expect.Call (executor.Execute<IEnumerable<Student>>(null)).IgnoreArguments().Return (CreateStudents());
       return executor;
+    }
+
+    public static MethodCallExpression CreateSimpleQuerySelectExpression (IQueryable<Student> source)
+    {
+      IQueryable<Student> simpleQuery = TestQueryGenerator.CreateSimpleQuery (source);
+      return (MethodCallExpression) simpleQuery.Expression;
+    }
+
+    public static MethodCallExpression CreateSimpleWhereQueryWhereExpression ()
+    {
+      IQueryable<Student> simpleWhereQuery = TestQueryGenerator.CreateSimpleWhereQuery (CreateQuerySource ());
+      return (MethodCallExpression) simpleWhereQuery.Expression;
     }
 
     private static List<Student> CreateStudents ()

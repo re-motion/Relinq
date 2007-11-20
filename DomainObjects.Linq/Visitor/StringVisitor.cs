@@ -1,5 +1,6 @@
 using System.Text;
 using Rubicon.Data.DomainObjects.Linq.Clauses;
+using Rubicon.Text;
 using Rubicon.Utilities;
 
 namespace Rubicon.Data.DomainObjects.Linq.Visitor
@@ -86,7 +87,7 @@ namespace Rubicon.Data.DomainObjects.Linq.Visitor
     public void VisitSelectClause (SelectClause selectClause)
     {
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);
-      _sb.AppendFormat ("select {0}", selectClause.Expression.ToString());
+      _sb.AppendFormat ("select {0}", SeparatedStringBuilder.Build (", ", selectClause.ProjectionExpressions));
     }
 
     public void VisitGroupClause (GroupClause groupClause)

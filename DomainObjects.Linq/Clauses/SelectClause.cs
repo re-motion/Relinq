@@ -7,18 +7,18 @@ namespace Rubicon.Data.DomainObjects.Linq.Clauses
 {
   public class SelectClause : ISelectGroupClause
   {
-    private readonly Expression _expression;
+    private readonly LambdaExpression[] _projectionExpressions;
 
-    public SelectClause (Expression expression)
+    public SelectClause (LambdaExpression[] projectionExpression)
     {
-      ArgumentUtility.CheckNotNull ("expression", expression);
+      ArgumentUtility.CheckNotNullOrEmpty ("projectionExpression", projectionExpression);
 
-      _expression = expression;
+      _projectionExpressions = projectionExpression;
     }
 
-    public Expression Expression
+    public LambdaExpression[] ProjectionExpressions
     {
-      get { return _expression; }
+      get { return _projectionExpressions; }
     }
 
     public virtual void Accept (IQueryVisitor visitor)
