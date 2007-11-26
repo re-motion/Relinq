@@ -1,34 +1,23 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using Rubicon.Utilities;
 
 namespace Rubicon.Data.DomainObjects.Linq.Clauses
 {
-  public class FromClause : IFromLetWhereClause
+  public abstract class FromClauseBase : IQueryElement
   {
     private readonly ParameterExpression _identifier;
-    private readonly IQueryable _querySource;
     private readonly List<JoinClause> _joinClauses = new List<JoinClause>();
 
-    public FromClause (ParameterExpression id, IQueryable querySource)
+    public FromClauseBase (ParameterExpression identifier)
     {
-      ArgumentUtility.CheckNotNull ("id", id);
-      ArgumentUtility.CheckNotNull ("querySource", querySource);
-
-      _identifier = id;
-      _querySource = querySource;
+      ArgumentUtility.CheckNotNull ("identifier", identifier);
+      _identifier = identifier;
     }
 
     public ParameterExpression Identifier
     {
       get { return _identifier; }
-    }
-
-    public IQueryable QuerySource
-    {
-      get { return _querySource; }
     }
 
     public IEnumerable<JoinClause> JoinClauses
@@ -47,12 +36,7 @@ namespace Rubicon.Data.DomainObjects.Linq.Clauses
       _joinClauses.Add (joinClause);
     }
 
-    public void Accept (IQueryVisitor visitor)
-    {
-      ArgumentUtility.CheckNotNull ("visitor", visitor);
-      visitor.VisitFromClause (this);
-    }
 
-
+    public abstract void Accept (IQueryVisitor visitor);
   }
 }

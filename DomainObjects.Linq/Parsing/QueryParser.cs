@@ -22,7 +22,7 @@ namespace Rubicon.Data.DomainObjects.Linq.Parsing
 
       SourceExpression = expressionTreeRoot;
 
-      switch (ParserUtility.CheckMethodCallExpression (rootExpression, expressionTreeRoot, "Select", "Where"))
+      switch (ParserUtility.CheckMethodCallExpression (rootExpression, expressionTreeRoot, "Select", "Where","SelectMany"))
       {
         case "Select":
           SelectExpressionParser se = new SelectExpressionParser(rootExpression, expressionTreeRoot);
@@ -38,6 +38,12 @@ namespace Rubicon.Data.DomainObjects.Linq.Parsing
           _whereExpressions.AddRange (we.BoolExpressions);
           _projectionExpressions.AddRange (we.ProjectionExpressions);
           break;
+        case "SelectMany":
+          SelectManyExpressionParser sm = new SelectManyExpressionParser (rootExpression, expressionTreeRoot);
+          _fromExpressions.AddRange (sm.FromExpressions);
+          _fromIdentifiers.AddRange (sm.FromIdentifiers);
+          _projectionExpressions.AddRange (sm.ProjectionExpressions);
+          break;
       }
     }
 
@@ -45,9 +51,16 @@ namespace Rubicon.Data.DomainObjects.Linq.Parsing
 
     public QueryExpression GetParsedQuery ()
     {
-      FromClause fromClause = new FromClause (_fromIdentifiers[0], (IQueryable)((ConstantExpression)_fromExpressions[0]).Value);
+      MainFromClause fromClause = new MainFromClause (_fromIdentifiers[0], (IQueryable)((ConstantExpression)_fromExpressions[0]).Value);
       SelectClause selectClause = new SelectClause (_projectionExpressions.ToArray());
       QueryBody queryBody = new QueryBody (selectClause);
+
+      for (int i = 1; i < _fromExpressions.Count; i++)
+      {
+        AdditionalFromClause additionalFromClause = new AdditionalFromClause (_fromIdentifiers[i], _fromExpressions[i]);
+        queryBody.Add (additionalFromClause);
+      }
+
       foreach (LambdaExpression whereExpression in _whereExpressions)
       {
         WhereClause whereClause = new WhereClause (whereExpression);

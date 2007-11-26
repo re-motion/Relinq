@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.20706</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{DD9AA076-BE37-4A42-BA9E-C35ECC6955C9}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -49,6 +49,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Clauses\AdditionalFromClause.cs" />
+    <Compile Include="Clauses\FromClauseBase.cs" />
     <Compile Include="Clauses\GroupClause.cs" />
     <Compile Include="Clauses\IFromLetWhereClause.cs" />
     <Compile Include="IQueryElement.cs" />
@@ -58,13 +60,14 @@
     <Compile Include="Clauses\LetClause.cs" />
     <Compile Include="Clauses\OrderByClause.cs" />
     <Compile Include="Clauses\OrderingClause.cs" />
+    <Compile Include="Parsing\SelectManyExpressionParser.cs" />
     <Compile Include="Parsing\ParserUtility.cs" />
     <Compile Include="Parsing\QueryParser.cs" />
     <Compile Include="Parsing\QueryParserException.cs" />
     <Compile Include="Parsing\SelectExpressionParser.cs" />
     <Compile Include="Parsing\WhereExpressionParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Clauses\FromClause.cs" />
+    <Compile Include="Clauses\MainFromClause.cs" />
     <Compile Include="Clauses\QueryBody.cs" />
     <Compile Include="QueryExpression.cs" />
     <Compile Include="Clauses\SelectClause.cs" />

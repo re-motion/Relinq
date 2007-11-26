@@ -8,10 +8,10 @@ namespace Rubicon.Data.DomainObjects.Linq
 {
   public class QueryExpression : IQueryElement
   {
-    private readonly FromClause _fromClause;
+    private readonly MainFromClause _fromClause;
     private readonly QueryBody _queryBody;
 
-    public QueryExpression (FromClause from, QueryBody queryBody)
+    public QueryExpression (MainFromClause from, QueryBody queryBody)
     {
       ArgumentUtility.CheckNotNull ("from", from);
       ArgumentUtility.CheckNotNull ("queryBody", queryBody);
@@ -20,7 +20,7 @@ namespace Rubicon.Data.DomainObjects.Linq
       _queryBody = queryBody;
     }
 
-    public FromClause FromClause
+    public MainFromClause FromClause
     {
       get { return _fromClause; }
     }

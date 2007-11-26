@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using Rubicon.Data.DomainObjects.Linq.Clauses;
 using Rubicon.Text;
@@ -25,10 +26,21 @@ namespace Rubicon.Data.DomainObjects.Linq.Visitor
       
     }
 
-    public void VisitFromClause (FromClause fromClause)
+    public void VisitMainFromClause (MainFromClause fromClause)
     {
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
       _sb.AppendFormat ("from {0} {1} in {2} ", fromClause.Identifier.Type, fromClause.Identifier.Name, fromClause.QuerySource);
+
+      foreach (JoinClause jc in fromClause.JoinClauses)
+      {
+        jc.Accept (this);
+      }
+    }
+
+    public void VisitAdditionalFromClause (AdditionalFromClause fromClause)
+    {
+      ArgumentUtility.CheckNotNull ("fromClause", fromClause);
+      _sb.AppendFormat ("from {0} {1} in {2} ", fromClause.Identifier.Type, fromClause.Identifier.Name, fromClause.Expression);
 
       foreach (JoinClause jc in fromClause.JoinClauses)
       {
@@ -116,5 +128,7 @@ namespace Rubicon.Data.DomainObjects.Linq.Visitor
     {
       return _sb.ToString();
     }
+
+    
   }
 }

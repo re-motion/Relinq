@@ -13,7 +13,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void Initialize_WithFromClauseAndBody ()
     {
-      FromClause fromClause = ExpressionHelper.CreateFromClause();
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause();
       QueryBody queryBody = ExpressionHelper.CreateQueryBody();
       QueryExpression model = new QueryExpression (fromClause, queryBody);
       Assert.AreSame (fromClause, model.FromClause);
@@ -31,20 +31,20 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     [ExpectedException (typeof (ArgumentNullException))]
     public void Initialization_ThrowsOnNullQueryBody ()
     {
-      new QueryExpression (ExpressionHelper.CreateFromClause(), null);
+      new QueryExpression (ExpressionHelper.CreateMainFromClause(), null);
     }
 
     [Test]
     public void QueryExpression_ImplementsIQueryElement()
     {
-      QueryExpression instance = new QueryExpression (ExpressionHelper.CreateFromClause (), ExpressionHelper.CreateQueryBody ());
+      QueryExpression instance = new QueryExpression (ExpressionHelper.CreateMainFromClause (), ExpressionHelper.CreateQueryBody ());
       Assert.IsInstanceOfType (typeof (IQueryElement), instance);
     }
 
     [Test]
     public void Accept()
     {
-      QueryExpression instance = new QueryExpression (ExpressionHelper.CreateFromClause(), ExpressionHelper.CreateQueryBody());
+      QueryExpression instance = new QueryExpression (ExpressionHelper.CreateMainFromClause(), ExpressionHelper.CreateQueryBody());
 
       MockRepository repository = new MockRepository ();
       IQueryVisitor testVisitor = repository.CreateMock<IQueryVisitor> ();
@@ -62,7 +62,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void Override_ToString()
     {
-      QueryExpression queryExpression = new QueryExpression (ExpressionHelper.CreateFromClause (), ExpressionHelper.CreateQueryBody ());
+      QueryExpression queryExpression = new QueryExpression (ExpressionHelper.CreateMainFromClause (), ExpressionHelper.CreateQueryBody ());
 
       StringVisitor sv = new StringVisitor();
 

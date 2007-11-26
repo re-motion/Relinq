@@ -13,13 +13,13 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.VisitorTest
   public class StringVisitorTest
   {
     [Test]
-    public void StringVisitorForSimpleFromClause ()
+    public void StringVisitorForMainFromClause ()
     {
-      FromClause fromClause = ExpressionHelper.CreateFromClause();
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause();
 
       StringVisitor sv = new StringVisitor();
 
-      sv.VisitFromClause (fromClause);
+      sv.VisitMainFromClause (fromClause);
 
       Assert.That (sv.ToString(), Text.Contains ("from"));
     }
@@ -27,7 +27,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.VisitorTest
     [Test]
     public void StringVisitorForFromClauseWithJoins ()
     {
-      FromClause fromClause = ExpressionHelper.CreateFromClause();
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause();
 
       MockRepository repository = new MockRepository();
       JoinClause joinClause1 = repository.CreateMock<JoinClause> (ExpressionHelper.CreateParameterExpression(),
@@ -49,7 +49,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.VisitorTest
 
       repository.ReplayAll();
 
-      sv.VisitFromClause (fromClause);
+      sv.VisitMainFromClause (fromClause);
 
       repository.VerifyAll();
     }
@@ -236,8 +236,8 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.VisitorTest
       OrderByClause orderByClause1 = 
         repository.CreateMock<OrderByClause> (ExpressionHelper.CreateOrderingClause());
 
-      FromClause fromClause1 = 
-        repository.CreateMock<FromClause> (ExpressionHelper.CreateParameterExpression(), ExpressionHelper.CreateQuerySource());
+      AdditionalFromClause fromClause1 = 
+        repository.CreateMock<AdditionalFromClause> (ExpressionHelper.CreateParameterExpression(), ExpressionHelper.CreateExpression());
 
       WhereClause whereClause1 =
           repository.CreateMock<WhereClause> (ExpressionHelper.CreateLambdaExpression());
@@ -293,7 +293,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.VisitorTest
     {
       MockRepository repository = new MockRepository();
 
-      FromClause fromClause = ExpressionHelper.CreateFromClause();
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause();
       QueryBody queryBody = new QueryBody (ExpressionHelper.CreateSelectClause(), ExpressionHelper.CreateOrderByClause());
 
 
@@ -312,6 +312,18 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.VisitorTest
       sv.VisitQueryExpression (queryExpression);
       repository.VerifyAll();
 
+    }
+
+    [Test]
+    public void StringVisitorForAdditionalFromClauses()
+    {
+      AdditionalFromClause fromClause = ExpressionHelper.CreateAdditionalFromClause ();
+
+      StringVisitor sv = new StringVisitor ();
+
+      sv.VisitAdditionalFromClause (fromClause);
+
+      Assert.That (sv.ToString (), Text.Contains ("from"));
     }
 
 

@@ -5,7 +5,8 @@ namespace Rubicon.Data.DomainObjects.Linq
   public interface IQueryVisitor
   {
     void VisitQueryExpression (QueryExpression queryExpression);
-    void VisitFromClause (FromClause fromClause);
+    void VisitMainFromClause (MainFromClause fromClause);
+    void VisitAdditionalFromClause (AdditionalFromClause fromClause);
     void VisitJoinClause (JoinClause joinClause);
     void VisitLetClause (LetClause letClause);
     void VisitWhereClause (WhereClause whereClause);

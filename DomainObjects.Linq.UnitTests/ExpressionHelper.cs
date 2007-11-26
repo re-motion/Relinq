@@ -42,13 +42,13 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
       return new JoinClause (identifier, inExpression, onExpression, equalityExpression);
     }
 
-    public static FromClause CreateFromClause ()
+    public static MainFromClause CreateMainFromClause ()
     {
       ParameterExpression id = ExpressionHelper.CreateParameterExpression ();
       IQueryable querySource = ExpressionHelper.CreateQuerySource ();
       
       
-      return new FromClause (id, querySource);
+      return new MainFromClause (id, querySource);
     }
 
     public static GroupClause CreateGroupClause ()
@@ -132,6 +132,11 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
         new Student {First="Michael", Last="Tucker", ID=122, Scores= new List<int> {94, 92, 91, 91} }
       };
       return students;
+    }
+
+    public static AdditionalFromClause CreateAdditionalFromClause ()
+    {
+      return new AdditionalFromClause (CreateParameterExpression(), CreateExpression());
     }
   }
 }

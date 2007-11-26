@@ -37,7 +37,10 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest
     }
 
 
-    
+    public static  IQueryable<Student> CreateSimpleSelectManyQuery (IQueryable<Student> source1,IQueryable<Student> source2)
+    {
+      return from s1 in source1 from s2 in source2 select s1;
+    }
 
     public static MethodCallExpression CreateSimpleQuery_SelectExpression (IQueryable<Student> source)
     {
@@ -66,6 +69,12 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest
     public static MethodCallExpression CreateSelectWhereQuery_SelectExpression (IQueryable<Student> source)
     {
       IQueryable<string> query = CreateSelectWhereQuery (source);
+      return (MethodCallExpression) query.Expression;
+    }
+
+    public static MethodCallExpression CreateSimpleSelectMany_SelectManyExpression (IQueryable<Student> source1,IQueryable<Student> source2)
+    {
+      IQueryable<Student> query = CreateSimpleSelectManyQuery (source1, source2);
       return (MethodCallExpression) query.Expression;
     }
   }

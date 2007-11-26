@@ -26,7 +26,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest
     }
 
     [Test]
-    [ExpectedException (typeof (QueryParserException), ExpectedMessage = "Expected one of 'Select, Where', but found 'WriteLine' at position "
+    [ExpectedException (typeof (QueryParserException), ExpectedMessage = "Expected one of 'Select, Where, SelectMany', but found 'WriteLine' at position "
         + "WriteLine() in tree WriteLine().")]
     public void Initialize_FromWrongExpression ()
     {
