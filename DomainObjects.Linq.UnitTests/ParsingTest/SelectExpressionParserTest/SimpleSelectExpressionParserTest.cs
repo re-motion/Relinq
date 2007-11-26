@@ -6,10 +6,10 @@ using Rubicon.Data.DomainObjects.Linq.Parsing;
 using NUnit.Framework.SyntaxHelpers;
 using Rubicon.Data.DomainObjects.Linq.UnitTests.Parsing;
 
-namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest
+namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.SelectExpressionParserTest
 {
   [TestFixture]
-  public class SelectExpressionParserTest
+  public class SimpleSelectExpressionParserTest
   {
     private IQueryable<Student> _querySource;
     private MethodCallExpression _expression;
@@ -19,26 +19,11 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest
     public void SetUp()
     {
       _querySource = ExpressionHelper.CreateQuerySource();
-      _expression = TestQueryGenerator.CreateSimpleQuerySelectExpression (_querySource);
+      _expression = TestQueryGenerator.CreateSimpleQuery_SelectExpression (_querySource);
       _parser = new SelectExpressionParser (_expression, _expression);
     }
 
-    [Test]
-    public void Initialize ()
-    {
-      Assert.AreSame (_expression, _parser.SourceExpression);
-    }
-
-    [Test]
-    [ExpectedException (typeof (QueryParserException), ExpectedMessage = "Expected one of 'Select', but found 'Where' at position "
-        + "value(Rubicon.Data.DomainObjects.Linq.QueryProviderImplementation.StandardQueryable`1[Rubicon.Data.DomainObjects.Linq.UnitTests.Parsing."
-        + "Student]).Where(s => (s.Last = \"Garcia\")) in tree value(Rubicon.Data.DomainObjects.Linq.QueryProviderImplementation.StandardQueryable`1"
-        + "[Rubicon.Data.DomainObjects.Linq.UnitTests.Parsing.Student]).Where(s => (s.Last = \"Garcia\")).")]
-    public void Initialize_FromWrongExpression ()
-    {
-      MethodCallExpression expression = TestQueryGenerator.CreateSimpleWhereQueryWhereExpression(ExpressionHelper.CreateQuerySource ());
-      new SelectExpressionParser (expression, expression);
-    }
+    
 
     [Test]
     public void ParsesFromExpressions()
@@ -54,7 +39,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest
     {
       Assert.IsNotNull (_parser.FromIdentifiers);
       Assert.That (_parser.FromIdentifiers,
-          Is.EqualTo (new object[] { ((LambdaExpression)((UnaryExpression)_expression.Arguments[1]).Operand).Parameters[0] }));
+                   Is.EqualTo (new object[] { ((LambdaExpression)((UnaryExpression)_expression.Arguments[1]).Operand).Parameters[0] }));
       Assert.IsInstanceOfType (typeof (ParameterExpression), _parser.FromIdentifiers[0]);
       Assert.AreEqual ("s", ((ParameterExpression) _parser.FromIdentifiers[0]).Name);
     }

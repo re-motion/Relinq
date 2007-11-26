@@ -19,8 +19,8 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.WhereExpressionP
     public void SetUp ()
     {
       _querySource = ExpressionHelper.CreateQuerySource ();
-      _expression = TestQueryGenerator.CreateMultiWhereQueryWhereExpression (_querySource);
-      _parser = new WhereExpressionParser (_expression, _expression);
+      _expression = TestQueryGenerator.CreateMultiWhereQuery_WhereExpression (_querySource);
+      _parser = new WhereExpressionParser (_expression, _expression, true);
     }
 
     [Test]
@@ -68,5 +68,12 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.WhereExpressionP
       Assert.AreEqual ("s", ((ParameterExpression) _parser.ProjectionExpressions[0].Body).Name);
     }
 
+    [Test]
+    public void ParsesProjectionExpressions_NotTopLevel ()
+    {
+      WhereExpressionParser parser = new WhereExpressionParser (_expression, _expression, false);
+      Assert.IsNotNull (parser.ProjectionExpressions);
+      Assert.AreEqual (0, parser.ProjectionExpressions.Count);
+    }
   }
 }

@@ -32,7 +32,7 @@ namespace Rubicon.Data.DomainObjects.Linq.Parsing
           _projectionExpressions.AddRange (se.ProjectionExpressions);
           break;
         case "Where":
-          WhereExpressionParser we = new WhereExpressionParser (rootExpression, expressionTreeRoot);
+          WhereExpressionParser we = new WhereExpressionParser (rootExpression, expressionTreeRoot, true);
           _fromExpressions.AddRange (we.FromExpressions);
           _fromIdentifiers.AddRange (we.FromIdentifiers);
           _whereExpressions.AddRange (we.BoolExpressions);

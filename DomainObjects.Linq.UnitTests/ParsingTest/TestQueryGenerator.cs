@@ -21,27 +21,52 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest
       return from s in source where s.Last == "Garcia" select s;
     }
 
+    public static IQueryable<Student> CreateMultiFromWhereQuery (IQueryable<Student> source1,IQueryable<Student> source2)
+    {
+      return from s1 in source1 from s2 in source2 where s1.Last == "Garcia" select s1;
+    }
+
     public static IQueryable<Student> CreateMultiWhereQuery (IQueryable<Student> source)
     {
       return from s in source where s.Last == "Garcia" where s.First == "Hugo" where s.ID > 100 select s;
     }
 
-    public static MethodCallExpression CreateSimpleQuerySelectExpression (IQueryable<Student> source)
+    public static IQueryable<string> CreateSelectWhereQuery (IQueryable<Student> source)
     {
-      IQueryable<Student> simpleQuery = CreateSimpleQuery (source);
-      return (MethodCallExpression) simpleQuery.Expression;
+      return from s in source where s.Last == "Garcia" select s.First;
     }
 
-    public static MethodCallExpression CreateSimpleWhereQueryWhereExpression (IQueryable<Student> source)
+
+    
+
+    public static MethodCallExpression CreateSimpleQuery_SelectExpression (IQueryable<Student> source)
     {
-      IQueryable<Student> simpleWhereQuery = CreateSimpleWhereQuery (source);
-      return (MethodCallExpression) simpleWhereQuery.Expression;
+      IQueryable<Student> query = CreateSimpleQuery (source);
+      return (MethodCallExpression) query.Expression;
     }
 
-    public static MethodCallExpression CreateMultiWhereQueryWhereExpression (IQueryable<Student> source)
+    public static MethodCallExpression CreateSimpleWhereQuery_WhereExpression (IQueryable<Student> source)
     {
-      IQueryable<Student> multiWhereQuery = CreateMultiWhereQuery (source);
-      return (MethodCallExpression) multiWhereQuery.Expression;
+      IQueryable<Student> query = CreateSimpleWhereQuery (source);
+      return (MethodCallExpression) query.Expression;
+    }
+
+    public static MethodCallExpression CreateMultiWhereQuery_WhereExpression (IQueryable<Student> source)
+    {
+      IQueryable<Student> query = CreateMultiWhereQuery (source);
+      return (MethodCallExpression) query.Expression;
+    }
+
+    public static MethodCallExpression CreateMultiFromWhere_WhereExpression(IQueryable<Student> source1,IQueryable<Student> source2)
+    {
+      IQueryable<Student> query = CreateMultiFromWhereQuery (source1, source2);
+      return (MethodCallExpression) query.Expression;
+    }
+
+    public static MethodCallExpression CreateSelectWhereQuery_SelectExpression (IQueryable<Student> source)
+    {
+      IQueryable<string> query = CreateSelectWhereQuery (source);
+      return (MethodCallExpression) query.Expression;
     }
   }
 }

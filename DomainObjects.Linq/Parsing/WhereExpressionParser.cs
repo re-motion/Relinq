@@ -7,15 +7,18 @@ namespace Rubicon.Data.DomainObjects.Linq.Parsing
 {
   public class WhereExpressionParser
   {
+    private readonly bool _isTopLevel;
     private readonly List<Expression> _fromExpressions = new List<Expression> ();
     private readonly List<ParameterExpression> _fromIdentifiers = new List<ParameterExpression> ();
     private readonly List<LambdaExpression> _boolExpressions = new List<LambdaExpression> ();
     private readonly List<LambdaExpression> _projectionExpressions = new List<LambdaExpression> ();
 
-    public WhereExpressionParser (MethodCallExpression whereExpression, Expression expressionTreeRoot)
+    public WhereExpressionParser (MethodCallExpression whereExpression, Expression expressionTreeRoot, bool isTopLevel)
     {
       ArgumentUtility.CheckNotNull ("whereExpression", whereExpression);
       ArgumentUtility.CheckNotNull ("expressionTreeRoot", expressionTreeRoot);
+
+      _isTopLevel = isTopLevel;
 
       ParserUtility.CheckMethodCallExpression (whereExpression, expressionTreeRoot, "Where");
 
@@ -53,14 +56,15 @@ namespace Rubicon.Data.DomainObjects.Linq.Parsing
       _fromExpressions.Add (ce);
       _fromIdentifiers.Add (ueLambda.Parameters[0]);
       _boolExpressions.Add (ueLambda);
-      _projectionExpressions.Add (Expression.Lambda (ueLambda.Parameters[0]));
+      if (_isTopLevel)
+        _projectionExpressions.Add (Expression.Lambda (ueLambda.Parameters[0]));
     }
 
     private void ParseRecursiveWhere (Expression expressionTreeRoot)
     {
       MethodCallExpression me = ParserUtility.GetTypedExpression<MethodCallExpression> (SourceExpression.Arguments[0],
                                                                                     "first argument of Where expression", expressionTreeRoot);
-      WhereExpressionParser we = new WhereExpressionParser (me, expressionTreeRoot);
+      WhereExpressionParser we = new WhereExpressionParser (me, expressionTreeRoot, _isTopLevel);
 
       UnaryExpression ue = ParserUtility.GetTypedExpression<UnaryExpression> (SourceExpression.Arguments[1],
                                                                               "second argument of Where expression", expressionTreeRoot);

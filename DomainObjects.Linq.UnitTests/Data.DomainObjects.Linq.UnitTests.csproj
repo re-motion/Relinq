@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.20706</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{BAACFB24-6EF8-4EA7-B385-3F8DAF085A4E}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -65,13 +65,16 @@
     <Compile Include="ClausesTest\OrderByClauseTest.cs" />
     <Compile Include="ClausesTest\OrderingClauseTest.cs" />
     <Compile Include="ParsingTest\ParserUtilityTest.cs" />
+    <Compile Include="ParsingTest\QueryParserIntegrationTest\SelectWhereQueryTest.cs" />
     <Compile Include="ParsingTest\QueryParserIntegrationTest\MultiWhereQueryTest.cs" />
     <Compile Include="ParsingTest\QueryParserIntegrationTest\QueryTestBase.cs" />
     <Compile Include="ParsingTest\QueryParserIntegrationTest\SimpleQueryTest.cs" />
     <Compile Include="ParsingTest\QueryParserIntegrationTest\SimpleQueryWithProjectionTest.cs" />
     <Compile Include="ParsingTest\QueryParserIntegrationTest\SimpleWhereQueryTest.cs" />
     <Compile Include="ParsingTest\QueryParserTest.cs" />
-    <Compile Include="ParsingTest\SelectExpressionParserTest.cs" />
+    <Compile Include="ParsingTest\SelectExpressionParserTest\GeneralSelectExpressionParserTest.cs" />
+    <Compile Include="ParsingTest\SelectExpressionParserTest\SimpleSelectExpressionParserTest.cs" />
+    <Compile Include="ParsingTest\SelectExpressionParserTest\WhereSelectExpressionParserTest.cs" />
     <Compile Include="ParsingTest\WhereExpressionParserTest\GeneralWhereExpressionParserTest.cs" />
     <Compile Include="ParsingTest\WhereExpressionParserTest\RecursiveWhereExpressionParserTest.cs" />
     <Compile Include="ParsingTest\WhereExpressionParserTest\SimpleWhereExpressionParserTest.cs" />
@@ -93,7 +96,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ParsingTest\ExpressionTrees\multiFromWhereQuery.jpg" />
     <Content Include="ParsingTest\ExpressionTrees\multiWhereQuery.jpg" />
+    <Content Include="ParsingTest\ExpressionTrees\selectWhereQuery.jpg" />
     <Content Include="ParsingTest\ExpressionTrees\simpleQuery.JPG" />
     <Content Include="ParsingTest\ExpressionTrees\simpleQueryWithProjection.JPG" />
     <Content Include="ParsingTest\ExpressionTrees\simpleWhereQuery.jpg" />
