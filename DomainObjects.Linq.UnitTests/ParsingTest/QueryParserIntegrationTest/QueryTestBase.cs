@@ -11,6 +11,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.QueryParserInteg
   public abstract class QueryTestBase<T>
   {
     public Expression SourceExpression { get; private set; }
+    public ExpressionTreeNavigator SourceExpressionNavigator { get; private set; }
     public QueryExpression ParsedQuery { get; private set; }
     public IQueryable<Student> QuerySource { get; private set; }
 
@@ -19,6 +20,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.QueryParserInteg
     {
       QuerySource = ExpressionHelper.CreateQuerySource();
       SourceExpression = CreateQuery().Expression;
+      SourceExpressionNavigator = new ExpressionTreeNavigator (SourceExpression);
       QueryParser parser = new QueryParser (SourceExpression);
       ParsedQuery = parser.GetParsedQuery ();
     }

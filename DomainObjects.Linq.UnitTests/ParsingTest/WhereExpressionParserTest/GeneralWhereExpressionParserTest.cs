@@ -36,6 +36,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.WhereExpressionP
     public void Initialize_FromWrongExpressionInWhereExpression ()
     {
       Expression nonCallExpression = Expression.Convert (Expression.Constant (null), typeof (IQueryable<Student>));
+      // Get method Queryable.Where which has two arguments (rather than three)
       MethodInfo method = (from m in typeof (Queryable).GetMethods () where m.Name == "Where" && m.GetParameters ().Length == 2 select m).First();
       method = method.MakeGenericMethod (typeof (Student));
       MethodCallExpression whereExpression = Expression.Call (method, nonCallExpression, Expression.Lambda (Expression.Constant(true), Expression.Parameter(typeof (Student), "student")));

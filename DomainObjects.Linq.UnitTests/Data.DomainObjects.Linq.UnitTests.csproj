@@ -64,6 +64,7 @@
     <Compile Include="ClausesTest\LetClauseTest.cs" />
     <Compile Include="ClausesTest\OrderByClauseTest.cs" />
     <Compile Include="ClausesTest\OrderingClauseTest.cs" />
+    <Compile Include="ExpressionTreeNavigator.cs" />
     <Compile Include="ParsingTest\ParserUtilityTest.cs" />
     <Compile Include="ParsingTest\QueryParserIntegrationTest\SelectWhereQueryTest.cs" />
     <Compile Include="ParsingTest\QueryParserIntegrationTest\MultiWhereQueryTest.cs" />

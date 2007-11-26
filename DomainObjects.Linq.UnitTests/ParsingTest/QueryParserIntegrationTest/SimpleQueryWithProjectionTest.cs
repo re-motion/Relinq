@@ -34,7 +34,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.QueryParserInteg
       SelectClause clause = ParsedQuery.QueryBody.SelectOrGroupClause as SelectClause;
       Assert.IsNotNull (clause);
       Assert.IsNotNull (clause.ProjectionExpressions);
-      Assert.IsInstanceOfType (typeof(MemberExpression) ,clause.ProjectionExpressions[0].Body,
+      Assert.IsInstanceOfType (typeof(MemberExpression), clause.ProjectionExpressions[0].Body,
           "from s in ... select s.First => select expression must be MemberAccess");
     }
   }

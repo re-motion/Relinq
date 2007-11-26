@@ -21,9 +21,11 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.QueryParserInteg
       Assert.AreEqual (1, ParsedQuery.QueryBody.FromLetWhereClauseCount);
       WhereClause whereClause = ParsedQuery.QueryBody.FromLetWhereClauses.First() as WhereClause;
       Assert.IsNotNull (whereClause);
+
+      ExpressionTreeNavigator navigator = new ExpressionTreeNavigator (whereClause.BoolExpression);
       Assert.IsNotNull (whereClause.BoolExpression);
       Assert.IsInstanceOfType (typeof (LambdaExpression), whereClause.BoolExpression);
-      Assert.AreSame (ParsedQuery.FromClause.Identifier, ((LambdaExpression) whereClause.BoolExpression).Parameters[0]);
+      Assert.AreSame (ParsedQuery.FromClause.Identifier, navigator.Parameters[0].Expression);
 
     }
   }
