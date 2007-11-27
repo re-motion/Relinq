@@ -9,9 +9,7 @@ namespace Rubicon.Data.DomainObjects.Linq.Parsing
   public class WhereExpressionParser
   {
     private readonly bool _isTopLevel;
-    private readonly List<Expression> _fromExpressions = new List<Expression>();
-    private readonly List<ParameterExpression> _fromIdentifiers = new List<ParameterExpression>();
-    private readonly List<LambdaExpression> _boolExpressions = new List<LambdaExpression>();
+    private readonly List<FromLetWhereExpressionBase> _fromLetWhereExpressions = new List<FromLetWhereExpressionBase> ();
     private readonly List<LambdaExpression> _projectionExpressions = new List<LambdaExpression>();
 
     public WhereExpressionParser (MethodCallExpression whereExpression, Expression expressionTreeRoot, bool isTopLevel)
@@ -31,9 +29,9 @@ namespace Rubicon.Data.DomainObjects.Linq.Parsing
           ParseSimpleWhere (expressionTreeRoot);
           break;
         case ExpressionType.Call:
-          switch (
-              ParserUtility.CheckMethodCallExpression ((MethodCallExpression) whereExpression.Arguments[0], expressionTreeRoot, "Where", "SelectMany")
-              )
+          string methodName =
+              ParserUtility.CheckMethodCallExpression ((MethodCallExpression) whereExpression.Arguments[0], expressionTreeRoot, "Where", "SelectMany");
+          switch (methodName)
           {
             case "Where":
               ParseRecursiveWhere (expressionTreeRoot);
@@ -61,10 +59,8 @@ namespace Rubicon.Data.DomainObjects.Linq.Parsing
       LambdaExpression ueLambda = ParserUtility.GetTypedExpression<LambdaExpression> (unaryExpression.Operand,
           "second argument of Where expression", expressionTreeRoot);
 
-      _fromExpressions.AddRange (selectManyExpressionParser.FromExpressions);
-      _fromIdentifiers.AddRange (selectManyExpressionParser.FromIdentifiers);
-      _boolExpressions.AddRange (selectManyExpressionParser.WhereExpressions);
-      _boolExpressions.Add (ueLambda);
+      _fromLetWhereExpressions.AddRange (selectManyExpressionParser.FromLetWhereExpressions);
+      _fromLetWhereExpressions.Add (new WhereExpression (ueLambda));
       _projectionExpressions.AddRange (selectManyExpressionParser.ProjectionExpressions);
     }
 
@@ -78,9 +74,8 @@ namespace Rubicon.Data.DomainObjects.Linq.Parsing
       LambdaExpression ueLambda = ParserUtility.GetTypedExpression<LambdaExpression> (unaryExpression.Operand,
           "second argument of Where expression", expressionTreeRoot);
 
-      _fromExpressions.Add (constantExpression);
-      _fromIdentifiers.Add (ueLambda.Parameters[0]);
-      _boolExpressions.Add (ueLambda);
+      _fromLetWhereExpressions.Add (new FromExpression (constantExpression, ueLambda.Parameters[0]));
+      _fromLetWhereExpressions.Add (new WhereExpression (ueLambda));
       if (_isTopLevel)
         _projectionExpressions.Add (Expression.Lambda (ueLambda.Parameters[0]));
     }
@@ -96,10 +91,8 @@ namespace Rubicon.Data.DomainObjects.Linq.Parsing
       LambdaExpression ueLambda = ParserUtility.GetTypedExpression<LambdaExpression> (unaryExpression.Operand,
           "second argument of Where expression", expressionTreeRoot);
 
-      _fromExpressions.AddRange (whereExpressionParser.FromExpressions);
-      _fromIdentifiers.AddRange (whereExpressionParser.FromIdentifiers);
-      _boolExpressions.AddRange (whereExpressionParser.BoolExpressions);
-      _boolExpressions.Add (ueLambda);
+      _fromLetWhereExpressions.AddRange (whereExpressionParser.FromLetWhereExpressions);
+      _fromLetWhereExpressions.Add (new WhereExpression (ueLambda));
       _projectionExpressions.AddRange (whereExpressionParser.ProjectionExpressions);
     }
 
@@ -109,19 +102,9 @@ namespace Rubicon.Data.DomainObjects.Linq.Parsing
       private set;
     }
 
-    public ReadOnlyCollection<Expression> FromExpressions
+    public ReadOnlyCollection<FromLetWhereExpressionBase> FromLetWhereExpressions
     {
-      get { return new ReadOnlyCollection<Expression> (_fromExpressions); }
-    }
-
-    public ReadOnlyCollection<ParameterExpression> FromIdentifiers
-    {
-      get { return new ReadOnlyCollection<ParameterExpression> (_fromIdentifiers); }
-    }
-
-    public ReadOnlyCollection<LambdaExpression> BoolExpressions
-    {
-      get { return new ReadOnlyCollection<LambdaExpression> (_boolExpressions); }
+      get { return new ReadOnlyCollection<FromLetWhereExpressionBase> (_fromLetWhereExpressions); }
     }
 
     public ReadOnlyCollection<LambdaExpression> ProjectionExpressions

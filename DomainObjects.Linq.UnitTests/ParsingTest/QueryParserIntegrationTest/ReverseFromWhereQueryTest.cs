@@ -34,7 +34,6 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.QueryParserInteg
     }
 
     [Test]
-    [Ignore ("TODO: Implement ordering")]
     public override void CheckFromLetWhereClauses ()
     {
       Assert.AreEqual (2, ParsedQuery.QueryBody.FromLetWhereClauseCount);

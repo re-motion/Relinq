@@ -37,7 +37,6 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.QueryParserInteg
 
 
     [Test]
-    [Ignore ("TODO: Implement ordering")]
     public override void CheckFromLetWhereClauses ()
     {
       Assert.AreEqual (3, ParsedQuery.QueryBody.FromLetWhereClauseCount);
@@ -51,7 +50,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.QueryParserInteg
 
       AdditionalFromClause fromClause2 = ParsedQuery.QueryBody.FromLetWhereClauses.Last () as AdditionalFromClause;
       Assert.IsNotNull (fromClause2);
-      Assert.AreSame (SourceExpressionNavigator.Arguments[0].Arguments[1].Operand.Expression, fromClause2.Expression);
+      Assert.AreSame (SourceExpressionNavigator.Arguments[1].Operand.Expression, fromClause2.Expression);
     }
 
 

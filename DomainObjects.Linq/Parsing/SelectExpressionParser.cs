@@ -9,9 +9,7 @@ namespace Rubicon.Data.DomainObjects.Linq.Parsing
 {
   public class SelectExpressionParser
   {
-    private readonly List<Expression> _fromExpressions = new List<Expression> ();
-    private readonly List<ParameterExpression> _fromIdentifiers = new List<ParameterExpression> ();
-    private readonly List<LambdaExpression> _whereExpressions = new List<LambdaExpression> ();
+    private readonly List<FromLetWhereExpressionBase> _fromLetWhereExpressions = new List<FromLetWhereExpressionBase> ();
     private readonly List<LambdaExpression> _projectionExpressions = new List<LambdaExpression> ();
 
     public SelectExpressionParser (MethodCallExpression selectExpression, Expression expressionTreeRoot)
@@ -52,9 +50,7 @@ namespace Rubicon.Data.DomainObjects.Linq.Parsing
       LambdaExpression ueLambda = ParserUtility.GetTypedExpression<LambdaExpression> (unaryExpression.Operand,
           "second argument of Select expression", expressionTreeRoot);
 
-      _fromExpressions.AddRange (whereExpressionParser.FromExpressions);
-      _fromIdentifiers.AddRange (whereExpressionParser.FromIdentifiers);
-      _whereExpressions.AddRange (whereExpressionParser.BoolExpressions);
+      _fromLetWhereExpressions.AddRange (whereExpressionParser.FromLetWhereExpressions);
       _projectionExpressions.AddRange (whereExpressionParser.ProjectionExpressions);
       _projectionExpressions.Add (ueLambda);
     }
@@ -68,26 +64,15 @@ namespace Rubicon.Data.DomainObjects.Linq.Parsing
       LambdaExpression ueLambda = ParserUtility.GetTypedExpression<LambdaExpression> (unaryExpression.Operand,
           "second argument of Select expression", expressionTreeRoot);
 
-      _fromExpressions.Add (constantExpression);
-      _fromIdentifiers.Add (ueLambda.Parameters[0]);
+      _fromLetWhereExpressions.Add (new FromExpression (constantExpression, ueLambda.Parameters[0]));
       _projectionExpressions.Add (ueLambda);
     }
 
     public MethodCallExpression SourceExpression { get; private set; }
     
-    public ReadOnlyCollection<Expression> FromExpressions
+    public ReadOnlyCollection<FromLetWhereExpressionBase> FromLetWhereExpressions
     {
-      get { return new ReadOnlyCollection<Expression> (_fromExpressions); }
-    }
-
-    public ReadOnlyCollection<ParameterExpression> FromIdentifiers
-    {
-      get { return new ReadOnlyCollection<ParameterExpression> (_fromIdentifiers); }
-    }
-
-    public ReadOnlyCollection<LambdaExpression> WhereExpressions
-    {
-      get { return new ReadOnlyCollection<LambdaExpression> (_whereExpressions); }
+      get { return new ReadOnlyCollection<FromLetWhereExpressionBase> (_fromLetWhereExpressions); }
     }
 
     public ReadOnlyCollection<LambdaExpression> ProjectionExpressions
