@@ -68,6 +68,7 @@
     <Compile Include="ClausesTest\OrderingClauseTest.cs" />
     <Compile Include="ExpressionTreeNavigator.cs" />
     <Compile Include="ParsingTest\ParserUtilityTest.cs" />
+    <Compile Include="ParsingTest\QueryParserIntegrationTest\ThreeFromQueryTest.cs" />
     <Compile Include="ParsingTest\QueryParserIntegrationTest\MultiFromWhereQueryTest.cs" />
     <Compile Include="ParsingTest\QueryParserIntegrationTest\SimpleSelectManyQueryTest.cs" />
     <Compile Include="ParsingTest\QueryParserIntegrationTest\SelectWhereQueryTest.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="ParsingTest\SelectExpressionParserTest\SimpleSelectExpressionParserTest.cs" />
     <Compile Include="ParsingTest\SelectExpressionParserTest\WhereSelectExpressionParserTest.cs" />
     <Compile Include="ParsingTest\SelectManyExpressionParserTest\GeneralSelectManyExpressionParserTest.cs" />
+    <Compile Include="ParsingTest\SelectManyExpressionParserTest\RecursiveSelectManyExpressionParserTest.cs" />
     <Compile Include="ParsingTest\SelectManyExpressionParserTest\SimpleSelectManyExpressionParserTest.cs" />
     <Compile Include="ParsingTest\WhereExpressionParserTest\GeneralWhereExpressionParserTest.cs" />
     <Compile Include="ParsingTest\WhereExpressionParserTest\RecursiveWhereExpressionParserTest.cs" />
@@ -111,6 +113,7 @@
     <Content Include="ParsingTest\ExpressionTrees\simpleQueryWithProjection.JPG" />
     <Content Include="ParsingTest\ExpressionTrees\simpleSelectManyQuery.jpg" />
     <Content Include="ParsingTest\ExpressionTrees\simpleWhereQuery.jpg" />
+    <Content Include="ParsingTest\ExpressionTrees\threeFromQuery.jpg" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ParsingTest\ExpressionTrees\ExpressionTree_Grammar.docx" />

@@ -18,7 +18,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.SelectManyExpres
     {
       IQueryable<Student> querySource1 = ExpressionHelper.CreateQuerySource();
       IQueryable<Student> querySource2 = ExpressionHelper.CreateQuerySource ();
-      MethodCallExpression expression = TestQueryGenerator.CreateSimpleSelectMany_SelectManyExpression(querySource1,querySource2);
+      MethodCallExpression expression = TestQueryGenerator.CreateMultiFromQuery_SelectManyExpression(querySource1,querySource2);
 
       SelectManyExpressionParser parser = new SelectManyExpressionParser (expression, expression);
       Assert.AreSame (expression, parser.SourceExpression);

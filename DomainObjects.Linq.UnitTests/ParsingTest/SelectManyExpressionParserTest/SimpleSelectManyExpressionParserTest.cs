@@ -23,7 +23,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.SelectManyExpres
     {
       _querySource1 = ExpressionHelper.CreateQuerySource();
       _querySource2 = ExpressionHelper.CreateQuerySource ();
-      _expression = TestQueryGenerator.CreateSimpleSelectMany_SelectManyExpression (_querySource1, _querySource2);
+      _expression = TestQueryGenerator.CreateMultiFromQuery_SelectManyExpression (_querySource1, _querySource2);
       _navigator = new ExpressionTreeNavigator (_expression);
       _parser = new SelectManyExpressionParser (_expression, _expression);
     }

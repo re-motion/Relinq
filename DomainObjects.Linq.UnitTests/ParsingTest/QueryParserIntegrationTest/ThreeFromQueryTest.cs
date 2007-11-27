@@ -8,19 +8,21 @@ using Rubicon.Data.DomainObjects.Linq.UnitTests.Parsing;
 namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.QueryParserIntegrationTest
 {
   [TestFixture]
-  public class SimpleSelectManyQueryTest : QueryTestBase<Student>
+  public class ThreeFromQueryTest : QueryTestBase<Student>
   {
     private IQueryable<Student> _querySource2;
+    private IQueryable<Student> _querySource3;
 
     public override void SetUp ()
     {
       _querySource2 = ExpressionHelper.CreateQuerySource();
+      _querySource3 = ExpressionHelper.CreateQuerySource ();
       base.SetUp ();
     }
 
     protected override IQueryable<Student> CreateQuery ()
     {
-      return TestQueryGenerator.CreateMultiFromQuery (QuerySource,_querySource2);
+      return TestQueryGenerator.CreateThreeFromQuery (QuerySource,_querySource2,_querySource3);
     }
 
     [Test]
@@ -33,13 +35,18 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.QueryParserInteg
       Assert.AreEqual (0, ParsedQuery.FromClause.JoinClauseCount);
     }
 
+
     [Test]
     public override void CheckFromLetWhereClauses ()
     {
-      Assert.AreEqual (1, ParsedQuery.QueryBody.FromLetWhereClauseCount);
-      AdditionalFromClause fromClause = ParsedQuery.QueryBody.FromLetWhereClauses.First() as AdditionalFromClause;
-      Assert.IsNotNull (fromClause);
-      Assert.AreSame (SourceExpressionNavigator.Arguments[1].Operand.Expression, fromClause.Expression);
+      Assert.AreEqual (2, ParsedQuery.QueryBody.FromLetWhereClauseCount);
+      AdditionalFromClause fromClause1 = ParsedQuery.QueryBody.FromLetWhereClauses.First() as AdditionalFromClause;
+      Assert.IsNotNull (fromClause1);
+      Assert.AreSame (SourceExpressionNavigator.Arguments[0].Arguments[1].Operand.Expression, fromClause1.Expression);
+
+      AdditionalFromClause fromClause2 = ParsedQuery.QueryBody.FromLetWhereClauses.Last () as AdditionalFromClause;
+      Assert.IsNotNull (fromClause2);
+      Assert.AreSame (SourceExpressionNavigator.Arguments[1].Operand.Expression, fromClause2.Expression);
     }
 
 
@@ -57,8 +64,11 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.QueryParserInteg
       SelectClause clause = ParsedQuery.QueryBody.SelectOrGroupClause as SelectClause;
       Assert.IsNotNull (clause);
       Assert.IsNotNull (clause.ProjectionExpressions);
-      Assert.AreSame (ParsedQuery.FromClause.Identifier, clause.ProjectionExpressions[0].Body,
-                      "from s in ... select s => select expression must be same as from-identifier");
+      Assert.AreEqual (2, clause.ProjectionExpressions.Length);
+
+      Assert.AreSame (SourceExpressionNavigator.Arguments[0].Arguments[2].Operand.Expression, clause.ProjectionExpressions[0]);
+
+      Assert.AreSame (SourceExpressionNavigator.Arguments[2].Operand.Expression, clause.ProjectionExpressions[1]);
 
     }
   }

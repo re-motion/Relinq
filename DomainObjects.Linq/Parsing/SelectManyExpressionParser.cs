@@ -39,17 +39,24 @@ namespace Rubicon.Data.DomainObjects.Linq.Parsing
 
     private void ParseRecursiveSelectMany (Expression expressionTreeRoot)
     {
-      //WhereExpressionParser we = new WhereExpressionParser ((MethodCallExpression) SourceExpression.Arguments[0], expressionTreeRoot, false);
-      //UnaryExpression ue = ParserUtility.GetTypedExpression<UnaryExpression> (SourceExpression.Arguments[1],
-      //    "second argument of Select expression", expressionTreeRoot);
-      //LambdaExpression ueLambda = ParserUtility.GetTypedExpression<LambdaExpression> (ue.Operand,
-      //    "second argument of Select expression", expressionTreeRoot);
+      MethodCallExpression me = ParserUtility.GetTypedExpression<MethodCallExpression> (SourceExpression.Arguments[0],
+          "first argument of SelectMany expression", expressionTreeRoot);
+      SelectManyExpressionParser sm = new SelectManyExpressionParser (me,expressionTreeRoot);
+      UnaryExpression ue1 = ParserUtility.GetTypedExpression<UnaryExpression> (SourceExpression.Arguments[1],
+          "second argument of SelectMany expression", expressionTreeRoot);
+      UnaryExpression ue2 = ParserUtility.GetTypedExpression<UnaryExpression> (SourceExpression.Arguments[2],
+          "third argument of SelectMany expression", expressionTreeRoot);
+      LambdaExpression ueLambda1 = ParserUtility.GetTypedExpression<LambdaExpression> (ue1.Operand,
+          "second argument of SelectMany expression", expressionTreeRoot);
+      LambdaExpression ueLambda2 = ParserUtility.GetTypedExpression<LambdaExpression> (ue2.Operand,
+                "second argument of SelectMany expression", expressionTreeRoot);
 
-      //_fromExpressions.AddRange (we.FromExpressions);
-      //_fromIdentifiers.AddRange (we.FromIdentifiers);
-      //_whereExpressions.AddRange (we.BoolExpressions);
-      //_projectionExpressions.AddRange (we.ProjectionExpressions);
-      //_projectionExpressions.Add (ueLambda);
+      _fromExpressions.AddRange (sm.FromExpressions);
+      _fromExpressions.Add (ueLambda1);
+      _fromIdentifiers.AddRange (sm.FromIdentifiers);
+      _fromIdentifiers.Add (ueLambda2.Parameters[1]);
+      _projectionExpressions.AddRange (sm.ProjectionExpressions);
+      _projectionExpressions.Add (ueLambda2);
     }
 
     private void ParseSimpleSelectMany (Expression expressionTreeRoot)
