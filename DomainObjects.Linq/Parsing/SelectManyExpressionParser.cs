@@ -12,6 +12,7 @@ namespace Rubicon.Data.DomainObjects.Linq.Parsing
     private readonly List<Expression> _fromExpressions = new List<Expression> ();
     private readonly List<ParameterExpression> _fromIdentifiers = new List<ParameterExpression> ();
     private readonly List<LambdaExpression> _projectionExpressions = new List<LambdaExpression> ();
+    private readonly List<LambdaExpression> _whereExpressions = new List<LambdaExpression> ();
 
     public SelectManyExpressionParser (MethodCallExpression selectManyExpression, Expression expressionTreeRoot)
     {
@@ -28,13 +29,47 @@ namespace Rubicon.Data.DomainObjects.Linq.Parsing
           ParseSimpleSelectMany (expressionTreeRoot);
           break;
         case ExpressionType.Call:
-          ParserUtility.CheckMethodCallExpression ((MethodCallExpression) selectManyExpression.Arguments[0], expressionTreeRoot, "SelectMany");
-          ParseRecursiveSelectMany (expressionTreeRoot);
+          string methodName = ParserUtility.CheckMethodCallExpression (
+            (MethodCallExpression) selectManyExpression.Arguments[0], expressionTreeRoot, "SelectMany","Where");
+          switch (methodName)
+          {
+            case "SelectMany":
+              ParseRecursiveSelectMany (expressionTreeRoot);
+              break;
+            case "Where":
+              ParseWhereSelectMany (expressionTreeRoot);
+              break;
+          }
+
+          
           break;
         default:
           throw ParserUtility.CreateParserException ("Constant or Call expression", selectManyExpression, "first argument of SelectMany expression",
               expressionTreeRoot);
       }
+    }
+
+    private void ParseWhereSelectMany (Expression expressionTreeRoot)
+    {
+      MethodCallExpression methodCallExpression = ParserUtility.GetTypedExpression<MethodCallExpression> (SourceExpression.Arguments[0],
+          "first argument of SelectMany expression", expressionTreeRoot);
+      WhereExpressionParser whereExpressionParser = new WhereExpressionParser (methodCallExpression, expressionTreeRoot,false);
+      UnaryExpression unaryExpression1 = ParserUtility.GetTypedExpression<UnaryExpression> (SourceExpression.Arguments[1],
+          "second argument of SelectMany expression", expressionTreeRoot);
+      UnaryExpression unaryExpression2 = ParserUtility.GetTypedExpression<UnaryExpression> (SourceExpression.Arguments[2],
+          "third argument of SelectMany expression", expressionTreeRoot);
+      LambdaExpression ueLambda1 = ParserUtility.GetTypedExpression<LambdaExpression> (unaryExpression1.Operand,
+          "second argument of SelectMany expression", expressionTreeRoot);
+      LambdaExpression ueLambda2 = ParserUtility.GetTypedExpression<LambdaExpression> (unaryExpression2.Operand,
+                "second argument of SelectMany expression", expressionTreeRoot);
+
+      _fromExpressions.AddRange (whereExpressionParser.FromExpressions);
+      _fromExpressions.Add (ueLambda1);
+      _fromIdentifiers.AddRange (whereExpressionParser.FromIdentifiers);
+      _fromIdentifiers.Add (ueLambda2.Parameters[1]);
+      _whereExpressions.AddRange (whereExpressionParser.BoolExpressions);
+      _projectionExpressions.AddRange (whereExpressionParser.ProjectionExpressions);
+      _projectionExpressions.Add (ueLambda2);
     }
 
     private void ParseRecursiveSelectMany (Expression expressionTreeRoot)
@@ -55,6 +90,7 @@ namespace Rubicon.Data.DomainObjects.Linq.Parsing
       _fromExpressions.Add (ueLambda1);
       _fromIdentifiers.AddRange (selectManyExpressionParser.FromIdentifiers);
       _fromIdentifiers.Add (ueLambda2.Parameters[1]);
+      _whereExpressions.AddRange (selectManyExpressionParser.WhereExpressions);
       _projectionExpressions.AddRange (selectManyExpressionParser.ProjectionExpressions);
       _projectionExpressions.Add (ueLambda2);
     }
@@ -96,6 +132,11 @@ namespace Rubicon.Data.DomainObjects.Linq.Parsing
     public ReadOnlyCollection<LambdaExpression> ProjectionExpressions
     {
       get { return new ReadOnlyCollection<LambdaExpression> (_projectionExpressions); }
+    }
+
+    public ReadOnlyCollection<LambdaExpression> WhereExpressions
+    {
+      get { return new ReadOnlyCollection<LambdaExpression> (_whereExpressions); }
     }
   }
 }

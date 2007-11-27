@@ -68,6 +68,8 @@
     <Compile Include="ClausesTest\OrderingClauseTest.cs" />
     <Compile Include="ExpressionTreeNavigator.cs" />
     <Compile Include="ParsingTest\ParserUtilityTest.cs" />
+    <Compile Include="ParsingTest\QueryParserIntegrationTest\ThreeFromWhereQueryTest.cs" />
+    <Compile Include="ParsingTest\QueryParserIntegrationTest\ReverseFromWhereQueryTest.cs" />
     <Compile Include="ParsingTest\QueryParserIntegrationTest\ThreeFromQueryTest.cs" />
     <Compile Include="ParsingTest\QueryParserIntegrationTest\MultiFromWhereQueryTest.cs" />
     <Compile Include="ParsingTest\QueryParserIntegrationTest\SimpleSelectManyQueryTest.cs" />
@@ -84,6 +86,7 @@
     <Compile Include="ParsingTest\SelectManyExpressionParserTest\GeneralSelectManyExpressionParserTest.cs" />
     <Compile Include="ParsingTest\SelectManyExpressionParserTest\RecursiveSelectManyExpressionParserTest.cs" />
     <Compile Include="ParsingTest\SelectManyExpressionParserTest\SimpleSelectManyExpressionParserTest.cs" />
+    <Compile Include="ParsingTest\SelectManyExpressionParserTest\WhereSelectManyExpressionParserTest.cs" />
     <Compile Include="ParsingTest\WhereExpressionParserTest\GeneralWhereExpressionParserTest.cs" />
     <Compile Include="ParsingTest\WhereExpressionParserTest\RecursiveWhereExpressionParserTest.cs" />
     <Compile Include="ParsingTest\WhereExpressionParserTest\SelectManyWhereExpressionParserTest.cs" />
@@ -108,12 +111,15 @@
   <ItemGroup>
     <Content Include="ParsingTest\ExpressionTrees\multiFromWhereQuery.jpg" />
     <Content Include="ParsingTest\ExpressionTrees\multiWhereQuery.jpg" />
+    <Content Include="ParsingTest\ExpressionTrees\reverseFromWhereQuery.jpg" />
     <Content Include="ParsingTest\ExpressionTrees\selectWhereQuery.jpg" />
     <Content Include="ParsingTest\ExpressionTrees\simpleQuery.JPG" />
     <Content Include="ParsingTest\ExpressionTrees\simpleQueryWithProjection.JPG" />
     <Content Include="ParsingTest\ExpressionTrees\simpleSelectManyQuery.jpg" />
     <Content Include="ParsingTest\ExpressionTrees\simpleWhereQuery.jpg" />
     <Content Include="ParsingTest\ExpressionTrees\threeFromQuery.jpg" />
+    <Content Include="ParsingTest\ExpressionTrees\threeFromWhereQuery.jpg" />
+    <Content Include="ParsingTest\ExpressionTrees\whereFromWhereQuery.jpg" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ParsingTest\ExpressionTrees\ExpressionTree_Grammar.docx" />

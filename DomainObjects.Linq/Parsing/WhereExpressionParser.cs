@@ -63,6 +63,7 @@ namespace Rubicon.Data.DomainObjects.Linq.Parsing
 
       _fromExpressions.AddRange (selectManyExpressionParser.FromExpressions);
       _fromIdentifiers.AddRange (selectManyExpressionParser.FromIdentifiers);
+      _boolExpressions.AddRange (selectManyExpressionParser.WhereExpressions);
       _boolExpressions.Add (ueLambda);
       _projectionExpressions.AddRange (selectManyExpressionParser.ProjectionExpressions);
     }

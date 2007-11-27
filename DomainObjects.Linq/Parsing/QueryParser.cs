@@ -42,6 +42,7 @@ namespace Rubicon.Data.DomainObjects.Linq.Parsing
           SelectManyExpressionParser selectManyExpressionParser = new SelectManyExpressionParser (rootExpression, expressionTreeRoot);
           _fromExpressions.AddRange (selectManyExpressionParser.FromExpressions);
           _fromIdentifiers.AddRange (selectManyExpressionParser.FromIdentifiers);
+          _whereExpressions.AddRange (selectManyExpressionParser.WhereExpressions);
           _projectionExpressions.AddRange (selectManyExpressionParser.ProjectionExpressions);
           break;
       }

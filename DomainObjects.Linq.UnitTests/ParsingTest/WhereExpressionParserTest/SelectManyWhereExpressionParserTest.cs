@@ -21,8 +21,8 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.WhereExpressionP
     [SetUp]
     public void SetUp ()
     {
-      _querySource1 = ExpressionHelper.CreateQuerySource ();
-      _querySource2 = ExpressionHelper.CreateQuerySource ();
+      _querySource1 = ExpressionHelper.CreateQuerySource();
+      _querySource2 = ExpressionHelper.CreateQuerySource();
       _expression = TestQueryGenerator.CreateMultiFromWhere_WhereExpression (_querySource1, _querySource2);
       _navigator = new ExpressionTreeNavigator (_expression);
       _parser = new WhereExpressionParser ((MethodCallExpression) _navigator.Arguments[0].Expression, _expression, true);
@@ -30,7 +30,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.WhereExpressionP
     }
 
     [Test]
-    public void ParsesFromExpressions()
+    public void ParsesFromExpressions ()
     {
       Assert.IsNotNull (_parser.FromExpressions);
       Assert.That (_parser.FromExpressions, Is.EqualTo (new object[]
@@ -50,8 +50,11 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.WhereExpressionP
     {
       Assert.IsNotNull (_parser.FromIdentifiers);
       Assert.That (_parser.FromIdentifiers,
-                   Is.EqualTo (new object[] { _selectManyNavigator.Arguments[2].Operand.Parameters[0].Expression,
-                   _selectManyNavigator.Arguments[2].Operand.Parameters[1].Expression}));
+          Is.EqualTo (new object[]
+              {
+                  _selectManyNavigator.Arguments[2].Operand.Parameters[0].Expression,
+                  _selectManyNavigator.Arguments[2].Operand.Parameters[1].Expression
+              }));
       Assert.IsInstanceOfType (typeof (ParameterExpression), _parser.FromIdentifiers[0]);
       Assert.IsInstanceOfType (typeof (ParameterExpression), _parser.FromIdentifiers[1]);
       Assert.AreEqual ("s1", _parser.FromIdentifiers[0].Name);
@@ -63,7 +66,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.WhereExpressionP
     public void ParsesProjectionExpressions ()
     {
       Assert.IsNotNull (_parser.ProjectionExpressions);
-      Assert.That (_parser.ProjectionExpressions, Is.EqualTo (new object[] { _selectManyNavigator.Arguments[2].Operand.Expression }));
+      Assert.That (_parser.ProjectionExpressions, Is.EqualTo (new object[] {_selectManyNavigator.Arguments[2].Operand.Expression}));
       Assert.IsInstanceOfType (typeof (LambdaExpression), _parser.ProjectionExpressions[0]);
     }
 
@@ -71,8 +74,22 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.WhereExpressionP
     public void ParsesBoolExpressions ()
     {
       Assert.IsNotNull (_parser.BoolExpressions);
-      Assert.That (_parser.BoolExpressions, Is.EqualTo (new object[] { _navigator.Arguments[0].Arguments[1].Operand.Expression }));
+      Assert.That (_parser.BoolExpressions, Is.EqualTo (new object[] {_navigator.Arguments[0].Arguments[1].Operand.Expression}));
       Assert.IsInstanceOfType (typeof (LambdaExpression), _parser.BoolExpressions[0]);
+    }
+
+    [Test]
+    public void TakesWhereExpressionFromMany ()
+    {
+      Expression expression = TestQueryGenerator.CreateWhereFromWhere_WhereExpression (_querySource1, _querySource2);
+      ExpressionTreeNavigator navigator = new ExpressionTreeNavigator (expression);
+      WhereExpressionParser parser = new WhereExpressionParser ((MethodCallExpression) navigator.Arguments[0].Expression, expression, true);
+      Assert.IsNotNull (parser.BoolExpressions);
+      Assert.That (parser.BoolExpressions, Is.EqualTo (new object[]
+          {
+              navigator.Arguments[0].Arguments[0].Arguments[0].Arguments[1].Operand.Expression,
+              navigator.Arguments[0].Arguments[1].Operand.Expression
+          }));
     }
   }
 }

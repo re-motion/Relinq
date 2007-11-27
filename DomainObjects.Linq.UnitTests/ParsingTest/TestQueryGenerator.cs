@@ -46,7 +46,22 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest
       return from s1 in source1 from s2 in source2 from s3 in source3 select s1;
     }
 
+    public static IQueryable<Student> CreateThreeFromWhereQuery (IQueryable<Student> source1, IQueryable<Student> source2, IQueryable<Student> source3)
+    {
+      return from s1 in source1 from s2 in source2 where s1.First == "Hugo" from s3 in source3 select s1;
+    }
+
+    public static IQueryable<Student> CreateWhereFromWhereQuery (IQueryable<Student> source1, IQueryable<Student> source2)
+    {
+      return from s1 in source1 where s1.First == "Hugo" from s2 in source2 where s1.Last == "Garcia" select s1;
+    }
+
+    public static IQueryable<Student> CreateReverseFromWhereQuery (IQueryable<Student> source1, IQueryable<Student> source2)
+    {
+      return from s1 in source1 where s1.Last == "Garcia" from s2 in source2 select s1;
+    }
     
+   
 
     public static MethodCallExpression CreateSimpleQuery_SelectExpression (IQueryable<Student> source)
     {
@@ -72,6 +87,12 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest
       return (MethodCallExpression) query.Expression;
     }
 
+    public static MethodCallExpression CreateReverseFromWhere_WhereExpression (IQueryable<Student> source1, IQueryable<Student> source2)
+    {
+      IQueryable<Student> query = CreateReverseFromWhereQuery (source1, source2);
+      return (MethodCallExpression) query.Expression;
+    }
+
     public static MethodCallExpression CreateSelectWhereQuery_SelectExpression (IQueryable<Student> source)
     {
       IQueryable<string> query = CreateSelectWhereQuery (source);
@@ -89,6 +110,20 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest
       IQueryable<Student> query = CreateThreeFromQuery (source1, source2,source3);
       return (MethodCallExpression) query.Expression;
     }
+
+    public static MethodCallExpression CreateWhereFromWhere_WhereExpression (IQueryable<Student> source1, IQueryable<Student> source2)
+    {
+      IQueryable<Student> query = CreateWhereFromWhereQuery (source1, source2);
+      return (MethodCallExpression) query.Expression;
+    }
+
+    public static MethodCallExpression CreateThreeFromWhereQuery_SelectManyExpression (IQueryable<Student> source1, IQueryable<Student> source2, IQueryable<Student> source3)
+    {
+      IQueryable<Student> query = CreateThreeFromWhereQuery (source1, source2, source3);
+      return (MethodCallExpression) query.Expression;
+    }
+
+
 
   }
 }

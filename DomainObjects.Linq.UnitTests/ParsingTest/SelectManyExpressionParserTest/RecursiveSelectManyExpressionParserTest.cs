@@ -24,7 +24,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.SelectManyExpres
       _querySource1 = ExpressionHelper.CreateQuerySource();
       _querySource2 = ExpressionHelper.CreateQuerySource();
       _querySource3 = ExpressionHelper.CreateQuerySource();
-      _expression = TestQueryGenerator.CreateThreeFromQuery_SelectManyExpression (_querySource1, _querySource2, _querySource3);
+      _expression = TestQueryGenerator.CreateThreeFromWhereQuery_SelectManyExpression (_querySource1, _querySource2, _querySource3);
       _navigator = new ExpressionTreeNavigator (_expression);
       _parser = new SelectManyExpressionParser (_expression, _expression);
     }
@@ -35,8 +35,8 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.SelectManyExpres
       Assert.IsNotNull (_parser.FromExpressions);
       Assert.That (_parser.FromExpressions, Is.EqualTo (new object[]
           {
-              _navigator.Arguments[0].Arguments[0].Expression,
-              _navigator.Arguments[0].Arguments[1].Operand.Expression,
+              _navigator.Arguments[0].Arguments[0].Arguments[0].Expression,
+              _navigator.Arguments[0].Arguments[0].Arguments[1].Operand.Expression,
               _navigator.Arguments[1].Operand.Expression
           }));
 
@@ -60,8 +60,8 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.SelectManyExpres
       Assert.That (_parser.FromIdentifiers,
           Is.EqualTo (new object[]
               {
-                  _navigator.Arguments[0].Arguments[2].Operand.Parameters[0].Expression,
-                  _navigator.Arguments[0].Arguments[2].Operand.Parameters[1].Expression,
+                  _navigator.Arguments[0].Arguments[0].Arguments[2].Operand.Parameters[0].Expression,
+                  _navigator.Arguments[0].Arguments[0].Arguments[2].Operand.Parameters[1].Expression,
                   _navigator.Arguments[2].Operand.Parameters[1].Expression
               }));
 
@@ -75,12 +75,22 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.SelectManyExpres
     }
 
     [Test]
+    public void ParsesWhereExpressions()
+    {
+      Assert.IsNotNull (_parser.WhereExpressions);
+      Assert.That (_parser.WhereExpressions, Is.EqualTo (new object[]
+          {
+              _navigator.Arguments[0].Arguments[1].Operand.Expression
+          }));
+    }
+
+    [Test]
     public void ParsesProjectionExpressions ()
     {
       Assert.IsNotNull (_parser.ProjectionExpressions);
       Assert.That (_parser.ProjectionExpressions, Is.EqualTo (new object[]
           {
-              _navigator.Arguments[0].Arguments[2].Operand.Expression,
+              _navigator.Arguments[0].Arguments[0].Arguments[2].Operand.Expression,
               _navigator.Arguments[2].Operand.Expression
           }));
       Assert.IsInstanceOfType (typeof (LambdaExpression), _parser.ProjectionExpressions[0]);
