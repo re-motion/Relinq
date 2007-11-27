@@ -35,12 +35,12 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest
     {
       return from s in source where s.Last == "Garcia" select s.First;
     }
-
-
+        
     public static  IQueryable<Student> CreateSimpleSelectManyQuery (IQueryable<Student> source1,IQueryable<Student> source2)
     {
       return from s1 in source1 from s2 in source2 select s1;
     }
+
 
     public static MethodCallExpression CreateSimpleQuery_SelectExpression (IQueryable<Student> source)
     {

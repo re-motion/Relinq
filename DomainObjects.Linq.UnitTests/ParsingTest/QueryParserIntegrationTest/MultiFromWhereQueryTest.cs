@@ -8,7 +8,7 @@ using Rubicon.Data.DomainObjects.Linq.UnitTests.Parsing;
 namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.QueryParserIntegrationTest
 {
   [TestFixture]
-  public class SimpleSelectManyQueryTest : QueryTestBase<Student>
+  public class MultiFromWhereQueryTest : QueryTestBase<Student>
   {
     private IQueryable<Student> _querySource2;
 
@@ -20,7 +20,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.QueryParserInteg
 
     protected override IQueryable<Student> CreateQuery ()
     {
-      return TestQueryGenerator.CreateSimpleSelectManyQuery (QuerySource,_querySource2);
+      return TestQueryGenerator.CreateMultiFromWhereQuery (QuerySource,_querySource2);
     }
 
     [Test]
@@ -36,13 +36,15 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.QueryParserInteg
     [Test]
     public override void CheckFromLetWhereClauses ()
     {
-      Assert.AreEqual (1, ParsedQuery.QueryBody.FromLetWhereClauseCount);
+      Assert.AreEqual (2, ParsedQuery.QueryBody.FromLetWhereClauseCount);
       AdditionalFromClause fromClause = ParsedQuery.QueryBody.FromLetWhereClauses.First() as AdditionalFromClause;
       Assert.IsNotNull (fromClause);
-      Assert.AreSame (SourceExpressionNavigator.Arguments[1].Operand.Expression, fromClause.Expression);
+      Assert.AreSame (SourceExpressionNavigator.Arguments[0].Arguments[0].Arguments[1].Operand.Expression, fromClause.Expression);
+
+      WhereClause whereClause = ParsedQuery.QueryBody.FromLetWhereClauses.Last() as WhereClause;
+      Assert.IsNotNull (whereClause);
+      Assert.AreSame (SourceExpressionNavigator.Arguments[0].Arguments[1].Operand.Expression, whereClause.BoolExpression);
     }
-
-
 
     [Test]
     public override void CheckOrderByClause ()
@@ -57,9 +59,10 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.QueryParserInteg
       SelectClause clause = ParsedQuery.QueryBody.SelectOrGroupClause as SelectClause;
       Assert.IsNotNull (clause);
       Assert.IsNotNull (clause.ProjectionExpressions);
-      Assert.AreSame (ParsedQuery.FromClause.Identifier, clause.ProjectionExpressions[0].Body,
-                      "from s in ... select s => select expression must be same as from-identifier");
-
+      Assert.AreEqual (2, clause.ProjectionExpressions.Length);
+      
+      Assert.AreSame (SourceExpressionNavigator.Arguments[0].Arguments[0].Arguments[2].Operand.Expression, clause.ProjectionExpressions[0]);
+      Assert.AreSame (SourceExpressionNavigator.Arguments[1].Operand.Expression, clause.ProjectionExpressions[1]);
     }
   }
 }

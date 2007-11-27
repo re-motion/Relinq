@@ -138,5 +138,10 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     {
       return new AdditionalFromClause (CreateParameterExpression(), CreateExpression());
     }
+
+    public static object ExecuteLambda (LambdaExpression lambdaExpression, params object[] args)
+    {
+      return lambdaExpression.Compile().DynamicInvoke (args);
+    }
   }
 }

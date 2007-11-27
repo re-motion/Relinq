@@ -34,7 +34,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.QueryParserInteg
     }
 
     [Test]
-    public virtual void CheckFromClause ()
+    public virtual void CheckMainFromClause ()
     {
       Assert.IsNotNull (ParsedQuery.FromClause);
       Assert.AreEqual ("s", ParsedQuery.FromClause.Identifier.Name);

@@ -38,8 +38,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.SelectManyExpres
       Assert.IsInstanceOfType (typeof (LambdaExpression), _parser.FromExpressions[1]);
       Assert.AreSame (_querySource1, ((ConstantExpression)_parser.FromExpressions[0]).Value);
       LambdaExpression fromExpression1 = (LambdaExpression) _parser.FromExpressions[1];
-      object value = fromExpression1.Compile().DynamicInvoke ((Student) null);
-      Assert.AreSame (_querySource2, value);
+      Assert.AreSame (_querySource2, ExpressionHelper.ExecuteLambda (fromExpression1, (Student)null));
     }
 
     [Test]

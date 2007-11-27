@@ -65,11 +65,13 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.WhereExpressionP
     }
 
     [Test]
-    public void ParsesProjectionExpressions_NotTopLeve ()
+    public void ParsesProjectionExpressions_NotTopLevel ()
     {
       WhereExpressionParser parser = new WhereExpressionParser (_expression, _expression, false);
       Assert.IsNotNull (parser.ProjectionExpressions);
       Assert.AreEqual (0, parser.ProjectionExpressions.Count);
     }
+
+
   }
 }
