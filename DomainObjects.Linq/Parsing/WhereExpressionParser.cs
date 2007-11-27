@@ -51,33 +51,33 @@ namespace Rubicon.Data.DomainObjects.Linq.Parsing
 
     private void ParseSelectManyWhere (Expression expressionTreeRoot)
     {
-      MethodCallExpression me = ParserUtility.GetTypedExpression<MethodCallExpression> (SourceExpression.Arguments[0],
+      MethodCallExpression methodCallExpression = ParserUtility.GetTypedExpression<MethodCallExpression> (SourceExpression.Arguments[0],
           "first argument of Where expression", expressionTreeRoot);
-      SelectManyExpressionParser sm = new SelectManyExpressionParser (me, expressionTreeRoot);
+      SelectManyExpressionParser selectManyExpressionParser = new SelectManyExpressionParser (methodCallExpression, expressionTreeRoot);
 
-      UnaryExpression ue = ParserUtility.GetTypedExpression<UnaryExpression> (SourceExpression.Arguments[1],
+      UnaryExpression unaryExpression = ParserUtility.GetTypedExpression<UnaryExpression> (SourceExpression.Arguments[1],
           "second argument of Where expression", expressionTreeRoot);
 
-      LambdaExpression ueLambda = ParserUtility.GetTypedExpression<LambdaExpression> (ue.Operand,
+      LambdaExpression ueLambda = ParserUtility.GetTypedExpression<LambdaExpression> (unaryExpression.Operand,
           "second argument of Where expression", expressionTreeRoot);
 
-      _fromExpressions.AddRange (sm.FromExpressions);
-      _fromIdentifiers.AddRange (sm.FromIdentifiers);
+      _fromExpressions.AddRange (selectManyExpressionParser.FromExpressions);
+      _fromIdentifiers.AddRange (selectManyExpressionParser.FromIdentifiers);
       _boolExpressions.Add (ueLambda);
-      _projectionExpressions.AddRange (sm.ProjectionExpressions);
+      _projectionExpressions.AddRange (selectManyExpressionParser.ProjectionExpressions);
     }
 
 
     private void ParseSimpleWhere (Expression expressionTreeRoot)
     {
-      ConstantExpression ce = ParserUtility.GetTypedExpression<ConstantExpression> (SourceExpression.Arguments[0],
+      ConstantExpression constantExpression = ParserUtility.GetTypedExpression<ConstantExpression> (SourceExpression.Arguments[0],
           "first argument of Where expression", expressionTreeRoot);
-      UnaryExpression ue = ParserUtility.GetTypedExpression<UnaryExpression> (SourceExpression.Arguments[1],
+      UnaryExpression unaryExpression = ParserUtility.GetTypedExpression<UnaryExpression> (SourceExpression.Arguments[1],
           "second argument of Where expression", expressionTreeRoot);
-      LambdaExpression ueLambda = ParserUtility.GetTypedExpression<LambdaExpression> (ue.Operand,
+      LambdaExpression ueLambda = ParserUtility.GetTypedExpression<LambdaExpression> (unaryExpression.Operand,
           "second argument of Where expression", expressionTreeRoot);
 
-      _fromExpressions.Add (ce);
+      _fromExpressions.Add (constantExpression);
       _fromIdentifiers.Add (ueLambda.Parameters[0]);
       _boolExpressions.Add (ueLambda);
       if (_isTopLevel)
@@ -86,20 +86,20 @@ namespace Rubicon.Data.DomainObjects.Linq.Parsing
 
     private void ParseRecursiveWhere (Expression expressionTreeRoot)
     {
-      MethodCallExpression me = ParserUtility.GetTypedExpression<MethodCallExpression> (SourceExpression.Arguments[0],
+      MethodCallExpression methodCallExpression = ParserUtility.GetTypedExpression<MethodCallExpression> (SourceExpression.Arguments[0],
           "first argument of Where expression", expressionTreeRoot);
-      WhereExpressionParser we = new WhereExpressionParser (me, expressionTreeRoot, _isTopLevel);
+      WhereExpressionParser whereExpressionParser = new WhereExpressionParser (methodCallExpression, expressionTreeRoot, _isTopLevel);
 
-      UnaryExpression ue = ParserUtility.GetTypedExpression<UnaryExpression> (SourceExpression.Arguments[1],
+      UnaryExpression unaryExpression = ParserUtility.GetTypedExpression<UnaryExpression> (SourceExpression.Arguments[1],
           "second argument of Where expression", expressionTreeRoot);
-      LambdaExpression ueLambda = ParserUtility.GetTypedExpression<LambdaExpression> (ue.Operand,
+      LambdaExpression ueLambda = ParserUtility.GetTypedExpression<LambdaExpression> (unaryExpression.Operand,
           "second argument of Where expression", expressionTreeRoot);
 
-      _fromExpressions.AddRange (we.FromExpressions);
-      _fromIdentifiers.AddRange (we.FromIdentifiers);
-      _boolExpressions.AddRange (we.BoolExpressions);
+      _fromExpressions.AddRange (whereExpressionParser.FromExpressions);
+      _fromIdentifiers.AddRange (whereExpressionParser.FromIdentifiers);
+      _boolExpressions.AddRange (whereExpressionParser.BoolExpressions);
       _boolExpressions.Add (ueLambda);
-      _projectionExpressions.AddRange (we.ProjectionExpressions);
+      _projectionExpressions.AddRange (whereExpressionParser.ProjectionExpressions);
     }
 
     public MethodCallExpression SourceExpression

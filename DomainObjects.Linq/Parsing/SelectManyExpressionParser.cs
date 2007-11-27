@@ -39,41 +39,41 @@ namespace Rubicon.Data.DomainObjects.Linq.Parsing
 
     private void ParseRecursiveSelectMany (Expression expressionTreeRoot)
     {
-      MethodCallExpression me = ParserUtility.GetTypedExpression<MethodCallExpression> (SourceExpression.Arguments[0],
+      MethodCallExpression methodCallExpression = ParserUtility.GetTypedExpression<MethodCallExpression> (SourceExpression.Arguments[0],
           "first argument of SelectMany expression", expressionTreeRoot);
-      SelectManyExpressionParser sm = new SelectManyExpressionParser (me,expressionTreeRoot);
-      UnaryExpression ue1 = ParserUtility.GetTypedExpression<UnaryExpression> (SourceExpression.Arguments[1],
+      SelectManyExpressionParser selectManyExpressionParser = new SelectManyExpressionParser (methodCallExpression,expressionTreeRoot);
+      UnaryExpression unaryExpression1 = ParserUtility.GetTypedExpression<UnaryExpression> (SourceExpression.Arguments[1],
           "second argument of SelectMany expression", expressionTreeRoot);
-      UnaryExpression ue2 = ParserUtility.GetTypedExpression<UnaryExpression> (SourceExpression.Arguments[2],
+      UnaryExpression unaryExpression2 = ParserUtility.GetTypedExpression<UnaryExpression> (SourceExpression.Arguments[2],
           "third argument of SelectMany expression", expressionTreeRoot);
-      LambdaExpression ueLambda1 = ParserUtility.GetTypedExpression<LambdaExpression> (ue1.Operand,
+      LambdaExpression ueLambda1 = ParserUtility.GetTypedExpression<LambdaExpression> (unaryExpression1.Operand,
           "second argument of SelectMany expression", expressionTreeRoot);
-      LambdaExpression ueLambda2 = ParserUtility.GetTypedExpression<LambdaExpression> (ue2.Operand,
+      LambdaExpression ueLambda2 = ParserUtility.GetTypedExpression<LambdaExpression> (unaryExpression2.Operand,
                 "second argument of SelectMany expression", expressionTreeRoot);
 
-      _fromExpressions.AddRange (sm.FromExpressions);
+      _fromExpressions.AddRange (selectManyExpressionParser.FromExpressions);
       _fromExpressions.Add (ueLambda1);
-      _fromIdentifiers.AddRange (sm.FromIdentifiers);
+      _fromIdentifiers.AddRange (selectManyExpressionParser.FromIdentifiers);
       _fromIdentifiers.Add (ueLambda2.Parameters[1]);
-      _projectionExpressions.AddRange (sm.ProjectionExpressions);
+      _projectionExpressions.AddRange (selectManyExpressionParser.ProjectionExpressions);
       _projectionExpressions.Add (ueLambda2);
     }
 
     private void ParseSimpleSelectMany (Expression expressionTreeRoot)
     {
-      ConstantExpression ce = ParserUtility.GetTypedExpression<ConstantExpression> (SourceExpression.Arguments[0],
+      ConstantExpression constantExpression = ParserUtility.GetTypedExpression<ConstantExpression> (SourceExpression.Arguments[0],
           "first argument of SelectMany expression", expressionTreeRoot);
-      UnaryExpression ue1 = ParserUtility.GetTypedExpression<UnaryExpression> (SourceExpression.Arguments[1],
+      UnaryExpression unaryExpression1 = ParserUtility.GetTypedExpression<UnaryExpression> (SourceExpression.Arguments[1],
           "second argument of SelectMany expression", expressionTreeRoot);
-      UnaryExpression ue2 = ParserUtility.GetTypedExpression<UnaryExpression> (SourceExpression.Arguments[2],
+      UnaryExpression unaryExpression2 = ParserUtility.GetTypedExpression<UnaryExpression> (SourceExpression.Arguments[2],
           "second argument of SelectMany expression", expressionTreeRoot);
-      LambdaExpression ueLambda1 = ParserUtility.GetTypedExpression<LambdaExpression> (ue1.Operand,
+      LambdaExpression ueLambda1 = ParserUtility.GetTypedExpression<LambdaExpression> (unaryExpression1.Operand,
           "second argument of SelectMany expression", expressionTreeRoot);
-      LambdaExpression ueLambda2 = ParserUtility.GetTypedExpression<LambdaExpression> (ue2.Operand,
+      LambdaExpression ueLambda2 = ParserUtility.GetTypedExpression<LambdaExpression> (unaryExpression2.Operand,
           "second argument of SelectMany expression", expressionTreeRoot);
 
 
-      _fromExpressions.Add (ce);
+      _fromExpressions.Add (constantExpression);
       _fromExpressions.Add (ueLambda1);
       _fromIdentifiers.Add (ueLambda2.Parameters[0]);
       _fromIdentifiers.Add (ueLambda2.Parameters[1]);

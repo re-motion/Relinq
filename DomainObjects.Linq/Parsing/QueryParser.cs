@@ -25,24 +25,24 @@ namespace Rubicon.Data.DomainObjects.Linq.Parsing
       switch (ParserUtility.CheckMethodCallExpression (rootExpression, expressionTreeRoot, "Select", "Where","SelectMany"))
       {
         case "Select":
-          SelectExpressionParser se = new SelectExpressionParser(rootExpression, expressionTreeRoot);
-          _fromExpressions.AddRange (se.FromExpressions);
-          _fromIdentifiers.AddRange (se.FromIdentifiers);
-          _whereExpressions.AddRange (se.WhereExpressions);
-          _projectionExpressions.AddRange (se.ProjectionExpressions);
+          SelectExpressionParser selectExpressionParser = new SelectExpressionParser(rootExpression, expressionTreeRoot);
+          _fromExpressions.AddRange (selectExpressionParser.FromExpressions);
+          _fromIdentifiers.AddRange (selectExpressionParser.FromIdentifiers);
+          _whereExpressions.AddRange (selectExpressionParser.WhereExpressions);
+          _projectionExpressions.AddRange (selectExpressionParser.ProjectionExpressions);
           break;
         case "Where":
-          WhereExpressionParser we = new WhereExpressionParser (rootExpression, expressionTreeRoot, true);
-          _fromExpressions.AddRange (we.FromExpressions);
-          _fromIdentifiers.AddRange (we.FromIdentifiers);
-          _whereExpressions.AddRange (we.BoolExpressions);
-          _projectionExpressions.AddRange (we.ProjectionExpressions);
+          WhereExpressionParser whereExpressionParser = new WhereExpressionParser (rootExpression, expressionTreeRoot, true);
+          _fromExpressions.AddRange (whereExpressionParser.FromExpressions);
+          _fromIdentifiers.AddRange (whereExpressionParser.FromIdentifiers);
+          _whereExpressions.AddRange (whereExpressionParser.BoolExpressions);
+          _projectionExpressions.AddRange (whereExpressionParser.ProjectionExpressions);
           break;
         case "SelectMany":
-          SelectManyExpressionParser sm = new SelectManyExpressionParser (rootExpression, expressionTreeRoot);
-          _fromExpressions.AddRange (sm.FromExpressions);
-          _fromIdentifiers.AddRange (sm.FromIdentifiers);
-          _projectionExpressions.AddRange (sm.ProjectionExpressions);
+          SelectManyExpressionParser selectManyExpressionParser = new SelectManyExpressionParser (rootExpression, expressionTreeRoot);
+          _fromExpressions.AddRange (selectManyExpressionParser.FromExpressions);
+          _fromIdentifiers.AddRange (selectManyExpressionParser.FromIdentifiers);
+          _projectionExpressions.AddRange (selectManyExpressionParser.ProjectionExpressions);
           break;
       }
     }

@@ -44,29 +44,31 @@ namespace Rubicon.Data.DomainObjects.Linq.Parsing
 
     private void ParseWhereSelect (Expression expressionTreeRoot)
     {
-      WhereExpressionParser we = new WhereExpressionParser ((MethodCallExpression) SourceExpression.Arguments[0], expressionTreeRoot, false);
-      UnaryExpression ue = ParserUtility.GetTypedExpression<UnaryExpression> (SourceExpression.Arguments[1],
+      MethodCallExpression methodCallExpression = ParserUtility.GetTypedExpression<MethodCallExpression> (SourceExpression.Arguments[0],
+          "first argument of Select expression", expressionTreeRoot);
+      WhereExpressionParser whereExpressionParser = new WhereExpressionParser (methodCallExpression, expressionTreeRoot, false);
+      UnaryExpression unaryExpression = ParserUtility.GetTypedExpression<UnaryExpression> (SourceExpression.Arguments[1],
           "second argument of Select expression", expressionTreeRoot);
-      LambdaExpression ueLambda = ParserUtility.GetTypedExpression<LambdaExpression> (ue.Operand,
+      LambdaExpression ueLambda = ParserUtility.GetTypedExpression<LambdaExpression> (unaryExpression.Operand,
           "second argument of Select expression", expressionTreeRoot);
 
-      _fromExpressions.AddRange (we.FromExpressions);
-      _fromIdentifiers.AddRange (we.FromIdentifiers);
-      _whereExpressions.AddRange (we.BoolExpressions);
-      _projectionExpressions.AddRange (we.ProjectionExpressions);
+      _fromExpressions.AddRange (whereExpressionParser.FromExpressions);
+      _fromIdentifiers.AddRange (whereExpressionParser.FromIdentifiers);
+      _whereExpressions.AddRange (whereExpressionParser.BoolExpressions);
+      _projectionExpressions.AddRange (whereExpressionParser.ProjectionExpressions);
       _projectionExpressions.Add (ueLambda);
     }
 
     private void ParseSimpleSelect (Expression expressionTreeRoot)
     {
-      ConstantExpression ce = ParserUtility.GetTypedExpression<ConstantExpression> (SourceExpression.Arguments[0],
+      ConstantExpression constantExpression = ParserUtility.GetTypedExpression<ConstantExpression> (SourceExpression.Arguments[0],
           "first argument of Select expression", expressionTreeRoot);
-      UnaryExpression ue = ParserUtility.GetTypedExpression<UnaryExpression> (SourceExpression.Arguments[1],
+      UnaryExpression unaryExpression = ParserUtility.GetTypedExpression<UnaryExpression> (SourceExpression.Arguments[1],
           "second argument of Select expression", expressionTreeRoot);
-      LambdaExpression ueLambda = ParserUtility.GetTypedExpression<LambdaExpression> (ue.Operand,
+      LambdaExpression ueLambda = ParserUtility.GetTypedExpression<LambdaExpression> (unaryExpression.Operand,
           "second argument of Select expression", expressionTreeRoot);
 
-      _fromExpressions.Add (ce);
+      _fromExpressions.Add (constantExpression);
       _fromIdentifiers.Add (ueLambda.Parameters[0]);
       _projectionExpressions.Add (ueLambda);
     }
