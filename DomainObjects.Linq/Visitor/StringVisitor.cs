@@ -40,7 +40,7 @@ namespace Rubicon.Data.DomainObjects.Linq.Visitor
     public void VisitAdditionalFromClause (AdditionalFromClause fromClause)
     {
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
-      _sb.AppendFormat ("from {0} {1} in {2} ", fromClause.Identifier.Type, fromClause.Identifier.Name, fromClause.Expression);
+      _sb.AppendFormat ("from {0} {1} in {2} ", fromClause.Identifier.Type, fromClause.Identifier.Name, fromClause.FromExpression);
 
       foreach (JoinClause jc in fromClause.JoinClauses)
       {
@@ -99,7 +99,7 @@ namespace Rubicon.Data.DomainObjects.Linq.Visitor
     public void VisitSelectClause (SelectClause selectClause)
     {
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);
-      _sb.AppendFormat ("select {0}", SeparatedStringBuilder.Build (", ", selectClause.ProjectionExpressions));
+      _sb.AppendFormat ("select {0}", selectClause.ProjectionExpression);
     }
 
     public void VisitGroupClause (GroupClause groupClause)

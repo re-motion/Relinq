@@ -77,7 +77,7 @@ namespace Rubicon.Data.DomainObjects.Linq.Parsing
       _fromLetWhereExpressions.Add (new FromExpression (constantExpression, ueLambda.Parameters[0]));
       _fromLetWhereExpressions.Add (new WhereExpression (ueLambda));
       if (_isTopLevel)
-        _projectionExpressions.Add (Expression.Lambda (ueLambda.Parameters[0]));
+        _projectionExpressions.Add (null);
     }
 
     private void ParseRecursiveWhere (Expression expressionTreeRoot)

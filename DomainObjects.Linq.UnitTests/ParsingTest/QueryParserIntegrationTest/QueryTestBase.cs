@@ -55,6 +55,13 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.QueryParserInteg
       Console.WriteLine (ParsedQuery);
     }
 
+    [Test]
+    public void TranslateBack()
+    {
+      Expression builtExpressionTree = ParsedQuery.BuildExpressionTree();
+      ExpressionTreeComparer.CheckAreEqualTrees (builtExpressionTree, SourceExpression);
+    }
+
     public abstract void CheckFromLetWhereClauses ();
     public abstract void CheckOrderByClause ();
     public abstract void CheckSelectOrGroupClause ();

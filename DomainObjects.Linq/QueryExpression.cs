@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using Rubicon.Data.DomainObjects.Linq.Clauses;
 using Rubicon.Data.DomainObjects.Linq.Visitor;
 using Rubicon.Utilities;
@@ -42,6 +43,13 @@ namespace Rubicon.Data.DomainObjects.Linq
       StringVisitor sv = new StringVisitor();
       sv.VisitQueryExpression (this);
       return sv.ToString();
+    }
+
+    public Expression BuildExpressionTree ()
+    {
+      ExpressionTreeBuildingVisitor visitor = new ExpressionTreeBuildingVisitor ();
+      Accept (visitor);
+      return visitor.ExpressionTree;
     }
   }
 }

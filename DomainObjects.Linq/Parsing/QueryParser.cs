@@ -47,19 +47,22 @@ namespace Rubicon.Data.DomainObjects.Linq.Parsing
       FromExpression mainFromExpression = (FromExpression) _fromLetWhereExpressions[0];
       MainFromClause fromClause =
           new MainFromClause (mainFromExpression.Identifier, (IQueryable) ((ConstantExpression) mainFromExpression.Expression).Value);
-      SelectClause selectClause = new SelectClause (_projectionExpressions.ToArray());
+      SelectClause selectClause = new SelectClause (_projectionExpressions.Last());
       QueryBody queryBody = new QueryBody (selectClause);
 
-      for (int i = 1; i < _fromLetWhereExpressions.Count; i++)
+      int currentProjection = 0;
+      for (int currentFromLetWhere = 1; currentFromLetWhere < _fromLetWhereExpressions.Count; currentFromLetWhere++)
       {
-        FromExpression fromExpression = _fromLetWhereExpressions[i] as FromExpression;
+        FromExpression fromExpression = _fromLetWhereExpressions[currentFromLetWhere] as FromExpression;
         if (fromExpression != null)
         {
-          AdditionalFromClause additionalFromClause = new AdditionalFromClause (fromExpression.Identifier, fromExpression.Expression);
+          AdditionalFromClause additionalFromClause = new AdditionalFromClause (fromExpression.Identifier, (LambdaExpression) fromExpression.Expression,
+              _projectionExpressions[currentProjection]);
           queryBody.Add (additionalFromClause);
+          ++currentProjection;
         }
 
-        WhereExpression whereExpression = _fromLetWhereExpressions[i] as WhereExpression;
+        WhereExpression whereExpression = _fromLetWhereExpressions[currentFromLetWhere] as WhereExpression;
         if (whereExpression != null)
         {
           WhereClause whereClause = new WhereClause (whereExpression.Expression);

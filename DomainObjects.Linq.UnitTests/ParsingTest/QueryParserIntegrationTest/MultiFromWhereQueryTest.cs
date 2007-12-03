@@ -39,7 +39,8 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.QueryParserInteg
       Assert.AreEqual (2, ParsedQuery.QueryBody.FromLetWhereClauseCount);
       AdditionalFromClause fromClause = ParsedQuery.QueryBody.FromLetWhereClauses.First() as AdditionalFromClause;
       Assert.IsNotNull (fromClause);
-      Assert.AreSame (SourceExpressionNavigator.Arguments[0].Arguments[0].Arguments[1].Operand.Expression, fromClause.Expression);
+      Assert.AreSame (SourceExpressionNavigator.Arguments[0].Arguments[0].Arguments[1].Operand.Expression, fromClause.FromExpression);
+      Assert.AreSame (SourceExpressionNavigator.Arguments[0].Arguments[0].Arguments[2].Operand.Expression, fromClause.ProjectionExpression);
 
       WhereClause whereClause = ParsedQuery.QueryBody.FromLetWhereClauses.Last() as WhereClause;
       Assert.IsNotNull (whereClause);
@@ -58,11 +59,9 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.QueryParserInteg
       Assert.IsNotNull (ParsedQuery.QueryBody.SelectOrGroupClause);
       SelectClause clause = ParsedQuery.QueryBody.SelectOrGroupClause as SelectClause;
       Assert.IsNotNull (clause);
-      Assert.IsNotNull (clause.ProjectionExpressions);
-      Assert.AreEqual (2, clause.ProjectionExpressions.Length);
+      Assert.IsNotNull (clause.ProjectionExpression);
       
-      Assert.AreSame (SourceExpressionNavigator.Arguments[0].Arguments[0].Arguments[2].Operand.Expression, clause.ProjectionExpressions[0]);
-      Assert.AreSame (SourceExpressionNavigator.Arguments[1].Operand.Expression, clause.ProjectionExpressions[1]);
+      Assert.AreSame (SourceExpressionNavigator.Arguments[1].Operand.Expression, clause.ProjectionExpression);
     }
   }
 }

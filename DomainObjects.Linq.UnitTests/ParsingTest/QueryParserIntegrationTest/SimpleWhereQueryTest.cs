@@ -27,5 +27,14 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.QueryParserInteg
       Assert.IsInstanceOfType (typeof (LambdaExpression), whereClause.BoolExpression);
       Assert.AreSame (ParsedQuery.FromClause.Identifier, navigator.Parameters[0].Expression);
     }
+
+    [Test]
+    public override void CheckSelectOrGroupClause ()
+    {
+      Assert.IsNotNull (ParsedQuery.QueryBody.SelectOrGroupClause);
+      SelectClause clause = ParsedQuery.QueryBody.SelectOrGroupClause as SelectClause;
+      Assert.IsNotNull (clause);
+      Assert.IsNull (clause.ProjectionExpression);
+    }
   }
 }

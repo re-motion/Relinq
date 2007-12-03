@@ -42,11 +42,13 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.QueryParserInteg
       Assert.AreEqual (2, ParsedQuery.QueryBody.FromLetWhereClauseCount);
       AdditionalFromClause fromClause1 = ParsedQuery.QueryBody.FromLetWhereClauses.First() as AdditionalFromClause;
       Assert.IsNotNull (fromClause1);
-      Assert.AreSame (SourceExpressionNavigator.Arguments[0].Arguments[1].Operand.Expression, fromClause1.Expression);
+      Assert.AreSame (SourceExpressionNavigator.Arguments[0].Arguments[1].Operand.Expression, fromClause1.FromExpression);
+      Assert.AreSame (SourceExpressionNavigator.Arguments[0].Arguments[2].Operand.Expression, fromClause1.ProjectionExpression);
 
       AdditionalFromClause fromClause2 = ParsedQuery.QueryBody.FromLetWhereClauses.Last () as AdditionalFromClause;
       Assert.IsNotNull (fromClause2);
-      Assert.AreSame (SourceExpressionNavigator.Arguments[1].Operand.Expression, fromClause2.Expression);
+      Assert.AreSame (SourceExpressionNavigator.Arguments[1].Operand.Expression, fromClause2.FromExpression);
+      Assert.AreSame (SourceExpressionNavigator.Arguments[2].Operand.Expression, fromClause2.ProjectionExpression);
     }
 
 
@@ -63,12 +65,9 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.QueryParserInteg
       Assert.IsNotNull (ParsedQuery.QueryBody.SelectOrGroupClause);
       SelectClause clause = ParsedQuery.QueryBody.SelectOrGroupClause as SelectClause;
       Assert.IsNotNull (clause);
-      Assert.IsNotNull (clause.ProjectionExpressions);
-      Assert.AreEqual (2, clause.ProjectionExpressions.Length);
+      Assert.IsNotNull (clause.ProjectionExpression);
 
-      Assert.AreSame (SourceExpressionNavigator.Arguments[0].Arguments[2].Operand.Expression, clause.ProjectionExpressions[0]);
-
-      Assert.AreSame (SourceExpressionNavigator.Arguments[2].Operand.Expression, clause.ProjectionExpressions[1]);
+      Assert.AreSame (SourceExpressionNavigator.Arguments[2].Operand.Expression, clause.ProjectionExpression);
 
     }
   }

@@ -1,7 +1,6 @@
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Rhino.Mocks;
 using Rubicon.Data.DomainObjects.Linq.Clauses;
 
@@ -15,21 +14,17 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ClausesTest
     {
       LambdaExpression expression = ExpressionHelper.CreateLambdaExpression ();
 
-      SelectClause selectClause = new SelectClause (new LambdaExpression[] {expression});
-
-      Assert.That (selectClause.ProjectionExpressions, Is.EqualTo (new object[] {expression}));
+      SelectClause selectClause = new SelectClause (expression);
+      Assert.AreEqual (expression, selectClause.ProjectionExpression);
     }
 
     [Test]
-    public void InitializeWithMultipleExpression ()
+    public void InitializeWithoutExpression ()
     {
-      LambdaExpression expression1 = ExpressionHelper.CreateLambdaExpression ();
-      LambdaExpression expression2 = ExpressionHelper.CreateLambdaExpression ();
-
-      SelectClause selectClause = new SelectClause (new LambdaExpression[] { expression1, expression2 });
-
-      Assert.That (selectClause.ProjectionExpressions, Is.EqualTo (new object[] { expression1, expression2 }));
+      SelectClause selectClause = new SelectClause (null);
+      Assert.IsNull (selectClause.ProjectionExpression);
     }
+
 
     [Test]
     public void SelectClause_ImplementISelectGroupClause()

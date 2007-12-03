@@ -78,6 +78,7 @@
     <Compile Include="QueryProvider.cs" />
     <Compile Include="QueryProviderImplementation\StandardQueryable.cs" />
     <Compile Include="QueryProviderImplementation\TypeSystem.cs" />
+    <Compile Include="Visitor\ExpressionTreeBuildingVisitor.cs" />
     <Compile Include="Visitor\StringVisitor.cs" />
     <Compile Include="Clauses\WhereClause.cs" />
   </ItemGroup>

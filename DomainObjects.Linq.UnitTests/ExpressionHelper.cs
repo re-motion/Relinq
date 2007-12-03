@@ -92,7 +92,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     {
       LambdaExpression expression = ExpressionHelper.CreateLambdaExpression ();
 
-      return new SelectClause (new LambdaExpression[] {expression});
+      return new SelectClause (expression);
     }
 
     public static WhereClause CreateWhereClause ()
@@ -136,7 +136,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
 
     public static AdditionalFromClause CreateAdditionalFromClause ()
     {
-      return new AdditionalFromClause (CreateParameterExpression(), CreateExpression());
+      return new AdditionalFromClause (CreateParameterExpression(), CreateLambdaExpression(), CreateLambdaExpression());
     }
 
     public static object ExecuteLambda (LambdaExpression lambdaExpression, params object[] args)

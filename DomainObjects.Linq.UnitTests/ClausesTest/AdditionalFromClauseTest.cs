@@ -15,12 +15,14 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ClausesTest
     public void Initialize_WithIDAndExpression ()
     {
       ParameterExpression id = ExpressionHelper.CreateParameterExpression ();
-      Expression expression = ExpressionHelper.CreateExpression();
+      LambdaExpression fromExpression = ExpressionHelper.CreateLambdaExpression ();
+      LambdaExpression projectionExpression = ExpressionHelper.CreateLambdaExpression ();
 
-      AdditionalFromClause fromClause = new AdditionalFromClause (id, expression);
+      AdditionalFromClause fromClause = new AdditionalFromClause (id, fromExpression, projectionExpression);
 
       Assert.AreSame (id, fromClause.Identifier);
-      Assert.AreSame (expression, fromClause.Expression);
+      Assert.AreSame (fromExpression, fromClause.FromExpression);
+      Assert.AreSame (projectionExpression, fromClause.ProjectionExpression);
 
       Assert.That (fromClause.JoinClauses, Is.Empty);
       Assert.AreEqual (0, fromClause.JoinClauseCount);
@@ -30,16 +32,27 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ClausesTest
     [ExpectedException (typeof (ArgumentNullException))]
     public void Initialize_ThrowsOnNullID ()
     {
-      Expression expression = ExpressionHelper.CreateExpression ();
-      new AdditionalFromClause (null, expression);
+      LambdaExpression expression = ExpressionHelper.CreateLambdaExpression ();
+      LambdaExpression projectionExpression = ExpressionHelper.CreateLambdaExpression ();
+      new AdditionalFromClause (null, expression, projectionExpression);
     }
 
     [Test]
     [ExpectedException (typeof (ArgumentNullException))]
-    public void Initialize_ThrowsOnNullExpressions ()
+    public void Initialize_ThrowsOnNullFromExpressions ()
     {
       ParameterExpression id = ExpressionHelper.CreateParameterExpression ();
-      new AdditionalFromClause (id, null);
+      LambdaExpression projectionExpression = ExpressionHelper.CreateLambdaExpression ();
+      new AdditionalFromClause (id, null, projectionExpression);
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentNullException))]
+    public void Initialize_ThrowsOnNullProjectionExpressions ()
+    {
+      LambdaExpression expression = ExpressionHelper.CreateLambdaExpression ();
+      ParameterExpression id = ExpressionHelper.CreateParameterExpression ();
+      new AdditionalFromClause (id, expression, null);
     }
 
     [Test]

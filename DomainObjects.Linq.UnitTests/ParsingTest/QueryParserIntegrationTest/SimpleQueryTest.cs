@@ -33,8 +33,8 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.QueryParserInteg
       Assert.IsNotNull (ParsedQuery.QueryBody.SelectOrGroupClause);
       SelectClause clause = ParsedQuery.QueryBody.SelectOrGroupClause as SelectClause;
       Assert.IsNotNull (clause);
-      Assert.IsNotNull (clause.ProjectionExpressions);
-      Assert.AreSame (ParsedQuery.FromClause.Identifier, clause.ProjectionExpressions[0].Body,
+      Assert.IsNotNull (clause.ProjectionExpression);
+      Assert.AreSame (ParsedQuery.FromClause.Identifier, clause.ProjectionExpression.Body,
                       "from s in ... select s => select expression must be same as from-identifier");
     }
   }

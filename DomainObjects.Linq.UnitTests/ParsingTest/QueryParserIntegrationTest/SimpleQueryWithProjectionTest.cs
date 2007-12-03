@@ -33,8 +33,8 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.QueryParserInteg
       Assert.IsNotNull (ParsedQuery.QueryBody.SelectOrGroupClause);
       SelectClause clause = ParsedQuery.QueryBody.SelectOrGroupClause as SelectClause;
       Assert.IsNotNull (clause);
-      Assert.IsNotNull (clause.ProjectionExpressions);
-      Assert.IsInstanceOfType (typeof(MemberExpression), clause.ProjectionExpressions[0].Body,
+      Assert.IsNotNull (clause.ProjectionExpression);
+      Assert.IsInstanceOfType (typeof(MemberExpression), clause.ProjectionExpression.Body,
           "from s in ... select s.First => select expression must be MemberAccess");
     }
   }

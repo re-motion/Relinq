@@ -6,16 +6,19 @@ namespace Rubicon.Data.DomainObjects.Linq.Clauses
 {
   public class AdditionalFromClause : FromClauseBase,IFromLetWhereClause
   {
-    
-
-    public AdditionalFromClause (ParameterExpression identifier, Expression expression) : base(identifier)
+    public AdditionalFromClause (ParameterExpression identifier, LambdaExpression fromExpression, LambdaExpression projectionExpression)
+      : base (identifier)
     {
       ArgumentUtility.CheckNotNull ("identifier", identifier);
-      ArgumentUtility.CheckNotNull ("expression", expression);
+      ArgumentUtility.CheckNotNull ("fromExpression", fromExpression);
+      ArgumentUtility.CheckNotNull ("projectionExpression", projectionExpression);
 
-      Expression = expression;
+      FromExpression = fromExpression;
+      ProjectionExpression = projectionExpression;
     }
-    public Expression Expression { get; private set; }
+
+    public LambdaExpression FromExpression { get; private set; }
+    public LambdaExpression ProjectionExpression { get; private set; }
 
     public override void Accept (IQueryVisitor visitor)
     {

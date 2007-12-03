@@ -231,13 +231,14 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.VisitorTest
       MockRepository repository = new MockRepository();
 
       SelectClause selectClause1 = 
-        repository.CreateMock<SelectClause> (new object[] {new LambdaExpression[] {ExpressionHelper.CreateLambdaExpression()}});
+        repository.CreateMock<SelectClause> (new object[] {ExpressionHelper.CreateLambdaExpression()});
 
       OrderByClause orderByClause1 = 
         repository.CreateMock<OrderByClause> (ExpressionHelper.CreateOrderingClause());
 
       AdditionalFromClause fromClause1 = 
-        repository.CreateMock<AdditionalFromClause> (ExpressionHelper.CreateParameterExpression(), ExpressionHelper.CreateExpression());
+        repository.CreateMock<AdditionalFromClause> (ExpressionHelper.CreateParameterExpression(),
+        ExpressionHelper.CreateLambdaExpression(), ExpressionHelper.CreateLambdaExpression());
 
       WhereClause whereClause1 =
           repository.CreateMock<WhereClause> (ExpressionHelper.CreateLambdaExpression());
@@ -271,7 +272,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.VisitorTest
       MockRepository repository = new MockRepository ();
 
       SelectClause selectClause1 =
-        repository.CreateMock<SelectClause> (new object[] { new LambdaExpression[] { ExpressionHelper.CreateLambdaExpression () } });
+        repository.CreateMock<SelectClause> (new object[] {ExpressionHelper.CreateLambdaExpression () });
 
       QueryBody queryBody = new QueryBody (selectClause1);
 
