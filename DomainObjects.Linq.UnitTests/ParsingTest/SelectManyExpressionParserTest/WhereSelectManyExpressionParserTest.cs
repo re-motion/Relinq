@@ -48,20 +48,6 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.SelectManyExpres
       LambdaExpression fromExpression1 = (LambdaExpression) _fromLetWhereHelper.FromExpressions[1];
       Assert.AreSame (_querySource2, ExpressionHelper.ExecuteLambda (fromExpression1, (Student) null));
 
-      //Assert.IsNotNull (_parser.FromExpressions);
-      //Assert.That (_parser.FromExpressions, Is.EqualTo (new object[]
-      //    {
-      //        _navigator.Arguments[0].Arguments[0].Expression,
-      //        _navigator.Arguments[1].Operand.Expression
-      //    }));
-
-      //Assert.IsInstanceOfType (typeof (ConstantExpression), _parser.FromExpressions[0]);
-      //Assert.IsInstanceOfType (typeof (LambdaExpression), _parser.FromExpressions[1]);
-
-      //Assert.AreSame (_querySource1, ((ConstantExpression) _parser.FromExpressions[0]).Value);
-
-      //LambdaExpression fromExpression1 = (LambdaExpression) _parser.FromExpressions[1];
-      //Assert.AreSame (_querySource2, ExpressionHelper.ExecuteLambda (fromExpression1, (Student) null));
     }
 
     [Test]
@@ -81,19 +67,6 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.SelectManyExpres
       Assert.AreEqual ("s1", _fromLetWhereHelper.FromIdentifiers[0].Name);
       Assert.AreEqual ("s2", _fromLetWhereHelper.FromIdentifiers[1].Name);
 
-      //Assert.IsNotNull (_parser.FromIdentifiers);
-      //Assert.That (_parser.FromIdentifiers,
-      //    Is.EqualTo (new object[]
-      //        {
-      //            _navigator.Arguments[0].Arguments[1].Operand.Parameters[0].Expression,
-      //            _navigator.Arguments[2].Operand.Parameters[1].Expression
-      //        }));
-
-      //Assert.IsInstanceOfType (typeof (ParameterExpression), _parser.FromIdentifiers[0]);
-      //Assert.IsInstanceOfType (typeof (ParameterExpression), _parser.FromIdentifiers[1]);
-
-      //Assert.AreEqual ("s1", _parser.FromIdentifiers[0].Name);
-      //Assert.AreEqual ("s2", _parser.FromIdentifiers[1].Name);
     }
 
     [Test]

@@ -69,6 +69,7 @@
     <Compile Include="ExpressionTreeNavigator.cs" />
     <Compile Include="ParsingTest\FromLetWhereExpressionTest.cs" />
     <Compile Include="ParsingTest\ParserUtilityTest.cs" />
+    <Compile Include="ParsingTest\QueryParserIntegrationTest\ReverseFromWhereQueryWithProjectionTest.cs" />
     <Compile Include="ParsingTest\QueryParserIntegrationTest\ThreeFromWhereQueryTest.cs" />
     <Compile Include="ParsingTest\QueryParserIntegrationTest\ReverseFromWhereQueryTest.cs" />
     <Compile Include="ParsingTest\QueryParserIntegrationTest\ThreeFromQueryTest.cs" />
@@ -114,6 +115,7 @@
     <Content Include="ParsingTest\ExpressionTrees\multiFromWhereQuery.jpg" />
     <Content Include="ParsingTest\ExpressionTrees\multiWhereQuery.jpg" />
     <Content Include="ParsingTest\ExpressionTrees\reverseFromWhereQuery.jpg" />
+    <Content Include="ParsingTest\ExpressionTrees\reverseFromWhereQueryWithProjection.jpg" />
     <Content Include="ParsingTest\ExpressionTrees\selectWhereQuery.jpg" />
     <Content Include="ParsingTest\ExpressionTrees\simpleQuery.JPG" />
     <Content Include="ParsingTest\ExpressionTrees\simpleQueryWithProjection.JPG" />

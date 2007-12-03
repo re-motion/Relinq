@@ -41,6 +41,16 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest
       return from s1 in source1 from s2 in source2 select s1;
     }
 
+    public static IQueryable<Student> CreateReverseFromWhereQuery (IQueryable<Student> source1, IQueryable<Student> source2)
+    {
+      return from s1 in source1 where s1.Last == "Garcia" from s2 in source2 select s1;
+    }
+
+    public static IQueryable<string> CreateReverseFromWhereQueryWithProjection (IQueryable<Student> source1, IQueryable<Student> source2)
+    {
+      return from s1 in source1 where s1.Last == "Garcia" from s2 in source2 select s2.Last;
+    }
+
     public static IQueryable<Student> CreateThreeFromQuery (IQueryable<Student> source1, IQueryable<Student> source2,IQueryable<Student> source3)
     {
       return from s1 in source1 from s2 in source2 from s3 in source3 select s1;
@@ -56,10 +66,6 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest
       return from s1 in source1 where s1.First == "Hugo" from s2 in source2 where s1.Last == "Garcia" select s1;
     }
 
-    public static IQueryable<Student> CreateReverseFromWhereQuery (IQueryable<Student> source1, IQueryable<Student> source2)
-    {
-      return from s1 in source1 where s1.Last == "Garcia" from s2 in source2 select s1;
-    }
     
    
 
@@ -90,6 +96,12 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest
     public static MethodCallExpression CreateReverseFromWhere_WhereExpression (IQueryable<Student> source1, IQueryable<Student> source2)
     {
       IQueryable<Student> query = CreateReverseFromWhereQuery (source1, source2);
+      return (MethodCallExpression) query.Expression;
+    }
+
+    public static MethodCallExpression CreateReverseFromWhereWithProjection_SelectExpression (IQueryable<Student> source1, IQueryable<Student> source2)
+    {
+      IQueryable<string> query = CreateReverseFromWhereQueryWithProjection(source1, source2);
       return (MethodCallExpression) query.Expression;
     }
 
