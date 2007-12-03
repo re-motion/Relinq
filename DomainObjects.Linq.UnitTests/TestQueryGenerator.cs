@@ -1,14 +1,26 @@
 using System.Linq;
 using System.Linq.Expressions;
+using Rubicon.Collections;
 using Rubicon.Data.DomainObjects.Linq.UnitTests.Parsing;
 
-namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest
+namespace Rubicon.Data.DomainObjects.Linq.UnitTests
 {
   public static class TestQueryGenerator
   {
     public static IQueryable<Student> CreateSimpleQuery(IQueryable<Student> source)
     {
       return from s in source select s;
+    }
+
+    public static IQueryable<Tuple<string,string>> CreateSimpleQueryWithFieldProjection (IQueryable<Student> source)
+    {
+      return from s in source select new Tuple<string,string>(s.First,s.Last);
+    }
+
+    public static IQueryable<Tuple<Student, string,string,string >> CreateSimpleQueryWithSpecialProjection (IQueryable<Student> source)
+    {
+      string k = "Test";
+      return from s in source select Tuple.NewTuple (s, s.Last,k,"Test2");
     }
 
     public static IQueryable<string> CreateSimpleQueryWithProjection (IQueryable<Student> source)
@@ -20,6 +32,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest
     {
       return from s in source where s.Last == "Garcia" select s;
     }
+
 
     public static IQueryable<Student> CreateMultiFromWhereQuery (IQueryable<Student> source1,IQueryable<Student> source2)
     {
@@ -65,6 +78,8 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest
     {
       return from s1 in source1 where s1.First == "Hugo" from s2 in source2 where s1.Last == "Garcia" select s1;
     }
+
+
 
     
    

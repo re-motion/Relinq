@@ -96,13 +96,16 @@
     <Compile Include="ParsingTest\WhereExpressionParserTest\SelectManyWhereExpressionParserTest.cs" />
     <Compile Include="ParsingTest\WhereExpressionParserTest\SimpleWhereExpressionParserTest.cs" />
     <Compile Include="ParsingTest\Student.cs" />
-    <Compile Include="ParsingTest\TestQueryGenerator.cs" />
+    <Compile Include="StubDatabaseInfo.cs" />
+    <Compile Include="TestQueryGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ClausesTest\QueryBodyTest.cs" />
     <Compile Include="QueryExpressionTest.cs" />
     <Compile Include="ClausesTest\SelectClauseTest.cs" />
     <Compile Include="QueryProviderImplementationTest\StandardQueryableTest.cs" />
     <Compile Include="QueryProviderTest.cs" />
+    <Compile Include="SqlGeneratorTest.cs" />
+    <Compile Include="VisitorTest\SqlGeneratorVisitorTest.cs" />
     <Compile Include="VisitorTest\StringVisitorTest.cs" />
     <Compile Include="ClausesTest\WhereClauseTest.cs" />
   </ItemGroup>

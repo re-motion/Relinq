@@ -3,6 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using Rhino.Mocks;
 using Rubicon.Data.DomainObjects.Linq.Clauses;
+using Rubicon.Data.DomainObjects.Linq.Parsing;
 using Rubicon.Data.DomainObjects.Linq.QueryProviderImplementation;
 using Rubicon.Data.DomainObjects.Linq.UnitTests.Parsing;
 
@@ -95,6 +96,8 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
       return new SelectClause (expression);
     }
 
+
+
     public static WhereClause CreateWhereClause ()
     {
       LambdaExpression boolExpression = ExpressionHelper.CreateLambdaExpression ();
@@ -142,6 +145,13 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     public static object ExecuteLambda (LambdaExpression lambdaExpression, params object[] args)
     {
       return lambdaExpression.Compile().DynamicInvoke (args);
+    }
+
+    public static QueryExpression ParseQuery<T> (IQueryable<T> query)
+    {
+      Expression expression = query.Expression;
+      QueryParser parser = new QueryParser (expression);
+      return parser.GetParsedQuery ();
     }
   }
 }

@@ -5,6 +5,8 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Rhino.Mocks;
 using Rubicon.Data.DomainObjects.Linq.Clauses;
+using Rubicon.Data.DomainObjects.Linq.QueryProviderImplementation;
+using Rubicon.Data.DomainObjects.Linq.UnitTests.Parsing;
 
 namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ClausesTest
 {
@@ -60,6 +62,16 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ClausesTest
     {
       AdditionalFromClause fromClause = ExpressionHelper.CreateAdditionalFromClause ();
       Assert.IsInstanceOfType (typeof (IFromLetWhereClause), fromClause);
+    }
+
+    [Test]
+    public void GetQuerySource()
+    {
+      IQueryable<Student> querySource = ExpressionHelper.CreateQuerySource();
+      LambdaExpression fromExpression = Expression.Lambda (Expression.Constant (querySource), Expression.Parameter (typeof (Student), "student"));
+      AdditionalFromClause fromClause =
+          new AdditionalFromClause (ExpressionHelper.CreateParameterExpression(), fromExpression, ExpressionHelper.CreateLambdaExpression());
+      Assert.AreSame (typeof (StandardQueryable<Student>), fromClause.GetQuerySourceType());
     }
 
     [Test]

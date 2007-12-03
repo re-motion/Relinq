@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using Rubicon.Utilities;
 
@@ -24,6 +25,11 @@ namespace Rubicon.Data.DomainObjects.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       visitor.VisitAdditionalFromClause (this);
+    }
+
+    public Type GetQuerySourceType ()
+    {
+      return FromExpression.Body.Type;
     }
   }
 }
