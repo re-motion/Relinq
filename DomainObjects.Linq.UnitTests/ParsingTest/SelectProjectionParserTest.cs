@@ -148,6 +148,31 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest
               }));
     }
 
+    [Test]
+    public void QueryWithUnaryBinaryLambdaInvocationConvertNewArrayExpression()
+    {
+      IQueryable<string> query = TestQueryGenerator.CreateUnaryBinaryLambdaInvocationConvertNewArrayExpressionQuery (_source);
+      QueryParser parser = new QueryParser (query.Expression);
+      QueryExpression expression = parser.GetParsedQuery ();
+      SelectClause selectClause = (SelectClause) expression.QueryBody.SelectOrGroupClause;
+
+      SelectProjectionParser selectParser = new SelectProjectionParser (selectClause, new StubDatabaseInfo ());
+
+      IEnumerable<Tuple<FromClauseBase, MemberInfo>> selectedFields = selectParser.SelectedFields;
+
+      Assert.That (selectedFields.ToArray (), Is.EquivalentTo (
+          new object[]
+              {
+                  new Tuple<FromClauseBase, MemberInfo> (expression.FromClause, typeof (Student).GetProperty ("First")),                
+                  new Tuple<FromClauseBase, MemberInfo> (expression.FromClause, typeof (Student).GetProperty ("Last")),                
+                  new Tuple<FromClauseBase, MemberInfo> (expression.FromClause, null),
+                  new Tuple<FromClauseBase, MemberInfo> (expression.FromClause, typeof (Student).GetProperty ("ID"))
+              }));
+    }
+    
+      
+    
+
 
   }
 }

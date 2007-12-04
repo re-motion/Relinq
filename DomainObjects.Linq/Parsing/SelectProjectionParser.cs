@@ -65,24 +65,34 @@ namespace Rubicon.Data.DomainObjects.Linq.Parsing
 
     private void FindSelectedFields (Expression expression)
     {
-      switch (expression.NodeType)
-      {
-        case ExpressionType.Parameter:
-          FindSelectedFields ((ParameterExpression) expression);
-          break;
-        case ExpressionType.MemberAccess:
-          MemberExpression memberExpression = (MemberExpression) expression;
-          FindSelectedFields (memberExpression);
-          break;
-        case ExpressionType.New:
-          NewExpression newExpression = (NewExpression) expression;
-          FindSelectedFields (newExpression);
-          break;
-        case ExpressionType.Call:
-          MethodCallExpression callExpression = (MethodCallExpression) expression;
-          FindSelectedFields (callExpression);
-          break;
-      }
+      ParameterExpression parameterExpression;
+      MemberExpression memberExpression;
+      NewExpression newExpression;
+      MethodCallExpression callExpression;
+      UnaryExpression unaryExpression;
+      BinaryExpression binaryExpression;
+      NewArrayExpression newArrayExpression;
+      LambdaExpression lambdaExpression;
+      InvocationExpression invocationExpression;
+
+      if ((parameterExpression = expression as ParameterExpression) != null)
+        FindSelectedFields (parameterExpression);
+      else if ((memberExpression = expression as MemberExpression) != null)
+        FindSelectedFields (memberExpression);
+      else if ((newExpression = expression as NewExpression) != null)
+        FindSelectedFields (newExpression);
+      else if ((callExpression = expression as MethodCallExpression) != null)
+        FindSelectedFields (callExpression);
+      else if ((unaryExpression = expression as UnaryExpression) != null)
+        FindSelectedFields (unaryExpression);
+      else if ((binaryExpression = expression as BinaryExpression) != null)
+        FindSelectedFields (binaryExpression);
+      else if ((newArrayExpression = expression as NewArrayExpression) != null)
+        FindSelectedFields (newArrayExpression);
+      else if ((lambdaExpression = expression as LambdaExpression) != null)
+        FindSelectedFields (lambdaExpression);
+      else if ((invocationExpression = expression as InvocationExpression) != null)
+        FindSelectedFields (invocationExpression);
     }
 
     private void FindSelectedFields (ParameterExpression expression)
@@ -111,6 +121,36 @@ namespace Rubicon.Data.DomainObjects.Linq.Parsing
         FindSelectedFields (callExpression.Object);
       foreach (Expression arg in callExpression.Arguments)
         FindSelectedFields (arg);
+    }
+
+    private void FindSelectedFields (UnaryExpression unaryExpression)
+    {
+      FindSelectedFields (unaryExpression.Operand);
+    }
+
+    private void FindSelectedFields (BinaryExpression binaryExpression)
+    {
+      FindSelectedFields (binaryExpression.Left);
+      FindSelectedFields (binaryExpression.Right);
+    }
+
+    private void FindSelectedFields (NewArrayExpression newArrayExpression)
+    {
+      foreach (Expression expression in newArrayExpression.Expressions)
+        FindSelectedFields (expression);
+    }
+
+    private void FindSelectedFields (LambdaExpression lambdaExpression)
+    {
+      FindSelectedFields (lambdaExpression.Body);
+    }
+
+    private void FindSelectedFields (InvocationExpression invocationExpression)
+    {
+      foreach (Expression arg in invocationExpression.Arguments)
+        FindSelectedFields (arg);
+      
+      FindSelectedFields (invocationExpression.Expression);
     }
 
 

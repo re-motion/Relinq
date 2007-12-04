@@ -93,6 +93,10 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
       return from s1 in source1 from s2 in source2 from s3 in source3 select Tuple.NewTuple (s1.First, s2.Last, s3.ID);
     }
 
+    public static IQueryable<string> CreateUnaryBinaryLambdaInvocationConvertNewArrayExpressionQuery (IQueryable<Student> source1)
+    {
+      return from s1 in source1 select ((Func<string, string>) ((string s) => s1.First)) (s1.Last) + new string[] { s1.ToString () }[s1.ID];
+    }
     
    
 
