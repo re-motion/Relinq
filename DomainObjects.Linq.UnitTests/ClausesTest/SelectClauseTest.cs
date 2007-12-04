@@ -4,7 +4,6 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using Rubicon.Data.DomainObjects.Linq.Clauses;
 using System.Linq;
-using Rubicon.Data.DomainObjects.Linq.UnitTests.Parsing;
 using Rubicon.Data.DomainObjects.Linq.Parsing;
 
 namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ClausesTest

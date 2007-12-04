@@ -6,13 +6,11 @@ using NUnit.Framework.SyntaxHelpers;
 using Rubicon.Collections;
 using Rubicon.Data.DomainObjects.Linq.Clauses;
 using Rubicon.Data.DomainObjects.Linq.Parsing;
-using Rubicon.Data.DomainObjects.Linq.UnitTests.Parsing;
 using Rubicon.Data.DomainObjects.Linq.Visitor;
 
 namespace Rubicon.Data.DomainObjects.Linq.UnitTests.VisitorTest
 {
   [TestFixture]
-  [Ignore]
   public class SqlGeneratorVisitorTest
   {
     private SqlGeneratorVisitor _sqlGeneratorVisitor;
@@ -40,7 +38,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.VisitorTest
       QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
       SelectClause selectClause = (SelectClause) parsedQuery.QueryBody.SelectOrGroupClause;
       _sqlGeneratorVisitor.VisitSelectClause (selectClause);
-      Assert.That (_sqlGeneratorVisitor.Columns, Is.EqualTo (new object[] {Tuple.NewTuple ("s", "First"), Tuple.NewTuple ("s", "Last")}));
+      Assert.That (_sqlGeneratorVisitor.Columns, Is.EqualTo (new object[] {Tuple.NewTuple ("s", "FirstColumn"), Tuple.NewTuple ("s", "LastColumn")}));
     }
 
     [Test]
@@ -52,7 +50,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.VisitorTest
       _sqlGeneratorVisitor.VisitSelectClause (selectClause);
       Assert.That (_sqlGeneratorVisitor.Columns, Is.EqualTo (new object[]
           {
-              Tuple.NewTuple ("s", "*"), Tuple.NewTuple ("s", "Last")
+              Tuple.NewTuple ("s", "*"), Tuple.NewTuple ("s", "LastColumn")
           }));
     }
 

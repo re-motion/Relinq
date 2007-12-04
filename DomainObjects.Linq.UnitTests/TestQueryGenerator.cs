@@ -1,7 +1,6 @@
 using System.Linq;
 using System.Linq.Expressions;
 using Rubicon.Collections;
-using Rubicon.Data.DomainObjects.Linq.UnitTests.Parsing;
 
 namespace Rubicon.Data.DomainObjects.Linq.UnitTests
 {
@@ -79,7 +78,20 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
       return from s1 in source1 where s1.First == "Hugo" from s2 in source2 where s1.Last == "Garcia" select s1;
     }
 
+    public static IQueryable<string> CreateSimpleSelectWithNonDbProjection(IQueryable<Student> source1)
+    {
+      return from s1 in source1 select s1.NonDBProperty;
+    }
 
+    public static IQueryable<Expression> CreateSimpleSelectWithNonEntityMemberAccess(IQueryable<Student> source1)
+    {
+      return from s1 in source1 select source1.Expression;
+    }
+
+    public static IQueryable<Tuple<string,string ,int>> CreateMultiFromQueryWithProjection(IQueryable<Student> source1,IQueryable<Student> source2,IQueryable<Student> source3 )
+    {
+      return from s1 in source1 from s2 in source2 from s3 in source3 select Tuple.NewTuple (s1.First, s2.Last, s3.ID);
+    }
 
     
    

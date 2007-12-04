@@ -5,7 +5,6 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using Rubicon.Data.DomainObjects.Linq.Parsing;
-using Rubicon.Data.DomainObjects.Linq.UnitTests.Parsing;
 
 namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.SelectManyExpressionParserTest
 {
@@ -26,9 +25,9 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.SelectManyExpres
 
     [Test]
     [ExpectedException (typeof (QueryParserException), ExpectedMessage = "Expected one of 'SelectMany', but found 'Where' at position value"
-        +"(Rubicon.Data.DomainObjects.Linq.QueryProviderImplementation.StandardQueryable`1[Rubicon.Data.DomainObjects.Linq.UnitTests.Parsing.Student])"
+        +"(Rubicon.Data.DomainObjects.Linq.QueryProviderImplementation.StandardQueryable`1[Rubicon.Data.DomainObjects.Linq.UnitTests.Student])"
         +".Where(s => (s.Last = \"Garcia\")) in tree value(Rubicon.Data.DomainObjects.Linq.QueryProviderImplementation.StandardQueryable`1"
-        +"[Rubicon.Data.DomainObjects.Linq.UnitTests.Parsing.Student]).Where(s => (s.Last = \"Garcia\")).")]
+        +"[Rubicon.Data.DomainObjects.Linq.UnitTests.Student]).Where(s => (s.Last = \"Garcia\")).")]
     public void Initialize_FromWrongExpression ()
     {
       MethodCallExpression expression = TestQueryGenerator.CreateSimpleWhereQuery_WhereExpression (ExpressionHelper.CreateQuerySource ());

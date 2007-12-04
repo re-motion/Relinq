@@ -35,11 +35,14 @@ namespace Rubicon.Data.DomainObjects.Linq
       if (visitor.Columns.Count == 0)
         sb.Append ("* ");
       else
-        throw new NotImplementedException();
+      {
+        IEnumerable<string> columnEntries = JoinTupleItems (visitor.Columns, ".");
+        sb.Append (SeparatedStringBuilder.Build (", ", columnEntries)).Append (" ");
+      }
 
       sb.Append ("FROM ");
 
-      IEnumerable<string> tableEntries = JoinTableEntries (visitor.Tables);
+      IEnumerable<string> tableEntries = JoinTupleItems (visitor.Tables, " ");
       sb.Append (SeparatedStringBuilder.Build (", ", tableEntries));
 
       IDbCommand command = connection.CreateCommand();
@@ -48,10 +51,18 @@ namespace Rubicon.Data.DomainObjects.Linq
       return command;
     }
 
-    private IEnumerable<string> JoinTableEntries (IEnumerable<Tuple<string, string>> tableEntries)
+    private IEnumerable<string> JoinTupleItems (IEnumerable<Tuple<string, string>> tuples, string joinString)
     {
-      foreach (Tuple<string, string> tableEntry in tableEntries)
-        yield return tableEntry.A + " " + tableEntry.B;
+      foreach (Tuple<string, string> tuple in tuples)
+        yield return WrapSqlIdentifier (tuple.A) + joinString + WrapSqlIdentifier (tuple.B);
+    }
+
+    private string WrapSqlIdentifier (string identifier)
+    {
+      if (identifier != "*")
+        return "[" + identifier + "]";
+      else
+        return "*";
     }
   }
 }

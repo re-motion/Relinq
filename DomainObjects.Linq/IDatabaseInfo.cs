@@ -6,6 +6,7 @@ namespace Rubicon.Data.DomainObjects.Linq
   public interface IDatabaseInfo
   {
     string GetTableName (Type querySourceType);
-    string GetColumnName (PropertyInfo property);
+    string GetColumnName (MemberInfo member);
+    bool IsDbColumn (MemberInfo member);
   }
 }

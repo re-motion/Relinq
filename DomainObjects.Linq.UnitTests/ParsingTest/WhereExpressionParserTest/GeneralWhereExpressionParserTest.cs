@@ -3,7 +3,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Rubicon.Data.DomainObjects.Linq.Parsing;
-using Rubicon.Data.DomainObjects.Linq.UnitTests.Parsing;
 using System.Reflection;
 
 namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.WhereExpressionParserTest
@@ -21,9 +20,9 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.WhereExpressionP
 
     [Test]
     [ExpectedException (typeof (QueryParserException), ExpectedMessage = "Expected one of 'Where', but found 'Select' at position "
-                                                                         + "value(Rubicon.Data.DomainObjects.Linq.QueryProviderImplementation.StandardQueryable`1[Rubicon.Data.DomainObjects.Linq.UnitTests.Parsing."
+                                                                         + "value(Rubicon.Data.DomainObjects.Linq.QueryProviderImplementation.StandardQueryable`1[Rubicon.Data.DomainObjects.Linq.UnitTests."
                                                                          + "Student]).Select(s => s) in tree value(Rubicon.Data.DomainObjects.Linq.QueryProviderImplementation.StandardQueryable`1[Rubicon.Data."
-                                                                         + "DomainObjects.Linq.UnitTests.Parsing.Student]).Select(s => s).")]
+                                                                         + "DomainObjects.Linq.UnitTests.Student]).Select(s => s).")]
     public void Initialize_FromWrongExpression ()
     {
       MethodCallExpression expression = TestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource ());

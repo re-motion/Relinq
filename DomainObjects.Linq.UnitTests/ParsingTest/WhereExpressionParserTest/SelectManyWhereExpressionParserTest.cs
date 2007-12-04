@@ -2,7 +2,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Rubicon.Data.DomainObjects.Linq.Parsing;
-using Rubicon.Data.DomainObjects.Linq.UnitTests.Parsing;
 using NUnit.Framework.SyntaxHelpers;
 
 namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.WhereExpressionParserTest

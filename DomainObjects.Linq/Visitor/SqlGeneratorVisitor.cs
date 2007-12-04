@@ -23,7 +23,8 @@ namespace Rubicon.Data.DomainObjects.Linq.Visitor
 
     public void VisitQueryExpression (QueryExpression queryExpression)
     {
-      throw new System.NotImplementedException();
+      queryExpression.FromClause.Accept (this);
+      queryExpression.QueryBody.Accept (this);
     }
 
     public void VisitMainFromClause (MainFromClause fromClause)
@@ -40,33 +41,28 @@ namespace Rubicon.Data.DomainObjects.Linq.Visitor
 
     public void VisitJoinClause (JoinClause joinClause)
     {
-      throw new System.NotImplementedException();
     }
 
     public void VisitLetClause (LetClause letClause)
     {
-      throw new System.NotImplementedException();
     }
 
     public void VisitWhereClause (WhereClause whereClause)
     {
-      throw new System.NotImplementedException();
     }
 
     public void VisitOrderByClause (OrderByClause orderByClause)
     {
-      throw new System.NotImplementedException();
     }
 
     public void VisitOrderingClause (OrderingClause orderingClause)
     {
-      throw new System.NotImplementedException();
     }
 
     public void VisitSelectClause (SelectClause selectClause)
     {
       SelectProjectionParser projectionParser = new SelectProjectionParser (selectClause, _databaseInfo);
-      IEnumerable<Tuple<FromClauseBase, PropertyInfo>> selectedFields = projectionParser.GetSelectedFields();
+      IEnumerable<Tuple<FromClauseBase, MemberInfo>> selectedFields = projectionParser.SelectedFields;
       
       IEnumerable<Tuple<string, string>> columns =
           from field in selectedFields
@@ -77,12 +73,15 @@ namespace Rubicon.Data.DomainObjects.Linq.Visitor
 
     public void VisitGroupClause (GroupClause groupClause)
     {
-      throw new System.NotImplementedException();
     }
 
     public void VisitQueryBody (QueryBody queryBody)
     {
-      throw new System.NotImplementedException();
+      foreach (IFromLetWhereClause fromLetWhereClause in queryBody.FromLetWhereClauses)
+        fromLetWhereClause.Accept (this);
+      if (queryBody.OrderByClause != null)
+        queryBody.OrderByClause.Accept (this);
+      queryBody.SelectOrGroupClause.Accept (this);
     }
   }
 }

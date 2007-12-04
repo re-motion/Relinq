@@ -3,7 +3,6 @@ using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
 using Rubicon.Data.DomainObjects.Linq.QueryProviderImplementation;
-using Rubicon.Data.DomainObjects.Linq.UnitTests.Parsing;
 
 namespace Rubicon.Data.DomainObjects.Linq.UnitTests
 {
@@ -16,9 +15,14 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
       return "sourceTable";
     }
 
-    public string GetColumnName (PropertyInfo property)
+    public string GetColumnName (MemberInfo member)
     {
-      return property.Name + "Column";
+      return member.Name + "Column";
+    }
+
+    public bool IsDbColumn (MemberInfo member)
+    {
+      return member.Name != "NonDBProperty";
     }
   }
 }
