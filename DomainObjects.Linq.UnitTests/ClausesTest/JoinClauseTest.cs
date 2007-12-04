@@ -17,8 +17,11 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ClausesTest
       Expression onExpression = ExpressionHelper.CreateExpression ();
       Expression equalityExpression = ExpressionHelper.CreateExpression ();
 
-      JoinClause joinClause = new JoinClause (identifier, inExpression, onExpression, equalityExpression);
-      
+      IClause clause = ExpressionHelper.CreateClause();
+
+      JoinClause joinClause = new JoinClause (clause, identifier, inExpression, onExpression, equalityExpression);
+
+      Assert.AreSame (clause, joinClause.PreviousClause);
       Assert.AreSame (identifier, joinClause.Identifier);
       Assert.AreSame (inExpression, joinClause.InExpression);
       Assert.AreSame (onExpression, joinClause.OnExpression);
@@ -36,8 +39,10 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ClausesTest
       Expression equalityExpression = ExpressionHelper.CreateExpression ();
       ParameterExpression intoIdentifier = ExpressionHelper.CreateParameterExpression ();
 
-      JoinClause joinClause = new JoinClause (identifier, inExpression, onExpression, equalityExpression, intoIdentifier);
+      IClause clause = ExpressionHelper.CreateClause ();
+      JoinClause joinClause = new JoinClause (clause,identifier, inExpression, onExpression, equalityExpression, intoIdentifier);
 
+      Assert.AreSame (clause, joinClause.PreviousClause);
       Assert.AreSame (identifier, joinClause.Identifier);
       Assert.AreSame (inExpression, joinClause.InExpression);
       Assert.AreSame (onExpression, joinClause.OnExpression);

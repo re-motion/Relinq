@@ -15,7 +15,7 @@ namespace Rubicon.Data.DomainObjects.Linq.Clauses
       ArgumentUtility.CheckNotNull ("SelectOrGroupClause", selectOrGroupClause);
       _selectOrGroupClause = selectOrGroupClause;
     }
-
+    
     public QueryBody (ISelectGroupClause selectOrGroupClause, OrderByClause orderByClause) 
         : this (selectOrGroupClause)
     {

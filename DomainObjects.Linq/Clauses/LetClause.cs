@@ -10,14 +10,17 @@ namespace Rubicon.Data.DomainObjects.Linq.Clauses
     private readonly ParameterExpression _identifier;
     private readonly Expression _expression;
 
-    public LetClause (ParameterExpression identifier, Expression expression)
+    public LetClause (IClause previousClause,ParameterExpression identifier, Expression expression)
     {
       ArgumentUtility.CheckNotNull ("identifier", identifier);
       ArgumentUtility.CheckNotNull ("expression", expression);
-
+      ArgumentUtility.CheckNotNull ("previousClause", previousClause);
       _identifier = identifier;
       _expression = expression;
+      PreviousClause = previousClause;
     }
+
+    public IClause PreviousClause { get; private set; }
 
     public Expression Expression
     {

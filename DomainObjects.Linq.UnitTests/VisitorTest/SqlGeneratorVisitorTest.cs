@@ -11,7 +11,8 @@ using Rubicon.Data.DomainObjects.Linq.Visitor;
 
 namespace Rubicon.Data.DomainObjects.Linq.UnitTests.VisitorTest
 {
-  [TestFixture,Ignore]
+  [TestFixture]
+  [Ignore]
   public class SqlGeneratorVisitorTest
   {
     private SqlGeneratorVisitor _sqlGeneratorVisitor;
@@ -51,8 +52,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.VisitorTest
       _sqlGeneratorVisitor.VisitSelectClause (selectClause);
       Assert.That (_sqlGeneratorVisitor.Columns, Is.EqualTo (new object[]
           {
-              Tuple.NewTuple ("s", "*"), Tuple.NewTuple ("s", "Last"), 
-              Tuple.NewTuple ((string) null, "Test"), Tuple.NewTuple ((string)null, "Test2")
+              Tuple.NewTuple ("s", "*"), Tuple.NewTuple ("s", "Last")
           }));
     }
 

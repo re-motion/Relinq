@@ -15,8 +15,10 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ClausesTest
       Expression groupExpression = ExpressionHelper.CreateExpression();
       Expression byExpression = ExpressionHelper.CreateExpression();
 
-      GroupClause groupClause = new GroupClause (groupExpression, byExpression);
+      IClause clause = ExpressionHelper.CreateClause();
+      GroupClause groupClause = new GroupClause (clause, groupExpression, byExpression);
 
+      Assert.AreSame (clause, groupClause.PreviousClause);
       Assert.AreSame (groupExpression, groupClause.GroupExpression);
       Assert.AreSame (byExpression, groupClause.ByExpression);
     }

@@ -5,6 +5,8 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Rhino.Mocks;
 using Rubicon.Data.DomainObjects.Linq.Clauses;
+using Rubicon.Data.DomainObjects.Linq.Parsing;
+using Rubicon.Data.DomainObjects.Linq.UnitTests.Parsing;
 
 namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ClausesTest
 {
@@ -24,22 +26,8 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ClausesTest
 
       Assert.That (fromClause.JoinClauses, Is.Empty);
       Assert.AreEqual (0, fromClause.JoinClauseCount);
-    }
 
-    [Test]
-    [ExpectedException (typeof (ArgumentNullException))]
-    public void Initialize_ThrowsOnNullID ()
-    {
-      IQueryable querySource = ExpressionHelper.CreateQuerySource ();
-      new MainFromClause (null, querySource);
-    }
-
-    [Test]
-    [ExpectedException (typeof (ArgumentNullException))]
-    public void Initialize_ThrowsOnNullQuerySource ()
-    {
-      ParameterExpression id = ExpressionHelper.CreateParameterExpression ();
-      new MainFromClause (id, null);
+      Assert.IsNull (fromClause.PreviousClause);
     }
 
     [Test]

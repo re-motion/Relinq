@@ -3,7 +3,7 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.DomainObjects.Linq.Clauses
 {
-  public class JoinClause : IQueryElement
+  public class JoinClause : IClause
   {
     private readonly ParameterExpression _identifier;
     private readonly Expression _inExpression;
@@ -11,28 +11,32 @@ namespace Rubicon.Data.DomainObjects.Linq.Clauses
     private readonly Expression _equalityExpression;
     private readonly ParameterExpression _intoIdentifier;
 
-    public JoinClause (ParameterExpression identifier, Expression inExpression, Expression onExpression, Expression equalityExpression)
+    public JoinClause (IClause previousClause,ParameterExpression identifier, Expression inExpression, Expression onExpression, Expression equalityExpression)
     {
       ArgumentUtility.CheckNotNull ("identifier", identifier);
       ArgumentUtility.CheckNotNull ("inExpression", inExpression);
       ArgumentUtility.CheckNotNull ("onExpression", onExpression);
       ArgumentUtility.CheckNotNull ("equalityExpression", equalityExpression);
+      ArgumentUtility.CheckNotNull ("previousClause", previousClause);
 
       _identifier = identifier;
       _inExpression = inExpression;
       _onExpression = onExpression;
       _equalityExpression = equalityExpression;
+      PreviousClause = previousClause;
     }
 
-
-    public JoinClause (ParameterExpression identifier, Expression inExpression, Expression onExpression, 
+    
+    public JoinClause (IClause previousClause,ParameterExpression identifier, Expression inExpression, Expression onExpression, 
                        Expression equalityExpression,ParameterExpression intoIdentifier)
-        : this (identifier, inExpression, onExpression, equalityExpression)
+        : this (previousClause,identifier, inExpression, onExpression, equalityExpression)
     {
       ArgumentUtility.CheckNotNull ("intoIdentifier", intoIdentifier);
 
       _intoIdentifier = intoIdentifier;
     }
+
+    public IClause PreviousClause { get; private set; }
 
     public ParameterExpression Identifier
     {

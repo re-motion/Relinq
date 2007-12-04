@@ -5,6 +5,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Rhino.Mocks;
 using Rubicon.Data.DomainObjects.Linq.Clauses;
+using Rubicon.Data.DomainObjects.Linq.Parsing;
 using Rubicon.Data.DomainObjects.Linq.QueryProviderImplementation;
 using Rubicon.Data.DomainObjects.Linq.UnitTests.Parsing;
 
@@ -20,41 +21,17 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ClausesTest
       LambdaExpression fromExpression = ExpressionHelper.CreateLambdaExpression ();
       LambdaExpression projectionExpression = ExpressionHelper.CreateLambdaExpression ();
 
-      AdditionalFromClause fromClause = new AdditionalFromClause (id, fromExpression, projectionExpression);
+      IClause clause = ExpressionHelper.CreateClause();
+      
+      AdditionalFromClause fromClause = new AdditionalFromClause (clause,id, fromExpression, projectionExpression);
 
       Assert.AreSame (id, fromClause.Identifier);
       Assert.AreSame (fromExpression, fromClause.FromExpression);
       Assert.AreSame (projectionExpression, fromClause.ProjectionExpression);
+      Assert.AreSame (clause, fromClause.PreviousClause);
 
       Assert.That (fromClause.JoinClauses, Is.Empty);
       Assert.AreEqual (0, fromClause.JoinClauseCount);
-    }
-
-    [Test]
-    [ExpectedException (typeof (ArgumentNullException))]
-    public void Initialize_ThrowsOnNullID ()
-    {
-      LambdaExpression expression = ExpressionHelper.CreateLambdaExpression ();
-      LambdaExpression projectionExpression = ExpressionHelper.CreateLambdaExpression ();
-      new AdditionalFromClause (null, expression, projectionExpression);
-    }
-
-    [Test]
-    [ExpectedException (typeof (ArgumentNullException))]
-    public void Initialize_ThrowsOnNullFromExpressions ()
-    {
-      ParameterExpression id = ExpressionHelper.CreateParameterExpression ();
-      LambdaExpression projectionExpression = ExpressionHelper.CreateLambdaExpression ();
-      new AdditionalFromClause (id, null, projectionExpression);
-    }
-
-    [Test]
-    [ExpectedException (typeof (ArgumentNullException))]
-    public void Initialize_ThrowsOnNullProjectionExpressions ()
-    {
-      LambdaExpression expression = ExpressionHelper.CreateLambdaExpression ();
-      ParameterExpression id = ExpressionHelper.CreateParameterExpression ();
-      new AdditionalFromClause (id, expression, null);
     }
 
     [Test]
@@ -70,10 +47,12 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ClausesTest
       IQueryable<Student> querySource = ExpressionHelper.CreateQuerySource();
       LambdaExpression fromExpression = Expression.Lambda (Expression.Constant (querySource), Expression.Parameter (typeof (Student), "student"));
       AdditionalFromClause fromClause =
-          new AdditionalFromClause (ExpressionHelper.CreateParameterExpression(), fromExpression, ExpressionHelper.CreateLambdaExpression());
+          new AdditionalFromClause (ExpressionHelper.CreateClause(), ExpressionHelper.CreateParameterExpression(), 
+          fromExpression, ExpressionHelper.CreateLambdaExpression());
       Assert.AreSame (typeof (StandardQueryable<Student>), fromClause.GetQuerySourceType());
     }
 
+    
     [Test]
     public void Accept ()
     {

@@ -9,7 +9,7 @@ namespace Rubicon.Data.DomainObjects.Linq.Clauses
   public class MainFromClause : FromClauseBase
   {
 
-    public MainFromClause (ParameterExpression identifier, IQueryable querySource): base(identifier)
+    public MainFromClause (ParameterExpression identifier, IQueryable querySource): base(null,identifier)
     {
       ArgumentUtility.CheckNotNull ("identifier", identifier);
       ArgumentUtility.CheckNotNull ("querySource", querySource);
@@ -24,5 +24,7 @@ namespace Rubicon.Data.DomainObjects.Linq.Clauses
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       visitor.VisitMainFromClause (this);
     }
+
+
   }
 }

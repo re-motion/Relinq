@@ -45,31 +45,41 @@ namespace Rubicon.Data.DomainObjects.Linq.Parsing
     public QueryExpression GetParsedQuery ()
     {
       FromExpression mainFromExpression = (FromExpression) _fromLetWhereExpressions[0];
-      MainFromClause fromClause =
-          new MainFromClause (mainFromExpression.Identifier, (IQueryable) ((ConstantExpression) mainFromExpression.Expression).Value);
-      SelectClause selectClause = new SelectClause (_projectionExpressions.Last());
-      QueryBody queryBody = new QueryBody (selectClause);
+      MainFromClause mainFromClause = new MainFromClause (mainFromExpression.Identifier,
+          (IQueryable) ((ConstantExpression) mainFromExpression.Expression).Value);
 
+      List<IFromLetWhereClause> fromLetWhereClauses = new List<IFromLetWhereClause>();
+      IClause previousClause = mainFromClause;
+      
       int currentProjection = 0;
       for (int currentFromLetWhere = 1; currentFromLetWhere < _fromLetWhereExpressions.Count; currentFromLetWhere++)
       {
         FromExpression fromExpression = _fromLetWhereExpressions[currentFromLetWhere] as FromExpression;
         if (fromExpression != null)
         {
-          AdditionalFromClause additionalFromClause = new AdditionalFromClause (fromExpression.Identifier, (LambdaExpression) fromExpression.Expression,
-              _projectionExpressions[currentProjection]);
-          queryBody.Add (additionalFromClause);
+          AdditionalFromClause additionalFromClause = new AdditionalFromClause (previousClause, fromExpression.Identifier,
+              (LambdaExpression) fromExpression.Expression, _projectionExpressions[currentProjection]);
+          fromLetWhereClauses.Add (additionalFromClause);
+          previousClause = additionalFromClause;
           ++currentProjection;
         }
 
         WhereExpression whereExpression = _fromLetWhereExpressions[currentFromLetWhere] as WhereExpression;
         if (whereExpression != null)
         {
-          WhereClause whereClause = new WhereClause (whereExpression.Expression);
-          queryBody.Add (whereClause);
+          WhereClause whereClause = new WhereClause (previousClause, whereExpression.Expression);
+          fromLetWhereClauses.Add (whereClause);
+          previousClause = whereClause;
         }
       }
-      return new QueryExpression (fromClause, queryBody);
+
+      SelectClause selectClause = new SelectClause (previousClause, _projectionExpressions.Last ());
+      QueryBody queryBody = new QueryBody (selectClause);
+
+      foreach (IFromLetWhereClause fromLetWhereClause in fromLetWhereClauses)
+        queryBody.Add (fromLetWhereClause);
+
+      return new QueryExpression (mainFromClause, queryBody);
     }
   }
 }

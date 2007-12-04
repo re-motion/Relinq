@@ -9,7 +9,8 @@ using Rubicon.Data.DomainObjects.Linq.UnitTests.Parsing;
 
 namespace Rubicon.Data.DomainObjects.Linq.UnitTests
 {
-  [TestFixture,Ignore]
+  [TestFixture]
+  [Ignore]
   public class SqlGeneratorTest
   {
     private IDbConnection _connection;

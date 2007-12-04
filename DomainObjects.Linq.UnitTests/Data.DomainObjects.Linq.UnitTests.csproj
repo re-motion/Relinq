@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClausesTest\AdditionalFromClauseTest.cs" />
+    <Compile Include="ClausesTest\ClauseFinderHelperTest.cs" />
     <Compile Include="ClausesTest\MainFromClauseTest.cs" />
     <Compile Include="ExpressionHelper.cs" />
     <Compile Include="ClausesTest\FromClauseBaseTest.cs" />

@@ -4,18 +4,21 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.DomainObjects.Linq.Clauses
 {
-  public class OrderingClause : IQueryElement
+  public class OrderingClause : IClause
   {
     private readonly Expression _expression;
     private readonly OrderDirection _orderDirection;
     
-    public OrderingClause (Expression expression, OrderDirection direction)
+    public OrderingClause (IClause previousClause,Expression expression, OrderDirection direction)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-
+      ArgumentUtility.CheckNotNull ("previousClause", previousClause);
       _expression = expression;
       _orderDirection = direction;
+      PreviousClause = previousClause;
     }
+
+    public IClause PreviousClause { get; private set; }
 
     public Expression Expression
     {

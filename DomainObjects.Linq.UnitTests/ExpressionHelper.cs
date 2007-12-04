@@ -40,16 +40,19 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
       Expression onExpression = ExpressionHelper.CreateExpression ();
       Expression equalityExpression = ExpressionHelper.CreateExpression ();
 
-      return new JoinClause (identifier, inExpression, onExpression, equalityExpression);
+      return new JoinClause (CreateMainFromClause(), identifier, inExpression, onExpression, equalityExpression);
     }
 
     public static MainFromClause CreateMainFromClause ()
     {
       ParameterExpression id = ExpressionHelper.CreateParameterExpression ();
-      IQueryable querySource = ExpressionHelper.CreateQuerySource ();
-      
-      
+      IQueryable querySource = ExpressionHelper.CreateQuerySource (); 
       return new MainFromClause (id, querySource);
+    }
+
+    public static AdditionalFromClause CreateAdditionalFromClause ()
+    {
+      return new AdditionalFromClause (CreateClause (), CreateParameterExpression (), CreateLambdaExpression (), CreateLambdaExpression ());
     }
 
     public static GroupClause CreateGroupClause ()
@@ -57,7 +60,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
       Expression groupExpression = ExpressionHelper.CreateExpression ();
       Expression byExpression = ExpressionHelper.CreateExpression ();
 
-      return new GroupClause (groupExpression, byExpression);
+      return new GroupClause (CreateClause (), groupExpression, byExpression);
     }
 
 
@@ -66,13 +69,13 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
       ParameterExpression identifier = ExpressionHelper.CreateParameterExpression ();
       Expression expression = ExpressionHelper.CreateExpression ();
 
-      return new LetClause (identifier, expression);
+      return new LetClause (CreateClause (), identifier, expression);
     }
 
     public static OrderingClause CreateOrderingClause()
     {
       Expression expression = ExpressionHelper.CreateExpression ();
-      return new OrderingClause (expression, OrderDirection.Asc);
+      return new OrderingClause (CreateClause (), expression, OrderDirection.Asc);
     }
 
     public static OrderByClause CreateOrderByClause()
@@ -92,8 +95,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     public static SelectClause CreateSelectClause ()
     {
       LambdaExpression expression = ExpressionHelper.CreateLambdaExpression ();
-
-      return new SelectClause (expression);
+      return new SelectClause (CreateClause (), expression);
     }
 
 
@@ -101,7 +103,12 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     public static WhereClause CreateWhereClause ()
     {
       LambdaExpression boolExpression = ExpressionHelper.CreateLambdaExpression ();
-      return new WhereClause (boolExpression);
+      return new WhereClause (CreateClause (), boolExpression);
+    }
+
+    public static IClause CreateClause()
+    {
+      return CreateMainFromClause();
     }
 
     public static IQueryable<Student> CreateQuerySource()
@@ -137,10 +144,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
       return students;
     }
 
-    public static AdditionalFromClause CreateAdditionalFromClause ()
-    {
-      return new AdditionalFromClause (CreateParameterExpression(), CreateLambdaExpression(), CreateLambdaExpression());
-    }
+    
 
     public static object ExecuteLambda (LambdaExpression lambdaExpression, params object[] args)
     {

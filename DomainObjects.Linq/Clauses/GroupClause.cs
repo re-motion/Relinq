@@ -10,15 +10,18 @@ namespace Rubicon.Data.DomainObjects.Linq.Clauses
     private readonly Expression _byExpression;
 
 
-    public GroupClause (Expression groupExpression, Expression byExpression)
+    public GroupClause (IClause previousClause,Expression groupExpression, Expression byExpression)
     {
       ArgumentUtility.CheckNotNull ("groupExpression", groupExpression);
       ArgumentUtility.CheckNotNull ("byExpression", byExpression);
+      ArgumentUtility.CheckNotNull ("previousClause", previousClause);
 
       _groupExpression = groupExpression;
       _byExpression = byExpression;
+      PreviousClause = previousClause;
     }
 
+    public IClause PreviousClause { get; private set; }
 
     public Expression GroupExpression
     {

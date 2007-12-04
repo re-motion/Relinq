@@ -50,9 +50,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Clauses\AdditionalFromClause.cs" />
+    <Compile Include="Clauses\ClauseFinderHelper.cs" />
     <Compile Include="Clauses\FromClauseBase.cs" />
     <Compile Include="Clauses\GroupClause.cs" />
     <Compile Include="Clauses\IFromLetWhereClause.cs" />
+    <Compile Include="IClause.cs" />
     <Compile Include="IQueryElement.cs" />
     <Compile Include="IQueryExecutor.cs" />
     <Compile Include="IQueryVisitor.cs" />
@@ -67,6 +69,7 @@
     <Compile Include="Parsing\QueryParser.cs" />
     <Compile Include="Parsing\QueryParserException.cs" />
     <Compile Include="Parsing\SelectExpressionParser.cs" />
+    <Compile Include="Parsing\SelectProjectionParser.cs" />
     <Compile Include="Parsing\WhereExpression.cs" />
     <Compile Include="Parsing\WhereExpressionParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

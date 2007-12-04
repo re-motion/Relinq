@@ -1,6 +1,9 @@
+using System.Linq;
 using System.Collections.Generic;
 using Rubicon.Collections;
 using Rubicon.Data.DomainObjects.Linq.Clauses;
+using System.Reflection;
+using Rubicon.Data.DomainObjects.Linq.Parsing;
 
 namespace Rubicon.Data.DomainObjects.Linq.Visitor
 {
@@ -62,8 +65,14 @@ namespace Rubicon.Data.DomainObjects.Linq.Visitor
 
     public void VisitSelectClause (SelectClause selectClause)
     {
-      Tuple<string, string> columnEntry;
-      //columnEntry = Tuple.NewTuple(selectClause.,"*")
+      SelectProjectionParser projectionParser = new SelectProjectionParser (selectClause, _databaseInfo);
+      IEnumerable<Tuple<FromClauseBase, PropertyInfo>> selectedFields = projectionParser.GetSelectedFields();
+      
+      IEnumerable<Tuple<string, string>> columns =
+          from field in selectedFields
+          select Tuple.NewTuple (field.A.Identifier.Name, field.B == null ? "*" : _databaseInfo.GetColumnName (field.B));
+
+      Columns.AddRange (columns);
     }
 
     public void VisitGroupClause (GroupClause groupClause)

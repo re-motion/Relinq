@@ -16,11 +16,13 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ClausesTest
     {
       Expression expression = ExpressionHelper.CreateExpression();
       OrderDirection directionAsc  = OrderDirection.Asc;
-      
 
-      OrderingClause ordering = new OrderingClause(expression,directionAsc);
+      IClause clause = ExpressionHelper.CreateClause();
       
+      OrderingClause ordering = new OrderingClause(clause, expression,directionAsc);
 
+
+      Assert.AreSame (clause, ordering.PreviousClause);
       Assert.AreSame (expression, ordering.Expression);
       Assert.AreEqual (directionAsc, ordering.OrderDirection);
     }
@@ -31,10 +33,11 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ClausesTest
       Expression expression = ExpressionHelper.CreateExpression ();
       OrderDirection directionAsc = OrderDirection.Asc;
 
+      IClause clause = ExpressionHelper.CreateClause ();
 
-      OrderingClause ordering = new OrderingClause (expression, directionAsc);
+      OrderingClause ordering = new OrderingClause (clause,expression, directionAsc);
 
-
+      Assert.AreSame (clause, ordering.PreviousClause);
       Assert.AreSame (expression, ordering.Expression);
       Assert.AreEqual (directionAsc, ordering.OrderDirection);
     }

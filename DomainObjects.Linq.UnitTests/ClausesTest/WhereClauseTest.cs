@@ -13,8 +13,10 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ClausesTest
     public void InitializeWithboolExpression()
     {
       LambdaExpression boolExpression = ExpressionHelper.CreateLambdaExpression ();
-      WhereClause whereClause = new WhereClause(boolExpression);
-
+      IClause clause = ExpressionHelper.CreateClause();
+      
+      WhereClause whereClause = new WhereClause(clause,boolExpression);
+      Assert.AreSame (clause, whereClause.PreviousClause);
       Assert.AreSame (boolExpression, whereClause.BoolExpression);
     }
 

@@ -15,8 +15,11 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ClausesTest
       ParameterExpression identifier = ExpressionHelper.CreateParameterExpression();
       Expression expression = ExpressionHelper.CreateExpression();
 
-      LetClause letClause = new LetClause(identifier,expression);
+       IClause clause = ExpressionHelper.CreateClause();
 
+      LetClause letClause = new LetClause(clause,identifier,expression);
+
+      Assert.AreSame (clause, letClause.PreviousClause);
       Assert.AreSame (identifier, letClause.Identifier);
       Assert.AreSame (expression, letClause.Expression);
     }

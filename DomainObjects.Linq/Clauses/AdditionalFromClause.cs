@@ -7,9 +7,11 @@ namespace Rubicon.Data.DomainObjects.Linq.Clauses
 {
   public class AdditionalFromClause : FromClauseBase,IFromLetWhereClause
   {
-    public AdditionalFromClause (ParameterExpression identifier, LambdaExpression fromExpression, LambdaExpression projectionExpression)
-      : base (identifier)
+    public AdditionalFromClause (IClause previousClause, ParameterExpression identifier,
+        LambdaExpression fromExpression, LambdaExpression projectionExpression)
+      : base (previousClause,identifier)
     {
+      ArgumentUtility.CheckNotNull ("previousClause", previousClause);
       ArgumentUtility.CheckNotNull ("identifier", identifier);
       ArgumentUtility.CheckNotNull ("fromExpression", fromExpression);
       ArgumentUtility.CheckNotNull ("projectionExpression", projectionExpression);
@@ -21,6 +23,7 @@ namespace Rubicon.Data.DomainObjects.Linq.Clauses
     public LambdaExpression FromExpression { get; private set; }
     public LambdaExpression ProjectionExpression { get; private set; }
 
+
     public override void Accept (IQueryVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
@@ -31,5 +34,6 @@ namespace Rubicon.Data.DomainObjects.Linq.Clauses
     {
       return FromExpression.Body.Type;
     }
+
   }
 }

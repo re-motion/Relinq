@@ -30,10 +30,12 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.VisitorTest
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause();
 
       MockRepository repository = new MockRepository();
-      JoinClause joinClause1 = repository.CreateMock<JoinClause> (ExpressionHelper.CreateParameterExpression(),
-                                                                  ExpressionHelper.CreateExpression(), ExpressionHelper.CreateExpression(), ExpressionHelper.CreateExpression());
-      JoinClause joinClause2 = repository.CreateMock<JoinClause> (ExpressionHelper.CreateParameterExpression(),
-                                                                  ExpressionHelper.CreateExpression(), ExpressionHelper.CreateExpression(), ExpressionHelper.CreateExpression());
+      JoinClause joinClause1 =
+          repository.CreateMock<JoinClause> (ExpressionHelper.CreateClause(), ExpressionHelper.CreateParameterExpression(),
+              ExpressionHelper.CreateExpression(), ExpressionHelper.CreateExpression(), ExpressionHelper.CreateExpression());
+      JoinClause joinClause2 =
+          repository.CreateMock<JoinClause> (ExpressionHelper.CreateClause(), ExpressionHelper.CreateParameterExpression(),
+              ExpressionHelper.CreateExpression(), ExpressionHelper.CreateExpression(), ExpressionHelper.CreateExpression());
 
       fromClause.Add (joinClause1);
       fromClause.Add (joinClause2);
@@ -55,7 +57,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.VisitorTest
     }
 
     [Test]
-    public void StringVisitorForJoins()
+    public void StringVisitorForJoins ()
     {
       JoinClause joinClause = ExpressionHelper.CreateJoinClause();
 
@@ -68,21 +70,22 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.VisitorTest
 
 
     [Test]
-    public void StringVisitorForSelectClause()
+    public void StringVisitorForSelectClause ()
     {
       SelectClause selectClause = ExpressionHelper.CreateSelectClause();
       StringVisitor sv = new StringVisitor();
 
       sv.VisitSelectClause (selectClause);
 
-      Assert.That (sv.ToString (), Text.Contains ("select"));
+      Assert.That (sv.ToString(), Text.Contains ("select"));
     }
 
     [Test]
-    public void StringVisitorForGroupClause()
+    public void StringVisitorForGroupClause ()
     {
-      GroupClause groupClause = new GroupClause (ExpressionHelper.CreateExpression(), ExpressionHelper.CreateExpression());
-      StringVisitor sv = new StringVisitor ();
+      GroupClause groupClause =
+          new GroupClause (ExpressionHelper.CreateClause(), ExpressionHelper.CreateExpression(), ExpressionHelper.CreateExpression());
+      StringVisitor sv = new StringVisitor();
 
       sv.VisitGroupClause (groupClause);
 
@@ -90,7 +93,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.VisitorTest
     }
 
     [Test]
-    public void StringVisitorForWhereClause()
+    public void StringVisitorForWhereClause ()
     {
       WhereClause whereClasue = ExpressionHelper.CreateWhereClause();
       StringVisitor sv = new StringVisitor();
@@ -101,7 +104,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.VisitorTest
     }
 
     [Test]
-    public void StringVisitorForLetClause()
+    public void StringVisitorForLetClause ()
     {
       LetClause letClause = ExpressionHelper.CreateLetClause();
       StringVisitor sv = new StringVisitor();
@@ -112,47 +115,46 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.VisitorTest
     }
 
     [Test]
-    public void StringVisitorForOrderingClauseAsc()
+    public void StringVisitorForOrderingClauseAsc ()
     {
       OrderingClause orderingClause = ExpressionHelper.CreateOrderingClause();
       StringVisitor sv = new StringVisitor();
 
       sv.VisitOrderingClause (orderingClause);
 
-      Assert.That (sv.ToString(), Text.Contains("ascending"));
+      Assert.That (sv.ToString(), Text.Contains ("ascending"));
     }
 
 
     [Test]
     public void StringVisitorForOrderingClauseDesc ()
     {
-      OrderingClause orderingClause = new OrderingClause (ExpressionHelper.CreateExpression(), OrderDirection.Desc);
-      StringVisitor sv = new StringVisitor ();
+      OrderingClause orderingClause = new OrderingClause (ExpressionHelper.CreateClause(), ExpressionHelper.CreateExpression(), OrderDirection.Desc);
+      StringVisitor sv = new StringVisitor();
 
       sv.VisitOrderingClause (orderingClause);
 
-      Assert.That (sv.ToString (), Text.Contains ("descending"));
+      Assert.That (sv.ToString(), Text.Contains ("descending"));
     }
 
 
-
     [Test]
-    public void StringVisitorForOrderByClauseOrderDirectionAsc()
+    public void StringVisitorForOrderByClauseOrderDirectionAsc ()
     {
       OrderByClause orderByClause = ExpressionHelper.CreateOrderByClause();
 
       MockRepository repository = new MockRepository();
 
-      OrderingClause ordering1 = repository.CreateMock<OrderingClause> (ExpressionHelper.CreateExpression(), OrderDirection.Asc);
-      OrderingClause ordering2 = repository.CreateMock<OrderingClause> (ExpressionHelper.CreateExpression (), OrderDirection.Asc);
+      OrderingClause ordering1 = repository.CreateMock<OrderingClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateExpression (), OrderDirection.Asc);
+      OrderingClause ordering2 = repository.CreateMock<OrderingClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateExpression (), OrderDirection.Asc);
 
       orderByClause.Add (ordering1);
       orderByClause.Add (ordering2);
 
-      StringVisitor sv = new StringVisitor ();
+      StringVisitor sv = new StringVisitor();
 
       //expectations
-      using(repository.Ordered())
+      using (repository.Ordered())
       {
         ordering1.Accept (sv);
         ordering2.Accept (sv);
@@ -169,89 +171,93 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.VisitorTest
     [Test]
     public void StringVisitorForOrderByClauseOrderDirectionDesc ()
     {
-      OrderByClause orderByClause = ExpressionHelper.CreateOrderByClause ();
+      OrderByClause orderByClause = ExpressionHelper.CreateOrderByClause();
 
-      MockRepository repository = new MockRepository ();
+      MockRepository repository = new MockRepository();
 
-      OrderingClause ordering1 = repository.CreateMock<OrderingClause> (ExpressionHelper.CreateExpression (), OrderDirection.Desc);
-      OrderingClause ordering2 = repository.CreateMock<OrderingClause> (ExpressionHelper.CreateExpression (), OrderDirection.Desc);
+      OrderingClause ordering1 =
+          repository.CreateMock<OrderingClause> (ExpressionHelper.CreateClause(), ExpressionHelper.CreateExpression(), OrderDirection.Desc);
+      OrderingClause ordering2 =
+          repository.CreateMock<OrderingClause> (ExpressionHelper.CreateClause(), ExpressionHelper.CreateExpression(), OrderDirection.Desc);
 
       orderByClause.Add (ordering1);
       orderByClause.Add (ordering2);
 
-      StringVisitor sv = new StringVisitor ();
+      StringVisitor sv = new StringVisitor();
 
       //expectations
-      using (repository.Ordered ())
+      using (repository.Ordered())
       {
         ordering1.Accept (sv);
         ordering2.Accept (sv);
       }
 
-      repository.ReplayAll ();
+      repository.ReplayAll();
 
       sv.VisitOrderByClause (orderByClause);
 
-      repository.VerifyAll ();
+      repository.VerifyAll();
     }
 
     [Test]
     public void StringVisitorForOrderByClauseOrderDirectionMixedAscDesc ()
     {
-      OrderByClause orderByClause = ExpressionHelper.CreateOrderByClause ();
+      OrderByClause orderByClause = ExpressionHelper.CreateOrderByClause();
 
-      MockRepository repository = new MockRepository ();
+      MockRepository repository = new MockRepository();
 
-      OrderingClause ordering1 = repository.CreateMock<OrderingClause> (ExpressionHelper.CreateExpression (), OrderDirection.Desc);
-      OrderingClause ordering2 = repository.CreateMock<OrderingClause> (ExpressionHelper.CreateExpression (), OrderDirection.Asc);
+      OrderingClause ordering1 =
+          repository.CreateMock<OrderingClause> (ExpressionHelper.CreateClause(), ExpressionHelper.CreateExpression(), OrderDirection.Desc);
+      OrderingClause ordering2 =
+          repository.CreateMock<OrderingClause> (ExpressionHelper.CreateClause(), ExpressionHelper.CreateExpression(), OrderDirection.Asc);
 
       orderByClause.Add (ordering1);
       orderByClause.Add (ordering2);
 
-      StringVisitor sv = new StringVisitor ();
+      StringVisitor sv = new StringVisitor();
 
       //expectations
-      using (repository.Ordered ())
+      using (repository.Ordered())
       {
         ordering1.Accept (sv);
         ordering2.Accept (sv);
       }
 
-      repository.ReplayAll ();
+      repository.ReplayAll();
 
       sv.VisitOrderByClause (orderByClause);
 
-      repository.VerifyAll ();
+      repository.VerifyAll();
     }
 
 
     [Test]
-    public void StringVisitorQueryBody()
+    public void StringVisitorQueryBody ()
     {
       MockRepository repository = new MockRepository();
 
-      SelectClause selectClause1 = 
-        repository.CreateMock<SelectClause> (new object[] {ExpressionHelper.CreateLambdaExpression()});
+      SelectClause selectClause1 =
+          repository.CreateMock<SelectClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateLambdaExpression () );
 
-      OrderByClause orderByClause1 = 
-        repository.CreateMock<OrderByClause> (ExpressionHelper.CreateOrderingClause());
+      OrderByClause orderByClause1 =
+          repository.CreateMock<OrderByClause> (ExpressionHelper.CreateOrderingClause ());
 
-      AdditionalFromClause fromClause1 = 
-        repository.CreateMock<AdditionalFromClause> (ExpressionHelper.CreateParameterExpression(),
-        ExpressionHelper.CreateLambdaExpression(), ExpressionHelper.CreateLambdaExpression());
+      AdditionalFromClause fromClause1 =
+          repository.CreateMock<AdditionalFromClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateParameterExpression (),
+              ExpressionHelper.CreateLambdaExpression(), ExpressionHelper.CreateLambdaExpression());
 
       WhereClause whereClause1 =
-          repository.CreateMock<WhereClause> (ExpressionHelper.CreateLambdaExpression());
+          repository.CreateMock<WhereClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateLambdaExpression ());
 
       QueryBody queryBody = new QueryBody (selectClause1, orderByClause1);
-      
+
       queryBody.Add (fromClause1);
       queryBody.Add (whereClause1);
 
-      StringVisitor sv = new StringVisitor ();
+      StringVisitor sv = new StringVisitor();
 
       //expectations
-      using(repository.Ordered())
+      using (repository.Ordered())
       {
         fromClause1.Accept (sv);
         whereClause1.Accept (sv);
@@ -259,38 +265,37 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.VisitorTest
         selectClause1.Accept (sv);
       }
 
-      repository.ReplayAll ();
+      repository.ReplayAll();
 
       sv.VisitQueryBody (queryBody);
-      
+
       repository.VerifyAll();
     }
 
     [Test]
-    public void StringVisitorQueryBodyOnlyWithSelectGroupClause()
+    public void StringVisitorQueryBodyOnlyWithSelectGroupClause ()
     {
-      MockRepository repository = new MockRepository ();
+      MockRepository repository = new MockRepository();
 
       SelectClause selectClause1 =
-        repository.CreateMock<SelectClause> (new object[] {ExpressionHelper.CreateLambdaExpression () });
+          repository.CreateMock<SelectClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateLambdaExpression ());
 
       QueryBody queryBody = new QueryBody (selectClause1);
 
       StringVisitor sv = new StringVisitor();
 
       //expectation
-      selectClause1.Accept(sv);
+      selectClause1.Accept (sv);
 
       repository.ReplayAll();
 
-      sv.VisitQueryBody(queryBody);
+      sv.VisitQueryBody (queryBody);
 
       repository.VerifyAll();
-
     }
 
     [Test]
-    public void StringVisitorQueryExpression()
+    public void StringVisitorQueryExpression ()
     {
       MockRepository repository = new MockRepository();
 
@@ -303,31 +308,27 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.VisitorTest
       StringVisitor sv = new StringVisitor();
 
       //expectations
-      using(repository.Ordered())
+      using (repository.Ordered())
       {
-        fromClause.Accept(sv);
-        queryBody.Accept(sv);
+        fromClause.Accept (sv);
+        queryBody.Accept (sv);
       }
 
       repository.ReplayAll();
       sv.VisitQueryExpression (queryExpression);
       repository.VerifyAll();
-
     }
 
     [Test]
-    public void StringVisitorForAdditionalFromClauses()
+    public void StringVisitorForAdditionalFromClauses ()
     {
-      AdditionalFromClause fromClause = ExpressionHelper.CreateAdditionalFromClause ();
+      AdditionalFromClause fromClause = ExpressionHelper.CreateAdditionalFromClause();
 
-      StringVisitor sv = new StringVisitor ();
+      StringVisitor sv = new StringVisitor();
 
       sv.VisitAdditionalFromClause (fromClause);
 
-      Assert.That (sv.ToString (), Text.Contains ("from"));
+      Assert.That (sv.ToString(), Text.Contains ("from"));
     }
-
-
-
   }
 }

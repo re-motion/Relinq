@@ -3,6 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Rubicon.Data.DomainObjects.Linq.Parsing;
+using Rubicon.Data.DomainObjects.Linq.UnitTests.Parsing;
 
 namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest
 {
@@ -38,6 +39,27 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest
     public void GetParsedQuery()
     {
       Assert.IsNotNull (_parser.GetParsedQuery());
+    }
+
+    [Test]
+    public void PreviousClauses_SimpleQuery()
+    {
+      QueryExpression parsedQuery = _parser.GetParsedQuery();
+      Assert.IsNull (parsedQuery.FromClause.PreviousClause);
+      Assert.AreSame (parsedQuery.FromClause, parsedQuery.QueryBody.SelectOrGroupClause.PreviousClause);
+    }
+
+    [Test]
+    public void PreviousClauses_LargeQuery ()
+    {
+      IQueryable<Student> source = ExpressionHelper.CreateQuerySource();
+      Expression queryExpression = TestQueryGenerator.CreateMultiFromWhereQuery (source, source).Expression;
+      QueryParser parser = new QueryParser (queryExpression);
+      QueryExpression parsedQuery = parser.GetParsedQuery ();
+      
+      Assert.IsNull (parsedQuery.FromClause.PreviousClause);
+      Assert.AreSame (parsedQuery.QueryBody.FromLetWhereClauses.First(), parsedQuery.QueryBody.FromLetWhereClauses.Last ().PreviousClause);
+      Assert.AreSame (parsedQuery.QueryBody.FromLetWhereClauses.Last(), parsedQuery.QueryBody.SelectOrGroupClause.PreviousClause);
     }
   }
 }

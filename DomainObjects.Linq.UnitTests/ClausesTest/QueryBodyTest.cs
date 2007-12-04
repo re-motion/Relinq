@@ -14,7 +14,6 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ClausesTest
     [Test]
     public void InitializeWithISelectOrGroupClause()
     {
-      Expression expression = ExpressionHelper.CreateExpression();
       ISelectGroupClause iSelectOrGroupClause = ExpressionHelper.CreateSelectClause();
 
       QueryBody queryBody = new QueryBody (iSelectOrGroupClause);
@@ -28,7 +27,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ClausesTest
       Expression expression = ExpressionHelper.CreateExpression ();
       ISelectGroupClause iSelectOrGroupClause = ExpressionHelper.CreateSelectClause ();
       
-      OrderingClause ordering = new OrderingClause (expression, OrderDirection.Asc);
+      OrderingClause ordering = new OrderingClause (ExpressionHelper.CreateClause(), expression, OrderDirection.Asc);
 
       OrderByClause orderByClause = new OrderByClause (ordering);
       

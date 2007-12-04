@@ -3,6 +3,9 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Rubicon.Data.DomainObjects.Linq.Clauses;
+using System.Linq;
+using Rubicon.Data.DomainObjects.Linq.UnitTests.Parsing;
+using Rubicon.Data.DomainObjects.Linq.Parsing;
 
 namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ClausesTest
 {
@@ -13,15 +16,17 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ClausesTest
     public void InitializeWithExpression ()
     {
       LambdaExpression expression = ExpressionHelper.CreateLambdaExpression ();
+      IClause clause = ExpressionHelper.CreateClause();
 
-      SelectClause selectClause = new SelectClause (expression);
+      SelectClause selectClause = new SelectClause (clause, expression);
+      Assert.AreSame (clause, selectClause.PreviousClause);
       Assert.AreEqual (expression, selectClause.ProjectionExpression);
     }
 
     [Test]
     public void InitializeWithoutExpression ()
     {
-      SelectClause selectClause = new SelectClause (null);
+      SelectClause selectClause = new SelectClause (ExpressionHelper.CreateClause(),null);
       Assert.IsNull (selectClause.ProjectionExpression);
     }
 
@@ -40,7 +45,6 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ClausesTest
       SelectClause selectClause = ExpressionHelper.CreateSelectClause();
       Assert.IsInstanceOfType (typeof (IQueryElement), selectClause);
     }
-
 
     [Test]
     public void Accept()
