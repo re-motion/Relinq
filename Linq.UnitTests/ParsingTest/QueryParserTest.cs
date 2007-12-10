@@ -3,7 +3,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Rubicon.Data.Linq.Parsing;
-using Rubicon.Data.Linq.Parsing;
 
 namespace Rubicon.Data.Linq.UnitTests.ParsingTest
 {

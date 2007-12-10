@@ -3,9 +3,6 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Rubicon.Data.Linq.Clauses;
-using System.Linq;
-using Rubicon.Data.Linq.Parsing;
-using Rubicon.Data.Linq.Clauses;
 
 namespace Rubicon.Data.Linq.UnitTests.ClausesTest
 {

@@ -5,9 +5,6 @@ using Rhino.Mocks;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.Parsing;
 using Rubicon.Data.Linq.QueryProviderImplementation;
-using Rubicon.Data.Linq.Clauses;
-using Rubicon.Data.Linq.Parsing;
-using Rubicon.Data.Linq.QueryProviderImplementation;
 
 namespace Rubicon.Data.Linq.UnitTests
 {

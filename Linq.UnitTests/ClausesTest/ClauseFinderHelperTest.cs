@@ -3,8 +3,6 @@ using System.Linq;
 using NUnit.Framework;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.Parsing;
-using Rubicon.Data.Linq.Clauses;
-using Rubicon.Data.Linq.Parsing;
 
 namespace Rubicon.Data.Linq.UnitTests.ClausesTest
 {

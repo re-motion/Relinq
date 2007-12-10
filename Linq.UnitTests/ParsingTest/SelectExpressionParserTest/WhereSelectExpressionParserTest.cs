@@ -5,8 +5,6 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Rubicon.Data.Linq.Parsing;
 using Rubicon.Data.Linq.UnitTests.ParsingTest.WhereExpressionParserTest;
-using Rubicon.Data.Linq.Parsing;
-using Rubicon.Data.Linq.UnitTests.ParsingTest.WhereExpressionParserTest;
 
 namespace Rubicon.Data.Linq.UnitTests.ParsingTest.SelectExpressionParserTest
 {

@@ -1,11 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Rhino.Mocks;
-using Rubicon.Data.Linq.QueryProviderImplementation;
 using Rubicon.Data.Linq.QueryProviderImplementation;
 using Rubicon.Utilities;
 

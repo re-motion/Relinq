@@ -1,12 +1,8 @@
 using System;
 using System.Linq;
-using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Rubicon.Collections;
-using Rubicon.Data.Linq.Clauses;
-using Rubicon.Data.Linq.Parsing;
-using Rubicon.Data.Linq.Visitor;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.Visitor;
 

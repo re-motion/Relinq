@@ -1,9 +1,6 @@
 using System;
-using System.Linq.Expressions;
 using NUnit.Framework;
 using Rhino.Mocks;
-using Rubicon.Data.Linq.Clauses;
-using Rubicon.Data.Linq.Visitor;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.Visitor;
 

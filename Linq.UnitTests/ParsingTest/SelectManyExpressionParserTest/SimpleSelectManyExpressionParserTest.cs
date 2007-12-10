@@ -1,12 +1,9 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using NUnit.Framework;
 using Rubicon.Data.Linq.Parsing;
 using NUnit.Framework.SyntaxHelpers;
-using Rubicon.Data.Linq.UnitTests.ParsingTest.WhereExpressionParserTest;
-using Rubicon.Data.Linq.Parsing;
 using Rubicon.Data.Linq.UnitTests.ParsingTest.WhereExpressionParserTest;
 
 namespace Rubicon.Data.Linq.UnitTests.ParsingTest.SelectManyExpressionParserTest
