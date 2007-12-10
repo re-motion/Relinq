@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Rubicon.Data.Linq.Clauses.FromClause" BaseTypeListCollapsed="true">
+    <Position X="6.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIIBACAAAAAAAAAAAAAAgCAAAAAAAAAQAAAAwAAAAAA=</HashCode>
+      <FileName>Clauses\FromClause.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="JoinClauses" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.169" />
+  </Class>
+  <Class Name="Rubicon.Data.Linq.Clauses.WhereClause" BaseTypeListCollapsed="true">
+    <Position X="9.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Clauses\WhereClause.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Rubicon.Data.Linq.Clauses.GroupClause" BaseTypeListCollapsed="true">
+    <Position X="8" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAACIAAAAAAAAAAAAAAAAAABABAAAA=</HashCode>
+      <FileName>Clauses\GroupClause.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Rubicon.Data.Linq.Clauses.JoinClause" BaseTypeListCollapsed="true">
+    <Position X="4.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAIAMAAAAgAAAAEACAAAAAAACQAAAAAE=</HashCode>
+      <FileName>Clauses\JoinClause.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Rubicon.Data.Linq.Clauses.LetClause" BaseTypeListCollapsed="true">
+    <Position X="11.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAAAAAgAAAAAAAAAAQAAAAwAAAAAA=</HashCode>
+      <FileName>Clauses\LetClause.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Rubicon.Data.Linq.Clauses.OrderByClause" BaseTypeListCollapsed="true">
+    <Position X="14.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIIAAAACAAAAAAAgAAAAAAAAACAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Clauses\OrderByClause.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="OrderingList" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Rubicon.Data.Linq.Clauses.OrderingClause" BaseTypeListCollapsed="true">
+    <Position X="14.75" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIgAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAgAABAAA=</HashCode>
+      <FileName>Clauses\OrderingClause.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="OrderDirection" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Rubicon.Data.Linq.Clauses.QueryBody" BaseTypeListCollapsed="true">
+    <Position X="12" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AIIAAACAAAAAAAAAAAEAAAIAAAAECAAAAIAAIAAAAAA=</HashCode>
+      <FileName>Clauses\QueryBody.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="OrderByClause" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Rubicon.Data.Linq.QueryExpression" BaseTypeListCollapsed="true">
+    <Position X="8.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIBAAAAAAAAAAAAEAIACAAAAAAAQAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>QueryExpression.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="FromClause" />
+      <Property Name="QueryBody" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Rubicon.Data.Linq.Clauses.SelectClause" BaseTypeListCollapsed="true">
+    <Position X="6.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAgAAAAAA=</HashCode>
+      <FileName>Clauses\SelectClause.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="Rubicon.Data.Linq.IQueryElement" Collapsed="true">
+    <Position X="8.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IQueryElement.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Rubicon.Data.Linq.Clauses.IFromLetWhereClause" Collapsed="true">
+    <Position X="10.75" Y="3.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Clauses\IFromLetWhereClause.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Rubicon.Data.Linq.Clauses.ISelectGroupClause" Collapsed="true">
+    <Position X="6.75" Y="3.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Clauses\ISelectGroupClause.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="Rubicon.Data.Linq.Clauses.OrderDirection">
+    <Position X="14.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAQAAAAAA=</HashCode>
+      <FileName>Clauses\OrderingClause.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Tahoma" Size="8.25" />
+</ClassDiagram>

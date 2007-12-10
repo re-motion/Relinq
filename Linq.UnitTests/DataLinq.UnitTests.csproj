@@ -1,0 +1,149 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{BAACFB24-6EF8-4EA7-B385-3F8DAF085A4E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Rubicon.Data.Linq.UnitTests</RootNamespace>
+    <AssemblyName>Rubicon.Data.Linq.UnitTests</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="nunit.framework, Version=2.4.0.2, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\libraries\Commons\trunk\prereq\Assemblies\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Rhino.Mocks, Version=3.1.0.584, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\libraries\Commons\trunk\prereq\Assemblies\Rhino.Mocks.dll</HintPath>
+    </Reference>
+    <Reference Include="Rubicon.Core, Version=1.7.56.202, Culture=neutral, PublicKeyToken=ad97c3e83e217fcd, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\libraries\Commons\trunk\Core\bin\Debug\Rubicon.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ClausesTest\AdditionalFromClauseTest.cs" />
+    <Compile Include="ClausesTest\ClauseFinderHelperTest.cs" />
+    <Compile Include="ClausesTest\MainFromClauseTest.cs" />
+    <Compile Include="ExpressionHelper.cs" />
+    <Compile Include="ClausesTest\FromClauseBaseTest.cs" />
+    <Compile Include="ClausesTest\GroupClauseTest.cs" />
+    <Compile Include="ClausesTest\JoinClauseTest.cs" />
+    <Compile Include="ClausesTest\LetClauseTest.cs" />
+    <Compile Include="ClausesTest\OrderByClauseTest.cs" />
+    <Compile Include="ClausesTest\OrderingClauseTest.cs" />
+    <Compile Include="ExpressionTreeNavigator.cs" />
+    <Compile Include="ParsingTest\ExpressionTreeComparer.cs" />
+    <Compile Include="ParsingTest\FromLetWhereExpressionTest.cs" />
+    <Compile Include="ParsingTest\ParserUtilityTest.cs" />
+    <Compile Include="ParsingTest\SelectProjectionParserTest.cs" />
+    <Compile Include="ParsingTest\QueryParserIntegrationTest\ReverseFromWhereQueryWithProjectionTest.cs" />
+    <Compile Include="ParsingTest\QueryParserIntegrationTest\ThreeFromWhereQueryTest.cs" />
+    <Compile Include="ParsingTest\QueryParserIntegrationTest\ReverseFromWhereQueryTest.cs" />
+    <Compile Include="ParsingTest\QueryParserIntegrationTest\ThreeFromQueryTest.cs" />
+    <Compile Include="ParsingTest\QueryParserIntegrationTest\MultiFromWhereQueryTest.cs" />
+    <Compile Include="ParsingTest\QueryParserIntegrationTest\SimpleSelectManyQueryTest.cs" />
+    <Compile Include="ParsingTest\QueryParserIntegrationTest\SelectWhereQueryTest.cs" />
+    <Compile Include="ParsingTest\QueryParserIntegrationTest\MultiWhereQueryTest.cs" />
+    <Compile Include="ParsingTest\QueryParserIntegrationTest\QueryTestBase.cs" />
+    <Compile Include="ParsingTest\QueryParserIntegrationTest\SimpleQueryTest.cs" />
+    <Compile Include="ParsingTest\QueryParserIntegrationTest\SimpleQueryWithProjectionTest.cs" />
+    <Compile Include="ParsingTest\QueryParserIntegrationTest\SimpleWhereQueryTest.cs" />
+    <Compile Include="ParsingTest\QueryParserTest.cs" />
+    <Compile Include="ParsingTest\SelectExpressionParserTest\GeneralSelectExpressionParserTest.cs" />
+    <Compile Include="ParsingTest\SelectExpressionParserTest\SimpleSelectExpressionParserTest.cs" />
+    <Compile Include="ParsingTest\SelectExpressionParserTest\WhereSelectExpressionParserTest.cs" />
+    <Compile Include="ParsingTest\SelectManyExpressionParserTest\GeneralSelectManyExpressionParserTest.cs" />
+    <Compile Include="ParsingTest\SelectManyExpressionParserTest\RecursiveSelectManyExpressionParserTest.cs" />
+    <Compile Include="ParsingTest\SelectManyExpressionParserTest\SimpleSelectManyExpressionParserTest.cs" />
+    <Compile Include="ParsingTest\SelectManyExpressionParserTest\WhereSelectManyExpressionParserTest.cs" />
+    <Compile Include="ParsingTest\WhereExpressionParserTest\FromLetWhereHelper.cs" />
+    <Compile Include="ParsingTest\WhereExpressionParserTest\GeneralWhereExpressionParserTest.cs" />
+    <Compile Include="ParsingTest\WhereExpressionParserTest\RecursiveWhereExpressionParserTest.cs" />
+    <Compile Include="ParsingTest\WhereExpressionParserTest\SelectManyWhereExpressionParserTest.cs" />
+    <Compile Include="ParsingTest\WhereExpressionParserTest\SimpleWhereExpressionParserTest.cs" />
+    <Compile Include="Student.cs" />
+    <Compile Include="StubDatabaseInfo.cs" />
+    <Compile Include="StubParameterCollection.cs" />
+    <Compile Include="TestQueryGenerator.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ClausesTest\QueryBodyTest.cs" />
+    <Compile Include="QueryExpressionTest.cs" />
+    <Compile Include="ClausesTest\SelectClauseTest.cs" />
+    <Compile Include="QueryProviderImplementationTest\StandardQueryableTest.cs" />
+    <Compile Include="QueryProviderTest.cs" />
+    <Compile Include="SqlGeneratorTest.cs" />
+    <Compile Include="VisitorTest\SqlGeneratorVisitorTest.cs" />
+    <Compile Include="VisitorTest\StringVisitorTest.cs" />
+    <Compile Include="ClausesTest\WhereClauseTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Linq\Data.Linq.csproj">
+      <Project>{DD9AA076-BE37-4A42-BA9E-C35ECC6955C9}</Project>
+      <Name>Data.Linq</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ParsingTest\ExpressionTrees\multiFromQueryWithProjection.jpg" />
+    <Content Include="ParsingTest\ExpressionTrees\multiFromWhereQuery.jpg" />
+    <Content Include="ParsingTest\ExpressionTrees\multiWhereQuery.jpg" />
+    <Content Include="ParsingTest\ExpressionTrees\reverseFromWhereQuery.jpg" />
+    <Content Include="ParsingTest\ExpressionTrees\reverseFromWhereQueryWithProjection.jpg" />
+    <Content Include="ParsingTest\ExpressionTrees\selectWhereQuery.jpg" />
+    <Content Include="ParsingTest\ExpressionTrees\simpleQuery.JPG" />
+    <Content Include="ParsingTest\ExpressionTrees\simpleQueryWithFieldProjection.jpg" />
+    <Content Include="ParsingTest\ExpressionTrees\simpleQueryWithNonEntityMemberAccess.jpg" />
+    <Content Include="ParsingTest\ExpressionTrees\simpleQueryWithProjection.JPG" />
+    <Content Include="ParsingTest\ExpressionTrees\simpleSelectManyQuery.jpg" />
+    <Content Include="ParsingTest\ExpressionTrees\simpleWhereQuery.jpg" />
+    <Content Include="ParsingTest\ExpressionTrees\threeFromQuery.jpg" />
+    <Content Include="ParsingTest\ExpressionTrees\threeFromWhereQuery.jpg" />
+    <Content Include="ParsingTest\ExpressionTrees\whereFromWhereQuery.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ParsingTest\ExpressionTrees\ExpressionTree_Grammar.docx" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

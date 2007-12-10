@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{DD9AA076-BE37-4A42-BA9E-C35ECC6955C9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Rubicon.Data.Linq</RootNamespace>
+    <AssemblyName>Rubicon.Data.Linq</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Rubicon.Core, Version=1.7.56.202, Culture=neutral, PublicKeyToken=ad97c3e83e217fcd, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\libraries\Commons\trunk\Core\bin\Debug\Rubicon.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Clauses\AdditionalFromClause.cs" />
+    <Compile Include="Clauses\ClauseFinderHelper.cs" />
+    <Compile Include="Clauses\FromClauseBase.cs" />
+    <Compile Include="Clauses\GroupClause.cs" />
+    <Compile Include="Clauses\IFromLetWhereClause.cs" />
+    <Compile Include="IClause.cs" />
+    <Compile Include="IQueryElement.cs" />
+    <Compile Include="IQueryExecutor.cs" />
+    <Compile Include="IQueryVisitor.cs" />
+    <Compile Include="Clauses\JoinClause.cs" />
+    <Compile Include="Clauses\LetClause.cs" />
+    <Compile Include="Clauses\OrderByClause.cs" />
+    <Compile Include="Clauses\OrderingClause.cs" />
+    <Compile Include="Parsing\FromExpression.cs" />
+    <Compile Include="Parsing\FromLetWhereExpressionBase.cs" />
+    <Compile Include="Parsing\SelectManyExpressionParser.cs" />
+    <Compile Include="Parsing\ParserUtility.cs" />
+    <Compile Include="Parsing\QueryParser.cs" />
+    <Compile Include="Parsing\QueryParserException.cs" />
+    <Compile Include="Parsing\SelectExpressionParser.cs" />
+    <Compile Include="Parsing\SelectProjectionParser.cs" />
+    <Compile Include="Parsing\WhereExpression.cs" />
+    <Compile Include="Parsing\WhereExpressionParser.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Clauses\MainFromClause.cs" />
+    <Compile Include="Clauses\QueryBody.cs" />
+    <Compile Include="QueryExpression.cs" />
+    <Compile Include="Clauses\SelectClause.cs" />
+    <Compile Include="Clauses\ISelectGroupClause.cs" />
+    <Compile Include="QueryProvider.cs" />
+    <Compile Include="QueryProviderImplementation\StandardQueryable.cs" />
+    <Compile Include="QueryProviderImplementation\TypeSystem.cs" />
+    <Compile Include="SqlGenerator.cs" />
+    <Compile Include="Visitor\ExpressionTreeBuildingVisitor.cs" />
+    <Compile Include="IDatabaseInfo.cs" />
+    <Compile Include="Visitor\SqlGeneratorVisitor.cs" />
+    <Compile Include="Visitor\StringVisitor.cs" />
+    <Compile Include="Clauses\WhereClause.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="QueryExpressionDiagramm.cd" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
