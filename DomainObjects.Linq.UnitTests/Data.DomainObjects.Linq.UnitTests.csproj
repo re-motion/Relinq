@@ -31,9 +31,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="nunit.framework, Version=2.4.0.2, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\libraries\Commons\trunk\prereq\Assemblies\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="Rubicon.Data.DomainObjects, Version=1.7.65.202, Culture=neutral, PublicKeyToken=ad97c3e83e217fcd, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\libraries\Commons\trunk\Data\DomainObjects\bin\Debug\Rubicon.Data.DomainObjects.dll</HintPath>
+    </Reference>
+    <Reference Include="Rubicon.Data.DomainObjects.UnitTests, Version=1.7.65.202, Culture=neutral, PublicKeyToken=ad97c3e83e217fcd, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\libraries\Commons\trunk\Data\DomainObjects.UnitTests\bin\Debug\Rubicon.Data.DomainObjects.UnitTests.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -50,12 +58,32 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueryExecutorTest.cs" />
+    <Compile Include="SetupFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DomainObjects.Linq\Data.DomainObjects.Linq.csproj">
       <Project>{975E15F0-75A7-419A-8EFC-8C5ED724DBA4}</Project>
       <Name>Data.DomainObjects.Linq</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\libraries\Commons\trunk\Data\DomainObjects.UnitTests\Database\DataDomainObjects_CreateDB.sql">
+      <Link>DataDomainObjects_CreateDB.sql</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\..\libraries\Commons\trunk\Data\DomainObjects.UnitTests\Database\DataDomainObjects_CreateTableInheritanceTestData.sql">
+      <Link>DataDomainObjects_CreateTableInheritanceTestData.sql</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\..\libraries\Commons\trunk\Data\DomainObjects.UnitTests\Database\DataDomainObjects_CreateTestData.sql">
+      <Link>DataDomainObjects_CreateTestData.sql</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\..\libraries\Commons\trunk\Data\DomainObjects.UnitTests\Database\DataDomainObjects_SetupDB.sql">
+      <Link>DataDomainObjects_SetupDB.sql</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
