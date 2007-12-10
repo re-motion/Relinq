@@ -7,6 +7,5 @@ namespace Rubicon.Data.Linq
   {
     string GetTableName (Type querySourceType);
     string GetColumnName (MemberInfo member);
-    bool IsDbColumn (MemberInfo member);
   }
 }

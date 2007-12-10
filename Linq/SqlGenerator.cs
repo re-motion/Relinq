@@ -1,11 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Text;
 using Rubicon.Collections;
-using Rubicon.Data.Linq.QueryProviderImplementation;
-using Rubicon.Data.Linq.Visitor;
 using Rubicon.Data.Linq.Visitor;
 using Rubicon.Text;
 using Rubicon.Utilities;

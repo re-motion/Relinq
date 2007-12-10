@@ -1,7 +1,6 @@
 using System;
 using System.Text;
 using Rubicon.Data.Linq.Clauses;
-using Rubicon.Data.Linq.Clauses;
 using Rubicon.Text;
 using Rubicon.Utilities;
 

@@ -17,12 +17,10 @@ namespace Rubicon.Data.Linq.UnitTests
 
     public string GetColumnName (MemberInfo member)
     {
-      return member.Name + "Column";
-    }
-
-    public bool IsDbColumn (MemberInfo member)
-    {
-      return member.Name != "NonDBProperty";
+      if (member.Name == "NonDBProperty")
+        return null;
+      else
+        return member.Name + "Column";
     }
   }
 }

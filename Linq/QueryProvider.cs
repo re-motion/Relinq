@@ -1,13 +1,11 @@
 using System;
+using System.Collections;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Rubicon.Data.Linq.QueryProviderImplementation;
 using Rubicon.Data.Linq.Parsing;
 using Rubicon.Data.Linq.QueryProviderImplementation;
 using Rubicon.Utilities;
-using Rubicon.Data.Linq.Parsing;
-using System.Collections;
 
 namespace Rubicon.Data.Linq
 {
@@ -31,7 +29,7 @@ namespace Rubicon.Data.Linq
       {
         return (IQueryable) genericCreateQueryMethod.MakeGenericMethod (elementType).Invoke(this, new object[] {expression});
       }
-      catch (System.Reflection.TargetInvocationException tie)
+      catch (TargetInvocationException tie)
       {
         throw tie.InnerException;
       }

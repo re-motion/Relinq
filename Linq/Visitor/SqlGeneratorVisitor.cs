@@ -1,9 +1,7 @@
-using System.Linq;
 using System.Collections.Generic;
-using Rubicon.Collections;
-using Rubicon.Data.Linq.Clauses;
 using System.Reflection;
-using Rubicon.Data.Linq.Parsing;
+using System.Linq;
+using Rubicon.Collections;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.Parsing;
 

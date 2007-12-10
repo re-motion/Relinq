@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
-using Rubicon.Data.Linq.Clauses;
-using Rubicon.Data.Linq.Visitor;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.Visitor;
 using Rubicon.Utilities;

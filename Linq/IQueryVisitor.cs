@@ -1,5 +1,4 @@
 using Rubicon.Data.Linq.Clauses;
-using Rubicon.Data.Linq.Clauses;
 
 namespace Rubicon.Data.Linq
 {

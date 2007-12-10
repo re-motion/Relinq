@@ -57,6 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DatabaseInfoTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryExecutorTest.cs" />
     <Compile Include="SetupFixture.cs" />
@@ -65,6 +66,10 @@
     <ProjectReference Include="..\DomainObjects.Linq\Data.DomainObjects.Linq.csproj">
       <Project>{975E15F0-75A7-419A-8EFC-8C5ED724DBA4}</Project>
       <Name>Data.DomainObjects.Linq</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Linq\Data.Linq.csproj">
+      <Project>{DD9AA076-BE37-4A42-BA9E-C35ECC6955C9}</Project>
+      <Name>Data.Linq</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

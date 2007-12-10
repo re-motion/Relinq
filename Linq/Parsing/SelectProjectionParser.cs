@@ -3,7 +3,6 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Rubicon.Collections;
 using Rubicon.Data.Linq.Clauses;
-using Rubicon.Data.Linq.Clauses;
 using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.Parsing
@@ -106,7 +105,7 @@ namespace Rubicon.Data.Linq.Parsing
     private void FindSelectedFields (MemberExpression memberExpression)
     {
       FromClauseBase fromClause = FindFromClauseForExpression (memberExpression.Expression);
-      if (fromClause != null && _databaseInfo.IsDbColumn(memberExpression.Member))
+      if (fromClause != null && _databaseInfo.GetColumnName (memberExpression.Member) != null)
         _fields.Add (Tuple.NewTuple (fromClause, memberExpression.Member));
     }
 
