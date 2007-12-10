@@ -5,14 +5,13 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Rhino.Mocks.Constraints;
-using Rubicon.Data.Linq.QueryProviderImplementation;
 using Rubicon.Utilities;
 using System.Collections;
 
 namespace Rubicon.Data.Linq.UnitTests
 {
   [TestFixture]
-  public class QueryProviderTest
+  public class QueryProviderBaseTest
   {
     private MockRepository _mockRepository;
     private QueryProviderBase _queryProvider;
@@ -105,7 +104,7 @@ namespace Rubicon.Data.Linq.UnitTests
 
       _mockRepository.ReplayAll ();
 
-      List<Student> students = new List<Student> (query);
+      List<Student> students = new List<Student> (query); // enumerates query -> ExecuteCollection
       Assert.AreEqual (1, students.Count);
       Assert.AreSame (student, students[0]);
 
@@ -128,7 +127,7 @@ namespace Rubicon.Data.Linq.UnitTests
 
       ArrayList students = new ArrayList();
       IEnumerable nonGenericQuery = query;
-      foreach (object o in nonGenericQuery)
+      foreach (object o in nonGenericQuery) // enumerates query -> ExecuteCollection
         students.Add (o);
 
       Assert.AreEqual (1, students.Count);

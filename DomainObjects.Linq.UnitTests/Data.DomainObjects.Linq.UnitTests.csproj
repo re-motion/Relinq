@@ -35,6 +35,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\libraries\Commons\trunk\prereq\Assemblies\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="Rubicon.Core, Version=1.7.65.202, Culture=neutral, PublicKeyToken=ad97c3e83e217fcd, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\libraries\Commons\trunk\Core\bin\Debug\Rubicon.Core.dll</HintPath>
+    </Reference>
     <Reference Include="Rubicon.Data.DomainObjects, Version=1.7.65.202, Culture=neutral, PublicKeyToken=ad97c3e83e217fcd, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\libraries\Commons\trunk\Data\DomainObjects\bin\Debug\Rubicon.Data.DomainObjects.dll</HintPath>
@@ -58,9 +62,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DatabaseInfoTest.cs" />
+    <Compile Include="DataContextTest.cs" />
     <Compile Include="DomainObjectQueryableTest.cs" />
+    <Compile Include="DomainObjectQueryExecutorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryExecutorTest.cs" />
+    <Compile Include="QueryProviderTest.cs" />
     <Compile Include="SetupFixture.cs" />
   </ItemGroup>
   <ItemGroup>

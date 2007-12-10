@@ -9,13 +9,10 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
   public class DomainObjectQueryableTest
   {
     [Test]
-    [Ignore]
     public void DomainObjectQueryable_Executor()
     {
       DomainObjectQueryable<Order> queryable = new DomainObjectQueryable<Order>();
       Assert.IsNotNull (((QueryProviderBase) queryable.Provider).Executor);
     }
-
-
   }
 }

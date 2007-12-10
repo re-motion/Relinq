@@ -11,6 +11,11 @@ namespace Rubicon.Data.Linq.UnitTests
       return from s in source select s;
     }
 
+    public static IQueryable<Student> CreateSimpleQueryWithNonDBProjection (IQueryable<Student> source)
+    {
+      return from s in source select (Student)null;
+    }
+
     public static IQueryable<Tuple<string,string>> CreateSimpleQueryWithFieldProjection (IQueryable<Student> source)
     {
       return from s in source select new Tuple<string,string>(s.First,s.Last);

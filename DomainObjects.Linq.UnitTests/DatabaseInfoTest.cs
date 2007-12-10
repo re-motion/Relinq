@@ -7,7 +7,6 @@ using Rubicon.Data.DomainObjects.UnitTests.TestDomain;
 namespace Rubicon.Data.DomainObjects.Linq.UnitTests
 {
   [TestFixture]
-  [Ignore]
   public class DatabaseInfoTest
   {
     private IDatabaseInfo _databaseInfo;
@@ -29,7 +28,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void GetTableName_InvalidType ()
     {
-      Assert.IsNull (typeof (DomainObjectQueryable<DomainObject>));
+      Assert.IsNull (_databaseInfo.GetTableName(typeof (DomainObjectQueryable<DomainObject>)));
       Assert.IsNull (_databaseInfo.GetTableName (typeof (string)));
     }
 

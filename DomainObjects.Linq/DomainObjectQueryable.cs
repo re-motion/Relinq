@@ -13,13 +13,13 @@ namespace Rubicon.Data.DomainObjects.Linq
     }
 
     public DomainObjectQueryable ()
-        : base (null)
+        : base (new QueryExecutor<T>())
     {
     }
 
     protected override QueryProviderBase CreateQueryProvider (IQueryExecutor executor)
     {
-      throw new System.NotImplementedException();
+      return new QueryProvider (executor);
     }
   }
 }

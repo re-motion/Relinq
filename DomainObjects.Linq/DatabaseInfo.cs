@@ -17,11 +17,19 @@ namespace Rubicon.Data.DomainObjects.Linq
     public string GetTableName (Type querySourceType)
     {
       ArgumentUtility.CheckNotNull ("querySourceType", querySourceType);
-      ClassDefinition classDefinition = MappingConfiguration.Current.ClassDefinitions[querySourceType];
-      if (classDefinition == null)
+      if (!querySourceType.IsGenericType
+          || querySourceType.IsGenericTypeDefinition
+          || querySourceType.GetGenericTypeDefinition () != typeof (DomainObjectQueryable<>))
         return null;
       else
-        return classDefinition.GetEntityName();
+      {
+        Type domainObjectType = querySourceType.GetGenericArguments()[0];
+        ClassDefinition classDefinition = MappingConfiguration.Current.ClassDefinitions[domainObjectType];
+        if (classDefinition == null)
+          return null;
+        else
+          return classDefinition.GetEntityName();
+      }
     }
 
     public string GetColumnName (MemberInfo member)

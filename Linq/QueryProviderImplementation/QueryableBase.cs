@@ -46,7 +46,7 @@ namespace Rubicon.Data.Linq.QueryProviderImplementation
 
     public IEnumerator<T> GetEnumerator ()
     {
-      return _queryProvider.ExecuteCollection<IEnumerable<T>> (Expression).GetEnumerator ();
+      return _queryProvider.ExecuteCollection<T> (Expression).GetEnumerator ();
     }
 
     IEnumerator IEnumerable.GetEnumerator ()

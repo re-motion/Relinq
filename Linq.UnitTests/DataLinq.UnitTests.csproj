@@ -106,8 +106,8 @@
     <Compile Include="ClausesTest\QueryBodyTest.cs" />
     <Compile Include="QueryExpressionTest.cs" />
     <Compile Include="ClausesTest\SelectClauseTest.cs" />
-    <Compile Include="QueryProviderImplementationTest\StandardQueryableTest.cs" />
-    <Compile Include="QueryProviderTest.cs" />
+    <Compile Include="QueryProviderImplementationTest\QueryableBaseTest.cs" />
+    <Compile Include="QueryProviderBaseTest.cs" />
     <Compile Include="SqlGeneratorTest.cs" />
     <Compile Include="TestQueryProvider.cs" />
     <Compile Include="VisitorTest\SqlGeneratorVisitorTest.cs" />

@@ -10,7 +10,7 @@ using Rubicon.Utilities;
 namespace Rubicon.Data.Linq.UnitTests.QueryProviderImplementationTest
 {
   [TestFixture]
-  public class StandardQueryableTest
+  public class QueryableBaseTest
   {
     private QueryProviderBase _provider;
     private MockRepository _mockRepository;
@@ -58,7 +58,7 @@ namespace Rubicon.Data.Linq.UnitTests.QueryProviderImplementationTest
     public void GenericGetEnumerator ()
     {
       Expression expression = ExpressionHelper.CreateNewIntArrayExpression();
-      Expect.Call (_provider.ExecuteCollection<IEnumerable<int>> (expression)).Return (new List<int> ());
+      Expect.Call (_provider.ExecuteCollection<int> (expression)).Return (new List<int> ());
 
       _mockRepository.ReplayAll ();
       QueryableBase<int> queryable = new TestQueryable<int> (_provider, expression);

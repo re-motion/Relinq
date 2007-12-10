@@ -1,11 +1,8 @@
 using System;
 using System.Data;
-using System.Data.Common;
 using System.Linq;
-using System.Linq.Expressions;
 using NUnit.Framework;
 using Rhino.Mocks;
-using Rubicon.Data.Linq.Parsing;
 using Rubicon.Collections;
 
 namespace Rubicon.Data.Linq.UnitTests
@@ -37,11 +34,22 @@ namespace Rubicon.Data.Linq.UnitTests
     }
 
     [Test]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "The query does not select any fields from the data source.")]
+    public void SimpleQuery_WithNonDBFieldProjection ()
+    {
+      IQueryable<Student> query = TestQueryGenerator.CreateSimpleQueryWithNonDBProjection (_source);
+      QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
+      new SqlGenerator (parsedQuery).GetCommandString(_databaseInfo);
+    }
+
+    [Test]
     public void SimpleQuery()
     {
       IQueryable<Student> query = TestQueryGenerator.CreateSimpleQuery (_source);
-      QueryExpression parsedQuery = ExpressionHelper.ParseQuery<Student> (query);
+      QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
       SqlGenerator sqlGenerator = new SqlGenerator(parsedQuery);
+      Assert.AreEqual ("SELECT [s].* FROM [sourceTable] [s]", sqlGenerator.GetCommandString(_databaseInfo));
+      
       IDbCommand command = sqlGenerator.GetCommand (_databaseInfo, _connection);
 
       Assert.AreEqual ("SELECT [s].* FROM [sourceTable] [s]", command.CommandText);
@@ -55,6 +63,9 @@ namespace Rubicon.Data.Linq.UnitTests
       IQueryable<Tuple<string, string, int>> query = TestQueryGenerator.CreateMultiFromQueryWithProjection (_source, _source, _source);
       QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
       SqlGenerator sqlGenerator = new SqlGenerator (parsedQuery);
+      Assert.AreEqual ("SELECT [s1].[FirstColumn], [s2].[LastColumn], [s3].[IDColumn] FROM [sourceTable] [s1], [sourceTable] [s2], [sourceTable] [s3]",
+        sqlGenerator.GetCommandString(_databaseInfo));
+
       IDbCommand command = sqlGenerator.GetCommand (_databaseInfo, _connection);
 
       Assert.AreEqual ("SELECT [s1].[FirstColumn], [s2].[LastColumn], [s3].[IDColumn] FROM [sourceTable] [s1], [sourceTable] [s2], [sourceTable] [s3]",

@@ -19,19 +19,18 @@ namespace Rubicon.Data.Linq
       _query = query;
     }
 
-    public IDbCommand GetCommand (IDatabaseInfo databaseInfo, IDbConnection connection)
+    public string GetCommandString (IDatabaseInfo databaseInfo)
     {
       ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
-      ArgumentUtility.CheckNotNull ("connection", connection);
 
-      SqlGeneratorVisitor visitor  = new SqlGeneratorVisitor (databaseInfo);
+      SqlGeneratorVisitor visitor = new SqlGeneratorVisitor (databaseInfo);
       _query.Accept (visitor);
-      StringBuilder sb = new StringBuilder();
+      StringBuilder sb = new StringBuilder ();
 
       sb.Append ("SELECT ");
 
       if (visitor.Columns.Count == 0)
-        sb.Append ("* ");
+        throw new InvalidOperationException ("The query does not select any fields from the data source.");
       else
       {
         IEnumerable<string> columnEntries = JoinTupleItems (visitor.Columns, ".");
@@ -43,8 +42,16 @@ namespace Rubicon.Data.Linq
       IEnumerable<string> tableEntries = JoinTupleItems (visitor.Tables, " ");
       sb.Append (SeparatedStringBuilder.Build (", ", tableEntries));
 
+      return sb.ToString();
+    }
+
+    public IDbCommand GetCommand (IDatabaseInfo databaseInfo, IDbConnection connection)
+    {
+      ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
+      ArgumentUtility.CheckNotNull ("connection", connection);
+
       IDbCommand command = connection.CreateCommand();
-      command.CommandText = sb.ToString();
+      command.CommandText = GetCommandString (databaseInfo);
       command.CommandType = CommandType.Text;
       return command;
     }

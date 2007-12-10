@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -61,11 +62,12 @@ namespace Rubicon.Data.Linq
       return Executor.ExecuteCollection (GenerateQueryExpression (expression));
     }
 
-    public virtual TResult ExecuteCollection<TResult> (Expression expression)
-        where TResult : IEnumerable
+    public virtual IEnumerable<TResult> ExecuteCollection<TResult> (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      return (TResult) Executor.ExecuteCollection (GenerateQueryExpression (expression));
+      IEnumerable results = Executor.ExecuteCollection (GenerateQueryExpression (expression));
+      foreach (TResult result in results)
+        yield return result;
     }
 
     private QueryExpression GenerateQueryExpression (Expression expression)
