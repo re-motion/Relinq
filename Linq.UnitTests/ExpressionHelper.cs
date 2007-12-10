@@ -117,7 +117,7 @@ namespace Rubicon.Data.Linq.UnitTests
 
     public static IQueryable<Student> CreateQuerySource (IQueryExecutor executor)
     {
-      return new StandardQueryable<Student> (executor);
+      return new TestQueryable<Student> (executor);
     }
 
     private static IQueryExecutor CreateExecutor()

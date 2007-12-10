@@ -7,17 +7,17 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.QueryProviderImplementation
 {
-  public class StandardQueryable<T> : IOrderedQueryable<T>
+  public abstract class QueryableBase<T> : IOrderedQueryable<T>
   {
-    private readonly QueryProvider _queryProvider;
+    private readonly QueryProviderBase _queryProvider;
     
-    public StandardQueryable (IQueryExecutor executor)
+    public QueryableBase (IQueryExecutor executor)
     {
-      _queryProvider = new QueryProvider (executor);
+      _queryProvider = CreateQueryProvider (executor);
       Expression = Expression.Constant (this);
     }
 
-    public StandardQueryable (QueryProvider provider, Expression expression)
+    public QueryableBase (QueryProviderBase provider, Expression expression)
     {
       ArgumentUtility.CheckNotNull ("provider", provider);
       ArgumentUtility.CheckNotNull ("expression", expression);
@@ -28,6 +28,8 @@ namespace Rubicon.Data.Linq.QueryProviderImplementation
       _queryProvider = provider;
       Expression = expression;
     }
+
+    protected abstract QueryProviderBase CreateQueryProvider (IQueryExecutor executor);
 
     public Expression Expression { get; private set; }
 

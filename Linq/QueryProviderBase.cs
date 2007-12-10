@@ -9,20 +9,20 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq
 {
-  public class QueryProvider : IQueryProvider
+  public abstract class QueryProviderBase : IQueryProvider
   {
-    private readonly IQueryExecutor _executor;
-
-    public QueryProvider (IQueryExecutor executor)
+    public QueryProviderBase (IQueryExecutor executor)
     {
       ArgumentUtility.CheckNotNull ("executor", executor);
-      _executor = executor;
+      Executor = executor;
     }
+
+    public IQueryExecutor Executor { get; private set; }
 
     public IQueryable CreateQuery (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      MethodInfo genericCreateQueryMethod = typeof (QueryProvider).GetMethod ("GenericCreateQuery", BindingFlags.NonPublic | BindingFlags.Instance);
+      MethodInfo genericCreateQueryMethod = typeof (QueryProviderBase).GetMethod ("CreateQueryable", BindingFlags.NonPublic | BindingFlags.Instance);
       
       Type elementType = TypeSystem.GetElementType(expression.Type);
       try
@@ -38,38 +38,34 @@ namespace Rubicon.Data.Linq
     public IQueryable<T> CreateQuery<T> (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      return GenericCreateQuery<T> (expression);
+      return CreateQueryable<T> (expression);
     }
 
-    private IQueryable<T> GenericCreateQuery<T> (Expression expression)
-    {
-      ArgumentUtility.CheckNotNull ("expression", expression);
-      return new StandardQueryable<T> (this, expression);
-    }
+    protected abstract IQueryable<T> CreateQueryable<T> (Expression expression);
 
     public virtual object Execute (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      return _executor.ExecuteSingle (GenerateQueryExpression(expression));
+      return Executor.ExecuteSingle (GenerateQueryExpression(expression));
     }
 
     public virtual TResult Execute<TResult> (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      return (TResult) _executor.ExecuteSingle (GenerateQueryExpression (expression));
+      return (TResult) Executor.ExecuteSingle (GenerateQueryExpression (expression));
     }
 
     public virtual IEnumerable ExecuteCollection (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      return _executor.ExecuteCollection (GenerateQueryExpression (expression));
+      return Executor.ExecuteCollection (GenerateQueryExpression (expression));
     }
 
     public virtual TResult ExecuteCollection<TResult> (Expression expression)
         where TResult : IEnumerable
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      return (TResult) _executor.ExecuteCollection (GenerateQueryExpression (expression));
+      return (TResult) Executor.ExecuteCollection (GenerateQueryExpression (expression));
     }
 
     private QueryExpression GenerateQueryExpression (Expression expression)

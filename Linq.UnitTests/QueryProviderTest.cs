@@ -15,7 +15,7 @@ namespace Rubicon.Data.Linq.UnitTests
   public class QueryProviderTest
   {
     private MockRepository _mockRepository;
-    private QueryProvider _queryProvider;
+    private QueryProviderBase _queryProvider;
     private IQueryExecutor _executor;
 
     [SetUp]
@@ -23,7 +23,7 @@ namespace Rubicon.Data.Linq.UnitTests
     {
       _mockRepository = new MockRepository();
       _executor = _mockRepository.CreateMock<IQueryExecutor>();
-      _queryProvider = new QueryProvider (_executor);
+      _queryProvider = new TestQueryProvider (_executor);
     }
 
     [Test]

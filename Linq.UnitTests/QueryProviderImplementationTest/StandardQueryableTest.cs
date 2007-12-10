@@ -12,7 +12,7 @@ namespace Rubicon.Data.Linq.UnitTests.QueryProviderImplementationTest
   [TestFixture]
   public class StandardQueryableTest
   {
-    private QueryProvider _provider;
+    private QueryProviderBase _provider;
     private MockRepository _mockRepository;
 
     [SetUp]
@@ -20,14 +20,14 @@ namespace Rubicon.Data.Linq.UnitTests.QueryProviderImplementationTest
     {
       _mockRepository = new MockRepository();
       IQueryExecutor executor = _mockRepository.CreateMock<IQueryExecutor>();
-      _provider = _mockRepository.CreateMock<QueryProvider> (executor);
+      _provider = _mockRepository.CreateMock<QueryProviderBase> (executor);
     }
 
     [Test]
     public void Initialize ()
     {
       Expression expression = ExpressionHelper.CreateNewIntArrayExpression();
-      StandardQueryable<int> queryable = new StandardQueryable<int> (_provider, expression);
+      QueryableBase<int> queryable = new TestQueryable<int> (_provider, expression);
 
       Assert.AreSame (_provider, queryable.Provider);
       Assert.AreSame (expression, queryable.Expression);
@@ -39,7 +39,7 @@ namespace Rubicon.Data.Linq.UnitTests.QueryProviderImplementationTest
     public void InitializeWithDefaultConstructor ()
     {
       IQueryExecutor executor = _mockRepository.CreateMock<IQueryExecutor>();
-      StandardQueryable<int> queryable = new StandardQueryable<int> (executor);
+      QueryableBase<int> queryable = new TestQueryable<int> (executor);
 
       Assert.IsNotNull (queryable.Provider);
       Assert.IsNotNull (queryable.Expression);
@@ -51,7 +51,7 @@ namespace Rubicon.Data.Linq.UnitTests.QueryProviderImplementationTest
     public void ConstructorThrowsTypeException ()
     {
       Expression expression = ExpressionHelper.CreateNewIntArrayExpression();
-      new StandardQueryable<string> (_provider, expression);
+      new TestQueryable<string> (_provider, expression);
     }
 
     [Test]
@@ -61,7 +61,7 @@ namespace Rubicon.Data.Linq.UnitTests.QueryProviderImplementationTest
       Expect.Call (_provider.ExecuteCollection<IEnumerable<int>> (expression)).Return (new List<int> ());
 
       _mockRepository.ReplayAll ();
-      StandardQueryable<int> queryable = new StandardQueryable<int> (_provider, expression);
+      QueryableBase<int> queryable = new TestQueryable<int> (_provider, expression);
       queryable.GetEnumerator();
       _mockRepository.VerifyAll ();
     }
@@ -73,7 +73,7 @@ namespace Rubicon.Data.Linq.UnitTests.QueryProviderImplementationTest
       Expect.Call (_provider.ExecuteCollection (expression)).Return(new List<int>());
 
       _mockRepository.ReplayAll ();
-      StandardQueryable<int> queryable = new StandardQueryable<int> (_provider, expression);
+      QueryableBase<int> queryable = new TestQueryable<int> (_provider, expression);
       ((IEnumerable)queryable).GetEnumerator ();
       _mockRepository.VerifyAll ();
     }

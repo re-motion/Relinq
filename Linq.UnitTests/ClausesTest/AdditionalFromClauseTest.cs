@@ -47,7 +47,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       AdditionalFromClause fromClause =
           new AdditionalFromClause (ExpressionHelper.CreateClause(), ExpressionHelper.CreateParameterExpression(), 
           fromExpression, ExpressionHelper.CreateLambdaExpression());
-      Assert.AreSame (typeof (StandardQueryable<Student>), fromClause.GetQuerySourceType());
+      Assert.AreSame (typeof (TestQueryable<Student>), fromClause.GetQuerySourceType());
     }
 
     

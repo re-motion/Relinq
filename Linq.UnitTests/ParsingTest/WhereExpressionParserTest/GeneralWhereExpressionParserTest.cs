@@ -20,8 +20,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.WhereExpressionParserTest
 
     [Test]
     [ExpectedException (typeof (QueryParserException), ExpectedMessage = "Expected one of 'Where', but found 'Select' at position "
-                                                                         + "value(Rubicon.Data.Linq.QueryProviderImplementation.StandardQueryable`1[Rubicon.Data.Linq.UnitTests."
-                                                                         + "Student]).Select(s => s) in tree value(Rubicon.Data.Linq.QueryProviderImplementation.StandardQueryable`1[Rubicon.Data."
+                                                                         + "value(Rubicon.Data.Linq.UnitTests.TestQueryable`1[Rubicon.Data.Linq.UnitTests."
+                                                                         + "Student]).Select(s => s) in tree value(Rubicon.Data.Linq.UnitTests.TestQueryable`1[Rubicon.Data."
                                                                          + "Linq.UnitTests.Student]).Select(s => s).")]
     public void Initialize_FromWrongExpression ()
     {

@@ -38,7 +38,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
 
     [Test]
     [ExpectedException (typeof (QueryParserException), ExpectedMessage = "Expected one of 'SelectMany, Where', but found 'Select' at "
-        + "position value(Rubicon.Data.Linq.QueryProviderImplementation.StandardQueryable`1[Rubicon.Data.Linq.UnitTests."
+        + "position value(Rubicon.Data.Linq.UnitTests.TestQueryable`1[Rubicon.Data.Linq.UnitTests."
         + "Student]).Select(s => s) in tree new [] {}.")]
     public void CheckMethodCallExpression_InvalidName ()
     {
