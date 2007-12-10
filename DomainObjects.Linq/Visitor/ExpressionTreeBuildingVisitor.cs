@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using Rubicon.Data.DomainObjects.Linq.Clauses;
 using System.Reflection;
 using System.Linq;
+using Rubicon.Text;
 using Rubicon.Utilities;
 
 namespace Rubicon.Data.DomainObjects.Linq.Visitor
@@ -114,6 +115,15 @@ namespace Rubicon.Data.DomainObjects.Linq.Visitor
             return currentMember.Name == methodName
                 && IsCompatibleMethod ((MethodInfo) currentMember, genericArguments, parameterTypes);
           }, null);
+
+      if (matchingsMethods.Length == 0)
+      {
+        string message = string.Format("The query contains an invalid query method: {0}<{1}>({2})",
+            methodName,
+            SeparatedStringBuilder.Build (", ", genericArguments, t => t.ToString()),
+            SeparatedStringBuilder.Build (", ", parameterTypes, t => t.ToString ()));
+        throw new NotSupportedException (message);
+      }
 
       Assertion.IsTrue (matchingsMethods.Length == 1);
       MethodInfo method = (MethodInfo) matchingsMethods[0];

@@ -93,7 +93,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
 
     public static SelectClause CreateSelectClause ()
     {
-      LambdaExpression expression = ExpressionHelper.CreateLambdaExpression ();
+      LambdaExpression expression = Expression.Lambda (Expression.Constant (0), Expression.Parameter (typeof (Student), "s1"));
       return new SelectClause (CreateClause (), expression);
     }
 
@@ -112,7 +112,12 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
 
     public static IQueryable<Student> CreateQuerySource()
     {
-      return new StandardQueryable<Student> (s_executor);
+      return CreateQuerySource (s_executor);
+    }
+
+    public static IQueryable<Student> CreateQuerySource (IQueryExecutor executor)
+    {
+      return new StandardQueryable<Student> (executor);
     }
 
     private static IQueryExecutor CreateExecutor()

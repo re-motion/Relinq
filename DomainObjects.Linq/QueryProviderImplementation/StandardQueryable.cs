@@ -9,13 +9,15 @@ namespace Rubicon.Data.DomainObjects.Linq.QueryProviderImplementation
 {
   public class StandardQueryable<T> : IOrderedQueryable<T>
   {
+    private readonly QueryProvider _queryProvider;
+    
     public StandardQueryable (IQueryExecutor executor)
     {
-      Provider = new QueryProvider (executor);
+      _queryProvider = new QueryProvider (executor);
       Expression = Expression.Constant (this);
     }
 
-    public StandardQueryable (IQueryProvider provider, Expression expression)
+    public StandardQueryable (QueryProvider provider, Expression expression)
     {
       ArgumentUtility.CheckNotNull ("provider", provider);
       ArgumentUtility.CheckNotNull ("expression", expression);
@@ -23,12 +25,17 @@ namespace Rubicon.Data.DomainObjects.Linq.QueryProviderImplementation
       if (!typeof (IEnumerable<T>).IsAssignableFrom (expression.Type))
         throw new ArgumentTypeException ("expression", typeof (IEnumerable<T>), expression.Type);
 
-      Provider = provider;
+      _queryProvider = provider;
       Expression = expression;
     }
 
-    public IQueryProvider Provider { get; private set; }
     public Expression Expression { get; private set; }
+
+    public IQueryProvider Provider { get
+    {
+      return _queryProvider;
+    }
+    }
 
     public Type ElementType
     {
@@ -37,12 +44,12 @@ namespace Rubicon.Data.DomainObjects.Linq.QueryProviderImplementation
 
     public IEnumerator<T> GetEnumerator ()
     {
-      return Provider.Execute<IEnumerable<T>> (Expression).GetEnumerator ();
+      return _queryProvider.ExecuteCollection<IEnumerable<T>> (Expression).GetEnumerator ();
     }
 
     IEnumerator IEnumerable.GetEnumerator ()
     {
-      return ((IEnumerable)Provider.Execute (Expression)).GetEnumerator ();
+      return _queryProvider.ExecuteCollection (Expression).GetEnumerator ();
     }
   }
 }

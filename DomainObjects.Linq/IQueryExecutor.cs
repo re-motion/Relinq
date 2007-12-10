@@ -1,10 +1,10 @@
-using System.Linq.Expressions;
+using System.Collections;
 
 namespace Rubicon.Data.DomainObjects.Linq
 {
   public interface IQueryExecutor
   {
-    TResult Execute<TResult> (Expression expression);
-    object Execute (Expression expression);
+    object ExecuteSingle (QueryExpression queryExpression);
+    IEnumerable ExecuteCollection (QueryExpression queryExpression);
   }
 }

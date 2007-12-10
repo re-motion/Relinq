@@ -41,6 +41,13 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest
     }
 
     [Test]
+    public void ParsedQuery_StoresExpressionTree ()
+    {
+      QueryExpression queryExpression = _parser.GetParsedQuery ();
+      Assert.AreSame (_expression, queryExpression.GetExpressionTree());
+    }
+
+    [Test]
     public void PreviousClauses_SimpleQuery()
     {
       QueryExpression parsedQuery = _parser.GetParsedQuery();

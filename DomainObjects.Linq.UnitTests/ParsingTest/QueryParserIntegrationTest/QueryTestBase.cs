@@ -57,7 +57,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests.ParsingTest.QueryParserInteg
     [Test]
     public void TranslateBack()
     {
-      Expression builtExpressionTree = ParsedQuery.BuildExpressionTree();
+      Expression builtExpressionTree = ParsedQuery.GetExpressionTree();
       ExpressionTreeComparer.CheckAreEqualTrees (builtExpressionTree, SourceExpression);
     }
 

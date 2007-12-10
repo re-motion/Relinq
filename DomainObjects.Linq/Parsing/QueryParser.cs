@@ -79,7 +79,7 @@ namespace Rubicon.Data.DomainObjects.Linq.Parsing
       foreach (IFromLetWhereClause fromLetWhereClause in fromLetWhereClauses)
         queryBody.Add (fromLetWhereClause);
 
-      return new QueryExpression (mainFromClause, queryBody);
+      return new QueryExpression (mainFromClause, queryBody, SourceExpression);
     }
   }
 }

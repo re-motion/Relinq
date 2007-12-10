@@ -18,20 +18,19 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
       QueryExpression model = new QueryExpression (fromClause, queryBody);
       Assert.AreSame (fromClause, model.FromClause);
       Assert.AreSame (queryBody, model.QueryBody);
+      Assert.IsNotNull (model.GetExpressionTree());
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentNullException))]
-    public void Initialization_ThrowsOnNullFromClause ()
+    public void Initialize_WithExpressionTree ()
     {
-      new QueryExpression (null, ExpressionHelper.CreateQueryBody ());
-    }
-
-    [Test]
-    [ExpectedException (typeof (ArgumentNullException))]
-    public void Initialization_ThrowsOnNullQueryBody ()
-    {
-      new QueryExpression (ExpressionHelper.CreateMainFromClause(), null);
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause ();
+      QueryBody queryBody = ExpressionHelper.CreateQueryBody ();
+      Expression expressionTree = ExpressionHelper.CreateExpression();
+      QueryExpression model = new QueryExpression (fromClause, queryBody,expressionTree);
+      Assert.AreSame (fromClause, model.FromClause);
+      Assert.AreSame (queryBody, model.QueryBody);
+      Assert.AreSame (expressionTree, model.GetExpressionTree());
     }
 
     [Test]
@@ -69,8 +68,19 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
       sv.VisitQueryExpression (queryExpression);
 
       Assert.AreEqual (sv.ToString (), queryExpression.ToString ());
-
     }
-    
+
+    [Test]
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "The query contains an invalid query method",
+        MatchType = MessageMatch.Contains)]
+    public void GetExpressionTree_ThrowsOnInvalidSelectCall()
+    {
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause();
+      SelectClause selectClause = new SelectClause (fromClause, Expression.Lambda (Expression.Constant (0)));
+      QueryBody queryBody = new QueryBody (selectClause);
+
+      QueryExpression queryExpression = new QueryExpression (fromClause, queryBody);
+      queryExpression.GetExpressionTree();
+    }
   }
 }

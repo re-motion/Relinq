@@ -4,6 +4,8 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Rubicon.Data.DomainObjects.Linq.QueryProviderImplementation;
 using Rubicon.Utilities;
+using Rubicon.Data.DomainObjects.Linq.Parsing;
+using System.Collections;
 
 namespace Rubicon.Data.DomainObjects.Linq
 {
@@ -45,16 +47,38 @@ namespace Rubicon.Data.DomainObjects.Linq
       return new StandardQueryable<T> (this, expression);
     }
 
-    public object Execute (Expression expression)
+    public virtual object Execute (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      return _executor.Execute (expression);
+      return _executor.ExecuteSingle (GenerateQueryExpression(expression));
     }
 
-    public TResult Execute<TResult> (Expression expression)
+    public virtual TResult Execute<TResult> (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      return _executor.Execute<TResult> (expression);
+      return (TResult) _executor.ExecuteSingle (GenerateQueryExpression (expression));
+    }
+
+    public virtual IEnumerable ExecuteCollection (Expression expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+      return _executor.ExecuteCollection (GenerateQueryExpression (expression));
+    }
+
+    public virtual TResult ExecuteCollection<TResult> (Expression expression)
+        where TResult : IEnumerable
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+      return (TResult) _executor.ExecuteCollection (GenerateQueryExpression (expression));
+    }
+
+    private QueryExpression GenerateQueryExpression (Expression expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
+      QueryParser parser = new QueryParser(expression);
+      return parser.GetParsedQuery();
+      
     }
     
   }

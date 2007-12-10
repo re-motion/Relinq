@@ -11,14 +11,22 @@ namespace Rubicon.Data.DomainObjects.Linq
   {
     private readonly MainFromClause _fromClause;
     private readonly QueryBody _queryBody;
+    private Expression _expressionTree;
 
-    public QueryExpression (MainFromClause from, QueryBody queryBody)
+    
+    public QueryExpression (MainFromClause fromClause, QueryBody queryBody, Expression expressionTree)
     {
-      ArgumentUtility.CheckNotNull ("from", from);
+      ArgumentUtility.CheckNotNull ("fromClause", fromClause);
       ArgumentUtility.CheckNotNull ("queryBody", queryBody);
 
-      _fromClause = from;
+      _fromClause = fromClause;
       _queryBody = queryBody;
+      _expressionTree = expressionTree;
+
+    }
+
+    public QueryExpression (MainFromClause fromClause, QueryBody queryBody) : this (fromClause,queryBody,null)
+    {
     }
 
     public MainFromClause FromClause
@@ -45,11 +53,16 @@ namespace Rubicon.Data.DomainObjects.Linq
       return sv.ToString();
     }
 
-    public Expression BuildExpressionTree ()
+    public Expression GetExpressionTree ()
     {
-      ExpressionTreeBuildingVisitor visitor = new ExpressionTreeBuildingVisitor ();
-      Accept (visitor);
-      return visitor.ExpressionTree;
+      if (_expressionTree == null)
+      {
+        ExpressionTreeBuildingVisitor visitor = new ExpressionTreeBuildingVisitor();
+        Accept (visitor);
+        _expressionTree = visitor.ExpressionTree;
+
+      }
+      return _expressionTree;
     }
   }
 }
