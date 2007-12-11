@@ -15,6 +15,21 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
   [TestFixture]
   public class QueryExecutorTest : ClientTransactionBaseTest
   {
+    private TestQueryListener _listener;
+
+    public override void SetUp ()
+    {
+      base.SetUp ();
+      _listener = new TestQueryListener ();
+    }
+
+    [Test]
+    public void QueryExecutor_Listener ()
+    {
+      QueryExecutor<Computer> executor = new QueryExecutor<Computer> (_listener);
+      Assert.AreSame (_listener, executor.Listener);
+    }
+
     [Test]
     public void ExecuteSingle()
     {
@@ -27,7 +42,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
 
       ClientTransaction.Current.Commit();
       
-      QueryExecutor<Computer> executor = new QueryExecutor<Computer> ();
+      QueryExecutor<Computer> executor = new QueryExecutor<Computer> (_listener);
       QueryExpression expression = GetParsedSimpleQuery ();
 
       object instance = executor.ExecuteSingle (expression);
@@ -39,14 +54,27 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     [ExpectedException (ExpectedMessage = "ExecuteSingle must return a single object, but the query returned 5 objects.")]
     public void ExecuteSingle_TooManyObjects()
     {
-      QueryExecutor<Computer> executor = new QueryExecutor<Computer> ();
+      QueryExecutor<Computer> executor = new QueryExecutor<Computer> (_listener);
       executor.ExecuteSingle (GetParsedSimpleQuery());
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "No ClientTransaction has been associated with the current thread.")]
+    public void QueryExecutor_ExecuteSingle_NoCurrentTransaction ()
+    {
+      QueryExecutor<Computer> executor = new QueryExecutor<Computer> (null);
+      QueryExpression expression = GetParsedSimpleQuery ();
+
+      using (ClientTransactionScope.EnterNullScope ())
+      {
+        executor.ExecuteSingle (expression);
+      }
     }
 
     [Test]
     public void ExecuteCollection ()
     {
-      QueryExecutor<Computer> executor = new QueryExecutor<Computer> ();
+      QueryExecutor<Computer> executor = new QueryExecutor<Computer> (_listener);
       QueryExpression expression = GetParsedSimpleQuery();
 
       IEnumerable computers = executor.ExecuteCollection (expression);
@@ -70,14 +98,27 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     [ExpectedException (typeof (MappingException), ExpectedMessage = "Mapping does not contain class 'System.String'.")]
     public void ExecuteCollection_WrongType ()
     {
-      QueryExecutor<string> executor = new QueryExecutor<string> ();
+      QueryExecutor<string> executor = new QueryExecutor<string> (_listener);
       executor.ExecuteCollection (GetParsedSimpleQuery());
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "No ClientTransaction has been associated with the current thread.")]
+    public void QueryExecutor_ExecuteCollection_NoCurrentTransaction ()
+    {
+      QueryExecutor<Computer> executor = new QueryExecutor<Computer> (null);
+      QueryExpression expression = GetParsedSimpleQuery ();
+
+      using (ClientTransactionScope.EnterNullScope ())
+      {
+        executor.ExecuteCollection (expression);
+      }
     }
 
     [Test]
     public void ExecuteSingle_WithParameters ()
     {
-      QueryExecutor<Order> executor = new QueryExecutor<Order> ();
+      QueryExecutor<Order> executor = new QueryExecutor<Order> (_listener);
       QueryExpression expression = GetParsedSimpleWhereQuery ();
 
       Order order = (Order) executor.ExecuteSingle (expression);
@@ -89,7 +130,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void ExecuteCollection_WithParameters()
     {
-      QueryExecutor<Order> executor = new QueryExecutor<Order> ();
+      QueryExecutor<Order> executor = new QueryExecutor<Order> (_listener);
       QueryExpression expression = GetParsedSimpleWhereQuery ();
 
       IEnumerable orders = executor.ExecuteCollection (expression);

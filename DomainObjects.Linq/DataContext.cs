@@ -5,7 +5,13 @@ namespace Rubicon.Data.DomainObjects.Linq
     public static DomainObjectQueryable<T> Entity<T>() 
       where T:DomainObject
     {
-      return new DomainObjectQueryable<T>();
+      return Entity<T> (null);
+    }
+
+    public static DomainObjectQueryable<T> Entity<T> (IQueryListener listener)
+      where T : DomainObject
+    {
+      return new DomainObjectQueryable<T> (listener);
     }
   }
 }

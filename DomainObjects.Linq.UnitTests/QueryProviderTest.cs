@@ -11,7 +11,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void CreateQuery()
     {
-      QueryExecutor<Supplier> executor = new QueryExecutor<Supplier> ();
+      QueryExecutor<Supplier> executor = new QueryExecutor<Supplier> (null);
       QueryProvider provider = new QueryProvider (executor);
       IQueryable<Supplier> query = from supplier in DataContext.Entity<Supplier> () select supplier;
 

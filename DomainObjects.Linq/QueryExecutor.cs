@@ -10,6 +10,13 @@ namespace Rubicon.Data.DomainObjects.Linq
 {
   public class QueryExecutor<T> : IQueryExecutor
   {
+    public QueryExecutor (IQueryListener listener)
+    {
+      Listener = listener;
+    }
+
+    public IQueryListener Listener { get; private set; }
+
     public object ExecuteSingle (QueryExpression queryExpression)
     {
       IEnumerable results = ExecuteCollection (queryExpression);
@@ -27,6 +34,9 @@ namespace Rubicon.Data.DomainObjects.Linq
 
     public IEnumerable ExecuteCollection (QueryExpression queryExpression)
     {
+      if (ClientTransaction.Current == null)
+        throw new InvalidOperationException ("No ClientTransaction has been associated with the current thread.");
+
       ClassDefinition classDefinition = MappingConfiguration.Current.ClassDefinitions.GetMandatory (typeof (T));
       SqlGenerator sqlGenerator = new SqlGenerator (queryExpression, DatabaseInfo.Instance);
       string statement = sqlGenerator.GetCommandString ();
@@ -37,6 +47,10 @@ namespace Rubicon.Data.DomainObjects.Linq
 
       QueryDefinition queryDefinition = new QueryDefinition ("<dynamic query>", classDefinition.StorageProviderID, statement, QueryType.Collection);
       Query query = new Query (queryDefinition,queryParameters);
+
+      if (Listener != null)
+        Listener.QueryConstructed (query);
+
       return ClientTransaction.Current.QueryManager.GetCollection (query);
     }
   }

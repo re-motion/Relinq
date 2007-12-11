@@ -35,6 +35,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\libraries\Commons\trunk\prereq\Assemblies\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="Rhino.Mocks, Version=3.1.0.584, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\libraries\Commons\trunk\prereq\Assemblies\Rhino.Mocks.dll</HintPath>
+    </Reference>
     <Reference Include="Rubicon.Core, Version=1.7.65.202, Culture=neutral, PublicKeyToken=ad97c3e83e217fcd, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\libraries\Commons\trunk\Core\bin\Debug\Rubicon.Core.dll</HintPath>
@@ -68,6 +72,7 @@
     <Compile Include="QueryExecutorTest.cs" />
     <Compile Include="QueryProviderTest.cs" />
     <Compile Include="SetupFixture.cs" />
+    <Compile Include="TestQueryListener.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DomainObjects.Linq\Data.DomainObjects.Linq.csproj">
