@@ -50,7 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Clauses\AdditionalFromClause.cs" />
-    <Compile Include="Clauses\ClauseFinderHelper.cs" />
+    <Compile Include="Clauses\ClauseFinder.cs" />
     <Compile Include="Clauses\FromClauseBase.cs" />
     <Compile Include="Clauses\GroupClause.cs" />
     <Compile Include="Clauses\IFromLetWhereClause.cs" />
@@ -62,7 +62,6 @@
     <Compile Include="Clauses\LetClause.cs" />
     <Compile Include="Clauses\OrderByClause.cs" />
     <Compile Include="Clauses\OrderingClause.cs" />
-    <Compile Include="Parsing\FromClauseFinder.cs" />
     <Compile Include="Parsing\FromExpression.cs" />
     <Compile Include="Parsing\FromLetWhereExpressionBase.cs" />
     <Compile Include="Parsing\SelectManyExpressionParser.cs" />

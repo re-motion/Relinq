@@ -23,7 +23,7 @@ namespace Rubicon.Data.Linq.Parsing
 
       if (_selectClause.ProjectionExpression == null)
       {
-        FromClauseBase fromClause = ClauseFinderHelper.FindClause<FromClauseBase> (_selectClause);
+        FromClauseBase fromClause = ClauseFinder.FindClause<FromClauseBase> (_selectClause);
         Assertion.IsTrue (fromClause is MainFromClause, "When there are two or more from clauses, there must be a projection expression.");
         _fields.Add (Tuple.NewTuple (fromClause, (MemberInfo) null));
       }
@@ -81,14 +81,14 @@ namespace Rubicon.Data.Linq.Parsing
 
     private void FindSelectedFields (ParameterExpression expression)
     {
-      FromClauseBase fromClause = FromClauseFinder.FindFromClauseForExpression (_selectClause, expression);
+      FromClauseBase fromClause = ClauseFinder.FindFromClauseForExpression (_selectClause, expression);
       if (fromClause != null)
         _fields.Add (Tuple.NewTuple (fromClause, (MemberInfo) null));
     }
 
     private void FindSelectedFields (MemberExpression memberExpression)
     {
-      FromClauseBase fromClause = FromClauseFinder.FindFromClauseForExpression (_selectClause, memberExpression.Expression);
+      FromClauseBase fromClause = ClauseFinder.FindFromClauseForExpression (_selectClause, memberExpression.Expression);
       if (fromClause != null && _databaseInfo.GetColumnName (memberExpression.Member) != null)
         _fields.Add (Tuple.NewTuple (fromClause, memberExpression.Member));
     }
