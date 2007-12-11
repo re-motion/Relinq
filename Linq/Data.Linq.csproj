@@ -90,7 +90,9 @@
     <Compile Include="DataObjectModel\ICriterion.cs" />
     <Compile Include="DataObjectModel\Table.cs" />
     <Compile Include="DataObjectModel\IValue.cs" />
+    <Compile Include="SqlGeneration\QueryParameter.cs" />
     <Compile Include="SqlGeneration\SqlGenerator.cs" />
+    <Compile Include="SqlGeneration\SqlUtility.cs" />
     <Compile Include="Visitor\ExpressionTreeBuildingVisitor.cs" />
     <Compile Include="IDatabaseInfo.cs" />
     <Compile Include="SqlGeneration\SqlGeneratorVisitor.cs" />

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using Rhino.Mocks;
 
 namespace Rubicon.Data.Linq.UnitTests
 {
@@ -12,7 +13,8 @@ namespace Rubicon.Data.Linq.UnitTests
 
     public override int Add (object value)
     {
-      throw new NotImplementedException ();
+      _parameters.Add (value);
+      return _parameters.Count - 1;
     }
 
     public override void AddRange (Array values)
@@ -47,7 +49,10 @@ namespace Rubicon.Data.Linq.UnitTests
 
     protected override DbParameter GetParameter (int index)
     {
-      throw new NotImplementedException();
+      MockRepository repository = new MockRepository();
+      DbParameter parameterStub = repository.Stub<DbParameter>();
+      parameterStub.Value = _parameters[index];
+      return parameterStub;
     }
 
     protected override DbParameter GetParameter (string parameterName)
@@ -97,7 +102,7 @@ namespace Rubicon.Data.Linq.UnitTests
 
     public override int Count
     {
-      get { return 0; }
+      get { return _parameters.Count; }
     }
 
     public override bool IsFixedSize

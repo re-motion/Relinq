@@ -98,6 +98,7 @@
     <Compile Include="ParsingTest\WhereExpressionParserTest\RecursiveWhereExpressionParserTest.cs" />
     <Compile Include="ParsingTest\WhereExpressionParserTest\SelectManyWhereExpressionParserTest.cs" />
     <Compile Include="ParsingTest\WhereExpressionParserTest\SimpleWhereExpressionParserTest.cs" />
+    <Compile Include="SqlGenerationTest\SqlUtilityTest.cs" />
     <Compile Include="Student.cs" />
     <Compile Include="StubDatabaseInfo.cs" />
     <Compile Include="StubParameterCollection.cs" />

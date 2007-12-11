@@ -38,6 +38,21 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
     }
 
     [Test]
+    public void IdentityProjection_WithoutSelectExpression ()
+    {
+      IQueryable<Student> query = TestQueryGenerator.CreateSimpleWhereQuery (_source);
+      QueryParser parser = new QueryParser (query.Expression);
+      QueryExpression expression = parser.GetParsedQuery ();
+      SelectClause selectClause = (SelectClause) expression.QueryBody.SelectOrGroupClause;
+
+      SelectProjectionParser selectParser = new SelectProjectionParser (selectClause, new StubDatabaseInfo ());
+
+      IEnumerable<Tuple<FromClauseBase, MemberInfo>> selectedFields = selectParser.SelectedFields;
+
+      Assert.That (selectedFields.ToArray (), Is.EqualTo (new object[] { new Tuple<FromClauseBase, MemberInfo> (expression.FromClause, null) }));
+    }
+
+    [Test]
     public void MemberAccessProjection ()
     {
       IQueryable<string> query = TestQueryGenerator.CreateSimpleQueryWithProjection (_source);

@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.Parsing;
 
@@ -81,6 +82,35 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       QueryExpression queryExpression = new QueryParser (query.Expression).GetParsedQuery ();
       SelectClause selectClause = (SelectClause) queryExpression.QueryBody.SelectOrGroupClause;
       Assert.AreSame (queryExpression.FromClause, ClauseFinderHelper.FindClause<FromClauseBase> (selectClause.PreviousClause));
+    }
+
+    [Test]
+    public void FindClauses()
+    {
+      IQueryable<Student> source = ExpressionHelper.CreateQuerySource ();
+      IQueryable<Student> query = TestQueryGenerator.CreateThreeFromWhereQuery (source,source,source);
+      QueryExpression queryExpression = new QueryParser (query.Expression).GetParsedQuery ();
+      SelectClause selectClause = (SelectClause) queryExpression.QueryBody.SelectOrGroupClause;
+      Assert.That (ClauseFinderHelper.FindClauses<FromClauseBase> (selectClause).ToArray(),Is.EqualTo(new object[]
+          {
+              queryExpression.QueryBody.FromLetWhereClauses.Last(), 
+              queryExpression.QueryBody.FromLetWhereClauses.First(), 
+              queryExpression.FromClause
+          }));
+    }
+
+    [Test]
+    public void FindClauses_StartsFromAdditionalFromClause ()
+    {
+      IQueryable<Student> source = ExpressionHelper.CreateQuerySource ();
+      IQueryable<Student> query = TestQueryGenerator.CreateThreeFromWhereQuery (source, source, source);
+      QueryExpression queryExpression = new QueryParser (query.Expression).GetParsedQuery ();
+      Assert.That (ClauseFinderHelper.FindClauses<FromClauseBase> 
+        (queryExpression.QueryBody.FromLetWhereClauses.Last ().PreviousClause).ToArray (), Is.EqualTo (new object[]
+          {
+              queryExpression.QueryBody.FromLetWhereClauses.First(), 
+              queryExpression.FromClause
+          }));
     }
   }
 }
