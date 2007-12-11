@@ -81,10 +81,12 @@
     <Compile Include="QueryProviderBase.cs" />
     <Compile Include="QueryProviderImplementation\QueryableBase.cs" />
     <Compile Include="QueryProviderImplementation\TypeSystem.cs" />
-    <Compile Include="SqlGenerator.cs" />
+    <Compile Include="SqlGeneration\ObjectModel\Column.cs" />
+    <Compile Include="SqlGeneration\ObjectModel\Table.cs" />
+    <Compile Include="SqlGeneration\SqlGenerator.cs" />
     <Compile Include="Visitor\ExpressionTreeBuildingVisitor.cs" />
     <Compile Include="IDatabaseInfo.cs" />
-    <Compile Include="Visitor\SqlGeneratorVisitor.cs" />
+    <Compile Include="SqlGeneration\SqlGeneratorVisitor.cs" />
     <Compile Include="Visitor\StringVisitor.cs" />
     <Compile Include="Clauses\WhereClause.cs" />
   </ItemGroup>

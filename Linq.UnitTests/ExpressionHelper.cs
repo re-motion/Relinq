@@ -128,7 +128,7 @@ namespace Rubicon.Data.Linq.UnitTests
       return executor;
     }
 
-    private static List<Student> CreateStudents ()
+    public static List<Student> CreateStudents ()
     {
       List<Student> students = new List<Student>
       {

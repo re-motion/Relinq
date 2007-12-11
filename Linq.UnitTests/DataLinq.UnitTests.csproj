@@ -108,9 +108,9 @@
     <Compile Include="ClausesTest\SelectClauseTest.cs" />
     <Compile Include="QueryProviderImplementationTest\QueryableBaseTest.cs" />
     <Compile Include="QueryProviderBaseTest.cs" />
-    <Compile Include="SqlGeneratorTest.cs" />
+    <Compile Include="SqlGenerationTest\SqlGeneratorTest.cs" />
     <Compile Include="TestQueryProvider.cs" />
-    <Compile Include="VisitorTest\SqlGeneratorVisitorTest.cs" />
+    <Compile Include="SqlGenerationTest\SqlGeneratorVisitorTest.cs" />
     <Compile Include="VisitorTest\StringVisitorTest.cs" />
     <Compile Include="ClausesTest\WhereClauseTest.cs" />
   </ItemGroup>
