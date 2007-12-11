@@ -81,8 +81,14 @@
     <Compile Include="QueryProviderBase.cs" />
     <Compile Include="QueryProviderImplementation\QueryableBase.cs" />
     <Compile Include="QueryProviderImplementation\TypeSystem.cs" />
+    <Compile Include="SqlGeneration\ObjectModel\BinaryCondition.cs" />
+    <Compile Include="SqlGeneration\ObjectModel\ComplexCriterion.cs" />
     <Compile Include="SqlGeneration\ObjectModel\Column.cs" />
+    <Compile Include="SqlGeneration\ObjectModel\Condition.cs" />
+    <Compile Include="SqlGeneration\ObjectModel\Constant.cs" />
+    <Compile Include="SqlGeneration\ObjectModel\Criterion.cs" />
     <Compile Include="SqlGeneration\ObjectModel\Table.cs" />
+    <Compile Include="SqlGeneration\ObjectModel\IValue.cs" />
     <Compile Include="SqlGeneration\SqlGenerator.cs" />
     <Compile Include="Visitor\ExpressionTreeBuildingVisitor.cs" />
     <Compile Include="IDatabaseInfo.cs" />

@@ -2,7 +2,7 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.SqlGeneration.ObjectModel
 {
-  public struct Column
+  public struct Column : IValue
   {
     public readonly string Name;
     public readonly string TableAlias;
