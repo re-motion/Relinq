@@ -1,8 +1,8 @@
 using Rubicon.Utilities;
 
-namespace Rubicon.Data.Linq.SqlGeneration.ObjectModel
+namespace Rubicon.Data.Linq.DataObjectModel
 {
-  public class BinaryCondition : Condition
+  public struct BinaryCondition : ICondition
   {
     public enum ConditionKind { Equal }
 

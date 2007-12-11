@@ -1,6 +1,6 @@
 using Rubicon.Utilities;
 
-namespace Rubicon.Data.Linq.SqlGeneration.ObjectModel
+namespace Rubicon.Data.Linq.DataObjectModel
 {
   public struct Constant : IValue
   {

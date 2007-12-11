@@ -1,17 +1,17 @@
 using Rubicon.Utilities;
 
-namespace Rubicon.Data.Linq.SqlGeneration.ObjectModel
+namespace Rubicon.Data.Linq.DataObjectModel
 {
   
-  public class ComplexCriterion : Criterion
+  public class ComplexCriterion : ICriterion
   {
     public enum JunctionKind { And, Or }
     
-    public readonly Criterion Left;
-    public readonly Criterion Right;
+    public readonly ICriterion Left;
+    public readonly ICriterion Right;
     public readonly JunctionKind Kind;
 
-    public ComplexCriterion (Criterion left, Criterion right, JunctionKind kind)
+    public ComplexCriterion (ICriterion left, ICriterion right, JunctionKind kind)
     {
       ArgumentUtility.CheckNotNull ("kind", kind);
       ArgumentUtility.CheckNotNull ("left", left);

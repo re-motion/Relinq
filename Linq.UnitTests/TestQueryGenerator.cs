@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 using Rubicon.Collections;
+using System;
 
 namespace Rubicon.Data.Linq.UnitTests
 {
@@ -73,6 +74,11 @@ namespace Rubicon.Data.Linq.UnitTests
       return from s1 in source1 from s2 in source2 from s3 in source3 select s1;
     }
 
+    public static IQueryable<Student> CreateThreeFromQueryWithSelectS2 (IQueryable<Student> source1, IQueryable<Student> source2, IQueryable<Student> source3)
+    {
+      return from s1 in source1 from s2 in source2 from s3 in source3 select s2;
+    }
+
     public static IQueryable<Student> CreateThreeFromWhereQuery (IQueryable<Student> source1, IQueryable<Student> source2, IQueryable<Student> source3)
     {
       return from s1 in source1 from s2 in source2 where s1.First == "Hugo" from s3 in source3 select s1;
@@ -88,9 +94,10 @@ namespace Rubicon.Data.Linq.UnitTests
       return from s1 in source1 select s1.NonDBProperty;
     }
 
-    public static IQueryable<Expression> CreateSimpleSelectWithNonEntityMemberAccess(IQueryable<Student> source1)
+    public static IQueryable<int> CreateSimpleSelectWithNonEntityMemberAccess(IQueryable<Student> source1)
     {
-      return from s1 in source1 select source1.Expression;
+      DateTime now = DateTime.Now;
+      return from s1 in source1 select now.Day;
     }
 
     public static IQueryable<Tuple<string,string ,int>> CreateMultiFromQueryWithProjection(IQueryable<Student> source1,IQueryable<Student> source2,IQueryable<Student> source3 )

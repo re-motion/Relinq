@@ -30,7 +30,7 @@ namespace Rubicon.Data.Linq.Clauses
       visitor.VisitAdditionalFromClause (this);
     }
 
-    public Type GetQuerySourceType ()
+    public override Type GetQuerySourceType ()
     {
       return FromExpression.Body.Type;
     }

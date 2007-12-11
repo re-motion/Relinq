@@ -90,20 +90,17 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
       Assert.IsEmpty (selectedFields.ToArray ());
     }
 
-
     [Test]
+    [ExpectedException (typeof (QueryParserException), ExpectedMessage = "The select clause contains an expression that cannot be parsed",
+        MatchType = MessageMatch.Contains)]
     public void NonEntityMemberAccessProjection ()
     {
-      IQueryable<Expression> query = TestQueryGenerator.CreateSimpleSelectWithNonEntityMemberAccess (_source);
+      IQueryable<int> query = TestQueryGenerator.CreateSimpleSelectWithNonEntityMemberAccess (_source);
       QueryParser parser = new QueryParser (query.Expression);
       QueryExpression expression = parser.GetParsedQuery ();
       SelectClause selectClause = (SelectClause) expression.QueryBody.SelectOrGroupClause;
 
-      SelectProjectionParser selectParser = new SelectProjectionParser (selectClause, new StubDatabaseInfo ());
-
-      IEnumerable<Tuple<FromClauseBase, MemberInfo>> selectedFields = selectParser.SelectedFields;
-
-      Assert.IsEmpty (selectedFields.ToArray ());
+      new SelectProjectionParser (selectClause, new StubDatabaseInfo ());
     }
 
 
@@ -129,6 +126,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
     }
 
     [Test]
+    [ExpectedException (typeof (QueryParserException), ExpectedMessage = "The select clause contains an expression that cannot be parsed",
+        MatchType = MessageMatch.Contains)]
     public void SimpleQueryWithSpecialProjection ()
     {
       IQueryable<Tuple<Student, string, string, string>> query = TestQueryGenerator.CreateSimpleQueryWithSpecialProjection (_source);

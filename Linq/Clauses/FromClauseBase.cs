@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Rubicon.Utilities;
@@ -39,7 +40,7 @@ namespace Rubicon.Data.Linq.Clauses
       _joinClauses.Add (joinClause);
     }
 
-
     public abstract void Accept (IQueryVisitor visitor);
+    public abstract Type GetQuerySourceType ();
   }
 }

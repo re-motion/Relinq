@@ -5,6 +5,16 @@ namespace Rubicon.Data.Linq.Parsing
 {
   public class QueryParserException : Exception
   {
+    public QueryParserException (string message)
+        : this (message, null, null)
+    {
+    }
+
+    public QueryParserException (string message, Exception inner)
+      : base (message, inner)
+    {
+    }
+
     public QueryParserException (string message, object parsedExpression, Expression expressionTree)
         : base (message)
     {
@@ -13,6 +23,6 @@ namespace Rubicon.Data.Linq.Parsing
     }
 
     public object ParsedExpression { get; private set; }
-    public object ExpressionTree { get; private set; }
+    public Expression ExpressionTree { get; private set; }
   }
 }

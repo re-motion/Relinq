@@ -45,5 +45,12 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       repository.VerifyAll ();
 
     }
+
+    [Test]
+    public void GetQuerySourceType ()
+    {
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause ();
+      Assert.AreSame (fromClause.QuerySource.GetType(), fromClause.GetQuerySourceType());
+    }
   }
 }
