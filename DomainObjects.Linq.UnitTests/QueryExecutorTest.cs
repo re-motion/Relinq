@@ -75,6 +75,18 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
+    public void ExecuteSingle_WithParameters ()
+    {
+      QueryExecutor<Order> executor = new QueryExecutor<Order> ();
+      QueryExpression expression = GetParsedSimpleWhereQuery ();
+
+      Order order = (Order) executor.ExecuteSingle (expression);
+
+      Order expected = Order.GetObject (DomainObjectIDs.Order1);
+      Assert.AreSame (expected, order);
+    }
+
+    [Test]
     public void ExecuteCollection_WithParameters()
     {
       QueryExecutor<Order> executor = new QueryExecutor<Order> ();
