@@ -64,7 +64,6 @@
     <Compile Include="DatabaseInfoTest.cs" />
     <Compile Include="DataContextTest.cs" />
     <Compile Include="DomainObjectQueryableTest.cs" />
-    <Compile Include="DomainObjectQueryExecutorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryExecutorTest.cs" />
     <Compile Include="QueryProviderTest.cs" />

@@ -28,7 +28,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
       ClientTransaction.Current.Commit();
       
       QueryExecutor<Computer> executor = new QueryExecutor<Computer> ();
-      QueryExpression expression = GetParsedQuery ();
+      QueryExpression expression = GetParsedSimpleQuery ();
 
       object instance = executor.ExecuteSingle (expression);
       Assert.IsNotNull (instance);
@@ -40,14 +40,14 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     public void ExecuteSingle_TooManyObjects()
     {
       QueryExecutor<Computer> executor = new QueryExecutor<Computer> ();
-      executor.ExecuteSingle (GetParsedQuery());
+      executor.ExecuteSingle (GetParsedSimpleQuery());
     }
 
     [Test]
     public void ExecuteCollection ()
     {
       QueryExecutor<Computer> executor = new QueryExecutor<Computer> ();
-      QueryExpression expression = GetParsedQuery();
+      QueryExpression expression = GetParsedSimpleQuery();
 
       IEnumerable computers = executor.ExecuteCollection (expression);
 
@@ -71,12 +71,38 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     public void ExecuteCollection_WrongType ()
     {
       QueryExecutor<string> executor = new QueryExecutor<string> ();
-      executor.ExecuteCollection (GetParsedQuery());
+      executor.ExecuteCollection (GetParsedSimpleQuery());
     }
 
-    private QueryExpression GetParsedQuery ()
+    [Test]
+    public void ExecuteCollection_WithParameters()
+    {
+      QueryExecutor<Order> executor = new QueryExecutor<Order> ();
+      QueryExpression expression = GetParsedSimpleWhereQuery ();
+
+      IEnumerable orders = executor.ExecuteCollection (expression);
+
+      ArrayList orderList = new ArrayList ();
+      foreach (Order order in orders) 
+        orderList.Add (order);
+
+      Order[] expected = new Order[]
+          {
+              Order.GetObject (DomainObjectIDs.Order1),
+
+          };
+      Assert.That (orderList, Is.EquivalentTo (expected));
+    }
+
+    private QueryExpression GetParsedSimpleQuery ()
     {
       IQueryable<Computer> query = from computer in DataContext.Entity<Computer> () select computer;
+      return new QueryParser (query.Expression).GetParsedQuery ();
+    }
+
+    private QueryExpression GetParsedSimpleWhereQuery ()
+    {
+      IQueryable<Order> query = from order in DataContext.Entity<Order> () where order.OrderNumber == 1 select order;
       return new QueryParser (query.Expression).GetParsedQuery ();
     }
 

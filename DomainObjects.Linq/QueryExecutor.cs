@@ -28,9 +28,15 @@ namespace Rubicon.Data.DomainObjects.Linq
     public IEnumerable ExecuteCollection (QueryExpression queryExpression)
     {
       ClassDefinition classDefinition = MappingConfiguration.Current.ClassDefinitions.GetMandatory (typeof (T));
-      string statement = new SqlGenerator (queryExpression, DatabaseInfo.Instance).GetCommandString ();
+      SqlGenerator sqlGenerator = new SqlGenerator (queryExpression, DatabaseInfo.Instance);
+      string statement = sqlGenerator.GetCommandString ();
+      CommandParameter[] commandParameters = sqlGenerator.GetCommandParameters();
+      QueryParameterCollection queryParameters = new QueryParameterCollection();
+      foreach (CommandParameter commandParameter in commandParameters)
+        queryParameters.Add (commandParameter.Name, commandParameter.Value, QueryParameterType.Value);
+
       QueryDefinition queryDefinition = new QueryDefinition ("<dynamic query>", classDefinition.StorageProviderID, statement, QueryType.Collection);
-      Query query = new Query (queryDefinition);
+      Query query = new Query (queryDefinition,queryParameters);
       return ClientTransaction.Current.QueryManager.GetCollection (query);
     }
   }
