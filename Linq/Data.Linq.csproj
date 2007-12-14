@@ -95,6 +95,7 @@
     <Compile Include="Visitor\ExpressionTreeBuildingVisitor.cs" />
     <Compile Include="IDatabaseInfo.cs" />
     <Compile Include="SqlGeneration\SqlGeneratorVisitor.cs" />
+    <Compile Include="Visitor\ExpressionTreeVisitor.cs" />
     <Compile Include="Visitor\StringVisitor.cs" />
     <Compile Include="Clauses\WhereClause.cs" />
   </ItemGroup>
