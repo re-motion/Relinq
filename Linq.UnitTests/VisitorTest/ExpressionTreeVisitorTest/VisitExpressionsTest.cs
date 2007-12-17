@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 using System.Linq.Expressions;
 using Rhino.Mocks;
 using System.Reflection;
 using Rhino.Mocks.Interfaces;
 using Rubicon.Data.Linq.Visitor;
+using Rubicon.Utilities;
+using System.Linq;
 
 namespace Rubicon.Data.Linq.UnitTests.VisitorTest.ExpressionTreeVisitorTest
 {
