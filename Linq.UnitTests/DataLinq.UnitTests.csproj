@@ -112,9 +112,11 @@
     <Compile Include="SqlGenerationTest\SqlGeneratorTest.cs" />
     <Compile Include="TestQueryProvider.cs" />
     <Compile Include="SqlGenerationTest\SqlGeneratorVisitorTest.cs" />
-    <Compile Include="VisitorTest\ExpressionInstanceCreator.cs" />
-    <Compile Include="VisitorTest\ExpressionTreeVisitorTest\VisitSpecificExpressionsTest.cs" />
-    <Compile Include="VisitorTest\ExpressionTreeVisitorTest\VisitExpressionTest.cs" />
+    <Compile Include="VisitorTest\ExpressionTreeVisitorTest\ExpressionInstanceCreator.cs" />
+    <Compile Include="VisitorTest\ExpressionTreeVisitorTest\SimpleClass.cs" />
+    <Compile Include="VisitorTest\ExpressionTreeVisitorTest\SpecialExpressionNode.cs" />
+    <Compile Include="VisitorTest\ExpressionTreeVisitorTest\VisitExpressionsTest.cs" />
+    <Compile Include="VisitorTest\ExpressionTreeVisitorTest\VisitSpecificExpressionTest.cs" />
     <Compile Include="VisitorTest\StringVisitorTest.cs" />
     <Compile Include="ClausesTest\WhereClauseTest.cs" />
   </ItemGroup>

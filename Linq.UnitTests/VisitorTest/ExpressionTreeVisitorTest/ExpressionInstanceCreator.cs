@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Rubicon.Data.Linq.UnitTests.VisitorTest.ExpressionTreeVisitorTest;
 
-namespace Rubicon.Data.Linq.UnitTests.VisitorTest
+namespace Rubicon.Data.Linq.UnitTests.VisitorTest.ExpressionTreeVisitorTest
 {
   public static class ExpressionInstanceCreator
   {
@@ -65,6 +66,7 @@ namespace Rubicon.Data.Linq.UnitTests.VisitorTest
       map[ExpressionType.SubtractChecked] = Expression.SubtractChecked (zero, zero);
       map[ExpressionType.TypeAs] = Expression.TypeAs (zero, typeof (object));
       map[ExpressionType.TypeIs] = Expression.TypeIs (zero, typeof (object));
+      map[(ExpressionType)(-1)] = new SpecialExpressionNode ((ExpressionType)(-1), typeof (int));
 
       return map;
     }

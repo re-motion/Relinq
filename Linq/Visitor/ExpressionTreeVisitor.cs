@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using Rubicon.Utilities;
@@ -237,40 +238,99 @@ namespace Rubicon.Data.Linq.Visitor
       return elementInit;
     }
 
-    protected virtual MemberBinding VisitMemberBinding (MemberBinding expression)
+    protected virtual MemberBinding VisitMemberBinding (MemberBinding memberBinding)
     {
-      throw new NotImplementedException ();
+      ArgumentUtility.CheckNotNull ("memberBinding", memberBinding);
+      switch (memberBinding.BindingType)
+      {
+        case MemberBindingType.Assignment:
+          return VisitMemberAssignment ((MemberAssignment) memberBinding);
+        case MemberBindingType.MemberBinding:
+          return VisitMemberMemberBinding ((MemberMemberBinding) memberBinding);
+        default:
+          Assertion.IsTrue (memberBinding.BindingType == MemberBindingType.ListBinding,
+              "Invalid member binding type " + memberBinding.GetType ().FullName);
+          return VisitMemberListBinding ((MemberListBinding) memberBinding);
+      }
     }
 
-    protected virtual MemberAssignment VisitMemberAssignment (MemberAssignment expression)
+    protected virtual MemberAssignment VisitMemberAssignment (MemberAssignment memberAssigment)
     {
-      throw new NotImplementedException ();
+      ArgumentUtility.CheckNotNull ("memberAssigment", memberAssigment);
+
+      Expression expression = VisitExpression (memberAssigment.Expression);
+      if (expression != memberAssigment.Expression)
+      {
+        return Expression.Bind (memberAssigment.Member, expression);
+      }
+      return memberAssigment;
     }
 
-    protected virtual MemberMemberBinding VisitMemberMemberBinding (MemberMemberBinding expression)
+    protected virtual MemberMemberBinding VisitMemberMemberBinding (MemberMemberBinding binding)
     {
-      throw new NotImplementedException ();
+      ArgumentUtility.CheckNotNull ("binding", binding);
+
+      ReadOnlyCollection<MemberBinding> newBindings = VisitMemberBindingList (binding.Bindings);
+      if (newBindings != binding.Bindings)
+      {
+        return Expression.MemberBind (binding.Member, newBindings);
+      }
+      return binding;
+      
     }
 
-    protected virtual MemberListBinding VisitMemberListBinding (MemberListBinding expression)
+    protected virtual MemberListBinding VisitMemberListBinding (MemberListBinding listBinding)
     {
-      throw new NotImplementedException ();
-    }
+      ArgumentUtility.CheckNotNull ("listBinding", listBinding);
+      ReadOnlyCollection<ElementInit> newInitializers = VisitElementInitList (listBinding.Initializers);
 
+      if (newInitializers != listBinding.Initializers)
+      {
+        return Expression.ListBind (listBinding.Member, newInitializers);
+      }
+      return listBinding;
+    }
 
     protected virtual ReadOnlyCollection<T> VisitExpressionList<T> (ReadOnlyCollection<T> expressions) where T : Expression
     {
-      throw new NotImplementedException ();
+      return VisitList (expressions, VisitExpression);
     }
 
     protected virtual ReadOnlyCollection<MemberBinding> VisitMemberBindingList (ReadOnlyCollection<MemberBinding> expressions)
     {
-      throw new NotImplementedException ();
+      return VisitList (expressions, VisitMemberBinding);
     }
 
     protected virtual ReadOnlyCollection<ElementInit> VisitElementInitList (ReadOnlyCollection<ElementInit> expressions)
     {
-      throw new NotImplementedException ();
+      return VisitList (expressions, VisitElementInit);
+    }
+
+    private ReadOnlyCollection<T> VisitList<T> (ReadOnlyCollection<T> list, Func<T, object> visitMethod)
+    where T : class
+    {
+      List<T> newList = null;
+
+      for (int i = 0; i < list.Count; i++)
+      {
+        T element = list[i];
+        T newElement = visitMethod (element) as T;
+        if (newElement == null)
+          throw new NotSupportedException ("The current list only supports objects of type '" + typeof (T).Name + "' as its elements.");
+
+        if (element != newElement)
+        {
+          if (newList == null)
+            newList = new List<T> (list);
+
+          newList[i] = newElement;
+        }
+      }
+
+      if (newList != null)
+        return newList.AsReadOnly ();
+      else
+        return list;
     }
   }
 }

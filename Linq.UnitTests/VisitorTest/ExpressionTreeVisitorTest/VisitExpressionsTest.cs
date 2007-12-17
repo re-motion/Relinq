@@ -20,6 +20,12 @@ namespace Rubicon.Data.Linq.UnitTests.VisitorTest.ExpressionTreeVisitorTest
     }
 
     [Test]
+    public void VisitExpression_Unknown ()
+    {
+      CheckDelegation (_mockRepository, "VisitUnknownExpression", (ExpressionType) (-1));
+    }
+
+    [Test]
     public void VisitExpression_Binary ()
     {
       CheckDelegation (_mockRepository, "VisitBinaryExpression", ExpressionType.Add, ExpressionType.AddChecked, ExpressionType.Divide,
