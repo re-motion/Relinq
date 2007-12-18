@@ -120,6 +120,21 @@ namespace Rubicon.Data.Linq.UnitTests
       return from s in source where (!(s.First == "Garcia") || s.First == "Garcia") && s.First == "Garcia" select s;
     }
 
+    public static IQueryable<Student> CreateWhereQueryNullChecks (IQueryable<Student> source)
+    {
+      return from s in source where s.First == null || null != s.Last select s;
+    }
+
+    public static IQueryable<Student> CreateWhereQueryBooleanConstantTrue (IQueryable<Student> source)
+    {
+      return from s in source where true select s;
+    }
+
+    public static IQueryable<Student> CreateWhereQueryBooleanConstantFalse (IQueryable<Student> source)
+    {
+      return from s in source where false select s;
+    }
+
     public static MethodCallExpression CreateSimpleQuery_SelectExpression (IQueryable<Student> source)
     {
       IQueryable<Student> query = CreateSimpleQuery (source);

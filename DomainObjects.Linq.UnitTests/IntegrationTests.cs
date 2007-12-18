@@ -23,7 +23,6 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
-    [Ignore ("TODO: Implement special null checking")]
     public void QueryWithWhereConditionsAndNull ()
     {
       var computers =
