@@ -120,7 +120,7 @@ namespace Rubicon.Data.Linq.UnitTests
       return new TestQueryable<Student> (executor);
     }
 
-    private static IQueryExecutor CreateExecutor()
+    public static IQueryExecutor CreateExecutor()
     {
       MockRepository repository = new MockRepository();
       IQueryExecutor executor = repository.CreateMock<IQueryExecutor>();

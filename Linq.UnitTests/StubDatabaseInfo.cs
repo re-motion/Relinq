@@ -10,9 +10,10 @@ namespace Rubicon.Data.Linq.UnitTests
   {
     public string GetTableName (Type querySourceType)
     {
-      Assert.IsTrue (typeof (IQueryable<Student>).IsAssignableFrom (querySourceType));
-      
-      return "sourceTable";
+      if (typeof (IQueryable<Student>).IsAssignableFrom (querySourceType))
+        return "sourceTable";
+      else
+        return null;
     }
 
     public string GetColumnName (MemberInfo member)

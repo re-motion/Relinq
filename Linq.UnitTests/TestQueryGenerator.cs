@@ -115,6 +115,11 @@ namespace Rubicon.Data.Linq.UnitTests
       return from s in source where s.First != "Garcia" &&  s.ID > 5 && s.ID >= 6 && s.ID < 7 && s.ID <=6 && s.ID == 6 select s;
     }
 
+    public static IQueryable<Student> CreateWhereQueryWithOrAndNot (IQueryable<Student> source)
+    {
+      return from s in source where (!(s.First == "Garcia") || s.First == "Garcia") && s.First == "Garcia" select s;
+    }
+
     public static MethodCallExpression CreateSimpleQuery_SelectExpression (IQueryable<Student> source)
     {
       IQueryable<Student> query = CreateSimpleQuery (source);
