@@ -38,6 +38,11 @@ namespace Rubicon.Data.Linq.UnitTests
       return from s in source where s.Last == "Garcia" select s;
     }
 
+    public static IQueryable<Student> CreateWhereQueryWithEvaluatableSubExpression (IQueryable<Student> source)
+    {
+      string cia = "cia";
+      return from s in source where s.Last == ("Gar" + cia) select s;
+    }
 
     public static IQueryable<Student> CreateMultiFromWhereQuery (IQueryable<Student> source1,IQueryable<Student> source2)
     {
@@ -146,6 +151,12 @@ namespace Rubicon.Data.Linq.UnitTests
       IQueryable<Student> query = CreateSimpleWhereQuery (source);
       return (MethodCallExpression) query.Expression;
     }
+    public static MethodCallExpression CreateWhereQueryWithEvaluatableSubExpression_WhereExpression (IQueryable<Student> source)
+    {
+      IQueryable<Student> query = CreateWhereQueryWithEvaluatableSubExpression (source);
+      return (MethodCallExpression) query.Expression;
+    }
+
 
     public static MethodCallExpression CreateMultiWhereQuery_WhereExpression (IQueryable<Student> source)
     {

@@ -3,6 +3,8 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Rubicon.Data.Linq.Clauses;
+using System.Linq;
+using Rubicon.Data.Linq.UnitTests.ParsingTest;
 
 namespace Rubicon.Data.Linq.UnitTests.ClausesTest
 {
@@ -32,6 +34,25 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     {
       WhereClause whereClause = ExpressionHelper.CreateWhereClause();
       Assert.IsInstanceOfType (typeof (IQueryElement), whereClause);
+    }
+
+    [Test]
+    public void GetSimplifiedBoolExpression ()
+    {
+      MethodCallExpression whereMethodCallExpression = TestQueryGenerator.CreateWhereQueryWithEvaluatableSubExpression_WhereExpression (
+          ExpressionHelper.CreateQuerySource());
+      LambdaExpression boolExpression = (LambdaExpression) ((UnaryExpression) whereMethodCallExpression.Arguments[1]).Operand;
+      IClause clause = ExpressionHelper.CreateClause();
+      WhereClause whereClause = new WhereClause (clause, boolExpression);
+      LambdaExpression simplifiedExpression = whereClause.GetSimplifiedBoolExpression ();
+      LambdaExpression simplifiedExpression2 = whereClause.GetSimplifiedBoolExpression ();
+      Assert.AreSame (simplifiedExpression2, simplifiedExpression);
+
+      ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
+      Expression expected = Expression.Lambda (Expression.Equal (Expression.MakeMemberAccess (parameter, typeof (Student).GetProperty ("Last")),
+          Expression.Constant ("Garcia")), parameter);
+
+      ExpressionTreeComparer.CheckAreEqualTrees (simplifiedExpression, expected);
     }
 
     [Test]

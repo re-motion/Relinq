@@ -36,7 +36,21 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
-    [Ignore ("TODO: Apply partial tree evaluator")]
+    [Ignore ("TODO: This will only work with joins.")]
+    public void QueryWithVirtualKeySide ()
+    {
+      var employees =
+          from e in DataContext.Entity<Employee> (new TestQueryListener ())
+          where e.Computer != null
+          select e;
+      Employee[] employeeArray = employees.ToArray ();
+      Assert.That (employeeArray,
+          Is.EquivalentTo (new object[] { Employee.GetObject (DomainObjectIDs.Employee3), Computer.GetObject (DomainObjectIDs.Employee4),
+          Computer.GetObject (DomainObjectIDs.Employee5)}));
+    }
+
+    [Test]
+    [Ignore ("TODO: Extend IDatabaseInfo to recognize that a constant value is a DomainObject and use its ID instead of the object itself.")]
     public void QueryWithWhereConditionsAndVariableAccess ()
     {
       Employee employee = Employee.GetObject (DomainObjectIDs.Employee3);

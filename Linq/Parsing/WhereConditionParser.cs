@@ -9,21 +9,24 @@ namespace Rubicon.Data.Linq.Parsing
 {
   public class WhereConditionParser
   {
+    private readonly bool _simplify;
     private readonly WhereClause _whereClause;
     private readonly IDatabaseInfo _databaseInfo;
 
-    public WhereConditionParser (WhereClause whereClause, IDatabaseInfo databaseInfo)
+    public WhereConditionParser (WhereClause whereClause, IDatabaseInfo databaseInfo, bool simplify)
     {
       ArgumentUtility.CheckNotNull ("whereClause", whereClause);
       ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
 
+      _simplify = simplify;
       _whereClause = whereClause;
       _databaseInfo = databaseInfo;
     }
 
     public ICriterion GetCriterion ()
     {
-      return ParseExpression (_whereClause.BoolExpression.Body);
+      LambdaExpression boolExpression = _simplify ? _whereClause.GetSimplifiedBoolExpression() : _whereClause.BoolExpression;
+      return ParseExpression (boolExpression.Body);
     }
 
     private ICriterion ParseExpression (Expression expression)

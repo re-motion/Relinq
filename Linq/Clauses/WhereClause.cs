@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using Rubicon.Data.Linq.Clauses;
+using Rubicon.Data.Linq.Parsing.TreeEvaluation;
 using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.Clauses
@@ -7,6 +8,7 @@ namespace Rubicon.Data.Linq.Clauses
   public class WhereClause : IFromLetWhereClause
   {
     private readonly LambdaExpression _boolExpression;
+    private LambdaExpression _simplifiedBoolExpression;
     
     public WhereClause (IClause previousClause,LambdaExpression boolExpression)
     {
@@ -21,6 +23,13 @@ namespace Rubicon.Data.Linq.Clauses
     public LambdaExpression BoolExpression
     {
       get { return _boolExpression; }
+    }
+
+    public LambdaExpression GetSimplifiedBoolExpression()
+    {
+      if (_simplifiedBoolExpression == null)
+        _simplifiedBoolExpression = (LambdaExpression) new PartialTreeEvaluator (BoolExpression).GetEvaluatedTree ();
+      return _simplifiedBoolExpression;
     }
 
     public virtual void Accept (IQueryVisitor visitor)
