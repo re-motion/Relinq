@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 using Rubicon.Data.Linq.Visitor;
 using Rubicon.Utilities;
 
-namespace Rubicon.Data.Linq.Visitor
+namespace Rubicon.Data.Linq.Parsing.TreeEvaluation
 {
   public class FilteredSubtreeFinder : ExpressionTreeVisitor
   {
@@ -34,26 +34,25 @@ namespace Rubicon.Data.Linq.Visitor
       if (_allChildrenSubtrees)
       {
         if (_filter (_startNode))
-        {
-          _parameterlessSubtrees.Clear ();
           _parameterlessSubtrees.Add (_startNode);
-        }
       }
     }
 
-    public HashSet<Expression> GetParameterlessSubtrees ()
+    public HashSet<Expression> GetFilteredSubtrees ()
     {
       return _parameterlessSubtrees;
     }
 
     protected override Expression VisitExpression (Expression expression)
     {
-      if (expression == _startNode)
+      if (expression == null)
+        return null;
+      else if (expression == _startNode)
         return base.VisitExpression (expression);
       else
       {
         FilteredSubtreeFinder childFinder = new FilteredSubtreeFinder(expression, _filter);
-        HashSet<Expression> childTrees = childFinder.GetParameterlessSubtrees ();
+        HashSet<Expression> childTrees = childFinder.GetFilteredSubtrees ();
         if (!childTrees.Contains (expression))
           _allChildrenSubtrees = false;
         _parameterlessSubtrees.UnionWith (childTrees);

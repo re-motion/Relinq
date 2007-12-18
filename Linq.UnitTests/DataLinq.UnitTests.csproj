@@ -92,6 +92,8 @@
     <Compile Include="ParsingTest\SelectManyExpressionParserTest\RecursiveSelectManyExpressionParserTest.cs" />
     <Compile Include="ParsingTest\SelectManyExpressionParserTest\SimpleSelectManyExpressionParserTest.cs" />
     <Compile Include="ParsingTest\SelectManyExpressionParserTest\WhereSelectManyExpressionParserTest.cs" />
+    <Compile Include="ParsingTest\TreeEvaluationTest\FilteredSubtreeFinderTest.cs" />
+    <Compile Include="ParsingTest\TreeEvaluationTest\PartialTreeEvaluatorTest.cs" />
     <Compile Include="ParsingTest\WhereExpressionParserTest\FromLetWhereHelper.cs" />
     <Compile Include="ParsingTest\WhereExpressionParserTest\GeneralWhereExpressionParserTest.cs" />
     <Compile Include="ParsingTest\WhereExpressionParserTest\RecursiveWhereExpressionParserTest.cs" />

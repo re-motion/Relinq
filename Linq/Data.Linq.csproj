@@ -96,8 +96,8 @@
     <Compile Include="IDatabaseInfo.cs" />
     <Compile Include="SqlGeneration\SqlGeneratorVisitor.cs" />
     <Compile Include="Visitor\ExpressionTreeVisitor.cs" />
-    <Compile Include="Visitor\FilteredSubtreeFinder.cs" />
-    <Compile Include="Visitor\PartialTreeEvaluator.cs" />
+    <Compile Include="Parsing\TreeEvaluation\FilteredSubtreeFinder.cs" />
+    <Compile Include="Parsing\TreeEvaluation\PartialTreeEvaluator.cs" />
     <Compile Include="Visitor\StringVisitor.cs" />
     <Compile Include="Clauses\WhereClause.cs" />
   </ItemGroup>
