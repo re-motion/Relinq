@@ -2,8 +2,7 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.DataObjectModel
 {
-  
-  public class ComplexCriterion : ICriterion
+  public struct ComplexCriterion : ICriterion
   {
     public enum JunctionKind { And, Or }
     
@@ -17,10 +16,14 @@ namespace Rubicon.Data.Linq.DataObjectModel
       ArgumentUtility.CheckNotNull ("left", left);
       ArgumentUtility.CheckNotNull ("right", right);
 
-      
       Left = left;
       Kind = kind;
       Right = right;
+    }
+
+    public override string ToString ()
+    {
+      return "(" + Left + " " + Kind + " " + Right + ")";
     }
   }
 }

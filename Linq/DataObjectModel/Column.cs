@@ -2,7 +2,7 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.DataObjectModel
 {
-  public struct Column : IValue
+  public struct Column : IValue, ICriterion
   {
     public readonly string Name;
     public readonly Table Table;
@@ -13,6 +13,11 @@ namespace Rubicon.Data.Linq.DataObjectModel
       ArgumentUtility.CheckNotNull ("table", table);
       Name = name;
       Table = table;
+    }
+
+    public override string ToString ()
+    {
+      return Table + "." + Name;
     }
   }
 }

@@ -14,5 +14,10 @@ namespace Rubicon.Data.Linq.DataObjectModel
       Name = name;
       Alias = alias;
     }
+
+    public override string ToString ()
+    {
+      return Name + " (" + Alias + ")";
+    }
   }
 }

@@ -1,6 +1,6 @@
 namespace Rubicon.Data.Linq.DataObjectModel
 {
-  public interface ICriterion
+  public interface ICriterion : IValue
   {
     
   }

@@ -109,8 +109,11 @@ namespace Rubicon.Data.Linq.UnitTests
     {
       return from s1 in source1 select ((Func<string, string>) ((string s) => s1.First)) (s1.Last) + new string[] { s1.ToString () }[s1.ID];
     }
-    
-   
+
+    public static IQueryable<Student> CreateWhereQueryWithDifferentComparisons (IQueryable<Student> source)
+    {
+      return from s in source where s.First != "Garcia" &&  s.ID > 5 && s.ID >= 6 && s.ID < 7 && s.ID <=6 && s.ID == 6 select s;
+    }
 
     public static MethodCallExpression CreateSimpleQuery_SelectExpression (IQueryable<Student> source)
     {
