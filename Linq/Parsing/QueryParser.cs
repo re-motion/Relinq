@@ -44,33 +44,30 @@ namespace Rubicon.Data.Linq.Parsing
 
     public QueryExpression GetParsedQuery ()
     {
-      FromExpression mainFromExpression = (FromExpression) _fromLetWhereExpressions[0];
-      MainFromClause mainFromClause = new MainFromClause (mainFromExpression.Identifier,
-          (IQueryable) ((ConstantExpression) mainFromExpression.Expression).Value);
+      MainFromClause mainFromClause = CreateMainFromClause();
+      QueryBody queryBody = CreateQueryBody(mainFromClause);
 
-      List<IFromLetWhereClause> fromLetWhereClauses = new List<IFromLetWhereClause>();
+      return new QueryExpression (mainFromClause, queryBody, SourceExpression);
+    }
+
+    private MainFromClause CreateMainFromClause ()
+    {
+      FromExpression mainFromExpression = (FromExpression) _fromLetWhereExpressions[0];
+      return new MainFromClause (mainFromExpression.Identifier,
+          (IQueryable) ((ConstantExpression) mainFromExpression.Expression).Value);
+    }
+
+    private QueryBody CreateQueryBody (MainFromClause mainFromClause)
+    {
+      List<IFromLetWhereClause> fromLetWhereClauses = new List<IFromLetWhereClause> ();
       IClause previousClause = mainFromClause;
-      
+
       int currentProjection = 0;
       for (int currentFromLetWhere = 1; currentFromLetWhere < _fromLetWhereExpressions.Count; currentFromLetWhere++)
       {
-        FromExpression fromExpression = _fromLetWhereExpressions[currentFromLetWhere] as FromExpression;
-        if (fromExpression != null)
-        {
-          AdditionalFromClause additionalFromClause = new AdditionalFromClause (previousClause, fromExpression.Identifier,
-              (LambdaExpression) fromExpression.Expression, _projectionExpressions[currentProjection]);
-          fromLetWhereClauses.Add (additionalFromClause);
-          previousClause = additionalFromClause;
-          ++currentProjection;
-        }
-
-        WhereExpression whereExpression = _fromLetWhereExpressions[currentFromLetWhere] as WhereExpression;
-        if (whereExpression != null)
-        {
-          WhereClause whereClause = new WhereClause (previousClause, whereExpression.Expression);
-          fromLetWhereClauses.Add (whereClause);
-          previousClause = whereClause;
-        }
+        IFromLetWhereClause fromLetWhereClause = CreateFromLetWhereClause (_fromLetWhereExpressions[currentFromLetWhere], previousClause, ref currentProjection);
+        fromLetWhereClauses.Add (fromLetWhereClause);
+        previousClause = fromLetWhereClause;
       }
 
       SelectClause selectClause = new SelectClause (previousClause, _projectionExpressions.Last ());
@@ -78,8 +75,28 @@ namespace Rubicon.Data.Linq.Parsing
 
       foreach (IFromLetWhereClause fromLetWhereClause in fromLetWhereClauses)
         queryBody.Add (fromLetWhereClause);
+      return queryBody;
+    }
 
-      return new QueryExpression (mainFromClause, queryBody, SourceExpression);
+    private IFromLetWhereClause CreateFromLetWhereClause (FromLetWhereExpressionBase expression, IClause previousClause, ref int currentProjection)
+    {
+      FromExpression fromExpression = expression as FromExpression;
+      if (fromExpression != null)
+      {
+        AdditionalFromClause additionalFromClause = new AdditionalFromClause (previousClause, fromExpression.Identifier,
+            (LambdaExpression) fromExpression.Expression, _projectionExpressions[currentProjection]);
+        ++currentProjection;
+        return additionalFromClause;
+      }
+
+      WhereExpression whereExpression = expression as WhereExpression;
+      if (whereExpression != null)
+      {
+        WhereClause whereClause = new WhereClause (previousClause, whereExpression.Expression);
+        return whereClause;
+      }
+
+      throw new NotSupportedException ("The FromLetWhereExpression type " + expression.GetType().Name + " is not supported.");
     }
   }
 }

@@ -76,8 +76,6 @@ namespace Rubicon.Data.Linq
 
       QueryParser parser = new QueryParser(expression);
       return parser.GetParsedQuery();
-      
     }
-    
   }
 }

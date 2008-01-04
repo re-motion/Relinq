@@ -105,7 +105,7 @@
     <Compile Include="Clauses\WhereClause.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="QueryExpressionDiagramm.cd" />
+    <None Include="QueryExpressions.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

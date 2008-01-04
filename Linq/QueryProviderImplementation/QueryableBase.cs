@@ -11,9 +11,11 @@ namespace Rubicon.Data.Linq.QueryProviderImplementation
   {
     private readonly QueryProviderBase _queryProvider;
     
-    public QueryableBase (IQueryExecutor executor)
+    public QueryableBase (QueryProviderBase provider)
     {
-      _queryProvider = CreateQueryProvider (executor);
+      ArgumentUtility.CheckNotNull ("provider", provider);
+
+      _queryProvider = provider;
       Expression = Expression.Constant (this);
     }
 
@@ -28,8 +30,6 @@ namespace Rubicon.Data.Linq.QueryProviderImplementation
       _queryProvider = provider;
       Expression = expression;
     }
-
-    protected abstract QueryProviderBase CreateQueryProvider (IQueryExecutor executor);
 
     public Expression Expression { get; private set; }
 

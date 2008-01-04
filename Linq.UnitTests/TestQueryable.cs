@@ -11,13 +11,8 @@ namespace Rubicon.Data.Linq.UnitTests
     }
 
     public TestQueryable (IQueryExecutor executor)
-        : base (executor)
+        : base (new TestQueryProvider (executor))
     {
-    }
-
-    protected override QueryProviderBase CreateQueryProvider (IQueryExecutor executor)
-    {
-      return new TestQueryProvider (executor);
     }
   }
 }

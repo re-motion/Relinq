@@ -13,13 +13,8 @@ namespace Rubicon.Data.DomainObjects.Linq
     }
 
     public DomainObjectQueryable (IQueryListener listener)
-        : base (new QueryExecutor<T> (listener))
+        : base (new QueryProvider (new QueryExecutor<T> (listener)))
     {
-    }
-
-    protected override QueryProviderBase CreateQueryProvider (IQueryExecutor executor)
-    {
-      return new QueryProvider (executor);
     }
 
     public string GetCommandString()
