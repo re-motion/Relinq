@@ -66,6 +66,7 @@
     <Compile Include="Clauses\OrderingClause.cs" />
     <Compile Include="Parsing\FromExpression.cs" />
     <Compile Include="Parsing\FromLetWhereExpressionBase.cs" />
+    <Compile Include="Parsing\OrderExpression.cs" />
     <Compile Include="Parsing\SelectManyExpressionParser.cs" />
     <Compile Include="Parsing\ParserUtility.cs" />
     <Compile Include="Parsing\QueryParser.cs" />

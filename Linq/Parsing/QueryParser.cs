@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
+using Rubicon.Collections;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Utilities;
 
@@ -11,6 +13,7 @@ namespace Rubicon.Data.Linq.Parsing
   {
     private readonly List<FromLetWhereExpressionBase> _fromLetWhereExpressions = new List<FromLetWhereExpressionBase> ();
     private readonly List<LambdaExpression> _projectionExpressions = new List<LambdaExpression> ();
+    private readonly List<OrderExpression> _orderExpressions = new List<OrderExpression>();
 
     public QueryParser (Expression expressionTreeRoot)
     {
@@ -41,6 +44,21 @@ namespace Rubicon.Data.Linq.Parsing
     }
 
     public Expression SourceExpression { get; private set; }
+
+    public ReadOnlyCollection<FromLetWhereExpressionBase> FromLetWhereExpressions
+    {
+      get { return new ReadOnlyCollection<FromLetWhereExpressionBase> (_fromLetWhereExpressions); }
+    }
+
+    public ReadOnlyCollection<LambdaExpression> ProjectionExpressions
+    {
+      get { return new ReadOnlyCollection<LambdaExpression> (_projectionExpressions); }
+    }
+
+    public ReadOnlyCollection<OrderExpression> OrderExpressions
+    {
+      get { return new ReadOnlyCollection<OrderExpression> (_orderExpressions); }
+    }
 
     public QueryExpression GetParsedQuery ()
     {
@@ -75,6 +93,9 @@ namespace Rubicon.Data.Linq.Parsing
 
       foreach (IFromLetWhereClause fromLetWhereClause in fromLetWhereClauses)
         queryBody.Add (fromLetWhereClause);
+
+      // TODO: translate OrderExpressions into queryBody.OrderBy clause
+
       return queryBody;
     }
 
