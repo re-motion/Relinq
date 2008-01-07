@@ -135,8 +135,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
           new object[]
               {
                   new Tuple<FromClauseBase, MemberInfo> (expression.FromClause, typeof (Student).GetProperty ("First")),
-                  new Tuple<FromClauseBase, MemberInfo> ((FromClauseBase)expression.QueryBody.FromLetWhereClauses.First(), typeof (Student).GetProperty ("Last")),
-                  new Tuple<FromClauseBase, MemberInfo> ((FromClauseBase)expression.QueryBody.FromLetWhereClauses.Last(), typeof (Student).GetProperty ("ID"))
+                  new Tuple<FromClauseBase, MemberInfo> ((FromClauseBase)expression.QueryBody.BodyClauses.First(), typeof (Student).GetProperty ("Last")),
+                  new Tuple<FromClauseBase, MemberInfo> ((FromClauseBase)expression.QueryBody.BodyClauses.Last(), typeof (Student).GetProperty ("ID"))
               }));
     }
 

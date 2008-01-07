@@ -59,21 +59,21 @@ namespace Rubicon.Data.Linq.Parsing
 
     private QueryBody CreateQueryBody (MainFromClause mainFromClause)
     {
-      List<IFromLetWhereClause> fromLetWhereClauses = new List<IFromLetWhereClause> ();
+      List<IBodyClause> fromLetWhereClauses = new List<IBodyClause> ();
       IClause previousClause = mainFromClause;
 
       int currentProjection = 0;
       for (int currentFromLetWhere = 1; currentFromLetWhere < _fromLetWhereExpressions.Count; currentFromLetWhere++)
       {
-        IFromLetWhereClause fromLetWhereClause = CreateFromLetWhereClause (_fromLetWhereExpressions[currentFromLetWhere], previousClause, ref currentProjection);
-        fromLetWhereClauses.Add (fromLetWhereClause);
-        previousClause = fromLetWhereClause;
+        IBodyClause clause = CreateFromLetWhereClause (_fromLetWhereExpressions[currentFromLetWhere], previousClause, ref currentProjection);
+        fromLetWhereClauses.Add (clause);
+        previousClause = clause;
       }
 
       SelectClause selectClause = new SelectClause (previousClause, _projectionExpressions.Last ());
       QueryBody queryBody = new QueryBody (selectClause);
 
-      foreach (IFromLetWhereClause fromLetWhereClause in fromLetWhereClauses)
+      foreach (IBodyClause fromLetWhereClause in fromLetWhereClauses)
         queryBody.Add (fromLetWhereClause);
 
       // TODO: translate OrderExpressions into queryBody.OrderBy clause
@@ -81,7 +81,7 @@ namespace Rubicon.Data.Linq.Parsing
       return queryBody;
     }
 
-    private IFromLetWhereClause CreateFromLetWhereClause (FromLetWhereExpressionBase expression, IClause previousClause, ref int currentProjection)
+    private IBodyClause CreateFromLetWhereClause (FromLetWhereExpressionBase expression, IClause previousClause, ref int currentProjection)
     {
       FromExpression fromExpression = expression as FromExpression;
       if (fromExpression != null)

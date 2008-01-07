@@ -32,25 +32,20 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.QueryParserIntegrationTest
     }
 
     [Test]
-    public override void CheckFromLetWhereClauses ()
+    public override void CheckBodyClause ()
     {
-      Assert.AreEqual (2, ParsedQuery.QueryBody.FromLetWhereClauseCount);
-      AdditionalFromClause fromClause = ParsedQuery.QueryBody.FromLetWhereClauses.First() as AdditionalFromClause;
+      Assert.AreEqual (2, ParsedQuery.QueryBody.BodyClauseCount);
+      AdditionalFromClause fromClause = ParsedQuery.QueryBody.BodyClauses.First() as AdditionalFromClause;
       Assert.IsNotNull (fromClause);
       Assert.AreSame (SourceExpressionNavigator.Arguments[0].Arguments[0].Arguments[1].Operand.Expression, fromClause.FromExpression);
       Assert.AreSame (SourceExpressionNavigator.Arguments[0].Arguments[0].Arguments[2].Operand.Expression, fromClause.ProjectionExpression);
 
-      WhereClause whereClause = ParsedQuery.QueryBody.FromLetWhereClauses.Last() as WhereClause;
+      WhereClause whereClause = ParsedQuery.QueryBody.BodyClauses.Last() as WhereClause;
       Assert.IsNotNull (whereClause);
       Assert.AreSame (SourceExpressionNavigator.Arguments[0].Arguments[1].Operand.Expression, whereClause.BoolExpression);
     }
 
-    [Test]
-    public override void CheckOrderByClause ()
-    {
-      Assert.IsNull (ParsedQuery.QueryBody.OrderByClause);
-    }
-
+    
     [Test]
     public override void CheckSelectOrGroupClause ()
     {

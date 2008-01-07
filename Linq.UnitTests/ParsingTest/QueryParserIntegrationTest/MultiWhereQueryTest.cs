@@ -16,11 +16,11 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.QueryParserIntegrationTest
     }
 
     [Test]
-    public override void CheckFromLetWhereClauses ()
+    public override void CheckBodyClause ()
     {
-      Assert.AreEqual (3, ParsedQuery.QueryBody.FromLetWhereClauseCount);
-      Assert.IsNotNull (ParsedQuery.QueryBody.FromLetWhereClauses);
-      WhereClause[] whereClauses = ParsedQuery.QueryBody.FromLetWhereClauses.Cast<WhereClause>().ToArray();
+      Assert.AreEqual (3, ParsedQuery.QueryBody.BodyClauseCount);
+      Assert.IsNotNull (ParsedQuery.QueryBody.BodyClauses);
+      WhereClause[] whereClauses = ParsedQuery.QueryBody.BodyClauses.Cast<WhereClause>().ToArray();
 
       ExpressionTreeNavigator navigator = new ExpressionTreeNavigator (whereClauses[0].BoolExpression);
 
@@ -45,11 +45,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.QueryParserIntegrationTest
       Assert.AreEqual (100, navigator.Body.Right.Value);
     }
 
-    [Test]
-    public override void CheckOrderByClause ()
-    {
-      Assert.IsNull (ParsedQuery.QueryBody.OrderByClause);
-    }
+    
 
     [Test]
     public override void CheckSelectOrGroupClause ()

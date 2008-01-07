@@ -29,7 +29,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     {
       LetClause letClause = ExpressionHelper.CreateLetClause();
 
-      Assert.IsInstanceOfType (typeof (IFromLetWhereClause), letClause);
+      Assert.IsInstanceOfType (typeof (IBodyClause), letClause);
     }
         
 

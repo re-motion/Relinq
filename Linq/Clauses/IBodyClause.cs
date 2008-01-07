@@ -2,7 +2,7 @@
 
 namespace Rubicon.Data.Linq.Clauses
 {
-  public interface IFromLetWhereClause : IClause
+  public interface IBodyClause : IClause
   {
   }
 }

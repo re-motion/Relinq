@@ -5,7 +5,7 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.Clauses
 {
-  public class WhereClause : IFromLetWhereClause
+  public class WhereClause : IBodyClause
   {
     private readonly LambdaExpression _boolExpression;
     private LambdaExpression _simplifiedBoolExpression;

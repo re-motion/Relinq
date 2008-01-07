@@ -4,7 +4,7 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.Clauses
 {
-  public class OrderByClause :IQueryElement
+  public class OrderByClause :IQueryElement,IBodyClause
   {
     private readonly List<OrderingClause> _orderingList = new List<OrderingClause>();
 
@@ -29,6 +29,8 @@ namespace Rubicon.Data.Linq.Clauses
     {
       get { return _orderingList.Count; }
     }
+
+    public IClause PreviousClause { get; private set; }
 
     public virtual void Accept (IQueryVisitor visitor)
     {

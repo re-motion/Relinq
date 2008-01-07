@@ -100,7 +100,7 @@ namespace Rubicon.Data.Linq.Visitor
 
     public void VisitQueryBody (QueryBody queryBody)
     {
-      foreach (IFromLetWhereClause clause in queryBody.FromLetWhereClauses)
+      foreach (IBodyClause clause in queryBody.BodyClauses)
         clause.Accept (this);
       queryBody.SelectOrGroupClause.Accept (this);
     }

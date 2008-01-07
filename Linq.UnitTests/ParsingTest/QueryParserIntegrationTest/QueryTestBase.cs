@@ -60,8 +60,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.QueryParserIntegrationTest
       ExpressionTreeComparer.CheckAreEqualTrees (builtExpressionTree, SourceExpression);
     }
 
-    public abstract void CheckFromLetWhereClauses ();
-    public abstract void CheckOrderByClause ();
+    public abstract void CheckBodyClause ();
     public abstract void CheckSelectOrGroupClause ();
   }
 }

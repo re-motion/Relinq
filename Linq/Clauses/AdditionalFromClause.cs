@@ -5,7 +5,7 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.Clauses
 {
-  public class AdditionalFromClause : FromClauseBase,IFromLetWhereClause
+  public class AdditionalFromClause : FromClauseBase,IBodyClause
   {
     public AdditionalFromClause (IClause previousClause, ParameterExpression identifier,
         LambdaExpression fromExpression, LambdaExpression projectionExpression)

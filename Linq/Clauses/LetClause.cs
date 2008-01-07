@@ -5,7 +5,7 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.Clauses
 {
-  public class LetClause : IFromLetWhereClause
+  public class LetClause : IBodyClause
   {
     private readonly ParameterExpression _identifier;
     private readonly Expression _expression;

@@ -14,18 +14,12 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.QueryParserIntegrationTest
     }
 
     [Test]
-    public override void CheckFromLetWhereClauses ()
+    public override void CheckBodyClause ()
     {
-      Assert.AreEqual (0, ParsedQuery.QueryBody.FromLetWhereClauseCount);
+      Assert.AreEqual (0, ParsedQuery.QueryBody.BodyClauseCount);
     }
 
-    [Test]
-    public override void CheckOrderByClause ()
-    {
-      Assert.IsNull (ParsedQuery.QueryBody.OrderByClause);
-    }
-
-    [Test]
+   [Test]
     public override void CheckSelectOrGroupClause ()
     {
       Assert.IsNotNull (ParsedQuery.QueryBody.SelectOrGroupClause);

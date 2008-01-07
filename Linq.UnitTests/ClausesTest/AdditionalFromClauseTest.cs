@@ -36,7 +36,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     public void ImplementInterface_IFromLetWhereClause ()
     {
       AdditionalFromClause fromClause = ExpressionHelper.CreateAdditionalFromClause ();
-      Assert.IsInstanceOfType (typeof (IFromLetWhereClause), fromClause);
+      Assert.IsInstanceOfType (typeof (IBodyClause), fromClause);
     }
 
     [Test]

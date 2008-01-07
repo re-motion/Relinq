@@ -248,10 +248,11 @@ namespace Rubicon.Data.Linq.UnitTests.VisitorTest
       WhereClause whereClause1 =
           repository.CreateMock<WhereClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateLambdaExpression ());
 
-      QueryBody queryBody = new QueryBody (selectClause1, orderByClause1);
+      QueryBody queryBody = new QueryBody (selectClause1);
 
       queryBody.Add (fromClause1);
       queryBody.Add (whereClause1);
+      queryBody.Add (orderByClause1);
 
       StringVisitor sv = new StringVisitor();
 
@@ -299,8 +300,11 @@ namespace Rubicon.Data.Linq.UnitTests.VisitorTest
       MockRepository repository = new MockRepository();
 
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause();
-      QueryBody queryBody = new QueryBody (ExpressionHelper.CreateSelectClause(), ExpressionHelper.CreateOrderByClause());
+      QueryBody queryBody = new QueryBody (ExpressionHelper.CreateSelectClause());
 
+      OrderByClause orderByClause = ExpressionHelper.CreateOrderByClause();
+
+      queryBody.Add (orderByClause);
 
       QueryExpression queryExpression = new QueryExpression (fromClause, queryBody);
 

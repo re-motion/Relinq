@@ -35,19 +35,19 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.QueryParserIntegrationTest
 
 
     [Test]
-    public override void CheckFromLetWhereClauses ()
+    public override void CheckBodyClause ()
     {
-      Assert.AreEqual (3, ParsedQuery.QueryBody.FromLetWhereClauseCount);
-      AdditionalFromClause fromClause1 = ParsedQuery.QueryBody.FromLetWhereClauses.First() as AdditionalFromClause;
+      Assert.AreEqual (3, ParsedQuery.QueryBody.BodyClauseCount);
+      AdditionalFromClause fromClause1 = ParsedQuery.QueryBody.BodyClauses.First() as AdditionalFromClause;
       Assert.IsNotNull (fromClause1);
       Assert.AreSame (SourceExpressionNavigator.Arguments[0].Arguments[0].Arguments[1].Operand.Expression, fromClause1.FromExpression);
       Assert.AreSame (SourceExpressionNavigator.Arguments[0].Arguments[0].Arguments[2].Operand.Expression, fromClause1.ProjectionExpression);
 
-      WhereClause whereClause = ParsedQuery.QueryBody.FromLetWhereClauses.Skip (1).First() as WhereClause;
+      WhereClause whereClause = ParsedQuery.QueryBody.BodyClauses.Skip (1).First() as WhereClause;
       Assert.IsNotNull (whereClause);
       Assert.AreSame (SourceExpressionNavigator.Arguments[0].Arguments[1].Operand.Expression, whereClause.BoolExpression);
 
-      AdditionalFromClause fromClause2 = ParsedQuery.QueryBody.FromLetWhereClauses.Last () as AdditionalFromClause;
+      AdditionalFromClause fromClause2 = ParsedQuery.QueryBody.BodyClauses.Last () as AdditionalFromClause;
       Assert.IsNotNull (fromClause2);
       Assert.AreSame (SourceExpressionNavigator.Arguments[1].Operand.Expression, fromClause2.FromExpression);
       Assert.AreSame (SourceExpressionNavigator.Arguments[2].Operand.Expression, fromClause2.ProjectionExpression);
@@ -55,12 +55,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.QueryParserIntegrationTest
 
 
 
-    [Test]
-    public override void CheckOrderByClause ()
-    {
-      Assert.IsNull (ParsedQuery.QueryBody.OrderByClause);
-    }
-
+    
     [Test]
     public override void CheckSelectOrGroupClause ()
     {

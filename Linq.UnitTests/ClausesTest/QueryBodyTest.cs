@@ -29,27 +29,46 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       
       OrderingClause ordering = new OrderingClause (ExpressionHelper.CreateClause(), expression, OrderDirection.Asc);
 
-      OrderByClause orderByClause = new OrderByClause (ordering);
       
+      QueryBody queryBody = new QueryBody (iSelectOrGroupClause);
+      OrderByClause orderByClause = new OrderByClause (ordering);
 
-      QueryBody queryBody = new QueryBody (iSelectOrGroupClause, orderByClause);
+      queryBody.Add (orderByClause);
 
       Assert.AreSame (iSelectOrGroupClause, queryBody.SelectOrGroupClause);
-      Assert.AreSame (orderByClause, queryBody.OrderByClause);
 
+      Assert.AreEqual (1, queryBody.BodyClauseCount);
+      Assert.That (queryBody.BodyClauses, List.Contains (orderByClause));
     }
 
     [Test]
-    public void AddIFromLetWhereClause()
+    public void AddSeveralOrderByClauses()
     {
       ISelectGroupClause iSelectOrGroupClause = ExpressionHelper.CreateSelectClause ();
       QueryBody queryBody = new QueryBody (iSelectOrGroupClause);
 
-      IFromLetWhereClause iFromLetWhereCLause = ExpressionHelper.CreateWhereClause();
-      queryBody.Add (iFromLetWhereCLause);
+      IBodyClause orderByClause1 = ExpressionHelper.CreateOrderByClause();
+      IBodyClause orderByClause2 = ExpressionHelper.CreateOrderByClause ();
 
-      Assert.AreEqual (1, queryBody.FromLetWhereClauseCount);
-      Assert.That (queryBody.FromLetWhereClauses, List.Contains (iFromLetWhereCLause));
+      queryBody.Add (orderByClause1);
+      queryBody.Add (orderByClause2);
+
+      Assert.AreEqual (2, queryBody.BodyClauseCount);
+      Assert.That (queryBody.BodyClauses, Is.EqualTo(new object[] {orderByClause1,orderByClause2}));
+    }
+
+    
+    [Test]
+    public void AddBodyClause()
+    {
+      ISelectGroupClause iSelectOrGroupClause = ExpressionHelper.CreateSelectClause ();
+      QueryBody queryBody = new QueryBody (iSelectOrGroupClause);
+
+      IBodyClause clause = ExpressionHelper.CreateWhereClause();
+      queryBody.Add (clause);
+
+      Assert.AreEqual (1, queryBody.BodyClauseCount);
+      Assert.That (queryBody.BodyClauses, List.Contains (clause));
     }
 
     [Test]

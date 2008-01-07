@@ -26,7 +26,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     public void ImplementInterface()
     {
       WhereClause whereClause = ExpressionHelper.CreateWhereClause();
-      Assert.IsInstanceOfType (typeof (IFromLetWhereClause), whereClause);
+      Assert.IsInstanceOfType (typeof (IBodyClause), whereClause);
     }
     
     [Test]

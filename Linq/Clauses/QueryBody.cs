@@ -7,46 +7,47 @@ namespace Rubicon.Data.Linq.Clauses
   public class QueryBody : IQueryElement
   {
     private readonly ISelectGroupClause _selectOrGroupClause;
-    private readonly OrderByClause _orderByClause;
-    private readonly List<IFromLetWhereClause> _fromLetWhere = new List<IFromLetWhereClause>();
+    //private readonly OrderByClause _orderByClause;
+    private readonly List<IBodyClause> _bodyClause = new List<IBodyClause>();
 
     public QueryBody (ISelectGroupClause selectOrGroupClause)
     {
       ArgumentUtility.CheckNotNull ("SelectOrGroupClause", selectOrGroupClause);
       _selectOrGroupClause = selectOrGroupClause;
     }
-    
-    public QueryBody (ISelectGroupClause selectOrGroupClause, OrderByClause orderByClause) 
-        : this (selectOrGroupClause)
-    {
-      ArgumentUtility.CheckNotNull ("orderByClause", orderByClause);
-      _orderByClause = orderByClause;
-    }
+
+    //public QueryBody (ISelectGroupClause selectOrGroupClause, OrderByClause orderByClause)
+    //  : this (selectOrGroupClause)
+    //{
+    //  ArgumentUtility.CheckNotNull ("orderByClause", orderByClause);
+    //  _orderByClause = orderByClause;
+    //}
+        
 
     public ISelectGroupClause SelectOrGroupClause
     {
       get { return _selectOrGroupClause; }
     }
 
-    public OrderByClause OrderByClause
+    //public OrderByClause OrderByClause
+    //{
+    //  get { return _orderByClause; }
+    //}
+
+    public IEnumerable<IBodyClause> BodyClauses
     {
-      get { return _orderByClause; }
+      get { return _bodyClause; }
     }
 
-    public IEnumerable<IFromLetWhereClause> FromLetWhereClauses
+    public void Add (IBodyClause clause)
     {
-      get { return _fromLetWhere; }
+      ArgumentUtility.CheckNotNull ("clause", clause);
+      _bodyClause.Add (clause);
     }
 
-    public void Add (IFromLetWhereClause fromLetWhere)
+    public int BodyClauseCount
     {
-      ArgumentUtility.CheckNotNull ("fromLetWhere", fromLetWhere);
-      _fromLetWhere.Add (fromLetWhere);
-    }
-
-    public int FromLetWhereClauseCount
-    {
-      get { return _fromLetWhere.Count; }
+      get { return _bodyClause.Count; }
     }
 
     public virtual void Accept (IQueryVisitor visitor)

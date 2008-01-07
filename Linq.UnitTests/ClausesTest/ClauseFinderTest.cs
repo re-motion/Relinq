@@ -72,7 +72,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       IQueryable<Student> query = TestQueryGenerator.CreateThreeFromQuery (source, source, source);
       QueryExpression queryExpression = new QueryParser (query.Expression).GetParsedQuery ();
       SelectClause selectClause = (SelectClause) queryExpression.QueryBody.SelectOrGroupClause;
-      Assert.AreSame (queryExpression.QueryBody.FromLetWhereClauses.Last (), ClauseFinder.FindClause<FromClauseBase> (selectClause.PreviousClause));
+      Assert.AreSame (queryExpression.QueryBody.BodyClauses.Last (), ClauseFinder.FindClause<FromClauseBase> (selectClause.PreviousClause));
     }
 
     [Test]
@@ -94,8 +94,8 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       SelectClause selectClause = (SelectClause) queryExpression.QueryBody.SelectOrGroupClause;
       Assert.That (ClauseFinder.FindClauses<FromClauseBase> (selectClause).ToArray(),Is.EqualTo(new object[]
           {
-              queryExpression.QueryBody.FromLetWhereClauses.Last(), 
-              queryExpression.QueryBody.FromLetWhereClauses.First(), 
+              queryExpression.QueryBody.BodyClauses.Last(), 
+              queryExpression.QueryBody.BodyClauses.First(), 
               queryExpression.FromClause
           }));
     }
@@ -107,9 +107,9 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       IQueryable<Student> query = TestQueryGenerator.CreateThreeFromWhereQuery (source, source, source);
       QueryExpression queryExpression = new QueryParser (query.Expression).GetParsedQuery ();
       Assert.That (ClauseFinder.FindClauses<FromClauseBase> 
-        (queryExpression.QueryBody.FromLetWhereClauses.Last ().PreviousClause).ToArray (), Is.EqualTo (new object[]
+        (queryExpression.QueryBody.BodyClauses.Last ().PreviousClause).ToArray (), Is.EqualTo (new object[]
           {
-              queryExpression.QueryBody.FromLetWhereClauses.First(), 
+              queryExpression.QueryBody.BodyClauses.First(), 
               queryExpression.FromClause
           }));
     }
@@ -126,10 +126,10 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       Assert.AreSame (queryExpression.FromClause, mainFromClause);
 
       FromClauseBase additionalFromClause = ClauseFinder.FindFromClauseForIdentifierName (queryExpression.QueryBody.SelectOrGroupClause, "s2");
-      Assert.AreSame (queryExpression.QueryBody.FromLetWhereClauses.First (), additionalFromClause);
+      Assert.AreSame (queryExpression.QueryBody.BodyClauses.First (), additionalFromClause);
 
       FromClauseBase additionalFromClause2 = ClauseFinder.FindFromClauseForIdentifierName (queryExpression.QueryBody.SelectOrGroupClause, "s3");
-      Assert.AreSame (queryExpression.QueryBody.FromLetWhereClauses.Last (), additionalFromClause2);
+      Assert.AreSame (queryExpression.QueryBody.BodyClauses.Last (), additionalFromClause2);
     }
 
     [Test]
@@ -140,13 +140,13 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
               ExpressionHelper.CreateQuerySource ());
       QueryExpression queryExpression = ExpressionHelper.ParseQuery (query);
 
-      WhereClause startingPoint = (WhereClause) queryExpression.QueryBody.FromLetWhereClauses.Skip (1).First ();
+      WhereClause startingPoint = (WhereClause) queryExpression.QueryBody.BodyClauses.Skip (1).First ();
 
       FromClauseBase mainFromClause = ClauseFinder.FindFromClauseForIdentifierName (startingPoint, "s1");
       Assert.AreSame (queryExpression.FromClause, mainFromClause);
 
       FromClauseBase additionalFromClause = ClauseFinder.FindFromClauseForIdentifierName (startingPoint, "s2");
-      Assert.AreSame (queryExpression.QueryBody.FromLetWhereClauses.First (), additionalFromClause);
+      Assert.AreSame (queryExpression.QueryBody.BodyClauses.First (), additionalFromClause);
     }
 
     [Test]
@@ -172,7 +172,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
               ExpressionHelper.CreateQuerySource ());
       QueryExpression queryExpression = ExpressionHelper.ParseQuery (query);
 
-      WhereClause startingPoint = (WhereClause) queryExpression.QueryBody.FromLetWhereClauses.Skip (1).First ();
+      WhereClause startingPoint = (WhereClause) queryExpression.QueryBody.BodyClauses.Skip (1).First ();
       ClauseFinder.FindFromClauseForIdentifierName (startingPoint, "s3");
     }
 
@@ -211,7 +211,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       SelectClause selectClause = (SelectClause) queryExpression.QueryBody.SelectOrGroupClause;
       Assert.IsInstanceOfType (typeof (MemberExpression), selectClause.ProjectionExpression.Body);
       FromClauseBase fromClause = ClauseFinder.FindFromClauseForExpression (selectClause, selectClause.ProjectionExpression.Body);
-      Assert.AreSame (queryExpression.QueryBody.FromLetWhereClauses.First (), fromClause);
+      Assert.AreSame (queryExpression.QueryBody.BodyClauses.First (), fromClause);
     }
 
     [Test]
