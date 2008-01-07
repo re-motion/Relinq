@@ -39,8 +39,9 @@ namespace Rubicon.Data.Linq.Parsing
         return ParseMemberExpression ((MemberExpression) expression);
       else if (expression is UnaryExpression)
         return ParseUnaryExpression ((UnaryExpression) expression);
-      else
-        throw ParserUtility.CreateParserException ("binary expression, constrant expression, or member expression", expression, "where condition",
+      else if (expression is MethodCallExpression)
+        return ParseMethodCallExpression((MethodCallExpression)expression);
+      throw ParserUtility.CreateParserException ("binary expression, constant expression,method call expression or member expression", expression, "where condition",
             _whereClause.BoolExpression);
     }
 
@@ -83,11 +84,19 @@ namespace Rubicon.Data.Linq.Parsing
           return new BinaryCondition (ParseExpression (expression.Left), ParseExpression (expression.Right), BinaryCondition.ConditionKind.LessThanOrEqual);
         case ExpressionType.LessThan:
           return new BinaryCondition (ParseExpression (expression.Left), ParseExpression (expression.Right), BinaryCondition.ConditionKind.LessThan);
-
         default:
           throw ParserUtility.CreateParserException ("and, or, or comparison expression", expression.NodeType, "binary expression in where condition",
               _whereClause.BoolExpression);
       }
+    }
+
+    private ICriterion ParseMethodCallExpression(MethodCallExpression expression)
+    {
+      if (expression.Method.Name == "StartsWith")
+        return new BinaryCondition (ParseExpression (expression.Object), new Constant (((ConstantExpression)expression.Arguments[0]).Value + "%"), BinaryCondition.ConditionKind.Like);
+      else if (expression.Method.Name == "EndsWith")
+        return new BinaryCondition (ParseExpression (expression.Object), new Constant ("%" +  ((ConstantExpression) expression.Arguments[0]).Value), BinaryCondition.ConditionKind.Like);
+      throw ParserUtility.CreateParserException("StartsWith, EndsWith",expression.NodeType,"method call expression in where condition",_whereClause.BoolExpression);
     }
 
     private ICriterion ParseUnaryExpression (UnaryExpression expression)

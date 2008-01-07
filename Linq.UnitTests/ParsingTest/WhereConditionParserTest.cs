@@ -20,7 +20,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
     }
 
     [Test]
-    [ExpectedException (typeof (QueryParserException), ExpectedMessage = "Expected binary expression, constrant expression, or member expression for "
+    [ExpectedException (typeof (QueryParserException), ExpectedMessage = "Expected binary expression, constant expression,method call expression or member expression for "
         + "where condition, found ConditionalExpression (IIF(True, True, True)).")]
     public void Invalid ()
     {
@@ -143,6 +143,48 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
       WhereConditionParser parser = new WhereConditionParser (whereClause, _databaseInfo, false);
       ICriterion criterion = parser.GetCriterion ();
       Assert.AreEqual (new BinaryCondition (new Constant (true), new Constant (true), BinaryCondition.ConditionKind.Equal), criterion);
+    }
+
+    [Test]
+    public void MethodCallStartsWith ()
+    {
+      ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
+      MainFromClause fromClause = new MainFromClause (parameter, ExpressionHelper.CreateQuerySource ());
+      WhereClause whereClause =
+          new WhereClause (fromClause,
+              Expression.Lambda (
+                  typeof (System.Func<Student, bool> ),
+                  Expression.Call(
+                    Expression.MakeMemberAccess (parameter, typeof (Student).GetProperty ("First")),
+                    typeof(string).GetMethod("StartsWith",new Type[] {typeof (string)}),
+                    Expression.Constant("Garcia")
+                   ),
+                  parameter
+                  ));
+      WhereConditionParser parser = new WhereConditionParser (whereClause, _databaseInfo, false);
+      ICriterion criterion = parser.GetCriterion ();
+      Assert.AreEqual (new BinaryCondition (new Column (new Table("sourceTable","s"),"FirstColumn"), new Constant ("Garcia%"), BinaryCondition.ConditionKind.Like), criterion);
+    }
+
+    [Test]
+    public void MethodCallEndsWith ()
+    {
+      ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
+      MainFromClause fromClause = new MainFromClause (parameter, ExpressionHelper.CreateQuerySource ());
+      WhereClause whereClause =
+          new WhereClause (fromClause,
+              Expression.Lambda (
+                  typeof (System.Func<Student, bool>),
+                  Expression.Call (
+                    Expression.MakeMemberAccess (parameter, typeof (Student).GetProperty ("First")),
+                    typeof (string).GetMethod ("EndsWith", new Type[] { typeof (string) }),
+                    Expression.Constant ("Garcia")
+                   ),
+                  parameter
+                  ));
+      WhereConditionParser parser = new WhereConditionParser (whereClause, _databaseInfo, false);
+      ICriterion criterion = parser.GetCriterion ();
+      Assert.AreEqual (new BinaryCondition (new Column (new Table ("sourceTable", "s"), "FirstColumn"), new Constant ("%Garcia"), BinaryCondition.ConditionKind.Like), criterion);
     }
 
     [Test]

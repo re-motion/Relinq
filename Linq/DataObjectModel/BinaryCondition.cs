@@ -4,7 +4,7 @@ namespace Rubicon.Data.Linq.DataObjectModel
 {
   public struct BinaryCondition : ICondition
   {
-    public enum ConditionKind { Equal, NotEqual, GreaterThan, GreaterThanOrEqual, LessThan, LessThanOrEqual }
+    public enum ConditionKind { Equal, NotEqual, GreaterThan, GreaterThanOrEqual, LessThan, LessThanOrEqual,Like }
 
     public readonly IValue Left;
     public readonly IValue Right;

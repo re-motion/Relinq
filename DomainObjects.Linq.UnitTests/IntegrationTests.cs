@@ -36,6 +36,30 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
+    public void QueryWithWhereConditionAndStartsWith ()
+    {
+      var computers = 
+        from c in DataContext.Entity<Computer> (new TestQueryListener())
+        where c.SerialNumber.StartsWith("9")
+        select c;
+      Computer[] computerArray = computers.ToArray ();
+      Assert.That (computerArray,
+          Is.EquivalentTo (new object[] {Computer.GetObject (DomainObjectIDs.Computer5), Computer.GetObject (DomainObjectIDs.Computer2)}));
+    }
+
+    [Test]
+    public void QueryWithWhereConditionAndEndsWith ()
+    {
+      var computers =
+        from c in DataContext.Entity<Computer> (new TestQueryListener ())
+        where c.SerialNumber.EndsWith ("7")
+        select c;
+      Computer[] computerArray = computers.ToArray ();
+      Assert.That (computerArray,
+          Is.EquivalentTo (new object[] { Computer.GetObject (DomainObjectIDs.Computer3) }));
+    }
+
+    [Test]
     [Ignore ("TODO: This will only work with joins.")]
     public void QueryWithVirtualKeySide ()
     {

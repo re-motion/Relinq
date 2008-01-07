@@ -125,6 +125,16 @@ namespace Rubicon.Data.Linq.UnitTests
       return from s in source where (!(s.First == "Garcia") || s.First == "Garcia") && s.First == "Garcia" select s;
     }
 
+    public static IQueryable<Student> CreateWhereQueryWithStartsWith (IQueryable<Student> source)
+    {
+      return from s in source where s.First.StartsWith("Garcia") select s;
+    }
+
+    public static IQueryable<Student> CreateWhereQueryWithEndsWith (IQueryable<Student> source)
+    {
+      return from s in source where s.First.EndsWith("Garcia") select s;
+    }
+
     public static IQueryable<Student> CreateWhereQueryNullChecks (IQueryable<Student> source)
     {
       return from s in source where s.First == null || null != s.Last select s;
@@ -139,6 +149,8 @@ namespace Rubicon.Data.Linq.UnitTests
     {
       return from s in source where false select s;
     }
+
+
 
     public static MethodCallExpression CreateSimpleQuery_SelectExpression (IQueryable<Student> source)
     {
