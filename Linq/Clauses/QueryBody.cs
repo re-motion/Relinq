@@ -15,24 +15,13 @@ namespace Rubicon.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("SelectOrGroupClause", selectOrGroupClause);
       _selectOrGroupClause = selectOrGroupClause;
     }
-
-    //public QueryBody (ISelectGroupClause selectOrGroupClause, OrderByClause orderByClause)
-    //  : this (selectOrGroupClause)
-    //{
-    //  ArgumentUtility.CheckNotNull ("orderByClause", orderByClause);
-    //  _orderByClause = orderByClause;
-    //}
-        
+     
 
     public ISelectGroupClause SelectOrGroupClause
     {
       get { return _selectOrGroupClause; }
     }
 
-    //public OrderByClause OrderByClause
-    //{
-    //  get { return _orderByClause; }
-    //}
 
     public IEnumerable<IBodyClause> BodyClauses
     {
