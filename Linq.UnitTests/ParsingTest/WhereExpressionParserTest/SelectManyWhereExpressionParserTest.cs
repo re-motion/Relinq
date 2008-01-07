@@ -25,7 +25,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.WhereExpressionParserTest
       _querySource2 = ExpressionHelper.CreateQuerySource();
       _expression = TestQueryGenerator.CreateMultiFromWhere_WhereExpression (_querySource1, _querySource2);
       _navigator = new ExpressionTreeNavigator (_expression);
-      _parser = new WhereExpressionParser ((MethodCallExpression) _navigator.Arguments[0].Expression, _expression, true);
+      _parser = new WhereExpressionParser ((MethodCallExpression) _navigator.Arguments[0].Expression, _expression, false);
       _selectManyNavigator = new ExpressionTreeNavigator (_expression).Arguments[0].Arguments[0];
       _fromLetWhereHelper = new FromLetWhereHelper (_parser.FromLetWhereExpressions);
     }

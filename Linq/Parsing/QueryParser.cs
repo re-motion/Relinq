@@ -18,29 +18,11 @@ namespace Rubicon.Data.Linq.Parsing
     public QueryParser (Expression expressionTreeRoot)
     {
       ArgumentUtility.CheckNotNull ("expressionTreeRoot", expressionTreeRoot);
-      MethodCallExpression rootExpression = ParserUtility.GetTypedExpression<MethodCallExpression> (expressionTreeRoot,
-          "expression tree root", expressionTreeRoot);
-
       SourceExpression = expressionTreeRoot;
 
-      switch (ParserUtility.CheckMethodCallExpression (rootExpression, expressionTreeRoot, "Select", "Where","SelectMany"))
-      {
-        case "Select":
-          SelectExpressionParser selectExpressionParser = new SelectExpressionParser(rootExpression, expressionTreeRoot);
-          _fromLetWhereExpressions.AddRange (selectExpressionParser.FromLetWhereExpressions);
-          _projectionExpressions.AddRange (selectExpressionParser.ProjectionExpressions);
-          break;
-        case "Where":
-          WhereExpressionParser whereExpressionParser = new WhereExpressionParser (rootExpression, expressionTreeRoot, true);
-          _fromLetWhereExpressions.AddRange (whereExpressionParser.FromLetWhereExpressions);
-          _projectionExpressions.AddRange (whereExpressionParser.ProjectionExpressions);
-          break;
-        case "SelectMany":
-          SelectManyExpressionParser selectManyExpressionParser = new SelectManyExpressionParser (rootExpression, expressionTreeRoot);
-          _fromLetWhereExpressions.AddRange (selectManyExpressionParser.FromLetWhereExpressions);
-          _projectionExpressions.AddRange (selectManyExpressionParser.ProjectionExpressions);
-          break;
-      }
+      SourceExpressionParser sourceExpressionParser = new SourceExpressionParser (SourceExpression, expressionTreeRoot, true, null, "parsing query");
+      _fromLetWhereExpressions.AddRange (sourceExpressionParser.FromLetWhereExpressions);
+      _projectionExpressions.AddRange (sourceExpressionParser.ProjectionExpressions);
     }
 
     public Expression SourceExpression { get; private set; }

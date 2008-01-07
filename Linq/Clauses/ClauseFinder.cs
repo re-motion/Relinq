@@ -47,7 +47,7 @@ namespace Rubicon.Data.Linq.Clauses
         default:
           string message = string.Format ("The expression cannot be parsed because the expression type {0} is not supported.",
               fromIdentifierExpression.NodeType);
-          throw new QueryParserException (message, fromIdentifierExpression, null);
+          throw new QueryParserException (message, fromIdentifierExpression, null, null);
       }
     }
 

@@ -54,6 +54,7 @@
     <Compile Include="Clauses\FromClauseBase.cs" />
     <Compile Include="Clauses\GroupClause.cs" />
     <Compile Include="Clauses\IFromLetWhereClause.cs" />
+    <Compile Include="Parsing\SourceExpressionParser.cs" />
     <Compile Include="Parsing\DatabaseInfoUtility.cs" />
     <Compile Include="DataObjectModel\NotCriterion.cs" />
     <Compile Include="IClause.cs" />
