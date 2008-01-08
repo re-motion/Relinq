@@ -14,7 +14,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     [Test]
     public void InitializeWithExpressionAndOrderDirectionAsc()
     {
-      Expression expression = ExpressionHelper.CreateExpression();
+      LambdaExpression expression = ExpressionHelper.CreateLambdaExpression();
       OrderDirection directionAsc  = OrderDirection.Asc;
 
       IClause clause = ExpressionHelper.CreateClause();
@@ -30,7 +30,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     [Test]
     public void InitializeWithExpressionAndOrderDirectionDesc ()
     {
-      Expression expression = ExpressionHelper.CreateExpression ();
+      LambdaExpression expression = ExpressionHelper.CreateLambdaExpression ();
       OrderDirection directionAsc = OrderDirection.Asc;
 
       IClause clause = ExpressionHelper.CreateClause ();

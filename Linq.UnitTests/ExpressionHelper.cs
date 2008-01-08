@@ -73,7 +73,7 @@ namespace Rubicon.Data.Linq.UnitTests
 
     public static OrderingClause CreateOrderingClause()
     {
-      Expression expression = ExpressionHelper.CreateExpression ();
+      LambdaExpression expression = ExpressionHelper.CreateLambdaExpression ();
       return new OrderingClause (CreateClause (), expression, OrderDirection.Asc);
     }
 

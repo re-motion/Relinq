@@ -4,9 +4,10 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.Parsing
 {
-  public class OrderExpression
+  public class OrderExpression : BodyExpressionBase<Expression>
   {
     public OrderExpression (bool firstOrderBy, OrderDirection orderDirection, UnaryExpression expression)
+      : base (expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
@@ -19,5 +20,12 @@ namespace Rubicon.Data.Linq.Parsing
     public OrderDirection OrderDirection { get; private set; }
     public UnaryExpression Expression { get; private set; }
 
+    public override string ToString ()
+    {
+      if (FirstOrderBy)
+        return string.Format ("orderby {0} {1}", Expression, OrderDirection);
+      else
+        return string.Format ("thenby {0} {1}", Expression, OrderDirection);
+    }
   }
 }

@@ -9,7 +9,7 @@ namespace Rubicon.Data.Linq.Parsing
   public class WhereExpressionParser
   {
     private readonly bool _isTopLevel;
-    private readonly List<FromLetWhereExpressionBase> _fromLetWhereExpressions = new List<FromLetWhereExpressionBase> ();
+    private readonly List<BodyExpressionBase> _fromLetWhereExpressions = new List<BodyExpressionBase> ();
     private readonly List<LambdaExpression> _projectionExpressions = new List<LambdaExpression>();
 
     public WhereExpressionParser (MethodCallExpression whereExpression, Expression expressionTreeRoot, bool isTopLevel)
@@ -39,22 +39,18 @@ namespace Rubicon.Data.Linq.Parsing
       SourceExpressionParser sourceExpressionParser = new SourceExpressionParser (SourceExpression.Arguments[0], expressionTreeRoot, false,
           ueLambda.Parameters[0], "first argument of Where expression");
 
-      _fromLetWhereExpressions.AddRange (sourceExpressionParser.FromLetWhereExpressions);
+      _fromLetWhereExpressions.AddRange (sourceExpressionParser.BodyExpressions);
       _fromLetWhereExpressions.Add (new WhereExpression (ueLambda));
       _projectionExpressions.AddRange (sourceExpressionParser.ProjectionExpressions);
       if (_isTopLevel)
         _projectionExpressions.Add (null);
     }
 
-    public MethodCallExpression SourceExpression
-    {
-      get;
-      private set;
-    }
+    public MethodCallExpression SourceExpression { get; private set; }
 
-    public ReadOnlyCollection<FromLetWhereExpressionBase> FromLetWhereExpressions
+    public ReadOnlyCollection<BodyExpressionBase> FromLetWhereExpressions
     {
-      get { return new ReadOnlyCollection<FromLetWhereExpressionBase> (_fromLetWhereExpressions); }
+      get { return new ReadOnlyCollection<BodyExpressionBase> (_fromLetWhereExpressions); }
     }
 
     public ReadOnlyCollection<LambdaExpression> ProjectionExpressions

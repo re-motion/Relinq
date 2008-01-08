@@ -1,4 +1,5 @@
 using System;
+using System.Linq.Expressions;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Rubicon.Data.Linq.Clauses;
@@ -128,7 +129,7 @@ namespace Rubicon.Data.Linq.UnitTests.VisitorTest
     [Test]
     public void StringVisitorForOrderingClauseDesc ()
     {
-      OrderingClause orderingClause = new OrderingClause (ExpressionHelper.CreateClause(), ExpressionHelper.CreateExpression(), OrderDirection.Desc);
+      OrderingClause orderingClause = new OrderingClause (ExpressionHelper.CreateClause(), ExpressionHelper.CreateLambdaExpression(), OrderDirection.Desc);
       StringVisitor sv = new StringVisitor();
 
       sv.VisitOrderingClause (orderingClause);
@@ -144,8 +145,8 @@ namespace Rubicon.Data.Linq.UnitTests.VisitorTest
 
       MockRepository repository = new MockRepository();
 
-      OrderingClause ordering1 = repository.CreateMock<OrderingClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateExpression (), OrderDirection.Asc);
-      OrderingClause ordering2 = repository.CreateMock<OrderingClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateExpression (), OrderDirection.Asc);
+      OrderingClause ordering1 = repository.CreateMock<OrderingClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateLambdaExpression (), OrderDirection.Asc);
+      OrderingClause ordering2 = repository.CreateMock<OrderingClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateLambdaExpression (), OrderDirection.Asc);
 
       orderByClause.Add (ordering1);
       orderByClause.Add (ordering2);
@@ -175,9 +176,9 @@ namespace Rubicon.Data.Linq.UnitTests.VisitorTest
       MockRepository repository = new MockRepository();
 
       OrderingClause ordering1 =
-          repository.CreateMock<OrderingClause> (ExpressionHelper.CreateClause(), ExpressionHelper.CreateExpression(), OrderDirection.Desc);
+          repository.CreateMock<OrderingClause> (ExpressionHelper.CreateClause(), ExpressionHelper.CreateLambdaExpression(), OrderDirection.Desc);
       OrderingClause ordering2 =
-          repository.CreateMock<OrderingClause> (ExpressionHelper.CreateClause(), ExpressionHelper.CreateExpression(), OrderDirection.Desc);
+          repository.CreateMock<OrderingClause> (ExpressionHelper.CreateClause(), ExpressionHelper.CreateLambdaExpression(), OrderDirection.Desc);
 
       orderByClause.Add (ordering1);
       orderByClause.Add (ordering2);
@@ -206,9 +207,9 @@ namespace Rubicon.Data.Linq.UnitTests.VisitorTest
       MockRepository repository = new MockRepository();
 
       OrderingClause ordering1 =
-          repository.CreateMock<OrderingClause> (ExpressionHelper.CreateClause(), ExpressionHelper.CreateExpression(), OrderDirection.Desc);
+          repository.CreateMock<OrderingClause> (ExpressionHelper.CreateClause(), ExpressionHelper.CreateLambdaExpression(), OrderDirection.Desc);
       OrderingClause ordering2 =
-          repository.CreateMock<OrderingClause> (ExpressionHelper.CreateClause(), ExpressionHelper.CreateExpression(), OrderDirection.Asc);
+          repository.CreateMock<OrderingClause> (ExpressionHelper.CreateClause(), ExpressionHelper.CreateLambdaExpression(), OrderDirection.Asc);
 
       orderByClause.Add (ordering1);
       orderByClause.Add (ordering2);

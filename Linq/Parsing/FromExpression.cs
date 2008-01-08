@@ -3,7 +3,7 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.Parsing
 {
-  public class FromExpression : FromLetWhereExpressionBase<Expression>
+  public class FromExpression : BodyExpressionBase<Expression>
   {
     public ParameterExpression Identifier { get; private set; }
 

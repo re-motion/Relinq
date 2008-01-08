@@ -6,10 +6,10 @@ namespace Rubicon.Data.Linq.Clauses
 {
   public class OrderingClause : IClause
   {
-    private readonly Expression _expression;
+    private readonly LambdaExpression _expression;
     private readonly OrderDirection _orderDirection;
     
-    public OrderingClause (IClause previousClause,Expression expression, OrderDirection direction)
+    public OrderingClause (IClause previousClause,LambdaExpression expression, OrderDirection direction)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
@@ -20,7 +20,7 @@ namespace Rubicon.Data.Linq.Clauses
 
     public IClause PreviousClause { get; private set; }
 
-    public Expression Expression
+    public LambdaExpression Expression
     {
       get { return _expression; }
     }

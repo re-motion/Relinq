@@ -150,6 +150,20 @@ namespace Rubicon.Data.Linq.UnitTests
       return from s in source where false select s;
     }
 
+    public static IQueryable<Student> CreateOrderByQueryWithOrderByAndThenBy(IQueryable<Student> source)
+    {
+     return from s in source orderby s.First,s.Last descending,s.Scores select s;
+    }
+
+    public static IQueryable<Student> CreateOrderByQueryWithMultipleOrderBys (IQueryable<Student> source)
+    {
+      return from s in source orderby s.First, s.Last descending, s.Scores orderby s.Last select s;
+    }
+
+    public static IQueryable<Student> CreateOrderByWithWhereCondition( IQueryable<Student> source)
+    {
+      return from s in source where s.First == "Garcia" orderby s.First select s;
+    }
 
 
     public static MethodCallExpression CreateSimpleQuery_SelectExpression (IQueryable<Student> source)
@@ -223,6 +237,25 @@ namespace Rubicon.Data.Linq.UnitTests
       IQueryable<Student> query = CreateThreeFromWhereQuery (source1, source2, source3);
       return (MethodCallExpression) query.Expression;
     }
+
+    public static MethodCallExpression CreateOrderByQueryWithOrderByAndThenBy_OrderByExpression(IQueryable<Student> source)
+    {
+      IQueryable<Student> query = CreateOrderByQueryWithOrderByAndThenBy (source);
+      return (MethodCallExpression) query.Expression;
+    }
+
+    public static MethodCallExpression CreateOrderByQueryWithMultipleOrderBys_OrderByExpression (IQueryable<Student> source)
+    {
+      IQueryable<Student> query = CreateOrderByQueryWithMultipleOrderBys (source);
+      return (MethodCallExpression) query.Expression;
+    }
+
+    public static MethodCallExpression CreateOrderByQueryWithWhere_OrderByExpression (IQueryable<Student> source)
+    {
+      IQueryable<Student> query = CreateOrderByWithWhereCondition (source);
+      return (MethodCallExpression) query.Expression;
+    }
+    
 
 
 

@@ -3,19 +3,19 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.Parsing
 {
-  public abstract class FromLetWhereExpressionBase<TExpression> : FromLetWhereExpressionBase
+  public abstract class BodyExpressionBase<TExpression> : BodyExpressionBase
       where TExpression : Expression
   {
     public TExpression Expression { get; private set; }
 
-    public FromLetWhereExpressionBase(TExpression expression)
+    public BodyExpressionBase(TExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       Expression = expression;
     }
   }
 
-  public abstract class FromLetWhereExpressionBase
+  public abstract class BodyExpressionBase
   {
   }
 }

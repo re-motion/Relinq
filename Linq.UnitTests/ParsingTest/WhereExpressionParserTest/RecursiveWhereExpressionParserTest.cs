@@ -14,7 +14,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.WhereExpressionParserTest
     private MethodCallExpression _expression;
     private ExpressionTreeNavigator _navigator;
     private WhereExpressionParser _parser;
-    private FromLetWhereHelper _fromLetWhereHelper;
+    private BodyHelper _bodyWhereHelper;
 
     [SetUp]
     public void SetUp ()
@@ -23,41 +23,41 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.WhereExpressionParserTest
       _expression = TestQueryGenerator.CreateMultiWhereQuery_WhereExpression (_querySource);
       _navigator = new ExpressionTreeNavigator(_expression);
       _parser = new WhereExpressionParser (_expression, _expression, true);
-      _fromLetWhereHelper = new FromLetWhereHelper (_parser.FromLetWhereExpressions);
+      _bodyWhereHelper = new BodyHelper (_parser.FromLetWhereExpressions);
     }
 
     
     [Test]
     public void ParsesFromExpressions ()
     {
-      Assert.IsNotNull (_fromLetWhereHelper.FromExpressions);
-      Assert.That (_fromLetWhereHelper.FromExpressions, Is.EqualTo (new object[] { _navigator.Arguments[0].Arguments[0].Arguments[0].Expression }));
-      Assert.IsInstanceOfType (typeof (ConstantExpression), _fromLetWhereHelper.FromExpressions[0]);
-      Assert.AreSame (_querySource, ((ConstantExpression) _fromLetWhereHelper.FromExpressions[0]).Value);
+      Assert.IsNotNull (_bodyWhereHelper.FromExpressions);
+      Assert.That (_bodyWhereHelper.FromExpressions, Is.EqualTo (new object[] { _navigator.Arguments[0].Arguments[0].Arguments[0].Expression }));
+      Assert.IsInstanceOfType (typeof (ConstantExpression), _bodyWhereHelper.FromExpressions[0]);
+      Assert.AreSame (_querySource, ((ConstantExpression) _bodyWhereHelper.FromExpressions[0]).Value);
     }
 
     [Test]
     public void ParsesFromIdentifiers ()
     {
-      Assert.IsNotNull (_fromLetWhereHelper.FromIdentifiers);
-      Assert.That (_fromLetWhereHelper.FromIdentifiers,
+      Assert.IsNotNull (_bodyWhereHelper.FromIdentifiers);
+      Assert.That (_bodyWhereHelper.FromIdentifiers,
           Is.EqualTo (new object[] { _navigator.Arguments[0].Arguments[0].Arguments[1].Operand.Parameters[0].Expression }));
-      Assert.IsInstanceOfType (typeof (ParameterExpression), _fromLetWhereHelper.FromIdentifiers[0]);
-      Assert.AreEqual ("s", ((ParameterExpression) _fromLetWhereHelper.FromIdentifiers[0]).Name);
+      Assert.IsInstanceOfType (typeof (ParameterExpression), _bodyWhereHelper.FromIdentifiers[0]);
+      Assert.AreEqual ("s", ((ParameterExpression) _bodyWhereHelper.FromIdentifiers[0]).Name);
     }
 
     [Test]
     public void ParsesBoolExpressions ()
     {
-      Assert.IsNotNull (_fromLetWhereHelper.WhereExpressions);
-      Assert.That (_fromLetWhereHelper.WhereExpressions, Is.EqualTo (new object[] 
+      Assert.IsNotNull (_bodyWhereHelper.WhereExpressions);
+      Assert.That (_bodyWhereHelper.WhereExpressions, Is.EqualTo (new object[] 
         {_navigator.Arguments[0].Arguments[0].Arguments[1].Operand.Expression,
         _navigator.Arguments[0].Arguments[1].Operand.Expression,
         _navigator.Arguments[1].Operand.Expression
         }));
-      Assert.IsInstanceOfType (typeof (LambdaExpression), _fromLetWhereHelper.WhereExpressions[0]);
-      Assert.IsInstanceOfType (typeof (LambdaExpression), _fromLetWhereHelper.WhereExpressions[1]);
-      Assert.IsInstanceOfType (typeof (LambdaExpression), _fromLetWhereHelper.WhereExpressions[2]);
+      Assert.IsInstanceOfType (typeof (LambdaExpression), _bodyWhereHelper.WhereExpressions[0]);
+      Assert.IsInstanceOfType (typeof (LambdaExpression), _bodyWhereHelper.WhereExpressions[1]);
+      Assert.IsInstanceOfType (typeof (LambdaExpression), _bodyWhereHelper.WhereExpressions[2]);
     }
 
     [Test]

@@ -11,7 +11,7 @@ namespace Rubicon.Data.Linq.Parsing
 {
   public class QueryParser
   {
-    private readonly List<FromLetWhereExpressionBase> _fromLetWhereExpressions = new List<FromLetWhereExpressionBase> ();
+    private readonly List<BodyExpressionBase> _bodyExpressions = new List<BodyExpressionBase> ();
     private readonly List<LambdaExpression> _projectionExpressions = new List<LambdaExpression> ();
     private readonly List<OrderExpression> _orderExpressions = new List<OrderExpression>();
 
@@ -21,15 +21,15 @@ namespace Rubicon.Data.Linq.Parsing
       SourceExpression = expressionTreeRoot;
 
       SourceExpressionParser sourceExpressionParser = new SourceExpressionParser (SourceExpression, expressionTreeRoot, true, null, "parsing query");
-      _fromLetWhereExpressions.AddRange (sourceExpressionParser.FromLetWhereExpressions);
+      _bodyExpressions.AddRange (sourceExpressionParser.BodyExpressions);
       _projectionExpressions.AddRange (sourceExpressionParser.ProjectionExpressions);
     }
 
     public Expression SourceExpression { get; private set; }
 
-    public ReadOnlyCollection<FromLetWhereExpressionBase> FromLetWhereExpressions
+    public ReadOnlyCollection<BodyExpressionBase> FromLetWhereExpressions
     {
-      get { return new ReadOnlyCollection<FromLetWhereExpressionBase> (_fromLetWhereExpressions); }
+      get { return new ReadOnlyCollection<BodyExpressionBase> (_bodyExpressions); }
     }
 
     public ReadOnlyCollection<LambdaExpression> ProjectionExpressions
@@ -52,7 +52,7 @@ namespace Rubicon.Data.Linq.Parsing
 
     private MainFromClause CreateMainFromClause ()
     {
-      FromExpression mainFromExpression = (FromExpression) _fromLetWhereExpressions[0];
+      FromExpression mainFromExpression = (FromExpression) _bodyExpressions[0];
       return new MainFromClause (mainFromExpression.Identifier,
           (IQueryable) ((ConstantExpression) mainFromExpression.Expression).Value);
     }
@@ -63,9 +63,9 @@ namespace Rubicon.Data.Linq.Parsing
       IClause previousClause = mainFromClause;
 
       int currentProjection = 0;
-      for (int currentFromLetWhere = 1; currentFromLetWhere < _fromLetWhereExpressions.Count; currentFromLetWhere++)
+      for (int currentFromLetWhere = 1; currentFromLetWhere < _bodyExpressions.Count; currentFromLetWhere++)
       {
-        IBodyClause clause = CreateFromLetWhereClause (_fromLetWhereExpressions[currentFromLetWhere], previousClause, ref currentProjection);
+        IBodyClause clause = CreateFromLetWhereClause (_bodyExpressions[currentFromLetWhere], previousClause, ref currentProjection);
         fromLetWhereClauses.Add (clause);
         previousClause = clause;
       }
@@ -81,7 +81,7 @@ namespace Rubicon.Data.Linq.Parsing
       return queryBody;
     }
 
-    private IBodyClause CreateFromLetWhereClause (FromLetWhereExpressionBase expression, IClause previousClause, ref int currentProjection)
+    private IBodyClause CreateFromLetWhereClause (BodyExpressionBase expression, IClause previousClause, ref int currentProjection)
     {
       FromExpression fromExpression = expression as FromExpression;
       if (fromExpression != null)

@@ -71,6 +71,9 @@
     <Compile Include="ParsingTest\DatabaseInfoUtilityTest.cs" />
     <Compile Include="ParsingTest\ExpressionTreeComparer.cs" />
     <Compile Include="ParsingTest\FromLetWhereExpressionTest.cs" />
+    <Compile Include="ParsingTest\OrderExpressionTest\MultiOrderBysTest.cs" />
+    <Compile Include="ParsingTest\OrderExpressionTest\OrderByWhereExpressionTest.cs" />
+    <Compile Include="ParsingTest\OrderExpressionTest\SimpleOrderByExpressionTest.cs" />
     <Compile Include="ParsingTest\ParserUtilityTest.cs" />
     <Compile Include="ParsingTest\SelectProjectionParserTest.cs" />
     <Compile Include="ParsingTest\QueryParserIntegrationTest\ReverseFromWhereQueryWithProjectionTest.cs" />
@@ -96,7 +99,7 @@
     <Compile Include="ParsingTest\TreeEvaluationTest\FilteredSubtreeFinderTest.cs" />
     <Compile Include="ParsingTest\TreeEvaluationTest\PartialTreeEvaluatorTest.cs" />
     <Compile Include="ParsingTest\WhereConditionParserTest.cs" />
-    <Compile Include="ParsingTest\WhereExpressionParserTest\FromLetWhereHelper.cs" />
+    <Compile Include="ParsingTest\WhereExpressionParserTest\BodyHelper.cs" />
     <Compile Include="ParsingTest\WhereExpressionParserTest\GeneralWhereExpressionParserTest.cs" />
     <Compile Include="ParsingTest\WhereExpressionParserTest\RecursiveWhereExpressionParserTest.cs" />
     <Compile Include="ParsingTest\WhereExpressionParserTest\SelectManyWhereExpressionParserTest.cs" />
@@ -133,7 +136,10 @@
   <ItemGroup>
     <Content Include="ParsingTest\ExpressionTrees\multiFromQueryWithProjection.jpg" />
     <Content Include="ParsingTest\ExpressionTrees\multiFromWhereQuery.jpg" />
+    <Content Include="ParsingTest\ExpressionTrees\multiOrderbysThenBys.jpg" />
+    <Content Include="ParsingTest\ExpressionTrees\OrderByThenBy.jpg" />
     <Content Include="ParsingTest\ExpressionTrees\multiWhereQuery.jpg" />
+    <Content Include="ParsingTest\ExpressionTrees\orderByWhereQuery.jpg" />
     <Content Include="ParsingTest\ExpressionTrees\reverseFromWhereQuery.jpg" />
     <Content Include="ParsingTest\ExpressionTrees\reverseFromWhereQueryWithProjection.jpg" />
     <Content Include="ParsingTest\ExpressionTrees\selectWhereQuery.jpg" />

@@ -24,10 +24,10 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     [Test]
     public void InitializeWithISelectOrGroupClauseAndOrderByClause()
     {
-      Expression expression = ExpressionHelper.CreateExpression ();
+      LambdaExpression expression = ExpressionHelper.CreateLambdaExpression ();
       ISelectGroupClause iSelectOrGroupClause = ExpressionHelper.CreateSelectClause ();
       
-      OrderingClause ordering = new OrderingClause (ExpressionHelper.CreateClause(), expression, OrderDirection.Asc);
+      OrderingClause ordering = new OrderingClause (ExpressionHelper.CreateClause(),expression, OrderDirection.Asc);
 
       
       QueryBody queryBody = new QueryBody (iSelectOrGroupClause);

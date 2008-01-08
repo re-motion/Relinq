@@ -8,7 +8,7 @@ namespace Rubicon.Data.Linq.Parsing
 {
   public class SelectManyExpressionParser
   {
-    private readonly List<FromLetWhereExpressionBase> _fromLetWhereExpressions = new List<FromLetWhereExpressionBase> ();
+    private readonly List<BodyExpressionBase> _fromLetWhereExpressions = new List<BodyExpressionBase> ();
     private readonly List<LambdaExpression> _projectionExpressions = new List<LambdaExpression> ();
 
     public SelectManyExpressionParser (MethodCallExpression selectManyExpression, Expression expressionTreeRoot)
@@ -40,7 +40,7 @@ namespace Rubicon.Data.Linq.Parsing
       SourceExpressionParser sourceExpressionParser = new SourceExpressionParser (SourceExpression.Arguments[0], expressionTreeRoot, false,
           ueLambda2.Parameters[0], "first argument of SelectMany expression");
 
-      _fromLetWhereExpressions.AddRange (sourceExpressionParser.FromLetWhereExpressions);
+      _fromLetWhereExpressions.AddRange (sourceExpressionParser.BodyExpressions);
       _fromLetWhereExpressions.Add (new FromExpression (ueLambda1, ueLambda2.Parameters[1]));
       _projectionExpressions.AddRange (sourceExpressionParser.ProjectionExpressions);
       _projectionExpressions.Add (ueLambda2);
@@ -48,9 +48,9 @@ namespace Rubicon.Data.Linq.Parsing
 
     public MethodCallExpression SourceExpression { get; private set; }
 
-    public ReadOnlyCollection<FromLetWhereExpressionBase> FromLetWhereExpressions
+    public ReadOnlyCollection<BodyExpressionBase> FromLetWhereExpressions
     {
-      get { return new ReadOnlyCollection<FromLetWhereExpressionBase> (_fromLetWhereExpressions); }
+      get { return new ReadOnlyCollection<BodyExpressionBase> (_fromLetWhereExpressions); }
     }
 
     public ReadOnlyCollection<LambdaExpression> ProjectionExpressions

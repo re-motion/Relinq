@@ -9,7 +9,7 @@ namespace Rubicon.Data.Linq.Parsing
 {
   internal class SourceExpressionParser
   {
-    private readonly List<FromLetWhereExpressionBase> _fromLetWhereExpressions = new List<FromLetWhereExpressionBase> ();
+    private readonly List<BodyExpressionBase> _bodyExpressions = new List<BodyExpressionBase> ();
     private readonly List<LambdaExpression> _projectionExpressions = new List<LambdaExpression> ();
     private readonly bool _isTopLevel;
     private readonly ParameterExpression _potentialFromIdentifier;
@@ -32,7 +32,8 @@ namespace Rubicon.Data.Linq.Parsing
           break;
         case ExpressionType.Call:
           string methodName = ParserUtility.CheckMethodCallExpression (
-            (MethodCallExpression) sourceExpression, expressionTreeRoot, "Select", "SelectMany", "Where");
+            (MethodCallExpression) sourceExpression, expressionTreeRoot, 
+              "Select", "SelectMany", "Where", "OrderBy", "OrderByDescending", "ThenBy", "ThenByDescending");
           switch (methodName)
           {
             case "Select":
@@ -43,6 +44,12 @@ namespace Rubicon.Data.Linq.Parsing
               break;
             case "Where":
               ParseWhereSource (expressionTreeRoot);
+              break;
+            case "OrderBy":
+            case "OrderByDescending":
+            case "ThenBy":
+            case "ThenByDescending":
+              ParseOrderBy (expressionTreeRoot);
               break;
           }
           break;
@@ -56,7 +63,7 @@ namespace Rubicon.Data.Linq.Parsing
     {
       ConstantExpression constantExpression = (ConstantExpression) SourceExpression;
 
-      _fromLetWhereExpressions.Add (new FromExpression (constantExpression, _potentialFromIdentifier));
+      _bodyExpressions.Add (new FromExpression (constantExpression, _potentialFromIdentifier));
      
     }
 
@@ -65,7 +72,7 @@ namespace Rubicon.Data.Linq.Parsing
       MethodCallExpression methodCallExpression = (MethodCallExpression) SourceExpression;
       SelectExpressionParser selectExpressionParser = new SelectExpressionParser (methodCallExpression, expressionTreeRoot);
 
-      _fromLetWhereExpressions.AddRange (selectExpressionParser.FromLetWhereExpressions);
+      _bodyExpressions.AddRange (selectExpressionParser.FromLetWhereExpressions);
       _projectionExpressions.AddRange (selectExpressionParser.ProjectionExpressions);
     }
 
@@ -74,7 +81,7 @@ namespace Rubicon.Data.Linq.Parsing
       MethodCallExpression methodCallExpression = (MethodCallExpression) SourceExpression;
       SelectManyExpressionParser selectManyExpressionParser = new SelectManyExpressionParser (methodCallExpression, expressionTreeRoot);
 
-      _fromLetWhereExpressions.AddRange (selectManyExpressionParser.FromLetWhereExpressions);
+      _bodyExpressions.AddRange (selectManyExpressionParser.FromLetWhereExpressions);
       _projectionExpressions.AddRange (selectManyExpressionParser.ProjectionExpressions);
     }
 
@@ -83,15 +90,25 @@ namespace Rubicon.Data.Linq.Parsing
       MethodCallExpression methodCallExpression = (MethodCallExpression) SourceExpression;
       WhereExpressionParser whereExpressionParser = new WhereExpressionParser (methodCallExpression, expressionTreeRoot, _isTopLevel);
 
-      _fromLetWhereExpressions.AddRange (whereExpressionParser.FromLetWhereExpressions);
+      _bodyExpressions.AddRange (whereExpressionParser.FromLetWhereExpressions);
       _projectionExpressions.AddRange (whereExpressionParser.ProjectionExpressions);
+    }
+
+    private void ParseOrderBy (Expression expressionTreeRoot)
+    {
+      MethodCallExpression methodCallExpression = (MethodCallExpression) SourceExpression;
+      OrderByExpressionParser orderByExpressionParser = new OrderByExpressionParser (methodCallExpression, expressionTreeRoot, _isTopLevel);
+
+      _bodyExpressions.AddRange (orderByExpressionParser.BodyExpressions);
+      _projectionExpressions.AddRange (orderByExpressionParser.ProjectionExpressions);
+
     }
 
     public Expression SourceExpression { get; private set; }
 
-    public ReadOnlyCollection<FromLetWhereExpressionBase> FromLetWhereExpressions
+    public ReadOnlyCollection<BodyExpressionBase> BodyExpressions
     {
-      get { return new ReadOnlyCollection<FromLetWhereExpressionBase> (_fromLetWhereExpressions); }
+      get { return new ReadOnlyCollection<BodyExpressionBase> (_bodyExpressions); }
     }
 
     public ReadOnlyCollection<LambdaExpression> ProjectionExpressions

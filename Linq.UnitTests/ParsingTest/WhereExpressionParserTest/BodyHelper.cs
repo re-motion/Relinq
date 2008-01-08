@@ -5,13 +5,13 @@ using Rubicon.Data.Linq.Parsing;
 
 namespace Rubicon.Data.Linq.UnitTests.ParsingTest.WhereExpressionParserTest
 {
-  public class FromLetWhereHelper
+  public class BodyHelper
   {
-    private readonly IEnumerable<FromLetWhereExpressionBase> _fromLetWhereExpressions;
+    private readonly IEnumerable<BodyExpressionBase> _bodyExpressions;
 
-    public FromLetWhereHelper (IEnumerable<FromLetWhereExpressionBase> fromLetWhereExpressions)
+    public BodyHelper (IEnumerable<BodyExpressionBase> bodyExpressions)
     {
-      _fromLetWhereExpressions = fromLetWhereExpressions;
+      _bodyExpressions = bodyExpressions;
     }
 
     public List<Expression> FromExpressions
@@ -19,7 +19,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.WhereExpressionParserTest
       get
       {
         List<Expression> fromExpressions = new List<Expression>();
-        foreach (FromLetWhereExpressionBase expression in _fromLetWhereExpressions)
+        foreach (BodyExpressionBase expression in _bodyExpressions)
         {
           FromExpression fromExpression = expression as FromExpression;
           if (fromExpression != null)
@@ -34,7 +34,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.WhereExpressionParserTest
       get
       {
         List<ParameterExpression> fromIdentifiers = new List<ParameterExpression>();
-        foreach (FromLetWhereExpressionBase expression in _fromLetWhereExpressions)
+        foreach (BodyExpressionBase expression in _bodyExpressions)
         {
           FromExpression fromExpression = expression as FromExpression;
           if (fromExpression != null)
@@ -49,7 +49,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.WhereExpressionParserTest
       get
       {
         List<LambdaExpression> fromExpressions = new List<LambdaExpression>();
-        foreach (FromLetWhereExpressionBase expression in _fromLetWhereExpressions)
+        foreach (BodyExpressionBase expression in _bodyExpressions)
         {
           WhereExpression whereExpression = expression as WhereExpression;
           if (whereExpression != null)
@@ -58,5 +58,24 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.WhereExpressionParserTest
         return fromExpressions;
       }
     }
+
+    public List<OrderExpression> OrderingExpressions
+    {
+      get
+      {
+        List<OrderExpression> orderbyExpressions = new List<OrderExpression> ();
+        foreach (BodyExpressionBase expression in _bodyExpressions)
+        {
+          OrderExpression orderExpression = expression as OrderExpression;
+          if (orderExpression != null)
+            orderbyExpressions.Add (orderExpression);
+        }
+        return orderbyExpressions;
+      }
+    }
+
+    
+
+
   }
 }

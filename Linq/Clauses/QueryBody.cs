@@ -7,7 +7,6 @@ namespace Rubicon.Data.Linq.Clauses
   public class QueryBody : IQueryElement
   {
     private readonly ISelectGroupClause _selectOrGroupClause;
-    //private readonly OrderByClause _orderByClause;
     private readonly List<IBodyClause> _bodyClause = new List<IBodyClause>();
 
     public QueryBody (ISelectGroupClause selectOrGroupClause)
