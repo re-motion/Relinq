@@ -55,6 +55,7 @@
     <Compile Include="Clauses\GroupClause.cs" />
     <Compile Include="Clauses\IBodyClause.cs" />
     <Compile Include="Parsing\OrderByExpressionParser.cs" />
+    <Compile Include="Parsing\QueryBodyCreator.cs" />
     <Compile Include="Parsing\SourceExpressionParser.cs" />
     <Compile Include="Parsing\DatabaseInfoUtility.cs" />
     <Compile Include="DataObjectModel\NotCriterion.cs" />

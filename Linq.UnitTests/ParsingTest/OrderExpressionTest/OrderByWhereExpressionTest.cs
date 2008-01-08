@@ -42,7 +42,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.OrderExpressionTest
       Assert.IsNotNull (_bodyOrderByHelper.OrderingExpressions);
       Assert.AreEqual (1, _bodyOrderByHelper.OrderingExpressions.Count);
       AssertOrderExpressionsEqual (new OrderExpression (true, OrderDirection.Asc,
-          (UnaryExpression) _navigator.Arguments[1].Expression), _bodyOrderByHelper.OrderingExpressions[0]);
+          (LambdaExpression) _navigator.Arguments[1].Operand.Expression), _bodyOrderByHelper.OrderingExpressions[0]);
     }
 
     [Test]

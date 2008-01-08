@@ -6,7 +6,7 @@ namespace Rubicon.Data.Linq.Parsing
 {
   public class OrderExpression : BodyExpressionBase<Expression>
   {
-    public OrderExpression (bool firstOrderBy, OrderDirection orderDirection, UnaryExpression expression)
+    public OrderExpression (bool firstOrderBy, OrderDirection orderDirection, LambdaExpression expression)
       : base (expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
@@ -18,7 +18,7 @@ namespace Rubicon.Data.Linq.Parsing
 
     public bool FirstOrderBy { get; private set; }
     public OrderDirection OrderDirection { get; private set; }
-    public UnaryExpression Expression { get; private set; }
+    public LambdaExpression Expression { get; private set; }
 
     public override string ToString ()
     {

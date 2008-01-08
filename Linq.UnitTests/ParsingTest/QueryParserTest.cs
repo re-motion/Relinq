@@ -67,5 +67,9 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
       Assert.AreSame (parsedQuery.QueryBody.BodyClauses.First(), parsedQuery.QueryBody.BodyClauses.Last ().PreviousClause);
       Assert.AreSame (parsedQuery.QueryBody.BodyClauses.Last(), parsedQuery.QueryBody.SelectOrGroupClause.PreviousClause);
     }
+
+
+
+
   }
 }

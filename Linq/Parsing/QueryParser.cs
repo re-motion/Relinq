@@ -59,47 +59,8 @@ namespace Rubicon.Data.Linq.Parsing
 
     private QueryBody CreateQueryBody (MainFromClause mainFromClause)
     {
-      List<IBodyClause> fromLetWhereClauses = new List<IBodyClause> ();
-      IClause previousClause = mainFromClause;
-
-      int currentProjection = 0;
-      for (int currentFromLetWhere = 1; currentFromLetWhere < _bodyExpressions.Count; currentFromLetWhere++)
-      {
-        IBodyClause clause = CreateFromLetWhereClause (_bodyExpressions[currentFromLetWhere], previousClause, ref currentProjection);
-        fromLetWhereClauses.Add (clause);
-        previousClause = clause;
-      }
-
-      SelectClause selectClause = new SelectClause (previousClause, _projectionExpressions.Last ());
-      QueryBody queryBody = new QueryBody (selectClause);
-
-      foreach (IBodyClause fromLetWhereClause in fromLetWhereClauses)
-        queryBody.Add (fromLetWhereClause);
-
-      // TODO: translate OrderExpressions into queryBody.OrderBy clause
-
-      return queryBody;
-    }
-
-    private IBodyClause CreateFromLetWhereClause (BodyExpressionBase expression, IClause previousClause, ref int currentProjection)
-    {
-      FromExpression fromExpression = expression as FromExpression;
-      if (fromExpression != null)
-      {
-        AdditionalFromClause additionalFromClause = new AdditionalFromClause (previousClause, fromExpression.Identifier,
-            (LambdaExpression) fromExpression.Expression, _projectionExpressions[currentProjection]);
-        ++currentProjection;
-        return additionalFromClause;
-      }
-
-      WhereExpression whereExpression = expression as WhereExpression;
-      if (whereExpression != null)
-      {
-        WhereClause whereClause = new WhereClause (previousClause, whereExpression.Expression);
-        return whereClause;
-      }
-
-      throw new NotSupportedException ("The FromLetWhereExpression type " + expression.GetType().Name + " is not supported.");
+      QueryBodyCreator bodyCreator = new QueryBodyCreator (SourceExpression, mainFromClause, _projectionExpressions, _bodyExpressions);
+      return bodyCreator.GetQueryBody();
     }
   }
 }

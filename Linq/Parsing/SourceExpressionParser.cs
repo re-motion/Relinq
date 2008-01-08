@@ -62,9 +62,8 @@ namespace Rubicon.Data.Linq.Parsing
     private void ParseSimpleSource ()
     {
       ConstantExpression constantExpression = (ConstantExpression) SourceExpression;
-
       _bodyExpressions.Add (new FromExpression (constantExpression, _potentialFromIdentifier));
-     
+    
     }
 
     private void ParseSelectSource (Expression expressionTreeRoot)

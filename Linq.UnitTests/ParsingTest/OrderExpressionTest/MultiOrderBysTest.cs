@@ -40,14 +40,14 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.OrderExpressionTest
     {
       Assert.IsNotNull (_bodyOrderByHelper.OrderingExpressions);
       Assert.AreEqual (4, _bodyOrderByHelper.OrderingExpressions.Count);
-      AssertOrderExpressionsEqual (new OrderExpression (true, OrderDirection.Asc, 
-        (UnaryExpression)_navigator.Arguments[0].Arguments[0].Arguments[0].Arguments[1].Expression), _bodyOrderByHelper.OrderingExpressions[0]);
-      AssertOrderExpressionsEqual (new OrderExpression (false, OrderDirection.Desc,
-        (UnaryExpression) _navigator.Arguments[0].Arguments[0].Arguments[1].Expression), _bodyOrderByHelper.OrderingExpressions[1]);
-      AssertOrderExpressionsEqual (new OrderExpression (false, OrderDirection.Asc,
-        (UnaryExpression) _navigator.Arguments[0].Arguments[1].Expression), _bodyOrderByHelper.OrderingExpressions[2]);
       AssertOrderExpressionsEqual (new OrderExpression (true, OrderDirection.Asc,
-        (UnaryExpression) _navigator.Arguments[1].Expression), _bodyOrderByHelper.OrderingExpressions[3]);
+        (LambdaExpression) _navigator.Arguments[0].Arguments[0].Arguments[0].Arguments[1].Operand.Expression), _bodyOrderByHelper.OrderingExpressions[0]);
+      AssertOrderExpressionsEqual (new OrderExpression (false, OrderDirection.Desc,
+        (LambdaExpression) _navigator.Arguments[0].Arguments[0].Arguments[1].Operand.Expression), _bodyOrderByHelper.OrderingExpressions[1]);
+      AssertOrderExpressionsEqual (new OrderExpression (false, OrderDirection.Asc,
+        (LambdaExpression) _navigator.Arguments[0].Arguments[1].Operand.Expression), _bodyOrderByHelper.OrderingExpressions[2]);
+      AssertOrderExpressionsEqual (new OrderExpression (true, OrderDirection.Asc,
+        (LambdaExpression) _navigator.Arguments[1].Operand.Expression), _bodyOrderByHelper.OrderingExpressions[3]);
     }
 
     [Test]
