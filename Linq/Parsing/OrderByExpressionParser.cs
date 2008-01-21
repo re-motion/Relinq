@@ -58,7 +58,6 @@ namespace Rubicon.Data.Linq.Parsing
           ueLambda.Parameters[0], "first argument of OrderBy expression");
             
       _bodyExpressions.AddRange (sourceExpressionParser.BodyExpressions);
-      //_bodyExpressions.Add (new OrderExpression (orderBy, direction, unaryExpression));
       _bodyExpressions.Add (new OrderExpression (orderBy, direction, ueLambda));
 
 

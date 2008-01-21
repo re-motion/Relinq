@@ -49,6 +49,11 @@ namespace Rubicon.Data.Linq.UnitTests
       return from s1 in source1 from s2 in source2 where s1.Last == "Garcia" select s1;
     }
 
+    public static IQueryable<Student> CreateMultiFromWhereOrderByQuery (IQueryable<Student> source1, IQueryable<Student> source2)
+    {
+      return from s1 in source1 from s2 in source2 where s1.Last == "Garcia" orderby s1 ascending,s2 descending select s1;
+    }
+
     public static IQueryable<Student> CreateMultiWhereQuery (IQueryable<Student> source)
     {
       return from s in source where s.Last == "Garcia" where s.First == "Hugo" where s.ID > 100 select s;

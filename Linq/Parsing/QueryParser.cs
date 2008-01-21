@@ -13,7 +13,7 @@ namespace Rubicon.Data.Linq.Parsing
   {
     private readonly List<BodyExpressionBase> _bodyExpressions = new List<BodyExpressionBase> ();
     private readonly List<LambdaExpression> _projectionExpressions = new List<LambdaExpression> ();
-    private readonly List<OrderExpression> _orderExpressions = new List<OrderExpression>();
+    
 
     public QueryParser (Expression expressionTreeRoot)
     {
@@ -36,12 +36,7 @@ namespace Rubicon.Data.Linq.Parsing
     {
       get { return new ReadOnlyCollection<LambdaExpression> (_projectionExpressions); }
     }
-
-    public ReadOnlyCollection<OrderExpression> OrderExpressions
-    {
-      get { return new ReadOnlyCollection<OrderExpression> (_orderExpressions); }
-    }
-
+        
     public QueryExpression GetParsedQuery ()
     {
       MainFromClause mainFromClause = CreateMainFromClause();

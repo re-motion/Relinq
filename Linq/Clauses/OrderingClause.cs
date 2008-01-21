@@ -8,6 +8,7 @@ namespace Rubicon.Data.Linq.Clauses
   {
     private readonly LambdaExpression _expression;
     private readonly OrderDirection _orderDirection;
+
     
     public OrderingClause (IClause previousClause,LambdaExpression expression, OrderDirection direction)
     {
@@ -18,15 +19,15 @@ namespace Rubicon.Data.Linq.Clauses
       PreviousClause = previousClause;
     }
 
-    public IClause PreviousClause { get; private set; }
+    public IClause PreviousClause { get; set;}
+
 
     public LambdaExpression Expression
     {
       get { return _expression; }
     }
 
-    public OrderDirection OrderDirection
-    {
+    public OrderDirection OrderDirection{
       get { return _orderDirection; }
     }
 

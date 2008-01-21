@@ -30,7 +30,10 @@ namespace Rubicon.Data.Linq.Clauses
       get { return _orderingList.Count; }
     }
 
-    public IClause PreviousClause { get; private set; }
+    public IClause PreviousClause
+    {
+      get { return _orderingList[0].PreviousClause; }
+    }
 
     public virtual void Accept (IQueryVisitor visitor)
     {

@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.Parsing;
 
 namespace Rubicon.Data.Linq.UnitTests.ParsingTest
@@ -67,6 +68,21 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
       Assert.AreSame (parsedQuery.QueryBody.BodyClauses.First(), parsedQuery.QueryBody.BodyClauses.Last ().PreviousClause);
       Assert.AreSame (parsedQuery.QueryBody.BodyClauses.Last(), parsedQuery.QueryBody.SelectOrGroupClause.PreviousClause);
     }
+
+    [Test]
+    public void PreviousClauses_MultiFromWhereOrderByQuery()
+    {
+      IQueryable<Student> source = ExpressionHelper.CreateQuerySource();
+      Expression queryExpression = TestQueryGenerator.CreateMultiFromWhereOrderByQuery (source, source).Expression;
+      QueryParser parser = new QueryParser (queryExpression);
+      QueryExpression parsedQuery = parser.GetParsedQuery();
+
+      Assert.IsNull (parsedQuery.FromClause.PreviousClause);
+      Assert.AreSame (parsedQuery.QueryBody.BodyClauses.First(), parsedQuery.QueryBody.BodyClauses.Skip(1).First().PreviousClause);
+      Assert.AreSame (parsedQuery.QueryBody.BodyClauses.Skip (1).First (), parsedQuery.QueryBody.BodyClauses.Last().PreviousClause);
+    }
+
+
 
 
 
