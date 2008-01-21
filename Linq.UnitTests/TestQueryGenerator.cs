@@ -10,7 +10,7 @@ namespace Rubicon.Data.Linq.UnitTests
     public static IQueryable<Student> CreateSimpleQuery(IQueryable<Student> source)
     {
       return from s in source select s;
-    }
+    } 
 
     public static IQueryable<Student> CreateSimpleQueryWithNonDBProjection (IQueryable<Student> source)
     {
@@ -48,10 +48,25 @@ namespace Rubicon.Data.Linq.UnitTests
     {
       return from s1 in source1 from s2 in source2 where s1.Last == "Garcia" select s1;
     }
-
+        
     public static IQueryable<Student> CreateMultiFromWhereOrderByQuery (IQueryable<Student> source1, IQueryable<Student> source2)
     {
-      return from s1 in source1 from s2 in source2 where s1.Last == "Garcia" orderby s1 ascending,s2 descending select s1;
+      return from s1 in source1 from s2 in source2 where s1.Last == "Garcia" orderby s1.First ascending,s2.Last descending select s1;
+    }
+
+    public static IQueryable<Student> CreateSimpleOrderByQuery (IQueryable<Student> source)
+    {
+      return from s1 in source orderby s1.First select s1 ;
+    }
+
+    public static IQueryable<Student> CreateTwoOrderByQuery (IQueryable<Student> source)
+    {
+      return from s1 in source orderby s1.First orderby s1.Last descending select s1;
+    }
+
+    public static IQueryable<Student> CreateThreeOrderByQuery (IQueryable<Student> source)
+    {
+      return from s1 in source orderby s1.First,s1.Last orderby s1.Last descending select s1;
     }
 
     public static IQueryable<Student> CreateMultiWhereQuery (IQueryable<Student> source)

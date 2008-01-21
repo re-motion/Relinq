@@ -74,6 +74,7 @@
     <Compile Include="ParsingTest\OrderExpressionTest\MultiOrderBysTest.cs" />
     <Compile Include="ParsingTest\OrderExpressionTest\OrderByWhereExpressionTest.cs" />
     <Compile Include="ParsingTest\OrderExpressionTest\SimpleOrderByExpressionTest.cs" />
+    <Compile Include="ParsingTest\OrderingFieldParserTest.cs" />
     <Compile Include="ParsingTest\ParserUtilityTest.cs" />
     <Compile Include="ParsingTest\QueryBodyCreatorTest.cs" />
     <Compile Include="ParsingTest\SelectProjectionParserTest.cs" />

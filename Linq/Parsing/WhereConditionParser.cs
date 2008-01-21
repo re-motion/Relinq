@@ -47,11 +47,16 @@ namespace Rubicon.Data.Linq.Parsing
 
     private ICriterion ParseMemberExpression (MemberExpression expression)
     {
-      ParameterExpression tableIdentifier = expression.Expression as ParameterExpression;
-      if (tableIdentifier == null)
-        throw ParserUtility.CreateParserException ("table identifier", expression.Expression, "member access in where condition", _whereClause.BoolExpression);
+      ParameterExpression tableIdentifier = expression.Expression as ParameterExpression; //kann mnan sich sparen
+      //diese Implementierung , aber erst test schreiben
+      FromClauseBase fromClause = ClauseFinder.FindFromClauseForExpression (_whereClause, expression.Expression);
+      
+      //if (tableIdentifier == null)
+      //  throw ParserUtility.CreateParserException ("table identifier", expression.Expression, "member access in where condition", _whereClause.BoolExpression);
 
-      FromClauseBase fromClause = ClauseFinder.FindFromClauseForExpression (_whereClause, tableIdentifier);
+
+
+      //FromClauseBase fromClause = ClauseFinder.FindFromClauseForExpression (_whereClause, tableIdentifier);
       Table table = DatabaseInfoUtility.GetTableForFromClause (_databaseInfo, fromClause);
       Column column = DatabaseInfoUtility.GetColumn (_databaseInfo, table, expression.Member);
       return column;

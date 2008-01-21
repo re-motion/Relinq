@@ -54,6 +54,7 @@
     <Compile Include="Clauses\FromClauseBase.cs" />
     <Compile Include="Clauses\GroupClause.cs" />
     <Compile Include="Clauses\IBodyClause.cs" />
+    <Compile Include="DataObjectModel\OrderingField.cs" />
     <Compile Include="Parsing\OrderByExpressionParser.cs" />
     <Compile Include="Parsing\QueryBodyCreator.cs" />
     <Compile Include="Parsing\SourceExpressionParser.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="Parsing\QueryParserException.cs" />
     <Compile Include="Parsing\SelectExpressionParser.cs" />
     <Compile Include="Parsing\SelectProjectionParser.cs" />
+    <Compile Include="Parsing\OrderingFieldParser.cs" />
     <Compile Include="Parsing\WhereConditionParser.cs" />
     <Compile Include="Parsing\WhereExpression.cs" />
     <Compile Include="Parsing\WhereExpressionParser.cs" />

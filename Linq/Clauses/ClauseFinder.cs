@@ -30,6 +30,9 @@ namespace Rubicon.Data.Linq.Clauses
       }
     }
 
+    // Finds the from clause matching either a ParameterExpression (e.g. parameter 's1') or a MemberExpression for a transparent identifier
+    // (e.g. '<>h__TransparentIdentifier1.s1'). Do not pass it an expression selecting an entity field (e.g. '<>h__TransparentIdentifier1.s1.First'),
+    // but split the surrounding member expression first.
     public static FromClauseBase FindFromClauseForExpression (IClause startingPoint, Expression fromIdentifierExpression)
     {
       string identifierName;
