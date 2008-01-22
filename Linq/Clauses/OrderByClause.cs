@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.Clauses
@@ -7,6 +8,7 @@ namespace Rubicon.Data.Linq.Clauses
   public class OrderByClause :IQueryElement,IBodyClause
   {
     private readonly List<OrderingClause> _orderingList = new List<OrderingClause>();
+    
 
     public OrderByClause (OrderingClause ordering)
     {
@@ -14,20 +16,15 @@ namespace Rubicon.Data.Linq.Clauses
       _orderingList.Add (ordering);
     }
 
-    public IEnumerable<OrderingClause> OrderingList
+    public ReadOnlyCollection<OrderingClause> OrderingList
     {
-      get { return _orderingList; }
+      get { return new ReadOnlyCollection<OrderingClause>(_orderingList); }
     }
 
     public void Add(OrderingClause ordering)
     {
       ArgumentUtility.CheckNotNull ("ordering", ordering);
       _orderingList.Add (ordering);
-    }
-
-    public int OrderByClauseCount
-    {
-      get { return _orderingList.Count; }
     }
 
     public IClause PreviousClause

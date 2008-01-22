@@ -17,7 +17,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       OrderingClause ordering = ExpressionHelper.CreateOrderingClause();
       OrderByClause orderBy = new OrderByClause (ordering);
 
-      Assert.AreEqual (1, orderBy.OrderByClauseCount);
+      Assert.AreEqual (1, orderBy.OrderingList.Count);
       
     }
     
@@ -30,7 +30,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       orderBy.Add (ordering2);
 
       Assert.That (orderBy.OrderingList, Is.EqualTo (new object[] { ordering1, ordering2 }));
-      Assert.AreEqual (2, orderBy.OrderByClauseCount);
+      Assert.AreEqual (2, orderBy.OrderingList.Count);
 
     }
 

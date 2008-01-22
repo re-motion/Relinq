@@ -138,7 +138,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
 
       OrderByClause orderByClause = body.BodyClauses.First() as OrderByClause;
       Assert.IsNotNull (orderByClause);
-      Assert.AreEqual (1,orderByClause.OrderByClauseCount);
+      Assert.AreEqual (1,orderByClause.OrderingList.Count);
       Assert.AreSame (orderExpression.Expression, orderByClause.OrderingList.First().Expression);
       Assert.AreEqual (orderExpression.OrderDirection, orderByClause.OrderingList.First().OrderDirection);
       Assert.AreSame (_mainFromClause, orderByClause.OrderingList.First ().PreviousClause);
@@ -170,8 +170,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
       Assert.IsNotNull (orderByClause1);
       Assert.IsNotNull (orderByClause2);
 
-      Assert.AreEqual(2,orderByClause1.OrderByClauseCount);
-      Assert.AreEqual(1, orderByClause2.OrderByClauseCount);
+      Assert.AreEqual(2,orderByClause1.OrderingList.Count);
+      Assert.AreEqual (1, orderByClause2.OrderingList.Count);
 
       Assert.AreSame (orderExpression1.Expression, orderByClause1.OrderingList.First().Expression);
       Assert.AreEqual (orderExpression1.OrderDirection, orderByClause1.OrderingList.First().OrderDirection);
