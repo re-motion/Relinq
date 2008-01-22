@@ -62,6 +62,10 @@ namespace Rubicon.Data.Linq.Visitor
 
     public void VisitOrderByClause (OrderByClause orderByClause)
     {
+      //foreach (OrderingClause clause in orderByClause.OrderingList)
+      //{
+      //  clause.Accept (this);
+      //}
       throw new System.NotImplementedException();
     }
 

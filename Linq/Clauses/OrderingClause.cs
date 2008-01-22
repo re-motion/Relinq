@@ -4,7 +4,7 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.Clauses
 {
-  public class OrderingClause : IClause
+  public class OrderingClause : IClause, IBodyClause
   {
     private readonly LambdaExpression _expression;
     private readonly OrderDirection _orderDirection;

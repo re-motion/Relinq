@@ -251,9 +251,24 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
     }
 
     [Test]
-    [Ignore]
     public void ComplexWhereCondition()
     {
+      IQueryable<Student> query =
+        TestQueryGenerator.CreateMultiFromWhereOrderByQuery (ExpressionHelper.CreateQuerySource (), ExpressionHelper.CreateQuerySource ());
+      QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
+      //WhereClause whereClause = ClauseFinder.FindClause<WhereClause> (parsedQuery.QueryBody.SelectOrGroupClause);
+      WhereClause whereClause1 = ClauseFinder.FindClause<WhereClause> (parsedQuery.QueryBody.BodyClauses.Skip (1).First());
+      WhereClause whereClause2 = ClauseFinder.FindClause<WhereClause> (parsedQuery.QueryBody.BodyClauses.Last ());
+
+      WhereConditionParser parser1 = new WhereConditionParser (whereClause1, _databaseInfo, false);
+      ICriterion result1 = parser1.GetCriterion();
+
+      WhereConditionParser parser2 = new WhereConditionParser (whereClause2, _databaseInfo, false);
+      ICriterion result2 = parser2.GetCriterion ();
+
+      Column c1 = new Column(new Table("sourceTable","s1"),"LastColumn" );
+      BinaryCondition comp1 = new BinaryCondition(c1,new Constant("Garcia"),BinaryCondition.ConditionKind.Equal);
+      Assert.AreEqual (comp1, result1);
       
     }
 
