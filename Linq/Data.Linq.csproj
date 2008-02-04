@@ -60,7 +60,7 @@
     <Compile Include="Parsing\SourceExpressionParser.cs" />
     <Compile Include="Parsing\DatabaseInfoUtility.cs" />
     <Compile Include="DataObjectModel\NotCriterion.cs" />
-    <Compile Include="IClause.cs" />
+    <Compile Include="Clauses\IClause.cs" />
     <Compile Include="IQueryElement.cs" />
     <Compile Include="IQueryExecutor.cs" />
     <Compile Include="IQueryVisitor.cs" />

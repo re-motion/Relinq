@@ -10,5 +10,6 @@ namespace Rubicon.Data.Linq.UnitTests
     public List<int> Scores;
     public string NonDBProperty { get; set; }
     public bool IsOld { get; set; }
+
   }
 }

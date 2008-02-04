@@ -47,7 +47,7 @@ namespace Rubicon.Data.Linq.Parsing
 
     private ICriterion ParseMemberExpression (MemberExpression expression)
     {
-      ParameterExpression tableIdentifier = expression.Expression as ParameterExpression; //kann mnan sich sparen
+      //ParameterExpression tableIdentifier = expression.Expression as ParameterExpression; //kann mnan sich sparen
       //diese Implementierung , aber erst test schreiben
       FromClauseBase fromClause = ClauseFinder.FindFromClauseForExpression (_whereClause, expression.Expression);
       

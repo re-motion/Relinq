@@ -62,12 +62,57 @@ namespace Rubicon.Data.Linq.Visitor
 
     public void VisitOrderByClause (OrderByClause orderByClause)
     {
-      //foreach (OrderingClause clause in orderByClause.OrderingList)
+      //ArgumentUtility.CheckNotNull ("orderByClause", orderByClause);
+
+      ////first element of orderBy
+      //CreateExpressionOrderBy (orderByClause.OrderingList[0], true);
+
+      ////loop through other elements
+      //if (orderByClause.OrderingList.Count > 1)
       //{
-      //  clause.Accept (this);
+      //    for (int i = 1;i <= orderByClause.OrderingList.Count;i++)
+      //    {
+      //      CreateExpressionOrderBy (orderByClause.OrderingList[i], false);
+      //    }
       //}
-      throw new System.NotImplementedException();
+        //idea: first element of orderByclause.OrderingList is first OrderBy in ExpressionTree
+        //Build OrderBy
+        //then simple for to iterate through collection (possible wrong way up)
+        //make ThenBy or OrderBy (Descending - depending of direction)
+        //generic Arguments: Source,Key
+        //parameters: ConstantExpression / MemberExpression
+        throw new System.NotImplementedException();
     }
+
+    //public void CreateExpressionOrderBy(OrderingClause orderingClause,bool first)
+    //{
+    //  ArgumentUtility.CheckNotNull ("first", first);
+    //  ArgumentUtility.CheckNotNull ("orderingClause", orderingClause);
+
+    //  Type[] genericArguments =
+    //    (from parameter in orderingClause.Expression.Parameters
+    //     select parameter.Type).ToArray ();
+    //  UnaryExpression orderByExpression = Expression.Quote (orderingClause.Expression);
+    //  MethodInfo orderByMethod = null;
+
+    //  if (orderingClause.OrderDirection == OrderDirection.Asc)
+    //  {
+    //    if (first)
+    //      orderByMethod = GetQueryMethod ("ThenBy", genericArguments, new Type[] { ExpressionTree.Type, orderByExpression.Type });
+    //    else 
+    //      orderByMethod = GetQueryMethod ("ThenBy", genericArguments, new Type[] { ExpressionTree.Type, orderByExpression.Type });
+    //  }
+    //  else
+    //  {
+    //    if (first)
+    //      orderByMethod = GetQueryMethod ("OrderByDescending", genericArguments, new Type[] { ExpressionTree.Type, orderByExpression.Type });
+    //    else 
+    //      orderByMethod = GetQueryMethod ("ThenByDescending", genericArguments, new Type[] { ExpressionTree.Type, orderByExpression.Type });
+    //  }
+
+    //  if (orderByMethod != null)
+    //    ExpressionTree = Expression.Call (orderByMethod, ExpressionTree, orderByExpression);
+    //}
 
     public void VisitOrderingClause (OrderingClause orderingClause)
     {

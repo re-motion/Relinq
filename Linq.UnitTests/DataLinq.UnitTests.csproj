@@ -110,6 +110,7 @@
     <Compile Include="Student.cs" />
     <Compile Include="StubDatabaseInfo.cs" />
     <Compile Include="StubParameterCollection.cs" />
+    <Compile Include="Student_Detail.cs" />
     <Compile Include="TestQueryable.cs" />
     <Compile Include="TestQueryGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -145,6 +146,8 @@
     <Content Include="ParsingTest\ExpressionTrees\reverseFromWhereQuery.jpg" />
     <Content Include="ParsingTest\ExpressionTrees\reverseFromWhereQueryWithProjection.jpg" />
     <Content Include="ParsingTest\ExpressionTrees\selectWhereQuery.jpg" />
+    <Content Include="ParsingTest\ExpressionTrees\simpleExplicitJoin.jpg" />
+    <Content Include="ParsingTest\ExpressionTrees\simpleImplicitJoin.jpg" />
     <Content Include="ParsingTest\ExpressionTrees\simpleQuery.JPG" />
     <Content Include="ParsingTest\ExpressionTrees\simpleQueryWithFieldProjection.jpg" />
     <Content Include="ParsingTest\ExpressionTrees\simpleQueryWithNonEntityMemberAccess.jpg" />

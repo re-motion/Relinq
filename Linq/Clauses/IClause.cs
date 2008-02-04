@@ -1,4 +1,4 @@
-namespace Rubicon.Data.Linq
+namespace Rubicon.Data.Linq.Clauses
 {
   public interface IClause :IQueryElement
   {

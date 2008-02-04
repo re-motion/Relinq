@@ -12,6 +12,8 @@ namespace Rubicon.Data.Linq.UnitTests
     {
       if (typeof (IQueryable<Student>).IsAssignableFrom (querySourceType))
         return "sourceTable";
+      if (typeof (IQueryable<Student_Detail>).IsAssignableFrom (querySourceType))
+        return "detailTable";
       else
         return null;
     }
