@@ -15,7 +15,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
     [SetUp]
     public void SetUp()
     {
-      _databaseInfo = new StubDatabaseInfo();
+      _databaseInfo = StubDatabaseInfo.Instance;
     }
 
     [Test]

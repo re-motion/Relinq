@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Rubicon.Data.Linq.Clauses;
+using Rubicon.Data.Linq.DataObjectModel;
 using OrderDirection=Rubicon.Data.Linq.Clauses.OrderDirection;
 
 namespace Rubicon.Data.Linq.UnitTests.ClausesTest
@@ -65,11 +66,25 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
 
       repository.VerifyAll();
     }
-    
 
-    
+    [Test]
+    public void Resolve ()
+    {
+      LambdaExpression expression = ExpressionHelper.CreateLambdaExpression ();
+      MockRepository repository = new MockRepository ();
+      IClause previousClause = repository.CreateMock<IClause> ();
 
+      OrderingClause clause = new OrderingClause (previousClause, expression, OrderDirection.Asc);
 
+      Expression resolvedFieldExpression = ExpressionHelper.CreateExpression ();
+      FieldDescriptor fieldDescriptor = new FieldDescriptor (new Column (new Table ("Foo", "foo"), "Bar"), ExpressionHelper.CreateMainFromClause ());
+      Expect.Call (previousClause.ResolveField (StubDatabaseInfo.Instance, resolvedFieldExpression, resolvedFieldExpression)).Return (fieldDescriptor);
 
+      repository.ReplayAll ();
+
+      FieldDescriptor resolvedFieldDescriptor = clause.ResolveField (StubDatabaseInfo.Instance, resolvedFieldExpression, resolvedFieldExpression);
+      Assert.AreEqual (fieldDescriptor, resolvedFieldDescriptor);
+      repository.VerifyAll ();
+    }
   }
 }

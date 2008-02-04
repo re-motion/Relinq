@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Rubicon.Data.Linq.DataObjectModel;
 using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.Clauses
@@ -42,5 +43,6 @@ namespace Rubicon.Data.Linq.Clauses
 
     public abstract void Accept (IQueryVisitor visitor);
     public abstract Type GetQuerySourceType ();
+    public abstract FieldDescriptor ResolveField (IDatabaseInfo databaseInfo, Expression partialFieldExpression, Expression fullFieldExpression);
   }
 }

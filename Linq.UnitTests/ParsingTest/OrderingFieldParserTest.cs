@@ -16,7 +16,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
     [SetUp]
     public void SetUp ()
     {
-      _sqlGeneratorVisitor = new SqlGeneratorVisitor (new StubDatabaseInfo ());
+      _sqlGeneratorVisitor = new SqlGeneratorVisitor (StubDatabaseInfo.Instance);
     }
 
     [Test]

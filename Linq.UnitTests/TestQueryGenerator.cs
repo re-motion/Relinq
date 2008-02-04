@@ -185,7 +185,12 @@ namespace Rubicon.Data.Linq.UnitTests
     public static IQueryable<Student> CreateOrderByWithWhereCondition( IQueryable<Student> source)
     {
       return from s in source where s.First == "Garcia" orderby s.First select s;
-    }  
+    }
+
+    public static IQueryable<Student> CreateOrderByWithWhereConditionAndMultiFrom (IQueryable<Student> source1, IQueryable<Student> source2)
+    {
+      return from s1 in source1 where s1.First == "Garcia" orderby s1.First from s2 in source2 where s2.Last == "Garcia" orderby s2.First, s2.Last orderby s2.First select s2;
+    }
 
     public static IQueryable<Student_Detail> CreateSimpleImplicitJoin (IQueryable<Student_Detail> source)
     {

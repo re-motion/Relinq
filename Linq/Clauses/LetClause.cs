@@ -1,6 +1,7 @@
 using System;
 using System.Linq.Expressions;
 using Rubicon.Data.Linq.Clauses;
+using Rubicon.Data.Linq.DataObjectModel;
 using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.Clauses
@@ -21,6 +22,11 @@ namespace Rubicon.Data.Linq.Clauses
     }
 
     public IClause PreviousClause { get; private set; }
+
+    public FieldDescriptor ResolveField (IDatabaseInfo databaseInfo, Expression partialFieldExpression, Expression fullFieldExpression)
+    {
+      throw new NotImplementedException();
+    }
 
     public Expression Expression
     {

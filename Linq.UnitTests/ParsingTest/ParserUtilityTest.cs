@@ -1,7 +1,7 @@
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using Rubicon.Data.Linq.Parsing;
+using Rubicon.Data.Linq.DataObjectModel;
 
 namespace Rubicon.Data.Linq.UnitTests.ParsingTest
 {
@@ -18,7 +18,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
     }
 
     [Test]
-    [ExpectedException (typeof (QueryParserException),
+    [ExpectedException (typeof (ParserException),
         ExpectedMessage = "Expected NewArrayExpression for source expression, found ParameterExpression (i).")]
     public void GetTypedExpression_InvalidType ()
     {
@@ -37,7 +37,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
     }
 
     [Test]
-    [ExpectedException (typeof (QueryParserException), ExpectedMessage = "Expected one of 'SelectMany, Where', but found 'Select' at "
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected one of 'SelectMany, Where', but found 'Select' at "
         + "position value(Rubicon.Data.Linq.UnitTests.TestQueryable`1[Rubicon.Data.Linq.UnitTests."
         + "Student]).Select(s => s) in tree new [] {}.")]
     public void CheckMethodCallExpression_InvalidName ()

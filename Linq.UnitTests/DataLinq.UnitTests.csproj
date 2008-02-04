@@ -60,6 +60,7 @@
     <Compile Include="ClausesTest\AdditionalFromClauseTest.cs" />
     <Compile Include="ClausesTest\ClauseFinderTest.cs" />
     <Compile Include="ClausesTest\MainFromClauseTest.cs" />
+    <Compile Include="ClausesTest\MemberAccessReducingTreeVisitorTest.cs" />
     <Compile Include="ExpressionHelper.cs" />
     <Compile Include="ClausesTest\FromClauseBaseTest.cs" />
     <Compile Include="ClausesTest\GroupClauseTest.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="ParsingTest\OrderingFieldParserTest.cs" />
     <Compile Include="ParsingTest\ParserUtilityTest.cs" />
     <Compile Include="ParsingTest\QueryBodyCreatorTest.cs" />
+    <Compile Include="ParsingTest\QueryParserIntegrationTest\OrderByWithWhereConditionAndMultiFrom.cs" />
     <Compile Include="ParsingTest\SelectProjectionParserTest.cs" />
     <Compile Include="ParsingTest\QueryParserIntegrationTest\ReverseFromWhereQueryWithProjectionTest.cs" />
     <Compile Include="ParsingTest\QueryParserIntegrationTest\ThreeFromWhereQueryTest.cs" />

@@ -7,6 +7,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Rubicon.Collections;
 using Rubicon.Data.Linq.Clauses;
+using Rubicon.Data.Linq.DataObjectModel;
 using Rubicon.Data.Linq.Parsing;
 
 namespace Rubicon.Data.Linq.UnitTests.ParsingTest
@@ -30,7 +31,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
       QueryExpression expression = parser.GetParsedQuery();
       SelectClause selectClause = (SelectClause) expression.QueryBody.SelectOrGroupClause;
 
-      SelectProjectionParser selectParser = new SelectProjectionParser (selectClause, new StubDatabaseInfo());
+      SelectProjectionParser selectParser = new SelectProjectionParser (selectClause, StubDatabaseInfo.Instance);
 
       IEnumerable<Tuple<FromClauseBase, MemberInfo>> selectedFields = selectParser.SelectedFields;
 
@@ -45,7 +46,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
       QueryExpression expression = parser.GetParsedQuery ();
       SelectClause selectClause = (SelectClause) expression.QueryBody.SelectOrGroupClause;
 
-      SelectProjectionParser selectParser = new SelectProjectionParser (selectClause, new StubDatabaseInfo ());
+      SelectProjectionParser selectParser = new SelectProjectionParser (selectClause, StubDatabaseInfo.Instance);
 
       IEnumerable<Tuple<FromClauseBase, MemberInfo>> selectedFields = selectParser.SelectedFields;
 
@@ -60,7 +61,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
       QueryExpression expression = parser.GetParsedQuery();
       SelectClause selectClause = (SelectClause) expression.QueryBody.SelectOrGroupClause;
 
-      SelectProjectionParser selectParser = new SelectProjectionParser (selectClause, new StubDatabaseInfo());
+      SelectProjectionParser selectParser = new SelectProjectionParser (selectClause, StubDatabaseInfo.Instance);
 
       IEnumerable<Tuple<FromClauseBase, MemberInfo>> selectedFields = selectParser.SelectedFields;
 
@@ -76,7 +77,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
       QueryExpression expression = parser.GetParsedQuery ();
       SelectClause selectClause = (SelectClause) expression.QueryBody.SelectOrGroupClause;
 
-      SelectProjectionParser selectParser = new SelectProjectionParser (selectClause, new StubDatabaseInfo ());
+      SelectProjectionParser selectParser = new SelectProjectionParser (selectClause, StubDatabaseInfo.Instance);
 
       IEnumerable<Tuple<FromClauseBase, MemberInfo>> selectedFields = selectParser.SelectedFields;
 
@@ -98,7 +99,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
       QueryExpression expression = parser.GetParsedQuery ();
       SelectClause selectClause = (SelectClause) expression.QueryBody.SelectOrGroupClause;
 
-      SelectProjectionParser selectParser = new SelectProjectionParser (selectClause, new StubDatabaseInfo ());
+      SelectProjectionParser selectParser = new SelectProjectionParser (selectClause, StubDatabaseInfo.Instance);
 
       IEnumerable<Tuple<FromClauseBase, MemberInfo>> selectedFields = selectParser.SelectedFields;
 
@@ -106,7 +107,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
     }
 
     [Test]
-    [ExpectedException (typeof (QueryParserException), ExpectedMessage = "The select clause contains an expression that cannot be parsed",
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "The select clause contains an expression that cannot be parsed",
         MatchType = MessageMatch.Contains)]
     public void NonEntityMemberAccessProjection ()
     {
@@ -115,7 +116,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
       QueryExpression expression = parser.GetParsedQuery ();
       SelectClause selectClause = (SelectClause) expression.QueryBody.SelectOrGroupClause;
 
-      new SelectProjectionParser (selectClause, new StubDatabaseInfo ());
+      new SelectProjectionParser (selectClause, StubDatabaseInfo.Instance);
     }
 
 
@@ -127,7 +128,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
       QueryExpression expression = parser.GetParsedQuery ();
       SelectClause selectClause = (SelectClause) expression.QueryBody.SelectOrGroupClause;
 
-      SelectProjectionParser selectParser = new SelectProjectionParser (selectClause, new StubDatabaseInfo ());
+      SelectProjectionParser selectParser = new SelectProjectionParser (selectClause, StubDatabaseInfo.Instance);
 
       IEnumerable<Tuple<FromClauseBase, MemberInfo>> selectedFields = selectParser.SelectedFields;
 
@@ -141,7 +142,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
     }
 
     [Test]
-    [ExpectedException (typeof (QueryParserException), ExpectedMessage = "The select clause contains an expression that cannot be parsed",
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "The select clause contains an expression that cannot be parsed",
         MatchType = MessageMatch.Contains)]
     public void SimpleQueryWithSpecialProjection ()
     {
@@ -150,7 +151,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
       QueryExpression expression = parser.GetParsedQuery ();
       SelectClause selectClause = (SelectClause) expression.QueryBody.SelectOrGroupClause;
 
-      SelectProjectionParser selectParser = new SelectProjectionParser (selectClause, new StubDatabaseInfo ());
+      SelectProjectionParser selectParser = new SelectProjectionParser (selectClause, StubDatabaseInfo.Instance);
 
       IEnumerable<Tuple<FromClauseBase, MemberInfo>> selectedFields = selectParser.SelectedFields;
 
@@ -170,7 +171,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
       QueryExpression expression = parser.GetParsedQuery ();
       SelectClause selectClause = (SelectClause) expression.QueryBody.SelectOrGroupClause;
 
-      SelectProjectionParser selectParser = new SelectProjectionParser (selectClause, new StubDatabaseInfo ());
+      SelectProjectionParser selectParser = new SelectProjectionParser (selectClause, StubDatabaseInfo.Instance);
 
       IEnumerable<Tuple<FromClauseBase, MemberInfo>> selectedFields = selectParser.SelectedFields;
 

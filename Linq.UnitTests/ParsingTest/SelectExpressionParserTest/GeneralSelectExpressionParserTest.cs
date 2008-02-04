@@ -3,6 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
+using Rubicon.Data.Linq.DataObjectModel;
 using Rubicon.Data.Linq.Parsing;
 
 namespace Rubicon.Data.Linq.UnitTests.ParsingTest.SelectExpressionParserTest
@@ -21,7 +22,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.SelectExpressionParserTest
     }
 
     [Test]
-    [ExpectedException (typeof (QueryParserException), ExpectedMessage = "Expected one of 'Select', but found 'Where' at position "
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected one of 'Select', but found 'Where' at position "
                                                                          + "value(Rubicon.Data.Linq.UnitTests.TestQueryable`1[Rubicon.Data.Linq.UnitTests."
                                                                          + "Student]).Where(s => (s.Last = \"Garcia\")) in tree value(Rubicon.Data.Linq.UnitTests.TestQueryable`1"
                                                                          + "[Rubicon.Data.Linq.UnitTests.Student]).Where(s => (s.Last = \"Garcia\")).")]
@@ -32,7 +33,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.SelectExpressionParserTest
     }
 
     [Test]
-    [ExpectedException (typeof (QueryParserException), ExpectedMessage = "Expected Constant or Call expression for first argument of Select "
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected Constant or Call expression for first argument of Select "
         + "expression, found UnaryExpression (Convert(null)).")]
     public void Initialize_FromWrongExpressionInWhereExpression ()
     {

@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using Rubicon.Data.Linq.Clauses;
+using Rubicon.Data.Linq.DataObjectModel;
 using Rubicon.Data.Linq.Parsing.TreeEvaluation;
 using Rubicon.Utilities;
 
@@ -36,6 +37,14 @@ namespace Rubicon.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       visitor.VisitWhereClause (this);
+    }
+
+    public virtual FieldDescriptor ResolveField (IDatabaseInfo databaseInfo, Expression fieldAccessExpression, Expression fullFieldExpression)
+    {
+      ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
+      ArgumentUtility.CheckNotNull ("fieldAccessExpression", fieldAccessExpression);
+      ArgumentUtility.CheckNotNull ("fullFieldExpression", fullFieldExpression);
+      return PreviousClause.ResolveField (databaseInfo, fieldAccessExpression, fullFieldExpression);
     }
   }
 }

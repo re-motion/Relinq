@@ -16,11 +16,11 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
     [SetUp]
     public void SetUp()
     {
-      _databaseInfo = new StubDatabaseInfo();
+      _databaseInfo = StubDatabaseInfo.Instance;
     }
 
     [Test]
-    [ExpectedException (typeof (QueryParserException), ExpectedMessage = "Expected binary expression, constant expression,method call expression or member expression for "
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected binary expression, constant expression,method call expression or member expression for "
         + "where condition, found ConditionalExpression (IIF(True, True, True)).")]
     public void Invalid ()
     {
@@ -49,7 +49,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
 
     [Test]
     [Ignore]
-    [ExpectedException (typeof (QueryParserException), ExpectedMessage = "Expected table identifier for member access in where condition, found "
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected table identifier for member access in where condition, found "
         + "ConstantExpression (value(Rubicon.Data.Linq.UnitTests.Student)).")]
     public void InvalidMemberAccess ()
     {
@@ -82,7 +82,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
     }
 
     [Test]
-    [ExpectedException (typeof (QueryParserException), ExpectedMessage = "Expected and, or, or comparison expression for binary expression in where "
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected and, or, or comparison expression for binary expression in where "
         + "condition, found ExpressionType (ArrayIndex).")]
     public void InvalidBinary ()
     {
@@ -205,7 +205,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
     }
 
     [Test]
-    [ExpectedException (typeof (QueryParserException), ExpectedMessage = "Expected not expression for unary expression in where condition, found "
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected not expression for unary expression in where condition, found "
         + "ExpressionType (Convert).")]
     public void InvalidUnary ()
     {
@@ -285,7 +285,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
     }
 
     [Test]
-    [ExpectedException (typeof (QueryParserException), ExpectedMessage = "Expected and, or, or comparison expression for binary expression in where "
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected and, or, or comparison expression for binary expression in where "
         + "condition, found ExpressionType (Add).")]
     public void Simplify_False ()
     {

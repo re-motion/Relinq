@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Rubicon.Data.Linq.Clauses;
+using Rubicon.Data.Linq.DataObjectModel;
 
 namespace Rubicon.Data.Linq.UnitTests.ClausesTest
 {
@@ -58,7 +59,26 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       selectClause.Accept (visitorMock);
 
       repository.VerifyAll();
+    }
 
+    [Test]
+    public void Resolve()
+    {
+      Expression resolvedFieldExpression = ExpressionHelper.CreateExpression();
+      LambdaExpression expression = ExpressionHelper.CreateLambdaExpression ();
+      MockRepository repository = new MockRepository();
+      IClause previousClause = repository.CreateMock<IClause>();
+
+      SelectClause clause = new SelectClause (previousClause, expression);
+
+      FieldDescriptor fieldDescriptor = new FieldDescriptor (new Column (new Table ("Foo", "foo"), "Bar"), ExpressionHelper.CreateMainFromClause ());
+      Expect.Call (previousClause.ResolveField (StubDatabaseInfo.Instance, resolvedFieldExpression, resolvedFieldExpression)).Return (fieldDescriptor);
+
+      repository.ReplayAll();
+
+      FieldDescriptor resolvedFieldDescriptor = clause.ResolveField (StubDatabaseInfo.Instance, resolvedFieldExpression, resolvedFieldExpression);
+      Assert.AreEqual (fieldDescriptor, resolvedFieldDescriptor);
+      repository.VerifyAll();
     }
   }
 }

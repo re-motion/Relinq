@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Rubicon.Data.Linq.Clauses;
+using Rubicon.Data.Linq.DataObjectModel;
 using Rubicon.Data.Linq.Parsing;
 
 namespace Rubicon.Data.Linq.UnitTests.ClausesTest
@@ -150,7 +151,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     }
 
     [Test]
-    [ExpectedException (typeof (QueryParserException),
+    [ExpectedException (typeof (ParserException),
         ExpectedMessage = "The identifier 's8' is not defined in a from clause previous to the given SelectClause.")]
     public void FindFromClauseForIdentifierName_InvalidFromIdentifier ()
     {
@@ -163,7 +164,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     }
 
     [Test]
-    [ExpectedException (typeof (QueryParserException),
+    [ExpectedException (typeof (ParserException),
         ExpectedMessage = "The identifier 's3' is not defined in a from clause previous to the given WhereClause.")]
     public void FindFromClauseForIdentifierName_StartsFromStartingPoint ()
     {
@@ -215,7 +216,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     }
 
     [Test]
-    [ExpectedException (typeof (QueryParserException), ExpectedMessage = "The expression cannot be parsed because the expression type NewArrayInit is not supported.",
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "The expression cannot be parsed because the expression type NewArrayInit is not supported.",
         MatchType = MessageMatch.Contains)]
     public void FindFromClauseForExpression_InvalidExpressionKind ()
     {
@@ -228,7 +229,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     }
 
     [Test]
-    [ExpectedException (typeof (QueryParserException),
+    [ExpectedException (typeof (ParserException),
         ExpectedMessage = "The identifier 's4' is not defined in a from clause previous to the given SelectClause.")]
     public void FindFromClauseForExpression_IdentifierNotFound ()
     {

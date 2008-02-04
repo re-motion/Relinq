@@ -1,8 +1,10 @@
 using System;
+using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Rhino.Mocks;
 using Rubicon.Data.Linq.Clauses;
+using Rubicon.Data.Linq.DataObjectModel;
 
 
 namespace Rubicon.Data.Linq.UnitTests.ClausesTest
@@ -10,7 +12,6 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
   [TestFixture]
   public class OrderByClauseTest
   {
-
     [Test]
     public void InitializeWithOneOrdering()
     {
@@ -18,7 +19,8 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       OrderByClause orderBy = new OrderByClause (ordering);
 
       Assert.AreEqual (1, orderBy.OrderingList.Count);
-      
+      Assert.IsNotNull (orderBy.PreviousClause);
+      Assert.AreSame (orderBy.OrderingList[0].PreviousClause, orderBy.PreviousClause);
     }
     
     [Test]
@@ -32,6 +34,8 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       Assert.That (orderBy.OrderingList, Is.EqualTo (new object[] { ordering1, ordering2 }));
       Assert.AreEqual (2, orderBy.OrderingList.Count);
 
+      Assert.IsNotNull (orderBy.PreviousClause);
+      Assert.AreSame (orderBy.OrderingList[0].PreviousClause, orderBy.PreviousClause);
     }
 
     [Test]
@@ -56,7 +60,27 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       orderByClause.Accept (visitorMock);
 
       repository.VerifyAll();
+    }
 
+    [Test]
+    public void Resolve()
+    {
+      Expression resolvedFieldExpression = ExpressionHelper.CreateExpression();
+      LambdaExpression expression = ExpressionHelper.CreateLambdaExpression ();
+      MockRepository repository = new MockRepository();
+      IClause previousClause = repository.CreateMock<IClause>();
+
+      OrderingClause ordering = new OrderingClause (previousClause, expression, OrderDirection.Asc);
+      OrderByClause clause = new OrderByClause (ordering);
+
+      FieldDescriptor fieldDescriptor = new FieldDescriptor (new Column (new Table ("Foo", "foo"), "Bar"), ExpressionHelper.CreateMainFromClause ());
+      Expect.Call (previousClause.ResolveField (StubDatabaseInfo.Instance, resolvedFieldExpression, resolvedFieldExpression)).Return (fieldDescriptor);
+
+      repository.ReplayAll();
+
+      FieldDescriptor resolvedFieldDescriptor = clause.ResolveField (StubDatabaseInfo.Instance, resolvedFieldExpression, resolvedFieldExpression);
+      Assert.AreEqual (fieldDescriptor, resolvedFieldDescriptor);
+      repository.VerifyAll();
     }
   }
 }

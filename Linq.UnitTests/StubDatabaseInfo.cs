@@ -8,6 +8,12 @@ namespace Rubicon.Data.Linq.UnitTests
 {
   public class StubDatabaseInfo : IDatabaseInfo
   {
+    public static readonly StubDatabaseInfo Instance = new StubDatabaseInfo();
+
+    private StubDatabaseInfo ()
+    {
+    }
+
     public string GetTableName (Type querySourceType)
     {
       if (typeof (IQueryable<Student>).IsAssignableFrom (querySourceType))

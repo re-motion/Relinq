@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using Rubicon.Data.Linq.DataObjectModel;
 using Rubicon.Data.Linq.Parsing;
 using System.Reflection;
 
@@ -19,7 +20,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.WhereExpressionParserTest
     }
 
     [Test]
-    [ExpectedException (typeof (QueryParserException), ExpectedMessage = "Expected one of 'Where', but found 'Select' at position "
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected one of 'Where', but found 'Select' at position "
                                                                          + "value(Rubicon.Data.Linq.UnitTests.TestQueryable`1[Rubicon.Data.Linq.UnitTests."
                                                                          + "Student]).Select(s => s) in tree value(Rubicon.Data.Linq.UnitTests.TestQueryable`1[Rubicon.Data."
                                                                          + "Linq.UnitTests.Student]).Select(s => s).")]
@@ -30,7 +31,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.WhereExpressionParserTest
     }
 
     [Test]
-    [ExpectedException (typeof (QueryParserException), ExpectedMessage = "Expected Constant or Call expression for first argument of Where expression,"
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected Constant or Call expression for first argument of Where expression,"
         + " found UnaryExpression (Convert(null)).")]
     public void Initialize_FromWrongExpressionInWhereExpression ()
     {

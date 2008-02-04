@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Rubicon.Collections;
 using Rubicon.Data.Linq.Clauses;
+using Rubicon.Data.Linq.DataObjectModel;
 using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.Parsing
@@ -72,10 +73,10 @@ namespace Rubicon.Data.Linq.Parsing
         else if ((invocationExpression = expression as InvocationExpression) != null)
           FindSelectedFields (invocationExpression);
       }
-      catch (QueryParserException ex)
+      catch (ParserException ex)
       {
         string message = string.Format ("The select clause contains an expression that cannot be parsed: {0}", expression);
-        throw new QueryParserException (message, ex);
+        throw new ParserException (message, ex);
       }
     }
 

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Rubicon.Data.Linq.Parsing;
+using Rubicon.Data.Linq.DataObjectModel;
 
 namespace Rubicon.Data.Linq.Clauses
 {
@@ -50,7 +50,7 @@ namespace Rubicon.Data.Linq.Clauses
         default:
           string message = string.Format ("The expression cannot be parsed because the expression type {0} is not supported.",
               fromIdentifierExpression.NodeType);
-          throw new QueryParserException (message, fromIdentifierExpression, null, null);
+          throw new ParserException (message, fromIdentifierExpression, null, null);
       }
     }
 
@@ -70,7 +70,7 @@ namespace Rubicon.Data.Linq.Clauses
       {
         string message = string.Format ("The identifier '{0}' is not defined in a from clause previous to the given {1}.",
             identifierName, startingPoint.GetType().Name);
-        throw new QueryParserException (message);
+        throw new ParserException (message);
       }
 
       return (FromClauseBase) currentClause;
