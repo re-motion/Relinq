@@ -70,8 +70,9 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       IClause previousClause = repository.CreateMock<IClause>();
 
       SelectClause clause = new SelectClause (previousClause, expression);
-
-      FieldDescriptor fieldDescriptor = new FieldDescriptor (new Column (new Table ("Foo", "foo"), "Bar"), ExpressionHelper.CreateMainFromClause ());
+      
+      Table table = new Table ("Foo", "foo");
+      FieldDescriptor fieldDescriptor = new FieldDescriptor (null, ExpressionHelper.CreateMainFromClause (), table, new Column (table, "Bar"));
       Expect.Call (previousClause.ResolveField (StubDatabaseInfo.Instance, resolvedFieldExpression, resolvedFieldExpression)).Return (fieldDescriptor);
 
       repository.ReplayAll();

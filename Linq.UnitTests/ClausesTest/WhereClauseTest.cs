@@ -82,7 +82,8 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       WhereClause clause = new WhereClause (previousClause, expression);
 
       Expression resolvedFieldExpression = ExpressionHelper.CreateExpression ();
-      FieldDescriptor fieldDescriptor = new FieldDescriptor (new Column (new Table ("Foo", "foo"), "Bar"), ExpressionHelper.CreateMainFromClause());
+      Table table = new Table ("Foo", "foo");
+      FieldDescriptor fieldDescriptor = new FieldDescriptor (null, ExpressionHelper.CreateMainFromClause(), table, new Column (table, "Bar"));
       Expect.Call (previousClause.ResolveField (StubDatabaseInfo.Instance, resolvedFieldExpression, resolvedFieldExpression)).Return (fieldDescriptor);
 
       repository.ReplayAll();

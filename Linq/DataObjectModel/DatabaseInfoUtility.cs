@@ -3,7 +3,7 @@ using System.Reflection;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.DataObjectModel;
 
-namespace Rubicon.Data.Linq.Parsing
+namespace Rubicon.Data.Linq.DataObjectModel
 {
   public static class DatabaseInfoUtility
   {
@@ -19,16 +19,13 @@ namespace Rubicon.Data.Linq.Parsing
       return new Table(tableName, fromClause.Identifier.Name);
     }
 
-    public static Column GetColumn (IDatabaseInfo databaseInfo, Table table, MemberInfo member)
+    public static Column? GetColumn (IDatabaseInfo databaseInfo, Table table, MemberInfo member)
     {
       string columnName = member == null ? "*" : databaseInfo.GetColumnName (member);
       if (columnName == null)
-      {
-        string message = string.Format ("The member {0}.{1} does not identify a queryable column in table {2}.",
-            member.DeclaringType.FullName, member.Name, table.Name);
-        throw new ArgumentException (message, "member");
-      }
-      return new Column (table, columnName);
+        return null;
+      else
+        return new Column (table, columnName);
     }
   }
 }

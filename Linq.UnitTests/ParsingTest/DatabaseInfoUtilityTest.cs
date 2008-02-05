@@ -3,7 +3,6 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.DataObjectModel;
-using Rubicon.Data.Linq.Parsing;
 
 namespace Rubicon.Data.Linq.UnitTests.ParsingTest
 {
@@ -42,19 +41,16 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
     {
       MainFromClause fromClause = new MainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
       Table table = DatabaseInfoUtility.GetTableForFromClause (_databaseInfo, fromClause);
-      Column column = DatabaseInfoUtility.GetColumn (_databaseInfo, table, typeof (Student).GetProperty ("First"));
+      Column column = DatabaseInfoUtility.GetColumn (_databaseInfo, table, typeof (Student).GetProperty ("First")).Value;
       Assert.AreEqual (new Column (table, "FirstColumn"),column);
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "he member Rubicon.Data.Linq.UnitTests.Student.NonDBProperty does "+
-      "not identify a queryable column in table sourceTable.", MatchType = MessageMatch.Contains)]
     public void GetColumnForFromClause_InvalidMember ()
     {
       MainFromClause fromClause = new MainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
       Table table = DatabaseInfoUtility.GetTableForFromClause (_databaseInfo, fromClause);
-      DatabaseInfoUtility.GetColumn (_databaseInfo, table, typeof (Student).GetProperty ("NonDBProperty"));
+      Assert.IsNull (DatabaseInfoUtility.GetColumn (_databaseInfo, table, typeof (Student).GetProperty ("NonDBProperty")));
     }
-
   }
 }

@@ -58,7 +58,7 @@ namespace Rubicon.Data.Linq.Parsing
 
       //FromClauseBase fromClause = ClauseFinder.FindFromClauseForExpression (_whereClause, tableIdentifier);
       Table table = DatabaseInfoUtility.GetTableForFromClause (_databaseInfo, fromClause);
-      Column column = DatabaseInfoUtility.GetColumn (_databaseInfo, table, expression.Member);
+      Column column = DatabaseInfoUtility.GetColumn (_databaseInfo, table, expression.Member).Value;
       return column;
     }
 

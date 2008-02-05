@@ -55,6 +55,39 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     }
 
     [Test]
+    public void GetTable ()
+    {
+      ParameterExpression id = Expression.Parameter (typeof (Student), "s1");
+      IQueryable querySource = ExpressionHelper.CreateQuerySource ();
+
+      MainFromClause fromClause = new MainFromClause (id, querySource);
+      Assert.AreEqual (new Table ("sourceTable", "s1"), fromClause.GetTable (StubDatabaseInfo.Instance));
+    }
+
+    [Test]
+    public void Resolve_ParameterAccess_Succeeds ()
+    {
+      ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
+      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource ());
+
+      FieldDescriptor fieldDescriptor = fromClause.ResolveField (StubDatabaseInfo.Instance, identifier, identifier);
+      Assert.AreEqual (new Column (new Table ("sourceTable", "fromIdentifier1"), "*"), fieldDescriptor.Column);
+      Assert.AreSame (fromClause, fieldDescriptor.FromClause);
+    }
+
+    [Test]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "There is no from clause defining identifier 'fromIdentifier5', which is used in "
+        + "expression 'fromIdentifier5'.")]
+    public void Resolve_ParameterAccess_InvalidParameter ()
+    {
+      ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
+      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource ());
+
+      ParameterExpression identifier2 = Expression.Parameter (typeof (Student), "fromIdentifier5");
+      fromClause.ResolveField (StubDatabaseInfo.Instance, identifier2, identifier2);
+    }
+
+    [Test]
     public void Resolve_SimpleMemberAccess_Succeeds ()
     {
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
@@ -112,8 +145,8 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected MemberExpression for resolving field access, found "
-        + "ConstantExpression (null).")]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected MemberExpression or ParameterExpression for resolving field access, "
+        + "found ConstantExpression (null).")]
     public void Resolve_SimpleMemberAccess_InvalidOuterExpression ()
     {
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
@@ -137,8 +170,6 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Could not retrieve database metadata for field expression "
-        + "'fromIdentifier1.NonDBProperty'.")]
     public void Resolve_SimpleMemberAccess_InvalidField ()
     {
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
@@ -146,7 +177,9 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
 
       Expression fieldExpression = Expression.MakeMemberAccess (Expression.Parameter (typeof (Student), "fromIdentifier1"),
           typeof (Student).GetProperty ("NonDBProperty"));
-      fromClause.ResolveField (StubDatabaseInfo.Instance, fieldExpression, fieldExpression);
+      FieldDescriptor fieldDescriptor = fromClause.ResolveField (StubDatabaseInfo.Instance, fieldExpression, fieldExpression);
+      Table table = fromClause.GetTable (StubDatabaseInfo.Instance);
+      Assert.AreEqual (new FieldDescriptor(typeof (Student).GetProperty ("NonDBProperty"), fromClause, table, null), fieldDescriptor);
     }
   }
 }

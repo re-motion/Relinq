@@ -24,18 +24,13 @@ namespace Rubicon.Data.Linq.Parsing
 
     public OrderingField GetField ()
     {
-      return ParseMemberExpression ((MemberExpression) _orderingClause.Expression.Body);
+      return ParseExpression (_orderingClause.Expression.Body);
     }
 
-    private OrderingField ParseMemberExpression (MemberExpression expression)
+    private OrderingField ParseExpression (Expression expression)
     {
-      FromClauseBase fromClause = ClauseFinder.FindFromClauseForExpression (_orderingClause, expression.Expression);
-      //ParameterExpression tableIdentifier = expression.Expression as ParameterExpression;
-      //if (tableIdentifier == null)
-      //  throw ParserUtility.CreateParserException ("table identifier", expression.Expression, "member access in order by ", _orderingClause.Expression);
-      Table table = DatabaseInfoUtility.GetTableForFromClause (_databaseInfo, fromClause);
-      Column column = DatabaseInfoUtility.GetColumn (_databaseInfo, table, expression.Member);
-      OrderingField orderingField = new OrderingField(column,_orderingClause.OrderDirection);
+      FieldDescriptor fieldDescriptor = _orderingClause.ResolveField (_databaseInfo, expression, expression);
+      OrderingField orderingField = new OrderingField (fieldDescriptor.GetMandatoryColumn(), _orderingClause.OrderDirection);
       return orderingField;
     }
 
