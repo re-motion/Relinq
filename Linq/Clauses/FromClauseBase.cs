@@ -53,23 +53,6 @@ namespace Rubicon.Data.Linq.Clauses
     public abstract Type GetQuerySourceType ();
     public abstract FieldDescriptor ResolveField (IDatabaseInfo databaseInfo, Expression partialFieldExpression, Expression fullFieldExpression);
 
-    protected void CheckExpressionNameAndType (string name, Type type, Expression fullFieldExpression)
-    {
-      if (name != Identifier.Name)
-      {
-        string message = string.Format ("There is no from clause defining identifier '{0}', which is used in expression '{1}'.",
-            name, fullFieldExpression);
-        throw new ParserException (message);
-      }
-
-      if (type != Identifier.Type)
-      {
-        string message = string.Format ("The from identifier '{0}' has a different type ({1}) than expected in expression '{2}' ({3}).",
-            name, Identifier.Type, fullFieldExpression, type);
-        throw new ParserException (message);
-      }
-    }
-
     protected FieldDescriptor CreateFieldDescriptor (MemberInfo member, IDatabaseInfo databaseInfo, Expression fullFieldExpression)
     {
       try

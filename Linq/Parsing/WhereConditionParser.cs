@@ -50,6 +50,7 @@ namespace Rubicon.Data.Linq.Parsing
       //ParameterExpression tableIdentifier = expression.Expression as ParameterExpression; //kann mnan sich sparen
       //diese Implementierung , aber erst test schreiben
       FromClauseBase fromClause = ClauseFinder.FindFromClauseForExpression (_whereClause, expression.Expression);
+
       
       //if (tableIdentifier == null)
       //  throw ParserUtility.CreateParserException ("table identifier", expression.Expression, "member access in where condition", _whereClause.BoolExpression);

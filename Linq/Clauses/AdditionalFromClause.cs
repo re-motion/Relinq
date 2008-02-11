@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Rubicon.Data.Linq.DataObjectModel;
@@ -42,46 +43,13 @@ namespace Rubicon.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("partialFieldExpression", partialFieldExpression);
       ArgumentUtility.CheckNotNull ("fullFieldExpression", fullFieldExpression);
 
-      MemberExpression memberExpression =
-          ParserUtility.GetTypedExpression<MemberExpression> (partialFieldExpression, "resolving field access", fullFieldExpression);
+      AdditionalFromClauseResolveVisitor visitor = new AdditionalFromClauseResolveVisitor (Identifier, ProjectionExpression.Parameters.ToArray());
+      AdditionalFromClauseResolveVisitor.Result visitorResult = visitor.ParseAndReduce (partialFieldExpression, fullFieldExpression);
 
-      // remove transparent identifier added by the SelectMany call corresponding to this clause
-      Expression reducedExpression = new MemberAccessReducingTreeVisitor ().ReduceInnermostMemberExpression (memberExpression);
-
-      switch (reducedExpression.NodeType)
-      {
-        case ExpressionType.MemberAccess:
-          return ResolveMemberAccess ((MemberExpression) reducedExpression, databaseInfo, fullFieldExpression);
-        case ExpressionType.Parameter:
-          return ResolveParameter ((ParameterExpression) reducedExpression, databaseInfo, fullFieldExpression);
-        default:
-          throw ParserUtility.CreateParserException ("MemberExpression or ParameterExpression", reducedExpression, "resolving field access",
-                fullFieldExpression);
-      }
-    }
-
-    private FieldDescriptor ResolveMemberAccess (MemberExpression memberExpression, IDatabaseInfo databaseInfo, Expression fullFieldExpression)
-    {
-      if (memberExpression.Expression.NodeType != ExpressionType.Parameter)
-        return PreviousClause.ResolveField (databaseInfo, memberExpression, fullFieldExpression);
+      if (visitorResult.FromIdentifierFound)
+        return CreateFieldDescriptor (visitorResult.Member, databaseInfo, fullFieldExpression);
       else
-      {
-        ParameterExpression parameterExpression = (ParameterExpression) (memberExpression.Expression);
-        if (parameterExpression.Name != Identifier.Name)
-          return PreviousClause.ResolveField (databaseInfo, memberExpression, fullFieldExpression);
-
-        CheckExpressionNameAndType (parameterExpression.Name, parameterExpression.Type, fullFieldExpression);
-        return CreateFieldDescriptor (memberExpression.Member, databaseInfo, fullFieldExpression);
-      }
-    }
-
-    private FieldDescriptor ResolveParameter (ParameterExpression parameterExpression, IDatabaseInfo databaseInfo, Expression fullFieldExpression)
-    {
-      if (parameterExpression.Name != Identifier.Name)
-        return PreviousClause.ResolveField (databaseInfo, parameterExpression, fullFieldExpression);
-
-      CheckExpressionNameAndType (parameterExpression.Name, parameterExpression.Type, fullFieldExpression);
-      return CreateFieldDescriptor (null, databaseInfo, fullFieldExpression);
+        return PreviousClause.ResolveField (databaseInfo, visitorResult.ReducedExpression, fullFieldExpression);
     }
   }
 }

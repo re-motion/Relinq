@@ -133,7 +133,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
 
     [Test]
     [ExpectedException (typeof (ParserException), ExpectedMessage = "The from identifier 'fromIdentifier1' has a different type "
-        + "(System.Int32) than expected in expression 'fromIdentifier1.First' (Rubicon.Data.Linq.UnitTests.Student).")]
+        + "(System.Int32) than expected (Rubicon.Data.Linq.UnitTests.Student) in expression 'fromIdentifier1.First'.")]
     public void Resolve_SimpleMemberAccess_InvalidType ()
     {
       ParameterExpression identifier = Expression.Parameter (typeof (int), "fromIdentifier1");
