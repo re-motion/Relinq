@@ -10,6 +10,11 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
   [TestFixture]
   public class AdditionalFromClauseResolveVisitorTest
   {
+    public class AnonymousType
+    {
+      public Student s;
+    }
+
     private ParameterExpression _s;
     private ParameterExpression _s1;
     private ParameterExpression _s2;
@@ -87,52 +92,12 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       Assert.IsFalse (result.FromIdentifierFound);
     }
 
-    public class AnonymousType
-    {
-      public Student s; 
-    }
-
-    [Test]
-    public void FromIdentifier_NotFound_TransparentIdentifier_TwoLevelsDeep ()
-    {
-      AdditionalFromClauseResolveVisitor visitor = new AdditionalFromClauseResolveVisitor (_s, new ParameterExpression[] { _transparent });
-
-      MemberExpression studentExpression = Expression.MakeMemberAccess (_transparent, typeof (AnonymousType).GetField ("s"));
-      MemberExpression expression = Expression.MakeMemberAccess (studentExpression, typeof (Student).GetProperty ("First"));
-
-      AdditionalFromClauseResolveVisitor.Result result = visitor.ParseAndReduce (expression, expression);
-      Assert.AreNotSame (expression, result.ReducedExpression);
-
-      ParameterExpression expectedStudentParameter = Expression.Parameter (typeof (Student), "s");
-      MemberExpression expectedReducedExpression = Expression.MakeMemberAccess (expectedStudentParameter, typeof (Student).GetProperty ("First"));
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedReducedExpression, result.ReducedExpression);
-
-      Assert.IsFalse (result.FromIdentifierFound);
-    }
-
     [Test]
     public void FromIdentifier_NotFound_TransparentIdentifier_OneLevelDeep ()
     {
       AdditionalFromClauseResolveVisitor visitor = new AdditionalFromClauseResolveVisitor (_s, new ParameterExpression[] { _transparent });
 
       MemberExpression expression = Expression.MakeMemberAccess (_transparent, typeof (AnonymousType).GetField ("s"));
-
-      AdditionalFromClauseResolveVisitor.Result result = visitor.ParseAndReduce (expression, expression);
-      Assert.AreNotSame (expression, result.ReducedExpression);
-
-      Expression expectedReducedExpression = Expression.Parameter (typeof (Student), "s");
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedReducedExpression, result.ReducedExpression);
-
-      Assert.IsFalse (result.FromIdentifierFound);
-    }
-
-    [Test]
-    public void FromIdentifier_NotFound_TransparentIdentifier_OneLevelDeep_SecondTransparentIdentifier ()
-    {
-      AdditionalFromClauseResolveVisitor visitor =
-          new AdditionalFromClauseResolveVisitor (_s, new ParameterExpression[] { _transparent1, _transparent2 });
-
-      MemberExpression expression = Expression.MakeMemberAccess (_transparent2, typeof (AnonymousType).GetField ("s"));
 
       AdditionalFromClauseResolveVisitor.Result result = visitor.ParseAndReduce (expression, expression);
       Assert.AreNotSame (expression, result.ReducedExpression);

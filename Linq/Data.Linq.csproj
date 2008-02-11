@@ -52,6 +52,7 @@
     <Compile Include="Clauses\AdditionalFromClause.cs" />
     <Compile Include="Clauses\ClauseFinder.cs" />
     <Compile Include="Clauses\AdditionalFromClauseResolveVisitor.cs" />
+    <Compile Include="Clauses\TransparentIdentifierReducingVisitor.cs" />
     <Compile Include="DataObjectModel\FieldDescriptor.cs" />
     <Compile Include="Clauses\FromClauseBase.cs" />
     <Compile Include="Clauses\GroupClause.cs" />
