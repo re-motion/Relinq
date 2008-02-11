@@ -38,9 +38,11 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     [Test]
     public void FromIdentifier_Found_NoTransparentIdentifier()
     {
+      ConstantExpression fullFieldExpression = Expression.Constant (null, typeof (Student));
+
       MemberExpression expression = Expression.MakeMemberAccess (_s, typeof (Student).GetProperty ("First"));
       AdditionalFromClauseResolveVisitor visitor = new AdditionalFromClauseResolveVisitor (_s, new ParameterExpression[] { _transparent });
-      AdditionalFromClauseResolveVisitor.Result result = visitor.ParseAndReduce (expression, expression);
+      AdditionalFromClauseResolveVisitor.Result result = visitor.ParseAndReduce (expression, fullFieldExpression);
       Assert.AreSame (expression, result.ReducedExpression);
       Assert.IsTrue (result.FromIdentifierFound);
       Assert.AreEqual (typeof (Student).GetProperty ("First"), result.Member);

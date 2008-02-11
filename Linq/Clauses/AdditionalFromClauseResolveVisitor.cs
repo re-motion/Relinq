@@ -41,7 +41,7 @@ namespace Rubicon.Data.Linq.Clauses
     public new Result ParseAndReduce (Expression expression, Expression expressionTreeRoot)
     {
       _fromIdentifierFound = false;
-      Expression reducedExpression = base.ParseAndReduce (expressionTreeRoot, expressionTreeRoot);
+      Expression reducedExpression = base.ParseAndReduce (expression, expressionTreeRoot);
       return new Result (_fromIdentifierFound, reducedExpression, Member);
     }
 
