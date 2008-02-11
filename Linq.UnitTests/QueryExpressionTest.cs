@@ -82,5 +82,100 @@ namespace Rubicon.Data.Linq.UnitTests
       QueryExpression queryExpression = new QueryExpression (fromClause, queryBody);
       queryExpression.GetExpressionTree();
     }
+
+    [Test]
+    public void GetFromClause ()
+    {
+      LambdaExpression fromExpression = ExpressionHelper.CreateLambdaExpression ();
+      LambdaExpression projExpression = ExpressionHelper.CreateLambdaExpression ();
+
+      ParameterExpression identifier0 = Expression.Parameter (typeof (Student), "s0");
+      ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
+      ParameterExpression identifier2 = Expression.Parameter (typeof (Student), "s2");
+      ParameterExpression identifier3 = Expression.Parameter (typeof (Student), "s3");
+
+      MainFromClause mainFromClause = new MainFromClause (identifier0, ExpressionHelper.CreateQuerySource());
+      AdditionalFromClause clause1 = new AdditionalFromClause (mainFromClause, identifier1, fromExpression, projExpression);
+      AdditionalFromClause clause2 = new AdditionalFromClause (clause1, identifier2, fromExpression, projExpression);
+      AdditionalFromClause clause3 = new AdditionalFromClause (clause2, identifier3, fromExpression, projExpression);
+
+      QueryBody body = new QueryBody (ExpressionHelper.CreateSelectClause ());
+      body.Add (clause1);
+      body.Add (clause2);
+      body.Add (clause3);
+
+      QueryExpression expression = new QueryExpression (mainFromClause, body);
+
+      Assert.AreSame (mainFromClause, expression.GetFromClause ("s0", typeof (Student)));
+      Assert.AreSame (clause1, expression.GetFromClause ("s1", typeof (Student)));
+      Assert.AreSame (clause2, expression.GetFromClause ("s2", typeof (Student)));
+      Assert.AreSame (clause3, expression.GetFromClause ("s3", typeof (Student)));
+    }
+
+    [Test]
+    public void GetFromClause_InvalidIdentifierName ()
+    {
+      LambdaExpression fromExpression = ExpressionHelper.CreateLambdaExpression ();
+      LambdaExpression projExpression = ExpressionHelper.CreateLambdaExpression ();
+
+      ParameterExpression identifier0 = Expression.Parameter (typeof (Student), "s0");
+      ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
+
+      MainFromClause mainFromClause = new MainFromClause (identifier0, ExpressionHelper.CreateQuerySource ());
+      AdditionalFromClause clause1 = new AdditionalFromClause (mainFromClause, identifier1, fromExpression, projExpression);
+
+      QueryBody body = new QueryBody (ExpressionHelper.CreateSelectClause ());
+      body.Add (clause1);
+
+      QueryExpression expression = new QueryExpression (mainFromClause, body);
+
+      Assert.IsNull (expression.GetFromClause ("s273627", typeof (Student)));
+    }
+
+    [Test]
+    [ExpectedException (typeof (ClauseLookupException), ExpectedMessage = "The from clause with identifier 's0' has type "
+        + "'Rubicon.Data.Linq.UnitTests.Student', but 'System.String' was requested.")]
+    public void GetFromClause_InvalidIdentifierType_MainFromClause ()
+    {
+      LambdaExpression fromExpression = ExpressionHelper.CreateLambdaExpression ();
+      LambdaExpression projExpression = ExpressionHelper.CreateLambdaExpression ();
+
+      ParameterExpression identifier0 = Expression.Parameter (typeof (Student), "s0");
+      ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
+
+      MainFromClause mainFromClause = new MainFromClause (identifier0, ExpressionHelper.CreateQuerySource ());
+      AdditionalFromClause clause1 = new AdditionalFromClause (mainFromClause, identifier1, fromExpression, projExpression);
+
+      QueryBody body = new QueryBody (ExpressionHelper.CreateSelectClause ());
+      body.Add (clause1);
+
+      QueryExpression expression = new QueryExpression (mainFromClause, body);
+
+      expression.GetFromClause ("s0", typeof (string));
+      Assert.Fail ("Expected exception");
+    }
+
+    [Test]
+    [ExpectedException (typeof (ClauseLookupException), ExpectedMessage = "The from clause with identifier 's1' has type "
+        + "'Rubicon.Data.Linq.UnitTests.Student', but 'System.String' was requested.")]
+    public void GetFromClause_InvalidIdentifierType_AdditionalFromClause ()
+    {
+      LambdaExpression fromExpression = ExpressionHelper.CreateLambdaExpression ();
+      LambdaExpression projExpression = ExpressionHelper.CreateLambdaExpression ();
+
+      ParameterExpression identifier0 = Expression.Parameter (typeof (Student), "s0");
+      ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
+
+      MainFromClause mainFromClause = new MainFromClause (identifier0, ExpressionHelper.CreateQuerySource ());
+      AdditionalFromClause clause1 = new AdditionalFromClause (mainFromClause, identifier1, fromExpression, projExpression);
+
+      QueryBody body = new QueryBody (ExpressionHelper.CreateSelectClause ());
+      body.Add (clause1);
+
+      QueryExpression expression = new QueryExpression (mainFromClause, body);
+
+      expression.GetFromClause ("s1", typeof (string));
+      Assert.Fail ("Expected exception");
+    }
   }
 }

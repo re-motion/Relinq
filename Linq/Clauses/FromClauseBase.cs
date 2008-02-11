@@ -67,5 +67,15 @@ namespace Rubicon.Data.Linq.Clauses
         throw new ParserException (message, ex);
       }
     }
+
+    internal void CheckIdentifierType(Type expectedType)
+    {
+      if (Identifier.Type != expectedType)
+      {
+        string message = string.Format ("The from clause with identifier '{0}' has type '{1}', but '{2}' was requested.", Identifier.Name,
+            Identifier.Type, expectedType);
+        throw new ClauseLookupException (message);
+      }
+    }
   }
 }

@@ -38,6 +38,20 @@ namespace Rubicon.Data.Linq
       get { return _queryBody; }
     }
 
+    public FromClauseBase GetFromClause(string identifierName, Type identifierType)
+    {
+      ArgumentUtility.CheckNotNull ("identifierName", identifierName);
+      ArgumentUtility.CheckNotNull ("identifierType", identifierType);
+
+      if (identifierName == FromClause.Identifier.Name)
+      {
+        FromClause.CheckIdentifierType (identifierType);
+        return FromClause;
+      }
+      else
+        return QueryBody.GetFromClause (identifierName, identifierType);
+    }
+
     public void Accept (IQueryVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);

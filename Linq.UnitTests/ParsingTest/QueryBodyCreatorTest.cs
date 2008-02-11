@@ -193,8 +193,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
       projectionExpressions.Add (ExpressionHelper.CreateLambdaExpression());
       projectionExpressions.Add (ExpressionHelper.CreateLambdaExpression());
 
-      FromExpression fromExpression1 = new FromExpression (ExpressionHelper.CreateLambdaExpression (), ExpressionHelper.CreateParameterExpression ());
-      FromExpression fromExpression2 = new FromExpression (ExpressionHelper.CreateLambdaExpression (), ExpressionHelper.CreateParameterExpression ());
+      FromExpression fromExpression1 = new FromExpression (ExpressionHelper.CreateLambdaExpression (), Expression.Parameter (typeof (Student), "s1"));
+      FromExpression fromExpression2 = new FromExpression (ExpressionHelper.CreateLambdaExpression (), Expression.Parameter (typeof (Student), "s2"));
       WhereExpression whereExpression1 = new WhereExpression (ExpressionHelper.CreateLambdaExpression ());
       WhereExpression whereExpression2 = new WhereExpression (ExpressionHelper.CreateLambdaExpression ());
 
