@@ -33,11 +33,10 @@ namespace Rubicon.Data.Linq.DataObjectModel
         return Column.Value;
       else
       {
-        string message = string.Format ("The member {0}.{1} does not identify a queryable column in table {2}.",
+        string message = string.Format ("The member '{0}.{1}' does not identify a queryable column in table '{2}'.",
             Member.DeclaringType.FullName, Member.Name, Table.Name);
 
-
-        throw new ParserException (message);
+        throw new FieldAccessResolveException (message);
       }
     }
 

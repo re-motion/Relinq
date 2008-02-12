@@ -26,7 +26,7 @@ namespace Rubicon.Data.Linq.UnitTests
 
     public string GetColumnName (MemberInfo member)
     {
-      if (member.Name == "NonDBProperty")
+      if (member.Name == "NonDBProperty" || member.Name == "NonDBBoolProperty")
         return null;
       else
         return member.Name + "Column";

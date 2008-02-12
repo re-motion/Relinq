@@ -56,6 +56,22 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
     }
 
     [Test]
+    [ExpectedException (typeof (FieldAccessResolveException), ExpectedMessage = "The member 'Rubicon.Data.Linq.UnitTests.Student.NonDBBoolProperty' "
+      + "does not identify a queryable column in table 'sourceTable'.")]
+    public void NonDbField ()
+    {
+
+      WhereClause whereClause =
+          new WhereClause (_fromClause,
+              Expression.Lambda (
+              typeof (System.Func<Student, bool>),
+              Expression.MakeMemberAccess (_parameter, typeof (Student).GetProperty ("NonDBBoolProperty")),
+              _parameter));
+      WhereConditionParser parser = new WhereConditionParser (_queryExpression, whereClause, _databaseInfo, false);
+      parser.GetCriterion ();
+    }
+
+    [Test]
     [Ignore]
     [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected table identifier for member access in where condition, found "
         + "ConstantExpression (value(Rubicon.Data.Linq.UnitTests.Student)).")]
@@ -286,6 +302,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
       WhereConditionParser parser = new WhereConditionParser (parsedQuery, whereClause, _databaseInfo, false);
       parser.GetCriterion ();
     }
+
+
 
     
 

@@ -9,7 +9,7 @@ namespace Rubicon.Data.Linq.UnitTests
     public int ID { get; set; }
     public List<int> Scores;
     public string NonDBProperty { get; set; }
+    public bool NonDBBoolProperty { get; set; }
     public bool IsOld { get; set; }
-
   }
 }

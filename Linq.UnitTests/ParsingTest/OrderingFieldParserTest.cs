@@ -13,7 +13,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
   public class OrderingFieldParserTest
   {
     [Test]
-    public void VisitSimpleOrderingClause ()
+    public void SimpleOrderingClause ()
     {
       IQueryable<Student> query = TestQueryGenerator.CreateSimpleOrderByQuery (ExpressionHelper.CreateQuerySource ());
       QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
@@ -25,7 +25,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
     }
 
     [Test]
-    public void VisitComplexOrderingClause ()
+    public void ComplexOrderingClause ()
     {
       IQueryable<Student> query =
         TestQueryGenerator.CreateMultiFromWhereOrderByQuery (ExpressionHelper.CreateQuerySource (), ExpressionHelper.CreateQuerySource ());
@@ -39,6 +39,20 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
 
       parser = new OrderingFieldParser (parsedQuery, orderingClause2, StubDatabaseInfo.Instance);
       Assert.AreEqual (new OrderingField (new Column (new Table ("sourceTable", "s2"), "LastColumn"), OrderDirection.Desc), parser.GetField ());
+    }
+
+    [Test]
+    [ExpectedException (typeof (FieldAccessResolveException), ExpectedMessage = "The member 'Rubicon.Data.Linq.UnitTests.Student.NonDBProperty' "
+      +"does not identify a queryable column in table 'sourceTable'.")]
+    public void OrderingClause_WithNonDBField ()
+    {
+      IQueryable<Student> query = TestQueryGenerator.CreateOrderByNonDBPropertyQuery (ExpressionHelper.CreateQuerySource ());
+      QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
+      OrderByClause orderBy = (OrderByClause) parsedQuery.QueryBody.BodyClauses.First ();
+      OrderingClause orderingClause = orderBy.OrderingList.First ();
+
+      OrderingFieldParser parser = new OrderingFieldParser (parsedQuery, orderingClause, StubDatabaseInfo.Instance);
+      parser.GetField ();
     }
   }
 }

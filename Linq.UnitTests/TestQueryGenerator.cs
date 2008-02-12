@@ -60,6 +60,11 @@ namespace Rubicon.Data.Linq.UnitTests
       return from s1 in source orderby s1.First select s1 ;
     }
 
+    public static IQueryable<Student> CreateOrderByNonDBPropertyQuery (IQueryable<Student> source)
+    {
+      return from s1 in source orderby s1.NonDBProperty select s1;
+    }
+
     public static IQueryable<Student> CreateTwoOrderByQuery (IQueryable<Student> source)
     {
       return from s1 in source orderby s1.First orderby s1.Last descending select s1;
