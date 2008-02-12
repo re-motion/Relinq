@@ -1,7 +1,6 @@
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Reflection;
-using Rubicon.Collections;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.DataObjectModel;
 using Rubicon.Utilities;
@@ -10,15 +9,19 @@ namespace Rubicon.Data.Linq.Parsing
 {
   public class SelectProjectionParser
   {
+    private readonly QueryExpression _queryExpression;
     private readonly SelectClause _selectClause;
     private readonly IDatabaseInfo _databaseInfo;
-    private readonly List<Tuple<FromClauseBase, MemberInfo>> _fields = new List<Tuple<FromClauseBase, MemberInfo>> ();
+    private readonly List<FieldDescriptor> _fields = new List<FieldDescriptor> ();
+    
 
-    public SelectProjectionParser (SelectClause selectClause, IDatabaseInfo databaseInfo)
+    public SelectProjectionParser (QueryExpression queryExpression, SelectClause selectClause, IDatabaseInfo databaseInfo)
     {
+      ArgumentUtility.CheckNotNull ("queryExpression", queryExpression);
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);
       ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
 
+      _queryExpression = queryExpression;
       _selectClause = selectClause;
       _databaseInfo = databaseInfo;
 
@@ -26,7 +29,9 @@ namespace Rubicon.Data.Linq.Parsing
       {
         FromClauseBase fromClause = ClauseFinder.FindClause<FromClauseBase> (_selectClause);
         Assertion.IsTrue (fromClause is MainFromClause, "When there are two or more from clauses, there must be a projection expression.");
-        _fields.Add (Tuple.NewTuple (fromClause, (MemberInfo) null));
+        Table table = fromClause.GetTable (_databaseInfo);
+        Column? column = DatabaseInfoUtility.GetColumn (_databaseInfo, table, null);
+        _fields.Add (new FieldDescriptor(null, fromClause, table, column));
       }
       else
       {
@@ -35,7 +40,7 @@ namespace Rubicon.Data.Linq.Parsing
       }
     }
 
-    public IEnumerable<Tuple<FromClauseBase, MemberInfo>> SelectedFields
+    public IEnumerable<FieldDescriptor> SelectedFields
     {
       get { return _fields; }
     }
@@ -55,9 +60,9 @@ namespace Rubicon.Data.Linq.Parsing
       try
       {
         if ((parameterExpression = expression as ParameterExpression) != null)
-          FindSelectedFields (parameterExpression);
+          ResolveField (parameterExpression);
         else if ((memberExpression = expression as MemberExpression) != null)
-          FindSelectedFields (memberExpression);
+          ResolveField (memberExpression);
         else if ((newExpression = expression as NewExpression) != null)
           FindSelectedFields (newExpression);
         else if ((callExpression = expression as MethodCallExpression) != null)
@@ -73,25 +78,18 @@ namespace Rubicon.Data.Linq.Parsing
         else if ((invocationExpression = expression as InvocationExpression) != null)
           FindSelectedFields (invocationExpression);
       }
-      catch (ParserException ex)
+      catch (Exception ex)
       {
         string message = string.Format ("The select clause contains an expression that cannot be parsed: {0}", expression);
         throw new ParserException (message, ex);
       }
     }
 
-    private void FindSelectedFields (ParameterExpression expression)
+    private void ResolveField(Expression expression)
     {
-      FromClauseBase fromClause = ClauseFinder.FindFromClauseForExpression (_selectClause, expression);
-      if (fromClause != null)
-        _fields.Add (Tuple.NewTuple (fromClause, (MemberInfo) null));
-    }
-
-    private void FindSelectedFields (MemberExpression memberExpression)
-    {
-      FromClauseBase fromClause = ClauseFinder.FindFromClauseForExpression (_selectClause, memberExpression.Expression);
-      if (fromClause != null && _databaseInfo.GetColumnName (memberExpression.Member) != null)
-        _fields.Add (Tuple.NewTuple (fromClause, memberExpression.Member));
+      FieldDescriptor fieldDescriptor = _queryExpression.ResolveField (_databaseInfo, expression);
+      if (fieldDescriptor.Column != null)
+        _fields.Add (fieldDescriptor);
     }
 
     private void FindSelectedFields (NewExpression newExpression)
