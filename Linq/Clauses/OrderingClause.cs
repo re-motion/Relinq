@@ -35,15 +35,6 @@ namespace Rubicon.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       visitor.VisitOrderingClause (this);
     }
-
-    // Note: As an optimization, one could go directly to this clause's OrderByClause instead of the PreviousClause for resolving fields.
-    public FieldDescriptor ResolveField (IDatabaseInfo databaseInfo, Expression partialFieldExpression, Expression fullFieldExpression)
-    {
-      ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
-      ArgumentUtility.CheckNotNull ("partialFieldExpression", partialFieldExpression);
-      ArgumentUtility.CheckNotNull ("fullFieldExpression", fullFieldExpression);
-      return PreviousClause.ResolveField (databaseInfo, partialFieldExpression, fullFieldExpression);
-    }
   }
 
   public enum OrderDirection

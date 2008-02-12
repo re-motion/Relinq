@@ -23,11 +23,6 @@ namespace Rubicon.Data.Linq.Clauses
 
     public IClause PreviousClause { get; private set; }
 
-    public FieldDescriptor ResolveField (IDatabaseInfo databaseInfo, Expression partialFieldExpression, Expression fullFieldExpression)
-    {
-      throw new NotImplementedException();
-    }
-
     public Expression Expression
     {
       get { return _expression; }

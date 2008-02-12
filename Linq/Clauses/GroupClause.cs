@@ -24,11 +24,6 @@ namespace Rubicon.Data.Linq.Clauses
 
     public IClause PreviousClause { get; private set; }
 
-    public FieldDescriptor ResolveField (IDatabaseInfo databaseInfo, Expression partialFieldExpression, Expression fullFieldExpression)
-    {
-      throw new System.NotImplementedException();
-    }
-
     public Expression GroupExpression
     {
       get { return _groupExpression; }

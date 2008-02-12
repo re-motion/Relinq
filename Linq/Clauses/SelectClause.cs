@@ -30,13 +30,5 @@ namespace Rubicon.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       visitor.VisitSelectClause (this);
     }
-
-    public FieldDescriptor ResolveField (IDatabaseInfo databaseInfo, Expression partialFieldExpression, Expression fullFieldExpression)
-    {
-      ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
-      ArgumentUtility.CheckNotNull ("partialFieldExpression", partialFieldExpression);
-      ArgumentUtility.CheckNotNull ("fullFieldExpression", fullFieldExpression);
-      return PreviousClause.ResolveField (databaseInfo, partialFieldExpression, fullFieldExpression);
-    }
   }
 }

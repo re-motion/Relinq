@@ -55,7 +55,6 @@ namespace Rubicon.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("partialFieldExpression", partialFieldExpression);
       ArgumentUtility.CheckNotNull ("fullFieldExpression", fullFieldExpression);
 
-
       FromClauseResolveVisitor visitor = new FromClauseResolveVisitor();
       FromClauseResolveVisitor.Result result = visitor.ParseFieldAccess (partialFieldExpression, fullFieldExpression);
 

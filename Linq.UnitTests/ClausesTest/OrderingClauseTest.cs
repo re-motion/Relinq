@@ -66,26 +66,5 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
 
       repository.VerifyAll();
     }
-
-    [Test]
-    public void Resolve ()
-    {
-      LambdaExpression expression = ExpressionHelper.CreateLambdaExpression ();
-      MockRepository repository = new MockRepository ();
-      IClause previousClause = repository.CreateMock<IClause> ();
-
-      OrderingClause clause = new OrderingClause (previousClause, expression, OrderDirection.Asc);
-
-      Expression resolvedFieldExpression = ExpressionHelper.CreateExpression ();
-      Table table = new Table ("Foo", "foo");
-      FieldDescriptor fieldDescriptor = new FieldDescriptor (null, ExpressionHelper.CreateMainFromClause (), table, new Column (table, "Bar"));
-      Expect.Call (previousClause.ResolveField (StubDatabaseInfo.Instance, resolvedFieldExpression, resolvedFieldExpression)).Return (fieldDescriptor);
-
-      repository.ReplayAll ();
-
-      FieldDescriptor resolvedFieldDescriptor = clause.ResolveField (StubDatabaseInfo.Instance, resolvedFieldExpression, resolvedFieldExpression);
-      Assert.AreEqual (fieldDescriptor, resolvedFieldDescriptor);
-      repository.VerifyAll ();
-    }
   }
 }
