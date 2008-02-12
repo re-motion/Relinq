@@ -7,6 +7,7 @@ namespace Rubicon.Data.Linq.DataObjectModel
     public readonly string Name;
     public readonly string Alias;
 
+
     public Table(string name,string alias)
     {
       ArgumentUtility.CheckNotNull ("name", name);

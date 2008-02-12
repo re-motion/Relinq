@@ -9,14 +9,15 @@ namespace Rubicon.Data.Linq.DataObjectModel
   {
     public static Table GetTableForFromClause (IDatabaseInfo databaseInfo, FromClauseBase fromClause)
     {
-      string tableName = databaseInfo.GetTableName (fromClause.GetQuerySourceType());
-      if (tableName == null)
+      Table? table = databaseInfo.GetTable (fromClause);
+      if (table == null)
       {
         string message = string.Format ("The from clause with identifier {0} and query source type {1} does not identify a queryable table.",
             fromClause.Identifier, fromClause.GetQuerySourceType().FullName);
         throw new ArgumentException (message, "fromClause");
       }
-      return new Table(tableName, fromClause.Identifier.Name);
+      else
+        return table.Value;
     }
 
     public static Column? GetColumn (IDatabaseInfo databaseInfo, Table table, MemberInfo member)

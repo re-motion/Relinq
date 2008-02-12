@@ -1,11 +1,16 @@
 using System;
 using System.Reflection;
+using Rubicon.Collections;
+using Rubicon.Data.Linq.DataObjectModel;
+using Rubicon.Data.Linq.Clauses;
 
 namespace Rubicon.Data.Linq
 {
   public interface IDatabaseInfo
   {
-    string GetTableName (Type querySourceType);
+    Table? GetTable (FromClauseBase fromClause);
     string GetColumnName (MemberInfo member);
+    Tuple<string, string> GetJoinColumns (MemberInfo relationMember);
+
   }
 }

@@ -1,8 +1,11 @@
 using System;
 using System.Reflection;
+using Rubicon.Collections;
 using Rubicon.Data.DomainObjects.Mapping;
 using Rubicon.Data.Linq;
+using Rubicon.Data.Linq.DataObjectModel;
 using Rubicon.Utilities;
+using Rubicon.Data.Linq.Clauses;
 
 namespace Rubicon.Data.DomainObjects.Linq
 {
@@ -14,9 +17,11 @@ namespace Rubicon.Data.DomainObjects.Linq
     {
     }
 
-    public string GetTableName (Type querySourceType)
+    public Table? GetTable (FromClauseBase fromClause)
     {
-      ArgumentUtility.CheckNotNull ("querySourceType", querySourceType);
+      ArgumentUtility.CheckNotNull ("fromClause", fromClause);
+
+      Type querySourceType = fromClause.GetQuerySourceType();
       if (!querySourceType.IsGenericType
           || querySourceType.IsGenericTypeDefinition
           || querySourceType.GetGenericTypeDefinition () != typeof (DomainObjectQueryable<>))
@@ -28,7 +33,7 @@ namespace Rubicon.Data.DomainObjects.Linq
         if (classDefinition == null)
           return null;
         else
-          return classDefinition.GetEntityName();
+          return new Table(classDefinition.GetEntityName(), fromClause.Identifier.Name);
       }
     }
 
@@ -50,6 +55,39 @@ namespace Rubicon.Data.DomainObjects.Linq
         return propertyDefinition.StorageSpecificName;
       else
         return null;
+    }
+
+    public Tuple<string, string> GetJoinColumns (MemberInfo relationMember)
+    {
+      ArgumentUtility.CheckNotNull ("relationMember", relationMember);
+      PropertyInfo property = relationMember as PropertyInfo;
+      if (property == null)
+        return null;
+
+      ClassDefinition classDefinition = MappingConfiguration.Current.ClassDefinitions[property.DeclaringType];
+      if (classDefinition == null)
+        return null;
+
+      string propertyIdentifier = ReflectionUtility.GetPropertyName (property);
+      RelationDefinition relationDefinition = classDefinition.GetRelationDefinition (propertyIdentifier);
+      if (relationDefinition != null)
+      {
+        IRelationEndPointDefinition leftEndPoint = relationDefinition.EndPointDefinitions[0];
+        IRelationEndPointDefinition rightEndPoint = relationDefinition.EndPointDefinitions[1];
+
+        string leftColumn = GetJoinColumn (leftEndPoint);
+        string rightColumn = GetJoinColumn (rightEndPoint);
+
+        return Tuple.NewTuple (leftColumn, rightColumn);
+      }
+      else
+        return null;
+    }
+
+    private string GetJoinColumn (IRelationEndPointDefinition endPoint)
+    {
+      ClassDefinition classDefinition = endPoint.ClassDefinition;
+      return endPoint.IsVirtual ? "ID" : classDefinition.GetMandatoryPropertyDefinition (endPoint.PropertyName).StorageSpecificName;
     }
   }
 }

@@ -1,8 +1,9 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using NUnit.Framework;
-using Rubicon.Data.Linq.QueryProviderImplementation;
+using Rubicon.Collections;
+using Rubicon.Data.Linq.Clauses;
+using Rubicon.Data.Linq.DataObjectModel;
 
 namespace Rubicon.Data.Linq.UnitTests
 {
@@ -14,12 +15,13 @@ namespace Rubicon.Data.Linq.UnitTests
     {
     }
 
-    public string GetTableName (Type querySourceType)
+    public Table? GetTable (FromClauseBase fromClause)
     {
+      Type querySourceType = fromClause.GetQuerySourceType();
       if (typeof (IQueryable<Student>).IsAssignableFrom (querySourceType))
-        return "sourceTable";
+        return new Table("sourceTable", fromClause.Identifier.Name);
       if (typeof (IQueryable<Student_Detail>).IsAssignableFrom (querySourceType))
-        return "detailTable";
+        return new Table("detailTable", fromClause.Identifier.Name);
       else
         return null;
     }
@@ -30,6 +32,11 @@ namespace Rubicon.Data.Linq.UnitTests
         return null;
       else
         return member.Name + "Column";
+    }
+
+    public Tuple<string, string> GetJoinColumns (MemberInfo relationMember)
+    {
+      throw new NotImplementedException();
     }
   }
 }
