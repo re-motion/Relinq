@@ -43,7 +43,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
 
     [Test]
     [ExpectedException (typeof (FieldAccessResolveException), ExpectedMessage = "The member 'Rubicon.Data.Linq.UnitTests.Student.NonDBProperty' "
-      +"does not identify a queryable column in table 'sourceTable'.")]
+      +"does not identify a queryable column.")]
     public void OrderingClause_WithNonDBField ()
     {
       IQueryable<Student> query = TestQueryGenerator.CreateOrderByNonDBPropertyQuery (ExpressionHelper.CreateQuerySource ());

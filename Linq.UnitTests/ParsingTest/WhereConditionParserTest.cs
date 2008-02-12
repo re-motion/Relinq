@@ -57,7 +57,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
 
     [Test]
     [ExpectedException (typeof (FieldAccessResolveException), ExpectedMessage = "The member 'Rubicon.Data.Linq.UnitTests.Student.NonDBBoolProperty' "
-      + "does not identify a queryable column in table 'sourceTable'.")]
+      + "does not identify a queryable column.")]
     public void NonDbField ()
     {
 

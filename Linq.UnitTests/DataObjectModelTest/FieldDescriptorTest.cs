@@ -27,7 +27,7 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
       Assert.IsNull (descriptor.Member);
       Assert.AreSame (fromClause, descriptor.FromClause);
       Assert.AreEqual (column, descriptor.Column);
-      Assert.AreEqual (table, descriptor.Table);
+      Assert.AreEqual (table, descriptor.Source);
     }
 
     [Test]
@@ -40,7 +40,7 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
       Assert.IsNull (descriptor.Column);
       Assert.AreSame (fromClause, descriptor.FromClause);
       Assert.AreEqual (member, descriptor.Member);
-      Assert.AreEqual (table, descriptor.Table);
+      Assert.AreEqual (table, descriptor.Source);
     }
 
     [Test]
@@ -54,7 +54,7 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
       Assert.AreEqual (column, descriptor.Column);
       Assert.AreSame (fromClause, descriptor.FromClause);
       Assert.AreEqual (member, descriptor.Member);
-      Assert.AreEqual (table, descriptor.Table);
+      Assert.AreEqual (table, descriptor.Source);
     }
 
     [Test]
@@ -71,7 +71,7 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
 
     [Test]
     [ExpectedException (typeof (FieldAccessResolveException), ExpectedMessage = "The member 'Rubicon.Data.Linq.UnitTests.Student.First' "
-      + "does not identify a queryable column in table 'x'.")]
+      + "does not identify a queryable column.")]
     public void GetMandatoryColumnWithException ()
     {
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause ();

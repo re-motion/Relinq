@@ -8,10 +8,11 @@ namespace Rubicon.Data.Linq.DataObjectModel
 {
   public struct FieldDescriptor
   {
-    public FieldDescriptor (MemberInfo member, FromClauseBase fromClause, Table table, Column? column)
+    public FieldDescriptor (MemberInfo member, FromClauseBase fromClause, IFieldSource source, Column? column)
         : this()
     {
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
+      ArgumentUtility.CheckNotNull ("source", source);
 
       if (member == null && column == null)
         throw new ArgumentNullException ("member && column", "Either member or column must have a value.");
@@ -19,12 +20,12 @@ namespace Rubicon.Data.Linq.DataObjectModel
       Member = member;
       FromClause = fromClause;
       Column = column;
-      Table = table;
+      Source = source;
     }
 
     public MemberInfo Member { get; private set; }
     public Column? Column { get; private set; }
-    public Table Table { get; private set; }
+    public IFieldSource Source { get; private set; }
     public FromClauseBase FromClause { get; private set; }
 
     public Column GetMandatoryColumn()
@@ -33,8 +34,8 @@ namespace Rubicon.Data.Linq.DataObjectModel
         return Column.Value;
       else
       {
-        string message = string.Format ("The member '{0}.{1}' does not identify a queryable column in table '{2}'.",
-            Member.DeclaringType.FullName, Member.Name, Table.Name);
+        string message = string.Format ("The member '{0}.{1}' does not identify a queryable column.",
+            Member.DeclaringType.FullName, Member.Name);
 
         throw new FieldAccessResolveException (message);
       }
