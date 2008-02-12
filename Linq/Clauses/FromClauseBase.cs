@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
+using System.Linq;
 using System.Reflection;
 using Rubicon.Data.Linq.DataObjectModel;
 using Rubicon.Utilities;
@@ -68,7 +69,7 @@ namespace Rubicon.Data.Linq.Clauses
         throw new FieldAccessResolveException (message);
       }
 
-      MemberInfo member = result.Member;
+      MemberInfo member = result.Members.FirstOrDefault();
       Table table = GetTable (databaseInfo);
       Column? column = DatabaseInfoUtility.GetColumn (databaseInfo, table, member);
       return new FieldDescriptor (member, this, table, column);

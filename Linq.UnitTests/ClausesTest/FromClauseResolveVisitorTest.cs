@@ -1,6 +1,7 @@
 using System;
 using NUnit.Framework;
 using System.Linq.Expressions;
+using NUnit.Framework.SyntaxHelpers;
 using Rubicon.Data.Linq.Clauses;
 
 namespace Rubicon.Data.Linq.UnitTests.ClausesTest
@@ -15,19 +16,19 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       Expression expressionTree = Expression.MakeMemberAccess (parameter, typeof (Student).GetProperty ("First"));
       FromClauseResolveVisitor.Result result = new FromClauseResolveVisitor ().ParseFieldAccess (expressionTree, expressionTree);
       Assert.AreSame (parameter, result.Parameter);
+      Assert.That (result.Members, Is.EqualTo (new object[] { typeof (Student).GetProperty ("First")}));
+
     }
 
     [Test]
-    public void LastMember ()
+    public void NestedMembers ()
     {
       ParameterExpression parameter = Expression.Parameter (typeof (Student_Detail), "sd");
-      Expression expressionTree =
-          Expression.MakeMemberAccess (
-              Expression.MakeMemberAccess (parameter, typeof (Student_Detail).GetProperty ("Student")),
-              typeof (Student).GetProperty ("First"));
+      Expression expressionTree = Expression.MakeMemberAccess (
+        Expression.MakeMemberAccess (parameter, typeof (Student_Detail).GetProperty ("Student")),
+        typeof (Student).GetProperty ("First"));
       FromClauseResolveVisitor.Result result = new FromClauseResolveVisitor ().ParseFieldAccess (expressionTree, expressionTree);
-      Assert.AreSame (parameter, result.Parameter);
-      Assert.AreEqual (typeof (Student_Detail).GetProperty ("Student"), result.Member);
+      Assert.That (result.Members, Is.EqualTo (new object[] { typeof (Student).GetProperty ("First"), typeof (Student_Detail).GetProperty ("Student") }));
     }
 
     [Test]
@@ -36,7 +37,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       ParameterExpression parameter = Expression.Parameter (typeof (Student_Detail), "sd");
       Expression expressionTree = parameter;
       FromClauseResolveVisitor.Result result = new FromClauseResolveVisitor ().ParseFieldAccess (expressionTree, expressionTree);
-      Assert.IsNull (result.Member);
+      Assert.IsEmpty (result.Members);
       Assert.AreSame (parameter, result.Parameter);
     }
 
@@ -50,5 +51,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
 
       new FromClauseResolveVisitor ().ParseFieldAccess (expressionTree, expressionTreeRoot);
     }
+
+   
   }
 }

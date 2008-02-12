@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using Rubicon.Data.Linq.Visitor;
 using System.Reflection;
@@ -9,20 +10,21 @@ namespace Rubicon.Data.Linq.Clauses
   {
     public struct Result
     {
-      public Result (MemberInfo member, ParameterExpression parameter) : this ()
+      public Result (MemberInfo[] members, ParameterExpression parameter)
+        : this ()
       {
         ArgumentUtility.CheckNotNull ("parameter", parameter);
 
-        Member = member;
+        Members = members;
         Parameter = parameter;
       }
 
-      public MemberInfo Member { get; private set; }
+      public MemberInfo[] Members { get; private set; }
       public ParameterExpression Parameter { get; private set; }
     }
 
     private ParameterExpression _parameterExpression;
-    private MemberInfo _member;
+    private List<MemberInfo> _members;
     private Expression _expressionTreeRoot;
 
     public Result ParseFieldAccess (Expression fieldAccessExpression, Expression expressionTreeRoot)
@@ -31,11 +33,11 @@ namespace Rubicon.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("expressionTreeRoot", expressionTreeRoot);
 
       _parameterExpression = null;
-      _member = null;
+      _members = new List<MemberInfo>();
       _expressionTreeRoot = expressionTreeRoot;
 
       VisitExpression (fieldAccessExpression);
-      return new Result (_member, _parameterExpression);
+      return new Result (_members.ToArray(), _parameterExpression);
     }
 
     protected override Expression VisitExpression (Expression expression)
@@ -62,7 +64,7 @@ namespace Rubicon.Data.Linq.Clauses
 
     protected override Expression VisitMemberExpression (MemberExpression expression)
     {
-      _member = expression.Member;
+      _members.Add(expression.Member);
       return base.VisitMemberExpression (expression);
     }
   }
