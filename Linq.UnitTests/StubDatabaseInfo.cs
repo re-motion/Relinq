@@ -26,6 +26,14 @@ namespace Rubicon.Data.Linq.UnitTests
         return null;
     }
 
+    public string GetRelatedTableName (MemberInfo relationMember)
+    {
+      if (relationMember == typeof (Student_Detail).GetProperty ("Student"))
+        return "sourceTable";
+      else
+        return null;
+    }
+
     public string GetColumnName (MemberInfo member)
     {
       if (member.Name == "NonDBProperty" || member.Name == "NonDBBoolProperty")
@@ -36,7 +44,10 @@ namespace Rubicon.Data.Linq.UnitTests
 
     public Tuple<string, string> GetJoinColumns (MemberInfo relationMember)
     {
-      throw new NotImplementedException();
+      if (relationMember == typeof (Student_Detail).GetProperty ("Student"))
+        return Tuple.NewTuple ("Student_Detail_PK", "Student_FK");
+      else
+        return null;
     }
   }
 }

@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using System.Linq;
 using System.Reflection;
+using Rubicon.Collections;
 using Rubicon.Data.Linq.DataObjectModel;
 using Rubicon.Utilities;
 
@@ -55,24 +56,54 @@ namespace Rubicon.Data.Linq.Clauses
       FromClauseResolveVisitor visitor = new FromClauseResolveVisitor();
       FromClauseResolveVisitor.Result result = visitor.ParseFieldAccess (partialFieldExpression, fullFieldExpression);
 
-      if (result.Parameter.Name != Identifier.Name)
+      CheckParameterNameAndType(result.Parameter);
+      return CreateFieldDescriptor(databaseInfo, result);
+    }
+
+    private void CheckParameterNameAndType (ParameterExpression parameter)
+    {
+      if (parameter.Name != Identifier.Name)
       {
         string message = string.Format ("This from clause can only resolve field accesses for parameters called '{0}', but a parameter "
-          + "called '{1}' was given.", Identifier.Name, result.Parameter.Name);
+            + "called '{1}' was given.", Identifier.Name, parameter.Name);
         throw new FieldAccessResolveException (message);
       }
 
-      if (result.Parameter.Type != Identifier.Type)
+      if (parameter.Type != Identifier.Type)
       {
         string message = string.Format ("This from clause can only resolve field accesses for parameters of type '{0}', but a parameter "
-          + "of type '{1}' was given.", Identifier.Type, result.Parameter.Type);
+            + "of type '{1}' was given.", Identifier.Type, parameter.Type);
         throw new FieldAccessResolveException (message);
       }
+    }
 
-      MemberInfo member = result.Members.FirstOrDefault();
+    private FieldDescriptor CreateFieldDescriptor (IDatabaseInfo databaseInfo, FromClauseResolveVisitor.Result visitorResult)
+    {
+      MemberInfo member = visitorResult.Members.FirstOrDefault();
+
       Table table = GetTable (databaseInfo);
+      IFieldSource fieldSource = table;
+      for (int i = 1; i < visitorResult.Members.Length; i++)
+      {
+        try
+        {
+          Table leftTable = DatabaseInfoUtility.GetRelatedTable (databaseInfo, visitorResult.Members[i]);
+          Tuple<string, string> joinColumns = DatabaseInfoUtility.GetJoinColumns (databaseInfo, visitorResult.Members[i]);
+
+          Column leftColumn = new Column (leftTable, joinColumns.B); // student
+          Column rightColumn = new Column (table, joinColumns.A); // student_detail
+
+          fieldSource = new Join (leftTable, fieldSource, leftColumn, rightColumn);
+          table = leftTable;
+        }
+        catch (Exception ex)
+        {
+          throw new FieldAccessResolveException (ex.Message, ex);
+        }
+      }
+
       Column? column = DatabaseInfoUtility.GetColumn (databaseInfo, table, member);
-      return new FieldDescriptor (member, this, table, column);
+      return new FieldDescriptor (member, this, fieldSource, column);
     }
 
     public abstract void Accept (IQueryVisitor visitor);

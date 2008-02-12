@@ -37,6 +37,11 @@ namespace Rubicon.Data.DomainObjects.Linq
       }
     }
 
+    public string GetRelatedTableName (MemberInfo relationMember)
+    {
+      throw new NotImplementedException();
+    }
+
     public string GetColumnName (MemberInfo member)
     {
       ArgumentUtility.CheckNotNull ("member", member);

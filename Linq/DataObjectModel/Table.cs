@@ -11,7 +11,6 @@ namespace Rubicon.Data.Linq.DataObjectModel
     public Table(string name,string alias)
     {
       ArgumentUtility.CheckNotNull ("name", name);
-      ArgumentUtility.CheckNotNull ("alias", alias);
       Name = name;
       Alias = alias;
     }

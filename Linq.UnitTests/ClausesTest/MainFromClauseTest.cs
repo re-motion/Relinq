@@ -139,9 +139,49 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     }
 
     [Test]
-    [Ignore ("TODO")]
     public void Resolve_Join ()
     {
+      ParameterExpression identifier = Expression.Parameter (typeof (Student_Detail), "sd");
+      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySourceDetail());
+
+      Expression fieldExpression = 
+          Expression.MakeMemberAccess (
+              Expression.MakeMemberAccess (Expression.Parameter (typeof (Student_Detail), "sd"),
+              typeof (Student_Detail).GetProperty ("Student")),
+          typeof (Student).GetProperty ("First"));
+      
+      FieldDescriptor fieldDescriptor = fromClause.ResolveField (StubDatabaseInfo.Instance, fieldExpression, fieldExpression);
+
+      Assert.AreEqual (new Column (new Table ("sourceTable", null), "FirstColumn"), fieldDescriptor.Column);
+      Assert.AreSame (fromClause, fieldDescriptor.FromClause);
+      Assert.AreEqual (typeof (Student).GetProperty ("First"), fieldDescriptor.Member);
+
+      Table expectedLeftSide = new Table("sourceTable", null);
+      Table expectedRightSide = fromClause.GetTable (StubDatabaseInfo.Instance);
+      Join expectedJoin = new Join (
+          expectedLeftSide,
+          expectedRightSide,
+          new Column (expectedLeftSide, "Student_FK"),
+          new Column (expectedRightSide, "Student_Detail_PK"));
+
+      Assert.AreEqual (expectedJoin, fieldDescriptor.Source);
+    }
+
+    [Test]
+    [ExpectedException (typeof (FieldAccessResolveException), ExpectedMessage = "The member 'Rubicon.Data.Linq.UnitTests.Student.First' does not "
+        + "identify a relation.")]
+    public void Resolve_Join_InvalidMember ()
+    {
+      ParameterExpression identifier = Expression.Parameter (typeof (Student), "s");
+      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySourceDetail ());
+
+      Expression fieldExpression =
+          Expression.MakeMemberAccess (
+              Expression.MakeMemberAccess (Expression.Parameter (typeof (Student), "s"),
+              typeof (Student).GetProperty ("First")),
+          typeof (string).GetProperty ("Length"));
+
+      fromClause.ResolveField (StubDatabaseInfo.Instance, fieldExpression, fieldExpression);
     }
 
     [Test]
