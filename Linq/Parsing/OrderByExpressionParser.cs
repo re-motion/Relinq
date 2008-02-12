@@ -20,8 +20,6 @@ namespace Rubicon.Data.Linq.Parsing
 
       _isTopLevel = isTopLevel;
 
-      //ParserUtility.CheckMethodCallExpression (orderExpression, expressionTreeRoot, "OrderBy");
-
       if (orderExpression.Arguments.Count != 2)
         throw ParserUtility.CreateParserException ("OrderBy call with two arguments", orderExpression, "OrderBy expressions",
             expressionTreeRoot);
@@ -71,14 +69,14 @@ namespace Rubicon.Data.Linq.Parsing
 
     public MethodCallExpression SourceExpression { get; private set; }
 
-    public IEnumerable<BodyExpressionBase> BodyExpressions
+    public ReadOnlyCollection<BodyExpressionBase> BodyExpressions
     {
-      get { return new ReadOnlyCollection<BodyExpressionBase> (_bodyExpressions); }
+      get { return _bodyExpressions.AsReadOnly(); }
     }
 
     public ReadOnlyCollection<LambdaExpression> ProjectionExpressions
     {
-      get { return new ReadOnlyCollection<LambdaExpression> (_projectionExpressions); }
+      get { return _projectionExpressions.AsReadOnly(); }
     }
   }
 }
