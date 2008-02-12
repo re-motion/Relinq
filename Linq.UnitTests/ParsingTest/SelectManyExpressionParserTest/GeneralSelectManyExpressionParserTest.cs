@@ -4,7 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
-using Rubicon.Data.Linq.DataObjectModel;
 using Rubicon.Data.Linq.Parsing;
 
 namespace Rubicon.Data.Linq.UnitTests.ParsingTest.SelectManyExpressionParserTest

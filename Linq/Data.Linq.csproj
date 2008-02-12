@@ -77,9 +77,9 @@
     <Compile Include="Parsing\BodyExpressionBase.cs" />
     <Compile Include="Parsing\OrderExpression.cs" />
     <Compile Include="Parsing\SelectManyExpressionParser.cs" />
-    <Compile Include="DataObjectModel\ParserUtility.cs" />
+    <Compile Include="Parsing\ParserUtility.cs" />
     <Compile Include="Parsing\QueryParser.cs" />
-    <Compile Include="DataObjectModel\ParserException.cs" />
+    <Compile Include="Parsing\ParserException.cs" />
     <Compile Include="Parsing\SelectExpressionParser.cs" />
     <Compile Include="Parsing\SelectProjectionParser.cs" />
     <Compile Include="Parsing\OrderingFieldParser.cs" />

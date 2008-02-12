@@ -46,7 +46,7 @@ namespace Rubicon.Data.Linq
 
       if (identifierName == FromClause.Identifier.Name)
       {
-        FromClause.CheckIdentifierType (identifierType);
+        FromClause.CheckResolvedIdentifierType (identifierType);
         return FromClause;
       }
       else

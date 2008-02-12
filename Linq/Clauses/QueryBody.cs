@@ -61,7 +61,7 @@ namespace Rubicon.Data.Linq.Clauses
       FromClauseBase fromClause;
       if (_fromClauses.TryGetValue (identifierName, out fromClause))
       {
-        fromClause.CheckIdentifierType (identifierType);
+        fromClause.CheckResolvedIdentifierType (identifierType);
         return fromClause;
       }
       else

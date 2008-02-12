@@ -81,22 +81,7 @@ namespace Rubicon.Data.Linq.Clauses
     public abstract void Accept (IQueryVisitor visitor);
     public abstract Type GetQuerySourceType ();
 
-    protected FieldDescriptor CreateFieldDescriptor (MemberInfo member, IDatabaseInfo databaseInfo, Expression fullFieldExpression)
-    {
-      try
-      {
-        Table table = GetTable (databaseInfo);
-        Column? column = DatabaseInfoUtility.GetColumn (databaseInfo, table, member);
-        return new FieldDescriptor (member, this, table, column);
-      }
-      catch (Exception ex)
-      {
-        string message = string.Format ("Could not retrieve database metadata for field expression '{0}'.", fullFieldExpression);
-        throw new ParserException (message, ex);
-      }
-    }
-
-    internal void CheckIdentifierType(Type expectedType)
+    internal void CheckResolvedIdentifierType (Type expectedType)
     {
       if (Identifier.Type != expectedType)
       {

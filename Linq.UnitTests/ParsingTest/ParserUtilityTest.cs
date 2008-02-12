@@ -1,7 +1,7 @@
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using Rubicon.Data.Linq.DataObjectModel;
+using Rubicon.Data.Linq.Parsing;
 
 namespace Rubicon.Data.Linq.UnitTests.ParsingTest
 {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using Rubicon.Text;
 
-namespace Rubicon.Data.Linq.DataObjectModel
+namespace Rubicon.Data.Linq.Parsing
 {
   public static class ParserUtility
   {
@@ -23,7 +23,7 @@ namespace Rubicon.Data.Linq.DataObjectModel
     }
 
     public static ParserException CreateParserException (object expected, object expression, string context, Expression expressionTreeRoot,
-                                                              Exception inner)
+                                                         Exception inner)
     {
       string message = string.Format ("Expected {0} for {1}, found {2} ({3}).", expected, context, expression.GetType ().Name, expression);
       return new ParserException (message, expression, expressionTreeRoot, inner);

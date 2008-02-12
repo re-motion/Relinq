@@ -1,7 +1,7 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Rubicon.Data.Linq.DataObjectModel
+namespace Rubicon.Data.Linq.Parsing
 {
   public class ParserException : Exception
   {

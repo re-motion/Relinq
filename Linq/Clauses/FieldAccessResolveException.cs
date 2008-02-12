@@ -8,5 +8,10 @@ namespace Rubicon.Data.Linq.Clauses
         : base (message)
     {
     }
+
+    public FieldAccessResolveException (string message, Exception inner)
+        : base (message, inner)
+    {
+    }
   }
 }

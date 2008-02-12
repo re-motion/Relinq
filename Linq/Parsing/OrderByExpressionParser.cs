@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using Rubicon.Data.Linq.Clauses;
-using Rubicon.Data.Linq.DataObjectModel;
 using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.Parsing
