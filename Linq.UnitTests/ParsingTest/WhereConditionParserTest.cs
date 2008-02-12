@@ -12,12 +12,21 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
   public class WhereConditionParserTest
   {
     private IDatabaseInfo _databaseInfo;
+    private ParameterExpression _parameter;
+    private MainFromClause _fromClause;
+    private QueryExpression _queryExpression;
+
 
     [SetUp]
     public void SetUp()
     {
       _databaseInfo = StubDatabaseInfo.Instance;
+      _parameter = Expression.Parameter (typeof (Student), "s");
+      _fromClause = new MainFromClause (_parameter, ExpressionHelper.CreateQuerySource ());
+      _queryExpression = new QueryExpression (_fromClause, ExpressionHelper.CreateQueryBody());
     }
+
+    
 
     [Test]
     [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected binary expression, constant expression,method call expression or member expression for "
@@ -27,22 +36,21 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
       WhereClause whereClause =
           new WhereClause (ExpressionHelper.CreateMainFromClause(),
               Expression.Lambda (Expression.Condition (Expression.Constant (true), Expression.Constant (true), Expression.Constant (true))));
-      WhereConditionParser parser = new WhereConditionParser (whereClause, _databaseInfo, false);
+      WhereConditionParser parser = new WhereConditionParser (_queryExpression, whereClause, _databaseInfo, false);
       parser.GetCriterion();
     }
 
     [Test]
     public void Column()
     {
-      ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
-      MainFromClause fromClause = new MainFromClause(parameter,ExpressionHelper.CreateQuerySource());
+  
       WhereClause whereClause =
-          new WhereClause (fromClause,
+          new WhereClause (_fromClause,
               Expression.Lambda (
               typeof (System.Func<Student, bool>),
-              Expression.MakeMemberAccess(parameter,typeof(Student).GetProperty("IsOld")),
-              parameter));
-      WhereConditionParser parser = new WhereConditionParser (whereClause, _databaseInfo, false);
+              Expression.MakeMemberAccess(_parameter,typeof(Student).GetProperty("IsOld")),
+              _parameter));
+      WhereConditionParser parser = new WhereConditionParser (_queryExpression, whereClause, _databaseInfo, false);
       ICriterion criterion = parser.GetCriterion ();
       Assert.AreEqual (new Column (new Table ("sourceTable", "s"), "IsOldColumn"), criterion);
     }
@@ -53,30 +61,28 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
         + "ConstantExpression (value(Rubicon.Data.Linq.UnitTests.Student)).")]
     public void InvalidMemberAccess ()
     {
-      ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
-      MainFromClause fromClause = new MainFromClause (parameter, ExpressionHelper.CreateQuerySource ());
+      
       WhereClause whereClause =
-          new WhereClause (fromClause,
+          new WhereClause (_fromClause,
               Expression.Lambda (
               typeof (System.Func<Student, bool>),
               Expression.MakeMemberAccess (Expression.Constant (new Student()), typeof (Student).GetProperty ("IsOld")),
-              parameter));
-      WhereConditionParser parser = new WhereConditionParser (whereClause, _databaseInfo, false);
+              _parameter));
+      WhereConditionParser parser = new WhereConditionParser (_queryExpression, whereClause, _databaseInfo, false);
       parser.GetCriterion ();
     }
 
     [Test]
     public void Constant ()
     {
-      ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
-      MainFromClause fromClause = new MainFromClause (parameter, ExpressionHelper.CreateQuerySource ());
+      
       WhereClause whereClause =
-          new WhereClause (fromClause,
+          new WhereClause (_fromClause,
               Expression.Lambda (
               typeof (System.Func<Student, bool>),
               Expression.Constant(true),
-              parameter));
-      WhereConditionParser parser = new WhereConditionParser (whereClause, _databaseInfo, false);
+              _parameter));
+      WhereConditionParser parser = new WhereConditionParser (_queryExpression, whereClause, _databaseInfo, false);
       ICriterion criterion = parser.GetCriterion ();
       Assert.AreEqual (new Constant(true), criterion);
     }
@@ -86,46 +92,41 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
         + "condition, found ExpressionType (ArrayIndex).")]
     public void InvalidBinary ()
     {
-      ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
-      MainFromClause fromClause = new MainFromClause (parameter, ExpressionHelper.CreateQuerySource ());
+  
       WhereClause whereClause =
-          new WhereClause (fromClause,
+          new WhereClause (_fromClause,
               Expression.Lambda (
               typeof (System.Func<Student, bool>),
               Expression.ArrayIndex (Expression.Constant (new bool[0]), Expression.Constant(0)),
-              parameter));
-      WhereConditionParser parser = new WhereConditionParser (whereClause, _databaseInfo, false);
+              _parameter));
+      WhereConditionParser parser = new WhereConditionParser (_queryExpression, whereClause, _databaseInfo, false);
       parser.GetCriterion ();
     }
 
     [Test]
     public void BinaryAnd ()
     {
-      ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
-      MainFromClause fromClause = new MainFromClause (parameter, ExpressionHelper.CreateQuerySource ());
       WhereClause whereClause =
-          new WhereClause (fromClause,
+          new WhereClause (_fromClause,
               Expression.Lambda (
               typeof (System.Func<Student, bool>),
               Expression.And(Expression.Constant(true),Expression.Constant(true)),
-              parameter));
-      WhereConditionParser parser = new WhereConditionParser (whereClause, _databaseInfo, false);
+              _parameter));
+      WhereConditionParser parser = new WhereConditionParser (_queryExpression, whereClause, _databaseInfo, false);
       ICriterion criterion = parser.GetCriterion ();
       Assert.AreEqual (new ComplexCriterion (new Constant (true), new Constant (true),ComplexCriterion.JunctionKind.And), criterion);
     }
 
     [Test]
     public void BinaryOr ()
-    {
-      ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
-      MainFromClause fromClause = new MainFromClause (parameter, ExpressionHelper.CreateQuerySource ());
+    { 
       WhereClause whereClause =
-          new WhereClause (fromClause,
+          new WhereClause (_fromClause,
               Expression.Lambda (
               typeof (System.Func<Student, bool>),
               Expression.Or (Expression.Constant (true), Expression.Constant (true)),
-              parameter));
-      WhereConditionParser parser = new WhereConditionParser (whereClause, _databaseInfo, false);
+              _parameter));
+      WhereConditionParser parser = new WhereConditionParser (_queryExpression, whereClause, _databaseInfo, false);
       ICriterion criterion = parser.GetCriterion ();
       Assert.AreEqual (new ComplexCriterion (new Constant (true), new Constant (true), ComplexCriterion.JunctionKind.Or), criterion);
     }
@@ -133,15 +134,13 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
     [Test]
     public void BinaryEquals ()
     {
-      ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
-      MainFromClause fromClause = new MainFromClause (parameter, ExpressionHelper.CreateQuerySource ());
       WhereClause whereClause =
-          new WhereClause (fromClause,
+          new WhereClause (_fromClause,
               Expression.Lambda (
               typeof (System.Func<Student, bool>),
               Expression.Equal (Expression.Constant (true), Expression.Constant (true)),
-              parameter));
-      WhereConditionParser parser = new WhereConditionParser (whereClause, _databaseInfo, false);
+              _parameter));
+      WhereConditionParser parser = new WhereConditionParser (_queryExpression, whereClause, _databaseInfo, false);
       ICriterion criterion = parser.GetCriterion ();
       Assert.AreEqual (new BinaryCondition (new Constant (true), new Constant (true), BinaryCondition.ConditionKind.Equal), criterion);
     }
@@ -149,20 +148,19 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
     [Test]
     public void MethodCallStartsWith ()
     {
-      ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
-      MainFromClause fromClause = new MainFromClause (parameter, ExpressionHelper.CreateQuerySource ());
+  
       WhereClause whereClause =
-          new WhereClause (fromClause,
+          new WhereClause (_fromClause,
               Expression.Lambda (
                   typeof (System.Func<Student, bool> ),
                   Expression.Call(
-                    Expression.MakeMemberAccess (parameter, typeof (Student).GetProperty ("First")),
+                    Expression.MakeMemberAccess (_parameter, typeof (Student).GetProperty ("First")),
                     typeof(string).GetMethod("StartsWith",new Type[] {typeof (string)}),
                     Expression.Constant("Garcia")
                    ),
-                  parameter
+                  _parameter
                   ));
-      WhereConditionParser parser = new WhereConditionParser (whereClause, _databaseInfo, false);
+      WhereConditionParser parser = new WhereConditionParser (_queryExpression, whereClause, _databaseInfo, false);
       ICriterion criterion = parser.GetCriterion ();
       Assert.AreEqual (new BinaryCondition (new Column (new Table("sourceTable","s"),"FirstColumn"), new Constant ("Garcia%"), BinaryCondition.ConditionKind.Like), criterion);
     }
@@ -170,20 +168,18 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
     [Test]
     public void MethodCallEndsWith ()
     {
-      ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
-      MainFromClause fromClause = new MainFromClause (parameter, ExpressionHelper.CreateQuerySource ());
       WhereClause whereClause =
-          new WhereClause (fromClause,
+          new WhereClause (_fromClause,
               Expression.Lambda (
                   typeof (System.Func<Student, bool>),
                   Expression.Call (
-                    Expression.MakeMemberAccess (parameter, typeof (Student).GetProperty ("First")),
+                    Expression.MakeMemberAccess (_parameter, typeof (Student).GetProperty ("First")),
                     typeof (string).GetMethod ("EndsWith", new Type[] { typeof (string) }),
                     Expression.Constant ("Garcia")
                    ),
-                  parameter
+                  _parameter
                   ));
-      WhereConditionParser parser = new WhereConditionParser (whereClause, _databaseInfo, false);
+      WhereConditionParser parser = new WhereConditionParser (_queryExpression, whereClause, _databaseInfo, false);
       ICriterion criterion = parser.GetCriterion ();
       Assert.AreEqual (new BinaryCondition (new Column (new Table ("sourceTable", "s"), "FirstColumn"), new Constant ("%Garcia"), BinaryCondition.ConditionKind.Like), criterion);
     }
@@ -191,15 +187,13 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
     [Test]
     public void UnaryNot ()
     {
-      ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
-      MainFromClause fromClause = new MainFromClause (parameter, ExpressionHelper.CreateQuerySource ());
       WhereClause whereClause =
-          new WhereClause (fromClause,
+          new WhereClause (_fromClause,
               Expression.Lambda (
               typeof (System.Func<Student, bool>),
               Expression.Not (Expression.Constant (true)),
-              parameter));
-      WhereConditionParser parser = new WhereConditionParser (whereClause, _databaseInfo, false);
+              _parameter));
+      WhereConditionParser parser = new WhereConditionParser (_queryExpression, whereClause, _databaseInfo, false);
       ICriterion criterion = parser.GetCriterion ();
       Assert.AreEqual (new NotCriterion(new Constant(true)), criterion);
     }
@@ -209,15 +203,13 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
         + "ExpressionType (Convert).")]
     public void InvalidUnary ()
     {
-      ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
-      MainFromClause fromClause = new MainFromClause (parameter, ExpressionHelper.CreateQuerySource ());
       WhereClause whereClause =
-          new WhereClause (fromClause,
+          new WhereClause (_fromClause,
               Expression.Lambda (
               typeof (System.Func<Student, bool>),
               Expression.Convert (Expression.Constant (true), typeof (bool)),
-              parameter));
-      WhereConditionParser parser = new WhereConditionParser (whereClause, _databaseInfo, false);
+              _parameter));
+      WhereConditionParser parser = new WhereConditionParser (_queryExpression, whereClause, _databaseInfo, false);
       parser.GetCriterion ();
     }
 
@@ -227,7 +219,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
       IQueryable<Student> query = TestQueryGenerator.CreateWhereQueryWithDifferentComparisons (ExpressionHelper.CreateQuerySource());
       QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
       WhereClause whereClause = ClauseFinder.FindClause<WhereClause> (parsedQuery.QueryBody.SelectOrGroupClause);
-      WhereConditionParser parser = new WhereConditionParser (whereClause, _databaseInfo, false);
+      WhereConditionParser parser = new WhereConditionParser (parsedQuery, whereClause, _databaseInfo, false);
       ICriterion result = parser.GetCriterion();
       Column firstColumn = new Column(new Table("sourceTable", "s"), "FirstColumn");
       Column idColumn = new Column (new Table ("sourceTable", "s"), "IDColumn");
@@ -256,14 +248,13 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
       IQueryable<Student> query =
         TestQueryGenerator.CreateMultiFromWhereOrderByQuery (ExpressionHelper.CreateQuerySource (), ExpressionHelper.CreateQuerySource ());
       QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
-      //WhereClause whereClause = ClauseFinder.FindClause<WhereClause> (parsedQuery.QueryBody.SelectOrGroupClause);
       WhereClause whereClause1 = ClauseFinder.FindClause<WhereClause> (parsedQuery.QueryBody.BodyClauses.Skip (1).First());
       WhereClause whereClause2 = ClauseFinder.FindClause<WhereClause> (parsedQuery.QueryBody.BodyClauses.Last ());
 
-      WhereConditionParser parser1 = new WhereConditionParser (whereClause1, _databaseInfo, false);
+      WhereConditionParser parser1 = new WhereConditionParser (parsedQuery, whereClause1, _databaseInfo, false);
       ICriterion result1 = parser1.GetCriterion();
 
-      WhereConditionParser parser2 = new WhereConditionParser (whereClause2, _databaseInfo, false);
+      WhereConditionParser parser2 = new WhereConditionParser (parsedQuery, whereClause2, _databaseInfo, false);
       ICriterion result2 = parser2.GetCriterion ();
 
       Column c1 = new Column(new Table("sourceTable","s1"),"LastColumn" );
@@ -278,7 +269,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
       IQueryable<Student> query = TestQueryGenerator.CreateWhereQueryWithEvaluatableSubExpression (ExpressionHelper.CreateQuerySource ());
       QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
       WhereClause whereClause = ClauseFinder.FindClause<WhereClause> (parsedQuery.QueryBody.SelectOrGroupClause);
-      WhereConditionParser parser = new WhereConditionParser (whereClause, _databaseInfo, true);
+      WhereConditionParser parser = new WhereConditionParser (parsedQuery, whereClause, _databaseInfo, true);
       ICriterion result = parser.GetCriterion ();
       Assert.AreEqual (new BinaryCondition(new Column(new Table("sourceTable", "s"), "LastColumn"), new Constant("Garcia"),
           BinaryCondition.ConditionKind.Equal), result);
@@ -292,7 +283,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
       IQueryable<Student> query = TestQueryGenerator.CreateWhereQueryWithEvaluatableSubExpression (ExpressionHelper.CreateQuerySource ());
       QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
       WhereClause whereClause = ClauseFinder.FindClause<WhereClause> (parsedQuery.QueryBody.SelectOrGroupClause);
-      WhereConditionParser parser = new WhereConditionParser (whereClause, _databaseInfo, false);
+      WhereConditionParser parser = new WhereConditionParser (parsedQuery, whereClause, _databaseInfo, false);
       parser.GetCriterion ();
     }
 

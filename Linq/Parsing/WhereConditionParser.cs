@@ -12,13 +12,16 @@ namespace Rubicon.Data.Linq.Parsing
     private readonly bool _simplify;
     private readonly WhereClause _whereClause;
     private readonly IDatabaseInfo _databaseInfo;
+    private readonly QueryExpression _queryExpression;
 
-    public WhereConditionParser (WhereClause whereClause, IDatabaseInfo databaseInfo, bool simplify)
+    public WhereConditionParser (QueryExpression queryExpression, WhereClause whereClause, IDatabaseInfo databaseInfo, bool simplify)
     {
       ArgumentUtility.CheckNotNull ("whereClause", whereClause);
       ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
+      ArgumentUtility.CheckNotNull ("queryExpression", queryExpression);
 
       _simplify = simplify;
+      _queryExpression = queryExpression;
       _whereClause = whereClause;
       _databaseInfo = databaseInfo;
     }
@@ -47,20 +50,7 @@ namespace Rubicon.Data.Linq.Parsing
 
     private ICriterion ParseMemberExpression (MemberExpression expression)
     {
-      //ParameterExpression tableIdentifier = expression.Expression as ParameterExpression; //kann mnan sich sparen
-      //diese Implementierung , aber erst test schreiben
-      FromClauseBase fromClause = ClauseFinder.FindFromClauseForExpression (_whereClause, expression.Expression);
-
-      
-      //if (tableIdentifier == null)
-      //  throw ParserUtility.CreateParserException ("table identifier", expression.Expression, "member access in where condition", _whereClause.BoolExpression);
-
-
-
-      //FromClauseBase fromClause = ClauseFinder.FindFromClauseForExpression (_whereClause, tableIdentifier);
-      Table table = DatabaseInfoUtility.GetTableForFromClause (_databaseInfo, fromClause);
-      Column column = DatabaseInfoUtility.GetColumn (_databaseInfo, table, expression.Member).Value;
-      return column;
+      return _queryExpression.ResolveField (_databaseInfo, expression).GetMandatoryColumn();
     }
 
     private ICriterion ParseConstantExpression (ConstantExpression expression)
