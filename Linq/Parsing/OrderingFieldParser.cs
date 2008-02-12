@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.DataObjectModel;
@@ -9,14 +8,17 @@ namespace Rubicon.Data.Linq.Parsing
 {
   public class OrderingFieldParser
   {
+    private readonly QueryExpression _queryExpression;
     private readonly OrderingClause _orderingClause;
     private readonly IDatabaseInfo _databaseInfo;
 
-    public OrderingFieldParser (OrderingClause orderingClause, IDatabaseInfo databaseInfo)
+    public OrderingFieldParser (QueryExpression queryExpression, OrderingClause orderingClause, IDatabaseInfo databaseInfo)
     {
+      ArgumentUtility.CheckNotNull ("queryExpression", queryExpression);
       ArgumentUtility.CheckNotNull ("orderingClause", orderingClause);
       ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
 
+      _queryExpression = queryExpression;
       _orderingClause = orderingClause;
       _databaseInfo = databaseInfo;
 
@@ -24,44 +26,14 @@ namespace Rubicon.Data.Linq.Parsing
 
     public OrderingField GetField ()
     {
-      return ParseMemberExpression ((MemberExpression) _orderingClause.Expression.Body);
-    }
-
-    private OrderingField ParseMemberExpression (MemberExpression expression)
-    {
-      FromClauseBase fromClause = ClauseFinder.FindFromClauseForExpression (_orderingClause, expression.Expression);
-      //ParameterExpression tableIdentifier = expression.Expression as ParameterExpression;
-      //if (tableIdentifier == null)
-      //  throw ParserUtility.CreateParserException ("table identifier", expression.Expression, "member access in order by ", _orderingClause.Expression);
-      Table table = DatabaseInfoUtility.GetTableForFromClause (_databaseInfo, fromClause);
-      Column? column = DatabaseInfoUtility.GetColumn (_databaseInfo, table, expression.Member);
-      OrderingField orderingField = new OrderingField (column.Value, _orderingClause.OrderDirection);
-      return orderingField;
-    }
-
-    /*public OrderingField GetField ()
-    {
       return ParseExpression (_orderingClause.Expression.Body);
     }
 
     private OrderingField ParseExpression (Expression expression)
     {
-      FieldDescriptor fieldDescriptor = _orderingClause.ResolveField (_databaseInfo, expression, expression);
+      FieldDescriptor fieldDescriptor = _queryExpression.ResolveField (_databaseInfo, expression);
       OrderingField orderingField = new OrderingField (fieldDescriptor.GetMandatoryColumn(), _orderingClause.OrderDirection);
       return orderingField;
-    }*/
-
-
-    //private ICriterion ParseMemberExpression (MemberExpression expression)
-    //{
-    //  ParameterExpression tableIdentifier = expression.Expression as ParameterExpression;
-    //  if (tableIdentifier == null)
-    //    throw ParserUtility.CreateParserException ("table identifier", expression.Expression, "member access in where condition", _whereClause.BoolExpression);
-
-    //  FromClauseBase fromClause = ClauseFinder.FindFromClauseForExpression (_whereClause, tableIdentifier);
-    //  Table table = DatabaseInfoUtility.GetTableForFromClause (_databaseInfo, fromClause);
-    //  Column column = DatabaseInfoUtility.GetColumn (_databaseInfo, table, expression.Member);
-    //  return column;
-    //}
+    }
   }
 }

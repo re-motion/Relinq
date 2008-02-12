@@ -68,6 +68,25 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     }
 
     [Test]
+    public void TransparentIdentifier_ThenFromIdentifier_ThenField ()
+    {
+      QueryExpression queryExpression = CreateQueryExpression ();
+
+      Expression sourceExpression = Expression.MakeMemberAccess (
+          Expression.MakeMemberAccess (
+              Expression.Parameter (typeof (AnonymousType), "transparent1"),
+              typeof (AnonymousType).GetField ("s1")),
+          typeof (Student).GetProperty ("First"));
+
+      QueryExpressionResolveVisitor.Result result = new QueryExpressionResolveVisitor (queryExpression).ParseAndReduce (sourceExpression);
+      Expression expectedReducedExpression = Expression.MakeMemberAccess (
+          Expression.Parameter (typeof (Student), "s1"),
+          typeof (Student).GetProperty ("First"));
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedReducedExpression, result.ReducedExpression);
+      Assert.AreSame (queryExpression.FromClause, result.FromClause);
+    }
+
+    [Test]
     public void TransparentIdentifiers_ThenFromIdentifier ()
     {
       QueryExpression queryExpression = CreateQueryExpression ();

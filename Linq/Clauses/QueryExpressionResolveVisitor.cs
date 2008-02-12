@@ -65,6 +65,8 @@ namespace Rubicon.Data.Linq.Clauses
         ParameterExpression newParameterExpression = Expression.Parameter (expression.Type, expression.Member.Name);
         return VisitExpression (newParameterExpression);
       }
+      else if (newExpression != expression.Expression)
+        return Expression.MakeMemberAccess (newExpression, expression.Member);
       else
         return expression;
     }
