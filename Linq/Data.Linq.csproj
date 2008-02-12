@@ -51,11 +51,10 @@
   <ItemGroup>
     <Compile Include="Clauses\AdditionalFromClause.cs" />
     <Compile Include="Clauses\ClauseFinder.cs" />
-    <Compile Include="Clauses\AdditionalFromClauseResolveVisitor.cs" />
     <Compile Include="Clauses\ClauseLookupException.cs" />
     <Compile Include="Clauses\FieldAccessResolveException.cs" />
     <Compile Include="Clauses\FromClauseResolveVisitor.cs" />
-    <Compile Include="Clauses\TransparentIdentifierReducingVisitor.cs" />
+    <Compile Include="Clauses\QueryExpressionResolveVisitor.cs" />
     <Compile Include="DataObjectModel\FieldDescriptor.cs" />
     <Compile Include="Clauses\FromClauseBase.cs" />
     <Compile Include="Clauses\GroupClause.cs" />

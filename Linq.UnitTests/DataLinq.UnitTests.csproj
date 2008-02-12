@@ -60,9 +60,8 @@
     <Compile Include="ClausesTest\AdditionalFromClauseTest.cs" />
     <Compile Include="ClausesTest\ClauseFinderTest.cs" />
     <Compile Include="ClausesTest\FromClauseResolveVisitorTest.cs" />
-    <Compile Include="ClausesTest\TransparentIdentifierReducingVisitorTest.cs" />
+    <Compile Include="ClausesTest\QueryExpressionResolveVisitorTest.cs" />
     <Compile Include="ClausesTest\MainFromClauseTest.cs" />
-    <Compile Include="ClausesTest\AdditionalFromClauseResolveVisitorTest.cs" />
     <Compile Include="ExpressionHelper.cs" />
     <Compile Include="ClausesTest\FromClauseBaseTest.cs" />
     <Compile Include="ClausesTest\GroupClauseTest.cs" />

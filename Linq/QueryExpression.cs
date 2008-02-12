@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 using Rubicon.Data.Linq.Clauses;
+using Rubicon.Data.Linq.DataObjectModel;
 using Rubicon.Data.Linq.Visitor;
 using Rubicon.Utilities;
 
@@ -76,6 +77,17 @@ namespace Rubicon.Data.Linq
 
       }
       return _expressionTree;
+    }
+
+    public FieldDescriptor ResolveField (IDatabaseInfo databaseInfo, Expression fieldAccessExpression)
+    {
+      ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
+      ArgumentUtility.CheckNotNull ("fieldAccessExpression", fieldAccessExpression);
+
+      QueryExpressionResolveVisitor visitor = new QueryExpressionResolveVisitor (this);
+      QueryExpressionResolveVisitor.Result visitorResult = visitor.ParseAndReduce (fieldAccessExpression);
+
+      return visitorResult.FromClause.ResolveField (databaseInfo, visitorResult.ReducedExpression, fieldAccessExpression);
     }
   }
 }

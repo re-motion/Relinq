@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Rubicon.Data.Linq.Clauses;
+using Rubicon.Data.Linq.DataObjectModel;
 using Rubicon.Data.Linq.Visitor;
 
 namespace Rubicon.Data.Linq.UnitTests
@@ -176,6 +177,35 @@ namespace Rubicon.Data.Linq.UnitTests
 
       expression.GetFromClause ("s1", typeof (string));
       Assert.Fail ("Expected exception");
+    }
+
+    [Test]
+    public void ResolveField()
+    {
+      QueryExpression queryExpression = CreateQueryExpressionForResolve();
+
+      Expression fieldAccessExpression = Expression.Parameter (typeof (String), "s1");
+      FieldDescriptor descriptor = queryExpression.ResolveField (StubDatabaseInfo.Instance, fieldAccessExpression);
+
+      Table expectedTable = new Table ("sourceTable", "s1");
+      Assert.AreSame (queryExpression.FromClause, descriptor.FromClause);
+      Assert.AreEqual (new Column (expectedTable, "*"), descriptor.Column);
+      Assert.IsNull (descriptor.Member);
+      Assert.AreEqual (expectedTable, descriptor.Table);
+    }
+
+    private QueryExpression CreateQueryExpressionForResolve ()
+    {
+      ParameterExpression s1 = Expression.Parameter (typeof (String), "s1");
+      ParameterExpression s2 = Expression.Parameter (typeof (String), "s2");
+      MainFromClause mainFromClause = new MainFromClause (s1, ExpressionHelper.CreateQuerySource());
+      AdditionalFromClause additionalFromClause =
+          new AdditionalFromClause (mainFromClause, s2, ExpressionHelper.CreateLambdaExpression(), ExpressionHelper.CreateLambdaExpression());
+      
+      QueryBody queryBody = new QueryBody (ExpressionHelper.CreateSelectClause());
+      queryBody.Add (additionalFromClause);
+
+      return new QueryExpression (mainFromClause, queryBody);
     }
   }
 }
