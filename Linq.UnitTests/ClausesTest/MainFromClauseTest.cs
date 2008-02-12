@@ -76,14 +76,26 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "There is no from clause defining identifier 'fromIdentifier5', which is used in "
-        + "expression 'fromIdentifier5'.")]
-    public void Resolve_ParameterAccess_InvalidParameter ()
+    [ExpectedException (typeof (FieldAccessResolveException), ExpectedMessage = "This from clause can only resolve field accesses for parameters "
+        + "called 'fromIdentifier1', but a parameter called 'fromIdentifier5' was given.")]
+    public void Resolve_ParameterAccess_InvalidParameterName ()
     {
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
       MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource ());
 
       ParameterExpression identifier2 = Expression.Parameter (typeof (Student), "fromIdentifier5");
+      fromClause.ResolveField (StubDatabaseInfo.Instance, identifier2, identifier2);
+    }
+
+    [Test]
+    [ExpectedException (typeof (FieldAccessResolveException), ExpectedMessage = "This from clause can only resolve field accesses for parameters of "
+        + "type 'Rubicon.Data.Linq.UnitTests.Student', but a parameter of type 'System.String' was given.")]
+    public void Resolve_ParameterAccess_InvalidParameterType ()
+    {
+      ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
+      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource ());
+
+      ParameterExpression identifier2 = Expression.Parameter (typeof (string), "fromIdentifier1");
       fromClause.ResolveField (StubDatabaseInfo.Instance, identifier2, identifier2);
     }
 
@@ -101,26 +113,8 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     }
 
     [Test]
-    [Ignore ("TODO")]
-    public void Resolve_JoinMemberAccess_Succeeds ()
-    {
-      ParameterExpression identifier = Expression.Parameter (typeof (Student_Detail), "fromIdentifier1");
-      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySourceDetail ());
-
-      Expression studentExpression = Expression.MakeMemberAccess (
-          Expression.Parameter (typeof (Student_Detail), "fromIdentifier1"),
-          typeof (Student_Detail).GetProperty ("Student"));
-      Expression fieldExpression = Expression.MakeMemberAccess (
-          studentExpression,
-          typeof (Student).GetProperty ("First"));
-
-      FieldDescriptor fieldDescriptor = fromClause.ResolveField (StubDatabaseInfo.Instance, fieldExpression, fieldExpression);
-      Assert.Fail ("Not implemented yet");
-    }
-
-    [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "There is no from clause defining identifier 'fromIdentifier1', "
-        + "which is used in expression 'fromIdentifier1.First'.")]
+    [ExpectedException (typeof (FieldAccessResolveException), ExpectedMessage = "This from clause can only resolve field accesses for parameters "
+        + "called 'fzlbf', but a parameter called 'fromIdentifier1' was given.")]
     public void Resolve_SimpleMemberAccess_InvalidName ()
     {
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "fzlbf");
@@ -132,41 +126,22 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "The from identifier 'fromIdentifier1' has a different type "
-        + "(System.Int32) than expected (Rubicon.Data.Linq.UnitTests.Student) in expression 'fromIdentifier1.First'.")]
+    [ExpectedException (typeof (FieldAccessResolveException), ExpectedMessage = "This from clause can only resolve field accesses for parameters of "
+        + "type 'Rubicon.Data.Linq.UnitTests.Student', but a parameter of type 'Rubicon.Data.Linq.UnitTests.Student_Detail' was given.")]
     public void Resolve_SimpleMemberAccess_InvalidType ()
     {
-      ParameterExpression identifier = Expression.Parameter (typeof (int), "fromIdentifier1");
+      ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
       MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource ());
 
-      Expression fieldExpression = Expression.MakeMemberAccess (Expression.Parameter (typeof (Student), "fromIdentifier1"),
-          typeof (Student).GetProperty ("First"));
+      Expression fieldExpression = Expression.MakeMemberAccess (Expression.Parameter (typeof (Student_Detail), "fromIdentifier1"),
+          typeof (Student_Detail).GetProperty ("Student"));
       fromClause.ResolveField (StubDatabaseInfo.Instance, fieldExpression, fieldExpression);
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected MemberExpression or ParameterExpression for resolving field access, "
-        + "found ConstantExpression (null).")]
-    public void Resolve_SimpleMemberAccess_InvalidOuterExpression ()
+    [Ignore ("TODO")]
+    public void Resolve_Join ()
     {
-      ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
-      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource ());
-
-      Expression fieldExpression = Expression.Constant (null, typeof (Student));
-      fromClause.ResolveField (StubDatabaseInfo.Instance, fieldExpression, fieldExpression);
-    }
-
-    [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected ParameterExpression for resolving field access, found "
-        + "ConstantExpression (null).")]
-    public void Resolve_SimpleMemberAccess_InvalidInnerExpression ()
-    {
-      ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
-      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource ());
-
-      Expression fieldExpression = Expression.MakeMemberAccess (Expression.Constant (null, typeof (Student)),
-          typeof (Student).GetProperty ("First"));
-      fromClause.ResolveField (StubDatabaseInfo.Instance, fieldExpression, fieldExpression);
     }
 
     [Test]

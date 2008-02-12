@@ -69,236 +69,104 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
 
     }
 
-    public class TransparentIdentifierClass<T>
+    [Test]
+    public void Resolve_ParameterAccess_Succeeds ()
     {
-      public T s1;
-      public T s2;
-      public T fzlbf;
+      ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
+      AdditionalFromClause fromClause = CreateAdditionalFromClause (identifier);
+
+      FieldDescriptor fieldDescriptor = fromClause.ResolveField (StubDatabaseInfo.Instance, identifier, identifier);
+      Assert.AreEqual (new Column (new Table ("sourceTable", "fromIdentifier1"), "*"), fieldDescriptor.Column);
+      Assert.AreSame (fromClause, fieldDescriptor.FromClause);
     }
 
     [Test]
-    public void Resolve_FromIdentifier_Directly ()
+    [ExpectedException (typeof (FieldAccessResolveException), ExpectedMessage = "This from clause can only resolve field accesses for parameters "
+        + "called 'fromIdentifier1', but a parameter called 'fromIdentifier5' was given.")]
+    public void Resolve_ParameterAccess_InvalidParameterName ()
     {
-      ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
-      ParameterExpression identifier2 = Expression.Parameter (typeof (Student), "s2");
-      AdditionalFromClause additionalFromClause = CreateAdditionalFromClause(identifier1, identifier2);
+      ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
+      AdditionalFromClause fromClause = CreateAdditionalFromClause (identifier);
 
-      Expression fieldExpression = identifier2;
-
-      FieldDescriptor fieldDescriptor = additionalFromClause.ResolveField (StubDatabaseInfo.Instance, fieldExpression, fieldExpression);
-      Assert.AreEqual (new Column (new Table ("sourceTable", "s2"), "*"), fieldDescriptor.Column);
-      Assert.AreSame (additionalFromClause, fieldDescriptor.FromClause);
+      ParameterExpression identifier2 = Expression.Parameter (typeof (Student), "fromIdentifier5");
+      fromClause.ResolveField (StubDatabaseInfo.Instance, identifier2, identifier2);
     }
 
     [Test]
-    public void Resolve_FromIdentifier_FromMainClause ()
+    [ExpectedException (typeof (FieldAccessResolveException), ExpectedMessage = "This from clause can only resolve field accesses for parameters of "
+        + "type 'Rubicon.Data.Linq.UnitTests.Student', but a parameter of type 'System.String' was given.")]
+    public void Resolve_ParameterAccess_InvalidParameterType ()
     {
-      ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
-      ParameterExpression identifier2 = Expression.Parameter (typeof (Student), "s2");
-      AdditionalFromClause additionalFromClause = CreateAdditionalFromClause (identifier1, identifier2);
+      ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
+      AdditionalFromClause fromClause = CreateAdditionalFromClause (identifier);
 
-      Expression fieldExpression = identifier1;
-
-      FieldDescriptor fieldDescriptor = additionalFromClause.ResolveField (StubDatabaseInfo.Instance, fieldExpression, fieldExpression);
-      Assert.AreEqual (new Column (new Table ("sourceTable", "s1"), "*"), fieldDescriptor.Column);
-      Assert.AreSame (additionalFromClause.PreviousClause, fieldDescriptor.FromClause);
+      ParameterExpression identifier2 = Expression.Parameter (typeof (string), "fromIdentifier1");
+      fromClause.ResolveField (StubDatabaseInfo.Instance, identifier2, identifier2);
     }
 
     [Test]
-    public void Resolve_FromIdentifier_Field ()
+    public void Resolve_SimpleMemberAccess_Succeeds ()
     {
-      ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
-      ParameterExpression identifier2 = Expression.Parameter (typeof (Student), "s2");
-      AdditionalFromClause additionalFromClause = CreateAdditionalFromClause (identifier1, identifier2);
+      ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
+      AdditionalFromClause fromClause = CreateAdditionalFromClause (identifier);
 
-      Expression fieldExpression = Expression.MakeMemberAccess (identifier2, typeof (Student).GetProperty ("First"));
-
-      FieldDescriptor fieldDescriptor = additionalFromClause.ResolveField (StubDatabaseInfo.Instance, fieldExpression, fieldExpression);
-      Assert.AreEqual (new Column (new Table ("sourceTable", "s2"), "FirstColumn"), fieldDescriptor.Column);
-      Assert.AreSame (additionalFromClause, fieldDescriptor.FromClause);
+      Expression fieldExpression = Expression.MakeMemberAccess (Expression.Parameter (typeof (Student), "fromIdentifier1"),
+          typeof (Student).GetProperty ("First"));
+      FieldDescriptor fieldDescriptor = fromClause.ResolveField (StubDatabaseInfo.Instance, fieldExpression, fieldExpression);
+      Assert.AreEqual (new Column (new Table ("sourceTable", "fromIdentifier1"), "FirstColumn"), fieldDescriptor.Column);
+      Assert.AreSame (fromClause, fieldDescriptor.FromClause);
     }
 
     [Test]
-    public void Resolve_FromIdentifier_Field_FromMainClause ()
+    [ExpectedException (typeof (FieldAccessResolveException), ExpectedMessage = "This from clause can only resolve field accesses for parameters "
+        + "called 'fzlbf', but a parameter called 'fromIdentifier1' was given.")]
+    public void Resolve_SimpleMemberAccess_InvalidName ()
     {
-      ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
-      ParameterExpression identifier2 = Expression.Parameter (typeof (Student), "s2");
-      AdditionalFromClause additionalFromClause = CreateAdditionalFromClause (identifier1, identifier2);
+      ParameterExpression identifier = Expression.Parameter (typeof (Student), "fzlbf");
+      AdditionalFromClause fromClause = CreateAdditionalFromClause (identifier);
 
-      Expression fieldExpression = Expression.MakeMemberAccess (identifier1, typeof (Student).GetProperty ("First"));
-
-      FieldDescriptor fieldDescriptor = additionalFromClause.ResolveField (StubDatabaseInfo.Instance, fieldExpression, fieldExpression);
-      Assert.AreEqual (new Column (new Table ("sourceTable", "s1"), "FirstColumn"), fieldDescriptor.Column);
-      Assert.AreSame (additionalFromClause.PreviousClause, fieldDescriptor.FromClause);
+      Expression fieldExpression = Expression.MakeMemberAccess (Expression.Parameter (typeof (Student), "fromIdentifier1"),
+          typeof (Student).GetProperty ("First"));
+      fromClause.ResolveField (StubDatabaseInfo.Instance, fieldExpression, fieldExpression);
     }
 
     [Test]
-    public void Resolve_FromIdentifier_Directly_WithTransparentIdentifier ()
+    [ExpectedException (typeof (FieldAccessResolveException), ExpectedMessage = "This from clause can only resolve field accesses for parameters of "
+        + "type 'Rubicon.Data.Linq.UnitTests.Student', but a parameter of type 'Rubicon.Data.Linq.UnitTests.Student_Detail' was given.")]
+    public void Resolve_SimpleMemberAccess_InvalidType ()
     {
-      ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
-      ParameterExpression identifier2 = Expression.Parameter (typeof (Student), "s2");
-      ParameterExpression transparentIdentifier1 = Expression.Parameter (typeof (TransparentIdentifierClass<Student>), "transparent1");
-      ParameterExpression transparentIdentifier2 = Expression.Parameter (typeof (TransparentIdentifierClass<Student>), "transparent2");
-      AdditionalFromClause additionalFromClause =
-          CreateAdditionalFromClause (identifier1, identifier2, transparentIdentifier1, transparentIdentifier2, identifier2);
+      ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
+      AdditionalFromClause fromClause = CreateAdditionalFromClause (identifier);
 
-      Expression fieldExpression =
-          Expression.MakeMemberAccess (transparentIdentifier1, typeof (TransparentIdentifierClass<Student>).GetField ("s1"));
-
-      FieldDescriptor fieldDescriptor = additionalFromClause.ResolveField (StubDatabaseInfo.Instance, fieldExpression, fieldExpression);
-      Assert.AreEqual (new Column (new Table ("sourceTable", "s1"), "*"), fieldDescriptor.Column);
-      Assert.AreSame (additionalFromClause.PreviousClause, fieldDescriptor.FromClause);
+      Expression fieldExpression = Expression.MakeMemberAccess (Expression.Parameter (typeof (Student_Detail), "fromIdentifier1"),
+          typeof (Student_Detail).GetProperty ("Student"));
+      fromClause.ResolveField (StubDatabaseInfo.Instance, fieldExpression, fieldExpression);
     }
 
     [Test]
-    public void Resolve_FromIdentifier_Field_WithTransparentIdentifier ()
-    {
-      ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
-      ParameterExpression identifier2 = Expression.Parameter (typeof (Student), "s2");
-      ParameterExpression transparentIdentifier1 = Expression.Parameter (typeof (TransparentIdentifierClass<Student>), "transparent1");
-      ParameterExpression transparentIdentifier2 = Expression.Parameter (typeof (TransparentIdentifierClass<Student>), "transparent2");
-      AdditionalFromClause additionalFromClause =
-          CreateAdditionalFromClause (identifier1, identifier2, transparentIdentifier1, transparentIdentifier2, identifier2);
-
-      Expression studentExpression =
-          Expression.MakeMemberAccess (transparentIdentifier1, typeof (TransparentIdentifierClass<Student>).GetField ("s1"));
-      Expression fieldExpression =
-          Expression.MakeMemberAccess (studentExpression, typeof (Student).GetProperty ("First"));
-
-      FieldDescriptor fieldDescriptor = additionalFromClause.ResolveField (StubDatabaseInfo.Instance, fieldExpression, fieldExpression);
-      Assert.AreEqual (new Column (new Table ("sourceTable", "s1"), "FirstColumn"), fieldDescriptor.Column);
-      Assert.AreSame (additionalFromClause.PreviousClause, fieldDescriptor.FromClause);
-    }
-
-    [Test]
-    [Ignore ("TODO: Joins")]
-    public void Resolve_WithJoin()
+    [Ignore ("TODO")]
+    public void Resolve_Join ()
     {
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "There is no from clause defining identifier 'fzlbf', which is used in "
-        + "expression 'fzlbf'.")]
-    public void Resolve_InvalidIdentifierName_Directly ()
+    public void Resolve_SimpleMemberAccess_InvalidField ()
     {
-      ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
-      ParameterExpression identifier2 = Expression.Parameter (typeof (Student), "s2");
-      ParameterExpression invalidIdentifier = Expression.Parameter (typeof (Student), "fzlbf");
-      AdditionalFromClause additionalFromClause = CreateAdditionalFromClause (identifier1, identifier2);
+      ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
+      AdditionalFromClause fromClause = CreateAdditionalFromClause (identifier);
 
-      Expression fieldExpression = invalidIdentifier;
-
-      additionalFromClause.ResolveField (StubDatabaseInfo.Instance, fieldExpression, fieldExpression);
+      Expression fieldExpression = Expression.MakeMemberAccess (Expression.Parameter (typeof (Student), "fromIdentifier1"),
+          typeof (Student).GetProperty ("NonDBProperty"));
+      FieldDescriptor fieldDescriptor = fromClause.ResolveField (StubDatabaseInfo.Instance, fieldExpression, fieldExpression);
+      Table table = fromClause.GetTable (StubDatabaseInfo.Instance);
+      Assert.AreEqual (new FieldDescriptor (typeof (Student).GetProperty ("NonDBProperty"), fromClause, table, null), fieldDescriptor);
     }
 
-    [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "There is no from clause defining identifier 'fzlbf', which is used in "
-        + "expression 'fzlbf.First'.")]
-    public void Resolve_InvalidIdentifierName_Field ()
+    private AdditionalFromClause CreateAdditionalFromClause (ParameterExpression additionalFromIdentifier)
     {
-      ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
-      ParameterExpression identifier2 = Expression.Parameter (typeof (Student), "s2");
-      ParameterExpression invalidIdentifier = Expression.Parameter (typeof (Student), "fzlbf");
-      AdditionalFromClause additionalFromClause = CreateAdditionalFromClause (identifier1, identifier2);
-
-      Expression fieldExpression = Expression.MakeMemberAccess (invalidIdentifier, typeof (Student).GetProperty ("First"));
-
-      additionalFromClause.ResolveField (StubDatabaseInfo.Instance, fieldExpression, fieldExpression);
-    }
-
-    [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "There is no from clause defining identifier 'fzlbf', which is used in "
-        + "expression 'transparent1.fzlbf'.")]
-    public void Resolve_InvalidIdentifierName_Directly_WithTransparentIdentifier ()
-    {
-      ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
-      ParameterExpression identifier2 = Expression.Parameter (typeof (Student), "s2");
-      ParameterExpression transparentIdentifier1 = Expression.Parameter (typeof (TransparentIdentifierClass<Student>), "transparent1");
-      ParameterExpression transparentIdentifier2 = Expression.Parameter (typeof (TransparentIdentifierClass<Student>), "transparent2");
-      AdditionalFromClause additionalFromClause =
-          CreateAdditionalFromClause (identifier1, identifier2, transparentIdentifier1, transparentIdentifier2, identifier2);
-
-      Expression fieldExpression =
-          Expression.MakeMemberAccess (transparentIdentifier1, typeof (TransparentIdentifierClass<Student>).GetField ("fzlbf"));
-
-      additionalFromClause.ResolveField (StubDatabaseInfo.Instance, fieldExpression, fieldExpression);
-    }
-
-    [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "There is no from clause defining identifier 'fzlbf', which is used in "
-        + "expression 'transparent1.fzlbf.First'.")]
-    public void Resolve_InvalidIdentifierName_Field_WithTransparentIdentifier ()
-    {
-      ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
-      ParameterExpression identifier2 = Expression.Parameter (typeof (Student), "s2");
-      ParameterExpression transparentIdentifier1 = Expression.Parameter (typeof (TransparentIdentifierClass<Student>), "transparent1");
-      ParameterExpression transparentIdentifier2 = Expression.Parameter (typeof (TransparentIdentifierClass<Student>), "transparent2");
-      AdditionalFromClause additionalFromClause =
-          CreateAdditionalFromClause (identifier1, identifier2, transparentIdentifier1, transparentIdentifier2, identifier2);
-
-      Expression studentExpression =
-          Expression.MakeMemberAccess (transparentIdentifier1, typeof (TransparentIdentifierClass<Student>).GetField ("fzlbf"));
-      Expression fieldExpression =
-          Expression.MakeMemberAccess (studentExpression, typeof (Student).GetProperty ("First"));
-
-      additionalFromClause.ResolveField (StubDatabaseInfo.Instance, fieldExpression, fieldExpression);
-    }
-
-    [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "The identifier 's2' has a different type (System.String) than expected "
-        + "(Rubicon.Data.Linq.UnitTests.Student) in expression 's2'.")]
-    public void Resolve_InvalidIdentifierType_Directly ()
-    {
-      ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
-      ParameterExpression identifier2 = Expression.Parameter (typeof (Student), "s2");
-      ParameterExpression invalidIdentifier = Expression.Parameter (typeof (string), "s2");
-      AdditionalFromClause additionalFromClause = CreateAdditionalFromClause (identifier1, identifier2);
-
-      Expression fieldExpression = invalidIdentifier;
-
-      additionalFromClause.ResolveField (StubDatabaseInfo.Instance, fieldExpression, fieldExpression);
-    }
-
-    public class InvalidStudent : Student
-    {
-    }
-
-    [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "The identifier 's2' has a different type "
-        + "(Rubicon.Data.Linq.UnitTests.ClausesTest.AdditionalFromClauseTest+InvalidStudent) than expected (Rubicon.Data.Linq.UnitTests.Student) "
-        + "in expression 's2.First'.")]
-    public void Resolve_InvalidIdentifierType_Field ()
-    {
-      ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
-      ParameterExpression identifier2 = Expression.Parameter (typeof (Student), "s2");
-      ParameterExpression invalidIdentifier = Expression.Parameter (typeof (InvalidStudent), "s2");
-      AdditionalFromClause additionalFromClause = CreateAdditionalFromClause (identifier1, identifier2);
-
-      Expression fieldExpression = Expression.MakeMemberAccess (invalidIdentifier, typeof (InvalidStudent).GetProperty ("First"));
-
-      additionalFromClause.ResolveField (StubDatabaseInfo.Instance, fieldExpression, fieldExpression);
-    }
-
-    [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected ParameterExpression or MemberExpression for resolving field access in "
-        + "additional from clause, found ConstantExpression (null).")]
-    public void Resolve_InvalidExpressionTree ()
-    {
-      ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
-      ParameterExpression identifier2 = Expression.Parameter (typeof (Student), "s2");
-      AdditionalFromClause additionalFromClause = CreateAdditionalFromClause (identifier1, identifier2);
-
-      Expression fieldExpression = Expression.Constant (null, typeof (string));
-
-      additionalFromClause.ResolveField (StubDatabaseInfo.Instance, fieldExpression, fieldExpression);
-    }
-
-    private AdditionalFromClause CreateAdditionalFromClause (ParameterExpression mainFromIdentifier, ParameterExpression additionalFromIdentifier,
-        params ParameterExpression[] transparentIdentifiers)
-    {
-      MainFromClause mainFromClause = new MainFromClause (mainFromIdentifier, ExpressionHelper.CreateQuerySource ());
+      MainFromClause mainFromClause = new MainFromClause (ExpressionHelper.CreateParameterExpression(), ExpressionHelper.CreateQuerySource ());
       LambdaExpression fromExpression = Expression.Lambda (Expression.Constant (null, typeof (IQueryable<Student>)));
-      LambdaExpression projectionExpression = Expression.Lambda (Expression.Constant (null, typeof (Student)), transparentIdentifiers);
+      LambdaExpression projectionExpression = Expression.Lambda (Expression.Constant (null, typeof (Student)));
       return new AdditionalFromClause (mainFromClause, additionalFromIdentifier, fromExpression, projectionExpression);
     }
   }

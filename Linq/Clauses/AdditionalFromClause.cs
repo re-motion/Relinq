@@ -36,20 +36,5 @@ namespace Rubicon.Data.Linq.Clauses
     {
       return FromExpression.Body.Type;
     }
-
-    public override FieldDescriptor ResolveField (IDatabaseInfo databaseInfo, Expression partialFieldExpression, Expression fullFieldExpression)
-    {
-      ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
-      ArgumentUtility.CheckNotNull ("partialFieldExpression", partialFieldExpression);
-      ArgumentUtility.CheckNotNull ("fullFieldExpression", fullFieldExpression);
-
-      AdditionalFromClauseResolveVisitor visitor = new AdditionalFromClauseResolveVisitor (Identifier, ProjectionExpression.Parameters.ToArray());
-      AdditionalFromClauseResolveVisitor.Result visitorResult = visitor.ParseAndReduce (partialFieldExpression, fullFieldExpression);
-
-      if (visitorResult.FromIdentifierFound)
-        return CreateFieldDescriptor (visitorResult.Member, databaseInfo, fullFieldExpression);
-      else
-        return PreviousClause.ResolveField (databaseInfo, visitorResult.ReducedExpression, fullFieldExpression);
-    }
   }
 }

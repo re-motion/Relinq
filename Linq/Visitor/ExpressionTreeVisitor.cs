@@ -145,8 +145,8 @@ namespace Rubicon.Data.Linq.Visitor
     protected virtual Expression VisitLambdaExpression (LambdaExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      Expression newBody = VisitExpression (expression.Body);
       ReadOnlyCollection<ParameterExpression> newParameters = VisitExpressionList (expression.Parameters);
+      Expression newBody = VisitExpression (expression.Body);
       if ((newBody != expression.Body) || (newParameters != expression.Parameters))
         return Expression.Lambda (expression.Type, newBody, newParameters);
       return expression;

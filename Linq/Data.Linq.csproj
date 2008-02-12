@@ -53,6 +53,8 @@
     <Compile Include="Clauses\ClauseFinder.cs" />
     <Compile Include="Clauses\AdditionalFromClauseResolveVisitor.cs" />
     <Compile Include="Clauses\ClauseLookupException.cs" />
+    <Compile Include="Clauses\FieldAccessResolveException.cs" />
+    <Compile Include="Clauses\FromClauseResolveVisitor.cs" />
     <Compile Include="Clauses\TransparentIdentifierReducingVisitor.cs" />
     <Compile Include="DataObjectModel\FieldDescriptor.cs" />
     <Compile Include="Clauses\FromClauseBase.cs" />
