@@ -19,14 +19,15 @@ namespace Rubicon.Data.Linq.Clauses
       PreviousClause = previousClause;
     }
 
-    public IClause PreviousClause { get; set;}
+    public IClause PreviousClause { get; set; }
 
     public LambdaExpression Expression
     {
       get { return _expression; }
     }
 
-    public OrderDirection OrderDirection{
+    public OrderDirection OrderDirection
+    {
       get { return _orderDirection; }
     }
 

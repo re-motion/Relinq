@@ -17,7 +17,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.QueryParserIntegrationTest
     [Test]
     public override void CheckBodyClause ()
     {
-      Assert.AreEqual (1, ParsedQuery.QueryBody.BodyClauseCount);
+      Assert.AreEqual (1, ParsedQuery.QueryBody.BodyClauses.Count);
       WhereClause whereClause = ParsedQuery.QueryBody.BodyClauses.First () as WhereClause;
       Assert.IsNotNull (whereClause);
 

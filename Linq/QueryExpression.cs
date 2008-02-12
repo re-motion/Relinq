@@ -9,45 +9,36 @@ namespace Rubicon.Data.Linq
 {
   public class QueryExpression : IQueryElement
   {
-    private readonly MainFromClause _fromClause;
-    private readonly QueryBody _queryBody;
     private Expression _expressionTree;
 
-    
-    public QueryExpression (MainFromClause fromClause, QueryBody queryBody, Expression expressionTree)
+
+    public QueryExpression (MainFromClause mainFromClause, QueryBody queryBody, Expression expressionTree)
     {
-      ArgumentUtility.CheckNotNull ("fromClause", fromClause);
+      ArgumentUtility.CheckNotNull ("mainFromClause", mainFromClause);
       ArgumentUtility.CheckNotNull ("queryBody", queryBody);
 
-      _fromClause = fromClause;
-      _queryBody = queryBody;
+      MainFromClause = mainFromClause;
+      QueryBody = queryBody;
       _expressionTree = expressionTree;
-
     }
 
-    public QueryExpression (MainFromClause fromClause, QueryBody queryBody) : this (fromClause,queryBody,null)
+    public QueryExpression (MainFromClause fromClause, QueryBody queryBody)
+        : this (fromClause, queryBody, null)
     {
     }
 
-    public MainFromClause FromClause
-    {
-      get { return _fromClause; }
-    }
+    public MainFromClause MainFromClause { get; private set; }
+    public QueryBody QueryBody { get; private set; }
 
-    public QueryBody QueryBody
-    {
-      get { return _queryBody; }
-    }
-
-    public FromClauseBase GetFromClause(string identifierName, Type identifierType)
+    public FromClauseBase GetFromClause (string identifierName, Type identifierType)
     {
       ArgumentUtility.CheckNotNull ("identifierName", identifierName);
       ArgumentUtility.CheckNotNull ("identifierType", identifierType);
 
-      if (identifierName == FromClause.Identifier.Name)
+      if (identifierName == MainFromClause.Identifier.Name)
       {
-        FromClause.CheckResolvedIdentifierType (identifierType);
-        return FromClause;
+        MainFromClause.CheckResolvedIdentifierType (identifierType);
+        return MainFromClause;
       }
       else
         return QueryBody.GetFromClause (identifierName, identifierType);
@@ -74,7 +65,6 @@ namespace Rubicon.Data.Linq
         ExpressionTreeBuildingVisitor visitor = new ExpressionTreeBuildingVisitor();
         Accept (visitor);
         _expressionTree = visitor.ExpressionTree;
-
       }
       return _expressionTree;
     }

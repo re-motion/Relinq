@@ -16,7 +16,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.QueryParserIntegrationTest
     [Test]
     public override void CheckBodyClause ()
     {
-      Assert.AreEqual (0, ParsedQuery.QueryBody.BodyClauseCount);
+      Assert.AreEqual (0, ParsedQuery.QueryBody.BodyClauses.Count);
     }
 
    [Test]
@@ -26,7 +26,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.QueryParserIntegrationTest
       SelectClause clause = ParsedQuery.QueryBody.SelectOrGroupClause as SelectClause;
       Assert.IsNotNull (clause);
       Assert.IsNotNull (clause.ProjectionExpression);
-      Assert.AreSame (ParsedQuery.FromClause.Identifier, clause.ProjectionExpression.Body,
+      Assert.AreSame (ParsedQuery.MainFromClause.Identifier, clause.ProjectionExpression.Body,
                       "from s in ... select s => select expression must be same as from-identifier");
     }
   }

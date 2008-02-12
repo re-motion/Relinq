@@ -36,7 +36,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
 
       IEnumerable<FieldDescriptor> selectedFields = selectParser.SelectedFields;
 
-      Assert.That (selectedFields.ToArray(), Is.EqualTo (new object[] {CreateFieldDescriptor (expression.FromClause, null)}));
+      Assert.That (selectedFields.ToArray(), Is.EqualTo (new object[] {CreateFieldDescriptor (expression.MainFromClause, null)}));
     }
 
 
@@ -52,7 +52,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
 
       IEnumerable<FieldDescriptor> selectedFields = selectParser.SelectedFields;
 
-      Assert.That (selectedFields.ToArray(), Is.EqualTo (new object[] {CreateFieldDescriptor (expression.FromClause, null)}));
+      Assert.That (selectedFields.ToArray(), Is.EqualTo (new object[] {CreateFieldDescriptor (expression.MainFromClause, null)}));
     }
 
     [Test]
@@ -68,7 +68,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
       IEnumerable<FieldDescriptor> selectedFields = selectParser.SelectedFields;
 
       Assert.That (selectedFields.ToArray(),
-          Is.EqualTo (new object[] {CreateFieldDescriptor (expression.FromClause, typeof (Student).GetProperty ("First"))}));
+          Is.EqualTo (new object[] {CreateFieldDescriptor (expression.MainFromClause, typeof (Student).GetProperty ("First"))}));
     }
 
     [Test]
@@ -86,8 +86,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
       Assert.That (selectedFields.ToArray(), Is.EqualTo (
           new object[]
               {
-                  CreateFieldDescriptor (expression.FromClause, typeof (Student).GetProperty ("First")),
-                  CreateFieldDescriptor (expression.FromClause, typeof (Student).GetProperty ("Last"))
+                  CreateFieldDescriptor (expression.MainFromClause, typeof (Student).GetProperty ("First")),
+                  CreateFieldDescriptor (expression.MainFromClause, typeof (Student).GetProperty ("Last"))
               }));
     }
     
@@ -134,7 +134,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
       Assert.That (selectedFields.ToArray(), Is.EqualTo (
           new object[]
               {
-                  CreateFieldDescriptor (expression.FromClause, typeof (Student).GetProperty ("First")),
+                  CreateFieldDescriptor (expression.MainFromClause, typeof (Student).GetProperty ("First")),
                   CreateFieldDescriptor ((FromClauseBase) expression.QueryBody.BodyClauses.First(), typeof (Student).GetProperty ("Last")),
                   CreateFieldDescriptor ((FromClauseBase) expression.QueryBody.BodyClauses.Last(), typeof (Student).GetProperty ("ID"))
               }));
@@ -157,8 +157,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
       Assert.That (selectedFields.ToArray(), Is.EqualTo (
           new object[]
               {
-                  CreateFieldDescriptor (expression.FromClause, null),
-                  CreateFieldDescriptor (expression.FromClause, typeof (Student).GetProperty ("Last")),
+                  CreateFieldDescriptor (expression.MainFromClause, null),
+                  CreateFieldDescriptor (expression.MainFromClause, typeof (Student).GetProperty ("Last")),
               }));
     }
 
@@ -177,10 +177,10 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
       Assert.That (selectedFields.ToArray(), Is.EquivalentTo (
           new object[]
               {
-                  CreateFieldDescriptor (expression.FromClause, typeof (Student).GetProperty ("First")),
-                  CreateFieldDescriptor (expression.FromClause, typeof (Student).GetProperty ("Last")),
-                  CreateFieldDescriptor (expression.FromClause, null),
-                  CreateFieldDescriptor (expression.FromClause, typeof (Student).GetProperty ("ID"))
+                  CreateFieldDescriptor (expression.MainFromClause, typeof (Student).GetProperty ("First")),
+                  CreateFieldDescriptor (expression.MainFromClause, typeof (Student).GetProperty ("Last")),
+                  CreateFieldDescriptor (expression.MainFromClause, null),
+                  CreateFieldDescriptor (expression.MainFromClause, typeof (Student).GetProperty ("ID"))
               }));
     }
     

@@ -52,8 +52,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
     public void PreviousClauses_SimpleQuery()
     {
       QueryExpression parsedQuery = _parser.GetParsedQuery();
-      Assert.IsNull (parsedQuery.FromClause.PreviousClause);
-      Assert.AreSame (parsedQuery.FromClause, parsedQuery.QueryBody.SelectOrGroupClause.PreviousClause);
+      Assert.IsNull (parsedQuery.MainFromClause.PreviousClause);
+      Assert.AreSame (parsedQuery.MainFromClause, parsedQuery.QueryBody.SelectOrGroupClause.PreviousClause);
     }
 
     [Test]
@@ -64,7 +64,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
       QueryParser parser = new QueryParser (queryExpression);
       QueryExpression parsedQuery = parser.GetParsedQuery ();
       
-      Assert.IsNull (parsedQuery.FromClause.PreviousClause);
+      Assert.IsNull (parsedQuery.MainFromClause.PreviousClause);
       Assert.AreSame (parsedQuery.QueryBody.BodyClauses.First(), parsedQuery.QueryBody.BodyClauses.Last ().PreviousClause);
       Assert.AreSame (parsedQuery.QueryBody.BodyClauses.Last(), parsedQuery.QueryBody.SelectOrGroupClause.PreviousClause);
     }
@@ -77,7 +77,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
       QueryParser parser = new QueryParser (queryExpression);
       QueryExpression parsedQuery = parser.GetParsedQuery();
 
-      Assert.IsNull (parsedQuery.FromClause.PreviousClause);
+      Assert.IsNull (parsedQuery.MainFromClause.PreviousClause);
       Assert.AreSame (parsedQuery.QueryBody.BodyClauses.First(), parsedQuery.QueryBody.BodyClauses.Skip(1).First().PreviousClause);
       Assert.AreSame (parsedQuery.QueryBody.BodyClauses.Skip (1).First (), parsedQuery.QueryBody.BodyClauses.Last().PreviousClause);
     }

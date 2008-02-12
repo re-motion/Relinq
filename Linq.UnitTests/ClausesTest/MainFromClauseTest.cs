@@ -24,7 +24,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       Assert.AreSame (querySource, fromClause.QuerySource);
 
       Assert.That (fromClause.JoinClauses, Is.Empty);
-      Assert.AreEqual (0, fromClause.JoinClauseCount);
+      Assert.AreEqual (0, fromClause.JoinClauses.Count);
 
       Assert.IsNull (fromClause.PreviousClause);
     }

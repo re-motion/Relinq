@@ -14,7 +14,7 @@ namespace Rubicon.Data.Linq.Visitor
 
     public void VisitQueryExpression (QueryExpression queryExpression)
     {
-      queryExpression.FromClause.Accept (this);
+      queryExpression.MainFromClause.Accept (this);
       queryExpression.QueryBody.Accept (this);
     }
 

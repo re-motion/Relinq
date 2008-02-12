@@ -25,7 +25,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       Expression sourceExpression = Expression.Parameter (typeof (Student), "s1");
       QueryExpressionResolveVisitor.Result result = new QueryExpressionResolveVisitor (queryExpression).ParseAndReduce(sourceExpression);
       Assert.AreSame (sourceExpression, result.ReducedExpression);
-      Assert.AreSame (queryExpression.FromClause, result.FromClause);
+      Assert.AreSame (queryExpression.MainFromClause, result.FromClause);
     }
 
     [Test]
@@ -49,7 +49,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
           typeof (Student).GetProperty ("First"));
       QueryExpressionResolveVisitor.Result result = new QueryExpressionResolveVisitor (queryExpression).ParseAndReduce (sourceExpression);
       Assert.AreSame (sourceExpression, result.ReducedExpression);
-      Assert.AreSame (queryExpression.FromClause, result.FromClause);
+      Assert.AreSame (queryExpression.MainFromClause, result.FromClause);
     }
 
     [Test]
@@ -64,7 +64,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       QueryExpressionResolveVisitor.Result result = new QueryExpressionResolveVisitor (queryExpression).ParseAndReduce (sourceExpression);
       ParameterExpression expectedReducedExpression = Expression.Parameter (typeof (Student), "s1");
       ExpressionTreeComparer.CheckAreEqualTrees (expectedReducedExpression, result.ReducedExpression);
-      Assert.AreSame (queryExpression.FromClause, result.FromClause);
+      Assert.AreSame (queryExpression.MainFromClause, result.FromClause);
     }
 
     [Test]
@@ -83,7 +83,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
           Expression.Parameter (typeof (Student), "s1"),
           typeof (Student).GetProperty ("First"));
       ExpressionTreeComparer.CheckAreEqualTrees (expectedReducedExpression, result.ReducedExpression);
-      Assert.AreSame (queryExpression.FromClause, result.FromClause);
+      Assert.AreSame (queryExpression.MainFromClause, result.FromClause);
     }
 
     [Test]
@@ -100,7 +100,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       QueryExpressionResolveVisitor.Result result = new QueryExpressionResolveVisitor (queryExpression).ParseAndReduce (sourceExpression);
       ParameterExpression expectedReducedExpression = Expression.Parameter (typeof (Student), "s1");
       ExpressionTreeComparer.CheckAreEqualTrees (expectedReducedExpression, result.ReducedExpression);
-      Assert.AreSame (queryExpression.FromClause, result.FromClause);
+      Assert.AreSame (queryExpression.MainFromClause, result.FromClause);
     }
 
     [Test]

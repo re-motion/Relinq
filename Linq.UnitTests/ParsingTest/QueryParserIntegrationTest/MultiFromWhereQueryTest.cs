@@ -24,17 +24,17 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.QueryParserIntegrationTest
     [Test]
     public override void CheckMainFromClause ()
     {
-      Assert.IsNotNull (ParsedQuery.FromClause);
-      Assert.AreEqual ("s1", ParsedQuery.FromClause.Identifier.Name);
-      Assert.AreSame (typeof (Student), ParsedQuery.FromClause.Identifier.Type);
-      Assert.AreSame (QuerySource, ParsedQuery.FromClause.QuerySource);
-      Assert.AreEqual (0, ParsedQuery.FromClause.JoinClauseCount);
+      Assert.IsNotNull (ParsedQuery.MainFromClause);
+      Assert.AreEqual ("s1", ParsedQuery.MainFromClause.Identifier.Name);
+      Assert.AreSame (typeof (Student), ParsedQuery.MainFromClause.Identifier.Type);
+      Assert.AreSame (QuerySource, ParsedQuery.MainFromClause.QuerySource);
+      Assert.AreEqual (0, ParsedQuery.MainFromClause.JoinClauses.Count);
     }
 
     [Test]
     public override void CheckBodyClause ()
     {
-      Assert.AreEqual (2, ParsedQuery.QueryBody.BodyClauseCount);
+      Assert.AreEqual (2, ParsedQuery.QueryBody.BodyClauses.Count);
       AdditionalFromClause fromClause = ParsedQuery.QueryBody.BodyClauses.First() as AdditionalFromClause;
       Assert.IsNotNull (fromClause);
       Assert.AreSame (SourceExpressionNavigator.Arguments[0].Arguments[0].Arguments[1].Operand.Expression, fromClause.FromExpression);

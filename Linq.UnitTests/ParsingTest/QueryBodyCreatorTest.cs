@@ -34,7 +34,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
 
       QueryBodyCreator bodyCreator = new QueryBodyCreator (_root, _mainFromClause, projectionExpressions, bodyExpressions);
       QueryBody body = bodyCreator.GetQueryBody();
-      Assert.AreEqual (0, body.BodyClauseCount, "no body clause from first body expression - this is reserved for the main from clause");
+      Assert.AreEqual (0, body.BodyClauses.Count, "no body clause from first body expression - this is reserved for the main from clause");
     }
 
     [Test]
@@ -47,7 +47,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
 
       QueryBodyCreator bodyCreator = new QueryBodyCreator (_root, _mainFromClause, projectionExpressions, bodyExpressions);
       QueryBody body = bodyCreator.GetQueryBody ();
-      Assert.AreEqual (0, body.BodyClauseCount);
+      Assert.AreEqual (0, body.BodyClauses.Count);
 
       SelectClause selectClause = body.SelectOrGroupClause as SelectClause;
       Assert.IsNotNull (selectClause);
@@ -69,7 +69,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
 
       QueryBodyCreator bodyCreator = new QueryBodyCreator (_root, _mainFromClause, projectionExpressions, bodyExpressions);
       QueryBody body = bodyCreator.GetQueryBody ();
-      Assert.AreEqual (1, body.BodyClauseCount);
+      Assert.AreEqual (1, body.BodyClauses.Count);
       
       AdditionalFromClause additionalFromClause = body.BodyClauses.First() as AdditionalFromClause;
       Assert.IsNotNull (additionalFromClause);
@@ -93,7 +93,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
 
       QueryBodyCreator bodyCreator = new QueryBodyCreator (_root, _mainFromClause, projectionExpressions, bodyExpressions);
       QueryBody body = bodyCreator.GetQueryBody ();
-      Assert.AreEqual (1, body.BodyClauseCount);
+      Assert.AreEqual (1, body.BodyClauses.Count);
 
       SelectClause selectClause = body.SelectOrGroupClause as SelectClause;
       Assert.IsNotNull (selectClause);
@@ -114,7 +114,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
 
       QueryBodyCreator bodyCreator = new QueryBodyCreator (_root, _mainFromClause, projectionExpressions, bodyExpressions);
       QueryBody body = bodyCreator.GetQueryBody ();
-      Assert.AreEqual (1, body.BodyClauseCount);
+      Assert.AreEqual (1, body.BodyClauses.Count);
 
       WhereClause whereClause = body.BodyClauses.First () as WhereClause;
       Assert.IsNotNull (whereClause);
@@ -134,7 +134,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
 
       QueryBodyCreator bodyCreator = new QueryBodyCreator (_root, _mainFromClause, projectionExpressions, bodyExpressions);
       QueryBody body = bodyCreator.GetQueryBody ();
-      Assert.AreEqual (1, body.BodyClauseCount);
+      Assert.AreEqual (1, body.BodyClauses.Count);
 
       OrderByClause orderByClause = body.BodyClauses.First() as OrderByClause;
       Assert.IsNotNull (orderByClause);
@@ -162,7 +162,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
 
       QueryBodyCreator bodyCreator = new QueryBodyCreator (_root, _mainFromClause, projectionExpressions, bodyExpressions);
       QueryBody body = bodyCreator.GetQueryBody ();
-      Assert.AreEqual (2, body.BodyClauseCount);
+      Assert.AreEqual (2, body.BodyClauses.Count);
 
       OrderByClause orderByClause1 = body.BodyClauses.First () as OrderByClause;
       OrderByClause orderByClause2 = body.BodyClauses.Last () as OrderByClause;

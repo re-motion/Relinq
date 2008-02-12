@@ -20,7 +20,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       fromClause.Add (joinClause2);
 
       Assert.That (fromClause.JoinClauses, Is.EqualTo (new object[] { joinClause1, joinClause2 }));
-      Assert.AreEqual (2, fromClause.JoinClauseCount);
+      Assert.AreEqual (2, fromClause.JoinClauses.Count);
     }
 
 

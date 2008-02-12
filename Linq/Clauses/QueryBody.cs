@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Utilities;
@@ -10,7 +11,7 @@ namespace Rubicon.Data.Linq.Clauses
   public class QueryBody : IQueryElement
   {
     private readonly ISelectGroupClause _selectOrGroupClause;
-    private readonly List<IBodyClause> _bodyClause = new List<IBodyClause> ();
+    private readonly List<IBodyClause> _bodyClauses = new List<IBodyClause> ();
     private readonly Dictionary<string, FromClauseBase> _fromClauses = new Dictionary<string, FromClauseBase>();
 
     public QueryBody (ISelectGroupClause selectOrGroupClause)
@@ -24,33 +25,28 @@ namespace Rubicon.Data.Linq.Clauses
     {
       get { return _selectOrGroupClause; }
     }
-
-
-    public IEnumerable<IBodyClause> BodyClauses
+    
+    public ReadOnlyCollection<IBodyClause> BodyClauses
     {
-      get { return _bodyClause; }
+      get { return _bodyClauses.AsReadOnly(); }
     }
 
     public void Add (IBodyClause clause)
     {
       ArgumentUtility.CheckNotNull ("clause", clause);
-      _bodyClause.Add (clause);
+      _bodyClauses.Add (clause);
       
       FromClauseBase clauseAsFromClause = clause as FromClauseBase;
       if (clauseAsFromClause != null)
       {
         if (_fromClauses.ContainsKey (clauseAsFromClause.Identifier.Name))
         {
-          string message = string.Format ("Multiple from clauses with the same name ('{0}') are not supported.", clauseAsFromClause.Identifier.Name);
+          string message = string.Format ("Multiple from clauses with the same name ('{0}') are not supported.",
+            clauseAsFromClause.Identifier.Name);
           throw new NotSupportedException (message);
         }
         _fromClauses.Add (clauseAsFromClause.Identifier.Name, clauseAsFromClause);
       }
-    }
-
-    public int BodyClauseCount
-    {
-      get { return _bodyClause.Count; }
     }
 
     public FromClauseBase GetFromClause (string identifierName, Type identifierType)

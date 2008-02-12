@@ -21,7 +21,7 @@ namespace Rubicon.Data.Linq.Visitor
     {
       ArgumentUtility.CheckNotNull ("queryExpression", queryExpression);
 
-      queryExpression.FromClause.Accept (this);
+      queryExpression.MainFromClause.Accept (this);
       queryExpression.QueryBody.Accept (this);
       
     }

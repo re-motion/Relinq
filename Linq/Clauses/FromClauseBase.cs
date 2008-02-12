@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using System.Reflection;
 using Rubicon.Data.Linq.DataObjectModel;
@@ -27,14 +28,9 @@ namespace Rubicon.Data.Linq.Clauses
       get { return _identifier; }
     }
 
-    public IEnumerable<JoinClause> JoinClauses
+    public ReadOnlyCollection<JoinClause> JoinClauses
     {
-      get { return _joinClauses; }
-    }
-
-    public int JoinClauseCount
-    {
-      get { return _joinClauses.Count; }
+      get { return _joinClauses.AsReadOnly(); }
     }
 
     public void Add (JoinClause joinClause)

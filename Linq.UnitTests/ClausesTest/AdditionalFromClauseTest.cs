@@ -29,7 +29,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       Assert.AreSame (clause, fromClause.PreviousClause);
 
       Assert.That (fromClause.JoinClauses, Is.Empty);
-      Assert.AreEqual (0, fromClause.JoinClauseCount);
+      Assert.AreEqual (0, fromClause.JoinClauses.Count);
     }
 
     [Test]

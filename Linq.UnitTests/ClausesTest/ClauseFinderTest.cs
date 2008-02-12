@@ -17,7 +17,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     {
       IQueryable<Student> query = TestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource ());
       QueryExpression queryExpression = new QueryParser (query.Expression).GetParsedQuery ();
-      MainFromClause fromClause = queryExpression.FromClause;
+      MainFromClause fromClause = queryExpression.MainFromClause;
       Assert.IsNull (ClauseFinder.FindClause<SelectClause> (fromClause));
     }
 
@@ -63,7 +63,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       IQueryable<Student> query = TestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource ());
       QueryExpression queryExpression = new QueryParser (query.Expression).GetParsedQuery ();
       SelectClause selectClause = (SelectClause) queryExpression.QueryBody.SelectOrGroupClause;
-      Assert.AreSame (queryExpression.FromClause, ClauseFinder.FindClause <FromClauseBase> (selectClause.PreviousClause));
+      Assert.AreSame (queryExpression.MainFromClause, ClauseFinder.FindClause <FromClauseBase> (selectClause.PreviousClause));
     }
 
     [Test]
@@ -83,7 +83,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       IQueryable<Student> query = TestQueryGenerator.CreateMultiWhereQuery (source);
       QueryExpression queryExpression = new QueryParser (query.Expression).GetParsedQuery ();
       SelectClause selectClause = (SelectClause) queryExpression.QueryBody.SelectOrGroupClause;
-      Assert.AreSame (queryExpression.FromClause, ClauseFinder.FindClause<FromClauseBase> (selectClause.PreviousClause));
+      Assert.AreSame (queryExpression.MainFromClause, ClauseFinder.FindClause<FromClauseBase> (selectClause.PreviousClause));
     }
 
     [Test]
@@ -97,7 +97,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
           {
               queryExpression.QueryBody.BodyClauses.Last(), 
               queryExpression.QueryBody.BodyClauses.First(), 
-              queryExpression.FromClause
+              queryExpression.MainFromClause
           }));
     }
 
@@ -111,7 +111,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
         (queryExpression.QueryBody.BodyClauses.Last ().PreviousClause).ToArray (), Is.EqualTo (new object[]
           {
               queryExpression.QueryBody.BodyClauses.First(), 
-              queryExpression.FromClause
+              queryExpression.MainFromClause
           }));
     }
   }

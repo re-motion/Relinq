@@ -17,7 +17,7 @@ namespace Rubicon.Data.Linq.UnitTests
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause();
       QueryBody queryBody = ExpressionHelper.CreateQueryBody();
       QueryExpression model = new QueryExpression (fromClause, queryBody);
-      Assert.AreSame (fromClause, model.FromClause);
+      Assert.AreSame (fromClause, model.MainFromClause);
       Assert.AreSame (queryBody, model.QueryBody);
       Assert.IsNotNull (model.GetExpressionTree());
     }
@@ -29,7 +29,7 @@ namespace Rubicon.Data.Linq.UnitTests
       QueryBody queryBody = ExpressionHelper.CreateQueryBody ();
       Expression expressionTree = ExpressionHelper.CreateExpression();
       QueryExpression model = new QueryExpression (fromClause, queryBody,expressionTree);
-      Assert.AreSame (fromClause, model.FromClause);
+      Assert.AreSame (fromClause, model.MainFromClause);
       Assert.AreSame (queryBody, model.QueryBody);
       Assert.AreSame (expressionTree, model.GetExpressionTree());
     }
@@ -188,7 +188,7 @@ namespace Rubicon.Data.Linq.UnitTests
       FieldDescriptor descriptor = queryExpression.ResolveField (StubDatabaseInfo.Instance, fieldAccessExpression);
 
       Table expectedTable = new Table ("sourceTable", "s1");
-      Assert.AreSame (queryExpression.FromClause, descriptor.FromClause);
+      Assert.AreSame (queryExpression.MainFromClause, descriptor.FromClause);
       Assert.AreEqual (new Column (expectedTable, "*"), descriptor.Column);
       Assert.IsNull (descriptor.Member);
       Assert.AreEqual (expectedTable, descriptor.Table);

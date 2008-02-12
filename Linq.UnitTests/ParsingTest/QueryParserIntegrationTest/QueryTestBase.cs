@@ -34,11 +34,11 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.QueryParserIntegrationTest
     [Test]
     public virtual void CheckMainFromClause ()
     {
-      Assert.IsNotNull (ParsedQuery.FromClause);
-      Assert.AreEqual ("s", ParsedQuery.FromClause.Identifier.Name);
-      Assert.AreSame (typeof (Student), ParsedQuery.FromClause.Identifier.Type);
-      Assert.AreSame (QuerySource, ParsedQuery.FromClause.QuerySource);
-      Assert.AreEqual (0, ParsedQuery.FromClause.JoinClauseCount);
+      Assert.IsNotNull (ParsedQuery.MainFromClause);
+      Assert.AreEqual ("s", ParsedQuery.MainFromClause.Identifier.Name);
+      Assert.AreSame (typeof (Student), ParsedQuery.MainFromClause.Identifier.Type);
+      Assert.AreSame (QuerySource, ParsedQuery.MainFromClause.QuerySource);
+      Assert.AreEqual (0, ParsedQuery.MainFromClause.JoinClauses.Count);
     }
 
     [Test]

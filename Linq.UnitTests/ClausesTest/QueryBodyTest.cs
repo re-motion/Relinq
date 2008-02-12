@@ -37,7 +37,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
 
       Assert.AreSame (iSelectOrGroupClause, queryBody.SelectOrGroupClause);
 
-      Assert.AreEqual (1, queryBody.BodyClauseCount);
+      Assert.AreEqual (1, queryBody.BodyClauses.Count);
       Assert.That (queryBody.BodyClauses, List.Contains (orderByClause));
     }
 
@@ -53,7 +53,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       queryBody.Add (orderByClause1);
       queryBody.Add (orderByClause2);
 
-      Assert.AreEqual (2, queryBody.BodyClauseCount);
+      Assert.AreEqual (2, queryBody.BodyClauses.Count);
       Assert.That (queryBody.BodyClauses, Is.EqualTo(new object[] {orderByClause1,orderByClause2}));
     }
 
@@ -67,7 +67,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       IBodyClause clause = ExpressionHelper.CreateWhereClause();
       queryBody.Add (clause);
 
-      Assert.AreEqual (1, queryBody.BodyClauseCount);
+      Assert.AreEqual (1, queryBody.BodyClauses.Count);
       Assert.That (queryBody.BodyClauses, List.Contains (clause));
     }
 

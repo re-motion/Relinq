@@ -18,7 +18,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.QueryParserIntegrationTest
     [Test]
     public override void CheckBodyClause ()
     {
-      Assert.AreEqual (3, ParsedQuery.QueryBody.BodyClauseCount);
+      Assert.AreEqual (3, ParsedQuery.QueryBody.BodyClauses.Count);
       Assert.IsNotNull (ParsedQuery.QueryBody.BodyClauses);
       WhereClause[] whereClauses = ParsedQuery.QueryBody.BodyClauses.Cast<WhereClause>().ToArray();
 
@@ -26,7 +26,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.QueryParserIntegrationTest
 
       Assert.IsNotNull (whereClauses[0].BoolExpression);
       Assert.IsInstanceOfType (typeof (LambdaExpression), whereClauses[0].BoolExpression);
-      Assert.AreSame (ParsedQuery.FromClause.Identifier, navigator.Parameters[0].Expression);
+      Assert.AreSame (ParsedQuery.MainFromClause.Identifier, navigator.Parameters[0].Expression);
       Assert.IsInstanceOfType (typeof (BinaryExpression), whereClauses[0].BoolExpression.Body);
       Assert.AreEqual ("Garcia", navigator.Body.Right.Value);
 
