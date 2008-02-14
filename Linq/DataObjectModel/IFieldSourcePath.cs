@@ -1,6 +1,6 @@
 namespace Rubicon.Data.Linq.DataObjectModel
 {
-  public interface IFieldSource
+  public interface IFieldSourcePath
   {
     
   }

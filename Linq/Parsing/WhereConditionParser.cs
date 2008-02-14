@@ -117,7 +117,7 @@ namespace Rubicon.Data.Linq.Parsing
     //  Assertion.IsNotNull (tableParameter);
 
     //  FromClauseBase fromClause = ClauseFinder.FindFromClauseForExpression (_whereClause, tableParameter);
-    //  Source table = DatabaseInfoUtility.GetTableForFromClause (_databaseInfo, fromClause);
+    //  SourcePath table = DatabaseInfoUtility.GetTableForFromClause (_databaseInfo, fromClause);
     //  MemberInfo columnMember = leftSide.Member;
     //  Column leftColumn = DatabaseInfoUtility.GetColumn (_databaseInfo, table, columnMember);
 

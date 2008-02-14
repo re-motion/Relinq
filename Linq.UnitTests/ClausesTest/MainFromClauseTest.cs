@@ -164,7 +164,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
           new Column (expectedLeftSide, "Student_FK"),
           new Column (expectedRightSide, "Student_Detail_PK"));
 
-      Assert.AreEqual (expectedJoin, fieldDescriptor.Source);
+      Assert.AreEqual (expectedJoin, fieldDescriptor.SourcePath);
     }
 
     [Test]

@@ -2,7 +2,7 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.DataObjectModel
 {
-  public struct Table : IFieldSource
+  public struct Table : IFieldSourcePath
   {
     public readonly string Name;
     public readonly string Alias;

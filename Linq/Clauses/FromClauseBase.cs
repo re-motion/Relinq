@@ -81,17 +81,17 @@ namespace Rubicon.Data.Linq.Clauses
     {
       MemberInfo member = members.FirstOrDefault ();
       Table initialTable = DatabaseInfoUtility.GetTableForFromClause (databaseInfo, this);
-      Tuple<IFieldSource, Table> fieldData = CalculateJoinData (databaseInfo, initialTable, members.Skip (1));
+      Tuple<IFieldSourcePath, Table> fieldData = CalculateJoinData (databaseInfo, initialTable, members.Skip (1));
 
       Column? column = DatabaseInfoUtility.GetColumn (databaseInfo, fieldData.B, member);
       return new FieldDescriptor (member, this, fieldData.A, column);
     }
 
-    private Tuple<IFieldSource, Table> CalculateJoinData (IDatabaseInfo databaseInfo, Table initialTable, IEnumerable<MemberInfo> joinMembers)
+    private Tuple<IFieldSourcePath, Table> CalculateJoinData (IDatabaseInfo databaseInfo, Table initialTable, IEnumerable<MemberInfo> joinMembers)
     {
       // start with the table and create all joins necessary for reaching the field in the database
       Table lastTable = initialTable;
-      IFieldSource fieldSource = lastTable;
+      IFieldSourcePath fieldSourcePath = lastTable;
       foreach (MemberInfo member in joinMembers)
       {
         try
@@ -102,7 +102,7 @@ namespace Rubicon.Data.Linq.Clauses
           Column leftColumn = new Column (leftTable, joinColumns.B); // student
           Column rightColumn = new Column (lastTable, joinColumns.A); // student_detail
 
-          fieldSource = new Join (leftTable, fieldSource, leftColumn, rightColumn);
+          fieldSourcePath = new Join (leftTable, fieldSourcePath, leftColumn, rightColumn);
           lastTable = leftTable;
         }
         catch (Exception ex)
@@ -111,7 +111,7 @@ namespace Rubicon.Data.Linq.Clauses
         }        
       }
 
-      return Tuple.NewTuple (fieldSource, lastTable);
+      return Tuple.NewTuple (fieldSourcePath, lastTable);
     }
 
     public abstract void Accept (IQueryVisitor visitor);

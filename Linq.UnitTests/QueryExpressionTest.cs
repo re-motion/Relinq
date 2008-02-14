@@ -191,7 +191,7 @@ namespace Rubicon.Data.Linq.UnitTests
       Assert.AreSame (queryExpression.MainFromClause, descriptor.FromClause);
       Assert.AreEqual (new Column (expectedTable, "*"), descriptor.Column);
       Assert.IsNull (descriptor.Member);
-      Assert.AreEqual (expectedTable, descriptor.Source);
+      Assert.AreEqual (expectedTable, descriptor.SourcePath);
     }
 
     private QueryExpression CreateQueryExpressionForResolve ()

@@ -79,7 +79,7 @@ namespace Rubicon.Data.Linq.Visitor
         //Build OrderBy
         //then simple for to iterate through collection (possible wrong way up)
         //make ThenBy or OrderBy (Descending - depending of direction)
-        //generic Arguments: Source,Key
+        //generic Arguments: SourcePath,Key
         //parameters: ConstantExpression / MemberExpression
         throw new System.NotImplementedException();
     }

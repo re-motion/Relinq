@@ -2,14 +2,14 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.DataObjectModel
 {
-  public struct Join : IFieldSource
+  public struct Join : IFieldSourcePath
   {
     public Table LeftSide { get; private set; }
-    public IFieldSource RightSide { get; private set; }
+    public IFieldSourcePath RightSide { get; private set; }
     public Column LeftColumn { get; private set; }
     public Column RightColumn { get; private set; }
 
-    public Join (Table leftSide, IFieldSource rightSide, Column leftColumn, Column rightColumn) : this()
+    public Join (Table leftSide, IFieldSourcePath rightSide, Column leftColumn, Column rightColumn) : this()
     {
       ArgumentUtility.CheckNotNull ("leftSide", leftSide);
       ArgumentUtility.CheckNotNull ("rightSide", rightSide);

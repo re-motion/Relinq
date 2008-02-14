@@ -8,11 +8,11 @@ namespace Rubicon.Data.Linq.DataObjectModel
 {
   public struct FieldDescriptor
   {
-    public FieldDescriptor (MemberInfo member, FromClauseBase fromClause, IFieldSource source, Column? column)
+    public FieldDescriptor (MemberInfo member, FromClauseBase fromClause, IFieldSourcePath sourcePath, Column? column)
         : this()
     {
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
-      ArgumentUtility.CheckNotNull ("source", source);
+      ArgumentUtility.CheckNotNull ("sourcePath", sourcePath);
 
       if (member == null && column == null)
         throw new ArgumentNullException ("member && column", "Either member or column must have a value.");
@@ -20,12 +20,12 @@ namespace Rubicon.Data.Linq.DataObjectModel
       Member = member;
       FromClause = fromClause;
       Column = column;
-      Source = source;
+      SourcePath = sourcePath;
     }
 
     public MemberInfo Member { get; private set; }
     public Column? Column { get; private set; }
-    public IFieldSource Source { get; private set; }
+    public IFieldSourcePath SourcePath { get; private set; }
     public FromClauseBase FromClause { get; private set; }
 
     public Column GetMandatoryColumn()

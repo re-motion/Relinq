@@ -27,7 +27,7 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
       Assert.IsNull (descriptor.Member);
       Assert.AreSame (fromClause, descriptor.FromClause);
       Assert.AreEqual (column, descriptor.Column);
-      Assert.AreEqual (table, descriptor.Source);
+      Assert.AreEqual (table, descriptor.SourcePath);
     }
 
     [Test]
@@ -40,7 +40,7 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
       Assert.IsNull (descriptor.Column);
       Assert.AreSame (fromClause, descriptor.FromClause);
       Assert.AreEqual (member, descriptor.Member);
-      Assert.AreEqual (table, descriptor.Source);
+      Assert.AreEqual (table, descriptor.SourcePath);
     }
 
     [Test]
@@ -54,7 +54,7 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
       Assert.AreEqual (column, descriptor.Column);
       Assert.AreSame (fromClause, descriptor.FromClause);
       Assert.AreEqual (member, descriptor.Member);
-      Assert.AreEqual (table, descriptor.Source);
+      Assert.AreEqual (table, descriptor.SourcePath);
     }
 
     [Test]
