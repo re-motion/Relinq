@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using Rhino.Mocks;
 using Rubicon.Data.Linq.Clauses;
+using Rubicon.Data.Linq.DataObjectModel;
 using Rubicon.Data.Linq.Parsing;
 using Rubicon.Data.Linq.QueryProviderImplementation;
 
@@ -174,6 +176,14 @@ namespace Rubicon.Data.Linq.UnitTests
       Expression expression = query.Expression;
       QueryParser parser = new QueryParser (expression);
       return parser.GetParsedQuery ();
+    }
+
+    public static FieldDescriptor CreateFieldDescriptor (FromClauseBase fromClause, MemberInfo member)
+    {
+      Table table = fromClause.GetTable (StubDatabaseInfo.Instance);
+      Column? column = DatabaseInfoUtility.GetColumn (StubDatabaseInfo.Instance, table, member);
+      FieldDescriptor fieldDescriptor = new FieldDescriptor (member, fromClause, table, column);
+      return fieldDescriptor;
     }
   }
 }

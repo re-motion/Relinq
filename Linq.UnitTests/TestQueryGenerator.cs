@@ -197,7 +197,7 @@ namespace Rubicon.Data.Linq.UnitTests
       return from s1 in source1 where s1.First == "Garcia" orderby s1.First from s2 in source2 where s2.Last == "Garcia" orderby s2.First, s2.Last orderby s2.First select s2;
     }
 
-    public static IQueryable<Student_Detail> CreateSimpleImplicitJoin (IQueryable<Student_Detail> source)
+    public static IQueryable<Student_Detail> CreateSimpleImplicitWhereJoin (IQueryable<Student_Detail> source)
     {
       return from s in source where s.Student.First == "Garcia" select s;
     }
@@ -206,7 +206,11 @@ namespace Rubicon.Data.Linq.UnitTests
     {
       return from s1 in source2 join s2 in source1 on s1.ID equals s2.StudentID select s1;
     }
-    
+
+    public static IQueryable<Student_Detail> CreateSimpleImplicitOrderByJoin (IQueryable<Student_Detail> source)
+    {
+      return from s in source orderby s.Student.First select s;
+    }
 
 
     public static MethodCallExpression CreateSimpleQuery_SelectExpression (IQueryable<Student> source)

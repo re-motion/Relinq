@@ -32,7 +32,7 @@ namespace Rubicon.Data.Linq.Parsing
     private OrderingField ParseExpression (Expression expression)
     {
       FieldDescriptor fieldDescriptor = _queryExpression.ResolveField (_databaseInfo, expression);
-      OrderingField orderingField = new OrderingField (fieldDescriptor.GetMandatoryColumn(), _orderingClause.OrderDirection);
+      OrderingField orderingField = new OrderingField (fieldDescriptor, _orderingClause.OrderDirection);
       return orderingField;
     }
   }

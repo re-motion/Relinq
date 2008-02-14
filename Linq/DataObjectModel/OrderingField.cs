@@ -5,22 +5,25 @@ namespace Rubicon.Data.Linq.DataObjectModel
 {
   public struct OrderingField : ICriterion
   {
-    public readonly Column Column;
+    public readonly FieldDescriptor FieldDescriptor;
     public readonly OrderDirection Direction;
 
-    public OrderingField(Column field,OrderDirection direction)
+    public OrderingField (FieldDescriptor fieldDescriptor, OrderDirection direction)
     {
-      ArgumentUtility.CheckNotNull ("field", field);
-      ArgumentUtility.CheckNotNull ("direction", direction);
+      fieldDescriptor.GetMandatoryColumn (); // assert that there is a column for ordering
 
-      Column = field;
+      FieldDescriptor = fieldDescriptor;
       Direction = direction;
+    }
 
+    public Column Column
+    {
+      get { return FieldDescriptor.Column.Value; }
     }
 
     public override string ToString ()
     {
-      return Column.ToString()+ " " + Direction.ToString();
+      return FieldDescriptor.ToString()+ " " + Direction.ToString();
     }
   }
 }
