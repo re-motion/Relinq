@@ -115,6 +115,7 @@
     <Compile Include="StubDatabaseInfo.cs" />
     <Compile Include="StubParameterCollection.cs" />
     <Compile Include="Student_Detail.cs" />
+    <Compile Include="Student_Detail_Detail.cs" />
     <Compile Include="TestQueryable.cs" />
     <Compile Include="TestQueryGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

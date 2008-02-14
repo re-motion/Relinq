@@ -73,7 +73,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
     [Test]
     public void JoinOrderingClause ()
     {
-      IQueryable<Student_Detail> query = TestQueryGenerator.CreateSimpleImplicitOrderByJoin (ExpressionHelper.CreateQuerySourceDetail ());
+      IQueryable<Student_Detail> query = TestQueryGenerator.CreateSimpleImplicitOrderByJoin (ExpressionHelper.CreateQuerySource_Detail ());
       QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
       OrderByClause orderBy = (OrderByClause) parsedQuery.QueryBody.BodyClauses.First ();
       OrderingClause orderingClause = orderBy.OrderingList.First ();

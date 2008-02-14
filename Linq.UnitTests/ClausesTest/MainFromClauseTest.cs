@@ -142,7 +142,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     public void Resolve_Join ()
     {
       ParameterExpression identifier = Expression.Parameter (typeof (Student_Detail), "sd");
-      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySourceDetail());
+      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource_Detail());
 
       Expression fieldExpression = 
           Expression.MakeMemberAccess (
@@ -173,7 +173,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     public void Resolve_Join_InvalidMember ()
     {
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "s");
-      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySourceDetail ());
+      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource_Detail ());
 
       Expression fieldExpression =
           Expression.MakeMemberAccess (

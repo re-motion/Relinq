@@ -122,17 +122,25 @@ namespace Rubicon.Data.Linq.UnitTests
       return new TestQueryable<Student> (executor);
     }
 
-
-    public static IQueryable<Student_Detail> CreateQuerySourceDetail()
+    public static IQueryable<Student_Detail> CreateQuerySource_Detail()
     {
-      return CreateQuerySourceDetail (s_executor);
+      return CreateQuerySource_Detail (s_executor);
     }
 
-    public static IQueryable<Student_Detail> CreateQuerySourceDetail (IQueryExecutor executor)
+    public static IQueryable<Student_Detail> CreateQuerySource_Detail (IQueryExecutor executor)
     {
       return new TestQueryable<Student_Detail> (executor);
     }
 
+    public static IQueryable<Student_Detail_Detail> CreateQuerySource_Detail_Detail ()
+    {
+      return CreateQuerySource_Detail_Detail (s_executor);
+    }
+
+    public static IQueryable<Student_Detail_Detail> CreateQuerySource_Detail_Detail (IQueryExecutor executor)
+    {
+      return new TestQueryable<Student_Detail_Detail> (executor);
+    }
 
     public static IQueryExecutor CreateExecutor()
     {
