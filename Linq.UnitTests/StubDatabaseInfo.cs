@@ -24,6 +24,8 @@ namespace Rubicon.Data.Linq.UnitTests
         return new Table("detailTable", fromClause.Identifier.Name);
       else if (typeof (IQueryable<Student_Detail_Detail>).IsAssignableFrom (querySourceType))
         return new Table ("detailDetailTable", fromClause.Identifier.Name);
+      else if (typeof(IQueryable<IndustrialSector>).IsAssignableFrom(querySourceType))
+        return new Table("industrialTable",fromClause.Identifier.Name);
       else
         return null;
     }
@@ -34,6 +36,8 @@ namespace Rubicon.Data.Linq.UnitTests
         return "sourceTable";
       else if (relationMember == typeof (Student_Detail_Detail).GetProperty ("Student_Detail"))
         return "detailTable";
+      else if (relationMember == typeof (Student_Detail_Detail).GetProperty ("IndustrialSector"))
+        return "industrialSector";
       else
         return null;
     }
@@ -52,6 +56,10 @@ namespace Rubicon.Data.Linq.UnitTests
         return Tuple.NewTuple ("Student_Detail_PK", "Student_FK");
       else if (relationMember == typeof (Student_Detail_Detail).GetProperty ("Student_Detail"))
         return Tuple.NewTuple ("Student_Detail_Detail_PK", "Student_Detail_FK");
+      else if (relationMember == typeof (Student_Detail_Detail).GetProperty ("IndustrialSector"))
+        return Tuple.NewTuple ("Student_Detail_Detail_PK", "IndustrialSector_FK");
+      else if (relationMember == typeof (Student_Detail).GetProperty ("IndustrialSector"))
+        return Tuple.NewTuple ("Student_Detail_PK", "IndustrialSector_FK");
       else
         return null;
     }

@@ -6,5 +6,6 @@ namespace Rubicon.Data.Linq.UnitTests
     public Student Student { get; set; }
     public string Subject { get; set; }
     public int StudentID { get; set; }
+    public IndustrialSector IndustrialSector { get; set; }
   }
 }

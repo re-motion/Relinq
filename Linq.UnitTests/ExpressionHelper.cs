@@ -88,7 +88,6 @@ namespace Rubicon.Data.Linq.UnitTests
     public static QueryBody CreateQueryBody()
     {
       ISelectGroupClause iSelectOrGroupClause = CreateSelectClause();
-
       return new QueryBody (iSelectOrGroupClause);
 
     }
@@ -140,6 +139,16 @@ namespace Rubicon.Data.Linq.UnitTests
     public static IQueryable<Student_Detail_Detail> CreateQuerySource_Detail_Detail (IQueryExecutor executor)
     {
       return new TestQueryable<Student_Detail_Detail> (executor);
+    }
+
+    public static  IQueryable<IndustrialSector> CreateQuerySource_IndustrialSector ()
+    {
+      return CreateQuerySource_IndustrailSector (s_executor);
+    }
+
+    public static IQueryable<IndustrialSector> CreateQuerySource_IndustrailSector( IQueryExecutor executor)
+    {
+      return new TestQueryable<IndustrialSector> (executor);
     }
 
     public static IQueryExecutor CreateExecutor()

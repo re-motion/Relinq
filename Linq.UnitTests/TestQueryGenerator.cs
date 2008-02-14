@@ -217,6 +217,32 @@ namespace Rubicon.Data.Linq.UnitTests
       return from sdd in source orderby sdd.Student_Detail.Student.First select sdd;
     }
 
+    public static IQueryable<Student_Detail_Detail> CreateImplicitOrderByJoinWithMultipleJoins (IQueryable<Student_Detail_Detail> source)
+    {
+      return from sdd in source orderby sdd.Student_Detail.Student.First, sdd.IndustrialSector.ID select sdd;
+    }
+
+    public static IQueryable<Student_Detail_Detail> CreateImplicitOrderByJoinCheckingCorrectNumberOfEntries (IQueryable<Student_Detail_Detail> source)
+    {
+      return from sdd in source orderby sdd.Student_Detail.Student.First, sdd.Student_Detail.Student.Last select sdd;
+    }
+
+    public static IQueryable<Student_Detail_Detail> CreateImplicitOrderByJoinWithDifferentLevels (IQueryable<Student_Detail_Detail> source)
+    {
+      return from sdd in source orderby sdd.Student_Detail.Student.First, sdd.Student_Detail.IndustrialSector.ID select sdd;
+    }
+
+    public static IQueryable<Student_Detail_Detail> CreateImplicitOrderByJoinWithMultiKeys 
+          (IQueryable<Student_Detail_Detail> source1,IQueryable<Student_Detail_Detail> source2)
+    {
+      return from sdd1 in source1
+             from sdd2 in source2
+             orderby sdd1.Student_Detail.Student.First
+             orderby sdd2.Student_Detail.Student.First
+              select sdd1;
+    }
+
+
     public static MethodCallExpression CreateSimpleQuery_SelectExpression (IQueryable<Student> source)
     {
       IQueryable<Student> query = CreateSimpleQuery (source);

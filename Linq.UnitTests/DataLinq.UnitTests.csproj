@@ -73,6 +73,7 @@
     <Compile Include="ClausesTest\OrderByClauseTest.cs" />
     <Compile Include="ClausesTest\OrderingClauseTest.cs" />
     <Compile Include="ExpressionTreeNavigator.cs" />
+    <Compile Include="IndustrialSector.cs" />
     <Compile Include="ParsingTest\DatabaseInfoUtilityTest.cs" />
     <Compile Include="ParsingTest\ExpressionTreeComparer.cs" />
     <Compile Include="ParsingTest\FromLetWhereExpressionTest.cs" />
