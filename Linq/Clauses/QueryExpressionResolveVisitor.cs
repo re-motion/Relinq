@@ -8,6 +8,9 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.Clauses
 {
+  /// <summary>
+  /// removes transparent identifier from a expression representing a field access
+  /// </summary>
   public class QueryExpressionResolveVisitor : ExpressionTreeVisitor
   {
     public struct Result

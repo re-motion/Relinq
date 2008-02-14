@@ -6,6 +6,9 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.Clauses
 {
+  /// <summary>
+  /// identifies the parameter and members used by an expression of a field access
+  /// </summary>
   public class FromClauseResolveVisitor : ExpressionTreeVisitor
   {
     public struct Result

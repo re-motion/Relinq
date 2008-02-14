@@ -4,7 +4,7 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.Parsing
 {
-  public class OrderExpression : BodyExpressionBase<Expression>
+  public class OrderExpression : BodyExpressionBase<LambdaExpression>
   {
     public OrderExpression (bool firstOrderBy, OrderDirection orderDirection, LambdaExpression expression)
       : base (expression)
@@ -13,12 +13,10 @@ namespace Rubicon.Data.Linq.Parsing
 
       FirstOrderBy = firstOrderBy;
       OrderDirection = orderDirection;
-      Expression = expression;
     }
 
     public bool FirstOrderBy { get; private set; }
     public OrderDirection OrderDirection { get; private set; }
-    public LambdaExpression Expression { get; private set; }
 
     public override string ToString ()
     {

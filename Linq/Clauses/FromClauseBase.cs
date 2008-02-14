@@ -57,7 +57,7 @@ namespace Rubicon.Data.Linq.Clauses
       FromClauseResolveVisitor.Result result = visitor.ParseFieldAccess (partialFieldExpression, fullFieldExpression);
 
       CheckParameterNameAndType(result.Parameter);
-      return CreateFieldDescriptor(databaseInfo, result);
+      return CreateFieldDescriptor(databaseInfo, result.Members);
     }
 
     private void CheckParameterNameAndType (ParameterExpression parameter)
@@ -77,33 +77,41 @@ namespace Rubicon.Data.Linq.Clauses
       }
     }
 
-    private FieldDescriptor CreateFieldDescriptor (IDatabaseInfo databaseInfo, FromClauseResolveVisitor.Result visitorResult)
+    private FieldDescriptor CreateFieldDescriptor (IDatabaseInfo databaseInfo, IEnumerable<MemberInfo> members)
     {
-      MemberInfo member = visitorResult.Members.FirstOrDefault();
+      MemberInfo member = members.FirstOrDefault ();
+      Table initialTable = DatabaseInfoUtility.GetTableForFromClause (databaseInfo, this);
+      Tuple<IFieldSource, Table> fieldData = CalculateJoinData (databaseInfo, initialTable, members.Skip (1));
 
-      Table table = GetTable (databaseInfo);
-      IFieldSource fieldSource = table;
-      for (int i = 1; i < visitorResult.Members.Length; i++)
+      Column? column = DatabaseInfoUtility.GetColumn (databaseInfo, fieldData.B, member);
+      return new FieldDescriptor (member, this, fieldData.A, column);
+    }
+
+    private Tuple<IFieldSource, Table> CalculateJoinData (IDatabaseInfo databaseInfo, Table initialTable, IEnumerable<MemberInfo> joinMembers)
+    {
+      // start with the table and create all joins necessary for reaching the field in the database
+      Table lastTable = initialTable;
+      IFieldSource fieldSource = lastTable;
+      foreach (MemberInfo member in joinMembers)
       {
         try
         {
-          Table leftTable = DatabaseInfoUtility.GetRelatedTable (databaseInfo, visitorResult.Members[i]);
-          Tuple<string, string> joinColumns = DatabaseInfoUtility.GetJoinColumns (databaseInfo, visitorResult.Members[i]);
+          Table leftTable = DatabaseInfoUtility.GetRelatedTable (databaseInfo, member);
+          Tuple<string, string> joinColumns = DatabaseInfoUtility.GetJoinColumns (databaseInfo, member);
 
           Column leftColumn = new Column (leftTable, joinColumns.B); // student
-          Column rightColumn = new Column (table, joinColumns.A); // student_detail
+          Column rightColumn = new Column (lastTable, joinColumns.A); // student_detail
 
           fieldSource = new Join (leftTable, fieldSource, leftColumn, rightColumn);
-          table = leftTable;
+          lastTable = leftTable;
         }
         catch (Exception ex)
         {
           throw new FieldAccessResolveException (ex.Message, ex);
-        }
+        }        
       }
 
-      Column? column = DatabaseInfoUtility.GetColumn (databaseInfo, table, member);
-      return new FieldDescriptor (member, this, fieldSource, column);
+      return Tuple.NewTuple (fieldSource, lastTable);
     }
 
     public abstract void Accept (IQueryVisitor visitor);
