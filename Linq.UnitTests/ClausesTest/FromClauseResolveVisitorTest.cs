@@ -16,7 +16,8 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       Expression expressionTree = Expression.MakeMemberAccess (parameter, typeof (Student).GetProperty ("First"));
       FromClauseResolveVisitor.Result result = new FromClauseResolveVisitor ().ParseFieldAccess (expressionTree, expressionTree);
       Assert.AreSame (parameter, result.Parameter);
-      Assert.That (result.Members, Is.EqualTo (new object[] { typeof (Student).GetProperty ("First")}));
+      Assert.AreEqual (typeof (Student).GetProperty ("First"), result.AccessedMember);
+      Assert.That (result.JoinMembers, Is.Empty);
 
     }
 
@@ -28,7 +29,29 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
         Expression.MakeMemberAccess (parameter, typeof (Student_Detail).GetProperty ("Student")),
         typeof (Student).GetProperty ("First"));
       FromClauseResolveVisitor.Result result = new FromClauseResolveVisitor ().ParseFieldAccess (expressionTree, expressionTree);
-      Assert.That (result.Members, Is.EqualTo (new object[] { typeof (Student).GetProperty ("First"), typeof (Student_Detail).GetProperty ("Student") }));
+
+      Assert.AreEqual (typeof (Student).GetProperty ("First"), result.AccessedMember);
+      Assert.That (result.JoinMembers, Is.EqualTo (new object[] { typeof (Student_Detail).GetProperty ("Student") }));
+    }
+
+    [Test]
+    public void DeeplyNestedMembers ()
+    {
+      Expression expressionTree =
+          Expression.MakeMemberAccess (
+            Expression.MakeMemberAccess (
+                Expression.MakeMemberAccess (Expression.Parameter (typeof (Student_Detail_Detail), "sdd"),
+                typeof (Student_Detail_Detail).GetProperty ("Student_Detail")),
+            typeof (Student_Detail).GetProperty ("Student")),
+          typeof (Student).GetProperty ("First"));
+
+      FromClauseResolveVisitor.Result result = new FromClauseResolveVisitor ().ParseFieldAccess (expressionTree, expressionTree);
+      Assert.AreEqual (typeof (Student).GetProperty ("First"), result.AccessedMember);
+      Assert.That (result.JoinMembers, Is.EqualTo (new object[]
+          {
+              typeof (Student_Detail_Detail).GetProperty ("Student_Detail"),
+              typeof (Student_Detail).GetProperty ("Student")
+          }));
     }
 
     [Test]
@@ -37,7 +60,8 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       ParameterExpression parameter = Expression.Parameter (typeof (Student_Detail), "sd");
       Expression expressionTree = parameter;
       FromClauseResolveVisitor.Result result = new FromClauseResolveVisitor ().ParseFieldAccess (expressionTree, expressionTree);
-      Assert.IsEmpty (result.Members);
+      Assert.IsNull (result.AccessedMember);
+      Assert.IsEmpty (result.JoinMembers);
       Assert.AreSame (parameter, result.Parameter);
     }
 

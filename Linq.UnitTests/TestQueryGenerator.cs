@@ -209,12 +209,12 @@ namespace Rubicon.Data.Linq.UnitTests
 
     public static IQueryable<Student_Detail> CreateSimpleImplicitOrderByJoin (IQueryable<Student_Detail> source)
     {
-      return from s in source orderby s.Student.First select s;
+      return from sd in source orderby sd.Student.First select sd;
     }
 
     public static IQueryable<Student_Detail_Detail> CreateDoubleImplicitOrderByJoin (IQueryable<Student_Detail_Detail> source)
     {
-      return from s in source orderby s.Student_Detail.Student.First select s;
+      return from sdd in source orderby sdd.Student_Detail.Student.First select sdd;
     }
 
     public static MethodCallExpression CreateSimpleQuery_SelectExpression (IQueryable<Student> source)

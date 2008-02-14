@@ -26,5 +26,10 @@ namespace Rubicon.Data.Linq.DataObjectModel
     {
       return string.Format ("({0} inner join {1} on {2} = {3})", LeftSide, RightSide, LeftColumn, RightColumn);
     }
+
+    public Table GetStartingTable ()
+    {
+      return RightSide.GetStartingTable();
+    }
   }
 }

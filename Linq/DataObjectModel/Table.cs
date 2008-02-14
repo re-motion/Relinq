@@ -19,5 +19,10 @@ namespace Rubicon.Data.Linq.DataObjectModel
     {
       return Name + " (" + Alias + ")";
     }
+
+    public Table GetStartingTable ()
+    {
+      return this;
+    }
   }
 }

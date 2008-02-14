@@ -57,7 +57,7 @@ namespace Rubicon.Data.Linq.Clauses
       FromClauseResolveVisitor.Result result = visitor.ParseFieldAccess (partialFieldExpression, fullFieldExpression);
 
       CheckParameterNameAndType(result.Parameter);
-      return CreateFieldDescriptor(databaseInfo, result.Members);
+      return CreateFieldDescriptor(databaseInfo, result.AccessedMember, result.JoinMembers);
     }
 
     private void CheckParameterNameAndType (ParameterExpression parameter)
@@ -77,19 +77,29 @@ namespace Rubicon.Data.Linq.Clauses
       }
     }
 
-    private FieldDescriptor CreateFieldDescriptor (IDatabaseInfo databaseInfo, IEnumerable<MemberInfo> members)
+    private FieldDescriptor CreateFieldDescriptor (IDatabaseInfo databaseInfo, MemberInfo accessedMember, IEnumerable<MemberInfo> joinMembers)
     {
-      MemberInfo member = members.FirstOrDefault ();
-      Table initialTable = DatabaseInfoUtility.GetTableForFromClause (databaseInfo, this);
-      Tuple<IFieldSourcePath, Table> fieldData = CalculateJoinData (databaseInfo, initialTable, members.Skip (1));
+      // Documentation example: sdd.Student_Detail.Student.First
+      // joinMembers == "Student_Detail", "Student"
+      
+      Table initialTable = DatabaseInfoUtility.GetTableForFromClause (databaseInfo, this); // Table for sdd
+      Tuple<IFieldSourcePath, Table> fieldData = CalculateJoinData (databaseInfo, initialTable, joinMembers);
 
-      Column? column = DatabaseInfoUtility.GetColumn (databaseInfo, fieldData.B, member);
-      return new FieldDescriptor (member, this, fieldData.A, column);
+      Column? column = DatabaseInfoUtility.GetColumn (databaseInfo, fieldData.B, accessedMember);
+      return new FieldDescriptor (accessedMember, this, fieldData.A, column);
     }
 
     private Tuple<IFieldSourcePath, Table> CalculateJoinData (IDatabaseInfo databaseInfo, Table initialTable, IEnumerable<MemberInfo> joinMembers)
     {
-      // start with the table and create all joins necessary for reaching the field in the database
+      // Documentation example: sdd.Student_Detail.Student.First
+      // First create a join for sdd and Student_Detail (identified by the "Student_Detail" member) and use initial table (sdd) as the right side
+      // Then create the join for Student_Detail and Student (identified by the "Student" member) and use the first join as the right side
+      //      second join
+      //    /            \
+      // Student       first join
+      //              /          \
+      //      Student_Detail    sdd
+
       Table lastTable = initialTable;
       IFieldSourcePath fieldSourcePath = lastTable;
       foreach (MemberInfo member in joinMembers)
@@ -99,8 +109,10 @@ namespace Rubicon.Data.Linq.Clauses
           Table leftTable = DatabaseInfoUtility.GetRelatedTable (databaseInfo, member);
           Tuple<string, string> joinColumns = DatabaseInfoUtility.GetJoinColumns (databaseInfo, member);
 
-          Column leftColumn = new Column (leftTable, joinColumns.B); // student
-          Column rightColumn = new Column (lastTable, joinColumns.A); // student_detail
+          // joinColumns holds the columns in the order defined by the member: for "sdd.Student_Detail" it holds sdd.PK/Student_Detail.FK
+          // we build the trees in opposite order, so we use the first tuple value as the right column, the second value as the left column
+          Column leftColumn = new Column (leftTable, joinColumns.B);
+          Column rightColumn = new Column (lastTable, joinColumns.A);
 
           fieldSourcePath = new Join (leftTable, fieldSourcePath, leftColumn, rightColumn);
           lastTable = leftTable;

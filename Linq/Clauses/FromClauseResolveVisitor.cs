@@ -13,21 +13,24 @@ namespace Rubicon.Data.Linq.Clauses
   {
     public struct Result
     {
-      public Result (MemberInfo[] members, ParameterExpression parameter)
+      public Result (MemberInfo accessedMember, MemberInfo[] joinMembers, ParameterExpression parameter)
         : this ()
       {
         ArgumentUtility.CheckNotNull ("parameter", parameter);
 
-        Members = members;
+        AccessedMember = accessedMember;
+        JoinMembers = joinMembers;
         Parameter = parameter;
       }
 
-      public MemberInfo[] Members { get; private set; }
+      public MemberInfo AccessedMember { get; private set; }
+      public MemberInfo[] JoinMembers { get; private set; }
       public ParameterExpression Parameter { get; private set; }
     }
 
     private ParameterExpression _parameterExpression;
-    private List<MemberInfo> _members;
+    private MemberInfo _accessedMember;
+    private List<MemberInfo> _joinMembers;
     private Expression _expressionTreeRoot;
 
     public Result ParseFieldAccess (Expression fieldAccessExpression, Expression expressionTreeRoot)
@@ -36,11 +39,12 @@ namespace Rubicon.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("expressionTreeRoot", expressionTreeRoot);
 
       _parameterExpression = null;
-      _members = new List<MemberInfo>();
+      _accessedMember = null;
+      _joinMembers = new List<MemberInfo> ();
       _expressionTreeRoot = expressionTreeRoot;
 
       VisitExpression (fieldAccessExpression);
-      return new Result (_members.ToArray(), _parameterExpression);
+      return new Result (_accessedMember, _joinMembers.ToArray(), _parameterExpression);
     }
 
     protected override Expression VisitExpression (Expression expression)
@@ -67,8 +71,15 @@ namespace Rubicon.Data.Linq.Clauses
 
     protected override Expression VisitMemberExpression (MemberExpression expression)
     {
-      _members.Add(expression.Member);
-      return base.VisitMemberExpression (expression);
+      bool firstMember = _accessedMember == null;
+      if (firstMember)
+        _accessedMember = expression.Member;
+      
+      Expression result = base.VisitMemberExpression (expression);
+
+      if (!firstMember)
+        _joinMembers.Add (expression.Member);
+      return result;
     }
   }
 }

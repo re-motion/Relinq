@@ -63,6 +63,8 @@
     <Compile Include="ClausesTest\QueryExpressionResolveVisitorTest.cs" />
     <Compile Include="ClausesTest\MainFromClauseTest.cs" />
     <Compile Include="DataObjectModelTest\FieldDescriptorTest.cs" />
+    <Compile Include="DataObjectModelTest\JoinTest.cs" />
+    <Compile Include="DataObjectModelTest\TableTest.cs" />
     <Compile Include="ExpressionHelper.cs" />
     <Compile Include="ClausesTest\FromClauseBaseTest.cs" />
     <Compile Include="ClausesTest\GroupClauseTest.cs" />
