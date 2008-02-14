@@ -67,7 +67,6 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
-    [Ignore ("TODO: Check ordering of returned columns.")]
     public void GetJoinColumns_FK_Right()
     {
       Tuple<string, string> columns = _databaseInfo.GetJoinColumns (typeof (Order).GetProperty ("OrderItems"));
@@ -98,10 +97,32 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
-    [Ignore ("TODO: Implement.")]
-    public void GetRelatedTable ()
+    public void GetRelatedTable_FK_Right ()
     {
-      Assert.Fail();
+      string tableName = _databaseInfo.GetRelatedTableName (typeof (Order).GetProperty ("OrderItems"));
+      Assert.AreEqual ("OrderItem", tableName);
     }
+
+    [Test]
+    public void GetRelatedTable_FK_Left ()
+    {
+      string tableName = _databaseInfo.GetRelatedTableName (typeof (OrderItem).GetProperty ("Order"));
+      Assert.AreEqual ("Order", tableName);
+    }
+
+    [Test]
+    public void GetRelatedTable_NotInMapping ()
+    {
+      string tableName = _databaseInfo.GetRelatedTableName (typeof (Order).GetProperty ("NotInMapping"));
+      Assert.IsNull (tableName);
+    }
+
+    [Test]
+    public void GetRelatedTable_NoRelationProperty ()
+    {
+      string tableName = _databaseInfo.GetRelatedTableName (typeof (Order).GetProperty ("OrderNumber"));
+      Assert.IsNull (tableName);
+    }
+
   }
 }

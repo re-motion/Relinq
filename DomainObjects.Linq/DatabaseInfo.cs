@@ -39,7 +39,17 @@ namespace Rubicon.Data.DomainObjects.Linq
 
     public string GetRelatedTableName (MemberInfo relationMember)
     {
-      throw new NotImplementedException();
+      ArgumentUtility.CheckNotNull ("relationMember", relationMember);
+
+      Tuple<RelationDefinition, ClassDefinition, string> relationData = GetRelationData (relationMember);
+      if (relationData == null)
+        return null;
+
+      RelationDefinition relationDefinition = relationData.A;
+      ClassDefinition classDefinition = relationData.B;
+      string propertyIdentifier = relationData.C;
+
+      return relationDefinition.GetOppositeClassDefinition (classDefinition.ID, propertyIdentifier).GetEntityName();
     }
 
     public string GetColumnName (MemberInfo member)
@@ -65,6 +75,27 @@ namespace Rubicon.Data.DomainObjects.Linq
     public Tuple<string, string> GetJoinColumns (MemberInfo relationMember)
     {
       ArgumentUtility.CheckNotNull ("relationMember", relationMember);
+
+      Tuple<RelationDefinition, ClassDefinition, string> relationData = GetRelationData (relationMember);
+      if (relationData == null)
+        return null;
+
+      RelationDefinition relationDefinition = relationData.A;
+      ClassDefinition classDefinition = relationData.B;
+      string propertyIdentifier = relationData.C;
+
+      IRelationEndPointDefinition leftEndPoint = relationDefinition.GetEndPointDefinition (classDefinition.ID, propertyIdentifier);
+      IRelationEndPointDefinition rightEndPoint = relationDefinition.GetOppositeEndPointDefinition (leftEndPoint);
+     
+      string leftColumn = GetJoinColumn (leftEndPoint);
+      string rightColumn = GetJoinColumn (rightEndPoint);
+
+      return Tuple.NewTuple (leftColumn, rightColumn);
+    }
+
+    private Tuple<RelationDefinition, ClassDefinition, string> GetRelationData (MemberInfo relationMember)
+    {
+      ArgumentUtility.CheckNotNull ("relationMember", relationMember);
       PropertyInfo property = relationMember as PropertyInfo;
       if (property == null)
         return null;
@@ -75,18 +106,10 @@ namespace Rubicon.Data.DomainObjects.Linq
 
       string propertyIdentifier = ReflectionUtility.GetPropertyName (property);
       RelationDefinition relationDefinition = classDefinition.GetRelationDefinition (propertyIdentifier);
-      if (relationDefinition != null)
-      {
-        IRelationEndPointDefinition leftEndPoint = relationDefinition.EndPointDefinitions[0];
-        IRelationEndPointDefinition rightEndPoint = relationDefinition.EndPointDefinitions[1];
-
-        string leftColumn = GetJoinColumn (leftEndPoint);
-        string rightColumn = GetJoinColumn (rightEndPoint);
-
-        return Tuple.NewTuple (leftColumn, rightColumn);
-      }
-      else
+      if (relationDefinition == null)
         return null;
+      else
+        return Tuple.NewTuple (relationDefinition, classDefinition, propertyIdentifier);
     }
 
     private string GetJoinColumn (IRelationEndPointDefinition endPoint)
