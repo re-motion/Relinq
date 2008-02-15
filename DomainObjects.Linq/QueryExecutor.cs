@@ -5,6 +5,7 @@ using Rubicon.Data.DomainObjects.Queries.Configuration;
 using Rubicon.Data.Linq;
 using System;
 using Rubicon.Data.Linq.SqlGeneration;
+using Rubicon.Data.Linq.SqlGeneration.SqlServer;
 
 namespace Rubicon.Data.DomainObjects.Linq
 {

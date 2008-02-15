@@ -110,7 +110,7 @@
     <Compile Include="DataObjectModel\IValue.cs" />
     <Compile Include="SqlGeneration\CommandParameter.cs" />
     <Compile Include="SqlGeneration\JoinCollection.cs" />
-    <Compile Include="SqlGeneration\SqlGenerator.cs" />
+    <Compile Include="SqlGeneration\SqlServer\SqlGenerator.cs" />
     <Compile Include="SqlGeneration\SqlUtility.cs" />
     <Compile Include="Visitor\ExpressionTreeBuildingVisitor.cs" />
     <Compile Include="IDatabaseInfo.cs" />

@@ -117,7 +117,7 @@
     <Compile Include="ParsingTest\StructureTest\WhereExpressionParserTest\SelectManyWhereExpressionParserTest.cs" />
     <Compile Include="ParsingTest\StructureTest\WhereExpressionParserTest\SimpleWhereExpressionParserTest.cs" />
     <Compile Include="SqlGenerationTest\JoinCollectionTest.cs" />
-    <Compile Include="SqlGenerationTest\SqlGeneratorIntegrationTest.cs" />
+    <Compile Include="SqlGenerationTest\SqlServer\SqlGeneratorIntegrationTest.cs" />
     <Compile Include="SqlGenerationTest\SqlGeneratorVisitorIntegrationTest.cs" />
     <Compile Include="SqlGenerationTest\SqlUtilityTest.cs" />
     <Compile Include="Student.cs" />
@@ -133,7 +133,7 @@
     <Compile Include="ClausesTest\SelectClauseTest.cs" />
     <Compile Include="QueryProviderImplementationTest\QueryableBaseTest.cs" />
     <Compile Include="QueryProviderBaseTest.cs" />
-    <Compile Include="SqlGenerationTest\SqlGeneratorTest.cs" />
+    <Compile Include="SqlGenerationTest\SqlServer\SqlGeneratorTest.cs" />
     <Compile Include="TestQueryProvider.cs" />
     <Compile Include="SqlGenerationTest\SqlGeneratorVisitorTest.cs" />
     <Compile Include="VisitorTest\ExpressionTreeVisitorTest\ExpressionInstanceCreator.cs" />
