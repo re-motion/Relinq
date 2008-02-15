@@ -10,50 +10,62 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
   [TestFixture]
   public class FromClauseFieldResolverTest
   {
+    private JoinedTableContext _context;
+
+    [SetUp]
+    public void SetUp ()
+    {
+      _context = new JoinedTableContext();
+    }
+
     [Test]
     public void Resolve_ParameterAccess_Succeeds ()
     {
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
-      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource ());
+      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource());
 
-      FieldDescriptor fieldDescriptor = fromClause.ResolveField (StubDatabaseInfo.Instance, identifier, identifier);
+      FieldDescriptor fieldDescriptor =
+          new FromClauseFieldResolver (fromClause).ResolveField (StubDatabaseInfo.Instance, _context, identifier, identifier);
       Assert.AreEqual (new Column (new Table ("sourceTable", "fromIdentifier1"), "*"), fieldDescriptor.Column);
       Assert.AreSame (fromClause, fieldDescriptor.FromClause);
     }
 
     [Test]
-    [ExpectedException (typeof (FieldAccessResolveException), ExpectedMessage = "This from clause can only resolve field accesses for parameters "
-        + "called 'fromIdentifier1', but a parameter called 'fromIdentifier5' was given.")]
+    [ExpectedException (typeof (FieldAccessResolveException),
+        ExpectedMessage = "This from clause can only resolve field accesses for parameters "
+            + "called 'fromIdentifier1', but a parameter called 'fromIdentifier5' was given.")]
     public void Resolve_ParameterAccess_InvalidParameterName ()
     {
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
-      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource ());
+      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource());
 
       ParameterExpression identifier2 = Expression.Parameter (typeof (Student), "fromIdentifier5");
-      fromClause.ResolveField (StubDatabaseInfo.Instance, identifier2, identifier2);
+      new FromClauseFieldResolver (fromClause).ResolveField (StubDatabaseInfo.Instance, _context, identifier2, identifier2);
     }
 
     [Test]
-    [ExpectedException (typeof (FieldAccessResolveException), ExpectedMessage = "This from clause can only resolve field accesses for parameters of "
-        + "type 'Rubicon.Data.Linq.UnitTests.Student', but a parameter of type 'System.String' was given.")]
+    [ExpectedException (typeof (FieldAccessResolveException),
+        ExpectedMessage = "This from clause can only resolve field accesses for parameters of "
+            + "type 'Rubicon.Data.Linq.UnitTests.Student', but a parameter of type 'System.String' was given.")]
     public void Resolve_ParameterAccess_InvalidParameterType ()
     {
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
-      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource ());
+      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource());
 
       ParameterExpression identifier2 = Expression.Parameter (typeof (string), "fromIdentifier1");
-      fromClause.ResolveField (StubDatabaseInfo.Instance, identifier2, identifier2);
+      new FromClauseFieldResolver (fromClause).ResolveField (StubDatabaseInfo.Instance, _context, identifier2, identifier2);
     }
 
     [Test]
     public void Resolve_SimpleMemberAccess_Succeeds ()
     {
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
-      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource ());
+      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource());
 
       Expression fieldExpression = Expression.MakeMemberAccess (Expression.Parameter (typeof (Student), "fromIdentifier1"),
           typeof (Student).GetProperty ("First"));
-      FieldDescriptor fieldDescriptor = fromClause.ResolveField (StubDatabaseInfo.Instance, fieldExpression, fieldExpression);
+      FieldDescriptor fieldDescriptor =
+          new FromClauseFieldResolver (fromClause).ResolveField (StubDatabaseInfo.Instance, _context, fieldExpression, fieldExpression);
       Assert.AreEqual (new Column (new Table ("sourceTable", "fromIdentifier1"), "FirstColumn"), fieldDescriptor.Column);
       Assert.AreSame (fromClause, fieldDescriptor.FromClause);
     }
@@ -64,11 +76,11 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     public void Resolve_SimpleMemberAccess_InvalidName ()
     {
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "fzlbf");
-      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource ());
+      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource());
 
       Expression fieldExpression = Expression.MakeMemberAccess (Expression.Parameter (typeof (Student), "fromIdentifier1"),
           typeof (Student).GetProperty ("First"));
-      fromClause.ResolveField (StubDatabaseInfo.Instance, fieldExpression, fieldExpression);
+      new FromClauseFieldResolver (fromClause).ResolveField (StubDatabaseInfo.Instance, _context, fieldExpression, fieldExpression);
     }
 
     [Test]
@@ -77,11 +89,11 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     public void Resolve_SimpleMemberAccess_InvalidType ()
     {
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
-      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource ());
+      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource());
 
       Expression fieldExpression = Expression.MakeMemberAccess (Expression.Parameter (typeof (Student_Detail), "fromIdentifier1"),
           typeof (Student_Detail).GetProperty ("Student"));
-      fromClause.ResolveField (StubDatabaseInfo.Instance, fieldExpression, fieldExpression);
+      new FromClauseFieldResolver (fromClause).ResolveField (StubDatabaseInfo.Instance, _context, fieldExpression, fieldExpression);
     }
 
     [Test]
@@ -89,7 +101,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     {
       // sd.Student.First
       ParameterExpression identifier = Expression.Parameter (typeof (Student_Detail), "sd");
-      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource_Detail ());
+      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource_Detail());
 
       Expression fieldExpression =
           Expression.MakeMemberAccess (
@@ -97,7 +109,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
                   typeof (Student_Detail).GetProperty ("Student")),
               typeof (Student).GetProperty ("First"));
 
-      FieldDescriptor fieldDescriptor = fromClause.ResolveField (StubDatabaseInfo.Instance, fieldExpression, fieldExpression);
+      FieldDescriptor fieldDescriptor =
+          new FromClauseFieldResolver (fromClause).ResolveField (StubDatabaseInfo.Instance, _context, fieldExpression, fieldExpression);
 
       Assert.AreEqual (new Column (new Table ("sourceTable", null), "FirstColumn"), fieldDescriptor.Column);
       Assert.AreSame (fromClause, fieldDescriptor.FromClause);
@@ -119,18 +132,18 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     {
       // sdd.Student_Detail.Student.First
       ParameterExpression identifier = Expression.Parameter (typeof (Student_Detail_Detail), "sdd");
-      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource_Detail_Detail ());
+      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource_Detail_Detail());
 
       Expression fieldExpression =
           Expression.MakeMemberAccess (
               Expression.MakeMemberAccess (
                   Expression.MakeMemberAccess (Expression.Parameter (typeof (Student_Detail_Detail), "sdd"),
                       typeof (Student_Detail_Detail).GetProperty ("Student_Detail")),
-
                   typeof (Student_Detail).GetProperty ("Student")),
               typeof (Student).GetProperty ("First"));
 
-      FieldDescriptor fieldDescriptor = fromClause.ResolveField (StubDatabaseInfo.Instance, fieldExpression, fieldExpression);
+      FieldDescriptor fieldDescriptor =
+          new FromClauseFieldResolver (fromClause).ResolveField (StubDatabaseInfo.Instance, _context, fieldExpression, fieldExpression);
 
       Assert.AreEqual (new Column (new Table ("sourceTable", null), "FirstColumn"), fieldDescriptor.Column);
       Assert.AreSame (fromClause, fieldDescriptor.FromClause);
@@ -162,7 +175,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     {
       // s.First.Length
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "s");
-      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource_Detail ());
+      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource_Detail());
 
       Expression fieldExpression =
           Expression.MakeMemberAccess (
@@ -170,20 +183,45 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
                   typeof (Student).GetProperty ("First")),
               typeof (string).GetProperty ("Length"));
 
-      fromClause.ResolveField (StubDatabaseInfo.Instance, fieldExpression, fieldExpression);
+      new FromClauseFieldResolver (fromClause).ResolveField (StubDatabaseInfo.Instance, _context, fieldExpression, fieldExpression);
     }
 
     [Test]
     public void Resolve_SimpleMemberAccess_InvalidField ()
     {
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
-      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource ());
+      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource());
 
       Expression fieldExpression = Expression.MakeMemberAccess (Expression.Parameter (typeof (Student), "fromIdentifier1"),
           typeof (Student).GetProperty ("NonDBProperty"));
-      FieldDescriptor fieldDescriptor = fromClause.ResolveField (StubDatabaseInfo.Instance, fieldExpression, fieldExpression);
+      FieldDescriptor fieldDescriptor =
+          new FromClauseFieldResolver (fromClause).ResolveField (StubDatabaseInfo.Instance, _context, fieldExpression, fieldExpression);
       Table table = fromClause.GetTable (StubDatabaseInfo.Instance);
       Assert.AreEqual (new FieldDescriptor (typeof (Student).GetProperty ("NonDBProperty"), fromClause, table, null), fieldDescriptor);
+    }
+
+    [Test]
+    public void Resolve_UsesContext ()
+    {
+      // sd.Student.First
+      ParameterExpression identifier = Expression.Parameter (typeof (Student_Detail), "sd");
+      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource_Detail());
+
+      Expression fieldExpression =
+          Expression.MakeMemberAccess (
+              Expression.MakeMemberAccess (Expression.Parameter (typeof (Student_Detail), "sd"),
+                  typeof (Student_Detail).GetProperty ("Student")),
+              typeof (Student).GetProperty ("First"));
+
+      FieldDescriptor fieldDescriptor1 =
+          new FromClauseFieldResolver (fromClause).ResolveField (StubDatabaseInfo.Instance, _context, fieldExpression, fieldExpression);
+      FieldDescriptor fieldDescriptor2 =
+          new FromClauseFieldResolver (fromClause).ResolveField (StubDatabaseInfo.Instance, _context, fieldExpression, fieldExpression);
+
+      Table table1 = ((Join) fieldDescriptor1.SourcePath).LeftSide;
+      Table table2 = ((Join) fieldDescriptor2.SourcePath).LeftSide;
+
+      Assert.AreSame (table1, table2);
     }
   }
 }

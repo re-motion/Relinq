@@ -2,6 +2,7 @@ using System;
 using System.Linq.Expressions;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.DataObjectModel;
+using Rubicon.Data.Linq.Parsing.FieldResolving;
 using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.Parsing.Details
@@ -31,7 +32,8 @@ namespace Rubicon.Data.Linq.Parsing.Details
 
     private OrderingField ParseExpression (Expression expression)
     {
-      FieldDescriptor fieldDescriptor = _queryExpression.ResolveField (_databaseInfo, expression);
+      JoinedTableContext context = new JoinedTableContext ();
+      FieldDescriptor fieldDescriptor = _queryExpression.ResolveField (_databaseInfo, context, expression);
       OrderingField orderingField = new OrderingField (fieldDescriptor, _orderingClause.OrderDirection);
       return orderingField;
     }

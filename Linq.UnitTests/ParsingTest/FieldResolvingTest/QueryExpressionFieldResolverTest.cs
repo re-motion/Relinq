@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.DataObjectModel;
+using Rubicon.Data.Linq.Parsing.FieldResolving;
 
 namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
 {
@@ -15,7 +16,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       QueryExpression queryExpression = CreateQueryExpressionForResolve ();
 
       Expression fieldAccessExpression = Expression.Parameter (typeof (String), "s1");
-      FieldDescriptor descriptor = queryExpression.ResolveField (StubDatabaseInfo.Instance, fieldAccessExpression);
+      JoinedTableContext context = new JoinedTableContext ();
+      FieldDescriptor descriptor = queryExpression.ResolveField (StubDatabaseInfo.Instance, context, fieldAccessExpression);
 
       Table expectedTable = new Table ("sourceTable", "s1");
       Assert.AreSame (queryExpression.MainFromClause, descriptor.FromClause);

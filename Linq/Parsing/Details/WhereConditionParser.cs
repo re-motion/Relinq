@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.DataObjectModel;
+using Rubicon.Data.Linq.Parsing.FieldResolving;
 using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.Parsing.Details
@@ -50,7 +51,8 @@ namespace Rubicon.Data.Linq.Parsing.Details
 
     private ICriterion ParseMemberExpression (MemberExpression expression)
     {
-      return _queryExpression.ResolveField (_databaseInfo, expression).GetMandatoryColumn();
+      JoinedTableContext context = new JoinedTableContext();
+      return _queryExpression.ResolveField (_databaseInfo, context, expression).GetMandatoryColumn();
     }
 
     private ICriterion ParseConstantExpression (ConstantExpression expression)

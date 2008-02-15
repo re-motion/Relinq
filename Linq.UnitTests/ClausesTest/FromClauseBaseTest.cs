@@ -5,6 +5,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.DataObjectModel;
+using Rubicon.Data.Linq.Parsing.FieldResolving;
 
 namespace Rubicon.Data.Linq.UnitTests.ClausesTest
 {
@@ -38,7 +39,8 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
       MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource ());
 
-      FieldDescriptor fieldDescriptor = fromClause.ResolveField (StubDatabaseInfo.Instance, identifier, identifier);
+      JoinedTableContext context = new JoinedTableContext ();
+      FieldDescriptor fieldDescriptor = fromClause.ResolveField (StubDatabaseInfo.Instance, context, identifier, identifier);
       Assert.AreEqual (new Column (new Table ("sourceTable", "fromIdentifier1"), "*"), fieldDescriptor.Column);
       Assert.AreSame (fromClause, fieldDescriptor.FromClause);
     }
@@ -49,7 +51,8 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
       AdditionalFromClause fromClause = CreateAdditionalFromClause (identifier);
 
-      FieldDescriptor fieldDescriptor = fromClause.ResolveField (StubDatabaseInfo.Instance, identifier, identifier);
+      JoinedTableContext context = new JoinedTableContext ();
+      FieldDescriptor fieldDescriptor = fromClause.ResolveField (StubDatabaseInfo.Instance, context, identifier, identifier);
       Assert.AreEqual (new Column (new Table ("sourceTable", "fromIdentifier1"), "*"), fieldDescriptor.Column);
       Assert.AreSame (fromClause, fieldDescriptor.FromClause);
     }

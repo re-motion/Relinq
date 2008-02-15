@@ -20,17 +20,18 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
       _fromClause = fromClause;
     }
 
-    public FieldDescriptor ResolveField (IDatabaseInfo databaseInfo, Expression partialFieldExpression, Expression fullFieldExpression)
+    public FieldDescriptor ResolveField (IDatabaseInfo databaseInfo, JoinedTableContext context, Expression partialFieldExpression, Expression fullFieldExpression)
     {
       ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
+      ArgumentUtility.CheckNotNull ("context", context);
       ArgumentUtility.CheckNotNull ("partialFieldExpression", partialFieldExpression);
       ArgumentUtility.CheckNotNull ("fullFieldExpression", fullFieldExpression);
-
+      
       FromClauseFieldResolverVisitor visitor = new FromClauseFieldResolverVisitor ();
       FromClauseFieldResolverVisitor.Result result = visitor.ParseFieldAccess (partialFieldExpression, fullFieldExpression);
 
       CheckParameterNameAndType (result.Parameter);
-      return CreateFieldDescriptor (databaseInfo, result.AccessedMember, result.JoinMembers);
+      return CreateFieldDescriptor (databaseInfo, context, result.AccessedMember, result.JoinMembers);
     }
 
     private void CheckParameterNameAndType (ParameterExpression parameter)
@@ -50,19 +51,19 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
       }
     }
 
-    private FieldDescriptor CreateFieldDescriptor (IDatabaseInfo databaseInfo, MemberInfo accessedMember, IEnumerable<MemberInfo> joinMembers)
+    private FieldDescriptor CreateFieldDescriptor (IDatabaseInfo databaseInfo, JoinedTableContext context, MemberInfo accessedMember, IEnumerable<MemberInfo> joinMembers)
     {
       // Documentation example: sdd.Student_Detail.Student.First
       // joinMembers == "Student_Detail", "Student"
 
       Table initialTable = DatabaseInfoUtility.GetTableForFromClause (databaseInfo, _fromClause); // Table for sdd
-      Tuple<IFieldSourcePath, Table> fieldData = CalculateJoinData (databaseInfo, initialTable, joinMembers);
+      Tuple<IFieldSourcePath, Table> fieldData = CalculateJoinData (databaseInfo, context, initialTable, joinMembers);
 
       Column? column = DatabaseInfoUtility.GetColumn (databaseInfo, fieldData.B, accessedMember);
       return new FieldDescriptor (accessedMember, _fromClause, fieldData.A, column);
     }
 
-    private Tuple<IFieldSourcePath, Table> CalculateJoinData (IDatabaseInfo databaseInfo, Table initialTable, IEnumerable<MemberInfo> joinMembers)
+    private Tuple<IFieldSourcePath, Table> CalculateJoinData (IDatabaseInfo databaseInfo, JoinedTableContext context, Table initialTable, IEnumerable<MemberInfo> joinMembers)
     {
       // Documentation example: sdd.Student_Detail.Student.First
       // First create a join for sdd and Student_Detail (identified by the "Student_Detail" member) and use initial table (sdd) as the right side
@@ -79,7 +80,7 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
       {
         try
         {
-          Table leftTable = DatabaseInfoUtility.GetRelatedTable (databaseInfo, member);
+          Table leftTable = context.GetJoinedTable (databaseInfo, fieldSourcePath, member); //DatabaseInfoUtility.GetRelatedTable (databaseInfo, member);
           Tuple<string, string> joinColumns = DatabaseInfoUtility.GetJoinColumns (databaseInfo, member);
 
           // joinColumns holds the columns in the order defined by the member: for "sdd.Student_Detail" it holds sdd.PK/Student_Detail.FK
