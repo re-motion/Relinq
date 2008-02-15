@@ -242,7 +242,17 @@ namespace Rubicon.Data.Linq.UnitTests
              select sdd1;
     }
 
-
+    public static IQueryable<Student_Detail_Detail> CreateImplicitOrderByJoinWithJoinReuse
+          (IQueryable<Student_Detail_Detail> source1, IQueryable<Student_Detail_Detail> source2)
+    {
+      return from sdd1 in source1
+             from sdd2 in source2
+             orderby sdd1.Student_Detail.Student.First
+             orderby sdd2.Student_Detail.Student.First
+             orderby sdd1.Student_Detail.Student.First
+             select sdd1;
+    }
+    
     public static MethodCallExpression CreateSimpleQuery_SelectExpression (IQueryable<Student> source)
     {
       IQueryable<Student> query = CreateSimpleQuery (source);
