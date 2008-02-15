@@ -232,14 +232,14 @@ namespace Rubicon.Data.Linq.UnitTests
       return from sdd in source orderby sdd.Student_Detail.Student.First, sdd.Student_Detail.IndustrialSector.ID select sdd;
     }
 
-    public static IQueryable<Student_Detail_Detail> CreateImplicitOrderByJoinWithMultiKeys 
+    public static IQueryable<Student_Detail_Detail> CreateImplicitOrderByJoinWithMultipleKeys 
           (IQueryable<Student_Detail_Detail> source1,IQueryable<Student_Detail_Detail> source2)
     {
-      return from sdd1 in source1
+      return from sdd1 in source1 
              from sdd2 in source2
-             orderby sdd1.Student_Detail.Student.First
+             orderby sdd1.Student_Detail.Student.First 
              orderby sdd2.Student_Detail.Student.First
-              select sdd1;
+             select sdd1;
     }
 
 

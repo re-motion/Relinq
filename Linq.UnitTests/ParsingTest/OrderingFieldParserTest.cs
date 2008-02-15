@@ -28,6 +28,36 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
     }
 
     [Test]
+    public void TwoOrderingClause_FirstClause ()
+    {
+      IQueryable<Student> query =
+          TestQueryGenerator.CreateTwoOrderByQuery (ExpressionHelper.CreateQuerySource ());
+      QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
+      OrderByClause orderBy1 = (OrderByClause) parsedQuery.QueryBody.BodyClauses.First ();
+      OrderingClause orderingClause1 = orderBy1.OrderingList.First ();
+
+      OrderingFieldParser parser = new OrderingFieldParser (parsedQuery, orderingClause1, StubDatabaseInfo.Instance);
+
+      FieldDescriptor fieldDescriptor1 = ExpressionHelper.CreateFieldDescriptor (parsedQuery.MainFromClause, typeof (Student).GetProperty ("First"));
+      Assert.AreEqual (new OrderingField (fieldDescriptor1, OrderDirection.Asc), parser.GetField());
+    }
+
+    [Test]
+    public void TwoOrderingClause_SecondClause ()
+    {
+      IQueryable<Student> query =
+          TestQueryGenerator.CreateTwoOrderByQuery (ExpressionHelper.CreateQuerySource ());
+      QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
+      OrderByClause orderBy2 = (OrderByClause) parsedQuery.QueryBody.BodyClauses.Last ();
+      OrderingClause orderingClause2 = orderBy2.OrderingList.Last ();
+
+      OrderingFieldParser parser = new OrderingFieldParser (parsedQuery, orderingClause2, StubDatabaseInfo.Instance);
+
+      FieldDescriptor fieldDescriptor2 = ExpressionHelper.CreateFieldDescriptor (parsedQuery.MainFromClause, typeof (Student).GetProperty ("Last"));
+      Assert.AreEqual (new OrderingField (fieldDescriptor2, OrderDirection.Desc), parser.GetField());
+    }
+
+    [Test]
     public void ComplexOrderingClause_FirstOrdering ()
     {
       IQueryable<Student> query =

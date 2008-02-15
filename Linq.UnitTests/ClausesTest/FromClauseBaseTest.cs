@@ -139,6 +139,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     [Test]
     public void Resolve_Join ()
     {
+      // sd.Student.First
       ParameterExpression identifier = Expression.Parameter (typeof (Student_Detail), "sd");
       MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource_Detail ());
 
@@ -168,6 +169,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     [Test]
     public void Resolve_DoubleJoin ()
     {
+      // sdd.Student_Detail.Student.First
       ParameterExpression identifier = Expression.Parameter (typeof (Student_Detail_Detail), "sdd");
       MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource_Detail_Detail ());
 
@@ -210,6 +212,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
         + "identify a relation.")]
     public void Resolve_Join_InvalidMember ()
     {
+      // s.First.Length
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "s");
       MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource_Detail ());
 

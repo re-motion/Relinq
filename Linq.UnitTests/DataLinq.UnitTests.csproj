@@ -113,6 +113,8 @@
     <Compile Include="ParsingTest\WhereExpressionParserTest\RecursiveWhereExpressionParserTest.cs" />
     <Compile Include="ParsingTest\WhereExpressionParserTest\SelectManyWhereExpressionParserTest.cs" />
     <Compile Include="ParsingTest\WhereExpressionParserTest\SimpleWhereExpressionParserTest.cs" />
+    <Compile Include="SqlGenerationTest\JoinCollectionTest.cs" />
+    <Compile Include="SqlGenerationTest\SqlGeneratorVisitorIntegrationTest.cs" />
     <Compile Include="SqlGenerationTest\SqlUtilityTest.cs" />
     <Compile Include="Student.cs" />
     <Compile Include="StubDatabaseInfo.cs" />
