@@ -11,6 +11,11 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
   {
     private readonly Dictionary<Tuple<IFieldSourcePath, MemberInfo>, Table> _tables = new Dictionary<Tuple<IFieldSourcePath, MemberInfo>, Table>();
 
+    public int Count
+    {
+      get { return _tables.Count; }
+    }
+
     public Table GetJoinedTable (IDatabaseInfo databaseInfo, IFieldSourcePath fieldSourcePath, MemberInfo relationMember)
     {
       ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
@@ -20,7 +25,7 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
       Tuple<IFieldSourcePath, MemberInfo> key = Tuple.NewTuple (fieldSourcePath, relationMember);
 
       if (!_tables.ContainsKey (key))
-        _tables.Add (key,DatabaseInfoUtility.GetRelatedTable (databaseInfo, relationMember));
+        _tables.Add (key, DatabaseInfoUtility.GetRelatedTable (databaseInfo, relationMember));
       return _tables[key];
     }
   }

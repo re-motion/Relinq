@@ -15,7 +15,9 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       JoinedTableContext context = new JoinedTableContext();
       IFieldSourcePath fieldSourcePath = new Table();
       MemberInfo member = typeof (Student_Detail).GetProperty ("Student");
+      Assert.AreEqual (0, context.Count);
       Table table = context.GetJoinedTable (StubDatabaseInfo.Instance, fieldSourcePath, member);
+      Assert.AreEqual (1, context.Count);
       Assert.IsNotNull (table);
       Assert.IsNull (table.Alias);
       Assert.AreEqual ("sourceTable", table.Name);
@@ -30,6 +32,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       MemberInfo member = typeof (Student_Detail).GetProperty ("Student");
       Table table1 = context.GetJoinedTable (StubDatabaseInfo.Instance, fieldSourcePath1, member);
       Table table2 = context.GetJoinedTable (StubDatabaseInfo.Instance, fieldSourcePath2, member);
+      Assert.AreEqual (1, context.Count);
       Assert.AreSame (table1, table2);
     }
 
@@ -43,6 +46,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       
       Table table1 = context.GetJoinedTable (StubDatabaseInfo.Instance, fieldSourcePath, member1);
       Table table2 = context.GetJoinedTable (StubDatabaseInfo.Instance, fieldSourcePath, member2);
+      Assert.AreEqual (2, context.Count);
       Assert.AreNotSame (table1, table2);
       Assert.AreEqual ("industrialTable", table1.Name);    
       Assert.AreEqual ("sourceTable", table2.Name);
@@ -74,6 +78,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       MemberInfo member = typeof (Student).GetProperty ("First");
       context.GetJoinedTable (StubDatabaseInfo.Instance, fieldSourcePath, member);
     }
+
     
   }
 }
