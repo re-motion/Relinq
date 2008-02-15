@@ -17,10 +17,10 @@ namespace Rubicon.Data.DomainObjects.Linq
     {
     }
 
-    public Table? GetTable (FromClauseBase fromClause)
+    public Table GetTable (FromClauseBase fromClause)
     {
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
-
+      
       Type querySourceType = fromClause.GetQuerySourceType();
       if (!querySourceType.IsGenericType
           || querySourceType.IsGenericTypeDefinition

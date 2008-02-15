@@ -72,12 +72,10 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
     }
 
     [Test]
-    [Ignore]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected table identifier for member access in where condition, found "
-        + "ConstantExpression (value(Rubicon.Data.Linq.UnitTests.Student)).")]
+    [ExpectedException (typeof (FieldAccessResolveException), ExpectedMessage = "The field access expression "
+        + "'value(Rubicon.Data.Linq.UnitTests.Student).IsOld' does not contain a from clause identifier.")]
     public void InvalidMemberAccess ()
     {
-      
       WhereClause whereClause =
           new WhereClause (_fromClause,
               Expression.Lambda (
@@ -91,7 +89,6 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
     [Test]
     public void Constant ()
     {
-      
       WhereClause whereClause =
           new WhereClause (_fromClause,
               Expression.Lambda (

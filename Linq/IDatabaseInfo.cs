@@ -8,7 +8,7 @@ namespace Rubicon.Data.Linq
 {
   public interface IDatabaseInfo
   {
-    Table? GetTable (FromClauseBase fromClause);
+    Table GetTable (FromClauseBase fromClause);
     string GetRelatedTableName (MemberInfo relationMember);
     string GetColumnName (MemberInfo member);
     Tuple<string, string> GetJoinColumns (MemberInfo relationMember);

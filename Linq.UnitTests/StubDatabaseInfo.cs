@@ -15,7 +15,7 @@ namespace Rubicon.Data.Linq.UnitTests
     {
     }
 
-    public Table? GetTable (FromClauseBase fromClause)
+    public Table GetTable (FromClauseBase fromClause)
     {
       Type querySourceType = fromClause.GetQuerySourceType();
       if (typeof (IQueryable<Student>).IsAssignableFrom (querySourceType))

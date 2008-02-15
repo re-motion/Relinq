@@ -14,7 +14,7 @@ namespace Rubicon.Data.Linq.DataObjectModel
       ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
 
-      Table? table = databaseInfo.GetTable (fromClause);
+      Table table = databaseInfo.GetTable (fromClause);
       if (table == null)
       {
         string message = string.Format ("The from clause with identifier {0} and query source type {1} does not identify a queryable table.",
@@ -22,7 +22,7 @@ namespace Rubicon.Data.Linq.DataObjectModel
         throw new ArgumentException (message, "fromClause");
       }
       else
-        return table.Value;
+        return table;
     }
 
     public static Column? GetColumn (IDatabaseInfo databaseInfo, Table table, MemberInfo member)
