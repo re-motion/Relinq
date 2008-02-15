@@ -5,7 +5,7 @@ using System.Reflection;
 using Rhino.Mocks;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.DataObjectModel;
-using Rubicon.Data.Linq.Parsing;
+using Rubicon.Data.Linq.Parsing.Structure;
 using Rubicon.Data.Linq.QueryProviderImplementation;
 
 namespace Rubicon.Data.Linq.UnitTests

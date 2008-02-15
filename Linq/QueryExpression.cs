@@ -2,6 +2,7 @@
 using System.Linq.Expressions;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.DataObjectModel;
+using Rubicon.Data.Linq.Parsing.FieldResolving;
 using Rubicon.Data.Linq.Visitor;
 using Rubicon.Utilities;
 

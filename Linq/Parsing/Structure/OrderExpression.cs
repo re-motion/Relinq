@@ -1,0 +1,30 @@
+using System.Linq.Expressions;
+using Rubicon.Data.Linq.Clauses;
+using Rubicon.Data.Linq.Parsing.Structure;
+using Rubicon.Utilities;
+
+namespace Rubicon.Data.Linq.Parsing.Structure
+{
+  public class OrderExpression : BodyExpressionBase<LambdaExpression>
+  {
+    public OrderExpression (bool firstOrderBy, OrderDirection orderDirection, LambdaExpression expression)
+        : base (expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
+      FirstOrderBy = firstOrderBy;
+      OrderDirection = orderDirection;
+    }
+
+    public bool FirstOrderBy { get; private set; }
+    public OrderDirection OrderDirection { get; private set; }
+
+    public override string ToString ()
+    {
+      if (FirstOrderBy)
+        return string.Format ("orderby {0} {1}", Expression, OrderDirection);
+      else
+        return string.Format ("thenby {0} {1}", Expression, OrderDirection);
+    }
+  }
+}

@@ -1,0 +1,41 @@
+using System;
+using System.Linq.Expressions;
+using NUnit.Framework;
+using Rubicon.Data.Linq.Clauses;
+using Rubicon.Data.Linq.DataObjectModel;
+
+namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
+{
+  [TestFixture]
+  public class QueryExpressionFieldResolverTest
+  {
+    [Test]
+    public void ResolveField ()
+    {
+      QueryExpression queryExpression = CreateQueryExpressionForResolve ();
+
+      Expression fieldAccessExpression = Expression.Parameter (typeof (String), "s1");
+      FieldDescriptor descriptor = queryExpression.ResolveField (StubDatabaseInfo.Instance, fieldAccessExpression);
+
+      Table expectedTable = new Table ("sourceTable", "s1");
+      Assert.AreSame (queryExpression.MainFromClause, descriptor.FromClause);
+      Assert.AreEqual (new Column (expectedTable, "*"), descriptor.Column);
+      Assert.IsNull (descriptor.Member);
+      Assert.AreEqual (expectedTable, descriptor.SourcePath);
+    }
+
+    private QueryExpression CreateQueryExpressionForResolve ()
+    {
+      ParameterExpression s1 = Expression.Parameter (typeof (String), "s1");
+      ParameterExpression s2 = Expression.Parameter (typeof (String), "s2");
+      MainFromClause mainFromClause = new MainFromClause (s1, ExpressionHelper.CreateQuerySource ());
+      AdditionalFromClause additionalFromClause =
+          new AdditionalFromClause (mainFromClause, s2, ExpressionHelper.CreateLambdaExpression (), ExpressionHelper.CreateLambdaExpression ());
+
+      QueryBody queryBody = new QueryBody (ExpressionHelper.CreateSelectClause ());
+      queryBody.Add (additionalFromClause);
+
+      return new QueryExpression (mainFromClause, queryBody);
+    }
+  }
+}

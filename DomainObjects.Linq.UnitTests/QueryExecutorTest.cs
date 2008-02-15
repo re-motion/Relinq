@@ -8,7 +8,7 @@ using Rubicon.Data.DomainObjects.UnitTests;
 using Rubicon.Data.DomainObjects.UnitTests.TestDomain;
 using Rubicon.Data.Linq;
 using System.Linq;
-using Rubicon.Data.Linq.Parsing;
+using Rubicon.Data.Linq.Parsing.Structure;
 
 namespace Rubicon.Data.DomainObjects.Linq.UnitTests
 {

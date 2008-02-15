@@ -3,6 +3,7 @@ using System.Reflection;
 using NUnit.Framework;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.DataObjectModel;
+using Rubicon.Data.Linq.Parsing.FieldResolving;
 
 namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
 {
