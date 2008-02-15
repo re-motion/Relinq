@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Reflection;
 using Rubicon.Collections;
 using Rubicon.Data.Linq.DataObjectModel;
@@ -9,7 +9,8 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
 {
   public class JoinedTableContext
   {
-    private readonly Dictionary<Tuple<IFieldSourcePath, MemberInfo>, Table> _tables = new Dictionary<Tuple<IFieldSourcePath, MemberInfo>, Table>();
+    private readonly OrderedDictionary _tables = new OrderedDictionary ();
+    private int _generatedAliasCount = 0;
 
     public int Count
     {
@@ -24,9 +25,22 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
 
       Tuple<IFieldSourcePath, MemberInfo> key = Tuple.NewTuple (fieldSourcePath, relationMember);
 
-      if (!_tables.ContainsKey (key))
+      if (!_tables.Contains (key))
         _tables.Add (key, DatabaseInfoUtility.GetRelatedTable (databaseInfo, relationMember));
-      return _tables[key];
+      return (Table) _tables[key];
+    }
+
+    public void CreateAliases ()
+    {
+      for (int i = 0; i < Count; ++i)
+      {
+        Table table = (Table) _tables[i];
+        if (table.Alias == null)
+        {
+          table.SetAlias ("j" + _generatedAliasCount);
+          ++_generatedAliasCount;
+        }
+      }
     }
   }
 }

@@ -54,8 +54,21 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
       Assert.AreNotEqual (hashCode1, hashCode2);
     }
 
+    [Test]
+    public void SetAlias ()
+    {
+      Table t = new Table ("x", null);
+      Assert.IsNull (t.Alias);
+      t.SetAlias ("hugo");
+      Assert.AreEqual ("hugo", t.Alias);
+    }
 
-
-
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Table 'x' already has alias 'y', new alias 'hugo' cannot be set.")]
+    public void SetAlias_NonNullAlias ()
+    {
+      Table t = new Table ("x", "y");
+      t.SetAlias ("hugo");
+    }
   }
 }
