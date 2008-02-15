@@ -10,6 +10,7 @@ using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.DataObjectModel;
 using Rubicon.Data.Linq.Parsing;
 using Rubicon.Data.Linq.Parsing.Details;
+using Rubicon.Data.Linq.Parsing.FieldResolving;
 using Rubicon.Data.Linq.Parsing.Structure;
 
 namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
@@ -18,11 +19,13 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
   public class SelectProjectionParserTest
   {
     private IQueryable<Student> _source;
+    private JoinedTableContext _context;
 
     [SetUp]
     public void SetUp ()
     {
       _source = ExpressionHelper.CreateQuerySource();
+      _context = new JoinedTableContext();
     }
 
 
@@ -34,7 +37,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       QueryExpression expression = parser.GetParsedQuery();
       SelectClause selectClause = (SelectClause) expression.QueryBody.SelectOrGroupClause;
 
-      SelectProjectionParser selectParser = new SelectProjectionParser (expression, selectClause, StubDatabaseInfo.Instance);
+      SelectProjectionParser selectParser = new SelectProjectionParser (expression, selectClause, StubDatabaseInfo.Instance, _context);
 
       IEnumerable<FieldDescriptor> selectedFields = selectParser.SelectedFields;
 
@@ -50,7 +53,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       QueryExpression expression = parser.GetParsedQuery();
       SelectClause selectClause = (SelectClause) expression.QueryBody.SelectOrGroupClause;
 
-      SelectProjectionParser selectParser = new SelectProjectionParser (expression, selectClause, StubDatabaseInfo.Instance);
+      SelectProjectionParser selectParser = new SelectProjectionParser (expression, selectClause, StubDatabaseInfo.Instance, _context);
 
       IEnumerable<FieldDescriptor> selectedFields = selectParser.SelectedFields;
 
@@ -65,7 +68,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       QueryExpression expression = parser.GetParsedQuery();
       SelectClause selectClause = (SelectClause) expression.QueryBody.SelectOrGroupClause;
 
-      SelectProjectionParser selectParser = new SelectProjectionParser (expression, selectClause, StubDatabaseInfo.Instance);
+      SelectProjectionParser selectParser = new SelectProjectionParser (expression, selectClause, StubDatabaseInfo.Instance, _context);
 
       IEnumerable<FieldDescriptor> selectedFields = selectParser.SelectedFields;
 
@@ -81,7 +84,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       QueryExpression expression = parser.GetParsedQuery();
       SelectClause selectClause = (SelectClause) expression.QueryBody.SelectOrGroupClause;
 
-      SelectProjectionParser selectParser = new SelectProjectionParser (expression, selectClause, StubDatabaseInfo.Instance);
+      SelectProjectionParser selectParser = new SelectProjectionParser (expression, selectClause, StubDatabaseInfo.Instance, _context);
 
       IEnumerable<FieldDescriptor> selectedFields = selectParser.SelectedFields;
 
@@ -101,7 +104,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       QueryExpression expression = parser.GetParsedQuery();
       SelectClause selectClause = (SelectClause) expression.QueryBody.SelectOrGroupClause;
 
-      SelectProjectionParser selectParser = new SelectProjectionParser (expression, selectClause, StubDatabaseInfo.Instance);
+      SelectProjectionParser selectParser = new SelectProjectionParser (expression, selectClause, StubDatabaseInfo.Instance, _context);
 
       IEnumerable<FieldDescriptor> selectedFields = selectParser.SelectedFields;
 
@@ -118,7 +121,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       QueryExpression expression = parser.GetParsedQuery();
       SelectClause selectClause = (SelectClause) expression.QueryBody.SelectOrGroupClause;
 
-      new SelectProjectionParser (expression, selectClause, StubDatabaseInfo.Instance);
+      new SelectProjectionParser (expression, selectClause, StubDatabaseInfo.Instance, _context);
     }
     
     [Test]
@@ -129,7 +132,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       QueryExpression expression = parser.GetParsedQuery();
       SelectClause selectClause = (SelectClause) expression.QueryBody.SelectOrGroupClause;
 
-      SelectProjectionParser selectParser = new SelectProjectionParser (expression, selectClause, StubDatabaseInfo.Instance);
+      SelectProjectionParser selectParser = new SelectProjectionParser (expression, selectClause, StubDatabaseInfo.Instance, _context);
 
       IEnumerable<FieldDescriptor> selectedFields = selectParser.SelectedFields;
 
@@ -152,7 +155,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       QueryExpression expression = parser.GetParsedQuery();
       SelectClause selectClause = (SelectClause) expression.QueryBody.SelectOrGroupClause;
 
-      SelectProjectionParser selectParser = new SelectProjectionParser (expression, selectClause, StubDatabaseInfo.Instance);
+      SelectProjectionParser selectParser = new SelectProjectionParser (expression, selectClause, StubDatabaseInfo.Instance, _context);
 
       IEnumerable<FieldDescriptor> selectedFields = selectParser.SelectedFields;
 
@@ -172,7 +175,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       QueryExpression expression = parser.GetParsedQuery();
       SelectClause selectClause = (SelectClause) expression.QueryBody.SelectOrGroupClause;
 
-      SelectProjectionParser selectParser = new SelectProjectionParser (expression, selectClause, StubDatabaseInfo.Instance);
+      SelectProjectionParser selectParser = new SelectProjectionParser (expression, selectClause, StubDatabaseInfo.Instance, _context);
 
       IEnumerable<FieldDescriptor> selectedFields = selectParser.SelectedFields;
 
@@ -190,6 +193,14 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     {
       Table table = fromClause.GetTable (StubDatabaseInfo.Instance);
       return new FieldDescriptor (member, fromClause, table, DatabaseInfoUtility.GetColumn (StubDatabaseInfo.Instance, table, member));
+    }
+
+    [Test]
+    [Ignore ("TODO: Implement Joins (as in OrderingFieldParser")]
+    public void ParserUsesContext()
+    {
+      Assert.AreEqual (0, _context.Count);
+      Assert.Fail();
     }
   }
 }

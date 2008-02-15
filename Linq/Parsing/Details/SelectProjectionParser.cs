@@ -16,11 +16,12 @@ namespace Rubicon.Data.Linq.Parsing.Details
     private readonly List<FieldDescriptor> _fields = new List<FieldDescriptor> ();
     
 
-    public SelectProjectionParser (QueryExpression queryExpression, SelectClause selectClause, IDatabaseInfo databaseInfo)
+    public SelectProjectionParser (QueryExpression queryExpression, SelectClause selectClause, IDatabaseInfo databaseInfo, JoinedTableContext context)
     {
       ArgumentUtility.CheckNotNull ("queryExpression", queryExpression);
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);
       ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
+      ArgumentUtility.CheckNotNull ("context", context);
 
       _queryExpression = queryExpression;
       _selectClause = selectClause;
