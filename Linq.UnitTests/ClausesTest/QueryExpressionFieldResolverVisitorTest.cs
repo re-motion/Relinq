@@ -8,7 +8,7 @@ using Rubicon.Data.Linq.UnitTests.ParsingTest;
 namespace Rubicon.Data.Linq.UnitTests.ClausesTest
 {
   [TestFixture]
-  public class QueryExpressionResolveVisitorTest
+  public class QueryExpressionFieldResolverVisitorTest
   {
     public class AnonymousType
     {
@@ -23,7 +23,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       QueryExpression queryExpression = CreateQueryExpression();
 
       Expression sourceExpression = Expression.Parameter (typeof (Student), "s1");
-      QueryExpressionResolveVisitor.Result result = new QueryExpressionResolveVisitor (queryExpression).ParseAndReduce(sourceExpression);
+      QueryExpressionFieldResolverVisitor.Result result = new QueryExpressionFieldResolverVisitor (queryExpression).ParseAndReduce(sourceExpression);
       Assert.AreSame (sourceExpression, result.ReducedExpression);
       Assert.AreSame (queryExpression.MainFromClause, result.FromClause);
     }
@@ -34,7 +34,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       QueryExpression queryExpression = CreateQueryExpression ();
 
       Expression sourceExpression = Expression.Parameter (typeof (Student), "s2");
-      QueryExpressionResolveVisitor.Result result = new QueryExpressionResolveVisitor (queryExpression).ParseAndReduce (sourceExpression);
+      QueryExpressionFieldResolverVisitor.Result result = new QueryExpressionFieldResolverVisitor (queryExpression).ParseAndReduce (sourceExpression);
       Assert.AreSame (sourceExpression, result.ReducedExpression);
       Assert.AreSame (queryExpression.QueryBody.BodyClauses.First(), result.FromClause);
     }
@@ -47,7 +47,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       Expression sourceExpression = Expression.MakeMemberAccess (
           Expression.Parameter (typeof (Student), "s1"),
           typeof (Student).GetProperty ("First"));
-      QueryExpressionResolveVisitor.Result result = new QueryExpressionResolveVisitor (queryExpression).ParseAndReduce (sourceExpression);
+      QueryExpressionFieldResolverVisitor.Result result = new QueryExpressionFieldResolverVisitor (queryExpression).ParseAndReduce (sourceExpression);
       Assert.AreSame (sourceExpression, result.ReducedExpression);
       Assert.AreSame (queryExpression.MainFromClause, result.FromClause);
     }
@@ -61,7 +61,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
           Expression.Parameter (typeof (AnonymousType), "transparent1"),
           typeof (AnonymousType).GetField ("s1"));
 
-      QueryExpressionResolveVisitor.Result result = new QueryExpressionResolveVisitor (queryExpression).ParseAndReduce (sourceExpression);
+      QueryExpressionFieldResolverVisitor.Result result = new QueryExpressionFieldResolverVisitor (queryExpression).ParseAndReduce (sourceExpression);
       ParameterExpression expectedReducedExpression = Expression.Parameter (typeof (Student), "s1");
       ExpressionTreeComparer.CheckAreEqualTrees (expectedReducedExpression, result.ReducedExpression);
       Assert.AreSame (queryExpression.MainFromClause, result.FromClause);
@@ -78,7 +78,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
               typeof (AnonymousType).GetField ("s1")),
           typeof (Student).GetProperty ("First"));
 
-      QueryExpressionResolveVisitor.Result result = new QueryExpressionResolveVisitor (queryExpression).ParseAndReduce (sourceExpression);
+      QueryExpressionFieldResolverVisitor.Result result = new QueryExpressionFieldResolverVisitor (queryExpression).ParseAndReduce (sourceExpression);
       Expression expectedReducedExpression = Expression.MakeMemberAccess (
           Expression.Parameter (typeof (Student), "s1"),
           typeof (Student).GetProperty ("First"));
@@ -97,7 +97,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
               typeof (AnonymousType).GetField ("transparent2")),
           typeof (AnonymousType).GetField ("s1"));
       
-      QueryExpressionResolveVisitor.Result result = new QueryExpressionResolveVisitor (queryExpression).ParseAndReduce (sourceExpression);
+      QueryExpressionFieldResolverVisitor.Result result = new QueryExpressionFieldResolverVisitor (queryExpression).ParseAndReduce (sourceExpression);
       ParameterExpression expectedReducedExpression = Expression.Parameter (typeof (Student), "s1");
       ExpressionTreeComparer.CheckAreEqualTrees (expectedReducedExpression, result.ReducedExpression);
       Assert.AreSame (queryExpression.MainFromClause, result.FromClause);
@@ -116,7 +116,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
               typeof (AnonymousType).GetField ("transparent2")),
           typeof (AnonymousType).GetField ("fzlbf"));
 
-      new QueryExpressionResolveVisitor (queryExpression).ParseAndReduce (sourceExpression);
+      new QueryExpressionFieldResolverVisitor (queryExpression).ParseAndReduce (sourceExpression);
     }
 
     private QueryExpression CreateQueryExpression ()

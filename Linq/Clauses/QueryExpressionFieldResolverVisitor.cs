@@ -11,7 +11,7 @@ namespace Rubicon.Data.Linq.Clauses
   /// <summary>
   /// removes transparent identifier from a expression representing a field access
   /// </summary>
-  public class QueryExpressionResolveVisitor : ExpressionTreeVisitor
+  public class QueryExpressionFieldResolverVisitor : ExpressionTreeVisitor
   {
     public struct Result
     {
@@ -31,7 +31,7 @@ namespace Rubicon.Data.Linq.Clauses
 
     private FromClauseBase _fromClause;
 
-    public QueryExpressionResolveVisitor (QueryExpression queryExpression)
+    public QueryExpressionFieldResolverVisitor (QueryExpression queryExpression)
     {
       ArgumentUtility.CheckNotNull ("queryExpression", queryExpression);
       _queryExpression = queryExpression;

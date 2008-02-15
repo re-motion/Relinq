@@ -9,7 +9,7 @@ namespace Rubicon.Data.Linq.Clauses
   /// <summary>
   /// identifies the parameter and members used by an expression of a field access
   /// </summary>
-  public class FromClauseResolveVisitor : ExpressionTreeVisitor
+  public class FromClauseFieldResolverVisitor : ExpressionTreeVisitor
   {
     public struct Result
     {

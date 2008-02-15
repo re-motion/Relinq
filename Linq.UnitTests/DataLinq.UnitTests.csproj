@@ -59,8 +59,10 @@
   <ItemGroup>
     <Compile Include="ClausesTest\AdditionalFromClauseTest.cs" />
     <Compile Include="ClausesTest\ClauseFinderTest.cs" />
-    <Compile Include="ClausesTest\FromClauseResolveVisitorTest.cs" />
-    <Compile Include="ClausesTest\QueryExpressionResolveVisitorTest.cs" />
+    <Compile Include="ClausesTest\FromClauseFieldResolverTest.cs" />
+    <Compile Include="ClausesTest\FromClauseFieldResolverVisitorTest.cs" />
+    <Compile Include="ClausesTest\QueryExpressionFieldResolverTest.cs" />
+    <Compile Include="ClausesTest\QueryExpressionFieldResolverVisitorTest.cs" />
     <Compile Include="ClausesTest\MainFromClauseTest.cs" />
     <Compile Include="DataObjectModelTest\FieldDescriptorTest.cs" />
     <Compile Include="DataObjectModelTest\JoinTest.cs" />

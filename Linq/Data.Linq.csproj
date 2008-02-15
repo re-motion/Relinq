@@ -53,8 +53,10 @@
     <Compile Include="Clauses\ClauseFinder.cs" />
     <Compile Include="Clauses\ClauseLookupException.cs" />
     <Compile Include="Clauses\FieldAccessResolveException.cs" />
-    <Compile Include="Clauses\FromClauseResolveVisitor.cs" />
-    <Compile Include="Clauses\QueryExpressionResolveVisitor.cs" />
+    <Compile Include="Clauses\FromClauseFieldResolver.cs" />
+    <Compile Include="Clauses\FromClauseFieldResolverVisitor.cs" />
+    <Compile Include="Clauses\QueryExpressionFieldResolver.cs" />
+    <Compile Include="Clauses\QueryExpressionFieldResolverVisitor.cs" />
     <Compile Include="DataObjectModel\FieldDescriptor.cs" />
     <Compile Include="Clauses\FromClauseBase.cs" />
     <Compile Include="Clauses\GroupClause.cs" />

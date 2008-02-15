@@ -74,10 +74,7 @@ namespace Rubicon.Data.Linq
       ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
       ArgumentUtility.CheckNotNull ("fieldAccessExpression", fieldAccessExpression);
 
-      QueryExpressionResolveVisitor visitor = new QueryExpressionResolveVisitor (this);
-      QueryExpressionResolveVisitor.Result visitorResult = visitor.ParseAndReduce (fieldAccessExpression);
-
-      return visitorResult.FromClause.ResolveField (databaseInfo, visitorResult.ReducedExpression, fieldAccessExpression);
+      return new QueryExpressionFieldResolver (this).ResolveField (databaseInfo, fieldAccessExpression);
     }
   }
 }
