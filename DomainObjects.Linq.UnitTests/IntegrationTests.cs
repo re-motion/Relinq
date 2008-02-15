@@ -86,5 +86,26 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
       Assert.That (computerArray,
           Is.EquivalentTo (new object[] { Computer.GetObject (DomainObjectIDs.Computer1)}));
     }
+
+    [Test]
+    public void QueryWithOrderByAndImplicitJoin()
+    {
+      var orders =
+          from o in DataContext.Entity<Order> (new TestQueryListener ())
+          where o.OrderNumber <= 4
+          orderby o.Customer.Name
+          select o;
+
+      Order[] orderArray = orders.ToArray();
+
+      Assert.That (orderArray,
+          Is.EquivalentTo (new object[]
+              {
+                  Order.GetObject (DomainObjectIDs.OrderWithoutOrderItem), 
+                  Order.GetObject (DomainObjectIDs.Order1), 
+                  Order.GetObject (DomainObjectIDs.Order2), 
+                  Order.GetObject (DomainObjectIDs.Order3)
+              }));
+    }
   }
 }
