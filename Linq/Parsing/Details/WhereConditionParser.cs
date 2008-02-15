@@ -15,11 +15,12 @@ namespace Rubicon.Data.Linq.Parsing.Details
     private readonly IDatabaseInfo _databaseInfo;
     private readonly QueryExpression _queryExpression;
 
-    public WhereConditionParser (QueryExpression queryExpression, WhereClause whereClause, IDatabaseInfo databaseInfo, bool simplify)
+    public WhereConditionParser (QueryExpression queryExpression, WhereClause whereClause, IDatabaseInfo databaseInfo, JoinedTableContext context, bool simplify)
     {
       ArgumentUtility.CheckNotNull ("whereClause", whereClause);
       ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
       ArgumentUtility.CheckNotNull ("queryExpression", queryExpression);
+      ArgumentUtility.CheckNotNull ("context", context);
 
       _simplify = simplify;
       _queryExpression = queryExpression;
