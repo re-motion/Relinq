@@ -61,6 +61,7 @@
     <Compile Include="ClausesTest\ClauseFinderTest.cs" />
     <Compile Include="ParsingTest\FieldResolvingTest\FromClauseFieldResolverTest.cs" />
     <Compile Include="ParsingTest\FieldResolvingTest\FromClauseFieldResolverVisitorTest.cs" />
+    <Compile Include="ParsingTest\FieldResolvingTest\JoinedTableContextTest.cs" />
     <Compile Include="ParsingTest\FieldResolvingTest\QueryExpressionFieldResolverTest.cs" />
     <Compile Include="ParsingTest\FieldResolvingTest\QueryExpressionFieldResolverVisitorTest.cs" />
     <Compile Include="ClausesTest\MainFromClauseTest.cs" />

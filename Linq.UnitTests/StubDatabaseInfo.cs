@@ -37,9 +37,9 @@ namespace Rubicon.Data.Linq.UnitTests
       else if (relationMember == typeof (Student_Detail_Detail).GetProperty ("Student_Detail"))
         return "detailTable";
       else if (relationMember == typeof (Student_Detail_Detail).GetProperty ("IndustrialSector"))
-        return "industrialSector";
+        return "industrialTable";
       else if (relationMember == typeof (Student_Detail).GetProperty ("IndustrialSector"))
-        return "industrialSector";
+        return "industrialTable";
       else
         return null;
     }

@@ -55,6 +55,7 @@
     <Compile Include="Parsing\FieldResolving\FieldAccessResolveException.cs" />
     <Compile Include="Parsing\FieldResolving\FromClauseFieldResolver.cs" />
     <Compile Include="Parsing\FieldResolving\FromClauseFieldResolverVisitor.cs" />
+    <Compile Include="Parsing\FieldResolving\JoinedTableContext.cs" />
     <Compile Include="Parsing\FieldResolving\QueryExpressionFieldResolver.cs" />
     <Compile Include="Parsing\FieldResolving\QueryExpressionFieldResolverVisitor.cs" />
     <Compile Include="DataObjectModel\FieldDescriptor.cs" />
