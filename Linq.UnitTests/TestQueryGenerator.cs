@@ -232,6 +232,17 @@ namespace Rubicon.Data.Linq.UnitTests
       return from sdd in source orderby sdd.Student_Detail.Student.First, sdd.Student_Detail.IndustrialSector.ID select sdd;
     }
 
+    public static IQueryable<string> CreateSimpleImplicitSelectJoin (IQueryable<Student_Detail> source)
+    {
+      return from sd in source select sd.Student.First;
+    }
+
+    public static IQueryable<Tuple<string, int>> CreateComplexImplicitSelectJoin (IQueryable<Student_Detail_Detail> source)
+    {
+      return from sdd in source select new Tuple<string,int>(sdd.Student_Detail.Student.First,sdd.IndustrialSector.ID);
+    }
+
+
     public static IQueryable<Student_Detail_Detail> CreateImplicitOrderByJoinWithMultipleKeys 
           (IQueryable<Student_Detail_Detail> source1,IQueryable<Student_Detail_Detail> source2)
     {

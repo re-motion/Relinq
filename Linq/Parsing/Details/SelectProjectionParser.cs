@@ -13,8 +13,7 @@ namespace Rubicon.Data.Linq.Parsing.Details
     private readonly QueryExpression _queryExpression;
     private readonly SelectClause _selectClause;
     private readonly IDatabaseInfo _databaseInfo;
-    private readonly List<FieldDescriptor> _fields = new List<FieldDescriptor> ();
-    
+    private readonly JoinedTableContext _context;
 
     public SelectProjectionParser (QueryExpression queryExpression, SelectClause selectClause, IDatabaseInfo databaseInfo, JoinedTableContext context)
     {
@@ -26,6 +25,12 @@ namespace Rubicon.Data.Linq.Parsing.Details
       _queryExpression = queryExpression;
       _selectClause = selectClause;
       _databaseInfo = databaseInfo;
+      _context = context;
+    }
+
+    public IEnumerable<FieldDescriptor> GetSelectedFields ()
+    {
+      List<FieldDescriptor> fields = new List<FieldDescriptor> ();
 
       if (_selectClause.ProjectionExpression == null)
       {
@@ -33,21 +38,18 @@ namespace Rubicon.Data.Linq.Parsing.Details
         Assertion.IsTrue (fromClause is MainFromClause, "When there are two or more from clauses, there must be a projection expression.");
         Table table = fromClause.GetTable (_databaseInfo);
         Column? column = DatabaseInfoUtility.GetColumn (_databaseInfo, table, null);
-        _fields.Add (new FieldDescriptor(null, fromClause, table, column));
+        fields.Add (new FieldDescriptor (null, fromClause, table, column));
       }
       else
       {
         Expression expression = _selectClause.ProjectionExpression.Body;
-        FindSelectedFields (expression);
+        FindSelectedFields (fields, expression);
       }
+
+      return fields;
     }
 
-    public IEnumerable<FieldDescriptor> SelectedFields
-    {
-      get { return _fields; }
-    }
-
-    private void FindSelectedFields (Expression expression)
+    private void FindSelectedFields (List<FieldDescriptor> fields, Expression expression)
     {
       ParameterExpression parameterExpression;
       MemberExpression memberExpression;
@@ -62,23 +64,23 @@ namespace Rubicon.Data.Linq.Parsing.Details
       try
       {
         if ((parameterExpression = expression as ParameterExpression) != null)
-          ResolveField (parameterExpression);
+          ResolveField (fields, parameterExpression);
         else if ((memberExpression = expression as MemberExpression) != null)
-          ResolveField (memberExpression);
+          ResolveField (fields, memberExpression);
         else if ((newExpression = expression as NewExpression) != null)
-          FindSelectedFields (newExpression);
+          FindSelectedFields (fields, newExpression);
         else if ((callExpression = expression as MethodCallExpression) != null)
-          FindSelectedFields (callExpression);
+          FindSelectedFields (fields, callExpression);
         else if ((unaryExpression = expression as UnaryExpression) != null)
-          FindSelectedFields (unaryExpression);
+          FindSelectedFields (fields, unaryExpression);
         else if ((binaryExpression = expression as BinaryExpression) != null)
-          FindSelectedFields (binaryExpression);
+          FindSelectedFields (fields, binaryExpression);
         else if ((newArrayExpression = expression as NewArrayExpression) != null)
-          FindSelectedFields (newArrayExpression);
+          FindSelectedFields (fields, newArrayExpression);
         else if ((lambdaExpression = expression as LambdaExpression) != null)
-          FindSelectedFields (lambdaExpression);
+          FindSelectedFields (fields, lambdaExpression);
         else if ((invocationExpression = expression as InvocationExpression) != null)
-          FindSelectedFields (invocationExpression);
+          FindSelectedFields (fields, invocationExpression);
       }
       catch (Exception ex)
       {
@@ -87,58 +89,55 @@ namespace Rubicon.Data.Linq.Parsing.Details
       }
     }
 
-    private void ResolveField(Expression expression)
+    private void ResolveField (List<FieldDescriptor> fields, Expression expression)
     {
-      JoinedTableContext context = new JoinedTableContext();
-      FieldDescriptor fieldDescriptor = _queryExpression.ResolveField (_databaseInfo, context, expression);
+      FieldDescriptor fieldDescriptor = _queryExpression.ResolveField (_databaseInfo, _context, expression);
       if (fieldDescriptor.Column != null)
-        _fields.Add (fieldDescriptor);
+        fields.Add (fieldDescriptor);
     }
 
-    private void FindSelectedFields (NewExpression newExpression)
+    private void FindSelectedFields (List<FieldDescriptor> fields, NewExpression newExpression)
     {
       foreach (Expression arg in newExpression.Arguments)
-        FindSelectedFields (arg);
+        FindSelectedFields (fields, arg);
     }
 
-    private void FindSelectedFields (MethodCallExpression callExpression)
+    private void FindSelectedFields (List<FieldDescriptor> fields, MethodCallExpression callExpression)
     {
       if (callExpression.Object != null)
-        FindSelectedFields (callExpression.Object);
+        FindSelectedFields (fields, callExpression.Object);
       foreach (Expression arg in callExpression.Arguments)
-        FindSelectedFields (arg);
+        FindSelectedFields (fields, arg);
     }
 
-    private void FindSelectedFields (UnaryExpression unaryExpression)
+    private void FindSelectedFields (List<FieldDescriptor> fields, UnaryExpression unaryExpression)
     {
-      FindSelectedFields (unaryExpression.Operand);
+      FindSelectedFields (fields, unaryExpression.Operand);
     }
 
-    private void FindSelectedFields (BinaryExpression binaryExpression)
+    private void FindSelectedFields (List<FieldDescriptor> fields, BinaryExpression binaryExpression)
     {
-      FindSelectedFields (binaryExpression.Left);
-      FindSelectedFields (binaryExpression.Right);
+      FindSelectedFields (fields, binaryExpression.Left);
+      FindSelectedFields (fields, binaryExpression.Right);
     }
 
-    private void FindSelectedFields (NewArrayExpression newArrayExpression)
+    private void FindSelectedFields (List<FieldDescriptor> fields, NewArrayExpression newArrayExpression)
     {
       foreach (Expression expression in newArrayExpression.Expressions)
-        FindSelectedFields (expression);
+        FindSelectedFields (fields, expression);
     }
 
-    private void FindSelectedFields (LambdaExpression lambdaExpression)
+    private void FindSelectedFields (List<FieldDescriptor> fields, LambdaExpression lambdaExpression)
     {
-      FindSelectedFields (lambdaExpression.Body);
+      FindSelectedFields (fields, lambdaExpression.Body);
     }
 
-    private void FindSelectedFields (InvocationExpression invocationExpression)
+    private void FindSelectedFields (List<FieldDescriptor> fields, InvocationExpression invocationExpression)
     {
       foreach (Expression arg in invocationExpression.Arguments)
-        FindSelectedFields (arg);
+        FindSelectedFields (fields, arg);
       
-      FindSelectedFields (invocationExpression.Expression);
+      FindSelectedFields (fields, invocationExpression.Expression);
     }
-
-
   }
 }

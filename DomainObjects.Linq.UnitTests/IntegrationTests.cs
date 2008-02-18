@@ -107,5 +107,39 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
                   Order.GetObject (DomainObjectIDs.Order3)
               }));
     }
+
+    [Test]
+    [Ignore ("TODO: Find solution for querying the virtual side of relations.")]
+    public void QueryWithSelectAndImplicitJoin_VirtualSide ()
+    {
+      var ceos =
+          from o in DataContext.Entity<Order> (new TestQueryListener ())
+          select o.Customer.Ceo;
+
+      Ceo[] ceosArray = ceos.ToArray ();
+
+      Assert.That (ceosArray,
+          Is.EquivalentTo (new object[]
+              {
+                  
+              }));
+    }
+
+    [Test]
+    [Ignore ("TODO: When querying related object, the foreign key is selected, not the object data.")]
+    public void QueryWithSelectAndImplicitJoin ()
+    {
+      var companies =
+          from o in DataContext.Entity<Order> (new TestQueryListener ())
+          select o.Customer.Ceo.Company;
+
+      Company[] companyArray = companies.ToArray ();
+
+      Assert.That (companyArray,
+          Is.EquivalentTo (new object[]
+              {
+                  // TODO
+              }));
+    }
   }
 }
