@@ -1,4 +1,5 @@
 using System.Collections;
+using Rubicon.Collections;
 using Rubicon.Data.DomainObjects.Mapping;
 using Rubicon.Data.DomainObjects.Queries;
 using Rubicon.Data.DomainObjects.Queries.Configuration;
@@ -39,9 +40,12 @@ namespace Rubicon.Data.DomainObjects.Linq
         throw new InvalidOperationException ("No ClientTransaction has been associated with the current thread.");
 
       ClassDefinition classDefinition = MappingConfiguration.Current.ClassDefinitions.GetMandatory (typeof (T));
-      SqlGenerator sqlGenerator = new SqlGenerator (queryExpression, DatabaseInfo.Instance);
-      string statement = sqlGenerator.GetCommandString ();
-      CommandParameter[] commandParameters = sqlGenerator.GetCommandParameters();
+      SqlServerGenerator sqlGenerator = new SqlServerGenerator (queryExpression, DatabaseInfo.Instance);
+      
+      Tuple<string, CommandParameter[]> result = sqlGenerator.BuildCommandString();
+      string statement = result.A;
+      CommandParameter[] commandParameters = result.B;
+
       QueryParameterCollection queryParameters = new QueryParameterCollection();
       foreach (CommandParameter commandParameter in commandParameters)
         queryParameters.Add (commandParameter.Name, commandParameter.Value, QueryParameterType.Value);
