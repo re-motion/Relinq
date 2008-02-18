@@ -61,7 +61,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       IQueryable querySource = ExpressionHelper.CreateQuerySource ();
 
       MainFromClause fromClause = new MainFromClause (id, querySource);
-      Assert.AreEqual (new Table ("sourceTable", "s1"), fromClause.GetTable (StubDatabaseInfo.Instance));
+      Assert.AreEqual (new Table ("studentTable", "s1"), fromClause.GetTable (StubDatabaseInfo.Instance));
     }
   }
 }

@@ -19,7 +19,7 @@ namespace Rubicon.Data.Linq.UnitTests
     {
       Type querySourceType = fromClause.GetQuerySourceType();
       if (typeof (IQueryable<Student>).IsAssignableFrom (querySourceType))
-        return new Table("sourceTable", fromClause.Identifier.Name);
+        return new Table("studentTable", fromClause.Identifier.Name);
       else if (typeof (IQueryable<Student_Detail>).IsAssignableFrom (querySourceType))
         return new Table("detailTable", fromClause.Identifier.Name);
       else if (typeof (IQueryable<Student_Detail_Detail>).IsAssignableFrom (querySourceType))
@@ -33,7 +33,7 @@ namespace Rubicon.Data.Linq.UnitTests
     public string GetRelatedTableName (MemberInfo relationMember)
     {
       if (relationMember == typeof (Student_Detail).GetProperty ("Student"))
-        return "sourceTable";
+        return "studentTable";
       else if (relationMember == typeof (Student_Detail_Detail).GetProperty ("Student_Detail"))
         return "detailTable";
       else if (relationMember == typeof (Student_Detail_Detail).GetProperty ("IndustrialSector"))

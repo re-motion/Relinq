@@ -23,7 +23,7 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     {
       MainFromClause fromClause = new MainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource());
       Table table = DatabaseInfoUtility.GetTableForFromClause (_databaseInfo, fromClause);
-      Assert.AreEqual (new Table ("sourceTable", "s"), table);
+      Assert.AreEqual (new Table ("studentTable", "s"), table);
     }
 
     [Test]
@@ -58,7 +58,7 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     public void GetRelatedTable ()
     {
       Table table = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, typeof (Student_Detail).GetProperty ("Student"));
-      Assert.AreEqual (new Table ("sourceTable", null), table);
+      Assert.AreEqual (new Table ("studentTable", null), table);
     }
 
     [Test]

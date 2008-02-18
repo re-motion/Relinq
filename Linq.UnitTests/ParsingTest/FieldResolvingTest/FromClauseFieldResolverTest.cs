@@ -26,7 +26,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
 
       FieldDescriptor fieldDescriptor =
           new FromClauseFieldResolver (fromClause).ResolveField (StubDatabaseInfo.Instance, _context, identifier, identifier);
-      Assert.AreEqual (new Column (new Table ("sourceTable", "fromIdentifier1"), "*"), fieldDescriptor.Column);
+      Assert.AreEqual (new Column (new Table ("studentTable", "fromIdentifier1"), "*"), fieldDescriptor.Column);
       Assert.AreSame (fromClause, fieldDescriptor.FromClause);
     }
 
@@ -66,7 +66,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
           typeof (Student).GetProperty ("First"));
       FieldDescriptor fieldDescriptor =
           new FromClauseFieldResolver (fromClause).ResolveField (StubDatabaseInfo.Instance, _context, fieldExpression, fieldExpression);
-      Assert.AreEqual (new Column (new Table ("sourceTable", "fromIdentifier1"), "FirstColumn"), fieldDescriptor.Column);
+      Assert.AreEqual (new Column (new Table ("studentTable", "fromIdentifier1"), "FirstColumn"), fieldDescriptor.Column);
       Assert.AreSame (fromClause, fieldDescriptor.FromClause);
     }
 
@@ -112,11 +112,11 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       FieldDescriptor fieldDescriptor =
           new FromClauseFieldResolver (fromClause).ResolveField (StubDatabaseInfo.Instance, _context, fieldExpression, fieldExpression);
 
-      Assert.AreEqual (new Column (new Table ("sourceTable", null), "FirstColumn"), fieldDescriptor.Column);
+      Assert.AreEqual (new Column (new Table ("studentTable", null), "FirstColumn"), fieldDescriptor.Column);
       Assert.AreSame (fromClause, fieldDescriptor.FromClause);
       Assert.AreEqual (typeof (Student).GetProperty ("First"), fieldDescriptor.Member);
 
-      Table expectedLeftSide = new Table ("sourceTable", null);
+      Table expectedLeftSide = new Table ("studentTable", null);
       Table expectedRightSide = fromClause.GetTable (StubDatabaseInfo.Instance);
       Join expectedJoin = new Join (
           expectedLeftSide,
@@ -145,7 +145,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       FieldDescriptor fieldDescriptor =
           new FromClauseFieldResolver (fromClause).ResolveField (StubDatabaseInfo.Instance, _context, fieldExpression, fieldExpression);
 
-      Assert.AreEqual (new Column (new Table ("sourceTable", null), "FirstColumn"), fieldDescriptor.Column);
+      Assert.AreEqual (new Column (new Table ("studentTable", null), "FirstColumn"), fieldDescriptor.Column);
       Assert.AreSame (fromClause, fieldDescriptor.FromClause);
       Assert.AreEqual (typeof (Student).GetProperty ("First"), fieldDescriptor.Member);
 
@@ -157,7 +157,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
           new Column (expectedInnerLeftSide, "Student_Detail_FK"),
           new Column (expectedInnerRightSide, "Student_Detail_Detail_PK"));
 
-      Table expectedOuterLeftSide = new Table ("sourceTable", null); // Student
+      Table expectedOuterLeftSide = new Table ("studentTable", null); // Student
       Join expectedOuterJoin = new Join ( // s inner join (expectedInnerJoin) on s.FK = sd.PK
           expectedOuterLeftSide,
           expectedInnerJoin,

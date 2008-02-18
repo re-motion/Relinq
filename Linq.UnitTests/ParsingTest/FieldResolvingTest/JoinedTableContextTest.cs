@@ -21,7 +21,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       Assert.AreEqual (1, context.Count);
       Assert.IsNotNull (table);
       Assert.IsNull (table.Alias);
-      Assert.AreEqual ("sourceTable", table.Name);
+      Assert.AreEqual ("studentTable", table.Name);
     }
 
     [Test]
@@ -50,7 +50,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       Assert.AreEqual (2, context.Count);
       Assert.AreNotSame (table1, table2);
       Assert.AreEqual ("industrialTable", table1.Name);    
-      Assert.AreEqual ("sourceTable", table2.Name);
+      Assert.AreEqual ("studentTable", table2.Name);
     }
 
     [Test]

@@ -56,7 +56,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
                   _parameter));
       WhereConditionParser parser = new WhereConditionParser (_queryExpression, whereClause, _databaseInfo, _context, false);
       ICriterion criterion = parser.GetCriterion ();
-      Assert.AreEqual (new Column (new Table ("sourceTable", "s"), "IsOldColumn"), criterion);
+      Assert.AreEqual (new Column (new Table ("studentTable", "s"), "IsOldColumn"), criterion);
     }
 
     [Test]
@@ -179,7 +179,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
                   ));
       WhereConditionParser parser = new WhereConditionParser (_queryExpression, whereClause, _databaseInfo, _context, false);
       ICriterion criterion = parser.GetCriterion ();
-      Assert.AreEqual (new BinaryCondition (new Column (new Table("sourceTable","s"),"FirstColumn"), new Constant ("Garcia%"), BinaryCondition.ConditionKind.Like), criterion);
+      Assert.AreEqual (new BinaryCondition (new Column (new Table("studentTable","s"),"FirstColumn"), new Constant ("Garcia%"), BinaryCondition.ConditionKind.Like), criterion);
     }
 
     [Test]
@@ -198,7 +198,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
                   ));
       WhereConditionParser parser = new WhereConditionParser (_queryExpression, whereClause, _databaseInfo, _context, false);
       ICriterion criterion = parser.GetCriterion ();
-      Assert.AreEqual (new BinaryCondition (new Column (new Table ("sourceTable", "s"), "FirstColumn"), new Constant ("%Garcia"), BinaryCondition.ConditionKind.Like), criterion);
+      Assert.AreEqual (new BinaryCondition (new Column (new Table ("studentTable", "s"), "FirstColumn"), new Constant ("%Garcia"), BinaryCondition.ConditionKind.Like), criterion);
     }
 
     [Test]
@@ -238,8 +238,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       WhereClause whereClause = ClauseFinder.FindClause<WhereClause> (parsedQuery.QueryBody.SelectOrGroupClause);
       WhereConditionParser parser = new WhereConditionParser (parsedQuery, whereClause, _databaseInfo, _context, false);
       ICriterion result = parser.GetCriterion();
-      Column firstColumn = new Column(new Table("sourceTable", "s"), "FirstColumn");
-      Column idColumn = new Column (new Table ("sourceTable", "s"), "IDColumn");
+      Column firstColumn = new Column(new Table("studentTable", "s"), "FirstColumn");
+      Column idColumn = new Column (new Table ("studentTable", "s"), "IDColumn");
       BinaryCondition comparison1 = new BinaryCondition(firstColumn, new Constant("Garcia"), BinaryCondition.ConditionKind.NotEqual);
       BinaryCondition comparison2 = new BinaryCondition(idColumn, new Constant(5), BinaryCondition.ConditionKind.GreaterThan);
       BinaryCondition comparison3 = new BinaryCondition(idColumn, new Constant(6), BinaryCondition.ConditionKind.GreaterThanOrEqual);
@@ -274,7 +274,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       WhereConditionParser parser2 = new WhereConditionParser (parsedQuery, whereClause2, _databaseInfo, _context, false);
       ICriterion result2 = parser2.GetCriterion ();
 
-      Column c1 = new Column(new Table("sourceTable","s1"),"LastColumn" );
+      Column c1 = new Column(new Table("studentTable","s1"),"LastColumn" );
       BinaryCondition comp1 = new BinaryCondition(c1,new Constant("Garcia"),BinaryCondition.ConditionKind.Equal);
       Assert.AreEqual (comp1, result1);
       
@@ -288,7 +288,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       WhereClause whereClause = ClauseFinder.FindClause<WhereClause> (parsedQuery.QueryBody.SelectOrGroupClause);
       WhereConditionParser parser = new WhereConditionParser (parsedQuery, whereClause, _databaseInfo, _context, true);
       ICriterion result = parser.GetCriterion ();
-      Assert.AreEqual (new BinaryCondition(new Column(new Table("sourceTable", "s"), "LastColumn"), new Constant("Garcia"),
+      Assert.AreEqual (new BinaryCondition(new Column(new Table("studentTable", "s"), "LastColumn"), new Constant("Garcia"),
           BinaryCondition.ConditionKind.Equal), result);
     }
 

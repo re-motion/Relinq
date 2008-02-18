@@ -189,7 +189,7 @@ namespace Rubicon.Data.Linq.UnitTests
       JoinedTableContext context = new JoinedTableContext ();     
       FieldDescriptor descriptor = queryExpression.ResolveField (StubDatabaseInfo.Instance, context, fieldAccessExpression);
 
-      Table expectedTable = new Table ("sourceTable", "s1");
+      Table expectedTable = new Table ("studentTable", "s1");
       Assert.AreSame (queryExpression.MainFromClause, descriptor.FromClause);
       Assert.AreEqual (new Column (expectedTable, "*"), descriptor.Column);
       Assert.IsNull (descriptor.Member);
