@@ -150,7 +150,6 @@ namespace Rubicon.Data.Linq.UnitTests
     {
       return from s in source where (!(s.First == "Garcia") || s.First == "Garcia") && s.First == "Garcia" select s;
     }
-
     
     public static IQueryable<Student> CreateWhereQueryWithStartsWith (IQueryable<Student> source)
     {
@@ -197,11 +196,7 @@ namespace Rubicon.Data.Linq.UnitTests
       return from s1 in source1 where s1.First == "Garcia" orderby s1.First from s2 in source2 where s2.Last == "Garcia" orderby s2.First, s2.Last orderby s2.First select s2;
     }
 
-    public static IQueryable<Student_Detail> CreateSimpleImplicitWhereJoin (IQueryable<Student_Detail> source)
-    {
-      return from s in source where s.Student.First == "Garcia" select s;
-    }
-
+    
     public static IQueryable<Student> CreateSimpleExplicitJoin (IQueryable<Student_Detail> source1,IQueryable<Student> source2)
     {
       return from s1 in source2 join s2 in source1 on s1.ID equals s2.StudentID select s1;
@@ -242,6 +237,10 @@ namespace Rubicon.Data.Linq.UnitTests
       return from sdd in source select new Tuple<string,int>(sdd.Student_Detail.Student.First,sdd.IndustrialSector.ID);
     }
 
+    public static IQueryable<Student_Detail> CreateSimpleImplicitWhereJoin (IQueryable<Student_Detail> source)
+    {
+      return from sd in source where sd.Student.First == "Garcia" select sd;
+    }
 
     public static IQueryable<Student_Detail_Detail> CreateImplicitOrderByJoinWithMultipleKeys 
           (IQueryable<Student_Detail_Detail> source1,IQueryable<Student_Detail_Detail> source2)

@@ -17,9 +17,8 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
           from c in DataContext.Entity<Computer> (new TestQueryListener ())
           where c.SerialNumber == "93756-ndf-23" || c.SerialNumber == "98678-abc-43"
           select c;
-      Computer[] computerArray = computers.ToArray();
-      Assert.That (computerArray,
-          Is.EquivalentTo (new object[] { Computer.GetObject (DomainObjectIDs.Computer2), Computer.GetObject (DomainObjectIDs.Computer5) }));
+      
+      CheckQueryResult (computers, DomainObjectIDs.Computer2, DomainObjectIDs.Computer5);
     }
 
     [Test]
@@ -29,10 +28,8 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
           from c in DataContext.Entity<Computer> (new TestQueryListener ())
           where c.Employee != null
           select c;
-      Computer[] computerArray = computers.ToArray ();
-      Assert.That (computerArray,
-          Is.EquivalentTo (new object[] { Computer.GetObject (DomainObjectIDs.Computer1), Computer.GetObject (DomainObjectIDs.Computer2),
-          Computer.GetObject (DomainObjectIDs.Computer3)}));
+
+      CheckQueryResult (computers, DomainObjectIDs.Computer1, DomainObjectIDs.Computer2, DomainObjectIDs.Computer3);
     }
 
     [Test]
@@ -42,9 +39,8 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
         from c in DataContext.Entity<Computer> (new TestQueryListener())
         where c.SerialNumber.StartsWith("9")
         select c;
-      Computer[] computerArray = computers.ToArray ();
-      Assert.That (computerArray,
-          Is.EquivalentTo (new object[] {Computer.GetObject (DomainObjectIDs.Computer5), Computer.GetObject (DomainObjectIDs.Computer2)}));
+
+      CheckQueryResult (computers, DomainObjectIDs.Computer2, DomainObjectIDs.Computer5);
     }
 
     [Test]
@@ -54,9 +50,8 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
         from c in DataContext.Entity<Computer> (new TestQueryListener ())
         where c.SerialNumber.EndsWith ("7")
         select c;
-      Computer[] computerArray = computers.ToArray ();
-      Assert.That (computerArray,
-          Is.EquivalentTo (new object[] { Computer.GetObject (DomainObjectIDs.Computer3) }));
+
+      CheckQueryResult (computers, DomainObjectIDs.Computer3);
     }
 
     [Test]
@@ -67,10 +62,8 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
           from e in DataContext.Entity<Employee> (new TestQueryListener ())
           where e.Computer != null
           select e;
-      Employee[] employeeArray = employees.ToArray ();
-      Assert.That (employeeArray,
-          Is.EquivalentTo (new object[] { Employee.GetObject (DomainObjectIDs.Employee3), Computer.GetObject (DomainObjectIDs.Employee4),
-          Computer.GetObject (DomainObjectIDs.Employee5)}));
+
+      CheckQueryResult (employees, DomainObjectIDs.Employee3, DomainObjectIDs.Employee4, DomainObjectIDs.Employee5);
     }
 
     [Test]
@@ -82,9 +75,8 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
           from c in DataContext.Entity<Computer> (new TestQueryListener ())
           where c.Employee == employee
           select c;
-      Computer[] computerArray = computers.ToArray ();
-      Assert.That (computerArray,
-          Is.EquivalentTo (new object[] { Computer.GetObject (DomainObjectIDs.Computer1)}));
+
+      CheckQueryResult (computers, DomainObjectIDs.Computer1);
     }
 
     [Test]
@@ -96,16 +88,9 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
           orderby o.Customer.Name
           select o;
 
-      Order[] orderArray = orders.ToArray();
-
-      Assert.That (orderArray,
-          Is.EquivalentTo (new object[]
-              {
-                  Order.GetObject (DomainObjectIDs.OrderWithoutOrderItem), 
-                  Order.GetObject (DomainObjectIDs.Order1), 
-                  Order.GetObject (DomainObjectIDs.Order2), 
-                  Order.GetObject (DomainObjectIDs.Order3)
-              }));
+      Order[] expected =
+          GetExpectedObjects<Order> (DomainObjectIDs.OrderWithoutOrderItem, DomainObjectIDs.Order1, DomainObjectIDs.Order2, DomainObjectIDs.Order3);
+      Assert.That (orders.ToArray(), Is.EqualTo (expected));
     }
 
     [Test]
@@ -116,13 +101,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
           from o in DataContext.Entity<Order> (new TestQueryListener ())
           select o.Customer.Ceo;
 
-      Ceo[] ceosArray = ceos.ToArray ();
-
-      Assert.That (ceosArray,
-          Is.EquivalentTo (new object[]
-              {
-                  
-              }));
+      CheckQueryResult (ceos); // TODO
     }
 
     [Test]
@@ -133,13 +112,32 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
           from o in DataContext.Entity<Order> (new TestQueryListener ())
           select o.Customer.Ceo.Company;
 
-      Company[] companyArray = companies.ToArray ();
+      CheckQueryResult (companies); // TODO
+    }
 
-      Assert.That (companyArray,
-          Is.EquivalentTo (new object[]
-              {
-                  // TODO
-              }));
+    [Test]
+    public void QueryWithWhereAndImplicitJoin ()
+    {
+      var orders =
+          from o in DataContext.Entity<Order> (new TestQueryListener ())
+          where o.Customer.Type == Customer.CustomerType.Gold
+          select o;
+
+      CheckQueryResult (orders, DomainObjectIDs.InvalidOrder, DomainObjectIDs.Order3, DomainObjectIDs.Order2, DomainObjectIDs.Order4);
+    }
+
+    private void CheckQueryResult<T> (IQueryable<T> query, params ObjectID[] expectedObjectIDs)
+    where T : DomainObject
+    {
+      T[] results = query.ToArray ();
+      T[] expected = GetExpectedObjects<T> (expectedObjectIDs);
+      Assert.That (results, Is.EquivalentTo (expected));
+    }
+
+    private T[] GetExpectedObjects<T> (params ObjectID[] expectedObjectIDs)
+    where T : DomainObject
+    {
+      return (from id in expectedObjectIDs select (T) DomainObject.GetObject (id)).ToArray();
     }
   }
 }

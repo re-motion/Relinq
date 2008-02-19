@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
+using Rubicon.Collections;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.DataObjectModel;
 using Rubicon.Data.Linq.Parsing.FieldResolving;
@@ -14,6 +16,10 @@ namespace Rubicon.Data.Linq.Parsing.Details
     private readonly WhereClause _whereClause;
     private readonly IDatabaseInfo _databaseInfo;
     private readonly QueryExpression _queryExpression;
+    private readonly JoinedTableContext _context;
+
+    private List<FieldDescriptor> _fieldDescriptors;
+    
 
     public WhereConditionParser (QueryExpression queryExpression, WhereClause whereClause, IDatabaseInfo databaseInfo, JoinedTableContext context, bool simplify)
     {
@@ -26,13 +32,17 @@ namespace Rubicon.Data.Linq.Parsing.Details
       _queryExpression = queryExpression;
       _whereClause = whereClause;
       _databaseInfo = databaseInfo;
+      _context = context;
     }
 
-    public ICriterion GetCriterion ()
+    public Tuple<List<FieldDescriptor>, ICriterion> GetParseResult ()
     {
+      _fieldDescriptors = new List<FieldDescriptor>();
       LambdaExpression boolExpression = _simplify ? _whereClause.GetSimplifiedBoolExpression() : _whereClause.BoolExpression;
-      return ParseExpression (boolExpression.Body);
+      return Tuple.NewTuple (_fieldDescriptors, ParseExpression (boolExpression.Body));
     }
+
+    
 
     private ICriterion ParseExpression (Expression expression)
     {
@@ -52,8 +62,8 @@ namespace Rubicon.Data.Linq.Parsing.Details
 
     private ICriterion ParseMemberExpression (MemberExpression expression)
     {
-      JoinedTableContext context = new JoinedTableContext();
-      return _queryExpression.ResolveField (_databaseInfo, context, expression).GetMandatoryColumn();
+      _fieldDescriptors.Add (_queryExpression.ResolveField (_databaseInfo, _context, expression));
+      return _queryExpression.ResolveField (_databaseInfo, _context, expression).GetMandatoryColumn();
     }
 
     private ICriterion ParseConstantExpression (ConstantExpression expression)
@@ -67,35 +77,51 @@ namespace Rubicon.Data.Linq.Parsing.Details
       {
         case ExpressionType.And:
         case ExpressionType.AndAlso:
-          return new ComplexCriterion (ParseExpression (expression.Left), ParseExpression (expression.Right), ComplexCriterion.JunctionKind.And);
+          return CreateComplexCriterion(expression, ComplexCriterion.JunctionKind.And);
         case ExpressionType.Or:
         case ExpressionType.OrElse:
-          return new ComplexCriterion (ParseExpression (expression.Left), ParseExpression (expression.Right), ComplexCriterion.JunctionKind.Or);
+          return CreateComplexCriterion (expression, ComplexCriterion.JunctionKind.Or);
         case ExpressionType.Equal:
-          return new BinaryCondition (ParseExpression (expression.Left), ParseExpression (expression.Right), BinaryCondition.ConditionKind.Equal);
+          return CreateBinaryCondition(expression, BinaryCondition.ConditionKind.Equal);
         case ExpressionType.NotEqual:
-          return new BinaryCondition (ParseExpression (expression.Left), ParseExpression (expression.Right), BinaryCondition.ConditionKind.NotEqual);
+          return CreateBinaryCondition (expression, BinaryCondition.ConditionKind.NotEqual);
         case ExpressionType.GreaterThanOrEqual:
-          return new BinaryCondition (ParseExpression (expression.Left), ParseExpression (expression.Right), BinaryCondition.ConditionKind.GreaterThanOrEqual);
+          return CreateBinaryCondition (expression, BinaryCondition.ConditionKind.GreaterThanOrEqual);
         case ExpressionType.GreaterThan:
-          return new BinaryCondition (ParseExpression (expression.Left), ParseExpression (expression.Right), BinaryCondition.ConditionKind.GreaterThan);
+          return CreateBinaryCondition (expression, BinaryCondition.ConditionKind.GreaterThan);
         case ExpressionType.LessThanOrEqual:
-          return new BinaryCondition (ParseExpression (expression.Left), ParseExpression (expression.Right), BinaryCondition.ConditionKind.LessThanOrEqual);
+          return CreateBinaryCondition (expression, BinaryCondition.ConditionKind.LessThanOrEqual);
         case ExpressionType.LessThan:
-          return new BinaryCondition (ParseExpression (expression.Left), ParseExpression (expression.Right), BinaryCondition.ConditionKind.LessThan);
+          return CreateBinaryCondition (expression, BinaryCondition.ConditionKind.LessThan);
         default:
           throw ParserUtility.CreateParserException ("and, or, or comparison expression", expression.NodeType, "binary expression in where condition",
               _whereClause.BoolExpression);
       }
     }
 
+    private ComplexCriterion CreateComplexCriterion (BinaryExpression expression, ComplexCriterion.JunctionKind kind)
+    {
+      return new ComplexCriterion (ParseExpression (expression.Left), ParseExpression (expression.Right), kind);
+    }
+
+    private BinaryCondition CreateBinaryCondition (BinaryExpression expression, BinaryCondition.ConditionKind kind)
+    {
+      return new BinaryCondition (ParseExpression (expression.Left), ParseExpression (expression.Right), kind);
+    }
+
     private ICriterion ParseMethodCallExpression(MethodCallExpression expression)
     {
       if (expression.Method.Name == "StartsWith")
-        return new BinaryCondition (ParseExpression (expression.Object), new Constant (((ConstantExpression)expression.Arguments[0]).Value + "%"), BinaryCondition.ConditionKind.Like);
+        return CreateLike (expression, ((ConstantExpression)expression.Arguments[0]).Value + "%");
       else if (expression.Method.Name == "EndsWith")
-        return new BinaryCondition (ParseExpression (expression.Object), new Constant ("%" +  ((ConstantExpression) expression.Arguments[0]).Value), BinaryCondition.ConditionKind.Like);
-      throw ParserUtility.CreateParserException("StartsWith, EndsWith",expression.NodeType,"method call expression in where condition",_whereClause.BoolExpression);
+        return CreateLike (expression, "%" + ((ConstantExpression) expression.Arguments[0]).Value);
+
+      throw ParserUtility.CreateParserException("StartsWith, EndsWith",expression.NodeType, "method call expression in where condition",_whereClause.BoolExpression);
+    }
+
+    private BinaryCondition CreateLike (MethodCallExpression expression, string pattern)
+    {
+      return new BinaryCondition (ParseExpression (expression.Object), new Constant (pattern), BinaryCondition.ConditionKind.Like);
     }
 
     private ICriterion ParseUnaryExpression (UnaryExpression expression)
@@ -104,29 +130,12 @@ namespace Rubicon.Data.Linq.Parsing.Details
       {
         case ExpressionType.Not:
           return new NotCriterion (ParseExpression (expression.Operand));
+        case ExpressionType.Convert: // Convert is simply ignored ATM, change to more sophisticated logic when needed
+          return ParseExpression (expression.Operand);
         default:
-          throw ParserUtility.CreateParserException ("not expression", expression.NodeType, "unary expression in where condition",
+          throw ParserUtility.CreateParserException ("not or convert expression", expression.NodeType, "unary expression in where condition",
               _whereClause.BoolExpression);
       }
     }
-
-    //BinaryExpression binaryExpression = _whereClause.BoolExpression.Body as BinaryExpression;
-    //  Assertion.IsNotNull (binaryExpression);
-    //  Assertion.IsTrue (binaryExpression.NodeType == ExpressionType.Equal);
-
-    //  MemberExpression leftSide = binaryExpression.Left as MemberExpression;
-    //  Assertion.IsNotNull (leftSide);
-    //  ParameterExpression tableParameter = leftSide.Expression as ParameterExpression;
-    //  Assertion.IsNotNull (tableParameter);
-
-    //  FromClauseBase fromClause = ClauseFinder.FindFromClauseForExpression (_whereClause, tableParameter);
-    //  SourcePath table = DatabaseInfoUtility.GetTableForFromClause (_databaseInfo, fromClause);
-    //  MemberInfo columnMember = leftSide.Member;
-    //  Column leftColumn = DatabaseInfoUtility.GetColumn (_databaseInfo, table, columnMember);
-
-    //  ConstantExpression rightSide = binaryExpression.Right as ConstantExpression;
-    //  Assertion.IsNotNull (rightSide);
-    //  Constant rightConstant = new Constant (rightSide.Value);
-    //  return new BinaryCondition (leftColumn, rightConstant, BinaryCondition.ConditionKind.Equal);
   }
 }
