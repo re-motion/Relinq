@@ -17,7 +17,7 @@ namespace Rubicon.Data.Linq.DataObjectModel
 
     public override string ToString ()
     {
-      return Table.AliasString + "." + Name;
+      return (Table != null ? Table.AliasString : "<null>") + "." + Name;
     }
   }
 }

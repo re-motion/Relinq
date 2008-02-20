@@ -4,6 +4,18 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.DataObjectModel
 {
+  // Note: Join trees contain the joins in reverse natural order. Ie. the following tree and the following SQL statement are equivalent:
+  //      X
+  //     / \
+  //    T3  X
+  //       / \
+  //      T2  T1
+  //
+  // FROM T1
+  // INNER JOIN T2 ON ...
+  // INNER JOIN T3 ON ...
+  //
+  // The reason for this is the way the tree is built while parsing the LINQ statements.
   public struct JoinTree : IFieldSourcePath
   {
     public Table LeftSide { get; private set; }
