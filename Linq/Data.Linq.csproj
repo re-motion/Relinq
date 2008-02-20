@@ -54,6 +54,7 @@
     <Compile Include="Clauses\ClauseLookupException.cs" />
     <Compile Include="DataObjectModel\SingleJoin.cs" />
     <Compile Include="Parsing\FieldResolving\FieldAccessResolveException.cs" />
+    <Compile Include="Parsing\FieldResolving\FieldSourcePathBuilder.cs" />
     <Compile Include="Parsing\FieldResolving\FromClauseFieldResolver.cs" />
     <Compile Include="Parsing\FieldResolving\FromClauseFieldResolverVisitor.cs" />
     <Compile Include="Parsing\FieldResolving\JoinedTableContext.cs" />

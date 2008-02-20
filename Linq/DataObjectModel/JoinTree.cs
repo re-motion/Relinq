@@ -16,6 +16,12 @@ namespace Rubicon.Data.Linq.DataObjectModel
   // INNER JOIN T3 ON ...
   //
   // The reason for this is the way the tree is built while parsing the LINQ statements.
+
+  //      X
+  //     / \
+  //    T1  X
+  //       / \
+  //      T2  T3
   public struct JoinTree : IFieldSourcePath
   {
     public Table LeftSide { get; private set; }
