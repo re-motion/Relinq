@@ -209,7 +209,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       Table studentDetailTable = parsedQuery.MainFromClause.GetTable (StubDatabaseInfo.Instance);
       Table studentTable = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, relationMember);
       Tuple<string, string> joinColumns = DatabaseInfoUtility.GetJoinColumns (StubDatabaseInfo.Instance, relationMember);
-      IFieldSourcePath sourcePath = new Join (studentTable, studentDetailTable, new Column (studentTable, joinColumns.B),
+      IFieldSourcePath sourcePath = new JoinTree (studentTable, studentDetailTable, new Column (studentTable, joinColumns.B),
           new Column (studentDetailTable, joinColumns.A));
       
       FieldDescriptor expectedField =

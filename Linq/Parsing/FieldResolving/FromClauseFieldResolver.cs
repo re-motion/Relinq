@@ -105,7 +105,7 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
           Column leftColumn = new Column (leftTable, joinColumns.B);
           Column rightColumn = new Column (lastTable, joinColumns.A);
 
-          fieldSourcePath = new Join (leftTable, fieldSourcePath, leftColumn, rightColumn);
+          fieldSourcePath = new JoinTree (leftTable, fieldSourcePath, leftColumn, rightColumn);
           lastTable = leftTable;
         }
         catch (Exception ex)

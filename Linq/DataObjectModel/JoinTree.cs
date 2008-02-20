@@ -1,15 +1,17 @@
+using System;
+using System.Collections.Generic;
 using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.DataObjectModel
 {
-  public struct Join : IFieldSourcePath
+  public struct JoinTree : IFieldSourcePath
   {
     public Table LeftSide { get; private set; }
     public IFieldSourcePath RightSide { get; private set; }
     public Column LeftColumn { get; private set; }
     public Column RightColumn { get; private set; }
 
-    public Join (Table leftSide, IFieldSourcePath rightSide, Column leftColumn, Column rightColumn) : this()
+    public JoinTree (Table leftSide, IFieldSourcePath rightSide, Column leftColumn, Column rightColumn) : this()
     {
       ArgumentUtility.CheckNotNull ("leftSide", leftSide);
       ArgumentUtility.CheckNotNull ("rightSide", rightSide);
@@ -30,6 +32,24 @@ namespace Rubicon.Data.Linq.DataObjectModel
     public Table GetStartingTable ()
     {
       return RightSide.GetStartingTable();
+    }
+
+    public SingleJoin GetSingleJoinForRoot()
+    {
+      return new SingleJoin (LeftColumn, RightColumn);
+    }
+
+    public IEnumerable<SingleJoin> GetAllSingleJoins ()
+    {
+      yield return GetSingleJoinForRoot();
+
+      IFieldSourcePath currentTreeElement = RightSide;
+      while (currentTreeElement is JoinTree)
+      {
+        JoinTree currentJoin = (JoinTree) currentTreeElement;
+        yield return currentJoin.GetSingleJoinForRoot();
+        currentTreeElement = currentJoin.RightSide;
+      }
     }
   }
 }

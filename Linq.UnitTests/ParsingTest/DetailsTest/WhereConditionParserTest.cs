@@ -332,11 +332,11 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       Table leftSide = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, relationMember); // Student
       Table rightSide = fromClause.GetTable (StubDatabaseInfo.Instance); // Student_Detail
       Tuple<string, string> columns = DatabaseInfoUtility.GetJoinColumns (StubDatabaseInfo.Instance, relationMember);
-      Join join = new Join (leftSide, rightSide, new Column (leftSide, columns.B), new Column (rightSide, columns.A));
+      JoinTree joinTree = new JoinTree (leftSide, rightSide, new Column (leftSide, columns.B), new Column (rightSide, columns.A));
 
       PropertyInfo member = typeof (Student).GetProperty ("First");
       Column? column = DatabaseInfoUtility.GetColumn (StubDatabaseInfo.Instance, leftSide, member);
-      FieldDescriptor fieldDescriptor = new FieldDescriptor (member, fromClause, join, column);
+      FieldDescriptor fieldDescriptor = new FieldDescriptor (member, fromClause, joinTree, column);
 
       WhereConditionParser parser = new WhereConditionParser (parsedQuery, whereClause, _databaseInfo, _context, false);
       Tuple<List<FieldDescriptor>, ICriterion> parseResult = parser.GetParseResult ();

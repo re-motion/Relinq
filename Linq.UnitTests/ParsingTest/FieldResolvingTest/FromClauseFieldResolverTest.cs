@@ -124,13 +124,13 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
 
       Table expectedLeftSide = new Table ("studentTable", null);
       Table expectedRightSide = fromClause.GetTable (StubDatabaseInfo.Instance);
-      Join expectedJoin = new Join (
+      JoinTree expectedJoinTree = new JoinTree (
           expectedLeftSide,
           expectedRightSide,
           new Column (expectedLeftSide, "Student_FK"),
           new Column (expectedRightSide, "Student_Detail_PK"));
 
-      Assert.AreEqual (expectedJoin, fieldDescriptor.SourcePath);
+      Assert.AreEqual (expectedJoinTree, fieldDescriptor.SourcePath);
     }
 
     [Test]
@@ -157,21 +157,21 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
 
       Table expectedInnerLeftSide = new Table ("detailTable", null); // Student_Detail
       Table expectedInnerRightSide = fromClause.GetTable (StubDatabaseInfo.Instance); // Student_Detail_Detail
-      Join expectedInnerJoin = new Join ( // sd inner join sdd on sd.FK = sdd.PK
+      JoinTree expectedInnerJoinTree = new JoinTree ( // sd inner join sdd on sd.FK = sdd.PK
           expectedInnerLeftSide,
           expectedInnerRightSide,
           new Column (expectedInnerLeftSide, "Student_Detail_FK"),
           new Column (expectedInnerRightSide, "Student_Detail_Detail_PK"));
 
       Table expectedOuterLeftSide = new Table ("studentTable", null); // Student
-      Join expectedOuterJoin = new Join ( // s inner join (expectedInnerJoin) on s.FK = sd.PK
+      JoinTree expectedOuterJoinTree = new JoinTree ( // s inner join (expectedInnerJoinTree) on s.FK = sd.PK
           expectedOuterLeftSide,
-          expectedInnerJoin,
+          expectedInnerJoinTree,
           new Column (expectedOuterLeftSide, "Student_FK"),
           new Column (expectedInnerLeftSide, "Student_Detail_PK")
           );
 
-      Assert.AreEqual (expectedOuterJoin, fieldDescriptor.SourcePath);
+      Assert.AreEqual (expectedOuterJoinTree, fieldDescriptor.SourcePath);
     }
 
     [Test]
@@ -224,8 +224,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       FieldDescriptor fieldDescriptor2 =
           new FromClauseFieldResolver (fromClause).ResolveField (StubDatabaseInfo.Instance, _context, fieldExpression, fieldExpression);
 
-      Table table1 = ((Join) fieldDescriptor1.SourcePath).LeftSide;
-      Table table2 = ((Join) fieldDescriptor2.SourcePath).LeftSide;
+      Table table1 = ((JoinTree) fieldDescriptor1.SourcePath).LeftSide;
+      Table table2 = ((JoinTree) fieldDescriptor2.SourcePath).LeftSide;
 
       Assert.AreSame (table1, table2);
     }
@@ -249,10 +249,10 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       Table detailTable = fromClause.GetTable (StubDatabaseInfo.Instance);
       Table studentTable = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, member);
       Tuple<string, string> joinColumns = DatabaseInfoUtility.GetJoinColumns (StubDatabaseInfo.Instance, member);
-      Join join = new Join(studentTable, detailTable, new Column(studentTable, joinColumns.B), new Column(detailTable, joinColumns.A));
+      JoinTree joinTree = new JoinTree(studentTable, detailTable, new Column(studentTable, joinColumns.B), new Column(detailTable, joinColumns.A));
       Column column = new Column(studentTable, "*");
 
-      FieldDescriptor expected = new FieldDescriptor(member, fromClause, join, column);
+      FieldDescriptor expected = new FieldDescriptor(member, fromClause, joinTree, column);
       Assert.AreEqual (expected, fieldDescriptor);
     }
 
@@ -281,13 +281,13 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       Tuple<string, string> innerJoinColumns = DatabaseInfoUtility.GetJoinColumns (StubDatabaseInfo.Instance, innerRelationMember);
       Tuple<string, string> outerJoinColumns = DatabaseInfoUtility.GetJoinColumns (StubDatabaseInfo.Instance, member);
 
-      Join innerJoin =
-          new Join (detailTable, detailDetailTable, new Column (detailTable, innerJoinColumns.B), new Column (detailDetailTable, innerJoinColumns.A));
-      Join outerJoin =
-          new Join (studentTable, innerJoin, new Column (studentTable, outerJoinColumns.B), new Column (detailTable, outerJoinColumns.A));
+      JoinTree innerJoinTree =
+          new JoinTree (detailTable, detailDetailTable, new Column (detailTable, innerJoinColumns.B), new Column (detailDetailTable, innerJoinColumns.A));
+      JoinTree outerJoinTree =
+          new JoinTree (studentTable, innerJoinTree, new Column (studentTable, outerJoinColumns.B), new Column (detailTable, outerJoinColumns.A));
       Column column = new Column (studentTable, "*");
 
-      FieldDescriptor expected = new FieldDescriptor (member, fromClause, outerJoin, column);
+      FieldDescriptor expected = new FieldDescriptor (member, fromClause, outerJoinTree, column);
       Assert.AreEqual (expected, fieldDescriptor);
     }
   }

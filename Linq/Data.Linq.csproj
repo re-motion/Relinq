@@ -52,6 +52,7 @@
     <Compile Include="Clauses\AdditionalFromClause.cs" />
     <Compile Include="Clauses\ClauseFinder.cs" />
     <Compile Include="Clauses\ClauseLookupException.cs" />
+    <Compile Include="DataObjectModel\SingleJoin.cs" />
     <Compile Include="Parsing\FieldResolving\FieldAccessResolveException.cs" />
     <Compile Include="Parsing\FieldResolving\FromClauseFieldResolver.cs" />
     <Compile Include="Parsing\FieldResolving\FromClauseFieldResolverVisitor.cs" />
@@ -63,7 +64,7 @@
     <Compile Include="Clauses\GroupClause.cs" />
     <Compile Include="Clauses\IBodyClause.cs" />
     <Compile Include="DataObjectModel\IFieldSourcePath.cs" />
-    <Compile Include="DataObjectModel\Join.cs" />
+    <Compile Include="DataObjectModel\JoinTree.cs" />
     <Compile Include="DataObjectModel\OrderingField.cs" />
     <Compile Include="Parsing\Structure\OrderByExpressionParser.cs" />
     <Compile Include="Parsing\Structure\QueryBodyCreator.cs" />
