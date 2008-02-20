@@ -44,7 +44,7 @@ namespace Rubicon.Data.Linq.DataObjectModel
 
     public override string ToString ()
     {
-      return string.Format ("{0} ({1}.{2} via {3})", Column, FromClause.Identifier.Name, Member != null ? Member.Name : "*", SourcePath);
+      return string.Format ("{0} => {1}", SourcePath, Column);
     }
   }
 }

@@ -237,6 +237,11 @@ namespace Rubicon.Data.Linq.UnitTests
       return from sdd in source select new Tuple<string,int>(sdd.Student_Detail.Student.First,sdd.IndustrialSector.ID);
     }
 
+    public static IQueryable<Student> CreateObjectImplicitSelectJoin(IQueryable<Student_Detail> source)
+    {
+      return from sd in source select sd.Student;
+    }
+
     public static IQueryable<Student_Detail> CreateSimpleImplicitWhereJoin (IQueryable<Student_Detail> source)
     {
       return from sd in source where sd.Student.First == "Garcia" select sd;

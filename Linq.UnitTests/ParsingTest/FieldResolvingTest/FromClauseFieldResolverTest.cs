@@ -1,6 +1,8 @@
 using System;
 using System.Linq.Expressions;
+using System.Reflection;
 using NUnit.Framework;
+using Rubicon.Collections;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.DataObjectModel;
 using Rubicon.Data.Linq.Parsing.FieldResolving;
@@ -26,8 +28,12 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
 
       FieldDescriptor fieldDescriptor =
           new FromClauseFieldResolver (fromClause).ResolveField (StubDatabaseInfo.Instance, _context, identifier, identifier);
-      Assert.AreEqual (new Column (new Table ("studentTable", "fromIdentifier1"), "*"), fieldDescriptor.Column);
-      Assert.AreSame (fromClause, fieldDescriptor.FromClause);
+
+      Table table = fromClause.GetTable (StubDatabaseInfo.Instance);
+      Column column = new Column (table, "*");
+      FieldDescriptor expected = new FieldDescriptor (null, fromClause, table, column);
+
+      Assert.AreEqual (expected, fieldDescriptor);
     }
 
     [Test]
@@ -222,6 +228,67 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       Table table2 = ((Join) fieldDescriptor2.SourcePath).LeftSide;
 
       Assert.AreSame (table1, table2);
+    }
+
+    [Test]
+    public void Resolve_EntityField_Simple ()
+    {
+      //sd.Student
+      ParameterExpression identifier = Expression.Parameter (typeof (Student_Detail), "sd");
+      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource_Detail ());
+
+      PropertyInfo member = typeof (Student_Detail).GetProperty ("Student");
+      Expression fieldExpression =
+          Expression.MakeMemberAccess (
+              Expression.Parameter (typeof (Student_Detail), "sd"),
+                  member);
+
+      FieldDescriptor fieldDescriptor =
+          new FromClauseFieldResolver (fromClause).ResolveField (StubDatabaseInfo.Instance, _context, fieldExpression, fieldExpression);
+
+      Table detailTable = fromClause.GetTable (StubDatabaseInfo.Instance);
+      Table studentTable = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, member);
+      Tuple<string, string> joinColumns = DatabaseInfoUtility.GetJoinColumns (StubDatabaseInfo.Instance, member);
+      Join join = new Join(studentTable, detailTable, new Column(studentTable, joinColumns.B), new Column(detailTable, joinColumns.A));
+      Column column = new Column(studentTable, "*");
+
+      FieldDescriptor expected = new FieldDescriptor(member, fromClause, join, column);
+      Assert.AreEqual (expected, fieldDescriptor);
+    }
+
+    [Test]
+    public void Resolve_EntityField_Nested ()
+    {
+      //sdd.Student_Detail.Student
+      ParameterExpression identifier = Expression.Parameter (typeof (Student_Detail_Detail), "sdd");
+      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource_Detail_Detail ());
+
+      PropertyInfo member = typeof (Student_Detail).GetProperty ("Student");
+      PropertyInfo innerRelationMember = typeof (Student_Detail_Detail).GetProperty ("Student_Detail");
+      Expression fieldExpression =
+          Expression.MakeMemberAccess (
+              Expression.MakeMemberAccess (
+                  Expression.Parameter (typeof (Student_Detail_Detail), "sdd"),
+                  innerRelationMember),
+              member);
+
+      FieldDescriptor fieldDescriptor =
+          new FromClauseFieldResolver (fromClause).ResolveField (StubDatabaseInfo.Instance, _context, fieldExpression, fieldExpression);
+
+      Table detailDetailTable = fromClause.GetTable (StubDatabaseInfo.Instance);
+      Table detailTable = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, innerRelationMember);
+      Table studentTable = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, member);
+      Tuple<string, string> innerJoinColumns = DatabaseInfoUtility.GetJoinColumns (StubDatabaseInfo.Instance, innerRelationMember);
+      Tuple<string, string> outerJoinColumns = DatabaseInfoUtility.GetJoinColumns (StubDatabaseInfo.Instance, member);
+
+      Join innerJoin =
+          new Join (detailTable, detailDetailTable, new Column (detailTable, innerJoinColumns.B), new Column (detailDetailTable, innerJoinColumns.A));
+      Join outerJoin =
+          new Join (studentTable, innerJoin, new Column (studentTable, outerJoinColumns.B), new Column (detailTable, outerJoinColumns.A));
+      Column column = new Column (studentTable, "*");
+
+      FieldDescriptor expected = new FieldDescriptor (member, fromClause, outerJoin, column);
+      Assert.AreEqual (expected, fieldDescriptor);
     }
   }
 }

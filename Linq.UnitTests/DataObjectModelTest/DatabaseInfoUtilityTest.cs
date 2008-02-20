@@ -83,5 +83,24 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     {
       DatabaseInfoUtility.GetJoinColumns (StubDatabaseInfo.Instance, typeof (Student).GetProperty ("First"));
     }
+
+    [Test]
+    public void IsRelationMember_True ()
+    {
+      Assert.IsTrue (DatabaseInfoUtility.IsRelationMember (StubDatabaseInfo.Instance, typeof (Student_Detail_Detail).GetProperty ("Student_Detail")));
+      Assert.IsTrue (DatabaseInfoUtility.IsRelationMember (StubDatabaseInfo.Instance, typeof (Student_Detail).GetProperty ("Student")));
+    }
+
+    [Test]
+    public void IsRelationMember_False ()
+    {
+      Assert.IsFalse (DatabaseInfoUtility.IsRelationMember (StubDatabaseInfo.Instance, typeof (Student).GetProperty ("First")));
+    }
+
+    [Test]
+    public void IsRelationMember_NonDBMember ()
+    {
+      Assert.IsFalse (DatabaseInfoUtility.IsRelationMember (StubDatabaseInfo.Instance, typeof (Student).GetProperty ("NonDBProperty")));
+    }
   }
 }

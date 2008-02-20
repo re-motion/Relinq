@@ -67,5 +67,13 @@ namespace Rubicon.Data.Linq.DataObjectModel
       else
         return columns;
     }
+
+    public static bool IsRelationMember (IDatabaseInfo databaseInfo, MemberInfo member)
+    {
+      ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
+      ArgumentUtility.CheckNotNull ("member", member);
+
+      return databaseInfo.GetRelatedTableName (member) != null;
+    }
   }
 }

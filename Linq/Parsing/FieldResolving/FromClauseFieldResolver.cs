@@ -57,10 +57,27 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
       // joinMembers == "Student_Detail", "Student"
 
       Table initialTable = DatabaseInfoUtility.GetTableForFromClause (databaseInfo, _fromClause); // Table for sdd
-      Tuple<IFieldSourcePath, Table> fieldData = CalculateJoinData (databaseInfo, context, initialTable, joinMembers);
 
-      Column? column = DatabaseInfoUtility.GetColumn (databaseInfo, fieldData.B, accessedMember);
+      var memberInfos = AdjustMemberInfosForRelations (databaseInfo, accessedMember, joinMembers);
+      MemberInfo accessedMemberForColumn = memberInfos.A;
+      IEnumerable<MemberInfo> joinMembersForCalculation = memberInfos.B;
+      
+      Tuple<IFieldSourcePath, Table> fieldData = CalculateJoinData (databaseInfo, context, initialTable, joinMembersForCalculation);
+      Column? column = DatabaseInfoUtility.GetColumn (databaseInfo, fieldData.B, accessedMemberForColumn);
       return new FieldDescriptor (accessedMember, _fromClause, fieldData.A, column);
+    }
+
+    private Tuple<MemberInfo, IEnumerable<MemberInfo>> AdjustMemberInfosForRelations (
+        IDatabaseInfo databaseInfo, MemberInfo accessedMember, IEnumerable<MemberInfo> joinMembers)
+    {
+      if (accessedMember != null && DatabaseInfoUtility.IsRelationMember (databaseInfo, accessedMember))
+      {
+        List<MemberInfo> newJoinMembers = new List<MemberInfo> (joinMembers);
+        newJoinMembers.Add (accessedMember);
+        return new Tuple<MemberInfo, IEnumerable<MemberInfo>> (null, newJoinMembers); // select full table if relation member is accessed
+      }
+      else
+        return new Tuple<MemberInfo, IEnumerable<MemberInfo>> (accessedMember, joinMembers);
     }
 
     private Tuple<IFieldSourcePath, Table> CalculateJoinData (IDatabaseInfo databaseInfo, JoinedTableContext context, Table initialTable, IEnumerable<MemberInfo> joinMembers)

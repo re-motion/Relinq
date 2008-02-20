@@ -21,7 +21,12 @@ namespace Rubicon.Data.Linq.DataObjectModel
 
     public override string ToString ()
     {
-      return Name + " (" + Alias + ")";
+      return Name + " " + AliasString;
+    }
+
+    public string AliasString
+    {
+      get { return Alias ?? "_"; }
     }
 
     public Table GetStartingTable ()

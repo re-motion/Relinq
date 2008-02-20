@@ -22,6 +22,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
+    [Ignore ("TODO: Make entity members work correctly in where clauses.")]
     public void QueryWithWhereConditionsAndNull ()
     {
       var computers =
@@ -105,14 +106,37 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
-    [Ignore ("TODO: When querying related object, the foreign key is selected, not the object data.")]
     public void QueryWithSelectAndImplicitJoin ()
     {
-      var companies =
+      var ceos =
           from o in DataContext.Entity<Order> (new TestQueryListener ())
-          select o.Customer.Ceo.Company;
+          where o.Customer.Ceo.Name == "Hugo Boss"
+          select o.Customer.Ceo;
 
-      CheckQueryResult (companies); // TODO
+      CheckQueryResult (ceos, DomainObjectIDs.Ceo5); // TODO
+    }
+
+    [Test]
+    [Ignore ("TODO: Flatten joins when adding them in SqlGeneratorVisitor to avoid adding join parts twice")]
+    public void QueryWithSelectAndImplicitJoin_UsingJoinPartTwice ()
+    {
+      var ceos =
+          from o in DataContext.Entity<Order> (new TestQueryListener())
+          where o.Customer.Name == "Kunde 3"
+          select o.Customer.Ceo;
+
+      CheckQueryResult (ceos); // TODO
+    }
+
+    [Test]
+    [Ignore ("TODO: Support distinct")]
+    public void QueryWithDistinct ()
+    {
+      var ceos =
+          (from o in DataContext.Entity<Order> (new TestQueryListener ())
+          select o.Customer.Ceo).Distinct();
+
+      CheckQueryResult (ceos); // TODO
     }
 
     [Test]
