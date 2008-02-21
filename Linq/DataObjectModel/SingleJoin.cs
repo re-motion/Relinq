@@ -4,8 +4,8 @@ namespace Rubicon.Data.Linq.DataObjectModel
 {
   public struct SingleJoin
   {
-    public Column LeftColumn { get; private set; }
     public Column RightColumn { get; private set; }
+    public Column LeftColumn { get; private set; }
 
     public SingleJoin (Column leftColumn, Column rightColumn) : this()
     {
@@ -28,7 +28,7 @@ namespace Rubicon.Data.Linq.DataObjectModel
 
     public override string ToString ()
     {
-      return string.Format ("({0} inner join {1} on {2} = {3})", LeftSide, RightSide, LeftColumn, RightColumn);
+      return string.Format ("({0} inner join {1} on {2} = {3})", RightSide, LeftSide, RightColumn, LeftColumn);
     }
   }
 }

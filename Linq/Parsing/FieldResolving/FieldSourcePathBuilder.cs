@@ -18,16 +18,14 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
         FieldSourcePath pathSoFar = new FieldSourcePath (initialTable, joins);
         try
         {
-          Table leftTable = context.GetJoinedTable (databaseInfo, pathSoFar, member);
+          Table relatedTable = context.GetJoinedTable (databaseInfo, pathSoFar, member);
           Tuple<string, string> joinColumns = DatabaseInfoUtility.GetJoinColumnNames (databaseInfo, member);
 
-          // joinColumns holds the columns in the order defined by the member: for "sdd.Student_Detail" it holds sdd.PK/Student_Detail.FK
-          // we build the trees in opposite order, so we use the first tuple value as the right column, the second value as the left column
-          Column leftColumn = new Column (leftTable, joinColumns.B);
-          Column rightColumn = new Column (lastTable, joinColumns.A);
+          Column leftColumn = new Column (lastTable, joinColumns.A);
+          Column rightColumn = new Column (relatedTable, joinColumns.B);
 
-          joins.Add (new SingleJoin(leftColumn, rightColumn));
-          lastTable = leftTable;
+          joins.Add (new SingleJoin (leftColumn, rightColumn));
+          lastTable = relatedTable;
         }
         catch (Exception ex)
         {

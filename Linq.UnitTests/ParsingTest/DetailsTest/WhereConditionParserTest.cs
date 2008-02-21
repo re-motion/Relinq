@@ -319,15 +319,15 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       WhereClause whereClause = ClauseFinder.FindClause<WhereClause> (parsedQuery.QueryBody.SelectOrGroupClause);
       
       PropertyInfo relationMember = typeof (Student_Detail).GetProperty ("Student");
-      Table leftSide = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, relationMember); // Student
-      Table rightSide = fromClause.GetTable (StubDatabaseInfo.Instance); // Student_Detail
+      Table sourceTable = fromClause.GetTable (StubDatabaseInfo.Instance); // Student_Detail
+      Table relatedTable = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, relationMember); // Student
       Tuple<string, string> columns = DatabaseInfoUtility.GetJoinColumnNames (StubDatabaseInfo.Instance, relationMember);
       
       PropertyInfo member = typeof (Student).GetProperty ("First");
-      Column? column = DatabaseInfoUtility.GetColumn (StubDatabaseInfo.Instance, leftSide, member);
+      Column? column = DatabaseInfoUtility.GetColumn (StubDatabaseInfo.Instance, relatedTable, member);
 
-      SingleJoin join = new SingleJoin (new Column (leftSide, columns.B), new Column (rightSide, columns.A));
-      FieldSourcePath path = new FieldSourcePath(rightSide,new[] {join});
+      SingleJoin join = new SingleJoin (new Column (sourceTable, columns.A), new Column (relatedTable, columns.B));
+      FieldSourcePath path = new FieldSourcePath(sourceTable,new[] {join});
       FieldDescriptor fieldDescriptor = new FieldDescriptor (member, fromClause, path, column);
 
       WhereConditionParser parser = new WhereConditionParser (parsedQuery, whereClause, _databaseInfo, _context, false);

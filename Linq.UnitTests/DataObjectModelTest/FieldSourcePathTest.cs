@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Rubicon.Data.Linq.DataObjectModel;
@@ -12,8 +11,8 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     public void Initialization ()
     {
       Table source = new Table();
-      SingleJoin join1 = new SingleJoin(new Column(source,"s1"),new Column(source,"s2"));
-      SingleJoin join2 = new SingleJoin (new Column (source, "s3"), new Column (source, "s4"));
+      SingleJoin join1 = new SingleJoin(new Column(source,"s2"), new Column(source,"s1"));
+      SingleJoin join2 = new SingleJoin (new Column (source, "s4"), new Column (source, "s3"));
       SingleJoin[] joins = new[] {join1,join2};
       
       FieldSourcePath sourcePath = new FieldSourcePath(source,joins);
@@ -23,7 +22,7 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     }
 
     [Test]
-    public void LatTable_NoJoins ()
+    public void LastTable_NoJoins ()
     {
       Table source = new Table ();
       FieldSourcePath sourcePath = new FieldSourcePath (source, new SingleJoin[0]);
@@ -31,11 +30,11 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     }
 
     [Test]
-    public void LatTable_OneJoin ()
+    public void LastTable_OneJoin ()
     {
       Table source = new Table ();
       Table table1 = new Table ();
-      SingleJoin join1 = new SingleJoin (new Column (table1, "s1"), new Column (source, "s2"));
+      SingleJoin join1 = new SingleJoin (new Column (source, "s2"), new Column (table1, "s1"));
       SingleJoin[] joins = new[] { join1 };
 
       FieldSourcePath sourcePath = new FieldSourcePath (source, joins);
@@ -43,13 +42,13 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     }
 
     [Test]
-    public void LatTable_SeveralJoins ()
+    public void LastTable_SeveralJoins ()
     {
       Table source = new Table ();
       Table table1 = new Table ();
       Table table2 = new Table ();
-      SingleJoin join1 = new SingleJoin (new Column (table1, "s1"), new Column (source, "s2"));
-      SingleJoin join2 = new SingleJoin (new Column (table2, "s3"), new Column (table1, "s4"));
+      SingleJoin join1 = new SingleJoin (new Column (source, "s2"), new Column (table1, "s1"));
+      SingleJoin join2 = new SingleJoin (new Column (table1, "s4"), new Column (table2, "s3"));
       SingleJoin[] joins = new[] { join1, join2 };
 
       FieldSourcePath sourcePath = new FieldSourcePath (source, joins);
@@ -60,8 +59,8 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     public void Equals_True()
     {
       Table source = new Table ("source", "s");
-      SingleJoin join1 = new SingleJoin (new Column (source, "s1"), new Column (source, "s2"));
-      SingleJoin join2 = new SingleJoin (new Column (source, "s3"), new Column (source, "s4"));
+      SingleJoin join1 = new SingleJoin (new Column (source, "s2"), new Column (source, "s1"));
+      SingleJoin join2 = new SingleJoin (new Column (source, "s4"), new Column (source, "s3"));
       SingleJoin[] joins = new[] { join1, join2 };
 
       FieldSourcePath sourcePath1 = new FieldSourcePath (source, joins);
@@ -74,8 +73,8 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     public void Equals_FalseOtherClass ()
     {
       Table source = new Table ("source", "s");
-      SingleJoin join1 = new SingleJoin (new Column (source, "s1"), new Column (source, "s2"));
-      SingleJoin join2 = new SingleJoin (new Column (source, "s3"), new Column (source, "s4"));
+      SingleJoin join1 = new SingleJoin (new Column (source, "s2"), new Column (source, "s1"));
+      SingleJoin join2 = new SingleJoin (new Column (source, "s4"), new Column (source, "s3"));
       SingleJoin[] joins = new[] { join1, join2 };
 
       FieldSourcePath sourcePath = new FieldSourcePath (source, joins);
@@ -88,8 +87,8 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     {
       Table source1 = new Table ("source", "s");
       Table source2 = new Table ("source", "s");
-      SingleJoin join1 = new SingleJoin (new Column (source1, "s1"), new Column (source1, "s2"));
-      SingleJoin join2 = new SingleJoin (new Column (source1, "s3"), new Column (source1, "s4"));
+      SingleJoin join1 = new SingleJoin (new Column (source1, "s2"), new Column (source1, "s1"));
+      SingleJoin join2 = new SingleJoin (new Column (source1, "s4"), new Column (source1, "s3"));
       SingleJoin[] joins = new[] { join1, join2 };
 
       FieldSourcePath sourcePath1 = new FieldSourcePath (source1, joins);
@@ -102,9 +101,9 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     public void Equals_FalseJoins ()
     {
       Table source = new Table ("source", "s");
-      SingleJoin join1 = new SingleJoin (new Column (source, "s1"), new Column (source, "s2"));
-      SingleJoin join2 = new SingleJoin (new Column (source, "s3"), new Column (source, "s4"));
-      SingleJoin join3 = new SingleJoin (new Column (source, "s5"), new Column (source, "s6"));
+      SingleJoin join1 = new SingleJoin (new Column (source, "s2"), new Column (source, "s1"));
+      SingleJoin join2 = new SingleJoin (new Column (source, "s4"), new Column (source, "s3"));
+      SingleJoin join3 = new SingleJoin (new Column (source, "s6"), new Column (source, "s5"));
       SingleJoin[] joins1 = new[] { join1, join2 };
       SingleJoin[] joins2 = new[] { join1, join3 };
 
@@ -118,8 +117,8 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     public void GetHashCode_EqualPaths ()
     {
       Table source = new Table ("source", "s");
-      SingleJoin join1 = new SingleJoin (new Column (source, "s1"), new Column (source, "s2"));
-      SingleJoin join2 = new SingleJoin (new Column (source, "s3"), new Column (source, "s4"));
+      SingleJoin join1 = new SingleJoin (new Column (source, "s2"), new Column (source, "s1"));
+      SingleJoin join2 = new SingleJoin (new Column (source, "s4"), new Column (source, "s3"));
       SingleJoin[] joins = new[] { join1, join2 };
 
       FieldSourcePath sourcePath1 = new FieldSourcePath (source, joins);
@@ -133,8 +132,8 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     {
       Table source1 = new Table ("source", "s");
       Table source2 = new Table ("source", "s");
-      SingleJoin join1 = new SingleJoin (new Column (source1, "s1"), new Column (source1, "s2"));
-      SingleJoin join2 = new SingleJoin (new Column (source1, "s3"), new Column (source1, "s4"));
+      SingleJoin join1 = new SingleJoin (new Column (source1, "s2"), new Column (source1, "s1"));
+      SingleJoin join2 = new SingleJoin (new Column (source1, "s4"), new Column (source1, "s3"));
       SingleJoin[] joins = new[] { join1, join2 };
 
       FieldSourcePath sourcePath1 = new FieldSourcePath (source1, joins);
@@ -147,9 +146,9 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     public void GetHashCode_DifferentJoins ()
     {
       Table source = new Table ("source", "s");
-      SingleJoin join1 = new SingleJoin (new Column (source, "s1"), new Column (source, "s2"));
-      SingleJoin join2 = new SingleJoin (new Column (source, "s3"), new Column (source, "s4"));
-      SingleJoin join3 = new SingleJoin (new Column (source, "s5"), new Column (source, "s6"));
+      SingleJoin join1 = new SingleJoin (new Column (source, "s2"), new Column (source, "s1"));
+      SingleJoin join2 = new SingleJoin (new Column (source, "s4"), new Column (source, "s3"));
+      SingleJoin join3 = new SingleJoin (new Column (source, "s6"), new Column (source, "s5"));
       SingleJoin[] joins1 = new[] { join1, join2 };
       SingleJoin[] joins2 = new[] { join1, join3 };
 

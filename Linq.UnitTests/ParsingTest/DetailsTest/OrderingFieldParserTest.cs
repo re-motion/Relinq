@@ -117,14 +117,14 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
 
       FromClauseBase fromClause = parsedQuery.MainFromClause;
       PropertyInfo relationMember = typeof (Student_Detail).GetProperty ("Student");
-      Table leftSide = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, relationMember); // Student
-      Table rightSide = fromClause.GetTable (StubDatabaseInfo.Instance); // Student_Detail
+      Table sourceTable = fromClause.GetTable (StubDatabaseInfo.Instance); // Student_Detail
+      Table relatedTable = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, relationMember); // Student
       Tuple<string, string> columns = DatabaseInfoUtility.GetJoinColumnNames (StubDatabaseInfo.Instance, relationMember);
       
       PropertyInfo orderingMember = typeof (Student).GetProperty ("First");
-      SingleJoin join = new SingleJoin (new Column (leftSide, columns.B), new Column (rightSide, columns.A));
-      FieldSourcePath path = new FieldSourcePath (rightSide, new[] { join });
-      Column? column = DatabaseInfoUtility.GetColumn (StubDatabaseInfo.Instance, leftSide, orderingMember);
+      SingleJoin join = new SingleJoin (new Column (sourceTable, columns.A), new Column (relatedTable, columns.B));
+      FieldSourcePath path = new FieldSourcePath (sourceTable, new[] { join });
+      Column? column = DatabaseInfoUtility.GetColumn (StubDatabaseInfo.Instance, relatedTable, orderingMember);
       FieldDescriptor fieldDescriptor = new FieldDescriptor (orderingMember, fromClause, path, column);
 
       OrderingFieldParser parser = new OrderingFieldParser (parsedQuery, orderingClause, StubDatabaseInfo.Instance, _context);

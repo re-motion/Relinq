@@ -45,7 +45,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       Table relatedTable = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, _studentMember);
       Tuple<string, string> joinColumns = DatabaseInfoUtility.GetJoinColumnNames (StubDatabaseInfo.Instance, _studentMember);
 
-      SingleJoin singleJoin = new SingleJoin (new Column (relatedTable, joinColumns.B), new Column (_initialTable, joinColumns.A));
+      SingleJoin singleJoin = new SingleJoin (new Column (_initialTable, joinColumns.A), new Column (relatedTable, joinColumns.B));
       FieldSourcePath expected = new FieldSourcePath (_initialTable, new[] { singleJoin });
       Assert.AreEqual (expected, result);
     }
@@ -63,8 +63,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       Table relatedTable2 = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, _studentMember);
       Tuple<string, string> joinColumns2 = DatabaseInfoUtility.GetJoinColumnNames (StubDatabaseInfo.Instance, _studentMember);
 
-      SingleJoin singleJoin1 = new SingleJoin (new Column (relatedTable1, joinColumns1.B), new Column (_initialTable, joinColumns1.A));
-      SingleJoin singleJoin2 = new SingleJoin (new Column (relatedTable2, joinColumns2.B), new Column (relatedTable1, joinColumns2.A));
+      SingleJoin singleJoin1 = new SingleJoin (new Column (_initialTable, joinColumns1.A), new Column (relatedTable1, joinColumns1.B));
+      SingleJoin singleJoin2 = new SingleJoin (new Column (relatedTable1, joinColumns2.A), new Column (relatedTable2, joinColumns2.B));
       FieldSourcePath expected = new FieldSourcePath (_initialTable, new[] { singleJoin1, singleJoin2 });
       Assert.AreEqual (expected, result);
     }

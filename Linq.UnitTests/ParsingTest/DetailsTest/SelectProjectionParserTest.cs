@@ -205,7 +205,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       Table studentTable = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, relationMember);
       Tuple<string, string> joinColumns = DatabaseInfoUtility.GetJoinColumnNames (StubDatabaseInfo.Instance, relationMember);
 
-      SingleJoin join = new SingleJoin (new Column (studentTable, joinColumns.B), new Column (studentDetailTable, joinColumns.A));
+      SingleJoin join = new SingleJoin (new Column (studentDetailTable, joinColumns.A), new Column (studentTable, joinColumns.B));
 
       FieldSourcePath path = new FieldSourcePath (studentDetailTable, new[] {join});
 

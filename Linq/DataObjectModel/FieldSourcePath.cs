@@ -26,7 +26,7 @@ namespace Rubicon.Data.Linq.DataObjectModel
         if (Joins.Count == 0)
           return SourceTable;
         else
-          return Joins[Joins.Count - 1].LeftSide;
+          return Joins[Joins.Count - 1].RightSide;
       }
     }
 
@@ -61,7 +61,7 @@ namespace Rubicon.Data.Linq.DataObjectModel
     {
       bool joinsHasElements = Joins.GetEnumerator ().MoveNext ();
       if (joinsHasElements)
-        return SourceTable.AliasString + "." + SeparatedStringBuilder.Build (".", Joins, join => join.LeftSide.Name);
+        return SourceTable.AliasString + "." + SeparatedStringBuilder.Build (".", Joins, join => join.RightSide.Name);
       else
         return SourceTable.AliasString;
     }
