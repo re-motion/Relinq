@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="ClausesTest\AdditionalFromClauseTest.cs" />
     <Compile Include="ClausesTest\ClauseFinderTest.cs" />
+    <Compile Include="DataObjectModelTest\FieldSourcePathTest.cs" />
     <Compile Include="ParsingTest\FieldResolvingTest\FieldSourcePathBuilderTest.cs" />
     <Compile Include="ParsingTest\FieldResolvingTest\FromClauseFieldResolverTest.cs" />
     <Compile Include="ParsingTest\FieldResolvingTest\FromClauseFieldResolverVisitorTest.cs" />
