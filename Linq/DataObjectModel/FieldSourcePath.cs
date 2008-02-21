@@ -5,7 +5,7 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.DataObjectModel
 {
-  public struct FieldSourcePath
+  public struct FieldSourcePath : IFieldSourcePath
   {
     public Table SourceTable { get; private set; }
     public ReadOnlyCollection<SingleJoin> Joins { get; private set; }
@@ -50,9 +50,14 @@ namespace Rubicon.Data.Linq.DataObjectModel
     {
       bool joinsHasElements = Joins.GetEnumerator ().MoveNext ();
       if (joinsHasElements)
-        return SourceTable.AliasString + "." + SeparatedStringBuilder.Build (".", Joins, join => join.RightSide.AliasString);
+        return SourceTable.AliasString + "." + SeparatedStringBuilder.Build (".", Joins, join => join.LeftSide.Name);
       else
         return SourceTable.AliasString;
+    }
+
+    public Table GetStartingTable ()
+    {
+      throw new System.NotImplementedException();
     }
   }
 }

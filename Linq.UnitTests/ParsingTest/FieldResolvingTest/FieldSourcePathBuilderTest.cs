@@ -81,6 +81,59 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       Assert.AreEqual (1, _context.Count);
     }
 
+    [Test]
+    public void BuildFieldSourcePath2_NoJoin ()
+    {
+      MemberInfo[] joinMembers = new MemberInfo[] { };
+      FieldSourcePath result =
+          new FieldSourcePathBuilder ().BuildFieldSourcePath2 (StubDatabaseInfo.Instance, _context, _initialTable, joinMembers);
+
+      FieldSourcePath expected = new FieldSourcePath(_initialTable, new SingleJoin[0]);
+      Assert.AreEqual (expected, result);
+    }
+
+    [Test]
+    public void BuildFieldSourcePath2_SimpleJoin ()
+    {
+      MemberInfo[] joinMembers = new MemberInfo[] { _studentMember };
+      FieldSourcePath result =
+          new FieldSourcePathBuilder ().BuildFieldSourcePath2 (StubDatabaseInfo.Instance, _context, _initialTable, joinMembers);
+
+      Table relatedTable = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, _studentMember);
+      Tuple<string, string> joinColumns = DatabaseInfoUtility.GetJoinColumns (StubDatabaseInfo.Instance, _studentMember);
+
+      SingleJoin singleJoin = new SingleJoin (new Column (relatedTable, joinColumns.B), new Column (_initialTable, joinColumns.A));
+      FieldSourcePath expected = new FieldSourcePath (_initialTable, new[] { singleJoin });
+      Assert.AreEqual (expected, result);
+    }
+
+    [Test]
+    public void BuildFieldSourcePath2_NestedJoin ()
+    {
+      MemberInfo[] joinMembers = new MemberInfo[] { _studentDetailMember, _studentMember };
+      FieldSourcePath result =
+          new FieldSourcePathBuilder ().BuildFieldSourcePath2 (StubDatabaseInfo.Instance, _context, _initialTable, joinMembers);
+
+      Table relatedTable1 = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, _studentDetailMember);
+      Tuple<string, string> joinColumns1 = DatabaseInfoUtility.GetJoinColumns (StubDatabaseInfo.Instance, _studentDetailMember);
+
+      Table relatedTable2 = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, _studentMember);
+      Tuple<string, string> joinColumns2 = DatabaseInfoUtility.GetJoinColumns (StubDatabaseInfo.Instance, _studentMember);
+
+      SingleJoin singleJoin1 = new SingleJoin (new Column (relatedTable1, joinColumns1.B), new Column (_initialTable, joinColumns1.A));
+      SingleJoin singleJoin2 = new SingleJoin (new Column (relatedTable2, joinColumns2.B), new Column (relatedTable1, joinColumns2.A));
+      FieldSourcePath expected = new FieldSourcePath (_initialTable, new[] { singleJoin1, singleJoin2 });
+      Assert.AreEqual (expected, result);
+    }
+
+    [Test]
+    public void BuildFieldSourcePath2_UsesContext ()
+    {
+      Assert.AreEqual (0, _context.Count);
+      BuildFieldSourcePath2_SimpleJoin ();
+      Assert.AreEqual (1, _context.Count);
+    }
+
     //Reversed ordering
     //[Test]
     //public void BuildFieldSourcePath_NoJoin ()
