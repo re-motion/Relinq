@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using Rubicon.Data.Linq.Parsing.Structure;
 
-namespace Rubicon.Data.Linq.UnitTests.ParsingTest.QueryParserIntegrationTest
+namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.QueryParserIntegrationTest
 {
   public abstract class QueryTestBase<T>
   {
