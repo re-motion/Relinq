@@ -63,7 +63,7 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
       IEnumerable<MemberInfo> joinMembersForCalculation = memberInfos.B;
 
       FieldSourcePathBuilder pathBuilder = new FieldSourcePathBuilder();
-      FieldSourcePath fieldData = pathBuilder.BuildFieldSourcePath2 (databaseInfo, context, initialTable, joinMembersForCalculation);
+      FieldSourcePath fieldData = pathBuilder.BuildFieldSourcePath (databaseInfo, context, initialTable, joinMembersForCalculation);
       Column? column = DatabaseInfoUtility.GetColumn (databaseInfo, fieldData.LastTable, accessedMemberForColumn);
       return new FieldDescriptor (accessedMember, _fromClause, fieldData, column);
     }

@@ -8,7 +8,7 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
 {
   public class FieldSourcePathBuilder
   {
-    public FieldSourcePath BuildFieldSourcePath2 (IDatabaseInfo databaseInfo, JoinedTableContext context, Table initialTable, IEnumerable<MemberInfo> joinMembers)
+    public FieldSourcePath BuildFieldSourcePath (IDatabaseInfo databaseInfo, JoinedTableContext context, Table initialTable, IEnumerable<MemberInfo> joinMembers)
     {
       List<SingleJoin> joins = new List<SingleJoin>();
 

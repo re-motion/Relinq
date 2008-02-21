@@ -25,22 +25,22 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     }
 
     [Test]
-    public void BuildFieldSourcePath2_NoJoin ()
+    public void BuildFieldSourcePath_NoJoin ()
     {
       MemberInfo[] joinMembers = new MemberInfo[] { };
       FieldSourcePath result =
-          new FieldSourcePathBuilder ().BuildFieldSourcePath2 (StubDatabaseInfo.Instance, _context, _initialTable, joinMembers);
+          new FieldSourcePathBuilder ().BuildFieldSourcePath (StubDatabaseInfo.Instance, _context, _initialTable, joinMembers);
 
       FieldSourcePath expected = new FieldSourcePath(_initialTable, new SingleJoin[0]);
       Assert.AreEqual (expected, result);
     }
 
     [Test]
-    public void BuildFieldSourcePath2_SimpleJoin ()
+    public void BuildFieldSourcePath_SimpleJoin ()
     {
       MemberInfo[] joinMembers = new MemberInfo[] { _studentMember };
       FieldSourcePath result =
-          new FieldSourcePathBuilder ().BuildFieldSourcePath2 (StubDatabaseInfo.Instance, _context, _initialTable, joinMembers);
+          new FieldSourcePathBuilder ().BuildFieldSourcePath (StubDatabaseInfo.Instance, _context, _initialTable, joinMembers);
 
       Table relatedTable = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, _studentMember);
       Tuple<string, string> joinColumns = DatabaseInfoUtility.GetJoinColumnNames (StubDatabaseInfo.Instance, _studentMember);
@@ -51,11 +51,11 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     }
 
     [Test]
-    public void BuildFieldSourcePath2_NestedJoin ()
+    public void BuildFieldSourcePath_NestedJoin ()
     {
       MemberInfo[] joinMembers = new MemberInfo[] { _studentDetailMember, _studentMember };
       FieldSourcePath result =
-          new FieldSourcePathBuilder ().BuildFieldSourcePath2 (StubDatabaseInfo.Instance, _context, _initialTable, joinMembers);
+          new FieldSourcePathBuilder ().BuildFieldSourcePath (StubDatabaseInfo.Instance, _context, _initialTable, joinMembers);
 
       Table relatedTable1 = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, _studentDetailMember);
       Tuple<string, string> joinColumns1 = DatabaseInfoUtility.GetJoinColumnNames (StubDatabaseInfo.Instance, _studentDetailMember);
@@ -70,10 +70,10 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     }
 
     [Test]
-    public void BuildFieldSourcePath2_UsesContext ()
+    public void BuildFieldSourcePath_UsesContext ()
     {
       Assert.AreEqual (0, _context.Count);
-      BuildFieldSourcePath2_SimpleJoin ();
+      BuildFieldSourcePath_SimpleJoin ();
       Assert.AreEqual (1, _context.Count);
     }
 
