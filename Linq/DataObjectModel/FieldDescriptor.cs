@@ -9,7 +9,7 @@ namespace Rubicon.Data.Linq.DataObjectModel
 {
   public struct FieldDescriptor
   {
-    public FieldDescriptor (MemberInfo member, FromClauseBase fromClause, IFieldSourcePath sourcePath, Column? column)
+    public FieldDescriptor (MemberInfo member, FromClauseBase fromClause, FieldSourcePath sourcePath, Column? column)
         : this()
     {
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
@@ -26,7 +26,7 @@ namespace Rubicon.Data.Linq.DataObjectModel
 
     public MemberInfo Member { get; private set; }
     public Column? Column { get; private set; }
-    public IFieldSourcePath SourcePath { get; private set; }
+    public FieldSourcePath SourcePath { get; private set; }
     public FromClauseBase FromClause { get; private set; }
 
     public Column GetMandatoryColumn()

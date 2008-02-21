@@ -3,7 +3,7 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.DataObjectModel
 {
-  public class Table : IFieldSourcePath
+  public class Table
   {
     public Table ()
     {
@@ -27,11 +27,6 @@ namespace Rubicon.Data.Linq.DataObjectModel
     public string AliasString
     {
       get { return Alias ?? "_"; }
-    }
-
-    public Table GetStartingTable ()
-    {
-      return this;
     }
 
     public override bool Equals (object obj)

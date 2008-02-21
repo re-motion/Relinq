@@ -203,5 +203,21 @@ namespace Rubicon.Data.Linq.UnitTests
       FieldDescriptor fieldDescriptor = new FieldDescriptor (member, fromClause, sourcePath, column);
       return fieldDescriptor;
     }
+
+    public static FieldSourcePath GetPathForNewTable ()
+    {
+      return new FieldSourcePath (new Table (), new SingleJoin[0]);
+    }
+
+    public static FieldSourcePath GetPathForNewTable (string name, string alias)
+    {
+      Table table = new Table (name, alias);
+      return GetPathForTable(table);
+    }
+
+    public static FieldSourcePath GetPathForTable (Table table)
+    {
+      return new FieldSourcePath (table, new SingleJoin[0]);
+    }
   }
 }

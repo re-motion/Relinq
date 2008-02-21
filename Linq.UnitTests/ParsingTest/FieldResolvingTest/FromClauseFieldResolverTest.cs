@@ -123,7 +123,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       Assert.AreEqual (typeof (Student).GetProperty ("First"), fieldDescriptor.Member);
 
       Table expectedLeftSide = new Table ("studentTable", null);
-      Table expectedRightSide = fieldDescriptor.SourcePath.GetStartingTable();
+      Table expectedRightSide = fieldDescriptor.SourcePath.SourceTable;
       SingleJoin join = new SingleJoin(new Column (expectedLeftSide, "Student_FK"),
           new Column (expectedRightSide, "Student_Detail_PK"));
       FieldSourcePath expectedPath = new FieldSourcePath(expectedRightSide, new [] { join });
@@ -154,7 +154,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       Assert.AreEqual (typeof (Student).GetProperty ("First"), fieldDescriptor.Member);
 
       Table expectedInnerLeftSide = new Table ("detailTable", null); // Student_Detail
-      Table expectedInnerRightSide = fieldDescriptor.SourcePath.GetStartingTable();
+      Table expectedInnerRightSide = fieldDescriptor.SourcePath.SourceTable;
       SingleJoin join1 = new SingleJoin(
           new Column (expectedInnerLeftSide, "Student_Detail_FK"),
           new Column (expectedInnerRightSide, "Student_Detail_Detail_PK"));

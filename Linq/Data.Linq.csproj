@@ -65,8 +65,6 @@
     <Compile Include="Clauses\FromClauseBase.cs" />
     <Compile Include="Clauses\GroupClause.cs" />
     <Compile Include="Clauses\IBodyClause.cs" />
-    <Compile Include="DataObjectModel\IFieldSourcePath.cs" />
-    <Compile Include="DataObjectModel\JoinTree.cs" />
     <Compile Include="DataObjectModel\OrderingField.cs" />
     <Compile Include="Parsing\Structure\OrderByExpressionParser.cs" />
     <Compile Include="Parsing\Structure\QueryBodyCreator.cs" />

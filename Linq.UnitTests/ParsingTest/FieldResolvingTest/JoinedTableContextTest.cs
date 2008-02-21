@@ -14,7 +14,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     public void GetJoinedTable()
     {
       JoinedTableContext context = new JoinedTableContext();
-      IFieldSourcePath fieldSourcePath = new Table();
+      FieldSourcePath fieldSourcePath = ExpressionHelper.GetPathForNewTable();
       MemberInfo member = typeof (Student_Detail).GetProperty ("Student");
       Assert.AreEqual (0, context.Count);
       Table table = context.GetJoinedTable (StubDatabaseInfo.Instance, fieldSourcePath, member);
@@ -28,8 +28,9 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     public void GetJoinedTable_Twice ()
     {
       JoinedTableContext context = new JoinedTableContext ();
-      IFieldSourcePath fieldSourcePath1 = new Table ();
-      IFieldSourcePath fieldSourcePath2 = new Table ();
+      Table table = new Table();
+      FieldSourcePath fieldSourcePath1 = ExpressionHelper.GetPathForTable (table);
+      FieldSourcePath fieldSourcePath2 = ExpressionHelper.GetPathForTable (table);
       MemberInfo member = typeof (Student_Detail).GetProperty ("Student");
       Table table1 = context.GetJoinedTable (StubDatabaseInfo.Instance, fieldSourcePath1, member);
       Table table2 = context.GetJoinedTable (StubDatabaseInfo.Instance, fieldSourcePath2, member);
@@ -41,7 +42,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     public void GetJoinedTable_TwiceWithDifferentMembers ()
     {
       JoinedTableContext context = new JoinedTableContext ();
-      IFieldSourcePath fieldSourcePath = new Table ();
+      FieldSourcePath fieldSourcePath = ExpressionHelper.GetPathForNewTable ();
       MemberInfo member1 = typeof (Student_Detail).GetProperty ("IndustrialSector");
       MemberInfo member2 = typeof (Student_Detail).GetProperty ("Student");
       
@@ -57,8 +58,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     public void GetJoinedTable_TwiceWithDifferentFieldPath ()
     {
       JoinedTableContext context = new JoinedTableContext ();
-      IFieldSourcePath fieldSourcePath1 = new Table ("x","y");
-      IFieldSourcePath fieldSourcePath2 = new Table ("z","i");
+      FieldSourcePath fieldSourcePath1 = ExpressionHelper.GetPathForNewTable ("x", "y");
+      FieldSourcePath fieldSourcePath2 = ExpressionHelper.GetPathForNewTable ("z", "i");
 
       MemberInfo member = typeof (Student_Detail).GetProperty ("IndustrialSector");
       
@@ -75,7 +76,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     public void GetJoinedTable_InvalidMember ()
     {
       JoinedTableContext context = new JoinedTableContext ();
-      IFieldSourcePath fieldSourcePath = new Table ();
+      FieldSourcePath fieldSourcePath = ExpressionHelper.GetPathForNewTable ();
       MemberInfo member = typeof (Student).GetProperty ("First");
       context.GetJoinedTable (StubDatabaseInfo.Instance, fieldSourcePath, member);
     }
@@ -84,7 +85,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     public void CreateAliases()
     {
       JoinedTableContext context = new JoinedTableContext ();
-      IFieldSourcePath fieldSourcePath = new Table ();
+      FieldSourcePath fieldSourcePath = ExpressionHelper.GetPathForNewTable ();
       
       MemberInfo member1 = typeof (Student_Detail).GetProperty ("Student");
       Table table1 = context.GetJoinedTable (StubDatabaseInfo.Instance, fieldSourcePath, member1);
@@ -98,7 +99,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     public void CreateAliases_DoesntOverwriteAliases ()
     {
       JoinedTableContext context = new JoinedTableContext ();
-      IFieldSourcePath fieldSourcePath = new Table ();
+      FieldSourcePath fieldSourcePath = ExpressionHelper.GetPathForNewTable ();
 
       MemberInfo member1 = typeof (Student_Detail).GetProperty ("Student");
       Table table1 = context.GetJoinedTable (StubDatabaseInfo.Instance, fieldSourcePath, member1);
@@ -112,7 +113,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     public void CreateAliases_MultipleTimes ()
     {
       JoinedTableContext context = new JoinedTableContext ();
-      IFieldSourcePath fieldSourcePath = new Table ();
+      FieldSourcePath fieldSourcePath = ExpressionHelper.GetPathForNewTable ();
 
       MemberInfo member1 = typeof (Student_Detail).GetProperty ("Student");
       Table table1 = context.GetJoinedTable (StubDatabaseInfo.Instance, fieldSourcePath, member1);
@@ -133,9 +134,9 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     public void CreateAliases_MultipleTablesAndOrdering ()
     {
       JoinedTableContext context = new JoinedTableContext ();
-      IFieldSourcePath fieldSourcePath1 = new Table ("1", null);
-      IFieldSourcePath fieldSourcePath2 = new Table ("2", null);
-      IFieldSourcePath fieldSourcePath3 = new Table ("3", null);
+      FieldSourcePath fieldSourcePath1 = ExpressionHelper.GetPathForNewTable ("1", null);
+      FieldSourcePath fieldSourcePath2 = ExpressionHelper.GetPathForNewTable ("2", null);
+      FieldSourcePath fieldSourcePath3 = ExpressionHelper.GetPathForNewTable ("3", null);
 
       MemberInfo member = typeof (Student_Detail).GetProperty ("Student");
 

@@ -5,7 +5,7 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.DataObjectModel
 {
-  public struct FieldSourcePath : IFieldSourcePath
+  public struct FieldSourcePath
   {
     public Table SourceTable { get; private set; }
     public ReadOnlyCollection<SingleJoin> Joins { get; private set; }
@@ -64,11 +64,6 @@ namespace Rubicon.Data.Linq.DataObjectModel
         return SourceTable.AliasString + "." + SeparatedStringBuilder.Build (".", Joins, join => join.LeftSide.Name);
       else
         return SourceTable.AliasString;
-    }
-
-    public Table GetStartingTable ()
-    {
-      return SourceTable;
     }
   }
 }

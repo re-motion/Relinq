@@ -8,13 +8,6 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
   public class TableTest
   {
     [Test]
-    public void GetStartingTable()
-    {
-      Table t = new Table("x", "y");
-      Assert.AreEqual (t, t.GetStartingTable());
-    }
-
-    [Test]
     public void Equal()
     {
       Table t1 = new Table ("x", "y");

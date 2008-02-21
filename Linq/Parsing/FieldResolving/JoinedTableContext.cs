@@ -17,13 +17,13 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
       get { return _tables.Count; }
     }
 
-    public Table GetJoinedTable (IDatabaseInfo databaseInfo, IFieldSourcePath fieldSourcePath, MemberInfo relationMember)
+    public Table GetJoinedTable (IDatabaseInfo databaseInfo, FieldSourcePath fieldSourcePath, MemberInfo relationMember)
     {
       ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
       ArgumentUtility.CheckNotNull ("fieldSourcePath", fieldSourcePath);
       ArgumentUtility.CheckNotNull ("relationMember", relationMember);
 
-      Tuple<IFieldSourcePath, MemberInfo> key = Tuple.NewTuple (fieldSourcePath, relationMember);
+      Tuple<FieldSourcePath, MemberInfo> key = Tuple.NewTuple (fieldSourcePath, relationMember);
 
       if (!_tables.Contains (key))
         _tables.Add (key, DatabaseInfoUtility.GetRelatedTable (databaseInfo, relationMember));

@@ -15,57 +15,57 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
       "Parameter name: member && column")]
     public void MemberAndColumnNull()
     {
-      new FieldDescriptor (null, ExpressionHelper.CreateMainFromClause(), new Table(), null);
+      new FieldDescriptor (null, ExpressionHelper.CreateMainFromClause(), ExpressionHelper.GetPathForNewTable(), null);
     }
 
     [Test]
     public void MemberNull()
     {
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause();
-      Table table = new Table();
       Column column = new Column();
-      FieldDescriptor descriptor = new FieldDescriptor (null, fromClause, table, column);
+      FieldSourcePath path = ExpressionHelper.GetPathForNewTable();
+      FieldDescriptor descriptor = new FieldDescriptor (null, fromClause, path, column);
       Assert.IsNull (descriptor.Member);
       Assert.AreSame (fromClause, descriptor.FromClause);
       Assert.AreEqual (column, descriptor.Column);
-      Assert.AreEqual (table, descriptor.SourcePath);
+      Assert.AreEqual (path, descriptor.SourcePath);
     }
 
     [Test]
     public void ColumnNull ()
     {
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause ();
-      Table table = new Table ();
+      FieldSourcePath path = ExpressionHelper.GetPathForNewTable();
       MemberInfo member = typeof (Student).GetProperty ("First");
-      FieldDescriptor descriptor = new FieldDescriptor (member, fromClause, table, null);
+      FieldDescriptor descriptor = new FieldDescriptor (member, fromClause, path, null);
       Assert.IsNull (descriptor.Column);
       Assert.AreSame (fromClause, descriptor.FromClause);
       Assert.AreEqual (member, descriptor.Member);
-      Assert.AreEqual (table, descriptor.SourcePath);
+      Assert.AreEqual (path, descriptor.SourcePath);
     }
 
     [Test]
     public void MemberAndColumnNotNull ()
     {
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause ();
-      Table table = new Table ();
+      FieldSourcePath path = ExpressionHelper.GetPathForNewTable ();
       MemberInfo member = typeof (Student).GetProperty ("First");
       Column column = new Column ();
-      FieldDescriptor descriptor = new FieldDescriptor (member, fromClause, table, column);
+      FieldDescriptor descriptor = new FieldDescriptor (member, fromClause, path, column);
       Assert.AreEqual (column, descriptor.Column);
       Assert.AreSame (fromClause, descriptor.FromClause);
       Assert.AreEqual (member, descriptor.Member);
-      Assert.AreEqual (table, descriptor.SourcePath);
+      Assert.AreEqual (path, descriptor.SourcePath);
     }
 
     [Test]
     public void GetMandatoryColumn()
     {
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause ();
-      Table table = new Table ();
+      FieldSourcePath path = ExpressionHelper.GetPathForNewTable ();
       MemberInfo member = typeof (Student).GetProperty ("First");
       Column column = new Column ();
-      FieldDescriptor descriptor = new FieldDescriptor (member, fromClause, table, column);
+      FieldDescriptor descriptor = new FieldDescriptor (member, fromClause, path, column);
       Assert.AreEqual (column, descriptor.GetMandatoryColumn());
     }
 
@@ -76,9 +76,9 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     public void GetMandatoryColumnWithException ()
     {
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause ();
-      Table table = new Table ("x", "y");
+      FieldSourcePath path = ExpressionHelper.GetPathForNewTable ();
       MemberInfo member = typeof (Student).GetProperty ("First");
-      new FieldDescriptor (member, fromClause, table, null).GetMandatoryColumn();
+      new FieldDescriptor (member, fromClause, path, null).GetMandatoryColumn ();
     }
 
 
