@@ -48,15 +48,15 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     [Test]
     public void Column()
     {
-      Expression condition = Expression.MakeMemberAccess(_parameter,typeof(Student).GetProperty("IsOld"));
+      PropertyInfo member = typeof (Student).GetProperty ("IsOld");
+      Expression condition = Expression.MakeMemberAccess(_parameter,member);
       Tuple<List<FieldDescriptor>, ICriterion> parseResult = CreateAndParseWhereClause(condition);
       List<FieldDescriptor> fieldDescriptors = parseResult.A;
       ICriterion criterion = parseResult.B;
+      
+      FieldDescriptor expectedField = ExpressionHelper.CreateFieldDescriptor (_fromClause, member);
 
-      Column expectedColumn = new Column (new Table ("studentTable", "s"), "IsOldColumn");
-      FieldDescriptor expectedField = new FieldDescriptor (typeof (Student).GetProperty ("IsOld"), _fromClause, expectedColumn.Table, expectedColumn);
-
-      Assert.AreEqual (expectedColumn, criterion);
+      Assert.AreEqual (expectedField.Column, criterion);
       Assert.That (fieldDescriptors, Is.EqualTo (new object[] { expectedField }));
     }
 
@@ -139,12 +139,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       Tuple<List<FieldDescriptor>, ICriterion> parseResult = CreateAndParseWhereClause(condition);
       List<FieldDescriptor> fieldDescriptors = parseResult.A;
 
-      Table table = _fromClause.GetTable (_databaseInfo);
-      Column column1 = DatabaseInfoUtility.GetColumn (_databaseInfo, table, memberAccess1.Member).Value;
-      Column column2 = DatabaseInfoUtility.GetColumn (_databaseInfo, table, memberAccess2.Member).Value;
-
-      FieldDescriptor expectedField1 = new FieldDescriptor (memberAccess1.Member, _fromClause, table, column1);
-      FieldDescriptor expectedField2 = new FieldDescriptor (memberAccess2.Member, _fromClause, table, column2);
+      FieldDescriptor expectedField1 = ExpressionHelper.CreateFieldDescriptor(_fromClause, memberAccess1.Member);
+      FieldDescriptor expectedField2 = ExpressionHelper.CreateFieldDescriptor (_fromClause, memberAccess2.Member);
 
       Assert.That (fieldDescriptors, Is.EqualTo (new object[] {expectedField1, expectedField2}));
     }
@@ -159,12 +155,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       Tuple<List<FieldDescriptor>, ICriterion> parseResult = CreateAndParseWhereClause(condition);
       List<FieldDescriptor> fieldDescriptors = parseResult.A;
 
-      Table table = _fromClause.GetTable (_databaseInfo);
-      Column column1 = DatabaseInfoUtility.GetColumn (_databaseInfo, table, memberAccess1.Member).Value;
-      Column column2 = DatabaseInfoUtility.GetColumn (_databaseInfo, table, memberAccess2.Member).Value;
-
-      FieldDescriptor expectedField1 = new FieldDescriptor (memberAccess1.Member, _fromClause, table, column1);
-      FieldDescriptor expectedField2 = new FieldDescriptor (memberAccess2.Member, _fromClause, table, column2);
+      FieldDescriptor expectedField1 = ExpressionHelper.CreateFieldDescriptor (_fromClause, memberAccess1.Member);
+      FieldDescriptor expectedField2 = ExpressionHelper.CreateFieldDescriptor (_fromClause, memberAccess2.Member);
 
       Assert.That (fieldDescriptors, Is.EqualTo (new object[] { expectedField1, expectedField2 }));
     }
@@ -213,12 +205,10 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       List<FieldDescriptor> fieldDescriptors = parseResult.A;
       ICriterion criterion = parseResult.B;
 
-      Column expectedColumn = new Column (new Table ("studentTable", "s"), "FirstColumn");
-      FieldDescriptor expectedField = new FieldDescriptor (memberAccess.Member, _fromClause, expectedColumn.Table, expectedColumn);
-
+      FieldDescriptor expectedField = ExpressionHelper.CreateFieldDescriptor (_fromClause, memberAccess.Member);
+      
       Assert.That (fieldDescriptors, Is.EqualTo (new object[] { expectedField }));
-      Assert.AreEqual (new BinaryCondition (expectedColumn, new Constant ("Garcia%"),
-          BinaryCondition.ConditionKind.Like), criterion);
+      Assert.AreEqual (new BinaryCondition (expectedField.Column.Value, new Constant ("Garcia%"), BinaryCondition.ConditionKind.Like), criterion);
     }
 
     [Test]
@@ -244,13 +234,13 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     [Test]
     public void Unary_WithField ()
     {
-      MemberExpression memberAccess = Expression.MakeMemberAccess (_parameter, typeof (Student).GetProperty ("IsOld"));
+      PropertyInfo member = typeof (Student).GetProperty ("IsOld");
+      MemberExpression memberAccess = Expression.MakeMemberAccess (_parameter, member);
       Expression condition = Expression.Not (memberAccess);
       Tuple<List<FieldDescriptor>, ICriterion> parseResult = CreateAndParseWhereClause(condition);
       List<FieldDescriptor> fieldDescriptors = parseResult.A;
 
-      Column expectedColumn = new Column (new Table ("studentTable", "s"), "IsOldColumn");
-      FieldDescriptor expectedField = new FieldDescriptor (typeof (Student).GetProperty ("IsOld"), _fromClause, expectedColumn.Table, expectedColumn);
+      FieldDescriptor expectedField = ExpressionHelper.CreateFieldDescriptor(_fromClause, member);
 
       Assert.That (fieldDescriptors, Is.EqualTo (new object[] { expectedField }));
     }
@@ -331,12 +321,14 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       PropertyInfo relationMember = typeof (Student_Detail).GetProperty ("Student");
       Table leftSide = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, relationMember); // Student
       Table rightSide = fromClause.GetTable (StubDatabaseInfo.Instance); // Student_Detail
-      Tuple<string, string> columns = DatabaseInfoUtility.GetJoinColumns (StubDatabaseInfo.Instance, relationMember);
-      JoinTree joinTree = new JoinTree (leftSide, rightSide, new Column (leftSide, columns.B), new Column (rightSide, columns.A));
-
+      Tuple<string, string> columns = DatabaseInfoUtility.GetJoinColumnNames (StubDatabaseInfo.Instance, relationMember);
+      
       PropertyInfo member = typeof (Student).GetProperty ("First");
       Column? column = DatabaseInfoUtility.GetColumn (StubDatabaseInfo.Instance, leftSide, member);
-      FieldDescriptor fieldDescriptor = new FieldDescriptor (member, fromClause, joinTree, column);
+
+      SingleJoin join = new SingleJoin (new Column (leftSide, columns.B), new Column (rightSide, columns.A));
+      FieldSourcePath path = new FieldSourcePath(rightSide,new[] {join});
+      FieldDescriptor fieldDescriptor = new FieldDescriptor (member, fromClause, path, column);
 
       WhereConditionParser parser = new WhereConditionParser (parsedQuery, whereClause, _databaseInfo, _context, false);
       Tuple<List<FieldDescriptor>, ICriterion> parseResult = parser.GetParseResult ();

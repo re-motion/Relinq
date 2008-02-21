@@ -25,20 +25,20 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void GetTableName()
     {
-      Assert.AreEqual (new Table ("Order", "source"), _databaseInfo.GetTable (CreateFromClause<Order>()));
-      Assert.AreEqual (new Table ("Company", "source"), _databaseInfo.GetTable (CreateFromClause<Customer>()));
-      Assert.AreEqual (new Table ("TableWithValidRelations", "source"), _databaseInfo.GetTable (CreateFromClause<ClassWithValidRelations> ()));
+      Assert.AreEqual ("Order", _databaseInfo.GetTableName (CreateFromClause<Order>()));
+      Assert.AreEqual ("Company", _databaseInfo.GetTableName (CreateFromClause<Customer> ()));
+      Assert.AreEqual ("TableWithValidRelations", _databaseInfo.GetTableName (CreateFromClause<ClassWithValidRelations> ()));
     }
 
     [Test]
     public void GetTableName_InvalidType ()
     {
-      Assert.IsNull (_databaseInfo.GetTable(CreateFromClause<DomainObject>()));
+      Assert.IsNull (_databaseInfo.GetTableName (CreateFromClause<DomainObject> ()));
 
       DummyQueryable<string> stringSource = new DummyQueryable<string>();
       MainFromClause stringClause = new MainFromClause (Expression.Parameter (typeof (string), "source"), stringSource);
-      
-      Assert.IsNull (_databaseInfo.GetTable (stringClause));
+
+      Assert.IsNull (_databaseInfo.GetTableName (stringClause));
     }
 
     private FromClauseBase CreateFromClause<T> ()
@@ -69,7 +69,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void GetJoinColumns_FK_Right()
     {
-      Tuple<string, string> columns = _databaseInfo.GetJoinColumns (typeof (Order).GetProperty ("OrderItems"));
+      Tuple<string, string> columns = _databaseInfo.GetJoinColumnNames (typeof (Order).GetProperty ("OrderItems"));
       Assert.AreEqual ("ID", columns.A);
       Assert.AreEqual ("OrderID", columns.B);
     }
@@ -77,7 +77,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void GetJoinColumns_FK_Left ()
     {
-      Tuple<string, string> columns = _databaseInfo.GetJoinColumns (typeof (OrderItem).GetProperty ("Order"));
+      Tuple<string, string> columns = _databaseInfo.GetJoinColumnNames (typeof (OrderItem).GetProperty ("Order"));
       Assert.AreEqual ("OrderID", columns.A);
       Assert.AreEqual ("ID", columns.B);
     }
@@ -85,14 +85,14 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void GetJoinColumns_NotInMapping ()
     {
-      Tuple<string, string> columns = _databaseInfo.GetJoinColumns (typeof (Order).GetProperty ("NotInMapping"));
+      Tuple<string, string> columns = _databaseInfo.GetJoinColumnNames (typeof (Order).GetProperty ("NotInMapping"));
       Assert.IsNull (columns);
     }
 
     [Test]
     public void GetJoinColumns_NoRelationProperty ()
     {
-      Tuple<string, string> columns = _databaseInfo.GetJoinColumns (typeof (Order).GetProperty ("OrderNumber"));
+      Tuple<string, string> columns = _databaseInfo.GetJoinColumnNames (typeof (Order).GetProperty ("OrderNumber"));
       Assert.IsNull (columns);
     }
 

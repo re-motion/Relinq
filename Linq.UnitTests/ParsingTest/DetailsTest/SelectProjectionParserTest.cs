@@ -41,7 +41,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
 
       IEnumerable<FieldDescriptor> selectedFields = selectParser.GetSelectedFields();
 
-      Assert.That (selectedFields.ToArray(), Is.EqualTo (new object[] {CreateFieldDescriptor (expression.MainFromClause, null)}));
+      Assert.That (selectedFields.ToArray(), Is.EqualTo (new object[] {ExpressionHelper.CreateFieldDescriptor (expression.MainFromClause, null)}));
     }
 
 
@@ -57,7 +57,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
 
       IEnumerable<FieldDescriptor> selectedFields = selectParser.GetSelectedFields();
 
-      Assert.That (selectedFields.ToArray(), Is.EqualTo (new object[] {CreateFieldDescriptor (expression.MainFromClause, null)}));
+      Assert.That (selectedFields.ToArray(), Is.EqualTo (new object[] {ExpressionHelper.CreateFieldDescriptor (expression.MainFromClause, null)}));
     }
 
     [Test]
@@ -73,7 +73,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       IEnumerable<FieldDescriptor> selectedFields = selectParser.GetSelectedFields();
 
       Assert.That (selectedFields.ToArray(),
-          Is.EqualTo (new object[] {CreateFieldDescriptor (expression.MainFromClause, typeof (Student).GetProperty ("First"))}));
+          Is.EqualTo (new object[] {ExpressionHelper.CreateFieldDescriptor (expression.MainFromClause, typeof (Student).GetProperty ("First"))}));
     }
 
     [Test]
@@ -91,8 +91,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       Assert.That (selectedFields.ToArray(), Is.EqualTo (
           new object[]
             {
-                CreateFieldDescriptor (expression.MainFromClause, typeof (Student).GetProperty ("First")),
-                CreateFieldDescriptor (expression.MainFromClause, typeof (Student).GetProperty ("Last"))
+                ExpressionHelper.CreateFieldDescriptor (expression.MainFromClause, typeof (Student).GetProperty ("First")),
+                ExpressionHelper.CreateFieldDescriptor (expression.MainFromClause, typeof (Student).GetProperty ("Last"))
             }));
     }
 
@@ -139,9 +139,10 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       Assert.That (selectedFields.ToArray(), Is.EqualTo (
           new object[]
             {
-                CreateFieldDescriptor (expression.MainFromClause, typeof (Student).GetProperty ("First")),
-                CreateFieldDescriptor ((FromClauseBase) expression.QueryBody.BodyClauses.First(), typeof (Student).GetProperty ("Last")),
-                CreateFieldDescriptor ((FromClauseBase) expression.QueryBody.BodyClauses.Last(), typeof (Student).GetProperty ("ID"))
+                ExpressionHelper.CreateFieldDescriptor (expression.MainFromClause, typeof (Student).GetProperty ("First")),
+                ExpressionHelper.CreateFieldDescriptor ((FromClauseBase) expression.QueryBody.BodyClauses.First(),
+                    typeof (Student).GetProperty ("Last")),
+                ExpressionHelper.CreateFieldDescriptor ((FromClauseBase) expression.QueryBody.BodyClauses.Last(), typeof (Student).GetProperty ("ID"))
             }));
     }
 
@@ -162,8 +163,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       Assert.That (selectedFields.ToArray(), Is.EqualTo (
           new object[]
             {
-                CreateFieldDescriptor (expression.MainFromClause, null),
-                CreateFieldDescriptor (expression.MainFromClause, typeof (Student).GetProperty ("Last")),
+                ExpressionHelper.CreateFieldDescriptor (expression.MainFromClause, null),
+                ExpressionHelper.CreateFieldDescriptor (expression.MainFromClause, typeof (Student).GetProperty ("Last")),
             }));
     }
 
@@ -182,17 +183,11 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       Assert.That (selectedFields.ToArray(), Is.EquivalentTo (
           new object[]
             {
-                CreateFieldDescriptor (expression.MainFromClause, typeof (Student).GetProperty ("First")),
-                CreateFieldDescriptor (expression.MainFromClause, typeof (Student).GetProperty ("Last")),
-                CreateFieldDescriptor (expression.MainFromClause, null),
-                CreateFieldDescriptor (expression.MainFromClause, typeof (Student).GetProperty ("ID"))
+                ExpressionHelper.CreateFieldDescriptor (expression.MainFromClause, typeof (Student).GetProperty ("First")),
+                ExpressionHelper.CreateFieldDescriptor (expression.MainFromClause, typeof (Student).GetProperty ("Last")),
+                ExpressionHelper.CreateFieldDescriptor (expression.MainFromClause, null),
+                ExpressionHelper.CreateFieldDescriptor (expression.MainFromClause, typeof (Student).GetProperty ("ID"))
             }));
-    }
-
-    private FieldDescriptor CreateFieldDescriptor (FromClauseBase fromClause, MemberInfo member)
-    {
-      Table table = fromClause.GetTable (StubDatabaseInfo.Instance);
-      return new FieldDescriptor (member, fromClause, table, DatabaseInfoUtility.GetColumn (StubDatabaseInfo.Instance, table, member));
     }
 
     [Test]
@@ -208,13 +203,14 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       PropertyInfo relationMember = typeof (Student_Detail).GetProperty ("Student");
       Table studentDetailTable = parsedQuery.MainFromClause.GetTable (StubDatabaseInfo.Instance);
       Table studentTable = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, relationMember);
-      Tuple<string, string> joinColumns = DatabaseInfoUtility.GetJoinColumns (StubDatabaseInfo.Instance, relationMember);
-      IFieldSourcePath sourcePath = new JoinTree (studentTable, studentDetailTable, new Column (studentTable, joinColumns.B),
-          new Column (studentDetailTable, joinColumns.A));
-      
+      Tuple<string, string> joinColumns = DatabaseInfoUtility.GetJoinColumnNames (StubDatabaseInfo.Instance, relationMember);
+
+      SingleJoin join = new SingleJoin (new Column (studentTable, joinColumns.B), new Column (studentDetailTable, joinColumns.A));
+
+      FieldSourcePath path = new FieldSourcePath (studentDetailTable, new[] {join});
+
       FieldDescriptor expectedField =
-          new FieldDescriptor (typeof (Student).GetProperty ("First"), parsedQuery.MainFromClause, sourcePath,
-              new Column (studentTable, "FirstColumn"));
+          new FieldDescriptor (typeof (Student).GetProperty ("First"), parsedQuery.MainFromClause, path, new Column (studentTable, "FirstColumn"));
 
       Assert.That (parser.GetSelectedFields(), Is.EqualTo (new object[] {expectedField}));
     }

@@ -37,8 +37,9 @@ namespace Rubicon.Data.Linq.Parsing.Details
         FromClauseBase fromClause = ClauseFinder.FindClause<FromClauseBase> (_selectClause);
         Assertion.IsTrue (fromClause is MainFromClause, "When there are two or more from clauses, there must be a projection expression.");
         Table table = fromClause.GetTable (_databaseInfo);
+        FieldSourcePath path = new FieldSourcePath(table,new SingleJoin[0]);
         Column? column = DatabaseInfoUtility.GetColumn (_databaseInfo, table, null);
-        fields.Add (new FieldDescriptor (null, fromClause, table, column));
+        fields.Add (new FieldDescriptor (null, fromClause, path, column));
       }
       else
       {

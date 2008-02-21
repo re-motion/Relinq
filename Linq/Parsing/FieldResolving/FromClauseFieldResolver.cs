@@ -56,16 +56,16 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
       // Documentation example: sdd.Student_Detail.Student.First
       // joinMembers == "Student_Detail", "Student"
 
-      Table initialTable = DatabaseInfoUtility.GetTableForFromClause (databaseInfo, _fromClause); // Table for sdd
+      Table initialTable = _fromClause.GetTable(databaseInfo); // Table for sdd
 
       var memberInfos = AdjustMemberInfosForRelations (databaseInfo, accessedMember, joinMembers);
       MemberInfo accessedMemberForColumn = memberInfos.A;
       IEnumerable<MemberInfo> joinMembersForCalculation = memberInfos.B;
 
       FieldSourcePathBuilder pathBuilder = new FieldSourcePathBuilder();
-      Tuple<IFieldSourcePath, Table> fieldData = pathBuilder.BuildFieldSourcePath (databaseInfo, context, initialTable, joinMembersForCalculation);
-      Column? column = DatabaseInfoUtility.GetColumn (databaseInfo, fieldData.B, accessedMemberForColumn);
-      return new FieldDescriptor (accessedMember, _fromClause, fieldData.A, column);
+      FieldSourcePath fieldData = pathBuilder.BuildFieldSourcePath2 (databaseInfo, context, initialTable, joinMembersForCalculation);
+      Column? column = DatabaseInfoUtility.GetColumn (databaseInfo, fieldData.LastTable, accessedMemberForColumn);
+      return new FieldDescriptor (accessedMember, _fromClause, fieldData, column);
     }
 
     private Tuple<MemberInfo, IEnumerable<MemberInfo>> AdjustMemberInfosForRelations (

@@ -23,6 +23,40 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     }
 
     [Test]
+    public void LatTable_NoJoins ()
+    {
+      Table source = new Table ();
+      FieldSourcePath sourcePath = new FieldSourcePath (source, new SingleJoin[0]);
+      Assert.AreSame (source, sourcePath.LastTable);
+    }
+
+    [Test]
+    public void LatTable_OneJoin ()
+    {
+      Table source = new Table ();
+      Table table1 = new Table ();
+      SingleJoin join1 = new SingleJoin (new Column (table1, "s1"), new Column (source, "s2"));
+      SingleJoin[] joins = new[] { join1 };
+
+      FieldSourcePath sourcePath = new FieldSourcePath (source, joins);
+      Assert.AreSame (table1, sourcePath.LastTable);
+    }
+
+    [Test]
+    public void LatTable_SeveralJoins ()
+    {
+      Table source = new Table ();
+      Table table1 = new Table ();
+      Table table2 = new Table ();
+      SingleJoin join1 = new SingleJoin (new Column (table1, "s1"), new Column (source, "s2"));
+      SingleJoin join2 = new SingleJoin (new Column (table2, "s3"), new Column (table1, "s4"));
+      SingleJoin[] joins = new[] { join1, join2 };
+
+      FieldSourcePath sourcePath = new FieldSourcePath (source, joins);
+      Assert.AreSame (table2, sourcePath.LastTable);
+    }
+
+    [Test]
     public void Equals_True()
     {
       Table source = new Table ("source", "s");

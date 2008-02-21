@@ -19,6 +19,17 @@ namespace Rubicon.Data.Linq.DataObjectModel
       Joins = new List<SingleJoin>(joins).AsReadOnly();
     }
 
+    public Table LastTable
+    {
+      get
+      {
+        if (Joins.Count == 0)
+          return SourceTable;
+        else
+          return Joins[Joins.Count - 1].LeftSide;
+      }
+    }
+
     public override bool Equals (object obj)
     {
       if (!(obj is FieldSourcePath))
@@ -57,7 +68,7 @@ namespace Rubicon.Data.Linq.DataObjectModel
 
     public Table GetStartingTable ()
     {
-      throw new System.NotImplementedException();
+      return SourceTable;
     }
   }
 }

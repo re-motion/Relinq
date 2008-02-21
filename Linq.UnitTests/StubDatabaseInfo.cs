@@ -15,17 +15,17 @@ namespace Rubicon.Data.Linq.UnitTests
     {
     }
 
-    public Table GetTable (FromClauseBase fromClause)
+    public string GetTableName (FromClauseBase fromClause)
     {
       Type querySourceType = fromClause.GetQuerySourceType();
       if (typeof (IQueryable<Student>).IsAssignableFrom (querySourceType))
-        return new Table("studentTable", fromClause.Identifier.Name);
+        return "studentTable";
       else if (typeof (IQueryable<Student_Detail>).IsAssignableFrom (querySourceType))
-        return new Table("detailTable", fromClause.Identifier.Name);
+        return "detailTable";
       else if (typeof (IQueryable<Student_Detail_Detail>).IsAssignableFrom (querySourceType))
-        return new Table ("detailDetailTable", fromClause.Identifier.Name);
+        return "detailDetailTable";
       else if (typeof(IQueryable<IndustrialSector>).IsAssignableFrom(querySourceType))
-        return new Table("industrialTable",fromClause.Identifier.Name);
+        return "industrialTable";
       else
         return null;
     }
@@ -52,7 +52,7 @@ namespace Rubicon.Data.Linq.UnitTests
         return member.Name + "Column";
     }
 
-    public Tuple<string, string> GetJoinColumns (MemberInfo relationMember)
+    public Tuple<string, string> GetJoinColumnNames (MemberInfo relationMember)
     {
       if (relationMember == typeof (Student_Detail).GetProperty ("Student"))
         return Tuple.NewTuple ("Student_Detail_PK", "Student_FK");

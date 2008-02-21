@@ -119,11 +119,13 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       PropertyInfo relationMember = typeof (Student_Detail).GetProperty ("Student");
       Table leftSide = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, relationMember); // Student
       Table rightSide = fromClause.GetTable (StubDatabaseInfo.Instance); // Student_Detail
-      Tuple<string, string> columns = DatabaseInfoUtility.GetJoinColumns (StubDatabaseInfo.Instance, relationMember);
-      JoinTree joinTree = new JoinTree (leftSide, rightSide, new Column (leftSide, columns.B), new Column (rightSide, columns.A));
+      Tuple<string, string> columns = DatabaseInfoUtility.GetJoinColumnNames (StubDatabaseInfo.Instance, relationMember);
+      
       PropertyInfo orderingMember = typeof (Student).GetProperty ("First");
+      SingleJoin join = new SingleJoin (new Column (leftSide, columns.B), new Column (rightSide, columns.A));
+      FieldSourcePath path = new FieldSourcePath (rightSide, new[] { join });
       Column? column = DatabaseInfoUtility.GetColumn (StubDatabaseInfo.Instance, leftSide, orderingMember);
-      FieldDescriptor fieldDescriptor = new FieldDescriptor (orderingMember, fromClause, joinTree, column);
+      FieldDescriptor fieldDescriptor = new FieldDescriptor (orderingMember, fromClause, path, column);
 
       OrderingFieldParser parser = new OrderingFieldParser (parsedQuery, orderingClause, StubDatabaseInfo.Instance, _context);
       Assert.AreEqual (new OrderingField (fieldDescriptor, OrderDirection.Asc), parser.GetField ());

@@ -53,15 +53,5 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause ();
       Assert.AreSame (fromClause.QuerySource.GetType(), fromClause.GetQuerySourceType());
     }
-
-    [Test]
-    public void GetTable ()
-    {
-      ParameterExpression id = Expression.Parameter (typeof (Student), "s1");
-      IQueryable querySource = ExpressionHelper.CreateQuerySource ();
-
-      MainFromClause fromClause = new MainFromClause (id, querySource);
-      Assert.AreEqual (new Table ("studentTable", "s1"), fromClause.GetTable (StubDatabaseInfo.Instance));
-    }
   }
 }

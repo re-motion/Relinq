@@ -13,6 +13,28 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
   public class FromClauseBaseTest
   {
     [Test]
+    public void GetTable ()
+    {
+      ParameterExpression id = Expression.Parameter (typeof (Student), "s1");
+      IQueryable querySource = ExpressionHelper.CreateQuerySource ();
+
+      MainFromClause fromClause = new MainFromClause (id, querySource);
+      Assert.AreEqual (new Table ("studentTable", "s1"), fromClause.GetTable (StubDatabaseInfo.Instance));
+    }
+
+    [Test]
+    public void GetTable_CachesInstance ()
+    {
+      ParameterExpression id = Expression.Parameter (typeof (Student), "s1");
+      IQueryable querySource = ExpressionHelper.CreateQuerySource ();
+
+      MainFromClause fromClause = new MainFromClause (id, querySource);
+      Table t1 = fromClause.GetTable (StubDatabaseInfo.Instance);
+      Table t2 = fromClause.GetTable (StubDatabaseInfo.Instance);
+      Assert.AreSame (t1, t2);
+    }
+
+    [Test]
     public void AddJoinClause()
     {
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause();

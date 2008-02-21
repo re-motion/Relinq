@@ -17,7 +17,7 @@ namespace Rubicon.Data.DomainObjects.Linq
     {
     }
 
-    public Table GetTable (FromClauseBase fromClause)
+    public string GetTableName (FromClauseBase fromClause)
     {
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
       
@@ -33,7 +33,7 @@ namespace Rubicon.Data.DomainObjects.Linq
         if (classDefinition == null)
           return null;
         else
-          return new Table(classDefinition.GetEntityName(), fromClause.Identifier.Name);
+          return classDefinition.GetEntityName();
       }
     }
 
@@ -72,7 +72,7 @@ namespace Rubicon.Data.DomainObjects.Linq
         return null;
     }
 
-    public Tuple<string, string> GetJoinColumns (MemberInfo relationMember)
+    public Tuple<string, string> GetJoinColumnNames (MemberInfo relationMember)
     {
       ArgumentUtility.CheckNotNull ("relationMember", relationMember);
 

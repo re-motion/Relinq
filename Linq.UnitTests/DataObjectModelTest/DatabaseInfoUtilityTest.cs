@@ -1,6 +1,7 @@
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using Rhino.Mocks;
 using Rubicon.Collections;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.DataObjectModel;
@@ -27,6 +28,34 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     }
 
     [Test]
+    public void GetTableForFromClause_CachesTable ()
+    {
+      MainFromClause fromClause = new MainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
+      Table table1 = DatabaseInfoUtility.GetTableForFromClause (_databaseInfo, fromClause);
+      Table table2 = DatabaseInfoUtility.GetTableForFromClause (_databaseInfo, fromClause);
+      Assert.AreSame (table1, table2);
+    }
+
+    [Test]
+    public void GetTableForFromClause_CachesTable_PerDatabaseInfo ()
+    {
+      MainFromClause fromClause = new MainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
+
+      MockRepository repository = new MockRepository();
+      IDatabaseInfo databaseInfoMock = repository.CreateMock<IDatabaseInfo>();
+
+      Expect.Call (databaseInfoMock.GetTableName (fromClause)).Return ("studentTable");
+
+      repository.ReplayAll();
+
+      Table table1 = DatabaseInfoUtility.GetTableForFromClause (_databaseInfo, fromClause);
+      Table table2 = DatabaseInfoUtility.GetTableForFromClause (databaseInfoMock, fromClause);
+      Assert.AreNotSame (table1, table2);
+
+      repository.VerifyAll();
+    }
+
+    [Test]
     [ExpectedException (typeof (ArgumentException), ExpectedMessage = "The from clause with identifier i and query source type "
         + "Rubicon.Data.Linq.UnitTests.TestQueryable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]] "
             + "does not identify a queryable table.", MatchType = MessageMatch.Contains)]
@@ -38,19 +67,19 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     }
 
     [Test]
-    public void GetColumnForFromClause()
+    public void GetColumnNamesForFromClause()
     {
       MainFromClause fromClause = new MainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
-      Table table = DatabaseInfoUtility.GetTableForFromClause (_databaseInfo, fromClause);
+      Table table = fromClause.GetTable (_databaseInfo);
       Column column = DatabaseInfoUtility.GetColumn (_databaseInfo, table, typeof (Student).GetProperty ("First")).Value;
       Assert.AreEqual (new Column (table, "FirstColumn"),column);
     }
 
     [Test]
-    public void GetColumnForFromClause_InvalidMember ()
+    public void GetColumnNamesForFromClause_InvalidMember ()
     {
       MainFromClause fromClause = new MainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
-      Table table = DatabaseInfoUtility.GetTableForFromClause (_databaseInfo, fromClause);
+      Table table = fromClause.GetTable (_databaseInfo);
       Assert.IsNull (DatabaseInfoUtility.GetColumn (_databaseInfo, table, typeof (Student).GetProperty ("NonDBProperty")));
     }
 
@@ -72,7 +101,7 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     [Test]
     public void GetJoinColumns()
     {
-      Tuple<string, string> columns = DatabaseInfoUtility.GetJoinColumns (StubDatabaseInfo.Instance, typeof (Student_Detail).GetProperty ("Student"));
+      Tuple<string, string> columns = DatabaseInfoUtility.GetJoinColumnNames (StubDatabaseInfo.Instance, typeof (Student_Detail).GetProperty ("Student"));
       Assert.AreEqual (Tuple.NewTuple("Student_Detail_PK", "Student_FK"), columns);
     }
 
@@ -81,7 +110,7 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
         + "identify a relation.")]
     public void GetJoinColumns_InvalidMember ()
     {
-      DatabaseInfoUtility.GetJoinColumns (StubDatabaseInfo.Instance, typeof (Student).GetProperty ("First"));
+      DatabaseInfoUtility.GetJoinColumnNames (StubDatabaseInfo.Instance, typeof (Student).GetProperty ("First"));
     }
 
     [Test]

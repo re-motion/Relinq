@@ -17,13 +17,15 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
 
       Expression fieldAccessExpression = Expression.Parameter (typeof (String), "s1");
       JoinedTableContext context = new JoinedTableContext ();
-      FieldDescriptor descriptor = queryExpression.ResolveField (StubDatabaseInfo.Instance, context, fieldAccessExpression);
+      FieldDescriptor descriptor = new QueryExpressionFieldResolver(queryExpression).ResolveField (StubDatabaseInfo.Instance, context, fieldAccessExpression);
 
-      Table expectedTable = new Table ("studentTable", "s1");
+      Table expectedTable = queryExpression.MainFromClause.GetTable (StubDatabaseInfo.Instance);
+      FieldSourcePath expectedPath = new FieldSourcePath(expectedTable, new SingleJoin[0]);
+
       Assert.AreSame (queryExpression.MainFromClause, descriptor.FromClause);
       Assert.AreEqual (new Column (expectedTable, "*"), descriptor.Column);
       Assert.IsNull (descriptor.Member);
-      Assert.AreEqual (expectedTable, descriptor.SourcePath);
+      Assert.AreEqual (expectedPath, descriptor.SourcePath);
     }
 
     private QueryExpression CreateQueryExpressionForResolve ()
