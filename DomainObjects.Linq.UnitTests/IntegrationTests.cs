@@ -56,7 +56,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
-    [Ignore ("TODO: This will only work with joins.")]
+    [Ignore ("TODO: Support use of entity properties in where conditions.")]
     public void QueryWithVirtualKeySide ()
     {
       var employees =
@@ -117,7 +117,6 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
-    [Ignore ("TODO: Flatten joins when adding them in SqlGeneratorVisitor to avoid adding join parts twice")]
     public void QueryWithSelectAndImplicitJoin_UsingJoinPartTwice ()
     {
       var ceos =
@@ -125,7 +124,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
           where o.Customer.Name == "Kunde 3"
           select o.Customer.Ceo;
 
-      CheckQueryResult (ceos); // TODO
+      CheckQueryResult (ceos, DomainObjectIDs.Ceo5);
     }
 
     [Test]
