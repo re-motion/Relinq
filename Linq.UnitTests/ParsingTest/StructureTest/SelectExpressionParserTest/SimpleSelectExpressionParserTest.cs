@@ -16,7 +16,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.SelectExpression
     private ExpressionTreeNavigator _navigator;
     private SelectExpressionParser _parser;
     private BodyHelper _bodyWhereHelper;
-
+    
     [SetUp]
     public void SetUp()
     {
@@ -26,9 +26,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.SelectExpression
       _parser = new SelectExpressionParser (_expression, _expression);
       _bodyWhereHelper = new BodyHelper (_parser.FromLetWhereExpressions);
     }
-
     
-
     [Test]
     public void ParsesFromExpressions()
     {

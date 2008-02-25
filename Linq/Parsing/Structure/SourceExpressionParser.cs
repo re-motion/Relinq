@@ -23,6 +23,7 @@ namespace Rubicon.Data.Linq.Parsing.Structure
 
       _isTopLevel = isTopLevel;
       _potentialFromIdentifier = potentialFromIdentifier;
+      Distinct = false;
 
       SourceExpression = sourceExpression;
 
@@ -34,7 +35,7 @@ namespace Rubicon.Data.Linq.Parsing.Structure
         case ExpressionType.Call:
           string methodName = ParserUtility.CheckMethodCallExpression (
               (MethodCallExpression) sourceExpression, expressionTreeRoot, 
-              "Select", "SelectMany", "Where", "OrderBy", "OrderByDescending", "ThenBy", "ThenByDescending");
+              "Select", "SelectMany", "Where", "OrderBy", "OrderByDescending", "ThenBy", "ThenByDescending", "Distinct");
           switch (methodName)
           {
             case "Select":
@@ -51,6 +52,9 @@ namespace Rubicon.Data.Linq.Parsing.Structure
             case "ThenBy":
             case "ThenByDescending":
               ParseOrderBy (expressionTreeRoot);
+              break;
+            case "Distinct":
+              ParseDistinct (expressionTreeRoot);
               break;
           }
           break;
@@ -74,6 +78,14 @@ namespace Rubicon.Data.Linq.Parsing.Structure
 
       _bodyExpressions.AddRange (selectExpressionParser.FromLetWhereExpressions);
       _projectionExpressions.AddRange (selectExpressionParser.ProjectionExpressions);
+    }
+
+    private void ParseDistinct (Expression expressionTreeRoot) //only supports distinct in select (query.Distinct())
+    {
+      Distinct = true;
+      Expression newTreeRoot = ((MethodCallExpression) expressionTreeRoot).Arguments[0];
+      SourceExpression = newTreeRoot;
+      ParseSelectSource (newTreeRoot);
     }
 
     private void ParseSelectManySource (Expression expressionTreeRoot)
@@ -115,5 +127,7 @@ namespace Rubicon.Data.Linq.Parsing.Structure
     {
       get { return new ReadOnlyCollection<LambdaExpression> (_projectionExpressions); }
     }
+
+    public bool Distinct { get; private set; }
   }
 }

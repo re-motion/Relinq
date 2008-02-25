@@ -14,6 +14,7 @@ namespace Rubicon.Data.Linq.Parsing.Structure
   {
     private readonly List<BodyExpressionBase> _bodyExpressions = new List<BodyExpressionBase> ();
     private readonly List<LambdaExpression> _projectionExpressions = new List<LambdaExpression> ();
+    private readonly bool _distinct;
     
 
     public QueryParser (Expression expressionTreeRoot)
@@ -24,6 +25,7 @@ namespace Rubicon.Data.Linq.Parsing.Structure
       SourceExpressionParser sourceExpressionParser = new SourceExpressionParser (SourceExpression, expressionTreeRoot, true, null, "parsing query");
       _bodyExpressions.AddRange (sourceExpressionParser.BodyExpressions);
       _projectionExpressions.AddRange (sourceExpressionParser.ProjectionExpressions);
+      _distinct = sourceExpressionParser.Distinct;
     }
 
     public Expression SourceExpression { get; private set; }
@@ -55,7 +57,7 @@ namespace Rubicon.Data.Linq.Parsing.Structure
 
     private QueryBody CreateQueryBody (MainFromClause mainFromClause)
     {
-      QueryBodyCreator bodyCreator = new QueryBodyCreator (SourceExpression, mainFromClause, _projectionExpressions, _bodyExpressions);
+      QueryBodyCreator bodyCreator = new QueryBodyCreator (SourceExpression, mainFromClause, _projectionExpressions, _bodyExpressions,_distinct);
       return bodyCreator.GetQueryBody();
     }
   }

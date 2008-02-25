@@ -275,6 +275,11 @@ namespace Rubicon.Data.Linq.UnitTests
              orderby sdd.Student_Detail.ID
              select sdd;
     }
+
+    public static IQueryable<string > CreateSimpleDisinctQuery (IQueryable <Student> source)
+    {
+      return (from s in source select s.First).Distinct();
+    }
     
     public static MethodCallExpression CreateSimpleQuery_SelectExpression (IQueryable<Student> source)
     {
@@ -282,18 +287,25 @@ namespace Rubicon.Data.Linq.UnitTests
       return (MethodCallExpression) query.Expression;
     }
 
+    public static MethodCallExpression CreateSimpleDistinctQuery (IQueryable<Student> source)
+    {
+      IQueryable<string> query = CreateSimpleDisinctQuery (source);
+      MethodCallExpression newQuery = (MethodCallExpression) ((MethodCallExpression) query.Expression).Arguments[0];
+      return newQuery;
+    }
+
     public static MethodCallExpression CreateSimpleWhereQuery_WhereExpression (IQueryable<Student> source)
     {
       IQueryable<Student> query = CreateSimpleWhereQuery (source);
       return (MethodCallExpression) query.Expression;
     }
+
     public static MethodCallExpression CreateWhereQueryWithEvaluatableSubExpression_WhereExpression (IQueryable<Student> source)
     {
       IQueryable<Student> query = CreateWhereQueryWithEvaluatableSubExpression (source);
       return (MethodCallExpression) query.Expression;
     }
-
-
+    
     public static MethodCallExpression CreateMultiWhereQuery_WhereExpression (IQueryable<Student> source)
     {
       IQueryable<Student> query = CreateMultiWhereQuery (source);

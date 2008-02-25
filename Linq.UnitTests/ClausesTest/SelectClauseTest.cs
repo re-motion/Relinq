@@ -16,7 +16,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       LambdaExpression expression = ExpressionHelper.CreateLambdaExpression ();
       IClause clause = ExpressionHelper.CreateClause();
 
-      SelectClause selectClause = new SelectClause (clause, expression);
+      SelectClause selectClause = new SelectClause (clause, expression,false);
       Assert.AreSame (clause, selectClause.PreviousClause);
       Assert.AreEqual (expression, selectClause.ProjectionExpression);
     }
@@ -24,7 +24,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     [Test]
     public void InitializeWithoutExpression ()
     {
-      SelectClause selectClause = new SelectClause (ExpressionHelper.CreateClause(),null);
+      SelectClause selectClause = new SelectClause (ExpressionHelper.CreateClause(),null,false);
       Assert.IsNull (selectClause.ProjectionExpression);
     }
 

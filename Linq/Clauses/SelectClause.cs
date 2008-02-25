@@ -10,12 +10,14 @@ namespace Rubicon.Data.Linq.Clauses
   {
     private readonly LambdaExpression _projectionExpression;
 
-    public SelectClause (IClause previousClause, LambdaExpression projectionExpression)
+    public SelectClause (IClause previousClause, LambdaExpression projectionExpression,bool distinct)
     {
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
+      ArgumentUtility.CheckNotNull ("distinct", distinct);
 
       PreviousClause = previousClause;
       _projectionExpression = projectionExpression;
+      Distinct = distinct;
     }
 
     public IClause PreviousClause { get; private set; }
@@ -24,6 +26,8 @@ namespace Rubicon.Data.Linq.Clauses
     {
       get { return _projectionExpression; }
     }
+
+    public bool Distinct { get; private set; }
 
     public virtual void Accept (IQueryVisitor visitor)
     {

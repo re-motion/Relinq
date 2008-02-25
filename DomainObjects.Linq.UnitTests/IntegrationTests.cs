@@ -128,14 +128,13 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
-    [Ignore ("TODO: Support distinct")]
     public void QueryWithDistinct ()
     {
       var ceos =
           (from o in DataContext.Entity<Order> (new TestQueryListener ())
           select o.Customer.Ceo).Distinct();
 
-      CheckQueryResult (ceos); // TODO
+      CheckQueryResult (ceos,DomainObjectIDs.Ceo12,DomainObjectIDs.Ceo5,DomainObjectIDs.Ceo3);
     }
 
     [Test]

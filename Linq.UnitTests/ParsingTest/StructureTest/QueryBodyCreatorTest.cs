@@ -32,7 +32,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
       List<BodyExpressionBase> bodyExpressions = new List<BodyExpressionBase> ();
       bodyExpressions.Add (new FromExpression (ExpressionHelper.CreateLambdaExpression (), ExpressionHelper.CreateParameterExpression ()));
 
-      QueryBodyCreator bodyCreator = new QueryBodyCreator (_root, _mainFromClause, projectionExpressions, bodyExpressions);
+      QueryBodyCreator bodyCreator = new QueryBodyCreator (_root, _mainFromClause, projectionExpressions, bodyExpressions,false);
       QueryBody body = bodyCreator.GetQueryBody();
       Assert.AreEqual (0, body.BodyClauses.Count, "no body clause from first body expression - this is reserved for the main from clause");
     }
@@ -45,7 +45,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
 
       List<BodyExpressionBase> bodyExpressions = new List<BodyExpressionBase> ();
 
-      QueryBodyCreator bodyCreator = new QueryBodyCreator (_root, _mainFromClause, projectionExpressions, bodyExpressions);
+      QueryBodyCreator bodyCreator = new QueryBodyCreator (_root, _mainFromClause, projectionExpressions, bodyExpressions,false);
       QueryBody body = bodyCreator.GetQueryBody ();
       Assert.AreEqual (0, body.BodyClauses.Count);
 
@@ -67,7 +67,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
       bodyExpressions.Add (new FromExpression (ExpressionHelper.CreateLambdaExpression (), ExpressionHelper.CreateParameterExpression ()));
       bodyExpressions.Add (fromExpression);
 
-      QueryBodyCreator bodyCreator = new QueryBodyCreator (_root, _mainFromClause, projectionExpressions, bodyExpressions);
+      QueryBodyCreator bodyCreator = new QueryBodyCreator (_root, _mainFromClause, projectionExpressions, bodyExpressions,false);
       QueryBody body = bodyCreator.GetQueryBody ();
       Assert.AreEqual (1, body.BodyClauses.Count);
       
@@ -91,7 +91,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
       bodyExpressions.Add (new FromExpression (ExpressionHelper.CreateLambdaExpression (), ExpressionHelper.CreateParameterExpression ()));
       bodyExpressions.Add (fromExpression);
 
-      QueryBodyCreator bodyCreator = new QueryBodyCreator (_root, _mainFromClause, projectionExpressions, bodyExpressions);
+      QueryBodyCreator bodyCreator = new QueryBodyCreator (_root, _mainFromClause, projectionExpressions, bodyExpressions,false);
       QueryBody body = bodyCreator.GetQueryBody ();
       Assert.AreEqual (1, body.BodyClauses.Count);
 
@@ -112,7 +112,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
       bodyExpressions.Add (new FromExpression (ExpressionHelper.CreateLambdaExpression (), ExpressionHelper.CreateParameterExpression ()));
       bodyExpressions.Add (whereExpression);
 
-      QueryBodyCreator bodyCreator = new QueryBodyCreator (_root, _mainFromClause, projectionExpressions, bodyExpressions);
+      QueryBodyCreator bodyCreator = new QueryBodyCreator (_root, _mainFromClause, projectionExpressions, bodyExpressions,false);
       QueryBody body = bodyCreator.GetQueryBody ();
       Assert.AreEqual (1, body.BodyClauses.Count);
 
@@ -132,7 +132,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
       bodyExpressions.Add (new FromExpression (ExpressionHelper.CreateLambdaExpression (), ExpressionHelper.CreateParameterExpression ()));
       bodyExpressions.Add (orderExpression);
 
-      QueryBodyCreator bodyCreator = new QueryBodyCreator (_root, _mainFromClause, projectionExpressions, bodyExpressions);
+      QueryBodyCreator bodyCreator = new QueryBodyCreator (_root, _mainFromClause, projectionExpressions, bodyExpressions,false);
       QueryBody body = bodyCreator.GetQueryBody ();
       Assert.AreEqual (1, body.BodyClauses.Count);
 
@@ -160,7 +160,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
       bodyExpressions.Add (orderExpression2);
       bodyExpressions.Add (orderExpression3);
 
-      QueryBodyCreator bodyCreator = new QueryBodyCreator (_root, _mainFromClause, projectionExpressions, bodyExpressions);
+      QueryBodyCreator bodyCreator = new QueryBodyCreator (_root, _mainFromClause, projectionExpressions, bodyExpressions,false);
       QueryBody body = bodyCreator.GetQueryBody ();
       Assert.AreEqual (2, body.BodyClauses.Count);
 
@@ -213,7 +213,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
       bodyExpressions.Add (orderExpression3);
 
       
-      QueryBodyCreator bodyCreator = new QueryBodyCreator (_root, _mainFromClause, projectionExpressions, bodyExpressions);
+      QueryBodyCreator bodyCreator = new QueryBodyCreator (_root, _mainFromClause, projectionExpressions, bodyExpressions,false);
       QueryBody body = bodyCreator.GetQueryBody();
       
       OrderByClause orderByClause1 = body.BodyClauses.Skip (4).First() as OrderByClause;
@@ -263,6 +263,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
       Assert.AreSame (orderByClause2, selectClause.PreviousClause);
 
     }
+
 
   }
 }

@@ -78,7 +78,7 @@ namespace Rubicon.Data.Linq.UnitTests
     public void GetExpressionTree_ThrowsOnInvalidSelectCall()
     {
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause();
-      SelectClause selectClause = new SelectClause (fromClause, Expression.Lambda (Expression.Constant (0)));
+      SelectClause selectClause = new SelectClause (fromClause, Expression.Lambda (Expression.Constant (0)),false);
       QueryBody queryBody = new QueryBody (selectClause);
 
       QueryExpression queryExpression = new QueryExpression (fromClause, queryBody);

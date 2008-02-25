@@ -46,5 +46,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.SelectExpression
       MethodCallExpression selectExpression = Expression.Call (method, nonCallExpression, Expression.Lambda (Expression.Constant (null, typeof (Student)), Expression.Parameter (typeof (Student), "student")));
       new SelectExpressionParser (selectExpression, selectExpression);
     }
+
+    
   }
 }

@@ -95,7 +95,7 @@ namespace Rubicon.Data.Linq.UnitTests
     public static SelectClause CreateSelectClause ()
     {
       LambdaExpression expression = Expression.Lambda (Expression.Constant (0), Expression.Parameter (typeof (Student), "s1"));
-      return new SelectClause (CreateClause (), expression);
+      return new SelectClause (CreateClause (), expression,false);
     }
 
 

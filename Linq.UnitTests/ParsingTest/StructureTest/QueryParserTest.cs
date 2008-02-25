@@ -28,7 +28,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected one of 'Select, SelectMany, Where, OrderBy, OrderByDescending, ThenBy, ThenByDescending', but found 'WriteLine' at"
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected one of 'Select, SelectMany, Where, OrderBy, OrderByDescending, ThenBy, ThenByDescending, Distinct', but found 'WriteLine' at"
         + " position WriteLine() in tree WriteLine().")]
     public void Initialize_FromWrongExpression ()
     {
