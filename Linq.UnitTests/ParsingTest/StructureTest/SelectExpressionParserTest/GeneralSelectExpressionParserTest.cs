@@ -17,8 +17,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.SelectExpression
     {
       IQueryable<Student> querySource = ExpressionHelper.CreateQuerySource();
       MethodCallExpression expression = TestQueryGenerator.CreateSimpleQuery_SelectExpression (querySource);
-      SelectExpressionParser parser = new SelectExpressionParser (new ParseResultCollector(expression), expression);
-      Assert.AreSame (expression, parser.SourceExpression);
+      new SelectExpressionParser ().Parse (new ParseResultCollector(expression), expression);
     }
 
     [Test]
@@ -29,7 +28,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.SelectExpression
     public void Initialize_FromWrongExpression ()
     {
       MethodCallExpression expression = TestQueryGenerator.CreateSimpleWhereQuery_WhereExpression (ExpressionHelper.CreateQuerySource ());
-      new SelectExpressionParser (new ParseResultCollector (expression), expression);
+      new SelectExpressionParser ().Parse (new ParseResultCollector (expression), expression);
     }
 
     [Test]
@@ -44,7 +43,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.SelectExpression
           && m.GetParameters()[1].ParameterType.GetGenericArguments()[0].GetGenericArguments().Length == 2 select m).First ();
       method = method.MakeGenericMethod (typeof (Student), typeof (Student));
       MethodCallExpression selectExpression = Expression.Call (method, nonCallExpression, Expression.Lambda (Expression.Constant (null, typeof (Student)), Expression.Parameter (typeof (Student), "student")));
-      new SelectExpressionParser (new ParseResultCollector (selectExpression), selectExpression);
+      new SelectExpressionParser ().Parse (new ParseResultCollector (selectExpression), selectExpression);
     }
 
     

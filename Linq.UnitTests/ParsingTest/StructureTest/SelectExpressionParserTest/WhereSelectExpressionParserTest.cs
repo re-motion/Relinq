@@ -25,7 +25,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.SelectExpression
       _expression = TestQueryGenerator.CreateSelectWhereQuery_SelectExpression (_querySource);
       _navigator = new ExpressionTreeNavigator (_expression);
       _result = new ParseResultCollector (_expression);
-      new SelectExpressionParser (_result, _expression);
+      new SelectExpressionParser ().Parse (_result, _expression);
       _bodyWhereHelper = new BodyHelper (_result.BodyExpressions);
     }
 

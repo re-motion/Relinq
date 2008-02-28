@@ -66,7 +66,7 @@ namespace Rubicon.Data.Linq.Parsing.Structure
     private void ParseSelectSource (ParseResultCollector resultCollector, Expression sourceExpression)
     {
       MethodCallExpression methodCallExpression = (MethodCallExpression) sourceExpression;
-      new SelectExpressionParser (resultCollector, methodCallExpression);
+      new SelectExpressionParser().Parse (resultCollector, methodCallExpression);
     }
 
     private void ParseDistinct (ParseResultCollector resultCollector, Expression sourceExpression) //only supports distinct in select (query.Distinct())
