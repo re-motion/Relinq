@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
@@ -38,6 +39,19 @@ namespace Rubicon.Data.Linq.Parsing.Structure
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       _bodyExpressions.Add (expression);
+    }
+
+    public FromExpression ExtractMainFromExpression()
+    {
+      if (BodyExpressions.Count == 0)
+        throw new InvalidOperationException ("There are no body expressions to be extracted.");
+
+      FromExpression fromExpression = BodyExpressions[0] as FromExpression;
+      if (fromExpression == null)
+        throw new InvalidOperationException ("The first body expression is no FromExpression.");
+
+      _bodyExpressions.RemoveAt (0);
+      return fromExpression;
     }
 
     public void AddProjectionExpression (LambdaExpression expression)

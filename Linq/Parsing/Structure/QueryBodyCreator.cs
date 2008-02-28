@@ -34,9 +34,9 @@ namespace Rubicon.Data.Linq.Parsing.Structure
       currentProjection = 0;
       _previousOrderByClause = null;
 
-      for (int currentBodyExpression = 1; currentBodyExpression < _result.BodyExpressions.Count; currentBodyExpression++)
+      foreach (BodyExpressionBase bodyExpression in _result.BodyExpressions)
       {
-        IBodyClause clause = CreateBodyClause (_result.BodyExpressions[currentBodyExpression]);
+        IBodyClause clause = CreateBodyClause (bodyExpression);
         if (clause != _previousClause)
           _bodyClauses.Add (clause);
 

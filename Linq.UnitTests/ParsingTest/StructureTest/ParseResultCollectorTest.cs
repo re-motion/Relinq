@@ -1,3 +1,4 @@
+using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Rubicon.Data.Linq.Parsing.Structure;
@@ -41,6 +42,35 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
       _collector.AddBodyExpression (expression1);
       _collector.AddBodyExpression (expression2);
       Assert.That (_collector.BodyExpressions, Is.EqualTo (new[] {expression1, expression2}));
+    }
+
+    [Test]
+    public void ExtractMainFromExpression()
+    {
+      FromExpression expression1 = new FromExpression (ExpressionHelper.CreateExpression (), ExpressionHelper.CreateParameterExpression ());
+      FromExpression expression2 = new FromExpression (ExpressionHelper.CreateExpression (), ExpressionHelper.CreateParameterExpression ());
+      _collector.AddBodyExpression (expression1);
+      _collector.AddBodyExpression (expression2);
+
+      FromExpression mainFromExpression = _collector.ExtractMainFromExpression();
+      Assert.AreSame (expression1, mainFromExpression);
+      Assert.That (_collector.BodyExpressions, Is.EqualTo (new[] { expression2 }));
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "There are no body expressions to be extracted.")]
+    public void ExtractMainFromExpression_NoBodyExpressions ()
+    {
+      _collector.ExtractMainFromExpression ();
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "The first body expression is no FromExpression.")]
+    public void ExtractMainFromExpression_NotFromExpression ()
+    {
+      WhereExpression expression1 = new WhereExpression (ExpressionHelper.CreateLambdaExpression());
+      _collector.AddBodyExpression (expression1);
+      _collector.ExtractMainFromExpression ();
     }
 
     [Test]

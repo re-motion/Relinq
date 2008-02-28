@@ -32,9 +32,10 @@ namespace Rubicon.Data.Linq.Parsing.Structure
 
     private MainFromClause CreateMainFromClause (ParseResultCollector resultCollector)
     {
-      FromExpression mainFromExpression = (FromExpression) resultCollector.BodyExpressions[0];
-      return new MainFromClause (mainFromExpression.Identifier,
-          (IQueryable) ((ConstantExpression) mainFromExpression.Expression).Value);
+      Assertion.IsTrue (resultCollector.BodyExpressions.Count > 0 && resultCollector.BodyExpressions[0] is FromExpression);
+
+      FromExpression mainFromExpression = resultCollector.ExtractMainFromExpression();
+      return new MainFromClause (mainFromExpression.Identifier, (IQueryable) ((ConstantExpression) mainFromExpression.Expression).Value);
     }
 
     private QueryBody CreateQueryBody (ParseResultCollector resultCollector, MainFromClause mainFromClause)
