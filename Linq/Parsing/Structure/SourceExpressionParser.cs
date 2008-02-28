@@ -85,7 +85,7 @@ namespace Rubicon.Data.Linq.Parsing.Structure
     private void ParseWhereSource (ParseResultCollector resultCollector, Expression sourceExpression)
     {
       MethodCallExpression methodCallExpression = (MethodCallExpression) sourceExpression;
-      new WhereExpressionParser (resultCollector, methodCallExpression, _isTopLevel);
+      new WhereExpressionParser (_isTopLevel).Parse (resultCollector, methodCallExpression);
     }
 
     private void ParseOrderBy (ParseResultCollector resultCollector, Expression sourceExpression)

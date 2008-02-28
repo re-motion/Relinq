@@ -24,7 +24,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.WhereExpressionP
       _expression = TestQueryGenerator.CreateSimpleWhereQuery_WhereExpression (_querySource);
       _navigator  = new ExpressionTreeNavigator(_expression);
       _result = new ParseResultCollector (_expression);
-      new WhereExpressionParser (_result, _expression, true);
+      new WhereExpressionParser (true).Parse(_result, _expression);
       _bodyWhereHelper = new BodyHelper (_result.BodyExpressions);
     }
 
@@ -67,7 +67,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.WhereExpressionP
     public void ParsesProjectionExpressions_NotTopLevel ()
     {
       _result = new ParseResultCollector (_expression);
-      new WhereExpressionParser (_result, _expression, false);
+      new WhereExpressionParser (false).Parse (_result, _expression);
       Assert.IsNotNull (_result.ProjectionExpressions);
       Assert.AreEqual (0, _result.ProjectionExpressions.Count);
     }
