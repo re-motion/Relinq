@@ -10,30 +10,23 @@ namespace Rubicon.Data.Linq.Parsing.Structure
 {
   public class QueryBodyCreator
   {
-    private readonly List<IBodyClause> _bodyClauses = new List<IBodyClause> ();
-    private readonly List<BodyExpressionBase> _bodyExpressions;
-    private readonly List<LambdaExpression> _projectionExpressions;
     private readonly Expression _expressionTreeRoot;
-    private readonly bool _distinct;
+    private readonly ParseResultCollector _result;
+    private readonly List<IBodyClause> _bodyClauses = new List<IBodyClause> ();
 
     private IClause _previousClause;
     private int currentProjection;
     private OrderByClause _previousOrderByClause;
 
-    public QueryBodyCreator (Expression expressionTreeRoot, MainFromClause mainFromClause,
-                             List<LambdaExpression> projectionExpressions, List<BodyExpressionBase> bodyExpressions, bool distinct)
+    public QueryBodyCreator (Expression expressionTreeRoot, MainFromClause mainFromClause, ParseResultCollector result)
     {
       ArgumentUtility.CheckNotNull ("expressionTreeRoot", expressionTreeRoot);
       ArgumentUtility.CheckNotNull ("mainFromClause", mainFromClause);
-      ArgumentUtility.CheckNotNull ("projectionExpressions", projectionExpressions);
-      ArgumentUtility.CheckNotNull ("bodyExpressions", bodyExpressions);
-      ArgumentUtility.CheckNotNull ("distinct", distinct);
+      ArgumentUtility.CheckNotNull ("result", result);
 
       _expressionTreeRoot = expressionTreeRoot;
       _previousClause = mainFromClause;
-      _projectionExpressions = projectionExpressions;
-      _bodyExpressions = bodyExpressions;
-      _distinct = distinct;
+      _result = result;
     }
 
     public QueryBody GetQueryBody()
@@ -41,16 +34,16 @@ namespace Rubicon.Data.Linq.Parsing.Structure
       currentProjection = 0;
       _previousOrderByClause = null;
 
-      for (int currentBodyExpression = 1; currentBodyExpression < _bodyExpressions.Count; currentBodyExpression++)
+      for (int currentBodyExpression = 1; currentBodyExpression < _result.BodyExpressions.Count; currentBodyExpression++)
       {
-        IBodyClause clause = CreateBodyClause (_bodyExpressions[currentBodyExpression]);
+        IBodyClause clause = CreateBodyClause (_result.BodyExpressions[currentBodyExpression]);
         if (clause != _previousClause)
           _bodyClauses.Add (clause);
 
         _previousClause = clause;
       }
 
-      SelectClause selectClause = new SelectClause (_previousClause, _projectionExpressions.Last (), _distinct);
+      SelectClause selectClause = new SelectClause (_previousClause, _result.ProjectionExpressions.Last (), _result.IsDistinct);
       QueryBody queryBody = new QueryBody (selectClause);
 
       foreach (IBodyClause bodyClause in _bodyClauses)
@@ -83,7 +76,7 @@ namespace Rubicon.Data.Linq.Parsing.Structure
         return null;
 
       AdditionalFromClause additionalFromClause = new AdditionalFromClause (_previousClause, fromExpression.Identifier,
-          (LambdaExpression) fromExpression.Expression, _projectionExpressions[currentProjection]);
+          (LambdaExpression) fromExpression.Expression, _result.ProjectionExpressions[currentProjection]);
       ++currentProjection;
       return additionalFromClause;
     }

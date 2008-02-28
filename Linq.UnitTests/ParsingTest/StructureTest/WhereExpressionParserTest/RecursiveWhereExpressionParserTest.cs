@@ -14,8 +14,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.WhereExpressionP
     private IQueryable<Student> _querySource;
     private MethodCallExpression _expression;
     private ExpressionTreeNavigator _navigator;
-    private WhereExpressionParser _parser;
     private BodyHelper _bodyWhereHelper;
+    private ParseResultCollector _result;
 
     [SetUp]
     public void SetUp ()
@@ -23,10 +23,10 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.WhereExpressionP
       _querySource = ExpressionHelper.CreateQuerySource ();
       _expression = TestQueryGenerator.CreateMultiWhereQuery_WhereExpression (_querySource);
       _navigator = new ExpressionTreeNavigator(_expression);
-      _parser = new WhereExpressionParser (_expression, _expression, true);
-      _bodyWhereHelper = new BodyHelper (_parser.FromLetWhereExpressions);
+      _result = new ParseResultCollector (_expression);
+      new WhereExpressionParser (_result, _expression, true);
+      _bodyWhereHelper = new BodyHelper (_result.BodyExpressions);
     }
-
     
     [Test]
     public void ParsesFromExpressions ()
@@ -64,17 +64,18 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.WhereExpressionP
     [Test]
     public void ParsesProjectionExpressions ()
     {
-      Assert.IsNotNull (_parser.ProjectionExpressions);
-      Assert.AreEqual (1, _parser.ProjectionExpressions.Count);
-      Assert.IsNull (_parser.ProjectionExpressions[0]);
+      Assert.IsNotNull (_result.ProjectionExpressions);
+      Assert.AreEqual (1, _result.ProjectionExpressions.Count);
+      Assert.IsNull (_result.ProjectionExpressions[0]);
     }
 
     [Test]
     public void ParsesProjectionExpressions_NotTopLevel ()
     {
-      WhereExpressionParser parser = new WhereExpressionParser (_expression, _expression, false);
-      Assert.IsNotNull (parser.ProjectionExpressions);
-      Assert.AreEqual (0, parser.ProjectionExpressions.Count);
+      _result = new ParseResultCollector (_expression);
+      new WhereExpressionParser (_result, _expression, false);
+      Assert.IsNotNull (_result.ProjectionExpressions);
+      Assert.AreEqual (0, _result.ProjectionExpressions.Count);
     }
   }
 }

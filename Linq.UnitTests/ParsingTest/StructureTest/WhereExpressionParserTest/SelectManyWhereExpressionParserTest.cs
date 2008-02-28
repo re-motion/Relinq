@@ -14,10 +14,9 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.WhereExpressionP
     private IQueryable<Student> _querySource2;
     private MethodCallExpression _expression;
     private ExpressionTreeNavigator _navigator;
-    private WhereExpressionParser _parser;
     private ExpressionTreeNavigator _selectManyNavigator;
     private BodyHelper _bodyWhereHelper;
-
+    private ParseResultCollector _result;
 
     [SetUp]
     public void SetUp ()
@@ -26,9 +25,10 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.WhereExpressionP
       _querySource2 = ExpressionHelper.CreateQuerySource();
       _expression = TestQueryGenerator.CreateMultiFromWhere_WhereExpression (_querySource1, _querySource2);
       _navigator = new ExpressionTreeNavigator (_expression);
-      _parser = new WhereExpressionParser ((MethodCallExpression) _navigator.Arguments[0].Expression, _expression, false);
+      _result = new ParseResultCollector (_expression);
+      new WhereExpressionParser (_result, (MethodCallExpression) _navigator.Arguments[0].Expression, false);
       _selectManyNavigator = new ExpressionTreeNavigator (_expression).Arguments[0].Arguments[0];
-      _bodyWhereHelper = new BodyHelper (_parser.FromLetWhereExpressions);
+      _bodyWhereHelper = new BodyHelper (_result.BodyExpressions);
     }
 
     [Test]
@@ -67,9 +67,9 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.WhereExpressionP
     [Test]
     public void ParsesProjectionExpressions ()
     {
-      Assert.IsNotNull (_parser.ProjectionExpressions);
-      Assert.That (_parser.ProjectionExpressions, Is.EqualTo (new object[] {_selectManyNavigator.Arguments[2].Operand.Expression}));
-      Assert.IsInstanceOfType (typeof (LambdaExpression), _parser.ProjectionExpressions[0]);
+      Assert.IsNotNull (_result.ProjectionExpressions);
+      Assert.That (_result.ProjectionExpressions, Is.EqualTo (new object[] {_selectManyNavigator.Arguments[2].Operand.Expression}));
+      Assert.IsInstanceOfType (typeof (LambdaExpression), _result.ProjectionExpressions[0]);
     }
 
     [Test]
@@ -83,10 +83,12 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.WhereExpressionP
     [Test]
     public void TakesWhereExpressionFromMany ()
     {
+      _result = new ParseResultCollector (_expression);
+
       Expression expression = TestQueryGenerator.CreateWhereFromWhere_WhereExpression (_querySource1, _querySource2);
       ExpressionTreeNavigator navigator = new ExpressionTreeNavigator (expression);
-      WhereExpressionParser parser = new WhereExpressionParser ((MethodCallExpression) navigator.Arguments[0].Expression, expression, true);
-      BodyHelper bodyWhereHelper = new BodyHelper (parser.FromLetWhereExpressions);
+      new WhereExpressionParser (_result, (MethodCallExpression) navigator.Arguments[0].Expression, true);
+      BodyHelper bodyWhereHelper = new BodyHelper (_result.BodyExpressions);
       Assert.IsNotNull (bodyWhereHelper.WhereExpressions);
       Assert.That (bodyWhereHelper.WhereExpressions, Is.EqualTo (new object[]
           {

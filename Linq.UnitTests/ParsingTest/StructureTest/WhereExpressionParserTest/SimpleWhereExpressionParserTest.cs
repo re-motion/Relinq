@@ -14,8 +14,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.WhereExpressionP
     private IQueryable<Student> _querySource;
     private MethodCallExpression _expression;
     private ExpressionTreeNavigator _navigator;
-    private WhereExpressionParser _parser;
     private BodyHelper _bodyWhereHelper;
+    private ParseResultCollector _result;
 
     [SetUp]
     public void SetUp ()
@@ -23,8 +23,9 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.WhereExpressionP
       _querySource = ExpressionHelper.CreateQuerySource ();
       _expression = TestQueryGenerator.CreateSimpleWhereQuery_WhereExpression (_querySource);
       _navigator  = new ExpressionTreeNavigator(_expression);
-      _parser = new WhereExpressionParser (_expression, _expression, true);
-      _bodyWhereHelper = new BodyHelper (_parser.FromLetWhereExpressions);
+      _result = new ParseResultCollector (_expression);
+      new WhereExpressionParser (_result, _expression, true);
+      _bodyWhereHelper = new BodyHelper (_result.BodyExpressions);
     }
 
     [Test]
@@ -43,7 +44,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.WhereExpressionP
       Assert.That (_bodyWhereHelper.FromIdentifiers,
           Is.EqualTo (new object[] { _navigator.Arguments[1].Operand.Parameters[0].Expression }));
       Assert.IsInstanceOfType (typeof (ParameterExpression), _bodyWhereHelper.FromIdentifiers[0]);
-      Assert.AreEqual ("s", ((ParameterExpression) _bodyWhereHelper.FromIdentifiers[0]).Name);
+      Assert.AreEqual ("s", (_bodyWhereHelper.FromIdentifiers[0]).Name);
     }
 
     [Test]
@@ -57,17 +58,18 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.WhereExpressionP
     [Test]
     public void ParsesProjectionExpressions ()
     {
-      Assert.IsNotNull (_parser.ProjectionExpressions);
-      Assert.AreEqual (1, _parser.ProjectionExpressions.Count);
-      Assert.IsNull (_parser.ProjectionExpressions[0]);
+      Assert.IsNotNull (_result.ProjectionExpressions);
+      Assert.AreEqual (1, _result.ProjectionExpressions.Count);
+      Assert.IsNull (_result.ProjectionExpressions[0]);
     }
 
     [Test]
     public void ParsesProjectionExpressions_NotTopLevel ()
     {
-      WhereExpressionParser parser = new WhereExpressionParser (_expression, _expression, false);
-      Assert.IsNotNull (parser.ProjectionExpressions);
-      Assert.AreEqual (0, parser.ProjectionExpressions.Count);
+      _result = new ParseResultCollector (_expression);
+      new WhereExpressionParser (_result, _expression, false);
+      Assert.IsNotNull (_result.ProjectionExpressions);
+      Assert.AreEqual (0, _result.ProjectionExpressions.Count);
     }
 
 

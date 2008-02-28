@@ -89,6 +89,7 @@
     <Compile Include="ParsingTest\StructureTest\OrderExpressionTest\SimpleOrderByExpressionTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\OrderingFieldParserTest.cs" />
     <Compile Include="ParsingTest\ParserUtilityTest.cs" />
+    <Compile Include="ParsingTest\StructureTest\ParseResultCollectorTest.cs" />
     <Compile Include="ParsingTest\StructureTest\QueryBodyCreatorTest.cs" />
     <Compile Include="ParsingTest\StructureTest\QueryParserIntegrationTest\OrderByWithWhereConditionAndMultiFrom.cs" />
     <Compile Include="ParsingTest\DetailsTest\SelectProjectionParserTest.cs" />

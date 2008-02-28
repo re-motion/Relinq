@@ -12,18 +12,19 @@ namespace Rubicon.Data.Linq.Parsing.Structure
   {
     private readonly List<BodyExpressionBase> _bodyExpressions = new List<BodyExpressionBase> ();
     private readonly List<LambdaExpression> _projectionExpressions = new List<LambdaExpression> ();
+    private readonly ParseResultCollector _resultCollector;
     private readonly bool _isTopLevel;
     private readonly ParameterExpression _potentialFromIdentifier;
 
-    public SourceExpressionParser (Expression sourceExpression, Expression expressionTreeRoot, bool isTopLevel,
+    public SourceExpressionParser (ParseResultCollector resultCollector, Expression sourceExpression, bool isTopLevel,
                                    ParameterExpression potentialFromIdentifier, string context)
     {
       ArgumentUtility.CheckNotNull ("sourceExpression", sourceExpression);
-      ArgumentUtility.CheckNotNull ("expressionTreeRoot", expressionTreeRoot);
+      ArgumentUtility.CheckNotNull ("resultCollector", resultCollector);
 
+      _resultCollector = resultCollector;
       _isTopLevel = isTopLevel;
       _potentialFromIdentifier = potentialFromIdentifier;
-      Distinct = false;
 
       SourceExpression = sourceExpression;
 
@@ -34,82 +35,83 @@ namespace Rubicon.Data.Linq.Parsing.Structure
           break;
         case ExpressionType.Call:
           string methodName = ParserUtility.CheckMethodCallExpression (
-              (MethodCallExpression) sourceExpression, expressionTreeRoot, 
+              (MethodCallExpression) sourceExpression, _resultCollector.ExpressionTreeRoot, 
               "Select", "SelectMany", "Where", "OrderBy", "OrderByDescending", "ThenBy", "ThenByDescending", "Distinct");
           switch (methodName)
           {
             case "Select":
-              ParseSelectSource (expressionTreeRoot);
+              ParseSelectSource ();
               break;
             case "SelectMany":
-              ParseSelectManySource (expressionTreeRoot);
+              ParseSelectManySource ();
               break;
             case "Where":
-              ParseWhereSource (expressionTreeRoot);
+              ParseWhereSource ();
               break;
             case "OrderBy":
             case "OrderByDescending":
             case "ThenBy":
             case "ThenByDescending":
-              ParseOrderBy (expressionTreeRoot);
+              ParseOrderBy ();
               break;
             case "Distinct":
-              ParseDistinct (expressionTreeRoot);
+              ParseDistinct ();
               break;
           }
           break;
         default:
           throw ParserUtility.CreateParserException ("Constant or Call expression", sourceExpression, context,
-              expressionTreeRoot);
+              _resultCollector.ExpressionTreeRoot);
       }
+
+      foreach (LambdaExpression projectionExpression in _projectionExpressions)
+        _resultCollector.AddProjectionExpression (projectionExpression);
+      foreach (BodyExpressionBase bodyExpression in _bodyExpressions)
+        _resultCollector.AddBodyExpression (bodyExpression);
     }
 
     private void ParseSimpleSource ()
     {
       ConstantExpression constantExpression = (ConstantExpression) SourceExpression;
       _bodyExpressions.Add (new FromExpression (constantExpression, _potentialFromIdentifier));
-    
     }
 
-    private void ParseSelectSource (Expression expressionTreeRoot)
+    private void ParseSelectSource ()
     {
       MethodCallExpression methodCallExpression = (MethodCallExpression) SourceExpression;
-      SelectExpressionParser selectExpressionParser = new SelectExpressionParser (methodCallExpression, expressionTreeRoot);
+      SelectExpressionParser selectExpressionParser = new SelectExpressionParser (methodCallExpression, _resultCollector.ExpressionTreeRoot);
 
       _bodyExpressions.AddRange (selectExpressionParser.FromLetWhereExpressions);
       _projectionExpressions.AddRange (selectExpressionParser.ProjectionExpressions);
     }
 
-    private void ParseDistinct (Expression expressionTreeRoot) //only supports distinct in select (query.Distinct())
+    private void ParseDistinct () //only supports distinct in select (query.Distinct())
     {
       Distinct = true;
-      Expression newTreeRoot = ((MethodCallExpression) expressionTreeRoot).Arguments[0];
+      Expression newTreeRoot = ((MethodCallExpression) _resultCollector.ExpressionTreeRoot).Arguments[0];
       SourceExpression = newTreeRoot;
-      ParseSelectSource (newTreeRoot);
+      ParseSelectSource ();
     }
 
-    private void ParseSelectManySource (Expression expressionTreeRoot)
+    private void ParseSelectManySource ()
     {
       MethodCallExpression methodCallExpression = (MethodCallExpression) SourceExpression;
-      SelectManyExpressionParser selectManyExpressionParser = new SelectManyExpressionParser (methodCallExpression, expressionTreeRoot);
+      SelectManyExpressionParser selectManyExpressionParser = new SelectManyExpressionParser (methodCallExpression, _resultCollector.ExpressionTreeRoot);
 
       _bodyExpressions.AddRange (selectManyExpressionParser.FromLetWhereExpressions);
       _projectionExpressions.AddRange (selectManyExpressionParser.ProjectionExpressions);
     }
 
-    private void ParseWhereSource (Expression expressionTreeRoot)
+    private void ParseWhereSource ()
     {
       MethodCallExpression methodCallExpression = (MethodCallExpression) SourceExpression;
-      WhereExpressionParser whereExpressionParser = new WhereExpressionParser (methodCallExpression, expressionTreeRoot, _isTopLevel);
-
-      _bodyExpressions.AddRange (whereExpressionParser.FromLetWhereExpressions);
-      _projectionExpressions.AddRange (whereExpressionParser.ProjectionExpressions);
+      WhereExpressionParser whereExpressionParser = new WhereExpressionParser (_resultCollector, methodCallExpression, _isTopLevel);
     }
 
-    private void ParseOrderBy (Expression expressionTreeRoot)
+    private void ParseOrderBy ()
     {
       MethodCallExpression methodCallExpression = (MethodCallExpression) SourceExpression;
-      OrderByExpressionParser orderByExpressionParser = new OrderByExpressionParser (methodCallExpression, expressionTreeRoot, _isTopLevel);
+      OrderByExpressionParser orderByExpressionParser = new OrderByExpressionParser (methodCallExpression, _resultCollector.ExpressionTreeRoot, _isTopLevel);
 
       _bodyExpressions.AddRange (orderByExpressionParser.BodyExpressions);
       _projectionExpressions.AddRange (orderByExpressionParser.ProjectionExpressions);
@@ -120,14 +122,22 @@ namespace Rubicon.Data.Linq.Parsing.Structure
 
     public ReadOnlyCollection<BodyExpressionBase> BodyExpressions
     {
-      get { return new ReadOnlyCollection<BodyExpressionBase> (_bodyExpressions); }
+      get { return _resultCollector.BodyExpressions; }
     }
 
     public ReadOnlyCollection<LambdaExpression> ProjectionExpressions
     {
-      get { return new ReadOnlyCollection<LambdaExpression> (_projectionExpressions); }
+      get { return _resultCollector.ProjectionExpressions; }
     }
 
-    public bool Distinct { get; private set; }
+    public bool Distinct
+    {
+      get { return _resultCollector.IsDistinct; }
+      private set
+      {
+        Assertion.IsTrue (value);
+         _resultCollector.SetDistinct();
+      }
+    }
   }
 }

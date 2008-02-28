@@ -71,6 +71,7 @@
     <Compile Include="Parsing\FieldResolving\SelectFieldAccessPolicy.cs" />
     <Compile Include="Parsing\FieldResolving\WhereFieldAccessPolicy.cs" />
     <Compile Include="Parsing\Structure\OrderByExpressionParser.cs" />
+    <Compile Include="Parsing\Structure\ParseResultCollector.cs" />
     <Compile Include="Parsing\Structure\QueryBodyCreator.cs" />
     <Compile Include="Parsing\Structure\SourceExpressionParser.cs" />
     <Compile Include="DataObjectModel\DatabaseInfoUtility.cs" />

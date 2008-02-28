@@ -53,7 +53,7 @@ namespace Rubicon.Data.Linq.Parsing.Structure
       LambdaExpression ueLambda = ParserUtility.GetTypedExpression<LambdaExpression> (unaryExpression.Operand,
           "second argument of OrderBy expression", expressionTreeRoot);
 
-      SourceExpressionParser sourceExpressionParser = new SourceExpressionParser (SourceExpression.Arguments[0], expressionTreeRoot, false,
+      SourceExpressionParser sourceExpressionParser = new SourceExpressionParser (new ParseResultCollector (expressionTreeRoot), SourceExpression.Arguments[0], false,
           ueLambda.Parameters[0], "first argument of OrderBy expression");
             
       _bodyExpressions.AddRange (sourceExpressionParser.BodyExpressions);
