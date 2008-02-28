@@ -4,7 +4,6 @@ using System.Linq;
 using Rubicon.Data.Linq.Parsing;
 using Rubicon.Data.Linq.Parsing.Structure;
 using NUnit.Framework.SyntaxHelpers;
-using Rhino.Mocks;
 
 namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
 {
@@ -63,6 +62,15 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
     public void InvalidSource ()
     {
       _topLevelParser.Parse (new ParseResultCollector (_source.Expression), _potentialFromIdentifier, _potentialFromIdentifier, "xy");
+    }
+
+    [Test]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected one of 'Select, SelectMany, Where, OrderBy, OrderByDescending, ThenBy, "
+        + "ThenByDescending, Distinct', but found 'OfType' at position value(Rubicon.Data.Linq.UnitTests.TestQueryable`1[Rubicon.Data.Linq.UnitTests.Student]).OfType() in tree value(Rubicon.Data.Linq.UnitTests.TestQueryable`1[Rubicon.Data.Linq.UnitTests.Student]).")]
+    public void InvalidMethod ()
+    {
+      IQueryable<Student> source = _source.OfType<Student>();
+      _topLevelParser.Parse (new ParseResultCollector (_source.Expression), source.Expression, _potentialFromIdentifier, "xy");
     }
 
     [Test]
