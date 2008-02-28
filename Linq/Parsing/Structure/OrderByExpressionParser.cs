@@ -10,41 +10,42 @@ namespace Rubicon.Data.Linq.Parsing.Structure
 {
   public class OrderByExpressionParser
   {
+    private readonly ParseResultCollector _resultCollector;
     private readonly bool _isTopLevel;
-    private readonly List<BodyExpressionBase> _bodyExpressions = new List<BodyExpressionBase> ();
-    private readonly List<LambdaExpression> _projectionExpressions = new List<LambdaExpression> ();
 
-    public OrderByExpressionParser (MethodCallExpression orderExpression, Expression expressionTreeRoot, bool isTopLevel)
+    public OrderByExpressionParser (ParseResultCollector resultCollector, MethodCallExpression orderExpression, bool isTopLevel)
     {
       ArgumentUtility.CheckNotNull ("orderExpression", orderExpression);
-      ArgumentUtility.CheckNotNull ("expressionTreeRoot", expressionTreeRoot);    
+      ArgumentUtility.CheckNotNull ("resultCollector", resultCollector);
 
+      _resultCollector = resultCollector;
       _isTopLevel = isTopLevel;
 
       if (orderExpression.Arguments.Count != 2)
         throw ParserUtility.CreateParserException ("OrderBy call with two arguments", orderExpression, "OrderBy expressions",
-            expressionTreeRoot);
+            _resultCollector.ExpressionTreeRoot);
 
       SourceExpression = orderExpression;
 
-      switch (ParserUtility.CheckMethodCallExpression (orderExpression, expressionTreeRoot,
+      switch (ParserUtility.CheckMethodCallExpression (orderExpression, _resultCollector.ExpressionTreeRoot,
           "OrderBy", "OrderByDescending", "ThenBy", "ThenByDescending"))
       {
         case "OrderBy":
-          ParseOrderBy (expressionTreeRoot, OrderDirection.Asc, true);
+          ParseOrderBy (_resultCollector.ExpressionTreeRoot, OrderDirection.Asc, true);
           break;
         case "ThenBy":
-          ParseOrderBy (expressionTreeRoot, OrderDirection.Asc, false);
+          ParseOrderBy (_resultCollector.ExpressionTreeRoot, OrderDirection.Asc, false);
           break;
         case "OrderByDescending":
-          ParseOrderBy (expressionTreeRoot, OrderDirection.Desc, true);
+          ParseOrderBy (_resultCollector.ExpressionTreeRoot, OrderDirection.Desc, true);
           break;
         case "ThenByDescending":
-          ParseOrderBy (expressionTreeRoot, OrderDirection.Desc, false);
+          ParseOrderBy (_resultCollector.ExpressionTreeRoot, OrderDirection.Desc, false);
           break;
       }
-
     }
+
+    public MethodCallExpression SourceExpression { get; private set; }
 
     private void ParseOrderBy (Expression expressionTreeRoot, OrderDirection direction, bool orderBy)
     {
@@ -53,31 +54,12 @@ namespace Rubicon.Data.Linq.Parsing.Structure
       LambdaExpression ueLambda = ParserUtility.GetTypedExpression<LambdaExpression> (unaryExpression.Operand,
           "second argument of OrderBy expression", expressionTreeRoot);
 
-      SourceExpressionParser sourceExpressionParser = new SourceExpressionParser (new ParseResultCollector (expressionTreeRoot), SourceExpression.Arguments[0], false,
+      new SourceExpressionParser (_resultCollector, SourceExpression.Arguments[0], false,
           ueLambda.Parameters[0], "first argument of OrderBy expression");
             
-      _bodyExpressions.AddRange (sourceExpressionParser.BodyExpressions);
-      _bodyExpressions.Add (new OrderExpression (orderBy, direction, ueLambda));
-
-
-      _projectionExpressions.AddRange (sourceExpressionParser.ProjectionExpressions);
-
+      _resultCollector.AddBodyExpression (new OrderExpression (orderBy, direction, ueLambda));
       if (_isTopLevel)
-        _projectionExpressions.Add (null);
-      
-    }
-
-
-    public MethodCallExpression SourceExpression { get; private set; }
-
-    public ReadOnlyCollection<BodyExpressionBase> BodyExpressions
-    {
-      get { return _bodyExpressions.AsReadOnly(); }
-    }
-
-    public ReadOnlyCollection<LambdaExpression> ProjectionExpressions
-    {
-      get { return _projectionExpressions.AsReadOnly(); }
+        _resultCollector.AddProjectionExpression (null);
     }
   }
 }

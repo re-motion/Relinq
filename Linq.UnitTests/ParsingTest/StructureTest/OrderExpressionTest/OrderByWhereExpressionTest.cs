@@ -25,6 +25,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.OrderExpressionT
     private ExpressionTreeNavigator _navigator;
     private OrderByExpressionParser _parser;
     private BodyHelper _bodyOrderByHelper;
+    private ParseResultCollector _result;
 
     [SetUp]
     public void SetUp ()
@@ -32,8 +33,9 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.OrderExpressionT
       _querySource = ExpressionHelper.CreateQuerySource ();
       _expression = TestQueryGenerator.CreateOrderByQueryWithWhere_OrderByExpression (_querySource);
       _navigator = new ExpressionTreeNavigator (_expression);
-      _parser = new OrderByExpressionParser (_expression, _expression, true);
-      _bodyOrderByHelper = new BodyHelper (_parser.BodyExpressions);
+      _result = new ParseResultCollector (_expression);
+      new OrderByExpressionParser (_result, _expression, true);
+      _bodyOrderByHelper = new BodyHelper (_result.BodyExpressions);
     }
 
     [Test]
@@ -86,9 +88,9 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.OrderExpressionT
     [Test]
     public void ParsesProjectionExpressions ()
     {
-      Assert.IsNotNull (_parser.ProjectionExpressions);
-      Assert.AreEqual (1, _parser.ProjectionExpressions.Count);
-      Assert.IsNull (_parser.ProjectionExpressions[0]);
+      Assert.IsNotNull (_result.ProjectionExpressions);
+      Assert.AreEqual (1, _result.ProjectionExpressions.Count);
+      Assert.IsNull (_result.ProjectionExpressions[0]);
     }
 
   }

@@ -105,17 +105,13 @@ namespace Rubicon.Data.Linq.Parsing.Structure
     private void ParseWhereSource ()
     {
       MethodCallExpression methodCallExpression = (MethodCallExpression) SourceExpression;
-      WhereExpressionParser whereExpressionParser = new WhereExpressionParser (_resultCollector, methodCallExpression, _isTopLevel);
+      new WhereExpressionParser (_resultCollector, methodCallExpression, _isTopLevel);
     }
 
     private void ParseOrderBy ()
     {
       MethodCallExpression methodCallExpression = (MethodCallExpression) SourceExpression;
-      OrderByExpressionParser orderByExpressionParser = new OrderByExpressionParser (methodCallExpression, _resultCollector.ExpressionTreeRoot, _isTopLevel);
-
-      _bodyExpressions.AddRange (orderByExpressionParser.BodyExpressions);
-      _projectionExpressions.AddRange (orderByExpressionParser.ProjectionExpressions);
-
+      new OrderByExpressionParser (_resultCollector, methodCallExpression, _isTopLevel);
     }
 
     public Expression SourceExpression { get; private set; }

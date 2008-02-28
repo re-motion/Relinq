@@ -23,8 +23,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.OrderExpressionT
     private IQueryable<Student> _querySource;
     private MethodCallExpression _expression;
     private ExpressionTreeNavigator _navigator;
-    private OrderByExpressionParser _parser;
     private BodyHelper _bodyOrderByHelper;
+    private ParseResultCollector _result;
 
     [SetUp]
     public void SetUp()
@@ -32,8 +32,9 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.OrderExpressionT
       _querySource = ExpressionHelper.CreateQuerySource ();
       _expression = TestQueryGenerator.CreateOrderByQueryWithOrderByAndThenBy_OrderByExpression (_querySource);
       _navigator = new ExpressionTreeNavigator (_expression);
-      _parser = new OrderByExpressionParser (_expression, _expression,true);
-      _bodyOrderByHelper = new BodyHelper (_parser.BodyExpressions);
+      _result = new ParseResultCollector (_expression);
+      new OrderByExpressionParser (_result, _expression, true);
+      _bodyOrderByHelper = new BodyHelper (_result.BodyExpressions);
     }
 
     [Test]
