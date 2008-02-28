@@ -93,10 +93,7 @@ namespace Rubicon.Data.Linq.Parsing.Structure
     private void ParseSelectManySource ()
     {
       MethodCallExpression methodCallExpression = (MethodCallExpression) SourceExpression;
-      SelectManyExpressionParser selectManyExpressionParser = new SelectManyExpressionParser (methodCallExpression, _resultCollector.ExpressionTreeRoot);
-
-      _bodyExpressions.AddRange (selectManyExpressionParser.FromLetWhereExpressions);
-      _projectionExpressions.AddRange (selectManyExpressionParser.ProjectionExpressions);
+      new SelectManyExpressionParser (_resultCollector, methodCallExpression);
     }
 
     private void ParseWhereSource ()

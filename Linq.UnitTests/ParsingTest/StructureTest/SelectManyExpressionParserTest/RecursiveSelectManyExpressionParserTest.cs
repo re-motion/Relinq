@@ -16,8 +16,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.SelectManyExpres
     private IQueryable<Student> _querySource3;
     private MethodCallExpression _expression;
     private ExpressionTreeNavigator _navigator;
-    private SelectManyExpressionParser _parser;
     private BodyHelper _bodyWhereHelper;
+    private ParseResultCollector _result;
 
     [SetUp]
     public void SetUp ()
@@ -27,8 +27,9 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.SelectManyExpres
       _querySource3 = ExpressionHelper.CreateQuerySource();
       _expression = TestQueryGenerator.CreateThreeFromWhereQuery_SelectManyExpression (_querySource1, _querySource2, _querySource3);
       _navigator = new ExpressionTreeNavigator (_expression);
-      _parser = new SelectManyExpressionParser (_expression, _expression);
-      _bodyWhereHelper = new BodyHelper (_parser.FromLetWhereExpressions);
+      _result = new ParseResultCollector (_expression);
+      new SelectManyExpressionParser (_result, _expression);
+      _bodyWhereHelper = new BodyHelper (_result.BodyExpressions);
     }
 
     [Test]
@@ -89,14 +90,14 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.SelectManyExpres
     [Test]
     public void ParsesProjectionExpressions ()
     {
-      Assert.IsNotNull (_parser.ProjectionExpressions);
-      Assert.That (_parser.ProjectionExpressions, Is.EqualTo (new object[]
+      Assert.IsNotNull (_result.ProjectionExpressions);
+      Assert.That (_result.ProjectionExpressions, Is.EqualTo (new object[]
           {
               _navigator.Arguments[0].Arguments[0].Arguments[2].Operand.Expression,
               _navigator.Arguments[2].Operand.Expression
           }));
-      Assert.IsInstanceOfType (typeof (LambdaExpression), _parser.ProjectionExpressions[0]);
-      Assert.IsInstanceOfType (typeof (LambdaExpression), _parser.ProjectionExpressions[1]);
+      Assert.IsInstanceOfType (typeof (LambdaExpression), _result.ProjectionExpressions[0]);
+      Assert.IsInstanceOfType (typeof (LambdaExpression), _result.ProjectionExpressions[1]);
     }
   }
 }
