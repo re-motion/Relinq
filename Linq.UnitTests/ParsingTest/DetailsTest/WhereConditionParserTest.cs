@@ -351,7 +351,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
       WhereClause whereClause = ClauseFinder.FindClause<WhereClause> (parsedQuery.QueryBody.SelectOrGroupClause);
 
-      PropertyInfo relationMember = typeof (Student_Detail).GetProperty ("Student");
+      PropertyInfo relationMember = typeof (Student_Detail).GetProperty ("IndustrialSector");
       FieldDescriptor expected = ExpressionHelper.CreateFieldDescriptor (parsedQuery.MainFromClause, relationMember);
 
       WhereConditionParser parser = new WhereConditionParser (parsedQuery, whereClause, _databaseInfo, _context, false);
