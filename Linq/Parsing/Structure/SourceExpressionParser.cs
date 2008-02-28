@@ -91,7 +91,7 @@ namespace Rubicon.Data.Linq.Parsing.Structure
     private void ParseOrderBy (ParseResultCollector resultCollector, Expression sourceExpression)
     {
       MethodCallExpression methodCallExpression = (MethodCallExpression) sourceExpression;
-      new OrderByExpressionParser (resultCollector, methodCallExpression, _isTopLevel);
+      new OrderByExpressionParser (_isTopLevel).Parse ( resultCollector, methodCallExpression);
     }
   }
 }

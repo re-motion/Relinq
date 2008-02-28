@@ -33,7 +33,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.OrderExpressionT
       _expression = TestQueryGenerator.CreateOrderByQueryWithWhere_OrderByExpression (_querySource);
       _navigator = new ExpressionTreeNavigator (_expression);
       _result = new ParseResultCollector (_expression);
-      new OrderByExpressionParser (_result, _expression, true);
+      new OrderByExpressionParser (true).Parse (_result, _expression);
       _bodyOrderByHelper = new BodyHelper (_result.BodyExpressions);
     }
 

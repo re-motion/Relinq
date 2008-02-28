@@ -33,7 +33,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.OrderExpressionT
       _expression = TestQueryGenerator.CreateOrderByQueryWithOrderByAndThenBy_OrderByExpression (_querySource);
       _navigator = new ExpressionTreeNavigator (_expression);
       _result = new ParseResultCollector (_expression);
-      new OrderByExpressionParser (_result, _expression, true);
+      new OrderByExpressionParser (true).Parse (_result, _expression);
       _bodyOrderByHelper = new BodyHelper (_result.BodyExpressions);
     }
 
@@ -72,6 +72,23 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.OrderExpressionT
           }));
       Assert.IsInstanceOfType (typeof (ParameterExpression), _bodyOrderByHelper.FromIdentifiers[0]);
       Assert.AreEqual ("s", (_bodyOrderByHelper.FromIdentifiers[0]).Name);
+    }
+
+    [Test]
+    public void ParsesProjectionExpressions ()
+    {
+      Assert.IsNotNull (_result.ProjectionExpressions);
+      Assert.AreEqual (1, _result.ProjectionExpressions.Count);
+      Assert.IsNull (_result.ProjectionExpressions[0]);
+    }
+
+    [Test]
+    public void ParsesProjectionExpressions_NotTopLevel ()
+    {
+      _result = new ParseResultCollector (_expression);
+      new OrderByExpressionParser (false).Parse (_result, _expression);
+      Assert.IsNotNull (_result.ProjectionExpressions);
+      Assert.AreEqual (0, _result.ProjectionExpressions.Count);
     }
   }
 }

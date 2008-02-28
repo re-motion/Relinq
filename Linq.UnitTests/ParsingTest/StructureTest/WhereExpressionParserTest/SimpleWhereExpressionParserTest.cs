@@ -72,6 +72,5 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.WhereExpressionP
       Assert.AreEqual (0, _result.ProjectionExpressions.Count);
     }
 
-
   }
 }
