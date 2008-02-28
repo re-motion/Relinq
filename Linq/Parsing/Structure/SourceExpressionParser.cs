@@ -69,19 +69,6 @@ namespace Rubicon.Data.Linq.Parsing.Structure
       new SelectExpressionParser().Parse (resultCollector, methodCallExpression);
     }
 
-    private void ParseDistinct (ParseResultCollector resultCollector, Expression sourceExpression, ParameterExpression potentialFromIdentifier)
-    {
-      if (!_isTopLevel)
-      {
-        string message = string.Format ("Distinct is only allowed at the top level of a query, not in the middle: '{0}'.", resultCollector.ExpressionTreeRoot);
-        throw new ParserException (message, sourceExpression, resultCollector.ExpressionTreeRoot, null);
-      }
-
-      resultCollector.SetDistinct();
-      Expression selectExpression = ((MethodCallExpression) sourceExpression).Arguments[0];
-      Parse (resultCollector, selectExpression, potentialFromIdentifier, "first argument of distinct");
-    }
-
     private void ParseSelectManySource (ParseResultCollector resultCollector, Expression sourceExpression)
     {
       MethodCallExpression methodCallExpression = (MethodCallExpression) sourceExpression;
@@ -98,6 +85,19 @@ namespace Rubicon.Data.Linq.Parsing.Structure
     {
       MethodCallExpression methodCallExpression = (MethodCallExpression) sourceExpression;
       new OrderByExpressionParser (_isTopLevel).Parse ( resultCollector, methodCallExpression);
+    }
+
+    private void ParseDistinct (ParseResultCollector resultCollector, Expression sourceExpression, ParameterExpression potentialFromIdentifier)
+    {
+      if (!_isTopLevel)
+      {
+        string message = string.Format ("Distinct is only allowed at the top level of a query, not in the middle: '{0}'.", resultCollector.ExpressionTreeRoot);
+        throw new ParserException (message, sourceExpression, resultCollector.ExpressionTreeRoot, null);
+      }
+
+      resultCollector.SetDistinct ();
+      Expression selectExpression = ((MethodCallExpression) sourceExpression).Arguments[0];
+      Parse (resultCollector, selectExpression, potentialFromIdentifier, "first argument of distinct");
     }
   }
 }

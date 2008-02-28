@@ -15,7 +15,6 @@ namespace Rubicon.Data.Linq.Parsing.Structure
       ArgumentUtility.CheckNotNull ("identifier", identifier);
 
       Identifier = identifier;
-
     }
   }
 }
