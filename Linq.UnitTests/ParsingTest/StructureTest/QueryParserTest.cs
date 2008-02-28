@@ -33,7 +33,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
     public void Initialize_FromWrongExpression ()
     {
       MethodCallExpression expression = Expression.Call (typeof (Console), "WriteLine", Type.EmptyTypes);
-      new QueryParser (expression);
+      new QueryParser (expression).GetParsedQuery();
     }
 
     [Test]

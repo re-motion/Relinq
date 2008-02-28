@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using Rubicon.Data.Linq.Parsing.Structure;
 using Rubicon.Utilities;
@@ -10,6 +8,7 @@ namespace Rubicon.Data.Linq.Parsing.Structure
   public class SelectManyExpressionParser
   {
     private readonly ParseResultCollector _resultCollector;
+    private readonly SourceExpressionParser _sourceParser = new SourceExpressionParser (false);
 
     public SelectManyExpressionParser (ParseResultCollector resultCollector, MethodCallExpression selectManyExpression)
     {
@@ -41,8 +40,7 @@ namespace Rubicon.Data.Linq.Parsing.Structure
       LambdaExpression ueLambda2 = ParserUtility.GetTypedExpression<LambdaExpression> (unaryExpression2.Operand,
           "second argument of SelectMany expression", _resultCollector.ExpressionTreeRoot);
 
-      SourceExpressionParser sourceExpressionParser = new SourceExpressionParser (_resultCollector, SourceExpression.Arguments[0], false,
-          ueLambda2.Parameters[0], "first argument of SelectMany expression");
+      _sourceParser.Parse (_resultCollector, SourceExpression.Arguments[0], ueLambda2.Parameters[0], "first argument of SelectMany expression");
 
       _resultCollector.AddBodyExpression (new FromExpression (ueLambda1, ueLambda2.Parameters[1]));
       _resultCollector.AddProjectionExpression (ueLambda2);

@@ -12,6 +12,7 @@ namespace Rubicon.Data.Linq.Parsing.Structure
   {
     private readonly ParseResultCollector _resultCollector;
     private readonly bool _isTopLevel;
+    private readonly SourceExpressionParser _sourceParser = new SourceExpressionParser (false);
 
     public OrderByExpressionParser (ParseResultCollector resultCollector, MethodCallExpression orderExpression, bool isTopLevel)
     {
@@ -54,8 +55,7 @@ namespace Rubicon.Data.Linq.Parsing.Structure
       LambdaExpression ueLambda = ParserUtility.GetTypedExpression<LambdaExpression> (unaryExpression.Operand,
           "second argument of OrderBy expression", _resultCollector.ExpressionTreeRoot);
 
-      new SourceExpressionParser (_resultCollector, SourceExpression.Arguments[0], false,
-          ueLambda.Parameters[0], "first argument of OrderBy expression");
+      _sourceParser.Parse (_resultCollector, SourceExpression.Arguments[0], ueLambda.Parameters[0], "first argument of OrderBy expression");
             
       _resultCollector.AddBodyExpression (new OrderExpression (orderBy, direction, ueLambda));
       if (_isTopLevel)

@@ -9,6 +9,7 @@ namespace Rubicon.Data.Linq.Parsing.Structure
   public class SelectExpressionParser
   {
     private readonly ParseResultCollector _resultCollector;
+    private readonly SourceExpressionParser _sourceParser = new SourceExpressionParser (false);
 
     public SelectExpressionParser (ParseResultCollector resultCollector, MethodCallExpression selectExpression)
     {
@@ -37,8 +38,7 @@ namespace Rubicon.Data.Linq.Parsing.Structure
       LambdaExpression ueLambda = ParserUtility.GetTypedExpression<LambdaExpression> (unaryExpression.Operand,
           "second argument of Select expression", _resultCollector.ExpressionTreeRoot);
 
-      new SourceExpressionParser (_resultCollector, SourceExpression.Arguments[0], false, ueLambda.Parameters[0], 
-          "first argument of Select expression");
+      _sourceParser.Parse (_resultCollector, SourceExpression.Arguments[0], ueLambda.Parameters[0],  "first argument of Select expression");
 
       _resultCollector.AddProjectionExpression (ueLambda);
     }

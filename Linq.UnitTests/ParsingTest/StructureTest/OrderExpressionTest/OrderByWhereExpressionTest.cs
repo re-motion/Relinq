@@ -23,7 +23,6 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.OrderExpressionT
     private IQueryable<Student> _querySource;
     private MethodCallExpression _expression;
     private ExpressionTreeNavigator _navigator;
-    private OrderByExpressionParser _parser;
     private BodyHelper _bodyOrderByHelper;
     private ParseResultCollector _result;
 

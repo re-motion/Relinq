@@ -7,97 +7,91 @@ namespace Rubicon.Data.Linq.Parsing.Structure
 {
   internal class SourceExpressionParser
   {
-    private readonly ParseResultCollector _resultCollector;
     private readonly bool _isTopLevel;
-    private readonly ParameterExpression _potentialFromIdentifier;
 
-    public SourceExpressionParser (ParseResultCollector resultCollector, Expression sourceExpression, bool isTopLevel,
-                                   ParameterExpression potentialFromIdentifier, string context)
+    public SourceExpressionParser (bool isTopLevel)
     {
-      ArgumentUtility.CheckNotNull ("sourceExpression", sourceExpression);
-      ArgumentUtility.CheckNotNull ("resultCollector", resultCollector);
-
-      _resultCollector = resultCollector;
       _isTopLevel = isTopLevel;
-      _potentialFromIdentifier = potentialFromIdentifier;
+    }
 
-      SourceExpression = sourceExpression;
+    public void Parse (ParseResultCollector resultCollector, Expression sourceExpression, ParameterExpression potentialFromIdentifier, string context)
+    {
+      ArgumentUtility.CheckNotNull ("resultCollector", resultCollector);
+      ArgumentUtility.CheckNotNull ("sourceExpression", sourceExpression);
+      ArgumentUtility.CheckNotNull ("context", context);
 
       switch (sourceExpression.NodeType)
       {
         case ExpressionType.Constant:
-          ParseSimpleSource ();
+          ParseSimpleSource (resultCollector, sourceExpression, potentialFromIdentifier);
           break;
         case ExpressionType.Call:
           string methodName = ParserUtility.CheckMethodCallExpression (
-              (MethodCallExpression) sourceExpression, _resultCollector.ExpressionTreeRoot, 
+              (MethodCallExpression) sourceExpression, resultCollector.ExpressionTreeRoot, 
               "Select", "SelectMany", "Where", "OrderBy", "OrderByDescending", "ThenBy", "ThenByDescending", "Distinct");
           switch (methodName)
           {
             case "Select":
-              ParseSelectSource ();
+              ParseSelectSource (resultCollector, sourceExpression);
               break;
             case "SelectMany":
-              ParseSelectManySource ();
+              ParseSelectManySource (resultCollector, sourceExpression);
               break;
             case "Where":
-              ParseWhereSource ();
+              ParseWhereSource (resultCollector, sourceExpression);
               break;
             case "OrderBy":
             case "OrderByDescending":
             case "ThenBy":
             case "ThenByDescending":
-              ParseOrderBy ();
+              ParseOrderBy (resultCollector, sourceExpression);
               break;
             case "Distinct":
-              ParseDistinct ();
+              ParseDistinct (resultCollector, sourceExpression);
               break;
           }
           break;
         default:
           throw ParserUtility.CreateParserException ("Constant or Call expression", sourceExpression, context,
-              _resultCollector.ExpressionTreeRoot);
+              resultCollector.ExpressionTreeRoot);
       }
     }
 
-    public Expression SourceExpression { get; private set; }
-
-    private void ParseSimpleSource ()
+    private void ParseSimpleSource (ParseResultCollector resultCollector, Expression sourceExpression, ParameterExpression potentialFromIdentifier)
     {
-      ConstantExpression constantExpression = (ConstantExpression) SourceExpression;
-      _resultCollector.AddBodyExpression (new FromExpression (constantExpression, _potentialFromIdentifier));
+      ConstantExpression constantExpression = (ConstantExpression) sourceExpression;
+      resultCollector.AddBodyExpression (new FromExpression (constantExpression, potentialFromIdentifier));
     }
 
-    private void ParseSelectSource ()
+    private void ParseSelectSource (ParseResultCollector resultCollector, Expression sourceExpression)
     {
-      MethodCallExpression methodCallExpression = (MethodCallExpression) SourceExpression;
-      new SelectExpressionParser (_resultCollector, methodCallExpression);
+      MethodCallExpression methodCallExpression = (MethodCallExpression) sourceExpression;
+      new SelectExpressionParser (resultCollector, methodCallExpression);
     }
 
-    private void ParseDistinct () //only supports distinct in select (query.Distinct())
+    private void ParseDistinct (ParseResultCollector resultCollector, Expression sourceExpression) //only supports distinct in select (query.Distinct())
     {
-      _resultCollector.SetDistinct();
-      Expression newTreeRoot = ((MethodCallExpression) _resultCollector.ExpressionTreeRoot).Arguments[0];
-      SourceExpression = newTreeRoot;
-      ParseSelectSource ();
+      resultCollector.SetDistinct();
+      Expression selectExpression = ((MethodCallExpression) sourceExpression).Arguments[0];
+      ParseSelectSource (resultCollector, selectExpression);
     }
 
-    private void ParseSelectManySource ()
+    private void ParseSelectManySource (ParseResultCollector resultCollector, Expression sourceExpression)
     {
-      MethodCallExpression methodCallExpression = (MethodCallExpression) SourceExpression;
-      new SelectManyExpressionParser (_resultCollector, methodCallExpression);
+      MethodCallExpression methodCallExpression = (MethodCallExpression) sourceExpression;
+      new SelectManyExpressionParser (resultCollector, methodCallExpression);
     }
 
-    private void ParseWhereSource ()
+    private void ParseWhereSource (ParseResultCollector resultCollector, Expression sourceExpression)
     {
-      MethodCallExpression methodCallExpression = (MethodCallExpression) SourceExpression;
-      new WhereExpressionParser (_resultCollector, methodCallExpression, _isTopLevel);
+      MethodCallExpression methodCallExpression = (MethodCallExpression) sourceExpression;
+      new WhereExpressionParser (resultCollector, methodCallExpression, _isTopLevel);
     }
 
-    private void ParseOrderBy ()
+    private void ParseOrderBy (ParseResultCollector resultCollector, Expression sourceExpression)
     {
-      MethodCallExpression methodCallExpression = (MethodCallExpression) SourceExpression;
-      new OrderByExpressionParser (_resultCollector, methodCallExpression, _isTopLevel);
+      MethodCallExpression methodCallExpression = (MethodCallExpression) sourceExpression;
+      new OrderByExpressionParser (resultCollector, methodCallExpression, _isTopLevel);
     }
   }
 }
