@@ -36,16 +36,10 @@ namespace Rubicon.Data.Linq.Parsing.Structure
       LambdaExpression ueLambda = ParserUtility.GetTypedExpression<LambdaExpression> (unaryExpression.Operand,
           "second argument of Where expression", _resultCollector.ExpressionTreeRoot);
 
-      SourceExpressionParser sourceExpressionParser = new SourceExpressionParser (new ParseResultCollector (_resultCollector.ExpressionTreeRoot), SourceExpression.Arguments[0], false,
-          ueLambda.Parameters[0], "first argument of Where expression");
-
-      foreach (LambdaExpression projectionExpression in sourceExpressionParser.ProjectionExpressions)
-        _resultCollector.AddProjectionExpression (projectionExpression);
-      foreach (BodyExpressionBase bodyExpression in sourceExpressionParser.BodyExpressions)
-        _resultCollector.AddBodyExpression (bodyExpression);
+      new SourceExpressionParser (_resultCollector, SourceExpression.Arguments[0], false, ueLambda.Parameters[0],
+          "first argument of Where expression");
 
       _resultCollector.AddBodyExpression (new WhereExpression (ueLambda));
-      
       if (_isTopLevel)
         _resultCollector.AddProjectionExpression (null);
     }

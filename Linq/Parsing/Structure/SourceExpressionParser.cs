@@ -1,17 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using Rubicon.Data.Linq.Parsing.Structure;
-using Rubicon.Text;
 using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.Parsing.Structure
 {
   internal class SourceExpressionParser
   {
-    private readonly List<BodyExpressionBase> _bodyExpressions = new List<BodyExpressionBase> ();
-    private readonly List<LambdaExpression> _projectionExpressions = new List<LambdaExpression> ();
     private readonly ParseResultCollector _resultCollector;
     private readonly bool _isTopLevel;
     private readonly ParameterExpression _potentialFromIdentifier;
@@ -63,17 +58,14 @@ namespace Rubicon.Data.Linq.Parsing.Structure
           throw ParserUtility.CreateParserException ("Constant or Call expression", sourceExpression, context,
               _resultCollector.ExpressionTreeRoot);
       }
-
-      foreach (LambdaExpression projectionExpression in _projectionExpressions)
-        _resultCollector.AddProjectionExpression (projectionExpression);
-      foreach (BodyExpressionBase bodyExpression in _bodyExpressions)
-        _resultCollector.AddBodyExpression (bodyExpression);
     }
+
+    public Expression SourceExpression { get; private set; }
 
     private void ParseSimpleSource ()
     {
       ConstantExpression constantExpression = (ConstantExpression) SourceExpression;
-      _bodyExpressions.Add (new FromExpression (constantExpression, _potentialFromIdentifier));
+      _resultCollector.AddBodyExpression (new FromExpression (constantExpression, _potentialFromIdentifier));
     }
 
     private void ParseSelectSource ()
@@ -84,7 +76,7 @@ namespace Rubicon.Data.Linq.Parsing.Structure
 
     private void ParseDistinct () //only supports distinct in select (query.Distinct())
     {
-      Distinct = true;
+      _resultCollector.SetDistinct();
       Expression newTreeRoot = ((MethodCallExpression) _resultCollector.ExpressionTreeRoot).Arguments[0];
       SourceExpression = newTreeRoot;
       ParseSelectSource ();
@@ -106,28 +98,6 @@ namespace Rubicon.Data.Linq.Parsing.Structure
     {
       MethodCallExpression methodCallExpression = (MethodCallExpression) SourceExpression;
       new OrderByExpressionParser (_resultCollector, methodCallExpression, _isTopLevel);
-    }
-
-    public Expression SourceExpression { get; private set; }
-
-    public ReadOnlyCollection<BodyExpressionBase> BodyExpressions
-    {
-      get { return _resultCollector.BodyExpressions; }
-    }
-
-    public ReadOnlyCollection<LambdaExpression> ProjectionExpressions
-    {
-      get { return _resultCollector.ProjectionExpressions; }
-    }
-
-    public bool Distinct
-    {
-      get { return _resultCollector.IsDistinct; }
-      private set
-      {
-        Assertion.IsTrue (value);
-         _resultCollector.SetDistinct();
-      }
     }
   }
 }
