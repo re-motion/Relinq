@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Reflection;
 using Rubicon.Collections;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.DataObjectModel;
@@ -14,12 +13,10 @@ namespace Rubicon.Data.Linq.Parsing.Details
   {
     private readonly bool _simplify;
     private readonly WhereClause _whereClause;
-    private readonly IDatabaseInfo _databaseInfo;
     private readonly QueryExpression _queryExpression;
-    private readonly JoinedTableContext _context;
+    private readonly FromClauseFieldResolver _resolver;
 
     private List<FieldDescriptor> _fieldDescriptors;
-    
 
     public WhereConditionParser (QueryExpression queryExpression, WhereClause whereClause, IDatabaseInfo databaseInfo, JoinedTableContext context, bool simplify)
     {
@@ -31,8 +28,7 @@ namespace Rubicon.Data.Linq.Parsing.Details
       _simplify = simplify;
       _queryExpression = queryExpression;
       _whereClause = whereClause;
-      _databaseInfo = databaseInfo;
-      _context = context;
+      _resolver = new FromClauseFieldResolver (databaseInfo, context, new WhereFieldAccessPolicy());
     }
 
     public Tuple<List<FieldDescriptor>, ICriterion> GetParseResult ()
@@ -41,9 +37,7 @@ namespace Rubicon.Data.Linq.Parsing.Details
       LambdaExpression boolExpression = _simplify ? _whereClause.GetSimplifiedBoolExpression() : _whereClause.BoolExpression;
       return Tuple.NewTuple (_fieldDescriptors, ParseExpression (boolExpression.Body));
     }
-
     
-
     private ICriterion ParseExpression (Expression expression)
     {
       if (expression is BinaryExpression)
@@ -62,8 +56,9 @@ namespace Rubicon.Data.Linq.Parsing.Details
 
     private ICriterion ParseMemberExpression (MemberExpression expression)
     {
-      _fieldDescriptors.Add (_queryExpression.ResolveField (_databaseInfo, _context, expression, new WhereFieldAccessPolicy()));
-      return _queryExpression.ResolveField (_databaseInfo, _context, expression,new WhereFieldAccessPolicy()).GetMandatoryColumn();
+      FieldDescriptor fieldDescriptor = _queryExpression.ResolveField (_resolver, expression);
+      _fieldDescriptors.Add (fieldDescriptor);
+      return fieldDescriptor.GetMandatoryColumn();
     }
 
     private ICriterion ParseConstantExpression (ConstantExpression expression)

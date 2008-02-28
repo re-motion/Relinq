@@ -11,8 +11,7 @@ namespace Rubicon.Data.Linq.Parsing.Details
   {
     private readonly QueryExpression _queryExpression;
     private readonly OrderingClause _orderingClause;
-    private readonly IDatabaseInfo _databaseInfo;
-    private readonly JoinedTableContext _context;
+    private readonly FromClauseFieldResolver _resolver;
 
     public OrderingFieldParser (QueryExpression queryExpression, OrderingClause orderingClause, IDatabaseInfo databaseInfo, JoinedTableContext context)
     {
@@ -23,9 +22,8 @@ namespace Rubicon.Data.Linq.Parsing.Details
 
       _queryExpression = queryExpression;
       _orderingClause = orderingClause;
-      _databaseInfo = databaseInfo;
-      _context = context;
 
+      _resolver = new FromClauseFieldResolver (databaseInfo, context, new OrderingFieldAccessPolicy());
     }
 
     public OrderingField GetField ()
@@ -35,7 +33,7 @@ namespace Rubicon.Data.Linq.Parsing.Details
 
     private OrderingField ParseExpression (Expression expression)
     {
-      FieldDescriptor fieldDescriptor = _queryExpression.ResolveField (_databaseInfo, _context, expression,new OrderingFieldAccessPolicy());
+      FieldDescriptor fieldDescriptor = _queryExpression.ResolveField (_resolver, expression);
       OrderingField orderingField = new OrderingField (fieldDescriptor, _orderingClause.OrderDirection);
       return orderingField;
     }

@@ -12,8 +12,7 @@ namespace Rubicon.Data.Linq.Parsing.Details
   {
     private readonly QueryExpression _queryExpression;
     private readonly SelectClause _selectClause;
-    private readonly IDatabaseInfo _databaseInfo;
-    private readonly JoinedTableContext _context;
+    private readonly FromClauseFieldResolver _resolver;
 
     public SelectProjectionParser (QueryExpression queryExpression, SelectClause selectClause, IDatabaseInfo databaseInfo, JoinedTableContext context)
     {
@@ -24,8 +23,7 @@ namespace Rubicon.Data.Linq.Parsing.Details
 
       _queryExpression = queryExpression;
       _selectClause = selectClause;
-      _databaseInfo = databaseInfo;
-      _context = context;
+      _resolver = new FromClauseFieldResolver (databaseInfo, context, new SelectFieldAccessPolicy());
     }
 
     public IEnumerable<FieldDescriptor> GetSelectedFields ()
@@ -33,14 +31,7 @@ namespace Rubicon.Data.Linq.Parsing.Details
       List<FieldDescriptor> fields = new List<FieldDescriptor> ();
 
       if (_selectClause.ProjectionExpression == null)
-      {
-        FromClauseBase fromClause = ClauseFinder.FindClause<FromClauseBase> (_selectClause);
-        Assertion.IsTrue (fromClause is MainFromClause, "When there are two or more from clauses, there must be a projection expression.");
-        Table table = fromClause.GetTable (_databaseInfo);
-        FieldSourcePath path = new FieldSourcePath(table,new SingleJoin[0]);
-        Column? column = DatabaseInfoUtility.GetColumn (_databaseInfo, table, null);
-        fields.Add (new FieldDescriptor (null, fromClause, path, column));
-      }
+        AddDummyProjectionField(fields);
       else
       {
         Expression expression = _selectClause.ProjectionExpression.Body;
@@ -48,6 +39,14 @@ namespace Rubicon.Data.Linq.Parsing.Details
       }
 
       return fields;
+    }
+
+    private void AddDummyProjectionField (List<FieldDescriptor> fields)
+    {
+      FromClauseBase fromClause = ClauseFinder.FindClause<FromClauseBase> (_selectClause);
+      Assertion.IsTrue (fromClause is MainFromClause, "When there are two or more from clauses, there must be a projection expression.");
+      FieldDescriptor dummyProjectionField = _queryExpression.ResolveField (_resolver, fromClause.Identifier);
+      fields.Add (dummyProjectionField);
     }
 
     private void FindSelectedFields (List<FieldDescriptor> fields, Expression expression)
@@ -92,8 +91,7 @@ namespace Rubicon.Data.Linq.Parsing.Details
 
     private void ResolveField (List<FieldDescriptor> fields, Expression expression)
     {
-      FieldDescriptor fieldDescriptor = _queryExpression.ResolveField (_databaseInfo, _context, expression,new SelectFieldAccessPolicy());
-
+      FieldDescriptor fieldDescriptor = _queryExpression.ResolveField (_resolver, expression);
       if (fieldDescriptor.Column != null)
         fields.Add (fieldDescriptor);
     }

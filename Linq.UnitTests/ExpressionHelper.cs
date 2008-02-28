@@ -143,10 +143,10 @@ namespace Rubicon.Data.Linq.UnitTests
 
     public static  IQueryable<IndustrialSector> CreateQuerySource_IndustrialSector ()
     {
-      return CreateQuerySource_IndustrailSector (s_executor);
+      return CreateQuerySource_IndustrialSector (s_executor);
     }
 
-    public static IQueryable<IndustrialSector> CreateQuerySource_IndustrailSector( IQueryExecutor executor)
+    public static IQueryable<IndustrialSector> CreateQuerySource_IndustrialSector( IQueryExecutor executor)
     {
       return new TestQueryable<IndustrialSector> (executor);
     }

@@ -13,11 +13,13 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
   public class FromClauseFieldResolverTest
   {
     private JoinedTableContext _context;
+    private IResolveFieldAccessPolicy _policy;
 
     [SetUp]
     public void SetUp ()
     {
       _context = new JoinedTableContext();
+      _policy = new SelectFieldAccessPolicy();
     }
 
     [Test]
@@ -27,7 +29,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource());
 
       FieldDescriptor fieldDescriptor =
-          new FromClauseFieldResolver (fromClause).ResolveField (StubDatabaseInfo.Instance, _context, identifier, identifier,new SelectFieldAccessPolicy());
+          new FromClauseFieldResolver (StubDatabaseInfo.Instance, _context, _policy).ResolveField (fromClause, identifier, identifier);
 
       Table table = fromClause.GetTable (StubDatabaseInfo.Instance);
       Column column = new Column (table, "*");
@@ -46,7 +48,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource());
 
       ParameterExpression identifier2 = Expression.Parameter (typeof (Student), "fromIdentifier5");
-      new FromClauseFieldResolver (fromClause).ResolveField (StubDatabaseInfo.Instance, _context, identifier2, identifier2,null);
+      new FromClauseFieldResolver (StubDatabaseInfo.Instance, _context, _policy).ResolveField (fromClause, identifier2, identifier2);
     }
 
     [Test]
@@ -59,7 +61,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource());
 
       ParameterExpression identifier2 = Expression.Parameter (typeof (string), "fromIdentifier1");
-      new FromClauseFieldResolver (fromClause).ResolveField (StubDatabaseInfo.Instance, _context, identifier2, identifier2,null);
+      new FromClauseFieldResolver (StubDatabaseInfo.Instance, _context, _policy).ResolveField (fromClause, identifier2, identifier2);
     }
 
     [Test]
@@ -71,7 +73,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       Expression fieldExpression = Expression.MakeMemberAccess (Expression.Parameter (typeof (Student), "fromIdentifier1"),
           typeof (Student).GetProperty ("First"));
       FieldDescriptor fieldDescriptor =
-          new FromClauseFieldResolver (fromClause).ResolveField (StubDatabaseInfo.Instance, _context, fieldExpression, fieldExpression,null);
+          new FromClauseFieldResolver (StubDatabaseInfo.Instance, _context, _policy).ResolveField (fromClause, fieldExpression, fieldExpression);
       Assert.AreEqual (new Column (new Table ("studentTable", "fromIdentifier1"), "FirstColumn"), fieldDescriptor.Column);
       Assert.AreSame (fromClause, fieldDescriptor.FromClause);
     }
@@ -86,7 +88,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
 
       Expression fieldExpression = Expression.MakeMemberAccess (Expression.Parameter (typeof (Student), "fromIdentifier1"),
           typeof (Student).GetProperty ("First"));
-      new FromClauseFieldResolver (fromClause).ResolveField (StubDatabaseInfo.Instance, _context, fieldExpression, fieldExpression,null);
+      new FromClauseFieldResolver (StubDatabaseInfo.Instance, _context, _policy).ResolveField (fromClause, fieldExpression, fieldExpression);
     }
 
     [Test]
@@ -99,7 +101,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
 
       Expression fieldExpression = Expression.MakeMemberAccess (Expression.Parameter (typeof (Student_Detail), "fromIdentifier1"),
           typeof (Student_Detail).GetProperty ("Student"));
-      new FromClauseFieldResolver (fromClause).ResolveField (StubDatabaseInfo.Instance, _context, fieldExpression, fieldExpression,null);
+      new FromClauseFieldResolver (StubDatabaseInfo.Instance, _context, _policy).ResolveField (fromClause, fieldExpression, fieldExpression);
     }
 
     [Test]
@@ -116,7 +118,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
               typeof (Student).GetProperty ("First"));
 
       FieldDescriptor fieldDescriptor =
-          new FromClauseFieldResolver (fromClause).ResolveField (StubDatabaseInfo.Instance, _context, fieldExpression, fieldExpression,null);
+          new FromClauseFieldResolver (StubDatabaseInfo.Instance, _context, _policy).ResolveField (fromClause, fieldExpression, fieldExpression);
 
       Assert.AreEqual (new Column (new Table ("studentTable", null), "FirstColumn"), fieldDescriptor.Column);
       Assert.AreSame (fromClause, fieldDescriptor.FromClause);
@@ -146,7 +148,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
               typeof (Student).GetProperty ("First"));
 
       FieldDescriptor fieldDescriptor =
-          new FromClauseFieldResolver (fromClause).ResolveField (StubDatabaseInfo.Instance, _context, fieldExpression, fieldExpression,null);
+          new FromClauseFieldResolver (StubDatabaseInfo.Instance, _context, _policy).ResolveField (fromClause, fieldExpression, fieldExpression);
 
       Assert.AreEqual (new Column (new Table ("studentTable", null), "FirstColumn"), fieldDescriptor.Column);
       Assert.AreSame (fromClause, fieldDescriptor.FromClause);
@@ -178,7 +180,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
                   typeof (Student).GetProperty ("First")),
               typeof (string).GetProperty ("Length"));
 
-      new FromClauseFieldResolver (fromClause).ResolveField (StubDatabaseInfo.Instance, _context, fieldExpression, fieldExpression,null);
+      new FromClauseFieldResolver (StubDatabaseInfo.Instance, _context, _policy).ResolveField (fromClause, fieldExpression, fieldExpression);
     }
 
     [Test]
@@ -190,7 +192,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       Expression fieldExpression = Expression.MakeMemberAccess (Expression.Parameter (typeof (Student), "fromIdentifier1"),
           typeof (Student).GetProperty ("NonDBProperty"));
       FieldDescriptor fieldDescriptor =
-          new FromClauseFieldResolver (fromClause).ResolveField (StubDatabaseInfo.Instance, _context, fieldExpression, fieldExpression,null);
+          new FromClauseFieldResolver (StubDatabaseInfo.Instance, _context, _policy).ResolveField (fromClause, fieldExpression, fieldExpression);
       Table table = fromClause.GetTable (StubDatabaseInfo.Instance);
       FieldSourcePath path = new FieldSourcePath (table, new SingleJoin[0]);
       Assert.AreEqual (new FieldDescriptor (typeof (Student).GetProperty ("NonDBProperty"), fromClause, path, null), fieldDescriptor);
@@ -210,9 +212,9 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
               typeof (Student).GetProperty ("First"));
 
       FieldDescriptor fieldDescriptor1 =
-          new FromClauseFieldResolver (fromClause).ResolveField (StubDatabaseInfo.Instance, _context, fieldExpression, fieldExpression,null);
+          new FromClauseFieldResolver (StubDatabaseInfo.Instance, _context, _policy).ResolveField (fromClause, fieldExpression, fieldExpression);
       FieldDescriptor fieldDescriptor2 =
-          new FromClauseFieldResolver (fromClause).ResolveField (StubDatabaseInfo.Instance, _context, fieldExpression, fieldExpression,null);
+          new FromClauseFieldResolver (StubDatabaseInfo.Instance, _context, _policy).ResolveField (fromClause, fieldExpression, fieldExpression);
 
       Table table1 = ((FieldSourcePath) fieldDescriptor1.SourcePath).Joins[0].RightSide;
       Table table2 = ((FieldSourcePath) fieldDescriptor2.SourcePath).Joins[0].RightSide;
@@ -234,7 +236,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
                   member);
 
       FieldDescriptor fieldDescriptor =
-          new FromClauseFieldResolver (fromClause).ResolveField (StubDatabaseInfo.Instance, _context, fieldExpression, fieldExpression,new SelectFieldAccessPolicy());
+          new FromClauseFieldResolver (StubDatabaseInfo.Instance, _context, _policy).ResolveField (fromClause, fieldExpression, fieldExpression);
 
       Table detailTable = fromClause.GetTable (StubDatabaseInfo.Instance);
       Table studentTable = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, member);
@@ -263,7 +265,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
               member);
 
       FieldDescriptor fieldDescriptor =
-          new FromClauseFieldResolver (fromClause).ResolveField (StubDatabaseInfo.Instance, _context, fieldExpression, fieldExpression,new SelectFieldAccessPolicy());
+          new FromClauseFieldResolver (StubDatabaseInfo.Instance, _context, _policy).ResolveField (fromClause, fieldExpression, fieldExpression);
 
       Table detailDetailTable = fromClause.GetTable (StubDatabaseInfo.Instance);
       Table detailTable = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, innerRelationMember);

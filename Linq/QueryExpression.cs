@@ -70,13 +70,12 @@ namespace Rubicon.Data.Linq
       return _expressionTree;
     }
 
-    public FieldDescriptor ResolveField (IDatabaseInfo databaseInfo, JoinedTableContext context, Expression fieldAccessExpression, IResolveFieldAccessPolicy policy)
+    public FieldDescriptor ResolveField (FromClauseFieldResolver resolver, Expression fieldAccessExpression)
     {
-      ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
-      ArgumentUtility.CheckNotNull ("context", context);
+      ArgumentUtility.CheckNotNull ("resolver", resolver);
       ArgumentUtility.CheckNotNull ("fieldAccessExpression", fieldAccessExpression);
 
-      return new QueryExpressionFieldResolver (this).ResolveField (databaseInfo, context, fieldAccessExpression,policy);
+      return new QueryExpressionFieldResolver (this).ResolveField (resolver, fieldAccessExpression);
     }
   }
 }
