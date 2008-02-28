@@ -60,6 +60,11 @@ namespace Rubicon.Data.Linq.UnitTests
       return from s1 in source orderby s1.First select s1 ;
     }
 
+    public static IQueryable<Student_Detail> CreateRelationMemberOrderByQuery (IQueryable<Student_Detail> source)
+    {
+      return from sd in source orderby sd.Student select sd;
+    }
+
     public static IQueryable<Student> CreateOrderByNonDBPropertyQuery (IQueryable<Student> source)
     {
       return from s1 in source orderby s1.NonDBProperty select s1;
@@ -237,7 +242,7 @@ namespace Rubicon.Data.Linq.UnitTests
       return from sdd in source select new Tuple<string,int>(sdd.Student_Detail.Student.First,sdd.IndustrialSector.ID);
     }
 
-    public static IQueryable<Student> CreateObjectImplicitSelectJoin(IQueryable<Student_Detail> source)
+    public static IQueryable<Student> CreateRelationMemberSelectQuery(IQueryable<Student_Detail> source)
     {
       return from sd in source select sd.Student;
     }
@@ -245,6 +250,16 @@ namespace Rubicon.Data.Linq.UnitTests
     public static IQueryable<Student_Detail> CreateSimpleImplicitWhereJoin (IQueryable<Student_Detail> source)
     {
       return from sd in source where sd.Student.First == "Garcia" select sd;
+    }
+
+    public static IQueryable<Student_Detail> CreateRelationMemberWhereQuery (IQueryable<Student_Detail> source)
+    {
+      return from sd in source where sd.IndustrialSector != null select sd;
+    }
+
+    public static IQueryable<IndustrialSector> CreateRelationMemberVirtualSideWhereQuery (IQueryable<IndustrialSector> source)
+    {
+      return from industrial in source where industrial.Student_Detail != null select industrial;
     }
 
     public static IQueryable<Student_Detail_Detail> CreateImplicitOrderByJoinWithMultipleKeys 
@@ -279,6 +294,11 @@ namespace Rubicon.Data.Linq.UnitTests
     public static IQueryable<string > CreateSimpleDisinctQuery (IQueryable <Student> source)
     {
       return (from s in source select s.First).Distinct();
+    }
+
+    public static IQueryable<string> CreateDisinctWithWhereQuery (IQueryable<Student> source)
+    {
+      return (from s in source where s.First == "Garcia" select s.First).Distinct ();
     }
     
     public static MethodCallExpression CreateSimpleQuery_SelectExpression (IQueryable<Student> source)

@@ -58,7 +58,9 @@
     <Compile Include="Parsing\FieldResolving\FieldSourcePathBuilder.cs" />
     <Compile Include="Parsing\FieldResolving\FromClauseFieldResolver.cs" />
     <Compile Include="Parsing\FieldResolving\FromClauseFieldResolverVisitor.cs" />
+    <Compile Include="Parsing\FieldResolving\IResolveFieldAccessPolicy.cs" />
     <Compile Include="Parsing\FieldResolving\JoinedTableContext.cs" />
+    <Compile Include="Parsing\FieldResolving\OrderingFieldAccessPolicy.cs" />
     <Compile Include="Parsing\FieldResolving\QueryExpressionFieldResolver.cs" />
     <Compile Include="Parsing\FieldResolving\QueryExpressionFieldResolverVisitor.cs" />
     <Compile Include="DataObjectModel\FieldDescriptor.cs" />
@@ -66,6 +68,8 @@
     <Compile Include="Clauses\GroupClause.cs" />
     <Compile Include="Clauses\IBodyClause.cs" />
     <Compile Include="DataObjectModel\OrderingField.cs" />
+    <Compile Include="Parsing\FieldResolving\SelectFieldAccessPolicy.cs" />
+    <Compile Include="Parsing\FieldResolving\WhereFieldAccessPolicy.cs" />
     <Compile Include="Parsing\Structure\OrderByExpressionParser.cs" />
     <Compile Include="Parsing\Structure\QueryBodyCreator.cs" />
     <Compile Include="Parsing\Structure\SourceExpressionParser.cs" />

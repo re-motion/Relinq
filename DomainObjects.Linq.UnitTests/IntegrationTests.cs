@@ -22,7 +22,6 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
-    [Ignore ("TODO: Make entity members work correctly in where clauses.")]
     public void QueryWithWhereConditionsAndNull ()
     {
       var computers =
@@ -56,12 +55,12 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
-    [Ignore ("TODO: Support use of entity properties in where conditions.")]
+    [Ignore ("TODO: Support using virtual side in where conditions.")]
     public void QueryWithVirtualKeySide ()
     {
       var employees =
           from e in DataContext.Entity<Employee> (new TestQueryListener ())
-          where e.Computer != null
+          where e.Computer != null                       
           select e;
 
       CheckQueryResult (employees, DomainObjectIDs.Employee3, DomainObjectIDs.Employee4, DomainObjectIDs.Employee5);
@@ -95,14 +94,13 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
-    [Ignore ("TODO: Find solution for querying the virtual side of relations.")]
     public void QueryWithSelectAndImplicitJoin_VirtualSide ()
     {
       var ceos =
-          from o in DataContext.Entity<Order> (new TestQueryListener ())
-          select o.Customer.Ceo;
+          (from o in DataContext.Entity<Order> (new TestQueryListener ())
+          select o.Customer.Ceo).Distinct();
 
-      CheckQueryResult (ceos); // TODO
+      CheckQueryResult (ceos, DomainObjectIDs.Ceo12, DomainObjectIDs.Ceo5, DomainObjectIDs.Ceo3);
     }
 
     [Test]

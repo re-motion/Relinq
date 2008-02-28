@@ -20,7 +20,8 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
       _fromClause = fromClause;
     }
 
-    public FieldDescriptor ResolveField (IDatabaseInfo databaseInfo, JoinedTableContext context, Expression partialFieldExpression, Expression fullFieldExpression)
+    public FieldDescriptor ResolveField (IDatabaseInfo databaseInfo, JoinedTableContext context,
+      Expression partialFieldExpression, Expression fullFieldExpression, IResolveFieldAccessPolicy policy)
     {
       ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
       ArgumentUtility.CheckNotNull ("context", context);
@@ -31,7 +32,7 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
       FromClauseFieldResolverVisitor.Result result = visitor.ParseFieldAccess (partialFieldExpression, fullFieldExpression);
 
       CheckParameterNameAndType (result.Parameter);
-      return CreateFieldDescriptor (databaseInfo, context, result.AccessedMember, result.JoinMembers);
+      return CreateFieldDescriptor (databaseInfo, context, result.AccessedMember, result.JoinMembers,policy);
     }
 
     private void CheckParameterNameAndType (ParameterExpression parameter)
@@ -51,14 +52,15 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
       }
     }
 
-    private FieldDescriptor CreateFieldDescriptor (IDatabaseInfo databaseInfo, JoinedTableContext context, MemberInfo accessedMember, IEnumerable<MemberInfo> joinMembers)
+    private FieldDescriptor CreateFieldDescriptor (IDatabaseInfo databaseInfo, JoinedTableContext context, MemberInfo accessedMember, 
+      IEnumerable<MemberInfo> joinMembers, IResolveFieldAccessPolicy policy)
     {
       // Documentation example: sdd.Student_Detail.Student.First
       // joinMembers == "Student_Detail", "Student"
 
       Table initialTable = _fromClause.GetTable(databaseInfo); // Table for sdd
 
-      var memberInfos = AdjustMemberInfosForRelations (databaseInfo, accessedMember, joinMembers);
+      var memberInfos = AdjustMemberInfosForRelations (databaseInfo, accessedMember, joinMembers,policy);
       MemberInfo accessedMemberForColumn = memberInfos.A;
       IEnumerable<MemberInfo> joinMembersForCalculation = memberInfos.B;
 
@@ -69,14 +71,10 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
     }
 
     private Tuple<MemberInfo, IEnumerable<MemberInfo>> AdjustMemberInfosForRelations (
-        IDatabaseInfo databaseInfo, MemberInfo accessedMember, IEnumerable<MemberInfo> joinMembers)
+        IDatabaseInfo databaseInfo, MemberInfo accessedMember, IEnumerable<MemberInfo> joinMembers, IResolveFieldAccessPolicy policy)
     {
       if (accessedMember != null && DatabaseInfoUtility.IsRelationMember (databaseInfo, accessedMember))
-      {
-        List<MemberInfo> newJoinMembers = new List<MemberInfo> (joinMembers);
-        newJoinMembers.Add (accessedMember);
-        return new Tuple<MemberInfo, IEnumerable<MemberInfo>> (null, newJoinMembers); // select full table if relation member is accessed
-      }
+        return policy.AdjustMemberInfosForRelation (accessedMember, joinMembers);
       else
         return new Tuple<MemberInfo, IEnumerable<MemberInfo>> (accessedMember, joinMembers);
     }

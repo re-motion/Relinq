@@ -187,7 +187,7 @@ namespace Rubicon.Data.Linq.UnitTests
 
       Expression fieldAccessExpression = Expression.Parameter (typeof (String), "s1");
       JoinedTableContext context = new JoinedTableContext ();
-      FieldDescriptor descriptor = queryExpression.ResolveField (StubDatabaseInfo.Instance, context, fieldAccessExpression);
+      FieldDescriptor descriptor = queryExpression.ResolveField (StubDatabaseInfo.Instance, context, fieldAccessExpression,new WhereFieldAccessPolicy());
 
       Table expectedTable = queryExpression.MainFromClause.GetTable (StubDatabaseInfo.Instance);
       FieldSourcePath expectedPath = new FieldSourcePath (expectedTable, new SingleJoin[0]);

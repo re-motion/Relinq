@@ -343,6 +343,22 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       Assert.AreEqual (1, _context.Count);
     }
 
+    [Test]
+    public void RelationMember ()
+    {
+      IQueryable<Student_Detail> query = TestQueryGenerator.CreateRelationMemberWhereQuery (ExpressionHelper.CreateQuerySource_Detail ());
+
+      QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
+      WhereClause whereClause = ClauseFinder.FindClause<WhereClause> (parsedQuery.QueryBody.SelectOrGroupClause);
+
+      PropertyInfo relationMember = typeof (Student_Detail).GetProperty ("Student");
+      FieldDescriptor expected = ExpressionHelper.CreateFieldDescriptor (parsedQuery.MainFromClause, relationMember);
+
+      WhereConditionParser parser = new WhereConditionParser (parsedQuery, whereClause, _databaseInfo, _context, false);
+      Tuple<List<FieldDescriptor>, ICriterion> parseResult = parser.GetParseResult ();
+      Assert.AreEqual (expected, parseResult.A[0]);
+    }
+
     private Tuple<List<FieldDescriptor>, ICriterion> CreateAndParseWhereClause (Expression whereCondition)
     {
       WhereClause whereClause =

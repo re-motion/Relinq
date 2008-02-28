@@ -222,5 +222,25 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       JoinSelectClause();
       Assert.AreEqual (1, _context.Count);
     }
+
+    [Test]
+    public void SelectRelationMember ()
+    {
+      IQueryable<Student> query = TestQueryGenerator.CreateRelationMemberSelectQuery (ExpressionHelper.CreateQuerySource_Detail());
+      QueryParser parser = new QueryParser (query.Expression);
+      QueryExpression expression = parser.GetParsedQuery ();
+      SelectClause selectClause = (SelectClause) expression.QueryBody.SelectOrGroupClause;
+
+      SelectProjectionParser selectParser = new SelectProjectionParser (expression, selectClause, StubDatabaseInfo.Instance, _context);
+
+      IEnumerable<FieldDescriptor> selectedFields = selectParser.GetSelectedFields ();
+      PropertyInfo relationMember = typeof (Student_Detail).GetProperty ("Student");
+      Table studentDetailTable = expression.MainFromClause.GetTable (StubDatabaseInfo.Instance);
+      FieldSourcePath path = new FieldSourcePathBuilder ().BuildFieldSourcePath (StubDatabaseInfo.Instance, _context, studentDetailTable, 
+          new[] { relationMember });
+      FieldDescriptor expected = new FieldDescriptor(relationMember, expression.MainFromClause, path, new Column(path.LastTable, "*"));
+
+      Assert.That (selectedFields.ToArray (), Is.EqualTo (new object[] { expected } ));
+    }
   }
 }

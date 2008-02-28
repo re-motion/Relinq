@@ -199,7 +199,7 @@ namespace Rubicon.Data.Linq.UnitTests
     {
       Table table = fromClause.GetTable (StubDatabaseInfo.Instance);
       Column? column = DatabaseInfoUtility.GetColumn (StubDatabaseInfo.Instance, table, member);
-      FieldSourcePath sourcePath = new FieldSourcePath(table, new SingleJoin[0]);
+      FieldSourcePath sourcePath = new FieldSourcePath (table, new SingleJoin[0]);
       FieldDescriptor fieldDescriptor = new FieldDescriptor (member, fromClause, sourcePath, column);
       return fieldDescriptor;
     }

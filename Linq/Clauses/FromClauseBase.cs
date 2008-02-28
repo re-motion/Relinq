@@ -45,14 +45,14 @@ namespace Rubicon.Data.Linq.Clauses
       return DatabaseInfoUtility.GetTableForFromClause (databaseInfo, this);
     }
 
-    public FieldDescriptor ResolveField (IDatabaseInfo databaseInfo, JoinedTableContext context, Expression partialFieldExpression, Expression fullFieldExpression)
+    public FieldDescriptor ResolveField (IDatabaseInfo databaseInfo, JoinedTableContext context, Expression partialFieldExpression, Expression fullFieldExpression, IResolveFieldAccessPolicy policy)
     {
       ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
       ArgumentUtility.CheckNotNull ("context", context);
       ArgumentUtility.CheckNotNull ("partialFieldExpression", partialFieldExpression);
       ArgumentUtility.CheckNotNull ("fullFieldExpression", fullFieldExpression);
 
-      return new FromClauseFieldResolver (this).ResolveField (databaseInfo, context, partialFieldExpression, fullFieldExpression);
+      return new FromClauseFieldResolver (this).ResolveField (databaseInfo, context, partialFieldExpression, fullFieldExpression,policy);
     }
 
     public abstract void Accept (IQueryVisitor visitor);

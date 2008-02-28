@@ -48,6 +48,16 @@ namespace Rubicon.Data.Linq.UnitTests
     {
       if (member.Name == "NonDBProperty" || member.Name == "NonDBBoolProperty")
         return null;
+      else if (member == typeof (Student_Detail).GetProperty ("Student"))
+        return null;
+      else if (member == typeof (Student_Detail_Detail).GetProperty ("Student_Detail"))
+        return null;
+      else if (member == typeof (Student_Detail_Detail).GetProperty ("IndustrialSector"))
+        return null;
+      else if (member == typeof (IndustrialSector).GetProperty ("Student_Detail"))
+        return null;
+      else if (member == typeof (Student_Detail).GetProperty ("IndustrialSector"))
+        return "Student_Detail_to_IndustrialSector_FK";
       else
         return member.Name + "Column";
     }
@@ -55,13 +65,15 @@ namespace Rubicon.Data.Linq.UnitTests
     public Tuple<string, string> GetJoinColumnNames (MemberInfo relationMember)
     {
       if (relationMember == typeof (Student_Detail).GetProperty ("Student"))
-        return Tuple.NewTuple ("Student_Detail_PK", "Student_FK");
+        return Tuple.NewTuple ("Student_Detail_PK", "Student_Detail_to_Student_FK");
       else if (relationMember == typeof (Student_Detail_Detail).GetProperty ("Student_Detail"))
-        return Tuple.NewTuple ("Student_Detail_Detail_PK", "Student_Detail_FK");
+        return Tuple.NewTuple ("Student_Detail_Detail_PK", "Student_Detail_Detail_to_Student_Detail_FK");
       else if (relationMember == typeof (Student_Detail_Detail).GetProperty ("IndustrialSector"))
-        return Tuple.NewTuple ("Student_Detail_Detail_PK", "IndustrialSector_FK");
+        return Tuple.NewTuple ("Student_Detail_Detail_PK", "Student_Detail_Detail_to_IndustrialSector_FK");
+      else if (relationMember == typeof (IndustrialSector).GetProperty ("Student_Detail"))
+        return Tuple.NewTuple ("IndustrialSector_PK", "Student_Detail_to_IndustrialSector_FK");
       else if (relationMember == typeof (Student_Detail).GetProperty ("IndustrialSector"))
-        return Tuple.NewTuple ("Student_Detail_PK", "IndustrialSector_FK");
+        return Tuple.NewTuple ("Student_Detail_to_IndustrialSector_FK", "IndustrialSector_PK");
       else
         return null;
     }

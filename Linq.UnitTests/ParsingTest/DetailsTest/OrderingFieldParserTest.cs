@@ -138,5 +138,19 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       JoinOrderingClause();
       Assert.AreEqual (1, _context.Count);
     }
+
+    [Test]
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Ordering by 'Rubicon.Data.Linq.UnitTests.Student_Detail.Student' "
+        + "is not supported because it is a relation member.")]
+    public void OrderingOnRelationMemberThrows()
+    {
+      IQueryable<Student_Detail> query = TestQueryGenerator.CreateRelationMemberOrderByQuery (ExpressionHelper.CreateQuerySource_Detail ());
+      QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
+      OrderByClause orderBy = (OrderByClause) parsedQuery.QueryBody.BodyClauses.First ();
+      OrderingClause orderingClause = orderBy.OrderingList.First ();
+
+      OrderingFieldParser parser = new OrderingFieldParser (parsedQuery, orderingClause, StubDatabaseInfo.Instance, _context);
+      parser.GetField ();
+    }
   }
 }

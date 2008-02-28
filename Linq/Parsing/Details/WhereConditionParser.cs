@@ -62,8 +62,8 @@ namespace Rubicon.Data.Linq.Parsing.Details
 
     private ICriterion ParseMemberExpression (MemberExpression expression)
     {
-      _fieldDescriptors.Add (_queryExpression.ResolveField (_databaseInfo, _context, expression));
-      return _queryExpression.ResolveField (_databaseInfo, _context, expression).GetMandatoryColumn();
+      _fieldDescriptors.Add (_queryExpression.ResolveField (_databaseInfo, _context, expression, new WhereFieldAccessPolicy()));
+      return _queryExpression.ResolveField (_databaseInfo, _context, expression,new WhereFieldAccessPolicy()).GetMandatoryColumn();
     }
 
     private ICriterion ParseConstantExpression (ConstantExpression expression)

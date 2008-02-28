@@ -14,7 +14,7 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
       _queryExpression = queryExpression;
     }
 
-    public FieldDescriptor ResolveField (IDatabaseInfo databaseInfo, JoinedTableContext context, Expression fieldAccessExpression)
+    public FieldDescriptor ResolveField (IDatabaseInfo databaseInfo, JoinedTableContext context, Expression fieldAccessExpression, IResolveFieldAccessPolicy policy)
     {
       ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
       ArgumentUtility.CheckNotNull ("context", context);
@@ -23,7 +23,7 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
       QueryExpressionFieldResolverVisitor visitor = new QueryExpressionFieldResolverVisitor (_queryExpression);
       QueryExpressionFieldResolverVisitor.Result visitorResult = visitor.ParseAndReduce (fieldAccessExpression);
 
-      return visitorResult.FromClause.ResolveField (databaseInfo, context, visitorResult.ReducedExpression, fieldAccessExpression);
+      return visitorResult.FromClause.ResolveField (databaseInfo, context, visitorResult.ReducedExpression, fieldAccessExpression,policy);
     }
   }
 }

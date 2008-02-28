@@ -92,7 +92,7 @@ namespace Rubicon.Data.Linq.Parsing.Details
 
     private void ResolveField (List<FieldDescriptor> fields, Expression expression)
     {
-      FieldDescriptor fieldDescriptor = _queryExpression.ResolveField (_databaseInfo, _context, expression);
+      FieldDescriptor fieldDescriptor = _queryExpression.ResolveField (_databaseInfo, _context, expression,new SelectFieldAccessPolicy());
 
       if (fieldDescriptor.Column != null)
         fields.Add (fieldDescriptor);

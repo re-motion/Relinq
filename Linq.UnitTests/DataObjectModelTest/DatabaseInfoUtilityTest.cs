@@ -102,7 +102,7 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     public void GetJoinColumns()
     {
       Tuple<string, string> columns = DatabaseInfoUtility.GetJoinColumnNames (StubDatabaseInfo.Instance, typeof (Student_Detail).GetProperty ("Student"));
-      Assert.AreEqual (Tuple.NewTuple("Student_Detail_PK", "Student_FK"), columns);
+      Assert.AreEqual (Tuple.NewTuple("Student_Detail_PK", "Student_Detail_to_Student_FK"), columns);
     }
 
     [Test]
