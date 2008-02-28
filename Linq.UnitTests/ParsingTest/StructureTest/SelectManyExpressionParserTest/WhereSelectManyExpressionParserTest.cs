@@ -26,7 +26,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.SelectManyExpres
       _expression = TestQueryGenerator.CreateReverseFromWhere_WhereExpression (_querySource1, _querySource2);
       _navigator = new ExpressionTreeNavigator (_expression);
       _result = new ParseResultCollector (_expression);
-      new SelectManyExpressionParser (_result, _expression);
+      new SelectManyExpressionParser ().Parse (_result, _expression);
       _bodyWhereHelper = new BodyHelper (_result.BodyExpressions);
     }
 

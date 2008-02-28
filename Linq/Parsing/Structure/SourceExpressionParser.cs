@@ -8,7 +8,7 @@ namespace Rubicon.Data.Linq.Parsing.Structure
   internal class SourceExpressionParser
   {
     private readonly bool _isTopLevel;
-
+    
     public SourceExpressionParser (bool isTopLevel)
     {
       _isTopLevel = isTopLevel;
@@ -79,7 +79,7 @@ namespace Rubicon.Data.Linq.Parsing.Structure
     private void ParseSelectManySource (ParseResultCollector resultCollector, Expression sourceExpression)
     {
       MethodCallExpression methodCallExpression = (MethodCallExpression) sourceExpression;
-      new SelectManyExpressionParser (resultCollector, methodCallExpression);
+      new SelectManyExpressionParser().Parse (resultCollector, methodCallExpression);
     }
 
     private void ParseWhereSource (ParseResultCollector resultCollector, Expression sourceExpression)
