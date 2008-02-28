@@ -31,28 +31,28 @@ namespace Rubicon.Data.Linq.Parsing.Structure
           "OrderBy", "OrderByDescending", "ThenBy", "ThenByDescending"))
       {
         case "OrderBy":
-          ParseOrderBy (_resultCollector.ExpressionTreeRoot, OrderDirection.Asc, true);
+          ParseOrderBy (OrderDirection.Asc, true);
           break;
         case "ThenBy":
-          ParseOrderBy (_resultCollector.ExpressionTreeRoot, OrderDirection.Asc, false);
+          ParseOrderBy (OrderDirection.Asc, false);
           break;
         case "OrderByDescending":
-          ParseOrderBy (_resultCollector.ExpressionTreeRoot, OrderDirection.Desc, true);
+          ParseOrderBy (OrderDirection.Desc, true);
           break;
         case "ThenByDescending":
-          ParseOrderBy (_resultCollector.ExpressionTreeRoot, OrderDirection.Desc, false);
+          ParseOrderBy (OrderDirection.Desc, false);
           break;
       }
     }
 
     public MethodCallExpression SourceExpression { get; private set; }
 
-    private void ParseOrderBy (Expression expressionTreeRoot, OrderDirection direction, bool orderBy)
+    private void ParseOrderBy (OrderDirection direction, bool orderBy)
     {
       UnaryExpression unaryExpression = ParserUtility.GetTypedExpression<UnaryExpression> (SourceExpression.Arguments[1],
-          "second argument of OrderBy expression", expressionTreeRoot);
+          "second argument of OrderBy expression", _resultCollector.ExpressionTreeRoot);
       LambdaExpression ueLambda = ParserUtility.GetTypedExpression<LambdaExpression> (unaryExpression.Operand,
-          "second argument of OrderBy expression", expressionTreeRoot);
+          "second argument of OrderBy expression", _resultCollector.ExpressionTreeRoot);
 
       new SourceExpressionParser (_resultCollector, SourceExpression.Arguments[0], false,
           ueLambda.Parameters[0], "first argument of OrderBy expression");

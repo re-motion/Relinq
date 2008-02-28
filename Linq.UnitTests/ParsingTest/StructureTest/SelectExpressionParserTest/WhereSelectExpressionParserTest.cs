@@ -14,8 +14,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.SelectExpression
     private IQueryable<Student> _querySource;
     private MethodCallExpression _expression;
     private ExpressionTreeNavigator _navigator;
-    private SelectExpressionParser _parser;
     private BodyHelper _bodyWhereHelper;
+    private ParseResultCollector _result;
 
     [SetUp]
     public void SetUp ()
@@ -24,8 +24,9 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.SelectExpression
 
       _expression = TestQueryGenerator.CreateSelectWhereQuery_SelectExpression (_querySource);
       _navigator = new ExpressionTreeNavigator (_expression);
-      _parser = new SelectExpressionParser (_expression, _expression);
-      _bodyWhereHelper = new BodyHelper (_parser.FromLetWhereExpressions);
+      _result = new ParseResultCollector (_expression);
+      new SelectExpressionParser (_result, _expression);
+      _bodyWhereHelper = new BodyHelper (_result.BodyExpressions);
     }
 
     [Test]
@@ -50,7 +51,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.SelectExpression
       Assert.That (_bodyWhereHelper.FromIdentifiers,
           Is.EqualTo (new object[] { GetWhereExpression ().Arguments[1].Operand.Parameters[0].Expression }));
       Assert.IsInstanceOfType (typeof (ParameterExpression), _bodyWhereHelper.FromIdentifiers[0]);
-      Assert.AreEqual ("s", ((ParameterExpression) _bodyWhereHelper.FromIdentifiers[0]).Name);
+      Assert.AreEqual ("s", (_bodyWhereHelper.FromIdentifiers[0]).Name);
     }
 
     [Test]
@@ -63,9 +64,9 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.SelectExpression
     [Test]
     public void ParsesProjectionExpressions ()
     {
-      Assert.IsNotNull (_parser.ProjectionExpressions);
-      Assert.That (_parser.ProjectionExpressions, Is.EqualTo (new object[] { _navigator.Arguments[1].Operand.Expression }));
-      Assert.IsInstanceOfType (typeof (LambdaExpression), _parser.ProjectionExpressions[0]);
+      Assert.IsNotNull (_result.ProjectionExpressions);
+      Assert.That (_result.ProjectionExpressions, Is.EqualTo (new object[] { _navigator.Arguments[1].Operand.Expression }));
+      Assert.IsInstanceOfType (typeof (LambdaExpression), _result.ProjectionExpressions[0]);
     }
 
 

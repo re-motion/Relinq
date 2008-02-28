@@ -1,59 +1,46 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using Rubicon.Data.Linq.Parsing.Structure;
-using Rubicon.Text;
 using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.Parsing.Structure
 {
   public class SelectExpressionParser
   {
-    private readonly List<BodyExpressionBase> _fromLetWhereExpressions = new List<BodyExpressionBase> ();
-    private readonly List<LambdaExpression> _projectionExpressions = new List<LambdaExpression> ();
+    private readonly ParseResultCollector _resultCollector;
 
-    public SelectExpressionParser (MethodCallExpression selectExpression, Expression expressionTreeRoot)
+    public SelectExpressionParser (ParseResultCollector resultCollector, MethodCallExpression selectExpression)
     {
       ArgumentUtility.CheckNotNull ("selectExpression", selectExpression);
-      ArgumentUtility.CheckNotNull ("expressionTreeRoot", expressionTreeRoot);
+      ArgumentUtility.CheckNotNull ("resultCollector", resultCollector);
 
-      ParserUtility.CheckMethodCallExpression (selectExpression, expressionTreeRoot, "Select");
+      _resultCollector = resultCollector;
+
+      ParserUtility.CheckMethodCallExpression (selectExpression, _resultCollector.ExpressionTreeRoot, "Select");
 
       if (selectExpression.Arguments.Count != 2)
         throw ParserUtility.CreateParserException ("Select call with two arguments", selectExpression, "Select expressions",
-            expressionTreeRoot);
+            _resultCollector.ExpressionTreeRoot);
 
       SourceExpression = selectExpression;
 
-      ParseSelect (expressionTreeRoot);
-    }
-
-    private void ParseSelect (Expression expressionTreeRoot)
-    {
-      UnaryExpression unaryExpression = ParserUtility.GetTypedExpression<UnaryExpression> (SourceExpression.Arguments[1],
-          "second argument of Select expression", expressionTreeRoot);
-      LambdaExpression ueLambda = ParserUtility.GetTypedExpression<LambdaExpression> (unaryExpression.Operand,
-          "second argument of Select expression", expressionTreeRoot);
-
-      SourceExpressionParser sourceExpressionParser = new SourceExpressionParser (new ParseResultCollector (expressionTreeRoot), SourceExpression.Arguments[0], false,
-          ueLambda.Parameters[0], "first argument of Select expression");
-
-      _fromLetWhereExpressions.AddRange (sourceExpressionParser.BodyExpressions);
-      _projectionExpressions.AddRange (sourceExpressionParser.ProjectionExpressions);
-      _projectionExpressions.Add (ueLambda);
+      ParseSelect ();
     }
 
     public MethodCallExpression SourceExpression { get; private set; }
-    
-    public ReadOnlyCollection<BodyExpressionBase> FromLetWhereExpressions
-    {
-      get { return new ReadOnlyCollection<BodyExpressionBase> (_fromLetWhereExpressions); }
-    }
 
-    public ReadOnlyCollection<LambdaExpression> ProjectionExpressions
+    private void ParseSelect ()
     {
-      get { return new ReadOnlyCollection<LambdaExpression> (_projectionExpressions); }
+      UnaryExpression unaryExpression = ParserUtility.GetTypedExpression<UnaryExpression> (SourceExpression.Arguments[1],
+          "second argument of Select expression", _resultCollector.ExpressionTreeRoot);
+      LambdaExpression ueLambda = ParserUtility.GetTypedExpression<LambdaExpression> (unaryExpression.Operand,
+          "second argument of Select expression", _resultCollector.ExpressionTreeRoot);
+
+      new SourceExpressionParser (_resultCollector, SourceExpression.Arguments[0], false, ueLambda.Parameters[0], 
+          "first argument of Select expression");
+
+      _resultCollector.AddProjectionExpression (ueLambda);
     }
   }
 }
