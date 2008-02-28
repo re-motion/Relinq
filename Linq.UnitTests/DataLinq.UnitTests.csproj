@@ -113,6 +113,7 @@
     <Compile Include="ParsingTest\StructureTest\SelectManyExpressionParserTest\RecursiveSelectManyExpressionParserTest.cs" />
     <Compile Include="ParsingTest\StructureTest\SelectManyExpressionParserTest\SimpleSelectManyExpressionParserTest.cs" />
     <Compile Include="ParsingTest\StructureTest\SelectManyExpressionParserTest\WhereSelectManyExpressionParserTest.cs" />
+    <Compile Include="ParsingTest\StructureTest\SourceExpressionParserTest.cs" />
     <Compile Include="ParsingTest\TreeEvaluationTest\FilteredSubtreeFinderTest.cs" />
     <Compile Include="ParsingTest\TreeEvaluationTest\PartialTreeEvaluatorTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\WhereConditionParserTest.cs" />

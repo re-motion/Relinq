@@ -5,7 +5,7 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.Parsing.Structure
 {
-  internal class SourceExpressionParser
+  public class SourceExpressionParser
   {
     private readonly bool _isTopLevel;
     
@@ -47,7 +47,7 @@ namespace Rubicon.Data.Linq.Parsing.Structure
               ParseOrderBy (resultCollector, sourceExpression);
               break;
             case "Distinct":
-              ParseDistinct (resultCollector, sourceExpression);
+              ParseDistinct (resultCollector, sourceExpression, potentialFromIdentifier);
               break;
           }
           break;
@@ -69,11 +69,17 @@ namespace Rubicon.Data.Linq.Parsing.Structure
       new SelectExpressionParser().Parse (resultCollector, methodCallExpression);
     }
 
-    private void ParseDistinct (ParseResultCollector resultCollector, Expression sourceExpression) //only supports distinct in select (query.Distinct())
+    private void ParseDistinct (ParseResultCollector resultCollector, Expression sourceExpression, ParameterExpression potentialFromIdentifier)
     {
+      if (!_isTopLevel)
+      {
+        string message = string.Format ("Distinct is only allowed at the top level of a query, not in the middle: '{0}'.", resultCollector.ExpressionTreeRoot);
+        throw new ParserException (message, sourceExpression, resultCollector.ExpressionTreeRoot, null);
+      }
+
       resultCollector.SetDistinct();
       Expression selectExpression = ((MethodCallExpression) sourceExpression).Arguments[0];
-      ParseSelectSource (resultCollector, selectExpression);
+      Parse (resultCollector, selectExpression, potentialFromIdentifier, "first argument of distinct");
     }
 
     private void ParseSelectManySource (ParseResultCollector resultCollector, Expression sourceExpression)

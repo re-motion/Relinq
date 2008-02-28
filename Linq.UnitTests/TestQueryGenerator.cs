@@ -296,6 +296,11 @@ namespace Rubicon.Data.Linq.UnitTests
       return (from s in source select s.First).Distinct();
     }
 
+    public static IQueryable<Student> CreateDisinctWithWhereQueryWithoutProjection (IQueryable<Student> source)
+    {
+      return (from s in source where s.First == "Garcia" select s).Distinct ();
+    }
+
     public static IQueryable<string> CreateDisinctWithWhereQuery (IQueryable<Student> source)
     {
       return (from s in source where s.First == "Garcia" select s.First).Distinct ();
