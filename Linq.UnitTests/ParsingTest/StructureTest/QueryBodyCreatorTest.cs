@@ -39,6 +39,31 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
     }
 
     [Test]
+    public void SelectClause_Distinct_True ()
+    {
+      _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression ());
+      _result.SetDistinct();
+
+      QueryBodyCreator bodyCreator = new QueryBodyCreator (_root, _mainFromClause, _result);
+      QueryBody body = bodyCreator.GetQueryBody ();
+      
+      SelectClause selectClause = body.SelectOrGroupClause as SelectClause;
+      Assert.IsTrue (selectClause.Distinct);
+    }
+
+    [Test]
+    public void SelectClause_Distinct_False ()
+    {
+      _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression ());
+
+      QueryBodyCreator bodyCreator = new QueryBodyCreator (_root, _mainFromClause, _result);
+      QueryBody body = bodyCreator.GetQueryBody ();
+
+      SelectClause selectClause = body.SelectOrGroupClause as SelectClause;
+      Assert.IsFalse (selectClause.Distinct);
+    }
+
+    [Test]
     public void BodyExpressions_TranslatedIntoFromClauses ()
     {
       _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression());
