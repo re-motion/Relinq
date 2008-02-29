@@ -67,13 +67,25 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
-    [Ignore ("TODO: Extend IDatabaseInfo to recognize that a constant value is a DomainObject and use its ID instead of the object itself.")]
-    public void QueryWithWhereConditionsAndVariableAccess ()
+    [Ignore ("TODO: Extend IDatabaseInfo to recognize that a constant value is an entitiy and use its ID instead of the object itself")]
+    public void QueryWithOuterEntityInCondition ()
     {
       Employee employee = Employee.GetObject (DomainObjectIDs.Employee3);
       var computers =
           from c in DataContext.Entity<Computer> (new TestQueryListener ())
           where c.Employee == employee
+          select c;
+
+      CheckQueryResult (computers, DomainObjectIDs.Computer1);
+    }
+
+    [Test]
+    public void QueryWithIDInCondition ()
+    {
+      Employee employee = Employee.GetObject (DomainObjectIDs.Employee3);
+      var computers =
+          from c in DataContext.Entity<Computer> (new TestQueryListener ())
+          where c.Employee.ID == employee.ID
           select c;
 
       CheckQueryResult (computers, DomainObjectIDs.Computer1);

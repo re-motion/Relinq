@@ -59,6 +59,9 @@ namespace Rubicon.Data.DomainObjects.Linq
       if (property == null)
         return null;
 
+      if (property.Name == "ID" && property.DeclaringType == typeof (DomainObject))
+        return "ID";
+
       ClassDefinition classDefinition = MappingConfiguration.Current.ClassDefinitions[property.DeclaringType];
       if (classDefinition == null)
         return null;

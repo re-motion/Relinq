@@ -57,6 +57,12 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
+    public void GetColumnName_ForID ()
+    {
+      Assert.AreEqual ("ID", _databaseInfo.GetColumnName (typeof (Order).GetProperty ("ID")));
+    }
+
+    [Test]
     public void GetColumnName_Null ()
     {
       Assert.IsNull (_databaseInfo.GetColumnName (typeof (Order).GetProperty ("OrderTicket")));
