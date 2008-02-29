@@ -28,7 +28,7 @@ namespace Rubicon.Data.Linq.DataObjectModel
 
     public override string ToString ()
     {
-      return string.Format ("({0} inner join {1} on {2} = {3})", RightSide, LeftSide, RightColumn, LeftColumn);
+      return string.Format ("({0} left join {1} on {2} = {3})", RightSide, LeftSide, RightColumn, LeftColumn);
     }
   }
 }

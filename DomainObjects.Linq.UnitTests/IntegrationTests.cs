@@ -105,11 +105,13 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
+    [Ignore ("TODO: Implement where queries for virtual side")]
     public void QueryWithSelectAndImplicitJoin_VirtualSide ()
     {
       var ceos =
           (from o in DataContext.Entity<Order> (new TestQueryListener ())
-          select o.Customer.Ceo).Distinct();
+           where o.Customer.Ceo != null
+           select o.Customer.Ceo).Distinct();
 
       CheckQueryResult (ceos, DomainObjectIDs.Ceo12, DomainObjectIDs.Ceo5, DomainObjectIDs.Ceo3);
     }
@@ -122,7 +124,19 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
           where o.Customer.Ceo.Name == "Hugo Boss"
           select o.Customer.Ceo;
 
-      CheckQueryResult (ceos, DomainObjectIDs.Ceo5); // TODO
+      CheckQueryResult (ceos, DomainObjectIDs.Ceo5);
+    }
+
+    [Test]
+    [Ignore ("TODO: Implement Single or First")]
+    public void QueryWithImplicitJoinAndNullValues ()
+    {
+      var computer =
+          (from e in DataContext.Entity<Employee> (new TestQueryListener ())
+           where e.Name == "Trillian"
+           select e.Computer).Single();
+
+      Assert.IsNull (computer);
     }
 
     [Test]
@@ -137,10 +151,12 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
+    [Ignore ("TODO: Implement where queries for virtual side")]
     public void QueryWithDistinct ()
     {
       var ceos =
           (from o in DataContext.Entity<Order> (new TestQueryListener ())
+           where o.Customer.Ceo != null
           select o.Customer.Ceo).Distinct();
 
       CheckQueryResult (ceos,DomainObjectIDs.Ceo12,DomainObjectIDs.Ceo5,DomainObjectIDs.Ceo3);
@@ -158,7 +174,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     }
 
     private void CheckQueryResult<T> (IQueryable<T> query, params ObjectID[] expectedObjectIDs)
-    where T : DomainObject
+    where T : TestDomainBase
     {
       T[] results = query.ToArray ();
       T[] expected = GetExpectedObjects<T> (expectedObjectIDs);
@@ -166,9 +182,9 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     }
 
     private T[] GetExpectedObjects<T> (params ObjectID[] expectedObjectIDs)
-    where T : DomainObject
+    where T : TestDomainBase
     {
-      return (from id in expectedObjectIDs select (T) DomainObject.GetObject (id)).ToArray();
+      return (from id in expectedObjectIDs select (id == null ? null :(T) TestDomainBase.GetObject (id))).ToArray();
     }
   }
 }
