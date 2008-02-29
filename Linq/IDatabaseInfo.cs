@@ -11,5 +11,6 @@ namespace Rubicon.Data.Linq
     string GetRelatedTableName (MemberInfo relationMember);
     string GetColumnName (MemberInfo member);
     Tuple<string, string> GetJoinColumnNames (MemberInfo relationMember);
+    object ProcessWhereParameter (object parameter);
   }
 }

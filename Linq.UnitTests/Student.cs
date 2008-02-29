@@ -11,6 +11,7 @@ namespace Rubicon.Data.Linq.UnitTests
     public string NonDBProperty { get; set; }
     public bool NonDBBoolProperty { get; set; }
     public bool IsOld { get; set; }
-    public bool HasDog{ get; set; }
+    public bool HasDog { get; set; }
+    public Student OtherStudent { get; set; }
   }
 }

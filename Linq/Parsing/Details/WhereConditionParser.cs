@@ -13,6 +13,7 @@ namespace Rubicon.Data.Linq.Parsing.Details
   {
     private readonly bool _simplify;
     private readonly WhereClause _whereClause;
+    private readonly IDatabaseInfo _databaseInfo;
     private readonly QueryExpression _queryExpression;
     private readonly FromClauseFieldResolver _resolver;
 
@@ -28,6 +29,7 @@ namespace Rubicon.Data.Linq.Parsing.Details
       _simplify = simplify;
       _queryExpression = queryExpression;
       _whereClause = whereClause;
+      _databaseInfo = databaseInfo;
       _resolver = new FromClauseFieldResolver (databaseInfo, context, new WhereFieldAccessPolicy());
     }
 
@@ -63,7 +65,8 @@ namespace Rubicon.Data.Linq.Parsing.Details
 
     private ICriterion ParseConstantExpression (ConstantExpression expression)
     {
-      return new Constant (expression.Value);
+      object newValue = _databaseInfo.ProcessWhereParameter (expression.Value);
+      return new Constant (newValue);
     }
 
     private ICriterion ParseBinaryExpression (BinaryExpression expression)

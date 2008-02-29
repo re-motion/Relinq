@@ -130,6 +130,21 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     }
 
     [Test]
+    public void ConstantProcessedByDatabaseInfo ()
+    {
+      Student student = new Student ();
+      student.ID = 4;
+      MemberExpression memberAccess = Expression.MakeMemberAccess (_parameter, typeof (Student).GetProperty ("OtherStudent"));
+      Expression condition = Expression.Equal (Expression.Constant (student), memberAccess);
+      Tuple<List<FieldDescriptor>, ICriterion> parseResult = CreateAndParseWhereClause (condition);
+      ICriterion criterion = parseResult.B;
+
+      Table table = _fromClause.GetTable (StubDatabaseInfo.Instance);
+      Assert.AreEqual (new BinaryCondition (new Constant (4), new Column (table, "OtherStudentColumn"),
+          BinaryCondition.ConditionKind.Equal), criterion);
+    }
+
+    [Test]
     public void Binary_WithFields()
     {
       MemberExpression memberAccess1 = Expression.MakeMemberAccess (_parameter, typeof (Student).GetProperty ("First"));

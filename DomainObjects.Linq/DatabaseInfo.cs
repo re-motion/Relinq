@@ -96,6 +96,14 @@ namespace Rubicon.Data.DomainObjects.Linq
       return Tuple.NewTuple (leftColumn, rightColumn);
     }
 
+    public object ProcessWhereParameter (object parameter)
+    {
+      DomainObject domainObject = parameter as DomainObject;
+      if (domainObject != null)
+        return domainObject.ID;
+      return parameter;
+    }
+
     private Tuple<RelationDefinition, ClassDefinition, string> GetRelationData (MemberInfo relationMember)
     {
       ArgumentUtility.CheckNotNull ("relationMember", relationMember);

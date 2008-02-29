@@ -130,5 +130,23 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
       Assert.IsNull (tableName);
     }
 
+    [Test]
+    public void ProcessWhereParameter_Entity ()
+    {
+      using (ClientTransaction.NewTransaction ().EnterDiscardingScope ())
+      {
+        Order order = Order.NewObject();
+        object processed = _databaseInfo.ProcessWhereParameter (order);
+        Assert.AreEqual (order.ID, processed);
+      }
+    }
+
+    [Test]
+    public void ProcessWhereParameter_NoEntity ()
+    {
+        object processed = _databaseInfo.ProcessWhereParameter (5);
+        Assert.AreEqual (5, processed);
+    }
+
   }
 }

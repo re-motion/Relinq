@@ -67,7 +67,6 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
-    [Ignore ("TODO: Extend IDatabaseInfo to recognize that a constant value is an entitiy and use its ID instead of the object itself")]
     public void QueryWithOuterEntityInCondition ()
     {
       Employee employee = Employee.GetObject (DomainObjectIDs.Employee3);

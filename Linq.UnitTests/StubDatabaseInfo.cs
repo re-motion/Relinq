@@ -77,5 +77,13 @@ namespace Rubicon.Data.Linq.UnitTests
       else
         return null;
     }
+
+    public object ProcessWhereParameter (object parameter)
+    {
+      Student student = parameter as Student;
+      if (student != null)
+        return student.ID;
+      return parameter;
+    }
   }
 }
