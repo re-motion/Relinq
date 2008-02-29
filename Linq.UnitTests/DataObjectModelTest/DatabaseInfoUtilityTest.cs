@@ -131,5 +131,29 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     {
       Assert.IsFalse (DatabaseInfoUtility.IsRelationMember (StubDatabaseInfo.Instance, typeof (Student).GetProperty ("NonDBProperty")));
     }
+
+    [Test]
+    public void IsVirtualColumn_True()
+    {
+      Assert.IsTrue (DatabaseInfoUtility.IsVirtualColumn (_databaseInfo, typeof(IndustrialSector).GetProperty ("Student_Detail")));
+    }
+
+    [Test]
+    public void IsVirtualColumn_False_RealSide ()
+    {
+      Assert.IsFalse (DatabaseInfoUtility.IsVirtualColumn (_databaseInfo, typeof (Student_Detail).GetProperty ("IndustrialSector")));
+    }
+
+    [Test]
+    public void IsVirtualColumn_False_NonRelationMember ()
+    {
+      Assert.IsFalse (DatabaseInfoUtility.IsVirtualColumn (_databaseInfo, typeof (Student).GetProperty ("ID")));
+    }
+
+    [Test]
+    public void IsVirtualColumn_False_NonDBMember ()
+    {
+      Assert.IsFalse (DatabaseInfoUtility.IsVirtualColumn (_databaseInfo, typeof (Student).GetProperty ("NonDBProperty")));
+    }
   }
 }

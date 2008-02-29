@@ -83,5 +83,12 @@ namespace Rubicon.Data.Linq.DataObjectModel
 
       return databaseInfo.GetRelatedTableName (member) != null;
     }
+
+    public static bool IsVirtualColumn (IDatabaseInfo databaseInfo, MemberInfo member)
+    {
+      ArgumentUtility.CheckNotNull ("member", member);
+
+      return (IsRelationMember(databaseInfo,member)) && (databaseInfo.GetColumnName(member) == null);
+    }
   }
 }
