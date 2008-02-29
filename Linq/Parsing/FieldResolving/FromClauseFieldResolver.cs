@@ -74,20 +74,20 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
       return new FieldDescriptor (accessedMember, fromClause, fieldData, column);
     }
 
-    private IColumn GetColumn (Table columnTable, MemberInfo accessedMemberForColumn)
-    {
-      if (accessedMemberForColumn != null && DatabaseInfoUtility.IsVirtualColumn (_databaseInfo, accessedMemberForColumn))
-        return DatabaseInfoUtility.GetVirtualColumn(_databaseInfo, columnTable, accessedMemberForColumn);
-      else
-        return DatabaseInfoUtility.GetColumn (_databaseInfo, columnTable, accessedMemberForColumn);
-    }
-
     private Tuple<MemberInfo, IEnumerable<MemberInfo>> AdjustMemberInfosForRelations (MemberInfo accessedMember, IEnumerable<MemberInfo> joinMembers)
     {
       if (accessedMember != null && DatabaseInfoUtility.IsRelationMember (_databaseInfo, accessedMember))
         return _policy.AdjustMemberInfosForRelation (accessedMember, joinMembers);
       else
         return new Tuple<MemberInfo, IEnumerable<MemberInfo>> (accessedMember, joinMembers);
+    }
+
+    private IColumn GetColumn (Table columnTable, MemberInfo accessedMemberForColumn)
+    {
+      if (accessedMemberForColumn != null && DatabaseInfoUtility.IsVirtualColumn (_databaseInfo, accessedMemberForColumn))
+        return DatabaseInfoUtility.GetVirtualColumn (_databaseInfo, columnTable, accessedMemberForColumn);
+      else
+        return DatabaseInfoUtility.GetColumn (_databaseInfo, columnTable, accessedMemberForColumn);
     }
   }
 }
