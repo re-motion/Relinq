@@ -31,8 +31,22 @@ namespace Rubicon.Data.Linq.DataObjectModel
 
     public Column GetMandatoryColumn()
     {
+      IColumn column = GetMandatoryIColumn();
+      if (column is Column)
+        return (Column) column;
+      else
+      {
+        string message = string.Format ("The member '{0}.{1}' is a virtual column, which cannot be used in this context.",
+            Member.DeclaringType.FullName, Member.Name);
+
+        throw new FieldAccessResolveException (message);
+      }
+    }
+
+    public IColumn GetMandatoryIColumn ()
+    {
       if (Column != null)
-        return (Column) Column;
+        return Column;
       else
       {
         string message = string.Format ("The member '{0}.{1}' does not identify a queryable column.",

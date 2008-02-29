@@ -60,7 +60,7 @@ namespace Rubicon.Data.Linq.Parsing.Details
     {
       FieldDescriptor fieldDescriptor = _queryExpression.ResolveField (_resolver, expression);
       _fieldDescriptors.Add (fieldDescriptor);
-      return fieldDescriptor.GetMandatoryColumn();
+      return fieldDescriptor.GetMandatoryIColumn();
     }
 
     private ICriterion ParseConstantExpression (ConstantExpression expression)

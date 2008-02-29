@@ -2,7 +2,7 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.DataObjectModel
 {
-  public struct Column : IColumn, ICriterion
+  public struct Column : IColumn
   {
     public readonly string Name;
     public readonly Table Table;

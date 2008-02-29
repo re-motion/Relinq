@@ -130,6 +130,29 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     }
 
     [Test]
+    public void BinaryEquals_VirtualColumn ()
+    {
+      IQueryable<IndustrialSector> source = ExpressionHelper.CreateQuerySource_IndustrialSector();
+      ParameterExpression identifier = Expression.Parameter (typeof (IndustrialSector), "is");
+      MainFromClause fromClause = new MainFromClause (identifier, source);
+      PropertyInfo member = typeof (IndustrialSector).GetProperty ("Student_Detail");
+      MemberExpression virtualColumnAccess = Expression.MakeMemberAccess (identifier, member);
+
+      Expression condition = Expression.Equal (virtualColumnAccess, Expression.Constant (null));
+      WhereClause whereClause = CreateWhereClause (condition);
+
+      QueryExpression queryExpression = new QueryExpression (fromClause, _queryExpression.QueryBody);
+      WhereConditionParser parser = new WhereConditionParser (queryExpression, whereClause, _databaseInfo, _context, false);
+      Tuple<List<FieldDescriptor>, ICriterion> parseResult = parser.GetParseResult();
+      ICriterion criterion = parseResult.B;
+
+      Table columnTable = fromClause.GetTable (_databaseInfo);
+      Table relatedTable = new Table ("detailTable", null);
+      VirtualColumn virtualColumn = DatabaseInfoUtility.GetVirtualColumn (_databaseInfo, columnTable, relatedTable, member);
+      Assert.AreEqual (new BinaryCondition (virtualColumn, new Constant (null), BinaryCondition.ConditionKind.Equal), criterion);
+    }
+
+    [Test]
     public void ConstantProcessedByDatabaseInfo ()
     {
       Student student = new Student ();
@@ -377,15 +400,19 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
 
     private Tuple<List<FieldDescriptor>, ICriterion> CreateAndParseWhereClause (Expression whereCondition)
     {
-      WhereClause whereClause =
-          new WhereClause (_fromClause,
-              Expression.Lambda (
-                  typeof (System.Func<Student, bool>),
-                  whereCondition,
-                  _parameter));
+      WhereClause whereClause = CreateWhereClause(whereCondition);
 
       WhereConditionParser parser = new WhereConditionParser (_queryExpression, whereClause, _databaseInfo, _context, false);
       return parser.GetParseResult ();
+    }
+
+    private WhereClause CreateWhereClause (Expression whereCondition)
+    {
+      return new WhereClause (_fromClause,
+          Expression.Lambda (
+              typeof (System.Func<Student, bool>),
+              whereCondition,
+              _parameter));
     }
   }
 }

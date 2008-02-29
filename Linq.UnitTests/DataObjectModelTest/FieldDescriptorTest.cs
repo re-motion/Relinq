@@ -59,6 +59,17 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     }
 
     [Test]
+    public void GetMandatoryIColumn ()
+    {
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause ();
+      FieldSourcePath path = ExpressionHelper.GetPathForNewTable ();
+      MemberInfo member = typeof (Student).GetProperty ("First");
+      IColumn column = new VirtualColumn ();
+      FieldDescriptor descriptor = new FieldDescriptor (member, fromClause, path, column);
+      Assert.AreEqual (column, descriptor.GetMandatoryIColumn ());
+    }
+
+    [Test]
     public void GetMandatoryColumn()
     {
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause ();
@@ -69,6 +80,16 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
       Assert.AreEqual (column, descriptor.GetMandatoryColumn());
     }
 
+    [Test]
+    [ExpectedException (typeof (FieldAccessResolveException), ExpectedMessage = "The member 'Rubicon.Data.Linq.UnitTests.Student.First' "
+      + "does not identify a queryable column.")]
+    public void GetMandatoryIColumnWithException ()
+    {
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause ();
+      FieldSourcePath path = ExpressionHelper.GetPathForNewTable ();
+      MemberInfo member = typeof (Student).GetProperty ("First");
+      new FieldDescriptor (member, fromClause, path, null).GetMandatoryIColumn ();
+    }
 
     [Test]
     [ExpectedException (typeof (FieldAccessResolveException), ExpectedMessage = "The member 'Rubicon.Data.Linq.UnitTests.Student.First' "
@@ -79,6 +100,18 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
       FieldSourcePath path = ExpressionHelper.GetPathForNewTable ();
       MemberInfo member = typeof (Student).GetProperty ("First");
       new FieldDescriptor (member, fromClause, path, null).GetMandatoryColumn ();
+    }
+
+    [Test]
+    [ExpectedException (typeof (FieldAccessResolveException), ExpectedMessage = "The member 'Rubicon.Data.Linq.UnitTests.Student.First' "
+      + "is a virtual column, which cannot be used in this context.")]
+    public void GetMandatoryColumnWithVirtualColumn ()
+    {
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause ();
+      FieldSourcePath path = ExpressionHelper.GetPathForNewTable ();
+      MemberInfo member = typeof (Student).GetProperty ("First");
+      IColumn column = new VirtualColumn ();
+      new FieldDescriptor (member, fromClause, path, column).GetMandatoryColumn ();
     }
 
 

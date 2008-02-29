@@ -55,12 +55,22 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
-    [Ignore ("TODO: Support using virtual side in where conditions.")]
-    public void QueryWithVirtualKeySide ()
+    public void QueryWithVirtualKeySide_EqualsNull ()
     {
       var employees =
           from e in DataContext.Entity<Employee> (new TestQueryListener ())
-          where e.Computer != null                       
+          where e.Computer == null                       
+          select e;
+
+      CheckQueryResult (employees, DomainObjectIDs.Employee1, DomainObjectIDs.Employee2, DomainObjectIDs.Employee6, DomainObjectIDs.Employee7);
+    }
+
+    [Test]
+    public void QueryWithVirtualKeySide_NotEqualsNull ()
+    {
+      var employees =
+          from e in DataContext.Entity<Employee> (new TestQueryListener ())
+          where e.Computer != null
           select e;
 
       CheckQueryResult (employees, DomainObjectIDs.Employee3, DomainObjectIDs.Employee4, DomainObjectIDs.Employee5);
