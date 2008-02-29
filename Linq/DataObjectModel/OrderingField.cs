@@ -1,5 +1,4 @@
 using Rubicon.Data.Linq.Clauses;
-using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.DataObjectModel
 {
@@ -18,7 +17,7 @@ namespace Rubicon.Data.Linq.DataObjectModel
 
     public Column Column
     {
-      get { return FieldDescriptor.Column.Value; }
+      get { return FieldDescriptor.GetMandatoryColumn(); }
     }
 
     public override string ToString ()

@@ -9,7 +9,7 @@ namespace Rubicon.Data.Linq.DataObjectModel
 {
   public struct FieldDescriptor
   {
-    public FieldDescriptor (MemberInfo member, FromClauseBase fromClause, FieldSourcePath sourcePath, Column? column)
+    public FieldDescriptor (MemberInfo member, FromClauseBase fromClause, FieldSourcePath sourcePath, IColumn column)
         : this()
     {
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
@@ -25,14 +25,14 @@ namespace Rubicon.Data.Linq.DataObjectModel
     }
 
     public MemberInfo Member { get; private set; }
-    public Column? Column { get; private set; }
+    public IColumn Column { get; private set; }
     public FieldSourcePath SourcePath { get; private set; }
     public FromClauseBase FromClause { get; private set; }
 
     public Column GetMandatoryColumn()
     {
       if (Column != null)
-        return Column.Value;
+        return (Column) Column;
       else
       {
         string message = string.Format ("The member '{0}.{1}' does not identify a queryable column.",

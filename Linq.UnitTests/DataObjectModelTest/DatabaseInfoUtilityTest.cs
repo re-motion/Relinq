@@ -1,5 +1,6 @@
 using System;
 using System.Linq.Expressions;
+using System.Reflection;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Rubicon.Collections;
@@ -64,23 +65,6 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
       TestQueryable<int> ints = new TestQueryable<int> (ExpressionHelper.CreateExecutor());
       MainFromClause fromClause = new MainFromClause (Expression.Parameter (typeof (int), "i"), ints);
       DatabaseInfoUtility.GetTableForFromClause (_databaseInfo, fromClause);
-    }
-
-    [Test]
-    public void GetColumnNamesForFromClause()
-    {
-      MainFromClause fromClause = new MainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
-      Table table = fromClause.GetTable (_databaseInfo);
-      Column column = DatabaseInfoUtility.GetColumn (_databaseInfo, table, typeof (Student).GetProperty ("First")).Value;
-      Assert.AreEqual (new Column (table, "FirstColumn"),column);
-    }
-
-    [Test]
-    public void GetColumnNamesForFromClause_InvalidMember ()
-    {
-      MainFromClause fromClause = new MainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
-      Table table = fromClause.GetTable (_databaseInfo);
-      Assert.IsNull (DatabaseInfoUtility.GetColumn (_databaseInfo, table, typeof (Student).GetProperty ("NonDBProperty")));
     }
 
     [Test]
@@ -154,6 +138,49 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     public void IsVirtualColumn_False_NonDBMember ()
     {
       Assert.IsFalse (DatabaseInfoUtility.IsVirtualColumn (_databaseInfo, typeof (Student).GetProperty ("NonDBProperty")));
+    }
+
+    [Test]
+    public void GetColumnForFromClause ()
+    {
+      MainFromClause fromClause = new MainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
+      Table table = fromClause.GetTable (_databaseInfo);
+      Column column = DatabaseInfoUtility.GetColumn (_databaseInfo, table, typeof (Student).GetProperty ("First")).Value;
+      Assert.AreEqual (new Column (table, "FirstColumn"), column);
+    }
+
+    [Test]
+    public void GetColumnForFromClause_InvalidMember ()
+    {
+      MainFromClause fromClause = new MainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
+      Table table = fromClause.GetTable (_databaseInfo);
+      Assert.IsNull (DatabaseInfoUtility.GetColumn (_databaseInfo, table, typeof (Student).GetProperty ("NonDBProperty")));
+    }
+
+    [Test]
+    public void GetVirtualColumn()
+    {
+      MainFromClause fromClause = new MainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
+      Table table = fromClause.GetTable (_databaseInfo);
+      MemberInfo member = typeof (IndustrialSector).GetProperty ("Student_Detail");
+      VirtualColumn actual = DatabaseInfoUtility.GetVirtualColumn (_databaseInfo, table, member);
+
+      Table relatedTable = new Table ("detailTable", null);
+      Column primaryKeyColumn = new Column (table, "IndustrialSector_PK");
+      Column oppositeForeignKeyColumn = new Column (relatedTable, "Student_Detail_to_IndustrialSector_FK");
+      VirtualColumn expected = new VirtualColumn(primaryKeyColumn, oppositeForeignKeyColumn);
+      Assert.AreEqual (expected, actual);
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "The member 'Rubicon.Data.Linq.UnitTests.Student_Detail.IndustrialSector' does "
+        + "not identify a virtual column.\r\nParameter name: accessedMemberForColumn")]
+    public void GetVirtualColumn_NonVirtualColumn ()
+    {
+      MainFromClause fromClause = new MainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
+      Table table = fromClause.GetTable (_databaseInfo);
+      MemberInfo member = typeof (Student_Detail).GetProperty ("IndustrialSector");
+      DatabaseInfoUtility.GetVirtualColumn (_databaseInfo, table, member);
     }
   }
 }

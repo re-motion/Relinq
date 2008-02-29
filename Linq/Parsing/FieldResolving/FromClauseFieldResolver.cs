@@ -70,8 +70,16 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
 
       FieldSourcePathBuilder pathBuilder = new FieldSourcePathBuilder();
       FieldSourcePath fieldData = pathBuilder.BuildFieldSourcePath (_databaseInfo, _context, initialTable, joinMembersForCalculation);
-      Column? column = DatabaseInfoUtility.GetColumn (_databaseInfo, fieldData.LastTable, accessedMemberForColumn);
+      IColumn column = GetColumn (fieldData.LastTable, accessedMemberForColumn);
       return new FieldDescriptor (accessedMember, fromClause, fieldData, column);
+    }
+
+    private IColumn GetColumn (Table columnTable, MemberInfo accessedMemberForColumn)
+    {
+      if (accessedMemberForColumn != null && DatabaseInfoUtility.IsVirtualColumn (_databaseInfo, accessedMemberForColumn))
+        return DatabaseInfoUtility.GetVirtualColumn(_databaseInfo, columnTable, accessedMemberForColumn);
+      else
+        return DatabaseInfoUtility.GetColumn (_databaseInfo, columnTable, accessedMemberForColumn);
     }
 
     private Tuple<MemberInfo, IEnumerable<MemberInfo>> AdjustMemberInfosForRelations (MemberInfo accessedMember, IEnumerable<MemberInfo> joinMembers)

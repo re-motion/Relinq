@@ -17,7 +17,7 @@ namespace Rubicon.Data.Linq.DataObjectModel
       ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
 
-      return _tableCache.GetOrCreateValue (Tuple.NewTuple (databaseInfo, fromClause), key => GetTableFromDatabaseInfo(databaseInfo, fromClause));
+      return _tableCache.GetOrCreateValue (Tuple.NewTuple (databaseInfo, fromClause), key => GetTableFromDatabaseInfo (databaseInfo, fromClause));
     }
 
     private static Table GetTableFromDatabaseInfo (IDatabaseInfo databaseInfo, FromClauseBase fromClause)
@@ -30,18 +30,7 @@ namespace Rubicon.Data.Linq.DataObjectModel
         throw new ArgumentException (message, "fromClause");
       }
       else
-        return new Table(tableName, fromClause.Identifier.Name);
-    }
-
-    public static Column? GetColumn (IDatabaseInfo databaseInfo, Table table, MemberInfo member)
-    {
-      ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
-
-      string columnName = member == null ? "*" : databaseInfo.GetColumnName (member);
-      if (columnName == null)
-        return null;
-      else
-        return new Column (table, columnName);
+        return new Table (tableName, fromClause.Identifier.Name);
     }
 
     public static Table GetRelatedTable (IDatabaseInfo databaseInfo, MemberInfo relationMember)
@@ -87,8 +76,32 @@ namespace Rubicon.Data.Linq.DataObjectModel
     public static bool IsVirtualColumn (IDatabaseInfo databaseInfo, MemberInfo member)
     {
       ArgumentUtility.CheckNotNull ("member", member);
+      return (IsRelationMember (databaseInfo, member)) && (databaseInfo.GetColumnName (member) == null);
+    }
 
-      return (IsRelationMember(databaseInfo,member)) && (databaseInfo.GetColumnName(member) == null);
+    public static Column? GetColumn (IDatabaseInfo databaseInfo, Table table, MemberInfo member)
+    {
+      ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
+
+      string columnName = member == null ? "*" : databaseInfo.GetColumnName (member);
+      if (columnName == null)
+        return null;
+      else
+        return new Column (table, columnName);
+    }
+
+    public static VirtualColumn GetVirtualColumn (IDatabaseInfo databaseInfo, Table columnTable, MemberInfo accessedMemberForColumn)
+    {
+      if (!IsVirtualColumn (databaseInfo, accessedMemberForColumn))
+      {
+        string message = string.Format ("The member '{0}.{1}' does not identify a virtual column.",
+            accessedMemberForColumn.DeclaringType.FullName, accessedMemberForColumn.Name);
+        throw new ArgumentException (message, "accessedMemberForColumn");
+      }
+
+      Table relatedTable = DatabaseInfoUtility.GetRelatedTable (databaseInfo, accessedMemberForColumn);
+      Tuple<string, string> joinedColumnNames = DatabaseInfoUtility.GetJoinColumnNames (databaseInfo, accessedMemberForColumn);
+      return new VirtualColumn (new Column (columnTable, joinedColumnNames.A), new Column (relatedTable, joinedColumnNames.B));
     }
   }
 }

@@ -280,5 +280,28 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       FieldDescriptor expected = new FieldDescriptor (member, fromClause, new FieldSourcePath (detailDetailTable, new[] { join1, join2 }), column);
       Assert.AreEqual (expected, fieldDescriptor);
     }
+
+    [Test]
+    public void Resolve_EntityField_VirtualSide ()
+    {
+      //is.Student_Detail
+      ParameterExpression identifier = Expression.Parameter (typeof (IndustrialSector), "is");
+      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource_IndustrialSector ());
+
+      PropertyInfo member = typeof (IndustrialSector).GetProperty ("Student_Detail");
+      Expression fieldExpression = Expression.MakeMemberAccess (Expression.Parameter (typeof (IndustrialSector), "is"), member);
+
+      WhereFieldAccessPolicy wherePolicy = new WhereFieldAccessPolicy();
+      FieldDescriptor fieldDescriptor =
+          new FromClauseFieldResolver (StubDatabaseInfo.Instance, _context, wherePolicy).ResolveField (fromClause, fieldExpression, fieldExpression);
+
+      Table industrialTable = fromClause.GetTable (StubDatabaseInfo.Instance);
+      Table detailTable = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, member);
+      
+      Tuple<string, string> joinColumns = DatabaseInfoUtility.GetJoinColumnNames (StubDatabaseInfo.Instance, member);
+      VirtualColumn column = new VirtualColumn (new Column(industrialTable,joinColumns.A),new Column(detailTable,joinColumns.B));
+      FieldDescriptor expected = new FieldDescriptor (member, fromClause, new FieldSourcePath (industrialTable, new SingleJoin[0]), column);
+      Assert.AreEqual (expected, fieldDescriptor);
+    }
   }
 }

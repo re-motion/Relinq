@@ -223,7 +223,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       FieldDescriptor expectedField = ExpressionHelper.CreateFieldDescriptor (_fromClause, memberAccess.Member);
       
       Assert.That (fieldDescriptors, Is.EqualTo (new object[] { expectedField }));
-      Assert.AreEqual (new BinaryCondition (expectedField.Column.Value, new Constant ("Garcia%"), BinaryCondition.ConditionKind.Like), criterion);
+      Assert.AreEqual (new BinaryCondition (expectedField.GetMandatoryColumn(),
+          new Constant ("Garcia%"), BinaryCondition.ConditionKind.Like), criterion);
     }
 
     [Test]
