@@ -85,7 +85,11 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
     private IColumn GetColumn (Table columnTable, MemberInfo accessedMemberForColumn)
     {
       if (accessedMemberForColumn != null && DatabaseInfoUtility.IsVirtualColumn (_databaseInfo, accessedMemberForColumn))
-        return DatabaseInfoUtility.GetVirtualColumn (_databaseInfo, columnTable, accessedMemberForColumn);
+      {
+        FieldSourcePath path = new FieldSourcePath(new Table(), new SingleJoin[0]);
+        Table relatedTable = _context.GetJoinedTable (_databaseInfo, path, accessedMemberForColumn);
+        return DatabaseInfoUtility.GetVirtualColumn (_databaseInfo, columnTable, relatedTable, accessedMemberForColumn);
+      }
       else
         return DatabaseInfoUtility.GetColumn (_databaseInfo, columnTable, accessedMemberForColumn);
     }

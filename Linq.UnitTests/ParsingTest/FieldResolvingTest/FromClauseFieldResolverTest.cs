@@ -303,5 +303,13 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       FieldDescriptor expected = new FieldDescriptor (member, fromClause, new FieldSourcePath (industrialTable, new SingleJoin[0]), column);
       Assert.AreEqual (expected, fieldDescriptor);
     }
+
+    [Test]
+    public void Resolve_EntityField_VirtualSide_UsesContext ()
+    {
+      Assert.AreEqual (0, _context.Count);
+      Resolve_EntityField_VirtualSide();
+      Assert.AreEqual (1, _context.Count);
+    }
   }
 }

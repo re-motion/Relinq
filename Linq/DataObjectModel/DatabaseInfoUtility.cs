@@ -90,7 +90,7 @@ namespace Rubicon.Data.Linq.DataObjectModel
         return new Column (table, columnName);
     }
 
-    public static VirtualColumn GetVirtualColumn (IDatabaseInfo databaseInfo, Table columnTable, MemberInfo accessedMemberForColumn)
+    public static VirtualColumn GetVirtualColumn (IDatabaseInfo databaseInfo, Table columnTable, Table relatedTable, MemberInfo accessedMemberForColumn)
     {
       if (!IsVirtualColumn (databaseInfo, accessedMemberForColumn))
       {
@@ -99,7 +99,6 @@ namespace Rubicon.Data.Linq.DataObjectModel
         throw new ArgumentException (message, "accessedMemberForColumn");
       }
 
-      Table relatedTable = DatabaseInfoUtility.GetRelatedTable (databaseInfo, accessedMemberForColumn);
       Tuple<string, string> joinedColumnNames = DatabaseInfoUtility.GetJoinColumnNames (databaseInfo, accessedMemberForColumn);
       return new VirtualColumn (new Column (columnTable, joinedColumnNames.A), new Column (relatedTable, joinedColumnNames.B));
     }

@@ -163,9 +163,9 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
       MainFromClause fromClause = new MainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
       Table table = fromClause.GetTable (_databaseInfo);
       MemberInfo member = typeof (IndustrialSector).GetProperty ("Student_Detail");
-      VirtualColumn actual = DatabaseInfoUtility.GetVirtualColumn (_databaseInfo, table, member);
+      Table relatedTable = DatabaseInfoUtility.GetRelatedTable (_databaseInfo, member);
+      VirtualColumn actual = DatabaseInfoUtility.GetVirtualColumn (_databaseInfo, table, relatedTable, member);
 
-      Table relatedTable = new Table ("detailTable", null);
       Column primaryKeyColumn = new Column (table, "IndustrialSector_PK");
       Column oppositeForeignKeyColumn = new Column (relatedTable, "Student_Detail_to_IndustrialSector_FK");
       VirtualColumn expected = new VirtualColumn(primaryKeyColumn, oppositeForeignKeyColumn);
@@ -180,7 +180,7 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
       MainFromClause fromClause = new MainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
       Table table = fromClause.GetTable (_databaseInfo);
       MemberInfo member = typeof (Student_Detail).GetProperty ("IndustrialSector");
-      DatabaseInfoUtility.GetVirtualColumn (_databaseInfo, table, member);
+      DatabaseInfoUtility.GetVirtualColumn (_databaseInfo, table, DatabaseInfoUtility.GetRelatedTable (_databaseInfo, member), member);
     }
   }
 }
