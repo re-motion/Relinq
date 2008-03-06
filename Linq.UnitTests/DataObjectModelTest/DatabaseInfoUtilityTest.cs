@@ -158,32 +158,6 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     }
 
     [Test]
-    public void GetVirtualColumn()
-    {
-      MainFromClause fromClause = new MainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
-      Table table = fromClause.GetTable (_databaseInfo);
-      MemberInfo member = typeof (IndustrialSector).GetProperty ("Student_Detail");
-      Table relatedTable = DatabaseInfoUtility.GetRelatedTable (_databaseInfo, member);
-      VirtualColumn actual = DatabaseInfoUtility.GetVirtualColumn (_databaseInfo, table, relatedTable, member);
-
-      Column primaryKeyColumn = new Column (table, "IndustrialSector_PK");
-      Column oppositeForeignKeyColumn = new Column (relatedTable, "Student_Detail_to_IndustrialSector_FK");
-      VirtualColumn expected = new VirtualColumn(primaryKeyColumn, oppositeForeignKeyColumn);
-      Assert.AreEqual (expected, actual);
-    }
-
-    [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "The member 'Rubicon.Data.Linq.UnitTests.Student_Detail.IndustrialSector' does "
-        + "not identify a virtual column.\r\nParameter name: accessedMemberForColumn")]
-    public void GetVirtualColumn_NonVirtualColumn ()
-    {
-      MainFromClause fromClause = new MainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
-      Table table = fromClause.GetTable (_databaseInfo);
-      MemberInfo member = typeof (Student_Detail).GetProperty ("IndustrialSector");
-      DatabaseInfoUtility.GetVirtualColumn (_databaseInfo, table, DatabaseInfoUtility.GetRelatedTable (_databaseInfo, member), member);
-    }
-
-    [Test]
     public void GetPrimaryKeyMember ()
     {
       MemberInfo studentDetailPKMember = DatabaseInfoUtility.GetPrimaryKeyMember (_databaseInfo, typeof (Student_Detail));

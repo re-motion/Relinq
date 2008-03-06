@@ -53,9 +53,7 @@
     <Compile Include="Clauses\ClauseFinder.cs" />
     <Compile Include="Clauses\ClauseLookupException.cs" />
     <Compile Include="DataObjectModel\FieldSourcePath.cs" />
-    <Compile Include="DataObjectModel\IColumn.cs" />
     <Compile Include="DataObjectModel\SingleJoin.cs" />
-    <Compile Include="DataObjectModel\VirtualColumn.cs" />
     <Compile Include="Parsing\FieldResolving\FieldAccessResolveException.cs" />
     <Compile Include="Parsing\FieldResolving\FieldSourcePathBuilder.cs" />
     <Compile Include="Parsing\FieldResolving\FromClauseFieldResolver.cs" />

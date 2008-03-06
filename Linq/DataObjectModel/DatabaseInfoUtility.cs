@@ -89,20 +89,7 @@ namespace Rubicon.Data.Linq.DataObjectModel
       else
         return new Column (table, columnName);
     }
-
-    public static VirtualColumn GetVirtualColumn (IDatabaseInfo databaseInfo, Table columnTable, Table relatedTable, MemberInfo accessedMemberForColumn)
-    {
-      if (!IsVirtualColumn (databaseInfo, accessedMemberForColumn))
-      {
-        string message = string.Format ("The member '{0}.{1}' does not identify a virtual column.",
-            accessedMemberForColumn.DeclaringType.FullName, accessedMemberForColumn.Name);
-        throw new ArgumentException (message, "accessedMemberForColumn");
-      }
-
-      Tuple<string, string> joinedColumnNames = DatabaseInfoUtility.GetJoinColumnNames (databaseInfo, accessedMemberForColumn);
-      return new VirtualColumn (new Column (columnTable, joinedColumnNames.A), new Column (relatedTable, joinedColumnNames.B));
-    }
-
+    
     public static MemberInfo GetPrimaryKeyMember (IDatabaseInfo databaseInfo, Type entityType)
     {
       MemberInfo primaryKeyMember = databaseInfo.GetPrimaryKeyMember (entityType);
