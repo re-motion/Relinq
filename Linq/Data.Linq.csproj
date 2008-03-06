@@ -121,11 +121,13 @@
     <Compile Include="SqlGeneration\ISelectBuilder.cs" />
     <Compile Include="SqlGeneration\IWhereBuilder.cs" />
     <Compile Include="SqlGeneration\SqlGeneratorBase.cs" />
+    <Compile Include="SqlGeneration\SqlServer\BinaryConditionBuilder.cs" />
     <Compile Include="SqlGeneration\SqlServer\FromBuilder.cs" />
     <Compile Include="SqlGeneration\SqlServer\OrderByBuilder.cs" />
     <Compile Include="SqlGeneration\SqlServer\SelectBuilder.cs" />
     <Compile Include="SqlGeneration\SqlServer\SqlServerGenerator.cs" />
     <Compile Include="SqlGeneration\SqlServer\SqlServerUtility.cs" />
+    <Compile Include="SqlGeneration\SqlServer\SqlCommand.cs" />
     <Compile Include="SqlGeneration\SqlServer\WhereBuilder.cs" />
     <Compile Include="SqlGeneration\SqlUtility.cs" />
     <Compile Include="Visitor\ExpressionTreeBuildingVisitor.cs" />

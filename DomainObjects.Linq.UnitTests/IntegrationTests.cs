@@ -89,7 +89,6 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
-    [Ignore ("TODO: implement automatic NULL handling in where conditions")]
     public void QueryWithVirtualKeySide_NotEqualsOuterObject ()
     {
       Computer computer = Computer.GetObject (DomainObjectIDs.Computer1);
@@ -163,18 +162,6 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
-    [Ignore ("TODO: Implement Single or First")]
-    public void QueryWithImplicitJoinAndNullValues ()
-    {
-      var computer =
-          (from e in DataContext.Entity<Employee> (new TestQueryListener ())
-           where e.Name == "Trillian"
-           select e.Computer).Single();
-
-      Assert.IsNull (computer);
-    }
-
-    [Test]
     public void QueryWithSelectAndImplicitJoin_UsingJoinPartTwice ()
     {
       var ceos =
@@ -186,7 +173,6 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
-    [Ignore ("TODO: Implement where queries for virtual side")]
     public void QueryWithDistinct ()
     {
       var ceos =
