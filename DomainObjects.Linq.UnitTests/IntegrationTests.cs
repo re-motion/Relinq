@@ -77,6 +77,33 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
+    [Ignore ("TODO: Implement virtual side comparisons")]
+    public void QueryWithVirtualKeySide_EqualsOuterObject ()
+    {
+      Computer computer = Computer.GetObject (DomainObjectIDs.Computer1);
+      var employees =
+          from e in DataContext.Entity<Employee> (new TestQueryListener ())
+          where e.Computer == computer
+          select e;
+
+      CheckQueryResult (employees, DomainObjectIDs.Employee3);
+    }
+
+    [Test]
+    [Ignore ("TODO: Implement virtual side comparisons")]
+    public void QueryWithVirtualKeySide_NotEqualsOuterObject ()
+    {
+      Computer computer = Computer.GetObject (DomainObjectIDs.Computer1);
+      var employees =
+          from e in DataContext.Entity<Employee> (new TestQueryListener ())
+          where e.Computer != computer
+          select e;
+
+      CheckQueryResult (employees, DomainObjectIDs.Employee1, DomainObjectIDs.Employee2, DomainObjectIDs.Employee4, DomainObjectIDs.Employee5,
+          DomainObjectIDs.Employee6, DomainObjectIDs.Employee7);
+    }
+
+    [Test]
     public void QueryWithOuterEntityInCondition ()
     {
       Employee employee = Employee.GetObject (DomainObjectIDs.Employee3);
@@ -115,7 +142,6 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
-    [Ignore ("TODO: Implement where queries for virtual side")]
     public void QueryWithSelectAndImplicitJoin_VirtualSide ()
     {
       var ceos =
