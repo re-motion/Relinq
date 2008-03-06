@@ -125,6 +125,7 @@
     <Compile Include="SqlGenerationTest\JoinCollectionTest.cs" />
     <Compile Include="SqlGenerationTest\SqlGeneratorBaseTest.cs" />
     <Compile Include="SqlGenerationTest\SqlGeneratorMock.cs" />
+    <Compile Include="SqlGenerationTest\SqlServer\BinaryConditionBuilderTest.cs" />
     <Compile Include="SqlGenerationTest\SqlServer\CommandBuilderTest.cs" />
     <Compile Include="SqlGenerationTest\SqlServer\FromBuilderTest.cs" />
     <Compile Include="SqlGenerationTest\SqlServer\OrderByBuilderTest.cs" />
