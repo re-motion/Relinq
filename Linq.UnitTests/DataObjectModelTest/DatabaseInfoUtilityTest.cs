@@ -182,5 +182,20 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
       MemberInfo member = typeof (Student_Detail).GetProperty ("IndustrialSector");
       DatabaseInfoUtility.GetVirtualColumn (_databaseInfo, table, DatabaseInfoUtility.GetRelatedTable (_databaseInfo, member), member);
     }
+
+    [Test]
+    public void GetPrimaryKeyMember ()
+    {
+      MemberInfo studentDetailPKMember = DatabaseInfoUtility.GetPrimaryKeyMember (_databaseInfo, typeof (Student_Detail));
+      Assert.AreEqual (typeof (Student_Detail).GetProperty ("ID"), studentDetailPKMember);
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "The primary key member of type 'System.Object' cannot be determined "
+        + "because it is no entity type.")]
+    public void GetPrimaryKeyMember_NonEntityType ()
+    {
+      DatabaseInfoUtility.GetPrimaryKeyMember (_databaseInfo, typeof (object));
+    }
   }
 }

@@ -77,7 +77,6 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
-    [Ignore ("TODO: Implement virtual side comparisons")]
     public void QueryWithVirtualKeySide_EqualsOuterObject ()
     {
       Computer computer = Computer.GetObject (DomainObjectIDs.Computer1);
@@ -90,7 +89,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
-    [Ignore ("TODO: Implement virtual side comparisons")]
+    [Ignore ("TODO: implement automatic NULL handling in where conditions")]
     public void QueryWithVirtualKeySide_NotEqualsOuterObject ()
     {
       Computer computer = Computer.GetObject (DomainObjectIDs.Computer1);

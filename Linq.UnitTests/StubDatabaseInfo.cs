@@ -87,5 +87,17 @@ namespace Rubicon.Data.Linq.UnitTests
         return student.ID;
       return parameter;
     }
+
+    public MemberInfo GetPrimaryKeyMember (Type entityType)
+    {
+      if (entityType == typeof (Student_Detail))
+        return typeof (Student_Detail).GetProperty ("ID");
+      else if (entityType == typeof (Student))
+        return typeof (Student).GetProperty ("ID");
+      else if (entityType == typeof (IndustrialSector))
+        return typeof (IndustrialSector).GetProperty ("ID");
+      else
+        return null;
+    }
   }
 }

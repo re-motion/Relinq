@@ -148,5 +148,19 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
         Assert.AreEqual (5, processed);
     }
 
+    [Test]
+    public void GetPrimaryKeyMember_Entity()
+    {
+      MemberInfo actual = _databaseInfo.GetPrimaryKeyMember (typeof (Computer));
+      MemberInfo expected = typeof (DomainObject).GetProperty ("ID");
+      Assert.AreEqual (expected, actual);
+    }
+
+    [Test]
+    public void GetPrimaryKeyMember_NoEntity ()
+    {
+      MemberInfo actual = _databaseInfo.GetPrimaryKeyMember (typeof (string));
+      Assert.IsNull (actual);
+    }
   }
 }

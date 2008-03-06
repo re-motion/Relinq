@@ -102,5 +102,17 @@ namespace Rubicon.Data.Linq.DataObjectModel
       Tuple<string, string> joinedColumnNames = DatabaseInfoUtility.GetJoinColumnNames (databaseInfo, accessedMemberForColumn);
       return new VirtualColumn (new Column (columnTable, joinedColumnNames.A), new Column (relatedTable, joinedColumnNames.B));
     }
+
+    public static MemberInfo GetPrimaryKeyMember (IDatabaseInfo databaseInfo, Type entityType)
+    {
+      MemberInfo primaryKeyMember = databaseInfo.GetPrimaryKeyMember (entityType);
+      if (primaryKeyMember == null)
+      {
+        var message = string.Format ("The primary key member of type '{0}' cannot be determined because it is no entity type.", entityType.FullName);
+        throw new InvalidOperationException (message);
+      }
+      else
+        return primaryKeyMember;
+    }
   }
 }

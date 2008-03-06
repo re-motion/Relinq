@@ -30,7 +30,7 @@ namespace Rubicon.Data.Linq.Parsing.Details
       _queryExpression = queryExpression;
       _whereClause = whereClause;
       _databaseInfo = databaseInfo;
-      _resolver = new FromClauseFieldResolver (databaseInfo, context, new WhereFieldAccessPolicy());
+      _resolver = new FromClauseFieldResolver (databaseInfo, context, new WhereFieldAccessPolicy (_databaseInfo));
     }
 
     public Tuple<List<FieldDescriptor>, ICriterion> GetParseResult ()

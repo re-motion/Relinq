@@ -146,10 +146,10 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       Tuple<List<FieldDescriptor>, ICriterion> parseResult = parser.GetParseResult();
       ICriterion criterion = parseResult.B;
 
-      Table columnTable = fromClause.GetTable (_databaseInfo);
       Table relatedTable = new Table ("detailTable", null);
-      VirtualColumn virtualColumn = DatabaseInfoUtility.GetVirtualColumn (_databaseInfo, columnTable, relatedTable, member);
-      Assert.AreEqual (new BinaryCondition (virtualColumn, new Constant (null), BinaryCondition.ConditionKind.Equal), criterion);
+
+      Column expectedColumn = new Column(relatedTable, "IDColumn");
+      Assert.AreEqual (new BinaryCondition (expectedColumn, new Constant (null), BinaryCondition.ConditionKind.Equal), criterion);
     }
 
     [Test]

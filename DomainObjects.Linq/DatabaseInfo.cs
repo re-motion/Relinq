@@ -104,6 +104,15 @@ namespace Rubicon.Data.DomainObjects.Linq
       return parameter;
     }
 
+    public MemberInfo GetPrimaryKeyMember (Type entityType)
+    {
+      ClassDefinition classDefinition = MappingConfiguration.Current.ClassDefinitions[entityType];
+      if (classDefinition == null)
+        return null;
+      else
+        return typeof (DomainObject).GetProperty ("ID");
+    }
+
     private Tuple<RelationDefinition, ClassDefinition, string> GetRelationData (MemberInfo relationMember)
     {
       ArgumentUtility.CheckNotNull ("relationMember", relationMember);
