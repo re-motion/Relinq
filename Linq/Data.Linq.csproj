@@ -54,6 +54,12 @@
     <Compile Include="Clauses\ClauseLookupException.cs" />
     <Compile Include="DataObjectModel\FieldSourcePath.cs" />
     <Compile Include="DataObjectModel\SingleJoin.cs" />
+    <Compile Include="Parsing\Details\WhereParser\BinaryExpressionParser.cs" />
+    <Compile Include="Parsing\Details\WhereParser\ConstantExpressionParser.cs" />
+    <Compile Include="Parsing\Details\WhereParser\MemberExpressionParser.cs" />
+    <Compile Include="Parsing\Details\WhereParser\MethodCallExpressionParser.cs" />
+    <Compile Include="Parsing\Details\WhereParser\ParameterExpressionParser.cs" />
+    <Compile Include="Parsing\Details\WhereParser\UnaryExpressionParser.cs" />
     <Compile Include="Parsing\FieldResolving\FieldAccessResolveException.cs" />
     <Compile Include="Parsing\FieldResolving\FieldSourcePathBuilder.cs" />
     <Compile Include="Parsing\FieldResolving\FromClauseFieldResolver.cs" />

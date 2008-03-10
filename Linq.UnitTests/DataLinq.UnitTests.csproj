@@ -60,6 +60,12 @@
     <Compile Include="ClausesTest\AdditionalFromClauseTest.cs" />
     <Compile Include="ClausesTest\ClauseFinderTest.cs" />
     <Compile Include="DataObjectModelTest\FieldSourcePathTest.cs" />
+    <Compile Include="ParsingTest\DetailsTest\WhereParserTest\BinaryExpressionParserTest.cs" />
+    <Compile Include="ParsingTest\DetailsTest\WhereParserTest\ConstantExpressionParserTest.cs" />
+    <Compile Include="ParsingTest\DetailsTest\WhereParserTest\MemberExpressionParserTest.cs" />
+    <Compile Include="ParsingTest\DetailsTest\WhereParserTest\MethodCallExpressionParserTest.cs" />
+    <Compile Include="ParsingTest\DetailsTest\WhereParserTest\ParameterExpressionParserTest.cs" />
+    <Compile Include="ParsingTest\DetailsTest\WhereParserTest\UnaryExpressionParserTest.cs" />
     <Compile Include="ParsingTest\FieldResolvingTest\OrderingFieldAccessPolicyTest.cs" />
     <Compile Include="ParsingTest\FieldResolvingTest\FieldSourcePathBuilderTest.cs" />
     <Compile Include="ParsingTest\FieldResolvingTest\FromClauseFieldResolverTest.cs" />

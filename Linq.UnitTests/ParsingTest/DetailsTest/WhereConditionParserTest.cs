@@ -204,10 +204,10 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     {
       MemberExpression memberAccess = Expression.MakeMemberAccess (_parameter, typeof (Student).GetProperty ("First"));
       Expression condition = Expression.Call(
-                      memberAccess,
-                      typeof(string).GetMethod("StartsWith",new Type[] {typeof (string)}),
-                      Expression.Constant("Garcia")
-                      );
+          memberAccess,
+          typeof(string).GetMethod("StartsWith",new Type[] {typeof (string)}),
+          Expression.Constant("Garcia")
+          );
       Tuple<List<FieldDescriptor>, ICriterion> parseResult = CreateAndParseWhereClause(condition);
       ICriterion criterion = parseResult.B;
 
@@ -220,10 +220,10 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     public void MethodCallEndsWith ()
     {
       Expression condition = Expression.Call (
-                      Expression.MakeMemberAccess (_parameter, typeof (Student).GetProperty ("First")),
-                      typeof (string).GetMethod ("EndsWith", new Type[] { typeof (string) }),
-                      Expression.Constant ("Garcia")
-                      );
+          Expression.MakeMemberAccess (_parameter, typeof (Student).GetProperty ("First")),
+          typeof (string).GetMethod ("EndsWith", new Type[] { typeof (string) }),
+          Expression.Constant ("Garcia")
+          );
       Tuple<List<FieldDescriptor>, ICriterion> parseResult = CreateAndParseWhereClause(condition);
       ICriterion criterion = parseResult.B;
 
@@ -235,10 +235,10 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     {
       MemberExpression memberAccess = Expression.MakeMemberAccess (_parameter, typeof (Student).GetProperty ("First"));
       Expression condition = Expression.Call (
-                      memberAccess,
-                      typeof (string).GetMethod ("StartsWith", new Type[] { typeof (string) }),
-                      Expression.Constant ("Garcia")
-                      );
+          memberAccess,
+          typeof (string).GetMethod ("StartsWith", new Type[] { typeof (string) }),
+          Expression.Constant ("Garcia")
+          );
       Tuple<List<FieldDescriptor>, ICriterion> parseResult = CreateAndParseWhereClause(condition);
       List<FieldDescriptor> fieldDescriptors = parseResult.A;
       ICriterion criterion = parseResult.B;
@@ -322,7 +322,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
               comparison6, ComplexCriterion.JunctionKind.And);
       Assert.AreEqual (expected, result);
     }
-
+    
     [Test]
     public void Simplify_True()
     {
@@ -346,6 +346,34 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       WhereClause whereClause = ClauseFinder.FindClause<WhereClause> (parsedQuery.QueryBody.SelectOrGroupClause);
       WhereConditionParser parser = new WhereConditionParser (parsedQuery, whereClause, _databaseInfo, _context, false);
       parser.GetParseResult ();
+    }
+
+    [Test]
+    public void MakeMemberFromParameter()
+    {
+      // TODO: Simplify this test when ParseParameterExpression can be tested separately
+      //where s = s2;  -> (s.ID = s2.ID)
+      //ParameterExpression parameter1 = Expression.Parameter (typeof (Student), "s");
+      //ParameterExpression parameter2 = Expression.Parameter (typeof (Student), "s2");
+
+      AdditionalFromClause additionalFromClause = new AdditionalFromClause (_fromClause, Expression.Parameter (typeof (Student), "s2"),
+          Expression.Lambda (Expression.Constant (null, typeof (IQueryable<Student>))), ExpressionHelper.CreateLambdaExpression());
+      _queryExpression.QueryBody.Add (additionalFromClause);
+
+      ParameterExpression parameter1 = _queryExpression.MainFromClause.Identifier;
+      ParameterExpression parameter2 = additionalFromClause.Identifier;
+
+      Expression condition = Expression.Equal (parameter1, parameter2);
+      Tuple<List<FieldDescriptor>, ICriterion> parseResult = CreateAndParseWhereClause (condition);
+
+      ICriterion result = parseResult.B;
+
+      PropertyInfo member = typeof (Student).GetProperty ("ID");
+      Expression expectedMemberAccess1 = Expression.MakeMemberAccess (parameter1, member);
+      Expression expectedMemberAccess2 = Expression.MakeMemberAccess (parameter2, member);
+      Expression expectedCondition = Expression.Equal (expectedMemberAccess1, expectedMemberAccess2);
+      ICriterion expectedResult = (CreateAndParseWhereClause (expectedCondition)).B;
+      Assert.AreEqual (expectedResult,result);
     }
 
     [Test]

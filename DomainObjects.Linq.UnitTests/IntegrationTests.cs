@@ -11,6 +11,27 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
   public class IntegrationTests : ClientTransactionBaseTest
   {
     [Test]
+    public void SimpleQuery()
+    {
+      var computers =
+          from c in DataContext.Entity<Computer> (new TestQueryListener ())
+          select c;
+      CheckQueryResult (computers, DomainObjectIDs.Computer1, DomainObjectIDs.Computer2, DomainObjectIDs.Computer3, DomainObjectIDs.Computer4,
+          DomainObjectIDs.Computer5);
+    }
+    
+   [Test]
+   public void SimpleQuery_WithRelatedEntity()
+   {
+     var query =
+         from o in DataContext.Entity<OrderTicket> (new TestQueryListener())
+         select o.Order;
+     CheckQueryResult (query, DomainObjectIDs.Order1, DomainObjectIDs.Order2, DomainObjectIDs.Order3, DomainObjectIDs.Order4, 
+        DomainObjectIDs.OrderWithoutOrderItem);
+   }
+
+    
+    [Test]
     public void QueryWithWhereConditions()
     {
       var computers =
@@ -53,6 +74,30 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
 
       CheckQueryResult (computers, DomainObjectIDs.Computer3);
     }
+    
+    [Test]
+    public void QueryWithWhere_OuterObject()
+    {
+      Employee employee = Employee.GetObject (DomainObjectIDs.Employee1);
+      var employees =
+          from e in DataContext.Entity<Employee> (new TestQueryListener ())
+          where e == employee
+          select e;
+
+      CheckQueryResult (employees, DomainObjectIDs.Employee1);
+    }
+
+    [Test]
+    public void QueryWithWhereConditionAndGreaterThan ()
+    {
+      var orders =
+          from o in DataContext.Entity<Order> (new TestQueryListener())
+          where o.OrderNumber <= 3
+          select o;
+
+      CheckQueryResult (orders, DomainObjectIDs.OrderWithoutOrderItem, DomainObjectIDs.Order2,DomainObjectIDs.Order1);
+    }
+
 
     [Test]
     public void QueryWithVirtualKeySide_EqualsNull ()
@@ -123,6 +168,17 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
           select c;
 
       CheckQueryResult (computers, DomainObjectIDs.Computer1);
+    }
+
+    [Test]
+    public void QueryWithSimpleOrderBy()
+    {
+      var query =
+          from o in DataContext.Entity<Order> (new TestQueryListener())
+          orderby o.OrderNumber
+          select o;
+      CheckQueryResult (query, DomainObjectIDs.Order1, DomainObjectIDs.OrderWithoutOrderItem, DomainObjectIDs.Order2, DomainObjectIDs.Order3, 
+        DomainObjectIDs.Order4,DomainObjectIDs.InvalidOrder);
     }
 
     [Test]
