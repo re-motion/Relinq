@@ -20,8 +20,11 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereParserTest
         Expression.Constant (5);
         return criterion;
       });
+      
       ICriterion actualCriterion = parser.Parse (binaryExpression);
+
       ICriterion expectedCriterion = new ComplexCriterion (new Constant (5), new Constant (5), ComplexCriterion.JunctionKind.And);
+      
       Assert.AreEqual (expectedCriterion, actualCriterion);
     }
 
@@ -88,8 +91,5 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereParserTest
       ICriterion expectedCriterion = new BinaryCondition (new Constant (5), new Constant (5), BinaryCondition.ConditionKind.LessThan);
       Assert.AreEqual (expectedCriterion, actualCriterion);
     }
-
-
-
   }
 }
