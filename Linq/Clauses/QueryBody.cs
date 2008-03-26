@@ -12,7 +12,7 @@ namespace Rubicon.Data.Linq.Clauses
   {
     private readonly ISelectGroupClause _selectOrGroupClause;
     private readonly List<IBodyClause> _bodyClauses = new List<IBodyClause> ();
-    private readonly Dictionary<string, FromClauseBase> _fromClauses = new Dictionary<string, FromClauseBase>();
+    private readonly Dictionary<string, FromClauseBase> _fromClausesByIdentifier = new Dictionary<string, FromClauseBase>();
 
     public QueryBody (ISelectGroupClause selectOrGroupClause)
     {
@@ -36,17 +36,17 @@ namespace Rubicon.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("clause", clause);
       _bodyClauses.Add (clause);
       
-      FromClauseBase clauseAsFromClause = clause as FromClauseBase;
-      if (clauseAsFromClause != null)
+      var clauseAsFromClause = clause as FromClauseBase;
+      if (clauseAsFromClause == null)
+        return;
+
+      if (_fromClausesByIdentifier.ContainsKey (clauseAsFromClause.Identifier.Name))
       {
-        if (_fromClauses.ContainsKey (clauseAsFromClause.Identifier.Name))
-        {
-          string message = string.Format ("Multiple from clauses with the same name ('{0}') are not supported.",
+        string message = string.Format ("Multiple from clauses with the same name ('{0}') are not supported.",
             clauseAsFromClause.Identifier.Name);
-          throw new NotSupportedException (message);
-        }
-        _fromClauses.Add (clauseAsFromClause.Identifier.Name, clauseAsFromClause);
+        throw new NotSupportedException (message);
       }
+      _fromClausesByIdentifier.Add (clauseAsFromClause.Identifier.Name, clauseAsFromClause);
     }
 
     public FromClauseBase GetFromClause (string identifierName, Type identifierType)
@@ -55,13 +55,12 @@ namespace Rubicon.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("identifierType", identifierType);
 
       FromClauseBase fromClause;
-      if (_fromClauses.TryGetValue (identifierName, out fromClause))
+      if (_fromClausesByIdentifier.TryGetValue (identifierName, out fromClause))
       {
         fromClause.CheckResolvedIdentifierType (identifierType);
         return fromClause;
       }
-      else
-        return null;
+      return null;
     }
 
     public virtual void Accept (IQueryVisitor visitor)
