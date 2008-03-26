@@ -20,7 +20,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
 
       IClause clause = ExpressionHelper.CreateClause();
       
-      AdditionalFromClause fromClause = new AdditionalFromClause (clause,id, fromExpression, projectionExpression);
+      var fromClause = new AdditionalFromClause (clause,id, fromExpression, projectionExpression);
 
       Assert.AreSame (id, fromClause.Identifier);
       Assert.AreSame (fromExpression, fromClause.FromExpression);
@@ -43,7 +43,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     {
       IQueryable<Student> querySource = ExpressionHelper.CreateQuerySource();
       LambdaExpression fromExpression = Expression.Lambda (Expression.Constant (querySource), Expression.Parameter (typeof (Student), "student"));
-      AdditionalFromClause fromClause =
+      var fromClause =
           new AdditionalFromClause (ExpressionHelper.CreateClause(), ExpressionHelper.CreateParameterExpression(), 
           fromExpression, ExpressionHelper.CreateLambdaExpression());
       Assert.AreSame (typeof (TestQueryable<Student>), fromClause.GetQuerySourceType());
@@ -55,8 +55,8 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     {
       AdditionalFromClause fromClause = ExpressionHelper.CreateAdditionalFromClause ();
 
-      MockRepository repository = new MockRepository ();
-      IQueryVisitor visitorMock = repository.CreateMock<IQueryVisitor> ();
+      var repository = new MockRepository ();
+      var visitorMock = repository.CreateMock<IQueryVisitor> ();
 
       visitorMock.VisitAdditionalFromClause (fromClause);
 
