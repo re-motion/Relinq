@@ -19,8 +19,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.QueryParserInteg
     [Test]
     public override void CheckBodyClause ()
     {
-      Assert.AreEqual (1, ParsedQuery.QueryBody.BodyClauses.Count);
-      WhereClause whereClause = ParsedQuery.QueryBody.BodyClauses.First() as WhereClause;
+      Assert.AreEqual (1, ParsedQuery.BodyClauses.Count);
+      WhereClause whereClause = ParsedQuery.BodyClauses.First() as WhereClause;
       Assert.IsNotNull (whereClause);
 
       ExpressionTreeNavigator navigator = new ExpressionTreeNavigator (whereClause.BoolExpression);
@@ -32,8 +32,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.QueryParserInteg
     [Test]
     public override void CheckSelectOrGroupClause ()
     {
-      Assert.IsNotNull (ParsedQuery.QueryBody.SelectOrGroupClause);
-      SelectClause clause = ParsedQuery.QueryBody.SelectOrGroupClause as SelectClause;
+      Assert.IsNotNull (ParsedQuery.SelectOrGroupClause);
+      SelectClause clause = ParsedQuery.SelectOrGroupClause as SelectClause;
       Assert.IsNotNull (clause);
       Assert.IsNull (clause.ProjectionExpression);
     }

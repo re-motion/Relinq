@@ -17,14 +17,14 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.QueryParserInteg
     [Test]
     public override void CheckBodyClause ()
     {
-      Assert.AreEqual (0, ParsedQuery.QueryBody.BodyClauses.Count);
+      Assert.AreEqual (0, ParsedQuery.BodyClauses.Count);
     }
 
     [Test]
     public override void CheckSelectOrGroupClause ()
     {
-      Assert.IsNotNull (ParsedQuery.QueryBody.SelectOrGroupClause);
-      SelectClause clause = ParsedQuery.QueryBody.SelectOrGroupClause as SelectClause;
+      Assert.IsNotNull (ParsedQuery.SelectOrGroupClause);
+      SelectClause clause = ParsedQuery.SelectOrGroupClause as SelectClause;
       Assert.IsNotNull (clause);
       Assert.IsNotNull (clause.ProjectionExpression);
       Assert.AreSame (ParsedQuery.MainFromClause.Identifier, clause.ProjectionExpression.Body,

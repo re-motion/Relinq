@@ -16,7 +16,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereParserTest
     {
       ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
       MainFromClause fromClause = new MainFromClause (parameter, ExpressionHelper.CreateQuerySource ());;
-      QueryExpression queryExpression = new QueryExpression (fromClause, ExpressionHelper.CreateQueryBody());
+      QueryExpression queryExpression = ExpressionHelper.CreateQueryExpression (fromClause);
       JoinedTableContext context = new JoinedTableContext ();
       FromClauseFieldResolver resolver = 
         new FromClauseFieldResolver(StubDatabaseInfo.Instance,context,new WhereFieldAccessPolicy(StubDatabaseInfo.Instance));

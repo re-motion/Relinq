@@ -38,13 +38,13 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.QueryParserInteg
     [Test]
     public override void CheckBodyClause ()
     {
-      Assert.AreEqual (2, ParsedQuery.QueryBody.BodyClauses.Count);
-      AdditionalFromClause fromClause1 = ParsedQuery.QueryBody.BodyClauses.First() as AdditionalFromClause;
+      Assert.AreEqual (2, ParsedQuery.BodyClauses.Count);
+      AdditionalFromClause fromClause1 = ParsedQuery.BodyClauses.First() as AdditionalFromClause;
       Assert.IsNotNull (fromClause1);
       Assert.AreSame (SourceExpressionNavigator.Arguments[0].Arguments[1].Operand.Expression, fromClause1.FromExpression);
       Assert.AreSame (SourceExpressionNavigator.Arguments[0].Arguments[2].Operand.Expression, fromClause1.ProjectionExpression);
 
-      AdditionalFromClause fromClause2 = ParsedQuery.QueryBody.BodyClauses.Last () as AdditionalFromClause;
+      AdditionalFromClause fromClause2 = ParsedQuery.BodyClauses.Last () as AdditionalFromClause;
       Assert.IsNotNull (fromClause2);
       Assert.AreSame (SourceExpressionNavigator.Arguments[1].Operand.Expression, fromClause2.FromExpression);
       Assert.AreSame (SourceExpressionNavigator.Arguments[2].Operand.Expression, fromClause2.ProjectionExpression);
@@ -56,8 +56,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.QueryParserInteg
     [Test]
     public override void CheckSelectOrGroupClause ()
     {
-      Assert.IsNotNull (ParsedQuery.QueryBody.SelectOrGroupClause);
-      SelectClause clause = ParsedQuery.QueryBody.SelectOrGroupClause as SelectClause;
+      Assert.IsNotNull (ParsedQuery.SelectOrGroupClause);
+      SelectClause clause = ParsedQuery.SelectOrGroupClause as SelectClause;
       Assert.IsNotNull (clause);
       Assert.IsNotNull (clause.ProjectionExpression);
 

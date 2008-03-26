@@ -16,36 +16,36 @@ namespace Rubicon.Data.Linq.UnitTests
     public void Initialize_WithFromClauseAndBody ()
     {
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause();
-      QueryBody queryBody = ExpressionHelper.CreateQueryBody();
-      QueryExpression model = new QueryExpression (fromClause, queryBody);
+      SelectClause selectClause = ExpressionHelper.CreateSelectClause ();
+      QueryExpression model = new QueryExpression (fromClause, selectClause);
       Assert.AreSame (fromClause, model.MainFromClause);
-      Assert.AreSame (queryBody, model.QueryBody);
-      Assert.IsNotNull (model.GetExpressionTree());
+      Assert.AreSame (selectClause, model.SelectOrGroupClause);
+      Assert.IsNotNull (model.GetExpressionTree ());
     }
 
     [Test]
     public void Initialize_WithExpressionTree ()
     {
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause ();
-      QueryBody queryBody = ExpressionHelper.CreateQueryBody ();
       Expression expressionTree = ExpressionHelper.CreateExpression();
-      QueryExpression model = new QueryExpression (fromClause, queryBody,expressionTree);
+      SelectClause selectClause = ExpressionHelper.CreateSelectClause();
+      QueryExpression model = new QueryExpression (fromClause, selectClause,expressionTree);
       Assert.AreSame (fromClause, model.MainFromClause);
-      Assert.AreSame (queryBody, model.QueryBody);
+      Assert.AreSame (selectClause, model.SelectOrGroupClause);
       Assert.AreSame (expressionTree, model.GetExpressionTree());
     }
 
     [Test]
     public void QueryExpression_ImplementsIQueryElement()
     {
-      QueryExpression instance = new QueryExpression (ExpressionHelper.CreateMainFromClause (), ExpressionHelper.CreateQueryBody ());
+      QueryExpression instance = ExpressionHelper.CreateQueryExpression();
       Assert.IsInstanceOfType (typeof (IQueryElement), instance);
     }
 
     [Test]
     public void Accept()
     {
-      QueryExpression instance = new QueryExpression (ExpressionHelper.CreateMainFromClause(), ExpressionHelper.CreateQueryBody());
+      QueryExpression instance = ExpressionHelper.CreateQueryExpression();
 
       MockRepository repository = new MockRepository ();
       IQueryVisitor testVisitor = repository.CreateMock<IQueryVisitor> ();
@@ -63,7 +63,7 @@ namespace Rubicon.Data.Linq.UnitTests
     [Test]
     public void Override_ToString()
     {
-      QueryExpression queryExpression = new QueryExpression (ExpressionHelper.CreateMainFromClause (), ExpressionHelper.CreateQueryBody ());
+      QueryExpression queryExpression = ExpressionHelper.CreateQueryExpression();
 
       StringVisitor sv = new StringVisitor();
 
@@ -79,9 +79,8 @@ namespace Rubicon.Data.Linq.UnitTests
     {
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause();
       SelectClause selectClause = new SelectClause (fromClause, Expression.Lambda (Expression.Constant (0)),false);
-      QueryBody queryBody = new QueryBody (selectClause);
 
-      QueryExpression queryExpression = new QueryExpression (fromClause, queryBody);
+      QueryExpression queryExpression = new QueryExpression (fromClause, selectClause);
       queryExpression.GetExpressionTree();
     }
 
@@ -101,12 +100,11 @@ namespace Rubicon.Data.Linq.UnitTests
       AdditionalFromClause clause2 = new AdditionalFromClause (clause1, identifier2, fromExpression, projExpression);
       AdditionalFromClause clause3 = new AdditionalFromClause (clause2, identifier3, fromExpression, projExpression);
 
-      QueryBody body = new QueryBody (ExpressionHelper.CreateSelectClause ());
-      body.Add (clause1);
-      body.Add (clause2);
-      body.Add (clause3);
 
-      QueryExpression expression = new QueryExpression (mainFromClause, body);
+      QueryExpression expression = new QueryExpression (mainFromClause, ExpressionHelper.CreateSelectClause ());
+      expression.AddBodyClause (clause1);
+      expression.AddBodyClause (clause2);
+      expression.AddBodyClause (clause3);
 
       Assert.AreSame (mainFromClause, expression.GetFromClause ("s0", typeof (Student)));
       Assert.AreSame (clause1, expression.GetFromClause ("s1", typeof (Student)));
@@ -126,10 +124,8 @@ namespace Rubicon.Data.Linq.UnitTests
       MainFromClause mainFromClause = new MainFromClause (identifier0, ExpressionHelper.CreateQuerySource ());
       AdditionalFromClause clause1 = new AdditionalFromClause (mainFromClause, identifier1, fromExpression, projExpression);
 
-      QueryBody body = new QueryBody (ExpressionHelper.CreateSelectClause ());
-      body.Add (clause1);
-
-      QueryExpression expression = new QueryExpression (mainFromClause, body);
+      QueryExpression expression = new QueryExpression (mainFromClause, ExpressionHelper.CreateSelectClause ());
+      expression.AddBodyClause (clause1);
 
       Assert.IsNull (expression.GetFromClause ("s273627", typeof (Student)));
     }
@@ -148,10 +144,8 @@ namespace Rubicon.Data.Linq.UnitTests
       MainFromClause mainFromClause = new MainFromClause (identifier0, ExpressionHelper.CreateQuerySource ());
       AdditionalFromClause clause1 = new AdditionalFromClause (mainFromClause, identifier1, fromExpression, projExpression);
 
-      QueryBody body = new QueryBody (ExpressionHelper.CreateSelectClause ());
-      body.Add (clause1);
-
-      QueryExpression expression = new QueryExpression (mainFromClause, body);
+      QueryExpression expression = new QueryExpression (mainFromClause, ExpressionHelper.CreateSelectClause ());
+      expression.AddBodyClause (clause1);
 
       expression.GetFromClause ("s0", typeof (string));
       Assert.Fail ("Expected exception");
@@ -171,10 +165,8 @@ namespace Rubicon.Data.Linq.UnitTests
       MainFromClause mainFromClause = new MainFromClause (identifier0, ExpressionHelper.CreateQuerySource ());
       AdditionalFromClause clause1 = new AdditionalFromClause (mainFromClause, identifier1, fromExpression, projExpression);
 
-      QueryBody body = new QueryBody (ExpressionHelper.CreateSelectClause ());
-      body.Add (clause1);
-
-      QueryExpression expression = new QueryExpression (mainFromClause, body);
+      QueryExpression expression = new QueryExpression (mainFromClause, ExpressionHelper.CreateSelectClause ());
+      expression.AddBodyClause (clause1);
 
       expression.GetFromClause ("s1", typeof (string));
       Assert.Fail ("Expected exception");
@@ -208,10 +200,9 @@ namespace Rubicon.Data.Linq.UnitTests
       AdditionalFromClause additionalFromClause =
           new AdditionalFromClause (mainFromClause, s2, ExpressionHelper.CreateLambdaExpression(), ExpressionHelper.CreateLambdaExpression());
       
-      QueryBody queryBody = new QueryBody (ExpressionHelper.CreateSelectClause());
-      queryBody.Add (additionalFromClause);
-
-      return new QueryExpression (mainFromClause, queryBody);
+      QueryExpression queryExpression = new QueryExpression (mainFromClause, ExpressionHelper.CreateSelectClause ());
+      queryExpression.AddBodyClause (additionalFromClause);
+      return queryExpression;
     }
   }
 }

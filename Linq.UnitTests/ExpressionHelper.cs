@@ -44,6 +44,17 @@ namespace Rubicon.Data.Linq.UnitTests
       return new JoinClause (CreateMainFromClause(), identifier, inExpression, onExpression, equalityExpression);
     }
 
+    public static QueryExpression CreateQueryExpression (MainFromClause mainFromClause)
+    {
+      return new QueryExpression (mainFromClause, CreateSelectClause());
+    }
+
+    public static QueryExpression CreateQueryExpression ()
+    {
+      return CreateQueryExpression (CreateMainFromClause());
+    }
+
+
     public static MainFromClause CreateMainFromClause ()
     {
       ParameterExpression id = ExpressionHelper.CreateParameterExpression ();
@@ -83,13 +94,6 @@ namespace Rubicon.Data.Linq.UnitTests
     {
       OrderingClause ordering = ExpressionHelper.CreateOrderingClause ();
       return new OrderByClause (ordering);
-    }
-
-    public static QueryBody CreateQueryBody()
-    {
-      ISelectGroupClause iSelectOrGroupClause = CreateSelectClause();
-      return new QueryBody (iSelectOrGroupClause);
-
     }
 
     public static SelectClause CreateSelectClause ()

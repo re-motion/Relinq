@@ -27,7 +27,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     {
       IQueryable<Student> query = OrderByTestQueryGenerator.CreateSimpleOrderByQuery (ExpressionHelper.CreateQuerySource ());
       QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
-      OrderByClause orderBy = (OrderByClause) parsedQuery.QueryBody.BodyClauses.First ();
+      OrderByClause orderBy = (OrderByClause) parsedQuery.BodyClauses.First ();
       OrderingClause orderingClause = orderBy.OrderingList.First ();
 
       OrderingFieldParser parser = new OrderingFieldParser (parsedQuery, orderingClause, StubDatabaseInfo.Instance, _context);
@@ -40,7 +40,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     {
       IQueryable<Student> query = OrderByTestQueryGenerator.CreateTwoOrderByQuery (ExpressionHelper.CreateQuerySource ());
       QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
-      OrderByClause orderBy1 = (OrderByClause) parsedQuery.QueryBody.BodyClauses.First ();
+      OrderByClause orderBy1 = (OrderByClause) parsedQuery.BodyClauses.First ();
       OrderingClause orderingClause1 = orderBy1.OrderingList.First ();
 
       OrderingFieldParser parser = new OrderingFieldParser (parsedQuery, orderingClause1, StubDatabaseInfo.Instance, _context);
@@ -54,7 +54,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     {
       IQueryable<Student> query = OrderByTestQueryGenerator.CreateTwoOrderByQuery (ExpressionHelper.CreateQuerySource ());
       QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
-      OrderByClause orderBy2 = (OrderByClause) parsedQuery.QueryBody.BodyClauses.Last ();
+      OrderByClause orderBy2 = (OrderByClause) parsedQuery.BodyClauses.Last ();
       OrderingClause orderingClause2 = orderBy2.OrderingList.Last ();
 
       OrderingFieldParser parser = new OrderingFieldParser (parsedQuery, orderingClause2, StubDatabaseInfo.Instance, _context);
@@ -69,7 +69,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       IQueryable<Student> query =
           MixedTestQueryGenerator.CreateMultiFromWhereOrderByQuery (ExpressionHelper.CreateQuerySource (), ExpressionHelper.CreateQuerySource ());
       QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
-      OrderByClause orderBy1 = (OrderByClause) parsedQuery.QueryBody.BodyClauses.Skip (2).First ();
+      OrderByClause orderBy1 = (OrderByClause) parsedQuery.BodyClauses.Skip (2).First ();
       OrderingClause orderingClause1 = orderBy1.OrderingList.First ();
 
       OrderingFieldParser parser = new OrderingFieldParser (parsedQuery, orderingClause1, StubDatabaseInfo.Instance, _context);
@@ -83,11 +83,11 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       IQueryable<Student> query =
           MixedTestQueryGenerator.CreateMultiFromWhereOrderByQuery (ExpressionHelper.CreateQuerySource (), ExpressionHelper.CreateQuerySource ());
       QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
-      OrderByClause orderBy1 = (OrderByClause) parsedQuery.QueryBody.BodyClauses.Skip (2).First ();
+      OrderByClause orderBy1 = (OrderByClause) parsedQuery.BodyClauses.Skip (2).First ();
       OrderingClause orderingClause2 = orderBy1.OrderingList.Last ();
 
       OrderingFieldParser parser = new OrderingFieldParser (parsedQuery, orderingClause2, StubDatabaseInfo.Instance, _context);
-      FieldDescriptor fieldDescriptor = ExpressionHelper.CreateFieldDescriptor ((FromClauseBase) parsedQuery.QueryBody.BodyClauses[0],
+      FieldDescriptor fieldDescriptor = ExpressionHelper.CreateFieldDescriptor ((FromClauseBase) parsedQuery.BodyClauses[0],
           typeof (Student).GetProperty ("Last"));
       Assert.AreEqual (new OrderingField (fieldDescriptor, OrderDirection.Desc), parser.GetField ());
     }
@@ -99,7 +99,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     {
       IQueryable<Student> query = OrderByTestQueryGenerator.CreateOrderByNonDBPropertyQuery (ExpressionHelper.CreateQuerySource ());
       QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
-      OrderByClause orderBy = (OrderByClause) parsedQuery.QueryBody.BodyClauses.First ();
+      OrderByClause orderBy = (OrderByClause) parsedQuery.BodyClauses.First ();
       OrderingClause orderingClause = orderBy.OrderingList.First ();
 
       OrderingFieldParser parser = new OrderingFieldParser (parsedQuery, orderingClause, StubDatabaseInfo.Instance, _context);
@@ -111,7 +111,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     {
       IQueryable<Student_Detail> query = JoinTestQueryGenerator.CreateSimpleImplicitOrderByJoin (ExpressionHelper.CreateQuerySource_Detail ());
       QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
-      OrderByClause orderBy = (OrderByClause) parsedQuery.QueryBody.BodyClauses.First ();
+      OrderByClause orderBy = (OrderByClause) parsedQuery.BodyClauses.First ();
       OrderingClause orderingClause = orderBy.OrderingList.First ();
 
       FromClauseBase fromClause = parsedQuery.MainFromClause;
@@ -145,7 +145,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     {
       IQueryable<Student_Detail> query = OrderByTestQueryGenerator.CreateRelationMemberOrderByQuery (ExpressionHelper.CreateQuerySource_Detail ());
       QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
-      OrderByClause orderBy = (OrderByClause) parsedQuery.QueryBody.BodyClauses.First ();
+      OrderByClause orderBy = (OrderByClause) parsedQuery.BodyClauses.First ();
       OrderingClause orderingClause = orderBy.OrderingList.First ();
 
       OrderingFieldParser parser = new OrderingFieldParser (parsedQuery, orderingClause, StubDatabaseInfo.Instance, _context);

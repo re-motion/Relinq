@@ -3,37 +3,54 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Rubicon.Data.Linq.Clauses;
+using Rubicon.Data.Linq.Parsing;
 using Rubicon.Data.Linq.Parsing.Structure;
 
 namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
 {
   [TestFixture]
-  public class QueryBodyCreatorTest
+  public class QueryExpressionCreatorTest
   {
     private IQueryable<Student> _source;
     private Expression _root;
-    private MainFromClause _mainFromClause;
     private ParseResultCollector _result;
+    private QueryExpressionCreator _expressionCreator;
+    private FromExpression _firstFromExpression;
 
     [SetUp]
     public void SetUp ()
     {
       _source = ExpressionHelper.CreateQuerySource();
       _root = ExpressionHelper.CreateExpression();
-      _mainFromClause = new MainFromClause (ExpressionHelper.CreateParameterExpression(), _source);
       _result = new ParseResultCollector (_root);
+      _firstFromExpression = new FromExpression (Expression.Constant (_source), ExpressionHelper.CreateParameterExpression());
+      _result.AddBodyExpression (_firstFromExpression);
+      _expressionCreator = new QueryExpressionCreator (_root, _result);
+    }
+
+    [Test]
+    public void FirstBodyClause_TranslatedIntoMainFromClause ()
+    {
+      var additionalFromExpression = new FromExpression (ExpressionHelper.CreateLambdaExpression(), ExpressionHelper.CreateParameterExpression());
+      _result.AddBodyExpression (additionalFromExpression);
+      _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression ());
+
+      QueryExpression expression = _expressionCreator.CreateQueryExpression ();
+      Assert.IsNotNull (expression.MainFromClause);
+      Assert.AreSame (_firstFromExpression.Identifier, expression.MainFromClause.Identifier);
+      Assert.AreSame (((ConstantExpression)_firstFromExpression.Expression).Value, expression.MainFromClause.QuerySource);
+      Assert.AreNotSame (additionalFromExpression.Identifier, expression.MainFromClause.Identifier);
     }
 
     [Test]
     public void LastProjectionExpresion_TranslatedIntoSelectClause_NoFromClauses ()
     {
       _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression());
+      
+      QueryExpression expression = _expressionCreator.CreateQueryExpression();
+      Assert.AreEqual (0, expression.BodyClauses.Count);
 
-      QueryBodyCreator bodyCreator = new QueryBodyCreator (_root, _mainFromClause, _result);
-      QueryBody body = bodyCreator.GetQueryBody();
-      Assert.AreEqual (0, body.BodyClauses.Count);
-
-      SelectClause selectClause = body.SelectOrGroupClause as SelectClause;
+      SelectClause selectClause = expression.SelectOrGroupClause as SelectClause;
       Assert.IsNotNull (selectClause);
       Assert.AreSame (_result.ProjectionExpressions[0], selectClause.ProjectionExpression);
     }
@@ -44,10 +61,9 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
       _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression ());
       _result.SetDistinct();
 
-      QueryBodyCreator bodyCreator = new QueryBodyCreator (_root, _mainFromClause, _result);
-      QueryBody body = bodyCreator.GetQueryBody ();
+      QueryExpression expression = _expressionCreator.CreateQueryExpression ();
       
-      SelectClause selectClause = body.SelectOrGroupClause as SelectClause;
+      SelectClause selectClause = expression.SelectOrGroupClause as SelectClause;
       Assert.IsTrue (selectClause.Distinct);
     }
 
@@ -55,12 +71,20 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
     public void SelectClause_Distinct_False ()
     {
       _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression ());
+      QueryExpression expression = _expressionCreator.CreateQueryExpression ();
 
-      QueryBodyCreator bodyCreator = new QueryBodyCreator (_root, _mainFromClause, _result);
-      QueryBody body = bodyCreator.GetQueryBody ();
-
-      SelectClause selectClause = body.SelectOrGroupClause as SelectClause;
+      SelectClause selectClause = expression.SelectOrGroupClause as SelectClause;
       Assert.IsFalse (selectClause.Distinct);
+    }
+
+    [Test]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "From expression 'i' (() => 0) doesn't have a projection expression.")]
+    public void FromExpression_WithoutProjection ()
+    {
+      var additionalFromExpression = new FromExpression (ExpressionHelper.CreateLambdaExpression (), ExpressionHelper.CreateParameterExpression ());
+      _result.AddBodyExpression (additionalFromExpression);
+
+      _expressionCreator.CreateQueryExpression ();
     }
 
     [Test]
@@ -75,17 +99,17 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
       _result.AddBodyExpression (fromExpression1);
       _result.AddBodyExpression (fromExpression2);
 
-      QueryBodyCreator bodyCreator = new QueryBodyCreator (_root, _mainFromClause, _result);
-      QueryBody body = bodyCreator.GetQueryBody();
-      Assert.AreEqual (2, body.BodyClauses.Count);
+      QueryExpression expression = _expressionCreator.CreateQueryExpression ();     
+      
+      Assert.AreEqual (2, expression.BodyClauses.Count);
 
-      AdditionalFromClause additionalFromClause1 = body.BodyClauses.First() as AdditionalFromClause;
+      AdditionalFromClause additionalFromClause1 = expression.BodyClauses.First() as AdditionalFromClause;
       Assert.IsNotNull (additionalFromClause1);
       Assert.AreSame (fromExpression1.Expression, additionalFromClause1.FromExpression);
       Assert.AreSame (fromExpression1.Identifier, additionalFromClause1.Identifier);
       Assert.AreSame (_result.ProjectionExpressions[0], additionalFromClause1.ProjectionExpression);
 
-      AdditionalFromClause additionalFromClause2 = body.BodyClauses.Last () as AdditionalFromClause;
+      AdditionalFromClause additionalFromClause2 = expression.BodyClauses.Last () as AdditionalFromClause;
       Assert.IsNotNull (additionalFromClause2);
       Assert.AreSame (fromExpression2.Expression, additionalFromClause2.FromExpression);
       Assert.AreSame (fromExpression2.Identifier, additionalFromClause2.Identifier);
@@ -102,11 +126,11 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
 
       _result.AddBodyExpression (fromExpression);
 
-      QueryBodyCreator bodyCreator = new QueryBodyCreator (_root, _mainFromClause, _result);
-      QueryBody body = bodyCreator.GetQueryBody();
-      Assert.AreEqual (1, body.BodyClauses.Count);
+      QueryExpression expression = _expressionCreator.CreateQueryExpression ();
+      
+      Assert.AreEqual (1, expression.BodyClauses.Count);
 
-      SelectClause selectClause = body.SelectOrGroupClause as SelectClause;
+      SelectClause selectClause = expression.SelectOrGroupClause as SelectClause;
       Assert.IsNotNull (selectClause);
       Assert.AreSame (_result.ProjectionExpressions[1], selectClause.ProjectionExpression);
     }
@@ -120,11 +144,11 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
 
       _result.AddBodyExpression (whereExpression);
 
-      QueryBodyCreator bodyCreator = new QueryBodyCreator (_root, _mainFromClause, _result);
-      QueryBody body = bodyCreator.GetQueryBody();
-      Assert.AreEqual (1, body.BodyClauses.Count);
+      QueryExpression expression = _expressionCreator.CreateQueryExpression ();
 
-      WhereClause whereClause = body.BodyClauses.First() as WhereClause;
+      Assert.AreEqual (1, expression.BodyClauses.Count);
+
+      WhereClause whereClause = expression.BodyClauses.First() as WhereClause;
       Assert.IsNotNull (whereClause);
       Assert.AreSame (whereExpression.Expression, whereClause.BoolExpression);
     }
@@ -138,16 +162,16 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
 
       _result.AddBodyExpression (orderExpression);
 
-      QueryBodyCreator bodyCreator = new QueryBodyCreator (_root, _mainFromClause, _result);
-      QueryBody body = bodyCreator.GetQueryBody();
-      Assert.AreEqual (1, body.BodyClauses.Count);
+      QueryExpression expression = _expressionCreator.CreateQueryExpression ();
+      
+      Assert.AreEqual (1, expression.BodyClauses.Count);
 
-      OrderByClause orderByClause = body.BodyClauses.First() as OrderByClause;
+      OrderByClause orderByClause = expression.BodyClauses.First() as OrderByClause;
       Assert.IsNotNull (orderByClause);
       Assert.AreEqual (1, orderByClause.OrderingList.Count);
       Assert.AreSame (orderExpression.Expression, orderByClause.OrderingList.First().Expression);
       Assert.AreEqual (orderExpression.OrderDirection, orderByClause.OrderingList.First().OrderDirection);
-      Assert.AreSame (_mainFromClause, orderByClause.OrderingList.First().PreviousClause);
+      Assert.AreSame (expression.MainFromClause, orderByClause.OrderingList.First().PreviousClause);
     }
 
     [Test]
@@ -163,12 +187,13 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
       _result.AddBodyExpression (orderExpression2);
       _result.AddBodyExpression (orderExpression3);
 
-      QueryBodyCreator bodyCreator = new QueryBodyCreator (_root, _mainFromClause, _result);
-      QueryBody body = bodyCreator.GetQueryBody();
-      Assert.AreEqual (2, body.BodyClauses.Count);
+      QueryExpression expression = _expressionCreator.CreateQueryExpression();
+      
+      
+      Assert.AreEqual (2, expression.BodyClauses.Count);
 
-      OrderByClause orderByClause1 = body.BodyClauses.First() as OrderByClause;
-      OrderByClause orderByClause2 = body.BodyClauses.Last() as OrderByClause;
+      OrderByClause orderByClause1 = expression.BodyClauses.First() as OrderByClause;
+      OrderByClause orderByClause2 = expression.BodyClauses.Last() as OrderByClause;
 
       Assert.IsNotNull (orderByClause1);
       Assert.IsNotNull (orderByClause2);
@@ -178,7 +203,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
 
       Assert.AreSame (orderExpression1.Expression, orderByClause1.OrderingList.First().Expression);
       Assert.AreEqual (orderExpression1.OrderDirection, orderByClause1.OrderingList.First().OrderDirection);
-      Assert.AreSame (_mainFromClause, orderByClause1.OrderingList.First().PreviousClause);
+      Assert.AreSame (expression.MainFromClause, orderByClause1.OrderingList.First().PreviousClause);
       Assert.AreSame (orderExpression2.Expression, orderByClause1.OrderingList.Last().Expression);
       Assert.AreEqual (orderExpression2.OrderDirection, orderByClause1.OrderingList.Last().OrderDirection);
       Assert.AreSame (orderByClause1, orderByClause1.OrderingList.Last().PreviousClause);
@@ -212,32 +237,31 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
       _result.AddBodyExpression (orderExpression3);
 
 
-      QueryBodyCreator bodyCreator = new QueryBodyCreator (_root, _mainFromClause, _result);
-      QueryBody body = bodyCreator.GetQueryBody();
+      QueryExpression expression = _expressionCreator.CreateQueryExpression ();
 
-      OrderByClause orderByClause1 = body.BodyClauses.Skip (4).First() as OrderByClause;
-      OrderByClause orderByClause2 = body.BodyClauses.Skip (5).First() as OrderByClause;
+      OrderByClause orderByClause1 = expression.BodyClauses.Skip (4).First() as OrderByClause;
+      OrderByClause orderByClause2 = expression.BodyClauses.Skip (5).First () as OrderByClause;
 
-      AdditionalFromClause fromClause1 = body.BodyClauses.First() as AdditionalFromClause;
+      AdditionalFromClause fromClause1 = expression.BodyClauses.First () as AdditionalFromClause;
       Assert.IsNotNull (fromClause1);
       Assert.AreSame (fromExpression1.Identifier, fromClause1.Identifier);
       Assert.AreSame (fromExpression1.Expression, fromClause1.FromExpression);
       Assert.AreSame (_result.ProjectionExpressions[0], fromClause1.ProjectionExpression);
-      Assert.AreSame (_mainFromClause, fromClause1.PreviousClause);
+      Assert.AreSame (expression.MainFromClause, fromClause1.PreviousClause);
 
-      AdditionalFromClause fromClause2 = body.BodyClauses.Skip (1).First() as AdditionalFromClause;
+      AdditionalFromClause fromClause2 = expression.BodyClauses.Skip (1).First () as AdditionalFromClause;
       Assert.IsNotNull (fromClause2);
       Assert.AreSame (fromExpression2.Identifier, fromClause2.Identifier);
       Assert.AreSame (fromExpression2.Expression, fromClause2.FromExpression);
       Assert.AreSame (_result.ProjectionExpressions[1], fromClause2.ProjectionExpression);
       Assert.AreSame (fromClause1, fromClause2.PreviousClause);
 
-      WhereClause whereClause1 = body.BodyClauses.Skip (2).First() as WhereClause;
+      WhereClause whereClause1 = expression.BodyClauses.Skip (2).First () as WhereClause;
       Assert.IsNotNull (whereClause1);
       Assert.AreSame (whereExpression1.Expression, whereClause1.BoolExpression);
       Assert.AreSame (fromClause2, whereClause1.PreviousClause);
 
-      WhereClause whereClause2 = body.BodyClauses.Skip (3).First() as WhereClause;
+      WhereClause whereClause2 = expression.BodyClauses.Skip (3).First () as WhereClause;
       Assert.IsNotNull (whereClause2);
       Assert.AreSame (whereExpression2.Expression, whereClause2.BoolExpression);
       Assert.AreSame (whereClause1, whereClause2.PreviousClause);
@@ -256,7 +280,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
       Assert.AreSame (orderByClause1, orderByClause2.OrderingList.First().PreviousClause);
       Assert.AreSame (orderByClause1, orderByClause2.PreviousClause);
 
-      SelectClause selectClause = body.SelectOrGroupClause as SelectClause;
+      SelectClause selectClause = expression.SelectOrGroupClause as SelectClause;
       Assert.IsNotNull (selectClause);
       Assert.AreSame (_result.ProjectionExpressions[2], selectClause.ProjectionExpression);
       Assert.AreSame (orderByClause2, selectClause.PreviousClause);

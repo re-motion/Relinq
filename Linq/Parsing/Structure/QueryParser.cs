@@ -24,24 +24,8 @@ namespace Rubicon.Data.Linq.Parsing.Structure
       ParseResultCollector resultCollector = new ParseResultCollector (SourceExpression);
       _sourceParser.Parse (resultCollector, SourceExpression, null, "parsing query");
 
-      MainFromClause mainFromClause = CreateMainFromClause (resultCollector);
-      QueryBody queryBody = CreateQueryBody (resultCollector, mainFromClause);
-
-      return new QueryExpression (mainFromClause, queryBody, SourceExpression);
-    }
-
-    private MainFromClause CreateMainFromClause (ParseResultCollector resultCollector)
-    {
-      Assertion.IsTrue (resultCollector.BodyExpressions.Count > 0 && resultCollector.BodyExpressions[0] is FromExpression);
-
-      FromExpression mainFromExpression = resultCollector.ExtractMainFromExpression();
-      return new MainFromClause (mainFromExpression.Identifier, (IQueryable) ((ConstantExpression) mainFromExpression.Expression).Value);
-    }
-
-    private QueryBody CreateQueryBody (ParseResultCollector resultCollector, MainFromClause mainFromClause)
-    {
-      QueryBodyCreator bodyCreator = new QueryBodyCreator (SourceExpression, mainFromClause, resultCollector);
-      return bodyCreator.GetQueryBody();
+      QueryExpressionCreator expressionCreator = new QueryExpressionCreator (SourceExpression, resultCollector);
+      return expressionCreator.CreateQueryExpression();
     }
   }
 }

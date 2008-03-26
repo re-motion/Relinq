@@ -40,13 +40,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.QueryParserInteg
       Assert.AreSame (QuerySource, ParsedQuery.MainFromClause.QuerySource);
       Assert.AreEqual (0, ParsedQuery.MainFromClause.JoinClauses.Count);
     }
-
-    [Test]
-    public void CheckQueryBody ()
-    {
-      Assert.IsNotNull (ParsedQuery.QueryBody);
-    }
-
+    
     [Test]
     public void OutputResult ()
     {

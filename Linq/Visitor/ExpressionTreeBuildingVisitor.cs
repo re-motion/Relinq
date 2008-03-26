@@ -15,7 +15,10 @@ namespace Rubicon.Data.Linq.Visitor
     public void VisitQueryExpression (QueryExpression queryExpression)
     {
       queryExpression.MainFromClause.Accept (this);
-      queryExpression.QueryBody.Accept (this);
+      foreach (IBodyClause bodyClause in queryExpression.BodyClauses)
+        bodyClause.Accept (this);
+
+      queryExpression.SelectOrGroupClause.Accept (this);
     }
 
     public void VisitMainFromClause (MainFromClause fromClause)
@@ -144,14 +147,7 @@ namespace Rubicon.Data.Linq.Visitor
 
     public void VisitGroupClause (GroupClause groupClause)
     {
-      throw new System.NotImplementedException();
-    }
-
-    public void VisitQueryBody (QueryBody queryBody)
-    {
-      foreach (IBodyClause clause in queryBody.BodyClauses)
-        clause.Accept (this);
-      queryBody.SelectOrGroupClause.Accept (this);
+      throw new NotImplementedException();
     }
 
     private MethodInfo GetQueryMethod (string methodName, Type[] genericArguments, Type[] parameterTypes)

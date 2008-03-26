@@ -37,7 +37,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       Expression sourceExpression = Expression.Parameter (typeof (Student), "s2");
       QueryExpressionFieldResolverVisitor.Result result = new QueryExpressionFieldResolverVisitor (queryExpression).ParseAndReduce (sourceExpression);
       Assert.AreSame (sourceExpression, result.ReducedExpression);
-      Assert.AreSame (queryExpression.QueryBody.BodyClauses.First(), result.FromClause);
+      Assert.AreSame (queryExpression.BodyClauses.First(), result.FromClause);
     }
 
     [Test]
@@ -128,10 +128,10 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       AdditionalFromClause additionalFromClause =
           new AdditionalFromClause (mainFromClause, s2, ExpressionHelper.CreateLambdaExpression (), ExpressionHelper.CreateLambdaExpression ());
 
-      QueryBody queryBody = new QueryBody (ExpressionHelper.CreateSelectClause ());
-      queryBody.Add (additionalFromClause);
+      QueryExpression expression = new QueryExpression (mainFromClause, ExpressionHelper.CreateSelectClause());
+      expression.AddBodyClause (additionalFromClause);
 
-      return new QueryExpression (mainFromClause, queryBody);
+      return expression;
     }
   }
 }

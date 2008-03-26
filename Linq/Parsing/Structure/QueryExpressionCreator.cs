@@ -8,7 +8,7 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.Parsing.Structure
 {
-  public class QueryBodyCreator
+  public class QueryExpressionCreator
   {
     private readonly Expression _expressionTreeRoot;
     private readonly ParseResultCollector _result;
@@ -18,19 +18,20 @@ namespace Rubicon.Data.Linq.Parsing.Structure
     private int currentProjection;
     private OrderByClause _previousOrderByClause;
 
-    public QueryBodyCreator (Expression expressionTreeRoot, MainFromClause mainFromClause, ParseResultCollector result)
+    public QueryExpressionCreator (Expression expressionTreeRoot, ParseResultCollector result)
     {
       ArgumentUtility.CheckNotNull ("expressionTreeRoot", expressionTreeRoot);
-      ArgumentUtility.CheckNotNull ("mainFromClause", mainFromClause);
       ArgumentUtility.CheckNotNull ("result", result);
 
       _expressionTreeRoot = expressionTreeRoot;
-      _previousClause = mainFromClause;
       _result = result;
     }
 
-    public QueryBody GetQueryBody()
+    public QueryExpression CreateQueryExpression()
     {
+      MainFromClause mainFromClause = CreateMainFromClause (_result);
+
+      _previousClause = mainFromClause;
       currentProjection = 0;
       _previousOrderByClause = null;
 
@@ -43,13 +44,21 @@ namespace Rubicon.Data.Linq.Parsing.Structure
         _previousClause = clause;
       }
 
-      SelectClause selectClause = new SelectClause (_previousClause, _result.ProjectionExpressions.Last (), _result.IsDistinct);
-      QueryBody queryBody = new QueryBody (selectClause);
+      var selectClause = new SelectClause (_previousClause, _result.ProjectionExpressions.Last (), _result.IsDistinct);
+      var queryBody = new QueryExpression (mainFromClause, selectClause, _expressionTreeRoot);
 
       foreach (IBodyClause bodyClause in _bodyClauses)
-        queryBody.Add (bodyClause);
+        queryBody.AddBodyClause (bodyClause);
 
       return queryBody;
+    }
+
+    private MainFromClause CreateMainFromClause (ParseResultCollector resultCollector)
+    {
+      Assertion.IsTrue (resultCollector.BodyExpressions.Count > 0 && resultCollector.BodyExpressions[0] is FromExpression);
+
+      FromExpression mainFromExpression = resultCollector.ExtractMainFromExpression ();
+      return new MainFromClause (mainFromExpression.Identifier, (IQueryable) ((ConstantExpression) mainFromExpression.Expression).Value);
     }
 
     private IBodyClause CreateBodyClause (BodyExpressionBase expression)
@@ -66,16 +75,23 @@ namespace Rubicon.Data.Linq.Parsing.Structure
       if (orderByClause != null)
         return orderByClause;
 
-      throw new NotSupportedException ("The FromLetWhereExpression type " + expression.GetType ().Name + " is not supported.");
+      throw new ParserException ("The FromLetWhereExpression type " + expression.GetType ().Name + " is not supported.");
     }
 
     private AdditionalFromClause CreateFromClause (BodyExpressionBase expression)
     {
-      FromExpression fromExpression = expression as FromExpression;
+      var fromExpression = expression as FromExpression;
       if (fromExpression == null)
         return null;
 
-      AdditionalFromClause additionalFromClause = new AdditionalFromClause (_previousClause, fromExpression.Identifier,
+      if (currentProjection >= _result.ProjectionExpressions.Count)
+      {
+        string message = string.Format ("From expression '{0}' ({1}) doesn't have a projection expression.", fromExpression.Identifier,
+            fromExpression.Expression);
+        throw new ParserException (message);
+      }
+
+      var additionalFromClause = new AdditionalFromClause (_previousClause, fromExpression.Identifier,
           (LambdaExpression) fromExpression.Expression, _result.ProjectionExpressions[currentProjection]);
       ++currentProjection;
       return additionalFromClause;
@@ -83,31 +99,32 @@ namespace Rubicon.Data.Linq.Parsing.Structure
 
     private WhereClause CreateWhereClause (BodyExpressionBase expression)
     {
-      WhereExpression whereExpression = expression as WhereExpression;
+      var whereExpression = expression as WhereExpression;
       if (whereExpression == null)
         return null;
 
-      WhereClause whereClause = new WhereClause (_previousClause, whereExpression.Expression);
+      var whereClause = new WhereClause (_previousClause, whereExpression.Expression);
       return whereClause;
     }
 
     private OrderByClause CreateOrderByClause (BodyExpressionBase expression)
     {
-      OrderExpression orderExpression = expression as OrderExpression;
+      var orderExpression = expression as OrderExpression;
       if (orderExpression == null)
         return null;
 
-      OrderingClause orderingClause = new OrderingClause (_previousClause, orderExpression.Expression, orderExpression.OrderDirection);
+      var orderingClause = new OrderingClause (_previousClause, orderExpression.Expression, orderExpression.OrderDirection);
       if (orderExpression.FirstOrderBy)
       {
-        OrderByClause orderByClause = new OrderByClause (orderingClause);
+        var orderByClause = new OrderByClause (orderingClause);
         _previousOrderByClause = orderByClause;
         return orderByClause;
       }
       else
       {
         if (_previousOrderByClause == null)
-          throw ParserUtility.CreateParserException ("OrderBy or OrderByDescending", orderExpression, "beginning of an OrderBy clause", _expressionTreeRoot);
+          throw ParserUtility.CreateParserException ("OrderBy or OrderByDescending", orderExpression, "beginning of an OrderBy clause",
+              _expressionTreeRoot);
         else
         {
           _previousOrderByClause.Add (orderingClause);

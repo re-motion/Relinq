@@ -22,8 +22,10 @@ namespace Rubicon.Data.Linq.Visitor
       ArgumentUtility.CheckNotNull ("queryExpression", queryExpression);
 
       queryExpression.MainFromClause.Accept (this);
-      queryExpression.QueryBody.Accept (this);
-      
+      foreach (IBodyClause bodyClause in queryExpression.BodyClauses)
+        bodyClause.Accept (this);
+
+      queryExpression.SelectOrGroupClause.Accept (this);
     }
 
     public void VisitMainFromClause (MainFromClause fromClause)
@@ -107,16 +109,6 @@ namespace Rubicon.Data.Linq.Visitor
       ArgumentUtility.CheckNotNull ("groupClause", groupClause);
       _sb.AppendFormat ("group {0} by {1}", groupClause.GroupExpression, groupClause.ByExpression);
       
-    }
-
-    public void VisitQueryBody (QueryBody queryBody)
-    {
-      ArgumentUtility.CheckNotNull ("queryBody", queryBody);
-      
-      foreach (IBodyClause bodyClause in queryBody.BodyClauses)
-        bodyClause.Accept (this);
-
-      queryBody.SelectOrGroupClause.Accept (this);
     }
 
     #endregion

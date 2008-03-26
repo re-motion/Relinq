@@ -38,10 +38,11 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       AdditionalFromClause additionalFromClause =
           new AdditionalFromClause (mainFromClause, s2, ExpressionHelper.CreateLambdaExpression (), ExpressionHelper.CreateLambdaExpression ());
 
-      QueryBody queryBody = new QueryBody (ExpressionHelper.CreateSelectClause ());
-      queryBody.Add (additionalFromClause);
+      var expression = new QueryExpression (mainFromClause, ExpressionHelper.CreateSelectClause());
+      
+      expression.AddBodyClause (additionalFromClause);
 
-      return new QueryExpression (mainFromClause, queryBody);
+      return expression;
     }
   }
 }

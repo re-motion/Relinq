@@ -33,7 +33,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     {
       IQueryable<Student> query = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource ());
       QueryExpression queryExpression = new QueryParser (query.Expression).GetParsedQuery ();
-      SelectClause selectClause = (SelectClause) queryExpression.QueryBody.SelectOrGroupClause;
+      SelectClause selectClause = (SelectClause) queryExpression.SelectOrGroupClause;
       
       Assert.AreSame (selectClause, ClauseFinder.FindClause<SelectClause> (selectClause));
     }
@@ -43,7 +43,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     {
       IQueryable<Student> query = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource ());
       QueryExpression queryExpression = new QueryParser (query.Expression).GetParsedQuery ();
-      SelectClause selectClause = (SelectClause) queryExpression.QueryBody.SelectOrGroupClause;
+      SelectClause selectClause = (SelectClause) queryExpression.SelectOrGroupClause;
 
       Assert.AreSame (selectClause.PreviousClause, ClauseFinder.FindClause<MainFromClause> (selectClause));
     }
@@ -53,7 +53,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     {
       IQueryable<Student> query = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource ());
       QueryExpression queryExpression = new QueryParser (query.Expression).GetParsedQuery ();
-      SelectClause selectClause = (SelectClause) queryExpression.QueryBody.SelectOrGroupClause;
+      SelectClause selectClause = (SelectClause) queryExpression.SelectOrGroupClause;
 
       Assert.AreSame (selectClause.PreviousClause, ClauseFinder.FindClause<FromClauseBase> (selectClause));
     }
@@ -63,7 +63,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     {
       IQueryable<Student> query = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource ());
       QueryExpression queryExpression = new QueryParser (query.Expression).GetParsedQuery ();
-      SelectClause selectClause = (SelectClause) queryExpression.QueryBody.SelectOrGroupClause;
+      SelectClause selectClause = (SelectClause) queryExpression.SelectOrGroupClause;
       Assert.AreSame (queryExpression.MainFromClause, ClauseFinder.FindClause <FromClauseBase> (selectClause.PreviousClause));
     }
 
@@ -73,8 +73,8 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       IQueryable<Student> source = ExpressionHelper.CreateQuerySource ();
       IQueryable<Student> query = FromTestQueryGenerator.CreateThreeFromQuery (source, source, source);
       QueryExpression queryExpression = new QueryParser (query.Expression).GetParsedQuery ();
-      SelectClause selectClause = (SelectClause) queryExpression.QueryBody.SelectOrGroupClause;
-      Assert.AreSame (queryExpression.QueryBody.BodyClauses.Last (), ClauseFinder.FindClause<FromClauseBase> (selectClause.PreviousClause));
+      SelectClause selectClause = (SelectClause) queryExpression.SelectOrGroupClause;
+      Assert.AreSame (queryExpression.BodyClauses.Last (), ClauseFinder.FindClause<FromClauseBase> (selectClause.PreviousClause));
     }
 
     [Test]
@@ -83,7 +83,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       IQueryable<Student> source = ExpressionHelper.CreateQuerySource ();
       IQueryable<Student> query = WhereTestQueryGenerator.CreateMultiWhereQuery (source);
       QueryExpression queryExpression = new QueryParser (query.Expression).GetParsedQuery ();
-      SelectClause selectClause = (SelectClause) queryExpression.QueryBody.SelectOrGroupClause;
+      SelectClause selectClause = (SelectClause) queryExpression.SelectOrGroupClause;
       Assert.AreSame (queryExpression.MainFromClause, ClauseFinder.FindClause<FromClauseBase> (selectClause.PreviousClause));
     }
 
@@ -93,11 +93,11 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       IQueryable<Student> source = ExpressionHelper.CreateQuerySource ();
       IQueryable<Student> query = MixedTestQueryGenerator.CreateThreeFromWhereQuery (source, source, source);
       QueryExpression queryExpression = new QueryParser (query.Expression).GetParsedQuery ();
-      SelectClause selectClause = (SelectClause) queryExpression.QueryBody.SelectOrGroupClause;
+      SelectClause selectClause = (SelectClause) queryExpression.SelectOrGroupClause;
       Assert.That (ClauseFinder.FindClauses<FromClauseBase> (selectClause).ToArray(),Is.EqualTo(new object[]
           {
-              queryExpression.QueryBody.BodyClauses.Last(), 
-              queryExpression.QueryBody.BodyClauses.First(), 
+              queryExpression.BodyClauses.Last(), 
+              queryExpression.BodyClauses.First(), 
               queryExpression.MainFromClause
           }));
     }
@@ -109,9 +109,9 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       IQueryable<Student> query = MixedTestQueryGenerator.CreateThreeFromWhereQuery (source, source, source);
       QueryExpression queryExpression = new QueryParser (query.Expression).GetParsedQuery ();
       Assert.That (ClauseFinder.FindClauses<FromClauseBase> 
-        (queryExpression.QueryBody.BodyClauses.Last ().PreviousClause).ToArray (), Is.EqualTo (new object[]
+        (queryExpression.BodyClauses.Last ().PreviousClause).ToArray (), Is.EqualTo (new object[]
           {
-              queryExpression.QueryBody.BodyClauses.First(), 
+              queryExpression.BodyClauses.First(), 
               queryExpression.MainFromClause
           }));
     }

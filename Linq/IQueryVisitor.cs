@@ -14,7 +14,6 @@ namespace Rubicon.Data.Linq
     void VisitOrderingClause (OrderingClause orderingClause);
     void VisitSelectClause (SelectClause selectClause);
     void VisitGroupClause (GroupClause groupClause);
-    void VisitQueryBody (QueryBody queryBody);
 
   }
 }

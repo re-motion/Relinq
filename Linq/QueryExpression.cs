@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.DataObjectModel;
@@ -10,26 +12,51 @@ namespace Rubicon.Data.Linq
 {
   public class QueryExpression : IQueryElement
   {
+    private readonly List<IBodyClause> _bodyClauses = new List<IBodyClause> ();
+    private readonly Dictionary<string, FromClauseBase> _fromClausesByIdentifier = new Dictionary<string, FromClauseBase> ();
+
     private Expression _expressionTree;
 
-
-    public QueryExpression (MainFromClause mainFromClause, QueryBody queryBody, Expression expressionTree)
+    public QueryExpression (MainFromClause mainFromClause, ISelectGroupClause selectOrGroupClause, Expression expressionTree)
     {
       ArgumentUtility.CheckNotNull ("mainFromClause", mainFromClause);
-      ArgumentUtility.CheckNotNull ("queryBody", queryBody);
+      ArgumentUtility.CheckNotNull ("SelectOrGroupClause", selectOrGroupClause);
 
       MainFromClause = mainFromClause;
-      QueryBody = queryBody;
+      SelectOrGroupClause = selectOrGroupClause;
       _expressionTree = expressionTree;
     }
 
-    public QueryExpression (MainFromClause fromClause, QueryBody queryBody)
-        : this (fromClause, queryBody, null)
+    public QueryExpression (MainFromClause fromClause, ISelectGroupClause selectOrGroupClause)
+        : this (fromClause, selectOrGroupClause, null)
     {
     }
 
     public MainFromClause MainFromClause { get; private set; }
-    public QueryBody QueryBody { get; private set; }
+    public ISelectGroupClause SelectOrGroupClause { get; private set; }
+
+    public ReadOnlyCollection<IBodyClause> BodyClauses
+    {
+      get { return _bodyClauses.AsReadOnly (); }
+    }
+
+    public void AddBodyClause (IBodyClause clause)
+    {
+      ArgumentUtility.CheckNotNull ("clause", clause);
+      _bodyClauses.Add (clause);
+
+      var clauseAsFromClause = clause as FromClauseBase;
+      if (clauseAsFromClause == null)
+        return;
+
+      if (_fromClausesByIdentifier.ContainsKey (clauseAsFromClause.Identifier.Name))
+      {
+        string message = string.Format ("Multiple from clauses with the same name ('{0}') are not supported.",
+            clauseAsFromClause.Identifier.Name);
+        throw new NotSupportedException (message);
+      }
+      _fromClausesByIdentifier.Add (clauseAsFromClause.Identifier.Name, clauseAsFromClause);
+    }
 
     public FromClauseBase GetFromClause (string identifierName, Type identifierType)
     {
@@ -42,8 +69,23 @@ namespace Rubicon.Data.Linq
         return MainFromClause;
       }
       else
-        return QueryBody.GetFromClause (identifierName, identifierType);
+        return GetAdditionalFromClause (identifierName, identifierType);
     }
+
+    public FromClauseBase GetAdditionalFromClause (string identifierName, Type identifierType)
+    {
+      ArgumentUtility.CheckNotNull ("identifierName", identifierName);
+      ArgumentUtility.CheckNotNull ("identifierType", identifierType);
+
+      FromClauseBase fromClause;
+      if (_fromClausesByIdentifier.TryGetValue (identifierName, out fromClause))
+      {
+        fromClause.CheckResolvedIdentifierType (identifierType);
+        return fromClause;
+      }
+      return null;
+    }
+
 
     public void Accept (IQueryVisitor visitor)
     {
@@ -54,7 +96,7 @@ namespace Rubicon.Data.Linq
 
     public override string ToString ()
     {
-      StringVisitor sv = new StringVisitor();
+      var sv = new StringVisitor();
       sv.VisitQueryExpression (this);
       return sv.ToString();
     }
@@ -63,7 +105,7 @@ namespace Rubicon.Data.Linq
     {
       if (_expressionTree == null)
       {
-        ExpressionTreeBuildingVisitor visitor = new ExpressionTreeBuildingVisitor();
+        var visitor = new ExpressionTreeBuildingVisitor();
         Accept (visitor);
         _expressionTree = visitor.ExpressionTree;
       }

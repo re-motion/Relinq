@@ -230,84 +230,16 @@ namespace Rubicon.Data.Linq.UnitTests.VisitorTest
       repository.VerifyAll();
     }
 
-
     [Test]
-    public void StringVisitorQueryBody ()
-    {
-      MockRepository repository = new MockRepository();
-
-      SelectClause selectClause1 =
-          repository.CreateMock<SelectClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateLambdaExpression (),false );
-
-      OrderByClause orderByClause1 =
-          repository.CreateMock<OrderByClause> (ExpressionHelper.CreateOrderingClause ());
-
-      AdditionalFromClause fromClause1 =
-          repository.CreateMock<AdditionalFromClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateParameterExpression (),
-              ExpressionHelper.CreateLambdaExpression(), ExpressionHelper.CreateLambdaExpression());
-
-      WhereClause whereClause1 =
-          repository.CreateMock<WhereClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateLambdaExpression ());
-
-      QueryBody queryBody = new QueryBody (selectClause1);
-
-      queryBody.Add (fromClause1);
-      queryBody.Add (whereClause1);
-      queryBody.Add (orderByClause1);
-
-      StringVisitor sv = new StringVisitor();
-
-      //expectations
-      using (repository.Ordered())
-      {
-        fromClause1.Accept (sv);
-        whereClause1.Accept (sv);
-        orderByClause1.Accept (sv);
-        selectClause1.Accept (sv);
-      }
-
-      repository.ReplayAll();
-
-      sv.VisitQueryBody (queryBody);
-
-      repository.VerifyAll();
-    }
-
-    [Test]
-    public void StringVisitorQueryBodyOnlyWithSelectGroupClause ()
-    {
-      MockRepository repository = new MockRepository();
-
-      SelectClause selectClause1 =
-          repository.CreateMock<SelectClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateLambdaExpression (),false);
-
-      QueryBody queryBody = new QueryBody (selectClause1);
-
-      StringVisitor sv = new StringVisitor();
-
-      //expectation
-      selectClause1.Accept (sv);
-
-      repository.ReplayAll();
-
-      sv.VisitQueryBody (queryBody);
-
-      repository.VerifyAll();
-    }
-
-    [Test]
-    public void StringVisitorQueryExpression ()
+    public void StringVisitorQueryExpression_NoBodyClauses ()
     {
       MockRepository repository = new MockRepository();
 
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause();
-      QueryBody queryBody = new QueryBody (ExpressionHelper.CreateSelectClause());
-
-      OrderByClause orderByClause = ExpressionHelper.CreateOrderByClause();
-
-      queryBody.Add (orderByClause);
-
-      QueryExpression queryExpression = new QueryExpression (fromClause, queryBody);
+      SelectClause selectClause1 =
+          repository.CreateMock<SelectClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateLambdaExpression (), false);
+      
+      QueryExpression queryExpression = new QueryExpression (fromClause, selectClause1);
 
       StringVisitor sv = new StringVisitor();
 
@@ -315,12 +247,50 @@ namespace Rubicon.Data.Linq.UnitTests.VisitorTest
       using (repository.Ordered())
       {
         fromClause.Accept (sv);
-        queryBody.Accept (sv);
+        selectClause1.Accept (sv);
       }
 
       repository.ReplayAll();
       sv.VisitQueryExpression (queryExpression);
       repository.VerifyAll();
+    }
+
+    [Test]
+    public void StringVisitorQueryExpression_WithBodyClauses ()
+    {
+      MockRepository repository = new MockRepository ();
+
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause ();
+      SelectClause selectClause1 =
+          repository.CreateMock<SelectClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateLambdaExpression (), false);
+      OrderByClause orderByClause1 =
+          repository.CreateMock<OrderByClause> (ExpressionHelper.CreateOrderingClause ());
+      AdditionalFromClause fromClause1 =
+          repository.CreateMock<AdditionalFromClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateParameterExpression (),
+              ExpressionHelper.CreateLambdaExpression (), ExpressionHelper.CreateLambdaExpression ());
+      WhereClause whereClause1 =
+          repository.CreateMock<WhereClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateLambdaExpression ());
+
+      QueryExpression queryExpression = new QueryExpression (fromClause, selectClause1);
+      queryExpression.AddBodyClause (orderByClause1);
+      queryExpression.AddBodyClause (fromClause1);
+      queryExpression.AddBodyClause (whereClause1);
+
+      StringVisitor sv = new StringVisitor ();
+
+      //expectations
+      using (repository.Ordered ())
+      {
+        fromClause.Accept (sv);
+        orderByClause1.Accept (sv);
+        fromClause1.Accept (sv);
+        whereClause1.Accept (sv);
+        selectClause1.Accept (sv);
+      }
+
+      repository.ReplayAll ();
+      sv.VisitQueryExpression (queryExpression);
+      repository.VerifyAll ();
     }
 
     [Test]

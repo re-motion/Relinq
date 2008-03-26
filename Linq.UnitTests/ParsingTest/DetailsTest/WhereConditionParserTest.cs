@@ -30,7 +30,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       _databaseInfo = StubDatabaseInfo.Instance;
       _parameter = Expression.Parameter (typeof (Student), "s");
       _fromClause = new MainFromClause (_parameter, ExpressionHelper.CreateQuerySource ());
-      _queryExpression = new QueryExpression (_fromClause, ExpressionHelper.CreateQueryBody());
+      _queryExpression = ExpressionHelper.CreateQueryExpression (_fromClause);
       _context = new JoinedTableContext();
     }
     
@@ -142,7 +142,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       Expression condition = Expression.Equal (virtualColumnAccess, Expression.Constant (null));
       WhereClause whereClause = CreateWhereClause (condition);
 
-      QueryExpression queryExpression = new QueryExpression (fromClause, _queryExpression.QueryBody);
+      QueryExpression queryExpression = new QueryExpression (fromClause, _queryExpression.SelectOrGroupClause);
       WhereConditionParser parser = new WhereConditionParser (queryExpression, whereClause, _databaseInfo, _context, false);
       Tuple<List<FieldDescriptor>, ICriterion> parseResult = parser.GetParseResult();
       ICriterion criterion = parseResult.B;
@@ -299,7 +299,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     {
       IQueryable<Student> query = WhereTestQueryGenerator.CreateWhereQueryWithDifferentComparisons (ExpressionHelper.CreateQuerySource());
       QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
-      WhereClause whereClause = ClauseFinder.FindClause<WhereClause> (parsedQuery.QueryBody.SelectOrGroupClause);
+      WhereClause whereClause = ClauseFinder.FindClause<WhereClause> (parsedQuery.SelectOrGroupClause);
       WhereConditionParser parser = new WhereConditionParser (parsedQuery, whereClause, _databaseInfo, _context, false);
       Tuple<List<FieldDescriptor>, ICriterion> parseResult = parser.GetParseResult ();
       ICriterion result = parseResult.B;
@@ -329,7 +329,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     {
       IQueryable<Student> query = WhereTestQueryGenerator.CreateWhereQueryWithEvaluatableSubExpression (ExpressionHelper.CreateQuerySource ());
       QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
-      WhereClause whereClause = ClauseFinder.FindClause<WhereClause> (parsedQuery.QueryBody.SelectOrGroupClause);
+      WhereClause whereClause = ClauseFinder.FindClause<WhereClause> (parsedQuery.SelectOrGroupClause);
       WhereConditionParser parser = new WhereConditionParser (parsedQuery, whereClause, _databaseInfo, _context, true);
       Tuple<List<FieldDescriptor>, ICriterion> parseResult = parser.GetParseResult ();
       ICriterion result = parseResult.B;
@@ -344,7 +344,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     {
       IQueryable<Student> query = WhereTestQueryGenerator.CreateWhereQueryWithEvaluatableSubExpression (ExpressionHelper.CreateQuerySource ());
       QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
-      WhereClause whereClause = ClauseFinder.FindClause<WhereClause> (parsedQuery.QueryBody.SelectOrGroupClause);
+      WhereClause whereClause = ClauseFinder.FindClause<WhereClause> (parsedQuery.SelectOrGroupClause);
       WhereConditionParser parser = new WhereConditionParser (parsedQuery, whereClause, _databaseInfo, _context, false);
       parser.GetParseResult ();
     }
@@ -359,7 +359,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
 
       AdditionalFromClause additionalFromClause = new AdditionalFromClause (_fromClause, Expression.Parameter (typeof (Student), "s2"),
           Expression.Lambda (Expression.Constant (null, typeof (IQueryable<Student>))), ExpressionHelper.CreateLambdaExpression());
-      _queryExpression.QueryBody.Add (additionalFromClause);
+      _queryExpression.AddBodyClause (additionalFromClause);
 
       ParameterExpression parameter1 = _queryExpression.MainFromClause.Identifier;
       ParameterExpression parameter2 = additionalFromClause.Identifier;
@@ -384,7 +384,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       
       QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
       FromClauseBase fromClause = parsedQuery.MainFromClause;
-      WhereClause whereClause = ClauseFinder.FindClause<WhereClause> (parsedQuery.QueryBody.SelectOrGroupClause);
+      WhereClause whereClause = ClauseFinder.FindClause<WhereClause> (parsedQuery.SelectOrGroupClause);
       
       PropertyInfo relationMember = typeof (Student_Detail).GetProperty ("Student");
       Table sourceTable = fromClause.GetTable (StubDatabaseInfo.Instance); // Student_Detail
@@ -417,7 +417,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       IQueryable<Student_Detail> query = WhereTestQueryGenerator.CreateRelationMemberWhereQuery (ExpressionHelper.CreateQuerySource_Detail ());
 
       QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
-      WhereClause whereClause = ClauseFinder.FindClause<WhereClause> (parsedQuery.QueryBody.SelectOrGroupClause);
+      WhereClause whereClause = ClauseFinder.FindClause<WhereClause> (parsedQuery.SelectOrGroupClause);
 
       PropertyInfo relationMember = typeof (Student_Detail).GetProperty ("IndustrialSector");
       FieldDescriptor expected = ExpressionHelper.CreateFieldDescriptor (parsedQuery.MainFromClause, relationMember);
