@@ -23,7 +23,7 @@ namespace Rubicon.Data.Linq.Visitor
 
     public void VisitMainFromClause (MainFromClause fromClause)
     {
-      ExpressionTree = Expression.Constant (fromClause.QuerySource);
+      ExpressionTree = fromClause.QuerySource;
     }
 
     public void VisitAdditionalFromClause (AdditionalFromClause fromClause)

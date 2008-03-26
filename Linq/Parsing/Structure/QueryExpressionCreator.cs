@@ -58,7 +58,7 @@ namespace Rubicon.Data.Linq.Parsing.Structure
       Assertion.IsTrue (resultCollector.BodyExpressions.Count > 0 && resultCollector.BodyExpressions[0] is FromExpression);
 
       FromExpression mainFromExpression = resultCollector.ExtractMainFromExpression ();
-      return new MainFromClause (mainFromExpression.Identifier, (IQueryable) ((ConstantExpression) mainFromExpression.Expression).Value);
+      return new MainFromClause (mainFromExpression.Identifier, mainFromExpression.Expression);
     }
 
     private IBodyClause CreateBodyClause (BodyExpressionBase expression)

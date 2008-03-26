@@ -7,14 +7,18 @@ namespace Rubicon.Data.Linq.Clauses
 {
   public class MainFromClause : FromClauseBase
   {
+    public MainFromClause (ParameterExpression identifier, IQueryable querySource)
+      : this (identifier, Expression.Constant (querySource))
+    {
+    }
 
-    public MainFromClause (ParameterExpression identifier, IQueryable querySource): base(null,identifier)
+    public MainFromClause (ParameterExpression identifier, Expression querySource): base(null,identifier)
     {
       ArgumentUtility.CheckNotNull ("querySource", querySource);
       QuerySource = querySource;
     }
 
-    public IQueryable QuerySource { get; private set; }
+    public Expression QuerySource { get; private set; }
 
     public override void Accept (IQueryVisitor visitor)
     {
@@ -24,7 +28,7 @@ namespace Rubicon.Data.Linq.Clauses
 
     public override Type GetQueriedEntityType ()
     {
-      return QuerySource.GetType();
+      return QuerySource.Type;
     }
   }
 }

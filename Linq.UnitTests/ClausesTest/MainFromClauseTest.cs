@@ -13,20 +13,34 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
   public class MainFromClauseTest
   {
     [Test]
-    public void Initialize_WithIDAndExpression ()
+    public void Initialize_WithIDAndConstant ()
     {
       ParameterExpression id = ExpressionHelper.CreateParameterExpression ();
       IQueryable querySource = ExpressionHelper.CreateQuerySource ();
 
-      MainFromClause fromClause = new MainFromClause (id, querySource);
+      ConstantExpression constantExpression = Expression.Constant (querySource);
+      MainFromClause fromClause = new MainFromClause (id, constantExpression);
 
       Assert.AreSame (id, fromClause.Identifier);
-      Assert.AreSame (querySource, fromClause.QuerySource);
+      Assert.AreSame (constantExpression, fromClause.QuerySource);
 
       Assert.That (fromClause.JoinClauses, Is.Empty);
       Assert.AreEqual (0, fromClause.JoinClauses.Count);
 
       Assert.IsNull (fromClause.PreviousClause);
+    }
+
+    [Test]
+    public void Initialize_WithExpression ()
+    {
+      ParameterExpression id = ExpressionHelper.CreateParameterExpression ();
+      IQueryable querySource = ExpressionHelper.CreateQuerySource ();
+      var anonymous = new {source = querySource};
+      MemberExpression sourceExpression = Expression.MakeMemberAccess (Expression.Constant (anonymous), anonymous.GetType().GetProperty ("source"));
+
+      MainFromClause fromClause = new MainFromClause (id, sourceExpression);
+
+      Assert.AreSame (sourceExpression, fromClause.QuerySource);
     }
 
     [Test]
@@ -50,8 +64,9 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     [Test]
     public void GetQueriedEntityType ()
     {
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause ();
-      Assert.AreSame (fromClause.QuerySource.GetType(), fromClause.GetQueriedEntityType());
+      IQueryable<Student> querySource = ExpressionHelper.CreateQuerySource();
+      MainFromClause fromClause = new MainFromClause (ExpressionHelper.CreateParameterExpression(), querySource);
+      Assert.AreSame (typeof (TestQueryable<Student>), fromClause.GetQueriedEntityType());
     }
   }
 }

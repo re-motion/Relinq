@@ -67,7 +67,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
       QueryExpression expression = _expressionCreator.CreateQueryExpression ();
       Assert.IsNotNull (expression.MainFromClause);
       Assert.AreSame (_firstFromExpression.Identifier, expression.MainFromClause.Identifier);
-      Assert.AreSame (((ConstantExpression)_firstFromExpression.Expression).Value, expression.MainFromClause.QuerySource);
+      Assert.AreSame (_firstFromExpression.Expression, expression.MainFromClause.QuerySource);
       Assert.AreNotSame (additionalFromExpression.Identifier, expression.MainFromClause.Identifier);
     }
 

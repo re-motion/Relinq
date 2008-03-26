@@ -12,11 +12,13 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.QueryParserInteg
     public ExpressionTreeNavigator SourceExpressionNavigator { get; private set; }
     public QueryExpression ParsedQuery { get; private set; }
     public IQueryable<Student> QuerySource { get; private set; }
+    public ConstantExpression QuerySourceExpression { get; private set; }
 
     [SetUp]
     public virtual void SetUp()
     {
       QuerySource = ExpressionHelper.CreateQuerySource();
+      QuerySourceExpression = Expression.Constant (QuerySource);
       SourceExpression = CreateQuery().Expression;
       SourceExpressionNavigator = new ExpressionTreeNavigator (SourceExpression);
       QueryParser parser = new QueryParser (SourceExpression);
@@ -37,7 +39,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.QueryParserInteg
       Assert.IsNotNull (ParsedQuery.MainFromClause);
       Assert.AreEqual ("s", ParsedQuery.MainFromClause.Identifier.Name);
       Assert.AreSame (typeof (Student), ParsedQuery.MainFromClause.Identifier.Type);
-      Assert.AreSame (QuerySource, ParsedQuery.MainFromClause.QuerySource);
+      ExpressionTreeComparer.CheckAreEqualTrees (QuerySourceExpression, ParsedQuery.MainFromClause.QuerySource);
       Assert.AreEqual (0, ParsedQuery.MainFromClause.JoinClauses.Count);
     }
     

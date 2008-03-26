@@ -28,7 +28,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.QueryParserInteg
       Assert.IsNotNull (ParsedQuery.MainFromClause);
       Assert.AreEqual ("s1", ParsedQuery.MainFromClause.Identifier.Name);
       Assert.AreSame (typeof (Student), ParsedQuery.MainFromClause.Identifier.Type);
-      Assert.AreSame (QuerySource, ParsedQuery.MainFromClause.QuerySource);
+      ExpressionTreeComparer.CheckAreEqualTrees (QuerySourceExpression, ParsedQuery.MainFromClause.QuerySource);
       Assert.AreEqual (0, ParsedQuery.MainFromClause.JoinClauses.Count);
     }
 
