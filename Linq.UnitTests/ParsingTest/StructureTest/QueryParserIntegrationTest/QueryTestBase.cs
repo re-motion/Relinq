@@ -44,7 +44,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.QueryParserInteg
     }
     
     [Test]
-    public void OutputResult ()
+    public virtual void OutputResult ()
     {
       Console.WriteLine (ParsedQuery);
     }

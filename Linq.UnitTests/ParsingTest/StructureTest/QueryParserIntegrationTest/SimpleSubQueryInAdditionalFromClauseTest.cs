@@ -6,7 +6,7 @@ using Rubicon.Data.Linq.UnitTests.TestQueryGenerators;
 namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.QueryParserIntegrationTest
 {
   [TestFixture]
-  [Ignore ("TODO: Implement MainFromClauses without constant IQueryable")]
+  // [Ignore ("TODO: Implement MainFromClauses without constant IQueryable")]
   public class SimpleSubQueryInAdditionalFromClauseTest : QueryTestBase<Student>
   {
     protected override IQueryable<Student> CreateQuery ()
@@ -21,25 +21,25 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.QueryParserInteg
 
       SubQueryFromClause fromClause1 = ParsedQuery.BodyClauses[0] as SubQueryFromClause;
       Assert.IsNotNull (fromClause1);
-      Assert.AreSame (SourceExpressionNavigator.Arguments[0].Arguments[1].Operand.Expression, fromClause1.SubQuery.GetExpressionTree ());
-      Assert.AreSame (SourceExpressionNavigator.Arguments[0].Arguments[2].Operand.Expression, fromClause1.ProjectionExpression);
+      Assert.AreSame (SourceExpressionNavigator.Arguments[1].Operand.Body.Expression, fromClause1.SubQuery.GetExpressionTree ());
+      Assert.AreSame (SourceExpressionNavigator.Arguments[2].Operand.Expression, fromClause1.ProjectionExpression);
 
       CheckSubQuery (fromClause1.SubQuery);
     }
 
     private void CheckSubQuery (QueryExpression subQuery)
     {
-      ExpressionTreeNavigator subExpressionNavigator = SourceExpressionNavigator.Arguments[0].Arguments[1].Operand;
+      ExpressionTreeNavigator subExpressionNavigator = SourceExpressionNavigator.Arguments[1].Operand.Body;
 
       Assert.IsNotNull (subQuery.MainFromClause);
       Assert.AreSame (subExpressionNavigator.Arguments[0].Expression, subQuery.MainFromClause.QuerySource);
-      Assert.AreSame (subExpressionNavigator.Arguments[1].Parameters[0].Expression, subQuery.MainFromClause.Identifier);
+      Assert.AreSame (subExpressionNavigator.Arguments[1].Operand.Parameters[0].Expression, subQuery.MainFromClause.Identifier);
 
       Assert.AreEqual (0, subQuery.BodyClauses.Count);
 
       SelectClause selectClause = subQuery.SelectOrGroupClause as SelectClause;
       Assert.IsNotNull (selectClause);
-      Assert.AreSame (subExpressionNavigator.Arguments[1].Expression, selectClause.ProjectionExpression);
+      Assert.AreSame (subExpressionNavigator.Arguments[1].Operand.Expression, selectClause.ProjectionExpression);
     }
 
     [Test]
@@ -47,7 +47,14 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.QueryParserInteg
     {
       SelectClause selectClause = ParsedQuery.SelectOrGroupClause as SelectClause;
       Assert.IsNotNull (selectClause);
-      Assert.AreSame (SourceExpressionNavigator.Arguments[2].Expression, selectClause.ProjectionExpression);
+      Assert.AreSame (SourceExpressionNavigator.Arguments[2].Operand.Expression, selectClause.ProjectionExpression);
+    }
+
+    [Test]
+    [Ignore ("TODO: Implement StringVisitor for sub-queries")]
+    public override void OutputResult ()
+    {
+      base.OutputResult ();
     }
     
   }
