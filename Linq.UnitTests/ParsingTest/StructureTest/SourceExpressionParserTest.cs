@@ -75,13 +75,28 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
     }
 
     [Test]
-    public void SimpleSource()
+    public void SimpleSource_Constant()
     {
-      IQueryable<Student> query = _source;
-      ParseResultCollector result = Parse (query);
+      Expression constantExpression = Expression.Constant(null, typeof (IQueryable<Student>));
+      ParseResultCollector result = new ParseResultCollector (constantExpression);
+      _topLevelParser.Parse (result, constantExpression, _potentialFromIdentifier, "bla");
+
       Assert.AreEqual (1, result.BodyExpressions.Count);
-      Assert.AreEqual (((FromExpression) result.BodyExpressions[0]).Identifier, _potentialFromIdentifier);
-      Assert.AreEqual (((FromExpression) result.BodyExpressions[0]).Expression, query.Expression);
+      Assert.AreEqual (_potentialFromIdentifier, ((FromExpression) result.BodyExpressions[0]).Identifier);
+      Assert.AreEqual (constantExpression, ((FromExpression) result.BodyExpressions[0]).Expression);
+      Assert.That (result.ProjectionExpressions, Is.Empty);
+    }
+
+    [Test]
+    public void SimpleSource_MemberExpression ()
+    {
+      Expression memberExpression = Expression.MakeMemberAccess (Expression.Constant (null, typeof (Student)), typeof (Student).GetProperty ("Scores"));
+      ParseResultCollector result = new ParseResultCollector(memberExpression);
+      _topLevelParser.Parse (result, memberExpression, _potentialFromIdentifier, "bla");
+      
+      Assert.AreEqual (1, result.BodyExpressions.Count);
+      Assert.AreEqual (_potentialFromIdentifier, ((FromExpression) result.BodyExpressions[0]).Identifier);
+      Assert.AreEqual (memberExpression, ((FromExpression) result.BodyExpressions[0]).Expression);
       Assert.That (result.ProjectionExpressions, Is.Empty);
     }
 

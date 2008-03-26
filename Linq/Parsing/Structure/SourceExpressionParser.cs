@@ -23,6 +23,7 @@ namespace Rubicon.Data.Linq.Parsing.Structure
       switch (sourceExpression.NodeType)
       {
         case ExpressionType.Constant:
+        case ExpressionType.MemberAccess:
           ParseSimpleSource (resultCollector, sourceExpression, potentialFromIdentifier);
           break;
         case ExpressionType.Call:
@@ -59,8 +60,7 @@ namespace Rubicon.Data.Linq.Parsing.Structure
 
     private void ParseSimpleSource (ParseResultCollector resultCollector, Expression sourceExpression, ParameterExpression potentialFromIdentifier)
     {
-      ConstantExpression constantExpression = (ConstantExpression) sourceExpression;
-      resultCollector.AddBodyExpression (new FromExpression (constantExpression, potentialFromIdentifier));
+      resultCollector.AddBodyExpression (new FromExpression (sourceExpression, potentialFromIdentifier));
     }
 
     private void ParseSelectSource (ParseResultCollector resultCollector, Expression sourceExpression)
