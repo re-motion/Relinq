@@ -2,9 +2,11 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using Rubicon.Collections;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.Parsing;
 using Rubicon.Data.Linq.Parsing.Structure;
+using Rubicon.Data.Linq.UnitTests.TestQueryGenerators;
 
 namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
 {
@@ -26,6 +28,33 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
       _firstFromExpression = new FromExpression (Expression.Constant (_source), ExpressionHelper.CreateParameterExpression());
       _result.AddBodyExpression (_firstFromExpression);
       _expressionCreator = new QueryExpressionCreator (_root, _result);
+    }
+
+    [Test]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "There is no projection for the select clause.")]
+    public void NoProjectionForSelectClause ()
+    {
+      _expressionCreator.CreateQueryExpression ();
+    }
+
+    [Test]
+    public void ResultType_Simple ()
+    {
+      _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression ());
+      QueryExpression expression = _expressionCreator.CreateQueryExpression ();
+      Assert.AreEqual (_root.Type, expression.ResultType);
+    }
+
+    [Test]
+    public void ResultType_WithProjection ()
+    {
+      IQueryable<Tuple<Student, string, string, string>> query =
+          SelectTestQueryGenerator.CreateSimpleQueryWithSpecialProjection (ExpressionHelper.CreateQuerySource());
+      QueryExpressionCreator expressionCreator = new QueryExpressionCreator (query.Expression, _result);
+
+      _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression ());
+      QueryExpression expression = expressionCreator.CreateQueryExpression ();
+      Assert.AreEqual (typeof (IQueryable<Tuple<Student, string, string, string>>), expression.ResultType);
     }
 
     [Test]

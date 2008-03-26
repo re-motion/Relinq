@@ -21,7 +21,7 @@ namespace Rubicon.Data.DomainObjects.Linq
     {
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
       
-      Type querySourceType = fromClause.GetQuerySourceType();
+      Type querySourceType = fromClause.GetQueriedEntityType();
       if (!querySourceType.IsGenericType
           || querySourceType.IsGenericTypeDefinition
           || querySourceType.GetGenericTypeDefinition () != typeof (DomainObjectQueryable<>))

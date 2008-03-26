@@ -26,7 +26,7 @@ namespace Rubicon.Data.Linq.DataObjectModel
       if (tableName == null)
       {
         string message = string.Format ("The from clause with identifier {0} and query source type {1} does not identify a queryable table.",
-            fromClause.Identifier, fromClause.GetQuerySourceType().FullName);
+            fromClause.Identifier, fromClause.GetQueriedEntityType().FullName);
         throw new ArgumentException (message, "fromClause");
       }
       else

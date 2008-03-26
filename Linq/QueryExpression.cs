@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Linq.Expressions;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.DataObjectModel;
@@ -17,24 +18,28 @@ namespace Rubicon.Data.Linq
 
     private Expression _expressionTree;
 
-    public QueryExpression (MainFromClause mainFromClause, ISelectGroupClause selectOrGroupClause, Expression expressionTree)
+    public QueryExpression (Type resultType, MainFromClause mainFromClause, ISelectGroupClause selectOrGroupClause, Expression expressionTree)
     {
+      ArgumentUtility.CheckNotNull ("resultType", resultType);
       ArgumentUtility.CheckNotNull ("mainFromClause", mainFromClause);
       ArgumentUtility.CheckNotNull ("SelectOrGroupClause", selectOrGroupClause);
 
+      ResultType = resultType;
       MainFromClause = mainFromClause;
       SelectOrGroupClause = selectOrGroupClause;
       _expressionTree = expressionTree;
     }
 
-    public QueryExpression (MainFromClause fromClause, ISelectGroupClause selectOrGroupClause)
-        : this (fromClause, selectOrGroupClause, null)
+    public QueryExpression (Type resultType, MainFromClause fromClause, ISelectGroupClause selectOrGroupClause)
+        : this (resultType, fromClause, selectOrGroupClause, null)
     {
     }
 
+    public Type ResultType { get; private set; }
+
     public MainFromClause MainFromClause { get; private set; }
     public ISelectGroupClause SelectOrGroupClause { get; private set; }
-
+    
     public ReadOnlyCollection<IBodyClause> BodyClauses
     {
       get { return _bodyClauses.AsReadOnly (); }

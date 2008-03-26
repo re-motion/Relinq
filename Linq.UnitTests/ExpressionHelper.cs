@@ -46,7 +46,7 @@ namespace Rubicon.Data.Linq.UnitTests
 
     public static QueryExpression CreateQueryExpression (MainFromClause mainFromClause)
     {
-      return new QueryExpression (mainFromClause, CreateSelectClause());
+      return new QueryExpression (typeof (IQueryable<int>), mainFromClause, CreateSelectClause());
     }
 
     public static QueryExpression CreateQueryExpression ()

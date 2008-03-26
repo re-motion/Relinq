@@ -50,6 +50,11 @@ namespace Rubicon.Data.Linq.Visitor
       }
     }
 
+    public void VisitSubQueryFromClause (SubQueryFromClause clause)
+    {
+      throw new NotImplementedException();
+    }
+
     public void VisitJoinClause (JoinClause joinClause)
     {
       ArgumentUtility.CheckNotNull ("joinClause", joinClause);

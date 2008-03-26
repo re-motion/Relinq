@@ -8,6 +8,7 @@ using Rubicon.Data.Linq.Visitor;
 namespace Rubicon.Data.Linq.UnitTests.VisitorTest
 {
   using Text = NUnit.Framework.SyntaxHelpers.Text;
+  using System.Linq;
 
   [TestFixture]
   public class StringVisitorTest
@@ -239,7 +240,7 @@ namespace Rubicon.Data.Linq.UnitTests.VisitorTest
       SelectClause selectClause1 =
           repository.CreateMock<SelectClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateLambdaExpression (), false);
       
-      QueryExpression queryExpression = new QueryExpression (fromClause, selectClause1);
+      QueryExpression queryExpression = new QueryExpression (typeof (IQueryable<string>), fromClause, selectClause1);
 
       StringVisitor sv = new StringVisitor();
 
@@ -271,7 +272,7 @@ namespace Rubicon.Data.Linq.UnitTests.VisitorTest
       WhereClause whereClause1 =
           repository.CreateMock<WhereClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateLambdaExpression ());
 
-      QueryExpression queryExpression = new QueryExpression (fromClause, selectClause1);
+      QueryExpression queryExpression = new QueryExpression (typeof (IQueryable<string>), fromClause, selectClause1);
       queryExpression.AddBodyClause (orderByClause1);
       queryExpression.AddBodyClause (fromClause1);
       queryExpression.AddBodyClause (whereClause1);

@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="ClausesTest\AdditionalFromClauseTest.cs" />
     <Compile Include="ClausesTest\ClauseFinderTest.cs" />
+    <Compile Include="ClausesTest\SubQueryFromClauseTest.cs" />
     <Compile Include="DataObjectModelTest\FieldSourcePathTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\WhereParserTest\BinaryExpressionParserTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\WhereParserTest\ConstantExpressionParserTest.cs" />

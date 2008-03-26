@@ -40,6 +40,11 @@ namespace Rubicon.Data.Linq.Visitor
       ExpressionTree = Expression.Call (selectManyMethod, ExpressionTree, fromExpression, projectionExpression);
     }
 
+    public void VisitSubQueryFromClause (SubQueryFromClause clause)
+    {
+      throw new NotImplementedException();
+    }
+
     public void VisitJoinClause (JoinClause joinClause)
     {
       throw new System.NotImplementedException();

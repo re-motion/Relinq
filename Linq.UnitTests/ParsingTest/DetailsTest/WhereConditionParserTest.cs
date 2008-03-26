@@ -142,7 +142,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       Expression condition = Expression.Equal (virtualColumnAccess, Expression.Constant (null));
       WhereClause whereClause = CreateWhereClause (condition);
 
-      QueryExpression queryExpression = new QueryExpression (fromClause, _queryExpression.SelectOrGroupClause);
+      QueryExpression queryExpression = ExpressionHelper.CreateQueryExpression (fromClause);
       WhereConditionParser parser = new WhereConditionParser (queryExpression, whereClause, _databaseInfo, _context, false);
       Tuple<List<FieldDescriptor>, ICriterion> parseResult = parser.GetParseResult();
       ICriterion criterion = parseResult.B;

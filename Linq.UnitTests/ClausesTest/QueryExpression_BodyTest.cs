@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -18,7 +19,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     public void SetUp()
     {
       _selectOrGroupClause = ExpressionHelper.CreateSelectClause ();
-      _expression = new QueryExpression (ExpressionHelper.CreateMainFromClause(), _selectOrGroupClause);
+      _expression = new QueryExpression (typeof (IQueryable<int>), ExpressionHelper.CreateMainFromClause(), _selectOrGroupClause);
     }
 
     [Test]

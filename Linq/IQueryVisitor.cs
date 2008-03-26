@@ -7,6 +7,7 @@ namespace Rubicon.Data.Linq
     void VisitQueryExpression (QueryExpression queryExpression);
     void VisitMainFromClause (MainFromClause fromClause);
     void VisitAdditionalFromClause (AdditionalFromClause fromClause);
+    void VisitSubQueryFromClause (SubQueryFromClause clause);
     void VisitJoinClause (JoinClause joinClause);
     void VisitLetClause (LetClause letClause);
     void VisitWhereClause (WhereClause whereClause);
@@ -14,6 +15,5 @@ namespace Rubicon.Data.Linq
     void VisitOrderingClause (OrderingClause orderingClause);
     void VisitSelectClause (SelectClause selectClause);
     void VisitGroupClause (GroupClause groupClause);
-
   }
 }

@@ -15,7 +15,7 @@ namespace Rubicon.Data.Linq.Parsing.Structure
     private readonly List<IBodyClause> _bodyClauses = new List<IBodyClause> ();
 
     private IClause _previousClause;
-    private int currentProjection;
+    private int _currentProjection;
     private OrderByClause _previousOrderByClause;
 
     public QueryExpressionCreator (Expression expressionTreeRoot, ParseResultCollector result)
@@ -29,28 +29,28 @@ namespace Rubicon.Data.Linq.Parsing.Structure
 
     public QueryExpression CreateQueryExpression()
     {
-      MainFromClause mainFromClause = CreateMainFromClause (_result);
+      var mainFromClause = CreateMainFromClause (_result);
 
       _previousClause = mainFromClause;
-      currentProjection = 0;
+      _currentProjection = 0;
       _previousOrderByClause = null;
 
       foreach (BodyExpressionBase bodyExpression in _result.BodyExpressions)
       {
-        IBodyClause clause = CreateBodyClause (bodyExpression);
+        var clause = CreateBodyClause (bodyExpression);
         if (clause != _previousClause)
           _bodyClauses.Add (clause);
 
         _previousClause = clause;
       }
 
-      var selectClause = new SelectClause (_previousClause, _result.ProjectionExpressions.Last (), _result.IsDistinct);
-      var queryBody = new QueryExpression (mainFromClause, selectClause, _expressionTreeRoot);
+      var selectClause = CreateSelectClause();
+      var queryExpression = new QueryExpression (_expressionTreeRoot.Type, mainFromClause, selectClause, _expressionTreeRoot);
 
       foreach (IBodyClause bodyClause in _bodyClauses)
-        queryBody.AddBodyClause (bodyClause);
+        queryExpression.AddBodyClause (bodyClause);
 
-      return queryBody;
+      return queryExpression;
     }
 
     private MainFromClause CreateMainFromClause (ParseResultCollector resultCollector)
@@ -84,16 +84,16 @@ namespace Rubicon.Data.Linq.Parsing.Structure
       if (fromExpression == null)
         return null;
 
-      if (currentProjection >= _result.ProjectionExpressions.Count)
+      if (_currentProjection >= _result.ProjectionExpressions.Count)
       {
         string message = string.Format ("From expression '{0}' ({1}) doesn't have a projection expression.", fromExpression.Identifier,
             fromExpression.Expression);
-        throw new ParserException (message);
+        throw new ParserException (message, _expressionTreeRoot, _expressionTreeRoot, null);
       }
 
       var additionalFromClause = new AdditionalFromClause (_previousClause, fromExpression.Identifier,
-          (LambdaExpression) fromExpression.Expression, _result.ProjectionExpressions[currentProjection]);
-      ++currentProjection;
+          (LambdaExpression) fromExpression.Expression, _result.ProjectionExpressions[_currentProjection]);
+      ++_currentProjection;
       return additionalFromClause;
     }
 
@@ -131,6 +131,18 @@ namespace Rubicon.Data.Linq.Parsing.Structure
           return _previousOrderByClause;
         }
       }
+    }
+
+    private SelectClause CreateSelectClause ()
+    {
+      if (_result.ProjectionExpressions.Count == 0)
+      {
+        string message = "There is no projection for the select clause.";
+        throw new ParserException (message, _expressionTreeRoot, _expressionTreeRoot, null);
+      }
+
+      LambdaExpression selectProjection = _result.ProjectionExpressions.Last ();
+      return new SelectClause (_previousClause, selectProjection, _result.IsDistinct);
     }
   }
 }

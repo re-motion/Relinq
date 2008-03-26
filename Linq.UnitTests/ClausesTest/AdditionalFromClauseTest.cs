@@ -39,14 +39,14 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     }
 
     [Test]
-    public void GetQuerySource()
+    public void GetQueriedEntityType ()
     {
       IQueryable<Student> querySource = ExpressionHelper.CreateQuerySource();
       LambdaExpression fromExpression = Expression.Lambda (Expression.Constant (querySource), Expression.Parameter (typeof (Student), "student"));
       var fromClause =
           new AdditionalFromClause (ExpressionHelper.CreateClause(), ExpressionHelper.CreateParameterExpression(), 
           fromExpression, ExpressionHelper.CreateLambdaExpression());
-      Assert.AreSame (typeof (TestQueryable<Student>), fromClause.GetQuerySourceType());
+      Assert.AreSame (typeof (TestQueryable<Student>), fromClause.GetQueriedEntityType());
     }
 
     
