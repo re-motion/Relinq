@@ -101,6 +101,7 @@
     <Compile Include="ParsingTest\StructureTest\QueryParserIntegrationTest\OrderByWithWhereConditionAndMultiFrom.cs" />
     <Compile Include="ParsingTest\DetailsTest\SelectProjectionParserTest.cs" />
     <Compile Include="ParsingTest\StructureTest\QueryParserIntegrationTest\ReverseFromWhereQueryWithProjectionTest.cs" />
+    <Compile Include="ParsingTest\StructureTest\QueryParserIntegrationTest\SimpleSubQueryInAdditionalFromClauseTest.cs" />
     <Compile Include="ParsingTest\StructureTest\QueryParserIntegrationTest\ThreeFromWhereQueryTest.cs" />
     <Compile Include="ParsingTest\StructureTest\QueryParserIntegrationTest\ReverseFromWhereQueryTest.cs" />
     <Compile Include="ParsingTest\StructureTest\QueryParserIntegrationTest\ThreeFromQueryTest.cs" />
@@ -159,6 +160,7 @@
     <Compile Include="ClausesTest\SelectClauseTest.cs" />
     <Compile Include="QueryProviderImplementationTest\QueryableBaseTest.cs" />
     <Compile Include="QueryProviderBaseTest.cs" />
+    <Compile Include="TestQueryGenerators\SubQueryTestQueryGenerator.cs" />
     <Compile Include="TestQueryGenerators\WhereTestQueryGenerator.cs" />
     <Compile Include="TestQueryProvider.cs" />
     <Compile Include="SqlGenerationTest\SqlGeneratorVisitorTest.cs" />

@@ -16,7 +16,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.QueryParserInteg
     }
 
     [Test]
-    public override void CheckBodyClause ()
+    public override void CheckBodyClauses ()
     {
       Assert.AreEqual (0, ParsedQuery.BodyClauses.Count);
     }

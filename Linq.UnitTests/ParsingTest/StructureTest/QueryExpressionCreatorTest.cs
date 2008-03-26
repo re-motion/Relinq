@@ -117,7 +117,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
     }
 
     [Test]
-    public void BodyExpressions_TranslatedIntoFromClauses ()
+    public void BodyExpressions_TranslatedIntoAdditionalFromClauses ()
     {
       _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression());
       _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression());
@@ -143,6 +143,28 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
       Assert.AreSame (fromExpression2.Expression, additionalFromClause2.FromExpression);
       Assert.AreSame (fromExpression2.Identifier, additionalFromClause2.Identifier);
       Assert.AreSame (_result.ProjectionExpressions[1], additionalFromClause2.ProjectionExpression);
+    }
+
+    [Test]
+    public void BodyExpressions_TranslatedIntoSubQueryFromClauses ()
+    {
+      _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression());
+
+      IQueryable<Student> subQuery = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource());
+      FromExpression fromExpression1 = new FromExpression (Expression.Lambda (subQuery.Expression, ExpressionHelper.CreateParameterExpression()),
+          ExpressionHelper.CreateParameterExpression());
+
+      _result.AddBodyExpression (fromExpression1);
+
+      QueryExpression expression = _expressionCreator.CreateQueryExpression();
+
+      Assert.AreEqual (1, expression.BodyClauses.Count);
+
+      SubQueryFromClause subQueryFromClause1 = expression.BodyClauses[0] as SubQueryFromClause;
+      Assert.IsNotNull (subQueryFromClause1);
+      Assert.AreSame (subQuery.Expression, subQueryFromClause1.SubQuery.GetExpressionTree());
+      Assert.AreSame (fromExpression1.Identifier, subQueryFromClause1.Identifier);
+      Assert.AreSame (_result.ProjectionExpressions[0], subQueryFromClause1.ProjectionExpression);
     }
 
     [Test]

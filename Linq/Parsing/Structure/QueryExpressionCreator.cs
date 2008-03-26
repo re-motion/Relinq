@@ -63,7 +63,7 @@ namespace Rubicon.Data.Linq.Parsing.Structure
 
     private IBodyClause CreateBodyClause (BodyExpressionBase expression)
     {
-      AdditionalFromClause fromClause = CreateFromClause (expression);
+      IBodyClause fromClause = CreateBodyFromClause (expression);
       if (fromClause != null)
         return fromClause;
 
@@ -78,7 +78,7 @@ namespace Rubicon.Data.Linq.Parsing.Structure
       throw new ParserException ("The FromLetWhereExpression type " + expression.GetType ().Name + " is not supported.");
     }
 
-    private AdditionalFromClause CreateFromClause (BodyExpressionBase expression)
+    private IBodyClause CreateBodyFromClause (BodyExpressionBase expression)
     {
       var fromExpression = expression as FromExpression;
       if (fromExpression == null)
@@ -91,10 +91,23 @@ namespace Rubicon.Data.Linq.Parsing.Structure
         throw new ParserException (message, _expressionTreeRoot, _expressionTreeRoot, null);
       }
 
-      var additionalFromClause = new AdditionalFromClause (_previousClause, fromExpression.Identifier,
-          (LambdaExpression) fromExpression.Expression, _result.ProjectionExpressions[_currentProjection]);
+      var lambdaExpression = (LambdaExpression) fromExpression.Expression;
+      var projectionExpression = _result.ProjectionExpressions[_currentProjection];
       ++_currentProjection;
-      return additionalFromClause;
+
+      return CreateBodyFromClause(fromExpression, lambdaExpression, projectionExpression);
+    }
+
+    private IBodyClause CreateBodyFromClause (FromExpression fromExpression, LambdaExpression lambdaExpression, LambdaExpression projectionExpression)
+    {
+      if (lambdaExpression.Body.NodeType == ExpressionType.Call)
+      {
+        QueryParser subQueryParser = new QueryParser (lambdaExpression.Body);
+        QueryExpression subQuery = subQueryParser.GetParsedQuery();
+        return new SubQueryFromClause (_previousClause, fromExpression.Identifier, subQuery, projectionExpression);
+      }
+      else
+        return new AdditionalFromClause (_previousClause, fromExpression.Identifier, lambdaExpression, projectionExpression);
     }
 
     private WhereClause CreateWhereClause (BodyExpressionBase expression)
