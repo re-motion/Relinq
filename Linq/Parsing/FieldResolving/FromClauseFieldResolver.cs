@@ -33,7 +33,7 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
       ArgumentUtility.CheckNotNull ("partialFieldExpression", partialFieldExpression);
       ArgumentUtility.CheckNotNull ("fullFieldExpression", fullFieldExpression);
       
-      FromClauseFieldResolverVisitor visitor = new FromClauseFieldResolverVisitor ();
+      var visitor = new FromClauseFieldResolverVisitor ();
       FromClauseFieldResolverVisitor.Result result = visitor.ParseFieldAccess (partialFieldExpression, fullFieldExpression);
 
       CheckParameterNameAndType (fromClause, result.Parameter);
