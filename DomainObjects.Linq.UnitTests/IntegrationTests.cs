@@ -11,34 +11,34 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
   public class IntegrationTests : ClientTransactionBaseTest
   {
     [Test]
-    public void SimpleQuery()
+    public void SimpleQuery ()
     {
       var computers =
-          from c in DataContext.Entity<Computer> (new TestQueryListener ())
+          from c in DataContext.Entity<Computer> (new TestQueryListener())
           select c;
       CheckQueryResult (computers, DomainObjectIDs.Computer1, DomainObjectIDs.Computer2, DomainObjectIDs.Computer3, DomainObjectIDs.Computer4,
           DomainObjectIDs.Computer5);
     }
-    
-   [Test]
-   public void SimpleQuery_WithRelatedEntity()
-   {
-     var query =
-         from o in DataContext.Entity<OrderTicket> (new TestQueryListener())
-         select o.Order;
-     CheckQueryResult (query, DomainObjectIDs.Order1, DomainObjectIDs.Order2, DomainObjectIDs.Order3, DomainObjectIDs.Order4, 
-        DomainObjectIDs.OrderWithoutOrderItem);
-   }
 
-    
     [Test]
-    public void QueryWithWhereConditions()
+    public void SimpleQuery_WithRelatedEntity ()
+    {
+      var query =
+          from o in DataContext.Entity<OrderTicket> (new TestQueryListener())
+          select o.Order;
+      CheckQueryResult (query, DomainObjectIDs.Order1, DomainObjectIDs.Order2, DomainObjectIDs.Order3, DomainObjectIDs.Order4,
+          DomainObjectIDs.OrderWithoutOrderItem);
+    }
+
+
+    [Test]
+    public void QueryWithWhereConditions ()
     {
       var computers =
-          from c in DataContext.Entity<Computer> (new TestQueryListener ())
+          from c in DataContext.Entity<Computer> (new TestQueryListener())
           where c.SerialNumber == "93756-ndf-23" || c.SerialNumber == "98678-abc-43"
           select c;
-      
+
       CheckQueryResult (computers, DomainObjectIDs.Computer2, DomainObjectIDs.Computer5);
     }
 
@@ -46,7 +46,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     public void QueryWithWhereConditionsAndNull ()
     {
       var computers =
-          from c in DataContext.Entity<Computer> (new TestQueryListener ())
+          from c in DataContext.Entity<Computer> (new TestQueryListener())
           where c.Employee != null
           select c;
 
@@ -56,10 +56,10 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void QueryWithWhereConditionAndStartsWith ()
     {
-      var computers = 
-        from c in DataContext.Entity<Computer> (new TestQueryListener())
-        where c.SerialNumber.StartsWith("9")
-        select c;
+      var computers =
+          from c in DataContext.Entity<Computer> (new TestQueryListener())
+          where c.SerialNumber.StartsWith ("9")
+          select c;
 
       CheckQueryResult (computers, DomainObjectIDs.Computer2, DomainObjectIDs.Computer5);
     }
@@ -68,19 +68,19 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     public void QueryWithWhereConditionAndEndsWith ()
     {
       var computers =
-        from c in DataContext.Entity<Computer> (new TestQueryListener ())
-        where c.SerialNumber.EndsWith ("7")
-        select c;
+          from c in DataContext.Entity<Computer> (new TestQueryListener())
+          where c.SerialNumber.EndsWith ("7")
+          select c;
 
       CheckQueryResult (computers, DomainObjectIDs.Computer3);
     }
-    
+
     [Test]
-    public void QueryWithWhere_OuterObject()
+    public void QueryWithWhere_OuterObject ()
     {
       Employee employee = Employee.GetObject (DomainObjectIDs.Employee1);
       var employees =
-          from e in DataContext.Entity<Employee> (new TestQueryListener ())
+          from e in DataContext.Entity<Employee> (new TestQueryListener())
           where e == employee
           select e;
 
@@ -95,7 +95,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
           where o.OrderNumber <= 3
           select o;
 
-      CheckQueryResult (orders, DomainObjectIDs.OrderWithoutOrderItem, DomainObjectIDs.Order2,DomainObjectIDs.Order1);
+      CheckQueryResult (orders, DomainObjectIDs.OrderWithoutOrderItem, DomainObjectIDs.Order2, DomainObjectIDs.Order1);
     }
 
 
@@ -103,8 +103,8 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     public void QueryWithVirtualKeySide_EqualsNull ()
     {
       var employees =
-          from e in DataContext.Entity<Employee> (new TestQueryListener ())
-          where e.Computer == null                       
+          from e in DataContext.Entity<Employee> (new TestQueryListener())
+          where e.Computer == null
           select e;
 
       CheckQueryResult (employees, DomainObjectIDs.Employee1, DomainObjectIDs.Employee2, DomainObjectIDs.Employee6, DomainObjectIDs.Employee7);
@@ -114,7 +114,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     public void QueryWithVirtualKeySide_NotEqualsNull ()
     {
       var employees =
-          from e in DataContext.Entity<Employee> (new TestQueryListener ())
+          from e in DataContext.Entity<Employee> (new TestQueryListener())
           where e.Computer != null
           select e;
 
@@ -126,7 +126,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     {
       Computer computer = Computer.GetObject (DomainObjectIDs.Computer1);
       var employees =
-          from e in DataContext.Entity<Employee> (new TestQueryListener ())
+          from e in DataContext.Entity<Employee> (new TestQueryListener())
           where e.Computer == computer
           select e;
 
@@ -138,7 +138,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     {
       Computer computer = Computer.GetObject (DomainObjectIDs.Computer1);
       var employees =
-          from e in DataContext.Entity<Employee> (new TestQueryListener ())
+          from e in DataContext.Entity<Employee> (new TestQueryListener())
           where e.Computer != computer
           select e;
 
@@ -151,7 +151,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     {
       Employee employee = Employee.GetObject (DomainObjectIDs.Employee3);
       var computers =
-          from c in DataContext.Entity<Computer> (new TestQueryListener ())
+          from c in DataContext.Entity<Computer> (new TestQueryListener())
           where c.Employee == employee
           select c;
 
@@ -163,7 +163,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     {
       Employee employee = Employee.GetObject (DomainObjectIDs.Employee3);
       var computers =
-          from c in DataContext.Entity<Computer> (new TestQueryListener ())
+          from c in DataContext.Entity<Computer> (new TestQueryListener())
           where c.Employee.ID == employee.ID
           select c;
 
@@ -171,21 +171,21 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
-    public void QueryWithSimpleOrderBy()
+    public void QueryWithSimpleOrderBy ()
     {
       var query =
           from o in DataContext.Entity<Order> (new TestQueryListener())
           orderby o.OrderNumber
           select o;
-      CheckQueryResult (query, DomainObjectIDs.Order1, DomainObjectIDs.OrderWithoutOrderItem, DomainObjectIDs.Order2, DomainObjectIDs.Order3, 
-        DomainObjectIDs.Order4,DomainObjectIDs.InvalidOrder);
+      CheckQueryResult (query, DomainObjectIDs.Order1, DomainObjectIDs.OrderWithoutOrderItem, DomainObjectIDs.Order2, DomainObjectIDs.Order3,
+          DomainObjectIDs.Order4, DomainObjectIDs.InvalidOrder);
     }
 
     [Test]
-    public void QueryWithOrderByAndImplicitJoin()
+    public void QueryWithOrderByAndImplicitJoin ()
     {
       var orders =
-          from o in DataContext.Entity<Order> (new TestQueryListener ())
+          from o in DataContext.Entity<Order> (new TestQueryListener())
           where o.OrderNumber <= 4
           orderby o.Customer.Name
           select o;
@@ -199,9 +199,9 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     public void QueryWithSelectAndImplicitJoin_VirtualSide ()
     {
       var ceos =
-          (from o in DataContext.Entity<Order> (new TestQueryListener ())
-           where o.Customer.Ceo != null
-           select o.Customer.Ceo).Distinct();
+          (from o in DataContext.Entity<Order> (new TestQueryListener())
+          where o.Customer.Ceo != null
+          select o.Customer.Ceo).Distinct();
 
       CheckQueryResult (ceos, DomainObjectIDs.Ceo12, DomainObjectIDs.Ceo5, DomainObjectIDs.Ceo3);
     }
@@ -210,7 +210,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     public void QueryWithSelectAndImplicitJoin ()
     {
       var ceos =
-          from o in DataContext.Entity<Order> (new TestQueryListener ())
+          from o in DataContext.Entity<Order> (new TestQueryListener())
           where o.Customer.Ceo.Name == "Hugo Boss"
           select o.Customer.Ceo;
 
@@ -232,18 +232,18 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     public void QueryWithDistinct ()
     {
       var ceos =
-          (from o in DataContext.Entity<Order> (new TestQueryListener ())
-           where o.Customer.Ceo != null
+          (from o in DataContext.Entity<Order> (new TestQueryListener())
+          where o.Customer.Ceo != null
           select o.Customer.Ceo).Distinct();
 
-      CheckQueryResult (ceos,DomainObjectIDs.Ceo12,DomainObjectIDs.Ceo5,DomainObjectIDs.Ceo3);
+      CheckQueryResult (ceos, DomainObjectIDs.Ceo12, DomainObjectIDs.Ceo5, DomainObjectIDs.Ceo3);
     }
 
     [Test]
     public void QueryWithWhereAndImplicitJoin ()
     {
       var orders =
-          from o in DataContext.Entity<Order> (new TestQueryListener ())
+          from o in DataContext.Entity<Order> (new TestQueryListener())
           where o.Customer.Type == Customer.CustomerType.Gold
           select o;
 
@@ -251,17 +251,17 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     }
 
     private void CheckQueryResult<T> (IQueryable<T> query, params ObjectID[] expectedObjectIDs)
-    where T : TestDomainBase
+        where T: TestDomainBase
     {
-      T[] results = query.ToArray ();
+      T[] results = query.ToArray();
       T[] expected = GetExpectedObjects<T> (expectedObjectIDs);
       Assert.That (results, Is.EquivalentTo (expected));
     }
 
     private T[] GetExpectedObjects<T> (params ObjectID[] expectedObjectIDs)
-    where T : TestDomainBase
+        where T: TestDomainBase
     {
-      return (from id in expectedObjectIDs select (id == null ? null :(T) TestDomainBase.GetObject (id))).ToArray();
+      return (from id in expectedObjectIDs select (id == null ? null : (T) TestDomainBase.GetObject (id))).ToArray();
     }
   }
 }
