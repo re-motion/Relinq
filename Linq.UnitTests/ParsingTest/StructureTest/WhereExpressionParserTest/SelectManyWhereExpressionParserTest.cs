@@ -4,6 +4,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Rubicon.Data.Linq.Parsing.Structure;
 using Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.WhereExpressionParserTest;
+using Rubicon.Data.Linq.UnitTests.TestQueryGenerators;
 
 namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.WhereExpressionParserTest
 {
@@ -23,7 +24,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.WhereExpressionP
     {
       _querySource1 = ExpressionHelper.CreateQuerySource();
       _querySource2 = ExpressionHelper.CreateQuerySource();
-      _expression = TestQueryGenerator.CreateMultiFromWhere_WhereExpression (_querySource1, _querySource2);
+      _expression = MixedTestQueryGenerator.CreateMultiFromWhere_WhereExpression (_querySource1, _querySource2);
       _navigator = new ExpressionTreeNavigator (_expression);
       _result = new ParseResultCollector (_expression);
       new WhereExpressionParser (false).Parse (_result, (MethodCallExpression) _navigator.Arguments[0].Expression);
@@ -85,7 +86,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.WhereExpressionP
     {
       _result = new ParseResultCollector (_expression);
 
-      Expression expression = TestQueryGenerator.CreateWhereFromWhere_WhereExpression (_querySource1, _querySource2);
+      Expression expression = MixedTestQueryGenerator.CreateWhereFromWhere_WhereExpression (_querySource1, _querySource2);
       ExpressionTreeNavigator navigator = new ExpressionTreeNavigator (expression);
       new WhereExpressionParser (true).Parse (_result, (MethodCallExpression) navigator.Arguments[0].Expression);
       BodyHelper bodyWhereHelper = new BodyHelper (_result.BodyExpressions);

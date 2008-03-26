@@ -5,6 +5,7 @@ using Rhino.Mocks;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.DataObjectModel;
 using Rubicon.Data.Linq.UnitTests.ParsingTest;
+using Rubicon.Data.Linq.UnitTests.TestQueryGenerators;
 
 namespace Rubicon.Data.Linq.UnitTests.ClausesTest
 {
@@ -39,7 +40,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     [Test]
     public void GetSimplifiedBoolExpression ()
     {
-      MethodCallExpression whereMethodCallExpression = TestQueryGenerator.CreateWhereQueryWithEvaluatableSubExpression_WhereExpression (
+      MethodCallExpression whereMethodCallExpression = WhereTestQueryGenerator.CreateWhereQueryWithEvaluatableSubExpression_WhereExpression (
           ExpressionHelper.CreateQuerySource());
       LambdaExpression boolExpression = (LambdaExpression) ((UnaryExpression) whereMethodCallExpression.Arguments[1]).Operand;
       IClause clause = ExpressionHelper.CreateClause();

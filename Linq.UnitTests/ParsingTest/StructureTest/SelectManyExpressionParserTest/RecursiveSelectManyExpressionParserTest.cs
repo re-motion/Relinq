@@ -5,6 +5,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Rubicon.Data.Linq.Parsing.Structure;
 using Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.WhereExpressionParserTest;
+using Rubicon.Data.Linq.UnitTests.TestQueryGenerators;
 
 namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.SelectManyExpressionParserTest
 {
@@ -25,7 +26,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.SelectManyExpres
       _querySource1 = ExpressionHelper.CreateQuerySource();
       _querySource2 = ExpressionHelper.CreateQuerySource();
       _querySource3 = ExpressionHelper.CreateQuerySource();
-      _expression = TestQueryGenerator.CreateThreeFromWhereQuery_SelectManyExpression (_querySource1, _querySource2, _querySource3);
+      _expression = MixedTestQueryGenerator.CreateThreeFromWhereQuery_SelectManyExpression (_querySource1, _querySource2, _querySource3);
       _navigator = new ExpressionTreeNavigator (_expression);
       _result = new ParseResultCollector (_expression);
       new SelectManyExpressionParser ().Parse (_result, _expression);

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Rubicon.Data.Linq.Clauses;
+using Rubicon.Data.Linq.UnitTests.TestQueryGenerators;
 
 namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.QueryParserIntegrationTest
 {
@@ -11,7 +12,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.QueryParserInteg
   {
     protected override IQueryable<string> CreateQuery ()
     {
-      return TestQueryGenerator.CreateSelectWhereQuery (QuerySource);
+      return WhereTestQueryGenerator.CreateSelectWhereQuery (QuerySource);
     }
 
     [Test]

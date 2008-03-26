@@ -72,7 +72,6 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereParserTest
     public void Parse_WithException ()
     {
       WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
-      string s;
 
       ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
       MemberExpression memberAccess = Expression.MakeMemberAccess (parameter, typeof (Student).GetProperty ("First"));

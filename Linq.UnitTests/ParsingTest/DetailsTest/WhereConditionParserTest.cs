@@ -11,6 +11,7 @@ using System.Linq.Expressions;
 using Rubicon.Data.Linq.Parsing.Details;
 using Rubicon.Data.Linq.Parsing.FieldResolving;
 using NUnit.Framework.SyntaxHelpers;
+using Rubicon.Data.Linq.UnitTests.TestQueryGenerators;
 
 namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
 {
@@ -296,7 +297,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     [Test]
     public void AllComparisons()
     {
-      IQueryable<Student> query = TestQueryGenerator.CreateWhereQueryWithDifferentComparisons (ExpressionHelper.CreateQuerySource());
+      IQueryable<Student> query = WhereTestQueryGenerator.CreateWhereQueryWithDifferentComparisons (ExpressionHelper.CreateQuerySource());
       QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
       WhereClause whereClause = ClauseFinder.FindClause<WhereClause> (parsedQuery.QueryBody.SelectOrGroupClause);
       WhereConditionParser parser = new WhereConditionParser (parsedQuery, whereClause, _databaseInfo, _context, false);
@@ -326,7 +327,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     [Test]
     public void Simplify_True()
     {
-      IQueryable<Student> query = TestQueryGenerator.CreateWhereQueryWithEvaluatableSubExpression (ExpressionHelper.CreateQuerySource ());
+      IQueryable<Student> query = WhereTestQueryGenerator.CreateWhereQueryWithEvaluatableSubExpression (ExpressionHelper.CreateQuerySource ());
       QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
       WhereClause whereClause = ClauseFinder.FindClause<WhereClause> (parsedQuery.QueryBody.SelectOrGroupClause);
       WhereConditionParser parser = new WhereConditionParser (parsedQuery, whereClause, _databaseInfo, _context, true);
@@ -341,7 +342,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
         + "condition, found ExpressionType (Add).")]
     public void Simplify_False ()
     {
-      IQueryable<Student> query = TestQueryGenerator.CreateWhereQueryWithEvaluatableSubExpression (ExpressionHelper.CreateQuerySource ());
+      IQueryable<Student> query = WhereTestQueryGenerator.CreateWhereQueryWithEvaluatableSubExpression (ExpressionHelper.CreateQuerySource ());
       QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
       WhereClause whereClause = ClauseFinder.FindClause<WhereClause> (parsedQuery.QueryBody.SelectOrGroupClause);
       WhereConditionParser parser = new WhereConditionParser (parsedQuery, whereClause, _databaseInfo, _context, false);
@@ -379,7 +380,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     [Test]
     public void JoinWhereConditions()
     {
-      IQueryable<Student_Detail> query = TestQueryGenerator.CreateSimpleImplicitWhereJoin (ExpressionHelper.CreateQuerySource_Detail());
+      IQueryable<Student_Detail> query = JoinTestQueryGenerator.CreateSimpleImplicitWhereJoin (ExpressionHelper.CreateQuerySource_Detail ());
       
       QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
       FromClauseBase fromClause = parsedQuery.MainFromClause;
@@ -413,7 +414,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     [Test]
     public void RelationMember ()
     {
-      IQueryable<Student_Detail> query = TestQueryGenerator.CreateRelationMemberWhereQuery (ExpressionHelper.CreateQuerySource_Detail ());
+      IQueryable<Student_Detail> query = WhereTestQueryGenerator.CreateRelationMemberWhereQuery (ExpressionHelper.CreateQuerySource_Detail ());
 
       QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
       WhereClause whereClause = ClauseFinder.FindClause<WhereClause> (parsedQuery.QueryBody.SelectOrGroupClause);

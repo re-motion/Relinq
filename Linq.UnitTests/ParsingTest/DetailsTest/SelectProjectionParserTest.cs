@@ -12,6 +12,7 @@ using Rubicon.Data.Linq.Parsing;
 using Rubicon.Data.Linq.Parsing.Details;
 using Rubicon.Data.Linq.Parsing.FieldResolving;
 using Rubicon.Data.Linq.Parsing.Structure;
+using Rubicon.Data.Linq.UnitTests.TestQueryGenerators;
 
 namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
 {
@@ -32,7 +33,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     [Test]
     public void IdentityProjection ()
     {
-      IQueryable<Student> query = TestQueryGenerator.CreateSimpleQuery (_source);
+      IQueryable<Student> query = SelectTestQueryGenerator.CreateSimpleQuery (_source);
       QueryParser parser = new QueryParser (query.Expression);
       QueryExpression expression = parser.GetParsedQuery();
       SelectClause selectClause = (SelectClause) expression.QueryBody.SelectOrGroupClause;
@@ -48,7 +49,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     [Test]
     public void IdentityProjection_WithoutSelectExpression ()
     {
-      IQueryable<Student> query = TestQueryGenerator.CreateSimpleWhereQuery (_source);
+      IQueryable<Student> query = WhereTestQueryGenerator.CreateSimpleWhereQuery (_source);
       QueryParser parser = new QueryParser (query.Expression);
       QueryExpression expression = parser.GetParsedQuery();
       SelectClause selectClause = (SelectClause) expression.QueryBody.SelectOrGroupClause;
@@ -63,7 +64,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     [Test]
     public void MemberAccessProjection ()
     {
-      IQueryable<string> query = TestQueryGenerator.CreateSimpleQueryWithProjection (_source);
+      IQueryable<string> query = SelectTestQueryGenerator.CreateSimpleQueryWithProjection (_source);
       QueryParser parser = new QueryParser (query.Expression);
       QueryExpression expression = parser.GetParsedQuery();
       SelectClause selectClause = (SelectClause) expression.QueryBody.SelectOrGroupClause;
@@ -79,7 +80,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     [Test]
     public void NewExpressionProjection ()
     {
-      IQueryable<Tuple<string, string>> query = TestQueryGenerator.CreateSimpleQueryWithFieldProjection (_source);
+      IQueryable<Tuple<string, string>> query = SelectTestQueryGenerator.CreateSimpleQueryWithFieldProjection (_source);
       QueryParser parser = new QueryParser (query.Expression);
       QueryExpression expression = parser.GetParsedQuery();
       SelectClause selectClause = (SelectClause) expression.QueryBody.SelectOrGroupClause;
@@ -99,7 +100,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     [Test]
     public void NonDbMemberAccessProjection ()
     {
-      IQueryable<string> query = TestQueryGenerator.CreateSimpleSelectWithNonDbProjection (_source);
+      IQueryable<string> query = SelectTestQueryGenerator.CreateSimpleSelectWithNonDbProjection (_source);
       QueryParser parser = new QueryParser (query.Expression);
       QueryExpression expression = parser.GetParsedQuery();
       SelectClause selectClause = (SelectClause) expression.QueryBody.SelectOrGroupClause;
@@ -116,7 +117,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
         MatchType = MessageMatch.Contains)]
     public void NonEntityMemberAccessProjection ()
     {
-      IQueryable<int> query = TestQueryGenerator.CreateSimpleSelectWithNonEntityMemberAccess (_source);
+      IQueryable<int> query = SelectTestQueryGenerator.CreateSimpleSelectWithNonEntityMemberAccess (_source);
       QueryParser parser = new QueryParser (query.Expression);
       QueryExpression expression = parser.GetParsedQuery();
       SelectClause selectClause = (SelectClause) expression.QueryBody.SelectOrGroupClause;
@@ -127,7 +128,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     [Test]
     public void MultiFromProjection ()
     {
-      IQueryable<Tuple<string, string, int>> query = TestQueryGenerator.CreateMultiFromQueryWithProjection (_source, _source, _source);
+      IQueryable<Tuple<string, string, int>> query = MixedTestQueryGenerator.CreateMultiFromQueryWithProjection (_source, _source, _source);
       QueryParser parser = new QueryParser (query.Expression);
       QueryExpression expression = parser.GetParsedQuery();
       SelectClause selectClause = (SelectClause) expression.QueryBody.SelectOrGroupClause;
@@ -151,7 +152,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
         MatchType = MessageMatch.Contains)]
     public void SimpleQueryWithSpecialProjection ()
     {
-      IQueryable<Tuple<Student, string, string, string>> query = TestQueryGenerator.CreateSimpleQueryWithSpecialProjection (_source);
+      IQueryable<Tuple<Student, string, string, string>> query = SelectTestQueryGenerator.CreateSimpleQueryWithSpecialProjection (_source);
       QueryParser parser = new QueryParser (query.Expression);
       QueryExpression expression = parser.GetParsedQuery();
       SelectClause selectClause = (SelectClause) expression.QueryBody.SelectOrGroupClause;
@@ -171,7 +172,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     [Test]
     public void QueryWithUnaryBinaryLambdaInvocationConvertNewArrayExpression ()
     {
-      IQueryable<string> query = TestQueryGenerator.CreateUnaryBinaryLambdaInvocationConvertNewArrayExpressionQuery (_source);
+      IQueryable<string> query = SelectTestQueryGenerator.CreateUnaryBinaryLambdaInvocationConvertNewArrayExpressionQuery (_source);
       QueryParser parser = new QueryParser (query.Expression);
       QueryExpression expression = parser.GetParsedQuery();
       SelectClause selectClause = (SelectClause) expression.QueryBody.SelectOrGroupClause;
@@ -193,7 +194,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     [Test]
     public void JoinSelectClause ()
     {
-      IQueryable<string> query = TestQueryGenerator.CreateSimpleImplicitSelectJoin (ExpressionHelper.CreateQuerySource_Detail());
+      IQueryable<string> query = JoinTestQueryGenerator.CreateSimpleImplicitSelectJoin (ExpressionHelper.CreateQuerySource_Detail ());
       QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
 
       SelectProjectionParser parser = new SelectProjectionParser (parsedQuery, (SelectClause) parsedQuery.QueryBody.SelectOrGroupClause,
@@ -226,7 +227,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     [Test]
     public void SelectRelationMember ()
     {
-      IQueryable<Student> query = TestQueryGenerator.CreateRelationMemberSelectQuery (ExpressionHelper.CreateQuerySource_Detail());
+      IQueryable<Student> query = SelectTestQueryGenerator.CreateRelationMemberSelectQuery (ExpressionHelper.CreateQuerySource_Detail());
       QueryParser parser = new QueryParser (query.Expression);
       QueryExpression expression = parser.GetParsedQuery ();
       SelectClause selectClause = (SelectClause) expression.QueryBody.SelectOrGroupClause;

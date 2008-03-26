@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Rhino.Mocks.Constraints;
+using Rubicon.Data.Linq.UnitTests.TestQueryGenerators;
 using Rubicon.Utilities;
 using System.Collections;
 
@@ -61,7 +62,7 @@ namespace Rubicon.Data.Linq.UnitTests
     [Test]
     public void GenericExecute_Single()
     {
-      Expression expression = TestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource());
+      Expression expression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource());
       Expect.Call (_executor.ExecuteSingle (null)).Constraints (
           new PredicateConstraint<QueryExpression> (
               delegate (QueryExpression queryExpression) { return queryExpression.GetExpressionTree() == expression; }
@@ -77,7 +78,7 @@ namespace Rubicon.Data.Linq.UnitTests
     [Test]
     public void Execute_Single ()
     {
-      Expression expression = TestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource ());
+      Expression expression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource ());
       Expect.Call (_executor.ExecuteSingle (null)).Constraints (
           new PredicateConstraint<QueryExpression> (
               delegate (QueryExpression queryExpression) { return queryExpression.GetExpressionTree () == expression; }
@@ -93,7 +94,7 @@ namespace Rubicon.Data.Linq.UnitTests
     [Test]
     public void GenericExecute_Collection ()
     {
-      IQueryable<Student> query = TestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource(_executor));
+      IQueryable<Student> query = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource(_executor));
       Student student = new Student();
       
       Expression expression = query.Expression;
@@ -114,7 +115,7 @@ namespace Rubicon.Data.Linq.UnitTests
     [Test]
     public void NonGenericExecute_Collection ()
     {
-      IQueryable<Student> query = TestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource (_executor));
+      IQueryable<Student> query = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource (_executor));
       Student student = new Student ();
 
       Expression expression = query.Expression;

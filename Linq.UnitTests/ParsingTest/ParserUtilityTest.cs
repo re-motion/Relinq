@@ -2,6 +2,7 @@ using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Rubicon.Data.Linq.Parsing;
+using Rubicon.Data.Linq.UnitTests.TestQueryGenerators;
 
 namespace Rubicon.Data.Linq.UnitTests.ParsingTest
 {
@@ -29,7 +30,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
     [Test]
     public void CheckMethodCallExpression()
     {
-      MethodCallExpression selectExpression = TestQueryGenerator.CreateSimpleQuery_SelectExpression(ExpressionHelper.CreateQuerySource());
+      MethodCallExpression selectExpression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression(ExpressionHelper.CreateQuerySource());
       string result = ParserUtility.CheckMethodCallExpression (selectExpression, ExpressionHelper.CreateExpression (), "SelectMany", "Select", "Where");
       Assert.AreEqual ("Select", result);
       result = ParserUtility.CheckMethodCallExpression (selectExpression, ExpressionHelper.CreateExpression (), "Select");
@@ -42,7 +43,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
         + "Student]).Select(s => s) in tree new [] {}.")]
     public void CheckMethodCallExpression_InvalidName ()
     {
-      MethodCallExpression selectExpression = TestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource ());
+      MethodCallExpression selectExpression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource ());
       ParserUtility.CheckMethodCallExpression (selectExpression, ExpressionHelper.CreateExpression (), "SelectMany", "Where");
     }
   }

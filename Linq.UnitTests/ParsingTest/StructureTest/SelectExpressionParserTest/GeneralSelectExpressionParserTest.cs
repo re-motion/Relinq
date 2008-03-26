@@ -5,6 +5,7 @@ using System.Reflection;
 using NUnit.Framework;
 using Rubicon.Data.Linq.Parsing;
 using Rubicon.Data.Linq.Parsing.Structure;
+using Rubicon.Data.Linq.UnitTests.TestQueryGenerators;
 
 namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.SelectExpressionParserTest
 {
@@ -16,7 +17,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.SelectExpression
     public void Initialize ()
     {
       IQueryable<Student> querySource = ExpressionHelper.CreateQuerySource();
-      MethodCallExpression expression = TestQueryGenerator.CreateSimpleQuery_SelectExpression (querySource);
+      MethodCallExpression expression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (querySource);
       new SelectExpressionParser ().Parse (new ParseResultCollector(expression), expression);
     }
 
@@ -27,7 +28,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.SelectExpression
                 + "[Rubicon.Data.Linq.UnitTests.Student]).Where(s => (s.Last = \"Garcia\")).")]
     public void Initialize_FromWrongExpression ()
     {
-      MethodCallExpression expression = TestQueryGenerator.CreateSimpleWhereQuery_WhereExpression (ExpressionHelper.CreateQuerySource ());
+      MethodCallExpression expression = WhereTestQueryGenerator.CreateSimpleWhereQuery_WhereExpression (ExpressionHelper.CreateQuerySource ());
       new SelectExpressionParser ().Parse (new ParseResultCollector (expression), expression);
     }
 

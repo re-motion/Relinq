@@ -6,6 +6,7 @@ using NUnit.Framework.SyntaxHelpers;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.Parsing.Structure;
 using Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.WhereExpressionParserTest;
+using Rubicon.Data.Linq.UnitTests.TestQueryGenerators;
 
 namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.OrderExpressionTest
 {
@@ -30,7 +31,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.OrderExpressionT
     public void SetUp ()
     {
       _querySource = ExpressionHelper.CreateQuerySource ();
-      _expression = TestQueryGenerator.CreateOrderByQueryWithWhere_OrderByExpression (_querySource);
+      _expression = MixedTestQueryGenerator.CreateOrderByQueryWithWhere_OrderByExpression (_querySource);
       _navigator = new ExpressionTreeNavigator (_expression);
       _result = new ParseResultCollector (_expression);
       new OrderByExpressionParser (true).Parse (_result, _expression);

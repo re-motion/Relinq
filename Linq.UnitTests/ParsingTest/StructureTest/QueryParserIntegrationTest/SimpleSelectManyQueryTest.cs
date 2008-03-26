@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using NUnit.Framework;
 using Rubicon.Data.Linq.Clauses;
+using Rubicon.Data.Linq.UnitTests.TestQueryGenerators;
 
 namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.QueryParserIntegrationTest
 {
@@ -18,7 +19,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.QueryParserInteg
 
     protected override IQueryable<Student> CreateQuery ()
     {
-      return TestQueryGenerator.CreateMultiFromQuery (QuerySource,_querySource2);
+      return FromTestQueryGenerator.CreateMultiFromQuery (QuerySource, _querySource2);
     }
 
     [Test]

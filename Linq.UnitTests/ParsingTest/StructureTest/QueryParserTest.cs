@@ -5,6 +5,7 @@ using NUnit.Framework;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.Parsing;
 using Rubicon.Data.Linq.Parsing.Structure;
+using Rubicon.Data.Linq.UnitTests.TestQueryGenerators;
 
 namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
 {
@@ -17,7 +18,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
     [SetUp]
     public void SetUp()
     {
-      _expression = TestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource()).Expression;
+      _expression = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource()).Expression;
       _parser = new QueryParser (_expression);
     }
 
@@ -61,7 +62,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
     public void PreviousClauses_LargeQuery ()
     {
       IQueryable<Student> source = ExpressionHelper.CreateQuerySource();
-      Expression queryExpression = TestQueryGenerator.CreateMultiFromWhereQuery (source, source).Expression;
+      Expression queryExpression = MixedTestQueryGenerator.CreateMultiFromWhereQuery (source, source).Expression;
       QueryParser parser = new QueryParser (queryExpression);
       QueryExpression parsedQuery = parser.GetParsedQuery ();
       
@@ -74,7 +75,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
     public void PreviousClauses_MultiFromWhereOrderByQuery()
     {
       IQueryable<Student> source = ExpressionHelper.CreateQuerySource();
-      Expression queryExpression = TestQueryGenerator.CreateMultiFromWhereOrderByQuery (source, source).Expression;
+      Expression queryExpression = MixedTestQueryGenerator.CreateMultiFromWhereOrderByQuery (source, source).Expression;
       QueryParser parser = new QueryParser (queryExpression);
       QueryExpression parsedQuery = parser.GetParsedQuery();
 

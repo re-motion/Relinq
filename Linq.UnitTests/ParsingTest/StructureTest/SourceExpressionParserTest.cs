@@ -4,6 +4,7 @@ using System.Linq;
 using Rubicon.Data.Linq.Parsing;
 using Rubicon.Data.Linq.Parsing.Structure;
 using NUnit.Framework.SyntaxHelpers;
+using Rubicon.Data.Linq.UnitTests.TestQueryGenerators;
 
 namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
 {
@@ -27,7 +28,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
     [Test]
     public void NonDistinct ()
     {
-      IQueryable<Student> query = TestQueryGenerator.CreateSimpleQuery (_source);
+      IQueryable<Student> query = SelectTestQueryGenerator.CreateSimpleQuery (_source);
       ParseResultCollector result = Parse (query);
       Assert.IsFalse (result.IsDistinct);
     }
@@ -35,7 +36,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
     [Test]
     public void Distinct_TopLevelBeforeSelect()
     {
-      IQueryable<string> query = TestQueryGenerator.CreateSimpleDisinctQuery (_source);
+      IQueryable<string> query = DistinctTestQueryGenerator.CreateSimpleDistinctQuery (_source);
       ParseResultCollector result = Parse (query);
       Assert.IsTrue (result.IsDistinct);
     }
@@ -43,7 +44,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
     [Test]
     public void Distinct_TopLevelBeforeWhere ()
     {
-      IQueryable<Student> query = TestQueryGenerator.CreateDisinctWithWhereQueryWithoutProjection (_source);
+      IQueryable<Student> query = DistinctTestQueryGenerator.CreateDisinctWithWhereQueryWithoutProjection (_source);
       ParseResultCollector result = Parse(query);
       Assert.IsTrue (result.IsDistinct);
     }
@@ -87,7 +88,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
     [Test]
     public void Select ()
     {
-      IQueryable<Student> query = TestQueryGenerator.CreateSimpleQuery (_source);
+      IQueryable<Student> query = SelectTestQueryGenerator.CreateSimpleQuery (_source);
       ParseResultCollector result = Parse (query);
       ParseResultCollector expectedResult = new ParseResultCollector (query.Expression);
       new SelectExpressionParser().Parse (expectedResult, (MethodCallExpression) query.Expression);
@@ -97,7 +98,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
     [Test]
     public void SelectMany ()
     {
-      IQueryable<Student> query = TestQueryGenerator.CreateMultiFromQuery (_source, _source);
+      IQueryable<Student> query = FromTestQueryGenerator.CreateMultiFromQuery (_source, _source);
       ParseResultCollector result = Parse (query);
       ParseResultCollector expectedResult = new ParseResultCollector (query.Expression);
       new SelectManyExpressionParser ().Parse (expectedResult, (MethodCallExpression) query.Expression);
@@ -107,7 +108,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
     [Test]
     public void Where_TopLevel ()
     {
-      IQueryable<Student> query = TestQueryGenerator.CreateSimpleWhereQuery(_source);
+      IQueryable<Student> query = WhereTestQueryGenerator.CreateSimpleWhereQuery(_source);
       ParseResultCollector result = Parse (query);
       ParseResultCollector expectedResult = new ParseResultCollector (query.Expression);
       new WhereExpressionParser (true).Parse (expectedResult, (MethodCallExpression) query.Expression);
@@ -117,7 +118,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
     [Test]
     public void Where_NotTopLevel ()
     {
-      IQueryable<Student> query = TestQueryGenerator.CreateSimpleWhereQuery (_source);
+      IQueryable<Student> query = WhereTestQueryGenerator.CreateSimpleWhereQuery (_source);
       ParseResultCollector result = Parse_NotTopLevel (query);
       ParseResultCollector expectedResult = new ParseResultCollector (query.Expression);
       new WhereExpressionParser (false).Parse (expectedResult, (MethodCallExpression) query.Expression);
@@ -127,7 +128,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
     [Test]
     public void OrderBy_TopLevel ()
     {
-      IQueryable<Student> query = TestQueryGenerator.CreateSimpleOrderByQuery (_source);
+      IQueryable<Student> query = OrderByTestQueryGenerator.CreateSimpleOrderByQuery (_source);
       ParseResultCollector result = Parse (query);
       ParseResultCollector expectedResult = new ParseResultCollector (query.Expression);
       new OrderByExpressionParser (true).Parse (expectedResult, (MethodCallExpression) query.Expression);
@@ -137,7 +138,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
     [Test]
     public void OrderBy_NotTopLevel ()
     {
-      IQueryable<Student> query = TestQueryGenerator.CreateSimpleOrderByQuery (_source);
+      IQueryable<Student> query = OrderByTestQueryGenerator.CreateSimpleOrderByQuery (_source);
       ParseResultCollector result = Parse_NotTopLevel (query);
       ParseResultCollector expectedResult = new ParseResultCollector (query.Expression);
       new OrderByExpressionParser (false).Parse (expectedResult, (MethodCallExpression) query.Expression);

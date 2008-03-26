@@ -6,6 +6,7 @@ using System.Reflection;
 using NUnit.Framework;
 using Rubicon.Data.Linq.Parsing;
 using Rubicon.Data.Linq.Parsing.Structure;
+using Rubicon.Data.Linq.UnitTests.TestQueryGenerators;
 
 namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.SelectManyExpressionParserTest
 {
@@ -18,7 +19,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.SelectManyExpres
     {
       IQueryable<Student> querySource1 = ExpressionHelper.CreateQuerySource();
       IQueryable<Student> querySource2 = ExpressionHelper.CreateQuerySource ();
-      MethodCallExpression expression = TestQueryGenerator.CreateMultiFromQuery_SelectManyExpression(querySource1,querySource2);
+      MethodCallExpression expression = FromTestQueryGenerator.CreateMultiFromQuery_SelectManyExpression (querySource1, querySource2);
 
       new SelectManyExpressionParser ().Parse (new ParseResultCollector (expression), expression);
     }
@@ -30,7 +31,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.SelectManyExpres
                 +"[Rubicon.Data.Linq.UnitTests.Student]).Where(s => (s.Last = \"Garcia\")).")]
     public void Initialize_FromWrongExpression ()
     {
-      MethodCallExpression expression = TestQueryGenerator.CreateSimpleWhereQuery_WhereExpression (ExpressionHelper.CreateQuerySource ());
+      MethodCallExpression expression = WhereTestQueryGenerator.CreateSimpleWhereQuery_WhereExpression (ExpressionHelper.CreateQuerySource ());
       new SelectManyExpressionParser ().Parse (new ParseResultCollector (expression), expression);
     }
 
