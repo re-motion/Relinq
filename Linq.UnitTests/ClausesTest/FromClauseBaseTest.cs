@@ -18,7 +18,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       ParameterExpression id = Expression.Parameter (typeof (Student), "s1");
       IQueryable querySource = ExpressionHelper.CreateQuerySource ();
 
-      MainFromClause fromClause = new MainFromClause (id, querySource);
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(id, querySource);
       Assert.AreEqual (new Table ("studentTable", "s1"), fromClause.GetTable (StubDatabaseInfo.Instance));
     }
 
@@ -28,7 +28,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       ParameterExpression id = Expression.Parameter (typeof (Student), "s1");
       IQueryable querySource = ExpressionHelper.CreateQuerySource ();
 
-      MainFromClause fromClause = new MainFromClause (id, querySource);
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(id, querySource);
       Table t1 = fromClause.GetTable (StubDatabaseInfo.Instance);
       Table t2 = fromClause.GetTable (StubDatabaseInfo.Instance);
       Assert.AreSame (t1, t2);
@@ -59,7 +59,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     public void Resolve_Succeeds_MainFromClause ()
     {
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
-      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource ());
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(identifier, ExpressionHelper.CreateQuerySource ());
 
       JoinedTableContext context = new JoinedTableContext ();
       WhereFieldAccessPolicy policy = new WhereFieldAccessPolicy (StubDatabaseInfo.Instance);
@@ -85,7 +85,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
 
     private AdditionalFromClause CreateAdditionalFromClause (ParameterExpression additionalFromIdentifier)
     {
-      MainFromClause mainFromClause = new MainFromClause (ExpressionHelper.CreateParameterExpression (), ExpressionHelper.CreateQuerySource ());
+      MainFromClause mainFromClause = ExpressionHelper.CreateMainFromClause(ExpressionHelper.CreateParameterExpression (), ExpressionHelper.CreateQuerySource ());
       LambdaExpression fromExpression = Expression.Lambda (Expression.Constant (null, typeof (IQueryable<Student>)));
       LambdaExpression projectionExpression = Expression.Lambda (Expression.Constant (null, typeof (Student)));
       return new AdditionalFromClause (mainFromClause, additionalFromIdentifier, fromExpression, projectionExpression);

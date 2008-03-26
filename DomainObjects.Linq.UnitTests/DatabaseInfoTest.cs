@@ -36,7 +36,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
       Assert.IsNull (_databaseInfo.GetTableName (CreateFromClause<DomainObject> ()));
 
       DummyQueryable<string> stringSource = new DummyQueryable<string>();
-      MainFromClause stringClause = new MainFromClause (Expression.Parameter (typeof (string), "source"), stringSource);
+      MainFromClause stringClause = MainFromClause.CreateMainFromClause(Expression.Parameter (typeof (string), "source"), stringSource);
 
       Assert.IsNull (_databaseInfo.GetTableName (stringClause));
     }
@@ -45,7 +45,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
         where T : DomainObject
     {
       IQueryable querySource = new DomainObjectQueryable<T> (null);
-      return new MainFromClause (Expression.Parameter (querySource.ElementType, "source"), querySource);
+      return MainFromClause.CreateMainFromClause(Expression.Parameter (querySource.ElementType, "source"), querySource);
     }
 
     [Test]

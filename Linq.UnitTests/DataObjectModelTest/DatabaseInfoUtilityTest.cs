@@ -23,7 +23,7 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     [Test]
     public void GetTableForFromClause()
     {
-      MainFromClause fromClause = new MainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource());
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource());
       Table table = DatabaseInfoUtility.GetTableForFromClause (_databaseInfo, fromClause);
       Assert.AreEqual (new Table ("studentTable", "s"), table);
     }
@@ -31,7 +31,7 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     [Test]
     public void GetTableForFromClause_CachesTable ()
     {
-      MainFromClause fromClause = new MainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
       Table table1 = DatabaseInfoUtility.GetTableForFromClause (_databaseInfo, fromClause);
       Table table2 = DatabaseInfoUtility.GetTableForFromClause (_databaseInfo, fromClause);
       Assert.AreSame (table1, table2);
@@ -40,7 +40,7 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     [Test]
     public void GetTableForFromClause_CachesTable_PerDatabaseInfo ()
     {
-      MainFromClause fromClause = new MainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
 
       MockRepository repository = new MockRepository();
       IDatabaseInfo databaseInfoMock = repository.CreateMock<IDatabaseInfo>();
@@ -63,7 +63,7 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     public void GetTableForFromClause_InvalidSource ()
     {
       TestQueryable<int> ints = new TestQueryable<int> (ExpressionHelper.CreateExecutor());
-      MainFromClause fromClause = new MainFromClause (Expression.Parameter (typeof (int), "i"), ints);
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(Expression.Parameter (typeof (int), "i"), ints);
       DatabaseInfoUtility.GetTableForFromClause (_databaseInfo, fromClause);
     }
 
@@ -143,7 +143,7 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     [Test]
     public void GetColumnForFromClause ()
     {
-      MainFromClause fromClause = new MainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
       Table table = fromClause.GetTable (_databaseInfo);
       Column column = DatabaseInfoUtility.GetColumn (_databaseInfo, table, typeof (Student).GetProperty ("First")).Value;
       Assert.AreEqual (new Column (table, "FirstColumn"), column);
@@ -152,7 +152,7 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     [Test]
     public void GetColumnForFromClause_InvalidMember ()
     {
-      MainFromClause fromClause = new MainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
       Table table = fromClause.GetTable (_databaseInfo);
       Assert.IsNull (DatabaseInfoUtility.GetColumn (_databaseInfo, table, typeof (Student).GetProperty ("NonDBProperty")));
     }

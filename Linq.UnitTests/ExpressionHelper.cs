@@ -59,7 +59,7 @@ namespace Rubicon.Data.Linq.UnitTests
     {
       ParameterExpression id = ExpressionHelper.CreateParameterExpression ();
       IQueryable querySource = ExpressionHelper.CreateQuerySource (); 
-      return new MainFromClause (id, querySource);
+      return CreateMainFromClause(id, querySource);
     }
 
     public static AdditionalFromClause CreateAdditionalFromClause ()
@@ -222,6 +222,11 @@ namespace Rubicon.Data.Linq.UnitTests
     public static FieldSourcePath GetPathForTable (Table table)
     {
       return new FieldSourcePath (table, new SingleJoin[0]);
+    }
+
+    public static MainFromClause CreateMainFromClause (ParameterExpression identifier, IQueryable querySource)
+    {
+      return new MainFromClause (identifier, Expression.Constant (querySource));
     }
   }
 }

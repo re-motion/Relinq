@@ -29,7 +29,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     {
       _databaseInfo = StubDatabaseInfo.Instance;
       _parameter = Expression.Parameter (typeof (Student), "s");
-      _fromClause = new MainFromClause (_parameter, ExpressionHelper.CreateQuerySource ());
+      _fromClause = ExpressionHelper.CreateMainFromClause(_parameter, ExpressionHelper.CreateQuerySource ());
       _queryExpression = ExpressionHelper.CreateQueryExpression (_fromClause);
       _context = new JoinedTableContext();
     }
@@ -135,7 +135,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     {
       IQueryable<IndustrialSector> source = ExpressionHelper.CreateQuerySource_IndustrialSector();
       ParameterExpression identifier = Expression.Parameter (typeof (IndustrialSector), "is");
-      MainFromClause fromClause = new MainFromClause (identifier, source);
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(identifier, source);
       PropertyInfo member = typeof (IndustrialSector).GetProperty ("Student_Detail");
       MemberExpression virtualColumnAccess = Expression.MakeMemberAccess (identifier, member);
 

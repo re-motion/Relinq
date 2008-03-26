@@ -124,7 +124,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     {
       ParameterExpression s1 = Expression.Parameter (typeof (Student), "s1");
       ParameterExpression s2 = Expression.Parameter (typeof (Student), "s2");
-      MainFromClause mainFromClause = new MainFromClause (s1, ExpressionHelper.CreateQuerySource ());
+      MainFromClause mainFromClause = ExpressionHelper.CreateMainFromClause(s1, ExpressionHelper.CreateQuerySource ());
       AdditionalFromClause additionalFromClause =
           new AdditionalFromClause (mainFromClause, s2, ExpressionHelper.CreateLambdaExpression (), ExpressionHelper.CreateLambdaExpression ());
 

@@ -26,7 +26,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     public void Resolve_ParameterAccess_Succeeds ()
     {
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
-      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource());
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(identifier, ExpressionHelper.CreateQuerySource());
 
       FieldDescriptor fieldDescriptor =
           new FromClauseFieldResolver (StubDatabaseInfo.Instance, _context, _policy).ResolveField (fromClause, identifier, identifier);
@@ -45,7 +45,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     public void Resolve_ParameterAccess_InvalidParameterName ()
     {
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
-      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource());
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(identifier, ExpressionHelper.CreateQuerySource());
 
       ParameterExpression identifier2 = Expression.Parameter (typeof (Student), "fromIdentifier5");
       new FromClauseFieldResolver (StubDatabaseInfo.Instance, _context, _policy).ResolveField (fromClause, identifier2, identifier2);
@@ -58,7 +58,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     public void Resolve_ParameterAccess_InvalidParameterType ()
     {
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
-      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource());
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(identifier, ExpressionHelper.CreateQuerySource());
 
       ParameterExpression identifier2 = Expression.Parameter (typeof (string), "fromIdentifier1");
       new FromClauseFieldResolver (StubDatabaseInfo.Instance, _context, _policy).ResolveField (fromClause, identifier2, identifier2);
@@ -68,7 +68,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     public void Resolve_SimpleMemberAccess_Succeeds ()
     {
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
-      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource());
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(identifier, ExpressionHelper.CreateQuerySource());
 
       Expression fieldExpression = Expression.MakeMemberAccess (Expression.Parameter (typeof (Student), "fromIdentifier1"),
           typeof (Student).GetProperty ("First"));
@@ -84,7 +84,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     public void Resolve_SimpleMemberAccess_InvalidName ()
     {
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "fzlbf");
-      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource());
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(identifier, ExpressionHelper.CreateQuerySource());
 
       Expression fieldExpression = Expression.MakeMemberAccess (Expression.Parameter (typeof (Student), "fromIdentifier1"),
           typeof (Student).GetProperty ("First"));
@@ -97,7 +97,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     public void Resolve_SimpleMemberAccess_InvalidType ()
     {
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
-      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource());
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(identifier, ExpressionHelper.CreateQuerySource());
 
       Expression fieldExpression = Expression.MakeMemberAccess (Expression.Parameter (typeof (Student_Detail), "fromIdentifier1"),
           typeof (Student_Detail).GetProperty ("Student"));
@@ -109,7 +109,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     {
       // sd.Student.First
       ParameterExpression identifier = Expression.Parameter (typeof (Student_Detail), "sd");
-      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource_Detail());
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(identifier, ExpressionHelper.CreateQuerySource_Detail());
 
       Expression fieldExpression =
           Expression.MakeMemberAccess (
@@ -137,7 +137,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     {
       // sdd.Student_Detail.Student.First
       ParameterExpression identifier = Expression.Parameter (typeof (Student_Detail_Detail), "sdd");
-      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource_Detail_Detail());
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(identifier, ExpressionHelper.CreateQuerySource_Detail_Detail());
 
       Expression fieldExpression =
           Expression.MakeMemberAccess (
@@ -172,7 +172,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     {
       // s.First.Length
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "s");
-      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource_Detail());
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(identifier, ExpressionHelper.CreateQuerySource_Detail());
 
       Expression fieldExpression =
           Expression.MakeMemberAccess (
@@ -187,7 +187,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     public void Resolve_SimpleMemberAccess_InvalidField ()
     {
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
-      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource());
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(identifier, ExpressionHelper.CreateQuerySource());
 
       Expression fieldExpression = Expression.MakeMemberAccess (Expression.Parameter (typeof (Student), "fromIdentifier1"),
           typeof (Student).GetProperty ("NonDBProperty"));
@@ -203,7 +203,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     {
       // sd.Student.First
       ParameterExpression identifier = Expression.Parameter (typeof (Student_Detail), "sd");
-      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource_Detail());
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(identifier, ExpressionHelper.CreateQuerySource_Detail());
 
       Expression fieldExpression =
           Expression.MakeMemberAccess (
@@ -227,7 +227,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     {
       //sd.Student
       ParameterExpression identifier = Expression.Parameter (typeof (Student_Detail), "sd");
-      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource_Detail ());
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(identifier, ExpressionHelper.CreateQuerySource_Detail ());
 
       PropertyInfo member = typeof (Student_Detail).GetProperty ("Student");
       Expression fieldExpression =
@@ -253,7 +253,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     {
       //sdd.Student_Detail.Student
       ParameterExpression identifier = Expression.Parameter (typeof (Student_Detail_Detail), "sdd");
-      MainFromClause fromClause = new MainFromClause (identifier, ExpressionHelper.CreateQuerySource_Detail_Detail ());
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(identifier, ExpressionHelper.CreateQuerySource_Detail_Detail ());
 
       PropertyInfo member = typeof (Student_Detail).GetProperty ("Student");
       PropertyInfo innerRelationMember = typeof (Student_Detail_Detail).GetProperty ("Student_Detail");

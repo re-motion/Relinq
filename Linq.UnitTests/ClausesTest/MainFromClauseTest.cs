@@ -65,7 +65,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     public void GetQueriedEntityType ()
     {
       IQueryable<Student> querySource = ExpressionHelper.CreateQuerySource();
-      MainFromClause fromClause = new MainFromClause (ExpressionHelper.CreateParameterExpression(), querySource);
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(ExpressionHelper.CreateParameterExpression(), querySource);
       Assert.AreSame (typeof (TestQueryable<Student>), fromClause.GetQueriedEntityType());
     }
   }

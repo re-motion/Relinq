@@ -7,11 +7,6 @@ namespace Rubicon.Data.Linq.Clauses
 {
   public class MainFromClause : FromClauseBase
   {
-    public MainFromClause (ParameterExpression identifier, IQueryable querySource)
-      : this (identifier, Expression.Constant (querySource))
-    {
-    }
-
     public MainFromClause (ParameterExpression identifier, Expression querySource): base(null,identifier)
     {
       ArgumentUtility.CheckNotNull ("querySource", querySource);

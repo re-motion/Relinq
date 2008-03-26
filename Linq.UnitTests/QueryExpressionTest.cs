@@ -99,7 +99,7 @@ namespace Rubicon.Data.Linq.UnitTests
       ParameterExpression identifier2 = Expression.Parameter (typeof (Student), "s2");
       ParameterExpression identifier3 = Expression.Parameter (typeof (Student), "s3");
 
-      MainFromClause mainFromClause = new MainFromClause (identifier0, ExpressionHelper.CreateQuerySource());
+      MainFromClause mainFromClause = ExpressionHelper.CreateMainFromClause(identifier0, ExpressionHelper.CreateQuerySource());
       AdditionalFromClause clause1 = new AdditionalFromClause (mainFromClause, identifier1, fromExpression, projExpression);
       AdditionalFromClause clause2 = new AdditionalFromClause (clause1, identifier2, fromExpression, projExpression);
       AdditionalFromClause clause3 = new AdditionalFromClause (clause2, identifier3, fromExpression, projExpression);
@@ -125,7 +125,7 @@ namespace Rubicon.Data.Linq.UnitTests
       ParameterExpression identifier0 = Expression.Parameter (typeof (Student), "s0");
       ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
 
-      MainFromClause mainFromClause = new MainFromClause (identifier0, ExpressionHelper.CreateQuerySource ());
+      MainFromClause mainFromClause = ExpressionHelper.CreateMainFromClause(identifier0, ExpressionHelper.CreateQuerySource ());
       AdditionalFromClause clause1 = new AdditionalFromClause (mainFromClause, identifier1, fromExpression, projExpression);
 
       QueryExpression expression = ExpressionHelper.CreateQueryExpression (mainFromClause);
@@ -145,7 +145,7 @@ namespace Rubicon.Data.Linq.UnitTests
       ParameterExpression identifier0 = Expression.Parameter (typeof (Student), "s0");
       ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
 
-      MainFromClause mainFromClause = new MainFromClause (identifier0, ExpressionHelper.CreateQuerySource ());
+      MainFromClause mainFromClause = ExpressionHelper.CreateMainFromClause(identifier0, ExpressionHelper.CreateQuerySource ());
       AdditionalFromClause clause1 = new AdditionalFromClause (mainFromClause, identifier1, fromExpression, projExpression);
 
       QueryExpression expression = ExpressionHelper.CreateQueryExpression (mainFromClause);
@@ -166,7 +166,7 @@ namespace Rubicon.Data.Linq.UnitTests
       ParameterExpression identifier0 = Expression.Parameter (typeof (Student), "s0");
       ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
 
-      MainFromClause mainFromClause = new MainFromClause (identifier0, ExpressionHelper.CreateQuerySource ());
+      MainFromClause mainFromClause = ExpressionHelper.CreateMainFromClause(identifier0, ExpressionHelper.CreateQuerySource ());
       AdditionalFromClause clause1 = new AdditionalFromClause (mainFromClause, identifier1, fromExpression, projExpression);
 
       QueryExpression expression = ExpressionHelper.CreateQueryExpression (mainFromClause);
@@ -200,7 +200,7 @@ namespace Rubicon.Data.Linq.UnitTests
     {
       ParameterExpression s1 = Expression.Parameter (typeof (String), "s1");
       ParameterExpression s2 = Expression.Parameter (typeof (String), "s2");
-      MainFromClause mainFromClause = new MainFromClause (s1, ExpressionHelper.CreateQuerySource());
+      MainFromClause mainFromClause = ExpressionHelper.CreateMainFromClause(s1, ExpressionHelper.CreateQuerySource());
       AdditionalFromClause additionalFromClause =
           new AdditionalFromClause (mainFromClause, s2, ExpressionHelper.CreateLambdaExpression(), ExpressionHelper.CreateLambdaExpression());
 
