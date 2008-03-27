@@ -2,6 +2,7 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Rubicon.Data.Linq.Clauses;
+using Rubicon.Data.Linq.DataObjectModel;
 
 namespace Rubicon.Data.Linq.UnitTests.ClausesTest
 {
@@ -10,7 +11,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
   {
     private IClause _previousClause;
     private ParameterExpression _identifier;
-    private QueryExpression _subQuery;
+    private QueryExpression _subQueryExpression;
     private SubQueryFromClause _subQueryFromClause;
     private LambdaExpression _projectionExpression;
 
@@ -19,10 +20,10 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     {
       _previousClause = ExpressionHelper.CreateMainFromClause ();
       _identifier = ExpressionHelper.CreateParameterExpression ();
-      _subQuery = ExpressionHelper.CreateQueryExpression ();
+      _subQueryExpression = ExpressionHelper.CreateQueryExpression ();
       _projectionExpression = ExpressionHelper.CreateLambdaExpression();
 
-      _subQueryFromClause = new SubQueryFromClause (_previousClause, _identifier, _subQuery, _projectionExpression);
+      _subQueryFromClause = new SubQueryFromClause (_previousClause, _identifier, _subQueryExpression, _projectionExpression);
     }
 
     [Test]
@@ -30,7 +31,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     {
       Assert.AreSame (_previousClause, _subQueryFromClause.PreviousClause);
       Assert.AreSame (_identifier, _subQueryFromClause.Identifier);
-      Assert.AreSame (_subQuery, _subQueryFromClause.SubQuery);
+      Assert.AreSame (_subQueryExpression, _subQueryFromClause.SubQueryExpression);
       Assert.AreSame (_projectionExpression, _subQueryFromClause.ProjectionExpression);
     }
 
@@ -52,6 +53,16 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     public void GetQueriedEntityType ()
     {
       Assert.AreEqual (null, _subQueryFromClause.GetQueriedEntityType ());
+    }
+
+    [Test]
+    public void GetFromSource ()
+    {
+      IFromSource fromSource = _subQueryFromClause.GetFromSource (StubDatabaseInfo.Instance);
+      SubQuery subQuery = fromSource as SubQuery;
+      Assert.IsNotNull (subQuery);
+      Assert.AreEqual (_identifier.Name, subQuery.Alias);
+      Assert.AreSame (_subQueryExpression, subQuery.QueryExpression);
     }
   }
 }

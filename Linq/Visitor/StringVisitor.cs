@@ -65,7 +65,7 @@ namespace Rubicon.Data.Linq.Visitor
     public void VisitSubQueryFromClause (SubQueryFromClause fromClause)
     {
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
-      _sb.AppendFormat ("from {0} {1} in ({2}) ", fromClause.Identifier.Type.Name, fromClause.Identifier.Name, fromClause.SubQuery);
+      _sb.AppendFormat ("from {0} {1} in ({2}) ", fromClause.Identifier.Type.Name, fromClause.Identifier.Name, fromClause.SubQueryExpression);
     }
 
     public void VisitJoinClause (JoinClause joinClause)

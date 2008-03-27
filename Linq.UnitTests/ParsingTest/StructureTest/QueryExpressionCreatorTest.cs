@@ -162,7 +162,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
 
       SubQueryFromClause subQueryFromClause1 = expression.BodyClauses[0] as SubQueryFromClause;
       Assert.IsNotNull (subQueryFromClause1);
-      Assert.AreSame (subQuery.Expression, subQueryFromClause1.SubQuery.GetExpressionTree());
+      Assert.AreSame (subQuery.Expression, subQueryFromClause1.SubQueryExpression.GetExpressionTree());
       Assert.AreSame (fromExpression1.Identifier, subQueryFromClause1.Identifier);
       Assert.AreSame (_result.ProjectionExpressions[0], subQueryFromClause1.ProjectionExpression);
     }

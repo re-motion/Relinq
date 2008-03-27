@@ -229,5 +229,10 @@ namespace Rubicon.Data.Linq.UnitTests
     {
       return new MainFromClause (identifier, Expression.Constant (querySource));
     }
+
+    public static SubQueryFromClause CreateSubQueryFromClause ()
+    {
+      return new SubQueryFromClause (CreateClause(), CreateParameterExpression(), CreateQueryExpression(), CreateLambdaExpression());
+    }
   }
 }

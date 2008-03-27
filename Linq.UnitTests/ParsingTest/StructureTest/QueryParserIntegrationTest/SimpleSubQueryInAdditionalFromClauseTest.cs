@@ -21,10 +21,10 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.QueryParserInteg
 
       SubQueryFromClause fromClause1 = ParsedQuery.BodyClauses[0] as SubQueryFromClause;
       Assert.IsNotNull (fromClause1);
-      Assert.AreSame (SourceExpressionNavigator.Arguments[1].Operand.Body.Expression, fromClause1.SubQuery.GetExpressionTree ());
+      Assert.AreSame (SourceExpressionNavigator.Arguments[1].Operand.Body.Expression, fromClause1.SubQueryExpression.GetExpressionTree ());
       Assert.AreSame (SourceExpressionNavigator.Arguments[2].Operand.Expression, fromClause1.ProjectionExpression);
 
-      CheckSubQuery (fromClause1.SubQuery);
+      CheckSubQuery (fromClause1.SubQueryExpression);
     }
 
     private void CheckSubQuery (QueryExpression subQuery)
@@ -51,7 +51,6 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.QueryParserInteg
     }
 
     [Test]
-    [Ignore ("TODO: Implement StringVisitor for sub-queries")]
     public override void OutputResult ()
     {
       base.OutputResult ();

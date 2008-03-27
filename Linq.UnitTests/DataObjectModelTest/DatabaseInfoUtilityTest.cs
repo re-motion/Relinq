@@ -29,6 +29,15 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     }
 
     [Test]
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "The from clause with identifier i and query source type <null> does not "
+        + "identify a queryable table.\r\nParameter name: fromClause")]
+    public void GetTableForFromClause_WithSubQueryFromClause ()
+    {
+      SubQueryFromClause fromClause = ExpressionHelper.CreateSubQueryFromClause ();
+      DatabaseInfoUtility.GetTableForFromClause (_databaseInfo, fromClause);
+    }
+
+    [Test]
     public void GetTableForFromClause_CachesTable ()
     {
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
