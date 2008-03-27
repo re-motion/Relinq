@@ -36,6 +36,16 @@ namespace Rubicon.Data.Linq
     }
 
     public Type ResultType { get; private set; }
+    public QueryExpression ParentQuery { get; private set; }
+
+    public void SetParentQuery(QueryExpression parentQuery)
+    {
+      ArgumentUtility.CheckNotNull ("parentQueryExpression", parentQuery);
+      if (ParentQuery != null)
+        throw new InvalidOperationException ("The query already has a parent query.");
+
+      ParentQuery = parentQuery;
+    }
 
     public MainFromClause MainFromClause { get; private set; }
     public ISelectGroupClause SelectOrGroupClause { get; private set; }

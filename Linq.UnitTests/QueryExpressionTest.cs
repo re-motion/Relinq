@@ -196,6 +196,33 @@ namespace Rubicon.Data.Linq.UnitTests
       Assert.AreEqual (expectedPath, descriptor.SourcePath);
     }
 
+    [Test]
+    public void ParentQuery_Null ()
+    {
+      QueryExpression queryExpression = ExpressionHelper.CreateQueryExpression();
+      Assert.IsNull (queryExpression.ParentQuery);
+    }
+
+    [Test]
+    public void SetParentQuery ()
+    {
+      QueryExpression queryExpression = ExpressionHelper.CreateQueryExpression ();
+      QueryExpression parentQueryExpression = ExpressionHelper.CreateQueryExpression ();
+      queryExpression.SetParentQuery (parentQueryExpression);
+
+      Assert.AreSame (parentQueryExpression, queryExpression.ParentQuery);
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "The query already has a parent query.")]
+    public void SetParentQuery_ThrowsOnSecondParent ()
+    {
+      QueryExpression queryExpression = ExpressionHelper.CreateQueryExpression ();
+      QueryExpression parentQueryExpression = ExpressionHelper.CreateQueryExpression ();
+      queryExpression.SetParentQuery (parentQueryExpression);
+      queryExpression.SetParentQuery (parentQueryExpression);
+    }
+
     private QueryExpression CreateQueryExpressionForResolve ()
     {
       ParameterExpression s1 = Expression.Parameter (typeof (String), "s1");
