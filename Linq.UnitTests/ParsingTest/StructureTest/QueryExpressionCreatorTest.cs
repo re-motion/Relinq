@@ -168,6 +168,23 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
     }
 
     [Test]
+    public void BodyExpressions_TranslatedIntoSubQueryFromClauses_WithCorrectParent ()
+    {
+      _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression ());
+
+      IQueryable<Student> subQuery = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource ());
+      FromExpression fromExpression1 = new FromExpression (Expression.Lambda (subQuery.Expression, ExpressionHelper.CreateParameterExpression ()),
+          ExpressionHelper.CreateParameterExpression ());
+
+      _result.AddBodyExpression (fromExpression1);
+
+      QueryExpression expression = _expressionCreator.CreateQueryExpression ();
+
+      SubQueryFromClause subQueryFromClause1 = (SubQueryFromClause) expression.BodyClauses[0];
+      Assert.AreSame (expression, subQueryFromClause1.SubQueryExpression.ParentQuery);
+    }
+
+    [Test]
     public void LastProjectionExpresion_TranslatedIntoSelectClause_WithFromClauses ()
     {
       _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression());

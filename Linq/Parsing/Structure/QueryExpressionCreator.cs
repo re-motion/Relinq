@@ -13,6 +13,7 @@ namespace Rubicon.Data.Linq.Parsing.Structure
     private readonly Expression _expressionTreeRoot;
     private readonly ParseResultCollector _result;
     private readonly List<IBodyClause> _bodyClauses = new List<IBodyClause> ();
+    private readonly List<QueryExpression> _subQueries = new List<QueryExpression> ();
 
     private IClause _previousClause;
     private int _currentProjection;
@@ -49,6 +50,9 @@ namespace Rubicon.Data.Linq.Parsing.Structure
 
       foreach (IBodyClause bodyClause in _bodyClauses)
         queryExpression.AddBodyClause (bodyClause);
+
+      foreach (QueryExpression subQuery in _subQueries)
+        subQuery.SetParentQuery (queryExpression);
 
       return queryExpression;
     }
@@ -102,12 +106,19 @@ namespace Rubicon.Data.Linq.Parsing.Structure
     {
       if (lambdaExpression.Body.NodeType == ExpressionType.Call)
       {
-        QueryParser subQueryParser = new QueryParser (lambdaExpression.Body);
-        QueryExpression subQuery = subQueryParser.GetParsedQuery();
+        QueryExpression subQuery = CreateSubQuery(lambdaExpression);
         return new SubQueryFromClause (_previousClause, fromExpression.Identifier, subQuery, projectionExpression);
       }
       else
         return new AdditionalFromClause (_previousClause, fromExpression.Identifier, lambdaExpression, projectionExpression);
+    }
+
+    private QueryExpression CreateSubQuery (LambdaExpression subQueryExpression)
+    {
+      QueryParser subQueryParser = new QueryParser (subQueryExpression.Body);
+      QueryExpression subQuery = subQueryParser.GetParsedQuery();
+      _subQueries.Add (subQuery);
+      return subQuery;
     }
 
     private WhereClause CreateWhereClause (BodyExpressionBase expression)
