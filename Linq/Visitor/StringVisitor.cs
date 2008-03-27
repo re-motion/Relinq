@@ -1,4 +1,6 @@
 using System;
+using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using System.Text;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Text;
@@ -31,36 +33,47 @@ namespace Rubicon.Data.Linq.Visitor
     public void VisitMainFromClause (MainFromClause fromClause)
     {
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
-      _sb.AppendFormat ("from {0} {1} in {2} ", fromClause.Identifier.Type, fromClause.Identifier.Name, fromClause.QuerySource);
+      _sb.AppendFormat ("from {0} {1} in {2} ", fromClause.Identifier.Type.Name, fromClause.Identifier.Name, fromClause.QuerySource);
 
       foreach (JoinClause jc in fromClause.JoinClauses)
-      {
         jc.Accept (this);
-      }
     }
 
     public void VisitAdditionalFromClause (AdditionalFromClause fromClause)
     {
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
-      _sb.AppendFormat ("from {0} {1} in {2} ", fromClause.Identifier.Type, fromClause.Identifier.Name, fromClause.FromExpression);
+
+      string fromString;
+      MemberExpression memberExpression = fromClause.FromExpression.Body as MemberExpression;
+      if (memberExpression != null && IsCompilerGeneratedFromExpression (memberExpression))
+        fromString = memberExpression.Member.Name;
+      else
+        fromString = fromClause.FromExpression.Body.ToString();
+
+      _sb.AppendFormat ("from {0} {1} in {2} ", fromClause.Identifier.Type.Name, fromClause.Identifier.Name, fromString);
 
       foreach (JoinClause jc in fromClause.JoinClauses)
-      {
         jc.Accept (this);
-      }
     }
 
-    public void VisitSubQueryFromClause (SubQueryFromClause clause)
+    private bool IsCompilerGeneratedFromExpression (MemberExpression memberExpression)
     {
-      throw new NotImplementedException();
+      return memberExpression.Expression.NodeType == ExpressionType.Constant
+          && memberExpression.Expression.Type.IsDefined (typeof (CompilerGeneratedAttribute), false);
+    }
+
+    public void VisitSubQueryFromClause (SubQueryFromClause fromClause)
+    {
+      ArgumentUtility.CheckNotNull ("fromClause", fromClause);
+      _sb.AppendFormat ("from {0} {1} in ({2}) ", fromClause.Identifier.Type.Name, fromClause.Identifier.Name, fromClause.SubQuery);
     }
 
     public void VisitJoinClause (JoinClause joinClause)
     {
       ArgumentUtility.CheckNotNull ("joinClause", joinClause);
-      _sb.AppendFormat("join {0} {1} in {2} on {3} equals {4} into {5} ",
-        joinClause.Identifier.Type,joinClause.Identifier,joinClause.InExpression,
-        joinClause.OnExpression,joinClause.EqualityExpression,joinClause.IntoIdentifier);
+      _sb.AppendFormat ("join {0} {1} in {2} on {3} equals {4} into {5} ",
+          joinClause.Identifier.Type, joinClause.Identifier, joinClause.InExpression,
+          joinClause.OnExpression, joinClause.EqualityExpression, joinClause.IntoIdentifier);
     }
 
     public void VisitLetClause (LetClause letClause)
@@ -74,7 +87,7 @@ namespace Rubicon.Data.Linq.Visitor
     {
       ArgumentUtility.CheckNotNull ("whereClause", whereClause);
 
-      _sb.AppendFormat ("where {0} ", whereClause.BoolExpression);
+      _sb.AppendFormat ("where {0} ", whereClause.BoolExpression.Body);
     }
 
     public void VisitOrderByClause (OrderByClause orderByClause)
@@ -83,7 +96,7 @@ namespace Rubicon.Data.Linq.Visitor
       _sb.Append ("orderby ");
       foreach (OrderingClause oC in orderByClause.OrderingList)
       {
-        oC.Accept(this); 
+        oC.Accept (this);
       }
     }
 
@@ -91,7 +104,7 @@ namespace Rubicon.Data.Linq.Visitor
     {
       ArgumentUtility.CheckNotNull ("orderingClause", orderingClause);
 
-      switch( orderingClause.OrderDirection)
+      switch (orderingClause.OrderDirection)
       {
         case OrderDirection.Asc:
           _sb.AppendFormat ("{0} ascending ", orderingClause.Expression);
@@ -100,20 +113,18 @@ namespace Rubicon.Data.Linq.Visitor
           _sb.AppendFormat ("{0} descending ", orderingClause.Expression);
           break;
       }
-      
     }
 
     public void VisitSelectClause (SelectClause selectClause)
     {
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);
-      _sb.AppendFormat ("select {0}", selectClause.ProjectionExpression);
+      _sb.AppendFormat ("select {0}", selectClause.ProjectionExpression == null ? "<value>" : selectClause.ProjectionExpression.Body.ToString());
     }
 
     public void VisitGroupClause (GroupClause groupClause)
     {
       ArgumentUtility.CheckNotNull ("groupClause", groupClause);
       _sb.AppendFormat ("group {0} by {1}", groupClause.GroupExpression, groupClause.ByExpression);
-      
     }
 
     #endregion
@@ -122,7 +133,5 @@ namespace Rubicon.Data.Linq.Visitor
     {
       return _sb.ToString();
     }
-
-    
   }
 }

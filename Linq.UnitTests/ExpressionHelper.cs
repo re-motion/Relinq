@@ -106,7 +106,8 @@ namespace Rubicon.Data.Linq.UnitTests
 
     public static WhereClause CreateWhereClause ()
     {
-      LambdaExpression boolExpression = ExpressionHelper.CreateLambdaExpression ();
+      LambdaExpression boolExpression = 
+          Expression.Lambda (Expression.MakeBinary (ExpressionType.Equal, Expression.Constant (1), Expression.Constant (2)));
       return new WhereClause (CreateClause (), boolExpression);
     }
 

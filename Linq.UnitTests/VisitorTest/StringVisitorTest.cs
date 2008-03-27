@@ -1,5 +1,6 @@
 using System;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Rubicon.Data.Linq.Clauses;
@@ -17,12 +18,10 @@ namespace Rubicon.Data.Linq.UnitTests.VisitorTest
     public void StringVisitorForMainFromClause ()
     {
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause();
-
       StringVisitor sv = new StringVisitor();
-
       sv.VisitMainFromClause (fromClause);
-
-      Assert.That (sv.ToString(), Text.Contains ("from"));
+      Assert.AreEqual ("from Int32 i in value(Rubicon.Data.Linq.UnitTests.TestQueryable`1[Rubicon.Data.Linq.UnitTests.Student]) ",
+          sv.ToString());
     }
 
     [Test]
@@ -56,6 +55,7 @@ namespace Rubicon.Data.Linq.UnitTests.VisitorTest
 
       repository.VerifyAll();
     }
+    
 
     [Test]
     public void StringVisitorForJoins ()
@@ -78,7 +78,18 @@ namespace Rubicon.Data.Linq.UnitTests.VisitorTest
 
       sv.VisitSelectClause (selectClause);
 
-      Assert.That (sv.ToString(), Text.Contains ("select"));
+      Assert.AreEqual ("select 0", sv.ToString());
+    }
+
+    [Test]
+    public void StringVisitorForSelectClause_WithNullProjection ()
+    {
+      SelectClause selectClause = new SelectClause (ExpressionHelper.CreateClause(), null, false);
+      StringVisitor sv = new StringVisitor ();
+
+      sv.VisitSelectClause (selectClause);
+
+      Assert.AreEqual ("select <value>", sv.ToString ());
     }
 
     [Test]
@@ -101,7 +112,7 @@ namespace Rubicon.Data.Linq.UnitTests.VisitorTest
 
       sv.VisitWhereClause (whereClasue);
 
-      Assert.That (sv.ToString(), Text.Contains ("where"));
+      Assert.AreEqual("where (1 = 2) ", sv.ToString());
     }
 
     [Test]
@@ -294,16 +305,80 @@ namespace Rubicon.Data.Linq.UnitTests.VisitorTest
       repository.VerifyAll ();
     }
 
-    [Test]
-    public void StringVisitorForAdditionalFromClauses ()
+    [CompilerGenerated]
+    class DisplayClass
     {
-      AdditionalFromClause fromClause = ExpressionHelper.CreateAdditionalFromClause();
+      public object source;
+    }
+
+    [Test]
+    public void StringVisitorForAdditionalFromClauses_WithMemberAccessToDisplayClass ()
+    {
+      var displayClass = new DisplayClass {source = ExpressionHelper.CreateQuerySource()};
+
+      LambdaExpression fromExpression =
+          Expression.Lambda (Expression.MakeMemberAccess (Expression.Constant (displayClass), displayClass.GetType ().GetField ("source")),
+          Expression.Parameter (typeof (Student), "s2"));
+
+      AdditionalFromClause fromClause = new AdditionalFromClause (ExpressionHelper.CreateClause (), ExpressionHelper.CreateParameterExpression (), 
+          fromExpression, ExpressionHelper.CreateLambdaExpression ());
 
       StringVisitor sv = new StringVisitor();
 
       sv.VisitAdditionalFromClause (fromClause);
 
-      Assert.That (sv.ToString(), Text.Contains ("from"));
+      Assert.AreEqual ("from Int32 i in source ", sv.ToString());
+    }
+
+    [Test]
+    public void StringVisitorForAdditionalFromClauses_WithOtherFromExpression ()
+    {
+      LambdaExpression fromExpression = Expression.Lambda (Expression.Constant (1));
+
+      AdditionalFromClause fromClause = new AdditionalFromClause (ExpressionHelper.CreateClause (), ExpressionHelper.CreateParameterExpression (),
+          fromExpression, ExpressionHelper.CreateLambdaExpression ());
+
+      StringVisitor sv = new StringVisitor ();
+
+      sv.VisitAdditionalFromClause (fromClause);
+
+      Assert.AreEqual ("from Int32 i in 1 ", sv.ToString ());
+    }
+
+    [Test]
+    public void StringVisitorForAdditionalFromClauses_WithConstantNullFromExpression ()
+    {
+      LambdaExpression fromExpression = Expression.Lambda (Expression.Constant (null));
+
+      AdditionalFromClause fromClause = new AdditionalFromClause (ExpressionHelper.CreateClause (), ExpressionHelper.CreateParameterExpression (),
+          fromExpression, ExpressionHelper.CreateLambdaExpression ());
+
+      StringVisitor sv = new StringVisitor ();
+
+      sv.VisitAdditionalFromClause (fromClause);
+
+      Assert.AreEqual ("from Int32 i in null ", sv.ToString ());
+    }
+
+    [Test]
+    public void StringVisitorForSubQueryFromClause ()
+    {
+      IClause previousClause = ExpressionHelper.CreateMainFromClause();
+      ParameterExpression identifier = Expression.Parameter (typeof (Student), "s");
+      ParameterExpression subQueryIdentifier = Expression.Parameter (typeof (Student), "s2");
+      Expression querySource = Expression.Constant (null);
+      MainFromClause mainFromClause = new MainFromClause (subQueryIdentifier, querySource);
+      LambdaExpression subQueryProjection = Expression.Lambda (Expression.Constant (1));
+      SelectClause selectClause = new SelectClause (previousClause, subQueryProjection, false);
+      QueryExpression subQuery = new QueryExpression (typeof (string), mainFromClause, selectClause);
+      LambdaExpression projectionExpression = ExpressionHelper.CreateLambdaExpression();
+
+      SubQueryFromClause subQueryFromClause = new SubQueryFromClause (previousClause, identifier, subQuery, projectionExpression);
+      
+      StringVisitor sv = new StringVisitor();
+      sv.VisitSubQueryFromClause (subQueryFromClause);
+
+      Assert.AreEqual ("from Student s in (from Student s2 in null select 1) ", sv.ToString());
     }
   }
 }
