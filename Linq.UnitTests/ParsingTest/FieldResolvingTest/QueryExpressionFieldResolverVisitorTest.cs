@@ -105,8 +105,6 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     }
 
     [Test]
-    [ExpectedException (typeof (FieldAccessResolveException), ExpectedMessage = "The field access expression 'transparent1.transparent2.fzlbf' does "
-        + "not contain a from clause identifier.")]
     public void NoFromIdentifierFound ()
     {
       QueryExpression queryExpression = CreateQueryExpression ();
@@ -117,7 +115,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
               typeof (AnonymousType).GetField ("transparent2")),
           typeof (AnonymousType).GetField ("fzlbf"));
 
-      new QueryExpressionFieldResolverVisitor (queryExpression).ParseAndReduce (sourceExpression);
+      Assert.IsNull (new QueryExpressionFieldResolverVisitor (queryExpression).ParseAndReduce (sourceExpression));
     }
 
     private QueryExpression CreateQueryExpression ()

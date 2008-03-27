@@ -22,7 +22,16 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
       QueryExpressionFieldResolverVisitor visitor = new QueryExpressionFieldResolverVisitor (_queryExpression);
       QueryExpressionFieldResolverVisitor.Result visitorResult = visitor.ParseAndReduce (fieldAccessExpression);
 
-      return visitorResult.FromClause.ResolveField (resolver, visitorResult.ReducedExpression, fieldAccessExpression);
+      if (visitorResult != null)
+        return visitorResult.FromClause.ResolveField (resolver, visitorResult.ReducedExpression, fieldAccessExpression);
+      else if (_queryExpression.ParentQuery != null)
+        return _queryExpression.ParentQuery.ResolveField (resolver, fieldAccessExpression);
+      else
+      {
+        string message = string.Format ("The field access expression '{0}' does not contain a from clause identifier.", fieldAccessExpression);
+        throw new FieldAccessResolveException (message);
+      }
+
     }
   }
 }

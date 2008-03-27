@@ -11,9 +11,9 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
   /// </summary>
   public class QueryExpressionFieldResolverVisitor : ExpressionTreeVisitor
   {
-    public struct Result
+    public class Result
     {
-      public Result (Expression reducedExpression, FromClauseBase fromClause) : this ()
+      public Result (Expression reducedExpression, FromClauseBase fromClause)
       {
         ArgumentUtility.CheckNotNull ("fromClause", fromClause);
 
@@ -38,13 +38,12 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
     public Result ParseAndReduce (Expression expression)
     {
       _fromClause = null;
+      
       Expression reducedExpression = VisitExpression (expression);
-      if (_fromClause == null)
-      {
-        string message = string.Format ("The field access expression '{0}' does not contain a from clause identifier.", expression);
-        throw new FieldAccessResolveException (message);
-      }
-      return new Result (reducedExpression, _fromClause);
+      if (_fromClause != null)
+        return new Result (reducedExpression, _fromClause);
+      else
+        return null;
     }
 
     protected override Expression VisitParameterExpression (ParameterExpression expression)
