@@ -7,6 +7,8 @@ namespace Rubicon.Data.Linq.Clauses
 {
   public class SubQueryFromClause : FromClauseBase, IBodyClause
   {
+    private readonly SubQuery _fromSource;
+
     public SubQueryFromClause (IClause previousClause, ParameterExpression identifier, QueryExpression subQuery, LambdaExpression projectionExpression)
         : base (previousClause, identifier)
     {
@@ -17,6 +19,8 @@ namespace Rubicon.Data.Linq.Clauses
 
       SubQueryExpression = subQuery;
       ProjectionExpression = projectionExpression;
+
+      _fromSource = new SubQuery (SubQueryExpression, Identifier.Name);
     }
 
     public QueryExpression SubQueryExpression { get; private set; }
@@ -35,7 +39,7 @@ namespace Rubicon.Data.Linq.Clauses
 
     public override IFromSource GetFromSource (IDatabaseInfo databaseInfo)
     {
-      return new SubQuery (SubQueryExpression, Identifier.Name);
+      return _fromSource;
     }
   }
 }

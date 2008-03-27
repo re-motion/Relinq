@@ -280,5 +280,25 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       FieldDescriptor expected = new FieldDescriptor (member, fromClause, new FieldSourcePath (detailDetailTable, new[] { join1, join2 }), column);
       Assert.AreEqual (expected, fieldDescriptor);
     }
+
+    [Test]
+    public void Resolve_FieldFromSubQuery ()
+    {
+      // from x in (...)
+      // select x.ID
+      ParameterExpression identifier = Expression.Parameter (typeof (Student), "x");
+      SubQueryFromClause fromClause = ExpressionHelper.CreateSubQueryFromClause(identifier);
+
+      PropertyInfo member = typeof (Student).GetProperty ("ID");
+      Expression fieldExpression = Expression.MakeMemberAccess (identifier, member);
+
+      FieldDescriptor fieldDescriptor =
+          new FromClauseFieldResolver (StubDatabaseInfo.Instance, _context, _policy).ResolveField (fromClause, fieldExpression, fieldExpression);
+      SubQuery subQuery = (SubQuery) fromClause.GetFromSource (StubDatabaseInfo.Instance);
+      Column column = new Column (subQuery, "IDColumn");
+      FieldDescriptor expected = new FieldDescriptor (member, fromClause, new FieldSourcePath (subQuery, new SingleJoin[0]), column);
+
+      Assert.AreEqual (expected, fieldDescriptor);
+    }
   }
 }

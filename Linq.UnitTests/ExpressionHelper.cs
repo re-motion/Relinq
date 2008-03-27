@@ -232,7 +232,12 @@ namespace Rubicon.Data.Linq.UnitTests
 
     public static SubQueryFromClause CreateSubQueryFromClause ()
     {
-      return new SubQueryFromClause (CreateClause(), CreateParameterExpression(), CreateQueryExpression(), CreateLambdaExpression());
+      return CreateSubQueryFromClause (CreateParameterExpression());
+    }
+
+    public static SubQueryFromClause CreateSubQueryFromClause (ParameterExpression identifier)
+    {
+      return new SubQueryFromClause (CreateClause (), identifier, CreateQueryExpression (), CreateLambdaExpression ());
     }
   }
 }

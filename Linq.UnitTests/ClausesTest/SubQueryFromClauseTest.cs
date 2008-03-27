@@ -59,10 +59,17 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     public void GetFromSource ()
     {
       IFromSource fromSource = _subQueryFromClause.GetFromSource (StubDatabaseInfo.Instance);
-      SubQuery subQuery = fromSource as SubQuery;
-      Assert.IsNotNull (subQuery);
+      SubQuery subQuery = (SubQuery) fromSource;
       Assert.AreEqual (_identifier.Name, subQuery.Alias);
       Assert.AreSame (_subQueryExpression, subQuery.QueryExpression);
+    }
+
+    [Test]
+    public void GetFromSource_FromSourceIsCached ()
+    {
+      SubQuery subQuery1 = (SubQuery) _subQueryFromClause.GetFromSource (StubDatabaseInfo.Instance);
+      SubQuery subQuery2 = (SubQuery) _subQueryFromClause.GetFromSource (StubDatabaseInfo.Instance);
+      Assert.AreSame (subQuery1, subQuery2);
     }
   }
 }
