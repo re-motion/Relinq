@@ -61,6 +61,7 @@
     <Compile Include="ClausesTest\ClauseFinderTest.cs" />
     <Compile Include="ClausesTest\SubQueryFromClauseTest.cs" />
     <Compile Include="DataObjectModelTest\FieldSourcePathTest.cs" />
+    <Compile Include="DataObjectModelTest\SubQueryTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\WhereParserTest\BinaryExpressionParserTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\WhereParserTest\ConstantExpressionParserTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\WhereParserTest\MemberExpressionParserTest.cs" />
