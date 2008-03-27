@@ -16,14 +16,14 @@ namespace Rubicon.Data.Linq.DataObjectModel
       RightColumn = rightColumn;
     }
 
-    public Table LeftSide
+    public IFromSource LeftSide
     {
-      get { return LeftColumn.Table; }
+      get { return LeftColumn.FromSource; }
     }
 
-    public Table RightSide
+    public IFromSource RightSide
     {
-      get { return RightColumn.Table; }
+      get { return RightColumn.FromSource; }
     }
 
     public override string ToString ()

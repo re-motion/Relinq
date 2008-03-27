@@ -144,7 +144,7 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     public void GetColumnForFromClause ()
     {
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
-      Table table = fromClause.GetTable (_databaseInfo);
+      IFromSource table = fromClause.GetFromSource (_databaseInfo);
       Column column = DatabaseInfoUtility.GetColumn (_databaseInfo, table, typeof (Student).GetProperty ("First")).Value;
       Assert.AreEqual (new Column (table, "FirstColumn"), column);
     }
@@ -153,7 +153,7 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     public void GetColumnForFromClause_InvalidMember ()
     {
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
-      Table table = fromClause.GetTable (_databaseInfo);
+      IFromSource table = fromClause.GetFromSource (_databaseInfo);
       Assert.IsNull (DatabaseInfoUtility.GetColumn (_databaseInfo, table, typeof (Student).GetProperty ("NonDBProperty")));
     }
 

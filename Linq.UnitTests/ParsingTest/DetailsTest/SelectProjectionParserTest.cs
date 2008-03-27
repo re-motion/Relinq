@@ -202,7 +202,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
           _context);
 
       PropertyInfo relationMember = typeof (Student_Detail).GetProperty ("Student");
-      Table studentDetailTable = parsedQuery.MainFromClause.GetTable (StubDatabaseInfo.Instance);
+      IFromSource studentDetailTable = parsedQuery.MainFromClause.GetFromSource (StubDatabaseInfo.Instance);
       Table studentTable = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, relationMember);
       Tuple<string, string> joinColumns = DatabaseInfoUtility.GetJoinColumnNames (StubDatabaseInfo.Instance, relationMember);
 
@@ -236,10 +236,10 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
 
       IEnumerable<FieldDescriptor> selectedFields = selectParser.GetSelectedFields ();
       PropertyInfo relationMember = typeof (Student_Detail).GetProperty ("Student");
-      Table studentDetailTable = expression.MainFromClause.GetTable (StubDatabaseInfo.Instance);
+      IFromSource studentDetailTable = expression.MainFromClause.GetFromSource (StubDatabaseInfo.Instance);
       FieldSourcePath path = new FieldSourcePathBuilder ().BuildFieldSourcePath (StubDatabaseInfo.Instance, _context, studentDetailTable, 
           new[] { relationMember });
-      FieldDescriptor expected = new FieldDescriptor(relationMember, expression.MainFromClause, path, new Column(path.LastTable, "*"));
+      FieldDescriptor expected = new FieldDescriptor(relationMember, expression.MainFromClause, path, new Column(path.LastSource, "*"));
 
       Assert.That (selectedFields.ToArray (), Is.EqualTo (new object[] { expected } ));
     }

@@ -17,7 +17,7 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
       
       FieldSourcePath sourcePath = new FieldSourcePath(source,joins);
 
-      Assert.AreSame (source, sourcePath.SourceTable);
+      Assert.AreSame (source, sourcePath.FirstSource);
       Assert.That (sourcePath.Joins, Is.EqualTo (joins));
     }
 
@@ -26,7 +26,7 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     {
       Table source = new Table ();
       FieldSourcePath sourcePath = new FieldSourcePath (source, new SingleJoin[0]);
-      Assert.AreSame (source, sourcePath.LastTable);
+      Assert.AreSame (source, sourcePath.LastSource);
     }
 
     [Test]
@@ -38,7 +38,7 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
       SingleJoin[] joins = new[] { join1 };
 
       FieldSourcePath sourcePath = new FieldSourcePath (source, joins);
-      Assert.AreSame (table1, sourcePath.LastTable);
+      Assert.AreSame (table1, sourcePath.LastSource);
     }
 
     [Test]
@@ -52,7 +52,7 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
       SingleJoin[] joins = new[] { join1, join2 };
 
       FieldSourcePath sourcePath = new FieldSourcePath (source, joins);
-      Assert.AreSame (table2, sourcePath.LastTable);
+      Assert.AreSame (table2, sourcePath.LastSource);
     }
 
     [Test]

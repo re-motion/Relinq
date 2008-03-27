@@ -187,7 +187,7 @@ namespace Rubicon.Data.Linq.UnitTests
       FromClauseFieldResolver resolver = new FromClauseFieldResolver (StubDatabaseInfo.Instance, context, policy);
       FieldDescriptor descriptor = queryExpression.ResolveField (resolver, fieldAccessExpression);
 
-      Table expectedTable = queryExpression.MainFromClause.GetTable (StubDatabaseInfo.Instance);
+      IFromSource expectedTable = queryExpression.MainFromClause.GetFromSource (StubDatabaseInfo.Instance);
       FieldSourcePath expectedPath = new FieldSourcePath (expectedTable, new SingleJoin[0]);
 
       Assert.AreSame (queryExpression.MainFromClause, descriptor.FromClause);

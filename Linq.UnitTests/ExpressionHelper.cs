@@ -202,7 +202,7 @@ namespace Rubicon.Data.Linq.UnitTests
 
     public static FieldDescriptor CreateFieldDescriptor (FromClauseBase fromClause, MemberInfo member)
     {
-      Table table = fromClause.GetTable (StubDatabaseInfo.Instance);
+      IFromSource table = fromClause.GetFromSource (StubDatabaseInfo.Instance);
       Column? column = DatabaseInfoUtility.GetColumn (StubDatabaseInfo.Instance, table, member);
       FieldSourcePath sourcePath = new FieldSourcePath (table, new SingleJoin[0]);
       FieldDescriptor fieldDescriptor = new FieldDescriptor (member, fromClause, sourcePath, column);

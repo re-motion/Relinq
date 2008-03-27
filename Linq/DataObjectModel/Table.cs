@@ -3,7 +3,7 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.DataObjectModel
 {
-  public class Table
+  public class Table : IFromSource
   {
     public Table ()
     {

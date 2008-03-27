@@ -31,7 +31,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       FieldDescriptor fieldDescriptor =
           new FromClauseFieldResolver (StubDatabaseInfo.Instance, _context, _policy).ResolveField (fromClause, identifier, identifier);
 
-      Table table = fromClause.GetTable (StubDatabaseInfo.Instance);
+      IFromSource table = fromClause.GetFromSource (StubDatabaseInfo.Instance);
       Column column = new Column (table, "*");
       FieldDescriptor expected = new FieldDescriptor (null, fromClause, new FieldSourcePath(table, new SingleJoin[0]), column);
 
@@ -124,7 +124,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       Assert.AreSame (fromClause, fieldDescriptor.FromClause);
       Assert.AreEqual (typeof (Student).GetProperty ("First"), fieldDescriptor.Member);
 
-      Table expectedSourceTable = fieldDescriptor.SourcePath.SourceTable;
+      IFromSource expectedSourceTable = fieldDescriptor.SourcePath.FirstSource;
       Table expectedRelatedTable = new Table ("studentTable", null);
       SingleJoin join = new SingleJoin(new Column (expectedSourceTable, "Student_Detail_PK"), new Column (expectedRelatedTable, "Student_Detail_to_Student_FK"));
       FieldSourcePath expectedPath = new FieldSourcePath(expectedSourceTable, new [] { join });
@@ -154,7 +154,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       Assert.AreSame (fromClause, fieldDescriptor.FromClause);
       Assert.AreEqual (typeof (Student).GetProperty ("First"), fieldDescriptor.Member);
 
-      Table expectedDetailDetailTable = fieldDescriptor.SourcePath.SourceTable;
+      IFromSource expectedDetailDetailTable = fieldDescriptor.SourcePath.FirstSource;
       Table expectedDetailTable = new Table ("detailTable", null); // Student_Detail
       SingleJoin join1 = new SingleJoin (new Column (expectedDetailDetailTable, "Student_Detail_Detail_PK"), new Column (expectedDetailTable, "Student_Detail_Detail_to_Student_Detail_FK"));
       
@@ -193,7 +193,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
           typeof (Student).GetProperty ("NonDBProperty"));
       FieldDescriptor fieldDescriptor =
           new FromClauseFieldResolver (StubDatabaseInfo.Instance, _context, _policy).ResolveField (fromClause, fieldExpression, fieldExpression);
-      Table table = fromClause.GetTable (StubDatabaseInfo.Instance);
+      IFromSource table = fromClause.GetFromSource (StubDatabaseInfo.Instance);
       FieldSourcePath path = new FieldSourcePath (table, new SingleJoin[0]);
       Assert.AreEqual (new FieldDescriptor (typeof (Student).GetProperty ("NonDBProperty"), fromClause, path, null), fieldDescriptor);
     }
@@ -216,8 +216,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       FieldDescriptor fieldDescriptor2 =
           new FromClauseFieldResolver (StubDatabaseInfo.Instance, _context, _policy).ResolveField (fromClause, fieldExpression, fieldExpression);
 
-      Table table1 = ((FieldSourcePath) fieldDescriptor1.SourcePath).Joins[0].RightSide;
-      Table table2 = ((FieldSourcePath) fieldDescriptor2.SourcePath).Joins[0].RightSide;
+      IFromSource table1 = ((FieldSourcePath) fieldDescriptor1.SourcePath).Joins[0].RightSide;
+      IFromSource table2 = ((FieldSourcePath) fieldDescriptor2.SourcePath).Joins[0].RightSide;
 
       Assert.AreSame (table1, table2);
     }
@@ -238,7 +238,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       FieldDescriptor fieldDescriptor =
           new FromClauseFieldResolver (StubDatabaseInfo.Instance, _context, _policy).ResolveField (fromClause, fieldExpression, fieldExpression);
 
-      Table detailTable = fromClause.GetTable (StubDatabaseInfo.Instance);
+      IFromSource detailTable = fromClause.GetFromSource (StubDatabaseInfo.Instance);
       Table studentTable = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, member);
       Tuple<string, string> joinColumns = DatabaseInfoUtility.GetJoinColumnNames (StubDatabaseInfo.Instance, member);
       SingleJoin join = new SingleJoin (new Column(detailTable, joinColumns.A), new Column(studentTable, joinColumns.B));
@@ -267,7 +267,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       FieldDescriptor fieldDescriptor =
           new FromClauseFieldResolver (StubDatabaseInfo.Instance, _context, _policy).ResolveField (fromClause, fieldExpression, fieldExpression);
 
-      Table detailDetailTable = fromClause.GetTable (StubDatabaseInfo.Instance);
+      IFromSource detailDetailTable = fromClause.GetFromSource (StubDatabaseInfo.Instance);
       Table detailTable = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, innerRelationMember);
       Table studentTable = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, member);
       Tuple<string, string> innerJoinColumns = DatabaseInfoUtility.GetJoinColumnNames (StubDatabaseInfo.Instance, innerRelationMember);

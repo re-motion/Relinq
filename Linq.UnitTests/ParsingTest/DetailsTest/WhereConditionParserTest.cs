@@ -163,7 +163,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       Tuple<List<FieldDescriptor>, ICriterion> parseResult = CreateAndParseWhereClause (condition);
       ICriterion criterion = parseResult.B;
 
-      Table table = _fromClause.GetTable (StubDatabaseInfo.Instance);
+      IFromSource table = _fromClause.GetFromSource (StubDatabaseInfo.Instance);
       Assert.AreEqual (new BinaryCondition (new Constant (4), new Column (table, "OtherStudentColumn"),
           BinaryCondition.ConditionKind.Equal), criterion);
     }
@@ -387,7 +387,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       WhereClause whereClause = ClauseFinder.FindClause<WhereClause> (parsedQuery.SelectOrGroupClause);
       
       PropertyInfo relationMember = typeof (Student_Detail).GetProperty ("Student");
-      Table sourceTable = fromClause.GetTable (StubDatabaseInfo.Instance); // Student_Detail
+      IFromSource sourceTable = fromClause.GetFromSource (StubDatabaseInfo.Instance); // Student_Detail
       Table relatedTable = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, relationMember); // Student
       Tuple<string, string> columns = DatabaseInfoUtility.GetJoinColumnNames (StubDatabaseInfo.Instance, relationMember);
       

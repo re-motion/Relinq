@@ -7,24 +7,24 @@ namespace Rubicon.Data.Linq.DataObjectModel
 {
   public struct FieldSourcePath
   {
-    public Table SourceTable { get; private set; }
+    public IFromSource FirstSource { get; private set; }
     public ReadOnlyCollection<SingleJoin> Joins { get; private set; }
 
-    public FieldSourcePath(Table sourceTable,IEnumerable<SingleJoin> joins) : this()
+    public FieldSourcePath(IFromSource firstSource,IEnumerable<SingleJoin> joins) : this()
     {
-      ArgumentUtility.CheckNotNull ("sourceTable", sourceTable);
+      ArgumentUtility.CheckNotNull ("firstSource", firstSource);
       ArgumentUtility.CheckNotNull ("joins", joins);
 
-      SourceTable = sourceTable;
+      FirstSource = firstSource;
       Joins = new List<SingleJoin>(joins).AsReadOnly();
     }
 
-    public Table LastTable
+    public IFromSource LastSource
     {
       get
       {
         if (Joins.Count == 0)
-          return SourceTable;
+          return FirstSource;
         else
           return Joins[Joins.Count - 1].RightSide;
       }
@@ -36,7 +36,7 @@ namespace Rubicon.Data.Linq.DataObjectModel
         return false;
 
       FieldSourcePath other = (FieldSourcePath) obj;
-      return object.ReferenceEquals (SourceTable, other.SourceTable) && JoinsEqual (Joins, other.Joins);
+      return object.ReferenceEquals (FirstSource, other.FirstSource) && JoinsEqual (Joins, other.Joins);
     }
 
     private bool JoinsEqual (ReadOnlyCollection<SingleJoin> joins1, ReadOnlyCollection<SingleJoin> joins2)
@@ -54,16 +54,16 @@ namespace Rubicon.Data.Linq.DataObjectModel
 
     public override int GetHashCode ()
     {
-      return SourceTable.GetHashCode() ^ EqualityUtility.GetRotatedHashCode (Joins);
+      return FirstSource.GetHashCode() ^ EqualityUtility.GetRotatedHashCode (Joins);
     }
 
     public override string ToString ()
     {
       bool joinsHasElements = Joins.GetEnumerator ().MoveNext ();
       if (joinsHasElements)
-        return SourceTable.AliasString + "." + SeparatedStringBuilder.Build (".", Joins, join => join.RightSide.Name);
+        return FirstSource.AliasString + "." + SeparatedStringBuilder.Build (".", Joins, join => ((Table)join.RightSide).Name);
       else
-        return SourceTable.AliasString;
+        return FirstSource.AliasString;
     }
   }
 }

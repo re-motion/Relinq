@@ -39,7 +39,7 @@ namespace Rubicon.Data.Linq.Clauses
       _joinClauses.Add (joinClause);
     }
 
-    public Table GetTable (IDatabaseInfo databaseInfo)
+    public IFromSource GetFromSource (IDatabaseInfo databaseInfo)
     {
       ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
       return DatabaseInfoUtility.GetTableForFromClause (databaseInfo, this);
