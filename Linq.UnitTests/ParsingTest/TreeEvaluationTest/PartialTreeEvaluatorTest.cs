@@ -79,5 +79,16 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.TreeEvaluationTest
       Expression expected = Expression.Lambda (Expression.Add (Expression.Multiply (parameter, constant1), Expression.Constant (12)), parameter);
       ExpressionTreeComparer.CheckAreEqualTrees (expected, result);
     }
+
+    [Test]
+    public void EvaluateLambdaWithParameterFromOutside ()
+    {
+      ParameterExpression outsideParameter = Expression.Parameter (typeof (int), "p");
+      LambdaExpression lambdaExpression = Expression.Lambda (outsideParameter);
+      
+      PartialTreeEvaluator evaluator = new PartialTreeEvaluator (lambdaExpression);
+      Expression result = evaluator.GetEvaluatedTree ();
+      ExpressionTreeComparer.CheckAreEqualTrees (lambdaExpression, result);
+    }
   }
 }

@@ -7,22 +7,16 @@ namespace Rubicon.Data.Linq.Parsing.TreeEvaluation
 {
   public sealed class PartialTreeEvaluator : ExpressionTreeVisitor
   {
-    // _parentEvaluatableSubtrees is a list of subtrees that have been found suitable for evaluation when the tree root's parent lambda expression
-    // was analyzed. When a node is encountered and it is a member of this list, it will be evaluated. When a LambdaExpression is encountered,
-    // a new set of evaluatable subtrees will be calculated for the lambda's body.
-    private readonly HashSet<Expression> _parentEvaluatableSubtrees;
+    // _parameterUsage contains a list of the used parameters and a list of the declared parameters for each expression in the tree. We will 
+    // evaluate an expression if it only uses parameters declared within or below the same expression.
+    private readonly ParameterUsage _parameterUsage;
     private readonly Expression _evaluatedTree;
 
     public PartialTreeEvaluator (Expression treeRoot)
     {
-      // The tree root has no parent lambda, so create one to get an initial list of filtered subtrees.
-      _parentEvaluatableSubtrees = GetFilteredSubtrees (Expression.Lambda (treeRoot));
-      _evaluatedTree = VisitExpression (treeRoot);
-    }
-
-    private PartialTreeEvaluator (Expression treeRoot, HashSet<Expression> parentEvaluatableSubtrees)
-    {
-      _parentEvaluatableSubtrees = parentEvaluatableSubtrees;
+      ParameterUsageAnalyzer analyzer = new ParameterUsageAnalyzer();
+      analyzer.Analyze (treeRoot);
+      _parameterUsage = analyzer.Usage;
       _evaluatedTree = VisitExpression (treeRoot);
     }
 
@@ -31,41 +25,25 @@ namespace Rubicon.Data.Linq.Parsing.TreeEvaluation
       return _evaluatedTree;
     }
 
-    // When any node is processed
     protected override Expression VisitExpression (Expression expression)
     {
+      // Only evaluate expressions for which the set of used parameters is a subset of the set of declared parameters. Don't evaluate
+      // lambda expressions, we need to analyze those later on.
+      // (Invocations of lambda expressions are ok.)
       if (expression == null)
         return null;
-      else if (expression.NodeType != ExpressionType.Lambda && _parentEvaluatableSubtrees.Contains (expression))
+      else if (expression.NodeType != ExpressionType.Lambda && IsEvaluatableExpression(expression))
         return EvaluateSubtree (expression);
       else
         return base.VisitExpression (expression);
     }
 
-    // When a lambda expression is encountered, its body subtree is first filtered for subtrees that do not include the lambda's parameters
-    // (exluding any subtrees that aren't included in _parentEvaluatableSubtrees). Then, these subtrees are recursively analyzed with a separate
-    // PartialTreeEvaluator instance.
-    protected override Expression VisitLambdaExpression (LambdaExpression expression)
+    private bool IsEvaluatableExpression (Expression expression)
     {
-      HashSet<Expression> evaluatableSubtrees = GetFilteredSubtrees (expression);
-      PartialTreeEvaluator childEvaluator = new PartialTreeEvaluator (expression.Body, evaluatableSubtrees);
-      Expression newBody = childEvaluator.GetEvaluatedTree ();
-      if (newBody != expression.Body)
-        return Expression.Lambda (expression.Type, newBody, expression.Parameters);
+      if (!_parameterUsage.UsedParameters.ContainsKey (expression))
+        return false;
       else
-        return expression;
-    }
-
-    private HashSet<Expression> GetFilteredSubtrees (LambdaExpression lambdaExpression)
-    {
-      FilteredSubtreeFinder finder = new FilteredSubtreeFinder (lambdaExpression.Body,
-          delegate (Expression currentNode)
-          {
-            ParameterExpression currentNodeAsParameterExpression = currentNode as ParameterExpression;
-            return (_parentEvaluatableSubtrees == null || _parentEvaluatableSubtrees.Contains (currentNode))
-                && (currentNodeAsParameterExpression == null || !lambdaExpression.Parameters.Contains (currentNodeAsParameterExpression));
-          });
-      return finder.GetFilteredSubtrees ();
+        return _parameterUsage.DeclaredParameters[expression].IsSupersetOf (_parameterUsage.UsedParameters[expression]);
     }
 
     private Expression EvaluateSubtree (Expression subtree)
