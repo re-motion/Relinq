@@ -1,6 +1,8 @@
 using System;
 using System.Linq.Expressions;
+using System.Reflection;
 using Rubicon.Data.Linq.Parsing.Structure;
+using Rubicon.Data.Linq.Parsing.TreeEvaluation;
 using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.Parsing.Structure
@@ -23,13 +25,14 @@ namespace Rubicon.Data.Linq.Parsing.Structure
       switch (sourceExpression.NodeType)
       {
         case ExpressionType.Constant:
+          ParseConstantExpressionAsSimpleSource (resultCollector, (ConstantExpression) sourceExpression, potentialFromIdentifier);
+          break;
         case ExpressionType.MemberAccess:
           ParseSimpleSource (resultCollector, sourceExpression, potentialFromIdentifier);
           break;
         case ExpressionType.Call:
-          string methodName = ParserUtility.CheckMethodCallExpression (
-              (MethodCallExpression) sourceExpression, resultCollector.ExpressionTreeRoot, 
-              "Select", "SelectMany", "Where", "OrderBy", "OrderByDescending", "ThenBy", "ThenByDescending", "Distinct");
+          var methodCallExpression = (MethodCallExpression) sourceExpression;
+          string methodName = methodCallExpression.Method.Name;
           switch (methodName)
           {
             case "Select":
@@ -50,12 +53,43 @@ namespace Rubicon.Data.Linq.Parsing.Structure
             case "Distinct":
               ParseDistinct (resultCollector, sourceExpression, potentialFromIdentifier);
               break;
+            default:
+              EvaluateExpressionAsSimpleSource (resultCollector, methodCallExpression, potentialFromIdentifier);
+              break;
           }
           break;
         default:
           throw ParserUtility.CreateParserException ("Constant or Call expression", sourceExpression, context,
               resultCollector.ExpressionTreeRoot);
       }
+    }
+
+    private void EvaluateExpressionAsSimpleSource (ParseResultCollector resultCollector, Expression expression, ParameterExpression potentialFromIdentifier)
+    {
+      try
+      {
+        ConstantExpression evaluatedExpression = PartialTreeEvaluator.EvaluateSubtree (expression);
+        ParseConstantExpressionAsSimpleSource(resultCollector, evaluatedExpression, potentialFromIdentifier);
+      }
+      catch (TargetInvocationException targetInvocationException)
+      {
+        string message = string.Format ("The expression '{0}' could not be evaluated as a query source because it threw an exception: {1}", 
+            expression, targetInvocationException.InnerException.Message);
+        throw new ParserException (message, targetInvocationException);
+      }
+      catch (Exception ex)
+      {
+        string message = string.Format ("The expression '{0}' could not be evaluated as a query source because it cannot be compiled: {1}",
+            expression, ex.Message);
+        throw new ParserException (message, ex);
+      }
+    }
+
+    private void ParseConstantExpressionAsSimpleSource (ParseResultCollector resultCollector, ConstantExpression constantExpression, ParameterExpression potentialFromIdentifier)
+    {
+      if (constantExpression.Value == null)
+        throw new ParserException ("Query sources cannot be null.");
+      ParseSimpleSource (resultCollector, constantExpression, potentialFromIdentifier);
     }
 
     private void ParseSimpleSource (ParseResultCollector resultCollector, Expression sourceExpression, ParameterExpression potentialFromIdentifier)

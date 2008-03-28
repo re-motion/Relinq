@@ -1,3 +1,4 @@
+using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using System.Linq;
@@ -65,19 +66,34 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
       _topLevelParser.Parse (new ParseResultCollector (_source.Expression), _potentialFromIdentifier, _potentialFromIdentifier, "xy");
     }
 
-    [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected one of 'Select, SelectMany, Where, OrderBy, OrderByDescending, ThenBy, "
-        + "ThenByDescending, Distinct', but found 'OfType' at position value(Rubicon.Data.Linq.UnitTests.TestQueryable`1[Rubicon.Data.Linq.UnitTests.Student]).OfType() in tree value(Rubicon.Data.Linq.UnitTests.TestQueryable`1[Rubicon.Data.Linq.UnitTests.Student]).")]
-    public void InvalidMethod ()
+    public static void Thrower()
     {
-      IQueryable<Student> source = _source.OfType<Student>();
-      _topLevelParser.Parse (new ParseResultCollector (_source.Expression), source.Expression, _potentialFromIdentifier, "xy");
+      throw new InvalidOperationException ("This method always throws.");
+    }
+
+    [Test]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "The expression 'Thrower()' could not be evaluated as a query source because it "
+        + "threw an exception: This method always throws.")]
+    public void Method_ThrowingException ()
+    {
+      Expression throwingCall = Expression.Call (typeof (SourceExpressionParserTest).GetMethod ("Thrower"));
+      _topLevelParser.Parse (new ParseResultCollector (_source.Expression), throwingCall, _potentialFromIdentifier, "xy");
+    }
+
+    [Test]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "The expression 's.get_ID()' could not be evaluated as a query source because it "
+        + "cannot be compiled: Lambda Parameter not in scope")]
+    public void Method_ThrowingExceptionOnCompile ()
+    {
+      ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
+      Expression throwingCall = Expression.Call (parameter, typeof (Student).GetMethod ("get_ID"));
+      _topLevelParser.Parse (new ParseResultCollector (_source.Expression), throwingCall, _potentialFromIdentifier, "xy");
     }
 
     [Test]
     public void SimpleSource_Constant()
     {
-      Expression constantExpression = Expression.Constant(null, typeof (IQueryable<Student>));
+      Expression constantExpression = Expression.Constant(ExpressionHelper.CreateQuerySource(), typeof (IQueryable<Student>));
       ParseResultCollector result = new ParseResultCollector (constantExpression);
       _topLevelParser.Parse (result, constantExpression, _potentialFromIdentifier, "bla");
 
@@ -85,6 +101,15 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
       Assert.AreEqual (_potentialFromIdentifier, ((FromExpression) result.BodyExpressions[0]).Identifier);
       Assert.AreEqual (constantExpression, ((FromExpression) result.BodyExpressions[0]).Expression);
       Assert.That (result.ProjectionExpressions, Is.Empty);
+    }
+
+    [Test]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Query sources cannot be null.")]
+    public void SimpleSource_ConstantNull ()
+    {
+      Expression constantExpression = Expression.Constant (null, typeof (IQueryable<Student>));
+      ParseResultCollector result = new ParseResultCollector (constantExpression);
+      _topLevelParser.Parse (result, constantExpression, _potentialFromIdentifier, "bla");
     }
 
     [Test]
@@ -97,6 +122,19 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
       Assert.AreEqual (1, result.BodyExpressions.Count);
       Assert.AreEqual (_potentialFromIdentifier, ((FromExpression) result.BodyExpressions[0]).Identifier);
       Assert.AreEqual (memberExpression, ((FromExpression) result.BodyExpressions[0]).Expression);
+      Assert.That (result.ProjectionExpressions, Is.Empty);
+    }
+
+    [Test]
+    public void SimpleSource_MethodCall ()
+    {
+      Expression callExpression = Expression.Call (typeof (ExpressionHelper).GetMethod ("CreateQuerySource", new Type[0]));
+      ParseResultCollector result = new ParseResultCollector (callExpression);
+      _topLevelParser.Parse (result, callExpression, _potentialFromIdentifier, "bla");
+
+      Assert.AreEqual (1, result.BodyExpressions.Count);
+      Assert.AreEqual (_potentialFromIdentifier, ((FromExpression) result.BodyExpressions[0]).Identifier);
+      Assert.IsInstanceOfType (typeof (TestQueryable<Student>), ((ConstantExpression)((FromExpression) result.BodyExpressions[0]).Expression).Value);
       Assert.That (result.ProjectionExpressions, Is.Empty);
     }
 

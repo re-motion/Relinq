@@ -7,6 +7,18 @@ namespace Rubicon.Data.Linq.Parsing.TreeEvaluation
 {
   public sealed class PartialTreeEvaluator : ExpressionTreeVisitor
   {
+    public static ConstantExpression EvaluateSubtree (Expression subtree)
+    {
+      if (subtree.NodeType == ExpressionType.Constant)
+        return (ConstantExpression) subtree;
+      else
+      {
+        LambdaExpression lambdaWithoutParameters = Expression.Lambda (subtree);
+        object value = lambdaWithoutParameters.Compile ().DynamicInvoke ();
+        return Expression.Constant (value, subtree.Type);
+      }
+    }
+
     // _parameterUsage contains a list of the used parameters and a list of the declared parameters for each expression in the tree. We will 
     // evaluate an expression if it only uses parameters declared within or below the same expression.
     private readonly ParameterUsage _parameterUsage;
@@ -44,18 +56,6 @@ namespace Rubicon.Data.Linq.Parsing.TreeEvaluation
         return false;
       else
         return _parameterUsage.DeclaredParameters[expression].IsSupersetOf (_parameterUsage.UsedParameters[expression]);
-    }
-
-    private Expression EvaluateSubtree (Expression subtree)
-    {
-      if (subtree.NodeType == ExpressionType.Constant)
-        return subtree;
-      else
-      {
-        LambdaExpression lambdaWithoutParameters = Expression.Lambda (subtree);
-        object value = lambdaWithoutParameters.Compile().DynamicInvoke();
-        return Expression.Constant (value, subtree.Type);
-      }
     }
   }
 }

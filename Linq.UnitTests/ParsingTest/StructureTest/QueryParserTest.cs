@@ -29,8 +29,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected one of 'Select, SelectMany, Where, OrderBy, OrderByDescending, ThenBy, ThenByDescending, Distinct', but found 'WriteLine' at"
-        + " position WriteLine() in tree WriteLine().")]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "The expression 'WriteLine()' could not be evaluated as a query source because it " 
+        + "cannot be compiled: Argument types do not match")]
     public void Initialize_FromWrongExpression ()
     {
       MethodCallExpression expression = Expression.Call (typeof (Console), "WriteLine", Type.EmptyTypes);

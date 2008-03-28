@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Linq;
 using NUnit.Framework;
 using Rubicon.Data.DomainObjects.UnitTests;
@@ -248,6 +249,32 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
           select o;
 
       CheckQueryResult (orders, DomainObjectIDs.InvalidOrder, DomainObjectIDs.Order3, DomainObjectIDs.Order2, DomainObjectIDs.Order4);
+    }
+
+    [Test]
+    public void QueryWithSubQueryAndWhereInAdditionalFrom()
+    {
+      var orders =
+          from o in DataContext.Entity<Order> (new TestQueryListener())
+          from o2 in
+            (from oi in DataContext.Entity<OrderItem> (new TestQueryListener ()) where oi.Order == o select oi)
+          select o2;
+
+      CheckQueryResult (orders, DomainObjectIDs.OrderItem5, DomainObjectIDs.OrderItem4, DomainObjectIDs.OrderItem2, DomainObjectIDs.OrderItem1, 
+        DomainObjectIDs.OrderItem3);
+    }
+
+    [Test]
+    public void QueryWithSubQueryAndWhereInAdditionalFrom_X ()
+    {
+      var orders =
+          from o in DataContext.Entity<Order> (new TestQueryListener ())
+          from o2 in
+            (from oi in DataContext.Entity<OrderItem> (new TestQueryListener ()) where oi.Order == o select oi)
+          select o2;
+
+      CheckQueryResult (orders, DomainObjectIDs.OrderItem5, DomainObjectIDs.OrderItem4, DomainObjectIDs.OrderItem2, DomainObjectIDs.OrderItem1,
+        DomainObjectIDs.OrderItem3);
     }
 
     private void CheckQueryResult<T> (IQueryable<T> query, params ObjectID[] expectedObjectIDs)
