@@ -128,6 +128,8 @@
     <Compile Include="ParsingTest\StructureTest\SelectManyExpressionParserTest\WhereSelectManyExpressionParserTest.cs" />
     <Compile Include="ParsingTest\StructureTest\SourceExpressionParserTest.cs" />
     <Compile Include="ParsingTest\TreeEvaluationTest\FilteredSubtreeFinderTest.cs" />
+    <Compile Include="ParsingTest\TreeEvaluationTest\ParameterUsageAnalyzerIntegrationTest.cs" />
+    <Compile Include="ParsingTest\TreeEvaluationTest\ParameterUsagesAnalyzerTest.cs" />
     <Compile Include="ParsingTest\TreeEvaluationTest\PartialTreeEvaluatorTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\WhereConditionParserTest.cs" />
     <Compile Include="ParsingTest\StructureTest\WhereExpressionParserTest\BodyHelper.cs" />
@@ -135,6 +137,7 @@
     <Compile Include="ParsingTest\StructureTest\WhereExpressionParserTest\RecursiveWhereExpressionParserTest.cs" />
     <Compile Include="ParsingTest\StructureTest\WhereExpressionParserTest\SelectManyWhereExpressionParserTest.cs" />
     <Compile Include="ParsingTest\StructureTest\WhereExpressionParserTest\SimpleWhereExpressionParserTest.cs" />
+    <Compile Include="ParsingTest\TreeEvaluationTest\TestableParameterUsageAnalyzer.cs" />
     <Compile Include="SqlGenerationTest\JoinCollectionTest.cs" />
     <Compile Include="SqlGenerationTest\SqlGeneratorBaseTest.cs" />
     <Compile Include="SqlGenerationTest\SqlGeneratorMock.cs" />
