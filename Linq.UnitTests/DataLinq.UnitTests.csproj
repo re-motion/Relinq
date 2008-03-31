@@ -96,6 +96,7 @@
     <Compile Include="ParsingTest\ExpressionTreeComparer.cs" />
     <Compile Include="ParsingTest\FieldResolvingTest\SelectFieldAccessPolicyTest.cs" />
     <Compile Include="ParsingTest\FieldResolvingTest\WhereFieldAccessPolicyTest.cs" />
+    <Compile Include="ParsingTest\StructureTest\CallParserDispatcherTest.cs" />
     <Compile Include="ParsingTest\StructureTest\FromLetWhereExpressionTest.cs" />
     <Compile Include="ParsingTest\StructureTest\OrderExpressionParserTest\MultiOrderByExpressionParserTest.cs" />
     <Compile Include="ParsingTest\StructureTest\OrderExpressionParserTest\OrderByWhereExpressionParserTest.cs" />
@@ -128,6 +129,7 @@
     <Compile Include="ParsingTest\StructureTest\SelectManyExpressionParserTest\SimpleSelectManyExpressionParserTest.cs" />
     <Compile Include="ParsingTest\StructureTest\SelectManyExpressionParserTest\WhereSelectManyExpressionParserTest.cs" />
     <Compile Include="ParsingTest\StructureTest\SourceExpressionParserTest.cs" />
+    <Compile Include="ParsingTest\StructureTest\SubQueryFindingVisitorTest.cs" />
     <Compile Include="ParsingTest\TreeEvaluationTest\ParameterUsageAnalyzerIntegrationTest.cs" />
     <Compile Include="ParsingTest\TreeEvaluationTest\ParameterUsagesAnalyzerTest.cs" />
     <Compile Include="ParsingTest\TreeEvaluationTest\PartialTreeEvaluatorTest.cs" />

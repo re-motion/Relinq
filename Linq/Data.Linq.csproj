@@ -80,6 +80,7 @@
     <Compile Include="DataObjectModel\OrderingField.cs" />
     <Compile Include="Parsing\FieldResolving\SelectFieldAccessPolicy.cs" />
     <Compile Include="Parsing\FieldResolving\WhereFieldAccessPolicy.cs" />
+    <Compile Include="Parsing\Structure\CallParserDispatcher.cs" />
     <Compile Include="Parsing\Structure\OrderByExpressionParser.cs" />
     <Compile Include="Parsing\Structure\ParseResultCollector.cs" />
     <Compile Include="Parsing\Structure\QueryModelCreator.cs" />
@@ -105,6 +106,7 @@
     <Compile Include="Parsing\Details\SelectProjectionParser.cs" />
     <Compile Include="Parsing\Details\OrderingFieldParser.cs" />
     <Compile Include="Parsing\Details\WhereConditionParser.cs" />
+    <Compile Include="Parsing\Structure\SubQueryFindingVisitor.cs" />
     <Compile Include="Parsing\Structure\WhereExpressionData.cs" />
     <Compile Include="Parsing\Structure\WhereExpressionParser.cs" />
     <Compile Include="Parsing\TreeEvaluation\ParameterUsage.cs" />

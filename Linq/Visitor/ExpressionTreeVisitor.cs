@@ -10,7 +10,9 @@ namespace Rubicon.Data.Linq.Visitor
   {
     protected virtual Expression VisitExpression (Expression expression)
     {
-      ArgumentUtility.CheckNotNull ("expression", expression);
+      if (expression == null)
+        return null;
+
       switch (expression.NodeType)
       {
         case ExpressionType.ArrayLength:
@@ -75,6 +77,7 @@ namespace Rubicon.Data.Linq.Visitor
           return VisitTypeBinaryExpression ((TypeBinaryExpression) expression);
 
         default:
+          // TODO: if (expression is SubQueryExpression) VisitSubQueryExpression ((SubQueryExpression) expression);
           return VisitUnknownExpression (expression);
       }
     }

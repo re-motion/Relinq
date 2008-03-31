@@ -10,10 +10,26 @@ namespace Rubicon.Data.Linq.Parsing.Structure
   public class SourceExpressionParser
   {
     private readonly bool _isTopLevel;
+    private readonly CallParserDispatcher _callDispatcher;
     
     public SourceExpressionParser (bool isTopLevel)
     {
       _isTopLevel = isTopLevel;
+      _callDispatcher = new CallParserDispatcher ();
+
+      _callDispatcher.RegisterParser ("Select", ParseSelectSource);
+      _callDispatcher.RegisterParser ("SelectMany", ParseSelectManySource);
+      _callDispatcher.RegisterParser ("Where", ParseWhereSource);
+      _callDispatcher.RegisterParser ("OrderBy", ParseOrderBy);
+      _callDispatcher.RegisterParser ("OrderByDescending", ParseOrderBy);
+      _callDispatcher.RegisterParser ("ThenBy", ParseOrderBy);
+      _callDispatcher.RegisterParser ("ThenByDescending", ParseOrderBy);
+      _callDispatcher.RegisterParser ("Distinct", ParseDistinct);
+    }
+
+    public CallParserDispatcher CallDispatcher
+    {
+      get { return _callDispatcher; }
     }
 
     public void Parse (ParseResultCollector resultCollector, Expression sourceExpression, ParameterExpression potentialFromIdentifier, string context)
@@ -32,31 +48,10 @@ namespace Rubicon.Data.Linq.Parsing.Structure
           break;
         case ExpressionType.Call:
           var methodCallExpression = (MethodCallExpression) sourceExpression;
-          string methodName = methodCallExpression.Method.Name;
-          switch (methodName)
-          {
-            case "Select":
-              ParseSelectSource (resultCollector, sourceExpression);
-              break;
-            case "SelectMany":
-              ParseSelectManySource (resultCollector, sourceExpression);
-              break;
-            case "Where":
-              ParseWhereSource (resultCollector, sourceExpression);
-              break;
-            case "OrderBy":
-            case "OrderByDescending":
-            case "ThenBy":
-            case "ThenByDescending":
-              ParseOrderBy (resultCollector, sourceExpression);
-              break;
-            case "Distinct":
-              ParseDistinct (resultCollector, sourceExpression, potentialFromIdentifier);
-              break;
-            default:
-              EvaluateExpressionAsSimpleSource (resultCollector, methodCallExpression, potentialFromIdentifier);
-              break;
-          }
+          if (_callDispatcher.CanParse (methodCallExpression.Method))
+            _callDispatcher.Dispatch (resultCollector, methodCallExpression, potentialFromIdentifier);
+          else
+            EvaluateExpressionAsSimpleSource (resultCollector, methodCallExpression, potentialFromIdentifier);
           break;
         default:
           throw ParserUtility.CreateParserException ("Constant or Call expression", sourceExpression, context,

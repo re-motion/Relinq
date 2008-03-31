@@ -6,6 +6,7 @@ using Rhino.Mocks;
 using System.Reflection;
 using Rhino.Mocks.Interfaces;
 using Rubicon.Data.Linq.Visitor;
+using Rubicon.Development.UnitTesting;
 using Rubicon.Utilities;
 using System.Linq;
 
@@ -26,6 +27,14 @@ namespace Rubicon.Data.Linq.UnitTests.VisitorTest.ExpressionTreeVisitorTest
     public void VisitExpression_Unknown ()
     {
       CheckDelegation (_mockRepository, "VisitUnknownExpression", (ExpressionType) (-1));
+    }
+
+    [Test]
+    public void VisitExpression_Null ()
+    {
+      ExpressionTreeVisitor visitor = _mockRepository.PartialMock<ExpressionTreeVisitor>();
+      _mockRepository.ReplayAll ();
+      Assert.IsNull (PrivateInvoke.InvokeNonPublicMethod (visitor, "VisitExpression", new object[] { null }));
     }
 
     [Test]
