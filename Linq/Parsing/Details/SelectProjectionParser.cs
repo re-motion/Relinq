@@ -10,18 +10,18 @@ namespace Rubicon.Data.Linq.Parsing.Details
 {
   public class SelectProjectionParser
   {
-    private readonly QueryExpression _queryExpression;
+    private readonly QueryModel _queryModel;
     private readonly SelectClause _selectClause;
     private readonly FromClauseFieldResolver _resolver;
 
-    public SelectProjectionParser (QueryExpression queryExpression, SelectClause selectClause, IDatabaseInfo databaseInfo, JoinedTableContext context)
+    public SelectProjectionParser (QueryModel queryModel, SelectClause selectClause, IDatabaseInfo databaseInfo, JoinedTableContext context)
     {
-      ArgumentUtility.CheckNotNull ("queryExpression", queryExpression);
+      ArgumentUtility.CheckNotNull ("queryExpression", queryModel);
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);
       ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
       ArgumentUtility.CheckNotNull ("context", context);
 
-      _queryExpression = queryExpression;
+      _queryModel = queryModel;
       _selectClause = selectClause;
       _resolver = new FromClauseFieldResolver (databaseInfo, context, new SelectFieldAccessPolicy());
     }
@@ -45,7 +45,7 @@ namespace Rubicon.Data.Linq.Parsing.Details
     {
       FromClauseBase fromClause = ClauseFinder.FindClause<FromClauseBase> (_selectClause);
       Assertion.IsTrue (fromClause is MainFromClause, "When there are two or more from clauses, there must be a projection expression.");
-      FieldDescriptor dummyProjectionField = _queryExpression.ResolveField (_resolver, fromClause.Identifier);
+      FieldDescriptor dummyProjectionField = _queryModel.ResolveField (_resolver, fromClause.Identifier);
       fields.Add (dummyProjectionField);
     }
 
@@ -91,7 +91,7 @@ namespace Rubicon.Data.Linq.Parsing.Details
 
     private void ResolveField (List<FieldDescriptor> fields, Expression expression)
     {
-      FieldDescriptor fieldDescriptor = _queryExpression.ResolveField (_resolver, expression);
+      FieldDescriptor fieldDescriptor = _queryModel.ResolveField (_resolver, expression);
       if (fieldDescriptor.Column != null)
         fields.Add (fieldDescriptor);
     }

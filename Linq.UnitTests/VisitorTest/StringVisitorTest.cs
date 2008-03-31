@@ -251,7 +251,7 @@ namespace Rubicon.Data.Linq.UnitTests.VisitorTest
       SelectClause selectClause1 =
           repository.CreateMock<SelectClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateLambdaExpression (), false);
       
-      QueryExpression queryExpression = new QueryExpression (typeof (IQueryable<string>), fromClause, selectClause1);
+      QueryModel queryModel = new QueryModel (typeof (IQueryable<string>), fromClause, selectClause1);
 
       StringVisitor sv = new StringVisitor();
 
@@ -263,7 +263,7 @@ namespace Rubicon.Data.Linq.UnitTests.VisitorTest
       }
 
       repository.ReplayAll();
-      sv.VisitQueryExpression (queryExpression);
+      sv.VisitQueryExpression (queryModel);
       repository.VerifyAll();
     }
 
@@ -283,10 +283,10 @@ namespace Rubicon.Data.Linq.UnitTests.VisitorTest
       WhereClause whereClause1 =
           repository.CreateMock<WhereClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateLambdaExpression ());
 
-      QueryExpression queryExpression = new QueryExpression (typeof (IQueryable<string>), fromClause, selectClause1);
-      queryExpression.AddBodyClause (orderByClause1);
-      queryExpression.AddBodyClause (fromClause1);
-      queryExpression.AddBodyClause (whereClause1);
+      QueryModel queryModel = new QueryModel (typeof (IQueryable<string>), fromClause, selectClause1);
+      queryModel.AddBodyClause (orderByClause1);
+      queryModel.AddBodyClause (fromClause1);
+      queryModel.AddBodyClause (whereClause1);
 
       StringVisitor sv = new StringVisitor ();
 
@@ -301,7 +301,7 @@ namespace Rubicon.Data.Linq.UnitTests.VisitorTest
       }
 
       repository.ReplayAll ();
-      sv.VisitQueryExpression (queryExpression);
+      sv.VisitQueryExpression (queryModel);
       repository.VerifyAll ();
     }
 
@@ -370,7 +370,7 @@ namespace Rubicon.Data.Linq.UnitTests.VisitorTest
       MainFromClause mainFromClause = new MainFromClause (subQueryIdentifier, querySource);
       LambdaExpression subQueryProjection = Expression.Lambda (Expression.Constant (1));
       SelectClause selectClause = new SelectClause (previousClause, subQueryProjection, false);
-      QueryExpression subQuery = new QueryExpression (typeof (string), mainFromClause, selectClause);
+      QueryModel subQuery = new QueryModel (typeof (string), mainFromClause, selectClause);
       LambdaExpression projectionExpression = ExpressionHelper.CreateLambdaExpression();
 
       SubQueryFromClause subQueryFromClause = new SubQueryFromClause (previousClause, identifier, subQuery, projectionExpression);

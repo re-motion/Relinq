@@ -4,14 +4,14 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.Parsing.FieldResolving
 {
-  public class QueryExpressionFieldResolver
+  public class QueryModelFieldResolver
   {
-    private readonly QueryExpression _queryExpression;
+    private readonly QueryModel _queryModel;
 
-    public QueryExpressionFieldResolver (QueryExpression queryExpression)
+    public QueryModelFieldResolver (QueryModel queryModel)
     {
-      ArgumentUtility.CheckNotNull ("queryExpression", queryExpression);
-      _queryExpression = queryExpression;
+      ArgumentUtility.CheckNotNull ("queryExpression", queryModel);
+      _queryModel = queryModel;
     }
 
     public FieldDescriptor ResolveField (FromClauseFieldResolver resolver, Expression fieldAccessExpression)
@@ -19,13 +19,13 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
       ArgumentUtility.CheckNotNull ("resolver", resolver);
       ArgumentUtility.CheckNotNull ("fieldAccessExpression", fieldAccessExpression);
 
-      QueryExpressionFieldResolverVisitor visitor = new QueryExpressionFieldResolverVisitor (_queryExpression);
-      QueryExpressionFieldResolverVisitor.Result visitorResult = visitor.ParseAndReduce (fieldAccessExpression);
+      QueryModelFieldResolverVisitor visitor = new QueryModelFieldResolverVisitor (_queryModel);
+      QueryModelFieldResolverVisitor.Result visitorResult = visitor.ParseAndReduce (fieldAccessExpression);
 
       if (visitorResult != null)
         return visitorResult.FromClause.ResolveField (resolver, visitorResult.ReducedExpression, fieldAccessExpression);
-      else if (_queryExpression.ParentQuery != null)
-        return _queryExpression.ParentQuery.ResolveField (resolver, fieldAccessExpression);
+      else if (_queryModel.ParentQuery != null)
+        return _queryModel.ParentQuery.ResolveField (resolver, fieldAccessExpression);
       else
       {
         string message = string.Format ("The field access expression '{0}' does not contain a from clause identifier.", fieldAccessExpression);

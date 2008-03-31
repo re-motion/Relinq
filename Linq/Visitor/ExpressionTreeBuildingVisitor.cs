@@ -12,13 +12,13 @@ namespace Rubicon.Data.Linq.Visitor
   {
     public Expression ExpressionTree { get; private set; }
 
-    public void VisitQueryExpression (QueryExpression queryExpression)
+    public void VisitQueryExpression (QueryModel queryModel)
     {
-      queryExpression.MainFromClause.Accept (this);
-      foreach (IBodyClause bodyClause in queryExpression.BodyClauses)
+      queryModel.MainFromClause.Accept (this);
+      foreach (IBodyClause bodyClause in queryModel.BodyClauses)
         bodyClause.Accept (this);
 
-      queryExpression.SelectOrGroupClause.Accept (this);
+      queryModel.SelectOrGroupClause.Accept (this);
     }
 
     public void VisitMainFromClause (MainFromClause fromClause)

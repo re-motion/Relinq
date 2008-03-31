@@ -4,24 +4,24 @@ using Rubicon.Data.Linq.DataObjectModel;
 using Rubicon.Data.Linq.Parsing.FieldResolving;
 using Rubicon.Utilities;
 
-namespace Rubicon.Data.Linq.Parsing.Details.WhereParser
+namespace Rubicon.Data.Linq.Parsing.Details.WhereConditionParsing
 {
   public class MemberExpressionParser
   {
-    private readonly QueryExpression _queryExpression;
+    private readonly QueryModel _queryModel;
     private readonly FromClauseFieldResolver _resolver;
 
-    public MemberExpressionParser (QueryExpression queryExpression, FromClauseFieldResolver resolver)
+    public MemberExpressionParser (QueryModel queryModel, FromClauseFieldResolver resolver)
     {
-      ArgumentUtility.CheckNotNull ("queryExpression", queryExpression);
+      ArgumentUtility.CheckNotNull ("queryExpression", queryModel);
       ArgumentUtility.CheckNotNull ("resolver", resolver);
-      _queryExpression = queryExpression;
+      _queryModel = queryModel;
       _resolver = resolver;
     }
 
     public virtual ICriterion Parse (MemberExpression expression, List<FieldDescriptor> fieldDescriptorCollection)
     {
-      FieldDescriptor fieldDescriptor = _queryExpression.ResolveField (_resolver, expression);
+      FieldDescriptor fieldDescriptor = _queryModel.ResolveField (_resolver, expression);
       fieldDescriptorCollection.Add (fieldDescriptor);
       return fieldDescriptor.GetMandatoryColumn ();
     }

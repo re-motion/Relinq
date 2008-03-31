@@ -5,9 +5,9 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.Parsing.Structure
 {
-  public class OrderExpression : BodyExpressionBase<LambdaExpression>
+  public class OrderExpressionData : BodyExpressionDataBase<LambdaExpression>
   {
-    public OrderExpression (bool firstOrderBy, OrderDirection orderDirection, LambdaExpression expression)
+    public OrderExpressionData (bool firstOrderBy, OrderDirection orderDirection, LambdaExpression expression)
         : base (expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);

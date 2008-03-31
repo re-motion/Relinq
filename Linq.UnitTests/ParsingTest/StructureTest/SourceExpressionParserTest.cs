@@ -98,8 +98,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
       _topLevelParser.Parse (result, constantExpression, _potentialFromIdentifier, "bla");
 
       Assert.AreEqual (1, result.BodyExpressions.Count);
-      Assert.AreEqual (_potentialFromIdentifier, ((FromExpression) result.BodyExpressions[0]).Identifier);
-      Assert.AreEqual (constantExpression, ((FromExpression) result.BodyExpressions[0]).Expression);
+      Assert.AreEqual (_potentialFromIdentifier, ((FromExpressionData) result.BodyExpressions[0]).Identifier);
+      Assert.AreEqual (constantExpression, ((FromExpressionData) result.BodyExpressions[0]).Expression);
       Assert.That (result.ProjectionExpressions, Is.Empty);
     }
 
@@ -120,8 +120,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
       _topLevelParser.Parse (result, memberExpression, _potentialFromIdentifier, "bla");
       
       Assert.AreEqual (1, result.BodyExpressions.Count);
-      Assert.AreEqual (_potentialFromIdentifier, ((FromExpression) result.BodyExpressions[0]).Identifier);
-      Assert.AreEqual (memberExpression, ((FromExpression) result.BodyExpressions[0]).Expression);
+      Assert.AreEqual (_potentialFromIdentifier, ((FromExpressionData) result.BodyExpressions[0]).Identifier);
+      Assert.AreEqual (memberExpression, ((FromExpressionData) result.BodyExpressions[0]).Expression);
       Assert.That (result.ProjectionExpressions, Is.Empty);
     }
 
@@ -133,8 +133,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
       _topLevelParser.Parse (result, callExpression, _potentialFromIdentifier, "bla");
 
       Assert.AreEqual (1, result.BodyExpressions.Count);
-      Assert.AreEqual (_potentialFromIdentifier, ((FromExpression) result.BodyExpressions[0]).Identifier);
-      Assert.IsInstanceOfType (typeof (TestQueryable<Student>), ((ConstantExpression)((FromExpression) result.BodyExpressions[0]).Expression).Value);
+      Assert.AreEqual (_potentialFromIdentifier, ((FromExpressionData) result.BodyExpressions[0]).Identifier);
+      Assert.IsInstanceOfType (typeof (TestQueryable<Student>), ((ConstantExpression)((FromExpressionData) result.BodyExpressions[0]).Expression).Value);
       Assert.That (result.ProjectionExpressions, Is.Empty);
     }
 
@@ -210,24 +210,24 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
 
       for (int i = 0; i < one.BodyExpressions.Count; ++i)
       {
-        FromExpression fromExpression1 = one.BodyExpressions[i] as FromExpression;
-        WhereExpression whereExpression1 = one.BodyExpressions[i] as WhereExpression;
-        OrderExpression orderExpression1 = one.BodyExpressions[i] as OrderExpression;
+        FromExpressionData fromExpression1 = one.BodyExpressions[i] as FromExpressionData;
+        WhereExpressionData whereExpression1 = one.BodyExpressions[i] as WhereExpressionData;
+        OrderExpressionData orderExpression1 = one.BodyExpressions[i] as OrderExpressionData;
         if (fromExpression1 != null)
         {
-          FromExpression fromExpression2 = two.BodyExpressions[i] as FromExpression;
+          FromExpressionData fromExpression2 = two.BodyExpressions[i] as FromExpressionData;
 
           Assert.AreEqual (fromExpression1.Identifier, fromExpression2.Identifier);
           Assert.AreEqual (fromExpression1.Expression, fromExpression2.Expression);
         }
         else if (whereExpression1 != null)
         {
-          WhereExpression whereExpression2 = two.BodyExpressions[i] as WhereExpression;
+          WhereExpressionData whereExpression2 = two.BodyExpressions[i] as WhereExpressionData;
           Assert.AreEqual (whereExpression1.Expression, whereExpression2.Expression);
         }
         else
         {
-          OrderExpression orderExpression2 = two.BodyExpressions[i] as OrderExpression;
+          OrderExpressionData orderExpression2 = two.BodyExpressions[i] as OrderExpressionData;
           Assert.AreEqual (orderExpression1.Expression, orderExpression2.Expression);
         }
       }

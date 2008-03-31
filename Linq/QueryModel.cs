@@ -11,14 +11,14 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq
 {
-  public class QueryExpression : IQueryElement
+  public class QueryModel : IQueryElement
   {
     private readonly List<IBodyClause> _bodyClauses = new List<IBodyClause> ();
     private readonly Dictionary<string, FromClauseBase> _fromClausesByIdentifier = new Dictionary<string, FromClauseBase> ();
 
     private Expression _expressionTree;
 
-    public QueryExpression (Type resultType, MainFromClause mainFromClause, ISelectGroupClause selectOrGroupClause, Expression expressionTree)
+    public QueryModel (Type resultType, MainFromClause mainFromClause, ISelectGroupClause selectOrGroupClause, Expression expressionTree)
     {
       ArgumentUtility.CheckNotNull ("resultType", resultType);
       ArgumentUtility.CheckNotNull ("mainFromClause", mainFromClause);
@@ -30,15 +30,15 @@ namespace Rubicon.Data.Linq
       _expressionTree = expressionTree;
     }
 
-    public QueryExpression (Type resultType, MainFromClause fromClause, ISelectGroupClause selectOrGroupClause)
+    public QueryModel (Type resultType, MainFromClause fromClause, ISelectGroupClause selectOrGroupClause)
         : this (resultType, fromClause, selectOrGroupClause, null)
     {
     }
 
     public Type ResultType { get; private set; }
-    public QueryExpression ParentQuery { get; private set; }
+    public QueryModel ParentQuery { get; private set; }
 
-    public void SetParentQuery(QueryExpression parentQuery)
+    public void SetParentQuery(QueryModel parentQuery)
     {
       ArgumentUtility.CheckNotNull ("parentQueryExpression", parentQuery);
       if (ParentQuery != null)
@@ -132,7 +132,7 @@ namespace Rubicon.Data.Linq
       ArgumentUtility.CheckNotNull ("resolver", resolver);
       ArgumentUtility.CheckNotNull ("fieldAccessExpression", fieldAccessExpression);
 
-      return new QueryExpressionFieldResolver (this).ResolveField (resolver, fieldAccessExpression);
+      return new QueryModelFieldResolver (this).ResolveField (resolver, fieldAccessExpression);
     }
   }
 }

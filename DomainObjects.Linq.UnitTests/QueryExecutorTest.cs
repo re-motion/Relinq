@@ -43,9 +43,9 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
       ClientTransaction.Current.Commit();
       
       QueryExecutor<Computer> executor = new QueryExecutor<Computer> (_listener);
-      QueryExpression expression = GetParsedSimpleQuery ();
+      QueryModel model = GetParsedSimpleQuery ();
 
-      object instance = executor.ExecuteSingle (expression);
+      object instance = executor.ExecuteSingle (model);
       Assert.IsNotNull (instance);
       Assert.AreSame (Computer.GetObject (DomainObjectIDs.Computer5), instance);
     }
@@ -63,11 +63,11 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     public void QueryExecutor_ExecuteSingle_NoCurrentTransaction ()
     {
       QueryExecutor<Computer> executor = new QueryExecutor<Computer> (null);
-      QueryExpression expression = GetParsedSimpleQuery ();
+      QueryModel model = GetParsedSimpleQuery ();
 
       using (ClientTransactionScope.EnterNullScope ())
       {
-        executor.ExecuteSingle (expression);
+        executor.ExecuteSingle (model);
       }
     }
 
@@ -75,9 +75,9 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     public void ExecuteCollection ()
     {
       QueryExecutor<Computer> executor = new QueryExecutor<Computer> (_listener);
-      QueryExpression expression = GetParsedSimpleQuery();
+      QueryModel model = GetParsedSimpleQuery();
 
-      IEnumerable computers = executor.ExecuteCollection (expression);
+      IEnumerable computers = executor.ExecuteCollection (model);
 
       ArrayList computerList = new ArrayList();
       foreach (Computer computer in computers)
@@ -107,11 +107,11 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     public void QueryExecutor_ExecuteCollection_NoCurrentTransaction ()
     {
       QueryExecutor<Computer> executor = new QueryExecutor<Computer> (null);
-      QueryExpression expression = GetParsedSimpleQuery ();
+      QueryModel model = GetParsedSimpleQuery ();
 
       using (ClientTransactionScope.EnterNullScope ())
       {
-        executor.ExecuteCollection (expression);
+        executor.ExecuteCollection (model);
       }
     }
 
@@ -119,9 +119,9 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     public void ExecuteSingle_WithParameters ()
     {
       QueryExecutor<Order> executor = new QueryExecutor<Order> (_listener);
-      QueryExpression expression = GetParsedSimpleWhereQuery ();
+      QueryModel model = GetParsedSimpleWhereQuery ();
 
-      Order order = (Order) executor.ExecuteSingle (expression);
+      Order order = (Order) executor.ExecuteSingle (model);
 
       Order expected = Order.GetObject (DomainObjectIDs.Order1);
       Assert.AreSame (expected, order);
@@ -131,9 +131,9 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     public void ExecuteCollection_WithParameters()
     {
       QueryExecutor<Order> executor = new QueryExecutor<Order> (_listener);
-      QueryExpression expression = GetParsedSimpleWhereQuery ();
+      QueryModel model = GetParsedSimpleWhereQuery ();
 
-      IEnumerable orders = executor.ExecuteCollection (expression);
+      IEnumerable orders = executor.ExecuteCollection (model);
 
       ArrayList orderList = new ArrayList ();
       foreach (Order order in orders) 
@@ -147,13 +147,13 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
       Assert.That (orderList, Is.EquivalentTo (expected));
     }
 
-    private QueryExpression GetParsedSimpleQuery ()
+    private QueryModel GetParsedSimpleQuery ()
     {
       IQueryable<Computer> query = from computer in DataContext.Entity<Computer> () select computer;
       return new QueryParser (query.Expression).GetParsedQuery ();
     }
 
-    private QueryExpression GetParsedSimpleWhereQuery ()
+    private QueryModel GetParsedSimpleWhereQuery ()
     {
       IQueryable<Order> query = from order in DataContext.Entity<Order> () where order.OrderNumber == 1 select order;
       return new QueryParser (query.Expression).GetParsedQuery ();

@@ -7,9 +7,9 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.WhereExpressionP
 {
   public class BodyHelper
   {
-    private readonly IEnumerable<BodyExpressionBase> _bodyExpressions;
+    private readonly IEnumerable<BodyExpressionDataBase> _bodyExpressions;
 
-    public BodyHelper (IEnumerable<BodyExpressionBase> bodyExpressions)
+    public BodyHelper (IEnumerable<BodyExpressionDataBase> bodyExpressions)
     {
       _bodyExpressions = bodyExpressions;
     }
@@ -19,11 +19,11 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.WhereExpressionP
       get
       {
         List<Expression> fromExpressions = new List<Expression>();
-        foreach (BodyExpressionBase expression in _bodyExpressions)
+        foreach (BodyExpressionDataBase expression in _bodyExpressions)
         {
-          FromExpression fromExpression = expression as FromExpression;
-          if (fromExpression != null)
-            fromExpressions.Add (fromExpression.Expression);
+          FromExpressionData fromExpressionData = expression as FromExpressionData;
+          if (fromExpressionData != null)
+            fromExpressions.Add (fromExpressionData.Expression);
         }
         return fromExpressions;
       }
@@ -34,11 +34,11 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.WhereExpressionP
       get
       {
         List<ParameterExpression> fromIdentifiers = new List<ParameterExpression>();
-        foreach (BodyExpressionBase expression in _bodyExpressions)
+        foreach (BodyExpressionDataBase expression in _bodyExpressions)
         {
-          FromExpression fromExpression = expression as FromExpression;
-          if (fromExpression != null)
-            fromIdentifiers.Add (fromExpression.Identifier);
+          FromExpressionData fromExpressionData = expression as FromExpressionData;
+          if (fromExpressionData != null)
+            fromIdentifiers.Add (fromExpressionData.Identifier);
         }
         return fromIdentifiers;
       }
@@ -49,26 +49,26 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.WhereExpressionP
       get
       {
         List<LambdaExpression> fromExpressions = new List<LambdaExpression>();
-        foreach (BodyExpressionBase expression in _bodyExpressions)
+        foreach (BodyExpressionDataBase expression in _bodyExpressions)
         {
-          WhereExpression whereExpression = expression as WhereExpression;
-          if (whereExpression != null)
-            fromExpressions.Add (whereExpression.Expression);
+          WhereExpressionData whereExpressionData = expression as WhereExpressionData;
+          if (whereExpressionData != null)
+            fromExpressions.Add (whereExpressionData.Expression);
         }
         return fromExpressions;
       }
     }
 
-    public List<OrderExpression> OrderingExpressions
+    public List<OrderExpressionData> OrderingExpressions
     {
       get
       {
-        List<OrderExpression> orderbyExpressions = new List<OrderExpression> ();
-        foreach (BodyExpressionBase expression in _bodyExpressions)
+        List<OrderExpressionData> orderbyExpressions = new List<OrderExpressionData> ();
+        foreach (BodyExpressionDataBase expression in _bodyExpressions)
         {
-          OrderExpression orderExpression = expression as OrderExpression;
-          if (orderExpression != null)
-            orderbyExpressions.Add (orderExpression);
+          OrderExpressionData orderExpressionData = expression as OrderExpressionData;
+          if (orderExpressionData != null)
+            orderbyExpressions.Add (orderExpressionData);
         }
         return orderbyExpressions;
       }

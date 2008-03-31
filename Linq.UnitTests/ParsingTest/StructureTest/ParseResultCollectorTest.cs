@@ -37,8 +37,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
     public void BodyExpressions()
     {
       Assert.That (_collector.BodyExpressions, Is.Empty);
-      FromExpression expression1 = new FromExpression (ExpressionHelper.CreateExpression (), ExpressionHelper.CreateParameterExpression ());
-      FromExpression expression2 = new FromExpression (ExpressionHelper.CreateExpression (), ExpressionHelper.CreateParameterExpression ());
+      FromExpressionData expression1 = new FromExpressionData (ExpressionHelper.CreateExpression (), ExpressionHelper.CreateParameterExpression ());
+      FromExpressionData expression2 = new FromExpressionData (ExpressionHelper.CreateExpression (), ExpressionHelper.CreateParameterExpression ());
       _collector.AddBodyExpression (expression1);
       _collector.AddBodyExpression (expression2);
       Assert.That (_collector.BodyExpressions, Is.EqualTo (new[] {expression1, expression2}));
@@ -47,13 +47,13 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
     [Test]
     public void ExtractMainFromExpression()
     {
-      FromExpression expression1 = new FromExpression (ExpressionHelper.CreateExpression (), ExpressionHelper.CreateParameterExpression ());
-      FromExpression expression2 = new FromExpression (ExpressionHelper.CreateExpression (), ExpressionHelper.CreateParameterExpression ());
+      FromExpressionData expression1 = new FromExpressionData (ExpressionHelper.CreateExpression (), ExpressionHelper.CreateParameterExpression ());
+      FromExpressionData expression2 = new FromExpressionData (ExpressionHelper.CreateExpression (), ExpressionHelper.CreateParameterExpression ());
       _collector.AddBodyExpression (expression1);
       _collector.AddBodyExpression (expression2);
 
-      FromExpression mainFromExpression = _collector.ExtractMainFromExpression();
-      Assert.AreSame (expression1, mainFromExpression);
+      FromExpressionData mainFromExpressionData = _collector.ExtractMainFromExpression();
+      Assert.AreSame (expression1, mainFromExpressionData);
       Assert.That (_collector.BodyExpressions, Is.EqualTo (new[] { expression2 }));
     }
 
@@ -65,10 +65,10 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "The first body expression is no FromExpression.")]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "The first body expression is no FromExpressionData.")]
     public void ExtractMainFromExpression_NotFromExpression ()
     {
-      WhereExpression expression1 = new WhereExpression (ExpressionHelper.CreateLambdaExpression());
+      WhereExpressionData expression1 = new WhereExpressionData (ExpressionHelper.CreateLambdaExpression());
       _collector.AddBodyExpression (expression1);
       _collector.ExtractMainFromExpression ();
     }

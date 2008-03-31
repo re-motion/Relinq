@@ -4,7 +4,7 @@ namespace Rubicon.Data.Linq
 {
   public interface IQueryVisitor
   {
-    void VisitQueryExpression (QueryExpression queryExpression);
+    void VisitQueryExpression (QueryModel queryModel);
     void VisitMainFromClause (MainFromClause fromClause);
     void VisitAdditionalFromClause (AdditionalFromClause fromClause);
     void VisitSubQueryFromClause (SubQueryFromClause clause);

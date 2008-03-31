@@ -19,9 +19,9 @@ namespace Rubicon.Data.DomainObjects.Linq
 
     public IQueryListener Listener { get; private set; }
 
-    public object ExecuteSingle (QueryExpression queryExpression)
+    public object ExecuteSingle (QueryModel queryModel)
     {
-      IEnumerable results = ExecuteCollection (queryExpression);
+      IEnumerable results = ExecuteCollection (queryModel);
       ArrayList resultList = new ArrayList();
       foreach (object o in results)
         resultList.Add (o);
@@ -34,13 +34,13 @@ namespace Rubicon.Data.DomainObjects.Linq
       }
     }
 
-    public IEnumerable ExecuteCollection (QueryExpression queryExpression)
+    public IEnumerable ExecuteCollection (QueryModel queryModel)
     {
       if (ClientTransaction.Current == null)
         throw new InvalidOperationException ("No ClientTransaction has been associated with the current thread.");
 
       ClassDefinition classDefinition = MappingConfiguration.Current.ClassDefinitions.GetMandatory (typeof (T));
-      SqlServerGenerator sqlGenerator = new SqlServerGenerator (queryExpression, DatabaseInfo.Instance);
+      SqlServerGenerator sqlGenerator = new SqlServerGenerator (queryModel, DatabaseInfo.Instance);
       
       Tuple<string, CommandParameter[]> result = sqlGenerator.BuildCommandString();
       string statement = result.A;

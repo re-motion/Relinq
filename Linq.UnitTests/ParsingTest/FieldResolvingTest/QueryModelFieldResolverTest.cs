@@ -8,7 +8,7 @@ using Rubicon.Data.Linq.Parsing.FieldResolving;
 namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
 {
   [TestFixture]
-  public class QueryExpressionFieldResolverTest
+  public class QueryModelFieldResolverTest
   {
     private FromClauseFieldResolver _resolver;
     private WhereFieldAccessPolicy _policy;
@@ -25,15 +25,15 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     [Test]
     public void ResolveField ()
     {
-      QueryExpression queryExpression = CreateQueryExpressionForResolve ();
+      QueryModel queryModel = CreateQueryExpressionForResolve ();
 
       Expression fieldAccessExpression = Expression.Parameter (typeof (String), "s1");
-      FieldDescriptor descriptor = new QueryExpressionFieldResolver(queryExpression).ResolveField (_resolver, fieldAccessExpression);
+      FieldDescriptor descriptor = new QueryModelFieldResolver(queryModel).ResolveField (_resolver, fieldAccessExpression);
 
-      IFromSource expectedTable = queryExpression.MainFromClause.GetFromSource (StubDatabaseInfo.Instance);
+      IFromSource expectedTable = queryModel.MainFromClause.GetFromSource (StubDatabaseInfo.Instance);
       FieldSourcePath expectedPath = new FieldSourcePath(expectedTable, new SingleJoin[0]);
 
-      Assert.AreSame (queryExpression.MainFromClause, descriptor.FromClause);
+      Assert.AreSame (queryModel.MainFromClause, descriptor.FromClause);
       Assert.AreEqual (new Column (expectedTable, "*"), descriptor.Column);
       Assert.IsNull (descriptor.Member);
       Assert.AreEqual (expectedPath, descriptor.SourcePath);
@@ -44,28 +44,28 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
         + "not contain a from clause identifier.")]
     public void NoFromIdentifierFound ()
     {
-      QueryExpression queryExpression = CreateQueryExpressionForResolve ();
+      QueryModel queryModel = CreateQueryExpressionForResolve ();
       Expression sourceExpression = Expression.Parameter (typeof (Student), "fzlbf");
 
-      new QueryExpressionFieldResolver (queryExpression).ResolveField (_resolver, sourceExpression);
+      new QueryModelFieldResolver (queryModel).ResolveField (_resolver, sourceExpression);
     }
 
     [Test]
     public void ResolveInParentQuery ()
     {
-      QueryExpression parentQueryExpression = CreateQueryExpressionForResolve ();
-      QueryExpression subQueryExpression =
-          ExpressionHelper.CreateQueryExpression (new MainFromClause (Expression.Parameter (typeof (Student), "a"), Expression.Constant (null)));
-      subQueryExpression.SetParentQuery (parentQueryExpression);
+      QueryModel parentQueryModel = CreateQueryExpressionForResolve ();
+      QueryModel subQueryModel =
+          ExpressionHelper.CreateQueryModel (new MainFromClause (Expression.Parameter (typeof (Student), "a"), Expression.Constant (null)));
+      subQueryModel.SetParentQuery (parentQueryModel);
       Expression sourceExpression = Expression.Parameter (typeof (string), "s1");
 
-      QueryExpressionFieldResolver fieldResolver = new QueryExpressionFieldResolver (subQueryExpression);
+      QueryModelFieldResolver fieldResolver = new QueryModelFieldResolver (subQueryModel);
 
       FieldDescriptor fieldDescriptor = fieldResolver.ResolveField (_resolver, sourceExpression);
-      Assert.AreSame (parentQueryExpression.MainFromClause, fieldDescriptor.FromClause);
+      Assert.AreSame (parentQueryModel.MainFromClause, fieldDescriptor.FromClause);
     }
 
-    private QueryExpression CreateQueryExpressionForResolve ()
+    private QueryModel CreateQueryExpressionForResolve ()
     {
       ParameterExpression s1 = Expression.Parameter (typeof (String), "s1");
       ParameterExpression s2 = Expression.Parameter (typeof (String), "s2");
@@ -73,7 +73,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       AdditionalFromClause additionalFromClause =
           new AdditionalFromClause (mainFromClause, s2, ExpressionHelper.CreateLambdaExpression (), ExpressionHelper.CreateLambdaExpression ());
 
-      var expression = ExpressionHelper.CreateQueryExpression (mainFromClause);
+      var expression = ExpressionHelper.CreateQueryModel (mainFromClause);
       
       expression.AddBodyClause (additionalFromClause);
 

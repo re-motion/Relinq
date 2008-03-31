@@ -4,7 +4,7 @@ namespace Rubicon.Data.Linq
 {
   public interface IQueryExecutor
   {
-    object ExecuteSingle (QueryExpression queryExpression);
-    IEnumerable ExecuteCollection (QueryExpression queryExpression);
+    object ExecuteSingle (QueryModel queryModel);
+    IEnumerable ExecuteCollection (QueryModel queryModel);
   }
 }

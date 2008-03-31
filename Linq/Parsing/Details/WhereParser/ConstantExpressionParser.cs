@@ -2,7 +2,7 @@ using System.Linq.Expressions;
 using Rubicon.Data.Linq.DataObjectModel;
 using Rubicon.Utilities;
 
-namespace Rubicon.Data.Linq.Parsing.Details.WhereParser
+namespace Rubicon.Data.Linq.Parsing.Details.WhereConditionParsing
 {
   public class ConstantExpressionParser
   {

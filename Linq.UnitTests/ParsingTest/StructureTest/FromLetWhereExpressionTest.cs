@@ -13,17 +13,17 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
     {
       Expression expression = ExpressionHelper.CreateExpression();
       ParameterExpression identifier = ExpressionHelper.CreateParameterExpression();
-      FromExpression fromExpression = new FromExpression(expression,identifier);
-      Assert.AreSame (expression, fromExpression.Expression);
-      Assert.AreSame (identifier, fromExpression.Identifier);
+      FromExpressionData fromExpressionData = new FromExpressionData(expression,identifier);
+      Assert.AreSame (expression, fromExpressionData.Expression);
+      Assert.AreSame (identifier, fromExpressionData.Identifier);
     }
 
     [Test]
     public void WhereExpression_Initialize ()
     {
       LambdaExpression expression = ExpressionHelper.CreateLambdaExpression ();
-      WhereExpression whereExpression = new WhereExpression (expression);
-      Assert.AreSame (expression, whereExpression.Expression);
+      WhereExpressionData whereExpressionData = new WhereExpressionData (expression);
+      Assert.AreSame (expression, whereExpressionData.Expression);
 
     }
     

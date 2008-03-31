@@ -46,14 +46,14 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
     [Test]
     public void ParsedQuery_StoresExpressionTree ()
     {
-      QueryExpression queryExpression = _parser.GetParsedQuery ();
-      Assert.AreSame (_expression, queryExpression.GetExpressionTree());
+      QueryModel queryModel = _parser.GetParsedQuery ();
+      Assert.AreSame (_expression, queryModel.GetExpressionTree());
     }
 
     [Test]
     public void PreviousClauses_SimpleQuery()
     {
-      QueryExpression parsedQuery = _parser.GetParsedQuery();
+      QueryModel parsedQuery = _parser.GetParsedQuery();
       Assert.IsNull (parsedQuery.MainFromClause.PreviousClause);
       Assert.AreSame (parsedQuery.MainFromClause, parsedQuery.SelectOrGroupClause.PreviousClause);
     }
@@ -64,7 +64,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
       IQueryable<Student> source = ExpressionHelper.CreateQuerySource();
       Expression queryExpression = MixedTestQueryGenerator.CreateMultiFromWhereQuery (source, source).Expression;
       QueryParser parser = new QueryParser (queryExpression);
-      QueryExpression parsedQuery = parser.GetParsedQuery ();
+      QueryModel parsedQuery = parser.GetParsedQuery ();
       
       Assert.IsNull (parsedQuery.MainFromClause.PreviousClause);
       Assert.AreSame (parsedQuery.BodyClauses.First(), parsedQuery.BodyClauses.Last ().PreviousClause);
@@ -77,7 +77,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
       IQueryable<Student> source = ExpressionHelper.CreateQuerySource();
       Expression queryExpression = MixedTestQueryGenerator.CreateMultiFromWhereOrderByQuery (source, source).Expression;
       QueryParser parser = new QueryParser (queryExpression);
-      QueryExpression parsedQuery = parser.GetParsedQuery();
+      QueryModel parsedQuery = parser.GetParsedQuery();
 
       Assert.IsNull (parsedQuery.MainFromClause.PreviousClause);
       Assert.AreSame (parsedQuery.BodyClauses.First(), parsedQuery.BodyClauses.Skip(1).First().PreviousClause);

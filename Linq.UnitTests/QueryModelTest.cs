@@ -1,78 +1,239 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Linq.Expressions;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
+using Rhino.Mocks;
+using Rubicon.Collections;
+using Rubicon.Data.Linq.Clauses;
+using Rubicon.Data.Linq.DataObjectModel;
+using Rubicon.Data.Linq.Parsing.FieldResolving;
+using Rubicon.Data.Linq.Visitor;
+using Rubicon.Data.Linq.UnitTests.TestQueryGenerators;
 
-namespace Rubicon.Data.DomainObjects.Linq.UnitTests
+namespace Rubicon.Data.Linq.UnitTests
 {
   [TestFixture]
   public class QueryModelTest
   {
     [Test]
-    public void Initialize_WithQuery ()
+    public void Initialize_WithFromClauseAndBody ()
     {
-      Query query = new Query ();
-      QueryModel model = new QueryModel (query);
-      Assert.AreSame (query, model.From);
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause();
+      SelectClause selectClause = ExpressionHelper.CreateSelectClause ();
+      QueryModel model = new QueryModel (typeof (IQueryable<string>), fromClause, selectClause);
+      Assert.AreSame (fromClause, model.MainFromClause);
+      Assert.AreSame (selectClause, model.SelectOrGroupClause);
+      Assert.IsNotNull (model.GetExpressionTree ());
+      Assert.AreEqual (typeof (IQueryable<string>), model.ResultType);
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentNullException))]
-    public void Initialization_ThrowsOnNull ()
+    public void Initialize_WithExpressionTree ()
     {
-      QueryModel model = new QueryModel (null);
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause ();
+      Expression expressionTree = ExpressionHelper.CreateExpression();
+      SelectClause selectClause = ExpressionHelper.CreateSelectClause();
+      QueryModel model = new QueryModel (typeof (IQueryable<string>), fromClause, selectClause, expressionTree);
+      Assert.AreSame (fromClause, model.MainFromClause);
+      Assert.AreSame (selectClause, model.SelectOrGroupClause);
+      Assert.AreSame (expressionTree, model.GetExpressionTree());
     }
 
     [Test]
-    public void AddSelectedColumn ()
+    public void QueryExpression_ImplementsIQueryElement()
     {
-      QueryModel model = new QueryModel (new Query ());
-      model.AddSelectedColumn ("OrderNumber");
-      Assert.That (model.SelectedColumns, Is.EqualTo (new SelectedColumn[] { new SelectedColumn ("OrderNumber", null) }));
+      QueryModel instance = ExpressionHelper.CreateQueryModel();
+      Assert.IsInstanceOfType (typeof (IQueryElement), instance);
     }
 
     [Test]
-    public void AddSelectedColumns ()
+    public void Accept()
     {
-      QueryModel model = new QueryModel (new Query ());
-      model.AddSelectedColumn ("OrderNumber");
-      model.AddSelectedColumn ("OrderID");
-      Assert.That (model.SelectedColumns,
-          Is.EqualTo (new SelectedColumn[] { new SelectedColumn ("OrderNumber", null), new SelectedColumn ("OrderID", null) }));
+      QueryModel instance = ExpressionHelper.CreateQueryModel();
+
+      MockRepository repository = new MockRepository ();
+      IQueryVisitor testVisitor = repository.CreateMock<IQueryVisitor> ();
+
+      //// expectations
+      testVisitor.VisitQueryExpression (instance);
+
+      repository.ReplayAll ();
+
+      instance.Accept (testVisitor);
+
+      repository.VerifyAll ();
     }
 
     [Test]
-    public void AddSelectedColumns_Ordering ()
+    public void Override_ToString()
     {
-      QueryModel model = new QueryModel (new Query ());
-      model.AddSelectedColumn ("OrderNumber");
-      model.AddSelectedColumn ("OrderID");
-      Assert.That (model.SelectedColumns,
-          Is.EqualTo (new SelectedColumn[] { new SelectedColumn ("OrderNumber", null), new SelectedColumn ("OrderID", null) }));
+      QueryModel queryModel = ExpressionHelper.CreateQueryModel();
 
-      model = new QueryModel (new Query ());
-      model.AddSelectedColumn ("OrderID");
-      model.AddSelectedColumn ("OrderNumber");
-      Assert.That (model.SelectedColumns,
-          Is.EqualTo (new SelectedColumn[] { new SelectedColumn ("OrderID", null), new SelectedColumn ("OrderNumber", null) }));
+      StringVisitor sv = new StringVisitor();
+
+      sv.VisitQueryExpression (queryModel);
+
+      Assert.AreEqual (sv.ToString (), queryModel.ToString ());
     }
 
     [Test]
-    public void AddSelectedColumn_WithNullAlias ()
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "The query contains an invalid query method",
+        MatchType = MessageMatch.Contains)]
+    public void GetExpressionTree_ThrowsOnInvalidSelectCall()
     {
-      QueryModel model = new QueryModel (new Query ());
-      model.AddSelectedColumn ("OrderNumber", null);
-      Assert.That (model.SelectedColumns, Is.EqualTo (new SelectedColumn[] { new SelectedColumn ("OrderNumber", null) }));
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause();
+      SelectClause selectClause = new SelectClause (fromClause, Expression.Lambda (Expression.Constant (0)),false);
+
+      QueryModel queryModel = new QueryModel (typeof (IQueryable<int>), fromClause, selectClause);
+      queryModel.GetExpressionTree();
     }
 
     [Test]
-    public void AddSelectedColumn_WithAlias ()
+    public void GetFromClause ()
     {
-      QueryModel model = new QueryModel (new Query ());
-      model.AddSelectedColumn ("OrderNumber", "Alias");
-      Assert.That (model.SelectedColumns, Is.EqualTo (new SelectedColumn[] { new SelectedColumn ("OrderNumber", "Alias") }));
+      LambdaExpression fromExpression = ExpressionHelper.CreateLambdaExpression ();
+      LambdaExpression projExpression = ExpressionHelper.CreateLambdaExpression ();
+
+      ParameterExpression identifier0 = Expression.Parameter (typeof (Student), "s0");
+      ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
+      ParameterExpression identifier2 = Expression.Parameter (typeof (Student), "s2");
+      ParameterExpression identifier3 = Expression.Parameter (typeof (Student), "s3");
+
+      MainFromClause mainFromClause = ExpressionHelper.CreateMainFromClause(identifier0, ExpressionHelper.CreateQuerySource());
+      AdditionalFromClause clause1 = new AdditionalFromClause (mainFromClause, identifier1, fromExpression, projExpression);
+      AdditionalFromClause clause2 = new AdditionalFromClause (clause1, identifier2, fromExpression, projExpression);
+      AdditionalFromClause clause3 = new AdditionalFromClause (clause2, identifier3, fromExpression, projExpression);
+
+
+      QueryModel model = ExpressionHelper.CreateQueryModel (mainFromClause);
+      model.AddBodyClause (clause1);
+      model.AddBodyClause (clause2);
+      model.AddBodyClause (clause3);
+
+      Assert.AreSame (mainFromClause, model.GetFromClause ("s0", typeof (Student)));
+      Assert.AreSame (clause1, model.GetFromClause ("s1", typeof (Student)));
+      Assert.AreSame (clause2, model.GetFromClause ("s2", typeof (Student)));
+      Assert.AreSame (clause3, model.GetFromClause ("s3", typeof (Student)));
+    }
+
+    [Test]
+    public void GetFromClause_InvalidIdentifierName ()
+    {
+      LambdaExpression fromExpression = ExpressionHelper.CreateLambdaExpression ();
+      LambdaExpression projExpression = ExpressionHelper.CreateLambdaExpression ();
+
+      ParameterExpression identifier0 = Expression.Parameter (typeof (Student), "s0");
+      ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
+
+      MainFromClause mainFromClause = ExpressionHelper.CreateMainFromClause(identifier0, ExpressionHelper.CreateQuerySource ());
+      AdditionalFromClause clause1 = new AdditionalFromClause (mainFromClause, identifier1, fromExpression, projExpression);
+
+      QueryModel model = ExpressionHelper.CreateQueryModel (mainFromClause);
+      model.AddBodyClause (clause1);
+
+      Assert.IsNull (model.GetFromClause ("s273627", typeof (Student)));
+    }
+
+    [Test]
+    [ExpectedException (typeof (ClauseLookupException), ExpectedMessage = "The from clause with identifier 's0' has type "
+        + "'Rubicon.Data.Linq.UnitTests.Student', but 'System.String' was requested.")]
+    public void GetFromClause_InvalidIdentifierType_MainFromClause ()
+    {
+      LambdaExpression fromExpression = ExpressionHelper.CreateLambdaExpression ();
+      LambdaExpression projExpression = ExpressionHelper.CreateLambdaExpression ();
+
+      ParameterExpression identifier0 = Expression.Parameter (typeof (Student), "s0");
+      ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
+
+      MainFromClause mainFromClause = ExpressionHelper.CreateMainFromClause(identifier0, ExpressionHelper.CreateQuerySource ());
+      AdditionalFromClause clause1 = new AdditionalFromClause (mainFromClause, identifier1, fromExpression, projExpression);
+
+      QueryModel model = ExpressionHelper.CreateQueryModel (mainFromClause);
+      model.AddBodyClause (clause1);
+
+      model.GetFromClause ("s0", typeof (string));
+      Assert.Fail ("Expected exception");
+    }
+
+    [Test]
+    [ExpectedException (typeof (ClauseLookupException), ExpectedMessage = "The from clause with identifier 's1' has type "
+        + "'Rubicon.Data.Linq.UnitTests.Student', but 'System.String' was requested.")]
+    public void GetFromClause_InvalidIdentifierType_AdditionalFromClause ()
+    {
+      LambdaExpression fromExpression = ExpressionHelper.CreateLambdaExpression ();
+      LambdaExpression projExpression = ExpressionHelper.CreateLambdaExpression ();
+
+      ParameterExpression identifier0 = Expression.Parameter (typeof (Student), "s0");
+      ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
+
+      MainFromClause mainFromClause = ExpressionHelper.CreateMainFromClause(identifier0, ExpressionHelper.CreateQuerySource ());
+      AdditionalFromClause clause1 = new AdditionalFromClause (mainFromClause, identifier1, fromExpression, projExpression);
+
+      QueryModel model = ExpressionHelper.CreateQueryModel (mainFromClause);
+      model.AddBodyClause (clause1);
+
+      model.GetFromClause ("s1", typeof (string));
+      Assert.Fail ("Expected exception");
+    }
+
+    [Test]
+    public void ResolveField ()
+    {
+      QueryModel queryModel = CreateQueryExpressionForResolve ();
+
+      Expression fieldAccessExpression = Expression.Parameter (typeof (String), "s1");
+      JoinedTableContext context = new JoinedTableContext ();
+      WhereFieldAccessPolicy policy = new WhereFieldAccessPolicy (StubDatabaseInfo.Instance);
+      FromClauseFieldResolver resolver = new FromClauseFieldResolver (StubDatabaseInfo.Instance, context, policy);
+      FieldDescriptor descriptor = queryModel.ResolveField (resolver, fieldAccessExpression);
+
+      IFromSource expectedTable = queryModel.MainFromClause.GetFromSource (StubDatabaseInfo.Instance);
+      FieldSourcePath expectedPath = new FieldSourcePath (expectedTable, new SingleJoin[0]);
+
+      Assert.AreSame (queryModel.MainFromClause, descriptor.FromClause);
+      Assert.AreEqual (new Column (expectedTable, "*"), descriptor.Column);
+      Assert.IsNull (descriptor.Member);
+      Assert.AreEqual (expectedPath, descriptor.SourcePath);
+    }
+
+    [Test]
+    public void ParentQuery_Null ()
+    {
+      QueryModel queryModel = ExpressionHelper.CreateQueryModel();
+      Assert.IsNull (queryModel.ParentQuery);
+    }
+
+    [Test]
+    public void SetParentQuery ()
+    {
+      QueryModel queryModel = ExpressionHelper.CreateQueryModel ();
+      QueryModel parentQueryModel = ExpressionHelper.CreateQueryModel ();
+      queryModel.SetParentQuery (parentQueryModel);
+
+      Assert.AreSame (parentQueryModel, queryModel.ParentQuery);
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "The query already has a parent query.")]
+    public void SetParentQuery_ThrowsOnSecondParent ()
+    {
+      QueryModel queryModel = ExpressionHelper.CreateQueryModel ();
+      QueryModel parentQueryModel = ExpressionHelper.CreateQueryModel ();
+      queryModel.SetParentQuery (parentQueryModel);
+      queryModel.SetParentQuery (parentQueryModel);
+    }
+
+    private QueryModel CreateQueryExpressionForResolve ()
+    {
+      ParameterExpression s1 = Expression.Parameter (typeof (String), "s1");
+      ParameterExpression s2 = Expression.Parameter (typeof (String), "s2");
+      MainFromClause mainFromClause = ExpressionHelper.CreateMainFromClause(s1, ExpressionHelper.CreateQuerySource());
+      AdditionalFromClause additionalFromClause =
+          new AdditionalFromClause (mainFromClause, s2, ExpressionHelper.CreateLambdaExpression(), ExpressionHelper.CreateLambdaExpression());
+
+      QueryModel queryModel = ExpressionHelper.CreateQueryModel (mainFromClause);
+      queryModel.AddBodyClause (additionalFromClause);
+      return queryModel;
     }
   }
 }

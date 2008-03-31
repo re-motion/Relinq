@@ -26,7 +26,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     public void SimpleOrderingClause ()
     {
       IQueryable<Student> query = OrderByTestQueryGenerator.CreateSimpleOrderByQuery (ExpressionHelper.CreateQuerySource ());
-      QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
+      QueryModel parsedQuery = ExpressionHelper.ParseQuery (query);
       OrderByClause orderBy = (OrderByClause) parsedQuery.BodyClauses.First ();
       OrderingClause orderingClause = orderBy.OrderingList.First ();
 
@@ -39,7 +39,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     public void TwoOrderingClause_FirstClause ()
     {
       IQueryable<Student> query = OrderByTestQueryGenerator.CreateTwoOrderByQuery (ExpressionHelper.CreateQuerySource ());
-      QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
+      QueryModel parsedQuery = ExpressionHelper.ParseQuery (query);
       OrderByClause orderBy1 = (OrderByClause) parsedQuery.BodyClauses.First ();
       OrderingClause orderingClause1 = orderBy1.OrderingList.First ();
 
@@ -53,7 +53,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     public void TwoOrderingClause_SecondClause ()
     {
       IQueryable<Student> query = OrderByTestQueryGenerator.CreateTwoOrderByQuery (ExpressionHelper.CreateQuerySource ());
-      QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
+      QueryModel parsedQuery = ExpressionHelper.ParseQuery (query);
       OrderByClause orderBy2 = (OrderByClause) parsedQuery.BodyClauses.Last ();
       OrderingClause orderingClause2 = orderBy2.OrderingList.Last ();
 
@@ -68,7 +68,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     {
       IQueryable<Student> query =
           MixedTestQueryGenerator.CreateMultiFromWhereOrderByQuery (ExpressionHelper.CreateQuerySource (), ExpressionHelper.CreateQuerySource ());
-      QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
+      QueryModel parsedQuery = ExpressionHelper.ParseQuery (query);
       OrderByClause orderBy1 = (OrderByClause) parsedQuery.BodyClauses.Skip (2).First ();
       OrderingClause orderingClause1 = orderBy1.OrderingList.First ();
 
@@ -82,7 +82,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     {
       IQueryable<Student> query =
           MixedTestQueryGenerator.CreateMultiFromWhereOrderByQuery (ExpressionHelper.CreateQuerySource (), ExpressionHelper.CreateQuerySource ());
-      QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
+      QueryModel parsedQuery = ExpressionHelper.ParseQuery (query);
       OrderByClause orderBy1 = (OrderByClause) parsedQuery.BodyClauses.Skip (2).First ();
       OrderingClause orderingClause2 = orderBy1.OrderingList.Last ();
 
@@ -98,7 +98,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     public void OrderingClause_WithNonDBField ()
     {
       IQueryable<Student> query = OrderByTestQueryGenerator.CreateOrderByNonDBPropertyQuery (ExpressionHelper.CreateQuerySource ());
-      QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
+      QueryModel parsedQuery = ExpressionHelper.ParseQuery (query);
       OrderByClause orderBy = (OrderByClause) parsedQuery.BodyClauses.First ();
       OrderingClause orderingClause = orderBy.OrderingList.First ();
 
@@ -110,7 +110,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     public void JoinOrderingClause ()
     {
       IQueryable<Student_Detail> query = JoinTestQueryGenerator.CreateSimpleImplicitOrderByJoin (ExpressionHelper.CreateQuerySource_Detail ());
-      QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
+      QueryModel parsedQuery = ExpressionHelper.ParseQuery (query);
       OrderByClause orderBy = (OrderByClause) parsedQuery.BodyClauses.First ();
       OrderingClause orderingClause = orderBy.OrderingList.First ();
 
@@ -144,7 +144,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     public void OrderingOnRelationMemberThrows()
     {
       IQueryable<Student_Detail> query = OrderByTestQueryGenerator.CreateRelationMemberOrderByQuery (ExpressionHelper.CreateQuerySource_Detail ());
-      QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
+      QueryModel parsedQuery = ExpressionHelper.ParseQuery (query);
       OrderByClause orderBy = (OrderByClause) parsedQuery.BodyClauses.First ();
       OrderingClause orderingClause = orderBy.OrderingList.First ();
 

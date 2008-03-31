@@ -19,13 +19,13 @@ namespace Rubicon.Data.Linq.Parsing.Structure
 
     public Expression SourceExpression { get; private set; }
 
-    public QueryExpression GetParsedQuery ()
+    public QueryModel GetParsedQuery ()
     {
       ParseResultCollector resultCollector = new ParseResultCollector (SourceExpression);
       _sourceParser.Parse (resultCollector, SourceExpression, null, "parsing query");
 
-      QueryExpressionCreator expressionCreator = new QueryExpressionCreator (SourceExpression, resultCollector);
-      return expressionCreator.CreateQueryExpression();
+      QueryModelCreator modelCreator = new QueryModelCreator (SourceExpression, resultCollector);
+      return modelCreator.CreateQueryExpression();
     }
   }
 }

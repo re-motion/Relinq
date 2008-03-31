@@ -9,7 +9,7 @@ namespace Rubicon.Data.Linq.Clauses
   {
     private readonly SubQuery _fromSource;
 
-    public SubQueryFromClause (IClause previousClause, ParameterExpression identifier, QueryExpression subQuery, LambdaExpression projectionExpression)
+    public SubQueryFromClause (IClause previousClause, ParameterExpression identifier, QueryModel subQuery, LambdaExpression projectionExpression)
         : base (previousClause, identifier)
     {
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
@@ -17,13 +17,13 @@ namespace Rubicon.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("subQuery", subQuery);
       ArgumentUtility.CheckNotNull ("projectionExpression", projectionExpression);
 
-      SubQueryExpression = subQuery;
+      SubQueryModel = subQuery;
       ProjectionExpression = projectionExpression;
 
-      _fromSource = new SubQuery (SubQueryExpression, Identifier.Name);
+      _fromSource = new SubQuery (SubQueryModel, Identifier.Name);
     }
 
-    public QueryExpression SubQueryExpression { get; private set; }
+    public QueryModel SubQueryModel { get; private set; }
     public LambdaExpression ProjectionExpression { get; private set; }
 
     public override void Accept (IQueryVisitor visitor)

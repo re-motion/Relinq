@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 using Rubicon.Collections;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.DataObjectModel;
-using Rubicon.Data.Linq.Parsing.Details.WhereParser;
+using Rubicon.Data.Linq.Parsing.Details.WhereConditionParsing;
 using Rubicon.Data.Linq.Parsing.FieldResolving;
 using Rubicon.Utilities;
 
@@ -15,7 +15,7 @@ namespace Rubicon.Data.Linq.Parsing.Details
     private readonly bool _simplify;
     private readonly WhereClause _whereClause;
     private readonly IDatabaseInfo _databaseInfo;
-    private readonly QueryExpression _queryExpression;
+    private readonly QueryModel _queryModel;
     private readonly FromClauseFieldResolver _resolver;
 
     private readonly MemberExpressionParser _memberExpressionParser;
@@ -28,20 +28,20 @@ namespace Rubicon.Data.Linq.Parsing.Details
     public delegate ICriterion ParsingOfExpression (Expression expression);
     private List<FieldDescriptor> _fieldDescriptors;
 
-    public WhereConditionParser (QueryExpression queryExpression, WhereClause whereClause, IDatabaseInfo databaseInfo, JoinedTableContext context, bool simplify)
+    public WhereConditionParser (QueryModel queryModel, WhereClause whereClause, IDatabaseInfo databaseInfo, JoinedTableContext context, bool simplify)
     {
       ArgumentUtility.CheckNotNull ("whereClause", whereClause);
       ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
-      ArgumentUtility.CheckNotNull ("queryExpression", queryExpression);
+      ArgumentUtility.CheckNotNull ("queryExpression", queryModel);
       ArgumentUtility.CheckNotNull ("context", context);
 
       _simplify = simplify;
-      _queryExpression = queryExpression;
+      _queryModel = queryModel;
       _whereClause = whereClause;
       _databaseInfo = databaseInfo;
       _resolver = new FromClauseFieldResolver (databaseInfo, context, new WhereFieldAccessPolicy (_databaseInfo));
       
-      _memberExpressionParser = new MemberExpressionParser (_queryExpression, _resolver);
+      _memberExpressionParser = new MemberExpressionParser (_queryModel, _resolver);
       _parameterExpressionParser = new ParameterExpressionParser (_databaseInfo,ParseExpression);
       _constantExpressionParser = new ConstantExpressionParser (_databaseInfo);
       _binaryExpressionParser = new BinaryExpressionParser (_whereClause, ParseExpression);

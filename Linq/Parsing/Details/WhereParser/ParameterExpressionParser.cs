@@ -4,7 +4,7 @@ using Rubicon.Data.Linq.DataObjectModel;
 using Rubicon.Data.Linq.Parsing.FieldResolving;
 using Rubicon.Utilities;
 
-namespace Rubicon.Data.Linq.Parsing.Details.WhereParser
+namespace Rubicon.Data.Linq.Parsing.Details.WhereConditionParsing
 {
   public class ParameterExpressionParser
   {

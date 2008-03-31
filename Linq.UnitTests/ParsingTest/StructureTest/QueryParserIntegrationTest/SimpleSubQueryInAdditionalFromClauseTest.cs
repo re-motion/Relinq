@@ -21,13 +21,13 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.QueryParserInteg
 
       SubQueryFromClause fromClause1 = ParsedQuery.BodyClauses[0] as SubQueryFromClause;
       Assert.IsNotNull (fromClause1);
-      Assert.AreSame (SourceExpressionNavigator.Arguments[1].Operand.Body.Expression, fromClause1.SubQueryExpression.GetExpressionTree ());
+      Assert.AreSame (SourceExpressionNavigator.Arguments[1].Operand.Body.Expression, fromClause1.SubQueryModel.GetExpressionTree ());
       Assert.AreSame (SourceExpressionNavigator.Arguments[2].Operand.Expression, fromClause1.ProjectionExpression);
 
-      CheckSubQuery (fromClause1.SubQueryExpression);
+      CheckSubQuery (fromClause1.SubQueryModel);
     }
 
-    private void CheckSubQuery (QueryExpression subQuery)
+    private void CheckSubQuery (QueryModel subQuery)
     {
       ExpressionTreeNavigator subExpressionNavigator = SourceExpressionNavigator.Arguments[1].Operand.Body;
 

@@ -39,7 +39,7 @@ namespace Rubicon.Data.Linq.Parsing.Structure
 
       _sourceParser.Parse (resultCollector, sourceExpression.Arguments[0], ueLambda2.Parameters[0], "first argument of SelectMany expression");
 
-      resultCollector.AddBodyExpression (new FromExpression (ueLambda1, ueLambda2.Parameters[1]));
+      resultCollector.AddBodyExpression (new FromExpressionData (ueLambda1, ueLambda2.Parameters[1]));
       resultCollector.AddProjectionExpression (ueLambda2);
     }
   }

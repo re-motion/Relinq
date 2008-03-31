@@ -9,18 +9,18 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     [Test]
     public void Initialize ()
     {
-      QueryExpression queryExpression = ExpressionHelper.CreateQueryExpression();
-      SubQuery subQuery = new SubQuery (queryExpression, "foo");
+      QueryModel queryModel = ExpressionHelper.CreateQueryModel();
+      SubQuery subQuery = new SubQuery (queryModel, "foo");
 
-      Assert.AreSame (queryExpression, subQuery.QueryExpression);
+      Assert.AreSame (queryModel, subQuery.QueryModel);
       Assert.AreEqual ("foo", subQuery.Alias);
     }
 
     [Test]
     public void AliasString ()
     {
-      QueryExpression queryExpression = ExpressionHelper.CreateQueryExpression();
-      SubQuery subQuery = new SubQuery (queryExpression, "foo");
+      QueryModel queryModel = ExpressionHelper.CreateQueryModel();
+      SubQuery subQuery = new SubQuery (queryModel, "foo");
 
       Assert.AreEqual ("foo", subQuery.AliasString);
     }

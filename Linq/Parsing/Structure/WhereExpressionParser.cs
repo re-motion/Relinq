@@ -37,7 +37,7 @@ namespace Rubicon.Data.Linq.Parsing.Structure
 
       _sourceParser.Parse (resultCollector, sourceExpression.Arguments[0], ueLambda.Parameters[0], "first argument of Where expression");
 
-      resultCollector.AddBodyExpression (new WhereExpression (ueLambda));
+      resultCollector.AddBodyExpression (new WhereExpressionData (ueLambda));
       if (_isTopLevel)
         resultCollector.AddProjectionExpression (null);
     }

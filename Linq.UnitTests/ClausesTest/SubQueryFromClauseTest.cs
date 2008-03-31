@@ -11,7 +11,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
   {
     private IClause _previousClause;
     private ParameterExpression _identifier;
-    private QueryExpression _subQueryExpression;
+    private QueryModel _subQueryModel;
     private SubQueryFromClause _subQueryFromClause;
     private LambdaExpression _projectionExpression;
 
@@ -20,10 +20,10 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     {
       _previousClause = ExpressionHelper.CreateMainFromClause ();
       _identifier = ExpressionHelper.CreateParameterExpression ();
-      _subQueryExpression = ExpressionHelper.CreateQueryExpression ();
+      _subQueryModel = ExpressionHelper.CreateQueryModel ();
       _projectionExpression = ExpressionHelper.CreateLambdaExpression();
 
-      _subQueryFromClause = new SubQueryFromClause (_previousClause, _identifier, _subQueryExpression, _projectionExpression);
+      _subQueryFromClause = new SubQueryFromClause (_previousClause, _identifier, _subQueryModel, _projectionExpression);
     }
 
     [Test]
@@ -31,7 +31,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     {
       Assert.AreSame (_previousClause, _subQueryFromClause.PreviousClause);
       Assert.AreSame (_identifier, _subQueryFromClause.Identifier);
-      Assert.AreSame (_subQueryExpression, _subQueryFromClause.SubQueryExpression);
+      Assert.AreSame (_subQueryModel, _subQueryFromClause.SubQueryModel);
       Assert.AreSame (_projectionExpression, _subQueryFromClause.ProjectionExpression);
     }
 
@@ -61,7 +61,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       IFromSource fromSource = _subQueryFromClause.GetFromSource (StubDatabaseInfo.Instance);
       SubQuery subQuery = (SubQuery) fromSource;
       Assert.AreEqual (_identifier.Name, subQuery.Alias);
-      Assert.AreSame (_subQueryExpression, subQuery.QueryExpression);
+      Assert.AreSame (_subQueryModel, subQuery.QueryModel);
     }
 
     [Test]

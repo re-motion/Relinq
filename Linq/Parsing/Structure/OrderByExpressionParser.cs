@@ -54,7 +54,7 @@ namespace Rubicon.Data.Linq.Parsing.Structure
 
       _sourceParser.Parse (resultCollector, sourceExpression.Arguments[0], ueLambda.Parameters[0], "first argument of OrderBy expression");
 
-      resultCollector.AddBodyExpression (new OrderExpression (orderBy, direction, ueLambda));
+      resultCollector.AddBodyExpression (new OrderExpressionData (orderBy, direction, ueLambda));
       if (_isTopLevel)
         resultCollector.AddProjectionExpression (null);
     }

@@ -94,7 +94,7 @@ namespace Rubicon.Data.Linq.Parsing.Structure
 
     private void ParseSimpleSource (ParseResultCollector resultCollector, Expression sourceExpression, ParameterExpression potentialFromIdentifier)
     {
-      resultCollector.AddBodyExpression (new FromExpression (sourceExpression, potentialFromIdentifier));
+      resultCollector.AddBodyExpression (new FromExpressionData (sourceExpression, potentialFromIdentifier));
     }
 
     private void ParseSelectSource (ParseResultCollector resultCollector, Expression sourceExpression)

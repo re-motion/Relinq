@@ -5,16 +5,16 @@ namespace Rubicon.Data.Linq.DataObjectModel
 {
   public class SubQuery : IFromSource
   {
-    public SubQuery (QueryExpression queryExpression, string alias)
+    public SubQuery (QueryModel queryModel, string alias)
     {
-      ArgumentUtility.CheckNotNull ("queryExpression", queryExpression);
+      ArgumentUtility.CheckNotNull ("queryExpression", queryModel);
       ArgumentUtility.CheckNotNull ("alias", alias);
 
-      QueryExpression = queryExpression;
+      QueryModel = queryModel;
       Alias = alias;
     }
 
-    public QueryExpression QueryExpression { get; private set; }
+    public QueryModel QueryModel { get; private set; }
     public string Alias { get; private set; }
     
 

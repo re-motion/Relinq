@@ -70,7 +70,7 @@ namespace Rubicon.Data.Linq
         yield return result;
     }
 
-    private QueryExpression GenerateQueryExpression (Expression expression)
+    private QueryModel GenerateQueryExpression (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 

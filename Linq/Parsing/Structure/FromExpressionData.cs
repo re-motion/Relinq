@@ -4,11 +4,11 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.Parsing.Structure
 {
-  public class FromExpression : BodyExpressionBase<Expression>
+  public class FromExpressionData : BodyExpressionDataBase<Expression>
   {
     public ParameterExpression Identifier { get; private set; }
 
-    public FromExpression (Expression expression,ParameterExpression identifier)
+    public FromExpressionData (Expression expression,ParameterExpression identifier)
         : base (expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);

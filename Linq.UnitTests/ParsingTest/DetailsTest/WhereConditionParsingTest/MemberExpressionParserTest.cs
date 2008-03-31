@@ -3,10 +3,10 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.DataObjectModel;
-using Rubicon.Data.Linq.Parsing.Details.WhereParser;
+using Rubicon.Data.Linq.Parsing.Details.WhereConditionParsing;
 using Rubicon.Data.Linq.Parsing.FieldResolving;
 
-namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereParserTest
+namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionParsingTest
 {
   [TestFixture]
   public class MemberExpressionParserTest
@@ -16,11 +16,11 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereParserTest
     {
       ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(parameter, ExpressionHelper.CreateQuerySource ());;
-      QueryExpression queryExpression = ExpressionHelper.CreateQueryExpression (fromClause);
+      QueryModel queryModel = ExpressionHelper.CreateQueryModel (fromClause);
       JoinedTableContext context = new JoinedTableContext ();
       FromClauseFieldResolver resolver = 
         new FromClauseFieldResolver(StubDatabaseInfo.Instance,context,new WhereFieldAccessPolicy(StubDatabaseInfo.Instance));
-      MemberExpressionParser parser = new MemberExpressionParser (queryExpression, resolver);
+      MemberExpressionParser parser = new MemberExpressionParser (queryModel, resolver);
 
       List<FieldDescriptor> fieldCollection = new List<FieldDescriptor>();
       MemberExpression memberExpression = Expression.MakeMemberAccess (parameter, typeof (Student).GetProperty ("ID"));

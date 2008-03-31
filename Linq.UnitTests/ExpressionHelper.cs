@@ -44,14 +44,14 @@ namespace Rubicon.Data.Linq.UnitTests
       return new JoinClause (CreateMainFromClause(), identifier, inExpression, onExpression, equalityExpression);
     }
 
-    public static QueryExpression CreateQueryExpression (MainFromClause mainFromClause)
+    public static QueryModel CreateQueryModel (MainFromClause mainFromClause)
     {
-      return new QueryExpression (typeof (IQueryable<int>), mainFromClause, CreateSelectClause());
+      return new QueryModel (typeof (IQueryable<int>), mainFromClause, CreateSelectClause());
     }
 
-    public static QueryExpression CreateQueryExpression ()
+    public static QueryModel CreateQueryModel ()
     {
-      return CreateQueryExpression (CreateMainFromClause());
+      return CreateQueryModel (CreateMainFromClause());
     }
 
 
@@ -193,7 +193,7 @@ namespace Rubicon.Data.Linq.UnitTests
       return lambdaExpression.Compile().DynamicInvoke (args);
     }
 
-    public static QueryExpression ParseQuery<T> (IQueryable<T> query)
+    public static QueryModel ParseQuery<T> (IQueryable<T> query)
     {
       Expression expression = query.Expression;
       QueryParser parser = new QueryParser (expression);
@@ -237,7 +237,7 @@ namespace Rubicon.Data.Linq.UnitTests
 
     public static SubQueryFromClause CreateSubQueryFromClause (ParameterExpression identifier)
     {
-      return new SubQueryFromClause (CreateClause (), identifier, CreateQueryExpression (), CreateLambdaExpression ());
+      return new SubQueryFromClause (CreateClause (), identifier, CreateQueryModel (), CreateLambdaExpression ());
     }
   }
 }

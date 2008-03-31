@@ -3,9 +3,9 @@ using Rubicon.Data.Linq.Parsing.Structure;
 
 namespace Rubicon.Data.Linq.Parsing.Structure
 {
-  public class WhereExpression : BodyExpressionBase<LambdaExpression>
+  public class WhereExpressionData : BodyExpressionDataBase<LambdaExpression>
   {
-    public WhereExpression (LambdaExpression expression)
+    public WhereExpressionData (LambdaExpression expression)
         : base (expression)
     {
     }

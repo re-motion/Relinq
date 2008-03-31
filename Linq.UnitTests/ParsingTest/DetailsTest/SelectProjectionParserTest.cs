@@ -35,14 +35,14 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     {
       IQueryable<Student> query = SelectTestQueryGenerator.CreateSimpleQuery (_source);
       QueryParser parser = new QueryParser (query.Expression);
-      QueryExpression expression = parser.GetParsedQuery();
-      SelectClause selectClause = (SelectClause) expression.SelectOrGroupClause;
+      QueryModel model = parser.GetParsedQuery();
+      SelectClause selectClause = (SelectClause) model.SelectOrGroupClause;
 
-      SelectProjectionParser selectParser = new SelectProjectionParser (expression, selectClause, StubDatabaseInfo.Instance, _context);
+      SelectProjectionParser selectParser = new SelectProjectionParser (model, selectClause, StubDatabaseInfo.Instance, _context);
 
       IEnumerable<FieldDescriptor> selectedFields = selectParser.GetSelectedFields();
 
-      Assert.That (selectedFields.ToArray(), Is.EqualTo (new object[] {ExpressionHelper.CreateFieldDescriptor (expression.MainFromClause, null)}));
+      Assert.That (selectedFields.ToArray(), Is.EqualTo (new object[] {ExpressionHelper.CreateFieldDescriptor (model.MainFromClause, null)}));
     }
 
 
@@ -51,14 +51,14 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     {
       IQueryable<Student> query = WhereTestQueryGenerator.CreateSimpleWhereQuery (_source);
       QueryParser parser = new QueryParser (query.Expression);
-      QueryExpression expression = parser.GetParsedQuery();
-      SelectClause selectClause = (SelectClause) expression.SelectOrGroupClause;
+      QueryModel model = parser.GetParsedQuery();
+      SelectClause selectClause = (SelectClause) model.SelectOrGroupClause;
 
-      SelectProjectionParser selectParser = new SelectProjectionParser (expression, selectClause, StubDatabaseInfo.Instance, _context);
+      SelectProjectionParser selectParser = new SelectProjectionParser (model, selectClause, StubDatabaseInfo.Instance, _context);
 
       IEnumerable<FieldDescriptor> selectedFields = selectParser.GetSelectedFields();
 
-      Assert.That (selectedFields.ToArray(), Is.EqualTo (new object[] {ExpressionHelper.CreateFieldDescriptor (expression.MainFromClause, null)}));
+      Assert.That (selectedFields.ToArray(), Is.EqualTo (new object[] {ExpressionHelper.CreateFieldDescriptor (model.MainFromClause, null)}));
     }
 
     [Test]
@@ -66,15 +66,15 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     {
       IQueryable<string> query = SelectTestQueryGenerator.CreateSimpleQueryWithProjection (_source);
       QueryParser parser = new QueryParser (query.Expression);
-      QueryExpression expression = parser.GetParsedQuery();
-      SelectClause selectClause = (SelectClause) expression.SelectOrGroupClause;
+      QueryModel model = parser.GetParsedQuery();
+      SelectClause selectClause = (SelectClause) model.SelectOrGroupClause;
 
-      SelectProjectionParser selectParser = new SelectProjectionParser (expression, selectClause, StubDatabaseInfo.Instance, _context);
+      SelectProjectionParser selectParser = new SelectProjectionParser (model, selectClause, StubDatabaseInfo.Instance, _context);
 
       IEnumerable<FieldDescriptor> selectedFields = selectParser.GetSelectedFields();
 
       Assert.That (selectedFields.ToArray(),
-          Is.EqualTo (new object[] {ExpressionHelper.CreateFieldDescriptor (expression.MainFromClause, typeof (Student).GetProperty ("First"))}));
+          Is.EqualTo (new object[] {ExpressionHelper.CreateFieldDescriptor (model.MainFromClause, typeof (Student).GetProperty ("First"))}));
     }
 
     [Test]
@@ -82,18 +82,18 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     {
       IQueryable<Tuple<string, string>> query = SelectTestQueryGenerator.CreateSimpleQueryWithFieldProjection (_source);
       QueryParser parser = new QueryParser (query.Expression);
-      QueryExpression expression = parser.GetParsedQuery();
-      SelectClause selectClause = (SelectClause) expression.SelectOrGroupClause;
+      QueryModel model = parser.GetParsedQuery();
+      SelectClause selectClause = (SelectClause) model.SelectOrGroupClause;
 
-      SelectProjectionParser selectParser = new SelectProjectionParser (expression, selectClause, StubDatabaseInfo.Instance, _context);
+      SelectProjectionParser selectParser = new SelectProjectionParser (model, selectClause, StubDatabaseInfo.Instance, _context);
 
       IEnumerable<FieldDescriptor> selectedFields = selectParser.GetSelectedFields();
 
       Assert.That (selectedFields.ToArray(), Is.EqualTo (
           new object[]
             {
-                ExpressionHelper.CreateFieldDescriptor (expression.MainFromClause, typeof (Student).GetProperty ("First")),
-                ExpressionHelper.CreateFieldDescriptor (expression.MainFromClause, typeof (Student).GetProperty ("Last"))
+                ExpressionHelper.CreateFieldDescriptor (model.MainFromClause, typeof (Student).GetProperty ("First")),
+                ExpressionHelper.CreateFieldDescriptor (model.MainFromClause, typeof (Student).GetProperty ("Last"))
             }));
     }
 
@@ -102,10 +102,10 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     {
       IQueryable<string> query = SelectTestQueryGenerator.CreateSimpleSelectWithNonDbProjection (_source);
       QueryParser parser = new QueryParser (query.Expression);
-      QueryExpression expression = parser.GetParsedQuery();
-      SelectClause selectClause = (SelectClause) expression.SelectOrGroupClause;
+      QueryModel model = parser.GetParsedQuery();
+      SelectClause selectClause = (SelectClause) model.SelectOrGroupClause;
 
-      SelectProjectionParser selectParser = new SelectProjectionParser (expression, selectClause, StubDatabaseInfo.Instance, _context);
+      SelectProjectionParser selectParser = new SelectProjectionParser (model, selectClause, StubDatabaseInfo.Instance, _context);
 
       IEnumerable<FieldDescriptor> selectedFields = selectParser.GetSelectedFields();
 
@@ -119,10 +119,10 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     {
       IQueryable<int> query = SelectTestQueryGenerator.CreateSimpleSelectWithNonEntityMemberAccess (_source);
       QueryParser parser = new QueryParser (query.Expression);
-      QueryExpression expression = parser.GetParsedQuery();
-      SelectClause selectClause = (SelectClause) expression.SelectOrGroupClause;
+      QueryModel model = parser.GetParsedQuery();
+      SelectClause selectClause = (SelectClause) model.SelectOrGroupClause;
 
-      new SelectProjectionParser (expression, selectClause, StubDatabaseInfo.Instance, _context).GetSelectedFields();
+      new SelectProjectionParser (model, selectClause, StubDatabaseInfo.Instance, _context).GetSelectedFields();
     }
 
     [Test]
@@ -130,20 +130,20 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     {
       IQueryable<Tuple<string, string, int>> query = MixedTestQueryGenerator.CreateMultiFromQueryWithProjection (_source, _source, _source);
       QueryParser parser = new QueryParser (query.Expression);
-      QueryExpression expression = parser.GetParsedQuery();
-      SelectClause selectClause = (SelectClause) expression.SelectOrGroupClause;
+      QueryModel model = parser.GetParsedQuery();
+      SelectClause selectClause = (SelectClause) model.SelectOrGroupClause;
 
-      SelectProjectionParser selectParser = new SelectProjectionParser (expression, selectClause, StubDatabaseInfo.Instance, _context);
+      SelectProjectionParser selectParser = new SelectProjectionParser (model, selectClause, StubDatabaseInfo.Instance, _context);
 
       IEnumerable<FieldDescriptor> selectedFields = selectParser.GetSelectedFields();
 
       Assert.That (selectedFields.ToArray(), Is.EqualTo (
           new object[]
             {
-                ExpressionHelper.CreateFieldDescriptor (expression.MainFromClause, typeof (Student).GetProperty ("First")),
-                ExpressionHelper.CreateFieldDescriptor ((FromClauseBase) expression.BodyClauses.First(),
+                ExpressionHelper.CreateFieldDescriptor (model.MainFromClause, typeof (Student).GetProperty ("First")),
+                ExpressionHelper.CreateFieldDescriptor ((FromClauseBase) model.BodyClauses.First(),
                     typeof (Student).GetProperty ("Last")),
-                ExpressionHelper.CreateFieldDescriptor ((FromClauseBase) expression.BodyClauses.Last(), typeof (Student).GetProperty ("ID"))
+                ExpressionHelper.CreateFieldDescriptor ((FromClauseBase) model.BodyClauses.Last(), typeof (Student).GetProperty ("ID"))
             }));
     }
 
@@ -154,18 +154,18 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     {
       IQueryable<Tuple<Student, string, string, string>> query = SelectTestQueryGenerator.CreateSimpleQueryWithSpecialProjection (_source);
       QueryParser parser = new QueryParser (query.Expression);
-      QueryExpression expression = parser.GetParsedQuery();
-      SelectClause selectClause = (SelectClause) expression.SelectOrGroupClause;
+      QueryModel model = parser.GetParsedQuery();
+      SelectClause selectClause = (SelectClause) model.SelectOrGroupClause;
 
-      SelectProjectionParser selectParser = new SelectProjectionParser (expression, selectClause, StubDatabaseInfo.Instance, _context);
+      SelectProjectionParser selectParser = new SelectProjectionParser (model, selectClause, StubDatabaseInfo.Instance, _context);
 
       IEnumerable<FieldDescriptor> selectedFields = selectParser.GetSelectedFields();
 
       Assert.That (selectedFields.ToArray(), Is.EqualTo (
           new object[]
             {
-                ExpressionHelper.CreateFieldDescriptor (expression.MainFromClause, null),
-                ExpressionHelper.CreateFieldDescriptor (expression.MainFromClause, typeof (Student).GetProperty ("Last")),
+                ExpressionHelper.CreateFieldDescriptor (model.MainFromClause, null),
+                ExpressionHelper.CreateFieldDescriptor (model.MainFromClause, typeof (Student).GetProperty ("Last")),
             }));
     }
 
@@ -174,20 +174,20 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     {
       IQueryable<string> query = SelectTestQueryGenerator.CreateUnaryBinaryLambdaInvocationConvertNewArrayExpressionQuery (_source);
       QueryParser parser = new QueryParser (query.Expression);
-      QueryExpression expression = parser.GetParsedQuery();
-      SelectClause selectClause = (SelectClause) expression.SelectOrGroupClause;
+      QueryModel model = parser.GetParsedQuery();
+      SelectClause selectClause = (SelectClause) model.SelectOrGroupClause;
 
-      SelectProjectionParser selectParser = new SelectProjectionParser (expression, selectClause, StubDatabaseInfo.Instance, _context);
+      SelectProjectionParser selectParser = new SelectProjectionParser (model, selectClause, StubDatabaseInfo.Instance, _context);
 
       IEnumerable<FieldDescriptor> selectedFields = selectParser.GetSelectedFields();
 
       Assert.That (selectedFields.ToArray(), Is.EquivalentTo (
           new object[]
             {
-                ExpressionHelper.CreateFieldDescriptor (expression.MainFromClause, typeof (Student).GetProperty ("First")),
-                ExpressionHelper.CreateFieldDescriptor (expression.MainFromClause, typeof (Student).GetProperty ("Last")),
-                ExpressionHelper.CreateFieldDescriptor (expression.MainFromClause, null),
-                ExpressionHelper.CreateFieldDescriptor (expression.MainFromClause, typeof (Student).GetProperty ("ID"))
+                ExpressionHelper.CreateFieldDescriptor (model.MainFromClause, typeof (Student).GetProperty ("First")),
+                ExpressionHelper.CreateFieldDescriptor (model.MainFromClause, typeof (Student).GetProperty ("Last")),
+                ExpressionHelper.CreateFieldDescriptor (model.MainFromClause, null),
+                ExpressionHelper.CreateFieldDescriptor (model.MainFromClause, typeof (Student).GetProperty ("ID"))
             }));
     }
 
@@ -195,7 +195,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     public void JoinSelectClause ()
     {
       IQueryable<string> query = JoinTestQueryGenerator.CreateSimpleImplicitSelectJoin (ExpressionHelper.CreateQuerySource_Detail ());
-      QueryExpression parsedQuery = ExpressionHelper.ParseQuery (query);
+      QueryModel parsedQuery = ExpressionHelper.ParseQuery (query);
 
       SelectProjectionParser parser = new SelectProjectionParser (parsedQuery, (SelectClause) parsedQuery.SelectOrGroupClause,
           StubDatabaseInfo.Instance,
@@ -229,17 +229,17 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     {
       IQueryable<Student> query = SelectTestQueryGenerator.CreateRelationMemberSelectQuery (ExpressionHelper.CreateQuerySource_Detail());
       QueryParser parser = new QueryParser (query.Expression);
-      QueryExpression expression = parser.GetParsedQuery ();
-      SelectClause selectClause = (SelectClause) expression.SelectOrGroupClause;
+      QueryModel model = parser.GetParsedQuery ();
+      SelectClause selectClause = (SelectClause) model.SelectOrGroupClause;
 
-      SelectProjectionParser selectParser = new SelectProjectionParser (expression, selectClause, StubDatabaseInfo.Instance, _context);
+      SelectProjectionParser selectParser = new SelectProjectionParser (model, selectClause, StubDatabaseInfo.Instance, _context);
 
       IEnumerable<FieldDescriptor> selectedFields = selectParser.GetSelectedFields ();
       PropertyInfo relationMember = typeof (Student_Detail).GetProperty ("Student");
-      IFromSource studentDetailTable = expression.MainFromClause.GetFromSource (StubDatabaseInfo.Instance);
+      IFromSource studentDetailTable = model.MainFromClause.GetFromSource (StubDatabaseInfo.Instance);
       FieldSourcePath path = new FieldSourcePathBuilder ().BuildFieldSourcePath (StubDatabaseInfo.Instance, _context, studentDetailTable, 
           new[] { relationMember });
-      FieldDescriptor expected = new FieldDescriptor(relationMember, expression.MainFromClause, path, new Column(path.LastSource, "*"));
+      FieldDescriptor expected = new FieldDescriptor(relationMember, model.MainFromClause, path, new Column(path.LastSource, "*"));
 
       Assert.That (selectedFields.ToArray (), Is.EqualTo (new object[] { expected } ));
     }

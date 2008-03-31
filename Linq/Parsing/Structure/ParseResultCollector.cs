@@ -8,7 +8,7 @@ namespace Rubicon.Data.Linq.Parsing.Structure
 {
   public class ParseResultCollector
   {
-    private readonly List<BodyExpressionBase> _bodyExpressions = new List<BodyExpressionBase> ();
+    private readonly List<BodyExpressionDataBase> _bodyExpressions = new List<BodyExpressionDataBase> ();
     private readonly List<LambdaExpression> _projectionExpressions = new List<LambdaExpression> ();
 
     public ParseResultCollector (Expression expressionTreeRoot)
@@ -20,7 +20,7 @@ namespace Rubicon.Data.Linq.Parsing.Structure
     public Expression ExpressionTreeRoot { get; private set; }
     public bool IsDistinct { get; private set; }
 
-    public ReadOnlyCollection<BodyExpressionBase> BodyExpressions
+    public ReadOnlyCollection<BodyExpressionDataBase> BodyExpressions
     {
       get { return _bodyExpressions.AsReadOnly(); }
     }
@@ -35,23 +35,23 @@ namespace Rubicon.Data.Linq.Parsing.Structure
       IsDistinct = true;
     }
 
-    public void AddBodyExpression (BodyExpressionBase expression)
+    public void AddBodyExpression (BodyExpressionDataBase expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       _bodyExpressions.Add (expression);
     }
 
-    public FromExpression ExtractMainFromExpression()
+    public FromExpressionData ExtractMainFromExpression()
     {
       if (BodyExpressions.Count == 0)
         throw new InvalidOperationException ("There are no body expressions to be extracted.");
 
-      FromExpression fromExpression = BodyExpressions[0] as FromExpression;
-      if (fromExpression == null)
-        throw new InvalidOperationException ("The first body expression is no FromExpression.");
+      FromExpressionData fromExpressionData = BodyExpressions[0] as FromExpressionData;
+      if (fromExpressionData == null)
+        throw new InvalidOperationException ("The first body expression is no FromExpressionData.");
 
       _bodyExpressions.RemoveAt (0);
-      return fromExpression;
+      return fromExpressionData;
     }
 
     public void AddProjectionExpression (LambdaExpression expression)

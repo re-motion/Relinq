@@ -3,10 +3,10 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Rubicon.Data.Linq.DataObjectModel;
-using Rubicon.Data.Linq.Parsing.Details.WhereParser;
+using Rubicon.Data.Linq.Parsing.Details.WhereConditionParsing;
 using Rubicon.Data.Linq.Parsing.FieldResolving;
 
-namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereParserTest
+namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionParsingTest
 {
   [TestFixture]
   public class ParameterExpressionParserTest

@@ -64,8 +64,8 @@ namespace Rubicon.Data.Linq.UnitTests
     {
       Expression expression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource());
       Expect.Call (_executor.ExecuteSingle (null)).Constraints (
-          new PredicateConstraint<QueryExpression> (
-              delegate (QueryExpression queryExpression) { return queryExpression.GetExpressionTree() == expression; }
+          new PredicateConstraint<QueryModel> (
+              delegate (QueryModel queryExpression) { return queryExpression.GetExpressionTree() == expression; }
               )).Return (0);
 
       _mockRepository.ReplayAll();
@@ -80,8 +80,8 @@ namespace Rubicon.Data.Linq.UnitTests
     {
       Expression expression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource ());
       Expect.Call (_executor.ExecuteSingle (null)).Constraints (
-          new PredicateConstraint<QueryExpression> (
-              delegate (QueryExpression queryExpression) { return queryExpression.GetExpressionTree () == expression; }
+          new PredicateConstraint<QueryModel> (
+              delegate (QueryModel queryExpression) { return queryExpression.GetExpressionTree () == expression; }
               )).Return (0);
 
       _mockRepository.ReplayAll ();
@@ -99,8 +99,8 @@ namespace Rubicon.Data.Linq.UnitTests
       
       Expression expression = query.Expression;
       Expect.Call (_executor.ExecuteCollection (null)).Constraints (
-          new PredicateConstraint<QueryExpression> (
-              delegate (QueryExpression queryExpression) { return queryExpression.GetExpressionTree () == expression; }
+          new PredicateConstraint<QueryModel> (
+              delegate (QueryModel queryExpression) { return queryExpression.GetExpressionTree () == expression; }
               )).Return (new Student[] {student});
 
       _mockRepository.ReplayAll ();
@@ -120,8 +120,8 @@ namespace Rubicon.Data.Linq.UnitTests
 
       Expression expression = query.Expression;
       Expect.Call (_executor.ExecuteCollection (null)).Constraints (
-          new PredicateConstraint<QueryExpression> (
-              delegate (QueryExpression queryExpression) { return queryExpression.GetExpressionTree () == expression; }
+          new PredicateConstraint<QueryModel> (
+              delegate (QueryModel queryExpression) { return queryExpression.GetExpressionTree () == expression; }
               )).Return (new Student[] { student });
 
       _mockRepository.ReplayAll ();

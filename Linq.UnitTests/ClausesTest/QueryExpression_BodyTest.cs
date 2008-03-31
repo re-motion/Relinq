@@ -13,13 +13,13 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
   public class QueryExpression_BodyTest
   {
     private ISelectGroupClause _selectOrGroupClause;
-    private QueryExpression _expression;
+    private QueryModel _model;
 
     [SetUp]
     public void SetUp()
     {
       _selectOrGroupClause = ExpressionHelper.CreateSelectClause ();
-      _expression = new QueryExpression (typeof (IQueryable<int>), ExpressionHelper.CreateMainFromClause(), _selectOrGroupClause);
+      _model = new QueryModel (typeof (IQueryable<int>), ExpressionHelper.CreateMainFromClause(), _selectOrGroupClause);
     }
 
     [Test]
@@ -29,11 +29,11 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       OrderingClause ordering = new OrderingClause (ExpressionHelper.CreateClause(),orderingExpression, OrderDirection.Asc);
 
       OrderByClause orderByClause = new OrderByClause (ordering);
-      _expression.AddBodyClause (orderByClause);
+      _model.AddBodyClause (orderByClause);
 
-      Assert.AreSame (_selectOrGroupClause, _expression.SelectOrGroupClause);
-      Assert.AreEqual (1, _expression.BodyClauses.Count);
-      Assert.That (_expression.BodyClauses, List.Contains (orderByClause));
+      Assert.AreSame (_selectOrGroupClause, _model.SelectOrGroupClause);
+      Assert.AreEqual (1, _model.BodyClauses.Count);
+      Assert.That (_model.BodyClauses, List.Contains (orderByClause));
     }
 
     [Test]
@@ -43,11 +43,11 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       IBodyClause orderByClause1 = ExpressionHelper.CreateOrderByClause();
       IBodyClause orderByClause2 = ExpressionHelper.CreateOrderByClause ();
 
-      _expression.AddBodyClause (orderByClause1);
-      _expression.AddBodyClause (orderByClause2);
+      _model.AddBodyClause (orderByClause1);
+      _model.AddBodyClause (orderByClause2);
 
-      Assert.AreEqual (2, _expression.BodyClauses.Count);
-      Assert.That (_expression.BodyClauses, Is.EqualTo (new object[] { orderByClause1, orderByClause2 }));
+      Assert.AreEqual (2, _model.BodyClauses.Count);
+      Assert.That (_model.BodyClauses, Is.EqualTo (new object[] { orderByClause1, orderByClause2 }));
     }
 
     
@@ -55,10 +55,10 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     public void AddBodyClause()
     {
       IBodyClause clause = ExpressionHelper.CreateWhereClause();
-      _expression.AddBodyClause (clause);
+      _model.AddBodyClause (clause);
 
-      Assert.AreEqual (1, _expression.BodyClauses.Count);
-      Assert.That (_expression.BodyClauses, List.Contains (clause));
+      Assert.AreEqual (1, _model.BodyClauses.Count);
+      Assert.That (_model.BodyClauses, List.Contains (clause));
     }
 
     [Test]
@@ -70,8 +70,8 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       LambdaExpression fromExpression = ExpressionHelper.CreateLambdaExpression ();
       LambdaExpression projectionExpression = ExpressionHelper.CreateLambdaExpression ();
 
-      _expression.AddBodyClause (new AdditionalFromClause (previousClause, identifier, fromExpression, projectionExpression));
-      _expression.AddBodyClause (new AdditionalFromClause (previousClause, identifier, fromExpression, projectionExpression));
+      _model.AddBodyClause (new AdditionalFromClause (previousClause, identifier, fromExpression, projectionExpression));
+      _model.AddBodyClause (new AdditionalFromClause (previousClause, identifier, fromExpression, projectionExpression));
     }
     
     [Test]
@@ -88,13 +88,13 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       AdditionalFromClause clause2 = new AdditionalFromClause (clause1, identifier2, fromExpression, projExpression);
       AdditionalFromClause clause3 = new AdditionalFromClause (clause2, identifier3, fromExpression, projExpression);
 
-      _expression.AddBodyClause (clause1);
-      _expression.AddBodyClause (clause2);
-      _expression.AddBodyClause (clause3);
+      _model.AddBodyClause (clause1);
+      _model.AddBodyClause (clause2);
+      _model.AddBodyClause (clause3);
 
-      Assert.AreSame (clause1, _expression.GetAdditionalFromClause ("s1", typeof (Student)));
-      Assert.AreSame (clause2, _expression.GetAdditionalFromClause ("s2", typeof (Student)));
-      Assert.AreSame (clause3, _expression.GetAdditionalFromClause ("s3", typeof (Student)));
+      Assert.AreSame (clause1, _model.GetAdditionalFromClause ("s1", typeof (Student)));
+      Assert.AreSame (clause2, _model.GetAdditionalFromClause ("s2", typeof (Student)));
+      Assert.AreSame (clause3, _model.GetAdditionalFromClause ("s3", typeof (Student)));
     }
 
     [Test]
@@ -105,9 +105,9 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
       AdditionalFromClause clause1 = new AdditionalFromClause (ExpressionHelper.CreateMainFromClause (), identifier1, fromExpression, projExpression);
 
-      _expression.AddBodyClause (clause1);
+      _model.AddBodyClause (clause1);
 
-      Assert.IsNull (_expression.GetAdditionalFromClause ("fzlbf", typeof (Student)));
+      Assert.IsNull (_model.GetAdditionalFromClause ("fzlbf", typeof (Student)));
     }
 
     [Test]
@@ -120,8 +120,8 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
       AdditionalFromClause clause1 = new AdditionalFromClause (ExpressionHelper.CreateMainFromClause (), identifier1, fromExpression, projExpression);
 
-      _expression.AddBodyClause (clause1);
-      _expression.GetAdditionalFromClause ("s1", typeof (string));
+      _model.AddBodyClause (clause1);
+      _model.GetAdditionalFromClause ("s1", typeof (string));
     }
   }
 }

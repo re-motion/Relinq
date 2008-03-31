@@ -19,15 +19,15 @@ namespace Rubicon.Data.Linq.Visitor
 
     #region IQueryVisitor Members
 
-    public void VisitQueryExpression (QueryExpression queryExpression)
+    public void VisitQueryExpression (QueryModel queryModel)
     {
-      ArgumentUtility.CheckNotNull ("queryExpression", queryExpression);
+      ArgumentUtility.CheckNotNull ("queryExpression", queryModel);
 
-      queryExpression.MainFromClause.Accept (this);
-      foreach (IBodyClause bodyClause in queryExpression.BodyClauses)
+      queryModel.MainFromClause.Accept (this);
+      foreach (IBodyClause bodyClause in queryModel.BodyClauses)
         bodyClause.Accept (this);
 
-      queryExpression.SelectOrGroupClause.Accept (this);
+      queryModel.SelectOrGroupClause.Accept (this);
     }
 
     public void VisitMainFromClause (MainFromClause fromClause)
@@ -65,7 +65,7 @@ namespace Rubicon.Data.Linq.Visitor
     public void VisitSubQueryFromClause (SubQueryFromClause fromClause)
     {
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
-      _sb.AppendFormat ("from {0} {1} in ({2}) ", fromClause.Identifier.Type.Name, fromClause.Identifier.Name, fromClause.SubQueryExpression);
+      _sb.AppendFormat ("from {0} {1} in ({2}) ", fromClause.Identifier.Type.Name, fromClause.Identifier.Name, fromClause.SubQueryModel);
     }
 
     public void VisitJoinClause (JoinClause joinClause)

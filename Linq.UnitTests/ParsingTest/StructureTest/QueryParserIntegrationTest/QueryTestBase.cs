@@ -10,7 +10,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.QueryParserInteg
   {
     public Expression SourceExpression { get; private set; }
     public ExpressionTreeNavigator SourceExpressionNavigator { get; private set; }
-    public QueryExpression ParsedQuery { get; private set; }
+    public QueryModel ParsedQuery { get; private set; }
     public IQueryable<Student> QuerySource { get; private set; }
     public ConstantExpression QuerySourceExpression { get; private set; }
 

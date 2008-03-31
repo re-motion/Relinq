@@ -9,7 +9,7 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
   /// <summary>
   /// removes transparent identifier from a expression representing a field access
   /// </summary>
-  public class QueryExpressionFieldResolverVisitor : ExpressionTreeVisitor
+  public class QueryModelFieldResolverVisitor : ExpressionTreeVisitor
   {
     public class Result
     {
@@ -25,14 +25,14 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
       public FromClauseBase FromClause { get; private set; }
     }
 
-    private readonly QueryExpression _queryExpression;
+    private readonly QueryModel _queryModel;
 
     private FromClauseBase _fromClause;
 
-    public QueryExpressionFieldResolverVisitor (QueryExpression queryExpression)
+    public QueryModelFieldResolverVisitor (QueryModel queryModel)
     {
-      ArgumentUtility.CheckNotNull ("queryExpression", queryExpression);
-      _queryExpression = queryExpression;
+      ArgumentUtility.CheckNotNull ("queryExpression", queryModel);
+      _queryModel = queryModel;
     }
 
     public Result ParseAndReduce (Expression expression)
@@ -49,7 +49,7 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
     protected override Expression VisitParameterExpression (ParameterExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      _fromClause = _queryExpression.GetFromClause (expression.Name, expression.Type);
+      _fromClause = _queryModel.GetFromClause (expression.Name, expression.Type);
       if (_fromClause != null)
         return base.VisitParameterExpression (expression);
       else

@@ -8,18 +8,18 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.Parsing.Structure
 {
-  public class QueryExpressionCreator
+  public class QueryModelCreator
   {
     private readonly Expression _expressionTreeRoot;
     private readonly ParseResultCollector _result;
     private readonly List<IBodyClause> _bodyClauses = new List<IBodyClause> ();
-    private readonly List<QueryExpression> _subQueries = new List<QueryExpression> ();
+    private readonly List<QueryModel> _subQueries = new List<QueryModel> ();
 
     private IClause _previousClause;
     private int _currentProjection;
     private OrderByClause _previousOrderByClause;
 
-    public QueryExpressionCreator (Expression expressionTreeRoot, ParseResultCollector result)
+    public QueryModelCreator (Expression expressionTreeRoot, ParseResultCollector result)
     {
       ArgumentUtility.CheckNotNull ("expressionTreeRoot", expressionTreeRoot);
       ArgumentUtility.CheckNotNull ("result", result);
@@ -28,7 +28,7 @@ namespace Rubicon.Data.Linq.Parsing.Structure
       _result = result;
     }
 
-    public QueryExpression CreateQueryExpression()
+    public QueryModel CreateQueryExpression()
     {
       var mainFromClause = CreateMainFromClause (_result);
 
@@ -36,7 +36,7 @@ namespace Rubicon.Data.Linq.Parsing.Structure
       _currentProjection = 0;
       _previousOrderByClause = null;
 
-      foreach (BodyExpressionBase bodyExpression in _result.BodyExpressions)
+      foreach (BodyExpressionDataBase bodyExpression in _result.BodyExpressions)
       {
         var clause = CreateBodyClause (bodyExpression);
         if (clause != _previousClause)
@@ -46,12 +46,12 @@ namespace Rubicon.Data.Linq.Parsing.Structure
       }
 
       var selectClause = CreateSelectClause();
-      var queryExpression = new QueryExpression (_expressionTreeRoot.Type, mainFromClause, selectClause, _expressionTreeRoot);
+      var queryExpression = new QueryModel (_expressionTreeRoot.Type, mainFromClause, selectClause, _expressionTreeRoot);
 
       foreach (IBodyClause bodyClause in _bodyClauses)
         queryExpression.AddBodyClause (bodyClause);
 
-      foreach (QueryExpression subQuery in _subQueries)
+      foreach (QueryModel subQuery in _subQueries)
         subQuery.SetParentQuery (queryExpression);
 
       return queryExpression;
@@ -59,13 +59,13 @@ namespace Rubicon.Data.Linq.Parsing.Structure
 
     private MainFromClause CreateMainFromClause (ParseResultCollector resultCollector)
     {
-      Assertion.IsTrue (resultCollector.BodyExpressions.Count > 0 && resultCollector.BodyExpressions[0] is FromExpression);
+      Assertion.IsTrue (resultCollector.BodyExpressions.Count > 0 && resultCollector.BodyExpressions[0] is FromExpressionData);
 
-      FromExpression mainFromExpression = resultCollector.ExtractMainFromExpression ();
-      return new MainFromClause (mainFromExpression.Identifier, mainFromExpression.Expression);
+      FromExpressionData mainFromExpressionData = resultCollector.ExtractMainFromExpression ();
+      return new MainFromClause (mainFromExpressionData.Identifier, mainFromExpressionData.Expression);
     }
 
-    private IBodyClause CreateBodyClause (BodyExpressionBase expression)
+    private IBodyClause CreateBodyClause (BodyExpressionDataBase expression)
     {
       IBodyClause fromClause = CreateBodyFromClause (expression);
       if (fromClause != null)
@@ -82,9 +82,9 @@ namespace Rubicon.Data.Linq.Parsing.Structure
       throw new ParserException ("The FromLetWhereExpression type " + expression.GetType ().Name + " is not supported.");
     }
 
-    private IBodyClause CreateBodyFromClause (BodyExpressionBase expression)
+    private IBodyClause CreateBodyFromClause (BodyExpressionDataBase expression)
     {
-      var fromExpression = expression as FromExpression;
+      var fromExpression = expression as FromExpressionData;
       if (fromExpression == null)
         return null;
 
@@ -102,28 +102,28 @@ namespace Rubicon.Data.Linq.Parsing.Structure
       return CreateBodyFromClause(fromExpression, lambdaExpression, projectionExpression);
     }
 
-    private IBodyClause CreateBodyFromClause (FromExpression fromExpression, LambdaExpression lambdaExpression, LambdaExpression projectionExpression)
+    private IBodyClause CreateBodyFromClause (FromExpressionData fromExpressionData, LambdaExpression lambdaExpression, LambdaExpression projectionExpression)
     {
       if (lambdaExpression.Body.NodeType == ExpressionType.Call)
       {
-        QueryExpression subQuery = CreateSubQuery(lambdaExpression);
-        return new SubQueryFromClause (_previousClause, fromExpression.Identifier, subQuery, projectionExpression);
+        QueryModel subQuery = CreateSubQuery(lambdaExpression);
+        return new SubQueryFromClause (_previousClause, fromExpressionData.Identifier, subQuery, projectionExpression);
       }
       else
-        return new AdditionalFromClause (_previousClause, fromExpression.Identifier, lambdaExpression, projectionExpression);
+        return new AdditionalFromClause (_previousClause, fromExpressionData.Identifier, lambdaExpression, projectionExpression);
     }
 
-    private QueryExpression CreateSubQuery (LambdaExpression subQueryExpression)
+    private QueryModel CreateSubQuery (LambdaExpression subQueryExpression)
     {
       QueryParser subQueryParser = new QueryParser (subQueryExpression.Body);
-      QueryExpression subQuery = subQueryParser.GetParsedQuery();
+      QueryModel subQuery = subQueryParser.GetParsedQuery();
       _subQueries.Add (subQuery);
       return subQuery;
     }
 
-    private WhereClause CreateWhereClause (BodyExpressionBase expression)
+    private WhereClause CreateWhereClause (BodyExpressionDataBase expression)
     {
-      var whereExpression = expression as WhereExpression;
+      var whereExpression = expression as WhereExpressionData;
       if (whereExpression == null)
         return null;
 
@@ -131,9 +131,9 @@ namespace Rubicon.Data.Linq.Parsing.Structure
       return whereClause;
     }
 
-    private OrderByClause CreateOrderByClause (BodyExpressionBase expression)
+    private OrderByClause CreateOrderByClause (BodyExpressionDataBase expression)
     {
-      var orderExpression = expression as OrderExpression;
+      var orderExpression = expression as OrderExpressionData;
       if (orderExpression == null)
         return null;
 
