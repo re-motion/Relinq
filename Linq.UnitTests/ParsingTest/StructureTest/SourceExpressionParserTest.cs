@@ -60,7 +60,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected Constant or Call expression for xy, found ParameterExpression (i).")]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected Constant or Call expression for xy, found i (ParameterExpression).")]
     public void InvalidSource ()
     {
       _topLevelParser.Parse (new ParseResultCollector (_source.Expression), _potentialFromIdentifier, _potentialFromIdentifier, "xy");

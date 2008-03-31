@@ -265,16 +265,29 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
-    public void QueryWithSubQueryAndWhereInAdditionalFrom_X ()
+    [Ignore ("TODO: Implement contains with subquery in where conditions.")]
+    public void QueryWithSubQueryInWhere ()
+    {
+      var orders =
+          from o in DataContext.Entity<Order> (new TestQueryListener())
+          where (from c in DataContext.Entity<Customer>() select c).Contains (o.Customer)
+          select o;
+
+      CheckQueryResult (orders, DomainObjectIDs.Order1, DomainObjectIDs.Order2, DomainObjectIDs.Order3, DomainObjectIDs.Order4, 
+        DomainObjectIDs.OrderWithoutOrderItem, DomainObjectIDs.InvalidOrder);
+    }
+
+    [Test]
+    [Ignore ("TODO: Implement contains with subquery in where conditions.")]
+    public void QueryWithSubQueryAndJoinInWhere ()
     {
       var orders =
           from o in DataContext.Entity<Order> (new TestQueryListener ())
-          from o2 in
-            (from oi in DataContext.Entity<OrderItem> (new TestQueryListener ()) where oi.Order == o select oi)
-          select o2;
+          where (from c in DataContext.Entity<OrderTicket> () select c.Order).Contains (o)
+          select o;
 
-      CheckQueryResult (orders, DomainObjectIDs.OrderItem5, DomainObjectIDs.OrderItem4, DomainObjectIDs.OrderItem2, DomainObjectIDs.OrderItem1,
-        DomainObjectIDs.OrderItem3);
+      CheckQueryResult (orders, DomainObjectIDs.Order1, DomainObjectIDs.Order2, DomainObjectIDs.Order3, DomainObjectIDs.Order4,
+        DomainObjectIDs.OrderWithoutOrderItem, DomainObjectIDs.InvalidOrder);
     }
 
     private void CheckQueryResult<T> (IQueryable<T> query, params ObjectID[] expectedObjectIDs)

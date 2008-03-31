@@ -32,7 +32,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.WhereExpressionP
 
     [Test]
     [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected Constant or Call expression for first argument of Where expression,"
-        + " found UnaryExpression (Convert(null)).")]
+        + " found Convert(null) (UnaryExpression).")]
     public void Initialize_FromWrongExpressionInWhereExpression ()
     {
       Expression nonCallExpression = Expression.Convert (Expression.Constant (null), typeof (IQueryable<Student>));

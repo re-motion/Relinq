@@ -35,8 +35,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     }
     
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected binary expression, constant expression,method call expression or member expression for "
-        + "where condition, found ConditionalExpression (IIF(True, True, True)).")]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected binary expression, constant expression,method call expression or member"
+      +" expression for where condition, found IIF(True, True, True) (ConditionalExpression).")]
     public void Invalid ()
     {
       WhereClause whereClause =
@@ -93,7 +93,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
 
     [Test]
     [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected and, or, or comparison expression for binary expression in where "
-        + "condition, found ExpressionType (ArrayIndex).")]
+        + "condition, found ArrayIndex.")]
     public void InvalidBinary ()
     {
       Expression condition = Expression.ArrayIndex (Expression.Constant (new bool[0]), Expression.Constant(0));
@@ -287,7 +287,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
 
     [Test]
     [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected not or convert expression for unary expression in where condition, found "
-        + "ExpressionType (ConvertChecked).")]
+        + "ConvertChecked.")]
     public void InvalidUnary ()
     {
       Expression condition = Expression.ConvertChecked (Expression.Constant (true), typeof (bool));
@@ -339,7 +339,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
 
     [Test]
     [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected and, or, or comparison expression for binary expression in where "
-        + "condition, found ExpressionType (Add).")]
+        + "condition, found Add.")]
     public void Simplify_False ()
     {
       IQueryable<Student> query = WhereTestQueryGenerator.CreateWhereQueryWithEvaluatableSubExpression (ExpressionHelper.CreateQuerySource ());

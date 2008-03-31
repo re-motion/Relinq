@@ -26,7 +26,8 @@ namespace Rubicon.Data.Linq.Parsing.Details.WhereParser
       else if (expression.Method.Name == "EndsWith")
         return CreateLike (expression, "%" + ((ConstantExpression) expression.Arguments[0]).Value);
 
-      throw ParserUtility.CreateParserException ("StartsWith, EndsWith", expression.NodeType, "method call expression in where condition", _whereClause.BoolExpression);
+      throw ParserUtility.CreateParserException ("StartsWith, EndsWith", expression.Method.Name, "method call expression in where condition",
+          _whereClause.BoolExpression);
     }
 
     private BinaryCondition CreateLike (MethodCallExpression expression, string pattern)

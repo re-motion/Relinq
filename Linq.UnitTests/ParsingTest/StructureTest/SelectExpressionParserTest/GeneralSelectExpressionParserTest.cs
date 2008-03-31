@@ -34,7 +34,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.SelectExpression
 
     [Test]
     [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected Constant or Call expression for first argument of Select "
-        + "expression, found UnaryExpression (Convert(null)).")]
+        + "expression, found Convert(null) (UnaryExpression).")]
     public void Initialize_FromWrongExpressionInWhereExpression ()
     {
       Expression nonCallExpression = Expression.Convert (Expression.Constant (null), typeof (IQueryable<Student>));

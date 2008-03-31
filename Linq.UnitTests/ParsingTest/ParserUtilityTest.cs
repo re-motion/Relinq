@@ -20,7 +20,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
 
     [Test]
     [ExpectedException (typeof (ParserException),
-        ExpectedMessage = "Expected NewArrayExpression for source expression, found ParameterExpression (i).")]
+        ExpectedMessage = "Expected NewArrayExpression for source expression, found i (ParameterExpression).")]
     public void GetTypedExpression_InvalidType ()
     {
       Expression sourceExpression = ExpressionHelper.CreateParameterExpression();

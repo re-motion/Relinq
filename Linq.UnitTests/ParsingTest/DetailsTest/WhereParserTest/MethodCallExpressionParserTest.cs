@@ -68,7 +68,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereParserTest
 
     [Test]
     [ExpectedException (typeof (Rubicon.Data.Linq.Parsing.ParserException), ExpectedMessage = "Expected StartsWith, EndsWith for method call "
-      +"expression in where condition, found ExpressionType (Call).")]
+      +"expression in where condition, found Equals.")]
     public void Parse_WithException ()
     {
       WhereClause whereClause = ExpressionHelper.CreateWhereClause ();

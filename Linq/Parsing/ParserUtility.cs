@@ -25,7 +25,11 @@ namespace Rubicon.Data.Linq.Parsing
     public static ParserException CreateParserException (object expected, object expression, string context, Expression expressionTreeRoot,
                                                          Exception inner)
     {
-      string message = string.Format ("Expected {0} for {1}, found {2} ({3}).", expected, context, expression.GetType ().Name, expression);
+      string message;
+      if (expression is Expression)
+        message = string.Format ("Expected {0} for {1}, found {2} ({3}).", expected, context, expression, expression.GetType ().Name);
+      else
+        message = string.Format ("Expected {0} for {1}, found {2}.", expected, context, expression);
       return new ParserException (message, expression, expressionTreeRoot, inner);
     }
 

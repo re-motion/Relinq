@@ -37,7 +37,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.SelectManyExpres
 
     [Test]
     [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected SelectMany call with three arguments for SelectMany expressions, "
-        + "found MethodCallExpression (Convert(null).SelectMany(student => null)).")]
+        + "found Convert(null).SelectMany(student => null) (MethodCallExpression).")]
     public void Initialize_FromWrongExpressionInWhereExpression ()
     {
       Expression nonCallExpression = Expression.Convert (Expression.Constant (null), typeof (IQueryable<Student>));

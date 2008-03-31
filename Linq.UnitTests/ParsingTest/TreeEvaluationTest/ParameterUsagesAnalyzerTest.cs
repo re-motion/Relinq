@@ -62,6 +62,15 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.TreeEvaluationTest
     }
 
     [Test]
+    public void VisitExpression_WithNullExpression ()
+    {
+      _analyzer.VisitExpression (null);
+
+      Assert.That (_analyzer.Usage.UsedParameters, Is.Empty);
+      Assert.That (_analyzer.Usage.DeclaredParameters, Is.Empty);
+    }
+
+    [Test]
     public void VisitExpression_AddsUsage ()
     {
       BinaryExpression binaryExpression = Expression.MakeBinary(ExpressionType.Equal, Expression.Constant (0), Expression.Constant (1));

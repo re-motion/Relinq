@@ -22,7 +22,7 @@ namespace Rubicon.Data.Linq.Parsing.TreeEvaluation
 
     protected override Expression VisitExpression (Expression expression)
     {
-      if (expression is ConstantExpression)
+      if (expression is ConstantExpression || expression == null)
         return expression;
 
       PrepareExpression(expression);
