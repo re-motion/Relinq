@@ -177,8 +177,8 @@
     <Compile Include="VisitorTest\ExpressionTreeVisitorTest\ExpressionInstanceCreator.cs" />
     <Compile Include="VisitorTest\ExpressionTreeVisitorTest\SimpleClass.cs" />
     <Compile Include="VisitorTest\ExpressionTreeVisitorTest\SpecialExpressionNode.cs" />
-    <Compile Include="VisitorTest\ExpressionTreeVisitorTest\VisitExpressionsTest.cs" />
-    <Compile Include="VisitorTest\ExpressionTreeVisitorTest\VisitSpecificExpressionTest.cs" />
+    <Compile Include="VisitorTest\ExpressionTreeVisitorTest\ExpressionVisitorTest.cs" />
+    <Compile Include="VisitorTest\ExpressionTreeVisitorTest\ExpressionVisitor_SpecificExpressionsTest.cs" />
     <Compile Include="VisitorTest\StringVisitorTest.cs" />
     <Compile Include="ClausesTest\WhereClauseTest.cs" />
   </ItemGroup>

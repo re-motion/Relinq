@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using Rhino.Mocks;
 using System.Reflection;
 using Rhino.Mocks.Interfaces;
+using Rubicon.Data.Linq.DataObjectModel;
 using Rubicon.Data.Linq.Visitor;
 using Rubicon.Development.UnitTesting;
 using Rubicon.Utilities;
@@ -13,7 +14,7 @@ using System.Linq;
 namespace Rubicon.Data.Linq.UnitTests.VisitorTest.ExpressionTreeVisitorTest
 {
   [TestFixture]
-  public class VisitExpressionTest
+  public class ExpressionVisitorTest
   {
     private MockRepository _mockRepository;
 
@@ -128,7 +129,21 @@ namespace Rubicon.Data.Linq.UnitTests.VisitorTest.ExpressionTreeVisitorTest
           ExpressionType.TypeAs);
     }
 
+    [Test]
+    public void VisitExpression_SubQuery ()
+    {
+      QueryModel queryModel = ExpressionHelper.CreateQueryModel ();
+      CheckDelegation (_mockRepository, "VisitSubQueryExpression", new SubQueryExpression (queryModel));
+    }
+    
     private void CheckDelegation (MockRepository repository, string methodName, params ExpressionType[] expressionTypes)
+    {
+      Expression[] expressions = Array.ConvertAll<ExpressionType, Expression> (expressionTypes, ExpressionInstanceCreator.GetExpressionInstance);
+
+      CheckDelegation(repository, methodName, expressions);
+    }
+
+    private void CheckDelegation (MockRepository repository, string methodName, params Expression[] expressions)
     {
       ExpressionTreeVisitor visitorMock = repository.CreateMock<ExpressionTreeVisitor> ();
 
@@ -136,10 +151,8 @@ namespace Rubicon.Data.Linq.UnitTests.VisitorTest.ExpressionTreeVisitorTest
       MethodInfo methodToBeCalled = visitorMock.GetType ().GetMethod (methodName, BindingFlags.NonPublic | BindingFlags.Instance);
       Assert.IsNotNull (methodToBeCalled);
 
-      foreach (ExpressionType expressionType in expressionTypes)
+      foreach (Expression expression in expressions)
       {
-        Expression expression = ExpressionInstanceCreator.GetExpressionInstance (expressionType);
-        
         repository.BackToRecord (visitorMock);
         Expect.Call (visitExpressionMethod.Invoke (visitorMock, new object[] { expression })).CallOriginalMethod (OriginalCallOptions.CreateExpectation);
         Expect.Call (methodToBeCalled.Invoke (visitorMock, new object[] { expression })).Return (expression);

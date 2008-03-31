@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
+using Rubicon.Data.Linq.DataObjectModel;
 using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.Visitor
@@ -77,8 +78,10 @@ namespace Rubicon.Data.Linq.Visitor
           return VisitTypeBinaryExpression ((TypeBinaryExpression) expression);
 
         default:
-          // TODO: if (expression is SubQueryExpression) VisitSubQueryExpression ((SubQueryExpression) expression);
-          return VisitUnknownExpression (expression);
+          if (expression is SubQueryExpression)
+            return VisitSubQueryExpression ((SubQueryExpression) expression);
+          else
+            return VisitUnknownExpression (expression);
       }
     }
 
@@ -307,6 +310,11 @@ namespace Rubicon.Data.Linq.Visitor
     protected virtual ReadOnlyCollection<ElementInit> VisitElementInitList (ReadOnlyCollection<ElementInit> expressions)
     {
       return VisitList (expressions, VisitElementInit);
+    }
+
+    protected virtual Expression VisitSubQueryExpression (SubQueryExpression expression)
+    {
+      return expression;
     }
 
     private ReadOnlyCollection<T> VisitList<T> (ReadOnlyCollection<T> list, Func<T, object> visitMethod)

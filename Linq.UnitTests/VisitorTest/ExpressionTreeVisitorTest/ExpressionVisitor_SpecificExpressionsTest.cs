@@ -13,7 +13,7 @@ using Constant=Rubicon.Data.Linq.DataObjectModel.Constant;
 namespace Rubicon.Data.Linq.UnitTests.VisitorTest.ExpressionTreeVisitorTest
 {
   [TestFixture]
-  public class VisitSpecificExpressionsTest
+  public class ExpressionVisitor_SpecificExpressionsTest
   {
     private MockRepository _mockRepository;
     private ExpressionTreeVisitor _visitorMock;
