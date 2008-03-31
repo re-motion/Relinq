@@ -57,6 +57,7 @@
     <Compile Include="DataObjectModel\IFromSource.cs" />
     <Compile Include="DataObjectModel\SingleJoin.cs" />
     <Compile Include="DataObjectModel\SubQuery.cs" />
+    <Compile Include="DataObjectModel\SubQueryExpression.cs" />
     <Compile Include="Parsing\Details\WhereParser\BinaryExpressionParser.cs" />
     <Compile Include="Parsing\Details\WhereParser\ConstantExpressionParser.cs" />
     <Compile Include="Parsing\Details\WhereParser\MemberExpressionParser.cs" />
