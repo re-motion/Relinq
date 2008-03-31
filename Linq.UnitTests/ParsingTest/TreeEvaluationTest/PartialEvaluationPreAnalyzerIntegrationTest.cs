@@ -7,14 +7,14 @@ using Rubicon.Data.Linq.Parsing.TreeEvaluation;
 namespace Rubicon.Data.Linq.UnitTests.ParsingTest.TreeEvaluationTest
 {
   [TestFixture]
-  public class ParameterUsageAnalyzerIntegrationTest
+  public class PartialEvaluationPreAnalyzerIntegrationTest
   {
-    private ParameterUsageAnalyzer _analyzer;
+    private PartialEvaluationPreAnalyzer _analyzer;
 
     [SetUp]
     public void SetUp ()
     {
-      _analyzer = new ParameterUsageAnalyzer();
+      _analyzer = new PartialEvaluationPreAnalyzer();
     }
 
     [Test]

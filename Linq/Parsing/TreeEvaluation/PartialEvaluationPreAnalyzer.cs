@@ -4,9 +4,9 @@ using Rubicon.Data.Linq.Visitor;
 
 namespace Rubicon.Data.Linq.Parsing.TreeEvaluation
 {
-  public class ParameterUsageAnalyzer : ExpressionTreeVisitor
+  public class PartialEvaluationPreAnalyzer : ExpressionTreeVisitor
   {
-    public ParameterUsageAnalyzer ()
+    public PartialEvaluationPreAnalyzer ()
     {
       Usage = new ParameterUsage ();
       CurrentExpressions = new Stack<Expression> ();

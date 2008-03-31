@@ -7,7 +7,7 @@ using NUnit.Framework.SyntaxHelpers;
 namespace Rubicon.Data.Linq.UnitTests.ParsingTest.TreeEvaluationTest
 {
   [TestFixture]
-  public class ParameterUsagesAnalyzerTest
+  public class PartialEvaluationPreAnalyzerTest
   {
     private TestableParameterUsageAnalyzer _analyzer;
 

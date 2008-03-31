@@ -4,7 +4,7 @@ using Rubicon.Data.Linq.Parsing.TreeEvaluation;
 
 namespace Rubicon.Data.Linq.UnitTests.ParsingTest.TreeEvaluationTest
 {
-  public class TestableParameterUsageAnalyzer : ParameterUsageAnalyzer
+  public class TestableParameterUsageAnalyzer : PartialEvaluationPreAnalyzer
   {
     public bool VisitBinaryExpressionCalled { get; set; }
     public Expression StackTopInVisitBinary { get; set; }

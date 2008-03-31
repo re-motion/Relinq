@@ -110,7 +110,7 @@
     <Compile Include="Parsing\Structure\WhereExpressionData.cs" />
     <Compile Include="Parsing\Structure\WhereExpressionParser.cs" />
     <Compile Include="Parsing\TreeEvaluation\ParameterUsage.cs" />
-    <Compile Include="Parsing\TreeEvaluation\ParameterUsageAnalyzer.cs" />
+    <Compile Include="Parsing\TreeEvaluation\PartialEvaluationPreAnalyzer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Clauses\MainFromClause.cs" />
     <Compile Include="QueryModel.cs" />

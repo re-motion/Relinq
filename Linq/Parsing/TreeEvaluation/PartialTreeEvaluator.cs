@@ -26,7 +26,7 @@ namespace Rubicon.Data.Linq.Parsing.TreeEvaluation
 
     public PartialTreeEvaluator (Expression treeRoot)
     {
-      ParameterUsageAnalyzer analyzer = new ParameterUsageAnalyzer();
+      PartialEvaluationPreAnalyzer analyzer = new PartialEvaluationPreAnalyzer();
       analyzer.Analyze (treeRoot);
       _parameterUsage = analyzer.Usage;
       _evaluatedTree = VisitExpression (treeRoot);
