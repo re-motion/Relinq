@@ -127,7 +127,8 @@ namespace Rubicon.Data.Linq.Parsing.Structure
       if (whereExpression == null)
         return null;
 
-      var whereClause = new WhereClause (_previousClause, whereExpression.Expression);
+      var newWhereExpression = new SubQueryFindingVisitor ().ReplaceSubQuery (whereExpression.Expression);
+      var whereClause = new WhereClause (_previousClause, (LambdaExpression) newWhereExpression);
       return whereClause;
     }
 

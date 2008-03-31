@@ -2,8 +2,10 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Rubicon.Collections;
 using Rubicon.Data.Linq.Clauses;
+using Rubicon.Data.Linq.DataObjectModel;
 using Rubicon.Data.Linq.Parsing;
 using Rubicon.Data.Linq.Parsing.Structure;
 using Rubicon.Data.Linq.UnitTests.TestQueryGenerators;
@@ -219,6 +221,25 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
       WhereClause whereClause = model.BodyClauses.First() as WhereClause;
       Assert.IsNotNull (whereClause);
       Assert.AreSame (whereExpressionData.Expression, whereClause.BoolExpression);
+    }
+
+    [Test]
+    public void BodyExpression_TranslatedIntoWhereClauseWithSubQuery ()
+    {
+      _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression ());
+
+      Expression subQuery = SelectTestQueryGenerator.CreateSimpleQuery(ExpressionHelper.CreateQuerySource()).Expression;
+      WhereExpressionData whereExpressionData = new WhereExpressionData (Expression.Lambda(subQuery));
+      _result.AddBodyExpression (whereExpressionData);
+
+      QueryModel model = _modelCreator.CreateQueryExpression ();
+
+      Assert.AreEqual (1, model.BodyClauses.Count);
+
+      WhereClause whereClause = model.BodyClauses.First () as WhereClause;
+      Assert.IsNotNull (whereClause);
+      Assert.That (whereClause.BoolExpression.Body, Is.InstanceOfType (typeof (SubQueryExpression)));
+
     }
 
     [Test]
