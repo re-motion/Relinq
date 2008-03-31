@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using Rubicon.Data.Linq.DataObjectModel;
 using Rubicon.Data.Linq.Parsing.TreeEvaluation;
 using NUnit.Framework.SyntaxHelpers;
 
@@ -9,12 +10,12 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.TreeEvaluationTest
   [TestFixture]
   public class PartialEvaluationPreAnalyzerTest
   {
-    private TestableParameterUsageAnalyzer _analyzer;
+    private TestablePartialEvaluationPreAnalyzer _analyzer;
 
     [SetUp]
     public void SetUp ()
     {
-      _analyzer = new TestableParameterUsageAnalyzer ();
+      _analyzer = new TestablePartialEvaluationPreAnalyzer ();
     }
 
     [Test]
@@ -23,11 +24,14 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.TreeEvaluationTest
       Expression current1 = Expression.Constant (0);
       _analyzer.PrepareExpression (current1);
       
-      Assert.That (_analyzer.Usage.UsedParameters.ContainsKey (current1));
-      Assert.That (_analyzer.Usage.UsedParameters[current1].ToArray(), Is.Empty);
+      Assert.That (_analyzer.EvaluationData.UsedParameters.ContainsKey (current1));
+      Assert.That (_analyzer.EvaluationData.UsedParameters[current1].ToArray(), Is.Empty);
 
-      Assert.That (_analyzer.Usage.DeclaredParameters.ContainsKey (current1));
-      Assert.That (_analyzer.Usage.DeclaredParameters[current1].ToArray (), Is.Empty);
+      Assert.That (_analyzer.EvaluationData.DeclaredParameters.ContainsKey (current1));
+      Assert.That (_analyzer.EvaluationData.DeclaredParameters[current1].ToArray (), Is.Empty);
+
+      Assert.That (_analyzer.EvaluationData.SubQueries.ContainsKey (current1));
+      Assert.That (_analyzer.EvaluationData.SubQueries[current1].ToArray (), Is.Empty);
 
       Assert.That (_analyzer.CurrentExpressions, Is.EqualTo (new[] {current1}));
     }
@@ -39,11 +43,14 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.TreeEvaluationTest
       _analyzer.PrepareExpression (current1);
       _analyzer.PrepareExpression (current1);
 
-      Assert.That (_analyzer.Usage.UsedParameters.ContainsKey (current1));
-      Assert.That (_analyzer.Usage.UsedParameters[current1].ToArray (), Is.Empty);
+      Assert.That (_analyzer.EvaluationData.UsedParameters.ContainsKey (current1));
+      Assert.That (_analyzer.EvaluationData.UsedParameters[current1].ToArray (), Is.Empty);
 
-      Assert.That (_analyzer.Usage.DeclaredParameters.ContainsKey (current1));
-      Assert.That (_analyzer.Usage.DeclaredParameters[current1].ToArray (), Is.Empty);
+      Assert.That (_analyzer.EvaluationData.DeclaredParameters.ContainsKey (current1));
+      Assert.That (_analyzer.EvaluationData.DeclaredParameters[current1].ToArray (), Is.Empty);
+
+      Assert.That (_analyzer.EvaluationData.SubQueries.ContainsKey (current1));
+      Assert.That (_analyzer.EvaluationData.SubQueries[current1].ToArray (), Is.Empty);
 
       Assert.That (_analyzer.CurrentExpressions, Is.EqualTo (new[] { current1, current1 }));
     }
@@ -55,8 +62,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.TreeEvaluationTest
       _analyzer.PrepareExpression (current1);
       _analyzer.FinishExpression();
 
-      Assert.That (_analyzer.Usage.UsedParameters.ContainsKey (current1));
-      Assert.That (_analyzer.Usage.DeclaredParameters.ContainsKey (current1));
+      Assert.That (_analyzer.EvaluationData.UsedParameters.ContainsKey (current1));
+      Assert.That (_analyzer.EvaluationData.DeclaredParameters.ContainsKey (current1));
 
       Assert.That (_analyzer.CurrentExpressions, Is.Empty);
     }
@@ -66,8 +73,9 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.TreeEvaluationTest
     {
       _analyzer.VisitExpression (null);
 
-      Assert.That (_analyzer.Usage.UsedParameters, Is.Empty);
-      Assert.That (_analyzer.Usage.DeclaredParameters, Is.Empty);
+      Assert.That (_analyzer.EvaluationData.UsedParameters, Is.Empty);
+      Assert.That (_analyzer.EvaluationData.DeclaredParameters, Is.Empty);
+      Assert.That (_analyzer.EvaluationData.SubQueries, Is.Empty);
     }
 
     [Test]
@@ -76,8 +84,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.TreeEvaluationTest
       BinaryExpression binaryExpression = Expression.MakeBinary(ExpressionType.Equal, Expression.Constant (0), Expression.Constant (1));
       _analyzer.VisitExpression (binaryExpression);
 
-      Assert.That (_analyzer.Usage.UsedParameters.ContainsKey (binaryExpression));
-      Assert.That (_analyzer.Usage.DeclaredParameters.ContainsKey (binaryExpression));
+      Assert.That (_analyzer.EvaluationData.UsedParameters.ContainsKey (binaryExpression));
+      Assert.That (_analyzer.EvaluationData.DeclaredParameters.ContainsKey (binaryExpression));
     }
 
     [Test]
@@ -86,8 +94,9 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.TreeEvaluationTest
       ConstantExpression constantExpression = Expression.Constant (0);
       _analyzer.VisitExpression (constantExpression);
 
-      Assert.That (_analyzer.Usage.UsedParameters, Is.Empty);
-      Assert.That (_analyzer.Usage.DeclaredParameters, Is.Empty);
+      Assert.That (_analyzer.EvaluationData.UsedParameters, Is.Empty);
+      Assert.That (_analyzer.EvaluationData.DeclaredParameters, Is.Empty);
+      Assert.That (_analyzer.EvaluationData.SubQueries, Is.Empty);
     }
 
     [Test]
@@ -123,8 +132,9 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.TreeEvaluationTest
       ParameterExpression parameter = Expression.Parameter (typeof (string), "p");
       _analyzer.VisitParameterExpression (parameter);
 
-      Assert.That (_analyzer.Usage.DeclaredParameters, Is.Empty);
-      Assert.That (_analyzer.Usage.UsedParameters, Is.Empty);
+      Assert.That (_analyzer.EvaluationData.DeclaredParameters, Is.Empty);
+      Assert.That (_analyzer.EvaluationData.UsedParameters, Is.Empty);
+      Assert.That (_analyzer.EvaluationData.SubQueries, Is.Empty);
     }
 
     [Test]
@@ -139,11 +149,11 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.TreeEvaluationTest
       ParameterExpression parameter = Expression.Parameter (typeof (string), "p");
       _analyzer.VisitParameterExpression (parameter);
 
-      Assert.That (_analyzer.Usage.DeclaredParameters[current1].ToArray (), Is.Empty);
-      Assert.That (_analyzer.Usage.DeclaredParameters[current2].ToArray (), Is.Empty);
+      Assert.That (_analyzer.EvaluationData.DeclaredParameters[current1].ToArray (), Is.Empty);
+      Assert.That (_analyzer.EvaluationData.DeclaredParameters[current2].ToArray (), Is.Empty);
 
-      Assert.That (_analyzer.Usage.UsedParameters[current1].ToArray (), Is.EquivalentTo (new[] { parameter }));
-      Assert.That (_analyzer.Usage.UsedParameters[current2].ToArray (), Is.EquivalentTo (new[] { parameter }));
+      Assert.That (_analyzer.EvaluationData.UsedParameters[current1].ToArray (), Is.EquivalentTo (new[] { parameter }));
+      Assert.That (_analyzer.EvaluationData.UsedParameters[current2].ToArray (), Is.EquivalentTo (new[] { parameter }));
     }
 
     [Test]
@@ -157,7 +167,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.TreeEvaluationTest
       _analyzer.VisitParameterExpression (parameter);
       _analyzer.VisitParameterExpression (parameter);
 
-      Assert.That (_analyzer.Usage.UsedParameters[current1].ToArray(), Is.EqualTo (new[] { parameter }));
+      Assert.That (_analyzer.EvaluationData.UsedParameters[current1].ToArray(), Is.EqualTo (new[] { parameter }));
     }
 
     [Test]
@@ -168,8 +178,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.TreeEvaluationTest
       LambdaExpression lambda = Expression.Lambda (Expression.Constant(0), declaredParameter);
       _analyzer.VisitLambdaExpression (lambda);
 
-      Assert.That (_analyzer.Usage.DeclaredParameters, Is.Empty);
-      Assert.That (_analyzer.Usage.UsedParameters, Is.Empty);
+      Assert.That (_analyzer.EvaluationData.DeclaredParameters, Is.Empty);
+      Assert.That (_analyzer.EvaluationData.UsedParameters, Is.Empty);
     }
 
     [Test]
@@ -187,18 +197,17 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.TreeEvaluationTest
       LambdaExpression lambda = Expression.Lambda (usedParameter, declaredParameter);
       _analyzer.VisitLambdaExpression (lambda);
 
-      Assert.That (_analyzer.Usage.DeclaredParameters[current1].ToArray (), Is.EquivalentTo (new[] { declaredParameter }));
-      Assert.That (_analyzer.Usage.UsedParameters[current1].ToArray (), Is.EquivalentTo (new[] { usedParameter }));
+      Assert.That (_analyzer.EvaluationData.DeclaredParameters[current1].ToArray (), Is.EquivalentTo (new[] { declaredParameter }));
+      Assert.That (_analyzer.EvaluationData.UsedParameters[current1].ToArray (), Is.EquivalentTo (new[] { usedParameter }));
 
-      Assert.That (_analyzer.Usage.DeclaredParameters[current2].ToArray (), Is.EquivalentTo (new[] { declaredParameter }));
-      Assert.That (_analyzer.Usage.UsedParameters[current2].ToArray (), Is.EquivalentTo (new[] { usedParameter }));
+      Assert.That (_analyzer.EvaluationData.DeclaredParameters[current2].ToArray (), Is.EquivalentTo (new[] { declaredParameter }));
+      Assert.That (_analyzer.EvaluationData.UsedParameters[current2].ToArray (), Is.EquivalentTo (new[] { usedParameter }));
     }
 
     [Test]
     public void VisitLambdaExpression_Twice ()
     {
       Expression current1 = Expression.Constant (0);
-
       _analyzer.PrepareExpression (current1);
 
       ParameterExpression declaredParameter = Expression.Parameter (typeof (string), "p1");
@@ -207,7 +216,19 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.TreeEvaluationTest
       _analyzer.VisitLambdaExpression (lambda);
       _analyzer.VisitLambdaExpression (lambda);
 
-      Assert.That (_analyzer.Usage.DeclaredParameters[current1].ToArray(), Is.EqualTo (new[] { declaredParameter }));
+      Assert.That (_analyzer.EvaluationData.DeclaredParameters[current1].ToArray(), Is.EqualTo (new[] { declaredParameter }));
+    }
+
+    [Test]
+    public void VisitSubQueryExpression ()
+    {
+      Expression current1 = Expression.Constant (0);
+      _analyzer.PrepareExpression (current1);
+
+      SubQueryExpression subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel ());
+      _analyzer.VisitSubQueryExpression (subQueryExpression);
+
+      Assert.That (_analyzer.EvaluationData.SubQueries[current1].ToArray (), Is.EqualTo (new[] { subQueryExpression }));
     }
   }
 }

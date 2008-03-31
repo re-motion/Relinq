@@ -139,7 +139,7 @@
     <Compile Include="ParsingTest\StructureTest\WhereExpressionParserTest\RecursiveWhereExpressionParserTest.cs" />
     <Compile Include="ParsingTest\StructureTest\WhereExpressionParserTest\SelectManyWhereExpressionParserTest.cs" />
     <Compile Include="ParsingTest\StructureTest\WhereExpressionParserTest\SimpleWhereExpressionParserTest.cs" />
-    <Compile Include="ParsingTest\TreeEvaluationTest\TestableParameterUsageAnalyzer.cs" />
+    <Compile Include="ParsingTest\TreeEvaluationTest\TestablePartialEvaluationPreAnalyzer.cs" />
     <Compile Include="SqlGenerationTest\JoinCollectionTest.cs" />
     <Compile Include="SqlGenerationTest\SqlGeneratorBaseTest.cs" />
     <Compile Include="SqlGenerationTest\SqlGeneratorMock.cs" />

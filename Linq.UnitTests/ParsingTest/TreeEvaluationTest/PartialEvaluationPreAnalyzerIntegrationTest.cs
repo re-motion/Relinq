@@ -23,10 +23,10 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.TreeEvaluationTest
       Expression expression = Expression.MakeBinary (ExpressionType.Equal, Expression.Constant (0), Expression.Constant (1));
 
       _analyzer.Analyze (expression);
-      ParameterUsage usage = _analyzer.Usage;
+      PartialEvaluationData evaluationData = _analyzer.EvaluationData;
 
-      Assert.That (usage.UsedParameters[expression].ToArray(), Is.Empty);
-      Assert.That (usage.DeclaredParameters[expression].ToArray(), Is.Empty);
+      Assert.That (evaluationData.UsedParameters[expression].ToArray(), Is.Empty);
+      Assert.That (evaluationData.DeclaredParameters[expression].ToArray(), Is.Empty);
     }
 
     [Test]
@@ -36,10 +36,10 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.TreeEvaluationTest
       Expression expression = p1;
 
       _analyzer.Analyze (expression);
-      ParameterUsage usage = _analyzer.Usage;
+      PartialEvaluationData evaluationData = _analyzer.EvaluationData;
 
-      Assert.That (usage.UsedParameters[expression].ToArray(), Is.EquivalentTo (new[] {p1}));
-      Assert.That (usage.DeclaredParameters[expression].ToArray(), Is.Empty);
+      Assert.That (evaluationData.UsedParameters[expression].ToArray(), Is.EquivalentTo (new[] {p1}));
+      Assert.That (evaluationData.DeclaredParameters[expression].ToArray(), Is.Empty);
     }
 
     [Test]
@@ -49,10 +49,10 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.TreeEvaluationTest
       Expression expression = Expression.MakeBinary (ExpressionType.Equal, p1, Expression.Constant (0));
 
       _analyzer.Analyze (expression);
-      ParameterUsage usage = _analyzer.Usage;
+      PartialEvaluationData evaluationData = _analyzer.EvaluationData;
 
-      Assert.That (usage.UsedParameters[expression].ToArray(), Is.EquivalentTo (new[] {p1}));
-      Assert.That (usage.DeclaredParameters[expression].ToArray(), Is.Empty);
+      Assert.That (evaluationData.UsedParameters[expression].ToArray(), Is.EquivalentTo (new[] {p1}));
+      Assert.That (evaluationData.DeclaredParameters[expression].ToArray(), Is.Empty);
     }
 
     [Test]
@@ -63,10 +63,10 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.TreeEvaluationTest
       Expression expression = Expression.MakeBinary (ExpressionType.Equal, p1, p2);
 
       _analyzer.Analyze (expression);
-      ParameterUsage usage = _analyzer.Usage;
+      PartialEvaluationData evaluationData = _analyzer.EvaluationData;
 
-      Assert.That (usage.UsedParameters[expression].ToArray(), Is.EquivalentTo (new[] {p1, p2}));
-      Assert.That (usage.DeclaredParameters[expression].ToArray(), Is.Empty);
+      Assert.That (evaluationData.UsedParameters[expression].ToArray(), Is.EquivalentTo (new[] {p1, p2}));
+      Assert.That (evaluationData.DeclaredParameters[expression].ToArray(), Is.Empty);
     }
 
     [Test]
@@ -77,10 +77,10 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.TreeEvaluationTest
       Expression expression = Expression.Lambda (Expression.Constant (0), p1, p2);
 
       _analyzer.Analyze (expression);
-      ParameterUsage usage = _analyzer.Usage;
+      PartialEvaluationData evaluationData = _analyzer.EvaluationData;
 
-      Assert.That (usage.UsedParameters[expression].ToArray(), Is.Empty);
-      Assert.That (usage.DeclaredParameters[expression].ToArray(), Is.EquivalentTo (new[] {p1, p2}));
+      Assert.That (evaluationData.UsedParameters[expression].ToArray(), Is.Empty);
+      Assert.That (evaluationData.DeclaredParameters[expression].ToArray(), Is.EquivalentTo (new[] {p1, p2}));
     }
 
     [Test]
@@ -91,10 +91,10 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.TreeEvaluationTest
       Expression expression = Expression.Lambda (p2, p1, p2);
 
       _analyzer.Analyze (expression);
-      ParameterUsage usage = _analyzer.Usage;
+      PartialEvaluationData evaluationData = _analyzer.EvaluationData;
 
-      Assert.That (usage.UsedParameters[expression].ToArray(), Is.EquivalentTo (new[] {p2}));
-      Assert.That (usage.DeclaredParameters[expression].ToArray(), Is.EquivalentTo (new[] {p1, p2}));
+      Assert.That (evaluationData.UsedParameters[expression].ToArray(), Is.EquivalentTo (new[] {p2}));
+      Assert.That (evaluationData.DeclaredParameters[expression].ToArray(), Is.EquivalentTo (new[] {p1, p2}));
     }
 
     [Test]
@@ -109,13 +109,13 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.TreeEvaluationTest
       Expression binaryExpression = Expression.MakeBinary (ExpressionType.Equal, lambdaCall, p4);
 
       _analyzer.Analyze (binaryExpression);
-      ParameterUsage usage = _analyzer.Usage;
+      PartialEvaluationData evaluationData = _analyzer.EvaluationData;
 
-      Assert.That (usage.UsedParameters[lambdaExpression].ToArray(), Is.EquivalentTo (new[] { p3 }));
-      Assert.That (usage.DeclaredParameters[lambdaExpression].ToArray (), Is.EquivalentTo (new[] { p1, p2 }));
+      Assert.That (evaluationData.UsedParameters[lambdaExpression].ToArray(), Is.EquivalentTo (new[] { p3 }));
+      Assert.That (evaluationData.DeclaredParameters[lambdaExpression].ToArray (), Is.EquivalentTo (new[] { p1, p2 }));
 
-      Assert.That (usage.UsedParameters[binaryExpression].ToArray (), Is.EquivalentTo (new[] { p3, p4 }));
-      Assert.That (usage.DeclaredParameters[binaryExpression].ToArray (), Is.EquivalentTo (new[] { p1, p2 }));
+      Assert.That (evaluationData.UsedParameters[binaryExpression].ToArray (), Is.EquivalentTo (new[] { p3, p4 }));
+      Assert.That (evaluationData.DeclaredParameters[binaryExpression].ToArray (), Is.EquivalentTo (new[] { p1, p2 }));
     }
 
     [Test]
@@ -133,16 +133,16 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.TreeEvaluationTest
       Expression binaryExpression = Expression.MakeBinary (ExpressionType.Equal, lambdaExpression1, lambdaExpression2);
 
       _analyzer.Analyze (binaryExpression);
-      ParameterUsage usage = _analyzer.Usage;
+      PartialEvaluationData evaluationData = _analyzer.EvaluationData;
 
-      Assert.That (usage.UsedParameters[lambdaExpression1].ToArray (), Is.EquivalentTo (new[] { p3 }));
-      Assert.That (usage.DeclaredParameters[lambdaExpression1].ToArray (), Is.EquivalentTo (new[] { p1, p2 }));
+      Assert.That (evaluationData.UsedParameters[lambdaExpression1].ToArray (), Is.EquivalentTo (new[] { p3 }));
+      Assert.That (evaluationData.DeclaredParameters[lambdaExpression1].ToArray (), Is.EquivalentTo (new[] { p1, p2 }));
 
-      Assert.That (usage.UsedParameters[lambdaExpression2].ToArray (), Is.EquivalentTo (new[] { p5 }));
-      Assert.That (usage.DeclaredParameters[lambdaExpression2].ToArray (), Is.EquivalentTo (new[] { p6, p7 }));
+      Assert.That (evaluationData.UsedParameters[lambdaExpression2].ToArray (), Is.EquivalentTo (new[] { p5 }));
+      Assert.That (evaluationData.DeclaredParameters[lambdaExpression2].ToArray (), Is.EquivalentTo (new[] { p6, p7 }));
 
-      Assert.That (usage.UsedParameters[binaryExpression].ToArray (), Is.EquivalentTo (new[] { p3, p5 }));
-      Assert.That (usage.DeclaredParameters[binaryExpression].ToArray (), Is.EquivalentTo (new[] { p1, p2, p6, p7 }));
+      Assert.That (evaluationData.UsedParameters[binaryExpression].ToArray (), Is.EquivalentTo (new[] { p3, p5 }));
+      Assert.That (evaluationData.DeclaredParameters[binaryExpression].ToArray (), Is.EquivalentTo (new[] { p1, p2, p6, p7 }));
     }
 
     [Test]
@@ -158,13 +158,13 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.TreeEvaluationTest
       Expression lambdaExpression2 = Expression.Lambda (lambdaExpression1, p6, p7);
 
       _analyzer.Analyze (lambdaExpression2);
-      ParameterUsage usage = _analyzer.Usage;
+      PartialEvaluationData evaluationData = _analyzer.EvaluationData;
 
-      Assert.That (usage.UsedParameters[lambdaExpression1].ToArray (), Is.EquivalentTo (new[] { p3 }));
-      Assert.That (usage.DeclaredParameters[lambdaExpression1].ToArray (), Is.EquivalentTo (new[] { p1, p2 }));
+      Assert.That (evaluationData.UsedParameters[lambdaExpression1].ToArray (), Is.EquivalentTo (new[] { p3 }));
+      Assert.That (evaluationData.DeclaredParameters[lambdaExpression1].ToArray (), Is.EquivalentTo (new[] { p1, p2 }));
 
-      Assert.That (usage.UsedParameters[lambdaExpression2].ToArray (), Is.EquivalentTo (new[] { p3 }));
-      Assert.That (usage.DeclaredParameters[lambdaExpression2].ToArray (), Is.EquivalentTo (new[] { p1, p2, p6, p7 }));
+      Assert.That (evaluationData.UsedParameters[lambdaExpression2].ToArray (), Is.EquivalentTo (new[] { p3 }));
+      Assert.That (evaluationData.DeclaredParameters[lambdaExpression2].ToArray (), Is.EquivalentTo (new[] { p1, p2, p6, p7 }));
     }
 
     [Test]
@@ -176,13 +176,13 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.TreeEvaluationTest
       Expression lambdaExpression2 = Expression.Lambda (lambdaExpression1, p1);
 
       _analyzer.Analyze (lambdaExpression2);
-      ParameterUsage usage = _analyzer.Usage;
+      PartialEvaluationData evaluationData = _analyzer.EvaluationData;
 
-      Assert.That (usage.DeclaredParameters[lambdaExpression1].ToArray (), Is.EquivalentTo (new[] { p1 }));
-      Assert.That (usage.DeclaredParameters[lambdaExpression2].ToArray (), Is.EquivalentTo (new[] { p1 }));
+      Assert.That (evaluationData.DeclaredParameters[lambdaExpression1].ToArray (), Is.EquivalentTo (new[] { p1 }));
+      Assert.That (evaluationData.DeclaredParameters[lambdaExpression2].ToArray (), Is.EquivalentTo (new[] { p1 }));
 
-      Assert.That (usage.DeclaredParameters[lambdaExpression1].Count, Is.EqualTo (1));
-      Assert.That (usage.DeclaredParameters[lambdaExpression2].Count, Is.EqualTo (1));
+      Assert.That (evaluationData.DeclaredParameters[lambdaExpression1].Count, Is.EqualTo (1));
+      Assert.That (evaluationData.DeclaredParameters[lambdaExpression2].Count, Is.EqualTo (1));
     }
 
     [Test]
@@ -195,13 +195,13 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.TreeEvaluationTest
       Expression lambdaExpression2 = Expression.Lambda (Expression.MakeBinary (ExpressionType.Equal, lambdaCall, p1));
 
       _analyzer.Analyze (lambdaExpression2);
-      ParameterUsage usage = _analyzer.Usage;
+      PartialEvaluationData evaluationData = _analyzer.EvaluationData;
 
-      Assert.That (usage.UsedParameters[lambdaExpression1].ToArray (), Is.EquivalentTo (new[] { p1 }));
-      Assert.That (usage.UsedParameters[lambdaExpression2].ToArray (), Is.EquivalentTo (new[] { p1 }));
+      Assert.That (evaluationData.UsedParameters[lambdaExpression1].ToArray (), Is.EquivalentTo (new[] { p1 }));
+      Assert.That (evaluationData.UsedParameters[lambdaExpression2].ToArray (), Is.EquivalentTo (new[] { p1 }));
 
-      Assert.That (usage.UsedParameters[lambdaExpression1].Count, Is.EqualTo (1));
-      Assert.That (usage.UsedParameters[lambdaExpression2].Count, Is.EqualTo (1));
+      Assert.That (evaluationData.UsedParameters[lambdaExpression1].Count, Is.EqualTo (1));
+      Assert.That (evaluationData.UsedParameters[lambdaExpression2].Count, Is.EqualTo (1));
     }
   }
 }

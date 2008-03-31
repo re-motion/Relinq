@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Rubicon.Data.Linq.DataObjectModel;
 using Rubicon.Data.Linq.Parsing.TreeEvaluation;
 
 namespace Rubicon.Data.Linq.UnitTests.ParsingTest.TreeEvaluationTest
 {
-  public class TestableParameterUsageAnalyzer : PartialEvaluationPreAnalyzer
+  public class TestablePartialEvaluationPreAnalyzer : PartialEvaluationPreAnalyzer
   {
     public bool VisitBinaryExpressionCalled { get; set; }
     public Expression StackTopInVisitBinary { get; set; }
@@ -37,6 +38,11 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.TreeEvaluationTest
     public new Expression VisitParameterExpression (ParameterExpression expression)
     {
       return base.VisitParameterExpression (expression);
+    }
+
+    public new Expression VisitSubQueryExpression (SubQueryExpression expression)
+    {
+      return base.VisitSubQueryExpression (expression);
     }
 
     protected override Expression VisitBinaryExpression (BinaryExpression expression)

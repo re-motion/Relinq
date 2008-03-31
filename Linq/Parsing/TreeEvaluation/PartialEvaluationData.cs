@@ -1,17 +1,20 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Rubicon.Data.Linq.DataObjectModel;
 
 namespace Rubicon.Data.Linq.Parsing.TreeEvaluation
 {
-  public class ParameterUsage
+  public class PartialEvaluationData
   {
-    public ParameterUsage ()
+    public PartialEvaluationData ()
     {
       UsedParameters = new Dictionary<Expression, HashSet<ParameterExpression>> ();
       DeclaredParameters = new Dictionary<Expression, HashSet<ParameterExpression>> ();
+      SubQueries = new Dictionary<Expression, HashSet<SubQueryExpression>> ();
     }
 
     public Dictionary<Expression, HashSet<ParameterExpression>> UsedParameters { get; private set; }
     public Dictionary<Expression, HashSet<ParameterExpression>> DeclaredParameters { get; private set; }
+    public Dictionary<Expression, HashSet<SubQueryExpression>> SubQueries { get; private set; }
   }
 }

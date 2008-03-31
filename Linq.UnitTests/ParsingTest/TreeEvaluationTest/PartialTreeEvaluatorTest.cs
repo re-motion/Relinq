@@ -1,6 +1,7 @@
 using System;
 using NUnit.Framework;
 using System.Linq.Expressions;
+using Rubicon.Data.Linq.DataObjectModel;
 using Rubicon.Data.Linq.Parsing.TreeEvaluation;
 using Rubicon.Collections;
 
@@ -88,7 +89,18 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.TreeEvaluationTest
       
       PartialTreeEvaluator evaluator = new PartialTreeEvaluator (lambdaExpression);
       Expression result = evaluator.GetEvaluatedTree ();
-      ExpressionTreeComparer.CheckAreEqualTrees (lambdaExpression, result);
+      Assert.AreSame (lambdaExpression, result);
+    }
+
+    [Test]
+    public void EvaluateLambdaWithSubQuery  ()
+    {
+      SubQueryExpression subQuery = new SubQueryExpression(ExpressionHelper.CreateQueryModel());
+      LambdaExpression lambdaExpression = Expression.Lambda (subQuery);
+
+      PartialTreeEvaluator evaluator = new PartialTreeEvaluator (lambdaExpression);
+      Expression result = evaluator.GetEvaluatedTree ();
+      Assert.AreSame (lambdaExpression, result);
     }
   }
 }

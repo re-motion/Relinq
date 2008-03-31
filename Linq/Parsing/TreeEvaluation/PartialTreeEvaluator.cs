@@ -19,16 +19,16 @@ namespace Rubicon.Data.Linq.Parsing.TreeEvaluation
       }
     }
 
-    // _parameterUsage contains a list of the used parameters and a list of the declared parameters for each expression in the tree. We will 
+    // _partialEvaluationData contains a list of the used parameters and a list of the declared parameters for each expression in the tree. We will 
     // evaluate an expression if it only uses parameters declared within or below the same expression.
-    private readonly ParameterUsage _parameterUsage;
+    private readonly PartialEvaluationData _partialEvaluationData;
     private readonly Expression _evaluatedTree;
 
     public PartialTreeEvaluator (Expression treeRoot)
     {
       PartialEvaluationPreAnalyzer analyzer = new PartialEvaluationPreAnalyzer();
       analyzer.Analyze (treeRoot);
-      _parameterUsage = analyzer.Usage;
+      _partialEvaluationData = analyzer.EvaluationData;
       _evaluatedTree = VisitExpression (treeRoot);
     }
 
@@ -52,10 +52,11 @@ namespace Rubicon.Data.Linq.Parsing.TreeEvaluation
 
     private bool IsEvaluatableExpression (Expression expression)
     {
-      if (!_parameterUsage.UsedParameters.ContainsKey (expression))
+      if (!_partialEvaluationData.UsedParameters.ContainsKey (expression)) 
         return false;
       else
-        return _parameterUsage.DeclaredParameters[expression].IsSupersetOf (_parameterUsage.UsedParameters[expression]);
+        return _partialEvaluationData.DeclaredParameters[expression].IsSupersetOf (_partialEvaluationData.UsedParameters[expression])
+            && _partialEvaluationData.SubQueries[expression].Count == 0;
     }
   }
 }
