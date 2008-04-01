@@ -9,7 +9,7 @@ namespace Rubicon.Data.Linq.Parsing.Structure
 {
   public class SubQueryFindingVisitor : ExpressionTreeVisitor
   {
-    private SourceExpressionParser _referenceParser = new SourceExpressionParser (true);
+    private readonly SourceExpressionParser _referenceParser = new SourceExpressionParser (true);
 
     public Expression ReplaceSubQuery (Expression expression)
     {
