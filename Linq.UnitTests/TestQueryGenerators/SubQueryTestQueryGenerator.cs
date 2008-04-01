@@ -18,5 +18,16 @@ namespace Rubicon.Data.Linq.UnitTests.TestQueryGenerators
     {
       return from s in source where (from s2 in source select s2).Contains (s) select s;
     }
+
+    public static IQueryable<Student> CreateSubQueryWithConstantInWhereClause (IQueryable<Student> source)
+    {
+      Student student = new Student {ID = 5};
+      return from s in source where (from s2 in source select s2).Contains (student) select s;
+    }
+
+    public static IQueryable<Student> CreateSubQuerySelectingColumnsWithConstantInWhereClause (IQueryable<Student> source)
+    {
+      return from s in source where (from s2 in source select s2.First).Contains ("Hugo") select s;
+    }
   }
 }
