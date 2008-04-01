@@ -45,5 +45,20 @@ namespace Rubicon.Data.Linq.Parsing
       else
         return methodCallExpression.Method.Name;
     }
+
+    public static void CheckNumberOfArguments (MethodCallExpression expression, string methodName, int expectedArgumentCount, Expression expressionTreeRoot)
+    {
+      if (expression.Arguments.Count != expectedArgumentCount)
+        throw CreateParserException (expectedArgumentCount + " arguments", expression.Arguments.Count + " arguments",
+            methodName + " method call", expressionTreeRoot);
+    }
+
+    public static void CheckParameterType<T> (MethodCallExpression expression, string methodName, int parameterIndex, Expression expressionTreeRoot)
+    {
+      if (!(expression.Arguments[parameterIndex] is T))
+        throw CreateParserException (typeof (T).Name, 
+            expression.Arguments[parameterIndex].GetType().Name + " (" + expression.Arguments[parameterIndex] + ")",
+            "argument " + parameterIndex + " of " + methodName + " method call", expressionTreeRoot);
+    }
   }
 }

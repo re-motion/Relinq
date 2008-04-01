@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Rubicon.Data.Linq.Parsing;
@@ -45,6 +46,37 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
     {
       MethodCallExpression selectExpression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource ());
       ParserUtility.CheckMethodCallExpression (selectExpression, ExpressionHelper.CreateExpression (), "SelectMany", "Where");
+    }
+
+    [Test]
+    public void CheckNumberOfArguments_Succeed ()
+    {
+      MethodCallExpression selectExpression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource ());
+      ParserUtility.CheckNumberOfArguments (selectExpression, "Select", 2, ExpressionHelper.CreateExpression ());
+    }
+
+    [Test]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected 1 arguments for Select method call, found 2 arguments.")]
+    public void CheckNumberOfArguments_Fail ()
+    {
+      MethodCallExpression selectExpression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource ());
+      ParserUtility.CheckNumberOfArguments (selectExpression, "Select", 1, ExpressionHelper.CreateExpression ());
+    }
+
+    [Test]
+    public void CheckParameterType_Succeed ()
+    {
+      MethodCallExpression selectExpression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource ());
+      ParserUtility.CheckParameterType<ConstantExpression> (selectExpression, "Select", 0, ExpressionHelper.CreateExpression ());
+    }
+
+    [Test]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected ParameterExpression for argument 0 of Select method call, found " 
+        + "ConstantExpression (value(Rubicon.Data.Linq.UnitTests.TestQueryable`1[Rubicon.Data.Linq.UnitTests.Student])).")]
+    public void CheckParameterType_Fail ()
+    {
+      MethodCallExpression selectExpression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource ());
+      ParserUtility.CheckParameterType<ParameterExpression> (selectExpression, "Select", 0, ExpressionHelper.CreateExpression ());
     }
   }
 }

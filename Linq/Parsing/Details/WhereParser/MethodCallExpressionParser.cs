@@ -23,14 +23,26 @@ namespace Rubicon.Data.Linq.Parsing.Details.WhereParser
     public ICriterion Parse (MethodCallExpression expression)
     {
       if (expression.Method.Name == "StartsWith")
+      {
+        ParserUtility.CheckNumberOfArguments (expression, "StartsWith", 1, _whereClause.BoolExpression);
+        ParserUtility.CheckParameterType<ConstantExpression> (expression, "StartsWith", 0, _whereClause.BoolExpression);
         return CreateLike (expression, ((ConstantExpression) expression.Arguments[0]).Value + "%");
+      }
       else if (expression.Method.Name == "EndsWith")
+      {
+        ParserUtility.CheckNumberOfArguments (expression, "EndsWith", 1, _whereClause.BoolExpression);
+        ParserUtility.CheckParameterType<ConstantExpression> (expression, "EndsWith", 0, _whereClause.BoolExpression);
         return CreateLike (expression, "%" + ((ConstantExpression) expression.Arguments[0]).Value);
+      }
       else if (expression.Method.Name == "Contains")
+      {
+        ParserUtility.CheckNumberOfArguments (expression, "Contains", 2, _whereClause.BoolExpression);
+        ParserUtility.CheckParameterType<SubQueryExpression> (expression, "Contains", 0, _whereClause.BoolExpression);
         return CreateContains ((SubQueryExpression) expression.Arguments[0], expression.Arguments[1]);
+      }
 
-      throw ParserUtility.CreateParserException ("StartsWith, EndsWith", expression.Method.Name, "method call expression in where condition",
-          _whereClause.BoolExpression);
+      throw ParserUtility.CreateParserException ("StartsWith, EndsWith, Contains", expression.Method.Name,
+          "method call expression in where condition", _whereClause.BoolExpression);
     }
 
     private BinaryCondition CreateLike (MethodCallExpression expression, string pattern)
