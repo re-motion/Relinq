@@ -10,11 +10,13 @@ namespace Rubicon.Data.Linq.Parsing.Details
 {
   public class SelectProjectionParser
   {
+    public ParseContext ParseContext { get; private set; }
     private readonly QueryModel _queryModel;
     private readonly SelectClause _selectClause;
     private readonly FromClauseFieldResolver _resolver;
 
-    public SelectProjectionParser (QueryModel queryModel, SelectClause selectClause, IDatabaseInfo databaseInfo, JoinedTableContext context)
+    public SelectProjectionParser (QueryModel queryModel, SelectClause selectClause, IDatabaseInfo databaseInfo, JoinedTableContext context, 
+      ParseContext parseContext)
     {
       ArgumentUtility.CheckNotNull ("queryExpression", queryModel);
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);
@@ -24,6 +26,7 @@ namespace Rubicon.Data.Linq.Parsing.Details
       _queryModel = queryModel;
       _selectClause = selectClause;
       _resolver = new FromClauseFieldResolver (databaseInfo, context, new SelectFieldAccessPolicy());
+      ParseContext = parseContext;
     }
 
     public IEnumerable<FieldDescriptor> GetSelectedFields ()
@@ -91,6 +94,11 @@ namespace Rubicon.Data.Linq.Parsing.Details
 
     private void ResolveField (List<FieldDescriptor> fields, Expression expression)
     {
+      //if (expression is ParameterExpression && ParseContext.SubQueryInWhere)
+      //{
+      //  // ...
+      //}
+
       FieldDescriptor fieldDescriptor = _queryModel.ResolveField (_resolver, expression);
       if (fieldDescriptor.Column != null)
         fields.Add (fieldDescriptor);

@@ -28,8 +28,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       _source = ExpressionHelper.CreateQuerySource();
       _context = new JoinedTableContext();
     }
-
-
+    
     [Test]
     public void IdentityProjection ()
     {
@@ -38,7 +37,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       QueryModel model = parser.GetParsedQuery();
       SelectClause selectClause = (SelectClause) model.SelectOrGroupClause;
 
-      SelectProjectionParser selectParser = new SelectProjectionParser (model, selectClause, StubDatabaseInfo.Instance, _context);
+      SelectProjectionParser selectParser = new SelectProjectionParser (model, selectClause, StubDatabaseInfo.Instance, _context, ParseContext.TopLevelQuery);
 
       IEnumerable<FieldDescriptor> selectedFields = selectParser.GetSelectedFields();
 
@@ -54,7 +53,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       QueryModel model = parser.GetParsedQuery();
       SelectClause selectClause = (SelectClause) model.SelectOrGroupClause;
 
-      SelectProjectionParser selectParser = new SelectProjectionParser (model, selectClause, StubDatabaseInfo.Instance, _context);
+      SelectProjectionParser selectParser = new SelectProjectionParser (model, selectClause, StubDatabaseInfo.Instance, _context, ParseContext.TopLevelQuery);
 
       IEnumerable<FieldDescriptor> selectedFields = selectParser.GetSelectedFields();
 
@@ -69,7 +68,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       QueryModel model = parser.GetParsedQuery();
       SelectClause selectClause = (SelectClause) model.SelectOrGroupClause;
 
-      SelectProjectionParser selectParser = new SelectProjectionParser (model, selectClause, StubDatabaseInfo.Instance, _context);
+      SelectProjectionParser selectParser = new SelectProjectionParser (model, selectClause, StubDatabaseInfo.Instance, _context, ParseContext.TopLevelQuery);
 
       IEnumerable<FieldDescriptor> selectedFields = selectParser.GetSelectedFields();
 
@@ -85,7 +84,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       QueryModel model = parser.GetParsedQuery();
       SelectClause selectClause = (SelectClause) model.SelectOrGroupClause;
 
-      SelectProjectionParser selectParser = new SelectProjectionParser (model, selectClause, StubDatabaseInfo.Instance, _context);
+      SelectProjectionParser selectParser = new SelectProjectionParser (model, selectClause, StubDatabaseInfo.Instance, _context, ParseContext.TopLevelQuery);
 
       IEnumerable<FieldDescriptor> selectedFields = selectParser.GetSelectedFields();
 
@@ -105,7 +104,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       QueryModel model = parser.GetParsedQuery();
       SelectClause selectClause = (SelectClause) model.SelectOrGroupClause;
 
-      SelectProjectionParser selectParser = new SelectProjectionParser (model, selectClause, StubDatabaseInfo.Instance, _context);
+      SelectProjectionParser selectParser = new SelectProjectionParser (model, selectClause, StubDatabaseInfo.Instance, _context, ParseContext.TopLevelQuery);
 
       IEnumerable<FieldDescriptor> selectedFields = selectParser.GetSelectedFields();
 
@@ -122,7 +121,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       QueryModel model = parser.GetParsedQuery();
       SelectClause selectClause = (SelectClause) model.SelectOrGroupClause;
 
-      new SelectProjectionParser (model, selectClause, StubDatabaseInfo.Instance, _context).GetSelectedFields();
+      new SelectProjectionParser (model, selectClause, StubDatabaseInfo.Instance, _context, ParseContext.TopLevelQuery).GetSelectedFields();
     }
 
     [Test]
@@ -133,7 +132,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       QueryModel model = parser.GetParsedQuery();
       SelectClause selectClause = (SelectClause) model.SelectOrGroupClause;
 
-      SelectProjectionParser selectParser = new SelectProjectionParser (model, selectClause, StubDatabaseInfo.Instance, _context);
+      SelectProjectionParser selectParser = new SelectProjectionParser (model, selectClause, StubDatabaseInfo.Instance, _context, ParseContext.TopLevelQuery);
 
       IEnumerable<FieldDescriptor> selectedFields = selectParser.GetSelectedFields();
 
@@ -157,7 +156,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       QueryModel model = parser.GetParsedQuery();
       SelectClause selectClause = (SelectClause) model.SelectOrGroupClause;
 
-      SelectProjectionParser selectParser = new SelectProjectionParser (model, selectClause, StubDatabaseInfo.Instance, _context);
+      SelectProjectionParser selectParser = new SelectProjectionParser (model, selectClause, StubDatabaseInfo.Instance, _context, ParseContext.TopLevelQuery);
 
       IEnumerable<FieldDescriptor> selectedFields = selectParser.GetSelectedFields();
 
@@ -177,7 +176,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       QueryModel model = parser.GetParsedQuery();
       SelectClause selectClause = (SelectClause) model.SelectOrGroupClause;
 
-      SelectProjectionParser selectParser = new SelectProjectionParser (model, selectClause, StubDatabaseInfo.Instance, _context);
+      SelectProjectionParser selectParser = new SelectProjectionParser (model, selectClause, StubDatabaseInfo.Instance, _context, ParseContext.TopLevelQuery);
 
       IEnumerable<FieldDescriptor> selectedFields = selectParser.GetSelectedFields();
 
@@ -199,7 +198,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
 
       SelectProjectionParser parser = new SelectProjectionParser (parsedQuery, (SelectClause) parsedQuery.SelectOrGroupClause,
           StubDatabaseInfo.Instance,
-          _context);
+          _context, ParseContext.TopLevelQuery);
 
       PropertyInfo relationMember = typeof (Student_Detail).GetProperty ("Student");
       IFromSource studentDetailTable = parsedQuery.MainFromClause.GetFromSource (StubDatabaseInfo.Instance);
@@ -232,7 +231,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       QueryModel model = parser.GetParsedQuery ();
       SelectClause selectClause = (SelectClause) model.SelectOrGroupClause;
 
-      SelectProjectionParser selectParser = new SelectProjectionParser (model, selectClause, StubDatabaseInfo.Instance, _context);
+      SelectProjectionParser selectParser = new SelectProjectionParser (model, selectClause, StubDatabaseInfo.Instance, _context, ParseContext.TopLevelQuery);
 
       IEnumerable<FieldDescriptor> selectedFields = selectParser.GetSelectedFields ();
       PropertyInfo relationMember = typeof (Student_Detail).GetProperty ("Student");

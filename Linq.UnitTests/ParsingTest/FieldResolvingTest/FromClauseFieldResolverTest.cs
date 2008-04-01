@@ -1,11 +1,17 @@
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
+using Rhino.Mocks;
 using Rubicon.Collections;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.DataObjectModel;
 using Rubicon.Data.Linq.Parsing.FieldResolving;
+
+using Mocks_Is = Rhino.Mocks.Constraints.Is;
+using Mocks_List = Rhino.Mocks.Constraints.List;
+using NUnit.Framework.SyntaxHelpers;
 
 namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
 {
@@ -299,6 +305,66 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       FieldDescriptor expected = new FieldDescriptor (member, fromClause, new FieldSourcePath (subQuery, new SingleJoin[0]), column);
 
       Assert.AreEqual (expected, fieldDescriptor);
+    }
+
+    [Test]
+    public void Resolver_UsesPolicyToAdjustRelationMembers ()
+    {
+      MockRepository mockRepository = new MockRepository ();
+      IResolveFieldAccessPolicy policyMock = mockRepository.CreateMock<IResolveFieldAccessPolicy> ();
+
+      ParameterExpression identifier = Expression.Parameter (typeof (Student_Detail_Detail), "sdd");
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (identifier, ExpressionHelper.CreateQuerySource_Detail_Detail ());
+
+      var studentDetailMember = typeof (Student_Detail_Detail).GetProperty ("Student_Detail");
+      var studentMember = typeof (Student_Detail).GetProperty ("Student");
+      var idMember = typeof (Student).GetProperty ("ID");
+      Expression fieldExpression = Expression.MakeMemberAccess (Expression.MakeMemberAccess (identifier, studentDetailMember), studentMember);
+
+      PropertyInfo[] newJoinMembers = new[] {studentDetailMember, studentMember};
+      Expect.Call (policyMock.AdjustMemberInfosForRelation (null, null))
+          .Constraints (Mocks_Is.Equal (studentMember), Mocks_List.Equal (new[] { studentDetailMember }))
+          .Return (new  Tuple<MemberInfo, IEnumerable<MemberInfo>>(idMember, newJoinMembers));
+
+      mockRepository.ReplayAll ();
+      FieldDescriptor actualFieldDescriptor =
+          new FromClauseFieldResolver (StubDatabaseInfo.Instance, _context, policyMock).ResolveField (fromClause, fieldExpression, fieldExpression);
+      mockRepository.VerifyAll ();
+
+      FieldSourcePath path = new FieldSourcePathBuilder().BuildFieldSourcePath (StubDatabaseInfo.Instance, _context, 
+          fromClause.GetFromSource (StubDatabaseInfo.Instance), newJoinMembers);
+      FieldDescriptor expectedFieldDescriptor = new FieldDescriptor (studentMember, fromClause, path, new Column(path.LastSource, "IDColumn"));
+
+      Assert.That (actualFieldDescriptor, Is.EqualTo (expectedFieldDescriptor));
+    }
+
+    [Test]
+    public void Resolver_UsesPolicyToAdjustFromIdentifierAccess ()
+    {
+      MockRepository mockRepository = new MockRepository ();
+      IResolveFieldAccessPolicy policyMock = mockRepository.CreateMock<IResolveFieldAccessPolicy> ();
+
+      ParameterExpression identifier = Expression.Parameter (typeof (Student), "s");
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (identifier, ExpressionHelper.CreateQuerySource_Detail_Detail ());
+
+      var otherStudentMember = typeof (Student).GetProperty ("OtherStudent");
+      var idMember = typeof (Student).GetProperty ("ID");
+      Expression fieldExpression = identifier;
+
+      PropertyInfo[] newJoinMembers = new[] { otherStudentMember };
+      Expect.Call (policyMock.AdjustMemberInfosForFromIdentifier (fromClause))
+          .Return (new Tuple<MemberInfo, IEnumerable<MemberInfo>> (idMember, newJoinMembers));
+
+      mockRepository.ReplayAll ();
+      FieldDescriptor actualFieldDescriptor =
+          new FromClauseFieldResolver (StubDatabaseInfo.Instance, _context, policyMock).ResolveField (fromClause, fieldExpression, fieldExpression);
+      mockRepository.VerifyAll ();
+
+      FieldSourcePath path = new FieldSourcePathBuilder ().BuildFieldSourcePath (StubDatabaseInfo.Instance, _context,
+          fromClause.GetFromSource (StubDatabaseInfo.Instance), newJoinMembers);
+      FieldDescriptor expectedFieldDescriptor = new FieldDescriptor (null, fromClause, path, new Column (path.LastSource, "IDColumn"));
+
+      Assert.That (actualFieldDescriptor, Is.EqualTo (expectedFieldDescriptor));
     }
   }
 }

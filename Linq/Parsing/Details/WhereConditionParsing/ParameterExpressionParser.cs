@@ -8,22 +8,30 @@ namespace Rubicon.Data.Linq.Parsing.Details.WhereConditionParsing
 {
   public class ParameterExpressionParser
   {
-    private readonly IDatabaseInfo _databaseInfo;
-    private readonly Func<Expression, ICriterion> _parsingCall;
+    private readonly QueryModel _queryModel;
+    private readonly FromClauseFieldResolver _resolver;
 
-    public ParameterExpressionParser (IDatabaseInfo databaseInfo, Func<Expression, ICriterion> parsingCall)
+    public ParameterExpressionParser (QueryModel queryModel, FromClauseFieldResolver resolver)
     {
-      ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
-      ArgumentUtility.CheckNotNull ("parsingCall", parsingCall);
-      _databaseInfo = databaseInfo;
-      _parsingCall = parsingCall;
+      _queryModel = queryModel;
+      _resolver = resolver;
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+      ArgumentUtility.CheckNotNull ("resolver", resolver);
     }
 
     public ICriterion Parse (ParameterExpression expression, List<FieldDescriptor> fieldDescriptorCollection)
     {
-      MemberExpression primaryKeyExpression = Expression.MakeMemberAccess (expression,
-          DatabaseInfoUtility.GetPrimaryKeyMember (_databaseInfo, expression.Type));
-      return _parsingCall (primaryKeyExpression);
+      //MemberExpression primaryKeyExpression = Expression.MakeMemberAccess (expression,
+      //    DatabaseInfoUtility.GetPrimaryKeyMember (_databaseInfo, expression.Type));
+      //return _parsingCall (primaryKeyExpression);
+
+      //MemberExpression primaryKeyExpression = Expression.MakeMemberAccess (expression,
+      //    DatabaseInfoUtility.GetPrimaryKeyMember (_resolver.DatabaseInfo, expression.Type));
+      //return new MemberExpressionParser (_queryModel, _resolver).Parse (primaryKeyExpression, fieldDescriptorCollection);
+
+      FieldDescriptor fieldDescriptor = _queryModel.ResolveField (_resolver, expression);
+      fieldDescriptorCollection.Add (fieldDescriptor);
+      return fieldDescriptor.GetMandatoryColumn ();
     }
   }
 }

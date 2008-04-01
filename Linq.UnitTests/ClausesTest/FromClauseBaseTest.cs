@@ -62,7 +62,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(identifier, ExpressionHelper.CreateQuerySource ());
 
       JoinedTableContext context = new JoinedTableContext ();
-      WhereFieldAccessPolicy policy = new WhereFieldAccessPolicy (StubDatabaseInfo.Instance);
+      SelectFieldAccessPolicy policy = new SelectFieldAccessPolicy ();
       FromClauseFieldResolver resolver = new FromClauseFieldResolver (StubDatabaseInfo.Instance, context, policy);
       FieldDescriptor fieldDescriptor = fromClause.ResolveField (resolver, identifier, identifier);
       Assert.AreEqual (new Column (new Table ("studentTable", "fromIdentifier1"), "*"), fieldDescriptor.Column);
@@ -76,7 +76,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       AdditionalFromClause fromClause = CreateAdditionalFromClause (identifier);
 
       JoinedTableContext context = new JoinedTableContext ();
-      WhereFieldAccessPolicy policy = new WhereFieldAccessPolicy (StubDatabaseInfo.Instance);
+      SelectFieldAccessPolicy policy = new SelectFieldAccessPolicy ();
       FromClauseFieldResolver resolver = new FromClauseFieldResolver (StubDatabaseInfo.Instance, context, policy);
       FieldDescriptor fieldDescriptor = fromClause.ResolveField (resolver, identifier, identifier);
       Assert.AreEqual (new Column (new Table ("studentTable", "fromIdentifier1"), "*"), fieldDescriptor.Column);

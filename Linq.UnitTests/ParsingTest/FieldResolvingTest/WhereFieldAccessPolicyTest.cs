@@ -3,14 +3,28 @@ using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Rubicon.Collections;
+using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.Parsing.FieldResolving;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
 {
   [TestFixture]
   public class WhereFieldAccessPolicyTest
   {
+    [Test]
+    public void AdjustMemberInfosForFromIdentifier ()
+    {
+      MainFromClause fromClause = 
+          ExpressionHelper.CreateMainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource());
+      WhereFieldAccessPolicy policy = new WhereFieldAccessPolicy (StubDatabaseInfo.Instance);
+
+      var result = policy.AdjustMemberInfosForFromIdentifier (fromClause);
+      Assert.That (result.A, Is.EqualTo (typeof (Student).GetProperty ("ID")));
+      Assert.That (result.B, Is.Empty);
+    }
+
     [Test]
     public void AdjustMemberInfosForRelation ()
     {

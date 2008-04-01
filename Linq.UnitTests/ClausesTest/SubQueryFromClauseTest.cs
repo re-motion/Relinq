@@ -52,7 +52,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     [Test]
     public void GetQueriedEntityType ()
     {
-      Assert.AreEqual (null, _subQueryFromClause.GetQueriedEntityType ());
+      Assert.AreEqual (null, _subQueryFromClause.GetQuerySourceType ());
     }
 
     [Test]

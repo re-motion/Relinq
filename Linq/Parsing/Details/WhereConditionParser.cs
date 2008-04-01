@@ -43,7 +43,7 @@ namespace Rubicon.Data.Linq.Parsing.Details
       _resolver = new FromClauseFieldResolver (databaseInfo, context, new WhereFieldAccessPolicy (_databaseInfo));
       
       _memberExpressionParser = new MemberExpressionParser (_queryModel, _resolver);
-      _parameterExpressionParser = new ParameterExpressionParser (_databaseInfo,ParseExpression);
+      _parameterExpressionParser = new ParameterExpressionParser (_queryModel, _resolver);
       _constantExpressionParser = new ConstantExpressionParser (_databaseInfo);
       _binaryExpressionParser = new BinaryExpressionParser (_whereClause, ParseExpression);
       _methodCallExpressionParser = new MethodCallExpressionParser (_whereClause, ParseExpression);

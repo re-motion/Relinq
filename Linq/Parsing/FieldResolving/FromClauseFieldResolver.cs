@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Rubicon.Collections;
@@ -12,8 +13,9 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
 {
   public class FromClauseFieldResolver
   {
-    private readonly IDatabaseInfo _databaseInfo;
-    private readonly JoinedTableContext _context;
+    public IDatabaseInfo DatabaseInfo { get; private set; }
+    public JoinedTableContext Context { get; private set; }
+
     private readonly IResolveFieldAccessPolicy _policy;
 
     public FromClauseFieldResolver (IDatabaseInfo databaseInfo, JoinedTableContext context, IResolveFieldAccessPolicy policy)
@@ -22,8 +24,8 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
       ArgumentUtility.CheckNotNull ("context", context);
       ArgumentUtility.CheckNotNull ("policy", policy);
 
-      _databaseInfo = databaseInfo;
-      _context = context;
+      DatabaseInfo = databaseInfo;
+      Context = context;
       _policy = policy;
     }
 
@@ -62,21 +64,26 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
       // Documentation example: sdd.Student_Detail.Student.First
       // joinMembers == "Student_Detail", "Student"
 
-      IFromSource firstSource = fromClause.GetFromSource(_databaseInfo); // Table for sdd
+      IFromSource firstSource = fromClause.GetFromSource(DatabaseInfo); // Table for sdd
 
-      var memberInfos = AdjustMemberInfosForRelations (accessedMember, joinMembers);
+      var memberInfos = AdjustMemberInfos (fromClause, accessedMember, joinMembers);
       MemberInfo accessedMemberForColumn = memberInfos.A;
       IEnumerable<MemberInfo> joinMembersForCalculation = memberInfos.B;
 
       FieldSourcePathBuilder pathBuilder = new FieldSourcePathBuilder();
-      FieldSourcePath fieldData = pathBuilder.BuildFieldSourcePath (_databaseInfo, _context, firstSource, joinMembersForCalculation);
-      Column? column = DatabaseInfoUtility.GetColumn (_databaseInfo, fieldData.LastSource, accessedMemberForColumn);
+      FieldSourcePath fieldData = pathBuilder.BuildFieldSourcePath (DatabaseInfo, Context, firstSource, joinMembersForCalculation);
+      Column? column = DatabaseInfoUtility.GetColumn (DatabaseInfo, fieldData.LastSource, accessedMemberForColumn);
       return new FieldDescriptor (accessedMember, fromClause, fieldData, column);
     }
 
-    private Tuple<MemberInfo, IEnumerable<MemberInfo>> AdjustMemberInfosForRelations (MemberInfo accessedMember, IEnumerable<MemberInfo> joinMembers)
+    private Tuple<MemberInfo, IEnumerable<MemberInfo>> AdjustMemberInfos (FromClauseBase fromClause, MemberInfo accessedMember, IEnumerable<MemberInfo> joinMembers)
     {
-      if (accessedMember != null && DatabaseInfoUtility.IsRelationMember (_databaseInfo, accessedMember))
+      if (accessedMember == null)
+      {
+        Assertion.IsTrue (joinMembers.Count() == 0);
+        return _policy.AdjustMemberInfosForFromIdentifier (fromClause);
+      }
+      else if (DatabaseInfoUtility.IsRelationMember (DatabaseInfo, accessedMember))
         return _policy.AdjustMemberInfosForRelation (accessedMember, joinMembers);
       else
         return new Tuple<MemberInfo, IEnumerable<MemberInfo>> (accessedMember, joinMembers);

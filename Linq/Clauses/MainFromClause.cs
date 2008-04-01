@@ -21,7 +21,7 @@ namespace Rubicon.Data.Linq.Clauses
       visitor.VisitMainFromClause (this);
     }
 
-    public override Type GetQueriedEntityType ()
+    public override Type GetQuerySourceType ()
     {
       return QuerySource.Type;
     }

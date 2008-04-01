@@ -55,7 +55,7 @@ namespace Rubicon.Data.Linq.Clauses
     }
 
     public abstract void Accept (IQueryVisitor visitor);
-    public abstract Type GetQueriedEntityType ();
+    public abstract Type GetQuerySourceType ();
 
     internal void CheckResolvedIdentifierType (Type expectedType)
     {

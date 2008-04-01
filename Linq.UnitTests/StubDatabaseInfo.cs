@@ -17,7 +17,7 @@ namespace Rubicon.Data.Linq.UnitTests
 
     public string GetTableName (FromClauseBase fromClause)
     {
-      Type querySourceType = fromClause.GetQueriedEntityType();
+      Type querySourceType = fromClause.GetQuerySourceType();
       if (typeof (IQueryable<Student>).IsAssignableFrom (querySourceType))
         return "studentTable";
       else if (typeof (IQueryable<Student_Detail>).IsAssignableFrom (querySourceType))
@@ -42,6 +42,8 @@ namespace Rubicon.Data.Linq.UnitTests
         return "industrialTable";
       else if (relationMember == typeof (IndustrialSector).GetProperty ("Student_Detail"))
         return "detailTable";
+      else if (relationMember == typeof (Student).GetProperty ("OtherStudent"))
+        return "studentTable";
       else
         return null;
     }
@@ -76,6 +78,8 @@ namespace Rubicon.Data.Linq.UnitTests
         return Tuple.NewTuple ("IndustrialSector_PK", "Student_Detail_to_IndustrialSector_FK");
       else if (relationMember == typeof (Student_Detail).GetProperty ("IndustrialSector"))
         return Tuple.NewTuple ("Student_Detail_to_IndustrialSector_FK", "IndustrialSector_PK");
+      else if (relationMember == typeof (Student).GetProperty ("OtherStudent"))
+        return Tuple.NewTuple ("Student_to_OtherStudent_FK", "Student_PK");
       else
         return null;
     }
