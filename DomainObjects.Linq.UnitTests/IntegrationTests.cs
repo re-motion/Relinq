@@ -265,7 +265,6 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
-    [Ignore ("TODO: Implement contains with subquery in where conditions.")]
     public void QueryWithSubQueryInWhere ()
     {
       var orders =
@@ -278,7 +277,6 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
-    [Ignore ("TODO: Implement contains with subquery in where conditions.")]
     public void QueryWithSubQueryAndJoinInWhere ()
     {
       var orders =
@@ -286,8 +284,8 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
           where (from c in DataContext.Entity<OrderTicket> () select c.Order).Contains (o)
           select o;
 
-      CheckQueryResult (orders, DomainObjectIDs.Order1, DomainObjectIDs.Order2, DomainObjectIDs.Order3, DomainObjectIDs.Order4,
-        DomainObjectIDs.OrderWithoutOrderItem, DomainObjectIDs.InvalidOrder);
+      CheckQueryResult (orders, DomainObjectIDs.Order1, DomainObjectIDs.Order2, DomainObjectIDs.Order3, DomainObjectIDs.Order4, 
+          DomainObjectIDs.OrderWithoutOrderItem);
     }
 
     private void CheckQueryResult<T> (IQueryable<T> query, params ObjectID[] expectedObjectIDs)
