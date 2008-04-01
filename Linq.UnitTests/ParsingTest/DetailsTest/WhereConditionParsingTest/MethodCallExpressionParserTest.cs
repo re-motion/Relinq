@@ -1,9 +1,12 @@
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.DataObjectModel;
-using Rubicon.Data.Linq.Parsing.Details.WhereConditionParsing;
+using Rubicon.Data.Linq.Parsing.Details.WhereParser;
+using System.Reflection;
+using NUnit.Framework.SyntaxHelpers;
 
 namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionParsingTest
 {
@@ -90,6 +93,49 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPars
       });
 
       parser.Parse (methodCallExpression);
+    }
+
+    [Test]
+    public void ParseContainsWithSubQuery ()
+    {
+      WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
+
+      IQueryable<Student> querySource = ExpressionHelper.CreateQuerySource ();
+      QueryModel queryModel = ExpressionHelper.CreateQueryModel ();
+      SubQueryExpression subQueryExpression = new SubQueryExpression (queryModel);
+      Student item = new Student();
+      ConstantExpression checkedExpression = Expression.Constant (item);
+
+      MethodInfo containsMethod = ExpressionHelper.GetMethod (() => querySource.Contains (item));
+      MethodCallExpression methodCallExpression = Expression.Call (
+          null,
+          containsMethod,
+          subQueryExpression,
+          checkedExpression
+          );
+
+      int callCount = 0;
+
+      MethodCallExpressionParser parser = new MethodCallExpressionParser (whereClause, delegate (Expression expression)
+      {
+        if (callCount == 0)
+        {
+          Assert.That (expression, Is.SameAs (checkedExpression));
+          return new Constant ("Test");
+        }
+        else
+          Assert.Fail ("Too many calls.");
+        
+        ++callCount;
+        return null;
+      });
+
+      ICriterion actualCriterion = parser.Parse (methodCallExpression);
+      SubQuery expectedSubQuery = new SubQuery (queryModel, null);
+      IValue expectedCheckedItem = new Constant ("Test");
+      ICriterion expectedCriterion = new BinaryCondition (expectedSubQuery, expectedCheckedItem, BinaryCondition.ConditionKind.Contains);
+
+      Assert.AreEqual (expectedCriterion, actualCriterion);
     }
 
   }

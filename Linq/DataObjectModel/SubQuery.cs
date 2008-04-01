@@ -3,12 +3,11 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.DataObjectModel
 {
-  public class SubQuery : IFromSource
+  public class SubQuery : IFromSource, ICriterion
   {
     public SubQuery (QueryModel queryModel, string alias)
     {
       ArgumentUtility.CheckNotNull ("queryExpression", queryModel);
-      ArgumentUtility.CheckNotNull ("alias", alias);
 
       QueryModel = queryModel;
       Alias = alias;
@@ -23,6 +22,15 @@ namespace Rubicon.Data.Linq.DataObjectModel
       get { return Alias; }
     }
 
-    
+    public override bool Equals (object obj)
+    {
+      SubQuery other = obj as SubQuery;
+      return other != null && object.Equals (QueryModel, other.QueryModel) && object.Equals (Alias, other.Alias);
+    }
+
+    public override int GetHashCode ()
+    {
+      return EqualityUtility.GetRotatedHashCode (Alias, QueryModel);
+    }
   }
 }

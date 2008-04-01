@@ -5,6 +5,7 @@ using Rubicon.Collections;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.DataObjectModel;
 using Rubicon.Data.Linq.Parsing.Details.WhereConditionParsing;
+using Rubicon.Data.Linq.Parsing.Details.WhereParser;
 using Rubicon.Data.Linq.Parsing.FieldResolving;
 using Rubicon.Utilities;
 

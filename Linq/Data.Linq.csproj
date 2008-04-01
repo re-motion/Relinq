@@ -122,7 +122,6 @@
     <Compile Include="DataObjectModel\BinaryCondition.cs" />
     <Compile Include="DataObjectModel\ComplexCriterion.cs" />
     <Compile Include="DataObjectModel\Column.cs" />
-    <Compile Include="DataObjectModel\ICondition.cs" />
     <Compile Include="DataObjectModel\Constant.cs" />
     <Compile Include="DataObjectModel\ICriterion.cs" />
     <Compile Include="DataObjectModel\Table.cs" />

@@ -46,12 +46,12 @@ namespace Rubicon.Data.Linq.UnitTests
 
     public static QueryModel CreateQueryModel (MainFromClause mainFromClause)
     {
-      return new QueryModel (typeof (IQueryable<int>), mainFromClause, CreateSelectClause());
+      return new QueryModel (typeof (IQueryable<Student>), mainFromClause, CreateSelectClause());
     }
 
     public static QueryModel CreateQueryModel ()
     {
-      return CreateQueryModel (CreateMainFromClause());
+      return CreateQueryModel (CreateMainFromClause(Expression.Parameter (typeof (Student), "s"), CreateQuerySource()));
     }
 
 
@@ -238,6 +238,11 @@ namespace Rubicon.Data.Linq.UnitTests
     public static SubQueryFromClause CreateSubQueryFromClause (ParameterExpression identifier)
     {
       return new SubQueryFromClause (CreateClause (), identifier, CreateQueryModel (), CreateLambdaExpression ());
+    }
+
+    public static MethodInfo GetMethod<T> (Expression<Func<T>> wrappedCall)
+    {
+      return ((MethodCallExpression) wrappedCall.Body).Method;
     }
   }
 }

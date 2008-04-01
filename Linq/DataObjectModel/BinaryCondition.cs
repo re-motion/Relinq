@@ -2,9 +2,9 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.DataObjectModel
 {
-  public struct BinaryCondition : ICondition
+  public struct BinaryCondition : ICriterion
   {
-    public enum ConditionKind { Equal, NotEqual, GreaterThan, GreaterThanOrEqual, LessThan, LessThanOrEqual,Like }
+    public enum ConditionKind { Equal, NotEqual, GreaterThan, GreaterThanOrEqual, LessThan, LessThanOrEqual, Like, Contains }
 
     public readonly IValue Left;
     public readonly IValue Right;

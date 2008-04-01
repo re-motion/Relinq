@@ -24,7 +24,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
       _dispatcher = new CallParserDispatcher ();
       _source = ExpressionHelper.CreateQuerySource ();
       _wrappedCall = (() => _source.Select (s => s.First));
-      _method = GetMethod (_wrappedCall);
+      _method = ExpressionHelper.GetMethod (_wrappedCall);
       _emptyParser = delegate { };
     }
 
@@ -110,11 +110,5 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
 
       _dispatcher.Dispatch (null, (MethodCallExpression) _wrappedCall.Body, null);
     }
-
-    private MethodInfo GetMethod (Expression<Func<object>> wrappedCall)
-    {
-      return ((MethodCallExpression) wrappedCall.Body).Method;
-    }
-
   }
 }
