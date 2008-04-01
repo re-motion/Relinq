@@ -25,7 +25,14 @@ namespace Rubicon.Data.Linq.Parsing.Details
 
       _queryModel = queryModel;
       _selectClause = selectClause;
-      _resolver = new FromClauseFieldResolver (databaseInfo, context, new SelectFieldAccessPolicy());
+      
+      IResolveFieldAccessPolicy policy;
+      if (parseContext == ParseContext.SubQueryInWhere)
+        policy = new WhereFieldAccessPolicy (databaseInfo);
+      else
+        policy = new SelectFieldAccessPolicy();
+
+      _resolver = new FromClauseFieldResolver (databaseInfo, context, policy);
       ParseContext = parseContext;
     }
 

@@ -44,6 +44,21 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       Assert.That (selectedFields.ToArray(), Is.EqualTo (new object[] {ExpressionHelper.CreateFieldDescriptor (model.MainFromClause, null)}));
     }
 
+    [Test]
+    public void IdentityProjection_WithinSubQueryInWhere ()
+    {
+      IQueryable<Student> query = SelectTestQueryGenerator.CreateSimpleQuery (_source);
+      QueryParser parser = new QueryParser (query.Expression);
+      QueryModel model = parser.GetParsedQuery ();
+      SelectClause selectClause = (SelectClause) model.SelectOrGroupClause;
+
+      SelectProjectionParser selectParser = new SelectProjectionParser (model, selectClause, StubDatabaseInfo.Instance, _context, ParseContext.SubQueryInWhere);
+
+      IEnumerable<FieldDescriptor> selectedFields = selectParser.GetSelectedFields ();
+
+      Assert.That (selectedFields.ToArray (), Is.EqualTo (new object[] { ExpressionHelper.CreateFieldDescriptor (model.MainFromClause, typeof (Student).GetProperty ("ID"), null)}));
+    }
+
 
     [Test]
     public void IdentityProjection_WithoutSelectExpression ()
