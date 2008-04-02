@@ -11,17 +11,23 @@ namespace Rubicon.Data.Linq.Clauses
     private readonly ParameterExpression _identifier;
     private readonly Expression _expression;
 
-    public LetClause (IClause previousClause,ParameterExpression identifier, Expression expression)
+    public LetClause (IClause previousClause, ParameterExpression identifier, Expression expression, 
+      LambdaExpression projectionExpression)
     {
+      ArgumentUtility.CheckNotNull ("previousClause", previousClause);
       ArgumentUtility.CheckNotNull ("identifier", identifier);
       ArgumentUtility.CheckNotNull ("expression", expression);
-      ArgumentUtility.CheckNotNull ("previousClause", previousClause);
+      ArgumentUtility.CheckNotNull ("projectionExpression", projectionExpression);
+      
+      
       _identifier = identifier;
       _expression = expression;
       PreviousClause = previousClause;
+      ProjectionExpression = projectionExpression;
     }
 
     public IClause PreviousClause { get; private set; }
+    public LambdaExpression ProjectionExpression { get; private set; }
 
     public Expression Expression
     {

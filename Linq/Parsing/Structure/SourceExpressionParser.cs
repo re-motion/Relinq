@@ -95,7 +95,10 @@ namespace Rubicon.Data.Linq.Parsing.Structure
     private void ParseSelectSource (ParseResultCollector resultCollector, Expression sourceExpression)
     {
       MethodCallExpression methodCallExpression = (MethodCallExpression) sourceExpression;
-      new SelectExpressionParser().Parse (resultCollector, methodCallExpression);
+      if (_isTopLevel)
+        new SelectExpressionParser ().Parse (resultCollector, methodCallExpression);
+      else
+        new LetExpressionParser().Parse (resultCollector, methodCallExpression);
     }
 
     private void ParseSelectManySource (ParseResultCollector resultCollector, Expression sourceExpression)

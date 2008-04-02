@@ -17,7 +17,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
 
        IClause clause = ExpressionHelper.CreateClause();
 
-      LetClause letClause = new LetClause(clause,identifier,expression);
+      LetClause letClause = new LetClause(clause,identifier,expression,ExpressionHelper.CreateLambdaExpression());
 
       Assert.AreSame (clause, letClause.PreviousClause);
       Assert.AreSame (identifier, letClause.Identifier);

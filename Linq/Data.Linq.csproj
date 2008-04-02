@@ -82,6 +82,8 @@
     <Compile Include="Parsing\FieldResolving\SelectFieldAccessPolicy.cs" />
     <Compile Include="Parsing\FieldResolving\WhereFieldAccessPolicy.cs" />
     <Compile Include="Parsing\Structure\CallParserDispatcher.cs" />
+    <Compile Include="Parsing\Structure\LetExpressionData.cs" />
+    <Compile Include="Parsing\Structure\LetExpressionParser.cs" />
     <Compile Include="Parsing\Structure\OrderByExpressionParser.cs" />
     <Compile Include="Parsing\Structure\ParseResultCollector.cs" />
     <Compile Include="Parsing\Structure\QueryModelCreator.cs" />

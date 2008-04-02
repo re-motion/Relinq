@@ -224,6 +224,25 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
     }
 
     [Test]
+    public void BodyExpression__TranslatedIntoLetClause ()
+    {
+      _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression ());
+
+      ParameterExpression identifier = Expression.Parameter (typeof (string), "x");
+      LetExpressionData letExpressionData = new LetExpressionData (identifier,ExpressionHelper.CreateLambdaExpression());
+
+      _result.AddBodyExpression (letExpressionData);
+
+      QueryModel model = _modelCreator.CreateQueryExpression ();
+
+      Assert.AreEqual (1, model.BodyClauses.Count);
+
+      LetClause letClause = model.BodyClauses.First () as LetClause;
+      Assert.IsNotNull (letClause);
+      Assert.AreSame (letExpressionData.Expression, letClause.Expression);
+    }
+
+    [Test]
     public void BodyExpression_TranslatedIntoWhereClauseWithSubQuery ()
     {
       _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression ());

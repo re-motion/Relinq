@@ -74,6 +74,36 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.WhereExpressionP
       }
     }
 
+    public List<Expression> LetExpressions
+    {
+      get 
+      {
+        List<Expression> letExpressions = new List<Expression> ();
+        foreach (BodyExpressionDataBase expression in _bodyExpressions)
+        {
+          LetExpressionData letExpressionData = expression as LetExpressionData;
+          if (letExpressionData != null)
+            letExpressions.Add (letExpressionData.Expression);
+        }
+        return letExpressions;
+      }
+    }
+
+    public List<ParameterExpression> LetIdentifiers
+    {
+      get
+      {
+        List<ParameterExpression> letIdentifiers = new List<ParameterExpression> ();
+        foreach (BodyExpressionDataBase expression in _bodyExpressions)
+        {
+          LetExpressionData letExpressionData = expression as LetExpressionData;
+          if (letExpressionData != null)
+            letIdentifiers.Add (letExpressionData.Identifier);
+        }
+        return letIdentifiers;
+      }
+    }
+
     
 
 

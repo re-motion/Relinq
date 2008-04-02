@@ -79,6 +79,10 @@ namespace Rubicon.Data.Linq.Parsing.Structure
       if (orderByClause != null)
         return orderByClause;
 
+      LetClause letClause = CreateLetClause (expression);
+      if (letClause != null)
+        return letClause;
+
       throw new ParserException ("The FromLetWhereExpression type " + expression.GetType ().Name + " is not supported.");
     }
 
@@ -156,6 +160,27 @@ namespace Rubicon.Data.Linq.Parsing.Structure
           return _previousOrderByClause;
         }
       }
+    }
+
+    private LetClause CreateLetClause (BodyExpressionDataBase expression)
+    {
+      var letExpression = expression as LetExpressionData;
+
+      if (letExpression == null)
+        return null;
+
+      if (_currentProjection >= _result.ProjectionExpressions.Count)
+      {
+        string message = string.Format ("Let expression '{0}' ({1}) doesn't have a projection expression.", letExpression.Identifier,
+            letExpression.Expression);
+        throw new ParserException (message, _expressionTreeRoot, _expressionTreeRoot, null);
+      }
+
+      var projectionExpression = _result.ProjectionExpressions[_currentProjection];
+      var letClause = new LetClause (_previousClause, letExpression.Identifier, letExpression.Expression, projectionExpression);
+      ++_currentProjection;
+
+      return letClause;
     }
 
     private SelectClause CreateSelectClause ()

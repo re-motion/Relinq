@@ -99,6 +99,7 @@
     <Compile Include="ParsingTest\FieldResolvingTest\WhereFieldAccessPolicyTest.cs" />
     <Compile Include="ParsingTest\StructureTest\CallParserDispatcherTest.cs" />
     <Compile Include="ParsingTest\StructureTest\FromLetWhereExpressionTest.cs" />
+    <Compile Include="ParsingTest\StructureTest\LetExpressionParserTest\SimpleLetParserTest.cs" />
     <Compile Include="ParsingTest\StructureTest\OrderExpressionParserTest\MultiOrderByExpressionParserTest.cs" />
     <Compile Include="ParsingTest\StructureTest\OrderExpressionParserTest\OrderByWhereExpressionParserTest.cs" />
     <Compile Include="ParsingTest\StructureTest\OrderExpressionParserTest\SimpleOrderByExpressionParserTest.cs" />
@@ -162,9 +163,10 @@
     <Compile Include="TestQueryGenerators\DistinctTestQueryGenerator.cs" />
     <Compile Include="TestQueryGenerators\FromTestQueryGenerator.cs" />
     <Compile Include="TestQueryGenerators\JoinTestQueryGenerator.cs" />
+    <Compile Include="TestQueryGenerators\LetTestQueryGenerator.cs" />
     <Compile Include="TestQueryGenerators\MixedTestQueryGenerator.cs" />
     <Compile Include="TestQueryGenerators\OrderByTestQueryGenerator.cs" />
-    <Compile Include="TestQueryGenerators\SelectTestQueryGenerator.cs_noresharper" />
+    <Compile Include="TestQueryGenerators\SelectTestQueryGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ClausesTest\QueryExpression_BodyTest.cs" />
     <Compile Include="QueryModelTest.cs" />

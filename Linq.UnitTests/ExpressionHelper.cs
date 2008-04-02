@@ -81,7 +81,7 @@ namespace Rubicon.Data.Linq.UnitTests
       ParameterExpression identifier = ExpressionHelper.CreateParameterExpression ();
       Expression expression = ExpressionHelper.CreateExpression ();
 
-      return new LetClause (CreateClause (), identifier, expression);
+      return new LetClause (CreateClause (), identifier, expression,CreateLambdaExpression());
     }
 
     public static OrderingClause CreateOrderingClause()

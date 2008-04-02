@@ -198,6 +198,20 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
       AssertResultsEqual (expectedResult, result);
     }
 
+    [Test]
+    public void SimpleLet ()
+    {
+      IQueryable<string> query = LetTestQueryGenerator.CreateSimpleLetClause (_source);
+
+      Expression letExpression = ((MethodCallExpression) (query.Expression)).Arguments[0];
+      ParseResultCollector result = new ParseResultCollector (letExpression);
+      _notTopLevelParser.Parse (result, letExpression, _potentialFromIdentifier, "bla");
+
+      ParseResultCollector expectedResult = new ParseResultCollector (letExpression);
+      new LetExpressionParser ().Parse (expectedResult, (MethodCallExpression) letExpression);
+      AssertResultsEqual (expectedResult, result);
+    }
+
     private void AssertResultsEqual(ParseResultCollector one, ParseResultCollector two)
     {
       Assert.AreEqual (one.ExpressionTreeRoot, two.ExpressionTreeRoot);
@@ -213,6 +227,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
         FromExpressionData fromExpression1 = one.BodyExpressions[i] as FromExpressionData;
         WhereExpressionData whereExpression1 = one.BodyExpressions[i] as WhereExpressionData;
         OrderExpressionData orderExpression1 = one.BodyExpressions[i] as OrderExpressionData;
+        LetExpressionData letExpression1 = one.BodyExpressions[i] as LetExpressionData;
         if (fromExpression1 != null)
         {
           FromExpressionData fromExpression2 = two.BodyExpressions[i] as FromExpressionData;
@@ -224,6 +239,11 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
         {
           WhereExpressionData whereExpression2 = two.BodyExpressions[i] as WhereExpressionData;
           Assert.AreEqual (whereExpression1.Expression, whereExpression2.Expression);
+        }
+        else if (letExpression1 != null)
+        {
+          LetExpressionData letExpression2 = two.BodyExpressions[i] as LetExpressionData;
+          Assert.AreEqual (letExpression1.Expression, letExpression2.Expression);
         }
         else
         {
@@ -240,12 +260,14 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
       return result;
     }
 
+   
     private ParseResultCollector Parse_NotTopLevel (IQueryable query)
     {
       ParseResultCollector result = new ParseResultCollector (query.Expression);
       _notTopLevelParser.Parse (result, query.Expression, _potentialFromIdentifier, "bla");
       return result;
     }
+
 
   }
 }
