@@ -3,6 +3,8 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Rubicon.Data.Linq.Clauses;
+using Rubicon.Data.Linq.DataObjectModel;
+using Rubicon.Data.Linq.Parsing.FieldResolving;
 
 namespace Rubicon.Data.Linq.UnitTests.ClausesTest
 {
@@ -55,7 +57,31 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       letClause.Accept (visitorMock);
 
       repository.VerifyAll ();
-
     }
+
+    [Test]
+    public void GetNamedEvaluation ()
+    {
+      LetClause letClause = ExpressionHelper.CreateLetClause ();
+      Assert.AreEqual (new NamedEvaluation ("i", "i").Alias, letClause.GetNamedEvaluation().Alias);
+      Assert.AreEqual (letClause.Identifier.Name, letClause.GetNamedEvaluation ().AliasString);
+    }
+
+    [Test]
+    public void Resolve_Succeeds_NamedEvaluation ()
+    {
+      ParameterExpression identifier = Expression.Parameter (typeof (Student), "student");
+      LetClause letClause = 
+        new LetClause (ExpressionHelper.CreateMainFromClause(),identifier,ExpressionHelper.CreateExpression(),ExpressionHelper.CreateLambdaExpression());
+      
+      JoinedTableContext context = new JoinedTableContext ();
+      SelectFieldAccessPolicy policy = new SelectFieldAccessPolicy ();
+
+      ClauseFieldResolver resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, context, policy);
+      FieldDescriptor fieldDescriptor = letClause.ResolveField (resolver, identifier, identifier);
+
+      Assert.AreEqual (new Column(new NamedEvaluation("student","student"),"*"),fieldDescriptor.Column);
+    }
+
   }
 }

@@ -10,7 +10,7 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
   /// <summary>
   /// identifies the parameter and members used by an expression of a field access
   /// </summary>
-  public class FromClauseFieldResolverVisitor : ExpressionTreeVisitor
+  public class ClauseFieldResolverVisitor : ExpressionTreeVisitor
   {
     public struct Result
     {

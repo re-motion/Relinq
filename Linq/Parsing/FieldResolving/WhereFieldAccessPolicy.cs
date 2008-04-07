@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Reflection;
 using Rubicon.Collections;
 using Rubicon.Data.Linq.Clauses;
@@ -18,10 +19,10 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
       _databaseInfo = databaseInfo;
     }
 
-    public Tuple<MemberInfo, IEnumerable<MemberInfo>> AdjustMemberInfosForFromIdentifier (FromClauseBase accessedFromClause)
+    public Tuple<MemberInfo, IEnumerable<MemberInfo>> AdjustMemberInfosForAccessedIdentifier (ParameterExpression accessedIdentifier)
     {
-      ArgumentUtility.CheckNotNull ("accessedFromClause", accessedFromClause);
-      return new Tuple<MemberInfo, IEnumerable<MemberInfo>> (_databaseInfo.GetPrimaryKeyMember (accessedFromClause.Identifier.Type), 
+      ArgumentUtility.CheckNotNull ("accessedIdentifier", accessedIdentifier);
+      return new Tuple<MemberInfo, IEnumerable<MemberInfo>> (_databaseInfo.GetPrimaryKeyMember (accessedIdentifier.Type), 
           new MemberInfo[0]);
     }
 

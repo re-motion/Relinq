@@ -14,7 +14,7 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
       _queryModel = queryModel;
     }
 
-    public FieldDescriptor ResolveField (FromClauseFieldResolver resolver, Expression fieldAccessExpression)
+    public FieldDescriptor ResolveField (ClauseFieldResolver resolver, Expression fieldAccessExpression)
     {
       ArgumentUtility.CheckNotNull ("resolver", resolver);
       ArgumentUtility.CheckNotNull ("fieldAccessExpression", fieldAccessExpression);

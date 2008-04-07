@@ -9,9 +9,9 @@ namespace Rubicon.Data.Linq.Parsing.Details.WhereConditionParsing
   public class MemberExpressionParser
   {
     private readonly QueryModel _queryModel;
-    private readonly FromClauseFieldResolver _resolver;
+    private readonly ClauseFieldResolver _resolver;
 
-    public MemberExpressionParser (QueryModel queryModel, FromClauseFieldResolver resolver)
+    public MemberExpressionParser (QueryModel queryModel, ClauseFieldResolver resolver)
     {
       ArgumentUtility.CheckNotNull ("queryExpression", queryModel);
       ArgumentUtility.CheckNotNull ("resolver", resolver);

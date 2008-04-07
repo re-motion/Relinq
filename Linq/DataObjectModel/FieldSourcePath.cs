@@ -7,10 +7,10 @@ namespace Rubicon.Data.Linq.DataObjectModel
 {
   public struct FieldSourcePath
   {
-    public IFromSource FirstSource { get; private set; }
+    public IColumnSource FirstSource { get; private set; }
     public ReadOnlyCollection<SingleJoin> Joins { get; private set; }
 
-    public FieldSourcePath(IFromSource firstSource,IEnumerable<SingleJoin> joins) : this()
+    public FieldSourcePath(IColumnSource firstSource,IEnumerable<SingleJoin> joins) : this()
     {
       ArgumentUtility.CheckNotNull ("firstSource", firstSource);
       ArgumentUtility.CheckNotNull ("joins", joins);
@@ -19,7 +19,7 @@ namespace Rubicon.Data.Linq.DataObjectModel
       Joins = new List<SingleJoin>(joins).AsReadOnly();
     }
 
-    public IFromSource LastSource
+    public IColumnSource LastSource
     {
       get
       {

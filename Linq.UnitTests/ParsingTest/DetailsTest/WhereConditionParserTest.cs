@@ -163,7 +163,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       Tuple<List<FieldDescriptor>, ICriterion> parseResult = CreateAndParseWhereClause (condition);
       ICriterion criterion = parseResult.B;
 
-      IFromSource table = _fromClause.GetFromSource (StubDatabaseInfo.Instance);
+      IColumnSource table = _fromClause.GetFromSource (StubDatabaseInfo.Instance);
       Assert.AreEqual (new BinaryCondition (new Constant (4), new Column (table, "OtherStudentColumn"),
           BinaryCondition.ConditionKind.Equal), criterion);
     }
@@ -387,7 +387,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       WhereClause whereClause = ClauseFinder.FindClause<WhereClause> (parsedQuery.SelectOrGroupClause);
       
       PropertyInfo relationMember = typeof (Student_Detail).GetProperty ("Student");
-      IFromSource sourceTable = fromClause.GetFromSource (StubDatabaseInfo.Instance); // Student_Detail
+      IColumnSource sourceTable = fromClause.GetFromSource (StubDatabaseInfo.Instance); // Student_Detail
       Table relatedTable = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, relationMember); // Student
       Tuple<string, string> columns = DatabaseInfoUtility.GetJoinColumnNames (StubDatabaseInfo.Instance, relationMember);
       
@@ -396,7 +396,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
 
       SingleJoin join = new SingleJoin (new Column (sourceTable, columns.A), new Column (relatedTable, columns.B));
       FieldSourcePath path = new FieldSourcePath(sourceTable,new[] {join});
-      FieldDescriptor fieldDescriptor = new FieldDescriptor (member, fromClause, path, column);
+      FieldDescriptor fieldDescriptor = new FieldDescriptor (member, path, column);
 
       WhereConditionParser parser = new WhereConditionParser (parsedQuery, whereClause, _databaseInfo, _context, false);
       Tuple<List<FieldDescriptor>, ICriterion> parseResult = parser.GetParseResult ();

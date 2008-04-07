@@ -184,13 +184,13 @@ namespace Rubicon.Data.Linq.UnitTests
       Expression fieldAccessExpression = Expression.Parameter (typeof (String), "s1");
       JoinedTableContext context = new JoinedTableContext ();
       WhereFieldAccessPolicy policy = new WhereFieldAccessPolicy (StubDatabaseInfo.Instance);
-      FromClauseFieldResolver resolver = new FromClauseFieldResolver (StubDatabaseInfo.Instance, context, policy);
+      ClauseFieldResolver resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, context, policy);
       FieldDescriptor descriptor = queryModel.ResolveField (resolver, fieldAccessExpression);
 
-      IFromSource expectedTable = queryModel.MainFromClause.GetFromSource (StubDatabaseInfo.Instance);
+      IColumnSource expectedTable = queryModel.MainFromClause.GetFromSource (StubDatabaseInfo.Instance);
       FieldSourcePath expectedPath = new FieldSourcePath (expectedTable, new SingleJoin[0]);
 
-      Assert.AreSame (queryModel.MainFromClause, descriptor.FromClause);
+      //Assert.AreSame (queryModel.MainFromClause, descriptor.FromClause);
       Assert.AreEqual (new Column (expectedTable, "*"), descriptor.Column);
       Assert.IsNull (descriptor.Member);
       Assert.AreEqual (expectedPath, descriptor.SourcePath);

@@ -288,6 +288,19 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
           DomainObjectIDs.OrderWithoutOrderItem);
     }
 
+    [Test]
+    [Ignore]
+    public void QueryWithLet ()
+    {
+      var orders = from o in DataContext.Entity<Order> (new TestQueryListener ())
+                  let x = o
+                  select x;
+
+      CheckQueryResult (orders, DomainObjectIDs.Order1, DomainObjectIDs.Order2, DomainObjectIDs.Order3, DomainObjectIDs.Order4,DomainObjectIDs.Order4,
+      DomainObjectIDs.OrderWithNewPropertyAccess1,DomainObjectIDs.OrderWithoutOrderItem);
+
+    }
+
     private void CheckQueryResult<T> (IQueryable<T> query, params ObjectID[] expectedObjectIDs)
         where T: TestDomainBase
     {

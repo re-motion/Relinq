@@ -19,7 +19,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
           ExpressionHelper.CreateMainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
       SelectFieldAccessPolicy policy = new SelectFieldAccessPolicy ();
 
-      var result = policy.AdjustMemberInfosForFromIdentifier (fromClause);
+      var result = policy.AdjustMemberInfosForAccessedIdentifier (fromClause.Identifier);
       Assert.That (result.A, Is.Null);
       Assert.That (result.B, Is.Empty);
     }

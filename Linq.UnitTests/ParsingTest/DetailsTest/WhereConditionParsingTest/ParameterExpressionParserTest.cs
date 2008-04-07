@@ -20,13 +20,13 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPars
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (parameter, ExpressionHelper.CreateQuerySource ());
 
       QueryModel queryModel = ExpressionHelper.CreateQueryModel (fromClause);
-      FromClauseFieldResolver resolver =
-          new FromClauseFieldResolver (StubDatabaseInfo.Instance, new JoinedTableContext (), new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
+      ClauseFieldResolver resolver =
+          new ClauseFieldResolver (StubDatabaseInfo.Instance, new JoinedTableContext (), new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
 
       List<FieldDescriptor> fieldDescriptorCollection = new List<FieldDescriptor> ();
       var fromSource = fromClause.GetFromSource (StubDatabaseInfo.Instance);
       FieldSourcePath path = new FieldSourcePath (fromSource, new SingleJoin[0]);
-      FieldDescriptor expectedFieldDescriptor = new FieldDescriptor (null, fromClause, path, new Column (fromSource, "IDColumn"));
+      FieldDescriptor expectedFieldDescriptor = new FieldDescriptor (null, path, new Column (fromSource, "IDColumn"));
       ICriterion expectedCriterion = expectedFieldDescriptor.Column;
 
       ParameterExpressionParser parser = new ParameterExpressionParser (queryModel, resolver);

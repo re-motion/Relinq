@@ -54,7 +54,8 @@
     <Compile Include="Clauses\ClauseLookupException.cs" />
     <Compile Include="Clauses\SubQueryFromClause.cs" />
     <Compile Include="DataObjectModel\FieldSourcePath.cs" />
-    <Compile Include="DataObjectModel\IFromSource.cs" />
+    <Compile Include="DataObjectModel\IColumnSource.cs" />
+    <Compile Include="DataObjectModel\NamedEvaluation.cs" />
     <Compile Include="DataObjectModel\SingleJoin.cs" />
     <Compile Include="DataObjectModel\SubQuery.cs" />
     <Compile Include="DataObjectModel\SubQueryExpression.cs" />
@@ -67,8 +68,8 @@
     <Compile Include="Parsing\Details\WhereConditionParsing\UnaryExpressionParser.cs" />
     <Compile Include="Parsing\FieldResolving\FieldAccessResolveException.cs" />
     <Compile Include="Parsing\FieldResolving\FieldSourcePathBuilder.cs" />
-    <Compile Include="Parsing\FieldResolving\FromClauseFieldResolver.cs" />
-    <Compile Include="Parsing\FieldResolving\FromClauseFieldResolverVisitor.cs" />
+    <Compile Include="Parsing\FieldResolving\ClauseFieldResolver.cs" />
+    <Compile Include="Parsing\FieldResolving\ClauseFieldResolverVisitor.cs" />
     <Compile Include="Parsing\FieldResolving\IResolveFieldAccessPolicy.cs" />
     <Compile Include="Parsing\FieldResolving\JoinedTableContext.cs" />
     <Compile Include="Parsing\FieldResolving\OrderingFieldAccessPolicy.cs" />

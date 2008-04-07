@@ -13,7 +13,7 @@ namespace Rubicon.Data.Linq.Parsing.Details
     public ParseContext ParseContext { get; private set; }
     private readonly QueryModel _queryModel;
     private readonly SelectClause _selectClause;
-    private readonly FromClauseFieldResolver _resolver;
+    private readonly ClauseFieldResolver _resolver;
 
     public SelectProjectionParser (QueryModel queryModel, SelectClause selectClause, IDatabaseInfo databaseInfo, JoinedTableContext context, 
       ParseContext parseContext)
@@ -32,7 +32,7 @@ namespace Rubicon.Data.Linq.Parsing.Details
       else
         policy = new SelectFieldAccessPolicy();
 
-      _resolver = new FromClauseFieldResolver (databaseInfo, context, policy);
+      _resolver = new ClauseFieldResolver (databaseInfo, context, policy);
       ParseContext = parseContext;
     }
 

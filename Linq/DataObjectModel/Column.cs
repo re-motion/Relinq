@@ -5,19 +5,19 @@ namespace Rubicon.Data.Linq.DataObjectModel
   public struct Column : ICriterion
   {
     public readonly string Name;
-    public readonly IFromSource FromSource;
+    public readonly IColumnSource _columnSource;
 
-    public Column (IFromSource fromSource, string name)
+    public Column (IColumnSource columnSource, string name)
     {
       ArgumentUtility.CheckNotNull ("name", name);
-      ArgumentUtility.CheckNotNull ("fromSource", fromSource);
+      ArgumentUtility.CheckNotNull ("fromSource", columnSource);
       Name = name;
-      FromSource = fromSource;
+      _columnSource = columnSource;
     }
 
     public override string ToString ()
     {
-      return (FromSource != null ? FromSource.AliasString : "<null>") + "." + Name;
+      return (_columnSource != null ? _columnSource.AliasString : "<null>") + "." + Name;
     }
   }
 }

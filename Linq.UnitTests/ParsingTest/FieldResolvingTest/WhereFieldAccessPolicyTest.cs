@@ -20,7 +20,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
           ExpressionHelper.CreateMainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource());
       WhereFieldAccessPolicy policy = new WhereFieldAccessPolicy (StubDatabaseInfo.Instance);
 
-      var result = policy.AdjustMemberInfosForFromIdentifier (fromClause);
+      var result = policy.AdjustMemberInfosForAccessedIdentifier (fromClause.Identifier);
       Assert.That (result.A, Is.EqualTo (typeof (Student).GetProperty ("ID")));
       Assert.That (result.B, Is.Empty);
     }

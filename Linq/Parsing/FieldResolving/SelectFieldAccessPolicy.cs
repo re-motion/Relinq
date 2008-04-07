@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Reflection;
 using Rubicon.Collections;
 using Rubicon.Data.Linq.Clauses;
@@ -8,7 +9,7 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
 {
   public class SelectFieldAccessPolicy : IResolveFieldAccessPolicy
   {
-    public Tuple<MemberInfo, IEnumerable<MemberInfo>> AdjustMemberInfosForFromIdentifier (FromClauseBase accessedFromClause)
+    public Tuple<MemberInfo, IEnumerable<MemberInfo>> AdjustMemberInfosForAccessedIdentifier (ParameterExpression accessedIdentifier)
     {
       return new Tuple<MemberInfo, IEnumerable<MemberInfo>> (null, new MemberInfo[0]);
     }

@@ -9,9 +9,9 @@ namespace Rubicon.Data.Linq.Parsing.Details.WhereConditionParsing
   public class ParameterExpressionParser
   {
     private readonly QueryModel _queryModel;
-    private readonly FromClauseFieldResolver _resolver;
+    private readonly ClauseFieldResolver _resolver;
 
-    public ParameterExpressionParser (QueryModel queryModel, FromClauseFieldResolver resolver)
+    public ParameterExpressionParser (QueryModel queryModel, ClauseFieldResolver resolver)
     {
       _queryModel = queryModel;
       _resolver = resolver;

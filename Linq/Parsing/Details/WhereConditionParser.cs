@@ -16,7 +16,7 @@ namespace Rubicon.Data.Linq.Parsing.Details
     private readonly WhereClause _whereClause;
     private readonly IDatabaseInfo _databaseInfo;
     private readonly QueryModel _queryModel;
-    private readonly FromClauseFieldResolver _resolver;
+    private readonly ClauseFieldResolver _resolver;
 
     private readonly MemberExpressionParser _memberExpressionParser;
     private readonly ParameterExpressionParser _parameterExpressionParser;
@@ -39,7 +39,7 @@ namespace Rubicon.Data.Linq.Parsing.Details
       _queryModel = queryModel;
       _whereClause = whereClause;
       _databaseInfo = databaseInfo;
-      _resolver = new FromClauseFieldResolver (databaseInfo, context, new WhereFieldAccessPolicy (_databaseInfo));
+      _resolver = new ClauseFieldResolver (databaseInfo, context, new WhereFieldAccessPolicy (_databaseInfo));
       
       _memberExpressionParser = new MemberExpressionParser (_queryModel, _resolver);
       _parameterExpressionParser = new ParameterExpressionParser (_queryModel, _resolver);

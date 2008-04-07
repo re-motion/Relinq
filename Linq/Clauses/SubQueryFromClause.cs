@@ -37,7 +37,7 @@ namespace Rubicon.Data.Linq.Clauses
       return null;
     }
 
-    public override IFromSource GetFromSource (IDatabaseInfo databaseInfo)
+    public override IColumnSource GetFromSource (IDatabaseInfo databaseInfo)
     {
       return _fromSource;
     }

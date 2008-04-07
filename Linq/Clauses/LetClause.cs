@@ -2,6 +2,7 @@ using System;
 using System.Linq.Expressions;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.DataObjectModel;
+using Rubicon.Data.Linq.Parsing.FieldResolving;
 using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.Clauses
@@ -37,6 +38,20 @@ namespace Rubicon.Data.Linq.Clauses
     public ParameterExpression Identifier
     {
       get { return _identifier; }
+    }
+
+    public FieldDescriptor ResolveField (ClauseFieldResolver resolver, Expression partialFieldExpression, Expression fullFieldExpression)
+    {
+      ArgumentUtility.CheckNotNull ("resolver", resolver);
+      ArgumentUtility.CheckNotNull ("partialFieldExpression", partialFieldExpression);
+      ArgumentUtility.CheckNotNull ("fullFieldExpression", fullFieldExpression);
+
+      return resolver.ResolveField (GetNamedEvaluation(),Identifier,partialFieldExpression,fullFieldExpression);
+    }
+
+    public virtual NamedEvaluation GetNamedEvaluation ()
+    {
+      return new NamedEvaluation(Identifier.Name,Identifier.Name);
     }
 
     public virtual void Accept (IQueryVisitor visitor)

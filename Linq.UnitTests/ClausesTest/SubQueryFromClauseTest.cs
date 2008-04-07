@@ -58,8 +58,8 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     [Test]
     public void GetFromSource ()
     {
-      IFromSource fromSource = _subQueryFromClause.GetFromSource (StubDatabaseInfo.Instance);
-      SubQuery subQuery = (SubQuery) fromSource;
+      IColumnSource columnSource = _subQueryFromClause.GetFromSource (StubDatabaseInfo.Instance);
+      SubQuery subQuery = (SubQuery) columnSource;
       Assert.AreEqual (_identifier.Name, subQuery.Alias);
       Assert.AreSame (_subQueryModel, subQuery.QueryModel);
     }

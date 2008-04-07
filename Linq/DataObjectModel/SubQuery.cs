@@ -3,7 +3,7 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.DataObjectModel
 {
-  public class SubQuery : IFromSource, ICriterion
+  public class SubQuery : IColumnSource, ICriterion
   {
     public SubQuery (QueryModel queryModel, string alias)
     {

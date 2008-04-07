@@ -216,7 +216,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
           _context, ParseContext.TopLevelQuery);
 
       PropertyInfo relationMember = typeof (Student_Detail).GetProperty ("Student");
-      IFromSource studentDetailTable = parsedQuery.MainFromClause.GetFromSource (StubDatabaseInfo.Instance);
+      IColumnSource studentDetailTable = parsedQuery.MainFromClause.GetFromSource (StubDatabaseInfo.Instance);
       Table studentTable = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, relationMember);
       Tuple<string, string> joinColumns = DatabaseInfoUtility.GetJoinColumnNames (StubDatabaseInfo.Instance, relationMember);
 
@@ -225,7 +225,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       FieldSourcePath path = new FieldSourcePath (studentDetailTable, new[] {join});
 
       FieldDescriptor expectedField =
-          new FieldDescriptor (typeof (Student).GetProperty ("First"), parsedQuery.MainFromClause, path, new Column (studentTable, "FirstColumn"));
+          new FieldDescriptor (typeof (Student).GetProperty ("First"), path, new Column (studentTable, "FirstColumn"));
 
       Assert.That (parser.GetSelectedFields(), Is.EqualTo (new object[] {expectedField}));
     }
@@ -250,10 +250,10 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
 
       IEnumerable<FieldDescriptor> selectedFields = selectParser.GetSelectedFields ();
       PropertyInfo relationMember = typeof (Student_Detail).GetProperty ("Student");
-      IFromSource studentDetailTable = model.MainFromClause.GetFromSource (StubDatabaseInfo.Instance);
+      IColumnSource studentDetailTable = model.MainFromClause.GetFromSource (StubDatabaseInfo.Instance);
       FieldSourcePath path = new FieldSourcePathBuilder ().BuildFieldSourcePath (StubDatabaseInfo.Instance, _context, studentDetailTable, 
           new[] { relationMember });
-      FieldDescriptor expected = new FieldDescriptor(relationMember, model.MainFromClause, path, new Column(path.LastSource, "*"));
+      FieldDescriptor expected = new FieldDescriptor(relationMember, path, new Column(path.LastSource, "*"));
 
       Assert.That (selectedFields.ToArray (), Is.EqualTo (new object[] { expected } ));
     }

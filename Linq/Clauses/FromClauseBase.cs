@@ -39,19 +39,19 @@ namespace Rubicon.Data.Linq.Clauses
       _joinClauses.Add (joinClause);
     }
 
-    public virtual IFromSource GetFromSource (IDatabaseInfo databaseInfo)
+    public virtual IColumnSource GetFromSource (IDatabaseInfo databaseInfo)
     {
       ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
       return DatabaseInfoUtility.GetTableForFromClause (databaseInfo, this);
     }
 
-    public FieldDescriptor ResolveField (FromClauseFieldResolver resolver, Expression partialFieldExpression, Expression fullFieldExpression)
+    public FieldDescriptor ResolveField (ClauseFieldResolver resolver, Expression partialFieldExpression, Expression fullFieldExpression)
     {
       ArgumentUtility.CheckNotNull ("resolver", resolver);
       ArgumentUtility.CheckNotNull ("partialFieldExpression", partialFieldExpression);
       ArgumentUtility.CheckNotNull ("fullFieldExpression", fullFieldExpression);
 
-      return resolver.ResolveField (this, partialFieldExpression, fullFieldExpression);
+      return resolver.ResolveField (GetFromSource(resolver.DatabaseInfo), Identifier, partialFieldExpression, fullFieldExpression);
     }
 
     public abstract void Accept (IQueryVisitor visitor);

@@ -8,11 +8,11 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
 {
   public class FieldSourcePathBuilder
   {
-    public FieldSourcePath BuildFieldSourcePath (IDatabaseInfo databaseInfo, JoinedTableContext context, IFromSource firstSource, IEnumerable<MemberInfo> joinMembers)
+    public FieldSourcePath BuildFieldSourcePath (IDatabaseInfo databaseInfo, JoinedTableContext context, IColumnSource firstSource, IEnumerable<MemberInfo> joinMembers)
     {
       List<SingleJoin> joins = new List<SingleJoin>();
 
-      IFromSource lastSource = firstSource;
+      IColumnSource lastSource = firstSource;
       foreach (MemberInfo member in joinMembers)
       {
         FieldSourcePath pathSoFar = new FieldSourcePath (firstSource, joins);

@@ -11,14 +11,14 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.Parsing.FieldResolving
 {
-  public class FromClauseFieldResolver
+  public class ClauseFieldResolver
   {
     public IDatabaseInfo DatabaseInfo { get; private set; }
     public JoinedTableContext Context { get; private set; }
 
     private readonly IResolveFieldAccessPolicy _policy;
 
-    public FromClauseFieldResolver (IDatabaseInfo databaseInfo, JoinedTableContext context, IResolveFieldAccessPolicy policy)
+    public ClauseFieldResolver (IDatabaseInfo databaseInfo, JoinedTableContext context, IResolveFieldAccessPolicy policy)
     {
       ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
       ArgumentUtility.CheckNotNull ("context", context);
@@ -29,59 +29,57 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
       _policy = policy;
     }
 
-    public FieldDescriptor ResolveField (FromClauseBase fromClause, Expression partialFieldExpression, Expression fullFieldExpression )
+    public FieldDescriptor ResolveField (IColumnSource columnSource, ParameterExpression clauseIdentifier, Expression partialFieldExpression, Expression fullFieldExpression)
     {
-      ArgumentUtility.CheckNotNull ("fromClause", fromClause);
+      ArgumentUtility.CheckNotNull ("fromSource", columnSource);
       ArgumentUtility.CheckNotNull ("partialFieldExpression", partialFieldExpression);
       ArgumentUtility.CheckNotNull ("fullFieldExpression", fullFieldExpression);
       
-      var visitor = new FromClauseFieldResolverVisitor ();
-      FromClauseFieldResolverVisitor.Result result = visitor.ParseFieldAccess (partialFieldExpression, fullFieldExpression);
+      var visitor = new ClauseFieldResolverVisitor ();
+      ClauseFieldResolverVisitor.Result result = visitor.ParseFieldAccess (partialFieldExpression, fullFieldExpression);
 
-      CheckParameterNameAndType (fromClause, result.Parameter);
-      return CreateFieldDescriptor (fromClause, result.AccessedMember, result.JoinMembers);
+      CheckParameterNameAndType (clauseIdentifier, result.Parameter);
+      return CreateFieldDescriptor (columnSource, clauseIdentifier, result.AccessedMember, result.JoinMembers);
     }
 
-    private void CheckParameterNameAndType (FromClauseBase fromClause, ParameterExpression parameter)
+    private void CheckParameterNameAndType (ParameterExpression clauseIdentifier, ParameterExpression parameter)
     {
-      if (parameter.Name != fromClause.Identifier.Name)
+      if (parameter.Name != clauseIdentifier.Name)
       {
-        string message = string.Format ("This from clause can only resolve field accesses for parameters called '{0}', but a parameter "
-            + "called '{1}' was given.", fromClause.Identifier.Name, parameter.Name);
+        string message = string.Format ("This clause can only resolve field accesses for parameters called '{0}', but a parameter "
+            + "called '{1}' was given.", clauseIdentifier.Name, parameter.Name);
         throw new FieldAccessResolveException (message);
       }
 
-      if (parameter.Type != fromClause.Identifier.Type)
+      if (parameter.Type != clauseIdentifier.Type)
       {
-        string message = string.Format ("This from clause can only resolve field accesses for parameters of type '{0}', but a parameter "
-            + "of type '{1}' was given.", fromClause.Identifier.Type, parameter.Type);
+        string message = string.Format ("This clause can only resolve field accesses for parameters of type '{0}', but a parameter "
+            + "of type '{1}' was given.", clauseIdentifier.Type, parameter.Type);
         throw new FieldAccessResolveException (message);
       }
     }
 
-    private FieldDescriptor CreateFieldDescriptor (FromClauseBase fromClause, MemberInfo accessedMember, IEnumerable<MemberInfo> joinMembers)
+    private FieldDescriptor CreateFieldDescriptor (IColumnSource firstSource, ParameterExpression accessedIdentifier, MemberInfo accessedMember, IEnumerable<MemberInfo> joinMembers)
     {
       // Documentation example: sdd.Student_Detail.Student.First
       // joinMembers == "Student_Detail", "Student"
 
-      IFromSource firstSource = fromClause.GetFromSource(DatabaseInfo); // Table for sdd
-
-      var memberInfos = AdjustMemberInfos (fromClause, accessedMember, joinMembers);
+      var memberInfos = AdjustMemberInfos (accessedIdentifier, accessedMember, joinMembers);
       MemberInfo accessedMemberForColumn = memberInfos.A;
       IEnumerable<MemberInfo> joinMembersForCalculation = memberInfos.B;
 
       FieldSourcePathBuilder pathBuilder = new FieldSourcePathBuilder();
       FieldSourcePath fieldData = pathBuilder.BuildFieldSourcePath (DatabaseInfo, Context, firstSource, joinMembersForCalculation);
       Column? column = DatabaseInfoUtility.GetColumn (DatabaseInfo, fieldData.LastSource, accessedMemberForColumn);
-      return new FieldDescriptor (accessedMember, fromClause, fieldData, column);
+      return new FieldDescriptor (accessedMember, fieldData, column);
     }
 
-    private Tuple<MemberInfo, IEnumerable<MemberInfo>> AdjustMemberInfos (FromClauseBase fromClause, MemberInfo accessedMember, IEnumerable<MemberInfo> joinMembers)
+    private Tuple<MemberInfo, IEnumerable<MemberInfo>> AdjustMemberInfos (ParameterExpression accessedIdentifier, MemberInfo accessedMember, IEnumerable<MemberInfo> joinMembers)
     {
       if (accessedMember == null)
       {
         Assertion.IsTrue (joinMembers.Count() == 0);
-        return _policy.AdjustMemberInfosForFromIdentifier (fromClause);
+        return _policy.AdjustMemberInfosForAccessedIdentifier (accessedIdentifier);
       }
       else if (DatabaseInfoUtility.IsRelationMember (DatabaseInfo, accessedMember))
         return _policy.AdjustMemberInfosForRelation (accessedMember, joinMembers);

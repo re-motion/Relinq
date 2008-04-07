@@ -18,8 +18,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPars
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(parameter, ExpressionHelper.CreateQuerySource ());;
       QueryModel queryModel = ExpressionHelper.CreateQueryModel (fromClause);
       JoinedTableContext context = new JoinedTableContext ();
-      FromClauseFieldResolver resolver = 
-        new FromClauseFieldResolver(StubDatabaseInfo.Instance,context,new WhereFieldAccessPolicy(StubDatabaseInfo.Instance));
+      ClauseFieldResolver resolver = 
+        new ClauseFieldResolver(StubDatabaseInfo.Instance,context,new WhereFieldAccessPolicy(StubDatabaseInfo.Instance));
       MemberExpressionParser parser = new MemberExpressionParser (queryModel, resolver);
 
       List<FieldDescriptor> fieldCollection = new List<FieldDescriptor>();
