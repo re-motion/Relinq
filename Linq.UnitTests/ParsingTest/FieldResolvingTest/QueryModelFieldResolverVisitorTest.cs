@@ -26,7 +26,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       Expression sourceExpression = Expression.Parameter (typeof (Student), "s1");
       QueryModelFieldResolverVisitor.Result result = new QueryModelFieldResolverVisitor (queryModel).ParseAndReduce(sourceExpression);
       Assert.AreSame (sourceExpression, result.ReducedExpression);
-      Assert.AreSame (queryModel.MainFromClause, result.FromClause);
+      Assert.AreSame (queryModel.MainFromClause, result.ResolveableClause);
     }
 
     [Test]
@@ -37,7 +37,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       Expression sourceExpression = Expression.Parameter (typeof (Student), "s2");
       QueryModelFieldResolverVisitor.Result result = new QueryModelFieldResolverVisitor (queryModel).ParseAndReduce (sourceExpression);
       Assert.AreSame (sourceExpression, result.ReducedExpression);
-      Assert.AreSame (queryModel.BodyClauses.First(), result.FromClause);
+      Assert.AreSame (queryModel.BodyClauses.First(), result.ResolveableClause);
     }
 
     [Test]
@@ -50,7 +50,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
           typeof (Student).GetProperty ("First"));
       QueryModelFieldResolverVisitor.Result result = new QueryModelFieldResolverVisitor (queryModel).ParseAndReduce (sourceExpression);
       Assert.AreSame (sourceExpression, result.ReducedExpression);
-      Assert.AreSame (queryModel.MainFromClause, result.FromClause);
+      Assert.AreSame (queryModel.MainFromClause, result.ResolveableClause);
     }
 
     [Test]
@@ -65,7 +65,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       QueryModelFieldResolverVisitor.Result result = new QueryModelFieldResolverVisitor (queryModel).ParseAndReduce (sourceExpression);
       ParameterExpression expectedReducedExpression = Expression.Parameter (typeof (Student), "s1");
       ExpressionTreeComparer.CheckAreEqualTrees (expectedReducedExpression, result.ReducedExpression);
-      Assert.AreSame (queryModel.MainFromClause, result.FromClause);
+      Assert.AreSame (queryModel.MainFromClause, result.ResolveableClause);
     }
 
     [Test]
@@ -84,7 +84,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
           Expression.Parameter (typeof (Student), "s1"),
           typeof (Student).GetProperty ("First"));
       ExpressionTreeComparer.CheckAreEqualTrees (expectedReducedExpression, result.ReducedExpression);
-      Assert.AreSame (queryModel.MainFromClause, result.FromClause);
+      Assert.AreSame (queryModel.MainFromClause, result.ResolveableClause);
     }
 
     [Test]
@@ -101,7 +101,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       QueryModelFieldResolverVisitor.Result result = new QueryModelFieldResolverVisitor (queryModel).ParseAndReduce (sourceExpression);
       ParameterExpression expectedReducedExpression = Expression.Parameter (typeof (Student), "s1");
       ExpressionTreeComparer.CheckAreEqualTrees (expectedReducedExpression, result.ReducedExpression);
-      Assert.AreSame (queryModel.MainFromClause, result.FromClause);
+      Assert.AreSame (queryModel.MainFromClause, result.ResolveableClause);
     }
 
     [Test]

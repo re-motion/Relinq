@@ -89,7 +89,7 @@ namespace Rubicon.Data.Linq.UnitTests
     }
 
     [Test]
-    public void GetFromClause ()
+    public void GetResolveableClause_FromClauseBase ()
     {
       LambdaExpression fromExpression = ExpressionHelper.CreateLambdaExpression ();
       LambdaExpression projExpression = ExpressionHelper.CreateLambdaExpression ();
@@ -110,14 +110,14 @@ namespace Rubicon.Data.Linq.UnitTests
       model.AddBodyClause (clause2);
       model.AddBodyClause (clause3);
 
-      Assert.AreSame (mainFromClause, model.GetFromClause ("s0", typeof (Student)));
-      Assert.AreSame (clause1, model.GetFromClause ("s1", typeof (Student)));
-      Assert.AreSame (clause2, model.GetFromClause ("s2", typeof (Student)));
-      Assert.AreSame (clause3, model.GetFromClause ("s3", typeof (Student)));
+      Assert.AreSame (mainFromClause, model.GetResolveableClause ("s0", typeof (Student)));
+      Assert.AreSame (clause1, model.GetResolveableClause ("s1", typeof (Student)));
+      Assert.AreSame (clause2, model.GetResolveableClause ("s2", typeof (Student)));
+      Assert.AreSame (clause3, model.GetResolveableClause ("s3", typeof (Student)));
     }
 
     [Test]
-    public void GetFromClause_InvalidIdentifierName ()
+    public void GetResolveableClause_InvalidIdentifierName ()
     {
       LambdaExpression fromExpression = ExpressionHelper.CreateLambdaExpression ();
       LambdaExpression projExpression = ExpressionHelper.CreateLambdaExpression ();
@@ -131,13 +131,13 @@ namespace Rubicon.Data.Linq.UnitTests
       QueryModel model = ExpressionHelper.CreateQueryModel (mainFromClause);
       model.AddBodyClause (clause1);
 
-      Assert.IsNull (model.GetFromClause ("s273627", typeof (Student)));
+      Assert.IsNull (model.GetResolveableClause ("s273627", typeof (Student)));
     }
-
+   
     [Test]
     [ExpectedException (typeof (ClauseLookupException), ExpectedMessage = "The from clause with identifier 's0' has type "
         + "'Rubicon.Data.Linq.UnitTests.Student', but 'System.String' was requested.")]
-    public void GetFromClause_InvalidIdentifierType_MainFromClause ()
+    public void GetResolveableClause_InvalidIdentifierType_MainFromClause ()
     {
       LambdaExpression fromExpression = ExpressionHelper.CreateLambdaExpression ();
       LambdaExpression projExpression = ExpressionHelper.CreateLambdaExpression ();
@@ -151,14 +151,14 @@ namespace Rubicon.Data.Linq.UnitTests
       QueryModel model = ExpressionHelper.CreateQueryModel (mainFromClause);
       model.AddBodyClause (clause1);
 
-      model.GetFromClause ("s0", typeof (string));
+      model.GetResolveableClause ("s0", typeof (string));
       Assert.Fail ("Expected exception");
     }
 
     [Test]
     [ExpectedException (typeof (ClauseLookupException), ExpectedMessage = "The from clause with identifier 's1' has type "
         + "'Rubicon.Data.Linq.UnitTests.Student', but 'System.String' was requested.")]
-    public void GetFromClause_InvalidIdentifierType_AdditionalFromClause ()
+    public void GetResolveableClause_InvalidIdentifierType_AdditionalFromClause ()
     {
       LambdaExpression fromExpression = ExpressionHelper.CreateLambdaExpression ();
       LambdaExpression projExpression = ExpressionHelper.CreateLambdaExpression ();
@@ -172,10 +172,25 @@ namespace Rubicon.Data.Linq.UnitTests
       QueryModel model = ExpressionHelper.CreateQueryModel (mainFromClause);
       model.AddBodyClause (clause1);
 
-      model.GetFromClause ("s1", typeof (string));
+      model.GetResolveableClause ("s1", typeof (string));
       Assert.Fail ("Expected exception");
     }
 
+    [Test]
+    public void GetResolveableClause_LetClause ()
+    {
+      ParameterExpression identifier = Expression.Parameter (typeof (Student), "s0");
+      
+      MainFromClause mainFromClause = ExpressionHelper.CreateMainFromClause (identifier, ExpressionHelper.CreateQuerySource ());
+
+      LetClause letClause = ExpressionHelper.CreateLetClause ();
+
+      QueryModel model = ExpressionHelper.CreateQueryModel (mainFromClause);
+      model.AddBodyClause (letClause);
+
+      Assert.AreSame (letClause, model.GetResolveableClause ("i", typeof (int)));
+    }
+    
     [Test]
     public void ResolveField ()
     {
@@ -223,6 +238,7 @@ namespace Rubicon.Data.Linq.UnitTests
       queryModel.SetParentQuery (parentQueryModel);
     }
 
+    
     private QueryModel CreateQueryExpressionForResolve ()
     {
       ParameterExpression s1 = Expression.Parameter (typeof (String), "s1");

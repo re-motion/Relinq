@@ -4,17 +4,17 @@ namespace Rubicon.Data.Linq.DataObjectModel
 {
   public struct NamedEvaluation : IColumnSource
   {
-    public NamedEvaluation (string alias, string aliasString) : this()
+    public NamedEvaluation (string alias,IEvaluation evaluation) : this()
     {
       ArgumentUtility.CheckNotNull ("alias", alias);
-      ArgumentUtility.CheckNotNull ("aliasString", aliasString);
-
+      ArgumentUtility.CheckNotNull ("evaluation", evaluation);
       Alias = alias;
-      AliasString = aliasString;
+      Evaluation = evaluation;
     }
+    public IEvaluation Evaluation { get; private set; }
 
     public string Alias {get; private set; }
-
-    public string AliasString { get; private set; }
+    public string AliasString { get { return Alias; }
+    }
   }
 }

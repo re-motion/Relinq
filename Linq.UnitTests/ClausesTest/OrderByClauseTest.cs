@@ -61,5 +61,40 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
 
       repository.VerifyAll();
     }
+
+    [Test]
+    public void QueryModelAtInitialization ()
+    {
+      OrderByClause orderByClause = ExpressionHelper.CreateOrderByClause ();
+      Assert.IsNull (orderByClause.QueryModel);
+    }
+
+    [Test]
+    public void SetQueryModel ()
+    {
+      OrderByClause orderByClause = ExpressionHelper.CreateOrderByClause ();
+      QueryModel model = ExpressionHelper.CreateQueryModel ();
+      orderByClause.SetQueryModel (model);
+      Assert.IsNotNull (orderByClause.QueryModel);
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentNullException))]
+    public void SetQueryModelWithNull_Exception ()
+    {
+      OrderByClause orderByClause = ExpressionHelper.CreateOrderByClause ();
+
+      orderByClause.SetQueryModel (null);
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "QueryModel is already set")]
+    public void SetQueryModelTwice_Exception ()
+    {
+      OrderByClause orderByClause = ExpressionHelper.CreateOrderByClause ();
+      QueryModel model = ExpressionHelper.CreateQueryModel ();
+      orderByClause.SetQueryModel (model);
+      orderByClause.SetQueryModel (model);
+    }
   }
 }

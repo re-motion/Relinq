@@ -62,7 +62,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
     [Test]
     public void FirstBodyClause_TranslatedIntoMainFromClause ()
     {
-      var additionalFromExpression = new FromExpressionData (ExpressionHelper.CreateLambdaExpression(), ExpressionHelper.CreateParameterExpression());
+      var additionalFromExpression = new FromExpressionData (ExpressionHelper.CreateLambdaExpression(), Expression.Parameter(typeof(Student),"p"));
       _result.AddBodyExpression (additionalFromExpression);
       _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression ());
 
@@ -124,7 +124,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
       _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression());
       _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression());
 
-      FromExpressionData fromExpression1 = new FromExpressionData (ExpressionHelper.CreateLambdaExpression (), ExpressionHelper.CreateParameterExpression ());
+      //FromExpressionData fromExpression1 = new FromExpressionData (ExpressionHelper.CreateLambdaExpression (), ExpressionHelper.CreateParameterExpression ());
+      FromExpressionData fromExpression1 = new FromExpressionData (ExpressionHelper.CreateLambdaExpression (), Expression.Parameter (typeof (int), "p"));
       FromExpressionData fromExpression2 = new FromExpressionData (ExpressionHelper.CreateLambdaExpression (), Expression.Parameter (typeof (int), "j"));
 
       _result.AddBodyExpression (fromExpression1);
@@ -153,8 +154,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
       _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression());
 
       IQueryable<Student> subQuery = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource());
-      FromExpressionData fromExpression1 = new FromExpressionData (Expression.Lambda (subQuery.Expression, ExpressionHelper.CreateParameterExpression()),
-          ExpressionHelper.CreateParameterExpression());
+      FromExpressionData fromExpression1 = new FromExpressionData (Expression.Lambda (subQuery.Expression, Expression.Parameter (typeof (int), "p")),
+          Expression.Parameter (typeof (int), "p"));
 
       _result.AddBodyExpression (fromExpression1);
 
@@ -175,8 +176,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
       _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression ());
 
       IQueryable<Student> subQuery = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource ());
-      FromExpressionData fromExpression1 = new FromExpressionData (Expression.Lambda (subQuery.Expression, ExpressionHelper.CreateParameterExpression ()),
-          ExpressionHelper.CreateParameterExpression ());
+      FromExpressionData fromExpression1 = new FromExpressionData (Expression.Lambda (subQuery.Expression, Expression.Parameter (typeof (int), "p")),
+          Expression.Parameter (typeof (int), "p"));
 
       _result.AddBodyExpression (fromExpression1);
 
@@ -192,7 +193,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
       _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression());
       _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression());
 
-      FromExpressionData fromExpressionData = new FromExpressionData (ExpressionHelper.CreateLambdaExpression(), ExpressionHelper.CreateParameterExpression());
+      FromExpressionData fromExpressionData = new FromExpressionData (ExpressionHelper.CreateLambdaExpression (), Expression.Parameter (typeof (int), "p"));
 
       _result.AddBodyExpression (fromExpressionData);
 

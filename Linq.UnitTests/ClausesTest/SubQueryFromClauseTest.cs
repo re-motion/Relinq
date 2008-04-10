@@ -1,3 +1,4 @@
+using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -70,6 +71,40 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       SubQuery subQuery1 = (SubQuery) _subQueryFromClause.GetFromSource (StubDatabaseInfo.Instance);
       SubQuery subQuery2 = (SubQuery) _subQueryFromClause.GetFromSource (StubDatabaseInfo.Instance);
       Assert.AreSame (subQuery1, subQuery2);
+    }
+
+    [Test]
+    public void QueryModelAtInitialization ()
+    {
+      SubQueryFromClause subQueryFromClause = ExpressionHelper.CreateSubQueryFromClause ();
+      Assert.IsNull (subQueryFromClause.QueryModel);
+    }
+
+    [Test]
+    public void SetQueryModel ()
+    {
+      SubQueryFromClause subQueryFromClause = ExpressionHelper.CreateSubQueryFromClause ();
+      QueryModel model = ExpressionHelper.CreateQueryModel ();
+      subQueryFromClause.SetQueryModel (model);
+      Assert.IsNotNull (subQueryFromClause.QueryModel);
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentNullException))]
+    public void SetQueryModelWithNull_Exception ()
+    {
+      SubQueryFromClause subQueryFromClause = ExpressionHelper.CreateSubQueryFromClause ();
+      subQueryFromClause.SetQueryModel (null);
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "QueryModel is already set")]
+    public void SetQueryModelTwice_Exception ()
+    {
+      SubQueryFromClause subQueryFromClause = ExpressionHelper.CreateSubQueryFromClause ();
+      QueryModel model = ExpressionHelper.CreateQueryModel ();
+      subQueryFromClause.SetQueryModel (model);
+      subQueryFromClause.SetQueryModel (model);
     }
   }
 }

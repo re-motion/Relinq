@@ -14,7 +14,8 @@ namespace Rubicon.Data.Linq
   public class QueryModel : IQueryElement
   {
     private readonly List<IBodyClause> _bodyClauses = new List<IBodyClause> ();
-    private readonly Dictionary<string, FromClauseBase> _fromClausesByIdentifier = new Dictionary<string, FromClauseBase> ();
+
+    private readonly Dictionary<string, IResolveableClause> _clausesByIdentifier = new Dictionary<string, IResolveableClause> ();
 
     private Expression _expressionTree;
 
@@ -49,7 +50,7 @@ namespace Rubicon.Data.Linq
 
     public MainFromClause MainFromClause { get; private set; }
     public ISelectGroupClause SelectOrGroupClause { get; private set; }
-    
+
     public ReadOnlyCollection<IBodyClause> BodyClauses
     {
       get { return _bodyClauses.AsReadOnly (); }
@@ -58,45 +59,56 @@ namespace Rubicon.Data.Linq
     public void AddBodyClause (IBodyClause clause)
     {
       ArgumentUtility.CheckNotNull ("clause", clause);
-      _bodyClauses.Add (clause);
 
       var clauseAsFromClause = clause as FromClauseBase;
-      if (clauseAsFromClause == null)
-        return;
+      if (clauseAsFromClause != null)
+        RegisterClause(clauseAsFromClause.Identifier, clauseAsFromClause);
 
-      if (_fromClausesByIdentifier.ContainsKey (clauseAsFromClause.Identifier.Name))
-      {
-        string message = string.Format ("Multiple from clauses with the same name ('{0}') are not supported.",
-            clauseAsFromClause.Identifier.Name);
-        throw new NotSupportedException (message);
-      }
-      _fromClausesByIdentifier.Add (clauseAsFromClause.Identifier.Name, clauseAsFromClause);
+      var clauseAsLetClause = clause as LetClause;
+      if (clauseAsLetClause != null)
+        RegisterClause (clauseAsLetClause.Identifier, clauseAsLetClause);
+
+      clause.SetQueryModel (this);
+      _bodyClauses.Add (clause);
     }
 
-    public FromClauseBase GetFromClause (string identifierName, Type identifierType)
+    private void RegisterClause (ParameterExpression identifier, IResolveableClause clauseToBeRegistered)
+    {
+      if (MainFromClause.Identifier.Name == identifier.Name || _clausesByIdentifier.ContainsKey (identifier.Name))
+      {
+        string message = string.Format ("Multiple clauses with the same identifier name ('{0}') are not supported.",
+            identifier.Name);
+        throw new InvalidOperationException (message);
+      }
+      _clausesByIdentifier.Add (identifier.Name, clauseToBeRegistered);
+    }
+
+    public IResolveableClause GetResolveableClause (string identifierName, Type identifierType)
     {
       ArgumentUtility.CheckNotNull ("identifierName", identifierName);
       ArgumentUtility.CheckNotNull ("identifierType", identifierType);
 
       if (identifierName == MainFromClause.Identifier.Name)
       {
-        MainFromClause.CheckResolvedIdentifierType (identifierType);
+        CheckResolvedIdentifierType (MainFromClause.Identifier, identifierType);
         return MainFromClause;
       }
       else
-        return GetAdditionalFromClause (identifierName, identifierType);
+        return GetBodyClauseByIdentifier (identifierName, identifierType);
     }
 
-    public FromClauseBase GetAdditionalFromClause (string identifierName, Type identifierType)
+    private IResolveableClause GetBodyClauseByIdentifier (string identifierName, Type identifierType)
     {
       ArgumentUtility.CheckNotNull ("identifierName", identifierName);
       ArgumentUtility.CheckNotNull ("identifierType", identifierType);
 
-      FromClauseBase fromClause;
-      if (_fromClausesByIdentifier.TryGetValue (identifierName, out fromClause))
+      //FromClauseBase fromClause;
+      IResolveableClause clause;
+      //if (_clausesByIdentifier.TryGetValue (identifierName, out fromClause))
+      if (_clausesByIdentifier.TryGetValue (identifierName, out clause))
       {
-        fromClause.CheckResolvedIdentifierType (identifierType);
-        return fromClause;
+        CheckResolvedIdentifierType (clause.Identifier,identifierType);
+        return clause;
       }
       return null;
     }
@@ -131,8 +143,18 @@ namespace Rubicon.Data.Linq
     {
       ArgumentUtility.CheckNotNull ("resolver", resolver);
       ArgumentUtility.CheckNotNull ("fieldAccessExpression", fieldAccessExpression);
-
+      
       return new QueryModelFieldResolver (this).ResolveField (resolver, fieldAccessExpression);
+    }
+
+    private void CheckResolvedIdentifierType (ParameterExpression identifier,Type expectedType)
+    {
+      if (identifier.Type != expectedType)
+      {
+        string message = string.Format ("The from clause with identifier '{0}' has type '{1}', but '{2}' was requested.", identifier.Name,
+            identifier.Type, expectedType);
+        throw new ClauseLookupException (message);
+      }
     }
   }
 }

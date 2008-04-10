@@ -36,6 +36,17 @@ namespace Rubicon.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       visitor.VisitOrderingClause (this);
     }
+
+    public QueryModel QueryModel { get; private set; }
+
+    public void SetQueryModel (QueryModel model)
+    {
+      ArgumentUtility.CheckNotNull ("model", model);
+      if (QueryModel != null)
+        throw new InvalidOperationException ("QueryModel is already set");
+      QueryModel = model;
+
+    }
   }
 
   public enum OrderDirection

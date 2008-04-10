@@ -72,5 +72,39 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
 
       repository.VerifyAll();
     }
+
+    [Test]
+    public void QueryModelAtInitialization ()
+    {
+      WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
+      Assert.IsNull (whereClause.QueryModel);
+    }
+
+    [Test]
+    public void SetQueryModel ()
+    {
+      WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
+      QueryModel model = ExpressionHelper.CreateQueryModel ();
+      whereClause.SetQueryModel (model);
+      Assert.IsNotNull (whereClause.QueryModel);
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentNullException))]
+    public void SetQueryModelWithNull_Exception ()
+    {
+      WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
+      whereClause.SetQueryModel (null);
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "QueryModel is already set")]
+    public void SetQueryModelTwice_Exception ()
+    {
+      WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
+      QueryModel model = ExpressionHelper.CreateQueryModel ();
+      whereClause.SetQueryModel (model);
+      whereClause.SetQueryModel (model);
+    }
   }
 }

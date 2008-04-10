@@ -18,6 +18,8 @@ namespace Rubicon.Data.Linq.Clauses
       _orderingList.Add (ordering);
     }
 
+    public QueryModel QueryModel { get; private set; }
+
     public ReadOnlyCollection<OrderingClause> OrderingList
     {
       get { return new ReadOnlyCollection<OrderingClause>(_orderingList); }
@@ -39,5 +41,15 @@ namespace Rubicon.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       visitor.VisitOrderByClause (this);
     }
+    
+    public void SetQueryModel (QueryModel model)
+    {
+      ArgumentUtility.CheckNotNull ("model", model);
+      if (QueryModel != null)
+        throw new InvalidOperationException("QueryModel is already set");
+        QueryModel = model;
+      
+    }
+    
   }
 }

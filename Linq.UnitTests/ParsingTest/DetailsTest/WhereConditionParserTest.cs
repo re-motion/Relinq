@@ -52,6 +52,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       PropertyInfo member = typeof (Student).GetProperty ("IsOld");
       Expression condition = Expression.MakeMemberAccess(_parameter,member);
       Tuple<List<FieldDescriptor>, ICriterion> parseResult = CreateAndParseWhereClause(condition);
+      
       List<FieldDescriptor> fieldDescriptors = parseResult.A;
       ICriterion criterion = parseResult.B;
       

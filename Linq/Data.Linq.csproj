@@ -55,10 +55,14 @@
     <Compile Include="Clauses\SubQueryFromClause.cs" />
     <Compile Include="DataObjectModel\FieldSourcePath.cs" />
     <Compile Include="DataObjectModel\IColumnSource.cs" />
+    <Compile Include="Clauses\IResolveableClause.cs" />
+    <Compile Include="DataObjectModel\IEvaluation.cs" />
     <Compile Include="DataObjectModel\NamedEvaluation.cs" />
     <Compile Include="DataObjectModel\SingleJoin.cs" />
     <Compile Include="DataObjectModel\SubQuery.cs" />
     <Compile Include="DataObjectModel\SubQueryExpression.cs" />
+    <Compile Include="Parsing\Details\SelectEProjectionParsing\MemberExpressionParser.cs" />
+    <Compile Include="Parsing\Details\SelectEProjectionParsing\ParameterExpressionParser.cs" />
     <Compile Include="Parsing\ParseContext.cs" />
     <Compile Include="Parsing\Details\WhereConditionParsing\BinaryExpressionParser.cs" />
     <Compile Include="Parsing\Details\WhereConditionParsing\ConstantExpressionParser.cs" />

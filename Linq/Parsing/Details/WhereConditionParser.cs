@@ -32,7 +32,7 @@ namespace Rubicon.Data.Linq.Parsing.Details
     {
       ArgumentUtility.CheckNotNull ("whereClause", whereClause);
       ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
-      ArgumentUtility.CheckNotNull ("queryExpression", queryModel);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
       ArgumentUtility.CheckNotNull ("context", context);
 
       _simplify = simplify;

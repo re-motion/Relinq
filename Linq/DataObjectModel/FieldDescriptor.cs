@@ -26,6 +26,7 @@ namespace Rubicon.Data.Linq.DataObjectModel
     public Column? Column { get; private set; }
     public FieldSourcePath SourcePath { get; private set; }
 
+
     public Column GetMandatoryColumn ()
     {
       if (Column != null)
@@ -38,7 +39,7 @@ namespace Rubicon.Data.Linq.DataObjectModel
         throw new FieldAccessResolveException (message);
       }
     }
-
+    
     public override string ToString ()
     {
       return string.Format ("{0} => {1}", SourcePath, Column);

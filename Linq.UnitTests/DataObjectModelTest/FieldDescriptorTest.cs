@@ -79,7 +79,6 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
       MemberInfo member = typeof (Student).GetProperty ("First");
       new FieldDescriptor (member, path, null).GetMandatoryColumn ();
     }
-
     
   }
 }

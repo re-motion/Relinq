@@ -41,5 +41,16 @@ namespace Rubicon.Data.Linq.Clauses
     {
       return _fromSource;
     }
+
+    public QueryModel QueryModel { get; private set; }
+
+    public void SetQueryModel (QueryModel model)
+    {
+      ArgumentUtility.CheckNotNull ("model", model);
+      if (QueryModel != null)
+        throw new InvalidOperationException ("QueryModel is already set");
+      QueryModel = model;
+
+    }
   }
 }

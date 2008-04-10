@@ -13,10 +13,11 @@ namespace Rubicon.Data.Linq.Parsing.Details.WhereConditionParsing
 
     public ParameterExpressionParser (QueryModel queryModel, ClauseFieldResolver resolver)
     {
-      _queryModel = queryModel;
-      _resolver = resolver;
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
       ArgumentUtility.CheckNotNull ("resolver", resolver);
+
+      _queryModel = queryModel;
+      _resolver = resolver;
     }
 
     public ICriterion Parse (ParameterExpression expression, List<FieldDescriptor> fieldDescriptorCollection)

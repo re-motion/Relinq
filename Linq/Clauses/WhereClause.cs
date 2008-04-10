@@ -1,3 +1,4 @@
+using System;
 using System.Linq.Expressions;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.DataObjectModel;
@@ -37,6 +38,17 @@ namespace Rubicon.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       visitor.VisitWhereClause (this);
+    }
+
+    public QueryModel QueryModel { get; private set; }
+
+    public void SetQueryModel (QueryModel model)
+    {
+      ArgumentUtility.CheckNotNull ("model", model);
+      if (QueryModel != null)
+        throw new InvalidOperationException ("QueryModel is already set");
+      QueryModel = model;
+
     }
   }
 }

@@ -64,7 +64,13 @@ namespace Rubicon.Data.Linq.UnitTests
 
     public static AdditionalFromClause CreateAdditionalFromClause ()
     {
-      return new AdditionalFromClause (CreateClause (), CreateParameterExpression (), CreateLambdaExpression (), CreateLambdaExpression ());
+      ParameterExpression identifier = CreateParameterExpression ();
+      return CreateAdditionalFromClause(identifier);
+    }
+
+    public static AdditionalFromClause CreateAdditionalFromClause (ParameterExpression identifier)
+    {
+      return new AdditionalFromClause (CreateClause (), identifier, CreateLambdaExpression (), CreateLambdaExpression ());
     }
 
     public static GroupClause CreateGroupClause ()
@@ -74,15 +80,18 @@ namespace Rubicon.Data.Linq.UnitTests
 
       return new GroupClause (CreateClause (), groupExpression, byExpression);
     }
-
-
+    
     public static LetClause CreateLetClause ()
     {
       ParameterExpression identifier = ExpressionHelper.CreateParameterExpression ();
-      Expression expression = ExpressionHelper.CreateExpression ();
-
-      return new LetClause (CreateClause (), identifier, expression,CreateLambdaExpression());
+      return CreateLetClause(identifier);
     }
+
+    public static LetClause CreateLetClause (ParameterExpression identifier)
+    {
+      return new LetClause (CreateClause (), identifier, ExpressionHelper.CreateExpression (), CreateLambdaExpression ());
+    }
+
 
     public static OrderingClause CreateOrderingClause()
     {
@@ -101,8 +110,7 @@ namespace Rubicon.Data.Linq.UnitTests
       LambdaExpression expression = Expression.Lambda (Expression.Constant (0), Expression.Parameter (typeof (Student), "s1"));
       return new SelectClause (CreateClause (), expression,false);
     }
-
-
+    
 
     public static WhereClause CreateWhereClause ()
     {

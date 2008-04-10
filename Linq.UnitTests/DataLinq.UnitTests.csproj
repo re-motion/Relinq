@@ -68,6 +68,8 @@
     <Compile Include="DataObjectModelTest\FieldSourcePathTest.cs" />
     <Compile Include="DataObjectModelTest\SubQueryExpressionTest.cs" />
     <Compile Include="DataObjectModelTest\SubQueryTest.cs" />
+    <Compile Include="ParsingTest\DetailsTest\SelectProjectionParsingTest\MemberExpressionParserTest.cs" />
+    <Compile Include="ParsingTest\DetailsTest\SelectProjectionParsingTest\ParameterExpressionParserTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\WhereConditionParsingTest\BinaryExpressionParserTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\WhereConditionParsingTest\ConstantExpressionParserTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\WhereConditionParsingTest\MemberExpressionParserTest.cs" />
@@ -168,7 +170,7 @@
     <Compile Include="TestQueryGenerators\OrderByTestQueryGenerator.cs" />
     <Compile Include="TestQueryGenerators\SelectTestQueryGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ClausesTest\QueryExpression_BodyTest.cs" />
+    <Compile Include="QueryModel_BodyTest.cs" />
     <Compile Include="QueryModelTest.cs" />
     <Compile Include="ClausesTest\SelectClauseTest.cs" />
     <Compile Include="QueryProviderImplementationTest\QueryableBaseTest.cs" />

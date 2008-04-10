@@ -2,15 +2,14 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using Rhino.Mocks;
 using Rubicon.Data.Linq.Clauses;
 using OrderDirection=Rubicon.Data.Linq.Clauses.OrderDirection;
 using NUnit.Framework.SyntaxHelpers;
 
-namespace Rubicon.Data.Linq.UnitTests.ClausesTest
+namespace Rubicon.Data.Linq.UnitTests
 {
   [TestFixture]
-  public class QueryExpression_BodyTest
+  public class QueryModel_BodyTest
   {
     private ISelectGroupClause _selectOrGroupClause;
     private QueryModel _model;
@@ -62,7 +61,37 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Multiple from clauses with the same name ('s') are not supported.")]
+    public void AddBodyClause_RegistersFromClause ()
+    {
+      ParameterExpression identifier = Expression.Parameter(typeof(int),"j");
+      AdditionalFromClause additionalFromClause = ExpressionHelper.CreateAdditionalFromClause (identifier);
+      _model.AddBodyClause (additionalFromClause);
+      IResolveableClause resolveableClause = _model.GetResolveableClause (identifier.Name, identifier.Type);
+
+      Assert.AreEqual (resolveableClause, additionalFromClause);
+    }
+
+    [Test]
+    public void AddBodyClause_RegistersLetClause ()
+    {
+      ParameterExpression identifier = Expression.Parameter (typeof (int), "j");
+      LetClause letClause = ExpressionHelper.CreateLetClause (identifier);
+      _model.AddBodyClause (letClause);
+      IResolveableClause resolveableClause = _model.GetResolveableClause (identifier.Name, identifier.Type);
+
+      Assert.AreEqual (resolveableClause, letClause);
+    }
+
+    [Test]
+    public void AddBodyClause_SetsQueryModelOfBodyClause ()
+    {
+      IBodyClause clause = ExpressionHelper.CreateWhereClause ();
+      _model.AddBodyClause (clause);
+      Assert.IsNotNull (clause.QueryModel);
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Multiple clauses with the same identifier name ('s') are not supported.")]
     public void AddFromClausesWithSameIdentifiers ()
     {
       IClause previousClause = ExpressionHelper.CreateClause();
@@ -73,9 +102,18 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       _model.AddBodyClause (new AdditionalFromClause (previousClause, identifier, fromExpression, projectionExpression));
       _model.AddBodyClause (new AdditionalFromClause (previousClause, identifier, fromExpression, projectionExpression));
     }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Multiple clauses with the same identifier name ('i') are not supported.")]
+    public void AddBodyClause_WithSameIdentifierAsMainFromClause ()
+    {
+      IBodyClause clause = ExpressionHelper.CreateAdditionalFromClause (_model.MainFromClause.Identifier);
+      _model.AddBodyClause (clause);
+    }
+
     
     [Test]
-    public void GetAdditionalFromClause()
+    public void GetResolveableClause()
     {
       LambdaExpression fromExpression = ExpressionHelper.CreateLambdaExpression ();
       LambdaExpression projExpression = ExpressionHelper.CreateLambdaExpression ();
@@ -92,13 +130,13 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       _model.AddBodyClause (clause2);
       _model.AddBodyClause (clause3);
 
-      Assert.AreSame (clause1, _model.GetAdditionalFromClause ("s1", typeof (Student)));
-      Assert.AreSame (clause2, _model.GetAdditionalFromClause ("s2", typeof (Student)));
-      Assert.AreSame (clause3, _model.GetAdditionalFromClause ("s3", typeof (Student)));
+      Assert.AreSame (clause1, _model.GetResolveableClause ("s1", typeof (Student)));
+      Assert.AreSame (clause2, _model.GetResolveableClause ("s2", typeof (Student)));
+      Assert.AreSame (clause3, _model.GetResolveableClause ("s3", typeof (Student)));
     }
 
     [Test]
-    public void GetAdditionalFromClause_InvalidName ()
+    public void GetResolveableClause_InvalidName ()
     {
       LambdaExpression fromExpression = ExpressionHelper.CreateLambdaExpression ();
       LambdaExpression projExpression = ExpressionHelper.CreateLambdaExpression ();
@@ -107,13 +145,13 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
 
       _model.AddBodyClause (clause1);
 
-      Assert.IsNull (_model.GetAdditionalFromClause ("fzlbf", typeof (Student)));
+      Assert.IsNull (_model.GetResolveableClause ("fzlbf", typeof (Student)));
     }
 
     [Test]
     [ExpectedException (typeof (ClauseLookupException), ExpectedMessage = "The from clause with identifier 's1' has type "
         + "'Rubicon.Data.Linq.UnitTests.Student', but 'System.String' was requested.")]
-    public void GetAdditionalFromClause_InvalidType ()
+    public void GetResolveableClause_InvalidType ()
     {
       LambdaExpression fromExpression = ExpressionHelper.CreateLambdaExpression ();
       LambdaExpression projExpression = ExpressionHelper.CreateLambdaExpression ();
@@ -121,7 +159,7 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       AdditionalFromClause clause1 = new AdditionalFromClause (ExpressionHelper.CreateMainFromClause (), identifier1, fromExpression, projExpression);
 
       _model.AddBodyClause (clause1);
-      _model.GetAdditionalFromClause ("s1", typeof (string));
+      _model.GetResolveableClause ("s1", typeof (string));
     }
   }
 }

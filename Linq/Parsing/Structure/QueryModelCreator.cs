@@ -46,15 +46,15 @@ namespace Rubicon.Data.Linq.Parsing.Structure
       }
 
       var selectClause = CreateSelectClause();
-      var queryExpression = new QueryModel (_expressionTreeRoot.Type, mainFromClause, selectClause, _expressionTreeRoot);
+      var queryModel = new QueryModel (_expressionTreeRoot.Type, mainFromClause, selectClause, _expressionTreeRoot);
 
       foreach (IBodyClause bodyClause in _bodyClauses)
-        queryExpression.AddBodyClause (bodyClause);
+        queryModel.AddBodyClause (bodyClause);
 
       foreach (QueryModel subQuery in _subQueries)
-        subQuery.SetParentQuery (queryExpression);
+        subQuery.SetParentQuery (queryModel);
 
-      return queryExpression;
+      return queryModel;
     }
 
     private MainFromClause CreateMainFromClause (ParseResultCollector resultCollector)

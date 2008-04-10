@@ -24,7 +24,7 @@ namespace Rubicon.Data.Linq.Clauses
 
     public LambdaExpression FromExpression { get; private set; }
     public LambdaExpression ProjectionExpression { get; private set; }
-
+    public QueryModel QueryModel { get; private set; }
 
     public override void Accept (IQueryVisitor visitor)
     {
@@ -35,6 +35,15 @@ namespace Rubicon.Data.Linq.Clauses
     public override Type GetQuerySourceType ()
     {
       return FromExpression.Body.Type;
+    }
+    
+
+    public void SetQueryModel (QueryModel model)
+    {
+      ArgumentUtility.CheckNotNull ("model", model);
+      if (QueryModel != null)
+        throw new InvalidOperationException ("QueryModel is already set");
+      QueryModel = model;
     }
   }
 }

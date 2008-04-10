@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.DataObjectModel;
 using Rubicon.Utilities;
 
@@ -23,7 +24,7 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
       QueryModelFieldResolverVisitor.Result visitorResult = visitor.ParseAndReduce (fieldAccessExpression);
 
       if (visitorResult != null)
-        return visitorResult.FromClause.ResolveField (resolver, visitorResult.ReducedExpression, fieldAccessExpression);
+        return visitorResult.ResolveableClause.ResolveField (resolver, visitorResult.ReducedExpression, fieldAccessExpression);
       else if (_queryModel.ParentQuery != null)
         return _queryModel.ParentQuery.ResolveField (resolver, fieldAccessExpression);
       else

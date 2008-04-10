@@ -278,7 +278,7 @@ namespace Rubicon.Data.Linq.UnitTests.VisitorTest
       OrderByClause orderByClause1 =
           repository.CreateMock<OrderByClause> (ExpressionHelper.CreateOrderingClause ());
       AdditionalFromClause fromClause1 =
-          repository.CreateMock<AdditionalFromClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateParameterExpression (),
+          repository.CreateMock<AdditionalFromClause> (ExpressionHelper.CreateClause (), Expression.Parameter(typeof(Student),"p"),
               ExpressionHelper.CreateLambdaExpression (), ExpressionHelper.CreateLambdaExpression ());
       WhereClause whereClause1 =
           repository.CreateMock<WhereClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateLambdaExpression ());

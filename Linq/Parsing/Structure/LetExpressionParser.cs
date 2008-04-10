@@ -13,7 +13,6 @@ namespace Rubicon.Data.Linq.Parsing.Structure
     {
     }
 
-
     public void Parse (ParseResultCollector resultCollector, MethodCallExpression letExpression)
     {
       ArgumentUtility.CheckNotNull ("resultCollector", resultCollector);

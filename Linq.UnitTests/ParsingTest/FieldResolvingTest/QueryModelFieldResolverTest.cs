@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Rubicon.Data.Linq.Clauses;
@@ -23,7 +24,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     }
 
     [Test]
-    public void ResolveField ()
+    public void ResolveField_MainFromClause ()
     {
       QueryModel queryModel = CreateQueryExpressionForResolve ();
 
@@ -37,6 +38,24 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       Assert.AreEqual (new Column (expectedTable, "*"), descriptor.Column);
       Assert.IsNull (descriptor.Member);
       Assert.AreEqual (expectedPath, descriptor.SourcePath);
+    }
+
+    [Test]
+    [Ignore]
+    public void ResolveField_LetClause ()
+    {
+      //ParameterExpression identifier = Expression.Parameter (typeof (Student), "s");
+      //MainFromClause mainFromClause = ExpressionHelper.CreateMainFromClause (identifier, ExpressionHelper.CreateQuerySource ());
+      //LetClause letClause = ExpressionHelper.CreateLetClause ();
+      //QueryModel queryModel = ExpressionHelper.CreateQueryModel (mainFromClause);
+      //queryModel.AddBodyClause (letClause);
+      
+      //Expression fieldAccessExpression = Expression.Parameter (typeof (int), "i");
+      //FieldDescriptor descriptor = new QueryModelFieldResolver (queryModel).ResolveField (_resolver, fieldAccessExpression);
+      //NamedEvaluation expectedEvaluation = new NamedEvaluation("i");
+
+      //Assert.AreEqual (new Column(expectedEvaluation,"*"),descriptor.Column);
+
     }
 
     [Test]

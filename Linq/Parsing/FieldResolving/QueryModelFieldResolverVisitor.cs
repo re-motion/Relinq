@@ -13,21 +13,21 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
   {
     public class Result
     {
-      public Result (Expression reducedExpression, FromClauseBase fromClause)
+      public Result (Expression reducedExpression, IResolveableClause fromClause)
       {
         ArgumentUtility.CheckNotNull ("fromClause", fromClause);
 
         ReducedExpression = reducedExpression;
-        FromClause = fromClause;
+        ResolveableClause = fromClause;
       }
 
       public Expression ReducedExpression { get; private set; }
-      public FromClauseBase FromClause { get; private set; }
+      public IResolveableClause ResolveableClause { get; private set; }
     }
 
     private readonly QueryModel _queryModel;
 
-    private FromClauseBase _fromClause;
+    private IResolveableClause _clause;
 
     public QueryModelFieldResolverVisitor (QueryModel queryModel)
     {
@@ -37,11 +37,13 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
 
     public Result ParseAndReduce (Expression expression)
     {
-      _fromClause = null;
+      //_fromClause = null;
+      _clause = null;
       
       Expression reducedExpression = VisitExpression (expression);
-      if (_fromClause != null)
-        return new Result (reducedExpression, _fromClause);
+      //if (_fromClause != null)
+      if (_clause != null)
+        return new Result (reducedExpression, _clause);
       else
         return null;
     }
@@ -49,8 +51,8 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
     protected override Expression VisitParameterExpression (ParameterExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      _fromClause = _queryModel.GetFromClause (expression.Name, expression.Type);
-      if (_fromClause != null)
+      _clause = _queryModel.GetResolveableClause (expression.Name, expression.Type);
+      if (_clause != null)
         return base.VisitParameterExpression (expression);
       else
         return null;

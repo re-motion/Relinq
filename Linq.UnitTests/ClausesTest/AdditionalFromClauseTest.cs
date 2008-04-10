@@ -49,7 +49,6 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       Assert.AreSame (typeof (TestQueryable<Student>), fromClause.GetQuerySourceType());
     }
 
-    
     [Test]
     public void Accept ()
     {
@@ -66,6 +65,40 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
 
       repository.VerifyAll ();
 
+    }
+
+    [Test]
+    public void QueryModelAtInitialization ()
+    {
+      AdditionalFromClause additionalFromClause = ExpressionHelper.CreateAdditionalFromClause ();
+      Assert.IsNull (additionalFromClause.QueryModel);
+    }
+
+    [Test]
+    public void SetQueryModel ()
+    {
+      AdditionalFromClause additionalFromClause = ExpressionHelper.CreateAdditionalFromClause ();
+      QueryModel model = ExpressionHelper.CreateQueryModel ();
+      additionalFromClause.SetQueryModel (model);
+      Assert.IsNotNull (additionalFromClause.QueryModel);
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentNullException))]
+    public void SetQueryModelWithNull_Exception ()
+    {
+      AdditionalFromClause additionalFromClause = ExpressionHelper.CreateAdditionalFromClause ();
+      additionalFromClause.SetQueryModel (null);
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "QueryModel is already set")]
+    public void SetQueryModelTwice_Exception ()
+    {
+      AdditionalFromClause additionalFromClause = ExpressionHelper.CreateAdditionalFromClause ();     
+      QueryModel model = ExpressionHelper.CreateQueryModel ();
+      additionalFromClause.SetQueryModel (model);
+      additionalFromClause.SetQueryModel (model);
     }
   }
 }
