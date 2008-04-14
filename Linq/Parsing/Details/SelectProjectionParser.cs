@@ -19,6 +19,8 @@ namespace Rubicon.Data.Linq.Parsing.Details
 
     private readonly MemberExpressionParser _memberExpressionParser;
     private readonly ParameterExpressionParser _parameterExpressionParser;
+    private readonly NewExpressionParser _newExpressionParser;
+    
 
     private List<FieldDescriptor> _fieldDescriptors;
 
@@ -45,25 +47,36 @@ namespace Rubicon.Data.Linq.Parsing.Details
 
       _memberExpressionParser = new MemberExpressionParser (_queryModel, _resolver);
       _parameterExpressionParser = new ParameterExpressionParser (_queryModel, _resolver);
+      _newExpressionParser = new NewExpressionParser (_queryModel, _resolver,ParseExpression);
       
     }
 
-   public Tuple<List<FieldDescriptor>, IEvaluation> GetParseResult ()
+    public Tuple<List<FieldDescriptor>, List<IEvaluation>> GetParseResult ()
     {
       _fieldDescriptors = new List<FieldDescriptor> ();
       return Tuple.NewTuple (_fieldDescriptors, ParseExpression (_projectionBody));
     }
 
-    private IEvaluation ParseExpression (Expression expression)
+    private List<IEvaluation> ParseExpression (Expression expression)
     {
+      List<IEvaluation> evaluations = new List<IEvaluation> ();
       if (expression is ParameterExpression)
-        return _parameterExpressionParser.Parse ((ParameterExpression) expression, _fieldDescriptors);
+      {
+        IEvaluation evaluation = _parameterExpressionParser.Parse ((ParameterExpression) expression, _fieldDescriptors);
+        evaluations.Add (evaluation);
+        return evaluations;
+      }
       else if (expression is MemberExpression)
-        return _memberExpressionParser.Parse ((MemberExpression) expression, _fieldDescriptors);
-      throw ParserUtility.CreateParserException ("member expression", expression, "select projection",
+      {
+        IEvaluation evaluation = _memberExpressionParser.Parse ((MemberExpression) expression, _fieldDescriptors);
+        evaluations.Add (evaluation);
+        return evaluations;
+      }
+      else if (expression is NewExpression)
+        return _newExpressionParser.Parse ((NewExpression) expression, _fieldDescriptors);
+      throw ParserUtility.CreateParserException ("member expression, parameter expression or new expression", expression, "select projection",
           _projectionBody);
     }
-
 
     //private void FindSelectedFields (List<FieldDescriptor> fields, Expression expression)
     //{

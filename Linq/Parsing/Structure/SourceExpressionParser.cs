@@ -53,6 +53,7 @@ namespace Rubicon.Data.Linq.Parsing.Structure
           else
             EvaluateExpressionAsSimpleSource (resultCollector, methodCallExpression, potentialFromIdentifier);
           break;
+
         default:
           throw ParserUtility.CreateParserException ("Constant or Call expression", sourceExpression, context,
               resultCollector.ExpressionTreeRoot);

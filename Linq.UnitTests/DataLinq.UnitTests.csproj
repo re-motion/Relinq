@@ -69,6 +69,7 @@
     <Compile Include="DataObjectModelTest\SubQueryExpressionTest.cs" />
     <Compile Include="DataObjectModelTest\SubQueryTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\SelectProjectionParsingTest\MemberExpressionParserTest.cs" />
+    <Compile Include="ParsingTest\DetailsTest\SelectProjectionParsingTest\NewExpressionParserTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\SelectProjectionParsingTest\ParameterExpressionParserTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\WhereConditionParsingTest\BinaryExpressionParserTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\WhereConditionParsingTest\ConstantExpressionParserTest.cs" />

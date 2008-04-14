@@ -62,6 +62,7 @@
     <Compile Include="DataObjectModel\SubQuery.cs" />
     <Compile Include="DataObjectModel\SubQueryExpression.cs" />
     <Compile Include="Parsing\Details\SelectEProjectionParsing\MemberExpressionParser.cs" />
+    <Compile Include="Parsing\Details\SelectEProjectionParsing\NewExpressionParser.cs" />
     <Compile Include="Parsing\Details\SelectEProjectionParsing\ParameterExpressionParser.cs" />
     <Compile Include="Parsing\ParseContext.cs" />
     <Compile Include="Parsing\Details\WhereConditionParsing\BinaryExpressionParser.cs" />
