@@ -149,6 +149,7 @@
     <Compile Include="SqlGenerationTest\SqlGeneratorMock.cs" />
     <Compile Include="SqlGenerationTest\SqlServer\BinaryConditionBuilderTest.cs" />
     <Compile Include="SqlGenerationTest\SqlServer\CommandBuilderTest.cs" />
+    <Compile Include="SqlGenerationTest\SqlServer\DummyEvaluation.cs" />
     <Compile Include="SqlGenerationTest\SqlServer\FromBuilderTest.cs" />
     <Compile Include="SqlGenerationTest\SqlServer\OrderByBuilderTest.cs" />
     <Compile Include="SqlGenerationTest\SqlServer\SelectBuilderTest.cs" />
