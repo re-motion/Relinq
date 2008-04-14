@@ -188,7 +188,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       QueryModel model = parser.GetParsedQuery();
       SelectClause selectClause = (SelectClause) model.SelectOrGroupClause;
 
-      new SelectProjectionParser (model, selectClause.ProjectionExpression.Body, StubDatabaseInfo.Instance, _context, ParseContext.TopLevelQuery).GetSelectedFields ();
+      new SelectProjectionParser (model, selectClause.ProjectionExpression.Body, StubDatabaseInfo.Instance, _context, ParseContext.TopLevelQuery).GetParseResult ();
     }
 
     [Test]
@@ -228,9 +228,9 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
 
       SelectProjectionParser selectParser = new SelectProjectionParser (model, selectClause.ProjectionExpression.Body, StubDatabaseInfo.Instance, _context, ParseContext.TopLevelQuery);
 
-      IEnumerable<FieldDescriptor> selectedFields = selectParser.GetSelectedFields();
+      Tuple<List<FieldDescriptor>,IEvaluation> selectedFields = selectParser.GetParseResult ();
 
-      Assert.That (selectedFields.ToArray(), Is.EqualTo (
+      Assert.That (selectedFields.A.ToArray(), Is.EqualTo (
           new object[]
             {
                 ExpressionHelper.CreateFieldDescriptor (model.MainFromClause, null),
@@ -249,9 +249,9 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
 
       SelectProjectionParser selectParser = new SelectProjectionParser (model, selectClause.ProjectionExpression.Body, StubDatabaseInfo.Instance, _context, ParseContext.TopLevelQuery);
 
-      IEnumerable<FieldDescriptor> selectedFields = selectParser.GetSelectedFields();
+      Tuple<List<FieldDescriptor>, IEvaluation> selectedFields = selectParser.GetParseResult ();
 
-      Assert.That (selectedFields.ToArray(), Is.EquivalentTo (
+      Assert.That (selectedFields.A.ToArray(), Is.EquivalentTo (
           new object[]
             {
                 ExpressionHelper.CreateFieldDescriptor (model.MainFromClause, typeof (Student).GetProperty ("First")),

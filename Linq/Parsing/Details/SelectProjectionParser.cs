@@ -48,19 +48,7 @@ namespace Rubicon.Data.Linq.Parsing.Details
       
     }
 
-    //old
-    public IEnumerable<FieldDescriptor> GetSelectedFields ()
-    {
-      _fieldDescriptors = new List<FieldDescriptor> ();
-      //List<FieldDescriptor> fields = new List<FieldDescriptor> ();
-      
-      //Expression expression = _projectionBody;    
-      //FindSelectedFields (_fieldDescriptors, expression);
-      ParseExpression (_projectionBody);
-      return _fieldDescriptors;
-    }
-
-    public Tuple<List<FieldDescriptor>, IEvaluation> GetParseResult ()
+   public Tuple<List<FieldDescriptor>, IEvaluation> GetParseResult ()
     {
       _fieldDescriptors = new List<FieldDescriptor> ();
       return Tuple.NewTuple (_fieldDescriptors, ParseExpression (_projectionBody));
