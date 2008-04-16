@@ -20,6 +20,7 @@ namespace Rubicon.Data.Linq.Parsing.Details
     private readonly MemberExpressionParser _memberExpressionParser;
     private readonly ParameterExpressionParser _parameterExpressionParser;
     private readonly NewExpressionParser _newExpressionParser;
+    private readonly BinaryExpressionParser _binaryExpressionParser;
     
 
     private List<FieldDescriptor> _fieldDescriptors;
@@ -48,6 +49,7 @@ namespace Rubicon.Data.Linq.Parsing.Details
       _memberExpressionParser = new MemberExpressionParser (_queryModel, _resolver);
       _parameterExpressionParser = new ParameterExpressionParser (_queryModel, _resolver);
       _newExpressionParser = new NewExpressionParser (_queryModel, _resolver,ParseExpression);
+      _binaryExpressionParser = new BinaryExpressionParser (_queryModel, ParseSingleEvaluationExpression);
       
     }
 
@@ -57,25 +59,26 @@ namespace Rubicon.Data.Linq.Parsing.Details
       return Tuple.NewTuple (_fieldDescriptors, ParseExpression (_projectionBody));
     }
 
+    private IEvaluation ParseSingleEvaluationExpression (Expression expression)
+    {
+      if (expression is ParameterExpression)
+        return _parameterExpressionParser.Parse ((ParameterExpression) expression, _fieldDescriptors);
+      else if (expression is MemberExpression)
+        return _memberExpressionParser.Parse ((MemberExpression) expression, _fieldDescriptors);
+      else if (expression is BinaryExpression)
+        return _binaryExpressionParser.Parse ((BinaryExpression) expression, _fieldDescriptors);
+      throw ParserUtility.CreateParserException ("member expression or parameter expression", expression, "single evaluation in projection expression",
+          _projectionBody);
+    }
+
     private List<IEvaluation> ParseExpression (Expression expression)
     {
-      List<IEvaluation> evaluations = new List<IEvaluation> ();
-      if (expression is ParameterExpression)
-      {
-        IEvaluation evaluation = _parameterExpressionParser.Parse ((ParameterExpression) expression, _fieldDescriptors);
-        evaluations.Add (evaluation);
-        return evaluations;
-      }
-      else if (expression is MemberExpression)
-      {
-        IEvaluation evaluation = _memberExpressionParser.Parse ((MemberExpression) expression, _fieldDescriptors);
-        evaluations.Add (evaluation);
-        return evaluations;
-      }
-      else if (expression is NewExpression)
+      if (expression is NewExpression)
         return _newExpressionParser.Parse ((NewExpression) expression, _fieldDescriptors);
-      throw ParserUtility.CreateParserException ("member expression, parameter expression or new expression", expression, "select projection",
-          _projectionBody);
+      else
+      {
+        return new List<IEvaluation> { ParseSingleEvaluationExpression (expression) };
+      }
     }
 
     //private void FindSelectedFields (List<FieldDescriptor> fields, Expression expression)

@@ -10,6 +10,7 @@ using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.DataObjectModel;
 using Rubicon.Data.Linq.Parsing;
 using Rubicon.Data.Linq.Parsing.Details;
+using Rubicon.Data.Linq.Parsing.Details.SelectEProjectionParsing;
 using Rubicon.Data.Linq.Parsing.FieldResolving;
 using Rubicon.Data.Linq.Parsing.Structure;
 using Rubicon.Data.Linq.UnitTests.TestQueryGenerators;
@@ -25,10 +26,10 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     [SetUp]
     public void SetUp ()
     {
-      _source = ExpressionHelper.CreateQuerySource();
-      _context = new JoinedTableContext();
+      _source = ExpressionHelper.CreateQuerySource ();
+      _context = new JoinedTableContext ();
     }
-  
+
     [Test]
     public void Column_SelectClause ()
     {
@@ -41,11 +42,11 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       SelectClause selectClause = (SelectClause) model.SelectOrGroupClause;
 
       SelectProjectionParser selectParser = new SelectProjectionParser (model, selectClause.ProjectionExpression.Body, StubDatabaseInfo.Instance, _context, ParseContext.TopLevelQuery);
-      
-      Tuple<List<FieldDescriptor>,List<IEvaluation>> parseResult = selectParser.GetParseResult();
+
+      Tuple<List<FieldDescriptor>, List<IEvaluation>> parseResult = selectParser.GetParseResult ();
 
       FieldDescriptor expectedField = ExpressionHelper.CreateFieldDescriptor (fromClause, member);
-      
+
       //Assert.AreEqual (expectedField.Column, parseResult.B);
       Assert.That (parseResult.B, Is.EqualTo (new object[] { expectedField.Column }));
     }
@@ -65,7 +66,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       SelectProjectionParser selectParser = new SelectProjectionParser (model, model.MainFromClause.Identifier, StubDatabaseInfo.Instance, _context, ParseContext.TopLevelQuery);
 
       Tuple<List<FieldDescriptor>, List<IEvaluation>> parseResult = selectParser.GetParseResult ();
-      
+
       FieldDescriptor expectedField = ExpressionHelper.CreateFieldDescriptor (fromClause, member);
 
       Assert.That (parseResult.B, Is.EqualTo (new object[] { expectedField.Column }));
@@ -77,26 +78,26 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     {
       IQueryable<string> query = SelectTestQueryGenerator.CreateSimpleQueryWithProjection (_source);
       QueryParser parser = new QueryParser (query.Expression);
-      QueryModel model = parser.GetParsedQuery();
+      QueryModel model = parser.GetParsedQuery ();
       SelectClause selectClause = (SelectClause) model.SelectOrGroupClause;
 
       SelectProjectionParser selectParser = new SelectProjectionParser (model, selectClause.ProjectionExpression.Body, StubDatabaseInfo.Instance, _context, ParseContext.TopLevelQuery);
 
       Tuple<List<FieldDescriptor>, List<IEvaluation>> parseResult = selectParser.GetParseResult ();
       IEnumerable<FieldDescriptor> selectedFields = parseResult.A;
-      
-      Assert.That (selectedFields.ToArray(),
-          Is.EqualTo (new object[] {ExpressionHelper.CreateFieldDescriptor (model.MainFromClause, typeof (Student).GetProperty ("First"))}));
+
+      Assert.That (selectedFields.ToArray (),
+          Is.EqualTo (new object[] { ExpressionHelper.CreateFieldDescriptor (model.MainFromClause, typeof (Student).GetProperty ("First")) }));
     }
 
     [Test]
     [ExpectedException (typeof (FieldAccessResolveException), ExpectedMessage = "The member 'Rubicon.Data.Linq.UnitTests.Student.NonDBProperty' does"
-      +" not identify a queryable column.")]
+      + " not identify a queryable column.")]
     public void NonDbMemberAccessProjection ()
     {
       IQueryable<string> query = SelectTestQueryGenerator.CreateSimpleSelectWithNonDbProjection (_source);
       QueryParser parser = new QueryParser (query.Expression);
-      QueryModel model = parser.GetParsedQuery();
+      QueryModel model = parser.GetParsedQuery ();
       SelectClause selectClause = (SelectClause) model.SelectOrGroupClause;
 
       SelectProjectionParser selectParser = new SelectProjectionParser (model, selectClause.ProjectionExpression.Body, StubDatabaseInfo.Instance, _context, ParseContext.TopLevelQuery);
@@ -145,7 +146,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       QueryModel model = parser.GetParsedQuery ();
       SelectClause selectClause = (SelectClause) model.SelectOrGroupClause;
 
-      SelectProjectionParser selectParser = 
+      SelectProjectionParser selectParser =
         new SelectProjectionParser (model, selectClause.ProjectionExpression.Body, StubDatabaseInfo.Instance, _context, ParseContext.TopLevelQuery);
 
       IEnumerable<FieldDescriptor> selectedFields = selectParser.GetParseResult ().A;
@@ -169,8 +170,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (parameter, ExpressionHelper.CreateQuerySource ());
       var fromSource = fromClause.GetFromSource (StubDatabaseInfo.Instance);
-   
-      SelectProjectionParser selectParser = 
+
+      SelectProjectionParser selectParser =
         new SelectProjectionParser (model, selectClause.ProjectionExpression.Body, StubDatabaseInfo.Instance, _context, ParseContext.TopLevelQuery);
 
       //expectedResult
@@ -178,9 +179,92 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       Column column2 = new Column (fromSource, "LastColumn");
       List<IEvaluation> expectedResult = new List<IEvaluation> { column1, column2 };
 
-      List<IEvaluation> result = selectParser.GetParseResult().B;
+      List<IEvaluation> result = selectParser.GetParseResult ().B;
 
-      Assert.That (result,Is.EqualTo(expectedResult));
+      Assert.That (result, Is.EqualTo (expectedResult));
+    }
+
+    [Test]
+    public void NewExpressionInNewExpression_IntegrationTest ()
+    {
+      var query = from s in ExpressionHelper.CreateQuerySource () select new { s.First, pair = new { s.First, s.Last } };
+
+      QueryParser parser = new QueryParser (query.Expression);
+      QueryModel model = parser.GetParsedQuery ();
+      SelectClause selectClause = (SelectClause) model.SelectOrGroupClause;
+
+      ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (parameter, ExpressionHelper.CreateQuerySource ());
+      var fromSource = fromClause.GetFromSource (StubDatabaseInfo.Instance);
+
+      SelectProjectionParser selectParser =
+        new SelectProjectionParser (model, selectClause.ProjectionExpression.Body, StubDatabaseInfo.Instance, _context, ParseContext.TopLevelQuery);
+
+      //expectedResult
+      Column column1 = new Column (fromSource, "FirstColumn");
+      Column column2 = new Column (fromSource, "LastColumn");
+      List<IEvaluation> expectedResult = new List<IEvaluation> { column1, column1, column2 };
+
+      List<IEvaluation> result = selectParser.GetParseResult ().B;
+
+      Assert.That (result, Is.EqualTo (expectedResult));
+    }
+
+    [Test]
+    public void ParseWithEncapsulatedBinaryExpressions ()
+    {
+      ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (parameter, ExpressionHelper.CreateQuerySource ());
+      IColumnSource fromSource = fromClause.GetFromSource (StubDatabaseInfo.Instance);
+      QueryModel queryModel = ExpressionHelper.CreateQueryModel (fromClause);
+      MemberExpression memberExpression1 = Expression.MakeMemberAccess (parameter, typeof (Student).GetProperty ("First"));
+      MemberExpression memberExpression2 = Expression.MakeMemberAccess (parameter, typeof (Student).GetProperty ("Last"));
+      MemberExpression memberExpression3 = Expression.MakeMemberAccess (parameter, typeof (Student).GetProperty ("Last"));
+      List<FieldDescriptor> fieldDescriptors = new List<FieldDescriptor> ();
+
+
+      MethodInfo methodInfo = typeof (string).GetMethod ("Concat", new Type[] { typeof (string), typeof (string) });
+      BinaryExpression binaryExpression1 = Expression.Add (memberExpression1, memberExpression2, methodInfo);
+      BinaryExpression binaryExpression2 = Expression.Add (binaryExpression1, memberExpression3, methodInfo);
+
+      ////expectedResult
+      Column column1 = new Column (fromSource, "FirstColumn");
+      Column column2 = new Column (fromSource, "LastColumn");
+      BinaryEvaluation expectedResult1 = new BinaryEvaluation (column1, column2, BinaryEvaluation.EvaluationKind.Add);
+      BinaryEvaluation expectedResult2 = new BinaryEvaluation (expectedResult1, column2, BinaryEvaluation.EvaluationKind.Add);
+
+      BinaryExpressionParser binaryExpressionParser = new BinaryExpressionParser (queryModel, e => e == memberExpression3 ? column2 : (IEvaluation) expectedResult1);
+      IEvaluation result = binaryExpressionParser.Parse (binaryExpression2, fieldDescriptors);
+
+      Assert.AreEqual (expectedResult2, result);
+    }
+
+    [Test]
+    public void ParseWithAddAndDivide ()
+    {
+      var query = from s in ExpressionHelper.CreateQuerySource () select ((s.ID + s.ID) / s.ID);
+
+      QueryParser parser = new QueryParser (query.Expression);
+      QueryModel model = parser.GetParsedQuery ();
+      SelectClause selectClause = (SelectClause) model.SelectOrGroupClause;
+
+      ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (parameter, ExpressionHelper.CreateQuerySource ());
+      var fromSource = fromClause.GetFromSource (StubDatabaseInfo.Instance);
+
+      SelectProjectionParser selectParser =
+       new SelectProjectionParser (model, selectClause.ProjectionExpression.Body, StubDatabaseInfo.Instance, _context, ParseContext.TopLevelQuery);
+
+
+      //expectedResult
+      Column column = new Column (fromSource, "IDColumn");
+      BinaryEvaluation expectedResult1 = new BinaryEvaluation (column, column, BinaryEvaluation.EvaluationKind.Add);
+      BinaryEvaluation expectedResult2 = new BinaryEvaluation (expectedResult1, column, BinaryEvaluation.EvaluationKind.Divide);
+      List<IEvaluation> expectedResult = new List<IEvaluation> { expectedResult2 };
+
+      List<IEvaluation> result = selectParser.GetParseResult ().B;
+
+      Assert.AreEqual (expectedResult, result);
     }
 
     [Test]
@@ -211,7 +295,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     {
       IQueryable<int> query = SelectTestQueryGenerator.CreateSimpleSelectWithNonEntityMemberAccess (_source);
       QueryParser parser = new QueryParser (query.Expression);
-      QueryModel model = parser.GetParsedQuery();
+      QueryModel model = parser.GetParsedQuery ();
       SelectClause selectClause = (SelectClause) model.SelectOrGroupClause;
 
       new SelectProjectionParser (model, selectClause.ProjectionExpression.Body, StubDatabaseInfo.Instance, _context, ParseContext.TopLevelQuery).GetParseResult ();
@@ -223,7 +307,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     {
       IQueryable<Tuple<string, string, int>> query = MixedTestQueryGenerator.CreateMultiFromQueryWithProjection (_source, _source, _source);
       QueryParser parser = new QueryParser (query.Expression);
-      QueryModel model = parser.GetParsedQuery();
+      QueryModel model = parser.GetParsedQuery ();
       SelectClause selectClause = (SelectClause) model.SelectOrGroupClause;
 
       SelectProjectionParser selectParser = new SelectProjectionParser (model, selectClause.ProjectionExpression.Body, StubDatabaseInfo.Instance, _context, ParseContext.TopLevelQuery);
@@ -231,7 +315,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       Tuple<List<FieldDescriptor>, List<IEvaluation>> parseResult = selectParser.GetParseResult ();
       IEnumerable<FieldDescriptor> selectedFields = parseResult.A;
 
-      Assert.That (selectedFields.ToArray(), Is.EqualTo (
+      Assert.That (selectedFields.ToArray (), Is.EqualTo (
           new object[]
             {
                 ExpressionHelper.CreateFieldDescriptor (model.MainFromClause, typeof (Student).GetProperty ("First")),
@@ -249,14 +333,14 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     {
       IQueryable<Tuple<Student, string, string, string>> query = SelectTestQueryGenerator.CreateSimpleQueryWithSpecialProjection (_source);
       QueryParser parser = new QueryParser (query.Expression);
-      QueryModel model = parser.GetParsedQuery();
+      QueryModel model = parser.GetParsedQuery ();
       SelectClause selectClause = (SelectClause) model.SelectOrGroupClause;
 
       SelectProjectionParser selectParser = new SelectProjectionParser (model, selectClause.ProjectionExpression.Body, StubDatabaseInfo.Instance, _context, ParseContext.TopLevelQuery);
 
       Tuple<List<FieldDescriptor>, List<IEvaluation>> selectedFields = selectParser.GetParseResult ();
 
-      Assert.That (selectedFields.A.ToArray(), Is.EqualTo (
+      Assert.That (selectedFields.A.ToArray (), Is.EqualTo (
           new object[]
             {
                 ExpressionHelper.CreateFieldDescriptor (model.MainFromClause, null),
@@ -270,14 +354,14 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     {
       IQueryable<string> query = SelectTestQueryGenerator.CreateUnaryBinaryLambdaInvocationConvertNewArrayExpressionQuery (_source);
       QueryParser parser = new QueryParser (query.Expression);
-      QueryModel model = parser.GetParsedQuery();
+      QueryModel model = parser.GetParsedQuery ();
       SelectClause selectClause = (SelectClause) model.SelectOrGroupClause;
 
       SelectProjectionParser selectParser = new SelectProjectionParser (model, selectClause.ProjectionExpression.Body, StubDatabaseInfo.Instance, _context, ParseContext.TopLevelQuery);
 
       Tuple<List<FieldDescriptor>, List<IEvaluation>> selectedFields = selectParser.GetParseResult ();
 
-      Assert.That (selectedFields.A.ToArray(), Is.EquivalentTo (
+      Assert.That (selectedFields.A.ToArray (), Is.EquivalentTo (
           new object[]
             {
                 ExpressionHelper.CreateFieldDescriptor (model.MainFromClause, typeof (Student).GetProperty ("First")),
@@ -292,6 +376,6 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
 
   public class DummyClass2
   {
-    public DummyClass2 (string arg1,string arg2) { }
+    public DummyClass2 (string arg1, string arg2) { }
   }
 }

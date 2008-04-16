@@ -68,6 +68,7 @@
     <Compile Include="DataObjectModelTest\FieldSourcePathTest.cs" />
     <Compile Include="DataObjectModelTest\SubQueryExpressionTest.cs" />
     <Compile Include="DataObjectModelTest\SubQueryTest.cs" />
+    <Compile Include="ParsingTest\DetailsTest\SelectProjectionParsingTest\BinaryExpressionParserTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\SelectProjectionParsingTest\MemberExpressionParserTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\SelectProjectionParsingTest\NewExpressionParserTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\SelectProjectionParsingTest\ParameterExpressionParserTest.cs" />

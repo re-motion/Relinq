@@ -53,6 +53,7 @@
     <Compile Include="Clauses\ClauseFinder.cs" />
     <Compile Include="Clauses\ClauseLookupException.cs" />
     <Compile Include="Clauses\SubQueryFromClause.cs" />
+    <Compile Include="DataObjectModel\BinaryEvaluation.cs" />
     <Compile Include="DataObjectModel\FieldSourcePath.cs" />
     <Compile Include="DataObjectModel\IColumnSource.cs" />
     <Compile Include="Clauses\IResolveableClause.cs" />
@@ -61,6 +62,7 @@
     <Compile Include="DataObjectModel\SingleJoin.cs" />
     <Compile Include="DataObjectModel\SubQuery.cs" />
     <Compile Include="DataObjectModel\SubQueryExpression.cs" />
+    <Compile Include="Parsing\Details\SelectEProjectionParsing\BinaryExpressionParser.cs" />
     <Compile Include="Parsing\Details\SelectEProjectionParsing\MemberExpressionParser.cs" />
     <Compile Include="Parsing\Details\SelectEProjectionParsing\NewExpressionParser.cs" />
     <Compile Include="Parsing\Details\SelectEProjectionParsing\ParameterExpressionParser.cs" />

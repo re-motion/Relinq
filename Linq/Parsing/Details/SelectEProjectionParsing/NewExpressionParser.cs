@@ -26,6 +26,9 @@ namespace Rubicon.Data.Linq.Parsing.Details.SelectEProjectionParsing
 
     public virtual List<IEvaluation> Parse(NewExpression newExpression, List<FieldDescriptor> fieldDescriptorCollection)
     {
+      ArgumentUtility.CheckNotNull ("newExpression", newExpression);
+      ArgumentUtility.CheckNotNull ("fieldDescriptorCollection", fieldDescriptorCollection);
+
       List<IEvaluation> evaluations = new List<IEvaluation> ();
       foreach (Expression expression in newExpression.Arguments)
       {
