@@ -157,6 +157,7 @@
     <Compile Include="SqlGenerationTest\SqlServer\FromBuilderTest.cs" />
     <Compile Include="SqlGenerationTest\SqlServer\OrderByBuilderTest.cs" />
     <Compile Include="SqlGenerationTest\SqlServer\SelectBuilderTest.cs" />
+    <Compile Include="SqlGenerationTest\SqlServer\SqlServerEvaluationVisitorTest.cs" />
     <Compile Include="SqlGenerationTest\SqlServer\SqlServerGeneratorIntegrationTest.cs" />
     <Compile Include="SqlGenerationTest\SqlGeneratorVisitorIntegrationTest.cs" />
     <Compile Include="SqlGenerationTest\SqlServer\WhereBuilderTest.cs" />

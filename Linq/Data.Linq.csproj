@@ -153,6 +153,7 @@
     <Compile Include="SqlGeneration\SqlServer\ICommandBuilder.cs" />
     <Compile Include="SqlGeneration\SqlServer\OrderByBuilder.cs" />
     <Compile Include="SqlGeneration\SqlServer\SelectBuilder.cs" />
+    <Compile Include="SqlGeneration\SqlServer\SqlServerEvaluationVisitor.cs" />
     <Compile Include="SqlGeneration\SqlServer\SqlServerGenerator.cs" />
     <Compile Include="SqlGeneration\SqlServer\SqlServerUtility.cs" />
     <Compile Include="SqlGeneration\SqlServer\CommandBuilder.cs" />
