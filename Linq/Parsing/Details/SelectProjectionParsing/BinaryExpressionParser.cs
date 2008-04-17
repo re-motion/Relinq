@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Rubicon.Data.Linq.DataObjectModel;
-using Rubicon.Data.Linq.Parsing.FieldResolving;
 using Rubicon.Text;
 using Rubicon.Utilities;
 
-namespace Rubicon.Data.Linq.Parsing.Details.SelectEProjectionParsing
+namespace Rubicon.Data.Linq.Parsing.Details.SelectProjectionParsing
 {
   public class BinaryExpressionParser
   {
@@ -23,12 +22,12 @@ namespace Rubicon.Data.Linq.Parsing.Details.SelectEProjectionParsing
       _parsingCall = parsingCall;
 
       NodeTypeMap = new Dictionary<ExpressionType, BinaryEvaluation.EvaluationKind> { 
-            { ExpressionType.Add, BinaryEvaluation.EvaluationKind.Add },
-            { ExpressionType.Divide, BinaryEvaluation.EvaluationKind.Divide },
-            { ExpressionType.Modulo, BinaryEvaluation.EvaluationKind.Modulo },
-            { ExpressionType.Multiply, BinaryEvaluation.EvaluationKind.Multiply },
-            { ExpressionType.Subtract, BinaryEvaluation.EvaluationKind.Subtract }
-          };
+                                                                                        { ExpressionType.Add, BinaryEvaluation.EvaluationKind.Add },
+                                                                                        { ExpressionType.Divide, BinaryEvaluation.EvaluationKind.Divide },
+                                                                                        { ExpressionType.Modulo, BinaryEvaluation.EvaluationKind.Modulo },
+                                                                                        { ExpressionType.Multiply, BinaryEvaluation.EvaluationKind.Multiply },
+                                                                                        { ExpressionType.Subtract, BinaryEvaluation.EvaluationKind.Subtract }
+                                                                                    };
     }
 
     public virtual IEvaluation Parse(BinaryExpression binaryExpression, List<FieldDescriptor> fieldDescriptorCollection)

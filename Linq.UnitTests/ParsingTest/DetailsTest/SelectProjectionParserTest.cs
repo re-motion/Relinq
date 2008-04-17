@@ -10,7 +10,7 @@ using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.DataObjectModel;
 using Rubicon.Data.Linq.Parsing;
 using Rubicon.Data.Linq.Parsing.Details;
-using Rubicon.Data.Linq.Parsing.Details.SelectEProjectionParsing;
+using Rubicon.Data.Linq.Parsing.Details.SelectProjectionParsing;
 using Rubicon.Data.Linq.Parsing.FieldResolving;
 using Rubicon.Data.Linq.Parsing.Structure;
 using Rubicon.Data.Linq.UnitTests.TestQueryGenerators;
@@ -265,6 +265,35 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
       List<IEvaluation> result = selectParser.GetParseResult ().B;
 
       Assert.AreEqual (expectedResult, result);
+    }
+
+    [Test]
+    public void ParseMethodCall ()
+    {
+      var query = from s in ExpressionHelper.CreateQuerySource () select (s.First).Remove(5);
+
+      QueryParser parser = new QueryParser (query.Expression);
+      QueryModel model = parser.GetParsedQuery ();
+      SelectClause selectClause = (SelectClause) model.SelectOrGroupClause;
+
+      ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (parameter, ExpressionHelper.CreateQuerySource ());
+      var fromSource = fromClause.GetFromSource (StubDatabaseInfo.Instance);
+
+      SelectProjectionParser selectParser =
+       new SelectProjectionParser (model, selectClause.ProjectionExpression.Body, StubDatabaseInfo.Instance, _context, ParseContext.TopLevelQuery);
+
+      //expectedResult
+      MethodInfo methodInfo = typeof (string).GetMethod ("Remove", new Type[] { typeof (int) });
+      Column column = new Column (fromSource, "FirstColumn");
+      Constant item = new Constant (5);
+      List<IEvaluation> arguments = new List<IEvaluation> { item };
+      MethodCallEvaluation expected = new MethodCallEvaluation (methodInfo, column, arguments);
+
+      List<IEvaluation> result = selectParser.GetParseResult ().B;
+      Assert.AreEqual (expected.EvaluationArguments, ((MethodCallEvaluation)result.First()).EvaluationArguments);
+      Assert.AreEqual (expected.EvaluationMethodInfo, ((MethodCallEvaluation)result.First()).EvaluationMethodInfo);
+      Assert.AreEqual (expected.EvaluationParameter, ((MethodCallEvaluation)result.First()).EvaluationParameter);
     }
 
     [Test]

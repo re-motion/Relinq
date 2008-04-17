@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 using Rubicon.Collections;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.DataObjectModel;
-using Rubicon.Data.Linq.Parsing.Details.SelectEProjectionParsing;
+using Rubicon.Data.Linq.Parsing.Details.SelectProjectionParsing;
 using Rubicon.Data.Linq.Parsing.FieldResolving;
 using Rubicon.Utilities;
 
@@ -21,6 +21,8 @@ namespace Rubicon.Data.Linq.Parsing.Details
     private readonly ParameterExpressionParser _parameterExpressionParser;
     private readonly NewExpressionParser _newExpressionParser;
     private readonly BinaryExpressionParser _binaryExpressionParser;
+    private readonly MethodCallExpressionParser _methodCallExpressionParser;
+    private readonly ConstantExpressionParser _constantExpressionParser;
     
 
     private List<FieldDescriptor> _fieldDescriptors;
@@ -50,6 +52,8 @@ namespace Rubicon.Data.Linq.Parsing.Details
       _parameterExpressionParser = new ParameterExpressionParser (_queryModel, _resolver);
       _newExpressionParser = new NewExpressionParser (_queryModel, _resolver,ParseExpression);
       _binaryExpressionParser = new BinaryExpressionParser (_queryModel, ParseSingleEvaluationExpression);
+      _methodCallExpressionParser = new MethodCallExpressionParser (_queryModel, ParseSingleEvaluationExpression);
+      _constantExpressionParser = new ConstantExpressionParser (databaseInfo);
       
     }
 
@@ -67,7 +71,11 @@ namespace Rubicon.Data.Linq.Parsing.Details
         return _memberExpressionParser.Parse ((MemberExpression) expression, _fieldDescriptors);
       else if (expression is BinaryExpression)
         return _binaryExpressionParser.Parse ((BinaryExpression) expression, _fieldDescriptors);
-      throw ParserUtility.CreateParserException ("member expression or parameter expression", expression, "single evaluation in projection expression",
+      else if (expression is MethodCallExpression)
+        return _methodCallExpressionParser.Parse ((MethodCallExpression) expression, _fieldDescriptors);
+      else if (expression is ConstantExpression)
+        return _constantExpressionParser.Parse ((ConstantExpression) expression);
+      throw ParserUtility.CreateParserException ("member expression, parameter expression, binary expression, methodcall expression or constant expression ", expression, "single evaluation in projection expression",
           _projectionBody);
     }
 

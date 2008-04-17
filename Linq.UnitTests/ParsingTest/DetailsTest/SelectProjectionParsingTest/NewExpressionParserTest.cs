@@ -6,7 +6,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.DataObjectModel;
-using Rubicon.Data.Linq.Parsing.Details.SelectEProjectionParsing;
+using Rubicon.Data.Linq.Parsing.Details.SelectProjectionParsing;
 using Rubicon.Data.Linq.Parsing.FieldResolving;
 
 
