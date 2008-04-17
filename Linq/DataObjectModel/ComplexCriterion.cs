@@ -25,5 +25,11 @@ namespace Rubicon.Data.Linq.DataObjectModel
     {
       return "(" + Left + " " + Kind + " " + Right + ")";
     }
+
+    public void Accept (IEvaluationVisitor visitor)
+    {
+      ArgumentUtility.CheckNotNull ("visitor", visitor);
+      visitor.VisitComplexCriterion (this);
+    }
   }
 }

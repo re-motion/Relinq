@@ -18,5 +18,11 @@ namespace Rubicon.Data.Linq.DataObjectModel
     public MethodInfo EvaluationMethodInfo { get; private set; }
     public IEvaluation EvaluationParameter { get; private set; }
     public List<IEvaluation> EvaluationArguments { get; private set; }
+
+    public void Accept (IEvaluationVisitor visitor)
+    {
+      ArgumentUtility.CheckNotNull ("visitor", visitor);
+      visitor.VisitMethodCallEvaluation (this);
+    }
   }
 }

@@ -32,5 +32,11 @@ namespace Rubicon.Data.Linq.DataObjectModel
     {
       return EqualityUtility.GetRotatedHashCode (Alias, QueryModel);
     }
+
+    public void Accept (IEvaluationVisitor visitor)
+    {
+      ArgumentUtility.CheckNotNull ("visitor", visitor);
+      visitor.VisitSubQuery (this);
+    }
   }
 }

@@ -58,6 +58,7 @@
     <Compile Include="DataObjectModel\IColumnSource.cs" />
     <Compile Include="Clauses\IResolveableClause.cs" />
     <Compile Include="DataObjectModel\IEvaluation.cs" />
+    <Compile Include="DataObjectModel\IEvaluationVisitor.cs" />
     <Compile Include="DataObjectModel\MethodCallEvaluation.cs" />
     <Compile Include="DataObjectModel\NamedEvaluation.cs" />
     <Compile Include="DataObjectModel\SingleJoin.cs" />

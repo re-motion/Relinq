@@ -16,5 +16,11 @@ namespace Rubicon.Data.Linq.DataObjectModel
     {
       return "NOT (" + NegatedCriterion + ")";
     }
+
+    public void Accept (IEvaluationVisitor visitor)
+    {
+      ArgumentUtility.CheckNotNull ("visitor", visitor);
+      visitor.VisitNotCriterion (this);
+    }
   }
 }

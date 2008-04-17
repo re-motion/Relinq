@@ -22,8 +22,10 @@ namespace Rubicon.Data.Linq.DataObjectModel
     public EvaluationKind Kind { get; private set; }
 
 
-
-    
-    
+    public void Accept (IEvaluationVisitor visitor)
+    {
+      ArgumentUtility.CheckNotNull ("visitor", visitor);
+      visitor.VisitBinaryEvaluation (this);
+    }
   }
 }

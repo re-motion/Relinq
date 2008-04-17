@@ -1,4 +1,5 @@
 using Rubicon.Data.Linq.Clauses;
+using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.DataObjectModel
 {
@@ -23,6 +24,12 @@ namespace Rubicon.Data.Linq.DataObjectModel
     public override string ToString ()
     {
       return FieldDescriptor.ToString()+ " " + Direction.ToString();
+    }
+
+    public void Accept (IEvaluationVisitor visitor)
+    {
+      ArgumentUtility.CheckNotNull ("visitor", visitor);
+      visitor.VisitOrderingField (this);
     }
   }
 }

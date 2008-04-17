@@ -19,5 +19,11 @@ namespace Rubicon.Data.Linq.DataObjectModel
     {
       return (_columnSource != null ? _columnSource.AliasString : "<null>") + "." + Name;
     }
+
+    public void Accept (IEvaluationVisitor visitor)
+    {
+      ArgumentUtility.CheckNotNull ("visitor", visitor);
+      visitor.VisitColumn (this);
+    }
   }
 }
