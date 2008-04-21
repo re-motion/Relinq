@@ -3,7 +3,7 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.DataObjectModel
 {
-  public struct OrderingField : ICriterion
+  public struct OrderingField
   {
     public readonly FieldDescriptor FieldDescriptor;
     public readonly OrderDirection Direction;
@@ -24,12 +24,6 @@ namespace Rubicon.Data.Linq.DataObjectModel
     public override string ToString ()
     {
       return FieldDescriptor.ToString()+ " " + Direction.ToString();
-    }
-
-    public void Accept (IEvaluationVisitor visitor)
-    {
-      ArgumentUtility.CheckNotNull ("visitor", visitor);
-      visitor.VisitOrderingField (this);
     }
   }
 }
