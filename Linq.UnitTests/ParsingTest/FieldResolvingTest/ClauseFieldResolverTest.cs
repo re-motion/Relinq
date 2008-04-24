@@ -16,7 +16,7 @@ using NUnit.Framework.SyntaxHelpers;
 namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
 {
   [TestFixture]
-  public class FromClauseFieldResolverTest
+  public class ClauseFieldResolverTest
   {
     private JoinedTableContext _context;
     private IResolveFieldAccessPolicy _policy;

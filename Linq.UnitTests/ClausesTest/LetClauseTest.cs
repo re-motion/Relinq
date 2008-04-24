@@ -1,5 +1,6 @@
 using System;
 using System.Linq.Expressions;
+using System.Reflection;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Rubicon.Data.Linq.Clauses;
@@ -95,30 +96,21 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
 
 
     [Test]
-    [Ignore]
     public void GetNamedEvaluation ()
     {
-      //LetClause letClause = ExpressionHelper.CreateLetClause ();
-      //Assert.AreEqual (new NamedEvaluation ("i").Alias, letClause.GetNamedEvaluation().Alias);
-      //Assert.AreEqual (letClause.Identifier.Name, letClause.GetNamedEvaluation ().AliasString);
-    }
-
-    [Test]
-    [Ignore]
-    public void Resolve_Succeeds_NamedEvaluation ()
-    {
-      //ParameterExpression identifier = Expression.Parameter (typeof (Student), "student");
-      //LetClause letClause = 
-      //  new LetClause (ExpressionHelper.CreateMainFromClause(),identifier,ExpressionHelper.CreateExpression(),ExpressionHelper.CreateLambdaExpression());
+      SelectFieldAccessPolicy policy = new SelectFieldAccessPolicy ();
+      JoinedTableContext context = new JoinedTableContext ();
+      ClauseFieldResolver resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, context, policy);
       
-      //JoinedTableContext context = new JoinedTableContext ();
-      //SelectFieldAccessPolicy policy = new SelectFieldAccessPolicy ();
+      Expression expression = Expression.Add(Expression.Constant(5),Expression.Constant(5));
+      LetClause letClause = ExpressionHelper.CreateLetClause(expression);
+      letClause.SetQueryModel (ExpressionHelper.CreateQueryModel ());
+      NamedEvaluation namedEvaluation = 
+        new NamedEvaluation ("i", new BinaryEvaluation(new Constant(5),new Constant(5),BinaryEvaluation.EvaluationKind.Add));
 
-      //ClauseFieldResolver resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, context, policy);
-      //FieldDescriptor fieldDescriptor = letClause.ResolveField (resolver, identifier, identifier);
-
-      //Assert.AreEqual (new Column(new NamedEvaluation("student"),"*"),fieldDescriptor.Column);
+      Assert.AreEqual (namedEvaluation.Alias, letClause.GetNamedEvaluation(resolver).Alias);
+      Assert.AreEqual (namedEvaluation.Evaluation, letClause.GetNamedEvaluation (resolver).Evaluation);
     }
-
+    
   }
 }

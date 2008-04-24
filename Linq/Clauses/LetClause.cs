@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using Rubicon.Data.Linq.Clauses;
 using Rubicon.Data.Linq.DataObjectModel;
@@ -31,6 +33,7 @@ namespace Rubicon.Data.Linq.Clauses
 
     public IClause PreviousClause { get; private set; }
     public LambdaExpression ProjectionExpression { get; private set; }
+    public QueryModel QueryModel { get; private set; }
 
     public Expression Expression
     {
@@ -48,17 +51,14 @@ namespace Rubicon.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("partialFieldExpression", partialFieldExpression);
       ArgumentUtility.CheckNotNull ("fullFieldExpression", fullFieldExpression);
 
-      return resolver.ResolveField (GetNamedEvaluation(resolver),Identifier,partialFieldExpression,fullFieldExpression);
+      return resolver.ResolveField (GetNamedEvaluation (resolver), Identifier, partialFieldExpression, fullFieldExpression);
     }
 
     public virtual NamedEvaluation GetNamedEvaluation (ClauseFieldResolver resolver)
-    {
-      QueryModel _queryModel = null;
-      SelectProjectionParser expressionParser = new SelectProjectionParser (_queryModel, Expression, resolver.DatabaseInfo, resolver.Context,
+    { 
+     SelectProjectionParser parser = new SelectProjectionParser (QueryModel, Expression, resolver.DatabaseInfo, resolver.Context,
           ParseContext.LetExpression);
-      IEvaluation evaluation = null;
-      // evaluation = expressionParser.GetEvaluation ();
-      return new NamedEvaluation (Identifier.Name, evaluation);
+     return new NamedEvaluation (Identifier.Name, parser.GetParseResult ().B.First ());
     }
 
     public virtual void Accept (IQueryVisitor visitor)
@@ -66,8 +66,6 @@ namespace Rubicon.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       visitor.VisitLetClause (this);
     }
-
-    public QueryModel QueryModel {get; private set;}
 
     public void SetQueryModel (QueryModel model)
     {

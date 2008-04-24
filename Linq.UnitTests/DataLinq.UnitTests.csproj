@@ -82,7 +82,7 @@
     <Compile Include="ParsingTest\DetailsTest\WhereConditionParsingTest\UnaryExpressionParserTest.cs" />
     <Compile Include="ParsingTest\FieldResolvingTest\OrderingFieldAccessPolicyTest.cs" />
     <Compile Include="ParsingTest\FieldResolvingTest\FieldSourcePathBuilderTest.cs" />
-    <Compile Include="ParsingTest\FieldResolvingTest\FromClauseFieldResolverTest.cs" />
+    <Compile Include="ParsingTest\FieldResolvingTest\ClauseFieldResolverTest.cs" />
     <Compile Include="ParsingTest\FieldResolvingTest\FromClauseFieldResolverVisitorTest.cs" />
     <Compile Include="ParsingTest\FieldResolvingTest\JoinedTableContextTest.cs" />
     <Compile Include="ParsingTest\FieldResolvingTest\QueryModelFieldResolverTest.cs" />

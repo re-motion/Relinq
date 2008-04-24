@@ -92,6 +92,12 @@ namespace Rubicon.Data.Linq.UnitTests
       return new LetClause (CreateClause (), identifier, ExpressionHelper.CreateExpression (), CreateLambdaExpression ());
     }
 
+    public static LetClause CreateLetClause (Expression expression)
+    {
+      ParameterExpression identifier = ExpressionHelper.CreateParameterExpression ();
+      return new LetClause (CreateLetClause (), identifier, expression, CreateLambdaExpression ());
+    }
+
 
     public static OrderingClause CreateOrderingClause()
     {
