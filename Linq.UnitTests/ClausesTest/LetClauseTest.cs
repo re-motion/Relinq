@@ -108,8 +108,8 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       LetColumnSource letColumnSource = 
         new LetColumnSource ("i", true);
 
-      Assert.AreEqual (letColumnSource.Alias, letClause.GetColumnSource(resolver).Alias);
-      Assert.AreEqual (letColumnSource.IsTable, letClause.GetColumnSource (resolver).IsTable);
+      Assert.AreEqual (letColumnSource.Alias, letClause.GetColumnSource(resolver.DatabaseInfo).Alias);
+      Assert.AreEqual (letColumnSource.IsTable, letClause.GetColumnSource (resolver.DatabaseInfo).IsTable);
     }
     
   }
