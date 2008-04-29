@@ -60,7 +60,7 @@
     <Compile Include="DataObjectModel\IEvaluation.cs" />
     <Compile Include="DataObjectModel\IEvaluationVisitor.cs" />
     <Compile Include="DataObjectModel\MethodCallEvaluation.cs" />
-    <Compile Include="DataObjectModel\NamedEvaluation.cs" />
+    <Compile Include="DataObjectModel\LetColumnSource.cs" />
     <Compile Include="DataObjectModel\SingleJoin.cs" />
     <Compile Include="DataObjectModel\SubQuery.cs" />
     <Compile Include="DataObjectModel\SubQueryExpression.cs" />
@@ -147,6 +147,7 @@
     <Compile Include="SqlGeneration\IOrderByBuilder.cs" />
     <Compile Include="SqlGeneration\ISelectBuilder.cs" />
     <Compile Include="SqlGeneration\IWhereBuilder.cs" />
+    <Compile Include="SqlGeneration\LetData.cs" />
     <Compile Include="SqlGeneration\SqlGeneratorBase.cs" />
     <Compile Include="SqlGeneration\SqlServer\BinaryConditionBuilder.cs" />
     <Compile Include="SqlGeneration\SqlServer\FromBuilder.cs" />

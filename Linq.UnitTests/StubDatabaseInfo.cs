@@ -103,5 +103,15 @@ namespace Rubicon.Data.Linq.UnitTests
       else
         return null;
     }
+
+    public bool IsTableType (Type type)
+    {
+      return true;
+    }
+
+    public Type IsTableType (MemberInfo member)
+    {
+      throw new NotImplementedException();
+    }
   }
 }

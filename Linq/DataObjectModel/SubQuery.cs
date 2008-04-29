@@ -22,6 +22,11 @@ namespace Rubicon.Data.Linq.DataObjectModel
       get { return Alias; }
     }
 
+    public bool IsTable
+    {
+      get { return true; }
+    }
+
     public override bool Equals (object obj)
     {
       SubQuery other = obj as SubQuery;

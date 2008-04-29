@@ -51,14 +51,14 @@ namespace Rubicon.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("partialFieldExpression", partialFieldExpression);
       ArgumentUtility.CheckNotNull ("fullFieldExpression", fullFieldExpression);
 
-      return resolver.ResolveField (GetNamedEvaluation (resolver), Identifier, partialFieldExpression, fullFieldExpression);
+      return resolver.ResolveField (GetColumnSource (resolver), Identifier, partialFieldExpression, fullFieldExpression);
     }
 
-    public virtual NamedEvaluation GetNamedEvaluation (ClauseFieldResolver resolver)
+    public virtual LetColumnSource GetColumnSource (ClauseFieldResolver resolver) // TODO: pass databaseInfo, context instead of resolver
     { 
-     SelectProjectionParser parser = new SelectProjectionParser (QueryModel, Expression, resolver.DatabaseInfo, resolver.Context,
-          ParseContext.LetExpression);
-     return new NamedEvaluation (Identifier.Name, parser.GetParseResult ().B.First ());
+      // TODO: IsTable should also be true if the let clause constructs an object, eg: let x = new {o.ID, o.OrderNumber}
+      return new LetColumnSource (Identifier.Name, resolver.DatabaseInfo.IsTableType (Identifier.Type));
+      //return new LetColumnSource (Identifier.Name, evaluations);
     }
 
     public virtual void Accept (IQueryVisitor visitor)

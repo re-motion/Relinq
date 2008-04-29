@@ -5,7 +5,6 @@ using Rubicon.Data.Linq.QueryProviderImplementation;
 namespace Rubicon.Data.DomainObjects.Linq
 {
   public class DomainObjectQueryable<T> : QueryableBase<T> 
-    where T:DomainObject
   {
     public DomainObjectQueryable (QueryProviderBase provider, Expression expression)
         : base (provider, expression)

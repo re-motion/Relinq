@@ -383,5 +383,23 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
 
       Assert.That (actualFieldDescriptor, Is.EqualTo (expectedFieldDescriptor));
     }
+
+    [Test]
+    public void TestColumn ()
+    {
+      ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (identifier, ExpressionHelper.CreateQuerySource ());
+
+      IColumnSource table = fromClause.GetFromSource (StubDatabaseInfo.Instance);
+
+      FieldDescriptor fieldDescriptor =
+          new ClauseFieldResolver (StubDatabaseInfo.Instance, _context, _policy).ResolveField (table, identifier, identifier, identifier);
+
+      Column expecetedColumn = new Column (table, "*");
+
+      Assert.AreEqual (expecetedColumn, fieldDescriptor.Column);
+
+
+    }
   }
 }

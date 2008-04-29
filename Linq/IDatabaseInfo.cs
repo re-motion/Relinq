@@ -13,5 +13,6 @@ namespace Rubicon.Data.Linq
     Tuple<string, string> GetJoinColumnNames (MemberInfo relationMember);
     object ProcessWhereParameter (object parameter);
     MemberInfo GetPrimaryKeyMember (Type entityType);
+    bool IsTableType (Type type);
   }
 }

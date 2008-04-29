@@ -4,5 +4,6 @@ namespace Rubicon.Data.Linq.DataObjectModel
   {
     string Alias { get; }
     string AliasString { get; }
+    bool IsTable { get; }
   }
 }

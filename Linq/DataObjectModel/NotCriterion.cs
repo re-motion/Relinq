@@ -1,3 +1,4 @@
+using System;
 using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.DataObjectModel
@@ -12,6 +13,7 @@ namespace Rubicon.Data.Linq.DataObjectModel
       NegatedCriterion = negatedCriterion;
     }
 
+
     public override string ToString ()
     {
       return "NOT (" + NegatedCriterion + ")";
@@ -22,5 +24,6 @@ namespace Rubicon.Data.Linq.DataObjectModel
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       visitor.VisitNotCriterion (this);
     }
+
   }
 }

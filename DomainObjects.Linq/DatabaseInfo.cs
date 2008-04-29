@@ -37,6 +37,16 @@ namespace Rubicon.Data.DomainObjects.Linq
       }
     }
 
+    public bool IsTableType (Type type)
+    {
+      ArgumentUtility.CheckNotNull ("type", type);
+      ClassDefinition classDefinition = MappingConfiguration.Current.ClassDefinitions[type];
+      if (classDefinition == null)
+        return false;
+      else
+        return true;
+    }
+
     public string GetRelatedTableName (MemberInfo relationMember)
     {
       ArgumentUtility.CheckNotNull ("relationMember", relationMember);
@@ -112,6 +122,7 @@ namespace Rubicon.Data.DomainObjects.Linq
       else
         return typeof (DomainObject).GetProperty ("ID");
     }
+    
 
     private Tuple<RelationDefinition, ClassDefinition, string> GetRelationData (MemberInfo relationMember)
     {

@@ -2,16 +2,18 @@ using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.DataObjectModel
 {
-  public struct NamedEvaluation : IColumnSource
+  // LetColumnSource
+  public struct LetColumnSource : IColumnSource
   {
-    public NamedEvaluation (string alias,IEvaluation evaluation) : this()
+    public LetColumnSource (string alias, bool isTable) : this()
     {
       ArgumentUtility.CheckNotNull ("alias", alias);
-      ArgumentUtility.CheckNotNull ("evaluation", evaluation);
+      ArgumentUtility.CheckNotNull ("isTable", isTable);
       Alias = alias;
-      Evaluation = evaluation;
+      IsTable = isTable;
     }
-    public IEvaluation Evaluation { get; private set; }
+
+    public bool IsTable { get; private set; }
 
     public string Alias {get; private set; }
     public string AliasString { get { return Alias; }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Rubicon.Collections;
 using Rubicon.Data.Linq.DataObjectModel;
+using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.Parsing.FieldResolving
 {
@@ -21,6 +22,8 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
           Table relatedTable = context.GetJoinedTable (databaseInfo, pathSoFar, member);
           Tuple<string, string> joinColumns = DatabaseInfoUtility.GetJoinColumnNames (databaseInfo, member);
 
+          //Column leftColumn = new Column (lastSource, joinColumns.A, ReflectionUtility.GetFieldOrPropertyType (member));
+          //Column rightColumn = new Column (relatedTable, joinColumns.B, ReflectionUtility.GetFieldOrPropertyType (member));
           Column leftColumn = new Column (lastSource, joinColumns.A);
           Column rightColumn = new Column (relatedTable, joinColumns.B);
 

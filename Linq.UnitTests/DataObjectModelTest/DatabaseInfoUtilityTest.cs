@@ -159,6 +159,22 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     }
 
     [Test]
+    public void GetColumn_IsTableFalse_MemberNull ()
+    {
+      IColumnSource table = new LetColumnSource ("s", false);
+      Column column = DatabaseInfoUtility.GetColumn (_databaseInfo, table, null).Value;
+      Assert.AreEqual (new Column(table,null),column);
+    }
+
+    [Test]
+    public void GetColumn_IsTableFalse_Member ()
+    {
+      IColumnSource table = new LetColumnSource ("s", false);
+      Column column = DatabaseInfoUtility.GetColumn (_databaseInfo, table, typeof (Student).GetProperty ("First")).Value;
+      Assert.AreEqual (new Column (table, "FirstColumn"), column);
+    }
+
+    [Test]
     public void GetColumnForFromClause_InvalidMember ()
     {
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
@@ -179,6 +195,12 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     public void GetPrimaryKeyMember_NonEntityType ()
     {
       DatabaseInfoUtility.GetPrimaryKeyMember (_databaseInfo, typeof (object));
+    }
+
+    [Test]
+    public void GetEntity ()
+    {
+      
     }
   }
 }

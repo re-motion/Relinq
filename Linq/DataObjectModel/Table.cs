@@ -29,6 +29,11 @@ namespace Rubicon.Data.Linq.DataObjectModel
       get { return Alias ?? "_"; }
     }
 
+    public bool IsTable
+    {
+      get { return true; }
+    }
+
     public override bool Equals (object obj)
     {
       Table other = obj as Table;

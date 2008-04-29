@@ -105,11 +105,11 @@ namespace Rubicon.Data.Linq.UnitTests.ClausesTest
       Expression expression = Expression.Add(Expression.Constant(5),Expression.Constant(5));
       LetClause letClause = ExpressionHelper.CreateLetClause(expression);
       letClause.SetQueryModel (ExpressionHelper.CreateQueryModel ());
-      NamedEvaluation namedEvaluation = 
-        new NamedEvaluation ("i", new BinaryEvaluation(new Constant(5),new Constant(5),BinaryEvaluation.EvaluationKind.Add));
+      LetColumnSource letColumnSource = 
+        new LetColumnSource ("i", true);
 
-      Assert.AreEqual (namedEvaluation.Alias, letClause.GetNamedEvaluation(resolver).Alias);
-      Assert.AreEqual (namedEvaluation.Evaluation, letClause.GetNamedEvaluation (resolver).Evaluation);
+      Assert.AreEqual (letColumnSource.Alias, letClause.GetColumnSource(resolver).Alias);
+      Assert.AreEqual (letColumnSource.IsTable, letClause.GetColumnSource (resolver).IsTable);
     }
     
   }

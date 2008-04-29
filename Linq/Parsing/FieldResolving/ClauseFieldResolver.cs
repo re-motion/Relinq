@@ -70,10 +70,11 @@ namespace Rubicon.Data.Linq.Parsing.FieldResolving
 
       FieldSourcePathBuilder pathBuilder = new FieldSourcePathBuilder();
       FieldSourcePath fieldData = pathBuilder.BuildFieldSourcePath (DatabaseInfo, Context, firstSource, joinMembersForCalculation);
+
       Column? column = DatabaseInfoUtility.GetColumn (DatabaseInfo, fieldData.LastSource, accessedMemberForColumn);
       return new FieldDescriptor (accessedMember, fieldData, column);
     }
-
+    
     private Tuple<MemberInfo, IEnumerable<MemberInfo>> AdjustMemberInfos (ParameterExpression accessedIdentifier, MemberInfo accessedMember, IEnumerable<MemberInfo> joinMembers)
     {
       if (accessedMember == null)

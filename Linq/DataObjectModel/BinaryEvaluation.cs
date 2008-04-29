@@ -1,3 +1,4 @@
+using System;
 using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.DataObjectModel
@@ -20,7 +21,6 @@ namespace Rubicon.Data.Linq.DataObjectModel
     public IEvaluation Left { get; private set; }
     public IEvaluation Right { get; private set; }
     public EvaluationKind Kind { get; private set; }
-
 
     public void Accept (IEvaluationVisitor visitor)
     {

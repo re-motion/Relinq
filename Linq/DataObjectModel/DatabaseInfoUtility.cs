@@ -79,7 +79,7 @@ namespace Rubicon.Data.Linq.DataObjectModel
       ArgumentUtility.CheckNotNull ("member", member);
       return (IsRelationMember (databaseInfo, member)) && (databaseInfo.GetColumnName (member) == null);
     }
-
+    
     public static Column? GetColumn (IDatabaseInfo databaseInfo, IColumnSource columnSource, MemberInfo member)
     {
       ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
@@ -87,8 +87,11 @@ namespace Rubicon.Data.Linq.DataObjectModel
       string columnName = member == null ? "*" : databaseInfo.GetColumnName (member);
       if (columnName == null)
         return null;
+      else if (!columnSource.IsTable && member == null)
+        return new Column (columnSource, null);
       else
         return new Column (columnSource, columnName);
+      //return new Column (columnSource, columnName, ReflectionUtility.GetFieldOrPropertyType (member));
     }
     
     public static MemberInfo GetPrimaryKeyMember (IDatabaseInfo databaseInfo, Type entityType)

@@ -1,3 +1,4 @@
+using System;
 using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.DataObjectModel
@@ -9,7 +10,7 @@ namespace Rubicon.Data.Linq.DataObjectModel
     public readonly IValue Left;
     public readonly IValue Right;
     public readonly ConditionKind Kind;
-
+ 
     public BinaryCondition (IValue left, IValue right, ConditionKind kind)
     {
       ArgumentUtility.CheckNotNull ("left", left);
@@ -23,6 +24,7 @@ namespace Rubicon.Data.Linq.DataObjectModel
       Kind = kind;
       Right = right;
     }
+
 
     public override string ToString ()
     {

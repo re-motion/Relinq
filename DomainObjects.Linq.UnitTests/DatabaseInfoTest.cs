@@ -49,6 +49,20 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
+    public void IsTable_True ()
+    {
+      Type type = typeof (Order);
+      Assert.IsTrue (_databaseInfo.IsTableType (type));
+    }
+
+    [Test]
+    public void IsTable_False ()
+    {
+      Type type = typeof (int);
+      Assert.IsFalse (_databaseInfo.IsTableType (type));
+    }
+
+    [Test]
     public void GetColumnName()
     {
       Assert.AreEqual ("OrderNo", _databaseInfo.GetColumnName (typeof (Order).GetProperty ("OrderNumber")));

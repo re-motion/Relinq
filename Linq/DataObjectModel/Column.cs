@@ -1,3 +1,4 @@
+using System;
 using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.DataObjectModel
@@ -9,7 +10,6 @@ namespace Rubicon.Data.Linq.DataObjectModel
 
     public Column (IColumnSource columnSource, string name)
     {
-      ArgumentUtility.CheckNotNull ("name", name);
       ArgumentUtility.CheckNotNull ("fromSource", columnSource);
       Name = name;
       _columnSource = columnSource;

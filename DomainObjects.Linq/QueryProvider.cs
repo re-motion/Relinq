@@ -2,7 +2,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using Rubicon.Data.Linq;
 using System;
-using Rubicon.Reflection;
 using Rubicon.Utilities;
 
 namespace Rubicon.Data.DomainObjects.Linq
@@ -18,7 +17,7 @@ namespace Rubicon.Data.DomainObjects.Linq
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       Type queryableType = typeof (DomainObjectQueryable<>).MakeGenericType (typeof (T));
-      return (IQueryable<T>) TypesafeActivator.CreateInstance (queryableType).With (this, expression);
+      return (IQueryable<T>) Activator.CreateInstance (queryableType, this, expression);
     }
   }
 }

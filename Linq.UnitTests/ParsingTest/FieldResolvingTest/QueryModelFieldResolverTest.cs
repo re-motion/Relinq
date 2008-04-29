@@ -52,7 +52,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       
       //Expression fieldAccessExpression = Expression.Parameter (typeof (int), "i");
       //FieldDescriptor descriptor = new QueryModelFieldResolver (queryModel).ResolveField (_resolver, fieldAccessExpression);
-      //NamedEvaluation expectedEvaluation = new NamedEvaluation("i");
+      //LetColumnSource expectedEvaluation = new LetColumnSource("i");
 
       //Assert.AreEqual (new Column(expectedEvaluation,"*"),descriptor.Column);
 

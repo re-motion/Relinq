@@ -1,3 +1,4 @@
+using System;
 using Rubicon.Utilities;
 
 namespace Rubicon.Data.Linq.DataObjectModel
@@ -7,10 +8,12 @@ namespace Rubicon.Data.Linq.DataObjectModel
     public readonly object Value;
 
     public Constant (object value)
+        : this()
     {
       Value = value;
     }
 
+   
     public override string ToString ()
     {
       return Value != null ? Value.ToString() : "<null>";
