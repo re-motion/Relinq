@@ -292,24 +292,58 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     public void QueryWithLet ()
     {
       var orders = from o in DataContext.Entity<Order> (new TestQueryListener ())
-                  let x = o
-                  select x;
+                   let x = o
+                   select x;
 
       CheckQueryResult (orders, DomainObjectIDs.Order1, DomainObjectIDs.Order2, DomainObjectIDs.Order3, DomainObjectIDs.Order4,DomainObjectIDs.Order4,
           DomainObjectIDs.InvalidOrder,DomainObjectIDs.OrderWithoutOrderItem);
     }
 
     [Test]
-    [Ignore]
-    public void QueryWithLet_2 ()
+    public void QueryWithLet_LetWithColumn ()
     {
       var orders = from o in DataContext.Entity<Order> (new TestQueryListener ())
-                   let x = o.Customer
                    let y = o.OrderNumber
                    where y > 1
+                   select o;
+
+      CheckQueryResult (orders,
+        DomainObjectIDs.InvalidOrder, DomainObjectIDs.Order3, DomainObjectIDs.OrderWithoutOrderItem, DomainObjectIDs.Order2, 
+        DomainObjectIDs.Order4);
+    }
+
+    [Test]
+    public void QueryWithLet_LetWithColumn2()
+    {
+      var orders = from o in DataContext.Entity<Order>(new TestQueryListener())
+                   let x = o.Customer.Name
+                   where x == "Kunde 1"
+                   select o;
+      CheckQueryResult (orders, DomainObjectIDs.OrderWithoutOrderItem, DomainObjectIDs.Order1);
+    }
+
+    [Test]
+    public void QueryWithSeveralJoinsAndCrossApply ()
+    {
+      var ceos = from o in DataContext.Entity<Order>(new TestQueryListener())
+                 let x = o.Customer.Ceo
+                 where x.Name == "Hugo Boss"
+                 select x;
+
+      CheckQueryResult(ceos,DomainObjectIDs.Ceo5);
+    }
+
+    [Test]
+    public void QueryWithLet_SeveralCrossApplies()
+    {
+      var orders = from o in DataContext.Entity<Order>(new TestQueryListener())
+                   let x = o
+                   let y = o.Customer
                    select x;
 
-      CheckQueryResult (orders, DomainObjectIDs.Customer1, DomainObjectIDs.Customer2, DomainObjectIDs.Customer3, DomainObjectIDs.Customer4);
+      CheckQueryResult (orders, DomainObjectIDs.Order1, DomainObjectIDs.Order2, DomainObjectIDs.Order3, DomainObjectIDs.Order4, DomainObjectIDs.Order4,
+          DomainObjectIDs.InvalidOrder, DomainObjectIDs.OrderWithoutOrderItem);
+
     }
 
     private void CheckQueryResult<T> (IQueryable<T> query, params ObjectID[] expectedObjectIDs)

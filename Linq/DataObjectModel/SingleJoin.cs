@@ -18,12 +18,12 @@ namespace Rubicon.Data.Linq.DataObjectModel
 
     public IColumnSource LeftSide
     {
-      get { return LeftColumn._columnSource; }
+      get { return LeftColumn.ColumnSource; }
     }
 
     public IColumnSource RightSide
     {
-      get { return RightColumn._columnSource; }
+      get { return RightColumn.ColumnSource; }
     }
 
     public override string ToString ()
