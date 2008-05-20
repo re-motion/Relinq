@@ -343,9 +343,8 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
 
       CheckQueryResult (orders, DomainObjectIDs.Order1, DomainObjectIDs.Order2, DomainObjectIDs.Order3, DomainObjectIDs.Order4, DomainObjectIDs.Order4,
           DomainObjectIDs.InvalidOrder, DomainObjectIDs.OrderWithoutOrderItem);
-
     }
-
+    
     private void CheckQueryResult<T> (IQueryable<T> query, params ObjectID[] expectedObjectIDs)
         where T: TestDomainBase
     {
