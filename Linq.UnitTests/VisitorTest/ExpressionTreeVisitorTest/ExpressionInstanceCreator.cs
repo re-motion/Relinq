@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Rubicon.Data.Linq.UnitTests.VisitorTest.ExpressionTreeVisitorTest;
+using Remotion.Data.Linq.UnitTests.VisitorTest.ExpressionTreeVisitorTest;
 
-namespace Rubicon.Data.Linq.UnitTests.VisitorTest.ExpressionTreeVisitorTest
+namespace Remotion.Data.Linq.UnitTests.VisitorTest.ExpressionTreeVisitorTest
 {
   public static class ExpressionInstanceCreator
   {

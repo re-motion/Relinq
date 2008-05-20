@@ -1,10 +1,9 @@
-using System;
 using NUnit.Framework;
 
-namespace Rubicon.Data.DomainObjects.Linq.UnitTests
+namespace Remotion.Data.DomainObjects.Linq.UnitTests
 {
   [SetUpFixture]
-  public class SetupFixture : Rubicon.Data.DomainObjects.UnitTests.SetUpFixture
+  public class SetupFixture : Remotion.Data.DomainObjects.UnitTests.SetUpFixture
   {
     
   }

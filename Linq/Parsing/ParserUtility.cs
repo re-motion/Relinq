@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Rubicon.Text;
+using Remotion.Text;
 
-namespace Rubicon.Data.Linq.Parsing
+namespace Remotion.Data.Linq.Parsing
 {
   public static class ParserUtility
   {

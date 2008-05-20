@@ -1,9 +1,9 @@
 using System.Linq;
 using NUnit.Framework;
-using Rubicon.Data.Linq.Clauses;
-using Rubicon.Data.Linq.UnitTests.TestQueryGenerators;
+using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.UnitTests.TestQueryGenerators;
 
-namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.QueryParserIntegrationTest
+namespace Remotion.Data.Linq.UnitTests.ParsingTest.StructureTest.QueryParserIntegrationTest
 {
   [TestFixture]
   // [Ignore ("TODO: Implement MainFromClauses without constant IQueryable")]

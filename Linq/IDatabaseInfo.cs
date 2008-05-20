@@ -1,9 +1,9 @@
 using System;
 using System.Reflection;
-using Rubicon.Collections;
-using Rubicon.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses;
+using Remotion.Collections;
 
-namespace Rubicon.Data.Linq
+namespace Remotion.Data.Linq
 {
   public interface IDatabaseInfo
   {

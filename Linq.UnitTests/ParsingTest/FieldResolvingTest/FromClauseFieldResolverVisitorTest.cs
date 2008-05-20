@@ -2,9 +2,9 @@ using System;
 using NUnit.Framework;
 using System.Linq.Expressions;
 using NUnit.Framework.SyntaxHelpers;
-using Rubicon.Data.Linq.Parsing.FieldResolving;
+using Remotion.Data.Linq.Parsing.FieldResolving;
 
-namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
+namespace Remotion.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
 {
   [TestFixture]
   public class FromClauseFieldResolverVisitorTest

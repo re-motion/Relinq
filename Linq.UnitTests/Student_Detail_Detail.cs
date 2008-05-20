@@ -1,4 +1,4 @@
-namespace Rubicon.Data.Linq.UnitTests
+namespace Remotion.Data.Linq.UnitTests
 {
   public class Student_Detail_Detail
   {

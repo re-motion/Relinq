@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
-using Rubicon.Data.Linq.QueryProviderImplementation;
+using Remotion.Data.Linq.QueryProviderImplementation;
 
-namespace Rubicon.Data.Linq.UnitTests
+namespace Remotion.Data.Linq.UnitTests
 {
   public class TestQueryable<T> : QueryableBase<T>
   {

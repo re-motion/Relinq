@@ -2,12 +2,12 @@ using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Rhino.Mocks;
-using Rubicon.Data.Linq.Clauses;
-using Rubicon.Data.Linq.DataObjectModel;
-using Rubicon.Data.Linq.UnitTests.ParsingTest;
-using Rubicon.Data.Linq.UnitTests.TestQueryGenerators;
+using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.DataObjectModel;
+using Remotion.Data.Linq.UnitTests.ParsingTest;
+using Remotion.Data.Linq.UnitTests.TestQueryGenerators;
 
-namespace Rubicon.Data.Linq.UnitTests.ClausesTest
+namespace Remotion.Data.Linq.UnitTests.ClausesTest
 {
   [TestFixture]
   public class WhereClauseTest

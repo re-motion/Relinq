@@ -1,11 +1,11 @@
 using System;
 using System.Reflection;
 using NUnit.Framework;
-using Rubicon.Data.Linq.Clauses;
-using Rubicon.Data.Linq.DataObjectModel;
-using Rubicon.Data.Linq.Parsing.FieldResolving;
+using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.DataObjectModel;
+using Remotion.Data.Linq.Parsing.FieldResolving;
 
-namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
+namespace Remotion.Data.Linq.UnitTests.DataObjectModelTest
 {
   [TestFixture]
   public class FieldDescriptorTest
@@ -70,7 +70,7 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     }
     
     [Test]
-    [ExpectedException (typeof (FieldAccessResolveException), ExpectedMessage = "The member 'Rubicon.Data.Linq.UnitTests.Student.First' "
+    [ExpectedException (typeof (FieldAccessResolveException), ExpectedMessage = "The member 'Remotion.Data.Linq.UnitTests.Student.First' "
       + "does not identify a queryable column.")]
     public void GetMandatoryColumnWithException ()
     {

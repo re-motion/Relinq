@@ -1,10 +1,10 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using Rubicon.Collections;
-using Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest;
+using Remotion.Collections;
+using Remotion.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest;
 
-namespace Rubicon.Data.Linq.UnitTests.TestQueryGenerators
+namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
 {
   public static class SelectTestQueryGenerator
   {

@@ -8,8 +8,8 @@
     <ProjectGuid>{975E15F0-75A7-419A-8EFC-8C5ED724DBA4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Rubicon.Data.DomainObjects.Linq</RootNamespace>
-    <AssemblyName>Rubicon.Data.DomainObjects.Linq</AssemblyName>
+    <RootNamespace>Remotion.Data.DomainObjects.Linq</RootNamespace>
+    <AssemblyName>Remotion.Data.DomainObjects.Linq</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,13 +31,21 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Rubicon.Core, Version=1.7.65.202, Culture=neutral, PublicKeyToken=ad97c3e83e217fcd, processorArchitecture=MSIL">
+    <Reference Include="Remotion, Version=1.7.65.202, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\libraries\Commons\trunk\Core\bin\Debug\Rubicon.Core.dll</HintPath>
+      <HintPath>..\..\..\Remotion\trunk\Core\bin\Debug\Remotion.dll</HintPath>
     </Reference>
-    <Reference Include="Rubicon.Data.DomainObjects, Version=1.7.65.202, Culture=neutral, PublicKeyToken=ad97c3e83e217fcd, processorArchitecture=MSIL">
+    <Reference Include="Remotion.Data.DomainObjects, Version=1.7.65.202, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\libraries\Commons\trunk\Data\DomainObjects\bin\Debug\Rubicon.Data.DomainObjects.dll</HintPath>
+      <HintPath>..\..\..\Remotion\trunk\Data\DomainObjects\bin\Debug\Remotion.Data.DomainObjects.dll</HintPath>
+    </Reference>
+    <Reference Include="Remotion.Data.Interfaces, Version=1.7.65.202, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Remotion\trunk\Data\DomainObjects\bin\Debug\Remotion.Data.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Remotion.Interfaces, Version=1.7.65.202, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Remotion\trunk\Core.Interfaces\bin\Debug\Remotion.Interfaces.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">

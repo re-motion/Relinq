@@ -3,11 +3,11 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Rhino.Mocks;
-using Rubicon.Data.Linq.Clauses;
-using Rubicon.Data.Linq.DataObjectModel;
+using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.DataObjectModel;
 
 
-namespace Rubicon.Data.Linq.UnitTests.ClausesTest
+namespace Remotion.Data.Linq.UnitTests.ClausesTest
 {
   [TestFixture]
   public class OrderByClauseTest

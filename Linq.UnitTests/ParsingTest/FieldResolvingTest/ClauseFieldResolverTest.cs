@@ -4,16 +4,16 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using Rhino.Mocks;
-using Rubicon.Collections;
-using Rubicon.Data.Linq.Clauses;
-using Rubicon.Data.Linq.DataObjectModel;
-using Rubicon.Data.Linq.Parsing.FieldResolving;
+using Remotion.Collections;
+using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.DataObjectModel;
+using Remotion.Data.Linq.Parsing.FieldResolving;
 
 using Mocks_Is = Rhino.Mocks.Constraints.Is;
 using Mocks_List = Rhino.Mocks.Constraints.List;
 using NUnit.Framework.SyntaxHelpers;
 
-namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
+namespace Remotion.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
 {
   [TestFixture]
   public class ClauseFieldResolverTest
@@ -63,7 +63,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     [Test]
     [ExpectedException (typeof (FieldAccessResolveException),
         ExpectedMessage = "This clause can only resolve field accesses for parameters of "
-            + "type 'Rubicon.Data.Linq.UnitTests.Student', but a parameter of type 'System.String' was given.")]
+            + "type 'Remotion.Data.Linq.UnitTests.Student', but a parameter of type 'System.String' was given.")]
     public void Resolve_ParameterAccess_InvalidParameterType ()
     {
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
@@ -106,7 +106,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
 
     [Test]
     [ExpectedException (typeof (FieldAccessResolveException), ExpectedMessage = "This clause can only resolve field accesses for parameters of "
-        + "type 'Rubicon.Data.Linq.UnitTests.Student', but a parameter of type 'Rubicon.Data.Linq.UnitTests.Student_Detail' was given.")]
+        + "type 'Remotion.Data.Linq.UnitTests.Student', but a parameter of type 'Remotion.Data.Linq.UnitTests.Student_Detail' was given.")]
     public void Resolve_SimpleMemberAccess_InvalidType ()
     {
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
@@ -182,7 +182,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     }
 
     [Test]
-    [ExpectedException (typeof (FieldAccessResolveException), ExpectedMessage = "The member 'Rubicon.Data.Linq.UnitTests.Student.First' does not "
+    [ExpectedException (typeof (FieldAccessResolveException), ExpectedMessage = "The member 'Remotion.Data.Linq.UnitTests.Student.First' does not "
         + "identify a relation.")]
     public void Resolve_Join_InvalidMember ()
     {

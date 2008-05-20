@@ -1,7 +1,6 @@
-using Rubicon.Data.Linq.Clauses;
-using Rubicon.Utilities;
+using Remotion.Data.Linq.Clauses;
 
-namespace Rubicon.Data.Linq.DataObjectModel
+namespace Remotion.Data.Linq.DataObjectModel
 {
   public struct OrderingField
   {

@@ -1,6 +1,6 @@
 using System.Collections;
 
-namespace Rubicon.Data.Linq
+namespace Remotion.Data.Linq
 {
   public interface IQueryExecutor
   {

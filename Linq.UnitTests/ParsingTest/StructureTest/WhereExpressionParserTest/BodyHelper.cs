@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Rubicon.Data.Linq.Parsing.Structure;
+using Remotion.Data.Linq.Parsing.Structure;
 
-namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.WhereExpressionParserTest
+namespace Remotion.Data.Linq.UnitTests.ParsingTest.StructureTest.WhereExpressionParserTest
 {
   public class BodyHelper
   {

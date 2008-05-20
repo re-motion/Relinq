@@ -1,9 +1,9 @@
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using Rubicon.Data.Linq.Parsing.Structure;
+using Remotion.Data.Linq.Parsing.Structure;
 
-namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
+namespace Remotion.Data.Linq.UnitTests.ParsingTest.StructureTest
 {
   [TestFixture]
   public class FromLetWhereExpressionTest

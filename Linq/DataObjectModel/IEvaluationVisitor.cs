@@ -1,6 +1,4 @@
-using System.Collections.Generic;
-
-namespace Rubicon.Data.Linq.DataObjectModel
+namespace Remotion.Data.Linq.DataObjectModel
 {
   public interface IEvaluationVisitor
   {

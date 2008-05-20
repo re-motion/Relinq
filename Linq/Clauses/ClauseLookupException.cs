@@ -1,6 +1,6 @@
 using System;
 
-namespace Rubicon.Data.Linq.Clauses
+namespace Remotion.Data.Linq.Clauses
 {
   public class ClauseLookupException : Exception
   {

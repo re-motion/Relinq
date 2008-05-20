@@ -1,10 +1,8 @@
-using System;
-using Rubicon.Data.Linq.Clauses;
-using Rubicon.Data.Linq.DataObjectModel;
-using Rubicon.Utilities;
+using Remotion.Data.Linq.Clauses;
+using Remotion.Utilities;
 using System.Linq.Expressions;
 
-namespace Rubicon.Data.Linq.Clauses
+namespace Remotion.Data.Linq.Clauses
 {
   public class SelectClause : ISelectGroupClause
   {

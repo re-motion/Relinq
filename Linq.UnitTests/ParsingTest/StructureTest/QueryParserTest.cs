@@ -2,12 +2,12 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using Rubicon.Data.Linq.Clauses;
-using Rubicon.Data.Linq.Parsing;
-using Rubicon.Data.Linq.Parsing.Structure;
-using Rubicon.Data.Linq.UnitTests.TestQueryGenerators;
+using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Parsing;
+using Remotion.Data.Linq.Parsing.Structure;
+using Remotion.Data.Linq.UnitTests.TestQueryGenerators;
 
-namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
+namespace Remotion.Data.Linq.UnitTests.ParsingTest.StructureTest
 {
   [TestFixture]
   public class QueryParserTest

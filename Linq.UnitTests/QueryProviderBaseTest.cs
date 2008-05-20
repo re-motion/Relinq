@@ -5,11 +5,11 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Rhino.Mocks.Constraints;
-using Rubicon.Data.Linq.UnitTests.TestQueryGenerators;
-using Rubicon.Utilities;
+using Remotion.Data.Linq.UnitTests.TestQueryGenerators;
+using Remotion.Utilities;
 using System.Collections;
 
-namespace Rubicon.Data.Linq.UnitTests
+namespace Remotion.Data.Linq.UnitTests
 {
   [TestFixture]
   public class QueryProviderBaseTest

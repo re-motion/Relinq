@@ -2,11 +2,11 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using Rubicon.Data.Linq.Clauses;
-using Rubicon.Data.Linq.DataObjectModel;
-using Rubicon.Data.Linq.Parsing.FieldResolving;
+using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.DataObjectModel;
+using Remotion.Data.Linq.Parsing.FieldResolving;
 
-namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
+namespace Remotion.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
 {
   [TestFixture]
   public class QueryModelFieldResolverTest

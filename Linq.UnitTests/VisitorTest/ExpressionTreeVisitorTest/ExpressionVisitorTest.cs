@@ -5,13 +5,13 @@ using System.Linq.Expressions;
 using Rhino.Mocks;
 using System.Reflection;
 using Rhino.Mocks.Interfaces;
-using Rubicon.Data.Linq.DataObjectModel;
-using Rubicon.Data.Linq.Visitor;
-using Rubicon.Development.UnitTesting;
-using Rubicon.Utilities;
+using Remotion.Data.Linq.DataObjectModel;
+using Remotion.Data.Linq.Visitor;
+using Remotion.Development.UnitTesting;
+using Remotion.Utilities;
 using System.Linq;
 
-namespace Rubicon.Data.Linq.UnitTests.VisitorTest.ExpressionTreeVisitorTest
+namespace Remotion.Data.Linq.UnitTests.VisitorTest.ExpressionTreeVisitorTest
 {
   [TestFixture]
   public class ExpressionVisitorTest

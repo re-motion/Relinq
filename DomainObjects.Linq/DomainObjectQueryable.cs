@@ -1,8 +1,9 @@
 using System.Linq.Expressions;
-using Rubicon.Data.Linq;
-using Rubicon.Data.Linq.QueryProviderImplementation;
+using Remotion.Data.Linq;
+using Remotion.Data.Linq.QueryProviderImplementation;
 
-namespace Rubicon.Data.DomainObjects.Linq
+
+namespace Remotion.Data.DomainObjects.Linq
 {
   public class DomainObjectQueryable<T> : QueryableBase<T> 
   {

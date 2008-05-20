@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Rubicon.Data.Linq.Clauses
+﻿namespace Remotion.Data.Linq.Clauses
 {
   public interface ISelectGroupClause : IClause
   {

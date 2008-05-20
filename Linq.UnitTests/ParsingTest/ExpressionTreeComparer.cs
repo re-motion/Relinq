@@ -3,12 +3,12 @@ using System.Collections;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using Rubicon.Utilities;
+using Remotion.Utilities;
 using System.Reflection;
-using Assertion=Rubicon.Utilities.Assertion;
+using Assertion=Remotion.Utilities.Assertion;
 
 
-namespace Rubicon.Data.Linq.UnitTests.ParsingTest
+namespace Remotion.Data.Linq.UnitTests.ParsingTest
 {
   public class ExpressionTreeComparer
   {

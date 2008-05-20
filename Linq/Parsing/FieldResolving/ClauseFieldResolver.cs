@@ -1,15 +1,13 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Rubicon.Collections;
-using Rubicon.Data.Linq.Clauses;
-using Rubicon.Data.Linq.DataObjectModel;
-using Rubicon.Data.Linq.Parsing.FieldResolving;
-using Rubicon.Utilities;
+using Remotion.Collections;
+using Remotion.Data.Linq.DataObjectModel;
+using Remotion.Data.Linq.Parsing.FieldResolving;
+using Remotion.Utilities;
 
-namespace Rubicon.Data.Linq.Parsing.FieldResolving
+namespace Remotion.Data.Linq.Parsing.FieldResolving
 {
   public class ClauseFieldResolver
   {

@@ -1,9 +1,8 @@
 using System;
 using System.Linq.Expressions;
-using Rubicon.Data.Linq.DataObjectModel;
-using Rubicon.Utilities;
+using Remotion.Utilities;
 
-namespace Rubicon.Data.Linq.Clauses
+namespace Remotion.Data.Linq.Clauses
 {
   public class OrderingClause : IBodyClause
   {

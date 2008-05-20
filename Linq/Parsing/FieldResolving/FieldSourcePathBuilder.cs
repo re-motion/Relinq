@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Rubicon.Collections;
-using Rubicon.Data.Linq.DataObjectModel;
-using Rubicon.Utilities;
+using Remotion.Collections;
+using Remotion.Data.Linq.DataObjectModel;
 
-namespace Rubicon.Data.Linq.Parsing.FieldResolving
+namespace Remotion.Data.Linq.Parsing.FieldResolving
 {
   public class FieldSourcePathBuilder
   {

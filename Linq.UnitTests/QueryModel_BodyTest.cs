@@ -2,11 +2,11 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using Rubicon.Data.Linq.Clauses;
-using OrderDirection=Rubicon.Data.Linq.Clauses.OrderDirection;
+using Remotion.Data.Linq.Clauses;
+using OrderDirection=Remotion.Data.Linq.Clauses.OrderDirection;
 using NUnit.Framework.SyntaxHelpers;
 
-namespace Rubicon.Data.Linq.UnitTests
+namespace Remotion.Data.Linq.UnitTests
 {
   [TestFixture]
   public class QueryModel_BodyTest
@@ -150,7 +150,7 @@ namespace Rubicon.Data.Linq.UnitTests
 
     [Test]
     [ExpectedException (typeof (ClauseLookupException), ExpectedMessage = "The from clause with identifier 's1' has type "
-        + "'Rubicon.Data.Linq.UnitTests.Student', but 'System.String' was requested.")]
+        + "'Remotion.Data.Linq.UnitTests.Student', but 'System.String' was requested.")]
     public void GetResolveableClause_InvalidType ()
     {
       LambdaExpression fromExpression = ExpressionHelper.CreateLambdaExpression ();

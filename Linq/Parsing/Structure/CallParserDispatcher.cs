@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
-using Rubicon.Text;
-using Rubicon.Utilities;
+using Remotion.Text;
+using Remotion.Utilities;
 
-namespace Rubicon.Data.Linq.Parsing.Structure
+namespace Remotion.Data.Linq.Parsing.Structure
 {
   public class CallParserDispatcher
   {

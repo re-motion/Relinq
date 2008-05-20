@@ -3,14 +3,14 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Rubicon.Collections;
-using Rubicon.Data.Linq.Clauses;
-using Rubicon.Data.Linq.DataObjectModel;
-using Rubicon.Data.Linq.Parsing;
-using Rubicon.Data.Linq.Parsing.Structure;
-using Rubicon.Data.Linq.UnitTests.TestQueryGenerators;
+using Remotion.Collections;
+using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.DataObjectModel;
+using Remotion.Data.Linq.Parsing;
+using Remotion.Data.Linq.Parsing.Structure;
+using Remotion.Data.Linq.UnitTests.TestQueryGenerators;
 
-namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
+namespace Remotion.Data.Linq.UnitTests.ParsingTest.StructureTest
 {
   [TestFixture]
   public class QueryModelCreatorTest

@@ -1,7 +1,7 @@
 using System;
-using Rubicon.Data.DomainObjects.Queries;
+using Remotion.Data.DomainObjects.Queries;
 
-namespace Rubicon.Data.DomainObjects.Linq.UnitTests
+namespace Remotion.Data.DomainObjects.Linq.UnitTests
 {
   public class TestQueryListener : IQueryListener
   {

@@ -1,14 +1,14 @@
 using System.Collections;
-using Rubicon.Collections;
-using Rubicon.Data.DomainObjects.Mapping;
-using Rubicon.Data.DomainObjects.Queries;
-using Rubicon.Data.DomainObjects.Queries.Configuration;
-using Rubicon.Data.Linq;
+using Remotion.Data.DomainObjects.Mapping;
+using Remotion.Data.Linq;
+using Remotion.Data.Linq.SqlGeneration.SqlServer;
+using Remotion.Collections;
+using Remotion.Data.DomainObjects.Queries;
+using Remotion.Data.DomainObjects.Queries.Configuration;
 using System;
-using Rubicon.Data.Linq.SqlGeneration;
-using Rubicon.Data.Linq.SqlGeneration.SqlServer;
+using Remotion.Data.Linq.SqlGeneration;
 
-namespace Rubicon.Data.DomainObjects.Linq
+namespace Remotion.Data.DomainObjects.Linq
 {
   public class QueryExecutor<T> : IQueryExecutor
   {

@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Rubicon.Data.Linq.UnitTests.TestQueryGenerators
+namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
 {
   public static class OrderByTestQueryGenerator
   {

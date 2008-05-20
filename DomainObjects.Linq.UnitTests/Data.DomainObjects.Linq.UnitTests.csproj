@@ -8,8 +8,8 @@
     <ProjectGuid>{632D7B91-9742-4252-BB3D-4590971DD6F3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Rubicon.Data.DomainObjects.Linq.UnitTests</RootNamespace>
-    <AssemblyName>Rubicon.Data.DomainObjects.Linq.UnitTests</AssemblyName>
+    <RootNamespace>Remotion.Data.DomainObjects.Linq.UnitTests</RootNamespace>
+    <AssemblyName>Remotion.Data.DomainObjects.Linq.UnitTests</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -33,23 +33,27 @@
   <ItemGroup>
     <Reference Include="nunit.framework, Version=2.4.0.2, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\libraries\Commons\trunk\prereq\Assemblies\nunit.framework.dll</HintPath>
+      <HintPath>..\..\..\Remotion\trunk\prereq\Assemblies\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Remotion, Version=1.7.65.202, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Remotion\trunk\Core\bin\Debug\Remotion.dll</HintPath>
+    </Reference>
+    <Reference Include="Remotion.Data.DomainObjects, Version=1.7.65.202, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Remotion\trunk\Data\DomainObjects\bin\Debug\Remotion.Data.DomainObjects.dll</HintPath>
+    </Reference>
+    <Reference Include="Remotion.Data.DomainObjects.UnitTests, Version=1.7.65.202, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Remotion\trunk\Data\DomainObjects.UnitTests\bin\Debug\Remotion.Data.DomainObjects.UnitTests.dll</HintPath>
+    </Reference>
+    <Reference Include="Remotion.Data.Interfaces, Version=1.7.65.202, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Remotion\trunk\Data\DomainObjects\bin\Debug\Remotion.Data.Interfaces.dll</HintPath>
     </Reference>
     <Reference Include="Rhino.Mocks, Version=3.1.0.584, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\libraries\Commons\trunk\prereq\Assemblies\Rhino.Mocks.dll</HintPath>
-    </Reference>
-    <Reference Include="Rubicon.Core, Version=1.7.65.202, Culture=neutral, PublicKeyToken=ad97c3e83e217fcd, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\libraries\Commons\trunk\Core\bin\Debug\Rubicon.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Rubicon.Data.DomainObjects, Version=1.7.65.202, Culture=neutral, PublicKeyToken=ad97c3e83e217fcd, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\libraries\Commons\trunk\Data\DomainObjects\bin\Debug\Rubicon.Data.DomainObjects.dll</HintPath>
-    </Reference>
-    <Reference Include="Rubicon.Data.DomainObjects.UnitTests, Version=1.7.65.202, Culture=neutral, PublicKeyToken=ad97c3e83e217fcd, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\libraries\Commons\trunk\Data\DomainObjects.UnitTests\bin\Debug\Rubicon.Data.DomainObjects.UnitTests.dll</HintPath>
+      <HintPath>..\..\..\Remotion\trunk\prereq\Assemblies\Rhino.Mocks.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -65,7 +69,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\libraries\Commons\trunk\Data\DomainObjects.UnitTests\Factories\DomainObjectIDs.cs">
+    <Compile Include="..\..\..\Remotion\trunk\Data\DomainObjects.UnitTests\Factories\DomainObjectIDs.cs">
       <Link>DomainObjectIDs.cs</Link>
     </Compile>
     <Compile Include="DatabaseInfoTest.cs" />
@@ -90,21 +94,21 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\libraries\Commons\trunk\Data\DomainObjects.UnitTests\Database\DataDomainObjects_CreateDB.sql">
+    <None Include="..\..\..\Remotion\trunk\Data\DomainObjects.UnitTests\Database\DataDomainObjects_CreateDB.sql">
       <Link>DataDomainObjects_CreateDB.sql</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\..\libraries\Commons\trunk\Data\DomainObjects.UnitTests\Database\DataDomainObjects_CreateTableInheritanceTestData.sql">
+    <None Include="..\..\..\Remotion\trunk\Data\DomainObjects.UnitTests\Database\DataDomainObjects_CreateTableInheritanceTestData.sql">
       <Link>DataDomainObjects_CreateTableInheritanceTestData.sql</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\..\libraries\Commons\trunk\Data\DomainObjects.UnitTests\Database\DataDomainObjects_CreateTestData.sql">
+    <None Include="..\..\..\Remotion\trunk\Data\DomainObjects.UnitTests\Database\DataDomainObjects_CreateTestData.sql">
       <Link>DataDomainObjects_CreateTestData.sql</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\..\libraries\Commons\trunk\Data\DomainObjects.UnitTests\Database\DataDomainObjects_SetupDB.sql">
+    <None Include="..\..\..\Remotion\trunk\Data\DomainObjects.UnitTests\Database\DataDomainObjects_SetupDB.sql">
       <Link>DataDomainObjects_SetupDB.sql</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

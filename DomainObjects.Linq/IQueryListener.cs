@@ -1,5 +1,6 @@
-using Rubicon.Data.DomainObjects.Queries;
-namespace Rubicon.Data.DomainObjects.Linq
+using Remotion.Data.DomainObjects.Queries;
+
+namespace Remotion.Data.DomainObjects.Linq
 {
   public interface IQueryListener
   {

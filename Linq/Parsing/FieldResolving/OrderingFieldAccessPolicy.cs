@@ -2,10 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
-using Rubicon.Collections;
-using Rubicon.Data.Linq.Clauses;
+using Remotion.Collections;
 
-namespace Rubicon.Data.Linq.Parsing.FieldResolving
+namespace Remotion.Data.Linq.Parsing.FieldResolving
 {
   public class OrderingFieldAccessPolicy : IResolveFieldAccessPolicy
   {

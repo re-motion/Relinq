@@ -3,10 +3,12 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq;
+using Remotion.Data.Linq.UnitTests;
 using Rhino.Mocks;
-using Rubicon.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses;
 
-namespace Rubicon.Data.Linq.UnitTests.ClausesTest
+namespace Remotion.Data.Linq.UnitTests.ClausesTest
 {
   [TestFixture]
   public class AdditionalFromClauseTest

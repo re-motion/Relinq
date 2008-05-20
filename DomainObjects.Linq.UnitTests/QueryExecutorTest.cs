@@ -1,16 +1,15 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Rubicon.Data.DomainObjects.Mapping;
-using Rubicon.Data.DomainObjects.UnitTests;
-using Rubicon.Data.DomainObjects.UnitTests.TestDomain;
-using Rubicon.Data.Linq;
+using Remotion.Data.DomainObjects.Mapping;
+using Remotion.Data.DomainObjects.UnitTests;
+using Remotion.Data.DomainObjects.UnitTests.TestDomain;
+using Remotion.Data.Linq;
 using System.Linq;
-using Rubicon.Data.Linq.Parsing.Structure;
+using Remotion.Data.Linq.Parsing.Structure;
 
-namespace Rubicon.Data.DomainObjects.Linq.UnitTests
+namespace Remotion.Data.DomainObjects.Linq.UnitTests
 {
   [TestFixture]
   public class QueryExecutorTest : ClientTransactionBaseTest

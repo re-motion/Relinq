@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Rubicon.Data.Linq.UnitTests
+namespace Remotion.Data.Linq.UnitTests
 {
   public class Student
   {

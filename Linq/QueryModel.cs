@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Linq.Expressions;
-using Rubicon.Data.Linq.Clauses;
-using Rubicon.Data.Linq.DataObjectModel;
-using Rubicon.Data.Linq.Parsing.FieldResolving;
-using Rubicon.Data.Linq.Visitor;
-using Rubicon.Utilities;
+using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.DataObjectModel;
+using Remotion.Data.Linq.Parsing.FieldResolving;
+using Remotion.Data.Linq.Visitor;
+using Remotion.Utilities;
 
-namespace Rubicon.Data.Linq
+namespace Remotion.Data.Linq
 {
   public class QueryModel : IQueryElement
   {

@@ -1,6 +1,6 @@
 using System.Linq;
 
-namespace Rubicon.Data.Linq.UnitTests.TestQueryGenerators
+namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
 {
   public class SubQueryTestQueryGenerator
   {

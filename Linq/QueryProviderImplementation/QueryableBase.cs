@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Rubicon.Utilities;
+using Remotion.Utilities;
 
-namespace Rubicon.Data.Linq.QueryProviderImplementation
+namespace Remotion.Data.Linq.QueryProviderImplementation
 {
   public abstract class QueryableBase<T> : IOrderedQueryable<T>
   {

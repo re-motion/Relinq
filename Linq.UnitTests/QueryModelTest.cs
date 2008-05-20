@@ -3,14 +3,14 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Rhino.Mocks;
-using Rubicon.Collections;
-using Rubicon.Data.Linq.Clauses;
-using Rubicon.Data.Linq.DataObjectModel;
-using Rubicon.Data.Linq.Parsing.FieldResolving;
-using Rubicon.Data.Linq.Visitor;
-using Rubicon.Data.Linq.UnitTests.TestQueryGenerators;
+using Remotion.Collections;
+using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.DataObjectModel;
+using Remotion.Data.Linq.Parsing.FieldResolving;
+using Remotion.Data.Linq.Visitor;
+using Remotion.Data.Linq.UnitTests.TestQueryGenerators;
 
-namespace Rubicon.Data.Linq.UnitTests
+namespace Remotion.Data.Linq.UnitTests
 {
   [TestFixture]
   public class QueryModelTest
@@ -136,7 +136,7 @@ namespace Rubicon.Data.Linq.UnitTests
    
     [Test]
     [ExpectedException (typeof (ClauseLookupException), ExpectedMessage = "The from clause with identifier 's0' has type "
-        + "'Rubicon.Data.Linq.UnitTests.Student', but 'System.String' was requested.")]
+        + "'Remotion.Data.Linq.UnitTests.Student', but 'System.String' was requested.")]
     public void GetResolveableClause_InvalidIdentifierType_MainFromClause ()
     {
       LambdaExpression fromExpression = ExpressionHelper.CreateLambdaExpression ();
@@ -157,7 +157,7 @@ namespace Rubicon.Data.Linq.UnitTests
 
     [Test]
     [ExpectedException (typeof (ClauseLookupException), ExpectedMessage = "The from clause with identifier 's1' has type "
-        + "'Rubicon.Data.Linq.UnitTests.Student', but 'System.String' was requested.")]
+        + "'Remotion.Data.Linq.UnitTests.Student', but 'System.String' was requested.")]
     public void GetResolveableClause_InvalidIdentifierType_AdditionalFromClause ()
     {
       LambdaExpression fromExpression = ExpressionHelper.CreateLambdaExpression ();

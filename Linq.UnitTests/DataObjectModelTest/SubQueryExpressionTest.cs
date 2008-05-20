@@ -1,9 +1,9 @@
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using Rubicon.Data.Linq.DataObjectModel;
+using Remotion.Data.Linq.DataObjectModel;
 
-namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
+namespace Remotion.Data.Linq.UnitTests.DataObjectModelTest
 {
   [TestFixture]
   public class SubQueryExpressionTest

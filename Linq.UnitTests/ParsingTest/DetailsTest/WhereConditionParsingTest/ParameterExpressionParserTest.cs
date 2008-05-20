@@ -2,13 +2,13 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Rhino.Mocks;
-using Rubicon.Data.Linq.Clauses;
-using Rubicon.Data.Linq.DataObjectModel;
-using Rubicon.Data.Linq.Parsing.Details.WhereConditionParsing;
-using Rubicon.Data.Linq.Parsing.FieldResolving;
+using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.DataObjectModel;
+using Remotion.Data.Linq.Parsing.Details.WhereConditionParsing;
+using Remotion.Data.Linq.Parsing.FieldResolving;
 using NUnit.Framework.SyntaxHelpers;
 
-namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionParsingTest
+namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionParsingTest
 {
   [TestFixture]
   public class ParameterExpressionParserTest

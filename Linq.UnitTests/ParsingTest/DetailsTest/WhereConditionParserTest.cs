@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework;
 using System.Linq;
-using Rubicon.Collections;
-using Rubicon.Data.Linq.Clauses;
-using Rubicon.Data.Linq.DataObjectModel;
-using Rubicon.Data.Linq.Parsing;
+using Remotion.Collections;
+using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.DataObjectModel;
+using Remotion.Data.Linq.Parsing;
 using System.Linq.Expressions;
-using Rubicon.Data.Linq.Parsing.Details;
-using Rubicon.Data.Linq.Parsing.FieldResolving;
+using Remotion.Data.Linq.Parsing.Details;
+using Remotion.Data.Linq.Parsing.FieldResolving;
 using NUnit.Framework.SyntaxHelpers;
-using Rubicon.Data.Linq.UnitTests.TestQueryGenerators;
+using Remotion.Data.Linq.UnitTests.TestQueryGenerators;
 
-namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
+namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest
 {
   [TestFixture]
   public class WhereConditionParserTest
@@ -63,7 +63,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     }
 
     [Test]
-    [ExpectedException (typeof (FieldAccessResolveException), ExpectedMessage = "The member 'Rubicon.Data.Linq.UnitTests.Student.NonDBBoolProperty' "
+    [ExpectedException (typeof (FieldAccessResolveException), ExpectedMessage = "The member 'Remotion.Data.Linq.UnitTests.Student.NonDBBoolProperty' "
         + "does not identify a queryable column.")]
     public void NonDbField ()
     {
@@ -73,7 +73,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
 
     [Test]
     [ExpectedException (typeof (FieldAccessResolveException), ExpectedMessage = "The field access expression "
-        + "'value(Rubicon.Data.Linq.UnitTests.Student).IsOld' does not contain a from clause identifier.")]
+        + "'value(Remotion.Data.Linq.UnitTests.Student).IsOld' does not contain a from clause identifier.")]
     public void InvalidMemberAccess ()
     {
       Expression condition = Expression.MakeMemberAccess (Expression.Constant (new Student()), typeof (Student).GetProperty ("IsOld"));

@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Rhino.Mocks;
-using Rubicon.Data.Linq.QueryProviderImplementation;
-using Rubicon.Utilities;
+using Remotion.Data.Linq.QueryProviderImplementation;
+using Remotion.Utilities;
 
-namespace Rubicon.Data.Linq.UnitTests.QueryProviderImplementationTest
+namespace Remotion.Data.Linq.UnitTests.QueryProviderImplementationTest
 {
   [TestFixture]
   public class QueryableBaseTest

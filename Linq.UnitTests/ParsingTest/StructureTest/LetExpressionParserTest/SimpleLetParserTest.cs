@@ -1,10 +1,10 @@
 using System.Linq.Expressions;
 using NUnit.Framework;
-using Rubicon.Data.Linq.Parsing.Structure;
-using Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.WhereExpressionParserTest;
-using Rubicon.Data.Linq.UnitTests.TestQueryGenerators;
+using Remotion.Data.Linq.Parsing.Structure;
+using Remotion.Data.Linq.UnitTests.ParsingTest.StructureTest.WhereExpressionParserTest;
+using Remotion.Data.Linq.UnitTests.TestQueryGenerators;
 
-namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.LetExpressionParserTest
+namespace Remotion.Data.Linq.UnitTests.ParsingTest.StructureTest.LetExpressionParserTest
 {
   [TestFixture]
   public class SimpleLetParserTest

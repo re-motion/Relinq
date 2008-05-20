@@ -1,12 +1,9 @@
-using System;
-using System.Linq;
 using NUnit.Framework;
 using Rhino.Mocks;
-using Rubicon.Data.DomainObjects.UnitTests.TestDomain;
-using Rubicon.Data.Linq;
-using System.Diagnostics;
+using Remotion.Data.DomainObjects.UnitTests.TestDomain;
+using Remotion.Data.Linq;
 
-namespace Rubicon.Data.DomainObjects.Linq.UnitTests
+namespace Remotion.Data.DomainObjects.Linq.UnitTests
 {
   [TestFixture]
   public class DomainObjectQueryableTest

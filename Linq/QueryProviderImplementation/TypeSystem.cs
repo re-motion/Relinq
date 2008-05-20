@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Rubicon.Data.Linq.QueryProviderImplementation
+namespace Remotion.Data.Linq.QueryProviderImplementation
 {
   // Standard implementation taken from http://msdn2.microsoft.com/en-us/library/bb546158(VS.90).aspx
   internal static class TypeSystem

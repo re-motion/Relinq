@@ -1,9 +1,8 @@
 using System;
 using System.Linq.Expressions;
-using Rubicon.Data.Linq.Visitor;
-using Rubicon.Utilities;
+using Remotion.Utilities;
 
-namespace Rubicon.Data.Linq.Parsing.Structure
+namespace Remotion.Data.Linq.Parsing.Structure
 {
   public class LetExpressionParser
   {

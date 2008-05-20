@@ -1,13 +1,12 @@
-using System;
 using System.Linq;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Rhino.Mocks.Constraints;
-using Rubicon.Data.DomainObjects.Queries;
-using Rubicon.Data.DomainObjects.UnitTests;
-using Rubicon.Data.DomainObjects.UnitTests.TestDomain;
+using Remotion.Data.DomainObjects.Queries;
+using Remotion.Data.DomainObjects.UnitTests;
+using Remotion.Data.DomainObjects.UnitTests.TestDomain;
 
-namespace Rubicon.Data.DomainObjects.Linq.UnitTests
+namespace Remotion.Data.DomainObjects.Linq.UnitTests
 {
   [TestFixture]
   public class DataContextTest : ClientTransactionBaseTest

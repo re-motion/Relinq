@@ -1,11 +1,9 @@
-using System;
 using System.Linq.Expressions;
-using Rubicon.Data.Linq.Clauses;
-using Rubicon.Data.Linq.DataObjectModel;
-using Rubicon.Data.Linq.Visitor;
-using Rubicon.Utilities;
+using Remotion.Data.Linq.DataObjectModel;
+using Remotion.Data.Linq.Visitor;
+using Remotion.Utilities;
 
-namespace Rubicon.Data.Linq.Parsing.Structure
+namespace Remotion.Data.Linq.Parsing.Structure
 {
   public class SubQueryFindingVisitor : ExpressionTreeVisitor
   {

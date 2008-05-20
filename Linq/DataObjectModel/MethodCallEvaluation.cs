@@ -1,9 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Rubicon.Utilities;
+using Remotion.Utilities;
 
-namespace Rubicon.Data.Linq.DataObjectModel
+namespace Remotion.Data.Linq.DataObjectModel
 {
   public class MethodCallEvaluation : IEvaluation
   {

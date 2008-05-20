@@ -5,7 +5,7 @@ using System.Data;
 using System.Data.Common;
 using Rhino.Mocks;
 
-namespace Rubicon.Data.Linq.UnitTests
+namespace Remotion.Data.Linq.UnitTests
 {
   public class StubParameterCollection : DbParameterCollection
   {

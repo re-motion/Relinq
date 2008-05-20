@@ -1,12 +1,11 @@
-using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Rubicon.Data.Linq.Clauses;
-using Rubicon.Data.Linq.Parsing.Structure;
-using Rubicon.Utilities;
+using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Parsing.Structure;
+using Remotion.Utilities;
 
-namespace Rubicon.Data.Linq.Parsing.Structure
+namespace Remotion.Data.Linq.Parsing.Structure
 {
   public class QueryModelCreator
   {

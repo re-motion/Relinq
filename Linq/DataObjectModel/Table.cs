@@ -1,7 +1,7 @@
 using System;
-using Rubicon.Utilities;
+using Remotion.Utilities;
 
-namespace Rubicon.Data.Linq.DataObjectModel
+namespace Remotion.Data.Linq.DataObjectModel
 {
   public class Table : IColumnSource
   {

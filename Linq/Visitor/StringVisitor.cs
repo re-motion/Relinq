@@ -1,12 +1,10 @@
-using System;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Text;
-using Rubicon.Data.Linq.Clauses;
-using Rubicon.Text;
-using Rubicon.Utilities;
+using Remotion.Data.Linq.Clauses;
+using Remotion.Utilities;
 
-namespace Rubicon.Data.Linq.Visitor
+namespace Remotion.Data.Linq.Visitor
 {
   public class StringVisitor : IQueryVisitor
   {

@@ -1,13 +1,12 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
-using Rubicon.Collections;
-using Rubicon.Data.Linq.Clauses;
-using Rubicon.Data.Linq.DataObjectModel;
-using Rubicon.Utilities;
+using Remotion.Collections;
+using Remotion.Data.Linq.DataObjectModel;
+using Remotion.Utilities;
 using System.Linq;
 
-namespace Rubicon.Data.Linq.Parsing.FieldResolving
+namespace Remotion.Data.Linq.Parsing.FieldResolving
 {
   public class WhereFieldAccessPolicy : IResolveFieldAccessPolicy
   {

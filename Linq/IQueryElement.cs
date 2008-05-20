@@ -1,4 +1,4 @@
-namespace Rubicon.Data.Linq
+namespace Remotion.Data.Linq
 {
   public interface IQueryElement
   {

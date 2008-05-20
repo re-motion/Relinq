@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
-using Rubicon.Utilities;
+using Remotion.Utilities;
 
-namespace Rubicon.Data.Linq.Parsing.Structure
+namespace Remotion.Data.Linq.Parsing.Structure
 {
   public class LetExpressionData : BodyExpressionDataBase<Expression>
   {

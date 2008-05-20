@@ -1,6 +1,6 @@
 using System;
 
-namespace Rubicon.Data.Linq.Parsing.FieldResolving
+namespace Remotion.Data.Linq.Parsing.FieldResolving
 {
   public class FieldAccessResolveException : Exception
   {

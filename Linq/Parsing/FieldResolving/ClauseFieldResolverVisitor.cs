@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Rubicon.Data.Linq.Parsing.FieldResolving;
-using Rubicon.Data.Linq.Visitor;
+using Remotion.Data.Linq.Parsing.FieldResolving;
+using Remotion.Data.Linq.Visitor;
 using System.Reflection;
-using Rubicon.Utilities;
+using Remotion.Utilities;
 
-namespace Rubicon.Data.Linq.Parsing.FieldResolving
+namespace Remotion.Data.Linq.Parsing.FieldResolving
 {
   /// <summary>
   /// identifies the parameter and members used by an expression of a field access

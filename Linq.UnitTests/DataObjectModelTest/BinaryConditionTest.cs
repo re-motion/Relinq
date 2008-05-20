@@ -1,9 +1,9 @@
 using System;
 using NUnit.Framework;
-using Rubicon.Data.Linq.DataObjectModel;
-using Rubicon.Utilities;
+using Remotion.Data.Linq.DataObjectModel;
+using Remotion.Utilities;
 
-namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
+namespace Remotion.Data.Linq.UnitTests.DataObjectModelTest
 {
   [TestFixture]
   public class BinaryConditionTest
@@ -17,8 +17,8 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage = "Argument left has type Rubicon.Data.Linq.DataObjectModel.Constant when " 
-        + "type Rubicon.Data.Linq.DataObjectModel.SubQuery was expected.\r\nParameter name: left")]
+    [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage = "Argument left has type Remotion.Data.Linq.DataObjectModel.Constant when " 
+        + "type Remotion.Data.Linq.DataObjectModel.SubQuery was expected.\r\nParameter name: left")]
     public void ContainsWithInvalidLeftSide ()
     {
       new BinaryCondition (new Constant (0), new Constant (0), BinaryCondition.ConditionKind.Contains);

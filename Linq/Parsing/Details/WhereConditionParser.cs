@@ -1,14 +1,13 @@
-using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Rubicon.Collections;
-using Rubicon.Data.Linq.Clauses;
-using Rubicon.Data.Linq.DataObjectModel;
-using Rubicon.Data.Linq.Parsing.Details.WhereConditionParsing;
-using Rubicon.Data.Linq.Parsing.FieldResolving;
-using Rubicon.Utilities;
+using Remotion.Collections;
+using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.DataObjectModel;
+using Remotion.Data.Linq.Parsing.Details.WhereConditionParsing;
+using Remotion.Data.Linq.Parsing.FieldResolving;
+using Remotion.Utilities;
 
-namespace Rubicon.Data.Linq.Parsing.Details
+namespace Remotion.Data.Linq.Parsing.Details
 {
   public class WhereConditionParser
   {

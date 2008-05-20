@@ -3,10 +3,10 @@ using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using NUnit.Framework;
 using Rhino.Mocks;
-using Rubicon.Data.Linq.Clauses;
-using Rubicon.Data.Linq.Visitor;
+using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Visitor;
 
-namespace Rubicon.Data.Linq.UnitTests.VisitorTest
+namespace Remotion.Data.Linq.UnitTests.VisitorTest
 {
   using Text = NUnit.Framework.SyntaxHelpers.Text;
   using System.Linq;
@@ -20,7 +20,7 @@ namespace Rubicon.Data.Linq.UnitTests.VisitorTest
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause();
       StringVisitor sv = new StringVisitor();
       sv.VisitMainFromClause (fromClause);
-      Assert.AreEqual ("from Int32 i in value(Rubicon.Data.Linq.UnitTests.TestQueryable`1[Rubicon.Data.Linq.UnitTests.Student]) ",
+      Assert.AreEqual ("from Int32 i in value(Remotion.Data.Linq.UnitTests.TestQueryable`1[Remotion.Data.Linq.UnitTests.Student]) ",
           sv.ToString());
     }
 

@@ -1,4 +1,4 @@
-namespace Rubicon.Data.Linq.Parsing
+namespace Remotion.Data.Linq.Parsing
 {
   public enum ParseContext
   {

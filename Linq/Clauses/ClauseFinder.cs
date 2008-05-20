@@ -1,9 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
-using Rubicon.Data.Linq.DataObjectModel;
 
-namespace Rubicon.Data.Linq.Clauses
+namespace Remotion.Data.Linq.Clauses
 {
   public static class ClauseFinder
   {

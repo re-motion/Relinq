@@ -1,12 +1,12 @@
 using System;
 using System.Linq.Expressions;
-using Rubicon.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses;
 using System.Reflection;
 using System.Linq;
-using Rubicon.Text;
-using Rubicon.Utilities;
+using Remotion.Text;
+using Remotion.Utilities;
 
-namespace Rubicon.Data.Linq.Visitor
+namespace Remotion.Data.Linq.Visitor
 {
   public class ExpressionTreeBuildingVisitor : IQueryVisitor
   {

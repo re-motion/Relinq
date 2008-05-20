@@ -2,11 +2,11 @@ using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Rhino.Mocks;
-using Rubicon.Data.Linq.Clauses;
-using Rubicon.Data.Linq.DataObjectModel;
-using OrderDirection=Rubicon.Data.Linq.Clauses.OrderDirection;
+using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.DataObjectModel;
+using OrderDirection=Remotion.Data.Linq.Clauses.OrderDirection;
 
-namespace Rubicon.Data.Linq.UnitTests.ClausesTest
+namespace Remotion.Data.Linq.UnitTests.ClausesTest
 {
   [TestFixture]
   public class OrderingClauseTest

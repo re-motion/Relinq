@@ -2,12 +2,12 @@ using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using System.Linq;
-using Rubicon.Data.Linq.Parsing;
-using Rubicon.Data.Linq.Parsing.Structure;
+using Remotion.Data.Linq.Parsing;
+using Remotion.Data.Linq.Parsing.Structure;
 using NUnit.Framework.SyntaxHelpers;
-using Rubicon.Data.Linq.UnitTests.TestQueryGenerators;
+using Remotion.Data.Linq.UnitTests.TestQueryGenerators;
 
-namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
+namespace Remotion.Data.Linq.UnitTests.ParsingTest.StructureTest
 {
   [TestFixture]
   public class SourceExpressionParserTest
@@ -52,7 +52,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
 
     [Test]
     [ExpectedException (typeof (ParserException), ExpectedMessage = "Distinct is only allowed at the top level of a query, not in the middle: "
-        + "'value(Rubicon.Data.Linq.UnitTests.TestQueryable`1[Rubicon.Data.Linq.UnitTests.Student]).Select(s => s).Distinct().Where(s => s.IsOld)'.")]
+        + "'value(Remotion.Data.Linq.UnitTests.TestQueryable`1[Remotion.Data.Linq.UnitTests.Student]).Select(s => s).Distinct().Where(s => s.IsOld)'.")]
     public void Distinct_NonTopLevel ()
     {
       IQueryable<Student> query = _source.Select (s => s).Distinct().Where (s => s.IsOld);

@@ -2,14 +2,13 @@ using System;
 using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
-using Rubicon.Collections;
-using Rubicon.Data.Linq;
-using Rubicon.Data.DomainObjects.UnitTests.TestDomain;
-using Rubicon.Data.Linq.Clauses;
+using Remotion.Collections;
+using Remotion.Data.Linq;
+using Remotion.Data.DomainObjects.UnitTests.TestDomain;
+using Remotion.Data.Linq.Clauses;
 using System.Linq.Expressions;
-using Rubicon.Data.Linq.DataObjectModel;
 
-namespace Rubicon.Data.DomainObjects.Linq.UnitTests
+namespace Remotion.Data.DomainObjects.Linq.UnitTests
 {
   [TestFixture]
   public class DatabaseInfoTest
@@ -147,7 +146,7 @@ namespace Rubicon.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void ProcessWhereParameter_Entity ()
     {
-      using (ClientTransaction.NewTransaction ().EnterDiscardingScope ())
+      using (ClientTransaction.NewRootTransaction ().EnterDiscardingScope ())
       {
         Order order = Order.NewObject();
         object processed = _databaseInfo.ProcessWhereParameter (order);

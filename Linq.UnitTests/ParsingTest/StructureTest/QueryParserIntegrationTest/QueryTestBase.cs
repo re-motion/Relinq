@@ -2,9 +2,9 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using Rubicon.Data.Linq.Parsing.Structure;
+using Remotion.Data.Linq.Parsing.Structure;
 
-namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.QueryParserIntegrationTest
+namespace Remotion.Data.Linq.UnitTests.ParsingTest.StructureTest.QueryParserIntegrationTest
 {
   public abstract class QueryTestBase<T>
   {

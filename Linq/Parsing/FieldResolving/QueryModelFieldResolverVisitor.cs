@@ -1,10 +1,9 @@
-using System;
 using System.Linq.Expressions;
-using Rubicon.Data.Linq.Clauses;
-using Rubicon.Data.Linq.Visitor;
-using Rubicon.Utilities;
+using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Visitor;
+using Remotion.Utilities;
 
-namespace Rubicon.Data.Linq.Parsing.FieldResolving
+namespace Remotion.Data.Linq.Parsing.FieldResolving
 {
   /// <summary>
   /// removes transparent identifier from a expression representing a field access

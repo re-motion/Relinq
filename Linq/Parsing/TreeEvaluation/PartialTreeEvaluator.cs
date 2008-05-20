@@ -1,9 +1,8 @@
-using System.Collections.Generic;
 using System.Linq.Expressions;
-using Rubicon.Data.Linq.Parsing.TreeEvaluation;
-using Rubicon.Data.Linq.Visitor;
+using Remotion.Data.Linq.Parsing.TreeEvaluation;
+using Remotion.Data.Linq.Visitor;
 
-namespace Rubicon.Data.Linq.Parsing.TreeEvaluation
+namespace Remotion.Data.Linq.Parsing.TreeEvaluation
 {
   public sealed class PartialTreeEvaluator : ExpressionTreeVisitor
   {

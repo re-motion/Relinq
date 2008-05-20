@@ -3,11 +3,11 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
-using Rubicon.Data.Linq.Parsing;
-using Rubicon.Data.Linq.Parsing.Structure;
-using Rubicon.Data.Linq.UnitTests.TestQueryGenerators;
+using Remotion.Data.Linq.Parsing;
+using Remotion.Data.Linq.Parsing.Structure;
+using Remotion.Data.Linq.UnitTests.TestQueryGenerators;
 
-namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.SelectExpressionParserTest
+namespace Remotion.Data.Linq.UnitTests.ParsingTest.StructureTest.SelectExpressionParserTest
 {
   [TestFixture]
   public class GeneralSelectExpressionParserTest
@@ -23,9 +23,9 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.SelectExpression
 
     [Test]
     [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected one of 'Select', but found 'Where' at position "
-        + "value(Rubicon.Data.Linq.UnitTests.TestQueryable`1[Rubicon.Data.Linq.UnitTests."
-            + "Student]).Where(s => (s.Last = \"Garcia\")) in tree value(Rubicon.Data.Linq.UnitTests.TestQueryable`1"
-                + "[Rubicon.Data.Linq.UnitTests.Student]).Where(s => (s.Last = \"Garcia\")).")]
+        + "value(Remotion.Data.Linq.UnitTests.TestQueryable`1[Remotion.Data.Linq.UnitTests."
+            + "Student]).Where(s => (s.Last = \"Garcia\")) in tree value(Remotion.Data.Linq.UnitTests.TestQueryable`1"
+                + "[Remotion.Data.Linq.UnitTests.Student]).Where(s => (s.Last = \"Garcia\")).")]
     public void Initialize_FromWrongExpression ()
     {
       MethodCallExpression expression = WhereTestQueryGenerator.CreateSimpleWhereQuery_WhereExpression (ExpressionHelper.CreateQuerySource ());

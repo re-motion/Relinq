@@ -2,10 +2,10 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using Rubicon.Data.Linq.Parsing;
-using Rubicon.Data.Linq.UnitTests.TestQueryGenerators;
+using Remotion.Data.Linq.Parsing;
+using Remotion.Data.Linq.UnitTests.TestQueryGenerators;
 
-namespace Rubicon.Data.Linq.UnitTests.ParsingTest
+namespace Remotion.Data.Linq.UnitTests.ParsingTest
 {
   [TestFixture]
   public class ParserUtilityTest
@@ -40,7 +40,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
 
     [Test]
     [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected one of 'SelectMany, Where', but found 'Select' at "
-        + "position value(Rubicon.Data.Linq.UnitTests.TestQueryable`1[Rubicon.Data.Linq.UnitTests."
+        + "position value(Remotion.Data.Linq.UnitTests.TestQueryable`1[Remotion.Data.Linq.UnitTests."
         + "Student]).Select(s => s) in tree new [] {}.")]
     public void CheckMethodCallExpression_InvalidName ()
     {
@@ -72,7 +72,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest
 
     [Test]
     [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected ParameterExpression for argument 0 of Select method call, found " 
-        + "ConstantExpression (value(Rubicon.Data.Linq.UnitTests.TestQueryable`1[Rubicon.Data.Linq.UnitTests.Student])).")]
+        + "ConstantExpression (value(Remotion.Data.Linq.UnitTests.TestQueryable`1[Remotion.Data.Linq.UnitTests.Student])).")]
     public void CheckParameterType_Fail ()
     {
       MethodCallExpression selectExpression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource ());

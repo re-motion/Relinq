@@ -1,6 +1,6 @@
-using Rubicon.Utilities;
+using Remotion.Utilities;
 
-namespace Rubicon.Data.Linq.DataObjectModel
+namespace Remotion.Data.Linq.DataObjectModel
 {
   // LetColumnSource
   public struct LetColumnSource : IColumnSource

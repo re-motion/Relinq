@@ -4,10 +4,10 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Rubicon.Data.Linq.Parsing;
-using Rubicon.Data.Linq.Parsing.Structure;
+using Remotion.Data.Linq.Parsing;
+using Remotion.Data.Linq.Parsing.Structure;
 
-namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest
+namespace Remotion.Data.Linq.UnitTests.ParsingTest.StructureTest
 {
   [TestFixture]
   public class CallParserDispatcherTest

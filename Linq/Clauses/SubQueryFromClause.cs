@@ -1,9 +1,9 @@
 using System;
 using System.Linq.Expressions;
-using Rubicon.Utilities;
-using Rubicon.Data.Linq.DataObjectModel;
+using Remotion.Utilities;
+using Remotion.Data.Linq.DataObjectModel;
 
-namespace Rubicon.Data.Linq.Clauses
+namespace Remotion.Data.Linq.Clauses
 {
   public class SubQueryFromClause : FromClauseBase, IBodyClause
   {

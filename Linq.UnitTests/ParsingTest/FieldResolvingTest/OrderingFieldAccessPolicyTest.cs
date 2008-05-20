@@ -4,11 +4,11 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Rubicon.Collections;
-using Rubicon.Data.Linq.Clauses;
-using Rubicon.Data.Linq.Parsing.FieldResolving;
+using Remotion.Collections;
+using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Parsing.FieldResolving;
 
-namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
+namespace Remotion.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
 {
   [TestFixture]
   public class OrderingFieldAccessPolicyTest
@@ -26,7 +26,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Ordering by 'Rubicon.Data.Linq.UnitTests.Student_Detail.Student' "
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Ordering by 'Remotion.Data.Linq.UnitTests.Student_Detail.Student' "
         + "is not supported because it is a relation member.")]
     public void AdjustMemberInfosForRelation ()
     {

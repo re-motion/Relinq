@@ -1,10 +1,9 @@
 using System;
-using System.Linq;
 using System.Linq.Expressions;
-using Rubicon.Utilities;
-using Rubicon.Data.Linq.DataObjectModel;
+using Remotion.Utilities;
 
-namespace Rubicon.Data.Linq.Clauses
+
+namespace Remotion.Data.Linq.Clauses
 {
   public class MainFromClause : FromClauseBase
   {

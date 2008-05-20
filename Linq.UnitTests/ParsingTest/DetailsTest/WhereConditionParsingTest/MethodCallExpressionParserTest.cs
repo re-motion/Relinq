@@ -2,14 +2,14 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using Rubicon.Data.Linq.Clauses;
-using Rubicon.Data.Linq.DataObjectModel;
-using Rubicon.Data.Linq.Parsing;
-using Rubicon.Data.Linq.Parsing.Details.WhereConditionParsing;
+using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.DataObjectModel;
+using Remotion.Data.Linq.Parsing;
+using Remotion.Data.Linq.Parsing.Details.WhereConditionParsing;
 using System.Reflection;
 using NUnit.Framework.SyntaxHelpers;
 
-namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionParsingTest
+namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionParsingTest
 {
   [TestFixture]
   public class MethodCallExpressionParserTest
@@ -69,7 +69,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPars
 
 
     [Test]
-    [ExpectedException (typeof (Rubicon.Data.Linq.Parsing.ParserException), ExpectedMessage = "Expected StartsWith, EndsWith, Contains for method " 
+    [ExpectedException (typeof (Remotion.Data.Linq.Parsing.ParserException), ExpectedMessage = "Expected StartsWith, EndsWith, Contains for method " 
         + "call expression in where condition, found Equals.")]
     public void Parse_WithException ()
     {

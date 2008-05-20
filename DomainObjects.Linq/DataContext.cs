@@ -1,4 +1,4 @@
-namespace Rubicon.Data.DomainObjects.Linq
+namespace Remotion.Data.DomainObjects.Linq
 {
   public static class DataContext
   {

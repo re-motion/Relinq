@@ -1,10 +1,10 @@
 using System.Reflection;
 using NUnit.Framework;
-using Rubicon.Collections;
-using Rubicon.Data.Linq.DataObjectModel;
-using Rubicon.Data.Linq.Parsing.FieldResolving;
+using Remotion.Collections;
+using Remotion.Data.Linq.DataObjectModel;
+using Remotion.Data.Linq.Parsing.FieldResolving;
 
-namespace Rubicon.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
+namespace Remotion.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
 {
   [TestFixture]
   public class FieldSourcePathBuilderTest

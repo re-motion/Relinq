@@ -3,11 +3,11 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using Rhino.Mocks;
-using Rubicon.Collections;
-using Rubicon.Data.Linq.Clauses;
-using Rubicon.Data.Linq.DataObjectModel;
+using Remotion.Collections;
+using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.DataObjectModel;
 
-namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
+namespace Remotion.Data.Linq.UnitTests.DataObjectModelTest
 {
   [TestFixture]
   public class DatabaseInfoUtilityTest
@@ -67,7 +67,7 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
 
     [Test]
     [ExpectedException (typeof (ArgumentException), ExpectedMessage = "The from clause with identifier i and query source type "
-        + "Rubicon.Data.Linq.UnitTests.TestQueryable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]] "
+        + "Remotion.Data.Linq.UnitTests.TestQueryable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]] "
             + "does not identify a queryable table.", MatchType = MessageMatch.Contains)]
     public void GetTableForFromClause_InvalidSource ()
     {
@@ -84,7 +84,7 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "The member 'Rubicon.Data.Linq.UnitTests.Student.First' does not "
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "The member 'Remotion.Data.Linq.UnitTests.Student.First' does not "
         + "identify a relation.")]
     public void GetRelatedTable_InvalidMember ()
     {
@@ -99,7 +99,7 @@ namespace Rubicon.Data.Linq.UnitTests.DataObjectModelTest
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "The member 'Rubicon.Data.Linq.UnitTests.Student.First' does not "
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "The member 'Remotion.Data.Linq.UnitTests.Student.First' does not "
         + "identify a relation.")]
     public void GetJoinColumns_InvalidMember ()
     {

@@ -1,13 +1,13 @@
 using System;
 using System.Reflection;
-using Rubicon.Collections;
-using Rubicon.Data.DomainObjects.Mapping;
-using Rubicon.Data.Linq;
-using Rubicon.Data.Linq.DataObjectModel;
-using Rubicon.Utilities;
-using Rubicon.Data.Linq.Clauses;
+using Remotion.Collections;
+using Remotion.Data.DomainObjects.Mapping;
+using Remotion.Data.Linq;
+using Remotion.Data.Linq.Clauses;
+using Remotion.Utilities;
 
-namespace Rubicon.Data.DomainObjects.Linq
+
+namespace Remotion.Data.DomainObjects.Linq
 {
   public class DatabaseInfo : IDatabaseInfo
   {

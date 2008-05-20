@@ -1,6 +1,6 @@
-using Rubicon.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses;
 
-namespace Rubicon.Data.Linq
+namespace Remotion.Data.Linq
 {
   public interface IQueryVisitor
   {

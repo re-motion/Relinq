@@ -1,10 +1,10 @@
 using System.Linq;
 using System.Linq.Expressions;
-using Rubicon.Data.Linq;
+using Remotion.Data.Linq;
+using Remotion.Utilities;
 using System;
-using Rubicon.Utilities;
 
-namespace Rubicon.Data.DomainObjects.Linq
+namespace Remotion.Data.DomainObjects.Linq
 {
   public class QueryProvider : QueryProviderBase
   {

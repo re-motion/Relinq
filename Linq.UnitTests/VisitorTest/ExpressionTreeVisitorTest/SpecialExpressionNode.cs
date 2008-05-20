@@ -1,6 +1,6 @@
 using System;
 using System.Linq.Expressions;
-namespace Rubicon.Data.Linq.UnitTests.VisitorTest.ExpressionTreeVisitorTest
+namespace Remotion.Data.Linq.UnitTests.VisitorTest.ExpressionTreeVisitorTest
 {
   public class SpecialExpressionNode : Expression
   {

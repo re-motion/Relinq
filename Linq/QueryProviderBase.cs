@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Rubicon.Data.Linq.Parsing.Structure;
-using Rubicon.Data.Linq.QueryProviderImplementation;
-using Rubicon.Utilities;
+using Remotion.Data.Linq.Parsing.Structure;
+using Remotion.Data.Linq.QueryProviderImplementation;
+using Remotion.Utilities;
 
-namespace Rubicon.Data.Linq
+namespace Remotion.Data.Linq
 {
   public abstract class QueryProviderBase : IQueryProvider
   {

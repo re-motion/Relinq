@@ -7,10 +7,10 @@ using NUnit.Framework.SyntaxHelpers;
 using Rhino.Mocks;
 using System.Reflection;
 using Rhino.Mocks.Interfaces;
-using Rubicon.Data.Linq.Visitor;
-using Constant=Rubicon.Data.Linq.DataObjectModel.Constant;
+using Remotion.Data.Linq.Visitor;
+using Constant=Remotion.Data.Linq.DataObjectModel.Constant;
 
-namespace Rubicon.Data.Linq.UnitTests.VisitorTest.ExpressionTreeVisitorTest
+namespace Remotion.Data.Linq.UnitTests.VisitorTest.ExpressionTreeVisitorTest
 {
   [TestFixture]
   public class ExpressionVisitor_SpecificExpressionsTest

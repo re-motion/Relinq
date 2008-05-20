@@ -1,7 +1,7 @@
 using System.Linq;
-using Rubicon.Collections;
+using Remotion.Collections;
 
-namespace Rubicon.Data.Linq.UnitTests.TestQueryGenerators
+namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
 {
   public static class JoinTestQueryGenerator
   {

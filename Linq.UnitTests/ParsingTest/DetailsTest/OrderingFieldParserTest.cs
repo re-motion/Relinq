@@ -2,14 +2,14 @@ using System;
 using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
-using Rubicon.Collections;
-using Rubicon.Data.Linq.Clauses;
-using Rubicon.Data.Linq.DataObjectModel;
-using Rubicon.Data.Linq.Parsing.Details;
-using Rubicon.Data.Linq.Parsing.FieldResolving;
-using Rubicon.Data.Linq.UnitTests.TestQueryGenerators;
+using Remotion.Collections;
+using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.DataObjectModel;
+using Remotion.Data.Linq.Parsing.Details;
+using Remotion.Data.Linq.Parsing.FieldResolving;
+using Remotion.Data.Linq.UnitTests.TestQueryGenerators;
 
-namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
+namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest
 {
   [TestFixture]
   public class OrderingFieldParserTest
@@ -93,7 +93,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     }
 
     [Test]
-    [ExpectedException (typeof (FieldAccessResolveException), ExpectedMessage = "The member 'Rubicon.Data.Linq.UnitTests.Student.NonDBProperty' "
+    [ExpectedException (typeof (FieldAccessResolveException), ExpectedMessage = "The member 'Remotion.Data.Linq.UnitTests.Student.NonDBProperty' "
         +"does not identify a queryable column.")]
     public void OrderingClause_WithNonDBField ()
     {
@@ -139,7 +139,7 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.DetailsTest
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Ordering by 'Rubicon.Data.Linq.UnitTests.Student_Detail.Student' "
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Ordering by 'Remotion.Data.Linq.UnitTests.Student_Detail.Student' "
         + "is not supported because it is a relation member.")]
     public void OrderingOnRelationMemberThrows()
     {

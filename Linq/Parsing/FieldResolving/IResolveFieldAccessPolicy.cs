@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using System.Reflection;
-using Rubicon.Collections;
-using Rubicon.Data.Linq.Clauses;
+using Remotion.Collections;
 using System.Linq.Expressions;
 
-namespace Rubicon.Data.Linq.Parsing.FieldResolving
+namespace Remotion.Data.Linq.Parsing.FieldResolving
 {
   public interface IResolveFieldAccessPolicy
   {

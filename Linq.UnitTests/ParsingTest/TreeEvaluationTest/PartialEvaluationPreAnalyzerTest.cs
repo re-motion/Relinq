@@ -1,11 +1,11 @@
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using Rubicon.Data.Linq.DataObjectModel;
-using Rubicon.Data.Linq.Parsing.TreeEvaluation;
+using Remotion.Data.Linq.DataObjectModel;
+using Remotion.Data.Linq.Parsing.TreeEvaluation;
 using NUnit.Framework.SyntaxHelpers;
 
-namespace Rubicon.Data.Linq.UnitTests.ParsingTest.TreeEvaluationTest
+namespace Remotion.Data.Linq.UnitTests.ParsingTest.TreeEvaluationTest
 {
   [TestFixture]
   public class PartialEvaluationPreAnalyzerTest

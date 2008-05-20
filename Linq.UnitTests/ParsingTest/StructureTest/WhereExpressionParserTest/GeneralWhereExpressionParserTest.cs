@@ -2,12 +2,12 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using Rubicon.Data.Linq.Parsing;
+using Remotion.Data.Linq.Parsing;
 using System.Reflection;
-using Rubicon.Data.Linq.Parsing.Structure;
-using Rubicon.Data.Linq.UnitTests.TestQueryGenerators;
+using Remotion.Data.Linq.Parsing.Structure;
+using Remotion.Data.Linq.UnitTests.TestQueryGenerators;
 
-namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.WhereExpressionParserTest
+namespace Remotion.Data.Linq.UnitTests.ParsingTest.StructureTest.WhereExpressionParserTest
 {
   [TestFixture]
   public class GeneralWhereExpressionParserTest
@@ -21,8 +21,8 @@ namespace Rubicon.Data.Linq.UnitTests.ParsingTest.StructureTest.WhereExpressionP
 
     [Test]
     [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected one of 'Where', but found 'Select' at position "
-        + "value(Rubicon.Data.Linq.UnitTests.TestQueryable`1[Rubicon.Data.Linq.UnitTests."
-            + "Student]).Select(s => s) in tree value(Rubicon.Data.Linq.UnitTests.TestQueryable`1[Rubicon.Data."
+        + "value(Remotion.Data.Linq.UnitTests.TestQueryable`1[Remotion.Data.Linq.UnitTests."
+            + "Student]).Select(s => s) in tree value(Remotion.Data.Linq.UnitTests.TestQueryable`1[Remotion.Data."
                 + "Linq.UnitTests.Student]).Select(s => s).")]
     public void Initialize_FromWrongExpression ()
     {
