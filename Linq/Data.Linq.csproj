@@ -148,6 +148,7 @@
     <Compile Include="SqlGeneration\ISelectBuilder.cs" />
     <Compile Include="SqlGeneration\IWhereBuilder.cs" />
     <Compile Include="SqlGeneration\LetData.cs" />
+    <Compile Include="SqlGeneration\SqlGenerationData.cs" />
     <Compile Include="SqlGeneration\SqlGeneratorBase.cs" />
     <Compile Include="SqlGeneration\SqlServer\BinaryConditionBuilder.cs" />
     <Compile Include="SqlGeneration\SqlServer\FromBuilder.cs" />
