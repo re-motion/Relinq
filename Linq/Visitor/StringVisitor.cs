@@ -17,7 +17,7 @@ namespace Remotion.Data.Linq.Visitor
 
     #region IQueryVisitor Members
 
-    public void VisitQueryExpression (QueryModel queryModel)
+    public void VisitQueryModel (QueryModel queryModel)
     {
       ArgumentUtility.CheckNotNull ("queryExpression", queryModel);
 

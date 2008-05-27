@@ -55,7 +55,7 @@ namespace Remotion.Data.Linq.UnitTests
       IQueryVisitor testVisitor = repository.CreateMock<IQueryVisitor> ();
 
       //// expectations
-      testVisitor.VisitQueryExpression (instance);
+      testVisitor.VisitQueryModel (instance);
 
       repository.ReplayAll ();
 
@@ -71,7 +71,7 @@ namespace Remotion.Data.Linq.UnitTests
 
       StringVisitor sv = new StringVisitor();
 
-      sv.VisitQueryExpression (queryModel);
+      sv.VisitQueryModel (queryModel);
 
       Assert.AreEqual (sv.ToString (), queryModel.ToString ());
     }

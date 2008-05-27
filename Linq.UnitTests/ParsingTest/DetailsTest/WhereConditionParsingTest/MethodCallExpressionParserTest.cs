@@ -48,6 +48,15 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
     }
 
     [Test]
+    [Ignore]
+    public void ParseContainsWithConstantExpression()
+    {
+      var methodName = "Contains";
+      var pattern = "%Test";
+      CheckParsingOfLikeVariant(methodName,pattern);
+    }
+
+    [Test]
     [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected ConstantExpression for argument 0 of EndsWith method call, "
         + "found ParameterExpression (Test).")]
     public void ParseEndsWith_NoConstantExpression ()

@@ -35,6 +35,7 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
       }
       else if (expression.Method.Name == "Contains")
       {
+        //CheckNumberOfArguments (... ,... , 1, ...) -> return CreateLike (.., "%..%")
         ParserUtility.CheckNumberOfArguments (expression, "Contains", 2, _whereClause.BoolExpression);
         ParserUtility.CheckParameterType<SubQueryExpression> (expression, "Contains", 0, _whereClause.BoolExpression);
         return CreateContains ((SubQueryExpression) expression.Arguments[0], expression.Arguments[1]);

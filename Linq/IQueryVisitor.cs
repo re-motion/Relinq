@@ -4,7 +4,7 @@ namespace Remotion.Data.Linq
 {
   public interface IQueryVisitor
   {
-    void VisitQueryExpression (QueryModel queryModel);
+    void VisitQueryModel (QueryModel queryModel);
     void VisitMainFromClause (MainFromClause fromClause);
     void VisitAdditionalFromClause (AdditionalFromClause fromClause);
     void VisitSubQueryFromClause (SubQueryFromClause clause);

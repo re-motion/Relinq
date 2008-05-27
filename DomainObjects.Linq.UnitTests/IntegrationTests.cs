@@ -287,6 +287,20 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
+    [Ignore ("TODO: Implement Contains(Object) on OPF collection")]
+    public void QueryWithInnerCollectionSubQueryInWhere ()
+    {
+      OrderItem item = OrderItem.GetObject(DomainObjectIDs.OrderItem1);
+      var orders =
+          from o in DataContext.Entity<Order> (new TestQueryListener ())
+          where o.OrderItems.ContainsObject (item)
+          select o;
+
+      CheckQueryResult (orders, DomainObjectIDs.Order1, DomainObjectIDs.Order2, DomainObjectIDs.Order3, DomainObjectIDs.Order4,
+          DomainObjectIDs.OrderWithoutOrderItem);
+    }
+
+    [Test]
     public void QueryWithLet ()
     {
       var orders = from o in DataContext.Entity<Order> (new TestQueryListener ())
@@ -341,6 +355,16 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
 
       CheckQueryResult (orders, DomainObjectIDs.Order1, DomainObjectIDs.Order2, DomainObjectIDs.Order3, DomainObjectIDs.Order4, DomainObjectIDs.Order4,
           DomainObjectIDs.InvalidOrder, DomainObjectIDs.OrderWithoutOrderItem);
+    }
+
+    [Test]
+    [Ignore]
+    public void QueryWithContains_Like ()
+    {
+      var customers = from c in DataContext.Entity<Customer>(new TestQueryListener())
+                      where c.Name.Contains("Sepp Fischer")
+                      select c;
+      CheckQueryResult(customers,DomainObjectIDs.Customer2);
     }
     
     private void CheckQueryResult<T> (IQueryable<T> query, params ObjectID[] expectedObjectIDs)

@@ -117,13 +117,13 @@ namespace Remotion.Data.Linq
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
 
-      visitor.VisitQueryExpression (this);
+      visitor.VisitQueryModel (this);
     }
 
     public override string ToString ()
     {
       var sv = new StringVisitor();
-      sv.VisitQueryExpression (this);
+      sv.VisitQueryModel (this);
       return sv.ToString();
     }
 

@@ -12,7 +12,7 @@ namespace Remotion.Data.Linq.Visitor
   {
     public Expression ExpressionTree { get; private set; }
 
-    public void VisitQueryExpression (QueryModel queryModel)
+    public void VisitQueryModel (QueryModel queryModel)
     {
       queryModel.MainFromClause.Accept (this);
       foreach (IBodyClause bodyClause in queryModel.BodyClauses)

@@ -263,7 +263,7 @@ namespace Remotion.Data.Linq.UnitTests.VisitorTest
       }
 
       repository.ReplayAll();
-      sv.VisitQueryExpression (queryModel);
+      sv.VisitQueryModel (queryModel);
       repository.VerifyAll();
     }
 
@@ -301,7 +301,7 @@ namespace Remotion.Data.Linq.UnitTests.VisitorTest
       }
 
       repository.ReplayAll ();
-      sv.VisitQueryExpression (queryModel);
+      sv.VisitQueryModel (queryModel);
       repository.VerifyAll ();
     }
 
