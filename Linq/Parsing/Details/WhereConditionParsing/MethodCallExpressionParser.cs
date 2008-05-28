@@ -33,15 +33,24 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
         ParserUtility.CheckParameterType<ConstantExpression> (expression, "EndsWith", 0, _whereClause.BoolExpression);
         return CreateLike (expression, "%" + ((ConstantExpression) expression.Arguments[0]).Value);
       }
-      else if (expression.Method.Name == "Contains")
+      else if (expression.Method.Name == "Contains" && expression.Method.IsGenericMethod)
       {
-        //CheckNumberOfArguments (... ,... , 1, ...) -> return CreateLike (.., "%..%")
         ParserUtility.CheckNumberOfArguments (expression, "Contains", 2, _whereClause.BoolExpression);
         ParserUtility.CheckParameterType<SubQueryExpression> (expression, "Contains", 0, _whereClause.BoolExpression);
         return CreateContains ((SubQueryExpression) expression.Arguments[0], expression.Arguments[1]);
       }
+      else if (expression.Method.Name == "Contains" && !expression.Method.IsGenericMethod)
+      {
+        ParserUtility.CheckNumberOfArguments (expression, "Contains", 1, _whereClause.BoolExpression);
+        ParserUtility.CheckParameterType<ConstantExpression> (expression, "Contains", 0, _whereClause.BoolExpression);
+        return CreateLike (expression, "%" + ((ConstantExpression) expression.Arguments[0]).Value + "%");
+      }
+      else if (expression.Method.Name == "ContainsFulltext")
+      {
+        return CreateContainsFulltext (expression, (string) ((ConstantExpression) expression.Arguments[1]).Value);
+      }
 
-      throw ParserUtility.CreateParserException ("StartsWith, EndsWith, Contains", expression.Method.Name,
+      throw ParserUtility.CreateParserException ("StartsWith, EndsWith, Contains, ContainsFulltext", expression.Method.Name,
           "method call expression in where condition", _whereClause.BoolExpression);
     }
 
@@ -54,6 +63,11 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
     {
       return new BinaryCondition (new SubQuery (subQueryExpression.QueryModel, null), _parsingCall (itemExpression),
           BinaryCondition.ConditionKind.Contains);
+    }
+
+    private BinaryCondition CreateContainsFulltext (MethodCallExpression expression, string pattern)
+    {
+      return new BinaryCondition (_parsingCall (expression.Arguments[0]), new Constant (pattern), BinaryCondition.ConditionKind.ContainsFulltext);
     }
   }
 }

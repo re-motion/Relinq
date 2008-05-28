@@ -32,7 +32,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected 1 arguments for StartsWith method call, found 0 arguments.")]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected at least 1 argument for StartsWith method call, found 0 arguments.")]
     public void ParseStartsWith_NoArguments ()
     {
       var methodName = "StartsWith";
@@ -48,13 +48,31 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
     }
 
     [Test]
-    [Ignore]
     public void ParseContainsWithConstantExpression()
     {
-      var methodName = "Contains";
-      var pattern = "%Test";
-      CheckParsingOfLikeVariant(methodName,pattern);
+      WhereClause whereClause = ExpressionHelper.CreateWhereClause();
+      ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
+      MemberExpression memberAccess = Expression.MakeMemberAccess (parameter, typeof (Student).GetProperty ("First"));
+
+      ConstantExpression checkedExpression = Expression.Constant ("Test");
+
+      MethodCallExpression methodCallExpression = Expression.Call (
+          memberAccess,
+          typeof (string).GetMethod ("Contains", new Type[] { typeof (string) }),
+          Expression.Constant ("Test")
+          );
+
+      ICriterion criterion = new Column (new Table ("Student", "s"), "First");
+      MethodCallExpressionParser parser = new MethodCallExpressionParser (whereClause, delegate (Expression expression)
+      {
+        Expression.Constant (5);
+        return criterion;
+      });
+      ICriterion actualCriterion = parser.Parse (methodCallExpression);
+      ICriterion expectedCriterion = new BinaryCondition (new Column(new Table("Student","s"),"First"), new Constant ("%Test%"), BinaryCondition.ConditionKind.Like);
+      Assert.AreEqual (expectedCriterion, actualCriterion);
     }
+    
 
     [Test]
     [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected ConstantExpression for argument 0 of EndsWith method call, "
@@ -66,7 +84,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected 1 arguments for EndsWith method call, found 0 arguments.")]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected at least 1 argument for EndsWith method call, found 0 arguments.")]
     public void ParseEndsWith_NoArguments ()
     {
       var methodName = "EndsWith";
@@ -78,8 +96,8 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
 
 
     [Test]
-    [ExpectedException (typeof (Remotion.Data.Linq.Parsing.ParserException), ExpectedMessage = "Expected StartsWith, EndsWith, Contains for method " 
-        + "call expression in where condition, found Equals.")]
+    [ExpectedException (typeof (Remotion.Data.Linq.Parsing.ParserException), ExpectedMessage = "Expected StartsWith, EndsWith, Contains, ContainsFulltext "
+        + "for method call expression in where condition, found Equals.")]
     public void Parse_WithException ()
     {
       WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
@@ -170,7 +188,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected 2 arguments for Contains method call, found 0 arguments.")]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected at least 1 argument for Contains method call, found 0 arguments.")]
     public void ParseContains_NoArguments ()
     {
       WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
@@ -183,6 +201,14 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
 
       MethodCallExpressionParser parser = new MethodCallExpressionParser (whereClause, delegate { return null; });
       parser.Parse (methodCallExpression);
+    }
+
+    [Test]
+    public void ParseContainsFulltext ()
+    {
+      var methodName = "ContainsFulltext";
+      var pattern = "Test";
+      CheckParsingOfContainsFulltext (methodName, pattern);
     }
 
     public static bool Contains () { return true; }
@@ -240,6 +266,32 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
 
       MethodCallExpressionParser parser = new MethodCallExpressionParser (whereClause, delegate { return null; });
       parser.Parse (methodCallExpression);
+    }
+
+    private void CheckParsingOfContainsFulltext (string methodName, string pattern)
+    {
+      WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
+
+      ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
+      MemberExpression memberAccess = Expression.MakeMemberAccess (parameter, typeof (Student).GetProperty ("First"));
+
+      MethodCallExpression methodCallExpression = Expression.Call (
+          memberAccess,
+          typeof (Remotion.Data.Linq.ExtensionMethods.ExtensionMethods).GetMethod (methodName),
+          Expression.MakeMemberAccess(Expression.Parameter(typeof(Student),"s"),typeof(Student).GetProperty("First")),
+          Expression.Constant ("Test")
+          );
+
+      ICriterion criterion = new Constant ("Test");
+      MethodCallExpressionParser parser = new MethodCallExpressionParser (whereClause, delegate (Expression expression)
+      {
+        Expression.Constant (5);
+        return criterion;
+      });
+
+      ICriterion actualCriterion = parser.Parse (methodCallExpression);
+      ICriterion expectedCriterion = new BinaryCondition (new Constant ("Test"), new Constant (pattern), BinaryCondition.ConditionKind.ContainsFulltext);
+      Assert.AreEqual (expectedCriterion, actualCriterion);
     }
 
   }

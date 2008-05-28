@@ -64,6 +64,7 @@
     <Compile Include="DataObjectModel\SingleJoin.cs" />
     <Compile Include="DataObjectModel\SubQuery.cs" />
     <Compile Include="DataObjectModel\SubQueryExpression.cs" />
+    <Compile Include="ExtensionMethods\ExtensionMethods.cs" />
     <Compile Include="Parsing\Details\SelectProjectionParsing\BinaryExpressionParser.cs" />
     <Compile Include="Parsing\Details\SelectProjectionParsing\ConstantExpressionParser.cs" />
     <Compile Include="Parsing\Details\SelectProjectionParsing\MemberExpressionParser.cs" />

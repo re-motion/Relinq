@@ -1,8 +1,10 @@
+using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using Remotion.Data.DomainObjects.UnitTests;
 using Remotion.Data.DomainObjects.UnitTests.TestDomain;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.ExtensionMethods;
 
 namespace Remotion.Data.DomainObjects.Linq.UnitTests
 {
@@ -275,6 +277,15 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
+    public void QueryWithContains_Like ()
+    {
+      var ceos = from c in DataContext.Entity<Ceo> (new TestQueryListener ())
+                      where c.Name.Contains ("Sepp Fischer")
+                      select c;
+      CheckQueryResult (ceos, DomainObjectIDs.Ceo4);
+    }
+
+    [Test]
     public void QueryWithSubQueryAndJoinInWhere ()
     {
       var orders =
@@ -357,17 +368,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
           DomainObjectIDs.InvalidOrder, DomainObjectIDs.OrderWithoutOrderItem);
     }
 
-    [Test]
-    [Ignore]
-    public void QueryWithContains_Like ()
-    {
-      var customers = from c in DataContext.Entity<Customer>(new TestQueryListener())
-                      where c.Name.Contains("Sepp Fischer")
-                      select c;
-      CheckQueryResult(customers,DomainObjectIDs.Customer2);
-    }
-    
-    private void CheckQueryResult<T> (IQueryable<T> query, params ObjectID[] expectedObjectIDs)
+    public static void CheckQueryResult<T> (IEnumerable<T> query, params ObjectID[] expectedObjectIDs)
         where T: TestDomainBase
     {
       T[] results = query.ToArray();
@@ -375,7 +376,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
       Assert.That (results, Is.EquivalentTo (expected));
     }
 
-    private T[] GetExpectedObjects<T> (params ObjectID[] expectedObjectIDs)
+    private static T[] GetExpectedObjects<T> (params ObjectID[] expectedObjectIDs)
         where T: TestDomainBase
     {
       return (from id in expectedObjectIDs select (id == null ? null : (T) TestDomainBase.GetObject (id))).ToArray();

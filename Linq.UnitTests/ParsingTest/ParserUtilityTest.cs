@@ -56,7 +56,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected 1 arguments for Select method call, found 2 arguments.")]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected at least 1 argument for Select method call, found 2 arguments.")]
     public void CheckNumberOfArguments_Fail ()
     {
       MethodCallExpression selectExpression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource ());

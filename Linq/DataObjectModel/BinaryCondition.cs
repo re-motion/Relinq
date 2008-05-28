@@ -4,7 +4,7 @@ namespace Remotion.Data.Linq.DataObjectModel
 {
   public struct BinaryCondition : ICriterion
   {
-    public enum ConditionKind { Equal, NotEqual, GreaterThan, GreaterThanOrEqual, LessThan, LessThanOrEqual, Like, Contains }
+    public enum ConditionKind { Equal, NotEqual, GreaterThan, GreaterThanOrEqual, LessThan, LessThanOrEqual, Like, Contains, ContainsFulltext }
 
     public readonly IValue Left;
     public readonly IValue Right;

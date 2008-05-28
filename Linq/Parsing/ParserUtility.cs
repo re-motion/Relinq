@@ -49,7 +49,7 @@ namespace Remotion.Data.Linq.Parsing
     public static void CheckNumberOfArguments (MethodCallExpression expression, string methodName, int expectedArgumentCount, Expression expressionTreeRoot)
     {
       if (expression.Arguments.Count != expectedArgumentCount)
-        throw CreateParserException (expectedArgumentCount + " arguments", expression.Arguments.Count + " arguments",
+        throw CreateParserException ("at least " + expectedArgumentCount + " argument", expression.Arguments.Count + " arguments",
             methodName + " method call", expressionTreeRoot);
     }
 
