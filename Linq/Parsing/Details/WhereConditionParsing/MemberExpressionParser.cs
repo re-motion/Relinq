@@ -6,7 +6,7 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
 {
-  public class MemberExpressionParser
+  public class MemberExpressionParser : IWhereConditionParser<MemberExpression>, IWhereConditionParser
   {
     private readonly QueryModel _queryModel;
     private readonly ClauseFieldResolver _resolver;
@@ -19,11 +19,21 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
       _resolver = resolver;
     }
 
-    public virtual ICriterion Parse (MemberExpression expression, List<FieldDescriptor> fieldDescriptorCollection)
+    public virtual ICriterion Parse (MemberExpression memberExpression, List<FieldDescriptor> fieldDescriptorCollection)
     {
-      FieldDescriptor fieldDescriptor = _queryModel.ResolveField (_resolver, expression);
+      FieldDescriptor fieldDescriptor = _queryModel.ResolveField (_resolver, memberExpression);
       fieldDescriptorCollection.Add (fieldDescriptor);
       return fieldDescriptor.GetMandatoryColumn ();
+    }
+
+    public bool CanParse(MemberExpression memberExpression)
+    {
+      return true;
+    }
+
+    public ICriterion Parse(Expression expression, List<FieldDescriptor> fieldDescriptors)
+    {
+      return Parse ((MemberExpression) expression, fieldDescriptors);
     }
   }
 }

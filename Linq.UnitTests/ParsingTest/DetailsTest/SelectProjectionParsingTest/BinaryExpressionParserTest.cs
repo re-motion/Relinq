@@ -7,6 +7,7 @@ using NUnit.Framework;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing;
+using Remotion.Data.Linq.Parsing.Details;
 using Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing;
 using Remotion.Data.Linq.Parsing.FieldResolving;
 
@@ -24,6 +25,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
     private MemberExpression _memberExpression2;
     private MemberExpression _memberExpression3;
     private List<FieldDescriptor> _fieldDescriptors;
+    private ParserRegistry _parserRegistry;
 
     [SetUp]
     public void SetUp ()
@@ -37,6 +39,11 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
       _memberExpression2 = Expression.MakeMemberAccess (_parameter, typeof (Student).GetProperty ("Last"));
       _memberExpression3 = Expression.MakeMemberAccess (_parameter, typeof (Student).GetProperty ("Last"));
       _fieldDescriptors = new List<FieldDescriptor> ();
+      _parserRegistry = new ParserRegistry ();
+      _parserRegistry.RegisterParser (new ConstantExpressionParser (StubDatabaseInfo.Instance));
+      _parserRegistry.RegisterParser (new ParameterExpressionParser (_queryModel, _resolver));
+      _parserRegistry.RegisterParser (new MemberExpressionParser (_queryModel, _resolver));
+      _parserRegistry.RegisterParser (new MethodCallExpressionParser (_queryModel, _parserRegistry));
     }
 
     [Test]
@@ -47,15 +54,19 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
       
       //expectedResult
       Column column1 = new Column (_fromSource, "FirstColumn");
+      List<IEvaluation> c1 = new List<IEvaluation> { column1 };
       Column column2 = new Column (_fromSource, "LastColumn");
+      List<IEvaluation> c2 = new List<IEvaluation> { column2 };
       BinaryEvaluation expectedResult = new BinaryEvaluation (column1, column2, BinaryEvaluation.EvaluationKind.Add);
 
-      BinaryExpressionParser binaryExpressionParser = new BinaryExpressionParser (_queryModel, e => e == _memberExpression1 ? column1 : column2 );
+      //BinaryExpressionParser binaryExpressionParser = new BinaryExpressionParser (_queryModel, e => e == _memberExpression1 ? c1 : c2 );
+      BinaryExpressionParser binaryExpressionParser = 
+        new BinaryExpressionParser (_queryModel, _parserRegistry);
 
       //result
-     IEvaluation result = binaryExpressionParser.Parse (binaryExpression, _fieldDescriptors);
+     List<IEvaluation> result = binaryExpressionParser.Parse (binaryExpression, _fieldDescriptors);
 
-     Assert.AreEqual (expectedResult, result);
+     Assert.AreEqual (expectedResult, result[0]);
     }
 
     [Test]
@@ -69,7 +80,10 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
       BinaryExpression binaryExpression5 = Expression.Subtract (memberExpression, memberExpression);
 
       Column column = new Column (_fromSource, "IDColumn");
-      BinaryExpressionParser binaryExpressionParser = new BinaryExpressionParser (_queryModel, e => e == _memberExpression1 ? column : column);
+      List<IEvaluation> c1 = new List<IEvaluation> { column };
+      //BinaryExpressionParser binaryExpressionParser = new BinaryExpressionParser (_queryModel, e => e == _memberExpression1 ? c1 : c1);
+      BinaryExpressionParser binaryExpressionParser = 
+        new BinaryExpressionParser (_queryModel, _parserRegistry);
 
       BinaryEvaluation.EvaluationKind evaluationKind;
       Assert.IsTrue (binaryExpressionParser.NodeTypeMap.TryGetValue (binaryExpression1.NodeType, out evaluationKind));
@@ -87,7 +101,9 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
       MemberExpression memberExpression = Expression.MakeMemberAccess (_parameter, typeof (Student).GetProperty ("ID"));
       BinaryExpression binaryExpression = Expression.AddChecked (memberExpression, memberExpression);
       Column column = new Column (_fromSource, "IDColumn");
-      BinaryExpressionParser binaryExpressionParser = new BinaryExpressionParser (_queryModel, e => e == memberExpression ? column : column);
+      List<IEvaluation> c1 = new List<IEvaluation> { column };
+      //BinaryExpressionParser binaryExpressionParser = new BinaryExpressionParser (_queryModel, e => e == memberExpression ? c1 : c1);
+      BinaryExpressionParser binaryExpressionParser = new BinaryExpressionParser (_queryModel, _parserRegistry);
       binaryExpressionParser.Parse (binaryExpression, _fieldDescriptors);
     }
   }

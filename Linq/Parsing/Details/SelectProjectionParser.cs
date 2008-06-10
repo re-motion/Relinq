@@ -46,13 +46,26 @@ namespace Remotion.Data.Linq.Parsing.Details
 
       _resolver = new ClauseFieldResolver (databaseInfo, context, policy);
 
+      //only for testing
+      ParserRegistry parserRegistry = new ParserRegistry ();
+
       _memberExpressionParser = new MemberExpressionParser (_queryModel, _resolver);
       _parameterExpressionParser = new ParameterExpressionParser (_queryModel, _resolver);
-      _newExpressionParser = new NewExpressionParser (_queryModel, _resolver,ParseExpression);
-      _binaryExpressionParser = new BinaryExpressionParser (_queryModel, ParseSingleEvaluationExpression);
-      _methodCallExpressionParser = new MethodCallExpressionParser (_queryModel, ParseSingleEvaluationExpression);
+      //_newExpressionParser = new NewExpressionParser (_queryModel, _resolver,ParseExpression);
+      _newExpressionParser = new NewExpressionParser (_queryModel, _resolver, parserRegistry);
+      //_binaryExpressionParser = new BinaryExpressionParser (_queryModel, ParseSingleEvaluationExpression);
+      _binaryExpressionParser = new BinaryExpressionParser (_queryModel, parserRegistry);
+      //_methodCallExpressionParser = new MethodCallExpressionParser (_queryModel, ParseSingleEvaluationExpression);
+      _methodCallExpressionParser = new MethodCallExpressionParser (_queryModel, parserRegistry);
       _constantExpressionParser = new ConstantExpressionParser (databaseInfo);
-      
+
+      parserRegistry.RegisterParser (_memberExpressionParser);
+      parserRegistry.RegisterParser (_parameterExpressionParser);
+      parserRegistry.RegisterParser (_constantExpressionParser);
+      parserRegistry.RegisterParser (_binaryExpressionParser);
+      parserRegistry.RegisterParser (_methodCallExpressionParser);
+      parserRegistry.RegisterParser (_newExpressionParser);
+
     }
 
     public Tuple<List<FieldDescriptor>, List<IEvaluation>> GetParseResult ()
@@ -61,18 +74,18 @@ namespace Remotion.Data.Linq.Parsing.Details
       return Tuple.NewTuple (_fieldDescriptors, ParseExpression (_projectionBody));
     }
 
-    private IEvaluation ParseSingleEvaluationExpression (Expression expression)
+    private List<IEvaluation> ParseSingleEvaluationExpression (Expression expression)
     {
       if (expression is ParameterExpression)
-        return _parameterExpressionParser.Parse ((ParameterExpression) expression, _fieldDescriptors);
+        return _parameterExpressionParser.Parse ((ParameterExpression)expression, _fieldDescriptors);
       else if (expression is MemberExpression)
-        return _memberExpressionParser.Parse ((MemberExpression) expression, _fieldDescriptors);
+        return _memberExpressionParser.Parse ((MemberExpression)expression, _fieldDescriptors);
       else if (expression is BinaryExpression)
-        return _binaryExpressionParser.Parse ((BinaryExpression) expression, _fieldDescriptors);
+        return _binaryExpressionParser.Parse ((BinaryExpression)expression, _fieldDescriptors);
       else if (expression is MethodCallExpression)
-        return _methodCallExpressionParser.Parse ((MethodCallExpression) expression, _fieldDescriptors);
+        return _methodCallExpressionParser.Parse ((MethodCallExpression)expression, _fieldDescriptors);
       else if (expression is ConstantExpression)
-        return _constantExpressionParser.Parse ((ConstantExpression) expression);
+        return _constantExpressionParser.Parse ((ConstantExpression)expression, _fieldDescriptors);
       throw ParserUtility.CreateParserException ("member expression, parameter expression, binary expression, methodcall expression or constant expression ", expression, "single evaluation in projection expression",
           _projectionBody);
     }
@@ -83,7 +96,7 @@ namespace Remotion.Data.Linq.Parsing.Details
         return _newExpressionParser.Parse ((NewExpression) expression, _fieldDescriptors);
       else
       {
-        return new List<IEvaluation> { ParseSingleEvaluationExpression (expression) };
+        return ParseSingleEvaluationExpression (expression);
       }
     }
 

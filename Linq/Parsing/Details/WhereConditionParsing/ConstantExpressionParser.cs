@@ -1,10 +1,11 @@
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
 {
-  public class ConstantExpressionParser
+  public class ConstantExpressionParser : IWhereConditionParser<ConstantExpression>,IWhereConditionParser
   {
     private readonly IDatabaseInfo _databaseInfo;
 
@@ -14,10 +15,20 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
       _databaseInfo = databaseInfo;
     }
 
-    public ICriterion Parse (ConstantExpression expression)
+    public ICriterion Parse (ConstantExpression constantExpression, List<FieldDescriptor> fieldDescriptorCollection)
     {
-      object newValue = _databaseInfo.ProcessWhereParameter (expression.Value);
+      object newValue = _databaseInfo.ProcessWhereParameter (constantExpression.Value);
       return new Constant (newValue);
+    }
+
+    public bool CanParse(ConstantExpression constantExpression)
+    {
+      return true;
+    }
+
+    public ICriterion Parse(Expression expression, List<FieldDescriptor> fieldDescriptors)
+    {
+      return Parse ((ConstantExpression) expression, fieldDescriptors);
     }
   }
 }

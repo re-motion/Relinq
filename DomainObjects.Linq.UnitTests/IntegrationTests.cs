@@ -381,5 +381,17 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     {
       return (from id in expectedObjectIDs select (id == null ? null : (T) TestDomainBase.GetObject (id))).ToArray();
     }
+
+    //for master thesis only
+    [Test]
+    public void QueryForMasterThesis ()
+    {
+      var computers =
+          from c in DataContext.Entity<Computer> (new TestQueryListener ())
+          where c.SerialNumber == "93756-ndf-23"
+          select c;
+
+      CheckQueryResult (computers, DomainObjectIDs.Computer5);
+    }
   }
 }

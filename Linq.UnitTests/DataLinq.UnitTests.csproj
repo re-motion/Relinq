@@ -68,12 +68,15 @@
     <Compile Include="DataObjectModelTest\FieldSourcePathTest.cs" />
     <Compile Include="DataObjectModelTest\SubQueryExpressionTest.cs" />
     <Compile Include="DataObjectModelTest\SubQueryTest.cs" />
+    <Compile Include="ParsingTest\DetailsTest\ParserRegistryTest.cs" />
+    <Compile Include="ParsingTest\DetailsTest\SelectProjectionParserRegistryTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\SelectProjectionParsingTest\BinaryExpressionParserTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\SelectProjectionParsingTest\ConstantExpressionParserTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\SelectProjectionParsingTest\MemberExpressionParserTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\SelectProjectionParsingTest\MethodCallExpressionParserTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\SelectProjectionParsingTest\NewExpressionParserTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\SelectProjectionParsingTest\ParameterExpressionParserTest.cs" />
+    <Compile Include="ParsingTest\DetailsTest\WhereConditionParserRegistryTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\WhereConditionParsingTest\BinaryExpressionParserTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\WhereConditionParsingTest\ConstantExpressionParserTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\WhereConditionParsingTest\MemberExpressionParserTest.cs" />
@@ -114,7 +117,6 @@
     <Compile Include="ParsingTest\StructureTest\ParseResultCollectorTest.cs" />
     <Compile Include="ParsingTest\StructureTest\QueryModelCreatorTest.cs" />
     <Compile Include="ParsingTest\StructureTest\QueryParserIntegrationTest\OrderByWithWhereConditionAndMultiFrom.cs" />
-    <Compile Include="ParsingTest\DetailsTest\SelectProjectionParserTest.cs" />
     <Compile Include="ParsingTest\StructureTest\QueryParserIntegrationTest\ReverseFromWhereQueryWithProjectionTest.cs" />
     <Compile Include="ParsingTest\StructureTest\QueryParserIntegrationTest\SimpleSubQueryInAdditionalFromClauseTest.cs" />
     <Compile Include="ParsingTest\StructureTest\QueryParserIntegrationTest\ThreeFromWhereQueryTest.cs" />
@@ -141,7 +143,6 @@
     <Compile Include="ParsingTest\TreeEvaluationTest\PartialEvaluationPreAnalyzerIntegrationTest.cs" />
     <Compile Include="ParsingTest\TreeEvaluationTest\PartialEvaluationPreAnalyzerTest.cs" />
     <Compile Include="ParsingTest\TreeEvaluationTest\PartialTreeEvaluatorTest.cs" />
-    <Compile Include="ParsingTest\DetailsTest\WhereConditionParserTest.cs" />
     <Compile Include="ParsingTest\StructureTest\WhereExpressionParserTest\BodyHelper.cs" />
     <Compile Include="ParsingTest\StructureTest\WhereExpressionParserTest\GeneralWhereExpressionParserTest.cs" />
     <Compile Include="ParsingTest\StructureTest\WhereExpressionParserTest\RecursiveWhereExpressionParserTest.cs" />

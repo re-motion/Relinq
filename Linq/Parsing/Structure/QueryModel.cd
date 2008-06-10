@@ -87,7 +87,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Remotion.Data.Linq.Clauses.LetClause">
-    <Position X="7.5" Y="4.5" Width="1.75" />
+    <Position X="6.25" Y="4.5" Width="1.75" />
     <Members>
       <Field Name="_expression" Hidden="true" />
       <Field Name="_identifier" Hidden="true" />
@@ -112,6 +112,22 @@
     <TypeIdentifier>
       <HashCode>AIIBACABAAAAAAAAAAABgAAAAAAAAAAAAAQAQAAAAAA=</HashCode>
       <FileName>Clauses\FromClauseBase.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Remotion.Data.Linq.Clauses.WhereClause">
+    <Position X="9" Y="4.5" Width="1.5" />
+    <Members>
+      <Field Name="_boolExpression" Hidden="true" />
+      <Field Name="_simplifiedBoolExpression" Hidden="true" />
+      <Method Name="Accept" Hidden="true" />
+      <Method Name="GetSimplifiedBoolExpression" Hidden="true" />
+      <Method Name="SetQueryModel" Hidden="true" />
+      <Method Name="WhereClause" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>BIAAAAAAAAAAAAAAgAAAAIQAAAAAAAAAAAQAAEAAABA=</HashCode>
+      <FileName>Clauses\WhereClause.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>

@@ -1,7 +1,9 @@
 using System.Linq.Expressions;
 using NUnit.Framework;
+using System.Collections.Generic;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.DataObjectModel;
+using Remotion.Data.Linq.Parsing.Details;
 using Remotion.Data.Linq.Parsing.Details.WhereConditionParsing;
 
 namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionParsingTest
@@ -10,21 +12,23 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
   public class UnaryExpressionParserTest
   {
     [Test]
-    public void Parse()
+    public void Parse ()
     {
-      WhereClause whereClause = ExpressionHelper.CreateWhereClause();
+      QueryModel queryModel = ExpressionHelper.CreateQueryModel();
+
+      WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
       UnaryExpression unaryExpression = Expression.Not (Expression.Constant (5));
 
       ICriterion criterion = new Constant (5);
       ICriterion expectedCriterion = new NotCriterion (new Constant (5));
 
-      UnaryExpressionParser parser = new UnaryExpressionParser (whereClause, delegate (Expression expression)
-      {
-        Expression.Constant (5);
-        return criterion;
-      });
+      ParserRegistry parserRegistry = new ParserRegistry ();
+      parserRegistry.RegisterParser (new ConstantExpressionParser (StubDatabaseInfo.Instance));
 
-      ICriterion actualCriterion = parser.Parse (unaryExpression);
+      UnaryExpressionParser parser = new UnaryExpressionParser(queryModel,parserRegistry);
+
+      List<FieldDescriptor> fieldCollection = new List<FieldDescriptor> ();
+      ICriterion actualCriterion = parser.Parse (unaryExpression, fieldCollection);
       Assert.AreEqual (expectedCriterion, actualCriterion);
     }
   }

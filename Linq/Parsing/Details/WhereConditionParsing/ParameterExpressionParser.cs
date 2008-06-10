@@ -6,7 +6,7 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
 {
-  public class ParameterExpressionParser
+  public class ParameterExpressionParser : IWhereConditionParser<ParameterExpression>, IWhereConditionParser
   {
     private readonly QueryModel _queryModel;
     private readonly ClauseFieldResolver _resolver;
@@ -20,19 +20,21 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
       _resolver = resolver;
     }
 
-    public ICriterion Parse (ParameterExpression expression, List<FieldDescriptor> fieldDescriptorCollection)
+    public ICriterion Parse (ParameterExpression parameterExpression, List<FieldDescriptor> fieldDescriptorCollection)
     {
-      //MemberExpression primaryKeyExpression = Expression.MakeMemberAccess (expression,
-      //    DatabaseInfoUtility.GetPrimaryKeyMember (_databaseInfo, expression.Type));
-      //return _parsingCall (primaryKeyExpression);
-
-      //MemberExpression primaryKeyExpression = Expression.MakeMemberAccess (expression,
-      //    DatabaseInfoUtility.GetPrimaryKeyMember (_resolver.DatabaseInfo, expression.Type));
-      //return new MemberExpressionParser (_queryModel, _resolver).Parse (primaryKeyExpression, fieldDescriptorCollection);
-
-      FieldDescriptor fieldDescriptor = _queryModel.ResolveField (_resolver, expression);
+      FieldDescriptor fieldDescriptor = _queryModel.ResolveField (_resolver, parameterExpression);
       fieldDescriptorCollection.Add (fieldDescriptor);
       return fieldDescriptor.GetMandatoryColumn ();
+    }
+
+    public bool CanParse(ParameterExpression parameterExpression)
+    {
+      return true;
+    }
+
+    public ICriterion Parse(Expression expression, List<FieldDescriptor> fieldDescriptors)
+    {
+      return Parse ((ParameterExpression) expression, fieldDescriptors);
     }
   }
 }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Data.Linq.DataObjectModel;
@@ -13,7 +14,8 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
     {
       object expected = new Constant (5);
       ConstantExpressionParser parser = new ConstantExpressionParser (StubDatabaseInfo.Instance);
-      object result = parser.Parse (Expression.Constant(5, typeof (int)));
+      List<FieldDescriptor> fieldCollection = new List<FieldDescriptor> ();
+      object result = parser.Parse (Expression.Constant(5, typeof (int)),fieldCollection);
       Assert.AreEqual (expected, result);
     }
   }

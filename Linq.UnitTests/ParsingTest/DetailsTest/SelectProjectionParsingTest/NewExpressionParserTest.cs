@@ -6,6 +6,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.DataObjectModel;
+using Remotion.Data.Linq.Parsing.Details;
 using Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing;
 using Remotion.Data.Linq.Parsing.FieldResolving;
 
@@ -24,6 +25,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
     private QueryModel _queryModel;
     private IColumnSource _fromSource;
     private List<FieldDescriptor> _fieldDescriptors;
+    private ParserRegistry _parserRegistry;
 
     [SetUp]
     public void SetUp ()
@@ -38,6 +40,14 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
       _memberExpression1 = Expression.MakeMemberAccess (_parameter, typeof (Student).GetProperty ("First"));
       _memberExpression2 = Expression.MakeMemberAccess (_parameter, typeof (Student).GetProperty ("Last"));
       _memberExpression3 = Expression.MakeMemberAccess (_parameter, typeof (Student).GetProperty ("First"));
+
+      _parserRegistry = new ParserRegistry ();
+      _parserRegistry.RegisterParser (new ConstantExpressionParser (StubDatabaseInfo.Instance));
+      _parserRegistry.RegisterParser (new ParameterExpressionParser (_queryModel, _resolver));
+      _parserRegistry.RegisterParser (new MemberExpressionParser (_queryModel, _resolver));
+      _parserRegistry.RegisterParser (new MethodCallExpressionParser (_queryModel, _parserRegistry));
+      _parserRegistry.RegisterParser (new NewExpressionParser (_queryModel, _resolver, _parserRegistry));
+      
 
     }
 
@@ -56,7 +66,8 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
       Column column2 = new Column (_fromSource, "LastColumn");
       List<IEvaluation> expected2 = new List<IEvaluation> { column2 };
 
-      NewExpressionParser parser = new NewExpressionParser (_queryModel, _resolver, e => e == _memberExpression1 ? expected1 : expected2);
+      //NewExpressionParser parser = new NewExpressionParser (_queryModel, _resolver, e => e == _memberExpression1 ? expected1 : expected2);
+      NewExpressionParser parser = new NewExpressionParser (_queryModel, _resolver, _parserRegistry);
       List<IEvaluation> result = parser.Parse (newExpression, _fieldDescriptors);
 
       Assert.That (result, Is.EqualTo (expected1));
@@ -85,8 +96,9 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
       List<IEvaluation> test = new List<IEvaluation> { column1,column2};
 
       NewExpression outerExpression = Expression.New (constructorInfo1, _memberExpression3, innerExpression);
-      NewExpressionParser parser = new NewExpressionParser (_queryModel, _resolver,
-          e => e == _memberExpression3 ? expected1 : expected2);
+      //NewExpressionParser parser = new NewExpressionParser (_queryModel, _resolver,
+      //    e => e == _memberExpression3 ? expected1 : expected2);
+      NewExpressionParser parser = new NewExpressionParser (_queryModel, _resolver,_parserRegistry);
       List<IEvaluation> result = parser.Parse (outerExpression, _fieldDescriptors);
       
       Assert.That (result, Is.EqualTo (expectedResult));

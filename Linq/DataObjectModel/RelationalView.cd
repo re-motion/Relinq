@@ -4,9 +4,10 @@
     <Position X="0.5" Y="1.75" Width="1.5" />
     <Members>
       <Method Name="Accept" Hidden="true" />
+      <Property Name="AliasString" Hidden="true" />
       <Method Name="Equals" Hidden="true" />
       <Method Name="GetHashCode" Hidden="true" />
-      <Property Name="QueryModel" Hidden="true" />
+      <Property Name="IsTable" Hidden="true" />
       <Method Name="SubQuery" Hidden="true" />
     </Members>
     <TypeIdentifier>
@@ -18,6 +19,7 @@
   <Class Name="Remotion.Data.Linq.DataObjectModel.Table" BaseTypeListCollapsed="true">
     <Position X="2.75" Y="1.75" Width="1.5" />
     <Members>
+      <Property Name="AliasString" Hidden="true" />
       <Method Name="Equals" Hidden="true" />
       <Method Name="GetHashCode" Hidden="true" />
       <Property Name="IsTable" Hidden="true" />
@@ -50,7 +52,7 @@
     <Lollipop Position="0.2" />
   </Struct>
   <Struct Name="Remotion.Data.Linq.DataObjectModel.BinaryEvaluation" BaseTypeListCollapsed="true">
-    <Position X="10" Y="0.5" Width="1.5" />
+    <Position X="2.75" Y="3.5" Width="1.5" />
     <Members>
       <Method Name="Accept" Hidden="true" />
       <Method Name="BinaryEvaluation" Hidden="true" />
@@ -69,7 +71,7 @@
     <Lollipop Position="0.2" />
   </Struct>
   <Struct Name="Remotion.Data.Linq.DataObjectModel.BinaryCondition" BaseTypeListCollapsed="true">
-    <Position X="8.25" Y="0.5" Width="1.5" />
+    <Position X="0.5" Y="3.5" Width="1.5" />
     <Members>
       <Method Name="Accept" Hidden="true" />
       <Method Name="BinaryCondition" Hidden="true" />
@@ -92,7 +94,7 @@
     <Lollipop Position="0.2" />
   </Struct>
   <Struct Name="Remotion.Data.Linq.DataObjectModel.ComplexCriterion" BaseTypeListCollapsed="true">
-    <Position X="6.5" Y="0.5" Width="1.5" />
+    <Position X="4.75" Y="3.5" Width="1.5" />
     <Members>
       <Method Name="Accept" Hidden="true" />
       <Method Name="ComplexCriterion" Hidden="true" />
@@ -123,54 +125,6 @@
       <FileName>DataObjectModel\Constant.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
-  </Struct>
-  <Struct Name="Remotion.Data.Linq.DataObjectModel.LetColumnSource" BaseTypeListCollapsed="true">
-    <Position X="8.25" Y="2.5" Width="1.5" />
-    <Members>
-      <Method Name="LetColumnSource" Hidden="true" />
-    </Members>
-    <TypeIdentifier>
-      <HashCode>ABAAAAAAAAIABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>DataObjectModel\LetColumnSource.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Struct>
-  <Struct Name="Remotion.Data.Linq.DataObjectModel.NotCriterion" BaseTypeListCollapsed="true">
-    <Position X="4.75" Y="3.5" Width="1.5" />
-    <Members>
-      <Method Name="Accept" Hidden="true" />
-      <Method Name="NotCriterion" Hidden="true" />
-      <Method Name="ToString" Hidden="true" />
-    </Members>
-    <TypeIdentifier>
-      <HashCode>AIAAAAAAAAAAAAAEAAAAAAAAAAAAAAgAAAAAAAAAAAA=</HashCode>
-      <FileName>DataObjectModel\NotCriterion.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Struct>
-  <Struct Name="Remotion.Data.Linq.DataObjectModel.OrderingField">
-    <Position X="6.5" Y="2.5" Width="1.5" />
-    <Members>
-      <Field Name="Direction" Hidden="true" />
-      <Field Name="FieldDescriptor" Hidden="true" />
-      <Method Name="OrderingField" Hidden="true" />
-      <Method Name="ToString" Hidden="true" />
-    </Members>
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAEACBAAAAAAAAAAAAAAAAAAAAAACA=</HashCode>
-      <FileName>DataObjectModel\OrderingField.cs</FileName>
-    </TypeIdentifier>
-  </Struct>
-  <Struct Name="Remotion.Data.Linq.DataObjectModel.SingleJoin">
-    <Position X="10" Y="2.5" Width="1.5" />
-    <Members>
-      <Method Name="SingleJoin" Hidden="true" />
-      <Method Name="ToString" Hidden="true" />
-    </Members>
-    <TypeIdentifier>
-      <HashCode>AAAAAAAgAAAEAAAEAAAAAAAAAACAAAAAAAAAAAAAAIA=</HashCode>
-      <FileName>DataObjectModel\SingleJoin.cs</FileName>
-    </TypeIdentifier>
   </Struct>
   <Font Name="Tahoma" Size="8.25" />
 </ClassDiagram>

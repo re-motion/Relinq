@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Data.Linq.Clauses;
@@ -23,12 +24,13 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
       
       ConstantExpressionParser parser = new ConstantExpressionParser(StubDatabaseInfo.Instance);
 
-      IEvaluation result = parser.Parse (constantExpression);
+      List<FieldDescriptor> fieldCollection = new List<FieldDescriptor> ();
+      List<IEvaluation> result = parser.Parse (constantExpression, fieldCollection);
 
       //expected
       IEvaluation expected = new Constant (5);
 
-      Assert.AreEqual (expected, result);
+      Assert.AreEqual (expected, result[0]);
     }
   }
 }

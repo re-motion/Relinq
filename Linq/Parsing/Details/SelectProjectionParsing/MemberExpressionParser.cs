@@ -5,7 +5,7 @@ using Remotion.Data.Linq.Parsing.FieldResolving;
 
 namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing
 {
-  public class MemberExpressionParser
+  public class MemberExpressionParser : ISelectProjectionParser<MemberExpression>, ISelectProjectionParser
   {
     private readonly WhereConditionParsing.MemberExpressionParser _innerParser;
 
@@ -14,9 +14,19 @@ namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing
       _innerParser = new WhereConditionParsing.MemberExpressionParser (queryModel, resolver);
     }
 
-    public virtual IEvaluation Parse (MemberExpression expression, List<FieldDescriptor> fieldDescriptorCollection)
+    public virtual List<IEvaluation> Parse (MemberExpression memberExpression, List<FieldDescriptor> fieldDescriptorCollection)
     {
-      return _innerParser.Parse (expression, fieldDescriptorCollection);
+      return new List<IEvaluation> { _innerParser.Parse (memberExpression, fieldDescriptorCollection) };
+    }
+
+    public bool CanParse(MemberExpression memberExpression)
+    {
+      return true;
+    }
+
+    public List<IEvaluation> Parse(Expression expression, List<FieldDescriptor> fieldDescriptors)
+    {
+      return Parse ((MemberExpression) expression, fieldDescriptors);
     }
   }
 }

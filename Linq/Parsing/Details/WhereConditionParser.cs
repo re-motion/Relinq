@@ -43,9 +43,23 @@ namespace Remotion.Data.Linq.Parsing.Details
       _memberExpressionParser = new MemberExpressionParser (_queryModel, _resolver);
       _parameterExpressionParser = new ParameterExpressionParser (_queryModel, _resolver);
       _constantExpressionParser = new ConstantExpressionParser (_databaseInfo);
-      _binaryExpressionParser = new BinaryExpressionParser (_whereClause, ParseExpression);
-      _methodCallExpressionParser = new MethodCallExpressionParser (_whereClause, ParseExpression);
-      _unaryExpressionParser = new UnaryExpressionParser (_whereClause, ParseExpression);
+
+      //only for testing
+      ParserRegistry parserRegistry = new ParserRegistry ();
+      
+      //_binaryExpressionParser = new BinaryExpressionParser (_whereClause, parserRegistry);
+      _binaryExpressionParser = new BinaryExpressionParser (_queryModel, parserRegistry);
+      //_methodCallExpressionParser = new MethodCallExpressionParser (_whereClause, parserRegistry);
+      _methodCallExpressionParser = new MethodCallExpressionParser (_queryModel, parserRegistry);
+      //_unaryExpressionParser = new UnaryExpressionParser (_whereClause, parserRegistry);
+      _unaryExpressionParser = new UnaryExpressionParser (_queryModel, parserRegistry);
+
+      parserRegistry.RegisterParser (_memberExpressionParser);
+      parserRegistry.RegisterParser (_parameterExpressionParser);
+      parserRegistry.RegisterParser (_constantExpressionParser);
+      parserRegistry.RegisterParser (_binaryExpressionParser);
+      parserRegistry.RegisterParser (_methodCallExpressionParser);
+      parserRegistry.RegisterParser (_unaryExpressionParser);
     }
 
     public Tuple<List<FieldDescriptor>, ICriterion> GetParseResult ()
@@ -58,17 +72,17 @@ namespace Remotion.Data.Linq.Parsing.Details
     private ICriterion ParseExpression (Expression expression)
     {
       if (expression is BinaryExpression)
-        return _binaryExpressionParser.Parse ((BinaryExpression) expression);
+        return _binaryExpressionParser.Parse ((BinaryExpression)expression, _fieldDescriptors);
       else if (expression is ConstantExpression)
-        return _constantExpressionParser.Parse ((ConstantExpression) expression);
+        return _constantExpressionParser.Parse ((ConstantExpression)expression, _fieldDescriptors);
       else if (expression is MemberExpression)
-        return _memberExpressionParser.Parse ((MemberExpression) expression, _fieldDescriptors);
+        return _memberExpressionParser.Parse ((MemberExpression)expression, _fieldDescriptors);
       else if (expression is ParameterExpression)
-        return _parameterExpressionParser.Parse ((ParameterExpression) expression, _fieldDescriptors);
+        return _parameterExpressionParser.Parse ((ParameterExpression)expression, _fieldDescriptors);
       else if (expression is UnaryExpression)
-        return _unaryExpressionParser.Parse ((UnaryExpression) expression);
+        return _unaryExpressionParser.Parse ((UnaryExpression)expression, _fieldDescriptors);
       else if (expression is MethodCallExpression)
-        return _methodCallExpressionParser.Parse ((MethodCallExpression) expression);
+        return _methodCallExpressionParser.Parse ((MethodCallExpression)expression, _fieldDescriptors);
       throw ParserUtility.CreateParserException ("binary expression, constant expression,method call expression or member expression", expression, "where condition",
           _whereClause.BoolExpression);
     }
