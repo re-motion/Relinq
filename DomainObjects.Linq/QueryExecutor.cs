@@ -12,12 +12,14 @@ namespace Remotion.Data.DomainObjects.Linq
 {
   public class QueryExecutor<T> : IQueryExecutor
   {
-    public QueryExecutor (IQueryListener listener)
+    public QueryExecutor (IQueryListener listener, SqlGeneratorBase sqlGenerator)
     {
       Listener = listener;
+      SqlGenerator = sqlGenerator;
     }
 
     public IQueryListener Listener { get; private set; }
+    public SqlGeneratorBase SqlGenerator { get; private set; }
 
     public object ExecuteSingle (QueryModel queryModel)
     {
@@ -39,10 +41,11 @@ namespace Remotion.Data.DomainObjects.Linq
       if (ClientTransaction.Current == null)
         throw new InvalidOperationException ("No ClientTransaction has been associated with the current thread.");
 
-      ClassDefinition classDefinition = MappingConfiguration.Current.ClassDefinitions.GetMandatory (typeof (T));
-      SqlServerGenerator sqlGenerator = new SqlServerGenerator (queryModel, DatabaseInfo.Instance);
+      ClassDefinition classDefinition = GetClassDefinition();
+      //SqlServerGenerator sqlGenerator = new SqlServerGenerator (DatabaseInfo.Instance);
+
+      Tuple<string, CommandParameter[]> result = GetStatement(queryModel);
       
-      Tuple<string, CommandParameter[]> result = sqlGenerator.BuildCommandString();
       string statement = result.A;
       CommandParameter[] commandParameters = result.B;
 
@@ -57,6 +60,16 @@ namespace Remotion.Data.DomainObjects.Linq
         Listener.QueryConstructed (query);
 
       return ClientTransaction.Current.QueryManager.GetCollection (query);
+    }
+
+    public virtual ClassDefinition GetClassDefinition()
+    {
+      return MappingConfiguration.Current.ClassDefinitions.GetMandatory (typeof (T));
+    }
+
+    public virtual Tuple<string, CommandParameter[]> GetStatement (QueryModel queryModel)
+    {
+      return SqlGenerator.BuildCommandString (queryModel);
     }
   }
 }

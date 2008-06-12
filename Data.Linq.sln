@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Linq", "Linq\Data.Linq.csproj", "{DD9AA076-BE37-4A42-BA9E-C35ECC6955C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataLinq.UnitTests", "Linq.UnitTests\DataLinq.UnitTests.csproj", "{BAACFB24-6EF8-4EA7-B385-3F8DAF085A4E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Linq.UnitTests", "Linq.UnitTests\Data.Linq.UnitTests.csproj", "{BAACFB24-6EF8-4EA7-B385-3F8DAF085A4E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.DomainObjects.Linq", "DomainObjects.Linq\Data.DomainObjects.Linq.csproj", "{975E15F0-75A7-419A-8EFC-8C5ED724DBA4}"
 EndProject

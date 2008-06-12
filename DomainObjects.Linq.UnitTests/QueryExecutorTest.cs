@@ -8,6 +8,8 @@ using Remotion.Data.DomainObjects.UnitTests.TestDomain;
 using Remotion.Data.Linq;
 using System.Linq;
 using Remotion.Data.Linq.Parsing.Structure;
+using Remotion.Data.Linq.SqlGeneration;
+using Remotion.Data.Linq.SqlGeneration.SqlServer;
 
 namespace Remotion.Data.DomainObjects.Linq.UnitTests
 {
@@ -15,17 +17,19 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
   public class QueryExecutorTest : ClientTransactionBaseTest
   {
     private TestQueryListener _listener;
+    private SqlGeneratorBase _sqlGenerator;
 
     public override void SetUp ()
     {
       base.SetUp ();
       _listener = new TestQueryListener ();
+      _sqlGenerator = new SqlServerGenerator (DatabaseInfo.Instance);
     }
 
     [Test]
     public void QueryExecutor_Listener ()
     {
-      QueryExecutor<Computer> executor = new QueryExecutor<Computer> (_listener);
+      QueryExecutor<Computer> executor = new QueryExecutor<Computer> (_listener, _sqlGenerator);
       Assert.AreSame (_listener, executor.Listener);
     }
 
@@ -40,8 +44,8 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
       Computer.GetObject (DomainObjectIDs.Computer4).Delete ();
 
       ClientTransaction.Current.Commit();
-      
-      QueryExecutor<Computer> executor = new QueryExecutor<Computer> (_listener);
+
+      QueryExecutor<Computer> executor = new QueryExecutor<Computer> (_listener, _sqlGenerator);
       QueryModel model = GetParsedSimpleQuery ();
 
       object instance = executor.ExecuteSingle (model);
@@ -53,7 +57,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     [ExpectedException (ExpectedMessage = "ExecuteSingle must return a single object, but the query returned 5 objects.")]
     public void ExecuteSingle_TooManyObjects()
     {
-      QueryExecutor<Computer> executor = new QueryExecutor<Computer> (_listener);
+      QueryExecutor<Computer> executor = new QueryExecutor<Computer> (_listener, _sqlGenerator);
       executor.ExecuteSingle (GetParsedSimpleQuery());
     }
 
@@ -61,7 +65,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "No ClientTransaction has been associated with the current thread.")]
     public void QueryExecutor_ExecuteSingle_NoCurrentTransaction ()
     {
-      QueryExecutor<Computer> executor = new QueryExecutor<Computer> (null);
+      QueryExecutor<Computer> executor = new QueryExecutor<Computer> (null, _sqlGenerator);
       QueryModel model = GetParsedSimpleQuery ();
 
       using (ClientTransactionScope.EnterNullScope ())
@@ -73,7 +77,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void ExecuteCollection ()
     {
-      QueryExecutor<Computer> executor = new QueryExecutor<Computer> (_listener);
+      QueryExecutor<Computer> executor = new QueryExecutor<Computer> (_listener, _sqlGenerator);
       QueryModel model = GetParsedSimpleQuery();
 
       IEnumerable computers = executor.ExecuteCollection (model);
@@ -97,7 +101,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     [ExpectedException (typeof (MappingException), ExpectedMessage = "Mapping does not contain class 'System.String'.")]
     public void ExecuteCollection_WrongType ()
     {
-      QueryExecutor<string> executor = new QueryExecutor<string> (_listener);
+      QueryExecutor<string> executor = new QueryExecutor<string> (_listener, _sqlGenerator);
       executor.ExecuteCollection (GetParsedSimpleQuery());
     }
 
@@ -105,7 +109,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "No ClientTransaction has been associated with the current thread.")]
     public void QueryExecutor_ExecuteCollection_NoCurrentTransaction ()
     {
-      QueryExecutor<Computer> executor = new QueryExecutor<Computer> (null);
+      QueryExecutor<Computer> executor = new QueryExecutor<Computer> (null, _sqlGenerator);
       QueryModel model = GetParsedSimpleQuery ();
 
       using (ClientTransactionScope.EnterNullScope ())
@@ -117,7 +121,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void ExecuteSingle_WithParameters ()
     {
-      QueryExecutor<Order> executor = new QueryExecutor<Order> (_listener);
+      QueryExecutor<Order> executor = new QueryExecutor<Order> (_listener, _sqlGenerator);
       QueryModel model = GetParsedSimpleWhereQuery ();
 
       Order order = (Order) executor.ExecuteSingle (model);
@@ -129,7 +133,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void ExecuteCollection_WithParameters()
     {
-      QueryExecutor<Order> executor = new QueryExecutor<Order> (_listener);
+      QueryExecutor<Order> executor = new QueryExecutor<Order> (_listener, _sqlGenerator);
       QueryModel model = GetParsedSimpleWhereQuery ();
 
       IEnumerable orders = executor.ExecuteCollection (model);

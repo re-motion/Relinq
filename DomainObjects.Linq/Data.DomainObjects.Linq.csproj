@@ -33,7 +33,7 @@
   <ItemGroup>
     <Reference Include="Remotion, Version=1.7.65.202, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Remotion\trunk\Core\bin\Debug\Remotion.dll</HintPath>
+      <HintPath>..\..\..\Remotion\trunk\Core\Core\bin\Debug\Remotion.dll</HintPath>
     </Reference>
     <Reference Include="Remotion.Data.DomainObjects, Version=1.7.65.202, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -45,7 +45,7 @@
     </Reference>
     <Reference Include="Remotion.Interfaces, Version=1.7.65.202, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Remotion\trunk\Core.Interfaces\bin\Debug\Remotion.Interfaces.dll</HintPath>
+      <HintPath>..\..\..\Remotion\trunk\Core\Interfaces\bin\Debug\Remotion.Interfaces.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -62,6 +62,7 @@
     <Compile Include="DomainObjectQueryable.cs" />
     <Compile Include="IQueryListener.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="Properties\AssemblyInfoTemplate.cs" />
     <Compile Include="QueryExecutor.cs" />
     <Compile Include="QueryProvider.cs" />
   </ItemGroup>
@@ -70,6 +71,9 @@
       <Project>{DD9AA076-BE37-4A42-BA9E-C35ECC6955C9}</Project>
       <Name>Data.Linq</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Data.DomainObjects.Linq.build" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

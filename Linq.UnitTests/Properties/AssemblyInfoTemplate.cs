@@ -17,14 +17,14 @@ using System.Reflection;
 // associated with an assembly.
 //
 
-[assembly: AssemblyTitle("Remotion Linq Library")]
-[assembly: AssemblyDescription("Framework for working with linq queries.")]
-[assembly: AssemblyConfiguration(".NET Framework: net-3.5, build type: debug")]
-[assembly: AssemblyCompany("rubicon informationstechnologie gmbh")]
-[assembly: AssemblyProduct("Remotion")]
-[assembly: AssemblyCopyright("(c) 2005 - 2008 rubicon informationstechnologie gmbh, www.rubicon.eu")]
+[assembly: AssemblyTitle("Unit Tests for Remotion Linq Library")]
+[assembly: AssemblyDescription("Unit Tests for Remotion Linq Library")]
+[assembly: AssemblyConfiguration("@buildinfo@")]
+[assembly: AssemblyCompany("@company@")]
+[assembly: AssemblyProduct("@productname@")]
+[assembly: AssemblyCopyright("@copyright@")]
 [assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
+[assembly: AssemblyCulture("")]		
 [assembly: CLSCompliant(true)]
 
 //
@@ -38,7 +38,7 @@ using System.Reflection;
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("1.9.0.352")]
+[assembly: AssemblyVersion("@versionnumber@")]
 
 //
 // In order to sign your assembly you must specify a key to use. Refer to the 
@@ -67,6 +67,7 @@ using System.Reflection;
 //
 #pragma warning disable 1699
 [assembly: AssemblyDelaySign (false)]
-[assembly: AssemblyKeyFile(@"\Development\global/remotion.snk")]
+[assembly: AssemblyKeyFile(@"@keyfile@")]
 [assembly: AssemblyKeyName("")]
 #pragma warning restore 1699
+

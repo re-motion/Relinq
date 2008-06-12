@@ -5,6 +5,7 @@ using Remotion.Data.DomainObjects.UnitTests;
 using Remotion.Data.DomainObjects.UnitTests.TestDomain;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.ExtensionMethods;
+using Remotion.Data.Linq.SqlGeneration.SqlServer;
 
 namespace Remotion.Data.DomainObjects.Linq.UnitTests
 {

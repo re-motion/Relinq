@@ -37,7 +37,7 @@
     </Reference>
     <Reference Include="Remotion, Version=1.7.65.202, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Remotion\trunk\Core\bin\Debug\Remotion.dll</HintPath>
+      <HintPath>..\..\..\Remotion\trunk\Core\Core\bin\Debug\Remotion.dll</HintPath>
     </Reference>
     <Reference Include="Remotion.Development, Version=1.7.65.202, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -45,7 +45,7 @@
     </Reference>
     <Reference Include="Remotion.Interfaces, Version=1.7.65.202, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Remotion\trunk\Core.Interfaces\bin\Debug\Remotion.Interfaces.dll</HintPath>
+      <HintPath>..\..\..\Remotion\trunk\Core\Interfaces\bin\Debug\Remotion.Interfaces.dll</HintPath>
     </Reference>
     <Reference Include="Rhino.Mocks, Version=3.1.0.584, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -149,6 +149,7 @@
     <Compile Include="ParsingTest\StructureTest\WhereExpressionParserTest\SelectManyWhereExpressionParserTest.cs" />
     <Compile Include="ParsingTest\StructureTest\WhereExpressionParserTest\SimpleWhereExpressionParserTest.cs" />
     <Compile Include="ParsingTest\TreeEvaluationTest\TestablePartialEvaluationPreAnalyzer.cs" />
+    <None Include="Properties\AssemblyInfoTemplate.cs" />
     <Compile Include="SqlGenerationTest\JoinCollectionTest.cs" />
     <Compile Include="SqlGenerationTest\SqlGeneratorBaseTest.cs" />
     <Compile Include="SqlGenerationTest\SqlGeneratorMock.cs" />

@@ -1,4 +1,6 @@
 using System.Collections;
+using Remotion.Collections;
+using Remotion.Data.Linq.SqlGeneration;
 
 namespace Remotion.Data.Linq
 {
@@ -6,5 +8,6 @@ namespace Remotion.Data.Linq
   {
     object ExecuteSingle (QueryModel queryModel);
     IEnumerable ExecuteCollection (QueryModel queryModel);
+    Tuple<string, CommandParameter[]> GetStatement (QueryModel queryModel);
   }
 }

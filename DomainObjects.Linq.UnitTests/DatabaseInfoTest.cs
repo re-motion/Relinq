@@ -7,6 +7,8 @@ using Remotion.Data.Linq;
 using Remotion.Data.DomainObjects.UnitTests.TestDomain;
 using Remotion.Data.Linq.Clauses;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.SqlGeneration;
+using Remotion.Data.Linq.SqlGeneration.SqlServer;
 
 namespace Remotion.Data.DomainObjects.Linq.UnitTests
 {
@@ -14,11 +16,13 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
   public class DatabaseInfoTest
   {
     private IDatabaseInfo _databaseInfo;
+    private SqlGeneratorBase _sqlGenerator;
 
     [SetUp]
     public void SetUp ()
     {
       _databaseInfo = DatabaseInfo.Instance;
+      _sqlGenerator = new SqlServerGenerator (DatabaseInfo.Instance);
     }
 
     [Test]
@@ -43,7 +47,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     private FromClauseBase CreateFromClause<T> ()
         where T : DomainObject
     {
-      IQueryable querySource = new DomainObjectQueryable<T> (null);
+      IQueryable querySource = new DomainObjectQueryable<T> (null, _sqlGenerator);
       return new MainFromClause (Expression.Parameter (querySource.ElementType, "source"), Expression.Constant (querySource));
     }
 
