@@ -20,7 +20,6 @@ namespace Remotion.Data.Linq.Parsing.Details
       RegisterParser (typeof (MemberExpression), new MemberExpressionParser (queryModel, resolver));
       RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (queryModel, resolver));
       RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (databaseInfo));
-      //RegisterParser (typeof (MethodCallExpression), new MethodCallExpressionParser (queryModel.GetExpressionTree(), this));
       RegisterParser (typeof (MethodCallExpression), new LikeParser (queryModel.GetExpressionTree(), this));
       RegisterParser (typeof (MethodCallExpression), new ContainsParser (queryModel.GetExpressionTree (), this));
       RegisterParser (typeof (MethodCallExpression), new ContainsFullTextParser (queryModel.GetExpressionTree (), this));

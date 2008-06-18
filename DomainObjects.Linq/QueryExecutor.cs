@@ -1,7 +1,6 @@
 using System.Collections;
 using Remotion.Data.DomainObjects.Mapping;
 using Remotion.Data.Linq;
-using Remotion.Data.Linq.SqlGeneration.SqlServer;
 using Remotion.Collections;
 using Remotion.Data.DomainObjects.Queries;
 using Remotion.Data.DomainObjects.Queries.Configuration;
@@ -12,13 +11,11 @@ namespace Remotion.Data.DomainObjects.Linq
 {
   public class QueryExecutor<T> : IQueryExecutor
   {
-    public QueryExecutor (IQueryListener listener, SqlGeneratorBase sqlGenerator)
+    public QueryExecutor (SqlGeneratorBase sqlGenerator)
     {
-      Listener = listener;
       SqlGenerator = sqlGenerator;
     }
 
-    public IQueryListener Listener { get; private set; }
     public SqlGeneratorBase SqlGenerator { get; private set; }
 
     public object ExecuteSingle (QueryModel queryModel)
@@ -42,8 +39,7 @@ namespace Remotion.Data.DomainObjects.Linq
         throw new InvalidOperationException ("No ClientTransaction has been associated with the current thread.");
 
       ClassDefinition classDefinition = GetClassDefinition();
-      //SqlServerGenerator sqlGenerator = new SqlServerGenerator (DatabaseInfo.Instance);
-
+      
       Tuple<string, CommandParameter[]> result = CreateStatement(queryModel);
       
       string statement = result.A;
@@ -51,9 +47,6 @@ namespace Remotion.Data.DomainObjects.Linq
 
       Query query = CreateQuery(classDefinition, statement, commandParameters);
       
-      if (Listener != null)
-        Listener.QueryConstructed (query);
-
       return ClientTransaction.Current.QueryManager.GetCollection (query);
     }
 

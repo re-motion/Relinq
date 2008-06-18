@@ -36,7 +36,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void QueryWithContainsFullText ()
     {
-      var ceos = from c in DataContext.Entity<Ceo> (new TestQueryListener ())
+      var ceos = from c in DataContext.Entity<Ceo> ()
                       where c.Name.ContainsFulltext ("Fischer")
                       select c;
       IntegrationTests.CheckQueryResult (ceos, DomainObjectIDs.Ceo4);

@@ -14,19 +14,10 @@ namespace Remotion.Data.DomainObjects.Linq
     {
     }
 
-    //public DomainObjectQueryable (IQueryListener listener)
-    //    : base (new QueryProvider (new QueryExecutor<T> (listener)))
-    //{
-    //}
-
-    public DomainObjectQueryable (IQueryListener listener, SqlGeneratorBase sqlGenerator)
-      : base (new QueryProvider(ObjectFactory.Create<QueryExecutor<T>>().With(listener,sqlGenerator)))
+    public DomainObjectQueryable (SqlGeneratorBase sqlGenerator)
+      : base (new QueryProvider(ObjectFactory.Create<QueryExecutor<T>>().With(sqlGenerator)))
     {
     }
     
-    public string GetCommandString()
-    {
-      return null;
-    }
   }
 }

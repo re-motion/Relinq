@@ -88,7 +88,6 @@
     <Compile Include="QueryExecutorTest.cs" />
     <Compile Include="QueryProviderTest.cs" />
     <Compile Include="SetupFixture.cs" />
-    <Compile Include="TestQueryListener.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DomainObjects.Linq\Data.DomainObjects.Linq.csproj">

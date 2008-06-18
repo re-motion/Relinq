@@ -47,7 +47,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     private FromClauseBase CreateFromClause<T> ()
         where T : DomainObject
     {
-      IQueryable querySource = new DomainObjectQueryable<T> (null, _sqlGenerator);
+      IQueryable querySource = new DomainObjectQueryable<T> (_sqlGenerator);
       return new MainFromClause (Expression.Parameter (querySource.ElementType, "source"), Expression.Constant (querySource));
     }
 

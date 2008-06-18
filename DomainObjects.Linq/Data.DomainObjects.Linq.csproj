@@ -60,7 +60,6 @@
     <Compile Include="DatabaseInfo.cs" />
     <Compile Include="DataContext.cs" />
     <Compile Include="DomainObjectQueryable.cs" />
-    <Compile Include="IQueryListener.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="Properties\AssemblyInfoTemplate.cs" />
     <Compile Include="QueryExecutor.cs" />

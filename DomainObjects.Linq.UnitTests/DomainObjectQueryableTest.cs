@@ -21,18 +21,9 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void DomainObjectQueryable_Executor()
     {
-      DomainObjectQueryable<Order> queryable = new DomainObjectQueryable<Order> (null, _sqlGenerator);
+      DomainObjectQueryable<Order> queryable = new DomainObjectQueryable<Order> (_sqlGenerator);
       Assert.IsNotNull (((QueryProviderBase) queryable.Provider).Executor);
     }
 
-    [Test]
-    public void DomainObjectQueryable_ExecutorAndListener ()
-    {
-      MockRepository repository = new MockRepository ();
-      IQueryListener listener = repository.CreateMock<IQueryListener> ();
-
-      DomainObjectQueryable<Order> queryable = new DomainObjectQueryable<Order> (listener, _sqlGenerator);
-      Assert.AreSame (listener, ((QueryExecutor<Order>)((QueryProviderBase) queryable.Provider).Executor).Listener);
-    }
   }
 }

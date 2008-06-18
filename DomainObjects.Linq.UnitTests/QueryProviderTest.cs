@@ -13,7 +13,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     public void CreateQuery()
     {
       SqlGeneratorBase sqlGenerator = new SqlServerGenerator (DatabaseInfo.Instance);
-      QueryExecutor<Supplier> executor = new QueryExecutor<Supplier> (null, sqlGenerator);
+      QueryExecutor<Supplier> executor = new QueryExecutor<Supplier> (sqlGenerator);
       QueryProvider provider = new QueryProvider (executor);
       IQueryable<Supplier> query = from supplier in DataContext.Entity<Supplier> () select supplier;
 

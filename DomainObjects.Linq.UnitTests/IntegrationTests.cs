@@ -16,7 +16,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     public void SimpleQuery ()
     {
       var computers =
-          from c in DataContext.Entity<Computer> (new TestQueryListener())
+          from c in DataContext.Entity<Computer> ()
           select c;
       CheckQueryResult (computers, DomainObjectIDs.Computer1, DomainObjectIDs.Computer2, DomainObjectIDs.Computer3, DomainObjectIDs.Computer4,
           DomainObjectIDs.Computer5);
@@ -26,7 +26,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     public void SimpleQuery_WithRelatedEntity ()
     {
       var query =
-          from o in DataContext.Entity<OrderTicket> (new TestQueryListener())
+          from o in DataContext.Entity<OrderTicket> ()
           select o.Order;
       CheckQueryResult (query, DomainObjectIDs.Order1, DomainObjectIDs.Order2, DomainObjectIDs.Order3, DomainObjectIDs.Order4,
           DomainObjectIDs.OrderWithoutOrderItem);
@@ -37,7 +37,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     public void QueryWithWhereConditions ()
     {
       var computers =
-          from c in DataContext.Entity<Computer> (new TestQueryListener())
+          from c in DataContext.Entity<Computer> ()
           where c.SerialNumber == "93756-ndf-23" || c.SerialNumber == "98678-abc-43"
           select c;
 
@@ -48,7 +48,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     public void QueryWithWhereConditionsAndNull ()
     {
       var computers =
-          from c in DataContext.Entity<Computer> (new TestQueryListener())
+          from c in DataContext.Entity<Computer> ()
           where c.Employee != null
           select c;
 
@@ -59,7 +59,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     public void QueryWithWhereConditionAndStartsWith ()
     {
       var computers =
-          from c in DataContext.Entity<Computer> (new TestQueryListener())
+          from c in DataContext.Entity<Computer> ()
           where c.SerialNumber.StartsWith ("9")
           select c;
 
@@ -70,7 +70,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     public void QueryWithWhereConditionAndEndsWith ()
     {
       var computers =
-          from c in DataContext.Entity<Computer> (new TestQueryListener())
+          from c in DataContext.Entity<Computer> ()
           where c.SerialNumber.EndsWith ("7")
           select c;
 
@@ -82,7 +82,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     {
       Employee employee = Employee.GetObject (DomainObjectIDs.Employee1);
       var employees =
-          from e in DataContext.Entity<Employee> (new TestQueryListener())
+          from e in DataContext.Entity<Employee> ()
           where e == employee
           select e;
 
@@ -93,7 +93,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     public void QueryWithWhereConditionAndGreaterThan ()
     {
       var orders =
-          from o in DataContext.Entity<Order> (new TestQueryListener())
+          from o in DataContext.Entity<Order> ()
           where o.OrderNumber <= 3
           select o;
 
@@ -105,7 +105,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     public void QueryWithVirtualKeySide_EqualsNull ()
     {
       var employees =
-          from e in DataContext.Entity<Employee> (new TestQueryListener())
+          from e in DataContext.Entity<Employee> ()
           where e.Computer == null
           select e;
 
@@ -116,7 +116,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     public void QueryWithVirtualKeySide_NotEqualsNull ()
     {
       var employees =
-          from e in DataContext.Entity<Employee> (new TestQueryListener())
+          from e in DataContext.Entity<Employee> ()
           where e.Computer != null
           select e;
 
@@ -128,7 +128,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     {
       Computer computer = Computer.GetObject (DomainObjectIDs.Computer1);
       var employees =
-          from e in DataContext.Entity<Employee> (new TestQueryListener())
+          from e in DataContext.Entity<Employee> ()
           where e.Computer == computer
           select e;
 
@@ -140,7 +140,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     {
       Computer computer = Computer.GetObject (DomainObjectIDs.Computer1);
       var employees =
-          from e in DataContext.Entity<Employee> (new TestQueryListener())
+          from e in DataContext.Entity<Employee> ()
           where e.Computer != computer
           select e;
 
@@ -153,7 +153,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     {
       Employee employee = Employee.GetObject (DomainObjectIDs.Employee3);
       var computers =
-          from c in DataContext.Entity<Computer> (new TestQueryListener())
+          from c in DataContext.Entity<Computer> ()
           where c.Employee == employee
           select c;
 
@@ -165,7 +165,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     {
       Employee employee = Employee.GetObject (DomainObjectIDs.Employee3);
       var computers =
-          from c in DataContext.Entity<Computer> (new TestQueryListener())
+          from c in DataContext.Entity<Computer> ()
           where c.Employee.ID == employee.ID
           select c;
 
@@ -176,7 +176,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     public void QueryWithSimpleOrderBy ()
     {
       var query =
-          from o in DataContext.Entity<Order> (new TestQueryListener())
+          from o in DataContext.Entity<Order> ()
           orderby o.OrderNumber
           select o;
       CheckQueryResult (query, DomainObjectIDs.Order1, DomainObjectIDs.OrderWithoutOrderItem, DomainObjectIDs.Order2, DomainObjectIDs.Order3,
@@ -187,7 +187,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     public void QueryWithOrderByAndImplicitJoin ()
     {
       var orders =
-          from o in DataContext.Entity<Order> (new TestQueryListener())
+          from o in DataContext.Entity<Order> ()
           where o.OrderNumber <= 4
           orderby o.Customer.Name
           select o;
@@ -201,7 +201,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     public void QueryWithSelectAndImplicitJoin_VirtualSide ()
     {
       var ceos =
-          (from o in DataContext.Entity<Order> (new TestQueryListener())
+          (from o in DataContext.Entity<Order> ()
           where o.Customer.Ceo != null
           select o.Customer.Ceo).Distinct();
 
@@ -212,7 +212,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     public void QueryWithSelectAndImplicitJoin ()
     {
       var ceos =
-          from o in DataContext.Entity<Order> (new TestQueryListener())
+          from o in DataContext.Entity<Order> ()
           where o.Customer.Ceo.Name == "Hugo Boss"
           select o.Customer.Ceo;
 
@@ -223,7 +223,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     public void QueryWithSelectAndImplicitJoin_UsingJoinPartTwice ()
     {
       var ceos =
-          from o in DataContext.Entity<Order> (new TestQueryListener())
+          from o in DataContext.Entity<Order> ()
           where o.Customer.Name == "Kunde 3"
           select o.Customer.Ceo;
 
@@ -234,7 +234,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     public void QueryWithDistinct ()
     {
       var ceos =
-          (from o in DataContext.Entity<Order> (new TestQueryListener())
+          (from o in DataContext.Entity<Order> ()
           where o.Customer.Ceo != null
           select o.Customer.Ceo).Distinct();
 
@@ -245,7 +245,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     public void QueryWithWhereAndImplicitJoin ()
     {
       var orders =
-          from o in DataContext.Entity<Order> (new TestQueryListener())
+          from o in DataContext.Entity<Order> ()
           where o.Customer.Type == Customer.CustomerType.Gold
           select o;
 
@@ -256,9 +256,9 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     public void QueryWithSubQueryAndWhereInAdditionalFrom()
     {
       var orders =
-          from o in DataContext.Entity<Order> (new TestQueryListener())
+          from o in DataContext.Entity<Order> ()
           from o2 in
-            (from oi in DataContext.Entity<OrderItem> (new TestQueryListener ()) where oi.Order == o select oi)
+            (from oi in DataContext.Entity<OrderItem> () where oi.Order == o select oi)
           select o2;
 
       CheckQueryResult (orders, DomainObjectIDs.OrderItem5, DomainObjectIDs.OrderItem4, DomainObjectIDs.OrderItem2, DomainObjectIDs.OrderItem1, 
@@ -269,7 +269,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     public void QueryWithSubQueryInWhere ()
     {
       var orders =
-          from o in DataContext.Entity<Order> (new TestQueryListener())
+          from o in DataContext.Entity<Order> ()
           where (from c in DataContext.Entity<Customer>() select c).Contains (o.Customer)
           select o;
 
@@ -280,7 +280,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void QueryWithContains_Like ()
     {
-      var ceos = from c in DataContext.Entity<Ceo> (new TestQueryListener ())
+      var ceos = from c in DataContext.Entity<Ceo> ()
                       where c.Name.Contains ("Sepp Fischer")
                       select c;
       CheckQueryResult (ceos, DomainObjectIDs.Ceo4);
@@ -290,7 +290,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     public void QueryWithSubQueryAndJoinInWhere ()
     {
       var orders =
-          from o in DataContext.Entity<Order> (new TestQueryListener ())
+          from o in DataContext.Entity<Order> ()
           where (from c in DataContext.Entity<OrderTicket> () select c.Order).Contains (o)
           select o;
 
@@ -304,7 +304,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     {
       OrderItem item = OrderItem.GetObject(DomainObjectIDs.OrderItem1);
       var orders =
-          from o in DataContext.Entity<Order> (new TestQueryListener ())
+          from o in DataContext.Entity<Order> ()
           where o.OrderItems.ContainsObject (item)
           select o;
 
@@ -315,7 +315,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void QueryWithLet ()
     {
-      var orders = from o in DataContext.Entity<Order> (new TestQueryListener ())
+      var orders = from o in DataContext.Entity<Order> ()
                    let x = o
                    select x;
 
@@ -326,7 +326,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void QueryWithLet_LetWithColumn ()
     {
-      var orders = from o in DataContext.Entity<Order> (new TestQueryListener ())
+      var orders = from o in DataContext.Entity<Order> ()
                    let y = o.OrderNumber
                    where y > 1
                    select o;
@@ -339,7 +339,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void QueryWithLet_LetWithColumn2()
     {
-      var orders = from o in DataContext.Entity<Order>(new TestQueryListener())
+      var orders = from o in DataContext.Entity<Order>()
                    let x = o.Customer.Name
                    where x == "Kunde 1"
                    select o;
@@ -349,7 +349,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void QueryWithSeveralJoinsAndCrossApply ()
     {
-      var ceos = from o in DataContext.Entity<Order>(new TestQueryListener())
+      var ceos = from o in DataContext.Entity<Order>()
                  let x = o.Customer.Ceo
                  where x.Name == "Hugo Boss"
                  select x;
@@ -360,7 +360,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void QueryWithLet_SeveralCrossApplies()
     {
-      var orders = from o in DataContext.Entity<Order>(new TestQueryListener())
+      var orders = from o in DataContext.Entity<Order>()
                    let x = o
                    let y = o.Customer
                    select x;
@@ -383,16 +383,5 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
       return (from id in expectedObjectIDs select (id == null ? null : (T) TestDomainBase.GetObject (id))).ToArray();
     }
 
-    //for master thesis only
-    [Test]
-    public void QueryForMasterThesis ()
-    {
-      var computers =
-          from c in DataContext.Entity<Computer> (new TestQueryListener ())
-          where c.SerialNumber == "93756-ndf-23"
-          select c;
-
-      CheckQueryResult (computers, DomainObjectIDs.Computer5);
-    }
   }
 }
