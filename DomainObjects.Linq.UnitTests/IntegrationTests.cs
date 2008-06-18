@@ -33,340 +33,340 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     }
 
 
-    //[Test]
-    //public void QueryWithWhereConditions ()
-    //{
-    //  var computers =
-    //      from c in DataContext.Entity<Computer> ()
-    //      where c.SerialNumber == "93756-ndf-23" || c.SerialNumber == "98678-abc-43"
-    //      select c;
+    [Test]
+    public void QueryWithWhereConditions ()
+    {
+      var computers =
+          from c in DataContext.Entity<Computer> ()
+          where c.SerialNumber == "93756-ndf-23" || c.SerialNumber == "98678-abc-43"
+          select c;
 
-    //  CheckQueryResult (computers, DomainObjectIDs.Computer2, DomainObjectIDs.Computer5);
-    //}
+      CheckQueryResult (computers, DomainObjectIDs.Computer2, DomainObjectIDs.Computer5);
+    }
 
-    //[Test]
-    //public void QueryWithWhereConditionsAndNull ()
-    //{
-    //  var computers =
-    //      from c in DataContext.Entity<Computer> ()
-    //      where c.Employee != null
-    //      select c;
+    [Test]
+    public void QueryWithWhereConditionsAndNull ()
+    {
+      var computers =
+          from c in DataContext.Entity<Computer> ()
+          where c.Employee != null
+          select c;
 
-    //  CheckQueryResult (computers, DomainObjectIDs.Computer1, DomainObjectIDs.Computer2, DomainObjectIDs.Computer3);
-    //}
+      CheckQueryResult (computers, DomainObjectIDs.Computer1, DomainObjectIDs.Computer2, DomainObjectIDs.Computer3);
+    }
 
-    //[Test]
-    //public void QueryWithWhereConditionAndStartsWith ()
-    //{
-    //  var computers =
-    //      from c in DataContext.Entity<Computer> ()
-    //      where c.SerialNumber.StartsWith ("9")
-    //      select c;
+    [Test]
+    public void QueryWithWhereConditionAndStartsWith ()
+    {
+      var computers =
+          from c in DataContext.Entity<Computer> ()
+          where c.SerialNumber.StartsWith ("9")
+          select c;
 
-    //  CheckQueryResult (computers, DomainObjectIDs.Computer2, DomainObjectIDs.Computer5);
-    //}
+      CheckQueryResult (computers, DomainObjectIDs.Computer2, DomainObjectIDs.Computer5);
+    }
 
-    //[Test]
-    //public void QueryWithWhereConditionAndEndsWith ()
-    //{
-    //  var computers =
-    //      from c in DataContext.Entity<Computer> ()
-    //      where c.SerialNumber.EndsWith ("7")
-    //      select c;
+    [Test]
+    public void QueryWithWhereConditionAndEndsWith ()
+    {
+      var computers =
+          from c in DataContext.Entity<Computer> ()
+          where c.SerialNumber.EndsWith ("7")
+          select c;
 
-    //  CheckQueryResult (computers, DomainObjectIDs.Computer3);
-    //}
+      CheckQueryResult (computers, DomainObjectIDs.Computer3);
+    }
 
-    //[Test]
-    //public void QueryWithWhere_OuterObject ()
-    //{
-    //  Employee employee = Employee.GetObject (DomainObjectIDs.Employee1);
-    //  var employees =
-    //      from e in DataContext.Entity<Employee> ()
-    //      where e == employee
-    //      select e;
+    [Test]
+    public void QueryWithWhere_OuterObject ()
+    {
+      Employee employee = Employee.GetObject (DomainObjectIDs.Employee1);
+      var employees =
+          from e in DataContext.Entity<Employee> ()
+          where e == employee
+          select e;
 
-    //  CheckQueryResult (employees, DomainObjectIDs.Employee1);
-    //}
+      CheckQueryResult (employees, DomainObjectIDs.Employee1);
+    }
 
-    //[Test]
-    //public void QueryWithWhereConditionAndGreaterThan ()
-    //{
-    //  var orders =
-    //      from o in DataContext.Entity<Order> ()
-    //      where o.OrderNumber <= 3
-    //      select o;
+    [Test]
+    public void QueryWithWhereConditionAndGreaterThan ()
+    {
+      var orders =
+          from o in DataContext.Entity<Order> ()
+          where o.OrderNumber <= 3
+          select o;
 
-    //  CheckQueryResult (orders, DomainObjectIDs.OrderWithoutOrderItem, DomainObjectIDs.Order2, DomainObjectIDs.Order1);
-    //}
-    
-    //[Test]
-    //public void QueryWithVirtualKeySide_EqualsNull ()
-    //{
-    //  var employees =
-    //      from e in DataContext.Entity<Employee> ()
-    //      where e.Computer == null
-    //      select e;
+      CheckQueryResult (orders, DomainObjectIDs.OrderWithoutOrderItem, DomainObjectIDs.Order2, DomainObjectIDs.Order1);
+    }
 
-    //  CheckQueryResult (employees, DomainObjectIDs.Employee1, DomainObjectIDs.Employee2, DomainObjectIDs.Employee6, DomainObjectIDs.Employee7);
-    //}
+    [Test]
+    public void QueryWithVirtualKeySide_EqualsNull ()
+    {
+      var employees =
+          from e in DataContext.Entity<Employee> ()
+          where e.Computer == null
+          select e;
 
-    //[Test]
-    //public void QueryWithVirtualKeySide_NotEqualsNull ()
-    //{
-    //  var employees =
-    //      from e in DataContext.Entity<Employee> ()
-    //      where e.Computer != null
-    //      select e;
+      CheckQueryResult (employees, DomainObjectIDs.Employee1, DomainObjectIDs.Employee2, DomainObjectIDs.Employee6, DomainObjectIDs.Employee7);
+    }
 
-    //  CheckQueryResult (employees, DomainObjectIDs.Employee3, DomainObjectIDs.Employee4, DomainObjectIDs.Employee5);
-    //}
+    [Test]
+    public void QueryWithVirtualKeySide_NotEqualsNull ()
+    {
+      var employees =
+          from e in DataContext.Entity<Employee> ()
+          where e.Computer != null
+          select e;
 
-    //[Test]
-    //public void QueryWithVirtualKeySide_EqualsOuterObject ()
-    //{
-    //  Computer computer = Computer.GetObject (DomainObjectIDs.Computer1);
-    //  var employees =
-    //      from e in DataContext.Entity<Employee> ()
-    //      where e.Computer == computer
-    //      select e;
+      CheckQueryResult (employees, DomainObjectIDs.Employee3, DomainObjectIDs.Employee4, DomainObjectIDs.Employee5);
+    }
 
-    //  CheckQueryResult (employees, DomainObjectIDs.Employee3);
-    //}
+    [Test]
+    public void QueryWithVirtualKeySide_EqualsOuterObject ()
+    {
+      Computer computer = Computer.GetObject (DomainObjectIDs.Computer1);
+      var employees =
+          from e in DataContext.Entity<Employee> ()
+          where e.Computer == computer
+          select e;
 
-    //[Test]
-    //public void QueryWithVirtualKeySide_NotEqualsOuterObject ()
-    //{
-    //  Computer computer = Computer.GetObject (DomainObjectIDs.Computer1);
-    //  var employees =
-    //      from e in DataContext.Entity<Employee> ()
-    //      where e.Computer != computer
-    //      select e;
+      CheckQueryResult (employees, DomainObjectIDs.Employee3);
+    }
 
-    //  CheckQueryResult (employees, DomainObjectIDs.Employee1, DomainObjectIDs.Employee2, DomainObjectIDs.Employee4, DomainObjectIDs.Employee5,
-    //      DomainObjectIDs.Employee6, DomainObjectIDs.Employee7);
-    //}
+    [Test]
+    public void QueryWithVirtualKeySide_NotEqualsOuterObject ()
+    {
+      Computer computer = Computer.GetObject (DomainObjectIDs.Computer1);
+      var employees =
+          from e in DataContext.Entity<Employee> ()
+          where e.Computer != computer
+          select e;
 
-    //[Test]
-    //public void QueryWithOuterEntityInCondition ()
-    //{
-    //  Employee employee = Employee.GetObject (DomainObjectIDs.Employee3);
-    //  var computers =
-    //      from c in DataContext.Entity<Computer> ()
-    //      where c.Employee == employee
-    //      select c;
+      CheckQueryResult (employees, DomainObjectIDs.Employee1, DomainObjectIDs.Employee2, DomainObjectIDs.Employee4, DomainObjectIDs.Employee5,
+          DomainObjectIDs.Employee6, DomainObjectIDs.Employee7);
+    }
 
-    //  CheckQueryResult (computers, DomainObjectIDs.Computer1);
-    //}
+    [Test]
+    public void QueryWithOuterEntityInCondition ()
+    {
+      Employee employee = Employee.GetObject (DomainObjectIDs.Employee3);
+      var computers =
+          from c in DataContext.Entity<Computer> ()
+          where c.Employee == employee
+          select c;
 
-    //[Test]
-    //public void QueryWithIDInCondition ()
-    //{
-    //  Employee employee = Employee.GetObject (DomainObjectIDs.Employee3);
-    //  var computers =
-    //      from c in DataContext.Entity<Computer> ()
-    //      where c.Employee.ID == employee.ID
-    //      select c;
+      CheckQueryResult (computers, DomainObjectIDs.Computer1);
+    }
 
-    //  CheckQueryResult (computers, DomainObjectIDs.Computer1);
-    //}
+    [Test]
+    public void QueryWithIDInCondition ()
+    {
+      Employee employee = Employee.GetObject (DomainObjectIDs.Employee3);
+      var computers =
+          from c in DataContext.Entity<Computer> ()
+          where c.Employee.ID == employee.ID
+          select c;
 
-    //[Test]
-    //public void QueryWithSimpleOrderBy ()
-    //{
-    //  var query =
-    //      from o in DataContext.Entity<Order> ()
-    //      orderby o.OrderNumber
-    //      select o;
-    //  CheckQueryResult (query, DomainObjectIDs.Order1, DomainObjectIDs.OrderWithoutOrderItem, DomainObjectIDs.Order2, DomainObjectIDs.Order3,
-    //      DomainObjectIDs.Order4, DomainObjectIDs.InvalidOrder);
-    //}
+      CheckQueryResult (computers, DomainObjectIDs.Computer1);
+    }
 
-    //[Test]
-    //public void QueryWithOrderByAndImplicitJoin ()
-    //{
-    //  var orders =
-    //      from o in DataContext.Entity<Order> ()
-    //      where o.OrderNumber <= 4
-    //      orderby o.Customer.Name
-    //      select o;
+    [Test]
+    public void QueryWithSimpleOrderBy ()
+    {
+      var query =
+          from o in DataContext.Entity<Order> ()
+          orderby o.OrderNumber
+          select o;
+      CheckQueryResult (query, DomainObjectIDs.Order1, DomainObjectIDs.OrderWithoutOrderItem, DomainObjectIDs.Order2, DomainObjectIDs.Order3,
+          DomainObjectIDs.Order4, DomainObjectIDs.InvalidOrder);
+    }
 
-    //  Order[] expected =
-    //      GetExpectedObjects<Order> (DomainObjectIDs.OrderWithoutOrderItem, DomainObjectIDs.Order1, DomainObjectIDs.Order2, DomainObjectIDs.Order3);
-    //  Assert.That (orders.ToArray(), Is.EqualTo (expected));
-    //}
+    [Test]
+    public void QueryWithOrderByAndImplicitJoin ()
+    {
+      var orders =
+          from o in DataContext.Entity<Order> ()
+          where o.OrderNumber <= 4
+          orderby o.Customer.Name
+          select o;
 
-    //[Test]
-    //public void QueryWithSelectAndImplicitJoin_VirtualSide ()
-    //{
-    //  var ceos =
-    //      (from o in DataContext.Entity<Order> ()
-    //      where o.Customer.Ceo != null
-    //      select o.Customer.Ceo).Distinct();
+      Order[] expected =
+          GetExpectedObjects<Order> (DomainObjectIDs.OrderWithoutOrderItem, DomainObjectIDs.Order1, DomainObjectIDs.Order2, DomainObjectIDs.Order3);
+      Assert.That (orders.ToArray (), Is.EqualTo (expected));
+    }
 
-    //  CheckQueryResult (ceos, DomainObjectIDs.Ceo12, DomainObjectIDs.Ceo5, DomainObjectIDs.Ceo3);
-    //}
+    [Test]
+    public void QueryWithSelectAndImplicitJoin_VirtualSide ()
+    {
+      var ceos =
+          (from o in DataContext.Entity<Order> ()
+           where o.Customer.Ceo != null
+           select o.Customer.Ceo).Distinct ();
 
-    //[Test]
-    //public void QueryWithSelectAndImplicitJoin ()
-    //{
-    //  var ceos =
-    //      from o in DataContext.Entity<Order> ()
-    //      where o.Customer.Ceo.Name == "Hugo Boss"
-    //      select o.Customer.Ceo;
+      CheckQueryResult (ceos, DomainObjectIDs.Ceo12, DomainObjectIDs.Ceo5, DomainObjectIDs.Ceo3);
+    }
 
-    //  CheckQueryResult (ceos, DomainObjectIDs.Ceo5);
-    //}
+    [Test]
+    public void QueryWithSelectAndImplicitJoin ()
+    {
+      var ceos =
+          from o in DataContext.Entity<Order> ()
+          where o.Customer.Ceo.Name == "Hugo Boss"
+          select o.Customer.Ceo;
 
-    //[Test]
-    //public void QueryWithSelectAndImplicitJoin_UsingJoinPartTwice ()
-    //{
-    //  var ceos =
-    //      from o in DataContext.Entity<Order> ()
-    //      where o.Customer.Name == "Kunde 3"
-    //      select o.Customer.Ceo;
+      CheckQueryResult (ceos, DomainObjectIDs.Ceo5);
+    }
 
-    //  CheckQueryResult (ceos, DomainObjectIDs.Ceo5);
-    //}
+    [Test]
+    public void QueryWithSelectAndImplicitJoin_UsingJoinPartTwice ()
+    {
+      var ceos =
+          from o in DataContext.Entity<Order> ()
+          where o.Customer.Name == "Kunde 3"
+          select o.Customer.Ceo;
 
-    //[Test]
-    //public void QueryWithDistinct ()
-    //{
-    //  var ceos =
-    //      (from o in DataContext.Entity<Order> ()
-    //      where o.Customer.Ceo != null
-    //      select o.Customer.Ceo).Distinct();
+      CheckQueryResult (ceos, DomainObjectIDs.Ceo5);
+    }
 
-    //  CheckQueryResult (ceos, DomainObjectIDs.Ceo12, DomainObjectIDs.Ceo5, DomainObjectIDs.Ceo3);
-    //}
+    [Test]
+    public void QueryWithDistinct ()
+    {
+      var ceos =
+          (from o in DataContext.Entity<Order> ()
+           where o.Customer.Ceo != null
+           select o.Customer.Ceo).Distinct ();
 
-    //[Test]
-    //public void QueryWithWhereAndImplicitJoin ()
-    //{
-    //  var orders =
-    //      from o in DataContext.Entity<Order> ()
-    //      where o.Customer.Type == Customer.CustomerType.Gold
-    //      select o;
+      CheckQueryResult (ceos, DomainObjectIDs.Ceo12, DomainObjectIDs.Ceo5, DomainObjectIDs.Ceo3);
+    }
 
-    //  CheckQueryResult (orders, DomainObjectIDs.InvalidOrder, DomainObjectIDs.Order3, DomainObjectIDs.Order2, DomainObjectIDs.Order4);
-    //}
+    [Test]
+    public void QueryWithWhereAndImplicitJoin ()
+    {
+      var orders =
+          from o in DataContext.Entity<Order> ()
+          where o.Customer.Type == Customer.CustomerType.Gold
+          select o;
 
-    //[Test]
-    //public void QueryWithSubQueryAndWhereInAdditionalFrom()
-    //{
-    //  var orders =
-    //      from o in DataContext.Entity<Order> ()
-    //      from o2 in
-    //        (from oi in DataContext.Entity<OrderItem> () where oi.Order == o select oi)
-    //      select o2;
+      CheckQueryResult (orders, DomainObjectIDs.InvalidOrder, DomainObjectIDs.Order3, DomainObjectIDs.Order2, DomainObjectIDs.Order4);
+    }
 
-    //  CheckQueryResult (orders, DomainObjectIDs.OrderItem5, DomainObjectIDs.OrderItem4, DomainObjectIDs.OrderItem2, DomainObjectIDs.OrderItem1, 
-    //    DomainObjectIDs.OrderItem3);
-    //}
+    [Test]
+    public void QueryWithSubQueryAndWhereInAdditionalFrom ()
+    {
+      var orders =
+          from o in DataContext.Entity<Order> ()
+          from o2 in
+            (from oi in DataContext.Entity<OrderItem> () where oi.Order == o select oi)
+          select o2;
 
-    //[Test]
-    //public void QueryWithSubQueryInWhere ()
-    //{
-    //  var orders =
-    //      from o in DataContext.Entity<Order> ()
-    //      where (from c in DataContext.Entity<Customer>() select c).Contains (o.Customer)
-    //      select o;
+      CheckQueryResult (orders, DomainObjectIDs.OrderItem5, DomainObjectIDs.OrderItem4, DomainObjectIDs.OrderItem2, DomainObjectIDs.OrderItem1,
+        DomainObjectIDs.OrderItem3);
+    }
 
-    //  CheckQueryResult (orders, DomainObjectIDs.Order1, DomainObjectIDs.Order2, DomainObjectIDs.Order3, DomainObjectIDs.Order4, 
-    //    DomainObjectIDs.OrderWithoutOrderItem, DomainObjectIDs.InvalidOrder);
-    //}
+    [Test]
+    public void QueryWithSubQueryInWhere ()
+    {
+      var orders =
+          from o in DataContext.Entity<Order> ()
+          where (from c in DataContext.Entity<Customer> () select c).Contains (o.Customer)
+          select o;
 
-    //[Test]
-    //public void QueryWithContains_Like ()
-    //{
-    //  var ceos = from c in DataContext.Entity<Ceo> ()
-    //                  where c.Name.Contains ("Sepp Fischer")
-    //                  select c;
-    //  CheckQueryResult (ceos, DomainObjectIDs.Ceo4);
-    //}
+      CheckQueryResult (orders, DomainObjectIDs.Order1, DomainObjectIDs.Order2, DomainObjectIDs.Order3, DomainObjectIDs.Order4,
+        DomainObjectIDs.OrderWithoutOrderItem, DomainObjectIDs.InvalidOrder);
+    }
 
-    //[Test]
-    //public void QueryWithSubQueryAndJoinInWhere ()
-    //{
-    //  var orders =
-    //      from o in DataContext.Entity<Order> ()
-    //      where (from c in DataContext.Entity<OrderTicket> () select c.Order).Contains (o)
-    //      select o;
+    [Test]
+    public void QueryWithContains_Like ()
+    {
+      var ceos = from c in DataContext.Entity<Ceo> ()
+                 where c.Name.Contains ("Sepp Fischer")
+                 select c;
+      CheckQueryResult (ceos, DomainObjectIDs.Ceo4);
+    }
 
-    //  CheckQueryResult (orders, DomainObjectIDs.Order1, DomainObjectIDs.Order2, DomainObjectIDs.Order3, DomainObjectIDs.Order4, 
-    //      DomainObjectIDs.OrderWithoutOrderItem);
-    //}
+    [Test]
+    public void QueryWithSubQueryAndJoinInWhere ()
+    {
+      var orders =
+          from o in DataContext.Entity<Order> ()
+          where (from c in DataContext.Entity<OrderTicket> () select c.Order).Contains (o)
+          select o;
 
-    //[Test]
-    //[Ignore ("TODO: Implement Contains(Object) on OPF collection")]
-    //public void QueryWithInnerCollectionSubQueryInWhere ()
-    //{
-    //  OrderItem item = OrderItem.GetObject(DomainObjectIDs.OrderItem1);
-    //  var orders =
-    //      from o in DataContext.Entity<Order> ()
-    //      where o.OrderItems.ContainsObject (item)
-    //      select o;
+      CheckQueryResult (orders, DomainObjectIDs.Order1, DomainObjectIDs.Order2, DomainObjectIDs.Order3, DomainObjectIDs.Order4,
+          DomainObjectIDs.OrderWithoutOrderItem);
+    }
 
-    //  CheckQueryResult (orders, DomainObjectIDs.Order1, DomainObjectIDs.Order2, DomainObjectIDs.Order3, DomainObjectIDs.Order4,
-    //      DomainObjectIDs.OrderWithoutOrderItem);
-    //}
+    [Test]
+    [Ignore ("TODO: Implement Contains(Object) on OPF collection")]
+    public void QueryWithInnerCollectionSubQueryInWhere ()
+    {
+      OrderItem item = OrderItem.GetObject (DomainObjectIDs.OrderItem1);
+      var orders =
+          from o in DataContext.Entity<Order> ()
+          where o.OrderItems.ContainsObject (item)
+          select o;
 
-    //[Test]
-    //public void QueryWithLet ()
-    //{
-    //  var orders = from o in DataContext.Entity<Order> ()
-    //               let x = o
-    //               select x;
+      CheckQueryResult (orders, DomainObjectIDs.Order1, DomainObjectIDs.Order2, DomainObjectIDs.Order3, DomainObjectIDs.Order4,
+          DomainObjectIDs.OrderWithoutOrderItem);
+    }
 
-    //  CheckQueryResult (orders, DomainObjectIDs.Order1, DomainObjectIDs.Order2, DomainObjectIDs.Order3, DomainObjectIDs.Order4,DomainObjectIDs.Order4,
-    //      DomainObjectIDs.InvalidOrder,DomainObjectIDs.OrderWithoutOrderItem);
-    //}
+    [Test]
+    public void QueryWithLet ()
+    {
+      var orders = from o in DataContext.Entity<Order> ()
+                   let x = o
+                   select x;
 
-    //[Test]
-    //public void QueryWithLet_LetWithColumn ()
-    //{
-    //  var orders = from o in DataContext.Entity<Order> ()
-    //               let y = o.OrderNumber
-    //               where y > 1
-    //               select o;
+      CheckQueryResult (orders, DomainObjectIDs.Order1, DomainObjectIDs.Order2, DomainObjectIDs.Order3, DomainObjectIDs.Order4, DomainObjectIDs.Order4,
+          DomainObjectIDs.InvalidOrder, DomainObjectIDs.OrderWithoutOrderItem);
+    }
 
-    //  CheckQueryResult (orders,
-    //    DomainObjectIDs.InvalidOrder, DomainObjectIDs.Order3, DomainObjectIDs.OrderWithoutOrderItem, DomainObjectIDs.Order2, 
-    //    DomainObjectIDs.Order4);
-    //}
+    [Test]
+    public void QueryWithLet_LetWithColumn ()
+    {
+      var orders = from o in DataContext.Entity<Order> ()
+                   let y = o.OrderNumber
+                   where y > 1
+                   select o;
 
-    //[Test]
-    //public void QueryWithLet_LetWithColumn2()
-    //{
-    //  var orders = from o in DataContext.Entity<Order>()
-    //               let x = o.Customer.Name
-    //               where x == "Kunde 1"
-    //               select o;
-    //  CheckQueryResult (orders, DomainObjectIDs.OrderWithoutOrderItem, DomainObjectIDs.Order1);
-    //}
+      CheckQueryResult (orders,
+        DomainObjectIDs.InvalidOrder, DomainObjectIDs.Order3, DomainObjectIDs.OrderWithoutOrderItem, DomainObjectIDs.Order2,
+        DomainObjectIDs.Order4);
+    }
 
-    //[Test]
-    //public void QueryWithSeveralJoinsAndCrossApply ()
-    //{
-    //  var ceos = from o in DataContext.Entity<Order>()
-    //             let x = o.Customer.Ceo
-    //             where x.Name == "Hugo Boss"
-    //             select x;
+    [Test]
+    public void QueryWithLet_LetWithColumn2 ()
+    {
+      var orders = from o in DataContext.Entity<Order> ()
+                   let x = o.Customer.Name
+                   where x == "Kunde 1"
+                   select o;
+      CheckQueryResult (orders, DomainObjectIDs.OrderWithoutOrderItem, DomainObjectIDs.Order1);
+    }
 
-    //  CheckQueryResult(ceos,DomainObjectIDs.Ceo5);
-    //}
+    [Test]
+    public void QueryWithSeveralJoinsAndCrossApply ()
+    {
+      var ceos = from o in DataContext.Entity<Order> ()
+                 let x = o.Customer.Ceo
+                 where x.Name == "Hugo Boss"
+                 select x;
 
-    //[Test]
-    //public void QueryWithLet_SeveralCrossApplies()
-    //{
-    //  var orders = from o in DataContext.Entity<Order>()
-    //               let x = o
-    //               let y = o.Customer
-    //               select x;
+      CheckQueryResult (ceos, DomainObjectIDs.Ceo5);
+    }
 
-    //  CheckQueryResult (orders, DomainObjectIDs.Order1, DomainObjectIDs.Order2, DomainObjectIDs.Order3, DomainObjectIDs.Order4, DomainObjectIDs.Order4,
-    //      DomainObjectIDs.InvalidOrder, DomainObjectIDs.OrderWithoutOrderItem);
-    //}
+    [Test]
+    public void QueryWithLet_SeveralCrossApplies ()
+    {
+      var orders = from o in DataContext.Entity<Order> ()
+                   let x = o
+                   let y = o.Customer
+                   select x;
+
+      CheckQueryResult (orders, DomainObjectIDs.Order1, DomainObjectIDs.Order2, DomainObjectIDs.Order3, DomainObjectIDs.Order4, DomainObjectIDs.Order4,
+          DomainObjectIDs.InvalidOrder, DomainObjectIDs.OrderWithoutOrderItem);
+    }
 
     public static void CheckQueryResult<T> (IEnumerable<T> query, params ObjectID[] expectedObjectIDs)
         where T : TestDomainBase
