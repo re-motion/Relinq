@@ -77,12 +77,14 @@
     <Compile Include="Parsing\Details\SelectProjectionParsing\NewExpressionParser.cs" />
     <Compile Include="Parsing\Details\SelectProjectionParsing\ParameterExpressionParser.cs" />
     <Compile Include="Parsing\Details\WhereConditionParserRegistry.cs" />
+    <Compile Include="Parsing\Details\WhereConditionParsing\ContainsFullTextParser.cs" />
+    <Compile Include="Parsing\Details\WhereConditionParsing\ContainsParser.cs" />
     <Compile Include="Parsing\Details\WhereConditionParsing\IWhereConditionParser.cs" />
+    <Compile Include="Parsing\Details\WhereConditionParsing\LikeParser.cs" />
     <Compile Include="Parsing\ParseContext.cs" />
     <Compile Include="Parsing\Details\WhereConditionParsing\BinaryExpressionParser.cs" />
     <Compile Include="Parsing\Details\WhereConditionParsing\ConstantExpressionParser.cs" />
     <Compile Include="Parsing\Details\WhereConditionParsing\MemberExpressionParser.cs" />
-    <Compile Include="Parsing\Details\WhereConditionParsing\MethodCallExpressionParser.cs" />
     <Compile Include="Parsing\Details\WhereConditionParsing\ParameterExpressionParser.cs" />
     <Compile Include="Parsing\Details\WhereConditionParsing\UnaryExpressionParser.cs" />
     <Compile Include="Parsing\FieldResolving\FieldAccessResolveException.cs" />

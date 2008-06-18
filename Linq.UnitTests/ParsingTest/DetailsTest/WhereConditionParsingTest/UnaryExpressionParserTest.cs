@@ -5,6 +5,7 @@ using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing.Details;
 using Remotion.Data.Linq.Parsing.Details.WhereConditionParsing;
+using Remotion.Data.Linq.Parsing.FieldResolving;
 
 namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionParsingTest
 {
@@ -22,10 +23,11 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
       ICriterion criterion = new Constant (5);
       ICriterion expectedCriterion = new NotCriterion (new Constant (5));
 
-      ParserRegistry parserRegistry = new ParserRegistry ();
-      parserRegistry.RegisterParser (new ConstantExpressionParser (StubDatabaseInfo.Instance));
+      WhereConditionParserRegistry parserRegistry = 
+        new WhereConditionParserRegistry (queryModel, StubDatabaseInfo.Instance, new JoinedTableContext());
+      parserRegistry.RegisterParser (typeof(ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
 
-      UnaryExpressionParser parser = new UnaryExpressionParser(queryModel,parserRegistry);
+      UnaryExpressionParser parser = new UnaryExpressionParser(queryModel.GetExpressionTree(),parserRegistry);
 
       List<FieldDescriptor> fieldCollection = new List<FieldDescriptor> ();
       ICriterion actualCriterion = parser.Parse (unaryExpression, fieldCollection);

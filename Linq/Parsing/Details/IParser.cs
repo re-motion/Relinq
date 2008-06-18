@@ -4,12 +4,8 @@ using Remotion.Data.Linq.DataObjectModel;
 
 namespace Remotion.Data.Linq.Parsing.Details
 {
-  public interface IParser<TExpression> where TExpression : Expression
-  {
-    bool CanParse (TExpression expression);
-  }
-
   public interface IParser
   {
+    bool CanParse (Expression expression);
   }
 }

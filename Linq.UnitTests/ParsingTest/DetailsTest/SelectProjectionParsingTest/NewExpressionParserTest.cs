@@ -6,6 +6,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.DataObjectModel;
+using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Details;
 using Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing;
 using Remotion.Data.Linq.Parsing.FieldResolving;
@@ -25,7 +26,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
     private QueryModel _queryModel;
     private IColumnSource _fromSource;
     private List<FieldDescriptor> _fieldDescriptors;
-    private ParserRegistry _parserRegistry;
+    private SelectProjectionParserRegistry _parserRegistry;
 
     [SetUp]
     public void SetUp ()
@@ -41,12 +42,12 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
       _memberExpression2 = Expression.MakeMemberAccess (_parameter, typeof (Student).GetProperty ("Last"));
       _memberExpression3 = Expression.MakeMemberAccess (_parameter, typeof (Student).GetProperty ("First"));
 
-      _parserRegistry = new ParserRegistry ();
-      _parserRegistry.RegisterParser (new ConstantExpressionParser (StubDatabaseInfo.Instance));
-      _parserRegistry.RegisterParser (new ParameterExpressionParser (_queryModel, _resolver));
-      _parserRegistry.RegisterParser (new MemberExpressionParser (_queryModel, _resolver));
-      _parserRegistry.RegisterParser (new MethodCallExpressionParser (_queryModel, _parserRegistry));
-      _parserRegistry.RegisterParser (new NewExpressionParser (_queryModel, _resolver, _parserRegistry));
+      _parserRegistry = new SelectProjectionParserRegistry (_queryModel, StubDatabaseInfo.Instance, new JoinedTableContext(), new ParseContext());
+      _parserRegistry.RegisterParser (typeof(ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
+      _parserRegistry.RegisterParser (typeof(ParameterExpression), new ParameterExpressionParser (_queryModel, _resolver));
+      _parserRegistry.RegisterParser (typeof(MemberExpression), new MemberExpressionParser (_queryModel, _resolver));
+      _parserRegistry.RegisterParser (typeof(MethodCallExpression), new MethodCallExpressionParser (_parserRegistry));
+      _parserRegistry.RegisterParser (typeof(NewExpression), new NewExpressionParser (_parserRegistry));
       
 
     }
@@ -67,7 +68,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
       List<IEvaluation> expected2 = new List<IEvaluation> { column2 };
 
       //NewExpressionParser parser = new NewExpressionParser (_queryModel, _resolver, e => e == _memberExpression1 ? expected1 : expected2);
-      NewExpressionParser parser = new NewExpressionParser (_queryModel, _resolver, _parserRegistry);
+      NewExpressionParser parser = new NewExpressionParser (_parserRegistry);
       List<IEvaluation> result = parser.Parse (newExpression, _fieldDescriptors);
 
       Assert.That (result, Is.EqualTo (expected1));
@@ -98,7 +99,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
       NewExpression outerExpression = Expression.New (constructorInfo1, _memberExpression3, innerExpression);
       //NewExpressionParser parser = new NewExpressionParser (_queryModel, _resolver,
       //    e => e == _memberExpression3 ? expected1 : expected2);
-      NewExpressionParser parser = new NewExpressionParser (_queryModel, _resolver,_parserRegistry);
+      NewExpressionParser parser = new NewExpressionParser (_parserRegistry);
       List<IEvaluation> result = parser.Parse (outerExpression, _fieldDescriptors);
       
       Assert.That (result, Is.EqualTo (expectedResult));

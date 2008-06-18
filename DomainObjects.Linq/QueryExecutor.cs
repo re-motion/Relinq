@@ -44,30 +44,35 @@ namespace Remotion.Data.DomainObjects.Linq
       ClassDefinition classDefinition = GetClassDefinition();
       //SqlServerGenerator sqlGenerator = new SqlServerGenerator (DatabaseInfo.Instance);
 
-      Tuple<string, CommandParameter[]> result = GetStatement(queryModel);
+      Tuple<string, CommandParameter[]> result = CreateStatement(queryModel);
       
       string statement = result.A;
       CommandParameter[] commandParameters = result.B;
 
-      QueryParameterCollection queryParameters = new QueryParameterCollection();
-      foreach (CommandParameter commandParameter in commandParameters)
-        queryParameters.Add (commandParameter.Name, commandParameter.Value, QueryParameterType.Value);
-
-      QueryDefinition queryDefinition = new QueryDefinition ("<dynamic query>", classDefinition.StorageProviderID, statement, QueryType.Collection);
-      Query query = new Query (queryDefinition,queryParameters);
-
+      Query query = CreateQuery(classDefinition, statement, commandParameters);
+      
       if (Listener != null)
         Listener.QueryConstructed (query);
 
       return ClientTransaction.Current.QueryManager.GetCollection (query);
     }
 
-    public virtual ClassDefinition GetClassDefinition()
+    public virtual Query CreateQuery(ClassDefinition classDefinition, string statement, CommandParameter[] commandParameters)
+    {
+      QueryParameterCollection queryParameters = new QueryParameterCollection();
+      foreach (CommandParameter commandParameter in commandParameters)
+        queryParameters.Add (commandParameter.Name, commandParameter.Value, QueryParameterType.Value);
+
+      QueryDefinition queryDefinition = new QueryDefinition ("<dynamic query>", classDefinition.StorageProviderID, statement, QueryType.Collection);
+      return new Query (queryDefinition,queryParameters);
+    }
+
+    public virtual ClassDefinition GetClassDefinition ()
     {
       return MappingConfiguration.Current.ClassDefinitions.GetMandatory (typeof (T));
     }
 
-    public virtual Tuple<string, CommandParameter[]> GetStatement (QueryModel queryModel)
+    public virtual Tuple<string, CommandParameter[]> CreateStatement (QueryModel queryModel)
     {
       return SqlGenerator.BuildCommandString (queryModel);
     }

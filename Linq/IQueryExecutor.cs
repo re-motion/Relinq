@@ -8,6 +8,5 @@ namespace Remotion.Data.Linq
   {
     object ExecuteSingle (QueryModel queryModel);
     IEnumerable ExecuteCollection (QueryModel queryModel);
-    Tuple<string, CommandParameter[]> GetStatement (QueryModel queryModel);
   }
 }

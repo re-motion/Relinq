@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Data.Linq.Clauses;
@@ -5,6 +6,7 @@ using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Details;
 using Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing;
 using Remotion.Data.Linq.Parsing.FieldResolving;
+using NUnit.Framework.SyntaxHelpers;
 
 namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest
 {
@@ -34,64 +36,37 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest
     }
 
     [Test]
-    public void Initialization ()
+    public void Initialization_AddsDefaultParsers ()
     {
       SelectProjectionParserRegistry selectProjectionParserRegistry =
         new SelectProjectionParserRegistry (_queryModel, _databaseInfo, _context,_parseContext);
 
-      Assert.IsNotNull (selectProjectionParserRegistry.GetParsers<MethodCallExpression> ());
+      Assert.That (selectProjectionParserRegistry.GetParsers (typeof (BinaryExpression)).ToArray (), Is.Not.Empty);
+      Assert.That (selectProjectionParserRegistry.GetParsers (typeof (ConstantExpression)).ToArray (), Is.Not.Empty);
+      Assert.That (selectProjectionParserRegistry.GetParsers (typeof (MemberExpression)).ToArray (), Is.Not.Empty);
+      Assert.That (selectProjectionParserRegistry.GetParsers (typeof (MethodCallExpression)).ToArray (), Is.Not.Empty);
+      Assert.That (selectProjectionParserRegistry.GetParsers (typeof (NewExpression)).ToArray (), Is.Not.Empty);
+      Assert.That (selectProjectionParserRegistry.GetParsers (typeof (ParameterExpression)).ToArray (), Is.Not.Empty);     
     }
 
     [Test]
-    public void GetAllRegisteredParserForMethodCallExpressionParser ()
+    public void RegisterNewMethodCallExpressionParser_IsInsertedFirst ()
     {
-      MethodCallExpressionParser methodCallExpressionParser = new MethodCallExpressionParser (_queryModel, _parserRegistry);
+      Assert.That (_selectProjectionParserRegistry.GetParsers (typeof (MethodCallExpression)).Count (), Is.EqualTo (1));
 
-      foreach (ISelectProjectionParser<MethodCallExpression> parser in _selectProjectionParserRegistry.GetParsers<MethodCallExpression> ())
-      {
-        Assert.AreEqual (parser.GetType (), methodCallExpressionParser.GetType ());
-      }
+      MethodCallExpressionParser methodCallExpressionParser = new MethodCallExpressionParser (_selectProjectionParserRegistry);
+      _selectProjectionParserRegistry.RegisterParser (typeof (MethodCallExpression), methodCallExpressionParser);
+      Assert.That (_selectProjectionParserRegistry.GetParsers (typeof (MethodCallExpression)).Count (), Is.EqualTo (2));
+      Assert.That (_selectProjectionParserRegistry.GetParsers (typeof (MethodCallExpression)).First(), Is.SameAs (methodCallExpressionParser));
     }
 
     [Test]
-    public void RegisterNewMethodCallExpressionParser ()
-    {
-      MethodCallExpressionParser methodCallExpressionParser = new MethodCallExpressionParser (_queryModel, _parserRegistry);
-      int cnt1 = 0;
-      int cnt2 = 0;
-
-      foreach (ISelectProjectionParser<MethodCallExpression> parser in _selectProjectionParserRegistry.GetParsers<MethodCallExpression> ())
-      {
-        cnt1++;
-      }
-      _selectProjectionParserRegistry.RegisterParser (methodCallExpressionParser);
-      foreach (ISelectProjectionParser<MethodCallExpression> parser in _selectProjectionParserRegistry.GetParsers<MethodCallExpression> ())
-      {
-        cnt2++;
-      }
-
-      Assert.AreEqual (1, cnt1);
-      Assert.AreEqual (2, cnt2);
-    }
-
-    [Test]
-    public void GetDefaultRegisteredConstantExpressionParser ()
+    public void GetParser ()
     {
       ConstantExpression constantExpression = Expression.Constant ("test");
-      ConstantExpressionParser expectedParser = new ConstantExpressionParser (StubDatabaseInfo.Instance);
+      ISelectProjectionParser expectedParser = _selectProjectionParserRegistry.GetParsers (typeof (ConstantExpression)).First();
 
-      Assert.AreEqual (expectedParser.GetType (), _selectProjectionParserRegistry.GetParser (constantExpression).GetType ());
+      Assert.AreSame (expectedParser, _selectProjectionParserRegistry.GetParser (constantExpression));
     }
-
-    [Test]
-    public void GetParser_NonGeneric ()
-    {
-      ConstantExpression constantExpression = Expression.Constant ("test");
-      ConstantExpressionParser expectedParser = new ConstantExpressionParser (StubDatabaseInfo.Instance);
-
-      Assert.AreEqual (expectedParser.GetType (), _selectProjectionParserRegistry.GetParser (constantExpression).GetType ());
-    }
-
-
   }
 }

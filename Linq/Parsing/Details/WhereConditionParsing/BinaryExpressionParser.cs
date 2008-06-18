@@ -8,20 +8,18 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
 {
-  public class BinaryExpressionParser : IWhereConditionParser<BinaryExpression>, IWhereConditionParser
+  public class BinaryExpressionParser : IWhereConditionParser
   {
-    private readonly ParserRegistry _parserRegistry;
+    private readonly WhereConditionParserRegistry _parserRegistry;
     private readonly Expression _expressionTreeRoot;
-    private readonly QueryModel _queryModel;
 
-    public BinaryExpressionParser (QueryModel queryModel, ParserRegistry parserRegistry)
+    public BinaryExpressionParser (Expression expressionTreeRoot, WhereConditionParserRegistry parserRegistry)
     {
-      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+      ArgumentUtility.CheckNotNull ("expressionTreeRoot", expressionTreeRoot);
       ArgumentUtility.CheckNotNull ("parserRegistry", parserRegistry);
 
-      _expressionTreeRoot = queryModel.GetExpressionTree ();
+      _expressionTreeRoot = expressionTreeRoot;
       _parserRegistry = parserRegistry;
-      _queryModel = queryModel;
     }
 
 
@@ -53,17 +51,22 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
       }
     }
 
-    public bool CanParse (BinaryExpression binaryExpression)
+    ICriterion IWhereConditionParser.Parse (Expression expression, List<FieldDescriptor> fieldDescriptors)
     {
-      return true;
+      return Parse ((BinaryExpression) expression, fieldDescriptors);
+    }
+
+    public bool CanParse (Expression expression)
+    {
+      return expression is BinaryExpression;
     }
 
     private ComplexCriterion CreateComplexCriterion 
       (BinaryExpression expression, ComplexCriterion.JunctionKind kind, List<FieldDescriptor> fieldDescriptorCollection)
     {
       return new ComplexCriterion (
-        GetParsers (expression.Left).Parse (expression.Left, fieldDescriptorCollection),
-        GetParsers (expression.Right).Parse (expression.Right, fieldDescriptorCollection),
+        _parserRegistry.GetParser (expression.Left).Parse (expression.Left, fieldDescriptorCollection),
+        _parserRegistry.GetParser (expression.Right).Parse (expression.Right, fieldDescriptorCollection),
         kind
         );
     }
@@ -72,35 +75,10 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
       (BinaryExpression expression, BinaryCondition.ConditionKind kind, List<FieldDescriptor> fieldDescriptorCollection)
     {
       return new BinaryCondition (
-        GetParsers (expression.Left).Parse (expression.Left, fieldDescriptorCollection),
-        GetParsers (expression.Right).Parse (expression.Right, fieldDescriptorCollection),
+        _parserRegistry.GetParser (expression.Left).Parse (expression.Left, fieldDescriptorCollection),
+        _parserRegistry.GetParser (expression.Right).Parse (expression.Right, fieldDescriptorCollection),
         kind
         );
-    }
-    
-    public ICriterion Parse(Expression expression, List<FieldDescriptor> fieldDescriptors)
-    {
-      return Parse ((BinaryExpression) expression, fieldDescriptors);
-    }
-    
-    private IWhereConditionParser GetParsers (Expression expression)
-    {
-      if (expression.GetType () == typeof (ConstantExpression))
-        return (IWhereConditionParser) _parserRegistry.GetParser ((ConstantExpression) expression);
-      else if (expression.GetType () == typeof (BinaryExpression))
-        return (IWhereConditionParser) _parserRegistry.GetParser ((BinaryExpression) expression);
-      else if (expression.GetType () == typeof (MemberExpression))
-        return (IWhereConditionParser) _parserRegistry.GetParser ((MemberExpression) expression);
-      else if (expression.GetType () == typeof (MethodCallExpression))
-        return (IWhereConditionParser) _parserRegistry.GetParser ((MethodCallExpression) expression);
-      else if (expression.GetType () == typeof (ParameterExpression))
-        return (IWhereConditionParser) _parserRegistry.GetParser ((ParameterExpression) expression);
-      else if (expression.GetType () == typeof (UnaryExpression))
-        return (IWhereConditionParser) _parserRegistry.GetParser ((UnaryExpression) expression);
-      throw ParserUtility.CreateParserException ("no parser for expression found", expression, "GetParser",
-            _queryModel.GetExpressionTree ());
-      
-
     }
   }
 }

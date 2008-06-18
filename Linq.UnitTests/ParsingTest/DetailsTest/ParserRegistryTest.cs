@@ -6,6 +6,7 @@ using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing.Details;
 using Remotion.Data.Linq.Parsing.Details.WhereConditionParsing;
+using Remotion.Data.Linq.Parsing.FieldResolving;
 using Remotion.Utilities;
 
 
@@ -31,112 +32,75 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest
       List<IEvaluation> c1 = new List<IEvaluation> { column };
     }
 
-    [Test]
-    [Ignore ("TODO: Check higher priority")]
-    public void RegisterParser ()
-    {
-      ParserRegistry parserRegistry = new ParserRegistry ();
+    
+    //[Test]
+    //public void GetAllRegisteresParser_NoParserRegistered ()
+    //{
+    //  ParserRegistry parserRegistry = new ParserRegistry ();
+    //  IEnumerable resultList = (parserRegistry.GetParsers<Expression> ());
+    //  Assert.IsFalse (resultList.GetEnumerator ().MoveNext ());
+    //}
 
-      Column column = new Column (_fromSource, "FirstColumn");
-      List<IEvaluation> c1 = new List<IEvaluation> { column };
+    //[Test]
+    //public void GetParser_FirstRegisteredParser ()
+    //{
+    //  ParserRegistry parserRegistry = new ParserRegistry ();
 
-      ICriterion criterion = new Column (new Table ("Student", "s"), "First");
-      WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
-      MethodCallExpressionParser methodCallExpressionParser = new MethodCallExpressionParser (_queryModel, parserRegistry);
-      parserRegistry.RegisterParser (methodCallExpressionParser);
+    //  Column column = new Column (_fromSource, "FirstColumn");
+    //  List<IEvaluation> c1 = new List<IEvaluation> { column };
 
-      ConstantExpressionParser constantExpressionParser = new ConstantExpressionParser (StubDatabaseInfo.Instance);
-      parserRegistry.RegisterParser(constantExpressionParser); 
-    }
+    //  ICriterion criterion = new Column (new Table ("Student", "s"), "First");
+    //  WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
+    //  MethodCallExpressionParser methodCallExpressionParser = new MethodCallExpressionParser (_queryModel, parserRegistry);
 
-    [Test]
-    public void GetAllRegisteredParserForMethodCallExpressionParser ()
-    {
-      ParserRegistry parserRegistry = new ParserRegistry ();
-      Column column = new Column (_fromSource, "FirstColumn");
-      List<IEvaluation> c1 = new List<IEvaluation> { column };
+    //  parserRegistry.RegisterParser (methodCallExpressionParser);
+    //  ConstantExpressionParser expectedParser = new ConstantExpressionParser (StubDatabaseInfo.Instance);
+    //  parserRegistry.RegisterParser (expectedParser);
 
-      ICriterion criterion = new Column (new Table ("Student", "s"), "First");
-      WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
-      MethodCallExpressionParser methodCallExpressionParser = new MethodCallExpressionParser (_queryModel, parserRegistry);
+    //  ConstantExpression constantExpression = Expression.Constant (5);
+    //  IParser<ConstantExpression> actualParser = parserRegistry.GetParser (constantExpression);
 
-      parserRegistry.RegisterParser (methodCallExpressionParser);
-      parserRegistry.RegisterParser (new ConstantExpressionParser (StubDatabaseInfo.Instance));
+    //  Assert.AreEqual (expectedParser, actualParser);
+    //}
 
-      foreach (IParser<MethodCallExpression> parser in parserRegistry.GetParsers<MethodCallExpression> ())
-      {
-        Assert.AreEqual (parser, methodCallExpressionParser);
-      }
-    }
+    //[Test]
+    //[ExpectedException (typeof (ParseException), ExpectedMessage = "Cannot parse Constant, no appropriate parser found")]
+    //public void GetParser_NoParserFound ()
+    //{
+    //  ParserRegistry parserRegistry = new ParserRegistry ();
 
-    [Test]
-    public void GetAllRegisteresParser_NoParserRegistered ()
-    {
-      ParserRegistry parserRegistry = new ParserRegistry ();
-      IEnumerable resultList = (parserRegistry.GetParsers<Expression> ());
-      Assert.IsFalse (resultList.GetEnumerator ().MoveNext ());
-    }
+    //  Column column = new Column (_fromSource, "FirstColumn");
+    //  List<IEvaluation> c1 = new List<IEvaluation> { column };
 
-    [Test]
-    public void GetParser_FirstRegisteredParser ()
-    {
-      ParserRegistry parserRegistry = new ParserRegistry ();
+    //  ICriterion criterion = new Column (new Table ("Student", "s"), "First");
+    //  WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
+    //  MethodCallExpressionParser methodCallExpressionParser = new MethodCallExpressionParser (_queryModel, parserRegistry);
 
-      Column column = new Column (_fromSource, "FirstColumn");
-      List<IEvaluation> c1 = new List<IEvaluation> { column };
+    //  parserRegistry.RegisterParser (methodCallExpressionParser);
 
-      ICriterion criterion = new Column (new Table ("Student", "s"), "First");
-      WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
-      MethodCallExpressionParser methodCallExpressionParser = new MethodCallExpressionParser (_queryModel, parserRegistry);
+    //  ConstantExpression constantExpression = Expression.Constant (5);
+    //  IParser<ConstantExpression> actualParser = parserRegistry.GetParser (constantExpression);
+    //}
 
-      parserRegistry.RegisterParser (methodCallExpressionParser);
-      ConstantExpressionParser expectedParser = new ConstantExpressionParser (StubDatabaseInfo.Instance);
-      parserRegistry.RegisterParser (expectedParser);
+    //[Test]
+    //public void GetParser_NonGeneric ()
+    //{
+    //  ParserRegistry parserRegistry = new ParserRegistry ();
+    //  Column column = new Column (_fromSource, "FirstColumn");
+    //  List<IEvaluation> c1 = new List<IEvaluation> { column };
 
-      ConstantExpression constantExpression = Expression.Constant (5);
-      IParser<ConstantExpression> actualParser = parserRegistry.GetParser (constantExpression);
+    //  ICriterion criterion = new Column (new Table ("Student", "s"), "First");
+    //  WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
+    //  MethodCallExpressionParser methodCallExpressionParser = new MethodCallExpressionParser (_queryModel, parserRegistry);
 
-      Assert.AreEqual (expectedParser, actualParser);
-    }
+    //  parserRegistry.RegisterParser (methodCallExpressionParser);
+    //  ConstantExpressionParser expectedParser = new ConstantExpressionParser (StubDatabaseInfo.Instance);
+    //  parserRegistry.RegisterParser (expectedParser);
 
-    [Test]
-    [ExpectedException (typeof (ParseException), ExpectedMessage = "Cannot parse Constant, no appropriate parser found")]
-    public void GetParser_NoParserFound ()
-    {
-      ParserRegistry parserRegistry = new ParserRegistry ();
+    //  ConstantExpression constantExpression = Expression.Constant (5);
+    //  IParser actualParser = (IParser) parserRegistry.GetParser (constantExpression);
 
-      Column column = new Column (_fromSource, "FirstColumn");
-      List<IEvaluation> c1 = new List<IEvaluation> { column };
-
-      ICriterion criterion = new Column (new Table ("Student", "s"), "First");
-      WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
-      MethodCallExpressionParser methodCallExpressionParser = new MethodCallExpressionParser (_queryModel, parserRegistry);
-
-      parserRegistry.RegisterParser (methodCallExpressionParser);
-
-      ConstantExpression constantExpression = Expression.Constant (5);
-      IParser<ConstantExpression> actualParser = parserRegistry.GetParser (constantExpression);
-    }
-
-    [Test]
-    public void GetParser_NonGeneric ()
-    {
-      ParserRegistry parserRegistry = new ParserRegistry ();
-      Column column = new Column (_fromSource, "FirstColumn");
-      List<IEvaluation> c1 = new List<IEvaluation> { column };
-
-      ICriterion criterion = new Column (new Table ("Student", "s"), "First");
-      WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
-      MethodCallExpressionParser methodCallExpressionParser = new MethodCallExpressionParser (_queryModel, parserRegistry);
-
-      parserRegistry.RegisterParser (methodCallExpressionParser);
-      ConstantExpressionParser expectedParser = new ConstantExpressionParser (StubDatabaseInfo.Instance);
-      parserRegistry.RegisterParser (expectedParser);
-
-      ConstantExpression constantExpression = Expression.Constant (5);
-      IParser actualParser = (IParser) parserRegistry.GetParser (constantExpression);
-
-      Assert.AreEqual (expectedParser, actualParser);
-    }
+    //  Assert.AreEqual (expectedParser, actualParser);
+    //}
   }
 }

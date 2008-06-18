@@ -20,7 +20,7 @@ namespace Remotion.Data.DomainObjects.Linq
     //}
 
     public DomainObjectQueryable (IQueryListener listener, SqlGeneratorBase sqlGenerator)
-      :base (new QueryProvider(ObjectFactory.Create<QueryExecutor<T>>().With(listener,sqlGenerator)))
+      : base (new QueryProvider(ObjectFactory.Create<QueryExecutor<T>>().With(listener,sqlGenerator)))
     {
     }
     

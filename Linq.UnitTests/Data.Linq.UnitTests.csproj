@@ -79,8 +79,10 @@
     <Compile Include="ParsingTest\DetailsTest\WhereConditionParserRegistryTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\WhereConditionParsingTest\BinaryExpressionParserTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\WhereConditionParsingTest\ConstantExpressionParserTest.cs" />
+    <Compile Include="ParsingTest\DetailsTest\WhereConditionParsingTest\ContainsFulltextParserTest.cs" />
+    <Compile Include="ParsingTest\DetailsTest\WhereConditionParsingTest\ContainsParserTest.cs" />
+    <Compile Include="ParsingTest\DetailsTest\WhereConditionParsingTest\LikeParserTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\WhereConditionParsingTest\MemberExpressionParserTest.cs" />
-    <Compile Include="ParsingTest\DetailsTest\WhereConditionParsingTest\MethodCallExpressionParserTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\WhereConditionParsingTest\ParameterExpressionParserTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\WhereConditionParsingTest\UnaryExpressionParserTest.cs" />
     <Compile Include="ParsingTest\FieldResolvingTest\OrderingFieldAccessPolicyTest.cs" />

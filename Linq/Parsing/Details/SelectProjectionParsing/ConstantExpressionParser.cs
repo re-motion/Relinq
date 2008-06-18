@@ -6,10 +6,9 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing
 {
-  public class ConstantExpressionParser : ISelectProjectionParser<ConstantExpression>, ISelectProjectionParser
+  public class ConstantExpressionParser : ISelectProjectionParser
   {
     private readonly WhereConditionParsing.ConstantExpressionParser _innerParser;
-
 
     public ConstantExpressionParser (IDatabaseInfo databaseInfo)
     {
@@ -19,18 +18,17 @@ namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing
     public List<IEvaluation> Parse (ConstantExpression constantExpression, List<FieldDescriptor> fieldDescriptorCollection)
     {
       ArgumentUtility.CheckNotNull ("constantExpression", constantExpression);
-
       return new List<IEvaluation> { _innerParser.Parse (constantExpression, fieldDescriptorCollection) };
     }
 
-    public bool CanParse(ConstantExpression constantExpression)
-    {
-      return true;
-    }
-
-    public List<IEvaluation> Parse(Expression expression, List<FieldDescriptor> fieldDescriptors)
+    List<IEvaluation> ISelectProjectionParser.Parse (Expression expression, List<FieldDescriptor> fieldDescriptors)
     {
       return Parse ((ConstantExpression) expression, fieldDescriptors);
+    }
+
+    public bool CanParse(Expression expression)
+    {
+      return expression is ConstantExpression;
     }
   }
 }

@@ -84,6 +84,7 @@
     <Compile Include="IntegrationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="Properties\AssemblyInfoTemplate.cs" />
+    <Compile Include="QueryExecutorMixin.cs" />
     <Compile Include="QueryExecutorTest.cs" />
     <Compile Include="QueryProviderTest.cs" />
     <Compile Include="SetupFixture.cs" />

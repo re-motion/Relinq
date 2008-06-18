@@ -6,19 +6,19 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing
 {
-  public class BinaryExpressionParser : ISelectProjectionParser<BinaryExpression>, ISelectProjectionParser
+  public class BinaryExpressionParser : ISelectProjectionParser
   {
-    private readonly QueryModel _queryModel;
-    private readonly ParserRegistry _parserRegistry;
+    private readonly Expression _expressionTreeRoot;
+    private readonly SelectProjectionParserRegistry _parserRegistry;
 
     public Dictionary<ExpressionType, BinaryEvaluation.EvaluationKind> NodeTypeMap { get; private set; }
 
-    public BinaryExpressionParser(QueryModel queryModel, ParserRegistry parserRegistry)
+    public BinaryExpressionParser (Expression expressionTreeRoot, SelectProjectionParserRegistry parserRegistry)
     {
-      ArgumentUtility.CheckNotNull("queryModel", queryModel);
+      ArgumentUtility.CheckNotNull ("expressionTreeRoot", expressionTreeRoot);
       ArgumentUtility.CheckNotNull ("parserRegistry", parserRegistry);
 
-      _queryModel = queryModel;
+      _expressionTreeRoot = expressionTreeRoot;
       _parserRegistry = parserRegistry;
 
       NodeTypeMap = new Dictionary<ExpressionType, BinaryEvaluation.EvaluationKind>
@@ -36,18 +36,22 @@ namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing
       ArgumentUtility.CheckNotNull ("binaryExpression", binaryExpression);
       ArgumentUtility.CheckNotNull("fieldDescriptorCollection", fieldDescriptorCollection);
 
-      List<IEvaluation> leftSide = GetParser (binaryExpression.Left).Parse (binaryExpression.Left, fieldDescriptorCollection);
-      
-      List<IEvaluation> rightSide = GetParser (binaryExpression.Right).Parse (binaryExpression.Right, fieldDescriptorCollection);
+      List<IEvaluation> leftSide = _parserRegistry.GetParser (binaryExpression.Left).Parse (binaryExpression.Left, fieldDescriptorCollection);
+      List<IEvaluation> rightSide = _parserRegistry.GetParser (binaryExpression.Right).Parse (binaryExpression.Right, fieldDescriptorCollection);
 
       BinaryEvaluation.EvaluationKind evaluationKind;
       if (!NodeTypeMap.TryGetValue(binaryExpression.NodeType, out evaluationKind))
       {
         throw ParserUtility.CreateParserException(GetSupportedNodeTypeString(), binaryExpression.NodeType,
                                                   "binary expression in select projection",
-                                                  _queryModel.GetExpressionTree());
+                                                  _expressionTreeRoot);
       }
       return new List<IEvaluation> {new BinaryEvaluation(leftSide[0], rightSide[0], evaluationKind)};
+    }
+
+    List<IEvaluation> ISelectProjectionParser.Parse (Expression expression, List<FieldDescriptor> fieldDescriptors)
+    {
+      return Parse ((BinaryExpression) expression, fieldDescriptors);
     }
 
     private string GetSupportedNodeTypeString()
@@ -55,32 +59,9 @@ namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing
       return SeparatedStringBuilder.Build(", ", NodeTypeMap.Keys);
     }
 
-    public bool CanParse(BinaryExpression binaryExpression)
+    public bool CanParse(Expression expression)
     {
-      return true;
-    }
-
-    public List<IEvaluation> Parse(Expression expression, List<FieldDescriptor> fieldDescriptors)
-    {
-      return Parse ((BinaryExpression) expression, fieldDescriptors);
-    }
-
-    private ISelectProjectionParser GetParser (Expression expression)
-    {
-      if (expression.GetType () == typeof (ConstantExpression))
-        return (ISelectProjectionParser) _parserRegistry.GetParser ((ConstantExpression) expression);
-      else if (expression.GetType () == typeof (BinaryExpression))
-        return (ISelectProjectionParser) _parserRegistry.GetParser ((BinaryExpression) expression);
-      else if (expression.GetType () == typeof (MemberExpression))
-        return (ISelectProjectionParser) _parserRegistry.GetParser ((MemberExpression) expression);
-      else if (expression.GetType () == typeof (MethodCallExpression))
-        return (ISelectProjectionParser) _parserRegistry.GetParser ((MethodCallExpression) expression);
-      else if (expression.GetType () == typeof (ParameterExpression))
-        return (ISelectProjectionParser) _parserRegistry.GetParser ((ParameterExpression) expression);
-      else if (expression.GetType () == typeof (NewExpression))
-        return (ISelectProjectionParser) _parserRegistry.GetParser ((NewExpression) expression);
-      throw ParserUtility.CreateParserException ("no parser for expression found",expression,"GetParser",
-        _queryModel.GetExpressionTree());
+      return expression is BinaryExpression;
     }
   }
 }

@@ -1,9 +1,11 @@
+using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing.Details;
 using Remotion.Data.Linq.Parsing.Details.WhereConditionParsing;
 using Remotion.Data.Linq.Parsing.FieldResolving;
+using NUnit.Framework.SyntaxHelpers;
 
 namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest
 {
@@ -33,62 +35,39 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest
     }
 
     [Test]
-    public void Initialization ()
+    public void Initialization_AddsDefaultParsers ()
     {
       WhereConditionParserRegistry whereConditionParserRegistry = 
         new WhereConditionParserRegistry (_queryModel, _databaseInfo, _context);
+
+      Assert.That (whereConditionParserRegistry.GetParsers (typeof (BinaryExpression)).ToArray (), Is.Not.Empty);
+      Assert.That (whereConditionParserRegistry.GetParsers (typeof (ConstantExpression)).ToArray (), Is.Not.Empty);
+      Assert.That (whereConditionParserRegistry.GetParsers (typeof (MemberExpression)).ToArray (), Is.Not.Empty);
+      Assert.That (whereConditionParserRegistry.GetParsers (typeof (MethodCallExpression)).ToArray (), Is.Not.Empty);
+      Assert.That (whereConditionParserRegistry.GetParsers (typeof (ParameterExpression)).ToArray (), Is.Not.Empty);
+      Assert.That (whereConditionParserRegistry.GetParsers (typeof (UnaryExpression)).ToArray (), Is.Not.Empty);
       
-      Assert.IsNotNull (whereConditionParserRegistry.GetParsers<MethodCallExpression>());
     }
 
     [Test]
-    public void GetAllRegisteredParserForMethodCallExpressionParser ()
+    public void RegisterNewMethodCallExpressionParser_RegisterFirst ()
     {
-      MethodCallExpressionParser methodCallExpressionParser = new MethodCallExpressionParser (_queryModel, _parserRegistry);
-
-      foreach (IWhereConditionParser<MethodCallExpression> parser in _whereConditionParserRegistry.GetParsers<MethodCallExpression>())
-      {
-        Assert.AreEqual (parser.GetType(), methodCallExpressionParser.GetType());
-      }
-    }
-
-    [Test]
-    public void RegisterNewMethodCallExpressionParser ()
-    {
-      MethodCallExpressionParser methodCallExpressionParser = new MethodCallExpressionParser (_queryModel, _parserRegistry);
-      int cnt1 = 0;
-      int cnt2 = 0;
-
-      foreach (IWhereConditionParser<MethodCallExpression> parser in _whereConditionParserRegistry.GetParsers<MethodCallExpression> ())
-      {
-        cnt1++;
-      }
-      _whereConditionParserRegistry.RegisterParser (methodCallExpressionParser);
-      foreach (IWhereConditionParser<MethodCallExpression> parser in _whereConditionParserRegistry.GetParsers<MethodCallExpression> ())
-      {
-        cnt2++;
-      }
-
-      Assert.AreEqual (1, cnt1);
-      Assert.AreEqual (2, cnt2);
-    }
-
-    [Test]
-    public void GetDefaultRegisteredConstantExpressionParser ()
-    {
-      ConstantExpression constantExpression = Expression.Constant("test");
-      ConstantExpressionParser expectedParser = new ConstantExpressionParser (StubDatabaseInfo.Instance);
+      Assert.That (_whereConditionParserRegistry.GetParsers (typeof (MethodCallExpression)).Count (), Is.EqualTo (3));
       
-      Assert.AreEqual(expectedParser.GetType(),_whereConditionParserRegistry.GetParser (constantExpression).GetType());
+      LikeParser likeParser = new LikeParser (_queryModel.GetExpressionTree(), _whereConditionParserRegistry);
+      _whereConditionParserRegistry.RegisterParser (typeof (MethodCallExpression), likeParser);
+      Assert.That (_whereConditionParserRegistry.GetParsers (typeof (MethodCallExpression)).Count (), Is.EqualTo (4));
+      Assert.That (_whereConditionParserRegistry.GetParsers (typeof (MethodCallExpression)).First (), Is.SameAs (likeParser));
     }
+    
 
     [Test]
-    public void GetParser_NonGeneric ()
+    public void GetParser ()
     {
       ConstantExpression constantExpression = Expression.Constant ("test");
-      ConstantExpressionParser expectedParser = new ConstantExpressionParser (StubDatabaseInfo.Instance);
+      IWhereConditionParser expectedParser = _whereConditionParserRegistry.GetParsers (typeof (ConstantExpression)).First();
 
-      Assert.AreEqual (expectedParser.GetType (), _whereConditionParserRegistry.GetParser (constantExpression).GetType ());
+      Assert.AreSame (expectedParser, _whereConditionParserRegistry.GetParser (constantExpression));
     }
   }
 }

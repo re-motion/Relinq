@@ -1,4 +1,3 @@
-using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing.FieldResolving;
 
 namespace Remotion.Data.Linq.Parsing.Details

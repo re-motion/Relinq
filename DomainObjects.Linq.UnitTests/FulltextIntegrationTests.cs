@@ -18,7 +18,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
 
       SetDatabaseModifyable ();
       DatabaseAgent.ExecuteBatch ("DataDomainObjects_CreateFulltextIndices.sql", false);
-      System.Threading.Thread.Sleep (250);
+      WaitForIndices ();
     }
 
     [Test]
@@ -42,6 +42,12 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
       IntegrationTests.CheckQueryResult (ceos, DomainObjectIDs.Ceo4);
     }
 
+    private void WaitForIndices ()
+    {
+      var rowCount = DatabaseAgent.ExecuteScalarCommand ("SELECT COUNT(*) FROM Ceo WHERE Contains ([Ceo].[Name], 'Fischer')");
+      if (!rowCount.Equals (1))
+        WaitForIndices ();
+    }
 
   }
 }

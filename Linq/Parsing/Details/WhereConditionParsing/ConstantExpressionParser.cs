@@ -5,7 +5,7 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
 {
-  public class ConstantExpressionParser : IWhereConditionParser<ConstantExpression>,IWhereConditionParser
+  public class ConstantExpressionParser : IWhereConditionParser
   {
     private readonly IDatabaseInfo _databaseInfo;
 
@@ -21,9 +21,9 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
       return new Constant (newValue);
     }
 
-    public bool CanParse(ConstantExpression constantExpression)
+    public bool CanParse(Expression expression)
     {
-      return true;
+      return expression is ConstantExpression;
     }
 
     public ICriterion Parse(Expression expression, List<FieldDescriptor> fieldDescriptors)

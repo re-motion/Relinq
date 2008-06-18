@@ -5,8 +5,9 @@ using Remotion.Data.Linq.Parsing.FieldResolving;
 
 namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing
 {
-  public class ParameterExpressionParser : ISelectProjectionParser<ParameterExpression>, ISelectProjectionParser
+  public class ParameterExpressionParser : ISelectProjectionParser
   {
+    // parameter expression parsing is the same for where conditions and select projections, so delegate to that implementation
     private readonly WhereConditionParsing.ParameterExpressionParser _innerParser;
 
     public ParameterExpressionParser (QueryModel queryModel, ClauseFieldResolver resolver)
@@ -19,14 +20,14 @@ namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing
       return new List<IEvaluation> { _innerParser.Parse (parameterExpression, fieldDescriptorCollection) };
     }
 
-    public bool CanParse(ParameterExpression parameterExpression)
-    {
-      return true;
-    }
-
-    public List<IEvaluation> Parse(Expression expression, List<FieldDescriptor> fieldDescriptors)
+    List<IEvaluation> ISelectProjectionParser.Parse (Expression expression, List<FieldDescriptor> fieldDescriptors)
     {
       return Parse ((ParameterExpression) expression, fieldDescriptors);
+    }
+
+    public bool CanParse(Expression expression)
+    {
+      return expression is ParameterExpression;
     }
   }
 }
