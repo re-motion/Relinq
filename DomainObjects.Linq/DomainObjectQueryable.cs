@@ -14,7 +14,7 @@ namespace Remotion.Data.DomainObjects.Linq
     {
     }
 
-    public DomainObjectQueryable (SqlGeneratorBase sqlGenerator)
+    public DomainObjectQueryable (ISqlGeneratorBase sqlGenerator)
       : base (new QueryProvider(ObjectFactory.Create<QueryExecutor<T>>().With(sqlGenerator)))
     {
     }

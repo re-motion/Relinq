@@ -19,7 +19,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
   [TestFixture]
   public class QueryExecutorTest : ClientTransactionBaseTest
   {
-    private SqlGeneratorBase _sqlGenerator;
+    private SqlServerGenerator _sqlGenerator;
 
     public override void SetUp ()
     {

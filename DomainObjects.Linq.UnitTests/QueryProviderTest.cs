@@ -1,7 +1,6 @@
 using System.Linq;
 using NUnit.Framework;
 using Remotion.Data.DomainObjects.UnitTests.TestDomain;
-using Remotion.Data.Linq.SqlGeneration;
 using Remotion.Data.Linq.SqlGeneration.SqlServer;
 
 namespace Remotion.Data.DomainObjects.Linq.UnitTests
@@ -12,7 +11,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void CreateQuery()
     {
-      SqlGeneratorBase sqlGenerator = new SqlServerGenerator (DatabaseInfo.Instance);
+      SqlServerGenerator sqlGenerator = new SqlServerGenerator (DatabaseInfo.Instance);
       QueryExecutor<Supplier> executor = new QueryExecutor<Supplier> (sqlGenerator);
       QueryProvider provider = new QueryProvider (executor);
       IQueryable<Supplier> query = from supplier in DataContext.Entity<Supplier> () select supplier;

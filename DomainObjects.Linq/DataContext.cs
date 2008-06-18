@@ -1,16 +1,27 @@
 using Remotion.Data.Linq.SqlGeneration;
 using Remotion.Data.Linq.SqlGeneration.SqlServer;
+using Remotion.Mixins;
 
 namespace Remotion.Data.DomainObjects.Linq
 {
   public static class DataContext
   {
-    public static SqlGeneratorBase SqlGenerator { get; set; }
+    static DataContext ()
+    {
+      ResetSqlGenerator();
+      // TODO: register all OPF-specific parsers in SqlGenerator.DetailParser
+    }
+
+    public static void ResetSqlGenerator ()
+    {
+      SqlGenerator = ObjectFactory.Create<SqlServerGenerator>().With (DatabaseInfo.Instance);
+    }
+
+    public static ISqlGeneratorBase SqlGenerator { get; set; }
     
     public static DomainObjectQueryable<T> Entity<T> ()
       where T : DomainObject
     {
-      SqlGenerator = new SqlServerGenerator (DatabaseInfo.Instance);
       return new DomainObjectQueryable<T> (SqlGenerator);
     }
   }

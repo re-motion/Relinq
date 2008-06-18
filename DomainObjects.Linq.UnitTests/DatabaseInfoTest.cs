@@ -7,7 +7,6 @@ using Remotion.Data.Linq;
 using Remotion.Data.DomainObjects.UnitTests.TestDomain;
 using Remotion.Data.Linq.Clauses;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.SqlGeneration;
 using Remotion.Data.Linq.SqlGeneration.SqlServer;
 
 namespace Remotion.Data.DomainObjects.Linq.UnitTests
@@ -16,7 +15,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
   public class DatabaseInfoTest
   {
     private IDatabaseInfo _databaseInfo;
-    private SqlGeneratorBase _sqlGenerator;
+    private SqlServerGenerator _sqlGenerator;
 
     [SetUp]
     public void SetUp ()

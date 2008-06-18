@@ -151,6 +151,8 @@
     <Compile Include="DataObjectModel\Table.cs" />
     <Compile Include="DataObjectModel\IValue.cs" />
     <Compile Include="SqlGeneration\CommandParameter.cs" />
+    <Compile Include="SqlGeneration\ISqlGenerationContext.cs" />
+    <Compile Include="SqlGeneration\ISqlGeneratorBase.cs" />
     <Compile Include="SqlGeneration\JoinCollection.cs" />
     <Compile Include="SqlGeneration\IFromBuilder.cs" />
     <Compile Include="SqlGeneration\IOrderByBuilder.cs" />
@@ -160,11 +162,12 @@
     <Compile Include="SqlGeneration\SqlGenerationData.cs" />
     <Compile Include="SqlGeneration\SqlGeneratorBase.cs" />
     <Compile Include="SqlGeneration\SqlServer\BinaryConditionBuilder.cs" />
+    <Compile Include="SqlGeneration\SqlServer\InlineSqlServerGenerator.cs" />
     <Compile Include="SqlGeneration\SqlServer\FromBuilder.cs" />
-    <Compile Include="SqlGeneration\SqlServer\ICommandBuilder.cs" />
     <Compile Include="SqlGeneration\SqlServer\OrderByBuilder.cs" />
     <Compile Include="SqlGeneration\SqlServer\SelectBuilder.cs" />
     <Compile Include="SqlGeneration\SqlServer\SqlServerEvaluationVisitor.cs" />
+    <Compile Include="SqlGeneration\SqlServer\SqlServerGenerationContext.cs" />
     <Compile Include="SqlGeneration\SqlServer\SqlServerGenerator.cs" />
     <Compile Include="SqlGeneration\SqlServer\SqlServerUtility.cs" />
     <Compile Include="SqlGeneration\SqlServer\CommandBuilder.cs" />

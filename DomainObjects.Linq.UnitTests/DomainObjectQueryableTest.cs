@@ -10,7 +10,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
   [TestFixture]
   public class DomainObjectQueryableTest
   {
-    private SqlGeneratorBase _sqlGenerator;
+    private SqlServerGenerator _sqlGenerator;
 
     [SetUp]
     public void Setup ()
