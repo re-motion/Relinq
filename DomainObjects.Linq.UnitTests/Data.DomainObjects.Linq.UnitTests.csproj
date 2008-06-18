@@ -128,4 +128,8 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(TargetDir)\Remotion.Data.DomainObjects.UnitTests.dll" C:\development\prototypes\Data.Linq\prereq\Assemblies
+copy "$(TargetDir)\Remotion.Development.dll" C:\development\prototypes\Data.Linq\prereq\Assemblies</PostBuildEvent>
+  </PropertyGroup>
 </Project>

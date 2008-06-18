@@ -82,4 +82,16 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(TargetDir)\Remotion.dll" C:\development\prototypes\Data.Linq\prereq\Assemblies
+copy "$(TargetDir)\Remotion.Data.DomainObjects.dll" C:\development\prototypes\Data.Linq\prereq\Assemblies
+copy "$(TargetDir)\Remotion.Data.Interfaces.dll" C:\development\prototypes\Data.Linq\prereq\Assemblies
+copy "$(TargetDir)\Remotion.Interfaces.dll" C:\development\prototypes\Data.Linq\prereq\Assemblies
+
+
+
+
+
+</PostBuildEvent>
+  </PropertyGroup>
 </Project>
