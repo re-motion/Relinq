@@ -106,7 +106,7 @@ namespace Remotion.Data.Linq.UnitTests
 
     public bool IsTableType (Type type)
     {
-      return true;
+      return type == typeof (Student) || type == typeof (Student_Detail) || type == typeof (Student_Detail_Detail);
     }
 
     public Type IsTableType (MemberInfo member)

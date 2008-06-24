@@ -334,7 +334,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
-    public void QueryWithLet ()
+    public void QueryWithLet_LethWithTable ()
     {
       var orders = from o in DataContext.Entity<Order> ()
                    let x = o

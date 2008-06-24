@@ -96,20 +96,35 @@ namespace Remotion.Data.Linq.UnitTests.ClausesTest
 
 
     [Test]
-    public void GetNamedEvaluation ()
+    public void GetColumnSource_IsTableTrue ()
     {
       SelectFieldAccessPolicy policy = new SelectFieldAccessPolicy ();
       JoinedTableContext context = new JoinedTableContext ();
       ClauseFieldResolver resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, context, policy);
       
-      Expression expression = Expression.Add(Expression.Constant(5),Expression.Constant(5));
-      LetClause letClause = ExpressionHelper.CreateLetClause(expression);
+      ParameterExpression identifier = Expression.Parameter (typeof (Student), "s");
+      LetClause letClause = ExpressionHelper.CreateLetClause (identifier);
       letClause.SetQueryModel (ExpressionHelper.CreateQueryModel ());
-      LetColumnSource letColumnSource = 
-        new LetColumnSource ("i", true);
+      
+      LetColumnSource expected = new LetColumnSource ("s", true);
+      Assert.AreEqual (expected.Alias, letClause.GetColumnSource(resolver.DatabaseInfo).Alias);
+      Assert.AreEqual (expected.IsTable, letClause.GetColumnSource (resolver.DatabaseInfo).IsTable);
+    }
 
-      Assert.AreEqual (letColumnSource.Alias, letClause.GetColumnSource(resolver.DatabaseInfo).Alias);
-      Assert.AreEqual (letColumnSource.IsTable, letClause.GetColumnSource (resolver.DatabaseInfo).IsTable);
+    [Test]
+    public void GetColumnSource_IsTableFalse ()
+    {
+      SelectFieldAccessPolicy policy = new SelectFieldAccessPolicy ();
+      JoinedTableContext context = new JoinedTableContext ();
+      ClauseFieldResolver resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, context, policy);
+
+      ParameterExpression identifier = Expression.Parameter (typeof (int), "i");
+      LetClause letClause = ExpressionHelper.CreateLetClause (identifier);
+      letClause.SetQueryModel (ExpressionHelper.CreateQueryModel ());
+
+      LetColumnSource expected = new LetColumnSource ("i", false);
+      Assert.AreEqual (expected.Alias, letClause.GetColumnSource (resolver.DatabaseInfo).Alias);
+      Assert.AreEqual (expected.IsTable, letClause.GetColumnSource (resolver.DatabaseInfo).IsTable);
     }
     
   }

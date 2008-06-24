@@ -41,21 +41,35 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     }
 
     [Test]
-    [Ignore ("TODO: Write test")]
-    public void ResolveField_LetClause ()
+    public void ResolveField_LetClause_Table ()
     {
-      //ParameterExpression identifier = Expression.Parameter (typeof (Student), "s");
-      //MainFromClause mainFromClause = ExpressionHelper.CreateMainFromClause (identifier, ExpressionHelper.CreateQuerySource ());
-      //LetClause letClause = ExpressionHelper.CreateLetClause ();
-      //QueryModel queryModel = ExpressionHelper.CreateQueryModel (mainFromClause);
-      //queryModel.AddBodyClause (letClause);
+      ParameterExpression identifier = Expression.Parameter (typeof (Student), "x");
+      LetClause letClause = ExpressionHelper.CreateLetClause (identifier); // let x = ...
+
+      QueryModel queryModel = ExpressionHelper.CreateQueryModel ();
+      queryModel.AddBodyClause (letClause);
+
+      Expression fieldAccessExpression = Expression.Parameter (typeof (Student), "x"); // where x == ...
+      FieldDescriptor descriptor = new QueryModelFieldResolver (queryModel).ResolveField (_resolver, fieldAccessExpression);
       
-      //Expression fieldAccessExpression = Expression.Parameter (typeof (int), "i");
-      //FieldDescriptor descriptor = new QueryModelFieldResolver (queryModel).ResolveField (_resolver, fieldAccessExpression);
-      //LetColumnSource expectedEvaluation = new LetColumnSource("i");
+      LetColumnSource expectedEvaluation = new LetColumnSource ("x", true);
+      Assert.AreEqual (new Column (expectedEvaluation, "IDColumn"), descriptor.Column);
+    }
 
-      //Assert.AreEqual (new Column(expectedEvaluation,"*"),descriptor.Column);
+    [Test]
+    public void ResolveField_LetClause_Column ()
+    {
+      ParameterExpression identifier = Expression.Parameter (typeof (int), "x");
+      LetClause letClause = ExpressionHelper.CreateLetClause (identifier); // let x = ...
 
+      QueryModel queryModel = ExpressionHelper.CreateQueryModel ();
+      queryModel.AddBodyClause (letClause);
+
+      Expression fieldAccessExpression = Expression.Parameter (typeof (int), "x"); // where x == ...
+      FieldDescriptor descriptor = new QueryModelFieldResolver (queryModel).ResolveField (_resolver, fieldAccessExpression);
+
+      LetColumnSource expectedEvaluation = new LetColumnSource ("x", false);
+      Assert.AreEqual (new Column (expectedEvaluation, null), descriptor.Column);
     }
 
     [Test]
@@ -70,7 +84,6 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     }
 
     [Test]
-    [Ignore ("TODO: Finish test")]
     public void ResolveInParentQuery ()
     {
       QueryModel parentQueryModel = CreateQueryExpressionForResolve ();
@@ -82,7 +95,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       QueryModelFieldResolver fieldResolver = new QueryModelFieldResolver (subQueryModel);
 
       FieldDescriptor fieldDescriptor = fieldResolver.ResolveField (_resolver, sourceExpression);
-      //Assert.AreSame (parentQueryModel.MainFromClause, fieldDescriptor..FromClause);
+      Assert.AreEqual (parentQueryModel.MainFromClause.JoinClauses, fieldDescriptor.SourcePath.Joins);
     }
 
     private QueryModel CreateQueryExpressionForResolve ()

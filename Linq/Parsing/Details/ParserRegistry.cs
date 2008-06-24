@@ -27,6 +27,8 @@ namespace Remotion.Data.Linq.Parsing.Details
 
     public IParser GetParser (Expression expression)
     {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
       foreach (IParser parser in GetParsers (expression.GetType()))
       {
         if (parser.CanParse (expression))

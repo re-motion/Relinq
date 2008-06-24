@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing;
@@ -66,19 +67,6 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
     }
 
     [Test]
-    [Ignore ("TODO: Finish test implementation")]
-    public void CreateMethodCall_WithoutExpression ()
-    {
-      MethodInfo methodInfo = typeof (MethodCallExpressionParserTest).GetMethod ("Test");
-      MethodCallExpression methodCallExpression = Expression.Call (methodInfo);
-
-      Column column = new Column (_fromSource, "FirstColumn");
-      //MethodCallExpressionParser methodCallExpressionParser = new MethodCallExpressionParser (_queryModel, e => null);
-      MethodCallExpressionParser methodCallExpressionParser = new MethodCallExpressionParser (_parserRegistry);
-      methodCallExpressionParser.Parse (methodCallExpression, _fieldDescriptors);
-    }
-
-    [Test]
     public void CreateMethodCall_WithOneArgument ()
     {
       MemberExpression memberExpression = Expression.MakeMemberAccess (_parameter, typeof (Student).GetProperty ("First"));
@@ -108,9 +96,18 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
       Assert.AreEqual (expected.EvaluationParameter, ((MethodCallEvaluation) result[0]).EvaluationParameter);
     }
 
-    public static void Test ()
+    [Test]
+    public void CreateMethodCall_WithStaticMethod ()
     {
-    }
+      MethodInfo methodInfo = typeof (DateTime).GetMethod ("get_Now");
+      MethodCallExpression methodCallExpression = Expression.Call (methodInfo);
 
+      MethodCallExpressionParser methodCallExpressionParser = new MethodCallExpressionParser (_parserRegistry);
+      List<IEvaluation> result = methodCallExpressionParser.Parse (methodCallExpression, _fieldDescriptors);
+
+      Assert.That (((MethodCallEvaluation) result[0]).EvaluationArguments, Is.Empty);
+      Assert.That (((MethodCallEvaluation) result[0]).EvaluationMethodInfo, Is.EqualTo (methodInfo));
+      Assert.That (((MethodCallEvaluation) result[0]).EvaluationParameter, Is.Null);
+    }
   }
 }

@@ -126,36 +126,5 @@ namespace Remotion.Data.Linq.UnitTests.DataObjectModelTest
 
       Assert.AreEqual (sourcePath1.GetHashCode(), sourcePath2.GetHashCode());
     }
-
-    [Test]
-    public void GetHashCode_DifferentTables ()
-    {
-      Table source1 = new Table ("source", "s");
-      Table source2 = new Table ("source", "s");
-      SingleJoin join1 = new SingleJoin (new Column (source1, "s2"), new Column (source1, "s1"));
-      SingleJoin join2 = new SingleJoin (new Column (source1, "s4"), new Column (source1, "s3"));
-      SingleJoin[] joins = new[] { join1, join2 };
-
-      FieldSourcePath sourcePath1 = new FieldSourcePath (source1, joins);
-      FieldSourcePath sourcePath2 = new FieldSourcePath (source2, joins);
-
-      Assert.AreEqual (sourcePath1.GetHashCode(), sourcePath2.GetHashCode());
-    }
-
-    [Test]
-    public void GetHashCode_DifferentJoins ()
-    {
-      Table source = new Table ("source", "s");
-      SingleJoin join1 = new SingleJoin (new Column (source, "s2"), new Column (source, "s1"));
-      SingleJoin join2 = new SingleJoin (new Column (source, "s4"), new Column (source, "s3"));
-      SingleJoin join3 = new SingleJoin (new Column (source, "s6"), new Column (source, "s5"));
-      SingleJoin[] joins1 = new[] { join1, join2 };
-      SingleJoin[] joins2 = new[] { join1, join3 };
-
-      FieldSourcePath sourcePath1 = new FieldSourcePath (source, joins1);
-      FieldSourcePath sourcePath2 = new FieldSourcePath (source, joins2);
-
-      Assert.AreNotEqual (sourcePath1.GetHashCode(), sourcePath2.GetHashCode());
-    }
   }
 }
