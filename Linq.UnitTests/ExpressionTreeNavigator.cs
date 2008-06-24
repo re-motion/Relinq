@@ -48,6 +48,11 @@ namespace Remotion.Data.Linq.UnitTests
       get { return new ParametersNavigator (this); }
     }
 
+    public ExpressionTreeNavigator MemberAccess_Expression
+    {
+      get { return new ExpressionTreeNavigator (((MemberExpression) Expression).Expression); }
+    }
+
     public Expression Expression
     {
       get { return _expression; }

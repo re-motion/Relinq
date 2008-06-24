@@ -31,7 +31,7 @@ namespace Remotion.Data.Linq.Parsing.Details
       return _parserRegistry.GetParsers (expressionType).Cast<IWhereConditionParser> ();
     }
     
-    public IWhereConditionParser GetParser (Expression expression)
+    public virtual IWhereConditionParser GetParser (Expression expression)
     {
       return (IWhereConditionParser) _parserRegistry.GetParser (expression);
     }

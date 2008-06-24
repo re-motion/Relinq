@@ -6,7 +6,7 @@ namespace Remotion.Data.Linq.DataObjectModel
   {
     public SubQuery (QueryModel queryModel, string alias)
     {
-      ArgumentUtility.CheckNotNull ("queryExpression", queryModel);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
       QueryModel = queryModel;
       Alias = alias;
