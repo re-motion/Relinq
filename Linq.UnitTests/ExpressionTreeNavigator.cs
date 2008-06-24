@@ -53,6 +53,11 @@ namespace Remotion.Data.Linq.UnitTests
       get { return _expression; }
     }
 
+    public ExpressionTreeNavigator Object
+    {
+      get { return new ExpressionTreeNavigator (((MethodCallExpression) Expression).Object); }
+    }
+
     public class ArgumentsNavigator
     {
       private readonly ExpressionTreeNavigator _navigator;

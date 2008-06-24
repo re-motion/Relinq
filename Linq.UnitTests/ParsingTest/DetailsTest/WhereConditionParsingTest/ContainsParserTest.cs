@@ -19,8 +19,6 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
     [Test]
     public void ParseContainsWithSubQuery ()
     {
-      WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
-
       IQueryable<Student> querySource = ExpressionHelper.CreateQuerySource ();
       QueryModel queryModel = ExpressionHelper.CreateQueryModel ();
       SubQueryExpression subQueryExpression = new SubQueryExpression (queryModel);
@@ -37,7 +35,6 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
           checkedExpression
           );
 
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (parameter, ExpressionHelper.CreateQuerySource ());
       ClauseFieldResolver resolver =
           new ClauseFieldResolver (StubDatabaseInfo.Instance, new JoinedTableContext (), new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
       WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (queryModel, StubDatabaseInfo.Instance, new JoinedTableContext ());

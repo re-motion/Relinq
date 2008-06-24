@@ -41,7 +41,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     }
 
     [Test]
-    [Ignore]
+    [Ignore ("TODO: Write test")]
     public void ResolveField_LetClause ()
     {
       //ParameterExpression identifier = Expression.Parameter (typeof (Student), "s");
@@ -70,7 +70,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     }
 
     [Test]
-    [Ignore]
+    [Ignore ("TODO: Finish test")]
     public void ResolveInParentQuery ()
     {
       QueryModel parentQueryModel = CreateQueryExpressionForResolve ();

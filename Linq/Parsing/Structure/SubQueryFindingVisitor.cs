@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Visitor;
@@ -7,7 +8,13 @@ namespace Remotion.Data.Linq.Parsing.Structure
 {
   public class SubQueryFindingVisitor : ExpressionTreeVisitor
   {
+    private readonly List<QueryModel> _subQueryRegistry;
     private readonly SourceExpressionParser _referenceParser = new SourceExpressionParser (true);
+
+    public SubQueryFindingVisitor (List<QueryModel> subQueryRegistry)
+    {
+      _subQueryRegistry = subQueryRegistry;
+    }
 
     public Expression ReplaceSubQuery (Expression expression)
     {
@@ -27,6 +34,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
     {
       QueryParser parser = new QueryParser (methodCallExpression);
       QueryModel queryModel = parser.GetParsedQuery ();
+      _subQueryRegistry.Add (queryModel);
       return new SubQueryExpression (queryModel);
     }
   }

@@ -25,6 +25,8 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
       return from s in source where (from s2 in source select s2).Contains (student) select s;
     }
 
+    
+
     public static IQueryable<Student> CreateSubQuerySelectingColumnsWithConstantInWhereClause (IQueryable<Student> source)
     {
       return from s in source where (from s2 in source select s2.First).Contains ("Hugo") select s;

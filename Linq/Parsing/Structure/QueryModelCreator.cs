@@ -130,7 +130,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       if (whereExpression == null)
         return null;
 
-      var newWhereExpression = new SubQueryFindingVisitor ().ReplaceSubQuery (whereExpression.Expression);
+      var newWhereExpression = new SubQueryFindingVisitor (_subQueries).ReplaceSubQuery (whereExpression.Expression);
       var whereClause = new WhereClause (_previousClause, (LambdaExpression) newWhereExpression);
       return whereClause;
     }

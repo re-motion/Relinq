@@ -76,6 +76,7 @@
     <Compile Include="..\..\..\Remotion\trunk\Data\DomainObjects.UnitTests\Factories\DomainObjectIDs.cs">
       <Link>DomainObjectIDs.cs</Link>
     </Compile>
+    <Compile Include="ContainsObjectParserTest.cs" />
     <Compile Include="DatabaseInfoTest.cs" />
     <Compile Include="DataContextTest.cs" />
     <Compile Include="DomainObjectQueryableTest.cs" />
@@ -93,6 +94,10 @@
     <ProjectReference Include="..\DomainObjects.Linq\Data.DomainObjects.Linq.csproj">
       <Project>{975E15F0-75A7-419A-8EFC-8C5ED724DBA4}</Project>
       <Name>Data.DomainObjects.Linq</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Linq.UnitTests\Data.Linq.UnitTests.csproj">
+      <Project>{BAACFB24-6EF8-4EA7-B385-3F8DAF085A4E}</Project>
+      <Name>Data.Linq.UnitTests</Name>
     </ProjectReference>
     <ProjectReference Include="..\Linq\Data.Linq.csproj">
       <Project>{DD9AA076-BE37-4A42-BA9E-C35ECC6955C9}</Project>

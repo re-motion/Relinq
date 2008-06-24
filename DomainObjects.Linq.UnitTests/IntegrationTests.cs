@@ -4,8 +4,6 @@ using NUnit.Framework;
 using Remotion.Data.DomainObjects.UnitTests;
 using Remotion.Data.DomainObjects.UnitTests.TestDomain;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.ExtensionMethods;
-using Remotion.Data.Linq.SqlGeneration.SqlServer;
 
 namespace Remotion.Data.DomainObjects.Linq.UnitTests
 {
@@ -298,7 +296,19 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
-    [Ignore ("TODO: Implement Contains(Object) on OPF collection")]
+    public void QueryWithSubQueryAndJoinInWhere_WithOuterVariable ()
+    {
+      OrderItem myOrderItem = OrderItem.GetObject (DomainObjectIDs.OrderItem1);
+      var orders =
+          from o in DataContext.Entity<Order> ()
+          where (from oi in DataContext.Entity<OrderItem> () where oi.Order == o select oi).Contains (myOrderItem)
+          select o;
+
+      CheckQueryResult (orders, DomainObjectIDs.Order1);
+    }
+
+    [Test]
+    [Ignore ("TODO: Implement ContainsObjectParser")]
     public void QueryWithInnerCollectionSubQueryInWhere ()
     {
       OrderItem item = OrderItem.GetObject (DomainObjectIDs.OrderItem1);
@@ -309,6 +319,18 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
 
       CheckQueryResult (orders, DomainObjectIDs.Order1, DomainObjectIDs.Order2, DomainObjectIDs.Order3, DomainObjectIDs.Order4,
           DomainObjectIDs.OrderWithoutOrderItem);
+    }
+
+    [Test]
+    public void QueryWithSubQuery ()
+    {
+      OrderItem item = OrderItem.GetObject (DomainObjectIDs.OrderItem1);
+      var orders = 
+        from o in DataContext.Entity<Order> ()
+        where (from y in DataContext.Entity <OrderItem>() where y == item select y.Order).Contains(o) 
+        select o;
+      CheckQueryResult (orders, DomainObjectIDs.Order1);
+
     }
 
     [Test]

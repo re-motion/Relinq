@@ -66,7 +66,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
     }
 
     [Test]
-    [Ignore]
+    [Ignore ("TODO: Finish test implementation")]
     public void CreateMethodCall_WithoutExpression ()
     {
       MethodInfo methodInfo = typeof (MethodCallExpressionParserTest).GetMethod ("Test");

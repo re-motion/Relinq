@@ -49,7 +49,8 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
 
     private BinaryCondition CreateContains (SubQueryExpression subQueryExpression, Expression itemExpression, List<FieldDescriptor> fieldDescriptorCollection)
     {
-      return new BinaryCondition (new SubQuery (subQueryExpression.QueryModel, null), _parserRegistry.GetParser (itemExpression).Parse (itemExpression, fieldDescriptorCollection),
+      SubQuery subQuery = new SubQuery (subQueryExpression.QueryModel, null);
+      return new BinaryCondition (subQuery, _parserRegistry.GetParser (itemExpression).Parse (itemExpression, fieldDescriptorCollection),
           BinaryCondition.ConditionKind.Contains);
     }
   }
