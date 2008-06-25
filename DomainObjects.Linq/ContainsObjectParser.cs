@@ -21,6 +21,10 @@ namespace Remotion.Data.DomainObjects.Linq
   {
     private static readonly MethodInfo s_genericContainsMethod =
         ParserUtility.GetMethod (() => Queryable.Contains (null, (object) null)).GetGenericMethodDefinition();
+    private static readonly MethodInfo s_containsObjectMethod =
+        ParserUtility.GetMethod (() => ((DomainObjectCollection) null).ContainsObject (null));
+    private static readonly MethodInfo s_genericDataContextEntityMethod = 
+        ParserUtility.GetMethod (() => DataContext.Entity<DomainObject>()).GetGenericMethodDefinition();
 
     private readonly WhereConditionParserRegistry _registry;
 
@@ -33,7 +37,7 @@ namespace Remotion.Data.DomainObjects.Linq
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       MethodCallExpression methodCallExpression = expression as MethodCallExpression;
-      return methodCallExpression != null && methodCallExpression.Method == typeof (DomainObjectCollection).GetMethod ("ContainsObject");
+      return methodCallExpression != null && methodCallExpression.Method == s_containsObjectMethod;
     }
 
     public ICriterion Parse (Expression expression, List<FieldDescriptor> fieldDescriptors)
@@ -82,8 +86,7 @@ namespace Remotion.Data.DomainObjects.Linq
       string identifierName = "<<generated>>" + Guid.NewGuid().ToString("N");
       ParameterExpression identifier = Expression.Parameter (containsParameterType, identifierName);
     
-      MethodInfo entityMethod = typeof (DataContext).GetMethod ("Entity");
-      entityMethod = entityMethod.MakeGenericMethod (containsParameterType);
+      MethodInfo entityMethod = s_genericDataContextEntityMethod.MakeGenericMethod (containsParameterType);
       object queryable = entityMethod.Invoke(null, null);
       Expression querySource = Expression.Constant (queryable);
 
