@@ -14,16 +14,16 @@ namespace Remotion.Data.Linq.Parsing.Details
     public WhereConditionParserRegistry (QueryModel queryModel, IDatabaseInfo databaseInfo, JoinedTableContext context)
     {
       _parserRegistry = new ParserRegistry ();
-      ClauseFieldResolver resolver = new ClauseFieldResolver (databaseInfo, context, new WhereFieldAccessPolicy (databaseInfo));
+      ClauseFieldResolver resolver = new ClauseFieldResolver (databaseInfo, new WhereFieldAccessPolicy (databaseInfo));
 
-      RegisterParser (typeof (BinaryExpression), new BinaryExpressionParser (queryModel.GetExpressionTree(), this));
-      RegisterParser (typeof (MemberExpression), new MemberExpressionParser (queryModel, resolver));
-      RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (queryModel, resolver));
+      RegisterParser (typeof (BinaryExpression), new BinaryExpressionParser (this));
+      RegisterParser (typeof (MemberExpression), new MemberExpressionParser (resolver));
+      RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (resolver));
       RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (databaseInfo));
-      RegisterParser (typeof (MethodCallExpression), new LikeParser (queryModel.GetExpressionTree(), this));
-      RegisterParser (typeof (MethodCallExpression), new ContainsParser (queryModel.GetExpressionTree (), this));
-      RegisterParser (typeof (MethodCallExpression), new ContainsFullTextParser (queryModel.GetExpressionTree (), this));
-      RegisterParser (typeof (UnaryExpression), new UnaryExpressionParser (queryModel.GetExpressionTree(), this));  
+      RegisterParser (typeof (MethodCallExpression), new LikeParser (this));
+      RegisterParser (typeof (MethodCallExpression), new ContainsParser (this));
+      RegisterParser (typeof (MethodCallExpression), new ContainsFullTextParser (this));
+      RegisterParser (typeof (UnaryExpression), new UnaryExpressionParser (this));  
     }
 
     public IEnumerable<IWhereConditionParser> GetParsers (Type expressionType)

@@ -8,14 +8,10 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
   public class ContainsParser : IWhereConditionParser
   {
     private readonly WhereConditionParserRegistry _parserRegistry;
-    private readonly Expression _expressionTreeRoot;
 
-    public ContainsParser (Expression expressionTreeRoot, WhereConditionParserRegistry parserRegistry)
+    public ContainsParser (WhereConditionParserRegistry parserRegistry)
     {
-      ArgumentUtility.CheckNotNull ("expressionTreeRoot", expressionTreeRoot);
       ArgumentUtility.CheckNotNull ("parserRegistry", parserRegistry);
-
-      _expressionTreeRoot = expressionTreeRoot;
       _parserRegistry = parserRegistry;
     }
 
@@ -23,12 +19,12 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
     {
       if (methodCallExpression.Method.Name == "Contains" && methodCallExpression.Method.IsGenericMethod)
       {
-        ParserUtility.CheckNumberOfArguments (methodCallExpression, "Contains", 2, _expressionTreeRoot);
-        ParserUtility.CheckParameterType<SubQueryExpression> (methodCallExpression, "Contains", 0, _expressionTreeRoot);
+        ParserUtility.CheckNumberOfArguments (methodCallExpression, "Contains", 2, parseContext.ExpressionTreeRoot);
+        ParserUtility.CheckParameterType<SubQueryExpression> (methodCallExpression, "Contains", 0, parseContext.ExpressionTreeRoot);
         return CreateContains ((SubQueryExpression) methodCallExpression.Arguments[0], methodCallExpression.Arguments[1], parseContext);
       }
       throw ParserUtility.CreateParserException ("Contains with expression", methodCallExpression.Method.Name,
-          "method call expression in where condition", _expressionTreeRoot);
+          "method call expression in where condition", parseContext.ExpressionTreeRoot);
     }
 
     ICriterion IWhereConditionParser.Parse (Expression expression, ParseContext parseContext)

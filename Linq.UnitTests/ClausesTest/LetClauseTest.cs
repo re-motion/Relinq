@@ -100,7 +100,7 @@ namespace Remotion.Data.Linq.UnitTests.ClausesTest
     {
       SelectFieldAccessPolicy policy = new SelectFieldAccessPolicy ();
       JoinedTableContext context = new JoinedTableContext ();
-      ClauseFieldResolver resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, context, policy);
+      ClauseFieldResolver resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, policy);
       
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "s");
       LetClause letClause = ExpressionHelper.CreateLetClause (identifier);
@@ -116,7 +116,7 @@ namespace Remotion.Data.Linq.UnitTests.ClausesTest
     {
       SelectFieldAccessPolicy policy = new SelectFieldAccessPolicy ();
       JoinedTableContext context = new JoinedTableContext ();
-      ClauseFieldResolver resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, context, policy);
+      ClauseFieldResolver resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, policy);
 
       ParameterExpression identifier = Expression.Parameter (typeof (int), "i");
       LetClause letClause = ExpressionHelper.CreateLetClause (identifier);

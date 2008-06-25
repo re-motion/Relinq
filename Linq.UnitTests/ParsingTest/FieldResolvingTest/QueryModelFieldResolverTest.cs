@@ -20,7 +20,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
     {
       _policy = new WhereFieldAccessPolicy (StubDatabaseInfo.Instance);
       _context = new JoinedTableContext();
-      _resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, _context, _policy);
+      _resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy);
     }
 
     [Test]
@@ -29,7 +29,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       QueryModel queryModel = CreateQueryExpressionForResolve ();
 
       Expression fieldAccessExpression = Expression.Parameter (typeof (String), "s1");
-      FieldDescriptor descriptor = new QueryModelFieldResolver(queryModel).ResolveField (_resolver, fieldAccessExpression);
+      FieldDescriptor descriptor = new QueryModelFieldResolver(queryModel).ResolveField (_resolver, fieldAccessExpression, _context);
 
       IColumnSource expectedTable = queryModel.MainFromClause.GetFromSource (StubDatabaseInfo.Instance);
       FieldSourcePath expectedPath = new FieldSourcePath(expectedTable, new SingleJoin[0]);
@@ -50,7 +50,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       queryModel.AddBodyClause (letClause);
 
       Expression fieldAccessExpression = Expression.Parameter (typeof (Student), "x"); // where x == ...
-      FieldDescriptor descriptor = new QueryModelFieldResolver (queryModel).ResolveField (_resolver, fieldAccessExpression);
+      FieldDescriptor descriptor = new QueryModelFieldResolver (queryModel).ResolveField (_resolver, fieldAccessExpression, _context);
       
       LetColumnSource expectedEvaluation = new LetColumnSource ("x", true);
       Assert.AreEqual (new Column (expectedEvaluation, "IDColumn"), descriptor.Column);
@@ -66,7 +66,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       queryModel.AddBodyClause (letClause);
 
       Expression fieldAccessExpression = Expression.Parameter (typeof (int), "x"); // where x == ...
-      FieldDescriptor descriptor = new QueryModelFieldResolver (queryModel).ResolveField (_resolver, fieldAccessExpression);
+      FieldDescriptor descriptor = new QueryModelFieldResolver (queryModel).ResolveField (_resolver, fieldAccessExpression, _context);
 
       LetColumnSource expectedEvaluation = new LetColumnSource ("x", false);
       Assert.AreEqual (new Column (expectedEvaluation, null), descriptor.Column);
@@ -80,7 +80,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
       QueryModel queryModel = CreateQueryExpressionForResolve ();
       Expression sourceExpression = Expression.Parameter (typeof (Student), "fzlbf");
 
-      new QueryModelFieldResolver (queryModel).ResolveField (_resolver, sourceExpression);
+      new QueryModelFieldResolver (queryModel).ResolveField (_resolver, sourceExpression, _context);
     }
 
     [Test]
@@ -94,7 +94,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.FieldResolvingTest
 
       QueryModelFieldResolver fieldResolver = new QueryModelFieldResolver (subQueryModel);
 
-      FieldDescriptor fieldDescriptor = fieldResolver.ResolveField (_resolver, sourceExpression);
+      FieldDescriptor fieldDescriptor = fieldResolver.ResolveField (_resolver, sourceExpression, _context);
       Assert.AreEqual (parentQueryModel.MainFromClause.JoinClauses, fieldDescriptor.SourcePath.Joins);
     }
 

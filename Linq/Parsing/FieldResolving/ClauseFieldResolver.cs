@@ -12,22 +12,18 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
   public class ClauseFieldResolver
   {
     public IDatabaseInfo DatabaseInfo { get; private set; }
-    public JoinedTableContext Context { get; private set; }
-
     private readonly IResolveFieldAccessPolicy _policy;
 
-    public ClauseFieldResolver (IDatabaseInfo databaseInfo, JoinedTableContext context, IResolveFieldAccessPolicy policy)
+    public ClauseFieldResolver (IDatabaseInfo databaseInfo, IResolveFieldAccessPolicy policy)
     {
       ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
-      ArgumentUtility.CheckNotNull ("context", context);
       ArgumentUtility.CheckNotNull ("policy", policy);
 
       DatabaseInfo = databaseInfo;
-      Context = context;
       _policy = policy;
     }
 
-    public FieldDescriptor ResolveField (IColumnSource columnSource, ParameterExpression clauseIdentifier, Expression partialFieldExpression, Expression fullFieldExpression)
+    public FieldDescriptor ResolveField (IColumnSource columnSource, ParameterExpression clauseIdentifier, Expression partialFieldExpression, Expression fullFieldExpression, JoinedTableContext joinedTableContext)
     {
       ArgumentUtility.CheckNotNull ("fromSource", columnSource);
       ArgumentUtility.CheckNotNull ("partialFieldExpression", partialFieldExpression);
@@ -37,7 +33,7 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
       ClauseFieldResolverVisitor.Result result = visitor.ParseFieldAccess (partialFieldExpression, fullFieldExpression);
 
       CheckParameterNameAndType (clauseIdentifier, result.Parameter);
-      return CreateFieldDescriptor (columnSource, clauseIdentifier, result.AccessedMember, result.JoinMembers);
+      return CreateFieldDescriptor (columnSource, clauseIdentifier, result.AccessedMember, result.JoinMembers, joinedTableContext);
     }
 
     private void CheckParameterNameAndType (ParameterExpression clauseIdentifier, ParameterExpression parameter)
@@ -57,7 +53,7 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
       }
     }
 
-    private FieldDescriptor CreateFieldDescriptor (IColumnSource firstSource, ParameterExpression accessedIdentifier, MemberInfo accessedMember, IEnumerable<MemberInfo> joinMembers)
+    private FieldDescriptor CreateFieldDescriptor (IColumnSource firstSource, ParameterExpression accessedIdentifier, MemberInfo accessedMember, IEnumerable<MemberInfo> joinMembers, JoinedTableContext joinedTableContext)
     {
       // Documentation example: sdd.Student_Detail.Student.First
       // joinMembers == "Student_Detail", "Student"
@@ -67,7 +63,7 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
       IEnumerable<MemberInfo> joinMembersForCalculation = memberInfos.B;
 
       FieldSourcePathBuilder pathBuilder = new FieldSourcePathBuilder();
-      FieldSourcePath fieldData = pathBuilder.BuildFieldSourcePath (DatabaseInfo, Context, firstSource, joinMembersForCalculation);
+      FieldSourcePath fieldData = pathBuilder.BuildFieldSourcePath (DatabaseInfo, joinedTableContext, firstSource, joinMembersForCalculation);
 
       Column? column = DatabaseInfoUtility.GetColumn (DatabaseInfo, fieldData.LastSource, accessedMemberForColumn);
       return new FieldDescriptor (accessedMember, fieldData, column);

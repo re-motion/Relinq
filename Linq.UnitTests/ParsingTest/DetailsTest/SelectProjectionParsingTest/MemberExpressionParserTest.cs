@@ -20,9 +20,9 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
       QueryModel queryModel = ExpressionHelper.CreateQueryModel (fromClause);
 
       ClauseFieldResolver resolver =
-          new ClauseFieldResolver (StubDatabaseInfo.Instance, new JoinedTableContext (), new SelectFieldAccessPolicy ());
+          new ClauseFieldResolver (StubDatabaseInfo.Instance, new SelectFieldAccessPolicy ());
 
-      MemberExpressionParser parser = new MemberExpressionParser (queryModel, resolver);
+      MemberExpressionParser parser = new MemberExpressionParser (resolver);
       List<FieldDescriptor> fieldDescriptorCollection = new List<FieldDescriptor> ();
       MemberExpression memberExpression = Expression.MakeMemberAccess (parameter, typeof (Student).GetProperty ("ID"));
       var fromSource = fromClause.GetFromSource (StubDatabaseInfo.Instance);

@@ -21,14 +21,14 @@ namespace Remotion.Data.Linq.Parsing.Details
       else
         policy = new SelectFieldAccessPolicy();
 
-      ClauseFieldResolver resolver = new ClauseFieldResolver (databaseInfo, context, policy);
+      ClauseFieldResolver resolver = new ClauseFieldResolver (databaseInfo, policy);
 
-      RegisterParser (typeof (BinaryExpression), new BinaryExpressionParser (queryModel.GetExpressionTree(), this));
+      RegisterParser (typeof (BinaryExpression), new BinaryExpressionParser (this));
       RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (databaseInfo));
-      RegisterParser (typeof (MemberExpression), new MemberExpressionParser (queryModel, resolver));
+      RegisterParser (typeof (MemberExpression), new MemberExpressionParser (resolver));
       RegisterParser (typeof (MethodCallExpression), new MethodCallExpressionParser (this));
       RegisterParser (typeof (NewExpression), new NewExpressionParser (this));
-      RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (queryModel, resolver));
+      RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (resolver));
     }
 
     public IEnumerable<ISelectProjectionParser> GetParsers (Type expressionType)

@@ -36,13 +36,13 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
           );
 
       ClauseFieldResolver resolver =
-          new ClauseFieldResolver (StubDatabaseInfo.Instance, new JoinedTableContext (), new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
+          new ClauseFieldResolver (StubDatabaseInfo.Instance, new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
       WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (queryModel, StubDatabaseInfo.Instance, new JoinedTableContext ());
       parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
-      parserRegistry.RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (queryModel, resolver));
-      parserRegistry.RegisterParser (typeof (MemberExpression), new MemberExpressionParser (queryModel, resolver));
+      parserRegistry.RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (resolver));
+      parserRegistry.RegisterParser (typeof (MemberExpression), new MemberExpressionParser (resolver));
 
-      ContainsParser parser = new ContainsParser (queryModel.GetExpressionTree(), parserRegistry);
+      ContainsParser parser = new ContainsParser (parserRegistry);
 
       ICriterion actualCriterion = parser.Parse (methodCallExpression, ParseContext);
       SubQuery expectedSubQuery = new SubQuery (queryModel, null);
@@ -62,7 +62,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
       ConstantExpression checkedExpression = Expression.Constant (item);
       QueryModel queryModel = ExpressionHelper.CreateQueryModel ();
       ClauseFieldResolver resolver =
-          new ClauseFieldResolver (StubDatabaseInfo.Instance, new JoinedTableContext (), new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
+          new ClauseFieldResolver (StubDatabaseInfo.Instance, new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
 
       MethodInfo containsMethod = ParserUtility.GetMethod (() => querySource.Contains (item));
       MethodCallExpression methodCallExpression = Expression.Call (
@@ -74,10 +74,10 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
 
       WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (queryModel, StubDatabaseInfo.Instance, new JoinedTableContext ());
       parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
-      parserRegistry.RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (queryModel, resolver));
-      parserRegistry.RegisterParser (typeof (MemberExpression), new MemberExpressionParser (queryModel, resolver));
+      parserRegistry.RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (resolver));
+      parserRegistry.RegisterParser (typeof (MemberExpression), new MemberExpressionParser (resolver));
 
-      ContainsParser parser = new ContainsParser (queryModel.GetExpressionTree (), parserRegistry);
+      ContainsParser parser = new ContainsParser (parserRegistry);
       parser.Parse (methodCallExpression, ParseContext);
     }
 
@@ -93,14 +93,14 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
           );
       QueryModel queryModel = ExpressionHelper.CreateQueryModel ();
       ClauseFieldResolver resolver =
-          new ClauseFieldResolver (StubDatabaseInfo.Instance, new JoinedTableContext (), new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
+          new ClauseFieldResolver (StubDatabaseInfo.Instance, new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
 
       WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (queryModel, StubDatabaseInfo.Instance, new JoinedTableContext ());
       parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
-      parserRegistry.RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (queryModel, resolver));
-      parserRegistry.RegisterParser (typeof (MemberExpression), new MemberExpressionParser (queryModel, resolver));
+      parserRegistry.RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (resolver));
+      parserRegistry.RegisterParser (typeof (MemberExpression), new MemberExpressionParser (resolver));
 
-      ContainsParser parser = new ContainsParser (queryModel.GetExpressionTree (), parserRegistry);
+      ContainsParser parser = new ContainsParser (parserRegistry);
       
       parser.Parse (methodCallExpression, ParseContext);
     }

@@ -8,6 +8,6 @@ namespace Remotion.Data.Linq.Clauses
   public interface IResolveableClause : IClause
   {
     ParameterExpression Identifier {get;  }
-    FieldDescriptor ResolveField (ClauseFieldResolver resolver, Expression partialFieldExpression, Expression fullFieldExpression);
+    FieldDescriptor ResolveField (ClauseFieldResolver resolver, Expression partialFieldExpression, Expression fullFieldExpression, JoinedTableContext joinedTableContext);
   }
 }

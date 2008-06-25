@@ -11,11 +11,10 @@ namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing
     // member expression parsing is the same for where conditions and select projections, so delegate to that implementation
     private readonly WhereConditionParsing.MemberExpressionParser _innerParser;
 
-    public MemberExpressionParser (QueryModel queryModel, ClauseFieldResolver resolver)
+    public MemberExpressionParser (ClauseFieldResolver resolver)
     {
-      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
       ArgumentUtility.CheckNotNull ("resolver", resolver);
-      _innerParser = new WhereConditionParsing.MemberExpressionParser (queryModel, resolver);
+      _innerParser = new WhereConditionParsing.MemberExpressionParser (resolver);
     }
 
     public virtual List<IEvaluation> Parse (MemberExpression memberExpression, ParseContext parseContext)

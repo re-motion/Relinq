@@ -54,7 +54,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest
     {
       Assert.That (_whereConditionParserRegistry.GetParsers (typeof (MethodCallExpression)).Count (), Is.EqualTo (3));
       
-      LikeParser likeParser = new LikeParser (_queryModel.GetExpressionTree(), _whereConditionParserRegistry);
+      LikeParser likeParser = new LikeParser (_whereConditionParserRegistry);
       _whereConditionParserRegistry.RegisterParser (typeof (MethodCallExpression), likeParser);
       Assert.That (_whereConditionParserRegistry.GetParsers (typeof (MethodCallExpression)).Count (), Is.EqualTo (4));
       Assert.That (_whereConditionParserRegistry.GetParsers (typeof (MethodCallExpression)).First (), Is.SameAs (likeParser));

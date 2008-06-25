@@ -21,7 +21,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
           QueryModel, StubDatabaseInfo.Instance, new JoinedTableContext());
       parserRegistry.RegisterParser (typeof(ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
 
-      BinaryExpressionParser binaryExpressionParser = new BinaryExpressionParser (QueryModel.GetExpressionTree(), parserRegistry);
+      BinaryExpressionParser binaryExpressionParser = new BinaryExpressionParser (parserRegistry);
       parserRegistry.RegisterParser (typeof (BinaryExpression),binaryExpressionParser);
       ICriterion actualCriterion = binaryExpressionParser.Parse (binaryExpression, ParseContext);
 
@@ -41,7 +41,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
           QueryModel, StubDatabaseInfo.Instance, new JoinedTableContext ());
       parserRegistry.RegisterParser (typeof(ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
 
-      BinaryExpressionParser parser = new BinaryExpressionParser (QueryModel.GetExpressionTree(), parserRegistry);
+      BinaryExpressionParser parser = new BinaryExpressionParser (parserRegistry);
 
       ICriterion actualCriterion = parser.Parse (binaryExpression, ParseContext);
       ICriterion expectedCriterion = new ComplexCriterion (new Constant (5), new Constant (5), ComplexCriterion.JunctionKind.Or);
@@ -58,7 +58,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
           QueryModel, StubDatabaseInfo.Instance, new JoinedTableContext ());
       parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
 
-      BinaryExpressionParser parser = new BinaryExpressionParser (QueryModel.GetExpressionTree (), parserRegistry);
+      BinaryExpressionParser parser = new BinaryExpressionParser (parserRegistry);
 
       ICriterion actualCriterion = parser.Parse (binaryExpression, ParseContext);
       ICriterion expectedCriterion = new BinaryCondition (new Constant (5), new Constant (5), BinaryCondition.ConditionKind.Equal);
@@ -75,7 +75,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
           QueryModel, StubDatabaseInfo.Instance, new JoinedTableContext ());
       parserRegistry.RegisterParser (typeof(ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
 
-      BinaryExpressionParser parser = new BinaryExpressionParser (QueryModel.GetExpressionTree(), parserRegistry);
+      BinaryExpressionParser parser = new BinaryExpressionParser (parserRegistry);
 
       ICriterion actualCriterion = parser.Parse (binaryExpression, ParseContext);
       ICriterion expectedCriterion = new BinaryCondition (new Constant (5), new Constant (5), BinaryCondition.ConditionKind.GreaterThan);
@@ -92,7 +92,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
           QueryModel, StubDatabaseInfo.Instance, new JoinedTableContext ());
       parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
 
-      BinaryExpressionParser parser = new BinaryExpressionParser (QueryModel.GetExpressionTree(), parserRegistry);
+      BinaryExpressionParser parser = new BinaryExpressionParser (parserRegistry);
 
       ICriterion actualCriterion = parser.Parse (binaryExpression, ParseContext);
       ICriterion expectedCriterion = new BinaryCondition (new Constant (5), new Constant (5), BinaryCondition.ConditionKind.LessThan);

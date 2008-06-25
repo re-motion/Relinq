@@ -20,8 +20,8 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
       QueryModel queryModel = ExpressionHelper.CreateQueryModel (fromClause);
       JoinedTableContext context = new JoinedTableContext ();
       ClauseFieldResolver resolver = 
-        new ClauseFieldResolver(StubDatabaseInfo.Instance,context,new WhereFieldAccessPolicy(StubDatabaseInfo.Instance));
-      MemberExpressionParser parser = new MemberExpressionParser (queryModel, resolver);
+        new ClauseFieldResolver(StubDatabaseInfo.Instance,new WhereFieldAccessPolicy(StubDatabaseInfo.Instance));
+      MemberExpressionParser parser = new MemberExpressionParser (resolver);
 
       MemberExpression memberExpression = Expression.MakeMemberAccess (parameter, typeof (Student).GetProperty ("ID"));
       parser.Parse (memberExpression, ParseContext);

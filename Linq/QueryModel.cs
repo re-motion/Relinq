@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
@@ -138,12 +138,13 @@ namespace Remotion.Data.Linq
       return _expressionTree;
     }
 
-    public FieldDescriptor ResolveField (ClauseFieldResolver resolver, Expression fieldAccessExpression)
+    public FieldDescriptor ResolveField (ClauseFieldResolver resolver, Expression fieldAccessExpression, JoinedTableContext joinedTableContext)
     {
       ArgumentUtility.CheckNotNull ("resolver", resolver);
       ArgumentUtility.CheckNotNull ("fieldAccessExpression", fieldAccessExpression);
+      ArgumentUtility.CheckNotNull ("joinedTableContext", joinedTableContext);
       
-      return new QueryModelFieldResolver (this).ResolveField (resolver, fieldAccessExpression);
+      return new QueryModelFieldResolver (this).ResolveField (resolver, fieldAccessExpression, joinedTableContext);
     }
 
     private void CheckResolvedIdentifierType (ParameterExpression identifier,Type expectedType)

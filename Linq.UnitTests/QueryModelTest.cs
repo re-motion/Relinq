@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
@@ -199,8 +199,8 @@ namespace Remotion.Data.Linq.UnitTests
       Expression fieldAccessExpression = Expression.Parameter (typeof (String), "s1");
       JoinedTableContext context = new JoinedTableContext ();
       WhereFieldAccessPolicy policy = new WhereFieldAccessPolicy (StubDatabaseInfo.Instance);
-      ClauseFieldResolver resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, context, policy);
-      FieldDescriptor descriptor = queryModel.ResolveField (resolver, fieldAccessExpression);
+      ClauseFieldResolver resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, policy);
+      FieldDescriptor descriptor = queryModel.ResolveField (resolver, fieldAccessExpression, context);
 
       IColumnSource expectedTable = queryModel.MainFromClause.GetFromSource (StubDatabaseInfo.Instance);
       FieldSourcePath expectedPath = new FieldSourcePath (expectedTable, new SingleJoin[0]);

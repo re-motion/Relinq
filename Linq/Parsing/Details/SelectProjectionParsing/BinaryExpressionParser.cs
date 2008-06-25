@@ -8,19 +8,15 @@ namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing
 {
   public class BinaryExpressionParser : ISelectProjectionParser
   {
-    private readonly Expression _expressionTreeRoot;
     private readonly SelectProjectionParserRegistry _parserRegistry;
 
     public Dictionary<ExpressionType, BinaryEvaluation.EvaluationKind> NodeTypeMap { get; private set; }
 
-    public BinaryExpressionParser (Expression expressionTreeRoot, SelectProjectionParserRegistry parserRegistry)
+    public BinaryExpressionParser (SelectProjectionParserRegistry parserRegistry)
     {
-      ArgumentUtility.CheckNotNull ("expressionTreeRoot", expressionTreeRoot);
       ArgumentUtility.CheckNotNull ("parserRegistry", parserRegistry);
 
-      _expressionTreeRoot = expressionTreeRoot;
       _parserRegistry = parserRegistry;
-
       NodeTypeMap = new Dictionary<ExpressionType, BinaryEvaluation.EvaluationKind>
                       {
                         {ExpressionType.Add, BinaryEvaluation.EvaluationKind.Add},
@@ -44,7 +40,7 @@ namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing
       {
         throw ParserUtility.CreateParserException(GetSupportedNodeTypeString(), binaryExpression.NodeType,
                                                   "binary expression in select projection",
-                                                  _expressionTreeRoot);
+                                                  parseContext.ExpressionTreeRoot);
       }
       return new List<IEvaluation> {new BinaryEvaluation(leftSide[0], rightSide[0], evaluationKind)};
     }

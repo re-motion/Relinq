@@ -35,15 +35,15 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
       _parameter = Expression.Parameter (typeof (Student), "s");
       _fromClause = ExpressionHelper.CreateMainFromClause (_parameter, ExpressionHelper.CreateQuerySource ());
       QueryModel = ExpressionHelper.CreateQueryModel (_fromClause);
-      _resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, new JoinedTableContext (), new SelectFieldAccessPolicy ());
+      _resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, new SelectFieldAccessPolicy ());
       _fromSource = _fromClause.GetFromSource (StubDatabaseInfo.Instance);
       _memberExpression1 = Expression.MakeMemberAccess (_parameter, typeof (Student).GetProperty ("First"));
       _memberExpression2 = Expression.MakeMemberAccess (_parameter, typeof (Student).GetProperty ("Last"));
       _memberExpression3 = Expression.MakeMemberAccess (_parameter, typeof (Student).GetProperty ("Last"));
       _parserRegistry = new SelectProjectionParserRegistry (QueryModel,StubDatabaseInfo.Instance, new JoinedTableContext(), new ParseMode());
       _parserRegistry.RegisterParser (typeof(ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
-      _parserRegistry.RegisterParser (typeof(ParameterExpression), new ParameterExpressionParser (QueryModel, _resolver));
-      _parserRegistry.RegisterParser (typeof(MemberExpression), new MemberExpressionParser (QueryModel, _resolver));
+      _parserRegistry.RegisterParser (typeof(ParameterExpression), new ParameterExpressionParser (_resolver));
+      _parserRegistry.RegisterParser (typeof(MemberExpression), new MemberExpressionParser (_resolver));
       _parserRegistry.RegisterParser (typeof(MethodCallExpression), new MethodCallExpressionParser (_parserRegistry));
     }
 
@@ -59,7 +59,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
       BinaryEvaluation expectedResult = new BinaryEvaluation (column1, column2, BinaryEvaluation.EvaluationKind.Add);
 
       BinaryExpressionParser binaryExpressionParser = 
-        new BinaryExpressionParser (QueryModel.GetExpressionTree(), _parserRegistry);
+        new BinaryExpressionParser (_parserRegistry);
 
       //result
      List<IEvaluation> result = binaryExpressionParser.Parse (binaryExpression, ParseContext);
@@ -78,7 +78,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
       BinaryExpression binaryExpression5 = Expression.Subtract (memberExpression, memberExpression);
 
       BinaryExpressionParser binaryExpressionParser = 
-        new BinaryExpressionParser (QueryModel.GetExpressionTree(), _parserRegistry);
+        new BinaryExpressionParser (_parserRegistry);
 
       BinaryEvaluation.EvaluationKind evaluationKind;
       Assert.IsTrue (binaryExpressionParser.NodeTypeMap.TryGetValue (binaryExpression1.NodeType, out evaluationKind));
@@ -95,7 +95,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
     {
       MemberExpression memberExpression = Expression.MakeMemberAccess (_parameter, typeof (Student).GetProperty ("ID"));
       BinaryExpression binaryExpression = Expression.AddChecked (memberExpression, memberExpression);
-      BinaryExpressionParser binaryExpressionParser = new BinaryExpressionParser (QueryModel.GetExpressionTree(), _parserRegistry);
+      BinaryExpressionParser binaryExpressionParser = new BinaryExpressionParser (_parserRegistry);
       binaryExpressionParser.Parse (binaryExpression, ParseContext);
     }
   }

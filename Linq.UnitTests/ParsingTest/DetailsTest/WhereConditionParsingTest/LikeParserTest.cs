@@ -83,13 +83,13 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (parameter, ExpressionHelper.CreateQuerySource ());
       QueryModel queryModel = ExpressionHelper.CreateQueryModel (fromClause);
       ClauseFieldResolver resolver =
-          new ClauseFieldResolver (StubDatabaseInfo.Instance, new JoinedTableContext (), new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
+          new ClauseFieldResolver (StubDatabaseInfo.Instance, new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
       WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (queryModel, StubDatabaseInfo.Instance, new JoinedTableContext ());
       parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
-      parserRegistry.RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (queryModel, resolver));
-      parserRegistry.RegisterParser (typeof (MemberExpression), new MemberExpressionParser (queryModel, resolver));
+      parserRegistry.RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (resolver));
+      parserRegistry.RegisterParser (typeof (MemberExpression), new MemberExpressionParser (resolver));
 
-      LikeParser parser = new LikeParser (queryModel.GetExpressionTree (), parserRegistry);
+      LikeParser parser = new LikeParser (parserRegistry);
       parser.Parse (methodCallExpression, ParseContext);
     }
 
@@ -103,13 +103,13 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (parameter, ExpressionHelper.CreateQuerySource ());
       QueryModel queryModel = ExpressionHelper.CreateQueryModel (fromClause);
       ClauseFieldResolver resolver =
-          new ClauseFieldResolver (StubDatabaseInfo.Instance, new JoinedTableContext (), new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
+          new ClauseFieldResolver (StubDatabaseInfo.Instance, new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
 
 
       WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (queryModel, StubDatabaseInfo.Instance, new JoinedTableContext ());
       parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
-      parserRegistry.RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (queryModel, resolver));
-      parserRegistry.RegisterParser (typeof (MemberExpression), new MemberExpressionParser (queryModel, resolver));
+      parserRegistry.RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (resolver));
+      parserRegistry.RegisterParser (typeof (MemberExpression), new MemberExpressionParser (resolver));
 
       MethodCallExpression methodCallExpression = Expression.Call (
           memberAccess,
@@ -117,7 +117,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
           Expression.Constant ("Test")
           );
 
-      LikeParser parser = new LikeParser (queryModel.GetExpressionTree(), parserRegistry);
+      LikeParser parser = new LikeParser (parserRegistry);
 
       ICriterion actualCriterion = parser.Parse (methodCallExpression, ParseContext);
       ICriterion expectedCriterion = new BinaryCondition (new Column (new Table ("studentTable", "s"), "FirstColumn"), new Constant (pattern), BinaryCondition.ConditionKind.Like);
@@ -132,13 +132,13 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (parameter, ExpressionHelper.CreateQuerySource ());
       QueryModel queryModel = ExpressionHelper.CreateQueryModel (fromClause);
       ClauseFieldResolver resolver =
-          new ClauseFieldResolver (StubDatabaseInfo.Instance, new JoinedTableContext (), new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
+          new ClauseFieldResolver (StubDatabaseInfo.Instance, new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
 
 
       WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (queryModel, StubDatabaseInfo.Instance, new JoinedTableContext ());
       parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
-      parserRegistry.RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (queryModel, resolver));
-      parserRegistry.RegisterParser (typeof (MemberExpression), new MemberExpressionParser (queryModel, resolver));
+      parserRegistry.RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (resolver));
+      parserRegistry.RegisterParser (typeof (MemberExpression), new MemberExpressionParser (resolver));
 
       MethodCallExpression methodCallExpression = Expression.Call (
           memberAccess,
@@ -146,7 +146,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
           Expression.Parameter (typeof (string), "Test")
           );
 
-      LikeParser parser = new LikeParser (queryModel.GetExpressionTree (), parserRegistry);
+      LikeParser parser = new LikeParser (parserRegistry);
       parser.Parse (methodCallExpression, ParseContext);
     }
 
@@ -158,20 +158,20 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (parameter, ExpressionHelper.CreateQuerySource ());
       QueryModel queryModel = ExpressionHelper.CreateQueryModel (fromClause);
       ClauseFieldResolver resolver =
-          new ClauseFieldResolver (StubDatabaseInfo.Instance, new JoinedTableContext (), new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
+          new ClauseFieldResolver (StubDatabaseInfo.Instance, new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
 
 
       WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (queryModel, StubDatabaseInfo.Instance, new JoinedTableContext ());
       parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
-      parserRegistry.RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (queryModel, resolver));
-      parserRegistry.RegisterParser (typeof (MemberExpression), new MemberExpressionParser (queryModel, resolver));
+      parserRegistry.RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (resolver));
+      parserRegistry.RegisterParser (typeof (MemberExpression), new MemberExpressionParser (resolver));
 
       MethodCallExpression methodCallExpression = Expression.Call (
           memberAccess,
           typeof (LikeParserTest).GetMethod (methodName)
           );
 
-      LikeParser parser = new LikeParser (queryModel.GetExpressionTree (), parserRegistry);
+      LikeParser parser = new LikeParser (parserRegistry);
       parser.Parse (methodCallExpression, ParseContext);
     }
 

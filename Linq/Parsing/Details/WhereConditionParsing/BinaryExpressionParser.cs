@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
-using Remotion.Collections;
-using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Utilities;
 
@@ -11,17 +8,12 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
   public class BinaryExpressionParser : IWhereConditionParser
   {
     private readonly WhereConditionParserRegistry _parserRegistry;
-    private readonly Expression _expressionTreeRoot;
 
-    public BinaryExpressionParser (Expression expressionTreeRoot, WhereConditionParserRegistry parserRegistry)
+    public BinaryExpressionParser (WhereConditionParserRegistry parserRegistry)
     {
-      ArgumentUtility.CheckNotNull ("expressionTreeRoot", expressionTreeRoot);
       ArgumentUtility.CheckNotNull ("parserRegistry", parserRegistry);
-
-      _expressionTreeRoot = expressionTreeRoot;
       _parserRegistry = parserRegistry;
     }
-
 
     public ICriterion Parse (BinaryExpression binaryExpression, ParseContext parseContext)
     {
@@ -46,8 +38,8 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
         case ExpressionType.LessThan:
           return CreateBinaryCondition (binaryExpression, BinaryCondition.ConditionKind.LessThan, parseContext);
         default:
-          throw ParserUtility.CreateParserException ("and, or, or comparison expression", binaryExpression.NodeType, "binary expression in where condition",
-              _expressionTreeRoot);
+          throw ParserUtility.CreateParserException ("and, or, or comparison expression", binaryExpression.NodeType, 
+              "binary expression in where condition", parseContext.ExpressionTreeRoot);
       }
     }
 

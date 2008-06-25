@@ -11,11 +11,10 @@ namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing
     // parameter expression parsing is the same for where conditions and select projections, so delegate to that implementation
     private readonly WhereConditionParsing.ParameterExpressionParser _innerParser;
 
-    public ParameterExpressionParser (QueryModel queryModel, ClauseFieldResolver resolver)
+    public ParameterExpressionParser (ClauseFieldResolver resolver)
     {
-      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
       ArgumentUtility.CheckNotNull ("resolver", resolver);
-      _innerParser = new WhereConditionParsing.ParameterExpressionParser (queryModel, resolver);
+      _innerParser = new WhereConditionParsing.ParameterExpressionParser (resolver);
     }
 
     public List<IEvaluation> Parse (ParameterExpression parameterExpression, ParseContext parseContext)

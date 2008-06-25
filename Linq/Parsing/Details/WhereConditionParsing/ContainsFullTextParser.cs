@@ -8,14 +8,10 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
   public class ContainsFullTextParser : IWhereConditionParser
   {
     private readonly WhereConditionParserRegistry _parserRegistry;
-    private readonly Expression _expressionTreeRoot;
 
-    public ContainsFullTextParser (Expression expressionTreeRoot, WhereConditionParserRegistry parserRegistry)
+    public ContainsFullTextParser (WhereConditionParserRegistry parserRegistry)
     {
-      ArgumentUtility.CheckNotNull ("expressionTreeRoot", expressionTreeRoot);
       ArgumentUtility.CheckNotNull ("parserRegistry", parserRegistry);
-
-      _expressionTreeRoot = expressionTreeRoot;
       _parserRegistry = parserRegistry;
     }
 

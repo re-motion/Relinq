@@ -8,21 +8,17 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
 {
   public class ParameterExpressionParser : IWhereConditionParser
   {
-    private readonly QueryModel _queryModel;
     private readonly ClauseFieldResolver _resolver;
 
-    public ParameterExpressionParser (QueryModel queryModel, ClauseFieldResolver resolver)
+    public ParameterExpressionParser (ClauseFieldResolver resolver)
     {
-      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
       ArgumentUtility.CheckNotNull ("resolver", resolver);
-
-      _queryModel = queryModel;
       _resolver = resolver;
     }
 
     public ICriterion Parse (ParameterExpression parameterExpression, ParseContext parseContext)
     {
-      FieldDescriptor fieldDescriptor = _queryModel.ResolveField (_resolver, parameterExpression);
+      FieldDescriptor fieldDescriptor = parseContext.QueryModel.ResolveField (_resolver, parameterExpression, parseContext.JoinedTableContext);
       parseContext.FieldDescriptors.Add (fieldDescriptor);
       return fieldDescriptor.GetMandatoryColumn ();
     }

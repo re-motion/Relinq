@@ -33,7 +33,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
       _parameter = Expression.Parameter (typeof (Student), "s");
       _fromClause = ExpressionHelper.CreateMainFromClause (_parameter, ExpressionHelper.CreateQuerySource ());
       QueryModel = ExpressionHelper.CreateQueryModel (_fromClause);
-      _resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, new JoinedTableContext (), new SelectFieldAccessPolicy ());
+      _resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, new SelectFieldAccessPolicy ());
       _fromSource = _fromClause.GetFromSource (StubDatabaseInfo.Instance);
       
       _memberExpression1 = Expression.MakeMemberAccess (_parameter, typeof (Student).GetProperty ("First"));
@@ -42,8 +42,8 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
 
       _parserRegistry = new SelectProjectionParserRegistry (QueryModel, StubDatabaseInfo.Instance, new JoinedTableContext(), new ParseMode());
       _parserRegistry.RegisterParser (typeof(ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
-      _parserRegistry.RegisterParser (typeof(ParameterExpression), new ParameterExpressionParser (QueryModel, _resolver));
-      _parserRegistry.RegisterParser (typeof(MemberExpression), new MemberExpressionParser (QueryModel, _resolver));
+      _parserRegistry.RegisterParser (typeof(ParameterExpression), new ParameterExpressionParser (_resolver));
+      _parserRegistry.RegisterParser (typeof(MemberExpression), new MemberExpressionParser (_resolver));
       _parserRegistry.RegisterParser (typeof(MethodCallExpression), new MethodCallExpressionParser (_parserRegistry));
       _parserRegistry.RegisterParser (typeof(NewExpression), new NewExpressionParser (_parserRegistry));
       

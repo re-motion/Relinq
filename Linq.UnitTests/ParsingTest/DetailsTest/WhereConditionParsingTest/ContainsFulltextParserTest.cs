@@ -38,15 +38,15 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (parameter, ExpressionHelper.CreateQuerySource ());
       QueryModel queryModel = ExpressionHelper.CreateQueryModel (fromClause);
       ClauseFieldResolver resolver =
-          new ClauseFieldResolver (StubDatabaseInfo.Instance, new JoinedTableContext (), new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
+          new ClauseFieldResolver (StubDatabaseInfo.Instance, new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
 
       WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (queryModel, StubDatabaseInfo.Instance, new JoinedTableContext ());
       parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
-      parserRegistry.RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (queryModel, resolver));
-      parserRegistry.RegisterParser (typeof (MemberExpression), new MemberExpressionParser (queryModel, resolver));
+      parserRegistry.RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (resolver));
+      parserRegistry.RegisterParser (typeof (MemberExpression), new MemberExpressionParser (resolver));
 
       //MethodCallExpressionParser parser = new MethodCallExpressionParser (queryModel.GetExpressionTree (), parserRegistry);
-      ContainsFullTextParser parser = new ContainsFullTextParser (queryModel.GetExpressionTree (), parserRegistry);
+      ContainsFullTextParser parser = new ContainsFullTextParser (parserRegistry);
       
 
       List<FieldDescriptor> fieldCollection = new List<FieldDescriptor> ();

@@ -30,12 +30,12 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
       _fromClause = ExpressionHelper.CreateMainFromClause (_parameter, ExpressionHelper.CreateQuerySource ());
       _fromSource = _fromClause.GetFromSource (StubDatabaseInfo.Instance);
       QueryModel = ExpressionHelper.CreateQueryModel (_fromClause);
-      _resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, new JoinedTableContext (), new SelectFieldAccessPolicy());
+      _resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, new SelectFieldAccessPolicy());
       _parserRegistry = 
         new SelectProjectionParserRegistry (QueryModel, StubDatabaseInfo.Instance, new JoinedTableContext(), new ParseMode());
       _parserRegistry.RegisterParser (typeof(ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
-      _parserRegistry.RegisterParser (typeof(ParameterExpression), new ParameterExpressionParser (QueryModel,_resolver));
-      _parserRegistry.RegisterParser (typeof(MemberExpression), new MemberExpressionParser (QueryModel, _resolver));
+      _parserRegistry.RegisterParser (typeof(ParameterExpression), new ParameterExpressionParser (_resolver));
+      _parserRegistry.RegisterParser (typeof(MemberExpression), new MemberExpressionParser (_resolver));
       _parserRegistry.RegisterParser (typeof(MethodCallExpression), new MethodCallExpressionParser (_parserRegistry));
     }
 

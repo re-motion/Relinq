@@ -19,7 +19,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
       QueryModel queryModel = ExpressionHelper.CreateQueryModel (fromClause);
 
       ClauseFieldResolver resolver =
-          new ClauseFieldResolver (StubDatabaseInfo.Instance, new JoinedTableContext (), new SelectFieldAccessPolicy());
+          new ClauseFieldResolver (StubDatabaseInfo.Instance, new SelectFieldAccessPolicy());
 
       List<FieldDescriptor> fieldDescriptorCollection = new List<FieldDescriptor> ();
       var fromSource = fromClause.GetFromSource (StubDatabaseInfo.Instance);
@@ -28,7 +28,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
 
       IEvaluation expectedEvaluation = expectedFieldDescriptor.Column;
 
-      ParameterExpressionParser parser = new ParameterExpressionParser (queryModel, resolver);
+      ParameterExpressionParser parser = new ParameterExpressionParser (resolver);
 
       List<IEvaluation> actualEvaluation = parser.Parse (parameter, ParseContext);
       Assert.AreEqual (expectedEvaluation, actualEvaluation[0]);

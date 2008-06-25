@@ -8,32 +8,19 @@ namespace Remotion.Data.Linq.Parsing.Details
 {
   public class OrderingFieldParser
   {
-    private readonly QueryModel _queryModel;
-    private readonly OrderingClause _orderingClause;
     private readonly ClauseFieldResolver _resolver;
 
-    public OrderingFieldParser (QueryModel queryModel, OrderingClause orderingClause, IDatabaseInfo databaseInfo, JoinedTableContext context)
+    public OrderingFieldParser (IDatabaseInfo databaseInfo)
     {
-      ArgumentUtility.CheckNotNull ("queryExpression", queryModel);
-      ArgumentUtility.CheckNotNull ("orderingClause", orderingClause);
       ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
-      ArgumentUtility.CheckNotNull ("context", context);
 
-      _queryModel = queryModel;
-      _orderingClause = orderingClause;
-
-      _resolver = new ClauseFieldResolver (databaseInfo, context, new OrderingFieldAccessPolicy());
+      _resolver = new ClauseFieldResolver (databaseInfo, new OrderingFieldAccessPolicy());
     }
 
-    public OrderingField GetField ()
+    public OrderingField Parse (Expression expression, ParseContext parseContext, OrderDirection orderDirection)
     {
-      return ParseExpression (_orderingClause.Expression.Body);
-    }
-
-    private OrderingField ParseExpression (Expression expression)
-    {
-      FieldDescriptor fieldDescriptor = _queryModel.ResolveField (_resolver, expression);
-      OrderingField orderingField = new OrderingField (fieldDescriptor, _orderingClause.OrderDirection);
+      FieldDescriptor fieldDescriptor = parseContext.QueryModel.ResolveField (_resolver, expression, parseContext.JoinedTableContext);
+      OrderingField orderingField = new OrderingField (fieldDescriptor, orderDirection);
       return orderingField;
     }
   }
