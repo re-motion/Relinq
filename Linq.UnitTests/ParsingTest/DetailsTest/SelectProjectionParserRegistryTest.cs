@@ -31,7 +31,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest
       _queryModel = ExpressionHelper.CreateQueryModel (_fromClause);
       _context = new JoinedTableContext ();
       _parseMode = new ParseMode();
-      _selectProjectionParserRegistry = new SelectProjectionParserRegistry (_queryModel, _databaseInfo, _context, _parseMode);
+      _selectProjectionParserRegistry = new SelectProjectionParserRegistry (_databaseInfo, _parseMode);
       _parserRegistry = new ParserRegistry ();
     }
 
@@ -39,7 +39,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest
     public void Initialization_AddsDefaultParsers ()
     {
       SelectProjectionParserRegistry selectProjectionParserRegistry =
-        new SelectProjectionParserRegistry (_queryModel, _databaseInfo, _context,_parseMode);
+        new SelectProjectionParserRegistry (_databaseInfo,_parseMode);
 
       Assert.That (selectProjectionParserRegistry.GetParsers (typeof (BinaryExpression)).ToArray (), Is.Not.Empty);
       Assert.That (selectProjectionParserRegistry.GetParsers (typeof (ConstantExpression)).ToArray (), Is.Not.Empty);

@@ -11,7 +11,7 @@ namespace Remotion.Data.Linq.Parsing.Details
   {
     private readonly ParserRegistry _parserRegistry;
 
-    public WhereConditionParserRegistry (QueryModel queryModel, IDatabaseInfo databaseInfo, JoinedTableContext context)
+    public WhereConditionParserRegistry (IDatabaseInfo databaseInfo)
     {
       _parserRegistry = new ParserRegistry ();
       ClauseFieldResolver resolver = new ClauseFieldResolver (databaseInfo, new WhereFieldAccessPolicy (databaseInfo));

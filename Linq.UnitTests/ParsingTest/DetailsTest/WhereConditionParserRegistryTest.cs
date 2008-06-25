@@ -30,7 +30,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest
       _queryModel = ExpressionHelper.CreateQueryModel (_fromClause);
       _context = new JoinedTableContext ();
       _whereClause = ExpressionHelper.CreateWhereClause ();
-      _whereConditionParserRegistry = new WhereConditionParserRegistry (_queryModel, _databaseInfo, _context);
+      _whereConditionParserRegistry = new WhereConditionParserRegistry (_databaseInfo);
       _parserRegistry = new ParserRegistry ();
     }
 
@@ -38,7 +38,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest
     public void Initialization_AddsDefaultParsers ()
     {
       WhereConditionParserRegistry whereConditionParserRegistry = 
-        new WhereConditionParserRegistry (_queryModel, _databaseInfo, _context);
+        new WhereConditionParserRegistry (_databaseInfo);
 
       Assert.That (whereConditionParserRegistry.GetParsers (typeof (BinaryExpression)).ToArray (), Is.Not.Empty);
       Assert.That (whereConditionParserRegistry.GetParsers (typeof (ConstantExpression)).ToArray (), Is.Not.Empty);

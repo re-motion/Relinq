@@ -40,7 +40,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
       ClauseFieldResolver resolver =
           new ClauseFieldResolver (StubDatabaseInfo.Instance, new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
 
-      WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (queryModel, StubDatabaseInfo.Instance, new JoinedTableContext ());
+      WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
       parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
       parserRegistry.RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (resolver));
       parserRegistry.RegisterParser (typeof (MemberExpression), new MemberExpressionParser (resolver));

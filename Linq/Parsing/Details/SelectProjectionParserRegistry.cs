@@ -11,7 +11,7 @@ namespace Remotion.Data.Linq.Parsing.Details
   {
     private readonly ParserRegistry _parserRegistry;
 
-    public SelectProjectionParserRegistry (QueryModel queryModel, IDatabaseInfo databaseInfo, JoinedTableContext context, ParseMode parseMode)
+    public SelectProjectionParserRegistry (IDatabaseInfo databaseInfo, ParseMode parseMode)
     {
       _parserRegistry = new ParserRegistry ();
       

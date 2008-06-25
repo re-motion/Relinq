@@ -17,8 +17,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
     {
       BinaryExpression binaryExpression = Expression.And (Expression.Constant (5), Expression.Constant (5));
 
-      WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (
-          QueryModel, StubDatabaseInfo.Instance, new JoinedTableContext());
+      WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
       parserRegistry.RegisterParser (typeof(ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
 
       BinaryExpressionParser binaryExpressionParser = new BinaryExpressionParser (parserRegistry);
@@ -37,8 +36,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
       BinaryExpression binaryExpression = Expression.Or (Expression.Constant (5), Expression.Constant (5));
       ICriterion criterion = new Constant (5);
 
-      WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (
-          QueryModel, StubDatabaseInfo.Instance, new JoinedTableContext ());
+      WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
       parserRegistry.RegisterParser (typeof(ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
 
       BinaryExpressionParser parser = new BinaryExpressionParser (parserRegistry);
@@ -54,8 +52,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
       WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
       BinaryExpression binaryExpression = Expression.Equal (Expression.Constant (5), Expression.Constant (5));
       ICriterion criterion = new Constant (5);
-      WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (
-          QueryModel, StubDatabaseInfo.Instance, new JoinedTableContext ());
+      WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
       parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
 
       BinaryExpressionParser parser = new BinaryExpressionParser (parserRegistry);
@@ -71,8 +68,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
       WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
       BinaryExpression binaryExpression = Expression.GreaterThan (Expression.Constant (5), Expression.Constant (5));
       ICriterion criterion = new Constant (5);
-      WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (
-          QueryModel, StubDatabaseInfo.Instance, new JoinedTableContext ());
+      WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
       parserRegistry.RegisterParser (typeof(ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
 
       BinaryExpressionParser parser = new BinaryExpressionParser (parserRegistry);
@@ -88,8 +84,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
       WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
       BinaryExpression binaryExpression = Expression.LessThan (Expression.Constant (5), Expression.Constant (5));
       ICriterion criterion = new Constant (5);
-      WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (
-          QueryModel, StubDatabaseInfo.Instance, new JoinedTableContext ());
+      WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
       parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
 
       BinaryExpressionParser parser = new BinaryExpressionParser (parserRegistry);

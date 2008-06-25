@@ -20,7 +20,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
       ICriterion expectedCriterion = new NotCriterion (new Constant (5));
 
       WhereConditionParserRegistry parserRegistry = 
-        new WhereConditionParserRegistry (queryModel, StubDatabaseInfo.Instance, new JoinedTableContext());
+        new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
       parserRegistry.RegisterParser (typeof(ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
 
       UnaryExpressionParser parser = new UnaryExpressionParser(parserRegistry);
