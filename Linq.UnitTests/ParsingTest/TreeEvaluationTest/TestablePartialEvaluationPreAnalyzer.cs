@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Expressions;
 using Remotion.Data.Linq.Parsing.TreeEvaluation;
 
 namespace Remotion.Data.Linq.UnitTests.ParsingTest.TreeEvaluationTest

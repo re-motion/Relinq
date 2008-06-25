@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Expressions;
 using Rhino.Mocks;
 using System.Reflection;
 using Rhino.Mocks.Interfaces;

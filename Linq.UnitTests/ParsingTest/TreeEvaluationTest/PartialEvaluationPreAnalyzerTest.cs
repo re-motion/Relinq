@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using Remotion.Data.Linq.Expressions;
 using Remotion.Data.Linq.Parsing.TreeEvaluation;
 using NUnit.Framework.SyntaxHelpers;
 

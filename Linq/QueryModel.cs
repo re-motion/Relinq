@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.DataObjectModel;
+using Remotion.Data.Linq.Expressions;
 using Remotion.Data.Linq.Parsing.FieldResolving;
 using Remotion.Data.Linq.Visitor;
 using Remotion.Utilities;
@@ -101,9 +102,7 @@ namespace Remotion.Data.Linq
       ArgumentUtility.CheckNotNull ("identifierName", identifierName);
       ArgumentUtility.CheckNotNull ("identifierType", identifierType);
 
-      //FromClauseBase fromClause;
       IResolveableClause clause;
-      //if (_clausesByIdentifier.TryGetValue (identifierName, out fromClause))
       if (_clausesByIdentifier.TryGetValue (identifierName, out clause))
       {
         CheckResolvedIdentifierType (clause.Identifier,identifierType);
@@ -127,15 +126,14 @@ namespace Remotion.Data.Linq
       return sv.ToString();
     }
 
+    // Once we have a working ExpressionTreeBuildingVisitor, we could use it to build trees for constructed models. For now, we just create
+    // a special ConstructedExpression node.
     public Expression GetExpressionTree ()
     {
       if (_expressionTree == null)
-      {
-        var visitor = new ExpressionTreeBuildingVisitor();
-        Accept (visitor);
-        _expressionTree = visitor.ExpressionTree;
-      }
-      return _expressionTree;
+        return new ConstructedQueryExpression (this);
+      else
+        return _expressionTree;
     }
 
     public FieldDescriptor ResolveField (ClauseFieldResolver resolver, Expression fieldAccessExpression, JoinedTableContext joinedTableContext)

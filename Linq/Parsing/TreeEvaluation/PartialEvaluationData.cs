@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Expressions;
 
 namespace Remotion.Data.Linq.Parsing.TreeEvaluation
 {

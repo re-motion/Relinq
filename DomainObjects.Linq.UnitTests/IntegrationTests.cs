@@ -308,7 +308,6 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
-    [Ignore ("TODO: Finish ExpressionTreeBuildingVisitor")]
     public void QueryWithContainsObject ()
     {
       OrderItem item = OrderItem.GetObject (DomainObjectIDs.OrderItem1);

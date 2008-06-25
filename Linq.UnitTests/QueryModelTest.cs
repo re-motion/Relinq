@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using Remotion.Data.Linq.Expressions;
 using Rhino.Mocks;
 using Remotion.Collections;
 using Remotion.Data.Linq.Clauses;
@@ -9,6 +10,7 @@ using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing.FieldResolving;
 using Remotion.Data.Linq.Visitor;
 using Remotion.Data.Linq.UnitTests.TestQueryGenerators;
+using NUnit.Framework.SyntaxHelpers;
 
 namespace Remotion.Data.Linq.UnitTests
 {
@@ -68,24 +70,22 @@ namespace Remotion.Data.Linq.UnitTests
     public void Override_ToString()
     {
       QueryModel queryModel = ExpressionHelper.CreateQueryModel();
-
       StringVisitor sv = new StringVisitor();
-
       sv.VisitQueryModel (queryModel);
-
       Assert.AreEqual (sv.ToString (), queryModel.ToString ());
     }
 
+    // Once we have a working ExpressionTreeBuildingVisitor, we could use it to build trees for constructed models. For now, we just create
+    // a special ConstructedExpression node.
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "The query contains an invalid query method",
-        MatchType = MessageMatch.Contains)]
-    public void GetExpressionTree_ThrowsOnInvalidSelectCall()
+    public void GetExpressionTree_ForHandConstructedModel ()
     {
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause();
-      SelectClause selectClause = new SelectClause (fromClause, Expression.Lambda (Expression.Constant (0)),false);
-
-      QueryModel queryModel = new QueryModel (typeof (IQueryable<int>), fromClause, selectClause);
-      queryModel.GetExpressionTree();
+      QueryModel queryModel = ExpressionHelper.CreateQueryModel ();
+      Expression expressionTree = queryModel.GetExpressionTree();
+      Assert.That (expressionTree, Is.Not.Null);
+      Assert.That (expressionTree, Is.InstanceOfType (typeof (ConstructedQueryExpression)));
+      ConstructedQueryExpression constructedExpression = (ConstructedQueryExpression) expressionTree;
+      Assert.That (constructedExpression.QueryModel, Is.SameAs (queryModel));
     }
 
     [Test]
