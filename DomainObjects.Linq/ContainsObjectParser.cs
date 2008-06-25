@@ -46,26 +46,31 @@ namespace Remotion.Data.DomainObjects.Linq
       ArgumentUtility.CheckNotNull ("fieldDescriptors", parseContext);
 
       MethodCallExpression containsObjectCallExpression = ParserUtility.GetTypedExpression<MethodCallExpression> (
-          expression, "ContainsObject parser", expression);
+          expression, "ContainsObject parser", parseContext.ExpressionTreeRoot);
       
-      SubQueryExpression subQueryExpression = CreateEqualSubQuery (containsObjectCallExpression);
+      SubQueryExpression subQueryExpression = CreateEqualSubQuery (containsObjectCallExpression, parseContext.QueryModel,parseContext.ExpressionTreeRoot);
       MethodCallExpression containsExpression = CreateExpressionForContainsParser (subQueryExpression, containsObjectCallExpression.Arguments[0]);
       return _registry.GetParser (containsExpression).Parse (containsExpression, parseContext);
     }
 
-    public SubQueryExpression CreateEqualSubQuery (MethodCallExpression containsObjectCallExpression)
+    public SubQueryExpression CreateEqualSubQuery (MethodCallExpression containsObjectCallExpression, QueryModel parentQuery, Expression expressionTreeRoot)
     {
       ArgumentUtility.CheckNotNull ("containsObjectCallExpression", containsObjectCallExpression);
-      QueryModel queryModel = CreateQueryModel (containsObjectCallExpression);
+      ArgumentUtility.CheckNotNull ("parentQuery", parentQuery);
+
+      QueryModel queryModel = CreateQueryModel (containsObjectCallExpression, parentQuery, expressionTreeRoot);
       SubQueryExpression subQuery = new SubQueryExpression (queryModel);
       return subQuery;
     }
 
-    public QueryModel CreateQueryModel (MethodCallExpression methodCallExpression)
+    public QueryModel CreateQueryModel (MethodCallExpression methodCallExpression, QueryModel parentQuery, Expression expressionTreeRoot)
     {
+      ArgumentUtility.CheckNotNull ("methodCallExpression", methodCallExpression);
+      ArgumentUtility.CheckNotNull ("parentQuery", parentQuery);
+
       Type containsParameterType = methodCallExpression.Arguments[0].Type;
       MemberExpression collectionExpression = ParserUtility.GetTypedExpression<MemberExpression> (
-          methodCallExpression.Object, "object on which ContainsObject is called", methodCallExpression);
+          methodCallExpression.Object, "object on which ContainsObject is called", expressionTreeRoot);
       PropertyInfo collectionProperty = 
           ParserUtility.GetTypedExpression<PropertyInfo> (collectionExpression.Member, "member on which ContainsObject is called", methodCallExpression);
       PropertyInfo foreignKeyProperty = GetForeignKeyProperty (collectionProperty);
@@ -76,6 +81,8 @@ namespace Remotion.Data.DomainObjects.Linq
 
       QueryModel queryModel = new QueryModel (typeof (IQueryable<>).MakeGenericType (containsParameterType), mainFromClause, selectClause);
       queryModel.AddBodyClause (whereClause);
+
+      queryModel.SetParentQuery (parentQuery);
       return queryModel;
     }
 

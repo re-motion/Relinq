@@ -1,3 +1,5 @@
+using System.Linq.Expressions;
+using Remotion.Data.Linq.Parsing.Details;
 using Remotion.Data.Linq.SqlGeneration;
 using Remotion.Data.Linq.SqlGeneration.SqlServer;
 using Remotion.Mixins;
@@ -9,12 +11,14 @@ namespace Remotion.Data.DomainObjects.Linq
     static DataContext ()
     {
       ResetSqlGenerator();
-      // TODO: register all OPF-specific parsers in SqlGenerator.DetailParser
     }
 
     public static void ResetSqlGenerator ()
     {
       SqlGenerator = ObjectFactory.Create<SqlServerGenerator>().With (DatabaseInfo.Instance);
+      
+      WhereConditionParserRegistry whereConditionParserRegistry = SqlGenerator.DetailParser.WhereConditionParser;
+      whereConditionParserRegistry.RegisterParser (typeof (MethodCallExpression), new ContainsObjectParser (whereConditionParserRegistry));
     }
 
     public static ISqlGeneratorBase SqlGenerator { get; set; }

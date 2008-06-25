@@ -145,7 +145,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void CreateQueryModel_Clauses ()
     {
-      QueryModel queryModel = _parser.CreateQueryModel (_containsObjectCallExpression);
+      QueryModel queryModel = _parser.CreateQueryModel (_containsObjectCallExpression, ExpressionHelper.CreateQueryModel (), Expression.Constant(0));
 
       MainFromClause fromClause = queryModel.MainFromClause;
       Assert.That (fromClause.Identifier.Type, Is.EqualTo (typeof (OrderItem)));
@@ -167,30 +167,29 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void CreateQueryModel_ResultType ()
     {
-      QueryModel queryModel = _parser.CreateQueryModel (_containsObjectCallExpression);
+      QueryModel queryModel = _parser.CreateQueryModel (_containsObjectCallExpression, ExpressionHelper.CreateQueryModel (), Expression.Constant (0));
       Assert.That (queryModel.ResultType, Is.EqualTo (typeof (IQueryable<OrderItem>)));
     }
 
     [Test]
-    [Ignore ("TODO: Implement adding of parentQuery")]
     public void CreateQueryModel_ParentQuery ()
     {
       QueryModel parentQuery = ExpressionHelper.CreateQueryModel();
-      QueryModel queryModel = _parser.CreateQueryModel (_containsObjectCallExpression);
+      QueryModel queryModel = _parser.CreateQueryModel (_containsObjectCallExpression, parentQuery, Expression.Constant (0));
       Assert.That (queryModel.ParentQuery, Is.SameAs (parentQuery));
     }
 
     [Test]
     public void CreateEqualSubQuery_CreatesSubQuery_WithQueryModel ()
     {
-      SubQueryExpression subQuery = _parser.CreateEqualSubQuery (_containsObjectCallExpression);
+      SubQueryExpression subQuery = _parser.CreateEqualSubQuery (_containsObjectCallExpression, ExpressionHelper.CreateQueryModel (), Expression.Constant (0));
       Assert.That (subQuery.QueryModel, Is.Not.Null);
     }
 
     [Test]
     public void CreateExpressionForContainsParser ()
     {
-      SubQueryExpression subQueryExpression1 = _parser.CreateEqualSubQuery (_containsObjectCallExpression);
+      SubQueryExpression subQueryExpression1 = _parser.CreateEqualSubQuery (_containsObjectCallExpression, ExpressionHelper.CreateQueryModel (), Expression.Constant (0));
       Expression queryParameterExpression = Expression.Constant (null, typeof (OrderItem));
       MethodCallExpression methodCallExpression = _parser.CreateExpressionForContainsParser (subQueryExpression1, queryParameterExpression);
       Assert.That (methodCallExpression.Object, Is.Null);

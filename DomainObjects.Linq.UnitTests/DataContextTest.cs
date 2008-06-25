@@ -1,6 +1,10 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Parsing.Details.WhereConditionParsing;
 using Remotion.Data.Linq.SqlGeneration;
 using Remotion.Data.Linq.SqlGeneration.SqlServer;
 using Remotion.Mixins;
@@ -52,6 +56,16 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
 
       Assert.That (generator2, Is.Not.Null);
       Assert.That (generator2, Is.Not.SameAs (generator));
+    }
+
+    [Test]
+    public void SqlGenerator_HasOPFDetailParsers ()
+    {
+      ISqlGeneratorBase generator = DataContext.SqlGenerator;
+      IEnumerable<IWhereConditionParser> whereConditionParsers = generator.DetailParser.WhereConditionParser.GetParsers (
+          typeof (MethodCallExpression));
+      IEnumerable<Type> parserTypes = from p in whereConditionParsers select p.GetType();
+      Assert.That (parserTypes.ToArray(), List.Contains (typeof (ContainsObjectParser)));
     }
   }
 }
