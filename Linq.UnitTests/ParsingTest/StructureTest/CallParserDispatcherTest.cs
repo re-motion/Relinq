@@ -24,7 +24,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.StructureTest
       _dispatcher = new CallParserDispatcher ();
       _source = ExpressionHelper.CreateQuerySource ();
       _wrappedCall = (() => _source.Select (s => s.First));
-      _method = ExpressionHelper.GetMethod (_wrappedCall);
+      _method = ParserUtility.GetMethod (_wrappedCall);
       _emptyParser = delegate { };
     }
 

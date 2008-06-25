@@ -27,7 +27,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
       ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
       MemberExpression memberAccess = Expression.MakeMemberAccess (parameter, typeof (Student).GetProperty ("First"));
 
-      MethodInfo containsMethod = ExpressionHelper.GetMethod (() => querySource.Contains (item));
+      MethodInfo containsMethod = ParserUtility.GetMethod (() => querySource.Contains (item));
       MethodCallExpression methodCallExpression = Expression.Call (
           memberAccess,
           containsMethod,
@@ -70,7 +70,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
       ClauseFieldResolver resolver =
           new ClauseFieldResolver (StubDatabaseInfo.Instance, new JoinedTableContext (), new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
 
-      MethodInfo containsMethod = ExpressionHelper.GetMethod (() => querySource.Contains (item));
+      MethodInfo containsMethod = ParserUtility.GetMethod (() => querySource.Contains (item));
       MethodCallExpression methodCallExpression = Expression.Call (
           null,
           containsMethod,

@@ -260,10 +260,5 @@ namespace Remotion.Data.Linq.UnitTests
     {
       return new SubQueryFromClause (CreateClause (), identifier, CreateQueryModel (), CreateLambdaExpression ());
     }
-
-    public static MethodInfo GetMethod<T> (Expression<Func<T>> wrappedCall)
-    {
-      return ((MethodCallExpression) wrappedCall.Body).Method;
-    }
   }
 }

@@ -308,8 +308,8 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
-    [Ignore ("TODO: Implement ContainsObjectParser")]
-    public void QueryWithInnerCollectionSubQueryInWhere ()
+    [Ignore ("TODO: Register ContainsObjectParser")]
+    public void QueryWithContainsObject ()
     {
       OrderItem item = OrderItem.GetObject (DomainObjectIDs.OrderItem1);
       var orders =
@@ -317,8 +317,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
           where o.OrderItems.ContainsObject (item)
           select o;
 
-      CheckQueryResult (orders, DomainObjectIDs.Order1, DomainObjectIDs.Order2, DomainObjectIDs.Order3, DomainObjectIDs.Order4,
-          DomainObjectIDs.OrderWithoutOrderItem);
+      CheckQueryResult (orders, DomainObjectIDs.Order1);
     }
 
     [Test]

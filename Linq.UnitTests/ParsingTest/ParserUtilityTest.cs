@@ -2,8 +2,10 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.UnitTests.TestQueryGenerators;
+using System.Reflection;
 
 namespace Remotion.Data.Linq.UnitTests.ParsingTest
 {
@@ -77,6 +79,13 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest
     {
       MethodCallExpression selectExpression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource ());
       ParserUtility.CheckParameterType<ParameterExpression> (selectExpression, "Select", 0, ExpressionHelper.CreateExpression ());
+    }
+
+    [Test]
+    public void GetMethod ()
+    {
+      MethodInfo method = ParserUtility.GetMethod (() => "x".ToUpper());
+      Assert.That (method, Is.EqualTo (typeof (string).GetMethod ("ToUpper", new Type[0])));
     }
   }
 }

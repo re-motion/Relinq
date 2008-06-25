@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.DomainObjects.Mapping;
@@ -18,15 +19,34 @@ namespace Remotion.Data.DomainObjects.Linq
   // SQL: WHERE @1 IN (SELECT [oi].[ID] FROM [OrderItem] [oi] WHERE (([oi].[OrderID] IS NULL AND [o].[ID] IS NULL) OR [oi].[OrderID] = [o].[ID]))
   public class ContainsObjectParser : IWhereConditionParser
   {
+    private static readonly MethodInfo s_genericContainsMethod =
+        ParserUtility.GetMethod (() => Queryable.Contains (null, (object) null)).GetGenericMethodDefinition();
+
+    private readonly WhereConditionParserRegistry _registry;
+
+    public ContainsObjectParser (WhereConditionParserRegistry registry)
+    {
+      _registry = registry;
+    }
+
     public bool CanParse (Expression expression)
     {
+      ArgumentUtility.CheckNotNull ("expression", expression);
       MethodCallExpression methodCallExpression = expression as MethodCallExpression;
       return methodCallExpression != null && methodCallExpression.Method == typeof (DomainObjectCollection).GetMethod ("ContainsObject");
     }
 
     public ICriterion Parse (Expression expression, List<FieldDescriptor> fieldDescriptors)
     {
-      throw new System.NotImplementedException();
+      ArgumentUtility.CheckNotNull ("expression", expression);
+      ArgumentUtility.CheckNotNull ("fieldDescriptors", fieldDescriptors);
+
+      MethodCallExpression containsObjectCallExpression = ParserUtility.GetTypedExpression<MethodCallExpression> (
+          expression, "ContainsObject parser", expression);
+      
+      SubQueryExpression subQueryExpression = CreateEqualSubQuery (containsObjectCallExpression);
+      MethodCallExpression containsExpression = CreateExpressionForContainsParser (subQueryExpression, containsObjectCallExpression.Arguments[0]);
+      return _registry.GetParser (containsExpression).Parse (containsExpression, fieldDescriptors);
     }
 
     public SubQueryExpression CreateEqualSubQuery (MethodCallExpression containsObjectCallExpression)
@@ -50,7 +70,7 @@ namespace Remotion.Data.DomainObjects.Linq
       WhereClause whereClause = CreateWhereClause (mainFromClause, foreignKeyProperty, collectionExpression.Expression);
       SelectClause selectClause = CreateSelectClause (whereClause, mainFromClause.Identifier);
 
-      QueryModel queryModel = new QueryModel (typeof (object), mainFromClause, selectClause);
+      QueryModel queryModel = new QueryModel (typeof (IQueryable<>).MakeGenericType (containsParameterType), mainFromClause, selectClause);
       queryModel.AddBodyClause (whereClause);
       return queryModel;
     }
@@ -113,7 +133,8 @@ namespace Remotion.Data.DomainObjects.Linq
 
     public MethodCallExpression CreateExpressionForContainsParser (SubQueryExpression subQueryExpression, Expression queryParameterExpression)
     {
-      throw new NotImplementedException ("TODO");
+      MethodInfo concreteContainsObjectMethod = s_genericContainsMethod.MakeGenericMethod (queryParameterExpression.Type);
+      return Expression.Call (concreteContainsObjectMethod, subQueryExpression, queryParameterExpression);
     }
   }
 }

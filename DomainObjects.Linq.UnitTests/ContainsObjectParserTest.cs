@@ -8,6 +8,7 @@ using Remotion.Data.DomainObjects.Mapping;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.DataObjectModel;
+using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Details;
 using Remotion.Data.Linq.Parsing.Details.WhereConditionParsing;
 using Remotion.Data.Linq.Parsing.FieldResolving;
@@ -26,34 +27,30 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     //private QueryModel _queryModel;
     private OrderItem _orderItem1;
     private IQueryable<Order> _query;
-    //private MemberExpression _implicitSubQueryExpression;
-    //private ConstantExpression _containedItemExpression;
     private MethodCallExpression _containsObjectCallExpression;
     private ContainsObjectParser _parser;
     private ParameterExpression _queriedObjectExpression;
-    //private MockRepository _mockRepository;
-    
-    //private WhereConditionParserRegistry _registryStub;
-    //private IWhereConditionParser _containsParserMock;
+
+    private MockRepository _mockRepository;
+    private WhereConditionParserRegistry _registryStub;
+    private IWhereConditionParser _containsParserMock;
 
     public override void SetUp ()
     {
       base.SetUp ();
 
-      //_mockRepository = new MockRepository ();
-      //_registryStub = _mockRepository.Stub<WhereConditionParserRegistry>();
-      //_containsParserMock = _mockRepository.CreateMock<IWhereConditionParser> ();
+      _mockRepository = new MockRepository ();
+      _registryStub = 
+        _mockRepository.Stub<WhereConditionParserRegistry>(ExpressionHelper.CreateQueryModel(),StubDatabaseInfo.Instance,new JoinedTableContext());
+      _containsParserMock = _mockRepository.CreateMock<IWhereConditionParser> ();
 
       _orderItem1 = OrderItem.GetObject (DomainObjectIDs.OrderItem1);
       _query = GetQuery();
       _containsObjectCallExpression = (MethodCallExpression) new ExpressionTreeNavigator (_query.Expression).Arguments[1].Operand.Body.Expression;
       _queriedObjectExpression =
           (ParameterExpression) new ExpressionTreeNavigator (_containsObjectCallExpression).Object.MemberAccess_Expression.Expression;
-      _parser = new ContainsObjectParser ();
-      //  _implicitSubQueryExpression = (MemberExpression) new ExpressionTreeNavigator (_query.Expression).Arguments[1].Operand.Object.Expression;
-    //  _containedItemExpression = (ConstantExpression) new ExpressionTreeNavigator (_query.Expression).Arguments[1].Operand.Arguments[0].Expression;
-    //  MainFromClause fromClause = new MainFromClause (Expression.Parameter (typeof (Order), "o"), Expression.Constant (null, typeof (Order)));
-    //  _queryModel = ExpressionHelper.CreateQueryModel();
+
+      _parser = new ContainsObjectParser (_registryStub);
     }
 
     [Test]
@@ -148,9 +145,10 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
-    public void CreateQueryModel ()
+    public void CreateQueryModel_Clauses ()
     {
       QueryModel queryModel = _parser.CreateQueryModel (_containsObjectCallExpression);
+
       MainFromClause fromClause = queryModel.MainFromClause;
       Assert.That (fromClause.Identifier.Type, Is.EqualTo (typeof (OrderItem)));
       Assert.That (fromClause.Identifier.Name, NUnit.Framework.SyntaxHelpers.Text.StartsWith ("<<generated>>"));
@@ -169,6 +167,22 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
+    public void CreateQueryModel_ResultType ()
+    {
+      QueryModel queryModel = _parser.CreateQueryModel (_containsObjectCallExpression);
+      Assert.That (queryModel.ResultType, Is.EqualTo (typeof (IQueryable<OrderItem>)));
+    }
+
+    [Test]
+    [Ignore ("TODO: Implement adding of parentQuery")]
+    public void CreateQueryModel_ParentQuery ()
+    {
+      QueryModel parentQuery = ExpressionHelper.CreateQueryModel();
+      QueryModel queryModel = _parser.CreateQueryModel (_containsObjectCallExpression);
+      Assert.That (queryModel.ParentQuery, Is.SameAs (parentQuery));
+    }
+
+    [Test]
     public void CreateEqualSubQuery_CreatesSubQuery_WithQueryModel ()
     {
       SubQueryExpression subQuery = _parser.CreateEqualSubQuery (_containsObjectCallExpression);
@@ -176,17 +190,20 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
-    [Ignore ("TODO: Implement ContainsObjectParser")]
     public void CreateExpressionForContainsParser ()
     {
       SubQueryExpression subQueryExpression1 = _parser.CreateEqualSubQuery (_containsObjectCallExpression);
       Expression queryParameterExpression = Expression.Constant (null, typeof (OrderItem));
       MethodCallExpression methodCallExpression = _parser.CreateExpressionForContainsParser (subQueryExpression1, queryParameterExpression);
-      Assert.That (methodCallExpression.Object, Is.SameAs (subQueryExpression1));
-      MethodInfo containsMethod = ExpressionHelper.GetMethod (() => (from oi in DataContext.Entity<OrderItem> () select oi).Contains (_orderItem1));
+      Assert.That (methodCallExpression.Object, Is.Null);
+      MethodInfo containsMethod = GetContainsMethod();
       Assert.That (methodCallExpression.Method, Is.EqualTo (containsMethod));
-      Assert.That (methodCallExpression.Arguments.Count, Is.EqualTo (1));
-      Assert.That (methodCallExpression.Arguments[0], Is.SameAs(queryParameterExpression));
+      Assert.That (methodCallExpression.Arguments, Is.EqualTo (new[] { subQueryExpression1, queryParameterExpression }));
+    }
+
+    private MethodInfo GetContainsMethod ()
+    {
+      return ParserUtility.GetMethod (() => (from oi in DataContext.Entity<OrderItem> () select oi).Contains (_orderItem1));
     }
 
     [Test]
@@ -198,15 +215,27 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
-    [Ignore ("TODO: Implement ContainsObjectParser")]
     public void Parse ()
     {
-      //SetupResult.For (_registryStub.GetParser (null)).IgnoreArguments().Return (_containsParserMock);
-      //Func<Expression, List<FieldDescriptor>, ICriterion> action = delegate (Expression expression, List<FieldDescriptor> fieldDescriptors)
-      //{
-        
-      //  return null; };
-      //Expect.Call (_containsParserMock.Parse (null, null)).Do (action);
+      List<FieldDescriptor> expectedFieldDescriptors = new List<FieldDescriptor>();
+      ICriterion expectedResult = new Constant (false);
+
+      SetupResult.For (_registryStub.GetParser (null)).IgnoreArguments().Return (_containsParserMock);
+      Func<Expression, List<FieldDescriptor>, ICriterion> action = (expression, fieldDescriptors) =>
+      {
+        Assert.That (expression, Is.InstanceOfType (typeof (MethodCallExpression)));
+        Assert.That (((MethodCallExpression) expression).Method, Is.EqualTo (GetContainsMethod()));
+        Assert.That (fieldDescriptors, Is.SameAs (expectedFieldDescriptors));
+        return expectedResult;
+      };
+      Expect.Call (_containsParserMock.Parse (null, null))
+        .IgnoreArguments()
+        .Do (action);
+
+      _mockRepository.ReplayAll ();
+      ICriterion result = _parser.Parse (_containsObjectCallExpression, expectedFieldDescriptors);
+      Assert.That (result, Is.SameAs (expectedResult));
+      _mockRepository.VerifyAll ();
     }
 
     private IQueryable<Order> GetQuery ()
