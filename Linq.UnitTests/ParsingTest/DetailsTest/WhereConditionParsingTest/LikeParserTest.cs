@@ -15,7 +15,7 @@ using System.Collections.Generic;
 namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionParsingTest
 {
   [TestFixture]
-  public class LikeParserTest
+  public class LikeParserTest : DetailParserTestBase
   {
     [Test]
     public void ParseStartsWith ()
@@ -72,8 +72,6 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
         + "for method call expression in where condition, found Equals.")]
     public void Parse_WithException ()
     {
-      WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
-
       ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
       MemberExpression memberAccess = Expression.MakeMemberAccess (parameter, typeof (Student).GetProperty ("First"));
       MethodCallExpression methodCallExpression = Expression.Call (
@@ -81,8 +79,6 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
           typeof (string).GetMethod ("Equals", new Type[] { typeof (object) }),
           Expression.Constant ("Test")
           );
-
-      ICriterion criterion = new Constant ("Test");
 
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (parameter, ExpressionHelper.CreateQuerySource ());
       QueryModel queryModel = ExpressionHelper.CreateQueryModel (fromClause);
@@ -94,12 +90,10 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
       parserRegistry.RegisterParser (typeof (MemberExpression), new MemberExpressionParser (queryModel, resolver));
 
       LikeParser parser = new LikeParser (queryModel.GetExpressionTree (), parserRegistry);
-
-      List<FieldDescriptor> fieldCollection = new List<FieldDescriptor> ();
-      parser.Parse (methodCallExpression, fieldCollection);
+      parser.Parse (methodCallExpression, ParseContext);
     }
 
-    private static void CheckParsingOfLikeVariant (string methodName, string pattern)
+    private void CheckParsingOfLikeVariant (string methodName, string pattern)
     {
       WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
 
@@ -123,19 +117,15 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
           Expression.Constant ("Test")
           );
 
-      ICriterion criterion = new Constant ("Test");
       LikeParser parser = new LikeParser (queryModel.GetExpressionTree(), parserRegistry);
 
-      List<FieldDescriptor> fieldCollection = new List<FieldDescriptor> ();
-      ICriterion actualCriterion = parser.Parse (methodCallExpression, fieldCollection);
+      ICriterion actualCriterion = parser.Parse (methodCallExpression, ParseContext);
       ICriterion expectedCriterion = new BinaryCondition (new Column (new Table ("studentTable", "s"), "FirstColumn"), new Constant (pattern), BinaryCondition.ConditionKind.Like);
       Assert.AreEqual (expectedCriterion, actualCriterion);
     }
 
-    private static void CheckParsingOfLikeVariant_NoConstantExpression (string methodName)
+    private void CheckParsingOfLikeVariant_NoConstantExpression (string methodName)
     {
-      WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
-
       ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
       MemberExpression memberAccess = Expression.MakeMemberAccess (parameter, typeof (Student).GetProperty ("First"));
 
@@ -157,14 +147,11 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
           );
 
       LikeParser parser = new LikeParser (queryModel.GetExpressionTree (), parserRegistry);
-      List<FieldDescriptor> fieldCollection = new List<FieldDescriptor> ();
-      parser.Parse (methodCallExpression, fieldCollection);
+      parser.Parse (methodCallExpression, ParseContext);
     }
 
-    private static void CheckParsingOfLikeVariant_NoArguments (string methodName)
+    private void CheckParsingOfLikeVariant_NoArguments (string methodName)
     {
-      WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
-
       ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
       MemberExpression memberAccess = Expression.MakeMemberAccess (parameter, typeof (Student).GetProperty ("First"));
 
@@ -185,8 +172,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
           );
 
       LikeParser parser = new LikeParser (queryModel.GetExpressionTree (), parserRegistry);
-      List<FieldDescriptor> fieldCollection = new List<FieldDescriptor> ();
-      parser.Parse (methodCallExpression, fieldCollection);
+      parser.Parse (methodCallExpression, ParseContext);
     }
 
     public static bool StartsWith () { return true; }

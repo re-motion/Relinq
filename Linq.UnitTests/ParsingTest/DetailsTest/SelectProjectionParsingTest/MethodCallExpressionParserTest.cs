@@ -14,30 +14,28 @@ using Remotion.Data.Linq.Parsing.FieldResolving;
 namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionParsingTest
 {
   [TestFixture]
-  public class MethodCallExpressionParserTest
+  public class MethodCallExpressionParserTest : DetailParserTestBase
   {
     private ParameterExpression _parameter;
     private IColumnSource _fromSource;
     private MainFromClause _fromClause;
-    private QueryModel _queryModel;
-    private List<FieldDescriptor> _fieldDescriptors;
     private SelectProjectionParserRegistry _parserRegistry;
     private ClauseFieldResolver _resolver;
 
-    [SetUp]
-    public void SetUp()
+    public override void SetUp()
     {
+      base.SetUp();
+
       _parameter = Expression.Parameter (typeof (Student), "s");
       _fromClause = ExpressionHelper.CreateMainFromClause (_parameter, ExpressionHelper.CreateQuerySource ());
       _fromSource = _fromClause.GetFromSource (StubDatabaseInfo.Instance);
-      _queryModel = ExpressionHelper.CreateQueryModel (_fromClause);
-      _fieldDescriptors = new List<FieldDescriptor> ();
+      QueryModel = ExpressionHelper.CreateQueryModel (_fromClause);
       _resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, new JoinedTableContext (), new SelectFieldAccessPolicy());
       _parserRegistry = 
-        new SelectProjectionParserRegistry (_queryModel, StubDatabaseInfo.Instance, new JoinedTableContext(), new ParseMode());
+        new SelectProjectionParserRegistry (QueryModel, StubDatabaseInfo.Instance, new JoinedTableContext(), new ParseMode());
       _parserRegistry.RegisterParser (typeof(ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
-      _parserRegistry.RegisterParser (typeof(ParameterExpression), new ParameterExpressionParser (_queryModel,_resolver));
-      _parserRegistry.RegisterParser (typeof(MemberExpression), new MemberExpressionParser (_queryModel, _resolver));
+      _parserRegistry.RegisterParser (typeof(ParameterExpression), new ParameterExpressionParser (QueryModel,_resolver));
+      _parserRegistry.RegisterParser (typeof(MemberExpression), new MemberExpressionParser (QueryModel, _resolver));
       _parserRegistry.RegisterParser (typeof(MethodCallExpression), new MethodCallExpressionParser (_parserRegistry));
     }
 
@@ -54,12 +52,10 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
       List<IEvaluation> c1 = new List<IEvaluation> { column };
       MethodCallEvaluation expected = new MethodCallEvaluation(methodInfo,column,null);
       
-      //MethodCallExpressionParser methodCallExpressionParser = new MethodCallExpressionParser (_queryModel, e => c1);
       MethodCallExpressionParser methodCallExpressionParser = new MethodCallExpressionParser (_parserRegistry);
 
       //result
-      //MethodCallEvaluation result = methodCallExpressionParser.Parse (methodCallExpression, _fieldDescriptors);
-      List<IEvaluation> result = methodCallExpressionParser.Parse (methodCallExpression, _fieldDescriptors);
+      List<IEvaluation> result = methodCallExpressionParser.Parse (methodCallExpression, ParseContext);
 
       Assert.IsEmpty (((MethodCallEvaluation)result[0]).EvaluationArguments);
       Assert.AreEqual (expected.EvaluationMethodInfo, ((MethodCallEvaluation) result[0]).EvaluationMethodInfo);
@@ -82,13 +78,11 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
       List<IEvaluation> arguments = new List<IEvaluation> { item};
       MethodCallEvaluation expected = new MethodCallEvaluation (methodInfo, column, arguments);
 
-      //MethodCallExpressionParser methodCallExpressionParser = 
-        //new MethodCallExpressionParser (_queryModel, e => e == memberExpression ? c1 : item1);
       MethodCallExpressionParser methodCallExpressionParser =
         new MethodCallExpressionParser ( _parserRegistry);
 
       //result
-      List<IEvaluation> result = methodCallExpressionParser.Parse (methodCallExpression, _fieldDescriptors);
+      List<IEvaluation> result = methodCallExpressionParser.Parse (methodCallExpression, ParseContext);
 
       
       Assert.AreEqual (((MethodCallEvaluation)result[0]).EvaluationArguments, expected.EvaluationArguments);
@@ -103,7 +97,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
       MethodCallExpression methodCallExpression = Expression.Call (methodInfo);
 
       MethodCallExpressionParser methodCallExpressionParser = new MethodCallExpressionParser (_parserRegistry);
-      List<IEvaluation> result = methodCallExpressionParser.Parse (methodCallExpression, _fieldDescriptors);
+      List<IEvaluation> result = methodCallExpressionParser.Parse (methodCallExpression, ParseContext);
 
       Assert.That (((MethodCallEvaluation) result[0]).EvaluationArguments, Is.Empty);
       Assert.That (((MethodCallEvaluation) result[0]).EvaluationMethodInfo, Is.EqualTo (methodInfo));

@@ -14,7 +14,7 @@ using Remotion.Data.Linq.Parsing.FieldResolving;
 namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionParsingTest
 {
   [TestFixture]
-  public class ContainsParserTest
+  public class ContainsParserTest : DetailParserTestBase
   {
     [Test]
     public void ParseContainsWithSubQuery ()
@@ -42,11 +42,9 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
       parserRegistry.RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (queryModel, resolver));
       parserRegistry.RegisterParser (typeof (MemberExpression), new MemberExpressionParser (queryModel, resolver));
 
-      //MethodCallExpressionParser parser = new MethodCallExpressionParser (queryModel.GetExpressionTree (), parserRegistry);
       ContainsParser parser = new ContainsParser (queryModel.GetExpressionTree(), parserRegistry);
 
-      List<FieldDescriptor> fieldCollection = new List<FieldDescriptor> ();
-      ICriterion actualCriterion = parser.Parse (methodCallExpression, fieldCollection);
+      ICriterion actualCriterion = parser.Parse (methodCallExpression, ParseContext);
       SubQuery expectedSubQuery = new SubQuery (queryModel, null);
       IValue expectedCheckedItem = new Constant (0);
       ICriterion expectedCriterion = new BinaryCondition (expectedSubQuery, expectedCheckedItem, BinaryCondition.ConditionKind.Contains);
@@ -59,14 +57,10 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
         + "ConstantExpression (null).")]
     public void ParseContains_NoSubQueryExpression ()
     {
-      WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
-
       IQueryable<Student> querySource = ExpressionHelper.CreateQuerySource ();
       Student item = new Student ();
       ConstantExpression checkedExpression = Expression.Constant (item);
       QueryModel queryModel = ExpressionHelper.CreateQueryModel ();
-      ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (parameter, ExpressionHelper.CreateQuerySource ());
       ClauseFieldResolver resolver =
           new ClauseFieldResolver (StubDatabaseInfo.Instance, new JoinedTableContext (), new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
 
@@ -84,9 +78,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
       parserRegistry.RegisterParser (typeof (MemberExpression), new MemberExpressionParser (queryModel, resolver));
 
       ContainsParser parser = new ContainsParser (queryModel.GetExpressionTree (), parserRegistry);
-      
-      List<FieldDescriptor> fieldCollection = new List<FieldDescriptor> ();
-      parser.Parse (methodCallExpression, fieldCollection);
+      parser.Parse (methodCallExpression, ParseContext);
     }
 
     [Test]
@@ -94,19 +86,14 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
       + "condition, found Contains.")]
     public void ParseContains_NoArguments ()
     {
-      WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
-
       MethodInfo containsMethod = typeof (ContainsParserTest).GetMethod ("Contains");
       MethodCallExpression methodCallExpression = Expression.Call (
           null,
           containsMethod
           );
       QueryModel queryModel = ExpressionHelper.CreateQueryModel ();
-      ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (parameter, ExpressionHelper.CreateQuerySource ());
       ClauseFieldResolver resolver =
           new ClauseFieldResolver (StubDatabaseInfo.Instance, new JoinedTableContext (), new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
-
 
       WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (queryModel, StubDatabaseInfo.Instance, new JoinedTableContext ());
       parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
@@ -115,8 +102,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
 
       ContainsParser parser = new ContainsParser (queryModel.GetExpressionTree (), parserRegistry);
       
-      List<FieldDescriptor> fieldCollection = new List<FieldDescriptor> ();
-      parser.Parse (methodCallExpression, fieldCollection);
+      parser.Parse (methodCallExpression, ParseContext);
     }
 
     public static bool Contains () { return true; }

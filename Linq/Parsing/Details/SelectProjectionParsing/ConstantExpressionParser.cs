@@ -15,19 +15,23 @@ namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing
       _innerParser = new WhereConditionParsing.ConstantExpressionParser (databaseInfo);
     }
 
-    public List<IEvaluation> Parse (ConstantExpression constantExpression, List<FieldDescriptor> fieldDescriptorCollection)
+    public List<IEvaluation> Parse (ConstantExpression constantExpression, ParseContext parseContext)
     {
       ArgumentUtility.CheckNotNull ("constantExpression", constantExpression);
-      return new List<IEvaluation> { _innerParser.Parse (constantExpression, fieldDescriptorCollection) };
+      ArgumentUtility.CheckNotNull ("parseContext", parseContext);
+      return new List<IEvaluation> { _innerParser.Parse (constantExpression, parseContext) };
     }
 
-    List<IEvaluation> ISelectProjectionParser.Parse (Expression expression, List<FieldDescriptor> fieldDescriptors)
+    List<IEvaluation> ISelectProjectionParser.Parse (Expression expression, ParseContext parseContext)
     {
-      return Parse ((ConstantExpression) expression, fieldDescriptors);
+      ArgumentUtility.CheckNotNull ("expression", expression);
+      ArgumentUtility.CheckNotNull ("parseContext", parseContext);
+      return Parse ((ConstantExpression) expression, parseContext);
     }
 
     public bool CanParse(Expression expression)
     {
+      ArgumentUtility.CheckNotNull ("expression", expression);
       return expression is ConstantExpression;
     }
   }

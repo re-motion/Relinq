@@ -19,21 +19,21 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
       _parserRegistry = parserRegistry;
     }
 
-    public ICriterion Parse (MethodCallExpression methodCallExpression, List<FieldDescriptor> fieldDescriptorCollection)
+    public ICriterion Parse (MethodCallExpression methodCallExpression, ParseContext parseContext)
     {
       if (methodCallExpression.Method.Name == "Contains" && methodCallExpression.Method.IsGenericMethod)
       {
         ParserUtility.CheckNumberOfArguments (methodCallExpression, "Contains", 2, _expressionTreeRoot);
         ParserUtility.CheckParameterType<SubQueryExpression> (methodCallExpression, "Contains", 0, _expressionTreeRoot);
-        return CreateContains ((SubQueryExpression) methodCallExpression.Arguments[0], methodCallExpression.Arguments[1], fieldDescriptorCollection);
+        return CreateContains ((SubQueryExpression) methodCallExpression.Arguments[0], methodCallExpression.Arguments[1], parseContext);
       }
       throw ParserUtility.CreateParserException ("Contains with expression", methodCallExpression.Method.Name,
           "method call expression in where condition", _expressionTreeRoot);
     }
 
-    ICriterion IWhereConditionParser.Parse (Expression expression, List<FieldDescriptor> fieldDescriptors)
+    ICriterion IWhereConditionParser.Parse (Expression expression, ParseContext parseContext)
     {
-      return Parse ((MethodCallExpression) expression, fieldDescriptors);
+      return Parse ((MethodCallExpression) expression, parseContext);
     }
 
     public bool CanParse (Expression expression)
@@ -47,10 +47,10 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
       return false;
     }
 
-    private BinaryCondition CreateContains (SubQueryExpression subQueryExpression, Expression itemExpression, List<FieldDescriptor> fieldDescriptorCollection)
+    private BinaryCondition CreateContains (SubQueryExpression subQueryExpression, Expression itemExpression, ParseContext parseContext)
     {
       SubQuery subQuery = new SubQuery (subQueryExpression.QueryModel, null);
-      return new BinaryCondition (subQuery, _parserRegistry.GetParser (itemExpression).Parse (itemExpression, fieldDescriptorCollection),
+      return new BinaryCondition (subQuery, _parserRegistry.GetParser (itemExpression).Parse (itemExpression, parseContext),
           BinaryCondition.ConditionKind.Contains);
     }
   }

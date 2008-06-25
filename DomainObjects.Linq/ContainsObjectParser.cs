@@ -40,17 +40,17 @@ namespace Remotion.Data.DomainObjects.Linq
       return methodCallExpression != null && methodCallExpression.Method == s_containsObjectMethod;
     }
 
-    public ICriterion Parse (Expression expression, List<FieldDescriptor> fieldDescriptors)
+    public ICriterion Parse (Expression expression, ParseContext parseContext)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      ArgumentUtility.CheckNotNull ("fieldDescriptors", fieldDescriptors);
+      ArgumentUtility.CheckNotNull ("fieldDescriptors", parseContext);
 
       MethodCallExpression containsObjectCallExpression = ParserUtility.GetTypedExpression<MethodCallExpression> (
           expression, "ContainsObject parser", expression);
       
       SubQueryExpression subQueryExpression = CreateEqualSubQuery (containsObjectCallExpression);
       MethodCallExpression containsExpression = CreateExpressionForContainsParser (subQueryExpression, containsObjectCallExpression.Arguments[0]);
-      return _registry.GetParser (containsExpression).Parse (containsExpression, fieldDescriptors);
+      return _registry.GetParser (containsExpression).Parse (containsExpression, parseContext);
     }
 
     public SubQueryExpression CreateEqualSubQuery (MethodCallExpression containsObjectCallExpression)

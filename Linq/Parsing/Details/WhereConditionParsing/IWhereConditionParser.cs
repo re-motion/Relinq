@@ -6,6 +6,6 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
 {
   public interface IWhereConditionParser  : IParser
   {
-    ICriterion Parse (Expression expression, List<FieldDescriptor> fieldDescriptors);
+    ICriterion Parse (Expression expression, ParseContext parseContext);
   }
 }

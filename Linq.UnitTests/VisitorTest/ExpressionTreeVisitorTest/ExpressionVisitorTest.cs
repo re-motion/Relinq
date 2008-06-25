@@ -5,7 +5,6 @@ using System.Linq.Expressions;
 using Rhino.Mocks;
 using System.Reflection;
 using Rhino.Mocks.Interfaces;
-using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Visitor;
 using Remotion.Development.UnitTesting;
 using Remotion.Utilities;

@@ -20,16 +20,16 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
       _resolver = resolver;
     }
 
-    public ICriterion Parse (ParameterExpression parameterExpression, List<FieldDescriptor> fieldDescriptorCollection)
+    public ICriterion Parse (ParameterExpression parameterExpression, ParseContext parseContext)
     {
       FieldDescriptor fieldDescriptor = _queryModel.ResolveField (_resolver, parameterExpression);
-      fieldDescriptorCollection.Add (fieldDescriptor);
+      parseContext.FieldDescriptors.Add (fieldDescriptor);
       return fieldDescriptor.GetMandatoryColumn ();
     }
 
-    ICriterion IWhereConditionParser.Parse (Expression expression, List<FieldDescriptor> fieldDescriptors)
+    ICriterion IWhereConditionParser.Parse (Expression expression, ParseContext parseContext)
     {
-      return Parse ((ParameterExpression) expression, fieldDescriptors);
+      return Parse ((ParameterExpression) expression, parseContext);
     }
 
     public bool CanParse(Expression expression)

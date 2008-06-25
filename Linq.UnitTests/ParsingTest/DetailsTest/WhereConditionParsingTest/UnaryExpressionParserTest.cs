@@ -10,17 +10,13 @@ using Remotion.Data.Linq.Parsing.FieldResolving;
 namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionParsingTest
 {
   [TestFixture]
-  public class UnaryExpressionParserTest
+  public class UnaryExpressionParserTest : DetailParserTestBase
   {
     [Test]
     public void Parse ()
     {
       QueryModel queryModel = ExpressionHelper.CreateQueryModel();
-
-      WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
       UnaryExpression unaryExpression = Expression.Not (Expression.Constant (5));
-
-      ICriterion criterion = new Constant (5);
       ICriterion expectedCriterion = new NotCriterion (new Constant (5));
 
       WhereConditionParserRegistry parserRegistry = 
@@ -29,8 +25,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
 
       UnaryExpressionParser parser = new UnaryExpressionParser(queryModel.GetExpressionTree(),parserRegistry);
 
-      List<FieldDescriptor> fieldCollection = new List<FieldDescriptor> ();
-      ICriterion actualCriterion = parser.Parse (unaryExpression, fieldCollection);
+      ICriterion actualCriterion = parser.Parse (unaryExpression, ParseContext);
       Assert.AreEqual (expectedCriterion, actualCriterion);
     }
   }

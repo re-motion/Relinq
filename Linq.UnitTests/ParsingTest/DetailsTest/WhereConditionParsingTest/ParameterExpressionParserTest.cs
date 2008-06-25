@@ -11,7 +11,7 @@ using NUnit.Framework.SyntaxHelpers;
 namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionParsingTest
 {
   [TestFixture]
-  public class ParameterExpressionParserTest
+  public class ParameterExpressionParserTest : DetailParserTestBase
   {
     [Test]
     public void Parse ()
@@ -23,7 +23,6 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
       ClauseFieldResolver resolver =
           new ClauseFieldResolver (StubDatabaseInfo.Instance, new JoinedTableContext (), new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
 
-      List<FieldDescriptor> fieldDescriptorCollection = new List<FieldDescriptor> ();
       var fromSource = fromClause.GetFromSource (StubDatabaseInfo.Instance);
       FieldSourcePath path = new FieldSourcePath (fromSource, new SingleJoin[0]);
       FieldDescriptor expectedFieldDescriptor = new FieldDescriptor (null, path, new Column (fromSource, "IDColumn"));
@@ -31,9 +30,9 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
 
       ParameterExpressionParser parser = new ParameterExpressionParser (queryModel, resolver);
 
-      ICriterion actualCriterion = parser.Parse (parameter, fieldDescriptorCollection);
+      ICriterion actualCriterion = parser.Parse (parameter, ParseContext);
       Assert.AreEqual (expectedCriterion, actualCriterion);
-      Assert.That (fieldDescriptorCollection, Is.EqualTo (new[] { expectedFieldDescriptor }));
+      Assert.That (ParseContext.FieldDescriptors, Is.EqualTo (new[] { expectedFieldDescriptor }));
     }
   }
 }

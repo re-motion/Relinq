@@ -23,37 +23,37 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
     }
 
 
-    public ICriterion Parse (BinaryExpression binaryExpression, List<FieldDescriptor> fieldDescriptorCollection)
+    public ICriterion Parse (BinaryExpression binaryExpression, ParseContext parseContext)
     {
       switch (binaryExpression.NodeType)
       {
         case ExpressionType.And:
         case ExpressionType.AndAlso:
-          return CreateComplexCriterion (binaryExpression, ComplexCriterion.JunctionKind.And, fieldDescriptorCollection);
+          return CreateComplexCriterion (binaryExpression, ComplexCriterion.JunctionKind.And, parseContext);
         case ExpressionType.Or:
         case ExpressionType.OrElse:
-          return CreateComplexCriterion (binaryExpression, ComplexCriterion.JunctionKind.Or, fieldDescriptorCollection);
+          return CreateComplexCriterion (binaryExpression, ComplexCriterion.JunctionKind.Or, parseContext);
         case ExpressionType.Equal:
-          return CreateBinaryCondition (binaryExpression, BinaryCondition.ConditionKind.Equal, fieldDescriptorCollection);
+          return CreateBinaryCondition (binaryExpression, BinaryCondition.ConditionKind.Equal, parseContext);
         case ExpressionType.NotEqual:
-          return CreateBinaryCondition (binaryExpression, BinaryCondition.ConditionKind.NotEqual, fieldDescriptorCollection);
+          return CreateBinaryCondition (binaryExpression, BinaryCondition.ConditionKind.NotEqual, parseContext);
         case ExpressionType.GreaterThanOrEqual:
-          return CreateBinaryCondition (binaryExpression, BinaryCondition.ConditionKind.GreaterThanOrEqual, fieldDescriptorCollection);
+          return CreateBinaryCondition (binaryExpression, BinaryCondition.ConditionKind.GreaterThanOrEqual, parseContext);
         case ExpressionType.GreaterThan:
-          return CreateBinaryCondition (binaryExpression, BinaryCondition.ConditionKind.GreaterThan, fieldDescriptorCollection);
+          return CreateBinaryCondition (binaryExpression, BinaryCondition.ConditionKind.GreaterThan, parseContext);
         case ExpressionType.LessThanOrEqual:
-          return CreateBinaryCondition (binaryExpression, BinaryCondition.ConditionKind.LessThanOrEqual, fieldDescriptorCollection);
+          return CreateBinaryCondition (binaryExpression, BinaryCondition.ConditionKind.LessThanOrEqual, parseContext);
         case ExpressionType.LessThan:
-          return CreateBinaryCondition (binaryExpression, BinaryCondition.ConditionKind.LessThan, fieldDescriptorCollection);
+          return CreateBinaryCondition (binaryExpression, BinaryCondition.ConditionKind.LessThan, parseContext);
         default:
           throw ParserUtility.CreateParserException ("and, or, or comparison expression", binaryExpression.NodeType, "binary expression in where condition",
               _expressionTreeRoot);
       }
     }
 
-    ICriterion IWhereConditionParser.Parse (Expression expression, List<FieldDescriptor> fieldDescriptors)
+    ICriterion IWhereConditionParser.Parse (Expression expression, ParseContext parseContext)
     {
-      return Parse ((BinaryExpression) expression, fieldDescriptors);
+      return Parse ((BinaryExpression) expression, parseContext);
     }
 
     public bool CanParse (Expression expression)
@@ -62,21 +62,21 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
     }
 
     private ComplexCriterion CreateComplexCriterion 
-      (BinaryExpression expression, ComplexCriterion.JunctionKind kind, List<FieldDescriptor> fieldDescriptorCollection)
+      (BinaryExpression expression, ComplexCriterion.JunctionKind kind, ParseContext parseContext)
     {
       return new ComplexCriterion (
-        _parserRegistry.GetParser (expression.Left).Parse (expression.Left, fieldDescriptorCollection),
-        _parserRegistry.GetParser (expression.Right).Parse (expression.Right, fieldDescriptorCollection),
+        _parserRegistry.GetParser (expression.Left).Parse (expression.Left, parseContext),
+        _parserRegistry.GetParser (expression.Right).Parse (expression.Right, parseContext),
         kind
         );
     }
 
     private BinaryCondition CreateBinaryCondition 
-      (BinaryExpression expression, BinaryCondition.ConditionKind kind, List<FieldDescriptor> fieldDescriptorCollection)
+      (BinaryExpression expression, BinaryCondition.ConditionKind kind, ParseContext parseContext)
     {
       return new BinaryCondition (
-        _parserRegistry.GetParser (expression.Left).Parse (expression.Left, fieldDescriptorCollection),
-        _parserRegistry.GetParser (expression.Right).Parse (expression.Right, fieldDescriptorCollection),
+        _parserRegistry.GetParser (expression.Left).Parse (expression.Left, parseContext),
+        _parserRegistry.GetParser (expression.Right).Parse (expression.Right, parseContext),
         kind
         );
     }

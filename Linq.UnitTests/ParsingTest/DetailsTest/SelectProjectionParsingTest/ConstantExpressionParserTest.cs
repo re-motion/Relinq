@@ -9,23 +9,15 @@ using Remotion.Data.Linq.Parsing.FieldResolving;
 namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionParsingTest
 {
   [TestFixture]
-  public class ConstantExpressionParserTest
+  public class ConstantExpressionParserTest : DetailParserTestBase
   {
     [Test]
     public void Parse ()
     {
       ConstantExpression constantExpression = Expression.Constant (5);
 
-      ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (parameter, ExpressionHelper.CreateQuerySource ());
-      QueryModel queryModel = ExpressionHelper.CreateQueryModel (fromClause);
-      ClauseFieldResolver resolver =
-          new ClauseFieldResolver (StubDatabaseInfo.Instance, new JoinedTableContext (), new SelectFieldAccessPolicy ());
-      
       ConstantExpressionParser parser = new ConstantExpressionParser(StubDatabaseInfo.Instance);
-
-      List<FieldDescriptor> fieldCollection = new List<FieldDescriptor> ();
-      List<IEvaluation> result = parser.Parse (constantExpression, fieldCollection);
+      List<IEvaluation> result = parser.Parse (constantExpression, ParseContext);
 
       //expected
       IEvaluation expected = new Constant (5);

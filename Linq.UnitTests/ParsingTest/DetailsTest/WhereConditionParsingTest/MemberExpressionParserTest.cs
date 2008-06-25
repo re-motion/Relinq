@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing.Details.WhereConditionParsing;
@@ -9,7 +10,7 @@ using Remotion.Data.Linq.Parsing.FieldResolving;
 namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionParsingTest
 {
   [TestFixture]
-  public class MemberExpressionParserTest
+  public class MemberExpressionParserTest : DetailParserTestBase
   {
     [Test]
     public void Parse()
@@ -22,10 +23,9 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.WhereConditionPar
         new ClauseFieldResolver(StubDatabaseInfo.Instance,context,new WhereFieldAccessPolicy(StubDatabaseInfo.Instance));
       MemberExpressionParser parser = new MemberExpressionParser (queryModel, resolver);
 
-      List<FieldDescriptor> fieldCollection = new List<FieldDescriptor>();
       MemberExpression memberExpression = Expression.MakeMemberAccess (parameter, typeof (Student).GetProperty ("ID"));
-      parser.Parse (memberExpression, fieldCollection);
-      Assert.IsNotNull (fieldCollection);
+      parser.Parse (memberExpression, ParseContext);
+      Assert.That (ParseContext.FieldDescriptors, Is.Not.Empty);
     }
   }
 }

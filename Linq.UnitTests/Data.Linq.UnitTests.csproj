@@ -81,6 +81,7 @@
     <Compile Include="ParsingTest\DetailsTest\WhereConditionParsingTest\ConstantExpressionParserTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\WhereConditionParsingTest\ContainsFulltextParserTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\WhereConditionParsingTest\ContainsParserTest.cs" />
+    <Compile Include="ParsingTest\DetailsTest\DetailParserTestBase.cs" />
     <Compile Include="ParsingTest\DetailsTest\WhereConditionParsingTest\LikeParserTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\WhereConditionParsingTest\MemberExpressionParserTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\WhereConditionParsingTest\ParameterExpressionParserTest.cs" />

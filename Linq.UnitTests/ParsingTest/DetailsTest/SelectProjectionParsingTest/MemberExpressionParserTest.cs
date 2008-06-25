@@ -10,7 +10,7 @@ using Remotion.Data.Linq.Parsing.FieldResolving;
 namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionParsingTest
 {
   [TestFixture]
-  public class MemberExpressionParserTest
+  public class MemberExpressionParserTest : DetailParserTestBase
   {
     [Test]
     public void Parse ()
@@ -29,7 +29,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
       FieldSourcePath path = new FieldSourcePath (fromSource, new SingleJoin[0]);
       FieldDescriptor expectedFieldDescriptor = new FieldDescriptor (null, path, new Column (fromSource, "IDColumn"));
 
-      List<IEvaluation> actualEvaluation = parser.Parse (memberExpression, fieldDescriptorCollection);
+      List<IEvaluation> actualEvaluation = parser.Parse (memberExpression, ParseContext);
       IEvaluation expectedEvaluation = expectedFieldDescriptor.Column;
 
       Assert.IsNotNull (fieldDescriptorCollection);

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Visitor;
 using Remotion.Utilities;
 

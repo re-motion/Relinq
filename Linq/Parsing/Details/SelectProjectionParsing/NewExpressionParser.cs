@@ -16,22 +16,22 @@ namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing
       _parserRegistry = parserRegistry;
     }
 
-    public virtual List<IEvaluation> Parse(NewExpression newExpression, List<FieldDescriptor> fieldDescriptorCollection)
+    public virtual List<IEvaluation> Parse (NewExpression newExpression, ParseContext parseContext)
     {
       ArgumentUtility.CheckNotNull ("newExpression", newExpression);
-      ArgumentUtility.CheckNotNull ("fieldDescriptorCollection", fieldDescriptorCollection);
+      ArgumentUtility.CheckNotNull ("parseContext", parseContext);
 
       List<IEvaluation> evaluations = new List<IEvaluation> ();
       foreach (Expression exp in newExpression.Arguments)
       {
-        evaluations.AddRange (_parserRegistry.GetParser (exp).Parse (exp, fieldDescriptorCollection));
+        evaluations.AddRange (_parserRegistry.GetParser (exp).Parse (exp, parseContext));
       }
       return evaluations;
     }
 
-    List<IEvaluation> ISelectProjectionParser.Parse (Expression expression, List<FieldDescriptor> fieldDescriptors)
+    List<IEvaluation> ISelectProjectionParser.Parse (Expression expression, ParseContext parseContext)
     {
-      return Parse ((NewExpression) expression, fieldDescriptors);
+      return Parse ((NewExpression) expression, parseContext);
     }
 
     public bool CanParse(Expression expression)

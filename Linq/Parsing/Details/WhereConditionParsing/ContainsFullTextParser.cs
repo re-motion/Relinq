@@ -19,14 +19,14 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
       _parserRegistry = parserRegistry;
     }
 
-    public ICriterion Parse (MethodCallExpression methodCallExpression, List<FieldDescriptor> fieldDescriptorCollection)
+    public ICriterion Parse (MethodCallExpression methodCallExpression, ParseContext parseContext)
     {
-      return CreateContainsFulltext (methodCallExpression, (string) ((ConstantExpression) methodCallExpression.Arguments[1]).Value, fieldDescriptorCollection);
+      return CreateContainsFulltext (methodCallExpression, (string) ((ConstantExpression) methodCallExpression.Arguments[1]).Value, parseContext);
     }
 
-    ICriterion IWhereConditionParser.Parse (Expression expression, List<FieldDescriptor> fieldDescriptors)
+    ICriterion IWhereConditionParser.Parse (Expression expression, ParseContext parseContext)
     {
-      return Parse ((MethodCallExpression) expression, fieldDescriptors);
+      return Parse ((MethodCallExpression) expression, parseContext);
     }
 
     public bool CanParse (Expression expression)
@@ -40,9 +40,9 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
       return false;
     }
 
-    private BinaryCondition CreateContainsFulltext (MethodCallExpression expression, string pattern, List<FieldDescriptor> fieldDescriptorCollection)
+    private BinaryCondition CreateContainsFulltext (MethodCallExpression expression, string pattern, ParseContext parseContext)
     {
-      return new BinaryCondition (_parserRegistry.GetParser (expression.Arguments[0]).Parse (expression.Arguments[0], fieldDescriptorCollection), new Constant (pattern), BinaryCondition.ConditionKind.ContainsFulltext);
+      return new BinaryCondition (_parserRegistry.GetParser (expression.Arguments[0]).Parse (expression.Arguments[0], parseContext), new Constant (pattern), BinaryCondition.ConditionKind.ContainsFulltext);
     }
 
   }

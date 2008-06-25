@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing.FieldResolving;
+using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing
 {
@@ -12,21 +13,28 @@ namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing
 
     public MemberExpressionParser (QueryModel queryModel, ClauseFieldResolver resolver)
     {
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+      ArgumentUtility.CheckNotNull ("resolver", resolver);
       _innerParser = new WhereConditionParsing.MemberExpressionParser (queryModel, resolver);
     }
 
-    public virtual List<IEvaluation> Parse (MemberExpression memberExpression, List<FieldDescriptor> fieldDescriptorCollection)
+    public virtual List<IEvaluation> Parse (MemberExpression memberExpression, ParseContext parseContext)
     {
-      return new List<IEvaluation> { _innerParser.Parse (memberExpression, fieldDescriptorCollection) };
+      ArgumentUtility.CheckNotNull ("memberExpression", memberExpression);
+      ArgumentUtility.CheckNotNull ("parseContext", parseContext);
+      return new List<IEvaluation> { _innerParser.Parse (memberExpression, parseContext) };
     }
 
-    List<IEvaluation> ISelectProjectionParser.Parse (Expression expression, List<FieldDescriptor> fieldDescriptors)
+    List<IEvaluation> ISelectProjectionParser.Parse (Expression expression, ParseContext parseContext)
     {
-      return Parse ((MemberExpression) expression, fieldDescriptors);
+      ArgumentUtility.CheckNotNull ("expression", expression);
+      ArgumentUtility.CheckNotNull ("parseContext", parseContext);
+      return Parse ((MemberExpression) expression, parseContext);
     }
 
     public bool CanParse(Expression expression)
     {
+      ArgumentUtility.CheckNotNull ("expression", expression);
       return expression is MemberExpression;
     }
   }

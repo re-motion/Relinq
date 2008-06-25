@@ -5,9 +5,12 @@ using NUnit.Framework;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing.Details;
-using Remotion.Data.Linq.Parsing.Details.WhereConditionParsing;
+using Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing;
 using Remotion.Data.Linq.Parsing.FieldResolving;
 using Remotion.Utilities;
+using ConstantExpressionParser=Remotion.Data.Linq.Parsing.Details.WhereConditionParsing.ConstantExpressionParser;
+using NUnit.Framework.SyntaxHelpers;
+using System.Linq;
 
 
 namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest
@@ -15,92 +18,52 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest
   [TestFixture]
   public class ParserRegistryTest
   {
-    private ParameterExpression _parameter;
-    private IColumnSource _fromSource;
-    private MainFromClause _fromClause;
-    private QueryModel _queryModel;
-
-
-    [SetUp]
-    public void SetUp ()
+    [Test]
+    public void GetParsers_NoParserRegistered ()
     {
-      _parameter = Expression.Parameter (typeof (Student), "s");
-      _fromClause = ExpressionHelper.CreateMainFromClause (_parameter, ExpressionHelper.CreateQuerySource ());
-      _fromSource = _fromClause.GetFromSource (StubDatabaseInfo.Instance);
-      _queryModel = ExpressionHelper.CreateQueryModel (_fromClause);
-      Column column = new Column (_fromSource, "FirstColumn");
-      List<IEvaluation> c1 = new List<IEvaluation> { column };
+      ParserRegistry parserRegistry = new ParserRegistry ();
+      IEnumerable resultList = parserRegistry.GetParsers (typeof (Expression));
+      Assert.IsFalse (resultList.GetEnumerator ().MoveNext ());
     }
 
-    
-    //[Test]
-    //public void GetAllRegisteresParser_NoParserRegistered ()
-    //{
-    //  ParserRegistry parserRegistry = new ParserRegistry ();
-    //  IEnumerable resultList = (parserRegistry.GetParsers<Expression> ());
-    //  Assert.IsFalse (resultList.GetEnumerator ().MoveNext ());
-    //}
+    [Test]
+    public void GetParsers_ParsersRegistered ()
+    {
+      ConstantExpressionParser parser1 = new ConstantExpressionParser (StubDatabaseInfo.Instance);
+      ConstantExpressionParser parser2 = new ConstantExpressionParser (StubDatabaseInfo.Instance);
+      ConstantExpressionParser parser3 = new ConstantExpressionParser (StubDatabaseInfo.Instance);
 
-    //[Test]
-    //public void GetParser_FirstRegisteredParser ()
-    //{
-    //  ParserRegistry parserRegistry = new ParserRegistry ();
+      ParserRegistry parserRegistry = new ParserRegistry ();
+      parserRegistry.RegisterParser (typeof (ConstantExpression), parser1);
+      parserRegistry.RegisterParser (typeof (ConstantExpression), parser2);
+      parserRegistry.RegisterParser (typeof (BinaryExpression), parser3);
 
-    //  Column column = new Column (_fromSource, "FirstColumn");
-    //  List<IEvaluation> c1 = new List<IEvaluation> { column };
+      Assert.That (parserRegistry.GetParsers (typeof (ConstantExpression)).ToArray (), Is.EqualTo (new[] { parser2, parser1 }));
+      Assert.That (parserRegistry.GetParsers (typeof (BinaryExpression)).ToArray (), Is.EqualTo (new[] { parser3 }));
+   }
 
-    //  ICriterion criterion = new Column (new Table ("Student", "s"), "First");
-    //  WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
-    //  MethodCallExpressionParser methodCallExpressionParser = new MethodCallExpressionParser (_queryModel, parserRegistry);
+    [Test]
+    public void GetParser_LastRegisteredParser ()
+    {
+      ConstantExpressionParser parser1 = new ConstantExpressionParser (StubDatabaseInfo.Instance);
+      ConstantExpressionParser parser2 = new ConstantExpressionParser (StubDatabaseInfo.Instance);
 
-    //  parserRegistry.RegisterParser (methodCallExpressionParser);
-    //  ConstantExpressionParser expectedParser = new ConstantExpressionParser (StubDatabaseInfo.Instance);
-    //  parserRegistry.RegisterParser (expectedParser);
+      ParserRegistry parserRegistry = new ParserRegistry();
 
-    //  ConstantExpression constantExpression = Expression.Constant (5);
-    //  IParser<ConstantExpression> actualParser = parserRegistry.GetParser (constantExpression);
+      parserRegistry.RegisterParser (typeof (ConstantExpression), parser1);
+      parserRegistry.RegisterParser (typeof (ConstantExpression), parser2);
+      
+      Assert.That (parserRegistry.GetParser (Expression.Constant (0)), Is.SameAs (parser2));
+    }
 
-    //  Assert.AreEqual (expectedParser, actualParser);
-    //}
+    [Test]
+    [ExpectedException (typeof (ParseException), ExpectedMessage = "Cannot parse Constant, no appropriate parser found")]
+    public void GetParser_NoParserFound ()
+    {
+      ParserRegistry parserRegistry = new ParserRegistry ();
 
-    //[Test]
-    //[ExpectedException (typeof (ParseException), ExpectedMessage = "Cannot parse Constant, no appropriate parser found")]
-    //public void GetParser_NoParserFound ()
-    //{
-    //  ParserRegistry parserRegistry = new ParserRegistry ();
-
-    //  Column column = new Column (_fromSource, "FirstColumn");
-    //  List<IEvaluation> c1 = new List<IEvaluation> { column };
-
-    //  ICriterion criterion = new Column (new Table ("Student", "s"), "First");
-    //  WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
-    //  MethodCallExpressionParser methodCallExpressionParser = new MethodCallExpressionParser (_queryModel, parserRegistry);
-
-    //  parserRegistry.RegisterParser (methodCallExpressionParser);
-
-    //  ConstantExpression constantExpression = Expression.Constant (5);
-    //  IParser<ConstantExpression> actualParser = parserRegistry.GetParser (constantExpression);
-    //}
-
-    //[Test]
-    //public void GetParser_NonGeneric ()
-    //{
-    //  ParserRegistry parserRegistry = new ParserRegistry ();
-    //  Column column = new Column (_fromSource, "FirstColumn");
-    //  List<IEvaluation> c1 = new List<IEvaluation> { column };
-
-    //  ICriterion criterion = new Column (new Table ("Student", "s"), "First");
-    //  WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
-    //  MethodCallExpressionParser methodCallExpressionParser = new MethodCallExpressionParser (_queryModel, parserRegistry);
-
-    //  parserRegistry.RegisterParser (methodCallExpressionParser);
-    //  ConstantExpressionParser expectedParser = new ConstantExpressionParser (StubDatabaseInfo.Instance);
-    //  parserRegistry.RegisterParser (expectedParser);
-
-    //  ConstantExpression constantExpression = Expression.Constant (5);
-    //  IParser actualParser = (IParser) parserRegistry.GetParser (constantExpression);
-
-    //  Assert.AreEqual (expectedParser, actualParser);
-    //}
+      ConstantExpression constantExpression = Expression.Constant (5);
+      parserRegistry.GetParser (constantExpression);
+    }
   }
 }

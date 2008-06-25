@@ -1,7 +1,6 @@
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using Remotion.Data.Linq.DataObjectModel;
 
 namespace Remotion.Data.Linq.UnitTests.DataObjectModelTest
 {

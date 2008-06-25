@@ -20,14 +20,14 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
       _parserRegistry = parserRegistry;
     }
 
-    public ICriterion Parse (UnaryExpression unaryExpression, List<FieldDescriptor> fieldDescriptorCollection)
+    public ICriterion Parse (UnaryExpression unaryExpression, ParseContext parseContext)
     {
       switch (unaryExpression.NodeType)
       {
         case ExpressionType.Not:
-          return new NotCriterion (_parserRegistry.GetParser (unaryExpression.Operand).Parse (unaryExpression.Operand, fieldDescriptorCollection));
+          return new NotCriterion (_parserRegistry.GetParser (unaryExpression.Operand).Parse (unaryExpression.Operand, parseContext));
         case ExpressionType.Convert: // Convert is simply ignored ATM, change to more sophisticated logic when needed
-          return (_parserRegistry.GetParser (unaryExpression.Operand).Parse (unaryExpression.Operand, fieldDescriptorCollection));
+          return (_parserRegistry.GetParser (unaryExpression.Operand).Parse (unaryExpression.Operand, parseContext));
         default:
           throw ParserUtility.CreateParserException ("not or convert expression", unaryExpression.NodeType, "unary expression in where condition",
               _expressionTreeRoot);
@@ -39,9 +39,9 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
       return expression is UnaryExpression;
     }
 
-    public ICriterion Parse(Expression expression, List<FieldDescriptor> fieldDescriptors)
+    public ICriterion Parse(Expression expression, ParseContext parseContext)
     {
-      return Parse ((UnaryExpression) expression, fieldDescriptors);
+      return Parse ((UnaryExpression) expression, parseContext);
     }
   }
 }

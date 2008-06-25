@@ -15,7 +15,7 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
       _databaseInfo = databaseInfo;
     }
 
-    public ICriterion Parse (ConstantExpression constantExpression, List<FieldDescriptor> fieldDescriptorCollection)
+    public ICriterion Parse (ConstantExpression constantExpression, ParseContext parseContext)
     {
       object newValue = _databaseInfo.ProcessWhereParameter (constantExpression.Value);
       return new Constant (newValue);
@@ -26,9 +26,9 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
       return expression is ConstantExpression;
     }
 
-    public ICriterion Parse(Expression expression, List<FieldDescriptor> fieldDescriptors)
+    ICriterion IWhereConditionParser.Parse(Expression expression, ParseContext parseContext)
     {
-      return Parse ((ConstantExpression) expression, fieldDescriptors);
+      return Parse ((ConstantExpression) expression, parseContext);
     }
   }
 }

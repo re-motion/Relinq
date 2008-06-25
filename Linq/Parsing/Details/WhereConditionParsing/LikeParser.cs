@@ -19,33 +19,33 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
       _parserRegistry = parserRegistry;
     }
 
-    public ICriterion Parse (MethodCallExpression methodCallExpression, List<FieldDescriptor> fieldDescriptorCollection)
+    public ICriterion Parse (MethodCallExpression methodCallExpression, ParseContext parseContext)
     {
       if (methodCallExpression.Method.Name == "StartsWith")
       {
         ParserUtility.CheckNumberOfArguments (methodCallExpression, "StartsWith", 1, _expressionTreeRoot);
         ParserUtility.CheckParameterType<ConstantExpression> (methodCallExpression, "StartsWith", 0, _expressionTreeRoot);
-        return CreateLike (methodCallExpression, ((ConstantExpression) methodCallExpression.Arguments[0]).Value + "%", fieldDescriptorCollection);
+        return CreateLike (methodCallExpression, ((ConstantExpression) methodCallExpression.Arguments[0]).Value + "%", parseContext);
       }
       else if (methodCallExpression.Method.Name == "EndsWith")
       {
         ParserUtility.CheckNumberOfArguments (methodCallExpression, "EndsWith", 1, _expressionTreeRoot);
         ParserUtility.CheckParameterType<ConstantExpression> (methodCallExpression, "EndsWith", 0, _expressionTreeRoot);
-        return CreateLike (methodCallExpression, "%" + ((ConstantExpression) methodCallExpression.Arguments[0]).Value, fieldDescriptorCollection);
+        return CreateLike (methodCallExpression, "%" + ((ConstantExpression) methodCallExpression.Arguments[0]).Value, parseContext);
       }
       else if (methodCallExpression.Method.Name == "Contains" && !methodCallExpression.Method.IsGenericMethod)
       {
         ParserUtility.CheckNumberOfArguments (methodCallExpression, "Contains", 1, _expressionTreeRoot);
         ParserUtility.CheckParameterType<ConstantExpression> (methodCallExpression, "Contains", 0, _expressionTreeRoot);
-        return CreateLike (methodCallExpression, "%" + ((ConstantExpression) methodCallExpression.Arguments[0]).Value + "%", fieldDescriptorCollection);
+        return CreateLike (methodCallExpression, "%" + ((ConstantExpression) methodCallExpression.Arguments[0]).Value + "%", parseContext);
       }
       throw ParserUtility.CreateParserException ("StartsWith, EndsWith, Contains with no expression", methodCallExpression.Method.Name,
           "method call expression in where condition", _expressionTreeRoot);
     }
 
-    ICriterion IWhereConditionParser.Parse (Expression expression, List<FieldDescriptor> fieldDescriptors)
+    ICriterion IWhereConditionParser.Parse (Expression expression, ParseContext parseContext)
     {
-      return Parse ((MethodCallExpression) expression, fieldDescriptors);
+      return Parse ((MethodCallExpression) expression, parseContext);
     }
 
     public bool CanParse (Expression expression)
@@ -61,9 +61,9 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
       return false;
     }
 
-    private BinaryCondition CreateLike (MethodCallExpression expression, string pattern, List<FieldDescriptor> fieldDescriptorCollection)
+    private BinaryCondition CreateLike (MethodCallExpression expression, string pattern, ParseContext parseContext)
     {
-      return new BinaryCondition (_parserRegistry.GetParser (expression.Object).Parse (expression.Object, fieldDescriptorCollection), new Constant (pattern), BinaryCondition.ConditionKind.Like);
+      return new BinaryCondition (_parserRegistry.GetParser (expression.Object).Parse (expression.Object, parseContext), new Constant (pattern), BinaryCondition.ConditionKind.Like);
     }
   }
 }

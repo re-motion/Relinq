@@ -24,7 +24,6 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
   [TestFixture]
   public class ContainsObjectParserTest : ClientTransactionBaseTest
   {
-    //private QueryModel _queryModel;
     private OrderItem _orderItem1;
     private IQueryable<Order> _query;
     private MethodCallExpression _containsObjectCallExpression;
@@ -217,15 +216,14 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     [Test]
     public void Parse ()
     {
-      List<FieldDescriptor> expectedFieldDescriptors = new List<FieldDescriptor>();
       ICriterion expectedResult = new Constant (false);
 
       SetupResult.For (_registryStub.GetParser (null)).IgnoreArguments().Return (_containsParserMock);
-      Func<Expression, List<FieldDescriptor>, ICriterion> action = (expression, fieldDescriptors) =>
+      Func<Expression, ParseContext, ICriterion> action = (expression, parseContext) =>
       {
         Assert.That (expression, Is.InstanceOfType (typeof (MethodCallExpression)));
         Assert.That (((MethodCallExpression) expression).Method, Is.EqualTo (GetContainsMethod()));
-        Assert.That (fieldDescriptors, Is.SameAs (expectedFieldDescriptors));
+        Assert.That (parseContext, Is.SameAs (parseContext));
         return expectedResult;
       };
       Expect.Call (_containsParserMock.Parse (null, null))
@@ -233,7 +231,9 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
         .Do (action);
 
       _mockRepository.ReplayAll ();
-      ICriterion result = _parser.Parse (_containsObjectCallExpression, expectedFieldDescriptors);
+      ParseContext expectedParseContext = new ParseContext (
+          ExpressionHelper.CreateQueryModel(), _query.Expression, new List<FieldDescriptor>(), new JoinedTableContext());
+      ICriterion result = _parser.Parse (_containsObjectCallExpression, expectedParseContext);
       Assert.That (result, Is.SameAs (expectedResult));
       _mockRepository.VerifyAll ();
     }

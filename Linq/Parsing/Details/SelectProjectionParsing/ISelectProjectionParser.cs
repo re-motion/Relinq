@@ -6,6 +6,6 @@ namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing
 {
   public interface ISelectProjectionParser : IParser
   {
-    List<IEvaluation> Parse (Expression expression, List<FieldDescriptor> fieldDescriptors);
+    List<IEvaluation> Parse (Expression expression, ParseContext parseContext);
   }
 }

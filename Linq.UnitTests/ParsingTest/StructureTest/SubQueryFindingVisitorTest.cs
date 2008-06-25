@@ -1,7 +1,6 @@
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.UnitTests.TestQueryGenerators;
 using System.Collections.Generic;

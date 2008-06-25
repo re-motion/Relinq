@@ -9,7 +9,7 @@ using Remotion.Data.Linq.Parsing.FieldResolving;
 namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionParsingTest
 {
   [TestFixture]
-  public class ParameterExpressionParserTest
+  public class ParameterExpressionParserTest : DetailParserTestBase
   {
     [Test]
     public void Parse ()
@@ -30,7 +30,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
 
       ParameterExpressionParser parser = new ParameterExpressionParser (queryModel, resolver);
 
-      List<IEvaluation> actualEvaluation = parser.Parse (parameter, fieldDescriptorCollection);
+      List<IEvaluation> actualEvaluation = parser.Parse (parameter, ParseContext);
       Assert.AreEqual (expectedEvaluation, actualEvaluation[0]);
     }
   }

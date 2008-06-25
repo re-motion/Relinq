@@ -63,7 +63,7 @@
     <Compile Include="DataObjectModel\LetColumnSource.cs" />
     <Compile Include="DataObjectModel\SingleJoin.cs" />
     <Compile Include="DataObjectModel\SubQuery.cs" />
-    <Compile Include="DataObjectModel\SubQueryExpression.cs" />
+    <Compile Include="SubQueryExpression.cs" />
     <Compile Include="ExtensionMethods\ExtensionMethods.cs" />
     <Compile Include="Parsing\Details\DetailParser.cs" />
     <Compile Include="Parsing\Details\IParser.cs" />
