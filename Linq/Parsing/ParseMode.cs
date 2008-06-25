@@ -1,6 +1,6 @@
 namespace Remotion.Data.Linq.Parsing
 {
-  public enum ParseContext
+  public enum ParseMode
   {
     TopLevelQuery, SubQueryInFrom, SubQueryInWhere, LetExpression, SubQueryInSelect
   }

@@ -39,7 +39,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
       _memberExpression2 = Expression.MakeMemberAccess (_parameter, typeof (Student).GetProperty ("Last"));
       _memberExpression3 = Expression.MakeMemberAccess (_parameter, typeof (Student).GetProperty ("Last"));
       _fieldDescriptors = new List<FieldDescriptor> ();
-      _parserRegistry = new SelectProjectionParserRegistry (_queryModel,StubDatabaseInfo.Instance, new JoinedTableContext(), new ParseContext());
+      _parserRegistry = new SelectProjectionParserRegistry (_queryModel,StubDatabaseInfo.Instance, new JoinedTableContext(), new ParseMode());
       _parserRegistry.RegisterParser (typeof(ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
       _parserRegistry.RegisterParser (typeof(ParameterExpression), new ParameterExpressionParser (_queryModel, _resolver));
       _parserRegistry.RegisterParser (typeof(MemberExpression), new MemberExpressionParser (_queryModel, _resolver));

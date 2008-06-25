@@ -17,10 +17,10 @@ namespace Remotion.Data.Linq.Parsing.Details
       get { return _selectProjectionParserRegistry;  }
     }
 
-    public DetailParser (QueryModel queryModel, IDatabaseInfo databaseInfo, JoinedTableContext context, ParseContext parseContext)
+    public DetailParser (QueryModel queryModel, IDatabaseInfo databaseInfo, JoinedTableContext context, ParseMode parseMode)
     {
        _whereConditionParserRegistry = new WhereConditionParserRegistry (queryModel, databaseInfo, context);
-       _selectProjectionParserRegistry = new SelectProjectionParserRegistry (queryModel, databaseInfo, context, parseContext);
+       _selectProjectionParserRegistry = new SelectProjectionParserRegistry (queryModel, databaseInfo, context, parseMode);
     }
 
     

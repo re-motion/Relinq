@@ -67,6 +67,7 @@
     <Compile Include="ExtensionMethods\ExtensionMethods.cs" />
     <Compile Include="Parsing\Details\DetailParser.cs" />
     <Compile Include="Parsing\Details\IParser.cs" />
+    <Compile Include="Parsing\Details\ParseContext.cs" />
     <Compile Include="Parsing\Details\ParserRegistry.cs" />
     <Compile Include="Parsing\Details\SelectProjectionParserRegistry.cs" />
     <Compile Include="Parsing\Details\SelectProjectionParsing\BinaryExpressionParser.cs" />
@@ -81,7 +82,7 @@
     <Compile Include="Parsing\Details\WhereConditionParsing\ContainsParser.cs" />
     <Compile Include="Parsing\Details\WhereConditionParsing\IWhereConditionParser.cs" />
     <Compile Include="Parsing\Details\WhereConditionParsing\LikeParser.cs" />
-    <Compile Include="Parsing\ParseContext.cs" />
+    <Compile Include="Parsing\ParseMode.cs" />
     <Compile Include="Parsing\Details\WhereConditionParsing\BinaryExpressionParser.cs" />
     <Compile Include="Parsing\Details\WhereConditionParsing\ConstantExpressionParser.cs" />
     <Compile Include="Parsing\Details\WhereConditionParsing\MemberExpressionParser.cs" />

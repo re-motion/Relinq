@@ -11,12 +11,12 @@ namespace Remotion.Data.Linq.Parsing.Details
   {
     private readonly ParserRegistry _parserRegistry;
 
-    public SelectProjectionParserRegistry (QueryModel queryModel, IDatabaseInfo databaseInfo, JoinedTableContext context, ParseContext parseContext)
+    public SelectProjectionParserRegistry (QueryModel queryModel, IDatabaseInfo databaseInfo, JoinedTableContext context, ParseMode parseMode)
     {
       _parserRegistry = new ParserRegistry ();
       
       IResolveFieldAccessPolicy policy;
-      if (parseContext == ParseContext.SubQueryInWhere)
+      if (parseMode == ParseMode.SubQueryInWhere)
         policy = new WhereFieldAccessPolicy (databaseInfo);
       else
         policy = new SelectFieldAccessPolicy();
