@@ -1,3 +1,4 @@
+using System;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Utilities;
@@ -19,6 +20,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
       ParserUtility.CheckMethodCallExpression (selectExpression, resultCollector.ExpressionTreeRoot, "Select");
 
+      
       if (selectExpression.Arguments.Count != 2)
         throw ParserUtility.CreateParserException ("Select call with two arguments", selectExpression, "Select expressions",
             resultCollector.ExpressionTreeRoot);

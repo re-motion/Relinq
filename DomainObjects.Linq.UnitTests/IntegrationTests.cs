@@ -29,8 +29,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
       CheckQueryResult (query, DomainObjectIDs.Order1, DomainObjectIDs.Order2, DomainObjectIDs.Order3, DomainObjectIDs.Order4,
           DomainObjectIDs.OrderWithoutOrderItem);
     }
-
-
+    
     [Test]
     public void QueryWithWhereConditions ()
     {
@@ -259,7 +258,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
             (from oi in DataContext.Entity<OrderItem> () where oi.Order == o select oi)
           select o2;
 
-      CheckQueryResult (orders, DomainObjectIDs.OrderItem5, DomainObjectIDs.OrderItem4, DomainObjectIDs.OrderItem2, DomainObjectIDs.OrderItem1,
+       CheckQueryResult (orders, DomainObjectIDs.OrderItem5, DomainObjectIDs.OrderItem4, DomainObjectIDs.OrderItem2, DomainObjectIDs.OrderItem1,
         DomainObjectIDs.OrderItem3);
     }
 
@@ -390,7 +389,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
-    [ExpectedException (ExpectedMessage = "Cannot parse c => c, no appropriate parser found")]
+    [ExpectedException (ExpectedMessage = "Expected Select Call for Select expressions, found SubQuery in Select.")]
     public void QueryWithSubQuery_InSelectClause ()
     {
       var orders = from o in DataContext.Entity<Order>()
@@ -399,6 +398,17 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
 
       IQueryable<Computer>[] result = orders.ToArray();
 
+    }
+
+    [Test]
+    public void QueryWithSeveralOrderBys ()
+    {
+      var orders = from o in DataContext.Entity<Order>()
+                      orderby o.OrderNumber
+                      orderby o.Customer.Name descending
+                      select o;
+
+      CheckQueryResult (orders, DomainObjectIDs.Order3, DomainObjectIDs.Order4, DomainObjectIDs.Order2, DomainObjectIDs.Order1, DomainObjectIDs.OrderWithoutOrderItem, DomainObjectIDs.InvalidOrder);
     }
 
     public static void CheckQueryResult<T> (IEnumerable<T> query, params ObjectID[] expectedObjectIDs)

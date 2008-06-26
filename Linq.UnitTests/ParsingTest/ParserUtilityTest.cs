@@ -34,20 +34,21 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest
     public void CheckMethodCallExpression()
     {
       MethodCallExpression selectExpression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression(ExpressionHelper.CreateQuerySource());
-      string result = ParserUtility.CheckMethodCallExpression (selectExpression, ExpressionHelper.CreateExpression (), "SelectMany", "Select", "Where");
+      string result = ParserUtility.CheckMethodCallExpression (selectExpression, selectExpression, "SelectMany", "Select", "Where");
       Assert.AreEqual ("Select", result);
-      result = ParserUtility.CheckMethodCallExpression (selectExpression, ExpressionHelper.CreateExpression (), "Select");
+      result = ParserUtility.CheckMethodCallExpression (selectExpression, selectExpression, "Select");
       Assert.AreEqual ("Select", result);
     }
 
     [Test]
     [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected one of 'SelectMany, Where', but found 'Select' at "
         + "position value(Remotion.Data.Linq.UnitTests.TestQueryable`1[Remotion.Data.Linq.UnitTests."
-        + "Student]).Select(s => s) in tree new [] {}.")]
+        + "Student]).Select(s => s) in tree "
+        + "value(Remotion.Data.Linq.UnitTests.TestQueryable`1[Remotion.Data.Linq.UnitTests.Student]).Select(s => s).")]
     public void CheckMethodCallExpression_InvalidName ()
     {
       MethodCallExpression selectExpression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource ());
-      ParserUtility.CheckMethodCallExpression (selectExpression, ExpressionHelper.CreateExpression (), "SelectMany", "Where");
+      ParserUtility.CheckMethodCallExpression (selectExpression, selectExpression, "SelectMany", "Where");
     }
 
     [Test]
@@ -79,6 +80,14 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest
     {
       MethodCallExpression selectExpression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource ());
       ParserUtility.CheckParameterType<ParameterExpression> (selectExpression, "Select", 0, ExpressionHelper.CreateExpression ());
+    }
+
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected Select Call for Select expressions, found SubQuery in Select.")]
+    [Test]
+    public void CheckSubQueryInSelect ()
+    {
+      MethodCallExpression selectExpression = SelectTestQueryGenerator.CreateSubQueryInSelct_SelectExpression (ExpressionHelper.CreateQuerySource ());
+      ParserUtility.CheckMethodCallExpression (selectExpression, selectExpression, "SelectMany", "Where");
     }
 
     [Test]
