@@ -57,7 +57,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest
     }
 
     [Test]
-    [ExpectedException (typeof (ParseException), ExpectedMessage = "Cannot parse Constant, no appropriate parser found")]
+    [ExpectedException (typeof (ParseException), ExpectedMessage = "Cannot parse 5, no appropriate parser found")]
     public void GetParser_NoParserFound ()
     {
       ParserRegistry parserRegistry = new ParserRegistry ();

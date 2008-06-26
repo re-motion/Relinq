@@ -34,7 +34,7 @@ namespace Remotion.Data.Linq.Parsing.Details
         if (parser.CanParse (expression))
           return parser;
       }
-      throw new ParseException ("Cannot parse " + expression.NodeType + ", no appropriate parser found");
+      throw new ParseException ("Cannot parse " + expression + ", no appropriate parser found");
     }
   }
 }

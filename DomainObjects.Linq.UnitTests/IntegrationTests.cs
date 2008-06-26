@@ -193,6 +193,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
           GetExpectedObjects<Order> (DomainObjectIDs.OrderWithoutOrderItem, DomainObjectIDs.Order1, DomainObjectIDs.Order2, DomainObjectIDs.Order3);
       Assert.That (orders.ToArray (), Is.EqualTo (expected));
     }
+    
 
     [Test]
     public void QueryWithSelectAndImplicitJoin_VirtualSide ()
@@ -386,6 +387,18 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
 
       CheckQueryResult (orders, DomainObjectIDs.Order1, DomainObjectIDs.Order2, DomainObjectIDs.Order3, DomainObjectIDs.Order4, DomainObjectIDs.Order4,
           DomainObjectIDs.InvalidOrder, DomainObjectIDs.OrderWithoutOrderItem);
+    }
+
+    [Test]
+    [ExpectedException (ExpectedMessage = "Cannot parse c => c, no appropriate parser found")]
+    public void QueryWithSubQuery_InSelectClause ()
+    {
+      var orders = from o in DataContext.Entity<Order>()
+                   select
+                       (from c in DataContext.Entity<Computer>() select c);
+
+      IQueryable<Computer>[] result = orders.ToArray();
+
     }
 
     public static void CheckQueryResult<T> (IEnumerable<T> query, params ObjectID[] expectedObjectIDs)
