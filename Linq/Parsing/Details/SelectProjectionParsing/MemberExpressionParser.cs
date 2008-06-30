@@ -17,14 +17,14 @@ namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing
       _innerParser = new WhereConditionParsing.MemberExpressionParser (resolver);
     }
 
-    public virtual List<IEvaluation> Parse (MemberExpression memberExpression, ParseContext parseContext)
+    public virtual IEvaluation Parse (MemberExpression memberExpression, ParseContext parseContext)
     {
       ArgumentUtility.CheckNotNull ("memberExpression", memberExpression);
       ArgumentUtility.CheckNotNull ("parseContext", parseContext);
-      return new List<IEvaluation> { _innerParser.Parse (memberExpression, parseContext) };
+      return _innerParser.Parse (memberExpression, parseContext);
     }
 
-    List<IEvaluation> ISelectProjectionParser.Parse (Expression expression, ParseContext parseContext)
+    IEvaluation ISelectProjectionParser.Parse (Expression expression, ParseContext parseContext)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       ArgumentUtility.CheckNotNull ("parseContext", parseContext);

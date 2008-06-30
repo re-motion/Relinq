@@ -27,13 +27,13 @@ namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing
                       };
     }
 
-    public virtual List<IEvaluation> Parse (BinaryExpression binaryExpression, ParseContext parseContext)
+    public virtual IEvaluation Parse (BinaryExpression binaryExpression, ParseContext parseContext)
     {
       ArgumentUtility.CheckNotNull ("binaryExpression", binaryExpression);
       ArgumentUtility.CheckNotNull ("parseContext", parseContext);
 
-      List<IEvaluation> leftSide = _parserRegistry.GetParser (binaryExpression.Left).Parse (binaryExpression.Left, parseContext);
-      List<IEvaluation> rightSide = _parserRegistry.GetParser (binaryExpression.Right).Parse (binaryExpression.Right, parseContext);
+      IEvaluation leftSide = _parserRegistry.GetParser (binaryExpression.Left).Parse (binaryExpression.Left, parseContext);
+      IEvaluation rightSide = _parserRegistry.GetParser (binaryExpression.Right).Parse (binaryExpression.Right, parseContext);
 
       BinaryEvaluation.EvaluationKind evaluationKind;
       if (!NodeTypeMap.TryGetValue(binaryExpression.NodeType, out evaluationKind))
@@ -42,10 +42,10 @@ namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing
                                                   "binary expression in select projection",
                                                   parseContext.ExpressionTreeRoot);
       }
-      return new List<IEvaluation> {new BinaryEvaluation(leftSide[0], rightSide[0], evaluationKind)};
+      return new BinaryEvaluation(leftSide, rightSide, evaluationKind);
     }
 
-    List<IEvaluation> ISelectProjectionParser.Parse (Expression expression, ParseContext parseContext)
+    IEvaluation ISelectProjectionParser.Parse (Expression expression, ParseContext parseContext)
     {
       return Parse ((BinaryExpression) expression, parseContext);
     }

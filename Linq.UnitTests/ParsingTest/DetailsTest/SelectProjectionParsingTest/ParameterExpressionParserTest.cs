@@ -30,8 +30,8 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
 
       ParameterExpressionParser parser = new ParameterExpressionParser (resolver);
 
-      List<IEvaluation> actualEvaluation = parser.Parse (parameter, ParseContext);
-      Assert.AreEqual (expectedEvaluation, actualEvaluation[0]);
+      IEvaluation actualEvaluation = parser.Parse (parameter, ParseContext);
+      Assert.AreEqual (expectedEvaluation, actualEvaluation);
     }
   }
 }

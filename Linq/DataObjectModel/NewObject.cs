@@ -10,7 +10,7 @@ namespace Remotion.Data.Linq.DataObjectModel
     public ConstructorInfo ConstructorInfo { get; private set; }
     public IEvaluation[] ConstructorArguments { get; private set; }
 
-    public NewObject (ConstructorInfo constructorInfo, IEvaluation[] constructorArguments)
+    public NewObject (ConstructorInfo constructorInfo, params IEvaluation[] constructorArguments)
     {
       ArgumentUtility.CheckNotNull ("constructorInfo", constructorInfo);
       ArgumentUtility.CheckNotNull ("constructorArguments", constructorArguments);

@@ -62,9 +62,9 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
         new BinaryExpressionParser (_parserRegistry);
 
       //result
-     List<IEvaluation> result = binaryExpressionParser.Parse (binaryExpression, ParseContext);
+     IEvaluation result = binaryExpressionParser.Parse (binaryExpression, ParseContext);
 
-     Assert.AreEqual (expectedResult, result[0]);
+     Assert.AreEqual (expectedResult, result);
     }
 
     [Test]

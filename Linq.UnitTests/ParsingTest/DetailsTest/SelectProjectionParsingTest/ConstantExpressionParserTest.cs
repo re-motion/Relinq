@@ -17,12 +17,12 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
       ConstantExpression constantExpression = Expression.Constant (5);
 
       ConstantExpressionParser parser = new ConstantExpressionParser(StubDatabaseInfo.Instance);
-      List<IEvaluation> result = parser.Parse (constantExpression, ParseContext);
+      IEvaluation result = parser.Parse (constantExpression, ParseContext);
 
       //expected
       IEvaluation expected = new Constant (5);
 
-      Assert.AreEqual (expected, result[0]);
+      Assert.AreEqual (expected, result);
     }
   }
 }

@@ -16,7 +16,7 @@ namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing
       _parserRegistry = parserRegistry;
     }
 
-    public List<IEvaluation> Parse (MethodCallExpression methodCallExpression, ParseContext parseContext)
+    public IEvaluation Parse (MethodCallExpression methodCallExpression, ParseContext parseContext)
     {
       ArgumentUtility.CheckNotNull ("methodCallExpression", methodCallExpression);
       ArgumentUtility.CheckNotNull ("parseContext", parseContext);
@@ -25,17 +25,17 @@ namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing
       if (methodCallExpression.Object == null)
         evaluationObject = null;
       else
-        evaluationObject = _parserRegistry.GetParser (methodCallExpression.Object).Parse (methodCallExpression.Object, parseContext)[0];
+        evaluationObject = _parserRegistry.GetParser (methodCallExpression.Object).Parse (methodCallExpression.Object, parseContext);
 
       List<IEvaluation> evaluationArguments = new List<IEvaluation> ();
       foreach (Expression exp in methodCallExpression.Arguments)
       {
-        evaluationArguments.AddRange (_parserRegistry.GetParser (exp).Parse (exp, parseContext));
+        evaluationArguments.Add (_parserRegistry.GetParser (exp).Parse (exp, parseContext));
       }
-      return new List<IEvaluation> {new MethodCall (methodInfo, evaluationObject, evaluationArguments)};
+      return new MethodCall (methodInfo, evaluationObject, evaluationArguments);
     }
 
-    List<IEvaluation> ISelectProjectionParser.Parse (Expression expression, ParseContext parseContext)
+    IEvaluation ISelectProjectionParser.Parse (Expression expression, ParseContext parseContext)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       ArgumentUtility.CheckNotNull ("parseContext", parseContext);

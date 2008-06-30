@@ -29,11 +29,11 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
       FieldSourcePath path = new FieldSourcePath (fromSource, new SingleJoin[0]);
       FieldDescriptor expectedFieldDescriptor = new FieldDescriptor (null, path, new Column (fromSource, "IDColumn"));
 
-      List<IEvaluation> actualEvaluation = parser.Parse (memberExpression, ParseContext);
+      IEvaluation actualEvaluation = parser.Parse (memberExpression, ParseContext);
       IEvaluation expectedEvaluation = expectedFieldDescriptor.Column;
 
       Assert.IsNotNull (fieldDescriptorCollection);
-      Assert.AreEqual (expectedEvaluation, actualEvaluation[0]);
+      Assert.AreEqual (expectedEvaluation, actualEvaluation);
     }
   }
 }

@@ -16,7 +16,7 @@ namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing
       _parserRegistry = parserRegistry;
     }
 
-    public virtual List<IEvaluation> Parse (NewExpression newExpression, ParseContext parseContext)
+    public virtual IEvaluation Parse (NewExpression newExpression, ParseContext parseContext)
     {
       ArgumentUtility.CheckNotNull ("newExpression", newExpression);
       ArgumentUtility.CheckNotNull ("parseContext", parseContext);
@@ -24,12 +24,12 @@ namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing
       List<IEvaluation> argumentEvaluations = new List<IEvaluation> ();
       foreach (Expression exp in newExpression.Arguments)
       {
-        argumentEvaluations.AddRange (_parserRegistry.GetParser (exp).Parse (exp, parseContext));
+        argumentEvaluations.Add (_parserRegistry.GetParser (exp).Parse (exp, parseContext));
       }
-      return new List<IEvaluation> { new NewObject(newExpression.Constructor, argumentEvaluations.ToArray()) };
+      return new NewObject (newExpression.Constructor, argumentEvaluations.ToArray());
     }
 
-    List<IEvaluation> ISelectProjectionParser.Parse (Expression expression, ParseContext parseContext)
+    IEvaluation ISelectProjectionParser.Parse (Expression expression, ParseContext parseContext)
     {
       return Parse ((NewExpression) expression, parseContext);
     }

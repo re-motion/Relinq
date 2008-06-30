@@ -60,12 +60,12 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
       //expectedResult
       Column column = new Column (_fromSource, "FirstColumn");
       NewObject newObject = new NewObject(constructorInfo, new IEvaluation[] {column});
-      List<IEvaluation> expected = new List<IEvaluation> {newObject};
+     
 
       NewExpressionParser parser = new NewExpressionParser (_parserRegistry);
-      List<IEvaluation> result = parser.Parse (newExpression, ParseContext);
+      IEvaluation result = parser.Parse (newExpression, ParseContext);
 
-      Assert.That (result, Is.EqualTo (expected));
+      Assert.That (result, Is.EqualTo(newObject));
     }
 
     [Test]
@@ -87,12 +87,12 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
 
       NewObject expectedInnerNewObject = new NewObject (constructorInfo2, new IEvaluation[] {column1, column2});
       NewObject expectedOuterNewObject = new NewObject (constructorInfo1, new IEvaluation[] {column1, expectedInnerNewObject });
-      List<IEvaluation> expectedResult = new List<IEvaluation> { expectedOuterNewObject};
+      
       
       NewExpressionParser parser = new NewExpressionParser (_parserRegistry);
-      List<IEvaluation> result = parser.Parse (outerExpression, ParseContext);
-      
-      Assert.That (result, Is.EqualTo (expectedResult));
+      IEvaluation result = parser.Parse (outerExpression, ParseContext);
+
+      Assert.That (result, Is.EqualTo (expectedOuterNewObject));
     }
   }
 
