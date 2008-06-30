@@ -390,9 +390,8 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected no subqueries for Select expressions, found value(Remotion.Data.DomainObjects.Linq." 
-        + "DomainObjectQueryable`1[Remotion.Data.DomainObjects.UnitTests.TestDomain.Order]).Select(o => Entity().Select(c => c)) "
-        + "(MethodCallExpression).")]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected no subqueries for Select expressions, found DataContext.Entity<Order>()"
+        + ".Select(o => Entity().Select(c => c)) (MethodCallExpression).")]
     public void QueryWithSubQuery_InSelectClause ()
     {
       var orders = from o in DataContext.Entity<Order>()
@@ -403,9 +402,8 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected no subqueries for Select expressions, found value(Remotion.Data.DomainObjects.Linq." 
-        + "DomainObjectQueryable`1[Remotion.Data.DomainObjects.UnitTests.TestDomain.Order]).Where(o => (o.OrderNumber = 5)).Select(o => Entity()."
-        + "Select(c => c)) (MethodCallExpression).")]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected no subqueries for Select expressions, found DataContext.Entity<Order>()"
+        + ".Where(o => (o.OrderNumber = 5)).Select(o => Entity().Select(c => c)) (MethodCallExpression).")]
     public void QueryWithSubQueryInSelectClause_WhereClause ()
     {
       var orders = from o in DataContext.Entity<Order> ()
@@ -417,9 +415,8 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected no subqueries for Select expressions, found value(Remotion.Data."
-        + "DomainObjects.Linq.DomainObjectQueryable`1[Remotion.Data.DomainObjects.UnitTests.TestDomain.Order]).Where(o => (o.OrderNumber = 5))."
-        + "Select(o => Entity().Where(c => (c = c))) (MethodCallExpression).")]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected no subqueries for Select expressions, found DataContext.Entity<Order>()"
+        + ".Where(o => (o.OrderNumber = 5)).Select(o => Entity().Where(c => (c = c))) (MethodCallExpression).")]
     public void QueryWithSubQueryInSelectClause_WhereClause2 ()
     {
       var orders = from o in DataContext.Entity<Order> ()

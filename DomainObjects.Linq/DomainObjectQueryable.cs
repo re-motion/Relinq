@@ -18,6 +18,10 @@ namespace Remotion.Data.DomainObjects.Linq
       : base (new QueryProvider(ObjectFactory.Create<QueryExecutor<T>>().With(sqlGenerator)))
     {
     }
-    
+
+    public override string ToString ()
+    {
+      return "DataContext.Entity<" + typeof (T).Name + ">()";
+    }
   }
 }

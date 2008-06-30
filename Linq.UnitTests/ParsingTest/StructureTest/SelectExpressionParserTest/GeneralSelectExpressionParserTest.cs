@@ -22,10 +22,8 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.StructureTest.SelectExpressio
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected one of 'Select', but found 'Where' at position "
-        + "value(Remotion.Data.Linq.UnitTests.TestQueryable`1[Remotion.Data.Linq.UnitTests."
-            + "Student]).Where(s => (s.Last = \"Garcia\")) in tree value(Remotion.Data.Linq.UnitTests.TestQueryable`1"
-                + "[Remotion.Data.Linq.UnitTests.Student]).Where(s => (s.Last = \"Garcia\")).")]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected one of 'Select', but found 'Where' at TestQueryable<Student>()"
+        + ".Where(s => (s.Last = \"Garcia\")) in tree TestQueryable<Student>().Where(s => (s.Last = \"Garcia\")).")]
     public void Initialize_FromWrongExpression ()
     {
       MethodCallExpression expression = WhereTestQueryGenerator.CreateSimpleWhereQuery_WhereExpression (ExpressionHelper.CreateQuerySource ());
@@ -47,9 +45,9 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.StructureTest.SelectExpressio
       new SelectExpressionParser ().Parse (new ParseResultCollector (selectExpression), selectExpression);
     }
 
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected no subqueries for Select expressions, found value(Remotion." 
-        + "Data.Linq.UnitTests.TestQueryable`1[Remotion.Data.Linq.UnitTests.Student]).Select(s => value(Remotion.Data.Linq.UnitTests."
-        + "TestQueryGenerators.SelectTestQueryGenerator+<>c__DisplayClass4).source.Select(o => o)) (MethodCallExpression).")]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected no subqueries for Select expressions, found TestQueryable<Student>()"
+        + ".Select(s => value(Remotion.Data.Linq.UnitTests.TestQueryGenerators.SelectTestQueryGenerator+<>c__DisplayClass4).source.Select(o => o)) "
+        + "(MethodCallExpression).")]
     [Test]
     public void CheckSubQueryInSelect ()
     {
@@ -59,8 +57,8 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.StructureTest.SelectExpressio
 
     [Test]
     [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected no subqueries for Select expressions, found "
-        + "value(Remotion.Data.Linq.UnitTests.TestQueryable`1[Remotion.Data.Linq.UnitTests.Student]).Select(s => value(Remotion.Data.Linq"
-        + ".UnitTests.TestQueryGenerators.SelectTestQueryGenerator+<>c__DisplayClass6).source.Where(o => (o != null))) (MethodCallExpression).")]
+        + "TestQueryable<Student>().Select(s => value(Remotion.Data.Linq.UnitTests.TestQueryGenerators.SelectTestQueryGenerator+<>c__DisplayClass6)"
+        + ".source.Where(o => (o != null))) (MethodCallExpression).")]
     public void CheckSubQueryInSelect_WithoutExplicitSelect ()
     {
       MethodCallExpression selectExpression = 

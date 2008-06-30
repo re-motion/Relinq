@@ -25,10 +25,8 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.StructureTest.SelectManyExpre
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected one of 'SelectMany', but found 'Where' at position value"
-        + "(Remotion.Data.Linq.UnitTests.TestQueryable`1[Remotion.Data.Linq.UnitTests.Student])"
-            +".Where(s => (s.Last = \"Garcia\")) in tree value(Remotion.Data.Linq.UnitTests.TestQueryable`1"
-                +"[Remotion.Data.Linq.UnitTests.Student]).Where(s => (s.Last = \"Garcia\")).")]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected one of 'SelectMany', but found 'Where' at TestQueryable<Student>()"
+            +".Where(s => (s.Last = \"Garcia\")) in tree TestQueryable<Student>().Where(s => (s.Last = \"Garcia\")).")]
     public void Initialize_FromWrongExpression ()
     {
       MethodCallExpression expression = WhereTestQueryGenerator.CreateSimpleWhereQuery_WhereExpression (ExpressionHelper.CreateQuerySource ());

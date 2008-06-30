@@ -14,5 +14,10 @@ namespace Remotion.Data.Linq.UnitTests
         : base (new TestQueryProvider (executor))
     {
     }
+
+    public override string ToString ()
+    {
+      return "TestQueryable<" + typeof (T).Name + ">()";
+    }
   }
 }

@@ -42,9 +42,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest
 
     [Test]
     [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected one of 'SelectMany, Where', but found 'Select' at "
-        + "position value(Remotion.Data.Linq.UnitTests.TestQueryable`1[Remotion.Data.Linq.UnitTests."
-        + "Student]).Select(s => s) in tree "
-        + "value(Remotion.Data.Linq.UnitTests.TestQueryable`1[Remotion.Data.Linq.UnitTests.Student]).Select(s => s).")]
+        + "TestQueryable<Student>().Select(s => s) in tree TestQueryable<Student>().Select(s => s).")]
     public void CheckMethodCallExpression_InvalidName ()
     {
       MethodCallExpression selectExpression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource ());
@@ -75,7 +73,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest
 
     [Test]
     [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected ParameterExpression for argument 0 of Select method call, found " 
-        + "ConstantExpression (value(Remotion.Data.Linq.UnitTests.TestQueryable`1[Remotion.Data.Linq.UnitTests.Student])).")]
+        + "ConstantExpression (TestQueryable<Student>()).")]
     public void CheckParameterType_Fail ()
     {
       MethodCallExpression selectExpression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource ());

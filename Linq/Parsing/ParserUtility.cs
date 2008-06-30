@@ -54,7 +54,7 @@ namespace Remotion.Data.Linq.Parsing
 
       if (!((IList<string>)expectedMethodNames).Contains (methodCallExpression.Method.Name))
       {
-        string message = string.Format ("Expected one of '{0}', but found '{1}' at position {2} in tree {3}.",
+        string message = string.Format ("Expected one of '{0}', but found '{1}' at {2} in tree {3}.",
             SeparatedStringBuilder.Build (", ", expectedMethodNames),methodCallExpression.Method.Name, methodCallExpression, expressionTreeRoot);
         throw new ParserException (message, methodCallExpression, expressionTreeRoot, null);
       }

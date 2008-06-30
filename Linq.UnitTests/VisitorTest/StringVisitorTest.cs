@@ -20,7 +20,7 @@ namespace Remotion.Data.Linq.UnitTests.VisitorTest
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause();
       StringVisitor sv = new StringVisitor();
       sv.VisitMainFromClause (fromClause);
-      Assert.AreEqual ("from Int32 i in value(Remotion.Data.Linq.UnitTests.TestQueryable`1[Remotion.Data.Linq.UnitTests.Student]) ",
+      Assert.AreEqual ("from Int32 i in TestQueryable<Student>() ",
           sv.ToString());
     }
 
