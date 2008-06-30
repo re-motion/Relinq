@@ -397,7 +397,18 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
                        (from c in DataContext.Entity<Computer>() select c);
 
       IQueryable<Computer>[] result = orders.ToArray();
+    }
 
+    [Test]
+    [ExpectedException (ExpectedMessage = "Expected Select Call for Select expressions, found SubQuery in Select.")]
+    public void QueryWithSubQueryInSelectClause_WhereClause ()
+    {
+      var orders = from o in DataContext.Entity<Order> ()
+                   where o.OrderNumber == 5
+                   select
+                       (from c in DataContext.Entity<Computer> () select c);
+
+      IQueryable<Computer>[] result = orders.ToArray ();
     }
 
     [Test]
