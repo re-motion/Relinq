@@ -164,6 +164,7 @@
     <Compile Include="SqlGeneration\ISelectBuilder.cs" />
     <Compile Include="SqlGeneration\IWhereBuilder.cs" />
     <Compile Include="SqlGeneration\LetData.cs" />
+    <Compile Include="SqlGeneration\SelectedObjectActivator.cs" />
     <Compile Include="SqlGeneration\SqlGenerationData.cs" />
     <Compile Include="SqlGeneration\SqlGenerationException.cs" />
     <Compile Include="SqlGeneration\SqlGeneratorBase.cs" />
