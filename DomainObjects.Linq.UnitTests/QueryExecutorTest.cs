@@ -151,7 +151,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
       {
         ClassDefinition GetClassDefinition ();
         Query CreateQuery (ClassDefinition classDefinition, string statement, CommandParameter[] commandParameters);
-        Tuple<string, CommandParameter[]> CreateStatement (QueryModel queryModel);
+        CommandData CreateStatement (QueryModel queryModel);
       }
 
       public bool GetClassDefinitionCalled = false;
@@ -173,7 +173,7 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
       }
 
       [OverrideTarget]
-      public Tuple<string, CommandParameter[]> CreateStatement (QueryModel queryModel)
+      public CommandData CreateStatement (QueryModel queryModel)
       {
         GetStatementCalled = true;
         return Base.CreateStatement (queryModel);
@@ -225,9 +225,9 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
         QueryExecutor<Order> executor = (QueryExecutor<Order>) ((QueryProvider) queryable.Provider).Executor;
 
         ClassDefinition classDefinition = executor.GetClassDefinition();
-        Tuple<string, CommandParameter[]> statement = executor.CreateStatement(GetParsedSimpleQuery());
+        CommandData statement = executor.CreateStatement(GetParsedSimpleQuery());
 
-        executor.CreateQuery (classDefinition, statement.A, statement.B);
+        executor.CreateQuery (classDefinition, statement.Statement, statement.Parameters);
         Assert.That (Mixin.Get<TestMixin> (executor).CreateQueryCalled, Is.True);
       }
     }

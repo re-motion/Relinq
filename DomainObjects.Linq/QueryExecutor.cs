@@ -40,12 +40,8 @@ namespace Remotion.Data.DomainObjects.Linq
 
       ClassDefinition classDefinition = GetClassDefinition();
       
-      Tuple<string, CommandParameter[]> result = CreateStatement(queryModel);
-      
-      string statement = result.A;
-      CommandParameter[] commandParameters = result.B;
-
-      Query query = CreateQuery(classDefinition, statement, commandParameters);
+      CommandData commandData = CreateStatement(queryModel);
+      Query query = CreateQuery(classDefinition, commandData.Statement, commandData.Parameters);
       
       return ClientTransaction.Current.QueryManager.GetCollection (query);
     }
@@ -65,9 +61,9 @@ namespace Remotion.Data.DomainObjects.Linq
       return MappingConfiguration.Current.ClassDefinitions.GetMandatory (typeof (T));
     }
 
-    public virtual Tuple<string, CommandParameter[]> CreateStatement (QueryModel queryModel)
+    public virtual CommandData CreateStatement (QueryModel queryModel)
     {
-      return SqlGenerator.BuildCommandString (queryModel);
+      return SqlGenerator.BuildCommand (queryModel);
     }
   }
 }

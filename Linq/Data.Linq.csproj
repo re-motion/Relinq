@@ -154,6 +154,7 @@
     <Compile Include="DataObjectModel\ICriterion.cs" />
     <Compile Include="DataObjectModel\Table.cs" />
     <Compile Include="DataObjectModel\IValue.cs" />
+    <Compile Include="SqlGeneration\CommandData.cs" />
     <Compile Include="SqlGeneration\CommandParameter.cs" />
     <Compile Include="SqlGeneration\ISqlGenerationContext.cs" />
     <Compile Include="SqlGeneration\ISqlGeneratorBase.cs" />
