@@ -53,7 +53,7 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
 
     public static MethodCallExpression CreateSubQueryInSelct_SelectExpression (IQueryable<Student> source)
     {
-      IQueryable<IQueryable<Student>> query = CreateSubQueryInSelct (source);
+      IQueryable<IQueryable<Student>> query = CreateSubQueryInSelect (source);
       return (MethodCallExpression) query.Expression;
     }
 
@@ -72,11 +72,14 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
       return from s1 in source1 select ((Func<string, string>) ((string s) => s1.First)) (s1.Last) + new string[] { s1.ToString () }[s1.ID];
     }
 
-    public static IQueryable<IQueryable<Student>> CreateSubQueryInSelct (IQueryable<Student> source)
+    public static IQueryable<IQueryable<Student>> CreateSubQueryInSelect (IQueryable<Student> source)
     {
       return from s in source select (from o in source select o);
     }
 
-
+    public static IQueryable<IQueryable<Student>> CreateSubQueryInSelect_WithoutExplicitSelect (IQueryable<Student> source)
+    {
+      return from s in source select (from o in source where o != null select o);
+    }
   }
 }

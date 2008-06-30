@@ -47,6 +47,26 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.StructureTest.SelectExpressio
       new SelectExpressionParser ().Parse (new ParseResultCollector (selectExpression), selectExpression);
     }
 
-    
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected no subqueries for Select expressions, found value(Remotion." 
+        + "Data.Linq.UnitTests.TestQueryable`1[Remotion.Data.Linq.UnitTests.Student]).Select(s => value(Remotion.Data.Linq.UnitTests."
+        + "TestQueryGenerators.SelectTestQueryGenerator+<>c__DisplayClass4).source.Select(o => o)) (MethodCallExpression).")]
+    [Test]
+    public void CheckSubQueryInSelect ()
+    {
+      MethodCallExpression selectExpression = SelectTestQueryGenerator.CreateSubQueryInSelct_SelectExpression (ExpressionHelper.CreateQuerySource ());
+      new SelectExpressionParser().Parse (new ParseResultCollector (selectExpression), selectExpression);
+    }
+
+    [Test]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected no subqueries for Select expressions, found "
+        + "value(Remotion.Data.Linq.UnitTests.TestQueryable`1[Remotion.Data.Linq.UnitTests.Student]).Select(s => value(Remotion.Data.Linq"
+        + ".UnitTests.TestQueryGenerators.SelectTestQueryGenerator+<>c__DisplayClass6).source.Where(o => (o != null))) (MethodCallExpression).")]
+    public void CheckSubQueryInSelect_WithoutExplicitSelect ()
+    {
+      MethodCallExpression selectExpression = 
+          (MethodCallExpression) SelectTestQueryGenerator.CreateSubQueryInSelect_WithoutExplicitSelect (ExpressionHelper.CreateQuerySource ()).Expression;
+      new SelectExpressionParser ().Parse (new ParseResultCollector (selectExpression), selectExpression);
+      Assert.Fail();
+    }
   }
 }

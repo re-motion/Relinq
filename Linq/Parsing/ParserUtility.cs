@@ -52,16 +52,6 @@ namespace Remotion.Data.Linq.Parsing
       ArgumentUtility.CheckNotNull ("expressionTreeRoot", expressionTreeRoot);
       ArgumentUtility.CheckNotNull ("expectedMethodNames", expectedMethodNames);
 
-      //detect subQueries in select statement
-      var possibleSubQuery1 = ((LambdaExpression) ((UnaryExpression) methodCallExpression.Arguments[1]).Operand).Body as MethodCallExpression;
-      var expressionTreeRootMethod = ((MethodCallExpression) expressionTreeRoot).Method.Name;
-      if (((possibleSubQuery1 != null)) && (possibleSubQuery1.Method.Name == "Select") && (expressionTreeRootMethod != null) && (expressionTreeRootMethod == "Select"))
-          throw CreateParserException (
-              "Select Call",
-              "SubQuery in Select",
-              "Select expressions",
-              expressionTreeRoot);
-      
       if (!((IList<string>)expectedMethodNames).Contains (methodCallExpression.Method.Name))
       {
         string message = string.Format ("Expected one of '{0}', but found '{1}' at position {2} in tree {3}.",

@@ -82,14 +82,6 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest
       ParserUtility.CheckParameterType<ParameterExpression> (selectExpression, "Select", 0, ExpressionHelper.CreateExpression ());
     }
 
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected Select Call for Select expressions, found SubQuery in Select.")]
-    [Test]
-    public void CheckSubQueryInSelect ()
-    {
-      MethodCallExpression selectExpression = SelectTestQueryGenerator.CreateSubQueryInSelct_SelectExpression (ExpressionHelper.CreateQuerySource ());
-      ParserUtility.CheckMethodCallExpression (selectExpression, selectExpression, "SelectMany", "Where");
-    }
-
     [Test]
     public void GetMethod ()
     {

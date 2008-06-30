@@ -20,7 +20,6 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
       ParserUtility.CheckMethodCallExpression (selectExpression, resultCollector.ExpressionTreeRoot, "Select");
 
-      
       if (selectExpression.Arguments.Count != 2)
         throw ParserUtility.CreateParserException ("Select call with two arguments", selectExpression, "Select expressions",
             resultCollector.ExpressionTreeRoot);
@@ -35,9 +34,21 @@ namespace Remotion.Data.Linq.Parsing.Structure
       LambdaExpression ueLambda = ParserUtility.GetTypedExpression<LambdaExpression> (unaryExpression.Operand,
           "second argument of Select expression", resultCollector.ExpressionTreeRoot);
 
-      _sourceParser.Parse (resultCollector, sourceExpression.Arguments[0], ueLambda.Parameters[0],  "first argument of Select expression");
+      CheckForSubQuery(resultCollector, sourceExpression, ueLambda);
 
+      _sourceParser.Parse (resultCollector, sourceExpression.Arguments[0], ueLambda.Parameters[0],  "first argument of Select expression");
       resultCollector.AddProjectionExpression (ueLambda);
+    }
+
+    private void CheckForSubQuery (ParseResultCollector resultCollector, MethodCallExpression sourceExpression, LambdaExpression ueLambda)
+    {
+      var possibleSubQuery = ueLambda.Body as MethodCallExpression;
+      if (possibleSubQuery != null && _sourceParser.CallDispatcher.CanParse (possibleSubQuery.Method))
+        throw ParserUtility.CreateParserException(
+            "no subqueries",
+            sourceExpression,
+            "Select expressions",
+            resultCollector.ExpressionTreeRoot);
     }
   }
 }

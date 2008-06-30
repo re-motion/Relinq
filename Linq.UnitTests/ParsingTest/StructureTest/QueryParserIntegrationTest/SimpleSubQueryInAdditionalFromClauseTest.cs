@@ -6,7 +6,6 @@ using Remotion.Data.Linq.UnitTests.TestQueryGenerators;
 namespace Remotion.Data.Linq.UnitTests.ParsingTest.StructureTest.QueryParserIntegrationTest
 {
   [TestFixture]
-  // [Ignore ("TODO: Implement MainFromClauses without constant IQueryable")]
   public class SimpleSubQueryInAdditionalFromClauseTest : QueryTestBase<Student>
   {
     protected override IQueryable<Student> CreateQuery ()

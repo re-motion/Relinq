@@ -4,6 +4,7 @@ using NUnit.Framework;
 using Remotion.Data.DomainObjects.UnitTests;
 using Remotion.Data.DomainObjects.UnitTests.TestDomain;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Parsing;
 
 namespace Remotion.Data.DomainObjects.Linq.UnitTests
 {
@@ -389,7 +390,9 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
-    [ExpectedException (ExpectedMessage = "Expected Select Call for Select expressions, found SubQuery in Select.")]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected no subqueries for Select expressions, found value(Remotion.Data.DomainObjects.Linq." 
+        + "DomainObjectQueryable`1[Remotion.Data.DomainObjects.UnitTests.TestDomain.Order]).Select(o => Entity().Select(c => c)) "
+        + "(MethodCallExpression).")]
     public void QueryWithSubQuery_InSelectClause ()
     {
       var orders = from o in DataContext.Entity<Order>()
@@ -400,13 +403,29 @@ namespace Remotion.Data.DomainObjects.Linq.UnitTests
     }
 
     [Test]
-    [ExpectedException (ExpectedMessage = "Expected Select Call for Select expressions, found SubQuery in Select.")]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected no subqueries for Select expressions, found value(Remotion.Data.DomainObjects.Linq." 
+        + "DomainObjectQueryable`1[Remotion.Data.DomainObjects.UnitTests.TestDomain.Order]).Where(o => (o.OrderNumber = 5)).Select(o => Entity()."
+        + "Select(c => c)) (MethodCallExpression).")]
     public void QueryWithSubQueryInSelectClause_WhereClause ()
     {
       var orders = from o in DataContext.Entity<Order> ()
                    where o.OrderNumber == 5
                    select
                        (from c in DataContext.Entity<Computer> () select c);
+
+      IQueryable<Computer>[] result = orders.ToArray ();
+    }
+
+    [Test]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected no subqueries for Select expressions, found value(Remotion.Data."
+        + "DomainObjects.Linq.DomainObjectQueryable`1[Remotion.Data.DomainObjects.UnitTests.TestDomain.Order]).Where(o => (o.OrderNumber = 5))."
+        + "Select(o => Entity().Where(c => (c = c))) (MethodCallExpression).")]
+    public void QueryWithSubQueryInSelectClause_WhereClause2 ()
+    {
+      var orders = from o in DataContext.Entity<Order> ()
+                   where o.OrderNumber == 5
+                   select
+                       (from c in DataContext.Entity<Computer> () where c == c select c);
 
       IQueryable<Computer>[] result = orders.ToArray ();
     }
