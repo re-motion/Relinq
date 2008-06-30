@@ -46,8 +46,6 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
       _parserRegistry.RegisterParser (typeof(MemberExpression), new MemberExpressionParser (_resolver));
       _parserRegistry.RegisterParser (typeof(MethodCallExpression), new MethodCallExpressionParser (_parserRegistry));
       _parserRegistry.RegisterParser (typeof(NewExpression), new NewExpressionParser (_parserRegistry));
-      
-
     }
 
     [Test]
@@ -60,13 +58,14 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
       NewExpression newExpression = Expression.New (constructorInfo, new[] { _memberExpression1 });
 
       //expectedResult
-      Column column1 = new Column (_fromSource, "FirstColumn");
-      List<IEvaluation> expected1 = new List<IEvaluation> { column1};
+      Column column = new Column (_fromSource, "FirstColumn");
+      NewObject newObject = new NewObject(constructorInfo, new IEvaluation[] {column});
+      List<IEvaluation> expected = new List<IEvaluation> {newObject};
 
       NewExpressionParser parser = new NewExpressionParser (_parserRegistry);
       List<IEvaluation> result = parser.Parse (newExpression, ParseContext);
 
-      Assert.That (result, Is.EqualTo (expected1));
+      Assert.That (result, Is.EqualTo (expected));
     }
 
     [Test]
@@ -80,14 +79,16 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
       Type[] types2 = new[] { typeof (string), typeof (string)};
       ConstructorInfo constructorInfo2 = typeof(DoubleString).GetConstructor (BindingFlags.Instance | BindingFlags.Public, null, CallingConventions.Any, types2, null);
       NewExpression innerExpression = Expression.New (constructorInfo2, _memberExpression1, _memberExpression2);
+      NewExpression outerExpression = Expression.New (constructorInfo1, _memberExpression3, innerExpression);
 
       //expectedResult
       Column column1 = new Column (_fromSource, "FirstColumn");
       Column column2 = new Column (_fromSource, "LastColumn");
 
-      List<IEvaluation> expectedResult = new List<IEvaluation> { column1, column1, column2 };
+      NewObject expectedInnerNewObject = new NewObject (constructorInfo2, new IEvaluation[] {column1, column2});
+      NewObject expectedOuterNewObject = new NewObject (constructorInfo1, new IEvaluation[] {column1, expectedInnerNewObject });
+      List<IEvaluation> expectedResult = new List<IEvaluation> { expectedOuterNewObject};
       
-      NewExpression outerExpression = Expression.New (constructorInfo1, _memberExpression3, innerExpression);
       NewExpressionParser parser = new NewExpressionParser (_parserRegistry);
       List<IEvaluation> result = parser.Parse (outerExpression, ParseContext);
       

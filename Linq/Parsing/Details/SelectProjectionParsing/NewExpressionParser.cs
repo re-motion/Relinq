@@ -21,12 +21,12 @@ namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing
       ArgumentUtility.CheckNotNull ("newExpression", newExpression);
       ArgumentUtility.CheckNotNull ("parseContext", parseContext);
 
-      List<IEvaluation> evaluations = new List<IEvaluation> ();
+      List<IEvaluation> argumentEvaluations = new List<IEvaluation> ();
       foreach (Expression exp in newExpression.Arguments)
       {
-        evaluations.AddRange (_parserRegistry.GetParser (exp).Parse (exp, parseContext));
+        argumentEvaluations.AddRange (_parserRegistry.GetParser (exp).Parse (exp, parseContext));
       }
-      return evaluations;
+      return new List<IEvaluation> { new NewObject(newExpression.Constructor, argumentEvaluations.ToArray()) };
     }
 
     List<IEvaluation> ISelectProjectionParser.Parse (Expression expression, ParseContext parseContext)

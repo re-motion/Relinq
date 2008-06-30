@@ -59,8 +59,9 @@
     <Compile Include="Clauses\IResolveableClause.cs" />
     <Compile Include="DataObjectModel\IEvaluation.cs" />
     <Compile Include="DataObjectModel\IEvaluationVisitor.cs" />
-    <Compile Include="DataObjectModel\MethodCallEvaluation.cs" />
+    <Compile Include="DataObjectModel\MethodCall.cs" />
     <Compile Include="DataObjectModel\LetColumnSource.cs" />
+    <Compile Include="DataObjectModel\NewObject.cs" />
     <Compile Include="DataObjectModel\SingleJoin.cs" />
     <Compile Include="DataObjectModel\SubQuery.cs" />
     <Compile Include="Expressions\ConstructedQueryExpression.cs" />

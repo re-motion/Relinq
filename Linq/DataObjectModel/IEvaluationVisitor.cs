@@ -9,6 +9,7 @@ namespace Remotion.Data.Linq.DataObjectModel
     void VisitColumn (Column column);
     void VisitBinaryCondition (BinaryCondition binaryCondition);
     void VisitSubQuery (SubQuery subQuery);
-    void VisitMethodCallEvaluation (MethodCallEvaluation methodCallEvaluation);
+    void VisitMethodCallEvaluation (MethodCall methodCall);
+    void VisitNewObjectEvaluation (NewObject newObject);
   }
 }

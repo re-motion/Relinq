@@ -50,16 +50,16 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
       //expected Result
       Column column = new Column (_fromSource, "FirstColumn");
       List<IEvaluation> c1 = new List<IEvaluation> { column };
-      MethodCallEvaluation expected = new MethodCallEvaluation(methodInfo,column,null);
+      MethodCall expected = new MethodCall(methodInfo,column,null);
       
       MethodCallExpressionParser methodCallExpressionParser = new MethodCallExpressionParser (_parserRegistry);
 
       //result
       List<IEvaluation> result = methodCallExpressionParser.Parse (methodCallExpression, ParseContext);
 
-      Assert.IsEmpty (((MethodCallEvaluation)result[0]).EvaluationArguments);
-      Assert.AreEqual (expected.EvaluationMethodInfo, ((MethodCallEvaluation) result[0]).EvaluationMethodInfo);
-      Assert.AreEqual (expected.EvaluationParameter, ((MethodCallEvaluation) result[0]).EvaluationParameter);
+      Assert.IsEmpty (((MethodCall)result[0]).EvaluationArguments);
+      Assert.AreEqual (expected.EvaluationMethodInfo, ((MethodCall) result[0]).EvaluationMethodInfo);
+      Assert.AreEqual (expected.EvaluationParameter, ((MethodCall) result[0]).EvaluationParameter);
     }
 
     [Test]
@@ -76,7 +76,7 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
       Constant item = new Constant(5);
       List<IEvaluation> item1 = new List<IEvaluation> { item };
       List<IEvaluation> arguments = new List<IEvaluation> { item};
-      MethodCallEvaluation expected = new MethodCallEvaluation (methodInfo, column, arguments);
+      MethodCall expected = new MethodCall (methodInfo, column, arguments);
 
       MethodCallExpressionParser methodCallExpressionParser =
         new MethodCallExpressionParser ( _parserRegistry);
@@ -85,9 +85,9 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
       List<IEvaluation> result = methodCallExpressionParser.Parse (methodCallExpression, ParseContext);
 
       
-      Assert.AreEqual (((MethodCallEvaluation)result[0]).EvaluationArguments, expected.EvaluationArguments);
-      Assert.AreEqual (expected.EvaluationMethodInfo, ((MethodCallEvaluation) result[0]).EvaluationMethodInfo);
-      Assert.AreEqual (expected.EvaluationParameter, ((MethodCallEvaluation) result[0]).EvaluationParameter);
+      Assert.AreEqual (((MethodCall)result[0]).EvaluationArguments, expected.EvaluationArguments);
+      Assert.AreEqual (expected.EvaluationMethodInfo, ((MethodCall) result[0]).EvaluationMethodInfo);
+      Assert.AreEqual (expected.EvaluationParameter, ((MethodCall) result[0]).EvaluationParameter);
     }
 
     [Test]
@@ -99,9 +99,9 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest.SelectProjectionP
       MethodCallExpressionParser methodCallExpressionParser = new MethodCallExpressionParser (_parserRegistry);
       List<IEvaluation> result = methodCallExpressionParser.Parse (methodCallExpression, ParseContext);
 
-      Assert.That (((MethodCallEvaluation) result[0]).EvaluationArguments, Is.Empty);
-      Assert.That (((MethodCallEvaluation) result[0]).EvaluationMethodInfo, Is.EqualTo (methodInfo));
-      Assert.That (((MethodCallEvaluation) result[0]).EvaluationParameter, Is.Null);
+      Assert.That (((MethodCall) result[0]).EvaluationArguments, Is.Empty);
+      Assert.That (((MethodCall) result[0]).EvaluationMethodInfo, Is.EqualTo (methodInfo));
+      Assert.That (((MethodCall) result[0]).EvaluationParameter, Is.Null);
     }
   }
 }

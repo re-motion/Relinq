@@ -66,6 +66,7 @@
     <Compile Include="ClausesTest\SubQueryFromClauseTest.cs" />
     <Compile Include="DataObjectModelTest\BinaryConditionTest.cs" />
     <Compile Include="DataObjectModelTest\FieldSourcePathTest.cs" />
+    <Compile Include="DataObjectModelTest\NewObjectTest.cs" />
     <Compile Include="DataObjectModelTest\SubQueryExpressionTest.cs" />
     <Compile Include="DataObjectModelTest\SubQueryTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\ParserRegistryTest.cs" />

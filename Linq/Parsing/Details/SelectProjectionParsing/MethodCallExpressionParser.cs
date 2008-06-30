@@ -32,7 +32,7 @@ namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing
       {
         evaluationArguments.AddRange (_parserRegistry.GetParser (exp).Parse (exp, parseContext));
       }
-      return new List<IEvaluation> {new MethodCallEvaluation (methodInfo, evaluationObject, evaluationArguments)};
+      return new List<IEvaluation> {new MethodCall (methodInfo, evaluationObject, evaluationArguments)};
     }
 
     List<IEvaluation> ISelectProjectionParser.Parse (Expression expression, ParseContext parseContext)

@@ -4,9 +4,9 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.DataObjectModel
 {
-  public class MethodCallEvaluation : IEvaluation
+  public class MethodCall : IEvaluation
   {
-    public MethodCallEvaluation (MethodInfo evaluationMethodInfo, IEvaluation evaluationParameter, List<IEvaluation> evaluationArguments)
+    public MethodCall (MethodInfo evaluationMethodInfo, IEvaluation evaluationParameter, List<IEvaluation> evaluationArguments)
     {
       ArgumentUtility.CheckNotNull ("evaluationMethodInfo", evaluationMethodInfo);
 
