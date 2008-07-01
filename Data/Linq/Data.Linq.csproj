@@ -1,0 +1,206 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{DD9AA076-BE37-4A42-BA9E-C35ECC6955C9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Remotion.Data.Linq</RootNamespace>
+    <AssemblyName>Remotion.Data.Linq</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Clauses\AdditionalFromClause.cs" />
+    <Compile Include="Clauses\ClauseFinder.cs" />
+    <Compile Include="Clauses\ClauseLookupException.cs" />
+    <Compile Include="Clauses\SubQueryFromClause.cs" />
+    <Compile Include="DataObjectModel\BinaryEvaluation.cs" />
+    <Compile Include="DataObjectModel\FieldSourcePath.cs" />
+    <Compile Include="DataObjectModel\IColumnSource.cs" />
+    <Compile Include="Clauses\IResolveableClause.cs" />
+    <Compile Include="DataObjectModel\IEvaluation.cs" />
+    <Compile Include="DataObjectModel\IEvaluationVisitor.cs" />
+    <Compile Include="DataObjectModel\MethodCall.cs" />
+    <Compile Include="DataObjectModel\LetColumnSource.cs" />
+    <Compile Include="DataObjectModel\NewObject.cs" />
+    <Compile Include="DataObjectModel\SingleJoin.cs" />
+    <Compile Include="DataObjectModel\SubQuery.cs" />
+    <Compile Include="Expressions\ConstructedQueryExpression.cs" />
+    <Compile Include="Expressions\QueryModelExpressionBase.cs" />
+    <Compile Include="Expressions\SubQueryExpression.cs" />
+    <Compile Include="ExtensionMethods\ExtensionMethods.cs" />
+    <Compile Include="Parsing\Details\DetailParser.cs" />
+    <Compile Include="Parsing\Details\IParser.cs" />
+    <Compile Include="Parsing\Details\ParseContext.cs" />
+    <Compile Include="Parsing\Details\ParserRegistry.cs" />
+    <Compile Include="Parsing\Details\SelectProjectionParserRegistry.cs" />
+    <Compile Include="Parsing\Details\SelectProjectionParsing\BinaryExpressionParser.cs" />
+    <Compile Include="Parsing\Details\SelectProjectionParsing\ConstantExpressionParser.cs" />
+    <Compile Include="Parsing\Details\SelectProjectionParsing\ISelectProjectionParser.cs" />
+    <Compile Include="Parsing\Details\SelectProjectionParsing\MemberExpressionParser.cs" />
+    <Compile Include="Parsing\Details\SelectProjectionParsing\MethodCallExpressionParser.cs" />
+    <Compile Include="Parsing\Details\SelectProjectionParsing\NewExpressionParser.cs" />
+    <Compile Include="Parsing\Details\SelectProjectionParsing\ParameterExpressionParser.cs" />
+    <Compile Include="Parsing\Details\WhereConditionParserRegistry.cs" />
+    <Compile Include="Parsing\Details\WhereConditionParsing\ContainsFullTextParser.cs" />
+    <Compile Include="Parsing\Details\WhereConditionParsing\ContainsParser.cs" />
+    <Compile Include="Parsing\Details\WhereConditionParsing\IWhereConditionParser.cs" />
+    <Compile Include="Parsing\Details\WhereConditionParsing\LikeParser.cs" />
+    <Compile Include="Parsing\ParseMode.cs" />
+    <Compile Include="Parsing\Details\WhereConditionParsing\BinaryExpressionParser.cs" />
+    <Compile Include="Parsing\Details\WhereConditionParsing\ConstantExpressionParser.cs" />
+    <Compile Include="Parsing\Details\WhereConditionParsing\MemberExpressionParser.cs" />
+    <Compile Include="Parsing\Details\WhereConditionParsing\ParameterExpressionParser.cs" />
+    <Compile Include="Parsing\Details\WhereConditionParsing\UnaryExpressionParser.cs" />
+    <Compile Include="Parsing\FieldResolving\FieldAccessResolveException.cs" />
+    <Compile Include="Parsing\FieldResolving\FieldSourcePathBuilder.cs" />
+    <Compile Include="Parsing\FieldResolving\ClauseFieldResolver.cs" />
+    <Compile Include="Parsing\FieldResolving\ClauseFieldResolverVisitor.cs" />
+    <Compile Include="Parsing\FieldResolving\IResolveFieldAccessPolicy.cs" />
+    <Compile Include="Parsing\FieldResolving\JoinedTableContext.cs" />
+    <Compile Include="Parsing\FieldResolving\OrderingFieldAccessPolicy.cs" />
+    <Compile Include="Parsing\FieldResolving\QueryModelFieldResolver.cs" />
+    <Compile Include="Parsing\FieldResolving\QueryModelFieldResolverVisitor.cs" />
+    <Compile Include="DataObjectModel\FieldDescriptor.cs" />
+    <Compile Include="Clauses\FromClauseBase.cs" />
+    <Compile Include="Clauses\GroupClause.cs" />
+    <Compile Include="Clauses\IBodyClause.cs" />
+    <Compile Include="DataObjectModel\OrderingField.cs" />
+    <Compile Include="Parsing\FieldResolving\SelectFieldAccessPolicy.cs" />
+    <Compile Include="Parsing\FieldResolving\WhereFieldAccessPolicy.cs" />
+    <Compile Include="Parsing\Structure\CallParserDispatcher.cs" />
+    <Compile Include="Parsing\Structure\LetExpressionData.cs" />
+    <Compile Include="Parsing\Structure\LetExpressionParser.cs" />
+    <Compile Include="Parsing\Structure\OrderByExpressionParser.cs" />
+    <Compile Include="Parsing\Structure\ParseResultCollector.cs" />
+    <Compile Include="Parsing\Structure\QueryModelCreator.cs" />
+    <Compile Include="Parsing\Structure\SourceExpressionParser.cs" />
+    <Compile Include="DataObjectModel\DatabaseInfoUtility.cs" />
+    <Compile Include="DataObjectModel\NotCriterion.cs" />
+    <Compile Include="Clauses\IClause.cs" />
+    <Compile Include="IQueryElement.cs" />
+    <Compile Include="IQueryExecutor.cs" />
+    <Compile Include="IQueryVisitor.cs" />
+    <Compile Include="Clauses\JoinClause.cs" />
+    <Compile Include="Clauses\LetClause.cs" />
+    <Compile Include="Clauses\OrderByClause.cs" />
+    <Compile Include="Clauses\OrderingClause.cs" />
+    <Compile Include="Parsing\Structure\FromExpressionData.cs" />
+    <Compile Include="Parsing\Structure\BodyExpressionDataBase.cs" />
+    <Compile Include="Parsing\Structure\OrderExpressionData.cs" />
+    <Compile Include="Parsing\Structure\SelectManyExpressionParser.cs" />
+    <Compile Include="Parsing\ParserUtility.cs" />
+    <Compile Include="Parsing\Structure\QueryParser.cs" />
+    <Compile Include="Parsing\ParserException.cs" />
+    <Compile Include="Parsing\Structure\SelectExpressionParser.cs" />
+    <Compile Include="Parsing\Details\OrderingFieldParser.cs" />
+    <Compile Include="Parsing\Structure\SubQueryFindingVisitor.cs" />
+    <Compile Include="Parsing\Structure\WhereExpressionData.cs" />
+    <Compile Include="Parsing\Structure\WhereExpressionParser.cs" />
+    <Compile Include="Parsing\TreeEvaluation\PartialEvaluationData.cs" />
+    <Compile Include="Parsing\TreeEvaluation\PartialEvaluationPreAnalyzer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Clauses\MainFromClause.cs" />
+    <None Include="Properties\AssemblyInfoTemplate.cs" />
+    <Compile Include="QueryModel.cs" />
+    <Compile Include="Clauses\SelectClause.cs" />
+    <Compile Include="Clauses\ISelectGroupClause.cs" />
+    <Compile Include="QueryProviderBase.cs" />
+    <Compile Include="QueryProviderImplementation\QueryableBase.cs" />
+    <Compile Include="QueryProviderImplementation\TypeSystem.cs" />
+    <Compile Include="DataObjectModel\BinaryCondition.cs" />
+    <Compile Include="DataObjectModel\ComplexCriterion.cs" />
+    <Compile Include="DataObjectModel\Column.cs" />
+    <Compile Include="DataObjectModel\Constant.cs" />
+    <Compile Include="DataObjectModel\ICriterion.cs" />
+    <Compile Include="DataObjectModel\Table.cs" />
+    <Compile Include="DataObjectModel\IValue.cs" />
+    <Compile Include="SqlGeneration\CommandData.cs" />
+    <Compile Include="SqlGeneration\CommandParameter.cs" />
+    <Compile Include="SqlGeneration\ISqlGenerationContext.cs" />
+    <Compile Include="SqlGeneration\ISqlGeneratorBase.cs" />
+    <Compile Include="SqlGeneration\JoinCollection.cs" />
+    <Compile Include="SqlGeneration\IFromBuilder.cs" />
+    <Compile Include="SqlGeneration\IOrderByBuilder.cs" />
+    <Compile Include="SqlGeneration\ISelectBuilder.cs" />
+    <Compile Include="SqlGeneration\IWhereBuilder.cs" />
+    <Compile Include="SqlGeneration\LetData.cs" />
+    <Compile Include="SqlGeneration\SelectedObjectActivator.cs" />
+    <Compile Include="SqlGeneration\SqlGenerationData.cs" />
+    <Compile Include="SqlGeneration\SqlGenerationException.cs" />
+    <Compile Include="SqlGeneration\SqlGeneratorBase.cs" />
+    <Compile Include="SqlGeneration\SqlServer\BinaryConditionBuilder.cs" />
+    <Compile Include="SqlGeneration\SqlServer\InlineSqlServerGenerator.cs" />
+    <Compile Include="SqlGeneration\SqlServer\FromBuilder.cs" />
+    <Compile Include="SqlGeneration\SqlServer\OrderByBuilder.cs" />
+    <Compile Include="SqlGeneration\SqlServer\SelectBuilder.cs" />
+    <Compile Include="SqlGeneration\SqlServer\SqlServerEvaluationVisitor.cs" />
+    <Compile Include="SqlGeneration\SqlServer\SqlServerGenerationContext.cs" />
+    <Compile Include="SqlGeneration\SqlServer\SqlServerGenerator.cs" />
+    <Compile Include="SqlGeneration\SqlServer\SqlServerUtility.cs" />
+    <Compile Include="SqlGeneration\SqlServer\CommandBuilder.cs" />
+    <Compile Include="SqlGeneration\SqlServer\WhereBuilder.cs" />
+    <Compile Include="SqlGeneration\SqlUtility.cs" />
+    <Compile Include="Visitor\ExpressionTreeBuildingVisitor.cs" />
+    <Compile Include="IDatabaseInfo.cs" />
+    <Compile Include="SqlGeneration\SqlGeneratorVisitor.cs" />
+    <Compile Include="Visitor\ExpressionTreeVisitor.cs" />
+    <Compile Include="Parsing\TreeEvaluation\PartialTreeEvaluator.cs" />
+    <Compile Include="Visitor\StringVisitor.cs" />
+    <Compile Include="Clauses\WhereClause.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Data.Linq.build" />
+    <None Include="DataObjectModel\RelationalView.cd" />
+    <None Include="Parsing\Structure\QueryModel.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\Core\Core.Core.csproj">
+      <Project>{2AA369EC-A4E7-4D75-9101-EFA90E902625}</Project>
+      <Name>Core.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\Interfaces\Core.Interfaces.csproj">
+      <Project>{BD061F4A-A9E6-461E-A804-7999623A0060}</Project>
+      <Name>Core.Interfaces</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (C) 2005 - 2008 rubicon informationstechnologie gmbh
+ !
+ ! This program is free software: you can redistribute it and/or modify it under 
+ ! the terms of the re:motion license agreement in license.txt. If you did not 
+ ! receive it, please visit http://www.re-motion.org/licensing.
+ ! 
+ ! Unless otherwise provided, this software is distributed on an "AS IS" basis, 
+ ! WITHOUT WARRANTY OF ANY KIND, either express or implied. 
+-->
+
+<!--EXTERNAL_PROPERTIES: build.outputdir;build.test.outputdir;project.output;project.extension;project.doc;build.debug;build.csc.define-->
+<project xmlns="nant-schema" name="Remotion.Data.Linq">
+
+  <target name="build" description="perform a build">
+    <csc  target="library"
+          output="${build.outputdir}/${project.output}.${project.extension}"
+          doc="${project.doc}"
+          debug="${build.debug}"
+          define="${build.csc.define}">
+      <nowarn>
+        <!-- missing XML comment -->
+        <warning number="1591" />
+        <!-- Ambiguous reference in cref attribute -->
+        <warning number="0419" />
+        <!-- obsolete warning -->
+        <warning number="0618" />
+      </nowarn>
+      <sources failonempty="true">
+        <include name="*.cs"/>
+        <include name="Clauses/**/*.cs"/>
+        <include name="DataObjectModel/**/*.cs"/>
+        <include name="ExtensionMethods/**/*.cs"/>
+        <include name="Parsing/**/*.cs"/>
+        <include name="Properties/**/*.cs" />
+        <include name="QueryProviderImplementation/**/*.cs"/>
+        <include name="SqlGeneration/**/*.cs"/>
+        <include name="Visitor/**/*.cs"/>
+        <exclude name="Properties/AssemblyInfoTemplate.cs" />
+      </sources>
+      <references failonempty="true">
+        <include asis="true" name="${build.outputdir}/Remotion.dll"/>
+        <include asis="true" name="${build.outputdir}/Remotion.Interfaces.dll"/>
+        <include asis="true" name="System.dll"/>
+        <include asis="true" name="System.Core.dll"/>
+        <include asis="true" name="System.Data.dll"/>
+        <include asis="true" name="System.Data.DataSetExtensions.dll"/>
+      </references>
+    </csc>
+  </target>
+
+</project>

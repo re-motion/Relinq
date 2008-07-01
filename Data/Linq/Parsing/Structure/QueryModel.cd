@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Remotion.Data.Linq.Clauses.MainFromClause">
+    <Position X="0.5" Y="2.75" Width="1.5" />
+    <Members>
+      <Method Name="Accept" Hidden="true" />
+      <Method Name="GetQuerySourceType" Hidden="true" />
+      <Method Name="MainFromClause" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAIAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Clauses\MainFromClause.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Remotion.Data.Linq.Clauses.OrderByClause">
+    <Position X="7.5" Y="0.5" Width="1.5" />
+    <Members>
+      <Field Name="_orderingList" Hidden="true" />
+      <Method Name="Accept" Hidden="true" />
+      <Method Name="Add" Hidden="true" />
+      <Method Name="OrderByClause" Hidden="true" />
+      <Method Name="SetQueryModel" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>BIIAAAACAAAAAAAgAAAAAAAAAAAAAAAAAAQAAEAAAAA=</HashCode>
+      <FileName>Clauses\OrderByClause.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Remotion.Data.Linq.Clauses.OrderingClause">
+    <Position X="5.75" Y="0.5" Width="1.5" />
+    <Members>
+      <Field Name="_expression" Hidden="true" />
+      <Field Name="_orderDirection" Hidden="true" />
+      <Method Name="Accept" Hidden="true" />
+      <Method Name="OrderingClause" Hidden="true" />
+      <Property Name="QueryModel" Hidden="true" />
+      <Method Name="SetQueryModel" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>BIgAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAQAgEABAAA=</HashCode>
+      <FileName>Clauses\OrderingClause.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Remotion.Data.Linq.Clauses.SelectClause">
+    <Position X="9.5" Y="2.5" Width="1.75" />
+    <Members>
+      <Field Name="_projectionExpression" Hidden="true" />
+      <Method Name="Accept" Hidden="true" />
+      <Method Name="SelectClause" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>QIAAAAAAAAAACAAAAAAAAAAAAAAAAABAAAQAAAAAAAA=</HashCode>
+      <FileName>Clauses\SelectClause.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Remotion.Data.Linq.Clauses.SubQueryFromClause">
+    <Position X="2.75" Y="0.5" Width="1.75" />
+    <Members>
+      <Field Name="_fromSource" Hidden="true" />
+      <Method Name="Accept" Hidden="true" />
+      <Method Name="GetFromSource" Hidden="true" />
+      <Method Name="GetQuerySourceType" Hidden="true" />
+      <Method Name="SetQueryModel" Hidden="true" />
+      <Method Name="SubQueryFromClause" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>BIAAAAABAAAAAAAAAAABAAAAAAAAgARAAAAAAEAAAAA=</HashCode>
+      <FileName>Clauses\SubQueryFromClause.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Remotion.Data.Linq.Clauses.AdditionalFromClause">
+    <Position X="2.5" Y="4.75" Width="1.75" />
+    <Members>
+      <Method Name="Accept" Hidden="true" />
+      <Method Name="AdditionalFromClause" Hidden="true" />
+      <Method Name="GetQuerySourceType" Hidden="true" />
+      <Method Name="SetQueryModel" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>BIAAAAAAAAAAAAAAAAAJAAAAAAAAAABAAAAAAEAAAAA=</HashCode>
+      <FileName>Clauses\AdditionalFromClause.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Remotion.Data.Linq.Clauses.LetClause">
+    <Position X="6.25" Y="4.5" Width="1.75" />
+    <Members>
+      <Field Name="_expression" Hidden="true" />
+      <Field Name="_identifier" Hidden="true" />
+      <Method Name="Accept" Hidden="true" />
+      <Method Name="GetColumnSource" Hidden="true" />
+      <Method Name="LetClause" Hidden="true" />
+      <Method Name="ResolveField" Hidden="true" />
+      <Method Name="SetQueryModel" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>BIAAAAAAAAAAAAAAAAAAiAAAAAAAAABQAAQAwEAAAAA=</HashCode>
+      <FileName>Clauses\LetClause.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Orientation="Left" Position="0.1" />
+  </Class>
+  <Class Name="System.Object" Collapsed="true">
+    <Position X="6" Y="3" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Remotion.Data.Linq.Clauses.FromClauseBase" Collapsed="true">
+    <Position X="3" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIIBACABAAAAAAAAAAABgAAAAAAAAAAAAAQAQAAAAAA=</HashCode>
+      <FileName>Clauses\FromClauseBase.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Remotion.Data.Linq.Clauses.WhereClause">
+    <Position X="9" Y="4.5" Width="1.5" />
+    <Members>
+      <Field Name="_boolExpression" Hidden="true" />
+      <Field Name="_simplifiedBoolExpression" Hidden="true" />
+      <Method Name="Accept" Hidden="true" />
+      <Method Name="GetSimplifiedBoolExpression" Hidden="true" />
+      <Method Name="SetQueryModel" Hidden="true" />
+      <Method Name="WhereClause" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>BIAAAAAAAAAAAAAAgAAAAIQAAAAAAAAAAAQAAEAAABA=</HashCode>
+      <FileName>Clauses\WhereClause.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Font Name="Tahoma" Size="8.25" />
+</ClassDiagram>

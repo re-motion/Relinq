@@ -1,0 +1,44 @@
+using System;
+using System.Linq;
+using System.Linq.Expressions;
+using NUnit.Framework;
+using Remotion.Data.Linq.Parsing;
+using System.Reflection;
+using Remotion.Data.Linq.Parsing.Structure;
+using Remotion.Data.Linq.UnitTests.TestQueryGenerators;
+
+namespace Remotion.Data.Linq.UnitTests.ParsingTest.StructureTest.WhereExpressionParserTest
+{
+  [TestFixture]
+  public class GeneralWhereExpressionParserTest
+  {
+    [Test]
+    public void Initialize ()
+    {
+      MethodCallExpression expression = WhereTestQueryGenerator.CreateSimpleWhereQuery_WhereExpression(ExpressionHelper.CreateQuerySource());
+      new WhereExpressionParser ( true);
+    }
+
+    [Test]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected one of 'Where', but found 'Select' at TestQueryable<Student>()"
+        + ".Select(s => s) in tree TestQueryable<Student>().Select(s => s).")]
+    public void Initialize_FromWrongExpression ()
+    {
+      MethodCallExpression expression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource ());
+      new WhereExpressionParser (true).Parse(new ParseResultCollector (expression), expression);
+    }
+
+    [Test]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected Constant or Call expression for first argument of Where expression,"
+        + " found Convert(null) (UnaryExpression).")]
+    public void Initialize_FromWrongExpressionInWhereExpression ()
+    {
+      Expression nonCallExpression = Expression.Convert (Expression.Constant (null), typeof (IQueryable<Student>));
+      // Get method Queryable.Where which has two arguments (rather than three)
+      MethodInfo method = (from m in typeof (Queryable).GetMethods () where m.Name == "Where" && m.GetParameters ().Length == 2 select m).First();
+      method = method.MakeGenericMethod (typeof (Student));
+      MethodCallExpression whereExpression = Expression.Call (method, nonCallExpression, Expression.Lambda (Expression.Constant(true), Expression.Parameter(typeof (Student), "student")));
+      new WhereExpressionParser (true).Parse(new ParseResultCollector (whereExpression), whereExpression);
+    }
+  }
+}
