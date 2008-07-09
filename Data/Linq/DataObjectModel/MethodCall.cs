@@ -32,7 +32,7 @@ namespace Remotion.Data.Linq.DataObjectModel
     public void Accept (IEvaluationVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
-      visitor.VisitMethodCallEvaluation (this);
+      visitor.VisitMethodCall (this);
     }
   }
 }
