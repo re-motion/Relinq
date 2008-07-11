@@ -151,6 +151,9 @@
     <Compile Include="SqlGenerationTest\SqlServer\CommandBuilderTest.cs" />
     <Compile Include="SqlGenerationTest\SqlServer\DummyEvaluation.cs" />
     <Compile Include="SqlGenerationTest\SqlServer\FromBuilderTest.cs" />
+    <Compile Include="SqlGenerationTest\SqlServer\MethodCallGenerators\MethodCallRemoveTest.cs" />
+    <Compile Include="SqlGenerationTest\SqlServer\MethodCallGenerators\MethodCallUpperTest.cs" />
+    <Compile Include="SqlGenerationTest\SqlServer\MethodCallSqlGeneratorRegistryTest.cs" />
     <Compile Include="SqlGenerationTest\SqlServer\OrderByBuilderTest.cs" />
     <Compile Include="SqlGenerationTest\SqlServer\SelectBuilderTest.cs" />
     <Compile Include="SqlGenerationTest\SqlServer\SqlServerEvaluationVisitorTest.cs" />
