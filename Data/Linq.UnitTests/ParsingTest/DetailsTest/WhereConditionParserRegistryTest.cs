@@ -62,15 +62,14 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest
     [Test]
     public void RegisterNewMethodCallExpressionParser_RegisterFirst ()
     {
-      Assert.That (_whereConditionParserRegistry.GetParsers (typeof (MethodCallExpression)).Count (), Is.EqualTo (3));
+      Assert.That (_whereConditionParserRegistry.GetParsers (typeof (MethodCallExpression)).Count (), Is.EqualTo (4));
       
       LikeParser likeParser = new LikeParser (_whereConditionParserRegistry);
       _whereConditionParserRegistry.RegisterParser (typeof (MethodCallExpression), likeParser);
-      Assert.That (_whereConditionParserRegistry.GetParsers (typeof (MethodCallExpression)).Count (), Is.EqualTo (4));
+      Assert.That (_whereConditionParserRegistry.GetParsers (typeof (MethodCallExpression)).Count (), Is.EqualTo (5));
       Assert.That (_whereConditionParserRegistry.GetParsers (typeof (MethodCallExpression)).First (), Is.SameAs (likeParser));
     }
     
-
     [Test]
     public void GetParser ()
     {
@@ -79,5 +78,6 @@ namespace Remotion.Data.Linq.UnitTests.ParsingTest.DetailsTest
 
       Assert.AreSame (expectedParser, _whereConditionParserRegistry.GetParser (constantExpression));
     }
+
   }
 }

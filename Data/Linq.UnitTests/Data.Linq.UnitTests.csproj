@@ -73,6 +73,7 @@
     <Compile Include="ParsingTest\DetailsTest\DetailParserTestBase.cs" />
     <Compile Include="ParsingTest\DetailsTest\WhereConditionParsingTest\LikeParserTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\WhereConditionParsingTest\MemberExpressionParserTest.cs" />
+    <Compile Include="ParsingTest\DetailsTest\WhereConditionParsingTest\MethodCallExpressionParserTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\WhereConditionParsingTest\ParameterExpressionParserTest.cs" />
     <Compile Include="ParsingTest\DetailsTest\WhereConditionParsingTest\UnaryExpressionParserTest.cs" />
     <Compile Include="ParsingTest\FieldResolvingTest\OrderingFieldAccessPolicyTest.cs" />
@@ -151,6 +152,7 @@
     <Compile Include="SqlGenerationTest\SqlServer\CommandBuilderTest.cs" />
     <Compile Include="SqlGenerationTest\SqlServer\DummyEvaluation.cs" />
     <Compile Include="SqlGenerationTest\SqlServer\FromBuilderTest.cs" />
+    <Compile Include="SqlGenerationTest\SqlServer\MethodCallGenerators\MethodCallLowerTest.cs" />
     <Compile Include="SqlGenerationTest\SqlServer\MethodCallGenerators\MethodCallRemoveTest.cs" />
     <Compile Include="SqlGenerationTest\SqlServer\MethodCallGenerators\MethodCallUpperTest.cs" />
     <Compile Include="SqlGenerationTest\SqlServer\MethodCallSqlGeneratorRegistryTest.cs" />

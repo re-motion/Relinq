@@ -77,6 +77,7 @@
     <Compile Include="Parsing\Details\WhereConditionParsing\ContainsParser.cs" />
     <Compile Include="Parsing\Details\WhereConditionParsing\IWhereConditionParser.cs" />
     <Compile Include="Parsing\Details\WhereConditionParsing\LikeParser.cs" />
+    <Compile Include="Parsing\Details\WhereConditionParsing\MethodCallExpressionParser.cs" />
     <Compile Include="Parsing\ParseMode.cs" />
     <Compile Include="Parsing\Details\WhereConditionParsing\BinaryExpressionParser.cs" />
     <Compile Include="Parsing\Details\WhereConditionParsing\ConstantExpressionParser.cs" />
@@ -156,6 +157,7 @@
     <Compile Include="SqlGeneration\ISelectBuilder.cs" />
     <Compile Include="SqlGeneration\IWhereBuilder.cs" />
     <Compile Include="SqlGeneration\LetData.cs" />
+    <Compile Include="SqlGeneration\SqlServer\MethodCallGenerators\MethodCallLower.cs" />
     <Compile Include="SqlGeneration\SqlServer\MethodCallGenerators\MethodCallRemove.cs" />
     <Compile Include="SqlGeneration\SqlServer\MethodCallGenerators\MethodCallUpper.cs" />
     <Compile Include="SqlGeneration\SelectedObjectActivator.cs" />

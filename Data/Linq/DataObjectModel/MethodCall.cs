@@ -14,7 +14,7 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.DataObjectModel
 {
-  public class MethodCall : IEvaluation
+  public class MethodCall : IEvaluation,ICriterion
   {
     public MethodCall (MethodInfo evaluationMethodInfo, IEvaluation evaluationParameter, List<IEvaluation> evaluationArguments)
     {
