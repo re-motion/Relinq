@@ -12,6 +12,8 @@
     <AssemblyName>Remotion.Data.Linq</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\remotion.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,6 +23,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Remotion.Data.Linq.XML</DocumentationFile>
+    <NoWarn>1591;419</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,6 +33,8 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Remotion.Data.Linq.XML</DocumentationFile>
+    <NoWarn>1591;419</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -188,6 +194,9 @@
     <Compile Include="Clauses\WhereClause.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\remotion.snk">
+      <Link>remotion.snk</Link>
+    </None>
     <None Include="Data.Linq.build" />
     <None Include="DataObjectModel\RelationalView.cd" />
     <None Include="Parsing\Structure\QueryModel.cd" />

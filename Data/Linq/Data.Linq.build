@@ -17,7 +17,8 @@
           output="${build.outputdir}/${project.output}.${project.extension}"
           doc="${project.doc}"
           debug="${build.debug}"
-          define="${build.csc.define}">
+          define="${build.csc.define}"
+          keyfile="${solution.key-file}">          
       <nowarn>
         <!-- missing XML comment -->
         <warning number="1591" />
