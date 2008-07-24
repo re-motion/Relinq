@@ -14,6 +14,9 @@ using Remotion.Data.Linq.DataObjectModel;
 
 namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
 {
+  /// <summary>
+  /// 
+  /// </summary>
   public interface IWhereConditionParser  : IParser
   {
     ICriterion Parse (Expression expression, ParseContext parseContext);

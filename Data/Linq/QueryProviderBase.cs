@@ -20,6 +20,9 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq
 {
+  /// <summary>
+  /// The class implements <see cref="IQueryProvider"/> to create and execute queries against a datasource.
+  /// </summary>
   public abstract class QueryProviderBase : IQueryProvider
   {
     public QueryProviderBase (IQueryExecutor executor)

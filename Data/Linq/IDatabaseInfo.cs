@@ -15,6 +15,9 @@ using Remotion.Collections;
 
 namespace Remotion.Data.Linq
 {
+  /// <summary>
+  /// The interface has to be implemented so that the linq provider can use the underlying system to get information about the data source.
+  /// </summary>
   public interface IDatabaseInfo
   {
     string GetTableName (FromClauseBase fromClause);
