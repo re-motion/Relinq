@@ -176,7 +176,7 @@
     <Compile Include="SqlGeneration\IMethodCallSqlGenerator.cs" />
     <Compile Include="SqlGeneration\SqlServer\InlineSqlServerGenerator.cs" />
     <Compile Include="SqlGeneration\SqlServer\FromBuilder.cs" />
-    <Compile Include="SqlGeneration\SqlServer\MethodCallSqlGeneratorRegistry.cs" />
+    <Compile Include="SqlGeneration\MethodCallSqlGeneratorRegistry.cs" />
     <Compile Include="SqlGeneration\SqlServer\OrderByBuilder.cs" />
     <Compile Include="SqlGeneration\SqlServer\SelectBuilder.cs" />
     <Compile Include="SqlGeneration\SqlServer\SqlServerEvaluationVisitor.cs" />
