@@ -9,9 +9,13 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using NUnit.Framework;
+using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 
 namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.QueryParserIntegrationTest
@@ -48,15 +52,14 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.QueryParserInte
       Assert.AreEqual (2, ParsedQuery.BodyClauses.Count);
       AdditionalFromClause fromClause = ParsedQuery.BodyClauses.First() as AdditionalFromClause;
       Assert.IsNotNull (fromClause);
-      Assert.AreSame (SourceExpressionNavigator.Arguments[0].Arguments[0].Arguments[1].Operand.Expression, fromClause.FromExpression);
-      Assert.AreSame (SourceExpressionNavigator.Arguments[0].Arguments[0].Arguments[2].Operand.Expression, fromClause.ProjectionExpression);
+      AssertEquivalent (SourceExpressionNavigator.Arguments[0].Arguments[0].Arguments[1].Operand.Expression, fromClause.FromExpression);
+      AssertEquivalent (SourceExpressionNavigator.Arguments[0].Arguments[0].Arguments[2].Operand.Expression, fromClause.ProjectionExpression);
 
       WhereClause whereClause = ParsedQuery.BodyClauses.Last() as WhereClause;
       Assert.IsNotNull (whereClause);
-      Assert.AreSame (SourceExpressionNavigator.Arguments[0].Arguments[1].Operand.Expression, whereClause.BoolExpression);
+      AssertEquivalent (SourceExpressionNavigator.Arguments[0].Arguments[1].Operand.Expression, whereClause.BoolExpression);
     }
 
-    
     [Test]
     public override void CheckSelectOrGroupClause ()
     {

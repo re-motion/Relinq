@@ -16,16 +16,28 @@ namespace Remotion.Data.Linq.Parsing.Structure
   public abstract class BodyExpressionDataBase<TExpression> : BodyExpressionDataBase
       where TExpression : Expression
   {
-    public TExpression Expression { get; private set; }
-
+    private TExpression _expression;
+    
     public BodyExpressionDataBase(TExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      Expression = expression;
+      _expression = expression;
+    }
+
+    public TExpression TypedExpression
+    {
+      get { return _expression; }
+    }
+
+    public override Expression Expression
+    {
+      get { return _expression; }
+      set { _expression = (TExpression) value; }
     }
   }
 
   public abstract class BodyExpressionDataBase
   {
+    public abstract Expression Expression { get; set; }
   }
 }

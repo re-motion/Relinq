@@ -33,7 +33,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.WhereExpression
         {
           FromExpressionData fromExpressionData = expression as FromExpressionData;
           if (fromExpressionData != null)
-            fromExpressions.Add (fromExpressionData.Expression);
+            fromExpressions.Add (fromExpressionData.TypedExpression);
         }
         return fromExpressions;
       }
@@ -63,7 +63,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.WhereExpression
         {
           WhereExpressionData whereExpressionData = expression as WhereExpressionData;
           if (whereExpressionData != null)
-            fromExpressions.Add (whereExpressionData.Expression);
+            fromExpressions.Add (whereExpressionData.TypedExpression);
         }
         return fromExpressions;
       }
@@ -93,7 +93,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.WhereExpression
         {
           LetExpressionData letExpressionData = expression as LetExpressionData;
           if (letExpressionData != null)
-            letExpressions.Add (letExpressionData.Expression);
+            letExpressions.Add (letExpressionData.TypedExpression);
         }
         return letExpressions;
       }

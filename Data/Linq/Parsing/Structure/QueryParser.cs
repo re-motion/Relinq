@@ -8,6 +8,7 @@
  * WITHOUT WARRANTY OF ANY KIND, either express or implied. 
  */
 
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using Remotion.Utilities;
 
@@ -31,8 +32,16 @@ namespace Remotion.Data.Linq.Parsing.Structure
       ParseResultCollector resultCollector = new ParseResultCollector (SourceExpression);
       _sourceParser.Parse (resultCollector, SourceExpression, null, "parsing query");
 
+      List<QueryModel> subQueries = new List<QueryModel> ();
+      resultCollector.Simplify (subQueries);
+
       QueryModelCreator modelCreator = new QueryModelCreator (SourceExpression, resultCollector);
-      return modelCreator.CreateQueryExpression();
+      QueryModel model = modelCreator.CreateQueryExpression();
+
+      foreach (QueryModel subQuery in subQueries)
+        subQuery.SetParentQuery (model);
+
+      return model;
     }
   }
 }

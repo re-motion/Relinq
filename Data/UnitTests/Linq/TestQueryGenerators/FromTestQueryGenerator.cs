@@ -20,6 +20,16 @@ namespace Remotion.Data.UnitTests.Linq.TestQueryGenerators
       return from s1 in source1 from s2 in source2 select s1;
     }
 
+    public static IQueryable<Student> CreateMultiFromQuery_WithCalls (IQueryable<Student> source1, IQueryable<Student> source2)
+    {
+      return from s1 in GetSource (source1) from s2 in GetSource (source2) select s1;
+    }
+
+    private static IQueryable<Student> GetSource (IQueryable<Student> source)
+    {
+      return source;
+    }
+
     public static IQueryable<Student> CreateThreeFromQuery (IQueryable<Student> source1, IQueryable<Student> source2, IQueryable<Student> source3)
     {
       return from s1 in source1 from s2 in source2 from s3 in source3 select s1;

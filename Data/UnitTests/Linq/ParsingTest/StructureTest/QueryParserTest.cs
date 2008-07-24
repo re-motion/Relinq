@@ -12,8 +12,10 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Expressions;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
@@ -40,9 +42,8 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "The expression 'WriteLine()' could not be evaluated as a query source because it " 
-        + "cannot be compiled: Argument types do not match")]
-    [Ignore ("TODO: Fix bug COMMONS-693")]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Parsing of expression 'WriteLine()' is not supported because there is no from "
+        + "identifier matching the expression in expression tree 'WriteLine()'.")]
     public void Initialize_FromWrongExpression ()
     {
       MethodCallExpression expression = Expression.Call (typeof (Console), "WriteLine", Type.EmptyTypes);
@@ -60,6 +61,30 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     {
       QueryModel queryModel = _parser.GetParsedQuery ();
       Assert.AreSame (_expression, queryModel.GetExpressionTree());
+    }
+
+    [Test]
+    public void ParsedQuery_Simplifies ()
+    {
+      Expression simplifyableQuery = SelectTestQueryGenerator.CreateSimplifyableQuery (ExpressionHelper.CreateQuerySource()).Expression;
+      QueryParser parser = new QueryParser (simplifyableQuery);
+
+      QueryModel queryModel = parser.GetParsedQuery ();
+      Assert.That (((SelectClause)queryModel.SelectOrGroupClause).ProjectionExpression.Body, Is.InstanceOfType (typeof (ConstantExpression)));
+    }
+
+    [Test]
+    public void ParsedQuery_SubQueries_HaveParentSet ()
+    {
+      Expression queryWithSubQuery = SubQueryTestQueryGenerator.CreateSimpleSubQueryInWhereClause (ExpressionHelper.CreateQuerySource ()).Expression;
+      QueryParser parser = new QueryParser (queryWithSubQuery);
+
+      QueryModel queryModel = parser.GetParsedQuery ();
+      WhereClause whereClause = ((WhereClause) queryModel.BodyClauses[0]);
+      MethodCallExpression containsExpression = (MethodCallExpression) whereClause.BoolExpression.Body;
+      SubQueryExpression subQueryExpression = (SubQueryExpression) containsExpression.Arguments[0];
+
+      Assert.That (subQueryExpression.QueryModel.ParentQuery, Is.SameAs (queryModel));
     }
 
     [Test]

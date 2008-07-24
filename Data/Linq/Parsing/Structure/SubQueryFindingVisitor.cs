@@ -26,7 +26,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       _subQueryRegistry = subQueryRegistry;
     }
 
-    public Expression ReplaceSubQuery (Expression expression)
+    public Expression ReplaceSubQueries (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       return VisitExpression(expression);

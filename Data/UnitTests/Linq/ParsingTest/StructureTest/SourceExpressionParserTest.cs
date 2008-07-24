@@ -200,22 +200,22 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
           FromExpressionData fromExpression2 = two.BodyExpressions[i] as FromExpressionData;
 
           Assert.AreEqual (fromExpression1.Identifier, fromExpression2.Identifier);
-          Assert.AreEqual (fromExpression1.Expression, fromExpression2.Expression);
+          Assert.AreEqual (fromExpression1.TypedExpression, fromExpression2.TypedExpression);
         }
         else if (whereExpression1 != null)
         {
           WhereExpressionData whereExpression2 = two.BodyExpressions[i] as WhereExpressionData;
-          Assert.AreEqual (whereExpression1.Expression, whereExpression2.Expression);
+          Assert.AreEqual (whereExpression1.TypedExpression, whereExpression2.TypedExpression);
         }
         else if (letExpression1 != null)
         {
           LetExpressionData letExpression2 = two.BodyExpressions[i] as LetExpressionData;
-          Assert.AreEqual (letExpression1.Expression, letExpression2.Expression);
+          Assert.AreEqual (letExpression1.TypedExpression, letExpression2.TypedExpression);
         }
         else
         {
           OrderExpressionData orderExpression2 = two.BodyExpressions[i] as OrderExpressionData;
-          Assert.AreEqual (orderExpression1.Expression, orderExpression2.Expression);
+          Assert.AreEqual (orderExpression1.TypedExpression, orderExpression2.TypedExpression);
         }
       }
     }

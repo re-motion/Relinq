@@ -37,7 +37,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     {
       Expression expression = Expression.Constant ("test");
 
-      Expression newExpression = _visitor.ReplaceSubQuery (expression);
+      Expression newExpression = _visitor.ReplaceSubQueries (expression);
       Assert.That (newExpression, Is.SameAs (expression));
     }
 
@@ -47,7 +47,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
       Expression subQuery = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource()).Expression;
       Expression surroundingExpression = Expression.Lambda (subQuery);
 
-      Expression newExpression = _visitor.ReplaceSubQuery (surroundingExpression);
+      Expression newExpression = _visitor.ReplaceSubQueries (surroundingExpression);
 
       Assert.That (newExpression, Is.Not.SameAs (surroundingExpression));
       Assert.That (newExpression, Is.InstanceOfType (typeof (LambdaExpression)));
@@ -67,7 +67,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
       Expression subQuery = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource ()).Expression;
       Expression surroundingExpression = Expression.Lambda (subQuery);
 
-      LambdaExpression newLambdaExpression = (LambdaExpression) _visitor.ReplaceSubQuery (surroundingExpression);
+      LambdaExpression newLambdaExpression = (LambdaExpression) _visitor.ReplaceSubQueries (surroundingExpression);
       SubQueryExpression newSubQueryExpression = (SubQueryExpression) newLambdaExpression.Body;
       Assert.That (_subQueryRegistry, Is.EquivalentTo (new[] { newSubQueryExpression.QueryModel }));
     }

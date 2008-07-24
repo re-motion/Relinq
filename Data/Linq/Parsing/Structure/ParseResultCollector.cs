@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Parsing.TreeEvaluation;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure
@@ -67,6 +68,30 @@ namespace Remotion.Data.Linq.Parsing.Structure
     public void AddProjectionExpression (LambdaExpression expression)
     {
       _projectionExpressions.Add (expression);
+    }
+
+    public void Simplify (List<QueryModel> subQueryRegistry)
+    {
+      for (int i = 0; i < _projectionExpressions.Count; ++i)
+        _projectionExpressions[i] = Simplify (_projectionExpressions[i], subQueryRegistry);
+
+      for (int i = 0; i < _bodyExpressions.Count; ++i)
+        _bodyExpressions[i].Expression = Simplify (_bodyExpressions[i].Expression, subQueryRegistry);
+    }
+
+    public static T Simplify<T> (T expression, List<QueryModel> subQueryRegistry)
+        where T : Expression
+    {
+      if (expression == null)
+        return expression;
+
+      SubQueryFindingVisitor subQueryFindingVisitor = new SubQueryFindingVisitor (subQueryRegistry);
+      T newExpression = (T) subQueryFindingVisitor.ReplaceSubQueries (expression);
+
+      PartialTreeEvaluator partialEvaluator = new PartialTreeEvaluator (newExpression);
+      newExpression = (T) partialEvaluator.GetEvaluatedTree();
+
+      return newExpression;
     }
   }
 }

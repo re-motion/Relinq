@@ -9,10 +9,14 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using Remotion.Data.Linq;
+using Remotion.Data.Linq.Expressions;
 using Remotion.Data.Linq.Parsing.Structure;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 
 namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
 {
@@ -94,5 +98,69 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
       _collector.AddProjectionExpression (expression2);
       Assert.That (_collector.ProjectionExpressions, Is.EqualTo (new[] { expression1, null, expression2 }));
     }
+
+    [Test]
+    public void Simplify_FindsSubQueries ()
+    {
+      List<QueryModel> registry = new List<QueryModel> ();
+      Expression inner = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource()).Expression;
+      LambdaExpression outer = Expression.Lambda (inner);
+      _collector.AddProjectionExpression (outer);
+      _collector.Simplify(registry);
+
+      Assert.That (_collector.ProjectionExpressions.Count, Is.EqualTo (1));
+      Assert.That (_collector.ProjectionExpressions[0].Body, Is.InstanceOfType (typeof (SubQueryExpression)));
+      Assert.That (registry, Is.EqualTo (new[] {((SubQueryExpression) _collector.ProjectionExpressions[0].Body).QueryModel}));
+    }
+
+    [Test]
+    public void Simplify_EvaluatesExpressions ()
+    {
+      List<QueryModel> registry = new List<QueryModel> ();
+      Expression inner = Expression.Add (Expression.Constant (1), Expression.Constant (1));
+      LambdaExpression outer = Expression.Lambda (inner);
+      _collector.AddProjectionExpression (outer);
+      _collector.Simplify (registry);
+
+      Assert.That (_collector.ProjectionExpressions.Count, Is.EqualTo (1));
+      Assert.That (_collector.ProjectionExpressions[0].Body, Is.InstanceOfType (typeof (ConstantExpression)));
+      Assert.That (((ConstantExpression)_collector.ProjectionExpressions[0].Body).Value, Is.EqualTo (2));
+      Assert.That (registry, Is.Empty);
+    }
+
+    [Test]
+    public void Simplify_SimplifiesProjectionExpressions ()
+    {
+      List<QueryModel> registry = new List<QueryModel> ();
+      Expression inner = Expression.Add (Expression.Constant (1), Expression.Constant (1));
+      LambdaExpression outer = Expression.Lambda (inner);
+      _collector.AddProjectionExpression (outer);
+      _collector.Simplify (registry);
+
+      Assert.That (_collector.ProjectionExpressions[0].Body, Is.InstanceOfType (typeof (ConstantExpression)));
+    }
+
+    [Test]
+    public void Simplify_SimplifiesBodyExpressions ()
+    {
+      List<QueryModel> registry = new List<QueryModel> ();
+      Expression inner = Expression.Add (Expression.Constant (1), Expression.Constant (1));
+      FromExpressionData bodyExpression = new FromExpressionData (inner, Expression.Parameter (typeof (string), "s"));
+      _collector.AddBodyExpression (bodyExpression);
+      _collector.Simplify (registry);
+
+      Assert.That (_collector.BodyExpressions[0].Expression, Is.InstanceOfType (typeof (ConstantExpression)));
+    }
+
+    [Test]
+    public void Simplify_IgnoresNullExpressions ()
+    {
+      List<QueryModel> registry = new List<QueryModel> ();
+      _collector.AddProjectionExpression (null);
+      _collector.Simplify (registry);
+
+      Assert.That (_collector.ProjectionExpressions[0], Is.Null);
+    }
+
   }
 }

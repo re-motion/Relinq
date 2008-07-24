@@ -48,8 +48,8 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.QueryParserInte
       Assert.AreEqual (1, ParsedQuery.BodyClauses.Count);
       AdditionalFromClause fromClause = ParsedQuery.BodyClauses.First() as AdditionalFromClause;
       Assert.IsNotNull (fromClause);
-      Assert.AreSame (SourceExpressionNavigator.Arguments[1].Operand.Expression, fromClause.FromExpression);
-      Assert.AreSame (SourceExpressionNavigator.Arguments[2].Operand.Expression, fromClause.ProjectionExpression);
+      AssertEquivalent (SourceExpressionNavigator.Arguments[1].Operand.Expression, fromClause.FromExpression);
+      AssertEquivalent (SourceExpressionNavigator.Arguments[2].Operand.Expression, fromClause.ProjectionExpression);
     }
       
     
@@ -60,9 +60,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.QueryParserInte
       SelectClause clause = ParsedQuery.SelectOrGroupClause as SelectClause;
       Assert.IsNotNull (clause);
       Assert.IsNotNull (clause.ProjectionExpression);
-      Assert.AreSame (ParsedQuery.MainFromClause.Identifier, clause.ProjectionExpression.Body,
-          "from s in ... select s => select expression must be same as from-identifier");
-
+      AssertEquivalent (ParsedQuery.MainFromClause.Identifier, clause.ProjectionExpression.Body); // from s in ... select s => select expression must be same as from-identifier
     }
   }
 }

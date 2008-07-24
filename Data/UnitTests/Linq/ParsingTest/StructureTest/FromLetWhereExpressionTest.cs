@@ -24,7 +24,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
       Expression expression = ExpressionHelper.CreateExpression();
       ParameterExpression identifier = ExpressionHelper.CreateParameterExpression();
       FromExpressionData fromExpressionData = new FromExpressionData(expression,identifier);
-      Assert.AreSame (expression, fromExpressionData.Expression);
+      Assert.AreSame (expression, fromExpressionData.TypedExpression);
       Assert.AreSame (identifier, fromExpressionData.Identifier);
     }
 
@@ -33,7 +33,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     {
       LambdaExpression expression = ExpressionHelper.CreateLambdaExpression ();
       WhereExpressionData whereExpressionData = new WhereExpressionData (expression);
-      Assert.AreSame (expression, whereExpressionData.Expression);
+      Assert.AreSame (expression, whereExpressionData.TypedExpression);
 
     }
     

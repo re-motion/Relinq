@@ -32,9 +32,9 @@ namespace Remotion.Data.Linq.Parsing.Structure
     public override string ToString ()
     {
       if (FirstOrderBy)
-        return string.Format ("orderby {0} {1}", Expression, OrderDirection);
+        return string.Format ("orderby {0} {1}", TypedExpression, OrderDirection);
       else
-        return string.Format ("thenby {0} {1}", Expression, OrderDirection);
+        return string.Format ("thenby {0} {1}", TypedExpression, OrderDirection);
     }
   }
 }

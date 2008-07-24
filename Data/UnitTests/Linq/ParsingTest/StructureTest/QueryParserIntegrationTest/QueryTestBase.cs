@@ -9,6 +9,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
@@ -69,5 +70,15 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.QueryParserInte
 
     public abstract void CheckBodyClauses ();
     public abstract void CheckSelectOrGroupClause ();
+
+    protected void AssertEquivalent (Expression left, Expression right)
+    {
+      if (left == right)
+        return;
+
+      var simplifiedLeft = ParseResultCollector.Simplify (left, new List<QueryModel> ());
+      var simplifiedRight = ParseResultCollector.Simplify (right, new List<QueryModel> ());
+      ExpressionTreeComparer.CheckAreEqualTrees (simplifiedLeft, simplifiedRight);
+    }
   }
 }

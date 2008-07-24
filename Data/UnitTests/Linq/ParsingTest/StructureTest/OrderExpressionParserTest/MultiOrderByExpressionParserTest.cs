@@ -25,7 +25,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.OrderExpression
   {
     public static void AssertOrderExpressionsEqual (OrderExpressionData one, OrderExpressionData two)
     {
-      Assert.AreEqual (one.Expression, two.Expression);
+      Assert.AreEqual (one.TypedExpression, two.TypedExpression);
       Assert.AreEqual (one.OrderDirection, two.OrderDirection);
       Assert.AreEqual (one.FirstOrderBy, two.FirstOrderBy);
     }

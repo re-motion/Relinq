@@ -34,6 +34,16 @@ namespace Remotion.Data.UnitTests.Linq.TestQueryGenerators
       return from s in source select Tuple.NewTuple (s, s.Last, k, "Test2");
     }
 
+    public static IQueryable<string> CreateSimplifyableQuery (IQueryable<Student> source)
+    {
+      return from s in source select "1" + GetString();
+    }
+
+    private static string GetString ()
+    {
+      return "2";
+    }
+
     public static IQueryable<string> CreateSimpleQueryWithProjection (IQueryable<Student> source)
     {
       return from s in source select s.First;

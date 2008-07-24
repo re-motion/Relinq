@@ -51,17 +51,17 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.QueryParserInte
       Assert.AreEqual (3, ParsedQuery.BodyClauses.Count);
       AdditionalFromClause fromClause1 = ParsedQuery.BodyClauses.First() as AdditionalFromClause;
       Assert.IsNotNull (fromClause1);
-      Assert.AreSame (SourceExpressionNavigator.Arguments[0].Arguments[0].Arguments[1].Operand.Expression, fromClause1.FromExpression);
-      Assert.AreSame (SourceExpressionNavigator.Arguments[0].Arguments[0].Arguments[2].Operand.Expression, fromClause1.ProjectionExpression);
+      AssertEquivalent (SourceExpressionNavigator.Arguments[0].Arguments[0].Arguments[1].Operand.Expression, fromClause1.FromExpression);
+      AssertEquivalent (SourceExpressionNavigator.Arguments[0].Arguments[0].Arguments[2].Operand.Expression, fromClause1.ProjectionExpression);
 
       WhereClause whereClause = ParsedQuery.BodyClauses.Skip (1).First() as WhereClause;
       Assert.IsNotNull (whereClause);
-      Assert.AreSame (SourceExpressionNavigator.Arguments[0].Arguments[1].Operand.Expression, whereClause.BoolExpression);
+      AssertEquivalent (SourceExpressionNavigator.Arguments[0].Arguments[1].Operand.Expression, whereClause.BoolExpression);
 
       AdditionalFromClause fromClause2 = ParsedQuery.BodyClauses.Last () as AdditionalFromClause;
       Assert.IsNotNull (fromClause2);
-      Assert.AreSame (SourceExpressionNavigator.Arguments[1].Operand.Expression, fromClause2.FromExpression);
-      Assert.AreSame (SourceExpressionNavigator.Arguments[2].Operand.Expression, fromClause2.ProjectionExpression);
+      AssertEquivalent (SourceExpressionNavigator.Arguments[1].Operand.Expression, fromClause2.FromExpression);
+      AssertEquivalent (SourceExpressionNavigator.Arguments[2].Operand.Expression, fromClause2.ProjectionExpression);
     }
 
 
@@ -75,7 +75,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.QueryParserInte
       Assert.IsNotNull (clause);
       Assert.IsNotNull (clause.ProjectionExpression);
 
-      Assert.AreSame (SourceExpressionNavigator.Arguments[2].Operand.Expression, clause.ProjectionExpression);
+      AssertEquivalent (SourceExpressionNavigator.Arguments[2].Operand.Expression, clause.ProjectionExpression);
     }
   }
 }

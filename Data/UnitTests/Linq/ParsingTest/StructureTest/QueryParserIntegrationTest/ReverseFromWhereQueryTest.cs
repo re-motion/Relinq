@@ -39,12 +39,12 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.QueryParserInte
             
       WhereClause whereClause = ParsedQuery.BodyClauses.First() as WhereClause;
       Assert.IsNotNull (whereClause);
-      Assert.AreSame (SourceExpressionNavigator.Arguments[0].Arguments[1].Operand.Expression, whereClause.BoolExpression);
+      AssertEquivalent (SourceExpressionNavigator.Arguments[0].Arguments[1].Operand.Expression, whereClause.BoolExpression);
 
       AdditionalFromClause fromClause = ParsedQuery.BodyClauses.Last () as AdditionalFromClause;
       Assert.IsNotNull (fromClause);
-      Assert.AreSame (SourceExpressionNavigator.Arguments[1].Operand.Expression, fromClause.FromExpression);
-      Assert.AreSame (SourceExpressionNavigator.Arguments[2].Operand.Expression, fromClause.ProjectionExpression);
+      AssertEquivalent (SourceExpressionNavigator.Arguments[1].Operand.Expression, fromClause.FromExpression);
+      AssertEquivalent (SourceExpressionNavigator.Arguments[2].Operand.Expression, fromClause.ProjectionExpression);
     }
 
     

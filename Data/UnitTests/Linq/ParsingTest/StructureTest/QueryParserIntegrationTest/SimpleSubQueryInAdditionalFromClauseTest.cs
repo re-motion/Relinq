@@ -31,8 +31,8 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.QueryParserInte
 
       SubQueryFromClause fromClause1 = ParsedQuery.BodyClauses[0] as SubQueryFromClause;
       Assert.IsNotNull (fromClause1);
-      Assert.AreSame (SourceExpressionNavigator.Arguments[1].Operand.Body.Expression, fromClause1.SubQueryModel.GetExpressionTree ());
-      Assert.AreSame (SourceExpressionNavigator.Arguments[2].Operand.Expression, fromClause1.ProjectionExpression);
+      AssertEquivalent (SourceExpressionNavigator.Arguments[1].Operand.Body.Expression, fromClause1.SubQueryModel.GetExpressionTree ());
+      AssertEquivalent (SourceExpressionNavigator.Arguments[2].Operand.Expression, fromClause1.ProjectionExpression);
 
       CheckSubQuery (fromClause1.SubQueryModel);
     }
@@ -42,14 +42,14 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.QueryParserInte
       ExpressionTreeNavigator subExpressionNavigator = SourceExpressionNavigator.Arguments[1].Operand.Body;
 
       Assert.IsNotNull (subQuery.MainFromClause);
-      Assert.AreSame (subExpressionNavigator.Arguments[0].Expression, subQuery.MainFromClause.QuerySource);
-      Assert.AreSame (subExpressionNavigator.Arguments[1].Operand.Parameters[0].Expression, subQuery.MainFromClause.Identifier);
+      AssertEquivalent (subExpressionNavigator.Arguments[0].Expression, subQuery.MainFromClause.QuerySource);
+      AssertEquivalent (subExpressionNavigator.Arguments[1].Operand.Parameters[0].Expression, subQuery.MainFromClause.Identifier);
 
       Assert.AreEqual (0, subQuery.BodyClauses.Count);
 
       SelectClause selectClause = subQuery.SelectOrGroupClause as SelectClause;
       Assert.IsNotNull (selectClause);
-      Assert.AreSame (subExpressionNavigator.Arguments[1].Operand.Expression, selectClause.ProjectionExpression);
+      AssertEquivalent (subExpressionNavigator.Arguments[1].Operand.Expression, selectClause.ProjectionExpression);
     }
 
     [Test]
@@ -57,7 +57,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.QueryParserInte
     {
       SelectClause selectClause = ParsedQuery.SelectOrGroupClause as SelectClause;
       Assert.IsNotNull (selectClause);
-      Assert.AreSame (SourceExpressionNavigator.Arguments[2].Operand.Expression, selectClause.ProjectionExpression);
+      AssertEquivalent (SourceExpressionNavigator.Arguments[2].Operand.Expression, selectClause.ProjectionExpression);
     }
 
     [Test]

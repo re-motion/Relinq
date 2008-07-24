@@ -40,7 +40,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
 
       Assert.AreEqual (1, result.BodyExpressions.Count);
       Assert.AreEqual (_potentialFromIdentifier, ((FromExpressionData) result.BodyExpressions[0]).Identifier);
-      Assert.AreEqual (constantExpression, ((FromExpressionData) result.BodyExpressions[0]).Expression);
+      Assert.AreEqual (constantExpression, ((FromExpressionData) result.BodyExpressions[0]).TypedExpression);
       Assert.That (result.ProjectionExpressions, Is.Empty);
     }
 
@@ -62,7 +62,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
 
       Assert.AreEqual (1, result.BodyExpressions.Count);
       Assert.AreEqual (_potentialFromIdentifier, ((FromExpressionData) result.BodyExpressions[0]).Identifier);
-      Assert.AreEqual (memberExpression, ((FromExpressionData) result.BodyExpressions[0]).Expression);
+      Assert.AreEqual (memberExpression, ((FromExpressionData) result.BodyExpressions[0]).TypedExpression);
       Assert.That (result.ProjectionExpressions, Is.Empty);
     }
 
@@ -75,7 +75,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
 
       Assert.AreEqual (1, result.BodyExpressions.Count);
       Assert.AreEqual (_potentialFromIdentifier, ((FromExpressionData) result.BodyExpressions[0]).Identifier);
-      Assert.IsInstanceOfType (typeof (TestQueryable<Student>), ((ConstantExpression) ((FromExpressionData) result.BodyExpressions[0]).Expression).Value);
+      Assert.IsInstanceOfType (typeof (TestQueryable<Student>), ((ConstantExpression) ((FromExpressionData) result.BodyExpressions[0]).TypedExpression).Value);
       Assert.That (result.ProjectionExpressions, Is.Empty);
     }
 
