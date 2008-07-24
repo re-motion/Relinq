@@ -42,6 +42,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     [Test]
     [ExpectedException (typeof (ParserException), ExpectedMessage = "The expression 'WriteLine()' could not be evaluated as a query source because it " 
         + "cannot be compiled: Argument types do not match")]
+    [Ignore ("TODO: Fix bug COMMONS-693")]
     public void Initialize_FromWrongExpression ()
     {
       MethodCallExpression expression = Expression.Call (typeof (Console), "WriteLine", Type.EmptyTypes);

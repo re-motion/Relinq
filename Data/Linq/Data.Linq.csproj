@@ -112,6 +112,7 @@
     <Compile Include="Parsing\Structure\OrderByExpressionParser.cs" />
     <Compile Include="Parsing\Structure\ParseResultCollector.cs" />
     <Compile Include="Parsing\Structure\QueryModelCreator.cs" />
+    <Compile Include="Parsing\Structure\SimpleFromSourceExpressionParser.cs" />
     <Compile Include="Parsing\Structure\SourceExpressionParser.cs" />
     <Compile Include="DataObjectModel\DatabaseInfoUtility.cs" />
     <Compile Include="DataObjectModel\NotCriterion.cs" />

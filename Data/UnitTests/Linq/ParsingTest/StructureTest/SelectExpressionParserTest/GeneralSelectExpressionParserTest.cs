@@ -41,7 +41,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.SelectExpressio
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected Constant or Call expression for first argument of Select "
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected Constant, MemberAccess, or Call expression for first argument of Select "
         + "expression, found Convert(null) (UnaryExpression).")]
     public void Initialize_FromWrongExpressionInWhereExpression ()
     {

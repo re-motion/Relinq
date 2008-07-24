@@ -39,7 +39,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.WhereExpression
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected Constant or Call expression for first argument of Where expression,"
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected Constant, MemberAccess, or Call expression for first argument of Where expression,"
         + " found Convert(null) (UnaryExpression).")]
     public void Initialize_FromWrongExpressionInWhereExpression ()
     {

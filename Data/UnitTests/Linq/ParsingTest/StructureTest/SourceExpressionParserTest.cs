@@ -40,7 +40,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     public void NonDistinct ()
     {
       IQueryable<Student> query = SelectTestQueryGenerator.CreateSimpleQuery (_source);
-      ParseResultCollector result = Parse (query);
+      ParseResultCollector result = Parse (query.Expression);
       Assert.IsFalse (result.IsDistinct);
     }
 
@@ -48,7 +48,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     public void Distinct_TopLevelBeforeSelect()
     {
       IQueryable<string> query = DistinctTestQueryGenerator.CreateSimpleDistinctQuery (_source);
-      ParseResultCollector result = Parse (query);
+      ParseResultCollector result = Parse (query.Expression);
       Assert.IsTrue (result.IsDistinct);
     }
 
@@ -56,7 +56,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     public void Distinct_TopLevelBeforeWhere ()
     {
       IQueryable<Student> query = DistinctTestQueryGenerator.CreateDisinctWithWhereQueryWithoutProjection (_source);
-      ParseResultCollector result = Parse(query);
+      ParseResultCollector result = Parse(query.Expression);
       Assert.IsTrue (result.IsDistinct);
     }
 
@@ -66,14 +66,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     public void Distinct_NonTopLevel ()
     {
       IQueryable<Student> query = _source.Select (s => s).Distinct().Where (s => s.IsOld);
-      Parse (query);
-    }
-
-    [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected Constant or Call expression for xy, found i (ParameterExpression).")]
-    public void InvalidSource ()
-    {
-      _topLevelParser.Parse (new ParseResultCollector (_source.Expression), _potentialFromIdentifier, _potentialFromIdentifier, "xy");
+      Parse (query.Expression);
     }
 
     public static void Thrower()
@@ -101,58 +94,22 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     }
 
     [Test]
-    public void SimpleSource_Constant()
+    public void SimpleSource ()
     {
-      Expression constantExpression = Expression.Constant(ExpressionHelper.CreateQuerySource(), typeof (IQueryable<Student>));
-      ParseResultCollector result = new ParseResultCollector (constantExpression);
-      _topLevelParser.Parse (result, constantExpression, _potentialFromIdentifier, "bla");
+      ConstantExpression constantExpression = Expression.Constant (5);
+      ParseResultCollector result = Parse (constantExpression);
 
-      Assert.AreEqual (1, result.BodyExpressions.Count);
-      Assert.AreEqual (_potentialFromIdentifier, ((FromExpressionData) result.BodyExpressions[0]).Identifier);
-      Assert.AreEqual (constantExpression, ((FromExpressionData) result.BodyExpressions[0]).Expression);
-      Assert.That (result.ProjectionExpressions, Is.Empty);
-    }
+      ParseResultCollector expectedResult = new ParseResultCollector (constantExpression);
+      new SimpleFromSourceExpressionParser().Parse (expectedResult, constantExpression, _potentialFromIdentifier, "xy");
+      AssertResultsEqual (expectedResult, result);
 
-    [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Query sources cannot be null.")]
-    public void SimpleSource_ConstantNull ()
-    {
-      Expression constantExpression = Expression.Constant (null, typeof (IQueryable<Student>));
-      ParseResultCollector result = new ParseResultCollector (constantExpression);
-      _topLevelParser.Parse (result, constantExpression, _potentialFromIdentifier, "bla");
-    }
-
-    [Test]
-    public void SimpleSource_MemberExpression ()
-    {
-      Expression memberExpression = Expression.MakeMemberAccess (Expression.Constant (null, typeof (Student)), typeof (Student).GetProperty ("Scores"));
-      ParseResultCollector result = new ParseResultCollector(memberExpression);
-      _topLevelParser.Parse (result, memberExpression, _potentialFromIdentifier, "bla");
-      
-      Assert.AreEqual (1, result.BodyExpressions.Count);
-      Assert.AreEqual (_potentialFromIdentifier, ((FromExpressionData) result.BodyExpressions[0]).Identifier);
-      Assert.AreEqual (memberExpression, ((FromExpressionData) result.BodyExpressions[0]).Expression);
-      Assert.That (result.ProjectionExpressions, Is.Empty);
-    }
-
-    [Test]
-    public void SimpleSource_MethodCall ()
-    {
-      Expression callExpression = Expression.Call (typeof (ExpressionHelper).GetMethod ("CreateQuerySource", new Type[0]));
-      ParseResultCollector result = new ParseResultCollector (callExpression);
-      _topLevelParser.Parse (result, callExpression, _potentialFromIdentifier, "bla");
-
-      Assert.AreEqual (1, result.BodyExpressions.Count);
-      Assert.AreEqual (_potentialFromIdentifier, ((FromExpressionData) result.BodyExpressions[0]).Identifier);
-      Assert.IsInstanceOfType (typeof (TestQueryable<Student>), ((ConstantExpression)((FromExpressionData) result.BodyExpressions[0]).Expression).Value);
-      Assert.That (result.ProjectionExpressions, Is.Empty);
     }
 
     [Test]
     public void Select ()
     {
       IQueryable<Student> query = SelectTestQueryGenerator.CreateSimpleQuery (_source);
-      ParseResultCollector result = Parse (query);
+      ParseResultCollector result = Parse (query.Expression);
       ParseResultCollector expectedResult = new ParseResultCollector (query.Expression);
       new SelectExpressionParser().Parse (expectedResult, (MethodCallExpression) query.Expression);
       AssertResultsEqual (expectedResult, result);
@@ -162,7 +119,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     public void SelectMany ()
     {
       IQueryable<Student> query = FromTestQueryGenerator.CreateMultiFromQuery (_source, _source);
-      ParseResultCollector result = Parse (query);
+      ParseResultCollector result = Parse (query.Expression);
       ParseResultCollector expectedResult = new ParseResultCollector (query.Expression);
       new SelectManyExpressionParser ().Parse (expectedResult, (MethodCallExpression) query.Expression);
       AssertResultsEqual (expectedResult, result);
@@ -172,7 +129,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     public void Where_TopLevel ()
     {
       IQueryable<Student> query = WhereTestQueryGenerator.CreateSimpleWhereQuery(_source);
-      ParseResultCollector result = Parse (query);
+      ParseResultCollector result = Parse (query.Expression);
       ParseResultCollector expectedResult = new ParseResultCollector (query.Expression);
       new WhereExpressionParser (true).Parse (expectedResult, (MethodCallExpression) query.Expression);
       AssertResultsEqual (expectedResult, result);
@@ -192,7 +149,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     public void OrderBy_TopLevel ()
     {
       IQueryable<Student> query = OrderByTestQueryGenerator.CreateSimpleOrderByQuery (_source);
-      ParseResultCollector result = Parse (query);
+      ParseResultCollector result = Parse (query.Expression);
       ParseResultCollector expectedResult = new ParseResultCollector (query.Expression);
       new OrderByExpressionParser (true).Parse (expectedResult, (MethodCallExpression) query.Expression);
       AssertResultsEqual (expectedResult, result);
@@ -263,10 +220,10 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
       }
     }
 
-    private ParseResultCollector Parse (IQueryable query)
+    private ParseResultCollector Parse (Expression expression)
     {
-      ParseResultCollector result = new ParseResultCollector (query.Expression);
-      _topLevelParser.Parse (result, query.Expression, _potentialFromIdentifier, "bla");
+      ParseResultCollector result = new ParseResultCollector (expression);
+      _topLevelParser.Parse (result, expression, _potentialFromIdentifier, "bla");
       return result;
     }
 
