@@ -120,8 +120,9 @@ namespace Remotion.Data.Linq.Visitor
       ArgumentUtility.CheckNotNull ("expression", expression);
       Expression newLeft = VisitExpression (expression.Left);
       Expression newRight = VisitExpression (expression.Right);
-      if (newLeft != expression.Left || newRight != expression.Right)
-        return Expression.MakeBinary (expression.NodeType, newLeft, newRight);
+      LambdaExpression newConversion = (LambdaExpression) VisitExpression (expression.Conversion);
+      if (newLeft != expression.Left || newRight != expression.Right || newConversion != expression.Conversion)
+        return Expression.MakeBinary (expression.NodeType, newLeft, newRight, expression.IsLiftedToNull, expression.Method, newConversion);//, expression.IsLiftedToNull, expression.Method, expression.Conversion);
       return expression;
     }
 

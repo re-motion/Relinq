@@ -23,18 +23,8 @@ using Constant=Remotion.Data.Linq.DataObjectModel.Constant;
 namespace Remotion.Data.UnitTests.Linq.VisitorTest.ExpressionTreeVisitorTest
 {
   [TestFixture]
-  public class ExpressionVisitor_SpecificExpressionsTest
+  public class ExpressionTreeVisitor_SpecificExpressionsTest : ExpressionTreeVisitor_SpecificExpressionsTestBase
   {
-    private MockRepository _mockRepository;
-    private ExpressionTreeVisitor _visitorMock;
-
-    [SetUp]
-    public void Setup()
-    {
-      _mockRepository = new MockRepository();
-      _visitorMock = _mockRepository.CreateMock<ExpressionTreeVisitor>();
-    }
-
     [Test]
     public void VisitUnaryExpression_Unchanges ()
     {
@@ -69,47 +59,6 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest.ExpressionTreeVisitorTest
       UnaryExpression result = (UnaryExpression) InvokeAndCheckVisitExpression ("VisitUnaryExpression", expression);
       Assert.AreSame (newOperand, result.Operand);
       Assert.AreEqual (ExpressionType.Negate, result.NodeType);
-    }
-
-    [Test]
-    public void VisitBinaryExpression_Unchanged ()
-    {
-      BinaryExpression expression = (BinaryExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Add);
-      Expect.Call (InvokeVisitMethod ("VisitExpression", expression.Left)).Return (expression.Left);
-      Expect.Call (InvokeVisitMethod ("VisitExpression", expression.Right)).Return (expression.Right);
-
-      BinaryExpression result = (BinaryExpression) InvokeAndCheckVisitExpression ("VisitBinaryExpression", expression);
-      Assert.AreSame (expression, result);
-    }
-
-    [Test]
-    public void VisitBinaryExpression_LeftChanged ()
-    {
-      BinaryExpression expression = (BinaryExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Subtract);
-      Expression newOperand = Expression.Constant (1);
-      Expect.Call (InvokeVisitMethod ("VisitExpression", expression.Left)).Return (newOperand);
-      Expect.Call (InvokeVisitMethod ("VisitExpression", expression.Right)).Return (expression.Right);
-
-      BinaryExpression result = (BinaryExpression) InvokeAndCheckVisitExpression ("VisitBinaryExpression", expression);
-      Assert.AreNotSame (expression, result);
-      Assert.AreEqual (ExpressionType.Subtract, result.NodeType);
-      Assert.AreSame (newOperand, result.Left);
-      Assert.AreSame (expression.Right, result.Right);
-    }
-
-    [Test]
-    public void VisitBinaryExpression_RightChanged ()
-    {
-      BinaryExpression expression = (BinaryExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Subtract);
-      Expression newOperand = Expression.Constant (1);
-      Expect.Call (InvokeVisitMethod ("VisitExpression", expression.Left)).Return (expression.Left);
-      Expect.Call (InvokeVisitMethod ("VisitExpression", expression.Right)).Return (newOperand);
-
-      BinaryExpression result = (BinaryExpression) InvokeAndCheckVisitExpression ("VisitBinaryExpression", expression);
-      Assert.AreNotSame (expression, result);
-      Assert.AreEqual (ExpressionType.Subtract, result.NodeType);
-      Assert.AreSame (expression.Left, result.Left);
-      Assert.AreSame (newOperand, result.Right);
     }
 
     [Test]
@@ -776,58 +725,6 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest.ExpressionTreeVisitorTest
       {
         throw ex.InnerException;
       }
-    }
-
-    private Expression InvokeAndCheckVisitExpression (string methodName, Expression expression)
-    {
-      return (Expression) InvokeAndCheckVisitObject (methodName, expression);
-    }
-
-    private object InvokeAndCheckVisitObject (string methodName, object argument)
-    {
-      return InvokeAndCheckVisitMethod<object, object> (delegate { return InvokeVisitMethod (methodName, argument); }, argument);
-    }
-
-    private ReadOnlyCollection<T> InvokeAndCheckVisitExpressionList<T> (ReadOnlyCollection<T> expressions) where T : Expression
-    {
-      return InvokeAndCheckVisitMethod<ReadOnlyCollection<T>, ReadOnlyCollection<T>> (
-          delegate { return InvokeVisitExpressionListMethod (expressions); }, expressions);
-    }
-
-    private ReadOnlyCollection<MemberBinding> InvokeAndCheckVisitMemberBindingList (ReadOnlyCollection<MemberBinding> expressions)
-    {
-      return InvokeAndCheckVisitMethod<ReadOnlyCollection<MemberBinding>, ReadOnlyCollection<MemberBinding>> (
-          delegate { return InvokeVisitMethod ("VisitMemberBindingList", expressions); }, expressions);
-    }
-
-    private ReadOnlyCollection<ElementInit> InvokeAndCheckVisitElementInitList (ReadOnlyCollection<ElementInit> expressions)
-    {
-      return InvokeAndCheckVisitMethod<ReadOnlyCollection<ElementInit>, ReadOnlyCollection<ElementInit>> (
-          delegate { return InvokeVisitMethod ("VisitElementInitList", expressions); }, expressions);
-    }
-
-    private R InvokeAndCheckVisitMethod<A, R> (Func<A, R> visitMethod, A argument)
-    {
-      Expect.Call (visitMethod (argument)).CallOriginalMethod (OriginalCallOptions.CreateExpectation);
-
-      _mockRepository.ReplayAll ();
-
-      R result = visitMethod (argument);
-      _mockRepository.VerifyAll ();
-
-      return result;
-    }
-
-    private T InvokeVisitMethod<T> (string methodName, T argument)
-    {
-      return (T) _visitorMock.GetType ().GetMethod (methodName, BindingFlags.NonPublic | BindingFlags.Instance).Invoke (_visitorMock, new object[] { argument });
-    }
-
-    private ReadOnlyCollection<T> InvokeVisitExpressionListMethod<T> (ReadOnlyCollection<T> expressions) where T : Expression
-    {
-      return (ReadOnlyCollection<T>) _visitorMock.GetType ().GetMethod ("VisitExpressionList", BindingFlags.NonPublic | BindingFlags.Instance)
-        .MakeGenericMethod (typeof (T))
-        .Invoke (_visitorMock, new object[] { expressions });
     }
   }
 }

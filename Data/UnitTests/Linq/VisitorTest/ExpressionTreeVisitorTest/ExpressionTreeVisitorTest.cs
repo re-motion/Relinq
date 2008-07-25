@@ -25,7 +25,7 @@ using System.Linq;
 namespace Remotion.Data.UnitTests.Linq.VisitorTest.ExpressionTreeVisitorTest
 {
   [TestFixture]
-  public class ExpressionVisitorTest
+  public class ExpressionTreeVisitorTest
   {
     private MockRepository _mockRepository;
 
