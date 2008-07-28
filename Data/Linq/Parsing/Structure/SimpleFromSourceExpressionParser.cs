@@ -12,8 +12,8 @@ namespace Remotion.Data.Linq.Parsing.Structure
       if (potentialFromIdentifier == null)
       {
         string message = string.Format (
-            "Parsing of expression '{0}' is not supported because there is no from identifier matching the expression in "
-            + "expression tree '{1}'.",
+            "Parsing of expression '{0}' is not supported. The expression was interpreted as a from source, but there is no from identifier matching "
+            + "it in expression tree '{1}'.",
             sourceExpression,
             resultCollector.ExpressionTreeRoot);
         throw new ParserException (message, sourceExpression, resultCollector.ExpressionTreeRoot, null);

@@ -80,8 +80,8 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Parsing of expression 'TestQueryable<Student>()' is not supported because there "
-      + "is no from identifier matching the expression in expression tree 'TestQueryable<Student>()'.")]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Parsing of expression 'TestQueryable<Student>()' is not supported. The " 
+        + "expression was interpreted as a from source, but there is no from identifier matching it in expression tree 'TestQueryable<Student>()'.")]
     public void NoPotentialFromIdentifier ()
     {
       Expression constantExpression = Expression.Constant (ExpressionHelper.CreateQuerySource (), typeof (IQueryable<Student>));
