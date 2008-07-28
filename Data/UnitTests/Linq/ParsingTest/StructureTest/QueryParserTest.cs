@@ -42,8 +42,8 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Parsing of expression 'WriteLine()' is not supported because there is no from "
-        + "identifier matching the expression in expression tree 'WriteLine()'.")]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Parsing of expression 'WriteLine()' is not supported. The expression was " 
+        + "interpreted as a from source, but there is no from identifier matching it in expression tree 'WriteLine()'.")]
     public void Initialize_FromWrongExpression ()
     {
       MethodCallExpression expression = Expression.Call (typeof (Console), "WriteLine", Type.EmptyTypes);
