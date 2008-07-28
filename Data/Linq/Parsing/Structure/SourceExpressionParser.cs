@@ -35,6 +35,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       _callDispatcher.RegisterParser ("ThenBy", ParseOrderBySource);
       _callDispatcher.RegisterParser ("ThenByDescending", ParseOrderBySource);
       _callDispatcher.RegisterParser ("Distinct", ParseDistinctSource);
+      _callDispatcher.RegisterParser ("Cast", ParseCastSource);
     }
 
     public CallParserDispatcher CallDispatcher
@@ -55,34 +56,30 @@ namespace Remotion.Data.Linq.Parsing.Structure
         ParseSimpleFromSource (resultCollector, sourceExpression, potentialFromIdentifier, context);
     }
 
-    private void ParseSelectSource (ParseResultCollector resultCollector, Expression sourceExpression)
+    private void ParseSelectSource (ParseResultCollector resultCollector, MethodCallExpression sourceExpression)
     {
-      MethodCallExpression methodCallExpression = (MethodCallExpression) sourceExpression;
       if (_isTopLevel)
-        new SelectExpressionParser ().Parse (resultCollector, methodCallExpression);
+        new SelectExpressionParser ().Parse (resultCollector, sourceExpression);
       else
-        new LetExpressionParser().Parse (resultCollector, methodCallExpression);
+        new LetExpressionParser ().Parse (resultCollector, sourceExpression);
     }
 
-    private void ParseSelectManySource (ParseResultCollector resultCollector, Expression sourceExpression)
+    private void ParseSelectManySource (ParseResultCollector resultCollector, MethodCallExpression sourceExpression)
     {
-      MethodCallExpression methodCallExpression = (MethodCallExpression) sourceExpression;
-      new SelectManyExpressionParser().Parse (resultCollector, methodCallExpression);
+      new SelectManyExpressionParser ().Parse (resultCollector, sourceExpression);
     }
 
-    private void ParseWhereSource (ParseResultCollector resultCollector, Expression sourceExpression)
+    private void ParseWhereSource (ParseResultCollector resultCollector, MethodCallExpression sourceExpression)
     {
-      MethodCallExpression methodCallExpression = (MethodCallExpression) sourceExpression;
-      new WhereExpressionParser (_isTopLevel).Parse (resultCollector, methodCallExpression);
+      new WhereExpressionParser (_isTopLevel).Parse (resultCollector, sourceExpression);
     }
 
-    private void ParseOrderBySource (ParseResultCollector resultCollector, Expression sourceExpression)
+    private void ParseOrderBySource (ParseResultCollector resultCollector, MethodCallExpression sourceExpression)
     {
-      MethodCallExpression methodCallExpression = (MethodCallExpression) sourceExpression;
-      new OrderByExpressionParser (_isTopLevel).Parse ( resultCollector, methodCallExpression);
+      new OrderByExpressionParser (_isTopLevel).Parse (resultCollector, sourceExpression);
     }
 
-    private void ParseDistinctSource (ParseResultCollector resultCollector, Expression sourceExpression, ParameterExpression potentialFromIdentifier)
+    private void ParseDistinctSource (ParseResultCollector resultCollector, MethodCallExpression sourceExpression, ParameterExpression potentialFromIdentifier)
     {
       if (!_isTopLevel)
       {
@@ -91,8 +88,14 @@ namespace Remotion.Data.Linq.Parsing.Structure
       }
 
       resultCollector.SetDistinct ();
-      Expression selectExpression = ((MethodCallExpression) sourceExpression).Arguments[0];
+      Expression selectExpression = sourceExpression.Arguments[0];
       Parse (resultCollector, selectExpression, potentialFromIdentifier, "first argument of distinct");
+    }
+
+    private void ParseCastSource (ParseResultCollector resultCollector, MethodCallExpression sourceExpression, ParameterExpression potentialFromIdentifier)
+    {
+      // casts on this level are simply ignored in the query model
+      Parse (resultCollector, sourceExpression.Arguments[0], potentialFromIdentifier, "first argument of Cast");
     }
 
     private void ParseSimpleFromSource (ParseResultCollector resultCollector, Expression sourceExpression, ParameterExpression potentialFromIdentifier, string context)

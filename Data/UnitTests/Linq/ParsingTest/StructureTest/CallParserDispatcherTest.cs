@@ -26,7 +26,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     private IQueryable<Student> _source;
     private MethodInfo _method;
     private Expression<Func<object>> _wrappedCall;
-    private Action<ParseResultCollector, Expression> _emptyParser;
+    private Action<ParseResultCollector, MethodCallExpression> _emptyParser;
 
     [SetUp]
     public void SetUp ()
@@ -54,7 +54,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     [Test]
     public void GetParser_Registered ()
     {
-      Action<ParseResultCollector, Expression> parser = _emptyParser;
+      Action<ParseResultCollector, MethodCallExpression> parser = _emptyParser;
       _dispatcher.RegisterParser ("Select", parser);
 
       Assert.That (_dispatcher.GetParser (_method), Is.SameAs (parser));

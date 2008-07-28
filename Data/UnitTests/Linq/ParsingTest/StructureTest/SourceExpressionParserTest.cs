@@ -179,6 +179,18 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
       AssertResultsEqual (expectedResult, result);
     }
 
+    [Test]
+    public void Cast ()
+    {
+      IQueryable<object> query = CastTestQueryGenerator.CreateQueryWithTopLevelCastCall (_source);
+      ParseResultCollector result = Parse (query.Expression);
+      
+      Expression innerExpression = ((MethodCallExpression)query.Expression).Arguments[0];
+      ParseResultCollector expectedResult = new ParseResultCollector (query.Expression);
+      new SourceExpressionParser (true).Parse (expectedResult, innerExpression, _potentialFromIdentifier, "whatever");
+      AssertResultsEqual (expectedResult, result);
+    }
+
     private void AssertResultsEqual(ParseResultCollector one, ParseResultCollector two)
     {
       Assert.AreEqual (one.ExpressionTreeRoot, two.ExpressionTreeRoot);

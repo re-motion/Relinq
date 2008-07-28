@@ -21,14 +21,14 @@ namespace Remotion.Data.Linq.Parsing.Structure
   {
     private readonly Dictionary<string, Delegate> _parseMethods = new Dictionary<string, Delegate> ();
 
-    public void RegisterParser (string methodName, Action<ParseResultCollector, Expression> parser)
+    public void RegisterParser (string methodName, Action<ParseResultCollector, MethodCallExpression> parser)
     {
       ArgumentUtility.CheckNotNull ("methodName", methodName);
       ArgumentUtility.CheckNotNull ("parser", parser);
       _parseMethods.Add (methodName, parser);
     }
 
-    public void RegisterParser (string methodName, Action<ParseResultCollector, Expression, ParameterExpression> parser)
+    public void RegisterParser (string methodName, Action<ParseResultCollector, MethodCallExpression, ParameterExpression> parser)
     {
       ArgumentUtility.CheckNotNull ("methodName", methodName);
       ArgumentUtility.CheckNotNull ("parser", parser);
@@ -58,12 +58,11 @@ namespace Remotion.Data.Linq.Parsing.Structure
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      Action<ParseResultCollector, Expression, ParameterExpression> parser =
-          GetParser (expression.Method) as Action<ParseResultCollector, Expression, ParameterExpression>;
+      var parser = GetParser (expression.Method) as Action<ParseResultCollector, MethodCallExpression, ParameterExpression>;
       if (parser != null)
         parser (collector, expression, potentialFromIdentifier);
       else
-        ((Action<ParseResultCollector, Expression>) GetParser (expression.Method)) (collector, expression);
+        ((Action<ParseResultCollector, MethodCallExpression>) GetParser (expression.Method)) (collector, expression);
 
     }
   }
