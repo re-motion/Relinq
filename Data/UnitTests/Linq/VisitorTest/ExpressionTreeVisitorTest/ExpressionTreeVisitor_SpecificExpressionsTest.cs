@@ -493,9 +493,9 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest.ExpressionTreeVisitorTest
       
       Expect.Call (InvokeVisitMethod ("VisitMemberAssignment", memberAssignment)).Return (memberAssignment);
 
-      _mockRepository.ReplayAll();
+      MockRepository.ReplayAll();
       object result = InvokeVisitMethod ("VisitMemberBinding", memberAssignment);
-      _mockRepository.VerifyAll();
+      MockRepository.VerifyAll();
 
       Assert.AreSame (memberAssignment, result);
     }
@@ -508,9 +508,9 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest.ExpressionTreeVisitorTest
       Expect.Call (InvokeVisitMethod ("VisitMemberBinding", memberMemberBinding)).CallOriginalMethod (OriginalCallOptions.CreateExpectation);
       Expect.Call (InvokeVisitMethod ("VisitMemberMemberBinding", memberMemberBinding)).Return (memberMemberBinding);
 
-      _mockRepository.ReplayAll ();
+      MockRepository.ReplayAll ();
       object result = InvokeVisitMethod ("VisitMemberBinding", memberMemberBinding);
-      _mockRepository.VerifyAll ();
+      MockRepository.VerifyAll ();
 
       Assert.AreSame (memberMemberBinding, result);
     }
@@ -524,9 +524,9 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest.ExpressionTreeVisitorTest
     Expect.Call (InvokeVisitMethod ("VisitMemberBinding", memberListBinding)).CallOriginalMethod (OriginalCallOptions.CreateExpectation);
     Expect.Call (InvokeVisitMethod ("VisitMemberListBinding", memberListBinding)).Return (memberListBinding);
 
-    _mockRepository.ReplayAll ();
+    MockRepository.ReplayAll ();
     object result = InvokeVisitMethod ("VisitMemberBinding", memberListBinding);
-    _mockRepository.VerifyAll ();
+    MockRepository.VerifyAll ();
 
     Assert.AreSame (memberListBinding, result);
     }
@@ -715,7 +715,7 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest.ExpressionTreeVisitorTest
     {
       SpecialExpressionNode expressionNode = new SpecialExpressionNode ((ExpressionType) (-1), typeof (int));
       Expect.Call (InvokeVisitMethod ("VisitUnknownExpression", expressionNode)).CallOriginalMethod (OriginalCallOptions.CreateExpectation);
-      _mockRepository.ReplayAll();
+      MockRepository.ReplayAll();
 
       try
       {

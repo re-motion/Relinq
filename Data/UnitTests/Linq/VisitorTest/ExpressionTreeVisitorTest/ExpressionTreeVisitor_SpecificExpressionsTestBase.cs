@@ -12,7 +12,7 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest.ExpressionTreeVisitorTest
 {
   public class ExpressionTreeVisitor_SpecificExpressionsTestBase
   {
-    protected MockRepository _mockRepository;
+    private MockRepository _mockRepository;
     private ExpressionTreeVisitor _visitorMock;
 
     [SetUp]
@@ -20,6 +20,12 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest.ExpressionTreeVisitorTest
     {
       _mockRepository = new MockRepository();
       _visitorMock = _mockRepository.CreateMock<ExpressionTreeVisitor>();
+    }
+
+    protected MockRepository MockRepository
+    {
+      get { return _mockRepository; }
+      set { _mockRepository = value; }
     }
 
     protected Expression InvokeAndCheckVisitExpression (string methodName, Expression expression)
