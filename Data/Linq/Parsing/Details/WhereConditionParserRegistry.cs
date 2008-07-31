@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Expressions;
 using Remotion.Data.Linq.Parsing.Details.WhereConditionParsing;
 using Remotion.Data.Linq.Parsing.FieldResolving;
 
@@ -32,9 +33,10 @@ namespace Remotion.Data.Linq.Parsing.Details
       RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (databaseInfo));
       RegisterParser (typeof (MethodCallExpression), new MethodCallExpressionParser (this));
       RegisterParser (typeof (MethodCallExpression), new LikeParser (this));
+      RegisterParser (typeof (SubQueryExpression), new SubQueryExpressionParser ());
       RegisterParser (typeof (MethodCallExpression), new ContainsParser (this));
       RegisterParser (typeof (MethodCallExpression), new ContainsFullTextParser (this));
-      RegisterParser (typeof (UnaryExpression), new UnaryExpressionParser (this));  
+      RegisterParser (typeof (UnaryExpression), new UnaryExpressionParser (this));
     }
 
     public IEnumerable<IWhereConditionParser> GetParsers (Type expressionType)

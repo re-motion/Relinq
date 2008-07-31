@@ -10,6 +10,7 @@
 
 using System;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Parsing;
 using Remotion.Utilities;
 using Remotion.Data.Linq.DataObjectModel;
 
@@ -30,7 +31,7 @@ namespace Remotion.Data.Linq.Clauses
       SubQueryModel = subQuery;
       ProjectionExpression = projectionExpression;
 
-      _fromSource = new SubQuery (SubQueryModel, Identifier.Name);
+      _fromSource = new SubQuery (SubQueryModel, ParseMode.SubQueryInFrom, Identifier.Name);
     }
 
     public QueryModel SubQueryModel { get; private set; }

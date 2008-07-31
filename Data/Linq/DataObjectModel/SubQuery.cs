@@ -8,23 +8,26 @@
  * WITHOUT WARRANTY OF ANY KIND, either express or implied. 
  */
 
+using Remotion.Data.Linq.Parsing;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.DataObjectModel
 {
   public class SubQuery : IColumnSource, ICriterion
   {
-    public SubQuery (QueryModel queryModel, string alias)
+    public SubQuery (QueryModel queryModel, ParseMode parseMode, string alias)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+      ArgumentUtility.CheckNotNull ("parseMode", parseMode);
 
       QueryModel = queryModel;
       Alias = alias;
+      ParseMode = parseMode;
     }
 
     public QueryModel QueryModel { get; private set; }
     public string Alias { get; private set; }
-    
+    public ParseMode ParseMode { get; private set; }
 
     public string AliasString
     {
@@ -35,7 +38,7 @@ namespace Remotion.Data.Linq.DataObjectModel
     {
       get { return true; }
     }
-
+    
     public override bool Equals (object obj)
     {
       SubQuery other = obj as SubQuery;

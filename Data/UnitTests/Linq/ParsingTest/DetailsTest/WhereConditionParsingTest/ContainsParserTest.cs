@@ -57,41 +57,41 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.WhereConditionPar
       ContainsParser parser = new ContainsParser (parserRegistry);
 
       ICriterion actualCriterion = parser.Parse (methodCallExpression, ParseContext);
-      SubQuery expectedSubQuery = new SubQuery (queryModel, null);
+      SubQuery expectedSubQuery = new SubQuery (queryModel, ParseMode.SubQueryInSelect, null);
       IValue expectedCheckedItem = new Constant (0);
       ICriterion expectedCriterion = new BinaryCondition (expectedSubQuery, expectedCheckedItem, BinaryCondition.ConditionKind.Contains);
 
       Assert.AreEqual (expectedCriterion, actualCriterion);
     }
 
-    [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected SubQueryExpression for argument 0 of Contains method call, found "
-        + "ConstantExpression (null).")]
-    public void ParseContains_NoSubQueryExpression ()
-    {
-      IQueryable<Student> querySource = ExpressionHelper.CreateQuerySource ();
-      Student item = new Student ();
-      ConstantExpression checkedExpression = Expression.Constant (item);
-      Data.Linq.QueryModel queryModel = ExpressionHelper.CreateQueryModel ();
-      ClauseFieldResolver resolver =
-          new ClauseFieldResolver (StubDatabaseInfo.Instance, new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
+    //[Test]
+    //[ExpectedException (typeof (ParserException), ExpectedMessage = "Expected SubQueryExpression for argument 0 of Contains method call, found "
+    //    + "ConstantExpression (null).")]
+    //public void ParseContains_NoSubQueryExpression ()
+    //{
+    //  IQueryable<Student> querySource = ExpressionHelper.CreateQuerySource ();
+    //  Student item = new Student ();
+    //  ConstantExpression checkedExpression = Expression.Constant (item);
+    //  Data.Linq.QueryModel queryModel = ExpressionHelper.CreateQueryModel ();
+    //  ClauseFieldResolver resolver =
+    //      new ClauseFieldResolver (StubDatabaseInfo.Instance, new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
 
-      MethodInfo containsMethod = ParserUtility.GetMethod (() => querySource.Contains (item));
-      MethodCallExpression methodCallExpression = Expression.Call (
-          null,
-          containsMethod,
-          Expression.Constant (null, typeof (IQueryable<Student>)),
-          checkedExpression
-          );
+    //  MethodInfo containsMethod = ParserUtility.GetMethod (() => querySource.Contains (item));
+    //  MethodCallExpression methodCallExpression = Expression.Call (
+    //      null,
+    //      containsMethod,
+    //      Expression.Constant (null, typeof (IQueryable<Student>)),
+    //      checkedExpression
+    //      );
 
-      WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
-      parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
-      parserRegistry.RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (resolver));
-      parserRegistry.RegisterParser (typeof (MemberExpression), new MemberExpressionParser (resolver));
+    //  WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
+    //  parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
+    //  parserRegistry.RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (resolver));
+    //  parserRegistry.RegisterParser (typeof (MemberExpression), new MemberExpressionParser (resolver));
 
-      ContainsParser parser = new ContainsParser (parserRegistry);
-      parser.Parse (methodCallExpression, ParseContext);
-    }
+    //  ContainsParser parser = new ContainsParser (parserRegistry);
+    //  parser.Parse (methodCallExpression, ParseContext);
+    //}
 
     [Test]
     [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected Contains with expression for method call expression in where "

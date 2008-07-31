@@ -31,8 +31,9 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
       if (methodCallExpression.Method.Name == "Contains" && methodCallExpression.Method.IsGenericMethod)
       {
         ParserUtility.CheckNumberOfArguments (methodCallExpression, "Contains", 2, parseContext.ExpressionTreeRoot);
-        ParserUtility.CheckParameterType<SubQueryExpression> (methodCallExpression, "Contains", 0, parseContext.ExpressionTreeRoot);
-        return CreateContains ((SubQueryExpression) methodCallExpression.Arguments[0], methodCallExpression.Arguments[1], parseContext);
+        ParserUtility.CheckParameterType<Expression> (methodCallExpression, "Contains", 0, parseContext.ExpressionTreeRoot);
+        //return CreateContains ((SubQueryExpression) methodCallExpression.Arguments[0], methodCallExpression.Arguments[1], parseContext);
+        return CreateContains (methodCallExpression.Arguments[0], methodCallExpression.Arguments[1], parseContext);
       }
       throw ParserUtility.CreateParserException ("Contains with expression", methodCallExpression.Method.Name,
           "method call expression in where condition", parseContext.ExpressionTreeRoot);
@@ -54,11 +55,22 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
       return false;
     }
 
-    private BinaryCondition CreateContains (SubQueryExpression subQueryExpression, Expression itemExpression, ParseContext parseContext)
+    private BinaryCondition CreateContains (Expression expression, Expression itemExpression, ParseContext parseContext)
     {
-      SubQuery subQuery = new SubQuery (subQueryExpression.QueryModel, null);
-      return new BinaryCondition (subQuery, _parserRegistry.GetParser (itemExpression).Parse (itemExpression, parseContext),
+      //SubQuery subQuery = new SubQuery (subQueryExpression.QueryModel, null);
+      return new BinaryCondition (
+        _parserRegistry.GetParser (expression).Parse (expression, parseContext),
+        _parserRegistry.GetParser (itemExpression).Parse (itemExpression, parseContext),
           BinaryCondition.ConditionKind.Contains);
     }
+
+    //private BinaryCondition CreateContains (SubQueryExpression subQueryExpression, Expression itemExpression, ParseContext parseContext)
+    //{
+    //  SubQuery subQuery = new SubQuery (subQueryExpression.QueryModel, null);
+    //  return new BinaryCondition (
+    //    subQuery, 
+    //    _parserRegistry.GetParser (itemExpression).Parse (itemExpression, parseContext),
+    //      BinaryCondition.ConditionKind.Contains);
+    //}
   }
 }
