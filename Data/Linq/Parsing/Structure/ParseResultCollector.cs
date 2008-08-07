@@ -21,6 +21,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
   {
     private readonly List<BodyExpressionDataBase> _bodyExpressions = new List<BodyExpressionDataBase> ();
     private readonly List<LambdaExpression> _projectionExpressions = new List<LambdaExpression> ();
+    private readonly List<MethodCallExpression> _resultModifiers = new List<MethodCallExpression>();
 
     public ParseResultCollector (Expression expressionTreeRoot)
     {
@@ -29,8 +30,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
     }
 
     public Expression ExpressionTreeRoot { get; private set; }
-    public bool IsDistinct { get; private set; }
-
+    
     public ReadOnlyCollection<BodyExpressionDataBase> BodyExpressions
     {
       get { return _bodyExpressions.AsReadOnly(); }
@@ -41,9 +41,15 @@ namespace Remotion.Data.Linq.Parsing.Structure
       get { return _projectionExpressions.AsReadOnly (); }
     }
 
-    public void SetDistinct ()
+    public List<MethodCallExpression> ResultModifiers 
     {
-      IsDistinct = true;
+      get { return _resultModifiers; }
+    }
+
+    public void AddResultModifier (MethodCallExpression expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+      _resultModifiers.Add (expression);
     }
 
     public void AddBodyExpression (BodyExpressionDataBase expression)

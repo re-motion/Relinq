@@ -8,6 +8,8 @@
  * WITHOUT WARRANTY OF ANY KIND, either express or implied. 
  */
 
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Utilities;
 using System.Linq.Expressions;
@@ -17,15 +19,14 @@ namespace Remotion.Data.Linq.Clauses
   public class SelectClause : ISelectGroupClause
   {
     private readonly LambdaExpression _projectionExpression;
-
-    public SelectClause (IClause previousClause, LambdaExpression projectionExpression,bool distinct)
+    
+    public SelectClause (IClause previousClause, LambdaExpression projectionExpression, List<MethodCallExpression> resultModifiers)
     {
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
-      ArgumentUtility.CheckNotNull ("distinct", distinct);
-
+      
       PreviousClause = previousClause;
       _projectionExpression = projectionExpression;
-      Distinct = distinct;
+      ResultModifiers = resultModifiers;
     }
 
     public IClause PreviousClause { get; private set; }
@@ -35,8 +36,8 @@ namespace Remotion.Data.Linq.Clauses
       get { return _projectionExpression; }
     }
 
-    public bool Distinct { get; private set; }
-
+    public List<MethodCallExpression> ResultModifiers { get; private set; }
+    
     public virtual void Accept (IQueryVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);

@@ -10,10 +10,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq;
+using Remotion.Data.Linq.Parsing;
+using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 using Rhino.Mocks;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.DataObjectModel;
@@ -126,9 +129,22 @@ namespace Remotion.Data.UnitTests.Linq
     public static SelectClause CreateSelectClause ()
     {
       LambdaExpression expression = Expression.Lambda (Expression.Constant (0), Expression.Parameter (typeof (Student), "s1"));
-      return new SelectClause (CreateClause (), expression,false);
+      //return new SelectClause (CreateClause (), expression,false);
+      return new SelectClause (CreateClause (), expression, null);
     }
-    
+
+    public static SelectClause CreateNewSelectClause ()
+    {
+      LambdaExpression expression = Expression.Lambda (Expression.Constant (0), Expression.Parameter (typeof (Student), "s1"));
+      var query = SelectTestQueryGenerator.CreateSimpleQuery (CreateQuerySource());
+      var methodInfo = ParserUtility.GetMethod (() => query.Count ());
+      MethodCallExpression methodCallExpression = Expression.Call (methodInfo, query.Expression);
+      List<MethodCallExpression> methodCallExpressions = new List<MethodCallExpression> ();
+      methodCallExpressions.Add (methodCallExpression);
+
+      return new SelectClause (CreateClause (), expression, methodCallExpressions);
+    }
+
 
     public static WhereClause CreateWhereClause ()
     {

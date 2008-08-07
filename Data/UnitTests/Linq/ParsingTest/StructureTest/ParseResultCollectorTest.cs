@@ -10,10 +10,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Expressions;
+using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Structure;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
@@ -38,13 +40,19 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     {
       Assert.AreSame (_root, _collector.ExpressionTreeRoot);
     }
-
+    
     [Test]
-    public void IsDistinct()
+    public void ResultModifiers ()
     {
-      Assert.IsFalse (_collector.IsDistinct);
-      _collector.SetDistinct();
-      Assert.IsTrue (_collector.IsDistinct);
+      Assert.That (_collector.ResultModifiers, Is.Empty);
+      
+      var query = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource ());
+      var methodInfo = ParserUtility.GetMethod (() => Enumerable.Count (query));
+      MethodCallExpression methodCallExpression = Expression.Call (methodInfo, query.Expression);
+
+      _collector.AddResultModifier (methodCallExpression);
+
+      Assert.That (_collector.ResultModifiers, Is.EqualTo (new[] { methodCallExpression }));
     }
 
     [Test]

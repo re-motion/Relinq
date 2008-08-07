@@ -190,7 +190,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       }
 
       LambdaExpression selectProjection = _result.ProjectionExpressions.Last ();
-      return new SelectClause (_previousClause, selectProjection, _result.IsDistinct);
+      return new SelectClause (_previousClause, selectProjection, _result.ResultModifiers);
     }
   }
 }

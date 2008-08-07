@@ -12,9 +12,9 @@ using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using System.Linq;
+using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Structure;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 
 namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
@@ -41,7 +41,8 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     {
       IQueryable<Student> query = SelectTestQueryGenerator.CreateSimpleQuery (_source);
       ParseResultCollector result = Parse (query.Expression);
-      Assert.IsFalse (result.IsDistinct);
+      var resultModifiers = result.ResultModifiers;
+      Assert.IsEmpty (result.ResultModifiers);
     }
 
     [Test]
@@ -49,15 +50,26 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     {
       IQueryable<string> query = DistinctTestQueryGenerator.CreateSimpleDistinctQuery (_source);
       ParseResultCollector result = Parse (query.Expression);
-      Assert.IsTrue (result.IsDistinct);
+      Assert.IsNotEmpty (result.ResultModifiers);
     }
-
+    
     [Test]
     public void Distinct_TopLevelBeforeWhere ()
     {
       IQueryable<Student> query = DistinctTestQueryGenerator.CreateDisinctWithWhereQueryWithoutProjection (_source);
       ParseResultCollector result = Parse(query.Expression);
-      Assert.IsTrue (result.IsDistinct);
+      Assert.IsNotNull (result.ResultModifiers);
+    }
+
+    [Test]
+    public void ResultModifiers ()
+    {
+      var query = SelectTestQueryGenerator.CreateSimpleQuery (_source);
+      var methodInfo = ParserUtility.GetMethod (() => query.Count ());
+      MethodCallExpression countExpression = Expression.Call (methodInfo, query.Expression);
+      ParseResultCollector expectedResult = Parse (countExpression);
+      Assert.IsNotEmpty (expectedResult.ResultModifiers);
+      Assert.That (expectedResult.ResultModifiers, Is.EqualTo (new[] {countExpression}));
     }
 
     [Test]
@@ -114,7 +126,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
       new SelectExpressionParser().Parse (expectedResult, (MethodCallExpression) query.Expression);
       AssertResultsEqual (expectedResult, result);
     }
-
+    
     [Test]
     public void SelectMany ()
     {
@@ -191,10 +203,13 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
       AssertResultsEqual (expectedResult, result);
     }
 
+    
+
     private void AssertResultsEqual(ParseResultCollector one, ParseResultCollector two)
     {
       Assert.AreEqual (one.ExpressionTreeRoot, two.ExpressionTreeRoot);
-      Assert.AreEqual (one.IsDistinct, two.IsDistinct);
+      //Assert.AreEqual (one.IsDistinct, two.IsDistinct);
+      Assert.AreEqual (one.ResultModifiers, two.ResultModifiers);
       Assert.AreEqual (one.ProjectionExpressions.Count, two.ProjectionExpressions.Count);
       Assert.AreEqual (one.BodyExpressions.Count, two.BodyExpressions.Count);
 

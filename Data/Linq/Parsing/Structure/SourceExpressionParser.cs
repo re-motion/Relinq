@@ -34,8 +34,11 @@ namespace Remotion.Data.Linq.Parsing.Structure
       _callDispatcher.RegisterParser ("OrderByDescending", ParseOrderBySource);
       _callDispatcher.RegisterParser ("ThenBy", ParseOrderBySource);
       _callDispatcher.RegisterParser ("ThenByDescending", ParseOrderBySource);
-      _callDispatcher.RegisterParser ("Distinct", ParseDistinctSource);
+      _callDispatcher.RegisterParser ("Distinct", ParseResultModifierSource);
+      _callDispatcher.RegisterParser ("Count", ParseResultModifierSource);
+      _callDispatcher.RegisterParser ("First", ParseResultModifierSource);
       _callDispatcher.RegisterParser ("Cast", ParseCastSource);
+      
     }
 
     public CallParserDispatcher CallDispatcher
@@ -78,8 +81,9 @@ namespace Remotion.Data.Linq.Parsing.Structure
     {
       new OrderByExpressionParser (_isTopLevel).Parse (resultCollector, sourceExpression);
     }
-
-    private void ParseDistinctSource (ParseResultCollector resultCollector, MethodCallExpression sourceExpression, ParameterExpression potentialFromIdentifier)
+    
+    //supported method have to be registered from the dispatcher
+    private void ParseResultModifierSource (ParseResultCollector resultCollector, MethodCallExpression sourceExpression, ParameterExpression potentialFromIdentifier)
     {
       if (!_isTopLevel)
       {
@@ -87,9 +91,9 @@ namespace Remotion.Data.Linq.Parsing.Structure
         throw new ParserException (message, sourceExpression, resultCollector.ExpressionTreeRoot, null);
       }
 
-      resultCollector.SetDistinct ();
-      Expression selectExpression = sourceExpression.Arguments[0];
-      Parse (resultCollector, selectExpression, potentialFromIdentifier, "first argument of distinct");
+      resultCollector.AddResultModifier (sourceExpression);
+      Expression nextExpression = sourceExpression.Arguments[0];
+      Parse (resultCollector, nextExpression, potentialFromIdentifier, "first argument of result modifier");
     }
 
     private void ParseCastSource (ParseResultCollector resultCollector, MethodCallExpression sourceExpression, ParameterExpression potentialFromIdentifier)

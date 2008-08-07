@@ -21,5 +21,6 @@ namespace Remotion.Data.Linq.DataObjectModel
     void VisitSubQuery (SubQuery subQuery);
     void VisitMethodCall (MethodCall methodCall);
     void VisitNewObjectEvaluation (NewObject newObject);
+    void VisitSourceMarkerEvaluation (SourceMarkerEvaluation sourceMarkerEvaluation);
   }
 }

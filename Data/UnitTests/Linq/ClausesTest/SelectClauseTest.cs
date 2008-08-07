@@ -9,9 +9,13 @@
  */
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Data.Linq;
+using Remotion.Data.Linq.Parsing;
+using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 using Rhino.Mocks;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.DataObjectModel;
@@ -27,7 +31,23 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
       LambdaExpression expression = ExpressionHelper.CreateLambdaExpression ();
       IClause clause = ExpressionHelper.CreateClause();
 
-      SelectClause selectClause = new SelectClause (clause, expression,false);
+      SelectClause selectClause = new SelectClause (clause, expression, null);
+      Assert.AreSame (clause, selectClause.PreviousClause);
+      Assert.AreEqual (expression, selectClause.ProjectionExpression);
+    }
+
+    [Test]
+    public void InitializeWithExpression_New ()
+    {
+      LambdaExpression expression = ExpressionHelper.CreateLambdaExpression ();
+      IClause clause = ExpressionHelper.CreateClause ();
+      var query = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource());
+      var methodInfo = ParserUtility.GetMethod (() => Enumerable.Count (query));
+      MethodCallExpression methodCallExpression = Expression.Call (methodInfo, query.Expression);
+      List<MethodCallExpression> methodCallExpressions = new List<MethodCallExpression>();
+      methodCallExpressions.Add (methodCallExpression);
+      
+      SelectClause selectClause = new SelectClause (clause, expression, methodCallExpressions);
       Assert.AreSame (clause, selectClause.PreviousClause);
       Assert.AreEqual (expression, selectClause.ProjectionExpression);
     }
@@ -35,11 +55,10 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
     [Test]
     public void InitializeWithoutExpression ()
     {
-      SelectClause selectClause = new SelectClause (ExpressionHelper.CreateClause(),null,false);
+      SelectClause selectClause = new SelectClause (ExpressionHelper.CreateClause (), null, null);
       Assert.IsNull (selectClause.ProjectionExpression);
     }
-
-
+    
     [Test]
     public void SelectClause_ImplementISelectGroupClause()
     {

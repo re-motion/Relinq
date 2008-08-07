@@ -61,6 +61,7 @@
     <Compile Include="DataObjectModel\LetColumnSource.cs" />
     <Compile Include="DataObjectModel\NewObject.cs" />
     <Compile Include="DataObjectModel\SingleJoin.cs" />
+    <Compile Include="DataObjectModel\SourceMarkerEvaluation.cs" />
     <Compile Include="DataObjectModel\SubQuery.cs" />
     <Compile Include="Expressions\ConstructedQueryExpression.cs" />
     <Compile Include="Expressions\QueryModelExpressionBase.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="Parsing\Details\SelectProjectionParsing\MethodCallExpressionParser.cs" />
     <Compile Include="Parsing\Details\SelectProjectionParsing\NewExpressionParser.cs" />
     <Compile Include="Parsing\Details\SelectProjectionParsing\ParameterExpressionParser.cs" />
+    <Compile Include="Parsing\Details\SelectProjectionParsing\ResultModifierParser.cs" />
     <Compile Include="Parsing\Details\WhereConditionParserRegistry.cs" />
     <Compile Include="Parsing\Details\WhereConditionParsing\ContainsFullTextParser.cs" />
     <Compile Include="Parsing\Details\WhereConditionParsing\ContainsParser.cs" />

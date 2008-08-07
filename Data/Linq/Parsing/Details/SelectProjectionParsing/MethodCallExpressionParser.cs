@@ -26,23 +26,33 @@ namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing
       _parserRegistry = parserRegistry;
     }
 
-    public IEvaluation Parse (MethodCallExpression methodCallExpression, ParseContext parseContext)
+    public MethodCall Parse (MethodCallExpression methodCallExpression, ParseContext parseContext)
     {
       ArgumentUtility.CheckNotNull ("methodCallExpression", methodCallExpression);
       ArgumentUtility.CheckNotNull ("parseContext", parseContext);
+
       MethodInfo methodInfo = methodCallExpression.Method;
+      IEvaluation evaluationObject = ParseEvaluationObject(methodCallExpression, parseContext);
+      List<IEvaluation> evaluationArguments = ParseEvaluationArguments(methodCallExpression, parseContext);
+      return new MethodCall (methodInfo, evaluationObject, evaluationArguments);
+    }
+
+    private IEvaluation ParseEvaluationObject (MethodCallExpression methodCallExpression, ParseContext parseContext)
+    {
       IEvaluation evaluationObject;
       if (methodCallExpression.Object == null)
         evaluationObject = null;
       else
         evaluationObject = _parserRegistry.GetParser (methodCallExpression.Object).Parse (methodCallExpression.Object, parseContext);
+      return evaluationObject;
+    }
 
+    protected virtual List<IEvaluation> ParseEvaluationArguments (MethodCallExpression methodCallExpression, ParseContext parseContext)
+    {
       List<IEvaluation> evaluationArguments = new List<IEvaluation> ();
       foreach (Expression exp in methodCallExpression.Arguments)
-      {
         evaluationArguments.Add (_parserRegistry.GetParser (exp).Parse (exp, parseContext));
-      }
-      return new MethodCall (methodInfo, evaluationObject, evaluationArguments);
+      return evaluationArguments;
     }
 
     IEvaluation ISelectProjectionParser.Parse (Expression expression, ParseContext parseContext)
@@ -52,7 +62,7 @@ namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing
       return Parse ((MethodCallExpression) expression, parseContext);
     }
 
-    public bool CanParse(Expression expression)
+    public virtual bool CanParse(Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       return expression is MethodCallExpression;
