@@ -14,25 +14,35 @@ namespace Remotion.Data.Linq.DataObjectModel
 {
   public struct OrderingField
   {
-    public readonly FieldDescriptor FieldDescriptor;
-    public readonly OrderDirection Direction;
+    private readonly FieldDescriptor _fieldDescriptor;
+    private readonly OrderDirection _direction;
 
     public OrderingField (FieldDescriptor fieldDescriptor, OrderDirection direction)
     {
       fieldDescriptor.GetMandatoryColumn (); // assert that there is a column for ordering
 
-      FieldDescriptor = fieldDescriptor;
-      Direction = direction;
+      _fieldDescriptor = fieldDescriptor;
+      _direction = direction;
     }
 
     public Column Column
     {
-      get { return FieldDescriptor.GetMandatoryColumn(); }
+      get { return _fieldDescriptor.GetMandatoryColumn(); }
+    }
+
+    public FieldDescriptor FieldDescriptor
+    {
+      get { return _fieldDescriptor; }
+    }
+
+    public OrderDirection Direction
+    {
+      get { return _direction; }
     }
 
     public override string ToString ()
     {
-      return FieldDescriptor.ToString()+ " " + Direction.ToString();
+      return _fieldDescriptor.ToString()+ " " + _direction.ToString();
     }
   }
 }

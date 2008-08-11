@@ -16,9 +16,9 @@ namespace Remotion.Data.Linq.DataObjectModel
   {
     public enum ConditionKind { Equal, NotEqual, GreaterThan, GreaterThanOrEqual, LessThan, LessThanOrEqual, Like, Contains, ContainsFulltext }
 
-    public readonly IValue Left;
-    public readonly IValue Right;
-    public readonly ConditionKind Kind;
+    private readonly IValue _left;
+    private readonly IValue _right;
+    private readonly ConditionKind _kind;
  
     public BinaryCondition (IValue left, IValue right, ConditionKind kind)
     {
@@ -29,15 +29,29 @@ namespace Remotion.Data.Linq.DataObjectModel
       //if (kind == ConditionKind.Contains)
       //  ArgumentUtility.CheckType<SubQuery> ("left", left);
 
-      Left = left;
-      Kind = kind;
-      Right = right;
+      _left = left;
+      _kind = kind;
+      _right = right;
     }
 
+    public IValue Left
+    {
+      get { return _left; }
+    }
 
+    public IValue Right
+    {
+      get { return _right; }
+    }
+
+    public ConditionKind Kind
+    {
+      get { return _kind; }
+    }
+    
     public override string ToString ()
     {
-      return "(" + Left + " " + Kind + " " + Right + ")";
+      return "(" + _left + " " + _kind + " " + _right + ")";
     }
 
     public void Accept (IEvaluationVisitor visitor)

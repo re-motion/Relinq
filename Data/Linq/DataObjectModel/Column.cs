@@ -14,21 +14,31 @@ namespace Remotion.Data.Linq.DataObjectModel
 {
   public struct Column : ICriterion
   {
-    public readonly IColumnSource ColumnSource;
+    private readonly IColumnSource _columnSource;
     // If Name is null, the column represents access to the whole ColumnSource. For tables, this would be the whole table; for let clauses either a
     // table, a column, or a computed value.
-    public readonly string Name;
+    private readonly string _name;
 
     public Column (IColumnSource columnSource, string name)
     {
       ArgumentUtility.CheckNotNull ("fromSource", columnSource);
-      Name = name;
-      ColumnSource = columnSource;
+      _name = name;
+      _columnSource = columnSource;
+    }
+
+    public IColumnSource ColumnSource
+    {
+      get { return _columnSource; }
+    }
+
+    public string Name
+    {
+      get { return _name; }
     }
 
     public override string ToString ()
     {
-      return (ColumnSource != null ? ColumnSource.AliasString : "<null>") + "." + Name;
+      return (_columnSource != null ? _columnSource.AliasString : "<null>") + "." + _name;
     }
 
     public void Accept (IEvaluationVisitor visitor)

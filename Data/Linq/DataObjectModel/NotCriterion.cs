@@ -14,18 +14,22 @@ namespace Remotion.Data.Linq.DataObjectModel
 {
   public struct NotCriterion : ICriterion
   {
-    public readonly ICriterion NegatedCriterion;
+    private readonly ICriterion _negatedCriterion;
 
     public NotCriterion (ICriterion negatedCriterion)
     {
       ArgumentUtility.CheckNotNull ("negatedCriterion", negatedCriterion);
-      NegatedCriterion = negatedCriterion;
+      _negatedCriterion = negatedCriterion;
     }
 
+    public ICriterion NegatedCriterion
+    {
+      get { return _negatedCriterion; }
+    }
 
     public override string ToString ()
     {
-      return "NOT (" + NegatedCriterion + ")";
+      return "NOT (" + _negatedCriterion + ")";
     }
 
     public void Accept (IEvaluationVisitor visitor)

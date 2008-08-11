@@ -12,20 +12,24 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.DataObjectModel
 {
-  public struct Constant : IValue, ICriterion
+  public struct Constant : ICriterion
   {
-    public readonly object Value;
+    private readonly object _value;
 
     public Constant (object value)
         : this()
     {
-      Value = value;
+      _value = value;
     }
 
-   
+    public object Value
+    {
+      get { return _value; }
+    }
+
     public override string ToString ()
     {
-      return Value != null ? Value.ToString() : "<null>";
+      return _value != null ? _value.ToString() : "<null>";
     }
 
     public void Accept (IEvaluationVisitor visitor)
