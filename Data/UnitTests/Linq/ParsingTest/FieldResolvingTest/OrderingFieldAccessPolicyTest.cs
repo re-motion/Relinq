@@ -9,12 +9,10 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Collections;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing.FieldResolving;
 
@@ -23,14 +21,21 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.FieldResolvingTest
   [TestFixture]
   public class OrderingFieldAccessPolicyTest
   {
+    private OrderingFieldAccessPolicy _policy;
+
+    [SetUp]
+    public void SetUp ()
+    {
+      _policy = new OrderingFieldAccessPolicy ();
+    }
+
     [Test]
     public void AdjustMemberInfosForFromIdentifier ()
     {
       MainFromClause fromClause =
           ExpressionHelper.CreateMainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
-      OrderingFieldAccessPolicy policy = new OrderingFieldAccessPolicy ();
 
-      var result = policy.AdjustMemberInfosForAccessedIdentifier (fromClause.Identifier);
+      var result = _policy.AdjustMemberInfosForAccessedIdentifier (fromClause.Identifier);
       Assert.That (result.A, Is.Null);
       Assert.That (result.B, Is.Empty);
     }
@@ -43,8 +48,13 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.FieldResolvingTest
       MemberInfo joinMember = typeof (Student_Detail_Detail).GetProperty ("Student_Detail");
       MemberInfo relationMember = typeof (Student_Detail).GetProperty ("Student");
 
-      OrderingFieldAccessPolicy policy = new OrderingFieldAccessPolicy ();
-      policy.AdjustMemberInfosForRelation (relationMember, new[] { joinMember });
+      _policy.AdjustMemberInfosForRelation (relationMember, new[] { joinMember });
+    }
+
+    [Test]
+    public void OptimizeRelatedKeyAccess_False ()
+    {
+      Assert.That (_policy.OptimizeRelatedKeyAccess (), Is.False);
     }
   }
 }

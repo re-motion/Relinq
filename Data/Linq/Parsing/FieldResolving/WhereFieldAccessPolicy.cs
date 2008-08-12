@@ -47,5 +47,10 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
       else
         return new Tuple<MemberInfo, IEnumerable<MemberInfo>> (accessedMember, joinMembers);
     }
+
+    public bool OptimizeRelatedKeyAccess ()
+    {
+      return true;
+    }
   }
 }

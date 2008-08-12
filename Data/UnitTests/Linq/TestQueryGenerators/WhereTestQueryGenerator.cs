@@ -104,5 +104,15 @@ namespace Remotion.Data.UnitTests.Linq.TestQueryGenerators
       IQueryable<string> query = CreateSelectWhereQuery (source);
       return (MethodCallExpression) query.Expression;
     }
+
+    public static IQueryable<Student_Detail> CreateWhereQueryWithRelatedPrimaryKey_VirtualColumn (IQueryable<Student_Detail> source)
+    {
+      return from sd in source where sd.Student.ID == 5 select sd;
+    }
+
+    public static IQueryable<Student_Detail> CreateWhereQueryWithRelatedPrimaryKey_RealColumn (IQueryable<Student_Detail> source)
+    {
+      return from sd in source where sd.IndustrialSector.ID == 5 select sd;
+    }
   }
 }

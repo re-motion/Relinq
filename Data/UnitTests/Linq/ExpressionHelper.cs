@@ -287,5 +287,18 @@ namespace Remotion.Data.UnitTests.Linq
     {
       return new SubQueryFromClause (CreateClause (), identifier, CreateQueryModel (), CreateLambdaExpression ());
     }
+
+    public static Expression MakeExpression<T, R> (Expression<Func<T, R>> memberAccess)
+    {
+      return memberAccess.Body;
+    }
+
+    public static MemberInfo GetMember<T> (Expression<Func<T, object>> memberAccess)
+    {
+      Expression expression = memberAccess.Body;
+      while (expression is UnaryExpression)
+        expression = ((UnaryExpression) expression).Operand; // strip casts
+      return ((MemberExpression) expression).Member;
+    }
   }
 }

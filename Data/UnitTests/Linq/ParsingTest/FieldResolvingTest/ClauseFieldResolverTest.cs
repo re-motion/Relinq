@@ -49,8 +49,8 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.FieldResolvingTest
       FieldDescriptor fieldDescriptor =
           new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (table, identifier, identifier, identifier, _context);
       
-      Column column = new Column (table, "*");
-      FieldDescriptor expected = new FieldDescriptor (null,new FieldSourcePath(table, new SingleJoin[0]), column);
+      var column = new Column (table, "*");
+      var expected = new FieldDescriptor (null,new FieldSourcePath(table, new SingleJoin[0]), column);
 
       Assert.AreEqual (expected, fieldDescriptor);
     }
@@ -97,7 +97,6 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.FieldResolvingTest
       FieldDescriptor fieldDescriptor =
           new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (table,identifier, fieldExpression, fieldExpression, _context);
       Assert.AreEqual (new Column (new Table ("studentTable", "fromIdentifier1"), "FirstColumn"), fieldDescriptor.Column);
-      //Assert.AreSame (fromClause, fieldDescriptor.FromClause);
     }
 
     [Test]
@@ -150,9 +149,9 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.FieldResolvingTest
       Assert.AreEqual (typeof (Student).GetProperty ("First"), fieldDescriptor.Member);
 
       IColumnSource expectedSourceTable = fieldDescriptor.SourcePath.FirstSource;
-      Table expectedRelatedTable = new Table ("studentTable", null);
-      SingleJoin join = new SingleJoin(new Column (expectedSourceTable, "Student_Detail_PK"), new Column (expectedRelatedTable, "Student_Detail_to_Student_FK"));
-      FieldSourcePath expectedPath = new FieldSourcePath(expectedSourceTable, new [] { join });
+      var expectedRelatedTable = new Table ("studentTable", null);
+      var join = new SingleJoin(new Column (expectedSourceTable, "Student_Detail_PK"), new Column (expectedRelatedTable, "Student_Detail_to_Student_FK"));
+      var expectedPath = new FieldSourcePath(expectedSourceTable, new [] { join });
 
       Assert.AreEqual (expectedPath, fieldDescriptor.SourcePath);
     }
@@ -177,17 +176,16 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.FieldResolvingTest
           new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (table,identifier, fieldExpression, fieldExpression, _context);
 
       Assert.AreEqual (new Column (new Table ("studentTable", null), "FirstColumn"), fieldDescriptor.Column);
-      //Assert.AreSame (fromClause, fieldDescriptor.FromClause);
       Assert.AreEqual (typeof (Student).GetProperty ("First"), fieldDescriptor.Member);
 
       IColumnSource expectedDetailDetailTable = fieldDescriptor.SourcePath.FirstSource;
-      Table expectedDetailTable = new Table ("detailTable", null); // Student_Detail
-      SingleJoin join1 = new SingleJoin (new Column (expectedDetailDetailTable, "Student_Detail_Detail_PK"), new Column (expectedDetailTable, "Student_Detail_Detail_to_Student_Detail_FK"));
+      var expectedDetailTable = new Table ("detailTable", null); // Student_Detail
+      var join1 = new SingleJoin (new Column (expectedDetailDetailTable, "Student_Detail_Detail_PK"), new Column (expectedDetailTable, "Student_Detail_Detail_to_Student_Detail_FK"));
       
-      Table expectedStudentTable = new Table ("studentTable", null); // Student
-      SingleJoin join2 = new SingleJoin(new Column (expectedDetailTable, "Student_Detail_PK"), new Column (expectedStudentTable, "Student_Detail_to_Student_FK"));
+      var expectedStudentTable = new Table ("studentTable", null); // Student
+      var join2 = new SingleJoin(new Column (expectedDetailTable, "Student_Detail_PK"), new Column (expectedStudentTable, "Student_Detail_to_Student_FK"));
 
-      FieldSourcePath expectedPath = new FieldSourcePath(expectedDetailDetailTable, new[] { join1, join2 });
+      var expectedPath = new FieldSourcePath(expectedDetailDetailTable, new[] { join1, join2 });
       Assert.AreEqual (expectedPath, fieldDescriptor.SourcePath);
     }
 
@@ -221,7 +219,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.FieldResolvingTest
           typeof (Student).GetProperty ("NonDBProperty"));
       FieldDescriptor fieldDescriptor =
           new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (table,identifier,fieldExpression, fieldExpression, _context);
-      FieldSourcePath path = new FieldSourcePath (table, new SingleJoin[0]);
+      var path = new FieldSourcePath (table, new SingleJoin[0]);
       Assert.AreEqual (new FieldDescriptor (typeof (Student).GetProperty ("NonDBProperty"), path, null), fieldDescriptor);
     }
 
@@ -270,10 +268,10 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.FieldResolvingTest
       IColumnSource detailTable = fromClause.GetFromSource (StubDatabaseInfo.Instance);
       Table studentTable = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, member);
       Tuple<string, string> joinColumns = DatabaseInfoUtility.GetJoinColumnNames (StubDatabaseInfo.Instance, member);
-      SingleJoin join = new SingleJoin (new Column(detailTable, joinColumns.A), new Column(studentTable, joinColumns.B));
-      Column column = new Column(studentTable, "*");
+      var join = new SingleJoin (new Column(detailTable, joinColumns.A), new Column(studentTable, joinColumns.B));
+      var column = new Column(studentTable, "*");
 
-      FieldDescriptor expected = new FieldDescriptor(member, new FieldSourcePath (detailTable, new[] { join }), column);
+      var expected = new FieldDescriptor(member, new FieldSourcePath (detailTable, new[] { join }), column);
       Assert.AreEqual (expected, fieldDescriptor);
     }
 
@@ -303,11 +301,11 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.FieldResolvingTest
       Tuple<string, string> innerJoinColumns = DatabaseInfoUtility.GetJoinColumnNames (StubDatabaseInfo.Instance, innerRelationMember);
       Tuple<string, string> outerJoinColumns = DatabaseInfoUtility.GetJoinColumnNames (StubDatabaseInfo.Instance, member);
 
-      SingleJoin join1 = new SingleJoin (new Column (detailDetailTable, innerJoinColumns.A), new Column (detailTable, innerJoinColumns.B));
-      SingleJoin join2 = new SingleJoin (new Column (detailTable, outerJoinColumns.A), new Column (studentTable, outerJoinColumns.B));
-      Column column = new Column (studentTable, "*");
+      var join1 = new SingleJoin (new Column (detailDetailTable, innerJoinColumns.A), new Column (detailTable, innerJoinColumns.B));
+      var join2 = new SingleJoin (new Column (detailTable, outerJoinColumns.A), new Column (studentTable, outerJoinColumns.B));
+      var column = new Column (studentTable, "*");
 
-      FieldDescriptor expected = new FieldDescriptor (member, new FieldSourcePath (detailDetailTable, new[] { join1, join2 }), column);
+      var expected = new FieldDescriptor (member, new FieldSourcePath (detailDetailTable, new[] { join1, join2 }), column);
       Assert.AreEqual (expected, fieldDescriptor);
     }
 
@@ -325,9 +323,9 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.FieldResolvingTest
 
       FieldDescriptor fieldDescriptor =
           new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (table,identifier, fieldExpression, fieldExpression, _context);
-      SubQuery subQuery = (SubQuery) fromClause.GetFromSource (StubDatabaseInfo.Instance);
-      Column column = new Column (subQuery, "IDColumn");
-      FieldDescriptor expected = new FieldDescriptor (member, new FieldSourcePath (subQuery, new SingleJoin[0]), column);
+      var subQuery = (SubQuery) fromClause.GetFromSource (StubDatabaseInfo.Instance);
+      var column = new Column (subQuery, "IDColumn");
+      var expected = new FieldDescriptor (member, new FieldSourcePath (subQuery, new SingleJoin[0]), column);
 
       Assert.AreEqual (expected, fieldDescriptor);
     }
@@ -335,19 +333,21 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.FieldResolvingTest
     [Test]
     public void Resolver_UsesPolicyToAdjustRelationMembers ()
     {
-      MockRepository mockRepository = new MockRepository ();
-      IResolveFieldAccessPolicy policyMock = mockRepository.CreateMock<IResolveFieldAccessPolicy> ();
+      var mockRepository = new MockRepository ();
+      var policyMock = mockRepository.CreateMock<IResolveFieldAccessPolicy> ();
 
       ParameterExpression identifier = Expression.Parameter (typeof (Student_Detail_Detail), "sdd");
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (identifier, ExpressionHelper.CreateQuerySource_Detail_Detail ());
       IColumnSource table = fromClause.GetFromSource (StubDatabaseInfo.Instance);
+
+      Expect.Call (policyMock.OptimizeRelatedKeyAccess ()).Return (false);
 
       var studentDetailMember = typeof (Student_Detail_Detail).GetProperty ("Student_Detail");
       var studentMember = typeof (Student_Detail).GetProperty ("Student");
       var idMember = typeof (Student).GetProperty ("ID");
       Expression fieldExpression = Expression.MakeMemberAccess (Expression.MakeMemberAccess (identifier, studentDetailMember), studentMember);
 
-      PropertyInfo[] newJoinMembers = new[] {studentDetailMember, studentMember};
+      var newJoinMembers = new[] {studentDetailMember, studentMember};
       Expect.Call (policyMock.AdjustMemberInfosForRelation (null, null))
           .Constraints (Mocks_Is.Equal (studentMember), Mocks_List.Equal (new[] { studentDetailMember }))
           .Return (new  Tuple<MemberInfo, IEnumerable<MemberInfo>>(idMember, newJoinMembers));
@@ -357,9 +357,9 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.FieldResolvingTest
           new ClauseFieldResolver (StubDatabaseInfo.Instance, policyMock).ResolveField (table,identifier, fieldExpression, fieldExpression, _context);
       mockRepository.VerifyAll ();
 
-      FieldSourcePath path = new FieldSourcePathBuilder().BuildFieldSourcePath (StubDatabaseInfo.Instance, _context, 
+      var path = new FieldSourcePathBuilder().BuildFieldSourcePath (StubDatabaseInfo.Instance, _context, 
           fromClause.GetFromSource (StubDatabaseInfo.Instance), newJoinMembers);
-      FieldDescriptor expectedFieldDescriptor = new FieldDescriptor (studentMember, path, new Column(path.LastSource, "IDColumn"));
+      var expectedFieldDescriptor = new FieldDescriptor (studentMember, path, new Column(path.LastSource, "IDColumn"));
 
       Assert.That (actualFieldDescriptor, Is.EqualTo (expectedFieldDescriptor));
     }
@@ -367,18 +367,20 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.FieldResolvingTest
     [Test]
     public void Resolver_UsesPolicyToAdjustFromIdentifierAccess ()
     {
-      MockRepository mockRepository = new MockRepository ();
-      IResolveFieldAccessPolicy policyMock = mockRepository.CreateMock<IResolveFieldAccessPolicy> ();
+      var mockRepository = new MockRepository ();
+      var policyMock = mockRepository.CreateMock<IResolveFieldAccessPolicy> ();
 
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "s");
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (identifier, ExpressionHelper.CreateQuerySource_Detail_Detail ());
       IColumnSource table = fromClause.GetFromSource (StubDatabaseInfo.Instance);
 
+      Expect.Call (policyMock.OptimizeRelatedKeyAccess()).Return (false);
+      
       var otherStudentMember = typeof (Student).GetProperty ("OtherStudent");
       var idMember = typeof (Student).GetProperty ("ID");
       Expression fieldExpression = identifier;
 
-      PropertyInfo[] newJoinMembers = new[] { otherStudentMember };
+      var newJoinMembers = new[] { otherStudentMember };
       Expect.Call (policyMock.AdjustMemberInfosForAccessedIdentifier (identifier))
           .Return (new Tuple<MemberInfo, IEnumerable<MemberInfo>> (idMember, newJoinMembers));
 
@@ -389,27 +391,39 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.FieldResolvingTest
 
       FieldSourcePath path = new FieldSourcePathBuilder ().BuildFieldSourcePath (StubDatabaseInfo.Instance, _context,
           fromClause.GetFromSource (StubDatabaseInfo.Instance), newJoinMembers);
-      FieldDescriptor expectedFieldDescriptor = new FieldDescriptor (null, path, new Column (path.LastSource, "IDColumn"));
+      var expectedFieldDescriptor = new FieldDescriptor (null, path, new Column (path.LastSource, "IDColumn"));
 
       Assert.That (actualFieldDescriptor, Is.EqualTo (expectedFieldDescriptor));
     }
 
     [Test]
-    public void TestColumn ()
+    public void Resolver_PolicyOptimization_True ()
     {
-      ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (identifier, ExpressionHelper.CreateQuerySource ());
+      IResolveFieldAccessPolicy policy = new WhereFieldAccessPolicy (StubDatabaseInfo.Instance);
+      Assert.That (policy.OptimizeRelatedKeyAccess (), Is.True);
+      Expression fieldExpression = ExpressionHelper.MakeExpression<Student_Detail, int> (sd => sd.IndustrialSector.ID);
+      
+      var resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, policy);
+      var columnSource = new Table ();
+      var clauseIdentifier = Expression.Parameter (typeof (Student_Detail), "sd");
+      FieldDescriptor result = resolver.ResolveField (columnSource, clauseIdentifier, fieldExpression, fieldExpression, _context);
 
-      IColumnSource table = fromClause.GetFromSource (StubDatabaseInfo.Instance);
+      Assert.That (result.Column, Is.EqualTo (new Column (columnSource, "Student_Detail_to_IndustrialSector_FK")));
+    }
 
-      FieldDescriptor fieldDescriptor =
-          new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (table, identifier, identifier, identifier, _context);
+    [Test]
+    public void Resolver_PolicyOptimization_False ()
+    {
+      IResolveFieldAccessPolicy policy = new SelectFieldAccessPolicy ();
+      Assert.That (policy.OptimizeRelatedKeyAccess (), Is.False);
+      Expression fieldExpression = ExpressionHelper.MakeExpression<Student_Detail, int> (sd => sd.IndustrialSector.ID);
 
-      Column expecetedColumn = new Column (table, "*");
+      var resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, policy);
+      var columnSource = new Table ();
+      var clauseIdentifier = Expression.Parameter (typeof (Student_Detail), "sd");
+      FieldDescriptor result = resolver.ResolveField (columnSource, clauseIdentifier, fieldExpression, fieldExpression, _context);
 
-      Assert.AreEqual (expecetedColumn, fieldDescriptor.Column);
-
-
+      Assert.That (result.Column, Is.EqualTo (new Column (result.SourcePath.LastSource, "IDColumn")));
     }
   }
 }

@@ -28,5 +28,10 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
         newJoinMembers.Add (accessedMember);
         return new Tuple<MemberInfo, IEnumerable<MemberInfo>> (null, newJoinMembers); // select full table if relation member is accessed
     }
+
+    public bool OptimizeRelatedKeyAccess ()
+    {
+      return false;
+    }
   }
 }

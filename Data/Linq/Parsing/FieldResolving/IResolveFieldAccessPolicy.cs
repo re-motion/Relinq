@@ -19,5 +19,6 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
   {
     Tuple<MemberInfo, IEnumerable<MemberInfo>> AdjustMemberInfosForAccessedIdentifier (ParameterExpression accessedIdentifier);
     Tuple<MemberInfo, IEnumerable<MemberInfo>> AdjustMemberInfosForRelation (MemberInfo accessedMember, IEnumerable<MemberInfo> joinMembers);
+    bool OptimizeRelatedKeyAccess ();
   }
 }

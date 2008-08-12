@@ -39,12 +39,21 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
       public ParameterExpression Parameter { get; private set; }
     }
 
+    private readonly IDatabaseInfo _databaseInfo;
+
     private ParameterExpression _parameterExpression;
     private MemberInfo _accessedMember;
     private List<MemberInfo> _joinMembers;
     private Expression _expressionTreeRoot;
+    private bool _optimizeRelatedKeyAccess;
 
-    public Result ParseFieldAccess (Expression fieldAccessExpression, Expression expressionTreeRoot)
+    public ClauseFieldResolverVisitor (IDatabaseInfo databaseInfo)
+    {
+      ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
+      _databaseInfo = databaseInfo;
+    }
+
+    public Result ParseFieldAccess (Expression fieldAccessExpression, Expression expressionTreeRoot, bool optimizeRelatedKeyAccess)
     {
       ArgumentUtility.CheckNotNull ("fieldAccessExpression", fieldAccessExpression);
       ArgumentUtility.CheckNotNull ("expressionTreeRoot", expressionTreeRoot);
@@ -53,6 +62,7 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
       _accessedMember = null;
       _joinMembers = new List<MemberInfo> ();
       _expressionTreeRoot = expressionTreeRoot;
+      _optimizeRelatedKeyAccess = optimizeRelatedKeyAccess;
 
       VisitExpression (fieldAccessExpression);
       return new Result (_accessedMember, _joinMembers.ToArray(), _parameterExpression);
@@ -76,21 +86,35 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
 
     protected override Expression VisitParameterExpression (ParameterExpression expression)
     {
+      ArgumentUtility.CheckNotNull ("expression", expression);
       _parameterExpression = expression;
       return base.VisitParameterExpression (expression);
     }
 
     protected override Expression VisitMemberExpression (MemberExpression expression)
     {
-      bool firstMember = _accessedMember == null;
-      if (firstMember)
-        _accessedMember = expression.Member;
-      
+      ArgumentUtility.CheckNotNull ("expression", expression);
+      bool isFirstMember = _accessedMember == null;
+      if (isFirstMember)
+      {
+        // for related key access, we leave _accessedMember null, we'll take the next one
+        // eg. sd.Student.ID => we'll take sd.Student, not ID as the accessed member
+        if (!_optimizeRelatedKeyAccess || !IsOptimizableRelatedKeyAccess(expression))
+          _accessedMember = expression.Member;
+      }
+
       Expression result = base.VisitMemberExpression (expression);
 
-      if (!firstMember)
+      if (!isFirstMember)
         _joinMembers.Add (expression.Member);
       return result;
+    }
+
+    private bool IsOptimizableRelatedKeyAccess (MemberExpression expression)
+    {
+      var primaryKeyMember = _databaseInfo.GetPrimaryKeyMember (expression.Expression.Type);
+      // expression.Expression is MemberExpression &&  ?
+      return expression.Member.Equals (primaryKeyMember);
     }
   }
 }

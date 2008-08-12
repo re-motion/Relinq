@@ -14,7 +14,6 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Collections;
 using Remotion.Data.Linq.DataObjectModel;
-using Remotion.Data.Linq.Parsing.FieldResolving;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.FieldResolving
@@ -39,8 +38,8 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
       ArgumentUtility.CheckNotNull ("partialFieldExpression", partialFieldExpression);
       ArgumentUtility.CheckNotNull ("fullFieldExpression", fullFieldExpression);
       
-      var visitor = new ClauseFieldResolverVisitor ();
-      ClauseFieldResolverVisitor.Result result = visitor.ParseFieldAccess (partialFieldExpression, fullFieldExpression);
+      var visitor = new ClauseFieldResolverVisitor (DatabaseInfo);
+      ClauseFieldResolverVisitor.Result result = visitor.ParseFieldAccess (partialFieldExpression, fullFieldExpression, _policy.OptimizeRelatedKeyAccess());
 
       CheckParameterNameAndType (clauseIdentifier, result.Parameter);
       return CreateFieldDescriptor (columnSource, clauseIdentifier, result.AccessedMember, result.JoinMembers, joinedTableContext);

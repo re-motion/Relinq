@@ -22,14 +22,20 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.FieldResolvingTest
   [TestFixture]
   public class SelectFieldAccessPolicyTest
   {
+    private SelectFieldAccessPolicy _policy;
+
+    [SetUp]
+    public void SetUp ()
+    {
+      _policy = new SelectFieldAccessPolicy ();
+    }
+
     [Test]
     public void AdjustMemberInfosForFromIdentifier ()
     {
       MainFromClause fromClause =
           ExpressionHelper.CreateMainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
-      SelectFieldAccessPolicy policy = new SelectFieldAccessPolicy ();
-
-      var result = policy.AdjustMemberInfosForAccessedIdentifier (fromClause.Identifier);
+      var result = _policy.AdjustMemberInfosForAccessedIdentifier (fromClause.Identifier);
       Assert.That (result.A, Is.Null);
       Assert.That (result.B, Is.Empty);
     }
@@ -40,12 +46,17 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.FieldResolvingTest
       MemberInfo joinMember = typeof (Student_Detail_Detail).GetProperty ("Student_Detail");
       MemberInfo relationMember = typeof (Student_Detail).GetProperty ("Student");
 
-      SelectFieldAccessPolicy policy = new SelectFieldAccessPolicy();
-      Tuple<MemberInfo, IEnumerable<MemberInfo>> result = policy.AdjustMemberInfosForRelation (relationMember, new[] { joinMember });
+      Tuple<MemberInfo, IEnumerable<MemberInfo>> result = _policy.AdjustMemberInfosForRelation (relationMember, new[] { joinMember });
       var expected = new Tuple<MemberInfo, IEnumerable<MemberInfo>> (null, new[] {joinMember, relationMember});
 
       Assert.AreEqual (expected.A, result.A);
       Assert.That (result.B, Is.EqualTo (expected.B));
+    }
+
+    [Test]
+    public void OptimizeRelatedKeyAccess_False ()
+    {
+      Assert.That (_policy.OptimizeRelatedKeyAccess (), Is.False);
     }
   }
 }

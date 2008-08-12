@@ -29,5 +29,10 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
           accessedMember.Name);
       throw new NotSupportedException (message);
     }
+
+    public bool OptimizeRelatedKeyAccess ()
+    {
+      return false;
+    }
   }
 }

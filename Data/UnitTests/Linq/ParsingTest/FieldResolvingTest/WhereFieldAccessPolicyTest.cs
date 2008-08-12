@@ -23,14 +23,21 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.FieldResolvingTest
   [TestFixture]
   public class WhereFieldAccessPolicyTest
   {
+    private WhereFieldAccessPolicy _policy;
+
+    [SetUp]
+    public void SetUp ()
+    {
+      _policy = new WhereFieldAccessPolicy (StubDatabaseInfo.Instance);
+    }
+
     [Test]
     public void AdjustMemberInfosForFromIdentifier ()
     {
       MainFromClause fromClause = 
           ExpressionHelper.CreateMainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource());
-      WhereFieldAccessPolicy policy = new WhereFieldAccessPolicy (StubDatabaseInfo.Instance);
-
-      var result = policy.AdjustMemberInfosForAccessedIdentifier (fromClause.Identifier);
+      
+      var result = _policy.AdjustMemberInfosForAccessedIdentifier (fromClause.Identifier);
       Assert.That (result.A, Is.EqualTo (typeof (Student).GetProperty ("ID")));
       Assert.That (result.B, Is.Empty);
     }
@@ -41,8 +48,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.FieldResolvingTest
       MemberInfo joinMember = typeof (Student_Detail_Detail).GetProperty ("Student_Detail");
       MemberInfo relationMember = typeof (Student_Detail).GetProperty ("IndustrialSector");
 
-      WhereFieldAccessPolicy policy = new WhereFieldAccessPolicy (StubDatabaseInfo.Instance);
-      Tuple<MemberInfo, IEnumerable<MemberInfo>> result = policy.AdjustMemberInfosForRelation (relationMember, new[] { joinMember });
+            Tuple<MemberInfo, IEnumerable<MemberInfo>> result = _policy.AdjustMemberInfosForRelation (relationMember, new[] { joinMember });
       var expected = new Tuple<MemberInfo, IEnumerable<MemberInfo>> (relationMember, new[] { joinMember });
 
       Assert.AreEqual (expected.A, result.A);
@@ -56,8 +62,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.FieldResolvingTest
       MemberInfo relationMember = typeof (IndustrialSector).GetProperty ("Student_Detail");
       MemberInfo primaryKeyMember = typeof (Student_Detail).GetProperty ("ID");
 
-      WhereFieldAccessPolicy policy = new WhereFieldAccessPolicy (StubDatabaseInfo.Instance);
-      Tuple<MemberInfo, IEnumerable<MemberInfo>> result = policy.AdjustMemberInfosForRelation (relationMember, new[] { joinMember });
+      Tuple<MemberInfo, IEnumerable<MemberInfo>> result = _policy.AdjustMemberInfosForRelation (relationMember, new[] { joinMember });
       
       var expected = new Tuple<MemberInfo, IEnumerable<MemberInfo>> (primaryKeyMember, new[] { joinMember, relationMember });
 
@@ -65,5 +70,10 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.FieldResolvingTest
       Assert.That (result.B.ToArray(), Is.EqualTo (expected.B.ToArray()));
     }
 
+    [Test]
+    public void OptimizeRelatedKeyAccess_True ()
+    {
+      Assert.That (_policy.OptimizeRelatedKeyAccess (), Is.True);
+    }
   }
 }
