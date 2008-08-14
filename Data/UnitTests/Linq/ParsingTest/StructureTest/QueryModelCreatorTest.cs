@@ -96,29 +96,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
       Assert.IsNotNull (selectClause);
       Assert.AreSame (_result.ProjectionExpressions[0], selectClause.ProjectionExpression);
     }
-
-    //[Test]
-    //public void SelectClause_Distinct_True ()
-    //{
-    //  _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression ());
-    //  _result.SetDistinct();
-
-    //  QueryModel model = _modelCreator.CreateQueryExpression ();
-      
-    //  SelectClause selectClause = model.SelectOrGroupClause as SelectClause;
-    //  Assert.IsTrue (selectClause.Distinct);
-    //}
-
-    //[Test]
-    //public void SelectClause_Distinct_False ()
-    //{
-    //  _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression ());
-    //  QueryModel model = _modelCreator.CreateQueryExpression ();
-
-    //  SelectClause selectClause = model.SelectOrGroupClause as SelectClause;
-    //  Assert.IsFalse (selectClause.Distinct);
-    //}
-
+    
     [Test]
     [ExpectedException (typeof (ParserException), ExpectedMessage = "From expression 'i' (() => 0) doesn't have a projection expression.")]
     public void FromExpression_WithoutProjection ()

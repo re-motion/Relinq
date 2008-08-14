@@ -87,6 +87,11 @@ namespace Remotion.Data.UnitTests.Linq.TestQueryGenerators
       return from s in source select s.First;
     }
 
+    public static IQueryable<int> CreateSimpleQueryOnID (IQueryable<Student> source)
+    {
+      return from s in source select s.ID;
+    }
+
     public static IQueryable<string> CreateUnaryBinaryLambdaInvocationConvertNewArrayExpressionQuery (IQueryable<Student> source1)
     {
       return from s1 in source1 select ((Func<string, string>) ((string s) => s1.First)) (s1.Last) + new string[] { s1.ToString () }[s1.ID];

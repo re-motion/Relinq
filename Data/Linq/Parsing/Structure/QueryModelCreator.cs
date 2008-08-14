@@ -44,6 +44,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       _previousClause = mainFromClause;
       _currentProjection = 0;
       _previousOrderByClause = null;
+      
 
       foreach (BodyExpressionDataBase bodyExpression in _result.BodyExpressions)
       {
@@ -190,7 +191,16 @@ namespace Remotion.Data.Linq.Parsing.Structure
       }
 
       LambdaExpression selectProjection = _result.ProjectionExpressions.Last ();
-      return new SelectClause (_previousClause, selectProjection, _result.ResultModifiers);
+      
+      SelectClause selectClause = new SelectClause (_previousClause, selectProjection, _result.ResultModifiers);
+      
+      //create RMClauses and put them to SelectClause
+      foreach (var resultModifier in _result.ResultModifierData)
+      {
+        ResultModifierClause resultModifierClause = new ResultModifierClause (selectClause, resultModifier);
+        selectClause.AddResultModifierData (resultModifierClause);
+      }
+      return selectClause;
     }
   }
 }

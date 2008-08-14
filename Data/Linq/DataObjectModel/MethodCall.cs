@@ -10,29 +10,55 @@
 
 using System.Collections.Generic;
 using System.Reflection;
+using Remotion.Text;
 using Remotion.Utilities;
+using System.Linq;
 
 namespace Remotion.Data.Linq.DataObjectModel
 {
   public class MethodCall : IEvaluation,ICriterion
   {
-    public MethodCall (MethodInfo evaluationMethodInfo, IEvaluation evaluationParameter, List<IEvaluation> evaluationArguments)
+    public MethodCall (MethodInfo evaluationMethodInfo, IEvaluation evaluationObject, List<IEvaluation> evaluationArguments)
     {
       ArgumentUtility.CheckNotNull ("evaluationMethodInfo", evaluationMethodInfo);
+      ArgumentUtility.CheckNotNull ("evaluationArguments", evaluationArguments);
 
       EvaluationMethodInfo = evaluationMethodInfo;
-      EvaluationParameter = evaluationParameter;
+      EvaluationObject = evaluationObject;
       EvaluationArguments = evaluationArguments;
     }
 
     public MethodInfo EvaluationMethodInfo { get; private set; }
-    public IEvaluation EvaluationParameter { get; private set; }
+    public IEvaluation EvaluationObject { get; private set; }
     public List<IEvaluation> EvaluationArguments { get; private set; }
 
     public void Accept (IEvaluationVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       visitor.VisitMethodCall (this);
+    }
+
+    public override string ToString ()
+    {
+      string argumentString = SeparatedStringBuilder.Build (", ", EvaluationArguments);
+      if (EvaluationObject != null)
+        return string.Format ("{0}.{1}({2})", EvaluationObject, EvaluationMethodInfo.Name, argumentString);
+      else
+        return string.Format ("{0}({1})", EvaluationMethodInfo.Name, argumentString);
+    }
+
+    public override bool Equals (object obj)
+    {
+      MethodCall other = obj as MethodCall;
+      return other != null 
+          && Equals (EvaluationMethodInfo, other.EvaluationMethodInfo) 
+          && Equals (EvaluationObject, other.EvaluationObject)
+          && EvaluationArguments.SequenceEqual (other.EvaluationArguments);
+    }
+
+    public override int GetHashCode ()
+    {
+      return EqualityUtility.GetRotatedHashCode (EvaluationMethodInfo, EvaluationObject, EqualityUtility.GetRotatedHashCode (EvaluationArguments));
     }
   }
 }

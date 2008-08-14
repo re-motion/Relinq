@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing.TreeEvaluation;
 using Remotion.Utilities;
 
@@ -21,8 +22,8 @@ namespace Remotion.Data.Linq.Parsing.Structure
   {
     private readonly List<BodyExpressionDataBase> _bodyExpressions = new List<BodyExpressionDataBase> ();
     private readonly List<LambdaExpression> _projectionExpressions = new List<LambdaExpression> ();
-    private readonly List<MethodCallExpression> _resultModifiers = new List<MethodCallExpression>();
-
+    private readonly List<MethodCallExpression> _resultModifierData = new List<MethodCallExpression>();
+    
     public ParseResultCollector (Expression expressionTreeRoot)
     {
       ArgumentUtility.CheckNotNull ("expressionTreeRoot", expressionTreeRoot);
@@ -41,15 +42,22 @@ namespace Remotion.Data.Linq.Parsing.Structure
       get { return _projectionExpressions.AsReadOnly (); }
     }
 
-    public List<MethodCallExpression> ResultModifiers 
+    public ReadOnlyCollection<MethodCallExpression> ResultModifierData 
     {
-      get { return _resultModifiers; }
+      get { return _resultModifierData.AsReadOnly(); }
     }
 
-    public void AddResultModifier (MethodCallExpression expression)
+    public List<MethodCallExpression> ResultModifiers { get; private set; }
+
+    public void AddResultModifiers (MethodCallExpression expression)
+    {
+      ResultModifiers.Add (expression);
+    }
+
+    public void AddResultModifierData (MethodCallExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      _resultModifiers.Add (expression);
+      _resultModifierData.Add (expression);
     }
 
     public void AddBodyExpression (BodyExpressionDataBase expression)

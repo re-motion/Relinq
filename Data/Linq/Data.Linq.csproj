@@ -51,6 +51,7 @@
     <Compile Include="Clauses\AdditionalFromClause.cs" />
     <Compile Include="Clauses\ClauseFinder.cs" />
     <Compile Include="Clauses\ClauseLookupException.cs" />
+    <Compile Include="Clauses\ResultModifierClause.cs" />
     <Compile Include="Clauses\SubQueryFromClause.cs" />
     <Compile Include="DataObjectModel\BinaryEvaluation.cs" />
     <Compile Include="DataObjectModel\FieldSourcePath.cs" />

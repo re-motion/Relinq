@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
@@ -49,7 +50,23 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
       
       SelectClause selectClause = new SelectClause (clause, expression, methodCallExpressions);
       Assert.AreSame (clause, selectClause.PreviousClause);
-      Assert.AreEqual (expression, selectClause.ProjectionExpression);
+    }
+
+    [Test]
+    public void SelectWithMethodCall_ResultModifierData ()
+    {
+      LambdaExpression expression = ExpressionHelper.CreateLambdaExpression ();
+      IClause clause = ExpressionHelper.CreateClause ();
+      var query = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource ());
+      var methodInfo = ParserUtility.GetMethod (() => Enumerable.Count (query));
+      MethodCallExpression methodCallExpression = Expression.Call (methodInfo, query.Expression);
+
+      SelectClause selectClause = new SelectClause (clause, expression);
+      ResultModifierClause resultModifierClause = new ResultModifierClause (selectClause, methodCallExpression);
+      selectClause.AddResultModifierData (resultModifierClause);
+
+      Assert.IsNotEmpty (selectClause.ResultModifierData);
+      Assert.That (selectClause.ResultModifierData, Is.EqualTo (new[] { resultModifierClause }));
     }
 
     [Test]

@@ -23,7 +23,7 @@ namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing
 
     protected override List<IEvaluation> ParseEvaluationArguments (MethodCallExpression methodCallExpression, ParseContext parseContext)
     {
-      SourceMarkerEvaluation sourceMarkerEvaluation = new SourceMarkerEvaluation();
+      SourceMarkerEvaluation sourceMarkerEvaluation = SourceMarkerEvaluation.Instance;
       return new List<IEvaluation> { sourceMarkerEvaluation };
     }
     

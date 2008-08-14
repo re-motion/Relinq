@@ -19,7 +19,9 @@ namespace Remotion.Data.Linq.Clauses
   public class SelectClause : ISelectGroupClause
   {
     private readonly LambdaExpression _projectionExpression;
+    private List<ResultModifierClause> _resultModifierData = new List<ResultModifierClause>();
     
+    //delete after change
     public SelectClause (IClause previousClause, LambdaExpression projectionExpression, List<MethodCallExpression> resultModifiers)
     {
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
@@ -29,6 +31,14 @@ namespace Remotion.Data.Linq.Clauses
       ResultModifiers = resultModifiers;
     }
 
+    public SelectClause (IClause previousClause, LambdaExpression projectionExpression)
+    {
+      ArgumentUtility.CheckNotNull ("previousClause", previousClause);
+
+      PreviousClause = previousClause;
+      _projectionExpression = projectionExpression;
+    }
+    
     public IClause PreviousClause { get; private set; }
 
     public LambdaExpression ProjectionExpression
@@ -37,7 +47,20 @@ namespace Remotion.Data.Linq.Clauses
     }
 
     public List<MethodCallExpression> ResultModifiers { get; private set; }
-    
+
+    public ReadOnlyCollection<ResultModifierClause> ResultModifierData
+    {
+      get { return _resultModifierData.AsReadOnly(); }
+    }
+
+    public void AddResultModifierData (ResultModifierClause resultModifierData)
+    {
+      _resultModifierData.Add (resultModifierData);
+      if (ResultModifiers == null)
+        ResultModifiers = new List<MethodCallExpression>();
+      ResultModifiers.Add (resultModifierData.ResultModifier);
+    }
+
     public virtual void Accept (IQueryVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);

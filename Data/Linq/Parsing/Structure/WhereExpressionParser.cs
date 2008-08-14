@@ -47,7 +47,12 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
       _sourceParser.Parse (resultCollector, sourceExpression.Arguments[0], ueLambda.Parameters[0], "first argument of Where expression");
 
-      resultCollector.AddBodyExpression (new WhereExpressionData (ueLambda));
+      ParseWhere(resultCollector, ueLambda);
+    }
+
+    public void ParseWhere (ParseResultCollector resultCollector, LambdaExpression whereConditionLambda)
+    {
+      resultCollector.AddBodyExpression (new WhereExpressionData (whereConditionLambda));
       if (_isTopLevel)
         resultCollector.AddProjectionExpression (null);
     }

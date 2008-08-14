@@ -37,6 +37,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       _callDispatcher.RegisterParser ("Distinct", ParseResultModifierSource);
       _callDispatcher.RegisterParser ("Count", ParseResultModifierSource);
       _callDispatcher.RegisterParser ("First", ParseResultModifierSource);
+      _callDispatcher.RegisterParser ("Single", ParseResultModifierSource);
       _callDispatcher.RegisterParser ("Cast", ParseCastSource);
       
     }
@@ -62,10 +63,11 @@ namespace Remotion.Data.Linq.Parsing.Structure
     private void ParseSelectSource (ParseResultCollector resultCollector, MethodCallExpression sourceExpression)
     {
       if (_isTopLevel)
-        new SelectExpressionParser ().Parse (resultCollector, sourceExpression);
+        new SelectExpressionParser().Parse (resultCollector, sourceExpression);
       else
-        new LetExpressionParser ().Parse (resultCollector, sourceExpression);
+        new LetExpressionParser().Parse (resultCollector, sourceExpression);
     }
+
 
     private void ParseSelectManySource (ParseResultCollector resultCollector, MethodCallExpression sourceExpression)
     {
@@ -91,7 +93,10 @@ namespace Remotion.Data.Linq.Parsing.Structure
         throw new ParserException (message, sourceExpression, resultCollector.ExpressionTreeRoot, null);
       }
 
-      resultCollector.AddResultModifier (sourceExpression);
+      //delete
+      //resultCollector.AddResultModifiers (sourceExpression);
+      //new
+      resultCollector.AddResultModifierData (sourceExpression);
       Expression nextExpression = sourceExpression.Arguments[0];
       Parse (resultCollector, nextExpression, potentialFromIdentifier, "first argument of result modifier");
     }
