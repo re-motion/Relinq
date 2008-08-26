@@ -73,7 +73,7 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
       WhereClause whereClause = ExpressionHelper.CreateWhereClause();
 
       MockRepository repository = new MockRepository ();
-      IQueryVisitor visitorMock = repository.CreateMock<IQueryVisitor> ();
+      IQueryVisitor visitorMock = repository.StrictMock<IQueryVisitor> ();
 
       visitorMock.VisitWhereClause (whereClause);
 

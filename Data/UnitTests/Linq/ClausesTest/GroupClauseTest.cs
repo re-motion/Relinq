@@ -55,7 +55,7 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
       GroupClause groupClause = ExpressionHelper.CreateGroupClause ();
 
       MockRepository repository = new MockRepository();
-      IQueryVisitor visitorMock = repository.CreateMock<IQueryVisitor>();
+      IQueryVisitor visitorMock = repository.StrictMock<IQueryVisitor>();
       visitorMock.VisitGroupClause (groupClause);
 
       repository.ReplayAll();

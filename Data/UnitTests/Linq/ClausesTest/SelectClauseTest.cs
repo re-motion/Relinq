@@ -97,7 +97,7 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
       SelectClause selectClause = ExpressionHelper.CreateSelectClause();
 
       MockRepository repository = new MockRepository();
-      IQueryVisitor visitorMock = repository.CreateMock<IQueryVisitor>();
+      IQueryVisitor visitorMock = repository.StrictMock<IQueryVisitor>();
 
       visitorMock.VisitSelectClause (selectClause);
 

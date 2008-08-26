@@ -63,7 +63,7 @@ namespace Remotion.Data.UnitTests.Linq.DataObjectModelTest
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
 
       MockRepository repository = new MockRepository();
-      IDatabaseInfo databaseInfoMock = repository.CreateMock<IDatabaseInfo>();
+      IDatabaseInfo databaseInfoMock = repository.StrictMock<IDatabaseInfo>();
 
       Expect.Call (databaseInfoMock.GetTableName (fromClause)).Return ("studentTable");
 

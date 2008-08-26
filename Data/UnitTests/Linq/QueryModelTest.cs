@@ -65,7 +65,7 @@ namespace Remotion.Data.UnitTests.Linq
       QueryModel instance = ExpressionHelper.CreateQueryModel();
 
       MockRepository repository = new MockRepository ();
-      IQueryVisitor testVisitor = repository.CreateMock<IQueryVisitor> ();
+      IQueryVisitor testVisitor = repository.StrictMock<IQueryVisitor> ();
 
       //// expectations
       testVisitor.VisitQueryModel (instance);

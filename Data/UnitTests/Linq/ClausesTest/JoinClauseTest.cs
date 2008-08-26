@@ -76,7 +76,7 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
       JoinClause joinClause = ExpressionHelper.CreateJoinClause ();
 
       MockRepository repository = new MockRepository ();
-      IQueryVisitor visitorMock = repository.CreateMock<IQueryVisitor> ();
+      IQueryVisitor visitorMock = repository.StrictMock<IQueryVisitor> ();
 
       visitorMock.VisitJoinClause (joinClause);
 

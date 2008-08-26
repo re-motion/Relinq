@@ -156,7 +156,7 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest.ExpressionTreeVisitorTest
 
     private void CheckDelegation (MockRepository repository, string methodName, params Expression[] expressions)
     {
-      ExpressionTreeVisitor visitorMock = repository.CreateMock<ExpressionTreeVisitor> ();
+      ExpressionTreeVisitor visitorMock = repository.StrictMock<ExpressionTreeVisitor> ();
 
       MethodInfo visitExpressionMethod = visitorMock.GetType ().GetMethod ("VisitExpression", BindingFlags.NonPublic | BindingFlags.Instance);
       MethodInfo methodToBeCalled = visitorMock.GetType ().GetMethod (methodName, BindingFlags.NonPublic | BindingFlags.Instance);

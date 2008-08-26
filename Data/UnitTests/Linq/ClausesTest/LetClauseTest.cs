@@ -60,7 +60,7 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
       LetClause letClause = ExpressionHelper.CreateLetClause ();
 
       MockRepository repository = new MockRepository ();
-      IQueryVisitor visitorMock = repository.CreateMock<IQueryVisitor> ();
+      IQueryVisitor visitorMock = repository.StrictMock<IQueryVisitor> ();
 
       visitorMock.VisitLetClause (letClause);
 

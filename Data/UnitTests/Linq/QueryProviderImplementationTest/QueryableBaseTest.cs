@@ -30,8 +30,8 @@ namespace Remotion.Data.UnitTests.Linq.QueryProviderImplementationTest
     public void SetUp()
     {
       _mockRepository = new MockRepository();
-      IQueryExecutor executor = _mockRepository.CreateMock<IQueryExecutor>();
-      _provider = _mockRepository.CreateMock<QueryProviderBase> (executor);
+      IQueryExecutor executor = _mockRepository.StrictMock<IQueryExecutor>();
+      _provider = _mockRepository.StrictMock<QueryProviderBase> (executor);
     }
 
     [Test]
@@ -49,7 +49,7 @@ namespace Remotion.Data.UnitTests.Linq.QueryProviderImplementationTest
     [Test]
     public void InitializeWithDefaultConstructor ()
     {
-      IQueryExecutor executor = _mockRepository.CreateMock<IQueryExecutor>();
+      IQueryExecutor executor = _mockRepository.StrictMock<IQueryExecutor>();
       QueryableBase<int> queryable = new TestQueryable<int> (executor);
 
       Assert.IsNotNull (queryable.Provider);

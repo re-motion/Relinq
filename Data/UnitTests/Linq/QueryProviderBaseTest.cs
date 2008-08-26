@@ -33,7 +33,7 @@ namespace Remotion.Data.UnitTests.Linq
     public void SetUp()
     {
       _mockRepository = new MockRepository();
-      _executor = _mockRepository.CreateMock<IQueryExecutor>();
+      _executor = _mockRepository.StrictMock<IQueryExecutor>();
       _queryProvider = new TestQueryProvider (_executor);
     }
 

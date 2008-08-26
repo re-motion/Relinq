@@ -19,7 +19,7 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest.ExpressionTreeVisitorTest
     public void Setup()
     {
       _mockRepository = new MockRepository();
-      _visitorMock = _mockRepository.CreateMock<ExpressionTreeVisitor>();
+      _visitorMock = _mockRepository.StrictMock<ExpressionTreeVisitor>();
     }
 
     protected MockRepository MockRepository
@@ -70,7 +70,12 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest.ExpressionTreeVisitorTest
 
     protected T InvokeVisitMethod<T> (string methodName, T argument)
     {
-      return (T) _visitorMock.GetType ().GetMethod (methodName, BindingFlags.NonPublic | BindingFlags.Instance).Invoke (_visitorMock, new object[] { argument });
+      return InvokeVisitMethod<T, T> (methodName, argument);
+    }
+
+    protected TResult InvokeVisitMethod<TArg, TResult> (string methodName, TArg argument)
+    {
+      return (TResult) _visitorMock.GetType ().GetMethod (methodName, BindingFlags.NonPublic | BindingFlags.Instance).Invoke (_visitorMock, new object[] { argument });
     }
 
     protected ReadOnlyCollection<T> InvokeVisitExpressionListMethod<T> (ReadOnlyCollection<T> expressions) where T : Expression

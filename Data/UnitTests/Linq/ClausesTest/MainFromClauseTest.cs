@@ -60,7 +60,7 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause ();
 
       MockRepository repository = new MockRepository ();
-      IQueryVisitor visitorMock = repository.CreateMock<IQueryVisitor> ();
+      IQueryVisitor visitorMock = repository.StrictMock<IQueryVisitor> ();
 
       visitorMock.VisitMainFromClause (fromClause);
 

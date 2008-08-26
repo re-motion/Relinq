@@ -17,8 +17,6 @@ using NUnit.Framework.SyntaxHelpers;
 using Rhino.Mocks;
 using System.Reflection;
 using Rhino.Mocks.Interfaces;
-using Remotion.Data.Linq.Visitor;
-using Constant=Remotion.Data.Linq.DataObjectModel.Constant;
 
 namespace Remotion.Data.UnitTests.Linq.VisitorTest.ExpressionTreeVisitorTest
 {
@@ -364,7 +362,7 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest.ExpressionTreeVisitorTest
     public void VisitMemberInitExpression_InvalidNewExpression ()
     {
       MemberInitExpression expression = (MemberInitExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.MemberInit);
-      Expect.Call (InvokeVisitMethod ("VisitExpression", expression.NewExpression)).Return (Expression.Constant (0));
+      Expect.Call (InvokeVisitMethod<NewExpression, ConstantExpression> ("VisitExpression", expression.NewExpression)).Return (Expression.Constant (0));
       Expect.Call (InvokeVisitMethod ("VisitMemberBindingList", expression.Bindings)).Return (expression.Bindings);
       try
       {
@@ -380,7 +378,7 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest.ExpressionTreeVisitorTest
     public void VisitMemberInitExpression_ChangedNewExpression ()
     {
       MemberInitExpression expression = (MemberInitExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.MemberInit);
-      Expression newNewExpression = Expression.New (typeof (List<int>));
+      NewExpression newNewExpression = Expression.New (typeof (List<int>));
       Expect.Call (InvokeVisitMethod ("VisitExpression", expression.NewExpression)).Return (newNewExpression);
       Expect.Call (InvokeVisitMethod ("VisitMemberBindingList", expression.Bindings)).Return (expression.Bindings);
       MemberInitExpression result = (MemberInitExpression) InvokeAndCheckVisitExpression ("VisitMemberInitExpression", expression);
@@ -420,7 +418,7 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest.ExpressionTreeVisitorTest
     public void VisitListInitExpression_InvalidNewExpression ()
     {
       ListInitExpression expression = (ListInitExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.ListInit);
-      Expect.Call (InvokeVisitMethod ("VisitExpression", expression.NewExpression)).Return (Expression.Constant (0));
+      Expect.Call (InvokeVisitMethod<NewExpression, ConstantExpression> ("VisitExpression", expression.NewExpression)).Return (Expression.Constant (0));
       Expect.Call (InvokeVisitMethod ("VisitElementInitList", expression.Initializers)).Return (expression.Initializers);
       try
       {
@@ -436,7 +434,7 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest.ExpressionTreeVisitorTest
     public void VisitListInitExpression_ChangedNewExpression ()
     {
       ListInitExpression expression = (ListInitExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.ListInit);
-      Expression newNewExpression = Expression.New (typeof (List<int>));
+      NewExpression newNewExpression = Expression.New (typeof (List<int>));
       Expect.Call (InvokeVisitMethod ("VisitExpression", expression.NewExpression)).Return (newNewExpression);
       Expect.Call (InvokeVisitMethod ("VisitElementInitList", expression.Initializers)).Return (expression.Initializers);
       ListInitExpression result = (ListInitExpression) InvokeAndCheckVisitExpression ("VisitListInitExpression", expression);
@@ -451,7 +449,7 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest.ExpressionTreeVisitorTest
     {
       ListInitExpression expression = (ListInitExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.ListInit);
       ReadOnlyCollection<ElementInit> newInitializers =
-          new List<ElementInit> (new ElementInit[] {Expression.ElementInit (typeof (List<int>).GetMethod ("Add"), Expression.Constant (1))}).AsReadOnly ();
+          new List<ElementInit> (new [] {Expression.ElementInit (typeof (List<int>).GetMethod ("Add"), Expression.Constant (1))}).AsReadOnly ();
       Expect.Call (InvokeVisitMethod ("VisitExpression", expression.NewExpression)).Return (expression.NewExpression);
       Expect.Call (InvokeVisitMethod ("VisitElementInitList", expression.Initializers)).Return (newInitializers);
       ListInitExpression result = (ListInitExpression) InvokeAndCheckVisitExpression ("VisitListInitExpression", expression);
@@ -605,7 +603,7 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest.ExpressionTreeVisitorTest
     {
       Expression expr1 = Expression.Constant (1);
       Expression expr2 = Expression.Constant (2);
-      ReadOnlyCollection<Expression> expressions = new List<Expression> (new Expression[] {expr1,expr2}).AsReadOnly();
+      ReadOnlyCollection<Expression> expressions = new List<Expression> (new [] {expr1,expr2}).AsReadOnly();
       Expect.Call(InvokeVisitMethod("VisitExpression",expr1)).Return(expr1);
       Expect.Call (InvokeVisitMethod ("VisitExpression", expr2)).Return (expr2);
       ReadOnlyCollection<Expression> result = InvokeAndCheckVisitExpressionList (expressions);
@@ -619,7 +617,7 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest.ExpressionTreeVisitorTest
       Expression expr2 = Expression.Constant (2);
       Expression expr3 = Expression.Constant (3);
       Expression newExpression = Expression.Constant (4);
-      ReadOnlyCollection<Expression> expressions = new List<Expression> (new Expression[] { expr1, expr2,expr3 }).AsReadOnly ();
+      ReadOnlyCollection<Expression> expressions = new List<Expression> (new [] { expr1, expr2,expr3 }).AsReadOnly ();
       Expect.Call (InvokeVisitMethod ("VisitExpression", expr1)).Return (expr1);
       Expect.Call (InvokeVisitMethod ("VisitExpression", expr2)).Return (newExpression);
       Expect.Call (InvokeVisitMethod ("VisitExpression", expr3)).Return (expr3);
@@ -638,9 +636,9 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest.ExpressionTreeVisitorTest
       ConstantExpression expr3 = Expression.Constant (3);
       ParameterExpression newExpression = Expression.Parameter (typeof (int), "a");
 
-      ReadOnlyCollection<ConstantExpression> expressions = new List<ConstantExpression> (new ConstantExpression[] { expr1, expr2, expr3 }).AsReadOnly ();
+      ReadOnlyCollection<ConstantExpression> expressions = new List<ConstantExpression> (new [] { expr1, expr2, expr3 }).AsReadOnly ();
       Expect.Call (InvokeVisitMethod ("VisitExpression", expr1)).Return (expr1);
-      Expect.Call (InvokeVisitMethod ("VisitExpression", expr2)).Return (newExpression);
+      Expect.Call (InvokeVisitMethod<ConstantExpression, ParameterExpression> ("VisitExpression", expr2)).Return (newExpression);
       Expect.Call (InvokeVisitMethod ("VisitExpression", expr3)).Return (expr3);
 
       try
@@ -658,7 +656,7 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest.ExpressionTreeVisitorTest
     {
       MemberBinding memberBinding1 = Expression.Bind (typeof (SimpleClass).GetField ("Value"), Expression.Constant ("0"));
       MemberBinding memberBinding2 = Expression.Bind (typeof (SimpleClass).GetField ("Value"), Expression.Constant ("1"));
-      ReadOnlyCollection<MemberBinding> memberBindings = new List<MemberBinding> (new MemberBinding[] { memberBinding1, memberBinding2 }).AsReadOnly ();
+      ReadOnlyCollection<MemberBinding> memberBindings = new List<MemberBinding> (new [] { memberBinding1, memberBinding2 }).AsReadOnly ();
       Expect.Call (InvokeVisitMethod ("VisitMemberBinding", memberBinding1)).Return (memberBinding1);
       Expect.Call (InvokeVisitMethod ("VisitMemberBinding", memberBinding2)).Return (memberBinding2);
       ReadOnlyCollection<MemberBinding> result = InvokeAndCheckVisitMemberBindingList (memberBindings);
@@ -672,7 +670,7 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest.ExpressionTreeVisitorTest
       MemberBinding memberBinding2 = Expression.Bind (typeof (SimpleClass).GetField ("Value"), Expression.Constant ("1"));
       MemberBinding memberBinding3 = Expression.Bind (typeof (SimpleClass).GetField ("Value"), Expression.Constant ("2"));
       MemberBinding newMemberBinding = Expression.Bind (typeof (SimpleClass).GetField ("Value"), Expression.Constant ("3"));
-      ReadOnlyCollection<MemberBinding> memberBindings = new List<MemberBinding> (new MemberBinding[] { memberBinding1, memberBinding2, memberBinding3 }).AsReadOnly ();
+      ReadOnlyCollection<MemberBinding> memberBindings = new List<MemberBinding> (new [] { memberBinding1, memberBinding2, memberBinding3 }).AsReadOnly ();
       Expect.Call (InvokeVisitMethod ("VisitMemberBinding", memberBinding1)).Return (memberBinding1);
       Expect.Call (InvokeVisitMethod ("VisitMemberBinding", memberBinding2)).Return (newMemberBinding);
       Expect.Call (InvokeVisitMethod ("VisitMemberBinding", memberBinding3)).Return (memberBinding3);
@@ -686,7 +684,7 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest.ExpressionTreeVisitorTest
     {
       ElementInit elementInit1 = Expression.ElementInit (typeof (List<int>).GetMethod ("Add"), Expression.Constant (0));
       ElementInit elementInit2 = Expression.ElementInit (typeof (List<int>).GetMethod ("Add"), Expression.Constant (1));
-      ReadOnlyCollection<ElementInit> elementInits = new List<ElementInit> (new ElementInit[] { elementInit1, elementInit2 }).AsReadOnly ();
+      ReadOnlyCollection<ElementInit> elementInits = new List<ElementInit> (new [] { elementInit1, elementInit2 }).AsReadOnly ();
       Expect.Call (InvokeVisitMethod ("VisitElementInit", elementInit1)).Return (elementInit1);
       Expect.Call (InvokeVisitMethod ("VisitElementInit", elementInit2)).Return (elementInit2);
       ReadOnlyCollection<ElementInit> result = InvokeAndCheckVisitElementInitList (elementInits);
@@ -700,7 +698,7 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest.ExpressionTreeVisitorTest
       ElementInit elementInit2 = Expression.ElementInit (typeof (List<int>).GetMethod ("Add"), Expression.Constant (1));
       ElementInit elementInit3 = Expression.ElementInit (typeof (List<int>).GetMethod ("Add"), Expression.Constant (2));
       ElementInit newElementInit = Expression.ElementInit (typeof (List<int>).GetMethod ("Add"), Expression.Constant (3));
-      ReadOnlyCollection<ElementInit> elementInits = new List<ElementInit> (new ElementInit[] { elementInit1, elementInit2, elementInit3 }).AsReadOnly ();
+      ReadOnlyCollection<ElementInit> elementInits = new List<ElementInit> (new [] { elementInit1, elementInit2, elementInit3 }).AsReadOnly ();
       Expect.Call (InvokeVisitMethod ("VisitElementInit", elementInit1)).Return (elementInit1);
       Expect.Call (InvokeVisitMethod ("VisitElementInit", elementInit2)).Return (newElementInit);
       Expect.Call (InvokeVisitMethod ("VisitElementInit", elementInit3)).Return (elementInit3);

@@ -67,7 +67,7 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
       AdditionalFromClause fromClause = ExpressionHelper.CreateAdditionalFromClause ();
 
       var repository = new MockRepository ();
-      var visitorMock = repository.CreateMock<IQueryVisitor> ();
+      var visitorMock = repository.StrictMock<IQueryVisitor> ();
 
       visitorMock.VisitAdditionalFromClause (fromClause);
 

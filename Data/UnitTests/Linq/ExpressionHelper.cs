@@ -201,7 +201,7 @@ namespace Remotion.Data.UnitTests.Linq
     public static IQueryExecutor CreateExecutor()
     {
       MockRepository repository = new MockRepository();
-      IQueryExecutor executor = repository.CreateMock<IQueryExecutor>();
+      IQueryExecutor executor = repository.StrictMock<IQueryExecutor>();
       // Expect.Call (executor.Execute<IEnumerable<Student>>(null)).IgnoreArguments().Return (CreateStudents());
       return executor;
     }

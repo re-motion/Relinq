@@ -334,7 +334,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.FieldResolvingTest
     public void Resolver_UsesPolicyToAdjustRelationMembers ()
     {
       var mockRepository = new MockRepository ();
-      var policyMock = mockRepository.CreateMock<IResolveFieldAccessPolicy> ();
+      var policyMock = mockRepository.StrictMock<IResolveFieldAccessPolicy> ();
 
       ParameterExpression identifier = Expression.Parameter (typeof (Student_Detail_Detail), "sdd");
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (identifier, ExpressionHelper.CreateQuerySource_Detail_Detail ());
@@ -368,7 +368,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.FieldResolvingTest
     public void Resolver_UsesPolicyToAdjustFromIdentifierAccess ()
     {
       var mockRepository = new MockRepository ();
-      var policyMock = mockRepository.CreateMock<IResolveFieldAccessPolicy> ();
+      var policyMock = mockRepository.StrictMock<IResolveFieldAccessPolicy> ();
 
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "s");
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (identifier, ExpressionHelper.CreateQuerySource_Detail_Detail ());

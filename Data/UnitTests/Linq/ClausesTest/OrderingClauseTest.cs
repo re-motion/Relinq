@@ -67,7 +67,7 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
       OrderingClause orderingClause = ExpressionHelper.CreateOrderingClause ();
 
       MockRepository repository = new MockRepository();
-      IQueryVisitor visitorMock = repository.CreateMock<IQueryVisitor>();
+      IQueryVisitor visitorMock = repository.StrictMock<IQueryVisitor>();
 
       visitorMock.VisitOrderingClause (orderingClause);
 

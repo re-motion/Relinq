@@ -42,10 +42,10 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest
 
       MockRepository repository = new MockRepository();
       JoinClause joinClause1 =
-          repository.CreateMock<JoinClause> (ExpressionHelper.CreateClause(), ExpressionHelper.CreateParameterExpression(),
+          repository.StrictMock<JoinClause> (ExpressionHelper.CreateClause(), ExpressionHelper.CreateParameterExpression(),
               ExpressionHelper.CreateExpression(), ExpressionHelper.CreateExpression(), ExpressionHelper.CreateExpression());
       JoinClause joinClause2 =
-          repository.CreateMock<JoinClause> (ExpressionHelper.CreateClause(), ExpressionHelper.CreateParameterExpression(),
+          repository.StrictMock<JoinClause> (ExpressionHelper.CreateClause(), ExpressionHelper.CreateParameterExpression(),
               ExpressionHelper.CreateExpression(), ExpressionHelper.CreateExpression(), ExpressionHelper.CreateExpression());
 
       fromClause.Add (joinClause1);
@@ -167,8 +167,8 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest
 
       MockRepository repository = new MockRepository();
 
-      OrderingClause ordering1 = repository.CreateMock<OrderingClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateLambdaExpression (), OrderDirection.Asc);
-      OrderingClause ordering2 = repository.CreateMock<OrderingClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateLambdaExpression (), OrderDirection.Asc);
+      OrderingClause ordering1 = repository.StrictMock<OrderingClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateLambdaExpression (), OrderDirection.Asc);
+      OrderingClause ordering2 = repository.StrictMock<OrderingClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateLambdaExpression (), OrderDirection.Asc);
 
       orderByClause.Add (ordering1);
       orderByClause.Add (ordering2);
@@ -198,9 +198,9 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest
       MockRepository repository = new MockRepository();
 
       OrderingClause ordering1 =
-          repository.CreateMock<OrderingClause> (ExpressionHelper.CreateClause(), ExpressionHelper.CreateLambdaExpression(), OrderDirection.Desc);
+          repository.StrictMock<OrderingClause> (ExpressionHelper.CreateClause(), ExpressionHelper.CreateLambdaExpression(), OrderDirection.Desc);
       OrderingClause ordering2 =
-          repository.CreateMock<OrderingClause> (ExpressionHelper.CreateClause(), ExpressionHelper.CreateLambdaExpression(), OrderDirection.Desc);
+          repository.StrictMock<OrderingClause> (ExpressionHelper.CreateClause(), ExpressionHelper.CreateLambdaExpression(), OrderDirection.Desc);
 
       orderByClause.Add (ordering1);
       orderByClause.Add (ordering2);
@@ -229,9 +229,9 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest
       MockRepository repository = new MockRepository();
 
       OrderingClause ordering1 =
-          repository.CreateMock<OrderingClause> (ExpressionHelper.CreateClause(), ExpressionHelper.CreateLambdaExpression(), OrderDirection.Desc);
+          repository.StrictMock<OrderingClause> (ExpressionHelper.CreateClause(), ExpressionHelper.CreateLambdaExpression(), OrderDirection.Desc);
       OrderingClause ordering2 =
-          repository.CreateMock<OrderingClause> (ExpressionHelper.CreateClause(), ExpressionHelper.CreateLambdaExpression(), OrderDirection.Asc);
+          repository.StrictMock<OrderingClause> (ExpressionHelper.CreateClause(), ExpressionHelper.CreateLambdaExpression(), OrderDirection.Asc);
 
       orderByClause.Add (ordering1);
       orderByClause.Add (ordering2);
@@ -259,7 +259,7 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest
 
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause();
       SelectClause selectClause1 =
-          repository.CreateMock<SelectClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateLambdaExpression (), null);
+          repository.StrictMock<SelectClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateLambdaExpression (), null);
       
       QueryModel queryModel = new QueryModel (typeof (IQueryable<string>), fromClause, selectClause1);
 
@@ -284,14 +284,14 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest
 
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause ();
       SelectClause selectClause1 =
-          repository.CreateMock<SelectClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateLambdaExpression (), null);
+          repository.StrictMock<SelectClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateLambdaExpression (), null);
       OrderByClause orderByClause1 =
-          repository.CreateMock<OrderByClause> (ExpressionHelper.CreateOrderingClause ());
+          repository.StrictMock<OrderByClause> (ExpressionHelper.CreateOrderingClause ());
       AdditionalFromClause fromClause1 =
-          repository.CreateMock<AdditionalFromClause> (ExpressionHelper.CreateClause (), Expression.Parameter(typeof(Student),"p"),
+          repository.StrictMock<AdditionalFromClause> (ExpressionHelper.CreateClause (), Expression.Parameter(typeof(Student),"p"),
               ExpressionHelper.CreateLambdaExpression (), ExpressionHelper.CreateLambdaExpression ());
       WhereClause whereClause1 =
-          repository.CreateMock<WhereClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateLambdaExpression ());
+          repository.StrictMock<WhereClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateLambdaExpression ());
 
       QueryModel queryModel = new QueryModel (typeof (IQueryable<string>), fromClause, selectClause1);
       queryModel.AddBodyClause (orderByClause1);
