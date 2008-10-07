@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{DD9AA076-BE37-4A42-BA9E-C35ECC6955C9}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -24,7 +24,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\Remotion.Data.Linq.XML</DocumentationFile>
-    <NoWarn>1591;419</NoWarn><WarningsAsErrors>1570;1571;1572;1573;1574;1580;1581;1584;1587;1589;1590;1592;3008</WarningsAsErrors>
+    <NoWarn>1591;419</NoWarn>
+    <WarningsAsErrors>1570;1571;1572;1573;1574;1580;1581;1584;1587;1589;1590;1592;3008</WarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -162,7 +163,7 @@
     <Compile Include="SqlGeneration\CommandData.cs" />
     <Compile Include="SqlGeneration\CommandParameter.cs" />
     <Compile Include="SqlGeneration\ISqlGenerationContext.cs" />
-    <Compile Include="SqlGeneration\ISqlGeneratorBase.cs" />
+    <Compile Include="SqlGeneration\ISqlGenerator.cs" />
     <Compile Include="SqlGeneration\JoinCollection.cs" />
     <Compile Include="SqlGeneration\IFromBuilder.cs" />
     <Compile Include="SqlGeneration\IOrderByBuilder.cs" />

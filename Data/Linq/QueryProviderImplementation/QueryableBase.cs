@@ -20,7 +20,7 @@ namespace Remotion.Data.Linq.QueryProviderImplementation
   public abstract class QueryableBase<T> : IOrderedQueryable<T>
   {
     private readonly QueryProviderBase _queryProvider;
-    
+
     public QueryableBase (QueryProviderBase provider)
     {
       ArgumentUtility.CheckNotNull ("provider", provider);
@@ -43,10 +43,9 @@ namespace Remotion.Data.Linq.QueryProviderImplementation
 
     public Expression Expression { get; private set; }
 
-    public IQueryProvider Provider { get
+    public IQueryProvider Provider
     {
-      return _queryProvider;
-    }
+      get { return _queryProvider; }
     }
 
     public Type ElementType
@@ -54,14 +53,14 @@ namespace Remotion.Data.Linq.QueryProviderImplementation
       get { return typeof (T); }
     }
 
-    public IEnumerator<T> GetEnumerator ()
+    public IEnumerator<T> GetEnumerator()
     {
-      return _queryProvider.ExecuteCollection<T> (Expression).GetEnumerator ();
+      return _queryProvider.ExecuteCollection<T> (Expression).GetEnumerator();
     }
 
-    IEnumerator IEnumerable.GetEnumerator ()
+    IEnumerator IEnumerable.GetEnumerator()
     {
-      return _queryProvider.ExecuteCollection (Expression).GetEnumerator ();
+      return _queryProvider.ExecuteCollection (Expression).GetEnumerator();
     }
   }
 }
