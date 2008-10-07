@@ -31,6 +31,7 @@ namespace Remotion.Data.Linq.DataObjectModel
 
     public void Accept (IEvaluationVisitor visitor)
     {
+      ArgumentUtility.CheckNotNull ("visitor", visitor);
       visitor.VisitNewObjectEvaluation (this);
     }
 
