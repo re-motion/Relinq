@@ -8,14 +8,13 @@
  * WITHOUT WARRANTY OF ANY KIND, either express or implied. 
  */
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Rhino.Mocks;
-using Rhino.Mocks.Constraints;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 using Remotion.Utilities;
 using System.Collections;
@@ -71,13 +70,19 @@ namespace Remotion.Data.UnitTests.Linq
     }
 
     [Test]
+    public void GenerateQueryModel ()
+    {
+      Expression expression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource ());
+      var queryModel = _queryProvider.GenerateQueryModel (expression);
+
+      Assert.That (queryModel.GetExpressionTree (), Is.SameAs (expression));
+    }
+
+    [Test]
     public void GenericExecute_Single()
     {
       Expression expression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource());
-      Expect.Call (_executor.ExecuteSingle (null)).Constraints (
-          new PredicateConstraint<QueryModel> (
-              delegate (QueryModel queryExpression) { return queryExpression.GetExpressionTree() == expression; }
-              )).Return (0);
+      Expect.Call (_executor.ExecuteSingle (Arg<QueryModel>.Matches (queryModel => queryModel.GetExpressionTree() == expression))).Return (0);
 
       _mockRepository.ReplayAll();
 
@@ -90,10 +95,7 @@ namespace Remotion.Data.UnitTests.Linq
     public void Execute_Single ()
     {
       Expression expression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource ());
-      Expect.Call (_executor.ExecuteSingle (null)).Constraints (
-          new PredicateConstraint<QueryModel> (
-              delegate (QueryModel queryExpression) { return queryExpression.GetExpressionTree () == expression; }
-              )).Return (0);
+      Expect.Call (_executor.ExecuteSingle (Arg<QueryModel>.Matches (queryModel => queryModel.GetExpressionTree () == expression))).Return (0);
 
       _mockRepository.ReplayAll ();
 
@@ -106,17 +108,15 @@ namespace Remotion.Data.UnitTests.Linq
     public void GenericExecute_Collection ()
     {
       IQueryable<Student> query = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource(_executor));
-      Student student = new Student();
+      var student = new Student();
       
       Expression expression = query.Expression;
-      Expect.Call (_executor.ExecuteCollection (null)).Constraints (
-          new PredicateConstraint<QueryModel> (
-              delegate (QueryModel queryExpression) { return queryExpression.GetExpressionTree () == expression; }
-              )).Return (new Student[] {student});
+      Expect.Call (_executor.ExecuteCollection  (Arg<QueryModel>.Matches (queryModel => queryModel.GetExpressionTree() == expression)))
+          .Return (new[] {student});
 
       _mockRepository.ReplayAll ();
 
-      List<Student> students = new List<Student> (query); // enumerates query -> ExecuteCollection
+      var students = new List<Student> (query); // enumerates query -> ExecuteCollection
       Assert.AreEqual (1, students.Count);
       Assert.AreSame (student, students[0]);
 
@@ -127,17 +127,15 @@ namespace Remotion.Data.UnitTests.Linq
     public void NonGenericExecute_Collection ()
     {
       IQueryable<Student> query = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource (_executor));
-      Student student = new Student ();
+      var student = new Student ();
 
       Expression expression = query.Expression;
-      Expect.Call (_executor.ExecuteCollection (null)).Constraints (
-          new PredicateConstraint<QueryModel> (
-              delegate (QueryModel queryExpression) { return queryExpression.GetExpressionTree () == expression; }
-              )).Return (new Student[] { student });
+      Expect.Call (_executor.ExecuteCollection (Arg<QueryModel>.Matches (queryModel => queryModel.GetExpressionTree () == expression)))
+          .Return (new[] { student });
 
       _mockRepository.ReplayAll ();
 
-      ArrayList students = new ArrayList();
+      var students = new ArrayList();
       IEnumerable nonGenericQuery = query;
       foreach (object o in nonGenericQuery) // enumerates query -> ExecuteCollection
         students.Add (o);

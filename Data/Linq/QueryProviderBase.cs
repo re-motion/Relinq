@@ -60,34 +60,34 @@ namespace Remotion.Data.Linq
     public virtual object Execute (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      return Executor.ExecuteSingle (GenerateQueryExpression(expression));
+      return Executor.ExecuteSingle (GenerateQueryModel(expression));
     }
 
     public virtual TResult Execute<TResult> (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      return (TResult) Executor.ExecuteSingle (GenerateQueryExpression (expression));
+      return (TResult) Executor.ExecuteSingle (GenerateQueryModel (expression));
     }
 
     public virtual IEnumerable ExecuteCollection (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      return Executor.ExecuteCollection (GenerateQueryExpression (expression));
+      return Executor.ExecuteCollection (GenerateQueryModel (expression));
     }
 
     public virtual IEnumerable<TResult> ExecuteCollection<TResult> (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      IEnumerable results = Executor.ExecuteCollection (GenerateQueryExpression (expression));
+      IEnumerable results = Executor.ExecuteCollection (GenerateQueryModel (expression));
       foreach (TResult result in results)
         yield return result;
     }
 
-    private QueryModel GenerateQueryExpression (Expression expression)
+    public QueryModel GenerateQueryModel (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      QueryParser parser = new QueryParser(expression);
+      var parser = new QueryParser(expression);
       return parser.GetParsedQuery();
     }
   }
