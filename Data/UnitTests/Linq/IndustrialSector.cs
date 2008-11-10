@@ -8,11 +8,13 @@
  * WITHOUT WARRANTY OF ANY KIND, either express or implied. 
  */
 
+using System.Collections.Generic;
 namespace Remotion.Data.UnitTests.Linq
 {
   public class IndustrialSector
   {
     public int ID { get; set; }
     public Student_Detail Student_Detail { get; set; }
+    public IEnumerable<Student> Students { get; set; }
   }
 }

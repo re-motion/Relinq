@@ -55,6 +55,8 @@ namespace Remotion.Data.UnitTests.Linq
         return "detailTable";
       else if (relationMember == typeof (Student).GetProperty ("OtherStudent"))
         return "studentTable";
+      else if (relationMember == typeof (IndustrialSector).GetProperty ("Students"))
+        return "studentTable";
       else
         return null;
     }
@@ -73,6 +75,8 @@ namespace Remotion.Data.UnitTests.Linq
         return null;
       else if (member == typeof (Student_Detail).GetProperty ("IndustrialSector"))
         return "Student_Detail_to_IndustrialSector_FK";
+      else if (member == typeof (IndustrialSector).GetProperty ("Students"))
+        return null;
       else
         return member.Name + "Column";
     }
@@ -91,6 +95,8 @@ namespace Remotion.Data.UnitTests.Linq
         return Tuple.NewTuple ("Student_Detail_to_IndustrialSector_FK", "IndustrialSector_PK");
       else if (relationMember == typeof (Student).GetProperty ("OtherStudent"))
         return Tuple.NewTuple ("Student_to_OtherStudent_FK", "Student_PK");
+      else if (relationMember == typeof (IndustrialSector).GetProperty ("Students"))
+        return Tuple.NewTuple ("Industrial_PK", "Student_to_IndustrialSector_FK");
       else
         return null;
     }

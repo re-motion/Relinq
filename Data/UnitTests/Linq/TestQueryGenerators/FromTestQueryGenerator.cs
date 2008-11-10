@@ -35,6 +35,20 @@ namespace Remotion.Data.UnitTests.Linq.TestQueryGenerators
       return from s1 in source1 from s2 in source2 from s3 in source3 select s1;
     }
 
+    public static IQueryable<Student> CreateFromQueryWithMemberQuerySource (IQueryable<IndustrialSector> source)
+    {
+      return from sector in source
+             from s1 in sector.Students
+             select s1;
+    }
+
+    public static IQueryable<Student> CreateFromQueryWithMemberQuerySourceAndJoin (IQueryable<Student_Detail> source)
+    {
+      return from sd in source
+             from s1 in sd.IndustrialSector.Students
+             select s1;
+    }
+
     public static MethodCallExpression CreateMultiFromQuery_SelectManyExpression (IQueryable<Student> source1, IQueryable<Student> source2)
     {
       IQueryable<Student> query = CreateMultiFromQuery (source1, source2);
@@ -46,6 +60,5 @@ namespace Remotion.Data.UnitTests.Linq.TestQueryGenerators
       IQueryable<Student> query = CreateThreeFromQuery (source1, source2, source3);
       return (MethodCallExpression) query.Expression;
     }
-
   }
 }
