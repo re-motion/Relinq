@@ -391,5 +391,23 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest
 
       Assert.AreEqual ("from Student s in (from Student s2 in null select 1) ", sv.ToString());
     }
+
+    [Test]
+    public void StringVisitorForMemberFromClause ()
+    {
+      IClause previousClause = ExpressionHelper.CreateMainFromClause ();
+      ParameterExpression identifier = Expression.Parameter (typeof (Student), "s");
+      LambdaExpression projectionExpression = ExpressionHelper.CreateLambdaExpression ();
+
+      var bodyExpression = Expression.MakeMemberAccess (Expression.Constant ("test"), typeof (string).GetProperty ("Length"));
+      var fromExpression = Expression.Lambda (bodyExpression);
+      
+      MemberFromClause memberFromClause = new MemberFromClause (previousClause, identifier, fromExpression, projectionExpression);
+
+      StringVisitor sv = new StringVisitor ();
+      sv.VisitMemberFromClause (memberFromClause);
+
+      Assert.AreEqual ("from Student s in \"test\".Length ", sv.ToString ());
+    }
   }
 }

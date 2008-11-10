@@ -51,10 +51,10 @@ namespace Remotion.Data.UnitTests.Linq
 
     public static JoinClause CreateJoinClause ()
     {
-      ParameterExpression identifier = ExpressionHelper.CreateParameterExpression ();
-      Expression inExpression = ExpressionHelper.CreateExpression ();
-      Expression onExpression = ExpressionHelper.CreateExpression ();
-      Expression equalityExpression = ExpressionHelper.CreateExpression ();
+      ParameterExpression identifier = CreateParameterExpression ();
+      Expression inExpression = CreateExpression ();
+      Expression onExpression = CreateExpression ();
+      Expression equalityExpression = CreateExpression ();
 
       return new JoinClause (CreateMainFromClause(), identifier, inExpression, onExpression, equalityExpression);
     }
@@ -72,8 +72,8 @@ namespace Remotion.Data.UnitTests.Linq
 
     public static MainFromClause CreateMainFromClause ()
     {
-      ParameterExpression id = ExpressionHelper.CreateParameterExpression ();
-      IQueryable querySource = ExpressionHelper.CreateQuerySource (); 
+      ParameterExpression id = CreateParameterExpression ();
+      IQueryable querySource = CreateQuerySource (); 
       return CreateMainFromClause(id, querySource);
     }
 
@@ -90,39 +90,39 @@ namespace Remotion.Data.UnitTests.Linq
 
     public static GroupClause CreateGroupClause ()
     {
-      Expression groupExpression = ExpressionHelper.CreateExpression ();
-      Expression byExpression = ExpressionHelper.CreateExpression ();
+      Expression groupExpression = CreateExpression ();
+      Expression byExpression = CreateExpression ();
 
       return new GroupClause (CreateClause (), groupExpression, byExpression);
     }
     
     public static LetClause CreateLetClause ()
     {
-      ParameterExpression identifier = ExpressionHelper.CreateParameterExpression ();
+      ParameterExpression identifier = CreateParameterExpression ();
       return CreateLetClause(identifier);
     }
 
     public static LetClause CreateLetClause (ParameterExpression identifier)
     {
-      return new LetClause (CreateClause (), identifier, ExpressionHelper.CreateExpression (), CreateLambdaExpression ());
+      return new LetClause (CreateClause (), identifier, CreateExpression (), CreateLambdaExpression ());
     }
 
     public static LetClause CreateLetClause (Expression expression)
     {
-      ParameterExpression identifier = ExpressionHelper.CreateParameterExpression ();
+      ParameterExpression identifier = CreateParameterExpression ();
       return new LetClause (CreateLetClause (), identifier, expression, CreateLambdaExpression ());
     }
 
 
     public static OrderingClause CreateOrderingClause()
     {
-      LambdaExpression expression = ExpressionHelper.CreateLambdaExpression ();
+      LambdaExpression expression = CreateLambdaExpression ();
       return new OrderingClause (CreateClause (), expression, OrderDirection.Asc);
     }
 
     public static OrderByClause CreateOrderByClause()
     {
-      OrderingClause ordering = ExpressionHelper.CreateOrderingClause ();
+      OrderingClause ordering = CreateOrderingClause ();
       return new OrderByClause (ordering);
     }
 
@@ -299,6 +299,16 @@ namespace Remotion.Data.UnitTests.Linq
       while (expression is UnaryExpression)
         expression = ((UnaryExpression) expression).Operand; // strip casts
       return ((MemberExpression) expression).Member;
+    }
+
+    public static MemberFromClause CreateMemberFromClause ()
+    {
+      var previousClause = CreateClause();
+      var identifier = CreateParameterExpression();
+      var bodyExpression = Expression.MakeMemberAccess (Expression.Constant (null, typeof (IndustrialSector)), typeof (IndustrialSector).GetProperty ("Students"));
+      var fromExpression = Expression.Lambda (bodyExpression);
+      var projectionExpression = CreateLambdaExpression();
+      return new MemberFromClause (previousClause, identifier, fromExpression, projectionExpression);
     }
   }
 }

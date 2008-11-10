@@ -64,6 +64,11 @@ namespace Remotion.Data.Linq.Visitor
         jc.Accept (this);
     }
 
+    public void VisitMemberFromClause (MemberFromClause fromClause)
+    {
+      VisitAdditionalFromClause (fromClause);
+    }
+
     private bool IsCompilerGeneratedFromExpression (MemberExpression memberExpression)
     {
       return memberExpression.Expression.NodeType == ExpressionType.Constant

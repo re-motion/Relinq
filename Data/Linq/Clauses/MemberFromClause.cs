@@ -10,6 +10,8 @@
 
 using System;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.DataObjectModel;
+using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses
 {
@@ -31,6 +33,20 @@ namespace Remotion.Data.Linq.Clauses
     public MemberExpression MemberExpression
     {
       get { return _memberExpression; }
+    }
+
+    public override void Accept (IQueryVisitor visitor)
+    {
+      ArgumentUtility.CheckNotNull ("visitor", visitor);
+      visitor.VisitMemberFromClause (this);
+    }
+
+    public override IColumnSource GetFromSource (IDatabaseInfo databaseInfo)
+    {
+      ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
+      var relatedTable = DatabaseInfoUtility.GetRelatedTable (databaseInfo, MemberExpression.Member);
+      relatedTable.SetAlias (Identifier.Name);
+      return relatedTable;
     }
   }
 }

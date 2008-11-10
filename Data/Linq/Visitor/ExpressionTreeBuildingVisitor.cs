@@ -50,6 +50,11 @@ namespace Remotion.Data.Linq.Visitor
       ExpressionTree = Expression.Call (selectManyMethod, ExpressionTree, fromExpression, projectionExpression);
     }
 
+    public void VisitMemberFromClause (MemberFromClause fromClause)
+    {
+      throw new System.NotImplementedException();
+    }
+
     public void VisitSubQueryFromClause (SubQueryFromClause clause)
     {
       throw new NotImplementedException();

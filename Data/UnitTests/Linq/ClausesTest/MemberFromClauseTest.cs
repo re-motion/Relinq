@@ -12,7 +12,10 @@ using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.DataObjectModel;
+using Rhino.Mocks;
 
 namespace Remotion.Data.UnitTests.Linq.ClausesTest
 {
@@ -22,13 +25,8 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
     [Test]
     public void FromExpressionContainsMemberExpression ()
     {
-      var previousClause = ExpressionHelper.CreateClause();
-      var identifier = ExpressionHelper.CreateParameterExpression();
-      var bodyExpression = Expression.MakeMemberAccess (Expression.Constant ("test"), typeof (string).GetProperty ("Length"));
-      var fromExpression = Expression.Lambda (bodyExpression);
-      var projectionExpression = ExpressionHelper.CreateLambdaExpression();
-      var fromClause = new MemberFromClause (previousClause, identifier, fromExpression, projectionExpression);
-      Assert.That (fromClause.MemberExpression, Is.SameAs (bodyExpression));
+      MemberFromClause fromClause = ExpressionHelper.CreateMemberFromClause();
+      Assert.That (fromClause.MemberExpression, Is.SameAs (fromClause.FromExpression.Body));
     }
 
     [Test]
@@ -41,6 +39,27 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
       var fromExpression = Expression.Lambda (bodyExpression);
       var projectionExpression = ExpressionHelper.CreateLambdaExpression ();
       new MemberFromClause (previousClause, identifier, fromExpression, projectionExpression);
+    }
+
+    [Test]
+    public void Accept ()
+    {
+      MemberFromClause fromClause = ExpressionHelper.CreateMemberFromClause ();
+      var visitorMock = MockRepository.GenerateMock<IQueryVisitor> ();
+      fromClause.Accept (visitorMock);
+      visitorMock.AssertWasCalled (mock => mock.VisitMemberFromClause (fromClause));
+    }
+
+    [Test]
+    public void GetFromSource ()
+    {
+      MemberFromClause fromClause = ExpressionHelper.CreateMemberFromClause ();
+      var columnSource = fromClause.GetFromSource (StubDatabaseInfo.Instance);
+
+      Assert.That (columnSource is Table);
+      var tableSource = (Table) columnSource;
+      Assert.That (tableSource.Name, Is.EqualTo ("studentTable"));
+      Assert.That (tableSource.Alias, Is.EqualTo (fromClause.Identifier.Name));
     }
   }
 }

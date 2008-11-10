@@ -26,9 +26,6 @@ namespace Remotion.Data.Linq.DataObjectModel
       ArgumentUtility.CheckNotNull ("right", right);
       ArgumentUtility.CheckNotNull ("kind", kind);
 
-      //if (kind == ConditionKind.Contains)
-      //  ArgumentUtility.CheckType<SubQuery> ("left", left);
-
       _left = left;
       _kind = kind;
       _right = right;
