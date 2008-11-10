@@ -121,6 +121,8 @@ namespace Remotion.Data.Linq.Parsing.Structure
         QueryModel subQuery = subQueryExpression.QueryModel;
         return new SubQueryFromClause (_previousClause, fromExpressionData.Identifier, subQuery, projectionExpression);
       }
+      else if (lambdaExpression.Body is MemberExpression)
+        return new MemberFromClause (_previousClause, fromExpressionData.Identifier, lambdaExpression, projectionExpression);
       else
         return new AdditionalFromClause (_previousClause, fromExpressionData.Identifier, lambdaExpression, projectionExpression);
     }

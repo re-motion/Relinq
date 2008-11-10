@@ -113,7 +113,6 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
       _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression());
       _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression());
 
-      //FromExpressionData fromExpression1 = new FromExpressionData (ExpressionHelper.CreateLambdaExpression (), ExpressionHelper.CreateParameterExpression ());
       FromExpressionData fromExpression1 = new FromExpressionData (ExpressionHelper.CreateLambdaExpression (), Expression.Parameter (typeof (int), "p"));
       FromExpressionData fromExpression2 = new FromExpressionData (ExpressionHelper.CreateLambdaExpression (), Expression.Parameter (typeof (int), "j"));
 
@@ -159,6 +158,28 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
       Assert.AreSame (subQueryModel, subQueryFromClause1.SubQueryModel);
       Assert.AreSame (fromExpression1.Identifier, subQueryFromClause1.Identifier);
       Assert.AreSame (_result.ProjectionExpressions[0], subQueryFromClause1.ProjectionExpression);
+    }
+
+    [Test]
+    public void BodyExpressionsWithMemberExpression_TranslatedIntoMemberFromClause ()
+    {
+      _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression ());
+
+      var bodyExpression = Expression.MakeMemberAccess (Expression.Constant ("test"), typeof (string).GetProperty ("Length"));
+      var fromExpression = Expression.Lambda (bodyExpression);
+      FromExpressionData fromExpression2 = new FromExpressionData (fromExpression, Expression.Parameter (typeof (int), "j"));
+
+      _result.AddBodyExpression (fromExpression2);
+
+      QueryModel model = _modelCreator.CreateQueryExpression ();
+
+      Assert.AreEqual (1, model.BodyClauses.Count);
+
+      MemberFromClause memberFromClause = model.BodyClauses.Last () as MemberFromClause;
+      Assert.IsNotNull (memberFromClause);
+      Assert.AreSame (fromExpression2.TypedExpression, memberFromClause.FromExpression);
+      Assert.AreSame (fromExpression2.Identifier, memberFromClause.Identifier);
+      Assert.AreSame (_result.ProjectionExpressions[0], memberFromClause.ProjectionExpression);
     }
 
     [Test]
