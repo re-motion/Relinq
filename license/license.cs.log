@@ -1,0 +1,229 @@
+File Core\Core\Diagnostics\ToText\Infrastructure\ToTextProviderHandler\IToTextProviderHandler.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\Infrastructure\ToTextProviderHandler\ToTextParameters.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\Infrastructure\ToTextProviderHandler\ToTextProviderArrayHandler.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\Infrastructure\ToTextProviderHandler\ToTextProviderAutomaticObjectToTextHandler.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\Infrastructure\ToTextProviderHandler\ToTextProviderCharHandler.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\Infrastructure\ToTextProviderHandler\ToTextProviderDictionaryHandler.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\Infrastructure\ToTextProviderHandler\ToTextProviderEnumerableHandler.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\Infrastructure\ToTextProviderHandler\ToTextProviderEnumHandler.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\Infrastructure\ToTextProviderHandler\ToTextProviderFormattableHandler.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\Infrastructure\ToTextProviderHandler\ToTextProviderHandler.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\Infrastructure\ToTextProviderHandler\ToTextProviderHandlerFeedback.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\Infrastructure\ToTextProviderHandler\ToTextProviderIToTextHandlerHandler.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\Infrastructure\ToTextProviderHandler\ToTextProviderNullHandler.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\Infrastructure\ToTextProviderHandler\ToTextProviderRegisteredInterfaceHandlerHandler.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\Infrastructure\ToTextProviderHandler\ToTextProviderRegisteredTypeHandler.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\Infrastructure\ToTextProviderHandler\ToTextProviderStringHandler.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\Infrastructure\ToTextProviderHandler\ToTextProviderToStringHandler.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\Infrastructure\ToTextProviderHandler\ToTextProviderTypeHandler.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\Infrastructure\DisableableWriter.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\Infrastructure\DisableableXmlWriter.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\Infrastructure\IToTextSpecificHandler.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\Infrastructure\IToTextSpecificInterfaceHandler.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\Infrastructure\IToTextSpecificTypeHandler.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\Infrastructure\SequenceStateHolder.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\Infrastructure\ToTextBuilderArrayToTextProcessor.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\Infrastructure\ToTextBuilderBase.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\Infrastructure\ToTextBuilderSettings.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\Infrastructure\ToTextProviderSettings.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\Infrastructure\ToTextSpecificHandlerCollector.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\Infrastructure\ToTextSpecificHandlerMap.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\Infrastructure\ToTextSpecificInterfaceHandlerWrapper.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\Infrastructure\ToTextSpecificTypeHandlerWrapper.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\IToTextBuilder.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\IToTextConvertible.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\To.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\ToTextBuilder.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\ToTextBuilderXml.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\ToTextProvider.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\ToTextSpecificHandlerAttribute.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\ToTextSpecificInterfaceHandler.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\ToText\ToTextSpecificTypeHandler.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\IOuterProductProcessor.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Diagnostics\OuterProductProcessorBase.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Reflection\CodeGeneration\IClassEmitter.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Reflection\CodeGeneration\IMethodEmitter.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Reflection\ActionInvoker.generated.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Reflection\FuncInvoker.generated.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Text\StringExtensions\StringExtensions.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Utilities\ConsoleApplication\ConsoleApplication.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Utilities\ConsoleApplication\ConsoleKeypressWaiter.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Utilities\ConsoleApplication\IApplicationRunner.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Utilities\ConsoleApplication\IWaiter.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Core\Utilities\CultureScope.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Interfaces\Reflection\ActionInvoker.generated.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Interfaces\Reflection\FuncInvoker.generated.cs already has a license header different from the old license header. Difference at line 1.
+File Core\Interfaces\StandardDelegates.cs already has a license header different from the old license header. Difference at line 3.
+File Core\UnitTests\Diagnostics\BugReportTest.cs already has a license header different from the old license header. Difference at line 1.
+File Core\UnitTests\Diagnostics\OuterProductTest.cs already has a license header different from the old license header. Difference at line 1.
+File Core\UnitTests\Mixins\SampleTypes\MixinWithEmptyInterface.cs already has a license header different from the old license header. Source file contains less lines than license file.
+File Core\UnitTests\Mixins\Validation\ValidationSampleTypes\MixinWithProtectedOverriderWithoutMixinBase.cs already has a license header different from the old license header. Difference at line 1.
+File Core\UnitTests\Reflection\TestAssemblies\FirstInMemoryAssembly\AssemblyInfo.cs already has a license header different from the old license header. Source file contains less lines than license file.
+File Core\UnitTests\Reflection\TestAssemblies\MarkedAssembly\AssemblyInfo.cs already has a license header different from the old license header. Source file contains less lines than license file.
+File Core\UnitTests\Reflection\TestAssemblies\MarkedAssemblyInDynamicDirectory\AssemblyInfo.cs already has a license header different from the old license header. Source file contains less lines than license file.
+File Core\UnitTests\Reflection\TestAssemblies\MarkedAssemblyInRelativeSearchPath\AssemblyInfo.cs already has a license header different from the old license header. Source file contains less lines than license file.
+File Core\UnitTests\Reflection\TestAssemblies\MarkedAssemblyWithDerivedAttribute\AssemblyInfo.cs already has a license header different from the old license header. Source file contains less lines than license file.
+File Core\UnitTests\Reflection\TestAssemblies\MarkedAssemblyWithDerivedAttributeInOtherDirectory\AssemblyInfo.cs already has a license header different from the old license header. Source file contains less lines than license file.
+File Core\UnitTests\Reflection\TestAssemblies\MarkedAssemblyWithOtherFileNameInRelativeSearchPath\AssemblyInfo.cs already has a license header different from the old license header. Source file contains less lines than license file.
+File Core\UnitTests\Reflection\TestAssemblies\MarkedExeAssembly\AssemblyInfo.cs already has a license header different from the old license header. Source file contains less lines than license file.
+File Core\UnitTests\Reflection\TestAssemblies\MarkedExeAssemblyInDynamicDirectory\AssemblyInfo.cs already has a license header different from the old license header. Source file contains less lines than license file.
+File Core\UnitTests\Reflection\TestAssemblies\MarkedExeAssemblyInRelativeSearchPath\AssemblyInfo.cs already has a license header different from the old license header. Source file contains less lines than license file.
+File Core\UnitTests\Reflection\TestAssemblies\MarkedReferencedAssembly\AssemblyInfo.cs already has a license header different from the old license header. Source file contains less lines than license file.
+File Core\UnitTests\Reflection\TestAssemblies\NonApplicationMarkedAssembly\AssemblyInfo.cs already has a license header different from the old license header. Source file contains less lines than license file.
+File Core\UnitTests\Reflection\TestAssemblies\SecondInMemoryAssembly\AssemblyInfo.cs already has a license header different from the old license header. Source file contains less lines than license file.
+File Core\UnitTests\Reflection\TestAssemblies\UnmarkedAssembly\AssemblyInfo.cs already has a license header different from the old license header. Source file contains less lines than license file.
+File Core\UnitTests\Reflection\TestAssemblies\UnmarkedInMemoryAssembly\AssemblyInfo.cs already has a license header different from the old license header. Source file contains less lines than license file.
+File Core\UnitTests\Reflection\ConstructorLookupInfoTest.cs already has a license header different from the old license header. Difference at line 1.
+File Core\UnitTests\Reflection\MethodLookupInfoTest.cs already has a license header different from the old license header. Difference at line 1.
+File Core\UnitTests\Utilities\ConsoleApplicationTests\ConsoleApplicationTestApplicationRunner.cs already has a license header different from the old license header. Difference at line 1.
+File Core\UnitTests\Utilities\ConsoleApplicationTests\ConsoleApplicationTestSettings.cs already has a license header different from the old license header. Difference at line 1.
+File Data\DomainObjects\Mapping\IMappingNameResolver.cs already has a license header different from the old license header. Difference at line 1.
+File Data\DomainObjects\Mapping\ReflectionBasedNameResolver.cs already has a license header different from the old license header. Difference at line 1.
+File Data\DomainObjects\ClientTransactionFactory.cs already has a license header different from the old license header. Difference at line 1.
+File Data\DomainObjects.RdbmsTools.UnitTests\SchemaGeneration\SqlServer\FileBuilderTest.cs already has a license header different from the old license header. Difference at line 1.
+File Data\DomainObjects.Web.Test\FirstControl.ascx.cs already has a license header different from the old license header. Difference at line 1.
+File Data\DomainObjects.Web.Test\FirstControl.ascx.designer.cs already has a license header different from the old license header. Difference at line 1.
+File Data\DomainObjects.Web.Test\SecondControl.ascx.cs already has a license header different from the old license header. Difference at line 1.
+File Data\DomainObjects.Web.Test\SecondControl.ascx.designer.cs already has a license header different from the old license header. Difference at line 1.
+File Data\DomainObjects.Web.Test\WxeUserControlTestPage.aspx.cs already has a license header different from the old license header. Difference at line 1.
+File Data\DomainObjects.Web.Test\WxeUserControlTestPage.aspx.designer.cs already has a license header different from the old license header. Difference at line 1.
+File Data\Interfaces\ITransactionFactory.cs already has a license header different from the old license header. Difference at line 1.
+File Data\Linq\DataObjectModel\SourceMarkerEvaluation.cs already has a license header different from the old license header. Difference at line 1.
+File Data\Linq\Parsing\Details\WhereConditionParsing\SubQueryExpressionParser.cs already has a license header different from the old license header. Difference at line 1.
+File Data\Linq\Parsing\Details\DetailParserRegistries.cs already has a license header different from the old license header. Difference at line 1.
+File Data\Linq\Parsing\Structure\SimpleFromSourceExpressionParser.cs already has a license header different from the old license header. Difference at line 1.
+File Data\UnitTests\DomainObjects\Core\Cloning\CloneStrategyTestBase.cs already has a license header different from the old license header. Difference at line 1.
+File Data\UnitTests\DomainObjects\Core\Configuration\Mapping\MixinTestDomain\DiamondBase.cs already has a license header different from the old license header. Source file contains less lines than license file.
+File Data\UnitTests\DomainObjects\Core\Configuration\Mapping\TestDomain\Empty\AssemblyInfo.cs already has a license header different from the old license header. Source file contains less lines than license file.
+File Data\UnitTests\DomainObjects\Core\Configuration\Mapping\TestDomain\Errors\AssemblyInfo.cs already has a license header different from the old license header. Source file contains less lines than license file.
+File Data\UnitTests\DomainObjects\Core\Configuration\Mapping\TestDomain\Simple\AssemblyInfo.cs already has a license header different from the old license header. Source file contains less lines than license file.
+File Data\UnitTests\DomainObjects\Core\Configuration\Mapping\ReflectionBasedNameResolverTest.cs already has a license header different from the old license header. Difference at line 1.
+File Data\UnitTests\DomainObjects\Core\Interception\TestDomain\DirectlyInstantiableDO.cs already has a license header different from the old license header. Source file contains less lines than license file.
+File Data\UnitTests\DomainObjects\Core\Linq\ExtensionMethodsTest.cs already has a license header different from the old license header. Difference at line 1.
+File Data\UnitTests\Linq\ParsingTest\DetailsTest\WhereConditionParsingTest\SubQueryExpressionParserTest.cs already has a license header different from the old license header. Difference at line 1.
+File Data\UnitTests\Linq\ParsingTest\StructureTest\QueryParserIntegrationTest\ReverseFromWhereQueryTest.cs already has a license header different from the old license header. Difference at line 1.
+File Data\UnitTests\Linq\SqlGenerationTest\SqlServer\SqlServerGeneratorTest.cs already has a license header different from the old license header. Difference at line 1.
+File Data\UnitTests\Linq\TestQueryGenerators\MethodCallTestQueryGenerator.cs already has a license header different from the old license header. Source file contains less lines than license file.
+File Data\UnitTests\Linq\VisitorTest\ExpressionTreeVisitorTest\ExpressionTreeVisitor_SpecificExpressionsTestBase.cs already has a license header different from the old license header. Difference at line 1.
+File Development\Data\UnitTesting\DomainObjects\Linq\ExpressionTreeComparer.cs already has a license header different from the old license header. Difference at line 1.
+File Development\UnitTests\Core\UnitTesting\Data\SqlClient\DatabaseAgentTest.cs already has a license header different from the old license header. Difference at line 1.
+File Development\UnitTests\Core\UnitTesting\Data\SqlClient\TestableDatabaseAgent.cs already has a license header different from the old license header. Difference at line 1.
+File Development\UnitTests\Core\UnitTesting\ThreadRunnerTest.cs already has a license header different from the old license header. Difference at line 1.
+File Development\UnitTests\Data\UnitTesting\DomainObjects\Linq\ExpressionTreeComparerTest.cs already has a license header different from the old license header. Difference at line 1.
+File Development\UnitTests\Data\UnitTesting\DomainObjects\TestDomain\SimpleDomainObject.cs already has a license header different from the old license header. Source file contains less lines than license file.
+File Dms\Clients.Windows.Tray\Controllers\DownloadStartedEventArgs.cs already has a license header different from the old license header. Source file contains less lines than license file.
+File Dms\Clients.Windows.Tray\Forms\ApplicationWatcherForm.cs already has a license header different from the old license header. Difference at line 1.
+File Dms\Clients.Windows.Tray\Forms\ApplicationWatcherForm.Designer.cs already has a license header different from the old license header. Difference at line 1.
+File Dms\Clients.Windows.Tray\Forms\ProgressBarForm.cs already has a license header different from the old license header. Difference at line 1.
+File Dms\Clients.Windows.Tray\Forms\ProgressBarForm.Designer.cs already has a license header different from the old license header. Difference at line 1.
+File Dms\Clients.Windows.Tray\Properties\Resources.Designer.cs already has a license header different from the old license header. Difference at line 1.
+File Dms\Clients.Windows.WebBrowserControl\ExtendedWebBrowser.cs already has a license header different from the old license header. Difference at line 1.
+File Dms\Clients.Windows.WebBrowserControl\ExtendedWebBrowser.Designer.cs already has a license header different from the old license header. Difference at line 1.
+File Dms\DesktopConnector\Download\DownloadContext.cs already has a license header different from the old license header. Difference at line 1.
+File Dms\DesktopConnector\Download\DownloadFailedEventArgs.cs already has a license header different from the old license header. Difference at line 1.
+File Dms\DesktopConnector\Download\DownloadFinishedEventArgs.cs already has a license header different from the old license header. Difference at line 1.
+File Dms\DesktopConnector\Download\FileData.cs already has a license header different from the old license header. Difference at line 1.
+File Dms\DesktopConnector\FileHandling\ApplicationWatcher\IFileWatcher.cs already has a license header different from the old license header. Source file contains less lines than license file.
+File Dms\DesktopConnector\FileHandling\FileLockerFailedEventArgs.cs already has a license header different from the old license header. Difference at line 1.
+File Dms\DesktopConnector\FileHandling\FileLockerSucceededEventArgs.cs already has a license header different from the old license header. Difference at line 1.
+File Dms\DesktopConnector\FileHandling\FileWatcherEventArgs.cs already has a license header different from the old license header. Difference at line 1.
+File Dms\DesktopConnector\FileHandling\IFileOperationExecutor.cs already has a license header different from the old license header. Difference at line 1.
+File Dms\DesktopConnector\Globalization\NotificationResources.Designer.cs already has a license header different from the old license header. Difference at line 1.
+File Dms\UnitTests\DesktopConnector\FileHandling\DownloadedFileStates\DownloadedFileStateTestBase.cs already has a license header different from the old license header. Difference at line 1.
+File Dms\UnitTests\Globalization\NotificationResourcesTest.Designer.cs already has a license header different from the old license header. Difference at line 1.
+File ObjectBinding\UnitTests\Core\Globalization\MixinAddingResources2.Designer.cs already has a license header different from the old license header. Difference at line 1.
+File ObjectBinding\Web.CodeGenerator\DomainSample\Globalization\Country.de.Designer.cs already has a license header different from the old license header. Source file contains less lines than license file.
+File ObjectBinding\Web.CodeGenerator\DomainSample\Globalization\Location.de.Designer.cs already has a license header different from the old license header. Source file contains less lines than license file.
+File ObjectBinding\Web.CodeGenerator\DomainSample\Globalization\Person.de.Designer.cs already has a license header different from the old license header. Source file contains less lines than license file.
+File ObjectBinding\Web.CodeGenerator\DomainSample\Globalization\PhoneNumber.de.Designer.cs already has a license header different from the old license header. Source file contains less lines than license file.
+File ObjectBinding\Web.CodeGenerator\Templates\TabbedEditor\WebClient\UI\EditControl.ascx.cs already has a license header different from the old license header. Difference at line 1.
+File ObjectBinding\Web.CodeGenerator\Templates\TabbedEditor\WebClient\UI\EditControl.ascx.designer.cs already has a license header different from the old license header. Difference at line 1.
+File ObjectBinding\Web.CodeGenerator\Templates\TabbedEditor\WebClient\UI\EditForm.aspx.cs already has a license header different from the old license header. Difference at line 1.
+File ObjectBinding\Web.CodeGenerator\Templates\TabbedEditor\WebClient\UI\EditForm.aspx.designer.cs already has a license header different from the old license header. Difference at line 1.
+File ObjectBinding\Web.CodeGenerator\Templates\TabbedEditor\WebClient\UI\NavigationTabs.ascx.cs already has a license header different from the old license header. Source file contains less lines than license file.
+File ObjectBinding\Web.CodeGenerator\Templates\TabbedEditor\WebClient\UI\NavigationTabs.ascx.designer.cs already has a license header different from the old license header. Source file contains less lines than license file.
+File ObjectBinding\Web.CodeGenerator\Templates\TabbedEditor\WebClient\UI\SearchResultForm.aspx.cs already has a license header different from the old license header. Difference at line 1.
+File ObjectBinding\Web.CodeGenerator\Templates\TabbedEditor\WebClient\UI\SearchResultForm.aspx.designer.cs already has a license header different from the old license header. Difference at line 1.
+File ObjectBinding\Web.CodeGenerator\Templates\TabbedEditor\WebClient\Default.aspx.cs already has a license header different from the old license header. Source file contains less lines than license file.
+File ObjectBinding\Web.CodeGenerator\Templates\TabbedEditor\WebClient\Default.aspx.designer.cs already has a license header different from the old license header. Source file contains less lines than license file.
+File ObjectBinding\Web.CodeGenerator\Templates\TabbedEditor\WebClient\Global.asax.cs already has a license header different from the old license header. Difference at line 1.
+File ObjectBinding\Web.CodeGenerator\Templates\TabbedEditor\WebClient\WxeFunctions.cs already has a license header different from the old license header. Source file contains less lines than license file.
+File SecurityManager\AclTools.Expander\Program.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Clients.Web\Globalization\UI\AccessControl\AccessControlResources.de.Designer.cs already has a license header different from the old license header. Source file contains less lines than license file.
+File SecurityManager\Clients.Web\Globalization\UI\AccessControl\AccessControlResources.Designer.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Clients.Web\Globalization\UI\AccessControl\SecurableClassDefinitionListFormResources.de.Designer.cs already has a license header different from the old license header. Source file contains less lines than license file.
+File SecurityManager\Clients.Web\UI\AccessControl\EditAccessControlEntryControl.ascx.designer.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Clients.Web\UI\AccessControl\EditAccessControlEntryHeaderControl.ascx.designer.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Clients.Web\UI\AccessControl\EditPermissionControl.ascx.designer.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Clients.Web\UI\AccessControl\EditPermissionsForm.aspx.designer.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Clients.Web\UI\AccessControl\EditStateCombinationControl.ascx.designer.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Clients.Web\UI\AccessControl\EditStatefulAccessControlListControl.ascx.designer.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Clients.Web\UI\AccessControl\EditStatelessAccessControlListControl.ascx.designer.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Clients.Web\UI\SecurityManagerMasterPage.Master.designer.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core\AclTools\Expansion\Infrastructure\AclExpansionEntryCreator.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core\AclTools\Expansion\Infrastructure\AclExpansionEntryCreator_GetAccessTypesResult.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core\AclTools\Expansion\Infrastructure\AclExpansionHtmlWriterImplementationBase.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core\AclTools\Expansion\Infrastructure\AclExpansionTreeNode_ObjectMother.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core\AclTools\Expansion\Infrastructure\AclProbe.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core\AclTools\Expansion\Infrastructure\IUserRoleAclAceCombinationFinder.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core\AclTools\Expansion\Infrastructure\UserRoleAclAceCombination.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core\AclTools\Expansion\Infrastructure\UserRoleAclAceCombinationFinder.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core\AclTools\Expansion\TextWriterFactory\ITextWriterFactory.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core\AclTools\Expansion\TextWriterFactory\StreamWriterFactory.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core\AclTools\Expansion\TextWriterFactory\StringWriterFactory.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core\AclTools\Expansion\TextWriterFactory\TextWriterData.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core\AclTools\Expansion\TextWriterFactory\TextWriterFactoryBase.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core\AclTools\Expansion\AclExpanderApplication.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core\AclTools\Expansion\AclExpansionAccessConditions.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core\AclTools\Expansion\AclExpansionEntry.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core\AclTools\Expansion\EnumerableEqualsWrapper.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core\AclTools\Expansion\HtmlTagWriter.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core\AclTools\Expansion\HtmlTagWriterTags.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core\AclTools\Expansion\IAclExpanderAclFinder.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core\AclTools\Expansion\IAclExpanderUserFinder.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core\Domain\AccessControl\AccessTypeStatistics.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core\Domain\AccessControl\IStateCombinationBuilder.cs already has a license header different from the old license header. Source file contains less lines than license file.
+File SecurityManager\Core\Domain\ToTextSpecificTypeHandlers\AbstractRoleDefinition_ToTextSpecificTypeHandler.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core\Domain\ToTextSpecificTypeHandlers\AccessControlEntry_ToTextSpecificTypeHandler.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core\Domain\ToTextSpecificTypeHandlers\AccessControlList_ToTextSpecificTypeHandler.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core\Domain\ToTextSpecificTypeHandlers\AccessTypeDefinition_ToTextSpecificTypeHandler.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core\Domain\ToTextSpecificTypeHandlers\AclProbe_ToTextSpecificTypeHandler.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core\Domain\ToTextSpecificTypeHandlers\Group_ToTextSpecificTypeHandler.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core\Domain\ToTextSpecificTypeHandlers\ListOfAclExpansionEntry_ToTextSpecificTypeHandler.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core\Domain\ToTextSpecificTypeHandlers\Permission_ToTextSpecificTypeHandler.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core\Domain\ToTextSpecificTypeHandlers\Position_ToTextSpecificTypeHandler.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core\Domain\ToTextSpecificTypeHandlers\Role_ToTextSpecificTypeHandler.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core\Domain\ToTextSpecificTypeHandlers\SecurableClassDefinition_ToTextSpecificTypeHandler.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core\Domain\ToTextSpecificTypeHandlers\SecurityToken_ToTextSpecificTypeHandler.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core\Domain\ToTextSpecificTypeHandlers\StateDefinition_ToTextSpecificTypeHandler.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core\Domain\ToTextSpecificTypeHandlers\Tenant_ToTextSpecificTypeHandler.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core\Domain\ToTextSpecificTypeHandlers\User_ToTextSpecificTypeHandler.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core\Domain\SecurityManagerSearchServiceBase.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core.UnitTests\Domain\AccessControl\AccessControlEntryPropertiesSearchServiceTests\SetUpFixture.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core.UnitTests\Domain\OrganizationalStructure\RolePropertiesSearchServiceTests\SetUpFixture.cs already has a license header different from the old license header. Difference at line 1.
+File SecurityManager\Core.UnitTests\Domain\OrganizationalStructure\UserTests\UserTestBase.cs already has a license header different from the old license header. Difference at line 1.
+File Web\Core\ExecutionEngine\Infrastructure\TransactionStrategyBase.cs already has a license header different from the old license header. Difference at line 1.
+File Web\ExecutionEngine.CodeGenerator.Test\AutoPage.aspx.cs already has a license header different from the old license header. Difference at line 1.
+File Web\ExecutionEngine.CodeGenerator.Test\AutoPage.aspx.designer.cs already has a license header different from the old license header. Difference at line 1.
+File Web\ExecutionEngine.CodeGenerator.Test\AutoUserControl.ascx.cs already has a license header different from the old license header. Difference at line 1.
+File Web\ExecutionEngine.CodeGenerator.Test\AutoUserControl.ascx.designer.cs already has a license header different from the old license header. Difference at line 1.
+File Web\ExecutionEngine.CodeGenerator.Test\BaseFunction.cs already has a license header different from the old license header. Difference at line 1.
+File Web\ExecutionEngine.CodeGenerator.Test\CalledPage.aspx.cs already has a license header different from the old license header. Difference at line 1.
+File Web\ExecutionEngine.CodeGenerator.Test\Generated.cs already has a license header different from the old license header. Difference at line 1.
+File Web\Test\ExecutionEngine\FirstControl.ascx.cs already has a license header different from the old license header. Difference at line 1.
+File Web\Test\ExecutionEngine\FirstControl.ascx.designer.cs already has a license header different from the old license header. Difference at line 1.
+File Web\Test\ExecutionEngine\FourthControl.ascx.cs already has a license header different from the old license header. Difference at line 1.
+File Web\Test\ExecutionEngine\FourthControl.ascx.designer.cs already has a license header different from the old license header. Difference at line 1.
+File Web\Test\ExecutionEngine\SecondControl.ascx.cs already has a license header different from the old license header. Difference at line 1.
+File Web\Test\ExecutionEngine\SecondControl.ascx.designer.cs already has a license header different from the old license header. Difference at line 1.
+File Web\Test\ExecutionEngine\ShowFirstUserControlFormFunction.cs already has a license header different from the old license header. Difference at line 1.
+File Web\Test\ExecutionEngine\ShowFourthUserControlFormFunction.cs already has a license header different from the old license header. Difference at line 1.
+File Web\Test\ExecutionEngine\ShowSecondUserControlFormFunction.cs already has a license header different from the old license header. Difference at line 1.
+File Web\Test\ExecutionEngine\ShowThirdUserControlFormFunction.cs already has a license header different from the old license header. Difference at line 1.
+File Web\Test\ExecutionEngine\ShowUserControlFormFunction.cs already has a license header different from the old license header. Difference at line 1.
+File Web\Test\ExecutionEngine\ThirdControl.ascx.cs already has a license header different from the old license header. Difference at line 1.
+File Web\Test\ExecutionEngine\ThirdControl.ascx.designer.cs already has a license header different from the old license header. Difference at line 1.
+File Web\Test\ExecutionEngine\UserControlForm.aspx.designer.cs already has a license header different from the old license header. Difference at line 1.
+File Web\UnitTests\ExecutionEngine\Infrastructure\WxePageStepExecutionStates\TestBase.cs already has a license header different from the old license header. Difference at line 1.
+File Web\UnitTests\ExecutionEngine\WxePageStepIntegrationTests\TestBase.cs already has a license header different from the old license header. Difference at line 1.
+File Web\UnitTests\PairConstraint.cs already has a license header different from the old license header. Difference at line 1.
