@@ -49,7 +49,8 @@ filter replace-licenseHeader([string]$pathToLicenseHeaderFile, [string]$pathToOl
   move-item $tempFile $pathToSourceFile -force
 }
 
-get-ChildItem -path $rootPath -include '*.cs' -exclude 'prereq\*' -recurse | replace-licenseHeader 'licenseHeader.cs.txt' 'licenseHeader_old.cs.txt'
+#get-ChildItem -path $rootPath -include '*.cs' -exclude 'prereq\*' -recurse | replace-licenseHeader 'licenseHeader.cs.txt' 'licenseHeader_old.cs.txt'
+get-ChildItem -path $rootPath -include '*.cs' -exclude 'prereq\*' -recurse | replace-licenseHeader 'licenseHeaderRestrict.cs.txt' 'licenseHeader.cs.txt'
 #get-ChildItem -path $rootPath -include '*.js' -exclude 'prereq\*' -recurse | replace-licenseHeader 'licenseHeader.cs.txt'
 #get-ChildItem -path $rootPath -include '*.aspx' -exclude 'prereq\*' -recurse | replace-licenseHeader 'licenseHeader.asx.txt'
 #get-ChildItem -path $rootPath -include '*.ascx' -exclude 'prereq\*' -recurse | replace-licenseHeader 'licenseHeader.asx.txt'
