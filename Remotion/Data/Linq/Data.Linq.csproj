@@ -202,7 +202,7 @@
     <Compile Include="Clauses\WhereClause.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\remotion.snk">
+    <None Include="..\..\..\remotion.snk">
       <Link>remotion.snk</Link>
     </None>
     <None Include="Data.Linq.build" />
