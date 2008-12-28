@@ -49,12 +49,14 @@ filter replace-licenseHeader([string]$pathToLicenseHeaderFile, [string]$pathToOl
   move-item $tempFile $pathToSourceFile -force
 }
 
-#get-ChildItem -path $rootPath -include '*.cs' -exclude 'prereq\*','SecurityManager\*','*.designer.cs' -recurse | replace-licenseHeader 'licenseHeader.cs.txt' 'licenseHeader_old.cs.txt'
-#get-ChildItem -path $rootPath -include '*.js' -exclude 'prereq\*' -recurse | replace-licenseHeader 'licenseHeader.cs.txt'
-get-ChildItem -path $rootPath -include '*.aspx' -exclude 'prereq\*','SecurityManager\*' -recurse | write-host
-#get-ChildItem -path $rootPath -include '*.aspx' -exclude 'prereq\*','SecurityManager\*' -recurse | replace-licenseHeader 'licenseHeader.asx.txt' 'licenseHeader_old.asx.txt'
-#get-ChildItem -path $rootPath -include '*.ascx' -exclude 'prereq\*','SecurityManager\*' -recurse | replace-licenseHeader 'licenseHeader.asx.txt' 'licenseHeader_old.asx.txt'
+#get-ChildItem -path $rootPath -include '*.cs' -exclude '*.designer.cs' -recurse | replace-licenseHeader 'licenseHeader.cs.txt' 'licenseHeader_old.cs.txt'
+#get-ChildItem -path $rootPath -include '*.js' -recurse | replace-licenseHeader | replace-licenseHeader 'licenseHeader.cs.txt' 'licenseHeader_old.cs.txt'
+#get-ChildItem -path $rootPath\Remotion -include '*.aspx' -recurse | replace-licenseHeader 'licenseHeader.asx.txt' 'licenseHeader_old.asx.txt'
+#get-ChildItem -path $rootPath\Remotion -include '*.ascx' -recurse | replace-licenseHeader 'licenseHeader.asx.txt' 'licenseHeader_old.asx.txt'
+#get-ChildItem -path $rootPath\Remotion -include '*.asax' -recurse | replace-licenseHeader 'licenseHeader.asx.txt' 'licenseHeader_old.asx.txt'
 
-#get-ChildItem -path $rootPath\SecurityManager -include '*.cs' -exclude 'prereq\*','*.designer.cs' -recurse | replace-licenseHeader 'licenseHeaderRestrict.cs.txt' 'licenseHeaderRestrict_old.cs.txt'
-#get-ChildItem -path $rootPath\SecurityManager -include '*.aspx' -exclude 'prereq\*' -recurse | replace-licenseHeader 'licenseHeaderRestrict.asx.txt' 'licenseHeaderRestrict_old.asx.txt'
-#get-ChildItem -path $rootPath\SecurityManager -include '*.ascx' -exclude 'prereq\*' -recurse | replace-licenseHeader 'licenseHeaderRestrict.asx.txt' 'licenseHeaderRestrict_old.asx.txt'
+get-ChildItem -path $rootPath\SecurityManager -include '*.cs'   -exclude '*.designer.cs' -recurse | replace-licenseHeader 'licenseHeaderRestrict.cs.txt' 'licenseHeaderRestrict_old.cs.txt'
+get-ChildItem -path $rootPath\SecurityManager -include '*.aspx' -recurse | replace-licenseHeader 'licenseHeaderRestrict.asx.txt' 'licenseHeaderRestrict_old.asx.txt'
+get-ChildItem -path $rootPath\SecurityManager -include '*.ascx' -recurse | replace-licenseHeader 'licenseHeaderRestrict.asx.txt' 'licenseHeaderRestrict_old.asx.txt'
+get-ChildItem -path $rootPath\SecurityManager -include '*.asax' -recurse | replace-licenseHeader 'licenseHeaderRestrict.asx.txt' 'licenseHeaderRestrict_old.asx.txt'
+get-ChildItem -path $rootPath\SecurityManager -include '*.master' -recurse | replace-licenseHeader 'licenseHeaderRestrict.asx.txt' 'licenseHeaderRestrict_old.asx.txt'
