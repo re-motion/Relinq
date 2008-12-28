@@ -55,8 +55,10 @@ filter replace-licenseHeader([string]$pathToLicenseHeaderFile, [string]$pathToOl
 #get-ChildItem -path $rootPath\Remotion -include '*.ascx' -recurse | replace-licenseHeader 'licenseHeader.asx.txt' 'licenseHeader_old.asx.txt'
 #get-ChildItem -path $rootPath\Remotion -include '*.asax' -recurse | replace-licenseHeader 'licenseHeader.asx.txt' 'licenseHeader_old.asx.txt'
 
-get-ChildItem -path $rootPath\SecurityManager -include '*.cs'   -exclude '*.designer.cs' -recurse | replace-licenseHeader 'licenseHeaderRestrict.cs.txt' 'licenseHeaderRestrict_old.cs.txt'
-get-ChildItem -path $rootPath\SecurityManager -include '*.aspx' -recurse | replace-licenseHeader 'licenseHeaderRestrict.asx.txt' 'licenseHeaderRestrict_old.asx.txt'
-get-ChildItem -path $rootPath\SecurityManager -include '*.ascx' -recurse | replace-licenseHeader 'licenseHeaderRestrict.asx.txt' 'licenseHeaderRestrict_old.asx.txt'
-get-ChildItem -path $rootPath\SecurityManager -include '*.asax' -recurse | replace-licenseHeader 'licenseHeaderRestrict.asx.txt' 'licenseHeaderRestrict_old.asx.txt'
-get-ChildItem -path $rootPath\SecurityManager -include '*.master' -recurse | replace-licenseHeader 'licenseHeaderRestrict.asx.txt' 'licenseHeaderRestrict_old.asx.txt'
+#get-ChildItem -path $rootPath\SecurityManager -include '*.cs'   -exclude '*.designer.cs' -recurse | replace-licenseHeader 'licenseHeaderRestrict.cs.txt' 'licenseHeaderRestrict_old.cs.txt'
+#get-ChildItem -path $rootPath\SecurityManager -include '*.aspx' -recurse | replace-licenseHeader 'licenseHeaderRestrict.asx.txt' 'licenseHeaderRestrict_old.asx.txt'
+#get-ChildItem -path $rootPath\SecurityManager -include '*.ascx' -recurse | replace-licenseHeader 'licenseHeaderRestrict.asx.txt' 'licenseHeaderRestrict_old.asx.txt'
+#get-ChildItem -path $rootPath\SecurityManager -include '*.asax' -recurse | replace-licenseHeader 'licenseHeaderRestrict.asx.txt' 'licenseHeaderRestrict_old.asx.txt'
+#get-ChildItem -path $rootPath\SecurityManager -include '*.master' -recurse | replace-licenseHeader 'licenseHeaderRestrict.asx.txt' 'licenseHeaderRestrict_old.asx.txt'
+
+#get-ChildItem -path $rootPath\DMS -include '*.cs'   -exclude '*.designer.cs' -recurse | replace-licenseHeader 'licenseHeaderRevision.cs.txt' 'licenseHeaderRevision_old.cs.txt'
