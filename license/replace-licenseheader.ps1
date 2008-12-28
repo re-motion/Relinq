@@ -14,7 +14,7 @@ filter replace-licenseHeader([string]$pathToLicenseHeaderFile, [string]$pathToOl
   $oldLicenseHeader = get-content $pathToOldLicenseHeaderFile
   $source = get-content $pathToSourceFile
     
-  if ($source.Length -lt $licenseHeader.Length)
+  if ($source.Length -lt $oldLicenseHeader.Length)
   {
     $error = "File $_ already has a license header different from the old license header. Source file contains less lines than license file."
     write-host $error
