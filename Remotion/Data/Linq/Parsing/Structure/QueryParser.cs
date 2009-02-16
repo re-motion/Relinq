@@ -15,6 +15,7 @@
 // 
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Utilities;
 
 
@@ -47,6 +48,43 @@ namespace Remotion.Data.Linq.Parsing.Structure
         subQuery.SetParentQuery (model);
 
       return model;
+    }
+
+    ////////////////////////////////////////////////////////////////////////
+    
+    # warning only for testing !!!!
+    public QueryModel GetParsedQueryFetch (FromExpressionData fromExpressionData)
+    {
+      //simulate SelectMany if fetched is called
+
+      if (fromExpressionData != null)
+      {
+        ParseResultCollector resultCollector = new ParseResultCollector (SourceExpression);
+
+        _sourceParser.Parse (resultCollector, SourceExpression, null, "parsing query");
+
+        List<QueryModel> subQueries = new List<QueryModel>();
+        resultCollector.Simplify (subQueries);
+
+        QueryModelCreator modelCreator = new QueryModelCreator (SourceExpression, resultCollector);
+        QueryModel model = modelCreator.CreateQueryExpression();
+
+
+        //projectionExpression ? -> how to define this
+        IClause previousClause =  model.GetMainFromClause();
+        MemberFromClause fromClause = new MemberFromClause (
+            previousClause, fromExpressionData.Identifier, (LambdaExpression) fromExpressionData.Expression, (LambdaExpression) fromExpressionData.Expression);
+        model.AddBodyClause (fromClause); //add after main
+
+        foreach (QueryModel subQuery in subQueries)
+          subQuery.SetParentQuery (model);
+
+        return model;
+      }
+      else
+      {
+        return GetParsedQuery();
+      }
     }
   }
 }

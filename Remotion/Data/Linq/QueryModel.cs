@@ -87,6 +87,25 @@ namespace Remotion.Data.Linq
       _bodyClauses.Add (clause);
     }
 
+    //public IClause GetLastFromClause ()
+    //{
+    //  IClause previousClause = null;
+    //  foreach (var clause in _bodyClauses)
+    //  {
+    //    if ((clause is MainFromClause) || (clause is AdditionalFromClause))
+    //      previousClause = clause;
+    //  }
+    //  if (previousClause != null)
+    //    return previousClause;
+    //  else
+    //    return MainFromClause;
+    //}
+
+    public IClause GetMainFromClause ()
+    {
+      return MainFromClause;
+    }
+
     private void RegisterClause (ParameterExpression identifier, IResolveableClause clauseToBeRegistered)
     {
       if (MainFromClause.Identifier.Name == identifier.Name || _clausesByIdentifier.ContainsKey (identifier.Name))

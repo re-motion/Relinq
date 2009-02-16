@@ -254,6 +254,24 @@ namespace Remotion.Data.UnitTests.Linq
       queryModel.SetParentQuery (parentQueryModel);
     }
 
+    //[Test]
+    //public void GetLastFromClause_MainClause ()
+    //{
+    //  QueryModel queryModel = ExpressionHelper.CreateQueryModel();
+    //  IClause clause = queryModel.GetLastFromClause();
+    //  Assert.That (clause, Is.SameAs (queryModel.MainFromClause));
+    //}
+
+    //[Test]
+    //public void GetLastAdditionalFromClause ()
+    //{
+    //  QueryModel queryModel = ExpressionHelper.CreateQueryModel ();
+    //  IBodyClause additionalFromClause = ExpressionHelper.CreateAdditionalFromClause();
+    //  queryModel.AddBodyClause (additionalFromClause);
+    //  IClause clause = queryModel.GetLastFromClause ();
+    //  Assert.That (clause, Is.EqualTo(additionalFromClause));
+    //}
+
     
     private QueryModel CreateQueryExpressionForResolve ()
     {
