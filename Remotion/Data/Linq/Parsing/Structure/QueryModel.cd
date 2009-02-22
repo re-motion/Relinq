@@ -1,135 +1,336 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="Remotion.Data.Linq.Clauses.MainFromClause">
-    <Position X="0.5" Y="2.75" Width="1.5" />
-    <Members>
-      <Method Name="Accept" Hidden="true" />
-      <Method Name="GetQuerySourceType" Hidden="true" />
-      <Method Name="MainFromClause" Hidden="true" />
-    </Members>
-    <TypeIdentifier>
-      <HashCode>AIAAAAAAAAIAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Clauses\MainFromClause.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Remotion.Data.Linq.Clauses.OrderByClause">
-    <Position X="7.5" Y="0.5" Width="1.5" />
-    <Members>
-      <Field Name="_orderingList" Hidden="true" />
-      <Method Name="Accept" Hidden="true" />
-      <Method Name="Add" Hidden="true" />
-      <Method Name="OrderByClause" Hidden="true" />
-      <Method Name="SetQueryModel" Hidden="true" />
-    </Members>
-    <TypeIdentifier>
-      <HashCode>BIIAAAACAAAAAAAgAAAAAAAAAAAAAAAAAAQAAEAAAAA=</HashCode>
-      <FileName>Clauses\OrderByClause.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="Remotion.Data.Linq.Clauses.OrderingClause">
-    <Position X="5.75" Y="0.5" Width="1.5" />
-    <Members>
-      <Field Name="_expression" Hidden="true" />
-      <Field Name="_orderDirection" Hidden="true" />
-      <Method Name="Accept" Hidden="true" />
-      <Method Name="OrderingClause" Hidden="true" />
-      <Property Name="QueryModel" Hidden="true" />
-      <Method Name="SetQueryModel" Hidden="true" />
-    </Members>
-    <TypeIdentifier>
-      <HashCode>BIgAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAQAgEABAAA=</HashCode>
-      <FileName>Clauses\OrderingClause.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="Remotion.Data.Linq.Clauses.SelectClause">
-    <Position X="9.5" Y="2.5" Width="1.75" />
-    <Members>
-      <Field Name="_projectionExpression" Hidden="true" />
-      <Method Name="Accept" Hidden="true" />
-      <Method Name="SelectClause" Hidden="true" />
-    </Members>
-    <TypeIdentifier>
-      <HashCode>QIAAAAAAAAAACAAAAAAAAAAAAAAAAABAAAQAAAAAAAA=</HashCode>
-      <FileName>Clauses\SelectClause.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="Remotion.Data.Linq.Clauses.SubQueryFromClause">
-    <Position X="2.75" Y="0.5" Width="1.75" />
-    <Members>
-      <Field Name="_fromSource" Hidden="true" />
-      <Method Name="Accept" Hidden="true" />
-      <Method Name="GetFromSource" Hidden="true" />
-      <Method Name="GetQuerySourceType" Hidden="true" />
-      <Method Name="SetQueryModel" Hidden="true" />
-      <Method Name="SubQueryFromClause" Hidden="true" />
-    </Members>
-    <TypeIdentifier>
-      <HashCode>BIAAAAABAAAAAAAAAAABAAAAAAAAgARAAAAAAEAAAAA=</HashCode>
-      <FileName>Clauses\SubQueryFromClause.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
+  <Comment CommentText="{ordered}">
+    <Position X="5.722" Y="7.322" Height="0.263" Width="0.7" />
+  </Comment>
   <Class Name="Remotion.Data.Linq.Clauses.AdditionalFromClause">
-    <Position X="2.5" Y="4.75" Width="1.75" />
-    <Members>
-      <Method Name="Accept" Hidden="true" />
-      <Method Name="AdditionalFromClause" Hidden="true" />
-      <Method Name="GetQuerySourceType" Hidden="true" />
-      <Method Name="SetQueryModel" Hidden="true" />
-    </Members>
+    <Position X="14.25" Y="8" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <InheritanceLine Type="Remotion.Data.Linq.Clauses.FromClauseBase" ManuallyRouted="true">
+      <Path>
+        <Point X="11" Y="6.159" />
+        <Point X="11" Y="7.009" />
+        <Point X="15.125" Y="7.009" />
+        <Point X="15.125" Y="8" />
+      </Path>
+    </InheritanceLine>
     <TypeIdentifier>
       <HashCode>BIAAAAAAAAAAAAAAAAAJAAAAAAAAAABAAAAAAEAAAAA=</HashCode>
       <FileName>Clauses\AdditionalFromClause.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Remotion.Data.Linq.Clauses.LetClause">
-    <Position X="6.25" Y="4.5" Width="1.75" />
-    <Members>
-      <Field Name="_expression" Hidden="true" />
-      <Field Name="_identifier" Hidden="true" />
-      <Method Name="Accept" Hidden="true" />
-      <Method Name="GetColumnSource" Hidden="true" />
-      <Method Name="LetClause" Hidden="true" />
-      <Method Name="ResolveField" Hidden="true" />
-      <Method Name="SetQueryModel" Hidden="true" />
-    </Members>
+  <Class Name="Remotion.Data.Linq.Clauses.SubQueryFromClause">
+    <Position X="12" Y="8" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <InheritanceLine Type="Remotion.Data.Linq.Clauses.FromClauseBase" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="11" Y="6.159" />
+        <Point X="11" Y="6.98" />
+        <Point X="12.062" Y="6.98" />
+        <Point X="12.062" Y="8" />
+      </Path>
+    </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>BIAAAAAAAAAAAAAAAAAAiAAAAAAAAABQAAQAwEAAAAA=</HashCode>
-      <FileName>Clauses\LetClause.cs</FileName>
+      <HashCode>BIAAAAABAAAAAAAAAAABAAAAAAAAgARAAAAAAEAAAAA=</HashCode>
+      <FileName>Clauses\SubQueryFromClause.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Orientation="Left" Position="0.1" />
+    <Lollipop Position="0.2" />
   </Class>
-  <Class Name="System.Object" Collapsed="true">
-    <Position X="6" Y="3" Width="1.5" />
-    <TypeIdentifier />
-  </Class>
-  <Class Name="Remotion.Data.Linq.Clauses.FromClauseBase" Collapsed="true">
-    <Position X="3" Y="3" Width="1.5" />
+  <Class Name="Remotion.Data.Linq.Clauses.FromClauseBase">
+    <Position X="10.25" Y="4.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="JoinClauses" Type="Remotion.Data.Linq.Clauses.JoinClause" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="11.312" Y="4.25" />
+        <Point X="11.312" Y="3.494" />
+        <Point X="11.312" Y="3.494" />
+        <Point X="11.312" Y="2.738" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="-0.272" Y="0.456" Height="0.16" Width="1" />
+      </MemberNameLabel>
+    </AssociationLine>
     <TypeIdentifier>
       <HashCode>AIIBACABAAAAAAAAAAABgAAAAAAAAAAAAAQAQAAAAAA=</HashCode>
       <FileName>Clauses\FromClauseBase.cs</FileName>
     </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="JoinClauses" />
+    </ShowAsCollectionAssociation>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Remotion.Data.Linq.Clauses.WhereClause">
-    <Position X="9" Y="4.5" Width="1.5" />
-    <Members>
-      <Field Name="_boolExpression" Hidden="true" />
-      <Field Name="_simplifiedBoolExpression" Hidden="true" />
-      <Method Name="Accept" Hidden="true" />
-      <Method Name="GetSimplifiedBoolExpression" Hidden="true" />
-      <Method Name="SetQueryModel" Hidden="true" />
-      <Method Name="WhereClause" Hidden="true" />
-    </Members>
+  <Class Name="Remotion.Data.Linq.Clauses.GroupClause" BaseTypeListCollapsed="true">
+    <Position X="17" Y="7.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAACIAAAAAAAAAAAAAAAAQABABAAAA=</HashCode>
+      <FileName>Clauses\GroupClause.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Remotion.Data.Linq.Clauses.JoinClause" BaseTypeListCollapsed="true">
+    <Position X="10.5" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAIAMAAAAgAAAAEACAAAAAAQCQAAAAAE=</HashCode>
+      <FileName>Clauses\JoinClause.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Remotion.Data.Linq.Clauses.LetClause" BaseTypeListCollapsed="true">
+    <Position X="17.75" Y="4.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>BIAAAAAAAAAAAAAAAAAAiAAAAAAAAABQAAQAwEAAAAA=</HashCode>
+      <FileName>Clauses\LetClause.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Remotion.Data.Linq.Clauses.MainFromClause">
+    <Position X="10" Y="8" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <InheritanceLine Type="Remotion.Data.Linq.Clauses.FromClauseBase" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="11" Y="6.159" />
+        <Point X="11" Y="7.021" />
+        <Point X="10.375" Y="7.021" />
+        <Point X="10.375" Y="8" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAIAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Clauses\MainFromClause.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Remotion.Data.Linq.Clauses.MemberFromClause">
+    <Position X="14.25" Y="10.25" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AIAAAAADAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Clauses\MemberFromClause.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Remotion.Data.Linq.Clauses.OrderByClause" BaseTypeListCollapsed="true">
+    <Position X="16" Y="4.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>BIIAAAACAAAAAAAgAAAAAAAAAAAAAAAAAAQAAEAAAAA=</HashCode>
+      <FileName>Clauses\OrderByClause.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="OrderingList" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Remotion.Data.Linq.Clauses.OrderingClause" BaseTypeListCollapsed="true">
+    <Position X="16" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>BIgAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAQAgEABAAA=</HashCode>
+      <FileName>Clauses\OrderingClause.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Remotion.Data.Linq.Clauses.SelectClause" BaseTypeListCollapsed="true">
+    <Position X="12.25" Y="4.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="ResultModifierData" Type="Remotion.Data.Linq.Clauses.ResultModifierClause">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.317" Y="0.204" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>QIAAgAAEAAAAAAAEAAAAAAAAAAAAAABAAAQAAAAAAgA=</HashCode>
+      <FileName>Clauses\SelectClause.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="ResultModifierData" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Remotion.Data.Linq.Clauses.WhereClause" BaseTypeListCollapsed="true">
+    <Position X="14.25" Y="4.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
       <HashCode>BIAAAAAAAAAAAAAAgAAAAIQAAAAAAAAAAAQAAEAAABA=</HashCode>
       <FileName>Clauses\WhereClause.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
+  <Class Name="Remotion.Data.Linq.QueryModel">
+    <Position X="6.75" Y="8" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="BodyClauses" Type="Remotion.Data.Linq.Clauses.IBodyClause" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="6.75" Y="8.438" />
+        <Point X="6.062" Y="8.438" />
+        <Point X="6.062" Y="6.569" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.468" Y="0.329" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="MainFromClause" Type="Remotion.Data.Linq.Clauses.MainFromClause" FixedToPoint="true">
+      <Path>
+        <Point X="8.25" Y="8.688" />
+        <Point X="10" Y="8.688" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.191" Y="-0.368" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="ParentQuery" Type="Remotion.Data.Linq.QueryModel" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="7.062" Y="9.416" />
+        <Point X="7.062" Y="9.666" />
+        <Point X="7.812" Y="9.666" />
+        <Point X="7.812" Y="9.416" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.135" Y="0.38" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="SelectOrGroupClause" Type="Remotion.Data.Linq.Clauses.ISelectGroupClause" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="6.75" Y="8.938" />
+        <Point X="3.562" Y="8.938" />
+        <Point X="3.562" Y="5.88" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.284" Y="0.131" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AKQAAQggAAAAIAAEAIIAAUAAQBAEAAAAAAQCACAAACA=</HashCode>
+      <FileName>QueryModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="MainFromClause" />
+      <Property Name="ParentQuery" />
+      <Property Name="SelectOrGroupClause" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="BodyClauses" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Remotion.Data.Linq.Clauses.ResultModifierClause">
+    <Position X="12.5" Y="1" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AIAAAAAEAAAAAAAAAAAAAAAAAAAAAAIAAAQAAAAAAAA=</HashCode>
+      <FileName>Clauses\ResultModifierClause.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="Remotion.Data.Linq.Clauses.IBodyClause">
+    <Position X="5" Y="5.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <InheritanceLine Type="Remotion.Data.Linq.Clauses.IClause" FixedFromPoint="true">
+      <Path>
+        <Point X="3.25" Y="4.13" />
+        <Point X="3.25" Y="4.875" />
+        <Point X="5.75" Y="4.875" />
+        <Point X="5.75" Y="5.25" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAA=</HashCode>
+      <FileName>Clauses\IBodyClause.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Remotion.Data.Linq.Clauses.ISelectGroupClause" Collapsed="true">
+    <Position X="2.75" Y="5.25" Width="1.75" />
+    <InheritanceLine Type="Remotion.Data.Linq.Clauses.IClause" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="3.25" Y="4.13" />
+        <Point X="3.25" Y="4.661" />
+        <Point X="3.26" Y="4.661" />
+        <Point X="3.26" Y="5.25" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Clauses\ISelectGroupClause.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Remotion.Data.Linq.Clauses.IClause" Collapsed="true">
+    <Position X="2.5" Y="3.5" Width="1.5" />
+    <AssociationLine Name="PreviousClause" Type="Remotion.Data.Linq.Clauses.IClause" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="4" Y="3.625" />
+        <Point X="4.25" Y="3.625" />
+        <Point X="4.25" Y="3.938" />
+        <Point X="4" Y="3.938" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.37" Y="0.063" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>Clauses\IClause.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="PreviousClause" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="Remotion.Data.Linq.Clauses.IResolveableClause">
+    <Position X="0.5" Y="5.25" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAQAAAAAA=</HashCode>
+      <FileName>Clauses\IResolveableClause.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Remotion.Data.Linq.IQueryElement" Collapsed="true">
+    <Position X="2.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IQueryElement.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
   <Font Name="Tahoma" Size="8.25" />
 </ClassDiagram>
