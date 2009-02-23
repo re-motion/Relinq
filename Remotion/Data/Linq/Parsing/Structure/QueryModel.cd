@@ -3,19 +3,23 @@
   <Comment CommentText="{ordered}">
     <Position X="5.722" Y="7.322" Height="0.263" Width="0.7" />
   </Comment>
+  <Comment CommentText="from o in Orders&#xD;&#xA;from u in (&#xD;&#xA;from oi in OrderItems&#xD;&#xA;where oi.Order == o     --&gt; SubQueryModel&#xD;&#xA;select o;&#xD;&#xA;)">
+    <Position X="10.653" Y="10.225" Height="1.569" Width="3.214" />
+  </Comment>
+  <Comment CommentText="from o in Orders&#xD;&#xA;from i in o.Items&#xD;&#xA;&#xD;&#xA;o.Items --&gt; MemberExpression">
+    <Position X="16.5" Y="10.614" Height="0.833" Width="2.061" />
+  </Comment>
+  <Comment CommentText="Vereinheitlichen / Normalisieren&#xD;&#xA;&#xD;&#xA;- ProjectionExpression&#xD;&#xA;- Continuation / Sub-Selects (from .. into / from x in (from ...)&#xD;&#xA;- join (explizit)">
+    <Position X="0.611" Y="10.183" Height="1.569" Width="4.006" />
+  </Comment>
+  <Comment CommentText="from id in expression&#xD;&#xA;&#xD;&#xA;id --&gt; identifier&#xD;&#xA;expression --&gt; QuerySource&#xD;&#xA;&#xD;&#xA;ergibt: MainFromClause">
+    <Position X="6.125" Y="10.128" Height="1.569" Width="2.394" />
+  </Comment>
   <Class Name="Remotion.Data.Linq.Clauses.AdditionalFromClause">
     <Position X="14.25" Y="8" Width="1.75" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
-    <InheritanceLine Type="Remotion.Data.Linq.Clauses.FromClauseBase" ManuallyRouted="true">
-      <Path>
-        <Point X="11" Y="6.159" />
-        <Point X="11" Y="7.009" />
-        <Point X="15.125" Y="7.009" />
-        <Point X="15.125" Y="8" />
-      </Path>
-    </InheritanceLine>
     <TypeIdentifier>
       <HashCode>BIAAAAAAAAAAAAAAAAAJAAAAAAAAAABAAAAAAEAAAAA=</HashCode>
       <FileName>Clauses\AdditionalFromClause.cs</FileName>
@@ -28,14 +32,6 @@
       <Compartment Name="Fields" Collapsed="true" />
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
-    <InheritanceLine Type="Remotion.Data.Linq.Clauses.FromClauseBase" ManuallyRouted="true" FixedToPoint="true">
-      <Path>
-        <Point X="11" Y="6.159" />
-        <Point X="11" Y="6.98" />
-        <Point X="12.062" Y="6.98" />
-        <Point X="12.062" Y="8" />
-      </Path>
-    </InheritanceLine>
     <TypeIdentifier>
       <HashCode>BIAAAAABAAAAAAAAAAABAAAAAAAAgARAAAAAAEAAAAA=</HashCode>
       <FileName>Clauses\SubQueryFromClause.cs</FileName>
@@ -107,14 +103,6 @@
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
-    <InheritanceLine Type="Remotion.Data.Linq.Clauses.FromClauseBase" ManuallyRouted="true" FixedToPoint="true">
-      <Path>
-        <Point X="11" Y="6.159" />
-        <Point X="11" Y="7.021" />
-        <Point X="10.375" Y="7.021" />
-        <Point X="10.375" Y="8" />
-      </Path>
-    </InheritanceLine>
     <TypeIdentifier>
       <HashCode>AIAAAAAAAAIAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Clauses\MainFromClause.cs</FileName>
@@ -196,25 +184,6 @@
       <Compartment Name="Fields" Collapsed="true" />
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
-    <AssociationLine Name="BodyClauses" Type="Remotion.Data.Linq.Clauses.IBodyClause" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="6.75" Y="8.438" />
-        <Point X="6.062" Y="8.438" />
-        <Point X="6.062" Y="6.569" />
-      </Path>
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="-0.468" Y="0.329" />
-      </MemberNameLabel>
-    </AssociationLine>
-    <AssociationLine Name="MainFromClause" Type="Remotion.Data.Linq.Clauses.MainFromClause" FixedToPoint="true">
-      <Path>
-        <Point X="8.25" Y="8.688" />
-        <Point X="10" Y="8.688" />
-      </Path>
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="0.191" Y="-0.368" />
-      </MemberNameLabel>
-    </AssociationLine>
     <AssociationLine Name="ParentQuery" Type="Remotion.Data.Linq.QueryModel" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
       <Path>
         <Point X="7.062" Y="9.416" />
@@ -224,6 +193,15 @@
       </Path>
       <MemberNameLabel ManuallyPlaced="true">
         <Position X="-0.135" Y="0.38" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="MainFromClause" Type="Remotion.Data.Linq.Clauses.MainFromClause" FixedToPoint="true">
+      <Path>
+        <Point X="8.25" Y="8.688" />
+        <Point X="10" Y="8.688" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.191" Y="-0.368" />
       </MemberNameLabel>
     </AssociationLine>
     <AssociationLine Name="SelectOrGroupClause" Type="Remotion.Data.Linq.Clauses.ISelectGroupClause" FixedFromPoint="true" FixedToPoint="true">
@@ -236,13 +214,23 @@
         <Position X="-0.284" Y="0.131" />
       </MemberNameLabel>
     </AssociationLine>
+    <AssociationLine Name="BodyClauses" Type="Remotion.Data.Linq.Clauses.IBodyClause" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="6.75" Y="8.438" />
+        <Point X="6.062" Y="8.438" />
+        <Point X="6.062" Y="6.569" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.468" Y="0.329" />
+      </MemberNameLabel>
+    </AssociationLine>
     <TypeIdentifier>
       <HashCode>AKQAAQggAAAAIAAEAIIAAUAAQBAEAAAAAAQCACAAACA=</HashCode>
       <FileName>QueryModel.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="MainFromClause" />
       <Property Name="ParentQuery" />
+      <Property Name="MainFromClause" />
       <Property Name="SelectOrGroupClause" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
@@ -266,14 +254,6 @@
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
-    <InheritanceLine Type="Remotion.Data.Linq.Clauses.IClause" FixedFromPoint="true">
-      <Path>
-        <Point X="3.25" Y="4.13" />
-        <Point X="3.25" Y="4.875" />
-        <Point X="5.75" Y="4.875" />
-        <Point X="5.75" Y="5.25" />
-      </Path>
-    </InheritanceLine>
     <TypeIdentifier>
       <HashCode>BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAA=</HashCode>
       <FileName>Clauses\IBodyClause.cs</FileName>
@@ -281,14 +261,6 @@
   </Interface>
   <Interface Name="Remotion.Data.Linq.Clauses.ISelectGroupClause" Collapsed="true">
     <Position X="2.75" Y="5.25" Width="1.75" />
-    <InheritanceLine Type="Remotion.Data.Linq.Clauses.IClause" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="3.25" Y="4.13" />
-        <Point X="3.25" Y="4.661" />
-        <Point X="3.26" Y="4.661" />
-        <Point X="3.26" Y="5.25" />
-      </Path>
-    </InheritanceLine>
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Clauses\ISelectGroupClause.cs</FileName>
