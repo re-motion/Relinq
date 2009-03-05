@@ -52,6 +52,20 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
           return CreateBinaryCondition (binaryExpression, BinaryCondition.ConditionKind.LessThanOrEqual, parseContext);
         case ExpressionType.LessThan:
           return CreateBinaryCondition (binaryExpression, BinaryCondition.ConditionKind.LessThan, parseContext);
+        case ExpressionType.Add:
+          return CreateBinaryCondition (binaryExpression, BinaryCondition.ConditionKind.Add, parseContext);
+        case ExpressionType.Divide:
+          return CreateBinaryCondition (binaryExpression, BinaryCondition.ConditionKind.Divide, parseContext);
+        case ExpressionType.Modulo:
+          return CreateBinaryCondition (binaryExpression, BinaryCondition.ConditionKind.Modulo, parseContext);
+        case ExpressionType.Multiply:
+          return CreateBinaryCondition (binaryExpression, BinaryCondition.ConditionKind.Multiply, parseContext);
+        case ExpressionType.Negate:
+          return CreateBinaryCondition (binaryExpression, BinaryCondition.ConditionKind.Negate, parseContext);
+        case ExpressionType.Subtract:
+          return CreateBinaryCondition (binaryExpression, BinaryCondition.ConditionKind.Subtract, parseContext);
+        
+
         default:
           throw ParserUtility.CreateParserException ("and, or, or comparison expression", binaryExpression.NodeType, 
               "binary expression in where condition", parseContext.ExpressionTreeRoot);
