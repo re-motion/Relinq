@@ -60,8 +60,6 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
           return CreateBinaryCondition (binaryExpression, BinaryCondition.ConditionKind.Modulo, parseContext);
         case ExpressionType.Multiply:
           return CreateBinaryCondition (binaryExpression, BinaryCondition.ConditionKind.Multiply, parseContext);
-        case ExpressionType.Negate:
-          return CreateBinaryCondition (binaryExpression, BinaryCondition.ConditionKind.Negate, parseContext);
         case ExpressionType.Subtract:
           return CreateBinaryCondition (binaryExpression, BinaryCondition.ConditionKind.Subtract, parseContext);
         

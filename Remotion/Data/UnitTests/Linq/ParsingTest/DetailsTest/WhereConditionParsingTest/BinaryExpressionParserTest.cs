@@ -108,5 +108,87 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.WhereConditionPar
       ICriterion expectedCriterion = new BinaryCondition (new Constant (5), new Constant (5), BinaryCondition.ConditionKind.LessThan);
       Assert.AreEqual (expectedCriterion, actualCriterion);
     }
+
+    //Add,Divide,Modulo,Multiply,Negate,Subtract
+    [Test]
+    public void ParseAdd ()
+    {
+      WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
+      BinaryExpression binaryExpression = Expression.Add (Expression.Constant (5), Expression.Constant (5));
+      ICriterion criterion = new Constant (5);
+      WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
+      parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
+
+      BinaryExpressionParser parser = new BinaryExpressionParser (parserRegistry);
+
+      ICriterion actualCriterion = parser.Parse (binaryExpression, ParseContext);
+      ICriterion expectedCriterion = new BinaryCondition (new Constant (5), new Constant (5), BinaryCondition.ConditionKind.Add);
+      Assert.AreEqual (expectedCriterion, actualCriterion);
+    }
+
+    [Test]
+    public void ParseDivide ()
+    {
+      WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
+      BinaryExpression binaryExpression = Expression.Divide (Expression.Constant (5), Expression.Constant (5));
+      ICriterion criterion = new Constant (5);
+      WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
+      parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
+
+      BinaryExpressionParser parser = new BinaryExpressionParser (parserRegistry);
+
+      ICriterion actualCriterion = parser.Parse (binaryExpression, ParseContext);
+      ICriterion expectedCriterion = new BinaryCondition (new Constant (5), new Constant (5), BinaryCondition.ConditionKind.Divide);
+      Assert.AreEqual (expectedCriterion, actualCriterion);
+    }
+
+    [Test]
+    public void ParseModulo ()
+    {
+      WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
+      BinaryExpression binaryExpression = Expression.Modulo (Expression.Constant (5), Expression.Constant (5));
+      ICriterion criterion = new Constant (5);
+      WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
+      parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
+
+      BinaryExpressionParser parser = new BinaryExpressionParser (parserRegistry);
+
+      ICriterion actualCriterion = parser.Parse (binaryExpression, ParseContext);
+      ICriterion expectedCriterion = new BinaryCondition (new Constant (5), new Constant (5), BinaryCondition.ConditionKind.Modulo);
+      Assert.AreEqual (expectedCriterion, actualCriterion);
+    }
+
+    [Test]
+    public void ParseMultiply ()
+    {
+      WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
+      BinaryExpression binaryExpression = Expression.Multiply (Expression.Constant (5), Expression.Constant (5));
+      ICriterion criterion = new Constant (5);
+      WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
+      parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
+
+      BinaryExpressionParser parser = new BinaryExpressionParser (parserRegistry);
+
+      ICriterion actualCriterion = parser.Parse (binaryExpression, ParseContext);
+      ICriterion expectedCriterion = new BinaryCondition (new Constant (5), new Constant (5), BinaryCondition.ConditionKind.Multiply);
+      Assert.AreEqual (expectedCriterion, actualCriterion);
+    }
+
+    [Test]
+    public void ParseSubtract ()
+    {
+      WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
+      BinaryExpression binaryExpression = Expression.Subtract (Expression.Constant (5), Expression.Constant (5));
+      ICriterion criterion = new Constant (5);
+      WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
+      parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
+
+      BinaryExpressionParser parser = new BinaryExpressionParser (parserRegistry);
+
+      ICriterion actualCriterion = parser.Parse (binaryExpression, ParseContext);
+      ICriterion expectedCriterion = new BinaryCondition (new Constant (5), new Constant (5), BinaryCondition.ConditionKind.Subtract);
+      Assert.AreEqual (expectedCriterion, actualCriterion);
+    }
+
   }
 }

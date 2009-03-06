@@ -29,13 +29,13 @@ namespace Remotion.Data.Linq.DataObjectModel
       ArgumentUtility.CheckNotNull ("evaluationArguments", evaluationArguments);
 
       EvaluationMethodInfo = evaluationMethodInfo;
-      EvaluationObject = evaluationObject;
-      EvaluationArguments = evaluationArguments;
+      TargetObject = evaluationObject;
+      Arguments = evaluationArguments;
     }
 
     public MethodInfo EvaluationMethodInfo { get; private set; }
-    public IEvaluation EvaluationObject { get; private set; }
-    public List<IEvaluation> EvaluationArguments { get; private set; }
+    public IEvaluation TargetObject { get; private set; }
+    public List<IEvaluation> Arguments { get; private set; }
 
     public void Accept (IEvaluationVisitor visitor)
     {
@@ -45,9 +45,9 @@ namespace Remotion.Data.Linq.DataObjectModel
 
     public override string ToString ()
     {
-      string argumentString = SeparatedStringBuilder.Build (", ", EvaluationArguments);
-      if (EvaluationObject != null)
-        return string.Format ("{0}.{1}({2})", EvaluationObject, EvaluationMethodInfo.Name, argumentString);
+      string argumentString = SeparatedStringBuilder.Build (", ", Arguments);
+      if (TargetObject != null)
+        return string.Format ("{0}.{1}({2})", TargetObject, EvaluationMethodInfo.Name, argumentString);
       else
         return string.Format ("{0}({1})", EvaluationMethodInfo.Name, argumentString);
     }
@@ -57,13 +57,13 @@ namespace Remotion.Data.Linq.DataObjectModel
       MethodCall other = obj as MethodCall;
       return other != null 
           && Equals (EvaluationMethodInfo, other.EvaluationMethodInfo) 
-          && Equals (EvaluationObject, other.EvaluationObject)
-          && EvaluationArguments.SequenceEqual (other.EvaluationArguments);
+          && Equals (TargetObject, other.TargetObject)
+          && Arguments.SequenceEqual (other.Arguments);
     }
 
     public override int GetHashCode ()
     {
-      return EqualityUtility.GetRotatedHashCode (EvaluationMethodInfo, EvaluationObject, EqualityUtility.GetRotatedHashCode (EvaluationArguments));
+      return EqualityUtility.GetRotatedHashCode (EvaluationMethodInfo, TargetObject, EqualityUtility.GetRotatedHashCode (Arguments));
     }
   }
 }

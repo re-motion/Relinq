@@ -72,9 +72,9 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.SelectProjectionP
       //result
       IEvaluation result = methodCallExpressionParser.Parse (methodCallExpression, ParseContext);
 
-      Assert.IsEmpty (((MethodCall)result).EvaluationArguments);
+      Assert.IsEmpty (((MethodCall)result).Arguments);
       Assert.AreEqual (expected.EvaluationMethodInfo, ((MethodCall) result).EvaluationMethodInfo);
-      Assert.AreEqual (expected.EvaluationObject, ((MethodCall) result).EvaluationObject);
+      Assert.AreEqual (expected.TargetObject, ((MethodCall) result).TargetObject);
     }
 
     [Test]
@@ -100,9 +100,9 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.SelectProjectionP
       IEvaluation result = methodCallExpressionParser.Parse (methodCallExpression, ParseContext);
 
       
-      Assert.AreEqual (((MethodCall)result).EvaluationArguments, expected.EvaluationArguments);
+      Assert.AreEqual (((MethodCall)result).Arguments, expected.Arguments);
       Assert.AreEqual (expected.EvaluationMethodInfo, ((MethodCall) result).EvaluationMethodInfo);
-      Assert.AreEqual (expected.EvaluationObject, ((MethodCall) result).EvaluationObject);
+      Assert.AreEqual (expected.TargetObject, ((MethodCall) result).TargetObject);
     }
 
     [Test]
@@ -114,9 +114,9 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.SelectProjectionP
       MethodCallExpressionParser methodCallExpressionParser = new MethodCallExpressionParser (_parserRegistry);
       IEvaluation result = methodCallExpressionParser.Parse (methodCallExpression, ParseContext);
 
-      Assert.That (((MethodCall) result).EvaluationArguments, Is.Empty);
+      Assert.That (((MethodCall) result).Arguments, Is.Empty);
       Assert.That (((MethodCall) result).EvaluationMethodInfo, Is.EqualTo (methodInfo));
-      Assert.That (((MethodCall) result).EvaluationObject, Is.Null);
+      Assert.That (((MethodCall) result).TargetObject, Is.Null);
     }
   }
 }

@@ -70,9 +70,9 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.WhereConditionPar
       ICriterion result = methodCallExpressionParser.Parse (methodCallExpression, ParseContext);
 
       //asserts
-      Assert.IsEmpty (((MethodCall) result).EvaluationArguments);
+      Assert.IsEmpty (((MethodCall) result).Arguments);
       Assert.AreEqual (expected.EvaluationMethodInfo, ((MethodCall) result).EvaluationMethodInfo);
-      Assert.AreEqual (expected.EvaluationObject, ((MethodCall) result).EvaluationObject);
+      Assert.AreEqual (expected.TargetObject, ((MethodCall) result).TargetObject);
     }
 
     [Test]
@@ -97,10 +97,10 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.WhereConditionPar
       ICriterion result = methodCallExpressionParser.Parse (methodCallExpression, ParseContext);
 
       //asserts
-      Assert.IsNotEmpty (((MethodCall) result).EvaluationArguments);
-      Assert.AreEqual (((MethodCall) result).EvaluationArguments, expected.EvaluationArguments);
+      Assert.IsNotEmpty (((MethodCall) result).Arguments);
+      Assert.AreEqual (((MethodCall) result).Arguments, expected.Arguments);
       Assert.AreEqual (expected.EvaluationMethodInfo, ((MethodCall) result).EvaluationMethodInfo);
-      Assert.AreEqual (expected.EvaluationObject, ((MethodCall) result).EvaluationObject);
+      Assert.AreEqual (expected.TargetObject, ((MethodCall) result).TargetObject);
     }
   }
 
