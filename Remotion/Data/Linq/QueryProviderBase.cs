@@ -30,6 +30,10 @@ namespace Remotion.Data.Linq
   /// </summary>
   public abstract class QueryProviderBase : IQueryProvider
   {
+    /// <summary>
+    /// Initializes a new instance if  <see cref="QueryProviderBase"/> 
+    /// </summary>
+    /// <param name="executor">The executor is used to execute queries against the backend.</param>
     public QueryProviderBase (IQueryExecutor executor)
     {
       ArgumentUtility.CheckNotNull ("executor", executor);
@@ -37,6 +41,7 @@ namespace Remotion.Data.Linq
     }
 
     public IQueryExecutor Executor { get; private set; }
+
 
     public IQueryable CreateQuery (Expression expression)
     {
@@ -54,6 +59,12 @@ namespace Remotion.Data.Linq
       }
     }
 
+    /// <summary>
+    /// Queryable's collection-returning standard query operators call this method.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="expression">The query as expression chain.</param>
+    /// <returns><see cref="IQueryable{T}"/></returns>
     public IQueryable<T> CreateQuery<T> (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
@@ -74,12 +85,23 @@ namespace Remotion.Data.Linq
       return (TResult) Executor.ExecuteSingle (GenerateQueryModel (expression));
     }
 
+    /// <summary>
+    /// This is where the query is executed and the results are mapped to objects.
+    /// </summary>
+    /// <param name="expression">The query as expression chain.</param>
+    /// <returns></returns>
     public virtual IEnumerable ExecuteCollection (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       return Executor.ExecuteCollection (GenerateQueryModel (expression));
     }
 
+    /// <summary>
+    /// This is where the query is executed and the results are mapped to objects.
+    /// </summary>
+    /// <typeparam name="TResult"></typeparam>
+    /// <param name="expression">The query as expression chain.</param>
+    /// <returns></returns>
     public virtual IEnumerable<TResult> ExecuteCollection<TResult> (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
@@ -88,6 +110,11 @@ namespace Remotion.Data.Linq
         yield return result;
     }
 
+    /// <summary>
+    /// The method generates a <see cref="QueryModel"/>.
+    /// </summary>
+    /// <param name="expression">The query as expression chain.</param>
+    /// <returns>a <see cref="QueryModel"/></returns>
     public QueryModel GenerateQueryModel (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);

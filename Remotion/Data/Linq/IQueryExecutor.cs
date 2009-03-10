@@ -19,6 +19,9 @@ using Remotion.Data.Linq.SqlGeneration;
 
 namespace Remotion.Data.Linq
 {
+  /// <summary>
+  /// The interface has to be impelemented so that a query can be executed against the used data backend.
+  /// </summary>
   public interface IQueryExecutor
   {
     object ExecuteSingle (QueryModel queryModel);
