@@ -26,6 +26,10 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq
 {
+  /// <summary>
+  /// The class implements an abstraction of the expression tree which is created when executing a linq query. 
+  /// The different parts of a linq query are mapped to clauses.
+  /// </summary>
   public class QueryModel : IQueryElement
   {
     private readonly List<IBodyClause> _bodyClauses = new List<IBodyClause> ();
@@ -34,6 +38,13 @@ namespace Remotion.Data.Linq
 
     private Expression _expressionTree;
 
+    /// <summary>
+    /// Initializes a new instance of <see cref="QueryModel"/>
+    /// </summary>
+    /// <param name="resultType">The type of the result of a executed linq.</param>
+    /// <param name="mainFromClause">The first from in a linq query mapped to <see cref="MainFromClause"/></param>
+    /// <param name="selectOrGroupClause">The Select mapped to <see cref="SelectClause"/> or Group clause mapped to <see cref="GroupClause"/> depending to liqn query.</param>
+    /// <param name="expressionTree">The expression tree of a linq query.</param>
     public QueryModel (Type resultType, MainFromClause mainFromClause, ISelectGroupClause selectOrGroupClause, Expression expressionTree)
     {
       ArgumentUtility.CheckNotNull ("resultType", resultType);
@@ -46,6 +57,12 @@ namespace Remotion.Data.Linq
       _expressionTree = expressionTree;
     }
 
+    /// <summary>
+    /// Initializes a new instance of <see cref="QueryModel"/>
+    /// </summary>
+    /// <param name="resultType">The type of the result of a executed linq query.</param>
+    /// <param name="fromClause">The first from in a linq query mapped to <see cref="MainFromClause"/></param>
+    /// <param name="selectOrGroupClause">The Select mapped to <see cref="SelectClause"/> or Group clause mapped to <see cref="GroupClause"/> depending to liqn query.</param>
     public QueryModel (Type resultType, MainFromClause fromClause, ISelectGroupClause selectOrGroupClause)
         : this (resultType, fromClause, selectOrGroupClause, null)
     {
@@ -54,6 +71,10 @@ namespace Remotion.Data.Linq
     public Type ResultType { get; private set; }
     public QueryModel ParentQuery { get; private set; }
 
+    /// <summary>
+    /// Set parent <see cref="QueryModel"/> e.g. needed in a subquery.
+    /// </summary>
+    /// <param name="parentQuery">The parent <see cref="QueryModel"/> of another <see cref="QueryModel"/></param>
     public void SetParentQuery(QueryModel parentQuery)
     {
       ArgumentUtility.CheckNotNull ("parentQueryExpression", parentQuery);
@@ -66,11 +87,18 @@ namespace Remotion.Data.Linq
     public MainFromClause MainFromClause { get; private set; }
     public ISelectGroupClause SelectOrGroupClause { get; private set; }
 
+    /// <summary>
+    /// Collection of different clauses of a <see cref="QueryModel"/>
+    /// </summary>
     public ReadOnlyCollection<IBodyClause> BodyClauses
     {
       get { return _bodyClauses.AsReadOnly (); }
     }
 
+    /// <summary>
+    /// Method to add <see cref="IBodyClause"/> to a <see cref="QueryModel"/>
+    /// </summary>
+    /// <param name="clause"><see cref="IBodyClause"/></param>
     public void AddBodyClause (IBodyClause clause)
     {
       ArgumentUtility.CheckNotNull ("clause", clause);
@@ -87,25 +115,16 @@ namespace Remotion.Data.Linq
       _bodyClauses.Add (clause);
     }
 
-    //public IClause GetLastFromClause ()
-    //{
-    //  IClause previousClause = null;
-    //  foreach (var clause in _bodyClauses)
-    //  {
-    //    if ((clause is MainFromClause) || (clause is AdditionalFromClause))
-    //      previousClause = clause;
-    //  }
-    //  if (previousClause != null)
-    //    return previousClause;
-    //  else
-    //    return MainFromClause;
-    //}
-
     public IClause GetMainFromClause ()
     {
       return MainFromClause;
     }
 
+    /// <summary>
+    /// Method to register clauses via <see cref="ParameterExpression"/> 
+    /// </summary>
+    /// <param name="identifier"><see cref="ParameterExpression"/></param>
+    /// <param name="clauseToBeRegistered"><see cref="IResolveableClause"/></param>
     private void RegisterClause (ParameterExpression identifier, IResolveableClause clauseToBeRegistered)
     {
       if (MainFromClause.Identifier.Name == identifier.Name || _clausesByIdentifier.ContainsKey (identifier.Name))
@@ -117,6 +136,12 @@ namespace Remotion.Data.Linq
       _clausesByIdentifier.Add (identifier.Name, clauseToBeRegistered);
     }
 
+    /// <summary>
+    /// Method to get <see cref="IResolveableClause"/>
+    /// </summary>
+    /// <param name="identifierName">The name of the identifier.</param>
+    /// <param name="identifierType">The type of the identifier.</param>
+    /// <returns>The <see cref="IResolveableClause"/> for the given identifier.</returns>
     public IResolveableClause GetResolveableClause (string identifierName, Type identifierType)
     {
       ArgumentUtility.CheckNotNull ("identifierName", identifierName);

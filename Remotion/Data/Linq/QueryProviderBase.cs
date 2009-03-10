@@ -31,7 +31,7 @@ namespace Remotion.Data.Linq
   public abstract class QueryProviderBase : IQueryProvider
   {
     /// <summary>
-    /// Initializes a new instance if  <see cref="QueryProviderBase"/> 
+    /// Initializes a new instance of  <see cref="QueryProviderBase"/> 
     /// </summary>
     /// <param name="executor">The executor is used to execute queries against the backend.</param>
     public QueryProviderBase (IQueryExecutor executor)
