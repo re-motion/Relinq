@@ -20,8 +20,17 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses
 {
+  /// <summary>
+  /// Extends <see cref="FromClauseBase"/>. <see cref="MainFromClause"/> is used for the first from clause of a linq query.
+  /// A <see cref="MainFromClause"/> does not have a previous clause.
+  /// </summary>
   public class MainFromClause : FromClauseBase
   {
+    /// <summary>
+    /// Initialize a new instance of <see cref="MainFromClause"/>.
+    /// </summary>
+    /// <param name="identifier">The identifier of the clause.</param>
+    /// <param name="querySource">The source of the clause.</param>
     public MainFromClause (ParameterExpression identifier, Expression querySource): base(null,identifier)
     {
       ArgumentUtility.CheckNotNull ("querySource", querySource);

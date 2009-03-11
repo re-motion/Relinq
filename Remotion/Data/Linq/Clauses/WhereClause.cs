@@ -21,11 +21,19 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses
 {
+  /// <summary>
+  /// Represents the where part of a linq query.
+  /// </summary>
   public class WhereClause : IBodyClause
   {
     private readonly LambdaExpression _boolExpression;
     private LambdaExpression _simplifiedBoolExpression;
     
+    /// <summary>
+    /// Initialize a new instance of <see cref="WhereClause"/>
+    /// </summary>
+    /// <param name="previousClause">The previous clause of type <see cref="IClause"/> in the <see cref="QueryModel"/>.</param>
+    /// <param name="boolExpression">The expression which represents the where conditions.</param>
     public WhereClause (IClause previousClause,LambdaExpression boolExpression)
     {
       ArgumentUtility.CheckNotNull ("boolExpression", boolExpression);
@@ -34,8 +42,14 @@ namespace Remotion.Data.Linq.Clauses
       PreviousClause = previousClause;
     }
 
+    /// <summary>
+    /// The previous clause of type <see cref="IClause"/> in the <see cref="QueryModel"/>.
+    /// </summary>
     public IClause PreviousClause { get; private set; }
 
+    /// <summary>
+    /// The expression which represents the where conditions.
+    /// </summary>
     public LambdaExpression BoolExpression
     {
       get { return _boolExpression; }

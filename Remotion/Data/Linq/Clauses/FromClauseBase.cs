@@ -23,11 +23,19 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses
 {
+  /// <summary>
+  /// Base class for all kinds of from clauses in <see cref="QueryModel"/>
+  /// </summary>
   public abstract class FromClauseBase : IResolveableClause
   {
     private readonly ParameterExpression _identifier;
     private readonly List<JoinClause> _joinClauses = new List<JoinClause>();
 
+    /// <summary>
+    /// Initialize a new instance of <see cref="FromClauseBase"/>
+    /// </summary>
+    /// <param name="previousClause">The previous clause of the current from clause.</param>
+    /// <param name="identifier">The identifier of the from clause</param>
     public FromClauseBase (IClause previousClause, ParameterExpression identifier)
     {     
       ArgumentUtility.CheckNotNull ("identifier", identifier);
@@ -48,12 +56,21 @@ namespace Remotion.Data.Linq.Clauses
       get { return _joinClauses.AsReadOnly(); }
     }
 
+    /// <summary>
+    /// Methof for adding a <see cref="JoinClause"/>
+    /// </summary>
+    /// <param name="joinClause"><see cref="JoinClause"/></param>
     public void Add (JoinClause joinClause)
     {
       ArgumentUtility.CheckNotNull ("joinClause", joinClause);
       _joinClauses.Add (joinClause);
     }
 
+    /// <summary>
+    /// Method for getting source of a from clause.
+    /// </summary>
+    /// <param name="databaseInfo"></param>
+    /// <returns><see cref="IColumnSource"/></returns>
     public virtual IColumnSource GetFromSource (IDatabaseInfo databaseInfo)
     {
       ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);

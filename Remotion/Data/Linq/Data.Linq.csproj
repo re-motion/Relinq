@@ -195,6 +195,7 @@
     <Compile Include="SqlGeneration\SqlServer\CommandBuilder.cs" />
     <Compile Include="SqlGeneration\SqlServer\WhereBuilder.cs" />
     <Compile Include="SqlGeneration\SqlUtility.cs" />
+    <Compile Include="Visitor\QueryModelVisitor.cs" />
     <Compile Include="Visitor\ExpressionTreeBuildingVisitor.cs" />
     <Compile Include="IDatabaseInfo.cs" />
     <Compile Include="SqlGeneration\SqlGeneratorVisitor.cs" />

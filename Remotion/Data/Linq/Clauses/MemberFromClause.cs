@@ -20,6 +20,10 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses
 {
+  /// <summary>
+  /// Extends <see cref="FromClauseBase"/>. Similar to <see cref="AdditionalFromClause"/> but in contrast its expression body must contain a <see cref="MemberExpression"/>
+  /// example: from a in queryable from b in queryable.Queryable select a
+  /// </summary>
   public class MemberFromClause : AdditionalFromClause
   {
     private readonly MemberExpression _memberExpression;

@@ -19,11 +19,20 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses
 {
+  /// <summary>
+  /// Represents one expression of a order by in a linq query.
+  /// </summary>
   public class OrderingClause : IBodyClause
   {
     private readonly LambdaExpression _expression;
     private readonly OrderDirection _orderDirection;
     
+    /// <summary>
+    /// Initialize a new instance of <see cref="OrderingClause"/>
+    /// </summary>
+    /// <param name="previousClause">The previous clause of type <see cref="IClause"/> in the <see cref="QueryModel"/>.</param>
+    /// <param name="expression">The expression from one part of a order by in a linq query.</param>
+    /// <param name="direction"></param>
     public OrderingClause (IClause previousClause, LambdaExpression expression, OrderDirection direction)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
@@ -33,8 +42,14 @@ namespace Remotion.Data.Linq.Clauses
       PreviousClause = previousClause;
     }
 
+    /// <summary>
+    /// The previous clause of type <see cref="IClause"/> in the <see cref="QueryModel"/>.
+    /// </summary>
     public IClause PreviousClause { get; set; }
 
+    /// <summary>
+    /// The expression from one part of a order by in a linq query.
+    /// </summary>
     public LambdaExpression Expression
     {
       get { return _expression; }

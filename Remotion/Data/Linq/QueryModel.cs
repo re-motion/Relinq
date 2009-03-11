@@ -185,6 +185,13 @@ namespace Remotion.Data.Linq
       return sv.ToString();
     }
 
+    public string PrintQueryModel ()
+    {
+      var qv = new QueryModelVisitor ();
+      qv.VisitQueryModel (this);
+      return qv.ToString();
+    }
+
     // Once we have a working ExpressionTreeBuildingVisitor, we could use it to build trees for constructed models. For now, we just create
     // a special ConstructedExpression node.
     public Expression GetExpressionTree ()

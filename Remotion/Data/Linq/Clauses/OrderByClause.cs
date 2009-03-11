@@ -20,11 +20,17 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses
 {
+  /// <summary>
+  /// Represents the whole order by part of a linq query.
+  /// </summary>
   public class OrderByClause :IQueryElement,IBodyClause
   {
     private readonly List<OrderingClause> _orderingList = new List<OrderingClause>();
     
-
+    /// <summary>
+    /// Initialize a new instance of <see cref="OrderByClause"/>
+    /// </summary>
+    /// <param name="ordering"><see cref="OrderingClause"/></param>
     public OrderByClause (OrderingClause ordering)
     {
       ArgumentUtility.CheckNotNull ("ordering", ordering);
@@ -33,6 +39,9 @@ namespace Remotion.Data.Linq.Clauses
 
     public QueryModel QueryModel { get; private set; }
 
+    /// <summary>
+    /// A collection of <see cref="OrderingClause"/>
+    /// </summary>
     public ReadOnlyCollection<OrderingClause> OrderingList
     {
       get { return new ReadOnlyCollection<OrderingClause>(_orderingList); }

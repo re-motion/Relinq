@@ -19,8 +19,19 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses
 {
+  /// <summary>
+  /// Extends <see cref="FromClauseBase"/>. <see cref="AdditionalFromClause"/> is used for from clauses which is no <see cref="MainFromClause"/>.
+  /// example:from a in queryable1 from b in queryable select a
+  /// </summary>
   public class AdditionalFromClause : FromClauseBase,IBodyClause
   {
+    /// <summary>
+    /// Initialize a new instance of <see cref="AdditionalFromClause"/>
+    /// </summary>
+    /// <param name="previousClause">The previous <see cref="IClause"/> of this from clause.</param>
+    /// <param name="identifier">The identifierer of the from expression.</param>
+    /// <param name="fromExpression">The expression of the from expression.</param>
+    /// <param name="projectionExpression">The projection of identifier to from expression.</param>
     public AdditionalFromClause (IClause previousClause, ParameterExpression identifier, LambdaExpression fromExpression,
         LambdaExpression projectionExpression)
         : base (previousClause,identifier)
@@ -34,8 +45,19 @@ namespace Remotion.Data.Linq.Clauses
       ProjectionExpression = projectionExpression;
     }
 
+    /// <summary>
+    /// The expression of a from expression.
+    /// </summary>
     public LambdaExpression FromExpression { get; private set; }
+
+    /// <summary>
+    /// The projection of a from expression.
+    /// </summary>
     public LambdaExpression ProjectionExpression { get; private set; }
+
+    /// <summary>
+    /// The appropriate <see cref="QueryModel"/> of the <see cref="AdditionalFromClause"/>.
+    /// </summary>
     public QueryModel QueryModel { get; private set; }
 
     public override void Accept (IQueryVisitor visitor)

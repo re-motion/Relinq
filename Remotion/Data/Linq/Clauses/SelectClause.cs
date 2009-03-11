@@ -21,6 +21,9 @@ using System.Linq.Expressions;
 
 namespace Remotion.Data.Linq.Clauses
 {
+  /// <summary>
+  /// Represents the select part of a linq query.
+  /// </summary>
   public class SelectClause : ISelectGroupClause
   {
     private readonly LambdaExpression _projectionExpression;
@@ -36,6 +39,11 @@ namespace Remotion.Data.Linq.Clauses
       ResultModifiers = resultModifiers;
     }
 
+    /// <summary>
+    /// Initialize a new instance of <see cref="SelectClause"/>.
+    /// </summary>
+    /// <param name="previousClause">The previous clause of type <see cref="IClause"/> in the <see cref="QueryModel"/>.</param>
+    /// <param name="projectionExpression">The projection within the select part of the linq query.</param>
     public SelectClause (IClause previousClause, LambdaExpression projectionExpression)
     {
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
@@ -44,8 +52,14 @@ namespace Remotion.Data.Linq.Clauses
       _projectionExpression = projectionExpression;
     }
     
+    /// <summary>
+    /// The previous clause of type <see cref="IClause"/> in the <see cref="QueryModel"/>.
+    /// </summary>
     public IClause PreviousClause { get; private set; }
 
+    /// <summary>
+    /// The projection within the select part of the linq query.
+    /// </summary>
     public LambdaExpression ProjectionExpression
     {
       get { return _projectionExpression; }
@@ -71,5 +85,6 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       visitor.VisitSelectClause (this);
     }
+
   }
 }
