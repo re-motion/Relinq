@@ -120,7 +120,13 @@ namespace Remotion.Data.Linq
       ArgumentUtility.CheckNotNull ("expression", expression);
 
       var parser = new QueryParser(expression);
-      return parser.GetParsedQuery();
+
+      QueryModel queryModel = parser.GetParsedQuery();
+      Console.WriteLine (queryModel.ToString());
+      Console.WriteLine (queryModel.PrintQueryModel());
+      return queryModel;
     }
+    
+
   }
 }

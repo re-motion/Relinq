@@ -21,7 +21,7 @@ namespace Remotion.Data.Linq.Clauses
 {
   /// <summary>
   /// Extends <see cref="FromClauseBase"/>. <see cref="AdditionalFromClause"/> is used for from clauses which is no <see cref="MainFromClause"/>.
-  /// example:from a in queryable1 from b in queryable select a
+  /// example:from a in queryable1 from b in queryable (the additional <see cref="AdditionalFromClause"/> is the second from)
   /// </summary>
   public class AdditionalFromClause : FromClauseBase,IBodyClause
   {

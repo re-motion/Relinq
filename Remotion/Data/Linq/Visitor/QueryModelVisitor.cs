@@ -39,6 +39,7 @@ namespace Remotion.Data.Linq.Visitor
       _sb.Append ("---QueryModel---");
       _sb.Append ("\n");
       _sb.AppendFormat ("ResultType: {0}", queryModel.ResultType);
+      _sb.Append ("\n");
 
       queryModel.MainFromClause.Accept (this);
       foreach (IBodyClause bodyClause in queryModel.BodyClauses)

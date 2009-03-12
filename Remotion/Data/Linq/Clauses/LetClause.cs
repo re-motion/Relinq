@@ -22,11 +22,21 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses
 {
+  /// <summary>
+  /// Represents the let part of a linq query.
+  /// </summary>
   public class LetClause : IBodyClause, IResolveableClause
   {
     private readonly ParameterExpression _identifier;
     private readonly Expression _expression;
 
+    /// <summary>
+    /// Initialize a new instance of <see cref="LetClause"/>
+    /// </summary>
+    /// <param name="previousClause">The previous clause of type <see cref="IClause"/> in the <see cref="QueryModel"/>.</param>
+    /// <param name="identifier">The identifier of a let expression.</param>
+    /// <param name="expression">The expression in a let expression.</param>
+    /// <param name="projectionExpression">The projection within the let part of the linq query.</param>
     public LetClause (IClause previousClause, ParameterExpression identifier, Expression expression, 
       LambdaExpression projectionExpression)
     {
@@ -42,15 +52,32 @@ namespace Remotion.Data.Linq.Clauses
       ProjectionExpression = projectionExpression;
     }
 
+    /// <summary>
+    /// The previous clause of type <see cref="IClause"/> in the <see cref="QueryModel"/>.
+    /// </summary>
     public IClause PreviousClause { get; private set; }
+
+    /// <summary>
+    /// The projection within the let part of the linq query.
+    /// </summary>
     public LambdaExpression ProjectionExpression { get; private set; }
+    
+    /// <summary>
+    /// The <see cref="QueryModel"/> of the <see cref="LetClause"/>
+    /// </summary>
     public QueryModel QueryModel { get; private set; }
 
+    /// <summary>
+    /// The expression in a let expression.
+    /// </summary>
     public Expression Expression
     {
       get { return _expression; }
     }
 
+    /// <summary>
+    /// The identifier of the let expression.
+    /// </summary>
     public ParameterExpression Identifier
     {
       get { return _identifier; }

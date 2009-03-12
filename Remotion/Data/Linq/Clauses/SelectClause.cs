@@ -23,6 +23,7 @@ namespace Remotion.Data.Linq.Clauses
 {
   /// <summary>
   /// Represents the select part of a linq query.
+  /// example: select expression
   /// </summary>
   public class SelectClause : ISelectGroupClause
   {

@@ -21,10 +21,22 @@ using Remotion.Data.Linq.DataObjectModel;
 
 namespace Remotion.Data.Linq.Clauses
 {
+  /// <summary>
+  /// Extends the <see cref="FromClauseBase"/>. <see cref="SubQueryFromClause"/> is used for from clauses which are part of a subquery.
+  /// Represents a from clause which is part of a subquery in another from clause.
+  /// example: from identifier in (from identifier in datasource where ... select ...)
+  /// </summary>
   public class SubQueryFromClause : FromClauseBase, IBodyClause
   {
     private readonly SubQuery _fromSource;
 
+    /// <summary>
+    /// Initialize a new instance of <see cref="QueryModel"/>
+    /// </summary>
+    /// <param name="previousClause">The previous clause of type <see cref="IClause"/> in the <see cref="QueryModel"/>.</param>
+    /// <param name="identifier">The identifier of the expression which represents the subquery.</param>
+    /// <param name="subQuery">The subquery which contains the <see cref="SubQueryFromClause"/>with is represented by a new <see cref="QueryModel"/>.<see cref="QueryModel"/>.</param>
+    /// <param name="projectionExpression">The projection within the from part of the linq query.</param>
     public SubQueryFromClause (IClause previousClause, ParameterExpression identifier, QueryModel subQuery, LambdaExpression projectionExpression)
         : base (previousClause, identifier)
     {
@@ -39,7 +51,14 @@ namespace Remotion.Data.Linq.Clauses
       _fromSource = new SubQuery (SubQueryModel, ParseMode.SubQueryInFrom, Identifier.Name);
     }
 
+    /// <summary>
+    /// The subquery which contains the <see cref="SubQueryFromClause"/>with is represented by a new <see cref="QueryModel"/>.<see cref="QueryModel"/>
+    /// </summary>
     public QueryModel SubQueryModel { get; private set; }
+
+    /// <summary>
+    /// The projection within the from part of the linq query.
+    /// </summary>
     public LambdaExpression ProjectionExpression { get; private set; }
 
     public override void Accept (IQueryVisitor visitor)
@@ -58,6 +77,9 @@ namespace Remotion.Data.Linq.Clauses
       return _fromSource;
     }
 
+    /// <summary>
+    /// The <see cref="QueryModel"/> of the entire linq query.
+    /// </summary>
     public QueryModel QueryModel { get; private set; }
 
     public void SetQueryModel (QueryModel model)

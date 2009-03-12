@@ -23,6 +23,7 @@ namespace Remotion.Data.Linq.Clauses
 {
   /// <summary>
   /// Represents the where part of a linq query.
+  /// example: where a.A = "something useful"
   /// </summary>
   public class WhereClause : IBodyClause
   {
@@ -68,6 +69,9 @@ namespace Remotion.Data.Linq.Clauses
       visitor.VisitWhereClause (this);
     }
 
+    /// <summary>
+    /// The <see cref="QueryModel"/> to which the <see cref="WhereClause"/> belongs.
+    /// </summary>
     public QueryModel QueryModel { get; private set; }
 
     public void SetQueryModel (QueryModel model)
