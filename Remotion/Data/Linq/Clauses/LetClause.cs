@@ -24,6 +24,7 @@ namespace Remotion.Data.Linq.Clauses
 {
   /// <summary>
   /// Represents the let part of a linq query.
+  /// example: let a = b
   /// </summary>
   public class LetClause : IBodyClause, IResolveableClause
   {

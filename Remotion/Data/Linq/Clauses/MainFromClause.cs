@@ -23,7 +23,7 @@ namespace Remotion.Data.Linq.Clauses
   /// <summary>
   /// Extends <see cref="FromClauseBase"/>. <see cref="MainFromClause"/> is used for the first from clause of a linq query.
   /// A <see cref="MainFromClause"/> does not have a previous clause.
-  /// example: from c in DataSource
+  /// example: from c in queryable
   /// </summary>
   public class MainFromClause : FromClauseBase
   {

@@ -15,13 +15,13 @@
 // 
 using System;
 using System.Linq.Expressions;
-using System.Reflection;
-using Remotion.Data.Linq.Parsing.Structure;
-using Remotion.Data.Linq.Parsing.TreeEvaluation;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure
 {
+  /// <summary>
+  /// Delegates to the appropiate parser dependent to the used method expression in an expression chain.
+  /// </summary>
   public class SourceExpressionParser
   {
     private readonly bool _isTopLevel;

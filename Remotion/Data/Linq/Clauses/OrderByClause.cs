@@ -22,6 +22,7 @@ namespace Remotion.Data.Linq.Clauses
 {
   /// <summary>
   /// Represents the whole order by part of a linq query.
+  /// example: orderby expression
   /// </summary>
   public class OrderByClause :IQueryElement,IBodyClause
   {
