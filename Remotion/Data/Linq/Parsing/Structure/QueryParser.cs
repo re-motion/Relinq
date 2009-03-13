@@ -42,7 +42,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       resultCollector.Simplify (subQueries);
 
       QueryModelCreator modelCreator = new QueryModelCreator (SourceExpression, resultCollector);
-      QueryModel model = modelCreator.CreateQueryExpression();
+      QueryModel model = modelCreator.CreateQueryModel();
 
       foreach (QueryModel subQuery in subQueries)
         subQuery.SetParentQuery (model);
@@ -67,7 +67,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
     //    resultCollector.Simplify (subQueries);
 
     //    QueryModelCreator modelCreator = new QueryModelCreator (SourceExpression, resultCollector);
-    //    QueryModel model = modelCreator.CreateQueryExpression();
+    //    QueryModel model = modelCreator.CreateQueryModel();
 
 
     //    //projectionExpression ? -> how to define this

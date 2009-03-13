@@ -52,14 +52,14 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     [ExpectedException (typeof (ParserException), ExpectedMessage = "There is no projection for the select clause.")]
     public void NoProjectionForSelectClause ()
     {
-      _modelCreator.CreateQueryExpression ();
+      _modelCreator.CreateQueryModel ();
     }
 
     [Test]
     public void ResultType_Simple ()
     {
       _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression ());
-      QueryModel model = _modelCreator.CreateQueryExpression ();
+      QueryModel model = _modelCreator.CreateQueryModel ();
       Assert.AreEqual (_root.Type, model.ResultType);
     }
 
@@ -71,7 +71,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
       QueryModelCreator modelCreator = new QueryModelCreator (query.Expression, _result);
 
       _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression ());
-      QueryModel model = modelCreator.CreateQueryExpression ();
+      QueryModel model = modelCreator.CreateQueryModel ();
       Assert.AreEqual (typeof (IQueryable<Tuple<Student, string, string, string>>), model.ResultType);
     }
 
@@ -82,7 +82,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
       _result.AddBodyExpression (additionalFromExpression);
       _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression ());
 
-      QueryModel model = _modelCreator.CreateQueryExpression ();
+      QueryModel model = _modelCreator.CreateQueryModel ();
       Assert.IsNotNull (model.MainFromClause);
       Assert.AreSame (_firstFromExpressionData.Identifier, model.MainFromClause.Identifier);
       Assert.AreSame (_firstFromExpressionData.TypedExpression, model.MainFromClause.QuerySource);
@@ -94,7 +94,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     {
       _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression());
       
-      QueryModel model = _modelCreator.CreateQueryExpression();
+      QueryModel model = _modelCreator.CreateQueryModel();
       Assert.AreEqual (0, model.BodyClauses.Count);
 
       SelectClause selectClause = model.SelectOrGroupClause as SelectClause;
@@ -109,7 +109,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
       var additionalFromExpression = new FromExpressionData (ExpressionHelper.CreateLambdaExpression (), ExpressionHelper.CreateParameterExpression ());
       _result.AddBodyExpression (additionalFromExpression);
 
-      _modelCreator.CreateQueryExpression ();
+      _modelCreator.CreateQueryModel ();
     }
 
     [Test]
@@ -124,7 +124,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
       _result.AddBodyExpression (fromExpression1);
       _result.AddBodyExpression (fromExpression2);
 
-      QueryModel model = _modelCreator.CreateQueryExpression ();     
+      QueryModel model = _modelCreator.CreateQueryModel ();     
       
       Assert.AreEqual (2, model.BodyClauses.Count);
 
@@ -154,7 +154,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
 
       _result.AddBodyExpression (fromExpression1);
 
-      QueryModel model = _modelCreator.CreateQueryExpression();
+      QueryModel model = _modelCreator.CreateQueryModel();
 
       Assert.AreEqual (1, model.BodyClauses.Count);
 
@@ -176,7 +176,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
 
       _result.AddBodyExpression (fromExpression2);
 
-      QueryModel model = _modelCreator.CreateQueryExpression ();
+      QueryModel model = _modelCreator.CreateQueryModel ();
 
       Assert.AreEqual (1, model.BodyClauses.Count);
 
@@ -197,7 +197,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
 
       _result.AddBodyExpression (fromExpressionData);
 
-      QueryModel model = _modelCreator.CreateQueryExpression ();
+      QueryModel model = _modelCreator.CreateQueryModel ();
       
       Assert.AreEqual (1, model.BodyClauses.Count);
 
@@ -215,7 +215,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
 
       _result.AddBodyExpression (whereExpressionData);
 
-      QueryModel model = _modelCreator.CreateQueryExpression ();
+      QueryModel model = _modelCreator.CreateQueryModel ();
 
       Assert.AreEqual (1, model.BodyClauses.Count);
 
@@ -234,7 +234,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
 
       _result.AddBodyExpression (letExpressionData);
 
-      QueryModel model = _modelCreator.CreateQueryExpression ();
+      QueryModel model = _modelCreator.CreateQueryModel ();
 
       Assert.AreEqual (1, model.BodyClauses.Count);
 
@@ -252,7 +252,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
 
       _result.AddBodyExpression (orderExpressionData);
 
-      QueryModel model = _modelCreator.CreateQueryExpression ();
+      QueryModel model = _modelCreator.CreateQueryModel ();
       
       Assert.AreEqual (1, model.BodyClauses.Count);
 
@@ -277,7 +277,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
       _result.AddBodyExpression (orderExpression2);
       _result.AddBodyExpression (orderExpression3);
 
-      QueryModel model = _modelCreator.CreateQueryExpression();
+      QueryModel model = _modelCreator.CreateQueryModel();
       
       
       Assert.AreEqual (2, model.BodyClauses.Count);
@@ -327,7 +327,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
       _result.AddBodyExpression (orderExpression3);
 
 
-      QueryModel model = _modelCreator.CreateQueryExpression ();
+      QueryModel model = _modelCreator.CreateQueryModel ();
 
       OrderByClause orderByClause1 = model.BodyClauses.Skip (4).First() as OrderByClause;
       OrderByClause orderByClause2 = model.BodyClauses.Skip (5).First () as OrderByClause;

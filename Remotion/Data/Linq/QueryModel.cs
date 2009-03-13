@@ -36,7 +36,7 @@ namespace Remotion.Data.Linq
 
     private readonly Dictionary<string, IResolveableClause> _clausesByIdentifier = new Dictionary<string, IResolveableClause> ();
 
-    private Expression _expressionTree;
+    private readonly Expression _expressionTree;
 
     /// <summary>
     /// Initializes a new instance of <see cref="QueryModel"/>
@@ -115,11 +115,6 @@ namespace Remotion.Data.Linq
       _bodyClauses.Add (clause);
     }
 
-    public IClause GetMainFromClause ()
-    {
-      return MainFromClause;
-    }
-
     /// <summary>
     /// Method to register clauses via <see cref="ParameterExpression"/> 
     /// </summary>
@@ -170,7 +165,6 @@ namespace Remotion.Data.Linq
       return null;
     }
 
-
     public void Accept (IQueryVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
@@ -194,6 +188,7 @@ namespace Remotion.Data.Linq
 
     // Once we have a working ExpressionTreeBuildingVisitor, we could use it to build trees for constructed models. For now, we just create
     // a special ConstructedExpression node.
+    // TODO 1067: Changes made to the query model's clauses cause this Expression to become invalid.
     public Expression GetExpressionTree ()
     {
       if (_expressionTree == null)
@@ -209,6 +204,11 @@ namespace Remotion.Data.Linq
       ArgumentUtility.CheckNotNull ("joinedTableContext", joinedTableContext);
       
       return new QueryModelFieldResolver (this).ResolveField (resolver, fieldAccessExpression, joinedTableContext);
+    }
+
+    public QueryModel Clone ()
+    {
+      return new QueryModel (ResultType, MainFromClause, SelectOrGroupClause, _expressionTree);
     }
 
     private void CheckResolvedIdentifierType (ParameterExpression identifier,Type expectedType)

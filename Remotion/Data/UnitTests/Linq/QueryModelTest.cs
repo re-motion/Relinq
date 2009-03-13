@@ -33,51 +33,54 @@ namespace Remotion.Data.UnitTests.Linq
   [TestFixture]
   public class QueryModelTest
   {
+    private Expression _expressionTree;
+    private MainFromClause _mainFromClause;
+    private SelectClause _selectClause;
+    private QueryModel _queryModel;
+
+    [SetUp]
+    public void SetUp ()
+    {
+      _expressionTree = ExpressionHelper.CreateExpression ();
+      _mainFromClause = ExpressionHelper.CreateMainFromClause ();
+      _selectClause = ExpressionHelper.CreateSelectClause ();
+      _queryModel = new QueryModel (typeof (IQueryable<string>), _mainFromClause, _selectClause, _expressionTree);
+    }
+
     [Test]
     public void Initialize_WithFromClauseAndBody ()
     {
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause();
-      SelectClause selectClause = ExpressionHelper.CreateSelectClause ();
-      QueryModel model = new QueryModel (typeof (IQueryable<string>), fromClause, selectClause);
-      Assert.AreSame (fromClause, model.MainFromClause);
-      Assert.AreSame (selectClause, model.SelectOrGroupClause);
-      Assert.IsNotNull (model.GetExpressionTree ());
-      Assert.AreEqual (typeof (IQueryable<string>), model.ResultType);
+      Assert.AreSame (_mainFromClause, _queryModel.MainFromClause);
+      Assert.AreSame (_selectClause, _queryModel.SelectOrGroupClause);
+      Assert.IsNotNull (_queryModel.GetExpressionTree ());
+      Assert.AreEqual (typeof (IQueryable<string>), _queryModel.ResultType);
     }
 
     [Test]
     public void Initialize_WithExpressionTree ()
     {
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause ();
-      Expression expressionTree = ExpressionHelper.CreateExpression();
-      SelectClause selectClause = ExpressionHelper.CreateSelectClause();
-      QueryModel model = new QueryModel (typeof (IQueryable<string>), fromClause, selectClause, expressionTree);
-      Assert.AreSame (fromClause, model.MainFromClause);
-      Assert.AreSame (selectClause, model.SelectOrGroupClause);
-      Assert.AreSame (expressionTree, model.GetExpressionTree());
+      Assert.AreSame (_mainFromClause, _queryModel.MainFromClause);
+      Assert.AreSame (_selectClause, _queryModel.SelectOrGroupClause);
+      Assert.AreSame (_expressionTree, _queryModel.GetExpressionTree ());
     }
 
     [Test]
     public void QueryExpression_ImplementsIQueryElement()
     {
-      QueryModel instance = ExpressionHelper.CreateQueryModel();
-      Assert.IsInstanceOfType (typeof (IQueryElement), instance);
+      Assert.IsInstanceOfType (typeof (IQueryElement), _queryModel);
     }
 
     [Test]
     public void Accept()
     {
-      QueryModel instance = ExpressionHelper.CreateQueryModel();
+      var repository = new MockRepository ();
+      var visitorMock = repository.StrictMock<IQueryVisitor> ();
 
-      MockRepository repository = new MockRepository ();
-      IQueryVisitor testVisitor = repository.StrictMock<IQueryVisitor> ();
-
-      //// expectations
-      testVisitor.VisitQueryModel (instance);
+      visitorMock.Expect (mock => mock.VisitQueryModel (_queryModel));
 
       repository.ReplayAll ();
 
-      instance.Accept (testVisitor);
+      _queryModel.Accept (visitorMock);
 
       repository.VerifyAll ();
     }
@@ -85,10 +88,17 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void Override_ToString()
     {
-      QueryModel queryModel = ExpressionHelper.CreateQueryModel();
-      StringVisitor sv = new StringVisitor();
-      sv.VisitQueryModel (queryModel);
-      Assert.AreEqual (sv.ToString (), queryModel.ToString ());
+      var sv = new StringVisitor();
+      sv.VisitQueryModel (_queryModel);
+      Assert.AreEqual (sv.ToString (), _queryModel.ToString ());
+    }
+
+    [Test]
+    public void GetExpressionTree_ForSuppliedTree ()
+    {
+      Expression expressionTree = _queryModel.GetExpressionTree ();
+      Assert.That (expressionTree, Is.Not.Null);
+      Assert.That (expressionTree, Is.SameAs (_expressionTree));
     }
 
     // Once we have a working ExpressionTreeBuildingVisitor, we could use it to build trees for constructed models. For now, we just create
@@ -210,18 +220,23 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void ResolveField ()
     {
-      QueryModel queryModel = CreateQueryExpressionForResolve ();
+      ParameterExpression s1 = Expression.Parameter (typeof (String), "s1");
+      ParameterExpression s2 = Expression.Parameter (typeof (String), "s2");
+      MainFromClause mainFromClause = ExpressionHelper.CreateMainFromClause(s1, ExpressionHelper.CreateQuerySource());
+      var additionalFromClause = new AdditionalFromClause (mainFromClause, s2, ExpressionHelper.CreateLambdaExpression(), ExpressionHelper.CreateLambdaExpression());
+
+      QueryModel queryModel = ExpressionHelper.CreateQueryModel (mainFromClause);
+      queryModel.AddBodyClause (additionalFromClause);
 
       Expression fieldAccessExpression = Expression.Parameter (typeof (String), "s1");
-      JoinedTableContext context = new JoinedTableContext ();
-      WhereFieldAccessPolicy policy = new WhereFieldAccessPolicy (StubDatabaseInfo.Instance);
-      ClauseFieldResolver resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, policy);
-      FieldDescriptor descriptor = queryModel.ResolveField (resolver, fieldAccessExpression, context);
+      var context = new JoinedTableContext ();
+      var policy = new WhereFieldAccessPolicy (StubDatabaseInfo.Instance);
+      var resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, policy);
+      var descriptor = queryModel.ResolveField (resolver, fieldAccessExpression, context);
 
       IColumnSource expectedTable = queryModel.MainFromClause.GetFromSource (StubDatabaseInfo.Instance);
-      FieldSourcePath expectedPath = new FieldSourcePath (expectedTable, new SingleJoin[0]);
+      var expectedPath = new FieldSourcePath (expectedTable, new SingleJoin[0]);
 
-      //Assert.AreSame (queryModel.MainFromClause, descriptor.FromClause);
       Assert.AreEqual (new Column (expectedTable, "*"), descriptor.Column);
       Assert.IsNull (descriptor.Member);
       Assert.AreEqual (expectedPath, descriptor.SourcePath);
@@ -230,28 +245,79 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void ParentQuery_Null ()
     {
-      QueryModel queryModel = ExpressionHelper.CreateQueryModel();
-      Assert.IsNull (queryModel.ParentQuery);
+      Assert.IsNull (_queryModel.ParentQuery);
     }
 
     [Test]
     public void SetParentQuery ()
     {
-      QueryModel queryModel = ExpressionHelper.CreateQueryModel ();
       QueryModel parentQueryModel = ExpressionHelper.CreateQueryModel ();
-      queryModel.SetParentQuery (parentQueryModel);
+      _queryModel.SetParentQuery (parentQueryModel);
 
-      Assert.AreSame (parentQueryModel, queryModel.ParentQuery);
+      Assert.AreSame (parentQueryModel, _queryModel.ParentQuery);
     }
 
     [Test]
     [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "The query already has a parent query.")]
     public void SetParentQuery_ThrowsOnSecondParent ()
     {
-      QueryModel queryModel = ExpressionHelper.CreateQueryModel ();
       QueryModel parentQueryModel = ExpressionHelper.CreateQueryModel ();
-      queryModel.SetParentQuery (parentQueryModel);
-      queryModel.SetParentQuery (parentQueryModel);
+      _queryModel.SetParentQuery (parentQueryModel);
+      _queryModel.SetParentQuery (parentQueryModel);
+    }
+
+    [Test]
+    public void Clone_ReturnsNewQueryModel ()
+    {
+      var queryModel = ExpressionHelper.CreateQueryModel ();
+      var clone = queryModel.Clone ();
+
+      Assert.That (clone, Is.Not.Null);
+      Assert.That (clone, Is.Not.SameAs (queryModel));
+    }
+
+    [Test]
+    public void Clone_HasSameResultTypeAndExpressionTree ()
+    {
+      var clone = _queryModel.Clone ();
+
+      Assert.That (clone.ResultType, Is.SameAs (_queryModel.ResultType));
+      Assert.That (clone.GetExpressionTree(), Is.SameAs (_queryModel.GetExpressionTree()));
+    }
+
+    [Test]
+    [Ignore ("TODO 1066")]
+    public void Clone_HasCloneForMainFromClause ()
+    {
+      var clone = _queryModel.Clone ();
+
+      Assert.That (clone.MainFromClause, Is.Not.SameAs (_queryModel.MainFromClause));
+      Assert.That (clone.MainFromClause.Identifier, Is.EqualTo(_queryModel.MainFromClause.Identifier));
+    }
+
+    [Test]
+    [Ignore ("TODO 1066")]
+    public void Clone_HasCloneForSelectClause ()
+    {
+      var clone = _queryModel.Clone ();
+
+      Assert.That (clone.SelectOrGroupClause, Is.Not.SameAs (_queryModel.SelectOrGroupClause));
+      Assert.That (((SelectClause) clone.SelectOrGroupClause).ProjectionExpression, 
+          Is.EqualTo (((SelectClause)_queryModel.SelectOrGroupClause).ProjectionExpression));
+    }
+
+    [Test]
+    [Ignore ("TODO 1066")]
+    public void Clone_HasClonesForBodyClauses ()
+    {
+      var additionalFromClause = ExpressionHelper.CreateAdditionalFromClause ();
+      _queryModel.AddBodyClause (additionalFromClause);
+
+      var clone = _queryModel.Clone ();
+      var clonedAdditionalFromClause = (AdditionalFromClause) clone.BodyClauses[0];
+
+      Assert.That (clonedAdditionalFromClause, Is.Not.SameAs (additionalFromClause));
+      Assert.That (clonedAdditionalFromClause.Identifier, Is.EqualTo (additionalFromClause));
     }
 
     //[Test]
@@ -273,7 +339,7 @@ namespace Remotion.Data.UnitTests.Linq
     //}
 
     
-    private QueryModel CreateQueryExpressionForResolve ()
+    private QueryModel CreateQueryModelForResolve ()
     {
       ParameterExpression s1 = Expression.Parameter (typeof (String), "s1");
       ParameterExpression s2 = Expression.Parameter (typeof (String), "s2");

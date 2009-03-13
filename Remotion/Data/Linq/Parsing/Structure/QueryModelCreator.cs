@@ -42,7 +42,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       _result = result;
     }
 
-    public QueryModel CreateQueryExpression()
+    public QueryModel CreateQueryModel()
     {
       var mainFromClause = CreateMainFromClause (_result);
 
