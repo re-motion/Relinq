@@ -21,6 +21,10 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure
 {
+  /// <summary>
+  /// Parses an expression tree, looks for sub-queries in that tree (ie. expressions that themselves are LINQ queries), parses and registers them, and
+  /// replaces them with an instance of <see cref="SubQueryExpression"/>.
+  /// </summary>
   public class SubQueryFindingVisitor : ExpressionTreeVisitor
   {
     private readonly List<QueryModel> _subQueryRegistry;
@@ -47,7 +51,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
     private SubQueryExpression CreateSubQueryNode (MethodCallExpression methodCallExpression)
     {
-      QueryParser parser = new QueryParser (methodCallExpression);
+      var parser = new QueryParser (methodCallExpression);
       QueryModel queryModel = parser.GetParsedQuery ();
       _subQueryRegistry.Add (queryModel);
       return new SubQueryExpression (queryModel);
