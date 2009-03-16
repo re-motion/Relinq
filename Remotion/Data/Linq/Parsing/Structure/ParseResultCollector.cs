@@ -47,18 +47,22 @@ namespace Remotion.Data.Linq.Parsing.Structure
       get { return _projectionExpressions.AsReadOnly (); }
     }
 
+    // TODO MG: Unfinished Refactoring: Rename to ResultModifierExpressions to match other properties
     public ReadOnlyCollection<MethodCallExpression> ResultModifierData 
     {
       get { return _resultModifierData.AsReadOnly(); }
     }
 
+    // TODO MG: Unfinished Refactoring: delete (use ResultModifierData instead)
     public List<MethodCallExpression> ResultModifiers { get; private set; }
 
+    // TODO MG: Unfinished Refactoring: delete (use AddResultModifierData instead)
     public void AddResultModifiers (MethodCallExpression expression)
     {
       ResultModifiers.Add (expression);
     }
 
+    // TODO MG: Unfinished Refactoring: rename to AddResultModifierExpression
     public void AddResultModifierData (MethodCallExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);

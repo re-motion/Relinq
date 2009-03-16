@@ -20,10 +20,8 @@ namespace Remotion.Data.Linq.Clauses
 {
   public class GroupClause : ISelectGroupClause
   {
-
     private readonly Expression _groupExpression;
     private readonly Expression _byExpression;
-
 
     public GroupClause (IClause previousClause,Expression groupExpression, Expression byExpression)
     {
@@ -52,6 +50,16 @@ namespace Remotion.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       visitor.VisitGroupClause (this);
+    }
+
+    public GroupClause Clone (IClause newPreviousClause)
+    {
+      return new GroupClause (newPreviousClause, GroupExpression, ByExpression);
+    }
+
+    ISelectGroupClause ISelectGroupClause.Clone (IClause newPreviousClause)
+    {
+      return Clone (newPreviousClause);
     }
   }
 }

@@ -132,6 +132,8 @@ namespace Remotion.Data.Linq.Visitor
       _sb.Append ("\n");
       _sb.AppendFormat ("PreviousClause: {0}", joinClause.PreviousClause);
       _sb.Append ("\n");
+      _sb.AppendFormat ("FromClause: {0}", joinClause.FromClause);
+      _sb.Append ("\n");
       _sb.AppendFormat ("Identifier: {0}", joinClause.Identifier);
       _sb.Append ("\n");
       _sb.AppendFormat ("InExpression: {0}", joinClause.InExpression);

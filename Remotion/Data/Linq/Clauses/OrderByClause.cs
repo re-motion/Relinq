@@ -24,7 +24,7 @@ namespace Remotion.Data.Linq.Clauses
   /// Represents the whole order by part of a linq query.
   /// example: orderby expression
   /// </summary>
-  public class OrderByClause :IQueryElement,IBodyClause
+  public class OrderByClause : IBodyClause
   {
     private readonly List<OrderingClause> _orderingList = new List<OrderingClause>();
     
@@ -70,9 +70,26 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("model", model);
       if (QueryModel != null)
         throw new InvalidOperationException("QueryModel is already set");
-        QueryModel = model;
       
+      QueryModel = model;
     }
-    
+
+    public OrderByClause Clone (IClause newPreviousClause)
+    {
+      var firstOrderingClone = OrderingList[0].Clone (newPreviousClause);
+      var clone = new OrderByClause (firstOrderingClone);
+
+      for (int i = 1; i < OrderingList.Count; ++i)
+      {
+        var orderingClone = OrderingList[i].Clone (clone.OrderingList[i - 1]);
+        clone.Add (orderingClone);
+      }
+      return clone;
+    }
+
+    IBodyClause IBodyClause.Clone (IClause newPreviousClause)
+    {
+      return Clone (newPreviousClause);
+    }
   }
 }

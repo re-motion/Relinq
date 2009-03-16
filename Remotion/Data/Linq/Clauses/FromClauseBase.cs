@@ -36,7 +36,7 @@ namespace Remotion.Data.Linq.Clauses
     /// </summary>
     /// <param name="previousClause">The previous clause of the current from clause.</param>
     /// <param name="identifier">The identifier of the from clause</param>
-    public FromClauseBase (IClause previousClause, ParameterExpression identifier)
+    protected FromClauseBase (IClause previousClause, ParameterExpression identifier)
     {     
       ArgumentUtility.CheckNotNull ("identifier", identifier);
 
@@ -57,7 +57,7 @@ namespace Remotion.Data.Linq.Clauses
     }
 
     /// <summary>
-    /// Methof for adding a <see cref="JoinClause"/>
+    /// Method for adding a <see cref="JoinClause"/>
     /// </summary>
     /// <param name="joinClause"><see cref="JoinClause"/></param>
     public void Add (JoinClause joinClause)
@@ -90,6 +90,17 @@ namespace Remotion.Data.Linq.Clauses
     public abstract void Accept (IQueryVisitor visitor);
     public abstract Type GetQuerySourceType ();
 
-    
+    protected void AddClonedJoinClauses (IEnumerable<JoinClause> originalJoinClauses)
+    {
+      ArgumentUtility.CheckNotNull ("originalJoinClauses", originalJoinClauses);
+
+      IClause previousClause = this;
+      foreach (var joinClause in originalJoinClauses)
+      {
+        var joinClauseClone = joinClause.Clone (previousClause, this);
+        Add (joinClauseClone);
+        previousClause = joinClauseClone;
+      }
+    }
   }
 }

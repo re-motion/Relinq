@@ -15,7 +15,6 @@
 // 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -26,7 +25,6 @@ using Rhino.Mocks;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing.Structure;
-using Remotion.Data.Linq.QueryProviderImplementation;
 
 namespace Remotion.Data.UnitTests.Linq
 {
@@ -61,7 +59,7 @@ namespace Remotion.Data.UnitTests.Linq
       Expression onExpression = CreateExpression ();
       Expression equalityExpression = CreateExpression ();
 
-      return new JoinClause (CreateMainFromClause(), identifier, inExpression, onExpression, equalityExpression);
+      return new JoinClause (CreateClause(), CreateMainFromClause(), identifier, inExpression, onExpression, equalityExpression);
     }
 
     public static QueryModel CreateQueryModel (MainFromClause mainFromClause)
@@ -142,12 +140,17 @@ namespace Remotion.Data.UnitTests.Linq
     {
       LambdaExpression expression = Expression.Lambda (Expression.Constant (0), Expression.Parameter (typeof (Student), "s1"));
       var query = SelectTestQueryGenerator.CreateSimpleQuery (CreateQuerySource());
-      var methodInfo = ParserUtility.GetMethod (() => query.Count ());
-      MethodCallExpression methodCallExpression = Expression.Call (methodInfo, query.Expression);
+      MethodCallExpression methodCallExpression = CreateMethodCallExpression(query);
       List<MethodCallExpression> methodCallExpressions = new List<MethodCallExpression> ();
       methodCallExpressions.Add (methodCallExpression);
 
       return new SelectClause (CreateClause (), expression, methodCallExpressions);
+    }
+
+    public static MethodCallExpression CreateMethodCallExpression (IQueryable<Student> query)
+    {
+      var methodInfo = ParserUtility.GetMethod (() => query.Count ());
+      return Expression.Call (methodInfo, query.Expression);
     }
 
 
@@ -314,6 +317,17 @@ namespace Remotion.Data.UnitTests.Linq
       var fromExpression = Expression.Lambda (bodyExpression);
       var projectionExpression = CreateLambdaExpression();
       return new MemberFromClause (previousClause, identifier, fromExpression, projectionExpression);
+    }
+
+    public static ResultModifierClause CreateResultModifierClause (IClause previousClause, SelectClause selectClause)
+    {
+      var resultModifier = CreateMethodCallExpression (CreateQuerySource ());
+      return new ResultModifierClause (previousClause, selectClause, resultModifier);
+    }
+
+    public static ResultModifierClause CreateResultModifierClause ()
+    {
+      return CreateResultModifierClause (CreateClause(), CreateSelectClause ());
     }
   }
 }

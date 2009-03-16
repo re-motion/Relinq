@@ -16,6 +16,7 @@
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Rhino.Mocks;
 using Remotion.Data.Linq.Clauses;
@@ -33,11 +34,12 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
       Expression onExpression = ExpressionHelper.CreateExpression ();
       Expression equalityExpression = ExpressionHelper.CreateExpression ();
 
-      IClause clause = ExpressionHelper.CreateClause();
+      var previousClause = ExpressionHelper.CreateClause();
+      var fromClause = ExpressionHelper.CreateMainFromClause ();
+      var joinClause = new JoinClause (previousClause, fromClause, identifier, inExpression, onExpression, equalityExpression);
 
-      JoinClause joinClause = new JoinClause (clause, identifier, inExpression, onExpression, equalityExpression);
-
-      Assert.AreSame (clause, joinClause.PreviousClause);
+      Assert.AreSame (fromClause, joinClause.FromClause);
+      Assert.AreSame (previousClause, joinClause.PreviousClause);
       Assert.AreSame (identifier, joinClause.Identifier);
       Assert.AreSame (inExpression, joinClause.InExpression);
       Assert.AreSame (onExpression, joinClause.OnExpression);
@@ -55,17 +57,18 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
       Expression equalityExpression = ExpressionHelper.CreateExpression ();
       ParameterExpression intoIdentifier = ExpressionHelper.CreateParameterExpression ();
 
-      IClause clause = ExpressionHelper.CreateClause ();
-      JoinClause joinClause = new JoinClause (clause,identifier, inExpression, onExpression, equalityExpression, intoIdentifier);
+      var fromClause = ExpressionHelper.CreateMainFromClause ();
+      var previousClause = ExpressionHelper.CreateClause ();
+      var joinClause = new JoinClause (previousClause, fromClause, identifier, inExpression, onExpression, equalityExpression, intoIdentifier);
 
-      Assert.AreSame (clause, joinClause.PreviousClause);
+      Assert.AreSame (fromClause, joinClause.FromClause);
+      Assert.AreSame (previousClause, joinClause.PreviousClause);
       Assert.AreSame (identifier, joinClause.Identifier);
       Assert.AreSame (inExpression, joinClause.InExpression);
       Assert.AreSame (onExpression, joinClause.OnExpression);
       Assert.AreSame (equalityExpression, joinClause.EqualityExpression);
       Assert.AreSame (equalityExpression, joinClause.EqualityExpression);
       Assert.AreSame (intoIdentifier, joinClause.IntoIdentifier);
-
     }
 
     [Test]
@@ -80,8 +83,8 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
     {
       JoinClause joinClause = ExpressionHelper.CreateJoinClause ();
 
-      MockRepository repository = new MockRepository ();
-      IQueryVisitor visitorMock = repository.StrictMock<IQueryVisitor> ();
+      var repository = new MockRepository ();
+      var visitorMock = repository.StrictMock<IQueryVisitor> ();
 
       visitorMock.VisitJoinClause (joinClause);
 
@@ -91,6 +94,25 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
 
       repository.VerifyAll ();
 
+    }
+
+    [Test]
+    public void Clone ()
+    {
+      var originalClause = ExpressionHelper.CreateJoinClause ();
+      var newPreviousClause = ExpressionHelper.CreateClause ();
+      var newFromClause = ExpressionHelper.CreateMainFromClause ();
+      var clone = originalClause.Clone (newPreviousClause, newFromClause);
+
+      Assert.That (clone, Is.Not.Null);
+      Assert.That (clone, Is.Not.SameAs (originalClause));
+      Assert.That (clone.EqualityExpression, Is.SameAs (originalClause.EqualityExpression));
+      Assert.That (clone.Identifier, Is.SameAs (originalClause.Identifier));
+      Assert.That (clone.InExpression, Is.SameAs (originalClause.InExpression));
+      Assert.That (clone.IntoIdentifier, Is.SameAs (originalClause.IntoIdentifier));
+      Assert.That (clone.OnExpression, Is.SameAs (originalClause.OnExpression));
+      Assert.That (clone.FromClause, Is.SameAs (newFromClause));
+      Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
     }
   }
 }

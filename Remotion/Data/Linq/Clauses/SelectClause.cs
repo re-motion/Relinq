@@ -28,8 +28,9 @@ namespace Remotion.Data.Linq.Clauses
   public class SelectClause : ISelectGroupClause
   {
     private readonly LambdaExpression _projectionExpression;
-    private List<ResultModifierClause> _resultModifierData = new List<ResultModifierClause>();
+    private readonly List<ResultModifierClause> _resultModifierData = new List<ResultModifierClause>();
     
+    // TODO MG: Unfinished Refactoring: delete
     //delete after change
     public SelectClause (IClause previousClause, LambdaExpression projectionExpression, List<MethodCallExpression> resultModifiers)
     {
@@ -66,13 +67,16 @@ namespace Remotion.Data.Linq.Clauses
       get { return _projectionExpression; }
     }
 
+    // TODO MG: Unfinished Refactoring: delete (use ResultModifierData instead)
     public List<MethodCallExpression> ResultModifiers { get; private set; }
 
+    // TODO MG: Unfinished Refactoring: rename to ResultModifierClauses (analoguous to FromClauseBase.JoinClauses)
     public ReadOnlyCollection<ResultModifierClause> ResultModifierData
     {
       get { return _resultModifierData.AsReadOnly(); }
     }
 
+    // TODO MG: Unfinished Refactoring: rename to Add (analoguous to FromClauseBase.Add; or: rename both FromClauseBase.Add and this method to Add...Clause)
     public void AddResultModifierData (ResultModifierClause resultModifierData)
     {
       _resultModifierData.Add (resultModifierData);
@@ -87,5 +91,24 @@ namespace Remotion.Data.Linq.Clauses
       visitor.VisitSelectClause (this);
     }
 
+    public SelectClause Clone (IClause newPreviousClause)
+    {
+      var clone = new SelectClause (newPreviousClause, ProjectionExpression, ResultModifiers);
+      IClause previousClause = clone;
+
+      foreach (var resultModifierData in ResultModifierData)
+      {
+        var resultModifierClauseClone = resultModifierData.Clone (previousClause, clone);
+        clone.AddResultModifierData (resultModifierClauseClone);
+        previousClause = resultModifierClauseClone;
+      }
+
+      return clone;
+    }
+
+    ISelectGroupClause ISelectGroupClause.Clone (IClause newPreviousClause)
+    {
+      return Clone (newPreviousClause);
+    }
   }
 }

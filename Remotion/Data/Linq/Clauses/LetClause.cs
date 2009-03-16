@@ -15,7 +15,6 @@
 // 
 using System;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing.FieldResolving;
 using Remotion.Utilities;
@@ -96,7 +95,7 @@ namespace Remotion.Data.Linq.Clauses
 
     public virtual LetColumnSource GetColumnSource (IDatabaseInfo databaseInfo)
     { 
-      // TODO: IsTable should also be true if the let clause constructs an object, eg: let x = new {o.ID, o.OrderNumber}
+      // TODO 637: IsTable should also be true if the let clause constructs an object, eg: let x = new {o.ID, o.OrderNumber}
       return new LetColumnSource (Identifier.Name, databaseInfo.IsTableType (Identifier.Type));
     }
 
@@ -111,8 +110,18 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("model", model);
       if (QueryModel != null)
         throw new InvalidOperationException("QueryModel is already set");
-        QueryModel = model;
       
+      QueryModel = model;
+    }
+
+    public LetClause Clone (IClause newPreviousClause)
+    {
+      return new LetClause (newPreviousClause, Identifier, Expression, ProjectionExpression);
+    }
+
+    IBodyClause IBodyClause.Clone (IClause newPreviousClause)
+    {
+      return Clone (newPreviousClause);
     }
   }
 }

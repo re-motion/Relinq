@@ -16,10 +16,10 @@
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Rhino.Mocks;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.DataObjectModel;
 using OrderDirection=Remotion.Data.Linq.Clauses.OrderDirection;
 
 namespace Remotion.Data.UnitTests.Linq.ClausesTest
@@ -32,11 +32,11 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
     public void InitializeWithExpressionAndOrderDirectionAsc()
     {
       LambdaExpression expression = ExpressionHelper.CreateLambdaExpression();
-      OrderDirection directionAsc  = OrderDirection.Asc;
+      const OrderDirection directionAsc = OrderDirection.Asc;
 
       IClause clause = ExpressionHelper.CreateClause();
       
-      OrderingClause ordering = new OrderingClause(clause, expression,directionAsc);
+      var ordering = new OrderingClause(clause, expression,directionAsc);
 
 
       Assert.AreSame (clause, ordering.PreviousClause);
@@ -48,11 +48,11 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
     public void InitializeWithExpressionAndOrderDirectionDesc ()
     {
       LambdaExpression expression = ExpressionHelper.CreateLambdaExpression ();
-      OrderDirection directionAsc = OrderDirection.Asc;
+      const OrderDirection directionAsc = OrderDirection.Asc;
 
       IClause clause = ExpressionHelper.CreateClause ();
 
-      OrderingClause ordering = new OrderingClause (clause,expression, directionAsc);
+      var ordering = new OrderingClause (clause,expression, directionAsc);
 
       Assert.AreSame (clause, ordering.PreviousClause);
       Assert.AreSame (expression, ordering.Expression);
@@ -71,8 +71,8 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
     {
       OrderingClause orderingClause = ExpressionHelper.CreateOrderingClause ();
 
-      MockRepository repository = new MockRepository();
-      IQueryVisitor visitorMock = repository.StrictMock<IQueryVisitor>();
+      var repository = new MockRepository();
+      var visitorMock = repository.StrictMock<IQueryVisitor>();
 
       visitorMock.VisitOrderingClause (orderingClause);
 
@@ -115,6 +115,21 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
       QueryModel model = ExpressionHelper.CreateQueryModel ();
       orderingClause.SetQueryModel (model);
       orderingClause.SetQueryModel (model);
+    }
+
+    [Test]
+    public void Clone ()
+    {
+      var orderingClause = ExpressionHelper.CreateOrderingClause ();
+      var newPreviousClause = ExpressionHelper.CreateMainFromClause();
+      var clone = orderingClause.Clone (newPreviousClause);
+
+      Assert.That (clone, Is.Not.Null);
+      Assert.That (clone, Is.Not.SameAs (orderingClause));
+      Assert.That (clone.Expression, Is.SameAs (orderingClause.Expression));
+      Assert.That (clone.OrderDirection, Is.EqualTo (orderingClause.OrderDirection));
+      Assert.That (clone.QueryModel, Is.Null);
+      Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
     }
   }
 }

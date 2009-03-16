@@ -202,10 +202,13 @@ namespace Remotion.Data.Linq.Parsing.Structure
       SelectClause selectClause = new SelectClause (_previousClause, selectProjection, _result.ResultModifiers);
       
       //create RMClauses and put them to SelectClause
+      // TODO MG: Unfinished refactoring: test previous clause when multiple result modifier clauses exist
+      IClause previousClause = selectClause;
       foreach (var resultModifier in _result.ResultModifierData)
       {
-        ResultModifierClause resultModifierClause = new ResultModifierClause (selectClause, resultModifier);
+        ResultModifierClause resultModifierClause = new ResultModifierClause (previousClause, selectClause, resultModifier);
         selectClause.AddResultModifierData (resultModifierClause);
+        previousClause = resultModifierClause;
       }
       return selectClause;
     }

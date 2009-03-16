@@ -84,5 +84,43 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(ExpressionHelper.CreateParameterExpression(), querySource);
       Assert.AreSame (typeof (TestQueryable<Student>), fromClause.GetQuerySourceType());
     }
+
+    [Test]
+    public void Clone ()
+    {
+      MainFromClause originalClause = ExpressionHelper.CreateMainFromClause ();
+      var clone = originalClause.Clone ();
+
+      Assert.That (clone, Is.Not.Null);
+      Assert.That (clone, Is.Not.SameAs (originalClause));
+      Assert.That (clone.Identifier, Is.SameAs (originalClause.Identifier));
+      Assert.That (clone.QuerySource, Is.SameAs (originalClause.QuerySource));
+    }
+
+    [Test]
+    public void Clone_JoinClauses ()
+    {
+      MainFromClause originalClause = ExpressionHelper.CreateMainFromClause ();
+      var originalJoinClause1 = ExpressionHelper.CreateJoinClause ();
+      originalClause.Add (originalJoinClause1);
+
+      var originalJoinClause2 = ExpressionHelper.CreateJoinClause ();
+      originalClause.Add (originalJoinClause2);
+
+      var clone = originalClause.Clone ();
+      Assert.That (clone.JoinClauses.Count, Is.EqualTo (2));
+      
+      Assert.That (clone.JoinClauses[0], Is.Not.SameAs (originalJoinClause1));
+      Assert.That (clone.JoinClauses[0].EqualityExpression, Is.SameAs (originalJoinClause1.EqualityExpression));
+      Assert.That (clone.JoinClauses[0].InExpression, Is.SameAs (originalJoinClause1.InExpression));
+      Assert.That (clone.JoinClauses[0].FromClause, Is.SameAs (clone));
+      Assert.That (clone.JoinClauses[0].PreviousClause, Is.SameAs (clone));
+
+      Assert.That (clone.JoinClauses[1], Is.Not.SameAs (originalJoinClause2));
+      Assert.That (clone.JoinClauses[1].EqualityExpression, Is.SameAs (originalJoinClause2.EqualityExpression));
+      Assert.That (clone.JoinClauses[1].InExpression, Is.SameAs (originalJoinClause2.InExpression));
+      Assert.That (clone.JoinClauses[1].FromClause, Is.SameAs (clone));
+      Assert.That (clone.JoinClauses[1].PreviousClause, Is.SameAs (clone.JoinClauses[0]));
+    }
   }
 }

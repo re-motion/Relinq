@@ -31,7 +31,7 @@ namespace Remotion.Data.Linq.Clauses
     public MemberFromClause (IClause previousClause, ParameterExpression identifier, LambdaExpression fromExpression, LambdaExpression projectionExpression)
         : base(previousClause, identifier, fromExpression, projectionExpression)
     {
-      MemberExpression memberExpression = fromExpression.Body as MemberExpression;
+      var memberExpression = fromExpression.Body as MemberExpression;
       if (memberExpression != null)
         _memberExpression = memberExpression;
       else
@@ -56,6 +56,13 @@ namespace Remotion.Data.Linq.Clauses
       var relatedTable = DatabaseInfoUtility.GetRelatedTable (databaseInfo, MemberExpression.Member);
       relatedTable.SetAlias (Identifier.Name);
       return relatedTable;
+    }
+
+    public override AdditionalFromClause Clone (IClause newPreviousClause)
+    {
+      var result = new MemberFromClause (newPreviousClause, Identifier, FromExpression, ProjectionExpression);
+      result.AddClonedJoinClauses (JoinClauses);
+      return result;
     }
   }
 }

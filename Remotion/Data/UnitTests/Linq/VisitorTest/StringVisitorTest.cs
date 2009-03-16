@@ -47,10 +47,10 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest
 
       MockRepository repository = new MockRepository();
       JoinClause joinClause1 =
-          repository.StrictMock<JoinClause> (ExpressionHelper.CreateClause(), ExpressionHelper.CreateParameterExpression(),
+          repository.StrictMock<JoinClause> (ExpressionHelper.CreateClause(), fromClause, ExpressionHelper.CreateParameterExpression(),
               ExpressionHelper.CreateExpression(), ExpressionHelper.CreateExpression(), ExpressionHelper.CreateExpression());
       JoinClause joinClause2 =
-          repository.StrictMock<JoinClause> (ExpressionHelper.CreateClause(), ExpressionHelper.CreateParameterExpression(),
+          repository.StrictMock<JoinClause> (ExpressionHelper.CreateClause (), fromClause, ExpressionHelper.CreateParameterExpression (),
               ExpressionHelper.CreateExpression(), ExpressionHelper.CreateExpression(), ExpressionHelper.CreateExpression());
 
       fromClause.Add (joinClause1);

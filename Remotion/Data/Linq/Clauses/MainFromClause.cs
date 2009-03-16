@@ -53,5 +53,12 @@ namespace Remotion.Data.Linq.Clauses
     {
       return QuerySource.Type;
     }
+
+    public MainFromClause Clone ()
+    {
+      var clone = new MainFromClause (Identifier, QuerySource);
+      clone.AddClonedJoinClauses (JoinClauses);
+      return clone;
+    }
   }
 }

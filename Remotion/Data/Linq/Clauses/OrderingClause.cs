@@ -19,10 +19,13 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses
 {
+  // TODO: Define whether OrderingClause should really be a clause; it's actually an element or part of OrderByClause, so maybe it should rather be
+  // named OrderingElement or OrderingSpecification. (And then, it should not implement IClause. Its PreviousClause should be 
+  // PreviousElement/Specification, and every element/specification should knows its OrderByClause.)
   /// <summary>
   /// Represents one expression of a order by in a linq query.
   /// </summary>
-  public class OrderingClause : IBodyClause
+  public class OrderingClause : IClause
   {
     private readonly LambdaExpression _expression;
     private readonly OrderDirection _orderDirection;
@@ -73,8 +76,13 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("model", model);
       if (QueryModel != null)
         throw new InvalidOperationException ("QueryModel is already set");
-      QueryModel = model;
 
+      QueryModel = model;
+    }
+
+    public OrderingClause Clone (IClause newPreviousClause)
+    {
+      return new OrderingClause (newPreviousClause, Expression, OrderDirection);
     }
   }
 

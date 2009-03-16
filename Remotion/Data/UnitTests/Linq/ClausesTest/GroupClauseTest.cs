@@ -16,6 +16,7 @@
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Rhino.Mocks;
 using Remotion.Data.Linq.Clauses;
@@ -68,6 +69,20 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
       groupClause.Accept (visitorMock);
 
       repository.VerifyAll();
+    }
+
+    [Test]
+    public void Clone ()
+    {
+      var originalClause = ExpressionHelper.CreateGroupClause ();
+      var newPreviousClause = ExpressionHelper.CreateMainFromClause ();
+      var clone = originalClause.Clone (newPreviousClause);
+
+      Assert.That (clone, Is.Not.Null);
+      Assert.That (clone, Is.Not.SameAs (originalClause));
+      Assert.That (clone.ByExpression, Is.SameAs (originalClause.ByExpression));
+      Assert.That (clone.GroupExpression, Is.SameAs (originalClause.GroupExpression));
+      Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
     }
   }
 }

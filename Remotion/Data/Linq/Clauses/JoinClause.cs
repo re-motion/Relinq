@@ -16,43 +16,51 @@
 using System.Linq.Expressions;
 using Remotion.Utilities;
 
-
 namespace Remotion.Data.Linq.Clauses
 {
   public class JoinClause : IClause
   {
+    private readonly IClause _previousClause;
+    private readonly FromClauseBase _fromClause;
     private readonly ParameterExpression _identifier;
     private readonly Expression _inExpression;
     private readonly Expression _onExpression;
     private readonly Expression _equalityExpression;
     private readonly ParameterExpression _intoIdentifier;
 
-    public JoinClause (IClause previousClause,ParameterExpression identifier, Expression inExpression, Expression onExpression, Expression equalityExpression)
+    public JoinClause (IClause previousClause, FromClauseBase fromClause, ParameterExpression identifier, Expression inExpression, Expression onExpression, Expression equalityExpression)
+      : this (previousClause, fromClause, identifier, inExpression, onExpression, equalityExpression, null)
     {
+    }
+
+    public JoinClause (IClause previousClause, FromClauseBase fromClause, ParameterExpression identifier, Expression inExpression, Expression onExpression, 
+                       Expression equalityExpression,ParameterExpression intoIdentifier)
+    {
+      ArgumentUtility.CheckNotNull ("previousClause", previousClause);
       ArgumentUtility.CheckNotNull ("identifier", identifier);
       ArgumentUtility.CheckNotNull ("inExpression", inExpression);
       ArgumentUtility.CheckNotNull ("onExpression", onExpression);
       ArgumentUtility.CheckNotNull ("equalityExpression", equalityExpression);
-      ArgumentUtility.CheckNotNull ("previousClause", previousClause);
+      ArgumentUtility.CheckNotNull ("fromClause", fromClause);
 
+      _previousClause = previousClause;
       _identifier = identifier;
       _inExpression = inExpression;
       _onExpression = onExpression;
       _equalityExpression = equalityExpression;
-      PreviousClause = previousClause;
-    }
-
-    
-    public JoinClause (IClause previousClause,ParameterExpression identifier, Expression inExpression, Expression onExpression, 
-                       Expression equalityExpression,ParameterExpression intoIdentifier)
-        : this (previousClause,identifier, inExpression, onExpression, equalityExpression)
-    {
-      ArgumentUtility.CheckNotNull ("intoIdentifier", intoIdentifier);
-
+      _fromClause = fromClause;
       _intoIdentifier = intoIdentifier;
     }
 
-    public IClause PreviousClause { get; private set; }
+    public IClause PreviousClause
+    {
+      get { return _previousClause; }
+    }
+
+    public FromClauseBase FromClause
+    {
+      get { return _fromClause; }
+    }
 
     public ParameterExpression Identifier
     {
@@ -83,6 +91,11 @@ namespace Remotion.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       visitor.VisitJoinClause (this);
+    }
+
+    public JoinClause Clone (IClause newPreviousClause, FromClauseBase newFromClause)
+    {
+      return new JoinClause (newPreviousClause, newFromClause, Identifier, InExpression, OnExpression, EqualityExpression, IntoIdentifier);
     }
   }
 }

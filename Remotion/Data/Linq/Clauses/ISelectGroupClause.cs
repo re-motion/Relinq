@@ -17,5 +17,6 @@ namespace Remotion.Data.Linq.Clauses
 {
   public interface ISelectGroupClause : IClause
   {
+    ISelectGroupClause Clone (IClause newPreviousClause);
   }
 }

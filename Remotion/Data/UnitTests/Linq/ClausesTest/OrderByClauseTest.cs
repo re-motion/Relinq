@@ -14,13 +14,11 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Rhino.Mocks;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.DataObjectModel;
 
 
 namespace Remotion.Data.UnitTests.Linq.ClausesTest
@@ -32,7 +30,7 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
     public void InitializeWithOneOrdering()
     {
       OrderingClause ordering = ExpressionHelper.CreateOrderingClause();
-      OrderByClause orderBy = new OrderByClause (ordering);
+      var orderBy = new OrderByClause (ordering);
 
       Assert.AreEqual (1, orderBy.OrderingList.Count);
       Assert.IsNotNull (orderBy.PreviousClause);
@@ -44,7 +42,7 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
     {
       OrderingClause ordering1 = ExpressionHelper.CreateOrderingClause ();
       OrderingClause ordering2 = ExpressionHelper.CreateOrderingClause ();
-      OrderByClause orderBy = new OrderByClause (ordering1);
+      var orderBy = new OrderByClause (ordering1);
       orderBy.Add (ordering2);
 
       Assert.That (orderBy.OrderingList, Is.EqualTo (new object[] { ordering1, ordering2 }));
@@ -66,8 +64,8 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
     {
       OrderByClause orderByClause = ExpressionHelper.CreateOrderByClause ();
 
-      MockRepository repository = new MockRepository();
-      IQueryVisitor visitorMock = repository.StrictMock<IQueryVisitor>();
+      var repository = new MockRepository();
+      var visitorMock = repository.StrictMock<IQueryVisitor>();
 
       visitorMock.VisitOrderByClause(orderByClause);
 
@@ -111,6 +109,41 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
       QueryModel model = ExpressionHelper.CreateQueryModel ();
       orderByClause.SetQueryModel (model);
       orderByClause.SetQueryModel (model);
+    }
+
+    [Test]
+    public void Clone ()
+    {
+      var originalClause = ExpressionHelper.CreateOrderByClause ();
+      var newPreviousClause = ExpressionHelper.CreateClause ();
+      var clone = originalClause.Clone (newPreviousClause);
+
+      Assert.That (clone, Is.Not.Null);
+      Assert.That (clone, Is.Not.SameAs (originalClause));
+      Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
+      Assert.That (clone.QueryModel, Is.Null);
+    }
+
+    [Test]
+    public void Clone_Orderings ()
+    {
+      var orderByClause = ExpressionHelper.CreateOrderByClause ();
+      var ordering = ExpressionHelper.CreateOrderingClause();
+      orderByClause.Add (ordering);
+
+      var newPreviousClause = ExpressionHelper.CreateMainFromClause ();
+      var clone = orderByClause.Clone (newPreviousClause);
+
+      Assert.That (clone.OrderingList.Count, Is.EqualTo (2));
+
+      Assert.That (clone.OrderingList[0], Is.Not.SameAs (orderByClause.OrderingList[0]));
+      Assert.That (clone.OrderingList[0].Expression, Is.SameAs (orderByClause.OrderingList[0].Expression));
+      Assert.That (clone.OrderingList[0].OrderDirection, Is.EqualTo (orderByClause.OrderingList[0].OrderDirection));
+      Assert.That (clone.OrderingList[0].QueryModel, Is.Null);
+      Assert.That (clone.OrderingList[0].PreviousClause, Is.SameAs (newPreviousClause));
+
+      Assert.That (clone.OrderingList[1], Is.Not.SameAs (ordering));
+      Assert.That (clone.OrderingList[1].PreviousClause, Is.SameAs (clone.OrderingList[0]));
     }
   }
 }

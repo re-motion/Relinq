@@ -30,7 +30,7 @@ namespace Remotion.Data.Linq
   /// The class implements an abstraction of the expression tree which is created when executing a linq query. 
   /// The different parts of a linq query are mapped to clauses.
   /// </summary>
-  public class QueryModel : IQueryElement
+  public class QueryModel : IQueryElement, ICloneable
   {
     private readonly List<IBodyClause> _bodyClauses = new List<IBodyClause> ();
 
@@ -78,7 +78,7 @@ namespace Remotion.Data.Linq
     public void SetParentQuery(QueryModel parentQuery)
     {
       ArgumentUtility.CheckNotNull ("parentQueryExpression", parentQuery);
-      if (ParentQuery != null)
+      if (ParentQuery != null && ParentQuery != parentQuery)
         throw new InvalidOperationException ("The query already has a parent query.");
 
       ParentQuery = parentQuery;
@@ -209,6 +209,11 @@ namespace Remotion.Data.Linq
     public QueryModel Clone ()
     {
       return new QueryModel (ResultType, MainFromClause, SelectOrGroupClause, _expressionTree);
+    }
+
+    object ICloneable.Clone ()
+    {
+      return Clone();
     }
 
     private void CheckResolvedIdentifierType (ParameterExpression identifier,Type expectedType)

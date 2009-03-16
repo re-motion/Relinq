@@ -79,5 +79,17 @@ namespace Remotion.Data.Linq.Clauses
         throw new InvalidOperationException ("QueryModel is already set");
       QueryModel = model;
     }
+
+    public virtual AdditionalFromClause Clone (IClause newPreviousClause)
+    {
+      var result = new AdditionalFromClause (newPreviousClause, Identifier, FromExpression, ProjectionExpression);
+      result.AddClonedJoinClauses (JoinClauses);
+      return result;
+    }
+
+    IBodyClause IBodyClause.Clone (IClause newPreviousClause)
+    {
+      return Clone (newPreviousClause);
+    }
   }
 }

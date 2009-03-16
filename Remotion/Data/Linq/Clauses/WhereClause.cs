@@ -79,8 +79,18 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("model", model);
       if (QueryModel != null)
         throw new InvalidOperationException ("QueryModel is already set");
-      QueryModel = model;
 
+      QueryModel = model;
+    }
+
+    public WhereClause Clone (IClause newPreviousClause)
+    {
+      return new WhereClause (newPreviousClause, BoolExpression);
+    }
+
+    IBodyClause IBodyClause.Clone (IClause newPreviousClause)
+    {
+      return Clone (newPreviousClause);
     }
   }
 }

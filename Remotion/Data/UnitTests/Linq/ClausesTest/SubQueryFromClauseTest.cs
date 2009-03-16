@@ -16,6 +16,7 @@
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Rhino.Mocks;
 using Remotion.Data.Linq.Clauses;
@@ -55,11 +56,10 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
     [Test]
     public void Accept ()
     {
-      MockRepository mockRepository = new MockRepository();
-      IQueryVisitor visitorMock = mockRepository.StrictMock<IQueryVisitor>();
+      var mockRepository = new MockRepository();
+      var visitorMock = mockRepository.StrictMock<IQueryVisitor>();
 
-      // expectation
-      visitorMock.VisitSubQueryFromClause (_subQueryFromClause);
+      visitorMock.Expect (mock => mock.VisitSubQueryFromClause (_subQueryFromClause));
 
       mockRepository.ReplayAll ();
       _subQueryFromClause.Accept (visitorMock);
@@ -76,7 +76,7 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
     public void GetFromSource ()
     {
       IColumnSource columnSource = _subQueryFromClause.GetFromSource (StubDatabaseInfo.Instance);
-      SubQuery subQuery = (SubQuery) columnSource;
+      var subQuery = (SubQuery) columnSource;
       Assert.AreEqual (_identifier.Name, subQuery.Alias);
       Assert.AreSame (_subQueryModel, subQuery.QueryModel);
     }
@@ -84,8 +84,8 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
     [Test]
     public void GetFromSource_FromSourceIsCached ()
     {
-      SubQuery subQuery1 = (SubQuery) _subQueryFromClause.GetFromSource (StubDatabaseInfo.Instance);
-      SubQuery subQuery2 = (SubQuery) _subQueryFromClause.GetFromSource (StubDatabaseInfo.Instance);
+      var subQuery1 = (SubQuery) _subQueryFromClause.GetFromSource (StubDatabaseInfo.Instance);
+      var subQuery2 = (SubQuery) _subQueryFromClause.GetFromSource (StubDatabaseInfo.Instance);
       Assert.AreSame (subQuery1, subQuery2);
     }
 
@@ -121,6 +121,80 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
       QueryModel model = ExpressionHelper.CreateQueryModel ();
       subQueryFromClause.SetQueryModel (model);
       subQueryFromClause.SetQueryModel (model);
+    }
+
+    [Test]
+    public void SetQueryModel_SetsParentQueryOfSubQueryModel ()
+    {
+      SubQueryFromClause subQueryFromClause = ExpressionHelper.CreateSubQueryFromClause ();
+      Assert.That (subQueryFromClause.SubQueryModel.ParentQuery, Is.Null);
+
+      QueryModel model = ExpressionHelper.CreateQueryModel ();
+      subQueryFromClause.SetQueryModel (model);
+      Assert.That (subQueryFromClause.SubQueryModel.ParentQuery, Is.SameAs (model));
+    }
+
+    [Test]
+    public void Clone ()
+    {
+      var originalClause = ExpressionHelper.CreateSubQueryFromClause ();
+      var newPreviousClause = ExpressionHelper.CreateMainFromClause ();
+      var clone = originalClause.Clone (newPreviousClause);
+
+      Assert.That (clone, Is.Not.Null);
+      Assert.That (clone, Is.Not.SameAs (originalClause));
+      Assert.That (clone.Identifier, Is.SameAs (originalClause.Identifier));
+      Assert.That (clone.ProjectionExpression, Is.SameAs (originalClause.ProjectionExpression));
+      Assert.That (clone.SubQueryModel, Is.Not.SameAs (originalClause.SubQueryModel));
+      Assert.That (clone.SubQueryModel.MainFromClause.QuerySource, Is.SameAs (originalClause.SubQueryModel.MainFromClause.QuerySource));
+      Assert.That (clone.SubQueryModel.ParentQuery, Is.Null);
+      Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
+      Assert.That (clone.QueryModel, Is.Null);
+    }
+
+    [Test]
+    public void Clone_SubQueryModelsParent_SetWhenQueryModelIsSet ()
+    {
+      var originalClause = ExpressionHelper.CreateSubQueryFromClause ();
+      var newPreviousClause = ExpressionHelper.CreateMainFromClause ();
+      var clone = originalClause.Clone (newPreviousClause);
+
+      Assert.That (clone, Is.Not.Null);
+      Assert.That (clone, Is.Not.SameAs (originalClause));
+      Assert.That (clone.SubQueryModel.ParentQuery, Is.Null);
+      Assert.That (clone.QueryModel, Is.Null);
+
+      var newModel = ExpressionHelper.CreateQueryModel ();
+      clone.SetQueryModel (newModel);
+      Assert.That (clone.QueryModel, Is.SameAs (newModel));
+      Assert.That (clone.SubQueryModel.ParentQuery, Is.SameAs (newModel));
+    }
+
+    [Test]
+    public void Clone_JoinClauses ()
+    {
+      SubQueryFromClause originalClause = ExpressionHelper.CreateSubQueryFromClause ();
+      var originalJoinClause1 = ExpressionHelper.CreateJoinClause ();
+      originalClause.Add (originalJoinClause1);
+
+      var originalJoinClause2 = ExpressionHelper.CreateJoinClause ();
+      originalClause.Add (originalJoinClause2);
+
+      var newPreviousClause = ExpressionHelper.CreateClause ();
+      var clone = originalClause.Clone (newPreviousClause);
+      Assert.That (clone.JoinClauses.Count, Is.EqualTo (2));
+
+      Assert.That (clone.JoinClauses[0], Is.Not.SameAs (originalJoinClause1));
+      Assert.That (clone.JoinClauses[0].EqualityExpression, Is.SameAs (originalJoinClause1.EqualityExpression));
+      Assert.That (clone.JoinClauses[0].InExpression, Is.SameAs (originalJoinClause1.InExpression));
+      Assert.That (clone.JoinClauses[0].FromClause, Is.SameAs (clone));
+      Assert.That (clone.JoinClauses[0].PreviousClause, Is.SameAs (clone));
+
+      Assert.That (clone.JoinClauses[1], Is.Not.SameAs (originalJoinClause2));
+      Assert.That (clone.JoinClauses[1].EqualityExpression, Is.SameAs (originalJoinClause2.EqualityExpression));
+      Assert.That (clone.JoinClauses[1].InExpression, Is.SameAs (originalJoinClause2.InExpression));
+      Assert.That (clone.JoinClauses[1].FromClause, Is.SameAs (clone));
+      Assert.That (clone.JoinClauses[1].PreviousClause, Is.SameAs (clone.JoinClauses[0]));
     }
   }
 }

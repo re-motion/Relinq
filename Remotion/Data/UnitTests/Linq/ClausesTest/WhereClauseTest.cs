@@ -16,6 +16,7 @@
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Rhino.Mocks;
 using Remotion.Data.Linq.Clauses;
@@ -121,6 +122,20 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
       QueryModel model = ExpressionHelper.CreateQueryModel ();
       whereClause.SetQueryModel (model);
       whereClause.SetQueryModel (model);
+    }
+
+    [Test]
+    public void Clone ()
+    {
+      var originalClause = ExpressionHelper.CreateWhereClause ();
+      var newPreviousClause = ExpressionHelper.CreateClause ();
+      var clone = originalClause.Clone (newPreviousClause);
+
+      Assert.That (clone, Is.Not.Null);
+      Assert.That (clone, Is.Not.SameAs (originalClause));
+      Assert.That (clone.BoolExpression, Is.SameAs (originalClause.BoolExpression));
+      Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
+      Assert.That (clone.QueryModel, Is.Null);
     }
   }
 }

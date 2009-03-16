@@ -261,9 +261,19 @@ namespace Remotion.Data.UnitTests.Linq
     [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "The query already has a parent query.")]
     public void SetParentQuery_ThrowsOnSecondParent ()
     {
+      QueryModel parentQueryModel1 = ExpressionHelper.CreateQueryModel ();
+      QueryModel parentQueryModel2 = ExpressionHelper.CreateQueryModel ();
+      _queryModel.SetParentQuery (parentQueryModel1);
+      _queryModel.SetParentQuery (parentQueryModel2);
+    }
+
+    [Test]
+    public void SetParentQuery_IgnoresSecondParent_WhenSame ()
+    {
       QueryModel parentQueryModel = ExpressionHelper.CreateQueryModel ();
       _queryModel.SetParentQuery (parentQueryModel);
       _queryModel.SetParentQuery (parentQueryModel);
+      Assert.That (_queryModel.ParentQuery, Is.SameAs (parentQueryModel));
     }
 
     [Test]
@@ -292,18 +302,20 @@ namespace Remotion.Data.UnitTests.Linq
       var clone = _queryModel.Clone ();
 
       Assert.That (clone.MainFromClause, Is.Not.SameAs (_queryModel.MainFromClause));
-      Assert.That (clone.MainFromClause.Identifier, Is.EqualTo(_queryModel.MainFromClause.Identifier));
+      Assert.That (clone.MainFromClause.Identifier, Is.EqualTo (_queryModel.MainFromClause.Identifier));
     }
 
     [Test]
     [Ignore ("TODO 1066")]
     public void Clone_HasCloneForSelectClause ()
     {
+      var selectClause = (SelectClause) _queryModel.SelectOrGroupClause;
       var clone = _queryModel.Clone ();
 
       Assert.That (clone.SelectOrGroupClause, Is.Not.SameAs (_queryModel.SelectOrGroupClause));
-      Assert.That (((SelectClause) clone.SelectOrGroupClause).ProjectionExpression, 
-          Is.EqualTo (((SelectClause)_queryModel.SelectOrGroupClause).ProjectionExpression));
+      var cloneSelectClause = ((SelectClause) clone.SelectOrGroupClause);
+      Assert.That (cloneSelectClause.ProjectionExpression, Is.EqualTo (selectClause.ProjectionExpression));
+      Assert.That (cloneSelectClause.PreviousClause, Is.SameAs (clone.MainFromClause));
     }
 
     [Test]
@@ -311,13 +323,23 @@ namespace Remotion.Data.UnitTests.Linq
     public void Clone_HasClonesForBodyClauses ()
     {
       var additionalFromClause = ExpressionHelper.CreateAdditionalFromClause ();
+      var whereClause = ExpressionHelper.CreateWhereClause();
       _queryModel.AddBodyClause (additionalFromClause);
+      _queryModel.AddBodyClause (whereClause);
 
       var clone = _queryModel.Clone ();
       var clonedAdditionalFromClause = (AdditionalFromClause) clone.BodyClauses[0];
+      var clonedWhereClause = (WhereClause) clone.BodyClauses[1];
 
       Assert.That (clonedAdditionalFromClause, Is.Not.SameAs (additionalFromClause));
       Assert.That (clonedAdditionalFromClause.Identifier, Is.EqualTo (additionalFromClause));
+      Assert.That (clonedAdditionalFromClause.QueryModel, Is.SameAs (clone));
+      Assert.That (clonedAdditionalFromClause.PreviousClause, Is.SameAs (clone.MainFromClause));
+
+      Assert.That (clonedWhereClause, Is.Not.SameAs (whereClause));
+      Assert.That (clonedWhereClause.BoolExpression, Is.EqualTo (clonedWhereClause.BoolExpression));
+      Assert.That (clonedWhereClause.QueryModel, Is.SameAs (clone));
+      Assert.That (clonedWhereClause.PreviousClause, Is.SameAs (clonedAdditionalFromClause));
     }
 
     //[Test]

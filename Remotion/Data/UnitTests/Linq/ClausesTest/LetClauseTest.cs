@@ -15,8 +15,8 @@
 // 
 using System;
 using System.Linq.Expressions;
-using System.Reflection;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Rhino.Mocks;
 using Remotion.Data.Linq.Clauses;
@@ -36,7 +36,7 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
 
        IClause clause = ExpressionHelper.CreateClause();
 
-      LetClause letClause = new LetClause(clause,identifier,expression,ExpressionHelper.CreateLambdaExpression());
+      var letClause = new LetClause(clause,identifier,expression,ExpressionHelper.CreateLambdaExpression());
 
       Assert.AreSame (clause, letClause.PreviousClause);
       Assert.AreSame (identifier, letClause.Identifier);
@@ -64,8 +64,8 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
     {
       LetClause letClause = ExpressionHelper.CreateLetClause ();
 
-      MockRepository repository = new MockRepository ();
-      IQueryVisitor visitorMock = repository.StrictMock<IQueryVisitor> ();
+      var repository = new MockRepository ();
+      var visitorMock = repository.StrictMock<IQueryVisitor> ();
 
       visitorMock.VisitLetClause (letClause);
 
@@ -114,15 +114,14 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
     [Test]
     public void GetColumnSource_IsTableTrue ()
     {
-      SelectFieldAccessPolicy policy = new SelectFieldAccessPolicy ();
-      JoinedTableContext context = new JoinedTableContext ();
-      ClauseFieldResolver resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, policy);
+      var policy = new SelectFieldAccessPolicy ();
+      var resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, policy);
       
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "s");
       LetClause letClause = ExpressionHelper.CreateLetClause (identifier);
       letClause.SetQueryModel (ExpressionHelper.CreateQueryModel ());
       
-      LetColumnSource expected = new LetColumnSource ("s", true);
+      var expected = new LetColumnSource ("s", true);
       Assert.AreEqual (expected.Alias, letClause.GetColumnSource(resolver.DatabaseInfo).Alias);
       Assert.AreEqual (expected.IsTable, letClause.GetColumnSource (resolver.DatabaseInfo).IsTable);
     }
@@ -130,18 +129,32 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
     [Test]
     public void GetColumnSource_IsTableFalse ()
     {
-      SelectFieldAccessPolicy policy = new SelectFieldAccessPolicy ();
-      JoinedTableContext context = new JoinedTableContext ();
-      ClauseFieldResolver resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, policy);
+      var policy = new SelectFieldAccessPolicy ();
+      var resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, policy);
 
       ParameterExpression identifier = Expression.Parameter (typeof (int), "i");
       LetClause letClause = ExpressionHelper.CreateLetClause (identifier);
       letClause.SetQueryModel (ExpressionHelper.CreateQueryModel ());
 
-      LetColumnSource expected = new LetColumnSource ("i", false);
+      var expected = new LetColumnSource ("i", false);
       Assert.AreEqual (expected.Alias, letClause.GetColumnSource (resolver.DatabaseInfo).Alias);
       Assert.AreEqual (expected.IsTable, letClause.GetColumnSource (resolver.DatabaseInfo).IsTable);
     }
-    
+
+    [Test]
+    public void Clone ()
+    {
+      var originalClause = ExpressionHelper.CreateLetClause ();
+      var newPreviousClause = ExpressionHelper.CreateMainFromClause ();
+      var clone = originalClause.Clone (newPreviousClause);
+
+      Assert.That (clone, Is.Not.Null);
+      Assert.That (clone, Is.Not.SameAs (originalClause));
+      Assert.That (clone.Expression, Is.SameAs (originalClause.Expression));
+      Assert.That (clone.Identifier, Is.SameAs (originalClause.Identifier));
+      Assert.That (clone.ProjectionExpression, Is.SameAs (originalClause.ProjectionExpression));
+      Assert.That (clone.QueryModel, Is.Null);
+      Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
+    }
   }
 }
