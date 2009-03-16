@@ -20,9 +20,9 @@ namespace Remotion.Data.Linq.DataObjectModel
   public struct OrderingField
   {
     private readonly FieldDescriptor _fieldDescriptor;
-    private readonly OrderDirection _direction;
+    private readonly OrderingDirection _direction;
 
-    public OrderingField (FieldDescriptor fieldDescriptor, OrderDirection direction)
+    public OrderingField (FieldDescriptor fieldDescriptor, OrderingDirection direction)
     {
       fieldDescriptor.GetMandatoryColumn (); // assert that there is a column for ordering
 
@@ -40,7 +40,7 @@ namespace Remotion.Data.Linq.DataObjectModel
       get { return _fieldDescriptor; }
     }
 
-    public OrderDirection Direction
+    public OrderingDirection Direction
     {
       get { return _direction; }
     }

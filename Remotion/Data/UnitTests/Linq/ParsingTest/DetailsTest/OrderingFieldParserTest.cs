@@ -45,13 +45,13 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest
       IQueryable<Student> query = OrderByTestQueryGenerator.CreateSimpleOrderByQuery (ExpressionHelper.CreateQuerySource ());
       QueryModel parsedQuery = ExpressionHelper.ParseQuery (query);
       OrderByClause orderBy = (OrderByClause) parsedQuery.BodyClauses.First ();
-      OrderingClause orderingClause = orderBy.OrderingList.First ();
+      Ordering ordering = orderBy.OrderingList.First ();
 
       OrderingFieldParser parser = new OrderingFieldParser (StubDatabaseInfo.Instance);
       FieldDescriptor fieldDescriptor = ExpressionHelper.CreateFieldDescriptor (parsedQuery.MainFromClause, typeof(Student).GetProperty("First"));
       ParseContext parseContext = new ParseContext (
           parsedQuery, parsedQuery.GetExpressionTree (), new List<FieldDescriptor> (), _joinedTableContext);
-      Assert.AreEqual (new OrderingField (fieldDescriptor, OrderDirection.Asc), parser.Parse (orderingClause.Expression.Body, parseContext, orderingClause.OrderDirection));
+      Assert.AreEqual (new OrderingField (fieldDescriptor, OrderingDirection.Asc), parser.Parse (ordering.Expression.Body, parseContext, ordering.OrderingDirection));
     }
 
     [Test]
@@ -60,14 +60,14 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest
       IQueryable<Student> query = OrderByTestQueryGenerator.CreateTwoOrderByQuery (ExpressionHelper.CreateQuerySource ());
       QueryModel parsedQuery = ExpressionHelper.ParseQuery (query);
       OrderByClause orderBy1 = (OrderByClause) parsedQuery.BodyClauses.First ();
-      OrderingClause orderingClause = orderBy1.OrderingList.First ();
+      Ordering ordering = orderBy1.OrderingList.First ();
 
       OrderingFieldParser parser = new OrderingFieldParser (StubDatabaseInfo.Instance);
 
       FieldDescriptor fieldDescriptor1 = ExpressionHelper.CreateFieldDescriptor (parsedQuery.MainFromClause, typeof (Student).GetProperty ("First"));
       ParseContext parseContext = new ParseContext (
           parsedQuery, parsedQuery.GetExpressionTree (), new List<FieldDescriptor> (), _joinedTableContext);
-      Assert.AreEqual (new OrderingField (fieldDescriptor1, OrderDirection.Asc), parser.Parse (orderingClause.Expression.Body, parseContext, orderingClause.OrderDirection));
+      Assert.AreEqual (new OrderingField (fieldDescriptor1, OrderingDirection.Asc), parser.Parse (ordering.Expression.Body, parseContext, ordering.OrderingDirection));
     }
 
     [Test]
@@ -76,14 +76,14 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest
       IQueryable<Student> query = OrderByTestQueryGenerator.CreateTwoOrderByQuery (ExpressionHelper.CreateQuerySource ());
       QueryModel parsedQuery = ExpressionHelper.ParseQuery (query);
       OrderByClause orderBy2 = (OrderByClause) parsedQuery.BodyClauses.Last ();
-      OrderingClause orderingClause = orderBy2.OrderingList.Last ();
+      Ordering ordering = orderBy2.OrderingList.Last ();
 
       OrderingFieldParser parser = new OrderingFieldParser (StubDatabaseInfo.Instance);
 
       FieldDescriptor fieldDescriptor2 = ExpressionHelper.CreateFieldDescriptor (parsedQuery.MainFromClause, typeof (Student).GetProperty ("Last"));
       ParseContext parseContext = new ParseContext (
           parsedQuery, parsedQuery.GetExpressionTree (), new List<FieldDescriptor> (), _joinedTableContext);
-      Assert.AreEqual (new OrderingField (fieldDescriptor2, OrderDirection.Desc), parser.Parse (orderingClause.Expression.Body, parseContext, orderingClause.OrderDirection));
+      Assert.AreEqual (new OrderingField (fieldDescriptor2, OrderingDirection.Desc), parser.Parse (ordering.Expression.Body, parseContext, ordering.OrderingDirection));
     }
 
     [Test]
@@ -93,13 +93,13 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest
           MixedTestQueryGenerator.CreateMultiFromWhereOrderByQuery (ExpressionHelper.CreateQuerySource (), ExpressionHelper.CreateQuerySource ());
       QueryModel parsedQuery = ExpressionHelper.ParseQuery (query);
       OrderByClause orderBy1 = (OrderByClause) parsedQuery.BodyClauses.Skip (2).First ();
-      OrderingClause orderingClause = orderBy1.OrderingList.First ();
+      Ordering ordering = orderBy1.OrderingList.First ();
 
       OrderingFieldParser parser = new OrderingFieldParser (StubDatabaseInfo.Instance);
       FieldDescriptor fieldDescriptor = ExpressionHelper.CreateFieldDescriptor (parsedQuery.MainFromClause, typeof (Student).GetProperty ("First"));
       ParseContext parseContext = new ParseContext (
          parsedQuery, parsedQuery.GetExpressionTree (), new List<FieldDescriptor> (), _joinedTableContext);
-      Assert.AreEqual (new OrderingField (fieldDescriptor, OrderDirection.Asc), parser.Parse (orderingClause.Expression.Body, parseContext, orderingClause.OrderDirection));
+      Assert.AreEqual (new OrderingField (fieldDescriptor, OrderingDirection.Asc), parser.Parse (ordering.Expression.Body, parseContext, ordering.OrderingDirection));
     }
 
     [Test]
@@ -109,14 +109,14 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest
           MixedTestQueryGenerator.CreateMultiFromWhereOrderByQuery (ExpressionHelper.CreateQuerySource (), ExpressionHelper.CreateQuerySource ());
       QueryModel parsedQuery = ExpressionHelper.ParseQuery (query);
       OrderByClause orderBy1 = (OrderByClause) parsedQuery.BodyClauses.Skip (2).First ();
-      OrderingClause orderingClause = orderBy1.OrderingList.Last ();
+      Ordering ordering = orderBy1.OrderingList.Last ();
 
       OrderingFieldParser parser = new OrderingFieldParser (StubDatabaseInfo.Instance);
       FieldDescriptor fieldDescriptor = ExpressionHelper.CreateFieldDescriptor ((FromClauseBase) parsedQuery.BodyClauses[0],
           typeof (Student).GetProperty ("Last"));
       ParseContext parseContext = new ParseContext (
           parsedQuery, parsedQuery.GetExpressionTree (), new List<FieldDescriptor> (), _joinedTableContext);
-      Assert.AreEqual (new OrderingField (fieldDescriptor, OrderDirection.Desc), parser.Parse (orderingClause.Expression.Body, parseContext, orderingClause.OrderDirection));
+      Assert.AreEqual (new OrderingField (fieldDescriptor, OrderingDirection.Desc), parser.Parse (ordering.Expression.Body, parseContext, ordering.OrderingDirection));
     }
 
     [Test]
@@ -127,12 +127,12 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest
       IQueryable<Student> query = OrderByTestQueryGenerator.CreateOrderByNonDBPropertyQuery (ExpressionHelper.CreateQuerySource ());
       QueryModel parsedQuery = ExpressionHelper.ParseQuery (query);
       OrderByClause orderBy = (OrderByClause) parsedQuery.BodyClauses.First ();
-      OrderingClause orderingClause = orderBy.OrderingList.First ();
+      Ordering ordering = orderBy.OrderingList.First ();
 
       OrderingFieldParser parser = new OrderingFieldParser (StubDatabaseInfo.Instance);
       ParseContext parseContext = new ParseContext (
           parsedQuery, parsedQuery.GetExpressionTree (), new List<FieldDescriptor> (), _joinedTableContext);
-      parser.Parse (orderingClause.Expression.Body, parseContext, orderingClause.OrderDirection);
+      parser.Parse (ordering.Expression.Body, parseContext, ordering.OrderingDirection);
     }
 
     [Test]
@@ -141,7 +141,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest
       IQueryable<Student_Detail> query = JoinTestQueryGenerator.CreateSimpleImplicitOrderByJoin (ExpressionHelper.CreateQuerySource_Detail ());
       QueryModel parsedQuery = ExpressionHelper.ParseQuery (query);
       OrderByClause orderBy = (OrderByClause) parsedQuery.BodyClauses.First ();
-      OrderingClause orderingClause = orderBy.OrderingList.First ();
+      Ordering ordering = orderBy.OrderingList.First ();
 
       FromClauseBase fromClause = parsedQuery.MainFromClause;
       PropertyInfo relationMember = typeof (Student_Detail).GetProperty ("Student");
@@ -158,7 +158,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest
       OrderingFieldParser parser = new OrderingFieldParser (StubDatabaseInfo.Instance);
       ParseContext parseContext = new ParseContext (
           parsedQuery, parsedQuery.GetExpressionTree(), new List<FieldDescriptor>(), _joinedTableContext);
-      Assert.AreEqual (new OrderingField (fieldDescriptor, OrderDirection.Asc), parser.Parse (orderingClause.Expression.Body, parseContext, orderingClause.OrderDirection));
+      Assert.AreEqual (new OrderingField (fieldDescriptor, OrderingDirection.Asc), parser.Parse (ordering.Expression.Body, parseContext, ordering.OrderingDirection));
     }
 
     [Test]
@@ -177,12 +177,12 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest
       IQueryable<Student_Detail> query = OrderByTestQueryGenerator.CreateRelationMemberOrderByQuery (ExpressionHelper.CreateQuerySource_Detail ());
       QueryModel parsedQuery = ExpressionHelper.ParseQuery (query);
       OrderByClause orderBy = (OrderByClause) parsedQuery.BodyClauses.First ();
-      OrderingClause orderingClause = orderBy.OrderingList.First ();
+      Ordering ordering = orderBy.OrderingList.First ();
 
       OrderingFieldParser parser = new OrderingFieldParser (StubDatabaseInfo.Instance);
       ParseContext parseContext = new ParseContext (
           parsedQuery, parsedQuery.GetExpressionTree (), new List<FieldDescriptor> (), _joinedTableContext);
-      parser.Parse (orderingClause.Expression.Body, parseContext, orderingClause.OrderDirection);
+      parser.Parse (ordering.Expression.Body, parseContext, ordering.OrderingDirection);
     }
   }
 }

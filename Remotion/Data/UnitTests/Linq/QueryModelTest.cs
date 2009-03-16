@@ -65,12 +65,6 @@ namespace Remotion.Data.UnitTests.Linq
     }
 
     [Test]
-    public void QueryExpression_ImplementsIQueryElement()
-    {
-      Assert.IsInstanceOfType (typeof (IQueryElement), _queryModel);
-    }
-
-    [Test]
     public void Accept()
     {
       var repository = new MockRepository ();

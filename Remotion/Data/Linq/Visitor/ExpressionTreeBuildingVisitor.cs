@@ -112,10 +112,10 @@ namespace Remotion.Data.Linq.Visitor
         throw new System.NotImplementedException();
     }
 
-    //public void CreateExpressionOrderBy(OrderingClause orderingClause,bool first)
+    //public void CreateExpressionOrderBy(Ordering ordering,bool first)
     //{
     //  ArgumentUtility.CheckNotNull ("first", first);
-    //  ArgumentUtility.CheckNotNull ("orderingClause", orderingClause);
+    //  ArgumentUtility.CheckNotNull ("ordering", ordering);
 
     //  Type[] genericArguments =
     //    (from parameter in orderingClause.Expression.Parameters
@@ -123,7 +123,7 @@ namespace Remotion.Data.Linq.Visitor
     //  UnaryExpression orderByExpression = Expression.Quote (orderingClause.Expression);
     //  MethodInfo orderByMethod = null;
 
-    //  if (orderingClause.OrderDirection == OrderDirection.Asc)
+    //  if (orderingClause.OrderingDirection == OrderingDirection.Asc)
     //  {
     //    if (first)
     //      orderByMethod = GetQueryMethod ("ThenBy", genericArguments, new Type[] { ExpressionTree.Type, orderByExpression.Type });
@@ -142,7 +142,7 @@ namespace Remotion.Data.Linq.Visitor
     //    ExpressionTree = Expression.Call (orderByMethod, ExpressionTree, orderByExpression);
     //}
 
-    public void VisitOrderingClause (OrderingClause orderingClause)
+    public void VisitOrdering (Ordering ordering)
     {
       throw new System.NotImplementedException();
     }

@@ -112,23 +112,23 @@ namespace Remotion.Data.Linq.Visitor
     {
       ArgumentUtility.CheckNotNull ("orderByClause", orderByClause);
       _sb.Append ("orderby ");
-      foreach (OrderingClause oC in orderByClause.OrderingList)
+      foreach (Ordering oC in orderByClause.OrderingList)
       {
         oC.Accept (this);
       }
     }
 
-    public void VisitOrderingClause (OrderingClause orderingClause)
+    public void VisitOrdering (Ordering ordering)
     {
-      ArgumentUtility.CheckNotNull ("orderingClause", orderingClause);
+      ArgumentUtility.CheckNotNull ("ordering", ordering);
 
-      switch (orderingClause.OrderDirection)
+      switch (ordering.OrderingDirection)
       {
-        case OrderDirection.Asc:
-          _sb.AppendFormat ("{0} ascending ", orderingClause.Expression);
+        case OrderingDirection.Asc:
+          _sb.AppendFormat ("{0} ascending ", ordering.Expression);
           break;
-        case OrderDirection.Desc:
-          _sb.AppendFormat ("{0} descending ", orderingClause.Expression);
+        case OrderingDirection.Desc:
+          _sb.AppendFormat ("{0} descending ", ordering.Expression);
           break;
       }
     }

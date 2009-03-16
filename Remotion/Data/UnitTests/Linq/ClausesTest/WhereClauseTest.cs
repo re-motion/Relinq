@@ -48,13 +48,6 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
     }
     
     [Test]
-    public void WhereClause_ImplementIQueryElement()
-    {
-      WhereClause whereClause = ExpressionHelper.CreateWhereClause();
-      Assert.IsInstanceOfType (typeof (IQueryElement), whereClause);
-    }
-
-    [Test]
     public void GetSimplifiedBoolExpression ()
     {
       MethodCallExpression whereMethodCallExpression = WhereTestQueryGenerator.CreateWhereQueryWithEvaluatableSubExpression_WhereExpression (

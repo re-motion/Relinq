@@ -19,7 +19,6 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
-using OrderDirection=Remotion.Data.Linq.Clauses.OrderDirection;
 using NUnit.Framework.SyntaxHelpers;
 
 namespace Remotion.Data.UnitTests.Linq
@@ -41,9 +40,11 @@ namespace Remotion.Data.UnitTests.Linq
     public void InitializeWithISelectOrGroupClauseAndOrderByClause()
     {
       LambdaExpression orderingExpression = ExpressionHelper.CreateLambdaExpression ();
-      OrderingClause ordering = new OrderingClause (ExpressionHelper.CreateClause(),orderingExpression, OrderDirection.Asc);
 
-      OrderByClause orderByClause = new OrderByClause (ordering);
+      var orderByClause = new OrderByClause (_model.MainFromClause);
+      var ordering = new Ordering (orderByClause, orderingExpression, OrderingDirection.Asc);
+      orderByClause.Add (ordering);
+
       _model.AddBodyClause (orderByClause);
 
       Assert.AreSame (_selectOrGroupClause, _model.SelectOrGroupClause);

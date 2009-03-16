@@ -27,36 +27,32 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
   public class OrderByClauseTest
   {
     [Test]
-    public void InitializeWithOneOrdering()
+    public void InitializeWithoutOrdering()
     {
-      OrderingClause ordering = ExpressionHelper.CreateOrderingClause();
-      var orderBy = new OrderByClause (ordering);
+      var previousClause = ExpressionHelper.CreateClause ();
+      var orderBy = new OrderByClause (previousClause);
 
-      Assert.AreEqual (1, orderBy.OrderingList.Count);
+      Assert.AreEqual (0, orderBy.OrderingList.Count);
       Assert.IsNotNull (orderBy.PreviousClause);
-      Assert.AreSame (orderBy.OrderingList[0].PreviousClause, orderBy.PreviousClause);
+      Assert.AreSame (previousClause, orderBy.PreviousClause);
     }
     
     [Test]
-    public void AddMoreOrderings()
+    public void AddOrderings()
     {
-      OrderingClause ordering1 = ExpressionHelper.CreateOrderingClause ();
-      OrderingClause ordering2 = ExpressionHelper.CreateOrderingClause ();
-      var orderBy = new OrderByClause (ordering1);
+      var previousClause = ExpressionHelper.CreateClause ();
+      var orderBy = new OrderByClause (previousClause);
+
+      Ordering ordering1 = ExpressionHelper.CreateOrdering ();
+      Ordering ordering2 = ExpressionHelper.CreateOrdering ();
+
+      orderBy.Add (ordering1);
       orderBy.Add (ordering2);
 
       Assert.That (orderBy.OrderingList, Is.EqualTo (new object[] { ordering1, ordering2 }));
       Assert.AreEqual (2, orderBy.OrderingList.Count);
 
       Assert.IsNotNull (orderBy.PreviousClause);
-      Assert.AreSame (orderBy.OrderingList[0].PreviousClause, orderBy.PreviousClause);
-    }
-
-    [Test]
-    public void OrderByClause_ImplementsIQueryElement()
-    {
-      OrderByClause orderByClause = ExpressionHelper.CreateOrderByClause();
-      Assert.IsInstanceOfType (typeof (IQueryElement), orderByClause);
     }
 
     [Test]
@@ -128,22 +124,19 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
     public void Clone_Orderings ()
     {
       var orderByClause = ExpressionHelper.CreateOrderByClause ();
-      var ordering = ExpressionHelper.CreateOrderingClause();
+      var ordering = ExpressionHelper.CreateOrdering();
       orderByClause.Add (ordering);
 
       var newPreviousClause = ExpressionHelper.CreateMainFromClause ();
       var clone = orderByClause.Clone (newPreviousClause);
 
-      Assert.That (clone.OrderingList.Count, Is.EqualTo (2));
+      Assert.That (clone.OrderingList.Count, Is.EqualTo (1));
 
       Assert.That (clone.OrderingList[0], Is.Not.SameAs (orderByClause.OrderingList[0]));
       Assert.That (clone.OrderingList[0].Expression, Is.SameAs (orderByClause.OrderingList[0].Expression));
-      Assert.That (clone.OrderingList[0].OrderDirection, Is.EqualTo (orderByClause.OrderingList[0].OrderDirection));
+      Assert.That (clone.OrderingList[0].OrderingDirection, Is.EqualTo (orderByClause.OrderingList[0].OrderingDirection));
       Assert.That (clone.OrderingList[0].QueryModel, Is.Null);
-      Assert.That (clone.OrderingList[0].PreviousClause, Is.SameAs (newPreviousClause));
-
-      Assert.That (clone.OrderingList[1], Is.Not.SameAs (ordering));
-      Assert.That (clone.OrderingList[1].PreviousClause, Is.SameAs (clone.OrderingList[0]));
+      Assert.That (clone.OrderingList[0].OrderByClause, Is.SameAs (clone));
     }
   }
 }

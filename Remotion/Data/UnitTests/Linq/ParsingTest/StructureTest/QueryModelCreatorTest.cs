@@ -17,7 +17,6 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Collections;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
@@ -68,7 +67,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     {
       IQueryable<Tuple<Student, string, string, string>> query =
           SelectTestQueryGenerator.CreateSimpleQueryWithSpecialProjection (ExpressionHelper.CreateQuerySource());
-      QueryModelCreator modelCreator = new QueryModelCreator (query.Expression, _result);
+      var modelCreator = new QueryModelCreator (query.Expression, _result);
 
       _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression ());
       QueryModel model = modelCreator.CreateQueryModel ();
@@ -97,7 +96,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
       QueryModel model = _modelCreator.CreateQueryModel();
       Assert.AreEqual (0, model.BodyClauses.Count);
 
-      SelectClause selectClause = model.SelectOrGroupClause as SelectClause;
+      var selectClause = model.SelectOrGroupClause as SelectClause;
       Assert.IsNotNull (selectClause);
       Assert.AreSame (_result.ProjectionExpressions[0], selectClause.ProjectionExpression);
     }
@@ -118,8 +117,8 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
       _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression());
       _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression());
 
-      FromExpressionData fromExpression1 = new FromExpressionData (ExpressionHelper.CreateLambdaExpression (), Expression.Parameter (typeof (int), "p"));
-      FromExpressionData fromExpression2 = new FromExpressionData (ExpressionHelper.CreateLambdaExpression (), Expression.Parameter (typeof (int), "j"));
+      var fromExpression1 = new FromExpressionData (ExpressionHelper.CreateLambdaExpression (), Expression.Parameter (typeof (int), "p"));
+      var fromExpression2 = new FromExpressionData (ExpressionHelper.CreateLambdaExpression (), Expression.Parameter (typeof (int), "j"));
 
       _result.AddBodyExpression (fromExpression1);
       _result.AddBodyExpression (fromExpression2);
@@ -128,13 +127,13 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
       
       Assert.AreEqual (2, model.BodyClauses.Count);
 
-      AdditionalFromClause additionalFromClause1 = model.BodyClauses.First() as AdditionalFromClause;
+      var additionalFromClause1 = model.BodyClauses.First() as AdditionalFromClause;
       Assert.IsNotNull (additionalFromClause1);
       Assert.AreSame (fromExpression1.TypedExpression, additionalFromClause1.FromExpression);
       Assert.AreSame (fromExpression1.Identifier, additionalFromClause1.Identifier);
       Assert.AreSame (_result.ProjectionExpressions[0], additionalFromClause1.ProjectionExpression);
 
-      AdditionalFromClause additionalFromClause2 = model.BodyClauses.Last () as AdditionalFromClause;
+      var additionalFromClause2 = model.BodyClauses.Last () as AdditionalFromClause;
       Assert.IsNotNull (additionalFromClause2);
       Assert.AreSame (fromExpression2.TypedExpression, additionalFromClause2.FromExpression);
       Assert.AreSame (fromExpression2.Identifier, additionalFromClause2.Identifier);
@@ -148,8 +147,8 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
 
       IQueryable<Student> subQuery = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource());
       QueryModel subQueryModel = ExpressionHelper.ParseQuery (subQuery);
-      SubQueryExpression subQueryExpression = new SubQueryExpression (subQueryModel);
-      FromExpressionData fromExpression1 = new FromExpressionData (Expression.Lambda (subQueryExpression, Expression.Parameter (typeof (int), "p")),
+      var subQueryExpression = new SubQueryExpression (subQueryModel);
+      var fromExpression1 = new FromExpressionData (Expression.Lambda (subQueryExpression, Expression.Parameter (typeof (int), "p")),
           Expression.Parameter (typeof (int), "p"));
 
       _result.AddBodyExpression (fromExpression1);
@@ -158,7 +157,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
 
       Assert.AreEqual (1, model.BodyClauses.Count);
 
-      SubQueryFromClause subQueryFromClause1 = model.BodyClauses[0] as SubQueryFromClause;
+      var subQueryFromClause1 = model.BodyClauses[0] as SubQueryFromClause;
       Assert.IsNotNull (subQueryFromClause1);
       Assert.AreSame (subQueryModel, subQueryFromClause1.SubQueryModel);
       Assert.AreSame (fromExpression1.Identifier, subQueryFromClause1.Identifier);
@@ -172,7 +171,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
 
       var bodyExpression = Expression.MakeMemberAccess (Expression.Constant ("test"), typeof (string).GetProperty ("Length"));
       var fromExpression = Expression.Lambda (bodyExpression);
-      FromExpressionData fromExpression2 = new FromExpressionData (fromExpression, Expression.Parameter (typeof (int), "j"));
+      var fromExpression2 = new FromExpressionData (fromExpression, Expression.Parameter (typeof (int), "j"));
 
       _result.AddBodyExpression (fromExpression2);
 
@@ -180,7 +179,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
 
       Assert.AreEqual (1, model.BodyClauses.Count);
 
-      MemberFromClause memberFromClause = model.BodyClauses.Last () as MemberFromClause;
+      var memberFromClause = model.BodyClauses.Last () as MemberFromClause;
       Assert.IsNotNull (memberFromClause);
       Assert.AreSame (fromExpression2.TypedExpression, memberFromClause.FromExpression);
       Assert.AreSame (fromExpression2.Identifier, memberFromClause.Identifier);
@@ -193,7 +192,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
       _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression());
       _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression());
 
-      FromExpressionData fromExpressionData = new FromExpressionData (ExpressionHelper.CreateLambdaExpression (), Expression.Parameter (typeof (int), "p"));
+      var fromExpressionData = new FromExpressionData (ExpressionHelper.CreateLambdaExpression (), Expression.Parameter (typeof (int), "p"));
 
       _result.AddBodyExpression (fromExpressionData);
 
@@ -201,7 +200,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
       
       Assert.AreEqual (1, model.BodyClauses.Count);
 
-      SelectClause selectClause = model.SelectOrGroupClause as SelectClause;
+      var selectClause = model.SelectOrGroupClause as SelectClause;
       Assert.IsNotNull (selectClause);
       Assert.AreSame (_result.ProjectionExpressions[1], selectClause.ProjectionExpression);
     }
@@ -211,7 +210,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     {
       _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression());
 
-      WhereExpressionData whereExpressionData = new WhereExpressionData (ExpressionHelper.CreateLambdaExpression());
+      var whereExpressionData = new WhereExpressionData (ExpressionHelper.CreateLambdaExpression());
 
       _result.AddBodyExpression (whereExpressionData);
 
@@ -219,7 +218,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
 
       Assert.AreEqual (1, model.BodyClauses.Count);
 
-      WhereClause whereClause = model.BodyClauses.First() as WhereClause;
+      var whereClause = model.BodyClauses.First() as WhereClause;
       Assert.IsNotNull (whereClause);
       Assert.AreSame (whereExpressionData.TypedExpression, whereClause.BoolExpression);
     }
@@ -230,7 +229,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
       _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression ());
 
       ParameterExpression identifier = Expression.Parameter (typeof (string), "x");
-      LetExpressionData letExpressionData = new LetExpressionData (identifier,ExpressionHelper.CreateLambdaExpression());
+      var letExpressionData = new LetExpressionData (identifier,ExpressionHelper.CreateLambdaExpression());
 
       _result.AddBodyExpression (letExpressionData);
 
@@ -238,7 +237,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
 
       Assert.AreEqual (1, model.BodyClauses.Count);
 
-      LetClause letClause = model.BodyClauses.First () as LetClause;
+      var letClause = model.BodyClauses.First () as LetClause;
       Assert.IsNotNull (letClause);
       Assert.AreSame (letExpressionData.TypedExpression, letClause.Expression);
     }
@@ -248,7 +247,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     {
       _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression());
 
-      OrderExpressionData orderExpressionData = new OrderExpressionData (true, OrderDirection.Asc, ExpressionHelper.CreateLambdaExpression());
+      var orderExpressionData = new OrderExpressionData (true, OrderingDirection.Asc, ExpressionHelper.CreateLambdaExpression());
 
       _result.AddBodyExpression (orderExpressionData);
 
@@ -256,12 +255,13 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
       
       Assert.AreEqual (1, model.BodyClauses.Count);
 
-      OrderByClause orderByClause = model.BodyClauses.First() as OrderByClause;
+      var orderByClause = model.BodyClauses.First() as OrderByClause;
       Assert.IsNotNull (orderByClause);
       Assert.AreEqual (1, orderByClause.OrderingList.Count);
       Assert.AreSame (orderExpressionData.TypedExpression, orderByClause.OrderingList.First().Expression);
-      Assert.AreEqual (orderExpressionData.OrderDirection, orderByClause.OrderingList.First().OrderDirection);
-      Assert.AreSame (model.MainFromClause, orderByClause.OrderingList.First().PreviousClause);
+      Assert.AreEqual (orderExpressionData.OrderingDirection, orderByClause.OrderingList.First().OrderingDirection);
+      Assert.AreSame (model.MainFromClause, orderByClause.PreviousClause);
+      Assert.AreSame (orderByClause, orderByClause.OrderingList.First ().OrderByClause);
     }
 
     [Test]
@@ -269,9 +269,9 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     {
       _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression());
 
-      OrderExpressionData orderExpression1 = new OrderExpressionData (true, OrderDirection.Asc, ExpressionHelper.CreateLambdaExpression());
-      OrderExpressionData orderExpression2 = new OrderExpressionData (false, OrderDirection.Desc, ExpressionHelper.CreateLambdaExpression());
-      OrderExpressionData orderExpression3 = new OrderExpressionData (true, OrderDirection.Asc, ExpressionHelper.CreateLambdaExpression());
+      var orderExpression1 = new OrderExpressionData (true, OrderingDirection.Asc, ExpressionHelper.CreateLambdaExpression());
+      var orderExpression2 = new OrderExpressionData (false, OrderingDirection.Desc, ExpressionHelper.CreateLambdaExpression());
+      var orderExpression3 = new OrderExpressionData (true, OrderingDirection.Asc, ExpressionHelper.CreateLambdaExpression());
 
       _result.AddBodyExpression (orderExpression1);
       _result.AddBodyExpression (orderExpression2);
@@ -282,8 +282,8 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
       
       Assert.AreEqual (2, model.BodyClauses.Count);
 
-      OrderByClause orderByClause1 = model.BodyClauses.First() as OrderByClause;
-      OrderByClause orderByClause2 = model.BodyClauses.Last() as OrderByClause;
+      var orderByClause1 = model.BodyClauses.First() as OrderByClause;
+      var orderByClause2 = model.BodyClauses.Last() as OrderByClause;
 
       Assert.IsNotNull (orderByClause1);
       Assert.IsNotNull (orderByClause2);
@@ -292,14 +292,16 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
       Assert.AreEqual (1, orderByClause2.OrderingList.Count);
 
       Assert.AreSame (orderExpression1.TypedExpression, orderByClause1.OrderingList.First().Expression);
-      Assert.AreEqual (orderExpression1.OrderDirection, orderByClause1.OrderingList.First().OrderDirection);
-      Assert.AreSame (model.MainFromClause, orderByClause1.OrderingList.First().PreviousClause);
+      Assert.AreEqual (orderExpression1.OrderingDirection, orderByClause1.OrderingList.First().OrderingDirection);
+      Assert.AreSame (model.MainFromClause, orderByClause1.PreviousClause);
+      Assert.AreSame (orderByClause1, orderByClause1.OrderingList.First ().OrderByClause);
       Assert.AreSame (orderExpression2.TypedExpression, orderByClause1.OrderingList.Last().Expression);
-      Assert.AreEqual (orderExpression2.OrderDirection, orderByClause1.OrderingList.Last().OrderDirection);
-      Assert.AreSame (orderByClause1, orderByClause1.OrderingList.Last().PreviousClause);
+      Assert.AreEqual (orderExpression2.OrderingDirection, orderByClause1.OrderingList.Last().OrderingDirection);
+      Assert.AreSame (orderByClause1, orderByClause2.PreviousClause);
+      Assert.AreSame (orderByClause1, orderByClause1.OrderingList.Last ().OrderByClause);
       Assert.AreSame (orderExpression3.TypedExpression, orderByClause2.OrderingList.First().Expression);
-      Assert.AreEqual (orderExpression3.OrderDirection, orderByClause2.OrderingList.First().OrderDirection);
-      Assert.AreSame (orderByClause1, orderByClause2.OrderingList.First().PreviousClause);
+      Assert.AreEqual (orderExpression3.OrderingDirection, orderByClause2.OrderingList.First().OrderingDirection);
+      Assert.AreSame (orderByClause2, orderByClause2.OrderingList.First().OrderByClause);
     }
 
     [Test]
@@ -309,14 +311,14 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
       _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression());
       _result.AddProjectionExpression (ExpressionHelper.CreateLambdaExpression());
 
-      FromExpressionData fromExpression1 = new FromExpressionData (ExpressionHelper.CreateLambdaExpression(), Expression.Parameter (typeof (Student), "s1"));
-      FromExpressionData fromExpression2 = new FromExpressionData (ExpressionHelper.CreateLambdaExpression(), Expression.Parameter (typeof (Student), "s2"));
-      WhereExpressionData whereExpression1 = new WhereExpressionData (ExpressionHelper.CreateLambdaExpression());
-      WhereExpressionData whereExpression2 = new WhereExpressionData (ExpressionHelper.CreateLambdaExpression());
+      var fromExpression1 = new FromExpressionData (ExpressionHelper.CreateLambdaExpression(), Expression.Parameter (typeof (Student), "s1"));
+      var fromExpression2 = new FromExpressionData (ExpressionHelper.CreateLambdaExpression(), Expression.Parameter (typeof (Student), "s2"));
+      var whereExpression1 = new WhereExpressionData (ExpressionHelper.CreateLambdaExpression());
+      var whereExpression2 = new WhereExpressionData (ExpressionHelper.CreateLambdaExpression());
 
-      OrderExpressionData orderExpression1 = new OrderExpressionData (true, OrderDirection.Asc, ExpressionHelper.CreateLambdaExpression());
-      OrderExpressionData orderExpression2 = new OrderExpressionData (false, OrderDirection.Desc, ExpressionHelper.CreateLambdaExpression());
-      OrderExpressionData orderExpression3 = new OrderExpressionData (true, OrderDirection.Asc, ExpressionHelper.CreateLambdaExpression());
+      var orderExpression1 = new OrderExpressionData (true, OrderingDirection.Asc, ExpressionHelper.CreateLambdaExpression());
+      var orderExpression2 = new OrderExpressionData (false, OrderingDirection.Desc, ExpressionHelper.CreateLambdaExpression());
+      var orderExpression3 = new OrderExpressionData (true, OrderingDirection.Asc, ExpressionHelper.CreateLambdaExpression());
 
       _result.AddBodyExpression (fromExpression1);
       _result.AddBodyExpression (fromExpression2);
@@ -329,48 +331,49 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
 
       QueryModel model = _modelCreator.CreateQueryModel ();
 
-      OrderByClause orderByClause1 = model.BodyClauses.Skip (4).First() as OrderByClause;
-      OrderByClause orderByClause2 = model.BodyClauses.Skip (5).First () as OrderByClause;
+      var orderByClause1 = model.BodyClauses.Skip (4).First() as OrderByClause;
+      var orderByClause2 = model.BodyClauses.Skip (5).First () as OrderByClause;
 
-      AdditionalFromClause fromClause1 = model.BodyClauses.First () as AdditionalFromClause;
+      var fromClause1 = model.BodyClauses.First () as AdditionalFromClause;
       Assert.IsNotNull (fromClause1);
       Assert.AreSame (fromExpression1.Identifier, fromClause1.Identifier);
       Assert.AreSame (fromExpression1.TypedExpression, fromClause1.FromExpression);
       Assert.AreSame (_result.ProjectionExpressions[0], fromClause1.ProjectionExpression);
       Assert.AreSame (model.MainFromClause, fromClause1.PreviousClause);
 
-      AdditionalFromClause fromClause2 = model.BodyClauses.Skip (1).First () as AdditionalFromClause;
+      var fromClause2 = model.BodyClauses.Skip (1).First () as AdditionalFromClause;
       Assert.IsNotNull (fromClause2);
       Assert.AreSame (fromExpression2.Identifier, fromClause2.Identifier);
       Assert.AreSame (fromExpression2.TypedExpression, fromClause2.FromExpression);
       Assert.AreSame (_result.ProjectionExpressions[1], fromClause2.ProjectionExpression);
       Assert.AreSame (fromClause1, fromClause2.PreviousClause);
 
-      WhereClause whereClause1 = model.BodyClauses.Skip (2).First () as WhereClause;
+      var whereClause1 = model.BodyClauses.Skip (2).First () as WhereClause;
       Assert.IsNotNull (whereClause1);
       Assert.AreSame (whereExpression1.TypedExpression, whereClause1.BoolExpression);
       Assert.AreSame (fromClause2, whereClause1.PreviousClause);
 
-      WhereClause whereClause2 = model.BodyClauses.Skip (3).First () as WhereClause;
+      var whereClause2 = model.BodyClauses.Skip (3).First () as WhereClause;
       Assert.IsNotNull (whereClause2);
       Assert.AreSame (whereExpression2.TypedExpression, whereClause2.BoolExpression);
       Assert.AreSame (whereClause1, whereClause2.PreviousClause);
 
       Assert.IsNotNull (orderByClause1);
       Assert.AreSame (orderExpression1.TypedExpression, orderByClause1.OrderingList.First().Expression);
-      Assert.AreSame (whereClause2, orderByClause1.OrderingList.First().PreviousClause);
+      Assert.AreSame (whereClause2, orderByClause1.PreviousClause);
+      Assert.AreSame (orderByClause1, orderByClause1.OrderingList.First ().OrderByClause);
       Assert.AreSame (whereClause2, orderByClause1.PreviousClause);
 
       Assert.AreSame (orderExpression2.TypedExpression, orderByClause1.OrderingList.Last().Expression);
-      Assert.AreSame (orderByClause1, orderByClause1.OrderingList.Last().PreviousClause);
+      Assert.AreSame (orderByClause1, orderByClause1.OrderingList.Last().OrderByClause);
 
 
       Assert.IsNotNull (orderByClause2);
       Assert.AreSame (orderExpression3.TypedExpression, orderByClause2.OrderingList.First().Expression);
-      Assert.AreSame (orderByClause1, orderByClause2.OrderingList.First().PreviousClause);
+      Assert.AreSame (orderByClause2, orderByClause2.OrderingList.First ().OrderByClause);
       Assert.AreSame (orderByClause1, orderByClause2.PreviousClause);
 
-      SelectClause selectClause = model.SelectOrGroupClause as SelectClause;
+      var selectClause = model.SelectOrGroupClause as SelectClause;
       Assert.IsNotNull (selectClause);
       Assert.AreSame (_result.ProjectionExpressions[2], selectClause.ProjectionExpression);
       Assert.AreSame (orderByClause2, selectClause.PreviousClause);

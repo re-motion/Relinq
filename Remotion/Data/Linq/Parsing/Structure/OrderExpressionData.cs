@@ -22,24 +22,24 @@ namespace Remotion.Data.Linq.Parsing.Structure
 {
   public class OrderExpressionData : BodyExpressionDataBase<LambdaExpression>
   {
-    public OrderExpressionData (bool firstOrderBy, OrderDirection orderDirection, LambdaExpression expression)
+    public OrderExpressionData (bool firstOrderBy, OrderingDirection orderingDirection, LambdaExpression expression)
         : base (expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
       FirstOrderBy = firstOrderBy;
-      OrderDirection = orderDirection;
+      OrderingDirection = orderingDirection;
     }
 
     public bool FirstOrderBy { get; private set; }
-    public OrderDirection OrderDirection { get; private set; }
+    public OrderingDirection OrderingDirection { get; private set; }
 
     public override string ToString ()
     {
       if (FirstOrderBy)
-        return string.Format ("orderby {0} {1}", TypedExpression, OrderDirection);
+        return string.Format ("orderby {0} {1}", TypedExpression, OrderingDirection);
       else
-        return string.Format ("thenby {0} {1}", TypedExpression, OrderDirection);
+        return string.Format ("thenby {0} {1}", TypedExpression, OrderingDirection);
     }
   }
 }

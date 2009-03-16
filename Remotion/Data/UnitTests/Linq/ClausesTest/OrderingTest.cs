@@ -20,65 +20,53 @@ using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Rhino.Mocks;
 using Remotion.Data.Linq.Clauses;
-using OrderDirection=Remotion.Data.Linq.Clauses.OrderDirection;
 
 namespace Remotion.Data.UnitTests.Linq.ClausesTest
 {
   [TestFixture]
-  public class OrderingClauseTest
+  public class OrderingTest
   {
-   
     [Test]
     public void InitializeWithExpressionAndOrderDirectionAsc()
     {
       LambdaExpression expression = ExpressionHelper.CreateLambdaExpression();
-      const OrderDirection directionAsc = OrderDirection.Asc;
+      const OrderingDirection directionAsc = OrderingDirection.Asc;
 
-      IClause clause = ExpressionHelper.CreateClause();
-      
-      var ordering = new OrderingClause(clause, expression,directionAsc);
+      var clause = ExpressionHelper.CreateOrderByClause();
+      var ordering = new Ordering(clause, expression,directionAsc);
 
-
-      Assert.AreSame (clause, ordering.PreviousClause);
+      Assert.AreSame (clause, ordering.OrderByClause);
       Assert.AreSame (expression, ordering.Expression);
-      Assert.AreEqual (directionAsc, ordering.OrderDirection);
+      Assert.AreEqual (directionAsc, ordering.OrderingDirection);
     }
 
     [Test]
     public void InitializeWithExpressionAndOrderDirectionDesc ()
     {
       LambdaExpression expression = ExpressionHelper.CreateLambdaExpression ();
-      const OrderDirection directionAsc = OrderDirection.Asc;
+      const OrderingDirection directionAsc = OrderingDirection.Asc;
 
-      IClause clause = ExpressionHelper.CreateClause ();
+      var clause = ExpressionHelper.CreateOrderByClause ();
+      var ordering = new Ordering (clause,expression, directionAsc);
 
-      var ordering = new OrderingClause (clause,expression, directionAsc);
-
-      Assert.AreSame (clause, ordering.PreviousClause);
+      Assert.AreSame (clause, ordering.OrderByClause);
       Assert.AreSame (expression, ordering.Expression);
-      Assert.AreEqual (directionAsc, ordering.OrderDirection);
-    }
-
-    [Test]
-    public void OrderingClause_ImplementsIQueryElement()
-    {
-      OrderingClause orderingClause = ExpressionHelper.CreateOrderingClause();
-      Assert.IsInstanceOfType (typeof (IQueryElement), orderingClause);
+      Assert.AreEqual (directionAsc, ordering.OrderingDirection);
     }
 
     [Test]
     public void Accept()
     {
-      OrderingClause orderingClause = ExpressionHelper.CreateOrderingClause ();
+      Ordering ordering = ExpressionHelper.CreateOrdering ();
 
       var repository = new MockRepository();
       var visitorMock = repository.StrictMock<IQueryVisitor>();
 
-      visitorMock.VisitOrderingClause (orderingClause);
+      visitorMock.VisitOrdering (ordering);
 
       repository.ReplayAll();
 
-      orderingClause.Accept (visitorMock);
+      ordering.Accept (visitorMock);
 
       repository.VerifyAll();
     }
@@ -86,50 +74,50 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
     [Test]
     public void QueryModelAtInitialization ()
     {
-      OrderingClause orderingClause = ExpressionHelper.CreateOrderingClause ();
-      Assert.IsNull (orderingClause.QueryModel);
+      Ordering ordering = ExpressionHelper.CreateOrdering ();
+      Assert.IsNull (ordering.QueryModel);
     }
 
     [Test]
     public void SetQueryModel ()
     {
-      OrderingClause orderingClause = ExpressionHelper.CreateOrderingClause ();
+      Ordering ordering = ExpressionHelper.CreateOrdering ();
       QueryModel model = ExpressionHelper.CreateQueryModel ();
-      orderingClause.SetQueryModel (model);
-      Assert.IsNotNull (orderingClause.QueryModel);
+      ordering.SetQueryModel (model);
+      Assert.IsNotNull (ordering.QueryModel);
     }
 
     [Test]
     [ExpectedException (typeof (ArgumentNullException))]
     public void SetQueryModelWithNull_Exception ()
     {
-      OrderingClause orderingClause = ExpressionHelper.CreateOrderingClause ();
-      orderingClause.SetQueryModel (null);
+      Ordering ordering = ExpressionHelper.CreateOrdering ();
+      ordering.SetQueryModel (null);
     }
 
     [Test]
     [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "QueryModel is already set")]
     public void SetQueryModelTwice_Exception ()
     {
-      OrderingClause orderingClause = ExpressionHelper.CreateOrderingClause ();
+      Ordering ordering = ExpressionHelper.CreateOrdering ();
       QueryModel model = ExpressionHelper.CreateQueryModel ();
-      orderingClause.SetQueryModel (model);
-      orderingClause.SetQueryModel (model);
+      ordering.SetQueryModel (model);
+      ordering.SetQueryModel (model);
     }
 
     [Test]
     public void Clone ()
     {
-      var orderingClause = ExpressionHelper.CreateOrderingClause ();
-      var newPreviousClause = ExpressionHelper.CreateMainFromClause();
-      var clone = orderingClause.Clone (newPreviousClause);
+      var orderingClause = ExpressionHelper.CreateOrdering ();
+      var newOrderByClause = ExpressionHelper.CreateOrderByClause();
+      var clone = orderingClause.Clone (newOrderByClause);
 
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (orderingClause));
       Assert.That (clone.Expression, Is.SameAs (orderingClause.Expression));
-      Assert.That (clone.OrderDirection, Is.EqualTo (orderingClause.OrderDirection));
+      Assert.That (clone.OrderingDirection, Is.EqualTo (orderingClause.OrderingDirection));
       Assert.That (clone.QueryModel, Is.Null);
-      Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
+      Assert.That (clone.OrderByClause, Is.SameAs (newOrderByClause));
     }
   }
 }

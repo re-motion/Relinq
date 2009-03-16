@@ -43,21 +43,21 @@ namespace Remotion.Data.Linq.Parsing.Structure
           "OrderBy", "OrderByDescending", "ThenBy", "ThenByDescending"))
       {
         case "OrderBy":
-          ParseOrderBy (resultCollector, orderExpression, OrderDirection.Asc, true);
+          ParseOrderBy (resultCollector, orderExpression, OrderingDirection.Asc, true);
           break;
         case "ThenBy":
-          ParseOrderBy (resultCollector, orderExpression, OrderDirection.Asc, false);
+          ParseOrderBy (resultCollector, orderExpression, OrderingDirection.Asc, false);
           break;
         case "OrderByDescending":
-          ParseOrderBy (resultCollector, orderExpression, OrderDirection.Desc, true);
+          ParseOrderBy (resultCollector, orderExpression, OrderingDirection.Desc, true);
           break;
         case "ThenByDescending":
-          ParseOrderBy (resultCollector, orderExpression, OrderDirection.Desc, false);
+          ParseOrderBy (resultCollector, orderExpression, OrderingDirection.Desc, false);
           break;
       }
     }
 
-    private void ParseOrderBy (ParseResultCollector resultCollector, MethodCallExpression sourceExpression, OrderDirection direction, bool orderBy)
+    private void ParseOrderBy (ParseResultCollector resultCollector, MethodCallExpression sourceExpression, OrderingDirection direction, bool orderBy)
     {
       UnaryExpression unaryExpression = ParserUtility.GetTypedExpression<UnaryExpression> (sourceExpression.Arguments[1],
           "second argument of OrderBy expression", resultCollector.ExpressionTreeRoot);

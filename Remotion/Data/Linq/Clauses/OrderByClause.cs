@@ -26,38 +26,35 @@ namespace Remotion.Data.Linq.Clauses
   /// </summary>
   public class OrderByClause : IBodyClause
   {
-    private readonly List<OrderingClause> _orderingList = new List<OrderingClause>();
+    private readonly List<Ordering> _orderings = new List<Ordering>();
     
     /// <summary>
     /// Initialize a new instance of <see cref="OrderByClause"/>
     /// </summary>
-    /// <param name="ordering"><see cref="OrderingClause"/></param>
-    public OrderByClause (OrderingClause ordering)
+    /// <param name="previousClause">The previous clause of type <see cref="IClause"/> in the <see cref="QueryModel"/>.</param>
+    public OrderByClause (IClause previousClause)
     {
-      ArgumentUtility.CheckNotNull ("ordering", ordering);
-      _orderingList.Add (ordering);
+      ArgumentUtility.CheckNotNull ("previousClause", previousClause);
+      PreviousClause = previousClause;
     }
 
     public QueryModel QueryModel { get; private set; }
 
     /// <summary>
-    /// A collection of <see cref="OrderingClause"/>
+    /// A collection of <see cref="Ordering"/>
     /// </summary>
-    public ReadOnlyCollection<OrderingClause> OrderingList
+    public ReadOnlyCollection<Ordering> OrderingList
     {
-      get { return new ReadOnlyCollection<OrderingClause>(_orderingList); }
+      get { return new ReadOnlyCollection<Ordering>(_orderings); }
     }
 
-    public void Add(OrderingClause ordering)
+    public void Add(Ordering ordering)
     {
       ArgumentUtility.CheckNotNull ("ordering", ordering);
-      _orderingList.Add (ordering);
+      _orderings.Add (ordering);
     }
 
-    public IClause PreviousClause
-    {
-      get { return _orderingList[0].PreviousClause; }
-    }
+    public IClause PreviousClause { get; private set; }
 
     public virtual void Accept (IQueryVisitor visitor)
     {
@@ -76,14 +73,14 @@ namespace Remotion.Data.Linq.Clauses
 
     public OrderByClause Clone (IClause newPreviousClause)
     {
-      var firstOrderingClone = OrderingList[0].Clone (newPreviousClause);
-      var clone = new OrderByClause (firstOrderingClone);
+      var clone = new OrderByClause (newPreviousClause);
 
-      for (int i = 1; i < OrderingList.Count; ++i)
+      foreach (var ordering in _orderings)
       {
-        var orderingClone = OrderingList[i].Clone (clone.OrderingList[i - 1]);
+        var orderingClone = ordering.Clone (clone);
         clone.Add (orderingClone);
       }
+
       return clone;
     }
 

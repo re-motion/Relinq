@@ -148,24 +148,20 @@ namespace Remotion.Data.Linq.Parsing.Structure
       if (orderExpression == null)
         return null;
 
-      var orderingClause = new OrderingClause (_previousClause, orderExpression.TypedExpression, orderExpression.OrderDirection);
       if (orderExpression.FirstOrderBy)
       {
-        var orderByClause = new OrderByClause (orderingClause);
+        var orderByClause = new OrderByClause (_previousClause);
         _previousOrderByClause = orderByClause;
-        return orderByClause;
       }
-      else
+      else if (_previousOrderByClause == null)
       {
-        if (_previousOrderByClause == null)
-          throw ParserUtility.CreateParserException ("OrderBy or OrderByDescending", orderExpression, "beginning of an OrderBy clause",
-              _expressionTreeRoot);
-        else
-        {
-          _previousOrderByClause.Add (orderingClause);
-          return _previousOrderByClause;
-        }
+        throw ParserUtility.CreateParserException (
+            "OrderBy or OrderByDescending", orderExpression, "beginning of an OrderBy clause", _expressionTreeRoot);
       }
+
+      var ordering = new Ordering (_previousOrderByClause, orderExpression.TypedExpression, orderExpression.OrderingDirection);
+      _previousOrderByClause.Add (ordering);
+      return _previousOrderByClause;
     }
 
     private LetClause CreateLetClause (BodyExpressionDataBase expression)

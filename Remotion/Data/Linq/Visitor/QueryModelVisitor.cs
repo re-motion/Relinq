@@ -189,32 +189,32 @@ namespace Remotion.Data.Linq.Visitor
       _sb.AppendFormat ("PreviousClause: {0}", orderByClause.PreviousClause);
       _sb.Append ("\n");
       //_sb.Append ("orderby ");
-      foreach (OrderingClause oC in orderByClause.OrderingList)
+      foreach (Ordering oC in orderByClause.OrderingList)
       {
         oC.Accept (this);
       }
     }
 
-    public void VisitOrderingClause (OrderingClause orderingClause)
+    public void VisitOrdering (Ordering ordering)
     {
-      ArgumentUtility.CheckNotNull ("orderingClause", orderingClause);
+      ArgumentUtility.CheckNotNull ("ordering", ordering);
 
       _sb.Append ("\n");
-      _sb.Append ("---OrderingClause---");
+      _sb.Append ("---Ordering---");
       _sb.Append ("\n");
-      _sb.AppendFormat ("PreviousClause: {0}", orderingClause.PreviousClause);
+      _sb.AppendFormat ("OrderByClause: {0}", ordering.OrderByClause);
       _sb.Append ("\n");
-      _sb.AppendFormat ("Expression: {0}", orderingClause.Expression);
+      _sb.AppendFormat ("Expression: {0}", ordering.Expression);
       _sb.Append ("\n");
-      _sb.AppendFormat ("OrderDirection: {0}", orderingClause.OrderDirection);
+      _sb.AppendFormat ("OrderingDirection: {0}", ordering.OrderingDirection);
 
       
-      //switch (orderingClause.OrderDirection)
+      //switch (orderingClause.OrderingDirection)
       //{
-      //  case OrderDirection.Asc:
+      //  case OrderingDirection.Asc:
       //    _sb.AppendFormat ("{0} ascending ", orderingClause.Expression);
       //    break;
-      //  case OrderDirection.Desc:
+      //  case OrderingDirection.Desc:
       //    _sb.AppendFormat ("{0} descending ", orderingClause.Expression);
       //    break;
       //}

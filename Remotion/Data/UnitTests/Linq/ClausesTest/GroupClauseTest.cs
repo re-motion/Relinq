@@ -49,13 +49,6 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
     }
 
     [Test]
-    public void GroupClause_ImplementIQueryElement()
-    {
-      GroupClause groupClause = ExpressionHelper.CreateGroupClause ();
-      Assert.IsInstanceOfType (typeof (IQueryElement), groupClause);
-    }
-
-    [Test]
     public void Accept()
     {
       GroupClause groupClause = ExpressionHelper.CreateGroupClause ();

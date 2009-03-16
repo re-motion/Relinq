@@ -66,12 +66,6 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
     }
 
     [Test]
-    public void FromClause_ImplementsIQueryElement()
-    {
-      Assert.IsTrue (typeof (IQueryElement).IsAssignableFrom (typeof (FromClauseBase)));
-    }
-
-    [Test]
     public void Resolve_Succeeds_MainFromClause ()
     {
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");

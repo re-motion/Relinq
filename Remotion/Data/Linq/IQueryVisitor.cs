@@ -28,7 +28,7 @@ namespace Remotion.Data.Linq
     void VisitLetClause (LetClause letClause);
     void VisitWhereClause (WhereClause whereClause);
     void VisitOrderByClause (OrderByClause orderByClause);
-    void VisitOrderingClause (OrderingClause orderingClause);
+    void VisitOrdering (Ordering ordering);
     void VisitSelectClause (SelectClause selectClause);
     void VisitGroupClause (GroupClause groupClause);
   }

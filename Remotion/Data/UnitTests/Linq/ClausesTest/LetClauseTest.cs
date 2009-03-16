@@ -53,13 +53,6 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
         
 
     [Test]
-    public void LetClause_ImplementsIQueryElement()
-    {
-      LetClause letClause = ExpressionHelper.CreateLetClause();
-      Assert.IsInstanceOfType (typeof (IQueryElement), letClause);
-    }
-
-    [Test]
     public void Accept ()
     {
       LetClause letClause = ExpressionHelper.CreateLetClause ();

@@ -30,7 +30,7 @@ namespace Remotion.Data.Linq
   /// The class implements an abstraction of the expression tree which is created when executing a linq query. 
   /// The different parts of a linq query are mapped to clauses.
   /// </summary>
-  public class QueryModel : IQueryElement, ICloneable
+  public class QueryModel : ICloneable
   {
     private readonly List<IBodyClause> _bodyClauses = new List<IBodyClause> ();
 

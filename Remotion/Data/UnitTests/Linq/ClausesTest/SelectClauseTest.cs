@@ -89,13 +89,6 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
     }
         
     [Test]
-    public void SelectClause_ImplementIQueryElement()
-    {
-      SelectClause selectClause = ExpressionHelper.CreateSelectClause();
-      Assert.IsInstanceOfType (typeof (IQueryElement), selectClause);
-    }
-
-    [Test]
     public void Accept()
     {
       SelectClause selectClause = ExpressionHelper.CreateSelectClause();

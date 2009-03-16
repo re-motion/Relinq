@@ -32,7 +32,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.OrderExpression
     public static void AssertOrderExpressionsEqual (OrderExpressionData one, OrderExpressionData two)
     {
       Assert.AreEqual (one.TypedExpression, two.TypedExpression);
-      Assert.AreEqual (one.OrderDirection, two.OrderDirection);
+      Assert.AreEqual (one.OrderingDirection, two.OrderingDirection);
       Assert.AreEqual (one.FirstOrderBy, two.FirstOrderBy);
     }
 
@@ -58,7 +58,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.OrderExpression
     {
       Assert.IsNotNull (_bodyOrderByHelper.OrderingExpressions);
       Assert.AreEqual (1, _bodyOrderByHelper.OrderingExpressions.Count);
-      AssertOrderExpressionsEqual (new OrderExpressionData (true, OrderDirection.Asc,
+      AssertOrderExpressionsEqual (new OrderExpressionData (true, OrderingDirection.Asc,
           (LambdaExpression) _navigator.Arguments[1].Operand.Expression), _bodyOrderByHelper.OrderingExpressions[0]);
     }
 

@@ -32,10 +32,10 @@ namespace Remotion.Data.Linq.Parsing.Details
       _resolver = new ClauseFieldResolver (databaseInfo, new OrderingFieldAccessPolicy());
     }
 
-    public OrderingField Parse (Expression expression, ParseContext parseContext, OrderDirection orderDirection)
+    public OrderingField Parse (Expression expression, ParseContext parseContext, OrderingDirection orderingDirection)
     {
       FieldDescriptor fieldDescriptor = parseContext.QueryModel.ResolveField (_resolver, expression, parseContext.JoinedTableContext);
-      OrderingField orderingField = new OrderingField (fieldDescriptor, orderDirection);
+      OrderingField orderingField = new OrderingField (fieldDescriptor, orderingDirection);
       return orderingField;
     }
   }

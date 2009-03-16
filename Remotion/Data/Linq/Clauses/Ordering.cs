@@ -19,36 +19,34 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses
 {
-  // TODO: Define whether OrderingClause should really be a clause; it's actually an element or part of OrderByClause, so maybe it should rather be
-  // named OrderingElement or OrderingSpecification. (And then, it should not implement IClause. Its PreviousClause should be 
-  // PreviousElement/Specification, and every element/specification should knows its OrderByClause.)
   /// <summary>
   /// Represents one expression of a order by in a linq query.
   /// </summary>
-  public class OrderingClause : IClause
+  public class Ordering
   {
     private readonly LambdaExpression _expression;
-    private readonly OrderDirection _orderDirection;
+    private readonly OrderingDirection _orderingDirection;
     
     /// <summary>
-    /// Initialize a new instance of <see cref="OrderingClause"/>
+    /// Initialize a new instance of <see cref="Ordering"/>
     /// </summary>
-    /// <param name="previousClause">The previous clause of type <see cref="IClause"/> in the <see cref="QueryModel"/>.</param>
+    /// <param name="orderByClause">The <see cref="OrderByClause"/> associated with this <see cref="Ordering"/>.</param>
     /// <param name="expression">The expression from one part of a order by in a linq query.</param>
     /// <param name="direction"></param>
-    public OrderingClause (IClause previousClause, LambdaExpression expression, OrderDirection direction)
+    public Ordering (OrderByClause orderByClause, LambdaExpression expression, OrderingDirection direction)
     {
+      ArgumentUtility.CheckNotNull ("orderByClause", orderByClause);
       ArgumentUtility.CheckNotNull ("expression", expression);
-      ArgumentUtility.CheckNotNull ("previousClause", previousClause);
+
       _expression = expression;
-      _orderDirection = direction;
-      PreviousClause = previousClause;
+      _orderingDirection = direction;
+      OrderByClause = orderByClause;
     }
 
     /// <summary>
     /// The previous clause of type <see cref="IClause"/> in the <see cref="QueryModel"/>.
     /// </summary>
-    public IClause PreviousClause { get; set; }
+    public OrderByClause OrderByClause { get; set; }
 
     /// <summary>
     /// The expression from one part of a order by in a linq query.
@@ -58,15 +56,15 @@ namespace Remotion.Data.Linq.Clauses
       get { return _expression; }
     }
 
-    public OrderDirection OrderDirection
+    public OrderingDirection OrderingDirection
     {
-      get { return _orderDirection; }
+      get { return _orderingDirection; }
     }
 
     public virtual void Accept (IQueryVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
-      visitor.VisitOrderingClause (this);
+      visitor.VisitOrdering (this);
     }
 
     public QueryModel QueryModel { get; private set; }
@@ -80,15 +78,9 @@ namespace Remotion.Data.Linq.Clauses
       QueryModel = model;
     }
 
-    public OrderingClause Clone (IClause newPreviousClause)
+    public Ordering Clone (OrderByClause newOrderByClause)
     {
-      return new OrderingClause (newPreviousClause, Expression, OrderDirection);
+      return new Ordering (newOrderByClause, Expression, OrderingDirection);
     }
-  }
-
-  public enum OrderDirection
-  {
-    Asc,
-    Desc
   }
 }

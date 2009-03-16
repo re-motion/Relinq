@@ -72,13 +72,6 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
     }
 
     [Test]
-    public void JoinClause_ImplementsIQueryElement()
-    {
-      JoinClause joinClause = ExpressionHelper.CreateJoinClause();
-      Assert.IsInstanceOfType (typeof (IQueryElement), joinClause);
-    }
-
-    [Test]
     public void Accept ()
     {
       JoinClause joinClause = ExpressionHelper.CreateJoinClause ();

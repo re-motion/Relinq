@@ -117,16 +117,15 @@ namespace Remotion.Data.UnitTests.Linq
     }
 
 
-    public static OrderingClause CreateOrderingClause()
+    public static Ordering CreateOrdering()
     {
       LambdaExpression expression = CreateLambdaExpression ();
-      return new OrderingClause (CreateClause (), expression, OrderDirection.Asc);
+      return new Ordering (CreateOrderByClause (), expression, OrderingDirection.Asc);
     }
 
     public static OrderByClause CreateOrderByClause()
     {
-      OrderingClause ordering = CreateOrderingClause ();
-      return new OrderByClause (ordering);
+      return new OrderByClause (CreateClause());
     }
 
     public static SelectClause CreateSelectClause ()
