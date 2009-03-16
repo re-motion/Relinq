@@ -49,7 +49,12 @@ namespace Remotion.Data.UnitTests.Linq
 
     public static ParameterExpression CreateParameterExpression ()
     {
-      return Expression.Parameter (typeof (int), "i");
+      return CreateParameterExpression ("i");
+    }
+
+    public static ParameterExpression CreateParameterExpression (string identifier)
+    {
+      return Expression.Parameter (typeof (int), identifier);
     }
 
     public static JoinClause CreateJoinClause ()
@@ -82,7 +87,7 @@ namespace Remotion.Data.UnitTests.Linq
 
     public static AdditionalFromClause CreateAdditionalFromClause ()
     {
-      ParameterExpression identifier = CreateParameterExpression ();
+      ParameterExpression identifier = CreateParameterExpression ("additional");
       return CreateAdditionalFromClause(identifier);
     }
 

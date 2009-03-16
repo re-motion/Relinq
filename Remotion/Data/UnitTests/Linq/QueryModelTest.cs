@@ -290,7 +290,6 @@ namespace Remotion.Data.UnitTests.Linq
     }
 
     [Test]
-    [Ignore ("TODO 1066")]
     public void Clone_HasCloneForMainFromClause ()
     {
       var clone = _queryModel.Clone ();
@@ -300,7 +299,6 @@ namespace Remotion.Data.UnitTests.Linq
     }
 
     [Test]
-    [Ignore ("TODO 1066")]
     public void Clone_HasCloneForSelectClause ()
     {
       var selectClause = (SelectClause) _queryModel.SelectOrGroupClause;
@@ -313,7 +311,6 @@ namespace Remotion.Data.UnitTests.Linq
     }
 
     [Test]
-    [Ignore ("TODO 1066")]
     public void Clone_HasClonesForBodyClauses ()
     {
       var additionalFromClause = ExpressionHelper.CreateAdditionalFromClause ();
@@ -326,7 +323,7 @@ namespace Remotion.Data.UnitTests.Linq
       var clonedWhereClause = (WhereClause) clone.BodyClauses[1];
 
       Assert.That (clonedAdditionalFromClause, Is.Not.SameAs (additionalFromClause));
-      Assert.That (clonedAdditionalFromClause.Identifier, Is.EqualTo (additionalFromClause));
+      Assert.That (clonedAdditionalFromClause.Identifier, Is.SameAs (additionalFromClause.Identifier));
       Assert.That (clonedAdditionalFromClause.QueryModel, Is.SameAs (clone));
       Assert.That (clonedAdditionalFromClause.PreviousClause, Is.SameAs (clone.MainFromClause));
 
@@ -334,38 +331,8 @@ namespace Remotion.Data.UnitTests.Linq
       Assert.That (clonedWhereClause.BoolExpression, Is.EqualTo (clonedWhereClause.BoolExpression));
       Assert.That (clonedWhereClause.QueryModel, Is.SameAs (clone));
       Assert.That (clonedWhereClause.PreviousClause, Is.SameAs (clonedAdditionalFromClause));
-    }
 
-    //[Test]
-    //public void GetLastFromClause_MainClause ()
-    //{
-    //  QueryModel queryModel = ExpressionHelper.CreateQueryModel();
-    //  IClause clause = queryModel.GetLastFromClause();
-    //  Assert.That (clause, Is.SameAs (queryModel.MainFromClause));
-    //}
-
-    //[Test]
-    //public void GetLastAdditionalFromClause ()
-    //{
-    //  QueryModel queryModel = ExpressionHelper.CreateQueryModel ();
-    //  IBodyClause additionalFromClause = ExpressionHelper.CreateAdditionalFromClause();
-    //  queryModel.AddBodyClause (additionalFromClause);
-    //  IClause clause = queryModel.GetLastFromClause ();
-    //  Assert.That (clause, Is.EqualTo(additionalFromClause));
-    //}
-
-    
-    private QueryModel CreateQueryModelForResolve ()
-    {
-      ParameterExpression s1 = Expression.Parameter (typeof (String), "s1");
-      ParameterExpression s2 = Expression.Parameter (typeof (String), "s2");
-      MainFromClause mainFromClause = ExpressionHelper.CreateMainFromClause(s1, ExpressionHelper.CreateQuerySource());
-      AdditionalFromClause additionalFromClause =
-          new AdditionalFromClause (mainFromClause, s2, ExpressionHelper.CreateLambdaExpression(), ExpressionHelper.CreateLambdaExpression());
-
-      QueryModel queryModel = ExpressionHelper.CreateQueryModel (mainFromClause);
-      queryModel.AddBodyClause (additionalFromClause);
-      return queryModel;
+      Assert.That (clone.SelectOrGroupClause.PreviousClause, Is.SameAs (clonedWhereClause));
     }
   }
 }

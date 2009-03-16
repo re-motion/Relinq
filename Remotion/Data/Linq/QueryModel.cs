@@ -208,7 +208,24 @@ namespace Remotion.Data.Linq
 
     public QueryModel Clone ()
     {
-      return new QueryModel (ResultType, MainFromClause, SelectOrGroupClause, _expressionTree);
+      var clonedMainFromClause = MainFromClause.Clone();
+      var clonedBodyClauses = new List<IBodyClause> ();
+
+      IClause previousClause = clonedMainFromClause;
+      foreach (var bodyClause in BodyClauses)
+      {
+        var clonedBodyClause = bodyClause.Clone (previousClause);
+        clonedBodyClauses.Add (clonedBodyClause);
+        previousClause = clonedBodyClause;
+      }
+
+      var clonedSelectOrGroupClause = SelectOrGroupClause.Clone (previousClause);
+      
+      var queryModel = new QueryModel (ResultType, clonedMainFromClause, clonedSelectOrGroupClause, _expressionTree);
+      foreach (var clonedBodyClause in clonedBodyClauses)
+        queryModel.AddBodyClause (clonedBodyClause);
+
+      return queryModel;
     }
 
     object ICloneable.Clone ()
