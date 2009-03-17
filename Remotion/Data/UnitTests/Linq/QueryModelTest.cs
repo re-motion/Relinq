@@ -323,12 +323,21 @@ namespace Remotion.Data.UnitTests.Linq
       Assert.That (clone.SelectOrGroupClause.PreviousClause, Is.SameAs (clonedWhereClause));
     }
 
-    //[Test]
-    //public void InvalidateExpressionTree ()
-    //{
-    //  var queryModel = ExpressionHelper.CreateQueryModel ();
-    //  queryModel.InvalidateExpressionTree (this, new EventArgs ());
-    //  Assert.That (queryModel.GetExpressionTree (), Is.Null);
-    //}
+    [Test]
+    public void InvalidateExpressionTree ()
+    {
+      var queryModel = ExpressionHelper.CreateQueryModel ();
+      queryModel.InvalidateExpressionTree (this, new EventArgs ());
+      Assert.That (queryModel.GetExpressionTree (), Is.InstanceOfType (typeof(ConstructedQueryExpression)));
+    }
+
+    [Test]
+    public void AddBodyClauses_SetsExpressionTreeToNull ()
+    {
+      var queryModel = ExpressionHelper.CreateQueryModel ();
+      var bodyClause = ExpressionHelper.CreateAdditionalFromClause ();
+      queryModel.AddBodyClause (bodyClause);
+      Assert.That (queryModel.GetExpressionTree(), Is.InstanceOfType (typeof (ConstructedQueryExpression)));
+    }
   }
 }

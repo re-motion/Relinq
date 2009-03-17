@@ -110,6 +110,8 @@ namespace Remotion.Data.Linq
 
       clause.SetQueryModel (this);
       _bodyClauses.Add (clause);
+
+      InvalidateExpressionTree (this, new EventArgs());
     }
 
     /// <summary>
