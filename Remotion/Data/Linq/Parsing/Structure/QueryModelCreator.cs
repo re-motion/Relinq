@@ -61,12 +61,12 @@ namespace Remotion.Data.Linq.Parsing.Structure
       }
 
       var selectClause = CreateSelectClause();
-      //var queryModel = new QueryModel (_expressionTreeRoot.Type, mainFromClause, (ISelectGroupClause) selectClause);
-      var queryModel = new QueryModel (_expressionTreeRoot.Type, mainFromClause, (ISelectGroupClause) selectClause);
-      queryModel.ExpressionTree = _expressionTreeRoot;
-
+      var queryModel = new QueryModel (_expressionTreeRoot.Type, mainFromClause, selectClause);
+      
       foreach (IBodyClause bodyClause in _bodyClauses)
         queryModel.AddBodyClause (bodyClause);
+
+      queryModel.SetExpressionTree (_expressionTreeRoot);
 
       return queryModel;
     }

@@ -44,8 +44,8 @@ namespace Remotion.Data.UnitTests.Linq
       _expressionTree = ExpressionHelper.CreateExpression ();
       _mainFromClause = ExpressionHelper.CreateMainFromClause ();
       _selectClause = ExpressionHelper.CreateSelectClause ();
-      _queryModel = new QueryModel (typeof (IQueryable<string>), _mainFromClause, (ISelectGroupClause) _selectClause);
-      _queryModel.ExpressionTree = _expressionTree;
+      _queryModel = new QueryModel (typeof (IQueryable<string>), _mainFromClause, _selectClause);
+      _queryModel.SetExpressionTree(_expressionTree);
     }
 
     [Test]

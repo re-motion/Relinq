@@ -94,16 +94,6 @@ namespace Remotion.Data.Linq
     }
 
     /// <summary>
-    /// ExpressionTree
-    /// </summary>
-    /// <value> Property to get and set expression tree root. Must be set to null if QueryModel is changed from outside.</value>
-    public Expression ExpressionTree
-    {
-      get { return _expressionTree; }
-      set { _expressionTree = value; }
-    }
-
-    /// <summary>
     /// Method to add <see cref="IBodyClause"/> to a <see cref="QueryModel"/>
     /// </summary>
     /// <param name="clause"><see cref="IBodyClause"/></param>
@@ -198,10 +188,20 @@ namespace Remotion.Data.Linq
     // TODO 1067: Changes made to the query model's clauses cause this Expression to become invalid.
     public Expression GetExpressionTree ()
     {
-      if (ExpressionTree == null)
+      if (_expressionTree == null)
         return new ConstructedQueryExpression (this);
       else
-        return ExpressionTree;
+        return _expressionTree;
+    }
+
+    /// <summary>
+    /// Set expression tree whenever the query model changes.
+    /// </summary>
+    /// <param name="expressionTree">The expression of a linq query.</param>
+    public void SetExpressionTree (Expression expressionTree)
+    {
+      if (_expressionTree == null)
+        _expressionTree = expressionTree;
     }
 
     public FieldDescriptor ResolveField (ClauseFieldResolver resolver, Expression fieldAccessExpression, JoinedTableContext joinedTableContext)
@@ -229,9 +229,11 @@ namespace Remotion.Data.Linq
       var clonedSelectOrGroupClause = SelectOrGroupClause.Clone (previousClause);
       
       var queryModel = new QueryModel (ResultType, clonedMainFromClause, clonedSelectOrGroupClause);
-      queryModel.ExpressionTree = ExpressionTree;
+      
       foreach (var clonedBodyClause in clonedBodyClauses)
         queryModel.AddBodyClause (clonedBodyClause);
+
+      queryModel.SetExpressionTree (_expressionTree);
 
       return queryModel;
     }
@@ -250,10 +252,10 @@ namespace Remotion.Data.Linq
         throw new ClauseLookupException (message);
       }
     }
-    
-    //public void InvalidateExpressionTree (object sender, EventArgs args)
-    //{
-    //  _expressionTree = null;
-    //}
+
+    public void InvalidateExpressionTree (object sender, EventArgs args)
+    {
+      _expressionTree = null;
+    }
   }
 }
