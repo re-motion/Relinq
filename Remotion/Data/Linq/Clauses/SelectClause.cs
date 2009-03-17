@@ -13,6 +13,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Remotion.Data.Linq.Clauses;
@@ -29,7 +30,6 @@ namespace Remotion.Data.Linq.Clauses
   {
     private readonly LambdaExpression _projectionExpression;
     private readonly List<ResultModifierClause> _resultModifierData = new List<ResultModifierClause>();
-    
     // TODO MG: Unfinished Refactoring: delete
     //delete after change
     public SelectClause (IClause previousClause, LambdaExpression projectionExpression, List<MethodCallExpression> resultModifiers)
@@ -95,7 +95,7 @@ namespace Remotion.Data.Linq.Clauses
     {
       var clone = new SelectClause (newPreviousClause, ProjectionExpression, ResultModifiers);
       IClause previousClause = clone;
-
+      
       foreach (var resultModifierData in ResultModifierData)
       {
         var resultModifierClauseClone = resultModifierData.Clone (previousClause, clone);

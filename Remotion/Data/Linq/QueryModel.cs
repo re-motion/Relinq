@@ -36,7 +36,7 @@ namespace Remotion.Data.Linq
 
     private readonly Dictionary<string, IResolveableClause> _clausesByIdentifier = new Dictionary<string, IResolveableClause> ();
 
-    private readonly Expression _expressionTree;
+    private Expression _expressionTree;
 
     /// <summary>
     /// Initializes a new instance of <see cref="QueryModel"/>
@@ -44,8 +44,7 @@ namespace Remotion.Data.Linq
     /// <param name="resultType">The type of the result of a executed linq.</param>
     /// <param name="mainFromClause">The first from in a linq query mapped to <see cref="MainFromClause"/></param>
     /// <param name="selectOrGroupClause">The Select mapped to <see cref="SelectClause"/> or Group clause mapped to <see cref="GroupClause"/> depending to liqn query.</param>
-    /// <param name="expressionTree">The expression tree of a linq query.</param>
-    public QueryModel (Type resultType, MainFromClause mainFromClause, ISelectGroupClause selectOrGroupClause, Expression expressionTree)
+    public QueryModel (Type resultType, MainFromClause mainFromClause, ISelectGroupClause selectOrGroupClause)
     {
       ArgumentUtility.CheckNotNull ("resultType", resultType);
       ArgumentUtility.CheckNotNull ("mainFromClause", mainFromClause);
@@ -54,19 +53,18 @@ namespace Remotion.Data.Linq
       ResultType = resultType;
       MainFromClause = mainFromClause;
       SelectOrGroupClause = selectOrGroupClause;
-      _expressionTree = expressionTree;
     }
 
-    /// <summary>
-    /// Initializes a new instance of <see cref="QueryModel"/>
-    /// </summary>
-    /// <param name="resultType">The type of the result of a executed linq query.</param>
-    /// <param name="fromClause">The first from in a linq query mapped to <see cref="MainFromClause"/></param>
-    /// <param name="selectOrGroupClause">The Select mapped to <see cref="SelectClause"/> or Group clause mapped to <see cref="GroupClause"/> depending to liqn query.</param>
-    public QueryModel (Type resultType, MainFromClause fromClause, ISelectGroupClause selectOrGroupClause)
-        : this (resultType, fromClause, selectOrGroupClause, null)
-    {
-    }
+    ///// <summary>
+    ///// Initializes a new instance of <see cref="QueryModel"/>
+    ///// </summary>
+    ///// <param name="resultType">The type of the result of a executed linq query.</param>
+    ///// <param name="fromClause">The first from in a linq query mapped to <see cref="MainFromClause"/></param>
+    ///// <param name="selectOrGroupClause">The Select mapped to <see cref="SelectClause"/> or Group clause mapped to <see cref="GroupClause"/> depending to liqn query.</param>
+    //public QueryModel (Type resultType, MainFromClause fromClause, ISelectGroupClause selectOrGroupClause)
+    //    : this (resultType, fromClause, selectOrGroupClause)
+    //{
+    //}
 
     public Type ResultType { get; private set; }
     public QueryModel ParentQuery { get; private set; }
@@ -96,13 +94,22 @@ namespace Remotion.Data.Linq
     }
 
     /// <summary>
+    /// ExpressionTree
+    /// </summary>
+    /// <value> Property to get and set expression tree root. Must be set to null if QueryModel is changed from outside.</value>
+    public Expression ExpressionTree
+    {
+      get { return _expressionTree; }
+      set { _expressionTree = value; }
+    }
+
+    /// <summary>
     /// Method to add <see cref="IBodyClause"/> to a <see cref="QueryModel"/>
     /// </summary>
     /// <param name="clause"><see cref="IBodyClause"/></param>
     public void AddBodyClause (IBodyClause clause)
     {
       ArgumentUtility.CheckNotNull ("clause", clause);
-
       var clauseAsFromClause = clause as FromClauseBase;
       if (clauseAsFromClause != null)
         RegisterClause(clauseAsFromClause.Identifier, clauseAsFromClause);
@@ -191,10 +198,10 @@ namespace Remotion.Data.Linq
     // TODO 1067: Changes made to the query model's clauses cause this Expression to become invalid.
     public Expression GetExpressionTree ()
     {
-      if (_expressionTree == null)
+      if (ExpressionTree == null)
         return new ConstructedQueryExpression (this);
       else
-        return _expressionTree;
+        return ExpressionTree;
     }
 
     public FieldDescriptor ResolveField (ClauseFieldResolver resolver, Expression fieldAccessExpression, JoinedTableContext joinedTableContext)
@@ -221,7 +228,8 @@ namespace Remotion.Data.Linq
 
       var clonedSelectOrGroupClause = SelectOrGroupClause.Clone (previousClause);
       
-      var queryModel = new QueryModel (ResultType, clonedMainFromClause, clonedSelectOrGroupClause, _expressionTree);
+      var queryModel = new QueryModel (ResultType, clonedMainFromClause, clonedSelectOrGroupClause);
+      queryModel.ExpressionTree = ExpressionTree;
       foreach (var clonedBodyClause in clonedBodyClauses)
         queryModel.AddBodyClause (clonedBodyClause);
 
@@ -242,5 +250,10 @@ namespace Remotion.Data.Linq
         throw new ClauseLookupException (message);
       }
     }
+    
+    //public void InvalidateExpressionTree (object sender, EventArgs args)
+    //{
+    //  _expressionTree = null;
+    //}
   }
 }

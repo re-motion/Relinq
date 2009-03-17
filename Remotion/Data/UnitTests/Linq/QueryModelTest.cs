@@ -44,7 +44,8 @@ namespace Remotion.Data.UnitTests.Linq
       _expressionTree = ExpressionHelper.CreateExpression ();
       _mainFromClause = ExpressionHelper.CreateMainFromClause ();
       _selectClause = ExpressionHelper.CreateSelectClause ();
-      _queryModel = new QueryModel (typeof (IQueryable<string>), _mainFromClause, _selectClause, _expressionTree);
+      _queryModel = new QueryModel (typeof (IQueryable<string>), _mainFromClause, (ISelectGroupClause) _selectClause);
+      _queryModel.ExpressionTree = _expressionTree;
     }
 
     [Test]
@@ -93,19 +94,6 @@ namespace Remotion.Data.UnitTests.Linq
       Expression expressionTree = _queryModel.GetExpressionTree ();
       Assert.That (expressionTree, Is.Not.Null);
       Assert.That (expressionTree, Is.SameAs (_expressionTree));
-    }
-
-    // Once we have a working ExpressionTreeBuildingVisitor, we could use it to build trees for constructed models. For now, we just create
-    // a special ConstructedExpression node.
-    [Test]
-    public void GetExpressionTree_ForHandConstructedModel ()
-    {
-      QueryModel queryModel = ExpressionHelper.CreateQueryModel ();
-      Expression expressionTree = queryModel.GetExpressionTree();
-      Assert.That (expressionTree, Is.Not.Null);
-      Assert.That (expressionTree, Is.InstanceOfType (typeof (ConstructedQueryExpression)));
-      ConstructedQueryExpression constructedExpression = (ConstructedQueryExpression) expressionTree;
-      Assert.That (constructedExpression.QueryModel, Is.SameAs (queryModel));
     }
 
     [Test]
@@ -334,5 +322,13 @@ namespace Remotion.Data.UnitTests.Linq
 
       Assert.That (clone.SelectOrGroupClause.PreviousClause, Is.SameAs (clonedWhereClause));
     }
+
+    //[Test]
+    //public void InvalidateExpressionTree ()
+    //{
+    //  var queryModel = ExpressionHelper.CreateQueryModel ();
+    //  queryModel.InvalidateExpressionTree (this, new EventArgs ());
+    //  Assert.That (queryModel.GetExpressionTree (), Is.Null);
+    //}
   }
 }
