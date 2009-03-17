@@ -17,9 +17,25 @@ using System.Collections.Generic;
 using System.Reflection;
 using Remotion.Collections;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.DataObjectModel;
 
 namespace Remotion.Data.Linq.Parsing.FieldResolving
 {
+  /// <summary>
+  /// Defines how members are resolved for a specific resolution use case.
+  /// </summary>
+  /// <remarks>
+  /// <para>
+  /// Resolution of fields in select, where, and orderby clauses works very similarly. For example, <c>customer.Order.OrderNumber</c> always results
+  /// in a <see cref="Column"/> field representing the property <c>OrderNumber</c> with a <see cref="FieldSourcePath"/> of <c>customer.Order</c> (including
+  /// a <see cref="SingleJoin"/> between <c>Customer</c> and <c>Order</c>).
+  /// </para>
+  /// <para>
+  /// However, there are a few specifics to the way how expressions that access entities (such as in relations, e.g. <c>customer.Order</c>,
+  /// or by directly accessing the identifier, e.g. <c>customer</c>) should be handled. By implementing this policy, a user of the resolver can
+  /// influence how such cases are processed.
+  /// </para>
+  /// </remarks>
   public interface IResolveFieldAccessPolicy
   {
     Tuple<MemberInfo, IEnumerable<MemberInfo>> AdjustMemberInfosForAccessedIdentifier (ParameterExpression accessedIdentifier);

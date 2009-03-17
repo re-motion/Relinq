@@ -100,12 +100,11 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       bool isFirstMember = _accessedMember == null;
-      if (isFirstMember)
+      if (isFirstMember && (!_optimizeRelatedKeyAccess || !IsOptimizableRelatedKeyAccess(expression)))
       {
-        // for related key access, we leave _accessedMember null, we'll take the next one
+        // for non-optimized (or non-optimizable) related key access, we leave _accessedMember null, we'll take the next one
         // eg. sd.Student.ID => we'll take sd.Student, not ID as the accessed member
-        if (!_optimizeRelatedKeyAccess || !IsOptimizableRelatedKeyAccess(expression))
-          _accessedMember = expression.Member;
+        _accessedMember = expression.Member;
       }
 
       Expression result = base.VisitMemberExpression (expression);

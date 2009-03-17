@@ -92,6 +92,7 @@ namespace Remotion.Data.Linq.Parsing
       ArgumentUtility.CheckNotNull ("expression", expression);
       ArgumentUtility.CheckNotNull ("methodName", methodName);
       ArgumentUtility.CheckNotNull ("parameterIndex", parameterIndex);
+
       if (!(expression.Arguments[parameterIndex] is T))
         throw CreateParserException (typeof (T).Name, 
             expression.Arguments[parameterIndex].GetType().Name + " (" + expression.Arguments[parameterIndex] + ")",
