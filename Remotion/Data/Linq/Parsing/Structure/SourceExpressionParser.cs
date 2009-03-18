@@ -101,7 +101,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       //delete
       //resultCollector.AddResultModifiers (sourceExpression);
       //new
-      resultCollector.AddResultModifierData (sourceExpression);
+      resultCollector.AddResultModifierExpression (sourceExpression);
       Expression nextExpression = sourceExpression.Arguments[0];
       Parse (resultCollector, nextExpression, potentialFromIdentifier, "first argument of result modifier");
     }

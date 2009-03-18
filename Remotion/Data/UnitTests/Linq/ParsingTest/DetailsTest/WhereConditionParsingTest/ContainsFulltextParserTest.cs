@@ -61,10 +61,8 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.WhereConditionPar
       parserRegistry.RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (resolver));
       parserRegistry.RegisterParser (typeof (MemberExpression), new MemberExpressionParser (resolver));
 
-      //MethodCallExpressionParser parser = new MethodCallExpressionParser (queryModel.GetExpressionTree (), parserRegistry);
       ContainsFullTextParser parser = new ContainsFullTextParser (parserRegistry);
       
-
       List<FieldDescriptor> fieldCollection = new List<FieldDescriptor> ();
       ICriterion actualCriterion = parser.Parse (methodCallExpression, ParseContext);
       ICriterion expectedCriterion = new BinaryCondition (new Column (new Table ("studentTable", "s"), "FirstColumn"), new Constant (pattern), BinaryCondition.ConditionKind.ContainsFulltext);

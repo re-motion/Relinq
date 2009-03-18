@@ -29,7 +29,6 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.WhereConditionPar
     {
       object expected = new Constant (5);
       ConstantExpressionParser parser = new ConstantExpressionParser (StubDatabaseInfo.Instance);
-      List<FieldDescriptor> fieldCollection = new List<FieldDescriptor> ();
       object result = parser.Parse (Expression.Constant(5, typeof (int)), ParseContext);
       Assert.AreEqual (expected, result);
     }

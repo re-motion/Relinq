@@ -41,7 +41,6 @@ namespace Remotion.Data.UnitTests.Linq.DataObjectModelTest
       FieldSourcePath path = ExpressionHelper.GetPathForNewTable();
       FieldDescriptor descriptor = new FieldDescriptor (null, path, column);
       Assert.IsNull (descriptor.Member);
-      //Assert.AreSame (fromClause, descriptor.FromClause);
       Assert.AreEqual (column, descriptor.Column);
       Assert.AreEqual (path, descriptor.SourcePath);
     }
@@ -54,7 +53,6 @@ namespace Remotion.Data.UnitTests.Linq.DataObjectModelTest
       MemberInfo member = typeof (Student).GetProperty ("First");
       FieldDescriptor descriptor = new FieldDescriptor (member,path, null);
       Assert.IsNull (descriptor.Column);
-      //Assert.AreSame (fromClause, descriptor.FromClause);
       Assert.AreEqual (member, descriptor.Member);
       Assert.AreEqual (path, descriptor.SourcePath);
     }
@@ -68,7 +66,6 @@ namespace Remotion.Data.UnitTests.Linq.DataObjectModelTest
       Column column = new Column ();
       FieldDescriptor descriptor = new FieldDescriptor (member, path, column);
       Assert.AreEqual (column, descriptor.Column);
-      //Assert.AreSame (fromClause, descriptor.FromClause);
       Assert.AreEqual (member, descriptor.Member);
       Assert.AreEqual (path, descriptor.SourcePath);
     }

@@ -76,7 +76,6 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
       ClauseFieldResolver resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, policy);
       FieldDescriptor fieldDescriptor = fromClause.ResolveField (resolver, identifier, identifier, context);
       Assert.AreEqual (new Column (new Table ("studentTable", "fromIdentifier1"), "*"), fieldDescriptor.Column);
-      //Assert.AreSame (fromClause, fieldDescriptor.FromClause);
     }
 
     [Test]
@@ -90,7 +89,6 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
       ClauseFieldResolver resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, policy);
       FieldDescriptor fieldDescriptor = fromClause.ResolveField (resolver, identifier, identifier, context);
       Assert.AreEqual (new Column (new Table ("studentTable", "fromIdentifier1"), "*"), fieldDescriptor.Column);
-      //Assert.AreSame (fromClause, fieldDescriptor.FromClause);
     }
 
     private AdditionalFromClause CreateAdditionalFromClause (ParameterExpression additionalFromIdentifier)

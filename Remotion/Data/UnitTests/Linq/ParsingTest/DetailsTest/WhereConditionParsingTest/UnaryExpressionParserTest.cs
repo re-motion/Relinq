@@ -15,13 +15,10 @@
 // 
 using System.Linq.Expressions;
 using NUnit.Framework;
-using System.Collections.Generic;
 using Remotion.Data.Linq;
-using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing.Details;
 using Remotion.Data.Linq.Parsing.Details.WhereConditionParsing;
-using Remotion.Data.Linq.Parsing.FieldResolving;
 
 namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.WhereConditionParsingTest
 {
@@ -31,7 +28,6 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.WhereConditionPar
     [Test]
     public void Parse ()
     {
-      QueryModel queryModel = ExpressionHelper.CreateQueryModel();
       UnaryExpression unaryExpression = Expression.Not (Expression.Constant (5));
       ICriterion expectedCriterion = new NotCriterion (new Constant (5));
 

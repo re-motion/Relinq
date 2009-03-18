@@ -30,17 +30,7 @@ namespace Remotion.Data.Linq.Clauses
   {
     private readonly LambdaExpression _projectionExpression;
     private readonly List<ResultModifierClause> _resultModifierData = new List<ResultModifierClause>();
-    // TODO MG: Unfinished Refactoring: delete (after refactoring resultModifiers)
-    //delete after change
-    public SelectClause (IClause previousClause, LambdaExpression projectionExpression, List<MethodCallExpression> resultModifiers)
-    {
-      ArgumentUtility.CheckNotNull ("previousClause", previousClause);
-      
-      PreviousClause = previousClause;
-      _projectionExpression = projectionExpression;
-      ResultModifiers = resultModifiers;
-    }
-
+    
     /// <summary>
     /// Initialize a new instance of <see cref="SelectClause"/>.
     /// </summary>
@@ -67,11 +57,7 @@ namespace Remotion.Data.Linq.Clauses
       get { return _projectionExpression; }
     }
 
-    // TODO MG: Unfinished Refactoring: delete (use ResultModifierData instead)
-    public List<MethodCallExpression> ResultModifiers { get; private set; }
-
-    // TODO MG: Unfinished Refactoring: rename to ResultModifierClauses (analoguous to FromClauseBase.JoinClauses)
-    public ReadOnlyCollection<ResultModifierClause> ResultModifierData
+    public ReadOnlyCollection<ResultModifierClause> ResultModifierClauses
     {
       get { return _resultModifierData.AsReadOnly(); }
     }
@@ -79,9 +65,6 @@ namespace Remotion.Data.Linq.Clauses
     public void AddResultModifierData (ResultModifierClause resultModifierData)
     {
       _resultModifierData.Add (resultModifierData);
-      if (ResultModifiers == null)
-        ResultModifiers = new List<MethodCallExpression>();
-      ResultModifiers.Add (resultModifierData.ResultModifier);
     }
 
     public virtual void Accept (IQueryVisitor visitor)
@@ -92,10 +75,10 @@ namespace Remotion.Data.Linq.Clauses
 
     public SelectClause Clone (IClause newPreviousClause)
     {
-      var clone = new SelectClause (newPreviousClause, ProjectionExpression, ResultModifiers);
+      var clone = new SelectClause (newPreviousClause, ProjectionExpression);
       IClause previousClause = clone;
       
-      foreach (var resultModifierData in ResultModifierData)
+      foreach (var resultModifierData in ResultModifierClauses)
       {
         var resultModifierClauseClone = resultModifierData.Clone (previousClause, clone);
         clone.AddResultModifierData (resultModifierClauseClone);

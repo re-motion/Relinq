@@ -92,56 +92,5 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.FieldResolvingTest
       Assert.AreEqual (1, _context.Count);
     }
 
-    //Reversed ordering
-    //[Test]
-    //public void BuildFieldSourcePath_NoJoin ()
-    //{
-    //  MemberInfo[] joinMembers = new MemberInfo[] { };
-    //  Tuple<IFieldSourcePath, Table> result =
-    //      new FieldSourcePathBuilder ().BuildFieldSourcePath (StubDatabaseInfo.Instance, _context, _initialTable, joinMembers);
-
-    //  Assert.AreSame (_initialTable, result.A);
-    //  Assert.AreSame (_initialTable, result.B);
-    //}
-
-    //[Test]
-    //public void BuildFieldSourcePath_SimpleJoin ()
-    //{
-    //  MemberInfo[] joinMembers = new MemberInfo[] { _studentMember };
-    //  Tuple<IFieldSourcePath, Table> result =
-    //      new FieldSourcePathBuilder ().BuildFieldSourcePath (StubDatabaseInfo.Instance, _context, _initialTable, joinMembers);
-
-    //  Table relatedTable = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, _studentMember);
-    //  Tuple<string, string> joinColumns = DatabaseInfoUtility.GetJoinColumnNames (StubDatabaseInfo.Instance, _studentMember);
-    //  JoinTree expectedJoinTree =
-    //      new JoinTree (_initialTable, relatedTable, new Column (_initialTable, joinColumns.A), new Column (relatedTable, joinColumns.B));
-
-    //  Assert.AreEqual (expectedJoinTree, result.A);
-    //  Assert.AreEqual (relatedTable, result.B);
-    //}
-
-    //[Test]
-    //public void BuildFieldSourcePath_NestedJoin ()
-    //{
-    //  MemberInfo[] joinMembers = new MemberInfo[] { _studentDetailMember, _studentMember };
-    //  Tuple<IFieldSourcePath, Table> result =
-    //      new FieldSourcePathBuilder ().BuildFieldSourcePath (StubDatabaseInfo.Instance, _context, _initialTable, joinMembers);
-
-    //  Table relatedTable1 = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, _studentDetailMember);
-    //  Table relatedTable2 = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, _studentMember);
-    //  Tuple<string, string> joinColumns1 = DatabaseInfoUtility.GetJoinColumnNames (StubDatabaseInfo.Instance, _studentMember);
-    //  Tuple<string, string> joinColumns2 = DatabaseInfoUtility.GetJoinColumnNames (StubDatabaseInfo.Instance, _studentDetailMember);
-
-    //  JoinTree expectedInnerJoinTree =
-    //      new JoinTree (relatedTable1, relatedTable2, new Column (relatedTable1, joinColumns1.A), new Column (relatedTable2, joinColumns1.B));
-
-    //  JoinTree expectedOuterJoinTree =
-    //      new JoinTree (_initialTable, expectedInnerJoinTree, new Column (_initialTable, joinColumns2.A), new Column (relatedTable2, joinColumns2.B));
-
-    //  _context.CreateAliases ();
-
-    //  Assert.AreEqual (expectedOuterJoinTree, result.A);
-    //  Assert.AreEqual (relatedTable2, result.B);
-    //}
   }
 }

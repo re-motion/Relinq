@@ -46,8 +46,8 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     {
       IQueryable<Student> query = SelectTestQueryGenerator.CreateSimpleQuery (_source);
       ParseResultCollector result = Parse (query.Expression);
-      var resultModifiers = result.ResultModifierData;
-      Assert.IsEmpty (result.ResultModifierData);
+      var resultModifiers = result.ResultModifierExpression;
+      Assert.IsEmpty (result.ResultModifierExpression);
     }
 
     [Test]
@@ -55,7 +55,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     {
       IQueryable<string> query = DistinctTestQueryGenerator.CreateSimpleDistinctQuery (_source);
       ParseResultCollector result = Parse (query.Expression);
-      Assert.IsNotEmpty (result.ResultModifierData);
+      Assert.IsNotEmpty (result.ResultModifierExpression);
     }
     
     [Test]
@@ -63,7 +63,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     {
       IQueryable<Student> query = DistinctTestQueryGenerator.CreateDisinctWithWhereQueryWithoutProjection (_source);
       ParseResultCollector result = Parse(query.Expression);
-      Assert.IsNotNull (result.ResultModifierData);
+      Assert.IsNotNull (result.ResultModifierExpression);
     }
 
     [Test]
@@ -73,8 +73,8 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
       var methodInfo = ParserUtility.GetMethod (() => query.Count ());
       MethodCallExpression countExpression = Expression.Call (methodInfo, query.Expression);
       ParseResultCollector expectedResult = Parse (countExpression);
-      Assert.IsNotEmpty (expectedResult.ResultModifierData);
-      Assert.That (expectedResult.ResultModifierData, Is.EqualTo (new[] {countExpression}));
+      Assert.IsNotEmpty (expectedResult.ResultModifierExpression);
+      Assert.That (expectedResult.ResultModifierExpression, Is.EqualTo (new[] {countExpression}));
     }
 
     [Test]
@@ -214,7 +214,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     {
       Assert.AreEqual (one.ExpressionTreeRoot, two.ExpressionTreeRoot);
       //Assert.AreEqual (one.IsDistinct, two.IsDistinct);
-      Assert.AreEqual (one.ResultModifierData, two.ResultModifierData);
+      Assert.AreEqual (one.ResultModifierExpression, two.ResultModifierExpression);
       Assert.AreEqual (one.ProjectionExpressions.Count, two.ProjectionExpressions.Count);
       Assert.AreEqual (one.BodyExpressions.Count, two.BodyExpressions.Count);
 

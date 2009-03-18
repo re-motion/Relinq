@@ -35,8 +35,7 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
     {
       LambdaExpression expression = ExpressionHelper.CreateLambdaExpression ();
       IClause clause = ExpressionHelper.CreateClause();
-
-      var selectClause = new SelectClause (clause, expression, null);
+      var selectClause = new SelectClause (clause, expression);
       Assert.AreSame (clause, selectClause.PreviousClause);
       Assert.AreEqual (expression, selectClause.ProjectionExpression);
     }
@@ -48,11 +47,7 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
       IClause clause = ExpressionHelper.CreateClause ();
       var query = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource());
       var methodInfo = ParserUtility.GetMethod (() => Enumerable.Count (query));
-      MethodCallExpression methodCallExpression = Expression.Call (methodInfo, query.Expression);
-      var methodCallExpressions = new List<MethodCallExpression>();
-      methodCallExpressions.Add (methodCallExpression);
-      
-      var selectClause = new SelectClause (clause, expression, methodCallExpressions);
+      var selectClause = new SelectClause (clause, expression);
       Assert.AreSame (clause, selectClause.PreviousClause);
     }
 
@@ -69,14 +64,14 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
       var resultModifierClause = new ResultModifierClause (selectClause, selectClause, methodCallExpression);
       selectClause.AddResultModifierData (resultModifierClause);
 
-      Assert.IsNotEmpty (selectClause.ResultModifierData);
-      Assert.That (selectClause.ResultModifierData, Is.EqualTo (new[] { resultModifierClause }));
+      Assert.IsNotEmpty (selectClause.ResultModifierClauses);
+      Assert.That (selectClause.ResultModifierClauses, Is.EqualTo (new[] { resultModifierClause }));
     }
 
     [Test]
     public void InitializeWithoutExpression ()
     {
-      var selectClause = new SelectClause (ExpressionHelper.CreateClause (), null, null);
+      var selectClause = new SelectClause (ExpressionHelper.CreateClause (), null);
       Assert.IsNull (selectClause.ProjectionExpression);
     }
     
@@ -84,7 +79,6 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
     public void SelectClause_ImplementISelectGroupClause()
     {
       SelectClause selectClause = ExpressionHelper.CreateSelectClause();
-
       Assert.IsInstanceOfType (typeof(ISelectGroupClause),selectClause);
     }
         
@@ -92,16 +86,11 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
     public void Accept()
     {
       SelectClause selectClause = ExpressionHelper.CreateSelectClause();
-
       var repository = new MockRepository();
       var visitorMock = repository.StrictMock<IQueryVisitor>();
-
       visitorMock.VisitSelectClause (selectClause);
-
       repository.ReplayAll();
-
       selectClause.Accept (visitorMock);
-
       repository.VerifyAll();
     }
 
@@ -131,15 +120,15 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
 
       var clone = originalClause.Clone (newPreviousClause);
 
-      Assert.That (clone.ResultModifierData.Count, Is.EqualTo (2));
-      Assert.That (clone.ResultModifierData[0], Is.Not.SameAs (resultModifierClause1));
-      Assert.That (clone.ResultModifierData[0].ResultModifier, Is.SameAs (resultModifierClause1.ResultModifier));
-      Assert.That (clone.ResultModifierData[0].SelectClause, Is.SameAs (clone));
-      Assert.That (clone.ResultModifierData[0].PreviousClause, Is.SameAs (clone));
+      Assert.That (clone.ResultModifierClauses.Count, Is.EqualTo (2));
+      Assert.That (clone.ResultModifierClauses[0], Is.Not.SameAs (resultModifierClause1));
+      Assert.That (clone.ResultModifierClauses[0].ResultModifier, Is.SameAs (resultModifierClause1.ResultModifier));
+      Assert.That (clone.ResultModifierClauses[0].SelectClause, Is.SameAs (clone));
+      Assert.That (clone.ResultModifierClauses[0].PreviousClause, Is.SameAs (clone));
 
-      Assert.That (clone.ResultModifierData[1], Is.Not.SameAs (resultModifierClause2));
-      Assert.That (clone.ResultModifierData[1].ResultModifier, Is.SameAs (resultModifierClause2.ResultModifier));
-      Assert.That (clone.ResultModifierData[1].PreviousClause, Is.SameAs (clone.ResultModifierData[0]));
+      Assert.That (clone.ResultModifierClauses[1], Is.Not.SameAs (resultModifierClause2));
+      Assert.That (clone.ResultModifierClauses[1].ResultModifier, Is.SameAs (resultModifierClause2.ResultModifier));
+      Assert.That (clone.ResultModifierClauses[1].PreviousClause, Is.SameAs (clone.ResultModifierClauses[0]));
     }
   }
 }

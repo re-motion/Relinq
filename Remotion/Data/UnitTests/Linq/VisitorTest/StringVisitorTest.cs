@@ -99,7 +99,8 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest
     [Test]
     public void StringVisitorForSelectClause_WithNullProjection ()
     {
-      SelectClause selectClause = new SelectClause (ExpressionHelper.CreateClause (), null, null);
+      //SelectClause selectClause = new SelectClause (ExpressionHelper.CreateClause (), null, null);
+      SelectClause selectClause = new SelectClause (ExpressionHelper.CreateClause (), null);
       StringVisitor sv = new StringVisitor ();
 
       sv.VisitSelectClause (selectClause);
@@ -264,7 +265,7 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest
 
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause();
       SelectClause selectClause1 =
-          repository.StrictMock<SelectClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateLambdaExpression (), null);
+          repository.StrictMock<SelectClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateLambdaExpression ());
       
       QueryModel queryModel = new QueryModel (typeof (IQueryable<string>), fromClause, selectClause1);
 
@@ -289,7 +290,7 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest
 
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause ();
       SelectClause selectClause1 =
-          repository.StrictMock<SelectClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateLambdaExpression (), null);
+          repository.StrictMock<SelectClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateLambdaExpression ());
       OrderByClause orderByClause1 =
           repository.StrictMock<OrderByClause> (ExpressionHelper.CreateClause ());
       AdditionalFromClause fromClause1 =
@@ -385,7 +386,8 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest
       MainFromClause mainFromClause = new MainFromClause (subQueryIdentifier, querySource);
       LambdaExpression subQueryProjection = Expression.Lambda (Expression.Constant (1));
       //SelectClause selectClause = new SelectClause (previousClause, subQueryProjection, false);
-      SelectClause selectClause = new SelectClause (previousClause, subQueryProjection, null);
+      SelectClause selectClause = new SelectClause (previousClause, subQueryProjection);
+
       QueryModel subQuery = new QueryModel (typeof (string), mainFromClause, selectClause);
       LambdaExpression projectionExpression = ExpressionHelper.CreateLambdaExpression();
 

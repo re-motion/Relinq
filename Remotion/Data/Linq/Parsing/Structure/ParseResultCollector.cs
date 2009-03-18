@@ -17,7 +17,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing.TreeEvaluation;
 using Remotion.Utilities;
 
@@ -47,23 +46,12 @@ namespace Remotion.Data.Linq.Parsing.Structure
       get { return _projectionExpressions.AsReadOnly (); }
     }
 
-    // TODO MG: Unfinished Refactoring: Rename to ResultModifierExpressions to match other properties
-    public ReadOnlyCollection<MethodCallExpression> ResultModifierData 
+    public ReadOnlyCollection<MethodCallExpression> ResultModifierExpression 
     {
       get { return _resultModifierData.AsReadOnly(); }
     }
 
-    // TODO MG: Unfinished Refactoring: delete (use ResultModifierData instead)
-    public List<MethodCallExpression> ResultModifiers { get; private set; }
-
-    // TODO MG: Unfinished Refactoring: delete (use AddResultModifierData instead)
-    public void AddResultModifiers (MethodCallExpression expression)
-    {
-      ResultModifiers.Add (expression);
-    }
-
-    // TODO MG: Unfinished Refactoring: rename to AddResultModifierExpression
-    public void AddResultModifierData (MethodCallExpression expression)
+    public void AddResultModifierExpression (MethodCallExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       _resultModifierData.Add (expression);

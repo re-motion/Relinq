@@ -150,7 +150,6 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.FieldResolvingTest
           new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (table,identifier, fieldExpression, fieldExpression, _context);
 
       Assert.AreEqual (new Column (new Table ("studentTable", null), "FirstColumn"), fieldDescriptor.Column);
-      //Assert.AreSame (fromClause, fieldDescriptor.FromClause);
       Assert.AreEqual (typeof (Student).GetProperty ("First"), fieldDescriptor.Member);
 
       IColumnSource expectedSourceTable = fieldDescriptor.SourcePath.FirstSource;

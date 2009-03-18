@@ -14,14 +14,9 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing.Details;
-using Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing;
-using Remotion.Data.Linq.Parsing.FieldResolving;
 using Remotion.Utilities;
 using ConstantExpressionParser=Remotion.Data.Linq.Parsing.Details.WhereConditionParsing.ConstantExpressionParser;
 using NUnit.Framework.SyntaxHelpers;

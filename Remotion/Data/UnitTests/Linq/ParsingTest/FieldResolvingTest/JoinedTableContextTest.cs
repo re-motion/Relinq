@@ -18,7 +18,6 @@ using System.Reflection;
 using NUnit.Framework;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing.FieldResolving;
-using NUnit.Framework.SyntaxHelpers;
 
 namespace Remotion.Data.UnitTests.Linq.ParsingTest.FieldResolvingTest
 {

@@ -13,14 +13,12 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing.Details;
 using Remotion.Data.Linq.Parsing.Details.WhereConditionParsing;
-using Remotion.Data.Linq.Parsing.FieldResolving;
 
 namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.WhereConditionParsingTest
 {
@@ -47,9 +45,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.WhereConditionPar
     [Test]
     public void ParseOr ()
     {
-      WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
       BinaryExpression binaryExpression = Expression.Or (Expression.Constant (5), Expression.Constant (5));
-      ICriterion criterion = new Constant (5);
 
       WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
       parserRegistry.RegisterParser (typeof(ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
@@ -64,9 +60,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.WhereConditionPar
     [Test]
     public void ParseEqual ()
     {
-      WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
       BinaryExpression binaryExpression = Expression.Equal (Expression.Constant (5), Expression.Constant (5));
-      ICriterion criterion = new Constant (5);
       WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
       parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
 
@@ -80,9 +74,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.WhereConditionPar
     [Test]
     public void ParseGreaterThan ()
     {
-      WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
       BinaryExpression binaryExpression = Expression.GreaterThan (Expression.Constant (5), Expression.Constant (5));
-      ICriterion criterion = new Constant (5);
       WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
       parserRegistry.RegisterParser (typeof(ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
 
@@ -96,9 +88,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.WhereConditionPar
     [Test]
     public void ParseLessThan ()
     {
-      WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
       BinaryExpression binaryExpression = Expression.LessThan (Expression.Constant (5), Expression.Constant (5));
-      ICriterion criterion = new Constant (5);
       WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
       parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
 
@@ -113,9 +103,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.WhereConditionPar
     [Test]
     public void ParseAdd ()
     {
-      WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
       BinaryExpression binaryExpression = Expression.Add (Expression.Constant (5), Expression.Constant (5));
-      ICriterion criterion = new Constant (5);
       WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
       parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
 
@@ -129,9 +117,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.WhereConditionPar
     [Test]
     public void ParseDivide ()
     {
-      WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
       BinaryExpression binaryExpression = Expression.Divide (Expression.Constant (5), Expression.Constant (5));
-      ICriterion criterion = new Constant (5);
       WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
       parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
 
@@ -145,9 +131,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.WhereConditionPar
     [Test]
     public void ParseModulo ()
     {
-      WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
       BinaryExpression binaryExpression = Expression.Modulo (Expression.Constant (5), Expression.Constant (5));
-      ICriterion criterion = new Constant (5);
       WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
       parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
 
@@ -161,9 +145,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.WhereConditionPar
     [Test]
     public void ParseMultiply ()
     {
-      WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
       BinaryExpression binaryExpression = Expression.Multiply (Expression.Constant (5), Expression.Constant (5));
-      ICriterion criterion = new Constant (5);
       WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
       parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
 
@@ -177,9 +159,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.WhereConditionPar
     [Test]
     public void ParseSubtract ()
     {
-      WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
       BinaryExpression binaryExpression = Expression.Subtract (Expression.Constant (5), Expression.Constant (5));
-      ICriterion criterion = new Constant (5);
       WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
       parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
 

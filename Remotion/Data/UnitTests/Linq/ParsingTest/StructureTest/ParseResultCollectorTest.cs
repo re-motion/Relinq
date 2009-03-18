@@ -49,15 +49,15 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     [Test]
     public void ResultModifiers ()
     {
-      Assert.That (_collector.ResultModifierData, Is.Empty);
+      Assert.That (_collector.ResultModifierExpression, Is.Empty);
       
       var query = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource ());
       var methodInfo = ParserUtility.GetMethod (() => Enumerable.Count (query));
       MethodCallExpression methodCallExpression = Expression.Call (methodInfo, query.Expression);
 
-      _collector.AddResultModifierData (methodCallExpression);
+      _collector.AddResultModifierExpression (methodCallExpression);
 
-      Assert.That (_collector.ResultModifierData, Is.EqualTo (new[] { methodCallExpression }));
+      Assert.That (_collector.ResultModifierExpression, Is.EqualTo (new[] { methodCallExpression }));
     }
     
     [Test]

@@ -197,12 +197,11 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
       LambdaExpression selectProjection = _result.ProjectionExpressions.Last ();
       
-      SelectClause selectClause = new SelectClause (_previousClause, selectProjection, _result.ResultModifiers);
+      SelectClause selectClause = new SelectClause (_previousClause, selectProjection);
       
-      //create RMClauses and put them to SelectClause
-      // TODO MG: Unfinished refactoring: test previous clause when multiple result modifier clauses exist
+      // TODO MG: Unfinished refactoring: missing test to prove whether previousClause changes
       IClause previousClause = selectClause;
-      foreach (var resultModifier in _result.ResultModifierData)
+      foreach (var resultModifier in _result.ResultModifierExpression)
       {
         ResultModifierClause resultModifierClause = new ResultModifierClause (previousClause, selectClause, resultModifier);
         selectClause.AddResultModifierData (resultModifierClause);

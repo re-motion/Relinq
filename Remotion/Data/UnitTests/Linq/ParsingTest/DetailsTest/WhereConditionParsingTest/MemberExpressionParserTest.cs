@@ -13,13 +13,11 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing.Details.WhereConditionParsing;
 using Remotion.Data.Linq.Parsing.FieldResolving;
 
@@ -32,9 +30,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.WhereConditionPar
     public void Parse()
     {
       ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(parameter, ExpressionHelper.CreateQuerySource ());;
-      QueryModel queryModel = ExpressionHelper.CreateQueryModel (fromClause);
-      JoinedTableContext context = new JoinedTableContext ();
+      
       ClauseFieldResolver resolver = 
         new ClauseFieldResolver(StubDatabaseInfo.Instance,new WhereFieldAccessPolicy(StubDatabaseInfo.Instance));
       MemberExpressionParser parser = new MemberExpressionParser (resolver);

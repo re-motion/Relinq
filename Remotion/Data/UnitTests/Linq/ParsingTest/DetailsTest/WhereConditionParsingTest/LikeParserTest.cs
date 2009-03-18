@@ -14,11 +14,8 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.DataObjectModel;
@@ -26,7 +23,6 @@ using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Details;
 using Remotion.Data.Linq.Parsing.Details.WhereConditionParsing;
 using Remotion.Data.Linq.Parsing.FieldResolving;
-using System.Collections.Generic;
 
 namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.WhereConditionParsingTest
 {
@@ -96,8 +92,6 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.WhereConditionPar
           Expression.Constant ("Test")
           );
 
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (parameter, ExpressionHelper.CreateQuerySource ());
-      QueryModel queryModel = ExpressionHelper.CreateQueryModel (fromClause);
       ClauseFieldResolver resolver =
           new ClauseFieldResolver (StubDatabaseInfo.Instance, new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
       WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
@@ -111,13 +105,9 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.WhereConditionPar
 
     private void CheckParsingOfLikeVariant (string methodName, string pattern)
     {
-      WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
-
       ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
       MemberExpression memberAccess = Expression.MakeMemberAccess (parameter, typeof (Student).GetProperty ("First"));
 
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (parameter, ExpressionHelper.CreateQuerySource ());
-      Data.Linq.QueryModel queryModel = ExpressionHelper.CreateQueryModel (fromClause);
       ClauseFieldResolver resolver =
           new ClauseFieldResolver (StubDatabaseInfo.Instance, new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
 
@@ -145,8 +135,6 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.WhereConditionPar
       ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
       MemberExpression memberAccess = Expression.MakeMemberAccess (parameter, typeof (Student).GetProperty ("First"));
 
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (parameter, ExpressionHelper.CreateQuerySource ());
-      QueryModel queryModel = ExpressionHelper.CreateQueryModel (fromClause);
       ClauseFieldResolver resolver =
           new ClauseFieldResolver (StubDatabaseInfo.Instance, new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
 
@@ -171,8 +159,6 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.WhereConditionPar
       ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
       MemberExpression memberAccess = Expression.MakeMemberAccess (parameter, typeof (Student).GetProperty ("First"));
 
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (parameter, ExpressionHelper.CreateQuerySource ());
-      QueryModel queryModel = ExpressionHelper.CreateQueryModel (fromClause);
       ClauseFieldResolver resolver =
           new ClauseFieldResolver (StubDatabaseInfo.Instance, new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
 

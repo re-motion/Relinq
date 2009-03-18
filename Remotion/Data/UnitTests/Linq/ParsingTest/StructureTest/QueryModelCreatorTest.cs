@@ -16,6 +16,7 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using NUnit.Framework;
 using Remotion.Collections;
 using Remotion.Data.Linq;
@@ -366,8 +367,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
 
       Assert.AreSame (orderExpression2.TypedExpression, orderByClause1.OrderingList.Last().Expression);
       Assert.AreSame (orderByClause1, orderByClause1.OrderingList.Last().OrderByClause);
-
-
+      
       Assert.IsNotNull (orderByClause2);
       Assert.AreSame (orderExpression3.TypedExpression, orderByClause2.OrderingList.First().Expression);
       Assert.AreSame (orderByClause2, orderByClause2.OrderingList.First ().OrderByClause);
@@ -378,5 +378,6 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
       Assert.AreSame (_result.ProjectionExpressions[2], selectClause.ProjectionExpression);
       Assert.AreSame (orderByClause2, selectClause.PreviousClause);
     }
+
   }
 }
