@@ -48,7 +48,7 @@ namespace Remotion.Data.Linq.Clauses
       get { return new ReadOnlyCollection<Ordering>(_orderings); }
     }
 
-    public void Add(Ordering ordering)
+    public void AddOrdering(Ordering ordering)
     {
       ArgumentUtility.CheckNotNull ("ordering", ordering);
       _orderings.Add (ordering);
@@ -78,7 +78,7 @@ namespace Remotion.Data.Linq.Clauses
       foreach (var ordering in _orderings)
       {
         var orderingClone = ordering.Clone (clone);
-        clone.Add (orderingClone);
+        clone.AddOrdering (orderingClone);
       }
 
       return clone;

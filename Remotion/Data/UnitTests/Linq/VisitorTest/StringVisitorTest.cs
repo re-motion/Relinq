@@ -53,8 +53,8 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest
           repository.StrictMock<JoinClause> (ExpressionHelper.CreateClause (), fromClause, ExpressionHelper.CreateParameterExpression (),
               ExpressionHelper.CreateExpression(), ExpressionHelper.CreateExpression(), ExpressionHelper.CreateExpression());
 
-      fromClause.Add (joinClause1);
-      fromClause.Add (joinClause2);
+      fromClause.AddJoinClause (joinClause1);
+      fromClause.AddJoinClause (joinClause2);
 
       StringVisitor sv = new StringVisitor();
 
@@ -175,8 +175,8 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest
       Ordering ordering1 = repository.StrictMock<Ordering> (ExpressionHelper.CreateOrderByClause (), ExpressionHelper.CreateLambdaExpression (), OrderingDirection.Asc);
       Ordering ordering2 = repository.StrictMock<Ordering> (ExpressionHelper.CreateOrderByClause (), ExpressionHelper.CreateLambdaExpression (), OrderingDirection.Asc);
 
-      orderByClause.Add (ordering1);
-      orderByClause.Add (ordering2);
+      orderByClause.AddOrdering (ordering1);
+      orderByClause.AddOrdering (ordering2);
 
       StringVisitor sv = new StringVisitor();
 
@@ -207,8 +207,8 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest
       Ordering ordering2 =
           repository.StrictMock<Ordering> (ExpressionHelper.CreateOrderByClause (), ExpressionHelper.CreateLambdaExpression (), OrderingDirection.Desc);
 
-      orderByClause.Add (ordering1);
-      orderByClause.Add (ordering2);
+      orderByClause.AddOrdering (ordering1);
+      orderByClause.AddOrdering (ordering2);
 
       StringVisitor sv = new StringVisitor();
 
@@ -238,8 +238,8 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest
       Ordering ordering2 =
           repository.StrictMock<Ordering> (ExpressionHelper.CreateOrderByClause (), ExpressionHelper.CreateLambdaExpression (), OrderingDirection.Asc);
 
-      orderByClause.Add (ordering1);
-      orderByClause.Add (ordering2);
+      orderByClause.AddOrdering (ordering1);
+      orderByClause.AddOrdering (ordering2);
 
       StringVisitor sv = new StringVisitor();
 

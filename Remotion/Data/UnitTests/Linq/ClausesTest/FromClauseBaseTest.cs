@@ -58,8 +58,8 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
       JoinClause joinClause1 = ExpressionHelper.CreateJoinClause();
       JoinClause joinClause2 = ExpressionHelper.CreateJoinClause();
 
-      fromClause.Add (joinClause1);
-      fromClause.Add (joinClause2);
+      fromClause.AddJoinClause (joinClause1);
+      fromClause.AddJoinClause (joinClause2);
 
       Assert.That (fromClause.JoinClauses, Is.EqualTo (new object[] { joinClause1, joinClause2 }));
       Assert.AreEqual (2, fromClause.JoinClauses.Count);

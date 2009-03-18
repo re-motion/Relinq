@@ -43,7 +43,7 @@ namespace Remotion.Data.UnitTests.Linq
 
       var orderByClause = new OrderByClause (_model.MainFromClause);
       var ordering = new Ordering (orderByClause, orderingExpression, OrderingDirection.Asc);
-      orderByClause.Add (ordering);
+      orderByClause.AddOrdering (ordering);
 
       _model.AddBodyClause (orderByClause);
 

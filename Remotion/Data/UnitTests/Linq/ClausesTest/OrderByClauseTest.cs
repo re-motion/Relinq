@@ -46,8 +46,8 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
       Ordering ordering1 = ExpressionHelper.CreateOrdering ();
       Ordering ordering2 = ExpressionHelper.CreateOrdering ();
 
-      orderBy.Add (ordering1);
-      orderBy.Add (ordering2);
+      orderBy.AddOrdering (ordering1);
+      orderBy.AddOrdering (ordering2);
 
       Assert.That (orderBy.OrderingList, Is.EqualTo (new object[] { ordering1, ordering2 }));
       Assert.AreEqual (2, orderBy.OrderingList.Count);
@@ -125,7 +125,7 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
     {
       var orderByClause = ExpressionHelper.CreateOrderByClause ();
       var ordering = ExpressionHelper.CreateOrdering();
-      orderByClause.Add (ordering);
+      orderByClause.AddOrdering (ordering);
 
       var newPreviousClause = ExpressionHelper.CreateMainFromClause ();
       var clone = orderByClause.Clone (newPreviousClause);

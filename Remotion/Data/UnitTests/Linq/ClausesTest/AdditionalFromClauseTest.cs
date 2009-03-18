@@ -129,10 +129,10 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
     {
       AdditionalFromClause originalClause = ExpressionHelper.CreateAdditionalFromClause ();
       var originalJoinClause1 = ExpressionHelper.CreateJoinClause ();
-      originalClause.Add (originalJoinClause1);
+      originalClause.AddJoinClause (originalJoinClause1);
 
       var originalJoinClause2 = ExpressionHelper.CreateJoinClause ();
-      originalClause.Add (originalJoinClause2);
+      originalClause.AddJoinClause (originalJoinClause2);
 
       var newPreviousClause = ExpressionHelper.CreateClause();
       var clone = originalClause.Clone (newPreviousClause);

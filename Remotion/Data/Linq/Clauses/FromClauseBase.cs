@@ -60,7 +60,7 @@ namespace Remotion.Data.Linq.Clauses
     /// Method for adding a <see cref="JoinClause"/>
     /// </summary>
     /// <param name="joinClause"><see cref="JoinClause"/></param>
-    public void Add (JoinClause joinClause)
+    public void AddJoinClause (JoinClause joinClause)
     {
       ArgumentUtility.CheckNotNull ("joinClause", joinClause);
       _joinClauses.Add (joinClause);
@@ -98,7 +98,7 @@ namespace Remotion.Data.Linq.Clauses
       foreach (var joinClause in originalJoinClauses)
       {
         var joinClauseClone = joinClause.Clone (previousClause, this);
-        Add (joinClauseClone);
+        AddJoinClause (joinClauseClone);
         previousClause = joinClauseClone;
       }
     }

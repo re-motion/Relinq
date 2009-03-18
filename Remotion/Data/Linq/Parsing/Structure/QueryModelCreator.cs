@@ -162,7 +162,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       }
 
       var ordering = new Ordering (_previousOrderByClause, orderExpression.TypedExpression, orderExpression.OrderingDirection);
-      _previousOrderByClause.Add (ordering);
+      _previousOrderByClause.AddOrdering (ordering);
       return _previousOrderByClause;
     }
 

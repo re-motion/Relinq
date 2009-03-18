@@ -30,7 +30,7 @@ namespace Remotion.Data.Linq.Clauses
   {
     private readonly LambdaExpression _projectionExpression;
     private readonly List<ResultModifierClause> _resultModifierData = new List<ResultModifierClause>();
-    // TODO MG: Unfinished Refactoring: delete
+    // TODO MG: Unfinished Refactoring: delete (after refactoring resultModifiers)
     //delete after change
     public SelectClause (IClause previousClause, LambdaExpression projectionExpression, List<MethodCallExpression> resultModifiers)
     {
@@ -76,7 +76,6 @@ namespace Remotion.Data.Linq.Clauses
       get { return _resultModifierData.AsReadOnly(); }
     }
 
-    // TODO MG: Unfinished Refactoring: rename to Add (analoguous to FromClauseBase.Add; or: rename both FromClauseBase.Add and this method to Add...Clause)
     public void AddResultModifierData (ResultModifierClause resultModifierData)
     {
       _resultModifierData.Add (resultModifierData);
