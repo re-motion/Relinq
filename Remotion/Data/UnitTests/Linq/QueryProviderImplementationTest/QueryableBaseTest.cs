@@ -18,6 +18,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Rhino.Mocks;
 using Remotion.Data.Linq.QueryProviderImplementation;
@@ -28,25 +29,29 @@ namespace Remotion.Data.UnitTests.Linq.QueryProviderImplementationTest
   [TestFixture]
   public class QueryableBaseTest
   {
-    private QueryProviderBase _provider;
+    private QueryProviderBase _providerMock;
     private MockRepository _mockRepository;
+    private Expression _intArrayExpression;
+    private Expression _studentArrayExpression;
 
     [SetUp]
     public void SetUp()
     {
       _mockRepository = new MockRepository();
-      IQueryExecutor executor = _mockRepository.StrictMock<IQueryExecutor>();
-      _provider = _mockRepository.StrictMock<QueryProviderBase> (executor);
+      var executorMock = _mockRepository.StrictMock<IQueryExecutor>();
+      _providerMock = _mockRepository.StrictMock<QueryProviderBase> (executorMock);
+
+      _intArrayExpression = ExpressionHelper.CreateNewIntArrayExpression ();
+      _studentArrayExpression = Expression.Constant (new Student[0]);
     }
 
     [Test]
     public void Initialize ()
     {
-      Expression expression = ExpressionHelper.CreateNewIntArrayExpression();
-      QueryableBase<int> queryable = new TestQueryable<int> (_provider, expression);
+      QueryableBase<int> queryable = new TestQueryable<int> (_providerMock, _intArrayExpression);
 
-      Assert.AreSame (_provider, queryable.Provider);
-      Assert.AreSame (expression, queryable.Expression);
+      Assert.AreSame (_providerMock, queryable.Provider);
+      Assert.AreSame (_intArrayExpression, queryable.Expression);
 
       Assert.AreEqual (typeof (int), queryable.ElementType);
     }
@@ -54,7 +59,7 @@ namespace Remotion.Data.UnitTests.Linq.QueryProviderImplementationTest
     [Test]
     public void InitializeWithDefaultConstructor ()
     {
-      IQueryExecutor executor = _mockRepository.StrictMock<IQueryExecutor>();
+      var executor = _mockRepository.StrictMock<IQueryExecutor>();
       QueryableBase<int> queryable = new TestQueryable<int> (executor);
 
       Assert.IsNotNull (queryable.Provider);
@@ -66,18 +71,16 @@ namespace Remotion.Data.UnitTests.Linq.QueryProviderImplementationTest
     [ExpectedException (typeof (ArgumentTypeException))]
     public void ConstructorThrowsTypeException ()
     {
-      Expression expression = ExpressionHelper.CreateNewIntArrayExpression();
-      new TestQueryable<string> (_provider, expression);
+      new TestQueryable<string> (_providerMock, _intArrayExpression);
     }
 
     [Test]
     public void GenericGetEnumerator ()
     {
-      Expression expression = ExpressionHelper.CreateNewIntArrayExpression();
-      Expect.Call (_provider.ExecuteCollection<int> (expression)).Return (new List<int> ());
+      Expect.Call (_providerMock.ExecuteCollection<int> (_intArrayExpression)).Return (new List<int> ());
 
       _mockRepository.ReplayAll ();
-      QueryableBase<int> queryable = new TestQueryable<int> (_provider, expression);
+      QueryableBase<int> queryable = new TestQueryable<int> (_providerMock, _intArrayExpression);
       queryable.GetEnumerator();
       _mockRepository.VerifyAll ();
     }
@@ -85,13 +88,26 @@ namespace Remotion.Data.UnitTests.Linq.QueryProviderImplementationTest
     [Test]
     public void GetEnumerator()
     {
-      Expression expression = ExpressionHelper.CreateNewIntArrayExpression ();
-      Expect.Call (_provider.ExecuteCollection (expression)).Return(new List<int>());
+      Expect.Call (_providerMock.ExecuteCollection (_intArrayExpression)).Return (new List<int> ());
 
       _mockRepository.ReplayAll ();
-      QueryableBase<int> queryable = new TestQueryable<int> (_provider, expression);
+      QueryableBase<int> queryable = new TestQueryable<int> (_providerMock, _intArrayExpression);
       ((IEnumerable)queryable).GetEnumerator ();
       _mockRepository.VerifyAll ();
+    }
+
+    [Test]
+    public void GetOrAddFetchRequest ()
+    {
+      QueryableBase<Student> queryable = new TestQueryable<Student> (_providerMock, _studentArrayExpression);
+
+      Assert.That (queryable.FetchRequests, Is.Empty);
+
+      Expression<Func<Student, IEnumerable<int>>> expectedExpression = s => s.Scores;
+      var result = queryable.GetOrAddFetchRequest (expectedExpression);
+
+      Assert.That (result.RelatedObjectSelector, Is.SameAs (expectedExpression));
+      Assert.That (queryable.FetchRequests, Is.EqualTo (new[] { result }));
     }
   }
 }

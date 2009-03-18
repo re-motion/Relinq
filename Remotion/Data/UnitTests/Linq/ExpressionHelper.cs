@@ -137,8 +137,6 @@ namespace Remotion.Data.UnitTests.Linq
       return new SelectClause (CreateClause (), expression);
     }
 
-    
-
     public static MethodCallExpression CreateMethodCallExpression (IQueryable<Student> query)
     {
       var methodInfo = ParserUtility.GetMethod (() => query.Count ());

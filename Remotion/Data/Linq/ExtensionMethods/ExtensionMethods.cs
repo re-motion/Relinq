@@ -14,6 +14,11 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using Remotion.Data.Linq.QueryProviderImplementation;
+using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.ExtensionMethods
 {
@@ -21,7 +26,26 @@ namespace Remotion.Data.Linq.ExtensionMethods
   {
     public static bool ContainsFulltext(this string extension, string search)
     {
-      throw new NotImplementedException ();
+      throw new NotImplementedException ("This method should not be executed. It should be used only in queries analyzed and parsed by re-linq.");
+    }
+
+    /// <summary>
+    /// Specifies that, when the <paramref name="query"/> is executed, the relation indicated by <paramref name="relatedObjectSelector"/> should be eagerly
+    /// fetched if supported by the query provider implementation.
+    /// </summary>
+    /// <typeparam name="TOriginating">The type of the originating query result objects.</typeparam>
+    /// <typeparam name="TRelated">The type of the related objects to be eager-fetched.</typeparam>
+    /// <param name="query">The query for which the fetch request should be made.</param>
+    /// <param name="relatedObjectSelector">A lambda expression selecting the related objects to be eager-fetched.</param>
+    /// <returns>A <see cref="FluentFetchRequest{T}"/> object on which further fetch requests can be made. The subsequent fetches start from the 
+    /// related objects fetched by the original request created by this method.</returns>
+    public static FluentFetchRequest<TRelated> Fetch<TOriginating, TRelated> (this IQueryable<TOriginating> query, Expression<Func<TOriginating, IEnumerable<TRelated>>> relatedObjectSelector)
+    {
+      var queryable = ArgumentUtility.CheckNotNullAndType<QueryableBase<TOriginating>> ("query", query);
+      ArgumentUtility.CheckNotNull ("relatedObjectSelector", relatedObjectSelector);
+
+      var request = queryable.GetOrAddFetchRequest (relatedObjectSelector);
+      return new FluentFetchRequest<TRelated> (request);
     }
   }
 }
