@@ -13,12 +13,12 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Expressions;
-using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure
@@ -195,8 +195,21 @@ namespace Remotion.Data.Linq.Parsing.Structure
         throw new ParserException (message, _expressionTreeRoot, _expressionTreeRoot, null);
       }
 
+      // TODO 1096: Change QueryModelCreator.CreateSelectClause not to reuse old projection expressions but instead generate identity projections if the query source did not contain a Select clause
+      //LambdaExpression selectProjection;
+      //if (_currentProjection < _result.ProjectionExpressions.Count)
+      //{
+      //  selectProjection = _result.ProjectionExpressions[_currentProjection];
+      //  ++_currentProjection;
+      //}
+      //else
+      //{
+      //  // If we have no more projections, the compiler optimized away the last select clause. Therefore, we'll create an identity projection
+      //  // instead.
+      //  selectProjection = CreateIdentityProjection (_result.ProjectionExpressions.Last().Type);
+      //}
+
       LambdaExpression selectProjection = _result.ProjectionExpressions.Last ();
-      
       SelectClause selectClause = new SelectClause (_previousClause, selectProjection);
       
       // TODO MG: Unfinished refactoring: missing test to prove whether previousClause changes
