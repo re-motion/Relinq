@@ -52,6 +52,7 @@
     <Compile Include="Clauses\AdditionalFromClause.cs" />
     <Compile Include="Clauses\ClauseFinder.cs" />
     <Compile Include="Clauses\ClauseLookupException.cs" />
+    <Compile Include="EagerFetching\EagerFetchQueryModelCreator.cs" />
     <Compile Include="EagerFetching\FetchRequest.cs" />
     <Compile Include="EagerFetching\FetchRequestCollection.cs" />
     <Compile Include="Clauses\MemberFromClause.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="DataObjectModel\SourceMarkerEvaluation.cs" />
     <Compile Include="DataObjectModel\SubQuery.cs" />
     <Compile Include="EagerFetching\IFetchRequest.cs" />
+    <Compile Include="EagerFetching\IFetchRequestCollection.cs" />
     <Compile Include="Expressions\ConstructedQueryExpression.cs" />
     <Compile Include="Expressions\QueryModelExpressionBase.cs" />
     <Compile Include="Expressions\SubQueryExpression.cs" />
