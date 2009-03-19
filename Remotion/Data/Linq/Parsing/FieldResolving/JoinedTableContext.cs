@@ -24,7 +24,6 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
   public class JoinedTableContext
   {
     private readonly OrderedDictionary _tables = new OrderedDictionary ();
-    private int _generatedAliasCount = 0;
 
     public int Count
     {
@@ -44,16 +43,13 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
       return (Table) _tables[key];
     }
 
-    public void CreateAliases ()
+    public void CreateAliases (QueryModel queryModel)
     {
       for (int i = 0; i < Count; ++i)
       {
-        Table table = (Table) _tables[i];
+        var table = (Table) _tables[i];
         if (table.Alias == null)
-        {
-          table.SetAlias ("j" + _generatedAliasCount);
-          ++_generatedAliasCount;
-        }
+          table.SetAlias (queryModel.GetUniqueIdentifier ("#j"));
       }
     }
   }

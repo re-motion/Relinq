@@ -97,6 +97,60 @@ namespace Remotion.Data.UnitTests.Linq
     }
 
     [Test]
+    public void GetExpressionTree_ForConstructedTree ()
+    {
+      var queryModel = new QueryModel (typeof (IQueryable<Student>), ExpressionHelper.CreateMainFromClause (), ExpressionHelper.CreateSelectClause ());
+
+      Expression expressionTree = queryModel.GetExpressionTree();
+      Assert.That (expressionTree, Is.Not.Null);
+      Assert.That (expressionTree, Is.InstanceOfType (typeof (ConstructedQueryExpression)));
+    }
+
+    [Test]
+    public void GetExpressionTree_ForConstructedTree_Twice ()
+    {
+      var queryModel = new QueryModel (typeof (IQueryable<Student>), ExpressionHelper.CreateMainFromClause (), ExpressionHelper.CreateSelectClause ());
+
+      Expression expressionTree1 = queryModel.GetExpressionTree ();
+      Expression expressionTree2 = queryModel.GetExpressionTree ();
+      Assert.That (expressionTree1, Is.SameAs (expressionTree2));
+    }
+
+    [Test]
+    public void SetExpressionTree ()
+    {
+      var queryModel = new QueryModel (typeof (IQueryable<Student>), ExpressionHelper.CreateMainFromClause (), ExpressionHelper.CreateSelectClause ());
+      var expression = ExpressionHelper.CreateExpression ();
+      queryModel.SetExpressionTree (expression);
+
+      Assert.That (queryModel.GetExpressionTree (), Is.SameAs (expression));
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentNullException))]
+    public void SetExpressionTree_Null ()
+    {
+      var queryModel = new QueryModel (typeof (IQueryable<Student>), ExpressionHelper.CreateMainFromClause (), ExpressionHelper.CreateSelectClause ());
+      queryModel.SetExpressionTree (null);
+    }
+
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "This QueryModel already has an expression tree. Call InvalidateExpressionTree before setting a new one.")]
+    public void SetExpressionTree_AlreadyHasOne ()
+    {
+      _queryModel.SetExpressionTree (ExpressionHelper.CreateExpression());
+    }
+
+    [Test]
+    public void SetExpressionTree_Same ()
+    {
+      var previousTree = _queryModel.GetExpressionTree();
+      _queryModel.SetExpressionTree (previousTree);
+      Assert.That (_queryModel.GetExpressionTree (), Is.SameAs (previousTree));
+    }
+
+    [Test]
     public void GetResolveableClause_FromClauseBase ()
     {
       LambdaExpression fromExpression = ExpressionHelper.CreateLambdaExpression ();
@@ -326,9 +380,10 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void InvalidateExpressionTree ()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel ();
-      queryModel.InvalidateExpressionTree (this, new EventArgs ());
-      Assert.That (queryModel.GetExpressionTree (), Is.InstanceOfType (typeof(ConstructedQueryExpression)));
+      Assert.That (_queryModel.GetExpressionTree (), Is.SameAs (_expressionTree));
+      _queryModel.InvalidateExpressionTree ();
+      Assert.That (_queryModel.GetExpressionTree (), Is.Not.SameAs (_expressionTree));
+      Assert.That (_queryModel.GetExpressionTree (), Is.InstanceOfType (typeof (ConstructedQueryExpression)));
     }
 
     [Test]
@@ -338,6 +393,79 @@ namespace Remotion.Data.UnitTests.Linq
       var bodyClause = ExpressionHelper.CreateAdditionalFromClause ();
       queryModel.AddBodyClause (bodyClause);
       Assert.That (queryModel.GetExpressionTree(), Is.InstanceOfType (typeof (ConstructedQueryExpression)));
+    }
+
+    [Test]
+    public void SelectOrGroupClause_Set ()
+    {
+      var queryModel = ExpressionHelper.CreateQueryModel ();
+      var newSelectClause = ExpressionHelper.CreateSelectClause ();
+      queryModel.SelectOrGroupClause = newSelectClause;
+
+      Assert.That (queryModel.SelectOrGroupClause, Is.SameAs (newSelectClause));
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentNullException))]
+    public void SelectOrGroupClause_Set_Null ()
+    {
+      var queryModel = ExpressionHelper.CreateQueryModel ();
+      queryModel.SelectOrGroupClause = null;
+    }
+
+    [Test]
+    public void SelectOrGroupClause_Set_InvalidatesExpressionTree ()
+    {
+      var queryModel = ExpressionHelper.CreateQueryModel ();
+      var expressionTreeBefore = queryModel.GetExpressionTree ();
+      queryModel.SelectOrGroupClause = ExpressionHelper.CreateSelectClause ();
+      var expressionTreeAfter = queryModel.GetExpressionTree ();
+
+      Assert.That (expressionTreeAfter, Is.Not.SameAs (expressionTreeBefore));
+    }
+
+    [Test]
+    public void GetUniqueIentifier ()
+    {
+      var queryModel = ExpressionHelper.CreateQueryModel ();
+      var identifier = queryModel.GetUniqueIdentifier ("test");
+      Assert.That (identifier, Is.EqualTo ("test0"));
+    }
+
+    [Test]
+    public void GetUniqueIentifier_MoreThanOnce ()
+    {
+      var queryModel = ExpressionHelper.CreateQueryModel ();
+      var identifier1 = queryModel.GetUniqueIdentifier ("test");
+      var identifier2 = queryModel.GetUniqueIdentifier ("test");
+      var identifier3 = queryModel.GetUniqueIdentifier ("test");
+      Assert.That (identifier1, Is.Not.EqualTo (identifier2));
+      Assert.That (identifier2, Is.Not.EqualTo (identifier3));
+      Assert.That (identifier1, Is.Not.EqualTo (identifier3));
+    }
+
+    [Test]
+    public void GetUniqueIentifier_AlreadyExists_MainFromClause ()
+    {
+      var mainFromClause = new MainFromClause (Expression.Parameter (typeof (Student), "test0"), ExpressionHelper.CreateQuerySource ().Expression);
+      var queryModel = ExpressionHelper.CreateQueryModel (mainFromClause);
+      var identifier = queryModel.GetUniqueIdentifier ("test");
+      Assert.That (identifier, Is.EqualTo ("test1"));
+    }
+
+    [Test]
+    public void GetUniqueIentifier_AlreadyExists_BodyClauses ()
+    {
+      var queryModel = ExpressionHelper.CreateQueryModel ();
+      var additionalFromClause = new AdditionalFromClause (
+          queryModel.MainFromClause, 
+          Expression.Parameter (typeof (Student), "test0"), 
+          ExpressionHelper.CreateLambdaExpression(), 
+          ExpressionHelper.CreateLambdaExpression());
+      queryModel.AddBodyClause (additionalFromClause);
+
+      var identifier = queryModel.GetUniqueIdentifier ("test");
+      Assert.That (identifier, Is.EqualTo ("test1"));
     }
   }
 }

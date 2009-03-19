@@ -52,7 +52,6 @@
     <Compile Include="Clauses\AdditionalFromClause.cs" />
     <Compile Include="Clauses\ClauseFinder.cs" />
     <Compile Include="Clauses\ClauseLookupException.cs" />
-    <Compile Include="EagerFetching\EagerFetchQueryModelCreator.cs" />
     <Compile Include="EagerFetching\FetchRequest.cs" />
     <Compile Include="EagerFetching\FetchRequestCollection.cs" />
     <Compile Include="Clauses\MemberFromClause.cs" />

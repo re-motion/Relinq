@@ -36,7 +36,9 @@ namespace Remotion.Data.Linq
 
     private readonly Dictionary<string, IResolveableClause> _clausesByIdentifier = new Dictionary<string, IResolveableClause> ();
 
+    private ISelectGroupClause _selectOrGroupClause;
     private Expression _expressionTree;
+    private int _identifierCounter;
 
     /// <summary>
     /// Initializes a new instance of <see cref="QueryModel"/>
@@ -55,17 +57,6 @@ namespace Remotion.Data.Linq
       SelectOrGroupClause = selectOrGroupClause;
     }
 
-    ///// <summary>
-    ///// Initializes a new instance of <see cref="QueryModel"/>
-    ///// </summary>
-    ///// <param name="resultType">The type of the result of a executed linq query.</param>
-    ///// <param name="fromClause">The first from in a linq query mapped to <see cref="MainFromClause"/></param>
-    ///// <param name="selectOrGroupClause">The Select mapped to <see cref="SelectClause"/> or Group clause mapped to <see cref="GroupClause"/> depending to liqn query.</param>
-    //public QueryModel (Type resultType, MainFromClause fromClause, ISelectGroupClause selectOrGroupClause)
-    //    : this (resultType, fromClause, selectOrGroupClause)
-    //{
-    //}
-
     public Type ResultType { get; private set; }
     public QueryModel ParentQuery { get; private set; }
 
@@ -83,7 +74,17 @@ namespace Remotion.Data.Linq
     }
 
     public MainFromClause MainFromClause { get; private set; }
-    public ISelectGroupClause SelectOrGroupClause { get; private set; }
+    
+    public ISelectGroupClause SelectOrGroupClause
+    {
+      get { return _selectOrGroupClause; }
+      set 
+      {
+        ArgumentUtility.CheckNotNull ("value", value);
+        _selectOrGroupClause = value;
+        InvalidateExpressionTree ();
+      }
+    }
 
     /// <summary>
     /// Collection of different clauses of a <see cref="QueryModel"/>
@@ -111,7 +112,7 @@ namespace Remotion.Data.Linq
       clause.SetQueryModel (this);
       _bodyClauses.Add (clause);
 
-      InvalidateExpressionTree (this, new EventArgs());
+      InvalidateExpressionTree ();
     }
 
     /// <summary>
@@ -141,27 +142,25 @@ namespace Remotion.Data.Linq
       ArgumentUtility.CheckNotNull ("identifierName", identifierName);
       ArgumentUtility.CheckNotNull ("identifierType", identifierType);
 
-      if (identifierName == MainFromClause.Identifier.Name)
-      {
-        CheckResolvedIdentifierType (MainFromClause.Identifier, identifierType);
-        return MainFromClause;
-      }
-      else
-        return GetBodyClauseByIdentifier (identifierName, identifierType);
+      IResolveableClause clause = GetResolveableClauseWithoutTypeCheck(identifierName);
+      if (clause != null)
+        CheckResolvedIdentifierType (clause.Identifier, identifierType);
+      return clause;
     }
 
-    private IResolveableClause GetBodyClauseByIdentifier (string identifierName, Type identifierType)
+    private IResolveableClause GetResolveableClauseWithoutTypeCheck (string identifierName)
     {
-      ArgumentUtility.CheckNotNull ("identifierName", identifierName);
-      ArgumentUtility.CheckNotNull ("identifierType", identifierType);
+      if (identifierName == MainFromClause.Identifier.Name)
+        return MainFromClause;
+      else
+        return GetBodyClauseByIdentifier (identifierName);
+    }
 
+    private IResolveableClause GetBodyClauseByIdentifier (string identifierName)
+    {
       IResolveableClause clause;
-      if (_clausesByIdentifier.TryGetValue (identifierName, out clause))
-      {
-        CheckResolvedIdentifierType (clause.Identifier,identifierType);
-        return clause;
-      }
-      return null;
+      _clausesByIdentifier.TryGetValue (identifierName, out clause);
+      return clause;
     }
 
     public void Accept (IQueryVisitor visitor)
@@ -186,14 +185,13 @@ namespace Remotion.Data.Linq
     }
 
     // Once we have a working ExpressionTreeBuildingVisitor, we could use it to build trees for constructed models. For now, we just create
-    // a special ConstructedExpression node.
-    // TODO 1067: Changes made to the query model's clauses cause this Expression to become invalid.
+    // a special ConstructedQueryExpression node.
+    // TODO 1067: Changes made to the query model's clauses should cause this Expression to become invalid.
     public Expression GetExpressionTree ()
     {
       if (_expressionTree == null)
-        return new ConstructedQueryExpression (this);
-      else
-        return _expressionTree;
+        _expressionTree = new ConstructedQueryExpression (this);
+      return _expressionTree;
     }
 
     /// <summary>
@@ -202,8 +200,11 @@ namespace Remotion.Data.Linq
     /// <param name="expressionTree">The expression of a linq query.</param>
     public void SetExpressionTree (Expression expressionTree)
     {
-      if (_expressionTree == null)
-        _expressionTree = expressionTree;
+      ArgumentUtility.CheckNotNull ("expressionTree", expressionTree);
+      if (_expressionTree != null && _expressionTree != expressionTree)
+        throw new InvalidOperationException  ("This QueryModel already has an expression tree. Call InvalidateExpressionTree before setting a new one.");
+
+      _expressionTree = expressionTree;
     }
 
     public FieldDescriptor ResolveField (ClauseFieldResolver resolver, Expression fieldAccessExpression, JoinedTableContext joinedTableContext)
@@ -235,7 +236,8 @@ namespace Remotion.Data.Linq
       foreach (var clonedBodyClause in clonedBodyClauses)
         queryModel.AddBodyClause (clonedBodyClause);
 
-      queryModel.SetExpressionTree (_expressionTree);
+      if (_expressionTree != null)
+        queryModel.SetExpressionTree (_expressionTree);
 
       return queryModel;
     }
@@ -255,9 +257,25 @@ namespace Remotion.Data.Linq
       }
     }
 
-    public void InvalidateExpressionTree (object sender, EventArgs args)
+    public void InvalidateExpressionTree ()
     {
       _expressionTree = null;
+    }
+
+    public string GetUniqueIdentifier (string prefix)
+    {
+      ArgumentUtility.CheckNotNullOrEmpty ("prefix", prefix);
+
+      
+      string identifier;
+      do
+      {
+        identifier = prefix + _identifierCounter;
+        ++_identifierCounter;
+      }
+      while (GetResolveableClauseWithoutTypeCheck (identifier) != null);
+
+      return identifier;
     }
   }
 }

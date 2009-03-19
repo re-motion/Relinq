@@ -16,6 +16,7 @@
 using System;
 using System.Reflection;
 using NUnit.Framework;
+using Remotion.Data.Linq;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing.FieldResolving;
 
@@ -24,10 +25,18 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.FieldResolvingTest
   [TestFixture]
   public class JoinedTableContextTest
   {
+    private QueryModel _queryModel;
+
+    [SetUp]
+    public void SetUp ()
+    {
+      _queryModel = ExpressionHelper.CreateQueryModel ();
+    }
+
     [Test]
     public void GetJoinedTable()
     {
-      JoinedTableContext context = new JoinedTableContext();
+      var context = new JoinedTableContext();
       FieldSourcePath fieldSourcePath = ExpressionHelper.GetPathForNewTable();
       MemberInfo member = typeof (Student_Detail).GetProperty ("Student");
       Assert.AreEqual (0, context.Count);
@@ -41,8 +50,8 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.FieldResolvingTest
     [Test]
     public void GetJoinedTable_Twice ()
     {
-      JoinedTableContext context = new JoinedTableContext ();
-      Table table = new Table();
+      var context = new JoinedTableContext ();
+      var table = new Table();
       FieldSourcePath fieldSourcePath1 = ExpressionHelper.GetPathForTable (table);
       FieldSourcePath fieldSourcePath2 = ExpressionHelper.GetPathForTable (table);
       MemberInfo member = typeof (Student_Detail).GetProperty ("Student");
@@ -55,7 +64,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.FieldResolvingTest
     [Test]
     public void GetJoinedTable_TwiceWithDifferentMembers ()
     {
-      JoinedTableContext context = new JoinedTableContext ();
+      var context = new JoinedTableContext ();
       FieldSourcePath fieldSourcePath = ExpressionHelper.GetPathForNewTable ();
       MemberInfo member1 = typeof (Student_Detail).GetProperty ("IndustrialSector");
       MemberInfo member2 = typeof (Student_Detail).GetProperty ("Student");
@@ -71,7 +80,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.FieldResolvingTest
     [Test]
     public void GetJoinedTable_TwiceWithDifferentFieldPath ()
     {
-      JoinedTableContext context = new JoinedTableContext ();
+      var context = new JoinedTableContext ();
       FieldSourcePath fieldSourcePath1 = ExpressionHelper.GetPathForNewTable ("x", "y");
       FieldSourcePath fieldSourcePath2 = ExpressionHelper.GetPathForNewTable ("z", "i");
 
@@ -89,7 +98,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.FieldResolvingTest
       +"does not identify a relation.")]
     public void GetJoinedTable_InvalidMember ()
     {
-      JoinedTableContext context = new JoinedTableContext ();
+      var context = new JoinedTableContext ();
       FieldSourcePath fieldSourcePath = ExpressionHelper.GetPathForNewTable ();
       MemberInfo member = typeof (Student).GetProperty ("First");
       context.GetJoinedTable (StubDatabaseInfo.Instance, fieldSourcePath, member);
@@ -98,56 +107,56 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.FieldResolvingTest
     [Test]
     public void CreateAliases()
     {
-      JoinedTableContext context = new JoinedTableContext ();
+      var context = new JoinedTableContext ();
       FieldSourcePath fieldSourcePath = ExpressionHelper.GetPathForNewTable ();
       
       MemberInfo member1 = typeof (Student_Detail).GetProperty ("Student");
       Table table1 = context.GetJoinedTable (StubDatabaseInfo.Instance, fieldSourcePath, member1);
 
       Assert.IsNull (table1.Alias);
-      context.CreateAliases();
-      Assert.AreEqual ("j0", table1.Alias);
+      context.CreateAliases (_queryModel);
+      Assert.AreEqual ("#j0", table1.Alias);
     }
 
     [Test]
     public void CreateAliases_DoesntOverwriteAliases ()
     {
-      JoinedTableContext context = new JoinedTableContext ();
+      var context = new JoinedTableContext ();
       FieldSourcePath fieldSourcePath = ExpressionHelper.GetPathForNewTable ();
 
       MemberInfo member1 = typeof (Student_Detail).GetProperty ("Student");
       Table table1 = context.GetJoinedTable (StubDatabaseInfo.Instance, fieldSourcePath, member1);
       table1.SetAlias ("Franz");
 
-      context.CreateAliases ();
+      context.CreateAliases (_queryModel);
       Assert.AreEqual ("Franz", table1.Alias);
     }
 
     [Test]
     public void CreateAliases_MultipleTimes ()
     {
-      JoinedTableContext context = new JoinedTableContext ();
+      var context = new JoinedTableContext ();
       FieldSourcePath fieldSourcePath = ExpressionHelper.GetPathForNewTable ();
 
       MemberInfo member1 = typeof (Student_Detail).GetProperty ("Student");
       Table table1 = context.GetJoinedTable (StubDatabaseInfo.Instance, fieldSourcePath, member1);
 
       Assert.IsNull (table1.Alias);
-      context.CreateAliases ();
-      Assert.AreEqual ("j0", table1.Alias);
+      context.CreateAliases (_queryModel);
+      Assert.AreEqual ("#j0", table1.Alias);
 
       MemberInfo member2 = typeof (Student_Detail).GetProperty ("IndustrialSector");
       Table table2 = context.GetJoinedTable (StubDatabaseInfo.Instance, fieldSourcePath, member2);
 
       Assert.IsNull (table2.Alias);
-      context.CreateAliases ();
-      Assert.AreEqual ("j1", table2.Alias);
+      context.CreateAliases (_queryModel);
+      Assert.AreEqual ("#j1", table2.Alias);
     }
 
     [Test]
     public void CreateAliases_MultipleTablesAndOrdering ()
     {
-      JoinedTableContext context = new JoinedTableContext ();
+      var context = new JoinedTableContext ();
       FieldSourcePath fieldSourcePath1 = ExpressionHelper.GetPathForNewTable ("1", null);
       FieldSourcePath fieldSourcePath2 = ExpressionHelper.GetPathForNewTable ("2", null);
       FieldSourcePath fieldSourcePath3 = ExpressionHelper.GetPathForNewTable ("3", null);
@@ -162,11 +171,11 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.FieldResolvingTest
       Assert.IsNull (table2.Alias);
       Assert.IsNull (table3.Alias);
 
-      context.CreateAliases ();
+      context.CreateAliases (_queryModel);
 
-      Assert.AreEqual ("j0", table1.Alias);
-      Assert.AreEqual ("j1", table2.Alias);
-      Assert.AreEqual ("j2", table3.Alias);
+      Assert.AreEqual ("#j0", table1.Alias);
+      Assert.AreEqual ("#j1", table2.Alias);
+      Assert.AreEqual ("#j2", table3.Alias);
     }
   }
 }
