@@ -59,7 +59,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
     {
       resultCollector.AddBodyExpression (new WhereExpressionData (whereConditionLambda));
       if (_isTopLevel)
-        resultCollector.AddProjectionExpression (null);
+        resultCollector.AddIdentityProjectionExpression (whereConditionLambda.Parameters[0]);
     }
   }
 }

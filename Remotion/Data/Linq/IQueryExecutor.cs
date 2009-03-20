@@ -14,8 +14,8 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System.Collections;
-using Remotion.Collections;
-using Remotion.Data.Linq.SqlGeneration;
+using Remotion.Data.Linq.EagerFetching;
+using System.Collections.Generic;
 
 namespace Remotion.Data.Linq
 {

@@ -57,7 +57,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       }
     }
 
-    private void ParseOrderBy (ParseResultCollector resultCollector, MethodCallExpression sourceExpression, OrderingDirection direction, bool orderBy)
+    private void ParseOrderBy (ParseResultCollector resultCollector, MethodCallExpression sourceExpression, OrderingDirection direction, bool isOrderBy)
     {
       UnaryExpression unaryExpression = ParserUtility.GetTypedExpression<UnaryExpression> (sourceExpression.Arguments[1],
           "second argument of OrderBy expression", resultCollector.ExpressionTreeRoot);
@@ -66,9 +66,9 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
       _sourceParser.Parse (resultCollector, sourceExpression.Arguments[0], ueLambda.Parameters[0], "first argument of OrderBy expression");
 
-      resultCollector.AddBodyExpression (new OrderExpressionData (orderBy, direction, ueLambda));
+      resultCollector.AddBodyExpression (new OrderExpressionData (isOrderBy, direction, ueLambda));
       if (_isTopLevel)
-        resultCollector.AddProjectionExpression (null);
+        resultCollector.AddIdentityProjectionExpression (ueLambda.Parameters[0]);
     }
   }
 }

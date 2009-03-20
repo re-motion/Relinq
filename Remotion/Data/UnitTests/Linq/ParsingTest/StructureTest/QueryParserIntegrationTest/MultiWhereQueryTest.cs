@@ -17,6 +17,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 
@@ -69,7 +70,11 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.QueryParserInte
       Assert.IsNotNull (ParsedQuery.SelectOrGroupClause);
       SelectClause clause = ParsedQuery.SelectOrGroupClause as SelectClause;
       Assert.IsNotNull (clause);
-      Assert.IsNull (clause.ProjectionExpression);
+      
+      Assert.That (clause.ProjectionExpression.Parameters.Count, Is.EqualTo (1));
+      Assert.That (clause.ProjectionExpression.Parameters[0].Name, Is.EqualTo ("s"));
+      Assert.That (clause.ProjectionExpression.Parameters[0].Type, Is.EqualTo (typeof (Student)));
+      Assert.That (clause.ProjectionExpression.Body, Is.SameAs (clause.ProjectionExpression.Parameters[0]));
     }
   }
 }

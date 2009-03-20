@@ -63,7 +63,19 @@ namespace Remotion.Data.Linq.Parsing.Structure
       _bodyExpressions.Add (expression);
     }
 
-    public FromExpressionData ExtractMainFromExpression()
+    public void AddProjectionExpression (LambdaExpression expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+      _projectionExpressions.Add (expression);
+    }
+
+    public void AddIdentityProjectionExpression (ParameterExpression sourceParameterOfPreviousClause)
+    {
+      ArgumentUtility.CheckNotNull ("sourceParameterOfPreviousClause", sourceParameterOfPreviousClause);
+      AddProjectionExpression (Expression.Lambda (sourceParameterOfPreviousClause, sourceParameterOfPreviousClause));
+    }
+
+    public FromExpressionData ExtractMainFromExpression ()
     {
       if (BodyExpressions.Count == 0)
         throw new InvalidOperationException ("There are no body expressions to be extracted.");
@@ -74,11 +86,6 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
       _bodyExpressions.RemoveAt (0);
       return fromExpressionData;
-    }
-
-    public void AddProjectionExpression (LambdaExpression expression)
-    {
-      _projectionExpressions.Add (expression);
     }
 
     public void Simplify (List<QueryModel> subQueryRegistry)
@@ -93,9 +100,6 @@ namespace Remotion.Data.Linq.Parsing.Structure
     public static T Simplify<T> (T expression, List<QueryModel> subQueryRegistry)
         where T : Expression
     {
-      if (expression == null)
-        return expression;
-
       SubQueryFindingVisitor subQueryFindingVisitor = new SubQueryFindingVisitor (subQueryRegistry);
       T newExpression = (T) subQueryFindingVisitor.ReplaceSubQueries (expression);
 

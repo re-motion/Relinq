@@ -95,7 +95,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "The first body expression is no FromExpressionData.")]
     public void ExtractMainFromExpression_NotFromExpression ()
     {
-      WhereExpressionData expression1 = new WhereExpressionData (ExpressionHelper.CreateLambdaExpression());
+      var expression1 = new WhereExpressionData (ExpressionHelper.CreateLambdaExpression());
       _collector.AddBodyExpression (expression1);
       _collector.ExtractMainFromExpression ();
     }
@@ -107,9 +107,19 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
       LambdaExpression expression1 = ExpressionHelper.CreateLambdaExpression();
       LambdaExpression expression2 = ExpressionHelper.CreateLambdaExpression ();
       _collector.AddProjectionExpression (expression1);
-      _collector.AddProjectionExpression (null);
       _collector.AddProjectionExpression (expression2);
-      Assert.That (_collector.ProjectionExpressions, Is.EqualTo (new[] { expression1, null, expression2 }));
+      Assert.That (_collector.ProjectionExpressions, Is.EqualTo (new[] { expression1, expression2 }));
+    }
+
+    [Test]
+    public void AddIdentityProjectionExpression ()
+    {
+      var parameter = Expression.Parameter (typeof (int), "i");
+      Assert.That (_collector.ProjectionExpressions, Is.Empty);
+
+      _collector.AddIdentityProjectionExpression (parameter);
+      Assert.That (_collector.ProjectionExpressions.Count, Is.EqualTo (1));
+      Assert.That (_collector.ProjectionExpressions[0].Body, Is.SameAs (_collector.ProjectionExpressions[0].Parameters[0]));
     }
 
     [Test]
@@ -164,16 +174,5 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
 
       Assert.That (_collector.BodyExpressions[0].Expression, Is.InstanceOfType (typeof (ConstantExpression)));
     }
-
-    [Test]
-    public void Simplify_IgnoresNullExpressions ()
-    {
-      List<QueryModel> registry = new List<QueryModel> ();
-      _collector.AddProjectionExpression (null);
-      _collector.Simplify (registry);
-
-      Assert.That (_collector.ProjectionExpressions[0], Is.Null);
-    }
-
   }
 }

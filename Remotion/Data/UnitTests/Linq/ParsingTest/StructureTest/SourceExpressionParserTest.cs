@@ -21,6 +21,7 @@ using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
+using Remotion.Development.UnitTesting;
 
 namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
 {
@@ -46,7 +47,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     {
       IQueryable<Student> query = SelectTestQueryGenerator.CreateSimpleQuery (_source);
       ParseResultCollector result = Parse (query.Expression);
-      var resultModifiers = result.ResultModifierExpression;
+      Dev.Null = result.ResultModifierExpression;
       Assert.IsEmpty (result.ResultModifierExpression);
     }
 
@@ -116,7 +117,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
       ConstantExpression constantExpression = Expression.Constant (5);
       ParseResultCollector result = Parse (constantExpression);
 
-      ParseResultCollector expectedResult = new ParseResultCollector (constantExpression);
+      var expectedResult = new ParseResultCollector (constantExpression);
       new SimpleFromSourceExpressionParser().Parse (expectedResult, constantExpression, _potentialFromIdentifier, "xy");
       AssertResultsEqual (expectedResult, result);
 
@@ -127,7 +128,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     {
       IQueryable<Student> query = SelectTestQueryGenerator.CreateSimpleQuery (_source);
       ParseResultCollector result = Parse (query.Expression);
-      ParseResultCollector expectedResult = new ParseResultCollector (query.Expression);
+      var expectedResult = new ParseResultCollector (query.Expression);
       new SelectExpressionParser().Parse (expectedResult, (MethodCallExpression) query.Expression);
       AssertResultsEqual (expectedResult, result);
     }
@@ -137,7 +138,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     {
       IQueryable<Student> query = FromTestQueryGenerator.CreateMultiFromQuery (_source, _source);
       ParseResultCollector result = Parse (query.Expression);
-      ParseResultCollector expectedResult = new ParseResultCollector (query.Expression);
+      var expectedResult = new ParseResultCollector (query.Expression);
       new SelectManyExpressionParser ().Parse (expectedResult, (MethodCallExpression) query.Expression);
       AssertResultsEqual (expectedResult, result);
     }
@@ -147,7 +148,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     {
       IQueryable<Student> query = WhereTestQueryGenerator.CreateSimpleWhereQuery(_source);
       ParseResultCollector result = Parse (query.Expression);
-      ParseResultCollector expectedResult = new ParseResultCollector (query.Expression);
+      var expectedResult = new ParseResultCollector (query.Expression);
       new WhereExpressionParser (true).Parse (expectedResult, (MethodCallExpression) query.Expression);
       AssertResultsEqual (expectedResult, result);
     }
@@ -157,7 +158,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     {
       IQueryable<Student> query = WhereTestQueryGenerator.CreateSimpleWhereQuery (_source);
       ParseResultCollector result = Parse_NotTopLevel (query);
-      ParseResultCollector expectedResult = new ParseResultCollector (query.Expression);
+      var expectedResult = new ParseResultCollector (query.Expression);
       new WhereExpressionParser (false).Parse (expectedResult, (MethodCallExpression) query.Expression);
       AssertResultsEqual (expectedResult, result);
     }
@@ -167,7 +168,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     {
       IQueryable<Student> query = OrderByTestQueryGenerator.CreateSimpleOrderByQuery (_source);
       ParseResultCollector result = Parse (query.Expression);
-      ParseResultCollector expectedResult = new ParseResultCollector (query.Expression);
+      var expectedResult = new ParseResultCollector (query.Expression);
       new OrderByExpressionParser (true).Parse (expectedResult, (MethodCallExpression) query.Expression);
       AssertResultsEqual (expectedResult, result);
     }
@@ -177,7 +178,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     {
       IQueryable<Student> query = OrderByTestQueryGenerator.CreateSimpleOrderByQuery (_source);
       ParseResultCollector result = Parse_NotTopLevel (query);
-      ParseResultCollector expectedResult = new ParseResultCollector (query.Expression);
+      var expectedResult = new ParseResultCollector (query.Expression);
       new OrderByExpressionParser (false).Parse (expectedResult, (MethodCallExpression) query.Expression);
       AssertResultsEqual (expectedResult, result);
     }
@@ -188,10 +189,10 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
       IQueryable<string> query = LetTestQueryGenerator.CreateSimpleLetClause (_source);
 
       Expression letExpression = ((MethodCallExpression) (query.Expression)).Arguments[0];
-      ParseResultCollector result = new ParseResultCollector (letExpression);
+      var result = new ParseResultCollector (letExpression);
       _notTopLevelParser.Parse (result, letExpression, _potentialFromIdentifier, "bla");
 
-      ParseResultCollector expectedResult = new ParseResultCollector (letExpression);
+      var expectedResult = new ParseResultCollector (letExpression);
       new LetExpressionParser ().Parse (expectedResult, (MethodCallExpression) letExpression);
       AssertResultsEqual (expectedResult, result);
     }
@@ -203,7 +204,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
       ParseResultCollector result = Parse (query.Expression);
       
       Expression innerExpression = ((MethodCallExpression)query.Expression).Arguments[0];
-      ParseResultCollector expectedResult = new ParseResultCollector (query.Expression);
+      var expectedResult = new ParseResultCollector (query.Expression);
       new SourceExpressionParser (true).Parse (expectedResult, innerExpression, _potentialFromIdentifier, "whatever");
       AssertResultsEqual (expectedResult, result);
     }
@@ -213,56 +214,58 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     private void AssertResultsEqual(ParseResultCollector one, ParseResultCollector two)
     {
       Assert.AreEqual (one.ExpressionTreeRoot, two.ExpressionTreeRoot);
-      //Assert.AreEqual (one.IsDistinct, two.IsDistinct);
       Assert.AreEqual (one.ResultModifierExpression, two.ResultModifierExpression);
       Assert.AreEqual (one.ProjectionExpressions.Count, two.ProjectionExpressions.Count);
       Assert.AreEqual (one.BodyExpressions.Count, two.BodyExpressions.Count);
 
       for (int i = 0; i < one.ProjectionExpressions.Count; ++i)
-        Assert.AreEqual (one.ProjectionExpressions[i], two.ProjectionExpressions[i]);
+        ExpressionTreeComparer.CheckAreEqualTrees (one.ProjectionExpressions[i], two.ProjectionExpressions[i]);
 
       for (int i = 0; i < one.BodyExpressions.Count; ++i)
       {
-        FromExpressionData fromExpression1 = one.BodyExpressions[i] as FromExpressionData;
-        WhereExpressionData whereExpression1 = one.BodyExpressions[i] as WhereExpressionData;
-        OrderExpressionData orderExpression1 = one.BodyExpressions[i] as OrderExpressionData;
-        LetExpressionData letExpression1 = one.BodyExpressions[i] as LetExpressionData;
+        var fromExpression1 = one.BodyExpressions[i] as FromExpressionData;
+        var whereExpression1 = one.BodyExpressions[i] as WhereExpressionData;
+        var orderExpression1 = one.BodyExpressions[i] as OrderExpressionData;
+        var letExpression1 = one.BodyExpressions[i] as LetExpressionData;
         if (fromExpression1 != null)
         {
-          FromExpressionData fromExpression2 = two.BodyExpressions[i] as FromExpressionData;
+          var fromExpression2 = (FromExpressionData) two.BodyExpressions[i];
 
           Assert.AreEqual (fromExpression1.Identifier, fromExpression2.Identifier);
           Assert.AreEqual (fromExpression1.TypedExpression, fromExpression2.TypedExpression);
         }
         else if (whereExpression1 != null)
         {
-          WhereExpressionData whereExpression2 = two.BodyExpressions[i] as WhereExpressionData;
+          var whereExpression2 = (WhereExpressionData) two.BodyExpressions[i];
           Assert.AreEqual (whereExpression1.TypedExpression, whereExpression2.TypedExpression);
         }
         else if (letExpression1 != null)
         {
-          LetExpressionData letExpression2 = two.BodyExpressions[i] as LetExpressionData;
+          var letExpression2 = (LetExpressionData) two.BodyExpressions[i];
           Assert.AreEqual (letExpression1.TypedExpression, letExpression2.TypedExpression);
+        }
+        else if (orderExpression1 != null)
+        {
+          var orderExpression2 = (OrderExpressionData) two.BodyExpressions[i];
+          Assert.AreEqual (orderExpression1.TypedExpression, orderExpression2.TypedExpression);
         }
         else
         {
-          OrderExpressionData orderExpression2 = two.BodyExpressions[i] as OrderExpressionData;
-          Assert.AreEqual (orderExpression1.TypedExpression, orderExpression2.TypedExpression);
+          Assert.Fail ("Invalid expression data type");
         }
       }
     }
 
     private ParseResultCollector Parse (Expression expression)
     {
-      ParseResultCollector result = new ParseResultCollector (expression);
+      var result = new ParseResultCollector (expression);
       _topLevelParser.Parse (result, expression, _potentialFromIdentifier, "bla");
       return result;
     }
-
-   
+    
     private ParseResultCollector Parse_NotTopLevel (IQueryable query)
     {
-      ParseResultCollector result = new ParseResultCollector (query.Expression);
+      var result = new ParseResultCollector (query.Expression);
       _notTopLevelParser.Parse (result, query.Expression, _potentialFromIdentifier, "bla");
       return result;
     }

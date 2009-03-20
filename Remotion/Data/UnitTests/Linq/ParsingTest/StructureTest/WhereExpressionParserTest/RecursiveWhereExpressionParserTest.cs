@@ -82,7 +82,10 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.WhereExpression
     {
       Assert.IsNotNull (_result.ProjectionExpressions);
       Assert.AreEqual (1, _result.ProjectionExpressions.Count);
-      Assert.IsNull (_result.ProjectionExpressions[0]);
+      Assert.That (_result.ProjectionExpressions[0].Parameters.Count, Is.EqualTo (1));
+      Assert.That (_result.ProjectionExpressions[0].Parameters[0].Name, Is.EqualTo ("s"));
+      Assert.That (_result.ProjectionExpressions[0].Parameters[0].Type, Is.EqualTo (typeof (Student)));
+      Assert.That (_result.ProjectionExpressions[0].Body, Is.SameAs (_result.ProjectionExpressions[0].Parameters[0]));
     }
 
     [Test]
