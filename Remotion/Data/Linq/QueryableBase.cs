@@ -21,7 +21,7 @@ using System.Linq.Expressions;
 using Remotion.Data.Linq.EagerFetching;
 using Remotion.Utilities;
 
-namespace Remotion.Data.Linq.QueryProviderImplementation
+namespace Remotion.Data.Linq
 {
   /// <summary>
   /// Acts as a common base class for <see cref="IQueryable{T}"/> implementations based on re-linq.
@@ -30,7 +30,6 @@ namespace Remotion.Data.Linq.QueryProviderImplementation
   public abstract class QueryableBase<T> : IOrderedQueryable<T>
   {
     private readonly QueryProviderBase _queryProvider;
-    private readonly FetchRequestCollection<T> _fetchRequestCollection = new FetchRequestCollection<T> ();
 
     protected QueryableBase (QueryProviderBase provider)
     {
@@ -62,27 +61,6 @@ namespace Remotion.Data.Linq.QueryProviderImplementation
     public Type ElementType
     {
       get { return typeof (T); }
-    }
-
-    /// <summary>
-    /// Gets the fetch requests that were issued for this <see cref="QueryableBase{T}"/>.
-    /// </summary>
-    /// <value>The fetch requests added via <see cref="GetOrAddFetchRequest{TRelated}"/>.</value>
-    public IEnumerable<IFetchRequest> FetchRequests
-    {
-      get { return _fetchRequestCollection.FetchRequests; }
-    }
-
-    /// <summary>
-    /// Gets or adds an eager-fetch request for this <see cref="QueryableBase{T}"/>.
-    /// </summary>
-    /// <typeparam name="TRelated">The type of related objects to be fetched.</typeparam>
-    /// <param name="relatedObjectSelector">A lambda expression selecting related objects for a given query result object.</param>
-    /// <returns>An <see cref="IFetchRequest"/> instance representing the fetch request.</returns>
-    public FetchRequest<TRelated> GetOrAddFetchRequest<TRelated> (Expression<Func<T, IEnumerable<TRelated>>> relatedObjectSelector)
-    {
-      ArgumentUtility.CheckNotNull ("relatedObjectSelector", relatedObjectSelector);
-      return _fetchRequestCollection.GetOrAddFetchRequest (relatedObjectSelector);
     }
 
     public IEnumerator<T> GetEnumerator()

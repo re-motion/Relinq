@@ -19,6 +19,7 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
+using Remotion.Data.Linq.EagerFetching;
 using Rhino.Mocks;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 using Remotion.Utilities;
@@ -87,7 +88,12 @@ namespace Remotion.Data.UnitTests.Linq
     public void GenericExecute_Single()
     {
       Expression expression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource());
-      Expect.Call (_executor.ExecuteSingle (Arg<QueryModel>.Matches (queryModel => queryModel.GetExpressionTree() == expression))).Return (0);
+      Expect
+          .Call (
+          _executor.ExecuteSingle (
+              Arg<QueryModel>.Matches (queryModel => queryModel.GetExpressionTree() == expression),
+              Arg<IEnumerable<FetchRequest>>.List.Equal (new FetchRequest[0])))
+          .Return (0);
 
       _mockRepository.ReplayAll();
 
@@ -100,7 +106,12 @@ namespace Remotion.Data.UnitTests.Linq
     public void Execute_Single ()
     {
       Expression expression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource ());
-      Expect.Call (_executor.ExecuteSingle (Arg<QueryModel>.Matches (queryModel => queryModel.GetExpressionTree () == expression))).Return (0);
+      Expect
+          .Call (
+          _executor.ExecuteSingle (
+              Arg<QueryModel>.Matches (queryModel => queryModel.GetExpressionTree() == expression),
+              Arg<IEnumerable<FetchRequest>>.List.Equal (new FetchRequest[0])))
+          .Return (0);
 
       _mockRepository.ReplayAll ();
 
@@ -116,8 +127,12 @@ namespace Remotion.Data.UnitTests.Linq
       var student = new Student();
       
       Expression expression = query.Expression;
-      Expect.Call (_executor.ExecuteCollection  (Arg<QueryModel>.Matches (queryModel => queryModel.GetExpressionTree() == expression)))
-          .Return (new[] {student});
+      Expect
+          .Call (
+          _executor.ExecuteCollection (
+              Arg<QueryModel>.Matches (queryModel => queryModel.GetExpressionTree () == expression),
+              Arg<IEnumerable<FetchRequest>>.List.Equal (new FetchRequest[0])))
+          .Return (new[] { student });
 
       _mockRepository.ReplayAll ();
 
@@ -135,7 +150,11 @@ namespace Remotion.Data.UnitTests.Linq
       var student = new Student ();
 
       Expression expression = query.Expression;
-      Expect.Call (_executor.ExecuteCollection (Arg<QueryModel>.Matches (queryModel => queryModel.GetExpressionTree () == expression)))
+      Expect
+          .Call (
+          _executor.ExecuteCollection (
+              Arg<QueryModel>.Matches (queryModel => queryModel.GetExpressionTree () == expression),
+              Arg<IEnumerable<FetchRequest>>.List.Equal (new FetchRequest[0])))
           .Return (new[] { student });
 
       _mockRepository.ReplayAll ();
@@ -149,6 +168,18 @@ namespace Remotion.Data.UnitTests.Linq
       Assert.AreSame (student, students[0]);
 
       _mockRepository.VerifyAll ();
+    }
+
+    [Test]
+    [Ignore ("TODO 1089")]
+    public void ExecuteCollection_WithFetchRequests ()
+    {
+    }
+
+    [Test]
+    [Ignore ("TODO 1089")]
+    public void ExecuteSingle_WithFetchRequests ()
+    {
     }
   }
 }

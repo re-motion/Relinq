@@ -15,7 +15,6 @@
 // 
 using System.Linq.Expressions;
 using Remotion.Data.Linq;
-using Remotion.Data.Linq.QueryProviderImplementation;
 
 namespace Remotion.Data.UnitTests.Linq
 {

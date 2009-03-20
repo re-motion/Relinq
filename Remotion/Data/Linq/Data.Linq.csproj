@@ -52,6 +52,9 @@
     <Compile Include="Clauses\AdditionalFromClause.cs" />
     <Compile Include="Clauses\ClauseFinder.cs" />
     <Compile Include="Clauses\ClauseLookupException.cs" />
+    <Compile Include="EagerFetching\FetchFilteringExpressionTreeVisitor.cs" />
+    <Compile Include="EagerFetching\ThenFetchExpression.cs" />
+    <Compile Include="EagerFetching\FetchExpression.cs" />
     <Compile Include="EagerFetching\FetchRequest.cs" />
     <Compile Include="EagerFetching\FetchRequestCollection.cs" />
     <Compile Include="Clauses\MemberFromClause.cs" />
@@ -70,8 +73,6 @@
     <Compile Include="DataObjectModel\SingleJoin.cs" />
     <Compile Include="DataObjectModel\SourceMarkerEvaluation.cs" />
     <Compile Include="DataObjectModel\SubQuery.cs" />
-    <Compile Include="EagerFetching\IFetchRequest.cs" />
-    <Compile Include="EagerFetching\IFetchRequestCollection.cs" />
     <Compile Include="Expressions\ConstructedQueryExpression.cs" />
     <Compile Include="Expressions\QueryModelExpressionBase.cs" />
     <Compile Include="Expressions\SubQueryExpression.cs" />
@@ -157,8 +158,7 @@
     <Compile Include="Clauses\SelectClause.cs" />
     <Compile Include="Clauses\ISelectGroupClause.cs" />
     <Compile Include="QueryProviderBase.cs" />
-    <Compile Include="QueryProviderImplementation\QueryableBase.cs" />
-    <Compile Include="QueryProviderImplementation\TypeSystem.cs" />
+    <Compile Include="QueryableBase.cs" />
     <Compile Include="DataObjectModel\BinaryCondition.cs" />
     <Compile Include="DataObjectModel\ComplexCriterion.cs" />
     <Compile Include="DataObjectModel\Column.cs" />
@@ -226,6 +226,9 @@
       <Project>{BD061F4A-A9E6-461E-A804-7999623A0060}</Project>
       <Name>Core.Interfaces</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="QueryProviderImplementation\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

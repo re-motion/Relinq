@@ -17,7 +17,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.QueryProviderImplementation;
+using Remotion.Data.Linq.EagerFetching;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.ExtensionMethods
@@ -37,15 +37,15 @@ namespace Remotion.Data.Linq.ExtensionMethods
     /// <typeparam name="TRelated">The type of the related objects to be eager-fetched.</typeparam>
     /// <param name="query">The query for which the fetch request should be made.</param>
     /// <param name="relatedObjectSelector">A lambda expression selecting the related objects to be eager-fetched.</param>
-    /// <returns>A <see cref="FluentFetchRequest{T}"/> object on which further fetch requests can be made. The subsequent fetches start from the 
+    /// <returns>A <see cref="FluentFetchRequest{TOriginating, TRelated}"/> object on which further fetch requests can be made. The subsequent fetches start from the 
     /// related objects fetched by the original request created by this method.</returns>
-    public static FluentFetchRequest<TRelated> Fetch<TOriginating, TRelated> (this IQueryable<TOriginating> query, Expression<Func<TOriginating, IEnumerable<TRelated>>> relatedObjectSelector)
+    public static FluentFetchRequest<TOriginating, TRelated> Fetch<TOriginating, TRelated> (this IQueryable<TOriginating> query, Expression<Func<TOriginating, IEnumerable<TRelated>>> relatedObjectSelector)
     {
-      var queryable = ArgumentUtility.CheckNotNullAndType<QueryableBase<TOriginating>> ("query", query);
+      var queryProvider = ArgumentUtility.CheckNotNullAndType<QueryProviderBase> ("query.Provider", query.Provider);
       ArgumentUtility.CheckNotNull ("relatedObjectSelector", relatedObjectSelector);
 
-      var request = queryable.GetOrAddFetchRequest (relatedObjectSelector);
-      return new FluentFetchRequest<TRelated> (request);
+      var newExpression = new FetchExpression (query.Expression, relatedObjectSelector);
+      return new FluentFetchRequest<TOriginating, TRelated> (queryProvider, newExpression);
     }
   }
 }

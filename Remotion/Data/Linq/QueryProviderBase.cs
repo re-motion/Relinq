@@ -19,8 +19,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Remotion.Data.Linq.EagerFetching;
 using Remotion.Data.Linq.Parsing.Structure;
-using Remotion.Data.Linq.QueryProviderImplementation;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq
@@ -34,7 +34,7 @@ namespace Remotion.Data.Linq
     /// Initializes a new instance of  <see cref="QueryProviderBase"/> 
     /// </summary>
     /// <param name="executor">The executor is used to execute queries against the backend.</param>
-    public QueryProviderBase (IQueryExecutor executor)
+    protected QueryProviderBase (IQueryExecutor executor)
     {
       ArgumentUtility.CheckNotNull ("executor", executor);
       Executor = executor;
@@ -47,8 +47,8 @@ namespace Remotion.Data.Linq
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       MethodInfo genericCreateQueryMethod = typeof (QueryProviderBase).GetMethod ("CreateQueryable", BindingFlags.NonPublic | BindingFlags.Instance);
-      
-      Type elementType = TypeSystem.GetElementType(expression.Type);
+
+      Type elementType = ReflectionUtility.GetAscribedGenericArguments (expression.Type, typeof (IEnumerable<>))[0];
       try
       {
         return (IQueryable) genericCreateQueryMethod.MakeGenericMethod (elementType).Invoke(this, new object[] {expression});
@@ -73,27 +73,10 @@ namespace Remotion.Data.Linq
 
     protected abstract IQueryable<T> CreateQueryable<T> (Expression expression);
 
-    public virtual object Execute (Expression expression)
-    {
-      ArgumentUtility.CheckNotNull ("expression", expression);
-      return Executor.ExecuteSingle (GenerateQueryModel(expression));
-    }
-
     public virtual TResult Execute<TResult> (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      return (TResult) Executor.ExecuteSingle (GenerateQueryModel (expression));
-    }
-
-    /// <summary>
-    /// This is where the query is executed and the results are mapped to objects.
-    /// </summary>
-    /// <param name="expression">The query as expression chain.</param>
-    /// <returns></returns>
-    public virtual IEnumerable ExecuteCollection (Expression expression)
-    {
-      ArgumentUtility.CheckNotNull ("expression", expression);
-      return Executor.ExecuteCollection (GenerateQueryModel (expression));
+      return (TResult) Execute (expression);
     }
 
     /// <summary>
@@ -105,9 +88,38 @@ namespace Remotion.Data.Linq
     public virtual IEnumerable<TResult> ExecuteCollection<TResult> (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      IEnumerable results = Executor.ExecuteCollection (GenerateQueryModel (expression));
-      foreach (TResult result in results)
-        yield return result;
+      return ExecuteCollection (expression).Cast<TResult> ();
+    }
+
+    public virtual object Execute (Expression expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
+      var fetchRequests = GetFetchRequests (ref expression);
+      var queryModel = GenerateQueryModel (expression);
+      return Executor.ExecuteSingle (queryModel, fetchRequests);
+    }
+
+    /// <summary>
+    /// This is where the query is executed and the results are mapped to objects.
+    /// </summary>
+    /// <param name="expression">The query as expression chain.</param>
+    /// <returns></returns>
+    public virtual IEnumerable ExecuteCollection (Expression expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
+      var fetchRequests = GetFetchRequests (ref expression);
+      var queryModel = GenerateQueryModel (expression);
+      return Executor.ExecuteCollection (queryModel, fetchRequests);
+    }
+
+    // TODO 1089: Test and document
+    public FetchRequest[] GetFetchRequests (ref Expression expression)
+    {
+      var fetchFilteringVisitor = new FetchFilteringExpressionTreeVisitor ();
+      expression = fetchFilteringVisitor.Visit (expression);
+      return fetchFilteringVisitor.TopLevelFetchRequests;
     }
 
     /// <summary>

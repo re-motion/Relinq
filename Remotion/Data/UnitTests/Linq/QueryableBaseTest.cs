@@ -21,10 +21,9 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Rhino.Mocks;
-using Remotion.Data.Linq.QueryProviderImplementation;
 using Remotion.Utilities;
 
-namespace Remotion.Data.UnitTests.Linq.QueryProviderImplementationTest
+namespace Remotion.Data.UnitTests.Linq
 {
   [TestFixture]
   public class QueryableBaseTest
@@ -94,20 +93,6 @@ namespace Remotion.Data.UnitTests.Linq.QueryProviderImplementationTest
       QueryableBase<int> queryable = new TestQueryable<int> (_providerMock, _intArrayExpression);
       ((IEnumerable)queryable).GetEnumerator ();
       _mockRepository.VerifyAll ();
-    }
-
-    [Test]
-    public void GetOrAddFetchRequest ()
-    {
-      QueryableBase<Student> queryable = new TestQueryable<Student> (_providerMock, _studentArrayExpression);
-
-      Assert.That (queryable.FetchRequests, Is.Empty);
-
-      Expression<Func<Student, IEnumerable<int>>> expectedExpression = s => s.Scores;
-      var result = queryable.GetOrAddFetchRequest (expectedExpression);
-
-      Assert.That (result.RelatedObjectSelector, Is.SameAs (expectedExpression));
-      Assert.That (queryable.FetchRequests, Is.EqualTo (new[] { result }));
     }
   }
 }

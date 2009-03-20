@@ -9,15 +9,13 @@ namespace Remotion.Data.Linq.ExtensionMethods
   /// <summary>
   /// Provides a fluent interface to recursively fetch related objects of objects which themselves are eager-fetched.
   /// </summary>
-  /// <typeparam name="T">The type of object from which the recursive fetch operation should be made.</typeparam>
-  public class FluentFetchRequest<T>
+  /// <typeparam name="TQueried">The type of the objects returned by the query.</typeparam>
+  /// <typeparam name="TFetch">The type of object from which the recursive fetch operation should be made.</typeparam>
+  public class FluentFetchRequest<TQueried, TFetch> : QueryableBase<TQueried>
   {
-    private readonly FetchRequest<T> _fetchRequest;
-
-    public FluentFetchRequest (FetchRequest<T> fetchRequest)
+    public FluentFetchRequest (QueryProviderBase provider, Expression expression) 
+        : base (provider, expression)
     {
-      ArgumentUtility.CheckNotNull ("fetchRequest", fetchRequest);
-      _fetchRequest = fetchRequest;
     }
 
     /// <summary>
@@ -26,13 +24,14 @@ namespace Remotion.Data.Linq.ExtensionMethods
     /// </summary>
     /// <typeparam name="TRelated">The type of the next related objects to be eager-fetched.</typeparam>
     /// <param name="relatedObjectSelector">A lambda expression selecting the next related objects to be eager-fetched.</param>
-    /// <returns>A <see cref="FluentFetchRequest{T}"/> object on which further recursive fetch requests can be made. The subsequent fetches start 
+    /// <returns>A <see cref="FluentFetchRequest{TFetch, TQueried}"/> object on which further recursive fetch requests can be made. The subsequent fetches start 
     /// from the related objects fetched by the fetch request created by this method.</returns>
-    public FluentFetchRequest<TRelated> Fetch<TRelated> (Expression<Func<T, IEnumerable<TRelated>>> relatedObjectSelector)
+    public FluentFetchRequest<TQueried, TRelated> ThenFetch<TRelated> (Expression<Func<TFetch, IEnumerable<TRelated>>> relatedObjectSelector)
     {
       ArgumentUtility.CheckNotNull ("relatedObjectSelector", relatedObjectSelector);
-      var nextRequest = _fetchRequest.GetOrAddInnerFetchRequest (relatedObjectSelector);
-      return new FluentFetchRequest<TRelated> (nextRequest);
+
+      var newExpression = new ThenFetchExpression (Expression, relatedObjectSelector);
+      return new FluentFetchRequest<TQueried, TRelated> ((QueryProviderBase) Provider, newExpression);
     }
   }
 }

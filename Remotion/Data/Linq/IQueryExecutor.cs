@@ -24,7 +24,7 @@ namespace Remotion.Data.Linq
   /// </summary>
   public interface IQueryExecutor
   {
-    object ExecuteSingle (QueryModel queryModel);
-    IEnumerable ExecuteCollection (QueryModel queryModel);
+    object ExecuteSingle (QueryModel queryModel, IEnumerable<FetchRequest> fetchRequests);
+    IEnumerable ExecuteCollection (QueryModel queryModel, IEnumerable<FetchRequest> fetchRequests);
   }
 }

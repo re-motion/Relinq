@@ -18,9 +18,9 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq;
 using Remotion.Data.Linq.EagerFetching;
 using Remotion.Data.Linq.ExtensionMethods;
-using Remotion.Data.Linq.QueryProviderImplementation;
 using Remotion.Data.UnitTests.Linq.ParsingTest;
 using System.Linq.Expressions;
 using Remotion.Utilities;
@@ -34,12 +34,14 @@ namespace Remotion.Data.UnitTests.Linq
     public void Fetch ()
     {
       var query = ExpressionHelper.CreateQuerySource();
-      query.Fetch (s => s.Scores);
-      var castQuery = (QueryableBase<Student>) query;
+      Expression<Func<Student, IEnumerable<int>>> relatedObjectSelector = s => s.Scores;
+      var fetchedQuery = query.Fetch (relatedObjectSelector);
 
-      Assert.That (castQuery.FetchRequests.Count(), Is.EqualTo (1));
-      Expression<Func<Student, IEnumerable<int>>> expectedExpression = s => s.Scores;
-      ExpressionTreeComparer.CheckAreEqualTrees (castQuery.FetchRequests.First().RelatedObjectSelector, expectedExpression);
+      Assert.That (fetchedQuery.Expression, Is.InstanceOfType (typeof (FetchExpression)));
+
+      var fetchExpression = (FetchExpression) fetchedQuery.Expression;
+      Assert.That (fetchExpression.Operand, Is.SameAs (query.Expression));
+      Assert.That (fetchExpression.RelatedObjectSelector, Is.SameAs (relatedObjectSelector));
     }
 
     [Test]
@@ -47,33 +49,41 @@ namespace Remotion.Data.UnitTests.Linq
     {
       var query = from sd in ExpressionHelper.CreateQuerySource_Detail ()
                   select sd.IndustrialSector;
-      query.Fetch (i => i.Students);
-      var castQuery = (QueryableBase<IndustrialSector>) query;
+      Expression<Func<IndustrialSector, IEnumerable<Student>>> relatedObjectSelector = i => i.Students;
+      var fetchedQuery = query.Fetch (relatedObjectSelector);
 
-      Assert.That (castQuery.FetchRequests.Count (), Is.EqualTo (1));
-      
-      var fetchRequest = castQuery.FetchRequests.First ();
-      Assert.That (fetchRequest, Is.InstanceOfType (typeof (FetchRequest<Student>)));
+      Assert.That (fetchedQuery.Expression, Is.InstanceOfType (typeof (FetchExpression)));
 
-      Expression<Func<IndustrialSector, IEnumerable<Student>>> expectedExpression = i => i.Students;
-      ExpressionTreeComparer.CheckAreEqualTrees (fetchRequest.RelatedObjectSelector, expectedExpression);
+      var fetchExpression = (FetchExpression) fetchedQuery.Expression;
+      Assert.That (fetchExpression.Operand, Is.SameAs (query.Expression));
+      Assert.That (fetchExpression.RelatedObjectSelector, Is.SameAs (relatedObjectSelector));
     }
 
     [Test]
     public void Fetch_MultipleTimes ()
     {
       var query = ExpressionHelper.CreateQuerySource ();
-      query.Fetch (s => s.Scores);
-      query.Fetch (s => s.Friends);
-      query.Fetch (s => s.Scores);
-      var castQuery = (QueryableBase<Student>) query;
+      var f1 = query.Fetch (s => s.Scores);
+      var f2 = f1.Fetch (s => s.Friends);
+      var f3 = query.Fetch (s => s.Scores);
 
-      Assert.That (castQuery.FetchRequests.Count (), Is.EqualTo (2));
+      Assert.That (f1.Expression, Is.InstanceOfType (typeof (FetchExpression)));
+      var fetchExpression1 = (FetchExpression) f1.Expression;
+
+      Assert.That (f2.Expression, Is.InstanceOfType (typeof (FetchExpression)));
+      var fetchExpression2 = (FetchExpression) f2.Expression;
+
+      Assert.That (f3.Expression, Is.InstanceOfType (typeof (FetchExpression)));
+      var fetchExpression3 = (FetchExpression) f3.Expression;
+
+      Assert.That (fetchExpression1.Operand, Is.SameAs (query.Expression));
+      Assert.That (fetchExpression2.Operand, Is.SameAs (f1.Expression));
+      Assert.That (fetchExpression3.Operand, Is.SameAs (query.Expression));
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage = "Argument query has type System.Linq.EnumerableQuery`1[System.Int32] when " 
-        + "type Remotion.Data.Linq.QueryProviderImplementation.QueryableBase`1[System.Int32] was expected.\r\nParameter name: query")]
+    [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage = "Argument query.Provider has type System.Linq.EnumerableQuery`1[System.Int32] when " 
+        + "type Remotion.Data.Linq.QueryProviderBase was expected.\r\nParameter name: query.Provider")]
     public void Fetch_NoQueryable ()
     {
       var query = new[] { 1, 2, 3 }.AsQueryable ();
@@ -84,25 +94,20 @@ namespace Remotion.Data.UnitTests.Linq
     public void Fetch_Result ()
     {
       var query = ExpressionHelper.CreateQuerySource_IndustrialSector ();
-      query
-          .Fetch (i => i.Students)
-          .Fetch (s => s.Friends)
-          .Fetch (s => s.Scores);
-      var castQuery = (QueryableBase<IndustrialSector>) query;
+      Expression<Func<IndustrialSector, IEnumerable<Student>>> relatedObjectSelector1 = i => i.Students;
+      Expression<Func<Student, IEnumerable<Student>>> relatedObjectSelector2 = s => s.Friends;
+      Expression<Func<Student, IEnumerable<int>>> relatedObjectSelector3 = s => s.Scores;
 
-      var request1 = (FetchRequest<Student>) castQuery.FetchRequests.Single ();
-      var request2 = (FetchRequest<Student>) request1.InnerFetchRequests.Single ();
-      var request3 = (FetchRequest<int>) request2.InnerFetchRequests.Single ();
+      var expressionTree = query
+          .Fetch (relatedObjectSelector1)
+          .ThenFetch (relatedObjectSelector2)
+          .ThenFetch (relatedObjectSelector3).Expression;
 
-      Expression<Func<IndustrialSector, IEnumerable<Student>>> expectedExpression1 = i => i.Students;
-      ExpressionTreeComparer.CheckAreEqualTrees (request1.RelatedObjectSelector, expectedExpression1);
+      var expectedFetchExpression = new FetchExpression (query.Expression, relatedObjectSelector1);
+      var expectedThenFetchExpression1 = new ThenFetchExpression (expectedFetchExpression, relatedObjectSelector2);
+      var expectedThenFetchExpression2 = new ThenFetchExpression (expectedThenFetchExpression1, relatedObjectSelector3);
 
-      Expression<Func<Student, IEnumerable<Student>>> expectedExpression2 = s => s.Friends;
-      ExpressionTreeComparer.CheckAreEqualTrees (request2.RelatedObjectSelector, expectedExpression2);
-
-      Expression<Func<Student, IEnumerable<int>>> expectedExpression3 = s => s.Scores;
-      ExpressionTreeComparer.CheckAreEqualTrees (request3.RelatedObjectSelector, expectedExpression3);
-
+      ExpressionTreeComparer.CheckAreEqualTrees (expressionTree, expectedThenFetchExpression2);
     }
   }
 }
