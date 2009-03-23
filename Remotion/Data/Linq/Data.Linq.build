@@ -37,6 +37,7 @@
         <include name="*.cs"/>
         <include name="Clauses/**/*.cs"/>
         <include name="DataObjectModel/**/*.cs"/>
+        <include name="EagerFetching/**/*.cs"/>
         <include name="Expressions/**/*.cs"/>
         <include name="ExtensionMethods/**/*.cs"/>
         <include name="Parsing/**/*.cs"/>
