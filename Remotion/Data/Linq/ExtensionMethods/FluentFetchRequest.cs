@@ -19,8 +19,8 @@ namespace Remotion.Data.Linq.ExtensionMethods
     }
 
     /// <summary>
-    /// Specifies that, when the former fetch request is executed, the relation indicated by <paramref name="relatedObjectSelector"/> should be eagerly
-    /// fetched as well if supported by the query provider implementation.
+    /// Specifies that, when the previous fetch request is executed, the relation indicated by <paramref name="relatedObjectSelector"/> should be 
+    /// eagerly fetched, too, if supported by the query provider implementation.
     /// </summary>
     /// <typeparam name="TRelated">The type of the next related objects to be eager-fetched.</typeparam>
     /// <param name="relatedObjectSelector">A lambda expression selecting the next related objects to be eager-fetched.</param>
