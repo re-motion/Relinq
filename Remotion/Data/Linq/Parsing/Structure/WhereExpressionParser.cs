@@ -55,7 +55,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       ParseWhere(resultCollector, ueLambda);
     }
 
-    public void ParseWhere (ParseResultCollector resultCollector, LambdaExpression whereConditionLambda)
+    private void ParseWhere (ParseResultCollector resultCollector, LambdaExpression whereConditionLambda)
     {
       resultCollector.AddBodyExpression (new WhereExpressionData (whereConditionLambda));
       if (_isTopLevel)
