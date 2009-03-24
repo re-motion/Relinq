@@ -40,6 +40,11 @@ namespace Remotion.Data.UnitTests.Linq
       return Expression.Lambda (Expression.Constant (0));
     }
 
+    public static Expression<Func<TSource, TResult>> CreateLambdaExpression<TSource, TResult> (Expression<Func<TSource, TResult>> expression)
+    {
+      return expression;
+    }
+
     public static Expression CreateNewIntArrayExpression ()
     {
       return Expression.NewArrayInit (typeof (int));
