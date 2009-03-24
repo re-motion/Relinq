@@ -53,6 +53,7 @@
     <Compile Include="Clauses\ClauseFinder.cs" />
     <Compile Include="Clauses\ClauseLookupException.cs" />
     <Compile Include="EagerFetching\FetchFilteringExpressionTreeVisitor.cs" />
+    <Compile Include="EagerFetching\FetchFilteringResult.cs" />
     <Compile Include="EagerFetching\ThenFetchExpression.cs" />
     <Compile Include="EagerFetching\FetchExpression.cs" />
     <Compile Include="EagerFetching\FetchRequest.cs" />

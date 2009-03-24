@@ -13,6 +13,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -24,6 +25,7 @@ using Rhino.Mocks;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 using Remotion.Utilities;
 using System.Collections;
+using Remotion.Data.Linq.ExtensionMethods;
 
 namespace Remotion.Data.UnitTests.Linq
 {
@@ -32,14 +34,14 @@ namespace Remotion.Data.UnitTests.Linq
   {
     private MockRepository _mockRepository;
     private QueryProviderBase _queryProvider;
-    private IQueryExecutor _executor;
+    private IQueryExecutor _executorMock;
 
     [SetUp]
     public void SetUp()
     {
       _mockRepository = new MockRepository();
-      _executor = _mockRepository.StrictMock<IQueryExecutor>();
-      _queryProvider = new TestQueryProvider (_executor);
+      _executorMock = _mockRepository.StrictMock<IQueryExecutor>();
+      _queryProvider = new TestQueryProvider (_executorMock);
     }
 
     [Test]
@@ -90,7 +92,7 @@ namespace Remotion.Data.UnitTests.Linq
       Expression expression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource());
       Expect
           .Call (
-          _executor.ExecuteSingle (
+          _executorMock.ExecuteSingle (
               Arg<QueryModel>.Matches (queryModel => queryModel.GetExpressionTree() == expression),
               Arg<IEnumerable<FetchRequest>>.List.Equal (new FetchRequest[0])))
           .Return (0);
@@ -108,7 +110,7 @@ namespace Remotion.Data.UnitTests.Linq
       Expression expression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource ());
       Expect
           .Call (
-          _executor.ExecuteSingle (
+          _executorMock.ExecuteSingle (
               Arg<QueryModel>.Matches (queryModel => queryModel.GetExpressionTree() == expression),
               Arg<IEnumerable<FetchRequest>>.List.Equal (new FetchRequest[0])))
           .Return (0);
@@ -123,13 +125,13 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void GenericExecute_Collection ()
     {
-      IQueryable<Student> query = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource(_executor));
+      IQueryable<Student> query = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource(_executorMock));
       var student = new Student();
       
       Expression expression = query.Expression;
       Expect
           .Call (
-          _executor.ExecuteCollection (
+          _executorMock.ExecuteCollection (
               Arg<QueryModel>.Matches (queryModel => queryModel.GetExpressionTree () == expression),
               Arg<IEnumerable<FetchRequest>>.List.Equal (new FetchRequest[0])))
           .Return (new[] { student });
@@ -146,13 +148,13 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void NonGenericExecute_Collection ()
     {
-      IQueryable<Student> query = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource (_executor));
+      IQueryable<Student> query = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource (_executorMock));
       var student = new Student ();
 
       Expression expression = query.Expression;
       Expect
           .Call (
-          _executor.ExecuteCollection (
+          _executorMock.ExecuteCollection (
               Arg<QueryModel>.Matches (queryModel => queryModel.GetExpressionTree () == expression),
               Arg<IEnumerable<FetchRequest>>.List.Equal (new FetchRequest[0])))
           .Return (new[] { student });
@@ -171,15 +173,94 @@ namespace Remotion.Data.UnitTests.Linq
     }
 
     [Test]
-    [Ignore ("TODO 1089")]
-    public void ExecuteCollection_WithFetchRequests ()
+    public void GetFetchRequests_None ()
     {
+      var originalExpression = ExpressionHelper.CreateExpression ();
+      var expression = originalExpression;
+
+      var requests = _queryProvider.GetFetchRequests (ref expression);
+
+      Assert.That (requests, Is.Empty);
+      Assert.That (expression, Is.SameAs (originalExpression));
     }
 
     [Test]
-    [Ignore ("TODO 1089")]
+    public void GetFetchRequests_TopLevel ()
+    {
+      var relatedObjectSelector1 = ExpressionHelper.CreateLambdaExpression<Student_Detail, Student> (sd => sd.Student);
+      var relatedObjectSelector2 = ExpressionHelper.CreateLambdaExpression<Student, Student> (sd => sd.OtherStudent);
+      var innerExpression = ExpressionHelper.CreateExpression ();
+      var originalExpression = new FetchExpression (new FetchExpression (innerExpression, relatedObjectSelector1), relatedObjectSelector2);
+      Expression expression = originalExpression;
+
+      var requests = _queryProvider.GetFetchRequests (ref expression);
+
+      Assert.That (requests.Length, Is.EqualTo (2));
+      Assert.That (requests.Select (fr => fr.RelatedObjectSelector).ToArray (), 
+          Is.EquivalentTo (new Expression[] { relatedObjectSelector1, relatedObjectSelector2 }));
+      Assert.That (expression, Is.Not.SameAs (originalExpression));
+      Assert.That (expression, Is.SameAs (innerExpression));
+    }
+
+    [Test]
+    public void GetFetchRequests_ThenFetch ()
+    {
+      var relatedObjectSelector1 = ExpressionHelper.CreateLambdaExpression<Student_Detail, Student> (sd => sd.Student);
+      var relatedObjectSelector2 = ExpressionHelper.CreateLambdaExpression<Student, Student> (sd => sd.OtherStudent);
+      var innerExpression = ExpressionHelper.CreateExpression ();
+      var originalExpression = new ThenFetchExpression (new FetchExpression (innerExpression, relatedObjectSelector1), relatedObjectSelector2);
+      Expression expression = originalExpression;
+
+      var requests = _queryProvider.GetFetchRequests (ref expression);
+
+      Assert.That (requests.Length, Is.EqualTo (1));
+      Assert.That (requests.Single ().RelatedObjectSelector, Is.SameAs (relatedObjectSelector1));
+      Assert.That (requests.Single ().InnerFetchRequests.Count (), Is.EqualTo (1));
+      Assert.That (requests.Single ().InnerFetchRequests.Single ().RelatedObjectSelector, Is.SameAs (relatedObjectSelector2));
+      Assert.That (expression, Is.Not.SameAs (originalExpression));
+      Assert.That (expression, Is.SameAs (innerExpression));
+    }
+    
+    [Test]
+    public void ExecuteCollection_WithFetchRequests ()
+    {
+      Expression<Func<Student, IEnumerable<Student>>> relatedObjectSelector = s => s.Friends;
+      IQueryable<Student> query =
+          SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource (_executorMock)).Fetch (relatedObjectSelector);
+
+      _executorMock.Expect (
+          mock =>
+          mock.ExecuteCollection (
+              Arg<QueryModel>.Is.Anything, 
+              Arg<IEnumerable<FetchRequest>>.Matches (frs => frs.Single().RelatedObjectSelector == relatedObjectSelector)))
+          .Return (new Student[0]);
+
+      _mockRepository.ReplayAll ();
+
+      query.ToArray (); // enumerate query
+
+      _executorMock.VerifyAllExpectations ();
+    }
+
+    [Test]
     public void ExecuteSingle_WithFetchRequests ()
     {
+      Expression<Func<Student, IEnumerable<Student>>> relatedObjectSelector = s => s.Friends;
+      IQueryable<Student> query =
+          SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource (_executorMock)).Fetch (relatedObjectSelector);
+
+      _executorMock.Expect (
+          mock =>
+          mock.ExecuteSingle (
+              Arg<QueryModel>.Is.Anything,
+              Arg<IEnumerable<FetchRequest>>.Matches (frs => frs.Single ().RelatedObjectSelector == relatedObjectSelector)))
+          .Return (null);
+
+      _mockRepository.ReplayAll ();
+
+      query.Single(); // enumerate query
+
+      _executorMock.VerifyAllExpectations ();
     }
   }
 }

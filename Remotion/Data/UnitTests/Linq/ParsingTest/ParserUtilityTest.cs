@@ -37,7 +37,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest
 
     [Test]
     [ExpectedException (typeof (ParserException),
-        ExpectedMessage = "Expected NewArrayExpression for source expression, found i (ParameterExpression).")]
+        ExpectedMessage = "Expected NewArrayExpression for source expression, found 'i' (ParameterExpression).")]
     public void GetTypedExpression_InvalidType ()
     {
       Expression sourceExpression = ExpressionHelper.CreateParameterExpression();
@@ -71,7 +71,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected at least 1 argument for Select method call, found 2 arguments.")]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected at least 1 argument for Select method call, found '2 arguments'.")]
     public void CheckNumberOfArguments_Fail ()
     {
       MethodCallExpression selectExpression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource ());
@@ -87,7 +87,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest
 
     [Test]
     [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected ParameterExpression for argument 0 of Select method call, found " 
-        + "ConstantExpression (TestQueryable<Student>()).")]
+        + "'ConstantExpression (TestQueryable<Student>())'.")]
     public void CheckParameterType_Fail ()
     {
       MethodCallExpression selectExpression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource ());

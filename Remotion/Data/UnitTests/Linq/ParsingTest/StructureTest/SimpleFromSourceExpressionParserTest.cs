@@ -96,7 +96,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected Constant, MemberAccess, or Call expression for xy, found i (ParameterExpression).")]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected Constant, MemberAccess, or Call expression for xy, found 'i' (ParameterExpression).")]
     public void InvalidSource ()
     {
       Expression constantExpression = Expression.Parameter (typeof (int), "i");

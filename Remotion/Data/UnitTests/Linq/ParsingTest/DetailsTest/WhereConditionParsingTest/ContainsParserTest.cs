@@ -69,7 +69,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.WhereConditionPar
 
     [Test]
     [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected Contains with expression for method call expression in where "
-      + "condition, found Contains.")]
+      + "condition, found 'Contains'.")]
     public void ParseContains_NoArguments ()
     {
       MethodInfo containsMethod = typeof (ContainsParserTest).GetMethod ("Contains");

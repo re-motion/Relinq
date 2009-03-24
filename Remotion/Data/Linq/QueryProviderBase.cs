@@ -79,6 +79,15 @@ namespace Remotion.Data.Linq
       return (TResult) Execute (expression);
     }
 
+    public virtual object Execute (Expression expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
+      var fetchRequests = GetFetchRequests (ref expression);
+      var queryModel = GenerateQueryModel (expression);
+      return Executor.ExecuteSingle (queryModel, fetchRequests);
+    }
+
     /// <summary>
     /// This is where the query is executed and the results are mapped to objects.
     /// </summary>
@@ -89,15 +98,6 @@ namespace Remotion.Data.Linq
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       return ExecuteCollection (expression).Cast<TResult> ();
-    }
-
-    public virtual object Execute (Expression expression)
-    {
-      ArgumentUtility.CheckNotNull ("expression", expression);
-
-      var fetchRequests = GetFetchRequests (ref expression);
-      var queryModel = GenerateQueryModel (expression);
-      return Executor.ExecuteSingle (queryModel, fetchRequests);
     }
 
     /// <summary>
@@ -114,12 +114,20 @@ namespace Remotion.Data.Linq
       return Executor.ExecuteCollection (queryModel, fetchRequests);
     }
 
-    // TODO 1089: Test and document
+    /// <summary>
+    /// Gets all the fetch requests embedded in a query's <see cref="Expression"/> tree as a hierarchical set of <see cref="FetchRequest"/> objects.
+    /// </summary>
+    /// <param name="expression">The expression tree to search for fetch requests. If any is found, the parameter returns a new 
+    /// <see cref="Expression"/> instance with all fetch expressions removed from the expression tree.</param>
+    /// <returns>An array of <see cref="FetchRequest"/> objects that hold the top-level fetch requests for the expression tree.</returns>
     public FetchRequest[] GetFetchRequests (ref Expression expression)
     {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
       var fetchFilteringVisitor = new FetchFilteringExpressionTreeVisitor ();
-      expression = fetchFilteringVisitor.Visit (expression);
-      return fetchFilteringVisitor.TopLevelFetchRequests;
+      var result = fetchFilteringVisitor.Visit (expression);
+      expression = result.NewExpression;
+      return result.FetchRequests.ToArray();
     }
 
     /// <summary>

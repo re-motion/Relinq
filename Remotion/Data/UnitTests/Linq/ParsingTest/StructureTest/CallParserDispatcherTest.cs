@@ -66,7 +66,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected OrderBy, Where for dispatching a method call to a parser, found Select.")]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected OrderBy, Where for dispatching a method call to a parser, found 'Select'.")]
     public void GetParser_Unregistered ()
     {
       _dispatcher.RegisterParser ("OrderBy", _emptyParser);
@@ -117,7 +117,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected OrderBy, Where for dispatching a method call to a parser, found Select.")]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected OrderBy, Where for dispatching a method call to a parser, found 'Select'.")]
     public void Dispatch_Unregistered ()
     {
       _dispatcher.RegisterParser ("OrderBy", _emptyParser);

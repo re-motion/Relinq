@@ -39,7 +39,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.WhereConditionPar
 
     [Test]
     [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected ConstantExpression for argument 0 of StartsWith method call, "
-        + "found ParameterExpression (Test).")]
+        + "found 'ParameterExpression (Test)'.")]
     public void ParseStartsWith_NoConstantExpression ()
     {
       var methodName = "StartsWith";
@@ -47,7 +47,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.WhereConditionPar
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected at least 1 argument for StartsWith method call, found 0 arguments.")]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected at least 1 argument for StartsWith method call, found '0 arguments'.")]
     public void ParseStartsWith_NoArguments ()
     {
       var methodName = "StartsWith";
@@ -64,7 +64,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.WhereConditionPar
 
     [Test]
     [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected ConstantExpression for argument 0 of EndsWith method call, "
-        + "found ParameterExpression (Test).")]
+        + "found 'ParameterExpression (Test)'.")]
     public void ParseEndsWith_NoConstantExpression ()
     {
       var methodName = "EndsWith";
@@ -72,7 +72,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.WhereConditionPar
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected at least 1 argument for EndsWith method call, found 0 arguments.")]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected at least 1 argument for EndsWith method call, found '0 arguments'.")]
     public void ParseEndsWith_NoArguments ()
     {
       var methodName = "EndsWith";
@@ -81,7 +81,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.WhereConditionPar
 
     [Test]
     [ExpectedException (typeof (Remotion.Data.Linq.Parsing.ParserException), ExpectedMessage = "Expected StartsWith, EndsWith, Contains with no expression "
-        + "for method call expression in where condition, found Equals.")]
+        + "for method call expression in where condition, found 'Equals'.")]
     public void Parse_WithException ()
     {
       ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");

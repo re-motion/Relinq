@@ -47,7 +47,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.SelectExpressio
 
     [Test]
     [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected Constant, MemberAccess, or Call expression for first argument of Select "
-        + "expression, found Convert(null) (UnaryExpression).")]
+        + "expression, found 'Convert(null)' (UnaryExpression).")]
     public void Initialize_FromWrongExpressionInWhereExpression ()
     {
       Expression nonCallExpression = Expression.Convert (Expression.Constant (null), typeof (IQueryable<Student>));
@@ -60,8 +60,8 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.SelectExpressio
       new SelectExpressionParser ().Parse (new ParseResultCollector (selectExpression), selectExpression);
     }
 
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected no subqueries for Select expressions, found TestQueryable<Student>()"
-        + ".Select(s => value(Remotion.Data.UnitTests.Linq.TestQueryGenerators.SelectTestQueryGenerator+<>c__DisplayClass4).source.Select(o => o)) "
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected no subqueries for Select expressions, found 'TestQueryable<Student>()"
+        + ".Select(s => value(Remotion.Data.UnitTests.Linq.TestQueryGenerators.SelectTestQueryGenerator+<>c__DisplayClass4).source.Select(o => o))' "
         + "(MethodCallExpression).")]
     [Test]
     public void CheckSubQueryInSelect ()
@@ -72,8 +72,8 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.SelectExpressio
 
     [Test]
     [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected no subqueries for Select expressions, found "
-        + "TestQueryable<Student>().Select(s => value(Remotion.Data.UnitTests.Linq.TestQueryGenerators.SelectTestQueryGenerator+<>c__DisplayClass6)"
-        + ".source.Where(o => (o != null))) (MethodCallExpression).")]
+        + "'TestQueryable<Student>().Select(s => value(Remotion.Data.UnitTests.Linq.TestQueryGenerators.SelectTestQueryGenerator+<>c__DisplayClass6)"
+        + ".source.Where(o => (o != null)))' (MethodCallExpression).")]
     public void CheckSubQueryInSelect_WithoutExplicitSelect ()
     {
       MethodCallExpression selectExpression = 

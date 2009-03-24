@@ -64,6 +64,7 @@ namespace Remotion.Data.Linq.Clauses
 
     public void AddResultModifierData (ResultModifierClause resultModifierData)
     {
+      ArgumentUtility.CheckNotNull ("resultModifierData", resultModifierData);
       _resultModifierData.Add (resultModifierData);
     }
 

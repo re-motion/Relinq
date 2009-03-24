@@ -50,7 +50,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.SelectManyExpre
 
     [Test]
     [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected SelectMany call with three arguments for SelectMany expressions, "
-        + "found Convert(null).SelectMany(student => null) (MethodCallExpression).")]
+        + "found 'Convert(null).SelectMany(student => null)' (MethodCallExpression).")]
     public void Initialize_FromWrongExpressionInWhereExpression ()
     {
       Expression nonCallExpression = Expression.Convert (Expression.Constant (null), typeof (IQueryable<Student>));

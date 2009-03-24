@@ -104,7 +104,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.SelectProjectionP
 
     [Test]
     [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected Add, Divide, Modulo, Multiply, Subtract for binary expression "
-      +"in select projection, found AddChecked.")]
+      +"in select projection, found 'AddChecked'.")]
     public void CheckExceptionHandling ()
     {
       MemberExpression memberExpression = Expression.MakeMemberAccess (_parameter, typeof (Student).GetProperty ("ID"));
