@@ -39,6 +39,7 @@ namespace Remotion.Data.Linq.Clauses
     public SelectClause (IClause previousClause, LambdaExpression projectionExpression)
     {
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
+      ArgumentUtility.CheckNotNull ("projectionExpression", projectionExpression);
 
       PreviousClause = previousClause;
       _projectionExpression = projectionExpression;

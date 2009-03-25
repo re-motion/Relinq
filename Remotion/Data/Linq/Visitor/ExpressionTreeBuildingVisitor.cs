@@ -154,11 +154,7 @@ namespace Remotion.Data.Linq.Visitor
       {
         if (lastMethodCallExpression.Method.Name == "SelectMany")
           return;
-        if (lastMethodCallExpression.Method.Name == "Where" && selectClause.ProjectionExpression == null)
-          return;
       }
-
-      Assertion.IsNotNull (selectClause.ProjectionExpression);
 
       Type lambdaType = selectClause.ProjectionExpression.GetType ().GetGenericArguments ()[0];
       Type[] genericArguments = lambdaType.GetGenericArguments ();

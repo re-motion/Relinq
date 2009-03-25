@@ -136,7 +136,7 @@ namespace Remotion.Data.Linq.Visitor
     public void VisitSelectClause (SelectClause selectClause)
     {
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);
-      _sb.AppendFormat ("select {0}", selectClause.ProjectionExpression == null ? "<value>" : selectClause.ProjectionExpression.Body.ToString());
+      _sb.AppendFormat ("select {0}", selectClause.ProjectionExpression.Body);
     }
 
     public void VisitGroupClause (GroupClause groupClause)

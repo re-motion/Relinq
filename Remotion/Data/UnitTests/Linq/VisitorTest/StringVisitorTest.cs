@@ -97,18 +97,6 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest
     }
 
     [Test]
-    public void StringVisitorForSelectClause_WithNullProjection ()
-    {
-      //SelectClause selectClause = new SelectClause (ExpressionHelper.CreateClause (), null, null);
-      SelectClause selectClause = new SelectClause (ExpressionHelper.CreateClause (), null);
-      StringVisitor sv = new StringVisitor ();
-
-      sv.VisitSelectClause (selectClause);
-
-      Assert.AreEqual ("select <value>", sv.ToString ());
-    }
-
-    [Test]
     public void StringVisitorForGroupClause ()
     {
       GroupClause groupClause =

@@ -14,7 +14,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
@@ -69,10 +68,10 @@ namespace Remotion.Data.UnitTests.Linq.ClausesTest
     }
 
     [Test]
+    [ExpectedException (typeof (ArgumentNullException))]
     public void InitializeWithoutExpression ()
     {
-      var selectClause = new SelectClause (ExpressionHelper.CreateClause (), null);
-      Assert.IsNull (selectClause.ProjectionExpression);
+      new SelectClause (ExpressionHelper.CreateClause (), null);
     }
     
     [Test]
