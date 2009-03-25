@@ -44,6 +44,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       _callDispatcher.RegisterParser ("First", ParseResultModifierSource);
       _callDispatcher.RegisterParser ("Single", ParseResultModifierSource);
       _callDispatcher.RegisterParser ("Cast", ParseCastSource);
+      _callDispatcher.RegisterParser ("Take", ParseResultModifierSource);
       
     }
 
