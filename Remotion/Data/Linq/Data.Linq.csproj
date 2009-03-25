@@ -78,7 +78,7 @@
     <Compile Include="Expressions\QueryModelExpressionBase.cs" />
     <Compile Include="Expressions\SubQueryExpression.cs" />
     <Compile Include="ExtensionMethods\ExtensionMethods.cs" />
-    <Compile Include="ExtensionMethods\FluentFetchRequest.cs" />
+    <Compile Include="EagerFetching\FluentFetchRequest.cs" />
     <Compile Include="Parsing\Details\DetailParserRegistries.cs" />
     <Compile Include="Parsing\Details\IParser.cs" />
     <Compile Include="Parsing\Details\ParseContext.cs" />
