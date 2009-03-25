@@ -22,12 +22,19 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure
 {
+  /// <summary>
+  /// Caches information of expression. The stored informaion is used to generate <see cref="QueryModel"/>.
+  /// </summary>
   public class ParseResultCollector
   {
     private readonly List<BodyExpressionDataBase> _bodyExpressions = new List<BodyExpressionDataBase> ();
     private readonly List<LambdaExpression> _projectionExpressions = new List<LambdaExpression> ();
     private readonly List<MethodCallExpression> _resultModifierData = new List<MethodCallExpression>();
-    
+
+    /// <summary>
+    /// Initialize a new instance of <see cref="ParseResultCollector"/>.
+    /// </summary>
+    /// <param name="expressionTreeRoot">expression tree of executed linq query</param>
     public ParseResultCollector (Expression expressionTreeRoot)
     {
       ArgumentUtility.CheckNotNull ("expressionTreeRoot", expressionTreeRoot);
@@ -35,46 +42,75 @@ namespace Remotion.Data.Linq.Parsing.Structure
     }
 
     public Expression ExpressionTreeRoot { get; private set; }
-    
+
+    /// <summary>
+    /// Get all <see cref="BodyExpressionDataBase"/>. 
+    /// </summary>
     public ReadOnlyCollection<BodyExpressionDataBase> BodyExpressions
     {
       get { return _bodyExpressions.AsReadOnly(); }
     }
 
+    /// <summary>
+    /// Get the projection of a expression.
+    /// </summary>
     public ReadOnlyCollection<LambdaExpression> ProjectionExpressions
     {
       get { return _projectionExpressions.AsReadOnly (); }
     }
 
+    /// <summary>
+    /// Get the modifier of a linq query (e.g. Distinct)
+    /// </summary>
     public ReadOnlyCollection<MethodCallExpression> ResultModifierExpression 
     {
       get { return _resultModifierData.AsReadOnly(); }
     }
 
+    /// <summary>
+    /// Add <see cref="MethodCallExpression"/> of a modifier.
+    /// </summary>
+    /// <param name="expression">Expression of the method call which modifies the result of a linq query.</param>
     public void AddResultModifierExpression (MethodCallExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       _resultModifierData.Add (expression);
     }
 
+    /// <summary>
+    /// Add <see cref="BodyExpressionDataBase"/>. 
+    /// </summary>
+    /// <param name="expression"></param>
     public void AddBodyExpression (BodyExpressionDataBase expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       _bodyExpressions.Add (expression);
     }
 
+    /// <summary>
+    /// Add <see cref="LambdaExpression"/>
+    /// </summary>
+    /// <param name="expression"></param>
     public void AddProjectionExpression (LambdaExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       _projectionExpressions.Add (expression);
     }
 
+    /// <summary>
+    /// Add <see cref="ParameterExpression"/>
+    /// </summary>
+    /// <param name="sourceParameterOfPreviousClause"></param>
     public void AddIdentityProjectionExpression (ParameterExpression sourceParameterOfPreviousClause)
     {
       ArgumentUtility.CheckNotNull ("sourceParameterOfPreviousClause", sourceParameterOfPreviousClause);
       AddProjectionExpression (Expression.Lambda (sourceParameterOfPreviousClause, sourceParameterOfPreviousClause));
     }
 
+    /// <summary>
+    /// Removes a <see cref="FromExpressionData"/> with represents the main from of a linq query.
+    /// </summary>
+    /// <returns><see cref="FromExpressionData"/></returns>
     public FromExpressionData ExtractMainFromExpression ()
     {
       if (BodyExpressions.Count == 0)
