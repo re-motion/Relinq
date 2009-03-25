@@ -98,9 +98,6 @@ namespace Remotion.Data.Linq.Parsing.Structure
         throw new ParserException (message, sourceExpression, resultCollector.ExpressionTreeRoot, null);
       }
 
-      //delete
-      //resultCollector.AddResultModifiers (sourceExpression);
-      //new
       resultCollector.AddResultModifierExpression (sourceExpression);
       Expression nextExpression = sourceExpression.Arguments[0];
       Parse (resultCollector, nextExpression, potentialFromIdentifier, "first argument of result modifier");

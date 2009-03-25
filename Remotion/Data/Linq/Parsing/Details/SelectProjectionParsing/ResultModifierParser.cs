@@ -14,23 +14,57 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Linq.Expressions;
+using Remotion.Collections;
 using Remotion.Data.Linq.DataObjectModel;
+using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing
 {
-  public class ResultModifierParser : MethodCallExpressionParser
+  public class ResultModifierParser
   {
-    public ResultModifierParser (SelectProjectionParserRegistry parserRegistry)
-        : base(parserRegistry)
+    private readonly SelectProjectionParserRegistry _selectParserRegistry;
+    private readonly WhereConditionParserRegistry _whereParserRegistry;
+
+    public ResultModifierParser (SelectProjectionParserRegistry selectParserRegistry, WhereConditionParserRegistry whereParserRegistry)
     {
+      ArgumentUtility.CheckNotNull ("selectParserRegistry", selectParserRegistry);
+      ArgumentUtility.CheckNotNull ("whereParserRegistry", whereParserRegistry);
+
+      _selectParserRegistry = selectParserRegistry;
+      _whereParserRegistry = whereParserRegistry;
     }
 
-    protected override List<IEvaluation> ParseEvaluationArguments (MethodCallExpression methodCallExpression, ParseContext parseContext)
+    public Tuple<MethodCall, ICriterion> Parse (MethodCallExpression methodCallExpression, ParseContext parseContext)
     {
-      SourceMarkerEvaluation sourceMarkerEvaluation = SourceMarkerEvaluation.Instance;
-      return new List<IEvaluation> { sourceMarkerEvaluation };
+      ArgumentUtility.CheckNotNull ("methodCallExpression", methodCallExpression);
+      ArgumentUtility.CheckNotNull ("parseContext", parseContext);
+
+      var methodArguments = methodCallExpression.Arguments.Skip (1).Where (argument => argument.NodeType != ExpressionType.Quote);
+      var filteringArgument = methodCallExpression.Arguments.Skip (1).Where (argument => argument.NodeType == ExpressionType.Quote).SingleOrDefault();
+      
+
+      var methodCallExpressionParser = new MethodCallExpressionParser (_selectParserRegistry);
+      var methodCall = methodCallExpressionParser.Parse (methodCallExpression, parseContext, methodArguments);
+
+      ICriterion criterion = null;
+      if (filteringArgument != null)
+      {
+        UnaryExpression filteringUnaryExpression = ParserUtility.GetTypedExpression<UnaryExpression> (
+            filteringArgument,
+            "filtering argument of " + methodCallExpression.Method.Name,
+            parseContext.ExpressionTreeRoot);
+        LambdaExpression ueLambda = ParserUtility.GetTypedExpression<LambdaExpression> (
+            filteringUnaryExpression.Operand,
+            "filtering argument of " + methodCallExpression.Method.Name,
+            parseContext.ExpressionTreeRoot);
+
+        criterion = _whereParserRegistry.GetParser (ueLambda.Body).Parse (ueLambda.Body, parseContext);
+      }
+      
+      return Tuple.NewTuple (methodCall, criterion);
     }
-    
   }
 }

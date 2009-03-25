@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{DD9AA076-BE37-4A42-BA9E-C35ECC6955C9}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -178,8 +178,12 @@
     <Compile Include="SqlGeneration\IWhereBuilder.cs" />
     <Compile Include="SqlGeneration\LetData.cs" />
     <Compile Include="SqlGeneration\SqlServer\MethodCallGenerators\MethodCallConvertTo.cs" />
+    <Compile Include="SqlGeneration\SqlServer\MethodCallGenerators\MethodCallCount.cs" />
+    <Compile Include="SqlGeneration\SqlServer\MethodCallGenerators\MethodCallDistinct.cs" />
+    <Compile Include="SqlGeneration\SqlServer\MethodCallGenerators\MethodCallFirst.cs" />
     <Compile Include="SqlGeneration\SqlServer\MethodCallGenerators\MethodCallLower.cs" />
     <Compile Include="SqlGeneration\SqlServer\MethodCallGenerators\MethodCallRemove.cs" />
+    <Compile Include="SqlGeneration\SqlServer\MethodCallGenerators\MethodCallSingle.cs" />
     <Compile Include="SqlGeneration\SqlServer\MethodCallGenerators\MethodCallSubstring.cs" />
     <Compile Include="SqlGeneration\SqlServer\MethodCallGenerators\MethodCallUpper.cs" />
     <Compile Include="SqlGeneration\SelectedObjectActivator.cs" />

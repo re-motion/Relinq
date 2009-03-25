@@ -18,24 +18,28 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Collections;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Details;
 using Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing;
 using System.Collections.Generic;
+using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 
 namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.SelectProjectionParsingTest
 {
   [TestFixture]
   public class ResultModifierParserTest : DetailParserTestBase
   {
-    private SelectProjectionParserRegistry _registry;
+    private SelectProjectionParserRegistry _selectRegistry;
+    private WhereConditionParserRegistry _whereRegistry;
     private IQueryable<Student> _source;
 
     public override void SetUp ()
     {
       base.SetUp ();
-      _registry = new SelectProjectionParserRegistry (StubDatabaseInfo.Instance, new ParseMode ());
+      _selectRegistry = new SelectProjectionParserRegistry (StubDatabaseInfo.Instance, new ParseMode ());
+      _whereRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
       _source = null;
     }
 
@@ -45,11 +49,62 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.SelectProjectionP
       var methodInfo = ParserUtility.GetMethod (() => Enumerable.Count (_source));
       MethodCallExpression resultModifierExpression = Expression.Call (methodInfo, Expression.Constant (null, typeof (IQueryable<Student>)));
 
-      ResultModifierParser parser = new ResultModifierParser (_registry);
-      MethodCall result = parser.Parse (resultModifierExpression, ParseContext);
+      ResultModifierParser parser = new ResultModifierParser (_selectRegistry,_whereRegistry);
+      Tuple<MethodCall, ICriterion> result = parser.Parse (resultModifierExpression, ParseContext);
 
-      MethodCall expected = new MethodCall (methodInfo, null, new List<IEvaluation> { SourceMarkerEvaluation.Instance });
-      Assert.That (result, Is.EqualTo (expected));
+      MethodCall expected = new MethodCall (methodInfo, null, new List<IEvaluation>());
+      Assert.That (result.A, Is.EqualTo (expected));
     }
+
+    [Test]
+    public void MethodCallEvaluation_Take ()
+    {
+      var methodInfo = ParserUtility.GetMethod (() => Enumerable.Take (_source, 2));
+      MethodCallExpression resultModifierExpression = Expression.Call (methodInfo, Expression.Constant (null, typeof (IQueryable<Student>)), Expression.Constant(1));
+
+      ResultModifierParser parser = new ResultModifierParser (_selectRegistry, _whereRegistry);
+      Tuple<MethodCall, ICriterion> result = parser.Parse (resultModifierExpression, ParseContext);
+
+      MethodCall expected = new MethodCall (methodInfo, null, new List<IEvaluation> {new Constant(1)});
+      Assert.That (result.A, Is.EqualTo (expected));
+    }
+
+    [Test]
+    public void MethodCallEvaluation_SingleWithPredicate ()
+    {
+      var lambdaExpression = ExpressionHelper.CreateLambdaExpression<Student, bool> (s => s.ID == 5);
+      var methodInfo = ParserUtility.GetMethod (() => _source.Single (lambdaExpression));
+      UnaryExpression unaryExpression = Expression.Quote (lambdaExpression);
+
+      MethodCallExpression resultModifierExpression = Expression.Call (methodInfo, Expression.Constant (null, typeof (IQueryable<Student>)), unaryExpression);
+      
+      ResultModifierParser parser = new ResultModifierParser (_selectRegistry, _whereRegistry);
+      Tuple<MethodCall, ICriterion> result = parser.Parse (resultModifierExpression, ParseContext);
+
+      MethodCall expectedMethodCall = new MethodCall (methodInfo, null, new List<IEvaluation>());
+      Assert.That (result.A, Is.EqualTo (expectedMethodCall));
+
+      IValue left = new Column (new Table ("studentTable", "s"), "IDColumn");
+      IValue right = new Constant (5);
+      ICriterion expectedCriterion = new BinaryCondition (left, right,BinaryCondition.ConditionKind.Equal);
+      Assert.That (result.B, Is.EqualTo (expectedCriterion));
+    }
+
+    [Test]
+    public void MethodCallEvaluation_SingleWithoutQuote ()
+    {
+      var methodInfo = ParserUtility.GetMethod (() => _source.Single ());
+      MethodCallExpression resultModifierExpression = Expression.Call (methodInfo, Expression.Constant (null, typeof (IQueryable<Student>)));
+
+      ResultModifierParser parser = new ResultModifierParser (_selectRegistry, _whereRegistry);
+      Tuple<MethodCall, ICriterion> result = parser.Parse (resultModifierExpression, ParseContext);
+
+      MethodCall expected = new MethodCall (methodInfo, null, new List<IEvaluation> ());
+      Assert.That (result.A, Is.EqualTo (expected));
+      Assert.That (result.B, Is.Null);
+    }
+
+
+    
   }
 }

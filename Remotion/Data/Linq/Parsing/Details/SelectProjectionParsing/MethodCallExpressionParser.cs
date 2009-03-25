@@ -14,6 +14,8 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq.DataObjectModel;
@@ -23,12 +25,12 @@ namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing
 {
   public class MethodCallExpressionParser : ISelectProjectionParser
   {
-    private readonly SelectProjectionParserRegistry _parserRegistry;
+    public SelectProjectionParserRegistry ParserRegistry { get; private set; }
 
     public MethodCallExpressionParser (SelectProjectionParserRegistry parserRegistry)
     {
       ArgumentUtility.CheckNotNull ("parserRegistry", parserRegistry);
-      _parserRegistry = parserRegistry;
+      ParserRegistry = parserRegistry;
     }
 
     public MethodCall Parse (MethodCallExpression methodCallExpression, ParseContext parseContext)
@@ -36,9 +38,18 @@ namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing
       ArgumentUtility.CheckNotNull ("methodCallExpression", methodCallExpression);
       ArgumentUtility.CheckNotNull ("parseContext", parseContext);
 
+      return Parse(methodCallExpression, parseContext, methodCallExpression.Arguments);
+    }
+
+    public MethodCall Parse (MethodCallExpression methodCallExpression, ParseContext parseContext, IEnumerable<Expression> argumentsExpressions)
+    {
       MethodInfo methodInfo = methodCallExpression.Method;
       IEvaluation evaluationObject = ParseEvaluationObject(methodCallExpression, parseContext);
-      List<IEvaluation> evaluationArguments = ParseEvaluationArguments(methodCallExpression, parseContext);
+
+      List<IEvaluation> evaluationArguments = new List<IEvaluation> ();
+      foreach (Expression exp in argumentsExpressions)
+        evaluationArguments.Add (ParserRegistry.GetParser (exp).Parse (exp, parseContext));
+
       return new MethodCall (methodInfo, evaluationObject, evaluationArguments);
     }
 
@@ -48,16 +59,8 @@ namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing
       if (methodCallExpression.Object == null)
         evaluationObject = null;
       else
-        evaluationObject = _parserRegistry.GetParser (methodCallExpression.Object).Parse (methodCallExpression.Object, parseContext);
+        evaluationObject = ParserRegistry.GetParser (methodCallExpression.Object).Parse (methodCallExpression.Object, parseContext);
       return evaluationObject;
-    }
-
-    protected virtual List<IEvaluation> ParseEvaluationArguments (MethodCallExpression methodCallExpression, ParseContext parseContext)
-    {
-      List<IEvaluation> evaluationArguments = new List<IEvaluation> ();
-      foreach (Expression exp in methodCallExpression.Arguments)
-        evaluationArguments.Add (_parserRegistry.GetParser (exp).Parse (exp, parseContext));
-      return evaluationArguments;
     }
 
     IEvaluation ISelectProjectionParser.Parse (Expression expression, ParseContext parseContext)

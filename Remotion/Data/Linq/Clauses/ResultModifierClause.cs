@@ -40,6 +40,8 @@ namespace Remotion.Data.Linq.Clauses
     // TODO MG: Unfinished Refactoring: test, implement, and adapt IQueryVisitor and its implementations
     public void Accept (IQueryVisitor visitor)
     {
+      //ArgumentUtility.CheckNotNull ("visitor", visitor);
+      //visitor.VisitResultModifierClause (this);
       throw new System.NotImplementedException();
     }
 

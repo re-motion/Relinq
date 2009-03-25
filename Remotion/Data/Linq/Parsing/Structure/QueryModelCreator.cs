@@ -187,6 +187,10 @@ namespace Remotion.Data.Linq.Parsing.Structure
       return letClause;
     }
 
+    /// <summary>
+    /// Create a <see cref="SelectClause"/> based on last entry for project expressions in <see cref="ParseResultCollector"/>.
+    /// </summary>
+    /// <returns><see cref="SelectClause"/></returns>
     private SelectClause CreateSelectClause ()
     {
       if (_result.ProjectionExpressions.Count == 0)

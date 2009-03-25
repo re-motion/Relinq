@@ -31,5 +31,6 @@ namespace Remotion.Data.Linq
     void VisitOrdering (Ordering ordering);
     void VisitSelectClause (SelectClause selectClause);
     void VisitGroupClause (GroupClause groupClause);
+    //void VisitResultModifierClause (ResultModifierClause resultModifierClause);
   }
 }

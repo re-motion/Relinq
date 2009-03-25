@@ -111,5 +111,6 @@ namespace Remotion.Data.UnitTests.Linq.TestQueryGenerators
     {
       return from s in source select (from o in source where o != null select o);
     }
+
   }
 }

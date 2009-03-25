@@ -13,19 +13,30 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+using System.Linq;
+
 namespace Remotion.Data.Linq.DataObjectModel
 {
-  public class SourceMarkerEvaluation : IEvaluation
-  {
-    public static readonly SourceMarkerEvaluation Instance = new SourceMarkerEvaluation();
+  ///// <summary>
+  ///// Defines an evaluation argument which represents the source of the query. For example, a call to <see cref="Queryable.Single{T}(IQueryable{T})"/>
+  ///// always contains the query source as the first argument. A parsed <see cref="Queryable.Single{T}(IQueryable{T})"/> then contains 
+  ///// <see cref="Instance"/> as the first argument.
+  ///// </summary>
+  //public class SourceMarkerEvaluation : IEvaluation
+  //{
+  //  public static readonly SourceMarkerEvaluation Instance = new SourceMarkerEvaluation();
 
-    private SourceMarkerEvaluation ()
-    {
-    }
+  //  private SourceMarkerEvaluation ()
+  //  {
+  //  }
 
-    public void Accept (IEvaluationVisitor visitor)
-    {
-      visitor.VisitSourceMarkerEvaluation (this);
-    }
-  }
+  //  /// <summary>
+  //  /// Accepts the specified visitor.
+  //  /// </summary>
+  //  /// <param name="visitor">The visitor.</param>
+  //  public void Accept (IEvaluationVisitor visitor)
+  //  {
+  //    visitor.VisitSourceMarkerEvaluation (this);
+  //  }
+  //}
 }
