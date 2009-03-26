@@ -31,7 +31,7 @@ namespace Remotion.Data.Linq.ExtensionMethods
 
     /// <summary>
     /// Specifies that, when the <paramref name="query"/> is executed, the relation indicated by <paramref name="relatedObjectSelector"/> should be eagerly
-    /// fetched if supported by the query provider implementation.
+    /// fetched if supported by the query provider implementation. The relation must be a collection property.
     /// </summary>
     /// <typeparam name="TOriginating">The type of the originating query result objects.</typeparam>
     /// <typeparam name="TRelated">The type of the related objects to be eager-fetched.</typeparam>
@@ -40,6 +40,26 @@ namespace Remotion.Data.Linq.ExtensionMethods
     /// <returns>A <see cref="FluentFetchRequest{TOriginating, TRelated}"/> object on which further fetch requests can be made. The subsequent fetches start from the 
     /// related objects fetched by the original request created by this method.</returns>
     public static FluentFetchRequest<TOriginating, TRelated> Fetch<TOriginating, TRelated> (this IQueryable<TOriginating> query, Expression<Func<TOriginating, IEnumerable<TRelated>>> relatedObjectSelector)
+    {
+      return FetchInternal<TOriginating, TRelated> (query, relatedObjectSelector);
+    }
+
+    /// <summary>
+    /// Specifies that, when the <paramref name="query"/> is executed, the relation indicated by <paramref name="relatedObjectSelector"/> should be eagerly
+    /// fetched if supported by the query provider implementation. The relation must be of cardinality one.
+    /// </summary>
+    /// <typeparam name="TOriginating">The type of the originating query result objects.</typeparam>
+    /// <typeparam name="TRelated">The type of the related objects to be eager-fetched.</typeparam>
+    /// <param name="query">The query for which the fetch request should be made.</param>
+    /// <param name="relatedObjectSelector">A lambda expression selecting the related object to be eager-fetched.</param>
+    /// <returns>A <see cref="FluentFetchRequest{TOriginating, TRelated}"/> object on which further fetch requests can be made. The subsequent fetches start from the 
+    /// related object fetched by the original request created by this method.</returns>
+    public static FluentFetchRequest<TOriginating, TRelated> FetchOne<TOriginating, TRelated> (this IQueryable<TOriginating> query, Expression<Func<TOriginating, TRelated>> relatedObjectSelector)
+    {
+      return FetchInternal<TOriginating, TRelated>(query, relatedObjectSelector);
+    }
+
+    private static FluentFetchRequest<TOriginating, TRelated> FetchInternal<TOriginating, TRelated> (IQueryable<TOriginating> query, LambdaExpression relatedObjectSelector)
     {
       var queryProvider = ArgumentUtility.CheckNotNullAndType<QueryProviderBase> ("query.Provider", query.Provider);
       ArgumentUtility.CheckNotNull ("relatedObjectSelector", relatedObjectSelector);

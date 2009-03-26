@@ -45,6 +45,20 @@ namespace Remotion.Data.UnitTests.Linq
     }
 
     [Test]
+    public void FetchOne ()
+    {
+      var query = ExpressionHelper.CreateQuerySource ();
+      Expression<Func<Student, Student>> relatedObjectSelector = s => s.OtherStudent;
+      var fetchedQuery = query.FetchOne (relatedObjectSelector);
+
+      Assert.That (fetchedQuery.Expression, Is.InstanceOfType (typeof (FetchExpression)));
+
+      var fetchExpression = (FetchExpression) fetchedQuery.Expression;
+      Assert.That (fetchExpression.Operand, Is.SameAs (query.Expression));
+      Assert.That (fetchExpression.RelatedObjectSelector, Is.SameAs (relatedObjectSelector));
+    }
+
+    [Test]
     public void Fetch_WithSelectDifferentFromQueryBase ()
     {
       var query = from sd in ExpressionHelper.CreateQuerySource_Detail ()

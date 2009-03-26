@@ -94,7 +94,7 @@ namespace Remotion.Data.UnitTests.Linq
           .Call (
           _executorMock.ExecuteSingle (
               Arg<QueryModel>.Matches (queryModel => queryModel.GetExpressionTree() == expression),
-              Arg<IEnumerable<FetchRequest>>.List.Equal (new FetchRequest[0])))
+              Arg<IEnumerable<FetchRequestBase>>.List.Equal (new CollectionFetchRequest[0])))
           .Return (0);
 
       _mockRepository.ReplayAll();
@@ -112,7 +112,7 @@ namespace Remotion.Data.UnitTests.Linq
           .Call (
           _executorMock.ExecuteSingle (
               Arg<QueryModel>.Matches (queryModel => queryModel.GetExpressionTree() == expression),
-              Arg<IEnumerable<FetchRequest>>.List.Equal (new FetchRequest[0])))
+              Arg<IEnumerable<FetchRequestBase>>.List.Equal (new CollectionFetchRequest[0])))
           .Return (0);
 
       _mockRepository.ReplayAll ();
@@ -133,7 +133,7 @@ namespace Remotion.Data.UnitTests.Linq
           .Call (
           _executorMock.ExecuteCollection (
               Arg<QueryModel>.Matches (queryModel => queryModel.GetExpressionTree () == expression),
-              Arg<IEnumerable<FetchRequest>>.List.Equal (new FetchRequest[0])))
+              Arg<IEnumerable<FetchRequestBase>>.List.Equal (new CollectionFetchRequest[0])))
           .Return (new[] { student });
 
       _mockRepository.ReplayAll ();
@@ -156,7 +156,7 @@ namespace Remotion.Data.UnitTests.Linq
           .Call (
           _executorMock.ExecuteCollection (
               Arg<QueryModel>.Matches (queryModel => queryModel.GetExpressionTree () == expression),
-              Arg<IEnumerable<FetchRequest>>.List.Equal (new FetchRequest[0])))
+              Arg<IEnumerable<FetchRequestBase>>.List.Equal (new CollectionFetchRequest[0])))
           .Return (new[] { student });
 
       _mockRepository.ReplayAll ();
@@ -231,8 +231,8 @@ namespace Remotion.Data.UnitTests.Linq
       _executorMock.Expect (
           mock =>
           mock.ExecuteCollection (
-              Arg<QueryModel>.Is.Anything, 
-              Arg<IEnumerable<FetchRequest>>.Matches (frs => frs.Single().RelatedObjectSelector == relatedObjectSelector)))
+              Arg<QueryModel>.Is.Anything,
+              Arg<IEnumerable<FetchRequestBase>>.Matches (frs => frs.Single ().RelatedObjectSelector == relatedObjectSelector)))
           .Return (new Student[0]);
 
       _mockRepository.ReplayAll ();
@@ -253,7 +253,7 @@ namespace Remotion.Data.UnitTests.Linq
           mock =>
           mock.ExecuteSingle (
               Arg<QueryModel>.Is.Anything,
-              Arg<IEnumerable<FetchRequest>>.Matches (frs => frs.Single ().RelatedObjectSelector == relatedObjectSelector)))
+              Arg<IEnumerable<FetchRequestBase>>.Matches (frs => frs.Single ().RelatedObjectSelector == relatedObjectSelector)))
           .Return (null);
 
       _mockRepository.ReplayAll ();

@@ -115,12 +115,12 @@ namespace Remotion.Data.Linq
     }
 
     /// <summary>
-    /// Gets all the fetch requests embedded in a query's <see cref="Expression"/> tree as a hierarchical set of <see cref="FetchRequest"/> objects.
+    /// Gets all the fetch requests embedded in a query's <see cref="Expression"/> tree as a hierarchical set of <see cref="FetchRequestBase"/> objects.
     /// </summary>
     /// <param name="expression">The expression tree to search for fetch requests. If any is found, the parameter returns a new 
     /// <see cref="Expression"/> instance with all fetch expressions removed from the expression tree.</param>
-    /// <returns>An array of <see cref="FetchRequest"/> objects that hold the top-level fetch requests for the expression tree.</returns>
-    public FetchRequest[] GetFetchRequests (ref Expression expression)
+    /// <returns>An array of <see cref="FetchRequestBase"/> objects that hold the top-level fetch requests for the expression tree.</returns>
+    public FetchRequestBase[] GetFetchRequests (ref Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
