@@ -54,10 +54,11 @@
     <Compile Include="Clauses\ClauseLookupException.cs" />
     <Compile Include="EagerFetching\FetchFilteringExpressionTreeVisitor.cs" />
     <Compile Include="EagerFetching\FetchFilteringResult.cs" />
+    <Compile Include="EagerFetching\FetchOneRequest.cs" />
     <Compile Include="EagerFetching\FetchRequestBase.cs" />
     <Compile Include="EagerFetching\ThenFetchExpression.cs" />
     <Compile Include="EagerFetching\FetchExpression.cs" />
-    <Compile Include="EagerFetching\CollectionFetchRequest.cs" />
+    <Compile Include="EagerFetching\FetchManyRequest.cs" />
     <Compile Include="EagerFetching\FetchRequestCollection.cs" />
     <Compile Include="Clauses\MemberFromClause.cs" />
     <Compile Include="Clauses\OrderingDirection.cs" />
