@@ -187,8 +187,8 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void GetFetchRequests_TopLevel ()
     {
-      var relatedObjectSelector1 = ExpressionHelper.CreateLambdaExpression<Student_Detail, Student> (sd => sd.Student);
-      var relatedObjectSelector2 = ExpressionHelper.CreateLambdaExpression<Student, Student> (sd => sd.OtherStudent);
+      var relatedObjectSelector1 = ExpressionHelper.CreateLambdaExpression<Student, IEnumerable<Student>> (s => s.Friends);
+      var relatedObjectSelector2 = ExpressionHelper.CreateLambdaExpression<Student, IEnumerable<int>> (s => s.Scores);
       var innerExpression = ExpressionHelper.CreateExpression ();
       var originalExpression = new FetchExpression (new FetchExpression (innerExpression, relatedObjectSelector1), relatedObjectSelector2);
       Expression expression = originalExpression;
@@ -205,8 +205,8 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void GetFetchRequests_ThenFetch ()
     {
-      var relatedObjectSelector1 = ExpressionHelper.CreateLambdaExpression<Student_Detail, Student> (sd => sd.Student);
-      var relatedObjectSelector2 = ExpressionHelper.CreateLambdaExpression<Student, Student> (sd => sd.OtherStudent);
+      var relatedObjectSelector1 = ExpressionHelper.CreateLambdaExpression<Student, IEnumerable<Student>> (s => s.Friends);
+      var relatedObjectSelector2 = ExpressionHelper.CreateLambdaExpression<Student, IEnumerable<int>> (s => s.Scores);
       var innerExpression = ExpressionHelper.CreateExpression ();
       var originalExpression = new ThenFetchExpression (new FetchExpression (innerExpression, relatedObjectSelector1), relatedObjectSelector2);
       Expression expression = originalExpression;
@@ -226,7 +226,7 @@ namespace Remotion.Data.UnitTests.Linq
     {
       Expression<Func<Student, IEnumerable<Student>>> relatedObjectSelector = s => s.Friends;
       IQueryable<Student> query =
-          SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource (_executorMock)).Fetch (relatedObjectSelector);
+          SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource (_executorMock)).FetchMany (relatedObjectSelector);
 
       _executorMock.Expect (
           mock =>
@@ -247,7 +247,7 @@ namespace Remotion.Data.UnitTests.Linq
     {
       Expression<Func<Student, IEnumerable<Student>>> relatedObjectSelector = s => s.Friends;
       IQueryable<Student> query =
-          SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource (_executorMock)).Fetch (relatedObjectSelector);
+          SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource (_executorMock)).FetchMany (relatedObjectSelector);
 
       _executorMock.Expect (
           mock =>

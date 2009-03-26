@@ -35,7 +35,7 @@ namespace Remotion.Data.UnitTests.Linq
     {
       var query = ExpressionHelper.CreateQuerySource();
       Expression<Func<Student, IEnumerable<int>>> relatedObjectSelector = s => s.Scores;
-      var fetchedQuery = query.Fetch (relatedObjectSelector);
+      var fetchedQuery = query.FetchMany (relatedObjectSelector);
 
       Assert.That (fetchedQuery.Expression, Is.InstanceOfType (typeof (FetchExpression)));
 
@@ -64,7 +64,7 @@ namespace Remotion.Data.UnitTests.Linq
       var query = from sd in ExpressionHelper.CreateQuerySource_Detail ()
                   select sd.IndustrialSector;
       Expression<Func<IndustrialSector, IEnumerable<Student>>> relatedObjectSelector = i => i.Students;
-      var fetchedQuery = query.Fetch (relatedObjectSelector);
+      var fetchedQuery = query.FetchMany (relatedObjectSelector);
 
       Assert.That (fetchedQuery.Expression, Is.InstanceOfType (typeof (FetchExpression)));
 
@@ -77,9 +77,9 @@ namespace Remotion.Data.UnitTests.Linq
     public void Fetch_MultipleTimes ()
     {
       var query = ExpressionHelper.CreateQuerySource ();
-      var f1 = query.Fetch (s => s.Scores);
-      var f2 = f1.Fetch (s => s.Friends);
-      var f3 = query.Fetch (s => s.Scores);
+      var f1 = query.FetchMany (s => s.Scores);
+      var f2 = f1.FetchMany (s => s.Friends);
+      var f3 = query.FetchMany (s => s.Scores);
 
       Assert.That (f1.Expression, Is.InstanceOfType (typeof (FetchExpression)));
       var fetchExpression1 = (FetchExpression) f1.Expression;
@@ -101,7 +101,7 @@ namespace Remotion.Data.UnitTests.Linq
     public void Fetch_NoQueryable ()
     {
       var query = new[] { 1, 2, 3 }.AsQueryable ();
-      query.Fetch (i => (int[]) null);
+      query.FetchMany (i => (int[]) null);
     }
 
     [Test]
@@ -113,9 +113,9 @@ namespace Remotion.Data.UnitTests.Linq
       Expression<Func<Student, IEnumerable<int>>> relatedObjectSelector3 = s => s.Scores;
 
       var expressionTree = query
-          .Fetch (relatedObjectSelector1)
-          .ThenFetch (relatedObjectSelector2)
-          .ThenFetch (relatedObjectSelector3).Expression;
+          .FetchMany (relatedObjectSelector1)
+          .ThenFetchMany (relatedObjectSelector2)
+          .ThenFetchMany (relatedObjectSelector3).Expression;
 
       var expectedFetchExpression = new FetchExpression (query.Expression, relatedObjectSelector1);
       var expectedThenFetchExpression1 = new ThenFetchExpression (expectedFetchExpression, relatedObjectSelector2);

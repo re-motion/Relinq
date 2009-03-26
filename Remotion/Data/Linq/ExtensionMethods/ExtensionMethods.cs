@@ -39,7 +39,7 @@ namespace Remotion.Data.Linq.ExtensionMethods
     /// <param name="relatedObjectSelector">A lambda expression selecting the related objects to be eager-fetched.</param>
     /// <returns>A <see cref="FluentFetchRequest{TOriginating, TRelated}"/> object on which further fetch requests can be made. The subsequent fetches start from the 
     /// related objects fetched by the original request created by this method.</returns>
-    public static FluentFetchRequest<TOriginating, TRelated> Fetch<TOriginating, TRelated> (this IQueryable<TOriginating> query, Expression<Func<TOriginating, IEnumerable<TRelated>>> relatedObjectSelector)
+    public static FluentFetchRequest<TOriginating, TRelated> FetchMany<TOriginating, TRelated> (this IQueryable<TOriginating> query, Expression<Func<TOriginating, IEnumerable<TRelated>>> relatedObjectSelector)
     {
       return FetchInternal<TOriginating, TRelated> (query, relatedObjectSelector);
     }
