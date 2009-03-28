@@ -190,7 +190,7 @@ namespace Remotion.Data.UnitTests.Linq
       var relatedObjectSelector1 = ExpressionHelper.CreateLambdaExpression<Student, IEnumerable<Student>> (s => s.Friends);
       var relatedObjectSelector2 = ExpressionHelper.CreateLambdaExpression<Student, IEnumerable<int>> (s => s.Scores);
       var innerExpression = ExpressionHelper.CreateExpression ();
-      var originalExpression = new FetchExpression (new FetchExpression (innerExpression, relatedObjectSelector1), relatedObjectSelector2);
+      var originalExpression = new FetchManyExpression (new FetchManyExpression (innerExpression, relatedObjectSelector1), relatedObjectSelector2);
       Expression expression = originalExpression;
 
       var requests = _queryProvider.GetFetchRequests (ref expression);
@@ -208,7 +208,7 @@ namespace Remotion.Data.UnitTests.Linq
       var relatedObjectSelector1 = ExpressionHelper.CreateLambdaExpression<Student, IEnumerable<Student>> (s => s.Friends);
       var relatedObjectSelector2 = ExpressionHelper.CreateLambdaExpression<Student, IEnumerable<int>> (s => s.Scores);
       var innerExpression = ExpressionHelper.CreateExpression ();
-      var originalExpression = new ThenFetchExpression (new FetchExpression (innerExpression, relatedObjectSelector1), relatedObjectSelector2);
+      var originalExpression = new ThenFetchManyExpression (new FetchManyExpression (innerExpression, relatedObjectSelector1), relatedObjectSelector2);
       Expression expression = originalExpression;
 
       var requests = _queryProvider.GetFetchRequests (ref expression);

@@ -31,13 +31,13 @@ namespace Remotion.Data.UnitTests.Linq
   public class ExtensionMethodsTest
   {
     [Test]
-    public void Fetch ()
+    public void FetchMany ()
     {
       var query = ExpressionHelper.CreateQuerySource();
       Expression<Func<Student, IEnumerable<int>>> relatedObjectSelector = s => s.Scores;
       var fetchedQuery = query.FetchMany (relatedObjectSelector);
 
-      Assert.That (fetchedQuery.Expression, Is.InstanceOfType (typeof (FetchExpression)));
+      Assert.That (fetchedQuery.Expression, Is.InstanceOfType (typeof (FetchManyExpression)));
 
       var fetchExpression = (FetchExpression) fetchedQuery.Expression;
       Assert.That (fetchExpression.Operand, Is.SameAs (query.Expression));
@@ -51,7 +51,7 @@ namespace Remotion.Data.UnitTests.Linq
       Expression<Func<Student, Student>> relatedObjectSelector = s => s.OtherStudent;
       var fetchedQuery = query.FetchOne (relatedObjectSelector);
 
-      Assert.That (fetchedQuery.Expression, Is.InstanceOfType (typeof (FetchExpression)));
+      Assert.That (fetchedQuery.Expression, Is.InstanceOfType (typeof (FetchOneExpression)));
 
       var fetchExpression = (FetchExpression) fetchedQuery.Expression;
       Assert.That (fetchExpression.Operand, Is.SameAs (query.Expression));
@@ -117,9 +117,9 @@ namespace Remotion.Data.UnitTests.Linq
           .ThenFetchMany (relatedObjectSelector2)
           .ThenFetchMany (relatedObjectSelector3).Expression;
 
-      var expectedFetchExpression = new FetchExpression (query.Expression, relatedObjectSelector1);
-      var expectedThenFetchExpression1 = new ThenFetchExpression (expectedFetchExpression, relatedObjectSelector2);
-      var expectedThenFetchExpression2 = new ThenFetchExpression (expectedThenFetchExpression1, relatedObjectSelector3);
+      var expectedFetchExpression = new FetchManyExpression (query.Expression, relatedObjectSelector1);
+      var expectedThenFetchExpression1 = new ThenFetchManyExpression (expectedFetchExpression, relatedObjectSelector2);
+      var expectedThenFetchExpression2 = new ThenFetchManyExpression (expectedThenFetchExpression1, relatedObjectSelector3);
 
       ExpressionTreeComparer.CheckAreEqualTrees (expressionTree, expectedThenFetchExpression2);
     }

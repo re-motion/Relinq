@@ -41,7 +41,7 @@ namespace Remotion.Data.Linq.ExtensionMethods
     /// related objects fetched by the original request created by this method.</returns>
     public static FluentFetchRequest<TOriginating, TRelated> FetchMany<TOriginating, TRelated> (this IQueryable<TOriginating> query, Expression<Func<TOriginating, IEnumerable<TRelated>>> relatedObjectSelector)
     {
-      return FetchInternal<TOriginating, TRelated> (query, relatedObjectSelector);
+      return FetchInternal<TOriginating, TRelated> (query, relatedObjectSelector, new FetchManyExpression (query.Expression, (LambdaExpression) relatedObjectSelector));
     }
 
     /// <summary>
@@ -56,16 +56,15 @@ namespace Remotion.Data.Linq.ExtensionMethods
     /// related object fetched by the original request created by this method.</returns>
     public static FluentFetchRequest<TOriginating, TRelated> FetchOne<TOriginating, TRelated> (this IQueryable<TOriginating> query, Expression<Func<TOriginating, TRelated>> relatedObjectSelector)
     {
-      return FetchInternal<TOriginating, TRelated>(query, relatedObjectSelector);
+      return FetchInternal<TOriginating, TRelated>(query, relatedObjectSelector, new FetchOneExpression (query.Expression, (LambdaExpression) relatedObjectSelector));
     }
 
-    private static FluentFetchRequest<TOriginating, TRelated> FetchInternal<TOriginating, TRelated> (IQueryable<TOriginating> query, LambdaExpression relatedObjectSelector)
+    private static FluentFetchRequest<TOriginating, TRelated> FetchInternal<TOriginating, TRelated> (IQueryable<TOriginating> query, LambdaExpression relatedObjectSelector, FetchExpression fetchExpression)
     {
       var queryProvider = ArgumentUtility.CheckNotNullAndType<QueryProviderBase> ("query.Provider", query.Provider);
       ArgumentUtility.CheckNotNull ("relatedObjectSelector", relatedObjectSelector);
 
-      var newExpression = new FetchExpression (query.Expression, relatedObjectSelector);
-      return new FluentFetchRequest<TOriginating, TRelated> (queryProvider, newExpression);
+      return new FluentFetchRequest<TOriginating, TRelated> (queryProvider, fetchExpression);
     }
   }
 }
