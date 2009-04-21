@@ -1,5 +1,5 @@
 // This file is part of re-strict (www.re-motion.org)
-// Copyright (C) 2005-2008 rubicon informationstechnologie gmbh, www.rubicon.eu
+// Copyright (C) 2005-2009 rubicon informationstechnologie gmbh, www.rubicon.eu
 // 
 // re-strict is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 3.0 as

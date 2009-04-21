@@ -1,5 +1,5 @@
 // This file is part of the re-motion Core Framework (www.re-motion.org)
-// Copyright (C) 2005-2008 rubicon informationstechnologie gmbh, www.rubicon.eu
+// Copyright (C) 2005-2009 rubicon informationstechnologie gmbh, www.rubicon.eu
 //
 // The re-motion Core Framework is free software; you can redistribute it 
 // and/or modify it under the terms of the GNU Lesser General Public License 
