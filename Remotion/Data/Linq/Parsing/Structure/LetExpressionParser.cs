@@ -48,14 +48,21 @@ namespace Remotion.Data.Linq.Parsing.Structure
       
       LambdaExpression ueLambda = ParserUtility.GetTypedExpression<LambdaExpression> (unaryExpression.Operand,
           "second argument of Let expression", resultCollector.ExpressionTreeRoot);
-      string identifierName = ((NewExpression) ueLambda.Body).Constructor.GetParameters ()[1].Name;
-      Type identifierType = ((NewExpression) ueLambda.Body).Constructor.GetParameters ()[1].ParameterType;
-      ParameterExpression identifier = Expression.Parameter (identifierType, identifierName);
-      Expression expression = ((NewExpression) ueLambda.Body).Arguments[1];
-      _sourceParser.Parse (resultCollector, letExpression.Arguments[0], ueLambda.Parameters[0], "first argument of Select expression");
+      if (ueLambda.Body is ParameterExpression)
+      {
+        resultCollector.AddBodyExpression (new MainFromExpressionData (letExpression.Arguments[0])); 
+      }
+      else
+      {
+        string identifierName = ((NewExpression) ueLambda.Body).Constructor.GetParameters ()[1].Name; //if ueLambda == Parameter Expression => SubSelect
+        Type identifierType = ((NewExpression) ueLambda.Body).Constructor.GetParameters ()[1].ParameterType;
+        ParameterExpression identifier = Expression.Parameter (identifierType, identifierName);
+        Expression expression = ((NewExpression) ueLambda.Body).Arguments[1];
+        _sourceParser.Parse (resultCollector, letExpression.Arguments[0], ueLambda.Parameters[0], "first argument of Select expression");
 
-      resultCollector.AddBodyExpression (new LetExpressionData (identifier, expression));
-      resultCollector.AddProjectionExpression (ueLambda);
+        resultCollector.AddBodyExpression (new LetExpressionData (identifier, expression));
+        resultCollector.AddProjectionExpression (ueLambda);
+      }
 
     }
   }

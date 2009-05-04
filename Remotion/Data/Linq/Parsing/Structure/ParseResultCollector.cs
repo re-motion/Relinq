@@ -144,5 +144,11 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
       return newExpression;
     }
+
+    public void DeleteBodyExpression (BodyExpressionDataBase expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+      _bodyExpressions.Remove (expression);
+    }
   }
 }

@@ -174,5 +174,15 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
 
       Assert.That (_collector.BodyExpressions[0].Expression, Is.InstanceOfType (typeof (ConstantExpression)));
     }
+
+    [Test]
+    public void DeleteBodyExpression ()
+    {
+      FromExpressionData expression = new FromExpressionData (ExpressionHelper.CreateExpression (), ExpressionHelper.CreateParameterExpression ());
+      _collector.AddBodyExpression (expression);
+      Assert.That (_collector.BodyExpressions, Is.Not.Empty);
+      _collector.DeleteBodyExpression (expression);
+      Assert.That (_collector.BodyExpressions, Is.Empty);
+    }
   }
 }

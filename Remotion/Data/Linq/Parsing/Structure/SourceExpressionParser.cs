@@ -68,6 +68,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
     private void ParseSelectSource (ParseResultCollector resultCollector, MethodCallExpression sourceExpression)
     {
+      //TODO: extend this to handle subselects in main from clause (possible create a query model or result collector as expected when using let)
       if (_isTopLevel)
         new SelectExpressionParser().Parse (resultCollector, sourceExpression);
       else

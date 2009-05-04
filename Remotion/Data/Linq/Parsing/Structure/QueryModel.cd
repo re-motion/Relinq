@@ -21,7 +21,7 @@
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>BIAAAAAAAAAAAAAAAAAJAAAAAAAAAABAAAAAAEAAAAA=</HashCode>
+      <HashCode>BIAAAAAAAAAAAAACAAAJAAAAAAAAAABAAAAAAEAAABA=</HashCode>
       <FileName>Clauses\AdditionalFromClause.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -33,7 +33,7 @@
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>BIAAAAABAAAAAAAAAAABAAAAAAAAgARAAAAAAEAAAAA=</HashCode>
+      <HashCode>BIAAAAABAAAAAAACAAABAAAAAAAAgARAAAAAAEAAABA=</HashCode>
       <FileName>Clauses\SubQueryFromClause.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -43,19 +43,13 @@
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
-    <AssociationLine Name="JoinClauses" Type="Remotion.Data.Linq.Clauses.JoinClause" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="11.312" Y="4.25" />
-        <Point X="11.312" Y="3.494" />
-        <Point X="11.312" Y="3.494" />
-        <Point X="11.312" Y="2.738" />
-      </Path>
+    <AssociationLine Name="JoinClauses" Type="Remotion.Data.Linq.Clauses.JoinClause">
       <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
         <Position X="-0.272" Y="0.456" Height="0.16" Width="1" />
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AIIBACABAAAAAAAAAAABgAAAAAAAAAAAAAQAQAAAAAA=</HashCode>
+      <HashCode>AIABACABAAAAAAAAEAABgAAAAAAAIAAAAAQAQAAAAAA=</HashCode>
       <FileName>Clauses\FromClauseBase.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
@@ -69,7 +63,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AIAAAAAAAAAAAAAACIAAAAAAAAAAAAAAAAQABABAAAA=</HashCode>
+      <HashCode>AIAAAAAAAAAAAAAACIAAAAAIAAAAAAAAAAQABABAABA=</HashCode>
       <FileName>Clauses\GroupClause.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -81,7 +75,7 @@
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AIAAAAAAAAAAAIAMAAAAgAAAAEACAAAAAAQCQAAAAAE=</HashCode>
+      <HashCode>AIAAAAAAAAAAAIAMAIAAgAAAAEASAAAAAAQCQAAgABE=</HashCode>
       <FileName>Clauses\JoinClause.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -93,7 +87,7 @@
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>BIAAAAAAAAAAAAAAAAAAiAAAAAAAAABQAAQAwEAAAAA=</HashCode>
+      <HashCode>BIAAAAAAAAAAAAACAAAAiAAAAAAAAABQAAQAwEAAABA=</HashCode>
       <FileName>Clauses\LetClause.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -104,7 +98,7 @@
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AIAAAAAAAAIAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AIAAAAAAAAIAAAAAAAABAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
       <FileName>Clauses\MainFromClause.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -115,7 +109,7 @@
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AIAAAAADAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AIAAAAADAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
       <FileName>Clauses\MemberFromClause.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -126,23 +120,8 @@
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>BIIAAAACAAAAAAAgAAAAAAAAAAAAAAAAAAQAAEAAAAA=</HashCode>
+      <HashCode>BIAAAAAAAAAAAAAiAAAAAAAAAAAAAAAAAASAQEAAABA=</HashCode>
       <FileName>Clauses\OrderByClause.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsCollectionAssociation>
-      <Property Name="OrderingList" />
-    </ShowAsCollectionAssociation>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="Remotion.Data.Linq.Clauses.OrderingClause" BaseTypeListCollapsed="true">
-    <Position X="16" Y="0.5" Width="1.5" />
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-      <Compartment Name="Methods" Collapsed="true" />
-    </Compartments>
-    <TypeIdentifier>
-      <HashCode>BIgAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAQAgEABAAA=</HashCode>
-      <FileName>Clauses\OrderingClause.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
@@ -152,18 +131,10 @@
       <Compartment Name="Fields" Collapsed="true" />
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
-    <AssociationLine Name="ResultModifierData" Type="Remotion.Data.Linq.Clauses.ResultModifierClause">
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="-1.317" Y="0.204" />
-      </MemberNameLabel>
-    </AssociationLine>
     <TypeIdentifier>
-      <HashCode>QIAAgAAEAAAAAAAEAAAAAAAAAAAAAABAAAQAAAAAAgA=</HashCode>
+      <HashCode>QIAAgAAAAAAAAAAEAAAACAAIAAAAAABAAAQAAAAAABA=</HashCode>
       <FileName>Clauses\SelectClause.cs</FileName>
     </TypeIdentifier>
-    <ShowAsCollectionAssociation>
-      <Property Name="ResultModifierData" />
-    </ShowAsCollectionAssociation>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Remotion.Data.Linq.Clauses.WhereClause" BaseTypeListCollapsed="true">
@@ -173,7 +144,7 @@
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>BIAAAAAAAAAAAAAAgAAAAIQAAAAAAAAAAAQAAEAAABA=</HashCode>
+      <HashCode>BIAAAAAAAAAAAAACgAAAAIQAAAAAAAAAAAQAAEAAABA=</HashCode>
       <FileName>Clauses\WhereClause.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -225,7 +196,7 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AKQAAQggAAAAIAAEAIIAAUAAQBAEAAAAAAQCACAAACA=</HashCode>
+      <HashCode>AKQABQigAIAAIAAMAIAAAUIAQBCEAAAAAAQCACBAATA=</HashCode>
       <FileName>QueryModel.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -244,7 +215,7 @@
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AIAAAAAEAAAAAAAAAAAAAAAAAAAAAAIAAAQAAAAAAAA=</HashCode>
+      <HashCode>AIAAAAAEAAAAAAAAAAAAAAAAAAAAAAIAAAQAAAAAABA=</HashCode>
       <FileName>Clauses\ResultModifierClause.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -255,14 +226,14 @@
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAA=</HashCode>
+      <HashCode>BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAABA=</HashCode>
       <FileName>Clauses\IBodyClause.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="Remotion.Data.Linq.Clauses.ISelectGroupClause" Collapsed="true">
     <Position X="2.75" Y="5.25" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
       <FileName>Clauses\ISelectGroupClause.cs</FileName>
     </TypeIdentifier>
   </Interface>
@@ -280,7 +251,7 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAA=</HashCode>
+      <HashCode>AIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAA=</HashCode>
       <FileName>Clauses\IClause.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -295,13 +266,6 @@
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAQAAAAAA=</HashCode>
       <FileName>Clauses\IResolveableClause.cs</FileName>
-    </TypeIdentifier>
-  </Interface>
-  <Interface Name="Remotion.Data.Linq.IQueryElement" Collapsed="true">
-    <Position X="2.5" Y="2.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>IQueryElement.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Font Name="Tahoma" Size="8.25" />

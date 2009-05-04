@@ -112,5 +112,11 @@ namespace Remotion.Data.UnitTests.Linq.TestQueryGenerators
       return from s in source select (from o in source where o != null select o);
     }
 
+    public static MethodCallExpression CreateSubQueryInMainFrom (IQueryable<Student> source)
+    {
+      var query = from s in (from si in source select si) select s;
+      return (MethodCallExpression) query.Expression;
+    }
+
   }
 }

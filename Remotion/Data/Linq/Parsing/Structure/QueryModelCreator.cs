@@ -67,7 +67,8 @@ namespace Remotion.Data.Linq.Parsing.Structure
         queryModel.AddBodyClause (bodyClause);
 
       queryModel.SetExpressionTree (_expressionTreeRoot);
-
+       
+      //queryModel.PrintQueryModel(); //only for testing reasons
       return queryModel;
     }
 
@@ -75,7 +76,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
     {
       Assertion.IsTrue (resultCollector.BodyExpressions.Count > 0 && resultCollector.BodyExpressions[0] is FromExpressionData);
 
-      FromExpressionData mainFromExpressionData = resultCollector.ExtractMainFromExpression ();
+      FromExpressionData mainFromExpressionData = resultCollector.ExtractMainFromExpression (); //TODO: refactor this method to support SubQueries in MainFromClause
       return new MainFromClause (mainFromExpressionData.Identifier, mainFromExpressionData.TypedExpression);
     }
 

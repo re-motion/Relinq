@@ -52,7 +52,16 @@ namespace Remotion.Data.Linq.Parsing.Structure
       CheckForSubQuery(resultCollector, sourceExpression, ueLambda);
 
       _sourceParser.Parse (resultCollector, sourceExpression.Arguments[0], ueLambda.Parameters[0],  "first argument of Select expression");
-      resultCollector.AddProjectionExpression (ueLambda);
+      
+      //TODO: add new tests
+      var bodyExpression = resultCollector.BodyExpressions[0];
+      if (bodyExpression is MainFromExpressionData)
+      {
+        resultCollector.DeleteBodyExpression (bodyExpression);
+        resultCollector.AddBodyExpression (
+            new FromExpressionData (bodyExpression.Expression, (ParameterExpression) ueLambda.Body));
+      }
+      resultCollector.AddProjectionExpression (ueLambda); 
     }
 
     private void CheckForSubQuery (ParseResultCollector resultCollector, MethodCallExpression sourceExpression, LambdaExpression ueLambda)
