@@ -38,7 +38,7 @@ namespace Remotion.Data.Linq.Clauses
         throw new ArgumentException ("From expression must contain a MemberExpression.");
     }
 
-
+    // TODO 1158: Replace with PropertyPath
     public MemberExpression MemberExpression
     {
       get { return _memberExpression; }

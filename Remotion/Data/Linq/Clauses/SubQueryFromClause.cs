@@ -59,6 +59,7 @@ namespace Remotion.Data.Linq.Clauses
     /// <summary>
     /// The projection within the from part of the linq query.
     /// </summary>
+    // TODO 1158: Remove
     public LambdaExpression ProjectionExpression { get; private set; }
 
     public override void Accept (IQueryVisitor visitor)

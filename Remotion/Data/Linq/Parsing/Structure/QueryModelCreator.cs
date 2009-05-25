@@ -68,7 +68,6 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
       queryModel.SetExpressionTree (_expressionTreeRoot);
        
-      //queryModel.PrintQueryModel(); //only for testing reasons
       return queryModel;
     }
 

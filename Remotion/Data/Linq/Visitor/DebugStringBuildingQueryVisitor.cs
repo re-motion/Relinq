@@ -21,11 +21,11 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Visitor
 {
-  public class QueryModelVisitor : IQueryVisitor
+  public class DebugStringBuildingQueryVisitor : IQueryVisitor
   {
     private readonly StringBuilder _sb = null;
 
-    public QueryModelVisitor()
+    public DebugStringBuildingQueryVisitor()
     {
       _sb = new StringBuilder();
     }

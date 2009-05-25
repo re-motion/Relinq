@@ -51,6 +51,7 @@ namespace Remotion.Data.Linq.Clauses
     /// <summary>
     /// The expression which represents the where conditions.
     /// </summary>
+    // TODO 1158: Replace by ICriterion
     public LambdaExpression BoolExpression
     {
       get { return _boolExpression; }

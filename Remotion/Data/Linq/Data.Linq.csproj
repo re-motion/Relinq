@@ -213,13 +213,12 @@
     <Compile Include="SqlGeneration\SqlServer\CommandBuilder.cs" />
     <Compile Include="SqlGeneration\SqlServer\WhereBuilder.cs" />
     <Compile Include="SqlGeneration\SqlUtility.cs" />
-    <Compile Include="Visitor\QueryModelVisitor.cs" />
-    <Compile Include="Visitor\ExpressionTreeBuildingVisitor.cs" />
+    <Compile Include="Visitor\DebugStringBuildingQueryVisitor.cs" />
     <Compile Include="IDatabaseInfo.cs" />
     <Compile Include="SqlGeneration\SqlGeneratorVisitor.cs" />
     <Compile Include="Visitor\ExpressionTreeVisitor.cs" />
     <Compile Include="Parsing\TreeEvaluation\PartialTreeEvaluator.cs" />
-    <Compile Include="Visitor\StringVisitor.cs" />
+    <Compile Include="Visitor\StringBuildingQueryVisitor.cs" />
     <Compile Include="Clauses\WhereClause.cs" />
   </ItemGroup>
   <ItemGroup>

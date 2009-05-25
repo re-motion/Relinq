@@ -34,6 +34,7 @@ namespace Remotion.Data.Linq.Clauses
 
     public IClause PreviousClause { get; private set; }
     public SelectClause SelectClause { get; private set; }
+    // TODO 1158: Replace with MethodCall
     public MethodCallExpression ResultModifier { get; private set; }
 
 

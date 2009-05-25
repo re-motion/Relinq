@@ -51,6 +51,7 @@ namespace Remotion.Data.Linq.Clauses
     /// <summary>
     /// The expression from one part of a order by in a linq query.
     /// </summary>
+    // TODO 1158: Replace with IEvaluation
     public LambdaExpression Expression
     {
       get { return _expression; }

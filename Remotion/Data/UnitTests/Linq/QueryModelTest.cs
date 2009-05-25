@@ -83,7 +83,7 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void Override_ToString()
     {
-      var sv = new StringVisitor();
+      var sv = new StringBuildingQueryVisitor();
       sv.VisitQueryModel (_queryModel);
       Assert.AreEqual (sv.ToString (), _queryModel.ToString ());
     }

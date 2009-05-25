@@ -53,6 +53,7 @@ namespace Remotion.Data.Linq.Clauses
     /// <summary>
     /// The projection within the select part of the linq query.
     /// </summary>
+    // TODO 1158: Replace by IEvaluation
     public LambdaExpression ProjectionExpression
     {
       get { return _projectionExpression; }

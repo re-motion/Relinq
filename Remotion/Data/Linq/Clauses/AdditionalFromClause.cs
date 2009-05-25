@@ -48,11 +48,13 @@ namespace Remotion.Data.Linq.Clauses
     /// <summary>
     /// The expression of a from expression.
     /// </summary>
+    // TODO 1158: Replace by QuerySourceType
     public LambdaExpression FromExpression { get; private set; }
 
     /// <summary>
     /// The projection of a from expression.
     /// </summary>
+    // TODO 1158: Remove
     public LambdaExpression ProjectionExpression { get; private set; }
 
     /// <summary>

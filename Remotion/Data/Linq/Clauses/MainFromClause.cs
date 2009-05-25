@@ -41,6 +41,7 @@ namespace Remotion.Data.Linq.Clauses
     /// <summary>
     /// The query (data) source which is requested
     /// </summary>
+    // TODO 1158: Replace by QuerySourceType
     public Expression QuerySource { get; private set; }
 
     public override void Accept (IQueryVisitor visitor)

@@ -172,14 +172,14 @@ namespace Remotion.Data.Linq
 
     public override string ToString ()
     {
-      var sv = new StringVisitor();
+      var sv = new StringBuildingQueryVisitor();
       sv.VisitQueryModel (this);
       return sv.ToString();
     }
 
-    public string PrintQueryModel ()
+    public string GetDebugString ()
     {
-      var qv = new QueryModelVisitor ();
+      var qv = new DebugStringBuildingQueryVisitor ();
       qv.VisitQueryModel (this);
       return qv.ToString();
     }

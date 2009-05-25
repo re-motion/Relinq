@@ -28,13 +28,13 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest
   using System.Linq;
 
   [TestFixture]
-  public class StringVisitorTest
+  public class StringBuildingQueryVisitorTest
   {
     [Test]
     public void StringVisitorForMainFromClause ()
     {
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause();
-      StringVisitor sv = new StringVisitor();
+      StringBuildingQueryVisitor sv = new StringBuildingQueryVisitor();
       sv.VisitMainFromClause (fromClause);
       Assert.AreEqual ("from Int32 i in TestQueryable<Student>() ",
           sv.ToString());
@@ -56,7 +56,7 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest
       fromClause.AddJoinClause (joinClause1);
       fromClause.AddJoinClause (joinClause2);
 
-      StringVisitor sv = new StringVisitor();
+      StringBuildingQueryVisitor sv = new StringBuildingQueryVisitor();
 
       // expectations
       using (repository.Ordered())
@@ -77,7 +77,7 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest
     {
       JoinClause joinClause = ExpressionHelper.CreateJoinClause();
 
-      StringVisitor sv = new StringVisitor();
+      StringBuildingQueryVisitor sv = new StringBuildingQueryVisitor();
 
       sv.VisitJoinClause (joinClause);
 
@@ -89,7 +89,7 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest
     public void StringVisitorForSelectClause ()
     {
       SelectClause selectClause = ExpressionHelper.CreateSelectClause();
-      StringVisitor sv = new StringVisitor();
+      StringBuildingQueryVisitor sv = new StringBuildingQueryVisitor();
 
       sv.VisitSelectClause (selectClause);
 
@@ -101,7 +101,7 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest
     {
       GroupClause groupClause =
           new GroupClause (ExpressionHelper.CreateClause(), ExpressionHelper.CreateExpression(), ExpressionHelper.CreateExpression());
-      StringVisitor sv = new StringVisitor();
+      StringBuildingQueryVisitor sv = new StringBuildingQueryVisitor();
 
       sv.VisitGroupClause (groupClause);
 
@@ -112,7 +112,7 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest
     public void StringVisitorForWhereClause ()
     {
       WhereClause whereClasue = ExpressionHelper.CreateWhereClause();
-      StringVisitor sv = new StringVisitor();
+      StringBuildingQueryVisitor sv = new StringBuildingQueryVisitor();
 
       sv.VisitWhereClause (whereClasue);
 
@@ -123,7 +123,7 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest
     public void StringVisitorForLetClause ()
     {
       LetClause letClause = ExpressionHelper.CreateLetClause();
-      StringVisitor sv = new StringVisitor();
+      StringBuildingQueryVisitor sv = new StringBuildingQueryVisitor();
 
       sv.VisitLetClause (letClause);
 
@@ -134,7 +134,7 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest
     public void StringVisitorForOrderingClauseAsc ()
     {
       Ordering ordering = ExpressionHelper.CreateOrdering();
-      StringVisitor sv = new StringVisitor();
+      StringBuildingQueryVisitor sv = new StringBuildingQueryVisitor();
 
       sv.VisitOrdering (ordering);
 
@@ -146,7 +146,7 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest
     public void StringVisitorForOrderingClauseDesc ()
     {
       Ordering ordering = new Ordering (ExpressionHelper.CreateOrderByClause(), ExpressionHelper.CreateLambdaExpression(), OrderingDirection.Desc);
-      StringVisitor sv = new StringVisitor();
+      StringBuildingQueryVisitor sv = new StringBuildingQueryVisitor();
 
       sv.VisitOrdering (ordering);
 
@@ -167,7 +167,7 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest
       orderByClause.AddOrdering (ordering1);
       orderByClause.AddOrdering (ordering2);
 
-      StringVisitor sv = new StringVisitor();
+      StringBuildingQueryVisitor sv = new StringBuildingQueryVisitor();
 
       //expectations
       using (repository.Ordered())
@@ -199,7 +199,7 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest
       orderByClause.AddOrdering (ordering1);
       orderByClause.AddOrdering (ordering2);
 
-      StringVisitor sv = new StringVisitor();
+      StringBuildingQueryVisitor sv = new StringBuildingQueryVisitor();
 
       //expectations
       using (repository.Ordered())
@@ -230,7 +230,7 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest
       orderByClause.AddOrdering (ordering1);
       orderByClause.AddOrdering (ordering2);
 
-      StringVisitor sv = new StringVisitor();
+      StringBuildingQueryVisitor sv = new StringBuildingQueryVisitor();
 
       //expectations
       using (repository.Ordered())
@@ -257,7 +257,7 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest
       
       QueryModel queryModel = new QueryModel (typeof (IQueryable<string>), fromClause, selectClause1);
 
-      StringVisitor sv = new StringVisitor();
+      StringBuildingQueryVisitor sv = new StringBuildingQueryVisitor();
 
       //expectations
       using (repository.Ordered())
@@ -292,7 +292,7 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest
       queryModel.AddBodyClause (fromClause1);
       queryModel.AddBodyClause (whereClause1);
 
-      StringVisitor sv = new StringVisitor ();
+      StringBuildingQueryVisitor sv = new StringBuildingQueryVisitor ();
 
       //expectations
       using (repository.Ordered ())
@@ -327,7 +327,7 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest
       AdditionalFromClause fromClause = new AdditionalFromClause (ExpressionHelper.CreateClause (), ExpressionHelper.CreateParameterExpression (), 
           fromExpression, ExpressionHelper.CreateLambdaExpression ());
 
-      StringVisitor sv = new StringVisitor();
+      StringBuildingQueryVisitor sv = new StringBuildingQueryVisitor();
 
       sv.VisitAdditionalFromClause (fromClause);
 
@@ -342,7 +342,7 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest
       AdditionalFromClause fromClause = new AdditionalFromClause (ExpressionHelper.CreateClause (), ExpressionHelper.CreateParameterExpression (),
           fromExpression, ExpressionHelper.CreateLambdaExpression ());
 
-      StringVisitor sv = new StringVisitor ();
+      StringBuildingQueryVisitor sv = new StringBuildingQueryVisitor ();
 
       sv.VisitAdditionalFromClause (fromClause);
 
@@ -357,7 +357,7 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest
       AdditionalFromClause fromClause = new AdditionalFromClause (ExpressionHelper.CreateClause (), ExpressionHelper.CreateParameterExpression (),
           fromExpression, ExpressionHelper.CreateLambdaExpression ());
 
-      StringVisitor sv = new StringVisitor ();
+      StringBuildingQueryVisitor sv = new StringBuildingQueryVisitor ();
 
       sv.VisitAdditionalFromClause (fromClause);
 
@@ -381,7 +381,7 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest
 
       SubQueryFromClause subQueryFromClause = new SubQueryFromClause (previousClause, identifier, subQuery, projectionExpression);
       
-      StringVisitor sv = new StringVisitor();
+      StringBuildingQueryVisitor sv = new StringBuildingQueryVisitor();
       sv.VisitSubQueryFromClause (subQueryFromClause);
 
       Assert.AreEqual ("from Student s in (from Student s2 in null select 1) ", sv.ToString());
@@ -399,7 +399,7 @@ namespace Remotion.Data.UnitTests.Linq.VisitorTest
       
       MemberFromClause memberFromClause = new MemberFromClause (previousClause, identifier, fromExpression, projectionExpression);
 
-      StringVisitor sv = new StringVisitor ();
+      StringBuildingQueryVisitor sv = new StringBuildingQueryVisitor ();
       sv.VisitMemberFromClause (memberFromClause);
 
       Assert.AreEqual ("from Student s in \"test\".Length ", sv.ToString ());

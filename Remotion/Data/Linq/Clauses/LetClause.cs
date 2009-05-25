@@ -70,6 +70,7 @@ namespace Remotion.Data.Linq.Clauses
     /// <summary>
     /// The expression in a let expression.
     /// </summary>
+    // TODO 1158: Replace with IEvaluation
     public Expression Expression
     {
       get { return _expression; }
