@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{DD9AA076-BE37-4A42-BA9E-C35ECC6955C9}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -228,9 +228,6 @@
     </None>
     <None Include="Data.Linq.build" />
     <None Include="DataObjectModel\RelationalView.cd" />
-    <None Include="..\..\..\..\..\..\Users\matthias.goertler\Desktop\QueryModel.cd">
-      <Link>Parsing\Structure\QueryModel.cd</Link>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Core\Core.Core.csproj">

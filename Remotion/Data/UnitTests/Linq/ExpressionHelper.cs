@@ -215,7 +215,12 @@ namespace Remotion.Data.UnitTests.Linq
 
     public static QueryModel ParseQuery<T> (IQueryable<T> query)
     {
-      Expression expression = query.Expression;
+      return ParseQuery (query.Expression);
+    }
+
+    public static QueryModel ParseQuery (Expression queryExpression)
+    {
+      Expression expression = queryExpression;
       QueryParser parser = new QueryParser (expression);
       return parser.GetParsedQuery ();
     }
@@ -266,9 +271,14 @@ namespace Remotion.Data.UnitTests.Linq
       return new SubQueryFromClause (CreateClause (), identifier, CreateQueryModel (), CreateLambdaExpression ());
     }
 
-    public static Expression MakeExpression<T, R> (Expression<Func<T, R>> memberAccess)
+    public static Expression MakeExpression<TRet> (Expression<Func<TRet>> expression)
     {
-      return memberAccess.Body;
+      return expression.Body;
+    }
+
+    public static Expression MakeExpression<TArg, TRet> (Expression<Func<TArg, TRet>> expression)
+    {
+      return expression.Body;
     }
 
     public static MemberInfo GetMember<T> (Expression<Func<T, object>> memberAccess)

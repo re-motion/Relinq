@@ -17,6 +17,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Collections;
+using Remotion.Data.Linq.Parsing;
 using Remotion.Data.UnitTests.Linq.ParsingTest.FieldResolvingTest;
 
 namespace Remotion.Data.UnitTests.Linq.TestQueryGenerators
@@ -118,5 +119,9 @@ namespace Remotion.Data.UnitTests.Linq.TestQueryGenerators
       return (MethodCallExpression) query.Expression;
     }
 
+    public static Expression CreateCountQueryExpression (IQueryable<Student> source)
+    {
+      return ExpressionHelper.MakeExpression (() => (from s in source select s).Count());
+    }
   }
 }
