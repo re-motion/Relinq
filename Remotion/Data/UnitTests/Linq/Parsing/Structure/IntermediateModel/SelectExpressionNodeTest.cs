@@ -13,11 +13,14 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+using System;
+using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
+using Rhino.Mocks;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 {
@@ -29,6 +32,20 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       MethodInfo method = GetGenericMethodDefinition (q => q.Select (i => i.ToString()));
       Assert.That (SelectExpressionNode.SupportedMethods, List.Contains (method));
+    }
+
+    [Test]
+    public void Resolve_ReplacesParameter_WithProjection ()
+    {
+      var node = new SelectExpressionNode (SourceStub, ExpressionHelper.CreateLambdaExpression<int, int> (j => j * j));
+      var expression = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
+
+      var result = node.Resolve (expression.Parameters[0], expression.Body);
+
+      var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, 
+          Expression.MakeBinary (ExpressionType.Multiply, SourceReference, SourceReference),
+          Expression.Constant (5));
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
   }
 }

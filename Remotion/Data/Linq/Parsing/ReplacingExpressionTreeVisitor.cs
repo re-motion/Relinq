@@ -15,12 +15,18 @@
 // 
 using System;
 using System.Linq.Expressions;
+using Remotion.Utilities;
+
 namespace Remotion.Data.Linq.Parsing
 {
   public class ReplacingExpressionTreeVisitor : ExpressionTreeVisitor
   {
     public static Expression Replace (Expression replacedExpression, Expression replacementExpression, Expression sourceTree)
     {
+      ArgumentUtility.CheckNotNull ("replacedExpression", replacedExpression);
+      ArgumentUtility.CheckNotNull ("replacementExpression", replacementExpression);
+      ArgumentUtility.CheckNotNull ("sourceTree", sourceTree);
+
       var visitor = new ReplacingExpressionTreeVisitor (replacedExpression, replacementExpression);
       return visitor.VisitExpression (sourceTree);
     }

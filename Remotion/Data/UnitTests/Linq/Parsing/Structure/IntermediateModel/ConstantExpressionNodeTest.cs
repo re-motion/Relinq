@@ -14,38 +14,25 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using NUnit.Framework;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
-using Rhino.Mocks;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 {
-  public abstract class ExpressionNodeTestBase
+  [TestFixture]
+  public class ConstantExpressionNodeTest
   {
-    [SetUp]
-    public virtual void SetUp ()
+    [Test]
+    public void Resolve_ReplacesParameter_WithIdentifierReference ()
     {
-      SourceStub = new ConstantExpressionNode (typeof (int), new[] { 1, 2, 3 });
-      SourceReference = new IdentifierReferenceExpression (SourceStub);
+      var node = new ConstantExpressionNode (typeof (int), new [] { 1, 2, 3, 4, 5 });
+      var expression = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
+
+      var result = node.Resolve (expression.Parameters[0], expression.Body);
+
+      var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, new IdentifierReferenceExpression (node), Expression.Constant (5));
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
-
-    public IQuerySourceExpressionNode SourceStub { get; private set; }
-    public IdentifierReferenceExpression SourceReference { get; private set; }
-
-    protected MethodInfo GetGenericMethodDefinition<TReturn> (Expression<Func<IQueryable<int>, TReturn>> methodCallLambda)
-    {
-      return GetMethod (methodCallLambda).GetGenericMethodDefinition ();
-    }
-
-    protected MethodInfo GetMethod<TReturn> (Expression<Func<IQueryable<int>, TReturn>> methodCallLambda)
-    {
-      var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression (methodCallLambda);
-      return methodCallExpression.Method;
-    }
-
-
   }
 }

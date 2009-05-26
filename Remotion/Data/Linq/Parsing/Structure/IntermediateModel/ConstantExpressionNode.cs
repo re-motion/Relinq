@@ -36,10 +36,13 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public Type QuerySourceType { get; private set; }
     public object Value { get; private set; }
 
-    //public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)
-    //{
-    //  var identifierReference = new IdentifierReferenceExpression (this);
-    //  return ReplacingVisitor.Replace (inputParameter, identifierReference, expressionToBeResolved);
-    //}
+    public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)
+    {
+      ArgumentUtility.CheckNotNull ("inputParameter", inputParameter);
+      ArgumentUtility.CheckNotNull ("expressionToBeResolved", expressionToBeResolved);
+
+      var identifierReference = new IdentifierReferenceExpression (this);
+      return ReplacingExpressionTreeVisitor.Replace (inputParameter, identifierReference, expressionToBeResolved);
+    }
   }
 }
