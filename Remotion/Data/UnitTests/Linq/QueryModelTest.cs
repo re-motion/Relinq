@@ -19,12 +19,12 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Expressions;
+using Remotion.Data.Linq.StringBuilding;
 using Rhino.Mocks;
 using Remotion.Collections;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing.FieldResolving;
-using Remotion.Data.Linq.Visitor;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 using NUnit.Framework.SyntaxHelpers;
 

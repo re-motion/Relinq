@@ -19,7 +19,7 @@ using System.Text;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Utilities;
 
-namespace Remotion.Data.Linq.Visitor
+namespace Remotion.Data.Linq.StringBuilding
 {
   public class DebugStringBuildingQueryVisitor : IQueryVisitor
   {

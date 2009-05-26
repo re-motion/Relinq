@@ -14,19 +14,17 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using NUnit.Framework;
 using Remotion.Data.Linq;
+using Remotion.Data.Linq.StringBuilding;
 using Rhino.Mocks;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Visitor;
 
-namespace Remotion.Data.UnitTests.Linq.Visitor
+namespace Remotion.Data.UnitTests.Linq.StringBuilding
 {
-  using Text = NUnit.Framework.SyntaxHelpers.Text;
-  using System.Linq;
-
   [TestFixture]
   public class StringBuildingQueryVisitorTest
   {
@@ -37,7 +35,7 @@ namespace Remotion.Data.UnitTests.Linq.Visitor
       StringBuildingQueryVisitor sv = new StringBuildingQueryVisitor();
       sv.VisitMainFromClause (fromClause);
       Assert.AreEqual ("from Int32 i in TestQueryable<Student>() ",
-          sv.ToString());
+                       sv.ToString());
     }
 
     [Test]
@@ -48,10 +46,10 @@ namespace Remotion.Data.UnitTests.Linq.Visitor
       MockRepository repository = new MockRepository();
       JoinClause joinClause1 =
           repository.StrictMock<JoinClause> (ExpressionHelper.CreateClause(), fromClause, ExpressionHelper.CreateParameterExpression(),
-              ExpressionHelper.CreateExpression(), ExpressionHelper.CreateExpression(), ExpressionHelper.CreateExpression());
+                                             ExpressionHelper.CreateExpression(), ExpressionHelper.CreateExpression(), ExpressionHelper.CreateExpression());
       JoinClause joinClause2 =
           repository.StrictMock<JoinClause> (ExpressionHelper.CreateClause (), fromClause, ExpressionHelper.CreateParameterExpression (),
-              ExpressionHelper.CreateExpression(), ExpressionHelper.CreateExpression(), ExpressionHelper.CreateExpression());
+                                             ExpressionHelper.CreateExpression(), ExpressionHelper.CreateExpression(), ExpressionHelper.CreateExpression());
 
       fromClause.AddJoinClause (joinClause1);
       fromClause.AddJoinClause (joinClause2);
@@ -81,7 +79,7 @@ namespace Remotion.Data.UnitTests.Linq.Visitor
 
       sv.VisitJoinClause (joinClause);
 
-      Assert.That (sv.ToString(), Text.Contains ("join"));
+      Assert.That (sv.ToString(), NUnit.Framework.SyntaxHelpers.Text.Contains ("join"));
     }
 
 
@@ -105,7 +103,7 @@ namespace Remotion.Data.UnitTests.Linq.Visitor
 
       sv.VisitGroupClause (groupClause);
 
-      Assert.That (sv.ToString(), Text.Contains ("group"));
+      Assert.That (sv.ToString(), NUnit.Framework.SyntaxHelpers.Text.Contains ("group"));
     }
 
     [Test]
@@ -127,7 +125,7 @@ namespace Remotion.Data.UnitTests.Linq.Visitor
 
       sv.VisitLetClause (letClause);
 
-      Assert.That (sv.ToString(), Text.Contains ("let"));
+      Assert.That (sv.ToString(), NUnit.Framework.SyntaxHelpers.Text.Contains ("let"));
     }
 
     [Test]
@@ -138,7 +136,7 @@ namespace Remotion.Data.UnitTests.Linq.Visitor
 
       sv.VisitOrdering (ordering);
 
-      Assert.That (sv.ToString(), Text.Contains ("ascending"));
+      Assert.That (sv.ToString(), NUnit.Framework.SyntaxHelpers.Text.Contains ("ascending"));
     }
 
 
@@ -150,7 +148,7 @@ namespace Remotion.Data.UnitTests.Linq.Visitor
 
       sv.VisitOrdering (ordering);
 
-      Assert.That (sv.ToString(), Text.Contains ("descending"));
+      Assert.That (sv.ToString(), NUnit.Framework.SyntaxHelpers.Text.Contains ("descending"));
     }
 
 
@@ -283,7 +281,7 @@ namespace Remotion.Data.UnitTests.Linq.Visitor
           repository.StrictMock<OrderByClause> (ExpressionHelper.CreateClause ());
       AdditionalFromClause fromClause1 =
           repository.StrictMock<AdditionalFromClause> (ExpressionHelper.CreateClause (), Expression.Parameter(typeof(Student),"p"),
-              ExpressionHelper.CreateLambdaExpression (), ExpressionHelper.CreateLambdaExpression ());
+                                                       ExpressionHelper.CreateLambdaExpression (), ExpressionHelper.CreateLambdaExpression ());
       WhereClause whereClause1 =
           repository.StrictMock<WhereClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateLambdaExpression ());
 
@@ -322,10 +320,10 @@ namespace Remotion.Data.UnitTests.Linq.Visitor
 
       LambdaExpression fromExpression =
           Expression.Lambda (Expression.MakeMemberAccess (Expression.Constant (displayClass), displayClass.GetType ().GetField ("source")),
-          Expression.Parameter (typeof (Student), "s2"));
+                             Expression.Parameter (typeof (Student), "s2"));
 
       AdditionalFromClause fromClause = new AdditionalFromClause (ExpressionHelper.CreateClause (), ExpressionHelper.CreateParameterExpression (), 
-          fromExpression, ExpressionHelper.CreateLambdaExpression ());
+                                                                  fromExpression, ExpressionHelper.CreateLambdaExpression ());
 
       StringBuildingQueryVisitor sv = new StringBuildingQueryVisitor();
 
@@ -340,7 +338,7 @@ namespace Remotion.Data.UnitTests.Linq.Visitor
       LambdaExpression fromExpression = Expression.Lambda (Expression.Constant (1));
 
       AdditionalFromClause fromClause = new AdditionalFromClause (ExpressionHelper.CreateClause (), ExpressionHelper.CreateParameterExpression (),
-          fromExpression, ExpressionHelper.CreateLambdaExpression ());
+                                                                  fromExpression, ExpressionHelper.CreateLambdaExpression ());
 
       StringBuildingQueryVisitor sv = new StringBuildingQueryVisitor ();
 
@@ -355,7 +353,7 @@ namespace Remotion.Data.UnitTests.Linq.Visitor
       LambdaExpression fromExpression = Expression.Lambda (Expression.Constant (null));
 
       AdditionalFromClause fromClause = new AdditionalFromClause (ExpressionHelper.CreateClause (), ExpressionHelper.CreateParameterExpression (),
-          fromExpression, ExpressionHelper.CreateLambdaExpression ());
+                                                                  fromExpression, ExpressionHelper.CreateLambdaExpression ());
 
       StringBuildingQueryVisitor sv = new StringBuildingQueryVisitor ();
 

@@ -21,7 +21,7 @@ using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Expressions;
 using Remotion.Data.Linq.Parsing.FieldResolving;
-using Remotion.Data.Linq.Visitor;
+using Remotion.Data.Linq.StringBuilding;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq

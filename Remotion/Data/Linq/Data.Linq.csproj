@@ -232,12 +232,12 @@
     <Compile Include="SqlGeneration\SqlServer\CommandBuilder.cs" />
     <Compile Include="SqlGeneration\SqlServer\WhereBuilder.cs" />
     <Compile Include="SqlGeneration\SqlUtility.cs" />
-    <Compile Include="Visitor\DebugStringBuildingQueryVisitor.cs" />
+    <Compile Include="StringBuilding\DebugStringBuildingQueryVisitor.cs" />
     <Compile Include="IDatabaseInfo.cs" />
     <Compile Include="SqlGeneration\SqlGeneratorVisitor.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitor.cs" />
     <Compile Include="Parsing\TreeEvaluation\PartialTreeEvaluator.cs" />
-    <Compile Include="Visitor\StringBuildingQueryVisitor.cs" />
+    <Compile Include="StringBuilding\StringBuildingQueryVisitor.cs" />
     <Compile Include="Clauses\WhereClause.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -256,9 +256,6 @@
       <Project>{BD061F4A-A9E6-461E-A804-7999623A0060}</Project>
       <Name>Core.Interfaces</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="QueryProviderImplementation\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

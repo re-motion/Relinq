@@ -19,7 +19,7 @@ using System.Text;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Utilities;
 
-namespace Remotion.Data.Linq.Visitor
+namespace Remotion.Data.Linq.StringBuilding
 {
   public class StringBuildingQueryVisitor : IQueryVisitor
   {
@@ -77,7 +77,7 @@ namespace Remotion.Data.Linq.Visitor
     private bool IsCompilerGeneratedFromExpression (MemberExpression memberExpression)
     {
       return memberExpression.Expression.NodeType == ExpressionType.Constant
-          && memberExpression.Expression.Type.IsDefined (typeof (CompilerGeneratedAttribute), false);
+             && memberExpression.Expression.Type.IsDefined (typeof (CompilerGeneratedAttribute), false);
     }
 
     public void VisitSubQueryFromClause (SubQueryFromClause fromClause)
@@ -90,8 +90,8 @@ namespace Remotion.Data.Linq.Visitor
     {
       ArgumentUtility.CheckNotNull ("joinClause", joinClause);
       _sb.AppendFormat ("join {0} {1} in {2} on {3} equals {4} into {5} ",
-          joinClause.Identifier.Type, joinClause.Identifier, joinClause.InExpression,
-          joinClause.OnExpression, joinClause.EqualityExpression, joinClause.IntoIdentifier);
+                        joinClause.Identifier.Type, joinClause.Identifier, joinClause.InExpression,
+                        joinClause.OnExpression, joinClause.EqualityExpression, joinClause.IntoIdentifier);
     }
 
     public void VisitLetClause (LetClause letClause)
