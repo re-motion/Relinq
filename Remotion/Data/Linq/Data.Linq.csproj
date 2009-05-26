@@ -235,7 +235,7 @@
     <Compile Include="Visitor\DebugStringBuildingQueryVisitor.cs" />
     <Compile Include="IDatabaseInfo.cs" />
     <Compile Include="SqlGeneration\SqlGeneratorVisitor.cs" />
-    <Compile Include="Visitor\ExpressionTreeVisitor.cs" />
+    <Compile Include="Parsing\ExpressionTreeVisitor.cs" />
     <Compile Include="Parsing\TreeEvaluation\PartialTreeEvaluator.cs" />
     <Compile Include="Visitor\StringBuildingQueryVisitor.cs" />
     <Compile Include="Clauses\WhereClause.cs" />

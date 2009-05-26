@@ -19,11 +19,11 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using Remotion.Data.DomainObjects;
-using Remotion.Data.Linq.Visitor;
+using Remotion.Data.Linq.Parsing;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;
 
-namespace Remotion.Data.UnitTests.Linq.Visitor.ExpressionTreeVisitorTests
+namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitorTests
 {
   public class ExpressionTreeVisitor_SpecificExpressionsTestBase
   {

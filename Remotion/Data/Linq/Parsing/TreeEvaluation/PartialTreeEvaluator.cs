@@ -15,7 +15,6 @@
 // 
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Parsing.TreeEvaluation;
-using Remotion.Data.Linq.Visitor;
 
 namespace Remotion.Data.Linq.Parsing.TreeEvaluation
 {

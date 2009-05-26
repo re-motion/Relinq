@@ -20,7 +20,7 @@ using System.Linq.Expressions;
 using Remotion.Data.Linq.Expressions;
 using Remotion.Utilities;
 
-namespace Remotion.Data.Linq.Visitor
+namespace Remotion.Data.Linq.Parsing
 {
   public abstract class ExpressionTreeVisitor
   {
@@ -271,7 +271,7 @@ namespace Remotion.Data.Linq.Visitor
           return VisitMemberMemberBinding ((MemberMemberBinding) memberBinding);
         default:
           Assertion.IsTrue (memberBinding.BindingType == MemberBindingType.ListBinding,
-              "Invalid member binding type " + memberBinding.GetType ().FullName);
+                            "Invalid member binding type " + memberBinding.GetType ().FullName);
           return VisitMemberListBinding ((MemberListBinding) memberBinding);
       }
     }
@@ -334,7 +334,7 @@ namespace Remotion.Data.Linq.Visitor
     }
 
     private ReadOnlyCollection<T> VisitList<T> (ReadOnlyCollection<T> list, Func<T, object> visitMethod)
-    where T : class
+        where T : class
     {
       List<T> newList = null;
 
