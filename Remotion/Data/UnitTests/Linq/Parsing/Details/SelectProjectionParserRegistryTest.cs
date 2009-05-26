@@ -24,7 +24,7 @@ using Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing;
 using Remotion.Data.Linq.Parsing.FieldResolving;
 using NUnit.Framework.SyntaxHelpers;
 
-namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest
+namespace Remotion.Data.UnitTests.Linq.Parsing.Details
 {
   [TestFixture]
   public class SelectProjectionParserRegistryTest

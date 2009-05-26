@@ -23,7 +23,7 @@ using Remotion.Data.Linq.Parsing.FieldResolving;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Remotion.Data.UnitTests.Linq.ParsingTest.FieldResolvingTest
+namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
 {
   [TestFixture]
   public class WhereFieldAccessPolicyTest

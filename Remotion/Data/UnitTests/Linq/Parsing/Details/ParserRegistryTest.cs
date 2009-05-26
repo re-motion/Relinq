@@ -23,7 +23,7 @@ using NUnit.Framework.SyntaxHelpers;
 using System.Linq;
 
 
-namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest
+namespace Remotion.Data.UnitTests.Linq.Parsing.Details
 {
   [TestFixture]
   public class ParserRegistryTest

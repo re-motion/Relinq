@@ -19,7 +19,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Parsing.TreeEvaluation;
 
-namespace Remotion.Data.UnitTests.Linq.ParsingTest.TreeEvaluationTest
+namespace Remotion.Data.UnitTests.Linq.Parsing.TreeEvaluation
 {
   [TestFixture]
   public class PartialEvaluationPreAnalyzerIntegrationTest

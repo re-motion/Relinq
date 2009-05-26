@@ -20,7 +20,7 @@ using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing.FieldResolving;
 
-namespace Remotion.Data.UnitTests.Linq.DataObjectModelTest
+namespace Remotion.Data.UnitTests.Linq.DataObjectModel
 {
   [TestFixture]
   public class FieldDescriptorTest

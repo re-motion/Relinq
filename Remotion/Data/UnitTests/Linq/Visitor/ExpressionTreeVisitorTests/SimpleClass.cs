@@ -13,7 +13,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-namespace Remotion.Data.UnitTests.Linq.VisitorTest.ExpressionTreeVisitorTest
+namespace Remotion.Data.UnitTests.Linq.Visitor.ExpressionTreeVisitorTests
 {
   public class SimpleClass
   {

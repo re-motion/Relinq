@@ -18,7 +18,7 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Data.Linq.Parsing.Structure;
 
-namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
+namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 {
   [TestFixture]
   public class FromLetWhereExpressionTest

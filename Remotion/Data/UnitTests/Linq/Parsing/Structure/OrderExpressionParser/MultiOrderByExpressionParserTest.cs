@@ -19,11 +19,11 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Parsing.Structure;
-using Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.WhereExpressionParserTest;
+using Remotion.Data.UnitTests.Linq.Parsing.Structure.WhereExpressionParserTests;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 
-namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.OrderExpressionParserTest
+namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.OrderExpressionParserTests
 {
   [TestFixture]
   public class MultiOrderByExpressionParserTest

@@ -19,7 +19,7 @@ using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
 
-namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.IntermediateModel
+namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 {
   [TestFixture]
   public class SingleExpressionNodeTest : ExpressionNodeTestBase

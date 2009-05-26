@@ -25,7 +25,7 @@ using Remotion.Data.Linq.Parsing.Structure;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 
-namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
+namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 {
   [TestFixture]
   public class ParseResultCollectorTest

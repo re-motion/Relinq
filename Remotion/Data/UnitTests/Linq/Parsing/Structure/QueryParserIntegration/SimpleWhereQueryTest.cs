@@ -19,10 +19,10 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.QueryParserIntegrationTest;
+using Remotion.Data.UnitTests.Linq.Parsing.Structure.QueryParserIntegrationTests;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 
-namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.QueryParserIntegrationTest
+namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.QueryParserIntegrationTests
 {
   [TestFixture]
   public class SimpleWhereQueryTest : SimpleQueryTest

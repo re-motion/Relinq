@@ -24,7 +24,7 @@ using Remotion.Data.Linq.Parsing.Details;
 using Remotion.Data.Linq.Parsing.Details.WhereConditionParsing;
 using Remotion.Data.Linq.Parsing.FieldResolving;
 
-namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.WhereConditionParsingTest
+namespace Remotion.Data.UnitTests.Linq.Parsing.Details.WhereConditionParsing
 {
   [TestFixture]
   public class LikeParserTest : DetailParserTestBase

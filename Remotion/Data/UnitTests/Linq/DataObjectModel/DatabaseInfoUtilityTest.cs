@@ -23,7 +23,7 @@ using Remotion.Collections;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.DataObjectModel;
 
-namespace Remotion.Data.UnitTests.Linq.DataObjectModelTest
+namespace Remotion.Data.UnitTests.Linq.DataObjectModel
 {
   [TestFixture]
   public class DatabaseInfoUtilityTest

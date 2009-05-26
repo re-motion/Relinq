@@ -18,7 +18,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.IntermediateModel
+namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 {
   public class ExpressionNodeTestBase
   {

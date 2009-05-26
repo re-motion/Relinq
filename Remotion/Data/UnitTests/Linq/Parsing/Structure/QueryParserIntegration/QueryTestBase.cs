@@ -21,7 +21,7 @@ using NUnit.Framework;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Parsing.Structure;
 
-namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.QueryParserIntegrationTest
+namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.QueryParserIntegrationTests
 {
   public abstract class QueryTestBase<T>
   {

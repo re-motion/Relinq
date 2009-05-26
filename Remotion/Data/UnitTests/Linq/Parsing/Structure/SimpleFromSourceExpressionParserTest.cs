@@ -21,7 +21,7 @@ using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Structure;
 
-namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest
+namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 {
   [TestFixture]
   public class SimpleFromSourceExpressionParserTest

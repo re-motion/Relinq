@@ -24,7 +24,7 @@ using Remotion.Data.Linq.Parsing.Details;
 using Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing;
 using Remotion.Data.Linq.Parsing.FieldResolving;
 
-namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.SelectProjectionParsingTest
+namespace Remotion.Data.UnitTests.Linq.Parsing.Details.SelectProjectionParsing
 {
   [TestFixture]
   public class BinaryExpressionParserTest : DetailParserTestBase

@@ -18,7 +18,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Collections;
 using Remotion.Data.Linq.Parsing;
-using Remotion.Data.UnitTests.Linq.ParsingTest.FieldResolvingTest;
+using Remotion.Data.UnitTests.Linq.Parsing.FieldResolving;
 
 namespace Remotion.Data.UnitTests.Linq.TestQueryGenerators
 {

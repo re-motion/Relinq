@@ -17,7 +17,7 @@ using System;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 
-namespace Remotion.Data.UnitTests.Linq.ClausesTest
+namespace Remotion.Data.UnitTests.Linq.Clauses
 {
   [TestFixture]
   public class ResultModifierClauseTest

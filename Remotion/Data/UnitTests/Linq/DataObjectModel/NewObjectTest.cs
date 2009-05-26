@@ -18,7 +18,7 @@ using NUnit.Framework;
 using Remotion.Data.Linq.DataObjectModel;
 using NUnit.Framework.SyntaxHelpers;
 
-namespace Remotion.Data.UnitTests.Linq.DataObjectModelTest
+namespace Remotion.Data.UnitTests.Linq.DataObjectModel
 {
   [TestFixture]
   public class NewObjectTest

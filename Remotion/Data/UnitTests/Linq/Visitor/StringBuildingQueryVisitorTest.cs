@@ -22,7 +22,7 @@ using Rhino.Mocks;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Visitor;
 
-namespace Remotion.Data.UnitTests.Linq.VisitorTest
+namespace Remotion.Data.UnitTests.Linq.Visitor
 {
   using Text = NUnit.Framework.SyntaxHelpers.Text;
   using System.Linq;

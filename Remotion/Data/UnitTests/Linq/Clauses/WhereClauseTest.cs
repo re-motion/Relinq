@@ -21,10 +21,10 @@ using Remotion.Data.Linq;
 using Rhino.Mocks;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.DataObjectModel;
-using Remotion.Data.UnitTests.Linq.ParsingTest;
+using Remotion.Data.UnitTests.Linq.Parsing;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 
-namespace Remotion.Data.UnitTests.Linq.ClausesTest
+namespace Remotion.Data.UnitTests.Linq.Clauses
 {
   [TestFixture]
   public class WhereClauseTest

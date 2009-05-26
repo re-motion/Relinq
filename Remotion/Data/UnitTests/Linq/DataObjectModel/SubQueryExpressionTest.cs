@@ -19,7 +19,7 @@ using NUnit.Framework;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Expressions;
 
-namespace Remotion.Data.UnitTests.Linq.DataObjectModelTest
+namespace Remotion.Data.UnitTests.Linq.DataObjectModel
 {
   [TestFixture]
   public class SubQueryExpressionTest

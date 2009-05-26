@@ -17,7 +17,7 @@ using System;
 using NUnit.Framework;
 using Remotion.Data.Linq.DataObjectModel;
 
-namespace Remotion.Data.UnitTests.Linq.DataObjectModelTest
+namespace Remotion.Data.UnitTests.Linq.DataObjectModel
 {
   [TestFixture]
   public class TableTest

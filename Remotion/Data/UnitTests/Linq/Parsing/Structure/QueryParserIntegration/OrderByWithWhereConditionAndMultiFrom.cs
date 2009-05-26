@@ -16,7 +16,7 @@
 using System;
 using NUnit.Framework;
 
-namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.QueryParserIntegrationTest
+namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.QueryParserIntegrationTests
 {
   [TestFixture]
   [Ignore ("TODO: CreateOrderByWithWhereConditionAndMultiFrom")]

@@ -23,7 +23,7 @@ using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing.FieldResolving;
 
-namespace Remotion.Data.UnitTests.Linq.ClausesTest
+namespace Remotion.Data.UnitTests.Linq.Clauses
 {
   [TestFixture]
   public class FromClauseBaseTest

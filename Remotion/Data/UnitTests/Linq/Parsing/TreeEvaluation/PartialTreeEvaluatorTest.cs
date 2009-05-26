@@ -20,7 +20,7 @@ using Remotion.Data.Linq.Expressions;
 using Remotion.Data.Linq.Parsing.TreeEvaluation;
 using Remotion.Collections;
 
-namespace Remotion.Data.UnitTests.Linq.ParsingTest.TreeEvaluationTest
+namespace Remotion.Data.UnitTests.Linq.Parsing.TreeEvaluation
 {
   [TestFixture]
   public class PartialTreeEvaluatorTest

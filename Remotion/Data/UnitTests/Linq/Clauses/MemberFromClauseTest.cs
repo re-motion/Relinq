@@ -22,7 +22,7 @@ using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.DataObjectModel;
 using Rhino.Mocks;
 
-namespace Remotion.Data.UnitTests.Linq.ClausesTest
+namespace Remotion.Data.UnitTests.Linq.Clauses
 {
   [TestFixture]
   public class MemberFromClauseTest

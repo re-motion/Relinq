@@ -20,7 +20,7 @@ using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing.Details;
 using Remotion.Data.Linq.Parsing.FieldResolving;
 
-namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest
+namespace Remotion.Data.UnitTests.Linq.Parsing.Details
 {
   public class DetailParserTestBase
   {

@@ -19,10 +19,10 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Parsing.Structure;
-using Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.WhereExpressionParserTest;
+using Remotion.Data.UnitTests.Linq.Parsing.Structure.WhereExpressionParserTests;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 
-namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.SelectExpressionParserTest
+namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.SelectExpressionParserTests
 {
   [TestFixture]
   public class SimpleSelectExpressionParserTest
@@ -40,7 +40,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.SelectExpressio
       _expression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (_querySource);
       _navigator = new ExpressionTreeNavigator (_expression);
       _result = new ParseResultCollector (_expression);
-      new SelectExpressionParser ().Parse (_result, _expression);
+      new Data.Linq.Parsing.Structure.SelectExpressionParser ().Parse (_result, _expression);
       _bodyWhereHelper = new BodyHelper (_result.BodyExpressions);
     }
     

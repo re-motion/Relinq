@@ -26,7 +26,7 @@ using Remotion.Data.Linq.Parsing.Details;
 using Remotion.Data.Linq.Parsing.FieldResolving;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 
-namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest
+namespace Remotion.Data.UnitTests.Linq.Parsing.Details
 {
   [TestFixture]
   public class OrderingFieldParserTest

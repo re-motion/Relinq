@@ -27,7 +27,7 @@ using Remotion.Development.UnitTesting;
 using Remotion.Utilities;
 using System.Linq;
 
-namespace Remotion.Data.UnitTests.Linq.VisitorTest.ExpressionTreeVisitorTest
+namespace Remotion.Data.UnitTests.Linq.Visitor.ExpressionTreeVisitorTests
 {
   [TestFixture]
   public class ExpressionTreeVisitorTest

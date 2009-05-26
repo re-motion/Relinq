@@ -28,7 +28,7 @@ using Mocks_Is = Rhino.Mocks.Constraints.Is;
 using Mocks_List = Rhino.Mocks.Constraints.List;
 using NUnit.Framework.SyntaxHelpers;
 
-namespace Remotion.Data.UnitTests.Linq.ParsingTest.FieldResolvingTest
+namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
 {
   [TestFixture]
   public class ClauseFieldResolverTest

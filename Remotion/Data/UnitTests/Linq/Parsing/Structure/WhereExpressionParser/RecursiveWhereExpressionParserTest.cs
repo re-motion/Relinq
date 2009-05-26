@@ -19,10 +19,10 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Parsing.Structure;
-using Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.WhereExpressionParserTest;
+using Remotion.Data.UnitTests.Linq.Parsing.Structure.WhereExpressionParserTests;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 
-namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.WhereExpressionParserTest
+namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.WhereExpressionParserTests
 {
   [TestFixture]
   public class RecursiveWhereExpressionParserTest
@@ -40,7 +40,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.WhereExpression
       _expression = WhereTestQueryGenerator.CreateMultiWhereQuery_WhereExpression (_querySource);
       _navigator = new ExpressionTreeNavigator(_expression);
       _result = new ParseResultCollector (_expression);
-      new WhereExpressionParser (true).Parse(_result, _expression);
+      new Data.Linq.Parsing.Structure.WhereExpressionParser (true).Parse(_result, _expression);
       _bodyWhereHelper = new BodyHelper (_result.BodyExpressions);
     }
     
@@ -92,7 +92,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.WhereExpression
     public void ParsesProjectionExpressions_NotTopLevel ()
     {
       _result = new ParseResultCollector (_expression);
-      new WhereExpressionParser (false).Parse (_result, _expression);
+      new Data.Linq.Parsing.Structure.WhereExpressionParser (false).Parse (_result, _expression);
       Assert.IsNotNull (_result.ProjectionExpressions);
       Assert.AreEqual (0, _result.ProjectionExpressions.Count);
     }

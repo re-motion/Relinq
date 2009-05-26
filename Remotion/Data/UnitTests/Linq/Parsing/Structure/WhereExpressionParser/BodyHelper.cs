@@ -18,7 +18,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Parsing.Structure;
 
-namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.WhereExpressionParserTest
+namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.WhereExpressionParserTests
 {
   public class BodyHelper
   {

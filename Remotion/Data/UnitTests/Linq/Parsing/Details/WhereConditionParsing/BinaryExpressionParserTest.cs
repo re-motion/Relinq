@@ -20,7 +20,7 @@ using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing.Details;
 using Remotion.Data.Linq.Parsing.Details.WhereConditionParsing;
 
-namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.WhereConditionParsingTest
+namespace Remotion.Data.UnitTests.Linq.Parsing.Details.WhereConditionParsing
 {
   [TestFixture]
   public class BinaryExpressionParserTest : DetailParserTestBase

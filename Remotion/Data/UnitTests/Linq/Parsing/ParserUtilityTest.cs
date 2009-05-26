@@ -21,7 +21,7 @@ using Remotion.Data.Linq.Parsing;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 using System.Reflection;
 
-namespace Remotion.Data.UnitTests.Linq.ParsingTest
+namespace Remotion.Data.UnitTests.Linq.Parsing
 {
   [TestFixture]
   public class ParserUtilityTest

@@ -18,7 +18,7 @@ using System.Linq.Expressions;
 using Remotion.Data.Linq.Expressions;
 using Remotion.Data.Linq.Parsing.TreeEvaluation;
 
-namespace Remotion.Data.UnitTests.Linq.ParsingTest.TreeEvaluationTest
+namespace Remotion.Data.UnitTests.Linq.Parsing.TreeEvaluation
 {
   public class TestablePartialEvaluationPreAnalyzer : PartialEvaluationPreAnalyzer
   {

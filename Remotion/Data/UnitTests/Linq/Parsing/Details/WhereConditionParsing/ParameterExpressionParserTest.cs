@@ -20,7 +20,7 @@ using Remotion.Data.Linq.Parsing.Details.WhereConditionParsing;
 using Remotion.Data.Linq.Parsing.FieldResolving;
 using NUnit.Framework.SyntaxHelpers;
 
-namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.WhereConditionParsingTest
+namespace Remotion.Data.UnitTests.Linq.Parsing.Details.WhereConditionParsing
 {
   [TestFixture]
   public class ParameterExpressionParserTest : DetailParserTestBase

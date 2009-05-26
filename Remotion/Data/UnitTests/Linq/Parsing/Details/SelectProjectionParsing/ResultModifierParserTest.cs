@@ -26,7 +26,7 @@ using Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing;
 using System.Collections.Generic;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 
-namespace Remotion.Data.UnitTests.Linq.ParsingTest.DetailsTest.SelectProjectionParsingTest
+namespace Remotion.Data.UnitTests.Linq.Parsing.Details.SelectProjectionParsing
 {
   [TestFixture]
   public class ResultModifierParserTest : DetailParserTestBase

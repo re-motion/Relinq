@@ -22,7 +22,7 @@ using System.Reflection;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 
-namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.WhereExpressionParserTest
+namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.WhereExpressionParserTests
 {
   [TestFixture]
   public class GeneralWhereExpressionParserTest
@@ -31,7 +31,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.WhereExpression
     public void Initialize ()
     {
       MethodCallExpression expression = WhereTestQueryGenerator.CreateSimpleWhereQuery_WhereExpression(ExpressionHelper.CreateQuerySource());
-      new WhereExpressionParser ( true);
+      new Data.Linq.Parsing.Structure.WhereExpressionParser ( true);
     }
 
     [Test]
@@ -40,7 +40,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.WhereExpression
     public void Initialize_FromWrongExpression ()
     {
       MethodCallExpression expression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource ());
-      new WhereExpressionParser (true).Parse(new ParseResultCollector (expression), expression);
+      new Data.Linq.Parsing.Structure.WhereExpressionParser (true).Parse(new ParseResultCollector (expression), expression);
     }
 
     [Test]
@@ -53,7 +53,7 @@ namespace Remotion.Data.UnitTests.Linq.ParsingTest.StructureTest.WhereExpression
       MethodInfo method = (from m in typeof (Queryable).GetMethods () where m.Name == "Where" && m.GetParameters ().Length == 2 select m).First();
       method = method.MakeGenericMethod (typeof (Student));
       MethodCallExpression whereExpression = Expression.Call (method, nonCallExpression, Expression.Lambda (Expression.Constant(true), Expression.Parameter(typeof (Student), "student")));
-      new WhereExpressionParser (true).Parse(new ParseResultCollector (whereExpression), whereExpression);
+      new Data.Linq.Parsing.Structure.WhereExpressionParser (true).Parse(new ParseResultCollector (whereExpression), whereExpression);
     }
   }
 }

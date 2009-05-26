@@ -21,7 +21,7 @@ using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing.FieldResolving;
 
-namespace Remotion.Data.UnitTests.Linq.ParsingTest.FieldResolvingTest
+namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
 {
   [TestFixture]
   public class OrderingFieldAccessPolicyTest

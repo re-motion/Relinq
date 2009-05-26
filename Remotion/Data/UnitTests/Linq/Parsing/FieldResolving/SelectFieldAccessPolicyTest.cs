@@ -22,7 +22,7 @@ using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing.FieldResolving;
 using NUnit.Framework.SyntaxHelpers;
 
-namespace Remotion.Data.UnitTests.Linq.ParsingTest.FieldResolvingTest
+namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
 {
   [TestFixture]
   public class SelectFieldAccessPolicyTest
