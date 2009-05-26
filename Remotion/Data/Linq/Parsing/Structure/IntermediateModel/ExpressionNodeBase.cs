@@ -29,5 +29,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       var method = ParserUtility.GetMethod (methodCall);
       return method.IsGenericMethod ? method.GetGenericMethodDefinition() : method;
     }
+
+    public virtual Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)
+    {
+      throw new NotImplementedException();
+    }
   }
 }

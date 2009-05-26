@@ -36,5 +36,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public Type QuerySourceType { get; private set; }
     public object Value { get; private set; }
 
+    //public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)
+    //{
+    //  var identifierReference = new IdentifierReferenceExpression (this);
+    //  return ReplacingVisitor.Replace (inputParameter, identifierReference, expressionToBeResolved);
+    //}
   }
 }

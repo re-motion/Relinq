@@ -18,8 +18,22 @@ using System.Linq.Expressions;
 
 namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 {
+  /// <summary>
   /// Interface for classes representing structural parts of an <see cref="Expression"/> tree.
+  /// </summary>
   public interface IExpressionNode
   {
+    /// <summary>
+    /// Resolves the specified <paramref name="expressionToBeResolved"/> by replacing any occurrence of <paramref name="inputParameter"/>
+    /// by the result of the projection of this <see cref="IExpressionNode"/>. The result is an <see cref="Expression"/> that goes all the
+    /// way to an <see cref="IdentifierReferenceExpression"/>.
+    /// </summary>
+    /// <param name="inputParameter">The parameter representing the input data streaming into an <see cref="IExpressionNode"/>. This is replaced
+    /// by the projection data coming out of this <see cref="IExpressionNode"/>.</param>
+    /// <param name="expressionToBeResolved">The expression to be resolved. Any occurrence of <paramref name="inputParameter"/> in this expression
+    /// is replaced.</param>
+    /// <returns>An equivalent of <paramref name="expressionToBeResolved"/> with each occurrence of <paramref name="inputParameter"/> replaced by
+    /// the projection data streaming out of this <see cref="IExpressionNode"/>.</returns>
+    Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved);
   }
 }

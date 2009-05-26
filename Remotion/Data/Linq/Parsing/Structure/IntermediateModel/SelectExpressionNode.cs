@@ -42,5 +42,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     public IExpressionNode Source { get; private set; }
     public LambdaExpression Selector { get; private set; }
+
+
   }
 }

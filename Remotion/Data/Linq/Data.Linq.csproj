@@ -127,6 +127,7 @@
     <Compile Include="DataObjectModel\OrderingField.cs" />
     <Compile Include="Parsing\FieldResolving\SelectFieldAccessPolicy.cs" />
     <Compile Include="Parsing\FieldResolving\WhereFieldAccessPolicy.cs" />
+    <Compile Include="Parsing\ReplacingExpressionTreeVisitor.cs" />
     <Compile Include="Parsing\Structure\CallParserDispatcher.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ConstantExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ExpressionNodeBase.cs" />
