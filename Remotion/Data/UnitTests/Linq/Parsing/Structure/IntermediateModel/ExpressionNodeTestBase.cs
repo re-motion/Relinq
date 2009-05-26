@@ -17,11 +17,27 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using NUnit.Framework;
+using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
+using Rhino.Mocks;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 {
-  public class ExpressionNodeTestBase
+  public abstract class ExpressionNodeTestBase
   {
+    private IExpressionNode _sourceStub;
+
+    public IExpressionNode SourceStub
+    {
+      get { return _sourceStub; }
+    }
+
+    [SetUp]
+    public virtual void SetUp ()
+    {
+      _sourceStub = MockRepository.GenerateStub<IExpressionNode> ();
+    }
+
     protected MethodInfo GetGenericMethodDefinition<TReturn> (Expression<Func<IQueryable<int>, TReturn>> methodCallLambda)
     {
       return GetMethod (methodCallLambda).GetGenericMethodDefinition ();
@@ -32,5 +48,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression (methodCallLambda);
       return methodCallExpression.Method;
     }
+
+
   }
 }

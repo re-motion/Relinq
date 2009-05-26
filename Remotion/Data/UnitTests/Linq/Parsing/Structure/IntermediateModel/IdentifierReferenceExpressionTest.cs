@@ -13,32 +13,22 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-using System.Linq.Expressions;
-using System.Reflection;
+using System;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
-using System.Linq;
-using Rhino.Mocks;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 {
   [TestFixture]
-  public class SelectManyExpressionNodeTest : ExpressionNodeTestBase
+  public class IdentifierReferenceExpressionTest : ExpressionNodeTestBase
   {
     [Test]
-    public void SupportedMethod_WithoutPosition ()
+    public void Initialization ()
     {
-      MethodInfo method = GetGenericMethodDefinition (q => q.SelectMany (i => new[] { 1, 2, 3 }, (i, j) => new { i, j }));
-      Assert.That (SelectManyExpressionNode.SupportedMethods, List.Contains (method));
-    }
-
-    [Test]
-    public void QuerySourceType ()
-    {
-      SelectManyExpressionNode node = ExpressionNodeObjectMother.CreateSelectMany(SourceStub);
-
-      Assert.That (node.QuerySourceType, Is.SameAs (typeof (Student_Detail)));
+      var node = ExpressionNodeObjectMother.CreateSelectMany (SourceStub);
+      var identifierReferenceExpression = new IdentifierReferenceExpression (node);
+      Assert.That (identifierReferenceExpression.Type, Is.EqualTo (node.QuerySourceType));
     }
   }
 }

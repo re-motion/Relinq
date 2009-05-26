@@ -14,31 +14,18 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System.Linq.Expressions;
-using System.Reflection;
-using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
-using System.Linq;
-using Rhino.Mocks;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 {
-  [TestFixture]
-  public class SelectManyExpressionNodeTest : ExpressionNodeTestBase
+  public static class ExpressionNodeObjectMother
   {
-    [Test]
-    public void SupportedMethod_WithoutPosition ()
+    public static SelectManyExpressionNode CreateSelectMany (IExpressionNode source)
     {
-      MethodInfo method = GetGenericMethodDefinition (q => q.SelectMany (i => new[] { 1, 2, 3 }, (i, j) => new { i, j }));
-      Assert.That (SelectManyExpressionNode.SupportedMethods, List.Contains (method));
-    }
-
-    [Test]
-    public void QuerySourceType ()
-    {
-      SelectManyExpressionNode node = ExpressionNodeObjectMother.CreateSelectMany(SourceStub);
-
-      Assert.That (node.QuerySourceType, Is.SameAs (typeof (Student_Detail)));
+      var p1 = Expression.Parameter (typeof (Student), "s");
+      var p2 = Expression.Parameter (typeof (Student_Detail), "sd");
+      var resultSelector = Expression.Lambda (Expression.Constant (null), p1, p2);
+      return new SelectManyExpressionNode (source, ExpressionHelper.CreateLambdaExpression (), resultSelector);
     }
   }
 }

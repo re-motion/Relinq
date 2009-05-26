@@ -129,6 +129,8 @@
     <Compile Include="Parsing\FieldResolving\WhereFieldAccessPolicy.cs" />
     <Compile Include="Parsing\Structure\CallParserDispatcher.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ExpressionNodeBase.cs" />
+    <Compile Include="Parsing\Structure\IntermediateModel\IdentifierReferenceExpression.cs" />
+    <Compile Include="Parsing\Structure\IntermediateModel\IQuerySourceExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\WhereExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ThenByDescendingExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ThenByExpressionNode.cs" />

@@ -13,6 +13,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -24,7 +25,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   /// Represents a <see cref="MethodCallExpression"/> for 
   /// <see cref="Queryable.SelectMany{TSource,TCollection,TResult}(System.Linq.IQueryable{TSource},System.Linq.Expressions.Expression{System.Func{TSource,System.Collections.Generic.IEnumerable{TCollection}}},System.Linq.Expressions.Expression{System.Func{TSource,TCollection,TResult}})"/>.
   /// </summary>
-  public class SelectManyExpressionNode : ExpressionNodeBase
+  public class SelectManyExpressionNode : ExpressionNodeBase, IQuerySourceExpressionNode
   {
     public static readonly MethodInfo[] SupportedMethods = new[]
                                                            {
@@ -46,5 +47,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public IExpressionNode Source { get; private set; }
     public LambdaExpression CollectionSelector { get; private set; }
     public LambdaExpression ResultSelector { get; private set; }
+
+    public Type QuerySourceType
+    {
+      get { return ResultSelector.Parameters[1].Type; }
+    }
   }
 }
