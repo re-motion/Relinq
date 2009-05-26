@@ -20,6 +20,7 @@ using System.Linq.Expressions;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Expressions;
 using Remotion.Data.Linq.Parsing;
+using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Rhino.Mocks;
 using System.Reflection;
 using Rhino.Mocks.Interfaces;
@@ -150,6 +151,13 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitorTests
     {
       QueryModel queryModel = ExpressionHelper.CreateQueryModel ();
       CheckDelegation (_mockRepository, "VisitSubQueryExpression", new SubQueryExpression (queryModel));
+    }
+
+    [Test]
+    public void VisitExpression_IdentifierReference ()
+    {
+      var nodeStub = MockRepository.GenerateStub<IQuerySourceExpressionNode> ();
+      CheckDelegation (_mockRepository, "VisitIdentifierReferenceExpression", new IdentifierReferenceExpression (nodeStub));
     }
     
     private void CheckDelegation (MockRepository repository, string methodName, params ExpressionType[] expressionTypes)

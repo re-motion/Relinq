@@ -52,5 +52,18 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     {
       get { return ResultSelector.Parameters[1].Type; }
     }
+
+    public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)
+    {
+      ArgumentUtility.CheckNotNull ("inputParameter", inputParameter);
+      ArgumentUtility.CheckNotNull ("expressionToBeResolved", expressionToBeResolved);
+
+      var identifierReferenceExpression = new IdentifierReferenceExpression (this);
+      var resultSelectorWithIdentifierReference = 
+          ReplacingExpressionTreeVisitor.Replace (ResultSelector.Parameters[1], identifierReferenceExpression, ResultSelector.Body);
+
+      var resolvedResultSelector = Source.Resolve (ResultSelector.Parameters[0], resultSelectorWithIdentifierReference);
+      return ReplacingExpressionTreeVisitor.Replace (inputParameter, resolvedResultSelector, expressionToBeResolved);
+    }
   }
 }

@@ -80,9 +80,17 @@ namespace Remotion.Data.UnitTests.Linq.Parsing
         
         IList list1 = (IList) value1;
         IList list2 = (IList) value2;
-        Assert.AreEqual (list1.Count, list2.Count, GetMessage (e1, e2, "Number of elements in " + property.Name));
-        for (int i = 0; i < list1.Count; ++i)
-          CheckAreEqualProperties (property, elementType, list1[i], list2[i], e1, e2);
+        if (list1 == null || list2 == null)
+        {
+          Assert.IsNull (list1, "One of the lists in " + property.Name + " is null.");
+          Assert.IsNull (list2, "One of the lists in " + property.Name + " is null.");
+        }
+        else
+        {
+          Assert.AreEqual (list1.Count, list2.Count, GetMessage (e1, e2, "Number of elements in " + property.Name));
+          for (int i = 0; i < list1.Count; ++i)
+            CheckAreEqualProperties (property, elementType, list1[i], list2[i], e1, e2);
+        }
       }
       else
         Assert.AreEqual (value1, value2, GetMessage (e1, e2, "Property " + property.Name));

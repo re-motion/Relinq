@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Expressions;
+using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing
@@ -95,6 +96,8 @@ namespace Remotion.Data.Linq.Parsing
         default:
           if (expression is SubQueryExpression)
             return VisitSubQueryExpression ((SubQueryExpression) expression);
+          else if (expression is IdentifierReferenceExpression)
+            return VisitIdentifierReferenceExpression ((IdentifierReferenceExpression) expression);
           else
             return VisitUnknownExpression (expression);
       }
@@ -209,7 +212,12 @@ namespace Remotion.Data.Linq.Parsing
       ArgumentUtility.CheckNotNull ("expression", expression);
       ReadOnlyCollection<Expression> newArguments = VisitExpressionList (expression.Arguments);
       if (newArguments != expression.Arguments)
-        return Expression.New (expression.Constructor, newArguments, expression.Members);
+      {
+        if (expression.Members == null)
+          return Expression.New (expression.Constructor, newArguments);
+        else
+          return Expression.New (expression.Constructor, newArguments, expression.Members);
+      }
       return expression;
     }
 
@@ -329,6 +337,11 @@ namespace Remotion.Data.Linq.Parsing
     }
 
     protected virtual Expression VisitSubQueryExpression (SubQueryExpression expression)
+    {
+      return expression;
+    }
+
+    protected virtual Expression VisitIdentifierReferenceExpression (IdentifierReferenceExpression expression)
     {
       return expression;
     }

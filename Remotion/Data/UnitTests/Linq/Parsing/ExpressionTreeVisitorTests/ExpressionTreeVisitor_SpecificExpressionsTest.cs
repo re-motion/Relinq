@@ -319,6 +319,19 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitorTests
     }
 
     [Test]
+    public void VisitNewExpression_ChangedArguments_NoMembers ()
+    {
+      NewExpression expression = Expression.New (typeof (TypeForNewExpression).GetConstructors ()[0], Expression.Constant (0));
+
+      var newArguments = new List<Expression> { Expression.Constant (1) }.AsReadOnly();
+      Expect.Call (InvokeVisitExpressionListMethod (expression.Arguments)).Return (newArguments);
+      NewExpression result = (NewExpression) InvokeAndCheckVisitExpression ("VisitNewExpression", expression);
+      Assert.AreNotSame (expression, result);
+      Assert.AreEqual (ExpressionType.New, result.NodeType);
+      Assert.AreSame (newArguments, result.Arguments);
+    }
+
+    [Test]
     public void VisitNewArrayExpression_Unchanged ()
     {
       NewArrayExpression expression = (NewArrayExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.NewArrayInit);
