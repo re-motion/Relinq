@@ -15,7 +15,7 @@
 // 
 using System.Linq.Expressions;
 using NUnit.Framework;
-using Remotion.Data.Linq.Parsing.Structure;
+using Remotion.Data.Linq.Parsing.Structure.Legacy;
 using Remotion.Data.UnitTests.Linq.Parsing.Structure.WhereExpressionParserTests;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 
@@ -33,7 +33,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.LetExpressionParserTest
     {
       _letExpression = (MethodCallExpression) LetTestQueryGenerator.CreateSimpleSelect_LetExpression (ExpressionHelper.CreateQuerySource ()).Arguments[0];
       _result = new ParseResultCollector (_letExpression);
-      new Data.Linq.Parsing.Structure.LetExpressionParser ().Parse (_result, _letExpression);
+      new LetExpressionParser ().Parse (_result, _letExpression);
       _bodyHelper = new BodyHelper (_result.BodyExpressions);
     }
 

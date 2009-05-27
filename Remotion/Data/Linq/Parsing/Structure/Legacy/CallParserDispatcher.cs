@@ -20,7 +20,7 @@ using System.Reflection;
 using Remotion.Text;
 using Remotion.Utilities;
 
-namespace Remotion.Data.Linq.Parsing.Structure
+namespace Remotion.Data.Linq.Parsing.Structure.Legacy
 {
   public class CallParserDispatcher
   {

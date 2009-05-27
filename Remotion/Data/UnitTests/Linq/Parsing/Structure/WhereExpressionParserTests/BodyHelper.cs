@@ -16,7 +16,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Parsing.Structure;
+using Remotion.Data.Linq.Parsing.Structure.Legacy;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.WhereExpressionParserTests
 {

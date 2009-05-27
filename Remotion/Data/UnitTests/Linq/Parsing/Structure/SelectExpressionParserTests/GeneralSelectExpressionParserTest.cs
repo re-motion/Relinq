@@ -19,7 +19,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using Remotion.Data.Linq.Parsing;
-using Remotion.Data.Linq.Parsing.Structure;
+using Remotion.Data.Linq.Parsing.Structure.Legacy;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.SelectExpressionParserTests
@@ -33,7 +33,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.SelectExpressionParserT
     {
       IQueryable<Student> querySource = ExpressionHelper.CreateQuerySource();
       MethodCallExpression expression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (querySource);
-      new Data.Linq.Parsing.Structure.SelectExpressionParser ().Parse (new ParseResultCollector(expression), expression);
+      new SelectExpressionParser ().Parse (new ParseResultCollector(expression), expression);
     }
 
     [Test]
@@ -42,7 +42,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.SelectExpressionParserT
     public void Initialize_FromWrongExpression ()
     {
       MethodCallExpression expression = WhereTestQueryGenerator.CreateSimpleWhereQuery_WhereExpression (ExpressionHelper.CreateQuerySource ());
-      new Data.Linq.Parsing.Structure.SelectExpressionParser ().Parse (new ParseResultCollector (expression), expression);
+      new SelectExpressionParser ().Parse (new ParseResultCollector (expression), expression);
     }
 
     [Test]
@@ -57,7 +57,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.SelectExpressionParserT
           && m.GetParameters()[1].ParameterType.GetGenericArguments()[0].GetGenericArguments().Length == 2 select m).First ();
       method = method.MakeGenericMethod (typeof (Student), typeof (Student));
       MethodCallExpression selectExpression = Expression.Call (method, nonCallExpression, Expression.Lambda (Expression.Constant (null, typeof (Student)), Expression.Parameter (typeof (Student), "student")));
-      new Data.Linq.Parsing.Structure.SelectExpressionParser ().Parse (new ParseResultCollector (selectExpression), selectExpression);
+      new SelectExpressionParser ().Parse (new ParseResultCollector (selectExpression), selectExpression);
     }
 
     [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected no subqueries for Select expressions, found 'TestQueryable<Student>()"
@@ -67,7 +67,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.SelectExpressionParserT
     public void CheckSubQueryInSelect ()
     {
       MethodCallExpression selectExpression = SelectTestQueryGenerator.CreateSubQueryInSelct_SelectExpression (ExpressionHelper.CreateQuerySource ());
-      new Data.Linq.Parsing.Structure.SelectExpressionParser().Parse (new ParseResultCollector (selectExpression), selectExpression);
+      new SelectExpressionParser().Parse (new ParseResultCollector (selectExpression), selectExpression);
     }
 
     [Test]
@@ -78,7 +78,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.SelectExpressionParserT
     {
       MethodCallExpression selectExpression = 
           (MethodCallExpression) SelectTestQueryGenerator.CreateSubQueryInSelect_WithoutExplicitSelect (ExpressionHelper.CreateQuerySource ()).Expression;
-      new Data.Linq.Parsing.Structure.SelectExpressionParser ().Parse (new ParseResultCollector (selectExpression), selectExpression);
+      new SelectExpressionParser ().Parse (new ParseResultCollector (selectExpression), selectExpression);
       Assert.Fail();
     }
   }

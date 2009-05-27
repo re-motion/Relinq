@@ -18,7 +18,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.Parsing.Structure;
+using Remotion.Data.Linq.Parsing.Structure.Legacy;
 using Remotion.Data.UnitTests.Linq.Parsing.Structure.WhereExpressionParserTests;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 
@@ -40,7 +40,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.WhereExpressionParserTe
       _expression = WhereTestQueryGenerator.CreateSimpleWhereQuery_WhereExpression (_querySource);
       _navigator  = new ExpressionTreeNavigator(_expression);
       _result = new ParseResultCollector (_expression);
-      new Data.Linq.Parsing.Structure.WhereExpressionParser (true).Parse(_result, _expression);
+      new WhereExpressionParser (true).Parse(_result, _expression);
       _bodyWhereHelper = new BodyHelper (_result.BodyExpressions);
     }
 
@@ -86,7 +86,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.WhereExpressionParserTe
     public void ParsesProjectionExpressions_NotTopLevel ()
     {
       _result = new ParseResultCollector (_expression);
-      new Data.Linq.Parsing.Structure.WhereExpressionParser (false).Parse (_result, _expression);
+      new WhereExpressionParser (false).Parse (_result, _expression);
       Assert.IsNotNull (_result.ProjectionExpressions);
       Assert.AreEqual (0, _result.ProjectionExpressions.Count);
     }

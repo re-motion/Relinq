@@ -18,7 +18,7 @@ using System.Linq.Expressions;
 using Remotion.Data.Linq.Expressions;
 using Remotion.Utilities;
 
-namespace Remotion.Data.Linq.Parsing.Structure
+namespace Remotion.Data.Linq.Parsing.Structure.Legacy
 {
   /// <summary>
   /// Parses an expression tree, looks for sub-queries in that tree (ie. expressions that themselves are LINQ queries), parses and registers them, and

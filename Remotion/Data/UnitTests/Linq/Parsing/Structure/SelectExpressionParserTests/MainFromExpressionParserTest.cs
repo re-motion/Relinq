@@ -7,7 +7,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.Parsing.Structure;
+using Remotion.Data.Linq.Parsing.Structure.Legacy;
 using Remotion.Data.UnitTests.Linq.Parsing.Structure.WhereExpressionParserTests;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 

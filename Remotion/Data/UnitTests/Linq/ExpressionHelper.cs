@@ -19,10 +19,10 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Parsing;
+using Remotion.Data.Linq.Parsing.Structure.Legacy;
 using Rhino.Mocks;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.DataObjectModel;
-using Remotion.Data.Linq.Parsing.Structure;
 
 namespace Remotion.Data.UnitTests.Linq
 {

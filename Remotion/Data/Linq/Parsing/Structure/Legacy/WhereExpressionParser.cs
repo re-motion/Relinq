@@ -18,7 +18,7 @@ using System.Linq.Expressions;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Utilities;
 
-namespace Remotion.Data.Linq.Parsing.Structure
+namespace Remotion.Data.Linq.Parsing.Structure.Legacy
 {
   public class WhereExpressionParser
   {
@@ -38,7 +38,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       ParserUtility.CheckMethodCallExpression (whereExpression, resultCollector.ExpressionTreeRoot, "Where");
       if (whereExpression.Arguments.Count != 2)
         throw ParserUtility.CreateParserException ("Where call with two arguments", whereExpression, "Where expressions",
-            resultCollector.ExpressionTreeRoot);
+                                                   resultCollector.ExpressionTreeRoot);
 
       ParseWhere (resultCollector, whereExpression);
     }
@@ -46,9 +46,9 @@ namespace Remotion.Data.Linq.Parsing.Structure
     private void ParseWhere (ParseResultCollector resultCollector, MethodCallExpression sourceExpression)
     {
       UnaryExpression unaryExpression = ParserUtility.GetTypedExpression<UnaryExpression> (sourceExpression.Arguments[1],
-          "second argument of Where expression", resultCollector.ExpressionTreeRoot);
+                                                                                           "second argument of Where expression", resultCollector.ExpressionTreeRoot);
       LambdaExpression ueLambda = ParserUtility.GetTypedExpression<LambdaExpression> (unaryExpression.Operand,
-          "second argument of Where expression", resultCollector.ExpressionTreeRoot);
+                                                                                      "second argument of Where expression", resultCollector.ExpressionTreeRoot);
 
       _sourceParser.Parse (resultCollector, sourceExpression.Arguments[0], ueLambda.Parameters[0], "first argument of Where expression");
 

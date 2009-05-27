@@ -20,7 +20,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using Remotion.Data.Linq.Parsing;
-using Remotion.Data.Linq.Parsing.Structure;
+using Remotion.Data.Linq.Parsing.Structure.Legacy;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.SelectManyExpressionParserTests
@@ -36,7 +36,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.SelectManyExpressionPar
       IQueryable<Student> querySource2 = ExpressionHelper.CreateQuerySource ();
       MethodCallExpression expression = FromTestQueryGenerator.CreateMultiFromQuery_SelectManyExpression (querySource1, querySource2);
 
-      new Data.Linq.Parsing.Structure.SelectManyExpressionParser ().Parse (new ParseResultCollector (expression), expression);
+      new SelectManyExpressionParser ().Parse (new ParseResultCollector (expression), expression);
     }
 
     [Test]
@@ -45,7 +45,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.SelectManyExpressionPar
     public void Initialize_FromWrongExpression ()
     {
       MethodCallExpression expression = WhereTestQueryGenerator.CreateSimpleWhereQuery_WhereExpression (ExpressionHelper.CreateQuerySource ());
-      new Data.Linq.Parsing.Structure.SelectManyExpressionParser ().Parse (new ParseResultCollector (expression), expression);
+      new SelectManyExpressionParser ().Parse (new ParseResultCollector (expression), expression);
     }
 
     [Test]
@@ -60,7 +60,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.SelectManyExpressionPar
           && m.GetParameters()[1].ParameterType.GetGenericArguments()[0].GetGenericArguments().Length == 2 select m).First ();
       method = method.MakeGenericMethod (typeof (Student), typeof (Student));
       MethodCallExpression selectExpression = Expression.Call (method, nonCallExpression, Expression.Lambda (Expression.Constant (null, typeof (IEnumerable<Student>)), Expression.Parameter (typeof (Student), "student")));
-      new Data.Linq.Parsing.Structure.SelectManyExpressionParser ().Parse (new ParseResultCollector (selectExpression), selectExpression);
+      new SelectManyExpressionParser ().Parse (new ParseResultCollector (selectExpression), selectExpression);
     }
   }
 }

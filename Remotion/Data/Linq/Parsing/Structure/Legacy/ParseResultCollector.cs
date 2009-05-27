@@ -20,7 +20,7 @@ using System.Linq.Expressions;
 using Remotion.Data.Linq.Parsing.TreeEvaluation;
 using Remotion.Utilities;
 
-namespace Remotion.Data.Linq.Parsing.Structure
+namespace Remotion.Data.Linq.Parsing.Structure.Legacy
 {
   /// <summary>
   /// Caches information of expression. The stored informaion is used to generate <see cref="QueryModel"/>.

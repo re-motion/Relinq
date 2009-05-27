@@ -21,7 +21,7 @@ using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Expressions;
 using Remotion.Utilities;
 
-namespace Remotion.Data.Linq.Parsing.Structure
+namespace Remotion.Data.Linq.Parsing.Structure.Legacy
 {
   public class QueryModelCreator
   {
@@ -109,7 +109,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       if (_currentProjection >= _result.ProjectionExpressions.Count)
       {
         string message = string.Format ("From expression '{0}' ({1}) doesn't have a projection expression.", fromExpression.Identifier,
-            fromExpression.TypedExpression);
+                                        fromExpression.TypedExpression);
         throw new ParserException (message, _expressionTreeRoot, _expressionTreeRoot, null);
       }
 
@@ -176,7 +176,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       if (_currentProjection >= _result.ProjectionExpressions.Count)
       {
         string message = string.Format ("Let expression '{0}' ({1}) doesn't have a projection expression.", letExpression.Identifier,
-            letExpression.TypedExpression);
+                                        letExpression.TypedExpression);
         throw new ParserException (message, _expressionTreeRoot, _expressionTreeRoot, null);
       }
 

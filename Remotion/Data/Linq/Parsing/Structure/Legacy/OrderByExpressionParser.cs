@@ -18,7 +18,7 @@ using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Utilities;
 
-namespace Remotion.Data.Linq.Parsing.Structure
+namespace Remotion.Data.Linq.Parsing.Structure.Legacy
 {
   public class OrderByExpressionParser
   {
@@ -37,10 +37,10 @@ namespace Remotion.Data.Linq.Parsing.Structure
       
       if (orderExpression.Arguments.Count != 2)
         throw ParserUtility.CreateParserException ("OrderBy call with two arguments", orderExpression, "OrderBy expressions",
-            resultCollector.ExpressionTreeRoot);
+                                                   resultCollector.ExpressionTreeRoot);
 
       switch (ParserUtility.CheckMethodCallExpression (orderExpression, resultCollector.ExpressionTreeRoot,
-          "OrderBy", "OrderByDescending", "ThenBy", "ThenByDescending"))
+                                                       "OrderBy", "OrderByDescending", "ThenBy", "ThenByDescending"))
       {
         case "OrderBy":
           ParseOrderBy (resultCollector, orderExpression, OrderingDirection.Asc, true);
@@ -60,9 +60,9 @@ namespace Remotion.Data.Linq.Parsing.Structure
     private void ParseOrderBy (ParseResultCollector resultCollector, MethodCallExpression sourceExpression, OrderingDirection direction, bool isOrderBy)
     {
       UnaryExpression unaryExpression = ParserUtility.GetTypedExpression<UnaryExpression> (sourceExpression.Arguments[1],
-          "second argument of OrderBy expression", resultCollector.ExpressionTreeRoot);
+                                                                                           "second argument of OrderBy expression", resultCollector.ExpressionTreeRoot);
       LambdaExpression ueLambda = ParserUtility.GetTypedExpression<LambdaExpression> (unaryExpression.Operand,
-          "second argument of OrderBy expression", resultCollector.ExpressionTreeRoot);
+                                                                                      "second argument of OrderBy expression", resultCollector.ExpressionTreeRoot);
 
       _sourceParser.Parse (resultCollector, sourceExpression.Arguments[0], ueLambda.Parameters[0], "first argument of OrderBy expression");
 

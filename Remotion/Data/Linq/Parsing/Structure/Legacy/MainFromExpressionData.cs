@@ -5,7 +5,7 @@
 using System.Linq.Expressions;
 using Remotion.Utilities;
 
-namespace Remotion.Data.Linq.Parsing.Structure
+namespace Remotion.Data.Linq.Parsing.Structure.Legacy
 {
   public class MainFromExpressionData : BodyExpressionDataBase<Expression>
   {

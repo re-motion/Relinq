@@ -19,7 +19,7 @@ using NUnit.Framework;
 using System.Linq;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Parsing;
-using Remotion.Data.Linq.Parsing.Structure;
+using Remotion.Data.Linq.Parsing.Structure.Legacy;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 using Remotion.Development.UnitTesting;
 

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{DD9AA076-BE37-4A42-BA9E-C35ECC6955C9}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -128,7 +128,7 @@
     <Compile Include="Parsing\FieldResolving\SelectFieldAccessPolicy.cs" />
     <Compile Include="Parsing\FieldResolving\WhereFieldAccessPolicy.cs" />
     <Compile Include="Parsing\ReplacingExpressionTreeVisitor.cs" />
-    <Compile Include="Parsing\Structure\CallParserDispatcher.cs" />
+    <Compile Include="Parsing\Structure\Legacy\CallParserDispatcher.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ConstantExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ExpressionNodeBase.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\IdentifierReferenceExpression.cs" />
@@ -151,14 +151,14 @@
     <Compile Include="Parsing\Structure\IntermediateModel\SelectManyExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\IExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\SelectExpressionNode.cs" />
-    <Compile Include="Parsing\Structure\LetExpressionData.cs" />
-    <Compile Include="Parsing\Structure\LetExpressionParser.cs" />
-    <Compile Include="Parsing\Structure\MainFromExpressionData.cs" />
-    <Compile Include="Parsing\Structure\OrderByExpressionParser.cs" />
-    <Compile Include="Parsing\Structure\ParseResultCollector.cs" />
-    <Compile Include="Parsing\Structure\QueryModelCreator.cs" />
-    <Compile Include="Parsing\Structure\SimpleFromSourceExpressionParser.cs" />
-    <Compile Include="Parsing\Structure\SourceExpressionParser.cs" />
+    <Compile Include="Parsing\Structure\Legacy\LetExpressionData.cs" />
+    <Compile Include="Parsing\Structure\Legacy\LetExpressionParser.cs" />
+    <Compile Include="Parsing\Structure\Legacy\MainFromExpressionData.cs" />
+    <Compile Include="Parsing\Structure\Legacy\OrderByExpressionParser.cs" />
+    <Compile Include="Parsing\Structure\Legacy\ParseResultCollector.cs" />
+    <Compile Include="Parsing\Structure\Legacy\QueryModelCreator.cs" />
+    <Compile Include="Parsing\Structure\Legacy\SimpleFromSourceExpressionParser.cs" />
+    <Compile Include="Parsing\Structure\Legacy\SourceExpressionParser.cs" />
     <Compile Include="DataObjectModel\DatabaseInfoUtility.cs" />
     <Compile Include="DataObjectModel\NotCriterion.cs" />
     <Compile Include="Clauses\IClause.cs" />
@@ -168,18 +168,18 @@
     <Compile Include="Clauses\LetClause.cs" />
     <Compile Include="Clauses\OrderByClause.cs" />
     <Compile Include="Clauses\Ordering.cs" />
-    <Compile Include="Parsing\Structure\FromExpressionData.cs" />
-    <Compile Include="Parsing\Structure\BodyExpressionDataBase.cs" />
-    <Compile Include="Parsing\Structure\OrderExpressionData.cs" />
-    <Compile Include="Parsing\Structure\SelectManyExpressionParser.cs" />
+    <Compile Include="Parsing\Structure\Legacy\FromExpressionData.cs" />
+    <Compile Include="Parsing\Structure\Legacy\BodyExpressionDataBase.cs" />
+    <Compile Include="Parsing\Structure\Legacy\OrderExpressionData.cs" />
+    <Compile Include="Parsing\Structure\Legacy\SelectManyExpressionParser.cs" />
     <Compile Include="Parsing\ParserUtility.cs" />
-    <Compile Include="Parsing\Structure\QueryParser.cs" />
+    <Compile Include="Parsing\Structure\Legacy\QueryParser.cs" />
     <Compile Include="Parsing\ParserException.cs" />
-    <Compile Include="Parsing\Structure\SelectExpressionParser.cs" />
+    <Compile Include="Parsing\Structure\Legacy\SelectExpressionParser.cs" />
     <Compile Include="Parsing\Details\OrderingFieldParser.cs" />
-    <Compile Include="Parsing\Structure\SubQueryFindingVisitor.cs" />
-    <Compile Include="Parsing\Structure\WhereExpressionData.cs" />
-    <Compile Include="Parsing\Structure\WhereExpressionParser.cs" />
+    <Compile Include="Parsing\Structure\Legacy\SubQueryFindingVisitor.cs" />
+    <Compile Include="Parsing\Structure\Legacy\WhereExpressionData.cs" />
+    <Compile Include="Parsing\Structure\Legacy\WhereExpressionParser.cs" />
     <Compile Include="Parsing\TreeEvaluation\PartialEvaluationData.cs" />
     <Compile Include="Parsing\TreeEvaluation\PartialEvaluationPreAnalyzer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

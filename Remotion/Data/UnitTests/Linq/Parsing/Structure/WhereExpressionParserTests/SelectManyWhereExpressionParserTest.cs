@@ -17,7 +17,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.Parsing.Structure;
+using Remotion.Data.Linq.Parsing.Structure.Legacy;
 using Remotion.Data.UnitTests.Linq.Parsing.Structure.WhereExpressionParserTests;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 
@@ -42,7 +42,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.WhereExpressionParserTe
       _expression = MixedTestQueryGenerator.CreateMultiFromWhere_WhereExpression (_querySource1, _querySource2);
       _navigator = new ExpressionTreeNavigator (_expression);
       _result = new ParseResultCollector (_expression);
-      new Data.Linq.Parsing.Structure.WhereExpressionParser (false).Parse (_result, (MethodCallExpression) _navigator.Arguments[0].Expression);
+      new WhereExpressionParser (false).Parse (_result, (MethodCallExpression) _navigator.Arguments[0].Expression);
       _selectManyNavigator = new ExpressionTreeNavigator (_expression).Arguments[0].Arguments[0];
       _bodyWhereHelper = new BodyHelper (_result.BodyExpressions);
     }
@@ -103,7 +103,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.WhereExpressionParserTe
 
       Expression expression = MixedTestQueryGenerator.CreateWhereFromWhere_WhereExpression (_querySource1, _querySource2);
       ExpressionTreeNavigator navigator = new ExpressionTreeNavigator (expression);
-      new Data.Linq.Parsing.Structure.WhereExpressionParser (true).Parse (_result, (MethodCallExpression) navigator.Arguments[0].Expression);
+      new WhereExpressionParser (true).Parse (_result, (MethodCallExpression) navigator.Arguments[0].Expression);
       BodyHelper bodyWhereHelper = new BodyHelper (_result.BodyExpressions);
       Assert.IsNotNull (bodyWhereHelper.WhereExpressions);
       Assert.That (bodyWhereHelper.WhereExpressions, Is.EqualTo (new object[]

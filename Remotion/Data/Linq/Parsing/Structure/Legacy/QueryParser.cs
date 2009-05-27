@@ -19,7 +19,7 @@ using Remotion.Data.Linq.Clauses;
 using Remotion.Utilities;
 
 
-namespace Remotion.Data.Linq.Parsing.Structure
+namespace Remotion.Data.Linq.Parsing.Structure.Legacy
 {
   public class QueryParser
   {

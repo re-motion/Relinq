@@ -17,7 +17,7 @@ using System;
 using System.Linq.Expressions;
 using Remotion.Utilities;
 
-namespace Remotion.Data.Linq.Parsing.Structure
+namespace Remotion.Data.Linq.Parsing.Structure.Legacy
 {
   /// <summary>
   /// Delegates to the appropiate parser dependent to the used method expression in an expression chain.

@@ -18,7 +18,7 @@ using System.Linq.Expressions;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Utilities;
 
-namespace Remotion.Data.Linq.Parsing.Structure
+namespace Remotion.Data.Linq.Parsing.Structure.Legacy
 {
   public class SelectExpressionParser
   {
@@ -37,7 +37,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
       if (selectExpression.Arguments.Count != 2)
         throw ParserUtility.CreateParserException ("Select call with two arguments", selectExpression, "Select expressions",
-            resultCollector.ExpressionTreeRoot);
+                                                   resultCollector.ExpressionTreeRoot);
 
       ParseSelect (resultCollector, selectExpression);
     }
@@ -45,9 +45,9 @@ namespace Remotion.Data.Linq.Parsing.Structure
     private void ParseSelect (ParseResultCollector resultCollector, MethodCallExpression sourceExpression)
     {
       UnaryExpression unaryExpression = ParserUtility.GetTypedExpression<UnaryExpression> (sourceExpression.Arguments[1],
-          "second argument of Select expression", resultCollector.ExpressionTreeRoot);
+                                                                                           "second argument of Select expression", resultCollector.ExpressionTreeRoot);
       LambdaExpression ueLambda = ParserUtility.GetTypedExpression<LambdaExpression> (unaryExpression.Operand,
-          "second argument of Select expression", resultCollector.ExpressionTreeRoot);
+                                                                                      "second argument of Select expression", resultCollector.ExpressionTreeRoot);
 
       CheckForSubQuery(resultCollector, sourceExpression, ueLambda);
 

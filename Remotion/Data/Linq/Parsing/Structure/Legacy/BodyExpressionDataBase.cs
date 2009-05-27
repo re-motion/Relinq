@@ -14,22 +14,35 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Utilities;
 
-namespace Remotion.Data.Linq.Parsing.Structure
+namespace Remotion.Data.Linq.Parsing.Structure.Legacy
 {
-  public class FromExpressionData : BodyExpressionDataBase<Expression>
+  public abstract class BodyExpressionDataBase<TExpression> : BodyExpressionDataBase
+      where TExpression : Expression
   {
-    public ParameterExpression Identifier { get; private set; }
-
-    public FromExpressionData (Expression expression,ParameterExpression identifier)
-        : base (expression)
+    private TExpression _expression;
+    
+    public BodyExpressionDataBase(TExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      ArgumentUtility.CheckNotNull ("identifier", identifier);
-
-      Identifier = identifier;
+      _expression = expression;
     }
+
+    public TExpression TypedExpression
+    {
+      get { return _expression; }
+    }
+
+    public override Expression Expression
+    {
+      get { return _expression; }
+      set { _expression = (TExpression) value; }
+    }
+  }
+
+  public abstract class BodyExpressionDataBase
+  {
+    public abstract Expression Expression { get; set; }
   }
 }

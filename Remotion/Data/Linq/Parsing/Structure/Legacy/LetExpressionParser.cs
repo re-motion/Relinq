@@ -17,7 +17,7 @@ using System;
 using System.Linq.Expressions;
 using Remotion.Utilities;
 
-namespace Remotion.Data.Linq.Parsing.Structure
+namespace Remotion.Data.Linq.Parsing.Structure.Legacy
 {
   public class LetExpressionParser
   {
@@ -36,7 +36,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
       if (letExpression.Arguments.Count != 2)
         throw ParserUtility.CreateParserException ("Let call with two arguments", letExpression, "Let expressions",
-            resultCollector.ExpressionTreeRoot);
+                                                   resultCollector.ExpressionTreeRoot);
 
       ParseLet (resultCollector, letExpression);
     }
@@ -44,10 +44,10 @@ namespace Remotion.Data.Linq.Parsing.Structure
     private void ParseLet (ParseResultCollector resultCollector, MethodCallExpression letExpression)
     {
       UnaryExpression unaryExpression = ParserUtility.GetTypedExpression<UnaryExpression> (letExpression.Arguments[1],
-          "second argument of Let expression", resultCollector.ExpressionTreeRoot);
+                                                                                           "second argument of Let expression", resultCollector.ExpressionTreeRoot);
       
       LambdaExpression ueLambda = ParserUtility.GetTypedExpression<LambdaExpression> (unaryExpression.Operand,
-          "second argument of Let expression", resultCollector.ExpressionTreeRoot);
+                                                                                      "second argument of Let expression", resultCollector.ExpressionTreeRoot);
       if (ueLambda.Body is ParameterExpression)
       {
         resultCollector.AddBodyExpression (new MainFromExpressionData (letExpression.Arguments[0])); 

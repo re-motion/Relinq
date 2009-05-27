@@ -18,7 +18,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq.Parsing.TreeEvaluation;
 
-namespace Remotion.Data.Linq.Parsing.Structure
+namespace Remotion.Data.Linq.Parsing.Structure.Legacy
 {
   public class SimpleFromSourceExpressionParser
   {
@@ -64,13 +64,13 @@ namespace Remotion.Data.Linq.Parsing.Structure
       catch (TargetInvocationException targetInvocationException)
       {
         string message = string.Format ("The expression '{0}' could not be evaluated as a query source because it threw an exception: {1}", 
-            expression, targetInvocationException.InnerException.Message);
+                                        expression, targetInvocationException.InnerException.Message);
         throw new ParserException (message, targetInvocationException);
       }
       catch (Exception ex)
       {
         string message = string.Format ("The expression '{0}' could not be evaluated as a query source because it cannot be compiled: {1}",
-            expression, ex.Message);
+                                        expression, ex.Message);
         throw new ParserException (message, ex);
       }
       ParseConstantExpressionAsSimpleSource (resultCollector, evaluatedExpression, potentialFromIdentifier);
