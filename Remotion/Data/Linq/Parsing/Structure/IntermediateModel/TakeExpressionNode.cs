@@ -40,5 +40,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     public IExpressionNode Source { get; private set; }
     public int Count { get; set; }
+
+    public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)
+    {
+      return Source.Resolve (inputParameter, expressionToBeResolved);
+    }
   }
 }

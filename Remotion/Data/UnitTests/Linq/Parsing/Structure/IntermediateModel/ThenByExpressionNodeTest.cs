@@ -18,6 +18,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
+using Rhino.Mocks;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 {
@@ -29,6 +30,22 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       MethodInfo method = GetGenericMethodDefinition (q => ((IOrderedQueryable<object>) q).ThenBy (i => i));
       Assert.That (ThenByExpressionNode.SupportedMethods, List.Contains (method));
+    }
+
+    [Test]
+    public void Resolve_PassesExpressionToSource ()
+    {
+      var sourceMock = MockRepository.GenerateMock<IExpressionNode>();
+      var node = new ThenByExpressionNode (sourceMock, ExpressionHelper.CreateLambdaExpression());
+      var expression = ExpressionHelper.CreateLambdaExpression();
+      var parameter = ExpressionHelper.CreateParameterExpression();
+      var expectedResult = ExpressionHelper.CreateExpression();
+      sourceMock.Expect (mock => mock.Resolve (parameter, expression)).Return (expectedResult);
+      
+      var result = node.Resolve (parameter, expression);
+
+      sourceMock.VerifyAllExpectations();
+      Assert.That (result, Is.SameAs (expectedResult));
     }
   }
 }

@@ -22,7 +22,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   /// <summary>
   /// Base class for classes representing instantiations of <see cref="MethodCallExpression"/> for specific methods.
   /// </summary>
-  public class ExpressionNodeBase : IExpressionNode
+  public abstract class ExpressionNodeBase : IExpressionNode
   {
     protected static MethodInfo GetSupportedMethod<T> (Expression<Func<T>> methodCall)
     {
@@ -30,10 +30,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return method.IsGenericMethod ? method.GetGenericMethodDefinition() : method;
     }
 
-    public virtual Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)
-    {
-      throw new NotImplementedException();
-    }
+    public abstract Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved);
 
     protected InvalidOperationException CreateResolveNotSupportedException ()
     {

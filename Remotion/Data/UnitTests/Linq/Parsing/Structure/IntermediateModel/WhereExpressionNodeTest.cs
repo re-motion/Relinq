@@ -13,11 +13,13 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
+using Rhino.Mocks;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 {
@@ -29,6 +31,22 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       MethodInfo method = GetGenericMethodDefinition (q => q.Where (i => i > 5));
       Assert.That (WhereExpressionNode.SupportedMethods, List.Contains (method));
+    }
+
+    [Test]
+    public void Resolve_PassesExpressionToSource ()
+    {
+      var sourceMock = MockRepository.GenerateMock<IExpressionNode>();
+      var node = new WhereExpressionNode (sourceMock, ExpressionHelper.CreateLambdaExpression());
+      var expression = ExpressionHelper.CreateLambdaExpression();
+      var parameter = ExpressionHelper.CreateParameterExpression();
+      var expectedResult = ExpressionHelper.CreateExpression();
+      sourceMock.Expect (mock => mock.Resolve (parameter, expression)).Return (expectedResult);
+      
+      var result = node.Resolve (parameter, expression);
+
+      sourceMock.VerifyAllExpectations();
+      Assert.That (result, Is.SameAs (expectedResult));
     }
   }
 }

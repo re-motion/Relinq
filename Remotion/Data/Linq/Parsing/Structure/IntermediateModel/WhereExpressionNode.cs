@@ -48,9 +48,9 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     //  return Source.Resolve (Predicate.Parameters[0], Predicate.Body);
     //}
 
-    //public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)
-    //{
-    //   return Source.Resolve (inputParameter, expressionToBeResolved);
-    //}
+    public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)
+    {
+      return Source.Resolve (inputParameter, expressionToBeResolved);
+    }
   }
 }
