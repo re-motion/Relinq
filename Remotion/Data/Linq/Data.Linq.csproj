@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{DD9AA076-BE37-4A42-BA9E-C35ECC6955C9}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -128,6 +128,8 @@
     <Compile Include="Parsing\FieldResolving\SelectFieldAccessPolicy.cs" />
     <Compile Include="Parsing\FieldResolving\WhereFieldAccessPolicy.cs" />
     <Compile Include="Parsing\ReplacingExpressionTreeVisitor.cs" />
+    <Compile Include="Parsing\Structure\ExpressionNodeTypeRegistry.cs" />
+    <Compile Include="Parsing\Structure\IntermediateModel\ExpressionNodeFactory.cs" />
     <Compile Include="Parsing\Structure\Legacy\CallParserDispatcher.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ConstantExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ExpressionNodeBase.cs" />
@@ -180,6 +182,7 @@
     <Compile Include="Parsing\Structure\Legacy\SubQueryFindingVisitor.cs" />
     <Compile Include="Parsing\Structure\Legacy\WhereExpressionData.cs" />
     <Compile Include="Parsing\Structure\Legacy\WhereExpressionParser.cs" />
+    <Compile Include="Parsing\Structure\MethodCallExpressionParser.cs" />
     <Compile Include="Parsing\TreeEvaluation\PartialEvaluationData.cs" />
     <Compile Include="Parsing\TreeEvaluation\PartialEvaluationPreAnalyzer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
