@@ -18,7 +18,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.Serialization;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
+using Remotion.Data.Linq.Parsing.TreeEvaluation;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure
@@ -35,13 +37,40 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
     public IExpressionNode Parse (IExpressionNode source, MethodCallExpression expressionToParse)
     {
-      Type nodeType = _nodeTypeRegistry.GetNodeType (expressionToParse.Method);
-      return ExpressionNodeFactory.CreateExpressionNode (nodeType, source, expressionToParse.Arguments.Skip (1).Select (expr => StripUnaryExpression (expr)).ToArray());
+      ArgumentUtility.CheckNotNull ("source", source);
+      ArgumentUtility.CheckNotNull ("expressionToParse", expressionToParse);
+
+      Type nodeType = GetNodeType(expressionToParse);
+      var additionalConstructorParameters = expressionToParse.Arguments
+            .Skip (1) // skip the expression corresponding to the source argument
+            .Select (expr => ConvertExpressionToParameterValue (expr)).ToArray();
+      return CreateExpressionNode(nodeType, source, additionalConstructorParameters);
     }
 
-    private Expression StripUnaryExpression (Expression expression)
+    private Type GetNodeType (MethodCallExpression expressionToParse)
     {
-      throw new NotImplementedException();
+      try
+      {
+        return _nodeTypeRegistry.GetNodeType (expressionToParse.Method);
+      }
+      catch (KeyNotFoundException ex)
+      {
+        string message = string.Format (
+            "Could not parse expression '{0}': This overload of the method '{1}.{2}' is currently not supported, but you can register your own parser if needed.",
+            expressionToParse, expressionToParse.Method.DeclaringType.FullName, expressionToParse.Method.Name);
+        throw new ParserException (message, ex);
+      }
+    }
+
+    private object ConvertExpressionToParameterValue (Expression expression)
+    {
+      var evaluatedExpression = PartialTreeEvaluator.EvaluateSubtree (expression);
+      return evaluatedExpression.Value;
+    }
+
+    private IExpressionNode CreateExpressionNode (Type nodeType, IExpressionNode source, object[] additionalConstructorParameters)
+    {
+      return ExpressionNodeFactory.CreateExpressionNode (nodeType, source, additionalConstructorParameters);
     }
   }
 }

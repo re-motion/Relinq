@@ -18,13 +18,14 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
+using Remotion.Data.Linq.Parsing.TreeEvaluation;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 {
   [TestFixture]
-  [Ignore ("TODO 1168: Implement")]
   public class MethodCallExpressionParserTest
   {
     private ExpressionNodeTypeRegistry _nodeTypeRegistry;
@@ -37,6 +38,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 
       _nodeTypeRegistry.Register (WhereExpressionNode.SupportedMethods, typeof (WhereExpressionNode));
       _nodeTypeRegistry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
+      _nodeTypeRegistry.Register (TakeExpressionNode.SupportedMethods, typeof (TakeExpressionNode));
 
       _parser = new MethodCallExpressionParser (_nodeTypeRegistry);
     }
@@ -68,5 +70,42 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (((SelectExpressionNode) result).Source, Is.SameAs (source));
       Assert.That (((SelectExpressionNode) result).Selector, Is.SameAs (selectProjection));
     }
+
+    [Test]
+    public void Parse_TakeMethod ()
+    {
+      var source = new ConstantExpressionNode (typeof (int), new[] { 1, 2, 3 });
+      var outer = 4;
+      var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (q => q.Take (outer + 1));
+
+      var result = _parser.Parse (source, methodCallExpression);
+
+      Assert.That (result, Is.InstanceOfType (typeof (TakeExpressionNode)));
+      Assert.That (((TakeExpressionNode) result).Source, Is.SameAs (source));
+      Assert.That (((TakeExpressionNode) result).Count, Is.EqualTo (5));
+    }
+
+    [Test]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Could not parse expression 'q.First()': This overload of the method 'System.Linq.Queryable.First' " 
+        + "is currently not supported, but you can register your own parser if needed.")]
+    public void Parse_UnknownMethod ()
+    {
+      var source = new ConstantExpressionNode (typeof (int), new[] { 1, 2, 3 });
+      var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, int> (q => q.First());
+
+      _parser.Parse (source, methodCallExpression);
+    }
+
+    [Test]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Could not parse expression 'q.Select((i, j) => i)': This overload of the method 'System.Linq.Queryable.Select' "
+        + "is currently not supported, but you can register your own parser if needed.")]
+    public void Parse_UnknownOverload ()
+    {
+      var source = new ConstantExpressionNode (typeof (int), new[] { 1, 2, 3 });
+      var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (q => q.Select ((i, j) => i));
+
+      _parser.Parse (source, methodCallExpression);
+    }
+
   }
 }
