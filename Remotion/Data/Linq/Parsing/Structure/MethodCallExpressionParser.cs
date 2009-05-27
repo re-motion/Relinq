@@ -17,14 +17,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
-using System.Runtime.Serialization;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Data.Linq.Parsing.TreeEvaluation;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure
 {
+  /// <summary>
+  /// Parses a <see cref="MethodCallExpression"/> to create an <see cref="IExpressionNode"/>.
+  /// </summary>
   public class MethodCallExpressionParser
   {
     private readonly ExpressionNodeTypeRegistry _nodeTypeRegistry;
