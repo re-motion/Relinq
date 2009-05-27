@@ -23,7 +23,7 @@ using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Structure.Legacy;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.SelectManyExpressionParserTests
+namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy.SelectManyExpressionParserTests
 {
   [TestFixture]
   public class GeneralSelectManyExpressionParserTest

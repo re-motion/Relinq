@@ -23,7 +23,7 @@ using Remotion.Data.Linq.Parsing.Structure.Legacy;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 using Remotion.Development.UnitTesting;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
+namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy
 {
   [TestFixture]
   public class SourceExpressionParserTest

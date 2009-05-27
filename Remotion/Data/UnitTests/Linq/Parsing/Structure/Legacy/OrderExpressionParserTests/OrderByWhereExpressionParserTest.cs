@@ -20,10 +20,10 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing.Structure.Legacy;
-using Remotion.Data.UnitTests.Linq.Parsing.Structure.WhereExpressionParserTests;
+using Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy.WhereExpressionParserTests;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.OrderExpressionParserTests
+namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy.OrderExpressionParserTests
 {
   [TestFixture]
   public class OrderByWhereExpressionParserTest

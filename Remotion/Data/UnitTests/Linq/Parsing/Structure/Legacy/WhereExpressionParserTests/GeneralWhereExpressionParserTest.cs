@@ -22,7 +22,7 @@ using System.Reflection;
 using Remotion.Data.Linq.Parsing.Structure.Legacy;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.WhereExpressionParserTests
+namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy.WhereExpressionParserTests
 {
   [TestFixture]
   public class GeneralWhereExpressionParserTest

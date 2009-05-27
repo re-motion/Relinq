@@ -22,7 +22,7 @@ using Remotion.Data.Linq.Parsing.Structure.Legacy;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 using System.Collections.Generic;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
+namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy
 {
   [TestFixture]
   public class SubQueryFindingVisitorTest

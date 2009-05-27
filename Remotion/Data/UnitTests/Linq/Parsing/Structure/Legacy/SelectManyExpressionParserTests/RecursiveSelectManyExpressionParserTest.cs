@@ -19,10 +19,10 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Parsing.Structure.Legacy;
-using Remotion.Data.UnitTests.Linq.Parsing.Structure.WhereExpressionParserTests;
+using Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy.WhereExpressionParserTests;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.SelectManyExpressionParserTests
+namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy.SelectManyExpressionParserTests
 {
   [TestFixture]
   public class RecursiveSelectManyExpressionParserTest

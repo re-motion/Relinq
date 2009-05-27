@@ -20,7 +20,7 @@ using NUnit.Framework;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.QueryParserIntegrationTests
+namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy.QueryParserIntegrationTests
 {
   [TestFixture]
   public class SimpleQueryWithProjectionTest: QueryTestBase<string>
