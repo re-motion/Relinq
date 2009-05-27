@@ -129,6 +129,7 @@
     <Compile Include="Parsing\FieldResolving\WhereFieldAccessPolicy.cs" />
     <Compile Include="Parsing\ReplacingExpressionTreeVisitor.cs" />
     <Compile Include="Parsing\Structure\ExpressionNodeTypeRegistry.cs" />
+    <Compile Include="Parsing\Structure\ExpressionTreeParser.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ExpressionNodeFactory.cs" />
     <Compile Include="Parsing\Structure\Legacy\CallParserDispatcher.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ConstantExpressionNode.cs" />

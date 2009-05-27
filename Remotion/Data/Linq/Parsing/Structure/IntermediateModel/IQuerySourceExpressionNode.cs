@@ -19,6 +19,6 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 {
   public interface IQuerySourceExpressionNode : IExpressionNode
   {
-    Type QuerySourceType { get; }
+    Type QuerySourceElementType { get; }
   }
 }

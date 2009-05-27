@@ -28,11 +28,11 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     {
       ArgumentUtility.CheckNotNull ("querySourceType", querySourceType);
       
-      QuerySourceType = querySourceType;
+      QuerySourceElementType = querySourceType;
       Value = value;
     }
 
-    public Type QuerySourceType { get; private set; }
+    public Type QuerySourceElementType { get; private set; }
     public object Value { get; private set; }
 
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)

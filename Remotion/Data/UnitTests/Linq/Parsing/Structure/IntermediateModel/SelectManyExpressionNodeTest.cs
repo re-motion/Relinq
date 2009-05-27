@@ -39,7 +39,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       SelectManyExpressionNode node = ExpressionNodeObjectMother.CreateSelectMany(SourceStub);
 
-      Assert.That (node.QuerySourceType, Is.SameAs (typeof (Student_Detail)));
+      Assert.That (node.QuerySourceElementType, Is.SameAs (typeof (Student_Detail)));
     }
 
     class AnonymousType

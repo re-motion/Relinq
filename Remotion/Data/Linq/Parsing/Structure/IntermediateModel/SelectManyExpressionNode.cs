@@ -48,7 +48,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public LambdaExpression CollectionSelector { get; private set; }
     public LambdaExpression ResultSelector { get; private set; }
 
-    public Type QuerySourceType
+    public Type QuerySourceElementType
     {
       get { return ResultSelector.Parameters[1].Type; }
     }

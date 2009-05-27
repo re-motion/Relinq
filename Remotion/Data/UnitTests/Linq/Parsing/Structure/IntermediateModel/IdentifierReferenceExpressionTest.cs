@@ -28,7 +28,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var node = ExpressionNodeObjectMother.CreateSelectMany (SourceStub);
       var identifierReferenceExpression = new IdentifierReferenceExpression (node);
-      Assert.That (identifierReferenceExpression.Type, Is.EqualTo (node.QuerySourceType));
+      Assert.That (identifierReferenceExpression.Type, Is.EqualTo (node.QuerySourceElementType));
     }
   }
 }
