@@ -32,15 +32,20 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Queryable.SingleOrDefault<object> (null, null)),
                                                            };
 
-    public SingleOrDefaultExpressionNode (IExpressionNode source, LambdaExpression predicate)
+    public SingleOrDefaultExpressionNode (IExpressionNode source, LambdaExpression optionalPredicate)
     {
       ArgumentUtility.CheckNotNull ("source", source);
       
       Source = source;
-      Predicate = predicate;
+      OptionalPredicate = optionalPredicate;
     }
 
     public IExpressionNode Source { get; private set; }
-    public LambdaExpression Predicate { get; private set; }
+    public LambdaExpression OptionalPredicate { get; private set; }
+
+    public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)
+    {
+      throw CreateResolveNotSupportedException ();
+    }
   }
 }

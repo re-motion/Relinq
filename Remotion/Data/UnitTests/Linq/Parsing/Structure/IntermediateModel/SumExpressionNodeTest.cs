@@ -13,6 +13,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+using System;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
@@ -162,6 +163,14 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       MethodInfo method = GetGenericMethodDefinition (q => q.Sum (i => (long?) 0L));
       Assert.That (SumExpressionNode.SupportedMethods, List.Contains (method));
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException))]
+    public void Resolve_ThrowsInvalidOperationException ()
+    {
+      var node = new SumExpressionNode (SourceStub, null);
+      node.Resolve (ExpressionHelper.CreateParameterExpression (), ExpressionHelper.CreateExpression ());
     }
   }
 }

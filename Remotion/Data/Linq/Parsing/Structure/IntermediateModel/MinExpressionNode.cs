@@ -31,15 +31,20 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Queryable.Min<object, object> (null, null))
                                                            };
 
-    public MinExpressionNode (IExpressionNode source, LambdaExpression selector)
+    public MinExpressionNode (IExpressionNode source, LambdaExpression optioanlSelector)
     {
       ArgumentUtility.CheckNotNull ("source", source);
       
       Source = source;
-      Selector = selector;
+      OptionalSelector = optioanlSelector;
     }
 
     public IExpressionNode Source { get; private set; }
-    public LambdaExpression Selector { get; private set; }
+    public LambdaExpression OptionalSelector { get; private set; }
+
+    public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)
+    {
+      throw CreateResolveNotSupportedException ();
+    }
   }
 }

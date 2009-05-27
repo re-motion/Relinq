@@ -50,15 +50,20 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Queryable.Sum<object> (null, o => (float?)0)),
                                                            };
 
-    public SumExpressionNode (IExpressionNode source, LambdaExpression selector)
+    public SumExpressionNode (IExpressionNode source, LambdaExpression optionalSelector)
     {
       ArgumentUtility.CheckNotNull ("source", source);
       
       Source = source;
-      Selector = selector;
+      OptionalSelector = optionalSelector;
     }
 
     public IExpressionNode Source { get; private set; }
-    public LambdaExpression Selector { get; private set; }
+    public LambdaExpression OptionalSelector { get; private set; }
+
+    public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)
+    {
+      throw CreateResolveNotSupportedException ();
+    }
   }
 }

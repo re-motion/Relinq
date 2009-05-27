@@ -31,15 +31,20 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Queryable.Max<object, object> (null, null))
                                                            };
 
-    public MaxExpressionNode (IExpressionNode source, LambdaExpression selector)
+    public MaxExpressionNode (IExpressionNode source, LambdaExpression optionalSelector)
     {
       ArgumentUtility.CheckNotNull ("source", source);
       
       Source = source;
-      Selector = selector;
+      OptionalSelector = optionalSelector;
     }
 
     public IExpressionNode Source { get; private set; }
-    public LambdaExpression Selector { get; private set; }
+    public LambdaExpression OptionalSelector { get; private set; }
+
+    public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)
+    {
+      throw CreateResolveNotSupportedException ();
+    }
   }
 }

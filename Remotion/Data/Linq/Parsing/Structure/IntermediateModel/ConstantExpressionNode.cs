@@ -27,7 +27,6 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public ConstantExpressionNode (Type querySourceType, object value)
     {
       ArgumentUtility.CheckNotNull ("querySourceType", querySourceType);
-      ArgumentUtility.CheckNotNull ("value", value);
       
       QuerySourceType = querySourceType;
       Value = value;

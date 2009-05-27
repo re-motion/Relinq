@@ -34,5 +34,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     {
       throw new NotImplementedException();
     }
+
+    protected InvalidOperationException CreateResolveNotSupportedException ()
+    {
+      return new InvalidOperationException (GetType ().Name + " does not support resolving of expressions, because it does not stream any data to the following node.");
+    }
   }
 }
