@@ -185,7 +185,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var expectedResult = ExpressionHelper.CreateLambdaExpression ();
       sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything)).Return (expectedResult);
 
-      var result = node.GetResolvedSelector ();
+      var result = node.GetResolvedExpression ();
 
       sourceMock.VerifyAllExpectations ();
       Assert.That (result, Is.SameAs (expectedResult));
@@ -197,7 +197,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();
       var node = new SumExpressionNode (sourceMock, null);
-      node.GetResolvedSelector ();
+      node.GetResolvedExpression ();
     }
   }
 }

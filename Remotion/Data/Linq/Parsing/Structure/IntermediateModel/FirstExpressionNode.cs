@@ -44,10 +44,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public IExpressionNode Source { get; private set; }
     public LambdaExpression OptionalPredicate { get; private set; }
 
-    public Expression GetResolvedPredicate ()
+    public override Expression GetResolvedExpression ()
     {
       if (OptionalPredicate == null)
-        throw GetResolvedPredicateException ();
+        throw GetResolvedExpressionException ("OptionalPredicate");
       return Source.Resolve (OptionalPredicate.Parameters[0], OptionalPredicate);
     }
 

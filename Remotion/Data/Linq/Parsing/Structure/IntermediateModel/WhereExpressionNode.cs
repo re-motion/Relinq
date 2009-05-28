@@ -43,7 +43,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public IExpressionNode Source { get; private set; }
     public LambdaExpression Predicate { get; private set; }
 
-    public Expression GetResolvedPredicate ()
+    public override Expression GetResolvedExpression ()
     {
       return Source.Resolve (Predicate.Parameters[0], Predicate.Body);
     }

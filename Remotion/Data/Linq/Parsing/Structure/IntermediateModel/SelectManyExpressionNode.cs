@@ -53,7 +53,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       get { return ResultSelector.Parameters[1].Type; }
     }
 
-    public Expression GetResolvedSelector ()
+    public override Expression GetResolvedExpression ()
     {
       return Source.Resolve (ResultSelector.Parameters[0], ResultSelector);
     }

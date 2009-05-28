@@ -42,10 +42,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public IExpressionNode Source { get; private set; }
     public LambdaExpression OptionalSelector { get; private set; }
 
-    public Expression GetResolvedSelector ()
+    public override Expression GetResolvedExpression ()
     {
       if (OptionalSelector == null)
-        throw GetResolvedSelectorException ();
+        throw GetResolvedExpressionException ("OptionalSelector");
       return Source.Resolve (OptionalSelector.Parameters[0], OptionalSelector.Body);
     }
 

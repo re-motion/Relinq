@@ -13,6 +13,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -37,6 +38,11 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     }
 
     public IExpressionNode Source { get; private set; }
+
+    public override Expression GetResolvedExpression ()
+    {
+      throw CreateGetResolveExpressionNotSupportedException();
+    }
 
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)
     {

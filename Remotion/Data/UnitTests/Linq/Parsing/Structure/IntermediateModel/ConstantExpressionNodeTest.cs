@@ -17,6 +17,7 @@ using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
+using Rhino.Mocks;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 {
@@ -33,6 +34,14 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, new IdentifierReferenceExpression (node), Expression.Constant (5));
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "ConstantExpressionNode does not support to get a resolved expression.")]
+    public void GetResolvedExpression_ThrowsInvalidOperationException ()
+    {
+      var node = new ConstantExpressionNode (typeof (int), new[] { 1, 2, 3, 4, 5 });
+      node.GetResolvedExpression ();
     }
   }
 }

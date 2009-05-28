@@ -13,6 +13,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+using System;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
@@ -46,6 +47,15 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       sourceMock.VerifyAllExpectations();
       Assert.That (result, Is.SameAs (expectedResult));
+    }
+
+    [Test]
+    [ExpectedException(typeof(InvalidOperationException),ExpectedMessage = "DistinctExpressionNode does not support to get a resolved expression.")]
+    public void GetResolvedExpression_ThrowsInvalidOperationException ()
+    {
+      var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();
+      var node = new DistinctExpressionNode (sourceMock);
+      node.GetResolvedExpression();
     }
   }
 }
