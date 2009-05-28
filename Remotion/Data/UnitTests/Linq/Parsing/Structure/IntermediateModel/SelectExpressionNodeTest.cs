@@ -47,5 +47,21 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
           Expression.Constant (5));
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
+
+    [Test]
+    public void GetResolvedSelector ()
+    {
+      var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();
+      var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
+      var node = new SelectExpressionNode (sourceMock, selector);
+
+      var expectedResult = ExpressionHelper.CreateLambdaExpression ();
+      sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything)).Return (expectedResult);
+
+      var result = node.GetResolvedSelector ();
+
+      sourceMock.VerifyAllExpectations ();
+      Assert.That (result, Is.SameAs (expectedResult));
+    }
   }
 }
