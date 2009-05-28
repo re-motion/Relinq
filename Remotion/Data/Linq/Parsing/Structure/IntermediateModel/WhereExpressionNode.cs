@@ -26,6 +26,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public class WhereExpressionNode : ExpressionNodeBase
   {
+    private Expression _cachedPredicate;
+
     public static readonly MethodInfo[] SupportedMethods = new[]
                                                            {
                                                                GetSupportedMethod (() => Queryable.Where<object> (null, o => true))
@@ -45,7 +47,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     public override Expression GetResolvedExpression ()
     {
-      return Source.Resolve (Predicate.Parameters[0], Predicate.Body);
+      if (_cachedPredicate != null)
+        return _cachedPredicate;
+      _cachedPredicate = Source.Resolve (Predicate.Parameters[0], Predicate);
+      return _cachedPredicate;
     }
 
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)

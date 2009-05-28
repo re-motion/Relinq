@@ -19,6 +19,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
+using Remotion.Development.UnitTesting;
 using Rhino.Mocks;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
@@ -63,6 +64,20 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       sourceMock.VerifyAllExpectations();
       Assert.That (result, Is.SameAs (expectedResult));
+    }
+
+    [Test]
+    public void CachedPredicate ()
+    {
+      var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();
+      var predicate = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
+      var node = new WhereExpressionNode (sourceMock, predicate);
+      var expectedResult = ExpressionHelper.CreateLambdaExpression ();
+      sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything)).Repeat.Once ().Return (expectedResult);
+      node.GetResolvedExpression ();
+      node.GetResolvedExpression ();
+      sourceMock.VerifyAllExpectations ();
+      Assert.That (PrivateInvoke.GetNonPublicField (node, "_cachedPredicate"), Is.Not.Null);
     }
   }
 }

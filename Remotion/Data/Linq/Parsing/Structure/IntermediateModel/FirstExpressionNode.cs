@@ -27,6 +27,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public class FirstExpressionNode : ExpressionNodeBase
   {
+    private Expression _cachedPredicate;
     public static readonly MethodInfo[] SupportedMethods = new[]
                                                            {
                                                                GetSupportedMethod (() => Queryable.First<object> (null)),
@@ -48,7 +49,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     {
       if (OptionalPredicate == null)
         throw GetResolvedExpressionException ("OptionalPredicate");
-      return Source.Resolve (OptionalPredicate.Parameters[0], OptionalPredicate);
+      if (_cachedPredicate != null)
+        return _cachedPredicate;
+      _cachedPredicate = Source.Resolve (OptionalPredicate.Parameters[0], OptionalPredicate);
+      return _cachedPredicate;
     }
 
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)

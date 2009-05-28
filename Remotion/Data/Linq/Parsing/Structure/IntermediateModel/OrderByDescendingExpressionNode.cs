@@ -27,6 +27,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public class OrderByDescendingExpressionNode : ExpressionNodeBase
   {
+    private Expression _cachedSelector;
     public static readonly MethodInfo[] SupportedMethods = new[]
                                                            {
                                                                GetSupportedMethod (() => Queryable.OrderByDescending<object, object> (null, null))
@@ -46,7 +47,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     public override Expression GetResolvedExpression ()
     {
-      return Source.Resolve (KeySelector.Parameters[0], KeySelector.Body);
+      if (_cachedSelector != null)
+        return _cachedSelector;
+      _cachedSelector = Source.Resolve (KeySelector.Parameters[0], KeySelector.Body);
+      return _cachedSelector;
     }
 
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)

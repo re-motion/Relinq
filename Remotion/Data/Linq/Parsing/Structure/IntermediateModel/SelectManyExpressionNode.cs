@@ -27,6 +27,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public class SelectManyExpressionNode : ExpressionNodeBase, IQuerySourceExpressionNode
   {
+    private Expression _cachedSelector;
     public static readonly MethodInfo[] SupportedMethods = new[]
                                                            {
                                                                GetSupportedMethod (
@@ -55,7 +56,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     public override Expression GetResolvedExpression ()
     {
-      return Source.Resolve (ResultSelector.Parameters[0], ResultSelector);
+      if (_cachedSelector != null)
+        return _cachedSelector;
+      _cachedSelector = Source.Resolve (ResultSelector.Parameters[0], ResultSelector.Body);
+      return _cachedSelector;
     }
 
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)

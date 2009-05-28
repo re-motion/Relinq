@@ -25,6 +25,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public class MaxExpressionNode : ExpressionNodeBase
   {
+    private Expression _cachedSelector;
+
     public static readonly MethodInfo[] SupportedMethods = new[]
                                                            {
                                                                GetSupportedMethod (() => Queryable.Max<object> (null)),
@@ -46,7 +48,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     {
       if (OptionalSelector == null)
         throw GetResolvedExpressionException ("OptionalSelector");
-      return Source.Resolve (OptionalSelector.Parameters[0], OptionalSelector.Body);
+      if (_cachedSelector != null)
+        return _cachedSelector;
+      _cachedSelector = Source.Resolve (OptionalSelector.Parameters[0], OptionalSelector.Body);
+      return _cachedSelector;
     }
 
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)
