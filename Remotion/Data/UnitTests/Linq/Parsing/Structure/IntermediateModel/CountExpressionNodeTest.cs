@@ -14,11 +14,13 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
+using Rhino.Mocks;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 {
@@ -45,6 +47,31 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var node = new CountExpressionNode (SourceStub, null);
       node.Resolve (ExpressionHelper.CreateParameterExpression(), ExpressionHelper.CreateExpression());
+    }
+
+    [Test]
+    public void GetResolvedPredicate ()
+    {
+      var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();
+      var predicate = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
+      var node = new CountExpressionNode (sourceMock, predicate);
+
+      var expectedResult = ExpressionHelper.CreateLambdaExpression ();
+      sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything)).Return (expectedResult);
+
+      var result = node.GetResolvedPredicate ();
+
+      sourceMock.VerifyAllExpectations ();
+      Assert.That (result, Is.SameAs (expectedResult));
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentNullException), ExpectedMessage = "Predicate must not be null.\r\nParameter name: OptionalPredicate")]
+    public void GetResolvedPredicate_ThrowsArgumentNullException ()
+    {
+      var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();
+      var node = new CountExpressionNode (sourceMock, null);
+      node.GetResolvedPredicate ();
     }
   }
 }

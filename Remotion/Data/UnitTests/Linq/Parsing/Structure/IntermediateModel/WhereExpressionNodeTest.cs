@@ -48,5 +48,21 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       sourceMock.VerifyAllExpectations();
       Assert.That (result, Is.SameAs (expectedResult));
     }
+
+    [Test]
+    public void GetResolvedPredicate ()
+    {
+      var sourceMock = MockRepository.GenerateMock<IExpressionNode>();
+      var predicate = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
+      var node = new WhereExpressionNode (sourceMock, predicate);
+
+      var expectedResult = ExpressionHelper.CreateLambdaExpression();
+      sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything)).Return (expectedResult);
+
+      var result = node.GetResolvedPredicate();
+
+      sourceMock.VerifyAllExpectations();
+      Assert.That (result, Is.SameAs (expectedResult));
+    }
   }
 }

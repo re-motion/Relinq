@@ -43,6 +43,13 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public IExpressionNode Source { get; private set; }
     public LambdaExpression OptionalPredicate { get; private set; }
 
+    public Expression GetResolvedPredicate ()
+    {
+      if (OptionalPredicate == null)
+        throw GetResolvedPredicateException ();
+      return Source.Resolve (OptionalPredicate.Parameters[0], OptionalPredicate);
+    }
+
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)
     {
       throw CreateResolveNotSupportedException ();
