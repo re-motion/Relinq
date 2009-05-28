@@ -43,6 +43,11 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public IExpressionNode Source { get; private set; }
     public LambdaExpression KeySelector { get; private set; }
 
+    public Expression GetResolvedSelector ()
+    {
+      return Source.Resolve (KeySelector.Parameters[0], KeySelector.Body);
+    }
+
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)
     {
       return Source.Resolve (inputParameter, expressionToBeResolved);

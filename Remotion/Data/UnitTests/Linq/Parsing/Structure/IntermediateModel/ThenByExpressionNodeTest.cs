@@ -13,6 +13,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
@@ -45,6 +46,22 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var result = node.Resolve (parameter, expression);
 
       sourceMock.VerifyAllExpectations();
+      Assert.That (result, Is.SameAs (expectedResult));
+    }
+
+    [Test]
+    public void GetResolvedPredicate ()
+    {
+      var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();
+      var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
+      var node = new ThenByExpressionNode (sourceMock, selector);
+
+      var expectedResult = ExpressionHelper.CreateLambdaExpression ();
+      sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything)).Return (expectedResult);
+
+      var result = node.GetResolvedSelector ();
+
+      sourceMock.VerifyAllExpectations ();
       Assert.That (result, Is.SameAs (expectedResult));
     }
   }

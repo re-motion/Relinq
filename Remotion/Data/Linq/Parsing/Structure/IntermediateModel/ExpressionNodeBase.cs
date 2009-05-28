@@ -41,5 +41,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     {
       return new ArgumentNullException ("OptionalPredicate", "Predicate must not be null.");
     }
+
+    protected ArgumentNullException GetResolvedSelectorException ()
+    {
+      return new ArgumentNullException ("OptionalSelector", "Predicate must not be null.");
+    }
   }
 }

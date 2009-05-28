@@ -61,6 +61,13 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public IExpressionNode Source { get; private set; }
     public LambdaExpression OptionalSelector { get; private set; }
 
+    public Expression GetResolvedSelector ()
+    {
+      if (OptionalSelector == null)
+        throw GetResolvedSelectorException ();
+      return Source.Resolve (OptionalSelector.Parameters[0], OptionalSelector.Body);
+    }
+
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)
     {
       throw CreateResolveNotSupportedException ();
