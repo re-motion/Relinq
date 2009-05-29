@@ -14,24 +14,28 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
+using System.Reflection;
+using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.MemberBindings;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing
+namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors.MemberBindings
 {
-  public class AnonymousType
+  [TestFixture]
+  public class FieldInfoBindingTest : MemberBindingTestBase
   {
-    public AnonymousType ()
+    [Test]
+    public void MatchesReadAccess_True ()
     {
+      var binding = new FieldInfoBinding (Field, AssociatedExpression);
+      Assert.That (binding.MatchesReadAccess (Field), Is.True);
     }
 
-    public AnonymousType (int a, int b)
+    [Test]
+    public void MatchesReadAccess_False ()
     {
-      this.a = a;
-      this.b = b;
+      var binding = new FieldInfoBinding (Field, AssociatedExpression);
+      Assert.That (binding.MatchesReadAccess (Property), Is.False);
     }
-
-    public int a { get; set; }
-    public int b { get; set; }
-    public List<int> List { get; set; }
   }
 }

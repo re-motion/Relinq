@@ -14,24 +14,26 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Reflection;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing
+namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.MemberBindings
 {
-  public class AnonymousType
+  /// <summary>
+  /// Represents a <see cref="FieldInfo"/> being bound to an associated <see cref="Expression"/> instance. This binding's 
+  /// <see cref="MatchesReadAccess"/> method returns <see langword="true"/> only for the same <see cref="FieldInfo"/> the expression is bound to.
+  /// <seealso cref="System.Linq.Expressions.MemberBinding"/>
+  /// </summary>
+  public class FieldInfoBinding : MemberBinding
   {
-    public AnonymousType ()
+    public FieldInfoBinding (FieldInfo boundMember, Expression associatedExpression)
+        : base (boundMember, associatedExpression)
     {
     }
 
-    public AnonymousType (int a, int b)
+    public override bool MatchesReadAccess (MemberInfo member)
     {
-      this.a = a;
-      this.b = b;
+      return member == BoundMember;
     }
-
-    public int a { get; set; }
-    public int b { get; set; }
-    public List<int> List { get; set; }
   }
 }

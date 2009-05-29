@@ -14,15 +14,69 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
+using Remotion.Utilities;
+using System.Linq;
+using MemberBinding=Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.MemberBindings.MemberBinding;
 
 namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
 {
-  public class TransparentIdentifierRemovingVisitor
+  /// <summary>
+  /// Replaces expression patterns of the form <c>new T { x = 1, y = 2 }.x</c> (<see cref="MemberInitExpression"/>) or 
+  /// <c>new T ( x = 1, y = 2 ).x</c> (<see cref="NewExpression"/>) to <c>1</c> (or <c>2</c> if <c>y</c> is accessed instead of <c>x</c>).
+  /// </summary>
+  public class TransparentIdentifierRemovingVisitor : ExpressionTreeVisitor
   {
     public static Expression ReplaceTransparentIdentifiers (Expression expression)
     {
-      throw new NotImplementedException();
+      ArgumentUtility.CheckNotNull ("expression", expression);
+      return new TransparentIdentifierRemovingVisitor().VisitExpression (expression);
+    }
+
+    private TransparentIdentifierRemovingVisitor ()
+    {
+    }
+
+    protected override Expression VisitMemberExpression (MemberExpression memberExpression)
+    {
+      var memberBindings = GetMemberBindingsCreatedByExpression (memberExpression.Expression);
+      if (memberBindings == null)
+        return base.VisitMemberExpression (memberExpression);
+
+      var matchingAssignment = memberBindings
+          .Where (binding => binding.MatchesReadAccess (memberExpression.Member))
+          .LastOrDefault();
+
+      if (matchingAssignment == null)
+        return base.VisitMemberExpression (memberExpression);
+      else
+        return matchingAssignment.AssociatedExpression;
+    }
+
+    private IEnumerable<MemberBinding> GetMemberBindingsCreatedByExpression (Expression expression)
+    {
+      var memberInitExpression = expression as MemberInitExpression;
+      if (memberInitExpression != null)
+      {
+        return memberInitExpression.Bindings
+            .Where (binding => binding is MemberAssignment)
+            .Select (assignment => MemberBinding.Bind (assignment.Member, ((MemberAssignment) assignment).Expression));
+      }
+      else
+      {
+        var newExpression = expression as NewExpression;
+        if (newExpression != null && newExpression.Members != null)
+          return GetMemberBindingsForNewExpression (newExpression);
+        else
+          return null;
+      }
+    }
+
+    private IEnumerable<MemberBinding> GetMemberBindingsForNewExpression (NewExpression newExpression)
+    {
+      for (int i = 0; i < newExpression.Members.Count; ++i)
+        yield return MemberBinding.Bind (newExpression.Members[i], newExpression.Arguments[i]);
     }
   }
 }

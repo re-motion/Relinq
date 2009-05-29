@@ -105,6 +105,10 @@
     <Compile Include="Parsing\Details\WhereConditionParsing\LikeParser.cs" />
     <Compile Include="Parsing\Details\WhereConditionParsing\MethodCallExpressionParser.cs" />
     <Compile Include="Parsing\Details\WhereConditionParsing\SubQueryExpressionParser.cs" />
+    <Compile Include="Parsing\ExpressionTreeVisitors\MemberBindings\FieldInfoBinding.cs" />
+    <Compile Include="Parsing\ExpressionTreeVisitors\MemberBindings\MemberBinding.cs" />
+    <Compile Include="Parsing\ExpressionTreeVisitors\MemberBindings\MethodInfoBinding.cs" />
+    <Compile Include="Parsing\ExpressionTreeVisitors\MemberBindings\PropertyInfoBinding.cs" />
     <Compile Include="Parsing\ParseMode.cs" />
     <Compile Include="Parsing\Details\WhereConditionParsing\BinaryExpressionParser.cs" />
     <Compile Include="Parsing\Details\WhereConditionParsing\ConstantExpressionParser.cs" />
