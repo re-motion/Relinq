@@ -17,9 +17,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.Parsing.TreeEvaluation;
+using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing.TreeEvaluation
+namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation
 {
   [TestFixture]
   public class PartialEvaluationPreAnalyzerIntegrationTest

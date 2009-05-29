@@ -16,8 +16,8 @@
 using System;
 using System.Collections;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
-using Remotion.Data.Linq.Parsing.TreeEvaluation;
 using Remotion.Utilities;
 using System.Collections.Generic;
 
@@ -45,7 +45,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
         return ParseMethodCallExpression (methodCallExpression);
       else
       {
-        var constantExpression = PartialTreeEvaluator.EvaluateSubtree (expression);
+        var constantExpression = PartialTreeEvaluatingVisitor.EvaluateSubtree (expression);
         return ParseConstantExpression (constantExpression);
       }
     }

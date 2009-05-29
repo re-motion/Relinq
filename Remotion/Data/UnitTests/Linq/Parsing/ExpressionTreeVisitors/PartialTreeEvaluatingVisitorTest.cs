@@ -17,19 +17,19 @@ using System;
 using NUnit.Framework;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Expressions;
-using Remotion.Data.Linq.Parsing.TreeEvaluation;
+using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Collections;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing.TreeEvaluation
+namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
 {
   [TestFixture]
-  public class PartialTreeEvaluatorTest
+  public class PartialTreeEvaluatingVisitorTest
   {
     [Test]
     public void EvaluateTopBinary ()
     {
       Expression treeRoot = Expression.Add (Expression.Constant (1), Expression.Constant (2));
-      PartialTreeEvaluator evaluator = new PartialTreeEvaluator (treeRoot);
+      PartialTreeEvaluatingVisitor evaluator = new PartialTreeEvaluatingVisitor (treeRoot);
       Expression result = evaluator.GetEvaluatedTree ();
       Expression expected = Expression.Constant (3);
       ExpressionTreeComparer.CheckAreEqualTrees (expected, result);
@@ -41,7 +41,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.TreeEvaluation
       Tuple<int, int> tuple = Tuple.NewTuple (1, 2);
 
       Expression treeRoot = Expression.MakeMemberAccess (Expression.Constant (tuple), typeof (Tuple<int, int>).GetProperty ("A"));
-      PartialTreeEvaluator evaluator = new PartialTreeEvaluator (treeRoot);
+      PartialTreeEvaluatingVisitor evaluator = new PartialTreeEvaluatingVisitor (treeRoot);
       Expression result = evaluator.GetEvaluatedTree ();
       Expression expected = Expression.Constant (1);
       ExpressionTreeComparer.CheckAreEqualTrees (expected, result);
@@ -51,7 +51,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.TreeEvaluation
     public void EvaluateTopLambda()
     {
       Expression treeRoot = Expression.Lambda (Expression.Constant (0), Expression.Parameter (typeof (string), "s"));
-      PartialTreeEvaluator evaluator = new PartialTreeEvaluator(treeRoot);
+      PartialTreeEvaluatingVisitor evaluator = new PartialTreeEvaluatingVisitor(treeRoot);
       Expression result = evaluator.GetEvaluatedTree ();
       Assert.AreSame (result, result);
     }
@@ -61,7 +61,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.TreeEvaluation
     {
       ParameterExpression parameter = Expression.Parameter (typeof (string), "s");
       Expression treeRoot = Expression.Invoke (Expression.Lambda (parameter, parameter), Expression.Constant ("foo"));
-      PartialTreeEvaluator evaluator = new PartialTreeEvaluator (treeRoot);
+      PartialTreeEvaluatingVisitor evaluator = new PartialTreeEvaluatingVisitor (treeRoot);
       Expression result = evaluator.GetEvaluatedTree ();
       Expression expected = Expression.Constant ("foo");
       ExpressionTreeComparer.CheckAreEqualTrees (expected, result);
@@ -71,8 +71,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.TreeEvaluation
     public void EvaluateBinaryInLambdaWithoutParameter ()
     {
       Expression treeRoot = Expression.Lambda (Expression.Add (Expression.Constant (5), Expression.Constant (1)),
-          Expression.Parameter (typeof (string), "s"));
-      PartialTreeEvaluator evaluator = new PartialTreeEvaluator (treeRoot);
+                                               Expression.Parameter (typeof (string), "s"));
+      PartialTreeEvaluatingVisitor evaluator = new PartialTreeEvaluatingVisitor (treeRoot);
       Expression result = evaluator.GetEvaluatedTree ();
       Expression expected = Expression.Lambda (Expression.Constant (6), Expression.Parameter (typeof (string), "s"));
       ExpressionTreeComparer.CheckAreEqualTrees (expected, result);
@@ -90,7 +90,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.TreeEvaluation
       Expression add = Expression.Add (multiply1, multiply2);
       Expression treeRoot = Expression.Lambda (typeof (System.Func<int, int>), add, parameter);
       
-      PartialTreeEvaluator evaluator = new PartialTreeEvaluator (treeRoot);
+      PartialTreeEvaluatingVisitor evaluator = new PartialTreeEvaluatingVisitor (treeRoot);
       Expression result = evaluator.GetEvaluatedTree ();
       Expression expected = Expression.Lambda (Expression.Add (Expression.Multiply (parameter, constant1), Expression.Constant (12)), parameter);
       ExpressionTreeComparer.CheckAreEqualTrees (expected, result);
@@ -102,7 +102,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.TreeEvaluation
       ParameterExpression outsideParameter = Expression.Parameter (typeof (int), "p");
       LambdaExpression lambdaExpression = Expression.Lambda (outsideParameter);
       
-      PartialTreeEvaluator evaluator = new PartialTreeEvaluator (lambdaExpression);
+      PartialTreeEvaluatingVisitor evaluator = new PartialTreeEvaluatingVisitor (lambdaExpression);
       Expression result = evaluator.GetEvaluatedTree ();
       Assert.AreSame (lambdaExpression, result);
     }
@@ -113,7 +113,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.TreeEvaluation
       SubQueryExpression subQuery = new SubQueryExpression(ExpressionHelper.CreateQueryModel());
       LambdaExpression lambdaExpression = Expression.Lambda (subQuery);
 
-      PartialTreeEvaluator evaluator = new PartialTreeEvaluator (lambdaExpression);
+      PartialTreeEvaluatingVisitor evaluator = new PartialTreeEvaluatingVisitor (lambdaExpression);
       Expression result = evaluator.GetEvaluatedTree ();
       Assert.AreSame (lambdaExpression, result);
     }

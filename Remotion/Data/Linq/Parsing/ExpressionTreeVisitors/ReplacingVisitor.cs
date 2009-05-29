@@ -17,9 +17,9 @@ using System;
 using System.Linq.Expressions;
 using Remotion.Utilities;
 
-namespace Remotion.Data.Linq.Parsing
+namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
 {
-  public class ReplacingExpressionTreeVisitor : ExpressionTreeVisitor
+  public class ReplacingVisitor : ExpressionTreeVisitor
   {
     public static Expression Replace (Expression replacedExpression, Expression replacementExpression, Expression sourceTree)
     {
@@ -27,14 +27,14 @@ namespace Remotion.Data.Linq.Parsing
       ArgumentUtility.CheckNotNull ("replacementExpression", replacementExpression);
       ArgumentUtility.CheckNotNull ("sourceTree", sourceTree);
 
-      var visitor = new ReplacingExpressionTreeVisitor (replacedExpression, replacementExpression);
+      var visitor = new ReplacingVisitor (replacedExpression, replacementExpression);
       return visitor.VisitExpression (sourceTree);
     }
     
     private readonly Expression _replacedExpression;
     private readonly Expression _replacementExpression;
 
-    private ReplacingExpressionTreeVisitor (Expression replacedExpression, Expression replacementExpression)
+    private ReplacingVisitor (Expression replacedExpression, Expression replacementExpression)
     {
       _replacedExpression = replacedExpression;
       _replacementExpression = replacementExpression;

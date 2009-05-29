@@ -16,7 +16,7 @@
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
-using Remotion.Data.Linq.Parsing.TreeEvaluation;
+using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 
 namespace Remotion.Data.Linq.Parsing.Structure.Legacy
 {
@@ -59,7 +59,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.Legacy
       ConstantExpression evaluatedExpression;
       try
       {
-        evaluatedExpression = PartialTreeEvaluator.EvaluateSubtree (expression);
+        evaluatedExpression = PartialTreeEvaluatingVisitor.EvaluateSubtree (expression);
       }
       catch (TargetInvocationException targetInvocationException)
       {

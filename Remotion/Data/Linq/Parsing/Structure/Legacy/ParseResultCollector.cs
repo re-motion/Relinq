@@ -17,7 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Parsing.TreeEvaluation;
+using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure.Legacy
@@ -139,7 +139,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.Legacy
       SubQueryFindingVisitor subQueryFindingVisitor = new SubQueryFindingVisitor (subQueryRegistry);
       T newExpression = (T) subQueryFindingVisitor.ReplaceSubQueries (expression);
 
-      PartialTreeEvaluator partialEvaluator = new PartialTreeEvaluator (newExpression);
+      PartialTreeEvaluatingVisitor partialEvaluator = new PartialTreeEvaluatingVisitor (newExpression);
       newExpression = (T) partialEvaluator.GetEvaluatedTree();
 
       return newExpression;

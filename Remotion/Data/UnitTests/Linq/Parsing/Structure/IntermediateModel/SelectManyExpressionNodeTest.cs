@@ -43,18 +43,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       Assert.That (node.QuerySourceElementType, Is.SameAs (typeof (Student_Detail)));
     }
 
-    class AnonymousType
-    {
-      public AnonymousType (int a, int b)
-      {
-        this.a = a;
-        this.b = b;
-      }
-
-      public int a { get; set; }
-      public int b { get; set; }
-    }
-
     [Test]
     public void Resolve_ReplacesParameter_WithProjection ()
     {
@@ -71,7 +59,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       // new AnonymousType (SourceReference, selectManySourceReference).a > 5 && new AnonymousType (SourceReference, selectManySourceReference).b > 6
 
-      var newAnonymousTypeExpression = Expression.New (typeof (AnonymousType).GetConstructors()[0], SourceReference, selectManySourceReference);
+      var newAnonymousTypeExpression = Expression.New (typeof (AnonymousType).GetConstructor(new[] {typeof (int), typeof (int) }), SourceReference, selectManySourceReference);
       var anonymousTypeMemberAExpression = Expression.MakeMemberAccess (newAnonymousTypeExpression, typeof (AnonymousType).GetProperty ("a"));
       var anonymousTypeMemberBExpression = Expression.MakeMemberAccess (newAnonymousTypeExpression, typeof (AnonymousType).GetProperty ("b"));
 

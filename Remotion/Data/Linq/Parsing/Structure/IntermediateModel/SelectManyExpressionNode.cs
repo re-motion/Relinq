@@ -17,6 +17,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
@@ -79,10 +80,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
       var identifierReferenceExpression = new IdentifierReferenceExpression (this);
       var resultSelectorWithIdentifierReference = 
-          ReplacingExpressionTreeVisitor.Replace (ResultSelector.Parameters[1], identifierReferenceExpression, ResultSelector.Body);
+          ReplacingVisitor.Replace (ResultSelector.Parameters[1], identifierReferenceExpression, ResultSelector.Body);
 
       var resolvedResultSelector = Source.Resolve (ResultSelector.Parameters[0], resultSelectorWithIdentifierReference);
-      return ReplacingExpressionTreeVisitor.Replace (inputParameter, resolvedResultSelector, expressionToBeResolved);
+      return ReplacingVisitor.Replace (inputParameter, resolvedResultSelector, expressionToBeResolved);
     }
   }
 }

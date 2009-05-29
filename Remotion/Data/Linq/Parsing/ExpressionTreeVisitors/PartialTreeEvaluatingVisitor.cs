@@ -14,11 +14,11 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Parsing.TreeEvaluation;
+using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation;
 
-namespace Remotion.Data.Linq.Parsing.TreeEvaluation
+namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
 {
-  public sealed class PartialTreeEvaluator : ExpressionTreeVisitor
+  public sealed class PartialTreeEvaluatingVisitor : ExpressionTreeVisitor
   {
     public static ConstantExpression EvaluateSubtree (Expression subtree)
     {
@@ -37,7 +37,7 @@ namespace Remotion.Data.Linq.Parsing.TreeEvaluation
     private readonly PartialEvaluationData _partialEvaluationData;
     private readonly Expression _evaluatedTree;
 
-    public PartialTreeEvaluator (Expression treeRoot)
+    public PartialTreeEvaluatingVisitor (Expression treeRoot)
     {
       PartialEvaluationPreAnalyzer analyzer = new PartialEvaluationPreAnalyzer();
       analyzer.Analyze (treeRoot);
@@ -69,7 +69,7 @@ namespace Remotion.Data.Linq.Parsing.TreeEvaluation
         return false;
       else
         return _partialEvaluationData.DeclaredParameters[expression].IsSupersetOf (_partialEvaluationData.UsedParameters[expression])
-            && _partialEvaluationData.SubQueries[expression].Count == 0;
+               && _partialEvaluationData.SubQueries[expression].Count == 0;
     }
   }
 }

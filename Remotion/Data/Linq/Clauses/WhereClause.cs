@@ -16,7 +16,7 @@
 using System;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Parsing.TreeEvaluation;
+using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses
@@ -60,7 +60,7 @@ namespace Remotion.Data.Linq.Clauses
     public LambdaExpression GetSimplifiedBoolExpression()
     {
       if (_simplifiedBoolExpression == null)
-        _simplifiedBoolExpression = (LambdaExpression) new PartialTreeEvaluator (BoolExpression).GetEvaluatedTree ();
+        _simplifiedBoolExpression = (LambdaExpression) new PartialTreeEvaluatingVisitor (BoolExpression).GetEvaluatedTree ();
       return _simplifiedBoolExpression;
     }
 

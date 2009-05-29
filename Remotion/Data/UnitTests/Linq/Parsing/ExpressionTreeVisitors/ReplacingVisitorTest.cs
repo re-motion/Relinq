@@ -17,12 +17,12 @@ using System;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Parsing;
+using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing
+namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
 {
   [TestFixture]
-  public class ReplacingExpressionTreeVisitorTest
+  public class ReplacingVisitorTest
   {
     private ParameterExpression _replacedNode;
     private ParameterExpression _replacementNode;
@@ -39,7 +39,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing
     {
       var tree = _replacedNode;
 
-      var result = ReplacingExpressionTreeVisitor.Replace (_replacedNode, _replacementNode, tree);
+      var result = ReplacingVisitor.Replace (_replacedNode, _replacementNode, tree);
       Assert.That (result, Is.SameAs (_replacementNode));
     }
 
@@ -48,7 +48,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing
     {
       var tree = ExpressionHelper.CreateLambdaExpression();
 
-      var result = ReplacingExpressionTreeVisitor.Replace (_replacedNode, _replacementNode, tree);
+      var result = ReplacingVisitor.Replace (_replacedNode, _replacementNode, tree);
       Assert.That (result, Is.SameAs (tree));
     }
 
@@ -57,7 +57,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing
     {
       var tree = Expression.MakeBinary (ExpressionType.Add, Expression.Constant (0), _replacedNode);
 
-      var result = ReplacingExpressionTreeVisitor.Replace (_replacedNode, _replacementNode, tree);
+      var result = ReplacingVisitor.Replace (_replacedNode, _replacementNode, tree);
 
       var expectedResult = Expression.MakeBinary (ExpressionType.Add, Expression.Constant (0), _replacementNode);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);

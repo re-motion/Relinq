@@ -127,7 +127,7 @@
     <Compile Include="DataObjectModel\OrderingField.cs" />
     <Compile Include="Parsing\FieldResolving\SelectFieldAccessPolicy.cs" />
     <Compile Include="Parsing\FieldResolving\WhereFieldAccessPolicy.cs" />
-    <Compile Include="Parsing\ReplacingExpressionTreeVisitor.cs" />
+    <Compile Include="Parsing\ExpressionTreeVisitors\ReplacingVisitor.cs" />
     <Compile Include="Parsing\Structure\ExpressionNodeTypeRegistry.cs" />
     <Compile Include="Parsing\Structure\ExpressionTreeParser.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ExpressionNodeFactory.cs" />
@@ -184,8 +184,9 @@
     <Compile Include="Parsing\Structure\Legacy\WhereExpressionData.cs" />
     <Compile Include="Parsing\Structure\Legacy\WhereExpressionParser.cs" />
     <Compile Include="Parsing\Structure\MethodCallExpressionParser.cs" />
-    <Compile Include="Parsing\TreeEvaluation\PartialEvaluationData.cs" />
-    <Compile Include="Parsing\TreeEvaluation\PartialEvaluationPreAnalyzer.cs" />
+    <Compile Include="Parsing\ExpressionTreeVisitors\TransparentIdentifierRemovingVisitor.cs" />
+    <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\PartialEvaluationData.cs" />
+    <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\PartialEvaluationPreAnalyzer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Clauses\MainFromClause.cs" />
     <None Include="Properties\AssemblyInfoTemplate.cs" />
@@ -244,7 +245,7 @@
     <Compile Include="IDatabaseInfo.cs" />
     <Compile Include="SqlGeneration\SqlGeneratorVisitor.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitor.cs" />
-    <Compile Include="Parsing\TreeEvaluation\PartialTreeEvaluator.cs" />
+    <Compile Include="Parsing\ExpressionTreeVisitors\PartialTreeEvaluatingVisitor.cs" />
     <Compile Include="StringBuilding\StringBuildingQueryVisitor.cs" />
     <Compile Include="Clauses\WhereClause.cs" />
   </ItemGroup>

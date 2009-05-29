@@ -15,6 +15,7 @@
 // 
 using System;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
@@ -41,7 +42,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       ArgumentUtility.CheckNotNull ("expressionToBeResolved", expressionToBeResolved);
 
       var identifierReference = new IdentifierReferenceExpression (this);
-      return ReplacingExpressionTreeVisitor.Replace (inputParameter, identifierReference, expressionToBeResolved);
+      return ReplacingVisitor.Replace (inputParameter, identifierReference, expressionToBeResolved);
     }
   }
 }

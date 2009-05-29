@@ -17,10 +17,10 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Data.Linq.Expressions;
-using Remotion.Data.Linq.Parsing.TreeEvaluation;
+using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation;
 using NUnit.Framework.SyntaxHelpers;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing.TreeEvaluation
+namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation
 {
   [TestFixture]
   public class PartialEvaluationPreAnalyzerTest
