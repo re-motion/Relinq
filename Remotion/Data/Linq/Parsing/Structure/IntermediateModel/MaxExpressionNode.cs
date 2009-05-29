@@ -13,6 +13,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -25,18 +26,18 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public class MaxExpressionNode : ExpressionNodeBase
   {
-    private Expression _cachedSelector;
-
     public static readonly MethodInfo[] SupportedMethods = new[]
                                                            {
                                                                GetSupportedMethod (() => Queryable.Max<object> (null)),
                                                                GetSupportedMethod (() => Queryable.Max<object, object> (null, null))
                                                            };
 
+    private Expression _cachedSelector;
+
     public MaxExpressionNode (IExpressionNode source, LambdaExpression optionalSelector)
     {
       ArgumentUtility.CheckNotNull ("source", source);
-      
+
       Source = source;
       OptionalSelector = optionalSelector;
     }
@@ -44,19 +45,20 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public IExpressionNode Source { get; private set; }
     public LambdaExpression OptionalSelector { get; private set; }
 
-    public override Expression GetResolvedExpression ()
+    public Expression GetResolvedOptionalSelector ()
     {
       if (OptionalSelector == null)
-        throw GetResolvedExpressionException ("OptionalSelector");
-      if (_cachedSelector != null)
-        return _cachedSelector;
-      _cachedSelector = Source.Resolve (OptionalSelector.Parameters[0], OptionalSelector.Body);
+        return null;
+
+      if (_cachedSelector == null)
+        _cachedSelector = Source.Resolve (OptionalSelector.Parameters[0], OptionalSelector.Body);
+
       return _cachedSelector;
     }
 
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)
     {
-      throw CreateResolveNotSupportedException ();
+      throw CreateResolveNotSupportedException();
     }
   }
 }

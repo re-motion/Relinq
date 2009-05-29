@@ -27,13 +27,15 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public class SelectManyExpressionNode : ExpressionNodeBase, IQuerySourceExpressionNode
   {
-    private Expression _cachedSelector;
     public static readonly MethodInfo[] SupportedMethods = new[]
                                                            {
                                                                GetSupportedMethod (
                                                                    () => Queryable.SelectMany<object, object[], object> (null, o => null, null))
                                                            };
 
+    private Expression _cachedCollectionSelector;
+    private Expression _cachedResultSelector;
+    
     public SelectManyExpressionNode (IExpressionNode source, LambdaExpression collectionSelector, LambdaExpression resultSelector)
     {
       ArgumentUtility.CheckNotNull ("source", source);
@@ -54,14 +56,22 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       get { return ResultSelector.Parameters[1].Type; }
     }
 
-    public override Expression GetResolvedExpression ()
+    public Expression GetResolvedCollectionSelector ()
     {
-      if (_cachedSelector != null)
-        return _cachedSelector;
-      _cachedSelector = Source.Resolve (ResultSelector.Parameters[0], ResultSelector.Body);
-      return _cachedSelector;
+      if (_cachedCollectionSelector == null)
+        _cachedCollectionSelector = Source.Resolve (CollectionSelector.Parameters[0], CollectionSelector.Body);
+
+      return _cachedCollectionSelector;
     }
 
+    public Expression GetResolvedResultSelector ()
+    {
+      if (_cachedResultSelector == null)
+        _cachedResultSelector = Source.Resolve (ResultSelector.Parameters[0], ResultSelector.Body);
+
+      return _cachedResultSelector;
+    }
+    
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)
     {
       ArgumentUtility.CheckNotNull ("inputParameter", inputParameter);

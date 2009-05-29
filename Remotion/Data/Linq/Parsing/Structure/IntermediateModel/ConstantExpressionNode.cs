@@ -34,12 +34,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     public Type QuerySourceElementType { get; private set; }
     public object Value { get; private set; }
-
-    public override Expression GetResolvedExpression ()
-    {
-      throw CreateGetResolveExpressionNotSupportedException ();
-    }
-
+    
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)
     {
       ArgumentUtility.CheckNotNull ("inputParameter", inputParameter);

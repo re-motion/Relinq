@@ -26,11 +26,12 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public class SelectExpressionNode : ExpressionNodeBase
   {
-    private Expression _cachedSelector;
     public static readonly MethodInfo[] SupportedMethods = new[]
                                                            {
                                                                GetSupportedMethod (() => Queryable.Select<object, object>(null, o => null))
                                                            };
+
+    private Expression _cachedSelector;
 
     public SelectExpressionNode (IExpressionNode source, LambdaExpression selector)
     {
@@ -44,11 +45,11 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public IExpressionNode Source { get; private set; }
     public LambdaExpression Selector { get; private set; }
 
-    public override Expression GetResolvedExpression ()
+    public Expression GetResolvedSelector ()
     {
-      if (_cachedSelector != null)
-        return _cachedSelector;
-      _cachedSelector = Source.Resolve (Selector.Parameters[0], Selector.Body);
+      if (_cachedSelector == null)
+        _cachedSelector = Source.Resolve (Selector.Parameters[0], Selector.Body);
+
       return _cachedSelector;
     }
 

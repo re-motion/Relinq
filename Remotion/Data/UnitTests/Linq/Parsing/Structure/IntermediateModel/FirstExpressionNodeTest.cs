@@ -53,40 +53,41 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void GetResolvedPredicate ()
     {
-      var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();
       var predicate = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new FirstExpressionNode (sourceMock, predicate);
+      var node = new FirstExpressionNode (SourceStub, predicate);
+      
+      var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
 
-      var expectedResult = ExpressionHelper.CreateLambdaExpression ();
-      sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything)).Return (expectedResult);
+      var result = node.GetResolvedOptionalPredicate ();
 
-      var result = node.GetResolvedExpression ();
-
-      sourceMock.VerifyAllExpectations ();
-      Assert.That (result, Is.SameAs (expectedResult));
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
 
     [Test]
-    [ExpectedException(typeof(ArgumentNullException),ExpectedMessage = "Predicate must not be null.\r\nParameter name: OptionalPredicate")]
-    public void GetResolvedPredicate_ThrowsArgumentNullException ()
+    public void GetResolvedPredicate_Null ()
     {
       var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();
       var node = new FirstExpressionNode (sourceMock, null);
-      node.GetResolvedExpression();
+      var result = node.GetResolvedOptionalPredicate ();
+      Assert.That (result, Is.Null);
     }
 
     [Test]
-    public void CachedPredicate ()
+    public void GetResolvedPredicate_Cached ()
     {
-      var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();
+      var sourceMock = new MockRepository ().StrictMock<IExpressionNode> ();
       var predicate = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
       var node = new FirstExpressionNode (sourceMock, predicate);
       var expectedResult = ExpressionHelper.CreateLambdaExpression ();
+
       sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything)).Repeat.Once ().Return (expectedResult);
-      node.GetResolvedExpression ();
-      node.GetResolvedExpression ();
+
+      sourceMock.Replay ();
+
+      node.GetResolvedOptionalPredicate ();
+      node.GetResolvedOptionalPredicate ();
+
       sourceMock.VerifyAllExpectations ();
-      Assert.That (PrivateInvoke.GetNonPublicField (node, "_cachedPredicate"), Is.Not.Null);
     }
   }
 }

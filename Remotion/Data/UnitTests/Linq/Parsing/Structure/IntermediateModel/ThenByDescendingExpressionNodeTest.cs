@@ -51,33 +51,34 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void GetResolvedPredicate ()
+    public void GetResolvedSelector ()
     {
-      var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();
       var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new ThenByDescendingExpressionNode(sourceMock, selector);
+      var node = new ThenByDescendingExpressionNode (SourceStub, selector);
 
-      var expectedResult = ExpressionHelper.CreateLambdaExpression ();
-      sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything)).Return (expectedResult);
+      var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
 
-      var result = node.GetResolvedExpression ();
+      var result = node.GetResolvedKeySelector ();
 
-      sourceMock.VerifyAllExpectations ();
-      Assert.That (result, Is.SameAs (expectedResult));
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
 
     [Test]
-    public void CachedSelector ()
+    public void GetResolvedSelector_Cached ()
     {
-      var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();
+      var sourceMock = new MockRepository ().StrictMock<IExpressionNode> ();
       var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
       var node = new ThenByDescendingExpressionNode (sourceMock, selector);
       var expectedResult = ExpressionHelper.CreateLambdaExpression ();
+
       sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything)).Repeat.Once ().Return (expectedResult);
-      node.GetResolvedExpression ();
-      node.GetResolvedExpression ();
+
+      sourceMock.Replay ();
+
+      node.GetResolvedKeySelector ();
+      node.GetResolvedKeySelector ();
+
       sourceMock.VerifyAllExpectations ();
-      Assert.That (PrivateInvoke.GetNonPublicField (node, "_cachedSelector"), Is.Not.Null);
     }
   }
 }

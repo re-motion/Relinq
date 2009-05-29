@@ -51,42 +51,43 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void GetResolvedPredicate ()
+    public void GetResolvedSelector ()
     {
-      var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();
       var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new MaxExpressionNode (sourceMock, selector);
+      var node = new MaxExpressionNode (SourceStub, selector);
 
-      var expectedResult = ExpressionHelper.CreateLambdaExpression ();
-      sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything)).Return (expectedResult);
+      var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
+      
+      var result = node.GetResolvedOptionalSelector ();
 
-      var result = node.GetResolvedExpression ();
-
-      sourceMock.VerifyAllExpectations ();
-      Assert.That (result, Is.SameAs (expectedResult));
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentNullException), ExpectedMessage = "Predicate must not be null.\r\nParameter name: OptionalSelector")]
-    public void GetResolvedPredicate_ThrowsArgumentNullException ()
+    public void GetResolvedSelector_Null ()
     {
       var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();
       var node = new MaxExpressionNode (sourceMock, null);
-      node.GetResolvedExpression ();
+      var result = node.GetResolvedOptionalSelector ();
+      Assert.That (result, Is.Null);
     }
 
     [Test]
-    public void CachedSelector ()
+    public void GetResolvedOptionalSelector_Cached ()
     {
-      var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();
+      var sourceMock = new MockRepository ().StrictMock<IExpressionNode> ();
       var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
       var node = new MaxExpressionNode (sourceMock, selector);
       var expectedResult = ExpressionHelper.CreateLambdaExpression ();
+      
       sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything)).Repeat.Once ().Return (expectedResult);
-      node.GetResolvedExpression ();
-      node.GetResolvedExpression ();
+
+      sourceMock.Replay();
+
+      node.GetResolvedOptionalSelector ();
+      node.GetResolvedOptionalSelector ();
+
       sourceMock.VerifyAllExpectations ();
-      Assert.That (PrivateInvoke.GetNonPublicField (node, "_cachedSelector"), Is.Not.Null);
     }
   }
 }

@@ -25,8 +25,6 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public class SumExpressionNode : ExpressionNodeBase
   {
-    private Expression _cachedSelector;
-
     public static readonly MethodInfo[] SupportedMethods = new[]
                                                            {
                                                                GetSupportedMethod (() => Queryable.Sum ((IQueryable<decimal>) null)),
@@ -52,6 +50,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Queryable.Sum<object> (null, o => (float?)0)),
                                                            };
 
+    private Expression _cachedSelector;
+
     public SumExpressionNode (IExpressionNode source, LambdaExpression optionalSelector)
     {
       ArgumentUtility.CheckNotNull ("source", source);
@@ -63,13 +63,14 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public IExpressionNode Source { get; private set; }
     public LambdaExpression OptionalSelector { get; private set; }
 
-    public override Expression GetResolvedExpression ()
+    public Expression GetResolvedOptionalSelector ()
     {
       if (OptionalSelector == null)
-        throw GetResolvedExpressionException ("OptionalSelector");
-      if (_cachedSelector != null)
-        return _cachedSelector;
-      _cachedSelector = Source.Resolve (OptionalSelector.Parameters[0], OptionalSelector.Body);
+        return null;
+
+      if (_cachedSelector == null)
+        _cachedSelector = Source.Resolve (OptionalSelector.Parameters[0], OptionalSelector.Body);
+
       return _cachedSelector;
     }
 

@@ -13,6 +13,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -26,12 +27,12 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public class WhereExpressionNode : ExpressionNodeBase
   {
-    private Expression _cachedPredicate;
-
     public static readonly MethodInfo[] SupportedMethods = new[]
                                                            {
                                                                GetSupportedMethod (() => Queryable.Where<object> (null, o => true))
                                                            };
+
+    private Expression _cachedPredicate;
 
     public WhereExpressionNode (IExpressionNode source, LambdaExpression predicate)
     {
@@ -45,11 +46,11 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public IExpressionNode Source { get; private set; }
     public LambdaExpression Predicate { get; private set; }
 
-    public override Expression GetResolvedExpression ()
+    public Expression GetResolvedPredicate ()
     {
-      if (_cachedPredicate != null)
-        return _cachedPredicate;
-      _cachedPredicate = Source.Resolve (Predicate.Parameters[0], Predicate);
+      if (_cachedPredicate == null)
+        _cachedPredicate = Source.Resolve (Predicate.Parameters[0], Predicate.Body);
+
       return _cachedPredicate;
     }
 

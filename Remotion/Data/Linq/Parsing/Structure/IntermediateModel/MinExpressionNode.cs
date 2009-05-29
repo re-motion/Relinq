@@ -25,12 +25,13 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public class MinExpressionNode : ExpressionNodeBase
   {
-    private Expression _cachedSelector;
     public static readonly MethodInfo[] SupportedMethods = new[]
                                                            {
                                                                GetSupportedMethod (() => Queryable.Min<object> (null)),
                                                                GetSupportedMethod (() => Queryable.Min<object, object> (null, null))
                                                            };
+
+    private Expression _cachedSelector;
 
     public MinExpressionNode (IExpressionNode source, LambdaExpression optionalSelector)
     {
@@ -43,13 +44,14 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public IExpressionNode Source { get; private set; }
     public LambdaExpression OptionalSelector { get; private set; }
 
-    public override Expression GetResolvedExpression ()
+    public Expression GetResolvedOptionalSelector ()
     {
       if (OptionalSelector == null)
-        throw GetResolvedExpressionException ("OptionalSelector");
-      if (_cachedSelector != null)
-        return _cachedSelector;
-      _cachedSelector = Source.Resolve (OptionalSelector.Parameters[0], OptionalSelector.Body);
+        return null;
+
+      if (_cachedSelector == null)
+        _cachedSelector = Source.Resolve (OptionalSelector.Parameters[0], OptionalSelector.Body);
+
       return _cachedSelector;
     }
 

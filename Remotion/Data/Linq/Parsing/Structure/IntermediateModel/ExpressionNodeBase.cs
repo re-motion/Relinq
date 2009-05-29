@@ -30,25 +30,12 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return method.IsGenericMethod ? method.GetGenericMethodDefinition() : method;
     }
 
-    public abstract Expression GetResolvedExpression ();
     public abstract Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved);
 
     protected InvalidOperationException CreateResolveNotSupportedException ()
     {
       return new InvalidOperationException (GetType ().Name + " does not support resolving of expressions, because it does not stream any data to the following node.");
     }
-
-    protected InvalidOperationException CreateGetResolveExpressionNotSupportedException ()
-    {
-      return new InvalidOperationException (GetType().Name + " does not support to get a resolved expression.");
-    }
-
-    protected ArgumentNullException GetResolvedExpressionException (string paramName)
-    {
-      return new ArgumentNullException (paramName, "Predicate must not be null.");
-    }
-
-    
 
   }
 }

@@ -36,12 +36,5 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
 
-    [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "ConstantExpressionNode does not support to get a resolved expression.")]
-    public void GetResolvedExpression_ThrowsInvalidOperationException ()
-    {
-      var node = new ConstantExpressionNode (typeof (int), new[] { 1, 2, 3, 4, 5 });
-      node.GetResolvedExpression ();
-    }
   }
 }

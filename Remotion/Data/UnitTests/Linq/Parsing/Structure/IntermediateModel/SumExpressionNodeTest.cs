@@ -177,42 +177,43 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void GetResolvedPredicate ()
+    public void GetResolvedSelector ()
     {
-      var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();
-      var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new SumExpressionNode (sourceMock, selector);
+      var predicate = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
+      var node = new SumExpressionNode (SourceStub, predicate);
 
-      var expectedResult = ExpressionHelper.CreateLambdaExpression ();
-      sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything)).Return (expectedResult);
+      var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
 
-      var result = node.GetResolvedExpression ();
+      var result = node.GetResolvedOptionalSelector();
 
-      sourceMock.VerifyAllExpectations ();
-      Assert.That (result, Is.SameAs (expectedResult));
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentNullException), ExpectedMessage = "Predicate must not be null.\r\nParameter name: OptionalSelector")]
-    public void GetResolvedPredicate_ThrowsArgumentNullException ()
+    public void GetResolvedSelector_Null ()
     {
       var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();
-      var node = new SumExpressionNode (sourceMock, null);
-      node.GetResolvedExpression ();
+      var node = new SumExpressionNode(sourceMock, null);
+      var result = node.GetResolvedOptionalSelector ();
+      Assert.That (result, Is.Null);
     }
 
     [Test]
-    public void CachedSelector ()
+    public void GetResolvedSelector_Cached ()
     {
-      var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();
-      var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new SumExpressionNode (sourceMock, selector);
+      var sourceMock = new MockRepository ().StrictMock<IExpressionNode> ();
+      var predicate = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
+      var node = new SumExpressionNode (sourceMock, predicate);
       var expectedResult = ExpressionHelper.CreateLambdaExpression ();
+
       sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything)).Repeat.Once ().Return (expectedResult);
-      node.GetResolvedExpression ();
-      node.GetResolvedExpression ();
+
+      sourceMock.Replay ();
+
+      node.GetResolvedOptionalSelector ();
+      node.GetResolvedOptionalSelector ();
+
       sourceMock.VerifyAllExpectations ();
-      Assert.That (PrivateInvoke.GetNonPublicField (node, "_cachedSelector"), Is.Not.Null);
     }
   }
 }

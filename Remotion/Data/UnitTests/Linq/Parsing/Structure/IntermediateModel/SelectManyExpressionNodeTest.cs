@@ -83,33 +83,69 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void GetResolvedSelector ()
+    public void GetResolvedResultSelector ()
     {
-      var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();
-      var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new SelectManyExpressionNode (sourceMock, ExpressionHelper.CreateLambdaExpression (), selector);
+      var collectionSelector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
+      var resultSelector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
+      var node = new SelectManyExpressionNode (SourceStub, collectionSelector, resultSelector);
 
-      var expectedResult = ExpressionHelper.CreateLambdaExpression ();
-      sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything)).Return (expectedResult);
+      var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
 
-      var result = node.GetResolvedExpression ();
+      var result = node.GetResolvedResultSelector ();
 
-      sourceMock.VerifyAllExpectations ();
-      Assert.That (result, Is.SameAs (expectedResult));
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
 
     [Test]
-    public void CachedSelector ()
+    public void GetResolvedCollectionSelector ()
     {
-      var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();
-      var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new SelectManyExpressionNode (sourceMock, ExpressionHelper.CreateLambdaExpression (), selector);
+      var collectionSelector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
+      var resultSelector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
+      var node = new SelectManyExpressionNode (SourceStub, collectionSelector, resultSelector);
+
+      var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
+
+      var result = node.GetResolvedCollectionSelector ();
+
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
+    }
+
+    [Test]
+    public void GetResolvedResultSelector_Cached ()
+    {
+      var sourceMock = new MockRepository ().StrictMock<IExpressionNode> ();
+      var collectionSelector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
+      var resultSelector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
+      var node = new SelectManyExpressionNode (sourceMock, collectionSelector, resultSelector);
       var expectedResult = ExpressionHelper.CreateLambdaExpression ();
+
       sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything)).Repeat.Once ().Return (expectedResult);
-      node.GetResolvedExpression ();
-      node.GetResolvedExpression ();
+
+      sourceMock.Replay ();
+
+      node.GetResolvedResultSelector ();
+      node.GetResolvedResultSelector ();
+
       sourceMock.VerifyAllExpectations ();
-      Assert.That (PrivateInvoke.GetNonPublicField (node, "_cachedSelector"), Is.Not.Null);
+    }
+
+    [Test]
+    public void GetResolvedCollectionSelector_Cached ()
+    {
+      var sourceMock = new MockRepository ().StrictMock<IExpressionNode> ();
+      var collectionSelector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
+      var resultSelector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
+      var node = new SelectManyExpressionNode (sourceMock, collectionSelector, resultSelector);
+      var expectedResult = ExpressionHelper.CreateLambdaExpression ();
+
+      sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything)).Repeat.Once ().Return (expectedResult);
+
+      sourceMock.Replay ();
+
+      node.GetResolvedCollectionSelector ();
+      node.GetResolvedCollectionSelector ();
+
+      sourceMock.VerifyAllExpectations ();
     }
   }
 }

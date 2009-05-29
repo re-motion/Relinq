@@ -27,13 +27,13 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public class CountExpressionNode : ExpressionNodeBase
   {
-    private Expression _cachedPredicate;
-
     public static readonly MethodInfo[] SupportedMethods = new[]
                                                            {
                                                                GetSupportedMethod (() => Queryable.Count<object> (null)),
                                                                GetSupportedMethod (() => Queryable.Count<object> (null, null))
                                                            };
+
+    private Expression _cachedPredicate;
 
     public CountExpressionNode (IExpressionNode source, LambdaExpression optionalPredicate)
     {
@@ -46,13 +46,14 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public IExpressionNode Source { get; private set; }
     public LambdaExpression OptionalPredicate { get; private set; }
 
-    public override Expression GetResolvedExpression ()
+    public Expression GetResolvedOptionalPredicate ()
     {
       if (OptionalPredicate == null)
-        throw GetResolvedExpressionException("OptionalPredicate");
-      if (_cachedPredicate != null)
-        return _cachedPredicate;
-      _cachedPredicate = Source.Resolve (OptionalPredicate.Parameters[0], OptionalPredicate);
+        return null;
+
+      if (_cachedPredicate == null)
+        _cachedPredicate = Source.Resolve (OptionalPredicate.Parameters[0], OptionalPredicate.Body);
+
       return _cachedPredicate;
     }
 
