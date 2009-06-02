@@ -13,6 +13,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -37,7 +38,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public SingleOrDefaultExpressionNode (IExpressionNode source, LambdaExpression optionalPredicate)
     {
       ArgumentUtility.CheckNotNull ("source", source);
-      
+
+      if (optionalPredicate != null && optionalPredicate.Parameters.Count != 1)
+        throw new ArgumentException ("OptionalPredicate must have exactly one parameter.", "optionalPredicate");
+
       Source = source;
       OptionalPredicate = optionalPredicate;
     }

@@ -35,7 +35,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void CreateExpressionNode ()
     {
-      var selector = ExpressionHelper.CreateLambdaExpression ();
+      var selector = ExpressionHelper.CreateLambdaExpression<int, int> (i => i);
       var result = ExpressionNodeFactory.CreateExpressionNode (typeof (SelectExpressionNode), _source, new object[] { selector });
 
       Assert.That (result, Is.InstanceOfType (typeof (SelectExpressionNode)));

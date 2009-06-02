@@ -30,7 +30,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var p1 = Expression.Parameter (typeof (Student), "s");
       var p2 = Expression.Parameter (typeof (Student_Detail), "sd");
       var resultSelector = Expression.Lambda (Expression.Constant (null), p1, p2);
-      return new SelectManyExpressionNode (source, ExpressionHelper.CreateLambdaExpression (), resultSelector);
+      var collectionSelector = Expression.Lambda (Expression.Constant (null), p1);
+      return new SelectManyExpressionNode (source, collectionSelector, resultSelector);
     }
   }
 }

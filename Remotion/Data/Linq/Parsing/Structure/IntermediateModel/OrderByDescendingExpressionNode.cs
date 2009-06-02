@@ -39,6 +39,9 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       ArgumentUtility.CheckNotNull ("source", source);
       ArgumentUtility.CheckNotNull ("keySelector", keySelector);
 
+      if (keySelector != null && keySelector.Parameters.Count != 1)
+        throw new ArgumentException ("KeySelector must have exactly one parameter.", "keySelector");
+
       Source = source;
       KeySelector = keySelector;
     }

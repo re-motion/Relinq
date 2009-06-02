@@ -40,7 +40,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void Resolve_PassesExpressionToSource ()
     {
       var sourceMock = MockRepository.GenerateMock<IExpressionNode>();
-      var node = new WhereExpressionNode (sourceMock, ExpressionHelper.CreateLambdaExpression());
+      var predicate = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
+      var node = new WhereExpressionNode (sourceMock, predicate);
       var expression = ExpressionHelper.CreateLambdaExpression();
       var parameter = ExpressionHelper.CreateParameterExpression();
       var expectedResult = ExpressionHelper.CreateExpression();

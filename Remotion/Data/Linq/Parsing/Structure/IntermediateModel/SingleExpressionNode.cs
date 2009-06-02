@@ -39,6 +39,9 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     {
       ArgumentUtility.CheckNotNull ("source", source);
 
+      if (optionalPredicate != null && optionalPredicate.Parameters.Count != 1)
+        throw new ArgumentException ("OptionalPredicate must have exactly one parameter.", "optionalPredicate");
+
       Source = source;
       OptionalPredicate = optionalPredicate;
     }

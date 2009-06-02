@@ -13,6 +13,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -36,7 +37,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public MinExpressionNode (IExpressionNode source, LambdaExpression optionalSelector)
     {
       ArgumentUtility.CheckNotNull ("source", source);
-      
+
+      if (optionalSelector != null && optionalSelector.Parameters.Count != 1)
+        throw new ArgumentException ("OptionalSelector must have exactly one parameter.", "optionalSelector");
+
       Source = source;
       OptionalSelector = optionalSelector;
     }

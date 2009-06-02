@@ -29,6 +29,17 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
   [TestFixture]
   public class SelectManyExpressionNodeTest : ExpressionNodeTestBase
   {
+    private Expression<Func<int, bool>> _collectionSelector;
+    private Expression<Func<int, int, bool>> _resultSelector;
+
+    public override void SetUp ()
+    {
+      base.SetUp ();
+
+      _collectionSelector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
+      _resultSelector = ExpressionHelper.CreateLambdaExpression<int, int, bool> ((i, j) => i > j);
+    }
+
     [Test]
     public void SupportedMethod_WithoutPosition ()
     {
@@ -49,12 +60,11 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var node = new SelectManyExpressionNode (
           SourceStub,
-          ExpressionHelper.CreateLambdaExpression (),
+          _collectionSelector,
           ExpressionHelper.CreateLambdaExpression<int, int, AnonymousType> ((a, b) => new AnonymousType (a, b)));
 
       var expression = ExpressionHelper.CreateLambdaExpression<AnonymousType, bool> (i => i.a > 5 && i.b > 6);
       var result = node.Resolve (expression.Parameters[0], expression.Body);
-      Console.WriteLine (result);
       
       var selectManySourceReference = new IdentifierReferenceExpression (node);
 
@@ -74,11 +84,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void GetResolvedResultSelector ()
     {
-      var collectionSelector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var resultSelector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new SelectManyExpressionNode (SourceStub, collectionSelector, resultSelector);
-
-      var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
+      var node = new SelectManyExpressionNode (SourceStub, _collectionSelector, _resultSelector);
+      var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, new IdentifierReferenceExpression (node));
 
       var result = node.GetResolvedResultSelector ();
 
@@ -88,10 +95,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void GetResolvedCollectionSelector ()
     {
-      var collectionSelector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var resultSelector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new SelectManyExpressionNode (SourceStub, collectionSelector, resultSelector);
-
+      var node = new SelectManyExpressionNode (SourceStub, _collectionSelector, _resultSelector);
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
 
       var result = node.GetResolvedCollectionSelector ();
@@ -103,9 +107,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void GetResolvedResultSelector_Cached ()
     {
       var sourceMock = new MockRepository ().StrictMock<IExpressionNode> ();
-      var collectionSelector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var resultSelector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new SelectManyExpressionNode (sourceMock, collectionSelector, resultSelector);
+      var node = new SelectManyExpressionNode (sourceMock, _collectionSelector, _resultSelector);
       var expectedResult = ExpressionHelper.CreateLambdaExpression ();
 
       sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything)).Repeat.Once ().Return (expectedResult);
@@ -122,9 +124,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void GetResolvedCollectionSelector_Cached ()
     {
       var sourceMock = new MockRepository ().StrictMock<IExpressionNode> ();
-      var collectionSelector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var resultSelector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new SelectManyExpressionNode (sourceMock, collectionSelector, resultSelector);
+      var node = new SelectManyExpressionNode (sourceMock, _collectionSelector, _resultSelector);
       var expectedResult = ExpressionHelper.CreateLambdaExpression ();
 
       sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything)).Repeat.Once ().Return (expectedResult);
@@ -141,9 +141,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void CreateClause ()
     {
       IClause previousClause = ExpressionHelper.CreateClause ();
-      var collectionSelector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var resultSelector = ExpressionHelper.CreateLambdaExpression<int,int, bool> ((i,j) => i > 5);
-      var node = new SelectManyExpressionNode (SourceStub, collectionSelector, resultSelector);
+      var node = new SelectManyExpressionNode (SourceStub, _collectionSelector, _resultSelector);
 
       var clause = (AdditionalFromClause)node.CreateClause(previousClause);
 

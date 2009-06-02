@@ -40,6 +40,9 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       ArgumentUtility.CheckNotNull ("source", source);
       ArgumentUtility.CheckNotNull ("predicate", predicate);
 
+      if (predicate != null && predicate.Parameters.Count != 1)
+        throw new ArgumentException ("Predicate must have exactly one parameter.", "predicate");
+
       Source = source;
       Predicate = predicate;
     }

@@ -41,6 +41,9 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       ArgumentUtility.CheckNotNull ("source", source);
       ArgumentUtility.CheckNotNull ("selector", selector);
 
+      if (selector != null && selector.Parameters.Count != 1)
+        throw new ArgumentException ("Selector must have exactly one parameter.", "selector");
+
       Source = source;
       Selector = selector;
     }

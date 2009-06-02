@@ -44,6 +44,11 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       ArgumentUtility.CheckNotNull ("collectionSelector", collectionSelector);
       ArgumentUtility.CheckNotNull ("resultSelector", resultSelector);
 
+      if (collectionSelector.Parameters.Count != 1)
+        throw new ArgumentException ("Collection selector must have exactly one parameter.", "collectionSelector");
+      if (resultSelector.Parameters.Count != 2)
+        throw new ArgumentException ("Result selector must have exactly two parameters.", "resultSelector");
+
       Source = source;
       CollectionSelector = collectionSelector;
       ResultSelector = resultSelector;
@@ -69,7 +74,12 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public Expression GetResolvedResultSelector ()
     {
       if (_cachedResultSelector == null)
-        _cachedResultSelector = Source.Resolve (ResultSelector.Parameters[0], ResultSelector.Body);
+      {
+        var resolvedResultSelector = Source.Resolve (ResultSelector.Parameters[0], ResultSelector.Body);
+        var identifierReferenceExpression = new IdentifierReferenceExpression (this);
+        _cachedResultSelector = ReplacingVisitor.Replace (
+            ResultSelector.Parameters[1], identifierReferenceExpression, resolvedResultSelector);
+      }
 
       return _cachedResultSelector;
     }
@@ -79,11 +89,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       ArgumentUtility.CheckNotNull ("inputParameter", inputParameter);
       ArgumentUtility.CheckNotNull ("expressionToBeResolved", expressionToBeResolved);
 
-      var identifierReferenceExpression = new IdentifierReferenceExpression (this);
-      var resultSelectorWithIdentifierReference = 
-          ReplacingVisitor.Replace (ResultSelector.Parameters[1], identifierReferenceExpression, ResultSelector.Body);
-
-      var resolvedResultSelector = Source.Resolve (ResultSelector.Parameters[0], resultSelectorWithIdentifierReference);
+      var resolvedResultSelector = GetResolvedResultSelector();
       return ReplacingVisitor.Replace (inputParameter, resolvedResultSelector, expressionToBeResolved);
     }
 

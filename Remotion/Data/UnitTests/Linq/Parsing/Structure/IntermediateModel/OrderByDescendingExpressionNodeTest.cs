@@ -38,7 +38,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void Resolve_PassesExpressionToSource ()
     {
       var sourceMock = MockRepository.GenerateMock<IExpressionNode>();
-      var node = new OrderByDescendingExpressionNode (sourceMock, ExpressionHelper.CreateLambdaExpression());
+      var selector = ExpressionHelper.CreateLambdaExpression<int, int> (i => i);
+      var node = new OrderByDescendingExpressionNode (sourceMock, selector);
       var expression = ExpressionHelper.CreateLambdaExpression();
       var parameter = ExpressionHelper.CreateParameterExpression();
       var expectedResult = ExpressionHelper.CreateExpression();
