@@ -17,6 +17,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
 using Remotion.Development.UnitTesting;
@@ -80,6 +81,22 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       node.GetResolvedKeySelector ();
 
       sourceMock.VerifyAllExpectations ();
+    }
+
+    [Test]
+    public void CreateClause ()
+    {
+      var previousClause = ExpressionHelper.CreateClause ();
+      var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
+      var node = new OrderByDescendingExpressionNode (SourceStub, selector);
+
+      var clause = (OrderByClause) node.CreateClause (previousClause);
+
+      Assert.That (clause.PreviousClause, Is.SameAs (previousClause));
+      Assert.That (clause.OrderingList.Count, Is.EqualTo (1));
+      Assert.That (clause.OrderingList[0].OrderingDirection, Is.EqualTo (OrderingDirection.Desc));
+      Assert.That (clause.OrderingList[0].Expression, Is.SameAs (node.KeySelector));
+      Assert.That (clause.OrderingList[0].OrderByClause, Is.SameAs (clause));
     }
   }
 }
