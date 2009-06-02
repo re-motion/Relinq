@@ -29,6 +29,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.Legacy
     private readonly List<QueryModel> _subQueryRegistry;
     private readonly SourceExpressionParser _referenceParser = new SourceExpressionParser (true);
 
+    // TODO: subQueryRegistry might become obsolete once the new Reolve mechanism is integrated
     public SubQueryFindingVisitor (List<QueryModel> subQueryRegistry)
     {
       _subQueryRegistry = subQueryRegistry;

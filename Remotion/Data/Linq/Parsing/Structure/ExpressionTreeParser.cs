@@ -36,6 +36,8 @@ namespace Remotion.Data.Linq.Parsing.Structure
       _nodeTypeRegistry = nodeTypeRegistry;
     }
 
+    // TODO: call partial tree evaluator and SubQueryFindingVisitor
+
     public IExpressionNode Parse (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);

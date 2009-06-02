@@ -14,11 +14,13 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Expressions;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
 using Remotion.Development.UnitTesting;
@@ -149,6 +151,41 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       Assert.That (clause.Identifier.Type, Is.SameAs(typeof(int)));
       Assert.That (clause.ResultSelector, Is.SameAs (node.ResultSelector));
       Assert.That (clause.FromExpression, Is.SameAs (node.CollectionSelector));
+      Assert.That (clause.PreviousClause, Is.SameAs (previousClause));
+    }
+
+    [Test]
+    public void CreateClause_WithMemberFromInFromExpression ()
+    {
+      IClause previousClause = ExpressionHelper.CreateClause ();
+      var collectionSelector = ExpressionHelper.CreateLambdaExpression<Student, IEnumerable<Student>>(s => s.Friends);
+      var node = new SelectManyExpressionNode (SourceStub, collectionSelector, _resultSelector);
+
+      var clause = (MemberFromClause) node.CreateClause (previousClause);
+
+      Assert.That (clause.Identifier.Name, Is.EqualTo ("j"));
+      Assert.That (clause.Identifier.Type, Is.SameAs (typeof (int)));
+      Assert.That (clause.ResultSelector, Is.SameAs (node.ResultSelector));
+      Assert.That (clause.FromExpression, Is.SameAs (node.CollectionSelector));
+      Assert.That (clause.MemberExpression, Is.SameAs (node.CollectionSelector.Body));
+      Assert.That (clause.PreviousClause, Is.SameAs (previousClause));
+    }
+
+    [Test]
+    public void CreateClause_WithSubQueryInFromExpression ()
+    {
+      IClause previousClause = ExpressionHelper.CreateClause ();
+      var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel());
+
+      var collectionSelector = Expression.Lambda (subQueryExpression, Expression.Parameter (typeof (int), "i"));
+      var node = new SelectManyExpressionNode (SourceStub, collectionSelector, _resultSelector);
+
+      var clause = (SubQueryFromClause) node.CreateClause (previousClause);
+
+      Assert.That (clause.Identifier.Name, Is.EqualTo ("j"));
+      Assert.That (clause.Identifier.Type, Is.SameAs (typeof (int)));
+      Assert.That (clause.ProjectionExpression, Is.SameAs (node.ResultSelector));
+      Assert.That (clause.SubQueryModel, Is.SameAs (subQueryExpression.QueryModel));
       Assert.That (clause.PreviousClause, Is.SameAs (previousClause));
     }
   }

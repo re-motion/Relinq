@@ -18,6 +18,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Expressions;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Utilities;
 
@@ -96,7 +97,14 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public IClause CreateClause (IClause previousClause)
     {
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
-      return new AdditionalFromClause (previousClause, ResultSelector.Parameters[1], CollectionSelector, ResultSelector);
+
+      var identifier = ResultSelector.Parameters[1];
+      if (CollectionSelector.Body is MemberExpression)
+        return new MemberFromClause (previousClause, identifier, CollectionSelector, ResultSelector);
+      else if (CollectionSelector.Body is SubQueryExpression)
+        return new SubQueryFromClause (previousClause, identifier, ((SubQueryExpression) CollectionSelector.Body).QueryModel, ResultSelector);
+      else
+        return new AdditionalFromClause (previousClause, identifier, CollectionSelector, ResultSelector);
     }
   }
 }
