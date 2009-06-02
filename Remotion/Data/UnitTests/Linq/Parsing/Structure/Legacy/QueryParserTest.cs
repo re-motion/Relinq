@@ -86,7 +86,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy
 
       QueryModel queryModel = parser.GetParsedQuery ();
       WhereClause whereClause = ((WhereClause) queryModel.BodyClauses[0]);
-      MethodCallExpression containsExpression = (MethodCallExpression) whereClause.BoolExpression.Body;
+      MethodCallExpression containsExpression = (MethodCallExpression) ((LambdaExpression)whereClause.Predicate).Body;
       SubQueryExpression subQueryExpression = (SubQueryExpression) containsExpression.Arguments[0];
 
       Assert.That (subQueryExpression.QueryModel.ParentQuery, Is.SameAs (queryModel));

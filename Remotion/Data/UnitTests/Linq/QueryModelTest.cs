@@ -370,7 +370,7 @@ namespace Remotion.Data.UnitTests.Linq
       Assert.That (clonedAdditionalFromClause.PreviousClause, Is.SameAs (clone.MainFromClause));
 
       Assert.That (clonedWhereClause, Is.Not.SameAs (whereClause));
-      Assert.That (clonedWhereClause.BoolExpression, Is.EqualTo (clonedWhereClause.BoolExpression));
+      Assert.That (clonedWhereClause.Predicate, Is.EqualTo (clonedWhereClause.Predicate));
       Assert.That (clonedWhereClause.QueryModel, Is.SameAs (clone));
       Assert.That (clonedWhereClause.PreviousClause, Is.SameAs (clonedAdditionalFromClause));
 

@@ -39,9 +39,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy.QueryParserInteg
       WhereClause whereClause = ParsedQuery.BodyClauses.First() as WhereClause;
       Assert.IsNotNull (whereClause);
 
-      ExpressionTreeNavigator navigator = new ExpressionTreeNavigator (whereClause.BoolExpression);
-      Assert.IsNotNull (whereClause.BoolExpression);
-      Assert.IsInstanceOfType (typeof (LambdaExpression), whereClause.BoolExpression);
+      ExpressionTreeNavigator navigator = new ExpressionTreeNavigator (whereClause.Predicate);
+      Assert.IsNotNull (whereClause.Predicate);
+      Assert.IsInstanceOfType (typeof (LambdaExpression), whereClause.Predicate);
       Assert.AreSame (ParsedQuery.MainFromClause.Identifier, navigator.Parameters[0].Expression);
     }
 

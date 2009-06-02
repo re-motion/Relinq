@@ -37,7 +37,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy.QueryParserInteg
       WhereClause whereClause = ParsedQuery.BodyClauses.First () as WhereClause;
       Assert.IsNotNull (whereClause);
 
-      Assert.AreSame (SourceExpressionNavigator.Arguments[0].Arguments[1].Operand.Expression, whereClause.BoolExpression);
+      Assert.AreSame (SourceExpressionNavigator.Arguments[0].Arguments[1].Operand.Expression, whereClause.Predicate);
     }
 
     [Test]

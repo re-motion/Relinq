@@ -221,7 +221,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy
 
       var whereClause = model.BodyClauses.First() as WhereClause;
       Assert.IsNotNull (whereClause);
-      Assert.AreSame (whereExpressionData.TypedExpression, whereClause.BoolExpression);
+      Assert.AreSame (whereExpressionData.TypedExpression, whereClause.Predicate);
     }
 
     [Test]
@@ -351,12 +351,12 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy
 
       var whereClause1 = model.BodyClauses.Skip (2).First () as WhereClause;
       Assert.IsNotNull (whereClause1);
-      Assert.AreSame (whereExpression1.TypedExpression, whereClause1.BoolExpression);
+      Assert.AreSame (whereExpression1.TypedExpression, whereClause1.Predicate);
       Assert.AreSame (fromClause2, whereClause1.PreviousClause);
 
       var whereClause2 = model.BodyClauses.Skip (3).First () as WhereClause;
       Assert.IsNotNull (whereClause2);
-      Assert.AreSame (whereExpression2.TypedExpression, whereClause2.BoolExpression);
+      Assert.AreSame (whereExpression2.TypedExpression, whereClause2.Predicate);
       Assert.AreSame (whereClause1, whereClause2.PreviousClause);
 
       Assert.IsNotNull (orderByClause1);

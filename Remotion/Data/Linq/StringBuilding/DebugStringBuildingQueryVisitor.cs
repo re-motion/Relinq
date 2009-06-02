@@ -175,9 +175,9 @@ namespace Remotion.Data.Linq.StringBuilding
       _sb.Append ("\n");
       _sb.AppendFormat ("PreviousClause: {0}", whereClause.PreviousClause);
       _sb.Append ("\n");
-      _sb.AppendFormat ("BoolExpression: {0}", whereClause.BoolExpression);
+      _sb.AppendFormat ("Predicate: {0}", whereClause.Predicate);
       _sb.Append ("\n");
-      //_sb.AppendFormat ("where {0} ", whereClause.BoolExpression.Body);
+      //_sb.AppendFormat ("where {0} ", whereClause.Predicate.Body);
     }
 
     public void VisitOrderByClause (OrderByClause orderByClause)

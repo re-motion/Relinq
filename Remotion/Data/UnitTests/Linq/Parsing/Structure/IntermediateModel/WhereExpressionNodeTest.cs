@@ -13,10 +13,12 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+using System;
 using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
 using Remotion.Development.UnitTesting;
@@ -79,6 +81,21 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       node.GetResolvedPredicate ();
 
       sourceMock.VerifyAllExpectations ();
+    }
+
+    [Test]
+    public void CreateClause ()
+    {
+      var previousClause = ExpressionHelper.CreateClause ();
+      var predicate = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
+      var node = new WhereExpressionNode (SourceStub, predicate);
+
+      var clause = node.CreateClause (previousClause);
+
+      Assert.That (clause, Is.InstanceOfType (typeof (WhereClause)));
+      var whereClause = (WhereClause) clause;
+      Assert.That (whereClause.PreviousClause, Is.SameAs (previousClause));
+      Assert.That (whereClause.Predicate, Is.EqualTo (node.GetResolvedPredicate()));
     }
   }
 }

@@ -114,7 +114,7 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
 
       sv.VisitWhereClause (whereClasue);
 
-      Assert.AreEqual("where (1 = 2) ", sv.ToString());
+      Assert.AreEqual("where () => (1 = 2) ", sv.ToString());
     }
 
     [Test]

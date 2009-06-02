@@ -39,26 +39,26 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy.QueryParserInteg
       Assert.IsNotNull (ParsedQuery.BodyClauses);
       WhereClause[] whereClauses = ParsedQuery.BodyClauses.Cast<WhereClause>().ToArray();
 
-      ExpressionTreeNavigator navigator = new ExpressionTreeNavigator (whereClauses[0].BoolExpression);
+      ExpressionTreeNavigator navigator = new ExpressionTreeNavigator (whereClauses[0].Predicate);
 
-      Assert.IsNotNull (whereClauses[0].BoolExpression);
-      Assert.IsInstanceOfType (typeof (LambdaExpression), whereClauses[0].BoolExpression);
+      Assert.IsNotNull (whereClauses[0].Predicate);
+      Assert.IsInstanceOfType (typeof (LambdaExpression), whereClauses[0].Predicate);
       Assert.AreSame (ParsedQuery.MainFromClause.Identifier, navigator.Parameters[0].Expression);
-      Assert.IsInstanceOfType (typeof (BinaryExpression), whereClauses[0].BoolExpression.Body);
+      Assert.IsInstanceOfType (typeof (BinaryExpression), ((LambdaExpression) whereClauses[0].Predicate).Body);
       Assert.AreEqual ("Garcia", navigator.Body.Right.Value);
 
-      navigator = new ExpressionTreeNavigator (whereClauses[1].BoolExpression);
+      navigator = new ExpressionTreeNavigator (whereClauses[1].Predicate);
 
-      Assert.IsNotNull (whereClauses[1].BoolExpression);
-      Assert.IsInstanceOfType (typeof (LambdaExpression), whereClauses[1].BoolExpression);
-      Assert.IsInstanceOfType (typeof (BinaryExpression), whereClauses[1].BoolExpression.Body);
+      Assert.IsNotNull (whereClauses[1].Predicate);
+      Assert.IsInstanceOfType (typeof (LambdaExpression), whereClauses[1].Predicate);
+      Assert.IsInstanceOfType (typeof (BinaryExpression), ((LambdaExpression) whereClauses[1].Predicate).Body);
       Assert.AreEqual ("Hugo", navigator.Body.Right.Value);
 
-      navigator = new ExpressionTreeNavigator (whereClauses[2].BoolExpression);
+      navigator = new ExpressionTreeNavigator (whereClauses[2].Predicate);
 
-      Assert.IsNotNull (whereClauses[2].BoolExpression);
-      Assert.IsInstanceOfType (typeof (LambdaExpression), whereClauses[2].BoolExpression);
-      Assert.IsInstanceOfType (typeof (BinaryExpression), whereClauses[2].BoolExpression.Body);
+      Assert.IsNotNull (whereClauses[2].Predicate);
+      Assert.IsInstanceOfType (typeof (LambdaExpression), whereClauses[2].Predicate);
+      Assert.IsInstanceOfType (typeof (BinaryExpression), ((LambdaExpression) whereClauses[2].Predicate).Body);
       Assert.AreEqual (100, navigator.Body.Right.Value);
     }
 

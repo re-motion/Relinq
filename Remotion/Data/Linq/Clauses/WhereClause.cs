@@ -27,19 +27,19 @@ namespace Remotion.Data.Linq.Clauses
   /// </summary>
   public class WhereClause : IBodyClause
   {
-    private readonly LambdaExpression _boolExpression;
-    private LambdaExpression _simplifiedBoolExpression;
+    private readonly Expression _predicate;
+    private Expression _simplifiedBoolExpression;
     
     /// <summary>
     /// Initialize a new instance of <see cref="WhereClause"/>
     /// </summary>
     /// <param name="previousClause">The previous clause of type <see cref="IClause"/> in the <see cref="QueryModel"/>.</param>
-    /// <param name="boolExpression">The expression which represents the where conditions.</param>
-    public WhereClause (IClause previousClause,LambdaExpression boolExpression)
+    /// <param name="predicate">The expression which represents the where conditions.</param>
+    public WhereClause (IClause previousClause, Expression predicate)
     {
-      ArgumentUtility.CheckNotNull ("boolExpression", boolExpression);
+      ArgumentUtility.CheckNotNull ("predicate", predicate);
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
-      _boolExpression = boolExpression;
+      _predicate = predicate;
       PreviousClause = previousClause;
     }
 
@@ -52,15 +52,16 @@ namespace Remotion.Data.Linq.Clauses
     /// The expression which represents the where conditions.
     /// </summary>
     // TODO 1158: Replace by ICriterion
-    public LambdaExpression BoolExpression
+    public Expression Predicate
     {
-      get { return _boolExpression; }
+      get { return _predicate; }
     }
 
-    public LambdaExpression GetSimplifiedBoolExpression()
+    // TODO: This will be removed when the new intermediate model is integrated with the QueryModel/clause structure.
+    public Expression GetSimplifiedPredicate()
     {
       if (_simplifiedBoolExpression == null)
-        _simplifiedBoolExpression = (LambdaExpression) new PartialTreeEvaluatingVisitor (BoolExpression).GetEvaluatedTree ();
+        _simplifiedBoolExpression = new PartialTreeEvaluatingVisitor (Predicate).GetEvaluatedTree ();
       return _simplifiedBoolExpression;
     }
 
@@ -86,7 +87,7 @@ namespace Remotion.Data.Linq.Clauses
 
     public WhereClause Clone (IClause newPreviousClause)
     {
-      return new WhereClause (newPreviousClause, BoolExpression);
+      return new WhereClause (newPreviousClause, Predicate);
     }
 
     IBodyClause IBodyClause.Clone (IClause newPreviousClause)

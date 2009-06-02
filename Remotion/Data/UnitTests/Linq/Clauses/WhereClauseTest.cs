@@ -37,7 +37,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       
       WhereClause whereClause = new WhereClause(clause,boolExpression);
       Assert.AreSame (clause, whereClause.PreviousClause);
-      Assert.AreSame (boolExpression, whereClause.BoolExpression);
+      Assert.AreSame (boolExpression, whereClause.Predicate);
     }
 
     [Test]
@@ -48,15 +48,15 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
     
     [Test]
-    public void GetSimplifiedBoolExpression ()
+    public void GetSimplifiedPredicate ()
     {
       MethodCallExpression whereMethodCallExpression = WhereTestQueryGenerator.CreateWhereQueryWithEvaluatableSubExpression_WhereExpression (
           ExpressionHelper.CreateQuerySource());
       LambdaExpression boolExpression = (LambdaExpression) ((UnaryExpression) whereMethodCallExpression.Arguments[1]).Operand;
       IClause clause = ExpressionHelper.CreateClause();
       WhereClause whereClause = new WhereClause (clause, boolExpression);
-      LambdaExpression simplifiedExpression = whereClause.GetSimplifiedBoolExpression ();
-      LambdaExpression simplifiedExpression2 = whereClause.GetSimplifiedBoolExpression ();
+      LambdaExpression simplifiedExpression = (LambdaExpression) whereClause.GetSimplifiedPredicate ();
+      LambdaExpression simplifiedExpression2 = (LambdaExpression) whereClause.GetSimplifiedPredicate ();
       Assert.AreSame (simplifiedExpression2, simplifiedExpression);
 
       ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
@@ -126,7 +126,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
 
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (originalClause));
-      Assert.That (clone.BoolExpression, Is.SameAs (originalClause.BoolExpression));
+      Assert.That (clone.Predicate, Is.SameAs (originalClause.Predicate));
       Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
       Assert.That (clone.QueryModel, Is.Null);
     }
