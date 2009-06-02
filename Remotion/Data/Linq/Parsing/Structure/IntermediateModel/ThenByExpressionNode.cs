@@ -17,6 +17,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
@@ -60,6 +61,14 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)
     {
       return Source.Resolve (inputParameter, expressionToBeResolved);
+    }
+
+    public IClause CreateClause (IClause previousClause)
+    {
+      var clause = ArgumentUtility.CheckNotNullAndType<OrderByClause> ("previousClause", previousClause);
+
+      clause.AddOrdering (new Ordering (clause, KeySelector, OrderingDirection.Asc));
+      return clause;
     }
   }
 }

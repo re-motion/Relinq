@@ -17,9 +17,10 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
-using Remotion.Development.UnitTesting;
+using Remotion.Utilities;
 using Rhino.Mocks;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
@@ -80,6 +81,34 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       node.GetResolvedKeySelector ();
 
       sourceMock.VerifyAllExpectations ();
+    }
+
+    [Test]
+    public void CreateClause ()
+    {
+      var previousClause = ExpressionHelper.CreateOrderByClause ();
+      var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
+      var node = new ThenByDescendingExpressionNode (SourceStub, selector);
+      var oldCount = previousClause.OrderingList.Count;
+
+      var clause = (OrderByClause) node.CreateClause (previousClause);
+
+      Assert.That (clause, Is.SameAs (previousClause));
+      Assert.That (clause.OrderingList.Count, Is.EqualTo (oldCount + 1));
+      Assert.That (clause.OrderingList.Last ().OrderingDirection, Is.EqualTo (OrderingDirection.Desc));
+      Assert.That (clause.OrderingList.Last ().Expression, Is.SameAs (node.KeySelector));
+      Assert.That (clause.OrderingList.Last ().OrderByClause, Is.SameAs (previousClause));
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentTypeException))]
+    public void CreateClause_InvalidPreviousClause ()
+    {
+      var previousClause = ExpressionHelper.CreateMainFromClause ();
+      var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
+      var node = new ThenByDescendingExpressionNode (SourceStub, selector);
+
+      node.CreateClause (previousClause);
     }
   }
 }
