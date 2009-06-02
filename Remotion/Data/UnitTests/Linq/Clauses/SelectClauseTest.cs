@@ -36,7 +36,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       IClause clause = ExpressionHelper.CreateClause();
       var selectClause = new SelectClause (clause, expression);
       Assert.AreSame (clause, selectClause.PreviousClause);
-      Assert.AreEqual (expression, selectClause.ProjectionExpression);
+      Assert.AreEqual (expression, selectClause.Selector);
     }
 
     [Test]
@@ -102,7 +102,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
 
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (originalClause));
-      Assert.That (clone.ProjectionExpression, Is.SameAs (originalClause.ProjectionExpression));
+      Assert.That (clone.Selector, Is.SameAs (originalClause.Selector));
       Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
     }
 

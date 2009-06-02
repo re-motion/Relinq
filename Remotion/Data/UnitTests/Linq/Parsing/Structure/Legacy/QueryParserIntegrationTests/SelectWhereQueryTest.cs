@@ -34,7 +34,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy.QueryParserInteg
     public override void CheckBodyClauses ()
     {
       Assert.AreEqual (1, ParsedQuery.BodyClauses.Count);
-      WhereClause whereClause = ParsedQuery.BodyClauses.First () as WhereClause;
+      var whereClause = ParsedQuery.BodyClauses.First () as WhereClause;
       Assert.IsNotNull (whereClause);
 
       Assert.AreSame (SourceExpressionNavigator.Arguments[0].Arguments[1].Operand.Expression, whereClause.Predicate);
@@ -44,12 +44,12 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy.QueryParserInteg
     public override void CheckSelectOrGroupClause ()
     {
       Assert.IsNotNull (ParsedQuery.SelectOrGroupClause);
-      SelectClause clause = ParsedQuery.SelectOrGroupClause as SelectClause;
+      var clause = ParsedQuery.SelectOrGroupClause as SelectClause;
       Assert.IsNotNull (clause);
-      Assert.IsNotNull (clause.ProjectionExpression);
-      Assert.IsInstanceOfType (typeof (MemberExpression), clause.ProjectionExpression.Body,
+      Assert.IsNotNull (clause.Selector);
+      Assert.IsInstanceOfType (typeof (MemberExpression), clause.Selector.Body,
           "from s in ... select s.First => select expression must be member access");
-      Assert.AreEqual ("First", ((MemberExpression) clause.ProjectionExpression.Body).Member.Name,
+      Assert.AreEqual ("First", ((MemberExpression) clause.Selector.Body).Member.Name,
           "from s in ... select s.First => select expression must be access to First member");
     }
   }

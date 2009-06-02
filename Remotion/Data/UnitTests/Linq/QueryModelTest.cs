@@ -162,9 +162,9 @@ namespace Remotion.Data.UnitTests.Linq
       ParameterExpression identifier3 = Expression.Parameter (typeof (Student), "s3");
 
       MainFromClause mainFromClause = ExpressionHelper.CreateMainFromClause(identifier0, ExpressionHelper.CreateQuerySource());
-      AdditionalFromClause clause1 = new AdditionalFromClause (mainFromClause, identifier1, fromExpression, projExpression);
-      AdditionalFromClause clause2 = new AdditionalFromClause (clause1, identifier2, fromExpression, projExpression);
-      AdditionalFromClause clause3 = new AdditionalFromClause (clause2, identifier3, fromExpression, projExpression);
+      var clause1 = new AdditionalFromClause (mainFromClause, identifier1, fromExpression, projExpression);
+      var clause2 = new AdditionalFromClause (clause1, identifier2, fromExpression, projExpression);
+      var clause3 = new AdditionalFromClause (clause2, identifier3, fromExpression, projExpression);
 
 
       QueryModel model = ExpressionHelper.CreateQueryModel (mainFromClause);
@@ -188,7 +188,7 @@ namespace Remotion.Data.UnitTests.Linq
       ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
 
       MainFromClause mainFromClause = ExpressionHelper.CreateMainFromClause(identifier0, ExpressionHelper.CreateQuerySource ());
-      AdditionalFromClause clause1 = new AdditionalFromClause (mainFromClause, identifier1, fromExpression, projExpression);
+      var clause1 = new AdditionalFromClause (mainFromClause, identifier1, fromExpression, projExpression);
 
       QueryModel model = ExpressionHelper.CreateQueryModel (mainFromClause);
       model.AddBodyClause (clause1);
@@ -208,7 +208,7 @@ namespace Remotion.Data.UnitTests.Linq
       ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
 
       MainFromClause mainFromClause = ExpressionHelper.CreateMainFromClause(identifier0, ExpressionHelper.CreateQuerySource ());
-      AdditionalFromClause clause1 = new AdditionalFromClause (mainFromClause, identifier1, fromExpression, projExpression);
+      var clause1 = new AdditionalFromClause (mainFromClause, identifier1, fromExpression, projExpression);
 
       QueryModel model = ExpressionHelper.CreateQueryModel (mainFromClause);
       model.AddBodyClause (clause1);
@@ -229,7 +229,7 @@ namespace Remotion.Data.UnitTests.Linq
       ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
 
       MainFromClause mainFromClause = ExpressionHelper.CreateMainFromClause(identifier0, ExpressionHelper.CreateQuerySource ());
-      AdditionalFromClause clause1 = new AdditionalFromClause (mainFromClause, identifier1, fromExpression, projExpression);
+      var clause1 = new AdditionalFromClause (mainFromClause, identifier1, fromExpression, projExpression);
 
       QueryModel model = ExpressionHelper.CreateQueryModel (mainFromClause);
       model.AddBodyClause (clause1);
@@ -348,7 +348,7 @@ namespace Remotion.Data.UnitTests.Linq
 
       Assert.That (clone.SelectOrGroupClause, Is.Not.SameAs (_queryModel.SelectOrGroupClause));
       var cloneSelectClause = ((SelectClause) clone.SelectOrGroupClause);
-      Assert.That (cloneSelectClause.ProjectionExpression, Is.EqualTo (selectClause.ProjectionExpression));
+      Assert.That (cloneSelectClause.Selector, Is.EqualTo (selectClause.Selector));
       Assert.That (cloneSelectClause.PreviousClause, Is.SameAs (clone.MainFromClause));
     }
 

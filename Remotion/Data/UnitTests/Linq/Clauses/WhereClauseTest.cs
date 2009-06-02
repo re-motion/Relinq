@@ -55,8 +55,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       LambdaExpression boolExpression = (LambdaExpression) ((UnaryExpression) whereMethodCallExpression.Arguments[1]).Operand;
       IClause clause = ExpressionHelper.CreateClause();
       WhereClause whereClause = new WhereClause (clause, boolExpression);
-      LambdaExpression simplifiedExpression = (LambdaExpression) whereClause.GetSimplifiedPredicate ();
-      LambdaExpression simplifiedExpression2 = (LambdaExpression) whereClause.GetSimplifiedPredicate ();
+      LambdaExpression simplifiedExpression = whereClause.GetSimplifiedPredicate ();
+      LambdaExpression simplifiedExpression2 = whereClause.GetSimplifiedPredicate ();
       Assert.AreSame (simplifiedExpression2, simplifiedExpression);
 
       ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");

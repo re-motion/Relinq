@@ -105,7 +105,7 @@ namespace Remotion.Data.Linq.StringBuilding
     {
       ArgumentUtility.CheckNotNull ("whereClause", whereClause);
 
-      _sb.AppendFormat ("where {0} ", whereClause.Predicate);
+      _sb.AppendFormat ("where {0} ", whereClause.Predicate.Body);
     }
 
     public void VisitOrderByClause (OrderByClause orderByClause)
@@ -136,7 +136,7 @@ namespace Remotion.Data.Linq.StringBuilding
     public void VisitSelectClause (SelectClause selectClause)
     {
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);
-      _sb.AppendFormat ("select {0}", selectClause.ProjectionExpression.Body);
+      _sb.AppendFormat ("select {0}", selectClause.Selector.Body);
     }
 
     public void VisitGroupClause (GroupClause groupClause)

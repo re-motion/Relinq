@@ -44,21 +44,21 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy.QueryParserInteg
       Assert.IsNotNull (whereClauses[0].Predicate);
       Assert.IsInstanceOfType (typeof (LambdaExpression), whereClauses[0].Predicate);
       Assert.AreSame (ParsedQuery.MainFromClause.Identifier, navigator.Parameters[0].Expression);
-      Assert.IsInstanceOfType (typeof (BinaryExpression), ((LambdaExpression) whereClauses[0].Predicate).Body);
+      Assert.IsInstanceOfType (typeof (BinaryExpression), whereClauses[0].Predicate.Body);
       Assert.AreEqual ("Garcia", navigator.Body.Right.Value);
 
       navigator = new ExpressionTreeNavigator (whereClauses[1].Predicate);
 
       Assert.IsNotNull (whereClauses[1].Predicate);
       Assert.IsInstanceOfType (typeof (LambdaExpression), whereClauses[1].Predicate);
-      Assert.IsInstanceOfType (typeof (BinaryExpression), ((LambdaExpression) whereClauses[1].Predicate).Body);
+      Assert.IsInstanceOfType (typeof (BinaryExpression), whereClauses[1].Predicate.Body);
       Assert.AreEqual ("Hugo", navigator.Body.Right.Value);
 
       navigator = new ExpressionTreeNavigator (whereClauses[2].Predicate);
 
       Assert.IsNotNull (whereClauses[2].Predicate);
       Assert.IsInstanceOfType (typeof (LambdaExpression), whereClauses[2].Predicate);
-      Assert.IsInstanceOfType (typeof (BinaryExpression), ((LambdaExpression) whereClauses[2].Predicate).Body);
+      Assert.IsInstanceOfType (typeof (BinaryExpression), whereClauses[2].Predicate.Body);
       Assert.AreEqual (100, navigator.Body.Right.Value);
     }
 
@@ -71,10 +71,10 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy.QueryParserInteg
       SelectClause clause = ParsedQuery.SelectOrGroupClause as SelectClause;
       Assert.IsNotNull (clause);
       
-      Assert.That (clause.ProjectionExpression.Parameters.Count, Is.EqualTo (1));
-      Assert.That (clause.ProjectionExpression.Parameters[0].Name, Is.EqualTo ("s"));
-      Assert.That (clause.ProjectionExpression.Parameters[0].Type, Is.EqualTo (typeof (Student)));
-      Assert.That (clause.ProjectionExpression.Body, Is.SameAs (clause.ProjectionExpression.Parameters[0]));
+      Assert.That (clause.Selector.Parameters.Count, Is.EqualTo (1));
+      Assert.That (clause.Selector.Parameters[0].Name, Is.EqualTo ("s"));
+      Assert.That (clause.Selector.Parameters[0].Type, Is.EqualTo (typeof (Student)));
+      Assert.That (clause.Selector.Body, Is.SameAs (clause.Selector.Parameters[0]));
     }
   }
 }

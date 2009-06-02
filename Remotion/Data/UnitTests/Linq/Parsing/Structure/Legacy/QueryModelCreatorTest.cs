@@ -16,7 +16,6 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using NUnit.Framework;
 using Remotion.Collections;
 using Remotion.Data.Linq;
@@ -99,7 +98,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy
 
       var selectClause = model.SelectOrGroupClause as SelectClause;
       Assert.IsNotNull (selectClause);
-      Assert.AreSame (_result.ProjectionExpressions[0], selectClause.ProjectionExpression);
+      Assert.AreSame (_result.ProjectionExpressions[0], selectClause.Selector);
     }
     
     [Test]
@@ -203,7 +202,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy
 
       var selectClause = model.SelectOrGroupClause as SelectClause;
       Assert.IsNotNull (selectClause);
-      Assert.AreSame (_result.ProjectionExpressions[1], selectClause.ProjectionExpression);
+      Assert.AreSame (_result.ProjectionExpressions[1], selectClause.Selector);
     }
 
     [Test]
@@ -375,7 +374,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy
 
       var selectClause = model.SelectOrGroupClause as SelectClause;
       Assert.IsNotNull (selectClause);
-      Assert.AreSame (_result.ProjectionExpressions[2], selectClause.ProjectionExpression);
+      Assert.AreSame (_result.ProjectionExpressions[2], selectClause.Selector);
       Assert.AreSame (orderByClause2, selectClause.PreviousClause);
     }
 

@@ -18,9 +18,9 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
-using Remotion.Development.UnitTesting;
 using Rhino.Mocks;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
@@ -43,7 +43,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       var result = node.Resolve (expression.Parameters[0], expression.Body);
 
-      var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, 
+      var expectedResult = Expression.MakeBinary (
+          ExpressionType.GreaterThan,
           Expression.MakeBinary (ExpressionType.Multiply, SourceReference, SourceReference),
           Expression.Constant (5));
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
@@ -57,7 +58,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
 
-      var result = node.GetResolvedSelector ();
+      var result = node.GetResolvedSelector();
 
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
@@ -65,19 +66,34 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void GetResolvedSelector_Cached ()
     {
-      var sourceMock = new MockRepository ().StrictMock<IExpressionNode> ();
+      var sourceMock = new MockRepository().StrictMock<IExpressionNode>();
       var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
       var node = new SelectExpressionNode (sourceMock, selector);
-      var expectedResult = ExpressionHelper.CreateLambdaExpression ();
+      var expectedResult = ExpressionHelper.CreateLambdaExpression();
 
-      sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything)).Repeat.Once ().Return (expectedResult);
+      sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything)).Repeat.Once().Return (
+          expectedResult);
 
-      sourceMock.Replay ();
+      sourceMock.Replay();
 
-      node.GetResolvedSelector ();
-      node.GetResolvedSelector ();
+      node.GetResolvedSelector();
+      node.GetResolvedSelector();
 
-      sourceMock.VerifyAllExpectations ();
+      sourceMock.VerifyAllExpectations();
+    }
+
+    [Test]
+    public void CreateClause ()
+    {
+      var previousClause = ExpressionHelper.CreateClause();
+      var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
+      var node = new SelectExpressionNode (SourceStub, selector);
+
+      var selectClause = (SelectClause) node.CreateClause (previousClause);
+
+      Assert.That (selectClause.PreviousClause, Is.SameAs (previousClause));
+      Assert.That (selectClause.Selector, Is.EqualTo (node.Selector)); // TODO: This should become the resolved expression at a later point of time
+      Assert.That (selectClause.ResultModifierClauses, Is.Empty);
     }
   }
 }

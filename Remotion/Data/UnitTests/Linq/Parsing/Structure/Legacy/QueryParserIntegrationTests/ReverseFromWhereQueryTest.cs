@@ -69,9 +69,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy.QueryParserInteg
       Assert.IsNotNull (ParsedQuery.SelectOrGroupClause);
       SelectClause clause = ParsedQuery.SelectOrGroupClause as SelectClause;
       Assert.IsNotNull (clause);
-      Assert.IsNotNull (clause.ProjectionExpression);
+      Assert.IsNotNull (clause.Selector);
 
-      Assert.AreSame (SourceExpressionNavigator.Arguments[2].Operand.Expression, clause.ProjectionExpression);
+      Assert.AreSame (SourceExpressionNavigator.Arguments[2].Operand.Expression, clause.Selector);
     }
   }
 }

@@ -13,9 +13,11 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Utilities;
 
@@ -61,6 +63,12 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
       var resolvedSelector = Source.Resolve (Selector.Parameters[0], Selector.Body);
       return ReplacingVisitor.Replace (inputParameter, resolvedSelector, expressionToBeResolved);
+    }
+
+    public IClause CreateClause (IClause previousClause)
+    {
+      ArgumentUtility.CheckNotNull ("previousClause", previousClause);
+      return new SelectClause (previousClause, Selector);
     }
   }
 }

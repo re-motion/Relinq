@@ -223,13 +223,13 @@ namespace Remotion.Data.Linq.StringBuilding
     public void VisitSelectClause (SelectClause selectClause)
     {
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);
-      //_sb.AppendFormat ("select {0}", selectClause.ProjectionExpression == null ? "<value>" : selectClause.ProjectionExpression.Body.ToString());
+      //_sb.AppendFormat ("select {0}", selectClause.Selector == null ? "<value>" : selectClause.Selector.Body.ToString());
       _sb.Append ("\n");
       _sb.Append ("--- SelectClause ---");
       _sb.Append ("\n");
       _sb.AppendFormat ("PreviousClause: {0}", selectClause.PreviousClause);
       _sb.Append ("\n");
-      _sb.AppendFormat ("ProjectionExpression: {0}", selectClause.ProjectionExpression);
+      _sb.AppendFormat ("Selector: {0}", selectClause.Selector);
       _sb.Append ("\n");
       //_sb.AppendFormat ("", selectClause.ResultModifiers);
       //_sb.Append ("\n");

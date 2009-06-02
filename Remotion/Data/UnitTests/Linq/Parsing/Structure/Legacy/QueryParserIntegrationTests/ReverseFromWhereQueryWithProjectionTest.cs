@@ -52,11 +52,11 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy.QueryParserInteg
     {
       Assert.AreEqual (2, ParsedQuery.BodyClauses.Count);
             
-      WhereClause whereClause = ParsedQuery.BodyClauses.First() as WhereClause;
+      var whereClause = ParsedQuery.BodyClauses.First() as WhereClause;
       Assert.IsNotNull (whereClause);
       AssertEquivalent (SourceExpressionNavigator.Arguments[0].Arguments[1].Operand.Expression, whereClause.Predicate);
 
-      AdditionalFromClause fromClause = ParsedQuery.BodyClauses.Last () as AdditionalFromClause;
+      var fromClause = ParsedQuery.BodyClauses.Last () as AdditionalFromClause;
       Assert.IsNotNull (fromClause);
       AssertEquivalent (SourceExpressionNavigator.Arguments[1].Operand.Expression, fromClause.FromExpression);
       AssertEquivalent (SourceExpressionNavigator.Arguments[2].Operand.Expression, fromClause.ProjectionExpression);
@@ -67,11 +67,11 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy.QueryParserInteg
     public override void CheckSelectOrGroupClause ()
     {
       Assert.IsNotNull (ParsedQuery.SelectOrGroupClause);
-      SelectClause clause = ParsedQuery.SelectOrGroupClause as SelectClause;
+      var clause = ParsedQuery.SelectOrGroupClause as SelectClause;
       Assert.IsNotNull (clause);
-      Assert.IsNotNull (clause.ProjectionExpression);
+      Assert.IsNotNull (clause.Selector);
 
-      Assert.AreSame (SourceExpressionNavigator.Arguments[2].Operand.Expression, clause.ProjectionExpression);
+      Assert.AreSame (SourceExpressionNavigator.Arguments[2].Operand.Expression, clause.Selector);
     }
   }
 }

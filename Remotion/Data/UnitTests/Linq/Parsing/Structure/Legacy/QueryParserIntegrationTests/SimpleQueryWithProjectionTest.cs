@@ -43,8 +43,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy.QueryParserInteg
       Assert.IsNotNull (ParsedQuery.SelectOrGroupClause);
       SelectClause clause = ParsedQuery.SelectOrGroupClause as SelectClause;
       Assert.IsNotNull (clause);
-      Assert.IsNotNull (clause.ProjectionExpression);
-      Assert.IsInstanceOfType (typeof(MemberExpression), clause.ProjectionExpression.Body,
+      Assert.IsNotNull (clause.Selector);
+      Assert.IsInstanceOfType (typeof(MemberExpression), clause.Selector.Body,
           "from s in ... select s.First => select expression must be MemberAccess");
     }
   }

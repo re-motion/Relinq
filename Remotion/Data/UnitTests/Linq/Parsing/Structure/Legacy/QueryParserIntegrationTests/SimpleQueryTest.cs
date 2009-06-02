@@ -41,8 +41,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy.QueryParserInteg
       Assert.IsNotNull (ParsedQuery.SelectOrGroupClause);
       SelectClause clause = ParsedQuery.SelectOrGroupClause as SelectClause;
       Assert.IsNotNull (clause);
-      Assert.IsNotNull (clause.ProjectionExpression);
-      Assert.AreSame (ParsedQuery.MainFromClause.Identifier, clause.ProjectionExpression.Body,
+      Assert.IsNotNull (clause.Selector);
+      Assert.AreSame (ParsedQuery.MainFromClause.Identifier, clause.Selector.Body,
           "from s in ... select s => select expression must be same as from-identifier");
     }
   }

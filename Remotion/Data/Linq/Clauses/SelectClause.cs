@@ -28,21 +28,21 @@ namespace Remotion.Data.Linq.Clauses
   /// </summary>
   public class SelectClause : ISelectGroupClause
   {
-    private readonly LambdaExpression _projectionExpression;
+    private readonly LambdaExpression _selector;
     private readonly List<ResultModifierClause> _resultModifierData = new List<ResultModifierClause>();
     
     /// <summary>
     /// Initialize a new instance of <see cref="SelectClause"/>.
     /// </summary>
     /// <param name="previousClause">The previous clause of type <see cref="IClause"/> in the <see cref="QueryModel"/>.</param>
-    /// <param name="projectionExpression">The projection within the select part of the linq query.</param>
-    public SelectClause (IClause previousClause, LambdaExpression projectionExpression)
+    /// <param name="selector">The projection within the select part of the linq query.</param>
+    public SelectClause (IClause previousClause, LambdaExpression selector)
     {
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
-      ArgumentUtility.CheckNotNull ("projectionExpression", projectionExpression);
+      ArgumentUtility.CheckNotNull ("selector", selector);
 
       PreviousClause = previousClause;
-      _projectionExpression = projectionExpression;
+      _selector = selector;
     }
     
     /// <summary>
@@ -54,9 +54,9 @@ namespace Remotion.Data.Linq.Clauses
     /// The projection within the select part of the linq query.
     /// </summary>
     // TODO 1158: Replace by IEvaluation
-    public LambdaExpression ProjectionExpression
+    public LambdaExpression Selector
     {
-      get { return _projectionExpression; }
+      get { return _selector; }
     }
 
     public ReadOnlyCollection<ResultModifierClause> ResultModifierClauses
@@ -78,7 +78,7 @@ namespace Remotion.Data.Linq.Clauses
 
     public SelectClause Clone (IClause newPreviousClause)
     {
-      var clone = new SelectClause (newPreviousClause, ProjectionExpression);
+      var clone = new SelectClause (newPreviousClause, Selector);
       IClause previousClause = clone;
       
       foreach (var resultModifierData in ResultModifierClauses)

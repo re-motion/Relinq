@@ -27,15 +27,15 @@ namespace Remotion.Data.Linq.Clauses
   /// </summary>
   public class WhereClause : IBodyClause
   {
-    private readonly Expression _predicate;
-    private Expression _simplifiedBoolExpression;
+    private readonly LambdaExpression _predicate;
+    private LambdaExpression _simplifiedBoolExpression;
     
     /// <summary>
     /// Initialize a new instance of <see cref="WhereClause"/>
     /// </summary>
     /// <param name="previousClause">The previous clause of type <see cref="IClause"/> in the <see cref="QueryModel"/>.</param>
     /// <param name="predicate">The expression which represents the where conditions.</param>
-    public WhereClause (IClause previousClause, Expression predicate)
+    public WhereClause (IClause previousClause, LambdaExpression predicate)
     {
       ArgumentUtility.CheckNotNull ("predicate", predicate);
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
@@ -52,16 +52,16 @@ namespace Remotion.Data.Linq.Clauses
     /// The expression which represents the where conditions.
     /// </summary>
     // TODO 1158: Replace by ICriterion
-    public Expression Predicate
+    public LambdaExpression Predicate
     {
       get { return _predicate; }
     }
 
     // TODO: This will be removed when the new intermediate model is integrated with the QueryModel/clause structure.
-    public Expression GetSimplifiedPredicate()
+    public LambdaExpression GetSimplifiedPredicate ()
     {
       if (_simplifiedBoolExpression == null)
-        _simplifiedBoolExpression = new PartialTreeEvaluatingVisitor (Predicate).GetEvaluatedTree ();
+        _simplifiedBoolExpression = (LambdaExpression) new PartialTreeEvaluatingVisitor (Predicate).GetEvaluatedTree ();
       return _simplifiedBoolExpression;
     }
 

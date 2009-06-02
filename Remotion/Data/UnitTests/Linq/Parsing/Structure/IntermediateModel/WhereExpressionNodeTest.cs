@@ -90,12 +90,10 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var predicate = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
       var node = new WhereExpressionNode (SourceStub, predicate);
 
-      var clause = node.CreateClause (previousClause);
+      var clause = (WhereClause) node.CreateClause (previousClause);
 
-      Assert.That (clause, Is.InstanceOfType (typeof (WhereClause)));
-      var whereClause = (WhereClause) clause;
-      Assert.That (whereClause.PreviousClause, Is.SameAs (previousClause));
-      Assert.That (whereClause.Predicate, Is.EqualTo (node.GetResolvedPredicate()));
+      Assert.That (clause.PreviousClause, Is.SameAs (previousClause));
+      Assert.That (clause.Predicate, Is.EqualTo (node.Predicate)); // TODO: This should become the resolved expression at a later point of time
     }
   }
 }

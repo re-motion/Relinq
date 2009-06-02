@@ -54,7 +54,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy.QueryParserInteg
 
       SelectClause selectClause = subQuery.SelectOrGroupClause as SelectClause;
       Assert.IsNotNull (selectClause);
-      AssertEquivalent (subExpressionNavigator.Arguments[1].Operand.Expression, selectClause.ProjectionExpression);
+      AssertEquivalent (subExpressionNavigator.Arguments[1].Operand.Expression, selectClause.Selector);
     }
 
     [Test]
@@ -62,7 +62,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy.QueryParserInteg
     {
       SelectClause selectClause = ParsedQuery.SelectOrGroupClause as SelectClause;
       Assert.IsNotNull (selectClause);
-      AssertEquivalent (SourceExpressionNavigator.Arguments[2].Operand.Expression, selectClause.ProjectionExpression);
+      AssertEquivalent (SourceExpressionNavigator.Arguments[2].Operand.Expression, selectClause.Selector);
     }
 
     [Test]

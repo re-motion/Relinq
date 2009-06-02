@@ -72,22 +72,22 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy
     public void ParsedQuery_Simplifies ()
     {
       Expression simplifyableQuery = SelectTestQueryGenerator.CreateSimplifyableQuery (ExpressionHelper.CreateQuerySource()).Expression;
-      QueryParser parser = new QueryParser (simplifyableQuery);
+      var parser = new QueryParser (simplifyableQuery);
 
       QueryModel queryModel = parser.GetParsedQuery ();
-      Assert.That (((SelectClause)queryModel.SelectOrGroupClause).ProjectionExpression.Body, Is.InstanceOfType (typeof (ConstantExpression)));
+      Assert.That (((SelectClause)queryModel.SelectOrGroupClause).Selector.Body, Is.InstanceOfType (typeof (ConstantExpression)));
     }
 
     [Test]
     public void ParsedQuery_SubQueries_HaveParentSet ()
     {
       Expression queryWithSubQuery = SubQueryTestQueryGenerator.CreateSimpleSubQueryInWhereClause (ExpressionHelper.CreateQuerySource ()).Expression;
-      QueryParser parser = new QueryParser (queryWithSubQuery);
+      var parser = new QueryParser (queryWithSubQuery);
 
       QueryModel queryModel = parser.GetParsedQuery ();
-      WhereClause whereClause = ((WhereClause) queryModel.BodyClauses[0]);
-      MethodCallExpression containsExpression = (MethodCallExpression) ((LambdaExpression)whereClause.Predicate).Body;
-      SubQueryExpression subQueryExpression = (SubQueryExpression) containsExpression.Arguments[0];
+      var whereClause = ((WhereClause) queryModel.BodyClauses[0]);
+      var containsExpression = (MethodCallExpression) whereClause.Predicate.Body;
+      var subQueryExpression = (SubQueryExpression) containsExpression.Arguments[0];
 
       Assert.That (subQueryExpression.QueryModel.ParentQuery, Is.SameAs (queryModel));
     }
@@ -105,7 +105,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy
     {
       IQueryable<Student> source = ExpressionHelper.CreateQuerySource();
       Expression queryExpression = MixedTestQueryGenerator.CreateMultiFromWhereQuery (source, source).Expression;
-      QueryParser parser = new QueryParser (queryExpression);
+      var parser = new QueryParser (queryExpression);
       QueryModel parsedQuery = parser.GetParsedQuery ();
       
       Assert.IsNull (parsedQuery.MainFromClause.PreviousClause);
@@ -118,7 +118,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy
     {
       IQueryable<Student> source = ExpressionHelper.CreateQuerySource();
       Expression queryExpression = MixedTestQueryGenerator.CreateMultiFromWhereOrderByQuery (source, source).Expression;
-      QueryParser parser = new QueryParser (queryExpression);
+      var parser = new QueryParser (queryExpression);
       QueryModel parsedQuery = parser.GetParsedQuery();
 
       Assert.IsNull (parsedQuery.MainFromClause.PreviousClause);
