@@ -46,27 +46,10 @@ namespace Remotion.Data.Linq.Parsing.Structure
       else
       {
         var constantExpression = PartialTreeEvaluatingVisitor.EvaluateSubtree (expression);
-        return ParseConstantExpression (constantExpression);
+        return new ConstantExpressionNode (constantExpression.Type, constantExpression.Value, "TODO"); // TODO: Implement algorithm and test
       }
     }
 
-    private IExpressionNode ParseConstantExpression (ConstantExpression constantExpression)
-    {
-      Type querySourceElementType = GetQuerySourceElementType (constantExpression);
-      return new ConstantExpressionNode (querySourceElementType, constantExpression.Value);
-    }
-
-    private Type GetQuerySourceElementType (ConstantExpression constantExpression)
-    {
-      try
-      {
-        return ReflectionUtility.GetAscribedGenericArguments (constantExpression.Type, typeof (IEnumerable<>))[0];
-      }
-      catch (ArgumentTypeException)
-      {
-        throw new ArgumentTypeException ("expression", typeof (IEnumerable<>), constantExpression.Type);
-      }
-    }
 
     private IExpressionNode ParseMethodCallExpression (MethodCallExpression methodCallExpression)
     {

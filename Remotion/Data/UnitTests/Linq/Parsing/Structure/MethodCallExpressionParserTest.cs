@@ -22,6 +22,7 @@ using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation;
+using Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 {
@@ -30,6 +31,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
   {
     private ExpressionNodeTypeRegistry _nodeTypeRegistry;
     private MethodCallExpressionParser _parser;
+    private ConstantExpressionNode _source;
 
     [SetUp]
     public void SetUp ()
@@ -41,47 +43,46 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       _nodeTypeRegistry.Register (TakeExpressionNode.SupportedMethods, typeof (TakeExpressionNode));
 
       _parser = new MethodCallExpressionParser (_nodeTypeRegistry);
+
+      _source = ExpressionNodeObjectMother.CreateConstant();
     }
 
     [Test]
     public void Parse ()
     {
-      var source = new ConstantExpressionNode (typeof (int), new[] { 1, 2, 3 });
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (q => q.Where (i => i > 5));
       var whereCondition = (LambdaExpression) ((UnaryExpression) methodCallExpression.Arguments[1]).Operand;
 
-      var result = _parser.Parse (source, methodCallExpression);
+      var result = _parser.Parse (_source, methodCallExpression);
 
       Assert.That (result, Is.InstanceOfType (typeof (WhereExpressionNode)));
-      Assert.That (((WhereExpressionNode) result).Source, Is.SameAs (source));
+      Assert.That (((WhereExpressionNode) result).Source, Is.SameAs (_source));
       Assert.That (((WhereExpressionNode) result).Predicate, Is.SameAs (whereCondition));
     }
 
     [Test]
     public void Parse_DifferentMethod()
     {
-      var source = new ConstantExpressionNode (typeof (int), new[] { 1, 2, 3 });
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (q => q.Select (i => i + 1));
       var selectProjection = (LambdaExpression) ((UnaryExpression) methodCallExpression.Arguments[1]).Operand;
 
-      var result = _parser.Parse (source, methodCallExpression);
+      var result = _parser.Parse (_source, methodCallExpression);
 
       Assert.That (result, Is.InstanceOfType (typeof (SelectExpressionNode)));
-      Assert.That (((SelectExpressionNode) result).Source, Is.SameAs (source));
+      Assert.That (((SelectExpressionNode) result).Source, Is.SameAs (_source));
       Assert.That (((SelectExpressionNode) result).Selector, Is.SameAs (selectProjection));
     }
 
     [Test]
     public void Parse_TakeMethod ()
     {
-      var source = new ConstantExpressionNode (typeof (int), new[] { 1, 2, 3 });
       var outer = 4;
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (q => q.Take (outer + 1));
 
-      var result = _parser.Parse (source, methodCallExpression);
+      var result = _parser.Parse (_source, methodCallExpression);
 
       Assert.That (result, Is.InstanceOfType (typeof (TakeExpressionNode)));
-      Assert.That (((TakeExpressionNode) result).Source, Is.SameAs (source));
+      Assert.That (((TakeExpressionNode) result).Source, Is.SameAs (_source));
       Assert.That (((TakeExpressionNode) result).Count, Is.EqualTo (5));
     }
 
@@ -90,10 +91,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
         + "is currently not supported, but you can register your own parser if needed.")]
     public void Parse_UnknownMethod ()
     {
-      var source = new ConstantExpressionNode (typeof (int), new[] { 1, 2, 3 });
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, int> (q => q.First());
 
-      _parser.Parse (source, methodCallExpression);
+      _parser.Parse (_source, methodCallExpression);
     }
 
     [Test]
@@ -101,10 +101,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
         + "is currently not supported, but you can register your own parser if needed.")]
     public void Parse_UnknownOverload ()
     {
-      var source = new ConstantExpressionNode (typeof (int), new[] { 1, 2, 3 });
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (q => q.Select ((i, j) => i));
 
-      _parser.Parse (source, methodCallExpression);
+      _parser.Parse (_source, methodCallExpression);
     }
 
   }

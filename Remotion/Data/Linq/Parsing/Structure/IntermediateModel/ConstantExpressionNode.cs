@@ -14,7 +14,9 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Utilities;
 
@@ -25,17 +27,34 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public class ConstantExpressionNode : ExpressionNodeBase, IQuerySourceExpressionNode
   {
-    public ConstantExpressionNode (Type querySourceType, object value)
+    public ConstantExpressionNode (Type querySourceType, object value, string fromIdentifierName)
     {
       ArgumentUtility.CheckNotNull ("querySourceType", querySourceType);
-      
-      QuerySourceElementType = querySourceType;
+      ArgumentUtility.CheckNotNullOrEmpty ("fromIdentifierName", fromIdentifierName);
+
+      QuerySourceType = querySourceType;
+      QuerySourceElementType = GetQuerySourceElementType (querySourceType);
       Value = value;
+      FromIdentifierName = fromIdentifierName;
+    }
+
+    private Type GetQuerySourceElementType (Type enumerableType)
+    {
+      try
+      {
+        return ReflectionUtility.GetAscribedGenericArguments (enumerableType, typeof (IEnumerable<>))[0];
+      }
+      catch (ArgumentTypeException)
+      {
+        throw new ArgumentTypeException ("expression", typeof (IEnumerable<>), enumerableType);
+      }
     }
 
     public Type QuerySourceElementType { get; private set; }
+    public Type QuerySourceType { get; set; }
     public object Value { get; private set; }
-    
+    public string FromIdentifierName { get; set; }
+
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)
     {
       ArgumentUtility.CheckNotNull ("inputParameter", inputParameter);
@@ -43,6 +62,11 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
       var identifierReference = new IdentifierReferenceExpression (this);
       return ReplacingVisitor.Replace (inputParameter, identifierReference, expressionToBeResolved);
+    }
+
+    public MainFromClause CreateClause ()
+    {
+      return new MainFromClause (Expression.Parameter (QuerySourceElementType, FromIdentifierName), Expression.Constant (Value, QuerySourceType));
     }
   }
 }

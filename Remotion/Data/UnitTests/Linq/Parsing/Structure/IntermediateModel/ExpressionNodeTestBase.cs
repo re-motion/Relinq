@@ -28,7 +28,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [SetUp]
     public virtual void SetUp ()
     {
-      SourceStub = new ConstantExpressionNode (typeof (int), new[] { 1, 2, 3 });
+      SourceStub = ExpressionNodeObjectMother.CreateConstant();
       SourceReference = new IdentifierReferenceExpression (SourceStub);
     }
 

@@ -70,18 +70,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentTypeException),
-        ExpectedMessage =
-            "Argument expression has type System.Int32 when type System.Collections.Generic.IEnumerable`1[T] was expected.\r\nParameter name: expression"
-        )]
-    public void Parse_ConstantExpression_TypeNotEnumerable ()
-    {
-      var constantExpression = Expression.Constant (5);
-
-      _expressionTreeParser.Parse (constantExpression);
-    }
-
-    [Test]
     public void Parse_MethodCallExpression ()
     {
       var querySource = ExpressionHelper.CreateQuerySource();

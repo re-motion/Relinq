@@ -29,7 +29,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [SetUp]
     public void SetUp ()
     {
-      _source = new ConstantExpressionNode (typeof (int), new[] { 1, 2, 3 });
+      _source = ExpressionNodeObjectMother.CreateConstant();
     }
 
     [Test]

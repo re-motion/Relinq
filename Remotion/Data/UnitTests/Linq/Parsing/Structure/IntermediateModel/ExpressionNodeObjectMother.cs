@@ -20,6 +20,11 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 {
   public static class ExpressionNodeObjectMother
   {
+    public static ConstantExpressionNode CreateConstant ()
+    {
+      return new ConstantExpressionNode (typeof (int[]), new[] { 1, 2, 3 }, "x");
+    }
+
     public static SelectManyExpressionNode CreateSelectMany (IExpressionNode source)
     {
       var p1 = Expression.Parameter (typeof (Student), "s");

@@ -16,7 +16,10 @@
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
+using Remotion.Utilities;
 using Rhino.Mocks;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
@@ -25,15 +28,48 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
   public class ConstantExpressionNodeTest
   {
     [Test]
+    public void Initialization_QuerySourceElementType ()
+    {
+      var node = new ConstantExpressionNode (typeof (int[]), null, "x");
+      Assert.That (node.QuerySourceElementType, Is.EqualTo (typeof (int)));
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentTypeException),
+        ExpectedMessage =
+            "Argument expression has type System.Int32 when type System.Collections.Generic.IEnumerable`1[T] was expected.\r\nParameter name: expression"
+        )]
+    public void Initialization_TypeNotEnumerable ()
+    { 
+      new ConstantExpressionNode (typeof (int), 5, "x");
+    }
+
+
+    [Test]
     public void Resolve_ReplacesParameter_WithIdentifierReference ()
     {
-      var node = new ConstantExpressionNode (typeof (int), new [] { 1, 2, 3, 4, 5 });
+      var node = ExpressionNodeObjectMother.CreateConstant ();
       var expression = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
 
       var result = node.Resolve (expression.Parameters[0], expression.Body);
 
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, new IdentifierReferenceExpression (node), Expression.Constant (5));
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
+    }
+
+    [Test]
+    public void CreateClause ()
+    {
+      var node = new ConstantExpressionNode (typeof (int[]), new[] { 1, 2, 3, 4, 5 }, "x");
+
+      
+      var constantClause = node.CreateClause();
+
+      Assert.That (constantClause.Identifier.Name, Is.EqualTo ("x"));
+      Assert.That (constantClause.Identifier.Type, Is.SameAs(typeof(int)));    
+      Assert.That (constantClause.QuerySource, Is.InstanceOfType (typeof (ConstantExpression)));
+      Assert.That (((ConstantExpression) constantClause.QuerySource).Value, Is.SameAs (node.Value));
+      Assert.That (constantClause.QuerySource.Type, Is.SameAs (node.QuerySourceType));
     }
 
   }
