@@ -90,7 +90,7 @@ namespace Remotion.Data.Linq.StringBuilding
       _sb.Append ("\n");
       _sb.AppendFormat ("FromExpression: {0}", fromClause.FromExpression);
       _sb.Append ("\n");
-      _sb.AppendFormat ("ProjectionExpression: {0}", fromClause.ProjectionExpression);
+      _sb.AppendFormat ("ProjectionExpression: {0}", fromClause.ResultSelector);
       _sb.Append ("\n");
       //_sb.AppendFormat ("from {0} {1} in {2} ", fromClause.Identifier.Type.Name, fromClause.Identifier.Name, fromString);
 

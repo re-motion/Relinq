@@ -131,13 +131,13 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy
       Assert.IsNotNull (additionalFromClause1);
       Assert.AreSame (fromExpression1.TypedExpression, additionalFromClause1.FromExpression);
       Assert.AreSame (fromExpression1.Identifier, additionalFromClause1.Identifier);
-      Assert.AreSame (_result.ProjectionExpressions[0], additionalFromClause1.ProjectionExpression);
+      Assert.AreSame (_result.ProjectionExpressions[0], additionalFromClause1.ResultSelector);
 
       var additionalFromClause2 = model.BodyClauses.Last () as AdditionalFromClause;
       Assert.IsNotNull (additionalFromClause2);
       Assert.AreSame (fromExpression2.TypedExpression, additionalFromClause2.FromExpression);
       Assert.AreSame (fromExpression2.Identifier, additionalFromClause2.Identifier);
-      Assert.AreSame (_result.ProjectionExpressions[1], additionalFromClause2.ProjectionExpression);
+      Assert.AreSame (_result.ProjectionExpressions[1], additionalFromClause2.ResultSelector);
     }
 
     [Test]
@@ -183,7 +183,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy
       Assert.IsNotNull (memberFromClause);
       Assert.AreSame (fromExpression2.TypedExpression, memberFromClause.FromExpression);
       Assert.AreSame (fromExpression2.Identifier, memberFromClause.Identifier);
-      Assert.AreSame (_result.ProjectionExpressions[0], memberFromClause.ProjectionExpression);
+      Assert.AreSame (_result.ProjectionExpressions[0], memberFromClause.ResultSelector);
     }
 
     [Test]
@@ -338,14 +338,14 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy
       Assert.IsNotNull (fromClause1);
       Assert.AreSame (fromExpression1.Identifier, fromClause1.Identifier);
       Assert.AreSame (fromExpression1.TypedExpression, fromClause1.FromExpression);
-      Assert.AreSame (_result.ProjectionExpressions[0], fromClause1.ProjectionExpression);
+      Assert.AreSame (_result.ProjectionExpressions[0], fromClause1.ResultSelector);
       Assert.AreSame (model.MainFromClause, fromClause1.PreviousClause);
 
       var fromClause2 = model.BodyClauses.Skip (1).First () as AdditionalFromClause;
       Assert.IsNotNull (fromClause2);
       Assert.AreSame (fromExpression2.Identifier, fromClause2.Identifier);
       Assert.AreSame (fromExpression2.TypedExpression, fromClause2.FromExpression);
-      Assert.AreSame (_result.ProjectionExpressions[1], fromClause2.ProjectionExpression);
+      Assert.AreSame (_result.ProjectionExpressions[1], fromClause2.ResultSelector);
       Assert.AreSame (fromClause1, fromClause2.PreviousClause);
 
       var whereClause1 = model.BodyClauses.Skip (2).First () as WhereClause;

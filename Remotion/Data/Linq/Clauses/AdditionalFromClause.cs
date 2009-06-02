@@ -31,18 +31,18 @@ namespace Remotion.Data.Linq.Clauses
     /// <param name="previousClause">The previous <see cref="IClause"/> of this from clause.</param>
     /// <param name="identifier">The identifierer of the from expression.</param>
     /// <param name="fromExpression">The expression of the from expression.</param>
-    /// <param name="projectionExpression">The projection of identifier to from expression.</param>
+    /// <param name="resultSelector">The projection of identifier to from expression.</param>
     public AdditionalFromClause (IClause previousClause, ParameterExpression identifier, LambdaExpression fromExpression,
-        LambdaExpression projectionExpression)
+        LambdaExpression resultSelector)
         : base (previousClause,identifier)
     {
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
       ArgumentUtility.CheckNotNull ("identifier", identifier);
       ArgumentUtility.CheckNotNull ("fromExpression", fromExpression);
-      ArgumentUtility.CheckNotNull ("projectionExpression", projectionExpression);
+      ArgumentUtility.CheckNotNull ("resultSelector", resultSelector);
 
       FromExpression = fromExpression;
-      ProjectionExpression = projectionExpression;
+      ResultSelector = resultSelector;
     }
 
     /// <summary>
@@ -55,7 +55,7 @@ namespace Remotion.Data.Linq.Clauses
     /// The projection of a from expression.
     /// </summary>
     // TODO 1158: Remove
-    public LambdaExpression ProjectionExpression { get; private set; }
+    public LambdaExpression ResultSelector { get; private set; }
 
     /// <summary>
     /// The appropriate <see cref="QueryModel"/> of the <see cref="AdditionalFromClause"/>.
@@ -84,7 +84,7 @@ namespace Remotion.Data.Linq.Clauses
 
     public virtual AdditionalFromClause Clone (IClause newPreviousClause)
     {
-      var result = new AdditionalFromClause (newPreviousClause, Identifier, FromExpression, ProjectionExpression);
+      var result = new AdditionalFromClause (newPreviousClause, Identifier, FromExpression, ResultSelector);
       result.AddClonedJoinClauses (JoinClauses);
       return result;
     }

@@ -17,6 +17,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Utilities;
 
@@ -84,6 +85,12 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
       var resolvedResultSelector = Source.Resolve (ResultSelector.Parameters[0], resultSelectorWithIdentifierReference);
       return ReplacingVisitor.Replace (inputParameter, resolvedResultSelector, expressionToBeResolved);
+    }
+
+    public IClause CreateClause (IClause previousClause)
+    {
+      ArgumentUtility.CheckNotNull ("previousClause", previousClause);
+      return new AdditionalFromClause (previousClause, ResultSelector.Parameters[1], CollectionSelector, ResultSelector);
     }
   }
 }

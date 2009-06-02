@@ -60,7 +60,7 @@ namespace Remotion.Data.Linq.Clauses
 
     public override AdditionalFromClause Clone (IClause newPreviousClause)
     {
-      var result = new MemberFromClause (newPreviousClause, Identifier, FromExpression, ProjectionExpression);
+      var result = new MemberFromClause (newPreviousClause, Identifier, FromExpression, ResultSelector);
       result.AddClonedJoinClauses (JoinClauses);
       return result;
     }

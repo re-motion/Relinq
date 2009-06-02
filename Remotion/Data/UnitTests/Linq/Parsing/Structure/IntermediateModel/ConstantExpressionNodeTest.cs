@@ -61,8 +61,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void CreateClause ()
     {
       var node = new ConstantExpressionNode (typeof (int[]), new[] { 1, 2, 3, 4, 5 }, "x");
-
-      
       var constantClause = node.CreateClause();
 
       Assert.That (constantClause.Identifier.Name, Is.EqualTo ("x"));

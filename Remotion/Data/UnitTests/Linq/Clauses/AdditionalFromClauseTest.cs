@@ -40,7 +40,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
 
       Assert.AreSame (id, fromClause.Identifier);
       Assert.AreSame (fromExpression, fromClause.FromExpression);
-      Assert.AreSame (projectionExpression, fromClause.ProjectionExpression);
+      Assert.AreSame (projectionExpression, fromClause.ResultSelector);
       Assert.AreSame (clause, fromClause.PreviousClause);
 
       Assert.That (fromClause.JoinClauses, Is.Empty);
@@ -119,7 +119,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clone, Is.Not.SameAs (originalClause));
       Assert.That (clone.Identifier, Is.SameAs (originalClause.Identifier));
       Assert.That (clone.FromExpression, Is.SameAs (originalClause.FromExpression));
-      Assert.That (clone.ProjectionExpression, Is.SameAs (originalClause.ProjectionExpression));
+      Assert.That (clone.ResultSelector, Is.SameAs (originalClause.ResultSelector));
       Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
       Assert.That (clone.QueryModel, Is.Null);
     }

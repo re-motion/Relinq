@@ -59,7 +59,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy.QueryParserInteg
       AdditionalFromClause fromClause = ParsedQuery.BodyClauses.Last () as AdditionalFromClause;
       Assert.IsNotNull (fromClause);
       AssertEquivalent (SourceExpressionNavigator.Arguments[1].Operand.Expression, fromClause.FromExpression);
-      AssertEquivalent (SourceExpressionNavigator.Arguments[2].Operand.Expression, fromClause.ProjectionExpression);
+      AssertEquivalent (SourceExpressionNavigator.Arguments[2].Operand.Expression, fromClause.ResultSelector);
     }
 
     

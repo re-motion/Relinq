@@ -18,6 +18,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
 using Remotion.Development.UnitTesting;
@@ -134,6 +135,23 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       node.GetResolvedCollectionSelector ();
 
       sourceMock.VerifyAllExpectations ();
+    }
+
+    [Test]
+    public void CreateClause ()
+    {
+      IClause previousClause = ExpressionHelper.CreateClause ();
+      var collectionSelector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
+      var resultSelector = ExpressionHelper.CreateLambdaExpression<int,int, bool> ((i,j) => i > 5);
+      var node = new SelectManyExpressionNode (SourceStub, collectionSelector, resultSelector);
+
+      var clause = (AdditionalFromClause)node.CreateClause(previousClause);
+
+      Assert.That (clause.Identifier.Name, Is.EqualTo ("j"));
+      Assert.That (clause.Identifier.Type, Is.SameAs(typeof(int)));
+      Assert.That (clause.ResultSelector, Is.SameAs (node.ResultSelector));
+      Assert.That (clause.FromExpression, Is.SameAs (node.CollectionSelector));
+      Assert.That (clause.PreviousClause, Is.SameAs (previousClause));
     }
   }
 }
