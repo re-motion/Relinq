@@ -15,6 +15,7 @@
 // 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
@@ -28,6 +29,24 @@ namespace Remotion.Data.Linq.Parsing.Structure
   /// </summary>
   public class ExpressionNodeTypeRegistry
   {
+    public static ExpressionNodeTypeRegistry CreateDefault ()
+    {
+      var expressionNodeTypes = from t in typeof (ExpressionNodeTypeRegistry).Assembly.GetTypes ()
+                  where typeof (IExpressionNode).IsAssignableFrom (t)
+                  select t;
+
+      var supportedMethodsForTypes = from t in expressionNodeTypes
+                                     let supportedMethodsField = t.GetField ("SupportedMethods", BindingFlags.Static | BindingFlags.Public)
+                                     where supportedMethodsField != null
+                                     select new { Type = t, Methods = (IEnumerable<MethodInfo>) supportedMethodsField.GetValue (null) };
+
+      var registry = new ExpressionNodeTypeRegistry ();
+      foreach (var methodsForType in supportedMethodsForTypes)
+        registry.Register (methodsForType.Methods, methodsForType.Type);
+
+      return registry;
+    }
+
     private readonly Dictionary<MethodInfo, Type> _registeredTypes = new Dictionary<MethodInfo, Type>();
 
     public int Count

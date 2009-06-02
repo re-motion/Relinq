@@ -122,5 +122,38 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var type = registry.GetNodeType (WhereExpressionNode.SupportedMethods[0]);
       Assert.That (type, Is.SameAs (typeof (WhereExpressionNode)));
     }
+
+    [Test]
+    public void Create ()
+    {
+      ExpressionNodeTypeRegistry registry = ExpressionNodeTypeRegistry.CreateDefault ();
+
+      AssertAllMethodsRegistered (registry, typeof (CountExpressionNode));
+      AssertAllMethodsRegistered (registry, typeof (SelectExpressionNode));
+      AssertAllMethodsRegistered (registry, typeof (WhereExpressionNode));
+      AssertAllMethodsRegistered (registry, typeof (SelectManyExpressionNode));
+      AssertAllMethodsRegistered (registry, typeof (SumExpressionNode));
+      AssertAllMethodsRegistered (registry, typeof (FirstExpressionNode));
+      AssertAllMethodsRegistered (registry, typeof (LastExpressionNode));
+      AssertAllMethodsRegistered (registry, typeof (MinExpressionNode));
+      AssertAllMethodsRegistered (registry, typeof (MaxExpressionNode));
+      AssertAllMethodsRegistered (registry, typeof (OrderByExpressionNode));
+      AssertAllMethodsRegistered (registry, typeof (OrderByDescendingExpressionNode));
+      AssertAllMethodsRegistered (registry, typeof (ThenByExpressionNode));
+      AssertAllMethodsRegistered (registry, typeof (ThenByDescendingExpressionNode));
+      AssertAllMethodsRegistered (registry, typeof (DistinctExpressionNode));
+      AssertAllMethodsRegistered (registry, typeof (SingleExpressionNode));
+      AssertAllMethodsRegistered (registry, typeof (SingleOrDefaultExpressionNode));
+      AssertAllMethodsRegistered (registry, typeof (TakeExpressionNode));
+    }
+
+    private void AssertAllMethodsRegistered (ExpressionNodeTypeRegistry registry, Type type)
+    {
+      var methodInfos = (MethodInfo[]) type.GetField ("SupportedMethods").GetValue (null);
+      Assert.That (methodInfos.Length, Is.GreaterThan (0));
+
+      foreach (var methodInfo in methodInfos)
+        Assert.That (registry.GetNodeType (methodInfo), Is.SameAs (type));
+    }
   }
 }
