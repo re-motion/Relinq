@@ -30,6 +30,11 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
     }
 
+    public IExpressionNode Source
+    {
+      get { throw new NotImplementedException(); }
+    }
+
     public Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)
     {
       throw new NotImplementedException();

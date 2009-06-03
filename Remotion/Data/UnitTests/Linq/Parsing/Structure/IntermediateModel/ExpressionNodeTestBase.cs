@@ -21,7 +21,6 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
-using Rhino.Mocks;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 {
@@ -49,7 +48,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
 
-    protected void TestCreateClause_ForResultModification_WithoutOptionalPredicate_PreviousClauseIsSelect (IExpressionNode node, Type expectedResultModificationType)
+    protected void TestCreateClause_PreviousClauseIsSelect (IExpressionNode node, Type expectedResultModificationType)
     {
       var previousClause = ExpressionHelper.CreateSelectClause();
 
@@ -61,7 +60,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       Assert.That (clause.ResultModifications[0].SelectClause, Is.SameAs (clause));
     }
 
-    protected void TestCreateClause_WithoutOptionalPredicate_PreviousClauseIsNoSelect (IExpressionNode node, Type expectedResultModificationType)
+    protected void TestCreateClause_PreviousClauseIsNoSelect (IExpressionNode node, Type expectedResultModificationType)
     {
       var previousClause = ExpressionHelper.CreateMainFromClause ();
 
@@ -71,7 +70,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       Assert.That (clause.ResultModifications.Count, Is.EqualTo (1));
       Assert.That (clause.ResultModifications[0], Is.InstanceOfType (expectedResultModificationType));
       Assert.That (clause.ResultModifications[0].SelectClause, Is.SameAs (clause));
-      var expectedSelector = ExpressionHelper.CreateLambdaExpression<int, int> (i1 => i1);
+
+      var expectedSelectorParameter = node.Source.CreateParameterForOutput ();
+      var expectedSelector = Expression.Lambda (expectedSelectorParameter, expectedSelectorParameter);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedSelector, clause.Selector);
     }
 

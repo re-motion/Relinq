@@ -18,6 +18,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ResultModifications;
+using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
@@ -33,8 +34,16 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return method.IsGenericMethod ? method.GetGenericMethodDefinition() : method;
     }
 
+    protected ExpressionNodeBase (IExpressionNode source)
+    {
+      Source = source;
+    }
+
+    public IExpressionNode Source { get; private set; }
+
     public abstract Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved);
     public abstract ParameterExpression CreateParameterForOutput ();
+    
     public virtual IClause CreateClause (IClause previousClause) // TODO: Make abstract.
     {
       throw new NotImplementedException();
@@ -54,16 +63,6 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
               GetType().Name + " does not support creating a parameter for its output because it does not stream any data to the following node.");
     }
 
-    protected void CreateWhereClauseForResultModification (SelectClause selectClause, LambdaExpression optionalPredicate1)
-    {
-      LambdaExpression optionalPredicate = optionalPredicate1;
-      if (optionalPredicate != null)
-      {
-        var whereClause = new WhereClause (selectClause.PreviousClause, optionalPredicate);
-        selectClause.PreviousClause = whereClause;
-      }
-    }
-
     protected SelectClause GetSelectClauseForResultModification (IExpressionNode source, IClause previousClause)
     {
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
@@ -78,6 +77,32 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       }
 
       return selectClause;
+    }
+
+    protected void CreateWhereClauseForResultModification (SelectClause selectClause, LambdaExpression optionalPredicate)
+    {
+      ArgumentUtility.CheckNotNull ("selectClause", selectClause);
+
+      if (optionalPredicate != null)
+      {
+        var whereClause = new WhereClause (selectClause.PreviousClause, optionalPredicate);
+        selectClause.PreviousClause = whereClause;
+      }
+    }
+
+    protected void AdjustSelectorForResultModification (SelectClause selectClause, LambdaExpression optionalSelector)
+    {
+      ArgumentUtility.CheckNotNull ("selectClause", selectClause);
+
+      if (optionalSelector != null)
+      {
+        // for a selectClause.Selector of x => x.Property1
+        // and an OptionalSelector of a => a.Property2
+        // make x => x.Property1.Property2 by replacing a (OptionalSelector.Parameters[0]) with the body of selectClause.Selector
+        var newSelectorBody = ReplacingVisitor.Replace (optionalSelector.Parameters[0], selectClause.Selector.Body, optionalSelector.Body);
+        var newSelector = Expression.Lambda (newSelectorBody, selectClause.Selector.Parameters[0]);
+        selectClause.Selector = newSelector;
+      }
     }
   }
 }

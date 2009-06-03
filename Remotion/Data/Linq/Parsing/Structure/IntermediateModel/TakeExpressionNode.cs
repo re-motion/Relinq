@@ -32,14 +32,11 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                            };
 
     public TakeExpressionNode (IExpressionNode source, int count)
+      : base (ArgumentUtility.CheckNotNull ("source", source))
     {
-      ArgumentUtility.CheckNotNull ("source", source);
-      
-      Source = source;
       Count = count;
     }
 
-    public IExpressionNode Source { get; private set; }
     public int Count { get; set; }
 
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)

@@ -18,9 +18,10 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.ResultModifications;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
-using Remotion.Development.UnitTesting;
 using Rhino.Mocks;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
@@ -96,6 +97,39 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var node = new MaxExpressionNode (SourceStub, null);
       node.CreateParameterForOutput ();
+    }
+
+    [Test]
+    public void CreateClause_WithoutSelector_PreviousClauseIsSelect ()
+    {
+      var node = new MaxExpressionNode (SourceStub, null);
+      TestCreateClause_PreviousClauseIsSelect(node, typeof (MaxResultModification));
+    }
+
+    [Test]
+    public void CreateClause_WithoutSelector_PreviousClauseIsNoSelect ()
+    {
+      var node = new MaxExpressionNode (SourceStub, null);
+      TestCreateClause_PreviousClauseIsNoSelect (node, typeof (MaxResultModification));
+    }
+
+    [Test]
+    public void CreateClause_WithSelector_AdjustsSelectClause ()
+    {
+      var previousPreviousClause = ExpressionHelper.CreateClause ();
+      var selectorOfPreviousClause = ExpressionHelper.CreateLambdaExpression<Student, int> (s => s.ID);
+      var previousClause = new SelectClause (previousPreviousClause, selectorOfPreviousClause);
+
+      var selector = ExpressionHelper.CreateLambdaExpression<int, string> (i => i.ToString ());
+      var node = new MaxExpressionNode (SourceStub, selector);
+
+      var clause = (SelectClause) node.CreateClause (previousClause);
+
+      Assert.That (clause, Is.SameAs (previousClause));
+      Assert.That (clause.Selector, Is.Not.SameAs (selectorOfPreviousClause));
+
+      var expectedNewSelector = ExpressionHelper.CreateLambdaExpression<Student, string> (s => s.ID.ToString ());
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedNewSelector, clause.Selector);
     }
   }
 }

@@ -28,6 +28,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   public class ConstantExpressionNode : ExpressionNodeBase, IQuerySourceExpressionNode
   {
     public ConstantExpressionNode (Type querySourceType, object value, string fromIdentifierName)
+        : base (null)
     {
       ArgumentUtility.CheckNotNull ("querySourceType", querySourceType);
       ArgumentUtility.CheckNotNullOrEmpty ("fromIdentifierName", fromIdentifierName);

@@ -25,6 +25,12 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   public interface IExpressionNode
   {
     /// <summary>
+    /// Gets the source <see cref="IExpressionNode"/> that streams data into this node.
+    /// </summary>
+    /// <value>The source <see cref="IExpressionNode"/>, or <see langword="null"/> if this node is the end of the chain.</value>
+    IExpressionNode Source { get; }
+
+    /// <summary>
     /// Resolves the specified <paramref name="expressionToBeResolved"/> by replacing any occurrence of <paramref name="inputParameter"/>
     /// by the result of the projection of this <see cref="IExpressionNode"/>. The result is an <see cref="Expression"/> that goes all the
     /// way to an <see cref="IdentifierReferenceExpression"/>.

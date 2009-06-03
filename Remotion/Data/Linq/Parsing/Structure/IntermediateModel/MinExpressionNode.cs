@@ -35,17 +35,14 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     private Expression _cachedSelector;
 
     public MinExpressionNode (IExpressionNode source, LambdaExpression optionalSelector)
+      : base (ArgumentUtility.CheckNotNull ("source", source))
     {
-      ArgumentUtility.CheckNotNull ("source", source);
-
       if (optionalSelector != null && optionalSelector.Parameters.Count != 1)
         throw new ArgumentException ("OptionalSelector must have exactly one parameter.", "optionalSelector");
 
-      Source = source;
       OptionalSelector = optionalSelector;
     }
 
-    public IExpressionNode Source { get; private set; }
     public LambdaExpression OptionalSelector { get; private set; }
 
     public Expression GetResolvedOptionalSelector ()

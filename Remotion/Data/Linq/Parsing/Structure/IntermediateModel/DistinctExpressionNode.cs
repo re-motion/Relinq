@@ -32,12 +32,9 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                            };
 
     public DistinctExpressionNode (IExpressionNode source)
+      : base (ArgumentUtility.CheckNotNull ("source", source))
     {
-      ArgumentUtility.CheckNotNull ("source", source);
-      Source = source;
     }
-
-    public IExpressionNode Source { get; private set; }
 
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)
     {

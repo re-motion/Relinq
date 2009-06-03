@@ -36,18 +36,16 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     private Expression _cachedPredicate;
 
     public WhereExpressionNode (IExpressionNode source, LambdaExpression predicate)
+      : base (ArgumentUtility.CheckNotNull ("source", source))
     {
-      ArgumentUtility.CheckNotNull ("source", source);
       ArgumentUtility.CheckNotNull ("predicate", predicate);
 
       if (predicate != null && predicate.Parameters.Count != 1)
         throw new ArgumentException ("Predicate must have exactly one parameter.", "predicate");
 
-      Source = source;
       Predicate = predicate;
     }
 
-    public IExpressionNode Source { get; private set; }
     public LambdaExpression Predicate { get; private set; }
 
     public Expression GetResolvedPredicate ()

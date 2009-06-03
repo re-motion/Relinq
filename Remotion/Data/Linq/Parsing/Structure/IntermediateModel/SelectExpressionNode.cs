@@ -37,18 +37,16 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     private Expression _cachedSelector;
 
     public SelectExpressionNode (IExpressionNode source, LambdaExpression selector)
+      : base (ArgumentUtility.CheckNotNull ("source", source))
     {
-      ArgumentUtility.CheckNotNull ("source", source);
       ArgumentUtility.CheckNotNull ("selector", selector);
 
       if (selector != null && selector.Parameters.Count != 1)
         throw new ArgumentException ("Selector must have exactly one parameter.", "selector");
 
-      Source = source;
       Selector = selector;
     }
 
-    public IExpressionNode Source { get; private set; }
     public LambdaExpression Selector { get; private set; }
 
     public Expression GetResolvedSelector ()

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{DD9AA076-BE37-4A42-BA9E-C35ECC6955C9}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -52,6 +52,8 @@
     <Compile Include="Clauses\AdditionalFromClause.cs" />
     <Compile Include="Clauses\ClauseFinder.cs" />
     <Compile Include="Clauses\ClauseLookupException.cs" />
+    <Compile Include="Clauses\ResultModifications\MaxResultModification.cs" />
+    <Compile Include="Clauses\ResultModifications\MinResultModification.cs" />
     <Compile Include="Clauses\ResultModifications\LastResultModification.cs" />
     <Compile Include="Clauses\ResultModifications\TakeResultModification.cs" />
     <Compile Include="Clauses\ResultModifications\FirstResultModification.cs" />

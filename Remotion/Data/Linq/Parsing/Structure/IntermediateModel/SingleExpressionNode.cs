@@ -38,17 +38,14 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     private Expression _cachedPredicate;
 
     public SingleExpressionNode (IExpressionNode source, LambdaExpression optionalPredicate)
+      : base (ArgumentUtility.CheckNotNull ("source", source))
     {
-      ArgumentUtility.CheckNotNull ("source", source);
-
       if (optionalPredicate != null && optionalPredicate.Parameters.Count != 1)
         throw new ArgumentException ("OptionalPredicate must have exactly one parameter.", "optionalPredicate");
 
-      Source = source;
       OptionalPredicate = optionalPredicate;
     }
 
-    public IExpressionNode Source { get; private set; }
     public LambdaExpression OptionalPredicate { get; private set; }
 
     public Expression GetResolvedOptionalPredicate ()

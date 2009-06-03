@@ -40,8 +40,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     private Expression _cachedResultSelector;
     
     public SelectManyExpressionNode (IExpressionNode source, LambdaExpression collectionSelector, LambdaExpression resultSelector)
+      : base (ArgumentUtility.CheckNotNull ("source", source))
     {
-      ArgumentUtility.CheckNotNull ("source", source);
       ArgumentUtility.CheckNotNull ("collectionSelector", collectionSelector);
       ArgumentUtility.CheckNotNull ("resultSelector", resultSelector);
 
@@ -50,12 +50,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       if (resultSelector.Parameters.Count != 2)
         throw new ArgumentException ("Result selector must have exactly two parameters.", "resultSelector");
 
-      Source = source;
       CollectionSelector = collectionSelector;
       ResultSelector = resultSelector;
     }
 
-    public IExpressionNode Source { get; private set; }
     public LambdaExpression CollectionSelector { get; private set; }
     public LambdaExpression ResultSelector { get; private set; }
 

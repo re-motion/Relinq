@@ -104,7 +104,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var node = new LastExpressionNode (SourceStub, null);
 
-      TestCreateClause_ForResultModification_WithoutOptionalPredicate_PreviousClauseIsSelect (node, typeof (LastResultModification));
+      TestCreateClause_PreviousClauseIsSelect (node, typeof (LastResultModification));
     }
 
     [Test]
@@ -113,7 +113,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var source = new ConstantExpressionNode (typeof (int[]), new[] { 1, 2, 3 }, "i1");
       var node = new LastExpressionNode (source, null);
 
-      TestCreateClause_WithoutOptionalPredicate_PreviousClauseIsNoSelect (node, typeof (LastResultModification));
+      TestCreateClause_PreviousClauseIsNoSelect (node, typeof (LastResultModification));
     }
 
     [Test]

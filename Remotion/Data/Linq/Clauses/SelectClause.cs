@@ -27,9 +27,11 @@ namespace Remotion.Data.Linq.Clauses
   /// </summary>
   public class SelectClause : ISelectGroupClause
   {
-    private readonly LambdaExpression _selector;
-    private readonly List<ResultModificationBase> _resultModifications = new List<ResultModificationBase>();
-    
+    private readonly List<ResultModificationBase> _resultModifications = new List<ResultModificationBase> ();
+
+    private IClause _previousClause;
+    private LambdaExpression _selector;
+
     /// <summary>
     /// Initialize a new instance of <see cref="SelectClause"/>.
     /// </summary>
@@ -41,13 +43,17 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("selector", selector);
 
       PreviousClause = previousClause;
-      _selector = selector;
+      Selector = selector;
     }
-    
+
     /// <summary>
     /// The previous clause of type <see cref="IClause"/> in the <see cref="QueryModel"/>.
     /// </summary>
-    public IClause PreviousClause { get; set; }
+    public IClause PreviousClause
+    {
+      get { return _previousClause; }
+      set { _previousClause = ArgumentUtility.CheckNotNull ("value", value); }
+    }
 
     /// <summary>
     /// The projection within the select part of the linq query.
@@ -56,6 +62,7 @@ namespace Remotion.Data.Linq.Clauses
     public LambdaExpression Selector
     {
       get { return _selector; }
+      set { _selector = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
     public ReadOnlyCollection<ResultModificationBase> ResultModifications

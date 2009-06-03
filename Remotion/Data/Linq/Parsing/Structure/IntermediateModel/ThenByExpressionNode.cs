@@ -36,18 +36,16 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     private Expression _cachedSelector;
 
     public ThenByExpressionNode (IExpressionNode source, LambdaExpression keySelector)
+      : base (ArgumentUtility.CheckNotNull ("source", source))
     {
-      ArgumentUtility.CheckNotNull ("source", source);
       ArgumentUtility.CheckNotNull ("keySelector", keySelector);
 
       if (keySelector != null && keySelector.Parameters.Count != 1)
         throw new ArgumentException ("KeySelector must have exactly one parameter.", "keySelector");
 
-      Source = source;
       KeySelector = keySelector;
     }
 
-    public IExpressionNode Source { get; private set; }
     public LambdaExpression KeySelector { get; private set; }
 
     public Expression GetResolvedKeySelector ()

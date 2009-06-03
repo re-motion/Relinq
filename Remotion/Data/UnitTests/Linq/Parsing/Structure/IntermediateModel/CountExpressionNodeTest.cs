@@ -103,7 +103,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var node = new CountExpressionNode (SourceStub, null);
 
-      TestCreateClause_ForResultModification_WithoutOptionalPredicate_PreviousClauseIsSelect (node, typeof (CountResultModification));
+      TestCreateClause_PreviousClauseIsSelect (node, typeof (CountResultModification));
     }
 
     [Test]
@@ -112,7 +112,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var source = new ConstantExpressionNode (typeof (int[]), new[] { 1, 2, 3 }, "i1");
       var node = new CountExpressionNode (source, null);
 
-      TestCreateClause_WithoutOptionalPredicate_PreviousClauseIsNoSelect (node, typeof (CountResultModification));
+      TestCreateClause_PreviousClauseIsNoSelect (node, typeof (CountResultModification));
     }
 
     [Test]
