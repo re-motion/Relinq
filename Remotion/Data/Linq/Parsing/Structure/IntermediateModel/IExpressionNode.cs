@@ -34,6 +34,20 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     /// is replaced.</param>
     /// <returns>An equivalent of <paramref name="expressionToBeResolved"/> with each occurrence of <paramref name="inputParameter"/> replaced by
     /// the projection data streaming out of this <see cref="IExpressionNode"/>.</returns>
+    /// <exception cref="InvalidOperationException">
+    /// This node does not support this operation because it does not stream any data to subsequent nodes.
+    /// </exception>
     Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved);
+
+    /// <summary>
+    /// Creates a <see cref="ParameterExpression"/> that can take elements of the output stream provided by this node. This 
+    /// <see cref="ParameterExpression"/> can be used by the following <see cref="IExpressionNode"/> as an input to its selector or predicate
+    /// <see cref="LambdaExpression"/>.
+    /// </summary>
+    /// <returns>A <see cref="ParameterExpression"/> whose name and type corresponds to the elements streamed out of this node.</returns>
+    /// <exception cref="InvalidOperationException">
+    /// This node does not support this operation because it does not stream any data to subsequent nodes.
+    /// </exception>
+    ParameterExpression CreateParameterForOutput ();
   }
 }

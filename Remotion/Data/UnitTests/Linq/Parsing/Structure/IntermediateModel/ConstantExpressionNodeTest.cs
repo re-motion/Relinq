@@ -68,5 +68,15 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       Assert.That (constantClause.QuerySource.Type, Is.SameAs (node.QuerySourceType));
     }
 
+    [Test]
+    public void CreateParameterForOutput ()
+    {
+      var node = new ConstantExpressionNode (typeof (int[]), new[] { 1, 2, 3, 4, 5 }, "x");
+      var parameter = node.CreateParameterForOutput ();
+
+      Assert.That (parameter.Name, Is.EqualTo ("x"));
+      Assert.That (parameter.Type, Is.SameAs (typeof (int)));
+    }
+
   }
 }

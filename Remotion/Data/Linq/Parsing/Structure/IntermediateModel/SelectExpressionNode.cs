@@ -73,5 +73,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
       return new SelectClause (previousClause, Selector);
     }
+
+    public override ParameterExpression CreateParameterForOutput ()
+    {
+      return Expression.Parameter (Selector.Body.Type, "TODO"); // TODO: Find a way to get the right name from the following clause in ExpressionTreeParser, if any.
+    }
   }
 }

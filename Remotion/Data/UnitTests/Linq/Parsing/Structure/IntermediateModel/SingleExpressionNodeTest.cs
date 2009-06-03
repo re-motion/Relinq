@@ -90,5 +90,12 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       sourceMock.VerifyAllExpectations ();
     }
 
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException))]
+    public void CreateParameterForOutput ()
+    {
+      var node = new SingleExpressionNode (SourceStub, null);
+      node.CreateParameterForOutput ();
+    }
   }
 }

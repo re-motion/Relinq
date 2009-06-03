@@ -48,6 +48,16 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       sourceMock.VerifyAllExpectations();
       Assert.That (result, Is.SameAs (expectedResult));
     }
-  
+
+    [Test]
+    public void CreateParameterForOutput ()
+    {
+      var source = new ConstantExpressionNode (typeof (int[]), new[] { 1, 2, 3, 4, 5 }, "x");
+      var node = new DistinctExpressionNode (source);
+      var parameter = node.CreateParameterForOutput ();
+
+      Assert.That (parameter.Name, Is.EqualTo ("x"));
+      Assert.That (parameter.Type, Is.SameAs (typeof (int)));
+    }
   }
 }

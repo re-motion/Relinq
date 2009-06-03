@@ -63,5 +63,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     {
       throw CreateResolveNotSupportedException();
     }
+
+    public override ParameterExpression CreateParameterForOutput ()
+    {
+      throw CreateOutputParameterNotSupportedException ();
+    }
   }
 }

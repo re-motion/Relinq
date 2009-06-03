@@ -75,5 +75,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       selectClause.AddResultModification (new CountResultModification (selectClause));
       return selectClause;
     }
+
+    public override ParameterExpression CreateParameterForOutput ()
+    {
+      throw CreateOutputParameterNotSupportedException ();
+    }
   }
 }

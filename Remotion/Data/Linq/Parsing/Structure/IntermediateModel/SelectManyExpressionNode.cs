@@ -106,5 +106,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       else
         return new AdditionalFromClause (previousClause, identifier, CollectionSelector, ResultSelector);
     }
+
+    public override ParameterExpression CreateParameterForOutput ()
+    {
+      return Expression.Parameter (ResultSelector.Body.Type, "TODO");
+    }
   }
 }

@@ -33,5 +33,10 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       throw new NotImplementedException();
     }
+
+    public ParameterExpression CreateParameterForOutput ()
+    {
+      throw new NotImplementedException();
+    }
   }
 }

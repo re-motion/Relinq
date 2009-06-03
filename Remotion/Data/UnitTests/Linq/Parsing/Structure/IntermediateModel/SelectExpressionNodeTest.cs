@@ -95,5 +95,16 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       Assert.That (selectClause.Selector, Is.EqualTo (node.Selector)); // TODO: This should become the resolved expression at a later point of time
       Assert.That (selectClause.ResultModifications, Is.Empty);
     }
+
+    [Test]
+    public void CreateParameterForOutput ()
+    {
+      var node = new SelectExpressionNode (SourceStub, ExpressionHelper.CreateLambdaExpression<int, string> (y => y.ToString()));
+
+      var parameter = node.CreateParameterForOutput ();
+
+      Assert.That (parameter.Name, Is.EqualTo ("TODO"));
+      Assert.That (parameter.Type, Is.SameAs (typeof (string)));
+    }
   }
 }

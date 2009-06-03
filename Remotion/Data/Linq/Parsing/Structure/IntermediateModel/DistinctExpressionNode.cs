@@ -43,5 +43,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     {
       return Source.Resolve (inputParameter, expressionToBeResolved);
     }
+
+    public override ParameterExpression CreateParameterForOutput ()
+    {
+      return Source.CreateParameterForOutput ();
+    }
   }
 }

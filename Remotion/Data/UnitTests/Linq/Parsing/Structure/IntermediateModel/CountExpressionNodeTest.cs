@@ -121,5 +121,13 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var expectedSelector = ExpressionHelper.CreateLambdaExpression<int, int> (i1 => i1);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedSelector, clause.Selector);
     }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException))]
+    public void CreateParameterForOutput ()
+    {
+      var node = new CountExpressionNode (SourceStub, null);
+      node.CreateParameterForOutput ();
+    }
   }
 }

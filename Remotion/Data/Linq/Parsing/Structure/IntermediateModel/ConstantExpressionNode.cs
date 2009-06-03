@@ -68,5 +68,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     {
       return new MainFromClause (Expression.Parameter (QuerySourceElementType, FromIdentifierName), Expression.Constant (Value, QuerySourceType));
     }
+
+    public override ParameterExpression CreateParameterForOutput ()
+    {
+      return Expression.Parameter (QuerySourceElementType, FromIdentifierName);
+    }
   }
 }

@@ -36,7 +36,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
     public override void SetUp ()
     {
-      base.SetUp ();
+      base.SetUp();
 
       _collectionSelector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
       _resultSelector = ExpressionHelper.CreateLambdaExpression<int, int, bool> ((i, j) => i > j);
@@ -52,7 +52,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void QuerySourceType ()
     {
-      SelectManyExpressionNode node = ExpressionNodeObjectMother.CreateSelectMany(SourceStub);
+      SelectManyExpressionNode node = ExpressionNodeObjectMother.CreateSelectMany (SourceStub);
 
       Assert.That (node.QuerySourceElementType, Is.SameAs (typeof (Student_Detail)));
     }
@@ -67,18 +67,20 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       var expression = ExpressionHelper.CreateLambdaExpression<AnonymousType, bool> (i => i.a > 5 && i.b > 6);
       var result = node.Resolve (expression.Parameters[0], expression.Body);
-      
+
       var selectManySourceReference = new IdentifierReferenceExpression (node);
 
       // new AnonymousType (SourceReference, selectManySourceReference).a > 5 && new AnonymousType (SourceReference, selectManySourceReference).b > 6
 
-      var newAnonymousTypeExpression = Expression.New (typeof (AnonymousType).GetConstructor(new[] {typeof (int), typeof (int) }), SourceReference, selectManySourceReference);
+      var newAnonymousTypeExpression = Expression.New (
+          typeof (AnonymousType).GetConstructor (new[] { typeof (int), typeof (int) }), SourceReference, selectManySourceReference);
       var anonymousTypeMemberAExpression = Expression.MakeMemberAccess (newAnonymousTypeExpression, typeof (AnonymousType).GetProperty ("a"));
       var anonymousTypeMemberBExpression = Expression.MakeMemberAccess (newAnonymousTypeExpression, typeof (AnonymousType).GetProperty ("b"));
 
-      var expectedResult = Expression.MakeBinary (ExpressionType.AndAlso,
-        Expression.MakeBinary (ExpressionType.GreaterThan, anonymousTypeMemberAExpression, Expression.Constant (5)),
-        Expression.MakeBinary (ExpressionType.GreaterThan, anonymousTypeMemberBExpression, Expression.Constant (6)));
+      var expectedResult = Expression.MakeBinary (
+          ExpressionType.AndAlso,
+          Expression.MakeBinary (ExpressionType.GreaterThan, anonymousTypeMemberAExpression, Expression.Constant (5)),
+          Expression.MakeBinary (ExpressionType.GreaterThan, anonymousTypeMemberBExpression, Expression.Constant (6)));
 
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
@@ -89,7 +91,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var node = new SelectManyExpressionNode (SourceStub, _collectionSelector, _resultSelector);
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, new IdentifierReferenceExpression (node));
 
-      var result = node.GetResolvedResultSelector ();
+      var result = node.GetResolvedResultSelector();
 
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
@@ -100,7 +102,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var node = new SelectManyExpressionNode (SourceStub, _collectionSelector, _resultSelector);
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
 
-      var result = node.GetResolvedCollectionSelector ();
+      var result = node.GetResolvedCollectionSelector();
 
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
@@ -108,47 +110,49 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void GetResolvedResultSelector_Cached ()
     {
-      var sourceMock = new MockRepository ().StrictMock<IExpressionNode> ();
+      var sourceMock = new MockRepository().StrictMock<IExpressionNode>();
       var node = new SelectManyExpressionNode (sourceMock, _collectionSelector, _resultSelector);
-      var expectedResult = ExpressionHelper.CreateLambdaExpression ();
+      var expectedResult = ExpressionHelper.CreateLambdaExpression();
 
-      sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything)).Repeat.Once ().Return (expectedResult);
+      sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything)).Repeat.Once().Return (
+          expectedResult);
 
-      sourceMock.Replay ();
+      sourceMock.Replay();
 
-      node.GetResolvedResultSelector ();
-      node.GetResolvedResultSelector ();
+      node.GetResolvedResultSelector();
+      node.GetResolvedResultSelector();
 
-      sourceMock.VerifyAllExpectations ();
+      sourceMock.VerifyAllExpectations();
     }
 
     [Test]
     public void GetResolvedCollectionSelector_Cached ()
     {
-      var sourceMock = new MockRepository ().StrictMock<IExpressionNode> ();
+      var sourceMock = new MockRepository().StrictMock<IExpressionNode>();
       var node = new SelectManyExpressionNode (sourceMock, _collectionSelector, _resultSelector);
-      var expectedResult = ExpressionHelper.CreateLambdaExpression ();
+      var expectedResult = ExpressionHelper.CreateLambdaExpression();
 
-      sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything)).Repeat.Once ().Return (expectedResult);
+      sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything)).Repeat.Once().Return (
+          expectedResult);
 
-      sourceMock.Replay ();
+      sourceMock.Replay();
 
-      node.GetResolvedCollectionSelector ();
-      node.GetResolvedCollectionSelector ();
+      node.GetResolvedCollectionSelector();
+      node.GetResolvedCollectionSelector();
 
-      sourceMock.VerifyAllExpectations ();
+      sourceMock.VerifyAllExpectations();
     }
 
     [Test]
     public void CreateClause ()
     {
-      IClause previousClause = ExpressionHelper.CreateClause ();
+      IClause previousClause = ExpressionHelper.CreateClause();
       var node = new SelectManyExpressionNode (SourceStub, _collectionSelector, _resultSelector);
 
-      var clause = (AdditionalFromClause)node.CreateClause(previousClause);
+      var clause = (AdditionalFromClause) node.CreateClause (previousClause);
 
       Assert.That (clause.Identifier.Name, Is.EqualTo ("j"));
-      Assert.That (clause.Identifier.Type, Is.SameAs(typeof(int)));
+      Assert.That (clause.Identifier.Type, Is.SameAs (typeof (int)));
       Assert.That (clause.ResultSelector, Is.SameAs (node.ResultSelector));
       Assert.That (clause.FromExpression, Is.SameAs (node.CollectionSelector));
       Assert.That (clause.PreviousClause, Is.SameAs (previousClause));
@@ -157,8 +161,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void CreateClause_WithMemberFromInFromExpression ()
     {
-      IClause previousClause = ExpressionHelper.CreateClause ();
-      var collectionSelector = ExpressionHelper.CreateLambdaExpression<Student, IEnumerable<Student>>(s => s.Friends);
+      IClause previousClause = ExpressionHelper.CreateClause();
+      var collectionSelector = ExpressionHelper.CreateLambdaExpression<Student, IEnumerable<Student>> (s => s.Friends);
       var node = new SelectManyExpressionNode (SourceStub, collectionSelector, _resultSelector);
 
       var clause = (MemberFromClause) node.CreateClause (previousClause);
@@ -174,7 +178,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void CreateClause_WithSubQueryInFromExpression ()
     {
-      IClause previousClause = ExpressionHelper.CreateClause ();
+      IClause previousClause = ExpressionHelper.CreateClause();
       var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel());
 
       var collectionSelector = Expression.Lambda (subQueryExpression, Expression.Parameter (typeof (int), "i"));
@@ -187,6 +191,20 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       Assert.That (clause.ProjectionExpression, Is.SameAs (node.ResultSelector));
       Assert.That (clause.SubQueryModel, Is.SameAs (subQueryExpression.QueryModel));
       Assert.That (clause.PreviousClause, Is.SameAs (previousClause));
+    }
+
+    [Test]
+    public void CreateParameterForOutput ()
+    {
+      var node = new SelectManyExpressionNode (
+          SourceStub,
+          ExpressionHelper.CreateLambdaExpression<Student, IEnumerable<int>> (y => y.Scores),
+          ExpressionHelper.CreateLambdaExpression<Student, int, AnonymousType> ((s, i) => new AnonymousType()));
+
+      var parameter = node.CreateParameterForOutput();
+
+      Assert.That (parameter.Name, Is.EqualTo ("TODO"));
+      Assert.That (parameter.Type, Is.SameAs (typeof (AnonymousType)));
     }
   }
 }

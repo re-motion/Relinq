@@ -31,11 +31,24 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     }
 
     public abstract Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved);
+    
+    public virtual ParameterExpression CreateParameterForOutput () // TODO 1184: make abstract
+    {
+      throw new NotImplementedException();
+    }
 
     protected InvalidOperationException CreateResolveNotSupportedException ()
     {
-      return new InvalidOperationException (GetType ().Name + " does not support resolving of expressions, because it does not stream any data to the following node.");
+      return
+          new InvalidOperationException (
+              GetType().Name + " does not support resolving of expressions, because it does not stream any data to the following node.");
     }
 
+    protected InvalidOperationException CreateOutputParameterNotSupportedException ()
+    {
+      return
+          new InvalidOperationException (
+              GetType().Name + " does not support creating a parameter for its output because it does not stream any data to the following node.");
+    }
   }
 }
