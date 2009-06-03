@@ -18,6 +18,8 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.ResultModifications;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
 using Rhino.Mocks;
@@ -86,6 +88,38 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       node.GetResolvedOptionalPredicate();
 
       sourceMock.VerifyAllExpectations ();
+    }
+
+    [Test]
+    public void CreateClause_WithoutOptionalPredicate_PreviousClauseIsSelect ()
+    {
+      var previousClause = ExpressionHelper.CreateSelectClause();
+      var node = new CountExpressionNode (SourceStub, null);
+      
+      var clause = (SelectClause)node.CreateClause(previousClause);
+
+      Assert.That (clause, Is.SameAs (previousClause));
+      Assert.That (clause.ResultModifications.Count, Is.EqualTo (1));
+      Assert.That (clause.ResultModifications[0], Is.InstanceOfType (typeof (CountResultModification)));
+      Assert.That (clause.ResultModifications[0].SelectClause, Is.SameAs (clause));
+    }
+
+    [Ignore("TODO: 1184")]
+    [Test]
+    public void CreateClause_WithoutOptionalPredicate_PreviousClauseIsNoSelect ()
+    {
+      var source = new ConstantExpressionNode (typeof (int[]), new int[] { 1, 2, 3 }, "i1");
+      var node = new CountExpressionNode (source, null);
+      var previousClause = ExpressionHelper.CreateMainFromClause ();
+
+      var clause = (SelectClause) node.CreateClause (previousClause);
+
+      Assert.That (clause.PreviousClause, Is.SameAs (previousClause));
+      Assert.That (clause.ResultModifications.Count, Is.EqualTo (1));
+      Assert.That (clause.ResultModifications[0], Is.InstanceOfType (typeof (CountResultModification)));
+      Assert.That (clause.ResultModifications[0].SelectClause, Is.SameAs (clause));
+      var expectedSelector = ExpressionHelper.CreateLambdaExpression<int, int> (i1 => i1);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedSelector, clause.Selector);
     }
   }
 }
