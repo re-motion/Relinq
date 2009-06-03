@@ -15,6 +15,7 @@
 // 
 using System;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
@@ -35,6 +36,11 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     public ParameterExpression CreateParameterForOutput ()
+    {
+      throw new NotImplementedException();
+    }
+
+    public IClause CreateClause (IClause previousClause)
     {
       throw new NotImplementedException();
     }

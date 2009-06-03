@@ -18,6 +18,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Clauses.ResultModifications;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
 using Remotion.Development.UnitTesting;
@@ -96,6 +97,30 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var node = new SingleExpressionNode (SourceStub, null);
       node.CreateParameterForOutput ();
+    }
+
+    [Test]
+    public void CreateClause_WithoutOptionalPredicate_PreviousClauseIsSelect ()
+    {
+      var node = new SingleExpressionNode (SourceStub, null);
+
+      TestCreateClause_ForResultModification_WithoutOptionalPredicate_PreviousClauseIsSelect (node, typeof (SingleResultModification));
+    }
+
+    [Test]
+    public void CreateClause_WithoutOptionalPredicate_PreviousClauseIsNoSelect ()
+    {
+      var source = new ConstantExpressionNode (typeof (int[]), new[] { 1, 2, 3 }, "i1");
+      var node = new SingleExpressionNode (source, null);
+
+      TestCreateClause_WithoutOptionalPredicate_PreviousClauseIsNoSelect (node, typeof (SingleResultModification));
+    }
+
+    [Test]
+    public void CreateClause_WithOptionalPredicate_CreatesWhereClause ()
+    {
+      var node = new SingleExpressionNode (SourceStub, ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5));
+      TestCreateClause_WithOptionalPredicate (node, node.OptionalPredicate);
     }
   }
 }

@@ -47,7 +47,7 @@ namespace Remotion.Data.Linq.Clauses
     /// <summary>
     /// The previous clause of type <see cref="IClause"/> in the <see cref="QueryModel"/>.
     /// </summary>
-    public IClause PreviousClause { get; private set; }
+    public IClause PreviousClause { get; set; }
 
     /// <summary>
     /// The projection within the select part of the linq query.

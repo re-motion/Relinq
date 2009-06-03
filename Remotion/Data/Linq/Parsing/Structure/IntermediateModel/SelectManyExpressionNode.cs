@@ -94,7 +94,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return ReplacingVisitor.Replace (inputParameter, resolvedResultSelector, expressionToBeResolved);
     }
 
-    public IClause CreateClause (IClause previousClause)
+    public override IClause CreateClause (IClause previousClause)
     {
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
 

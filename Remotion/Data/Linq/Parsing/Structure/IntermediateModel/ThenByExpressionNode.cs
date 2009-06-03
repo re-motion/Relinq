@@ -68,7 +68,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return Source.CreateParameterForOutput ();
     }
 
-    public IClause CreateClause (IClause previousClause)
+    public override IClause CreateClause (IClause previousClause)
     {
       var clause = ArgumentUtility.CheckNotNullAndType<OrderByClause> ("previousClause", previousClause);
 

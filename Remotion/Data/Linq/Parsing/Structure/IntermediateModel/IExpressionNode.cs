@@ -15,6 +15,7 @@
 // 
 using System;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Clauses;
 
 namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 {
@@ -49,5 +50,15 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     /// This node does not support this operation because it does not stream any data to subsequent nodes.
     /// </exception>
     ParameterExpression CreateParameterForOutput ();
+
+    /// <summary>
+    /// Creates an instance of <see cref="IClause"/> that can represent the current <see cref="IExpressionNode"/> in a <see cref="QueryModel"/>.
+    /// All expressions of the <see cref="IExpressionNode"/> are passed to the new <see cref="IClause"/> as required, and the 
+    /// <see cref="IClause.PreviousClause"/> of the new <see cref="IClause"/> is set to the given <paramref name="previousClause"/>.
+    /// </summary>
+    /// <param name="previousClause">The previous clause the new <see cref="IClause"/> should link to. For <see cref="IExpressionNode"/>
+    /// instances representing the end of a query chain (e.g. <see cref="ConstantExpressionNode"/>), this must be <see langword="null"/>.</param>
+    /// <returns>A new <see cref="IClause"/> instance representing this <see cref="IExpressionNode"/>.</returns>
+    IClause CreateClause (IClause previousClause);
   }
 }

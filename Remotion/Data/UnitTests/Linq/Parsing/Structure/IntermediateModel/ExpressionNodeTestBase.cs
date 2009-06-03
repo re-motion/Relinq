@@ -18,6 +18,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Rhino.Mocks;
 
@@ -47,5 +49,48 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
 
+    protected void TestCreateClause_ForResultModification_WithoutOptionalPredicate_PreviousClauseIsSelect (IExpressionNode node, Type expectedResultModificationType)
+    {
+      var previousClause = ExpressionHelper.CreateSelectClause();
+
+      var clause = (SelectClause)node.CreateClause(previousClause);
+
+      Assert.That (clause, Is.SameAs (previousClause));
+      Assert.That (clause.ResultModifications.Count, Is.EqualTo (1));
+      Assert.That (clause.ResultModifications[0], Is.InstanceOfType (expectedResultModificationType));
+      Assert.That (clause.ResultModifications[0].SelectClause, Is.SameAs (clause));
+    }
+
+    protected void TestCreateClause_WithoutOptionalPredicate_PreviousClauseIsNoSelect (IExpressionNode node, Type expectedResultModificationType)
+    {
+      var previousClause = ExpressionHelper.CreateMainFromClause ();
+
+      var clause = (SelectClause) node.CreateClause (previousClause);
+
+      Assert.That (clause.PreviousClause, Is.SameAs (previousClause));
+      Assert.That (clause.ResultModifications.Count, Is.EqualTo (1));
+      Assert.That (clause.ResultModifications[0], Is.InstanceOfType (expectedResultModificationType));
+      Assert.That (clause.ResultModifications[0].SelectClause, Is.SameAs (clause));
+      var expectedSelector = ExpressionHelper.CreateLambdaExpression<int, int> (i1 => i1);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedSelector, clause.Selector);
+    }
+
+    protected void TestCreateClause_WithOptionalPredicate (IExpressionNode node, LambdaExpression optionalPredicate)
+    {
+      var previousClause = ExpressionHelper.CreateSelectClause ();
+      var previousPreviousClause = previousClause.PreviousClause;
+
+      // chain: previousPreviousClause <- previousClause
+
+      var clause = (SelectClause) node.CreateClause (previousClause);
+
+      // chain: previousPreviousClause <- whereClause <- previousClause
+
+      Assert.That (clause, Is.SameAs (previousClause));
+      Assert.That (clause.PreviousClause, Is.Not.SameAs (previousPreviousClause));
+      var newWhereClause = (WhereClause) clause.PreviousClause;
+      Assert.That (newWhereClause.PreviousClause, Is.SameAs (previousPreviousClause));
+      Assert.That (newWhereClause.Predicate, Is.SameAs (optionalPredicate));
+    }
   }
 }

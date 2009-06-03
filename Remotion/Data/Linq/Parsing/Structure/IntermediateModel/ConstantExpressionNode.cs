@@ -64,6 +64,18 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return ReplacingVisitor.Replace (inputParameter, identifierReference, expressionToBeResolved);
     }
 
+    public override IClause CreateClause (IClause previousClause)
+    {
+      if (previousClause != null)
+      {
+        throw new InvalidOperationException (
+            "A ConstantExpressionNode cannot create a clause with a previous clause because it represents the end "
+            + "of a query call chain. Set previousClause to null.");
+      }
+
+      return CreateClause ();
+    }
+
     public MainFromClause CreateClause ()
     {
       return new MainFromClause (Expression.Parameter (QuerySourceElementType, FromIdentifierName), Expression.Constant (Value, QuerySourceType));

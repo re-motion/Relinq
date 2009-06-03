@@ -67,12 +67,14 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       throw CreateResolveNotSupportedException ();
     }
 
-    public IClause CreateClause (IClause previousClause)
+    public override IClause CreateClause (IClause previousClause)
     {
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
 
-      var selectClause = previousClause as SelectClause;
+      SelectClause selectClause = GetSelectClauseForResultModification(Source, previousClause);
       selectClause.AddResultModification (new CountResultModification (selectClause));
+      CreateWhereClauseForResultModification(selectClause, OptionalPredicate);
+
       return selectClause;
     }
 

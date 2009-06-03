@@ -16,6 +16,9 @@
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
+using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.ResultModifications;
+using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 {
@@ -31,8 +34,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     }
 
     public abstract Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved);
-    
-    public virtual ParameterExpression CreateParameterForOutput () // TODO 1184: make abstract
+    public abstract ParameterExpression CreateParameterForOutput ();
+    public virtual IClause CreateClause (IClause previousClause) // TODO: Make abstract.
     {
       throw new NotImplementedException();
     }
@@ -49,6 +52,32 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return
           new InvalidOperationException (
               GetType().Name + " does not support creating a parameter for its output because it does not stream any data to the following node.");
+    }
+
+    protected void CreateWhereClauseForResultModification (SelectClause selectClause, LambdaExpression optionalPredicate1)
+    {
+      LambdaExpression optionalPredicate = optionalPredicate1;
+      if (optionalPredicate != null)
+      {
+        var whereClause = new WhereClause (selectClause.PreviousClause, optionalPredicate);
+        selectClause.PreviousClause = whereClause;
+      }
+    }
+
+    protected SelectClause GetSelectClauseForResultModification (IExpressionNode source, IClause previousClause)
+    {
+      ArgumentUtility.CheckNotNull ("previousClause", previousClause);
+      ArgumentUtility.CheckNotNull ("source", source);
+
+      var selectClause = previousClause as SelectClause;
+
+      if (selectClause == null)
+      {
+        var selectorParameter = source.CreateParameterForOutput();
+        selectClause = new SelectClause (previousClause, Expression.Lambda (selectorParameter, selectorParameter));
+      }
+
+      return selectClause;
     }
   }
 }

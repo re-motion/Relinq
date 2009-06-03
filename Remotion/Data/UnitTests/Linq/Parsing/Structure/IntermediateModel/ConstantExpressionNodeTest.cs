@@ -17,6 +17,7 @@ using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Utilities;
 
@@ -56,6 +57,16 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
+    public void CreateParameterForOutput ()
+    {
+      var node = new ConstantExpressionNode (typeof (int[]), new[] { 1, 2, 3, 4, 5 }, "x");
+      var parameter = node.CreateParameterForOutput ();
+
+      Assert.That (parameter.Name, Is.EqualTo ("x"));
+      Assert.That (parameter.Type, Is.SameAs (typeof (int)));
+    }
+
+    [Test]
     public void CreateClause ()
     {
       var node = new ConstantExpressionNode (typeof (int[]), new[] { 1, 2, 3, 4, 5 }, "x");
@@ -69,14 +80,24 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void CreateParameterForOutput ()
+    [ExpectedException (typeof (InvalidOperationException))]
+    public void CreateClause_WithNonNullPreviousClause ()
     {
       var node = new ConstantExpressionNode (typeof (int[]), new[] { 1, 2, 3, 4, 5 }, "x");
-      var parameter = node.CreateParameterForOutput ();
-
-      Assert.That (parameter.Name, Is.EqualTo ("x"));
-      Assert.That (parameter.Type, Is.SameAs (typeof (int)));
+      node.CreateClause (ExpressionHelper.CreateClause());
     }
 
+    [Test]
+    public void CreateClause_WithNullPreviousClause ()
+    {
+      var node = new ConstantExpressionNode (typeof (int[]), new[] { 1, 2, 3, 4, 5 }, "x");
+      var constantClause = (MainFromClause) node.CreateClause (null);
+
+      Assert.That (constantClause.Identifier.Name, Is.EqualTo ("x"));
+      Assert.That (constantClause.Identifier.Type, Is.SameAs (typeof (int)));
+      Assert.That (constantClause.QuerySource, Is.InstanceOfType (typeof (ConstantExpression)));
+      Assert.That (((ConstantExpression) constantClause.QuerySource).Value, Is.SameAs (node.Value));
+      Assert.That (constantClause.QuerySource.Type, Is.SameAs (node.QuerySourceType));
+    }
   }
 }
