@@ -93,7 +93,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       Assert.That (selectClause.PreviousClause, Is.SameAs (previousClause));
       Assert.That (selectClause.Selector, Is.EqualTo (node.Selector)); // TODO: This should become the resolved expression at a later point of time
-      Assert.That (selectClause.ResultModifierClauses, Is.Empty);
+      Assert.That (selectClause.ResultModifications, Is.Empty);
     }
   }
 }

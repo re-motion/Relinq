@@ -16,21 +16,25 @@
 using System;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Clauses.ResultModifications;
 
-namespace Remotion.Data.UnitTests.Linq.Clauses
+namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
 {
   [TestFixture]
-  public class ResultModifierClauseTest
+  public class TakeResultModificationTest
   {
     [Test]
     public void Clone ()
     {
-      var originalClause = ExpressionHelper.CreateResultModifierClause();
-      var newPreviousClause = ExpressionHelper.CreateClause ();
+      var selectClause = ExpressionHelper.CreateSelectClause ();
       var newSelectClause = ExpressionHelper.CreateSelectClause ();
-      var clone = originalClause.Clone (newSelectClause);
 
+      var resultModification = new TakeResultModification (selectClause, 3);
+      var clone = resultModification.Clone (newSelectClause);
+
+      Assert.That (clone, Is.InstanceOfType (typeof (TakeResultModification)));
       Assert.That (clone.SelectClause, Is.SameAs (newSelectClause));
+      Assert.That (((TakeResultModification) clone).Count, Is.EqualTo (3));
     }
   }
 }

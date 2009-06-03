@@ -14,23 +14,19 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 
-namespace Remotion.Data.UnitTests.Linq.Clauses
+namespace Remotion.Data.Linq.Clauses.ResultModifications
 {
-  [TestFixture]
-  public class ResultModifierClauseTest
+  public class CountResultModification : ResultModificationBase
   {
-    [Test]
-    public void Clone ()
+    public CountResultModification (SelectClause selectClause)
+        : base (selectClause)
     {
-      var originalClause = ExpressionHelper.CreateResultModifierClause();
-      var newPreviousClause = ExpressionHelper.CreateClause ();
-      var newSelectClause = ExpressionHelper.CreateSelectClause ();
-      var clone = originalClause.Clone (newSelectClause);
+    }
 
-      Assert.That (clone.SelectClause, Is.SameAs (newSelectClause));
+    public override ResultModificationBase Clone (SelectClause newSelectClause)
+    {
+      return new CountResultModification (newSelectClause);
     }
   }
 }

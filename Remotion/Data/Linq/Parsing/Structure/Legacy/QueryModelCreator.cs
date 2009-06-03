@@ -18,7 +18,9 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.ResultModifications;
 using Remotion.Data.Linq.Expressions;
+using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure.Legacy
@@ -217,14 +219,32 @@ namespace Remotion.Data.Linq.Parsing.Structure.Legacy
       SelectClause selectClause = new SelectClause (_previousClause, selectProjection);
       
       // TODO MG: Unfinished refactoring: missing test to prove whether previousClause changes
-      IClause previousClause = selectClause;
       foreach (var resultModifier in _result.ResultModifierExpression)
       {
-        ResultModifierClause resultModifierClause = new ResultModifierClause (previousClause, selectClause, resultModifier);
-        selectClause.AddResultModifierData (resultModifierClause);
-        previousClause = resultModifierClause;
+        ResultModificationBase resultModification = CreateResultModification (resultModifier, selectClause);
+        selectClause.AddResultModification (resultModification);
       }
       return selectClause;
+    }
+
+    private ResultModificationBase CreateResultModification (MethodCallExpression methodCallExpression, SelectClause selectClause)
+    {
+      switch (methodCallExpression.Method.Name)
+        {
+          case "Count":
+            return new CountResultModification (selectClause);
+          case "First":
+            return new FirstResultModification (selectClause);
+          case "Single":
+            return new SingleResultModification (selectClause);
+          case "Take":
+            int count = (int) PartialTreeEvaluatingVisitor.EvaluateSubtree (methodCallExpression.Arguments[1]).Value;
+            return new TakeResultModification (selectClause, count);
+          case "Distinct":
+              return new DistinctResultModification (selectClause);
+          default:
+            throw new ParserException ("Result modification method " + methodCallExpression.Method + " is not supported.");
+        }
     }
   }
 }

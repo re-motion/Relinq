@@ -18,6 +18,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq;
+using Remotion.Data.Linq.Clauses.ResultModifications;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Structure.Legacy;
 using Rhino.Mocks;
@@ -304,15 +305,14 @@ namespace Remotion.Data.UnitTests.Linq
       return new MemberFromClause (previousClause, identifier, fromExpression, projectionExpression);
     }
 
-    public static ResultModifierClause CreateResultModifierClause (IClause previousClause, SelectClause selectClause)
+    public static ResultModificationBase CreateResultModifierClause (SelectClause selectClause)
     {
-      var resultModifier = CreateMethodCallExpression (CreateQuerySource ());
-      return new ResultModifierClause (previousClause, selectClause, resultModifier);
+      return new DistinctResultModification (selectClause);
     }
 
-    public static ResultModifierClause CreateResultModifierClause ()
+    public static ResultModificationBase CreateResultModifierClause ()
     {
-      return CreateResultModifierClause (CreateClause(), CreateSelectClause ());
+      return CreateResultModifierClause (CreateSelectClause ());
     }
   }
 }

@@ -16,7 +16,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Remotion.Data.Linq.Clauses;
 using Remotion.Utilities;
 using System.Linq.Expressions;
 
@@ -29,7 +28,7 @@ namespace Remotion.Data.Linq.Clauses
   public class SelectClause : ISelectGroupClause
   {
     private readonly LambdaExpression _selector;
-    private readonly List<ResultModifierClause> _resultModifierData = new List<ResultModifierClause>();
+    private readonly List<ResultModificationBase> _resultModifications = new List<ResultModificationBase>();
     
     /// <summary>
     /// Initialize a new instance of <see cref="SelectClause"/>.
@@ -59,15 +58,15 @@ namespace Remotion.Data.Linq.Clauses
       get { return _selector; }
     }
 
-    public ReadOnlyCollection<ResultModifierClause> ResultModifierClauses
+    public ReadOnlyCollection<ResultModificationBase> ResultModifications
     {
-      get { return _resultModifierData.AsReadOnly(); }
+      get { return _resultModifications.AsReadOnly(); }
     }
 
-    public void AddResultModifierData (ResultModifierClause resultModifierData)
+    public void AddResultModification (ResultModificationBase resultModification)
     {
-      ArgumentUtility.CheckNotNull ("resultModifierData", resultModifierData);
-      _resultModifierData.Add (resultModifierData);
+      ArgumentUtility.CheckNotNull ("resultModification", resultModification);
+      _resultModifications.Add (resultModification);
     }
 
     public virtual void Accept (IQueryVisitor visitor)
@@ -79,13 +78,10 @@ namespace Remotion.Data.Linq.Clauses
     public SelectClause Clone (IClause newPreviousClause)
     {
       var clone = new SelectClause (newPreviousClause, Selector);
-      IClause previousClause = clone;
-      
-      foreach (var resultModifierData in ResultModifierClauses)
+      foreach (var resultModification in ResultModifications)
       {
-        var resultModifierClauseClone = resultModifierData.Clone (previousClause, clone);
-        clone.AddResultModifierData (resultModifierClauseClone);
-        previousClause = resultModifierClauseClone;
+        var resultModificationClone = resultModification.Clone (clone);
+        clone.AddResultModification (resultModificationClone);
       }
 
       return clone;
