@@ -17,6 +17,7 @@ using System;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Clauses.ResultModifications;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
 using Rhino.Mocks;
@@ -58,6 +59,21 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       Assert.That (parameter.Name, Is.EqualTo ("x"));
       Assert.That (parameter.Type, Is.SameAs (typeof (int)));
+    }
+
+    [Test]
+    public void CreateClause_PreviousClauseIsSelect ()
+    {
+      var node = new DistinctExpressionNode (SourceStub);
+
+      TestCreateClause_PreviousClauseIsSelect (node, typeof (DistinctResultModification));
+    }
+
+    [Test]
+    public void CreateClause_PreviousClauseIsNoSelect ()
+    {
+      var node = new DistinctExpressionNode (SourceStub);
+      TestCreateClause_PreviousClauseIsNoSelect (node, typeof (DistinctResultModification));
     }
   }
 }

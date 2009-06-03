@@ -43,11 +43,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     public abstract Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved);
     public abstract ParameterExpression CreateParameterForOutput ();
-    
-    public virtual IClause CreateClause (IClause previousClause) // TODO: Make abstract.
-    {
-      throw new NotImplementedException();
-    }
+    public abstract IClause CreateClause (IClause previousClause);
 
     protected InvalidOperationException CreateResolveNotSupportedException ()
     {
@@ -63,16 +59,15 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
               GetType().Name + " does not support creating a parameter for its output because it does not stream any data to the following node.");
     }
 
-    protected SelectClause GetSelectClauseForResultModification (IExpressionNode source, IClause previousClause)
+    protected SelectClause GetSelectClauseForResultModification (IClause previousClause)
     {
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
-      ArgumentUtility.CheckNotNull ("source", source);
 
       var selectClause = previousClause as SelectClause;
 
       if (selectClause == null)
       {
-        var selectorParameter = source.CreateParameterForOutput();
+        var selectorParameter = Source.CreateParameterForOutput();
         selectClause = new SelectClause (previousClause, Expression.Lambda (selectorParameter, selectorParameter));
       }
 

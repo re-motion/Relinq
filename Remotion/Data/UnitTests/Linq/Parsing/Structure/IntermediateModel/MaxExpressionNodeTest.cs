@@ -116,20 +116,13 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void CreateClause_WithSelector_AdjustsSelectClause ()
     {
-      var previousPreviousClause = ExpressionHelper.CreateClause ();
-      var selectorOfPreviousClause = ExpressionHelper.CreateLambdaExpression<Student, int> (s => s.ID);
-      var previousClause = new SelectClause (previousPreviousClause, selectorOfPreviousClause);
-
       var selector = ExpressionHelper.CreateLambdaExpression<int, string> (i => i.ToString ());
       var node = new MaxExpressionNode (SourceStub, selector);
 
-      var clause = (SelectClause) node.CreateClause (previousClause);
-
-      Assert.That (clause, Is.SameAs (previousClause));
-      Assert.That (clause.Selector, Is.Not.SameAs (selectorOfPreviousClause));
-
+      var selectorOfPreviousClause = ExpressionHelper.CreateLambdaExpression<Student, int> (s => s.ID);
       var expectedNewSelector = ExpressionHelper.CreateLambdaExpression<Student, string> (s => s.ID.ToString ());
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedNewSelector, clause.Selector);
+
+      TestCreateClause_WithOptionalSelector (node, selectorOfPreviousClause, expectedNewSelector);
     }
   }
 }

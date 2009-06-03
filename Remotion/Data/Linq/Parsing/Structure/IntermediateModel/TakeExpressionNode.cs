@@ -17,6 +17,8 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.ResultModifications;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
@@ -47,6 +49,16 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public override ParameterExpression CreateParameterForOutput ()
     {
       return Source.CreateParameterForOutput ();
+    }
+
+    public override IClause CreateClause (IClause previousClause)
+    {
+      ArgumentUtility.CheckNotNull ("previousClause", previousClause);
+
+      var selectClause = GetSelectClauseForResultModification (previousClause);
+      selectClause.AddResultModification (new TakeResultModification (selectClause, Count));
+
+      return selectClause;
     }
   }
 }

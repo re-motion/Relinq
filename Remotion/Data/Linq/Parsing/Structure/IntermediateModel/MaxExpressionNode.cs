@@ -73,7 +73,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     {
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
 
-      SelectClause selectClause = GetSelectClauseForResultModification (Source, previousClause);
+      SelectClause selectClause = GetSelectClauseForResultModification (previousClause);
       selectClause.AddResultModification (new MaxResultModification (selectClause));
       AdjustSelectorForResultModification(selectClause, OptionalSelector);
 

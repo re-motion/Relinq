@@ -18,6 +18,8 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.ResultModifications;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
 using Remotion.Development.UnitTesting;
@@ -96,6 +98,32 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var node = new MinExpressionNode (SourceStub, null);
       node.CreateParameterForOutput ();
+    }
+
+    [Test]
+    public void CreateClause_WithoutSelector_PreviousClauseIsSelect ()
+    {
+      var node = new MinExpressionNode (SourceStub, null);
+      TestCreateClause_PreviousClauseIsSelect (node, typeof (MinResultModification));
+    }
+
+    [Test]
+    public void CreateClause_WithoutSelector_PreviousClauseIsNoSelect ()
+    {
+      var node = new MinExpressionNode (SourceStub, null);
+      TestCreateClause_PreviousClauseIsNoSelect (node, typeof (MinResultModification));
+    }
+
+    [Test]
+    public void CreateClause_WithSelector_AdjustsSelectClause ()
+    {
+      var selector = ExpressionHelper.CreateLambdaExpression<int, string> (i => i.ToString ());
+      var node = new MinExpressionNode (SourceStub, selector);
+
+      var selectorOfPreviousClause = ExpressionHelper.CreateLambdaExpression<Student, int> (s => s.ID);
+      var expectedNewSelector = ExpressionHelper.CreateLambdaExpression<Student, string> (s => s.ID.ToString ());
+
+      TestCreateClause_WithOptionalSelector(node, selectorOfPreviousClause, expectedNewSelector);
     }
   }
 }
