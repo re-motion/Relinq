@@ -30,11 +30,11 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public virtual void SetUp ()
     {
       SourceStub = ExpressionNodeObjectMother.CreateConstant();
-      SourceReference = new IdentifierReferenceExpression (SourceStub);
+      SourceReference = new QuerySourceReferenceExpression (SourceStub);
     }
 
     public IQuerySourceExpressionNode SourceStub { get; private set; }
-    public IdentifierReferenceExpression SourceReference { get; private set; }
+    public QuerySourceReferenceExpression SourceReference { get; private set; }
 
     protected MethodInfo GetGenericMethodDefinition<TReturn> (Expression<Func<IQueryable<int>, TReturn>> methodCallLambda)
     {

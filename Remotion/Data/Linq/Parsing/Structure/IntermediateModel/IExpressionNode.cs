@@ -33,7 +33,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     /// <summary>
     /// Resolves the specified <paramref name="expressionToBeResolved"/> by replacing any occurrence of <paramref name="inputParameter"/>
     /// by the result of the projection of this <see cref="IExpressionNode"/>. The result is an <see cref="Expression"/> that goes all the
-    /// way to an <see cref="IdentifierReferenceExpression"/>.
+    /// way to an <see cref="QuerySourceReferenceExpression"/>.
     /// </summary>
     /// <param name="inputParameter">The parameter representing the input data streaming into an <see cref="IExpressionNode"/>. This is replaced
     /// by the projection data coming out of this <see cref="IExpressionNode"/>.</param>

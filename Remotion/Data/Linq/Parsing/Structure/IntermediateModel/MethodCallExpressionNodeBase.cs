@@ -17,24 +17,31 @@ using System;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Clauses.ResultModifications;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 {
   /// <summary>
-  /// Base class for classes representing instantiations of <see cref="MethodCallExpression"/> for specific methods.
+  /// Base class for <see cref="IExpressionNode"/> implementations that represent instantiations of <see cref="MethodCallExpression"/>.
   /// </summary>
-  public abstract class ExpressionNodeBase : IExpressionNode
+  public abstract class MethodCallExpressionNodeBase : IExpressionNode
   {
+    /// <summary>
+    /// Gets the <see cref="MethodInfo"/> from a given <see cref="LambdaExpression"/> that has to wrap a <see cref="MethodCallExpression"/>.
+    /// If the method is a generic method, its open generic method definition is returned.
+    /// This method can be used for registration of the node type with an <see cref="MethodCallExpressionNodeTypeRegistry"/>.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="methodCall">The method call.</param>
+    /// <returns></returns>
     protected static MethodInfo GetSupportedMethod<T> (Expression<Func<T>> methodCall)
     {
       var method = ParserUtility.GetMethod (methodCall);
       return method.IsGenericMethod ? method.GetGenericMethodDefinition() : method;
     }
 
-    protected ExpressionNodeBase (IExpressionNode source)
+    protected MethodCallExpressionNodeBase (IExpressionNode source)
     {
       Source = source;
     }
@@ -59,6 +66,19 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
               GetType().Name + " does not support creating a parameter for its output because it does not stream any data to the following node.");
     }
 
+    /// <summary>
+    /// Gets the <see cref="SelectClause"/> needed when implementing the <see cref="CreateClause"/> method for a result modification node.
+    /// </summary>
+    /// <returns>The previous clause if it is a <see cref="SelectClause"/>, or a new clause with the given <paramref name="previousClause"/>
+    /// and an identity projection if it is not.</returns>
+    /// <remarks>
+    /// Result modification nodes such as <see cref="CountExpressionNode"/> or <see cref="DistinctExpressionNode"/> do not identify real 
+    /// clauses, they represent result modifications in the preceding <see cref="SelectClause"/>.
+    /// Therefore, implementations of <see cref="CreateClause"/> will usually not add new clauses, but instead call 
+    /// <see cref="SelectClause.AddResultModification"/> on the <paramref name="previousClause"/>. If, however, the <paramref name="previousClause"/>
+    /// is not a <see cref="SelectClause"/> because it was optimized away, a new trivial <see cref="SelectClause"/> must be added by the node. This
+    /// is implemented by this method.
+    /// </remarks>
     protected SelectClause GetSelectClauseForResultModification (IClause previousClause)
     {
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
@@ -74,6 +94,17 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return selectClause;
     }
 
+    /// <summary>
+    /// Gets and injects the <see cref="WhereClause"/> when implementing the <see cref="CreateClause"/> method for a result modification node with an 
+    /// optional predicate if that predicate is not <see langword="null"/>.
+    /// </summary>
+    /// <remarks>
+    /// Result modification nodes such as <see cref="CountExpressionNode"/> or <see cref="DistinctExpressionNode"/>
+    /// do not identify real clauses, they represent result modifications in the preceding <see cref="SelectClause"/>.
+    /// Some of them contain optional predicates, which need to be transformed into <see cref="WhereClause"/> in the <see cref="CreateClause"/> method.
+    /// That <see cref="WhereClause"/> will be inserted before the <paramref name="selectClause"/> modified by the result modification node.
+    /// Creation and insertion of this <see cref="WhereClause"/> is implemented by this method.
+    /// </remarks>
     protected void CreateWhereClauseForResultModification (SelectClause selectClause, LambdaExpression optionalPredicate)
     {
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);
@@ -85,6 +116,17 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       }
     }
 
+    /// <summary>
+    /// Adjusts the <see cref="SelectClause.Selector"/> of the <paramref name="selectClause"/> modified by a result modification node for a nodes with an 
+    /// optional selector if that selector is not <see langword="null"/>.
+    /// </summary>
+    /// <remarks>
+    /// Result modification nodes such as <see cref="MinExpressionNode"/> or <see cref="SumExpressionNode"/>
+    /// do not identify real clauses, they represent result modifications in the preceding <see cref="SelectClause"/>.
+    /// Some of them contain optional selectors, which need to be combined with the <see cref="SelectClause.Selector"/> of the 
+    /// <paramref name="selectClause"/> modified by the node.
+    /// This process of adjusting the selector is implemented by this method.
+    /// </remarks>
     protected void AdjustSelectorForResultModification (SelectClause selectClause, LambdaExpression optionalSelector)
     {
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);

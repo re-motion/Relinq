@@ -157,7 +157,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitorTests
     public void VisitExpression_IdentifierReference ()
     {
       var nodeStub = MockRepository.GenerateStub<IQuerySourceExpressionNode> ();
-      CheckDelegation (_mockRepository, "VisitIdentifierReferenceExpression", new IdentifierReferenceExpression (nodeStub));
+      CheckDelegation (_mockRepository, "QuerySourceReferenceExpression", new QuerySourceReferenceExpression (nodeStub));
     }
     
     private void CheckDelegation (MockRepository repository, string methodName, params ExpressionType[] expressionTypes)

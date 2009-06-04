@@ -141,13 +141,13 @@
     <Compile Include="Parsing\FieldResolving\SelectFieldAccessPolicy.cs" />
     <Compile Include="Parsing\FieldResolving\WhereFieldAccessPolicy.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\ReplacingVisitor.cs" />
-    <Compile Include="Parsing\Structure\ExpressionNodeTypeRegistry.cs" />
+    <Compile Include="Parsing\Structure\MethodCallExpressionNodeTypeRegistry.cs" />
     <Compile Include="Parsing\Structure\ExpressionTreeParser.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ExpressionNodeFactory.cs" />
     <Compile Include="Parsing\Structure\Legacy\CallParserDispatcher.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ConstantExpressionNode.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\ExpressionNodeBase.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\IdentifierReferenceExpression.cs" />
+    <Compile Include="Parsing\Structure\IntermediateModel\MethodCallExpressionNodeBase.cs" />
+    <Compile Include="Parsing\Structure\IntermediateModel\QuerySourceReferenceExpression.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\IQuerySourceExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\WhereExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ThenByDescendingExpressionNode.cs" />

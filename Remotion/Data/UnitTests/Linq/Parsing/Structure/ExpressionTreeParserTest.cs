@@ -29,13 +29,13 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
   [TestFixture]
   public class ExpressionTreeParserTest
   {
-    private ExpressionNodeTypeRegistry _nodeTypeRegistry;
+    private MethodCallExpressionNodeTypeRegistry _nodeTypeRegistry;
     private ExpressionTreeParser _expressionTreeParser;
 
     [SetUp]
     public void SetUp ()
     {
-      _nodeTypeRegistry = new ExpressionNodeTypeRegistry();
+      _nodeTypeRegistry = new MethodCallExpressionNodeTypeRegistry();
 
       _nodeTypeRegistry.Register (WhereExpressionNode.SupportedMethods, typeof (WhereExpressionNode));
       _nodeTypeRegistry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));

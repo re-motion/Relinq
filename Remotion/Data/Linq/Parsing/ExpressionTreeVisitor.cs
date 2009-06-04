@@ -23,6 +23,11 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing
 {
+  /// <summary>
+  /// Provides a base class that can be used for visiting and optionally transforming each node of an <see cref="Expression"/> tree in a 
+  /// strongly typed fashion.
+  /// This is the base class of many transformation classes.
+  /// </summary>
   public abstract class ExpressionTreeVisitor
   {
     protected virtual Expression VisitExpression (Expression expression)
@@ -96,8 +101,8 @@ namespace Remotion.Data.Linq.Parsing
         default:
           if (expression is SubQueryExpression)
             return VisitSubQueryExpression ((SubQueryExpression) expression);
-          else if (expression is IdentifierReferenceExpression)
-            return VisitIdentifierReferenceExpression ((IdentifierReferenceExpression) expression);
+          else if (expression is QuerySourceReferenceExpression)
+            return QuerySourceReferenceExpression ((QuerySourceReferenceExpression) expression);
           else
             return VisitUnknownExpression (expression);
       }
@@ -128,7 +133,7 @@ namespace Remotion.Data.Linq.Parsing
       ArgumentUtility.CheckNotNull ("expression", expression);
       Expression newLeft = VisitExpression (expression.Left);
       Expression newRight = VisitExpression (expression.Right);
-      LambdaExpression newConversion = (LambdaExpression) VisitExpression (expression.Conversion);
+      var newConversion = (LambdaExpression) VisitExpression (expression.Conversion);
       if (newLeft != expression.Left || newRight != expression.Right || newConversion != expression.Conversion)
         return Expression.MakeBinary (expression.NodeType, newLeft, newRight, expression.IsLiftedToNull, expression.Method, newConversion);//, expression.IsLiftedToNull, expression.Method, expression.Conversion);
       return expression;
@@ -238,9 +243,10 @@ namespace Remotion.Data.Linq.Parsing
     protected virtual Expression VisitMemberInitExpression (MemberInitExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      NewExpression newNewExpression = VisitExpression (expression.NewExpression) as NewExpression;
+      var newNewExpression = VisitExpression (expression.NewExpression) as NewExpression;
       if (newNewExpression == null)
         throw new NotSupportedException ("MemberInitExpressions only support non-null instances of type 'NewExpression' as their NewExpression member.");
+      
       ReadOnlyCollection<MemberBinding> newBindings = VisitMemberBindingList (expression.Bindings);
       if (newNewExpression != expression.NewExpression || newBindings != expression.Bindings)
         return Expression.MemberInit (newNewExpression, newBindings);
@@ -250,7 +256,7 @@ namespace Remotion.Data.Linq.Parsing
     protected virtual Expression VisitListInitExpression (ListInitExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      NewExpression newNewExpression = VisitExpression (expression.NewExpression) as NewExpression;
+      var newNewExpression = VisitExpression (expression.NewExpression) as NewExpression;
       if (newNewExpression == null)
         throw new NotSupportedException ("ListInitExpressions only support non-null instances of type 'NewExpression' as their NewExpression member.");
       ReadOnlyCollection<ElementInit> newInitializers = VisitElementInitList (expression.Initializers);
@@ -341,7 +347,7 @@ namespace Remotion.Data.Linq.Parsing
       return expression;
     }
 
-    protected virtual Expression VisitIdentifierReferenceExpression (IdentifierReferenceExpression expression)
+    protected virtual Expression QuerySourceReferenceExpression (QuerySourceReferenceExpression expression)
     {
       return expression;
     }

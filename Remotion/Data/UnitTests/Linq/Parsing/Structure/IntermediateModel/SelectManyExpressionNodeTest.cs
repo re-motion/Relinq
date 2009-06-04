@@ -68,7 +68,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var expression = ExpressionHelper.CreateLambdaExpression<AnonymousType, bool> (i => i.a > 5 && i.b > 6);
       var result = node.Resolve (expression.Parameters[0], expression.Body);
 
-      var selectManySourceReference = new IdentifierReferenceExpression (node);
+      var selectManySourceReference = new QuerySourceReferenceExpression (node);
 
       // new AnonymousType (SourceReference, selectManySourceReference).a > 5 && new AnonymousType (SourceReference, selectManySourceReference).b > 6
 
@@ -89,7 +89,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void GetResolvedResultSelector ()
     {
       var node = new SelectManyExpressionNode (SourceStub, _collectionSelector, _resultSelector);
-      var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, new IdentifierReferenceExpression (node));
+      var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, new QuerySourceReferenceExpression (node));
 
       var result = node.GetResolvedResultSelector();
 

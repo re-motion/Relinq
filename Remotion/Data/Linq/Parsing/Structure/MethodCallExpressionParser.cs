@@ -24,13 +24,14 @@ using Remotion.Utilities;
 namespace Remotion.Data.Linq.Parsing.Structure
 {
   /// <summary>
-  /// Parses a <see cref="MethodCallExpression"/> to create an <see cref="IExpressionNode"/>.
+  /// Parses a <see cref="MethodCallExpression"/> and creates an <see cref="IExpressionNode"/> from it. This is used by 
+  /// <see cref="ExpressionTreeParser"/> for parsing whole expression trees.
   /// </summary>
   public class MethodCallExpressionParser
   {
-    private readonly ExpressionNodeTypeRegistry _nodeTypeRegistry;
+    private readonly MethodCallExpressionNodeTypeRegistry _nodeTypeRegistry;
 
-    public MethodCallExpressionParser (ExpressionNodeTypeRegistry nodeTypeRegistry)
+    public MethodCallExpressionParser (MethodCallExpressionNodeTypeRegistry nodeTypeRegistry)
     {
       ArgumentUtility.CheckNotNull ("nodeTypeRegistry", nodeTypeRegistry);
       _nodeTypeRegistry = nodeTypeRegistry;
@@ -44,7 +45,8 @@ namespace Remotion.Data.Linq.Parsing.Structure
       Type nodeType = GetNodeType(expressionToParse);
       var additionalConstructorParameters = expressionToParse.Arguments
             .Skip (1) // skip the expression corresponding to the source argument
-            .Select (expr => ConvertExpressionToParameterValue (expr)).ToArray();
+            .Select (expr => ConvertExpressionToParameterValue (expr)) // convert the remaining argument expressions to their actual values
+            .ToArray();
       return CreateExpressionNode(nodeType, source, additionalConstructorParameters);
     }
 
@@ -65,6 +67,10 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
     private object ConvertExpressionToParameterValue (Expression expression)
     {
+      // Each argument of a MethodCallExpression will either be a UnaryExpression/Quote, which represents an expression passed to the method,
+      // or any other expression that represents a constant passed to the method.
+      // The partial evaluator will convert Quote expressions into ConstantExpressions holding the actual Expression to pass in and
+      // all other expressions into ConstantExpressions holding the value to pass in.
       var evaluatedExpression = PartialTreeEvaluatingVisitor.EvaluateSubtree (expression);
       return evaluatedExpression.Value;
     }

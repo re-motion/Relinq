@@ -272,7 +272,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
                   where a.ID > 5
                   select a.ID;
 
-      var nodeTypeRegistry = new ExpressionNodeTypeRegistry ();
+      var nodeTypeRegistry = new MethodCallExpressionNodeTypeRegistry ();
       nodeTypeRegistry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
       nodeTypeRegistry.Register (SelectManyExpressionNode.SupportedMethods, typeof (SelectManyExpressionNode));
       nodeTypeRegistry.Register (WhereExpressionNode.SupportedMethods, typeof (WhereExpressionNode));
@@ -285,8 +285,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
       // IR(a).ID
       Assert.That (result, Is.InstanceOfType (typeof (MemberExpression)));
       Expression innerExpression = ((MemberExpression)result).Expression;
-      Assert.That (innerExpression, Is.InstanceOfType (typeof (IdentifierReferenceExpression)));
-      Assert.That (((IdentifierReferenceExpression) innerExpression).ReferencedQuerySource, Is.InstanceOfType (typeof (ConstantExpressionNode)));
+      Assert.That (innerExpression, Is.InstanceOfType (typeof (QuerySourceReferenceExpression)));
+      Assert.That (((QuerySourceReferenceExpression) innerExpression).ReferencedQuerySource, Is.InstanceOfType (typeof (ConstantExpressionNode)));
     }
   }
 }

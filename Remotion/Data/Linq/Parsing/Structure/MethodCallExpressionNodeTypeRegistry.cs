@@ -25,13 +25,20 @@ namespace Remotion.Data.Linq.Parsing.Structure
 {
   /// <summary>
   /// Maps the <see cref="MethodInfo"/> objects used in <see cref="MethodCallExpression"/> objects to the respective <see cref="IExpressionNode"/>
-  /// types.
+  /// types. This is used by <see cref="ExpressionTreeParser"/> when a <see cref="MethodCallExpression"/> is encountered to instantiate the
+  /// right <see cref="IExpressionNode"/> for the given method.
   /// </summary>
-  public class ExpressionNodeTypeRegistry
+  public class MethodCallExpressionNodeTypeRegistry
   {
-    public static ExpressionNodeTypeRegistry CreateDefault ()
+    /// <summary>
+    /// Creates a default <see cref="MethodCallExpressionNodeTypeRegistry"/>, which has all types implementing <see cref="IExpressionNode"/> from the
+    /// re-linq assembly automatically registered, as long as they offer a public static <c>SupportedMethods</c> field.
+    /// </summary>
+    /// <returns>A default <see cref="MethodCallExpressionNodeTypeRegistry"/> with all <see cref="IExpressionNode"/> types with a <c>SupportedMethods</c>
+    /// field registered.</returns>
+    public static MethodCallExpressionNodeTypeRegistry CreateDefault ()
     {
-      var expressionNodeTypes = from t in typeof (ExpressionNodeTypeRegistry).Assembly.GetTypes ()
+      var expressionNodeTypes = from t in typeof (MethodCallExpressionNodeTypeRegistry).Assembly.GetTypes ()
                   where typeof (IExpressionNode).IsAssignableFrom (t)
                   select t;
 
@@ -40,7 +47,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
                                      where supportedMethodsField != null
                                      select new { Type = t, Methods = (IEnumerable<MethodInfo>) supportedMethodsField.GetValue (null) };
 
-      var registry = new ExpressionNodeTypeRegistry ();
+      var registry = new MethodCallExpressionNodeTypeRegistry ();
       foreach (var methodsForType in supportedMethodsForTypes)
         registry.Register (methodsForType.Methods, methodsForType.Type);
 
@@ -54,10 +61,14 @@ namespace Remotion.Data.Linq.Parsing.Structure
       get { return _registeredTypes.Count; }
     }
 
+    /// <summary>
+    /// Registers the specified <paramref name="methods"/> with the given <paramref name="nodeType"/>. The given methods must either be non-generic
+    /// or open generic method definitions. If a method has already been registered before, the later registration overwrites the earlier one.
+    /// </summary>
     public void Register (IEnumerable<MethodInfo> methods, Type nodeType)
     {
       ArgumentUtility.CheckNotNull ("methods", methods);
-      ArgumentUtility.CheckNotNull ("nodeType", nodeType);
+      ArgumentUtility.CheckNotNullAndTypeIsAssignableFrom ("nodeType", nodeType, typeof (IExpressionNode));
 
       foreach (var method in methods)
       {
@@ -72,6 +83,10 @@ namespace Remotion.Data.Linq.Parsing.Structure
       }
     }
 
+    /// <summary>
+    /// Gets the type of <see cref="IExpressionNode"/> registered with this <see cref="MethodCallExpressionNodeTypeRegistry"/> instance that
+    /// matches the given <paramref name="method"/>, throwing a <see cref="KeyNotFoundException"/> if none can be found.
+    /// </summary>
     public Type GetNodeType (MethodInfo method)
     {
       ArgumentUtility.CheckNotNull ("method", method);

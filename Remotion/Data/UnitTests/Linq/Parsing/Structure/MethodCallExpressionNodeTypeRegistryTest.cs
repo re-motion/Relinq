@@ -20,19 +20,18 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 {
   [TestFixture]
-  public class ExpressionNodeTypeRegistryTest
+  public class MethodCallExpressionNodeTypeRegistryTest
   {
     [Test]
     public void Register ()
     {
-      var registry = new ExpressionNodeTypeRegistry ();
+      var registry = new MethodCallExpressionNodeTypeRegistry ();
       Assert.That (registry.Count, Is.EqualTo (0));
 
       registry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
@@ -44,7 +43,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     [ExpectedException (typeof (InvalidOperationException))]
     public void Register_ClosedGenericMethod_NotAllowed ()
     {
-      var registry = new ExpressionNodeTypeRegistry ();
+      var registry = new MethodCallExpressionNodeTypeRegistry ();
       var closedGenericMethod = SelectExpressionNode.SupportedMethods[0].MakeGenericMethod (typeof (int), typeof (int));
       registry.Register (new[] { closedGenericMethod }, typeof (SelectExpressionNode));
     }
@@ -52,7 +51,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     [Test]
     public void GetNodeType ()
     {
-      var registry = new ExpressionNodeTypeRegistry ();
+      var registry = new MethodCallExpressionNodeTypeRegistry ();
       registry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
 
       var type = registry.GetNodeType (SelectExpressionNode.SupportedMethods[0]);
@@ -63,7 +62,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     [Test]
     public void GetNodeType_WithMultipleNodes ()
     {
-      var registry = new ExpressionNodeTypeRegistry ();
+      var registry = new MethodCallExpressionNodeTypeRegistry ();
       registry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
       registry.Register (SumExpressionNode.SupportedMethods, typeof (SumExpressionNode));
 
@@ -79,7 +78,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     [Test]
     public void GetNodeType_ClosedGenericMethod ()
     {
-      var registry = new ExpressionNodeTypeRegistry ();
+      var registry = new MethodCallExpressionNodeTypeRegistry ();
       registry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
 
       var closedGenericMethodCallExpression = 
@@ -92,7 +91,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     [Test]
     public void GetNodeType_NonGenericMethod ()
     {
-      var registry = new ExpressionNodeTypeRegistry ();
+      var registry = new MethodCallExpressionNodeTypeRegistry ();
       registry.Register (SumExpressionNode.SupportedMethods, typeof (SumExpressionNode));
 
       var nonGenericMethod = SumExpressionNode.SupportedMethods[0];
@@ -108,14 +107,14 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
         ExpectedMessage = "No corresponding expression node type was registered for method 'System.Linq.Queryable.Select'.")]
     public void GetNodeType_UnknownMethod ()
     {
-      var registry = new ExpressionNodeTypeRegistry ();
+      var registry = new MethodCallExpressionNodeTypeRegistry ();
       registry.GetNodeType (SelectExpressionNode.SupportedMethods[0]);
     }
 
     [Test]
     public void Register_SameMethodTwice_OverridesPreviousNodeType ()
     {
-      var registry = new ExpressionNodeTypeRegistry ();
+      var registry = new MethodCallExpressionNodeTypeRegistry ();
       registry.Register (WhereExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
       registry.Register (WhereExpressionNode.SupportedMethods, typeof (WhereExpressionNode));
 
@@ -126,7 +125,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     [Test]
     public void Create ()
     {
-      ExpressionNodeTypeRegistry registry = ExpressionNodeTypeRegistry.CreateDefault ();
+      MethodCallExpressionNodeTypeRegistry registry = MethodCallExpressionNodeTypeRegistry.CreateDefault ();
 
       AssertAllMethodsRegistered (registry, typeof (CountExpressionNode));
       AssertAllMethodsRegistered (registry, typeof (SelectExpressionNode));
@@ -147,7 +146,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       AssertAllMethodsRegistered (registry, typeof (TakeExpressionNode));
     }
 
-    private void AssertAllMethodsRegistered (ExpressionNodeTypeRegistry registry, Type type)
+    private void AssertAllMethodsRegistered (MethodCallExpressionNodeTypeRegistry registry, Type type)
     {
       var methodInfos = (MethodInfo[]) type.GetField ("SupportedMethods").GetValue (null);
       Assert.That (methodInfos.Length, Is.GreaterThan (0));

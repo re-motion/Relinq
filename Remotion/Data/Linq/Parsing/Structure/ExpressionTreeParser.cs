@@ -14,23 +14,22 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Utilities;
-using System.Collections.Generic;
 
 namespace Remotion.Data.Linq.Parsing.Structure
 {
   /// <summary>
-  /// Parses an expression tree into a chain of <see cref="IExpressionNode"/> objects.
+  /// Parses an expression tree into a chain of <see cref="IExpressionNode"/> objects, partially evaluating expressions and finding subqueries in the 
+  /// process.
   /// </summary>
   public class ExpressionTreeParser
   {
-    private readonly ExpressionNodeTypeRegistry _nodeTypeRegistry;
+    private readonly MethodCallExpressionNodeTypeRegistry _nodeTypeRegistry;
 
-    public ExpressionTreeParser (ExpressionNodeTypeRegistry nodeTypeRegistry)
+    public ExpressionTreeParser (MethodCallExpressionNodeTypeRegistry nodeTypeRegistry)
     {
       ArgumentUtility.CheckNotNull ("nodeTypeRegistry", nodeTypeRegistry);
       _nodeTypeRegistry = nodeTypeRegistry;
@@ -51,7 +50,6 @@ namespace Remotion.Data.Linq.Parsing.Structure
         return new ConstantExpressionNode (constantExpression.Type, constantExpression.Value, "TODO"); // TODO: Implement algorithm and test
       }
     }
-
 
     private IExpressionNode ParseMethodCallExpression (MethodCallExpression methodCallExpression)
     {

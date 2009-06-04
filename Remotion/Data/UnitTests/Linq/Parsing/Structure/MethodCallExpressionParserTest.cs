@@ -21,7 +21,6 @@ using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
-using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation;
 using Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
@@ -29,14 +28,14 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
   [TestFixture]
   public class MethodCallExpressionParserTest
   {
-    private ExpressionNodeTypeRegistry _nodeTypeRegistry;
+    private MethodCallExpressionNodeTypeRegistry _nodeTypeRegistry;
     private MethodCallExpressionParser _parser;
     private ConstantExpressionNode _source;
 
     [SetUp]
     public void SetUp ()
     {
-      _nodeTypeRegistry = new ExpressionNodeTypeRegistry ();
+      _nodeTypeRegistry = new MethodCallExpressionNodeTypeRegistry ();
 
       _nodeTypeRegistry.Register (WhereExpressionNode.SupportedMethods, typeof (WhereExpressionNode));
       _nodeTypeRegistry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));

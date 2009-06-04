@@ -22,9 +22,9 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   /// <summary>
   /// Represents an expression tree node that points to a query source represented by a <see cref="IQuerySourceExpressionNode"/>.
   /// </summary>
-  public class IdentifierReferenceExpression : Expression
+  public class QuerySourceReferenceExpression : Expression
   {
-    public IdentifierReferenceExpression (IQuerySourceExpressionNode node)
+    public QuerySourceReferenceExpression (IQuerySourceExpressionNode node)
       : base ((ExpressionType) (-1), ArgumentUtility.CheckNotNull ("node", node).QuerySourceElementType)
     {
       ReferencedQuerySource = node;

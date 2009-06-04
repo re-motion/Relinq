@@ -24,6 +24,13 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitorTests
       A = a;
     }
 
+    public TypeForNewExpression (int a, int b)
+    {
+      A = a;
+      B = b;
+    }
+
     public int A { get; set; }
+    public int B { get; set; }
   }
 }
