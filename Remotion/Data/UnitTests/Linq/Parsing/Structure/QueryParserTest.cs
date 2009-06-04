@@ -136,6 +136,5 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (((WhereClause) queryModel.BodyClauses[0]).PreviousClause, Is.SameAs (queryModel.MainFromClause));
       Assert.That (((WhereClause) queryModel.BodyClauses[0]).Predicate, Is.SameAs(((UnaryExpression)expressionTree.Arguments[1]).Operand));
     }
-
   }
 }

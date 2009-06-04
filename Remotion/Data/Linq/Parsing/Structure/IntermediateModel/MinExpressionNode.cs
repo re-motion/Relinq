@@ -36,21 +36,25 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Queryable.Min<object, object> (null, null))
                                                            };
 
-    public MinExpressionNode (IExpressionNode source, LambdaExpression optionalSelector)
-      : base (ArgumentUtility.CheckNotNull ("source", source), null, optionalSelector)
+    public MinExpressionNode (string associatedIdentifier, IExpressionNode source, LambdaExpression optionalSelector)
+        : base (
+            ArgumentUtility.CheckNotNull ("associatedIdentifier", associatedIdentifier),
+            ArgumentUtility.CheckNotNull ("source", source),
+            null,
+            optionalSelector)
     {
     }
 
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)
     {
       // no data streams out from this node, so we cannot resolve any expressions
-      throw CreateResolveNotSupportedException ();
+      throw CreateResolveNotSupportedException();
     }
 
     public override ParameterExpression CreateParameterForOutput ()
     {
       // no data streams out from this node, so we cannot create a parameter accepting that data
-      throw CreateOutputParameterNotSupportedException ();
+      throw CreateOutputParameterNotSupportedException();
     }
 
     protected override ResultModificationBase CreateResultModification (SelectClause selectClause)

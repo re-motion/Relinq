@@ -40,9 +40,12 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     private Expression _cachedCollectionSelector;
     private Expression _cachedResultSelector;
-    
-    public SelectManyExpressionNode (IExpressionNode source, LambdaExpression collectionSelector, LambdaExpression resultSelector)
-      : base (ArgumentUtility.CheckNotNull ("source", source))
+
+    public SelectManyExpressionNode (
+        string associatedIdentifier, IExpressionNode source, LambdaExpression collectionSelector, LambdaExpression resultSelector)
+        : base (
+            ArgumentUtility.CheckNotNullOrEmpty ("associatedIdentifier", associatedIdentifier),
+            ArgumentUtility.CheckNotNull ("source", source))
     {
       ArgumentUtility.CheckNotNull ("collectionSelector", collectionSelector);
       ArgumentUtility.CheckNotNull ("resultSelector", resultSelector);
@@ -78,7 +81,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       {
         // our result selector usually looks like this: (i, j) => new { i = i, j = j }
         // with the data for i coming from the previous node and j identifying the data from this node
-        
+
         // we resolve the selector by first asking the previous node to resolve i, then we substitute j by a QuerySourceReferenceExpression pointing 
         // back to us
         var resolvedResultSelector = Source.Resolve (ResultSelector.Parameters[0], ResultSelector.Body);
@@ -88,7 +91,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
       return _cachedResultSelector;
     }
-    
+
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)
     {
       ArgumentUtility.CheckNotNull ("inputParameter", inputParameter);
@@ -96,7 +99,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
       // we modify the structure of the stream of data coming into this node by our result selector,
       // so we first resolve the result selector, then we substitute the result for the inputParameter in the expressionToBeResolved
-      var resolvedResultSelector = GetResolvedResultSelector ();
+      var resolvedResultSelector = GetResolvedResultSelector();
       return ReplacingVisitor.Replace (inputParameter, resolvedResultSelector, expressionToBeResolved);
     }
 

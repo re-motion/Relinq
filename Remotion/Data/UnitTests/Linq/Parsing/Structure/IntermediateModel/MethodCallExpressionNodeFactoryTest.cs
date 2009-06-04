@@ -22,7 +22,7 @@ using Remotion.Utilities;
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 {
   [TestFixture]
-  public class ExpressionNodeFactoryTest
+  public class MethodCallExpressionNodeFactoryTest
   {
     private IExpressionNode _source;
 
@@ -36,17 +36,18 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void CreateExpressionNode ()
     {
       var selector = ExpressionHelper.CreateLambdaExpression<int, int> (i => i);
-      var result = ExpressionNodeFactory.CreateExpressionNode (typeof (SelectExpressionNode), _source, new object[] { selector });
+      var result = MethodCallExpressionNodeFactory.CreateExpressionNode (typeof (SelectExpressionNode), "foo", _source, new object[] { selector });
 
       Assert.That (result, Is.InstanceOfType (typeof (SelectExpressionNode)));
       Assert.That (((SelectExpressionNode) result).Source, Is.SameAs (_source));
       Assert.That (((SelectExpressionNode) result).Selector, Is.SameAs (selector));
+      Assert.That (((SelectExpressionNode) result).AssociatedIdentifier, Is.EqualTo ("foo"));
     }
 
     [Test]
     public void CreateExpressionNode_NullSupplied ()
     {
-      var result = ExpressionNodeFactory.CreateExpressionNode (typeof (FirstExpressionNode), _source, new object[0]);
+      var result = MethodCallExpressionNodeFactory.CreateExpressionNode (typeof (FirstExpressionNode), "foo", _source, new object[0]);
 
       Assert.That (result, Is.InstanceOfType (typeof (FirstExpressionNode)));
       Assert.That (((FirstExpressionNode) result).Source, Is.SameAs (_source));
@@ -57,7 +58,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [ExpectedException (typeof (ArgumentTypeException))]
     public void CreateExpressionNode_InvalidType ()
     {
-      ExpressionNodeFactory.CreateExpressionNode (typeof (ExpressionNodeFactoryTest), _source, new object[0]);
+      MethodCallExpressionNodeFactory.CreateExpressionNode (typeof (MethodCallExpressionNodeFactoryTest), "foo", _source, new object[0]);
     }
 
     [Test]
@@ -66,17 +67,17 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
         + "to be passed for any optional arguments.\r\nParameter name: nodeType")]
     public void CreateExpressionNode_MoreThanOneCtor ()
     {
-      ExpressionNodeFactory.CreateExpressionNode (typeof (ExpressionNodeWithTooManyCtors), _source, new object[0]);
+      MethodCallExpressionNodeFactory.CreateExpressionNode (typeof (ExpressionNodeWithTooManyCtors), "foo", _source, new object[0]);
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "The constructor of expression node type 'Remotion.Data.Linq.Parsing.Structure." 
-          + "IntermediateModel.SelectExpressionNode' only takes 2 parameters, but you specified 3 (including the source parameter).\r\n"
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "The constructor of expression node type 'Remotion.Data.Linq.Parsing.Structure."
+          + "IntermediateModel.SelectExpressionNode' only takes 3 parameters, but you specified 4 (including the identifier and the source parameter).\r\n"
           + "Parameter name: additionalConstructorParameters")]
     public void CreateExpressionNode_TooManyParameters ()
     {
       var selector = ExpressionHelper.CreateLambdaExpression ();
-      ExpressionNodeFactory.CreateExpressionNode (typeof (SelectExpressionNode), _source, new object[] { selector, selector });
+      MethodCallExpressionNodeFactory.CreateExpressionNode (typeof (SelectExpressionNode), "foo", _source, new object[] { selector, selector });
     }
   }
 }

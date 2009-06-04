@@ -22,7 +22,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
   {
     public static ConstantExpressionNode CreateConstant ()
     {
-      return new ConstantExpressionNode (typeof (int[]), new[] { 1, 2, 3 }, "x");
+      return new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3 });
     }
 
     public static SelectManyExpressionNode CreateSelectMany (IExpressionNode source)
@@ -31,7 +31,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var p2 = Expression.Parameter (typeof (Student_Detail), "sd");
       var resultSelector = Expression.Lambda (Expression.Constant (null), p1, p2);
       var collectionSelector = Expression.Lambda (Expression.Constant (null), p1);
-      return new SelectManyExpressionNode (source, collectionSelector, resultSelector);
+      return new SelectManyExpressionNode ("TODO", source, collectionSelector, resultSelector);
     }
   }
 }

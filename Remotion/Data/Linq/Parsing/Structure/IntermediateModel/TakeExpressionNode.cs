@@ -36,8 +36,12 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Queryable.Take<object> (null, 0))
                                                            };
 
-    public TakeExpressionNode (IExpressionNode source, int count)
-      : base (ArgumentUtility.CheckNotNull ("source", source), null, null)
+    public TakeExpressionNode (string associatedIdentifier, IExpressionNode source, int count)
+        : base (
+            ArgumentUtility.CheckNotNullOrEmpty ("associatedIdentifier", associatedIdentifier),
+            ArgumentUtility.CheckNotNull ("source", source),
+            null,
+            null)
     {
       Count = count;
     }
@@ -53,7 +57,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public override ParameterExpression CreateParameterForOutput ()
     {
       // this simply streams its input data to the output without modifying its structure, so we let the previous node create the parameter
-      return Source.CreateParameterForOutput ();
+      return Source.CreateParameterForOutput();
     }
 
     protected override ResultModificationBase CreateResultModification (SelectClause selectClause)

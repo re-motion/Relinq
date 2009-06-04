@@ -30,8 +30,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     private Expression _cachedPredicate;
      private Expression _cachedSelector;
 
-    protected ResultModificationExpressionNodeBase (IExpressionNode source, LambdaExpression optionalPredicate, LambdaExpression optionalSelector)
-        : base (source)
+    protected ResultModificationExpressionNodeBase (string assoicatedIdentifier, IExpressionNode source, LambdaExpression optionalPredicate, LambdaExpression optionalSelector)
+       : base (assoicatedIdentifier, source)
     {
       if (optionalPredicate != null && optionalPredicate.Parameters.Count != 1)
         throw new ArgumentException ("OptionalPredicate must have exactly one parameter.", "optionalPredicate");

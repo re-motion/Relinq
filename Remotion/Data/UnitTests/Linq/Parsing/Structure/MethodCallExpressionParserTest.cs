@@ -52,9 +52,10 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (q => q.Where (i => i > 5));
       var whereCondition = (LambdaExpression) ((UnaryExpression) methodCallExpression.Arguments[1]).Operand;
 
-      var result = _parser.Parse (_source, methodCallExpression);
+      var result = _parser.Parse ("x", _source, methodCallExpression);
 
       Assert.That (result, Is.InstanceOfType (typeof (WhereExpressionNode)));
+      Assert.That (((WhereExpressionNode) result).AssociatedIdentifier, Is.EqualTo ("x"));
       Assert.That (((WhereExpressionNode) result).Source, Is.SameAs (_source));
       Assert.That (((WhereExpressionNode) result).Predicate, Is.SameAs (whereCondition));
     }
@@ -65,7 +66,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (q => q.Select (i => i + 1));
       var selectProjection = (LambdaExpression) ((UnaryExpression) methodCallExpression.Arguments[1]).Operand;
 
-      var result = _parser.Parse (_source, methodCallExpression);
+      var result = _parser.Parse ("x", _source, methodCallExpression);
 
       Assert.That (result, Is.InstanceOfType (typeof (SelectExpressionNode)));
       Assert.That (((SelectExpressionNode) result).Source, Is.SameAs (_source));
@@ -78,7 +79,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var outer = 4;
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (q => q.Take (outer + 1));
 
-      var result = _parser.Parse (_source, methodCallExpression);
+      var result = _parser.Parse ("x", _source, methodCallExpression);
 
       Assert.That (result, Is.InstanceOfType (typeof (TakeExpressionNode)));
       Assert.That (((TakeExpressionNode) result).Source, Is.SameAs (_source));
@@ -92,7 +93,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     {
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, int> (q => q.First());
 
-      _parser.Parse (_source, methodCallExpression);
+      _parser.Parse ("x", _source, methodCallExpression);
     }
 
     [Test]
@@ -102,7 +103,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     {
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (q => q.Select ((i, j) => i));
 
-      _parser.Parse (_source, methodCallExpression);
+      _parser.Parse ("x", _source, methodCallExpression);
     }
 
   }

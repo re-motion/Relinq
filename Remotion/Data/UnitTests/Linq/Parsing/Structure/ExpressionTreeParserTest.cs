@@ -17,6 +17,7 @@ using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
@@ -107,13 +108,28 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentTypeException),
-        ExpectedMessage =
-            "Argument expression has type System.Func`1[System.Int32] when type System.Collections.Generic.IEnumerable`1[T] was expected.\r\nParameter name: expression"
-        )]
+    [ExpectedException (typeof (ParserException))]
     public void Parse_InvalidExpression ()
     {
       _expressionTreeParser.Parse (ExpressionHelper.CreateLambdaExpression());
+    }
+
+    [Test]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Cannot parse expression '1.ToString()' because it calls the unsupported method "
+        + "'ToString'. Only query methods whose first parameter represents the remaining query chain are supported.")]
+    public void Parse_InvalidMethodCall_NonQueryMethod ()
+    {
+      var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression (() => 1.ToString ());
+      _expressionTreeParser.Parse (methodCallExpression);
+    }
+
+    [Test]
+    [ExpectedException (typeof (ParserException))]
+    public void Parse_InvalidMethodCall_UnknownMethod ()
+    {
+      var source = new[] {1, 2, 3};
+      var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression (() => source.Sum());
+      _expressionTreeParser.Parse (methodCallExpression);
     }
   }
 }

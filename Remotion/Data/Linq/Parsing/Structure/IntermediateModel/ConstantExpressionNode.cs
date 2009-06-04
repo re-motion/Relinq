@@ -29,15 +29,15 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public class ConstantExpressionNode : IQuerySourceExpressionNode
   {
-    public ConstantExpressionNode (Type querySourceType, object value, string fromIdentifierName)
+    public ConstantExpressionNode (string associatedIdentifier, Type querySourceType, object value)
     {
       ArgumentUtility.CheckNotNull ("querySourceType", querySourceType);
-      ArgumentUtility.CheckNotNullOrEmpty ("fromIdentifierName", fromIdentifierName);
+      ArgumentUtility.CheckNotNullOrEmpty ("associatedIdentifier", associatedIdentifier);
 
       QuerySourceType = querySourceType;
       QuerySourceElementType = GetQuerySourceElementType (querySourceType);
       Value = value;
-      FromIdentifierName = fromIdentifierName;
+      AssociatedIdentifier = associatedIdentifier;
     }
 
     private Type GetQuerySourceElementType (Type enumerableType)
@@ -57,7 +57,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public Type QuerySourceElementType { get; private set; }
     public Type QuerySourceType { get; set; }
     public object Value { get; private set; }
-    public string FromIdentifierName { get; set; }
+    public string AssociatedIdentifier { get; set; }
 
     public IExpressionNode Source
     {
@@ -88,12 +88,12 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     public MainFromClause CreateClause ()
     {
-      return new MainFromClause (Expression.Parameter (QuerySourceElementType, FromIdentifierName), Expression.Constant (Value, QuerySourceType));
+      return new MainFromClause (Expression.Parameter (QuerySourceElementType, AssociatedIdentifier), Expression.Constant (Value, QuerySourceType));
     }
 
     public ParameterExpression CreateParameterForOutput ()
     {
-      return Expression.Parameter (QuerySourceElementType, FromIdentifierName);
+      return Expression.Parameter (QuerySourceElementType, AssociatedIdentifier);
     }
   }
 }

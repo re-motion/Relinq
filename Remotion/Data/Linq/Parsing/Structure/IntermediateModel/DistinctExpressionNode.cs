@@ -36,8 +36,12 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Queryable.Distinct<object> (null))
                                                            };
 
-    public DistinctExpressionNode (IExpressionNode source)
-      : base (ArgumentUtility.CheckNotNull ("source", source), null, null)
+    public DistinctExpressionNode (string associatedIdentifier, IExpressionNode source)
+        : base (
+            ArgumentUtility.CheckNotNullOrEmpty ("associatedIdentifier", associatedIdentifier),
+            ArgumentUtility.CheckNotNull ("source", source),
+            null,
+            null)
     {
     }
 

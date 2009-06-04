@@ -36,8 +36,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     private Expression _cachedPredicate;
 
-    public WhereExpressionNode (IExpressionNode source, LambdaExpression predicate)
-      : base (ArgumentUtility.CheckNotNull ("source", source))
+    public WhereExpressionNode (string associatedIdentifier, IExpressionNode source, LambdaExpression predicate)
+        : base (
+            ArgumentUtility.CheckNotNullOrEmpty ("associatedIdentifier", associatedIdentifier),
+            ArgumentUtility.CheckNotNull ("source", source))
     {
       ArgumentUtility.CheckNotNull ("predicate", predicate);
 
@@ -66,7 +68,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public override ParameterExpression CreateParameterForOutput ()
     {
       // this simply streams its input data to the output without modifying its structure, so we let the previous node create the parameter
-      return Source.CreateParameterForOutput ();
+      return Source.CreateParameterForOutput();
     }
 
     public override IClause CreateClause (IClause previousClause)

@@ -60,8 +60,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void Resolve_ReplacesParameter_WithProjection ()
     {
-      var node = new SelectManyExpressionNode (
-          SourceStub,
+      var node = new SelectManyExpressionNode ("TODO", SourceStub,
           _collectionSelector,
           ExpressionHelper.CreateLambdaExpression<int, int, AnonymousType> ((a, b) => new AnonymousType (a, b)));
 
@@ -88,7 +87,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void GetResolvedResultSelector ()
     {
-      var node = new SelectManyExpressionNode (SourceStub, _collectionSelector, _resultSelector);
+      var node = new SelectManyExpressionNode ("TODO", SourceStub, _collectionSelector, _resultSelector);
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, new QuerySourceReferenceExpression (node));
 
       var result = node.GetResolvedResultSelector();
@@ -99,7 +98,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void GetResolvedCollectionSelector ()
     {
-      var node = new SelectManyExpressionNode (SourceStub, _collectionSelector, _resultSelector);
+      var node = new SelectManyExpressionNode ("TODO", SourceStub, _collectionSelector, _resultSelector);
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
 
       var result = node.GetResolvedCollectionSelector();
@@ -111,7 +110,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void GetResolvedResultSelector_Cached ()
     {
       var sourceMock = new MockRepository().StrictMock<IExpressionNode>();
-      var node = new SelectManyExpressionNode (sourceMock, _collectionSelector, _resultSelector);
+      var node = new SelectManyExpressionNode ("TODO", sourceMock, _collectionSelector, _resultSelector);
       var expectedResult = ExpressionHelper.CreateLambdaExpression();
 
       sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything)).Repeat.Once().Return (
@@ -129,7 +128,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void GetResolvedCollectionSelector_Cached ()
     {
       var sourceMock = new MockRepository().StrictMock<IExpressionNode>();
-      var node = new SelectManyExpressionNode (sourceMock, _collectionSelector, _resultSelector);
+      var node = new SelectManyExpressionNode ("TODO", sourceMock, _collectionSelector, _resultSelector);
       var expectedResult = ExpressionHelper.CreateLambdaExpression();
 
       sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything)).Repeat.Once().Return (
@@ -147,7 +146,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void CreateClause ()
     {
       IClause previousClause = ExpressionHelper.CreateClause();
-      var node = new SelectManyExpressionNode (SourceStub, _collectionSelector, _resultSelector);
+      var node = new SelectManyExpressionNode ("TODO", SourceStub, _collectionSelector, _resultSelector);
 
       var clause = (AdditionalFromClause) node.CreateClause (previousClause);
 
@@ -163,7 +162,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       IClause previousClause = ExpressionHelper.CreateClause();
       var collectionSelector = ExpressionHelper.CreateLambdaExpression<Student, IEnumerable<Student>> (s => s.Friends);
-      var node = new SelectManyExpressionNode (SourceStub, collectionSelector, _resultSelector);
+      var node = new SelectManyExpressionNode ("TODO", SourceStub, collectionSelector, _resultSelector);
 
       var clause = (MemberFromClause) node.CreateClause (previousClause);
 
@@ -182,7 +181,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel());
 
       var collectionSelector = Expression.Lambda (subQueryExpression, Expression.Parameter (typeof (int), "i"));
-      var node = new SelectManyExpressionNode (SourceStub, collectionSelector, _resultSelector);
+      var node = new SelectManyExpressionNode ("TODO", SourceStub, collectionSelector, _resultSelector);
 
       var clause = (SubQueryFromClause) node.CreateClause (previousClause);
 
@@ -196,8 +195,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void CreateParameterForOutput ()
     {
-      var node = new SelectManyExpressionNode (
-          SourceStub,
+      var node = new SelectManyExpressionNode ("TODO", SourceStub,
           ExpressionHelper.CreateLambdaExpression<Student, IEnumerable<int>> (y => y.Scores),
           ExpressionHelper.CreateLambdaExpression<Student, int, AnonymousType> ((s, i) => new AnonymousType()));
 

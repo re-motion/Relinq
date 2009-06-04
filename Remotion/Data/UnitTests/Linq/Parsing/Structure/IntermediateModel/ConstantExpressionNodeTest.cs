@@ -29,7 +29,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void Initialization_QuerySourceElementType ()
     {
-      var node = new ConstantExpressionNode (typeof (int[]), null, "x");
+      var node = new ConstantExpressionNode ("x", typeof (int[]), null);
       Assert.That (node.QuerySourceElementType, Is.EqualTo (typeof (int)));
     }
 
@@ -40,7 +40,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
         )]
     public void Initialization_TypeNotEnumerable ()
     { 
-      new ConstantExpressionNode (typeof (int), 5, "x");
+      new ConstantExpressionNode ("x", typeof (int), 5);
     }
 
 
@@ -59,7 +59,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void CreateParameterForOutput ()
     {
-      var node = new ConstantExpressionNode (typeof (int[]), new[] { 1, 2, 3, 4, 5 }, "x");
+      var node = new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3, 4, 5 });
       var parameter = node.CreateParameterForOutput ();
 
       Assert.That (parameter.Name, Is.EqualTo ("x"));
@@ -69,7 +69,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void CreateClause ()
     {
-      var node = new ConstantExpressionNode (typeof (int[]), new[] { 1, 2, 3, 4, 5 }, "x");
+      var node = new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3, 4, 5 });
       var constantClause = node.CreateClause();
 
       Assert.That (constantClause.Identifier.Name, Is.EqualTo ("x"));
@@ -83,14 +83,14 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [ExpectedException (typeof (InvalidOperationException))]
     public void CreateClause_WithNonNullPreviousClause ()
     {
-      var node = new ConstantExpressionNode (typeof (int[]), new[] { 1, 2, 3, 4, 5 }, "x");
+      var node = new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3, 4, 5 });
       node.CreateClause (ExpressionHelper.CreateClause());
     }
 
     [Test]
     public void CreateClause_WithNullPreviousClause ()
     {
-      var node = new ConstantExpressionNode (typeof (int[]), new[] { 1, 2, 3, 4, 5 }, "x");
+      var node = new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3, 4, 5 });
       var constantClause = (MainFromClause) node.CreateClause (null);
 
       Assert.That (constantClause.Identifier.Name, Is.EqualTo ("x"));

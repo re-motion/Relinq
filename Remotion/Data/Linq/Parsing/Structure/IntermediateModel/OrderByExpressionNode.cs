@@ -31,13 +31,15 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   {
     public static readonly MethodInfo[] SupportedMethods = new[]
                                                            {
-                                                               GetSupportedMethod (() => Queryable.OrderBy<object, object>(null, null))
+                                                               GetSupportedMethod (() => Queryable.OrderBy<object, object> (null, null))
                                                            };
 
     private Expression _cachedSelector;
 
-    public OrderByExpressionNode (IExpressionNode source, LambdaExpression keySelector)
-        : base (ArgumentUtility.CheckNotNull ("source", source))
+    public OrderByExpressionNode (string associatedIdentifier, IExpressionNode source, LambdaExpression keySelector)
+        : base (
+            ArgumentUtility.CheckNotNullOrEmpty ("associatedIdentifier", associatedIdentifier),
+            ArgumentUtility.CheckNotNull ("source", source))
     {
       ArgumentUtility.CheckNotNull ("keySelector", keySelector);
 
@@ -66,7 +68,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public override ParameterExpression CreateParameterForOutput ()
     {
       // this simply streams its input data to the output without modifying its structure, so we let the previous node create the parameter
-      return Source.CreateParameterForOutput ();
+      return Source.CreateParameterForOutput();
     }
 
     public override IClause CreateClause (IClause previousClause)

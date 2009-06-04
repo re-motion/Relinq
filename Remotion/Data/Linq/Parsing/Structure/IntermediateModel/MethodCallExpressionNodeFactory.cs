@@ -14,12 +14,8 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Utilities;
-using Remotion.Collections;
 
 namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 {
@@ -31,9 +27,9 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   /// constructor parameters handed to the <see cref="CreateExpressionNode"/> method are passed on to the constructor; for each argument where no 
   /// parameter is passed, <see langword="null"/> is passed to the constructor.
   /// </remarks>
-  public class ExpressionNodeFactory
+  public class MethodCallExpressionNodeFactory
   {
-    public static IExpressionNode CreateExpressionNode (Type nodeType, IExpressionNode source, object[] additionalConstructorParameters)
+    public static IExpressionNode CreateExpressionNode (Type nodeType, string associatedIdentifier, IExpressionNode source, object[] additionalConstructorParameters)
     {
       ArgumentUtility.CheckNotNullAndTypeIsAssignableFrom ("nodeType", nodeType, typeof (IExpressionNode));
       ArgumentUtility.CheckNotNull ("source", source);
@@ -48,26 +44,27 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
         throw new ArgumentException (message, "nodeType");
       }
 
-      object[] constructorParameterArray = GetParameterArray (constructors[0], source, additionalConstructorParameters);
+      object[] constructorParameterArray = GetParameterArray (constructors[0], associatedIdentifier, source, additionalConstructorParameters);
       return (IExpressionNode) constructors[0].Invoke (constructorParameterArray);
     }
 
-    private static object[] GetParameterArray (ConstructorInfo nodeTypeConstructor, IExpressionNode source, object[] additionalConstructorParameters)
+    private static object[] GetParameterArray (ConstructorInfo nodeTypeConstructor, string associatedIdentifier, IExpressionNode source, object[] additionalConstructorParameters)
     {
       var parameterInfos = nodeTypeConstructor.GetParameters();
-      if (additionalConstructorParameters.Length >= parameterInfos.Length)
+      if (additionalConstructorParameters.Length > parameterInfos.Length - 2)
       {
         string message = string.Format (
-            "The constructor of expression node type '{0}' only takes {1} parameters, but you specified {2} (including the source parameter).",
+            "The constructor of expression node type '{0}' only takes {1} parameters, but you specified {2} (including the identifier and the source parameter).",
             nodeTypeConstructor.DeclaringType.FullName, 
             parameterInfos.Length, 
-            additionalConstructorParameters.Length + 1);
+            additionalConstructorParameters.Length + 2);
         throw new ArgumentException (message, "additionalConstructorParameters");
       }
 
       var constructorParameters = new object[parameterInfos.Length];
-      constructorParameters[0] = source;
-      additionalConstructorParameters.CopyTo (constructorParameters, 1);
+      constructorParameters[0] = associatedIdentifier;
+      constructorParameters[1] = source;
+      additionalConstructorParameters.CopyTo (constructorParameters, 2);
       return constructorParameters;
     }
   }

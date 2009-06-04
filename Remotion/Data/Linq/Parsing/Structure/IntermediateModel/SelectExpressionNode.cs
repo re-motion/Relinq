@@ -32,13 +32,15 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   {
     public static readonly MethodInfo[] SupportedMethods = new[]
                                                            {
-                                                               GetSupportedMethod (() => Queryable.Select<object, object>(null, o => null))
+                                                               GetSupportedMethod (() => Queryable.Select<object, object> (null, o => null))
                                                            };
 
     private Expression _cachedSelector;
 
-    public SelectExpressionNode (IExpressionNode source, LambdaExpression selector)
-      : base (ArgumentUtility.CheckNotNull ("source", source))
+    public SelectExpressionNode (string associatedIdentifier, IExpressionNode source, LambdaExpression selector)
+        : base (
+            ArgumentUtility.CheckNotNullOrEmpty ("associatedIdentifier", associatedIdentifier),
+            ArgumentUtility.CheckNotNull ("source", source))
     {
       ArgumentUtility.CheckNotNull ("selector", selector);
 
@@ -65,7 +67,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
       // we modify the structure of the stream of data coming into this node by our selector,
       // so we first resolve the selector, then we substitute the result for the inputParameter in the expressionToBeResolved
-      var resolvedSelector = GetResolvedSelector ();
+      var resolvedSelector = GetResolvedSelector();
       return ReplacingVisitor.Replace (inputParameter, resolvedSelector, expressionToBeResolved);
     }
 
@@ -73,7 +75,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     {
       // we modify the structure of the stream of data coming into this node by our selector,
       // so we create a parameter capable of holding the modified stream elements
-      return Expression.Parameter (Selector.Body.Type, "TODO"); // TODO: Find a way to get the right name from the following clause in ExpressionTreeParser, if any.
+      return Expression.Parameter (Selector.Body.Type, "TODO");
+          // TODO: Find a way to get the right name from the following clause in ExpressionTreeParser, if any.
     }
 
     public override IClause CreateClause (IClause previousClause)

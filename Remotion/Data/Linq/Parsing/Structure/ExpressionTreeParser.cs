@@ -42,25 +42,47 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
     // TODO: call partial tree evaluator and SubQueryFindingVisitor
 
-    public IExpressionNode Parse (Expression expression)
+    public IExpressionNode Parse (Expression expression) // string associatedIdentifier
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
+      // if (associatedIdentifier == null) associatedIdentifier = generate();
+
       var methodCallExpression = expression as MethodCallExpression;
       if (methodCallExpression != null)
-        return ParseMethodCallExpression (methodCallExpression);
+        return ParseMethodCallExpression (methodCallExpression); // , associatedIdentifier
       else
       {
         var constantExpression = PartialTreeEvaluatingVisitor.EvaluateSubtree (expression);
-        return new ConstantExpressionNode (constantExpression.Type, constantExpression.Value, "TODO"); // TODO: Implement algorithm and test
+        try
+        {
+          return new ConstantExpressionNode ("TODO", constantExpression.Type, constantExpression.Value); // associatedIdentifier
+        }
+        catch (ArgumentTypeException ex)
+        {
+          var message = string.Format ("Cannot parse expression '{0}' as it has an unsupported type. {1}", expression, ex.Message);
+          throw new ParserException (message, ex);
+        }
       }
     }
 
-    private IExpressionNode ParseMethodCallExpression (MethodCallExpression methodCallExpression)
+    private IExpressionNode ParseMethodCallExpression (MethodCallExpression methodCallExpression) // string associatedIdentifier
     {
       var parser = new MethodCallExpressionParser (_nodeTypeRegistry);
-      var source = Parse (methodCallExpression.Arguments[0]);
-      return parser.Parse (source, methodCallExpression);
+      // var associatedIdentifierForSource = methodCallExpression.Arguments[1].Operand.Parameters[0].Name / null
+
+      if (methodCallExpression.Arguments.Count == 0)
+      {
+        var message = string.Format (
+            "Cannot parse expression '{0}' because it calls the unsupported method '{1}'. Only query methods "
+            + "whose first parameter represents the remaining query chain are supported.",
+            methodCallExpression,
+            methodCallExpression.Method.Name);
+        throw new ParserException (message);
+      }
+
+      var source = Parse (methodCallExpression.Arguments[0]); //, associatedIdentifierForSource
+      return parser.Parse ("TODO", source, methodCallExpression); // , associatedIdentifier
     }
   }
 }

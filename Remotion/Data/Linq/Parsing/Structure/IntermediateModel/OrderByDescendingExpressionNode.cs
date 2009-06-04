@@ -36,8 +36,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     private Expression _cachedSelector;
 
-    public OrderByDescendingExpressionNode (IExpressionNode source, LambdaExpression keySelector)
-        : base (ArgumentUtility.CheckNotNull ("source", source))
+    public OrderByDescendingExpressionNode (string associatedIdentifier, IExpressionNode source, LambdaExpression keySelector)
+        : base (
+            ArgumentUtility.CheckNotNullOrEmpty ("associatedIdentifier", associatedIdentifier),
+            ArgumentUtility.CheckNotNull ("source", source))
     {
       ArgumentUtility.CheckNotNull ("keySelector", keySelector);
 
@@ -66,7 +68,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public override ParameterExpression CreateParameterForOutput ()
     {
       // this simply streams its input data to the output without modifying its structure, so we let the previous node create the parameter
-      return Source.CreateParameterForOutput ();
+      return Source.CreateParameterForOutput();
     }
 
     public override IClause CreateClause (IClause previousClause)

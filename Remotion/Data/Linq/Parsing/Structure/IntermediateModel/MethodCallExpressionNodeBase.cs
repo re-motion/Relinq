@@ -17,6 +17,7 @@ using System;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 {
@@ -39,11 +40,14 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return method.IsGenericMethod ? method.GetGenericMethodDefinition() : method;
     }
 
-    protected MethodCallExpressionNodeBase (IExpressionNode source)
+    protected MethodCallExpressionNodeBase (string associatedIdentifier, IExpressionNode source)
     {
+      ArgumentUtility.CheckNotNullOrEmpty ("associatedIdentifier", associatedIdentifier);
+      AssociatedIdentifier = associatedIdentifier;
       Source = source;
     }
 
+    public string AssociatedIdentifier { get; set; }
     public IExpressionNode Source { get; private set; }
 
     public abstract Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved);

@@ -42,34 +42,37 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Queryable.Sum ((IQueryable<long?>) null)),
                                                                GetSupportedMethod (() => Queryable.Sum ((IQueryable<float>) null)),
                                                                GetSupportedMethod (() => Queryable.Sum ((IQueryable<float?>) null)),
-                                                               
-                                                               GetSupportedMethod (() => Queryable.Sum<object> (null, o => (decimal)0)),
-                                                               GetSupportedMethod (() => Queryable.Sum<object> (null, o => (decimal?)0)),
-                                                               GetSupportedMethod (() => Queryable.Sum<object> (null, o => (double)0)),
-                                                               GetSupportedMethod (() => Queryable.Sum<object> (null, o => (double?)0)),
-                                                               GetSupportedMethod (() => Queryable.Sum<object> (null, o => (int)0)),
-                                                               GetSupportedMethod (() => Queryable.Sum<object> (null, o => (int?)0)),
-                                                               GetSupportedMethod (() => Queryable.Sum<object> (null, o => (long)0)),
-                                                               GetSupportedMethod (() => Queryable.Sum<object> (null, o => (long?)0)),
-                                                               GetSupportedMethod (() => Queryable.Sum<object> (null, o => (float)0)),
-                                                               GetSupportedMethod (() => Queryable.Sum<object> (null, o => (float?)0)),
+                                                               GetSupportedMethod (() => Queryable.Sum<object> (null, o => (decimal) 0)),
+                                                               GetSupportedMethod (() => Queryable.Sum<object> (null, o => (decimal?) 0)),
+                                                               GetSupportedMethod (() => Queryable.Sum<object> (null, o => (double) 0)),
+                                                               GetSupportedMethod (() => Queryable.Sum<object> (null, o => (double?) 0)),
+                                                               GetSupportedMethod (() => Queryable.Sum<object> (null, o => (int) 0)),
+                                                               GetSupportedMethod (() => Queryable.Sum<object> (null, o => (int?) 0)),
+                                                               GetSupportedMethod (() => Queryable.Sum<object> (null, o => (long) 0)),
+                                                               GetSupportedMethod (() => Queryable.Sum<object> (null, o => (long?) 0)),
+                                                               GetSupportedMethod (() => Queryable.Sum<object> (null, o => (float) 0)),
+                                                               GetSupportedMethod (() => Queryable.Sum<object> (null, o => (float?) 0)),
                                                            };
 
-    public SumExpressionNode (IExpressionNode source, LambdaExpression optionalSelector)
-      : base (ArgumentUtility.CheckNotNull ("source", source), null, optionalSelector)
+    public SumExpressionNode (string associatedIdentifier, IExpressionNode source, LambdaExpression optionalSelector)
+        : base (
+            ArgumentUtility.CheckNotNullOrEmpty ("associatedIdentifier", associatedIdentifier),
+            ArgumentUtility.CheckNotNull ("source", source),
+            null,
+            optionalSelector)
     {
     }
 
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)
     {
       // no data streams out from this node, so we cannot resolve any expressions
-      throw CreateResolveNotSupportedException ();
+      throw CreateResolveNotSupportedException();
     }
 
     public override ParameterExpression CreateParameterForOutput ()
     {
       // no data streams out from this node, so we cannot create a parameter accepting that data
-      throw CreateOutputParameterNotSupportedException ();
+      throw CreateOutputParameterNotSupportedException();
     }
 
     protected override ResultModificationBase CreateResultModification (SelectClause selectClause)
