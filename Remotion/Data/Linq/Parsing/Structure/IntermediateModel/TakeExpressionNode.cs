@@ -29,7 +29,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   /// When this node is used, it usually follows (or replaces) a <see cref="SelectExpressionNode"/> of an <see cref="IExpressionNode"/> chain that 
   /// represents a query.
   /// </summary>
-  public class TakeExpressionNode : MethodCallExpressionNodeBase
+  public class TakeExpressionNode : ResultModificationExpressionNodeBase
   {
     public static readonly MethodInfo[] SupportedMethods = new[]
                                                            {
@@ -37,7 +37,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                            };
 
     public TakeExpressionNode (IExpressionNode source, int count)
-      : base (ArgumentUtility.CheckNotNull ("source", source))
+      : base (ArgumentUtility.CheckNotNull ("source", source), null, null)
     {
       Count = count;
     }
@@ -56,14 +56,9 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return Source.CreateParameterForOutput ();
     }
 
-    public override IClause CreateClause (IClause previousClause)
+    protected override ResultModificationBase CreateResultModification (SelectClause selectClause)
     {
-      ArgumentUtility.CheckNotNull ("previousClause", previousClause);
-
-      var selectClause = GetSelectClauseForResultModification (previousClause);
-      selectClause.AddResultModification (new TakeResultModification (selectClause, Count));
-
-      return selectClause;
+      return new TakeResultModification (selectClause, Count);
     }
   }
 }
