@@ -38,7 +38,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void Resolve_ReplacesParameter_WithProjection ()
     {
-      var node = new SelectExpressionNode ("TODO", SourceStub, ExpressionHelper.CreateLambdaExpression<int, int> (j => j * j));
+      var node = new SelectExpressionNode ("x", SourceStub, ExpressionHelper.CreateLambdaExpression<int, int> (j => j * j));
       var expression = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
 
       var result = node.Resolve (expression.Parameters[0], expression.Body);
@@ -54,7 +54,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void GetResolvedSelector ()
     {
       var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new SelectExpressionNode ("TODO", SourceStub, selector);
+      var node = new SelectExpressionNode ("x", SourceStub, selector);
 
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
 
@@ -68,7 +68,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var sourceMock = new MockRepository().StrictMock<IExpressionNode>();
       var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new SelectExpressionNode ("TODO", sourceMock, selector);
+      var node = new SelectExpressionNode ("x", sourceMock, selector);
       var expectedResult = ExpressionHelper.CreateLambdaExpression();
 
       sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything)).Repeat.Once().Return (
@@ -87,7 +87,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var previousClause = ExpressionHelper.CreateClause();
       var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new SelectExpressionNode ("TODO", SourceStub, selector);
+      var node = new SelectExpressionNode ("x", SourceStub, selector);
 
       var selectClause = (SelectClause) node.CreateClause (previousClause);
 
@@ -99,11 +99,11 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void CreateParameterForOutput ()
     {
-      var node = new SelectExpressionNode ("TODO", SourceStub, ExpressionHelper.CreateLambdaExpression<int, string> (y => y.ToString()));
+      var node = new SelectExpressionNode ("x", SourceStub, ExpressionHelper.CreateLambdaExpression<int, string> (y => y.ToString()));
 
       var parameter = node.CreateParameterForOutput ();
 
-      Assert.That (parameter.Name, Is.EqualTo ("TODO"));
+      Assert.That (parameter.Name, Is.EqualTo ("x"));
       Assert.That (parameter.Type, Is.SameAs (typeof (string)));
     }
   }

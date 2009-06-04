@@ -75,8 +75,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     {
       // we modify the structure of the stream of data coming into this node by our selector,
       // so we create a parameter capable of holding the modified stream elements
-      return Expression.Parameter (Selector.Body.Type, "TODO");
-          // TODO: Find a way to get the right name from the following clause in ExpressionTreeParser, if any.
+      return Expression.Parameter (Selector.Body.Type, AssociatedIdentifier);
     }
 
     public override IClause CreateClause (IClause previousClause)

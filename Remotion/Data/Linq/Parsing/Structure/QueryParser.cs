@@ -68,7 +68,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
     public QueryModel GetParsedQuery (Expression expressionTreeRoot)
     {
       ArgumentUtility.CheckNotNull ("expressionTreeRoot", expressionTreeRoot);
-      var node = _expressionTreeParser.Parse (expressionTreeRoot);
+      var node = _expressionTreeParser.Parse (expressionTreeRoot, null);
 
       IClause lastClause = CreateClauseChain (node);
       SelectClause selectClause = GetOrCreateSelectClause(node, lastClause);

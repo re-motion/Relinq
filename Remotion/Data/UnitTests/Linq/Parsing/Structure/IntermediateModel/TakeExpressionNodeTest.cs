@@ -39,7 +39,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void Resolve_PassesExpressionToSource ()
     {
       var sourceMock = MockRepository.GenerateMock<IExpressionNode>();
-      var node = new TakeExpressionNode ("TODO", sourceMock,0);
+      var node = new TakeExpressionNode ("x", sourceMock,0);
       var expression = ExpressionHelper.CreateLambdaExpression();
       var parameter = ExpressionHelper.CreateParameterExpression();
       var expectedResult = ExpressionHelper.CreateExpression();
@@ -55,7 +55,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void CreateParameterForOutput ()
     {
       var source = new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3, 4, 5 });
-      var node = new TakeExpressionNode ("TODO", source, 7);
+      var node = new TakeExpressionNode ("x", source, 7);
       var parameter = node.CreateParameterForOutput ();
 
       Assert.That (parameter.Name, Is.EqualTo ("x"));
@@ -65,7 +65,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void CreateClause_Count ()
     {
-      var node = new TakeExpressionNode ("TODO", SourceStub, 3);
+      var node = new TakeExpressionNode ("x", SourceStub, 3);
       var clause = (SelectClause) node.CreateClause (ExpressionHelper.CreateClause ());
       Assert.That (((TakeResultModification) clause.ResultModifications[0]).Count, Is.EqualTo (3));
     }
@@ -73,7 +73,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void CreateClause_PreviousClauseIsSelect ()
     {
-      var node = new TakeExpressionNode ("TODO", SourceStub, 3);
+      var node = new TakeExpressionNode ("x", SourceStub, 3);
 
       TestCreateClause_PreviousClauseIsSelect (node, typeof (TakeResultModification));
     }
@@ -81,7 +81,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void CreateClause_PreviousClauseIsNoSelect ()
     {
-      var node = new TakeExpressionNode ("TODO", SourceStub, 3);
+      var node = new TakeExpressionNode ("x", SourceStub, 3);
       TestCreateClause_PreviousClauseIsNoSelect (node, typeof (TakeResultModification));
     }
   }

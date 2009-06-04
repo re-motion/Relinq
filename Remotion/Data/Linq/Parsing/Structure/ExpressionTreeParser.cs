@@ -28,6 +28,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
   public class ExpressionTreeParser
   {
     private readonly MethodCallExpressionNodeTypeRegistry _nodeTypeRegistry;
+    private readonly UniqueIdentifierGenerator _identifierGenerator = new UniqueIdentifierGenerator ();
 
     public ExpressionTreeParser (MethodCallExpressionNodeTypeRegistry nodeTypeRegistry)
     {
@@ -42,21 +43,22 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
     // TODO: call partial tree evaluator and SubQueryFindingVisitor
 
-    public IExpressionNode Parse (Expression expression) // string associatedIdentifier
+    public IExpressionNode Parse (Expression expression, string associatedIdentifier)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      // if (associatedIdentifier == null) associatedIdentifier = generate();
+      if (associatedIdentifier == null)
+        associatedIdentifier = _identifierGenerator.GetUniqueIdentifier ("<generated>_");
 
       var methodCallExpression = expression as MethodCallExpression;
       if (methodCallExpression != null)
-        return ParseMethodCallExpression (methodCallExpression); // , associatedIdentifier
+        return ParseMethodCallExpression (methodCallExpression, associatedIdentifier);
       else
       {
         var constantExpression = PartialTreeEvaluatingVisitor.EvaluateSubtree (expression);
         try
         {
-          return new ConstantExpressionNode ("TODO", constantExpression.Type, constantExpression.Value); // associatedIdentifier
+          return new ConstantExpressionNode (associatedIdentifier, constantExpression.Type, constantExpression.Value);
         }
         catch (ArgumentTypeException ex)
         {
@@ -66,11 +68,8 @@ namespace Remotion.Data.Linq.Parsing.Structure
       }
     }
 
-    private IExpressionNode ParseMethodCallExpression (MethodCallExpression methodCallExpression) // string associatedIdentifier
+    private IExpressionNode ParseMethodCallExpression (MethodCallExpression methodCallExpression, string associatedIdentifier)
     {
-      var parser = new MethodCallExpressionParser (_nodeTypeRegistry);
-      // var associatedIdentifierForSource = methodCallExpression.Arguments[1].Operand.Parameters[0].Name / null
-
       if (methodCallExpression.Arguments.Count == 0)
       {
         var message = string.Format (
@@ -81,8 +80,28 @@ namespace Remotion.Data.Linq.Parsing.Structure
         throw new ParserException (message);
       }
 
-      var source = Parse (methodCallExpression.Arguments[0]); //, associatedIdentifierForSource
-      return parser.Parse ("TODO", source, methodCallExpression); // , associatedIdentifier
+      string associatedIdentifierForSource = InferAssociatedIdentifierForSource (methodCallExpression);
+      var source = Parse (methodCallExpression.Arguments[0], associatedIdentifierForSource);
+
+      var parser = new MethodCallExpressionParser (_nodeTypeRegistry);
+      return parser.Parse (associatedIdentifier, source, methodCallExpression);
+    }
+
+    /// <summary>
+    /// Infers the associated identifier for the source expression node contained in methodCallExpression.Arguments[0]. For example, for the
+    /// call chain "<c>source.Where (i => i > 5)</c>" (which actually reads "<c>Where (source, i => i > 5</c>"), the identifier "i" is associated
+    /// with the node generated for "source". If no identifier can be inferred, <see langword="null"/> is returned.
+    /// </summary>
+    private string InferAssociatedIdentifierForSource (MethodCallExpression methodCallExpression)
+    {
+      if (methodCallExpression.Arguments.Count > 1 && methodCallExpression.Arguments[1] is UnaryExpression)
+      {
+        var operand = ((UnaryExpression) methodCallExpression.Arguments[1]).Operand;
+        var lambdaExpression = operand as LambdaExpression;
+        if (lambdaExpression != null && lambdaExpression.Parameters.Count == 1)
+          return lambdaExpression.Parameters[0].Name;
+      }
+      return null;
     }
   }
 }

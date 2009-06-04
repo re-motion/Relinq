@@ -62,7 +62,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var newSelector = ((SelectClause) queryModel.SelectOrGroupClause).Selector;
       Assert.That (newSelector.Body, Is.SameAs (newSelector.Parameters[0]));
       Assert.That (newSelector.Parameters[0].Type, Is.SameAs (typeof (int)));
-      Assert.That (newSelector.Parameters[0].Name, Is.EqualTo ("TODO"));
+      Assert.That (newSelector.Parameters[0].Name, Is.EqualTo ("<generated>_0"));
     }
 
     [Test]
@@ -74,7 +74,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       QueryModel queryModel = _queryParser.GetParsedQuery (constantExpression);
 
       Assert.That (queryModel.MainFromClause, Is.Not.Null);
-      Assert.That (queryModel.MainFromClause.Identifier.Name, Is.EqualTo ("TODO"));
+      Assert.That (queryModel.MainFromClause.Identifier.Name, Is.EqualTo ("<generated>_0"));
       Assert.That (((ConstantExpression) queryModel.MainFromClause.QuerySource).Value, Is.SameAs (value));
     }
 
@@ -94,7 +94,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
-    [Ignore ("TODO 1191")]
     public void CreateQueryModel_CorrectFromIdentifier ()
     {
       IQueryable<int> value = new[] { 1, 2, 3 }.AsQueryable ();
@@ -120,7 +119,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var newSelector = ((SelectClause) queryModel.SelectOrGroupClause).Selector;
       Assert.That (newSelector.Body, Is.SameAs (newSelector.Parameters[0]));
       Assert.That (newSelector.Parameters[0].Type, Is.SameAs (typeof (int)));
-      Assert.That (newSelector.Parameters[0].Name, Is.EqualTo ("TODO"));
+      Assert.That (newSelector.Parameters[0].Name, Is.EqualTo ("i"));
     }
 
     [Test]

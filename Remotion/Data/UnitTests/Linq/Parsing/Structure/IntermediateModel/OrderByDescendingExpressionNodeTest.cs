@@ -40,7 +40,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var sourceMock = MockRepository.GenerateMock<IExpressionNode>();
       var selector = ExpressionHelper.CreateLambdaExpression<int, int> (i => i);
-      var node = new OrderByDescendingExpressionNode ("TODO", sourceMock, selector);
+      var node = new OrderByDescendingExpressionNode ("x", sourceMock, selector);
       var expression = ExpressionHelper.CreateLambdaExpression();
       var parameter = ExpressionHelper.CreateParameterExpression();
       var expectedResult = ExpressionHelper.CreateExpression();
@@ -56,7 +56,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void CreateParameterForOutput ()
     {
       var source = new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3, 4, 5 });
-      var node = new OrderByDescendingExpressionNode ("TODO", source, ExpressionHelper.CreateLambdaExpression<int, int> (i => i));
+      var node = new OrderByDescendingExpressionNode ("x", source, ExpressionHelper.CreateLambdaExpression<int, int> (i => i));
       var parameter = node.CreateParameterForOutput ();
 
       Assert.That (parameter.Name, Is.EqualTo ("x"));
@@ -67,7 +67,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void GetResolvedSelector ()
     {
       var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new OrderByDescendingExpressionNode ("TODO", SourceStub, selector);
+      var node = new OrderByDescendingExpressionNode ("x", SourceStub, selector);
 
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
 
@@ -81,7 +81,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var sourceMock = new MockRepository ().StrictMock<IExpressionNode> ();
       var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new OrderByDescendingExpressionNode ("TODO", sourceMock, selector);
+      var node = new OrderByDescendingExpressionNode ("x", sourceMock, selector);
       var expectedResult = ExpressionHelper.CreateLambdaExpression ();
 
       sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything)).Repeat.Once ().Return (expectedResult);
@@ -99,7 +99,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var previousClause = ExpressionHelper.CreateClause ();
       var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new OrderByDescendingExpressionNode ("TODO", SourceStub, selector);
+      var node = new OrderByDescendingExpressionNode ("x", SourceStub, selector);
 
       var clause = (OrderByClause) node.CreateClause (previousClause);
 

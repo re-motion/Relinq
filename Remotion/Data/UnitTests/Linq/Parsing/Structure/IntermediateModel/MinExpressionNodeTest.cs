@@ -48,7 +48,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [ExpectedException (typeof (InvalidOperationException))]
     public void Resolve_ThrowsInvalidOperationException ()
     {
-      var node = new MinExpressionNode ("TODO", SourceStub, null);
+      var node = new MinExpressionNode ("x", SourceStub, null);
       node.Resolve (ExpressionHelper.CreateParameterExpression (), ExpressionHelper.CreateExpression ());
     }
 
@@ -56,7 +56,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void GetResolvedSelector ()
     {
       var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new MinExpressionNode ("TODO", SourceStub, selector);
+      var node = new MinExpressionNode ("x", SourceStub, selector);
 
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
 
@@ -69,7 +69,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void GetResolvedSelector_Null ()
     {
       var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();
-      var node = new MinExpressionNode ("TODO", sourceMock, null);
+      var node = new MinExpressionNode ("x", sourceMock, null);
       var result = node.GetResolvedOptionalSelector ();
       Assert.That (result, Is.Null);
     }
@@ -79,7 +79,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var sourceMock = new MockRepository ().StrictMock<IExpressionNode> ();
       var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new MinExpressionNode ("TODO", sourceMock, selector);
+      var node = new MinExpressionNode ("x", sourceMock, selector);
       var expectedResult = ExpressionHelper.CreateLambdaExpression ();
 
       sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything)).Repeat.Once ().Return (expectedResult);
@@ -96,21 +96,21 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [ExpectedException (typeof (InvalidOperationException))]
     public void CreateParameterForOutput ()
     {
-      var node = new MinExpressionNode ("TODO", SourceStub, null);
+      var node = new MinExpressionNode ("x", SourceStub, null);
       node.CreateParameterForOutput ();
     }
 
     [Test]
     public void CreateClause_WithoutSelector_PreviousClauseIsSelect ()
     {
-      var node = new MinExpressionNode ("TODO", SourceStub, null);
+      var node = new MinExpressionNode ("x", SourceStub, null);
       TestCreateClause_PreviousClauseIsSelect (node, typeof (MinResultModification));
     }
 
     [Test]
     public void CreateClause_WithoutSelector_PreviousClauseIsNoSelect ()
     {
-      var node = new MinExpressionNode ("TODO", SourceStub, null);
+      var node = new MinExpressionNode ("x", SourceStub, null);
       TestCreateClause_PreviousClauseIsNoSelect (node, typeof (MinResultModification));
     }
 
@@ -118,7 +118,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void CreateClause_WithSelector_AdjustsSelectClause ()
     {
       var selector = ExpressionHelper.CreateLambdaExpression<int, string> (i => i.ToString ());
-      var node = new MinExpressionNode ("TODO", SourceStub, selector);
+      var node = new MinExpressionNode ("x", SourceStub, selector);
 
       var selectorOfPreviousClause = ExpressionHelper.CreateLambdaExpression<Student, int> (s => s.ID);
       var expectedNewSelector = ExpressionHelper.CreateLambdaExpression<Student, string> (s => s.ID.ToString ());
