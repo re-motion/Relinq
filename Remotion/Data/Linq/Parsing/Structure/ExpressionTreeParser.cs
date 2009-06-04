@@ -35,6 +35,11 @@ namespace Remotion.Data.Linq.Parsing.Structure
       _nodeTypeRegistry = nodeTypeRegistry;
     }
 
+    public MethodCallExpressionNodeTypeRegistry NodeTypeRegistry
+    {
+      get { return _nodeTypeRegistry; }
+    }
+
     // TODO: call partial tree evaluator and SubQueryFindingVisitor
 
     public IExpressionNode Parse (Expression expression)

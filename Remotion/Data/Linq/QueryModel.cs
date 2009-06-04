@@ -16,6 +16,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.DataObjectModel;
@@ -43,7 +44,7 @@ namespace Remotion.Data.Linq
     /// <summary>
     /// Initializes a new instance of <see cref="QueryModel"/>
     /// </summary>
-    /// <param name="resultType">The type of the result of a executed linq.</param>
+    /// <param name="resultType">The type of the underlying LINQ query, usually a type implementing <see cref="IQueryable{T}"/>.</param>
     /// <param name="mainFromClause">The first from in a linq query mapped to <see cref="MainFromClause"/></param>
     /// <param name="selectOrGroupClause">The Select mapped to <see cref="SelectClause"/> or Group clause mapped to <see cref="GroupClause"/> depending to liqn query.</param>
     public QueryModel (Type resultType, MainFromClause mainFromClause, ISelectGroupClause selectOrGroupClause)
