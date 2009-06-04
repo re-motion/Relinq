@@ -34,12 +34,11 @@ namespace Remotion.Data.Linq
   public class QueryModel : ICloneable
   {
     private readonly List<IBodyClause> _bodyClauses = new List<IBodyClause> ();
-
     private readonly Dictionary<string, IResolveableClause> _clausesByIdentifier = new Dictionary<string, IResolveableClause> ();
+    private readonly QueryModelUniqueIdentifierGenerator _uniqueIdentifierGenerator;
 
     private ISelectGroupClause _selectOrGroupClause;
     private Expression _expressionTree;
-    private int _identifierCounter;
 
     /// <summary>
     /// Initializes a new instance of <see cref="QueryModel"/>
@@ -52,6 +51,8 @@ namespace Remotion.Data.Linq
       ArgumentUtility.CheckNotNull ("resultType", resultType);
       ArgumentUtility.CheckNotNull ("mainFromClause", mainFromClause);
       ArgumentUtility.CheckNotNull ("SelectOrGroupClause", selectOrGroupClause);
+
+      _uniqueIdentifierGenerator = new QueryModelUniqueIdentifierGenerator (this);
 
       ResultType = resultType;
       MainFromClause = mainFromClause;
@@ -133,14 +134,14 @@ namespace Remotion.Data.Linq
     }
 
     /// <summary>
-    /// Method to get <see cref="IResolveableClause"/>
+    /// Method to get <see cref="IResolveableClause"/> by identifier.
     /// </summary>
     /// <param name="identifierName">The name of the identifier.</param>
     /// <param name="identifierType">The type of the identifier.</param>
     /// <returns>The <see cref="IResolveableClause"/> for the given identifier.</returns>
     public IResolveableClause GetResolveableClause (string identifierName, Type identifierType)
     {
-      ArgumentUtility.CheckNotNull ("identifierName", identifierName);
+      ArgumentUtility.CheckNotNullOrEmpty ("identifierName", identifierName);
       ArgumentUtility.CheckNotNull ("identifierType", identifierType);
 
       IResolveableClause clause = GetResolveableClauseWithoutTypeCheck(identifierName);
@@ -149,8 +150,15 @@ namespace Remotion.Data.Linq
       return clause;
     }
 
-    private IResolveableClause GetResolveableClauseWithoutTypeCheck (string identifierName)
+    /// <summary>
+    /// Method to get <see cref="IResolveableClause"/> by identifier name, without considering the type of the identifier.
+    /// </summary>
+    /// <param name="identifierName">The name of the identifier.</param>
+    /// <returns>The <see cref="IResolveableClause"/> for the given identifier name.</returns>
+    public IResolveableClause GetResolveableClauseWithoutTypeCheck (string identifierName)
     {
+      ArgumentUtility.CheckNotNullOrEmpty ("identifierName", identifierName);
+
       if (identifierName == MainFromClause.Identifier.Name)
         return MainFromClause;
       else
@@ -266,17 +274,7 @@ namespace Remotion.Data.Linq
     public string GetUniqueIdentifier (string prefix)
     {
       ArgumentUtility.CheckNotNullOrEmpty ("prefix", prefix);
-
-      
-      string identifier;
-      do
-      {
-        identifier = prefix + _identifierCounter;
-        ++_identifierCounter;
-      }
-      while (GetResolveableClauseWithoutTypeCheck (identifier) != null);
-
-      return identifier;
+      return _uniqueIdentifierGenerator.GetUniqueIdentifier (prefix);
     }
   }
 }

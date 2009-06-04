@@ -61,6 +61,7 @@
     <Compile Include="Clauses\ResultModifications\SingleResultModification.cs" />
     <Compile Include="Clauses\ResultModifications\DistinctResultModification.cs" />
     <Compile Include="Clauses\ResultModifications\CountResultModification.cs" />
+    <Compile Include="UniqueIdentifierGenerator.cs" />
     <Compile Include="EagerFetching\ThenFetchManyExpression.cs" />
     <Compile Include="EagerFetching\ThenFetchOneExpression.cs" />
     <Compile Include="EagerFetching\FetchFilteringExpressionTreeVisitor.cs" />
@@ -208,6 +209,7 @@
     <Compile Include="QueryModel.cs" />
     <Compile Include="Clauses\SelectClause.cs" />
     <Compile Include="Clauses\ISelectGroupClause.cs" />
+    <Compile Include="QueryModelUniqueIdentifierGenerator.cs" />
     <Compile Include="QueryProviderBase.cs" />
     <Compile Include="QueryableBase.cs" />
     <Compile Include="DataObjectModel\BinaryCondition.cs" />
@@ -263,6 +265,7 @@
     <Compile Include="Parsing\ExpressionTreeVisitors\PartialTreeEvaluatingVisitor.cs" />
     <Compile Include="StringBuilding\StringBuildingQueryVisitor.cs" />
     <Compile Include="Clauses\WhereClause.cs" />
+    <Compile Include="UniqueIdentifierGeneratorBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\remotion.snk">
