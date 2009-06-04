@@ -21,6 +21,10 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 {
+  /// <summary>
+  /// Acts as a base class for <see cref="IExpressionNode"/>s standing for <see cref="MethodCallExpression"/>s that modify the result of the query
+  /// rather than representing actual clauses, such as <see cref="CountExpressionNode"/> or <see cref="DistinctExpressionNode"/>.
+  /// </summary>
   public abstract class ResultModificationExpressionNodeBase : MethodCallExpressionNodeBase
   {
     private Expression _cachedPredicate;
