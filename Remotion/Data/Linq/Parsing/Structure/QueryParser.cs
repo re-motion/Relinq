@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Utilities;
@@ -73,9 +74,10 @@ namespace Remotion.Data.Linq.Parsing.Structure
       IClause lastClause = CreateClauseChain (node);
       SelectClause selectClause = GetOrCreateSelectClause(node, lastClause);
 
-      // TODO: After COMMONS-1178, this code will not be needed any longer.
+      // TODO 1178: After COMMONS-1178, this code will not be needed any longer.
       var bodyClauses = new List<IBodyClause>();
       var findMainFromClause = FindMainFromClause (selectClause, bodyClauses);
+      bodyClauses.Reverse (); // need to reverse the list of body clauses to have the last clause (nearest to the MainFromClause) first
       
       var queryModel = new QueryModel (expressionTreeRoot.Type, findMainFromClause, selectClause);
       foreach (var bodyClause in bodyClauses)
@@ -98,8 +100,36 @@ namespace Remotion.Data.Linq.Parsing.Structure
       else
       { // this is not the end of the cahin, process the rest of the chain before processing this node
         var previousClause = CreateClauseChain (node.Source);
+
+        // TODO 1180: This is only temporary, we will implement a better model that does not require LetClause later on.
+        if (previousClause is SelectClause)
+          previousClause = CreateLetClauseFromSelectClause((SelectClause) previousClause);
+
         return node.CreateClause (previousClause);
       }
+    }
+
+    // TODO 1180: This is only temporary, we will implement a better model that does not require LetClause later on.
+    // This creates a LetClause from an existing SelectClause if the SelectClause matches the pattern emitted by the C# compiler for "let" clauses.
+    private IClause CreateLetClauseFromSelectClause (SelectClause selectClause)
+    {
+      // selectClause.Selector is usually something like "i => new { i = i, j = whatever }"
+      // we take "j" as the letIdentifier, "whatever" as the letExpression, and the whole expression as the letProjection
+
+      var newExpression = selectClause.Selector.Body as NewExpression;
+      if (newExpression != null && newExpression.Members.Count > 0)
+      {
+        Assertion.IsTrue (newExpression.Members.Count == newExpression.Arguments.Count, "This is ensured by Expression.New.");
+        var letMember = newExpression.Members.Last();
+        Assertion.IsTrue (letMember.Name.StartsWith ("get_"), 
+            "C# emits a MethodInfo to the property getter as the member to access the assignment in a let expression");
+
+        Expression letExpression = newExpression.Arguments.Last();
+        ParameterExpression letIdentifier = Expression.Parameter (letExpression.Type, letMember.Name.Substring (4));
+        LambdaExpression letProjection = selectClause.Selector;
+        return new LetClause (selectClause.PreviousClause, letIdentifier, letExpression, letProjection);
+      }
+      return selectClause;
     }
 
     /// <summary>
@@ -123,7 +153,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       }
     }
 
-    // TODO: After COMMONS-1178, this code will not be needed any longer.
+    // TODO 1178: After COMMONS-1178, this code will not be needed any longer.
     private MainFromClause FindMainFromClause (IClause clause, List<IBodyClause> bodyClauses)
     {
       if (clause is MainFromClause)

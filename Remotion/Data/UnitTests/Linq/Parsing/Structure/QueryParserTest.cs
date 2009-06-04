@@ -135,5 +135,31 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (((WhereClause) queryModel.BodyClauses[0]).PreviousClause, Is.SameAs (queryModel.MainFromClause));
       Assert.That (((WhereClause) queryModel.BodyClauses[0]).Predicate, Is.SameAs(((UnaryExpression)expressionTree.Arguments[1]).Operand));
     }
+
+    [Test]
+    public void CreateQueryModel_WithSelectClauseBeforeAnotherClause ()
+    {
+      IQueryable<int> value = new[] { 1, 2, 3 }.AsQueryable ();
+      var expressionTree = (MethodCallExpression) ExpressionHelper.MakeExpression (
+          () => value.Select (i => new { i = i, j = i.ToString() }).Where (trans => trans.i > 5));
+
+      QueryModel queryModel = _queryParser.GetParsedQuery (expressionTree);
+
+      Assert.That (queryModel.BodyClauses[0], Is.InstanceOfType (typeof (LetClause)));
+      var letClause = (LetClause) queryModel.BodyClauses[0];
+
+      Assert.That (letClause.PreviousClause, Is.SameAs (queryModel.MainFromClause));
+      Assert.That (letClause.Identifier.Name, Is.EqualTo ("j"));
+      Assert.That (letClause.Identifier.Type, Is.SameAs (typeof (string)));
+
+      Assert.That (queryModel.BodyClauses[1].PreviousClause, Is.SameAs (letClause));
+
+      var expectedLetExpression = ExpressionHelper.MakeExpression<int, string> (i => i.ToString ());
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedLetExpression, letClause.Expression);
+
+      var expectedLetProjection = ((UnaryExpression) ((MethodCallExpression) expressionTree.Arguments[0]).Arguments[1]).Operand;
+      Assert.That (letClause.ProjectionExpression, Is.SameAs (expectedLetProjection));
+
+    }
   }
 }
