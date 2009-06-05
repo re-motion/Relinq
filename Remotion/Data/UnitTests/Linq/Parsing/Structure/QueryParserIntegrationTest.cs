@@ -15,6 +15,7 @@
 // 
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
@@ -51,6 +52,44 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (selectClause.PreviousClause, Is.EqualTo (whereClause));
 
       Assert.That (whereClause.PreviousClause, Is.EqualTo (queryModel.MainFromClause));
+    }
+
+    [Test]
+    public void ThreeWheres ()
+    {
+      var query = WhereTestQueryGenerator.CreateMultiWhereQuery (_querySource);
+      var queryModel = _queryParser.GetParsedQuery (query.Expression);
+      
+      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
+      var whereClause1 = (WhereClause) queryModel.BodyClauses[0];
+      var whereClause2 = (WhereClause) queryModel.BodyClauses[1];
+      var whereClause3 = (WhereClause) queryModel.BodyClauses[2];
+      
+      Assert.That (queryModel.MainFromClause.PreviousClause, Is.Null);
+      
+      Assert.That (queryModel.BodyClauses.Count, Is.EqualTo (3));
+      Assert.That (whereClause1.PreviousClause, Is.EqualTo (queryModel.MainFromClause));
+      Assert.That (whereClause2.PreviousClause, Is.EqualTo (whereClause1));
+      Assert.That (selectClause.PreviousClause, Is.EqualTo (whereClause3));
+      Assert.That (whereClause3.PreviousClause, Is.EqualTo (whereClause2));
+    }
+
+    [Test]
+    public void WhereWithDifferentComparisons ()
+    {
+      var query = WhereTestQueryGenerator.CreateWhereQueryWithDifferentComparisons (_querySource);
+      var expression = query.Expression;
+      var queryModel = _queryParser.GetParsedQuery (expression);
+
+      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
+      var whereClause = (WhereClause) queryModel.BodyClauses[0];
+
+      Assert.That (queryModel.MainFromClause.PreviousClause, Is.Null);
+      Assert.That (selectClause.PreviousClause, Is.EqualTo (whereClause));
+      Assert.That (whereClause.PreviousClause, Is.EqualTo (queryModel.MainFromClause));
+
+      var operand = ((UnaryExpression)((MethodCallExpression)expression).Arguments[1]).Operand;
+      Assert.That (whereClause.Predicate, Is.SameAs (operand));
     }
   }
 }
