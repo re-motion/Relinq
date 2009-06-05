@@ -89,6 +89,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     {
       var query = WhereTestQueryGenerator.CreateWhereQueryWithDifferentComparisons (_querySource);
       var expression = query.Expression;
+      var navigator = new ExpressionTreeNavigator (expression);
       var queryModel = _queryParser.GetParsedQuery (expression);
 
       var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
@@ -98,8 +99,31 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (selectClause.PreviousClause, Is.EqualTo (whereClause));
       Assert.That (whereClause.PreviousClause, Is.EqualTo (queryModel.MainFromClause));
 
-      var operand = ((UnaryExpression) ((MethodCallExpression) expression).Arguments[1]).Operand;
-      Assert.That (whereClause.Predicate, Is.SameAs (operand));
+      var whereMethodCall = navigator.Arguments[1].Operand.Expression;
+      Assert.That (whereClause.Predicate, Is.SameAs (whereMethodCall));
+    }
+
+    [Test]
+    public void MultiFromsAndWhere ()
+    {
+      var expression = MixedTestQueryGenerator.CreateMultiFromWhereQuery (_querySource, _querySource).Expression;
+      var navigator = new ExpressionTreeNavigator (expression);
+      var queryModel = _queryParser.GetParsedQuery (expression);
+
+      var additionalFromClause = (AdditionalFromClause) queryModel.BodyClauses[0];
+      var whereClause = (WhereClause) queryModel.BodyClauses[1];
+
+      Assert.That (queryModel.MainFromClause.PreviousClause, Is.Null);
+      Assert.That (additionalFromClause.PreviousClause, Is.EqualTo (queryModel.MainFromClause));
+      Assert.That (whereClause.PreviousClause, Is.EqualTo (additionalFromClause));
+
+      var selectMethodCall = navigator;
+      var whereMethodCall = selectMethodCall.Arguments[0];
+      var selectManyMethodCall = whereMethodCall.Arguments[0];
+      var constantExpression = selectManyMethodCall.Arguments[0];
+
+      Assert.That (additionalFromClause.FromExpression, Is.SameAs (selectManyMethodCall.Arguments[1].Operand.Expression));
+      Assert.That (whereClause.Predicate, Is.SameAs (whereMethodCall.Arguments[1].Operand.Expression));
     }
 
     [Test]
@@ -199,10 +223,26 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var orderByClause = (OrderByClause) queryModel.BodyClauses[1];
 
       Assert.That (queryModel.MainFromClause.PreviousClause, Is.Null);
-      Assert.That (whereClause.PreviousClause, Is.EqualTo(queryModel.MainFromClause));
+      Assert.That (whereClause.PreviousClause, Is.EqualTo (queryModel.MainFromClause));
       Assert.That (orderByClause.PreviousClause, Is.EqualTo (whereClause));
       Assert.That (queryModel.SelectOrGroupClause.PreviousClause, Is.EqualTo (orderByClause));
     }
-    
+
+    [Test]
+    public void MultiFromsWithOrderBy ()
+    {
+      var query = MixedTestQueryGenerator.CreateMultiFromWhereOrderByQuery (_querySource, _querySource);
+      var queryModel = _queryParser.GetParsedQuery (query.Expression);
+
+      var memberFromClause = (AdditionalFromClause) queryModel.BodyClauses[0];
+      var whereClause = (WhereClause) queryModel.BodyClauses[1];
+      var orderByClause = (OrderByClause) queryModel.BodyClauses[2];
+
+      Assert.That (queryModel.MainFromClause.PreviousClause, Is.Null);
+      Assert.That (memberFromClause.PreviousClause, Is.EqualTo (queryModel.MainFromClause));
+      Assert.That (whereClause.PreviousClause, Is.EqualTo (memberFromClause));
+      Assert.That (orderByClause.PreviousClause, Is.EqualTo (whereClause));
+      Assert.That (queryModel.SelectOrGroupClause.PreviousClause, Is.EqualTo (orderByClause));
+    }
   }
 }
