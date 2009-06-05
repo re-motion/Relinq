@@ -158,5 +158,51 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (letClause.PreviousClause, Is.EqualTo (queryModel.MainFromClause));
       Assert.That (queryModel.SelectOrGroupClause.PreviousClause, Is.EqualTo (letClause));
     }
+
+    [Test]
+    public void OrderByAndThenBy ()
+    {
+      var expression = OrderByTestQueryGenerator.CreateOrderByQueryWithOrderByAndThenBy_OrderByExpression (_querySource);
+      var queryModel = _queryParser.GetParsedQuery (expression);
+
+      Assert.That (queryModel.MainFromClause.PreviousClause, Is.Null);
+      var orderByClause = (OrderByClause) queryModel.BodyClauses[0];
+      Assert.That (orderByClause.OrderingList.Count, Is.EqualTo (3));
+      Assert.That (orderByClause.PreviousClause, Is.EqualTo (queryModel.MainFromClause));
+      Assert.That (queryModel.SelectOrGroupClause.PreviousClause, Is.EqualTo (orderByClause));
+    }
+
+    [Test]
+    public void MultipleOrderBys ()
+    {
+      var query = OrderByTestQueryGenerator.CreateOrderByQueryWithMultipleOrderBys (_querySource);
+      var queryModel = _queryParser.GetParsedQuery (query.Expression);
+
+      Assert.That (queryModel.MainFromClause.PreviousClause, Is.Null);
+      var orderByClause1 = (OrderByClause) queryModel.BodyClauses[0];
+      Assert.That (orderByClause1.OrderingList.Count, Is.EqualTo (3));
+      var orderByClause2 = (OrderByClause) queryModel.BodyClauses[1];
+      Assert.That (orderByClause2.OrderingList.Count, Is.EqualTo (1));
+
+      Assert.That (orderByClause1.PreviousClause, Is.EqualTo (queryModel.MainFromClause));
+      Assert.That (orderByClause2.PreviousClause, Is.EqualTo (orderByClause1));
+      Assert.That (queryModel.SelectOrGroupClause.PreviousClause, Is.EqualTo (orderByClause2));
+    }
+
+    [Test]
+    public void OrderByAndWhere ()
+    {
+      var expression = MixedTestQueryGenerator.CreateOrderByQueryWithWhere_OrderByExpression (_querySource);
+      var queryModel = _queryParser.GetParsedQuery (expression);
+
+      var whereClause = (WhereClause) queryModel.BodyClauses[0];
+      var orderByClause = (OrderByClause) queryModel.BodyClauses[1];
+
+      Assert.That (queryModel.MainFromClause.PreviousClause, Is.Null);
+      Assert.That (whereClause.PreviousClause, Is.EqualTo(queryModel.MainFromClause));
+      Assert.That (orderByClause.PreviousClause, Is.EqualTo (whereClause));
+      Assert.That (queryModel.SelectOrGroupClause.PreviousClause, Is.EqualTo (orderByClause));
+    }
+    
   }
 }
