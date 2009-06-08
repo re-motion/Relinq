@@ -13,9 +13,11 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+using System;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Utilities;
+using System.Linq;
 
 namespace Remotion.Data.Linq.Parsing.FieldResolving
 {
@@ -26,21 +28,25 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
   {
     public class Result
     {
-      public Result (Expression reducedExpression, IResolveableClause fromClause)
+      public Result (Expression reducedExpression, IResolveableClause fromClause, bool hackNeeded)
       {
-        ArgumentUtility.CheckNotNull ("fromClause", fromClause);
+        if (!hackNeeded)
+          ArgumentUtility.CheckNotNull ("fromClause", fromClause);
 
         ReducedExpression = reducedExpression;
         ResolveableClause = fromClause;
+        HackNeeded = hackNeeded; // TODO 1096: Remove.
       }
 
       public Expression ReducedExpression { get; private set; }
       public IResolveableClause ResolveableClause { get; private set; }
+      public bool HackNeeded { get; private set; } // TODO 1096: Remove.
     }
 
     private readonly QueryModel _queryModel;
 
     private IResolveableClause _clause;
+    private bool _hackNeeded; // TODO 1096: Remove.
 
     public QueryModelFieldResolverVisitor (QueryModel queryModel)
     {
@@ -50,13 +56,12 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
 
     public Result ParseAndReduce (Expression expression)
     {
-      //_fromClause = null;
       _clause = null;
+      _hackNeeded = false; // TODO 1096: Remove.
       
       Expression reducedExpression = VisitExpression (expression);
-      //if (_fromClause != null)
-      if (_clause != null)
-        return new Result (reducedExpression, _clause);
+      if (_clause != null || _hackNeeded)
+        return new Result (reducedExpression, _clause, _hackNeeded);
       else
         return null;
     }
@@ -64,7 +69,12 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
     protected override Expression VisitParameterExpression (ParameterExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
+
       _clause = _queryModel.GetResolveableClause (expression.Name, expression.Type);
+
+      if (_clause == null && expression.Name.StartsWith ("<generated>")) // TODO 1096: Remove.
+        _hackNeeded = true; // TODO 1096: Remove.
+
       if (_clause != null)
         return base.VisitParameterExpression (expression);
       else
