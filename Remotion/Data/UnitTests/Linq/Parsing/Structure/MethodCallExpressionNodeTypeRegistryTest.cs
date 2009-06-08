@@ -142,7 +142,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       AssertAllMethodsRegistered (registry, typeof (ThenByDescendingExpressionNode));
       AssertAllMethodsRegistered (registry, typeof (DistinctExpressionNode));
       AssertAllMethodsRegistered (registry, typeof (SingleExpressionNode));
-      AssertAllMethodsRegistered (registry, typeof (SingleOrDefaultExpressionNode));
       AssertAllMethodsRegistered (registry, typeof (TakeExpressionNode));
       AssertAllMethodsRegistered (registry, typeof (CastExpressionNode));
     }

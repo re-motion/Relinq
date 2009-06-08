@@ -157,7 +157,6 @@
     <Compile Include="Parsing\Structure\IntermediateModel\ThenByExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\TakeExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\SumExpressionNode.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\SingleOrDefaultExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\SingleExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\OrderByDescendingExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\OrderByExpressionNode.cs" />

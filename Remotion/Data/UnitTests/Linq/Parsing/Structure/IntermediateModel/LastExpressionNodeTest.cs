@@ -21,7 +21,6 @@ using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.ResultModifications;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
-using Remotion.Development.UnitTesting;
 using Rhino.Mocks;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
@@ -40,6 +39,20 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void SupportedMethod_WithPredicate ()
     {
       MethodInfo method = GetGenericMethodDefinition (q => q.Last (i => i > 5));
+      Assert.That (LastExpressionNode.SupportedMethods, List.Contains (method));
+    }
+
+    [Test]
+    public void SupportedMethod_LastOrDefault_WithoutPredicate ()
+    {
+      MethodInfo method = GetGenericMethodDefinition (q => q.LastOrDefault ());
+      Assert.That (LastExpressionNode.SupportedMethods, List.Contains (method));
+    }
+
+    [Test]
+    public void SupportedMethod_LastOrDefault_WithPredicate ()
+    {
+      MethodInfo method = GetGenericMethodDefinition (q => q.LastOrDefault (i => i > 5));
       Assert.That (LastExpressionNode.SupportedMethods, List.Contains (method));
     }
 

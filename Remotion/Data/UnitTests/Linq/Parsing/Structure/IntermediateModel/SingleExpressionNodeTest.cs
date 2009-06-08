@@ -44,6 +44,21 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
+    public void SupportedMethod_SingleOrDefault_WithoutPredicate ()
+    {
+      MethodInfo method = GetGenericMethodDefinition (q => q.SingleOrDefault ());
+      Assert.That (SingleExpressionNode.SupportedMethods, List.Contains (method));
+    }
+
+    [Test]
+    public void SupportedMethod_SingleOrDefault_WithPredicate ()
+    {
+      MethodInfo method = GetGenericMethodDefinition (q => q.SingleOrDefault (i => i > 5));
+      Assert.That (SingleExpressionNode.SupportedMethods, List.Contains (method));
+    }
+
+
+    [Test]
     [ExpectedException (typeof (InvalidOperationException))]
     public void Resolve_ThrowsInvalidOperationException ()
     {
