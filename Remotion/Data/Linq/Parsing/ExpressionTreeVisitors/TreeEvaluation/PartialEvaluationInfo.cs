@@ -13,23 +13,32 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Expressions;
+using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation
 {
-  public class PartialEvaluationData
+  public class PartialEvaluationInfo
   {
-    public PartialEvaluationData ()
+    private readonly HashSet<Expression> _evaluatableExpressions = new HashSet<Expression>();
+
+    public int Count
     {
-      UsedParameters = new Dictionary<Expression, HashSet<ParameterExpression>> ();
-      DeclaredParameters = new Dictionary<Expression, HashSet<ParameterExpression>> ();
-      SubQueries = new Dictionary<Expression, HashSet<SubQueryExpression>> ();
+      get { return _evaluatableExpressions.Count; }
     }
 
-    public Dictionary<Expression, HashSet<ParameterExpression>> UsedParameters { get; private set; }
-    public Dictionary<Expression, HashSet<ParameterExpression>> DeclaredParameters { get; private set; }
-    public Dictionary<Expression, HashSet<SubQueryExpression>> SubQueries { get; private set; }
+    public void AddEvaluatableExpression (Expression expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+      _evaluatableExpressions.Add (expression);
+    }
+
+    public bool IsEvaluatableExpression (Expression expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+      return _evaluatableExpressions.Contains (expression);
+    }
   }
 }

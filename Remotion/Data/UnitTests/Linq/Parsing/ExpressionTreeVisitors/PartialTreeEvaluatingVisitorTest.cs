@@ -14,8 +14,10 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Linq;
 using NUnit.Framework;
 using System.Linq.Expressions;
+using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Expressions;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Collections;
@@ -54,17 +56,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
       PartialTreeEvaluatingVisitor evaluator = new PartialTreeEvaluatingVisitor(treeRoot);
       Expression result = evaluator.GetEvaluatedTree ();
       Assert.AreSame (result, result);
-    }
-
-    [Test]
-    public void EvaluateTopInvoke ()
-    {
-      ParameterExpression parameter = Expression.Parameter (typeof (string), "s");
-      Expression treeRoot = Expression.Invoke (Expression.Lambda (parameter, parameter), Expression.Constant ("foo"));
-      PartialTreeEvaluatingVisitor evaluator = new PartialTreeEvaluatingVisitor (treeRoot);
-      Expression result = evaluator.GetEvaluatedTree ();
-      Expression expected = Expression.Constant ("foo");
-      ExpressionTreeComparer.CheckAreEqualTrees (expected, result);
     }
 
     [Test]
@@ -116,6 +107,87 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
       PartialTreeEvaluatingVisitor evaluator = new PartialTreeEvaluatingVisitor (lambdaExpression);
       Expression result = evaluator.GetEvaluatedTree ();
       Assert.AreSame (lambdaExpression, result);
+    }
+
+    [Test]
+    public void EvaluateWholeQueryTree ()
+    {
+// ReSharper disable ConvertToConstant.Local
+      var i = 1;
+// ReSharper restore ConvertToConstant.Local
+
+      var source1 = ExpressionHelper.CreateQuerySource ();
+      var source2 = ExpressionHelper.CreateQuerySource ();
+      var query = from s1 in source1
+                  from s2 in source2
+                  where 2 > i + 5
+                  select s1.ID + (1 + i);
+
+      var partiallyEvaluatedExpression = new PartialTreeEvaluatingVisitor (query.Expression).GetEvaluatedTree ();
+
+      var selectMethodCallExpression = (MethodCallExpression) partiallyEvaluatedExpression;
+      var whereMethodCallExpression = (MethodCallExpression) selectMethodCallExpression.Arguments[0];
+      var selectManyMethodCallExpression = (MethodCallExpression) whereMethodCallExpression.Arguments[0];
+
+      var selectSelectorNavigator = new ExpressionTreeNavigator (selectMethodCallExpression.Arguments[1]);
+      var wherePredicateNavigator = new ExpressionTreeNavigator (whereMethodCallExpression.Arguments[1]);
+      var selectManyCollectionSelectorNavigator = new ExpressionTreeNavigator (selectManyMethodCallExpression.Arguments[1]);
+
+      Assert.That (selectSelectorNavigator.Operand.Body.Right.Value, Is.EqualTo (2));
+      Assert.That (wherePredicateNavigator.Operand.Body.Value, Is.EqualTo (false));
+      Assert.That (selectManyCollectionSelectorNavigator.Operand.Body.Value, Is.SameAs (source2));
+    }
+
+    [Test]
+    public void EvaluateWholeQueryTree_ThatDoesNotUseItsParameters ()
+    {
+      var source = ExpressionHelper.CreateQuerySource ();
+      var query = from s1 in source
+                  where false
+                  select 0 + int.Parse ("0");
+
+      var partiallyEvaluatedExpression = new PartialTreeEvaluatingVisitor (query.Expression).GetEvaluatedTree ();
+
+      var selectMethodCallExpression = (MethodCallExpression) partiallyEvaluatedExpression;
+      var whereMethodCallExpression = (MethodCallExpression) selectMethodCallExpression.Arguments[0];
+
+      var selectSelectorNavigator = new ExpressionTreeNavigator (selectMethodCallExpression.Arguments[1]);
+      var wherePredicateNavigator = new ExpressionTreeNavigator (whereMethodCallExpression.Arguments[1]);
+
+      Assert.That (selectSelectorNavigator.Operand.Body.Value, Is.EqualTo (0));
+      Assert.That (wherePredicateNavigator.Operand.Body.Value, Is.EqualTo (false));
+    }
+
+    [Test]
+    public void EvaluateWholeQueryTree_WhoseLambdasAreInConstantsInsteadOf ()
+    {
+      var source = ExpressionHelper.CreateQuerySource ();
+
+      Expression<Func<Student, bool>> predicate = s1 => false;
+      var queryExpression = ExpressionHelper.MakeExpression (() => source.Where (predicate));
+
+      Assert.That (((MethodCallExpression) queryExpression).Arguments[1].NodeType, Is.EqualTo (ExpressionType.MemberAccess),
+          "Usually, this would be a UnaryExpression (Quote containing the Lambda); but we pass a MemberExpression containing the lambda.");
+
+      var partiallyEvaluatedExpression = new PartialTreeEvaluatingVisitor (queryExpression).GetEvaluatedTree ();
+      var whereMethodCallExpression = (MethodCallExpression) partiallyEvaluatedExpression;
+      var wherePredicateNavigator = new ExpressionTreeNavigator (whereMethodCallExpression.Arguments[1]);
+      var wherePredicateLambdaNavigator = new ExpressionTreeNavigator ((Expression) wherePredicateNavigator.Value);
+
+      Assert.That (wherePredicateLambdaNavigator.Body.Value, Is.EqualTo (false));
+    }
+
+    [Test]
+    public void EvaluateWholeQueryTree_WithoutLambdas ()
+    {
+      var source = ExpressionHelper.CreateQuerySource ();
+
+      var queryExpression = ExpressionHelper.MakeExpression (() => source.Count ());
+
+      var partiallyEvaluatedExpression = new PartialTreeEvaluatingVisitor (queryExpression).GetEvaluatedTree ();
+      var countMethodCallExpression = (MethodCallExpression) partiallyEvaluatedExpression;
+
+      Assert.That (countMethodCallExpression.Method.Name, Is.EqualTo ("Count"));
     }
   }
 }
