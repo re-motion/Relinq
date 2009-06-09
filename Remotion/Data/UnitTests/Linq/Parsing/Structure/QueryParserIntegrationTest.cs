@@ -42,33 +42,44 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     {
       var expression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (_querySource);
       var queryModel = _queryParser.GetParsedQuery (expression);
+      var navigator = new ExpressionTreeNavigator (expression);
+
+      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
 
       Assert.That (queryModel.MainFromClause.PreviousClause, Is.Null);
-      Assert.That (queryModel.SelectOrGroupClause.PreviousClause, Is.EqualTo (queryModel.MainFromClause));
+      Assert.That (selectClause.PreviousClause, Is.EqualTo (queryModel.MainFromClause));
+      Assert.That (navigator.Arguments[1].Operand.Expression, Is.SameAs (selectClause.Selector));
     }
 
     [Test]
     public void SimpleWhere ()
     {
-      var query = WhereTestQueryGenerator.CreateSimpleWhereQuery (_querySource);
-      var queryModel = _queryParser.GetParsedQuery (query.Expression);
+      var expression = WhereTestQueryGenerator.CreateSimpleWhereQuery (_querySource).Expression;
+      var queryModel = _queryParser.GetParsedQuery (expression);
+      var navigator = new ExpressionTreeNavigator (expression);
+
+      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
+      var whereClause = (WhereClause) queryModel.BodyClauses[0];
 
       Assert.That (queryModel.MainFromClause.Identifier.Name, Is.EqualTo ("s"));
       Assert.That (queryModel.MainFromClause.JoinClauses, Is.Empty);
       Assert.That (queryModel.MainFromClause.PreviousClause, Is.Null);
-
-      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
-      var whereClause = (WhereClause) queryModel.BodyClauses[0];
       Assert.That (selectClause.PreviousClause, Is.EqualTo (whereClause));
-
       Assert.That (whereClause.PreviousClause, Is.EqualTo (queryModel.MainFromClause));
+      Assert.That (navigator.Arguments[1].Operand.Expression, Is.SameAs (whereClause.Predicate));
+
+      var parameterExpression = Expression.Parameter (typeof (Student), "s");
+      var expectedSelectExpression = Expression.Lambda (typeof (Func<Student, Student>), parameterExpression, parameterExpression);
+      Assert.That (expectedSelectExpression.Body.NodeType, Is.EqualTo (selectClause.Selector.Body.NodeType));
+      Assert.That (expectedSelectExpression.Body.Type, Is.EqualTo (selectClause.Selector.Body.Type));
     }
 
     [Test]
     public void ThreeWheres ()
     {
-      var query = WhereTestQueryGenerator.CreateMultiWhereQuery (_querySource);
-      var queryModel = _queryParser.GetParsedQuery (query.Expression);
+      var expression = WhereTestQueryGenerator.CreateMultiWhereQuery (_querySource).Expression;
+      var queryModel = _queryParser.GetParsedQuery (expression);
+      var navigator = new ExpressionTreeNavigator (expression);
 
       var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
       var whereClause1 = (WhereClause) queryModel.BodyClauses[0];
@@ -82,13 +93,26 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (whereClause2.PreviousClause, Is.EqualTo (whereClause1));
       Assert.That (selectClause.PreviousClause, Is.EqualTo (whereClause3));
       Assert.That (whereClause3.PreviousClause, Is.EqualTo (whereClause2));
+
+      var whereMethodCall1 = navigator.Arguments[0].Arguments[0].Arguments[1].Operand.Expression;
+      var whereMethodCall2 = navigator.Arguments[0].Arguments[1].Operand.Expression;
+      var whereMethodCall3 = navigator.Arguments[1].Operand.Expression;
+
+      Assert.That (whereClause1.Predicate, Is.SameAs (whereMethodCall1));
+      Assert.That (whereClause2.Predicate, Is.SameAs (whereMethodCall2));
+      Assert.That (whereClause3.Predicate, Is.SameAs (whereMethodCall3));
+
+      var parameterExpression = Expression.Parameter (typeof (Student), "s");
+      var expectedSelectExpression = Expression.Lambda (typeof (Func<Student, Student>), parameterExpression, parameterExpression);
+      
+      Assert.That (expectedSelectExpression.Body.NodeType, Is.EqualTo (selectClause.Selector.Body.NodeType));
+      Assert.That (expectedSelectExpression.Body.Type, Is.EqualTo (selectClause.Selector.Body.Type));
     }
 
     [Test]
     public void WhereWithDifferentComparisons ()
     {
-      var query = WhereTestQueryGenerator.CreateWhereQueryWithDifferentComparisons (_querySource);
-      var expression = query.Expression;
+      var expression = WhereTestQueryGenerator.CreateWhereQueryWithDifferentComparisons (_querySource).Expression;
       var navigator = new ExpressionTreeNavigator (expression);
       var queryModel = _queryParser.GetParsedQuery (expression);
 
@@ -98,9 +122,16 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (queryModel.MainFromClause.PreviousClause, Is.Null);
       Assert.That (selectClause.PreviousClause, Is.EqualTo (whereClause));
       Assert.That (whereClause.PreviousClause, Is.EqualTo (queryModel.MainFromClause));
+      Assert.That (whereClause.Predicate, Is.SameAs (navigator.Arguments[1].Operand.Expression));
 
-      var whereMethodCall = navigator.Arguments[1].Operand.Expression;
-      Assert.That (whereClause.Predicate, Is.SameAs (whereMethodCall));
+      var parameterExpression = Expression.Parameter (typeof (Student), "s");
+      var expectedSelectExpression = Expression.Lambda (typeof (Func<Student, Student>), parameterExpression, parameterExpression);
+
+      Assert.That (expectedSelectExpression.Body.NodeType, Is.EqualTo (selectClause.Selector.Body.NodeType));
+      Assert.That (expectedSelectExpression.Body.Type, Is.EqualTo (selectClause.Selector.Body.Type));
+
+      Assert.That (navigator.Arguments[0].Expression.NodeType, Is.EqualTo (queryModel.MainFromClause.QuerySource.NodeType));
+      Assert.That (navigator.Arguments[0].Expression.Type, Is.EqualTo (queryModel.MainFromClause.QuerySource.Type));
     }
 
     [Test]
@@ -110,11 +141,12 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var navigator = new ExpressionTreeNavigator (expression);
       var queryModel = _queryParser.GetParsedQuery (expression);
 
+      var mainFromClause = queryModel.MainFromClause;
       var additionalFromClause = (AdditionalFromClause) queryModel.BodyClauses[0];
       var whereClause = (WhereClause) queryModel.BodyClauses[1];
 
-      Assert.That (queryModel.MainFromClause.PreviousClause, Is.Null);
-      Assert.That (additionalFromClause.PreviousClause, Is.EqualTo (queryModel.MainFromClause));
+      Assert.That (mainFromClause.PreviousClause, Is.Null);
+      Assert.That (additionalFromClause.PreviousClause, Is.EqualTo (mainFromClause));
       Assert.That (whereClause.PreviousClause, Is.EqualTo (additionalFromClause));
 
       var selectMethodCall = navigator;
@@ -124,20 +156,32 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 
       Assert.That (additionalFromClause.FromExpression, Is.SameAs (selectManyMethodCall.Arguments[1].Operand.Expression));
       Assert.That (whereClause.Predicate, Is.SameAs (whereMethodCall.Arguments[1].Operand.Expression));
+      Assert.That (mainFromClause.QuerySource.Type, Is.EqualTo (selectManyMethodCall.Arguments[0].Expression.Type));
     }
 
     [Test]
     public void GeneralSelectMany ()
     {
-      var query = FromTestQueryGenerator.CreateMultiFromQuery (_querySource, _querySource);
-      var queryModel = _queryParser.GetParsedQuery (query.Expression);
+      var expression = FromTestQueryGenerator.CreateMultiFromQuery (_querySource, _querySource).Expression;
+      var navigator = new ExpressionTreeNavigator (expression);
+      var queryModel = _queryParser.GetParsedQuery (expression);
 
-      Assert.That (queryModel.MainFromClause.PreviousClause, Is.Null);
-      Assert.That (queryModel.BodyClauses[0], Is.InstanceOfType (typeof (MemberFromClause)));
+      var mainFromClause = queryModel.MainFromClause;
       var memberFromClause = (MemberFromClause) queryModel.BodyClauses[0];
 
-      Assert.That (queryModel.SelectOrGroupClause.PreviousClause, Is.EqualTo (memberFromClause));
+      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
+      
+      Assert.That (mainFromClause.PreviousClause, Is.Null);
+      Assert.That (queryModel.BodyClauses[0], Is.InstanceOfType (typeof (MemberFromClause)));
+      Assert.That (selectClause.PreviousClause, Is.EqualTo (memberFromClause));
       Assert.That (memberFromClause.Identifier.Name, Is.EqualTo ("s2"));
+
+      var parameterExpression = Expression.Parameter (typeof (Student), "<generated>_0");
+      var expectedSelectExpression = Expression.Lambda (typeof (Func<Student,Student>), parameterExpression, parameterExpression);
+      Assert.That (expectedSelectExpression.Body.NodeType, Is.EqualTo (selectClause.Selector.Body.NodeType));
+      Assert.That (expectedSelectExpression.Body.Type, Is.EqualTo (selectClause.Selector.Body.Type));
+      Assert.That (mainFromClause.QuerySource.Type, Is.EqualTo(navigator.Arguments[0].Expression.Type));
+
     }
 
     [Test]
@@ -145,12 +189,19 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     {
       var expression = MixedTestQueryGenerator.CreateReverseFromWhere_WhereExpression (_querySource, _querySource);
       var queryModel = _queryParser.GetParsedQuery (expression);
+      var navigator = new ExpressionTreeNavigator (expression);
 
-      Assert.That (queryModel.MainFromClause.PreviousClause, Is.Null);
+      var mainFromClause = queryModel.MainFromClause;
       var whereClause = (WhereClause) queryModel.BodyClauses[0];
       var memberFromClause = (MemberFromClause) queryModel.BodyClauses[1];
+
+      Assert.That (mainFromClause.PreviousClause, Is.Null);
       Assert.That (queryModel.SelectOrGroupClause.PreviousClause, Is.EqualTo (memberFromClause));
-      Assert.That (whereClause.PreviousClause, Is.EqualTo (queryModel.MainFromClause));
+      Assert.That (whereClause.PreviousClause, Is.EqualTo (mainFromClause));
+
+      Assert.That (navigator.Arguments[0].Arguments[1].Operand.Expression, Is.EqualTo (whereClause.Predicate));
+      Assert.That (mainFromClause.QuerySource.Type, Is.EqualTo (navigator.Arguments[0].Arguments[0].Expression.Type));
+      Assert.That (memberFromClause.Identifier.Name, Is.EqualTo ("s2"));
     }
 
     [Test]
@@ -158,16 +209,23 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     {
       var expression = MixedTestQueryGenerator.CreateThreeFromWhereQuery_SelectManyExpression (_querySource, _querySource, _querySource);
       var queryModel = _queryParser.GetParsedQuery (expression);
-
+      var navigator = new ExpressionTreeNavigator (expression);
+      
       var memberFromClause1 = (MemberFromClause) queryModel.BodyClauses[0];
       var whereClause = (WhereClause) queryModel.BodyClauses[1];
       var memberFromClause2 = (MemberFromClause) queryModel.BodyClauses[2];
+      var mainFromClause = queryModel.MainFromClause;
 
-      Assert.That (queryModel.MainFromClause.PreviousClause, Is.Null);
-      Assert.That (memberFromClause1.PreviousClause, Is.EqualTo (queryModel.MainFromClause));
+      Assert.That (mainFromClause.PreviousClause, Is.Null);
+      Assert.That (memberFromClause1.PreviousClause, Is.EqualTo (mainFromClause));
       Assert.That (whereClause.PreviousClause, Is.EqualTo (memberFromClause1));
       Assert.That (memberFromClause2.PreviousClause, Is.EqualTo (whereClause));
       Assert.That (queryModel.SelectOrGroupClause.PreviousClause, Is.EqualTo (memberFromClause2));
+
+      Assert.That (navigator.Arguments[0].Arguments[1].Operand.Expression, Is.EqualTo (whereClause.Predicate));
+      Assert.That (mainFromClause.QuerySource.Type, Is.EqualTo (navigator.Arguments[0].Arguments[0].Arguments[0].Expression.Type));
+      Assert.That (memberFromClause1.Identifier.Name, Is.EqualTo ("s2"));
+      Assert.That (memberFromClause2.Identifier.Name, Is.EqualTo ("s3"));
     }
 
     [Test]
@@ -175,12 +233,16 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     {
       var expression = LetTestQueryGenerator.CreateSimpleSelect_LetExpression (_querySource);
       var queryModel = _queryParser.GetParsedQuery (expression);
+      var navigator = new ExpressionTreeNavigator (expression);
 
       var letClause = (LetClause) queryModel.BodyClauses[0];
 
       Assert.That (queryModel.MainFromClause.PreviousClause, Is.Null);
       Assert.That (letClause.PreviousClause, Is.EqualTo (queryModel.MainFromClause));
       Assert.That (queryModel.SelectOrGroupClause.PreviousClause, Is.EqualTo (letClause));
+
+      Assert.That (letClause.ProjectionExpression.Body.NodeType, Is.EqualTo (navigator.Arguments[0].Arguments[1].Operand.Body.Expression.NodeType));
+      Assert.That (letClause.ProjectionExpression.Body.Type, Is.EqualTo (navigator.Arguments[0].Arguments[1].Operand.Body.Expression.Type));
     }
 
     [Test]
@@ -188,12 +250,22 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     {
       var expression = OrderByTestQueryGenerator.CreateOrderByQueryWithOrderByAndThenBy_OrderByExpression (_querySource);
       var queryModel = _queryParser.GetParsedQuery (expression);
+      var navigator = new ExpressionTreeNavigator (expression);
 
-      Assert.That (queryModel.MainFromClause.PreviousClause, Is.Null);
       var orderByClause = (OrderByClause) queryModel.BodyClauses[0];
+      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
+
+      var mainFromClause = queryModel.MainFromClause;
+      Assert.That (mainFromClause.PreviousClause, Is.Null);
       Assert.That (orderByClause.OrderingList.Count, Is.EqualTo (3));
-      Assert.That (orderByClause.PreviousClause, Is.EqualTo (queryModel.MainFromClause));
-      Assert.That (queryModel.SelectOrGroupClause.PreviousClause, Is.EqualTo (orderByClause));
+      Assert.That (orderByClause.PreviousClause, Is.EqualTo (mainFromClause));
+      Assert.That (selectClause.PreviousClause, Is.EqualTo (orderByClause));
+
+      var parameterExpression = Expression.Parameter (typeof (Student), "s");
+      var expectedSelectExpression = Expression.Lambda (typeof (Func<Student, Student>), parameterExpression, parameterExpression);
+      Assert.That (selectClause.Selector.Body.NodeType, Is.EqualTo (expectedSelectExpression.Body.NodeType));
+      Assert.That (selectClause.Selector.Body.Type, Is.EqualTo (expectedSelectExpression.Body.Type));
+      Assert.That (mainFromClause.QuerySource.NodeType, Is.EqualTo (navigator.Arguments[0].Arguments[0].Arguments[0].Expression.NodeType));
     }
 
     [Test]
@@ -218,6 +290,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     {
       var expression = MixedTestQueryGenerator.CreateOrderByQueryWithWhere_OrderByExpression (_querySource);
       var queryModel = _queryParser.GetParsedQuery (expression);
+      var navigator = new ExpressionTreeNavigator (expression);
+
 
       var whereClause = (WhereClause) queryModel.BodyClauses[0];
       var orderByClause = (OrderByClause) queryModel.BodyClauses[1];
@@ -226,14 +300,17 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (whereClause.PreviousClause, Is.EqualTo (queryModel.MainFromClause));
       Assert.That (orderByClause.PreviousClause, Is.EqualTo (whereClause));
       Assert.That (queryModel.SelectOrGroupClause.PreviousClause, Is.EqualTo (orderByClause));
+
+      Assert.That (navigator.Arguments[0].Arguments[1].Operand.Expression, Is.EqualTo (whereClause.Predicate));
     }
 
     [Test]
     public void MultiFromsWithOrderBy ()
     {
-      var query = MixedTestQueryGenerator.CreateMultiFromWhereOrderByQuery (_querySource, _querySource);
-      var queryModel = _queryParser.GetParsedQuery (query.Expression);
-
+      var expression = MixedTestQueryGenerator.CreateMultiFromWhereOrderByQuery (_querySource, _querySource).Expression;
+      var queryModel = _queryParser.GetParsedQuery (expression);
+      var navigator = new ExpressionTreeNavigator (expression);
+      
       var memberFromClause = (AdditionalFromClause) queryModel.BodyClauses[0];
       var whereClause = (WhereClause) queryModel.BodyClauses[1];
       var orderByClause = (OrderByClause) queryModel.BodyClauses[2];
@@ -243,6 +320,10 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (whereClause.PreviousClause, Is.EqualTo (memberFromClause));
       Assert.That (orderByClause.PreviousClause, Is.EqualTo (whereClause));
       Assert.That (queryModel.SelectOrGroupClause.PreviousClause, Is.EqualTo (orderByClause));
+
+      Assert.That (navigator.Arguments[0].Arguments[0].Arguments[0].Arguments[1].Operand.Expression, Is.EqualTo (whereClause.Predicate));
     }
+
+    
   }
 }
