@@ -159,7 +159,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
     }
 
     [Test]
-    public void EvaluateWholeQueryTree_WhoseLambdasAreInConstantsInsteadOf ()
+    public void EvaluateWholeQueryTree_WhoseLambdasAreInMemberExpressions_InsteadOfUnaryExpressions ()
     {
       var source = ExpressionHelper.CreateQuerySource ();
 
