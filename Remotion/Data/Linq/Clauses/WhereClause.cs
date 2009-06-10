@@ -61,7 +61,7 @@ namespace Remotion.Data.Linq.Clauses
     public LambdaExpression GetSimplifiedPredicate ()
     {
       if (_simplifiedBoolExpression == null)
-        _simplifiedBoolExpression = (LambdaExpression) new PartialTreeEvaluatingVisitor (Predicate).GetEvaluatedTree ();
+        _simplifiedBoolExpression = (LambdaExpression) PartialTreeEvaluatingVisitor.EvaluateIndependentSubtrees (Predicate);
       return _simplifiedBoolExpression;
     }
 

@@ -31,8 +31,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
     public void EvaluateTopBinary ()
     {
       Expression treeRoot = Expression.Add (Expression.Constant (1), Expression.Constant (2));
-      PartialTreeEvaluatingVisitor evaluator = new PartialTreeEvaluatingVisitor (treeRoot);
-      Expression result = evaluator.GetEvaluatedTree ();
+      Expression result = PartialTreeEvaluatingVisitor.EvaluateIndependentSubtrees (treeRoot);
       Expression expected = Expression.Constant (3);
       ExpressionTreeComparer.CheckAreEqualTrees (expected, result);
     }
@@ -43,8 +42,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
       Tuple<int, int> tuple = Tuple.NewTuple (1, 2);
 
       Expression treeRoot = Expression.MakeMemberAccess (Expression.Constant (tuple), typeof (Tuple<int, int>).GetProperty ("A"));
-      PartialTreeEvaluatingVisitor evaluator = new PartialTreeEvaluatingVisitor (treeRoot);
-      Expression result = evaluator.GetEvaluatedTree ();
+      Expression result = PartialTreeEvaluatingVisitor.EvaluateIndependentSubtrees (treeRoot);
       Expression expected = Expression.Constant (1);
       ExpressionTreeComparer.CheckAreEqualTrees (expected, result);
     }
@@ -53,8 +51,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
     public void EvaluateTopLambda()
     {
       Expression treeRoot = Expression.Lambda (Expression.Constant (0), Expression.Parameter (typeof (string), "s"));
-      PartialTreeEvaluatingVisitor evaluator = new PartialTreeEvaluatingVisitor(treeRoot);
-      Expression result = evaluator.GetEvaluatedTree ();
+      Expression result = PartialTreeEvaluatingVisitor.EvaluateIndependentSubtrees (treeRoot);
       Assert.AreSame (result, result);
     }
 
@@ -63,8 +60,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
     {
       Expression treeRoot = Expression.Lambda (Expression.Add (Expression.Constant (5), Expression.Constant (1)),
                                                Expression.Parameter (typeof (string), "s"));
-      PartialTreeEvaluatingVisitor evaluator = new PartialTreeEvaluatingVisitor (treeRoot);
-      Expression result = evaluator.GetEvaluatedTree ();
+      Expression result = PartialTreeEvaluatingVisitor.EvaluateIndependentSubtrees (treeRoot);
       Expression expected = Expression.Lambda (Expression.Constant (6), Expression.Parameter (typeof (string), "s"));
       ExpressionTreeComparer.CheckAreEqualTrees (expected, result);
     }
@@ -80,9 +76,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
       Expression multiply2 = Expression.Multiply (constant2, constant3);
       Expression add = Expression.Add (multiply1, multiply2);
       Expression treeRoot = Expression.Lambda (typeof (System.Func<int, int>), add, parameter);
-      
-      PartialTreeEvaluatingVisitor evaluator = new PartialTreeEvaluatingVisitor (treeRoot);
-      Expression result = evaluator.GetEvaluatedTree ();
+
+      Expression result = PartialTreeEvaluatingVisitor.EvaluateIndependentSubtrees (treeRoot);
       Expression expected = Expression.Lambda (Expression.Add (Expression.Multiply (parameter, constant1), Expression.Constant (12)), parameter);
       ExpressionTreeComparer.CheckAreEqualTrees (expected, result);
     }
@@ -92,9 +87,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
     {
       ParameterExpression outsideParameter = Expression.Parameter (typeof (int), "p");
       LambdaExpression lambdaExpression = Expression.Lambda (outsideParameter);
-      
-      PartialTreeEvaluatingVisitor evaluator = new PartialTreeEvaluatingVisitor (lambdaExpression);
-      Expression result = evaluator.GetEvaluatedTree ();
+
+      Expression result = PartialTreeEvaluatingVisitor.EvaluateIndependentSubtrees (lambdaExpression);
       Assert.AreSame (lambdaExpression, result);
     }
 
@@ -104,8 +98,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
       SubQueryExpression subQuery = new SubQueryExpression(ExpressionHelper.CreateQueryModel());
       LambdaExpression lambdaExpression = Expression.Lambda (subQuery);
 
-      PartialTreeEvaluatingVisitor evaluator = new PartialTreeEvaluatingVisitor (lambdaExpression);
-      Expression result = evaluator.GetEvaluatedTree ();
+      Expression result = PartialTreeEvaluatingVisitor.EvaluateIndependentSubtrees (lambdaExpression);
       Assert.AreSame (lambdaExpression, result);
     }
 
@@ -123,7 +116,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
                   where 2 > i + 5
                   select s1.ID + (1 + i);
 
-      var partiallyEvaluatedExpression = new PartialTreeEvaluatingVisitor (query.Expression).GetEvaluatedTree ();
+      var partiallyEvaluatedExpression = PartialTreeEvaluatingVisitor.EvaluateIndependentSubtrees (query.Expression);
 
       var selectMethodCallExpression = (MethodCallExpression) partiallyEvaluatedExpression;
       var whereMethodCallExpression = (MethodCallExpression) selectMethodCallExpression.Arguments[0];
@@ -146,7 +139,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
                   where false
                   select 0 + int.Parse ("0");
 
-      var partiallyEvaluatedExpression = new PartialTreeEvaluatingVisitor (query.Expression).GetEvaluatedTree ();
+      var partiallyEvaluatedExpression = PartialTreeEvaluatingVisitor.EvaluateIndependentSubtrees (query.Expression);
 
       var selectMethodCallExpression = (MethodCallExpression) partiallyEvaluatedExpression;
       var whereMethodCallExpression = (MethodCallExpression) selectMethodCallExpression.Arguments[0];
@@ -169,7 +162,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
       Assert.That (((MethodCallExpression) queryExpression).Arguments[1].NodeType, Is.EqualTo (ExpressionType.MemberAccess),
           "Usually, this would be a UnaryExpression (Quote containing the Lambda); but we pass a MemberExpression containing the lambda.");
 
-      var partiallyEvaluatedExpression = new PartialTreeEvaluatingVisitor (queryExpression).GetEvaluatedTree ();
+      var partiallyEvaluatedExpression = PartialTreeEvaluatingVisitor.EvaluateIndependentSubtrees (queryExpression);
       var whereMethodCallExpression = (MethodCallExpression) partiallyEvaluatedExpression;
       var wherePredicateNavigator = new ExpressionTreeNavigator (whereMethodCallExpression.Arguments[1]);
       var wherePredicateLambdaNavigator = new ExpressionTreeNavigator ((Expression) wherePredicateNavigator.Value);
@@ -184,7 +177,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
 
       var queryExpression = ExpressionHelper.MakeExpression (() => source.Count ());
 
-      var partiallyEvaluatedExpression = new PartialTreeEvaluatingVisitor (queryExpression).GetEvaluatedTree ();
+      var partiallyEvaluatedExpression = PartialTreeEvaluatingVisitor.EvaluateIndependentSubtrees (queryExpression);
       var countMethodCallExpression = (MethodCallExpression) partiallyEvaluatedExpression;
 
       Assert.That (countMethodCallExpression.Method.Name, Is.EqualTo ("Count"));

@@ -139,10 +139,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.Legacy
       SubQueryFindingVisitor subQueryFindingVisitor = new SubQueryFindingVisitor (subQueryRegistry);
       T newExpression = (T) subQueryFindingVisitor.ReplaceSubQueries (expression);
 
-      PartialTreeEvaluatingVisitor partialEvaluator = new PartialTreeEvaluatingVisitor (newExpression);
-      newExpression = (T) partialEvaluator.GetEvaluatedTree();
-
-      return newExpression;
+      return (T) PartialTreeEvaluatingVisitor.EvaluateIndependentSubtrees (newExpression);
     }
 
     public void DeleteBodyExpression (BodyExpressionDataBase expression)

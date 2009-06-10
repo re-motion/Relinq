@@ -46,8 +46,8 @@ namespace Remotion.Data.Linq.Parsing.Structure
     {
       ArgumentUtility.CheckNotNull ("expressionTree", expressionTree);
 
-      // TODO: call partial tree evaluator and SubQueryFindingVisitor
-      var simplifiedExpressionTree = new PartialTreeEvaluatingVisitor (expressionTree).GetEvaluatedTree ();
+      // TODO: call SubQueryFindingVisitor
+      var simplifiedExpressionTree = PartialTreeEvaluatingVisitor.EvaluateIndependentSubtrees (expressionTree);
       return ParseNode (simplifiedExpressionTree, null);
     }
 
