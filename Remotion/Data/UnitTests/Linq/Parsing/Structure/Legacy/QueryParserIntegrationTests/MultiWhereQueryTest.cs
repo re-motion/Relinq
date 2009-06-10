@@ -43,7 +43,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy.QueryParserInteg
 
       Assert.IsNotNull (whereClauses[0].Predicate);
       Assert.IsInstanceOfType (typeof (LambdaExpression), whereClauses[0].Predicate);
-      Assert.AreSame (ParsedQuery.MainFromClause.Identifier, navigator.Parameters[0].Expression);
+      Assert.AreEqual (ParsedQuery.MainFromClause.Identifier.Name, navigator.Parameters[0].Name);
       Assert.IsInstanceOfType (typeof (BinaryExpression), whereClauses[0].Predicate.Body);
       Assert.AreEqual ("Garcia", navigator.Body.Right.Value);
 

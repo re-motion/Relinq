@@ -47,6 +47,9 @@ namespace Remotion.Data.Linq.Parsing.Structure
     {
       ArgumentUtility.CheckNotNull ("expressionTree", expressionTree);
 
+      if (expressionTree.Type == typeof (void))
+        throw new ParserException (string.Format ("Expressions of type void ('{0}') are not supported.", expressionTree));
+
       var simplifiedExpressionTree = PartialTreeEvaluatingVisitor.EvaluateIndependentSubtrees (expressionTree);
       return ParseNode (simplifiedExpressionTree, null, subQueryRegistry);
     }
@@ -72,18 +75,26 @@ namespace Remotion.Data.Linq.Parsing.Structure
           throw new ParserException (message);
         }
 
-        try
-        {
-          return new ConstantExpressionNode (associatedIdentifier, constantExpression.Type, constantExpression.Value);
-        }
-        catch (ArgumentTypeException ex)
-        {
-          var message = string.Format (
-              "Cannot parse expression '{0}' as it has an unsupported type. Only query sources (that is, expressions that implement IEnumerable) "
-              + "can be parsed.", 
-              expression);
-          throw new ParserException (message, ex);
-        }
+        return ParseConstantExpression(constantExpression, associatedIdentifier);
+      }
+    }
+
+    private IExpressionNode ParseConstantExpression (ConstantExpression constantExpression, string associatedIdentifier)
+    {
+      if (constantExpression.Value == null)
+        throw new ParserException ("Query sources cannot be null.");
+
+      try
+      {
+        return new ConstantExpressionNode (associatedIdentifier, constantExpression.Type, constantExpression.Value);
+      }
+      catch (ArgumentTypeException ex)
+      {
+        var message = string.Format (
+            "Cannot parse expression '{0}' as it has an unsupported type. Only query sources (that is, expressions that implement IEnumerable) "
+            + "can be parsed.",
+            constantExpression);
+        throw new ParserException (message, ex);
       }
     }
 

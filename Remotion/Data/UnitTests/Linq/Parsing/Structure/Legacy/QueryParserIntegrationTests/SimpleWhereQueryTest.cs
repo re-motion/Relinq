@@ -41,7 +41,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy.QueryParserInteg
       var navigator = new ExpressionTreeNavigator (whereClause.Predicate);
       Assert.IsNotNull (whereClause.Predicate);
       Assert.IsInstanceOfType (typeof (LambdaExpression), whereClause.Predicate);
-      Assert.AreSame (ParsedQuery.MainFromClause.Identifier, navigator.Parameters[0].Expression);
+      Assert.AreSame (ParsedQuery.MainFromClause.Identifier.Name, navigator.Parameters[0].Name);
     }
 
     [Test]

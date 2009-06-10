@@ -77,6 +77,15 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
+    public void CreateQueryModel_SetsExpressionTree_EvenWithBodyClauses ()
+    {
+      var queryExpression = ExpressionHelper.MakeExpression (() => ExpressionHelper.CreateQuerySource().Where (s => s.ID > 5));
+
+      QueryModel queryModel = _queryParser.GetParsedQuery (queryExpression);
+      Assert.That (queryModel.GetExpressionTree (), Is.SameAs (queryExpression));
+    }
+
+    [Test]
     public void CreateQueryModel_ConstantExpression_CreatesMainFromClause_WithGeneratedIdentifier ()
     {
       var value = new[] { 1, 2, 3 };

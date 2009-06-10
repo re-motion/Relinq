@@ -69,6 +69,14 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Query sources cannot be null.")]
+    public void ParseTree_ConstantExpression_Null ()
+    {
+      var constantExpression = Expression.Constant (null, typeof (IQueryable<int>));
+      _expressionTreeParser.ParseTree (constantExpression, _subQueryRegistry);
+    }
+
+    [Test]
     public void ParseTree_ConstantExpression_IdentifierNameGetsIncremented ()
     {
       var constantExpression = Expression.Constant (_intSource);
@@ -83,13 +91,13 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     [Test]
     public void ParseTree_ConstantExpression_TypeNotInferrableFromValue ()
     {
-      var constantExpression = Expression.Constant (null, typeof (int[]));
+      var constantExpression = Expression.Constant (new Student[0], typeof (object[]));
 
       var result = _expressionTreeParser.ParseTree (constantExpression, _subQueryRegistry);
 
       Assert.That (result, Is.InstanceOfType (typeof (ConstantExpressionNode)));
-      Assert.That (((ConstantExpressionNode) result).Value, Is.Null);
-      Assert.That (((ConstantExpressionNode) result).QuerySourceElementType, Is.SameAs (typeof (int)));
+      Assert.That (((ConstantExpressionNode) result).Value, Is.InstanceOfType (typeof (Student[])));
+      Assert.That (((ConstantExpressionNode) result).QuerySourceElementType, Is.SameAs (typeof (object)));
     }
 
     [Test]
@@ -179,6 +187,14 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     {
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<int, string> (i => i.ToString ());
       _expressionTreeParser.ParseTree (methodCallExpression, _subQueryRegistry);
+    }
+
+    [Test]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expressions of type void ('WriteLine()') are not supported.")]
+    public void ParseTree_VoidExpression ()
+    {
+      MethodCallExpression expression = Expression.Call (typeof (Console), "WriteLine", Type.EmptyTypes);
+      _expressionTreeParser.ParseTree (expression, _subQueryRegistry);
     }
 
     [Test]

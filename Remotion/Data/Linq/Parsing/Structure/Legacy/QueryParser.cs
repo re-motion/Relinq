@@ -15,7 +15,6 @@
 // 
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Clauses;
 using Remotion.Utilities;
 
 
@@ -35,19 +34,21 @@ namespace Remotion.Data.Linq.Parsing.Structure.Legacy
 
     public QueryModel GetParsedQuery ()
     {
-      ParseResultCollector resultCollector = new ParseResultCollector (SourceExpression);
-      _sourceParser.Parse (resultCollector, SourceExpression, null, "parsing query");
+      //ParseResultCollector resultCollector = new ParseResultCollector (SourceExpression);
+      //_sourceParser.Parse (resultCollector, SourceExpression, null, "parsing query");
 
-      List<QueryModel> subQueries = new List<QueryModel> ();
-      resultCollector.Simplify (subQueries);
+      //List<QueryModel> subQueries = new List<QueryModel> ();
+      //resultCollector.Simplify (subQueries);
 
-      QueryModelCreator modelCreator = new QueryModelCreator (SourceExpression, resultCollector);
-      QueryModel model = modelCreator.CreateQueryModel();
+      //QueryModelCreator modelCreator = new QueryModelCreator (SourceExpression, resultCollector);
+      //QueryModel model = modelCreator.CreateQueryModel();
 
-      foreach (QueryModel subQuery in subQueries)
-        subQuery.SetParentQuery (model);
+      //foreach (QueryModel subQuery in subQueries)
+      //  subQuery.SetParentQuery (model);
 
-      return model;
+      //return model;
+
+      return new Structure.QueryParser().GetParsedQuery (SourceExpression);
     }
 
     

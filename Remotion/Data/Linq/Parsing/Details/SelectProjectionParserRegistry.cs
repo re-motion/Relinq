@@ -16,6 +16,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Expressions;
 using Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing;
 using Remotion.Data.Linq.Parsing.FieldResolving;
 using System.Linq;
@@ -44,6 +45,7 @@ namespace Remotion.Data.Linq.Parsing.Details
       RegisterParser (typeof (MethodCallExpression), new MethodCallExpressionParser (this));
       RegisterParser (typeof (NewExpression), new NewExpressionParser (this));
       RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (resolver));
+      RegisterParser (typeof (SubQueryExpression), new SubQueryExpressionParser ());
     }
 
     public IEnumerable<ISelectProjectionParser> GetParsers (Type expressionType)

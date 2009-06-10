@@ -29,7 +29,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void Initialization_QuerySourceElementType ()
     {
-      var node = new ConstantExpressionNode ("x", typeof (int[]), null);
+      var node = new ConstantExpressionNode ("x", typeof (int[]), new[] {1, 2, 3});
       Assert.That (node.QuerySourceElementType, Is.EqualTo (typeof (int)));
     }
 

@@ -14,42 +14,32 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
-using Remotion.Collections;
+using Remotion.Data.Linq.DataObjectModel;
+using Remotion.Data.Linq.Expressions;
 using Remotion.Utilities;
 
-namespace Remotion.Data.Linq.Parsing.Details
+namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing
 {
-  public class ParserRegistry
+  public class SubQueryExpressionParser : ISelectProjectionParser
   {
-    private readonly MultiDictionary<Type, IParser> _parsers;
-
-    public ParserRegistry()
+    public bool CanParse (Expression expression)
     {
-      _parsers = new MultiDictionary<Type, IParser> ();
+      return expression is SubQueryExpression;
     }
 
-    public void RegisterParser (Type expressionType, IParser parser)
+    IEvaluation ISelectProjectionParser.Parse (Expression expression, ParseContext parseContext)
     {
-      _parsers[expressionType].Insert (0, parser);
+      return Parse(expression, parseContext);
     }
 
-    public IEnumerable<IParser> GetParsers (Type expressionType)
-    {
-      return _parsers[expressionType];
-    }
-
-    public IParser GetParser (Expression expression)
+    public IEvaluation Parse (Expression expression, ParseContext parseContext)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
+      ArgumentUtility.CheckNotNull ("parseContext", parseContext);
 
-      foreach (IParser parser in GetParsers (expression.GetType()))
-      {
-        if (parser.CanParse (expression))
-          return parser;
-      }
-      throw new ParserException ("Cannot parse " + expression + ", no appropriate parser found");
+      throw new ParserException (
+          "This version of re-linq does not support subqueries in the select projection of a query.", expression, expression, null);
     }
   }
 }

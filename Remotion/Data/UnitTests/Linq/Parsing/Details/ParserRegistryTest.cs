@@ -16,6 +16,7 @@
 using System.Collections;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Details;
 using Remotion.Utilities;
 using ConstantExpressionParser=Remotion.Data.Linq.Parsing.Details.WhereConditionParsing.ConstantExpressionParser;
@@ -67,7 +68,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details
     }
 
     [Test]
-    [ExpectedException (typeof (ParseException), ExpectedMessage = "Cannot parse 5, no appropriate parser found")]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Cannot parse 5, no appropriate parser found")]
     public void GetParser_NoParserFound ()
     {
       ParserRegistry parserRegistry = new ParserRegistry ();

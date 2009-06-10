@@ -13,6 +13,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+using System;
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses;
@@ -52,8 +53,14 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
         // stems from the SelectManyClause) and resolve its ResultSelector instead.
         if (visitorResult.HackNeeded)
         {
-          var clause = (AdditionalFromClause) _queryModel.BodyClauses.Last (bc => bc is AdditionalFromClause);
-          return ResolveField (resolver, clause.ResultSelector.Body, joinedTableContext);
+          var clause = (FromClauseBase) _queryModel.BodyClauses.Last (bc => bc is FromClauseBase);
+
+          var additionalFromClause = clause as AdditionalFromClause;
+          if (additionalFromClause != null)
+            return ResolveField (resolver, additionalFromClause.ResultSelector.Body, joinedTableContext);
+          else
+            return ResolveField (resolver, ((SubQueryFromClause) clause).ProjectionExpression.Body, joinedTableContext);
+
         }
         else
           return visitorResult.ResolveableClause.ResolveField (resolver, visitorResult.ReducedExpression, fieldAccessExpression, joinedTableContext);

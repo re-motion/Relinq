@@ -82,13 +82,13 @@ namespace Remotion.Data.Linq.Parsing.Structure
       bodyClauses.Reverse (); // need to reverse the list of body clauses to have the last clause (nearest to the MainFromClause) first
       
       var queryModel = new QueryModel (expressionTreeRoot.Type, findMainFromClause, selectClause);
-      queryModel.SetExpressionTree (expressionTreeRoot);
       foreach (var bodyClause in bodyClauses)
         queryModel.AddBodyClause (bodyClause);
 
       foreach (var subQuery in subQueryRegistry)
         subQuery.SetParentQuery (queryModel);
 
+      queryModel.SetExpressionTree (expressionTreeRoot);
       return queryModel;
     }
 

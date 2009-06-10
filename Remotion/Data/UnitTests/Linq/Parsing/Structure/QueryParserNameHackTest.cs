@@ -127,5 +127,28 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var memberExpressionLeftSide = ((MemberExpression) selectClause.Selector.Body).Expression;
       Assert.That (((ParameterExpression) memberExpressionLeftSide).Name, Is.EqualTo ("s1"));
     }
+
+    [Test]
+    public void MissingSelect_AfterSelectMany_WithSubQuery_CanBeResolved ()
+    {
+      var query = from s1 in ExpressionHelper.CreateQuerySource ()
+                  from s2 in (from s3 in ExpressionHelper.CreateQuerySource () select s3)
+                  select s1;
+
+      var queryModel = new QueryParser ().GetParsedQuery (query.Expression);
+      var mainFromTable = queryModel.MainFromClause.GetFromSource (_databaseInfo);
+
+      var selectClause = ((SelectClause) queryModel.SelectOrGroupClause);
+
+      Assert.That (selectClause.Selector.Parameters[0].Name, NUnit.Framework.SyntaxHelpers.Text.StartsWith ("<generated>"));
+
+      var parser = _parserRegistry.GetParser (selectClause.Selector.Body);
+      var evaluation = parser.Parse (
+          selectClause.Selector.Body, new ParseContext (queryModel, query.Expression, new List<FieldDescriptor> (), new JoinedTableContext ()));
+
+      Assert.That (evaluation, Is.InstanceOfType (typeof (Column)));
+      Assert.That (((Column) evaluation).ColumnSource, Is.SameAs (mainFromTable));
+      Assert.That (((Column) evaluation).Name, Is.EqualTo ("*"));
+    }
   }
 }
