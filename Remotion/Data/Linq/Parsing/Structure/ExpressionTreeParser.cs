@@ -41,12 +41,18 @@ namespace Remotion.Data.Linq.Parsing.Structure
       get { return _nodeTypeRegistry; }
     }
 
-    // TODO: call partial tree evaluator and SubQueryFindingVisitor
 
-    public IExpressionNode Parse (Expression expression, string associatedIdentifier)
+    public IExpressionNode ParseTree (Expression expressionTree)
     {
-      ArgumentUtility.CheckNotNull ("expression", expression);
+      ArgumentUtility.CheckNotNull ("expressionTree", expressionTree);
 
+      // TODO: call partial tree evaluator and SubQueryFindingVisitor
+      var simplifiedExpressionTree = new PartialTreeEvaluatingVisitor (expressionTree).GetEvaluatedTree ();
+      return ParseNode (simplifiedExpressionTree, null);
+    }
+
+    private IExpressionNode ParseNode (Expression expression, string associatedIdentifier)
+    {
       if (associatedIdentifier == null)
         associatedIdentifier = _identifierGenerator.GetUniqueIdentifier ("<generated>_");
 
@@ -55,14 +61,27 @@ namespace Remotion.Data.Linq.Parsing.Structure
         return ParseMethodCallExpression (methodCallExpression, associatedIdentifier);
       else
       {
-        var constantExpression = PartialTreeEvaluatingVisitor.EvaluateSubtree (expression);
+        var constantExpression = expression as ConstantExpression;
+        if (constantExpression == null)
+        {
+          var message = string.Format (
+              "Cannot parse expression '{0}' as it is of type '{1}'. Only MethodCallExpressions and expressions that can be evaluated to a constant "
+              + "query source can be parsed.", 
+              expression, 
+              expression.NodeType) ;
+          throw new ParserException (message);
+        }
+
         try
         {
           return new ConstantExpressionNode (associatedIdentifier, constantExpression.Type, constantExpression.Value);
         }
         catch (ArgumentTypeException ex)
         {
-          var message = string.Format ("Cannot parse expression '{0}' as it has an unsupported type. {1}", expression, ex.Message);
+          var message = string.Format (
+              "Cannot parse expression '{0}' as it has an unsupported type. Only query sources (that is, expressions that implement IEnumerable) "
+              + "can be parsed.", 
+              expression);
           throw new ParserException (message, ex);
         }
       }
@@ -81,7 +100,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       }
 
       string associatedIdentifierForSource = InferAssociatedIdentifierForSource (methodCallExpression);
-      var source = Parse (methodCallExpression.Arguments[0], associatedIdentifierForSource);
+      var source = ParseNode (methodCallExpression.Arguments[0], associatedIdentifierForSource);
 
       var parser = new MethodCallExpressionParser (_nodeTypeRegistry);
       return parser.Parse (associatedIdentifier, source, methodCallExpression);

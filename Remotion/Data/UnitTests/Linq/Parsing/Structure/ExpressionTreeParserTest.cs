@@ -49,11 +49,11 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
-    public void Parse_ConstantExpression ()
+    public void ParseTree_ConstantExpression ()
     {
       var constantExpression = Expression.Constant (_intSource);
 
-      var result = _expressionTreeParser.Parse (constantExpression, null);
+      var result = _expressionTreeParser.ParseTree (constantExpression);
 
       Assert.That (result, Is.InstanceOfType (typeof (ConstantExpressionNode)));
       Assert.That (((ConstantExpressionNode) result).Value, Is.SameAs (_intSource));
@@ -62,23 +62,23 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
-    public void Parse_ConstantExpression_IdentifierNameGetsIncremented ()
+    public void ParseTree_ConstantExpression_IdentifierNameGetsIncremented ()
     {
       var constantExpression = Expression.Constant (_intSource);
 
-      var result1 = _expressionTreeParser.Parse (constantExpression, null);
-      var result2 = _expressionTreeParser.Parse (constantExpression, null);
+      var result1 = _expressionTreeParser.ParseTree (constantExpression);
+      var result2 = _expressionTreeParser.ParseTree (constantExpression);
 
       Assert.That (((ConstantExpressionNode) result1).AssociatedIdentifier, Is.EqualTo ("<generated>_0"));
       Assert.That (((ConstantExpressionNode) result2).AssociatedIdentifier, Is.EqualTo ("<generated>_1"));
     }
 
     [Test]
-    public void Parse_ConstantExpression_TypeNotInferrableFromValue ()
+    public void ParseTree_ConstantExpression_TypeNotInferrableFromValue ()
     {
       var constantExpression = Expression.Constant (null, typeof (int[]));
 
-      var result = _expressionTreeParser.Parse (constantExpression, null);
+      var result = _expressionTreeParser.ParseTree (constantExpression);
 
       Assert.That (result, Is.InstanceOfType (typeof (ConstantExpressionNode)));
       Assert.That (((ConstantExpressionNode) result).Value, Is.Null);
@@ -86,13 +86,13 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
-    public void Parse_MethodCallExpression ()
+    public void ParseTree_MethodCallExpression ()
     {
       var querySource = ExpressionHelper.CreateQuerySource();
       Expression<Func<Student, int>> selector = s => s.ID;
       var expression = ExpressionHelper.MakeExpression (() => querySource.Select (selector));
 
-      var result = _expressionTreeParser.Parse (expression, null);
+      var result = _expressionTreeParser.ParseTree (expression);
 
       Assert.That (result, Is.InstanceOfType (typeof (SelectExpressionNode)));
       Assert.That (((SelectExpressionNode) result).Selector, Is.SameAs (selector));
@@ -103,24 +103,24 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
-    public void Parse_MethodCallExpression_GetsGeneratedIdentifier ()
+    public void ParseTree_MethodCallExpression_GetsGeneratedIdentifier ()
     {
       var querySource = ExpressionHelper.CreateQuerySource ();
       Expression<Func<Student, int>> selector = s => s.ID;
       var expression = ExpressionHelper.MakeExpression (() => querySource.Select (selector));
 
-      var result = _expressionTreeParser.Parse (expression, null);
+      var result = _expressionTreeParser.ParseTree (expression);
 
       Assert.That (((SelectExpressionNode) result).AssociatedIdentifier, NUnit.Framework.SyntaxHelpers.Text.StartsWith ("<generated>_"));
     }
 
     [Test]
-    public void Parse_MethodCallExpression_PropagatesNameToSourceNode ()
+    public void ParseTree_MethodCallExpression_PropagatesNameToSourceNode ()
     {
       var querySource = ExpressionHelper.CreateQuerySource ();
       var expression = ExpressionHelper.MakeExpression (() => querySource.Select (s => s.ID)); // "s" gets propagated to ConstantExpressionNode
 
-      var result = _expressionTreeParser.Parse (expression, null);
+      var result = _expressionTreeParser.ParseTree (expression);
 
       var source = ((SelectExpressionNode) result).Source;
       Assert.That (source, Is.InstanceOfType (typeof (ConstantExpressionNode)));
@@ -128,14 +128,14 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
-    public void Parse_ComplexMethodCallExpression ()
+    public void ParseTree_ComplexMethodCallExpression ()
     {
       var querySource = ExpressionHelper.CreateQuerySource();
       Expression<Func<Student, int>> selector = s => s.ID;
       Expression<Func<Student, bool>> predicate = s => s.HasDog;
       var expression = ExpressionHelper.MakeExpression (() => querySource.Where (predicate).Select (selector));
 
-      var result = _expressionTreeParser.Parse (expression, null);
+      var result = _expressionTreeParser.ParseTree (expression);
 
       Assert.That (result, Is.InstanceOfType (typeof (SelectExpressionNode)));
       Assert.That (((SelectExpressionNode) result).Selector, Is.SameAs (selector));
@@ -150,27 +150,48 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException))]
-    public void Parse_InvalidExpression ()
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Cannot parse expression '() => 0' as it is of type 'Lambda'. Only "
+        + "MethodCallExpressions and expressions that can be evaluated to a constant query source can be parsed.")]
+    public void ParseTree_InvalidExpression ()
     {
-      _expressionTreeParser.Parse (ExpressionHelper.CreateLambdaExpression (), null);
+      _expressionTreeParser.ParseTree (ExpressionHelper.CreateLambdaExpression ());
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Cannot parse expression '1.ToString()' because it calls the unsupported method "
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Cannot parse expression '0' as it has an unsupported type. Only query sources " 
+        + "(that is, expressions that implement IEnumerable) can be parsed.")]
+    public void ParseTree_InvalidConstantExpression ()
+    {
+      _expressionTreeParser.ParseTree (Expression.Constant(0));
+    }
+
+    [Test]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Cannot parse expression 'i.ToString()' because it calls the unsupported method "
         + "'ToString'. Only query methods whose first parameter represents the remaining query chain are supported.")]
-    public void Parse_InvalidMethodCall_NonQueryMethod ()
+    public void ParseTree_InvalidMethodCall_NonQueryMethod ()
     {
-      var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression (() => 1.ToString ());
-      _expressionTreeParser.Parse (methodCallExpression, null);
+      var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<int, string> (i => i.ToString ());
+      _expressionTreeParser.ParseTree (methodCallExpression);
     }
 
     [Test]
     [ExpectedException (typeof (ParserException))]
-    public void Parse_InvalidMethodCall_UnknownMethod ()
+    public void ParseTree_InvalidMethodCall_UnknownMethod ()
     {
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression (() => _intSource.Sum());
-      _expressionTreeParser.Parse (methodCallExpression, null);
+      _expressionTreeParser.ParseTree (methodCallExpression);
+    }
+
+    [Test]
+    public void ParseTree_SimplifiesTree ()
+    {
+// ReSharper disable ConvertToConstant.Local
+      var outerI = 1;
+// ReSharper restore ConvertToConstant.Local
+      var expression = _intSource.Where (i => 1 > outerI).Expression;
+
+      var result = (WhereExpressionNode) _expressionTreeParser.ParseTree (expression);
+      Assert.That (((ConstantExpression) result.Predicate.Body).Value, Is.EqualTo (false));
     }
 
     [Test]

@@ -68,9 +68,12 @@ namespace Remotion.Data.Linq.Parsing.Structure
     private object ConvertExpressionToParameterValue (Expression expression)
     {
       // Each argument of a MethodCallExpression will either be a UnaryExpression/Quote, which represents an expression passed to the method,
+      // a ConstantExpression that contains the expression passed to the method,
       // or any other expression that represents a constant passed to the method.
       // The partial evaluator will convert Quote expressions into ConstantExpressions holding the actual Expression to pass in and
       // all other expressions into ConstantExpressions holding the value to pass in.
+      // This simplification step is usually not needed when this parser is called from ExpressionTreeParser because ExpressionTreeParser
+      // simplifies the whole tree as a first step. However, to enable usage of MethodCallExpressionParser independently, we'll perform it anyway.
       var evaluatedExpression = PartialTreeEvaluatingVisitor.EvaluateSubtree (expression);
       return evaluatedExpression.Value;
     }
