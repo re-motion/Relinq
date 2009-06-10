@@ -142,6 +142,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var queryModel = _queryParser.GetParsedQuery (expression);
 
       var mainFromClause = queryModel.MainFromClause;
+      var selectClause = (SelectClause)queryModel.SelectOrGroupClause;
       var additionalFromClause = (AdditionalFromClause) queryModel.BodyClauses[0];
       var whereClause = (WhereClause) queryModel.BodyClauses[1];
 
@@ -157,6 +158,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (additionalFromClause.FromExpression, Is.SameAs (selectManyMethodCall.Arguments[1].Operand.Expression));
       Assert.That (whereClause.Predicate, Is.SameAs (whereMethodCall.Arguments[1].Operand.Expression));
       Assert.That (mainFromClause.QuerySource.Type, Is.EqualTo (selectManyMethodCall.Arguments[0].Expression.Type));
+      Assert.That (mainFromClause.JoinClauses.Count, Is.EqualTo (0));
+      Assert.That (selectClause.Selector, Is.EqualTo (navigator.Arguments[1].Operand.Expression));
     }
 
     [Test]
@@ -195,6 +198,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var whereClause = (WhereClause) queryModel.BodyClauses[0];
       var memberFromClause = (MemberFromClause) queryModel.BodyClauses[1];
 
+      Assert.That (queryModel.BodyClauses.Count, Is.EqualTo (2));
       Assert.That (mainFromClause.PreviousClause, Is.Null);
       Assert.That (queryModel.SelectOrGroupClause.PreviousClause, Is.EqualTo (memberFromClause));
       Assert.That (whereClause.PreviousClause, Is.EqualTo (mainFromClause));
@@ -243,6 +247,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 
       Assert.That (letClause.ProjectionExpression.Body.NodeType, Is.EqualTo (navigator.Arguments[0].Arguments[1].Operand.Body.Expression.NodeType));
       Assert.That (letClause.ProjectionExpression.Body.Type, Is.EqualTo (navigator.Arguments[0].Arguments[1].Operand.Body.Expression.Type));
+      Assert.That (letClause.Identifier.Name, Is.EqualTo ("x"));
     }
 
     [Test]
@@ -253,36 +258,54 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var navigator = new ExpressionTreeNavigator (expression);
 
       var orderByClause = (OrderByClause) queryModel.BodyClauses[0];
-      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
+      var ordering1 = orderByClause.OrderingList[0];
+      var ordering2 = orderByClause.OrderingList[1];
+      var ordering3 = orderByClause.OrderingList[2];
 
+      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
       var mainFromClause = queryModel.MainFromClause;
+
+      Assert.That (ordering1.OrderingDirection, Is.EqualTo (OrderingDirection.Asc));
+      Assert.That (ordering2.OrderingDirection, Is.EqualTo (OrderingDirection.Desc));
+      Assert.That (ordering3.OrderingDirection, Is.EqualTo (OrderingDirection.Asc));
+
       Assert.That (mainFromClause.PreviousClause, Is.Null);
+      Assert.That (mainFromClause.Identifier.Name, Is.EqualTo ("s"));
       Assert.That (orderByClause.OrderingList.Count, Is.EqualTo (3));
       Assert.That (orderByClause.PreviousClause, Is.EqualTo (mainFromClause));
       Assert.That (selectClause.PreviousClause, Is.EqualTo (orderByClause));
-
+      
       var parameterExpression = Expression.Parameter (typeof (Student), "s");
       var expectedSelectExpression = Expression.Lambda (typeof (Func<Student, Student>), parameterExpression, parameterExpression);
       Assert.That (selectClause.Selector.Body.NodeType, Is.EqualTo (expectedSelectExpression.Body.NodeType));
       Assert.That (selectClause.Selector.Body.Type, Is.EqualTo (expectedSelectExpression.Body.Type));
       Assert.That (mainFromClause.QuerySource.NodeType, Is.EqualTo (navigator.Arguments[0].Arguments[0].Arguments[0].Expression.NodeType));
+
+      Assert.That (selectClause.Selector.Parameters.Count, Is.EqualTo (1));
+      Assert.That (selectClause.Selector.Parameters[0].Name, Is.EqualTo ("s"));
+      Assert.That (selectClause.Selector.Parameters[0].Type, Is.EqualTo (typeof(Student)));
     }
 
     [Test]
     public void MultipleOrderBys ()
     {
-      var query = OrderByTestQueryGenerator.CreateOrderByQueryWithMultipleOrderBys (_querySource);
-      var queryModel = _queryParser.GetParsedQuery (query.Expression);
+      var expression = OrderByTestQueryGenerator.CreateOrderByQueryWithMultipleOrderBys (_querySource).Expression;
+      var queryModel = _queryParser.GetParsedQuery (expression);
+      var navigator = new ExpressionTreeNavigator (expression);
 
-      Assert.That (queryModel.MainFromClause.PreviousClause, Is.Null);
+
+      var mainFromClause = queryModel.MainFromClause;
+      Assert.That (mainFromClause.PreviousClause, Is.Null);
       var orderByClause1 = (OrderByClause) queryModel.BodyClauses[0];
       Assert.That (orderByClause1.OrderingList.Count, Is.EqualTo (3));
       var orderByClause2 = (OrderByClause) queryModel.BodyClauses[1];
       Assert.That (orderByClause2.OrderingList.Count, Is.EqualTo (1));
 
-      Assert.That (orderByClause1.PreviousClause, Is.EqualTo (queryModel.MainFromClause));
+      Assert.That (orderByClause1.PreviousClause, Is.EqualTo (mainFromClause));
       Assert.That (orderByClause2.PreviousClause, Is.EqualTo (orderByClause1));
       Assert.That (queryModel.SelectOrGroupClause.PreviousClause, Is.EqualTo (orderByClause2));
+      Assert.That (mainFromClause.QuerySource.NodeType, Is.EqualTo (navigator.Arguments[0].Arguments[0].Arguments[0].Arguments[0].Expression.NodeType));
+      Assert.That (mainFromClause.QuerySource.Type, Is.EqualTo (navigator.Arguments[0].Arguments[0].Arguments[0].Arguments[0].Expression.Type));
     }
 
     [Test]
@@ -295,13 +318,14 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 
       var whereClause = (WhereClause) queryModel.BodyClauses[0];
       var orderByClause = (OrderByClause) queryModel.BodyClauses[1];
+      var mainFromClause = queryModel.MainFromClause;
 
-      Assert.That (queryModel.MainFromClause.PreviousClause, Is.Null);
-      Assert.That (whereClause.PreviousClause, Is.EqualTo (queryModel.MainFromClause));
+      Assert.That (mainFromClause.PreviousClause, Is.Null);
+      Assert.That (whereClause.PreviousClause, Is.EqualTo (mainFromClause));
       Assert.That (orderByClause.PreviousClause, Is.EqualTo (whereClause));
       Assert.That (queryModel.SelectOrGroupClause.PreviousClause, Is.EqualTo (orderByClause));
 
-      Assert.That (navigator.Arguments[0].Arguments[1].Operand.Expression, Is.EqualTo (whereClause.Predicate));
+      Assert.That (whereClause.Predicate, Is.EqualTo (navigator.Arguments[0].Arguments[1].Operand.Expression));
     }
 
     [Test]
