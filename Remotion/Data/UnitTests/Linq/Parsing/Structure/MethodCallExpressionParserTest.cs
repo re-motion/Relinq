@@ -18,6 +18,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Expressions;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
@@ -40,6 +41,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       _nodeTypeRegistry.Register (WhereExpressionNode.SupportedMethods, typeof (WhereExpressionNode));
       _nodeTypeRegistry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
       _nodeTypeRegistry.Register (TakeExpressionNode.SupportedMethods, typeof (TakeExpressionNode));
+      _nodeTypeRegistry.Register (CountExpressionNode.SupportedMethods, typeof (CountExpressionNode));
 
       _parser = new MethodCallExpressionParser (_nodeTypeRegistry);
 
@@ -47,7 +49,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
-    public void Parse ()
+    public void Parse_WithUnary ()
     {
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (q => q.Where (i => i > 5));
       var whereCondition = (LambdaExpression) ((UnaryExpression) methodCallExpression.Arguments[1]).Operand;
@@ -74,16 +76,27 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
-    public void Parse_TakeMethod ()
+    public void Parse_TakeMethod_WithConstant ()
     {
-      var outer = 4;
-      var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (q => q.Take (outer + 1));
+      var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (q => q.Take (5));
 
       var result = _parser.Parse ("x", _source, methodCallExpression);
 
       Assert.That (result, Is.InstanceOfType (typeof (TakeExpressionNode)));
       Assert.That (((TakeExpressionNode) result).Source, Is.SameAs (_source));
       Assert.That (((TakeExpressionNode) result).Count, Is.EqualTo (5));
+    }
+
+    [Test]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "The parameter expression type 'Add' is not supported by " 
+        + "MethodCallExpressionParser. Only UnaryExpressions and ConstantExpressions are supported. To transform other expressions to "
+        + "ConstantExpressions, use PartialTreeEvaluatingVisitor to simplify the expression tree.")]
+    public void Parse_WithNonEvaluatedParameter ()
+    {
+      var outer = 4;
+      var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (q => q.Take (outer + 1));
+
+      _parser.Parse ("x", _source, methodCallExpression);
     }
 
     [Test]
@@ -104,6 +117,21 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (q => q.Select ((i, j) => i));
 
       _parser.Parse ("x", _source, methodCallExpression);
+    }
+
+    [Test]
+    public void Parse_DetectsSubQueries ()
+    {
+      var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (
+          q => q.Where (i => (
+              from x in ExpressionHelper.CreateQuerySource() 
+              select x).Count() > 0));
+
+      var result = _parser.Parse ("x", _source, methodCallExpression);
+
+      Assert.That (result, Is.InstanceOfType (typeof (WhereExpressionNode)));
+      var predicateBody = (BinaryExpression)((WhereExpressionNode) result).Predicate.Body;
+      Assert.That (predicateBody.Left, Is.InstanceOfType (typeof (SubQueryExpression)));
     }
 
   }

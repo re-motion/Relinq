@@ -67,15 +67,25 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
     private object ConvertExpressionToParameterValue (Expression expression)
     {
+      var expressionWithSubQueries = SubQueryFindingVisitor.ReplaceSubQueries(expression,_nodeTypeRegistry, new List<QueryModel>());
+      
       // Each argument of a MethodCallExpression will either be a UnaryExpression/Quote, which represents an expression passed to the method,
       // a ConstantExpression that contains the expression passed to the method,
       // or any other expression that represents a constant passed to the method.
-      // The partial evaluator will convert Quote expressions into ConstantExpressions holding the actual Expression to pass in and
-      // all other expressions into ConstantExpressions holding the value to pass in.
-      // This simplification step is usually not needed when this parser is called from ExpressionTreeParser because ExpressionTreeParser
-      // simplifies the whole tree as a first step. However, to enable usage of MethodCallExpressionParser independently, we'll perform it anyway.
-      var evaluatedExpression = PartialTreeEvaluatingVisitor.EvaluateSubtree (expression);
-      return evaluatedExpression.Value;
+      // We only support the former two, to support the latter, PartialTreeEvaluatingVisitor must be used.
+
+      if (expressionWithSubQueries.NodeType == ExpressionType.Constant)
+        return ((ConstantExpression) expressionWithSubQueries).Value;
+      else if (expressionWithSubQueries.NodeType == ExpressionType.Quote)
+        return ((UnaryExpression) expressionWithSubQueries).Operand;
+      else
+      {
+        var message = string.Format (
+            "The parameter expression type '{0}' is not supported by MethodCallExpressionParser. Only UnaryExpressions and ConstantExpressions are "
+            + "supported. To transform other expressions to ConstantExpressions, use PartialTreeEvaluatingVisitor to simplify the expression tree.",
+            expression.NodeType);
+        throw new ParserException (message);
+      }
     }
 
     private IExpressionNode CreateExpressionNode (Type nodeType, string associatedIdentifier, IExpressionNode source, object[] additionalConstructorParameters)
