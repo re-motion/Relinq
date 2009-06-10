@@ -66,6 +66,16 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
+    public void CreateQueryModel_SetsExpressionTree ()
+    {
+      var value = new[] { 1, 2, 3 };
+      var constantExpression = Expression.Constant (value);
+
+      QueryModel queryModel = _queryParser.GetParsedQuery (constantExpression);
+      Assert.That (queryModel.GetExpressionTree(), Is.SameAs (constantExpression));
+    }
+
+    [Test]
     public void CreateQueryModel_ConstantExpression_CreatesMainFromClause_WithGeneratedIdentifier ()
     {
       var value = new[] { 1, 2, 3 };
@@ -159,7 +169,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 
       var expectedLetProjection = ((UnaryExpression) ((MethodCallExpression) expressionTree.Arguments[0]).Arguments[1]).Operand;
       Assert.That (letClause.ProjectionExpression, Is.SameAs (expectedLetProjection));
-
     }
   }
 }

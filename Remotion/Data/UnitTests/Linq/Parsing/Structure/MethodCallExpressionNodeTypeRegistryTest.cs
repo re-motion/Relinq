@@ -123,7 +123,52 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
-    public void Create ()
+    public void IsRegistered_True ()
+    {
+      var registry = new MethodCallExpressionNodeTypeRegistry ();
+      registry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
+
+      var result = registry.IsRegistered (SelectExpressionNode.SupportedMethods[0]);
+      Assert.That (result, Is.True);
+    }
+
+    [Test]
+    public void IsRegistered_True_ClosedGenericMethod ()
+    {
+      var registry = new MethodCallExpressionNodeTypeRegistry ();
+      registry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
+
+      var closedGenericMethodCallExpression =
+          (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (q => q.Select (i => i + 1));
+      var result = registry.IsRegistered (closedGenericMethodCallExpression.Method);
+
+      Assert.That (result, Is.True);
+    }
+
+    [Test]
+    public void IsRegistered_True_NonGenericMethod ()
+    {
+      var registry = new MethodCallExpressionNodeTypeRegistry ();
+      registry.Register (SumExpressionNode.SupportedMethods, typeof (SumExpressionNode));
+
+      var nonGenericMethod = SumExpressionNode.SupportedMethods[0];
+      Assert.That (nonGenericMethod.IsGenericMethod, Is.False);
+
+      var result = registry.IsRegistered (nonGenericMethod);
+
+      Assert.That (result, Is.True);
+    }
+
+    [Test]
+    public void IsRegistered_False ()
+    {
+      var registry = new MethodCallExpressionNodeTypeRegistry ();
+      var result = registry.IsRegistered (SelectExpressionNode.SupportedMethods[0]);
+      Assert.That (result, Is.False);
+    }
+
+    [Test]
+    public void CreateDefault ()
     {
       MethodCallExpressionNodeTypeRegistry registry = MethodCallExpressionNodeTypeRegistry.CreateDefault ();
 

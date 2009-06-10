@@ -13,11 +13,16 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+using System;
+using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Expressions;
+using Remotion.Data.Linq.Parsing;
+using Remotion.Data.Linq.Parsing.Structure;
+using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Data.Linq.Parsing.Structure.Legacy;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 using System.Collections.Generic;
@@ -57,10 +62,10 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy
       Assert.That (newExpression, Is.Not.SameAs (surroundingExpression));
       Assert.That (newExpression, Is.InstanceOfType (typeof (LambdaExpression)));
 
-      LambdaExpression newLambdaExpression = (LambdaExpression) newExpression;
+      var newLambdaExpression = (LambdaExpression) newExpression;
       Assert.That (newLambdaExpression.Body, Is.InstanceOfType (typeof (SubQueryExpression)));
 
-      SubQueryExpression newSubQueryExpression = (SubQueryExpression) newLambdaExpression.Body;
+      var newSubQueryExpression = (SubQueryExpression) newLambdaExpression.Body;
       Assert.That (newSubQueryExpression.QueryModel.GetExpressionTree (), Is.SameAs (subQuery));
     }
 
@@ -72,9 +77,83 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy
       Expression subQuery = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource ()).Expression;
       Expression surroundingExpression = Expression.Lambda (subQuery);
 
-      LambdaExpression newLambdaExpression = (LambdaExpression) _visitor.ReplaceSubQueries (surroundingExpression);
-      SubQueryExpression newSubQueryExpression = (SubQueryExpression) newLambdaExpression.Body;
+      var newLambdaExpression = (LambdaExpression) _visitor.ReplaceSubQueries (surroundingExpression);
+      var newSubQueryExpression = (SubQueryExpression) newLambdaExpression.Body;
       Assert.That (_subQueryRegistry, Is.EquivalentTo (new[] { newSubQueryExpression.QueryModel }));
+    }
+  }
+
+  [TestFixture]
+  public class SubQueryFindingVisitorNewTest
+  {
+    private List<QueryModel> _subQueryRegistry;
+    private MethodCallExpressionNodeTypeRegistry _nodeTypeRegistry;
+
+    [SetUp]
+    public void SetUp ()
+    {
+      _nodeTypeRegistry = MethodCallExpressionNodeTypeRegistry.CreateDefault();
+      _subQueryRegistry = new List<QueryModel> ();
+    }
+
+    [Test]
+    public void TreeWithNoSubquery ()
+    {
+      Expression expression = Expression.Constant ("test");
+
+      Expression newExpression = SubQueryFindingVisitorNew.ReplaceSubQueries (expression, _nodeTypeRegistry, _subQueryRegistry);
+      Assert.That (newExpression, Is.SameAs (expression));
+    }
+
+    [Test]
+    public void TreeWithSubquery ()
+    {
+      Expression subQuery = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource ()).Expression;
+      Expression surroundingExpression = Expression.Lambda (subQuery);
+
+      Expression newExpression = SubQueryFindingVisitorNew.ReplaceSubQueries (surroundingExpression, _nodeTypeRegistry, _subQueryRegistry);
+
+      Assert.That (newExpression, Is.Not.SameAs (surroundingExpression));
+      Assert.That (newExpression, Is.InstanceOfType (typeof (LambdaExpression)));
+
+      var newLambdaExpression = (LambdaExpression) newExpression;
+      Assert.That (newLambdaExpression.Body, Is.InstanceOfType (typeof (SubQueryExpression)));
+
+      var newSubQueryExpression = (SubQueryExpression) newLambdaExpression.Body;
+      Assert.That (newSubQueryExpression.QueryModel.GetExpressionTree (), Is.SameAs (subQuery));
+    }
+
+    [Test]
+    public void SubqueryIsRegistered ()
+    {
+      Assert.That (_subQueryRegistry, Is.Empty);
+
+      Expression subQuery = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource ()).Expression;
+      Expression surroundingExpression = Expression.Lambda (subQuery);
+
+      var newLambdaExpression =
+          (LambdaExpression) SubQueryFindingVisitorNew.ReplaceSubQueries (surroundingExpression, _nodeTypeRegistry, _subQueryRegistry);
+      var newSubQueryExpression = (SubQueryExpression) newLambdaExpression.Body;
+      Assert.That (_subQueryRegistry, Is.EquivalentTo (new[] { newSubQueryExpression.QueryModel }));
+    }
+
+    [Test]
+    public void VisitorUsesNodeTypeRegistry_ToParseAndAnalyzeSubQueries ()
+    {
+      Expression subQuery = ExpressionHelper.MakeExpression (() => CustomSelect (ExpressionHelper.CreateQuerySource (), s => s));
+      Expression surroundingExpression = Expression.Lambda (subQuery);
+
+      var emptyNodeTypeRegistry = new MethodCallExpressionNodeTypeRegistry ();
+      emptyNodeTypeRegistry.Register (new[] { ((MethodCallExpression) subQuery).Method }, typeof (SelectExpressionNode));
+
+      var newLambdaExpression =
+          (LambdaExpression) SubQueryFindingVisitorNew.ReplaceSubQueries (surroundingExpression, emptyNodeTypeRegistry, _subQueryRegistry);
+      Assert.That (newLambdaExpression.Body, Is.InstanceOfType (typeof (SubQueryExpression)));
+    }
+
+    public static IQueryable<Student> CustomSelect (IQueryable<Student> source, Expression<Func<Student, Student>> selector)
+    {
+      throw new NotImplementedException ();
     }
   }
 }

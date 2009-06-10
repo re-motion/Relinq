@@ -84,6 +84,17 @@ namespace Remotion.Data.Linq.Parsing.Structure
     }
 
     /// <summary>
+    /// Determines whether the specified method was registered with this <see cref="MethodCallExpressionNodeTypeRegistry"/>.
+    /// </summary>
+    public bool IsRegistered (MethodInfo method)
+    {
+      ArgumentUtility.CheckNotNull ("method", method);
+
+      var methodDefinition = GetMethodDefinition (method);
+      return _registeredTypes.ContainsKey (methodDefinition);
+    }
+
+    /// <summary>
     /// Gets the type of <see cref="IExpressionNode"/> registered with this <see cref="MethodCallExpressionNodeTypeRegistry"/> instance that
     /// matches the given <paramref name="method"/>, throwing a <see cref="KeyNotFoundException"/> if none can be found.
     /// </summary>
@@ -91,7 +102,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
     {
       ArgumentUtility.CheckNotNull ("method", method);
 
-      var methodDefinition = method.IsGenericMethod ? method.GetGenericMethodDefinition() : method;
+      var methodDefinition = GetMethodDefinition(method);
       try
       {
         return _registeredTypes[methodDefinition];
@@ -104,6 +115,11 @@ namespace Remotion.Data.Linq.Parsing.Structure
             methodDefinition.Name);
         throw new KeyNotFoundException (message, ex);
       }
+    }
+
+    private MethodInfo GetMethodDefinition (MethodInfo method)
+    {
+      return method.IsGenericMethod ? method.GetGenericMethodDefinition() : method;
     }
   }
 }
