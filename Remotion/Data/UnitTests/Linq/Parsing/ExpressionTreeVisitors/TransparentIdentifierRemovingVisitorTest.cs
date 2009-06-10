@@ -19,6 +19,7 @@ using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
@@ -277,7 +278,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
       nodeTypeRegistry.Register (SelectManyExpressionNode.SupportedMethods, typeof (SelectManyExpressionNode));
       nodeTypeRegistry.Register (WhereExpressionNode.SupportedMethods, typeof (WhereExpressionNode));
       
-      var selectNode = (SelectExpressionNode) new ExpressionTreeParser (nodeTypeRegistry).ParseTree (query.Expression);
+      var selectNode = (SelectExpressionNode) new ExpressionTreeParser (nodeTypeRegistry).ParseTree (query.Expression, new List<QueryModel>());
       var selectProjection = selectNode.GetResolvedSelector (); // new ( a = IR (a), b = IR (b) ).a.ID
 
       var result = TransparentIdentifierRemovingVisitor.ReplaceTransparentIdentifiers (selectProjection);

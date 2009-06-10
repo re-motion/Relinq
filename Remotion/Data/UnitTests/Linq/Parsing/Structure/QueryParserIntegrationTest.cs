@@ -40,7 +40,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     [Test]
     public void SimpleSelect ()
     {
-      var expression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (_querySource);
+      var expression = SelectTestQueryGenerator.CreateSimpleQuery (_querySource).Expression;
       var queryModel = _queryParser.GetParsedQuery (expression);
       var navigator = new ExpressionTreeNavigator (expression);
 
@@ -175,6 +175,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
       
       Assert.That (mainFromClause.PreviousClause, Is.Null);
+      Assert.That (mainFromClause.Identifier.Name, Is.EqualTo ("s1"));
+      Assert.That (mainFromClause.Identifier.Type, Is.SameAs(typeof(Student)));
       Assert.That (queryModel.BodyClauses[0], Is.InstanceOfType (typeof (AdditionalFromClause)));
       Assert.That (selectClause.PreviousClause, Is.EqualTo (additionalFromClause));
       Assert.That (additionalFromClause.Identifier.Name, Is.EqualTo ("s2"));
@@ -185,6 +187,30 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (expectedSelectExpression.Body.Type, Is.EqualTo (selectClause.Selector.Body.Type));
       Assert.That (mainFromClause.QuerySource.Type, Is.EqualTo(navigator.Arguments[0].Expression.Type));
 
+      Assert.IsNotNull (selectClause);
+      Assert.IsNotNull (selectClause.Selector);
+    }
+
+    [Test]
+    public void SimpleSubQueryInAdditionalFromClause ()
+    {
+      var expression = SubQueryTestQueryGenerator.CreateSimpleSubQueryInAdditionalFromClause (_querySource).Expression;
+      var queryModel = _queryParser.GetParsedQuery (expression);
+
+      Assert.That (queryModel.BodyClauses.Count, Is.EqualTo (1));
+      SubQueryFromClause subQueryFromClause = queryModel.BodyClauses[0] as SubQueryFromClause;
+      Assert.IsNotNull (subQueryFromClause);
+
+      Assert.That (subQueryFromClause.SubQueryModel, Is.Not.Null);
+      Assert.That (subQueryFromClause.SubQueryModel.ParentQuery, Is.SameAs (queryModel));
+      Assert.That (subQueryFromClause.SubQueryModel.MainFromClause, Is.Not.Null);
+
+      var subQueryMainFromClause = subQueryFromClause.SubQueryModel.MainFromClause;
+      Assert.That (subQueryMainFromClause.Identifier.Name, Is.EqualTo ("s3"));
+      Assert.That (((ConstantExpression)subQueryMainFromClause.QuerySource).Value, Is.SameAs(_querySource));
+
+      var subQuerySelectClause = (SelectClause) subQueryFromClause.SubQueryModel.SelectOrGroupClause;
+      Assert.That (subQuerySelectClause.Selector.Body, Is.SameAs (subQuerySelectClause.Selector.Parameters[0]));
     }
 
     [Test]
@@ -234,9 +260,53 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
+    public void WhereAndSelectMany ()
+    {
+      var expression = MixedTestQueryGenerator.CreateReverseFromWhereQuery (_querySource, _querySource).Expression;
+      var queryModel = _queryParser.GetParsedQuery (expression);
+      var navigator = new ExpressionTreeNavigator (expression);
+
+      var mainFromClause = queryModel.MainFromClause;
+      var whereClause = (WhereClause) queryModel.BodyClauses[0];
+      
+      Assert.That (mainFromClause.PreviousClause, Is.Null);
+      Assert.That (mainFromClause.Identifier.Name, Is.EqualTo ("s1"));
+      Assert.That (mainFromClause.JoinClauses.Count, Is.EqualTo (0));
+
+      Assert.That (queryModel.BodyClauses.Count, Is.EqualTo (2));
+      Assert.That (navigator.Arguments[0].Arguments[1].Operand.Expression, Is.EqualTo (whereClause.Predicate));
+      Assert.That (queryModel.BodyClauses.Last(), Is.InstanceOfType (typeof (AdditionalFromClause)));
+
+      var selectClause = (SelectClause)queryModel.SelectOrGroupClause;
+      Assert.That (selectClause, Is.Not.Null);
+    }
+
+    [Test]
+    public void WhereAndSelectMannyWithProjection ()
+    {
+      var expression = MixedTestQueryGenerator.CreateReverseFromWhereQueryWithProjection (_querySource, _querySource).Expression;
+      var queryModel = _queryParser.GetParsedQuery (expression);
+      var navigator = new ExpressionTreeNavigator (expression);
+
+      var mainFromClause = queryModel.MainFromClause;
+      var whereClause = (WhereClause) queryModel.BodyClauses[0];
+
+      Assert.That (mainFromClause.PreviousClause, Is.Null);
+      Assert.That (mainFromClause.Identifier.Name, Is.EqualTo ("s1"));
+      Assert.That (mainFromClause.JoinClauses.Count, Is.EqualTo (0));
+
+      Assert.That (queryModel.BodyClauses.Count, Is.EqualTo (2));
+      Assert.That (navigator.Arguments[0].Arguments[1].Operand.Expression, Is.EqualTo (whereClause.Predicate));
+      Assert.That (queryModel.BodyClauses.Last (), Is.InstanceOfType (typeof (AdditionalFromClause)));
+
+      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
+      Assert.That (selectClause, Is.Not.Null);
+    }
+
+    [Test]
     public void Let ()
     {
-      var expression = LetTestQueryGenerator.CreateSimpleSelect_LetExpression (_querySource);
+      var expression = LetTestQueryGenerator.CreateSimpleLetClause (_querySource).Expression;
       var queryModel = _queryParser.GetParsedQuery (expression);
       var navigator = new ExpressionTreeNavigator (expression);
 
@@ -254,7 +324,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     [Test]
     public void OrderByAndThenBy ()
     {
-      var expression = OrderByTestQueryGenerator.CreateOrderByQueryWithOrderByAndThenBy_OrderByExpression (_querySource);
+      var expression = OrderByTestQueryGenerator.CreateOrderByQueryWithOrderByAndThenBy (_querySource).Expression;
       var queryModel = _queryParser.GetParsedQuery (expression);
       var navigator = new ExpressionTreeNavigator (expression);
 
@@ -312,7 +382,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     [Test]
     public void OrderByAndWhere ()
     {
-      var expression = MixedTestQueryGenerator.CreateOrderByQueryWithWhere_OrderByExpression (_querySource);
+      var expression = MixedTestQueryGenerator.CreateOrderByWithWhereCondition (_querySource).Expression;
       var queryModel = _queryParser.GetParsedQuery (expression);
       var navigator = new ExpressionTreeNavigator (expression);
 

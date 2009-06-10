@@ -30,11 +30,15 @@ namespace Remotion.Data.Linq.Parsing.Structure
   public class MethodCallExpressionParser
   {
     private readonly MethodCallExpressionNodeTypeRegistry _nodeTypeRegistry;
+    private readonly List<QueryModel> _subQueryRegistry;
 
-    public MethodCallExpressionParser (MethodCallExpressionNodeTypeRegistry nodeTypeRegistry)
+    public MethodCallExpressionParser (MethodCallExpressionNodeTypeRegistry nodeTypeRegistry, List<QueryModel> subQueryRegistry)
     {
       ArgumentUtility.CheckNotNull ("nodeTypeRegistry", nodeTypeRegistry);
+      ArgumentUtility.CheckNotNull ("subQueryRegistry", subQueryRegistry);
+
       _nodeTypeRegistry = nodeTypeRegistry;
+      _subQueryRegistry = subQueryRegistry;
     }
 
     public IExpressionNode Parse (string associatedIdentifier, IExpressionNode source, MethodCallExpression expressionToParse)
@@ -67,7 +71,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
     private object ConvertExpressionToParameterValue (Expression expression)
     {
-      var expressionWithSubQueries = SubQueryFindingVisitor.ReplaceSubQueries(expression,_nodeTypeRegistry, new List<QueryModel>());
+      var expressionWithSubQueries = SubQueryFindingVisitor.ReplaceSubQueries(expression,_nodeTypeRegistry, _subQueryRegistry);
       
       // Each argument of a MethodCallExpression will either be a UnaryExpression/Quote, which represents an expression passed to the method,
       // a ConstantExpression that contains the expression passed to the method,

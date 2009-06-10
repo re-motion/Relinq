@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
@@ -42,23 +43,22 @@ namespace Remotion.Data.Linq.Parsing.Structure
     }
 
 
-    public IExpressionNode ParseTree (Expression expressionTree)
+    public IExpressionNode ParseTree (Expression expressionTree, List<QueryModel> subQueryRegistry)
     {
       ArgumentUtility.CheckNotNull ("expressionTree", expressionTree);
 
-      // TODO: call SubQueryFindingVisitor
       var simplifiedExpressionTree = PartialTreeEvaluatingVisitor.EvaluateIndependentSubtrees (expressionTree);
-      return ParseNode (simplifiedExpressionTree, null);
+      return ParseNode (simplifiedExpressionTree, null, subQueryRegistry);
     }
 
-    private IExpressionNode ParseNode (Expression expression, string associatedIdentifier)
+    private IExpressionNode ParseNode (Expression expression, string associatedIdentifier, List<QueryModel> subQueryRegistry)
     {
       if (associatedIdentifier == null)
         associatedIdentifier = _identifierGenerator.GetUniqueIdentifier ("<generated>_");
 
       var methodCallExpression = expression as MethodCallExpression;
       if (methodCallExpression != null)
-        return ParseMethodCallExpression (methodCallExpression, associatedIdentifier);
+        return ParseMethodCallExpression (methodCallExpression, associatedIdentifier, subQueryRegistry);
       else
       {
         var constantExpression = expression as ConstantExpression;
@@ -87,7 +87,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       }
     }
 
-    private IExpressionNode ParseMethodCallExpression (MethodCallExpression methodCallExpression, string associatedIdentifier)
+    private IExpressionNode ParseMethodCallExpression (MethodCallExpression methodCallExpression, string associatedIdentifier, List<QueryModel> subQueryRegistry)
     {
       if (methodCallExpression.Arguments.Count == 0)
       {
@@ -100,9 +100,9 @@ namespace Remotion.Data.Linq.Parsing.Structure
       }
 
       string associatedIdentifierForSource = InferAssociatedIdentifierForSource (methodCallExpression);
-      var source = ParseNode (methodCallExpression.Arguments[0], associatedIdentifierForSource);
+      var source = ParseNode (methodCallExpression.Arguments[0], associatedIdentifierForSource, subQueryRegistry);
 
-      var parser = new MethodCallExpressionParser (_nodeTypeRegistry);
+      var parser = new MethodCallExpressionParser (_nodeTypeRegistry, subQueryRegistry);
       return parser.Parse (associatedIdentifier, source, methodCallExpression);
     }
 

@@ -20,6 +20,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Expressions;
 using Remotion.Data.Linq.Parsing.Structure;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
@@ -170,5 +171,20 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var expectedLetProjection = ((UnaryExpression) ((MethodCallExpression) expressionTree.Arguments[0]).Arguments[1]).Operand;
       Assert.That (letClause.ProjectionExpression, Is.SameAs (expectedLetProjection));
     }
+
+    [Test]
+    public void CreateQueryModel_SubQueries_AreAssociatedWithParentQueries ()
+    {
+      var expression = ExpressionHelper.MakeExpression (
+           () => ExpressionHelper.CreateQuerySource ().Where (i => (
+               from x in ExpressionHelper.CreateQuerySource ()
+               select x).Count () > 0));
+
+      var result = _queryParser.GetParsedQuery (expression);
+      var whereClause = (WhereClause) result.BodyClauses[0];
+      var predicateBody = (BinaryExpression) whereClause.Predicate.Body;
+      Assert.That (((SubQueryExpression)predicateBody.Left).QueryModel.ParentQuery, Is.SameAs (result));
+    }
+
   }
 }

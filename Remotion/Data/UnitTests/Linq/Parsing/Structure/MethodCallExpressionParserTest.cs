@@ -14,15 +14,18 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq;
 using Remotion.Data.Linq.Expressions;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel;
+using Remotion.Development.UnitTesting;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 {
@@ -32,6 +35,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     private MethodCallExpressionNodeTypeRegistry _nodeTypeRegistry;
     private MethodCallExpressionParser _parser;
     private ConstantExpressionNode _source;
+    private List<QueryModel> _subQueryRegistry;
 
     [SetUp]
     public void SetUp ()
@@ -43,7 +47,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       _nodeTypeRegistry.Register (TakeExpressionNode.SupportedMethods, typeof (TakeExpressionNode));
       _nodeTypeRegistry.Register (CountExpressionNode.SupportedMethods, typeof (CountExpressionNode));
 
-      _parser = new MethodCallExpressionParser (_nodeTypeRegistry);
+      _subQueryRegistry = new List<QueryModel>();
+      _parser = new MethodCallExpressionParser (_nodeTypeRegistry, _subQueryRegistry);
 
       _source = ExpressionNodeObjectMother.CreateConstant();
     }
@@ -132,6 +137,19 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (result, Is.InstanceOfType (typeof (WhereExpressionNode)));
       var predicateBody = (BinaryExpression)((WhereExpressionNode) result).Predicate.Body;
       Assert.That (predicateBody.Left, Is.InstanceOfType (typeof (SubQueryExpression)));
+    }
+
+    [Test]
+    public void SubqueriesAreCollectedInList ()
+    {
+      var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (
+           q => q.Where (i => (
+               from x in ExpressionHelper.CreateQuerySource ()
+               select x).Count () > 0));
+
+      var result = (WhereExpressionNode) _parser.Parse ("x", _source, methodCallExpression);
+      var predicateBody = (BinaryExpression) result.Predicate.Body;
+      Assert.That (_subQueryRegistry, Is.EqualTo (new[] { ((SubQueryExpression) predicateBody.Left).QueryModel }));
     }
 
   }
