@@ -136,7 +136,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.Legacy
     public static T Simplify<T> (T expression, List<QueryModel> subQueryRegistry)
         where T : Expression
     {
-      SubQueryFindingVisitor subQueryFindingVisitor = new SubQueryFindingVisitor (subQueryRegistry);
+      LegacySubQueryFindingVisitor subQueryFindingVisitor = new LegacySubQueryFindingVisitor (subQueryRegistry);
       T newExpression = (T) subQueryFindingVisitor.ReplaceSubQueries (expression);
 
       return (T) PartialTreeEvaluatingVisitor.EvaluateIndependentSubtrees (newExpression);

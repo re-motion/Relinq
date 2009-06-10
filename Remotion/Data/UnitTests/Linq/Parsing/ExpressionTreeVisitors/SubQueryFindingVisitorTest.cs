@@ -20,71 +20,16 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Expressions;
-using Remotion.Data.Linq.Parsing;
+using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
-using Remotion.Data.Linq.Parsing.Structure.Legacy;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 using System.Collections.Generic;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy
+namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
 {
   [TestFixture]
   public class SubQueryFindingVisitorTest
-  {
-    private SubQueryFindingVisitor _visitor;
-    private List<QueryModel> _subQueryRegistry;
-
-    [SetUp]
-    public void SetUp ()
-    {
-      _subQueryRegistry = new List<QueryModel>();
-      _visitor = new SubQueryFindingVisitor (_subQueryRegistry);
-    }
-
-    [Test]
-    public void TreeWithNoSubquery()
-    {
-      Expression expression = Expression.Constant ("test");
-
-      Expression newExpression = _visitor.ReplaceSubQueries (expression);
-      Assert.That (newExpression, Is.SameAs (expression));
-    }
-
-    [Test]
-    public void TreeWithSubquery ()
-    {
-      Expression subQuery = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource()).Expression;
-      Expression surroundingExpression = Expression.Lambda (subQuery);
-
-      Expression newExpression = _visitor.ReplaceSubQueries (surroundingExpression);
-
-      Assert.That (newExpression, Is.Not.SameAs (surroundingExpression));
-      Assert.That (newExpression, Is.InstanceOfType (typeof (LambdaExpression)));
-
-      var newLambdaExpression = (LambdaExpression) newExpression;
-      Assert.That (newLambdaExpression.Body, Is.InstanceOfType (typeof (SubQueryExpression)));
-
-      var newSubQueryExpression = (SubQueryExpression) newLambdaExpression.Body;
-      Assert.That (newSubQueryExpression.QueryModel.GetExpressionTree (), Is.SameAs (subQuery));
-    }
-
-    [Test]
-    public void SubqueryIsRegistered ()
-    {
-      Assert.That (_subQueryRegistry, Is.Empty);
-      
-      Expression subQuery = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource ()).Expression;
-      Expression surroundingExpression = Expression.Lambda (subQuery);
-
-      var newLambdaExpression = (LambdaExpression) _visitor.ReplaceSubQueries (surroundingExpression);
-      var newSubQueryExpression = (SubQueryExpression) newLambdaExpression.Body;
-      Assert.That (_subQueryRegistry, Is.EquivalentTo (new[] { newSubQueryExpression.QueryModel }));
-    }
-  }
-
-  [TestFixture]
-  public class SubQueryFindingVisitorNewTest
   {
     private List<QueryModel> _subQueryRegistry;
     private MethodCallExpressionNodeTypeRegistry _nodeTypeRegistry;
@@ -101,7 +46,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy
     {
       Expression expression = Expression.Constant ("test");
 
-      Expression newExpression = SubQueryFindingVisitorNew.ReplaceSubQueries (expression, _nodeTypeRegistry, _subQueryRegistry);
+      Expression newExpression = SubQueryFindingVisitor.ReplaceSubQueries (expression, _nodeTypeRegistry, _subQueryRegistry);
       Assert.That (newExpression, Is.SameAs (expression));
     }
 
@@ -111,7 +56,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy
       Expression subQuery = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource ()).Expression;
       Expression surroundingExpression = Expression.Lambda (subQuery);
 
-      Expression newExpression = SubQueryFindingVisitorNew.ReplaceSubQueries (surroundingExpression, _nodeTypeRegistry, _subQueryRegistry);
+      Expression newExpression = SubQueryFindingVisitor.ReplaceSubQueries (surroundingExpression, _nodeTypeRegistry, _subQueryRegistry);
 
       Assert.That (newExpression, Is.Not.SameAs (surroundingExpression));
       Assert.That (newExpression, Is.InstanceOfType (typeof (LambdaExpression)));
@@ -132,7 +77,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy
       Expression surroundingExpression = Expression.Lambda (subQuery);
 
       var newLambdaExpression =
-          (LambdaExpression) SubQueryFindingVisitorNew.ReplaceSubQueries (surroundingExpression, _nodeTypeRegistry, _subQueryRegistry);
+          (LambdaExpression) SubQueryFindingVisitor.ReplaceSubQueries (surroundingExpression, _nodeTypeRegistry, _subQueryRegistry);
       var newSubQueryExpression = (SubQueryExpression) newLambdaExpression.Body;
       Assert.That (_subQueryRegistry, Is.EquivalentTo (new[] { newSubQueryExpression.QueryModel }));
     }
@@ -147,7 +92,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.Legacy
       emptyNodeTypeRegistry.Register (new[] { ((MethodCallExpression) subQuery).Method }, typeof (SelectExpressionNode));
 
       var newLambdaExpression =
-          (LambdaExpression) SubQueryFindingVisitorNew.ReplaceSubQueries (surroundingExpression, emptyNodeTypeRegistry, _subQueryRegistry);
+          (LambdaExpression) SubQueryFindingVisitor.ReplaceSubQueries (surroundingExpression, emptyNodeTypeRegistry, _subQueryRegistry);
       Assert.That (newLambdaExpression.Body, Is.InstanceOfType (typeof (SubQueryExpression)));
     }
 

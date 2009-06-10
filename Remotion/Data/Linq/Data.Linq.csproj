@@ -64,6 +64,7 @@
     <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\EvaluatableTreeFindingVisitor.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\PartialEvaluationInfo.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\CastExpressionNode.cs" />
+    <Compile Include="Parsing\Structure\Legacy\LegacySubQueryFindingVisitor.cs" />
     <Compile Include="UniqueIdentifierGenerator.cs" />
     <Compile Include="EagerFetching\ThenFetchManyExpression.cs" />
     <Compile Include="EagerFetching\ThenFetchOneExpression.cs" />
@@ -197,7 +198,7 @@
     <Compile Include="Parsing\ParserException.cs" />
     <Compile Include="Parsing\Structure\Legacy\SelectExpressionParser.cs" />
     <Compile Include="Parsing\Details\OrderingFieldParser.cs" />
-    <Compile Include="Parsing\Structure\Legacy\SubQueryFindingVisitor.cs" />
+    <Compile Include="Parsing\ExpressionTreeVisitors\SubQueryFindingVisitor.cs" />
     <Compile Include="Parsing\Structure\Legacy\WhereExpressionData.cs" />
     <Compile Include="Parsing\Structure\Legacy\WhereExpressionParser.cs" />
     <Compile Include="Parsing\Structure\MethodCallExpressionParser.cs" />

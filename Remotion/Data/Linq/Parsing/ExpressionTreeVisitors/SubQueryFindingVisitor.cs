@@ -16,9 +16,10 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Expressions;
+using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Utilities;
 
-namespace Remotion.Data.Linq.Parsing.Structure.Legacy
+namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
 {
   /// <summary>
   /// Parses an expression tree, looks for sub-queries in that tree (ie. expressions that themselves are LINQ queries), parses and registers them, and
@@ -26,66 +27,29 @@ namespace Remotion.Data.Linq.Parsing.Structure.Legacy
   /// </summary>
   public class SubQueryFindingVisitor : ExpressionTreeVisitor
   {
-    private readonly List<QueryModel> _subQueryRegistry;
-    private readonly SourceExpressionParser _referenceParser = new SourceExpressionParser (true);
-
-    public SubQueryFindingVisitor (List<QueryModel> subQueryRegistry)
-    {
-      _subQueryRegistry = subQueryRegistry;
-    }
-
-    public Expression ReplaceSubQueries (Expression expression)
-    {
-      ArgumentUtility.CheckNotNull ("expression", expression);
-      return VisitExpression(expression);
-    }
-
-    protected override Expression VisitMethodCallExpression (MethodCallExpression expression)
-    {
-      if (_referenceParser.CallDispatcher.CanParse (expression.Method))
-        return CreateSubQueryNode (expression);
-      else
-        return base.VisitMethodCallExpression (expression);
-    }
-
-    private SubQueryExpression CreateSubQueryNode (MethodCallExpression methodCallExpression)
-    {
-      var parser = new QueryParser (methodCallExpression);
-      QueryModel queryModel = parser.GetParsedQuery ();
-      _subQueryRegistry.Add (queryModel);
-      return new SubQueryExpression (queryModel);
-    }
-  }
-
-  /// <summary>
-  /// Parses an expression tree, looks for sub-queries in that tree (ie. expressions that themselves are LINQ queries), parses and registers them, and
-  /// replaces them with an instance of <see cref="SubQueryExpression"/>.
-  /// </summary>
-  public class SubQueryFindingVisitorNew : ExpressionTreeVisitor
-  {
     public static Expression ReplaceSubQueries (Expression expressionTree, MethodCallExpressionNodeTypeRegistry nodeTypeRegistry, List<QueryModel> subQueryRegistry)
     {
       ArgumentUtility.CheckNotNull ("expressionTree", expressionTree);
       ArgumentUtility.CheckNotNull ("nodeTypeRegistry", nodeTypeRegistry);
       ArgumentUtility.CheckNotNull ("subQueryRegistry", subQueryRegistry);
       
-      var visitor = new SubQueryFindingVisitorNew (nodeTypeRegistry, subQueryRegistry);
+      var visitor = new SubQueryFindingVisitor (nodeTypeRegistry, subQueryRegistry);
       return visitor.VisitExpression (expressionTree);
     }
 
     private readonly MethodCallExpressionNodeTypeRegistry _nodeTypeRegistry;
     private readonly List<QueryModel> _subQueryRegistry;
-    private readonly Structure.QueryParser _innerParser;
+    private readonly QueryParser _innerParser;
 
     // TODO: subQueryRegistry might become obsolete once the new Reolve mechanism is integrated and QueryModel is refactored
-    private SubQueryFindingVisitorNew (MethodCallExpressionNodeTypeRegistry nodeTypeRegistry, List<QueryModel> subQueryRegistry)
+    private SubQueryFindingVisitor (MethodCallExpressionNodeTypeRegistry nodeTypeRegistry, List<QueryModel> subQueryRegistry)
     {
       ArgumentUtility.CheckNotNull ("nodeTypeRegistry", nodeTypeRegistry);
       ArgumentUtility.CheckNotNull ("subQueryRegistry", subQueryRegistry);
 
       _nodeTypeRegistry = nodeTypeRegistry;
       _subQueryRegistry = subQueryRegistry;
-      _innerParser = new Structure.QueryParser (new ExpressionTreeParser (_nodeTypeRegistry));
+      _innerParser = new QueryParser (new ExpressionTreeParser (_nodeTypeRegistry));
     }
 
     protected override Expression VisitMethodCallExpression (MethodCallExpression expression)
