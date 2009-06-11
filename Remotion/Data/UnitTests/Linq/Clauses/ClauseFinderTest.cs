@@ -15,13 +15,11 @@
 // 
 using System;
 using System.Linq;
-using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.DataObjectModel;
-using Remotion.Data.Linq.Parsing.Structure.Legacy;
+using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 
 namespace Remotion.Data.UnitTests.Linq.Clauses
@@ -33,7 +31,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void FindClause_Null ()
     {
       IQueryable<Student> query = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource ());
-      QueryModel queryModel = new QueryParser (query.Expression).GetParsedQuery ();
+      QueryModel queryModel = ExpressionHelper.ParseQuery (query.Expression);
       MainFromClause fromClause = queryModel.MainFromClause;
       Assert.IsNull (ClauseFinder.FindClause<SelectClause> (fromClause));
     }
@@ -48,7 +46,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void FindClause_Self()
     {
       IQueryable<Student> query = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource ());
-      QueryModel queryModel = new QueryParser (query.Expression).GetParsedQuery ();
+      QueryModel queryModel = ExpressionHelper.ParseQuery (query.Expression);
       SelectClause selectClause = (SelectClause) queryModel.SelectOrGroupClause;
       
       Assert.AreSame (selectClause, ClauseFinder.FindClause<SelectClause> (selectClause));
@@ -58,7 +56,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void FindClause_Previous ()
     {
       IQueryable<Student> query = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource ());
-      QueryModel queryModel = new QueryParser (query.Expression).GetParsedQuery ();
+      QueryModel queryModel = ExpressionHelper.ParseQuery (query.Expression);
       SelectClause selectClause = (SelectClause) queryModel.SelectOrGroupClause;
 
       Assert.AreSame (selectClause.PreviousClause, ClauseFinder.FindClause<MainFromClause> (selectClause));
@@ -68,7 +66,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void FindClause_PreviousWithBaseType ()
     {
       IQueryable<Student> query = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource ());
-      QueryModel queryModel = new QueryParser (query.Expression).GetParsedQuery ();
+      QueryModel queryModel = ExpressionHelper.ParseQuery (query.Expression);
       SelectClause selectClause = (SelectClause) queryModel.SelectOrGroupClause;
 
       Assert.AreSame (selectClause.PreviousClause, ClauseFinder.FindClause<FromClauseBase> (selectClause));
@@ -78,7 +76,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void FindLastFromClause_MainFromClause ()
     {
       IQueryable<Student> query = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource ());
-      QueryModel queryModel = new QueryParser (query.Expression).GetParsedQuery ();
+      QueryModel queryModel = ExpressionHelper.ParseQuery (query.Expression);
       SelectClause selectClause = (SelectClause) queryModel.SelectOrGroupClause;
       Assert.AreSame (queryModel.MainFromClause, ClauseFinder.FindClause <FromClauseBase> (selectClause.PreviousClause));
     }
@@ -88,7 +86,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     {
       IQueryable<Student> source = ExpressionHelper.CreateQuerySource ();
       IQueryable<Student> query = FromTestQueryGenerator.CreateThreeFromQuery (source, source, source);
-      QueryModel queryModel = new QueryParser (query.Expression).GetParsedQuery ();
+      QueryModel queryModel = ExpressionHelper.ParseQuery (query.Expression);
       SelectClause selectClause = (SelectClause) queryModel.SelectOrGroupClause;
       Assert.AreSame (queryModel.BodyClauses.Last (), ClauseFinder.FindClause<FromClauseBase> (selectClause.PreviousClause));
     }
@@ -98,7 +96,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     {
       IQueryable<Student> source = ExpressionHelper.CreateQuerySource ();
       IQueryable<Student> query = WhereTestQueryGenerator.CreateMultiWhereQuery (source);
-      QueryModel queryModel = new QueryParser (query.Expression).GetParsedQuery ();
+      QueryModel queryModel = ExpressionHelper.ParseQuery (query.Expression);
       SelectClause selectClause = (SelectClause) queryModel.SelectOrGroupClause;
       Assert.AreSame (queryModel.MainFromClause, ClauseFinder.FindClause<FromClauseBase> (selectClause.PreviousClause));
     }
@@ -108,7 +106,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     {
       IQueryable<Student> source = ExpressionHelper.CreateQuerySource ();
       IQueryable<Student> query = MixedTestQueryGenerator.CreateThreeFromWhereQuery (source, source, source);
-      QueryModel queryModel = new QueryParser (query.Expression).GetParsedQuery ();
+      QueryModel queryModel = ExpressionHelper.ParseQuery (query.Expression);
       SelectClause selectClause = (SelectClause) queryModel.SelectOrGroupClause;
       Assert.That (ClauseFinder.FindClauses<FromClauseBase> (selectClause).ToArray(),Is.EqualTo(new object[]
           {
@@ -123,7 +121,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     {
       IQueryable<Student> source = ExpressionHelper.CreateQuerySource ();
       IQueryable<Student> query = MixedTestQueryGenerator.CreateThreeFromWhereQuery (source, source, source);
-      QueryModel queryModel = new QueryParser (query.Expression).GetParsedQuery ();
+      QueryModel queryModel = ExpressionHelper.ParseQuery (query.Expression);
       Assert.That (ClauseFinder.FindClauses<FromClauseBase> 
         (queryModel.BodyClauses.Last ().PreviousClause).ToArray (), Is.EqualTo (new object[]
           {

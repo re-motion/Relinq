@@ -20,7 +20,7 @@ using System.Reflection;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses.ResultModifications;
 using Remotion.Data.Linq.Parsing;
-using Remotion.Data.Linq.Parsing.Structure.Legacy;
+using Remotion.Data.Linq.Parsing.Structure;
 using Rhino.Mocks;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.DataObjectModel;
@@ -226,9 +226,8 @@ namespace Remotion.Data.UnitTests.Linq
 
     public static QueryModel ParseQuery (Expression queryExpression)
     {
-      Expression expression = queryExpression;
-      QueryParser parser = new QueryParser (expression);
-      return parser.GetParsedQuery ();
+      QueryParser parser = new QueryParser ();
+      return parser.GetParsedQuery (queryExpression);
     }
 
     public static FieldDescriptor CreateFieldDescriptor (FromClauseBase fromClause, MemberInfo member)

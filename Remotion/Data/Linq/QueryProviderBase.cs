@@ -20,7 +20,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq.EagerFetching;
-using Remotion.Data.Linq.Parsing.Structure.Legacy;
+using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq
@@ -139,10 +139,8 @@ namespace Remotion.Data.Linq
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      var parser = new QueryParser(expression);
-      return parser.GetParsedQuery();
+      var parser = new QueryParser();
+      return parser.GetParsedQuery (expression);
     }
-    
-
   }
 }
