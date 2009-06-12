@@ -29,11 +29,26 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
       var selectClause = ExpressionHelper.CreateSelectClause ();
       var newSelectClause = ExpressionHelper.CreateSelectClause ();
 
-      var resultModification = new LastResultModification (selectClause);
+      var resultModification = new LastResultModification (selectClause, true);
       var clone = resultModification.Clone (newSelectClause);
 
       Assert.That (clone, Is.InstanceOfType (typeof (LastResultModification)));
       Assert.That (clone.SelectClause, Is.SameAs (newSelectClause));
+      Assert.That (((LastResultModification) clone).ReturnDefaultWhenEmpty, Is.True);
+    }
+
+    [Test]
+    public void Clone_ReturnDefaultIfEmpty_False ()
+    {
+      var selectClause = ExpressionHelper.CreateSelectClause ();
+      var newSelectClause = ExpressionHelper.CreateSelectClause ();
+
+      var resultModification = new LastResultModification (selectClause, false);
+      var clone = resultModification.Clone (newSelectClause);
+
+      Assert.That (clone, Is.InstanceOfType (typeof (LastResultModification)));
+      Assert.That (clone.SelectClause, Is.SameAs (newSelectClause));
+      Assert.That (((LastResultModification) clone).ReturnDefaultWhenEmpty, Is.False);
     }
   }
 }

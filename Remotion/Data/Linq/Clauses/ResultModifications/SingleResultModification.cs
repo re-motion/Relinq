@@ -19,14 +19,17 @@ namespace Remotion.Data.Linq.Clauses.ResultModifications
 {
   public class SingleResultModification : ResultModificationBase
   {
-    public SingleResultModification (SelectClause selectClause)
-        : base (selectClause)
+    public SingleResultModification (SelectClause selectClause, bool returnDefaultWhenEmpty)
+      : base (selectClause)
     {
+      ReturnDefaultWhenEmpty = returnDefaultWhenEmpty;
     }
+
+    public bool ReturnDefaultWhenEmpty { get; set; }
 
     public override ResultModificationBase Clone (SelectClause newSelectClause)
     {
-      return new SingleResultModification (newSelectClause);
+      return new SingleResultModification (newSelectClause, ReturnDefaultWhenEmpty);
     }
   }
 }

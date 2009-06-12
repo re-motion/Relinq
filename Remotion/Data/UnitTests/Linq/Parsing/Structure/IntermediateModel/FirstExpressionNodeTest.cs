@@ -18,6 +18,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ResultModifications;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
@@ -134,6 +135,24 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var node = new FirstExpressionNode (CreateParseInfo (), ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5));
       TestCreateClause_WithOptionalPredicate (node, node.OptionalPredicate);
+    }
+
+    [Test]
+    public void CreateClause_NoDefaultAllowed ()
+    {
+      var node = new FirstExpressionNode (CreateParseInfo (FirstExpressionNode.SupportedMethods[0].MakeGenericMethod (typeof (Student))), null);
+      var clause = (SelectClause) node.CreateClause (ExpressionHelper.CreateClause ());
+
+      Assert.That (((FirstResultModification) clause.ResultModifications[0]).ReturnDefaultWhenEmpty, Is.False);
+    }
+
+    [Test]
+    public void CreateClause_DefaultAllowed ()
+    {
+      var node = new FirstExpressionNode (CreateParseInfo (FirstExpressionNode.SupportedMethods[3].MakeGenericMethod (typeof (Student))), null);
+      var clause = (SelectClause) node.CreateClause (ExpressionHelper.CreateClause ());
+
+      Assert.That (((FirstResultModification) clause.ResultModifications[0]).ReturnDefaultWhenEmpty, Is.True);
     }
   }
 }

@@ -60,7 +60,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     protected override ResultModificationBase CreateResultModification (SelectClause selectClause)
     {
-      return new SingleResultModification (selectClause);
+      return new SingleResultModification (selectClause, ParsedExpression.Method.Name.EndsWith ("OrDefault"));
     }
   }
 }

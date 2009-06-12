@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System.Linq.Expressions;
+using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 {
@@ -25,6 +26,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public MethodCallExpressionParseInfo (string associatedIdentifier, IExpressionNode source, MethodCallExpression parsedExpression)
         : this()
     {
+      ArgumentUtility.CheckNotNullOrEmpty ("associatedIdentifier", associatedIdentifier);
+      ArgumentUtility.CheckNotNull ("source", source);
+      ArgumentUtility.CheckNotNull ("parsedExpression", parsedExpression);
+
       AssociatedIdentifier = associatedIdentifier;
       Source = source;
       ParsedExpression = parsedExpression;

@@ -121,5 +121,16 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       return new MethodCallExpressionParseInfo (associatedIdentifier, source, ExpressionHelper.CreateMethodCallExpression ());
     }
+
+    protected MethodCallExpressionParseInfo CreateParseInfo (MethodInfo method)
+    {
+      var arguments = from p in method.GetParameters ()
+                      let t = p.ParameterType
+                      let defaultValue = t.IsValueType ? Activator.CreateInstance (t) : null
+                      select Expression.Constant (defaultValue, t);
+      var methodCallExpression = Expression.Call (method, arguments.ToArray());
+
+      return new MethodCallExpressionParseInfo ("x", SourceStub, methodCallExpression);
+    }
   }
 }
