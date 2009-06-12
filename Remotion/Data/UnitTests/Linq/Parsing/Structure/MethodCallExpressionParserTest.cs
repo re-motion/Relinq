@@ -25,7 +25,6 @@ using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel;
-using Remotion.Development.UnitTesting;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 {
@@ -81,6 +80,15 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
+    public void Parse_ParsedExpression ()
+    {
+      var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (q => q.Select (i => i + 1));
+      var result = (SelectExpressionNode) _parser.Parse ("x", _source, methodCallExpression);
+
+      Assert.That (result.ParsedExpression, Is.SameAs (methodCallExpression));
+    }
+
+    [Test]
     public void Parse_TakeMethod_WithConstant ()
     {
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (q => q.Take (5));
@@ -98,7 +106,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
         + "ConstantExpressions, use PartialTreeEvaluatingVisitor to simplify the expression tree.")]
     public void Parse_WithNonEvaluatedParameter ()
     {
+// ReSharper disable ConvertToConstant.Local
       var outer = 4;
+// ReSharper restore ConvertToConstant.Local
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (q => q.Take (outer + 1));
 
       _parser.Parse ("x", _source, methodCallExpression);
