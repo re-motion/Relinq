@@ -28,15 +28,16 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   public abstract class ResultModificationExpressionNodeBase : MethodCallExpressionNodeBase
   {
     private Expression _cachedPredicate;
-     private Expression _cachedSelector;
+    private Expression _cachedSelector;
 
-    protected ResultModificationExpressionNodeBase (string assoicatedIdentifier, IExpressionNode source, LambdaExpression optionalPredicate, LambdaExpression optionalSelector)
-       : base (assoicatedIdentifier, source)
+    protected ResultModificationExpressionNodeBase (
+        MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalPredicate, LambdaExpression optionalSelector)
+        : base (parseInfo)
     {
       if (optionalPredicate != null && optionalPredicate.Parameters.Count != 1)
         throw new ArgumentException ("OptionalPredicate must have exactly one parameter.", "optionalPredicate");
 
-            if (optionalSelector != null && optionalSelector.Parameters.Count != 1)
+      if (optionalSelector != null && optionalSelector.Parameters.Count != 1)
         throw new ArgumentException ("OptionalSelector must have exactly one parameter.", "optionalSelector");
 
       OptionalPredicate = optionalPredicate;
@@ -74,9 +75,9 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     {
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
 
-      SelectClause selectClause = GetSelectClauseForResultModification(previousClause);
-      selectClause.AddResultModification (CreateResultModification(selectClause));
-      CreateWhereClauseForResultModification(selectClause, OptionalPredicate);
+      SelectClause selectClause = GetSelectClauseForResultModification (previousClause);
+      selectClause.AddResultModification (CreateResultModification (selectClause));
+      CreateWhereClauseForResultModification (selectClause, OptionalPredicate);
       AdjustSelectorForResultModification (selectClause, OptionalSelector);
 
       return selectClause;

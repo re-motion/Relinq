@@ -36,12 +36,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Queryable.Take<object> (null, 0))
                                                            };
 
-    public TakeExpressionNode (string associatedIdentifier, IExpressionNode source, int count)
-        : base (
-            ArgumentUtility.CheckNotNullOrEmpty ("associatedIdentifier", associatedIdentifier),
-            ArgumentUtility.CheckNotNull ("source", source),
-            null,
-            null)
+    public TakeExpressionNode (MethodCallExpressionParseInfo parseInfo, int count)
+        : base (parseInfo, null, null)
     {
       Count = count;
     }

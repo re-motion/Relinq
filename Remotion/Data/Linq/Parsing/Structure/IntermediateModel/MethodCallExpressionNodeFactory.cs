@@ -29,10 +29,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   /// </remarks>
   public class MethodCallExpressionNodeFactory
   {
-    public static IExpressionNode CreateExpressionNode (Type nodeType, string associatedIdentifier, IExpressionNode source, object[] additionalConstructorParameters)
+    public static IExpressionNode CreateExpressionNode (
+        Type nodeType, MethodCallExpressionParseInfo parseInfo, object[] additionalConstructorParameters)
     {
       ArgumentUtility.CheckNotNullAndTypeIsAssignableFrom ("nodeType", nodeType, typeof (IExpressionNode));
-      ArgumentUtility.CheckNotNull ("source", source);
       ArgumentUtility.CheckNotNull ("additionalConstructorParameters", additionalConstructorParameters);
 
       var constructors = nodeType.GetConstructors();
@@ -44,27 +44,27 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
         throw new ArgumentException (message, "nodeType");
       }
 
-      object[] constructorParameterArray = GetParameterArray (constructors[0], associatedIdentifier, source, additionalConstructorParameters);
+      object[] constructorParameterArray = GetParameterArray (constructors[0], parseInfo, additionalConstructorParameters);
       return (IExpressionNode) constructors[0].Invoke (constructorParameterArray);
     }
 
-    private static object[] GetParameterArray (ConstructorInfo nodeTypeConstructor, string associatedIdentifier, IExpressionNode source, object[] additionalConstructorParameters)
+    private static object[] GetParameterArray (
+        ConstructorInfo nodeTypeConstructor, MethodCallExpressionParseInfo parseInfo, object[] additionalConstructorParameters)
     {
       var parameterInfos = nodeTypeConstructor.GetParameters();
-      if (additionalConstructorParameters.Length > parameterInfos.Length - 2)
+      if (additionalConstructorParameters.Length > parameterInfos.Length - 1)
       {
         string message = string.Format (
-            "The constructor of expression node type '{0}' only takes {1} parameters, but you specified {2} (including the identifier and the source parameter).",
-            nodeTypeConstructor.DeclaringType.FullName, 
-            parameterInfos.Length, 
-            additionalConstructorParameters.Length + 2);
+            "The constructor of expression node type '{0}' only takes {1} parameters, but you specified {2} (including the parse info parameter).",
+            nodeTypeConstructor.DeclaringType.FullName,
+            parameterInfos.Length,
+            additionalConstructorParameters.Length + 1);
         throw new ArgumentException (message, "additionalConstructorParameters");
       }
 
       var constructorParameters = new object[parameterInfos.Length];
-      constructorParameters[0] = associatedIdentifier;
-      constructorParameters[1] = source;
-      additionalConstructorParameters.CopyTo (constructorParameters, 2);
+      constructorParameters[0] = parseInfo;
+      additionalConstructorParameters.CopyTo (constructorParameters, 1);
       return constructorParameters;
     }
   }

@@ -38,7 +38,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void Resolve_PassesExpressionToSource ()
     {
       var sourceMock = MockRepository.GenerateMock<IExpressionNode>();
-      var node = new DistinctExpressionNode ("x", sourceMock);
+      var node = new DistinctExpressionNode (CreateParseInfo (sourceMock));
       var expression = ExpressionHelper.CreateLambdaExpression();
       var parameter = ExpressionHelper.CreateParameterExpression();
       var expectedResult = ExpressionHelper.CreateExpression();
@@ -54,7 +54,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void CreateParameterForOutput ()
     {
       var source = new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3, 4, 5 });
-      var node = new DistinctExpressionNode ("x", source);
+      var node = new DistinctExpressionNode (CreateParseInfo (source, "y"));
       var parameter = node.CreateParameterForOutput ();
 
       Assert.That (parameter.Name, Is.EqualTo ("x"));
@@ -64,7 +64,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void CreateClause_PreviousClauseIsSelect ()
     {
-      var node = new DistinctExpressionNode ("x", SourceStub);
+      var node = new DistinctExpressionNode (CreateParseInfo ());
 
       TestCreateClause_PreviousClauseIsSelect (node, typeof (DistinctResultModification));
     }
@@ -72,7 +72,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void CreateClause_PreviousClauseIsNoSelect ()
     {
-      var node = new DistinctExpressionNode ("x", SourceStub);
+      var node = new DistinctExpressionNode (CreateParseInfo ());
       TestCreateClause_PreviousClauseIsNoSelect (node, typeof (DistinctResultModification));
     }
   }

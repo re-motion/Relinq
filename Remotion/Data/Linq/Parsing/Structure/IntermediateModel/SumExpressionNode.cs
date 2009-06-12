@@ -54,12 +54,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Queryable.Sum<object> (null, o => (float?) 0)),
                                                            };
 
-    public SumExpressionNode (string associatedIdentifier, IExpressionNode source, LambdaExpression optionalSelector)
-        : base (
-            ArgumentUtility.CheckNotNullOrEmpty ("associatedIdentifier", associatedIdentifier),
-            ArgumentUtility.CheckNotNull ("source", source),
-            null,
-            optionalSelector)
+    public SumExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalSelector)
+        : base (parseInfo, null, optionalSelector)
     {
     }
 

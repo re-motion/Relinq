@@ -17,6 +17,7 @@ using System;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
+using Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel.TestDomain;
 using Remotion.Utilities;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
@@ -25,18 +26,20 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
   public class MethodCallExpressionNodeFactoryTest
   {
     private IExpressionNode _source;
+    private MethodCallExpressionParseInfo _parseInfo;
 
     [SetUp]
     public void SetUp ()
     {
       _source = ExpressionNodeObjectMother.CreateConstant();
+      _parseInfo = new MethodCallExpressionParseInfo ("foo", _source, ExpressionHelper.CreateMethodCallExpression());
     }
 
     [Test]
     public void CreateExpressionNode ()
     {
       var selector = ExpressionHelper.CreateLambdaExpression<int, int> (i => i);
-      var result = MethodCallExpressionNodeFactory.CreateExpressionNode (typeof (SelectExpressionNode), "foo", _source, new object[] { selector });
+      var result = MethodCallExpressionNodeFactory.CreateExpressionNode (typeof (SelectExpressionNode), _parseInfo, new object[] { selector });
 
       Assert.That (result, Is.InstanceOfType (typeof (SelectExpressionNode)));
       Assert.That (((SelectExpressionNode) result).Source, Is.SameAs (_source));
@@ -47,7 +50,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void CreateExpressionNode_NullSupplied ()
     {
-      var result = MethodCallExpressionNodeFactory.CreateExpressionNode (typeof (FirstExpressionNode), "foo", _source, new object[0]);
+      var result = MethodCallExpressionNodeFactory.CreateExpressionNode (typeof (FirstExpressionNode), _parseInfo, new object[0]);
 
       Assert.That (result, Is.InstanceOfType (typeof (FirstExpressionNode)));
       Assert.That (((FirstExpressionNode) result).Source, Is.SameAs (_source));
@@ -58,26 +61,26 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [ExpectedException (typeof (ArgumentTypeException))]
     public void CreateExpressionNode_InvalidType ()
     {
-      MethodCallExpressionNodeFactory.CreateExpressionNode (typeof (MethodCallExpressionNodeFactoryTest), "foo", _source, new object[0]);
+      MethodCallExpressionNodeFactory.CreateExpressionNode (typeof (MethodCallExpressionNodeFactoryTest), _parseInfo, new object[0]);
     }
 
     [Test]
     [ExpectedException (typeof (ArgumentException), ExpectedMessage = "Expression node type 'Remotion.Data.UnitTests.Linq.Parsing.Structure."
-        + "IntermediateModel.ExpressionNodeWithTooManyCtors' contains too many constructors. It must only contain a single constructor, allowing null "
+        + "IntermediateModel.TestDomain.ExpressionNodeWithTooManyCtors' contains too many constructors. It must only contain a single constructor, allowing null "
         + "to be passed for any optional arguments.\r\nParameter name: nodeType")]
     public void CreateExpressionNode_MoreThanOneCtor ()
     {
-      MethodCallExpressionNodeFactory.CreateExpressionNode (typeof (ExpressionNodeWithTooManyCtors), "foo", _source, new object[0]);
+      MethodCallExpressionNodeFactory.CreateExpressionNode (typeof (ExpressionNodeWithTooManyCtors), _parseInfo, new object[0]);
     }
 
     [Test]
     [ExpectedException (typeof (ArgumentException), ExpectedMessage = "The constructor of expression node type 'Remotion.Data.Linq.Parsing.Structure."
-          + "IntermediateModel.SelectExpressionNode' only takes 3 parameters, but you specified 4 (including the identifier and the source parameter).\r\n"
+          + "IntermediateModel.SelectExpressionNode' only takes 2 parameters, but you specified 3 (including the parse info parameter).\r\n"
           + "Parameter name: additionalConstructorParameters")]
     public void CreateExpressionNode_TooManyParameters ()
     {
       var selector = ExpressionHelper.CreateLambdaExpression ();
-      MethodCallExpressionNodeFactory.CreateExpressionNode (typeof (SelectExpressionNode), "foo", _source, new object[] { selector, selector });
+      MethodCallExpressionNodeFactory.CreateExpressionNode (typeof (SelectExpressionNode), _parseInfo, new object[] { selector, selector });
     }
   }
 }

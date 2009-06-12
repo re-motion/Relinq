@@ -106,5 +106,20 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       ExpressionTreeComparer.CheckAreEqualTrees (expectedNewSelector, clause.Selector);
     }
+
+    protected MethodCallExpressionParseInfo CreateParseInfo ()
+    {
+      return CreateParseInfo (SourceStub);
+    }
+
+    protected MethodCallExpressionParseInfo CreateParseInfo (IExpressionNode source)
+    {
+      return CreateParseInfo (source, "x");
+    }
+
+    protected MethodCallExpressionParseInfo CreateParseInfo (IExpressionNode source, string associatedIdentifier)
+    {
+      return new MethodCallExpressionParseInfo (associatedIdentifier, source, ExpressionHelper.CreateMethodCallExpression ());
+    }
   }
 }

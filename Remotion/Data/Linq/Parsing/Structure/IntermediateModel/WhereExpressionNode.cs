@@ -36,10 +36,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     private Expression _cachedPredicate;
 
-    public WhereExpressionNode (string associatedIdentifier, IExpressionNode source, LambdaExpression predicate)
-        : base (
-            ArgumentUtility.CheckNotNullOrEmpty ("associatedIdentifier", associatedIdentifier),
-            ArgumentUtility.CheckNotNull ("source", source))
+    public WhereExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression predicate)
+        : base (parseInfo)
     {
       ArgumentUtility.CheckNotNull ("predicate", predicate);
 

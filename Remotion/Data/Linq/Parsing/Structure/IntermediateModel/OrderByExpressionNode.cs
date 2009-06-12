@@ -36,10 +36,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     private Expression _cachedSelector;
 
-    public OrderByExpressionNode (string associatedIdentifier, IExpressionNode source, LambdaExpression keySelector)
-        : base (
-            ArgumentUtility.CheckNotNullOrEmpty ("associatedIdentifier", associatedIdentifier),
-            ArgumentUtility.CheckNotNull ("source", source))
+    public OrderByExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression keySelector)
+        : base (parseInfo)
     {
       ArgumentUtility.CheckNotNull ("keySelector", keySelector);
 

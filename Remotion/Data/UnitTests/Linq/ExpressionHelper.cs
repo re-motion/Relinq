@@ -154,6 +154,10 @@ namespace Remotion.Data.UnitTests.Linq
       return Expression.Call (methodInfo, query.Expression);
     }
 
+    public static MethodCallExpression CreateMethodCallExpression ()
+    {
+      return CreateMethodCallExpression (CreateQuerySource ());
+    }
 
     public static WhereClause CreateWhereClause ()
     {

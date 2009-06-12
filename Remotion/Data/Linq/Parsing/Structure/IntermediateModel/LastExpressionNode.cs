@@ -41,25 +41,21 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Queryable.LastOrDefault<object> (null, null))
                                                            };
 
-    public LastExpressionNode (string associatedIdentifier, IExpressionNode source, LambdaExpression optionalPredicate)
-        : base (
-            ArgumentUtility.CheckNotNullOrEmpty ("associatedIdentifier", associatedIdentifier),
-            ArgumentUtility.CheckNotNull ("source", source),
-            optionalPredicate,
-            null)
+    public LastExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalPredicate)
+        : base (parseInfo, optionalPredicate, null)
     {
     }
 
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)
     {
       // no data streams out from this node, so we cannot resolve any expressions
-      throw CreateResolveNotSupportedException ();
+      throw CreateResolveNotSupportedException();
     }
 
     public override ParameterExpression CreateParameterForOutput ()
     {
       // no data streams out from this node, so we cannot create a parameter accepting that data
-      throw CreateOutputParameterNotSupportedException ();
+      throw CreateOutputParameterNotSupportedException();
     }
 
     protected override ResultModificationBase CreateResultModification (SelectClause selectClause)

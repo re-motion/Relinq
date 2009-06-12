@@ -36,12 +36,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Queryable.Min<object, object> (null, null))
                                                            };
 
-    public MinExpressionNode (string associatedIdentifier, IExpressionNode source, LambdaExpression optionalSelector)
-        : base (
-            ArgumentUtility.CheckNotNull ("associatedIdentifier", associatedIdentifier),
-            ArgumentUtility.CheckNotNull ("source", source),
-            null,
-            optionalSelector)
+    public MinExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalSelector)
+        : base (parseInfo, null, optionalSelector)
     {
     }
 

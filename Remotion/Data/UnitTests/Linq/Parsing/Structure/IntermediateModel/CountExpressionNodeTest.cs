@@ -46,7 +46,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [ExpectedException (typeof (InvalidOperationException))]
     public void Resolve_ThrowsInvalidOperationException ()
     {
-      var node = new CountExpressionNode ("x", SourceStub, null);
+      var node = new CountExpressionNode (CreateParseInfo (), null);
       node.Resolve (ExpressionHelper.CreateParameterExpression(), ExpressionHelper.CreateExpression());
     }
 
@@ -54,7 +54,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [ExpectedException (typeof (InvalidOperationException))]
     public void CreateParameterForOutput ()
     {
-      var node = new CountExpressionNode ("x", SourceStub, null);
+      var node = new CountExpressionNode (CreateParseInfo (), null);
       node.CreateParameterForOutput ();
     }
 
@@ -62,7 +62,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void GetResolvedPredicate ()
     {
       var predicate = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new CountExpressionNode ("x", SourceStub, predicate);
+      var node = new CountExpressionNode (CreateParseInfo (), predicate);
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
 
       var result = node.GetResolvedOptionalPredicate ();
@@ -74,7 +74,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void GetResolvedPredicate_Null ()
     {
       var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();
-      var node = new CountExpressionNode ("x", sourceMock, null);
+      var node = new CountExpressionNode (CreateParseInfo (sourceMock), null);
       var result = node.GetResolvedOptionalPredicate ();
       Assert.That (result, Is.Null);
     }
@@ -84,7 +84,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var sourceMock = new MockRepository().StrictMock<IExpressionNode>();
       var predicate = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new CountExpressionNode ("x", sourceMock, predicate);
+      var node = new CountExpressionNode (CreateParseInfo (sourceMock), predicate);
       var expectedResult = ExpressionHelper.CreateLambdaExpression ();
 
       sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything)).Repeat.Once().Return (expectedResult);
@@ -100,7 +100,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void CreateClause_WithoutOptionalPredicate_PreviousClauseIsSelect ()
     {
-      var node = new CountExpressionNode ("x", SourceStub, null);
+      var node = new CountExpressionNode (CreateParseInfo (), null);
 
       TestCreateClause_PreviousClauseIsSelect (node, typeof (CountResultModification));
     }
@@ -109,7 +109,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void CreateClause_WithoutOptionalPredicate_PreviousClauseIsNoSelect ()
     {
       var source = new ConstantExpressionNode ("i1", typeof (int[]), new[] { 1, 2, 3 });
-      var node = new CountExpressionNode ("x", source, null);
+      var node = new CountExpressionNode (CreateParseInfo (source), null);
 
       TestCreateClause_PreviousClauseIsNoSelect (node, typeof (CountResultModification));
     }
@@ -117,7 +117,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void CreateClause_WithOptionalPredicate_CreatesWhereClause ()
     {
-      var node = new CountExpressionNode ("x", SourceStub, ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5));
+      var node = new CountExpressionNode (CreateParseInfo (), ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5));
       TestCreateClause_WithOptionalPredicate(node, node.OptionalPredicate);
     }
   }

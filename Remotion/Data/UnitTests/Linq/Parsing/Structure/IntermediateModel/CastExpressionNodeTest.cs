@@ -37,7 +37,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void Resolve_PassesExpressionToSource ()
     {
       var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();
-      var node = new CastExpressionNode ("x", sourceMock);
+      var node = new CastExpressionNode (CreateParseInfo (sourceMock));
       var expression = ExpressionHelper.CreateLambdaExpression ();
       var parameter = ExpressionHelper.CreateParameterExpression ();
       var expectedResult = ExpressionHelper.CreateExpression ();
@@ -53,7 +53,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void CreateParameterForOutput ()
     {
       var source = new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3, 4, 5 });
-      var node = new CastExpressionNode ("x", source);
+      var node = new CastExpressionNode (CreateParseInfo (source, "Test"));
       
       var parameter = node.CreateParameterForOutput ();
 
@@ -65,7 +65,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void CreateClause ()
     {
       var previousClause = ExpressionHelper.CreateClause ();
-      var node = new CastExpressionNode ("x", SourceStub);
+      var node = new CastExpressionNode (CreateParseInfo());
 
       var clause = node.CreateClause (previousClause);
 

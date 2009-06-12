@@ -42,10 +42,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     private Expression _cachedResultSelector;
 
     public SelectManyExpressionNode (
-        string associatedIdentifier, IExpressionNode source, LambdaExpression collectionSelector, LambdaExpression resultSelector)
-        : base (
-            ArgumentUtility.CheckNotNullOrEmpty ("associatedIdentifier", associatedIdentifier),
-            ArgumentUtility.CheckNotNull ("source", source))
+        MethodCallExpressionParseInfo parseInfo, LambdaExpression collectionSelector, LambdaExpression resultSelector)
+        : base (parseInfo)
     {
       ArgumentUtility.CheckNotNull ("collectionSelector", collectionSelector);
       ArgumentUtility.CheckNotNull ("resultSelector", resultSelector);

@@ -83,7 +83,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
             + "of a query call chain. Set previousClause to null.");
       }
 
-      return CreateClause ();
+      return CreateClause();
     }
 
     public MainFromClause CreateClause ()

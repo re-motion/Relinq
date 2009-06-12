@@ -65,6 +65,7 @@
     <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\EvaluatableTreeFindingVisitor.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\PartialEvaluationInfo.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\CastExpressionNode.cs" />
+    <Compile Include="Parsing\Structure\IntermediateModel\IExpressionNodeParseInfo.cs" />
     <Compile Include="UniqueIdentifierGenerator.cs" />
     <Compile Include="EagerFetching\ThenFetchManyExpression.cs" />
     <Compile Include="EagerFetching\ThenFetchOneExpression.cs" />

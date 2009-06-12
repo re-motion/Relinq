@@ -34,10 +34,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Queryable.Cast<object> (null))
                                                            };
 
-    public CastExpressionNode (string associatedIdentifier, IExpressionNode source)
-        : base (
-            ArgumentUtility.CheckNotNull ("associatedIdentifier", associatedIdentifier),
-            ArgumentUtility.CheckNotNull ("source", source))
+    public CastExpressionNode (MethodCallExpressionParseInfo parseInfo)
+        : base (parseInfo)
     {
     }
 
@@ -50,7 +48,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public override ParameterExpression CreateParameterForOutput ()
     {
       // this simply streams its input data to the output without modifying its structure, so we let the previous node create the parameter
-      return Source.CreateParameterForOutput ();
+      return Source.CreateParameterForOutput();
     }
 
     public override IClause CreateClause (IClause previousClause)

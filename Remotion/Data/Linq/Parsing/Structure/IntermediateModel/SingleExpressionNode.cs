@@ -41,12 +41,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Queryable.SingleOrDefault<object> (null, null))
                                                            };
 
-    public SingleExpressionNode (string associatedIdentifier, IExpressionNode source, LambdaExpression optionalPredicate)
-        : base (
-            ArgumentUtility.CheckNotNullOrEmpty ("associatedIdentifier", associatedIdentifier),
-            ArgumentUtility.CheckNotNull ("source", source),
-            optionalPredicate,
-            null)
+    public SingleExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalPredicate)
+        : base (parseInfo, optionalPredicate, null)
     {
     }
 

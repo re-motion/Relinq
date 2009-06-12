@@ -18,7 +18,6 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ResultModifications;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
@@ -47,7 +46,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [ExpectedException (typeof (InvalidOperationException))]
     public void Resolve_ThrowsInvalidOperationException ()
     {
-      var node = new MaxExpressionNode ("x", SourceStub, null);
+      var node = new MaxExpressionNode (CreateParseInfo (), null);
       node.Resolve (ExpressionHelper.CreateParameterExpression (), ExpressionHelper.CreateExpression ());
     }
 
@@ -55,7 +54,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void GetResolvedSelector ()
     {
       var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new MaxExpressionNode ("x", SourceStub, selector);
+      var node = new MaxExpressionNode (CreateParseInfo (), selector);
 
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
       
@@ -68,7 +67,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void GetResolvedSelector_Null ()
     {
       var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();
-      var node = new MaxExpressionNode ("x", sourceMock, null);
+      var node = new MaxExpressionNode (CreateParseInfo (sourceMock), null);
       var result = node.GetResolvedOptionalSelector ();
       Assert.That (result, Is.Null);
     }
@@ -78,7 +77,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var sourceMock = new MockRepository ().StrictMock<IExpressionNode> ();
       var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new MaxExpressionNode ("x", sourceMock, selector);
+      var node = new MaxExpressionNode (CreateParseInfo (sourceMock), selector);
       var expectedResult = ExpressionHelper.CreateLambdaExpression ();
       
       sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything)).Repeat.Once ().Return (expectedResult);
@@ -95,21 +94,21 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [ExpectedException (typeof (InvalidOperationException))]
     public void CreateParameterForOutput ()
     {
-      var node = new MaxExpressionNode ("x", SourceStub, null);
+      var node = new MaxExpressionNode (CreateParseInfo (), null);
       node.CreateParameterForOutput ();
     }
 
     [Test]
     public void CreateClause_WithoutSelector_PreviousClauseIsSelect ()
     {
-      var node = new MaxExpressionNode ("x", SourceStub, null);
+      var node = new MaxExpressionNode (CreateParseInfo (), null);
       TestCreateClause_PreviousClauseIsSelect(node, typeof (MaxResultModification));
     }
 
     [Test]
     public void CreateClause_WithoutSelector_PreviousClauseIsNoSelect ()
     {
-      var node = new MaxExpressionNode ("x", SourceStub, null);
+      var node = new MaxExpressionNode (CreateParseInfo (), null);
       TestCreateClause_PreviousClauseIsNoSelect (node, typeof (MaxResultModification));
     }
 
@@ -117,7 +116,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void CreateClause_WithSelector_AdjustsSelectClause ()
     {
       var selector = ExpressionHelper.CreateLambdaExpression<int, string> (i => i.ToString ());
-      var node = new MaxExpressionNode ("x", SourceStub, selector);
+      var node = new MaxExpressionNode (CreateParseInfo (), selector);
 
       var selectorOfPreviousClause = ExpressionHelper.CreateLambdaExpression<Student, int> (s => s.ID);
       var expectedNewSelector = ExpressionHelper.CreateLambdaExpression<Student, string> (s => s.ID.ToString ());

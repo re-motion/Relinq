@@ -37,10 +37,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     private Expression _cachedSelector;
 
-    public SelectExpressionNode (string associatedIdentifier, IExpressionNode source, LambdaExpression selector)
-        : base (
-            ArgumentUtility.CheckNotNullOrEmpty ("associatedIdentifier", associatedIdentifier),
-            ArgumentUtility.CheckNotNull ("source", source))
+    public SelectExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression selector)
+        : base (parseInfo)
     {
       ArgumentUtility.CheckNotNull ("selector", selector);
 

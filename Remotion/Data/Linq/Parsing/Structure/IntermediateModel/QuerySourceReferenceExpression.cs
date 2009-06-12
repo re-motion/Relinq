@@ -25,7 +25,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   public class QuerySourceReferenceExpression : Expression
   {
     public QuerySourceReferenceExpression (IQuerySourceExpressionNode node)
-      : base ((ExpressionType) (-1), ArgumentUtility.CheckNotNull ("node", node).QuerySourceElementType)
+        : base ((ExpressionType) (-1), ArgumentUtility.CheckNotNull ("node", node).QuerySourceElementType)
     {
       ReferencedQuerySource = node;
     }

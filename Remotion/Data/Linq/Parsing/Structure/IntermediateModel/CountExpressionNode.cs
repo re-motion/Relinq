@@ -38,12 +38,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                            };
 
 
-    public CountExpressionNode (string associatedIdentifier, IExpressionNode source, LambdaExpression optionalPredicate)
-        : base (
-            ArgumentUtility.CheckNotNullOrEmpty ("associatedIdentifier", associatedIdentifier),
-            ArgumentUtility.CheckNotNull ("source", source),
-            optionalPredicate,
-            null)
+    public CountExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalPredicate)
+        : base (parseInfo, optionalPredicate, null)
     {
     }
 

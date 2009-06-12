@@ -36,12 +36,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Queryable.Max<object, object> (null, null))
                                                            };
 
-    public MaxExpressionNode (string associatedIdentifier, IExpressionNode source, LambdaExpression optionalSelector)
-        : base (
-            ArgumentUtility.CheckNotNullOrEmpty ("associatedIdentifier", associatedIdentifier),
-            ArgumentUtility.CheckNotNull ("source", source),
-            null,
-            optionalSelector)
+    public MaxExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalSelector)
+        : base (parseInfo, null, optionalSelector)
     {
     }
 

@@ -43,7 +43,6 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
     public IExpressionNode Parse (string associatedIdentifier, IExpressionNode source, MethodCallExpression expressionToParse)
     {
-      ArgumentUtility.CheckNotNull ("source", source);
       ArgumentUtility.CheckNotNull ("expressionToParse", expressionToParse);
 
       Type nodeType = GetNodeType(expressionToParse);
@@ -51,7 +50,9 @@ namespace Remotion.Data.Linq.Parsing.Structure
             .Skip (1) // skip the expression corresponding to the source argument
             .Select (expr => ConvertExpressionToParameterValue (expr)) // convert the remaining argument expressions to their actual values
             .ToArray();
-      return CreateExpressionNode (nodeType, associatedIdentifier, source, additionalConstructorParameters);
+
+      var parseInfo = new MethodCallExpressionParseInfo(associatedIdentifier, source, expressionToParse);
+      return CreateExpressionNode (nodeType, parseInfo, additionalConstructorParameters);
     }
 
     private Type GetNodeType (MethodCallExpression expressionToParse)
@@ -92,9 +93,9 @@ namespace Remotion.Data.Linq.Parsing.Structure
       }
     }
 
-    private IExpressionNode CreateExpressionNode (Type nodeType, string associatedIdentifier, IExpressionNode source, object[] additionalConstructorParameters)
+    private IExpressionNode CreateExpressionNode (Type nodeType, MethodCallExpressionParseInfo parseInfo, object[] additionalConstructorParameters)
     {
-      return MethodCallExpressionNodeFactory.CreateExpressionNode (nodeType, associatedIdentifier, source, additionalConstructorParameters);
+      return MethodCallExpressionNodeFactory.CreateExpressionNode (nodeType, parseInfo, additionalConstructorParameters);
     }
   }
 }

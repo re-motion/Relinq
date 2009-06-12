@@ -36,12 +36,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Queryable.Distinct<object> (null))
                                                            };
 
-    public DistinctExpressionNode (string associatedIdentifier, IExpressionNode source)
-        : base (
-            ArgumentUtility.CheckNotNullOrEmpty ("associatedIdentifier", associatedIdentifier),
-            ArgumentUtility.CheckNotNull ("source", source),
-            null,
-            null)
+    public DistinctExpressionNode (MethodCallExpressionParseInfo parseInfo)
+        : base (parseInfo, null, null)
     {
     }
 
@@ -54,7 +50,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public override ParameterExpression CreateParameterForOutput ()
     {
       // this simply streams its input data to the output without modifying its structure, so we let the previous node create the parameter
-      return Source.CreateParameterForOutput ();
+      return Source.CreateParameterForOutput();
     }
 
     protected override ResultModificationBase CreateResultModification (SelectClause selectClause)
