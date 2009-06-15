@@ -39,12 +39,14 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     /// by the projection data coming out of this <see cref="IExpressionNode"/>.</param>
     /// <param name="expressionToBeResolved">The expression to be resolved. Any occurrence of <paramref name="inputParameter"/> in this expression
     /// is replaced.</param>
+    /// <param name="querySourceClauseMapping">The querySourceClauseMapping must be initialized for all <see cref="IExpressionNode"/>s which create
+    /// a <see cref="FromClauseBase"/> like <see cref="ConstantExpressionNode"/> or <see cref="SelectManyExpressionNode"/></param>
     /// <returns>An equivalent of <paramref name="expressionToBeResolved"/> with each occurrence of <paramref name="inputParameter"/> replaced by
     /// the projection data streaming out of this <see cref="IExpressionNode"/>.</returns>
     /// <exception cref="InvalidOperationException">
     /// This node does not support this operation because it does not stream any data to subsequent nodes.
     /// </exception>
-    Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved);
+    Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, QuerySourceClauseMapping querySourceClauseMapping);
 
     /// <summary>
     /// Creates a <see cref="ParameterExpression"/> that can take elements of the output stream provided by this node. This 

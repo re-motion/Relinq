@@ -49,18 +49,18 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     public LambdaExpression Predicate { get; private set; }
 
-    public Expression GetResolvedPredicate ()
+    public Expression GetResolvedPredicate (QuerySourceClauseMapping querySourceClauseMapping)
     {
       if (_cachedPredicate == null)
-        _cachedPredicate = Source.Resolve (Predicate.Parameters[0], Predicate.Body);
+        _cachedPredicate = Source.Resolve (Predicate.Parameters[0], Predicate.Body, querySourceClauseMapping);
 
       return _cachedPredicate;
     }
 
-    public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)
+    public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, QuerySourceClauseMapping querySourceClauseMapping)
     {
       // this simply streams its input data to the output without modifying its structure, so we resolve by passing on the data to the previous node
-      return Source.Resolve (inputParameter, expressionToBeResolved);
+      return Source.Resolve (inputParameter, expressionToBeResolved, querySourceClauseMapping);
     }
 
     public override ParameterExpression CreateParameterForOutput ()

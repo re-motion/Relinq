@@ -51,7 +51,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var node = ExpressionNodeObjectMother.CreateConstant ();
       var expression = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
 
-      var result = node.Resolve (expression.Parameters[0], expression.Body);
+      var result = node.Resolve (expression.Parameters[0], expression.Body, null);
 
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, new QuerySourceReferenceExpression (node), Expression.Constant (5));
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);

@@ -50,22 +50,22 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     public LambdaExpression Selector { get; private set; }
 
-    public Expression GetResolvedSelector ()
+    public Expression GetResolvedSelector (QuerySourceClauseMapping querySourceClauseMapping)
     {
       if (_cachedSelector == null)
-        _cachedSelector = Source.Resolve (Selector.Parameters[0], Selector.Body);
+        _cachedSelector = Source.Resolve (Selector.Parameters[0], Selector.Body, querySourceClauseMapping);
 
       return _cachedSelector;
     }
 
-    public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)
+    public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, QuerySourceClauseMapping querySourceClauseMapping)
     {
       ArgumentUtility.CheckNotNull ("inputParameter", inputParameter);
       ArgumentUtility.CheckNotNull ("expressionToBeResolved", expressionToBeResolved);
 
       // we modify the structure of the stream of data coming into this node by our selector,
       // so we first resolve the selector, then we substitute the result for the inputParameter in the expressionToBeResolved
-      var resolvedSelector = GetResolvedSelector();
+      var resolvedSelector = GetResolvedSelector(querySourceClauseMapping);
       return ReplacingVisitor.Replace (inputParameter, resolvedSelector, expressionToBeResolved);
     }
 

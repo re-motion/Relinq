@@ -49,13 +49,13 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public LambdaExpression OptionalPredicate { get; private set; }
     public LambdaExpression OptionalSelector { get; private set; }
 
-    public Expression GetResolvedOptionalPredicate ()
+    public Expression GetResolvedOptionalPredicate (QuerySourceClauseMapping querySourceClauseMapping)
     {
       if (OptionalPredicate == null)
         return null;
 
       if (_cachedPredicate == null)
-        _cachedPredicate = Source.Resolve (OptionalPredicate.Parameters[0], OptionalPredicate.Body);
+        _cachedPredicate = Source.Resolve (OptionalPredicate.Parameters[0], OptionalPredicate.Body, querySourceClauseMapping);
 
       return _cachedPredicate;
     }
@@ -66,7 +66,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
         return null;
 
       if (_cachedSelector == null)
-        _cachedSelector = Source.Resolve (OptionalSelector.Parameters[0], OptionalSelector.Body);
+        _cachedSelector = Source.Resolve (OptionalSelector.Parameters[0], OptionalSelector.Body, null);
 
       return _cachedSelector;
     }

@@ -65,15 +65,15 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       get { return ResultSelector.Parameters[1].Type; }
     }
 
-    public Expression GetResolvedCollectionSelector ()
+    public Expression GetResolvedCollectionSelector (QuerySourceClauseMapping querySourceClauseMapping)
     {
       if (_cachedCollectionSelector == null)
-        _cachedCollectionSelector = Source.Resolve (CollectionSelector.Parameters[0], CollectionSelector.Body);
+        _cachedCollectionSelector = Source.Resolve (CollectionSelector.Parameters[0], CollectionSelector.Body, querySourceClauseMapping);
 
       return _cachedCollectionSelector;
     }
 
-    public Expression GetResolvedResultSelector ()
+    public Expression GetResolvedResultSelector (QuerySourceClauseMapping querySourceClauseMapping)
     {
       if (_cachedResultSelector == null)
       {
@@ -82,7 +82,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
         // we resolve the selector by first asking the previous node to resolve i, then we substitute j by a QuerySourceReferenceExpression pointing 
         // back to us
-        var resolvedResultSelector = Source.Resolve (ResultSelector.Parameters[0], ResultSelector.Body);
+        var resolvedResultSelector = Source.Resolve (ResultSelector.Parameters[0], ResultSelector.Body, querySourceClauseMapping);
         var referenceExpression = new QuerySourceReferenceExpression (this);
         _cachedResultSelector = ReplacingVisitor.Replace (ResultSelector.Parameters[1], referenceExpression, resolvedResultSelector);
       }
@@ -90,14 +90,14 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return _cachedResultSelector;
     }
 
-    public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)
+    public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, QuerySourceClauseMapping querySourceClauseMapping)
     {
       ArgumentUtility.CheckNotNull ("inputParameter", inputParameter);
       ArgumentUtility.CheckNotNull ("expressionToBeResolved", expressionToBeResolved);
 
       // we modify the structure of the stream of data coming into this node by our result selector,
       // so we first resolve the result selector, then we substitute the result for the inputParameter in the expressionToBeResolved
-      var resolvedResultSelector = GetResolvedResultSelector();
+      var resolvedResultSelector = GetResolvedResultSelector(querySourceClauseMapping);
       return ReplacingVisitor.Replace (inputParameter, resolvedResultSelector, expressionToBeResolved);
     }
 

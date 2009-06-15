@@ -51,7 +51,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public IExpressionNode Source { get; private set; }
     public MethodCallExpression ParsedExpression { get; private set; }
 
-    public abstract Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved);
+    public abstract Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, QuerySourceClauseMapping querySourceClauseMapping);
     public abstract ParameterExpression CreateParameterForOutput ();
     public abstract IClause CreateClause (IClause previousClause, QuerySourceClauseMapping querySourceClauseMapping);
 

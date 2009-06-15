@@ -43,7 +43,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     {
     }
 
-    public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)
+    public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, QuerySourceClauseMapping querySourceClauseMapping)
     {
       // no data streams out from this node, so we cannot resolve any expressions
       throw CreateResolveNotSupportedException();

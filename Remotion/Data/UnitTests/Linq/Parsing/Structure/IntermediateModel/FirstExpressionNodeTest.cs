@@ -20,6 +20,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ResultModifications;
+using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
 using Rhino.Mocks;
@@ -62,7 +63,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void Resolve_ThrowsInvalidOperationException ()
     {
       var node = new FirstExpressionNode (CreateParseInfo (), null);
-      node.Resolve (ExpressionHelper.CreateParameterExpression (), ExpressionHelper.CreateExpression ());
+      node.Resolve (ExpressionHelper.CreateParameterExpression (), ExpressionHelper.CreateExpression (), null);
     }
 
     [Test]
@@ -73,7 +74,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
 
-      var result = node.GetResolvedOptionalPredicate ();
+      var result = node.GetResolvedOptionalPredicate (QuerySourceClauseMapping);
 
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
@@ -83,7 +84,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();
       var node = new FirstExpressionNode (CreateParseInfo (sourceMock), null);
-      var result = node.GetResolvedOptionalPredicate ();
+      var result = node.GetResolvedOptionalPredicate (QuerySourceClauseMapping);
       Assert.That (result, Is.Null);
     }
 
@@ -95,12 +96,12 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var node = new FirstExpressionNode (CreateParseInfo (sourceMock), predicate);
       var expectedResult = ExpressionHelper.CreateLambdaExpression ();
 
-      sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything)).Repeat.Once ().Return (expectedResult);
+      sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything, Arg<QuerySourceClauseMapping>.Is.Anything)).Repeat.Once ().Return (expectedResult);
 
       sourceMock.Replay ();
 
-      node.GetResolvedOptionalPredicate ();
-      node.GetResolvedOptionalPredicate ();
+      node.GetResolvedOptionalPredicate (QuerySourceClauseMapping);
+      node.GetResolvedOptionalPredicate (QuerySourceClauseMapping);
 
       sourceMock.VerifyAllExpectations ();
     }

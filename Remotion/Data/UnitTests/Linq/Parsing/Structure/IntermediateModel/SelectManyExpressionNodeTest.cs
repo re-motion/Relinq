@@ -68,7 +68,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
           ExpressionHelper.CreateLambdaExpression<int, int, AnonymousType> ((a, b) => new AnonymousType (a, b)));
 
       var expression = ExpressionHelper.CreateLambdaExpression<AnonymousType, bool> (i => i.a > 5 && i.b > 6);
-      var result = node.Resolve (expression.Parameters[0], expression.Body);
+      var result = node.Resolve (expression.Parameters[0], expression.Body, null);
 
       var selectManySourceReference = new QuerySourceReferenceExpression (node);
 
@@ -93,7 +93,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var node = new SelectManyExpressionNode (CreateParseInfo (), _collectionSelector, _resultSelector);
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, new QuerySourceReferenceExpression (node));
 
-      var result = node.GetResolvedResultSelector();
+      var result = node.GetResolvedResultSelector (QuerySourceClauseMapping);
 
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
@@ -104,7 +104,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var node = new SelectManyExpressionNode (CreateParseInfo (), _collectionSelector, _resultSelector);
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
 
-      var result = node.GetResolvedCollectionSelector();
+      var result = node.GetResolvedCollectionSelector (QuerySourceClauseMapping);
 
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
@@ -116,13 +116,13 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var node = new SelectManyExpressionNode (CreateParseInfo (sourceMock), _collectionSelector, _resultSelector);
       var expectedResult = ExpressionHelper.CreateLambdaExpression();
 
-      sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything)).Repeat.Once().Return (
+      sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything, Arg<QuerySourceClauseMapping>.Is.Anything)).Repeat.Once ().Return (
           expectedResult);
 
       sourceMock.Replay();
 
-      node.GetResolvedResultSelector();
-      node.GetResolvedResultSelector();
+      node.GetResolvedResultSelector (QuerySourceClauseMapping);
+      node.GetResolvedResultSelector (QuerySourceClauseMapping);
 
       sourceMock.VerifyAllExpectations();
     }
@@ -134,13 +134,13 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var node = new SelectManyExpressionNode (CreateParseInfo (sourceMock), _collectionSelector, _resultSelector);
       var expectedResult = ExpressionHelper.CreateLambdaExpression();
 
-      sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything)).Repeat.Once().Return (
+      sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything, Arg<QuerySourceClauseMapping>.Is.Anything)).Repeat.Once ().Return (
           expectedResult);
 
       sourceMock.Replay();
 
-      node.GetResolvedCollectionSelector();
-      node.GetResolvedCollectionSelector();
+      node.GetResolvedCollectionSelector (QuerySourceClauseMapping);
+      node.GetResolvedCollectionSelector (QuerySourceClauseMapping);
 
       sourceMock.VerifyAllExpectations();
     }

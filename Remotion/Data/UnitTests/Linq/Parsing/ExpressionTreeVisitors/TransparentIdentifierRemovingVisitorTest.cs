@@ -279,7 +279,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
       nodeTypeRegistry.Register (WhereExpressionNode.SupportedMethods, typeof (WhereExpressionNode));
       
       var selectNode = (SelectExpressionNode) new ExpressionTreeParser (nodeTypeRegistry).ParseTree (query.Expression, new List<QueryModel>());
-      var selectProjection = selectNode.GetResolvedSelector (); // new ( a = IR (a), b = IR (b) ).a.ID
+      var selectProjection = selectNode.GetResolvedSelector (new QuerySourceClauseMapping()); // new ( a = IR (a), b = IR (b) ).a.ID
 
       var result = TransparentIdentifierRemovingVisitor.ReplaceTransparentIdentifiers (selectProjection);
 

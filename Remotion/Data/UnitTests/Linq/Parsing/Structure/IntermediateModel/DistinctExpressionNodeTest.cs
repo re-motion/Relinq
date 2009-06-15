@@ -42,9 +42,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var expression = ExpressionHelper.CreateLambdaExpression();
       var parameter = ExpressionHelper.CreateParameterExpression();
       var expectedResult = ExpressionHelper.CreateExpression();
-      sourceMock.Expect (mock => mock.Resolve (parameter, expression)).Return (expectedResult);
+      sourceMock.Expect (mock => mock.Resolve (parameter, expression, null)).Return (expectedResult);
       
-      var result = node.Resolve (parameter, expression);
+      var result = node.Resolve (parameter, expression, null);
 
       sourceMock.VerifyAllExpectations();
       Assert.That (result, Is.SameAs (expectedResult));

@@ -19,6 +19,7 @@ using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
 using Rhino.Mocks;
@@ -41,7 +42,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var node = new SelectExpressionNode (CreateParseInfo (), ExpressionHelper.CreateLambdaExpression<int, int> (j => j * j));
       var expression = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
 
-      var result = node.Resolve (expression.Parameters[0], expression.Body);
+      var result = node.Resolve (expression.Parameters[0], expression.Body, null);
 
       var expectedResult = Expression.MakeBinary (
           ExpressionType.GreaterThan,
@@ -58,7 +59,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
 
-      var result = node.GetResolvedSelector();
+      var result = node.GetResolvedSelector(QuerySourceClauseMapping);
 
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
@@ -71,13 +72,13 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var node = new SelectExpressionNode (CreateParseInfo (sourceMock), selector);
       var expectedResult = ExpressionHelper.CreateLambdaExpression();
 
-      sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything)).Repeat.Once().Return (
+      sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything, Arg<QuerySourceClauseMapping>.Is.Anything)).Repeat.Once ().Return (
           expectedResult);
 
       sourceMock.Replay();
 
-      node.GetResolvedSelector();
-      node.GetResolvedSelector();
+      node.GetResolvedSelector (QuerySourceClauseMapping);
+      node.GetResolvedSelector (QuerySourceClauseMapping);
 
       sourceMock.VerifyAllExpectations();
     }

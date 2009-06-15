@@ -64,7 +64,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       get { return null; }
     }
 
-    public Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)
+    public Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, QuerySourceClauseMapping querySourceClauseMapping)
     {
       ArgumentUtility.CheckNotNull ("inputParameter", inputParameter);
       ArgumentUtility.CheckNotNull ("expressionToBeResolved", expressionToBeResolved);

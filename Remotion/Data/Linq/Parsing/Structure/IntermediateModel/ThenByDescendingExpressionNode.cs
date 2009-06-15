@@ -51,18 +51,18 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     public LambdaExpression KeySelector { get; private set; }
 
-    public Expression GetResolvedKeySelector ()
+    public Expression GetResolvedKeySelector (QuerySourceClauseMapping querySourceClauseMapping)
     {
       if (_cachedSelector == null)
-        _cachedSelector = Source.Resolve (KeySelector.Parameters[0], KeySelector.Body);
+        _cachedSelector = Source.Resolve (KeySelector.Parameters[0], KeySelector.Body, querySourceClauseMapping);
 
       return _cachedSelector;
     }
 
-    public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)
+    public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, QuerySourceClauseMapping querySourceClauseMapping)
     {
       // this simply streams its input data to the output without modifying its structure, so we resolve by passing on the data to the previous node
-      return Source.Resolve (inputParameter, expressionToBeResolved);
+      return Source.Resolve (inputParameter, expressionToBeResolved, querySourceClauseMapping);
     }
 
     public override ParameterExpression CreateParameterForOutput ()

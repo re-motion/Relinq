@@ -20,6 +20,7 @@ using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
@@ -31,10 +32,13 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       SourceStub = ExpressionNodeObjectMother.CreateConstant();
       SourceReference = new QuerySourceReferenceExpression (SourceStub);
+      QuerySourceClauseMapping = new QuerySourceClauseMapping();
+
     }
 
     public IQuerySourceExpressionNode SourceStub { get; private set; }
     public QuerySourceReferenceExpression SourceReference { get; private set; }
+    public QuerySourceClauseMapping QuerySourceClauseMapping { get; private set; }
 
     protected MethodInfo GetGenericMethodDefinition<TReturn> (Expression<Func<IQueryable<int>, TReturn>> methodCallLambda)
     {

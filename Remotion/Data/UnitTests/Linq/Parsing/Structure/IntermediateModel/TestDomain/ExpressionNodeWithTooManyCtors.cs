@@ -36,7 +36,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel.TestD
       get { throw new NotImplementedException(); }
     }
 
-    public Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved)
+    public Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, QuerySourceClauseMapping querySourceClauseMapping)
     {
       throw new NotImplementedException();
     }
