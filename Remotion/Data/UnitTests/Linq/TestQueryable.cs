@@ -13,6 +13,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Data.Linq;
 
@@ -20,7 +21,7 @@ namespace Remotion.Data.UnitTests.Linq
 {
   public class TestQueryable<T> : QueryableBase<T>
   {
-    public TestQueryable (QueryProviderBase provider, Expression expression)
+    public TestQueryable (IQueryProvider provider, Expression expression)
         : base (provider, expression)
     {
     }

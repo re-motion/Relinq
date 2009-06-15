@@ -13,6 +13,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+using System;
 using System.Linq.Expressions;
 using Remotion.Utilities;
 
@@ -55,6 +56,11 @@ namespace Remotion.Data.Linq.Clauses
     public GroupClause Clone (IClause newPreviousClause)
     {
       return new GroupClause (newPreviousClause, GroupExpression, ByExpression);
+    }
+
+    public IExecutionStrategy GetExecutionStrategy ()
+    {
+      throw new NotImplementedException();
     }
 
     ISelectGroupClause ISelectGroupClause.Clone (IClause newPreviousClause)

@@ -73,45 +73,32 @@ namespace Remotion.Data.Linq
 
     protected abstract IQueryable<T> CreateQueryable<T> (Expression expression);
 
+    /// <summary>
+    /// Executes the query defined by the specified expression by first extracting any fetch requests, then parsing it with a 
+    /// <see cref="QueryParser"/>, and lastly running it through the <see cref="Executor"/>.
+    /// This method is invoked through the <see cref="IQueryProvider"/> interface by methods such as 
+    /// <see cref="Queryable.First{TSource}(System.Linq.IQueryable{TSource})"/> and 
+    /// <see cref="Queryable.Count{TSource}(System.Linq.IQueryable{TSource})"/>, and it's also invoked by <see cref="QueryableBase{T}"/>
+    /// when the <see cref="IQueryable{T}"/> is enumerated.
+    /// </summary>
     public virtual TResult Execute<TResult> (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      return (TResult) Execute (expression);
-    }
-
-    public virtual object Execute (Expression expression)
-    {
-      ArgumentUtility.CheckNotNull ("expression", expression);
 
       var fetchRequests = GetFetchRequests (ref expression);
       var queryModel = GenerateQueryModel (expression);
-      return Executor.ExecuteSingle (queryModel, fetchRequests);
+
+      var executionStrategy = queryModel.SelectOrGroupClause.GetExecutionStrategy();
+      var executionLambda = executionStrategy.GetExecutionExpression<TResult> (queryModel, fetchRequests);
+      var result = executionLambda.Compile () (Executor);
+      return result;
     }
 
-    /// <summary>
-    /// This is where the query is executed and the results are mapped to objects.
-    /// </summary>
-    /// <typeparam name="TResult"></typeparam>
-    /// <param name="expression">The query as expression chain.</param>
-    /// <returns></returns>
-    public virtual IEnumerable<TResult> ExecuteCollection<TResult> (Expression expression)
+    object IQueryProvider.Execute (Expression expression)
     {
-      ArgumentUtility.CheckNotNull ("expression", expression);
-      return ExecuteCollection (expression).Cast<TResult> ();
-    }
-
-    /// <summary>
-    /// This is where the query is executed and the results are mapped to objects.
-    /// </summary>
-    /// <param name="expression">The query as expression chain.</param>
-    /// <returns></returns>
-    public virtual IEnumerable ExecuteCollection (Expression expression)
-    {
-      ArgumentUtility.CheckNotNull ("expression", expression);
-
-      var fetchRequests = GetFetchRequests (ref expression);
-      var queryModel = GenerateQueryModel (expression);
-      return Executor.ExecuteCollection (queryModel, fetchRequests);
+      var executeMethod = 
+          typeof (QueryProviderBase).GetMethod ("Execute", BindingFlags.Public | BindingFlags.Instance).MakeGenericMethod (expression.Type);
+      return executeMethod.Invoke (this, new object[] { expression });
     }
 
     /// <summary>

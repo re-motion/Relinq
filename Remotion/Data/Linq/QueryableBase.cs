@@ -18,7 +18,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.EagerFetching;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq
@@ -29,9 +28,9 @@ namespace Remotion.Data.Linq
   /// <typeparam name="T">The result type yielded by this query.</typeparam>
   public abstract class QueryableBase<T> : IOrderedQueryable<T>
   {
-    private readonly QueryProviderBase _queryProvider;
+    private readonly IQueryProvider _queryProvider;
 
-    protected QueryableBase (QueryProviderBase provider)
+    protected QueryableBase (IQueryProvider provider)
     {
       ArgumentUtility.CheckNotNull ("provider", provider);
 
@@ -39,7 +38,7 @@ namespace Remotion.Data.Linq
       Expression = Expression.Constant (this);
     }
 
-    protected QueryableBase (QueryProviderBase provider, Expression expression)
+    protected QueryableBase (IQueryProvider provider, Expression expression)
     {
       ArgumentUtility.CheckNotNull ("provider", provider);
       ArgumentUtility.CheckNotNull ("expression", expression);
@@ -65,12 +64,12 @@ namespace Remotion.Data.Linq
 
     public IEnumerator<T> GetEnumerator()
     {
-      return _queryProvider.ExecuteCollection<T> (Expression).GetEnumerator();
+      return _queryProvider.Execute<IEnumerable<T>> (Expression).GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()
     {
-      return _queryProvider.ExecuteCollection (Expression).GetEnumerator();
+      return ((IEnumerable)_queryProvider.Execute (Expression)).GetEnumerator();
     }
   }
 }

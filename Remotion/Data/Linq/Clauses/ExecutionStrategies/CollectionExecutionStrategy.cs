@@ -15,8 +15,11 @@
 // 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using Remotion.Data.Linq.EagerFetching;
+using Remotion.Data.Linq.Parsing;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ExecutionStrategies
@@ -39,13 +42,40 @@ namespace Remotion.Data.Linq.Clauses.ExecutionStrategies
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
       ArgumentUtility.CheckNotNull ("fetchRequests", fetchRequests);
 
+      var itemType = GetItemType<TResult> ();
+
       var executeCollectionMethod = typeof (IQueryExecutor).GetMethod ("ExecuteCollection2");
-      var itemType = ReflectionUtility.GetAscribedGenericArguments (typeof (TResult), typeof (IEnumerable<>))[0];
+      var asQueryableMethod = ParserUtility.GetMethod (() => Queryable.AsQueryable<object>(null))
+          .GetGenericMethodDefinition()
+          .MakeGenericMethod (itemType);
 
       var executorParameter = Expression.Parameter (typeof (IQueryExecutor), "queryExecutor");
+      var executeCollectionCall = Expression.Call (
+          executorParameter, 
+          executeCollectionMethod.MakeGenericMethod (itemType), Expression.Constant (queryModel), Expression.Constant (fetchRequests));
+
+      var asQueryableCall = Expression.Call (asQueryableMethod, executeCollectionCall);
+
       return Expression.Lambda<Func<IQueryExecutor, TResult>> (
-          Expression.Call (executorParameter, executeCollectionMethod.MakeGenericMethod (itemType), Expression.Constant (queryModel), Expression.Constant (fetchRequests)),
+          asQueryableCall,
           executorParameter);
+    }
+
+    private Type GetItemType<TResult> ()
+    {
+      try
+      {
+        return ReflectionUtility.GetAscribedGenericArguments (typeof (TResult), typeof (IEnumerable<>))[0];
+      }
+      catch (ArgumentTypeException ex)
+      {
+        var message = string.Format (
+            "A query that returns a collection of elements cannot be executed with a result type of '{0}'. Specify a result type that implements "
+            + "IEnumerable<T>.", 
+            typeof (TResult).FullName);
+
+        throw new InvalidOperationException (message, ex);
+      }
     }
   }
 }

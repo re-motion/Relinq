@@ -15,6 +15,7 @@
 // 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
@@ -39,8 +40,35 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ExecutionStrategies
       executorMock.Expect (mock => mock.ExecuteCollection2<int> (queryModel, fetchRequests)).Return (new[] { 1, 2, 3 });
       IEnumerable<int> result = lambda.Compile() (executorMock);
 
-      Assert.That (result, Is.EqualTo (new[] { 1, 2, 3 }));
+      Assert.That (result.ToArray(), Is.EqualTo (new[] { 1, 2, 3 }));
       executorMock.VerifyAllExpectations();
+    }
+
+    [Test]
+    public void GetExecutionExpression_MakesResultQueryable ()
+    {
+      var queryModel = ExpressionHelper.CreateQueryModel ();
+      var fetchRequests = new FetchRequestBase[0];
+
+      var lambda = CollectionExecutionStrategy.Instance.GetExecutionExpression<IEnumerable<int>> (queryModel, fetchRequests);
+
+      var executorMock = MockRepository.GenerateMock<IQueryExecutor> ();
+      executorMock.Expect (mock => mock.ExecuteCollection2<int> (queryModel, fetchRequests)).Return (new[] { 1, 2, 3 });
+      IEnumerable<int> result = lambda.Compile () (executorMock);
+
+      Assert.That (result, Is.InstanceOfType (typeof (IQueryable<int>)));
+      executorMock.VerifyAllExpectations ();
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "A query that returns a collection of elements cannot be executed with " 
+        + "a result type of 'System.Int32'. Specify a result type that implements IEnumerable<T>.")]
+    public void GetExecutionExpression_InvalidResultType ()
+    {
+      var queryModel = ExpressionHelper.CreateQueryModel ();
+      var fetchRequests = new FetchRequestBase[0];
+
+      CollectionExecutionStrategy.Instance.GetExecutionExpression<int> (queryModel, fetchRequests);
     }
   }
 }

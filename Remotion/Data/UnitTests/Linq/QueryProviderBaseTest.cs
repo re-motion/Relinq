@@ -35,6 +35,7 @@ namespace Remotion.Data.UnitTests.Linq
     private MockRepository _mockRepository;
     private QueryProviderBase _queryProvider;
     private IQueryExecutor _executorMock;
+    private TestQueryable<Student> _queryableWithExecutorMock;
 
     [SetUp]
     public void SetUp()
@@ -42,6 +43,7 @@ namespace Remotion.Data.UnitTests.Linq
       _mockRepository = new MockRepository();
       _executorMock = _mockRepository.StrictMock<IQueryExecutor>();
       _queryProvider = new TestQueryProvider (_executorMock);
+      _queryableWithExecutorMock = new TestQueryable<Student> (_executorMock);
     }
 
     [Test]
@@ -87,89 +89,102 @@ namespace Remotion.Data.UnitTests.Linq
     }
 
     [Test]
-    public void GenericExecute_Single()
+    public void Execute_Generic ()
     {
-      Expression expression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource());
-      Expect
-          .Call (
-          _executorMock.ExecuteSingle (
-              Arg<QueryModel>.Matches (queryModel => queryModel.GetExpressionTree() == expression),
-              Arg<IEnumerable<FetchRequestBase>>.List.Equal (new FetchManyRequest[0])))
-          .Return (0);
+      var expectedResult = new Student[0];
+      Expression expression = (from s in _queryableWithExecutorMock select s).Expression;
+      _executorMock.Expect (mock => mock.ExecuteCollection2<Student> (
+          Arg<QueryModel>.Matches (queryModel => queryModel.GetExpressionTree () == expression),
+          Arg<FetchRequestBase[]>.List.Equal (new FetchManyRequest[0]))).Return (expectedResult);
 
-      _mockRepository.ReplayAll();
+      _executorMock.Replay ();
+      var result = _queryProvider.Execute<IEnumerable<Student>> (expression);
+      _executorMock.VerifyAllExpectations ();
 
-      _queryProvider.Execute<int> (expression);
-
-      _mockRepository.VerifyAll();
+      Assert.That (result.ToArray(), Is.EqualTo (expectedResult));
     }
 
     [Test]
-    public void Execute_Single ()
+    public void Execute_NonGeneric ()
     {
-      Expression expression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource ());
-      Expect
-          .Call (
-          _executorMock.ExecuteSingle (
-              Arg<QueryModel>.Matches (queryModel => queryModel.GetExpressionTree() == expression),
-              Arg<IEnumerable<FetchRequestBase>>.List.Equal (new FetchManyRequest[0])))
-          .Return (0);
+      var expectedResult = new Student[0];
+      Expression expression = (from s in _queryableWithExecutorMock select s).Expression;
+      _executorMock.Expect (mock => mock.ExecuteCollection2<Student> (
+          Arg<QueryModel>.Matches (queryModel => queryModel.GetExpressionTree () == expression),
+          Arg<FetchRequestBase[]>.List.Equal (new FetchManyRequest[0]))).Return (new Student[0]);
 
-      _mockRepository.ReplayAll ();
+      _executorMock.Replay ();
+      var result = ((IQueryProvider)_queryProvider).Execute (expression);
+      _executorMock.VerifyAllExpectations ();
 
-      _queryProvider.Execute (expression);
-
-      _mockRepository.VerifyAll ();
+      Assert.That (((IEnumerable<Student>)result).ToArray (), Is.EqualTo (expectedResult));
     }
 
     [Test]
-    public void GenericExecute_Collection ()
+    public void Execute_IntegrationWithGenericEnumerable ()
     {
-      IQueryable<Student> query = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource(_executorMock));
-      var student = new Student();
-      
-      Expression expression = query.Expression;
-      Expect
-          .Call (
-          _executorMock.ExecuteCollection (
-              Arg<QueryModel>.Matches (queryModel => queryModel.GetExpressionTree () == expression),
-              Arg<IEnumerable<FetchRequestBase>>.List.Equal (new FetchManyRequest[0])))
-          .Return (new[] { student });
+      var queryable = from s in _queryableWithExecutorMock select s;
 
-      _mockRepository.ReplayAll ();
+      var expectedResult = new[] { new Student () };
+      _executorMock
+          .Expect (mock => mock.ExecuteCollection2<Student> (Arg<QueryModel>.Is.Anything, Arg<FetchRequestBase[]>.Is.Anything))
+          .Return (expectedResult);
 
-      var students = new List<Student> (query); // enumerates query -> ExecuteCollection
-      Assert.AreEqual (1, students.Count);
-      Assert.AreSame (student, students[0]);
+      _executorMock.Replay ();
+      var result = queryable.ToArray ();
+      _executorMock.VerifyAllExpectations ();
 
-      _mockRepository.VerifyAll ();
+      Assert.That (result, Is.EqualTo (expectedResult));
     }
 
     [Test]
-    public void NonGenericExecute_Collection ()
+    public void Execute_IntegrationWithNonGenericEnumerable ()
     {
-      IQueryable<Student> query = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource (_executorMock));
-      var student = new Student ();
+      var queryable = from s in _queryableWithExecutorMock select s;
 
-      Expression expression = query.Expression;
-      Expect
-          .Call (
-          _executorMock.ExecuteCollection (
-              Arg<QueryModel>.Matches (queryModel => queryModel.GetExpressionTree () == expression),
-              Arg<IEnumerable<FetchRequestBase>>.List.Equal (new FetchManyRequest[0])))
-          .Return (new[] { student });
+      var expectedResult = new[] { new Student () };
+      _executorMock
+          .Expect (mock => mock.ExecuteCollection2<Student> (Arg<QueryModel>.Is.Anything, Arg<FetchRequestBase[]>.Is.Anything))
+          .Return (expectedResult);
 
-      _mockRepository.ReplayAll ();
+      _executorMock.Replay ();
 
-      var students = new ArrayList();
-      IEnumerable nonGenericQuery = query;
-      foreach (object o in nonGenericQuery) // enumerates query -> ExecuteCollection
-        students.Add (o);
+      var result = new List<object> ();
+      foreach (var s in (IEnumerable) queryable)
+        result.Add (s);
 
-      Assert.AreEqual (1, students.Count);
-      Assert.AreSame (student, students[0]);
+      _executorMock.VerifyAllExpectations ();
 
-      _mockRepository.VerifyAll ();
+      Assert.That (result, Is.EqualTo (expectedResult));
+    }
+
+    [Test]
+    public void Execute_IntegrationWithSingle ()
+    {
+      var expectedResult = new[] { new Student () };
+      _executorMock
+                .Expect (mock => mock.ExecuteCollection2<Student> (Arg<QueryModel>.Is.Anything, Arg<FetchRequestBase[]>.Is.Anything))
+                .Return (expectedResult);
+
+      _executorMock.Replay ();
+      var result = (from s in _queryableWithExecutorMock select s).Single();
+      _executorMock.VerifyAllExpectations ();
+
+      Assert.That (result, Is.SameAs(expectedResult[0]));
+    }
+
+    [Test]
+    public void Execute_IntegrationWithScalar ()
+    {
+      _executorMock
+                .Expect (mock => mock.ExecuteScalar<int> (Arg<QueryModel>.Is.Anything, Arg<FetchRequestBase[]>.Is.Anything))
+                .Return (7);
+
+      _executorMock.Replay ();
+      var result = (from s in _queryableWithExecutorMock select s).Count ();
+      _executorMock.VerifyAllExpectations();
+
+      Assert.That (result, Is.EqualTo (7));
     }
 
     [Test]
@@ -220,46 +235,20 @@ namespace Remotion.Data.UnitTests.Linq
       Assert.That (expression, Is.Not.SameAs (originalExpression));
       Assert.That (expression, Is.SameAs (innerExpression));
     }
-    
+
     [Test]
-    public void ExecuteCollection_WithFetchRequests ()
+    public void Execute_WithFetchRequests ()
     {
       Expression<Func<Student, IEnumerable<Student>>> relatedObjectSelector = s => s.Friends;
-      IQueryable<Student> query =
-          SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource (_executorMock)).FetchMany (relatedObjectSelector);
+      IQueryable<Student> query = SelectTestQueryGenerator.CreateSimpleQuery (_queryableWithExecutorMock).FetchMany (relatedObjectSelector);
 
-      _executorMock.Expect (
-          mock =>
-          mock.ExecuteCollection (
-              Arg<QueryModel>.Is.Anything,
-              Arg<IEnumerable<FetchRequestBase>>.Matches (frs => frs.Single ().RelatedObjectSelector == relatedObjectSelector)))
+      _executorMock.Expect (mock => mock.ExecuteCollection2<Student> (
+          Arg<QueryModel>.Is.Anything,
+          Arg<FetchRequestBase[]>.Matches (frs => frs.Single().RelatedObjectSelector == relatedObjectSelector)))
           .Return (new Student[0]);
 
-      _mockRepository.ReplayAll ();
-
-      query.ToArray (); // enumerate query
-
-      _executorMock.VerifyAllExpectations ();
-    }
-
-    [Test]
-    public void ExecuteSingle_WithFetchRequests ()
-    {
-      Expression<Func<Student, IEnumerable<Student>>> relatedObjectSelector = s => s.Friends;
-      IQueryable<Student> query =
-          SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource (_executorMock)).FetchMany (relatedObjectSelector);
-
-      _executorMock.Expect (
-          mock =>
-          mock.ExecuteSingle (
-              Arg<QueryModel>.Is.Anything,
-              Arg<IEnumerable<FetchRequestBase>>.Matches (frs => frs.Single ().RelatedObjectSelector == relatedObjectSelector)))
-          .Return (null);
-
-      _mockRepository.ReplayAll ();
-
-      query.Single(); // enumerate query
-
+      _executorMock.Replay ();
+      _queryProvider.Execute<IEnumerable<Student>> (query.Expression);
       _executorMock.VerifyAllExpectations ();
     }
   }

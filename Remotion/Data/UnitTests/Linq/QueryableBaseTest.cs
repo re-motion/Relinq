@@ -16,9 +16,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Rhino.Mocks;
 using Remotion.Utilities;
@@ -28,20 +28,17 @@ namespace Remotion.Data.UnitTests.Linq
   [TestFixture]
   public class QueryableBaseTest
   {
-    private QueryProviderBase _providerMock;
+    private IQueryProvider _providerMock;
     private MockRepository _mockRepository;
     private Expression _intArrayExpression;
-    private Expression _studentArrayExpression;
 
     [SetUp]
     public void SetUp()
     {
       _mockRepository = new MockRepository();
-      var executorMock = _mockRepository.StrictMock<IQueryExecutor>();
-      _providerMock = _mockRepository.StrictMock<QueryProviderBase> (executorMock);
+      _providerMock = _mockRepository.StrictMock<IQueryProvider> ();
 
       _intArrayExpression = ExpressionHelper.CreateNewIntArrayExpression ();
-      _studentArrayExpression = Expression.Constant (new Student[0]);
     }
 
     [Test]
@@ -76,23 +73,23 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void GenericGetEnumerator ()
     {
-      Expect.Call (_providerMock.ExecuteCollection<int> (_intArrayExpression)).Return (new List<int> ());
+      _providerMock.Expect (mock => mock.Execute<IEnumerable<int>> (_intArrayExpression)).Return (new List<int>(0));
 
-      _mockRepository.ReplayAll ();
+      _providerMock.Replay ();
       QueryableBase<int> queryable = new TestQueryable<int> (_providerMock, _intArrayExpression);
       queryable.GetEnumerator();
-      _mockRepository.VerifyAll ();
+      _providerMock.VerifyAllExpectations();
     }
 
     [Test]
     public void GetEnumerator()
     {
-      Expect.Call (_providerMock.ExecuteCollection (_intArrayExpression)).Return (new List<int> ());
+      _providerMock.Expect (mock => mock.Execute (_intArrayExpression)).Return (new List<int>());
 
-      _mockRepository.ReplayAll ();
+      _providerMock.Replay ();
       QueryableBase<int> queryable = new TestQueryable<int> (_providerMock, _intArrayExpression);
       ((IEnumerable)queryable).GetEnumerator ();
-      _mockRepository.VerifyAll ();
+      _providerMock.VerifyAllExpectations ();
     }
   }
 }
