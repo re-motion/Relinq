@@ -64,7 +64,9 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     /// </summary>
     /// <param name="previousClause">The previous clause the new <see cref="IClause"/> should link to. For <see cref="IExpressionNode"/>
     /// instances representing the end of a query chain (e.g. <see cref="ConstantExpressionNode"/>), this must be <see langword="null"/>.</param>
+    /// <param name="querySourceClauseMapping">The querySourceClauseMapping must be initialized for all <see cref="IExpressionNode"/>s which create
+    /// a <see cref="FromClauseBase"/> like <see cref="ConstantExpressionNode"/> or <see cref="SelectManyExpressionNode"/></param>
     /// <returns>A new <see cref="IClause"/> instance representing this <see cref="IExpressionNode"/>.</returns>
-    IClause CreateClause (IClause previousClause);
+    IClause CreateClause (IClause previousClause, QuerySourceClauseMapping querySourceClauseMapping);
   }
 }

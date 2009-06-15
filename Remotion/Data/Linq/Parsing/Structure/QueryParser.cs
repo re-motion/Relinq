@@ -102,16 +102,16 @@ namespace Remotion.Data.Linq.Parsing.Structure
     private IClause CreateClauseChain (IExpressionNode node)
     {
       if (node.Source == null) // this is the end of the node chain, create a clause symbolizing the end of the clause chain
-        return node.CreateClause (null);
+        return node.CreateClause (null, new QuerySourceClauseMapping ());
       else
-      { // this is not the end of the cahin, process the rest of the chain before processing this node
+      { // this is not the end of the chain, process the rest of the chain before processing this node
         var previousClause = CreateClauseChain (node.Source);
 
         // TODO 1180: This is only temporary, we will implement a better model that does not require LetClause later on.
         if (previousClause is SelectClause)
           previousClause = CreateLetClauseFromSelectClause((SelectClause) previousClause);
 
-        return node.CreateClause (previousClause);
+        return node.CreateClause (previousClause, new QuerySourceClauseMapping());
       }
     }
 

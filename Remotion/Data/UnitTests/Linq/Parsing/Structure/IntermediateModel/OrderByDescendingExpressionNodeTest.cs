@@ -100,7 +100,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
       var node = new OrderByDescendingExpressionNode (CreateParseInfo (), selector);
 
-      var clause = (OrderByClause) node.CreateClause (previousClause);
+      var clause = (OrderByClause) node.CreateClause (previousClause, null);
 
       Assert.That (clause.PreviousClause, Is.SameAs (previousClause));
       Assert.That (clause.OrderingList.Count, Is.EqualTo (1));

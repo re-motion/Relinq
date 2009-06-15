@@ -67,7 +67,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var previousClause = ExpressionHelper.CreateClause ();
       var node = new CastExpressionNode (CreateParseInfo());
 
-      var clause = node.CreateClause (previousClause);
+      var clause = node.CreateClause (previousClause, null);
 
       Assert.That (clause, Is.SameAs (previousClause));
     }

@@ -89,7 +89,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
       var node = new SelectExpressionNode (CreateParseInfo (), selector);
 
-      var selectClause = (SelectClause) node.CreateClause (previousClause);
+      var selectClause = (SelectClause) node.CreateClause (previousClause, null);
 
       Assert.That (selectClause.PreviousClause, Is.SameAs (previousClause));
       Assert.That (selectClause.Selector, Is.EqualTo (node.Selector)); // TODO: This should become the resolved expression at a later point of time

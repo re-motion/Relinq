@@ -74,8 +74,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return ReplacingVisitor.Replace (inputParameter, reference, expressionToBeResolved);
     }
 
-    public IClause CreateClause (IClause previousClause)
+    public IClause CreateClause (IClause previousClause, QuerySourceClauseMapping querySourceClauseMapping)
     {
+      ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
+
       if (previousClause != null)
       {
         throw new InvalidOperationException (
@@ -83,7 +85,9 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
             + "of a query call chain. Set previousClause to null.");
       }
 
-      return CreateClause();
+      var fromClause = CreateClause();
+      querySourceClauseMapping.AddMapping (this, fromClause);
+      return fromClause;
     }
 
     public MainFromClause CreateClause ()

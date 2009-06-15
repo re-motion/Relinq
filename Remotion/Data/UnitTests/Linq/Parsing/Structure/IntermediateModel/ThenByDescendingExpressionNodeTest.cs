@@ -102,7 +102,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var node = new ThenByDescendingExpressionNode (CreateParseInfo (), selector);
       var oldCount = previousClause.OrderingList.Count;
 
-      var clause = (OrderByClause) node.CreateClause (previousClause);
+      var clause = (OrderByClause) node.CreateClause (previousClause, null);
 
       Assert.That (clause, Is.SameAs (previousClause));
       Assert.That (clause.OrderingList.Count, Is.EqualTo (oldCount + 1));
@@ -119,7 +119,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
       var node = new ThenByDescendingExpressionNode (CreateParseInfo (), selector);
 
-      node.CreateClause (previousClause);
+      node.CreateClause (previousClause, null);
     }
   }
 }

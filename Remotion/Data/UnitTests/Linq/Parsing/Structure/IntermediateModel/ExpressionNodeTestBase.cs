@@ -52,7 +52,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var previousClause = ExpressionHelper.CreateSelectClause();
 
-      var clause = (SelectClause)node.CreateClause(previousClause);
+      var clause = (SelectClause)node.CreateClause(previousClause, null);
 
       Assert.That (clause, Is.SameAs (previousClause));
       Assert.That (clause.ResultModifications.Count, Is.EqualTo (1));
@@ -64,7 +64,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var previousClause = ExpressionHelper.CreateMainFromClause ();
 
-      var clause = (SelectClause) node.CreateClause (previousClause);
+      var clause = (SelectClause) node.CreateClause (previousClause, null);
 
       Assert.That (clause.PreviousClause, Is.SameAs (previousClause));
       Assert.That (clause.ResultModifications.Count, Is.EqualTo (1));
@@ -83,7 +83,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       // chain: previousPreviousClause <- previousClause
 
-      var clause = (SelectClause) node.CreateClause (previousClause);
+      var clause = (SelectClause) node.CreateClause (previousClause, null);
 
       // chain: previousPreviousClause <- whereClause <- previousClause
 
@@ -99,7 +99,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var previousPreviousClause = ExpressionHelper.CreateClause ();
       var previousClause = new SelectClause (previousPreviousClause, selectorOfPreviousClause);
 
-      var clause = (SelectClause) node.CreateClause (previousClause);
+      var clause = (SelectClause) node.CreateClause (previousClause, null);
 
       Assert.That (clause, Is.SameAs (previousClause));
       Assert.That (clause.Selector, Is.Not.SameAs (selectorOfPreviousClause));

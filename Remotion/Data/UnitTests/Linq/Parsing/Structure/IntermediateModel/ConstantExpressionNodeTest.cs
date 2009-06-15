@@ -18,6 +18,7 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Utilities;
 
@@ -80,18 +81,30 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
+    public void CreateClause_AddMapping ()
+    {
+      var node = new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3, 4, 5 });
+      var querySourceClauseMapping = new QuerySourceClauseMapping();
+      node.CreateClause (null, querySourceClauseMapping);
+
+      Assert.That (querySourceClauseMapping.Count, Is.EqualTo (1));
+    }
+
+    [Test]
     [ExpectedException (typeof (InvalidOperationException))]
     public void CreateClause_WithNonNullPreviousClause ()
     {
       var node = new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3, 4, 5 });
-      node.CreateClause (ExpressionHelper.CreateClause());
+      var querySourceClauseMapping = new QuerySourceClauseMapping ();
+      node.CreateClause (ExpressionHelper.CreateClause(), querySourceClauseMapping);
     }
 
     [Test]
     public void CreateClause_WithNullPreviousClause ()
     {
       var node = new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3, 4, 5 });
-      var constantClause = (MainFromClause) node.CreateClause (null);
+      var querySourceClauseMapping = new QuerySourceClauseMapping ();
+      var constantClause = (MainFromClause) node.CreateClause (null, querySourceClauseMapping);
 
       Assert.That (constantClause.Identifier.Name, Is.EqualTo ("x"));
       Assert.That (constantClause.Identifier.Type, Is.SameAs (typeof (int)));

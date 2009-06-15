@@ -108,17 +108,22 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return Expression.Parameter (ResultSelector.Body.Type, AssociatedIdentifier);
     }
 
-    public override IClause CreateClause (IClause previousClause)
+    public override IClause CreateClause (IClause previousClause, QuerySourceClauseMapping querySourceClauseMapping)
     {
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
+      ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
 
       var identifier = ResultSelector.Parameters[1];
+      FromClauseBase clause;
       if (CollectionSelector.Body is MemberExpression)
-        return new MemberFromClause (previousClause, identifier, CollectionSelector, ResultSelector);
+        clause = new MemberFromClause (previousClause, identifier, CollectionSelector, ResultSelector);
       else if (CollectionSelector.Body is SubQueryExpression)
-        return new SubQueryFromClause (previousClause, identifier, ((SubQueryExpression) CollectionSelector.Body).QueryModel, ResultSelector);
+        clause = new SubQueryFromClause (previousClause, identifier, ((SubQueryExpression) CollectionSelector.Body).QueryModel, ResultSelector);
       else
-        return new AdditionalFromClause (previousClause, identifier, CollectionSelector, ResultSelector);
+        clause = new AdditionalFromClause (previousClause, identifier, CollectionSelector, ResultSelector);
+
+      querySourceClauseMapping.AddMapping (this, clause);
+      return clause;
     }
   }
 }
