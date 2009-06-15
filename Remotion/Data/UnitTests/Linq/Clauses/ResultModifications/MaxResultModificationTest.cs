@@ -16,6 +16,7 @@
 using System;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.ResultModifications;
 
 namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
@@ -54,21 +55,9 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
     }
 
     [Test]
-    public void ConvertStreamToResult ()
+    public void ExecutionStrategy ()
     {
-      var items = new[] { 1 };
-      var result = _resultModification.ConvertStreamToResult (items);
-
-      Assert.That (result, Is.EqualTo (1));
-    }
-
-    [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "A query ending with a MaxResultModification must retrieve exactly "
-        + "one value.")]
-    public void ConvertStreamToResult_Invalid ()
-    {
-      var items = new[] { 1, 2 };
-      _resultModification.ConvertStreamToResult (items);
+      Assert.That (_resultModification.ExecutionStrategy, Is.SameAs (ScalarExecutionStrategy.Instance));
     }
   }
 }

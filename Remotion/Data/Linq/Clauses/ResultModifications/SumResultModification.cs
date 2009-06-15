@@ -18,6 +18,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultModifications
@@ -25,7 +26,7 @@ namespace Remotion.Data.Linq.Clauses.ResultModifications
   public class SumResultModification : ResultModificationBase
   {
     public SumResultModification (SelectClause selectClause)
-        : base (selectClause)
+        : base (selectClause, ScalarExecutionStrategy.Instance)
     {
     }
 
@@ -44,12 +45,6 @@ namespace Remotion.Data.Linq.Clauses.ResultModifications
         throw new NotSupportedException (message);
       }
       return new[] { (T) method.Invoke (null, new object[] { items }) };
-    }
-
-    public override object ConvertStreamToResult<T> (IEnumerable<T> stream)
-    {
-      ArgumentUtility.CheckNotNull ("stream", stream);
-      return ConvertStreamToValue (stream);
     }
   }
 }

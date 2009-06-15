@@ -14,30 +14,32 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
-using Remotion.Utilities;
+using Remotion.Data.Linq.EagerFetching;
+using Rhino.Mocks;
 
-namespace Remotion.Data.Linq.Clauses.ResultModifications
+namespace Remotion.Data.UnitTests.Linq.Clauses.ExecutionStrategies
 {
-  public class MaxResultModification : ResultModificationBase
+  [TestFixture]
+  public class ScalarExecutionStrategyTest
   {
-    public MaxResultModification (SelectClause selectClause)
-        : base (selectClause, ScalarExecutionStrategy.Instance)
+    [Test]
+    public void GetExecutionExpression ()
     {
-    }
+      var queryModel = ExpressionHelper.CreateQueryModel();
+      var fetchRequests = new FetchRequestBase[0];
 
-    public override ResultModificationBase Clone (SelectClause newSelectClause)
-    {
-      return new MaxResultModification (newSelectClause);
-    }
+      var lambda = ScalarExecutionStrategy.Instance.GetExecutionExpression<int> (queryModel, fetchRequests);
 
-    public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)
-    {
-      ArgumentUtility.CheckNotNull ("items", items);
-      return new[] { items.Max () };
+      var executorMock = MockRepository.GenerateMock<IQueryExecutor>();
+      executorMock.Expect (mock => mock.ExecuteScalar<int> (queryModel, fetchRequests)).Return (7);
+      int result = lambda.Compile() (executorMock);
+
+      Assert.That (result, Is.EqualTo (7));
+      executorMock.VerifyAllExpectations();
     }
   }
 }

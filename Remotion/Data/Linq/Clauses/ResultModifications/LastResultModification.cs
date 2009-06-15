@@ -17,6 +17,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultModifications
@@ -24,7 +25,9 @@ namespace Remotion.Data.Linq.Clauses.ResultModifications
   public class LastResultModification : ResultModificationBase
   {
     public LastResultModification (SelectClause selectClause, bool returnDefaultWhenEmpty)
-      : base (selectClause)
+        : base (
+            selectClause,
+            returnDefaultWhenEmpty ? SingleExecutionStrategy.InstanceWithDefaultWhenEmpty : SingleExecutionStrategy.InstanceNoDefaultWhenEmpty)
     {
       ReturnDefaultWhenEmpty = returnDefaultWhenEmpty;
     }
@@ -41,15 +44,9 @@ namespace Remotion.Data.Linq.Clauses.ResultModifications
       ArgumentUtility.CheckNotNull ("items", items);
 
       if (ReturnDefaultWhenEmpty)
-        return new[] { items.LastOrDefault () };
+        return new[] { items.LastOrDefault() };
       else
-        return new[] { items.Last () };
-    }
-
-    public override object ConvertStreamToResult<T> (IEnumerable<T> stream)
-    {
-      ArgumentUtility.CheckNotNull ("stream", stream);
-      return ConvertStreamToSingleResult (stream);
+        return new[] { items.Last() };
     }
   }
 }

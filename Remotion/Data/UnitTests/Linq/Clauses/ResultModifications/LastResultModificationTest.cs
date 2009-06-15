@@ -16,6 +16,7 @@
 using System;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.ResultModifications;
 
 namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
@@ -84,21 +85,15 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
     }
 
     [Test]
-    public void ConvertStreamToResult ()
+    public void ExecutionStrategy_Default ()
     {
-      var items = new[] { 1 };
-      var result = _resultModificationWithDefault.ConvertStreamToResult (items);
-
-      Assert.That (result, Is.EqualTo (1));
+      Assert.That (_resultModificationWithDefault.ExecutionStrategy, Is.SameAs (SingleExecutionStrategy.InstanceWithDefaultWhenEmpty));
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "A query ending with a LastResultModification must retrieve exactly "
-        + "one item.")]
-    public void ConvertStreamToResult_Invalid ()
+    public void ExecutionStrategy_NoDefault ()
     {
-      var items = new[] { 1, 2 };
-      _resultModificationWithDefault.ConvertStreamToResult (items);
+      Assert.That (_resultModificationNoDefault.ExecutionStrategy, Is.SameAs (SingleExecutionStrategy.InstanceNoDefaultWhenEmpty));
     }
   }
 }

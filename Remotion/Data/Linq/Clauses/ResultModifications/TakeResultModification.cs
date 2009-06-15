@@ -16,6 +16,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Utilities;
 using System.Linq;
 
@@ -26,7 +27,7 @@ namespace Remotion.Data.Linq.Clauses.ResultModifications
     public int Count { get; set; }
 
     public TakeResultModification (SelectClause selectClause, int count)
-        : base (selectClause)
+        : base (selectClause, CollectionExecutionStrategy.Instance)
     {
       Count = count;
     }
@@ -40,12 +41,6 @@ namespace Remotion.Data.Linq.Clauses.ResultModifications
     {
       ArgumentUtility.CheckNotNull ("items", items);
       return items.Take (Count);
-    }
-
-    public override object ConvertStreamToResult<T> (IEnumerable<T> stream)
-    {
-      ArgumentUtility.CheckNotNull ("stream", stream);
-      return stream;
     }
   }
 }

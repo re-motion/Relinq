@@ -17,6 +17,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultModifications
@@ -24,7 +25,7 @@ namespace Remotion.Data.Linq.Clauses.ResultModifications
   public class DistinctResultModification : ResultModificationBase
   {
     public DistinctResultModification (SelectClause selectClause)
-        : base (selectClause)
+        : base (selectClause, CollectionExecutionStrategy.Instance)
     {
     }
 
@@ -37,12 +38,6 @@ namespace Remotion.Data.Linq.Clauses.ResultModifications
     {
       ArgumentUtility.CheckNotNull ("items", items);
       return items.Distinct ();
-    }
-
-    public override object ConvertStreamToResult<T> (IEnumerable<T> stream)
-    {
-      ArgumentUtility.CheckNotNull ("stream", stream);
-      return stream;
     }
   }
 }

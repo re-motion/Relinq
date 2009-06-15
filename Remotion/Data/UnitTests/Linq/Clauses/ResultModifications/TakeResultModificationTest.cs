@@ -17,6 +17,7 @@ using System;
 using System.Linq;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.ResultModifications;
 
 namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
@@ -53,12 +54,9 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
     }
 
     [Test]
-    public void ConvertStreamToResult ()
+    public void ExecutionStrategy ()
     {
-      var items = new[] { 1, 2, 3, 0, 2 };
-      var result = _resultModification.ConvertStreamToResult (items);
-
-      Assert.That (result, Is.SameAs (items));
+      Assert.That (_resultModification.ExecutionStrategy, Is.SameAs (CollectionExecutionStrategy.Instance));
     }
   }
 }

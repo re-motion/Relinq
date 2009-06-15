@@ -52,6 +52,10 @@
     <Compile Include="Clauses\AdditionalFromClause.cs" />
     <Compile Include="Clauses\ClauseFinder.cs" />
     <Compile Include="Clauses\ClauseLookupException.cs" />
+    <Compile Include="Clauses\ExecutionStrategies\CollectionExecutionStrategy.cs" />
+    <Compile Include="Clauses\ExecutionStrategies\SingleExecutionStrategy.cs" />
+    <Compile Include="Clauses\ExecutionStrategies\ScalarExecutionStrategy.cs" />
+    <Compile Include="Clauses\IExecutionStrategy.cs" />
     <Compile Include="Clauses\ResultModifications\SumResultModification.cs" />
     <Compile Include="Clauses\ResultModifications\MaxResultModification.cs" />
     <Compile Include="Clauses\ResultModifications\MinResultModification.cs" />

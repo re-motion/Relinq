@@ -17,6 +17,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultModifications
@@ -24,7 +25,7 @@ namespace Remotion.Data.Linq.Clauses.ResultModifications
   public class MinResultModification : ResultModificationBase
   {
     public MinResultModification (SelectClause selectClause)
-        : base (selectClause)
+        : base (selectClause, ScalarExecutionStrategy.Instance)
     {
     }
 
@@ -37,12 +38,6 @@ namespace Remotion.Data.Linq.Clauses.ResultModifications
     {
       ArgumentUtility.CheckNotNull ("items", items);
       return new[] { items.Min () };
-    }
-
-    public override object ConvertStreamToResult<T> (IEnumerable<T> stream)
-    {
-      ArgumentUtility.CheckNotNull ("stream", stream);
-      return ConvertStreamToValue (stream);
     }
   }
 }
