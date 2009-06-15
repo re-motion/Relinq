@@ -23,14 +23,22 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
   [TestFixture]
   public class LastResultModificationTest
   {
+    private LastResultModification _resultModificationNoDefault;
+    private LastResultModification _resultModificationWithDefault;
+
+    [SetUp]
+    public void SetUp ()
+    {
+      _resultModificationNoDefault = new LastResultModification (ExpressionHelper.CreateSelectClause (), false);
+      _resultModificationWithDefault = new LastResultModification (ExpressionHelper.CreateSelectClause (), true);
+    }
+
     [Test]
     public void Clone ()
     {
-      var selectClause = ExpressionHelper.CreateSelectClause ();
       var newSelectClause = ExpressionHelper.CreateSelectClause ();
 
-      var resultModification = new LastResultModification (selectClause, true);
-      var clone = resultModification.Clone (newSelectClause);
+      var clone = _resultModificationWithDefault.Clone (newSelectClause);
 
       Assert.That (clone, Is.InstanceOfType (typeof (LastResultModification)));
       Assert.That (clone.SelectClause, Is.SameAs (newSelectClause));
@@ -40,15 +48,57 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
     [Test]
     public void Clone_ReturnDefaultIfEmpty_False ()
     {
-      var selectClause = ExpressionHelper.CreateSelectClause ();
       var newSelectClause = ExpressionHelper.CreateSelectClause ();
-
-      var resultModification = new LastResultModification (selectClause, false);
-      var clone = resultModification.Clone (newSelectClause);
+      var clone = _resultModificationNoDefault.Clone (newSelectClause);
 
       Assert.That (clone, Is.InstanceOfType (typeof (LastResultModification)));
       Assert.That (clone.SelectClause, Is.SameAs (newSelectClause));
       Assert.That (((LastResultModification) clone).ReturnDefaultWhenEmpty, Is.False);
+    }
+
+
+    [Test]
+    public void ExecuteInMemory ()
+    {
+      var items = new[] { 1, 2, 3 };
+      var result = _resultModificationWithDefault.ExecuteInMemory (items);
+
+      Assert.That (result, Is.EqualTo (new[] { 3 }));
+    }
+
+    [Test]
+    public void ExecuteInMemory_Empty_Default ()
+    {
+      var items = new int[0];
+      var result = _resultModificationWithDefault.ExecuteInMemory (items);
+
+      Assert.That (result, Is.EqualTo (new[] { 0 }));
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Sequence contains no elements")]
+    public void ExecuteInMemory_Empty_NoDefault ()
+    {
+      var items = new int[0];
+      _resultModificationNoDefault.ExecuteInMemory (items);
+    }
+
+    [Test]
+    public void ConvertStreamToResult ()
+    {
+      var items = new[] { 1 };
+      var result = _resultModificationWithDefault.ConvertStreamToResult (items);
+
+      Assert.That (result, Is.EqualTo (1));
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "A query ending with a LastResultModification must retrieve exactly "
+        + "one item.")]
+    public void ConvertStreamToResult_Invalid ()
+    {
+      var items = new[] { 1, 2 };
+      _resultModificationWithDefault.ConvertStreamToResult (items);
     }
   }
 }

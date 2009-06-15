@@ -23,17 +23,52 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
   [TestFixture]
   public class MinResultModificationTest
   {
+    private MinResultModification _resultModification;
+
+    [SetUp]
+    public void SetUp ()
+    {
+      _resultModification = new MinResultModification (ExpressionHelper.CreateSelectClause ());
+    }
+
     [Test]
     public void Clone ()
     {
-      var selectClause = ExpressionHelper.CreateSelectClause ();
       var newSelectClause = ExpressionHelper.CreateSelectClause ();
 
-      var resultModification = new MinResultModification (selectClause);
-      var clone = resultModification.Clone (newSelectClause);
+      var clone = _resultModification.Clone (newSelectClause);
 
       Assert.That (clone, Is.InstanceOfType (typeof (MinResultModification)));
       Assert.That (clone.SelectClause, Is.SameAs (newSelectClause));
+    }
+
+    [Test]
+    public void ExecuteInMemory ()
+    {
+      var items = new[] { 1, 2, 3, 0, 2 };
+      var resultModification = new MinResultModification (ExpressionHelper.CreateSelectClause ());
+
+      var result = resultModification.ExecuteInMemory (items);
+
+      Assert.That (result, Is.EqualTo (new[] { 0 }));
+    }
+
+    [Test]
+    public void ConvertStreamToResult ()
+    {
+      var items = new[] { 1 };
+      var result = _resultModification.ConvertStreamToResult (items);
+
+      Assert.That (result, Is.EqualTo (1));
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "A query ending with a MinResultModification must retrieve exactly "
+        + "one value.")]
+    public void ConvertStreamToResult_Invalid ()
+    {
+      var items = new[] { 1, 2 };
+      _resultModification.ConvertStreamToResult (items);
     }
   }
 }

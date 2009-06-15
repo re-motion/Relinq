@@ -14,6 +14,11 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultModifications
 {
@@ -27,6 +32,24 @@ namespace Remotion.Data.Linq.Clauses.ResultModifications
     public override ResultModificationBase Clone (SelectClause newSelectClause)
     {
       return new SumResultModification (newSelectClause);
+    }
+
+    public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)
+    {
+      ArgumentUtility.CheckNotNull ("items", items);
+      var method = typeof (Enumerable).GetMethod ("Sum", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof (IEnumerable<T>) }, null);
+      if (method == null)
+      {
+        var message = string.Format ("Cannot calculate the sum of elements of type '{0}' in memory.", typeof (T).FullName);
+        throw new NotSupportedException (message);
+      }
+      return new[] { (T) method.Invoke (null, new object[] { items }) };
+    }
+
+    public override object ConvertStreamToResult<T> (IEnumerable<T> stream)
+    {
+      ArgumentUtility.CheckNotNull ("stream", stream);
+      return ConvertStreamToValue (stream);
     }
   }
 }

@@ -14,6 +14,10 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultModifications
 {
@@ -30,6 +34,22 @@ namespace Remotion.Data.Linq.Clauses.ResultModifications
     public override ResultModificationBase Clone (SelectClause newSelectClause)
     {
       return new LastResultModification (newSelectClause, ReturnDefaultWhenEmpty);
+    }
+
+    public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)
+    {
+      ArgumentUtility.CheckNotNull ("items", items);
+
+      if (ReturnDefaultWhenEmpty)
+        return new[] { items.LastOrDefault () };
+      else
+        return new[] { items.Last () };
+    }
+
+    public override object ConvertStreamToResult<T> (IEnumerable<T> stream)
+    {
+      ArgumentUtility.CheckNotNull ("stream", stream);
+      return ConvertStreamToSingleResult (stream);
     }
   }
 }
