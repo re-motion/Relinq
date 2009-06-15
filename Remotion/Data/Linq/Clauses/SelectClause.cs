@@ -16,6 +16,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Utilities;
 using System.Linq.Expressions;
 
@@ -97,6 +98,14 @@ namespace Remotion.Data.Linq.Clauses
     ISelectGroupClause ISelectGroupClause.Clone (IClause newPreviousClause)
     {
       return Clone (newPreviousClause);
+    }
+
+    public IExecutionStrategy GetExecutionStrategy ()
+    {
+      if (ResultModifications.Count > 0)
+        return ResultModifications[ResultModifications.Count - 1].ExecutionStrategy;
+      else
+        return CollectionExecutionStrategy.Instance;
     }
   }
 }

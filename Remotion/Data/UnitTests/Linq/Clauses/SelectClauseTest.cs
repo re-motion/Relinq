@@ -19,6 +19,7 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
+using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.ResultModifications;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
@@ -120,6 +121,37 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clone.ResultModifications[0].SelectClause, Is.SameAs (clone));
 
       Assert.That (clone.ResultModifications[1], Is.Not.SameAs (resultModifierClause2));
+    }
+
+    [Test]
+    public void GetExecutionStrategy_WithoutResultModifiers ()
+    {
+      var clause = ExpressionHelper.CreateSelectClause ();
+      Assert.That (clause.GetExecutionStrategy (), Is.SameAs (CollectionExecutionStrategy.Instance));
+    }
+
+    [Test]
+    public void GetExecutionStrategy_WithResultModifiers ()
+    {
+      var clause = ExpressionHelper.CreateSelectClause ();
+      var firstModifier = new FirstResultModification (clause, true);
+      clause.AddResultModification (firstModifier);
+
+      Assert.That (clause.GetExecutionStrategy (), Is.SameAs (firstModifier.ExecutionStrategy));
+    }
+
+    [Test]
+    public void GetExecutionStrategy_WithManyResultModifiers ()
+    {
+      var clause = ExpressionHelper.CreateSelectClause ();
+      var takeModifier = new TakeResultModification (clause, 7);
+      var distinctModifier = new DistinctResultModification (clause);
+      var countModifier = new CountResultModification (clause);
+      clause.AddResultModification (takeModifier);
+      clause.AddResultModification (distinctModifier);
+      clause.AddResultModification (countModifier);
+
+      Assert.That (clause.GetExecutionStrategy (), Is.SameAs (countModifier.ExecutionStrategy));
     }
   }
 }
