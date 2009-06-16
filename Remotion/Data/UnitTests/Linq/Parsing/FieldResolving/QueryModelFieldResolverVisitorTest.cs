@@ -17,8 +17,10 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.FieldResolving;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
@@ -31,6 +33,18 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
       public Student s1;
       public Student fzlbf;
       public AnonymousType transparent2;
+    }
+
+    [Test]
+    public void QuerySourceReferenceExpression ()
+    {
+      var clause = ExpressionHelper.CreateMainFromClause ();
+      var querySourceReferenceExpression = new QuerySourceReferenceExpression (clause);
+
+      QueryModel queryModel = CreateQueryExpression ();
+      QueryModelFieldResolverVisitor.Result result = new QueryModelFieldResolverVisitor (queryModel).ParseAndReduce (querySourceReferenceExpression);
+
+      Assert.That (result.ResolveableClause, Is.SameAs (clause));
     }
 
     [Test]

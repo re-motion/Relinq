@@ -16,6 +16,7 @@
 using System;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Utilities;
 using System.Linq;
 
@@ -79,7 +80,15 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
       if (_clause != null)
         return base.VisitParameterExpression (expression);
       else
-        return null;
+        return null; //this is a transparent identifier
+    }
+
+    protected override Expression VisitQuerySourceReferenceExpression (QuerySourceReferenceExpression expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
+      _clause = expression.ReferencedClause;
+      return base.VisitQuerySourceReferenceExpression (expression);
     }
 
     protected override Expression VisitMemberExpression (MemberExpression expression)
@@ -88,6 +97,7 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
       Expression newExpression = VisitExpression (expression.Expression);
       if (newExpression == null)
       {
+        //found a transparent identifier, ignore it and continue with the next expression
         ParameterExpression newParameterExpression = Expression.Parameter (expression.Type, expression.Member.Name);
         return VisitExpression (newParameterExpression);
       }
