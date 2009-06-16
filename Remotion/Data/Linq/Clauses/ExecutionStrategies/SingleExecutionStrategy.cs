@@ -23,7 +23,7 @@ using Remotion.Utilities;
 namespace Remotion.Data.Linq.Clauses.ExecutionStrategies
 {
   /// <summary>
-  /// Represents a call to <see cref="IQueryExecutor.ExecuteCollection2{T}"/> that returns at most or exactly one item. 
+  /// Represents a call to <see cref="IQueryExecutor.ExecuteCollection{T}"/> that returns at most or exactly one item. 
   /// The generic TResult argument of the <see cref="GetExecutionExpression{TResult}"/> method defines the item type to be returned.
   /// <seealso cref="IExecutionStrategy"/>
   /// </summary>
@@ -44,7 +44,7 @@ namespace Remotion.Data.Linq.Clauses.ExecutionStrategies
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
       ArgumentUtility.CheckNotNull ("fetchRequests", fetchRequests);
 
-      var executeCollectionMethod = typeof (IQueryExecutor).GetMethod ("ExecuteCollection2");
+      var executeCollectionMethod = typeof (IQueryExecutor).GetMethod ("ExecuteCollection");
       var singleMethod = ParserUtility.GetMethod (() => ((Enumerable.Single<TResult> (null))));
       var singleOrDefaultMethod = ParserUtility.GetMethod (() => ((Enumerable.SingleOrDefault<TResult> (null))));
       var singleMethodToUse = _returnDefaultWhenEmpty ? singleOrDefaultMethod : singleMethod;

@@ -40,34 +40,6 @@ namespace Remotion.Data.Linq
     /// or <see cref="FirstResultModification"/>. In such a case, the returned enumerable must yield exactly one object (or none if the last
     /// result modification allows empty result sets).
     /// </summary>
-    IEnumerable<T> ExecuteCollection2<T> (QueryModel queryModel, IEnumerable<FetchRequestBase> fetchRequests);
-
-    [Obsolete ("COMMONS-1210: To be removed.")]
-    object ExecuteSingle (QueryModel queryModel, IEnumerable<FetchRequestBase> fetchRequests);
-
-    [Obsolete ("COMMONS-1210: To be replaced.")]
-    IEnumerable ExecuteCollection (QueryModel queryModel, IEnumerable<FetchRequestBase> fetchRequests);
+    IEnumerable<T> ExecuteCollection<T> (QueryModel queryModel, IEnumerable<FetchRequestBase> fetchRequests);
   }
-
-  ///// <summary>
-  ///// Constitutes the bridge between re-linq and a concrete query provider implementation. Concrete providers implement this interface
-  ///// to execute the queries, and <see cref="QueryProviderBase"/> calls the respective method of the interface implementation when a query
-  ///// is to be executed.
-  ///// </summary>
-  //public interface IQueryExecutor
-  //{
-  //  /// <summary>
-  //  /// Executes the given <paramref name="queryModel"/> as a scalar query, i.e. as a query returning a scalar value of type T. The query
-  //  /// ends with a scalar result modification, for example a <see cref="CountResultModification"/> or a <see cref="SumResultModification"/>.
-  //  /// </summary>
-  //  T ExecuteScalar<T> (QueryModel queryModel, IEnumerable<FetchRequestBase> fetchRequests);
-
-  //  /// <summary>
-  //  /// Executes the given <paramref name="queryModel"/> as a collection query, i.e. as a query returning objects. The query does nit end
-  //  /// with a scalar result modification, but it can end with a single result modification, for example <see cref="SingleResultModification"/>
-  //  /// or <see cref="FirstResultModification"/>. In such a case, the returned enumerable must yield exactly one object (or none if the last
-  //  /// result modification allows empty result sets).
-  //  /// </summary>
-  //  IEnumerable ExecuteCollection (QueryModel queryModel, IEnumerable<FetchRequestBase> fetchRequests);
-  //}
 }

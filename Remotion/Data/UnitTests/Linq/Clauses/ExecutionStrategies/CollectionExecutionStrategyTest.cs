@@ -37,7 +37,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ExecutionStrategies
       var lambda = CollectionExecutionStrategy.Instance.GetExecutionExpression<IEnumerable<int>> (queryModel, fetchRequests);
 
       var executorMock = MockRepository.GenerateMock<IQueryExecutor>();
-      executorMock.Expect (mock => mock.ExecuteCollection2<int> (queryModel, fetchRequests)).Return (new[] { 1, 2, 3 });
+      executorMock.Expect (mock => mock.ExecuteCollection<int> (queryModel, fetchRequests)).Return (new[] { 1, 2, 3 });
       IEnumerable<int> result = lambda.Compile() (executorMock);
 
       Assert.That (result.ToArray(), Is.EqualTo (new[] { 1, 2, 3 }));
@@ -53,7 +53,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ExecutionStrategies
       var lambda = CollectionExecutionStrategy.Instance.GetExecutionExpression<IEnumerable<int>> (queryModel, fetchRequests);
 
       var executorMock = MockRepository.GenerateMock<IQueryExecutor> ();
-      executorMock.Expect (mock => mock.ExecuteCollection2<int> (queryModel, fetchRequests)).Return (new[] { 1, 2, 3 });
+      executorMock.Expect (mock => mock.ExecuteCollection<int> (queryModel, fetchRequests)).Return (new[] { 1, 2, 3 });
       IEnumerable<int> result = lambda.Compile () (executorMock);
 
       Assert.That (result, Is.InstanceOfType (typeof (IQueryable<int>)));

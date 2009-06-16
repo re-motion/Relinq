@@ -93,7 +93,7 @@ namespace Remotion.Data.UnitTests.Linq
     {
       var expectedResult = new Student[0];
       Expression expression = (from s in _queryableWithExecutorMock select s).Expression;
-      _executorMock.Expect (mock => mock.ExecuteCollection2<Student> (
+      _executorMock.Expect (mock => mock.ExecuteCollection<Student> (
           Arg<QueryModel>.Matches (queryModel => queryModel.GetExpressionTree () == expression),
           Arg<FetchRequestBase[]>.List.Equal (new FetchManyRequest[0]))).Return (expectedResult);
 
@@ -109,7 +109,7 @@ namespace Remotion.Data.UnitTests.Linq
     {
       var expectedResult = new Student[0];
       Expression expression = (from s in _queryableWithExecutorMock select s).Expression;
-      _executorMock.Expect (mock => mock.ExecuteCollection2<Student> (
+      _executorMock.Expect (mock => mock.ExecuteCollection<Student> (
           Arg<QueryModel>.Matches (queryModel => queryModel.GetExpressionTree () == expression),
           Arg<FetchRequestBase[]>.List.Equal (new FetchManyRequest[0]))).Return (new Student[0]);
 
@@ -127,7 +127,7 @@ namespace Remotion.Data.UnitTests.Linq
 
       var expectedResult = new[] { new Student () };
       _executorMock
-          .Expect (mock => mock.ExecuteCollection2<Student> (Arg<QueryModel>.Is.Anything, Arg<FetchRequestBase[]>.Is.Anything))
+          .Expect (mock => mock.ExecuteCollection<Student> (Arg<QueryModel>.Is.Anything, Arg<FetchRequestBase[]>.Is.Anything))
           .Return (expectedResult);
 
       _executorMock.Replay ();
@@ -144,7 +144,7 @@ namespace Remotion.Data.UnitTests.Linq
 
       var expectedResult = new[] { new Student () };
       _executorMock
-          .Expect (mock => mock.ExecuteCollection2<Student> (Arg<QueryModel>.Is.Anything, Arg<FetchRequestBase[]>.Is.Anything))
+          .Expect (mock => mock.ExecuteCollection<Student> (Arg<QueryModel>.Is.Anything, Arg<FetchRequestBase[]>.Is.Anything))
           .Return (expectedResult);
 
       _executorMock.Replay ();
@@ -163,7 +163,7 @@ namespace Remotion.Data.UnitTests.Linq
     {
       var expectedResult = new[] { new Student () };
       _executorMock
-                .Expect (mock => mock.ExecuteCollection2<Student> (Arg<QueryModel>.Is.Anything, Arg<FetchRequestBase[]>.Is.Anything))
+                .Expect (mock => mock.ExecuteCollection<Student> (Arg<QueryModel>.Is.Anything, Arg<FetchRequestBase[]>.Is.Anything))
                 .Return (expectedResult);
 
       _executorMock.Replay ();
@@ -242,7 +242,7 @@ namespace Remotion.Data.UnitTests.Linq
       Expression<Func<Student, IEnumerable<Student>>> relatedObjectSelector = s => s.Friends;
       IQueryable<Student> query = SelectTestQueryGenerator.CreateSimpleQuery (_queryableWithExecutorMock).FetchMany (relatedObjectSelector);
 
-      _executorMock.Expect (mock => mock.ExecuteCollection2<Student> (
+      _executorMock.Expect (mock => mock.ExecuteCollection<Student> (
           Arg<QueryModel>.Is.Anything,
           Arg<FetchRequestBase[]>.Matches (frs => frs.Single().RelatedObjectSelector == relatedObjectSelector)))
           .Return (new Student[0]);

@@ -25,7 +25,7 @@ using Remotion.Utilities;
 namespace Remotion.Data.Linq.Clauses.ExecutionStrategies
 {
   /// <summary>
-  /// Represents a call to <see cref="IQueryExecutor.ExecuteCollection2{T}"/>. The generic TResult argument of the 
+  /// Represents a call to <see cref="IQueryExecutor.ExecuteCollection{T}"/>. The generic TResult argument of the 
   /// <see cref="GetExecutionExpression{TResult}"/> method is a specialization of <see cref="IEnumerable{T}"/>.
   /// <seealso cref="IExecutionStrategy"/>
   /// </summary>
@@ -44,7 +44,7 @@ namespace Remotion.Data.Linq.Clauses.ExecutionStrategies
 
       var itemType = GetItemType<TResult> ();
 
-      var executeCollectionMethod = typeof (IQueryExecutor).GetMethod ("ExecuteCollection2");
+      var executeCollectionMethod = typeof (IQueryExecutor).GetMethod ("ExecuteCollection");
       var asQueryableMethod = ParserUtility.GetMethod (() => Queryable.AsQueryable<object>(null))
           .GetGenericMethodDefinition()
           .MakeGenericMethod (itemType);

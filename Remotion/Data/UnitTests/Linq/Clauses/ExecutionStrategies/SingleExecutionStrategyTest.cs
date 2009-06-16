@@ -35,7 +35,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ExecutionStrategies
       var lambda = SingleExecutionStrategy.InstanceWithDefaultWhenEmpty.GetExecutionExpression<int> (queryModel, fetchRequests);
 
       var executorMock = MockRepository.GenerateMock<IQueryExecutor>();
-      executorMock.Expect (mock => mock.ExecuteCollection2<int> (queryModel, fetchRequests)).Return (new[] { 1 });
+      executorMock.Expect (mock => mock.ExecuteCollection<int> (queryModel, fetchRequests)).Return (new[] { 1 });
       int result = lambda.Compile() (executorMock);
 
       Assert.That (result, Is.EqualTo (1));
@@ -51,7 +51,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ExecutionStrategies
       var lambda = SingleExecutionStrategy.InstanceWithDefaultWhenEmpty.GetExecutionExpression<int> (queryModel, fetchRequests);
 
       var executorMock = MockRepository.GenerateMock<IQueryExecutor>();
-      executorMock.Expect (mock => mock.ExecuteCollection2<int> (queryModel, fetchRequests)).Return (new int[0]);
+      executorMock.Expect (mock => mock.ExecuteCollection<int> (queryModel, fetchRequests)).Return (new int[0]);
       int result = lambda.Compile() (executorMock);
 
       Assert.That (result, Is.EqualTo (0));
@@ -68,7 +68,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ExecutionStrategies
       var lambda = SingleExecutionStrategy.InstanceNoDefaultWhenEmpty.GetExecutionExpression<int> (queryModel, fetchRequests);
 
       var executorMock = MockRepository.GenerateMock<IQueryExecutor>();
-      executorMock.Expect (mock => mock.ExecuteCollection2<int> (queryModel, fetchRequests)).Return (new int[0]);
+      executorMock.Expect (mock => mock.ExecuteCollection<int> (queryModel, fetchRequests)).Return (new int[0]);
       lambda.Compile() (executorMock);
     }
   }
