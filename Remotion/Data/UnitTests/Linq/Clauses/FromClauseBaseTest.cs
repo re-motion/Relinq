@@ -74,7 +74,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       JoinedTableContext context = new JoinedTableContext ();
       SelectFieldAccessPolicy policy = new SelectFieldAccessPolicy ();
       ClauseFieldResolver resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, policy);
-      FieldDescriptor fieldDescriptor = fromClause.ResolveField (resolver, identifier, identifier, context);
+      FieldDescriptor fieldDescriptor = fromClause.ResolveField (resolver, identifier, context);
       Assert.AreEqual (new Column (new Table ("studentTable", "fromIdentifier1"), "*"), fieldDescriptor.Column);
     }
 
@@ -87,7 +87,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       JoinedTableContext context = new JoinedTableContext ();
       SelectFieldAccessPolicy policy = new SelectFieldAccessPolicy ();
       ClauseFieldResolver resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, policy);
-      FieldDescriptor fieldDescriptor = fromClause.ResolveField (resolver, identifier, identifier, context);
+      FieldDescriptor fieldDescriptor = fromClause.ResolveField (resolver, identifier, context);
       Assert.AreEqual (new Column (new Table ("studentTable", "fromIdentifier1"), "*"), fieldDescriptor.Column);
     }
 

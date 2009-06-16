@@ -63,7 +63,7 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
 
         }
         else
-          return visitorResult.ResolveableClause.ResolveField (resolver, visitorResult.ReducedExpression, fieldAccessExpression, joinedTableContext);
+          return visitorResult.ResolveableClause.ResolveField (resolver, visitorResult.ReducedExpression, joinedTableContext);
       }
       else if (_queryModel.ParentQuery != null)
         return _queryModel.ParentQuery.ResolveField (resolver, fieldAccessExpression, joinedTableContext);

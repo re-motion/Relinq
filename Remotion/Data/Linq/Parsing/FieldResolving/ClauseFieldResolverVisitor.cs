@@ -24,51 +24,42 @@ using Remotion.Utilities;
 namespace Remotion.Data.Linq.Parsing.FieldResolving
 {
   /// <summary>
-  /// identifies the parameter and members used by an expression of a field access
+  /// Identifies the query source and members used by a field access expression.
   /// </summary>
   public class ClauseFieldResolverVisitor : ExpressionTreeVisitor
   {
-    public struct Result
+    public static FieldAccessInfo ParseFieldAccess (
+        IDatabaseInfo databaseInfo,
+        IResolveableClause resolvedClause,
+        Expression fieldAccessExpression,
+        bool optimizeRelatedKeyAccess)
     {
-      public Result (MemberInfo accessedMember, MemberInfo[] joinMembers)
-          : this ()
-      {
-        AccessedMember = accessedMember;
-        JoinMembers = joinMembers;
-      }
+      ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
+      ArgumentUtility.CheckNotNull ("resolvedClause", resolvedClause);
+      ArgumentUtility.CheckNotNull ("fieldAccessExpression", fieldAccessExpression);
 
-      public MemberInfo AccessedMember { get; private set; }
-      public MemberInfo[] JoinMembers { get; private set; }
+      var visitor = new ClauseFieldResolverVisitor (databaseInfo, resolvedClause, optimizeRelatedKeyAccess);
+      visitor.VisitExpression (fieldAccessExpression);
+      return new FieldAccessInfo (visitor._accessedMember, visitor._joinMembers.ToArray ());
     }
 
     private readonly IDatabaseInfo _databaseInfo;
+    private readonly IResolveableClause _resolvedClause;
+    private readonly List<MemberInfo> _joinMembers;
+    private readonly bool _optimizeRelatedKeyAccess;
 
-    private IResolveableClause _resolvedClause;
     private MemberInfo _accessedMember;
-    private List<MemberInfo> _joinMembers;
-    private Expression _expressionTreeRoot;
-    private bool _optimizeRelatedKeyAccess;
 
-    public ClauseFieldResolverVisitor (IDatabaseInfo databaseInfo)
+    private ClauseFieldResolverVisitor (IDatabaseInfo databaseInfo, IResolveableClause resolvedClause, bool optimizeRelatedKeyAccess)
     {
       ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
-      _databaseInfo = databaseInfo;
-    }
-
-    public Result ParseFieldAccess (IResolveableClause resolvedClause, Expression fieldAccessExpression, Expression expressionTreeRoot, bool optimizeRelatedKeyAccess)
-    {
       ArgumentUtility.CheckNotNull ("resolvedClause", resolvedClause);
-      ArgumentUtility.CheckNotNull ("fieldAccessExpression", fieldAccessExpression);
-      ArgumentUtility.CheckNotNull ("expressionTreeRoot", expressionTreeRoot);
 
-      _resolvedClause = resolvedClause;
-      _accessedMember = null;
-      _joinMembers = new List<MemberInfo> ();
-      _expressionTreeRoot = expressionTreeRoot;
+      _databaseInfo = databaseInfo;
       _optimizeRelatedKeyAccess = optimizeRelatedKeyAccess;
-
-      VisitExpression (fieldAccessExpression);
-      return new Result (_accessedMember, _joinMembers.ToArray());
+      _resolvedClause = resolvedClause;
+      _joinMembers = new List<MemberInfo> ();
+      _accessedMember = null;
     }
 
     protected override Expression VisitExpression (Expression expression)
@@ -80,12 +71,11 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
       else
       {
         string message = string.Format ("Only MemberExpressions, QuerySourceReferenceExpressions, and ParameterExpressions can be resolved, found "
-            + "'{0}' in expression '{1}'.", expression, _expressionTreeRoot);
+            + "'{0}'.", expression);
         throw new FieldAccessResolveException (message);
       }
     }
 
-    // TODO 1217: Store QuerySourceReferenceExpression if such an expression is found
     protected override Expression VisitParameterExpression (ParameterExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);

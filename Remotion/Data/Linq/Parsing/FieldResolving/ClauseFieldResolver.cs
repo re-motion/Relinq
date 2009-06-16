@@ -38,16 +38,12 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
       _policy = policy;
     }
 
-    // TODO: Remove fullFieldExpression
-    public FieldDescriptor ResolveField (IResolveableClause clause, Expression partialFieldExpression, Expression fullFieldExpression, JoinedTableContext joinedTableContext)
+    public FieldDescriptor ResolveField (IResolveableClause clause, Expression fieldAccessExpression, JoinedTableContext joinedTableContext)
     {
       ArgumentUtility.CheckNotNull ("clause", clause);
-      ArgumentUtility.CheckNotNull ("partialFieldExpression", partialFieldExpression);
-      ArgumentUtility.CheckNotNull ("fullFieldExpression", fullFieldExpression);
+      ArgumentUtility.CheckNotNull ("fieldAccessExpression", fieldAccessExpression);
       
-      var visitor = new ClauseFieldResolverVisitor (DatabaseInfo);
-      ClauseFieldResolverVisitor.Result result = visitor.ParseFieldAccess (clause, partialFieldExpression, fullFieldExpression, _policy.OptimizeRelatedKeyAccess());
-
+      var result = ClauseFieldResolverVisitor.ParseFieldAccess(DatabaseInfo, clause, fieldAccessExpression, _policy.OptimizeRelatedKeyAccess());
       return CreateFieldDescriptor (clause.GetColumnSource (DatabaseInfo), clause.Identifier, result.AccessedMember, result.JoinMembers, joinedTableContext);
     }
 

@@ -13,22 +13,25 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-using System.Linq.Expressions;
-using Remotion.Data.Linq.DataObjectModel;
-using Remotion.Data.Linq.Parsing.FieldResolving;
+using System;
+using System.Reflection;
 
-namespace Remotion.Data.Linq.Clauses
+namespace Remotion.Data.Linq.Parsing.FieldResolving
 {
-  public interface IResolveableClause : IClause
+  /// <summary>
+  /// Holds information about the members involved in a field access. This is produced by <see cref="ClauseFieldResolverVisitor"/> and 
+  /// used by <see cref="ClauseFieldResolver"/>.
+  /// </summary>
+  public struct FieldAccessInfo
   {
-    ParameterExpression Identifier {get;  }
-    FieldDescriptor ResolveField (ClauseFieldResolver resolver, Expression fieldAccessExpression, JoinedTableContext joinedTableContext);
+    public FieldAccessInfo (MemberInfo accessedMember, MemberInfo[] joinMembers)
+        : this()
+    {
+      AccessedMember = accessedMember;
+      JoinMembers = joinMembers;
+    }
 
-    /// <summary>
-    /// Method for getting source of a from clause.
-    /// </summary>
-    /// <param name="databaseInfo"></param>
-    /// <returns><see cref="IColumnSource"/></returns>
-    IColumnSource GetColumnSource (IDatabaseInfo databaseInfo);
+    public MemberInfo AccessedMember { get; private set; }
+    public MemberInfo[] JoinMembers { get; private set; }
   }
 }

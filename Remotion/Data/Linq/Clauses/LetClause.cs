@@ -84,14 +84,13 @@ namespace Remotion.Data.Linq.Clauses
       get { return _identifier; }
     }
 
-    public FieldDescriptor ResolveField (ClauseFieldResolver resolver, Expression partialFieldExpression, Expression fullFieldExpression, JoinedTableContext joinedTableContext)
+    public FieldDescriptor ResolveField (ClauseFieldResolver resolver, Expression fieldAccessExpression, JoinedTableContext joinedTableContext)
     {
       ArgumentUtility.CheckNotNull ("resolver", resolver);
-      ArgumentUtility.CheckNotNull ("partialFieldExpression", partialFieldExpression);
-      ArgumentUtility.CheckNotNull ("fullFieldExpression", fullFieldExpression);
+      ArgumentUtility.CheckNotNull ("fieldAccessExpression", fieldAccessExpression);
       ArgumentUtility.CheckNotNull ("joinedTableContext", joinedTableContext);
 
-      return resolver.ResolveField (this, partialFieldExpression, fullFieldExpression, joinedTableContext);
+      return resolver.ResolveField (this, fieldAccessExpression, joinedTableContext);
     }
 
     public virtual LetColumnSource GetColumnSource (IDatabaseInfo databaseInfo)
