@@ -18,6 +18,7 @@ using NUnit.Framework;
 using System.Linq.Expressions;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.FieldResolving;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
@@ -48,16 +49,23 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
           _studentDetailDetailParameter, ExpressionHelper.CreateQuerySource_Detail_Detail());
     }
 
-    //[Test]
-    //public void QuerySourceReferenceExpression ()
-    //{
-    //  var referenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause ());
-    //  var result = new ClauseFieldResolverVisitor (StubDatabaseInfo.Instance).ParseFieldAccess (referenceExpression, referenceExpression, true);
-    //  Assert.That (result.AccessedMember, Is.Null);
-    //  Assert.That (result.JoinMembers, Is.Empty);
-    //  Assert.That (result.Parameter, Is.Null);
-    //  Assert.That (result.ClauseReference, Is.SameAs (referenceExpression.ReferencedClause));
-    //}
+    [Test]
+    public void QuerySourceReferenceExpression ()
+    {
+      var referenceExpression = new QuerySourceReferenceExpression (_studentClause);
+      var result = new ClauseFieldResolverVisitor (StubDatabaseInfo.Instance).ParseFieldAccess (_studentClause, referenceExpression, referenceExpression, true);
+      Assert.That (result.AccessedMember, Is.Null);
+      Assert.That (result.JoinMembers, Is.Empty);
+    }
+
+    [Test]
+    [ExpectedException (typeof (FieldAccessResolveException), ExpectedMessage = "This clause can only resolve field accesses for itself ('sd'), but " 
+        + "a reference to a clause called 'fromIdentifier1' was given.")]
+    public void QuerySourceReferenceExpression_InvalidClause ()
+    {
+      var referenceExpression = new QuerySourceReferenceExpression (_studentClause);
+      new ClauseFieldResolverVisitor (StubDatabaseInfo.Instance).ParseFieldAccess (_studentDetailClause, referenceExpression, referenceExpression, true);
+    }
 
     [Test]
     public void Parameter ()
@@ -141,8 +149,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
     }
 
     [Test]
-    [ExpectedException (typeof (FieldAccessResolveException), ExpectedMessage = "Only MemberExpressions and ParameterExpressions can be resolved, "
-                                                                                + "found 'null' in expression '1'.")]
+    [ExpectedException (typeof (FieldAccessResolveException), ExpectedMessage = "Only MemberExpressions, QuerySourceReferenceExpressions, and "
+        + "ParameterExpressions can be resolved, found 'null' in expression '1'.")]
     public void InvalidExpression ()
     {
       Expression expressionTree = Expression.Constant (null, typeof (Student));

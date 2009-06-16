@@ -101,7 +101,7 @@ namespace Remotion.Data.Linq.Parsing
           if (expression is SubQueryExpression)
             return VisitSubQueryExpression ((SubQueryExpression) expression);
           else if (expression is QuerySourceReferenceExpression)
-            return QuerySourceReferenceExpression ((QuerySourceReferenceExpression) expression);
+            return VisitQuerySourceReferenceExpression ((QuerySourceReferenceExpression) expression);
           else
             return VisitUnknownExpression (expression);
       }
@@ -346,7 +346,7 @@ namespace Remotion.Data.Linq.Parsing
       return expression;
     }
 
-    protected virtual Expression QuerySourceReferenceExpression (QuerySourceReferenceExpression expression)
+    protected virtual Expression VisitQuerySourceReferenceExpression (QuerySourceReferenceExpression expression)
     {
       return expression;
     }

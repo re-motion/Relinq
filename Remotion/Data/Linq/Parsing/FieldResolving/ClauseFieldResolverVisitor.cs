@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.FieldResolving
@@ -74,15 +75,13 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      switch (expression.NodeType)
+      if (expression is ParameterExpression || expression is MemberExpression || expression is QuerySourceReferenceExpression)
+        return base.VisitExpression (expression);
+      else
       {
-        case ExpressionType.Parameter:
-        case ExpressionType.MemberAccess:
-          return base.VisitExpression (expression);
-        default:
-          string message = string.Format ("Only MemberExpressions and ParameterExpressions can be resolved, found '{0}' in expression '{1}'.",
-              expression, _expressionTreeRoot);
-          throw new FieldAccessResolveException (message);
+        string message = string.Format ("Only MemberExpressions, QuerySourceReferenceExpressions, and ParameterExpressions can be resolved, found "
+            + "'{0}' in expression '{1}'.", expression, _expressionTreeRoot);
+        throw new FieldAccessResolveException (message);
       }
     }
 
@@ -106,6 +105,18 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
       }
 
       return base.VisitParameterExpression (expression);
+    }
+
+    protected override Expression VisitQuerySourceReferenceExpression (QuerySourceReferenceExpression expression)
+    {
+      if (expression.ReferencedClause != _resolvedClause)
+      {
+        string message = string.Format ("This clause can only resolve field accesses for itself ('{0}'), but a reference to a clause "
+                                        + "called '{1}' was given.", _resolvedClause.Identifier.Name, expression.ReferencedClause.Identifier.Name);
+        throw new FieldAccessResolveException (message);
+      }
+
+      return base.VisitQuerySourceReferenceExpression (expression);
     }
 
     protected override Expression VisitMemberExpression (MemberExpression expression)

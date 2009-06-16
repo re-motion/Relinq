@@ -154,7 +154,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitorTests
     public void VisitExpression_QuerySourceReference ()
     {
       var clause = ExpressionHelper.CreateMainFromClause ();
-      CheckDelegation (_mockRepository, "QuerySourceReferenceExpression", new QuerySourceReferenceExpression (clause));
+      CheckDelegation (_mockRepository, "VisitQuerySourceReferenceExpression", new QuerySourceReferenceExpression (clause));
     }
     
     private void CheckDelegation (MockRepository repository, string methodName, params ExpressionType[] expressionTypes)
