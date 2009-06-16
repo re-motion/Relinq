@@ -82,13 +82,14 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void CreateClause_AddMapping ()
+    public void CreateClause_AddsMapping ()
     {
       var node = new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3, 4, 5 });
       var querySourceClauseMapping = new QuerySourceClauseMapping();
-      node.CreateClause (null, querySourceClauseMapping);
+      var clause = node.CreateClause (null, querySourceClauseMapping);
 
       Assert.That (querySourceClauseMapping.Count, Is.EqualTo (1));
+      Assert.That (querySourceClauseMapping.GetClause (node), Is.SameAs (clause));
     }
 
     [Test]

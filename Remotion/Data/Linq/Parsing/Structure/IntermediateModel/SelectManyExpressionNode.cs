@@ -85,7 +85,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
         var resolvedResultSelector = Source.Resolve (ResultSelector.Parameters[0], ResultSelector.Body, querySourceClauseMapping);
 
         var referenceExpression = new QuerySourceReferenceExpression (this);
-        //var referenceExpression = new QuerySourceReferenceExpression (querySourceClauseMapping.GetFromClause(this));
+        //var referenceExpression = new QuerySourceReferenceExpression (querySourceClauseMapping.GetClause(this));
         _cachedResultSelector = ReplacingVisitor.Replace (ResultSelector.Parameters[1], referenceExpression, resolvedResultSelector);
       }
 

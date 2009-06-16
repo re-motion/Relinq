@@ -71,7 +71,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
       // query sources resolve into references that point back to the expression
       var reference = new QuerySourceReferenceExpression (this);
-      //var reference = new QuerySourceReferenceExpression (querySourceClauseMapping.GetFromClause (this));
+      //var reference = new QuerySourceReferenceExpression (querySourceClauseMapping.GetClause (this));
       return ReplacingVisitor.Replace (inputParameter, reference, expressionToBeResolved);
     }
 

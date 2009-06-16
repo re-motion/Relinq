@@ -33,7 +33,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
   {
     private Expression<Func<int, bool>> _collectionSelector;
     private Expression<Func<int, int, bool>> _resultSelector;
-    private QuerySourceClauseMapping _querySourceClauseMapping;
 
     public override void SetUp ()
     {
@@ -41,7 +40,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       _collectionSelector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
       _resultSelector = ExpressionHelper.CreateLambdaExpression<int, int, bool> ((i, j) => i > j);
-      _querySourceClauseMapping = new QuerySourceClauseMapping ();
     }
 
     [Test]
@@ -151,7 +149,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       IClause previousClause = ExpressionHelper.CreateClause();
       var node = new SelectManyExpressionNode (CreateParseInfo (SourceStub, "j"), _collectionSelector, _resultSelector);
 
-      var clause = (AdditionalFromClause) node.CreateClause (previousClause, _querySourceClauseMapping);
+      var clause = (AdditionalFromClause) node.CreateClause (previousClause, QuerySourceClauseMapping);
 
       Assert.That (clause.Identifier.Name, Is.EqualTo ("j"));
       Assert.That (clause.Identifier.Type, Is.SameAs (typeof (int)));
@@ -167,7 +165,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var collectionSelector = ExpressionHelper.CreateLambdaExpression<Student, IEnumerable<Student>> (s => s.Friends);
       var node = new SelectManyExpressionNode (CreateParseInfo (), collectionSelector, _resultSelector);
 
-      var clause = (MemberFromClause) node.CreateClause (previousClause, _querySourceClauseMapping);
+      var clause = (MemberFromClause) node.CreateClause (previousClause, QuerySourceClauseMapping);
 
       Assert.That (clause.Identifier.Name, Is.EqualTo ("j"));
       Assert.That (clause.Identifier.Type, Is.SameAs (typeof (int)));
@@ -186,7 +184,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var collectionSelector = Expression.Lambda (subQueryExpression, Expression.Parameter (typeof (int), "i"));
       var node = new SelectManyExpressionNode (CreateParseInfo (), collectionSelector, _resultSelector);
 
-      var clause = (SubQueryFromClause) node.CreateClause (previousClause, _querySourceClauseMapping);
+      var clause = (SubQueryFromClause) node.CreateClause (previousClause, QuerySourceClauseMapping);
 
       Assert.That (clause.Identifier.Name, Is.EqualTo ("j"));
       Assert.That (clause.Identifier.Type, Is.SameAs (typeof (int)));
@@ -196,40 +194,14 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void CreateClause_AddMappingWithAdditionFromClause ()
+    public void CreateClause_AddsMapping ()
     {
       IClause previousClause = ExpressionHelper.CreateClause ();
       var node = new SelectManyExpressionNode (CreateParseInfo (SourceStub, "j"), _collectionSelector, _resultSelector);
-      var clause = (AdditionalFromClause) node.CreateClause (previousClause, _querySourceClauseMapping);
+      var clause = (AdditionalFromClause) node.CreateClause (previousClause, QuerySourceClauseMapping);
 
-      Assert.That (_querySourceClauseMapping.Count, Is.EqualTo (1));
-      Assert.That (_querySourceClauseMapping.GetFromClause (node), Is.SameAs(clause));
-    }
-
-    [Test]
-    public void CreateClause_AddMappingWithMemberFromClause ()
-    {
-      IClause previousClause = ExpressionHelper.CreateClause ();
-      var collectionSelector = ExpressionHelper.CreateLambdaExpression<Student, IEnumerable<Student>> (s => s.Friends);
-      var node = new SelectManyExpressionNode (CreateParseInfo (), collectionSelector, _resultSelector);
-      var clause = (MemberFromClause) node.CreateClause (previousClause, _querySourceClauseMapping);
-
-      Assert.That (_querySourceClauseMapping.Count, Is.EqualTo (1));
-      Assert.That (_querySourceClauseMapping.GetFromClause (node), Is.SameAs (clause));
-    }
-
-    [Test]
-    public void CreateClause_WithSubQueryFromClause ()
-    {
-      IClause previousClause = ExpressionHelper.CreateClause ();
-      var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel ());
-
-      var collectionSelector = Expression.Lambda (subQueryExpression, Expression.Parameter (typeof (int), "i"));
-      var node = new SelectManyExpressionNode (CreateParseInfo (), collectionSelector, _resultSelector);
-      var clause = (SubQueryFromClause) node.CreateClause (previousClause, _querySourceClauseMapping);
-
-      Assert.That (_querySourceClauseMapping.Count, Is.EqualTo (1));
-      Assert.That (_querySourceClauseMapping.GetFromClause (node), Is.SameAs (clause));
+      Assert.That (QuerySourceClauseMapping.Count, Is.EqualTo (1));
+      Assert.That (QuerySourceClauseMapping.GetClause (node), Is.SameAs(clause));
     }
 
     [Test]

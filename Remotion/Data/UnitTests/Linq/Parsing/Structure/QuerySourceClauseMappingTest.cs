@@ -43,7 +43,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     {
       _mapping.AddMapping (_node, _clause);
 
-      Assert.That (_mapping.GetFromClause (_node), Is.Not.Null);
+      Assert.That (_mapping.GetClause (_node), Is.Not.Null);
     }
 
     [Test]
@@ -63,18 +63,18 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
-    public void GetFromClause ()
+    public void GetClause ()
     {
       _mapping.AddMapping (_node, _clause);
 
-      Assert.That (_mapping.GetFromClause (_node), Is.SameAs (_clause));
+      Assert.That (_mapping.GetClause (_node), Is.SameAs (_clause));
     }
 
     [Test]
     [ExpectedException (typeof (KeyNotFoundException), ExpectedMessage = "Node has no associated clause.")]
-    public void GetFromClause_ThrowsException ()
+    public void GetClause_ThrowsException ()
     {
-      _mapping.GetFromClause (_node);
+      _mapping.GetClause (_node);
     }
     
   }

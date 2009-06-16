@@ -55,7 +55,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       }
     }
 
-    public FromClauseBase GetFromClause (IQuerySourceExpressionNode node)
+    public FromClauseBase GetClause (IQuerySourceExpressionNode node)
     {
       ArgumentUtility.CheckNotNull ("node", node);
 
