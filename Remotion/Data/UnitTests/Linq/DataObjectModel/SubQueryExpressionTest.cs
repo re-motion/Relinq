@@ -17,7 +17,7 @@ using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Data.Linq;
-using Remotion.Data.Linq.Expressions;
+using Remotion.Data.Linq.Clauses.Expressions;
 
 namespace Remotion.Data.UnitTests.Linq.DataObjectModel
 {

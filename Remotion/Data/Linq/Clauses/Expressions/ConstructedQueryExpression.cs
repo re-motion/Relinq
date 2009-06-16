@@ -13,21 +13,13 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-using System;
-using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
-
-namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
+namespace Remotion.Data.Linq.Clauses.Expressions
 {
-  [TestFixture]
-  public class QuerySourceReferenceExpressionTest : ExpressionNodeTestBase
+  public class ConstructedQueryExpression : QueryModelExpressionBase
   {
-    [Test]
-    public void Initialization ()
+    public ConstructedQueryExpression (QueryModel queryModel)
+      : base (queryModel)
     {
-      var referenceExpression = new QuerySourceReferenceExpression (SourceClause);
-      Assert.That (referenceExpression.Type, Is.SameAs (typeof (int)));
     }
   }
 }

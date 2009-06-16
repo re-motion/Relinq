@@ -13,12 +13,12 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-namespace Remotion.Data.Linq.Expressions
+namespace Remotion.Data.Linq.Clauses.Expressions
 {
-  public class ConstructedQueryExpression : QueryModelExpressionBase
+  public class SubQueryExpression : QueryModelExpressionBase
   {
-    public ConstructedQueryExpression (QueryModel queryModel)
-      : base (queryModel)
+    public SubQueryExpression (QueryModel queryModel)
+        : base(queryModel)
     {
     }
   }

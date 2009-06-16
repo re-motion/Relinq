@@ -20,7 +20,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.DataObjectModel;
-using Remotion.Data.Linq.Expressions;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.FieldResolving;
 using Remotion.Data.Linq.StringBuilding;
 using Remotion.Utilities;

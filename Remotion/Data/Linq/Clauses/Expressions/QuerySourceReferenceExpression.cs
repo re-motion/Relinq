@@ -15,10 +15,9 @@
 // 
 using System;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Clauses;
 using Remotion.Utilities;
 
-namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
+namespace Remotion.Data.Linq.Clauses.Expressions
 {
   /// <summary>
   /// Represents an expression tree node that points to a query source represented by a <see cref="FromClauseBase"/>.
@@ -26,7 +25,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   public class QuerySourceReferenceExpression : Expression
   {
     public QuerySourceReferenceExpression (FromClauseBase fromClause)
-      : base ((ExpressionType) (-1), ArgumentUtility.CheckNotNull ("fromClause", fromClause).Identifier.Type)
+        : base ((ExpressionType) (-1), ArgumentUtility.CheckNotNull ("fromClause", fromClause).Identifier.Type)
     {
       ReferencedClause = fromClause;
     }

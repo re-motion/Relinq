@@ -13,13 +13,18 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-namespace Remotion.Data.Linq.Expressions
+using System.Linq.Expressions;
+
+namespace Remotion.Data.Linq.Clauses.Expressions
 {
-  public class SubQueryExpression : QueryModelExpressionBase
+  public class QueryModelExpressionBase : Expression
   {
-    public SubQueryExpression (QueryModel queryModel)
-        : base(queryModel)
+    public QueryModelExpressionBase (QueryModel queryModel)
+        : base ((ExpressionType) int.MaxValue, queryModel.ResultType)
     {
+      QueryModel = queryModel;
     }
+
+    public QueryModel QueryModel { get; private set; }
   }
 }

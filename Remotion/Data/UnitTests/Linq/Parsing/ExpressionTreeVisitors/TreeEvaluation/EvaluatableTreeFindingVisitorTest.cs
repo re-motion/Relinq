@@ -17,7 +17,7 @@ using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.Expressions;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation;
 using System.Linq;
 

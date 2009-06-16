@@ -20,7 +20,7 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
-using Remotion.Data.Linq.Expressions;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;

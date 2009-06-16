@@ -100,9 +100,9 @@
     <Compile Include="DataObjectModel\SingleJoin.cs" />
     <Compile Include="DataObjectModel\SourceMarkerEvaluation.cs" />
     <Compile Include="DataObjectModel\SubQuery.cs" />
-    <Compile Include="Expressions\ConstructedQueryExpression.cs" />
-    <Compile Include="Expressions\QueryModelExpressionBase.cs" />
-    <Compile Include="Expressions\SubQueryExpression.cs" />
+    <Compile Include="Clauses\Expressions\ConstructedQueryExpression.cs" />
+    <Compile Include="Clauses\Expressions\QueryModelExpressionBase.cs" />
+    <Compile Include="Clauses\Expressions\SubQueryExpression.cs" />
     <Compile Include="ExtensionMethods\ExtensionMethods.cs" />
     <Compile Include="EagerFetching\FluentFetchRequest.cs" />
     <Compile Include="Parsing\Details\DetailParserRegistries.cs" />
@@ -158,7 +158,7 @@
     <Compile Include="Parsing\Structure\IntermediateModel\MethodCallExpressionNodeFactory.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ConstantExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\MethodCallExpressionNodeBase.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\QuerySourceReferenceExpression.cs" />
+    <Compile Include="Clauses\Expressions\QuerySourceReferenceExpression.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\IQuerySourceExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\WhereExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ThenByDescendingExpressionNode.cs" />

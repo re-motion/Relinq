@@ -16,7 +16,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Expressions;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing;
 using Remotion.Data.Linq.Parsing.FieldResolving;
 using System.Linq;

@@ -18,15 +18,12 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using System.Linq.Expressions;
 using Remotion.Data.Linq;
-using Remotion.Data.Linq.Expressions;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
-using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Rhino.Mocks;
 using System.Reflection;
 using Rhino.Mocks.Interfaces;
 using Remotion.Development.UnitTesting;
-using Remotion.Utilities;
-using System.Linq;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitorTests
 {
