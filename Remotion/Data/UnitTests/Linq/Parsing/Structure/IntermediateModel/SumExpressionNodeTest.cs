@@ -180,9 +180,21 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void GetResolvedSelector ()
     {
-      var predicate = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new SumExpressionNode (CreateParseInfo (), predicate);
+      var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
+      var node = new SumExpressionNode (CreateParseInfo (), selector);
 
+      var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
+
+      var result = node.GetResolvedOptionalSelector (QuerySourceClauseMapping);
+
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
+    }
+
+    [Test]
+    public void GetResolvedSelector_RemovesTransparentIdentifiers ()
+    {
+      var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > new AnonymousType { a = 2, b = 5 }.b);
+      var node = new SumExpressionNode (CreateParseInfo (), selector);
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
 
       var result = node.GetResolvedOptionalSelector (QuerySourceClauseMapping);

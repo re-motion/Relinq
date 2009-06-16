@@ -71,7 +71,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
 
       if (_cachedCollectionSelector == null)
+      {
         _cachedCollectionSelector = Source.Resolve (CollectionSelector.Parameters[0], CollectionSelector.Body, querySourceClauseMapping);
+        _cachedCollectionSelector = TransparentIdentifierRemovingVisitor.ReplaceTransparentIdentifiers (_cachedCollectionSelector);
+      }
 
       return _cachedCollectionSelector;
     }
@@ -93,6 +96,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
         var referenceExpression = new QuerySourceReferenceExpression (clause);
 
         _cachedResultSelector = ReplacingVisitor.Replace (ResultSelector.Parameters[1], referenceExpression, resolvedResultSelector);
+        _cachedResultSelector = TransparentIdentifierRemovingVisitor.ReplaceTransparentIdentifiers (_cachedResultSelector);
       }
 
       return _cachedResultSelector;

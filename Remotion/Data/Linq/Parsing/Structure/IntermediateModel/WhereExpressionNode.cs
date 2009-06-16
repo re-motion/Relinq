@@ -18,6 +18,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
@@ -54,7 +55,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
 
       if (_cachedPredicate == null)
+      {
         _cachedPredicate = Source.Resolve (Predicate.Parameters[0], Predicate.Body, querySourceClauseMapping);
+        _cachedPredicate = TransparentIdentifierRemovingVisitor.ReplaceTransparentIdentifiers (_cachedPredicate);
+      }
 
       return _cachedPredicate;
     }

@@ -65,6 +65,18 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
+    public void GetResolvedSelector_RemovesTransparentIdentifiers ()
+    {
+      var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > new AnonymousType { a = 2, b = 5 }.b);
+      var node = new MaxExpressionNode (CreateParseInfo (), selector);
+      var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
+
+      var result = node.GetResolvedOptionalSelector (QuerySourceClauseMapping);
+
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
+    }
+
+    [Test]
     public void GetResolvedSelector_Null ()
     {
       var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();

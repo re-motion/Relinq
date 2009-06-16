@@ -57,7 +57,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
         return null;
 
       if (_cachedPredicate == null)
+      {
         _cachedPredicate = Source.Resolve (OptionalPredicate.Parameters[0], OptionalPredicate.Body, querySourceClauseMapping);
+        _cachedPredicate = TransparentIdentifierRemovingVisitor.ReplaceTransparentIdentifiers (_cachedPredicate);
+      }
 
       return _cachedPredicate;
     }
@@ -70,7 +73,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
         return null;
 
       if (_cachedSelector == null)
+      {
         _cachedSelector = Source.Resolve (OptionalSelector.Parameters[0], OptionalSelector.Body, querySourceClauseMapping);
+        _cachedSelector = TransparentIdentifierRemovingVisitor.ReplaceTransparentIdentifiers (_cachedSelector);
+      }
 
       return _cachedSelector;
     }

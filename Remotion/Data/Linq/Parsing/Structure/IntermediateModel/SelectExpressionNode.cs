@@ -55,7 +55,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
 
       if (_cachedSelector == null)
+      {
         _cachedSelector = Source.Resolve (Selector.Parameters[0], Selector.Body, querySourceClauseMapping);
+        _cachedSelector = TransparentIdentifierRemovingVisitor.ReplaceTransparentIdentifiers (_cachedSelector);
+      }
 
       return _cachedSelector;
     }

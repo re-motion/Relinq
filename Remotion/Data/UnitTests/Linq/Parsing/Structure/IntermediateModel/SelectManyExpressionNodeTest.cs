@@ -61,7 +61,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void Resolve_ReplacesParameter_WithProjection ()
     {
       var node = new SelectManyExpressionNode (
-          CreateParseInfo (), 
+          CreateParseInfo(),
           _collectionSelector,
           ExpressionHelper.CreateLambdaExpression<int, int, AnonymousType> ((a, b) => new AnonymousType (a, b)));
       var clause = (FromClauseBase) node.CreateClause (SourceClause, QuerySourceClauseMapping);
@@ -89,7 +89,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void GetResolvedResultSelector ()
     {
-      var node = new SelectManyExpressionNode (CreateParseInfo (), _collectionSelector, _resultSelector);
+      var node = new SelectManyExpressionNode (CreateParseInfo(), _collectionSelector, _resultSelector);
       var clause = (FromClauseBase) node.CreateClause (SourceClause, QuerySourceClauseMapping);
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, new QuerySourceReferenceExpression (clause));
 
@@ -99,20 +99,48 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Cannot resolve with a SelectManyExpressionNode for which no clause was "
-        + "created. Be sure to call CreateClause before calling GetResolvedResultSelector, and pass in the same QuerySourceClauseMapping to both methods.")]
+    public void GetResolvedResultSelector_RemovesTransparentIdentifiers ()
+    {
+      var resultSelector = ExpressionHelper.CreateLambdaExpression<int, int, bool> ((i, j) => i > new AnonymousType {a=2,b=j}.b);
+      var node = new SelectManyExpressionNode (CreateParseInfo (), _collectionSelector, resultSelector);
+      var clause = (FromClauseBase) node.CreateClause (SourceClause, QuerySourceClauseMapping);
+      var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, new QuerySourceReferenceExpression (clause));
+
+      var result = node.GetResolvedResultSelector (QuerySourceClauseMapping);
+
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException),
+        ExpectedMessage = "Cannot resolve with a SelectManyExpressionNode for which no clause was "
+                          +
+                          "created. Be sure to call CreateClause before calling GetResolvedResultSelector, and pass in the same QuerySourceClauseMapping to both methods."
+        )]
     public void GetResolvedResultSelector_WithoutClause ()
     {
-      var node = new SelectManyExpressionNode (CreateParseInfo (), _collectionSelector, _resultSelector);
+      var node = new SelectManyExpressionNode (CreateParseInfo(), _collectionSelector, _resultSelector);
       node.GetResolvedResultSelector (QuerySourceClauseMapping);
     }
 
     [Test]
     public void GetResolvedCollectionSelector ()
     {
-      var node = new SelectManyExpressionNode (CreateParseInfo (), _collectionSelector, _resultSelector);
+      var node = new SelectManyExpressionNode (CreateParseInfo(), _collectionSelector, _resultSelector);
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
 
+      var result = node.GetResolvedCollectionSelector (QuerySourceClauseMapping);
+
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
+    }
+
+    [Test]
+    public void GetResolvedCollectionSelector_RemovesTransparentIdentifiers ()
+    {
+      var collectionSelector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > new AnonymousType {a=2,b=5 }.b);     
+      var node = new SelectManyExpressionNode (CreateParseInfo(), collectionSelector, _resultSelector);
+      var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
+      
       var result = node.GetResolvedCollectionSelector (QuerySourceClauseMapping);
 
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
@@ -124,9 +152,11 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var sourceMock = new MockRepository().StrictMock<IExpressionNode>();
       var node = new SelectManyExpressionNode (CreateParseInfo (sourceMock), _collectionSelector, _resultSelector);
       node.CreateClause (SourceClause, QuerySourceClauseMapping); // just to prepare the mapping for the GetResolvedResultSelector
-      var fakeResult = ExpressionHelper.CreateLambdaExpression ();
+      var fakeResult = ExpressionHelper.CreateLambdaExpression();
 
-      sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything, Arg<QuerySourceClauseMapping>.Is.Anything)).Repeat.Once ().Return (
+      sourceMock.Expect (
+          mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything, Arg<QuerySourceClauseMapping>.Is.Anything)).Repeat.
+          Once().Return (
           fakeResult);
 
       sourceMock.Replay();
@@ -136,7 +166,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       sourceMock.VerifyAllExpectations();
     }
-
+    
     [Test]
     public void GetResolvedCollectionSelector_Cached ()
     {
@@ -144,7 +174,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var node = new SelectManyExpressionNode (CreateParseInfo (sourceMock), _collectionSelector, _resultSelector);
       var expectedResult = ExpressionHelper.CreateLambdaExpression();
 
-      sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything, Arg<QuerySourceClauseMapping>.Is.Anything)).Repeat.Once ().Return (
+      sourceMock.Expect (
+          mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything, Arg<QuerySourceClauseMapping>.Is.Anything)).Repeat.
+          Once().Return (
           expectedResult);
 
       sourceMock.Replay();
@@ -175,7 +207,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       IClause previousClause = ExpressionHelper.CreateClause();
       var collectionSelector = ExpressionHelper.CreateLambdaExpression<Student, IEnumerable<Student>> (s => s.Friends);
-      var node = new SelectManyExpressionNode (CreateParseInfo (), collectionSelector, _resultSelector);
+      var node = new SelectManyExpressionNode (CreateParseInfo(), collectionSelector, _resultSelector);
 
       var clause = (MemberFromClause) node.CreateClause (previousClause, QuerySourceClauseMapping);
 
@@ -194,7 +226,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel());
 
       var collectionSelector = Expression.Lambda (subQueryExpression, Expression.Parameter (typeof (int), "i"));
-      var node = new SelectManyExpressionNode (CreateParseInfo (), collectionSelector, _resultSelector);
+      var node = new SelectManyExpressionNode (CreateParseInfo(), collectionSelector, _resultSelector);
 
       var clause = (SubQueryFromClause) node.CreateClause (previousClause, QuerySourceClauseMapping);
 
@@ -208,17 +240,18 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void CreateClause_AddsMapping ()
     {
-      IClause previousClause = ExpressionHelper.CreateClause ();
+      IClause previousClause = ExpressionHelper.CreateClause();
       var node = new SelectManyExpressionNode (CreateParseInfo (SourceNode, "j"), _collectionSelector, _resultSelector);
       var clause = (AdditionalFromClause) node.CreateClause (previousClause, QuerySourceClauseMapping);
 
-      Assert.That (QuerySourceClauseMapping.GetClause (node), Is.SameAs(clause));
+      Assert.That (QuerySourceClauseMapping.GetClause (node), Is.SameAs (clause));
     }
 
     [Test]
     public void CreateParameterForOutput ()
     {
-      var node = new SelectManyExpressionNode (CreateParseInfo (),
+      var node = new SelectManyExpressionNode (
+          CreateParseInfo(),
           ExpressionHelper.CreateLambdaExpression<Student, IEnumerable<int>> (y => y.Scores),
           ExpressionHelper.CreateLambdaExpression<Student, int, AnonymousType> ((s, i) => new AnonymousType()));
 
