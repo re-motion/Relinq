@@ -31,12 +31,14 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public virtual void SetUp ()
     {
       SourceStub = ExpressionNodeObjectMother.CreateConstant();
+      //SourceStub = ExpressionHelper.CreateMainFromClause();
       SourceReference = new QuerySourceReferenceExpression (SourceStub);
       QuerySourceClauseMapping = new QuerySourceClauseMapping();
 
     }
 
     public IQuerySourceExpressionNode SourceStub { get; private set; }
+    //public FromClauseBase SourceStub { get; set; }
     public QuerySourceReferenceExpression SourceReference { get; private set; }
     public QuerySourceClauseMapping QuerySourceClauseMapping { get; private set; }
 

@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
@@ -31,9 +32,22 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var p2 = Expression.Parameter (typeof (Student_Detail), "sd");
       var resultSelector = Expression.Lambda (Expression.Constant (null), p1, p2);
       var collectionSelector = Expression.Lambda (Expression.Constant (null), p1);
-      
-      var parseInfo = new MethodCallExpressionParseInfo ("trans", source, ExpressionHelper.CreateMethodCallExpression());
+
+      var parseInfo = new MethodCallExpressionParseInfo ("trans", source, ExpressionHelper.CreateMethodCallExpression ());
       return new SelectManyExpressionNode (parseInfo, collectionSelector, resultSelector);
     }
+
+    //public static SelectManyExpressionNode CreateSelectMany (FromClauseBase source)
+    //{
+    //  var p1 = Expression.Parameter (typeof (Student), "s");
+    //  var p2 = Expression.Parameter (typeof (Student_Detail), "sd");
+    //  var resultSelector = Expression.Lambda (Expression.Constant (null), p1, p2);
+    //  var collectionSelector = Expression.Lambda (Expression.Constant (null), p1);
+
+    //  var parseInfo = new MethodCallExpressionParseInfo ("trans", source, ExpressionHelper.CreateMethodCallExpression ());
+    //  return new SelectManyExpressionNode (parseInfo, collectionSelector, resultSelector);
+    //}
+
+
   }
 }

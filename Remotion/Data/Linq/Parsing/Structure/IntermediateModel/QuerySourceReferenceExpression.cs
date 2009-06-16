@@ -15,6 +15,7 @@
 // 
 using System;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
@@ -25,11 +26,19 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   public class QuerySourceReferenceExpression : Expression
   {
     public QuerySourceReferenceExpression (IQuerySourceExpressionNode node)
-        : base ((ExpressionType) (-1), ArgumentUtility.CheckNotNull ("node", node).QuerySourceElementType)
+      : base ((ExpressionType) (-1), ArgumentUtility.CheckNotNull ("node", node).QuerySourceElementType)
     {
       ReferencedQuerySource = node;
     }
 
     public IQuerySourceExpressionNode ReferencedQuerySource { get; private set; }
+
+    //public QuerySourceReferenceExpression (FromClauseBase fromClause)
+    //  : base ((ExpressionType) (-1), ArgumentUtility.CheckNotNull("fromClause",fromClause).Identifier.Type)
+    //{
+    //  ReferencedQuerySource = fromClause;
+    //}
+
+    //public FromClauseBase ReferencedQuerySource { get; private set; }
   }
 }

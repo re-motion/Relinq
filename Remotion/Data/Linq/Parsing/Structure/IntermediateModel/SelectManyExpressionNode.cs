@@ -83,7 +83,9 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
         // we resolve the selector by first asking the previous node to resolve i, then we substitute j by a QuerySourceReferenceExpression pointing 
         // back to us
         var resolvedResultSelector = Source.Resolve (ResultSelector.Parameters[0], ResultSelector.Body, querySourceClauseMapping);
+
         var referenceExpression = new QuerySourceReferenceExpression (this);
+        //var referenceExpression = new QuerySourceReferenceExpression (querySourceClauseMapping.GetFromClause(this));
         _cachedResultSelector = ReplacingVisitor.Replace (ResultSelector.Parameters[1], referenceExpression, resolvedResultSelector);
       }
 
