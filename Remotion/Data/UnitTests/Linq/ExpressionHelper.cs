@@ -242,7 +242,7 @@ namespace Remotion.Data.UnitTests.Linq
 
     public static FieldDescriptor CreateFieldDescriptor (FromClauseBase fromClause, MemberInfo member, MemberInfo originalMember)
     {
-      IColumnSource table = fromClause.GetFromSource (StubDatabaseInfo.Instance);
+      IColumnSource table = fromClause.GetColumnSource (StubDatabaseInfo.Instance);
       Column? column = DatabaseInfoUtility.GetColumn (StubDatabaseInfo.Instance, table, member);
       FieldSourcePath sourcePath = new FieldSourcePath (table, new SingleJoin[0]);
       FieldDescriptor fieldDescriptor = new FieldDescriptor (originalMember, sourcePath, column);

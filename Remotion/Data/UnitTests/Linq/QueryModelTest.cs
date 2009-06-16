@@ -270,7 +270,7 @@ namespace Remotion.Data.UnitTests.Linq
       var resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, policy);
       var descriptor = queryModel.ResolveField (resolver, fieldAccessExpression, context);
 
-      IColumnSource expectedTable = queryModel.MainFromClause.GetFromSource (StubDatabaseInfo.Instance);
+      IColumnSource expectedTable = queryModel.MainFromClause.GetColumnSource (StubDatabaseInfo.Instance);
       var expectedPath = new FieldSourcePath (expectedTable, new SingleJoin[0]);
 
       Assert.AreEqual (new Column (expectedTable, "*"), descriptor.Column);

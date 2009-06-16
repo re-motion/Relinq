@@ -23,7 +23,7 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
 {
   public class OrderingFieldAccessPolicy : IResolveFieldAccessPolicy
   {
-    public Tuple<MemberInfo, IEnumerable<MemberInfo>> AdjustMemberInfosForAccessedIdentifier (ParameterExpression accessedIdentifier)
+    public Tuple<MemberInfo, IEnumerable<MemberInfo>> AdjustMemberInfosForDirectAccessOfQuerySource (ParameterExpression accessedIdentifier)
     {
       return new Tuple<MemberInfo, IEnumerable<MemberInfo>> (null, new MemberInfo[0]);
     }

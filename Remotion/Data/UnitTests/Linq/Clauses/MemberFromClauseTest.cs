@@ -59,7 +59,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void GetFromSource ()
     {
       MemberFromClause fromClause = ExpressionHelper.CreateMemberFromClause ();
-      var columnSource = fromClause.GetFromSource (StubDatabaseInfo.Instance);
+      var columnSource = fromClause.GetColumnSource (StubDatabaseInfo.Instance);
 
       Assert.That (columnSource is Table);
       var tableSource = (Table) columnSource;

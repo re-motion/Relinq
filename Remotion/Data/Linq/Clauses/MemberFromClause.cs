@@ -50,7 +50,7 @@ namespace Remotion.Data.Linq.Clauses
       visitor.VisitMemberFromClause (this);
     }
 
-    public override IColumnSource GetFromSource (IDatabaseInfo databaseInfo)
+    public override IColumnSource GetColumnSource (IDatabaseInfo databaseInfo)
     {
       ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
       var relatedTable = DatabaseInfoUtility.GetRelatedTable (databaseInfo, MemberExpression.Member);

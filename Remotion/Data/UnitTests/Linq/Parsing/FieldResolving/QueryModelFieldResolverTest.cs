@@ -47,7 +47,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
       Expression fieldAccessExpression = Expression.Parameter (typeof (String), "s1");
       FieldDescriptor descriptor = new QueryModelFieldResolver(queryModel).ResolveField (_resolver, fieldAccessExpression, _context);
 
-      IColumnSource expectedTable = queryModel.MainFromClause.GetFromSource (StubDatabaseInfo.Instance);
+      IColumnSource expectedTable = queryModel.MainFromClause.GetColumnSource (StubDatabaseInfo.Instance);
       FieldSourcePath expectedPath = new FieldSourcePath(expectedTable, new SingleJoin[0]);
 
       //Assert.AreSame (queryModel.MainFromClause, descriptor.FromClause);

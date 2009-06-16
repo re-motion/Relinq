@@ -73,7 +73,7 @@ namespace Remotion.Data.Linq.Clauses
       return null;
     }
 
-    public override IColumnSource GetFromSource (IDatabaseInfo databaseInfo)
+    public override IColumnSource GetColumnSource (IDatabaseInfo databaseInfo)
     {
       return _fromSource;
     }

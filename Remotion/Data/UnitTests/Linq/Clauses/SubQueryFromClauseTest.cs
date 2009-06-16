@@ -75,7 +75,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void GetFromSource ()
     {
-      IColumnSource columnSource = _subQueryFromClause.GetFromSource (StubDatabaseInfo.Instance);
+      IColumnSource columnSource = _subQueryFromClause.GetColumnSource (StubDatabaseInfo.Instance);
       var subQuery = (SubQuery) columnSource;
       Assert.AreEqual (_identifier.Name, subQuery.Alias);
       Assert.AreSame (_subQueryModel, subQuery.QueryModel);
@@ -84,8 +84,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void GetFromSource_FromSourceIsCached ()
     {
-      var subQuery1 = (SubQuery) _subQueryFromClause.GetFromSource (StubDatabaseInfo.Instance);
-      var subQuery2 = (SubQuery) _subQueryFromClause.GetFromSource (StubDatabaseInfo.Instance);
+      var subQuery1 = (SubQuery) _subQueryFromClause.GetColumnSource (StubDatabaseInfo.Instance);
+      var subQuery2 = (SubQuery) _subQueryFromClause.GetColumnSource (StubDatabaseInfo.Instance);
       Assert.AreSame (subQuery1, subQuery2);
     }
 

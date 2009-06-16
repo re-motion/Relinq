@@ -145,7 +145,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details
 
       FromClauseBase fromClause = parsedQuery.MainFromClause;
       PropertyInfo relationMember = typeof (Student_Detail).GetProperty ("Student");
-      IColumnSource sourceTable = fromClause.GetFromSource (StubDatabaseInfo.Instance); // Student_Detail
+      IColumnSource sourceTable = fromClause.GetColumnSource (StubDatabaseInfo.Instance); // Student_Detail
       Table relatedTable = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, relationMember); // Student
       Tuple<string, string> columns = DatabaseInfoUtility.GetJoinColumnNames (StubDatabaseInfo.Instance, relationMember);
       

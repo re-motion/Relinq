@@ -91,13 +91,20 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("fullFieldExpression", fullFieldExpression);
       ArgumentUtility.CheckNotNull ("joinedTableContext", joinedTableContext);
 
-      return resolver.ResolveField (GetColumnSource (resolver.DatabaseInfo), Identifier, partialFieldExpression, fullFieldExpression, joinedTableContext);
+      return resolver.ResolveField (this, partialFieldExpression, fullFieldExpression, joinedTableContext);
     }
 
     public virtual LetColumnSource GetColumnSource (IDatabaseInfo databaseInfo)
     { 
+      ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
+
       // TODO 637: IsTable should also be true if the let clause constructs an object, eg: let x = new {o.ID, o.OrderNumber}
       return new LetColumnSource (Identifier.Name, databaseInfo.IsTableType (Identifier.Type));
+    }
+
+    IColumnSource IResolveableClause.GetColumnSource (IDatabaseInfo databaseInfo)
+    {
+      return GetColumnSource (databaseInfo);
     }
 
     public virtual void Accept (IQueryVisitor visitor)

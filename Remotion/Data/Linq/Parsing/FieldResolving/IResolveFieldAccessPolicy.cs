@@ -38,7 +38,7 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
   /// </remarks>
   public interface IResolveFieldAccessPolicy
   {
-    Tuple<MemberInfo, IEnumerable<MemberInfo>> AdjustMemberInfosForAccessedIdentifier (ParameterExpression accessedIdentifier);
+    Tuple<MemberInfo, IEnumerable<MemberInfo>> AdjustMemberInfosForDirectAccessOfQuerySource (ParameterExpression accessedIdentifier);
     Tuple<MemberInfo, IEnumerable<MemberInfo>> AdjustMemberInfosForRelation (MemberInfo accessedMember, IEnumerable<MemberInfo> joinMembers);
     bool OptimizeRelatedKeyAccess ();
   }

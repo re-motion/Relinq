@@ -13,10 +13,11 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Parsing.FieldResolving;
 using System.Reflection;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.FieldResolving
@@ -28,24 +29,20 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
   {
     public struct Result
     {
-      public Result (MemberInfo accessedMember, MemberInfo[] joinMembers, ParameterExpression parameter)
+      public Result (MemberInfo accessedMember, MemberInfo[] joinMembers)
           : this ()
       {
-        ArgumentUtility.CheckNotNull ("parameter", parameter);
-
         AccessedMember = accessedMember;
         JoinMembers = joinMembers;
-        Parameter = parameter;
       }
 
       public MemberInfo AccessedMember { get; private set; }
       public MemberInfo[] JoinMembers { get; private set; }
-      public ParameterExpression Parameter { get; private set; }
     }
 
     private readonly IDatabaseInfo _databaseInfo;
 
-    private ParameterExpression _parameterExpression;
+    private IResolveableClause _resolvedClause;
     private MemberInfo _accessedMember;
     private List<MemberInfo> _joinMembers;
     private Expression _expressionTreeRoot;
@@ -57,19 +54,20 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
       _databaseInfo = databaseInfo;
     }
 
-    public Result ParseFieldAccess (Expression fieldAccessExpression, Expression expressionTreeRoot, bool optimizeRelatedKeyAccess)
+    public Result ParseFieldAccess (IResolveableClause resolvedClause, Expression fieldAccessExpression, Expression expressionTreeRoot, bool optimizeRelatedKeyAccess)
     {
+      ArgumentUtility.CheckNotNull ("resolvedClause", resolvedClause);
       ArgumentUtility.CheckNotNull ("fieldAccessExpression", fieldAccessExpression);
       ArgumentUtility.CheckNotNull ("expressionTreeRoot", expressionTreeRoot);
 
-      _parameterExpression = null;
+      _resolvedClause = resolvedClause;
       _accessedMember = null;
       _joinMembers = new List<MemberInfo> ();
       _expressionTreeRoot = expressionTreeRoot;
       _optimizeRelatedKeyAccess = optimizeRelatedKeyAccess;
 
       VisitExpression (fieldAccessExpression);
-      return new Result (_accessedMember, _joinMembers.ToArray(), _parameterExpression);
+      return new Result (_accessedMember, _joinMembers.ToArray());
     }
 
     protected override Expression VisitExpression (Expression expression)
@@ -88,10 +86,25 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
       }
     }
 
+    // TODO 1217: Store QuerySourceReferenceExpression if such an expression is found
     protected override Expression VisitParameterExpression (ParameterExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      _parameterExpression = expression;
+
+      if (expression.Name != _resolvedClause.Identifier.Name)
+      {
+        string message = string.Format ("This clause can only resolve field accesses for parameters called '{0}', but a parameter "
+                                        + "called '{1}' was given.", _resolvedClause.Identifier.Name, expression.Name);
+        throw new FieldAccessResolveException (message);
+      }
+
+      if (expression.Type != _resolvedClause.Identifier.Type)
+      {
+        string message = string.Format ("This clause can only resolve field accesses for parameters of type '{0}', but a parameter "
+                                        + "of type '{1}' was given.", _resolvedClause.Identifier.Type, expression.Type);
+        throw new FieldAccessResolveException (message);
+      }
+
       return base.VisitParameterExpression (expression);
     }
 
@@ -116,7 +129,6 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
     private bool IsOptimizableRelatedKeyAccess (MemberExpression expression)
     {
       var primaryKeyMember = _databaseInfo.GetPrimaryKeyMember (expression.Expression.Type);
-      // expression.Expression is MemberExpression &&  ?
       return expression.Member.Equals (primaryKeyMember);
     }
   }

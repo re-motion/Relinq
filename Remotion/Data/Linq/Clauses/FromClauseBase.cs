@@ -71,7 +71,7 @@ namespace Remotion.Data.Linq.Clauses
     /// </summary>
     /// <param name="databaseInfo"></param>
     /// <returns><see cref="IColumnSource"/></returns>
-    public virtual IColumnSource GetFromSource (IDatabaseInfo databaseInfo)
+    public virtual IColumnSource GetColumnSource (IDatabaseInfo databaseInfo)
     {
       ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
       return DatabaseInfoUtility.GetTableForFromClause (databaseInfo, this);
@@ -84,7 +84,7 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("fullFieldExpression", fullFieldExpression);
       ArgumentUtility.CheckNotNull ("joinedTableContext", joinedTableContext);
 
-      return resolver.ResolveField (GetFromSource(resolver.DatabaseInfo), Identifier, partialFieldExpression, fullFieldExpression, joinedTableContext);
+      return resolver.ResolveField (this, partialFieldExpression, fullFieldExpression, joinedTableContext);
     }
 
     public abstract void Accept (IQueryVisitor visitor);

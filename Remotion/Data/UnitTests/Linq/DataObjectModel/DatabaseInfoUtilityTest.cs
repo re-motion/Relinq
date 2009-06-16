@@ -169,7 +169,7 @@ namespace Remotion.Data.UnitTests.Linq.DataObjectModel
     public void GetColumnForFromClause ()
     {
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
-      IColumnSource table = fromClause.GetFromSource (_databaseInfo);
+      IColumnSource table = fromClause.GetColumnSource (_databaseInfo);
       Column column = DatabaseInfoUtility.GetColumn (_databaseInfo, table, typeof (Student).GetProperty ("First")).Value;
       Assert.AreEqual (new Column (table, "FirstColumn"), column);
     }
@@ -194,7 +194,7 @@ namespace Remotion.Data.UnitTests.Linq.DataObjectModel
     public void GetColumnForFromClause_InvalidMember ()
     {
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
-      IColumnSource table = fromClause.GetFromSource (_databaseInfo);
+      IColumnSource table = fromClause.GetColumnSource (_databaseInfo);
       Assert.IsNull (DatabaseInfoUtility.GetColumn (_databaseInfo, table, typeof (Student).GetProperty ("NonDBProperty")));
     }
 

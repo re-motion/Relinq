@@ -66,6 +66,7 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
         return null;
     }
 
+    // TODO 1218: Store clause of QuerySourceReferenceExpression if such an expression is found
     protected override Expression VisitParameterExpression (ParameterExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);

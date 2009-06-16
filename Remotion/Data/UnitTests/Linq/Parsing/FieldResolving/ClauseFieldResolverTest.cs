@@ -23,7 +23,6 @@ using Remotion.Collections;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing.FieldResolving;
-
 using Mocks_Is = Rhino.Mocks.Constraints.Is;
 using Mocks_List = Rhino.Mocks.Constraints.List;
 using NUnit.Framework.SyntaxHelpers;
@@ -47,89 +46,63 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
     public void Resolve_ParameterAccess_Succeeds ()
     {
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(identifier, ExpressionHelper.CreateQuerySource());
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (identifier, ExpressionHelper.CreateQuerySource());
 
-      IColumnSource table = fromClause.GetFromSource (StubDatabaseInfo.Instance);
+      IColumnSource table = fromClause.GetColumnSource (StubDatabaseInfo.Instance);
 
       FieldDescriptor fieldDescriptor =
-          new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (table, identifier, identifier, identifier, _context);
-      
+          new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (fromClause, identifier, identifier, _context);
+
       var column = new Column (table, "*");
-      var expected = new FieldDescriptor (null,new FieldSourcePath(table, new SingleJoin[0]), column);
+      var expected = new FieldDescriptor (null, new FieldSourcePath (table, new SingleJoin[0]), column);
 
       Assert.AreEqual (expected, fieldDescriptor);
-    }
-
-    [Test]
-    [ExpectedException (typeof (FieldAccessResolveException),
-        ExpectedMessage = "This clause can only resolve field accesses for parameters "
-            + "called 'fromIdentifier1', but a parameter called 'fromIdentifier5' was given.")]
-    public void Resolve_ParameterAccess_InvalidParameterName ()
-    {
-      ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(identifier, ExpressionHelper.CreateQuerySource());
-
-      IColumnSource table = fromClause.GetFromSource (StubDatabaseInfo.Instance);
-
-      ParameterExpression identifier2 = Expression.Parameter (typeof (Student), "fromIdentifier5");
-      new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (table, identifier, identifier2, identifier2, _context);
-    }
-
-    [Test]
-    [ExpectedException (typeof (FieldAccessResolveException),
-        ExpectedMessage = "This clause can only resolve field accesses for parameters of "
-            + "type 'Remotion.Data.UnitTests.Linq.Student', but a parameter of type 'System.String' was given.")]
-    public void Resolve_ParameterAccess_InvalidParameterType ()
-    {
-      ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(identifier, ExpressionHelper.CreateQuerySource());
-      
-      IColumnSource table = fromClause.GetFromSource (StubDatabaseInfo.Instance);
-
-      ParameterExpression identifier2 = Expression.Parameter (typeof (string), "fromIdentifier1");
-      new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (table, identifier, identifier2, identifier2, _context);
     }
 
     [Test]
     public void Resolve_SimpleMemberAccess_Succeeds ()
     {
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(identifier, ExpressionHelper.CreateQuerySource());
-      IColumnSource table = fromClause.GetFromSource (StubDatabaseInfo.Instance);
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (identifier, ExpressionHelper.CreateQuerySource());
 
-      Expression fieldExpression = Expression.MakeMemberAccess (Expression.Parameter (typeof (Student), "fromIdentifier1"),
+      Expression fieldExpression = Expression.MakeMemberAccess (
+          Expression.Parameter (typeof (Student), "fromIdentifier1"),
           typeof (Student).GetProperty ("First"));
       FieldDescriptor fieldDescriptor =
-          new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (table,identifier, fieldExpression, fieldExpression, _context);
+          new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (fromClause, fieldExpression, fieldExpression, _context);
       Assert.AreEqual (new Column (new Table ("studentTable", "fromIdentifier1"), "FirstColumn"), fieldDescriptor.Column);
     }
 
     [Test]
     [ExpectedException (typeof (FieldAccessResolveException), ExpectedMessage = "This clause can only resolve field accesses for parameters "
-        + "called 'fzlbf', but a parameter called 'fromIdentifier1' was given.")]
+                                                                                +
+                                                                                "called 'fzlbf', but a parameter called 'fromIdentifier1' was given.")
+    ]
     public void Resolve_SimpleMemberAccess_InvalidName ()
     {
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "fzlbf");
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(identifier, ExpressionHelper.CreateQuerySource());
-      IColumnSource table = fromClause.GetFromSource (StubDatabaseInfo.Instance);
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (identifier, ExpressionHelper.CreateQuerySource());
 
-      Expression fieldExpression = Expression.MakeMemberAccess (Expression.Parameter (typeof (Student), "fromIdentifier1"),
+      Expression fieldExpression = Expression.MakeMemberAccess (
+          Expression.Parameter (typeof (Student), "fromIdentifier1"),
           typeof (Student).GetProperty ("First"));
-      new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (table,identifier, fieldExpression, fieldExpression, _context);
+      new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (fromClause, fieldExpression, fieldExpression, _context);
     }
 
     [Test]
     [ExpectedException (typeof (FieldAccessResolveException), ExpectedMessage = "This clause can only resolve field accesses for parameters of "
-        + "type 'Remotion.Data.UnitTests.Linq.Student', but a parameter of type 'Remotion.Data.UnitTests.Linq.Student_Detail' was given.")]
+                                                                                +
+                                                                                "type 'Remotion.Data.UnitTests.Linq.Student', but a parameter of type 'Remotion.Data.UnitTests.Linq.Student_Detail' was given."
+        )]
     public void Resolve_SimpleMemberAccess_InvalidType ()
     {
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(identifier, ExpressionHelper.CreateQuerySource());
-      IColumnSource table = fromClause.GetFromSource (StubDatabaseInfo.Instance);
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (identifier, ExpressionHelper.CreateQuerySource());
 
-      Expression fieldExpression = Expression.MakeMemberAccess (Expression.Parameter (typeof (Student_Detail), "fromIdentifier1"),
+      Expression fieldExpression = Expression.MakeMemberAccess (
+          Expression.Parameter (typeof (Student_Detail), "fromIdentifier1"),
           typeof (Student_Detail).GetProperty ("Student"));
-      new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (table,identifier, fieldExpression, fieldExpression, _context);
+      new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (fromClause, fieldExpression, fieldExpression, _context);
     }
 
     [Test]
@@ -137,25 +110,26 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
     {
       // sd.Student.First
       ParameterExpression identifier = Expression.Parameter (typeof (Student_Detail), "sd");
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(identifier, ExpressionHelper.CreateQuerySource_Detail());
-      IColumnSource table = fromClause.GetFromSource (StubDatabaseInfo.Instance);
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (identifier, ExpressionHelper.CreateQuerySource_Detail());
 
       Expression fieldExpression =
           Expression.MakeMemberAccess (
-              Expression.MakeMemberAccess (Expression.Parameter (typeof (Student_Detail), "sd"),
+              Expression.MakeMemberAccess (
+                  Expression.Parameter (typeof (Student_Detail), "sd"),
                   typeof (Student_Detail).GetProperty ("Student")),
               typeof (Student).GetProperty ("First"));
 
       FieldDescriptor fieldDescriptor =
-          new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (table,identifier, fieldExpression, fieldExpression, _context);
+          new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (fromClause, fieldExpression, fieldExpression, _context);
 
       Assert.AreEqual (new Column (new Table ("studentTable", null), "FirstColumn"), fieldDescriptor.Column);
       Assert.AreEqual (typeof (Student).GetProperty ("First"), fieldDescriptor.Member);
 
       IColumnSource expectedSourceTable = fieldDescriptor.SourcePath.FirstSource;
       var expectedRelatedTable = new Table ("studentTable", null);
-      var join = new SingleJoin(new Column (expectedSourceTable, "Student_Detail_PK"), new Column (expectedRelatedTable, "Student_Detail_to_Student_FK"));
-      var expectedPath = new FieldSourcePath(expectedSourceTable, new [] { join });
+      var join = new SingleJoin (
+          new Column (expectedSourceTable, "Student_Detail_PK"), new Column (expectedRelatedTable, "Student_Detail_to_Student_FK"));
+      var expectedPath = new FieldSourcePath (expectedSourceTable, new[] { join });
 
       Assert.AreEqual (expectedPath, fieldDescriptor.SourcePath);
     }
@@ -165,64 +139,68 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
     {
       // sdd.Student_Detail.Student.First
       ParameterExpression identifier = Expression.Parameter (typeof (Student_Detail_Detail), "sdd");
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(identifier, ExpressionHelper.CreateQuerySource_Detail_Detail());
-      IColumnSource table = fromClause.GetFromSource (StubDatabaseInfo.Instance);
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (identifier, ExpressionHelper.CreateQuerySource_Detail_Detail());
 
       Expression fieldExpression =
           Expression.MakeMemberAccess (
               Expression.MakeMemberAccess (
-                  Expression.MakeMemberAccess (Expression.Parameter (typeof (Student_Detail_Detail), "sdd"),
+                  Expression.MakeMemberAccess (
+                      Expression.Parameter (typeof (Student_Detail_Detail), "sdd"),
                       typeof (Student_Detail_Detail).GetProperty ("Student_Detail")),
                   typeof (Student_Detail).GetProperty ("Student")),
               typeof (Student).GetProperty ("First"));
 
       FieldDescriptor fieldDescriptor =
-          new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (table,identifier, fieldExpression, fieldExpression, _context);
+          new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (fromClause, fieldExpression, fieldExpression, _context);
 
       Assert.AreEqual (new Column (new Table ("studentTable", null), "FirstColumn"), fieldDescriptor.Column);
       Assert.AreEqual (typeof (Student).GetProperty ("First"), fieldDescriptor.Member);
 
       IColumnSource expectedDetailDetailTable = fieldDescriptor.SourcePath.FirstSource;
       var expectedDetailTable = new Table ("detailTable", null); // Student_Detail
-      var join1 = new SingleJoin (new Column (expectedDetailDetailTable, "Student_Detail_Detail_PK"), new Column (expectedDetailTable, "Student_Detail_Detail_to_Student_Detail_FK"));
-      
-      var expectedStudentTable = new Table ("studentTable", null); // Student
-      var join2 = new SingleJoin(new Column (expectedDetailTable, "Student_Detail_PK"), new Column (expectedStudentTable, "Student_Detail_to_Student_FK"));
+      var join1 = new SingleJoin (
+          new Column (expectedDetailDetailTable, "Student_Detail_Detail_PK"),
+          new Column (expectedDetailTable, "Student_Detail_Detail_to_Student_Detail_FK"));
 
-      var expectedPath = new FieldSourcePath(expectedDetailDetailTable, new[] { join1, join2 });
+      var expectedStudentTable = new Table ("studentTable", null); // Student
+      var join2 = new SingleJoin (
+          new Column (expectedDetailTable, "Student_Detail_PK"), new Column (expectedStudentTable, "Student_Detail_to_Student_FK"));
+
+      var expectedPath = new FieldSourcePath (expectedDetailDetailTable, new[] { join1, join2 });
       Assert.AreEqual (expectedPath, fieldDescriptor.SourcePath);
     }
 
     [Test]
     [ExpectedException (typeof (FieldAccessResolveException), ExpectedMessage = "The member 'Remotion.Data.UnitTests.Linq.Student.First' does not "
-        + "identify a relation.")]
+                                                                                + "identify a relation.")]
     public void Resolve_Join_InvalidMember ()
     {
       // s.First.Length
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "s");
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(identifier, ExpressionHelper.CreateQuerySource_Detail());
-      IColumnSource table = fromClause.GetFromSource (StubDatabaseInfo.Instance);
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (identifier, ExpressionHelper.CreateQuerySource_Detail());
 
       Expression fieldExpression =
           Expression.MakeMemberAccess (
-              Expression.MakeMemberAccess (Expression.Parameter (typeof (Student), "s"),
+              Expression.MakeMemberAccess (
+                  Expression.Parameter (typeof (Student), "s"),
                   typeof (Student).GetProperty ("First")),
               typeof (string).GetProperty ("Length"));
 
-      new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (table,identifier, fieldExpression, fieldExpression, _context);
+      new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (fromClause, fieldExpression, fieldExpression, _context);
     }
 
     [Test]
     public void Resolve_SimpleMemberAccess_InvalidField ()
     {
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(identifier, ExpressionHelper.CreateQuerySource());
-      IColumnSource table = fromClause.GetFromSource (StubDatabaseInfo.Instance);
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (identifier, ExpressionHelper.CreateQuerySource());
+      IColumnSource table = fromClause.GetColumnSource (StubDatabaseInfo.Instance);
 
-      Expression fieldExpression = Expression.MakeMemberAccess (Expression.Parameter (typeof (Student), "fromIdentifier1"),
+      Expression fieldExpression = Expression.MakeMemberAccess (
+          Expression.Parameter (typeof (Student), "fromIdentifier1"),
           typeof (Student).GetProperty ("NonDBProperty"));
       FieldDescriptor fieldDescriptor =
-          new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (table,identifier,fieldExpression, fieldExpression, _context);
+          new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (fromClause, fieldExpression, fieldExpression, _context);
       var path = new FieldSourcePath (table, new SingleJoin[0]);
       Assert.AreEqual (new FieldDescriptor (typeof (Student).GetProperty ("NonDBProperty"), path, null), fieldDescriptor);
     }
@@ -232,19 +210,19 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
     {
       // sd.Student.First
       ParameterExpression identifier = Expression.Parameter (typeof (Student_Detail), "sd");
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(identifier, ExpressionHelper.CreateQuerySource_Detail());
-      IColumnSource table = fromClause.GetFromSource (StubDatabaseInfo.Instance);
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (identifier, ExpressionHelper.CreateQuerySource_Detail());
 
       Expression fieldExpression =
           Expression.MakeMemberAccess (
-              Expression.MakeMemberAccess (Expression.Parameter (typeof (Student_Detail), "sd"),
+              Expression.MakeMemberAccess (
+                  Expression.Parameter (typeof (Student_Detail), "sd"),
                   typeof (Student_Detail).GetProperty ("Student")),
               typeof (Student).GetProperty ("First"));
 
       FieldDescriptor fieldDescriptor1 =
-          new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (table,identifier, fieldExpression, fieldExpression, _context);
+          new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (fromClause, fieldExpression, fieldExpression, _context);
       FieldDescriptor fieldDescriptor2 =
-          new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (table, identifier, fieldExpression, fieldExpression, _context);
+          new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (fromClause, fieldExpression, fieldExpression, _context);
 
       IColumnSource table1 = fieldDescriptor1.SourcePath.Joins[0].RightSide;
       IColumnSource table2 = fieldDescriptor2.SourcePath.Joins[0].RightSide;
@@ -257,25 +235,24 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
     {
       //sd.Student
       ParameterExpression identifier = Expression.Parameter (typeof (Student_Detail), "sd");
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(identifier, ExpressionHelper.CreateQuerySource_Detail ());
-      IColumnSource table = fromClause.GetFromSource (StubDatabaseInfo.Instance);
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (identifier, ExpressionHelper.CreateQuerySource_Detail());
 
       PropertyInfo member = typeof (Student_Detail).GetProperty ("Student");
       Expression fieldExpression =
           Expression.MakeMemberAccess (
               Expression.Parameter (typeof (Student_Detail), "sd"),
-                  member);
+              member);
 
       FieldDescriptor fieldDescriptor =
-          new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (table,identifier, fieldExpression, fieldExpression, _context);
+          new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (fromClause, fieldExpression, fieldExpression, _context);
 
-      IColumnSource detailTable = fromClause.GetFromSource (StubDatabaseInfo.Instance);
+      IColumnSource detailTable = fromClause.GetColumnSource (StubDatabaseInfo.Instance);
       Table studentTable = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, member);
       Tuple<string, string> joinColumns = DatabaseInfoUtility.GetJoinColumnNames (StubDatabaseInfo.Instance, member);
-      var join = new SingleJoin (new Column(detailTable, joinColumns.A), new Column(studentTable, joinColumns.B));
-      var column = new Column(studentTable, "*");
+      var join = new SingleJoin (new Column (detailTable, joinColumns.A), new Column (studentTable, joinColumns.B));
+      var column = new Column (studentTable, "*");
 
-      var expected = new FieldDescriptor(member, new FieldSourcePath (detailTable, new[] { join }), column);
+      var expected = new FieldDescriptor (member, new FieldSourcePath (detailTable, new[] { join }), column);
       Assert.AreEqual (expected, fieldDescriptor);
     }
 
@@ -284,8 +261,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
     {
       //sdd.Student_Detail.Student
       ParameterExpression identifier = Expression.Parameter (typeof (Student_Detail_Detail), "sdd");
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(identifier, ExpressionHelper.CreateQuerySource_Detail_Detail ());
-      IColumnSource table = fromClause.GetFromSource (StubDatabaseInfo.Instance);
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (identifier, ExpressionHelper.CreateQuerySource_Detail_Detail());
 
       PropertyInfo member = typeof (Student_Detail).GetProperty ("Student");
       PropertyInfo innerRelationMember = typeof (Student_Detail_Detail).GetProperty ("Student_Detail");
@@ -297,9 +273,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
               member);
 
       FieldDescriptor fieldDescriptor =
-          new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (table,identifier, fieldExpression, fieldExpression, _context);
+          new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (fromClause, fieldExpression, fieldExpression, _context);
 
-      IColumnSource detailDetailTable = fromClause.GetFromSource (StubDatabaseInfo.Instance);
+      IColumnSource detailDetailTable = fromClause.GetColumnSource (StubDatabaseInfo.Instance);
       Table detailTable = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, innerRelationMember);
       Table studentTable = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, member);
       Tuple<string, string> innerJoinColumns = DatabaseInfoUtility.GetJoinColumnNames (StubDatabaseInfo.Instance, innerRelationMember);
@@ -319,15 +295,14 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
       // from x in (...)
       // select x.ID
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "x");
-      SubQueryFromClause fromClause = ExpressionHelper.CreateSubQueryFromClause(identifier);
-      IColumnSource table = fromClause.GetFromSource (StubDatabaseInfo.Instance);
+      SubQueryFromClause fromClause = ExpressionHelper.CreateSubQueryFromClause (identifier);
 
       PropertyInfo member = typeof (Student).GetProperty ("ID");
       Expression fieldExpression = Expression.MakeMemberAccess (identifier, member);
 
       FieldDescriptor fieldDescriptor =
-          new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (table,identifier, fieldExpression, fieldExpression, _context);
-      var subQuery = (SubQuery) fromClause.GetFromSource (StubDatabaseInfo.Instance);
+          new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (fromClause, fieldExpression, fieldExpression, _context);
+      var subQuery = (SubQuery) fromClause.GetColumnSource (StubDatabaseInfo.Instance);
       var column = new Column (subQuery, "IDColumn");
       var expected = new FieldDescriptor (member, new FieldSourcePath (subQuery, new SingleJoin[0]), column);
 
@@ -337,33 +312,35 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
     [Test]
     public void Resolver_UsesPolicyToAdjustRelationMembers ()
     {
-      var mockRepository = new MockRepository ();
-      var policyMock = mockRepository.StrictMock<IResolveFieldAccessPolicy> ();
+      var mockRepository = new MockRepository();
+      var policyMock = mockRepository.StrictMock<IResolveFieldAccessPolicy>();
 
       ParameterExpression identifier = Expression.Parameter (typeof (Student_Detail_Detail), "sdd");
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (identifier, ExpressionHelper.CreateQuerySource_Detail_Detail ());
-      IColumnSource table = fromClause.GetFromSource (StubDatabaseInfo.Instance);
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (identifier, ExpressionHelper.CreateQuerySource_Detail_Detail());
 
-      Expect.Call (policyMock.OptimizeRelatedKeyAccess ()).Return (false);
+      Expect.Call (policyMock.OptimizeRelatedKeyAccess()).Return (false);
 
       var studentDetailMember = typeof (Student_Detail_Detail).GetProperty ("Student_Detail");
       var studentMember = typeof (Student_Detail).GetProperty ("Student");
       var idMember = typeof (Student).GetProperty ("ID");
       Expression fieldExpression = Expression.MakeMemberAccess (Expression.MakeMemberAccess (identifier, studentDetailMember), studentMember);
 
-      var newJoinMembers = new[] {studentDetailMember, studentMember};
+      var newJoinMembers = new[] { studentDetailMember, studentMember };
       Expect.Call (policyMock.AdjustMemberInfosForRelation (null, null))
           .Constraints (Mocks_Is.Equal (studentMember), Mocks_List.Equal (new[] { studentDetailMember }))
-          .Return (new  Tuple<MemberInfo, IEnumerable<MemberInfo>>(idMember, newJoinMembers));
+          .Return (new Tuple<MemberInfo, IEnumerable<MemberInfo>> (idMember, newJoinMembers));
 
-      mockRepository.ReplayAll ();
+      mockRepository.ReplayAll();
       FieldDescriptor actualFieldDescriptor =
-          new ClauseFieldResolver (StubDatabaseInfo.Instance, policyMock).ResolveField (table,identifier, fieldExpression, fieldExpression, _context);
-      mockRepository.VerifyAll ();
+          new ClauseFieldResolver (StubDatabaseInfo.Instance, policyMock).ResolveField (fromClause, fieldExpression, fieldExpression, _context);
+      mockRepository.VerifyAll();
 
-      var path = new FieldSourcePathBuilder().BuildFieldSourcePath (StubDatabaseInfo.Instance, _context, 
-          fromClause.GetFromSource (StubDatabaseInfo.Instance), newJoinMembers);
-      var expectedFieldDescriptor = new FieldDescriptor (studentMember, path, new Column(path.LastSource, "IDColumn"));
+      var path = new FieldSourcePathBuilder().BuildFieldSourcePath (
+          StubDatabaseInfo.Instance,
+          _context,
+          fromClause.GetColumnSource (StubDatabaseInfo.Instance),
+          newJoinMembers);
+      var expectedFieldDescriptor = new FieldDescriptor (studentMember, path, new Column (path.LastSource, "IDColumn"));
 
       Assert.That (actualFieldDescriptor, Is.EqualTo (expectedFieldDescriptor));
     }
@@ -371,30 +348,32 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
     [Test]
     public void Resolver_UsesPolicyToAdjustFromIdentifierAccess ()
     {
-      var mockRepository = new MockRepository ();
-      var policyMock = mockRepository.StrictMock<IResolveFieldAccessPolicy> ();
+      var mockRepository = new MockRepository();
+      var policyMock = mockRepository.StrictMock<IResolveFieldAccessPolicy>();
 
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "s");
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (identifier, ExpressionHelper.CreateQuerySource_Detail_Detail ());
-      IColumnSource table = fromClause.GetFromSource (StubDatabaseInfo.Instance);
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (identifier, ExpressionHelper.CreateQuerySource_Detail_Detail());
 
       Expect.Call (policyMock.OptimizeRelatedKeyAccess()).Return (false);
-      
+
       var otherStudentMember = typeof (Student).GetProperty ("OtherStudent");
       var idMember = typeof (Student).GetProperty ("ID");
       Expression fieldExpression = identifier;
 
       var newJoinMembers = new[] { otherStudentMember };
-      Expect.Call (policyMock.AdjustMemberInfosForAccessedIdentifier (identifier))
+      Expect.Call (policyMock.AdjustMemberInfosForDirectAccessOfQuerySource (identifier))
           .Return (new Tuple<MemberInfo, IEnumerable<MemberInfo>> (idMember, newJoinMembers));
 
-      mockRepository.ReplayAll ();
+      mockRepository.ReplayAll();
       FieldDescriptor actualFieldDescriptor =
-          new ClauseFieldResolver (StubDatabaseInfo.Instance, policyMock).ResolveField (table,identifier, fieldExpression, fieldExpression, _context);
-      mockRepository.VerifyAll ();
+          new ClauseFieldResolver (StubDatabaseInfo.Instance, policyMock).ResolveField (fromClause, fieldExpression, fieldExpression, _context);
+      mockRepository.VerifyAll();
 
-      FieldSourcePath path = new FieldSourcePathBuilder ().BuildFieldSourcePath (StubDatabaseInfo.Instance, _context,
-          fromClause.GetFromSource (StubDatabaseInfo.Instance), newJoinMembers);
+      FieldSourcePath path = new FieldSourcePathBuilder().BuildFieldSourcePath (
+          StubDatabaseInfo.Instance,
+          _context,
+          fromClause.GetColumnSource (StubDatabaseInfo.Instance),
+          newJoinMembers);
       var expectedFieldDescriptor = new FieldDescriptor (null, path, new Column (path.LastSource, "IDColumn"));
 
       Assert.That (actualFieldDescriptor, Is.EqualTo (expectedFieldDescriptor));
@@ -404,28 +383,30 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
     public void Resolver_PolicyOptimization_True ()
     {
       IResolveFieldAccessPolicy policy = new WhereFieldAccessPolicy (StubDatabaseInfo.Instance);
-      Assert.That (policy.OptimizeRelatedKeyAccess (), Is.True);
+      Assert.That (policy.OptimizeRelatedKeyAccess(), Is.True);
       Expression fieldExpression = ExpressionHelper.MakeExpression<Student_Detail, int> (sd => sd.IndustrialSector.ID);
-      
-      var resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, policy);
-      var columnSource = new Table ();
-      var clauseIdentifier = Expression.Parameter (typeof (Student_Detail), "sd");
-      FieldDescriptor result = resolver.ResolveField (columnSource, clauseIdentifier, fieldExpression, fieldExpression, _context);
 
-      Assert.That (result.Column, Is.EqualTo (new Column (columnSource, "Student_Detail_to_IndustrialSector_FK")));
+      var resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, policy);
+      var clauseIdentifier = Expression.Parameter (typeof (Student_Detail), "sd");
+      var fakeClause = ExpressionHelper.CreateMainFromClause (clauseIdentifier, ExpressionHelper.CreateQuerySource_Detail());
+
+      FieldDescriptor result = resolver.ResolveField (fakeClause, fieldExpression, fieldExpression, _context);
+
+      Assert.That (
+          result.Column, Is.EqualTo (new Column (fakeClause.GetColumnSource (StubDatabaseInfo.Instance), "Student_Detail_to_IndustrialSector_FK")));
     }
 
     [Test]
     public void Resolver_PolicyOptimization_False ()
     {
-      IResolveFieldAccessPolicy policy = new SelectFieldAccessPolicy ();
-      Assert.That (policy.OptimizeRelatedKeyAccess (), Is.False);
+      IResolveFieldAccessPolicy policy = new SelectFieldAccessPolicy();
+      Assert.That (policy.OptimizeRelatedKeyAccess(), Is.False);
       Expression fieldExpression = ExpressionHelper.MakeExpression<Student_Detail, int> (sd => sd.IndustrialSector.ID);
 
       var resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, policy);
-      var columnSource = new Table ();
       var clauseIdentifier = Expression.Parameter (typeof (Student_Detail), "sd");
-      FieldDescriptor result = resolver.ResolveField (columnSource, clauseIdentifier, fieldExpression, fieldExpression, _context);
+      var fakeClause = ExpressionHelper.CreateMainFromClause (clauseIdentifier, ExpressionHelper.CreateQuerySource_Detail());
+      FieldDescriptor result = resolver.ResolveField (fakeClause, fieldExpression, fieldExpression, _context);
 
       Assert.That (result.Column, Is.EqualTo (new Column (result.SourcePath.LastSource, "IDColumn")));
     }

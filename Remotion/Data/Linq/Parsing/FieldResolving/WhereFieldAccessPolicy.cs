@@ -33,7 +33,7 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
       _databaseInfo = databaseInfo;
     }
 
-    public Tuple<MemberInfo, IEnumerable<MemberInfo>> AdjustMemberInfosForAccessedIdentifier (ParameterExpression accessedIdentifier)
+    public Tuple<MemberInfo, IEnumerable<MemberInfo>> AdjustMemberInfosForDirectAccessOfQuerySource (ParameterExpression accessedIdentifier)
     {
       ArgumentUtility.CheckNotNull ("accessedIdentifier", accessedIdentifier);
       return new Tuple<MemberInfo, IEnumerable<MemberInfo>> (_databaseInfo.GetPrimaryKeyMember (accessedIdentifier.Type), 

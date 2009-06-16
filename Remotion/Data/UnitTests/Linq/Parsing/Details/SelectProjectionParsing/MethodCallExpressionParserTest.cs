@@ -43,7 +43,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details.SelectProjectionParsing
 
       _parameter = Expression.Parameter (typeof (Student), "s");
       _fromClause = ExpressionHelper.CreateMainFromClause (_parameter, ExpressionHelper.CreateQuerySource ());
-      _fromSource = _fromClause.GetFromSource (StubDatabaseInfo.Instance);
+      _fromSource = _fromClause.GetColumnSource (StubDatabaseInfo.Instance);
       QueryModel = ExpressionHelper.CreateQueryModel (_fromClause);
       _resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, new SelectFieldAccessPolicy());
       _parserRegistry = 

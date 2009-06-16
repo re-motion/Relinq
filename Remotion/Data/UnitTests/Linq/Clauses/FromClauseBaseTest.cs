@@ -35,7 +35,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       IQueryable querySource = ExpressionHelper.CreateQuerySource ();
 
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(id, querySource);
-      Assert.AreEqual (new Table ("studentTable", "s1"), fromClause.GetFromSource (StubDatabaseInfo.Instance));
+      Assert.AreEqual (new Table ("studentTable", "s1"), fromClause.GetColumnSource (StubDatabaseInfo.Instance));
     }
 
     [Test]
@@ -45,8 +45,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       IQueryable querySource = ExpressionHelper.CreateQuerySource ();
 
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(id, querySource);
-      IColumnSource t1 = fromClause.GetFromSource (StubDatabaseInfo.Instance);
-      IColumnSource t2 = fromClause.GetFromSource (StubDatabaseInfo.Instance);
+      IColumnSource t1 = fromClause.GetColumnSource (StubDatabaseInfo.Instance);
+      IColumnSource t2 = fromClause.GetColumnSource (StubDatabaseInfo.Instance);
       Assert.AreSame (t1, t2);
     }
 

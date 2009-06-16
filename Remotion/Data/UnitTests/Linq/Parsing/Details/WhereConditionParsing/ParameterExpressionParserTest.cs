@@ -33,7 +33,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details.WhereConditionParsing
       ClauseFieldResolver resolver =
           new ClauseFieldResolver (StubDatabaseInfo.Instance, new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
 
-      var fromSource = QueryModel.MainFromClause.GetFromSource (StubDatabaseInfo.Instance);
+      var fromSource = QueryModel.MainFromClause.GetColumnSource (StubDatabaseInfo.Instance);
       FieldSourcePath path = new FieldSourcePath (fromSource, new SingleJoin[0]);
       FieldDescriptor expectedFieldDescriptor = new FieldDescriptor (null, path, new Column (fromSource, "IDColumn"));
       ICriterion expectedCriterion = expectedFieldDescriptor.Column;

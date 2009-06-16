@@ -40,7 +40,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
       MainFromClause fromClause =
           ExpressionHelper.CreateMainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
 
-      var result = _policy.AdjustMemberInfosForAccessedIdentifier (fromClause.Identifier);
+      var result = _policy.AdjustMemberInfosForDirectAccessOfQuerySource (fromClause.Identifier);
       Assert.That (result.A, Is.Null);
       Assert.That (result.B, Is.Empty);
     }

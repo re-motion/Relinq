@@ -23,5 +23,12 @@ namespace Remotion.Data.Linq.Clauses
   {
     ParameterExpression Identifier {get;  }
     FieldDescriptor ResolveField (ClauseFieldResolver resolver, Expression partialFieldExpression, Expression fullFieldExpression, JoinedTableContext joinedTableContext);
+
+    /// <summary>
+    /// Method for getting source of a from clause.
+    /// </summary>
+    /// <param name="databaseInfo"></param>
+    /// <returns><see cref="IColumnSource"/></returns>
+    IColumnSource GetColumnSource (IDatabaseInfo databaseInfo);
   }
 }

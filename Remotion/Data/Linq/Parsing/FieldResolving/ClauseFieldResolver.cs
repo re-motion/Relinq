@@ -18,6 +18,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Collections;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Utilities;
 
@@ -37,34 +38,17 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
       _policy = policy;
     }
 
-    public FieldDescriptor ResolveField (IColumnSource columnSource, ParameterExpression clauseIdentifier, Expression partialFieldExpression, Expression fullFieldExpression, JoinedTableContext joinedTableContext)
+    // TODO: Remove fullFieldExpression
+    public FieldDescriptor ResolveField (IResolveableClause clause, Expression partialFieldExpression, Expression fullFieldExpression, JoinedTableContext joinedTableContext)
     {
-      ArgumentUtility.CheckNotNull ("fromSource", columnSource);
+      ArgumentUtility.CheckNotNull ("clause", clause);
       ArgumentUtility.CheckNotNull ("partialFieldExpression", partialFieldExpression);
       ArgumentUtility.CheckNotNull ("fullFieldExpression", fullFieldExpression);
       
       var visitor = new ClauseFieldResolverVisitor (DatabaseInfo);
-      ClauseFieldResolverVisitor.Result result = visitor.ParseFieldAccess (partialFieldExpression, fullFieldExpression, _policy.OptimizeRelatedKeyAccess());
+      ClauseFieldResolverVisitor.Result result = visitor.ParseFieldAccess (clause, partialFieldExpression, fullFieldExpression, _policy.OptimizeRelatedKeyAccess());
 
-      CheckParameterNameAndType (clauseIdentifier, result.Parameter);
-      return CreateFieldDescriptor (columnSource, clauseIdentifier, result.AccessedMember, result.JoinMembers, joinedTableContext);
-    }
-
-    private void CheckParameterNameAndType (ParameterExpression clauseIdentifier, ParameterExpression parameter)
-    {
-      if (parameter.Name != clauseIdentifier.Name)
-      {
-        string message = string.Format ("This clause can only resolve field accesses for parameters called '{0}', but a parameter "
-            + "called '{1}' was given.", clauseIdentifier.Name, parameter.Name);
-        throw new FieldAccessResolveException (message);
-      }
-
-      if (parameter.Type != clauseIdentifier.Type)
-      {
-        string message = string.Format ("This clause can only resolve field accesses for parameters of type '{0}', but a parameter "
-            + "of type '{1}' was given.", clauseIdentifier.Type, parameter.Type);
-        throw new FieldAccessResolveException (message);
-      }
+      return CreateFieldDescriptor (clause.GetColumnSource (DatabaseInfo), clause.Identifier, result.AccessedMember, result.JoinMembers, joinedTableContext);
     }
 
     private FieldDescriptor CreateFieldDescriptor (IColumnSource firstSource, ParameterExpression accessedIdentifier, MemberInfo accessedMember, IEnumerable<MemberInfo> joinMembers, JoinedTableContext joinedTableContext)
@@ -76,7 +60,7 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
       MemberInfo accessedMemberForColumn = memberInfos.A;
       IEnumerable<MemberInfo> joinMembersForCalculation = memberInfos.B;
 
-      FieldSourcePathBuilder pathBuilder = new FieldSourcePathBuilder();
+      var pathBuilder = new FieldSourcePathBuilder();
       FieldSourcePath fieldData = pathBuilder.BuildFieldSourcePath (DatabaseInfo, joinedTableContext, firstSource, joinMembersForCalculation);
 
       Column? column = DatabaseInfoUtility.GetColumn (DatabaseInfo, fieldData.LastSource, accessedMemberForColumn);
@@ -88,7 +72,7 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
       if (accessedMember == null)
       {
         Assertion.IsTrue (joinMembers.Count() == 0);
-        return _policy.AdjustMemberInfosForAccessedIdentifier (accessedIdentifier);
+        return _policy.AdjustMemberInfosForDirectAccessOfQuerySource (accessedIdentifier);
       }
       else if (DatabaseInfoUtility.IsRelationMember (DatabaseInfo, accessedMember))
         return _policy.AdjustMemberInfosForRelation (accessedMember, joinMembers);

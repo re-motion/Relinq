@@ -38,7 +38,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details.SelectProjectionParsing
           new ClauseFieldResolver (StubDatabaseInfo.Instance, new SelectFieldAccessPolicy());
 
       List<FieldDescriptor> fieldDescriptorCollection = new List<FieldDescriptor> ();
-      var fromSource = fromClause.GetFromSource (StubDatabaseInfo.Instance);
+      var fromSource = fromClause.GetColumnSource (StubDatabaseInfo.Instance);
       FieldSourcePath path = new FieldSourcePath (fromSource, new SingleJoin[0]);
       FieldDescriptor expectedFieldDescriptor = new FieldDescriptor (null, path, new Column (fromSource, "*"));
 

@@ -50,7 +50,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details.SelectProjectionParsing
       _fromClause = ExpressionHelper.CreateMainFromClause (_parameter, ExpressionHelper.CreateQuerySource ());
       QueryModel = ExpressionHelper.CreateQueryModel (_fromClause);
       _resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, new SelectFieldAccessPolicy ());
-      _fromSource = _fromClause.GetFromSource (StubDatabaseInfo.Instance);
+      _fromSource = _fromClause.GetColumnSource (StubDatabaseInfo.Instance);
       _memberExpression1 = Expression.MakeMemberAccess (_parameter, typeof (Student).GetProperty ("First"));
       _memberExpression2 = Expression.MakeMemberAccess (_parameter, typeof (Student).GetProperty ("Last"));
       _memberExpression3 = Expression.MakeMemberAccess (_parameter, typeof (Student).GetProperty ("Last"));

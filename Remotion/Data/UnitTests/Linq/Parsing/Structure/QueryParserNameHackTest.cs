@@ -54,7 +54,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
                   select s1;
 
       var queryModel = new QueryParser().GetParsedQuery (query.Expression);
-      var mainFromTable = queryModel.MainFromClause.GetFromSource (_databaseInfo);
+      var mainFromTable = queryModel.MainFromClause.GetColumnSource (_databaseInfo);
 
       var selectClause = ((SelectClause) queryModel.SelectOrGroupClause);
       
@@ -75,7 +75,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var query = ExpressionHelper.CreateQuerySource ();
 
       var queryModel = new QueryParser ().GetParsedQuery (query.Expression);
-      var mainFromTable = queryModel.MainFromClause.GetFromSource (_databaseInfo);
+      var mainFromTable = queryModel.MainFromClause.GetColumnSource (_databaseInfo);
 
       var selectClause = ((SelectClause) queryModel.SelectOrGroupClause);
 
@@ -136,7 +136,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
                   select s1;
 
       var queryModel = new QueryParser ().GetParsedQuery (query.Expression);
-      var mainFromTable = queryModel.MainFromClause.GetFromSource (_databaseInfo);
+      var mainFromTable = queryModel.MainFromClause.GetColumnSource (_databaseInfo);
 
       var selectClause = ((SelectClause) queryModel.SelectOrGroupClause);
 
