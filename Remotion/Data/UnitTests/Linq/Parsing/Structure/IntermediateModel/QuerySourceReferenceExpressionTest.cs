@@ -16,26 +16,18 @@
 using System;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 {
   [TestFixture]
-  public class IdentifierReferenceExpressionTest : ExpressionNodeTestBase
+  public class QuerySourceReferenceExpressionTest : ExpressionNodeTestBase
   {
     [Test]
     public void Initialization ()
     {
-      var node = ExpressionNodeObjectMother.CreateSelectMany (SourceNode);
-      //var node = new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3 });
-      var querySourceClauseMapping = new QuerySourceClauseMapping();
-      var fromClause = ExpressionHelper.CreateMainFromClause();
-      querySourceClauseMapping.AddMapping (node, fromClause);
-
-      //var identifierReferenceExpression = new QuerySourceReferenceExpression (fromClause);
-      var identifierReferenceExpression = new QuerySourceReferenceExpression (node);
-      Assert.That (identifierReferenceExpression.Type, Is.EqualTo (node.QuerySourceElementType));
+      var referenceExpression = new QuerySourceReferenceExpression (SourceClause);
+      Assert.That (referenceExpression.Type, Is.SameAs (typeof (int)));
     }
   }
 }

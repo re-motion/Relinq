@@ -46,6 +46,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, QuerySourceClauseMapping querySourceClauseMapping)
     {
+      ArgumentUtility.CheckNotNull ("inputParameter", inputParameter);
+      ArgumentUtility.CheckNotNull ("expressionToBeResolved", expressionToBeResolved);
+      ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
+
       // this simply streams its input data to the output without modifying its structure, so we resolve by passing on the data to the previous node
       return Source.Resolve (inputParameter, expressionToBeResolved, querySourceClauseMapping);
     }
@@ -58,6 +62,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     protected override ResultModificationBase CreateResultModification (SelectClause selectClause)
     {
+      ArgumentUtility.CheckNotNull ("selectClause", selectClause);
       return new TakeResultModification (selectClause, Count);
     }
   }

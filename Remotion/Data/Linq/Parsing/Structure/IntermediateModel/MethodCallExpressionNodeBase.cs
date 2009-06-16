@@ -17,6 +17,7 @@ using System;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 {
@@ -35,6 +36,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     /// <returns></returns>
     protected static MethodInfo GetSupportedMethod<T> (Expression<Func<T>> methodCall)
     {
+      ArgumentUtility.CheckNotNull ("methodCall", methodCall);
+
       var method = ParserUtility.GetMethod (methodCall);
       return method.IsGenericMethod ? method.GetGenericMethodDefinition() : method;
     }

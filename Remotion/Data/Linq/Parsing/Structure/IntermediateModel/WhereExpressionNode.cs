@@ -51,6 +51,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     public Expression GetResolvedPredicate (QuerySourceClauseMapping querySourceClauseMapping)
     {
+      ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
+
       if (_cachedPredicate == null)
         _cachedPredicate = Source.Resolve (Predicate.Parameters[0], Predicate.Body, querySourceClauseMapping);
 
@@ -59,6 +61,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, QuerySourceClauseMapping querySourceClauseMapping)
     {
+      ArgumentUtility.CheckNotNull ("inputParameter", inputParameter);
+      ArgumentUtility.CheckNotNull ("expressionToBeResolved", expressionToBeResolved);
+      ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
+
       // this simply streams its input data to the output without modifying its structure, so we resolve by passing on the data to the previous node
       return Source.Resolve (inputParameter, expressionToBeResolved, querySourceClauseMapping);
     }
@@ -72,6 +78,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public override IClause CreateClause (IClause previousClause, QuerySourceClauseMapping querySourceClauseMapping)
     {
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
+      ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
+
       return new WhereClause (previousClause, Predicate);
     }
   }

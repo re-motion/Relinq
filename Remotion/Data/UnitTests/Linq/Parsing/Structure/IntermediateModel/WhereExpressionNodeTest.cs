@@ -45,9 +45,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var expression = ExpressionHelper.CreateLambdaExpression();
       var parameter = ExpressionHelper.CreateParameterExpression();
       var expectedResult = ExpressionHelper.CreateExpression();
-      sourceMock.Expect (mock => mock.Resolve (parameter, expression, null)).Return (expectedResult);
-      
-      var result = node.Resolve (parameter, expression, null);
+      sourceMock.Expect (mock => mock.Resolve (parameter, expression, QuerySourceClauseMapping)).Return (expectedResult);
+
+      var result = node.Resolve (parameter, expression, QuerySourceClauseMapping);
 
       sourceMock.VerifyAllExpectations();
       Assert.That (result, Is.SameAs (expectedResult));
@@ -103,7 +103,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var predicate = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
       var node = new WhereExpressionNode (CreateParseInfo (), predicate);
 
-      var clause = (WhereClause) node.CreateClause (previousClause, null);
+      var clause = (WhereClause) node.CreateClause (previousClause, QuerySourceClauseMapping);
 
       Assert.That (clause.PreviousClause, Is.SameAs (previousClause));
       Assert.That (clause.Predicate, Is.EqualTo (node.Predicate)); // TODO: This should become the resolved expression at a later point of time

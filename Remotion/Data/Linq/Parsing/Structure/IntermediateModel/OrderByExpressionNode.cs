@@ -51,6 +51,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     public Expression GetResolvedKeySelector (QuerySourceClauseMapping querySourceClauseMapping)
     {
+      ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
+
       if (_cachedSelector == null)
         _cachedSelector = Source.Resolve (KeySelector.Parameters[0], KeySelector.Body, querySourceClauseMapping);
 
@@ -59,6 +61,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, QuerySourceClauseMapping querySourceClauseMapping)
     {
+      ArgumentUtility.CheckNotNull ("inputParameter", inputParameter);
+      ArgumentUtility.CheckNotNull ("expressionToBeResolved", expressionToBeResolved);
+      ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
+      
       // this simply streams its input data to the output without modifying its structure, so we resolve by passing on the data to the previous node
       return Source.Resolve (inputParameter, expressionToBeResolved, querySourceClauseMapping);
     }
@@ -72,6 +78,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public override IClause CreateClause (IClause previousClause, QuerySourceClauseMapping querySourceClauseMapping)
     {
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
+      ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
+
       var clause = new OrderByClause (previousClause);
       clause.AddOrdering (new Ordering (clause, KeySelector, OrderingDirection.Asc));
       return clause;

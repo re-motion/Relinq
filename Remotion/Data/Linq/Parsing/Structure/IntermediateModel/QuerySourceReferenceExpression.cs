@@ -21,19 +21,10 @@ using Remotion.Utilities;
 namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 {
   /// <summary>
-  /// Represents an expression tree node that points to a query source represented by a <see cref="IQuerySourceExpressionNode"/>.
+  /// Represents an expression tree node that points to a query source represented by a <see cref="FromClauseBase"/>.
   /// </summary>
   public class QuerySourceReferenceExpression : Expression
   {
-    // TODO 1216: Remove this ctor and property
-    public QuerySourceReferenceExpression (IQuerySourceExpressionNode node)
-      : base ((ExpressionType) (-1), ArgumentUtility.CheckNotNull ("node", node).QuerySourceElementType)
-    {
-      ReferencedQuerySource = node;
-    }
-
-    public IQuerySourceExpressionNode ReferencedQuerySource { get; private set; }
-
     public QuerySourceReferenceExpression (FromClauseBase fromClause)
       : base ((ExpressionType) (-1), ArgumentUtility.CheckNotNull ("fromClause", fromClause).Identifier.Type)
     {
