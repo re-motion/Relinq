@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -67,6 +68,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     public Expression GetResolvedCollectionSelector (QuerySourceClauseMapping querySourceClauseMapping)
     {
+      ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
+
       if (_cachedCollectionSelector == null)
         _cachedCollectionSelector = Source.Resolve (CollectionSelector.Parameters[0], CollectionSelector.Body, querySourceClauseMapping);
 
@@ -75,6 +78,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     public Expression GetResolvedResultSelector (QuerySourceClauseMapping querySourceClauseMapping)
     {
+      ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
+
       if (_cachedResultSelector == null)
       {
         // our result selector usually looks like this: (i, j) => new { i = i, j = j }
@@ -84,18 +89,36 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
         // back to us
         var resolvedResultSelector = Source.Resolve (ResultSelector.Parameters[0], ResultSelector.Body, querySourceClauseMapping);
 
-        var referenceExpression = new QuerySourceReferenceExpression (this);
-        //var referenceExpression = new QuerySourceReferenceExpression (querySourceClauseMapping.GetClause(this));
+        var clause = GetClauseForResolve(querySourceClauseMapping);
+        var referenceExpression = new QuerySourceReferenceExpression (clause);
+
         _cachedResultSelector = ReplacingVisitor.Replace (ResultSelector.Parameters[1], referenceExpression, resolvedResultSelector);
       }
 
       return _cachedResultSelector;
     }
 
+    private FromClauseBase GetClauseForResolve (QuerySourceClauseMapping querySourceClauseMapping)
+    {
+      try
+      {
+        return querySourceClauseMapping.GetClause (this);
+      }
+      catch (KeyNotFoundException ex)
+      {
+        var message = string.Format (
+            "Cannot resolve with a {0} for which no clause was created. Be sure to call CreateClause before calling GetResolvedResultSelector, and pass in the same "
+            + "QuerySourceClauseMapping to both methods.",
+            GetType ().Name);
+        throw new InvalidOperationException (message, ex);
+      }
+    }
+
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, QuerySourceClauseMapping querySourceClauseMapping)
     {
       ArgumentUtility.CheckNotNull ("inputParameter", inputParameter);
       ArgumentUtility.CheckNotNull ("expressionToBeResolved", expressionToBeResolved);
+      ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
 
       // we modify the structure of the stream of data coming into this node by our result selector,
       // so we first resolve the result selector, then we substitute the result for the inputParameter in the expressionToBeResolved

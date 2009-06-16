@@ -64,11 +64,12 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
           CreateParseInfo (), 
           _collectionSelector,
           ExpressionHelper.CreateLambdaExpression<int, int, AnonymousType> ((a, b) => new AnonymousType (a, b)));
+      var clause = (FromClauseBase) node.CreateClause (SourceClause, QuerySourceClauseMapping);
 
       var expression = ExpressionHelper.CreateLambdaExpression<AnonymousType, bool> (i => i.a > 5 && i.b > 6);
       var result = node.Resolve (expression.Parameters[0], expression.Body, QuerySourceClauseMapping);
 
-      var selectManySourceReference = new QuerySourceReferenceExpression (node);
+      var selectManySourceReference = new QuerySourceReferenceExpression (clause);
 
       // new AnonymousType (SourceReference, selectManySourceReference).a > 5 && new AnonymousType (SourceReference, selectManySourceReference).b > 6
 
@@ -89,11 +90,21 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void GetResolvedResultSelector ()
     {
       var node = new SelectManyExpressionNode (CreateParseInfo (), _collectionSelector, _resultSelector);
-      var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, new QuerySourceReferenceExpression (node));
+      var clause = (FromClauseBase) node.CreateClause (SourceClause, QuerySourceClauseMapping);
+      var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, new QuerySourceReferenceExpression (clause));
 
       var result = node.GetResolvedResultSelector (QuerySourceClauseMapping);
 
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Cannot resolve with a SelectManyExpressionNode for which no clause was "
+        + "created. Be sure to call CreateClause before calling GetResolvedResultSelector, and pass in the same QuerySourceClauseMapping to both methods.")]
+    public void GetResolvedResultSelector_WithoutClause ()
+    {
+      var node = new SelectManyExpressionNode (CreateParseInfo (), _collectionSelector, _resultSelector);
+      node.GetResolvedResultSelector (QuerySourceClauseMapping);
     }
 
     [Test]
@@ -112,10 +123,11 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var sourceMock = new MockRepository().StrictMock<IExpressionNode>();
       var node = new SelectManyExpressionNode (CreateParseInfo (sourceMock), _collectionSelector, _resultSelector);
-      var expectedResult = ExpressionHelper.CreateLambdaExpression();
+      node.CreateClause (SourceClause, QuerySourceClauseMapping); // just to prepare the mapping for the GetResolvedResultSelector
+      var fakeResult = ExpressionHelper.CreateLambdaExpression ();
 
       sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything, Arg<QuerySourceClauseMapping>.Is.Anything)).Repeat.Once ().Return (
-          expectedResult);
+          fakeResult);
 
       sourceMock.Replay();
 
