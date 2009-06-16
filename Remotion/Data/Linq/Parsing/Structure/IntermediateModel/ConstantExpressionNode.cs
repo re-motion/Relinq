@@ -68,11 +68,28 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     {
       ArgumentUtility.CheckNotNull ("inputParameter", inputParameter);
       ArgumentUtility.CheckNotNull ("expressionToBeResolved", expressionToBeResolved);
+      ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
 
-      // query sources resolve into references that point back to the expression
-      var reference = new QuerySourceReferenceExpression (this);
-      //var reference = new QuerySourceReferenceExpression (querySourceClauseMapping.GetClause (this));
+      // query sources resolve into references that point back to the respective clauses
+      FromClauseBase clause = GetClauseForResolve (querySourceClauseMapping);
+      var reference = new QuerySourceReferenceExpression (clause);
       return ReplacingVisitor.Replace (inputParameter, reference, expressionToBeResolved);
+    }
+
+    private FromClauseBase GetClauseForResolve (QuerySourceClauseMapping querySourceClauseMapping)
+    {
+      try
+      {
+        return querySourceClauseMapping.GetClause (this);
+      }
+      catch (KeyNotFoundException ex)
+      {
+        var message = string.Format (
+            "Cannot resolve with a {0} for which no clause was created. Be sure to call CreateClause before calling Resolve, and pass in the same " 
+            + "QuerySourceClauseMapping to both methods.", 
+            GetType().Name);
+        throw new InvalidOperationException (message, ex);
+      }
     }
 
     public IClause CreateClause (IClause previousClause, QuerySourceClauseMapping querySourceClauseMapping)
@@ -86,14 +103,12 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
             + "of a query call chain. Set previousClause to null.");
       }
 
-      var fromClause = CreateClause();
+      var fromClause = new MainFromClause (
+          Expression.Parameter (QuerySourceElementType, AssociatedIdentifier), 
+          Expression.Constant (Value, QuerySourceType));
+
       querySourceClauseMapping.AddMapping (this, fromClause);
       return fromClause;
-    }
-
-    public MainFromClause CreateClause ()
-    {
-      return new MainFromClause (Expression.Parameter (QuerySourceElementType, AssociatedIdentifier), Expression.Constant (Value, QuerySourceType));
     }
 
     public ParameterExpression CreateParameterForOutput ()

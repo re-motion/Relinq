@@ -30,12 +30,14 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [SetUp]
     public virtual void SetUp ()
     {
-      SourceStub = ExpressionNodeObjectMother.CreateConstant();
-      SourceReference = new QuerySourceReferenceExpression (SourceStub);
+      SourceNode = ExpressionNodeObjectMother.CreateConstant();
       QuerySourceClauseMapping = new QuerySourceClauseMapping();
+      SourceClause = (FromClauseBase) SourceNode.CreateClause (null, QuerySourceClauseMapping);
+      SourceReference = new QuerySourceReferenceExpression (SourceClause);
     }
 
-    public IQuerySourceExpressionNode SourceStub { get; private set; }
+    public IQuerySourceExpressionNode SourceNode { get; private set; }
+    public FromClauseBase SourceClause { get; private set; }
     public QuerySourceReferenceExpression SourceReference { get; private set; }
     public QuerySourceClauseMapping QuerySourceClauseMapping { get; private set; }
 
@@ -55,7 +57,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var previousClause = ExpressionHelper.CreateSelectClause();
 
-      var clause = (SelectClause)node.CreateClause(previousClause, null);
+      var clause = (SelectClause) node.CreateClause (previousClause, QuerySourceClauseMapping);
 
       Assert.That (clause, Is.SameAs (previousClause));
       Assert.That (clause.ResultModifications.Count, Is.EqualTo (1));
@@ -67,7 +69,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var previousClause = ExpressionHelper.CreateMainFromClause ();
 
-      var clause = (SelectClause) node.CreateClause (previousClause, null);
+      var clause = (SelectClause) node.CreateClause (previousClause, QuerySourceClauseMapping);
 
       Assert.That (clause.PreviousClause, Is.SameAs (previousClause));
       Assert.That (clause.ResultModifications.Count, Is.EqualTo (1));
@@ -86,7 +88,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       // chain: previousPreviousClause <- previousClause
 
-      var clause = (SelectClause) node.CreateClause (previousClause, null);
+      var clause = (SelectClause) node.CreateClause (previousClause, QuerySourceClauseMapping);
 
       // chain: previousPreviousClause <- whereClause <- previousClause
 
@@ -102,7 +104,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var previousPreviousClause = ExpressionHelper.CreateClause ();
       var previousClause = new SelectClause (previousPreviousClause, selectorOfPreviousClause);
 
-      var clause = (SelectClause) node.CreateClause (previousClause, null);
+      var clause = (SelectClause) node.CreateClause (previousClause, QuerySourceClauseMapping);
 
       Assert.That (clause, Is.SameAs (previousClause));
       Assert.That (clause.Selector, Is.Not.SameAs (selectorOfPreviousClause));
@@ -112,7 +114,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
     protected MethodCallExpressionParseInfo CreateParseInfo ()
     {
-      return CreateParseInfo (SourceStub);
+      return CreateParseInfo (SourceNode);
     }
 
     protected MethodCallExpressionParseInfo CreateParseInfo (IExpressionNode source)
@@ -133,7 +135,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
                       select Expression.Constant (defaultValue, t);
       var methodCallExpression = Expression.Call (method, arguments.ToArray());
 
-      return new MethodCallExpressionParseInfo ("x", SourceStub, methodCallExpression);
+      return new MethodCallExpressionParseInfo ("x", SourceNode, methodCallExpression);
     }
   }
 }

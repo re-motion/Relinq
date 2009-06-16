@@ -66,7 +66,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void CreateClause_Count ()
     {
       var node = new TakeExpressionNode (CreateParseInfo (), 3);
-      var clause = (SelectClause) node.CreateClause (ExpressionHelper.CreateClause (), null);
+      var clause = (SelectClause) node.CreateClause (ExpressionHelper.CreateClause (), QuerySourceClauseMapping);
       Assert.That (((TakeResultModification) clause.ResultModifications[0]).Count, Is.EqualTo (3));
     }
 

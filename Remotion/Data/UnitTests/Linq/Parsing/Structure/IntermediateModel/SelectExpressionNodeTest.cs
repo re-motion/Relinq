@@ -42,7 +42,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var node = new SelectExpressionNode (CreateParseInfo (), ExpressionHelper.CreateLambdaExpression<int, int> (j => j * j));
       var expression = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
 
-      var result = node.Resolve (expression.Parameters[0], expression.Body, null);
+      var result = node.Resolve (expression.Parameters[0], expression.Body, QuerySourceClauseMapping);
 
       var expectedResult = Expression.MakeBinary (
           ExpressionType.GreaterThan,
@@ -100,7 +100,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void CreateParameterForOutput ()
     {
-      var node = new SelectExpressionNode (CreateParseInfo (SourceStub, "z"), ExpressionHelper.CreateLambdaExpression<int, string> (y => y.ToString()));
+      var node = new SelectExpressionNode (CreateParseInfo (SourceNode, "z"), ExpressionHelper.CreateLambdaExpression<int, string> (y => y.ToString()));
 
       var parameter = node.CreateParameterForOutput ();
 

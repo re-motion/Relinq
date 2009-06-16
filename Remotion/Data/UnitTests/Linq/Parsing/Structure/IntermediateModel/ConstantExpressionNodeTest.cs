@@ -25,7 +25,7 @@ using Remotion.Utilities;
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 {
   [TestFixture]
-  public class ConstantExpressionNodeTest
+  public class ConstantExpressionNodeTest : ExpressionNodeTestBase
   {
     [Test]
     public void Initialization_QuerySourceElementType ()
@@ -46,16 +46,27 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
 
     [Test]
-    public void Resolve_ReplacesParameter_WithIdentifierReference ()
+    public void Resolve_ReplacesParameter_WithQuerySourceReference ()
     {
       var node = ExpressionNodeObjectMother.CreateConstant ();
       var expression = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
+      var clause = ExpressionHelper.CreateMainFromClause ();
+      QuerySourceClauseMapping.AddMapping (node, clause);
 
-      var result = node.Resolve (expression.Parameters[0], expression.Body, null);
+      var result = node.Resolve (expression.Parameters[0], expression.Body, QuerySourceClauseMapping);
 
-      var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, new QuerySourceReferenceExpression (node), Expression.Constant (5));
-      //var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, ExpressionHelper.CreateParameterExpression ("i"), Expression.Constant (5));
+      var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, new QuerySourceReferenceExpression (clause), Expression.Constant (5));
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Cannot resolve with a ConstantExpressionNode for which no clause was "
+        + "created. Be sure to call CreateClause before calling Resolve, and pass in the same QuerySourceClauseMapping to both methods.")]
+    public void Resolve_WithoutClause ()
+    {
+      var node = ExpressionNodeObjectMother.CreateConstant ();
+      var expression = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
+      node.Resolve (expression.Parameters[0], expression.Body, QuerySourceClauseMapping);
     }
 
     [Test]
@@ -72,7 +83,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void CreateClause ()
     {
       var node = new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3, 4, 5 });
-      var constantClause = node.CreateClause();
+      var constantClause = (MainFromClause) node.CreateClause(null, QuerySourceClauseMapping);
 
       Assert.That (constantClause.Identifier.Name, Is.EqualTo ("x"));
       Assert.That (constantClause.Identifier.Type, Is.SameAs(typeof(int)));    

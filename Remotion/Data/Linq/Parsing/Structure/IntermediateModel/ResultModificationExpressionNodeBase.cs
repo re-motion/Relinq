@@ -51,6 +51,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     public Expression GetResolvedOptionalPredicate (QuerySourceClauseMapping querySourceClauseMapping)
     {
+      ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
+
       if (OptionalPredicate == null)
         return null;
 
@@ -60,13 +62,15 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return _cachedPredicate;
     }
 
-    public Expression GetResolvedOptionalSelector ()
+    public Expression GetResolvedOptionalSelector (QuerySourceClauseMapping querySourceClauseMapping)
     {
+      ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
+
       if (OptionalSelector == null)
         return null;
 
       if (_cachedSelector == null)
-        _cachedSelector = Source.Resolve (OptionalSelector.Parameters[0], OptionalSelector.Body, null);
+        _cachedSelector = Source.Resolve (OptionalSelector.Parameters[0], OptionalSelector.Body, querySourceClauseMapping);
 
       return _cachedSelector;
     }
@@ -74,6 +78,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public override IClause CreateClause (IClause previousClause, QuerySourceClauseMapping querySourceClauseMapping)
     {
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
+      ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
 
       SelectClause selectClause = GetSelectClauseForResultModification (previousClause);
       selectClause.AddResultModification (CreateResultModification (selectClause));

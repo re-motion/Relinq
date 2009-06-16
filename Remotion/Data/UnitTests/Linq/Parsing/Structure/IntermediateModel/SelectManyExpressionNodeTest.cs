@@ -52,7 +52,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void QuerySourceType ()
     {
-      SelectManyExpressionNode node = ExpressionNodeObjectMother.CreateSelectMany (SourceStub);
+      SelectManyExpressionNode node = ExpressionNodeObjectMother.CreateSelectMany (SourceNode);
 
       Assert.That (node.QuerySourceElementType, Is.SameAs (typeof (Student_Detail)));
     }
@@ -66,7 +66,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
           ExpressionHelper.CreateLambdaExpression<int, int, AnonymousType> ((a, b) => new AnonymousType (a, b)));
 
       var expression = ExpressionHelper.CreateLambdaExpression<AnonymousType, bool> (i => i.a > 5 && i.b > 6);
-      var result = node.Resolve (expression.Parameters[0], expression.Body, null);
+      var result = node.Resolve (expression.Parameters[0], expression.Body, QuerySourceClauseMapping);
 
       var selectManySourceReference = new QuerySourceReferenceExpression (node);
 
@@ -147,7 +147,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void CreateClause ()
     {
       IClause previousClause = ExpressionHelper.CreateClause();
-      var node = new SelectManyExpressionNode (CreateParseInfo (SourceStub, "j"), _collectionSelector, _resultSelector);
+      var node = new SelectManyExpressionNode (CreateParseInfo (SourceNode, "j"), _collectionSelector, _resultSelector);
 
       var clause = (AdditionalFromClause) node.CreateClause (previousClause, QuerySourceClauseMapping);
 
@@ -197,10 +197,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void CreateClause_AddsMapping ()
     {
       IClause previousClause = ExpressionHelper.CreateClause ();
-      var node = new SelectManyExpressionNode (CreateParseInfo (SourceStub, "j"), _collectionSelector, _resultSelector);
+      var node = new SelectManyExpressionNode (CreateParseInfo (SourceNode, "j"), _collectionSelector, _resultSelector);
       var clause = (AdditionalFromClause) node.CreateClause (previousClause, QuerySourceClauseMapping);
 
-      Assert.That (QuerySourceClauseMapping.Count, Is.EqualTo (1));
       Assert.That (QuerySourceClauseMapping.GetClause (node), Is.SameAs(clause));
     }
 

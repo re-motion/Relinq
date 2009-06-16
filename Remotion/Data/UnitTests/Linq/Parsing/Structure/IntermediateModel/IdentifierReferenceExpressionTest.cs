@@ -27,7 +27,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void Initialization ()
     {
-      var node = ExpressionNodeObjectMother.CreateSelectMany (SourceStub);
+      var node = ExpressionNodeObjectMother.CreateSelectMany (SourceNode);
       //var node = new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3 });
       var querySourceClauseMapping = new QuerySourceClauseMapping();
       var fromClause = ExpressionHelper.CreateMainFromClause();

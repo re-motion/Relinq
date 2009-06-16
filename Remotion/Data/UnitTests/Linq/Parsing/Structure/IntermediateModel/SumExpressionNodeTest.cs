@@ -185,7 +185,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
 
-      var result = node.GetResolvedOptionalSelector();
+      var result = node.GetResolvedOptionalSelector (QuerySourceClauseMapping);
 
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
@@ -195,7 +195,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();
       var node = new SumExpressionNode(CreateParseInfo (sourceMock), null);
-      var result = node.GetResolvedOptionalSelector ();
+      var result = node.GetResolvedOptionalSelector (QuerySourceClauseMapping);
       Assert.That (result, Is.Null);
     }
 
@@ -211,8 +211,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       sourceMock.Replay ();
 
-      node.GetResolvedOptionalSelector ();
-      node.GetResolvedOptionalSelector ();
+      node.GetResolvedOptionalSelector (QuerySourceClauseMapping);
+      node.GetResolvedOptionalSelector (QuerySourceClauseMapping);
 
       sourceMock.VerifyAllExpectations ();
     }

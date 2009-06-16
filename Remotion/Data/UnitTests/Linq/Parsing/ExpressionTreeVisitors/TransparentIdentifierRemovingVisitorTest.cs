@@ -279,7 +279,15 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
       nodeTypeRegistry.Register (WhereExpressionNode.SupportedMethods, typeof (WhereExpressionNode));
       
       var selectNode = (SelectExpressionNode) new ExpressionTreeParser (nodeTypeRegistry).ParseTree (query.Expression, new List<QueryModel>());
-      var selectProjection = selectNode.GetResolvedSelector (new QuerySourceClauseMapping()); // new ( a = IR (a), b = IR (b) ).a.ID
+      var querySourceClauseMapping = new QuerySourceClauseMapping();
+
+      var selectManyNode = (SelectManyExpressionNode) selectNode.Source.Source;
+      var constantNode = (ConstantExpressionNode) selectManyNode.Source;
+
+      var mainFromClause = constantNode.CreateClause (null, querySourceClauseMapping);
+      selectManyNode.CreateClause (mainFromClause, querySourceClauseMapping); // only to add the clause to the mapping
+
+      var selectProjection = selectNode.GetResolvedSelector (querySourceClauseMapping); // new ( a = IR (a), b = IR (b) ).a.ID
 
       var result = TransparentIdentifierRemovingVisitor.ReplaceTransparentIdentifiers (selectProjection);
 
@@ -287,7 +295,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
       Assert.That (result, Is.InstanceOfType (typeof (MemberExpression)));
       Expression innerExpression = ((MemberExpression)result).Expression;
       Assert.That (innerExpression, Is.InstanceOfType (typeof (QuerySourceReferenceExpression)));
-      Assert.That (((QuerySourceReferenceExpression) innerExpression).ReferencedQuerySource, Is.InstanceOfType (typeof (ConstantExpressionNode)));
+      Assert.That (((QuerySourceReferenceExpression) innerExpression).ReferencedClause, Is.SameAs (mainFromClause));
     }
   }
 }
