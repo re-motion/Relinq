@@ -15,7 +15,6 @@
 // 
 using System;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Utilities;
 
@@ -27,19 +26,22 @@ namespace Remotion.Data.Linq.Clauses
   /// </summary>
   public class WhereClause : IBodyClause
   {
-    private readonly LambdaExpression _predicate;
+    private readonly LambdaExpression _legacyPredicate;
     private LambdaExpression _simplifiedBoolExpression;
     
     /// <summary>
     /// Initialize a new instance of <see cref="WhereClause"/>
     /// </summary>
     /// <param name="previousClause">The previous clause of type <see cref="IClause"/> in the <see cref="QueryModel"/>.</param>
+    /// <param name="legacyPredicate">To be removed.</param>
     /// <param name="predicate">The expression which represents the where conditions.</param>
-    public WhereClause (IClause previousClause, LambdaExpression predicate)
+    public WhereClause (IClause previousClause, LambdaExpression legacyPredicate, Expression predicate)
     {
-      ArgumentUtility.CheckNotNull ("predicate", predicate);
+      // TODO 1219: null check
+      ArgumentUtility.CheckNotNull ("predicate", legacyPredicate);
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
-      _predicate = predicate;
+      _legacyPredicate = legacyPredicate;
+      Predicate = predicate;
       PreviousClause = previousClause;
     }
 
@@ -51,17 +53,24 @@ namespace Remotion.Data.Linq.Clauses
     /// <summary>
     /// The expression which represents the where conditions.
     /// </summary>
-    // TODO 1158: Replace by ICriterion
-    public LambdaExpression Predicate
+    public LambdaExpression LegacyPredicate
     {
-      get { return _predicate; }
+      get { return _legacyPredicate; }
     }
 
-    // TODO: This will be removed when the new intermediate model is integrated with the QueryModel/clause structure.
+    /// <summary>
+    /// The expression which represents the where conditions.
+    /// </summary>
+    public Expression Predicate
+    {
+      get; private set;
+    }
+
+    // TODO 1219: Remove
     public LambdaExpression GetSimplifiedPredicate ()
     {
       if (_simplifiedBoolExpression == null)
-        _simplifiedBoolExpression = (LambdaExpression) PartialTreeEvaluatingVisitor.EvaluateIndependentSubtrees (Predicate);
+        _simplifiedBoolExpression = (LambdaExpression) PartialTreeEvaluatingVisitor.EvaluateIndependentSubtrees (LegacyPredicate);
       return _simplifiedBoolExpression;
     }
 
@@ -87,7 +96,7 @@ namespace Remotion.Data.Linq.Clauses
 
     public WhereClause Clone (IClause newPreviousClause)
     {
-      return new WhereClause (newPreviousClause, Predicate);
+      return new WhereClause (newPreviousClause, LegacyPredicate, Predicate);
     }
 
     IBodyClause IBodyClause.Clone (IClause newPreviousClause)

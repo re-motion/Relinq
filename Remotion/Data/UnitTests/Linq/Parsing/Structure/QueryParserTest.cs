@@ -153,7 +153,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       
       Assert.That (queryModel.BodyClauses.Count, Is.EqualTo (1));
       Assert.That (((WhereClause) queryModel.BodyClauses[0]).PreviousClause, Is.SameAs (queryModel.MainFromClause));
-      Assert.That (((WhereClause) queryModel.BodyClauses[0]).Predicate, Is.SameAs(((UnaryExpression)expressionTree.Arguments[1]).Operand));
+      Assert.That (((WhereClause) queryModel.BodyClauses[0]).LegacyPredicate, Is.SameAs(((UnaryExpression)expressionTree.Arguments[1]).Operand));
     }
 
     [Test]
@@ -191,7 +191,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 
       var result = _queryParser.GetParsedQuery (expression);
       var whereClause = (WhereClause) result.BodyClauses[0];
-      var predicateBody = (BinaryExpression) whereClause.Predicate.Body;
+      var predicateBody = (BinaryExpression) whereClause.LegacyPredicate.Body;
       Assert.That (((SubQueryExpression)predicateBody.Left).QueryModel.ParentQuery, Is.SameAs (result));
     }
 

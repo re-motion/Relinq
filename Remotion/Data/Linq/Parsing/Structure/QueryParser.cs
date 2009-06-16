@@ -19,6 +19,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Utilities;
 
@@ -73,7 +74,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       var subQueryRegistry = new List<QueryModel>();
       var node = _expressionTreeParser.ParseTree (expressionTreeRoot, subQueryRegistry);
 
-      IClause lastClause = CreateClauseChain (node);
+      IClause lastClause = CreateClauseChain (node, new QuerySourceClauseMapping());
       SelectClause selectClause = GetOrCreateSelectClause(node, lastClause);
 
       // TODO 1178: After COMMONS-1178, this code will not be needed any longer.
@@ -97,21 +98,23 @@ namespace Remotion.Data.Linq.Parsing.Structure
     /// order as the corresponding nodes.
     /// </summary>
     /// <param name="node">The last node in the chain to process.</param>
+    /// <param name="querySourceClauseMapping">A mapping where every <see cref="IQuerySourceExpressionNode"/> is mapped to its respective
+    /// clause. This is used to resolve predicates and selectors using <see cref="QuerySourceReferenceExpression"/>s.</param>
     /// <returns>An <see cref="IClause"/> that corresponds to <paramref name="node"/>. The chain defined by <see cref="IExpressionNode.Source"/>
     /// is reflected in the chain defined by <see cref="IClause.PreviousClause"/>.</returns>
-    private IClause CreateClauseChain (IExpressionNode node)
+    private IClause CreateClauseChain (IExpressionNode node, QuerySourceClauseMapping querySourceClauseMapping)
     {
       if (node.Source == null) // this is the end of the node chain, create a clause symbolizing the end of the clause chain
-        return node.CreateClause (null, new QuerySourceClauseMapping ());
+        return node.CreateClause (null, querySourceClauseMapping);
       else
       { // this is not the end of the chain, process the rest of the chain before processing this node
-        var previousClause = CreateClauseChain (node.Source);
+        var previousClause = CreateClauseChain (node.Source, querySourceClauseMapping);
 
         // TODO 1180: This is only temporary, we will implement a better model that does not require LetClause later on.
         if (previousClause is SelectClause)
           previousClause = CreateLetClauseFromSelectClause((SelectClause) previousClause);
 
-        return node.CreateClause (previousClause, new QuerySourceClauseMapping());
+        return node.CreateClause (previousClause, querySourceClauseMapping);
       }
     }
 

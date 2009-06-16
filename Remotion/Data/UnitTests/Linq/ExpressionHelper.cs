@@ -161,9 +161,8 @@ namespace Remotion.Data.UnitTests.Linq
 
     public static WhereClause CreateWhereClause ()
     {
-      LambdaExpression boolExpression = 
-          Expression.Lambda (Expression.MakeBinary (ExpressionType.Equal, Expression.Constant (1), Expression.Constant (2)));
-      return new WhereClause (CreateClause (), boolExpression);
+      var predicate = Expression.MakeBinary (ExpressionType.Equal, Expression.Constant (1), Expression.Constant (2));
+      return new WhereClause (CreateClause (), Expression.Lambda (predicate), predicate);
     }
 
     public static IClause CreateClause()

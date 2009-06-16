@@ -139,7 +139,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
       if (optionalPredicate != null)
       {
-        var whereClause = new WhereClause (selectClause.PreviousClause, optionalPredicate);
+        var whereClause = new WhereClause (selectClause.PreviousClause, optionalPredicate, null); // TODO 1219
         selectClause.PreviousClause = whereClause;
       }
     }

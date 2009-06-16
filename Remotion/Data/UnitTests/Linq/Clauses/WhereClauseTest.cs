@@ -20,9 +20,6 @@ using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Rhino.Mocks;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.DataObjectModel;
-using Remotion.Data.UnitTests.Linq.Parsing;
-using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 
 namespace Remotion.Data.UnitTests.Linq.Clauses
 {
@@ -32,47 +29,29 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test] 
     public void InitializeWithboolExpression()
     {
-      LambdaExpression boolExpression = ExpressionHelper.CreateLambdaExpression ();
+      var predicate = Expression.Constant (false);
+      LambdaExpression boolExpression = Expression.Lambda (predicate);
       IClause clause = ExpressionHelper.CreateClause();
       
-      WhereClause whereClause = new WhereClause(clause,boolExpression);
-      Assert.AreSame (clause, whereClause.PreviousClause);
-      Assert.AreSame (boolExpression, whereClause.Predicate);
+      var whereClause = new WhereClause(clause, boolExpression, predicate);
+      Assert.That (whereClause.PreviousClause, Is.SameAs (clause));
+      Assert.That (whereClause.Predicate, Is.SameAs (predicate));
     }
 
     [Test]
     public void ImplementInterface()
     {
       WhereClause whereClause = ExpressionHelper.CreateWhereClause();
-      Assert.IsInstanceOfType (typeof (IBodyClause), whereClause);
+      Assert.That (whereClause, Is.InstanceOfType (typeof (IBodyClause)));
     }
     
-    [Test]
-    public void GetSimplifiedPredicate ()
-    {
-      MethodCallExpression whereMethodCallExpression = WhereTestQueryGenerator.CreateWhereQueryWithEvaluatableSubExpression_WhereExpression (
-          ExpressionHelper.CreateQuerySource());
-      LambdaExpression boolExpression = (LambdaExpression) ((UnaryExpression) whereMethodCallExpression.Arguments[1]).Operand;
-      IClause clause = ExpressionHelper.CreateClause();
-      WhereClause whereClause = new WhereClause (clause, boolExpression);
-      LambdaExpression simplifiedExpression = whereClause.GetSimplifiedPredicate ();
-      LambdaExpression simplifiedExpression2 = whereClause.GetSimplifiedPredicate ();
-      Assert.AreSame (simplifiedExpression2, simplifiedExpression);
-
-      ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
-      Expression expected = Expression.Lambda (Expression.Equal (Expression.MakeMemberAccess (parameter, typeof (Student).GetProperty ("Last")),
-          Expression.Constant ("Garcia")), parameter);
-
-      ExpressionTreeComparer.CheckAreEqualTrees (simplifiedExpression, expected);
-    }
-
     [Test]
     public void Accept()
     {
       WhereClause whereClause = ExpressionHelper.CreateWhereClause();
 
-      MockRepository repository = new MockRepository ();
-      IQueryVisitor visitorMock = repository.StrictMock<IQueryVisitor> ();
+      var repository = new MockRepository ();
+      var visitorMock = repository.StrictMock<IQueryVisitor> ();
 
       visitorMock.VisitWhereClause (whereClause);
 
@@ -87,7 +66,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void QueryModelAtInitialization ()
     {
       WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
-      Assert.IsNull (whereClause.QueryModel);
+      Assert.That (whereClause.QueryModel, Is.Null);
     }
 
     [Test]
@@ -96,7 +75,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
       QueryModel model = ExpressionHelper.CreateQueryModel ();
       whereClause.SetQueryModel (model);
-      Assert.IsNotNull (whereClause.QueryModel);
+      Assert.That (whereClause.QueryModel, Is.Not.Null);
     }
 
     [Test]
@@ -126,6 +105,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
 
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (originalClause));
+      Assert.That (clone.LegacyPredicate, Is.SameAs (originalClause.LegacyPredicate));
       Assert.That (clone.Predicate, Is.SameAs (originalClause.Predicate));
       Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
       Assert.That (clone.QueryModel, Is.Null);

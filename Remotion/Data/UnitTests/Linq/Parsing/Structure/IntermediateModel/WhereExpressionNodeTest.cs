@@ -119,7 +119,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var clause = (WhereClause) node.CreateClause (previousClause, QuerySourceClauseMapping);
 
       Assert.That (clause.PreviousClause, Is.SameAs (previousClause));
-      Assert.That (clause.Predicate, Is.EqualTo (node.Predicate)); // TODO: This should become the resolved expression at a later point of time
+      Assert.That (clause.Predicate, Is.EqualTo (node.GetResolvedPredicate(QuerySourceClauseMapping)));
     }
   }
 }

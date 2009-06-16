@@ -97,7 +97,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       Assert.That (clause.PreviousClause, Is.Not.SameAs (previousPreviousClause));
       var newWhereClause = (WhereClause) clause.PreviousClause;
       Assert.That (newWhereClause.PreviousClause, Is.SameAs (previousPreviousClause));
-      Assert.That (newWhereClause.Predicate, Is.SameAs (optionalPredicate));
+      Assert.That (newWhereClause.LegacyPredicate, Is.SameAs (optionalPredicate));
     }
 
     protected void TestCreateClause_WithOptionalSelector (IExpressionNode node, Expression<Func<Student, int>> selectorOfPreviousClause, Expression<Func<Student, string>> expectedNewSelector)
