@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 
@@ -25,59 +26,55 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
   [TestFixture]
   public class QuerySourceClauseMappingTest
   {
+    private QuerySourceClauseMapping _mapping;
+    private ConstantExpressionNode _node;
+    private MainFromClause _clause;
+
+    [SetUp]
+    public void SetUp ()
+    {
+      _node = new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3 });
+      _mapping = new QuerySourceClauseMapping ();
+      _clause = ExpressionHelper.CreateMainFromClause ();
+    }
+
     [Test]
     public void AddMapping ()
     {
-      var node = new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3 });
-      var clause = ExpressionHelper.CreateMainFromClause ();
-      var mapping = new QuerySourceClauseMapping ();
-      mapping.AddMapping (node, clause);
+      _mapping.AddMapping (_node, _clause);
 
-      Assert.That (mapping.GetFromClause (node), Is.Not.Null);
+      Assert.That (_mapping.GetFromClause (_node), Is.Not.Null);
     }
 
     [Test]
     public void AddMapping_IncreasesCount ()
     {
-      var node = new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3 });
-      var clause = ExpressionHelper.CreateMainFromClause();
-      var mapping = new QuerySourceClauseMapping();
-      mapping.AddMapping (node, clause);
+      _mapping.AddMapping (_node, _clause);
 
-      Assert.That (mapping.Count, Is.EqualTo (1));
+      Assert.That (_mapping.Count, Is.EqualTo (1));
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Node already has an associated class.")]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Node already has an associated clause.")]
     public void AddMappingTwice ()
     {
-      var node = new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3 });
-      var clause = ExpressionHelper.CreateMainFromClause();
-      var mapping = new QuerySourceClauseMapping();
-      mapping.AddMapping (node, clause);
-      mapping.AddMapping (node, clause);
+      _mapping.AddMapping (_node, _clause);
+      _mapping.AddMapping (_node, _clause);
     }
 
     [Test]
     public void GetFromClause ()
     {
-      var node = new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3 });
-      var clause = ExpressionHelper.CreateMainFromClause ();
-      var mapping = new QuerySourceClauseMapping ();
-      mapping.AddMapping (node, clause);
+      _mapping.AddMapping (_node, _clause);
 
-      Assert.That (mapping.GetFromClause (node), Is.SameAs (clause));
+      Assert.That (_mapping.GetFromClause (_node), Is.SameAs (_clause));
     }
 
     [Test]
     [ExpectedException (typeof (KeyNotFoundException), ExpectedMessage = "Node has no associated clause.")]
     public void GetFromClause_ThrowsException ()
     {
-      var node = new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3 });
-      var clause = ExpressionHelper.CreateMainFromClause ();
-      var mapping = new QuerySourceClauseMapping ();
-
-      mapping.GetFromClause (node);
+      _mapping.GetFromClause (_node);
     }
     
   }

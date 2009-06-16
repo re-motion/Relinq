@@ -22,30 +22,37 @@ using Remotion.Utilities;
 namespace Remotion.Data.Linq.Parsing.Structure
 {
   /// <summary>
-  /// Represents a lookup class from <see cref="IQuerySourceExpressionNode"/> to the respective <see cref="FromClauseBase"/>
+  /// Represents a lookup class from <see cref="IQuerySourceExpressionNode"/> to the respective <see cref="FromClauseBase"/>. This is filled
+  /// when the <see cref="QueryParser"/> generates clauses from expression nodes, and it is used when resolving expressions whose data stems
+  /// from <see cref="IQuerySourceExpressionNode"/> instances to associate the respective clause.
   /// </summary>
   public class QuerySourceClauseMapping
   {
-    private Dictionary<IQuerySourceExpressionNode, FromClauseBase> _lookup;
-
-    public int Count { get; private set; }
+    private readonly Dictionary<IQuerySourceExpressionNode, FromClauseBase> _lookup;
 
     public QuerySourceClauseMapping ()
     {
       _lookup = new Dictionary<IQuerySourceExpressionNode, FromClauseBase>();
-      Count = 0;
     }
 
+    public int Count
+    {
+      get { return _lookup.Count; }
+    }
 
     public void AddMapping (IQuerySourceExpressionNode node, FromClauseBase fromClause)
     {
       ArgumentUtility.CheckNotNull ("node", node);
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
 
-      if (_lookup.ContainsKey (node))
-        throw new InvalidOperationException ("Node already has an associated class.");
-      _lookup.Add (node, fromClause);
-      Count++;
+      try
+      {
+        _lookup.Add (node, fromClause);
+      }
+      catch (ArgumentException)
+      {
+        throw new InvalidOperationException ("Node already has an associated clause.");
+      }
     }
 
     public FromClauseBase GetFromClause (IQuerySourceExpressionNode node)
@@ -55,9 +62,8 @@ namespace Remotion.Data.Linq.Parsing.Structure
       FromClauseBase fromClause;
       if (!_lookup.TryGetValue (node, out fromClause))
         throw new KeyNotFoundException ("Node has no associated clause.");
+
       return fromClause;
     }
-
-
   }
 }
