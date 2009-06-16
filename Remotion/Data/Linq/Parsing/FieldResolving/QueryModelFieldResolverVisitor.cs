@@ -18,7 +18,6 @@ using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Utilities;
-using System.Linq;
 
 namespace Remotion.Data.Linq.Parsing.FieldResolving
 {
@@ -27,42 +26,26 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
   /// </summary>
   public class QueryModelFieldResolverVisitor : ExpressionTreeVisitor
   {
-    public class Result
-    {
-      public Result (Expression reducedExpression, IResolveableClause fromClause, bool hackNeeded)
-      {
-        if (!hackNeeded)
-          ArgumentUtility.CheckNotNull ("fromClause", fromClause);
-
-        ReducedExpression = reducedExpression;
-        ResolveableClause = fromClause;
-        HackNeeded = hackNeeded; // TODO 1096: Remove.
-      }
-
-      public Expression ReducedExpression { get; private set; }
-      public IResolveableClause ResolveableClause { get; private set; }
-      public bool HackNeeded { get; private set; } // TODO 1096: Remove.
-    }
-
     private readonly QueryModel _queryModel;
 
     private IResolveableClause _clause;
     private bool _hackNeeded; // TODO 1096: Remove.
 
-    public QueryModelFieldResolverVisitor (QueryModel queryModel)
+    private QueryModelFieldResolverVisitor (QueryModel queryModel)
     {
       ArgumentUtility.CheckNotNull ("queryExpression", queryModel);
       _queryModel = queryModel;
-    }
-
-    public Result ParseAndReduce (Expression expression)
-    {
       _clause = null;
       _hackNeeded = false; // TODO 1096: Remove.
-      
-      Expression reducedExpression = VisitExpression (expression);
-      if (_clause != null || _hackNeeded)
-        return new Result (reducedExpression, _clause, _hackNeeded);
+    }
+
+    public static QueryModelFieldResolverVisitorResult ParseAndReduce (QueryModel queryModel, Expression expression)
+    {
+      var visitor = new QueryModelFieldResolverVisitor (queryModel);
+
+      Expression reducedExpression = visitor.VisitExpression (expression);
+      if (visitor._clause != null || visitor._hackNeeded)
+        return new QueryModelFieldResolverVisitorResult (reducedExpression, visitor._clause, visitor._hackNeeded);
       else
         return null;
     }

@@ -69,6 +69,7 @@
     <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\EvaluatableTreeFindingVisitor.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\PartialEvaluationInfo.cs" />
     <Compile Include="Parsing\FieldResolving\FieldAccessInfo.cs" />
+    <Compile Include="Parsing\FieldResolving\QueryModelFieldResolverVisitorResult.cs" />
     <Compile Include="Parsing\Structure\QuerySourceClauseMapping.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\CastExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\IExpressionNodeParseInfo.cs" />

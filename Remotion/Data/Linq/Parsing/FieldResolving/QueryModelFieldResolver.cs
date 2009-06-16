@@ -38,8 +38,7 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
       ArgumentUtility.CheckNotNull ("fieldAccessExpression", fieldAccessExpression);
       ArgumentUtility.CheckNotNull ("joinedTableContext", joinedTableContext);
 
-      QueryModelFieldResolverVisitor visitor = new QueryModelFieldResolverVisitor (_queryModel);
-      QueryModelFieldResolverVisitor.Result visitorResult = visitor.ParseAndReduce (fieldAccessExpression);
+      var visitorResult = QueryModelFieldResolverVisitor.ParseAndReduce (_queryModel, fieldAccessExpression);
 
       if (visitorResult != null)
       {

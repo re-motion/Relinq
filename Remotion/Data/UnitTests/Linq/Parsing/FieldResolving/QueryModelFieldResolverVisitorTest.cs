@@ -42,7 +42,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
       var querySourceReferenceExpression = new QuerySourceReferenceExpression (clause);
 
       QueryModel queryModel = CreateQueryExpression ();
-      QueryModelFieldResolverVisitor.Result result = new QueryModelFieldResolverVisitor (queryModel).ParseAndReduce (querySourceReferenceExpression);
+      QueryModelFieldResolverVisitorResult result = QueryModelFieldResolverVisitor.ParseAndReduce (queryModel, querySourceReferenceExpression);
 
       Assert.That (result.ResolveableClause, Is.SameAs (clause));
     }
@@ -53,7 +53,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
       QueryModel queryModel = CreateQueryExpression();
 
       Expression sourceExpression = Expression.Parameter (typeof (Student), "s1");
-      QueryModelFieldResolverVisitor.Result result = new QueryModelFieldResolverVisitor (queryModel).ParseAndReduce(sourceExpression);
+      QueryModelFieldResolverVisitorResult result = QueryModelFieldResolverVisitor.ParseAndReduce (queryModel, sourceExpression);
       Assert.AreSame (sourceExpression, result.ReducedExpression);
       Assert.AreSame (queryModel.MainFromClause, result.ResolveableClause);
     }
@@ -64,7 +64,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
       QueryModel queryModel = CreateQueryExpression ();
 
       Expression sourceExpression = Expression.Parameter (typeof (Student), "s2");
-      QueryModelFieldResolverVisitor.Result result = new QueryModelFieldResolverVisitor (queryModel).ParseAndReduce (sourceExpression);
+      QueryModelFieldResolverVisitorResult result = QueryModelFieldResolverVisitor.ParseAndReduce (queryModel, sourceExpression);
       Assert.AreSame (sourceExpression, result.ReducedExpression);
       Assert.AreSame (queryModel.BodyClauses.First(), result.ResolveableClause);
     }
@@ -77,7 +77,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
       Expression sourceExpression = Expression.MakeMemberAccess (
           Expression.Parameter (typeof (Student), "s1"),
           typeof (Student).GetProperty ("First"));
-      QueryModelFieldResolverVisitor.Result result = new QueryModelFieldResolverVisitor (queryModel).ParseAndReduce (sourceExpression);
+      QueryModelFieldResolverVisitorResult result = QueryModelFieldResolverVisitor.ParseAndReduce (queryModel, sourceExpression);
       Assert.AreSame (sourceExpression, result.ReducedExpression);
       Assert.AreSame (queryModel.MainFromClause, result.ResolveableClause);
     }
@@ -91,7 +91,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
           Expression.Parameter (typeof (AnonymousType), "transparent1"),
           typeof (AnonymousType).GetField ("s1"));
 
-      QueryModelFieldResolverVisitor.Result result = new QueryModelFieldResolverVisitor (queryModel).ParseAndReduce (sourceExpression);
+      QueryModelFieldResolverVisitorResult result = QueryModelFieldResolverVisitor.ParseAndReduce (queryModel, sourceExpression);
       ParameterExpression expectedReducedExpression = Expression.Parameter (typeof (Student), "s1");
       ExpressionTreeComparer.CheckAreEqualTrees (expectedReducedExpression, result.ReducedExpression);
       Assert.AreSame (queryModel.MainFromClause, result.ResolveableClause);
@@ -108,7 +108,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
               typeof (AnonymousType).GetField ("s1")),
           typeof (Student).GetProperty ("First"));
 
-      QueryModelFieldResolverVisitor.Result result = new QueryModelFieldResolverVisitor (queryModel).ParseAndReduce (sourceExpression);
+      QueryModelFieldResolverVisitorResult result = QueryModelFieldResolverVisitor.ParseAndReduce (queryModel, sourceExpression);
       Expression expectedReducedExpression = Expression.MakeMemberAccess (
           Expression.Parameter (typeof (Student), "s1"),
           typeof (Student).GetProperty ("First"));
@@ -127,7 +127,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
               typeof (AnonymousType).GetField ("transparent2")),
           typeof (AnonymousType).GetField ("s1"));
       
-      QueryModelFieldResolverVisitor.Result result = new QueryModelFieldResolverVisitor (queryModel).ParseAndReduce (sourceExpression);
+      QueryModelFieldResolverVisitorResult result = QueryModelFieldResolverVisitor.ParseAndReduce (queryModel, sourceExpression);
       ParameterExpression expectedReducedExpression = Expression.Parameter (typeof (Student), "s1");
       ExpressionTreeComparer.CheckAreEqualTrees (expectedReducedExpression, result.ReducedExpression);
       Assert.AreSame (queryModel.MainFromClause, result.ResolveableClause);
@@ -144,7 +144,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
               typeof (AnonymousType).GetField ("transparent2")),
           typeof (AnonymousType).GetField ("fzlbf"));
 
-      Assert.IsNull (new QueryModelFieldResolverVisitor (queryModel).ParseAndReduce (sourceExpression));
+      Assert.IsNull (QueryModelFieldResolverVisitor.ParseAndReduce (queryModel, sourceExpression));
     }
 
     private QueryModel CreateQueryExpression ()
@@ -152,7 +152,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
       ParameterExpression s1 = Expression.Parameter (typeof (Student), "s1");
       ParameterExpression s2 = Expression.Parameter (typeof (Student), "s2");
       MainFromClause mainFromClause = ExpressionHelper.CreateMainFromClause(s1, ExpressionHelper.CreateQuerySource ());
-      AdditionalFromClause additionalFromClause =
+      var additionalFromClause =
           new AdditionalFromClause (mainFromClause, s2, ExpressionHelper.CreateLambdaExpression (), ExpressionHelper.CreateLambdaExpression ());
 
       QueryModel model = ExpressionHelper.CreateQueryModel (mainFromClause);
