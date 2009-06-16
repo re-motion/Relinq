@@ -46,6 +46,7 @@ namespace Remotion.Data.Linq.Parsing.Details
       RegisterParser (typeof (NewExpression), new NewExpressionParser (this));
       RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (resolver));
       RegisterParser (typeof (SubQueryExpression), new SubQueryExpressionParser ());
+      RegisterParser (typeof (QuerySourceReferenceExpression), new QuerySourceReferenceExpressionParser (resolver));
     }
 
     public IEnumerable<ISelectProjectionParser> GetParsers (Type expressionType)

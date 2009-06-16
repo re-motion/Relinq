@@ -14,41 +14,42 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing.FieldResolving;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing
 {
-  public class ParameterExpressionParser : ISelectProjectionParser
+  public class QuerySourceReferenceExpressionParser : ISelectProjectionParser
   {
-    // parameter expression parsing is the same for where conditions and select projections, so delegate to that implementation
-    private readonly WhereConditionParsing.ParameterExpressionParser _innerParser;
+    // query source reference expression parsing is the same for where conditions and select projections, so delegate to that implementation
+    private readonly WhereConditionParsing.QuerySourceReferenceExpressionParser _innerParser;
 
-    public ParameterExpressionParser (ClauseFieldResolver resolver)
+    public QuerySourceReferenceExpressionParser (ClauseFieldResolver resolver)
     {
       ArgumentUtility.CheckNotNull ("resolver", resolver);
-      _innerParser = new WhereConditionParsing.ParameterExpressionParser (resolver);
+      _innerParser = new WhereConditionParsing.QuerySourceReferenceExpressionParser (resolver);
     }
 
-    public IEvaluation Parse (ParameterExpression parameterExpression, ParseContext parseContext)
+    public IEvaluation Parse (QuerySourceReferenceExpression referenceExpression, ParseContext parseContext)
     {
-      ArgumentUtility.CheckNotNull ("parameterExpression", parameterExpression);
+      ArgumentUtility.CheckNotNull ("referenceExpression", referenceExpression);
       ArgumentUtility.CheckNotNull ("parseContext", parseContext);
-      return _innerParser.Parse (parameterExpression, parseContext);
+      return _innerParser.Parse (referenceExpression, parseContext);
     }
 
     IEvaluation ISelectProjectionParser.Parse (Expression expression, ParseContext parseContext)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       ArgumentUtility.CheckNotNull ("parseContext", parseContext);
-      return Parse ((ParameterExpression) expression, parseContext);
+      return Parse ((QuerySourceReferenceExpression) expression, parseContext);
     }
 
     public bool CanParse(Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      return expression is ParameterExpression;
+      return expression is QuerySourceReferenceExpression;
     }
   }
 }

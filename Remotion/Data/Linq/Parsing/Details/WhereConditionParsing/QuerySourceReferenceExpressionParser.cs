@@ -14,37 +14,38 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing.FieldResolving;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
 {
-  public class ParameterExpressionParser : IWhereConditionParser
+  public class QuerySourceReferenceExpressionParser : IWhereConditionParser
   {
     private readonly ClauseFieldResolver _resolver;
 
-    public ParameterExpressionParser (ClauseFieldResolver resolver)
+    public QuerySourceReferenceExpressionParser (ClauseFieldResolver resolver)
     {
       ArgumentUtility.CheckNotNull ("resolver", resolver);
       _resolver = resolver;
     }
 
-    public ICriterion Parse (ParameterExpression parameterExpression, ParseContext parseContext)
+    public ICriterion Parse (QuerySourceReferenceExpression referenceExpression, ParseContext parseContext)
     {
-      FieldDescriptor fieldDescriptor = parseContext.QueryModel.ResolveField (_resolver, parameterExpression, parseContext.JoinedTableContext);
+      FieldDescriptor fieldDescriptor = parseContext.QueryModel.ResolveField (_resolver, referenceExpression, parseContext.JoinedTableContext);
       parseContext.FieldDescriptors.Add (fieldDescriptor);
       return fieldDescriptor.GetMandatoryColumn ();
     }
 
     ICriterion IWhereConditionParser.Parse (Expression expression, ParseContext parseContext)
     {
-      return Parse ((ParameterExpression) expression, parseContext);
+      return Parse ((QuerySourceReferenceExpression) expression, parseContext);
     }
 
     public bool CanParse(Expression expression)
     {
-      return expression is ParameterExpression;
+      return expression is QuerySourceReferenceExpression;
     }
   }
 }

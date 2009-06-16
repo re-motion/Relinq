@@ -13,35 +13,32 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-using System.Linq.Expressions;
 using NUnit.Framework;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.DataObjectModel;
-using Remotion.Data.Linq.Parsing.Details.WhereConditionParsing;
+using Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing;
 using Remotion.Data.Linq.Parsing.FieldResolving;
-using NUnit.Framework.SyntaxHelpers;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing.Details.WhereConditionParsing
+namespace Remotion.Data.UnitTests.Linq.Parsing.Details.SelectProjectionParsing
 {
   [TestFixture]
-  public class ParameterExpressionParserTest : DetailParserTestBase
+  public class QuerySourceReferenceExpressionParserTest : DetailParserTestBase
   {
     [Test]
     public void Parse ()
     {
-      ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
-
-      var resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
+      var expression = new QuerySourceReferenceExpression (QueryModel.MainFromClause);
+      var resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, new SelectFieldAccessPolicy());
 
       var fromSource = QueryModel.MainFromClause.GetColumnSource (StubDatabaseInfo.Instance);
       var path = new FieldSourcePath (fromSource, new SingleJoin[0]);
-      var expectedFieldDescriptor = new FieldDescriptor (null, path, new Column (fromSource, "IDColumn"));
-      ICriterion expectedCriterion = expectedFieldDescriptor.Column;
+      var expectedFieldDescriptor = new FieldDescriptor (null, path, new Column (fromSource, "*"));
+      IEvaluation expectedEvaluation = expectedFieldDescriptor.Column;
 
-      var parser = new ParameterExpressionParser (resolver);
+      var parser = new QuerySourceReferenceExpressionParser (resolver);
 
-      ICriterion actualCriterion = parser.Parse (parameter, ParseContext);
-      Assert.AreEqual (expectedCriterion, actualCriterion);
-      Assert.That (ParseContext.FieldDescriptors, Is.EqualTo (new[] { expectedFieldDescriptor }));
+      IEvaluation actualEvaluation = parser.Parse (expression, ParseContext);
+      Assert.AreEqual (expectedEvaluation, actualEvaluation);
     }
   }
 }

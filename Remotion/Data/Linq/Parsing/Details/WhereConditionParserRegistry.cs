@@ -38,10 +38,11 @@ namespace Remotion.Data.Linq.Parsing.Details
       RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (databaseInfo));
       RegisterParser (typeof (MethodCallExpression), new MethodCallExpressionParser (this));
       RegisterParser (typeof (MethodCallExpression), new LikeParser (this));
-      RegisterParser (typeof (SubQueryExpression), new SubQueryExpressionParser ());
       RegisterParser (typeof (MethodCallExpression), new ContainsParser (this));
       RegisterParser (typeof (MethodCallExpression), new ContainsFullTextParser (this));
+      RegisterParser (typeof (SubQueryExpression), new SubQueryExpressionParser ());
       RegisterParser (typeof (UnaryExpression), new UnaryExpressionParser (this));
+      RegisterParser (typeof (QuerySourceReferenceExpression), new QuerySourceReferenceExpressionParser (resolver));
     }
 
     public IEnumerable<IWhereConditionParser> GetParsers (Type expressionType)

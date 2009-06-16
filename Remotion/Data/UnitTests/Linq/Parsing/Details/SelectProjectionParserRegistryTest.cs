@@ -51,7 +51,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details
     [Test]
     public void Initialization_AddsDefaultParsers ()
     {
-      SelectProjectionParserRegistry selectProjectionParserRegistry =
+      var selectProjectionParserRegistry =
         new SelectProjectionParserRegistry (_databaseInfo,_parseMode);
 
       Assert.That (selectProjectionParserRegistry.GetParsers (typeof (BinaryExpression)).ToArray (), Is.Not.Empty);
@@ -59,7 +59,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details
       Assert.That (selectProjectionParserRegistry.GetParsers (typeof (MemberExpression)).ToArray (), Is.Not.Empty);
       Assert.That (selectProjectionParserRegistry.GetParsers (typeof (MethodCallExpression)).ToArray (), Is.Not.Empty);
       Assert.That (selectProjectionParserRegistry.GetParsers (typeof (NewExpression)).ToArray (), Is.Not.Empty);
-      Assert.That (selectProjectionParserRegistry.GetParsers (typeof (ParameterExpression)).ToArray (), Is.Not.Empty);     
+      Assert.That (selectProjectionParserRegistry.GetParsers (typeof (ParameterExpression)).ToArray (), Is.Not.Empty);
+      Assert.That (selectProjectionParserRegistry.GetParsers (typeof (SubQueryExpression)).ToArray (), Is.Not.Empty);
+      Assert.That (selectProjectionParserRegistry.GetParsers (typeof (QuerySourceReferenceExpression)).ToArray (), Is.Not.Empty);
     }
 
     [Test]

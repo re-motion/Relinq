@@ -17,10 +17,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Data.Linq;
-using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.Details;
 using Remotion.Data.Linq.Parsing.Details.WhereConditionParsing;
-using Remotion.Data.Linq.Parsing.FieldResolving;
 using NUnit.Framework.SyntaxHelpers;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Details
@@ -29,40 +28,40 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details
   public class WhereConditionParserRegistryTest
   {
     private IDatabaseInfo _databaseInfo;
-    private ParameterExpression _parameter;
-    private MainFromClause _fromClause;
-    private QueryModel _queryModel;
-    private JoinedTableContext _context;
-    private WhereClause _whereClause;
     private WhereConditionParserRegistry _whereConditionParserRegistry;
-    private ParserRegistry _parserRegistry;
 
     [SetUp]
     public void SetUp ()
     {
       _databaseInfo = StubDatabaseInfo.Instance;
-      _parameter = Expression.Parameter (typeof (Student), "s");
-      _fromClause = ExpressionHelper.CreateMainFromClause (_parameter, ExpressionHelper.CreateQuerySource ());
-      _queryModel = ExpressionHelper.CreateQueryModel (_fromClause);
-      _context = new JoinedTableContext ();
-      _whereClause = ExpressionHelper.CreateWhereClause ();
       _whereConditionParserRegistry = new WhereConditionParserRegistry (_databaseInfo);
-      _parserRegistry = new ParserRegistry ();
     }
 
     [Test]
     public void Initialization_AddsDefaultParsers ()
     {
-      WhereConditionParserRegistry whereConditionParserRegistry = 
-        new WhereConditionParserRegistry (_databaseInfo);
+      var whereConditionParserRegistry = new WhereConditionParserRegistry (_databaseInfo);
 
       Assert.That (whereConditionParserRegistry.GetParsers (typeof (BinaryExpression)).ToArray (), Is.Not.Empty);
-      Assert.That (whereConditionParserRegistry.GetParsers (typeof (ConstantExpression)).ToArray (), Is.Not.Empty);
       Assert.That (whereConditionParserRegistry.GetParsers (typeof (MemberExpression)).ToArray (), Is.Not.Empty);
-      Assert.That (whereConditionParserRegistry.GetParsers (typeof (MethodCallExpression)).ToArray (), Is.Not.Empty);
       Assert.That (whereConditionParserRegistry.GetParsers (typeof (ParameterExpression)).ToArray (), Is.Not.Empty);
+      Assert.That (whereConditionParserRegistry.GetParsers (typeof (ConstantExpression)).ToArray (), Is.Not.Empty);
+      Assert.That (whereConditionParserRegistry.GetParsers (typeof (MethodCallExpression)).ToArray (), Is.Not.Empty);
+      Assert.That (whereConditionParserRegistry.GetParsers (typeof (SubQueryExpression)).ToArray (), Is.Not.Empty);
       Assert.That (whereConditionParserRegistry.GetParsers (typeof (UnaryExpression)).ToArray (), Is.Not.Empty);
-      
+      Assert.That (whereConditionParserRegistry.GetParsers (typeof (QuerySourceReferenceExpression)).ToArray (), Is.Not.Empty);      
+    }
+
+    [Test]
+    public void Initialization_MethodCallParsers ()
+    {
+      var whereConditionParserRegistry = new WhereConditionParserRegistry (_databaseInfo);
+
+      var parsers = whereConditionParserRegistry.GetParsers (typeof (MethodCallExpression)).ToArray ();
+      Assert.That (parsers.SingleOrDefault (p => p.GetType () == typeof (MethodCallExpressionParser)), Is.Not.Null);
+      Assert.That (parsers.SingleOrDefault (p => p.GetType () == typeof (LikeParser)), Is.Not.Null);
+      Assert.That (parsers.SingleOrDefault (p => p.GetType () == typeof (ContainsParser)), Is.Not.Null);
+      Assert.That (parsers.SingleOrDefault (p => p.GetType () == typeof (ContainsFullTextParser)), Is.Not.Null);
     }
 
     [Test]
@@ -70,7 +69,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details
     {
       Assert.That (_whereConditionParserRegistry.GetParsers (typeof (MethodCallExpression)).Count (), Is.EqualTo (4));
       
-      LikeParser likeParser = new LikeParser (_whereConditionParserRegistry);
+      var likeParser = new LikeParser (_whereConditionParserRegistry);
       _whereConditionParserRegistry.RegisterParser (typeof (MethodCallExpression), likeParser);
       Assert.That (_whereConditionParserRegistry.GetParsers (typeof (MethodCallExpression)).Count (), Is.EqualTo (5));
       Assert.That (_whereConditionParserRegistry.GetParsers (typeof (MethodCallExpression)).First (), Is.SameAs (likeParser));

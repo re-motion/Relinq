@@ -65,7 +65,9 @@
     <Compile Include="Clauses\ResultModifications\SingleResultModification.cs" />
     <Compile Include="Clauses\ResultModifications\DistinctResultModification.cs" />
     <Compile Include="Clauses\ResultModifications\CountResultModification.cs" />
+    <Compile Include="Parsing\Details\SelectProjectionParsing\QuerySourceReferenceExpressionParser.cs" />
     <Compile Include="Parsing\Details\SelectProjectionParsing\SubQueryExpressionParser.cs" />
+    <Compile Include="Parsing\Details\WhereConditionParsing\QuerySourceReferenceExpressionParser.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\EvaluatableTreeFindingVisitor.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\PartialEvaluationInfo.cs" />
     <Compile Include="Parsing\FieldResolving\FieldAccessInfo.cs" />
