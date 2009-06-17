@@ -114,7 +114,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       Assert.That (clause.PreviousClause, Is.Not.SameAs (previousPreviousClause));
       var newWhereClause = (WhereClause) clause.PreviousClause;
       Assert.That (newWhereClause.PreviousClause, Is.SameAs (previousPreviousClause));
-      Assert.That (newWhereClause.LegacyPredicate, Is.SameAs (node.OptionalPredicate));
       Assert.That (newWhereClause.Predicate, Is.SameAs (node.GetResolvedOptionalPredicate (ClauseGenerationContext)));
     }
 

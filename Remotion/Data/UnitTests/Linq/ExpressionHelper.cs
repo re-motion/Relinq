@@ -18,8 +18,10 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultModifications;
 using Remotion.Data.Linq.Parsing;
+using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Parsing.Structure;
 using Rhino.Mocks;
 using Remotion.Data.Linq.Clauses;
@@ -163,7 +165,7 @@ namespace Remotion.Data.UnitTests.Linq
     public static WhereClause CreateWhereClause ()
     {
       var predicate = Expression.MakeBinary (ExpressionType.Equal, Expression.Constant (1), Expression.Constant (2));
-      return new WhereClause (CreateClause (), Expression.Lambda (predicate), predicate);
+      return new WhereClause (CreateClause (), predicate);
     }
 
     public static IClause CreateClause()
@@ -316,6 +318,11 @@ namespace Remotion.Data.UnitTests.Linq
     public static ResultModificationBase CreateResultModifierClause ()
     {
       return CreateResultModifierClause (CreateSelectClause ());
+    }
+
+    public static Expression Resolve<TParameter, TResult> (FromClauseBase fromClauseToReference, Expression<Func<TParameter, TResult>> expressionToBeResolved)
+    {
+      return ReplacingVisitor.Replace (expressionToBeResolved.Parameters[0], new QuerySourceReferenceExpression (fromClauseToReference), expressionToBeResolved.Body);
     }
   }
 }

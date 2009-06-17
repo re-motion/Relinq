@@ -105,7 +105,7 @@ namespace Remotion.Data.Linq.StringBuilding
     {
       ArgumentUtility.CheckNotNull ("whereClause", whereClause);
 
-      _sb.AppendFormat ("where {0} ", whereClause.LegacyPredicate.Body);
+      _sb.AppendFormat ("where {0} ", whereClause.Predicate);
     }
 
     public void VisitOrderByClause (OrderByClause orderByClause)

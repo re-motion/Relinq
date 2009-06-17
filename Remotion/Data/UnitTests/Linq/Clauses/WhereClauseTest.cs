@@ -30,10 +30,9 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void InitializeWithboolExpression()
     {
       var predicate = Expression.Constant (false);
-      LambdaExpression boolExpression = Expression.Lambda (predicate);
       IClause clause = ExpressionHelper.CreateClause();
       
-      var whereClause = new WhereClause(clause, boolExpression, predicate);
+      var whereClause = new WhereClause(clause, predicate);
       Assert.That (whereClause.PreviousClause, Is.SameAs (clause));
       Assert.That (whereClause.Predicate, Is.SameAs (predicate));
     }
@@ -105,7 +104,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
 
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (originalClause));
-      Assert.That (clone.LegacyPredicate, Is.SameAs (originalClause.LegacyPredicate));
       Assert.That (clone.Predicate, Is.SameAs (originalClause.Predicate));
       Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
       Assert.That (clone.QueryModel, Is.Null);

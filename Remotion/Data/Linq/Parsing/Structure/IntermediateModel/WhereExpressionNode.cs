@@ -73,7 +73,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public override IClause CreateClause (IClause previousClause, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
-      return new WhereClause (previousClause, Predicate, GetResolvedPredicate (clauseGenerationContext));
+      return new WhereClause (previousClause, GetResolvedPredicate (clauseGenerationContext));
     }
   }
 }

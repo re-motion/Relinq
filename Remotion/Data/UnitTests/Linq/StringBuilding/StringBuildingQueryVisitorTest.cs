@@ -283,7 +283,7 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
           repository.StrictMock<AdditionalFromClause> (ExpressionHelper.CreateClause (), Expression.Parameter(typeof(Student),"p"),
                                                        ExpressionHelper.CreateLambdaExpression (), ExpressionHelper.CreateLambdaExpression ());
       WhereClause whereClause1 =
-          repository.StrictMock<WhereClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateLambdaExpression (), ExpressionHelper.CreateExpression ());
+          repository.StrictMock<WhereClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateExpression ());
 
       QueryModel queryModel = new QueryModel (typeof (IQueryable<string>), fromClause, selectClause1);
       queryModel.AddBodyClause (orderByClause1);

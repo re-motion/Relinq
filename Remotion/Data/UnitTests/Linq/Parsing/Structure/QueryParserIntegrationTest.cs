@@ -56,7 +56,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     {
       var expression = WhereTestQueryGenerator.CreateSimpleWhereQuery (_querySource).Expression;
       var queryModel = _queryParser.GetParsedQuery (expression);
-      var navigator = new ExpressionTreeNavigator (expression);
 
       var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
       var whereClause = (WhereClause) queryModel.BodyClauses[0];
@@ -66,7 +65,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (queryModel.MainFromClause.PreviousClause, Is.Null);
       Assert.That (selectClause.PreviousClause, Is.EqualTo (whereClause));
       Assert.That (whereClause.PreviousClause, Is.EqualTo (queryModel.MainFromClause));
-      Assert.That (navigator.Arguments[1].Operand.Expression, Is.SameAs (whereClause.LegacyPredicate));
+
+      CheckResolvedExpression<Student, bool> (whereClause.Predicate, queryModel.MainFromClause, s => s.Last == "Garcia");
 
       var parameterExpression = Expression.Parameter (typeof (Student), "s");
       var expectedSelectExpression = Expression.Lambda (typeof (Func<Student, Student>), parameterExpression, parameterExpression);
@@ -79,7 +79,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     {
       var expression = WhereTestQueryGenerator.CreateMultiWhereQuery (_querySource).Expression;
       var queryModel = _queryParser.GetParsedQuery (expression);
-      var navigator = new ExpressionTreeNavigator (expression);
 
       var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
       var whereClause1 = (WhereClause) queryModel.BodyClauses[0];
@@ -94,13 +93,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (selectClause.PreviousClause, Is.EqualTo (whereClause3));
       Assert.That (whereClause3.PreviousClause, Is.EqualTo (whereClause2));
 
-      var whereMethodCall1 = navigator.Arguments[0].Arguments[0].Arguments[1].Operand.Expression;
-      var whereMethodCall2 = navigator.Arguments[0].Arguments[1].Operand.Expression;
-      var whereMethodCall3 = navigator.Arguments[1].Operand.Expression;
-
-      Assert.That (whereClause1.LegacyPredicate, Is.SameAs (whereMethodCall1));
-      Assert.That (whereClause2.LegacyPredicate, Is.SameAs (whereMethodCall2));
-      Assert.That (whereClause3.LegacyPredicate, Is.SameAs (whereMethodCall3));
+      CheckResolvedExpression<Student, bool> (whereClause1.Predicate, queryModel.MainFromClause, s => s.Last == "Garcia");
+      CheckResolvedExpression<Student, bool> (whereClause2.Predicate, queryModel.MainFromClause, s => s.First == "Hugo");
+      CheckResolvedExpression<Student, bool> (whereClause3.Predicate, queryModel.MainFromClause, s => s.ID > 100);
 
       var parameterExpression = Expression.Parameter (typeof (Student), "s");
       var expectedSelectExpression = Expression.Lambda (typeof (Func<Student, Student>), parameterExpression, parameterExpression);
@@ -122,7 +117,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (queryModel.MainFromClause.PreviousClause, Is.Null);
       Assert.That (selectClause.PreviousClause, Is.EqualTo (whereClause));
       Assert.That (whereClause.PreviousClause, Is.EqualTo (queryModel.MainFromClause));
-      Assert.That (whereClause.LegacyPredicate, Is.SameAs (navigator.Arguments[1].Operand.Expression));
+      
+      CheckResolvedExpression<Student, bool> (whereClause.Predicate, 
+        queryModel.MainFromClause, s => s.First != "Garcia" && s.ID >5 && s.ID >= 6 && s.ID < 7 && s.ID <= 6 && s.ID == 6);
 
       var parameterExpression = Expression.Parameter (typeof (Student), "s");
       var expectedSelectExpression = Expression.Lambda (typeof (Func<Student, Student>), parameterExpression, parameterExpression);
@@ -153,10 +150,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var selectMethodCall = navigator;
       var whereMethodCall = selectMethodCall.Arguments[0];
       var selectManyMethodCall = whereMethodCall.Arguments[0];
-      var constantExpression = selectManyMethodCall.Arguments[0];
 
       Assert.That (((ConstantExpression)additionalFromClause.FromExpression.Body).Value, Is.SameAs (_querySource));
-      Assert.That (whereClause.LegacyPredicate, Is.SameAs (whereMethodCall.Arguments[1].Operand.Expression));
+      CheckResolvedExpression<Student, bool> (whereClause.Predicate, queryModel.MainFromClause, s1 => s1.Last == "Garcia");
       Assert.That (mainFromClause.QuerySource.Type, Is.EqualTo (selectManyMethodCall.Arguments[0].Expression.Type));
       Assert.That (mainFromClause.JoinClauses.Count, Is.EqualTo (0));
       Assert.That (selectClause.LegacySelector, Is.EqualTo (navigator.Arguments[1].Operand.Expression));
@@ -199,7 +195,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var queryModel = _queryParser.GetParsedQuery (expression);
 
       Assert.That (queryModel.BodyClauses.Count, Is.EqualTo (1));
-      SubQueryFromClause subQueryFromClause = queryModel.BodyClauses[0] as SubQueryFromClause;
+      var subQueryFromClause = queryModel.BodyClauses[0] as SubQueryFromClause;
       Assert.IsNotNull (subQueryFromClause);
 
       Assert.That (subQueryFromClause.SubQueryModel, Is.Not.Null);
@@ -230,7 +226,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (queryModel.SelectOrGroupClause.PreviousClause, Is.EqualTo (additionalFromClause));
       Assert.That (whereClause.PreviousClause, Is.EqualTo (mainFromClause));
 
-      Assert.That (navigator.Arguments[0].Arguments[1].Operand.Expression, Is.EqualTo (whereClause.LegacyPredicate));
+      CheckResolvedExpression<Student, bool> (whereClause.Predicate, queryModel.MainFromClause, s1 => s1.Last == "Garcia");
       Assert.That (mainFromClause.QuerySource.Type, Is.EqualTo (navigator.Arguments[0].Arguments[0].Expression.Type));
       Assert.That (additionalFromClause.Identifier.Name, Is.EqualTo ("s2"));
       Assert.That (((ConstantExpression) additionalFromClause.FromExpression.Body).Value, Is.SameAs (_querySource));
@@ -253,8 +249,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (whereClause.PreviousClause, Is.EqualTo (additionalFromClause1));
       Assert.That (additionalFromClause2.PreviousClause, Is.EqualTo (whereClause));
       Assert.That (queryModel.SelectOrGroupClause.PreviousClause, Is.EqualTo (additionalFromClause2));
-
-      Assert.That (navigator.Arguments[0].Arguments[1].Operand.Expression, Is.EqualTo (whereClause.LegacyPredicate));
+      CheckResolvedExpression<Student, bool> (whereClause.Predicate, queryModel.MainFromClause, s1 => s1.First == "Hugo");
       Assert.That (mainFromClause.QuerySource.Type, Is.EqualTo (navigator.Arguments[0].Arguments[0].Arguments[0].Expression.Type));
       Assert.That (additionalFromClause1.Identifier.Name, Is.EqualTo ("s2"));
       Assert.That (additionalFromClause2.Identifier.Name, Is.EqualTo ("s3"));
@@ -275,9 +270,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (mainFromClause.JoinClauses.Count, Is.EqualTo (0));
 
       Assert.That (queryModel.BodyClauses.Count, Is.EqualTo (2));
-      Assert.That (navigator.Arguments[0].Arguments[1].Operand.Expression, Is.EqualTo (whereClause.LegacyPredicate));
+      CheckResolvedExpression<Student, bool> (whereClause.Predicate, queryModel.MainFromClause, s1 => s1.Last == "Garcia");
       Assert.That (queryModel.BodyClauses.Last(), Is.InstanceOfType (typeof (AdditionalFromClause)));
-
       var selectClause = (SelectClause)queryModel.SelectOrGroupClause;
       Assert.That (selectClause, Is.Not.Null);
     }
@@ -295,11 +289,10 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (mainFromClause.PreviousClause, Is.Null);
       Assert.That (mainFromClause.Identifier.Name, Is.EqualTo ("s1"));
       Assert.That (mainFromClause.JoinClauses.Count, Is.EqualTo (0));
-
+      
+      CheckResolvedExpression<Student, bool> (whereClause.Predicate, queryModel.MainFromClause, s1 => s1.Last == "Garcia");
       Assert.That (queryModel.BodyClauses.Count, Is.EqualTo (2));
-      Assert.That (navigator.Arguments[0].Arguments[1].Operand.Expression, Is.EqualTo (whereClause.LegacyPredicate));
       Assert.That (queryModel.BodyClauses.Last (), Is.InstanceOfType (typeof (AdditionalFromClause)));
-
       var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
       Assert.That (selectClause, Is.Not.Null);
     }
@@ -385,8 +378,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     {
       var expression = MixedTestQueryGenerator.CreateOrderByWithWhereCondition (_querySource).Expression;
       var queryModel = _queryParser.GetParsedQuery (expression);
-      var navigator = new ExpressionTreeNavigator (expression);
-
 
       var whereClause = (WhereClause) queryModel.BodyClauses[0];
       var orderByClause = (OrderByClause) queryModel.BodyClauses[1];
@@ -396,8 +387,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (whereClause.PreviousClause, Is.EqualTo (mainFromClause));
       Assert.That (orderByClause.PreviousClause, Is.EqualTo (whereClause));
       Assert.That (queryModel.SelectOrGroupClause.PreviousClause, Is.EqualTo (orderByClause));
-
-      Assert.That (whereClause.LegacyPredicate, Is.EqualTo (navigator.Arguments[0].Arguments[1].Operand.Expression));
+      CheckResolvedExpression<Student, bool> (whereClause.Predicate, queryModel.MainFromClause, s1 => s1.First == "Garcia");
     }
 
     [Test]
@@ -405,7 +395,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     {
       var expression = MixedTestQueryGenerator.CreateMultiFromWhereOrderByQuery (_querySource, _querySource).Expression;
       var queryModel = _queryParser.GetParsedQuery (expression);
-      var navigator = new ExpressionTreeNavigator (expression);
       
       var memberFromClause = (AdditionalFromClause) queryModel.BodyClauses[0];
       var whereClause = (WhereClause) queryModel.BodyClauses[1];
@@ -416,10 +405,13 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (whereClause.PreviousClause, Is.EqualTo (memberFromClause));
       Assert.That (orderByClause.PreviousClause, Is.EqualTo (whereClause));
       Assert.That (queryModel.SelectOrGroupClause.PreviousClause, Is.EqualTo (orderByClause));
-
-      Assert.That (navigator.Arguments[0].Arguments[0].Arguments[0].Arguments[1].Operand.Expression, Is.EqualTo (whereClause.LegacyPredicate));
+      CheckResolvedExpression<Student, bool> (whereClause.Predicate, queryModel.MainFromClause, s1 => s1.Last == "Garcia");
     }
 
-    
+    private void CheckResolvedExpression<TParameter, TResult> (Expression expressionToCheck, MainFromClause clauseToReference, Expression<Func<TParameter, TResult>> expectedUnresolvedExpression)
+    {
+      var expectedPredicate = ExpressionHelper.Resolve (clauseToReference, expectedUnresolvedExpression);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedPredicate, expressionToCheck);
+    }
   }
 }

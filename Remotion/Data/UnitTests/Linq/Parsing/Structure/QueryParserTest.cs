@@ -165,7 +165,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       
       Assert.That (queryModel.BodyClauses.Count, Is.EqualTo (1));
       Assert.That (((WhereClause) queryModel.BodyClauses[0]).PreviousClause, Is.SameAs (queryModel.MainFromClause));
-      Assert.That (((WhereClause) queryModel.BodyClauses[0]).LegacyPredicate, Is.SameAs(((UnaryExpression)expressionTree.Arguments[1]).Operand));
+      
+      var expectedPredicate = ExpressionHelper.Resolve<int, bool> (queryModel.MainFromClause, i => i > 5);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedPredicate, ((WhereClause) queryModel.BodyClauses[0]).Predicate);
     }
 
     [Test]
