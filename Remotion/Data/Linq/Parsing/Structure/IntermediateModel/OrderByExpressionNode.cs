@@ -18,7 +18,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
@@ -35,17 +34,18 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Queryable.OrderBy<object, object> (null, null))
                                                            };
 
-    private Expression _cachedSelector;
+    private readonly NodeExpressionResolver _selectorResolver;
 
     public OrderByExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression keySelector)
         : base (parseInfo)
     {
       ArgumentUtility.CheckNotNull ("keySelector", keySelector);
 
-      if (keySelector != null && keySelector.Parameters.Count != 1)
+      if (keySelector.Parameters.Count != 1)
         throw new ArgumentException ("KeySelector must have exactly one parameter.", "keySelector");
 
       KeySelector = keySelector;
+      _selectorResolver = new NodeExpressionResolver (Source);
     }
 
     public LambdaExpression KeySelector { get; private set; }
@@ -53,14 +53,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public Expression GetResolvedKeySelector (QuerySourceClauseMapping querySourceClauseMapping)
     {
       ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
-
-      if (_cachedSelector == null)
-      {
-        _cachedSelector = Source.Resolve (KeySelector.Parameters[0], KeySelector.Body, querySourceClauseMapping);
-        _cachedSelector = TransparentIdentifierRemovingVisitor.ReplaceTransparentIdentifiers (_cachedSelector);
-      }
-
-      return _cachedSelector;
+      return _selectorResolver.GetResolvedExpression (KeySelector.Body, KeySelector.Parameters[0], querySourceClauseMapping);
     }
 
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, QuerySourceClauseMapping querySourceClauseMapping)

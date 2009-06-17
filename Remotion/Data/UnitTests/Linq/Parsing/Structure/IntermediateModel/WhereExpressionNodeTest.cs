@@ -67,37 +67,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void GetResolvedPredicate_RemovesTransparentIdentifiers ()
-    {
-      var predicate = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > new AnonymousType { a = 1, b = 5 }.b);
-      var node = new WhereExpressionNode (CreateParseInfo (), predicate);
-
-      var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
-
-      var result = node.GetResolvedPredicate (QuerySourceClauseMapping);
-
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
-    }
-
-    [Test]
-    public void GetResolvedPredicate_Cached ()
-    {
-      var sourceMock = new MockRepository ().StrictMock<IExpressionNode> ();
-      var predicate = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new WhereExpressionNode (CreateParseInfo (sourceMock), predicate);
-      var expectedResult = ExpressionHelper.CreateLambdaExpression ();
-
-      sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything, Arg<QuerySourceClauseMapping>.Is.Anything)).Repeat.Once ().Return (expectedResult);
-
-      sourceMock.Replay ();
-
-      node.GetResolvedPredicate (QuerySourceClauseMapping);
-      node.GetResolvedPredicate (QuerySourceClauseMapping);
-
-      sourceMock.VerifyAllExpectations ();
-    }
-
-    [Test]
     public void CreateParameterForOutput ()
     {
       var source = new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3, 4, 5 });

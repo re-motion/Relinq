@@ -191,42 +191,12 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void GetResolvedSelector_RemovesTransparentIdentifiers ()
-    {
-      var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > new AnonymousType { a = 2, b = 5 }.b);
-      var node = new SumExpressionNode (CreateParseInfo (), selector);
-      var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
-
-      var result = node.GetResolvedOptionalSelector (QuerySourceClauseMapping);
-
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
-    }
-
-    [Test]
     public void GetResolvedSelector_Null ()
     {
       var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();
       var node = new SumExpressionNode(CreateParseInfo (sourceMock), null);
       var result = node.GetResolvedOptionalSelector (QuerySourceClauseMapping);
       Assert.That (result, Is.Null);
-    }
-
-    [Test]
-    public void GetResolvedSelector_Cached ()
-    {
-      var sourceMock = new MockRepository ().StrictMock<IExpressionNode> ();
-      var predicate = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new SumExpressionNode (CreateParseInfo (sourceMock), predicate);
-      var expectedResult = ExpressionHelper.CreateLambdaExpression ();
-
-      sourceMock.Expect (mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything, Arg<QuerySourceClauseMapping>.Is.Anything)).Repeat.Once ().Return (expectedResult);
-
-      sourceMock.Replay ();
-
-      node.GetResolvedOptionalSelector (QuerySourceClauseMapping);
-      node.GetResolvedOptionalSelector (QuerySourceClauseMapping);
-
-      sourceMock.VerifyAllExpectations ();
     }
 
     [Test]

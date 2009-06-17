@@ -35,17 +35,18 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Queryable.Select<object, object> (null, o => null))
                                                            };
 
-    private Expression _cachedSelector;
+    private readonly NodeExpressionResolver _selectorResolver;
 
     public SelectExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression selector)
         : base (parseInfo)
     {
       ArgumentUtility.CheckNotNull ("selector", selector);
 
-      if (selector != null && selector.Parameters.Count != 1)
+      if (selector.Parameters.Count != 1)
         throw new ArgumentException ("Selector must have exactly one parameter.", "selector");
 
       Selector = selector;
+      _selectorResolver = new NodeExpressionResolver (Source);
     }
 
     public LambdaExpression Selector { get; private set; }
@@ -53,14 +54,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public Expression GetResolvedSelector (QuerySourceClauseMapping querySourceClauseMapping)
     {
       ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
-
-      if (_cachedSelector == null)
-      {
-        _cachedSelector = Source.Resolve (Selector.Parameters[0], Selector.Body, querySourceClauseMapping);
-        _cachedSelector = TransparentIdentifierRemovingVisitor.ReplaceTransparentIdentifiers (_cachedSelector);
-      }
-
-      return _cachedSelector;
+      return _selectorResolver.GetResolvedExpression (Selector.Body, Selector.Parameters[0], querySourceClauseMapping);
     }
 
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, QuerySourceClauseMapping querySourceClauseMapping)

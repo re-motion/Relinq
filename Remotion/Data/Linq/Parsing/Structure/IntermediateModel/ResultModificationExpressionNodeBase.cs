@@ -27,9 +27,9 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public abstract class ResultModificationExpressionNodeBase : MethodCallExpressionNodeBase
   {
-    private Expression _cachedPredicate;
-    private Expression _cachedSelector;
-
+    private readonly NodeExpressionResolver _predicateResolver;
+    private readonly NodeExpressionResolver _selectorResolver;
+    
     protected ResultModificationExpressionNodeBase (
         MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalPredicate, LambdaExpression optionalSelector)
         : base (parseInfo)
@@ -42,6 +42,12 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
       OptionalPredicate = optionalPredicate;
       OptionalSelector = optionalSelector;
+
+      if (optionalPredicate != null)
+        _predicateResolver = new NodeExpressionResolver (Source);
+
+      if (optionalSelector != null)
+        _selectorResolver = new NodeExpressionResolver (Source);
     }
 
     protected abstract ResultModificationBase CreateResultModification (SelectClause selectClause);
@@ -56,13 +62,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       if (OptionalPredicate == null)
         return null;
 
-      if (_cachedPredicate == null)
-      {
-        _cachedPredicate = Source.Resolve (OptionalPredicate.Parameters[0], OptionalPredicate.Body, querySourceClauseMapping);
-        _cachedPredicate = TransparentIdentifierRemovingVisitor.ReplaceTransparentIdentifiers (_cachedPredicate);
-      }
-
-      return _cachedPredicate;
+      return _predicateResolver.GetResolvedExpression(OptionalPredicate.Body, OptionalPredicate.Parameters[0], querySourceClauseMapping);
     }
 
     public Expression GetResolvedOptionalSelector (QuerySourceClauseMapping querySourceClauseMapping)
@@ -72,13 +72,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       if (OptionalSelector == null)
         return null;
 
-      if (_cachedSelector == null)
-      {
-        _cachedSelector = Source.Resolve (OptionalSelector.Parameters[0], OptionalSelector.Body, querySourceClauseMapping);
-        _cachedSelector = TransparentIdentifierRemovingVisitor.ReplaceTransparentIdentifiers (_cachedSelector);
-      }
-
-      return _cachedSelector;
+      return _selectorResolver.GetResolvedExpression (OptionalSelector.Body, OptionalSelector.Parameters[0], querySourceClauseMapping);      
     }
 
     public override IClause CreateClause (IClause previousClause, QuerySourceClauseMapping querySourceClauseMapping)

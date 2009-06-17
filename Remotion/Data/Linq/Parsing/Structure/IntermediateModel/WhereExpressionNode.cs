@@ -35,17 +35,18 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Queryable.Where<object> (null, o => true))
                                                            };
 
-    private Expression _cachedPredicate;
+    private readonly NodeExpressionResolver _predicateResolver;
 
     public WhereExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression predicate)
         : base (parseInfo)
     {
       ArgumentUtility.CheckNotNull ("predicate", predicate);
 
-      if (predicate != null && predicate.Parameters.Count != 1)
+      if (predicate.Parameters.Count != 1)
         throw new ArgumentException ("Predicate must have exactly one parameter.", "predicate");
 
       Predicate = predicate;
+      _predicateResolver = new NodeExpressionResolver (Source);
     }
 
     public LambdaExpression Predicate { get; private set; }
@@ -53,14 +54,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public Expression GetResolvedPredicate (QuerySourceClauseMapping querySourceClauseMapping)
     {
       ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
-
-      if (_cachedPredicate == null)
-      {
-        _cachedPredicate = Source.Resolve (Predicate.Parameters[0], Predicate.Body, querySourceClauseMapping);
-        _cachedPredicate = TransparentIdentifierRemovingVisitor.ReplaceTransparentIdentifiers (_cachedPredicate);
-      }
-
-      return _cachedPredicate;
+      return _predicateResolver.GetResolvedExpression (Predicate.Body, Predicate.Parameters[0], querySourceClauseMapping);
     }
 
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, QuerySourceClauseMapping querySourceClauseMapping)

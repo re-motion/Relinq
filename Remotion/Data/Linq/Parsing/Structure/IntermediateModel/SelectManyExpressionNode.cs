@@ -39,8 +39,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                    () => Queryable.SelectMany<object, object[], object> (null, o => null, null))
                                                            };
 
-    private Expression _cachedCollectionSelector;
-    private Expression _cachedResultSelector;
+    private readonly NodeExpressionResolver _collectionSelectorResolver;
+    private readonly NodeExpressionResolver _resultSelectorResolver;
 
     public SelectManyExpressionNode (
         MethodCallExpressionParseInfo parseInfo, LambdaExpression collectionSelector, LambdaExpression resultSelector)
@@ -56,6 +56,9 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
       CollectionSelector = collectionSelector;
       ResultSelector = resultSelector;
+
+      _collectionSelectorResolver = new NodeExpressionResolver (Source);
+      _resultSelectorResolver = new NodeExpressionResolver (Source);
     }
 
     public LambdaExpression CollectionSelector { get; private set; }
@@ -69,37 +72,30 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public Expression GetResolvedCollectionSelector (QuerySourceClauseMapping querySourceClauseMapping)
     {
       ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
-
-      if (_cachedCollectionSelector == null)
-      {
-        _cachedCollectionSelector = Source.Resolve (CollectionSelector.Parameters[0], CollectionSelector.Body, querySourceClauseMapping);
-        _cachedCollectionSelector = TransparentIdentifierRemovingVisitor.ReplaceTransparentIdentifiers (_cachedCollectionSelector);
-      }
-
-      return _cachedCollectionSelector;
+      return _collectionSelectorResolver.GetResolvedExpression (CollectionSelector.Body, CollectionSelector.Parameters[0], querySourceClauseMapping);
     }
 
     public Expression GetResolvedResultSelector (QuerySourceClauseMapping querySourceClauseMapping)
     {
       ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
 
-      if (_cachedResultSelector == null)
-      {
-        // our result selector usually looks like this: (i, j) => new { i = i, j = j }
-        // with the data for i coming from the previous node and j identifying the data from this node
+      // our result selector usually looks like this: (i, j) => new { i = i, j = j }
+      // with the data for i coming from the previous node and j identifying the data from this node
 
-        // we resolve the selector by first asking the previous node to resolve i, then we substitute j by a QuerySourceReferenceExpression pointing 
-        // back to us
-        var resolvedResultSelector = Source.Resolve (ResultSelector.Parameters[0], ResultSelector.Body, querySourceClauseMapping);
+      // we resolve the selector by first substituting j by a QuerySourceReferenceExpression pointing back to us, before asking the previous node 
+      // to resolve i
+      return _resultSelectorResolver.GetResolvedExpression (
+          () => GetResultSelectorWithBackReference (querySourceClauseMapping),
+          ResultSelector.Parameters[0],
+          querySourceClauseMapping);
+    }
 
-        var clause = GetClauseForResolve(querySourceClauseMapping);
-        var referenceExpression = new QuerySourceReferenceExpression (clause);
+    private Expression GetResultSelectorWithBackReference (QuerySourceClauseMapping querySourceClauseMapping)
+    {
+      var clause = GetClauseForResolve (querySourceClauseMapping);
+      var referenceExpression = new QuerySourceReferenceExpression (clause);
 
-        _cachedResultSelector = ReplacingVisitor.Replace (ResultSelector.Parameters[1], referenceExpression, resolvedResultSelector);
-        _cachedResultSelector = TransparentIdentifierRemovingVisitor.ReplaceTransparentIdentifiers (_cachedResultSelector);
-      }
-
-      return _cachedResultSelector;
+      return ReplacingVisitor.Replace (ResultSelector.Parameters[1], referenceExpression, ResultSelector.Body);
     }
 
     private FromClauseBase GetClauseForResolve (QuerySourceClauseMapping querySourceClauseMapping)
