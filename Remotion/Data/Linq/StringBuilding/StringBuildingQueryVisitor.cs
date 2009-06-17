@@ -136,7 +136,7 @@ namespace Remotion.Data.Linq.StringBuilding
     public void VisitSelectClause (SelectClause selectClause)
     {
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);
-      _sb.AppendFormat ("select {0}", selectClause.Selector.Body);
+      _sb.AppendFormat ("select {0}", selectClause.LegacySelector.Body);
     }
 
     public void VisitGroupClause (GroupClause groupClause)

@@ -348,7 +348,7 @@ namespace Remotion.Data.UnitTests.Linq
 
       Assert.That (clone.SelectOrGroupClause, Is.Not.SameAs (_queryModel.SelectOrGroupClause));
       var cloneSelectClause = ((SelectClause) clone.SelectOrGroupClause);
-      Assert.That (cloneSelectClause.Selector, Is.EqualTo (selectClause.Selector));
+      Assert.That (cloneSelectClause.LegacySelector, Is.EqualTo (selectClause.LegacySelector));
       Assert.That (cloneSelectClause.PreviousClause, Is.SameAs (clone.MainFromClause));
     }
 

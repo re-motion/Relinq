@@ -121,8 +121,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void CreateClause_WithoutOptionalPredicate_PreviousClauseIsNoSelect ()
     {
-      var source = new ConstantExpressionNode ("i1", typeof (int[]), new[] { 1, 2, 3 });
-      var node = new CountExpressionNode (CreateParseInfo (source), null);
+      var node = new CountExpressionNode (CreateParseInfo (), null);
 
       TestCreateClause_PreviousClauseIsNoSelect (node, typeof (CountResultModification));
     }

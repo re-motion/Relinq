@@ -86,10 +86,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
       ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
 
-      SelectClause selectClause = GetSelectClauseForResultModification (previousClause);
+      SelectClause selectClause = GetSelectClauseForResultModification (previousClause, querySourceClauseMapping);
       selectClause.AddResultModification (CreateResultModification (selectClause));
-      CreateWhereClauseForResultModification (selectClause, OptionalPredicate);
-      AdjustSelectorForResultModification (selectClause, OptionalSelector);
+      CreateWhereClauseForResultModification (selectClause);
+      AdjustSelectorForResultModification (selectClause);
 
       return selectClause;
     }
@@ -107,16 +107,16 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     /// is not a <see cref="SelectClause"/> because it was optimized away, a new trivial <see cref="SelectClause"/> must be added by the node. This
     /// is implemented by this method.
     /// </remarks>
-    protected SelectClause GetSelectClauseForResultModification (IClause previousClause)
+    private SelectClause GetSelectClauseForResultModification (IClause previousClause, QuerySourceClauseMapping querySourceClauseMapping)
     {
-      ArgumentUtility.CheckNotNull ("previousClause", previousClause);
-
       var selectClause = previousClause as SelectClause;
 
       if (selectClause == null)
       {
         var selectorParameter = Source.CreateParameterForOutput();
-        selectClause = new SelectClause (previousClause, Expression.Lambda (selectorParameter, selectorParameter));
+        //TODO: 1221 add selector expression
+        var resolvedSelectorParameter = Source.Resolve (selectorParameter, selectorParameter, querySourceClauseMapping);
+        selectClause = new SelectClause (previousClause, Expression.Lambda (selectorParameter, selectorParameter), resolvedSelectorParameter);
       }
 
       return selectClause;
@@ -133,39 +133,40 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     /// That <see cref="WhereClause"/> will be inserted before the <paramref name="selectClause"/> modified by the result modification node.
     /// Creation and insertion of this <see cref="WhereClause"/> is implemented by this method.
     /// </remarks>
-    protected void CreateWhereClauseForResultModification (SelectClause selectClause, LambdaExpression optionalPredicate)
+    private void CreateWhereClauseForResultModification (SelectClause selectClause)
     {
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);
 
-      if (optionalPredicate != null)
+      if (OptionalPredicate != null)
       {
-        var whereClause = new WhereClause (selectClause.PreviousClause, optionalPredicate, null); // TODO 1219
+        var whereClause = new WhereClause (selectClause.PreviousClause, OptionalPredicate, null); // TODO 1219
         selectClause.PreviousClause = whereClause;
       }
     }
 
     /// <summary>
-    /// Adjusts the <see cref="SelectClause.Selector"/> of the <paramref name="selectClause"/> modified by a result modification node for a nodes with an 
+    /// Adjusts the <see cref="SelectClause.LegacySelector"/> of the <paramref name="selectClause"/> modified by a result modification node for a nodes with an 
     /// optional selector if that selector is not <see langword="null"/>.
     /// </summary>
     /// <remarks>
     /// Result modification nodes such as <see cref="MinExpressionNode"/> or <see cref="SumExpressionNode"/>
     /// do not identify real clauses, they represent result modifications in the preceding <see cref="SelectClause"/>.
-    /// Some of them contain optional selectors, which need to be combined with the <see cref="SelectClause.Selector"/> of the 
+    /// Some of them contain optional selectors, which need to be combined with the <see cref="SelectClause.LegacySelector"/> of the 
     /// <paramref name="selectClause"/> modified by the node.
     /// This process of adjusting the selector is implemented by this method.
     /// </remarks>
-    protected void AdjustSelectorForResultModification (SelectClause selectClause, LambdaExpression optionalSelector)
+    private void AdjustSelectorForResultModification (SelectClause selectClause)
     {
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);
 
-      if (optionalSelector != null)
+      if (OptionalSelector != null)
       {
         // for a selectClause.Selector of x => x.Property1
         // and an OptionalSelector of a => a.Property2
         // make x => x.Property1.Property2 by replacing a (OptionalSelector.Parameters[0]) with the body of selectClause.Selector
-        var newSelectorBody = ReplacingVisitor.Replace (optionalSelector.Parameters[0], selectClause.Selector.Body, optionalSelector.Body);
-        var newSelector = Expression.Lambda (newSelectorBody, selectClause.Selector.Parameters[0]);
+        var newSelector = ReplacingVisitor.Replace (OptionalSelector.Parameters[0], selectClause.LegacySelector.Body, OptionalSelector.Body);
+        var newLegacySelector = Expression.Lambda (newSelector, selectClause.LegacySelector.Parameters[0]);
+        selectClause.LegacySelector = newLegacySelector;
         selectClause.Selector = newSelector;
       }
     }

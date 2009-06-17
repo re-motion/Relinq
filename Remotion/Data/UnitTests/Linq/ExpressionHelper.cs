@@ -144,8 +144,9 @@ namespace Remotion.Data.UnitTests.Linq
 
     public static SelectClause CreateSelectClause ()
     {
-      LambdaExpression expression = Expression.Lambda (Expression.Constant (0), Expression.Parameter (typeof (Student), "s1"));
-      return new SelectClause (CreateClause (), expression);
+      var selector = Expression.Constant (0);
+      // TODO 1221: delete first expression
+      return new SelectClause (CreateClause (), Expression.Lambda (selector, Expression.Parameter (typeof (Student), "s1")), selector);
     }
 
     public static MethodCallExpression CreateMethodCallExpression (IQueryable<Student> query)

@@ -106,8 +106,10 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var selectClause = (SelectClause) node.CreateClause (previousClause, QuerySourceClauseMapping);
 
       Assert.That (selectClause.PreviousClause, Is.SameAs (previousClause));
-      Assert.That (selectClause.Selector, Is.EqualTo (node.Selector)); // TODO: This should become the resolved expression at a later point of time
+      Assert.That (selectClause.LegacySelector, Is.EqualTo (node.Selector));
       Assert.That (selectClause.ResultModifications, Is.Empty);
+      Assert.That (selectClause.Selector, Is.EqualTo (node.GetResolvedSelector(QuerySourceClauseMapping)));
+      
     }
 
     [Test]

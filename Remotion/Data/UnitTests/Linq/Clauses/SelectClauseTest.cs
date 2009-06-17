@@ -28,90 +28,79 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
   [TestFixture]
   public class SelectClauseTest
   {
-    [Test]
-    public void InitializeWithExpression ()
+    private LambdaExpression _legacySelector;
+    private Expression _selector;
+    private IClause _previousClause;
+    private SelectClause _selectClause;
+
+    [SetUp]
+    public void SetUp ()
     {
-      LambdaExpression expression = ExpressionHelper.CreateLambdaExpression ();
-      IClause clause = ExpressionHelper.CreateClause();
-      var selectClause = new SelectClause (clause, expression);
-      Assert.AreSame (clause, selectClause.PreviousClause);
-      Assert.AreEqual (expression, selectClause.Selector);
+      _legacySelector = ExpressionHelper.CreateLambdaExpression ();
+      _selector = ExpressionHelper.CreateExpression();
+      _previousClause = ExpressionHelper.CreateClause ();
+      _selectClause = new SelectClause (_previousClause, _legacySelector, _selector);
     }
 
     [Test]
-    public void InitializeWithExpression_New ()
+    public void InitializeWithExpression ()
     {
-      LambdaExpression expression = ExpressionHelper.CreateLambdaExpression ();
-      IClause clause = ExpressionHelper.CreateClause ();
-      var selectClause = new SelectClause (clause, expression);
-      Assert.AreSame (clause, selectClause.PreviousClause);
+      Assert.AreSame (_previousClause, _selectClause.PreviousClause);
+      Assert.AreEqual (_legacySelector, _selectClause.LegacySelector);
+      Assert.AreEqual (_selector, _selectClause.Selector);
     }
 
     [Test]
     public void SelectWithMethodCall_ResultModifications ()
     {
-      LambdaExpression expression = ExpressionHelper.CreateLambdaExpression ();
-      IClause clause = ExpressionHelper.CreateClause ();
+      var resultModifierClause = new DistinctResultModification (_selectClause);
+      _selectClause.AddResultModification (resultModifierClause);
 
-      var selectClause = new SelectClause (clause, expression);
-      var resultModifierClause = new DistinctResultModification (selectClause);
-      selectClause.AddResultModification (resultModifierClause);
-
-      Assert.IsNotEmpty (selectClause.ResultModifications);
-      Assert.That (selectClause.ResultModifications, Is.EqualTo (new[] { resultModifierClause }));
+      Assert.IsNotEmpty (_selectClause.ResultModifications);
+      Assert.That (_selectClause.ResultModifications, Is.EqualTo (new[] { resultModifierClause }));
     }
 
-    [Test]
-    [ExpectedException (typeof (ArgumentNullException))]
-    public void InitializeWithoutExpression ()
-    {
-      new SelectClause (ExpressionHelper.CreateClause (), null);
-    }
-    
     [Test]
     public void SelectClause_ImplementISelectGroupClause()
     {
-      SelectClause selectClause = ExpressionHelper.CreateSelectClause();
-      Assert.IsInstanceOfType (typeof(ISelectGroupClause),selectClause);
+      Assert.IsInstanceOfType (typeof(ISelectGroupClause),_selectClause);
     }
         
     [Test]
     public void Accept()
     {
-      SelectClause selectClause = ExpressionHelper.CreateSelectClause();
       var repository = new MockRepository();
       var visitorMock = repository.StrictMock<IQueryVisitor>();
-      visitorMock.VisitSelectClause (selectClause);
+      visitorMock.VisitSelectClause (_selectClause);
       repository.ReplayAll();
-      selectClause.Accept (visitorMock);
+      _selectClause.Accept (visitorMock);
       repository.VerifyAll();
     }
 
     [Test]
     public void Clone ()
     {
-      var originalClause = ExpressionHelper.CreateSelectClause ();
       var newPreviousClause = ExpressionHelper.CreateMainFromClause ();
-      var clone = originalClause.Clone (newPreviousClause);
+      var clone = _selectClause.Clone (newPreviousClause);
 
       Assert.That (clone, Is.Not.Null);
-      Assert.That (clone, Is.Not.SameAs (originalClause));
-      Assert.That (clone.Selector, Is.SameAs (originalClause.Selector));
+      Assert.That (clone, Is.Not.SameAs (_selectClause));
+      Assert.That (clone.LegacySelector, Is.SameAs (_selectClause.LegacySelector));
+      Assert.That (clone.Selector, Is.SameAs (_selectClause.Selector));
       Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
     }
 
     [Test]
     public void Clone_ResultModifiers ()
     {
-      var originalClause = ExpressionHelper.CreateSelectClause ();
       var newPreviousClause = ExpressionHelper.CreateMainFromClause ();
 
-      var resultModifierClause1 = ExpressionHelper.CreateResultModifierClause (originalClause);
-      originalClause.AddResultModification (resultModifierClause1);
-      var resultModifierClause2 = ExpressionHelper.CreateResultModifierClause (originalClause);
-      originalClause.AddResultModification (resultModifierClause2);
+      var resultModifierClause1 = ExpressionHelper.CreateResultModifierClause (_selectClause);
+      _selectClause.AddResultModification (resultModifierClause1);
+      var resultModifierClause2 = ExpressionHelper.CreateResultModifierClause (_selectClause);
+      _selectClause.AddResultModification (resultModifierClause2);
 
-      var clone = originalClause.Clone (newPreviousClause);
+      var clone = _selectClause.Clone (newPreviousClause);
 
       Assert.That (clone.ResultModifications.Count, Is.EqualTo (2));
       Assert.That (clone.ResultModifications[0], Is.Not.SameAs (resultModifierClause1));
@@ -123,32 +112,29 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void GetExecutionStrategy_WithoutResultModifiers ()
     {
-      var clause = ExpressionHelper.CreateSelectClause ();
-      Assert.That (clause.GetExecutionStrategy (), Is.SameAs (CollectionExecutionStrategy.Instance));
+      Assert.That (_selectClause.GetExecutionStrategy (), Is.SameAs (CollectionExecutionStrategy.Instance));
     }
 
     [Test]
     public void GetExecutionStrategy_WithResultModifiers ()
     {
-      var clause = ExpressionHelper.CreateSelectClause ();
-      var firstModifier = new FirstResultModification (clause, true);
-      clause.AddResultModification (firstModifier);
+      var firstModifier = new FirstResultModification (_selectClause, true);
+      _selectClause.AddResultModification (firstModifier);
 
-      Assert.That (clause.GetExecutionStrategy (), Is.SameAs (firstModifier.ExecutionStrategy));
+      Assert.That (_selectClause.GetExecutionStrategy (), Is.SameAs (firstModifier.ExecutionStrategy));
     }
 
     [Test]
     public void GetExecutionStrategy_WithManyResultModifiers ()
     {
-      var clause = ExpressionHelper.CreateSelectClause ();
-      var takeModifier = new TakeResultModification (clause, 7);
-      var distinctModifier = new DistinctResultModification (clause);
-      var countModifier = new CountResultModification (clause);
-      clause.AddResultModification (takeModifier);
-      clause.AddResultModification (distinctModifier);
-      clause.AddResultModification (countModifier);
+      var takeModifier = new TakeResultModification (_selectClause, 7);
+      var distinctModifier = new DistinctResultModification (_selectClause);
+      var countModifier = new CountResultModification (_selectClause);
+      _selectClause.AddResultModification (takeModifier);
+      _selectClause.AddResultModification (distinctModifier);
+      _selectClause.AddResultModification (countModifier);
 
-      Assert.That (clause.GetExecutionStrategy (), Is.SameAs (countModifier.ExecutionStrategy));
+      Assert.That (_selectClause.GetExecutionStrategy (), Is.SameAs (countModifier.ExecutionStrategy));
     }
   }
 }

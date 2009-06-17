@@ -60,10 +60,15 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       QueryModel queryModel = _queryParser.GetParsedQuery(constantExpression);
 
       Assert.That (queryModel.SelectOrGroupClause, Is.Not.Null);
+      
+      var newLegacySelector = ((SelectClause) queryModel.SelectOrGroupClause).LegacySelector;
+      Assert.That (newLegacySelector.Body, Is.SameAs (newLegacySelector.Parameters[0]));
+      Assert.That (newLegacySelector.Parameters[0].Type, Is.SameAs (typeof (int)));
+      Assert.That (newLegacySelector.Parameters[0].Name, Is.EqualTo ("<generated>_0"));
+
       var newSelector = ((SelectClause) queryModel.SelectOrGroupClause).Selector;
-      Assert.That (newSelector.Body, Is.SameAs (newSelector.Parameters[0]));
-      Assert.That (newSelector.Parameters[0].Type, Is.SameAs (typeof (int)));
-      Assert.That (newSelector.Parameters[0].Name, Is.EqualTo ("<generated>_0"));
+      Assert.That (newSelector, Is.InstanceOfType (typeof (QuerySourceReferenceExpression)));
+      Assert.That (((QuerySourceReferenceExpression) newSelector).ReferencedClause, Is.SameAs (queryModel.MainFromClause));
     }
 
     [Test]
@@ -108,9 +113,11 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 
       Assert.That (queryModel.SelectOrGroupClause, Is.Not.Null);
       Assert.That (queryModel.SelectOrGroupClause.PreviousClause, Is.SameAs (queryModel.MainFromClause));
-      Assert.That (((SelectClause) queryModel.SelectOrGroupClause).Selector, 
+      Assert.That (((SelectClause) queryModel.SelectOrGroupClause).LegacySelector, 
           Is.SameAs (((UnaryExpression) expressionTree.Arguments[1]).Operand));
 
+      Assert.That (((SelectClause) queryModel.SelectOrGroupClause).Selector, Is.InstanceOfType (typeof (MethodCallExpression)));
+      Assert.That (((MethodCallExpression)((SelectClause) queryModel.SelectOrGroupClause).Selector).Method.Name, Is.EqualTo("ToString"));
     }
 
     [Test]
@@ -136,10 +143,15 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 
       Assert.That (queryModel.SelectOrGroupClause, Is.Not.Null);
       Assert.That (queryModel.SelectOrGroupClause.PreviousClause, Is.InstanceOfType (typeof (WhereClause)));
+      
+      var newLegacySelector = ((SelectClause) queryModel.SelectOrGroupClause).LegacySelector;
+      Assert.That (newLegacySelector.Body, Is.SameAs (newLegacySelector.Parameters[0]));
+      Assert.That (newLegacySelector.Parameters[0].Type, Is.SameAs (typeof (int)));
+      Assert.That (newLegacySelector.Parameters[0].Name, Is.EqualTo ("i"));
+
       var newSelector = ((SelectClause) queryModel.SelectOrGroupClause).Selector;
-      Assert.That (newSelector.Body, Is.SameAs (newSelector.Parameters[0]));
-      Assert.That (newSelector.Parameters[0].Type, Is.SameAs (typeof (int)));
-      Assert.That (newSelector.Parameters[0].Name, Is.EqualTo ("i"));
+      Assert.That (newSelector, Is.InstanceOfType (typeof (QuerySourceReferenceExpression)));
+      Assert.That (((QuerySourceReferenceExpression) newSelector).ReferencedClause, Is.SameAs (queryModel.MainFromClause));
     }
 
     [Test]

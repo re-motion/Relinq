@@ -31,19 +31,23 @@ namespace Remotion.Data.Linq.Clauses
     private readonly List<ResultModificationBase> _resultModifications = new List<ResultModificationBase> ();
 
     private IClause _previousClause;
-    private LambdaExpression _selector;
+    private LambdaExpression _legacySelector;
+    private Expression _selector;
 
     /// <summary>
     /// Initialize a new instance of <see cref="SelectClause"/>.
     /// </summary>
     /// <param name="previousClause">The previous clause of type <see cref="IClause"/> in the <see cref="QueryModel"/>.</param>
+    /// <param name="legacySelector">The projection within the select part of the linq query.</param>
     /// <param name="selector">The projection within the select part of the linq query.</param>
-    public SelectClause (IClause previousClause, LambdaExpression selector)
+    public SelectClause (IClause previousClause, LambdaExpression legacySelector, Expression selector)
     {
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
+      ArgumentUtility.CheckNotNull ("legacySelector", legacySelector);
       ArgumentUtility.CheckNotNull ("selector", selector);
 
       PreviousClause = previousClause;
+      LegacySelector = legacySelector;
       Selector = selector;
     }
 
@@ -60,7 +64,13 @@ namespace Remotion.Data.Linq.Clauses
     /// The projection within the select part of the linq query.
     /// </summary>
     // TODO 1158: Replace by IEvaluation
-    public LambdaExpression Selector
+    public LambdaExpression LegacySelector
+    {
+      get { return _legacySelector; }
+      set { _legacySelector = ArgumentUtility.CheckNotNull ("value", value); }
+    }
+
+    public Expression Selector 
     {
       get { return _selector; }
       set { _selector = ArgumentUtility.CheckNotNull ("value", value); }
@@ -85,7 +95,7 @@ namespace Remotion.Data.Linq.Clauses
 
     public SelectClause Clone (IClause newPreviousClause)
     {
-      var clone = new SelectClause (newPreviousClause, Selector);
+      var clone = new SelectClause (newPreviousClause, LegacySelector, Selector);
       foreach (var resultModification in ResultModifications)
       {
         var resultModificationClone = resultModification.Clone (clone);

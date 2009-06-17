@@ -73,8 +73,9 @@ namespace Remotion.Data.Linq.Parsing.Structure
       var subQueryRegistry = new List<QueryModel>();
       var node = _expressionTreeParser.ParseTree (expressionTreeRoot, subQueryRegistry);
 
-      IClause lastClause = CreateClauseChain (node, new QuerySourceClauseMapping());
-      SelectClause selectClause = GetOrCreateSelectClause(node, lastClause);
+      var clauseMapping = new QuerySourceClauseMapping();
+      IClause lastClause = CreateClauseChain (node, clauseMapping);
+      SelectClause selectClause = GetOrCreateSelectClause(node, lastClause, clauseMapping);
 
       // TODO 1178: After COMMONS-1178, this code will not be needed any longer.
       var bodyClauses = new List<IBodyClause>();
@@ -124,7 +125,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       // selectClause.Selector is usually something like "i => new { i = i, j = whatever }"
       // we take "j" as the letIdentifier, "whatever" as the letExpression, and the whole expression as the letProjection
 
-      var newExpression = selectClause.Selector.Body as NewExpression;
+      var newExpression = selectClause.LegacySelector.Body as NewExpression;
       if (newExpression != null && newExpression.Members.Count > 0)
       {
         Assertion.IsTrue (newExpression.Members.Count == newExpression.Arguments.Count, "This is ensured by Expression.New.");
@@ -134,7 +135,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
         Expression letExpression = newExpression.Arguments.Last();
         ParameterExpression letIdentifier = Expression.Parameter (letExpression.Type, letMember.Name.Substring (4));
-        LambdaExpression letProjection = selectClause.Selector;
+        LambdaExpression letProjection = selectClause.LegacySelector;
         return new LetClause (selectClause.PreviousClause, letIdentifier, letExpression, letProjection);
       }
       return selectClause;
@@ -145,10 +146,11 @@ namespace Remotion.Data.Linq.Parsing.Structure
     /// </summary>
     /// <param name="lastNode">The last node in the chain of <see cref="IExpressionNode"/>s.</param>
     /// <param name="lastClause">The last clause produced by the chain defined by <paramref name="lastNode"/>.</param>
+    /// <param name="querySourceClauseMapping">The <see cref="QuerySourceClauseMapping"/> used for constructing the clause chain.</param>
     /// <returns><paramref name="lastClause"/> if it is a <see cref="SelectClause"/>, or a new <see cref="SelectClause"/> that references
     /// <paramref name="lastClause"/> as its <see cref="SelectClause.PreviousClause"/>. If a new <see cref="SelectClause"/> is created, its selector
     /// will take the data streamed out by <paramref name="lastClause"/> and return it unchanged.</returns>
-    private SelectClause GetOrCreateSelectClause (IExpressionNode lastNode, IClause lastClause)
+    private SelectClause GetOrCreateSelectClause (IExpressionNode lastNode, IClause lastClause, QuerySourceClauseMapping querySourceClauseMapping)
     {
       if (lastClause is SelectClause)
       {
@@ -157,7 +159,9 @@ namespace Remotion.Data.Linq.Parsing.Structure
       else
       {
         var parameterExpression = lastNode.CreateParameterForOutput();
-        return new SelectClause (lastClause, Expression.Lambda (parameterExpression, parameterExpression));
+        //TODO: 1221
+        var resolveedParameterExpression = lastNode.Resolve (parameterExpression, parameterExpression, querySourceClauseMapping);
+        return new SelectClause (lastClause, Expression.Lambda (parameterExpression, parameterExpression), resolveedParameterExpression);
       }
     }
 

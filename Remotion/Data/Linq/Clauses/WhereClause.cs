@@ -37,9 +37,10 @@ namespace Remotion.Data.Linq.Clauses
     /// <param name="predicate">The expression which represents the where conditions.</param>
     public WhereClause (IClause previousClause, LambdaExpression legacyPredicate, Expression predicate)
     {
-      // TODO 1219: null check
       ArgumentUtility.CheckNotNull ("predicate", legacyPredicate);
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
+      // ArgumentUtility.CheckNotNull ("predicate", predicate); // TODO 1219
+
       _legacyPredicate = legacyPredicate;
       Predicate = predicate;
       PreviousClause = previousClause;

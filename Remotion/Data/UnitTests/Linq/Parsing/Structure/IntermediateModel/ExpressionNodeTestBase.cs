@@ -42,6 +42,11 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public QuerySourceReferenceExpression SourceReference { get; private set; }
     public QuerySourceClauseMapping QuerySourceClauseMapping { get; private set; }
 
+    public Expression<Func<int, string>> OptionalSelector
+    {
+      get { return (i => i.ToString ()); }
+    }
+
     protected MethodInfo GetGenericMethodDefinition<TReturn> (Expression<Func<IQueryable<int>, TReturn>> methodCallLambda)
     {
       return GetMethod (methodCallLambda).GetGenericMethodDefinition ();
@@ -68,7 +73,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
     protected void TestCreateClause_PreviousClauseIsNoSelect (IExpressionNode node, Type expectedResultModificationType)
     {
-      var previousClause = ExpressionHelper.CreateMainFromClause ();
+      var previousClause = SourceClause;
 
       var clause = (SelectClause) node.CreateClause (previousClause, QuerySourceClauseMapping);
 
@@ -77,8 +82,12 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       Assert.That (clause.ResultModifications[0], Is.InstanceOfType (expectedResultModificationType));
       Assert.That (clause.ResultModifications[0].SelectClause, Is.SameAs (clause));
 
+      var expectedLegacySelectorParameter = node.Source.CreateParameterForOutput ();
+      var expectedLegacySelector = Expression.Lambda (expectedLegacySelectorParameter, expectedLegacySelectorParameter);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedLegacySelector, clause.LegacySelector);
+
       var expectedSelectorParameter = node.Source.CreateParameterForOutput ();
-      var expectedSelector = Expression.Lambda (expectedSelectorParameter, expectedSelectorParameter);
+      var expectedSelector = node.Source.Resolve (expectedSelectorParameter, expectedSelectorParameter, QuerySourceClauseMapping);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedSelector, clause.Selector);
     }
 
@@ -100,16 +109,22 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       Assert.That (newWhereClause.LegacyPredicate, Is.SameAs (optionalPredicate));
     }
 
-    protected void TestCreateClause_WithOptionalSelector (IExpressionNode node, Expression<Func<Student, int>> selectorOfPreviousClause, Expression<Func<Student, string>> expectedNewSelector)
+    protected void TestCreateClause_WithOptionalSelector (IExpressionNode node)
     {
+      var legacySelectorOfPreviousClause = ExpressionHelper.CreateLambdaExpression<Student, int> (s => s.ID);
+      var expectedNewLegacySelector = ExpressionHelper.CreateLambdaExpression<Student, string> (s => s.ID.ToString ());
+
+      var selectorOfPreviousClause = (MemberExpression) ExpressionHelper.MakeExpression<Student, int> (s => s.ID);
+      var expectedNewSelector = (MethodCallExpression) ExpressionHelper.MakeExpression<Student, string> (s => s.ID.ToString());
+
       var previousPreviousClause = ExpressionHelper.CreateClause ();
-      var previousClause = new SelectClause (previousPreviousClause, selectorOfPreviousClause);
+      var previousClause = new SelectClause (previousPreviousClause, legacySelectorOfPreviousClause, selectorOfPreviousClause);
 
       var clause = (SelectClause) node.CreateClause (previousClause, QuerySourceClauseMapping);
 
       Assert.That (clause, Is.SameAs (previousClause));
-      Assert.That (clause.Selector, Is.Not.SameAs (selectorOfPreviousClause));
 
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedNewLegacySelector, clause.LegacySelector);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedNewSelector, clause.Selector);
     }
 

@@ -48,7 +48,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 
       Assert.That (queryModel.MainFromClause.PreviousClause, Is.Null);
       Assert.That (selectClause.PreviousClause, Is.EqualTo (queryModel.MainFromClause));
-      Assert.That (navigator.Arguments[1].Operand.Expression, Is.SameAs (selectClause.Selector));
+      Assert.That (navigator.Arguments[1].Operand.Expression, Is.SameAs (selectClause.LegacySelector));
     }
 
     [Test]
@@ -70,8 +70,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 
       var parameterExpression = Expression.Parameter (typeof (Student), "s");
       var expectedSelectExpression = Expression.Lambda (typeof (Func<Student, Student>), parameterExpression, parameterExpression);
-      Assert.That (expectedSelectExpression.Body.NodeType, Is.EqualTo (selectClause.Selector.Body.NodeType));
-      Assert.That (expectedSelectExpression.Body.Type, Is.EqualTo (selectClause.Selector.Body.Type));
+      Assert.That (expectedSelectExpression.Body.NodeType, Is.EqualTo (selectClause.LegacySelector.Body.NodeType));
+      Assert.That (expectedSelectExpression.Body.Type, Is.EqualTo (selectClause.LegacySelector.Body.Type));
     }
 
     [Test]
@@ -105,8 +105,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var parameterExpression = Expression.Parameter (typeof (Student), "s");
       var expectedSelectExpression = Expression.Lambda (typeof (Func<Student, Student>), parameterExpression, parameterExpression);
       
-      Assert.That (expectedSelectExpression.Body.NodeType, Is.EqualTo (selectClause.Selector.Body.NodeType));
-      Assert.That (expectedSelectExpression.Body.Type, Is.EqualTo (selectClause.Selector.Body.Type));
+      Assert.That (expectedSelectExpression.Body.NodeType, Is.EqualTo (selectClause.LegacySelector.Body.NodeType));
+      Assert.That (expectedSelectExpression.Body.Type, Is.EqualTo (selectClause.LegacySelector.Body.Type));
     }
 
     [Test]
@@ -127,8 +127,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var parameterExpression = Expression.Parameter (typeof (Student), "s");
       var expectedSelectExpression = Expression.Lambda (typeof (Func<Student, Student>), parameterExpression, parameterExpression);
 
-      Assert.That (expectedSelectExpression.Body.NodeType, Is.EqualTo (selectClause.Selector.Body.NodeType));
-      Assert.That (expectedSelectExpression.Body.Type, Is.EqualTo (selectClause.Selector.Body.Type));
+      Assert.That (expectedSelectExpression.Body.NodeType, Is.EqualTo (selectClause.LegacySelector.Body.NodeType));
+      Assert.That (expectedSelectExpression.Body.Type, Is.EqualTo (selectClause.LegacySelector.Body.Type));
 
       Assert.That (navigator.Arguments[0].Expression.NodeType, Is.EqualTo (queryModel.MainFromClause.QuerySource.NodeType));
       Assert.That (navigator.Arguments[0].Expression.Type, Is.EqualTo (queryModel.MainFromClause.QuerySource.Type));
@@ -159,7 +159,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (whereClause.LegacyPredicate, Is.SameAs (whereMethodCall.Arguments[1].Operand.Expression));
       Assert.That (mainFromClause.QuerySource.Type, Is.EqualTo (selectManyMethodCall.Arguments[0].Expression.Type));
       Assert.That (mainFromClause.JoinClauses.Count, Is.EqualTo (0));
-      Assert.That (selectClause.Selector, Is.EqualTo (navigator.Arguments[1].Operand.Expression));
+      Assert.That (selectClause.LegacySelector, Is.EqualTo (navigator.Arguments[1].Operand.Expression));
     }
 
     [Test]
@@ -183,12 +183,12 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 
       var parameterExpression = Expression.Parameter (typeof (Student), "<generated>_0");
       var expectedSelectExpression = Expression.Lambda (typeof (Func<Student,Student>), parameterExpression, parameterExpression);
-      Assert.That (expectedSelectExpression.Body.NodeType, Is.EqualTo (selectClause.Selector.Body.NodeType));
-      Assert.That (expectedSelectExpression.Body.Type, Is.EqualTo (selectClause.Selector.Body.Type));
+      Assert.That (expectedSelectExpression.Body.NodeType, Is.EqualTo (selectClause.LegacySelector.Body.NodeType));
+      Assert.That (expectedSelectExpression.Body.Type, Is.EqualTo (selectClause.LegacySelector.Body.Type));
       Assert.That (mainFromClause.QuerySource.Type, Is.EqualTo(navigator.Arguments[0].Expression.Type));
 
       Assert.IsNotNull (selectClause);
-      Assert.IsNotNull (selectClause.Selector);
+      Assert.IsNotNull (selectClause.LegacySelector);
     }
 
     [Test]
@@ -210,7 +210,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (((ConstantExpression)subQueryMainFromClause.QuerySource).Value, Is.SameAs(_querySource));
 
       var subQuerySelectClause = (SelectClause) subQueryFromClause.SubQueryModel.SelectOrGroupClause;
-      Assert.That (subQuerySelectClause.Selector.Body, Is.SameAs (subQuerySelectClause.Selector.Parameters[0]));
+      Assert.That (subQuerySelectClause.LegacySelector.Body, Is.SameAs (subQuerySelectClause.LegacySelector.Parameters[0]));
     }
 
     [Test]
@@ -348,13 +348,13 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       
       var parameterExpression = Expression.Parameter (typeof (Student), "s");
       var expectedSelectExpression = Expression.Lambda (typeof (Func<Student, Student>), parameterExpression, parameterExpression);
-      Assert.That (selectClause.Selector.Body.NodeType, Is.EqualTo (expectedSelectExpression.Body.NodeType));
-      Assert.That (selectClause.Selector.Body.Type, Is.EqualTo (expectedSelectExpression.Body.Type));
+      Assert.That (selectClause.LegacySelector.Body.NodeType, Is.EqualTo (expectedSelectExpression.Body.NodeType));
+      Assert.That (selectClause.LegacySelector.Body.Type, Is.EqualTo (expectedSelectExpression.Body.Type));
       Assert.That (mainFromClause.QuerySource.NodeType, Is.EqualTo (navigator.Arguments[0].Arguments[0].Arguments[0].Expression.NodeType));
 
-      Assert.That (selectClause.Selector.Parameters.Count, Is.EqualTo (1));
-      Assert.That (selectClause.Selector.Parameters[0].Name, Is.EqualTo ("s"));
-      Assert.That (selectClause.Selector.Parameters[0].Type, Is.EqualTo (typeof(Student)));
+      Assert.That (selectClause.LegacySelector.Parameters.Count, Is.EqualTo (1));
+      Assert.That (selectClause.LegacySelector.Parameters[0].Name, Is.EqualTo ("s"));
+      Assert.That (selectClause.LegacySelector.Parameters[0].Type, Is.EqualTo (typeof(Student)));
     }
 
     [Test]

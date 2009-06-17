@@ -251,7 +251,7 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
 
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause();
       SelectClause selectClause1 =
-          repository.StrictMock<SelectClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateLambdaExpression ());
+          repository.StrictMock<SelectClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateLambdaExpression (), ExpressionHelper.CreateExpression());
       
       QueryModel queryModel = new QueryModel (typeof (IQueryable<string>), fromClause, selectClause1);
 
@@ -276,7 +276,7 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
 
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause ();
       SelectClause selectClause1 =
-          repository.StrictMock<SelectClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateLambdaExpression ());
+          repository.StrictMock<SelectClause> (ExpressionHelper.CreateClause (), ExpressionHelper.CreateLambdaExpression (), ExpressionHelper.CreateExpression());
       OrderByClause orderByClause1 =
           repository.StrictMock<OrderByClause> (ExpressionHelper.CreateClause ());
       AdditionalFromClause fromClause1 =
@@ -370,9 +370,9 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
       ParameterExpression subQueryIdentifier = Expression.Parameter (typeof (Student), "s2");
       Expression querySource = Expression.Constant (null);
       MainFromClause mainFromClause = new MainFromClause (subQueryIdentifier, querySource);
-      LambdaExpression subQueryProjection = Expression.Lambda (Expression.Constant (1));
-      //SelectClause selectClause = new SelectClause (previousClause, subQueryProjection, false);
-      SelectClause selectClause = new SelectClause (previousClause, subQueryProjection);
+      Expression subQuerySelector = Expression.Constant (1);
+      LambdaExpression subQueryLegacySelector = Expression.Lambda (Expression.Constant (1));
+      SelectClause selectClause = new SelectClause (previousClause, subQueryLegacySelector, subQuerySelector);
 
       QueryModel subQuery = new QueryModel (typeof (string), mainFromClause, selectClause);
       LambdaExpression projectionExpression = ExpressionHelper.CreateLambdaExpression();

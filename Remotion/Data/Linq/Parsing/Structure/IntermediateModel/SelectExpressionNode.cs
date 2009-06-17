@@ -87,7 +87,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
       ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
       
-      return new SelectClause (previousClause, Selector);
+      return new SelectClause (previousClause, Selector, GetResolvedSelector (querySourceClauseMapping));
     }
   }
 }

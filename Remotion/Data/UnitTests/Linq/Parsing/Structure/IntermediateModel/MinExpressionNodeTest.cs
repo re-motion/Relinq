@@ -128,13 +128,10 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void CreateClause_WithSelector_AdjustsSelectClause ()
     {
-      var selector = ExpressionHelper.CreateLambdaExpression<int, string> (i => i.ToString ());
+      var selector = ExpressionHelper.CreateLambdaExpression (OptionalSelector);
       var node = new MinExpressionNode (CreateParseInfo (), selector);
 
-      var selectorOfPreviousClause = ExpressionHelper.CreateLambdaExpression<Student, int> (s => s.ID);
-      var expectedNewSelector = ExpressionHelper.CreateLambdaExpression<Student, string> (s => s.ID.ToString ());
-
-      TestCreateClause_WithOptionalSelector(node, selectorOfPreviousClause, expectedNewSelector);
+      TestCreateClause_WithOptionalSelector(node);
     }
   }
 }
