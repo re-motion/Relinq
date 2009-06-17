@@ -91,44 +91,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
-    public void MissingSelect_AfterSelectMany_InFetchManyClause ()
-    {
-      var query = (from s1 in ExpressionHelper.CreateQuerySource ()
-                  from s2 in ExpressionHelper.CreateQuerySource ()
-                  select s1).FetchMany (s1 => s1.Friends);
-
-      var fetchFilteringVisitor = new FetchFilteringExpressionTreeVisitor ();
-      var result = fetchFilteringVisitor.Visit (query.Expression);
-      var fetchRequest = result.FetchRequests.Single();
-
-      var outerQueryModel = new QueryParser().GetParsedQuery (result.NewExpression);
-      var fetchQueryModel = fetchRequest.CreateFetchQueryModel (outerQueryModel);
-
-      var memberFromClause = (MemberFromClause) fetchQueryModel.BodyClauses.Last();
-      var memberExpressionLeftSide = memberFromClause.MemberExpression.Expression;
-      Assert.That (((ParameterExpression) memberExpressionLeftSide).Name, Is.EqualTo ("s1"));
-    }
-
-    [Test]
-    public void MissingSelect_AfterSelectMany_InFetchOneClause ()
-    {
-      var query = (from s1 in ExpressionHelper.CreateQuerySource ()
-                   from s2 in ExpressionHelper.CreateQuerySource ()
-                   select s1).FetchOne (s1 => s1.OtherStudent);
-
-      var fetchFilteringVisitor = new FetchFilteringExpressionTreeVisitor ();
-      var result = fetchFilteringVisitor.Visit (query.Expression);
-      var fetchRequest = result.FetchRequests.Single ();
-
-      var outerQueryModel = new QueryParser ().GetParsedQuery (result.NewExpression);
-      var fetchQueryModel = fetchRequest.CreateFetchQueryModel (outerQueryModel);
-
-      var selectClause = (SelectClause) fetchQueryModel.SelectOrGroupClause;
-      var memberExpressionLeftSide = ((MemberExpression) selectClause.LegacySelector.Body).Expression;
-      Assert.That (((ParameterExpression) memberExpressionLeftSide).Name, Is.EqualTo ("s1"));
-    }
-
-    [Test]
     public void MissingSelect_AfterSelectMany_WithSubQuery_CanBeResolved ()
     {
       var query = from s1 in ExpressionHelper.CreateQuerySource ()
