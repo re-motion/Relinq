@@ -172,8 +172,10 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     public void CreateQueryModel_WithSelectClauseBeforeAnotherClause ()
     {
       IQueryable<int> value = new[] { 1, 2, 3 }.AsQueryable ();
+// ReSharper disable RedundantAnonymousTypePropertyName
       var expressionTree = (MethodCallExpression) ExpressionHelper.MakeExpression (
           () => value.Select (i => new { i = i, j = i.ToString() }).Where (trans => trans.i > 5));
+// ReSharper restore RedundantAnonymousTypePropertyName
 
       QueryModel queryModel = _queryParser.GetParsedQuery (expressionTree);
 
@@ -197,14 +199,26 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     public void CreateQueryModel_SubQueries_AreAssociatedWithParentQueries ()
     {
       var expression = ExpressionHelper.MakeExpression (
-           () => ExpressionHelper.CreateQuerySource ().Where (i => (
-               from x in ExpressionHelper.CreateQuerySource ()
-               select x).Count () > 0));
+           () => ExpressionHelper.CreateQuerySource ().Where (i => (from x in ExpressionHelper.CreateQuerySource () select x).Count () > 0));
 
       var result = _queryParser.GetParsedQuery (expression);
       var whereClause = (WhereClause) result.BodyClauses[0];
-      var predicateBody = (BinaryExpression) whereClause.LegacyPredicate.Body;
+      var predicateBody = (BinaryExpression) whereClause.Predicate;
       Assert.That (((SubQueryExpression)predicateBody.Left).QueryModel.ParentQuery, Is.SameAs (result));
+    }
+
+    [Test]
+    public void CreateQueryModel_SubQueries_AreResolved ()
+    {
+      var expression = ExpressionHelper.MakeExpression (
+           () => ExpressionHelper.CreateQuerySource ().Where (i => (from x in ExpressionHelper.CreateQuerySource () select i).Count () > 0));
+
+      var result = _queryParser.GetParsedQuery (expression);
+      var whereClause = (WhereClause) result.BodyClauses[0];
+      var predicateBody = (BinaryExpression) whereClause.Predicate;
+      var subQuerySelector = ((SelectClause)((SubQueryExpression) predicateBody.Left).QueryModel.SelectOrGroupClause).Selector;
+      Assert.That (subQuerySelector, Is.InstanceOfType (typeof (QuerySourceReferenceExpression)));
+      Assert.That (((QuerySourceReferenceExpression)subQuerySelector).ReferencedClause, Is.SameAs (result.MainFromClause));
     }
 
   }

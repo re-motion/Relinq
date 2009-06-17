@@ -69,13 +69,12 @@ namespace Remotion.Data.Linq.Parsing.Structure
     {
       ArgumentUtility.CheckNotNull ("expressionTreeRoot", expressionTreeRoot);
 
-      var subQueryRegistry = new List<QueryModel>();
-      var node = _expressionTreeParser.ParseTree (expressionTreeRoot, subQueryRegistry);
+      var node = _expressionTreeParser.ParseTree (expressionTreeRoot);
 
       var clauseGenerationContext = new ClauseGenerationContext (
           new QuerySourceClauseMapping (), 
           _expressionTreeParser.NodeTypeRegistry, 
-          subQueryRegistry);
+          new List<QueryModel>());
 
       IClause lastClause = CreateClauseChain (node, clauseGenerationContext);
       SelectClause selectClause = GetOrCreateSelectClause (node, lastClause, clauseGenerationContext);
@@ -89,7 +88,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       foreach (var bodyClause in bodyClauses)
         queryModel.AddBodyClause (bodyClause);
 
-      foreach (var subQuery in subQueryRegistry)
+      foreach (var subQuery in clauseGenerationContext.SubQueryRegistry)
         subQuery.SetParentQuery (queryModel);
 
       queryModel.SetExpressionTree (expressionTreeRoot);

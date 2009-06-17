@@ -17,7 +17,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Utilities;
 
@@ -30,15 +29,11 @@ namespace Remotion.Data.Linq.Parsing.Structure
   public class MethodCallExpressionParser
   {
     private readonly MethodCallExpressionNodeTypeRegistry _nodeTypeRegistry;
-    private readonly List<QueryModel> _subQueryRegistry;
 
-    public MethodCallExpressionParser (MethodCallExpressionNodeTypeRegistry nodeTypeRegistry, List<QueryModel> subQueryRegistry)
+    public MethodCallExpressionParser (MethodCallExpressionNodeTypeRegistry nodeTypeRegistry)
     {
       ArgumentUtility.CheckNotNull ("nodeTypeRegistry", nodeTypeRegistry);
-      ArgumentUtility.CheckNotNull ("subQueryRegistry", subQueryRegistry);
-
       _nodeTypeRegistry = nodeTypeRegistry;
-      _subQueryRegistry = subQueryRegistry;
     }
 
     public IExpressionNode Parse (string associatedIdentifier, IExpressionNode source, MethodCallExpression expressionToParse)
@@ -72,17 +67,15 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
     private object ConvertExpressionToParameterValue (Expression expression)
     {
-      var expressionWithSubQueries = SubQueryFindingVisitor.ReplaceSubQueries(expression,_nodeTypeRegistry, _subQueryRegistry);
-      
       // Each argument of a MethodCallExpression will either be a UnaryExpression/Quote, which represents an expression passed to the method,
       // a ConstantExpression that contains the expression passed to the method,
       // or any other expression that represents a constant passed to the method.
       // We only support the former two, to support the latter, PartialTreeEvaluatingVisitor must be used.
 
-      if (expressionWithSubQueries.NodeType == ExpressionType.Constant)
-        return ((ConstantExpression) expressionWithSubQueries).Value;
-      else if (expressionWithSubQueries.NodeType == ExpressionType.Quote)
-        return ((UnaryExpression) expressionWithSubQueries).Operand;
+      if (expression.NodeType == ExpressionType.Constant)
+        return ((ConstantExpression) expression).Value;
+      else if (expression.NodeType == ExpressionType.Quote)
+        return ((UnaryExpression) expression).Operand;
       else
       {
         var message = string.Format (

@@ -23,8 +23,7 @@ using Remotion.Utilities;
 namespace Remotion.Data.Linq.Parsing.Structure
 {
   /// <summary>
-  /// Parses an expression tree into a chain of <see cref="IExpressionNode"/> objects, partially evaluating expressions and finding subqueries in the 
-  /// process.
+  /// Parses an expression tree into a chain of <see cref="IExpressionNode"/> objects, partially evaluating expressions in the process.
   /// </summary>
   public class ExpressionTreeParser
   {
@@ -43,7 +42,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
     }
 
 
-    public IExpressionNode ParseTree (Expression expressionTree, List<QueryModel> subQueryRegistry)
+    public IExpressionNode ParseTree (Expression expressionTree)
     {
       ArgumentUtility.CheckNotNull ("expressionTree", expressionTree);
 
@@ -51,17 +50,17 @@ namespace Remotion.Data.Linq.Parsing.Structure
         throw new ParserException (string.Format ("Expressions of type void ('{0}') are not supported.", expressionTree));
 
       var simplifiedExpressionTree = PartialTreeEvaluatingVisitor.EvaluateIndependentSubtrees (expressionTree);
-      return ParseNode (simplifiedExpressionTree, null, subQueryRegistry);
+      return ParseNode (simplifiedExpressionTree, null);
     }
 
-    private IExpressionNode ParseNode (Expression expression, string associatedIdentifier, List<QueryModel> subQueryRegistry)
+    private IExpressionNode ParseNode (Expression expression, string associatedIdentifier)
     {
       if (associatedIdentifier == null)
         associatedIdentifier = _identifierGenerator.GetUniqueIdentifier ("<generated>_");
 
       var methodCallExpression = expression as MethodCallExpression;
       if (methodCallExpression != null)
-        return ParseMethodCallExpression (methodCallExpression, associatedIdentifier, subQueryRegistry);
+        return ParseMethodCallExpression (methodCallExpression, associatedIdentifier);
       else
       {
         var constantExpression = expression as ConstantExpression;
@@ -98,7 +97,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       }
     }
 
-    private IExpressionNode ParseMethodCallExpression (MethodCallExpression methodCallExpression, string associatedIdentifier, List<QueryModel> subQueryRegistry)
+    private IExpressionNode ParseMethodCallExpression (MethodCallExpression methodCallExpression, string associatedIdentifier)
     {
       if (methodCallExpression.Arguments.Count == 0)
       {
@@ -111,9 +110,9 @@ namespace Remotion.Data.Linq.Parsing.Structure
       }
 
       string associatedIdentifierForSource = InferAssociatedIdentifierForSource (methodCallExpression);
-      var source = ParseNode (methodCallExpression.Arguments[0], associatedIdentifierForSource, subQueryRegistry);
+      var source = ParseNode (methodCallExpression.Arguments[0], associatedIdentifierForSource);
 
-      var parser = new MethodCallExpressionParser (_nodeTypeRegistry, subQueryRegistry);
+      var parser = new MethodCallExpressionParser (_nodeTypeRegistry);
       return parser.Parse (associatedIdentifier, source, methodCallExpression);
     }
 
