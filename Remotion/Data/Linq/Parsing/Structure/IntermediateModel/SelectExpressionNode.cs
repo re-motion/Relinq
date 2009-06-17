@@ -35,7 +35,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Queryable.Select<object, object> (null, o => null))
                                                            };
 
-    private readonly NodeExpressionResolver _selectorResolver;
+    private readonly ResolvedExpressionCache _cachedSelector;
 
     public SelectExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression selector)
         : base (parseInfo)
@@ -46,14 +46,14 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
         throw new ArgumentException ("Selector must have exactly one parameter.", "selector");
 
       Selector = selector;
-      _selectorResolver = new NodeExpressionResolver (Source);
+      _cachedSelector = new ResolvedExpressionCache (Source);
     }
 
     public LambdaExpression Selector { get; private set; }
 
     public Expression GetResolvedSelector (ClauseGenerationContext clauseGenerationContext)
     {
-      return _selectorResolver.GetResolvedExpression (Selector.Body, Selector.Parameters[0], clauseGenerationContext);
+      return _cachedSelector.GetOrCreate (r => r.GetResolvedExpression (Selector.Body, Selector.Parameters[0], clauseGenerationContext));
     }
 
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)

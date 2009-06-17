@@ -34,7 +34,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Queryable.Where<object> (null, o => true))
                                                            };
 
-    private readonly NodeExpressionResolver _predicateResolver;
+    private ResolvedExpressionCache _cachedPredicate;
 
     public WhereExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression predicate)
         : base (parseInfo)
@@ -45,14 +45,14 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
         throw new ArgumentException ("Predicate must have exactly one parameter.", "predicate");
 
       Predicate = predicate;
-      _predicateResolver = new NodeExpressionResolver (Source);
+      _cachedPredicate = new ResolvedExpressionCache (Source);
     }
 
     public LambdaExpression Predicate { get; private set; }
 
     public Expression GetResolvedPredicate (ClauseGenerationContext clauseGenerationContext)
     {
-      return _predicateResolver.GetResolvedExpression (Predicate.Body, Predicate.Parameters[0], clauseGenerationContext);
+      return _cachedPredicate.GetOrCreate (r => r.GetResolvedExpression (Predicate.Body, Predicate.Parameters[0], clauseGenerationContext));
     }
 
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)

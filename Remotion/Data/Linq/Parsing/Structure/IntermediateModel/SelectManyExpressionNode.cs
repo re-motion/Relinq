@@ -39,8 +39,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                    () => Queryable.SelectMany<object, object[], object> (null, o => null, null))
                                                            };
 
-    private readonly NodeExpressionResolver _collectionSelectorResolver;
-    private readonly NodeExpressionResolver _resultSelectorResolver;
+    private readonly ResolvedExpressionCache _cachedCollectionSelector;
+    private readonly ResolvedExpressionCache _cachedResultSelector;
 
     public SelectManyExpressionNode (
         MethodCallExpressionParseInfo parseInfo, LambdaExpression collectionSelector, LambdaExpression resultSelector)
@@ -57,8 +57,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       CollectionSelector = collectionSelector;
       ResultSelector = resultSelector;
 
-      _collectionSelectorResolver = new NodeExpressionResolver (Source);
-      _resultSelectorResolver = new NodeExpressionResolver (Source);
+      _cachedCollectionSelector = new ResolvedExpressionCache (Source);
+      _cachedResultSelector = new ResolvedExpressionCache (Source);
     }
 
     public LambdaExpression CollectionSelector { get; private set; }
@@ -71,7 +71,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     public Expression GetResolvedCollectionSelector (ClauseGenerationContext clauseGenerationContext)
     {
-      return _collectionSelectorResolver.GetResolvedExpression (CollectionSelector.Body, CollectionSelector.Parameters[0], clauseGenerationContext);
+      return _cachedCollectionSelector.GetOrCreate (r => r.GetResolvedExpression (CollectionSelector.Body, CollectionSelector.Parameters[0], clauseGenerationContext));
     }
 
     public Expression GetResolvedResultSelector (ClauseGenerationContext clauseGenerationContext)
@@ -81,10 +81,11 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
       // we resolve the selector by first substituting j by a QuerySourceReferenceExpression pointing back to us, before asking the previous node 
       // to resolve i
-      return _resultSelectorResolver.GetResolvedExpression (
-          () => GetResultSelectorWithBackReference (clauseGenerationContext.ClauseMapping),
+
+      return _cachedResultSelector.GetOrCreate (r => r.GetResolvedExpression (
+          GetResultSelectorWithBackReference (clauseGenerationContext.ClauseMapping),
           ResultSelector.Parameters[0],
-          clauseGenerationContext);
+          clauseGenerationContext));
     }
 
     private Expression GetResultSelectorWithBackReference (QuerySourceClauseMapping querySourceClauseMapping)

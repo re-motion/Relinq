@@ -14,18 +14,20 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 {
-  public class NodeExpressionResolver
+  /// <summary>
+  /// Resolves an expression using <see cref="IExpressionNode.Resolve"/>, removing transparent identifiers and detecting subqueries
+  /// in the process. This is used by methods such as <see cref="SelectExpressionNode.GetResolvedSelector"/>, which are
+  /// used when a clause is created from an <see cref="IExpressionNode"/>.
+  /// </summary>
+  public class ExpressionResolver
   {
-    private Expression _cachedResolvedExpression;
-
-    public NodeExpressionResolver (IExpressionNode sourceNode)
+    public ExpressionResolver (IExpressionNode sourceNode)
     {
       ArgumentUtility.CheckNotNull ("sourceNode", sourceNode);
 
@@ -39,28 +41,14 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       ArgumentUtility.CheckNotNull ("unresolvedExpression", unresolvedExpression);
       ArgumentUtility.CheckNotNull ("parameterToBeResolved", parameterToBeResolved);
 
-      if (_cachedResolvedExpression == null)
-      {
-        _cachedResolvedExpression = SourceNode.Resolve (parameterToBeResolved, unresolvedExpression, clauseGenerationContext);
-        _cachedResolvedExpression = TransparentIdentifierRemovingVisitor.ReplaceTransparentIdentifiers (_cachedResolvedExpression);
-        _cachedResolvedExpression = SubQueryFindingVisitor.ReplaceSubQueries (
-            _cachedResolvedExpression, 
-            clauseGenerationContext.NodeTypeRegistry, 
-            clauseGenerationContext.SubQueryRegistry);
-      }
+      var resolvedExpression = SourceNode.Resolve (parameterToBeResolved, unresolvedExpression, clauseGenerationContext);
+      resolvedExpression = TransparentIdentifierRemovingVisitor.ReplaceTransparentIdentifiers (resolvedExpression);
+      resolvedExpression = SubQueryFindingVisitor.ReplaceSubQueries (
+          resolvedExpression, 
+          clauseGenerationContext.NodeTypeRegistry, 
+          clauseGenerationContext.SubQueryRegistry);
 
-      return _cachedResolvedExpression;
-    }
-
-    public Expression GetResolvedExpression (Func<Expression> unresolvedExpressionGenerator, ParameterExpression parameterToBeResolved, ClauseGenerationContext clauseGenerationContext)
-    {
-      ArgumentUtility.CheckNotNull ("unresolvedExpressionGenerator", unresolvedExpressionGenerator);
-      ArgumentUtility.CheckNotNull ("parameterToBeResolved", parameterToBeResolved);
-
-      if (_cachedResolvedExpression == null)
-        return GetResolvedExpression (unresolvedExpressionGenerator (), parameterToBeResolved, clauseGenerationContext);
-
-      return _cachedResolvedExpression;
+      return resolvedExpression;
     }
   }
 }

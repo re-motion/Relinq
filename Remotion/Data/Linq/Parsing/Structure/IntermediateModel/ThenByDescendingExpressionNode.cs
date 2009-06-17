@@ -37,7 +37,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Queryable.ThenByDescending<object, object> (null, null))
                                                            };
 
-    private readonly NodeExpressionResolver _selectorResolver;
+    private ResolvedExpressionCache _cachedSelector;
 
     public ThenByDescendingExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression keySelector)
         : base (parseInfo)
@@ -48,14 +48,14 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
         throw new ArgumentException ("KeySelector must have exactly one parameter.", "keySelector");
 
       KeySelector = keySelector;
-      _selectorResolver = new NodeExpressionResolver (Source);
+      _cachedSelector = new ResolvedExpressionCache (Source);
     }
 
     public LambdaExpression KeySelector { get; private set; }
 
     public Expression GetResolvedKeySelector (ClauseGenerationContext clauseGenerationContext)
     {
-      return _selectorResolver.GetResolvedExpression (KeySelector.Body, KeySelector.Parameters[0], clauseGenerationContext);
+      return _cachedSelector.GetOrCreate (r => r.GetResolvedExpression (KeySelector.Body, KeySelector.Parameters[0], clauseGenerationContext));
     }
 
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)

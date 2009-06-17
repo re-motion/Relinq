@@ -27,8 +27,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public abstract class ResultModificationExpressionNodeBase : MethodCallExpressionNodeBase
   {
-    private readonly NodeExpressionResolver _predicateResolver;
-    private readonly NodeExpressionResolver _selectorResolver;
+    private readonly ResolvedExpressionCache _cachedPredicate;
+    private readonly ResolvedExpressionCache _cachedSelector;
     
     protected ResultModificationExpressionNodeBase (
         MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalPredicate, LambdaExpression optionalSelector)
@@ -44,10 +44,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       OptionalSelector = optionalSelector;
 
       if (optionalPredicate != null)
-        _predicateResolver = new NodeExpressionResolver (Source);
+        _cachedPredicate = new ResolvedExpressionCache (Source);
 
       if (optionalSelector != null)
-        _selectorResolver = new NodeExpressionResolver (Source);
+        _cachedSelector = new ResolvedExpressionCache (Source);
     }
 
     protected abstract ResultModificationBase CreateResultModification (SelectClause selectClause);
@@ -60,7 +60,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       if (OptionalPredicate == null)
         return null;
 
-      return _predicateResolver.GetResolvedExpression(OptionalPredicate.Body, OptionalPredicate.Parameters[0], clauseGenerationContext);
+      return _cachedPredicate.GetOrCreate (r => r.GetResolvedExpression (OptionalPredicate.Body, OptionalPredicate.Parameters[0], clauseGenerationContext));
     }
 
     public Expression GetResolvedOptionalSelector (ClauseGenerationContext clauseGenerationContext)
@@ -68,7 +68,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       if (OptionalSelector == null)
         return null;
 
-      return _selectorResolver.GetResolvedExpression (OptionalSelector.Body, OptionalSelector.Parameters[0], clauseGenerationContext);      
+      return _cachedSelector.GetOrCreate (r => r.GetResolvedExpression (OptionalSelector.Body, OptionalSelector.Parameters[0], clauseGenerationContext));
     }
 
     public override IClause CreateClause (IClause previousClause, ClauseGenerationContext clauseGenerationContext)
@@ -103,7 +103,6 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       if (selectClause == null)
       {
         var selectorParameter = Source.CreateParameterForOutput();
-        //TODO: 1221 add selector expression
         var resolvedSelectorParameter = Source.Resolve (selectorParameter, selectorParameter, clauseGenerationContext);
         selectClause = new SelectClause (previousClause, Expression.Lambda (selectorParameter, selectorParameter), resolvedSelectorParameter);
       }

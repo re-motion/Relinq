@@ -101,7 +101,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
     /// </summary>
     /// <param name="node">The last node in the chain to process.</param>
     /// <param name="clauseGenerationContext">A container for all the context information needed for creating clauses. This is used to resolve 
-    /// predicates and selectors using <see cref="NodeExpressionResolver"/>s.</param>
+    /// predicates and selectors using <see cref="ExpressionResolver"/>s.</param>
     /// <returns>An <see cref="IClause"/> that corresponds to <paramref name="node"/>. The chain defined by <see cref="IExpressionNode.Source"/>
     /// is reflected in the chain defined by <see cref="IClause.PreviousClause"/>.</returns>
     private IClause CreateClauseChain (IExpressionNode node, ClauseGenerationContext clauseGenerationContext)
