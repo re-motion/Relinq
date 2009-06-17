@@ -55,6 +55,7 @@
     <Compile Include="Clauses\ExecutionStrategies\CollectionExecutionStrategy.cs" />
     <Compile Include="Clauses\ExecutionStrategies\SingleExecutionStrategy.cs" />
     <Compile Include="Clauses\ExecutionStrategies\ScalarExecutionStrategy.cs" />
+    <Compile Include="Clauses\FromClauseMapping.cs" />
     <Compile Include="Clauses\IExecutionStrategy.cs" />
     <Compile Include="Clauses\ResultModifications\SumResultModification.cs" />
     <Compile Include="Clauses\ResultModifications\MaxResultModification.cs" />
