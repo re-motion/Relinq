@@ -35,7 +35,7 @@ namespace Remotion.Data.Linq.Parsing.Details
     public OrderingField Parse (Expression expression, ParseContext parseContext, OrderingDirection orderingDirection)
     {
       FieldDescriptor fieldDescriptor = parseContext.QueryModel.ResolveField (_resolver, expression, parseContext.JoinedTableContext);
-      OrderingField orderingField = new OrderingField (fieldDescriptor, orderingDirection);
+      var orderingField = new OrderingField (fieldDescriptor, orderingDirection);
       return orderingField;
     }
   }

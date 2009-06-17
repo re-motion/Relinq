@@ -39,10 +39,8 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void InitializeWithISelectOrGroupClauseAndOrderByClause()
     {
-      LambdaExpression orderingExpression = ExpressionHelper.CreateLambdaExpression ();
-
       var orderByClause = new OrderByClause (_model.MainFromClause);
-      var ordering = new Ordering (orderByClause, orderingExpression, OrderingDirection.Asc);
+      var ordering = new Ordering (orderByClause, ExpressionHelper.CreateExpression (), OrderingDirection.Asc);
       orderByClause.AddOrdering (ordering);
 
       _model.AddBodyClause (orderByClause);
@@ -139,9 +137,9 @@ namespace Remotion.Data.UnitTests.Linq
       ParameterExpression identifier2 = Expression.Parameter (typeof (Student), "s2");
       ParameterExpression identifier3 = Expression.Parameter (typeof (Student), "s3");
 
-      AdditionalFromClause clause1 = new AdditionalFromClause (ExpressionHelper.CreateMainFromClause (), identifier1, fromExpression, projExpression);
-      AdditionalFromClause clause2 = new AdditionalFromClause (clause1, identifier2, fromExpression, projExpression);
-      AdditionalFromClause clause3 = new AdditionalFromClause (clause2, identifier3, fromExpression, projExpression);
+      var clause1 = new AdditionalFromClause (ExpressionHelper.CreateMainFromClause (), identifier1, fromExpression, projExpression);
+      var clause2 = new AdditionalFromClause (clause1, identifier2, fromExpression, projExpression);
+      var clause3 = new AdditionalFromClause (clause2, identifier3, fromExpression, projExpression);
 
       _model.AddBodyClause (clause1);
       _model.AddBodyClause (clause2);
@@ -158,7 +156,7 @@ namespace Remotion.Data.UnitTests.Linq
       LambdaExpression fromExpression = ExpressionHelper.CreateLambdaExpression ();
       LambdaExpression projExpression = ExpressionHelper.CreateLambdaExpression ();
       ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
-      AdditionalFromClause clause1 = new AdditionalFromClause (ExpressionHelper.CreateMainFromClause (), identifier1, fromExpression, projExpression);
+      var clause1 = new AdditionalFromClause (ExpressionHelper.CreateMainFromClause (), identifier1, fromExpression, projExpression);
 
       _model.AddBodyClause (clause1);
 
@@ -173,7 +171,7 @@ namespace Remotion.Data.UnitTests.Linq
       LambdaExpression fromExpression = ExpressionHelper.CreateLambdaExpression ();
       LambdaExpression projExpression = ExpressionHelper.CreateLambdaExpression ();
       ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
-      AdditionalFromClause clause1 = new AdditionalFromClause (ExpressionHelper.CreateMainFromClause (), identifier1, fromExpression, projExpression);
+      var clause1 = new AdditionalFromClause (ExpressionHelper.CreateMainFromClause (), identifier1, fromExpression, projExpression);
 
       _model.AddBodyClause (clause1);
       _model.GetResolveableClause ("s1", typeof (string));

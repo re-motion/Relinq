@@ -24,7 +24,7 @@ namespace Remotion.Data.Linq.Clauses
   /// </summary>
   public class Ordering
   {
-    private readonly LambdaExpression _expression;
+    private readonly Expression _expression;
     private readonly OrderingDirection _orderingDirection;
     
     /// <summary>
@@ -33,7 +33,7 @@ namespace Remotion.Data.Linq.Clauses
     /// <param name="orderByClause">The <see cref="OrderByClause"/> associated with this <see cref="Ordering"/>.</param>
     /// <param name="expression">The expression from one part of a order by in a linq query.</param>
     /// <param name="direction"></param>
-    public Ordering (OrderByClause orderByClause, LambdaExpression expression, OrderingDirection direction)
+    public Ordering (OrderByClause orderByClause, Expression expression, OrderingDirection direction)
     {
       ArgumentUtility.CheckNotNull ("orderByClause", orderByClause);
       ArgumentUtility.CheckNotNull ("expression", expression);
@@ -51,8 +51,7 @@ namespace Remotion.Data.Linq.Clauses
     /// <summary>
     /// The expression from one part of a order by in a linq query.
     /// </summary>
-    // TODO 1158: Replace with IEvaluation
-    public LambdaExpression Expression
+    public Expression Expression
     {
       get { return _expression; }
     }

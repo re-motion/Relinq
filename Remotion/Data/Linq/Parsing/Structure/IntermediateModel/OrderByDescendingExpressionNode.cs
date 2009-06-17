@@ -75,7 +75,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
 
       var clause = new OrderByClause (previousClause);
-      clause.AddOrdering (new Ordering (clause, KeySelector, OrderingDirection.Desc));
+      clause.AddOrdering (new Ordering (clause, GetResolvedKeySelector (clauseGenerationContext), OrderingDirection.Desc));
       return clause;
     }
   }

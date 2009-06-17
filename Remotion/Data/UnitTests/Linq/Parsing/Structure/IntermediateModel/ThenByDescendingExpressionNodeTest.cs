@@ -89,7 +89,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       Assert.That (clause, Is.SameAs (previousClause));
       Assert.That (clause.OrderingList.Count, Is.EqualTo (oldCount + 1));
       Assert.That (clause.OrderingList.Last ().OrderingDirection, Is.EqualTo (OrderingDirection.Desc));
-      Assert.That (clause.OrderingList.Last ().Expression, Is.SameAs (node.KeySelector));
+      Assert.That (clause.OrderingList.Last ().Expression, Is.SameAs (node.GetResolvedKeySelector (ClauseGenerationContext)));
       Assert.That (clause.OrderingList.Last ().OrderByClause, Is.SameAs (previousClause));
     }
 

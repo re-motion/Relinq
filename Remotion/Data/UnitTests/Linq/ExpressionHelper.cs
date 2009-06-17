@@ -132,11 +132,9 @@ namespace Remotion.Data.UnitTests.Linq
       return new LetClause (CreateLetClause (), identifier, expression, CreateLambdaExpression ());
     }
 
-
     public static Ordering CreateOrdering()
     {
-      LambdaExpression expression = CreateLambdaExpression ();
-      return new Ordering (CreateOrderByClause (), expression, OrderingDirection.Asc);
+      return new Ordering (CreateOrderByClause (), CreateExpression(), OrderingDirection.Asc);
     }
 
     public static OrderByClause CreateOrderByClause()
@@ -147,7 +145,6 @@ namespace Remotion.Data.UnitTests.Linq
     public static SelectClause CreateSelectClause ()
     {
       var selector = Expression.Constant (0);
-      // TODO 1221: delete first expression
       return new SelectClause (CreateClause (), Expression.Lambda (selector, Expression.Parameter (typeof (Student), "s1")), selector);
     }
 
@@ -215,8 +212,8 @@ namespace Remotion.Data.UnitTests.Linq
 
     public static IQueryExecutor CreateExecutor()
     {
-      MockRepository repository = new MockRepository();
-      IQueryExecutor executor = repository.StrictMock<IQueryExecutor>();
+      var repository = new MockRepository();
+      var executor = repository.StrictMock<IQueryExecutor>();
       return executor;
     }
 
@@ -232,7 +229,7 @@ namespace Remotion.Data.UnitTests.Linq
 
     public static QueryModel ParseQuery (Expression queryExpression)
     {
-      QueryParser parser = new QueryParser ();
+      var parser = new QueryParser ();
       return parser.GetParsedQuery (queryExpression);
     }
 
@@ -246,8 +243,8 @@ namespace Remotion.Data.UnitTests.Linq
     {
       IColumnSource table = fromClause.GetColumnSource (StubDatabaseInfo.Instance);
       Column? column = DatabaseInfoUtility.GetColumn (StubDatabaseInfo.Instance, table, member);
-      FieldSourcePath sourcePath = new FieldSourcePath (table, new SingleJoin[0]);
-      FieldDescriptor fieldDescriptor = new FieldDescriptor (originalMember, sourcePath, column);
+      var sourcePath = new FieldSourcePath (table, new SingleJoin[0]);
+      var fieldDescriptor = new FieldDescriptor (originalMember, sourcePath, column);
       return fieldDescriptor;
     }
 
@@ -258,7 +255,7 @@ namespace Remotion.Data.UnitTests.Linq
 
     public static FieldSourcePath GetPathForNewTable (string name, string alias)
     {
-      Table table = new Table (name, alias);
+      var table = new Table (name, alias);
       return GetPathForTable(table);
     }
 

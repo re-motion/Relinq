@@ -14,7 +14,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
@@ -29,29 +28,28 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void InitializeWithExpressionAndOrderDirectionAsc()
     {
-      LambdaExpression expression = ExpressionHelper.CreateLambdaExpression();
-      const OrderingDirection directionAsc = OrderingDirection.Asc;
+      var expression = ExpressionHelper.CreateExpression ();
 
       var clause = ExpressionHelper.CreateOrderByClause();
-      var ordering = new Ordering(clause, expression,directionAsc);
+      var ordering = new Ordering(clause, expression, OrderingDirection.Asc);
 
-      Assert.AreSame (clause, ordering.OrderByClause);
-      Assert.AreSame (expression, ordering.Expression);
-      Assert.AreEqual (directionAsc, ordering.OrderingDirection);
+      Assert.That (ordering.OrderByClause, Is.SameAs (clause));
+      Assert.That (ordering.Expression, Is.SameAs (expression));
+      Assert.That (ordering.OrderingDirection, Is.EqualTo (OrderingDirection.Asc));
     }
 
     [Test]
     public void InitializeWithExpressionAndOrderDirectionDesc ()
     {
-      LambdaExpression expression = ExpressionHelper.CreateLambdaExpression ();
+      var expression = ExpressionHelper.CreateExpression ();
       const OrderingDirection directionAsc = OrderingDirection.Asc;
 
       var clause = ExpressionHelper.CreateOrderByClause ();
-      var ordering = new Ordering (clause,expression, directionAsc);
+      var ordering = new Ordering (clause, expression, directionAsc);
 
-      Assert.AreSame (clause, ordering.OrderByClause);
-      Assert.AreSame (expression, ordering.Expression);
-      Assert.AreEqual (directionAsc, ordering.OrderingDirection);
+      Assert.That (ordering.OrderByClause, Is.SameAs (clause));
+      Assert.That (ordering.Expression, Is.SameAs (expression));
+      Assert.That (ordering.OrderingDirection, Is.EqualTo (directionAsc));
     }
 
     [Test]
@@ -75,7 +73,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void QueryModelAtInitialization ()
     {
       Ordering ordering = ExpressionHelper.CreateOrdering ();
-      Assert.IsNull (ordering.QueryModel);
+      Assert.That (ordering.QueryModel, Is.Null);
     }
 
     [Test]
@@ -84,7 +82,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Ordering ordering = ExpressionHelper.CreateOrdering ();
       QueryModel model = ExpressionHelper.CreateQueryModel ();
       ordering.SetQueryModel (model);
-      Assert.IsNotNull (ordering.QueryModel);
+      Assert.That (ordering.QueryModel, Is.Not.Null);
     }
 
     [Test]
