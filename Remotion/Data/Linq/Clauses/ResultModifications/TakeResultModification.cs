@@ -32,7 +32,7 @@ namespace Remotion.Data.Linq.Clauses.ResultModifications
       Count = count;
     }
 
-    public override ResultModificationBase Clone (SelectClause newSelectClause)
+    public override ResultModificationBase Clone (SelectClause newSelectClause, FromClauseMapping fromClauseMapping)
     {
       return new TakeResultModification (newSelectClause, Count);
     }

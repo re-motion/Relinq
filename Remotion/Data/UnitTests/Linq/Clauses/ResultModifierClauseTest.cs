@@ -16,6 +16,7 @@
 using System;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Clauses;
 
 namespace Remotion.Data.UnitTests.Linq.Clauses
 {
@@ -25,10 +26,9 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone ()
     {
-      var originalClause = ExpressionHelper.CreateResultModifierClause();
-      var newPreviousClause = ExpressionHelper.CreateClause ();
+      var originalClause = ExpressionHelper.CreateResultModification();
       var newSelectClause = ExpressionHelper.CreateSelectClause ();
-      var clone = originalClause.Clone (newSelectClause);
+      var clone = originalClause.Clone (newSelectClause, new FromClauseMapping());
 
       Assert.That (clone.SelectClause, Is.SameAs (newSelectClause));
     }

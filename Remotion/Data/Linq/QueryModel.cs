@@ -238,7 +238,7 @@ namespace Remotion.Data.Linq
         previousClause = clonedBodyClause;
       }
 
-      var clonedSelectOrGroupClause = SelectOrGroupClause.Clone (previousClause);
+      var clonedSelectOrGroupClause = SelectOrGroupClause.Clone (previousClause, new FromClauseMapping()); // TODO 1229
       
       var queryModel = new QueryModel (ResultType, clonedMainFromClause, clonedSelectOrGroupClause);
       

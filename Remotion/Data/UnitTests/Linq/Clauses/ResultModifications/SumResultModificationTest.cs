@@ -16,6 +16,7 @@
 using System;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.ResultModifications;
 
@@ -36,7 +37,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
     public void Clone ()
     {
       var newSelectClause = ExpressionHelper.CreateSelectClause ();
-      var clone = _resultModification.Clone (newSelectClause);
+      var clone = _resultModification.Clone (newSelectClause, new FromClauseMapping ());
 
       Assert.That (clone, Is.InstanceOfType (typeof (SumResultModification)));
       Assert.That (clone.SelectClause, Is.SameAs (newSelectClause));

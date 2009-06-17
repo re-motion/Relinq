@@ -16,6 +16,7 @@
 using System;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.ResultModifications;
 
@@ -39,7 +40,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
     {
       var newSelectClause = ExpressionHelper.CreateSelectClause ();
 
-      var clone = _resultModificationWithDefault.Clone (newSelectClause);
+      var clone = _resultModificationWithDefault.Clone (newSelectClause, new FromClauseMapping ());
 
       Assert.That (clone, Is.InstanceOfType (typeof (SingleResultModification)));
       Assert.That (clone.SelectClause, Is.SameAs (newSelectClause));
@@ -50,7 +51,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
     public void Clone_ReturnDefaultIfEmpty_False ()
     {
       var newSelectClause = ExpressionHelper.CreateSelectClause ();
-      var clone = _resultModificationNoDefault.Clone (newSelectClause);
+      var clone = _resultModificationNoDefault.Clone (newSelectClause, new FromClauseMapping ());
 
       Assert.That (clone, Is.InstanceOfType (typeof (SingleResultModification)));
       Assert.That (clone.SelectClause, Is.SameAs (newSelectClause));

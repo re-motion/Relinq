@@ -30,7 +30,7 @@ namespace Remotion.Data.Linq.Clauses.ResultModifications
     {
     }
 
-    public override ResultModificationBase Clone (SelectClause newSelectClause)
+    public override ResultModificationBase Clone (SelectClause newSelectClause, FromClauseMapping fromClauseMapping)
     {
       return new SumResultModification (newSelectClause);
     }

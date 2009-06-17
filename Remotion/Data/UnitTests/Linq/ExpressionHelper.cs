@@ -307,14 +307,14 @@ namespace Remotion.Data.UnitTests.Linq
       return new MemberFromClause (previousClause, identifier, fromExpression, projectionExpression);
     }
 
-    public static ResultModificationBase CreateResultModifierClause (SelectClause selectClause)
+    public static ResultModificationBase CreateResultModification (SelectClause selectClause)
     {
       return new DistinctResultModification (selectClause);
     }
 
-    public static ResultModificationBase CreateResultModifierClause ()
+    public static ResultModificationBase CreateResultModification ()
     {
-      return CreateResultModifierClause (CreateSelectClause ());
+      return CreateResultModification (CreateSelectClause ());
     }
 
     public static Expression Resolve<TParameter, TResult> (FromClauseBase fromClauseToReference, Expression<Func<TParameter, TResult>> expressionToBeResolved)
