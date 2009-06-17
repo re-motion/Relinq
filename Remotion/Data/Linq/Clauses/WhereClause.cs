@@ -39,7 +39,7 @@ namespace Remotion.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("predicate", legacyPredicate);
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
-      // ArgumentUtility.CheckNotNull ("predicate", predicate); // TODO 1219
+      ArgumentUtility.CheckNotNull ("predicate", predicate);
 
       _legacyPredicate = legacyPredicate;
       Predicate = predicate;

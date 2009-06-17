@@ -91,7 +91,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       ExpressionTreeComparer.CheckAreEqualTrees (expectedSelector, clause.Selector);
     }
 
-    protected void TestCreateClause_WithOptionalPredicate (IExpressionNode node, LambdaExpression optionalPredicate)
+    protected void TestCreateClause_WithOptionalPredicate (ResultModificationExpressionNodeBase node)
     {
       var previousClause = ExpressionHelper.CreateSelectClause ();
       var previousPreviousClause = previousClause.PreviousClause;
@@ -106,7 +106,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       Assert.That (clause.PreviousClause, Is.Not.SameAs (previousPreviousClause));
       var newWhereClause = (WhereClause) clause.PreviousClause;
       Assert.That (newWhereClause.PreviousClause, Is.SameAs (previousPreviousClause));
-      Assert.That (newWhereClause.LegacyPredicate, Is.SameAs (optionalPredicate));
+      Assert.That (newWhereClause.LegacyPredicate, Is.SameAs (node.OptionalPredicate));
+      Assert.That (newWhereClause.Predicate, Is.SameAs (node.GetResolvedOptionalPredicate (QuerySourceClauseMapping)));
     }
 
     protected void TestCreateClause_WithOptionalSelector (IExpressionNode node)

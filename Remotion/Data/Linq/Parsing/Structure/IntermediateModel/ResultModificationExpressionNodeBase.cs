@@ -88,7 +88,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
       SelectClause selectClause = GetSelectClauseForResultModification (previousClause, querySourceClauseMapping);
       selectClause.AddResultModification (CreateResultModification (selectClause));
-      CreateWhereClauseForResultModification (selectClause);
+      CreateWhereClauseForResultModification (selectClause, querySourceClauseMapping);
       AdjustSelectorForResultModification (selectClause);
 
       return selectClause;
@@ -133,13 +133,13 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     /// That <see cref="WhereClause"/> will be inserted before the <paramref name="selectClause"/> modified by the result modification node.
     /// Creation and insertion of this <see cref="WhereClause"/> is implemented by this method.
     /// </remarks>
-    private void CreateWhereClauseForResultModification (SelectClause selectClause)
+    private void CreateWhereClauseForResultModification (SelectClause selectClause, QuerySourceClauseMapping querySourceClauseMapping)
     {
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);
 
       if (OptionalPredicate != null)
       {
-        var whereClause = new WhereClause (selectClause.PreviousClause, OptionalPredicate, null); // TODO 1219
+        var whereClause = new WhereClause (selectClause.PreviousClause, OptionalPredicate, GetResolvedOptionalPredicate (querySourceClauseMapping));
         selectClause.PreviousClause = whereClause;
       }
     }

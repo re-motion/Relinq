@@ -145,7 +145,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void CreateClause_WithOptionalPredicate_CreatesWhereClause ()
     {
       var node = new LastExpressionNode (CreateParseInfo (), ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5));
-      TestCreateClause_WithOptionalPredicate (node, node.OptionalPredicate);
+      TestCreateClause_WithOptionalPredicate (node);
     }
 
     [Test]
