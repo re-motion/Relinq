@@ -164,7 +164,11 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
         // for a selectClause.Selector of x => x.Property1
         // and an OptionalSelector of a => a.Property2
         // make x => x.Property1.Property2 by replacing a (OptionalSelector.Parameters[0]) with the body of selectClause.Selector
-        var newSelector = ReplacingVisitor.Replace (OptionalSelector.Parameters[0], selectClause.LegacySelector.Body, OptionalSelector.Body);
+
+        // we use OptionalSelector instead of GetResolvedOptionalSelector because we are substituting the selector's parameter with
+        // selectClause.Selector (which is already resolved)
+
+        var newSelector = ReplacingVisitor.Replace (OptionalSelector.Parameters[0], selectClause.Selector, OptionalSelector.Body);
         var newLegacySelector = Expression.Lambda (newSelector, selectClause.LegacySelector.Parameters[0]);
         selectClause.LegacySelector = newLegacySelector;
         selectClause.Selector = newSelector;
