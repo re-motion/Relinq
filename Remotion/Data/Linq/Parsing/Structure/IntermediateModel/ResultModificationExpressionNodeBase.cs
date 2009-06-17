@@ -55,34 +55,29 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public LambdaExpression OptionalPredicate { get; private set; }
     public LambdaExpression OptionalSelector { get; private set; }
 
-    public Expression GetResolvedOptionalPredicate (QuerySourceClauseMapping querySourceClauseMapping)
+    public Expression GetResolvedOptionalPredicate (ClauseGenerationContext clauseGenerationContext)
     {
-      ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
-
       if (OptionalPredicate == null)
         return null;
 
-      return _predicateResolver.GetResolvedExpression(OptionalPredicate.Body, OptionalPredicate.Parameters[0], querySourceClauseMapping);
+      return _predicateResolver.GetResolvedExpression(OptionalPredicate.Body, OptionalPredicate.Parameters[0], clauseGenerationContext);
     }
 
-    public Expression GetResolvedOptionalSelector (QuerySourceClauseMapping querySourceClauseMapping)
+    public Expression GetResolvedOptionalSelector (ClauseGenerationContext clauseGenerationContext)
     {
-      ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
-
       if (OptionalSelector == null)
         return null;
 
-      return _selectorResolver.GetResolvedExpression (OptionalSelector.Body, OptionalSelector.Parameters[0], querySourceClauseMapping);      
+      return _selectorResolver.GetResolvedExpression (OptionalSelector.Body, OptionalSelector.Parameters[0], clauseGenerationContext);      
     }
 
-    public override IClause CreateClause (IClause previousClause, QuerySourceClauseMapping querySourceClauseMapping)
+    public override IClause CreateClause (IClause previousClause, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
-      ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
 
-      SelectClause selectClause = GetSelectClauseForResultModification (previousClause, querySourceClauseMapping);
+      SelectClause selectClause = GetSelectClauseForResultModification (previousClause, clauseGenerationContext);
       selectClause.AddResultModification (CreateResultModification (selectClause));
-      CreateWhereClauseForResultModification (selectClause, querySourceClauseMapping);
+      CreateWhereClauseForResultModification (selectClause, clauseGenerationContext);
       AdjustSelectorForResultModification (selectClause);
 
       return selectClause;
@@ -101,7 +96,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     /// is not a <see cref="SelectClause"/> because it was optimized away, a new trivial <see cref="SelectClause"/> must be added by the node. This
     /// is implemented by this method.
     /// </remarks>
-    private SelectClause GetSelectClauseForResultModification (IClause previousClause, QuerySourceClauseMapping querySourceClauseMapping)
+    private SelectClause GetSelectClauseForResultModification (IClause previousClause, ClauseGenerationContext clauseGenerationContext)
     {
       var selectClause = previousClause as SelectClause;
 
@@ -109,7 +104,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       {
         var selectorParameter = Source.CreateParameterForOutput();
         //TODO: 1221 add selector expression
-        var resolvedSelectorParameter = Source.Resolve (selectorParameter, selectorParameter, querySourceClauseMapping);
+        var resolvedSelectorParameter = Source.Resolve (selectorParameter, selectorParameter, clauseGenerationContext);
         selectClause = new SelectClause (previousClause, Expression.Lambda (selectorParameter, selectorParameter), resolvedSelectorParameter);
       }
 
@@ -127,13 +122,13 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     /// That <see cref="WhereClause"/> will be inserted before the <paramref name="selectClause"/> modified by the result modification node.
     /// Creation and insertion of this <see cref="WhereClause"/> is implemented by this method.
     /// </remarks>
-    private void CreateWhereClauseForResultModification (SelectClause selectClause, QuerySourceClauseMapping querySourceClauseMapping)
+    private void CreateWhereClauseForResultModification (SelectClause selectClause, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);
 
       if (OptionalPredicate != null)
       {
-        var whereClause = new WhereClause (selectClause.PreviousClause, OptionalPredicate, GetResolvedOptionalPredicate (querySourceClauseMapping));
+        var whereClause = new WhereClause (selectClause.PreviousClause, OptionalPredicate, GetResolvedOptionalPredicate (clauseGenerationContext));
         selectClause.PreviousClause = whereClause;
       }
     }

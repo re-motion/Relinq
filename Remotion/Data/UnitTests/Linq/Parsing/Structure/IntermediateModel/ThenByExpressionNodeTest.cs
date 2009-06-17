@@ -18,7 +18,6 @@ using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
 using Remotion.Utilities;
@@ -45,9 +44,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var expression = ExpressionHelper.CreateLambdaExpression();
       var parameter = ExpressionHelper.CreateParameterExpression();
       var expectedResult = ExpressionHelper.CreateExpression();
-      sourceMock.Expect (mock => mock.Resolve (parameter, expression, QuerySourceClauseMapping)).Return (expectedResult);
+      sourceMock.Expect (mock => mock.Resolve (parameter, expression, ClauseGenerationContext)).Return (expectedResult);
 
-      var result = node.Resolve (parameter, expression, QuerySourceClauseMapping);
+      var result = node.Resolve (parameter, expression, ClauseGenerationContext);
 
       sourceMock.VerifyAllExpectations();
       Assert.That (result, Is.SameAs (expectedResult));
@@ -72,7 +71,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
 
-      var result = node.GetResolvedKeySelector (QuerySourceClauseMapping);
+      var result = node.GetResolvedKeySelector (ClauseGenerationContext);
 
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
@@ -85,7 +84,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var node = new ThenByExpressionNode (CreateParseInfo (), selector);
       var oldCount = previousClause.OrderingList.Count;
 
-      var clause = (OrderByClause) node.CreateClause (previousClause, QuerySourceClauseMapping);
+      var clause = (OrderByClause) node.CreateClause (previousClause, ClauseGenerationContext);
 
       Assert.That (clause, Is.SameAs (previousClause));
       Assert.That (clause.OrderingList.Count, Is.EqualTo (oldCount + 1));
@@ -101,8 +100,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var previousClause = ExpressionHelper.CreateMainFromClause();
       var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
       var node = new ThenByExpressionNode (CreateParseInfo (), selector);
-      
-      node.CreateClause (previousClause, null);
+
+      node.CreateClause (previousClause, ClauseGenerationContext);
     }
   }
 }

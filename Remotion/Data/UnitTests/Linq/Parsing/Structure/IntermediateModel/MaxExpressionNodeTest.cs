@@ -48,7 +48,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void Resolve_ThrowsInvalidOperationException ()
     {
       var node = new MaxExpressionNode (CreateParseInfo (), null);
-      node.Resolve (ExpressionHelper.CreateParameterExpression (), ExpressionHelper.CreateExpression (), QuerySourceClauseMapping);
+      node.Resolve (ExpressionHelper.CreateParameterExpression (), ExpressionHelper.CreateExpression (), ClauseGenerationContext);
     }
 
     [Test]
@@ -59,7 +59,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
       
-      var result = node.GetResolvedOptionalSelector (QuerySourceClauseMapping);
+      var result = node.GetResolvedOptionalSelector (ClauseGenerationContext);
 
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
@@ -69,7 +69,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();
       var node = new MaxExpressionNode (CreateParseInfo (sourceMock), null);
-      var result = node.GetResolvedOptionalSelector (QuerySourceClauseMapping);
+      var result = node.GetResolvedOptionalSelector (ClauseGenerationContext);
       Assert.That (result, Is.Null);
     }
 

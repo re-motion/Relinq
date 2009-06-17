@@ -63,7 +63,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void Resolve_ThrowsInvalidOperationException ()
     {
       var node = new FirstExpressionNode (CreateParseInfo (), null);
-      node.Resolve (ExpressionHelper.CreateParameterExpression (), ExpressionHelper.CreateExpression (), QuerySourceClauseMapping);
+      node.Resolve (ExpressionHelper.CreateParameterExpression (), ExpressionHelper.CreateExpression (), ClauseGenerationContext);
     }
 
     [Test]
@@ -74,7 +74,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
 
-      var result = node.GetResolvedOptionalPredicate (QuerySourceClauseMapping);
+      var result = node.GetResolvedOptionalPredicate (ClauseGenerationContext);
 
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
@@ -84,7 +84,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();
       var node = new FirstExpressionNode (CreateParseInfo (sourceMock), null);
-      var result = node.GetResolvedOptionalPredicate (QuerySourceClauseMapping);
+      var result = node.GetResolvedOptionalPredicate (ClauseGenerationContext);
       Assert.That (result, Is.Null);
     }
 
@@ -123,7 +123,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void CreateClause_NoDefaultAllowed ()
     {
       var node = new FirstExpressionNode (CreateParseInfo (FirstExpressionNode.SupportedMethods[0].MakeGenericMethod (typeof (Student))), null);
-      var clause = (SelectClause) node.CreateClause (ExpressionHelper.CreateClause (), QuerySourceClauseMapping);
+      var clause = (SelectClause) node.CreateClause (ExpressionHelper.CreateClause (), ClauseGenerationContext);
 
       Assert.That (((FirstResultModification) clause.ResultModifications[0]).ReturnDefaultWhenEmpty, Is.False);
     }
@@ -132,7 +132,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void CreateClause_DefaultAllowed ()
     {
       var node = new FirstExpressionNode (CreateParseInfo (FirstExpressionNode.SupportedMethods[3].MakeGenericMethod (typeof (Student))), null);
-      var clause = (SelectClause) node.CreateClause (ExpressionHelper.CreateClause (), QuerySourceClauseMapping);
+      var clause = (SelectClause) node.CreateClause (ExpressionHelper.CreateClause (), ClauseGenerationContext);
 
       Assert.That (((FirstResultModification) clause.ResultModifications[0]).ReturnDefaultWhenEmpty, Is.True);
     }

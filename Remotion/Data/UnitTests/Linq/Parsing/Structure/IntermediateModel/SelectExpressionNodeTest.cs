@@ -42,7 +42,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var node = new SelectExpressionNode (CreateParseInfo (), ExpressionHelper.CreateLambdaExpression<int, int> (j => j * j));
       var expression = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
 
-      var result = node.Resolve (expression.Parameters[0], expression.Body, QuerySourceClauseMapping);
+      var result = node.Resolve (expression.Parameters[0], expression.Body, ClauseGenerationContext);
 
       var expectedResult = Expression.MakeBinary (
           ExpressionType.GreaterThan,
@@ -59,7 +59,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
 
-      var result = node.GetResolvedSelector(QuerySourceClauseMapping);
+      var result = node.GetResolvedSelector(ClauseGenerationContext);
 
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
@@ -71,12 +71,12 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
       var node = new SelectExpressionNode (CreateParseInfo (), selector);
 
-      var selectClause = (SelectClause) node.CreateClause (previousClause, QuerySourceClauseMapping);
+      var selectClause = (SelectClause) node.CreateClause (previousClause, ClauseGenerationContext);
 
       Assert.That (selectClause.PreviousClause, Is.SameAs (previousClause));
       Assert.That (selectClause.LegacySelector, Is.EqualTo (node.Selector));
       Assert.That (selectClause.ResultModifications, Is.Empty);
-      Assert.That (selectClause.Selector, Is.EqualTo (node.GetResolvedSelector(QuerySourceClauseMapping)));
+      Assert.That (selectClause.Selector, Is.EqualTo (node.GetResolvedSelector(ClauseGenerationContext)));
       
     }
 

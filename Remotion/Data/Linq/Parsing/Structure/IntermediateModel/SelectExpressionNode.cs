@@ -51,21 +51,19 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     public LambdaExpression Selector { get; private set; }
 
-    public Expression GetResolvedSelector (QuerySourceClauseMapping querySourceClauseMapping)
+    public Expression GetResolvedSelector (ClauseGenerationContext clauseGenerationContext)
     {
-      ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
-      return _selectorResolver.GetResolvedExpression (Selector.Body, Selector.Parameters[0], querySourceClauseMapping);
+      return _selectorResolver.GetResolvedExpression (Selector.Body, Selector.Parameters[0], clauseGenerationContext);
     }
 
-    public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, QuerySourceClauseMapping querySourceClauseMapping)
+    public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("inputParameter", inputParameter);
       ArgumentUtility.CheckNotNull ("expressionToBeResolved", expressionToBeResolved);
-      ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
 
       // we modify the structure of the stream of data coming into this node by our selector,
       // so we first resolve the selector, then we substitute the result for the inputParameter in the expressionToBeResolved
-      var resolvedSelector = GetResolvedSelector(querySourceClauseMapping);
+      var resolvedSelector = GetResolvedSelector(clauseGenerationContext);
       return ReplacingVisitor.Replace (inputParameter, resolvedSelector, expressionToBeResolved);
     }
 
@@ -76,12 +74,11 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return Expression.Parameter (Selector.Body.Type, AssociatedIdentifier);
     }
 
-    public override IClause CreateClause (IClause previousClause, QuerySourceClauseMapping querySourceClauseMapping)
+    public override IClause CreateClause (IClause previousClause, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
-      ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
       
-      return new SelectClause (previousClause, Selector, GetResolvedSelector (querySourceClauseMapping));
+      return new SelectClause (previousClause, Selector, GetResolvedSelector (clauseGenerationContext));
     }
   }
 }

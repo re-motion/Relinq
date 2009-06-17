@@ -14,9 +14,14 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq;
+using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Rhino.Mocks;
@@ -40,7 +45,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void GetResolvedExpression ()
     {
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
-      var result = _nodeExpressionResolver.GetResolvedExpression (_unresolvedLambda.Body, _unresolvedLambda.Parameters[0], QuerySourceClauseMapping);
+      var result = _nodeExpressionResolver.GetResolvedExpression (_unresolvedLambda.Body, _unresolvedLambda.Parameters[0], ClauseGenerationContext);
 
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
@@ -48,7 +53,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void GetResolvedExpression_Lazy ()
     {
-      _nodeExpressionResolver.GetResolvedExpression (() => _unresolvedLambda.Body, _unresolvedLambda.Parameters[0], QuerySourceClauseMapping);
+      _nodeExpressionResolver.GetResolvedExpression (() => _unresolvedLambda.Body, _unresolvedLambda.Parameters[0], ClauseGenerationContext);
 
       bool lambdaCalled = false;
       _nodeExpressionResolver.GetResolvedExpression (
@@ -58,7 +63,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
             return _unresolvedLambda.Body;
           },
           _unresolvedLambda.Parameters[0],
-          QuerySourceClauseMapping);
+          ClauseGenerationContext);
 
       Assert.That (lambdaCalled, Is.False);
     }
@@ -67,9 +72,60 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void GetResolvedExpression_RemovesTransparentIdentifiers ()
     {
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
-      var result = _nodeExpressionResolver.GetResolvedExpression (_unresolvedLambda.Body, _unresolvedLambda.Parameters[0], QuerySourceClauseMapping);
+      var result = _nodeExpressionResolver.GetResolvedExpression (_unresolvedLambda.Body, _unresolvedLambda.Parameters[0], ClauseGenerationContext);
 
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
+    }
+
+    [Test]
+    public void GetResolvedExpression_DetectsSubQueries ()
+    {
+      var unresolvedExpressionWithSubQuery = 
+          ExpressionHelper.CreateLambdaExpression<int, int> (i => (from x in ExpressionHelper.CreateQuerySource () select i).Count());
+      var result = _nodeExpressionResolver.GetResolvedExpression (
+          unresolvedExpressionWithSubQuery.Body, unresolvedExpressionWithSubQuery.Parameters[0], ClauseGenerationContext);
+
+      Assert.That (result, Is.InstanceOfType (typeof (SubQueryExpression)));
+    }
+
+    [Test]
+    public void GetResolvedExpression_DetectsSubQueries_RegistersSubQueriesInList ()
+    {
+      var unresolvedExpressionWithSubQuery =
+          ExpressionHelper.CreateLambdaExpression<int, int> (i => (from x in ExpressionHelper.CreateQuerySource () select i).Count ());
+      var result = _nodeExpressionResolver.GetResolvedExpression (
+          unresolvedExpressionWithSubQuery.Body, unresolvedExpressionWithSubQuery.Parameters[0], ClauseGenerationContext);
+
+      Assert.That (ClauseGenerationContext.SubQueryRegistry.Contains (((SubQueryExpression) result).QueryModel));
+    }
+
+    [Test]
+    public void GetResolvedExpression_DetectsSubQueries_AfterResolving ()
+    {
+      var unresolvedExpressionWithSubQuery =
+          ExpressionHelper.CreateLambdaExpression<int, int> (i => (from x in ExpressionHelper.CreateQuerySource () select i).Count ());
+      var result = _nodeExpressionResolver.GetResolvedExpression (
+          unresolvedExpressionWithSubQuery.Body, unresolvedExpressionWithSubQuery.Parameters[0], ClauseGenerationContext);
+
+      var subQueryExpression = (SubQueryExpression) result;
+      var subQuerySelector = ((SelectClause) subQueryExpression.QueryModel.SelectOrGroupClause).Selector;
+      Assert.That (subQuerySelector, Is.InstanceOfType (typeof (QuerySourceReferenceExpression)));
+      Assert.That (((QuerySourceReferenceExpression) subQuerySelector).ReferencedClause, Is.SameAs (SourceClause));
+    }
+
+    [Test]
+    public void GetResolvedExpression_UsesNodeTypeRegistry ()
+    {
+      var nodeTypeRegistry = new MethodCallExpressionNodeTypeRegistry ();
+      var context = new ClauseGenerationContext(QuerySourceClauseMapping, nodeTypeRegistry, new List<QueryModel>());
+
+      var unresolvedExpressionWithSubQuery =
+          ExpressionHelper.CreateLambdaExpression<int, int> (i => (from x in ExpressionHelper.CreateQuerySource () select i).Count ());
+      var result = _nodeExpressionResolver.GetResolvedExpression (
+          unresolvedExpressionWithSubQuery.Body, unresolvedExpressionWithSubQuery.Parameters[0], context);
+
+      Assert.That (result, Is.InstanceOfType (typeof (MethodCallExpression)), 
+          "The given nodeTypeRegistry does not know any query methods, so no SubQueryExpression is generated.");
     }
 
     [Test]
@@ -81,14 +137,14 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       sourceMock
           .Expect (
-          mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything, Arg<QuerySourceClauseMapping>.Is.Anything))
+          mock => mock.Resolve (Arg<ParameterExpression>.Is.Anything, Arg<Expression>.Is.Anything, Arg<ClauseGenerationContext>.Is.Anything))
           .Repeat.Once()
           .Return (fakeResult);
 
       sourceMock.Replay();
 
-      cache.GetResolvedExpression (_unresolvedLambda, _unresolvedLambda.Parameters[0], QuerySourceClauseMapping);
-      cache.GetResolvedExpression (_unresolvedLambda, _unresolvedLambda.Parameters[0], QuerySourceClauseMapping);
+      cache.GetResolvedExpression (_unresolvedLambda, _unresolvedLambda.Parameters[0], ClauseGenerationContext);
+      cache.GetResolvedExpression (_unresolvedLambda, _unresolvedLambda.Parameters[0], ClauseGenerationContext);
 
       sourceMock.VerifyAllExpectations();
     }

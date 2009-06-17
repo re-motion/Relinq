@@ -48,7 +48,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void Resolve_ThrowsInvalidOperationException ()
     {
       var node = new CountExpressionNode (CreateParseInfo (), null);
-      node.Resolve (ExpressionHelper.CreateParameterExpression (), ExpressionHelper.CreateExpression (), QuerySourceClauseMapping);
+      node.Resolve (ExpressionHelper.CreateParameterExpression (), ExpressionHelper.CreateExpression (), ClauseGenerationContext);
     }
 
     [Test]
@@ -66,7 +66,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var node = new CountExpressionNode (CreateParseInfo (), predicate);
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
 
-      var result = node.GetResolvedOptionalPredicate (QuerySourceClauseMapping);
+      var result = node.GetResolvedOptionalPredicate (ClauseGenerationContext);
 
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
@@ -76,7 +76,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();
       var node = new CountExpressionNode (CreateParseInfo (sourceMock), null);
-      var result = node.GetResolvedOptionalPredicate (QuerySourceClauseMapping);
+      var result = node.GetResolvedOptionalPredicate (ClauseGenerationContext);
       Assert.That (result, Is.Null);
     }
 

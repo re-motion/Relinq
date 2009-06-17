@@ -69,25 +69,22 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       get { return ResultSelector.Parameters[1].Type; }
     }
 
-    public Expression GetResolvedCollectionSelector (QuerySourceClauseMapping querySourceClauseMapping)
+    public Expression GetResolvedCollectionSelector (ClauseGenerationContext clauseGenerationContext)
     {
-      ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
-      return _collectionSelectorResolver.GetResolvedExpression (CollectionSelector.Body, CollectionSelector.Parameters[0], querySourceClauseMapping);
+      return _collectionSelectorResolver.GetResolvedExpression (CollectionSelector.Body, CollectionSelector.Parameters[0], clauseGenerationContext);
     }
 
-    public Expression GetResolvedResultSelector (QuerySourceClauseMapping querySourceClauseMapping)
+    public Expression GetResolvedResultSelector (ClauseGenerationContext clauseGenerationContext)
     {
-      ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
-
       // our result selector usually looks like this: (i, j) => new { i = i, j = j }
       // with the data for i coming from the previous node and j identifying the data from this node
 
       // we resolve the selector by first substituting j by a QuerySourceReferenceExpression pointing back to us, before asking the previous node 
       // to resolve i
       return _resultSelectorResolver.GetResolvedExpression (
-          () => GetResultSelectorWithBackReference (querySourceClauseMapping),
+          () => GetResultSelectorWithBackReference (clauseGenerationContext.ClauseMapping),
           ResultSelector.Parameters[0],
-          querySourceClauseMapping);
+          clauseGenerationContext);
     }
 
     private Expression GetResultSelectorWithBackReference (QuerySourceClauseMapping querySourceClauseMapping)
@@ -114,15 +111,14 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       }
     }
 
-    public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, QuerySourceClauseMapping querySourceClauseMapping)
+    public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("inputParameter", inputParameter);
       ArgumentUtility.CheckNotNull ("expressionToBeResolved", expressionToBeResolved);
-      ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
 
       // we modify the structure of the stream of data coming into this node by our result selector,
       // so we first resolve the result selector, then we substitute the result for the inputParameter in the expressionToBeResolved
-      var resolvedResultSelector = GetResolvedResultSelector(querySourceClauseMapping);
+      var resolvedResultSelector = GetResolvedResultSelector (clauseGenerationContext);
       return ReplacingVisitor.Replace (inputParameter, resolvedResultSelector, expressionToBeResolved);
     }
 
@@ -133,10 +129,9 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return Expression.Parameter (ResultSelector.Body.Type, AssociatedIdentifier);
     }
 
-    public override IClause CreateClause (IClause previousClause, QuerySourceClauseMapping querySourceClauseMapping)
+    public override IClause CreateClause (IClause previousClause, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
-      ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
 
       var identifier = ResultSelector.Parameters[1];
       FromClauseBase clause;
@@ -147,7 +142,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       else
         clause = new AdditionalFromClause (previousClause, identifier, CollectionSelector, ResultSelector);
 
-      querySourceClauseMapping.AddMapping (this, clause);
+      clauseGenerationContext.ClauseMapping.AddMapping (this, clause);
       return clause;
     }
   }

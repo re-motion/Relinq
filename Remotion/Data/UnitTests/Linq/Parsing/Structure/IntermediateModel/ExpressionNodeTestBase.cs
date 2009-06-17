@@ -14,11 +14,13 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.Structure;
@@ -33,13 +35,19 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       SourceNode = ExpressionNodeObjectMother.CreateConstant();
       QuerySourceClauseMapping = new QuerySourceClauseMapping();
-      SourceClause = (FromClauseBase) SourceNode.CreateClause (null, QuerySourceClauseMapping);
+      ClauseGenerationContext = new ClauseGenerationContext(
+          QuerySourceClauseMapping, 
+          MethodCallExpressionNodeTypeRegistry.CreateDefault(), 
+          new List<QueryModel>());
+
+      SourceClause = (FromClauseBase) SourceNode.CreateClause (null, ClauseGenerationContext);
       SourceReference = new QuerySourceReferenceExpression (SourceClause);
     }
 
     public IQuerySourceExpressionNode SourceNode { get; private set; }
     public FromClauseBase SourceClause { get; private set; }
     public QuerySourceReferenceExpression SourceReference { get; private set; }
+    public ClauseGenerationContext ClauseGenerationContext { get; private set; }
     public QuerySourceClauseMapping QuerySourceClauseMapping { get; private set; }
 
     public Expression<Func<int, string>> OptionalSelector
@@ -63,7 +71,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var previousClause = ExpressionHelper.CreateSelectClause();
 
-      var clause = (SelectClause) node.CreateClause (previousClause, QuerySourceClauseMapping);
+      var clause = (SelectClause) node.CreateClause (previousClause, ClauseGenerationContext);
 
       Assert.That (clause, Is.SameAs (previousClause));
       Assert.That (clause.ResultModifications.Count, Is.EqualTo (1));
@@ -75,7 +83,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var previousClause = SourceClause;
 
-      var clause = (SelectClause) node.CreateClause (previousClause, QuerySourceClauseMapping);
+      var clause = (SelectClause) node.CreateClause (previousClause, ClauseGenerationContext);
 
       Assert.That (clause.PreviousClause, Is.SameAs (previousClause));
       Assert.That (clause.ResultModifications.Count, Is.EqualTo (1));
@@ -87,7 +95,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       ExpressionTreeComparer.CheckAreEqualTrees (expectedLegacySelector, clause.LegacySelector);
 
       var expectedSelectorParameter = node.Source.CreateParameterForOutput ();
-      var expectedSelector = node.Source.Resolve (expectedSelectorParameter, expectedSelectorParameter, QuerySourceClauseMapping);
+      var expectedSelector = node.Source.Resolve (expectedSelectorParameter, expectedSelectorParameter, ClauseGenerationContext);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedSelector, clause.Selector);
     }
 
@@ -98,7 +106,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       // chain: previousPreviousClause <- previousClause
 
-      var clause = (SelectClause) node.CreateClause (previousClause, QuerySourceClauseMapping);
+      var clause = (SelectClause) node.CreateClause (previousClause, ClauseGenerationContext);
 
       // chain: previousPreviousClause <- whereClause <- previousClause
 
@@ -107,7 +115,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var newWhereClause = (WhereClause) clause.PreviousClause;
       Assert.That (newWhereClause.PreviousClause, Is.SameAs (previousPreviousClause));
       Assert.That (newWhereClause.LegacyPredicate, Is.SameAs (node.OptionalPredicate));
-      Assert.That (newWhereClause.Predicate, Is.SameAs (node.GetResolvedOptionalPredicate (QuerySourceClauseMapping)));
+      Assert.That (newWhereClause.Predicate, Is.SameAs (node.GetResolvedOptionalPredicate (ClauseGenerationContext)));
     }
 
     protected void TestCreateClause_WithOptionalSelector (IExpressionNode node)
@@ -121,7 +129,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var previousPreviousClause = ExpressionHelper.CreateClause ();
       var previousClause = new SelectClause (previousPreviousClause, legacySelectorOfPreviousClause, selectorOfPreviousClause);
 
-      var clause = (SelectClause) node.CreateClause (previousClause, QuerySourceClauseMapping);
+      var clause = (SelectClause) node.CreateClause (previousClause, ClauseGenerationContext);
 
       Assert.That (clause, Is.SameAs (previousClause));
 

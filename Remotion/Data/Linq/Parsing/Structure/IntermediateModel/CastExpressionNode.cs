@@ -39,14 +39,13 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     {
     }
 
-    public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, QuerySourceClauseMapping querySourceClauseMapping)
+    public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("inputParameter", inputParameter);
       ArgumentUtility.CheckNotNull ("expressionToBeResolved", expressionToBeResolved);
-      ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
 
       // this simply streams its input data to the output without modifying its structure, so we resolve by passing on the data to the previous node
-      return Source.Resolve (inputParameter, expressionToBeResolved, querySourceClauseMapping);
+      return Source.Resolve (inputParameter, expressionToBeResolved, clauseGenerationContext);
     }
 
     public override ParameterExpression CreateParameterForOutput ()
@@ -55,10 +54,9 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return Source.CreateParameterForOutput();
     }
 
-    public override IClause CreateClause (IClause previousClause, QuerySourceClauseMapping querySourceClauseMapping)
+    public override IClause CreateClause (IClause previousClause, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
-      ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
 
       //currently there is no clause for 'CastNodes'
       return previousClause;

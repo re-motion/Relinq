@@ -41,9 +41,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var expression = ExpressionHelper.CreateLambdaExpression ();
       var parameter = ExpressionHelper.CreateParameterExpression ();
       var expectedResult = ExpressionHelper.CreateExpression ();
-      sourceMock.Expect (mock => mock.Resolve (parameter, expression, QuerySourceClauseMapping)).Return (expectedResult);
+      sourceMock.Expect (mock => mock.Resolve (parameter, expression, ClauseGenerationContext)).Return (expectedResult);
 
-      var result = node.Resolve (parameter, expression, QuerySourceClauseMapping);
+      var result = node.Resolve (parameter, expression, ClauseGenerationContext);
 
       sourceMock.VerifyAllExpectations ();
       Assert.That (result, Is.SameAs (expectedResult));
@@ -67,7 +67,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var previousClause = ExpressionHelper.CreateClause ();
       var node = new CastExpressionNode (CreateParseInfo());
 
-      var clause = node.CreateClause (previousClause, QuerySourceClauseMapping);
+      var clause = node.CreateClause (previousClause, ClauseGenerationContext);
 
       Assert.That (clause, Is.SameAs (previousClause));
     }

@@ -18,7 +18,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Utilities;
 
@@ -73,9 +72,13 @@ namespace Remotion.Data.Linq.Parsing.Structure
       var subQueryRegistry = new List<QueryModel>();
       var node = _expressionTreeParser.ParseTree (expressionTreeRoot, subQueryRegistry);
 
-      var clauseMapping = new QuerySourceClauseMapping();
-      IClause lastClause = CreateClauseChain (node, clauseMapping);
-      SelectClause selectClause = GetOrCreateSelectClause(node, lastClause, clauseMapping);
+      var clauseGenerationContext = new ClauseGenerationContext (
+          new QuerySourceClauseMapping (), 
+          _expressionTreeParser.NodeTypeRegistry, 
+          subQueryRegistry);
+
+      IClause lastClause = CreateClauseChain (node, clauseGenerationContext);
+      SelectClause selectClause = GetOrCreateSelectClause (node, lastClause, clauseGenerationContext);
 
       // TODO 1178: After COMMONS-1178, this code will not be needed any longer.
       var bodyClauses = new List<IBodyClause>();
@@ -98,23 +101,23 @@ namespace Remotion.Data.Linq.Parsing.Structure
     /// order as the corresponding nodes.
     /// </summary>
     /// <param name="node">The last node in the chain to process.</param>
-    /// <param name="querySourceClauseMapping">A mapping where every <see cref="IQuerySourceExpressionNode"/> is mapped to its respective
-    /// clause. This is used to resolve predicates and selectors using <see cref="QuerySourceReferenceExpression"/>s.</param>
+    /// <param name="clauseGenerationContext">A container for all the context information needed for creating clauses. This is used to resolve 
+    /// predicates and selectors using <see cref="NodeExpressionResolver"/>s.</param>
     /// <returns>An <see cref="IClause"/> that corresponds to <paramref name="node"/>. The chain defined by <see cref="IExpressionNode.Source"/>
     /// is reflected in the chain defined by <see cref="IClause.PreviousClause"/>.</returns>
-    private IClause CreateClauseChain (IExpressionNode node, QuerySourceClauseMapping querySourceClauseMapping)
+    private IClause CreateClauseChain (IExpressionNode node, ClauseGenerationContext clauseGenerationContext)
     {
       if (node.Source == null) // this is the end of the node chain, create a clause symbolizing the end of the clause chain
-        return node.CreateClause (null, querySourceClauseMapping);
+        return node.CreateClause (null, clauseGenerationContext);
       else
       { // this is not the end of the chain, process the rest of the chain before processing this node
-        var previousClause = CreateClauseChain (node.Source, querySourceClauseMapping);
+        var previousClause = CreateClauseChain (node.Source, clauseGenerationContext);
 
         // TODO 1180: This is only temporary, we will implement a better model that does not require LetClause later on.
         if (previousClause is SelectClause)
           previousClause = CreateLetClauseFromSelectClause((SelectClause) previousClause);
 
-        return node.CreateClause (previousClause, querySourceClauseMapping);
+        return node.CreateClause (previousClause, clauseGenerationContext);
       }
     }
 
@@ -146,11 +149,11 @@ namespace Remotion.Data.Linq.Parsing.Structure
     /// </summary>
     /// <param name="lastNode">The last node in the chain of <see cref="IExpressionNode"/>s.</param>
     /// <param name="lastClause">The last clause produced by the chain defined by <paramref name="lastNode"/>.</param>
-    /// <param name="querySourceClauseMapping">The <see cref="QuerySourceClauseMapping"/> used for constructing the clause chain.</param>
+    /// <param name="clauseGenerationContext">The context info needed to resolve the created selector.</param>
     /// <returns><paramref name="lastClause"/> if it is a <see cref="SelectClause"/>, or a new <see cref="SelectClause"/> that references
     /// <paramref name="lastClause"/> as its <see cref="SelectClause.PreviousClause"/>. If a new <see cref="SelectClause"/> is created, its selector
     /// will take the data streamed out by <paramref name="lastClause"/> and return it unchanged.</returns>
-    private SelectClause GetOrCreateSelectClause (IExpressionNode lastNode, IClause lastClause, QuerySourceClauseMapping querySourceClauseMapping)
+    private SelectClause GetOrCreateSelectClause (IExpressionNode lastNode, IClause lastClause, ClauseGenerationContext clauseGenerationContext)
     {
       if (lastClause is SelectClause)
       {
@@ -160,8 +163,8 @@ namespace Remotion.Data.Linq.Parsing.Structure
       {
         var parameterExpression = lastNode.CreateParameterForOutput();
         //TODO: 1221
-        var resolveedParameterExpression = lastNode.Resolve (parameterExpression, parameterExpression, querySourceClauseMapping);
-        return new SelectClause (lastClause, Expression.Lambda (parameterExpression, parameterExpression), resolveedParameterExpression);
+        var resolvedParameterExpression = lastNode.Resolve (parameterExpression, parameterExpression, clauseGenerationContext);
+        return new SelectClause (lastClause, Expression.Lambda (parameterExpression, parameterExpression), resolvedParameterExpression);
       }
     }
 

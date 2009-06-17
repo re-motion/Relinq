@@ -280,15 +280,18 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
       nodeTypeRegistry.Register (WhereExpressionNode.SupportedMethods, typeof (WhereExpressionNode));
       
       var selectNode = (SelectExpressionNode) new ExpressionTreeParser (nodeTypeRegistry).ParseTree (query.Expression, new List<QueryModel>());
-      var querySourceClauseMapping = new QuerySourceClauseMapping();
+      var clauseGenerationContext = new ClauseGenerationContext (
+          new QuerySourceClauseMapping(), 
+          new MethodCallExpressionNodeTypeRegistry(), 
+          new List<QueryModel>());
 
       var selectManyNode = (SelectManyExpressionNode) selectNode.Source.Source;
       var constantNode = (ConstantExpressionNode) selectManyNode.Source;
 
-      var mainFromClause = constantNode.CreateClause (null, querySourceClauseMapping);
-      selectManyNode.CreateClause (mainFromClause, querySourceClauseMapping); // only to add the clause to the mapping
+      var mainFromClause = constantNode.CreateClause (null, clauseGenerationContext);
+      selectManyNode.CreateClause (mainFromClause, clauseGenerationContext); // only to add the clause to the mapping
 
-      var selectProjection = selectNode.GetResolvedSelector (querySourceClauseMapping); // new ( a = IR (a), b = IR (b) ).a.ID
+      var selectProjection = selectNode.GetResolvedSelector (clauseGenerationContext); // new ( a = IR (a), b = IR (b) ).a.ID
 
       var result = TransparentIdentifierRemovingVisitor.ReplaceTransparentIdentifiers (selectProjection);
 

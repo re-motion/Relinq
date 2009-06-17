@@ -40,16 +40,16 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     /// by the projection data coming out of this <see cref="IExpressionNode"/>.</param>
     /// <param name="expressionToBeResolved">The expression to be resolved. Any occurrence of <paramref name="inputParameter"/> in this expression
     /// is replaced.</param>
-    /// <param name="querySourceClauseMapping">The <see cref="QuerySourceClauseMapping"/>, which maps <see cref="IQuerySourceExpressionNode"/>s 
-    /// to the clauses created from them. Implementers that also implement <see cref="IQuerySourceExpressionNode"/> (such as 
-    /// <see cref="ConstantExpressionNode"/> or <see cref="SelectManyExpressionNode"/>) must add their clauses to the mapping in 
-    /// <see cref="CreateClause"/> if they want to be able to implement <see cref="Resolve"/> correctly.</param>
+    /// <param name="clauseGenerationContext">Context information used during the current parsing process. The <see cref="QuerySourceClauseMapping"/>
+    /// contained in this structure maps <see cref="IQuerySourceExpressionNode"/>s  to the clauses created from them. Implementers that also implement 
+    /// <see cref="IQuerySourceExpressionNode"/> (such as  <see cref="ConstantExpressionNode"/> or <see cref="SelectManyExpressionNode"/>) must add 
+    /// their clauses to the mapping in <see cref="CreateClause"/> if they want to be able to implement <see cref="Resolve"/> correctly.</param>
     /// <returns>An equivalent of <paramref name="expressionToBeResolved"/> with each occurrence of <paramref name="inputParameter"/> replaced by
     /// the projection data streaming out of this <see cref="IExpressionNode"/>.</returns>
     /// <exception cref="InvalidOperationException">
     /// This node does not support this operation because it does not stream any data to subsequent nodes.
     /// </exception>
-    Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, QuerySourceClauseMapping querySourceClauseMapping);
+    Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext);
 
     /// <summary>
     /// Creates a <see cref="ParameterExpression"/> that can take elements of the output stream provided by this node. This 
@@ -69,11 +69,12 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     /// </summary>
     /// <param name="previousClause">The previous clause the new <see cref="IClause"/> should link to. For <see cref="IExpressionNode"/>
     /// instances representing the end of a query chain (e.g. <see cref="ConstantExpressionNode"/>), this must be <see langword="null"/>.</param>
-    /// <param name="querySourceClauseMapping">The <see cref="QuerySourceClauseMapping"/>, which maps <see cref="IQuerySourceExpressionNode"/>s 
-    /// to the clauses created from them. Implementers that also implement <see cref="IQuerySourceExpressionNode"/> (such as 
+    /// <param name="clauseGenerationContext">Context information used during the current parsing process. The <see cref="QuerySourceClauseMapping"/>
+    /// contained in this structure maps <see cref="IQuerySourceExpressionNode"/>s to the clauses created from them. Implementers that 
+    /// also implement <see cref="IQuerySourceExpressionNode"/> (such as 
     /// <see cref="ConstantExpressionNode"/> or <see cref="SelectManyExpressionNode"/>) must add their clauses to the mapping in 
     /// <see cref="CreateClause"/> if they want to be able to implement <see cref="Resolve"/> correctly.</param>
     /// <returns>A new <see cref="IClause"/> instance representing this <see cref="IExpressionNode"/>.</returns>
-    IClause CreateClause (IClause previousClause, QuerySourceClauseMapping querySourceClauseMapping);
+    IClause CreateClause (IClause previousClause, ClauseGenerationContext clauseGenerationContext);
   }
 }

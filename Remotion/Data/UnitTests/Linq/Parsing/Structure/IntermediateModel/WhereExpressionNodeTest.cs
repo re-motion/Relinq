@@ -45,9 +45,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var expression = ExpressionHelper.CreateLambdaExpression();
       var parameter = ExpressionHelper.CreateParameterExpression();
       var expectedResult = ExpressionHelper.CreateExpression();
-      sourceMock.Expect (mock => mock.Resolve (parameter, expression, QuerySourceClauseMapping)).Return (expectedResult);
+      sourceMock.Expect (mock => mock.Resolve (parameter, expression, ClauseGenerationContext)).Return (expectedResult);
 
-      var result = node.Resolve (parameter, expression, QuerySourceClauseMapping);
+      var result = node.Resolve (parameter, expression, ClauseGenerationContext);
 
       sourceMock.VerifyAllExpectations();
       Assert.That (result, Is.SameAs (expectedResult));
@@ -61,7 +61,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
 
-      var result = node.GetResolvedPredicate (QuerySourceClauseMapping);
+      var result = node.GetResolvedPredicate (ClauseGenerationContext);
 
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
@@ -85,10 +85,10 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var predicate = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
       var node = new WhereExpressionNode (CreateParseInfo (), predicate);
 
-      var clause = (WhereClause) node.CreateClause (previousClause, QuerySourceClauseMapping);
+      var clause = (WhereClause) node.CreateClause (previousClause, ClauseGenerationContext);
 
       Assert.That (clause.PreviousClause, Is.SameAs (previousClause));
-      Assert.That (clause.Predicate, Is.EqualTo (node.GetResolvedPredicate(QuerySourceClauseMapping)));
+      Assert.That (clause.Predicate, Is.EqualTo (node.GetResolvedPredicate(ClauseGenerationContext)));
     }
   }
 }

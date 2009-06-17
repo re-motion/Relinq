@@ -65,14 +65,13 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       get { return null; }
     }
 
-    public Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, QuerySourceClauseMapping querySourceClauseMapping)
+    public Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("inputParameter", inputParameter);
       ArgumentUtility.CheckNotNull ("expressionToBeResolved", expressionToBeResolved);
-      ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
 
       // query sources resolve into references that point back to the respective clauses
-      FromClauseBase clause = GetClauseForResolve (querySourceClauseMapping);
+      FromClauseBase clause = GetClauseForResolve (clauseGenerationContext.ClauseMapping);
       var reference = new QuerySourceReferenceExpression (clause);
       return ReplacingVisitor.Replace (inputParameter, reference, expressionToBeResolved);
     }
@@ -93,10 +92,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       }
     }
 
-    public IClause CreateClause (IClause previousClause, QuerySourceClauseMapping querySourceClauseMapping)
+    public IClause CreateClause (IClause previousClause, ClauseGenerationContext clauseGenerationContext)
     {
-      ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
-
       if (previousClause != null)
       {
         throw new InvalidOperationException (
@@ -108,7 +105,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
           Expression.Parameter (QuerySourceElementType, AssociatedIdentifier), 
           Expression.Constant (Value, QuerySourceType));
 
-      querySourceClauseMapping.AddMapping (this, fromClause);
+      clauseGenerationContext.ClauseMapping.AddMapping (this, fromClause);
       return fromClause;
     }
 

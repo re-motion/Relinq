@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Utilities;
@@ -33,29 +34,31 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     public IExpressionNode SourceNode { get; set; }
 
-    public Expression GetResolvedExpression (Expression unresolvedExpression, ParameterExpression parameterToBeResolved, QuerySourceClauseMapping querySourceClauseMapping)
+    public Expression GetResolvedExpression (Expression unresolvedExpression, ParameterExpression parameterToBeResolved, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("unresolvedExpression", unresolvedExpression);
       ArgumentUtility.CheckNotNull ("parameterToBeResolved", parameterToBeResolved);
-      ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
 
       if (_cachedResolvedExpression == null)
       {
-        _cachedResolvedExpression = SourceNode.Resolve (parameterToBeResolved, unresolvedExpression, querySourceClauseMapping);
+        _cachedResolvedExpression = SourceNode.Resolve (parameterToBeResolved, unresolvedExpression, clauseGenerationContext);
         _cachedResolvedExpression = TransparentIdentifierRemovingVisitor.ReplaceTransparentIdentifiers (_cachedResolvedExpression);
+        _cachedResolvedExpression = SubQueryFindingVisitor.ReplaceSubQueries (
+            _cachedResolvedExpression, 
+            clauseGenerationContext.NodeTypeRegistry, 
+            clauseGenerationContext.SubQueryRegistry);
       }
 
       return _cachedResolvedExpression;
     }
 
-    public Expression GetResolvedExpression (Func<Expression> unresolvedExpressionGenerator, ParameterExpression parameterToBeResolved, QuerySourceClauseMapping querySourceClauseMapping)
+    public Expression GetResolvedExpression (Func<Expression> unresolvedExpressionGenerator, ParameterExpression parameterToBeResolved, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("unresolvedExpressionGenerator", unresolvedExpressionGenerator);
       ArgumentUtility.CheckNotNull ("parameterToBeResolved", parameterToBeResolved);
-      ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
 
       if (_cachedResolvedExpression == null)
-        return GetResolvedExpression (unresolvedExpressionGenerator(), parameterToBeResolved, querySourceClauseMapping);
+        return GetResolvedExpression (unresolvedExpressionGenerator (), parameterToBeResolved, clauseGenerationContext);
 
       return _cachedResolvedExpression;
     }

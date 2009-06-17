@@ -14,9 +14,11 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.Structure;
@@ -28,6 +30,17 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
   [TestFixture]
   public class ConstantExpressionNodeTest : ExpressionNodeTestBase
   {
+    private ClauseGenerationContext _emptyContext;
+
+    public override void SetUp ()
+    {
+      base.SetUp ();
+      _emptyContext = new ClauseGenerationContext (
+          new QuerySourceClauseMapping(), 
+          new MethodCallExpressionNodeTypeRegistry (), 
+          new List<QueryModel> ());
+    }
+
     [Test]
     public void Initialization_QuerySourceElementType ()
     {
@@ -54,7 +67,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var clause = ExpressionHelper.CreateMainFromClause ();
       QuerySourceClauseMapping.AddMapping (node, clause);
 
-      var result = node.Resolve (expression.Parameters[0], expression.Body, QuerySourceClauseMapping);
+      var result = node.Resolve (expression.Parameters[0], expression.Body, ClauseGenerationContext);
 
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, new QuerySourceReferenceExpression (clause), Expression.Constant (5));
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
@@ -67,7 +80,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var node = ExpressionNodeObjectMother.CreateConstant ();
       var expression = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      node.Resolve (expression.Parameters[0], expression.Body, QuerySourceClauseMapping);
+      node.Resolve (expression.Parameters[0], expression.Body, ClauseGenerationContext);
     }
 
     [Test]
@@ -84,7 +97,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void CreateClause ()
     {
       var node = new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3, 4, 5 });
-      var constantClause = (MainFromClause) node.CreateClause(null, QuerySourceClauseMapping);
+      var constantClause = (MainFromClause) node.CreateClause(null, ClauseGenerationContext);
 
       Assert.That (constantClause.Identifier.Name, Is.EqualTo ("x"));
       Assert.That (constantClause.Identifier.Type, Is.SameAs(typeof(int)));    
@@ -97,11 +110,10 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void CreateClause_AddsMapping ()
     {
       var node = new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3, 4, 5 });
-      var querySourceClauseMapping = new QuerySourceClauseMapping();
-      var clause = node.CreateClause (null, querySourceClauseMapping);
+      var clause = node.CreateClause (null, _emptyContext);
 
-      Assert.That (querySourceClauseMapping.Count, Is.EqualTo (1));
-      Assert.That (querySourceClauseMapping.GetClause (node), Is.SameAs (clause));
+      Assert.That (_emptyContext.ClauseMapping.Count, Is.EqualTo (1));
+      Assert.That (_emptyContext.ClauseMapping.GetClause (node), Is.SameAs (clause));
     }
 
     [Test]
@@ -109,16 +121,14 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void CreateClause_WithNonNullPreviousClause ()
     {
       var node = new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3, 4, 5 });
-      var querySourceClauseMapping = new QuerySourceClauseMapping ();
-      node.CreateClause (ExpressionHelper.CreateClause(), querySourceClauseMapping);
+      node.CreateClause (ExpressionHelper.CreateClause(), _emptyContext);
     }
 
     [Test]
     public void CreateClause_WithNullPreviousClause ()
     {
       var node = new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3, 4, 5 });
-      var querySourceClauseMapping = new QuerySourceClauseMapping ();
-      var constantClause = (MainFromClause) node.CreateClause (null, querySourceClauseMapping);
+      var constantClause = (MainFromClause) node.CreateClause (null, _emptyContext);
 
       Assert.That (constantClause.Identifier.Name, Is.EqualTo ("x"));
       Assert.That (constantClause.Identifier.Type, Is.SameAs (typeof (int)));

@@ -16,7 +16,6 @@
 using System;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel.TestDomain
@@ -27,7 +26,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel.TestD
     {
     }
 
+// ReSharper disable UnusedParameter.Local
     public ExpressionNodeWithTooManyCtors (int i)
+// ReSharper restore UnusedParameter.Local
     {
     }
 
@@ -36,7 +37,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel.TestD
       get { throw new NotImplementedException(); }
     }
 
-    public Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, QuerySourceClauseMapping querySourceClauseMapping)
+    public Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
     {
       throw new NotImplementedException();
     }
@@ -46,7 +47,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel.TestD
       throw new NotImplementedException();
     }
 
-    public IClause CreateClause (IClause previousClause, QuerySourceClauseMapping querySourceClauseMapping)
+    public IClause CreateClause (IClause previousClause, ClauseGenerationContext clauseGenerationContext)
     {
       throw new NotImplementedException();
     }
