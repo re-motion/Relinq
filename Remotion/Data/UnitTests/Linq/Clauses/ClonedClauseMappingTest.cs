@@ -63,7 +63,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), "Clause has not been associated with a clause, cannot replace its mapping.")]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Clause has not been associated with a clause, cannot replace its mapping.")]
     public void ReplaceMapping_WithoutAdding ()
     {
       _mapping.ReplaceMapping (_clause1, _clause2);

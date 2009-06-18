@@ -126,7 +126,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       // selectClause.Selector is usually something like "i => new { i = i, j = whatever }"
       // we take "j" as the letIdentifier, "whatever" as the letExpression, and the whole expression as the letProjection
 
-      var newExpression = selectClause.LegacySelector.Body as NewExpression;
+      var newExpression = selectClause.Selector as NewExpression;
       if (newExpression != null && newExpression.Members.Count > 0)
       {
         Assertion.IsTrue (newExpression.Members.Count == newExpression.Arguments.Count, "This is ensured by Expression.New.");
@@ -136,7 +136,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
         Expression letExpression = newExpression.Arguments.Last();
         ParameterExpression letIdentifier = Expression.Parameter (letExpression.Type, letMember.Name.Substring (4));
-        LambdaExpression letProjection = selectClause.LegacySelector;
+        LambdaExpression letProjection = Expression.Lambda (selectClause.Selector); // TODO: The lambda parameters aren't correct, but we'll remove the lambda anyway.
         return new LetClause (selectClause.PreviousClause, letIdentifier, letExpression, letProjection);
       }
       return selectClause;
@@ -160,9 +160,8 @@ namespace Remotion.Data.Linq.Parsing.Structure
       else
       {
         var parameterExpression = lastNode.CreateParameterForOutput();
-        //TODO: 1221
         var resolvedParameterExpression = lastNode.Resolve (parameterExpression, parameterExpression, clauseGenerationContext);
-        return new SelectClause (lastClause, Expression.Lambda (parameterExpression, parameterExpression), resolvedParameterExpression);
+        return new SelectClause (lastClause, resolvedParameterExpression);
       }
     }
 

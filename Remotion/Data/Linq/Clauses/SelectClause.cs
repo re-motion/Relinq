@@ -32,23 +32,19 @@ namespace Remotion.Data.Linq.Clauses
     private readonly List<ResultModificationBase> _resultModifications = new List<ResultModificationBase> ();
 
     private IClause _previousClause;
-    private LambdaExpression _legacySelector;
     private Expression _selector;
 
     /// <summary>
     /// Initialize a new instance of <see cref="SelectClause"/>.
     /// </summary>
     /// <param name="previousClause">The previous clause of type <see cref="IClause"/> in the <see cref="QueryModel"/>.</param>
-    /// <param name="legacySelector">The projection within the select part of the linq query.</param>
     /// <param name="selector">The projection within the select part of the linq query.</param>
-    public SelectClause (IClause previousClause, LambdaExpression legacySelector, Expression selector)
+    public SelectClause (IClause previousClause, Expression selector)
     {
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
-      ArgumentUtility.CheckNotNull ("legacySelector", legacySelector);
       ArgumentUtility.CheckNotNull ("selector", selector);
 
       PreviousClause = previousClause;
-      LegacySelector = legacySelector;
       Selector = selector;
     }
 
@@ -59,16 +55,6 @@ namespace Remotion.Data.Linq.Clauses
     {
       get { return _previousClause; }
       set { _previousClause = ArgumentUtility.CheckNotNull ("value", value); }
-    }
-
-    /// <summary>
-    /// The projection within the select part of the linq query.
-    /// </summary>
-    // TODO 1158: Replace by IEvaluation
-    public LambdaExpression LegacySelector
-    {
-      get { return _legacySelector; }
-      set { _legacySelector = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
     public Expression Selector 
@@ -100,8 +86,7 @@ namespace Remotion.Data.Linq.Clauses
 
       var newPreviousClause = cloneContext.ClonedClauseMapping.GetClause<IClause>(PreviousClause);
       var newSelector = CloneExpressionTreeVisitor.ReplaceClauseReferences (Selector, cloneContext);
-      var newLegacySelector = CloneExpressionTreeVisitor.ReplaceClauseReferences (LegacySelector, cloneContext);
-      var result = new SelectClause (newPreviousClause, (LambdaExpression) newLegacySelector, newSelector);
+      var result = new SelectClause (newPreviousClause, newSelector);
       cloneContext.ClonedClauseMapping.AddMapping (this, result);
       foreach (var resultModification in ResultModifications)
       {

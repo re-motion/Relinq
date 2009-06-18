@@ -104,7 +104,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       {
         var selectorParameter = Source.CreateParameterForOutput();
         var resolvedSelectorParameter = Source.Resolve (selectorParameter, selectorParameter, clauseGenerationContext);
-        selectClause = new SelectClause (previousClause, Expression.Lambda (selectorParameter, selectorParameter), resolvedSelectorParameter);
+        selectClause = new SelectClause (previousClause, resolvedSelectorParameter);
       }
 
       return selectClause;
@@ -133,13 +133,13 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     }
 
     /// <summary>
-    /// Adjusts the <see cref="SelectClause.LegacySelector"/> of the <paramref name="selectClause"/> modified by a result modification node for a nodes with an 
+    /// Adjusts the <see cref="SelectClause.Selector"/> of the <paramref name="selectClause"/> modified by a result modification node for a nodes with an 
     /// optional selector if that selector is not <see langword="null"/>.
     /// </summary>
     /// <remarks>
     /// Result modification nodes such as <see cref="MinExpressionNode"/> or <see cref="SumExpressionNode"/>
     /// do not identify real clauses, they represent result modifications in the preceding <see cref="SelectClause"/>.
-    /// Some of them contain optional selectors, which need to be combined with the <see cref="SelectClause.LegacySelector"/> of the 
+    /// Some of them contain optional selectors, which need to be combined with the <see cref="SelectClause.Selector"/> of the 
     /// <paramref name="selectClause"/> modified by the node.
     /// This process of adjusting the selector is implemented by this method.
     /// </remarks>
@@ -157,8 +157,6 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
         // selectClause.Selector (which is already resolved)
 
         var newSelector = ReplacingVisitor.Replace (OptionalSelector.Parameters[0], selectClause.Selector, OptionalSelector.Body);
-        var newLegacySelector = Expression.Lambda (newSelector, selectClause.LegacySelector.Parameters[0]);
-        selectClause.LegacySelector = newLegacySelector;
         selectClause.Selector = newSelector;
       }
     }

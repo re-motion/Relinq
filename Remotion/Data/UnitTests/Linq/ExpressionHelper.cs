@@ -172,7 +172,7 @@ namespace Remotion.Data.UnitTests.Linq
     public static SelectClause CreateSelectClause (IClause previousClause)
     {
       var selector = Expression.Constant (0);
-      return new SelectClause (previousClause, Expression.Lambda (selector, Expression.Parameter (typeof (Student), "s1")), selector);
+      return new SelectClause (previousClause, selector);
     }
 
     public static MethodCallExpression CreateMethodCallExpression (IQueryable<Student> query)

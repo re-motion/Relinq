@@ -58,11 +58,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 
       var selectClause = ((SelectClause) queryModel.SelectOrGroupClause);
       
-      Assert.That (selectClause.LegacySelector.Parameters[0].Name, NUnit.Framework.SyntaxHelpers.Text.StartsWith ("<generated>"));
-
-      var parser = _parserRegistry.GetParser (selectClause.LegacySelector.Body);
+      var parser = _parserRegistry.GetParser (selectClause.Selector);
       var evaluation = parser.Parse (
-          selectClause.LegacySelector.Body, new ParseContext (queryModel, query.Expression, new List<FieldDescriptor>(), new JoinedTableContext()));
+          selectClause.Selector, new ParseContext (queryModel, query.Expression, new List<FieldDescriptor>(), new JoinedTableContext()));
 
       Assert.That (evaluation, Is.InstanceOfType (typeof (Column)));
       Assert.That (((Column) evaluation).ColumnSource,  Is.SameAs (mainFromTable));
@@ -79,11 +77,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 
       var selectClause = ((SelectClause) queryModel.SelectOrGroupClause);
 
-      Assert.That (selectClause.LegacySelector.Parameters[0].Name, NUnit.Framework.SyntaxHelpers.Text.StartsWith ("<generated>"));
-
-      var parser = _parserRegistry.GetParser (selectClause.LegacySelector.Body);
+      var parser = _parserRegistry.GetParser (selectClause.Selector);
       var evaluation = parser.Parse (
-          selectClause.LegacySelector.Body, new ParseContext (queryModel, query.Expression, new List<FieldDescriptor> (), new JoinedTableContext ()));
+          selectClause.Selector, new ParseContext (queryModel, query.Expression, new List<FieldDescriptor> (), new JoinedTableContext ()));
 
       Assert.That (evaluation, Is.InstanceOfType (typeof (Column)));
       Assert.That (((Column) evaluation).ColumnSource, Is.SameAs (mainFromTable));
@@ -102,11 +98,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 
       var selectClause = ((SelectClause) queryModel.SelectOrGroupClause);
 
-      Assert.That (selectClause.LegacySelector.Parameters[0].Name, NUnit.Framework.SyntaxHelpers.Text.StartsWith ("<generated>"));
-
-      var parser = _parserRegistry.GetParser (selectClause.LegacySelector.Body);
+      var parser = _parserRegistry.GetParser (selectClause.Selector);
       var evaluation = parser.Parse (
-          selectClause.LegacySelector.Body, new ParseContext (queryModel, query.Expression, new List<FieldDescriptor> (), new JoinedTableContext ()));
+          selectClause.Selector, new ParseContext (queryModel, query.Expression, new List<FieldDescriptor> (), new JoinedTableContext ()));
 
       Assert.That (evaluation, Is.InstanceOfType (typeof (Column)));
       Assert.That (((Column) evaluation).ColumnSource, Is.SameAs (mainFromTable));

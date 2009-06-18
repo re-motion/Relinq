@@ -266,8 +266,7 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
 
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause();
       var selectClause1 =
-          repository.StrictMock<SelectClause> (
-              ExpressionHelper.CreateClause(), ExpressionHelper.CreateLambdaExpression(), ExpressionHelper.CreateExpression());
+          repository.StrictMock<SelectClause> (ExpressionHelper.CreateClause(), ExpressionHelper.CreateExpression());
 
       var queryModel = new QueryModel (typeof (IQueryable<string>), fromClause, selectClause1);
 
@@ -292,8 +291,7 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
 
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause();
       var selectClause1 =
-          repository.StrictMock<SelectClause> (
-              ExpressionHelper.CreateClause(), ExpressionHelper.CreateLambdaExpression(), ExpressionHelper.CreateExpression());
+          repository.StrictMock<SelectClause> (ExpressionHelper.CreateClause(), ExpressionHelper.CreateExpression());
       var orderByClause1 =
           repository.StrictMock<OrderByClause> (ExpressionHelper.CreateClause());
       var fromClause1 =
@@ -401,8 +399,7 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
       Expression querySource = Expression.Constant (null);
       var mainFromClause = new MainFromClause (subQueryIdentifier, querySource);
       Expression subQuerySelector = Expression.Constant (1);
-      LambdaExpression subQueryLegacySelector = Expression.Lambda (Expression.Constant (1));
-      var selectClause = new SelectClause (previousClause, subQueryLegacySelector, subQuerySelector);
+      var selectClause = new SelectClause (previousClause, subQuerySelector);
 
       var subQuery = new QueryModel (typeof (string), mainFromClause, selectClause);
       LambdaExpression projectionExpression = ExpressionHelper.CreateLambdaExpression();

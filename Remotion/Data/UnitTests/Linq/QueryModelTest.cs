@@ -356,7 +356,7 @@ namespace Remotion.Data.UnitTests.Linq
 
       Assert.That (clone.SelectOrGroupClause, Is.Not.SameAs (_queryModel.SelectOrGroupClause));
       var cloneSelectClause = ((SelectClause) clone.SelectOrGroupClause);
-      Assert.That (cloneSelectClause.LegacySelector, Is.EqualTo (selectClause.LegacySelector));
+      Assert.That (cloneSelectClause.Selector, Is.EqualTo (selectClause.Selector));
       Assert.That (cloneSelectClause.PreviousClause, Is.SameAs (clone.MainFromClause));
     }
 
@@ -409,7 +409,7 @@ namespace Remotion.Data.UnitTests.Linq
     {
       var mainFromClause = ExpressionHelper.CreateMainFromClause ();
       var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel ());
-      var selectClause = new SelectClause (mainFromClause, ExpressionHelper.CreateLambdaExpression (), subQueryExpression);
+      var selectClause = new SelectClause (mainFromClause, subQueryExpression);
       var queryModel = new QueryModel (typeof (IEnumerable<int>), mainFromClause, selectClause);
       
       var clone = queryModel.Clone ();

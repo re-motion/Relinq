@@ -229,7 +229,7 @@ namespace Remotion.Data.Linq.StringBuilding
       _sb.Append ("\n");
       _sb.AppendFormat ("PreviousClause: {0}", selectClause.PreviousClause);
       _sb.Append ("\n");
-      _sb.AppendFormat ("Selector: {0}", selectClause.LegacySelector);
+      _sb.AppendFormat ("Selector: {0}", selectClause.Selector);
       _sb.Append ("\n");
       //_sb.AppendFormat ("", selectClause.ResultModifiers);
       //_sb.Append ("\n");

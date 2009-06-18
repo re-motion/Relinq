@@ -14,7 +14,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
@@ -30,7 +29,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
   [TestFixture]
   public class SelectClauseTest
   {
-    private LambdaExpression _legacySelector;
     private Expression _selector;
     private IClause _previousClause;
     private SelectClause _selectClause;
@@ -39,10 +37,9 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [SetUp]
     public void SetUp ()
     {
-      _legacySelector = ExpressionHelper.CreateLambdaExpression ();
       _selector = ExpressionHelper.CreateExpression();
       _previousClause = ExpressionHelper.CreateClause ();
-      _selectClause = new SelectClause (_previousClause, _legacySelector, _selector);
+      _selectClause = new SelectClause (_previousClause, _selector);
       _cloneContext = new CloneContext (new ClonedClauseMapping(), new SubQueryRegistry());
     }
 
@@ -50,7 +47,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void InitializeWithExpression ()
     {
       Assert.AreSame (_previousClause, _selectClause.PreviousClause);
-      Assert.AreEqual (_legacySelector, _selectClause.LegacySelector);
       Assert.AreEqual (_selector, _selectClause.Selector);
     }
 
@@ -90,7 +86,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
 
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (_selectClause));
-      Assert.That (clone.LegacySelector, Is.SameAs (_selectClause.LegacySelector));
       Assert.That (clone.Selector, Is.SameAs (_selectClause.Selector));
       Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
     }
@@ -116,7 +111,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     {
       var mainFromClause = ExpressionHelper.CreateMainFromClause();
       var selector = new QuerySourceReferenceExpression (mainFromClause);
-      var selectClause = new SelectClause (mainFromClause, Expression.Lambda (selector), selector);
+      var selectClause = new SelectClause (mainFromClause, selector);
 
       var newMainFromClause = ExpressionHelper.CreateMainFromClause ();
       _cloneContext.ClonedClauseMapping.AddMapping (mainFromClause, newMainFromClause);

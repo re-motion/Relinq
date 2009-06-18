@@ -90,10 +90,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       Assert.That (clause.ResultModifications[0], Is.InstanceOfType (expectedResultModificationType));
       Assert.That (clause.ResultModifications[0].SelectClause, Is.SameAs (clause));
 
-      var expectedLegacySelectorParameter = node.Source.CreateParameterForOutput ();
-      var expectedLegacySelector = Expression.Lambda (expectedLegacySelectorParameter, expectedLegacySelectorParameter);
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedLegacySelector, clause.LegacySelector);
-
       var expectedSelectorParameter = node.Source.CreateParameterForOutput ();
       var expectedSelector = node.Source.Resolve (expectedSelectorParameter, expectedSelectorParameter, ClauseGenerationContext);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedSelector, clause.Selector);
@@ -120,19 +116,16 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     protected void TestCreateClause_WithOptionalSelector (IExpressionNode node)
     {
       var legacySelectorOfPreviousClause = ExpressionHelper.CreateLambdaExpression<Student, int> (s => s.ID);
-      var expectedNewLegacySelector = ExpressionHelper.CreateLambdaExpression<Student, string> (s => s.ID.ToString ());
 
       var selectorOfPreviousClause = (MemberExpression) ExpressionHelper.MakeExpression<Student, int> (s => s.ID);
       var expectedNewSelector = (MethodCallExpression) ExpressionHelper.MakeExpression<Student, string> (s => s.ID.ToString());
 
       var previousPreviousClause = ExpressionHelper.CreateClause ();
-      var previousClause = new SelectClause (previousPreviousClause, legacySelectorOfPreviousClause, selectorOfPreviousClause);
+      var previousClause = new SelectClause (previousPreviousClause, selectorOfPreviousClause);
 
       var clause = (SelectClause) node.CreateClause (previousClause, ClauseGenerationContext);
 
       Assert.That (clause, Is.SameAs (previousClause));
-
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedNewLegacySelector, clause.LegacySelector);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedNewSelector, clause.Selector);
     }
 
