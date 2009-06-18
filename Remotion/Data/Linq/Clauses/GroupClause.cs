@@ -55,7 +55,9 @@ namespace Remotion.Data.Linq.Clauses
 
     public GroupClause Clone (IClause newPreviousClause, ClonedClauseMapping clonedClauseMapping)
     {
-      return new GroupClause (newPreviousClause, GroupExpression, ByExpression);
+      var result = new GroupClause (newPreviousClause, GroupExpression, ByExpression);
+      clonedClauseMapping.AddMapping (this, result);
+      return result;
     }
 
     public IExecutionStrategy GetExecutionStrategy ()

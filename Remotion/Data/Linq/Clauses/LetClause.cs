@@ -126,7 +126,9 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("newPreviousClause", newPreviousClause);
       ArgumentUtility.CheckNotNull ("clonedClauseMapping", clonedClauseMapping);
 
-      return new LetClause (newPreviousClause, Identifier, Expression, ProjectionExpression);
+      var result = new LetClause (newPreviousClause, Identifier, Expression, ProjectionExpression);
+      clonedClauseMapping.AddMapping (this, result);
+      return result;
     }
 
     IBodyClause IBodyClause.Clone (IClause newPreviousClause, ClonedClauseMapping clonedClauseMapping)

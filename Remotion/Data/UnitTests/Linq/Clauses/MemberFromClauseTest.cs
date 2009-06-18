@@ -29,11 +29,13 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
   public class MemberFromClauseTest
   {
     private MemberFromClause _memberFromClause;
+    private ClonedClauseMapping _clonedClauseMapping;
 
     [SetUp]
     public void SetUp ()
     {
       _memberFromClause = ExpressionHelper.CreateMemberFromClause ();
+      _clonedClauseMapping = new ClonedClauseMapping();
     }
 
     [Test]
@@ -77,7 +79,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Clone ()
     {
       var newPreviousClause = ExpressionHelper.CreateMainFromClause ();
-      var clone = (MemberFromClause) _memberFromClause.Clone (newPreviousClause, new ClonedClauseMapping());
+      var clone = (MemberFromClause) _memberFromClause.Clone (newPreviousClause, _clonedClauseMapping);
 
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (_memberFromClause));
@@ -99,7 +101,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       _memberFromClause.AddJoinClause (originalJoinClause2);
 
       var newPreviousClause = ExpressionHelper.CreateClause ();
-      var clone = _memberFromClause.Clone (newPreviousClause, new ClonedClauseMapping());
+      var clone = _memberFromClause.Clone (newPreviousClause, _clonedClauseMapping);
       Assert.That (clone.JoinClauses.Count, Is.EqualTo (2));
 
       Assert.That (clone.JoinClauses[0], Is.Not.SameAs (originalJoinClause1));
@@ -129,12 +131,18 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
           ExpressionHelper.CreateExpression ());
       _memberFromClause.AddJoinClause (originalJoinClause);
 
-      var mapping = new ClonedClauseMapping ();
       var newFromClause = ExpressionHelper.CreateMainFromClause ();
-      mapping.AddMapping (oldFromClause, newFromClause);
+      _clonedClauseMapping.AddMapping (oldFromClause, newFromClause);
 
-      var clone = _memberFromClause.Clone (ExpressionHelper.CreateClause (), mapping);
+      var clone = _memberFromClause.Clone (ExpressionHelper.CreateClause (), _clonedClauseMapping);
       Assert.That (((QuerySourceReferenceExpression) clone.JoinClauses[0].InExpression).ReferencedClause, Is.SameAs (newFromClause));
+    }
+
+    [Test]
+    public void Clone_AddsClauseToMapping ()
+    {
+      var clone = _memberFromClause.Clone (ExpressionHelper.CreateClause (), _clonedClauseMapping);
+      Assert.That (_clonedClauseMapping.GetClause (_memberFromClause), Is.SameAs (clone));
     }
   }
 }

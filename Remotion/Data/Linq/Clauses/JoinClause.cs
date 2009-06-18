@@ -95,7 +95,9 @@ namespace Remotion.Data.Linq.Clauses
 
     public JoinClause Clone (IClause newPreviousClause, FromClauseBase newFromClause, ClonedClauseMapping clonedClauseMapping)
     {
-      return new JoinClause (newPreviousClause, newFromClause, Identifier, InExpression, OnExpression, EqualityExpression, IntoIdentifier);
+      var result = new JoinClause (newPreviousClause, newFromClause, Identifier, InExpression, OnExpression, EqualityExpression, IntoIdentifier);
+      clonedClauseMapping.AddMapping (this, result);
+      return result;
     }
   }
 }

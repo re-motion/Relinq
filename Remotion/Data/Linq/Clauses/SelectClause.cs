@@ -98,14 +98,15 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("newPreviousClause", newPreviousClause);
       ArgumentUtility.CheckNotNull ("clonedClauseMapping", clonedClauseMapping);
 
-      var clone = new SelectClause (newPreviousClause, LegacySelector, Selector);
+      var result = new SelectClause (newPreviousClause, LegacySelector, Selector);
+      clonedClauseMapping.AddMapping (this, result);
       foreach (var resultModification in ResultModifications)
       {
-        var resultModificationClone = resultModification.Clone (clone, clonedClauseMapping);
-        clone.AddResultModification (resultModificationClone);
+        var resultModificationClone = resultModification.Clone (result, clonedClauseMapping);
+        result.AddResultModification (resultModificationClone);
       }
 
-      return clone;
+      return result;
     }
 
     ISelectGroupClause ISelectGroupClause.Clone (IClause newPreviousClause, ClonedClauseMapping clonedClauseMapping)

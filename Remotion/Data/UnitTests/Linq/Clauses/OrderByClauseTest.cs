@@ -154,5 +154,12 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       
       Assert.That (((QuerySourceReferenceExpression) clonedOrdering.Expression).ReferencedClause, Is.SameAs (newMainFromClause));
     }
+
+    [Test]
+    public void Clone_AddsClauseToMapping ()
+    {
+      var clone = _orderByClause.Clone (ExpressionHelper.CreateClause (), _clonedClauseMapping);
+      Assert.That (_clonedClauseMapping.GetClause (_orderByClause), Is.SameAs (clone));
+    }
   }
 }

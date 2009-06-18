@@ -26,6 +26,16 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
   [TestFixture]
   public class JoinClauseTest
   {
+    private JoinClause _joinClause;
+    private ClonedClauseMapping _clonedClauseMapping;
+
+    [SetUp]
+    public void SetUp ()
+    {
+      _joinClause = ExpressionHelper.CreateJoinClause ();
+      _clonedClauseMapping = new ClonedClauseMapping ();
+    }
+
     [Test]
     public void Intialize_WithIDAndInExprAndOnExprAndEqExpr()
     {
@@ -74,38 +84,41 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Accept ()
     {
-      JoinClause joinClause = ExpressionHelper.CreateJoinClause ();
-
       var repository = new MockRepository ();
       var visitorMock = repository.StrictMock<IQueryVisitor> ();
 
-      visitorMock.VisitJoinClause (joinClause);
+      visitorMock.VisitJoinClause (_joinClause);
 
       repository.ReplayAll ();
 
-      joinClause.Accept (visitorMock);
+      _joinClause.Accept (visitorMock);
 
       repository.VerifyAll ();
-
     }
 
     [Test]
     public void Clone ()
     {
-      var originalClause = ExpressionHelper.CreateJoinClause ();
       var newPreviousClause = ExpressionHelper.CreateClause ();
       var newFromClause = ExpressionHelper.CreateMainFromClause ();
-      var clone = originalClause.Clone (newPreviousClause, newFromClause, new ClonedClauseMapping());
+      var clone = _joinClause.Clone (newPreviousClause, newFromClause, _clonedClauseMapping);
 
       Assert.That (clone, Is.Not.Null);
-      Assert.That (clone, Is.Not.SameAs (originalClause));
-      Assert.That (clone.EqualityExpression, Is.SameAs (originalClause.EqualityExpression));
-      Assert.That (clone.Identifier, Is.SameAs (originalClause.Identifier));
-      Assert.That (clone.InExpression, Is.SameAs (originalClause.InExpression));
-      Assert.That (clone.IntoIdentifier, Is.SameAs (originalClause.IntoIdentifier));
-      Assert.That (clone.OnExpression, Is.SameAs (originalClause.OnExpression));
+      Assert.That (clone, Is.Not.SameAs (_joinClause));
+      Assert.That (clone.EqualityExpression, Is.SameAs (_joinClause.EqualityExpression));
+      Assert.That (clone.Identifier, Is.SameAs (_joinClause.Identifier));
+      Assert.That (clone.InExpression, Is.SameAs (_joinClause.InExpression));
+      Assert.That (clone.IntoIdentifier, Is.SameAs (_joinClause.IntoIdentifier));
+      Assert.That (clone.OnExpression, Is.SameAs (_joinClause.OnExpression));
       Assert.That (clone.FromClause, Is.SameAs (newFromClause));
       Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
+    }
+
+    [Test]
+    public void Clone_AddsClauseToMapping ()
+    {
+      var clone = _joinClause.Clone (ExpressionHelper.CreateClause (), ExpressionHelper.CreateMainFromClause(), _clonedClauseMapping);
+      Assert.That (_clonedClauseMapping.GetClause (_joinClause), Is.SameAs (clone));
     }
   }
 }

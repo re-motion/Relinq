@@ -88,6 +88,7 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("clonedClauseMapping", clonedClauseMapping);
 
       var result = new AdditionalFromClause (newPreviousClause, Identifier, FromExpression, ResultSelector);
+      clonedClauseMapping.AddMapping (this, result);
       result.AddClonedJoinClauses (JoinClauses, clonedClauseMapping);
       return result;
     }

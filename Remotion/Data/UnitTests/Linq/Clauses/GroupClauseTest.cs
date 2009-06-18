@@ -26,6 +26,16 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
   [TestFixture]
   public class GroupClauseTest
   {
+    private GroupClause _groupClause;
+    private ClonedClauseMapping _clonedClauseMapping;
+
+    [SetUp]
+    public void SetUp ()
+    {
+      _groupClause = ExpressionHelper.CreateGroupClause ();
+      _clonedClauseMapping = new ClonedClauseMapping ();
+    }
+
     [Test]
     public void InitializeWithGroupExpressionAndByExpression()
     {
@@ -43,23 +53,19 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void GroupClause_ImplementISelectGroupClause ()
     {
-      GroupClause groupClause = ExpressionHelper.CreateGroupClause();
-
-      Assert.IsInstanceOfType (typeof (ISelectGroupClause), groupClause);
+      Assert.IsInstanceOfType (typeof (ISelectGroupClause), _groupClause);
     }
 
     [Test]
     public void Accept()
     {
-      GroupClause groupClause = ExpressionHelper.CreateGroupClause ();
-
       MockRepository repository = new MockRepository();
       IQueryVisitor visitorMock = repository.StrictMock<IQueryVisitor>();
-      visitorMock.VisitGroupClause (groupClause);
+      visitorMock.VisitGroupClause (_groupClause);
 
       repository.ReplayAll();
 
-      groupClause.Accept (visitorMock);
+      _groupClause.Accept (visitorMock);
 
       repository.VerifyAll();
     }
@@ -67,15 +73,21 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone ()
     {
-      var originalClause = ExpressionHelper.CreateGroupClause ();
       var newPreviousClause = ExpressionHelper.CreateMainFromClause ();
-      var clone = originalClause.Clone (newPreviousClause, new ClonedClauseMapping ());
+      var clone = _groupClause.Clone (newPreviousClause, _clonedClauseMapping);
 
       Assert.That (clone, Is.Not.Null);
-      Assert.That (clone, Is.Not.SameAs (originalClause));
-      Assert.That (clone.ByExpression, Is.SameAs (originalClause.ByExpression));
-      Assert.That (clone.GroupExpression, Is.SameAs (originalClause.GroupExpression));
+      Assert.That (clone, Is.Not.SameAs (_groupClause));
+      Assert.That (clone.ByExpression, Is.SameAs (_groupClause.ByExpression));
+      Assert.That (clone.GroupExpression, Is.SameAs (_groupClause.GroupExpression));
       Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
+    }
+
+    [Test]
+    public void Clone_AddsClauseToMapping ()
+    {
+      var clone = _groupClause.Clone (ExpressionHelper.CreateClause (), _clonedClauseMapping);
+      Assert.That (_clonedClauseMapping.GetClause (_groupClause), Is.SameAs (clone));
     }
   }
 }

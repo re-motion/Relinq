@@ -29,11 +29,13 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
   public class MainFromClauseTest
   {
     private MainFromClause _mainFromClause;
+    private ClonedClauseMapping _clonedClauseMapping;
 
     [SetUp]
     public void SetUp ()
     {
       _mainFromClause = ExpressionHelper.CreateMainFromClause();
+      _clonedClauseMapping = new ClonedClauseMapping ();
     }
 
     [Test]
@@ -93,7 +95,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone ()
     {
-      var clone = _mainFromClause.Clone (new ClonedClauseMapping());
+      var clone = _mainFromClause.Clone (_clonedClauseMapping);
 
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (_mainFromClause));
@@ -110,7 +112,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       var originalJoinClause2 = ExpressionHelper.CreateJoinClause ();
       _mainFromClause.AddJoinClause (originalJoinClause2);
 
-      var clone = _mainFromClause.Clone (new ClonedClauseMapping());
+      var clone = _mainFromClause.Clone (_clonedClauseMapping);
       Assert.That (clone.JoinClauses.Count, Is.EqualTo (2));
       
       Assert.That (clone.JoinClauses[0], Is.Not.SameAs (originalJoinClause1));
@@ -140,12 +142,18 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
           ExpressionHelper.CreateExpression());
       _mainFromClause.AddJoinClause (originalJoinClause);
 
-      var mapping = new ClonedClauseMapping ();
       var newFromClause = ExpressionHelper.CreateMainFromClause ();
-      mapping.AddMapping (oldFromClause, newFromClause);
+      _clonedClauseMapping.AddMapping (oldFromClause, newFromClause);
 
-      var clone = _mainFromClause.Clone (mapping);
+      var clone = _mainFromClause.Clone (_clonedClauseMapping);
       Assert.That (((QuerySourceReferenceExpression) clone.JoinClauses[0].InExpression).ReferencedClause, Is.SameAs (newFromClause));
+    }
+
+    [Test]
+    public void Clone_AddsClauseToMapping ()
+    {
+      var clone = _mainFromClause.Clone (_clonedClauseMapping);
+      Assert.That (_clonedClauseMapping.GetClause (_mainFromClause), Is.SameAs (clone));
     }
   }
 }

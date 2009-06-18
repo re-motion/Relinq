@@ -29,11 +29,13 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
   public class LetClauseTest
   {
     private LetClause _letClause;
+    private ClonedClauseMapping _clonedClauseMapping;
 
     [SetUp]
     public void SetUp ()
     {
       _letClause = ExpressionHelper.CreateLetClause ();
+      _clonedClauseMapping = new ClonedClauseMapping ();
     }
 
     [Test]
@@ -137,7 +139,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Clone ()
     {
       var newPreviousClause = ExpressionHelper.CreateMainFromClause ();
-      var clone = _letClause.Clone (newPreviousClause, new ClonedClauseMapping());
+      var clone = _letClause.Clone (newPreviousClause, _clonedClauseMapping);
 
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (_letClause));
@@ -146,6 +148,13 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clone.ProjectionExpression, Is.SameAs (_letClause.ProjectionExpression));
       Assert.That (clone.QueryModel, Is.Null);
       Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
+    }
+
+    [Test]
+    public void Clone_AddsClauseToMapping ()
+    {
+      var clone = _letClause.Clone (ExpressionHelper.CreateClause (), _clonedClauseMapping);
+      Assert.That (_clonedClauseMapping.GetClause (_letClause), Is.SameAs (clone));
     }
   }
 }

@@ -77,7 +77,9 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("newPreviousClause", newPreviousClause);
       ArgumentUtility.CheckNotNull ("clonedClauseMapping", clonedClauseMapping);
 
-      return new WhereClause (newPreviousClause, Predicate);
+      var result = new WhereClause (newPreviousClause, Predicate);
+      clonedClauseMapping.AddMapping (this, result);
+      return result;
     }
 
     IBodyClause IBodyClause.Clone (IClause newPreviousClause, ClonedClauseMapping clonedClauseMapping)

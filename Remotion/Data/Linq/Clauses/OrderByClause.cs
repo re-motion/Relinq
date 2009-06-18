@@ -76,15 +76,15 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("newPreviousClause", newPreviousClause);
       ArgumentUtility.CheckNotNull ("clonedClauseMapping", clonedClauseMapping);
 
-      var clone = new OrderByClause (newPreviousClause);
-
+      var result = new OrderByClause (newPreviousClause);
+      clonedClauseMapping.AddMapping (this, result);
       foreach (var ordering in _orderings)
       {
-        var orderingClone = ordering.Clone (clone, clonedClauseMapping);
-        clone.AddOrdering (orderingClone);
+        var orderingClone = ordering.Clone (result, clonedClauseMapping);
+        result.AddOrdering (orderingClone);
       }
 
-      return clone;
+      return result;
     }
 
     IBodyClause IBodyClause.Clone (IClause newPreviousClause, ClonedClauseMapping clonedClauseMapping)

@@ -93,6 +93,13 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
+    public void Clone_AddsClauseToMapping ()
+    {
+      var clone = _selectClause.Clone (ExpressionHelper.CreateClause(), _clonedClauseMapping);
+      Assert.That (_clonedClauseMapping.GetClause (_selectClause), Is.SameAs (clone));
+    }
+
+    [Test]
     public void Clone_ResultModifiers ()
     {
       var newPreviousClause = ExpressionHelper.CreateMainFromClause ();

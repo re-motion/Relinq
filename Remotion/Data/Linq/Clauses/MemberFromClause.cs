@@ -61,6 +61,7 @@ namespace Remotion.Data.Linq.Clauses
     public override AdditionalFromClause Clone (IClause newPreviousClause, ClonedClauseMapping clonedClauseMapping)
     {
       var result = new MemberFromClause (newPreviousClause, Identifier, FromExpression, ResultSelector);
+      clonedClauseMapping.AddMapping (this, result);
       result.AddClonedJoinClauses (JoinClauses, clonedClauseMapping);
       return result;
     }

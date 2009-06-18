@@ -98,9 +98,10 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("newPreviousClause", newPreviousClause);
       ArgumentUtility.CheckNotNull ("clonedClauseMapping", clonedClauseMapping);
 
-      var clone = new SubQueryFromClause (newPreviousClause, Identifier, SubQueryModel.Clone (), ProjectionExpression);
-      clone.AddClonedJoinClauses (JoinClauses, clonedClauseMapping);
-      return clone;
+      var result = new SubQueryFromClause (newPreviousClause, Identifier, SubQueryModel.Clone (), ProjectionExpression);
+      clonedClauseMapping.AddMapping (this, result);
+      result.AddClonedJoinClauses (JoinClauses, clonedClauseMapping);
+      return result;
     }
 
     IBodyClause IBodyClause.Clone (IClause newPreviousClause, ClonedClauseMapping clonedClauseMapping)

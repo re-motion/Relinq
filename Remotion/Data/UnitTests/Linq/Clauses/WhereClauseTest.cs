@@ -27,11 +27,13 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
   public class WhereClauseTest
   {
     private WhereClause _whereClause;
+    private ClonedClauseMapping _clonedClauseMapping;
 
     [SetUp]
     public void SetUp ()
     {
       _whereClause = ExpressionHelper.CreateWhereClause();
+      _clonedClauseMapping = new ClonedClauseMapping ();
     }
 
     [Test] 
@@ -100,13 +102,20 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Clone ()
     {
       var newPreviousClause = ExpressionHelper.CreateClause ();
-      var clone = _whereClause.Clone (newPreviousClause, new ClonedClauseMapping());
+      var clone = _whereClause.Clone (newPreviousClause, _clonedClauseMapping);
 
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (_whereClause));
       Assert.That (clone.Predicate, Is.SameAs (_whereClause.Predicate));
       Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
       Assert.That (clone.QueryModel, Is.Null);
+    }
+
+    [Test]
+    public void Clone_AddsClauseToMapping ()
+    {
+      var clone = _whereClause.Clone (ExpressionHelper.CreateClause (), _clonedClauseMapping);
+      Assert.That (_clonedClauseMapping.GetClause (_whereClause), Is.SameAs (clone));
     }
   }
 }
