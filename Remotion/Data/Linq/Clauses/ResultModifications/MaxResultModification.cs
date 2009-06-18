@@ -29,9 +29,9 @@ namespace Remotion.Data.Linq.Clauses.ResultModifications
     {
     }
 
-    public override ResultModificationBase Clone (ClonedClauseMapping clonedClauseMapping)
+    public override ResultModificationBase Clone (CloneContext cloneContext)
     {
-      return new MaxResultModification (clonedClauseMapping.GetClause<SelectClause> (SelectClause));
+      return new MaxResultModification (cloneContext.ClonedClauseMapping.GetClause<SelectClause> (SelectClause));
     }
 
     public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)

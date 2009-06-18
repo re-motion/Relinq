@@ -234,16 +234,19 @@ namespace Remotion.Data.Linq
     {
       ArgumentUtility.CheckNotNull ("clonedClauseMapping", clonedClauseMapping);
 
-      var clonedMainFromClause = MainFromClause.Clone (clonedClauseMapping);
+      var cloneContext = new CloneContext (clonedClauseMapping, new List<QueryModel>());
+      var clonedMainFromClause = MainFromClause.Clone (cloneContext);
       var clonedBodyClauses = new List<IBodyClause> ();
 
       foreach (var bodyClause in BodyClauses)
       {
-        var clonedBodyClause = bodyClause.Clone (clonedClauseMapping);
+        var clonedBodyClause = bodyClause.Clone (cloneContext);
         clonedBodyClauses.Add (clonedBodyClause);
       }
 
-      var clonedSelectOrGroupClause = SelectOrGroupClause.Clone (clonedClauseMapping);
+      var clonedSelectOrGroupClause = SelectOrGroupClause.Clone (cloneContext);
+
+      // TODO 1229: Test that subqueries in any clauses have their parent query model correctly set.
       
       var queryModel = new QueryModel (ResultType, clonedMainFromClause, clonedSelectOrGroupClause);
       

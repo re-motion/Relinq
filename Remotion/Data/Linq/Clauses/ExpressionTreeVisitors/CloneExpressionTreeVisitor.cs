@@ -30,32 +30,27 @@ namespace Remotion.Data.Linq.Clauses.ExpressionTreeVisitors
   /// </summary>
   public class CloneExpressionTreeVisitor : ExpressionTreeVisitor
   {
-    public static Expression ReplaceClauseReferences (Expression expression, ClonedClauseMapping clonedClauseMapping, List<QueryModel> subQueryRegistry)
+    public static Expression ReplaceClauseReferences (Expression expression, CloneContext cloneContext)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      ArgumentUtility.CheckNotNull ("clonedClauseMapping", clonedClauseMapping);
-      ArgumentUtility.CheckNotNull ("subQueryRegistry", subQueryRegistry);
+      ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 
-      return new CloneExpressionTreeVisitor (clonedClauseMapping, subQueryRegistry).VisitExpression (expression);
+      return new CloneExpressionTreeVisitor (cloneContext).VisitExpression (expression);
     }
 
-    private readonly ClonedClauseMapping _clonedClauseMapping;
-    private readonly List<QueryModel> _subQueryRegistry;
+    private readonly CloneContext _cloneContext;
 
-    private CloneExpressionTreeVisitor (ClonedClauseMapping clonedClauseMapping, List<QueryModel> subQueryRegistry)
+    private CloneExpressionTreeVisitor (CloneContext cloneContext)
     {
-      ArgumentUtility.CheckNotNull ("clonedClauseMapping", clonedClauseMapping);
-      ArgumentUtility.CheckNotNull ("subQueryRegistry", subQueryRegistry);
-
-      _clonedClauseMapping = clonedClauseMapping;
-      _subQueryRegistry = subQueryRegistry;
+      ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
+      _cloneContext = cloneContext;
     }
 
     protected override Expression VisitQuerySourceReferenceExpression (QuerySourceReferenceExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      var newReferencedClause = _clonedClauseMapping.GetClause<FromClauseBase> (expression.ReferencedClause);
+      var newReferencedClause = _cloneContext.ClonedClauseMapping.GetClause<FromClauseBase> (expression.ReferencedClause);
       return new QuerySourceReferenceExpression (newReferencedClause);
     }
 
@@ -64,7 +59,7 @@ namespace Remotion.Data.Linq.Clauses.ExpressionTreeVisitors
       ArgumentUtility.CheckNotNull ("expression", expression);
       
       var clonedQueryModel = expression.QueryModel.Clone ();
-      _subQueryRegistry.Add (clonedQueryModel);
+      _cloneContext.SubQueryRegistry.Add (clonedQueryModel);
       return new SubQueryExpression (clonedQueryModel);
     }
   }

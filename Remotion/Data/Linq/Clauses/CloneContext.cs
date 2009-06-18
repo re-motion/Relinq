@@ -13,31 +13,26 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Utilities;
 
-namespace Remotion.Data.Linq.Clauses.ResultModifications
+namespace Remotion.Data.Linq.Clauses
 {
-  public class DistinctResultModification : ResultModificationBase
+  /// <summary>
+  /// Aggregates all objects needed in the process of cloning a <see cref="QueryModel"/> and its clauses.
+  /// </summary>
+  public class CloneContext
   {
-    public DistinctResultModification (SelectClause selectClause)
-        : base (selectClause, CollectionExecutionStrategy.Instance)
+    public CloneContext (ClonedClauseMapping clonedClauseMapping, List<QueryModel> subQueryRegistry)
     {
+      ArgumentUtility.CheckNotNull ("clonedClauseMapping", clonedClauseMapping);
+      ArgumentUtility.CheckNotNull ("subQueryRegistry", subQueryRegistry);
+
+      ClonedClauseMapping = clonedClauseMapping;
+      SubQueryRegistry = subQueryRegistry;
     }
 
-    public override ResultModificationBase Clone (CloneContext cloneContext)
-    {
-      return new DistinctResultModification (cloneContext.ClonedClauseMapping.GetClause<SelectClause> (SelectClause));
-    }
-
-    public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)
-    {
-      ArgumentUtility.CheckNotNull ("items", items);
-      return items.Distinct ();
-    }
+    public ClonedClauseMapping ClonedClauseMapping { get; private set; }
+    public List<QueryModel> SubQueryRegistry { get; private set; }
   }
 }

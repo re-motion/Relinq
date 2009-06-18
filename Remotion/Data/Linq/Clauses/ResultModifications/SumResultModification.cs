@@ -30,9 +30,9 @@ namespace Remotion.Data.Linq.Clauses.ResultModifications
     {
     }
 
-    public override ResultModificationBase Clone (ClonedClauseMapping clonedClauseMapping)
+    public override ResultModificationBase Clone (CloneContext cloneContext)
     {
-      return new SumResultModification (clonedClauseMapping.GetClause<SelectClause> (SelectClause));
+      return new SumResultModification (cloneContext.ClonedClauseMapping.GetClause<SelectClause> (SelectClause));
     }
 
     public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)

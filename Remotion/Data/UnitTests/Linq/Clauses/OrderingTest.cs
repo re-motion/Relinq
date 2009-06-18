@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
@@ -28,6 +29,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     private ClonedClauseMapping _clonedClauseMapping;
     private OrderByClause _orderByClause;
     private Ordering _ordering;
+    private CloneContext _cloneContext;
 
     [SetUp]
     public void SetUp ()
@@ -35,6 +37,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       _clonedClauseMapping = new ClonedClauseMapping ();
       _orderByClause = ExpressionHelper.CreateOrderByClause ();
       _ordering = ExpressionHelper.CreateOrdering (_orderByClause);
+      _cloneContext = new CloneContext (_clonedClauseMapping, new List<QueryModel> ());
     }
 
     [Test]
@@ -112,7 +115,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     {
       var newOrderByClause = ExpressionHelper.CreateOrderByClause();
       _clonedClauseMapping.AddMapping (_orderByClause, newOrderByClause);
-      var clone = _ordering.Clone (_clonedClauseMapping);
+      var clone = _ordering.Clone (_cloneContext);
 
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (_ordering));

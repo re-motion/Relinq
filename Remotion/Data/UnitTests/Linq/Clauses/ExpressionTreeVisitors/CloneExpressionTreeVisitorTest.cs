@@ -32,6 +32,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ExpressionTreeVisitors
     private MainFromClause _oldFromClause;
     private MainFromClause _newFromClause;
     private List<QueryModel> _subQueryRegistry;
+    private CloneContext _cloneContext;
 
     [SetUp]
     public void SetUp ()
@@ -43,13 +44,15 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ExpressionTreeVisitors
       _clonedClauseMapping.AddMapping (_oldFromClause, _newFromClause);
 
       _subQueryRegistry = new List<QueryModel> ();
+
+      _cloneContext = new CloneContext (_clonedClauseMapping, _subQueryRegistry);
     }
 
     [Test]
     public void Replaces_QuerySourceReferenceExpressions ()
     {
       var expression = new QuerySourceReferenceExpression (_oldFromClause);
-      var result = CloneExpressionTreeVisitor.ReplaceClauseReferences (expression, _clonedClauseMapping, _subQueryRegistry);
+      var result = CloneExpressionTreeVisitor.ReplaceClauseReferences (expression, _cloneContext);
 
       Assert.That (((QuerySourceReferenceExpression) result).ReferencedClause, Is.SameAs (_newFromClause));
     }
@@ -58,7 +61,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ExpressionTreeVisitors
     public void Replaces_NestedExpressions ()
     {
       var expression = Expression.Negate (new QuerySourceReferenceExpression (_oldFromClause));
-      var result = (UnaryExpression) CloneExpressionTreeVisitor.ReplaceClauseReferences (expression, _clonedClauseMapping, _subQueryRegistry);
+      var result = (UnaryExpression) CloneExpressionTreeVisitor.ReplaceClauseReferences (expression, _cloneContext);
 
       Assert.That (((QuerySourceReferenceExpression) result.Operand).ReferencedClause, Is.SameAs (_newFromClause));
     }
@@ -67,7 +70,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ExpressionTreeVisitors
     public void Replaces_SubQueryExpressions ()
     {
       var expression = new SubQueryExpression (ExpressionHelper.CreateQueryModel());
-      var result = CloneExpressionTreeVisitor.ReplaceClauseReferences (expression, _clonedClauseMapping, _subQueryRegistry);
+      var result = CloneExpressionTreeVisitor.ReplaceClauseReferences (expression, _cloneContext);
 
       Assert.That (((SubQueryExpression) result).QueryModel, Is.Not.SameAs (expression.QueryModel));
     }
@@ -76,7 +79,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ExpressionTreeVisitors
     public void Replaces_SubQueryExpressions_RegistersSubQueries ()
     {
       var expression = new SubQueryExpression (ExpressionHelper.CreateQueryModel ());
-      var result = CloneExpressionTreeVisitor.ReplaceClauseReferences (expression, _clonedClauseMapping, _subQueryRegistry);
+      var result = CloneExpressionTreeVisitor.ReplaceClauseReferences (expression, _cloneContext);
 
       Assert.That (_subQueryRegistry, List.Contains(((SubQueryExpression) result).QueryModel));
     }

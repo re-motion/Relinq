@@ -58,14 +58,14 @@ namespace Remotion.Data.Linq.Clauses
       return relatedTable;
     }
 
-    public override AdditionalFromClause Clone (ClonedClauseMapping clonedClauseMapping)
+    public override AdditionalFromClause Clone (CloneContext cloneContext)
     {
-      ArgumentUtility.CheckNotNull ("clonedClauseMapping", clonedClauseMapping);
+      ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 
-      var newPreviousClause = clonedClauseMapping.GetClause<IClause> (PreviousClause);
+      var newPreviousClause = cloneContext.ClonedClauseMapping.GetClause<IClause> (PreviousClause);
       var result = new MemberFromClause (newPreviousClause, Identifier, FromExpression, ResultSelector);
-      clonedClauseMapping.AddMapping (this, result);
-      result.AddClonedJoinClauses (JoinClauses, clonedClauseMapping);
+      cloneContext.ClonedClauseMapping.AddMapping (this, result);
+      result.AddClonedJoinClauses (JoinClauses, cloneContext);
       return result;
     }
   }

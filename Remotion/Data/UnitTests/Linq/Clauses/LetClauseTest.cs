@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
@@ -29,13 +30,13 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
   public class LetClauseTest
   {
     private LetClause _letClause;
-    private ClonedClauseMapping _clonedClauseMapping;
+    private CloneContext _cloneContext;
 
     [SetUp]
     public void SetUp ()
     {
       _letClause = ExpressionHelper.CreateLetClause ();
-      _clonedClauseMapping = new ClonedClauseMapping ();
+      _cloneContext = new CloneContext (new ClonedClauseMapping(), new List<QueryModel>());
     }
 
     [Test]
@@ -139,8 +140,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Clone ()
     {
       var newPreviousClause = ExpressionHelper.CreateMainFromClause ();
-      _clonedClauseMapping.AddMapping (_letClause.PreviousClause, newPreviousClause);
-      var clone = _letClause.Clone (_clonedClauseMapping);
+      _cloneContext.ClonedClauseMapping.AddMapping (_letClause.PreviousClause, newPreviousClause);
+      var clone = _letClause.Clone (_cloneContext);
 
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (_letClause));
@@ -154,17 +155,17 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone_ViaInterface_PassesMapping ()
     {
-      _clonedClauseMapping.AddMapping (_letClause.PreviousClause, ExpressionHelper.CreateClause ());
-      var clone = ((IBodyClause) _letClause).Clone (_clonedClauseMapping);
-      Assert.That (_clonedClauseMapping.GetClause (_letClause), Is.SameAs (clone));
+      _cloneContext.ClonedClauseMapping.AddMapping (_letClause.PreviousClause, ExpressionHelper.CreateClause ());
+      var clone = ((IBodyClause) _letClause).Clone (_cloneContext);
+      Assert.That (_cloneContext.ClonedClauseMapping.GetClause (_letClause), Is.SameAs (clone));
     }
 
     [Test]
     public void Clone_AddsClauseToMapping ()
     {
-      _clonedClauseMapping.AddMapping (_letClause.PreviousClause, ExpressionHelper.CreateClause ());
-      var clone = _letClause.Clone (_clonedClauseMapping);
-      Assert.That (_clonedClauseMapping.GetClause (_letClause), Is.SameAs (clone));
+      _cloneContext.ClonedClauseMapping.AddMapping (_letClause.PreviousClause, ExpressionHelper.CreateClause ());
+      var clone = _letClause.Clone (_cloneContext);
+      Assert.That (_cloneContext.ClonedClauseMapping.GetClause (_letClause), Is.SameAs (clone));
     }
   }
 }

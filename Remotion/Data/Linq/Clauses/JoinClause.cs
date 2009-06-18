@@ -94,14 +94,14 @@ namespace Remotion.Data.Linq.Clauses
       visitor.VisitJoinClause (this);
     }
 
-    public JoinClause Clone (IClause newPreviousClause1, FromClauseBase newFromClause1, ClonedClauseMapping clonedClauseMapping)
+    public JoinClause Clone (CloneContext cloneContext)
     {
-      ArgumentUtility.CheckNotNull ("clonedClauseMapping", clonedClauseMapping);
+      ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 
-      var newPreviousClause = clonedClauseMapping.GetClause<IClause> (PreviousClause);
-      var newFromClause = clonedClauseMapping.GetClause<FromClauseBase> (FromClause);
+      var newPreviousClause = cloneContext.ClonedClauseMapping.GetClause<IClause> (PreviousClause);
+      var newFromClause = cloneContext.ClonedClauseMapping.GetClause<FromClauseBase> (FromClause);
       var result = new JoinClause (newPreviousClause, newFromClause, Identifier, InExpression, OnExpression, EqualityExpression, IntoIdentifier);
-      clonedClauseMapping.AddMapping (this, result);
+      cloneContext.ClonedClauseMapping.AddMapping (this, result);
       return result;
     }
   }

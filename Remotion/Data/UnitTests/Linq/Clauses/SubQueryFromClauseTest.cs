@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
@@ -33,7 +34,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     private QueryModel _subQueryModel;
     private SubQueryFromClause _subQueryFromClause;
     private LambdaExpression _projectionExpression;
-    private ClonedClauseMapping _clonedClauseMapping;
+    private CloneContext _cloneContext;
 
     [SetUp]
     public void SetUp ()
@@ -44,7 +45,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       _projectionExpression = ExpressionHelper.CreateLambdaExpression();
 
       _subQueryFromClause = new SubQueryFromClause (_previousClause, _identifier, _subQueryModel, _projectionExpression);
-      _clonedClauseMapping = new ClonedClauseMapping();
+      _cloneContext = new CloneContext (new ClonedClauseMapping (), new List<QueryModel> ());
     }
 
     [Test]
@@ -136,8 +137,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Clone ()
     {
       var newPreviousClause = ExpressionHelper.CreateMainFromClause ();
-      _clonedClauseMapping.AddMapping (_subQueryFromClause.PreviousClause, newPreviousClause);
-      var clone = _subQueryFromClause.Clone (_clonedClauseMapping);
+      _cloneContext.ClonedClauseMapping.AddMapping (_subQueryFromClause.PreviousClause, newPreviousClause);
+      var clone = _subQueryFromClause.Clone (_cloneContext);
 
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (_subQueryFromClause));
@@ -151,8 +152,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Clone_ClonesSubQueryModel ()
     {
       var newPreviousClause = ExpressionHelper.CreateMainFromClause ();
-      _clonedClauseMapping.AddMapping (_subQueryFromClause.PreviousClause, newPreviousClause);
-      var clone = _subQueryFromClause.Clone (_clonedClauseMapping);
+      _cloneContext.ClonedClauseMapping.AddMapping (_subQueryFromClause.PreviousClause, newPreviousClause);
+      var clone = _subQueryFromClause.Clone (_cloneContext);
 
       Assert.That (clone.SubQueryModel, Is.Not.SameAs (_subQueryFromClause.SubQueryModel));
       Assert.That (clone.SubQueryModel.MainFromClause.QuerySource, Is.SameAs (_subQueryFromClause.SubQueryModel.MainFromClause.QuerySource));
@@ -163,30 +164,30 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Clone_ClonesSubQueryModel_WithCorrectMapping ()
     {
       var newPreviousClause = ExpressionHelper.CreateMainFromClause ();
-      _clonedClauseMapping.AddMapping (_subQueryFromClause.PreviousClause, newPreviousClause);
-      var clone = _subQueryFromClause.Clone (_clonedClauseMapping);
+      _cloneContext.ClonedClauseMapping.AddMapping (_subQueryFromClause.PreviousClause, newPreviousClause);
+      var clone = _subQueryFromClause.Clone (_cloneContext);
 
       Assert.That (clone.SubQueryModel, Is.Not.SameAs (_subQueryFromClause.SubQueryModel));
       Assert.That (clone.SubQueryModel.MainFromClause.QuerySource, Is.SameAs (_subQueryFromClause.SubQueryModel.MainFromClause.QuerySource));
       Assert.That (clone.SubQueryModel.ParentQuery, Is.Null);
 
-      Assert.That (_clonedClauseMapping.GetClause (_subQueryFromClause.SubQueryModel.MainFromClause), Is.SameAs (clone.SubQueryModel.MainFromClause));
+      Assert.That (_cloneContext.ClonedClauseMapping.GetClause (_subQueryFromClause.SubQueryModel.MainFromClause), Is.SameAs (clone.SubQueryModel.MainFromClause));
     }
 
     [Test]
     public void Clone_ViaInterface_PassesMapping ()
     {
-      _clonedClauseMapping.AddMapping (_subQueryFromClause.PreviousClause, ExpressionHelper.CreateClause ());
-      var clone = ((IBodyClause) _subQueryFromClause).Clone (_clonedClauseMapping);
-      Assert.That (_clonedClauseMapping.GetClause (_subQueryFromClause), Is.SameAs (clone));
+      _cloneContext.ClonedClauseMapping.AddMapping (_subQueryFromClause.PreviousClause, ExpressionHelper.CreateClause ());
+      var clone = ((IBodyClause) _subQueryFromClause).Clone (_cloneContext);
+      Assert.That (_cloneContext.ClonedClauseMapping.GetClause (_subQueryFromClause), Is.SameAs (clone));
     }
 
     [Test]
     public void Clone_SubQueryModelsParent_SetWhenQueryModelIsSet ()
     {
       var newPreviousClause = ExpressionHelper.CreateMainFromClause ();
-      _clonedClauseMapping.AddMapping (_subQueryFromClause.PreviousClause, newPreviousClause);
-      var clone = _subQueryFromClause.Clone (_clonedClauseMapping);
+      _cloneContext.ClonedClauseMapping.AddMapping (_subQueryFromClause.PreviousClause, newPreviousClause);
+      var clone = _subQueryFromClause.Clone (_cloneContext);
 
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (_subQueryFromClause));
@@ -209,8 +210,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       _subQueryFromClause.AddJoinClause (originalJoinClause2);
 
       var newPreviousClause = ExpressionHelper.CreateClause ();
-      _clonedClauseMapping.AddMapping (_subQueryFromClause.PreviousClause, newPreviousClause);
-      var clone = _subQueryFromClause.Clone (_clonedClauseMapping);
+      _cloneContext.ClonedClauseMapping.AddMapping (_subQueryFromClause.PreviousClause, newPreviousClause);
+      var clone = _subQueryFromClause.Clone (_cloneContext);
       Assert.That (clone.JoinClauses.Count, Is.EqualTo (2));
 
       Assert.That (clone.JoinClauses[0], Is.Not.SameAs (originalJoinClause1));
@@ -231,7 +232,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Clone_JoinClauses_PassesMapping ()
     {
       var oldFromClause = ExpressionHelper.CreateMainFromClause ();
-      _clonedClauseMapping.AddMapping (_subQueryFromClause.PreviousClause, ExpressionHelper.CreateClause ());
+      _cloneContext.ClonedClauseMapping.AddMapping (_subQueryFromClause.PreviousClause, ExpressionHelper.CreateClause ());
       var originalJoinClause = new JoinClause (
           _subQueryFromClause,
           _subQueryFromClause,
@@ -241,20 +242,19 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
           ExpressionHelper.CreateExpression ());
       _subQueryFromClause.AddJoinClause (originalJoinClause);
 
-      var mapping = _clonedClauseMapping;
       var newFromClause = ExpressionHelper.CreateMainFromClause ();
-      mapping.AddMapping (oldFromClause, newFromClause);
+      _cloneContext.ClonedClauseMapping.AddMapping (oldFromClause, newFromClause);
 
-      var clone = _subQueryFromClause.Clone (mapping);
+      var clone = _subQueryFromClause.Clone (_cloneContext);
       Assert.That (((QuerySourceReferenceExpression) clone.JoinClauses[0].InExpression).ReferencedClause, Is.SameAs (newFromClause));
     }
 
     [Test]
     public void Clone_AddsClauseToMapping ()
     {
-      _clonedClauseMapping.AddMapping (_subQueryFromClause.PreviousClause, ExpressionHelper.CreateClause ());
-      var clone = _subQueryFromClause.Clone (_clonedClauseMapping);
-      Assert.That (_clonedClauseMapping.GetClause (_subQueryFromClause), Is.SameAs (clone));
+      _cloneContext.ClonedClauseMapping.AddMapping (_subQueryFromClause.PreviousClause, ExpressionHelper.CreateClause ());
+      var clone = _subQueryFromClause.Clone (_cloneContext);
+      Assert.That (_cloneContext.ClonedClauseMapping.GetClause (_subQueryFromClause), Is.SameAs (clone));
     }
   }
 }

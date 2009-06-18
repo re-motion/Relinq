@@ -14,8 +14,10 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.ResultModifications;
@@ -27,21 +29,24 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
   {
     private FirstResultModification _resultModificationNoDefault;
     private FirstResultModification _resultModificationWithDefault;
+    private ClonedClauseMapping _clonedClauseMapping;
+    private CloneContext _cloneContext;
 
     [SetUp]
     public void SetUp ()
     {
       _resultModificationNoDefault = new FirstResultModification (ExpressionHelper.CreateSelectClause (), false);
       _resultModificationWithDefault = new FirstResultModification (ExpressionHelper.CreateSelectClause (), true);
+      _clonedClauseMapping = new ClonedClauseMapping ();
+      _cloneContext = new CloneContext (_clonedClauseMapping, new List<QueryModel> ());
     }
 
     [Test]
     public void Clone ()
     {
       var newSelectClause = ExpressionHelper.CreateSelectClause ();
-      var clonedClauseMapping = new ClonedClauseMapping ();
-      clonedClauseMapping.AddMapping (_resultModificationWithDefault.SelectClause, newSelectClause);
-      var clone = _resultModificationWithDefault.Clone (clonedClauseMapping);
+      _clonedClauseMapping.AddMapping (_resultModificationWithDefault.SelectClause, newSelectClause);
+      var clone = _resultModificationWithDefault.Clone (_cloneContext);
 
       Assert.That (clone, Is.InstanceOfType (typeof (FirstResultModification)));
       Assert.That (clone.SelectClause, Is.SameAs (newSelectClause));
@@ -52,9 +57,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
     public void Clone_ReturnDefaultIfEmpty_False ()
     {
       var newSelectClause = ExpressionHelper.CreateSelectClause ();
-      var clonedClauseMapping = new ClonedClauseMapping ();
-      clonedClauseMapping.AddMapping (_resultModificationNoDefault.SelectClause, newSelectClause);
-      var clone = _resultModificationNoDefault.Clone (clonedClauseMapping);
+      _clonedClauseMapping.AddMapping (_resultModificationNoDefault.SelectClause, newSelectClause);
+      var clone = _resultModificationNoDefault.Clone (_cloneContext);
 
       Assert.That (clone, Is.InstanceOfType (typeof (FirstResultModification)));
       Assert.That (clone.SelectClause, Is.SameAs (newSelectClause));
