@@ -121,19 +121,19 @@ namespace Remotion.Data.Linq.Clauses
       QueryModel = model;
     }
 
-    public LetClause Clone (IClause newPreviousClause, ClonedClauseMapping clonedClauseMapping)
+    public LetClause Clone (ClonedClauseMapping clonedClauseMapping)
     {
-      ArgumentUtility.CheckNotNull ("newPreviousClause", newPreviousClause);
       ArgumentUtility.CheckNotNull ("clonedClauseMapping", clonedClauseMapping);
 
+      var newPreviousClause = clonedClauseMapping.GetClause<IClause> (PreviousClause);
       var result = new LetClause (newPreviousClause, Identifier, Expression, ProjectionExpression);
       clonedClauseMapping.AddMapping (this, result);
       return result;
     }
 
-    IBodyClause IBodyClause.Clone (IClause newPreviousClause, ClonedClauseMapping clonedClauseMapping)
+    IBodyClause IBodyClause.Clone (ClonedClauseMapping clonedClauseMapping)
     {
-      return Clone (newPreviousClause, clonedClauseMapping);
+      return Clone (clonedClauseMapping);
     }
   }
 }

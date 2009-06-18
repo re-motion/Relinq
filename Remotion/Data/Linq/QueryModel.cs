@@ -237,12 +237,10 @@ namespace Remotion.Data.Linq
       var clonedMainFromClause = MainFromClause.Clone (clonedClauseMapping);
       var clonedBodyClauses = new List<IBodyClause> ();
 
-      IClause previousClause = clonedMainFromClause;
       foreach (var bodyClause in BodyClauses)
       {
-        var clonedBodyClause = bodyClause.Clone (previousClause, clonedClauseMapping);
+        var clonedBodyClause = bodyClause.Clone (clonedClauseMapping);
         clonedBodyClauses.Add (clonedBodyClause);
-        previousClause = clonedBodyClause;
       }
 
       var clonedSelectOrGroupClause = SelectOrGroupClause.Clone (clonedClauseMapping);

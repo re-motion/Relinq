@@ -111,7 +111,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Clone ()
     {
       var newPreviousClause = ExpressionHelper.CreateClause ();
-      var clone = _orderByClause.Clone (newPreviousClause, new ClonedClauseMapping());
+      _clonedClauseMapping.AddMapping (_orderByClause.PreviousClause, newPreviousClause);
+      var clone = _orderByClause.Clone (_clonedClauseMapping);
 
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (_orderByClause));
@@ -123,18 +124,19 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Clone_ViaInterface_PassesMapping ()
     {
       _clonedClauseMapping.AddMapping (_orderByClause.PreviousClause, ExpressionHelper.CreateClause ());
-      var clone = ((IBodyClause) _orderByClause).Clone (ExpressionHelper.CreateClause (), _clonedClauseMapping);
+      var clone = ((IBodyClause) _orderByClause).Clone (_clonedClauseMapping);
       Assert.That (_clonedClauseMapping.GetClause (_orderByClause), Is.SameAs (clone));
     }
 
     [Test]
     public void Clone_Orderings ()
     {
-      var ordering = ExpressionHelper.CreateOrdering();
+      var ordering = ExpressionHelper.CreateOrdering(_orderByClause);
       _orderByClause.AddOrdering (ordering);
 
       var newPreviousClause = ExpressionHelper.CreateMainFromClause ();
-      var clone = _orderByClause.Clone (newPreviousClause, new ClonedClauseMapping());
+      _clonedClauseMapping.AddMapping (_orderByClause.PreviousClause, newPreviousClause);
+      var clone = _orderByClause.Clone (_clonedClauseMapping);
 
       Assert.That (clone.OrderingList.Count, Is.EqualTo (1));
 
@@ -149,24 +151,26 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Ignore("TODO 1229")]
     public void Clone_Orderings_PassesMapping ()
     {
-      var newMainFromClause = ExpressionHelper.CreateMainFromClause ();
+      var newReferencedClause = ExpressionHelper.CreateMainFromClause ();
 
-      var oldMainFromClause = ExpressionHelper.CreateMainFromClause();
-      var ordering = new Ordering (_orderByClause, new QuerySourceReferenceExpression (oldMainFromClause), OrderingDirection.Asc);
+      var oldReferencedClause = ExpressionHelper.CreateMainFromClause();
+      var ordering = new Ordering (_orderByClause, new QuerySourceReferenceExpression (oldReferencedClause), OrderingDirection.Asc);
       _orderByClause.AddOrdering (ordering);
 
-      _clonedClauseMapping.AddMapping (oldMainFromClause, newMainFromClause);
+      _clonedClauseMapping.AddMapping (_orderByClause.PreviousClause, ExpressionHelper.CreateClause());
+      _clonedClauseMapping.AddMapping (oldReferencedClause, newReferencedClause);
 
-      var clone = _orderByClause.Clone (newMainFromClause, _clonedClauseMapping);
+      var clone = _orderByClause.Clone (_clonedClauseMapping);
       var clonedOrdering = clone.OrderingList[0];
       
-      Assert.That (((QuerySourceReferenceExpression) clonedOrdering.Expression).ReferencedClause, Is.SameAs (newMainFromClause));
+      Assert.That (((QuerySourceReferenceExpression) clonedOrdering.Expression).ReferencedClause, Is.SameAs (newReferencedClause));
     }
 
     [Test]
     public void Clone_AddsClauseToMapping ()
     {
-      var clone = _orderByClause.Clone (ExpressionHelper.CreateClause (), _clonedClauseMapping);
+      _clonedClauseMapping.AddMapping (_orderByClause.PreviousClause, ExpressionHelper.CreateClause ());
+      var clone = _orderByClause.Clone (_clonedClauseMapping);
       Assert.That (_clonedClauseMapping.GetClause (_orderByClause), Is.SameAs (clone));
     }
   }

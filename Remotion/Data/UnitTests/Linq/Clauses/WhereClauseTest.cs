@@ -102,7 +102,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Clone ()
     {
       var newPreviousClause = ExpressionHelper.CreateClause ();
-      var clone = _whereClause.Clone (newPreviousClause, _clonedClauseMapping);
+      _clonedClauseMapping.AddMapping (_whereClause.PreviousClause, newPreviousClause);
+      var clone = _whereClause.Clone (_clonedClauseMapping);
 
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (_whereClause));
@@ -115,14 +116,15 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Clone_ViaInterface_PassesMapping ()
     {
       _clonedClauseMapping.AddMapping (_whereClause.PreviousClause, ExpressionHelper.CreateClause ());
-      var clone = ((IBodyClause) _whereClause).Clone (ExpressionHelper.CreateClause(), _clonedClauseMapping);
+      var clone = ((IBodyClause) _whereClause).Clone (_clonedClauseMapping);
       Assert.That (_clonedClauseMapping.GetClause (_whereClause), Is.SameAs (clone));
     }
 
     [Test]
     public void Clone_AddsClauseToMapping ()
     {
-      var clone = _whereClause.Clone (ExpressionHelper.CreateClause (), _clonedClauseMapping);
+      _clonedClauseMapping.AddMapping (_whereClause.PreviousClause, ExpressionHelper.CreateClause());
+      var clone = _whereClause.Clone (_clonedClauseMapping);
       Assert.That (_clonedClauseMapping.GetClause (_whereClause), Is.SameAs (clone));
     }
   }

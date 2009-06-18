@@ -25,15 +25,26 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
   [TestFixture]
   public class OrderingTest
   {
+    private ClonedClauseMapping _clonedClauseMapping;
+    private OrderByClause _orderByClause;
+    private Ordering _ordering;
+
+    [SetUp]
+    public void SetUp ()
+    {
+      _clonedClauseMapping = new ClonedClauseMapping ();
+      _orderByClause = ExpressionHelper.CreateOrderByClause ();
+      _ordering = ExpressionHelper.CreateOrdering (_orderByClause);
+    }
+
     [Test]
     public void InitializeWithExpressionAndOrderDirectionAsc()
     {
       var expression = ExpressionHelper.CreateExpression ();
 
-      var clause = ExpressionHelper.CreateOrderByClause();
-      var ordering = new Ordering(clause, expression, OrderingDirection.Asc);
+      var ordering = new Ordering(_orderByClause, expression, OrderingDirection.Asc);
 
-      Assert.That (ordering.OrderByClause, Is.SameAs (clause));
+      Assert.That (ordering.OrderByClause, Is.SameAs (_orderByClause));
       Assert.That (ordering.Expression, Is.SameAs (expression));
       Assert.That (ordering.OrderingDirection, Is.EqualTo (OrderingDirection.Asc));
     }
@@ -44,10 +55,9 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       var expression = ExpressionHelper.CreateExpression ();
       const OrderingDirection directionAsc = OrderingDirection.Asc;
 
-      var clause = ExpressionHelper.CreateOrderByClause ();
-      var ordering = new Ordering (clause, expression, directionAsc);
+      var ordering = new Ordering (_orderByClause, expression, directionAsc);
 
-      Assert.That (ordering.OrderByClause, Is.SameAs (clause));
+      Assert.That (ordering.OrderByClause, Is.SameAs (_orderByClause));
       Assert.That (ordering.Expression, Is.SameAs (expression));
       Assert.That (ordering.OrderingDirection, Is.EqualTo (directionAsc));
     }
@@ -55,16 +65,14 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Accept()
     {
-      Ordering ordering = ExpressionHelper.CreateOrdering ();
-
       var repository = new MockRepository();
       var visitorMock = repository.StrictMock<IQueryVisitor>();
 
-      visitorMock.VisitOrdering (ordering);
+      visitorMock.VisitOrdering (_ordering);
 
       repository.ReplayAll();
 
-      ordering.Accept (visitorMock);
+      _ordering.Accept (visitorMock);
 
       repository.VerifyAll();
     }
@@ -72,48 +80,44 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void QueryModelAtInitialization ()
     {
-      Ordering ordering = ExpressionHelper.CreateOrdering ();
-      Assert.That (ordering.QueryModel, Is.Null);
+      Assert.That (_ordering.QueryModel, Is.Null);
     }
 
     [Test]
     public void SetQueryModel ()
     {
-      Ordering ordering = ExpressionHelper.CreateOrdering ();
       QueryModel model = ExpressionHelper.CreateQueryModel ();
-      ordering.SetQueryModel (model);
-      Assert.That (ordering.QueryModel, Is.Not.Null);
+      _ordering.SetQueryModel (model);
+      Assert.That (_ordering.QueryModel, Is.Not.Null);
     }
 
     [Test]
     [ExpectedException (typeof (ArgumentNullException))]
     public void SetQueryModelWithNull_Exception ()
     {
-      Ordering ordering = ExpressionHelper.CreateOrdering ();
-      ordering.SetQueryModel (null);
+      _ordering.SetQueryModel (null);
     }
 
     [Test]
     [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "QueryModel is already set")]
     public void SetQueryModelTwice_Exception ()
     {
-      Ordering ordering = ExpressionHelper.CreateOrdering ();
       QueryModel model = ExpressionHelper.CreateQueryModel ();
-      ordering.SetQueryModel (model);
-      ordering.SetQueryModel (model);
+      _ordering.SetQueryModel (model);
+      _ordering.SetQueryModel (model);
     }
 
     [Test]
     public void Clone ()
     {
-      var orderingClause = ExpressionHelper.CreateOrdering ();
       var newOrderByClause = ExpressionHelper.CreateOrderByClause();
-      var clone = orderingClause.Clone (newOrderByClause, new ClonedClauseMapping());
+      _clonedClauseMapping.AddMapping (_orderByClause, newOrderByClause);
+      var clone = _ordering.Clone (_clonedClauseMapping);
 
       Assert.That (clone, Is.Not.Null);
-      Assert.That (clone, Is.Not.SameAs (orderingClause));
-      Assert.That (clone.Expression, Is.SameAs (orderingClause.Expression));
-      Assert.That (clone.OrderingDirection, Is.EqualTo (orderingClause.OrderingDirection));
+      Assert.That (clone, Is.Not.SameAs (_ordering));
+      Assert.That (clone.Expression, Is.SameAs (_ordering.Expression));
+      Assert.That (clone.OrderingDirection, Is.EqualTo (_ordering.OrderingDirection));
       Assert.That (clone.QueryModel, Is.Null);
       Assert.That (clone.OrderByClause, Is.SameAs (newOrderByClause));
     }

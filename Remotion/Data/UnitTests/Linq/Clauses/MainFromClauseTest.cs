@@ -45,7 +45,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       IQueryable querySource = ExpressionHelper.CreateQuerySource ();
 
       ConstantExpression constantExpression = Expression.Constant (querySource);
-      MainFromClause fromClause = new MainFromClause (id, constantExpression);
+      var fromClause = new MainFromClause (id, constantExpression);
 
       Assert.AreSame (id, fromClause.Identifier);
       Assert.AreSame (constantExpression, fromClause.QuerySource);
@@ -64,7 +64,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       var anonymous = new {source = querySource};
       MemberExpression sourceExpression = Expression.MakeMemberAccess (Expression.Constant (anonymous), anonymous.GetType().GetProperty ("source"));
 
-      MainFromClause fromClause = new MainFromClause (id, sourceExpression);
+      var fromClause = new MainFromClause (id, sourceExpression);
 
       Assert.AreSame (sourceExpression, fromClause.QuerySource);
     }
@@ -72,8 +72,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Accept ()
     {
-      MockRepository repository = new MockRepository ();
-      IQueryVisitor visitorMock = repository.StrictMock<IQueryVisitor> ();
+      var repository = new MockRepository ();
+      var visitorMock = repository.StrictMock<IQueryVisitor> ();
 
       visitorMock.VisitMainFromClause (_mainFromClause);
 
@@ -106,10 +106,10 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone_JoinClauses ()
     {
-      var originalJoinClause1 = ExpressionHelper.CreateJoinClause ();
+      var originalJoinClause1 = ExpressionHelper.CreateJoinClause (_mainFromClause, _mainFromClause);
       _mainFromClause.AddJoinClause (originalJoinClause1);
 
-      var originalJoinClause2 = ExpressionHelper.CreateJoinClause ();
+      var originalJoinClause2 = ExpressionHelper.CreateJoinClause (originalJoinClause1, _mainFromClause);
       _mainFromClause.AddJoinClause (originalJoinClause2);
 
       var clone = _mainFromClause.Clone (_clonedClauseMapping);

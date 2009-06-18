@@ -23,7 +23,7 @@ namespace Remotion.Data.Linq.Clauses
   /// Extends <see cref="FromClauseBase"/>. <see cref="AdditionalFromClause"/> is used for from clauses which is no <see cref="MainFromClause"/>.
   /// example:from a in queryable1 from b in queryable (the additional <see cref="AdditionalFromClause"/> is the second from)
   /// </summary>
-  public class AdditionalFromClause : FromClauseBase,IBodyClause
+  public class AdditionalFromClause : FromClauseBase, IBodyClause
   {
     /// <summary>
     /// Initialize a new instance of <see cref="AdditionalFromClause"/>
@@ -82,20 +82,20 @@ namespace Remotion.Data.Linq.Clauses
       QueryModel = model;
     }
 
-    public virtual AdditionalFromClause Clone (IClause newPreviousClause, ClonedClauseMapping clonedClauseMapping)
+    public virtual AdditionalFromClause Clone (ClonedClauseMapping clonedClauseMapping)
     {
-      ArgumentUtility.CheckNotNull ("newPreviousClause", newPreviousClause);
       ArgumentUtility.CheckNotNull ("clonedClauseMapping", clonedClauseMapping);
 
+      var newPreviousClause = clonedClauseMapping.GetClause<IClause> (PreviousClause);
       var result = new AdditionalFromClause (newPreviousClause, Identifier, FromExpression, ResultSelector);
       clonedClauseMapping.AddMapping (this, result);
       result.AddClonedJoinClauses (JoinClauses, clonedClauseMapping);
       return result;
     }
 
-    IBodyClause IBodyClause.Clone (IClause newPreviousClause, ClonedClauseMapping clonedClauseMapping)
+    IBodyClause IBodyClause.Clone (ClonedClauseMapping clonedClauseMapping)
     {
-      return Clone (newPreviousClause, clonedClauseMapping);
+      return Clone (clonedClauseMapping);
     }
   }
 }

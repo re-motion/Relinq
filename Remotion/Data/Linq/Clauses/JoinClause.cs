@@ -52,6 +52,7 @@ namespace Remotion.Data.Linq.Clauses
       _intoIdentifier = intoIdentifier;
     }
 
+    // TODO: Check whether this property is really necessary.
     public IClause PreviousClause
     {
       get { return _previousClause; }
@@ -93,8 +94,12 @@ namespace Remotion.Data.Linq.Clauses
       visitor.VisitJoinClause (this);
     }
 
-    public JoinClause Clone (IClause newPreviousClause, FromClauseBase newFromClause, ClonedClauseMapping clonedClauseMapping)
+    public JoinClause Clone (IClause newPreviousClause1, FromClauseBase newFromClause1, ClonedClauseMapping clonedClauseMapping)
     {
+      ArgumentUtility.CheckNotNull ("clonedClauseMapping", clonedClauseMapping);
+
+      var newPreviousClause = clonedClauseMapping.GetClause<IClause> (PreviousClause);
+      var newFromClause = clonedClauseMapping.GetClause<FromClauseBase> (FromClause);
       var result = new JoinClause (newPreviousClause, newFromClause, Identifier, InExpression, OnExpression, EqualityExpression, IntoIdentifier);
       clonedClauseMapping.AddMapping (this, result);
       return result;

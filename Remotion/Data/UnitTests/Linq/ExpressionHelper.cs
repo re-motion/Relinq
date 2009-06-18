@@ -70,12 +70,17 @@ namespace Remotion.Data.UnitTests.Linq
 
     public static JoinClause CreateJoinClause ()
     {
+      return CreateJoinClause (CreateClause(), CreateMainFromClause());
+    }
+
+    public static JoinClause CreateJoinClause (IClause previousClause, FromClauseBase fromClause)
+    {
       ParameterExpression identifier = CreateParameterExpression ();
       Expression inExpression = CreateExpression ();
       Expression onExpression = CreateExpression ();
       Expression equalityExpression = CreateExpression ();
 
-      return new JoinClause (CreateClause(), CreateMainFromClause(), identifier, inExpression, onExpression, equalityExpression);
+      return new JoinClause (previousClause, fromClause, identifier, inExpression, onExpression, equalityExpression);
     }
 
     public static QueryModel CreateQueryModel (MainFromClause mainFromClause)
@@ -144,9 +149,14 @@ namespace Remotion.Data.UnitTests.Linq
       return new LetClause (CreateLetClause (), identifier, expression, CreateLambdaExpression ());
     }
 
-    public static Ordering CreateOrdering()
+    public static Ordering CreateOrdering (OrderByClause orderByClause)
     {
-      return new Ordering (CreateOrderByClause (), CreateExpression(), OrderingDirection.Asc);
+      return new Ordering (orderByClause, CreateExpression (), OrderingDirection.Asc);
+    }
+
+    public static Ordering CreateOrdering ()
+    {
+      return CreateOrdering (CreateOrderByClause ());
     }
 
     public static OrderByClause CreateOrderByClause()
