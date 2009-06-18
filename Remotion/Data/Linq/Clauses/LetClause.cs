@@ -15,6 +15,7 @@
 // 
 using System;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing.FieldResolving;
 using Remotion.Utilities;
@@ -126,7 +127,9 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 
       var newPreviousClause = cloneContext.ClonedClauseMapping.GetClause<IClause> (PreviousClause);
-      var result = new LetClause (newPreviousClause, Identifier, Expression, ProjectionExpression);
+      var newExpression = CloneExpressionTreeVisitor.ReplaceClauseReferences (Expression, cloneContext);
+      var newProjectionExpression = CloneExpressionTreeVisitor.ReplaceClauseReferences (ProjectionExpression, cloneContext);
+      var result = new LetClause (newPreviousClause, Identifier, newExpression, (LambdaExpression) newProjectionExpression);
       cloneContext.ClonedClauseMapping.AddMapping (this, result);
       return result;
     }

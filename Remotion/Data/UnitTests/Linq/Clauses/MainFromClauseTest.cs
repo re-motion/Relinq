@@ -105,6 +105,21 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
+    public void Clone_AdjustsExpressions ()
+    {
+      var oldReferencedClause = ExpressionHelper.CreateMainFromClause();
+      var querySource = new QuerySourceReferenceExpression (oldReferencedClause);
+      var mainFromClause = new MainFromClause (ExpressionHelper.CreateParameterExpression(), querySource);
+
+      var newReferencedClause = ExpressionHelper.CreateMainFromClause ();
+      _cloneContext.ClonedClauseMapping.AddMapping (oldReferencedClause, newReferencedClause);
+
+      var clone = mainFromClause.Clone (_cloneContext);
+
+      Assert.That (((QuerySourceReferenceExpression) clone.QuerySource).ReferencedClause, Is.SameAs (newReferencedClause));
+    }
+
+    [Test]
     public void Clone_JoinClauses ()
     {
       var originalJoinClause1 = ExpressionHelper.CreateJoinClause (_mainFromClause, _mainFromClause);

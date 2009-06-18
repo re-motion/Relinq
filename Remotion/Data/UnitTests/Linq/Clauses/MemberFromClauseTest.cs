@@ -94,6 +94,27 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
+    public void Clone_AdjustsExpressions ()
+    {
+      var mainFromClause = ExpressionHelper.CreateMainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource());
+      var fromExpression = Expression.MakeMemberAccess (new QuerySourceReferenceExpression (mainFromClause), typeof (Student).GetProperty ("OtherStudent"));
+      var projectionExpression = new QuerySourceReferenceExpression (mainFromClause);
+      var memberFromClause = new MemberFromClause (
+          mainFromClause, 
+          ExpressionHelper.CreateParameterExpression(), 
+          Expression.Lambda (fromExpression), 
+          Expression.Lambda (projectionExpression));
+
+      var newMainFromClause = ExpressionHelper.CreateMainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
+      _cloneContext.ClonedClauseMapping.AddMapping (mainFromClause, newMainFromClause);
+
+      var clone = (MemberFromClause) memberFromClause.Clone (_cloneContext);
+
+      Assert.That (((QuerySourceReferenceExpression) clone.MemberExpression.Expression).ReferencedClause, Is.SameAs (newMainFromClause));
+      Assert.That (((QuerySourceReferenceExpression) clone.ResultSelector.Body).ReferencedClause, Is.SameAs (newMainFromClause));
+    }
+
+    [Test]
     public void Clone_ViaInterface_PassesMapping ()
     {
       _cloneContext.ClonedClauseMapping.AddMapping (_memberFromClause.PreviousClause, ExpressionHelper.CreateClause());

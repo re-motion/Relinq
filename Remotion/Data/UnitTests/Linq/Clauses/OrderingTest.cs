@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Rhino.Mocks;
 using Remotion.Data.Linq.Clauses;
 
@@ -123,6 +124,22 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clone.OrderingDirection, Is.EqualTo (_ordering.OrderingDirection));
       Assert.That (clone.QueryModel, Is.Null);
       Assert.That (clone.OrderByClause, Is.SameAs (newOrderByClause));
+    }
+
+    [Test]
+    public void Clone_AdjustsExpressions ()
+    {
+      var mainFromClause = ExpressionHelper.CreateMainFromClause();
+      var expression = new QuerySourceReferenceExpression (mainFromClause);
+      var whereClause = new Ordering (_orderByClause, expression, OrderingDirection.Asc);
+
+      var newMainFromClause = ExpressionHelper.CreateMainFromClause ();
+      _cloneContext.ClonedClauseMapping.AddMapping (mainFromClause, newMainFromClause);
+      _cloneContext.ClonedClauseMapping.AddMapping (_orderByClause, ExpressionHelper.CreateOrderByClause());
+
+      var clone = whereClause.Clone (_cloneContext);
+
+      Assert.That (((QuerySourceReferenceExpression) clone.Expression).ReferencedClause, Is.SameAs (newMainFromClause));
     }
   }
 }

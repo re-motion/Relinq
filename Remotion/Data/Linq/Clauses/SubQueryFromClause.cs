@@ -15,6 +15,7 @@
 // 
 using System;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Utilities;
 using Remotion.Data.Linq.DataObjectModel;
@@ -99,7 +100,8 @@ namespace Remotion.Data.Linq.Clauses
 
       var newPreviousClause = cloneContext.ClonedClauseMapping.GetClause<IClause> (PreviousClause);
       var clonedSubQueryModel = SubQueryModel.Clone (cloneContext.ClonedClauseMapping);
-      var result = new SubQueryFromClause (newPreviousClause, Identifier, clonedSubQueryModel, ProjectionExpression);
+      var newProjectionExpression = (LambdaExpression) CloneExpressionTreeVisitor.ReplaceClauseReferences (ProjectionExpression, cloneContext);
+      var result = new SubQueryFromClause (newPreviousClause, Identifier, clonedSubQueryModel, newProjectionExpression);
       cloneContext.ClonedClauseMapping.AddMapping (this, result);
       result.AddClonedJoinClauses (JoinClauses, cloneContext);
       return result;

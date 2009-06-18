@@ -15,6 +15,7 @@
 // 
 using System;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses
@@ -83,7 +84,8 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 
       var newOrderByClause = cloneContext.ClonedClauseMapping.GetClause<OrderByClause> (OrderByClause);
-      return new Ordering (newOrderByClause, Expression, OrderingDirection);
+      var newExpression = CloneExpressionTreeVisitor.ReplaceClauseReferences (Expression, cloneContext);
+      return new Ordering (newOrderByClause, newExpression, OrderingDirection);
     }
   }
 }

@@ -19,6 +19,7 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Rhino.Mocks;
 using Remotion.Data.Linq.Clauses;
 
@@ -115,6 +116,31 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clone.OnExpression, Is.SameAs (_joinClause.OnExpression));
       Assert.That (clone.FromClause, Is.SameAs (newFromClause));
       Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
+    }
+
+    [Test]
+    public void Clone_AdjustsExpressions ()
+    {
+      var mainFromClause = ExpressionHelper.CreateMainFromClause();
+      var inExpression = new QuerySourceReferenceExpression (mainFromClause);
+      var onExpression = new QuerySourceReferenceExpression (mainFromClause);
+      var equalityExpression = new QuerySourceReferenceExpression (mainFromClause);
+      var joinClause = new JoinClause (
+          mainFromClause, 
+          mainFromClause, 
+          ExpressionHelper.CreateParameterExpression(), 
+          inExpression, 
+          onExpression, 
+          equalityExpression);
+
+      var newMainFromClause = ExpressionHelper.CreateMainFromClause ();
+      _cloneContext.ClonedClauseMapping.AddMapping (mainFromClause, newMainFromClause);
+
+      var clone = joinClause.Clone (_cloneContext);
+
+      Assert.That (((QuerySourceReferenceExpression) clone.InExpression).ReferencedClause, Is.SameAs (newMainFromClause));
+      Assert.That (((QuerySourceReferenceExpression) clone.OnExpression).ReferencedClause, Is.SameAs (newMainFromClause));
+      Assert.That (((QuerySourceReferenceExpression) clone.EqualityExpression).ReferencedClause, Is.SameAs (newMainFromClause));
     }
 
     [Test]

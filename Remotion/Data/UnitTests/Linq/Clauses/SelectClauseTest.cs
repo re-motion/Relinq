@@ -20,6 +20,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultModifications;
 using Rhino.Mocks;
 using Remotion.Data.Linq.Clauses;
@@ -108,6 +109,21 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       _cloneContext.ClonedClauseMapping.AddMapping (_selectClause.PreviousClause, ExpressionHelper.CreateClause ());
       var clone = _selectClause.Clone (_cloneContext);
       Assert.That (_cloneContext.ClonedClauseMapping.GetClause (_selectClause), Is.SameAs (clone));
+    }
+
+    [Test]
+    public void Clone_AdjustsExpressions ()
+    {
+      var mainFromClause = ExpressionHelper.CreateMainFromClause();
+      var selector = new QuerySourceReferenceExpression (mainFromClause);
+      var selectClause = new SelectClause (mainFromClause, Expression.Lambda (selector), selector);
+
+      var newMainFromClause = ExpressionHelper.CreateMainFromClause ();
+      _cloneContext.ClonedClauseMapping.AddMapping (mainFromClause, newMainFromClause);
+
+      var clone = selectClause.Clone (_cloneContext);
+
+      Assert.That (((QuerySourceReferenceExpression) clone.Selector).ReferencedClause, Is.SameAs (newMainFromClause));
     }
 
     [Test]

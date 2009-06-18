@@ -15,6 +15,7 @@
 // 
 using System;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Utilities;
 
 
@@ -59,7 +60,8 @@ namespace Remotion.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 
-      var result = new MainFromClause (Identifier, QuerySource);
+      var newQuerySource = CloneExpressionTreeVisitor.ReplaceClauseReferences (QuerySource, cloneContext);
+      var result = new MainFromClause (Identifier, newQuerySource);
       cloneContext.ClonedClauseMapping.AddMapping (this, result);
       result.AddClonedJoinClauses (JoinClauses, cloneContext);
       return result;

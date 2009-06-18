@@ -256,5 +256,24 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       var clone = _subQueryFromClause.Clone (_cloneContext);
       Assert.That (_cloneContext.ClonedClauseMapping.GetClause (_subQueryFromClause), Is.SameAs (clone));
     }
+
+    [Test]
+    public void Clone_AdjustsExpressions ()
+    {
+      var mainFromClause = ExpressionHelper.CreateMainFromClause ();
+      var projectionExpression = new QuerySourceReferenceExpression (mainFromClause);
+      var subQueryFromClause = new SubQueryFromClause (
+          mainFromClause, 
+          ExpressionHelper.CreateParameterExpression(), 
+          ExpressionHelper.CreateQueryModel(), 
+          Expression.Lambda (projectionExpression));
+
+      var newMainFromClause = ExpressionHelper.CreateMainFromClause ();
+      _cloneContext.ClonedClauseMapping.AddMapping (mainFromClause, newMainFromClause);
+
+      var clone = subQueryFromClause.Clone (_cloneContext);
+
+      Assert.That (((QuerySourceReferenceExpression) clone.ProjectionExpression.Body).ReferencedClause, Is.SameAs (newMainFromClause));
+    }
   }
 }

@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses
@@ -100,7 +101,10 @@ namespace Remotion.Data.Linq.Clauses
 
       var newPreviousClause = cloneContext.ClonedClauseMapping.GetClause<IClause> (PreviousClause);
       var newFromClause = cloneContext.ClonedClauseMapping.GetClause<FromClauseBase> (FromClause);
-      var result = new JoinClause (newPreviousClause, newFromClause, Identifier, InExpression, OnExpression, EqualityExpression, IntoIdentifier);
+      var newInExpression = CloneExpressionTreeVisitor.ReplaceClauseReferences (InExpression, cloneContext);
+      var newOnExpression = CloneExpressionTreeVisitor.ReplaceClauseReferences (OnExpression, cloneContext);
+      var newEqualityExpression = CloneExpressionTreeVisitor.ReplaceClauseReferences (EqualityExpression, cloneContext);
+      var result = new JoinClause (newPreviousClause, newFromClause, Identifier, newInExpression, newOnExpression, newEqualityExpression, IntoIdentifier);
       cloneContext.ClonedClauseMapping.AddMapping (this, result);
       return result;
     }

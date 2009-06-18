@@ -149,7 +149,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
-    [Ignore("TODO 1229")]
     public void Clone_Orderings_PassesMapping ()
     {
       var newReferencedClause = ExpressionHelper.CreateMainFromClause ();

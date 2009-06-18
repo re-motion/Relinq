@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
+using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Utilities;
 using System.Linq.Expressions;
 
@@ -98,7 +99,9 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 
       var newPreviousClause = cloneContext.ClonedClauseMapping.GetClause<IClause>(PreviousClause);
-      var result = new SelectClause (newPreviousClause, LegacySelector, Selector);
+      var newSelector = CloneExpressionTreeVisitor.ReplaceClauseReferences (Selector, cloneContext);
+      var newLegacySelector = CloneExpressionTreeVisitor.ReplaceClauseReferences (LegacySelector, cloneContext);
+      var result = new SelectClause (newPreviousClause, (LambdaExpression) newLegacySelector, newSelector);
       cloneContext.ClonedClauseMapping.AddMapping (this, result);
       foreach (var resultModification in ResultModifications)
       {

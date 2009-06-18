@@ -19,6 +19,7 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Rhino.Mocks;
 using Remotion.Data.Linq.Clauses;
 
@@ -44,7 +45,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Expression byExpression = ExpressionHelper.CreateExpression();
 
       IClause clause = ExpressionHelper.CreateClause();
-      GroupClause groupClause = new GroupClause (clause, groupExpression, byExpression);
+      var groupClause = new GroupClause (clause, groupExpression, byExpression);
 
       Assert.AreSame (clause, groupClause.PreviousClause);
       Assert.AreSame (groupExpression, groupClause.GroupExpression);
@@ -60,8 +61,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Accept()
     {
-      MockRepository repository = new MockRepository();
-      IQueryVisitor visitorMock = repository.StrictMock<IQueryVisitor>();
+      var repository = new MockRepository();
+      var visitorMock = repository.StrictMock<IQueryVisitor>();
       visitorMock.VisitGroupClause (_groupClause);
 
       repository.ReplayAll();
@@ -83,6 +84,23 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clone.ByExpression, Is.SameAs (_groupClause.ByExpression));
       Assert.That (clone.GroupExpression, Is.SameAs (_groupClause.GroupExpression));
       Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
+    }
+
+    [Test]
+    public void Clone_AdjustsExpressions ()
+    {
+      var mainFromClause = ExpressionHelper.CreateMainFromClause();
+      var groupExpression = new QuerySourceReferenceExpression (mainFromClause);
+      var byExpression = new QuerySourceReferenceExpression (mainFromClause);
+      var groupClause = new GroupClause (mainFromClause, groupExpression, byExpression);
+
+      var newMainFromClause = ExpressionHelper.CreateMainFromClause ();
+      _cloneContext.ClonedClauseMapping.AddMapping (mainFromClause, newMainFromClause);
+
+      var clone = groupClause.Clone (_cloneContext);
+
+      Assert.That (((QuerySourceReferenceExpression) clone.GroupExpression).ReferencedClause, Is.SameAs (newMainFromClause));
+      Assert.That (((QuerySourceReferenceExpression) clone.ByExpression).ReferencedClause, Is.SameAs (newMainFromClause));
     }
 
     [Test]
