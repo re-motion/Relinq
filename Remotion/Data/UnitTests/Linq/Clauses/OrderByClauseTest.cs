@@ -120,6 +120,14 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
+    public void Clone_ViaInterface_PassesMapping ()
+    {
+      _clonedClauseMapping.AddMapping (_orderByClause.PreviousClause, ExpressionHelper.CreateClause ());
+      var clone = ((IBodyClause) _orderByClause).Clone (ExpressionHelper.CreateClause (), _clonedClauseMapping);
+      Assert.That (_clonedClauseMapping.GetClause (_orderByClause), Is.SameAs (clone));
+    }
+
+    [Test]
     public void Clone_Orderings ()
     {
       var ordering = ExpressionHelper.CreateOrdering();

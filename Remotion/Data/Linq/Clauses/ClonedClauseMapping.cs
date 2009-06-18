@@ -27,6 +27,12 @@ namespace Remotion.Data.Linq.Clauses
   {
     private readonly Dictionary<IClause, IClause> _lookup = new Dictionary<IClause, IClause> ();
 
+    public bool ContainsMapping (IClause clause)
+    {
+      ArgumentUtility.CheckNotNull ("clause", clause);
+      return _lookup.ContainsKey (clause);
+    }
+
     public void AddMapping (IClause oldClause, IClause newClause)
     {
       ArgumentUtility.CheckNotNull ("oldClause", oldClause);
@@ -40,6 +46,17 @@ namespace Remotion.Data.Linq.Clauses
       {
         throw new InvalidOperationException ("Clause has already been associated with a new clause.");
       }
+    }
+
+    public void ReplaceMapping (IClause oldClause, IClause newClause)
+    {
+      ArgumentUtility.CheckNotNull ("oldClause", oldClause);
+      ArgumentUtility.CheckNotNull ("newClause", newClause);
+
+      if (!ContainsMapping (oldClause))
+        throw new InvalidOperationException ("Clause has not been associated with a clause, cannot replace its mapping.");
+
+      _lookup[oldClause] = newClause;
     }
 
     public IClause GetClause (IClause oldClause)

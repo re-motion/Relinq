@@ -80,7 +80,8 @@ namespace Remotion.Data.UnitTests.Linq
 
     public static QueryModel CreateQueryModel (MainFromClause mainFromClause)
     {
-      return new QueryModel (typeof (IQueryable<Student>), mainFromClause, CreateSelectClause());
+      var selectClause = CreateSelectClause (mainFromClause);
+      return new QueryModel (typeof (IQueryable<Student>), mainFromClause, selectClause);
     }
 
     public static QueryModel CreateQueryModel ()
@@ -102,9 +103,20 @@ namespace Remotion.Data.UnitTests.Linq
       return CreateAdditionalFromClause(identifier);
     }
 
+    public static AdditionalFromClause CreateAdditionalFromClause (IClause previousClause)
+    {
+      ParameterExpression identifier = CreateParameterExpression ("additional");
+      return CreateAdditionalFromClause (previousClause, identifier);
+    }
+
     public static AdditionalFromClause CreateAdditionalFromClause (ParameterExpression identifier)
     {
       return new AdditionalFromClause (CreateClause (), identifier, CreateLambdaExpression (), CreateLambdaExpression ());
+    }
+
+    public static AdditionalFromClause CreateAdditionalFromClause (IClause previousClause, ParameterExpression identifier)
+    {
+      return new AdditionalFromClause (previousClause, identifier, CreateLambdaExpression (), CreateLambdaExpression ());
     }
 
     public static GroupClause CreateGroupClause ()
@@ -144,8 +156,13 @@ namespace Remotion.Data.UnitTests.Linq
 
     public static SelectClause CreateSelectClause ()
     {
+      return CreateSelectClause (CreateClause ());
+    }
+
+    public static SelectClause CreateSelectClause (IClause previousClause)
+    {
       var selector = Expression.Constant (0);
-      return new SelectClause (CreateClause (), Expression.Lambda (selector, Expression.Parameter (typeof (Student), "s1")), selector);
+      return new SelectClause (previousClause, Expression.Lambda (selector, Expression.Parameter (typeof (Student), "s1")), selector);
     }
 
     public static MethodCallExpression CreateMethodCallExpression (IQueryable<Student> query)
@@ -161,8 +178,13 @@ namespace Remotion.Data.UnitTests.Linq
 
     public static WhereClause CreateWhereClause ()
     {
+      return CreateWhereClause (CreateClause());
+    }
+
+    public static WhereClause CreateWhereClause (IClause previousClause)
+    {
       var predicate = Expression.MakeBinary (ExpressionType.Equal, Expression.Constant (1), Expression.Constant (2));
-      return new WhereClause (CreateClause (), predicate);
+      return new WhereClause (previousClause, predicate);
     }
 
     public static IClause CreateClause()

@@ -17,7 +17,7 @@ namespace Remotion.Data.Linq.Clauses
 {
   public interface ISelectGroupClause : IClause
   {
-    ISelectGroupClause Clone (IClause newPreviousClause, ClonedClauseMapping clonedClauseMapping);
+    ISelectGroupClause Clone (ClonedClauseMapping clonedClauseMapping);
     
     /// <summary>
     /// Gets the execution strategy to use for the given select or group clause. The execution strategy defines how to dispatch a query

@@ -27,6 +27,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     private ClonedClauseMapping _mapping;
     private MainFromClause _clause1;
     private MainFromClause _clause2;
+    private MainFromClause _clause3;
 
     [SetUp]
     public void SetUp ()
@@ -34,6 +35,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       _mapping = new ClonedClauseMapping ();
       _clause1 = ExpressionHelper.CreateMainFromClause ();
       _clause2 = ExpressionHelper.CreateMainFromClause ();
+      _clause3 = ExpressionHelper.CreateMainFromClause ();
     }
 
     [Test]
@@ -49,6 +51,35 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     {
       _mapping.AddMapping (_clause1, _clause2);
       _mapping.AddMapping (_clause1, _clause2);
+    }
+
+    [Test]
+    public void ReplaceMapping ()
+    {
+      _mapping.AddMapping (_clause1, _clause2);
+      _mapping.ReplaceMapping (_clause1, _clause3);
+
+      Assert.That (_mapping.GetClause (_clause1), Is.SameAs (_clause3));
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException), "Clause has not been associated with a clause, cannot replace its mapping.")]
+    public void ReplaceMapping_WithoutAdding ()
+    {
+      _mapping.ReplaceMapping (_clause1, _clause2);
+    }
+
+    [Test]
+    public void ContainsMapping_True ()
+    {
+      _mapping.AddMapping (_clause1, _clause2);
+      Assert.That (_mapping.ContainsMapping (_clause1), Is.True);
+    }
+
+    [Test]
+    public void ContainsMapping_False ()
+    {
+      Assert.That (_mapping.ContainsMapping (_clause1), Is.False);
     }
 
     [Test]

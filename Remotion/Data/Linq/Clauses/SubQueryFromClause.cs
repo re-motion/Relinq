@@ -106,7 +106,7 @@ namespace Remotion.Data.Linq.Clauses
 
     IBodyClause IBodyClause.Clone (IClause newPreviousClause, ClonedClauseMapping clonedClauseMapping)
     {
-      return Clone (newPreviousClause, new ClonedClauseMapping());
+      return Clone (newPreviousClause, clonedClauseMapping);
     }
   }
 }

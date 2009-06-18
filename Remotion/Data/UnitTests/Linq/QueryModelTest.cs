@@ -21,11 +21,9 @@ using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.StringBuilding;
 using Rhino.Mocks;
-using Remotion.Collections;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing.FieldResolving;
-using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 using NUnit.Framework.SyntaxHelpers;
 
 namespace Remotion.Data.UnitTests.Linq
@@ -37,15 +35,17 @@ namespace Remotion.Data.UnitTests.Linq
     private MainFromClause _mainFromClause;
     private SelectClause _selectClause;
     private QueryModel _queryModel;
+    private ClonedClauseMapping _clonedClauseMapping;
 
     [SetUp]
     public void SetUp ()
     {
       _expressionTree = ExpressionHelper.CreateExpression ();
       _mainFromClause = ExpressionHelper.CreateMainFromClause ();
-      _selectClause = ExpressionHelper.CreateSelectClause ();
+      _selectClause = ExpressionHelper.CreateSelectClause (_mainFromClause);
       _queryModel = new QueryModel (typeof (IQueryable<string>), _mainFromClause, _selectClause);
       _queryModel.SetExpressionTree(_expressionTree);
+      _clonedClauseMapping = new ClonedClauseMapping ();
     }
 
     [Test]
@@ -341,6 +341,13 @@ namespace Remotion.Data.UnitTests.Linq
     }
 
     [Test]
+    public void Clone_HasCloneForMainFromClause_PassesMapping ()
+    {
+      var clone = _queryModel.Clone (_clonedClauseMapping);
+      Assert.That (_clonedClauseMapping.GetClause (_queryModel.MainFromClause), Is.SameAs (clone.MainFromClause));
+    }
+
+    [Test]
     public void Clone_HasCloneForSelectClause ()
     {
       var selectClause = (SelectClause) _queryModel.SelectOrGroupClause;
@@ -353,12 +360,20 @@ namespace Remotion.Data.UnitTests.Linq
     }
 
     [Test]
+    public void Clone_HasCloneForSelectClause_PassesMapping ()
+    {
+      var clone = _queryModel.Clone (_clonedClauseMapping);
+      Assert.That (_clonedClauseMapping.GetClause (_queryModel.SelectOrGroupClause), Is.SameAs (clone.SelectOrGroupClause));
+    }
+
+    [Test]
     public void Clone_HasClonesForBodyClauses ()
     {
-      var additionalFromClause = ExpressionHelper.CreateAdditionalFromClause ();
-      var whereClause = ExpressionHelper.CreateWhereClause();
+      var additionalFromClause = ExpressionHelper.CreateAdditionalFromClause (_mainFromClause);
+      var whereClause = ExpressionHelper.CreateWhereClause(additionalFromClause);
       _queryModel.AddBodyClause (additionalFromClause);
       _queryModel.AddBodyClause (whereClause);
+      _selectClause.PreviousClause = whereClause;
 
       var clone = _queryModel.Clone ();
       var clonedAdditionalFromClause = (AdditionalFromClause) clone.BodyClauses[0];
@@ -375,6 +390,17 @@ namespace Remotion.Data.UnitTests.Linq
       Assert.That (clonedWhereClause.PreviousClause, Is.SameAs (clonedAdditionalFromClause));
 
       Assert.That (clone.SelectOrGroupClause.PreviousClause, Is.SameAs (clonedWhereClause));
+    }
+
+    [Test]
+    public void Clone_HasCloneForBodyClauses_PassesMapping ()
+    {
+      var bodyClause = ExpressionHelper.CreateWhereClause(_mainFromClause);
+      _queryModel.AddBodyClause (bodyClause);
+      _selectClause.PreviousClause = bodyClause;
+
+      var clone = _queryModel.Clone (_clonedClauseMapping);
+      Assert.That (_clonedClauseMapping.GetClause (_queryModel.BodyClauses[0]), Is.SameAs (clone.BodyClauses[0]));
     }
 
     [Test]

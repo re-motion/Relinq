@@ -129,6 +129,14 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
+    public void Clone_ViaInterface_PassesMapping ()
+    {
+      _clonedClauseMapping.AddMapping (_additionalFromClause.PreviousClause, ExpressionHelper.CreateClause ());
+      var clone = ((IBodyClause) _additionalFromClause).Clone (ExpressionHelper.CreateClause (), _clonedClauseMapping);
+      Assert.That (_clonedClauseMapping.GetClause (_additionalFromClause), Is.SameAs (clone));
+    }
+
+    [Test]
     public void Clone_JoinClauses ()
     {
       var originalJoinClause1 = ExpressionHelper.CreateJoinClause ();

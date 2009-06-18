@@ -83,7 +83,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Clone ()
     {
       var newPreviousClause = ExpressionHelper.CreateMainFromClause ();
-      var clone = _selectClause.Clone (newPreviousClause, _clonedClauseMapping);
+      _clonedClauseMapping.AddMapping (_selectClause.PreviousClause, newPreviousClause);
+      var clone = _selectClause.Clone (_clonedClauseMapping);
 
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (_selectClause));
@@ -93,9 +94,18 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
+    public void Clone_ViaInterface_PassesMapping ()
+    {
+      _clonedClauseMapping.AddMapping (_selectClause.PreviousClause, ExpressionHelper.CreateClause());
+      var clone = ((ISelectGroupClause) _selectClause).Clone (_clonedClauseMapping);
+      Assert.That (_clonedClauseMapping.GetClause (_selectClause), Is.SameAs (clone));
+    }
+
+    [Test]
     public void Clone_AddsClauseToMapping ()
     {
-      var clone = _selectClause.Clone (ExpressionHelper.CreateClause(), _clonedClauseMapping);
+      _clonedClauseMapping.AddMapping (_selectClause.PreviousClause, ExpressionHelper.CreateClause ());
+      var clone = _selectClause.Clone (_clonedClauseMapping);
       Assert.That (_clonedClauseMapping.GetClause (_selectClause), Is.SameAs (clone));
     }
 
@@ -103,13 +113,14 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Clone_ResultModifiers ()
     {
       var newPreviousClause = ExpressionHelper.CreateMainFromClause ();
+      _clonedClauseMapping.AddMapping (_selectClause.PreviousClause, newPreviousClause);
 
       var resultModifierClause1 = ExpressionHelper.CreateResultModification (_selectClause);
       _selectClause.AddResultModification (resultModifierClause1);
       var resultModifierClause2 = ExpressionHelper.CreateResultModification (_selectClause);
       _selectClause.AddResultModification (resultModifierClause2);
 
-      var clone = _selectClause.Clone (newPreviousClause, _clonedClauseMapping);
+      var clone = _selectClause.Clone (_clonedClauseMapping);
 
       Assert.That (clone.ResultModifications.Count, Is.EqualTo (2));
       Assert.That (clone.ResultModifications[0], Is.Not.SameAs (resultModifierClause1));
@@ -122,6 +133,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Clone_ResultModifiers_PassesMapping ()
     {
       var newPreviousClause = ExpressionHelper.CreateMainFromClause ();
+      _clonedClauseMapping.AddMapping (_selectClause.PreviousClause, newPreviousClause);
 
       var resultModifierClauseMock = MockRepository.GenerateMock<ResultModificationBase> (_selectClause, CollectionExecutionStrategy.Instance);
       _selectClause.AddResultModification (resultModifierClauseMock);
@@ -131,7 +143,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
           .Return (ExpressionHelper.CreateResultModification());
       resultModifierClauseMock.Replay();
 
-      _selectClause.Clone (newPreviousClause, _clonedClauseMapping);
+      _selectClause.Clone (_clonedClauseMapping);
 
       resultModifierClauseMock.VerifyAllExpectations();
     }
