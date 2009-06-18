@@ -57,5 +57,22 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     {
       _mapping.GetClause (_clause1);
     }
+
+    [Test]
+    public void GetClause_Generic ()
+    {
+      _mapping.AddMapping (_clause1, _clause2);
+      Assert.That (_mapping.GetClause<MainFromClause> (_clause1), Is.SameAs (_clause2));
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Expected a SelectClause as the mapped clone of the given SelectClause, "
+      + "but a MainFromClause was registered.")]
+    public void GetClause_Generic_InvalidType ()
+    {
+      var selectClause = ExpressionHelper.CreateSelectClause();
+      _mapping.AddMapping (selectClause, _clause1);
+      _mapping.GetClause<SelectClause> (selectClause);
+    }
   }
 }

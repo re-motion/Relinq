@@ -55,10 +55,24 @@ namespace Remotion.Data.Linq.Clauses
       }
     }
 
-    public T GetClause<T> (IClause clause) where T : IClause
+    public T GetClause<T> (IClause clause) where T : class, IClause
     {
-      // TODO 1229: Throw sensible error message.
-      return (T) GetClause (clause);
+      ArgumentUtility.CheckNotNull ("clause", clause);
+
+      var mappedClause = GetClause (clause);
+
+      var castClause = mappedClause as T;
+      if (castClause == null)
+      {
+        var message = string.Format (
+            "Expected a {0} as the mapped clone of the given {1}, but a {2} was registered.",
+            typeof (T).Name,
+            clause.GetType().Name,
+            mappedClause.GetType().Name);
+        throw new InvalidOperationException (message);
+      }
+
+      return castClause;
     }
   }
 }
