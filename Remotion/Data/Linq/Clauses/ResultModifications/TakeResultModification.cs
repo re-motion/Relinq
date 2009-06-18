@@ -32,9 +32,9 @@ namespace Remotion.Data.Linq.Clauses.ResultModifications
       Count = count;
     }
 
-    public override ResultModificationBase Clone (SelectClause newSelectClause, ClonedClauseMapping clonedClauseMapping)
+    public override ResultModificationBase Clone (ClonedClauseMapping clonedClauseMapping)
     {
-      return new TakeResultModification (newSelectClause, Count);
+      return new TakeResultModification (clonedClauseMapping.GetClause<SelectClause> (SelectClause), Count);
     }
 
     public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)

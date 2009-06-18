@@ -102,7 +102,7 @@ namespace Remotion.Data.Linq.Clauses
       clonedClauseMapping.AddMapping (this, result);
       foreach (var resultModification in ResultModifications)
       {
-        var resultModificationClone = resultModification.Clone (result, clonedClauseMapping);
+        var resultModificationClone = resultModification.Clone (clonedClauseMapping);
         result.AddResultModification (resultModificationClone);
       }
 

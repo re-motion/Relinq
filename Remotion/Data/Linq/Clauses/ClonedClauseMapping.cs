@@ -54,5 +54,11 @@ namespace Remotion.Data.Linq.Clauses
         throw new KeyNotFoundException ("Clause has not been associated with a new clause.");
       }
     }
+
+    public T GetClause<T> (IClause clause) where T : IClause
+    {
+      // TODO 1229: Throw sensible error message.
+      return (T) GetClause (clause);
+    }
   }
 }

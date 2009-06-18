@@ -34,9 +34,9 @@ namespace Remotion.Data.Linq.Clauses.ResultModifications
 
     public bool ReturnDefaultWhenEmpty { get; set; }
 
-    public override ResultModificationBase Clone (SelectClause newSelectClause, ClonedClauseMapping clonedClauseMapping)
+    public override ResultModificationBase Clone (ClonedClauseMapping clonedClauseMapping)
     {
-      return new FirstResultModification (newSelectClause, ReturnDefaultWhenEmpty);
+      return new FirstResultModification (clonedClauseMapping.GetClause<SelectClause> (SelectClause), ReturnDefaultWhenEmpty);
     }
 
     public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)

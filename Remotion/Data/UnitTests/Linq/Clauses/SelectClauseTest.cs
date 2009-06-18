@@ -127,7 +127,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       _selectClause.AddResultModification (resultModifierClauseMock);
 
       resultModifierClauseMock
-          .Expect (mock => mock.Clone (Arg<SelectClause>.Is.Anything, Arg.Is (_clonedClauseMapping)))
+          .Expect (mock => mock.Clone (Arg.Is (_clonedClauseMapping)))
           .Return (ExpressionHelper.CreateResultModification());
       resultModifierClauseMock.Replay();
 

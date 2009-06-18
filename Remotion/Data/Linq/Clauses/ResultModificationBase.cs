@@ -43,7 +43,7 @@ namespace Remotion.Data.Linq.Clauses
       throw new NotImplementedException();
     }
 
-    public abstract ResultModificationBase Clone (SelectClause newSelectClause, ClonedClauseMapping clonedClauseMapping);
+    public abstract ResultModificationBase Clone (ClonedClauseMapping clonedClauseMapping);
 
     /// <summary>
     /// Executes this result modification in memory, on a given enumeration of items. Executing result modifications in memory should only be 

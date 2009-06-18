@@ -38,8 +38,9 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
     public void Clone ()
     {
       var newSelectClause = ExpressionHelper.CreateSelectClause ();
-
-      var clone = _resultModification.Clone (newSelectClause, new ClonedClauseMapping ());
+      var clonedClauseMapping = new ClonedClauseMapping ();
+      clonedClauseMapping.AddMapping (_resultModification.SelectClause, newSelectClause);
+      var clone = _resultModification.Clone (clonedClauseMapping);
 
       Assert.That (clone, Is.InstanceOfType (typeof (DistinctResultModification)));
       Assert.That (clone.SelectClause, Is.SameAs (newSelectClause));
