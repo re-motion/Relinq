@@ -45,7 +45,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       _projectionExpression = ExpressionHelper.CreateLambdaExpression();
 
       _subQueryFromClause = new SubQueryFromClause (_previousClause, _identifier, _subQueryModel, _projectionExpression);
-      _cloneContext = new CloneContext (new ClonedClauseMapping (), new List<QueryModel> ());
+      _cloneContext = new CloneContext (new ClonedClauseMapping (), new SubQueryRegistry());
     }
 
     [Test]

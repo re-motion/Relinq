@@ -38,7 +38,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       _emptyContext = new ClauseGenerationContext (
           new QuerySourceClauseMapping(), 
           new MethodCallExpressionNodeTypeRegistry (), 
-          new List<QueryModel> ());
+          new SubQueryRegistry());
     }
 
     [Test]

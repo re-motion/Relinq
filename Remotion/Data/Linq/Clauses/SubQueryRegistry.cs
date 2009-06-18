@@ -14,25 +14,36 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses
 {
   /// <summary>
-  /// Aggregates all objects needed in the process of cloning a <see cref="QueryModel"/> and its clauses.
+  /// Keeps a list of subqueries in order to be able to update their <see cref="QueryModel.ParentQuery"/> altogether.
   /// </summary>
-  public class CloneContext
+  public class SubQueryRegistry
   {
-    public CloneContext (ClonedClauseMapping clonedClauseMapping, SubQueryRegistry subQueryRegistry)
-    {
-      ArgumentUtility.CheckNotNull ("clonedClauseMapping", clonedClauseMapping);
-      ArgumentUtility.CheckNotNull ("subQueryRegistry", subQueryRegistry);
+    private readonly List<QueryModel> _subQueries = new List<QueryModel> ();
 
-      ClonedClauseMapping = clonedClauseMapping;
-      SubQueryRegistry = subQueryRegistry;
+    public void Add (QueryModel subQuery)
+    {
+      ArgumentUtility.CheckNotNull ("subQuery", subQuery);
+      _subQueries.Add (subQuery);
     }
 
-    public ClonedClauseMapping ClonedClauseMapping { get; private set; }
-    public SubQueryRegistry SubQueryRegistry { get; private set; }
+    public void UpdateAllParentQueries (QueryModel parentQueryModel)
+    {
+      ArgumentUtility.CheckNotNull ("parentQueryModel", parentQueryModel);
+
+      foreach (var queryModel in _subQueries)
+        queryModel.SetParentQuery (parentQueryModel);
+    }
+
+    public bool Contains (QueryModel queryModel)
+    {
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+      return _subQueries.Contains (queryModel);
+    }
   }
 }

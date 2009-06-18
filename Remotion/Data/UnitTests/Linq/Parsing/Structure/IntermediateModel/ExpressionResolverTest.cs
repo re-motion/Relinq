@@ -14,17 +14,14 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
-using Rhino.Mocks;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 {
@@ -99,7 +96,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void GetResolvedExpression_UsesNodeTypeRegistry ()
     {
       var nodeTypeRegistry = new MethodCallExpressionNodeTypeRegistry ();
-      var context = new ClauseGenerationContext(QuerySourceClauseMapping, nodeTypeRegistry, new List<QueryModel>());
+      var context = new ClauseGenerationContext(QuerySourceClauseMapping, nodeTypeRegistry, new SubQueryRegistry());
 
       var unresolvedExpressionWithSubQuery =
           ExpressionHelper.CreateLambdaExpression<int, int> (i => (from x in ExpressionHelper.CreateQuerySource () select i).Count ());

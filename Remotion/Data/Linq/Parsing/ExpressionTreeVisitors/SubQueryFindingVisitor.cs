@@ -13,8 +13,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-using System.Collections.Generic;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Utilities;
@@ -27,7 +27,7 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
   /// </summary>
   public class SubQueryFindingVisitor : ExpressionTreeVisitor
   {
-    public static Expression ReplaceSubQueries (Expression expressionTree, MethodCallExpressionNodeTypeRegistry nodeTypeRegistry, List<QueryModel> subQueryRegistry)
+    public static Expression ReplaceSubQueries (Expression expressionTree, MethodCallExpressionNodeTypeRegistry nodeTypeRegistry, SubQueryRegistry subQueryRegistry)
     {
       ArgumentUtility.CheckNotNull ("expressionTree", expressionTree);
       ArgumentUtility.CheckNotNull ("nodeTypeRegistry", nodeTypeRegistry);
@@ -38,11 +38,10 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
     }
 
     private readonly MethodCallExpressionNodeTypeRegistry _nodeTypeRegistry;
-    private readonly List<QueryModel> _subQueryRegistry;
+    private readonly SubQueryRegistry _subQueryRegistry;
     private readonly QueryParser _innerParser;
 
-    // TODO: subQueryRegistry might become obsolete once the new Reolve mechanism is integrated and QueryModel is refactored
-    private SubQueryFindingVisitor (MethodCallExpressionNodeTypeRegistry nodeTypeRegistry, List<QueryModel> subQueryRegistry)
+    private SubQueryFindingVisitor (MethodCallExpressionNodeTypeRegistry nodeTypeRegistry, SubQueryRegistry subQueryRegistry)
     {
       ArgumentUtility.CheckNotNull ("nodeTypeRegistry", nodeTypeRegistry);
       ArgumentUtility.CheckNotNull ("subQueryRegistry", subQueryRegistry);

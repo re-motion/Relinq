@@ -36,7 +36,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void SetUp ()
     {
       _additionalFromClause = ExpressionHelper.CreateAdditionalFromClause();
-      _cloneContext = new CloneContext (new ClonedClauseMapping (), new List<QueryModel> ());      
+      _cloneContext = new CloneContext (new ClonedClauseMapping (), new SubQueryRegistry());      
     }
 
     [Test]

@@ -38,7 +38,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       _clonedClauseMapping = new ClonedClauseMapping ();
       _orderByClause = ExpressionHelper.CreateOrderByClause ();
       _ordering = ExpressionHelper.CreateOrdering (_orderByClause);
-      _cloneContext = new CloneContext (_clonedClauseMapping, new List<QueryModel> ());
+      _cloneContext = new CloneContext (_clonedClauseMapping, new SubQueryRegistry());
     }
 
     [Test]

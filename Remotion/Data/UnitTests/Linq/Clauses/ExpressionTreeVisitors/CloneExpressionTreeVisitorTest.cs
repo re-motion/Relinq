@@ -31,7 +31,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ExpressionTreeVisitors
     private ClonedClauseMapping _clonedClauseMapping;
     private MainFromClause _oldFromClause;
     private MainFromClause _newFromClause;
-    private List<QueryModel> _subQueryRegistry;
+    private SubQueryRegistry _subQueryRegistry;
     private CloneContext _cloneContext;
 
     [SetUp]
@@ -43,7 +43,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ExpressionTreeVisitors
       _clonedClauseMapping = new ClonedClauseMapping ();
       _clonedClauseMapping.AddMapping (_oldFromClause, _newFromClause);
 
-      _subQueryRegistry = new List<QueryModel> ();
+      _subQueryRegistry = new SubQueryRegistry();
 
       _cloneContext = new CloneContext (_clonedClauseMapping, _subQueryRegistry);
     }
@@ -81,7 +81,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ExpressionTreeVisitors
       var expression = new SubQueryExpression (ExpressionHelper.CreateQueryModel ());
       var result = CloneExpressionTreeVisitor.ReplaceClauseReferences (expression, _cloneContext);
 
-      Assert.That (_subQueryRegistry, List.Contains(((SubQueryExpression) result).QueryModel));
+      Assert.That (_subQueryRegistry.Contains(((SubQueryExpression) result).QueryModel), Is.True);
     }
   }
 }

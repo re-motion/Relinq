@@ -234,7 +234,7 @@ namespace Remotion.Data.Linq
     {
       ArgumentUtility.CheckNotNull ("clonedClauseMapping", clonedClauseMapping);
 
-      var cloneContext = new CloneContext (clonedClauseMapping, new List<QueryModel>());
+      var cloneContext = new CloneContext (clonedClauseMapping, new SubQueryRegistry());
       var clonedMainFromClause = MainFromClause.Clone (cloneContext);
       var clonedBodyClauses = new List<IBodyClause> ();
 

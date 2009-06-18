@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System.Collections.Generic;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
@@ -26,7 +27,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public ClauseGenerationContext (
         QuerySourceClauseMapping clauseMapping, 
         MethodCallExpressionNodeTypeRegistry nodeTypeRegistry, 
-        List<QueryModel> subQueryRegistry)
+        SubQueryRegistry subQueryRegistry)
       : this()
     {
       ArgumentUtility.CheckNotNull ("clauseMapping", clauseMapping);
@@ -40,6 +41,6 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     public QuerySourceClauseMapping ClauseMapping { get; set; }
     public MethodCallExpressionNodeTypeRegistry NodeTypeRegistry { get; set; }
-    public List<QueryModel> SubQueryRegistry { get; set; }
+    public SubQueryRegistry SubQueryRegistry { get; set; }
   }
 }

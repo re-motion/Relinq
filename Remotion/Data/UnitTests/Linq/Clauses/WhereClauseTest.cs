@@ -14,7 +14,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
@@ -35,7 +34,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void SetUp ()
     {
       _whereClause = ExpressionHelper.CreateWhereClause();
-      _cloneContext = new CloneContext (new ClonedClauseMapping(), new List<QueryModel>());
+      _cloneContext = new CloneContext (new ClonedClauseMapping(), new SubQueryRegistry());
     }
 
     [Test] 

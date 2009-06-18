@@ -18,27 +18,26 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
-using System.Collections.Generic;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
 {
   [TestFixture]
   public class SubQueryFindingVisitorTest
   {
-    private List<QueryModel> _subQueryRegistry;
+    private SubQueryRegistry _subQueryRegistry;
     private MethodCallExpressionNodeTypeRegistry _nodeTypeRegistry;
 
     [SetUp]
     public void SetUp ()
     {
       _nodeTypeRegistry = MethodCallExpressionNodeTypeRegistry.CreateDefault();
-      _subQueryRegistry = new List<QueryModel> ();
+      _subQueryRegistry = new SubQueryRegistry();
     }
 
     [Test]
@@ -71,15 +70,13 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
     [Test]
     public void SubqueryIsRegistered ()
     {
-      Assert.That (_subQueryRegistry, Is.Empty);
-
       Expression subQuery = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQuerySource ()).Expression;
       Expression surroundingExpression = Expression.Lambda (subQuery);
 
       var newLambdaExpression =
           (LambdaExpression) SubQueryFindingVisitor.ReplaceSubQueries (surroundingExpression, _nodeTypeRegistry, _subQueryRegistry);
       var newSubQueryExpression = (SubQueryExpression) newLambdaExpression.Body;
-      Assert.That (_subQueryRegistry, Is.EquivalentTo (new[] { newSubQueryExpression.QueryModel }));
+      Assert.That (_subQueryRegistry.Contains(newSubQueryExpression.QueryModel), Is.True);
     }
 
     [Test]

@@ -35,7 +35,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [SetUp]
     public void SetUp ()
     {
-      _cloneContext = new CloneContext (new ClonedClauseMapping (), new List<QueryModel>());
+      _cloneContext = new CloneContext (new ClonedClauseMapping (), new SubQueryRegistry());
       _previousClause = ExpressionHelper.CreateClause();
       _orderByClause = new OrderByClause (_previousClause);
     }

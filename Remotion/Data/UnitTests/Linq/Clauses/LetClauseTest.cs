@@ -37,7 +37,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void SetUp ()
     {
       _letClause = ExpressionHelper.CreateLetClause ();
-      _cloneContext = new CloneContext (new ClonedClauseMapping(), new List<QueryModel>());
+      _cloneContext = new CloneContext (new ClonedClauseMapping(), new SubQueryRegistry());
     }
 
     [Test]

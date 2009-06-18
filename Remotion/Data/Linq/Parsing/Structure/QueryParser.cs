@@ -74,7 +74,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       var clauseGenerationContext = new ClauseGenerationContext (
           new QuerySourceClauseMapping (), 
           _expressionTreeParser.NodeTypeRegistry, 
-          new List<QueryModel>());
+          new SubQueryRegistry());
 
       IClause lastClause = CreateClauseChain (node, clauseGenerationContext);
       SelectClause selectClause = GetOrCreateSelectClause (node, lastClause, clauseGenerationContext);
@@ -88,8 +88,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       foreach (var bodyClause in bodyClauses)
         queryModel.AddBodyClause (bodyClause);
 
-      foreach (var subQuery in clauseGenerationContext.SubQueryRegistry)
-        subQuery.SetParentQuery (queryModel);
+      clauseGenerationContext.SubQueryRegistry.UpdateAllParentQueries (queryModel);
 
       queryModel.SetExpressionTree (expressionTreeRoot);
       return queryModel;
