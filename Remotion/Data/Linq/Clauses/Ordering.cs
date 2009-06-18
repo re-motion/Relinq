@@ -78,10 +78,10 @@ namespace Remotion.Data.Linq.Clauses
       QueryModel = model;
     }
 
-    public Ordering Clone (OrderByClause newOrderByClause, FromClauseMapping fromClauseMapping)
+    public Ordering Clone (OrderByClause newOrderByClause, ClonedClauseMapping clonedClauseMapping)
     {
       ArgumentUtility.CheckNotNull ("newOrderByClause", newOrderByClause);
-      ArgumentUtility.CheckNotNull ("fromClauseMapping", fromClauseMapping);
+      ArgumentUtility.CheckNotNull ("clonedClauseMapping", clonedClauseMapping);
 
       return new Ordering (newOrderByClause, Expression, OrderingDirection);
     }

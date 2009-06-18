@@ -20,21 +20,21 @@ using Remotion.Utilities;
 namespace Remotion.Data.Linq.Clauses
 {
   /// <summary>
-  /// Maps old <see cref="FromClauseBase"/> instances to new <see cref="FromClauseBase"/> instances. This is used by <see cref="QueryModel.Clone"/>
+  /// Maps old <see cref="IClause"/> instances to new <see cref="IClause"/> instances. This is used by <see cref="QueryModel.Clone"/>
   /// and the clauses' Clone methods in order to be able to correctly update references to old clauses to point to the new clauses.
   /// </summary>
-  public class FromClauseMapping
+  public class ClonedClauseMapping
   {
-    private readonly Dictionary<FromClauseBase, FromClauseBase> _lookup = new Dictionary<FromClauseBase, FromClauseBase> ();
+    private readonly Dictionary<IClause, IClause> _lookup = new Dictionary<IClause, IClause> ();
 
-    public void AddMapping (FromClauseBase oldFromClause, FromClauseBase newFromClause)
+    public void AddMapping (IClause oldClause, IClause newClause)
     {
-      ArgumentUtility.CheckNotNull ("oldFromClause", oldFromClause);
-      ArgumentUtility.CheckNotNull ("newFromClause", newFromClause);
+      ArgumentUtility.CheckNotNull ("oldClause", oldClause);
+      ArgumentUtility.CheckNotNull ("newClause", newClause);
 
       try
       {
-        _lookup.Add (oldFromClause, newFromClause);
+        _lookup.Add (oldClause, newClause);
       }
       catch (ArgumentException)
       {
@@ -42,7 +42,7 @@ namespace Remotion.Data.Linq.Clauses
       }
     }
 
-    public FromClauseBase GetClause (FromClauseBase oldClause)
+    public IClause GetClause (IClause oldClause)
     {
       ArgumentUtility.CheckNotNull ("oldClause", oldClause);
       try

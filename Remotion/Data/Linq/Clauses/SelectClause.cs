@@ -93,24 +93,24 @@ namespace Remotion.Data.Linq.Clauses
       visitor.VisitSelectClause (this);
     }
 
-    public SelectClause Clone (IClause newPreviousClause, FromClauseMapping fromClauseMapping)
+    public SelectClause Clone (IClause newPreviousClause, ClonedClauseMapping clonedClauseMapping)
     {
       ArgumentUtility.CheckNotNull ("newPreviousClause", newPreviousClause);
-      ArgumentUtility.CheckNotNull ("fromClauseMapping", fromClauseMapping);
+      ArgumentUtility.CheckNotNull ("clonedClauseMapping", clonedClauseMapping);
 
       var clone = new SelectClause (newPreviousClause, LegacySelector, Selector);
       foreach (var resultModification in ResultModifications)
       {
-        var resultModificationClone = resultModification.Clone (clone, fromClauseMapping);
+        var resultModificationClone = resultModification.Clone (clone, clonedClauseMapping);
         clone.AddResultModification (resultModificationClone);
       }
 
       return clone;
     }
 
-    ISelectGroupClause ISelectGroupClause.Clone (IClause newPreviousClause, FromClauseMapping fromClauseMapping)
+    ISelectGroupClause ISelectGroupClause.Clone (IClause newPreviousClause, ClonedClauseMapping clonedClauseMapping)
     {
-      return Clone (newPreviousClause, new FromClauseMapping());
+      return Clone (newPreviousClause, new ClonedClauseMapping());
     }
 
     public IExecutionStrategy GetExecutionStrategy ()

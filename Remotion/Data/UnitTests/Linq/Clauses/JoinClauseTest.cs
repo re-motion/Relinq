@@ -95,7 +95,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       var originalClause = ExpressionHelper.CreateJoinClause ();
       var newPreviousClause = ExpressionHelper.CreateClause ();
       var newFromClause = ExpressionHelper.CreateMainFromClause ();
-      var clone = originalClause.Clone (newPreviousClause, newFromClause, new FromClauseMapping());
+      var clone = originalClause.Clone (newPreviousClause, newFromClause, new ClonedClauseMapping());
 
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (originalClause));

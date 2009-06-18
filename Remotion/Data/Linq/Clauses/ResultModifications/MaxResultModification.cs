@@ -29,7 +29,7 @@ namespace Remotion.Data.Linq.Clauses.ResultModifications
     {
     }
 
-    public override ResultModificationBase Clone (SelectClause newSelectClause, FromClauseMapping fromClauseMapping)
+    public override ResultModificationBase Clone (SelectClause newSelectClause, ClonedClauseMapping clonedClauseMapping)
     {
       return new MaxResultModification (newSelectClause);
     }

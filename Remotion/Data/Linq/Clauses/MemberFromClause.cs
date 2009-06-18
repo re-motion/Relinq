@@ -58,10 +58,10 @@ namespace Remotion.Data.Linq.Clauses
       return relatedTable;
     }
 
-    public override AdditionalFromClause Clone (IClause newPreviousClause, FromClauseMapping fromClauseMapping)
+    public override AdditionalFromClause Clone (IClause newPreviousClause, ClonedClauseMapping clonedClauseMapping)
     {
       var result = new MemberFromClause (newPreviousClause, Identifier, FromExpression, ResultSelector);
-      result.AddClonedJoinClauses (JoinClauses, fromClauseMapping);
+      result.AddClonedJoinClauses (JoinClauses, clonedClauseMapping);
       return result;
     }
   }

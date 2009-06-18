@@ -71,25 +71,25 @@ namespace Remotion.Data.Linq.Clauses
       QueryModel = model;
     }
 
-    public OrderByClause Clone (IClause newPreviousClause, FromClauseMapping fromClauseMapping)
+    public OrderByClause Clone (IClause newPreviousClause, ClonedClauseMapping clonedClauseMapping)
     {
       ArgumentUtility.CheckNotNull ("newPreviousClause", newPreviousClause);
-      ArgumentUtility.CheckNotNull ("fromClauseMapping", fromClauseMapping);
+      ArgumentUtility.CheckNotNull ("clonedClauseMapping", clonedClauseMapping);
 
       var clone = new OrderByClause (newPreviousClause);
 
       foreach (var ordering in _orderings)
       {
-        var orderingClone = ordering.Clone (clone, fromClauseMapping);
+        var orderingClone = ordering.Clone (clone, clonedClauseMapping);
         clone.AddOrdering (orderingClone);
       }
 
       return clone;
     }
 
-    IBodyClause IBodyClause.Clone (IClause newPreviousClause, FromClauseMapping fromClauseMapping)
+    IBodyClause IBodyClause.Clone (IClause newPreviousClause, ClonedClauseMapping clonedClauseMapping)
     {
-      return Clone (newPreviousClause, new FromClauseMapping());
+      return Clone (newPreviousClause, new ClonedClauseMapping());
     }
   }
 }

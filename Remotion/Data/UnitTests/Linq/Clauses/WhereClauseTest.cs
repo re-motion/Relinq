@@ -100,7 +100,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Clone ()
     {
       var newPreviousClause = ExpressionHelper.CreateClause ();
-      var clone = _whereClause.Clone (newPreviousClause, new FromClauseMapping());
+      var clone = _whereClause.Clone (newPreviousClause, new ClonedClauseMapping());
 
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (_whereClause));

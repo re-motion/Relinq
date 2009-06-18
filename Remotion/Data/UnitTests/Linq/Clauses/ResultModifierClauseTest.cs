@@ -28,7 +28,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     {
       var originalClause = ExpressionHelper.CreateResultModification();
       var newSelectClause = ExpressionHelper.CreateSelectClause ();
-      var clone = originalClause.Clone (newSelectClause, new FromClauseMapping());
+      var clone = originalClause.Clone (newSelectClause, new ClonedClauseMapping());
 
       Assert.That (clone.SelectClause, Is.SameAs (newSelectClause));
     }

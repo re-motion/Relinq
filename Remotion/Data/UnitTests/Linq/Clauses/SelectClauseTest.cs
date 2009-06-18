@@ -32,7 +32,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     private Expression _selector;
     private IClause _previousClause;
     private SelectClause _selectClause;
-    private FromClauseMapping _fromClauseMapping;
+    private ClonedClauseMapping _clonedClauseMapping;
 
     [SetUp]
     public void SetUp ()
@@ -41,7 +41,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       _selector = ExpressionHelper.CreateExpression();
       _previousClause = ExpressionHelper.CreateClause ();
       _selectClause = new SelectClause (_previousClause, _legacySelector, _selector);
-      _fromClauseMapping = new FromClauseMapping ();
+      _clonedClauseMapping = new ClonedClauseMapping ();
     }
 
     [Test]
@@ -83,7 +83,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Clone ()
     {
       var newPreviousClause = ExpressionHelper.CreateMainFromClause ();
-      var clone = _selectClause.Clone (newPreviousClause, _fromClauseMapping);
+      var clone = _selectClause.Clone (newPreviousClause, _clonedClauseMapping);
 
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (_selectClause));
@@ -102,7 +102,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       var resultModifierClause2 = ExpressionHelper.CreateResultModification (_selectClause);
       _selectClause.AddResultModification (resultModifierClause2);
 
-      var clone = _selectClause.Clone (newPreviousClause, _fromClauseMapping);
+      var clone = _selectClause.Clone (newPreviousClause, _clonedClauseMapping);
 
       Assert.That (clone.ResultModifications.Count, Is.EqualTo (2));
       Assert.That (clone.ResultModifications[0], Is.Not.SameAs (resultModifierClause1));
@@ -120,11 +120,11 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       _selectClause.AddResultModification (resultModifierClauseMock);
 
       resultModifierClauseMock
-          .Expect (mock => mock.Clone (Arg<SelectClause>.Is.Anything, Arg.Is (_fromClauseMapping)))
+          .Expect (mock => mock.Clone (Arg<SelectClause>.Is.Anything, Arg.Is (_clonedClauseMapping)))
           .Return (ExpressionHelper.CreateResultModification());
       resultModifierClauseMock.Replay();
 
-      _selectClause.Clone (newPreviousClause, _fromClauseMapping);
+      _selectClause.Clone (newPreviousClause, _clonedClauseMapping);
 
       resultModifierClauseMock.VerifyAllExpectations();
     }

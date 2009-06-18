@@ -53,7 +53,7 @@ namespace Remotion.Data.Linq.Clauses
       visitor.VisitGroupClause (this);
     }
 
-    public GroupClause Clone (IClause newPreviousClause, FromClauseMapping fromClauseMapping)
+    public GroupClause Clone (IClause newPreviousClause, ClonedClauseMapping clonedClauseMapping)
     {
       return new GroupClause (newPreviousClause, GroupExpression, ByExpression);
     }
@@ -63,9 +63,9 @@ namespace Remotion.Data.Linq.Clauses
       throw new NotImplementedException();
     }
 
-    ISelectGroupClause ISelectGroupClause.Clone (IClause newPreviousClause, FromClauseMapping fromClauseMapping)
+    ISelectGroupClause ISelectGroupClause.Clone (IClause newPreviousClause, ClonedClauseMapping clonedClauseMapping)
     {
-      return Clone (newPreviousClause, fromClauseMapping);
+      return Clone (newPreviousClause, clonedClauseMapping);
     }
   }
 }

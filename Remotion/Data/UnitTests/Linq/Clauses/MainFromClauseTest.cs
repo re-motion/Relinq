@@ -93,7 +93,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone ()
     {
-      var clone = _mainFromClause.Clone (new FromClauseMapping());
+      var clone = _mainFromClause.Clone (new ClonedClauseMapping());
 
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (_mainFromClause));
@@ -110,7 +110,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       var originalJoinClause2 = ExpressionHelper.CreateJoinClause ();
       _mainFromClause.AddJoinClause (originalJoinClause2);
 
-      var clone = _mainFromClause.Clone (new FromClauseMapping());
+      var clone = _mainFromClause.Clone (new ClonedClauseMapping());
       Assert.That (clone.JoinClauses.Count, Is.EqualTo (2));
       
       Assert.That (clone.JoinClauses[0], Is.Not.SameAs (originalJoinClause1));
@@ -140,7 +140,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
           ExpressionHelper.CreateExpression());
       _mainFromClause.AddJoinClause (originalJoinClause);
 
-      var mapping = new FromClauseMapping ();
+      var mapping = new ClonedClauseMapping ();
       var newFromClause = ExpressionHelper.CreateMainFromClause ();
       mapping.AddMapping (oldFromClause, newFromClause);
 

@@ -22,16 +22,16 @@ using Remotion.Data.Linq.Clauses;
 namespace Remotion.Data.UnitTests.Linq.Clauses
 {
   [TestFixture]
-  public class FromClauseMappingTest
+  public class ClonedClauseMappingTest
   {
-    private FromClauseMapping _mapping;
+    private ClonedClauseMapping _mapping;
     private MainFromClause _clause1;
     private MainFromClause _clause2;
 
     [SetUp]
     public void SetUp ()
     {
-      _mapping = new FromClauseMapping ();
+      _mapping = new ClonedClauseMapping ();
       _clause1 = ExpressionHelper.CreateMainFromClause ();
       _clause2 = ExpressionHelper.CreateMainFromClause ();
     }

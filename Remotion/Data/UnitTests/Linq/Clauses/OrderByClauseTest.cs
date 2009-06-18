@@ -27,14 +27,14 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
   [TestFixture]
   public class OrderByClauseTest
   {
-    private FromClauseMapping _fromClauseMapping;
+    private ClonedClauseMapping _clonedClauseMapping;
     private OrderByClause _orderByClause;
     private IClause _previousClause;
 
     [SetUp]
     public void SetUp ()
     {
-      _fromClauseMapping = new FromClauseMapping();
+      _clonedClauseMapping = new ClonedClauseMapping();
       _previousClause = ExpressionHelper.CreateClause();
       _orderByClause = new OrderByClause (_previousClause);
     }
@@ -111,7 +111,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Clone ()
     {
       var newPreviousClause = ExpressionHelper.CreateClause ();
-      var clone = _orderByClause.Clone (newPreviousClause, new FromClauseMapping());
+      var clone = _orderByClause.Clone (newPreviousClause, new ClonedClauseMapping());
 
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (_orderByClause));
@@ -126,7 +126,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       _orderByClause.AddOrdering (ordering);
 
       var newPreviousClause = ExpressionHelper.CreateMainFromClause ();
-      var clone = _orderByClause.Clone (newPreviousClause, new FromClauseMapping());
+      var clone = _orderByClause.Clone (newPreviousClause, new ClonedClauseMapping());
 
       Assert.That (clone.OrderingList.Count, Is.EqualTo (1));
 
@@ -147,9 +147,9 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       var ordering = new Ordering (_orderByClause, new QuerySourceReferenceExpression (oldMainFromClause), OrderingDirection.Asc);
       _orderByClause.AddOrdering (ordering);
 
-      _fromClauseMapping.AddMapping (oldMainFromClause, newMainFromClause);
+      _clonedClauseMapping.AddMapping (oldMainFromClause, newMainFromClause);
 
-      var clone = _orderByClause.Clone (newMainFromClause, _fromClauseMapping);
+      var clone = _orderByClause.Clone (newMainFromClause, _clonedClauseMapping);
       var clonedOrdering = clone.OrderingList[0];
       
       Assert.That (((QuerySourceReferenceExpression) clonedOrdering.Expression).ReferencedClause, Is.SameAs (newMainFromClause));
