@@ -89,14 +89,15 @@ namespace Remotion.Data.Linq.Clauses
     public abstract void Accept (IQueryVisitor visitor);
     public abstract Type GetQuerySourceType ();
 
-    protected void AddClonedJoinClauses (IEnumerable<JoinClause> originalJoinClauses)
+    protected void AddClonedJoinClauses (IEnumerable<JoinClause> originalJoinClauses, FromClauseMapping fromClauseMapping)
     {
       ArgumentUtility.CheckNotNull ("originalJoinClauses", originalJoinClauses);
+      ArgumentUtility.CheckNotNull ("fromClauseMapping", fromClauseMapping);
 
       IClause previousClause = this;
       foreach (var joinClause in originalJoinClauses)
       {
-        var joinClauseClone = joinClause.Clone (previousClause, this);
+        var joinClauseClone = joinClause.Clone (previousClause, this, fromClauseMapping);
         AddJoinClause (joinClauseClone);
         previousClause = joinClauseClone;
       }

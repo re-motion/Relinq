@@ -108,7 +108,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     {
       var orderingClause = ExpressionHelper.CreateOrdering ();
       var newOrderByClause = ExpressionHelper.CreateOrderByClause();
-      var clone = orderingClause.Clone (newOrderByClause);
+      var clone = orderingClause.Clone (newOrderByClause, new FromClauseMapping());
 
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (orderingClause));

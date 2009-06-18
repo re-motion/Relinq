@@ -20,6 +20,6 @@ namespace Remotion.Data.Linq.Clauses
     QueryModel QueryModel { get; }
     void SetQueryModel (QueryModel model);
 
-    IBodyClause Clone (IClause newPreviousClause);
+    IBodyClause Clone (IClause newPreviousClause, FromClauseMapping fromClauseMapping);
   }
 }

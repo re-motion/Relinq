@@ -93,7 +93,7 @@ namespace Remotion.Data.Linq.Clauses
       visitor.VisitJoinClause (this);
     }
 
-    public JoinClause Clone (IClause newPreviousClause, FromClauseBase newFromClause)
+    public JoinClause Clone (IClause newPreviousClause, FromClauseBase newFromClause, FromClauseMapping fromClauseMapping)
     {
       return new JoinClause (newPreviousClause, newFromClause, Identifier, InExpression, OnExpression, EqualityExpression, IntoIdentifier);
     }

@@ -17,6 +17,7 @@ using System;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Rhino.Mocks;
 using Remotion.Data.Linq.Clauses;
 
@@ -26,48 +27,52 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
   [TestFixture]
   public class OrderByClauseTest
   {
+    private FromClauseMapping _fromClauseMapping;
+    private OrderByClause _orderByClause;
+    private IClause _previousClause;
+
+    [SetUp]
+    public void SetUp ()
+    {
+      _fromClauseMapping = new FromClauseMapping();
+      _previousClause = ExpressionHelper.CreateClause();
+      _orderByClause = new OrderByClause (_previousClause);
+    }
+
     [Test]
     public void InitializeWithoutOrdering()
     {
-      var previousClause = ExpressionHelper.CreateClause ();
-      var orderBy = new OrderByClause (previousClause);
-
-      Assert.AreEqual (0, orderBy.OrderingList.Count);
-      Assert.IsNotNull (orderBy.PreviousClause);
-      Assert.AreSame (previousClause, orderBy.PreviousClause);
+      Assert.AreEqual (0, _orderByClause.OrderingList.Count);
+      Assert.IsNotNull (_orderByClause.PreviousClause);
+      Assert.AreSame (_previousClause, _orderByClause.PreviousClause);
     }
     
     [Test]
     public void AddOrderings()
     {
-      var previousClause = ExpressionHelper.CreateClause ();
-      var orderBy = new OrderByClause (previousClause);
-
       Ordering ordering1 = ExpressionHelper.CreateOrdering ();
       Ordering ordering2 = ExpressionHelper.CreateOrdering ();
 
-      orderBy.AddOrdering (ordering1);
-      orderBy.AddOrdering (ordering2);
+      _orderByClause.AddOrdering (ordering1);
+      _orderByClause.AddOrdering (ordering2);
 
-      Assert.That (orderBy.OrderingList, Is.EqualTo (new object[] { ordering1, ordering2 }));
-      Assert.AreEqual (2, orderBy.OrderingList.Count);
+      Assert.That (_orderByClause.OrderingList, Is.EqualTo (new object[] { ordering1, ordering2 }));
+      Assert.AreEqual (2, _orderByClause.OrderingList.Count);
 
-      Assert.IsNotNull (orderBy.PreviousClause);
+      Assert.IsNotNull (_orderByClause.PreviousClause);
     }
 
     [Test]
     public void Accept()
     {
-      OrderByClause orderByClause = ExpressionHelper.CreateOrderByClause ();
-
       var repository = new MockRepository();
       var visitorMock = repository.StrictMock<IQueryVisitor>();
 
-      visitorMock.VisitOrderByClause(orderByClause);
+      visitorMock.VisitOrderByClause(_orderByClause);
 
       repository.ReplayAll();
 
-      orderByClause.Accept (visitorMock);
+      _orderByClause.Accept (visitorMock);
 
       repository.VerifyAll();
     }
@@ -75,47 +80,41 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void QueryModelAtInitialization ()
     {
-      OrderByClause orderByClause = ExpressionHelper.CreateOrderByClause ();
-      Assert.IsNull (orderByClause.QueryModel);
+      Assert.IsNull (_orderByClause.QueryModel);
     }
 
     [Test]
     public void SetQueryModel ()
     {
-      OrderByClause orderByClause = ExpressionHelper.CreateOrderByClause ();
       QueryModel model = ExpressionHelper.CreateQueryModel ();
-      orderByClause.SetQueryModel (model);
-      Assert.IsNotNull (orderByClause.QueryModel);
+      _orderByClause.SetQueryModel (model);
+      Assert.IsNotNull (_orderByClause.QueryModel);
     }
 
     [Test]
     [ExpectedException (typeof (ArgumentNullException))]
     public void SetQueryModelWithNull_Exception ()
     {
-      OrderByClause orderByClause = ExpressionHelper.CreateOrderByClause ();
-
-      orderByClause.SetQueryModel (null);
+      _orderByClause.SetQueryModel (null);
     }
 
     [Test]
     [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "QueryModel is already set")]
     public void SetQueryModelTwice_Exception ()
     {
-      OrderByClause orderByClause = ExpressionHelper.CreateOrderByClause ();
       QueryModel model = ExpressionHelper.CreateQueryModel ();
-      orderByClause.SetQueryModel (model);
-      orderByClause.SetQueryModel (model);
+      _orderByClause.SetQueryModel (model);
+      _orderByClause.SetQueryModel (model);
     }
 
     [Test]
     public void Clone ()
     {
-      var originalClause = ExpressionHelper.CreateOrderByClause ();
       var newPreviousClause = ExpressionHelper.CreateClause ();
-      var clone = originalClause.Clone (newPreviousClause);
+      var clone = _orderByClause.Clone (newPreviousClause, new FromClauseMapping());
 
       Assert.That (clone, Is.Not.Null);
-      Assert.That (clone, Is.Not.SameAs (originalClause));
+      Assert.That (clone, Is.Not.SameAs (_orderByClause));
       Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
       Assert.That (clone.QueryModel, Is.Null);
     }
@@ -123,20 +122,37 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone_Orderings ()
     {
-      var orderByClause = ExpressionHelper.CreateOrderByClause ();
       var ordering = ExpressionHelper.CreateOrdering();
-      orderByClause.AddOrdering (ordering);
+      _orderByClause.AddOrdering (ordering);
 
       var newPreviousClause = ExpressionHelper.CreateMainFromClause ();
-      var clone = orderByClause.Clone (newPreviousClause);
+      var clone = _orderByClause.Clone (newPreviousClause, new FromClauseMapping());
 
       Assert.That (clone.OrderingList.Count, Is.EqualTo (1));
 
-      Assert.That (clone.OrderingList[0], Is.Not.SameAs (orderByClause.OrderingList[0]));
-      Assert.That (clone.OrderingList[0].Expression, Is.SameAs (orderByClause.OrderingList[0].Expression));
-      Assert.That (clone.OrderingList[0].OrderingDirection, Is.EqualTo (orderByClause.OrderingList[0].OrderingDirection));
+      Assert.That (clone.OrderingList[0], Is.Not.SameAs (_orderByClause.OrderingList[0]));
+      Assert.That (clone.OrderingList[0].Expression, Is.SameAs (_orderByClause.OrderingList[0].Expression));
+      Assert.That (clone.OrderingList[0].OrderingDirection, Is.EqualTo (_orderByClause.OrderingList[0].OrderingDirection));
       Assert.That (clone.OrderingList[0].QueryModel, Is.Null);
       Assert.That (clone.OrderingList[0].OrderByClause, Is.SameAs (clone));
+    }
+
+    [Test]
+    [Ignore("TODO 1229")]
+    public void Clone_Orderings_PassesMapping ()
+    {
+      var newMainFromClause = ExpressionHelper.CreateMainFromClause ();
+
+      var oldMainFromClause = ExpressionHelper.CreateMainFromClause();
+      var ordering = new Ordering (_orderByClause, new QuerySourceReferenceExpression (oldMainFromClause), OrderingDirection.Asc);
+      _orderByClause.AddOrdering (ordering);
+
+      _fromClauseMapping.AddMapping (oldMainFromClause, newMainFromClause);
+
+      var clone = _orderByClause.Clone (newMainFromClause, _fromClauseMapping);
+      var clonedOrdering = clone.OrderingList[0];
+      
+      Assert.That (((QuerySourceReferenceExpression) clonedOrdering.Expression).ReferencedClause, Is.SameAs (newMainFromClause));
     }
   }
 }

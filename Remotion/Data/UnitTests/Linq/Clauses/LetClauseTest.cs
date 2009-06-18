@@ -28,13 +28,21 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
   [TestFixture]
   public class LetClauseTest
   {
+    private LetClause _letClause;
+
+    [SetUp]
+    public void SetUp ()
+    {
+      _letClause = ExpressionHelper.CreateLetClause ();
+    }
+
     [Test]
     public void IntitalizeWithIDAndExpression()
     {
       ParameterExpression identifier = ExpressionHelper.CreateParameterExpression();
       Expression expression = ExpressionHelper.CreateExpression();
 
-       IClause clause = ExpressionHelper.CreateClause();
+      IClause clause = ExpressionHelper.CreateClause();
 
       var letClause = new LetClause(clause,identifier,expression,ExpressionHelper.CreateLambdaExpression());
 
@@ -46,25 +54,21 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void ImplementInterface()
     {
-      LetClause letClause = ExpressionHelper.CreateLetClause();
-
-      Assert.IsInstanceOfType (typeof (IBodyClause), letClause);
+      Assert.IsInstanceOfType (typeof (IBodyClause), _letClause);
     }
         
 
     [Test]
     public void Accept ()
     {
-      LetClause letClause = ExpressionHelper.CreateLetClause ();
-
       var repository = new MockRepository ();
       var visitorMock = repository.StrictMock<IQueryVisitor> ();
 
-      visitorMock.VisitLetClause (letClause);
+      visitorMock.VisitLetClause (_letClause);
 
       repository.ReplayAll ();
 
-      letClause.Accept (visitorMock);
+      _letClause.Accept (visitorMock);
 
       repository.VerifyAll ();
     }
@@ -72,38 +76,33 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void QueryModelAtInitialization ()
     {
-      LetClause letClause = ExpressionHelper.CreateLetClause ();
-      Assert.IsNull (letClause.QueryModel);
+      Assert.IsNull (_letClause.QueryModel);
     }
 
     [Test]
     public void SetQueryModel ()
     {
-      LetClause letClause = ExpressionHelper.CreateLetClause ();
       QueryModel model = ExpressionHelper.CreateQueryModel ();
-      letClause.SetQueryModel (model);
-      Assert.IsNotNull (letClause.QueryModel);
+      _letClause.SetQueryModel (model);
+      Assert.IsNotNull (_letClause.QueryModel);
     }
 
     [Test]
     [ExpectedException (typeof (ArgumentNullException))]
     public void SetQueryModelWithNull_Exception ()
     {
-      LetClause letClause = ExpressionHelper.CreateLetClause ();
-      letClause.SetQueryModel (null);
+      _letClause.SetQueryModel (null);
     }
 
     [Test]
     [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "QueryModel is already set")]
     public void SetQueryModelTwice_Exception ()
     {
-      LetClause letClause = ExpressionHelper.CreateLetClause ();
       QueryModel model = ExpressionHelper.CreateQueryModel ();
-      letClause.SetQueryModel (model);
-      letClause.SetQueryModel (model);
+      _letClause.SetQueryModel (model);
+      _letClause.SetQueryModel (model);
     }
-
-
+    
     [Test]
     public void GetColumnSource_IsTableTrue ()
     {
@@ -111,7 +110,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       var resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, policy);
       
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "s");
-      LetClause letClause = ExpressionHelper.CreateLetClause (identifier);
+      var letClause = ExpressionHelper.CreateLetClause (identifier);
       letClause.SetQueryModel (ExpressionHelper.CreateQueryModel ());
       
       var expected = new LetColumnSource ("s", true);
@@ -137,15 +136,14 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone ()
     {
-      var originalClause = ExpressionHelper.CreateLetClause ();
       var newPreviousClause = ExpressionHelper.CreateMainFromClause ();
-      var clone = originalClause.Clone (newPreviousClause);
+      var clone = _letClause.Clone (newPreviousClause, new FromClauseMapping());
 
       Assert.That (clone, Is.Not.Null);
-      Assert.That (clone, Is.Not.SameAs (originalClause));
-      Assert.That (clone.Expression, Is.SameAs (originalClause.Expression));
-      Assert.That (clone.Identifier, Is.SameAs (originalClause.Identifier));
-      Assert.That (clone.ProjectionExpression, Is.SameAs (originalClause.ProjectionExpression));
+      Assert.That (clone, Is.Not.SameAs (_letClause));
+      Assert.That (clone.Expression, Is.SameAs (_letClause.Expression));
+      Assert.That (clone.Identifier, Is.SameAs (_letClause.Identifier));
+      Assert.That (clone.ProjectionExpression, Is.SameAs (_letClause.ProjectionExpression));
       Assert.That (clone.QueryModel, Is.Null);
       Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
     }

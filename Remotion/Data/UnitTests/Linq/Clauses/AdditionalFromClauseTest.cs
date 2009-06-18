@@ -19,6 +19,7 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Rhino.Mocks;
 using Remotion.Data.Linq.Clauses;
 
@@ -27,6 +28,14 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
   [TestFixture]
   public class AdditionalFromClauseTest
   {
+    private AdditionalFromClause _additionalFromClause;
+
+    [SetUp]
+    public void SetUp ()
+    {
+      _additionalFromClause = ExpressionHelper.CreateAdditionalFromClause();
+    }
+
     [Test]
     public void Initialize_WithIDAndExpression ()
     {
@@ -50,8 +59,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void ImplementInterface_IFromLetWhereClause ()
     {
-      AdditionalFromClause fromClause = ExpressionHelper.CreateAdditionalFromClause ();
-      Assert.IsInstanceOfType (typeof (IBodyClause), fromClause);
+      Assert.IsInstanceOfType (typeof (IBodyClause), _additionalFromClause);
     }
 
     [Test]
@@ -68,58 +76,52 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Accept ()
     {
-      AdditionalFromClause fromClause = ExpressionHelper.CreateAdditionalFromClause ();
       var visitorMock = MockRepository.GenerateMock<IQueryVisitor> ();
-      fromClause.Accept (visitorMock);
-      visitorMock.AssertWasCalled (mock => mock.VisitAdditionalFromClause (fromClause));
+      _additionalFromClause.Accept (visitorMock);
+      visitorMock.AssertWasCalled (mock => mock.VisitAdditionalFromClause (_additionalFromClause));
     }
 
     [Test]
     public void QueryModelAtInitialization ()
     {
-      AdditionalFromClause additionalFromClause = ExpressionHelper.CreateAdditionalFromClause ();
-      Assert.IsNull (additionalFromClause.QueryModel);
+      Assert.IsNull (_additionalFromClause.QueryModel);
     }
 
     [Test]
     public void SetQueryModel ()
     {
-      AdditionalFromClause additionalFromClause = ExpressionHelper.CreateAdditionalFromClause ();
       QueryModel model = ExpressionHelper.CreateQueryModel ();
-      additionalFromClause.SetQueryModel (model);
-      Assert.IsNotNull (additionalFromClause.QueryModel);
+      _additionalFromClause.SetQueryModel (model);
+      Assert.IsNotNull (_additionalFromClause.QueryModel);
     }
 
     [Test]
     [ExpectedException (typeof (ArgumentNullException))]
     public void SetQueryModelWithNull_Exception ()
     {
-      AdditionalFromClause additionalFromClause = ExpressionHelper.CreateAdditionalFromClause ();
-      additionalFromClause.SetQueryModel (null);
+      _additionalFromClause.SetQueryModel (null);
     }
 
     [Test]
     [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "QueryModel is already set")]
     public void SetQueryModelTwice_Exception ()
     {
-      AdditionalFromClause additionalFromClause = ExpressionHelper.CreateAdditionalFromClause ();     
       QueryModel model = ExpressionHelper.CreateQueryModel ();
-      additionalFromClause.SetQueryModel (model);
-      additionalFromClause.SetQueryModel (model);
+      _additionalFromClause.SetQueryModel (model);
+      _additionalFromClause.SetQueryModel (model);
     }
 
     [Test]
     public void Clone ()
     {
-      var originalClause = ExpressionHelper.CreateAdditionalFromClause ();
       var newPreviousClause = ExpressionHelper.CreateMainFromClause ();
-      var clone = originalClause.Clone (newPreviousClause);
+      var clone = _additionalFromClause.Clone (newPreviousClause, new FromClauseMapping());
 
       Assert.That (clone, Is.Not.Null);
-      Assert.That (clone, Is.Not.SameAs (originalClause));
-      Assert.That (clone.Identifier, Is.SameAs (originalClause.Identifier));
-      Assert.That (clone.FromExpression, Is.SameAs (originalClause.FromExpression));
-      Assert.That (clone.ResultSelector, Is.SameAs (originalClause.ResultSelector));
+      Assert.That (clone, Is.Not.SameAs (_additionalFromClause));
+      Assert.That (clone.Identifier, Is.SameAs (_additionalFromClause.Identifier));
+      Assert.That (clone.FromExpression, Is.SameAs (_additionalFromClause.FromExpression));
+      Assert.That (clone.ResultSelector, Is.SameAs (_additionalFromClause.ResultSelector));
       Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
       Assert.That (clone.QueryModel, Is.Null);
     }
@@ -127,15 +129,14 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone_JoinClauses ()
     {
-      AdditionalFromClause originalClause = ExpressionHelper.CreateAdditionalFromClause ();
       var originalJoinClause1 = ExpressionHelper.CreateJoinClause ();
-      originalClause.AddJoinClause (originalJoinClause1);
+      _additionalFromClause.AddJoinClause (originalJoinClause1);
 
       var originalJoinClause2 = ExpressionHelper.CreateJoinClause ();
-      originalClause.AddJoinClause (originalJoinClause2);
+      _additionalFromClause.AddJoinClause (originalJoinClause2);
 
       var newPreviousClause = ExpressionHelper.CreateClause();
-      var clone = originalClause.Clone (newPreviousClause);
+      var clone = _additionalFromClause.Clone (newPreviousClause, new FromClauseMapping());
       Assert.That (clone.JoinClauses.Count, Is.EqualTo (2));
 
       Assert.That (clone.JoinClauses[0], Is.Not.SameAs (originalJoinClause1));
@@ -150,5 +151,28 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clone.JoinClauses[1].FromClause, Is.SameAs (clone));
       Assert.That (clone.JoinClauses[1].PreviousClause, Is.SameAs (clone.JoinClauses[0]));
     }
+
+    [Test]
+    [Ignore ("TODO 1229")]
+    public void Clone_JoinClauses_PassesMapping ()
+    {
+      var oldFromClause = ExpressionHelper.CreateMainFromClause ();
+      var originalJoinClause = new JoinClause (
+          _additionalFromClause,
+          _additionalFromClause,
+          ExpressionHelper.CreateParameterExpression (),
+          new QuerySourceReferenceExpression (oldFromClause),
+          ExpressionHelper.CreateExpression (),
+          ExpressionHelper.CreateExpression ());
+      _additionalFromClause.AddJoinClause (originalJoinClause);
+
+      var mapping = new FromClauseMapping ();
+      var newFromClause = ExpressionHelper.CreateMainFromClause ();
+      mapping.AddMapping (oldFromClause, newFromClause);
+
+      var clone = _additionalFromClause.Clone (ExpressionHelper.CreateClause(), mapping);
+      Assert.That (((QuerySourceReferenceExpression) clone.JoinClauses[0].InExpression).ReferencedClause, Is.SameAs (newFromClause));
+    }
+
   }
 }

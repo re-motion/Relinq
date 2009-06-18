@@ -18,6 +18,7 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Rhino.Mocks;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.DataObjectModel;
@@ -92,46 +93,41 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void QueryModelAtInitialization ()
     {
-      SubQueryFromClause subQueryFromClause = ExpressionHelper.CreateSubQueryFromClause ();
-      Assert.IsNull (subQueryFromClause.QueryModel);
+      Assert.IsNull (_subQueryFromClause.QueryModel);
     }
 
     [Test]
     public void SetQueryModel ()
     {
-      SubQueryFromClause subQueryFromClause = ExpressionHelper.CreateSubQueryFromClause ();
       QueryModel model = ExpressionHelper.CreateQueryModel ();
-      subQueryFromClause.SetQueryModel (model);
-      Assert.IsNotNull (subQueryFromClause.QueryModel);
+      _subQueryFromClause.SetQueryModel (model);
+      Assert.IsNotNull (_subQueryFromClause.QueryModel);
     }
 
     [Test]
     [ExpectedException (typeof (ArgumentNullException))]
     public void SetQueryModelWithNull_Exception ()
     {
-      SubQueryFromClause subQueryFromClause = ExpressionHelper.CreateSubQueryFromClause ();
-      subQueryFromClause.SetQueryModel (null);
+      _subQueryFromClause.SetQueryModel (null);
     }
 
     [Test]
     [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "QueryModel is already set")]
     public void SetQueryModelTwice_Exception ()
     {
-      SubQueryFromClause subQueryFromClause = ExpressionHelper.CreateSubQueryFromClause ();
       QueryModel model = ExpressionHelper.CreateQueryModel ();
-      subQueryFromClause.SetQueryModel (model);
-      subQueryFromClause.SetQueryModel (model);
+      _subQueryFromClause.SetQueryModel (model);
+      _subQueryFromClause.SetQueryModel (model);
     }
 
     [Test]
     public void SetQueryModel_SetsParentQueryOfSubQueryModel ()
     {
-      SubQueryFromClause subQueryFromClause = ExpressionHelper.CreateSubQueryFromClause ();
-      Assert.That (subQueryFromClause.SubQueryModel.ParentQuery, Is.Null);
+      Assert.That (_subQueryFromClause.SubQueryModel.ParentQuery, Is.Null);
 
       QueryModel model = ExpressionHelper.CreateQueryModel ();
-      subQueryFromClause.SetQueryModel (model);
-      Assert.That (subQueryFromClause.SubQueryModel.ParentQuery, Is.SameAs (model));
+      _subQueryFromClause.SetQueryModel (model);
+      Assert.That (_subQueryFromClause.SubQueryModel.ParentQuery, Is.SameAs (model));
     }
 
     [Test]
@@ -139,7 +135,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     {
       var originalClause = ExpressionHelper.CreateSubQueryFromClause ();
       var newPreviousClause = ExpressionHelper.CreateMainFromClause ();
-      var clone = originalClause.Clone (newPreviousClause);
+      var clone = originalClause.Clone (newPreviousClause, new FromClauseMapping());
 
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (originalClause));
@@ -157,7 +153,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     {
       var originalClause = ExpressionHelper.CreateSubQueryFromClause ();
       var newPreviousClause = ExpressionHelper.CreateMainFromClause ();
-      var clone = originalClause.Clone (newPreviousClause);
+      var clone = originalClause.Clone (newPreviousClause, new FromClauseMapping());
 
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (originalClause));
@@ -181,7 +177,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       originalClause.AddJoinClause (originalJoinClause2);
 
       var newPreviousClause = ExpressionHelper.CreateClause ();
-      var clone = originalClause.Clone (newPreviousClause);
+      var clone = originalClause.Clone (newPreviousClause, new FromClauseMapping());
       Assert.That (clone.JoinClauses.Count, Is.EqualTo (2));
 
       Assert.That (clone.JoinClauses[0], Is.Not.SameAs (originalJoinClause1));
@@ -195,6 +191,28 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clone.JoinClauses[1].InExpression, Is.SameAs (originalJoinClause2.InExpression));
       Assert.That (clone.JoinClauses[1].FromClause, Is.SameAs (clone));
       Assert.That (clone.JoinClauses[1].PreviousClause, Is.SameAs (clone.JoinClauses[0]));
+    }
+
+    [Test]
+    [Ignore ("TODO 1229")]
+    public void Clone_JoinClauses_PassesMapping ()
+    {
+      var oldFromClause = ExpressionHelper.CreateMainFromClause ();
+      var originalJoinClause = new JoinClause (
+          _subQueryFromClause,
+          _subQueryFromClause,
+          ExpressionHelper.CreateParameterExpression (),
+          new QuerySourceReferenceExpression (oldFromClause),
+          ExpressionHelper.CreateExpression (),
+          ExpressionHelper.CreateExpression ());
+      _subQueryFromClause.AddJoinClause (originalJoinClause);
+
+      var mapping = new FromClauseMapping ();
+      var newFromClause = ExpressionHelper.CreateMainFromClause ();
+      mapping.AddMapping (oldFromClause, newFromClause);
+
+      var clone = _subQueryFromClause.Clone (ExpressionHelper.CreateClause (), mapping);
+      Assert.That (((QuerySourceReferenceExpression) clone.JoinClauses[0].InExpression).ReferencedClause, Is.SameAs (newFromClause));
     }
   }
 }

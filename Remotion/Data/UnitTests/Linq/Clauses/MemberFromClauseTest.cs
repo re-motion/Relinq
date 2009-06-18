@@ -19,6 +19,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.DataObjectModel;
 using Rhino.Mocks;
 
@@ -27,11 +28,18 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
   [TestFixture]
   public class MemberFromClauseTest
   {
+    private MemberFromClause _memberFromClause;
+
+    [SetUp]
+    public void SetUp ()
+    {
+      _memberFromClause = ExpressionHelper.CreateMemberFromClause ();
+    }
+
     [Test]
     public void FromExpressionContainsMemberExpression ()
     {
-      MemberFromClause fromClause = ExpressionHelper.CreateMemberFromClause();
-      Assert.That (fromClause.MemberExpression, Is.SameAs (fromClause.FromExpression.Body));
+      Assert.That (_memberFromClause.MemberExpression, Is.SameAs (_memberFromClause.FromExpression.Body));
     }
 
     [Test]
@@ -49,37 +57,34 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Accept ()
     {
-      MemberFromClause fromClause = ExpressionHelper.CreateMemberFromClause ();
       var visitorMock = MockRepository.GenerateMock<IQueryVisitor> ();
-      fromClause.Accept (visitorMock);
-      visitorMock.AssertWasCalled (mock => mock.VisitMemberFromClause (fromClause));
+      _memberFromClause.Accept (visitorMock);
+      visitorMock.AssertWasCalled (mock => mock.VisitMemberFromClause (_memberFromClause));
     }
 
     [Test]
     public void GetFromSource ()
     {
-      MemberFromClause fromClause = ExpressionHelper.CreateMemberFromClause ();
-      var columnSource = fromClause.GetColumnSource (StubDatabaseInfo.Instance);
+      var columnSource = _memberFromClause.GetColumnSource (StubDatabaseInfo.Instance);
 
       Assert.That (columnSource is Table);
       var tableSource = (Table) columnSource;
       Assert.That (tableSource.Name, Is.EqualTo ("studentTable"));
-      Assert.That (tableSource.Alias, Is.EqualTo (fromClause.Identifier.Name));
+      Assert.That (tableSource.Alias, Is.EqualTo (_memberFromClause.Identifier.Name));
     }
 
     [Test]
     public void Clone ()
     {
-      var originalClause = ExpressionHelper.CreateMemberFromClause ();
       var newPreviousClause = ExpressionHelper.CreateMainFromClause ();
-      var clone = (MemberFromClause) originalClause.Clone (newPreviousClause);
+      var clone = (MemberFromClause) _memberFromClause.Clone (newPreviousClause, new FromClauseMapping());
 
       Assert.That (clone, Is.Not.Null);
-      Assert.That (clone, Is.Not.SameAs (originalClause));
-      Assert.That (clone.Identifier, Is.SameAs (originalClause.Identifier));
-      Assert.That (clone.FromExpression, Is.SameAs (originalClause.FromExpression));
-      Assert.That (clone.ResultSelector, Is.SameAs (originalClause.ResultSelector));
-      Assert.That (clone.MemberExpression, Is.SameAs (originalClause.MemberExpression));
+      Assert.That (clone, Is.Not.SameAs (_memberFromClause));
+      Assert.That (clone.Identifier, Is.SameAs (_memberFromClause.Identifier));
+      Assert.That (clone.FromExpression, Is.SameAs (_memberFromClause.FromExpression));
+      Assert.That (clone.ResultSelector, Is.SameAs (_memberFromClause.ResultSelector));
+      Assert.That (clone.MemberExpression, Is.SameAs (_memberFromClause.MemberExpression));
       Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
       Assert.That (clone.QueryModel, Is.Null);
     }
@@ -87,15 +92,14 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone_JoinClauses ()
     {
-      MemberFromClause originalClause = ExpressionHelper.CreateMemberFromClause ();
       var originalJoinClause1 = ExpressionHelper.CreateJoinClause ();
-      originalClause.AddJoinClause (originalJoinClause1);
+      _memberFromClause.AddJoinClause (originalJoinClause1);
 
       var originalJoinClause2 = ExpressionHelper.CreateJoinClause ();
-      originalClause.AddJoinClause (originalJoinClause2);
+      _memberFromClause.AddJoinClause (originalJoinClause2);
 
       var newPreviousClause = ExpressionHelper.CreateClause ();
-      var clone = originalClause.Clone (newPreviousClause);
+      var clone = _memberFromClause.Clone (newPreviousClause, new FromClauseMapping());
       Assert.That (clone.JoinClauses.Count, Is.EqualTo (2));
 
       Assert.That (clone.JoinClauses[0], Is.Not.SameAs (originalJoinClause1));
@@ -109,6 +113,28 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clone.JoinClauses[1].InExpression, Is.SameAs (originalJoinClause2.InExpression));
       Assert.That (clone.JoinClauses[1].FromClause, Is.SameAs (clone));
       Assert.That (clone.JoinClauses[1].PreviousClause, Is.SameAs (clone.JoinClauses[0]));
+    }
+
+    [Test]
+    [Ignore ("TODO 1229")]
+    public void Clone_JoinClauses_PassesMapping ()
+    {
+      var oldFromClause = ExpressionHelper.CreateMainFromClause ();
+      var originalJoinClause = new JoinClause (
+          _memberFromClause,
+          _memberFromClause,
+          ExpressionHelper.CreateParameterExpression (),
+          new QuerySourceReferenceExpression (oldFromClause),
+          ExpressionHelper.CreateExpression (),
+          ExpressionHelper.CreateExpression ());
+      _memberFromClause.AddJoinClause (originalJoinClause);
+
+      var mapping = new FromClauseMapping ();
+      var newFromClause = ExpressionHelper.CreateMainFromClause ();
+      mapping.AddMapping (oldFromClause, newFromClause);
+
+      var clone = _memberFromClause.Clone (ExpressionHelper.CreateClause (), mapping);
+      Assert.That (((QuerySourceReferenceExpression) clone.JoinClauses[0].InExpression).ReferencedClause, Is.SameAs (newFromClause));
     }
   }
 }

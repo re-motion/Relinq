@@ -227,13 +227,13 @@ namespace Remotion.Data.Linq
 
     public QueryModel Clone ()
     {
-      var clonedMainFromClause = MainFromClause.Clone();
+      var clonedMainFromClause = MainFromClause.Clone(new FromClauseMapping());
       var clonedBodyClauses = new List<IBodyClause> ();
 
       IClause previousClause = clonedMainFromClause;
       foreach (var bodyClause in BodyClauses)
       {
-        var clonedBodyClause = bodyClause.Clone (previousClause);
+        var clonedBodyClause = bodyClause.Clone (previousClause, new FromClauseMapping());
         clonedBodyClauses.Add (clonedBodyClause);
         previousClause = clonedBodyClause;
       }

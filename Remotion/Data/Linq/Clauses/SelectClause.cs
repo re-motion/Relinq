@@ -110,7 +110,7 @@ namespace Remotion.Data.Linq.Clauses
 
     ISelectGroupClause ISelectGroupClause.Clone (IClause newPreviousClause, FromClauseMapping fromClauseMapping)
     {
-      return Clone (newPreviousClause, fromClauseMapping);
+      return Clone (newPreviousClause, new FromClauseMapping());
     }
 
     public IExecutionStrategy GetExecutionStrategy ()

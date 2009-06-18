@@ -19,15 +19,23 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Rhino.Mocks;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.DataObjectModel;
 
 namespace Remotion.Data.UnitTests.Linq.Clauses
 {
   [TestFixture]
   public class MainFromClauseTest
   {
+    private MainFromClause _mainFromClause;
+
+    [SetUp]
+    public void SetUp ()
+    {
+      _mainFromClause = ExpressionHelper.CreateMainFromClause();
+    }
+
     [Test]
     public void Initialize_WithIDAndConstant ()
     {
@@ -62,19 +70,16 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Accept ()
     {
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause ();
-
       MockRepository repository = new MockRepository ();
       IQueryVisitor visitorMock = repository.StrictMock<IQueryVisitor> ();
 
-      visitorMock.VisitMainFromClause (fromClause);
+      visitorMock.VisitMainFromClause (_mainFromClause);
 
       repository.ReplayAll ();
 
-      fromClause.Accept (visitorMock);
+      _mainFromClause.Accept (visitorMock);
 
       repository.VerifyAll ();
-
     }
 
     [Test]
@@ -88,26 +93,24 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone ()
     {
-      MainFromClause originalClause = ExpressionHelper.CreateMainFromClause ();
-      var clone = originalClause.Clone ();
+      var clone = _mainFromClause.Clone (new FromClauseMapping());
 
       Assert.That (clone, Is.Not.Null);
-      Assert.That (clone, Is.Not.SameAs (originalClause));
-      Assert.That (clone.Identifier, Is.SameAs (originalClause.Identifier));
-      Assert.That (clone.QuerySource, Is.SameAs (originalClause.QuerySource));
+      Assert.That (clone, Is.Not.SameAs (_mainFromClause));
+      Assert.That (clone.Identifier, Is.SameAs (_mainFromClause.Identifier));
+      Assert.That (clone.QuerySource, Is.SameAs (_mainFromClause.QuerySource));
     }
 
     [Test]
     public void Clone_JoinClauses ()
     {
-      MainFromClause originalClause = ExpressionHelper.CreateMainFromClause ();
       var originalJoinClause1 = ExpressionHelper.CreateJoinClause ();
-      originalClause.AddJoinClause (originalJoinClause1);
+      _mainFromClause.AddJoinClause (originalJoinClause1);
 
       var originalJoinClause2 = ExpressionHelper.CreateJoinClause ();
-      originalClause.AddJoinClause (originalJoinClause2);
+      _mainFromClause.AddJoinClause (originalJoinClause2);
 
-      var clone = originalClause.Clone ();
+      var clone = _mainFromClause.Clone (new FromClauseMapping());
       Assert.That (clone.JoinClauses.Count, Is.EqualTo (2));
       
       Assert.That (clone.JoinClauses[0], Is.Not.SameAs (originalJoinClause1));
@@ -121,6 +124,28 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clone.JoinClauses[1].InExpression, Is.SameAs (originalJoinClause2.InExpression));
       Assert.That (clone.JoinClauses[1].FromClause, Is.SameAs (clone));
       Assert.That (clone.JoinClauses[1].PreviousClause, Is.SameAs (clone.JoinClauses[0]));
+    }
+
+    [Test]
+    [Ignore ("TODO 1229")]
+    public void Clone_JoinClauses_PassesMapping ()
+    {
+      var oldFromClause = ExpressionHelper.CreateMainFromClause ();
+      var originalJoinClause = new JoinClause (
+          _mainFromClause,
+          _mainFromClause,
+          ExpressionHelper.CreateParameterExpression(),
+          new QuerySourceReferenceExpression (oldFromClause),
+          ExpressionHelper.CreateExpression(),
+          ExpressionHelper.CreateExpression());
+      _mainFromClause.AddJoinClause (originalJoinClause);
+
+      var mapping = new FromClauseMapping ();
+      var newFromClause = ExpressionHelper.CreateMainFromClause ();
+      mapping.AddMapping (oldFromClause, newFromClause);
+
+      var clone = _mainFromClause.Clone (mapping);
+      Assert.That (((QuerySourceReferenceExpression) clone.JoinClauses[0].InExpression).ReferencedClause, Is.SameAs (newFromClause));
     }
   }
 }

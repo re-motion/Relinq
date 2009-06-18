@@ -55,10 +55,12 @@ namespace Remotion.Data.Linq.Clauses
       return QuerySource.Type;
     }
 
-    public MainFromClause Clone ()
+    public MainFromClause Clone (FromClauseMapping fromClauseMapping)
     {
+      ArgumentUtility.CheckNotNull ("fromClauseMapping", fromClauseMapping);
+
       var clone = new MainFromClause (Identifier, QuerySource);
-      clone.AddClonedJoinClauses (JoinClauses);
+      clone.AddClonedJoinClauses (JoinClauses, fromClauseMapping);
       return clone;
     }
   }

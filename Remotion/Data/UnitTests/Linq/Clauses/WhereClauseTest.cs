@@ -26,6 +26,14 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
   [TestFixture]
   public class WhereClauseTest
   {
+    private WhereClause _whereClause;
+
+    [SetUp]
+    public void SetUp ()
+    {
+      _whereClause = ExpressionHelper.CreateWhereClause();
+    }
+
     [Test] 
     public void InitializeWithboolExpression()
     {
@@ -40,23 +48,20 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void ImplementInterface()
     {
-      WhereClause whereClause = ExpressionHelper.CreateWhereClause();
-      Assert.That (whereClause, Is.InstanceOfType (typeof (IBodyClause)));
+      Assert.That (_whereClause, Is.InstanceOfType (typeof (IBodyClause)));
     }
     
     [Test]
     public void Accept()
     {
-      WhereClause whereClause = ExpressionHelper.CreateWhereClause();
-
       var repository = new MockRepository ();
       var visitorMock = repository.StrictMock<IQueryVisitor> ();
 
-      visitorMock.VisitWhereClause (whereClause);
+      visitorMock.VisitWhereClause (_whereClause);
 
       repository.ReplayAll();
 
-      whereClause.Accept (visitorMock);
+      _whereClause.Accept (visitorMock);
 
       repository.VerifyAll();
     }
@@ -64,47 +69,42 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void QueryModelAtInitialization ()
     {
-      WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
-      Assert.That (whereClause.QueryModel, Is.Null);
+      Assert.That (_whereClause.QueryModel, Is.Null);
     }
 
     [Test]
     public void SetQueryModel ()
     {
-      WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
       QueryModel model = ExpressionHelper.CreateQueryModel ();
-      whereClause.SetQueryModel (model);
-      Assert.That (whereClause.QueryModel, Is.Not.Null);
+      _whereClause.SetQueryModel (model);
+      Assert.That (_whereClause.QueryModel, Is.Not.Null);
     }
 
     [Test]
     [ExpectedException (typeof (ArgumentNullException))]
     public void SetQueryModelWithNull_Exception ()
     {
-      WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
-      whereClause.SetQueryModel (null);
+      _whereClause.SetQueryModel (null);
     }
 
     [Test]
     [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "QueryModel is already set")]
     public void SetQueryModelTwice_Exception ()
     {
-      WhereClause whereClause = ExpressionHelper.CreateWhereClause ();
       QueryModel model = ExpressionHelper.CreateQueryModel ();
-      whereClause.SetQueryModel (model);
-      whereClause.SetQueryModel (model);
+      _whereClause.SetQueryModel (model);
+      _whereClause.SetQueryModel (model);
     }
 
     [Test]
     public void Clone ()
     {
-      var originalClause = ExpressionHelper.CreateWhereClause ();
       var newPreviousClause = ExpressionHelper.CreateClause ();
-      var clone = originalClause.Clone (newPreviousClause);
+      var clone = _whereClause.Clone (newPreviousClause, new FromClauseMapping());
 
       Assert.That (clone, Is.Not.Null);
-      Assert.That (clone, Is.Not.SameAs (originalClause));
-      Assert.That (clone.Predicate, Is.SameAs (originalClause.Predicate));
+      Assert.That (clone, Is.Not.SameAs (_whereClause));
+      Assert.That (clone.Predicate, Is.SameAs (_whereClause.Predicate));
       Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
       Assert.That (clone.QueryModel, Is.Null);
     }
