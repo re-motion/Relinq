@@ -246,12 +246,12 @@ namespace Remotion.Data.Linq
 
       var clonedSelectOrGroupClause = SelectOrGroupClause.Clone (cloneContext);
 
-      // TODO 1229: Test that subqueries in any clauses have their parent query model correctly set.
-      
       var queryModel = new QueryModel (ResultType, clonedMainFromClause, clonedSelectOrGroupClause);
       
       foreach (var clonedBodyClause in clonedBodyClauses)
         queryModel.AddBodyClause (clonedBodyClause);
+
+      cloneContext.SubQueryRegistry.UpdateAllParentQueries (queryModel);
 
       if (_expressionTree != null)
         queryModel.SetExpressionTree (_expressionTree);

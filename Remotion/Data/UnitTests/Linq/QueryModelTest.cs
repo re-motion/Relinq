@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
@@ -401,6 +402,19 @@ namespace Remotion.Data.UnitTests.Linq
 
       var clone = _queryModel.Clone (_clonedClauseMapping);
       Assert.That (_clonedClauseMapping.GetClause (_queryModel.BodyClauses[0]), Is.SameAs (clone.BodyClauses[0]));
+    }
+
+    [Test]
+    public void Clone_SetsParentQueryModel_OfClonedSubQueries ()
+    {
+      var mainFromClause = ExpressionHelper.CreateMainFromClause ();
+      var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel ());
+      var selectClause = new SelectClause (mainFromClause, ExpressionHelper.CreateLambdaExpression (), subQueryExpression);
+      var queryModel = new QueryModel (typeof (IEnumerable<int>), mainFromClause, selectClause);
+      
+      var clone = queryModel.Clone ();
+
+      Assert.That (((SubQueryExpression)((SelectClause)clone.SelectOrGroupClause).Selector).QueryModel.ParentQuery, Is.SameAs (clone));
     }
 
     [Test]
