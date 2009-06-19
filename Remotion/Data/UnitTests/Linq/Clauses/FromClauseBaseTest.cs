@@ -93,7 +93,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     private AdditionalFromClause CreateAdditionalFromClause (ParameterExpression additionalFromIdentifier)
     {
       MainFromClause mainFromClause = ExpressionHelper.CreateMainFromClause(ExpressionHelper.CreateParameterExpression (), ExpressionHelper.CreateQuerySource ());
-      LambdaExpression fromExpression = Expression.Lambda (Expression.Constant (null, typeof (IQueryable<Student>)));
+      var fromExpression = Expression.Constant (null, typeof (IQueryable<Student>));
       return new AdditionalFromClause (mainFromClause, additionalFromIdentifier, fromExpression);
     }
   }

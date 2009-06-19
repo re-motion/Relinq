@@ -118,7 +118,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
       ParameterExpression s1 = Expression.Parameter (typeof (String), "s1");
       ParameterExpression s2 = Expression.Parameter (typeof (String), "s2");
       MainFromClause mainFromClause = ExpressionHelper.CreateMainFromClause(s1, ExpressionHelper.CreateQuerySource ());
-      var additionalFromClause = new AdditionalFromClause (mainFromClause, s2, ExpressionHelper.CreateLambdaExpression ());
+      var additionalFromClause = new AdditionalFromClause (mainFromClause, s2, ExpressionHelper.CreateExpression ());
 
       var expression = ExpressionHelper.CreateQueryModel (mainFromClause);
       

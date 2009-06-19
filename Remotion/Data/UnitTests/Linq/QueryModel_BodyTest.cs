@@ -111,7 +111,7 @@ namespace Remotion.Data.UnitTests.Linq
     {
       IClause previousClause = ExpressionHelper.CreateClause();
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "s");
-      LambdaExpression fromExpression = ExpressionHelper.CreateLambdaExpression ();
+      Expression fromExpression = ExpressionHelper.CreateExpression ();
 
       _model.AddBodyClause (new AdditionalFromClause (previousClause, identifier, fromExpression));
       _model.AddBodyClause (new AdditionalFromClause (previousClause, identifier, fromExpression));
@@ -129,7 +129,7 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void GetResolveableClause()
     {
-      LambdaExpression fromExpression = ExpressionHelper.CreateLambdaExpression ();
+      var fromExpression = ExpressionHelper.CreateExpression ();
 
       ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
       ParameterExpression identifier2 = Expression.Parameter (typeof (Student), "s2");
@@ -151,7 +151,7 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void GetResolveableClause_InvalidName ()
     {
-      LambdaExpression fromExpression = ExpressionHelper.CreateLambdaExpression ();
+      var fromExpression = ExpressionHelper.CreateExpression ();
       ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
       var clause1 = new AdditionalFromClause (ExpressionHelper.CreateMainFromClause (), identifier1, fromExpression);
 
@@ -165,11 +165,11 @@ namespace Remotion.Data.UnitTests.Linq
         + "'Remotion.Data.UnitTests.Linq.Student', but 'System.String' was requested.")]
     public void GetResolveableClause_InvalidType ()
     {
-      LambdaExpression fromExpression = ExpressionHelper.CreateLambdaExpression ();
-      ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
-      var clause1 = new AdditionalFromClause (ExpressionHelper.CreateMainFromClause (), identifier1, fromExpression);
+      var fromExpression = ExpressionHelper.CreateExpression ();
+      var identifier = Expression.Parameter (typeof (Student), "s1");
+      var clause = new AdditionalFromClause (ExpressionHelper.CreateMainFromClause (), identifier, fromExpression);
 
-      _model.AddBodyClause (clause1);
+      _model.AddBodyClause (clause);
       _model.GetResolveableClause ("s1", typeof (string));
     }
   }

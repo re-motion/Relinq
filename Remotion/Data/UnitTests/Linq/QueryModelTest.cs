@@ -154,7 +154,7 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void GetResolveableClause_FromClauseBase ()
     {
-      LambdaExpression fromExpression = ExpressionHelper.CreateLambdaExpression ();
+      var fromExpression = ExpressionHelper.CreateExpression ();
 
       ParameterExpression identifier0 = Expression.Parameter (typeof (Student), "s0");
       ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
@@ -181,7 +181,7 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void GetResolveableClause_InvalidIdentifierName ()
     {
-      LambdaExpression fromExpression = ExpressionHelper.CreateLambdaExpression ();
+      var fromExpression = ExpressionHelper.CreateExpression ();
 
       ParameterExpression identifier0 = Expression.Parameter (typeof (Student), "s0");
       ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
@@ -200,7 +200,7 @@ namespace Remotion.Data.UnitTests.Linq
         + "'Remotion.Data.UnitTests.Linq.Student', but 'System.String' was requested.")]
     public void GetResolveableClause_InvalidIdentifierType_MainFromClause ()
     {
-      LambdaExpression fromExpression = ExpressionHelper.CreateLambdaExpression ();
+      var fromExpression = ExpressionHelper.CreateExpression ();
 
       ParameterExpression identifier0 = Expression.Parameter (typeof (Student), "s0");
       ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
@@ -220,16 +220,16 @@ namespace Remotion.Data.UnitTests.Linq
         + "'Remotion.Data.UnitTests.Linq.Student', but 'System.String' was requested.")]
     public void GetResolveableClause_InvalidIdentifierType_AdditionalFromClause ()
     {
-      LambdaExpression fromExpression = ExpressionHelper.CreateLambdaExpression ();
+      var fromExpression = ExpressionHelper.CreateExpression ();
 
       ParameterExpression identifier0 = Expression.Parameter (typeof (Student), "s0");
       ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
 
       MainFromClause mainFromClause = ExpressionHelper.CreateMainFromClause(identifier0, ExpressionHelper.CreateQuerySource ());
-      var clause1 = new AdditionalFromClause (mainFromClause, identifier1, fromExpression);
+      var clause = new AdditionalFromClause (mainFromClause, identifier1, fromExpression);
 
       QueryModel model = ExpressionHelper.CreateQueryModel (mainFromClause);
-      model.AddBodyClause (clause1);
+      model.AddBodyClause (clause);
 
       model.GetResolveableClause ("s1", typeof (string));
       Assert.Fail ("Expected exception");
@@ -256,7 +256,7 @@ namespace Remotion.Data.UnitTests.Linq
       ParameterExpression s1 = Expression.Parameter (typeof (String), "s1");
       ParameterExpression s2 = Expression.Parameter (typeof (String), "s2");
       MainFromClause mainFromClause = ExpressionHelper.CreateMainFromClause(s1, ExpressionHelper.CreateQuerySource());
-      var additionalFromClause = new AdditionalFromClause (mainFromClause, s2, ExpressionHelper.CreateLambdaExpression());
+      var additionalFromClause = new AdditionalFromClause (mainFromClause, s2, ExpressionHelper.CreateExpression());
 
       QueryModel queryModel = ExpressionHelper.CreateQueryModel (mainFromClause);
       queryModel.AddBodyClause (additionalFromClause);
@@ -496,7 +496,7 @@ namespace Remotion.Data.UnitTests.Linq
       var additionalFromClause = new AdditionalFromClause (
           queryModel.MainFromClause, 
           Expression.Parameter (typeof (Student), "test0"), 
-          ExpressionHelper.CreateLambdaExpression());
+          ExpressionHelper.CreateExpression());
       queryModel.AddBodyClause (additionalFromClause);
 
       var identifier = queryModel.GetUniqueIdentifier ("test");

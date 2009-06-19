@@ -56,12 +56,13 @@ namespace Remotion.Data.Linq.StringBuilding
     {
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
 
+      // TODO 1223: Remove special casing
       string fromString;
-      MemberExpression memberExpression = fromClause.FromExpression.Body as MemberExpression;
+      var memberExpression = fromClause.FromExpression as MemberExpression;
       if (memberExpression != null && IsCompilerGeneratedFromExpression (memberExpression))
         fromString = memberExpression.Member.Name;
       else
-        fromString = fromClause.FromExpression.Body.ToString();
+        fromString = fromClause.FromExpression.ToString();
 
       _sb.AppendFormat ("from {0} {1} in {2} ", fromClause.Identifier.Type.Name, fromClause.Identifier.Name, fromString);
 

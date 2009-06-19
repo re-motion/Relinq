@@ -298,7 +298,7 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
           repository.StrictMock<AdditionalFromClause> (
               ExpressionHelper.CreateClause(),
               Expression.Parameter (typeof (Student), "p"),
-              ExpressionHelper.CreateLambdaExpression());
+              ExpressionHelper.CreateExpression());
       var whereClause1 =
           repository.StrictMock<WhereClause> (ExpressionHelper.CreateClause(), ExpressionHelper.CreateExpression());
 
@@ -335,11 +335,7 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
     public void StringVisitorForAdditionalFromClauses_WithMemberAccessToDisplayClass ()
     {
       var displayClass = new DisplayClass { source = ExpressionHelper.CreateQuerySource() };
-
-      LambdaExpression fromExpression =
-          Expression.Lambda (
-              Expression.MakeMemberAccess (Expression.Constant (displayClass), displayClass.GetType().GetField ("source")),
-              Expression.Parameter (typeof (Student), "s2"));
+      var fromExpression = Expression.MakeMemberAccess (Expression.Constant (displayClass), displayClass.GetType().GetField ("source"));
 
       var fromClause = new AdditionalFromClause (
           ExpressionHelper.CreateClause(),
@@ -356,7 +352,7 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
     [Test]
     public void StringVisitorForAdditionalFromClauses_WithOtherFromExpression ()
     {
-      LambdaExpression fromExpression = Expression.Lambda (Expression.Constant (1));
+      var fromExpression = Expression.Constant (1);
 
       var fromClause = new AdditionalFromClause (
           ExpressionHelper.CreateClause(),
@@ -373,7 +369,7 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
     [Test]
     public void StringVisitorForAdditionalFromClauses_WithConstantNullFromExpression ()
     {
-      LambdaExpression fromExpression = Expression.Lambda (Expression.Constant (null));
+      var fromExpression = Expression.Constant (null);
 
       var fromClause = new AdditionalFromClause (
           ExpressionHelper.CreateClause(),
@@ -413,9 +409,7 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
     {
       IClause previousClause = ExpressionHelper.CreateMainFromClause();
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "s");
-
-      MemberExpression bodyExpression = Expression.MakeMemberAccess (Expression.Constant ("test"), typeof (string).GetProperty ("Length"));
-      LambdaExpression fromExpression = Expression.Lambda (bodyExpression);
+      var fromExpression = Expression.MakeMemberAccess (Expression.Constant ("test"), typeof (string).GetProperty ("Length"));
 
       var memberFromClause = new MemberFromClause (previousClause, identifier, fromExpression);
 

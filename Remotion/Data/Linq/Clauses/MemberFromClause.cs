@@ -29,17 +29,16 @@ namespace Remotion.Data.Linq.Clauses
   {
     private readonly MemberExpression _memberExpression;
 
-    public MemberFromClause (IClause previousClause, ParameterExpression identifier, LambdaExpression fromExpression)
-        : base(previousClause, identifier, fromExpression)
+    public MemberFromClause (IClause previousClause, ParameterExpression identifier, Expression fromExpression)
+        : base (previousClause, identifier, fromExpression)
     {
-      var memberExpression = fromExpression.Body as MemberExpression;
+      var memberExpression = fromExpression as MemberExpression;
       if (memberExpression != null)
         _memberExpression = memberExpression;
       else
         throw new ArgumentException ("FromExpression must contain a MemberExpression.", "fromExpression");
     }
 
-    // TODO 1158: Replace with PropertyPath
     public MemberExpression MemberExpression
     {
       get { return _memberExpression; }
@@ -65,7 +64,7 @@ namespace Remotion.Data.Linq.Clauses
 
       var newPreviousClause = cloneContext.ClonedClauseMapping.GetClause<IClause> (PreviousClause);
       var newFromExpression = CloneExpressionTreeVisitor.ReplaceClauseReferences (FromExpression, cloneContext);
-      var result = new MemberFromClause (newPreviousClause, Identifier, (LambdaExpression) newFromExpression);
+      var result = new MemberFromClause (newPreviousClause, Identifier, newFromExpression);
       cloneContext.ClonedClauseMapping.AddMapping (this, result);
       result.AddClonedJoinClauses (JoinClauses, cloneContext);
       return result;

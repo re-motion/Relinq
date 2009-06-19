@@ -41,7 +41,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void FromExpressionContainsMemberExpression ()
     {
-      Assert.That (_memberFromClause.MemberExpression, Is.SameAs (_memberFromClause.FromExpression.Body));
+      Assert.That (_memberFromClause.MemberExpression, Is.SameAs (_memberFromClause.FromExpression));
     }
 
     [Test]
@@ -51,7 +51,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       var previousClause = ExpressionHelper.CreateClause ();
       var identifier = ExpressionHelper.CreateParameterExpression ();
       var bodyExpression = Expression.Constant ("test");
-      var fromExpression = Expression.Lambda (bodyExpression);
+      var fromExpression = bodyExpression;
       new MemberFromClause (previousClause, identifier, fromExpression);
     }
 
@@ -98,7 +98,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       var memberFromClause = new MemberFromClause (
           mainFromClause, 
           ExpressionHelper.CreateParameterExpression(), 
-          Expression.Lambda (fromExpression));
+          fromExpression);
 
       var newMainFromClause = ExpressionHelper.CreateMainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
       _cloneContext.ClonedClauseMapping.AddMapping (mainFromClause, newMainFromClause);

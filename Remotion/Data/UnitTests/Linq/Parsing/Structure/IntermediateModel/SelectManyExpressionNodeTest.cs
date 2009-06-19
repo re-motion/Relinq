@@ -129,23 +129,26 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       Assert.That (clause.Identifier.Name, Is.EqualTo ("j"));
       Assert.That (clause.Identifier.Type, Is.SameAs (typeof (int)));
-      Assert.That (clause.FromExpression, Is.SameAs (node.CollectionSelector));
+      Assert.That (clause.FromExpression, Is.SameAs (node.GetResolvedCollectionSelector (ClauseGenerationContext)));
       Assert.That (clause.PreviousClause, Is.SameAs (previousClause));
     }
 
     [Test]
     public void CreateClause_WithMemberFromInFromExpression ()
     {
-      IClause previousClause = ExpressionHelper.CreateClause();
+      var previousClause = ExpressionHelper.CreateMainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource());
       var collectionSelector = ExpressionHelper.CreateLambdaExpression<Student, IEnumerable<Student>> (s => s.Friends);
-      var node = new SelectManyExpressionNode (CreateParseInfo(), collectionSelector, _resultSelector);
+
+      var studentSource = new ConstantExpressionNode ("s", typeof (IQueryable<Student>), null);
+      ClauseGenerationContext.ClauseMapping.AddMapping (studentSource, previousClause);
+      var node = new SelectManyExpressionNode (CreateParseInfo (studentSource), collectionSelector, _resultSelector);
 
       var clause = (MemberFromClause) node.CreateClause (previousClause, ClauseGenerationContext);
 
       Assert.That (clause.Identifier.Name, Is.EqualTo ("j"));
       Assert.That (clause.Identifier.Type, Is.SameAs (typeof (int)));
-      Assert.That (clause.FromExpression, Is.SameAs (node.CollectionSelector));
-      Assert.That (clause.MemberExpression, Is.SameAs (node.CollectionSelector.Body));
+      Assert.That (clause.FromExpression, Is.SameAs (node.GetResolvedCollectionSelector (ClauseGenerationContext)));
+      Assert.That (clause.MemberExpression, Is.SameAs (node.GetResolvedCollectionSelector (ClauseGenerationContext)));
       Assert.That (clause.PreviousClause, Is.SameAs (previousClause));
     }
 

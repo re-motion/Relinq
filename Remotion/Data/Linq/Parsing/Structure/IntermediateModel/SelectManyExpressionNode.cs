@@ -136,19 +136,20 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
       var identifier = ResultSelector.Parameters[1];
       
-      FromClauseBase clause = CreateFromClauseOfCorrectType(previousClause, identifier);
+      FromClauseBase clause = CreateFromClauseOfCorrectType(previousClause, identifier, clauseGenerationContext);
       clauseGenerationContext.ClauseMapping.AddMapping (this, clause);
       return clause;
     }
 
-    private FromClauseBase CreateFromClauseOfCorrectType (IClause previousClause, ParameterExpression identifier)
+    private FromClauseBase CreateFromClauseOfCorrectType (IClause previousClause, ParameterExpression identifier, ClauseGenerationContext clauseGenerationContext)
     {
-      if (CollectionSelector.Body is MemberExpression)
-        return new MemberFromClause (previousClause, identifier, CollectionSelector);
-      else if (CollectionSelector.Body is SubQueryExpression)
-        return new SubQueryFromClause (previousClause, identifier, ((SubQueryExpression) CollectionSelector.Body).QueryModel);
+      var resolvedCollectionSelector = GetResolvedCollectionSelector (clauseGenerationContext);
+      if (resolvedCollectionSelector is MemberExpression)
+        return new MemberFromClause (previousClause, identifier, resolvedCollectionSelector);
+      else if (resolvedCollectionSelector is SubQueryExpression)
+        return new SubQueryFromClause (previousClause, identifier, ((SubQueryExpression) resolvedCollectionSelector).QueryModel);
       else
-        return new AdditionalFromClause (previousClause, identifier, CollectionSelector);
+        return new AdditionalFromClause (previousClause, identifier, resolvedCollectionSelector);
     }
   }
 }
