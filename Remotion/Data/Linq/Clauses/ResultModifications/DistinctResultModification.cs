@@ -39,5 +39,10 @@ namespace Remotion.Data.Linq.Clauses.ResultModifications
       ArgumentUtility.CheckNotNull ("items", items);
       return items.Distinct ();
     }
+
+    public override string ToString ()
+    {
+      return "Distinct()";
+    }
   }
 }

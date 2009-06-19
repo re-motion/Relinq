@@ -48,5 +48,13 @@ namespace Remotion.Data.Linq.Clauses.ResultModifications
       else
         return new[] { items.Single() };
     }
+
+    public override string ToString ()
+    {
+      if (ReturnDefaultWhenEmpty)
+        return "SingleOrDefault()";
+      else
+        return "Single()";
+    }
   }
 }

@@ -42,5 +42,10 @@ namespace Remotion.Data.Linq.Clauses.ResultModifications
       ArgumentUtility.CheckNotNull ("items", items);
       return items.Take (Count);
     }
+
+    public override string ToString ()
+    {
+      return "Take(" + Count + ")";
+    }
   }
 }

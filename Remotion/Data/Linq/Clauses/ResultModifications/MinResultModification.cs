@@ -39,5 +39,10 @@ namespace Remotion.Data.Linq.Clauses.ResultModifications
       ArgumentUtility.CheckNotNull ("items", items);
       return new[] { items.Min () };
     }
+
+    public override string ToString ()
+    {
+      return "Min()";
+    }
   }
 }

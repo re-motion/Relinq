@@ -48,5 +48,13 @@ namespace Remotion.Data.Linq.Clauses.ResultModifications
       else
         return new[] { items.Last() };
     }
+
+    public override string ToString ()
+    {
+      if (ReturnDefaultWhenEmpty)
+        return "LastOrDefault()";
+      else
+        return "Last()";
+    }
   }
 }

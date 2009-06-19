@@ -14,7 +14,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System.Linq.Expressions;
-using System.Runtime.CompilerServices;
 using System.Text;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Utilities;
@@ -30,8 +29,6 @@ namespace Remotion.Data.Linq.StringBuilding
       _sb = new StringBuilder();
     }
 
-    #region IQueryVisitor Members
-
     public void VisitQueryModel (QueryModel queryModel)
     {
       ArgumentUtility.CheckNotNull ("queryExpression", queryModel);
@@ -46,7 +43,7 @@ namespace Remotion.Data.Linq.StringBuilding
     public void VisitMainFromClause (MainFromClause fromClause)
     {
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
-      _sb.AppendFormat ("from {0} {1} in {2} ", fromClause.Identifier.Type.Name, fromClause.Identifier.Name, fromClause.QuerySource);
+      _sb.AppendFormat ("from {0} {1} in {2} ", fromClause.Identifier.Type.Name, fromClause.Identifier.Name, FormatExpression (fromClause.QuerySource));
 
       foreach (JoinClause jc in fromClause.JoinClauses)
         jc.Accept (this);
@@ -56,16 +53,7 @@ namespace Remotion.Data.Linq.StringBuilding
     {
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
 
-      // TODO 1223: Remove special casing
-      string fromString;
-      var memberExpression = fromClause.FromExpression as MemberExpression;
-      if (memberExpression != null && IsCompilerGeneratedFromExpression (memberExpression))
-        fromString = memberExpression.Member.Name;
-      else
-        fromString = fromClause.FromExpression.ToString();
-
-      _sb.AppendFormat ("from {0} {1} in {2} ", fromClause.Identifier.Type.Name, fromClause.Identifier.Name, fromString);
-
+      _sb.AppendFormat ("from {0} {1} in {2} ", fromClause.Identifier.Type.Name, fromClause.Identifier.Name, FormatExpression (fromClause.FromExpression));
       foreach (JoinClause jc in fromClause.JoinClauses)
         jc.Accept (this);
     }
@@ -73,12 +61,6 @@ namespace Remotion.Data.Linq.StringBuilding
     public void VisitMemberFromClause (MemberFromClause fromClause)
     {
       VisitAdditionalFromClause (fromClause);
-    }
-
-    private bool IsCompilerGeneratedFromExpression (MemberExpression memberExpression)
-    {
-      return memberExpression.Expression.NodeType == ExpressionType.Constant
-             && memberExpression.Expression.Type.IsDefined (typeof (CompilerGeneratedAttribute), false);
     }
 
     public void VisitSubQueryFromClause (SubQueryFromClause fromClause)
@@ -90,23 +72,28 @@ namespace Remotion.Data.Linq.StringBuilding
     public void VisitJoinClause (JoinClause joinClause)
     {
       ArgumentUtility.CheckNotNull ("joinClause", joinClause);
-      _sb.AppendFormat ("join {0} {1} in {2} on {3} equals {4} into {5} ",
-                        joinClause.Identifier.Type, joinClause.Identifier, joinClause.InExpression,
-                        joinClause.OnExpression, joinClause.EqualityExpression, joinClause.IntoIdentifier);
+      _sb.AppendFormat (
+          "join {0} {1} in {2} on {3} equals {4} into {5} ",
+          joinClause.Identifier.Type, 
+          joinClause.Identifier, 
+          FormatExpression (joinClause.InExpression),
+          FormatExpression (joinClause.OnExpression), 
+          FormatExpression (joinClause.EqualityExpression), 
+          FormatExpression (joinClause.IntoIdentifier));
     }
 
     public void VisitLetClause (LetClause letClause)
     {
       ArgumentUtility.CheckNotNull ("letClause", letClause);
 
-      _sb.AppendFormat ("let {0} = {1} ", letClause.Identifier, letClause.Expression);
+      _sb.AppendFormat ("let {0} = {1} ", FormatExpression (letClause.Identifier), FormatExpression (letClause.Expression));
     }
 
     public void VisitWhereClause (WhereClause whereClause)
     {
       ArgumentUtility.CheckNotNull ("whereClause", whereClause);
 
-      _sb.AppendFormat ("where {0} ", whereClause.Predicate);
+      _sb.AppendFormat ("where {0} ", FormatExpression (whereClause.Predicate));
     }
 
     public void VisitOrderByClause (OrderByClause orderByClause)
@@ -114,9 +101,7 @@ namespace Remotion.Data.Linq.StringBuilding
       ArgumentUtility.CheckNotNull ("orderByClause", orderByClause);
       _sb.Append ("orderby ");
       foreach (Ordering oC in orderByClause.OrderingList)
-      {
         oC.Accept (this);
-      }
     }
 
     public void VisitOrdering (Ordering ordering)
@@ -126,10 +111,10 @@ namespace Remotion.Data.Linq.StringBuilding
       switch (ordering.OrderingDirection)
       {
         case OrderingDirection.Asc:
-          _sb.AppendFormat ("{0} ascending ", ordering.Expression);
+          _sb.AppendFormat ("{0} ascending ", FormatExpression (ordering.Expression));
           break;
         case OrderingDirection.Desc:
-          _sb.AppendFormat ("{0} descending ", ordering.Expression);
+          _sb.AppendFormat ("{0} descending ", FormatExpression (ordering.Expression));
           break;
       }
     }
@@ -137,20 +122,38 @@ namespace Remotion.Data.Linq.StringBuilding
     public void VisitSelectClause (SelectClause selectClause)
     {
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);
-      _sb.AppendFormat ("select {0}", selectClause.Selector);
+      _sb.AppendFormat ("select {0}", FormatExpression (selectClause.Selector));
+
+      if (selectClause.ResultModifications.Count > 0)
+      {
+        _sb.Insert (0, "(");
+        _sb.Append (")");
+
+        foreach (var resultModification in selectClause.ResultModifications)
+        {
+          _sb.Append (".");
+          _sb.Append (resultModification.ToString ());
+        }
+      }
     }
 
     public void VisitGroupClause (GroupClause groupClause)
     {
       ArgumentUtility.CheckNotNull ("groupClause", groupClause);
-      _sb.AppendFormat ("group {0} by {1}", groupClause.GroupExpression, groupClause.ByExpression);
+      _sb.AppendFormat ("group {0} by {1}", FormatExpression (groupClause.GroupExpression), FormatExpression (groupClause.ByExpression));
     }
-
-    #endregion
 
     public override string ToString ()
     {
       return _sb.ToString();
+    }
+
+    private string FormatExpression (Expression expression)
+    {
+      if (expression != null)
+        return FormattingExpressionTreeVisitor.Format (expression);
+      else
+        return "<null>";
     }
   }
 }

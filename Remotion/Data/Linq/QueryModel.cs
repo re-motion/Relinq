@@ -186,13 +186,6 @@ namespace Remotion.Data.Linq
       return sv.ToString();
     }
 
-    public string GetDebugString ()
-    {
-      var qv = new DebugStringBuildingQueryVisitor ();
-      qv.VisitQueryModel (this);
-      return qv.ToString();
-    }
-
     // Once we have a working ExpressionTreeBuildingVisitor, we could use it to build trees for constructed models. For now, we just create
     // a special ConstructedQueryExpression node.
     // TODO 1067: Changes made to the query model's clauses should cause this Expression to become invalid.

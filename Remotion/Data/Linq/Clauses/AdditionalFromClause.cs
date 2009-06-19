@@ -40,9 +40,6 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("fromExpression", fromExpression);
 
       FromExpression = fromExpression;
-
-      // TODO 1223: Remove temporary test
-      Assertion.IsFalse (fromExpression is LambdaExpression);
     }
 
     /// <summary>

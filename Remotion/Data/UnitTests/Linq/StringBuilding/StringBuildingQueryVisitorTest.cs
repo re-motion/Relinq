@@ -16,10 +16,12 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Runtime.CompilerServices;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.Expressions;
+using Remotion.Data.Linq.Clauses.ResultModifications;
 using Remotion.Data.Linq.StringBuilding;
 using Rhino.Mocks;
 
@@ -29,14 +31,25 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
   public class StringBuildingQueryVisitorTest
   {
     [Test]
+    public void StringVisitor_ForExpression_WithQuerySourceReference ()
+    {
+      var identifier = Expression.Parameter (typeof (int), "i");
+      var referencedClause = ExpressionHelper.CreateMainFromClause (identifier, ExpressionHelper.CreateQuerySource ());
+      var predicate = Expression.MakeBinary (ExpressionType.GreaterThan, new QuerySourceReferenceExpression (referencedClause), Expression.Constant (0));
+      var whereClause = new WhereClause (ExpressionHelper.CreateClause (), predicate);
+      var sv = new StringBuildingQueryVisitor ();
+
+      sv.VisitWhereClause (whereClause);
+      Assert.That (sv.ToString(), Is.EqualTo ("where ([i] > 0) "));
+    }
+
+    [Test]
     public void StringVisitorForMainFromClause ()
     {
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause();
       var sv = new StringBuildingQueryVisitor();
       sv.VisitMainFromClause (fromClause);
-      Assert.AreEqual (
-          "from Int32 i in TestQueryable<Student>() ",
-          sv.ToString());
+      Assert.That (sv.ToString (), Is.EqualTo ("from Int32 i in TestQueryable<Student>() "));
     }
 
     [Test]
@@ -93,7 +106,6 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
       Assert.That (sv.ToString(), NUnit.Framework.SyntaxHelpers.Text.Contains ("join"));
     }
 
-
     [Test]
     public void StringVisitorForSelectClause ()
     {
@@ -102,7 +114,20 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
 
       sv.VisitSelectClause (selectClause);
 
-      Assert.AreEqual ("select 0", sv.ToString());
+      Assert.That (sv.ToString (), Is.EqualTo ("select 0"));
+    }
+
+    [Test]
+    public void StringVisitorForSelectClause_WithResultModifications ()
+    {
+      SelectClause selectClause = ExpressionHelper.CreateSelectClause ();
+      selectClause.AddResultModification (new TakeResultModification (selectClause, 5));
+      selectClause.AddResultModification (new CountResultModification (selectClause));
+      var sv = new StringBuildingQueryVisitor ();
+
+      sv.VisitSelectClause (selectClause);
+
+      Assert.That (sv.ToString (), Is.EqualTo ("(select 0).Take(5).Count()"));
     }
 
     [Test]
@@ -125,7 +150,7 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
 
       sv.VisitWhereClause (whereClasue);
 
-      Assert.AreEqual ("where (1 = 2) ", sv.ToString());
+      Assert.That (sv.ToString (), Is.EqualTo ("where (1 = 2) "));
     }
 
     [Test]
@@ -149,7 +174,6 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
 
       Assert.That (sv.ToString(), NUnit.Framework.SyntaxHelpers.Text.Contains ("ascending"));
     }
-
 
     [Test]
     public void StringVisitorForOrderingClauseDesc ()
@@ -324,18 +348,11 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
       repository.VerifyAll();
     }
 
-    [CompilerGenerated]
-    public class DisplayClass
-    {
-      public object source;
-    }
-
-    // TODO 1223: Remove
     [Test]
     public void StringVisitorForAdditionalFromClauses_WithMemberAccessToDisplayClass ()
     {
-      var displayClass = new DisplayClass { source = ExpressionHelper.CreateQuerySource() };
-      var fromExpression = Expression.MakeMemberAccess (Expression.Constant (displayClass), displayClass.GetType().GetField ("source"));
+      var mainFromClause = ExpressionHelper.CreateMainFromClause(Expression.Parameter (typeof (Student_Detail), "sd"), null);
+      var fromExpression = ExpressionHelper.Resolve<Student_Detail, Student> (mainFromClause, sd => sd.Student);
 
       var fromClause = new AdditionalFromClause (
           ExpressionHelper.CreateClause(),
@@ -346,9 +363,8 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
 
       sv.VisitAdditionalFromClause (fromClause);
 
-      Assert.AreEqual ("from Int32 i in source ", sv.ToString());
+      Assert.That (sv.ToString (), Is.EqualTo ("from Int32 i in [sd].Student "));
     }
-
     [Test]
     public void StringVisitorForAdditionalFromClauses_WithOtherFromExpression ()
     {
@@ -363,7 +379,7 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
 
       sv.VisitAdditionalFromClause (fromClause);
 
-      Assert.AreEqual ("from Int32 i in 1 ", sv.ToString());
+      Assert.That (sv.ToString (), Is.EqualTo ("from Int32 i in 1 "));
     }
 
     [Test]
@@ -380,7 +396,7 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
 
       sv.VisitAdditionalFromClause (fromClause);
 
-      Assert.AreEqual ("from Int32 i in null ", sv.ToString());
+      Assert.That (sv.ToString (), Is.EqualTo ("from Int32 i in null "));
     }
 
     [Test]
@@ -401,7 +417,7 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
       var sv = new StringBuildingQueryVisitor();
       sv.VisitSubQueryFromClause (subQueryFromClause);
 
-      Assert.AreEqual ("from Student s in (from Student s2 in null select 1) ", sv.ToString());
+      Assert.That (sv.ToString (), Is.EqualTo ("from Student s in (from Student s2 in null select 1) "));
     }
 
     [Test]
@@ -416,7 +432,7 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
       var sv = new StringBuildingQueryVisitor();
       sv.VisitMemberFromClause (memberFromClause);
 
-      Assert.AreEqual ("from Student s in \"test\".Length ", sv.ToString());
+      Assert.That (sv.ToString (), Is.EqualTo ("from Student s in \"test\".Length "));
     }
   }
 }

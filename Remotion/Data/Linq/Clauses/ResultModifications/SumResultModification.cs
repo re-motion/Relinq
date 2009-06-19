@@ -46,5 +46,10 @@ namespace Remotion.Data.Linq.Clauses.ResultModifications
       }
       return new[] { (T) method.Invoke (null, new object[] { items }) };
     }
+
+    public override string ToString ()
+    {
+      return "Sum()";
+    }
   }
 }
