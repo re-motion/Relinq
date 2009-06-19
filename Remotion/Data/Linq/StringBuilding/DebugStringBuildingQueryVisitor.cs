@@ -119,8 +119,6 @@ namespace Remotion.Data.Linq.StringBuilding
       _sb.Append ("\n");
       _sb.AppendFormat ("Identifier: {0}", fromClause.Identifier);
       _sb.Append ("\n");
-      _sb.AppendFormat ("ProjectionExpression: {0}", fromClause.ProjectionExpression);
-      _sb.Append ("\n");
       //_sb.AppendFormat ("from {0} {1} in ({2}) ", fromClause.Identifier.Type.Name, fromClause.Identifier.Name, fromClause.SubQueryModel);
     }
 

@@ -58,8 +58,7 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
           if (additionalFromClause != null)
             return ResolveField (resolver, additionalFromClause.ResultSelector.Body, joinedTableContext);
           else
-            return ResolveField (resolver, ((SubQueryFromClause) clause).ProjectionExpression.Body, joinedTableContext);
-
+            throw new NotImplementedException ("Hack not implemented for SubQueryFromClauses any longer.");
         }
         else
           return visitorResult.ResolveableClause.ResolveField (resolver, visitorResult.ReducedExpression, joinedTableContext);

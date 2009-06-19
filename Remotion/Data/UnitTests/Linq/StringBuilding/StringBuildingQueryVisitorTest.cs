@@ -331,6 +331,7 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
       public object source;
     }
 
+    // TODO 1223: Remove
     [Test]
     public void StringVisitorForAdditionalFromClauses_WithMemberAccessToDisplayClass ()
     {
@@ -402,9 +403,8 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
       var selectClause = new SelectClause (previousClause, subQuerySelector);
 
       var subQuery = new QueryModel (typeof (string), mainFromClause, selectClause);
-      LambdaExpression projectionExpression = ExpressionHelper.CreateLambdaExpression();
 
-      var subQueryFromClause = new SubQueryFromClause (previousClause, identifier, subQuery, projectionExpression);
+      var subQueryFromClause = new SubQueryFromClause (previousClause, identifier, subQuery);
 
       var sv = new StringBuildingQueryVisitor();
       sv.VisitSubQueryFromClause (subQueryFromClause);

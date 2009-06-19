@@ -21,10 +21,8 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
-using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
-using Rhino.Mocks;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 {
@@ -158,15 +156,14 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       IClause previousClause = ExpressionHelper.CreateClause();
       var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel());
-
+      
       var collectionSelector = Expression.Lambda (subQueryExpression, Expression.Parameter (typeof (int), "i"));
       var node = new SelectManyExpressionNode (CreateParseInfo(), collectionSelector, _resultSelector);
 
       var clause = (SubQueryFromClause) node.CreateClause (previousClause, ClauseGenerationContext);
-
+      
       Assert.That (clause.Identifier.Name, Is.EqualTo ("j"));
       Assert.That (clause.Identifier.Type, Is.SameAs (typeof (int)));
-      Assert.That (clause.ProjectionExpression, Is.SameAs (node.ResultSelector));
       Assert.That (clause.SubQueryModel, Is.SameAs (subQueryExpression.QueryModel));
       Assert.That (clause.PreviousClause, Is.SameAs (previousClause));
     }

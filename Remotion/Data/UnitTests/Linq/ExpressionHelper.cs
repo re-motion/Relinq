@@ -308,7 +308,7 @@ namespace Remotion.Data.UnitTests.Linq
 
     public static SubQueryFromClause CreateSubQueryFromClause (ParameterExpression identifier)
     {
-      return new SubQueryFromClause (CreateClause (), identifier, CreateQueryModel (), CreateLambdaExpression ());
+      return new SubQueryFromClause (CreateClause (), identifier, CreateQueryModel ());
     }
 
     public static Expression MakeExpression<TRet> (Expression<Func<TRet>> expression)

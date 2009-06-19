@@ -136,10 +136,11 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
       var identifier = ResultSelector.Parameters[1];
       FromClauseBase clause;
+
       if (CollectionSelector.Body is MemberExpression)
         clause = new MemberFromClause (previousClause, identifier, CollectionSelector, ResultSelector);
       else if (CollectionSelector.Body is SubQueryExpression)
-        clause = new SubQueryFromClause (previousClause, identifier, ((SubQueryExpression) CollectionSelector.Body).QueryModel, ResultSelector);
+        clause = new SubQueryFromClause (previousClause, identifier, ((SubQueryExpression) CollectionSelector.Body).QueryModel);
       else
         clause = new AdditionalFromClause (previousClause, identifier, CollectionSelector, ResultSelector);
 

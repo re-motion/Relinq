@@ -15,7 +15,6 @@
 // 
 using System;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Utilities;
 using Remotion.Data.Linq.DataObjectModel;
@@ -37,17 +36,14 @@ namespace Remotion.Data.Linq.Clauses
     /// <param name="previousClause">The previous clause of type <see cref="IClause"/> in the <see cref="QueryModel"/>.</param>
     /// <param name="identifier">The identifier of the expression which represents the subquery.</param>
     /// <param name="subQuery">The subquery which contains the <see cref="SubQueryFromClause"/>with is represented by a new <see cref="QueryModel"/>.<see cref="QueryModel"/>.</param>
-    /// <param name="projectionExpression">The projection within the from part of the linq query.</param>
-    public SubQueryFromClause (IClause previousClause, ParameterExpression identifier, QueryModel subQuery, LambdaExpression projectionExpression)
+    public SubQueryFromClause (IClause previousClause, ParameterExpression identifier, QueryModel subQuery)
         : base (previousClause, identifier)
     {
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
       ArgumentUtility.CheckNotNull ("identifier", identifier);
       ArgumentUtility.CheckNotNull ("subQuery", subQuery);
-      ArgumentUtility.CheckNotNull ("projectionExpression", projectionExpression);
 
       SubQueryModel = subQuery;
-      ProjectionExpression = projectionExpression;
 
       _fromSource = new SubQuery (SubQueryModel, ParseMode.SubQueryInFrom, Identifier.Name);
     }
@@ -56,12 +52,6 @@ namespace Remotion.Data.Linq.Clauses
     /// The subquery which contains the <see cref="SubQueryFromClause"/>with is represented by a new <see cref="QueryModel"/>.<see cref="QueryModel"/>
     /// </summary>
     public QueryModel SubQueryModel { get; private set; }
-
-    /// <summary>
-    /// The projection within the from part of the linq query.
-    /// </summary>
-    // TODO 1158: Remove
-    public LambdaExpression ProjectionExpression { get; private set; }
 
     public override void Accept (IQueryVisitor visitor)
     {
@@ -100,8 +90,7 @@ namespace Remotion.Data.Linq.Clauses
 
       var newPreviousClause = cloneContext.ClonedClauseMapping.GetClause<IClause> (PreviousClause);
       var clonedSubQueryModel = SubQueryModel.Clone (cloneContext.ClonedClauseMapping);
-      var newProjectionExpression = (LambdaExpression) CloneExpressionTreeVisitor.ReplaceClauseReferences (ProjectionExpression, cloneContext);
-      var result = new SubQueryFromClause (newPreviousClause, Identifier, clonedSubQueryModel, newProjectionExpression);
+      var result = new SubQueryFromClause (newPreviousClause, Identifier, clonedSubQueryModel);
       cloneContext.ClonedClauseMapping.AddMapping (this, result);
       result.AddClonedJoinClauses (JoinClauses, cloneContext);
       return result;
