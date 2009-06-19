@@ -21,6 +21,7 @@ using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
+using Remotion.Data.Linq.Clauses.ResultModifications;
 using Remotion.Data.Linq.Parsing.Structure;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
@@ -163,22 +164,73 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       IQueryable<int> value = new[] { 1, 2, 3 }.AsQueryable ();
 // ReSharper disable RedundantAnonymousTypePropertyName
       var expressionTree = (MethodCallExpression) ExpressionHelper.MakeExpression (
-          () => value.Select (i => new { i = i, j = i.ToString() }).Where (trans => trans.i > 5));
+          () => value.Select (i => new AnonymousType { a = i, b = i + 1 }).Where (trans => trans.a > 5));
 // ReSharper restore RedundantAnonymousTypePropertyName
 
       QueryModel queryModel = _queryParser.GetParsedQuery (expressionTree);
 
-      Assert.That (queryModel.BodyClauses[0], Is.InstanceOfType (typeof (LetClause)));
-      var letClause = (LetClause) queryModel.BodyClauses[0];
+      Assert.That (queryModel.BodyClauses.Count(), Is.EqualTo (1));
+      var whereClause = (WhereClause) (queryModel.BodyClauses[0]);
+      var selectClause = (SelectClause) (queryModel.SelectOrGroupClause);
 
-      Assert.That (letClause.PreviousClause, Is.SameAs (queryModel.MainFromClause));
-      Assert.That (letClause.Identifier.Name, Is.EqualTo ("j"));
-      Assert.That (letClause.Identifier.Type, Is.SameAs (typeof (string)));
+      var expectedPredicate = ExpressionHelper.Resolve<int, bool> (queryModel.MainFromClause, i => i > 5);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedPredicate, whereClause.Predicate);
 
-      Assert.That (queryModel.BodyClauses[1].PreviousClause, Is.SameAs (letClause));
+      var expectedSelector = ExpressionHelper.Resolve<int, AnonymousType> (queryModel.MainFromClause, i => new AnonymousType { a = i, b = i + 1 });
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedSelector, selectClause.Selector);
+    }
 
-      var expectedLetExpression = ExpressionHelper.Resolve<int, string> (queryModel.MainFromClause, i => i.ToString ());
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedLetExpression, letClause.Expression);
+    [Test]
+    public void CreateQueryModel_WithNonTrivialSelectClause_BeforeResultModification ()
+    {
+      IQueryable<int> value = new[] { 1, 2, 3 }.AsQueryable ();
+      // ReSharper disable RedundantAnonymousTypePropertyName
+      var expressionTree = (MethodCallExpression) ExpressionHelper.MakeExpression (() => value.Select (i => i + 1).Count());
+      // ReSharper restore RedundantAnonymousTypePropertyName
+
+      QueryModel queryModel = _queryParser.GetParsedQuery (expressionTree);
+      var selectClause = (SelectClause) (queryModel.SelectOrGroupClause);
+
+      var expectedSelector = ExpressionHelper.Resolve<int, int> (queryModel.MainFromClause, i => i + 1);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedSelector, selectClause.Selector);
+    }
+
+    [Test]
+    public void CreateQueryModel_WithMultipleResultModifications ()
+    {
+      IQueryable<int> value = new[] { 1, 2, 3 }.AsQueryable ();
+      // ReSharper disable RedundantAnonymousTypePropertyName
+      var expressionTree = (MethodCallExpression) ExpressionHelper.MakeExpression (() => value.Select (i => i + 1).Take (1).Count ());
+      // ReSharper restore RedundantAnonymousTypePropertyName
+
+      QueryModel queryModel = _queryParser.GetParsedQuery (expressionTree);
+      var selectClause = (SelectClause) (queryModel.SelectOrGroupClause);
+
+      var expectedSelector = ExpressionHelper.Resolve<int, int> (queryModel.MainFromClause, i => i + 1);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedSelector, selectClause.Selector);
+
+      Assert.That (selectClause.ResultModifications[0], Is.InstanceOfType (typeof (TakeResultModification)));
+      Assert.That (selectClause.ResultModifications[1], Is.InstanceOfType (typeof (CountResultModification)));
+    }
+
+    [Test]
+    [Ignore ("TODO 1233")]
+    public void CreateQueryModel_WithResultModification_BeforeWhere ()
+    {
+      IQueryable<int> value = new[] { 1, 2, 3 }.AsQueryable ();
+      // ReSharper disable RedundantAnonymousTypePropertyName
+      var expressionTree = (MethodCallExpression) ExpressionHelper.MakeExpression (() => value.Select (i => i + 1).Take (1).Where (i => i > 5));
+      // ReSharper restore RedundantAnonymousTypePropertyName
+
+      QueryModel queryModel = _queryParser.GetParsedQuery (expressionTree);
+      var selectClause = (SelectClause) (queryModel.SelectOrGroupClause);
+
+      var expectedSelector = ExpressionHelper.Resolve<int, int> (queryModel.MainFromClause, i => i + 1);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedSelector, selectClause.Selector);
+
+      Assert.That (selectClause.ResultModifications.Count, Is.EqualTo (1));
+      Assert.That (selectClause.ResultModifications[0], Is.InstanceOfType (typeof (TakeResultModification)));
+      Assert.That (selectClause.PreviousClause, Is.InstanceOfType (typeof (WhereClause)));
     }
 
     [Test]

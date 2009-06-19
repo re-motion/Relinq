@@ -56,38 +56,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
     }
 
     [Test]
-    public void ResolveField_LetClause_Table ()
-    {
-      ParameterExpression identifier = Expression.Parameter (typeof (Student), "x");
-      LetClause letClause = ExpressionHelper.CreateLetClause (identifier); // let x = ...
-
-      QueryModel queryModel = ExpressionHelper.CreateQueryModel ();
-      queryModel.AddBodyClause (letClause);
-
-      Expression fieldAccessExpression = Expression.Parameter (typeof (Student), "x"); // where x == ...
-      FieldDescriptor descriptor = new QueryModelFieldResolver (queryModel).ResolveField (_resolver, fieldAccessExpression, _context);
-      
-      var expectedEvaluation = new LetColumnSource ("x", true);
-      Assert.AreEqual (new Column (expectedEvaluation, "IDColumn"), descriptor.Column);
-    }
-
-    [Test]
-    public void ResolveField_LetClause_Column ()
-    {
-      ParameterExpression identifier = Expression.Parameter (typeof (int), "x");
-      LetClause letClause = ExpressionHelper.CreateLetClause (identifier); // let x = ...
-
-      QueryModel queryModel = ExpressionHelper.CreateQueryModel ();
-      queryModel.AddBodyClause (letClause);
-
-      Expression fieldAccessExpression = Expression.Parameter (typeof (int), "x"); // where x == ...
-      FieldDescriptor descriptor = new QueryModelFieldResolver (queryModel).ResolveField (_resolver, fieldAccessExpression, _context);
-
-      var expectedEvaluation = new LetColumnSource ("x", false);
-      Assert.AreEqual (new Column (expectedEvaluation, null), descriptor.Column);
-    }
-
-    [Test]
     [ExpectedException (typeof (FieldAccessResolveException), ExpectedMessage = "The field access expression 'fzlbf' does "
         + "not contain a from clause identifier.")]
     public void NoFromIdentifierFound ()

@@ -154,17 +154,6 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
     }
 
     [Test]
-    public void StringVisitorForLetClause ()
-    {
-      LetClause letClause = ExpressionHelper.CreateLetClause();
-      var sv = new StringBuildingQueryVisitor();
-
-      sv.VisitLetClause (letClause);
-
-      Assert.That (sv.ToString(), NUnit.Framework.SyntaxHelpers.Text.Contains ("let"));
-    }
-
-    [Test]
     public void StringVisitorForOrderingClauseAsc ()
     {
       Ordering ordering = ExpressionHelper.CreateOrdering();

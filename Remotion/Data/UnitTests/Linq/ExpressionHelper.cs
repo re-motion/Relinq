@@ -132,23 +132,6 @@ namespace Remotion.Data.UnitTests.Linq
       return new GroupClause (CreateClause (), groupExpression, byExpression);
     }
     
-    public static LetClause CreateLetClause ()
-    {
-      ParameterExpression identifier = CreateParameterExpression ();
-      return CreateLetClause(identifier);
-    }
-
-    public static LetClause CreateLetClause (ParameterExpression identifier)
-    {
-      return new LetClause (CreateClause (), identifier, CreateExpression (), CreateLambdaExpression ());
-    }
-
-    public static LetClause CreateLetClause (Expression expression)
-    {
-      ParameterExpression identifier = CreateParameterExpression ();
-      return new LetClause (CreateLetClause (), identifier, expression, CreateLambdaExpression ());
-    }
-
     public static Ordering CreateOrdering (OrderByClause orderByClause)
     {
       return new Ordering (orderByClause, CreateExpression (), OrderingDirection.Asc);

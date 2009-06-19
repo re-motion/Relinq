@@ -301,17 +301,12 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     {
       var expression = LetTestQueryGenerator.CreateSimpleLetClause (_querySource).Expression;
       var queryModel = _queryParser.GetParsedQuery (expression);
-      var navigator = new ExpressionTreeNavigator (expression);
 
-      var letClause = (LetClause) queryModel.BodyClauses[0];
+      var mainFromClause = queryModel.MainFromClause;
+      var selectClause = ((SelectClause) queryModel.SelectOrGroupClause);
 
-      Assert.That (queryModel.MainFromClause.PreviousClause, Is.Null);
-      Assert.That (letClause.PreviousClause, Is.SameAs (queryModel.MainFromClause));
-      Assert.That (queryModel.SelectOrGroupClause.PreviousClause, Is.SameAs (letClause));
-
-      Assert.That (letClause.ProjectionExpression.Body.NodeType, Is.EqualTo (navigator.Arguments[0].Arguments[1].Operand.Body.Expression.NodeType));
-      Assert.That (letClause.ProjectionExpression.Body.Type, Is.EqualTo (navigator.Arguments[0].Arguments[1].Operand.Body.Expression.Type));
-      Assert.That (letClause.Identifier.Name, Is.EqualTo ("x"));
+      Assert.That (queryModel.BodyClauses.Count (), Is.EqualTo (0));
+      CheckResolvedExpression<Student, string> (selectClause.Selector, mainFromClause, s => s.First + s.Last);
     }
 
     [Test]

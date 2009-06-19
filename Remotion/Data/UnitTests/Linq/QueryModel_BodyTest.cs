@@ -87,17 +87,6 @@ namespace Remotion.Data.UnitTests.Linq
     }
 
     [Test]
-    public void AddBodyClause_RegistersLetClause ()
-    {
-      ParameterExpression identifier = Expression.Parameter (typeof (int), "j");
-      LetClause letClause = ExpressionHelper.CreateLetClause (identifier);
-      _model.AddBodyClause (letClause);
-      IResolveableClause resolveableClause = _model.GetResolveableClause (identifier.Name, identifier.Type);
-
-      Assert.That (letClause, Is.EqualTo (resolveableClause));
-    }
-
-    [Test]
     public void AddBodyClause_SetsQueryModelOfBodyClause ()
     {
       IBodyClause clause = ExpressionHelper.CreateWhereClause ();

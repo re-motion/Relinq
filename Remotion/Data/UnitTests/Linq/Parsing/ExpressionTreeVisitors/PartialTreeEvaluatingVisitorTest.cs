@@ -21,6 +21,7 @@ using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Collections;
+using System.Collections.Generic;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
 {
@@ -75,7 +76,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
       Expression multiply1 = Expression.Multiply (parameter, constant1);
       Expression multiply2 = Expression.Multiply (constant2, constant3);
       Expression add = Expression.Add (multiply1, multiply2);
-      Expression treeRoot = Expression.Lambda (typeof (System.Func<int, int>), add, parameter);
+      Expression treeRoot = Expression.Lambda (typeof (Func<int, int>), add, parameter);
 
       Expression result = PartialTreeEvaluatingVisitor.EvaluateIndependentSubtrees (treeRoot);
       Expression expected = Expression.Lambda (Expression.Add (Expression.Multiply (parameter, constant1), Expression.Constant (12)), parameter);
@@ -95,7 +96,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
     [Test]
     public void EvaluateLambdaWithSubQuery  ()
     {
-      SubQueryExpression subQuery = new SubQueryExpression(ExpressionHelper.CreateQueryModel());
+      var subQuery = new SubQueryExpression(ExpressionHelper.CreateQueryModel());
       LambdaExpression lambdaExpression = Expression.Lambda (subQuery);
 
       Expression result = PartialTreeEvaluatingVisitor.EvaluateIndependentSubtrees (lambdaExpression);
@@ -181,6 +182,45 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
       var countMethodCallExpression = (MethodCallExpression) partiallyEvaluatedExpression;
 
       Assert.That (countMethodCallExpression.Method.Name, Is.EqualTo ("Count"));
+    }
+
+    [Test]
+    public void EvaluateMemberInitialization_WithParametersInMemberAssignments_IsNotEvaluated ()
+    {
+      var queryExpression = ExpressionHelper.MakeExpression<int, AnonymousType> (i => new AnonymousType { a = i, b = 1 });
+
+      var partiallyEvaluatedExpression = PartialTreeEvaluatingVisitor.EvaluateIndependentSubtrees (queryExpression);
+      Assert.That (partiallyEvaluatedExpression, Is.SameAs (queryExpression));
+    }
+
+    [Test]
+    public void EvaluateListInitialization_WithParametersInMemberAssignments_IsNotEvaluated ()
+    {
+      var queryExpression = ExpressionHelper.MakeExpression<int, List<int>> (i => new List<int> { i, 1 });
+
+      var partiallyEvaluatedExpression = PartialTreeEvaluatingVisitor.EvaluateIndependentSubtrees (queryExpression);
+      Assert.That (partiallyEvaluatedExpression, Is.SameAs (queryExpression));
+    }
+
+    [Test]
+    public void EvaluateMemberInitialization_WithoutParametersInMemberAssignments_IsEvaluated ()
+    {
+      var queryExpression = ExpressionHelper.MakeExpression<int, AnonymousType> (i => new AnonymousType { a = 2, b = 1 });
+
+      var partiallyEvaluatedExpression = PartialTreeEvaluatingVisitor.EvaluateIndependentSubtrees (queryExpression);
+      Assert.That (((ConstantExpression) partiallyEvaluatedExpression).Value, Is.InstanceOfType (typeof (AnonymousType)));
+      Assert.That (((AnonymousType) ((ConstantExpression) partiallyEvaluatedExpression).Value).a, Is.EqualTo (2));
+      Assert.That (((AnonymousType) ((ConstantExpression) partiallyEvaluatedExpression).Value).b, Is.EqualTo (1));
+    }
+
+    [Test]
+    public void EvaluateListInitialization_WithoutParametersInMemberAssignments_IsEvaluated ()
+    {
+      var queryExpression = ExpressionHelper.MakeExpression<int, List<int>> (i => new List<int> { 2, 1 });
+
+      var partiallyEvaluatedExpression = PartialTreeEvaluatingVisitor.EvaluateIndependentSubtrees (queryExpression);
+      Assert.That (((ConstantExpression) partiallyEvaluatedExpression).Value, Is.InstanceOfType (typeof (List<int>)));
+      Assert.That (((ConstantExpression) partiallyEvaluatedExpression).Value, Is.EqualTo (new[] {2, 1}));
     }
   }
 }

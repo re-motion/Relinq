@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Utilities;
@@ -108,6 +109,36 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation
       }
 
       return base.VisitMethodCallExpression (expression);
+    }
+
+    protected override Expression VisitMemberInitExpression (MemberInitExpression expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+      VisitMemberBindingList (expression.Bindings);
+
+      // Visit the NewExpression only if the List initializers is evaluatable. It makes no sense to evaluate the ListExpression if the initializers
+      // cannot be evaluated.
+
+      if (!_isCurrentSubtreeEvaluatable)
+        return expression;
+
+      VisitExpression (expression.NewExpression);
+      return expression;
+    }
+
+    protected override Expression VisitListInitExpression (ListInitExpression expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+      VisitElementInitList (expression.Initializers);
+
+      // Visit the NewExpression only if the List initializers is evaluatable. It makes no sense to evaluate the NewExpression if the initializers
+      // cannot be evaluated.
+
+      if (!_isCurrentSubtreeEvaluatable)
+        return expression;
+
+      VisitExpression (expression.NewExpression);
+      return expression;
     }
 
     private bool IsQueryableExpression (Expression expression)

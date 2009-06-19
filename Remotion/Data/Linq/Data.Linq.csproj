@@ -195,7 +195,6 @@
     <Compile Include="IQueryExecutor.cs" />
     <Compile Include="IQueryVisitor.cs" />
     <Compile Include="Clauses\JoinClause.cs" />
-    <Compile Include="Clauses\LetClause.cs" />
     <Compile Include="Clauses\OrderByClause.cs" />
     <Compile Include="Clauses\Ordering.cs" />
     <Compile Include="Parsing\ParserUtility.cs" />
@@ -230,7 +229,6 @@
     <Compile Include="SqlGeneration\IOrderByBuilder.cs" />
     <Compile Include="SqlGeneration\ISelectBuilder.cs" />
     <Compile Include="SqlGeneration\IWhereBuilder.cs" />
-    <Compile Include="SqlGeneration\LetData.cs" />
     <Compile Include="SqlGeneration\SqlServer\MethodCallGenerators\MethodCallConvertTo.cs" />
     <Compile Include="SqlGeneration\SqlServer\MethodCallGenerators\MethodCallCount.cs" />
     <Compile Include="SqlGeneration\SqlServer\MethodCallGenerators\MethodCallDistinct.cs" />

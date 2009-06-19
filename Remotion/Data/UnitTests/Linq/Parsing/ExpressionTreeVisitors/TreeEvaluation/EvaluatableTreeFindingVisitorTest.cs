@@ -20,6 +20,7 @@ using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation
 {
@@ -122,6 +123,46 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors.TreeEvalua
 
       var evaluationInfo = EvaluatableTreeFindingVisitor.Analyze (expression);
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
+    }
+
+    [Test]
+    public void MemberInitialization_WithParametersInMemberAssignments_IsNotEvaluatable ()
+    {
+      var expression = (MemberInitExpression) ExpressionHelper.MakeExpression<int, AnonymousType> (i => new AnonymousType { a = i, b = 1 });
+
+      var evaluationInfo = EvaluatableTreeFindingVisitor.Analyze (expression);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (expression.NewExpression), Is.False);
+    }
+
+    [Test]
+    public void ListInitialization_WithParametersInMemberAssignments_IsNotEvaluatable ()
+    {
+      var expression = (ListInitExpression) ExpressionHelper.MakeExpression<int, List<int>> (i => new List<int> { i, 1 });
+
+      var evaluationInfo = EvaluatableTreeFindingVisitor.Analyze (expression);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (expression.NewExpression), Is.False);
+    }
+
+    [Test]
+    public void MemberInitialization_WithoutParametersInMemberAssignments_IsEvaluatable ()
+    {
+      var expression = (MemberInitExpression) ExpressionHelper.MakeExpression<int, AnonymousType> (i => new AnonymousType { a = 1, b = 1 });
+
+      var evaluationInfo = EvaluatableTreeFindingVisitor.Analyze (expression);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.True);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (expression.NewExpression), Is.True);
+    }
+
+    [Test]
+    public void ListInitialization_WithoutParametersInMemberAssignments_IsEvaluatable ()
+    {
+      var expression = (ListInitExpression) ExpressionHelper.MakeExpression<int, List<int>> (i => new List<int> { 2, 1 });
+
+      var evaluationInfo = EvaluatableTreeFindingVisitor.Analyze (expression);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.True);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (expression.NewExpression), Is.True);
     }
 
   }

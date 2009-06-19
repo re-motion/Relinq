@@ -53,24 +53,33 @@ namespace Remotion.Data.UnitTests.Linq.Parsing
       {
         Assert.AreEqual (e1.NodeType, e2.NodeType, GetMessage (e1, e2, "NodeType"));
         Assert.AreEqual (e1.Type, e2.Type, GetMessage (e1, e2, "Type"));
-        Assert.AreEqual (e1.GetType(), e2.GetType(), GetMessage (e1, e2, "GetType()"));
-
-        foreach (PropertyInfo property in e1.GetType().GetProperties (BindingFlags.Instance | BindingFlags.Public))
-        {
-          object value1 = property.GetValue (e1, null);
-          object value2 = property.GetValue (e2, null);
-          CheckAreEqualProperties (property, property.PropertyType, value1, value2, e1, e2);
-        }
+        CheckAreEqualObjects(e1, e2);
       }
     }
 
-    private void CheckAreEqualProperties (PropertyInfo property, Type valueType, object value1, object value2, Expression e1, Expression e2)
+    private void CheckAreEqualObjects (object e1, object e2)
+    {
+      Assert.AreEqual (e1.GetType(), e2.GetType(), GetMessage (e1, e2, "GetType()"));
+
+      foreach (PropertyInfo property in e1.GetType().GetProperties (BindingFlags.Instance | BindingFlags.Public))
+      {
+        object value1 = property.GetValue (e1, null);
+        object value2 = property.GetValue (e2, null);
+        CheckAreEqualProperties (property, property.PropertyType, value1, value2, e1, e2);
+      }
+    }
+
+    private void CheckAreEqualProperties (PropertyInfo property, Type valueType, object value1, object value2, object e1, object e2)
     {
       if (typeof (Expression).IsAssignableFrom (valueType))
       {
         Expression subNode1 = (Expression) value1;
         Expression subNode2 = (Expression) value2;
         CheckAreEqualNodes (subNode1, subNode2);
+      }
+      else if (typeof (MemberBinding).IsAssignableFrom (valueType) || typeof (ElementInit).IsAssignableFrom (valueType))
+      {
+        CheckAreEqualObjects (value1, value2);
       }
       else if (ReflectionUtility.CanAscribe (valueType, typeof (ReadOnlyCollection<>)))
       {
@@ -96,7 +105,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing
         Assert.AreEqual (value1, value2, GetMessage (e1, e2, "Property " + property.Name));
     }
 
-    private string GetMessage (Expression e1, Expression e2, string context)
+    private string GetMessage (object e1, object e2, string context)
     {
       return string.Format ("Trees are not equal: {0}\nNode 1: {1}\nNode 2: {2}\nTree 1: {3}\nTree 2: {4}", context, e1, e2, _expressionTreeRoot1,
           _expressionTreeRoot2);

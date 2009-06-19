@@ -82,13 +82,6 @@ namespace Remotion.Data.Linq.StringBuilding
           FormatExpression (joinClause.IntoIdentifier));
     }
 
-    public void VisitLetClause (LetClause letClause)
-    {
-      ArgumentUtility.CheckNotNull ("letClause", letClause);
-
-      _sb.AppendFormat ("let {0} = {1} ", FormatExpression (letClause.Identifier), FormatExpression (letClause.Expression));
-    }
-
     public void VisitWhereClause (WhereClause whereClause)
     {
       ArgumentUtility.CheckNotNull ("whereClause", whereClause);

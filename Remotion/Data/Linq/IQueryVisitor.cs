@@ -25,12 +25,10 @@ namespace Remotion.Data.Linq
     void VisitMemberFromClause (MemberFromClause fromClause);
     void VisitSubQueryFromClause (SubQueryFromClause clause);
     void VisitJoinClause (JoinClause joinClause);
-    void VisitLetClause (LetClause letClause);
     void VisitWhereClause (WhereClause whereClause);
     void VisitOrderByClause (OrderByClause orderByClause);
     void VisitOrdering (Ordering ordering);
     void VisitSelectClause (SelectClause selectClause);
     void VisitGroupClause (GroupClause groupClause);
-    //void VisitResultModifierClause (ResultModifierClause resultModifierClause);
   }
 }

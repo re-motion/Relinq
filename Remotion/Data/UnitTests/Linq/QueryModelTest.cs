@@ -236,21 +236,6 @@ namespace Remotion.Data.UnitTests.Linq
     }
 
     [Test]
-    public void GetResolveableClause_LetClause ()
-    {
-      ParameterExpression identifier = Expression.Parameter (typeof (Student), "s0");
-      
-      MainFromClause mainFromClause = ExpressionHelper.CreateMainFromClause (identifier, ExpressionHelper.CreateQuerySource ());
-
-      LetClause letClause = ExpressionHelper.CreateLetClause ();
-
-      QueryModel model = ExpressionHelper.CreateQueryModel (mainFromClause);
-      model.AddBodyClause (letClause);
-
-      Assert.AreSame (letClause, model.GetResolveableClause ("i", typeof (int)));
-    }
-    
-    [Test]
     public void ResolveField ()
     {
       ParameterExpression s1 = Expression.Parameter (typeof (String), "s1");

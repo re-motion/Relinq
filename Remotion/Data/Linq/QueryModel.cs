@@ -107,10 +107,6 @@ namespace Remotion.Data.Linq
       if (clauseAsFromClause != null)
         RegisterClause(clauseAsFromClause.Identifier, clauseAsFromClause);
 
-      var clauseAsLetClause = clause as LetClause;
-      if (clauseAsLetClause != null)
-        RegisterClause (clauseAsLetClause.Identifier, clauseAsLetClause);
-
       clause.SetQueryModel (this);
       _bodyClauses.Add (clause);
 

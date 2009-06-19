@@ -111,35 +111,11 @@ namespace Remotion.Data.Linq.Parsing.Structure
       { // this is not the end of the chain, process the rest of the chain before processing this node
         var previousClause = CreateClauseChain (node.Source, clauseGenerationContext);
 
-        // TODO 1180: This is only temporary, we will implement a better model that does not require LetClause later on.
-        if (previousClause is SelectClause)
-          previousClause = CreateLetClauseFromSelectClause((SelectClause) previousClause);
+        if (previousClause is SelectClause && !(node is ResultModificationExpressionNodeBase))
+          previousClause = previousClause.PreviousClause;
 
         return node.CreateClause (previousClause, clauseGenerationContext);
       }
-    }
-
-    // TODO 1180: This is only temporary, we will implement a better model that does not require LetClause later on.
-    // This creates a LetClause from an existing SelectClause if the SelectClause matches the pattern emitted by the C# compiler for "let" clauses.
-    private IClause CreateLetClauseFromSelectClause (SelectClause selectClause)
-    {
-      // selectClause.Selector is usually something like "i => new { i = i, j = whatever }"
-      // we take "j" as the letIdentifier, "whatever" as the letExpression, and the whole expression as the letProjection
-
-      var newExpression = selectClause.Selector as NewExpression;
-      if (newExpression != null && newExpression.Members.Count > 0)
-      {
-        Assertion.IsTrue (newExpression.Members.Count == newExpression.Arguments.Count, "This is ensured by Expression.New.");
-        var letMember = newExpression.Members.Last();
-        Assertion.IsTrue (letMember.Name.StartsWith ("get_"), 
-            "C# emits a MethodInfo to the property getter as the member to access the assignment in a let expression");
-
-        Expression letExpression = newExpression.Arguments.Last();
-        ParameterExpression letIdentifier = Expression.Parameter (letExpression.Type, letMember.Name.Substring (4));
-        LambdaExpression letProjection = Expression.Lambda (selectClause.Selector); // TODO: The lambda parameters aren't correct, but we'll remove the lambda anyway.
-        return new LetClause (selectClause.PreviousClause, letIdentifier, letExpression, letProjection);
-      }
-      return selectClause;
     }
 
     /// <summary>

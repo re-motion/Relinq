@@ -253,6 +253,27 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
     }
 
     [Test]
+    public void ReplaceableExpression_GivingAnotherReplaceableExpression ()
+    {
+      // new AnonymousType { a = (new AnonymousType { a = 5 }.a) }.a => 5
+      var replaceableExpression = Expression.MakeMemberAccess (
+          Expression.MemberInit (
+            _anonymousTypeNewExpression,
+            Expression.Bind (_anonymousTypeA, _assignedExpressionA)),
+          _anonymousTypeA);
+
+      var outerExpression = Expression.MakeMemberAccess (
+          Expression.MemberInit (
+            _anonymousTypeNewExpression,
+            Expression.Bind (_anonymousTypeA, replaceableExpression)),
+          _anonymousTypeA);
+
+      var result = TransparentIdentifierRemovingVisitor.ReplaceTransparentIdentifiers (outerExpression);
+      Assert.That (result, Is.SameAs (_assignedExpressionA));
+    }
+
+
+    [Test]
     public void IntegrationTest_WithSimpleExpressions ()
     {
       var expression1 = ExpressionHelper.MakeExpression<int, int> (i => new AnonymousType { a = i, b = 1 }.a);

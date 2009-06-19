@@ -31,7 +31,18 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
     public static Expression ReplaceTransparentIdentifiers (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      return new TransparentIdentifierRemovingVisitor().VisitExpression (expression);
+
+      Expression expressionBeforeRemove;
+      Expression expressionAfterRemove = expression;
+
+      // Run again and again until no replacements have been made.
+      do
+      {
+        expressionBeforeRemove = expressionAfterRemove;
+        expressionAfterRemove = new TransparentIdentifierRemovingVisitor ().VisitExpression (expressionAfterRemove);
+      } while (expressionAfterRemove != expressionBeforeRemove);
+
+      return expressionAfterRemove;
     }
 
     private TransparentIdentifierRemovingVisitor ()
