@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Utilities;
@@ -43,6 +44,7 @@ namespace Remotion.Data.Linq.Clauses
     /// The query (data) source which is requested
     /// </summary>
     // TODO 1158: Replace by QuerySourceType
+    [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (QuerySource),nq}")]
     public Expression QuerySource { get; private set; }
 
     public override void Accept (IQueryVisitor visitor)

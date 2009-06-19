@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Utilities;
@@ -38,11 +39,13 @@ namespace Remotion.Data.Linq.Clauses
 
     public IClause PreviousClause { get; private set; }
 
+    [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (GroupExpression),nq}")]
     public Expression GroupExpression
     {
       get { return _groupExpression; }
     }
 
+    [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (ByExpression),nq}")]
     public Expression ByExpression
     {
       get { return _byExpression; }

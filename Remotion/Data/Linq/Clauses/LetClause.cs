@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Data.Linq.DataObjectModel;
@@ -72,6 +73,7 @@ namespace Remotion.Data.Linq.Clauses
     /// The expression in a let expression.
     /// </summary>
     // TODO 1158: Replace with IEvaluation
+    [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (Expression),nq}")]
     public Expression Expression
     {
       get { return _expression; }

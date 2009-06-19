@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Data.Linq.DataObjectModel;
@@ -39,6 +40,7 @@ namespace Remotion.Data.Linq.Clauses
         throw new ArgumentException ("FromExpression must contain a MemberExpression.", "fromExpression");
     }
 
+    [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (MemberExpression),nq}")]
     public MemberExpression MemberExpression
     {
       get { return _memberExpression; }

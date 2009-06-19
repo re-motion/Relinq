@@ -13,6 +13,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+using System.Diagnostics;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Utilities;
@@ -69,16 +70,19 @@ namespace Remotion.Data.Linq.Clauses
       get { return _identifier; }
     }
 
+    [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (InExpression),nq}")]
     public Expression InExpression
     {
       get { return _inExpression; }
     }
 
+    [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (OnExpression),nq}")]
     public Expression OnExpression
     {
       get { return _onExpression; }
     }
 
+    [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (EqualityExpression),nq}")]
     public Expression EqualityExpression
     {
       get { return _equalityExpression; }

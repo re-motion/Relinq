@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Utilities;
@@ -52,6 +53,7 @@ namespace Remotion.Data.Linq.Clauses
     /// <summary>
     /// The expression from one part of a order by in a linq query.
     /// </summary>
+    [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (Expression),nq}")]
     public Expression Expression
     {
       get { return _expression; }

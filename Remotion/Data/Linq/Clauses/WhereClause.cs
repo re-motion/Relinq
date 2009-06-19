@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Utilities;
@@ -48,6 +49,7 @@ namespace Remotion.Data.Linq.Clauses
     /// <summary>
     /// The expression which represents the where conditions.
     /// </summary>
+    [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (Predicate),nq}")]
     public Expression Predicate
     {
       get; private set;

@@ -16,6 +16,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Utilities;
@@ -57,6 +58,7 @@ namespace Remotion.Data.Linq.Clauses
       set { _previousClause = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
+    [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (Selector),nq}")]
     public Expression Selector 
     {
       get { return _selector; }

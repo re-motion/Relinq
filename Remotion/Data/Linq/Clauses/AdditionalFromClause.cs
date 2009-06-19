@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Utilities;
@@ -46,6 +47,7 @@ namespace Remotion.Data.Linq.Clauses
     /// The expression of a from expression.
     /// </summary>
     // TODO 1158: Maybe replace by QuerySourceType
+    [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (FromExpression),nq}")]
     public Expression FromExpression { get; private set; }
 
     /// <summary>
