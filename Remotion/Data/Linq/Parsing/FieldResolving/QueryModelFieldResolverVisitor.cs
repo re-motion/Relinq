@@ -29,14 +29,12 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
     private readonly QueryModel _queryModel;
 
     private IResolveableClause _clause;
-    private bool _hackNeeded; // TODO 1096: Remove.
 
     private QueryModelFieldResolverVisitor (QueryModel queryModel)
     {
       ArgumentUtility.CheckNotNull ("queryExpression", queryModel);
       _queryModel = queryModel;
       _clause = null;
-      _hackNeeded = false; // TODO 1096: Remove.
     }
 
     public static QueryModelFieldResolverVisitorResult ParseAndReduce (QueryModel queryModel, Expression expression)
@@ -44,8 +42,8 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
       var visitor = new QueryModelFieldResolverVisitor (queryModel);
 
       Expression reducedExpression = visitor.VisitExpression (expression);
-      if (visitor._clause != null || visitor._hackNeeded)
-        return new QueryModelFieldResolverVisitorResult (reducedExpression, visitor._clause, visitor._hackNeeded);
+      if (visitor._clause != null)
+        return new QueryModelFieldResolverVisitorResult (reducedExpression, visitor._clause);
       else
         return null;
     }
@@ -56,9 +54,6 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
       ArgumentUtility.CheckNotNull ("expression", expression);
 
       _clause = _queryModel.GetResolveableClause (expression.Name, expression.Type);
-
-      if (_clause == null && expression.Name.StartsWith ("<generated>")) // TODO 1096: Remove.
-        _hackNeeded = true; // TODO 1096: Remove.
 
       if (_clause != null)
         return base.VisitParameterExpression (expression);

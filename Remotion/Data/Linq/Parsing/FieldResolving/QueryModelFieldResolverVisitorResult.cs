@@ -22,18 +22,15 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
 {
   public class QueryModelFieldResolverVisitorResult
   {
-    public QueryModelFieldResolverVisitorResult (Expression reducedExpression, IResolveableClause fromClause, bool hackNeeded)
+    public QueryModelFieldResolverVisitorResult (Expression reducedExpression, IResolveableClause fromClause)
     {
-      if (!hackNeeded)
-        ArgumentUtility.CheckNotNull ("fromClause", fromClause);
+      ArgumentUtility.CheckNotNull ("fromClause", fromClause);
 
       ReducedExpression = reducedExpression;
       ResolveableClause = fromClause;
-      HackNeeded = hackNeeded; // TODO 1096: Remove.
     }
 
     public Expression ReducedExpression { get; private set; }
     public IResolveableClause ResolveableClause { get; private set; }
-    public bool HackNeeded { get; private set; } // TODO 1096: Remove.
   }
 }
