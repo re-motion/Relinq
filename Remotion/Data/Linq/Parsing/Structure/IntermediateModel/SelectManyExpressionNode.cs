@@ -135,17 +135,20 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
 
       var identifier = ResultSelector.Parameters[1];
-      FromClauseBase clause;
-
-      if (CollectionSelector.Body is MemberExpression)
-        clause = new MemberFromClause (previousClause, identifier, CollectionSelector, ResultSelector);
-      else if (CollectionSelector.Body is SubQueryExpression)
-        clause = new SubQueryFromClause (previousClause, identifier, ((SubQueryExpression) CollectionSelector.Body).QueryModel);
-      else
-        clause = new AdditionalFromClause (previousClause, identifier, CollectionSelector, ResultSelector);
-
+      
+      FromClauseBase clause = CreateFromClauseOfCorrectType(previousClause, identifier);
       clauseGenerationContext.ClauseMapping.AddMapping (this, clause);
       return clause;
+    }
+
+    private FromClauseBase CreateFromClauseOfCorrectType (IClause previousClause, ParameterExpression identifier)
+    {
+      if (CollectionSelector.Body is MemberExpression)
+        return new MemberFromClause (previousClause, identifier, CollectionSelector);
+      else if (CollectionSelector.Body is SubQueryExpression)
+        return new SubQueryFromClause (previousClause, identifier, ((SubQueryExpression) CollectionSelector.Body).QueryModel);
+      else
+        return new AdditionalFromClause (previousClause, identifier, CollectionSelector);
     }
   }
 }

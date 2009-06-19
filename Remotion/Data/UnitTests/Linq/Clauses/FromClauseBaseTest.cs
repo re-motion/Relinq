@@ -70,9 +70,9 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(identifier, ExpressionHelper.CreateQuerySource ());
 
-      JoinedTableContext context = new JoinedTableContext ();
-      SelectFieldAccessPolicy policy = new SelectFieldAccessPolicy ();
-      ClauseFieldResolver resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, policy);
+      var context = new JoinedTableContext ();
+      var policy = new SelectFieldAccessPolicy ();
+      var resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, policy);
       FieldDescriptor fieldDescriptor = fromClause.ResolveField (resolver, identifier, context);
       Assert.AreEqual (new Column (new Table ("studentTable", "fromIdentifier1"), "*"), fieldDescriptor.Column);
     }
@@ -83,9 +83,9 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
       AdditionalFromClause fromClause = CreateAdditionalFromClause (identifier);
 
-      JoinedTableContext context = new JoinedTableContext ();
-      SelectFieldAccessPolicy policy = new SelectFieldAccessPolicy ();
-      ClauseFieldResolver resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, policy);
+      var context = new JoinedTableContext ();
+      var policy = new SelectFieldAccessPolicy ();
+      var resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, policy);
       FieldDescriptor fieldDescriptor = fromClause.ResolveField (resolver, identifier, context);
       Assert.AreEqual (new Column (new Table ("studentTable", "fromIdentifier1"), "*"), fieldDescriptor.Column);
     }
@@ -94,8 +94,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     {
       MainFromClause mainFromClause = ExpressionHelper.CreateMainFromClause(ExpressionHelper.CreateParameterExpression (), ExpressionHelper.CreateQuerySource ());
       LambdaExpression fromExpression = Expression.Lambda (Expression.Constant (null, typeof (IQueryable<Student>)));
-      LambdaExpression projectionExpression = Expression.Lambda (Expression.Constant (null, typeof (Student)));
-      return new AdditionalFromClause (mainFromClause, additionalFromIdentifier, fromExpression, projectionExpression);
+      return new AdditionalFromClause (mainFromClause, additionalFromIdentifier, fromExpression);
     }
   }
 }

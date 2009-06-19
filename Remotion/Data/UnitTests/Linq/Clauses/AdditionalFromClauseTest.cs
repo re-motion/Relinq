@@ -14,7 +14,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
@@ -44,15 +43,13 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     {
       ParameterExpression id = ExpressionHelper.CreateParameterExpression ();
       LambdaExpression fromExpression = ExpressionHelper.CreateLambdaExpression ();
-      LambdaExpression projectionExpression = ExpressionHelper.CreateLambdaExpression ();
 
       IClause clause = ExpressionHelper.CreateClause();
       
-      var fromClause = new AdditionalFromClause (clause,id, fromExpression, projectionExpression);
+      var fromClause = new AdditionalFromClause (clause,id, fromExpression);
 
       Assert.AreSame (id, fromClause.Identifier);
       Assert.AreSame (fromExpression, fromClause.FromExpression);
-      Assert.AreSame (projectionExpression, fromClause.ResultSelector);
       Assert.AreSame (clause, fromClause.PreviousClause);
 
       Assert.That (fromClause.JoinClauses, Is.Empty);
@@ -70,9 +67,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     {
       IQueryable<Student> querySource = ExpressionHelper.CreateQuerySource();
       LambdaExpression fromExpression = Expression.Lambda (Expression.Constant (querySource), Expression.Parameter (typeof (Student), "student"));
-      var fromClause =
-          new AdditionalFromClause (ExpressionHelper.CreateClause(), ExpressionHelper.CreateParameterExpression(), 
-          fromExpression, ExpressionHelper.CreateLambdaExpression());
+      var fromClause = new AdditionalFromClause (ExpressionHelper.CreateClause(), ExpressionHelper.CreateParameterExpression(), fromExpression);
       Assert.AreSame (typeof (TestQueryable<Student>), fromClause.GetQuerySourceType());
     }
 
@@ -125,7 +120,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clone, Is.Not.SameAs (_additionalFromClause));
       Assert.That (clone.Identifier, Is.SameAs (_additionalFromClause.Identifier));
       Assert.That (clone.FromExpression, Is.SameAs (_additionalFromClause.FromExpression));
-      Assert.That (clone.ResultSelector, Is.SameAs (_additionalFromClause.ResultSelector));
       Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
       Assert.That (clone.QueryModel, Is.Null);
     }
@@ -135,12 +129,10 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     {
       var mainFromClause = ExpressionHelper.CreateMainFromClause();
       var fromExpression = new QuerySourceReferenceExpression (mainFromClause);
-      var resultSelector = new QuerySourceReferenceExpression (mainFromClause);
       var additionalFromClause = new AdditionalFromClause (
           mainFromClause, 
           ExpressionHelper.CreateParameterExpression(), 
-          Expression.Lambda (fromExpression), 
-          Expression.Lambda (resultSelector));
+          Expression.Lambda (fromExpression));
 
       var newMainFromClause = ExpressionHelper.CreateMainFromClause ();
       _cloneContext.ClonedClauseMapping.AddMapping (mainFromClause, newMainFromClause);
@@ -148,7 +140,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       var clone = additionalFromClause.Clone (_cloneContext);
 
       Assert.That (((QuerySourceReferenceExpression) clone.FromExpression.Body).ReferencedClause, Is.SameAs (newMainFromClause));
-      Assert.That (((QuerySourceReferenceExpression) clone.ResultSelector.Body).ReferencedClause, Is.SameAs (newMainFromClause));
     }
 
     [Test]

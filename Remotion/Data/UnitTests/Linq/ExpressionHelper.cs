@@ -116,12 +116,12 @@ namespace Remotion.Data.UnitTests.Linq
 
     public static AdditionalFromClause CreateAdditionalFromClause (ParameterExpression identifier)
     {
-      return new AdditionalFromClause (CreateClause (), identifier, CreateLambdaExpression (), CreateLambdaExpression ());
+      return new AdditionalFromClause (CreateClause (), identifier, CreateLambdaExpression ());
     }
 
     public static AdditionalFromClause CreateAdditionalFromClause (IClause previousClause, ParameterExpression identifier)
     {
-      return new AdditionalFromClause (previousClause, identifier, CreateLambdaExpression (), CreateLambdaExpression ());
+      return new AdditionalFromClause (previousClause, identifier, CreateLambdaExpression ());
     }
 
     public static GroupClause CreateGroupClause ()
@@ -335,8 +335,7 @@ namespace Remotion.Data.UnitTests.Linq
       var identifier = CreateParameterExpression();
       var bodyExpression = Expression.MakeMemberAccess (Expression.Constant (null, typeof (IndustrialSector)), typeof (IndustrialSector).GetProperty ("Students"));
       var fromExpression = Expression.Lambda (bodyExpression);
-      var projectionExpression = CreateLambdaExpression();
-      return new MemberFromClause (previousClause, identifier, fromExpression, projectionExpression);
+      return new MemberFromClause (previousClause, identifier, fromExpression);
     }
 
     public static ResultModificationBase CreateResultModification (SelectClause selectClause)

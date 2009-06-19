@@ -298,7 +298,6 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
           repository.StrictMock<AdditionalFromClause> (
               ExpressionHelper.CreateClause(),
               Expression.Parameter (typeof (Student), "p"),
-              ExpressionHelper.CreateLambdaExpression(),
               ExpressionHelper.CreateLambdaExpression());
       var whereClause1 =
           repository.StrictMock<WhereClause> (ExpressionHelper.CreateClause(), ExpressionHelper.CreateExpression());
@@ -345,8 +344,7 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
       var fromClause = new AdditionalFromClause (
           ExpressionHelper.CreateClause(),
           ExpressionHelper.CreateParameterExpression(),
-          fromExpression,
-          ExpressionHelper.CreateLambdaExpression());
+          fromExpression);
 
       var sv = new StringBuildingQueryVisitor();
 
@@ -363,8 +361,7 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
       var fromClause = new AdditionalFromClause (
           ExpressionHelper.CreateClause(),
           ExpressionHelper.CreateParameterExpression(),
-          fromExpression,
-          ExpressionHelper.CreateLambdaExpression());
+          fromExpression);
 
       var sv = new StringBuildingQueryVisitor();
 
@@ -381,8 +378,7 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
       var fromClause = new AdditionalFromClause (
           ExpressionHelper.CreateClause(),
           ExpressionHelper.CreateParameterExpression(),
-          fromExpression,
-          ExpressionHelper.CreateLambdaExpression());
+          fromExpression);
 
       var sv = new StringBuildingQueryVisitor();
 
@@ -417,12 +413,11 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
     {
       IClause previousClause = ExpressionHelper.CreateMainFromClause();
       ParameterExpression identifier = Expression.Parameter (typeof (Student), "s");
-      LambdaExpression projectionExpression = ExpressionHelper.CreateLambdaExpression();
 
       MemberExpression bodyExpression = Expression.MakeMemberAccess (Expression.Constant ("test"), typeof (string).GetProperty ("Length"));
       LambdaExpression fromExpression = Expression.Lambda (bodyExpression);
 
-      var memberFromClause = new MemberFromClause (previousClause, identifier, fromExpression, projectionExpression);
+      var memberFromClause = new MemberFromClause (previousClause, identifier, fromExpression);
 
       var sv = new StringBuildingQueryVisitor();
       sv.VisitMemberFromClause (memberFromClause);

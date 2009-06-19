@@ -14,7 +14,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
@@ -46,15 +45,14 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "From expression must contain a MemberExpression.")]
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "FromExpression must contain a MemberExpression.\r\nParameter name: fromExpression")]
     public void FromExpressionContainNoMemberExpression ()
     {
       var previousClause = ExpressionHelper.CreateClause ();
       var identifier = ExpressionHelper.CreateParameterExpression ();
       var bodyExpression = Expression.Constant ("test");
       var fromExpression = Expression.Lambda (bodyExpression);
-      var projectionExpression = ExpressionHelper.CreateLambdaExpression ();
-      new MemberFromClause (previousClause, identifier, fromExpression, projectionExpression);
+      new MemberFromClause (previousClause, identifier, fromExpression);
     }
 
     [Test]
@@ -87,7 +85,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clone, Is.Not.SameAs (_memberFromClause));
       Assert.That (clone.Identifier, Is.SameAs (_memberFromClause.Identifier));
       Assert.That (clone.FromExpression, Is.SameAs (_memberFromClause.FromExpression));
-      Assert.That (clone.ResultSelector, Is.SameAs (_memberFromClause.ResultSelector));
       Assert.That (clone.MemberExpression, Is.SameAs (_memberFromClause.MemberExpression));
       Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
       Assert.That (clone.QueryModel, Is.Null);
@@ -98,12 +95,10 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     {
       var mainFromClause = ExpressionHelper.CreateMainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource());
       var fromExpression = Expression.MakeMemberAccess (new QuerySourceReferenceExpression (mainFromClause), typeof (Student).GetProperty ("OtherStudent"));
-      var projectionExpression = new QuerySourceReferenceExpression (mainFromClause);
       var memberFromClause = new MemberFromClause (
           mainFromClause, 
           ExpressionHelper.CreateParameterExpression(), 
-          Expression.Lambda (fromExpression), 
-          Expression.Lambda (projectionExpression));
+          Expression.Lambda (fromExpression));
 
       var newMainFromClause = ExpressionHelper.CreateMainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
       _cloneContext.ClonedClauseMapping.AddMapping (mainFromClause, newMainFromClause);
@@ -111,7 +106,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       var clone = (MemberFromClause) memberFromClause.Clone (_cloneContext);
 
       Assert.That (((QuerySourceReferenceExpression) clone.MemberExpression.Expression).ReferencedClause, Is.SameAs (newMainFromClause));
-      Assert.That (((QuerySourceReferenceExpression) clone.ResultSelector.Body).ReferencedClause, Is.SameAs (newMainFromClause));
     }
 
     [Test]

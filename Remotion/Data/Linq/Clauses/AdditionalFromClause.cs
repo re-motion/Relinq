@@ -32,18 +32,14 @@ namespace Remotion.Data.Linq.Clauses
     /// <param name="previousClause">The previous <see cref="IClause"/> of this from clause.</param>
     /// <param name="identifier">The identifierer of the from expression.</param>
     /// <param name="fromExpression">The expression of the from expression.</param>
-    /// <param name="resultSelector">The projection of identifier to from expression.</param>
-    public AdditionalFromClause (IClause previousClause, ParameterExpression identifier, LambdaExpression fromExpression,
-        LambdaExpression resultSelector)
+    public AdditionalFromClause (IClause previousClause, ParameterExpression identifier, LambdaExpression fromExpression)
         : base (previousClause,identifier)
     {
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
       ArgumentUtility.CheckNotNull ("identifier", identifier);
       ArgumentUtility.CheckNotNull ("fromExpression", fromExpression);
-      ArgumentUtility.CheckNotNull ("resultSelector", resultSelector);
 
       FromExpression = fromExpression;
-      ResultSelector = resultSelector;
     }
 
     /// <summary>
@@ -51,12 +47,6 @@ namespace Remotion.Data.Linq.Clauses
     /// </summary>
     // TODO 1158: Replace by QuerySourceType
     public LambdaExpression FromExpression { get; private set; }
-
-    /// <summary>
-    /// The projection of a from expression.
-    /// </summary>
-    // TODO 1158: Remove
-    public LambdaExpression ResultSelector { get; private set; }
 
     /// <summary>
     /// The appropriate <see cref="QueryModel"/> of the <see cref="AdditionalFromClause"/>.
@@ -89,8 +79,7 @@ namespace Remotion.Data.Linq.Clauses
 
       var newPreviousClause = cloneContext.ClonedClauseMapping.GetClause<IClause> (PreviousClause);
       var newFromExpression = CloneExpressionTreeVisitor.ReplaceClauseReferences (FromExpression, cloneContext);
-      var newResultSelector = CloneExpressionTreeVisitor.ReplaceClauseReferences (ResultSelector, cloneContext);
-      var result = new AdditionalFromClause (newPreviousClause, Identifier, (LambdaExpression) newFromExpression, (LambdaExpression) newResultSelector);
+      var result = new AdditionalFromClause (newPreviousClause, Identifier, (LambdaExpression) newFromExpression);
       cloneContext.ClonedClauseMapping.AddMapping (this, result);
       result.AddClonedJoinClauses (JoinClauses, cloneContext);
       return result;
