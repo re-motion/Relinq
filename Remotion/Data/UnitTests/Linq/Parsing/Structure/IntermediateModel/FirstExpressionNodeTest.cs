@@ -18,9 +18,8 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultModifications;
-using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
 using Rhino.Mocks;
@@ -30,6 +29,21 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
   [TestFixture]
   public class FirstExpressionNodeTest : ExpressionNodeTestBase
   {
+    private FirstExpressionNode _node;
+    private FirstExpressionNode _nodeWithPredicate;
+    private Expression<Func<int, bool>> _predicate;
+
+    [SetUp]
+    public override void SetUp ()
+    {
+      base.SetUp();
+
+      _node = new FirstExpressionNode (CreateParseInfo (), null);
+      _predicate = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
+      _nodeWithPredicate = new FirstExpressionNode (CreateParseInfo (), _predicate);
+      
+    }
+
     [Test]
     public void SupportedMethod_WithoutPredicate ()
     {
@@ -62,19 +76,15 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [ExpectedException (typeof (InvalidOperationException))]
     public void Resolve_ThrowsInvalidOperationException ()
     {
-      var node = new FirstExpressionNode (CreateParseInfo (), null);
-      node.Resolve (ExpressionHelper.CreateParameterExpression (), ExpressionHelper.CreateExpression (), ClauseGenerationContext);
+      _node.Resolve (ExpressionHelper.CreateParameterExpression (), ExpressionHelper.CreateExpression (), ClauseGenerationContext);
     }
 
     [Test]
     public void GetResolvedPredicate ()
     {
-      var predicate = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new FirstExpressionNode (CreateParseInfo (), predicate);
-      
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
 
-      var result = node.GetResolvedOptionalPredicate (ClauseGenerationContext);
+      var result = _nodeWithPredicate.GetResolvedOptionalPredicate (ClauseGenerationContext);
 
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
@@ -92,49 +102,58 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [ExpectedException (typeof (InvalidOperationException))]
     public void CreateParameterForOutput ()
     {
-      var node = new FirstExpressionNode (CreateParseInfo (), null);
-      node.CreateParameterForOutput ();
+      _node.CreateParameterForOutput ();
     }
 
     [Test]
-    public void CreateClause_WithoutOptionalPredicate_PreviousClauseIsSelect ()
+    public void CreateClause ()
     {
-      var node = new FirstExpressionNode (CreateParseInfo (), null);
+      var previousClause = ExpressionHelper.CreateClause ();
 
-      TestCreateClause_PreviousClauseIsSelect (node, typeof (FirstResultModification));
+      var result = _node.CreateClause (previousClause, ClauseGenerationContext);
+      Assert.That (result, Is.SameAs (previousClause));
+      Assert.That (ClauseGenerationContext.ResultModificationNodeRegistry.ToArray (), List.Contains (_node));
     }
 
     [Test]
-    public void CreateClause_WithoutOptionalPredicate_PreviousClauseIsNoSelect ()
+    public void ApplyToSelectClause_WithoutOptionalPredicate ()
     {
-      var node = new FirstExpressionNode (CreateParseInfo (), null);
-
-      TestCreateClause_PreviousClauseIsNoSelect (node, typeof (FirstResultModification));
+      TestApplyToSelectClause (_node, typeof (FirstResultModification));
     }
 
     [Test]
-    public void CreateClause_WithOptionalPredicate_CreatesWhereClause ()
+    public void ApplyToSelectClause_WithOptionalPredicate_CreatesWhereClause ()
     {
-      var node = new FirstExpressionNode (CreateParseInfo (), ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5));
-      TestCreateClause_WithOptionalPredicate (node);
+      TestApplyToSelectClause_WithOptionalPredicate (_nodeWithPredicate);
     }
 
     [Test]
-    public void CreateClause_NoDefaultAllowed ()
+    public void ApplyToSelectClause_NoDefaultAllowed ()
     {
       var node = new FirstExpressionNode (CreateParseInfo (FirstExpressionNode.SupportedMethods[0].MakeGenericMethod (typeof (Student))), null);
-      var clause = (SelectClause) node.CreateClause (ExpressionHelper.CreateClause (), ClauseGenerationContext);
+      var selectClause = ExpressionHelper.CreateSelectClause ();
+      node.ApplyToSelectClause (selectClause, ClauseGenerationContext);
 
-      Assert.That (((FirstResultModification) clause.ResultModifications[0]).ReturnDefaultWhenEmpty, Is.False);
+      Assert.That (((FirstResultModification) selectClause.ResultModifications[0]).ReturnDefaultWhenEmpty, Is.False);
     }
 
     [Test]
-    public void CreateClause_DefaultAllowed ()
+    public void ApplyToSelectClause_DefaultAllowed ()
     {
       var node = new FirstExpressionNode (CreateParseInfo (FirstExpressionNode.SupportedMethods[3].MakeGenericMethod (typeof (Student))), null);
-      var clause = (SelectClause) node.CreateClause (ExpressionHelper.CreateClause (), ClauseGenerationContext);
+      var selectClause = ExpressionHelper.CreateSelectClause ();
+      node.ApplyToSelectClause (selectClause, ClauseGenerationContext);
 
-      Assert.That (((FirstResultModification) clause.ResultModifications[0]).ReturnDefaultWhenEmpty, Is.True);
+      Assert.That (((FirstResultModification) selectClause.ResultModifications[0]).ReturnDefaultWhenEmpty, Is.True);
+    }
+
+    [Test]
+    public void CreateSelectClause ()
+    {
+      var previousClause = ExpressionHelper.CreateClause ();
+
+      var selectClause = _node.CreateSelectClause (previousClause, ClauseGenerationContext);
+      Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedClause, Is.SameAs (SourceClause));
     }
   }
 }

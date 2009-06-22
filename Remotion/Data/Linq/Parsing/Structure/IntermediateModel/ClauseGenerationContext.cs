@@ -27,20 +27,24 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public ClauseGenerationContext (
         QuerySourceClauseMapping clauseMapping, 
         MethodCallExpressionNodeTypeRegistry nodeTypeRegistry, 
-        SubQueryRegistry subQueryRegistry)
+        SubQueryRegistry subQueryRegistry,
+        ResultModificationExpressionNodeRegistry resultModificationNodeRegistry)
       : this()
     {
       ArgumentUtility.CheckNotNull ("clauseMapping", clauseMapping);
       ArgumentUtility.CheckNotNull ("nodeTypeRegistry", nodeTypeRegistry);
       ArgumentUtility.CheckNotNull ("subQueryRegistry", subQueryRegistry);
+      ArgumentUtility.CheckNotNull ("resultModificationNodeRegistry", resultModificationNodeRegistry);
 
       ClauseMapping = clauseMapping;
       NodeTypeRegistry = nodeTypeRegistry;
       SubQueryRegistry = subQueryRegistry;
+      ResultModificationNodeRegistry = resultModificationNodeRegistry;
     }
 
-    public QuerySourceClauseMapping ClauseMapping { get; set; }
-    public MethodCallExpressionNodeTypeRegistry NodeTypeRegistry { get; set; }
-    public SubQueryRegistry SubQueryRegistry { get; set; }
+    public QuerySourceClauseMapping ClauseMapping { get; private set; }
+    public MethodCallExpressionNodeTypeRegistry NodeTypeRegistry { get; private set; }
+    public SubQueryRegistry SubQueryRegistry { get; private set; }
+    public ResultModificationExpressionNodeRegistry ResultModificationNodeRegistry { get; private set; }
   }
 }

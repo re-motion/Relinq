@@ -17,6 +17,7 @@ using System;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultModifications;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
@@ -27,6 +28,14 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
   [TestFixture]
   public class DistinctExpressionNodeTest : ExpressionNodeTestBase
   {
+    private DistinctExpressionNode _node;
+
+    public override void SetUp ()
+    {
+      base.SetUp ();
+      _node = new DistinctExpressionNode (CreateParseInfo ());
+    }
+
     [Test]
     public void SupportedMethod_WithoutComparer ()
     {
@@ -62,18 +71,31 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void CreateClause_PreviousClauseIsSelect ()
+    public void CreateClause ()
     {
-      var node = new DistinctExpressionNode (CreateParseInfo ());
+      var previousClause = ExpressionHelper.CreateClause ();
 
-      TestCreateClause_PreviousClauseIsSelect (node, typeof (DistinctResultModification));
+      var result = _node.CreateClause (previousClause, ClauseGenerationContext);
+      Assert.That (result, Is.SameAs (previousClause));
+      Assert.That (ClauseGenerationContext.ResultModificationNodeRegistry.ToArray(), List.Contains (_node));
     }
 
     [Test]
-    public void CreateClause_PreviousClauseIsNoSelect ()
+    public void ApplyToSelectClause ()
     {
-      var node = new DistinctExpressionNode (CreateParseInfo ());
-      TestCreateClause_PreviousClauseIsNoSelect (node, typeof (DistinctResultModification));
+      var selectClause = ExpressionHelper.CreateSelectClause ();
+
+      _node.ApplyToSelectClause (selectClause, ClauseGenerationContext);
+      Assert.That (selectClause.ResultModifications[0], Is.InstanceOfType (typeof (DistinctResultModification)));
+    }
+
+    [Test]
+    public void CreateSelectClause ()
+    {
+      var previousClause = ExpressionHelper.CreateClause ();
+
+      var selectClause = _node.CreateSelectClause (previousClause, ClauseGenerationContext);
+      Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedClause, Is.SameAs (SourceClause));
     }
   }
 }

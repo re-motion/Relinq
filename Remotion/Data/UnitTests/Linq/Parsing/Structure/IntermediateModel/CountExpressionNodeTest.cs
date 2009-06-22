@@ -18,8 +18,8 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultModifications;
-using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
 using Rhino.Mocks;
@@ -29,6 +29,18 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
   [TestFixture]
   public class CountExpressionNodeTest : ExpressionNodeTestBase
   {
+    private CountExpressionNode _node;
+    private CountExpressionNode _nodeWithPredicate;
+    private Expression<Func<int, bool>> _predicate;
+
+    public override void SetUp ()
+    {
+      base.SetUp ();
+      _node = new CountExpressionNode (CreateParseInfo (), null);
+      _predicate = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
+      _nodeWithPredicate = new CountExpressionNode (CreateParseInfo (), _predicate);
+    }
+
     [Test]
     public void SupportedMethod_WithoutPredicate ()
     {
@@ -47,26 +59,22 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [ExpectedException (typeof (InvalidOperationException))]
     public void Resolve_ThrowsInvalidOperationException ()
     {
-      var node = new CountExpressionNode (CreateParseInfo (), null);
-      node.Resolve (ExpressionHelper.CreateParameterExpression (), ExpressionHelper.CreateExpression (), ClauseGenerationContext);
+      _node.Resolve (ExpressionHelper.CreateParameterExpression (), ExpressionHelper.CreateExpression (), ClauseGenerationContext);
     }
 
     [Test]
     [ExpectedException (typeof (InvalidOperationException))]
     public void CreateParameterForOutput ()
     {
-      var node = new CountExpressionNode (CreateParseInfo (), null);
-      node.CreateParameterForOutput ();
+      _node.CreateParameterForOutput ();
     }
 
     [Test]
     public void GetResolvedPredicate ()
     {
-      var predicate = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new CountExpressionNode (CreateParseInfo (), predicate);
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
 
-      var result = node.GetResolvedOptionalPredicate (ClauseGenerationContext);
+      var result = _nodeWithPredicate.GetResolvedOptionalPredicate (ClauseGenerationContext);
 
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
@@ -81,26 +89,33 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void CreateClause_WithoutOptionalPredicate_PreviousClauseIsSelect ()
+    public void CreateClause ()
     {
-      var node = new CountExpressionNode (CreateParseInfo (), null);
-
-      TestCreateClause_PreviousClauseIsSelect (node, typeof (CountResultModification));
+      var previousClause = ExpressionHelper.CreateClause();
+      var result = _node.CreateClause (previousClause, ClauseGenerationContext);
+      Assert.That (result, Is.SameAs (previousClause));
+      Assert.That (ClauseGenerationContext.ResultModificationNodeRegistry.ToArray(), List.Contains (_node));
     }
 
     [Test]
-    public void CreateClause_WithoutOptionalPredicate_PreviousClauseIsNoSelect ()
+    public void ApplyToSelectClause_WithoutOptionalPredicate ()
     {
-      var node = new CountExpressionNode (CreateParseInfo (), null);
-
-      TestCreateClause_PreviousClauseIsNoSelect (node, typeof (CountResultModification));
+      TestApplyToSelectClause (_node, typeof (CountResultModification));
     }
 
     [Test]
-    public void CreateClause_WithOptionalPredicate_CreatesWhereClause ()
+    public void ApplyToSelectClause_WithOptionalPredicate_CreatesWhereClause ()
     {
-      var node = new CountExpressionNode (CreateParseInfo (), ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5));
-      TestCreateClause_WithOptionalPredicate(node);
+      TestApplyToSelectClause_WithOptionalPredicate (_nodeWithPredicate);
+    }
+
+    [Test]
+    public void CreateSelectClause ()
+    {
+      var previousClause = ExpressionHelper.CreateClause ();
+
+      var selectClause = _node.CreateSelectClause (previousClause, ClauseGenerationContext);
+      Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedClause, Is.SameAs (SourceClause));
     }
   }
 }

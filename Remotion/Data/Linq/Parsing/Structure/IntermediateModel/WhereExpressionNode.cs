@@ -34,7 +34,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Queryable.Where<object> (null, o => true))
                                                            };
 
-    private ResolvedExpressionCache _cachedPredicate;
+    private readonly ResolvedExpressionCache _cachedPredicate;
 
     public WhereExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression predicate)
         : base (parseInfo)

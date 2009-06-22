@@ -74,10 +74,13 @@ namespace Remotion.Data.Linq.Parsing.Structure
       var clauseGenerationContext = new ClauseGenerationContext (
           new QuerySourceClauseMapping (), 
           _expressionTreeParser.NodeTypeRegistry, 
-          new SubQueryRegistry());
+          new SubQueryRegistry(),
+          new ResultModificationExpressionNodeRegistry());
 
       IClause lastClause = CreateClauseChain (node, clauseGenerationContext);
       SelectClause selectClause = GetOrCreateSelectClause (node, lastClause, clauseGenerationContext);
+
+      clauseGenerationContext.ResultModificationNodeRegistry.ApplyAllToSelectClause (selectClause, clauseGenerationContext);
 
       // TODO 1178: After COMMONS-1178, this code will not be needed any longer.
       var bodyClauses = new List<IBodyClause>();
@@ -130,15 +133,9 @@ namespace Remotion.Data.Linq.Parsing.Structure
     private SelectClause GetOrCreateSelectClause (IExpressionNode lastNode, IClause lastClause, ClauseGenerationContext clauseGenerationContext)
     {
       if (lastClause is SelectClause)
-      {
         return (SelectClause) lastClause;
-      }
       else
-      {
-        var parameterExpression = lastNode.CreateParameterForOutput();
-        var resolvedParameterExpression = lastNode.Resolve (parameterExpression, parameterExpression, clauseGenerationContext);
-        return new SelectClause (lastClause, resolvedParameterExpression);
-      }
+        return lastNode.CreateSelectClause (lastClause, clauseGenerationContext);
     }
 
     // TODO 1178: After COMMONS-1178, this code will not be needed any longer.

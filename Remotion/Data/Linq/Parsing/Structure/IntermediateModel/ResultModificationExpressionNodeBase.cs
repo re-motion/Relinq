@@ -74,40 +74,29 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public override IClause CreateClause (IClause previousClause, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
+      clauseGenerationContext.ResultModificationNodeRegistry.AddResultModificationNode (this);
+      return previousClause;
+    }
 
-      SelectClause selectClause = GetSelectClauseForResultModification (previousClause, clauseGenerationContext);
-      selectClause.AddResultModification (CreateResultModification (selectClause));
-      CreateWhereClauseForResultModification (selectClause, clauseGenerationContext);
-      AdjustSelectorForResultModification (selectClause);
-
-      return selectClause;
+    public override SelectClause CreateSelectClause (IClause previousClause, ClauseGenerationContext clauseGenerationContext)
+    {
+      return Source.CreateSelectClause (previousClause, clauseGenerationContext);
     }
 
     /// <summary>
-    /// Gets the <see cref="SelectClause"/> needed when implementing the <see cref="MethodCallExpressionNodeBase.CreateClause"/> method for a result modification node.
+    /// Applies a <see cref="ResultModificationBase"/> representing this <see cref="ResultModificationExpressionNodeBase"/> to the given 
+    /// <see cref="SelectClause"/>, adding a <see cref="WhereClause"/> for the <see cref="OptionalPredicate"/> if present and adjusting the
+    /// <see cref="SelectClause.Selector"/> for the <see cref="OptionalSelector"/> if present.
     /// </summary>
-    /// <returns>The previous clause if it is a <see cref="SelectClause"/>, or a new clause with the given <paramref name="previousClause"/>
-    /// and an identity projection if it is not.</returns>
-    /// <remarks>
-    /// Result modification nodes such as <see cref="CountExpressionNode"/> or <see cref="DistinctExpressionNode"/> do not identify real 
-    /// clauses, they represent result modifications in the preceding <see cref="SelectClause"/>.
-    /// Therefore, implementations of <see cref="MethodCallExpressionNodeBase.CreateClause"/> will usually not add new clauses, but instead call 
-    /// <see cref="SelectClause.AddResultModification"/> on the <paramref name="previousClause"/>. If, however, the <paramref name="previousClause"/>
-    /// is not a <see cref="SelectClause"/> because it was optimized away, a new trivial <see cref="SelectClause"/> must be added by the node. This
-    /// is implemented by this method.
-    /// </remarks>
-    private SelectClause GetSelectClauseForResultModification (IClause previousClause, ClauseGenerationContext clauseGenerationContext)
+    /// <param name="selectClause">The select clause to apply the modification to.</param>
+    /// <param name="clauseGenerationContext">The clause generation context.</param>
+    public void ApplyToSelectClause (SelectClause selectClause, ClauseGenerationContext clauseGenerationContext)
     {
-      var selectClause = previousClause as SelectClause;
+      ArgumentUtility.CheckNotNull ("selectClause", selectClause);
 
-      if (selectClause == null)
-      {
-        var selectorParameter = Source.CreateParameterForOutput();
-        var resolvedSelectorParameter = Source.Resolve (selectorParameter, selectorParameter, clauseGenerationContext);
-        selectClause = new SelectClause (previousClause, resolvedSelectorParameter);
-      }
-
-      return selectClause;
+      selectClause.AddResultModification (CreateResultModification (selectClause));
+      CreateWhereClauseForResultModification (selectClause, clauseGenerationContext);
+      AdjustSelectorForResultModification (selectClause);
     }
 
     /// <summary>

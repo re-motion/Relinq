@@ -18,8 +18,8 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultModifications;
-using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
 using Rhino.Mocks;
@@ -29,17 +29,27 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
   [TestFixture]
   public class MinExpressionNodeTest : ExpressionNodeTestBase
   {
+    private MinExpressionNode _node;
+    private MinExpressionNode _nodeWithSelector;
+
+    public override void SetUp ()
+    {
+      base.SetUp ();
+      _node = new MinExpressionNode (CreateParseInfo (), null);
+      _nodeWithSelector = new MinExpressionNode (CreateParseInfo (), OptionalSelector);
+    }
+
     [Test]
     public void SupportedMethod_WithoutSelector ()
     {
-      MethodInfo method = GetGenericMethodDefinition (q => q.Min());
+      MethodInfo method = GetGenericMethodDefinition (q => q.Min ());
       Assert.That (MinExpressionNode.SupportedMethods, List.Contains (method));
     }
 
     [Test]
     public void SupportedMethod_WithSelector ()
     {
-      MethodInfo method = GetGenericMethodDefinition (q => q.Min (i => i.ToString()));
+      MethodInfo method = GetGenericMethodDefinition (q => q.Min (i => i.ToString ()));
       Assert.That (MinExpressionNode.SupportedMethods, List.Contains (method));
     }
 
@@ -47,19 +57,15 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [ExpectedException (typeof (InvalidOperationException))]
     public void Resolve_ThrowsInvalidOperationException ()
     {
-      var node = new MinExpressionNode (CreateParseInfo (), null);
-      node.Resolve (ExpressionHelper.CreateParameterExpression (), ExpressionHelper.CreateExpression (), ClauseGenerationContext);
+      _node.Resolve (ExpressionHelper.CreateParameterExpression (), ExpressionHelper.CreateExpression (), ClauseGenerationContext);
     }
 
     [Test]
     public void GetResolvedSelector ()
     {
-      var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new MinExpressionNode (CreateParseInfo (), selector);
+      var expectedResult = ExpressionHelper.Resolve<int, string> (SourceClause, i => i.ToString ());
 
-      var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
-
-      var result = node.GetResolvedOptionalSelector (ClauseGenerationContext);
+      var result = _nodeWithSelector.GetResolvedOptionalSelector (ClauseGenerationContext);
 
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
@@ -77,31 +83,37 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [ExpectedException (typeof (InvalidOperationException))]
     public void CreateParameterForOutput ()
     {
-      var node = new MinExpressionNode (CreateParseInfo (), null);
-      node.CreateParameterForOutput ();
+      _node.CreateParameterForOutput ();
     }
 
     [Test]
-    public void CreateClause_WithoutSelector_PreviousClauseIsSelect ()
+    public void CreateClause ()
     {
-      var node = new MinExpressionNode (CreateParseInfo (), null);
-      TestCreateClause_PreviousClauseIsSelect (node, typeof (MinResultModification));
+      var previousClause = ExpressionHelper.CreateClause ();
+      var result = _node.CreateClause (previousClause, ClauseGenerationContext);
+      Assert.That (result, Is.SameAs (previousClause));
+      Assert.That (ClauseGenerationContext.ResultModificationNodeRegistry.ToArray (), List.Contains (_node));
     }
 
     [Test]
-    public void CreateClause_WithoutSelector_PreviousClauseIsNoSelect ()
+    public void ApplyToSelectClause_WithoutSelector ()
     {
-      var node = new MinExpressionNode (CreateParseInfo (), null);
-      TestCreateClause_PreviousClauseIsNoSelect (node, typeof (MinResultModification));
+      TestApplyToSelectClause (_node, typeof (MinResultModification));
     }
 
     [Test]
-    public void CreateClause_WithSelector_AdjustsSelectClause ()
+    public void ApplyToSelectClause_WithSelector_AdjustsSelectClause ()
     {
-      var selector = ExpressionHelper.CreateLambdaExpression (OptionalSelector);
-      var node = new MinExpressionNode (CreateParseInfo (), selector);
+      TestApplyToSelectClause_WithOptionalSelector (_nodeWithSelector);
+    }
 
-      TestCreateClause_WithOptionalSelector(node);
+    [Test]
+    public void CreateSelectClause ()
+    {
+      var previousClause = ExpressionHelper.CreateClause ();
+
+      var selectClause = _node.CreateSelectClause (previousClause, ClauseGenerationContext);
+      Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedClause, Is.SameAs (SourceClause));
     }
   }
 }

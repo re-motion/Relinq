@@ -17,7 +17,7 @@ using System;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultModifications;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
@@ -28,6 +28,14 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
   [TestFixture]
   public class TakeExpressionNodeTest : ExpressionNodeTestBase
   {
+    private TakeExpressionNode _node;
+
+    public override void SetUp ()
+    {
+      base.SetUp ();
+      _node = new TakeExpressionNode (CreateParseInfo (), 3);
+    }
+
     [Test]
     public void SupportedMethod ()
     {
@@ -63,26 +71,31 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void CreateClause_Count ()
+    public void CreateClause ()
     {
-      var node = new TakeExpressionNode (CreateParseInfo (), 3);
-      var clause = (SelectClause) node.CreateClause (ExpressionHelper.CreateClause (), ClauseGenerationContext);
-      Assert.That (((TakeResultModification) clause.ResultModifications[0]).Count, Is.EqualTo (3));
+      var previousClause = ExpressionHelper.CreateClause ();
+
+      var result = _node.CreateClause (previousClause, ClauseGenerationContext);
+      Assert.That (result, Is.SameAs (previousClause));
+      Assert.That (ClauseGenerationContext.ResultModificationNodeRegistry.ToArray (), List.Contains (_node));
     }
 
     [Test]
-    public void CreateClause_PreviousClauseIsSelect ()
+    public void ApplyToSelectClause ()
     {
-      var node = new TakeExpressionNode (CreateParseInfo (), 3);
+      var selectClause = ExpressionHelper.CreateSelectClause();
 
-      TestCreateClause_PreviousClauseIsSelect (node, typeof (TakeResultModification));
+      _node.ApplyToSelectClause (selectClause, ClauseGenerationContext);
+      Assert.That (((TakeResultModification) selectClause.ResultModifications[0]).Count, Is.EqualTo (3));
     }
 
     [Test]
-    public void CreateClause_PreviousClauseIsNoSelect ()
+    public void CreateSelectClause ()
     {
-      var node = new TakeExpressionNode (CreateParseInfo (), 3);
-      TestCreateClause_PreviousClauseIsNoSelect (node, typeof (TakeResultModification));
+      var previousClause = ExpressionHelper.CreateClause ();
+
+      var selectClause = _node.CreateSelectClause (previousClause, ClauseGenerationContext);
+      Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedClause, Is.SameAs (SourceClause));
     }
   }
 }

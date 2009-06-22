@@ -37,8 +37,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       QuerySourceClauseMapping = new QuerySourceClauseMapping();
       ClauseGenerationContext = new ClauseGenerationContext(
           QuerySourceClauseMapping, 
-          MethodCallExpressionNodeTypeRegistry.CreateDefault(), 
-          new SubQueryRegistry());
+          MethodCallExpressionNodeTypeRegistry.CreateDefault(),
+          new SubQueryRegistry (),
+          new ResultModificationExpressionNodeRegistry ());
 
       SourceClause = (FromClauseBase) SourceNode.CreateClause (null, ClauseGenerationContext);
       SourceReference = new QuerySourceReferenceExpression (SourceClause);
@@ -67,66 +68,45 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
 
-    protected void TestCreateClause_PreviousClauseIsSelect (IExpressionNode node, Type expectedResultModificationType)
+    protected void TestApplyToSelectClause (ResultModificationExpressionNodeBase node, Type expectedResultModificationType)
     {
-      var previousClause = ExpressionHelper.CreateSelectClause();
+      var selectClause = ExpressionHelper.CreateSelectClause();
 
-      var clause = (SelectClause) node.CreateClause (previousClause, ClauseGenerationContext);
+      node.ApplyToSelectClause (selectClause, ClauseGenerationContext);
 
-      Assert.That (clause, Is.SameAs (previousClause));
-      Assert.That (clause.ResultModifications.Count, Is.EqualTo (1));
-      Assert.That (clause.ResultModifications[0], Is.InstanceOfType (expectedResultModificationType));
-      Assert.That (clause.ResultModifications[0].SelectClause, Is.SameAs (clause));
+      Assert.That (selectClause.ResultModifications.Count, Is.EqualTo (1));
+      Assert.That (selectClause.ResultModifications[0], Is.InstanceOfType (expectedResultModificationType));
+      Assert.That (selectClause.ResultModifications[0].SelectClause, Is.SameAs (selectClause));
     }
 
-    protected void TestCreateClause_PreviousClauseIsNoSelect (IExpressionNode node, Type expectedResultModificationType)
+    protected void TestApplyToSelectClause_WithOptionalPredicate (ResultModificationExpressionNodeBase node)
     {
-      var previousClause = SourceClause;
-
-      var clause = (SelectClause) node.CreateClause (previousClause, ClauseGenerationContext);
-
-      Assert.That (clause.PreviousClause, Is.SameAs (previousClause));
-      Assert.That (clause.ResultModifications.Count, Is.EqualTo (1));
-      Assert.That (clause.ResultModifications[0], Is.InstanceOfType (expectedResultModificationType));
-      Assert.That (clause.ResultModifications[0].SelectClause, Is.SameAs (clause));
-
-      var expectedSelectorParameter = node.Source.CreateParameterForOutput ();
-      var expectedSelector = node.Source.Resolve (expectedSelectorParameter, expectedSelectorParameter, ClauseGenerationContext);
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedSelector, clause.Selector);
-    }
-
-    protected void TestCreateClause_WithOptionalPredicate (ResultModificationExpressionNodeBase node)
-    {
-      var previousClause = ExpressionHelper.CreateSelectClause ();
-      var previousPreviousClause = previousClause.PreviousClause;
+      var selectClause = ExpressionHelper.CreateSelectClause ();
+      var previousPreviousClause = selectClause.PreviousClause;
 
       // chain: previousPreviousClause <- previousClause
 
-      var clause = (SelectClause) node.CreateClause (previousClause, ClauseGenerationContext);
+      node.ApplyToSelectClause (selectClause, ClauseGenerationContext);
 
       // chain: previousPreviousClause <- whereClause <- previousClause
 
-      Assert.That (clause, Is.SameAs (previousClause));
-      Assert.That (clause.PreviousClause, Is.Not.SameAs (previousPreviousClause));
-      var newWhereClause = (WhereClause) clause.PreviousClause;
+      Assert.That (selectClause.PreviousClause, Is.Not.SameAs (previousPreviousClause));
+      var newWhereClause = (WhereClause) selectClause.PreviousClause;
       Assert.That (newWhereClause.PreviousClause, Is.SameAs (previousPreviousClause));
       Assert.That (newWhereClause.Predicate, Is.SameAs (node.GetResolvedOptionalPredicate (ClauseGenerationContext)));
     }
 
-    protected void TestCreateClause_WithOptionalSelector (IExpressionNode node)
+    protected void TestApplyToSelectClause_WithOptionalSelector (ResultModificationExpressionNodeBase node)
     {
-      var legacySelectorOfPreviousClause = ExpressionHelper.CreateLambdaExpression<Student, int> (s => s.ID);
-
       var selectorOfPreviousClause = (MemberExpression) ExpressionHelper.MakeExpression<Student, int> (s => s.ID);
       var expectedNewSelector = (MethodCallExpression) ExpressionHelper.MakeExpression<Student, string> (s => s.ID.ToString());
 
       var previousPreviousClause = ExpressionHelper.CreateClause ();
-      var previousClause = new SelectClause (previousPreviousClause, selectorOfPreviousClause);
+      var selectClause = new SelectClause (previousPreviousClause, selectorOfPreviousClause);
 
-      var clause = (SelectClause) node.CreateClause (previousClause, ClauseGenerationContext);
+      node.ApplyToSelectClause(selectClause, ClauseGenerationContext);
 
-      Assert.That (clause, Is.SameAs (previousClause));
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedNewSelector, clause.Selector);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedNewSelector, selectClause.Selector);
     }
 
     protected MethodCallExpressionParseInfo CreateParseInfo ()

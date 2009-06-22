@@ -304,8 +304,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
       var selectNode = (SelectExpressionNode) new ExpressionTreeParser (nodeTypeRegistry).ParseTree (query.Expression);
       var clauseGenerationContext = new ClauseGenerationContext (
           new QuerySourceClauseMapping(), 
-          new MethodCallExpressionNodeTypeRegistry(), 
-          new SubQueryRegistry());
+          new MethodCallExpressionNodeTypeRegistry(),
+          new SubQueryRegistry (),
+          new ResultModificationExpressionNodeRegistry ());
 
       var selectManyNode = (SelectManyExpressionNode) selectNode.Source.Source;
       var constantNode = (ConstantExpressionNode) selectManyNode.Source;

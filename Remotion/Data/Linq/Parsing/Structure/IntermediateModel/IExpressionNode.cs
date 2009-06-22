@@ -76,5 +76,19 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     /// <see cref="CreateClause"/> if they want to be able to implement <see cref="Resolve"/> correctly.</param>
     /// <returns>A new <see cref="IClause"/> instance representing this <see cref="IExpressionNode"/>.</returns>
     IClause CreateClause (IClause previousClause, ClauseGenerationContext clauseGenerationContext);
+
+    /// <summary>
+    /// Creates a select clause that corresponds to this <see cref="IExpressionNode"/>.
+    /// This is used by <see cref="QueryParser"/> in order to create the <see cref="SelectClause"/> for queries without 
+    /// <see cref="SelectExpressionNode"/>. In those queries, a <see cref="SelectClause"/> with an identity projection must be simulated.
+    /// </summary>
+    /// <param name="previousClause">The previous clause for the <see cref="SelectClause"/>.</param>
+    /// <param name="clauseGenerationContext">Context information used during the current parsing process. The <see cref="QuerySourceClauseMapping"/>
+    /// contained in this structure maps <see cref="IQuerySourceExpressionNode"/>s to the clauses created from them. Implementers that 
+    /// also implement <see cref="IQuerySourceExpressionNode"/> (such as 
+    /// <see cref="ConstantExpressionNode"/> or <see cref="SelectManyExpressionNode"/>) must add their clauses to the mapping in 
+    /// <see cref="CreateClause"/> if they want to be able to implement <see cref="Resolve"/> correctly.</param>
+    /// <returns>A new <see cref="SelectClause"/> that can be used for the query in which this node takes place.</returns>
+    SelectClause CreateSelectClause (IClause previousClause, ClauseGenerationContext clauseGenerationContext);
   }
 }

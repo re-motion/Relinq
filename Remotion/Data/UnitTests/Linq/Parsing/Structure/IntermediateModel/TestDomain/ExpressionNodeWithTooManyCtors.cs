@@ -51,5 +51,10 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel.TestD
     {
       throw new NotImplementedException();
     }
+
+    public SelectClause CreateSelectClause (IClause previousClause, ClauseGenerationContext clauseGenerationContext)
+    {
+      throw new NotImplementedException();
+    }
   }
 }

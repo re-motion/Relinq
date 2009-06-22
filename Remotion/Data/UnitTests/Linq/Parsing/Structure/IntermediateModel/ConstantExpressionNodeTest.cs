@@ -14,11 +14,9 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.Structure;
@@ -31,6 +29,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
   public class ConstantExpressionNodeTest : ExpressionNodeTestBase
   {
     private ClauseGenerationContext _emptyContext;
+    private ConstantExpressionNode _node;
 
     public override void SetUp ()
     {
@@ -38,14 +37,15 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       _emptyContext = new ClauseGenerationContext (
           new QuerySourceClauseMapping(), 
           new MethodCallExpressionNodeTypeRegistry (), 
-          new SubQueryRegistry());
+          new SubQueryRegistry(),
+          new ResultModificationExpressionNodeRegistry());
+      _node = new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3 });
     }
 
     [Test]
     public void Initialization_QuerySourceElementType ()
     {
-      var node = new ConstantExpressionNode ("x", typeof (int[]), new[] {1, 2, 3});
-      Assert.That (node.QuerySourceElementType, Is.EqualTo (typeof (int)));
+      Assert.That (_node.QuerySourceElementType, Is.EqualTo (typeof (int)));
     }
 
     [Test]
@@ -62,12 +62,11 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void Resolve_ReplacesParameter_WithQuerySourceReference ()
     {
-      var node = ExpressionNodeObjectMother.CreateConstant ();
       var expression = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
       var clause = ExpressionHelper.CreateMainFromClause ();
-      QuerySourceClauseMapping.AddMapping (node, clause);
+      QuerySourceClauseMapping.AddMapping (_node, clause);
 
-      var result = node.Resolve (expression.Parameters[0], expression.Body, ClauseGenerationContext);
+      var result = _node.Resolve (expression.Parameters[0], expression.Body, ClauseGenerationContext);
 
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, new QuerySourceReferenceExpression (clause), Expression.Constant (5));
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
@@ -78,16 +77,14 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
         + "created. Be sure to call CreateClause before calling Resolve, and pass in the same QuerySourceClauseMapping to both methods.")]
     public void Resolve_WithoutClause ()
     {
-      var node = ExpressionNodeObjectMother.CreateConstant ();
       var expression = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      node.Resolve (expression.Parameters[0], expression.Body, ClauseGenerationContext);
+      _node.Resolve (expression.Parameters[0], expression.Body, ClauseGenerationContext);
     }
 
     [Test]
     public void CreateParameterForOutput ()
     {
-      var node = new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3, 4, 5 });
-      var parameter = node.CreateParameterForOutput ();
+      var parameter = _node.CreateParameterForOutput ();
 
       Assert.That (parameter.Name, Is.EqualTo ("x"));
       Assert.That (parameter.Type, Is.SameAs (typeof (int)));
@@ -96,45 +93,53 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void CreateClause ()
     {
-      var node = new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3, 4, 5 });
-      var constantClause = (MainFromClause) node.CreateClause(null, ClauseGenerationContext);
+      var constantClause = (MainFromClause) _node.CreateClause(null, ClauseGenerationContext);
 
       Assert.That (constantClause.Identifier.Name, Is.EqualTo ("x"));
       Assert.That (constantClause.Identifier.Type, Is.SameAs(typeof(int)));    
       Assert.That (constantClause.QuerySource, Is.InstanceOfType (typeof (ConstantExpression)));
-      Assert.That (((ConstantExpression) constantClause.QuerySource).Value, Is.SameAs (node.Value));
-      Assert.That (constantClause.QuerySource.Type, Is.SameAs (node.QuerySourceType));
+      Assert.That (((ConstantExpression) constantClause.QuerySource).Value, Is.SameAs (_node.Value));
+      Assert.That (constantClause.QuerySource.Type, Is.SameAs (_node.QuerySourceType));
     }
 
     [Test]
     public void CreateClause_AddsMapping ()
     {
-      var node = new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3, 4, 5 });
-      var clause = node.CreateClause (null, _emptyContext);
+      var clause = _node.CreateClause (null, _emptyContext);
 
       Assert.That (_emptyContext.ClauseMapping.Count, Is.EqualTo (1));
-      Assert.That (_emptyContext.ClauseMapping.GetClause (node), Is.SameAs (clause));
+      Assert.That (_emptyContext.ClauseMapping.GetClause (_node), Is.SameAs (clause));
     }
 
     [Test]
     [ExpectedException (typeof (InvalidOperationException))]
     public void CreateClause_WithNonNullPreviousClause ()
     {
-      var node = new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3, 4, 5 });
-      node.CreateClause (ExpressionHelper.CreateClause(), _emptyContext);
+      _node.CreateClause (ExpressionHelper.CreateClause(), _emptyContext);
     }
 
     [Test]
     public void CreateClause_WithNullPreviousClause ()
     {
-      var node = new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3, 4, 5 });
-      var constantClause = (MainFromClause) node.CreateClause (null, _emptyContext);
+      var constantClause = (MainFromClause) _node.CreateClause (null, _emptyContext);
 
       Assert.That (constantClause.Identifier.Name, Is.EqualTo ("x"));
       Assert.That (constantClause.Identifier.Type, Is.SameAs (typeof (int)));
       Assert.That (constantClause.QuerySource, Is.InstanceOfType (typeof (ConstantExpression)));
-      Assert.That (((ConstantExpression) constantClause.QuerySource).Value, Is.SameAs (node.Value));
-      Assert.That (constantClause.QuerySource.Type, Is.SameAs (node.QuerySourceType));
+      Assert.That (((ConstantExpression) constantClause.QuerySource).Value, Is.SameAs (_node.Value));
+      Assert.That (constantClause.QuerySource.Type, Is.SameAs (_node.QuerySourceType));
+    }
+
+    [Test]
+    public void CreateSelectClause ()
+    {
+      var previousClause = ExpressionHelper.CreateClause();
+      var mainFromClause = ExpressionHelper.CreateMainFromClause();
+
+      ClauseGenerationContext.ClauseMapping.AddMapping (_node, mainFromClause);
+
+      var selectClause = _node.CreateSelectClause (previousClause, ClauseGenerationContext);
+      Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedClause, Is.SameAs (mainFromClause));
     }
   }
 }

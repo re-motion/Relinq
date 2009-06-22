@@ -192,5 +192,21 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       Assert.That (parameter.Name, Is.EqualTo ("x"));
       Assert.That (parameter.Type, Is.SameAs (typeof (AnonymousType)));
     }
+
+    [Test]
+    public void CreateSelectClause ()
+    {
+      var previousClause = ExpressionHelper.CreateClause ();
+      var node = new SelectManyExpressionNode (
+          CreateParseInfo (),
+          ExpressionHelper.CreateLambdaExpression<int, IEnumerable<int>> (y => new int[0]),
+          ExpressionHelper.CreateLambdaExpression<int, int, AnonymousType> ((j, i) => new AnonymousType {a = i, b = i}));
+
+      var selectManyClause = (AdditionalFromClause) node.CreateClause (previousClause, ClauseGenerationContext);
+      var selectClause = node.CreateSelectClause (selectManyClause, ClauseGenerationContext);
+
+      var expectedSelector = ExpressionHelper.Resolve<int, AnonymousType> (selectManyClause, i => new AnonymousType {a = i, b = i});
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedSelector, selectClause.Selector);
+    }
   }
 }

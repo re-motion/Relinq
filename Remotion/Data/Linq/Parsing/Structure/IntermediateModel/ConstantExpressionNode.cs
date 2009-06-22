@@ -109,6 +109,15 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return fromClause;
     }
 
+    public SelectClause CreateSelectClause (IClause previousClause, ClauseGenerationContext clauseGenerationContext)
+    {
+      ArgumentUtility.CheckNotNull ("previousClause", previousClause);
+
+      var parameterExpression = CreateParameterForOutput();
+      var selector = Resolve (parameterExpression, parameterExpression, clauseGenerationContext);
+      return new SelectClause (previousClause, selector);
+    }
+
     public ParameterExpression CreateParameterForOutput ()
     {
       return Expression.Parameter (QuerySourceElementType, AssociatedIdentifier);

@@ -19,6 +19,7 @@ using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
@@ -88,6 +89,19 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       Assert.That (parameter.Name, Is.EqualTo ("z"));
       Assert.That (parameter.Type, Is.SameAs (typeof (string)));
+    }
+
+    [Test]
+    public void CreateSelectClause ()
+    {
+      var previousClause = ExpressionHelper.CreateClause ();
+      var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
+      var node = new SelectExpressionNode (CreateParseInfo (), selector);
+
+      var selectClause = node.CreateSelectClause (previousClause, ClauseGenerationContext);
+
+      var expectedSelector = ExpressionHelper.Resolve<int, bool> (SourceClause, i => i > 5);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedSelector, selectClause.Selector);
     }
   }
 }
