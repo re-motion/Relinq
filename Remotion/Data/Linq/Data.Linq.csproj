@@ -82,6 +82,7 @@
     <Compile Include="Parsing\Structure\QuerySourceClauseMapping.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\CastExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\IExpressionNodeParseInfo.cs" />
+    <Compile Include="QueryModelBuilder.cs" />
     <Compile Include="StringBuilding\FormattingExpressionTreeVisitor.cs" />
     <Compile Include="UniqueIdentifierGenerator.cs" />
     <Compile Include="EagerFetching\ThenFetchManyExpression.cs" />

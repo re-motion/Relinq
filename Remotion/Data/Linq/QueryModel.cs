@@ -224,22 +224,15 @@ namespace Remotion.Data.Linq
       ArgumentUtility.CheckNotNull ("clonedClauseMapping", clonedClauseMapping);
 
       var cloneContext = new CloneContext (clonedClauseMapping, new SubQueryRegistry());
-      var clonedMainFromClause = MainFromClause.Clone (cloneContext);
-      var clonedBodyClauses = new List<IBodyClause> ();
+      var queryModelBuilder = new QueryModelBuilder();
 
+      queryModelBuilder.AddClause (MainFromClause.Clone (cloneContext));
       foreach (var bodyClause in BodyClauses)
-      {
-        var clonedBodyClause = bodyClause.Clone (cloneContext);
-        clonedBodyClauses.Add (clonedBodyClause);
-      }
+        queryModelBuilder.AddClause (bodyClause.Clone (cloneContext));
+      queryModelBuilder.AddClause (SelectOrGroupClause.Clone (cloneContext));
 
-      var clonedSelectOrGroupClause = SelectOrGroupClause.Clone (cloneContext);
-
-      var queryModel = new QueryModel (ResultType, clonedMainFromClause, clonedSelectOrGroupClause);
+      var queryModel = queryModelBuilder.Build (ResultType);
       
-      foreach (var clonedBodyClause in clonedBodyClauses)
-        queryModel.AddBodyClause (clonedBodyClause);
-
       cloneContext.SubQueryRegistry.UpdateAllParentQueries (queryModel);
 
       if (_expressionTree != null)

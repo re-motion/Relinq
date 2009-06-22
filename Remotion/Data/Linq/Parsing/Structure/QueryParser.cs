@@ -14,7 +14,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses;
@@ -82,19 +81,23 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
       clauseGenerationContext.ResultModificationNodeRegistry.ApplyAllToSelectClause (selectClause, clauseGenerationContext);
 
-      // TODO 1178: After COMMONS-1178, this code will not be needed any longer.
-      var bodyClauses = new List<IBodyClause>();
-      var findMainFromClause = FindMainFromClause (selectClause, bodyClauses);
-      bodyClauses.Reverse (); // need to reverse the list of body clauses to have the last clause (nearest to the MainFromClause) first
-      
-      var queryModel = new QueryModel (expressionTreeRoot.Type, findMainFromClause, selectClause);
-      foreach (var bodyClause in bodyClauses)
-        queryModel.AddBodyClause (bodyClause);
+      var queryModelBuilder = new QueryModelBuilder();
+      AddClauses (selectClause, queryModelBuilder);
+
+      var queryModel = queryModelBuilder.Build (expressionTreeRoot.Type);
 
       clauseGenerationContext.SubQueryRegistry.UpdateAllParentQueries (queryModel);
 
       queryModel.SetExpressionTree (expressionTreeRoot);
       return queryModel;
+    }
+
+    private void AddClauses (IClause clause, QueryModelBuilder queryModelBuilder)
+    {
+      if (clause.PreviousClause != null)
+        AddClauses (clause.PreviousClause, queryModelBuilder); // need to reverse the list of clauses to have the last clause (nearest to the MainFromClause) first
+      
+      queryModelBuilder.AddClause (clause);
     }
 
     /// <summary>
@@ -136,20 +139,6 @@ namespace Remotion.Data.Linq.Parsing.Structure
         return (SelectClause) lastClause;
       else
         return lastNode.CreateSelectClause (lastClause, clauseGenerationContext);
-    }
-
-    // TODO 1178: After COMMONS-1178, this code will not be needed any longer.
-    private MainFromClause FindMainFromClause (IClause clause, List<IBodyClause> bodyClauses)
-    {
-      if (clause is MainFromClause)
-        return (MainFromClause) clause;
-      else
-      {
-        if (clause is IBodyClause)
-          bodyClauses.Add ((IBodyClause) clause);
-
-        return FindMainFromClause (clause.PreviousClause, bodyClauses);
-      }
     }
   }
 }
