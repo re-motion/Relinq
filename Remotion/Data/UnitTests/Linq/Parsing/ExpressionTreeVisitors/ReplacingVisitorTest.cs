@@ -62,5 +62,14 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
       var expectedResult = Expression.MakeBinary (ExpressionType.Add, Expression.Constant (0), _replacementNode);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
+
+    [Test]
+    public void VisitUnknownExpression_Ignored ()
+    {
+      var expression = new UnknownExpression (typeof (object));
+      var result = ReplacingVisitor.Replace (_replacedNode, _replacementNode, expression);
+
+      Assert.That (result, Is.SameAs (expression));
+    }
   }
 }

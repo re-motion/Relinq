@@ -22,6 +22,7 @@ using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using System.Linq.Expressions;
+using Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors;
 
 namespace Remotion.Data.UnitTests.Linq.Clauses.ExpressionTreeVisitors
 {
@@ -82,6 +83,15 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ExpressionTreeVisitors
       var result = CloneExpressionTreeVisitor.ReplaceClauseReferences (expression, _cloneContext);
 
       Assert.That (_subQueryRegistry.Contains(((SubQueryExpression) result).QueryModel), Is.True);
+    }
+
+    [Test]
+    public void VisitUnknownExpression_Ignored ()
+    {
+      var expression = new UnknownExpression (typeof (object));
+      var result = CloneExpressionTreeVisitor.ReplaceClauseReferences (expression, _cloneContext);
+
+      Assert.That (result, Is.SameAs (expression));
     }
   }
 }

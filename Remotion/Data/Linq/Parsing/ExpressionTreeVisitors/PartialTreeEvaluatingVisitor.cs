@@ -76,6 +76,12 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
       _partialEvaluationInfo = partialEvaluationInfo;
     }
 
+    protected override Expression VisitUnknownExpression (Expression expression)
+    {
+      //ignore
+      return expression;
+    }
+
     protected override Expression VisitExpression (Expression expression)
     {
       // Only evaluate expressions which do not use any of the surrounding parameter expressions. Don't evaluate

@@ -65,6 +65,12 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
         return matchingAssignment.AssociatedExpression;
     }
 
+    protected override Expression VisitUnknownExpression (Expression expression)
+    {
+      //ignore
+      return expression;
+    }
+
     private IEnumerable<MemberBinding> GetMemberBindingsCreatedByExpression (Expression expression)
     {
       var memberInitExpression = expression as MemberInitExpression;

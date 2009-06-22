@@ -14,7 +14,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Utilities;
@@ -138,6 +137,12 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation
         return expression;
 
       VisitExpression (expression.NewExpression);
+      return expression;
+    }
+
+    protected override Expression VisitUnknownExpression (Expression expression)
+    {
+      // Ignore
       return expression;
     }
 

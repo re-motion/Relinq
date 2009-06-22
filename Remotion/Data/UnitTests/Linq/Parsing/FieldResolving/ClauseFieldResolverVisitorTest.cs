@@ -20,6 +20,7 @@ using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.FieldResolving;
+using Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
 {
@@ -191,5 +192,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
       Assert.That (actualResult.AccessedMember, Is.EqualTo (optimizedResult.AccessedMember));
       Assert.That (actualResult.JoinMembers, Is.EqualTo (optimizedResult.JoinMembers));
     }
+
   }
 }

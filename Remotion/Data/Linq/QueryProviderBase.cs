@@ -127,8 +127,7 @@ namespace Remotion.Data.Linq
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      var fetchFilteringVisitor = new FetchFilteringExpressionTreeVisitor ();
-      var result = fetchFilteringVisitor.Visit (expression);
+      var result = FetchFilteringExpressionTreeVisitor.Visit (expression);
       expression = result.NewExpression;
       return result.FetchRequests.ToArray();
     }

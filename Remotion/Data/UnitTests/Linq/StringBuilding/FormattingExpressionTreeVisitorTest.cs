@@ -20,6 +20,7 @@ using NUnit.Framework.SyntaxHelpers;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.StringBuilding;
+using Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors;
 
 namespace Remotion.Data.UnitTests.Linq.StringBuilding
 {
@@ -53,6 +54,15 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
       var expression = Expression.MakeBinary (ExpressionType.GreaterThan, new SubQueryExpression (subQueryModel), Expression.Constant (2));
       var formattedExpression = FormattingExpressionTreeVisitor.Format (expression);
       Assert.That (formattedExpression, Is.EqualTo ("({(from Student s in TestQueryable<Student>() select [s]).Count()} > 2)"));
+    }
+
+    [Test]
+    public void VisitUnknownExpression_Ignored ()
+    {
+      var expression = new UnknownExpression (typeof (object));
+      var result = FormattingExpressionTreeVisitor.Format (expression);
+
+      Assert.That (result, Is.EqualTo("[-1]"));
     }
   }
 }

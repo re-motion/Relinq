@@ -59,6 +59,12 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
         return base.VisitMethodCallExpression (expression);
     }
 
+    protected override Expression VisitUnknownExpression (Expression expression)
+    {
+      //ignore
+      return expression;
+    }
+
     private SubQueryExpression CreateSubQueryNode (MethodCallExpression methodCallExpression)
     {
       QueryModel queryModel = _innerParser.GetParsedQuery (methodCallExpression);

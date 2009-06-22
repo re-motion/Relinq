@@ -22,6 +22,7 @@ using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.FieldResolving;
+using Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
 {
@@ -158,6 +159,15 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
       model.AddBodyClause (additionalFromClause);
 
       return model;
+    }
+
+    [Test]
+    public void VisitUnknownExpression_Ignored ()
+    {
+      var expression = new UnknownExpression (typeof (object));
+      var result = QueryModelFieldResolverVisitor.ParseAndReduce (ExpressionHelper.CreateQueryModel(), expression);
+
+      Assert.That (result, Is.Null);
     }
   }
 }

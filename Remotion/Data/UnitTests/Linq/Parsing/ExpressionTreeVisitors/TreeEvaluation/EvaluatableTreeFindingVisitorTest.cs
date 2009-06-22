@@ -165,5 +165,13 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors.TreeEvalua
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression.NewExpression), Is.True);
     }
 
+    [Test]
+    public void VisitUnknownExpression_Ignored ()
+    {
+      var expression = new UnknownExpression (typeof (object));
+      var result = EvaluatableTreeFindingVisitor.Analyze (expression);
+
+      Assert.That (result.IsEvaluatableExpression (expression), Is.False);
+    }
   }
 }

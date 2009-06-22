@@ -222,5 +222,14 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
       Assert.That (((ConstantExpression) partiallyEvaluatedExpression).Value, Is.InstanceOfType (typeof (List<int>)));
       Assert.That (((ConstantExpression) partiallyEvaluatedExpression).Value, Is.EqualTo (new[] {2, 1}));
     }
+
+    [Test]
+    public void VisitUnknownExpression_Ignored ()
+    {
+      var expression = new UnknownExpression (typeof (object));
+      var result = PartialTreeEvaluatingVisitor.EvaluateIndependentSubtrees (expression);
+
+      Assert.That (result, Is.SameAs (expression));
+    }
   }
 }

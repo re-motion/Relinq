@@ -324,5 +324,14 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
       Assert.That (innerExpression, Is.InstanceOfType (typeof (QuerySourceReferenceExpression)));
       Assert.That (((QuerySourceReferenceExpression) innerExpression).ReferencedClause, Is.SameAs (mainFromClause));
     }
+
+    [Test]
+    public void VisitUnknownExpression_Ignored ()
+    {
+      var expression = new UnknownExpression (typeof (object));
+      var result = TransparentIdentifierRemovingVisitor.ReplaceTransparentIdentifiers(expression);
+
+      Assert.That (result, Is.SameAs (expression));
+    }
   }
 }

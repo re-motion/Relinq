@@ -62,5 +62,11 @@ namespace Remotion.Data.Linq.Clauses.ExpressionTreeVisitors
       _cloneContext.SubQueryRegistry.Add (clonedQueryModel);
       return new SubQueryExpression (clonedQueryModel);
     }
+
+    protected override Expression VisitUnknownExpression (Expression expression)
+    {
+      //ignore
+      return expression;
+    }
   }
 }

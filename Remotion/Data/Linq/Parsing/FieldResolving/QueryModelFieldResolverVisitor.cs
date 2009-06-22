@@ -84,5 +84,11 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
       else
         return expression;
     }
+
+    protected override Expression VisitUnknownExpression (Expression expression)
+    {
+      //ignore
+      return expression;
+    }
   }
 }

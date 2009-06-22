@@ -93,6 +93,15 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
       Assert.That (newLambdaExpression.Body, Is.InstanceOfType (typeof (SubQueryExpression)));
     }
 
+    [Test]
+    public void VisitUnknownExpression_Ignored ()
+    {
+      var expression = new UnknownExpression (typeof (object));
+      var result = SubQueryFindingVisitor.ReplaceSubQueries (expression, _nodeTypeRegistry, _subQueryRegistry);
+
+      Assert.That (result, Is.SameAs (expression));
+    }
+
     public static IQueryable<Student> CustomSelect (IQueryable<Student> source, Expression<Func<Student, Student>> selector)
     {
       throw new NotImplementedException ();

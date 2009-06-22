@@ -51,5 +51,11 @@ namespace Remotion.Data.Linq.StringBuilding
       ArgumentUtility.CheckNotNull ("expression", expression);
       return Expression.Parameter (expression.Type, "{" + expression.QueryModel + "}");
     }
+
+    protected override Expression VisitUnknownExpression (Expression expression)
+    {
+      //ignore
+      return expression;
+    }
   }
 }
