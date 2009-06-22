@@ -742,7 +742,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitorTests
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "Expression type -1 is not supported.", MatchType = MessageMatch.Contains)]
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Expression type -1 is not supported by this ExpressionTreeVisitor.*\\.", MatchType = MessageMatch.Regex)]
     public void VisitUnknownExpression ()
     {
       var expressionNode = new SpecialExpressionNode ((ExpressionType) (-1), typeof (int));

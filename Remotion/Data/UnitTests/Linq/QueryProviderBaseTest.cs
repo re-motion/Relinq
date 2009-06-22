@@ -21,6 +21,8 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.EagerFetching;
+using Remotion.Data.Linq.Parsing;
+using Remotion.Data.Linq.Parsing.Structure;
 using Rhino.Mocks;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 using Remotion.Utilities;
@@ -36,6 +38,8 @@ namespace Remotion.Data.UnitTests.Linq
     private QueryProviderBase _queryProvider;
     private IQueryExecutor _executorMock;
     private TestQueryable<Student> _queryableWithExecutorMock;
+    private MethodCallExpressionNodeTypeRegistry _nodeTypeRegistry;
+    private TestQueryProvider _queryProviderWithSpecificRegistry;
 
     [SetUp]
     public void SetUp()
@@ -43,6 +47,8 @@ namespace Remotion.Data.UnitTests.Linq
       _mockRepository = new MockRepository();
       _executorMock = _mockRepository.StrictMock<IQueryExecutor>();
       _queryProvider = new TestQueryProvider (_executorMock);
+      _nodeTypeRegistry = new MethodCallExpressionNodeTypeRegistry ();
+      _queryProviderWithSpecificRegistry = new TestQueryProvider (_executorMock, _nodeTypeRegistry);
       _queryableWithExecutorMock = new TestQueryable<Student> (_executorMock);
     }
 
@@ -185,6 +191,32 @@ namespace Remotion.Data.UnitTests.Linq
       _executorMock.VerifyAllExpectations();
 
       Assert.That (result, Is.EqualTo (7));
+    }
+
+    [Test]
+    public void Execute_WithDefaultRegistry ()
+    {
+      Expression expression = ExpressionHelper.MakeExpression (() => from s in ExpressionHelper.CreateQuerySource () select s);
+      _executorMock
+          .Expect (mock => mock.ExecuteCollection<Student> (Arg<QueryModel>.Is.Anything, Arg<IEnumerable<FetchRequestBase>>.Is.Anything))
+          .Return (new Student[0]);
+      _executorMock.Replay ();
+      _queryProvider.Execute<IEnumerable<Student>> (expression);
+      _executorMock.VerifyAllExpectations ();
+    }
+
+    [Test]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Could not parse expression 'TestQueryable<Student>().Select(s => s)': This "
+        + "overload of the method 'System.Linq.Queryable.Select' is currently not supported, but you can register your own parser if needed.")]
+    public void Execute_WithSpecificRegistry ()
+    {
+      Expression expression = ExpressionHelper.MakeExpression (() => from s in ExpressionHelper.CreateQuerySource () select s);
+      _executorMock
+          .Expect (mock => mock.ExecuteCollection<Student> (Arg<QueryModel>.Is.Anything, Arg<IEnumerable<FetchRequestBase>>.Is.Anything))
+          .Return (new Student[0]);
+      _executorMock.Replay ();
+      _queryProviderWithSpecificRegistry.Execute<IEnumerable<Student>> (expression);
+      _executorMock.VerifyAllExpectations ();
     }
 
     [Test]

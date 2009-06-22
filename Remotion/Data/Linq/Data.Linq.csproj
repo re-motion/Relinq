@@ -50,7 +50,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Clauses\AdditionalFromClause.cs" />
-    <Compile Include="Clauses\ClauseFinder.cs" />
     <Compile Include="Clauses\ClauseLookupException.cs" />
     <Compile Include="Clauses\CloneContext.cs" />
     <Compile Include="Clauses\ExecutionStrategies\CollectionExecutionStrategy.cs" />

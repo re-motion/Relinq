@@ -109,7 +109,8 @@ namespace Remotion.Data.Linq.Parsing
 
     protected virtual Expression VisitUnknownExpression (Expression expression)
     {
-      throw new ArgumentException ("Expression type " + expression.NodeType + " is not supported.");
+      var message = string.Format ("Expression type {0} is not supported by this {1}.", expression.NodeType, GetType().Name);
+      throw new NotSupportedException (message);
     }
 
     protected virtual Expression VisitUnaryExpression (UnaryExpression expression)
