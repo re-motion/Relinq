@@ -83,7 +83,7 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("fieldAccessExpression", fieldAccessExpression);
       ArgumentUtility.CheckNotNull ("joinedTableContext", joinedTableContext);
 
-      return resolver.ResolveField (this, fieldAccessExpression, joinedTableContext);
+      return resolver.ResolveField (fieldAccessExpression, joinedTableContext);
     }
 
     public abstract void Accept (IQueryVisitor visitor);

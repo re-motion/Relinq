@@ -18,7 +18,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Collections;
-using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Utilities;
@@ -39,13 +38,12 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
       _policy = policy;
     }
 
-    public FieldDescriptor ResolveField (IResolveableClause clause, Expression fieldAccessExpression, JoinedTableContext joinedTableContext)
+    public FieldDescriptor ResolveField (Expression fieldAccessExpression, JoinedTableContext joinedTableContext)
     {
-      ArgumentUtility.CheckNotNull ("clause", clause);
       ArgumentUtility.CheckNotNull ("fieldAccessExpression", fieldAccessExpression);
       
       var result = ClauseFieldResolverVisitor.ParseFieldAccess(DatabaseInfo, fieldAccessExpression, _policy.OptimizeRelatedKeyAccess());
-      // var clause = result.QuerySourceReferenceExpression.ReferencedClause;
+      var clause = result.QuerySourceReferenceExpression.ReferencedClause;
       return CreateFieldDescriptor (clause.GetColumnSource (DatabaseInfo), result.QuerySourceReferenceExpression, result.AccessedMember, result.JoinMembers, joinedTableContext);
     }
 
