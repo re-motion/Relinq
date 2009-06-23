@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Remotion.Collections;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.DataObjectModel;
 
 namespace Remotion.Data.Linq.Parsing.FieldResolving
@@ -38,7 +39,7 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
   /// </remarks>
   public interface IResolveFieldAccessPolicy
   {
-    Tuple<MemberInfo, IEnumerable<MemberInfo>> AdjustMemberInfosForDirectAccessOfQuerySource (ParameterExpression accessedIdentifier);
+    Tuple<MemberInfo, IEnumerable<MemberInfo>> AdjustMemberInfosForDirectAccessOfQuerySource (QuerySourceReferenceExpression referenceExpression);
     Tuple<MemberInfo, IEnumerable<MemberInfo>> AdjustMemberInfosForRelation (MemberInfo accessedMember, IEnumerable<MemberInfo> joinMembers);
     bool OptimizeRelatedKeyAccess ();
   }

@@ -13,9 +13,10 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using Remotion.Data.Linq;
+using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing.Details;
 using Remotion.Data.Linq.Parsing.Details.WhereConditionParsing;
@@ -31,14 +32,13 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details.WhereConditionParsing
       UnaryExpression unaryExpression = Expression.Not (Expression.Constant (5));
       ICriterion expectedCriterion = new NotCriterion (new Constant (5));
 
-      WhereConditionParserRegistry parserRegistry = 
-        new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
-      parserRegistry.RegisterParser (typeof(ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
+      var parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
+      parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
 
-      UnaryExpressionParser parser = new UnaryExpressionParser(parserRegistry);
+      var parser = new UnaryExpressionParser (parserRegistry);
 
       ICriterion actualCriterion = parser.Parse (unaryExpression, ParseContext);
-      Assert.AreEqual (expectedCriterion, actualCriterion);
+      Assert.That (actualCriterion, Is.EqualTo (expectedCriterion));
     }
   }
 }

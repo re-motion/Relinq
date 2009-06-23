@@ -14,9 +14,9 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Collections;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Utilities;
 using System.Linq;
@@ -33,11 +33,11 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
       _databaseInfo = databaseInfo;
     }
 
-    public Tuple<MemberInfo, IEnumerable<MemberInfo>> AdjustMemberInfosForDirectAccessOfQuerySource (ParameterExpression accessedIdentifier)
+    public Tuple<MemberInfo, IEnumerable<MemberInfo>> AdjustMemberInfosForDirectAccessOfQuerySource (QuerySourceReferenceExpression referenceExpression)
     {
-      ArgumentUtility.CheckNotNull ("accessedIdentifier", accessedIdentifier);
-      return new Tuple<MemberInfo, IEnumerable<MemberInfo>> (_databaseInfo.GetPrimaryKeyMember (accessedIdentifier.Type), 
-          new MemberInfo[0]);
+      ArgumentUtility.CheckNotNull ("referenceExpression", referenceExpression);
+      var primaryKeyMember = _databaseInfo.GetPrimaryKeyMember (referenceExpression.ReferencedClause.Identifier.Type);
+      return new Tuple<MemberInfo, IEnumerable<MemberInfo>> (primaryKeyMember, new MemberInfo[0]);
     }
 
     public Tuple<MemberInfo, IEnumerable<MemberInfo>> AdjustMemberInfosForRelation (MemberInfo accessedMember, IEnumerable<MemberInfo> joinMembers)

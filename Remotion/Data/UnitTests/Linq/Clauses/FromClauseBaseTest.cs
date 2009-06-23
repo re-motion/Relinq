@@ -19,6 +19,7 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing.FieldResolving;
 
@@ -67,26 +68,24 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Resolve_Succeeds_MainFromClause ()
     {
-      ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(identifier, ExpressionHelper.CreateQuerySource ());
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (Expression.Parameter (typeof (Student), "fromIdentifier1"), ExpressionHelper.CreateQuerySource ());
 
       var context = new JoinedTableContext ();
       var policy = new SelectFieldAccessPolicy ();
       var resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, policy);
-      FieldDescriptor fieldDescriptor = fromClause.ResolveField (resolver, identifier, context);
+      FieldDescriptor fieldDescriptor = fromClause.ResolveField (resolver, new QuerySourceReferenceExpression (fromClause), context);
       Assert.AreEqual (new Column (new Table ("studentTable", "fromIdentifier1"), "*"), fieldDescriptor.Column);
     }
 
     [Test]
     public void Resolve_Succeeds_AdditionalFromClause ()
     {
-      ParameterExpression identifier = Expression.Parameter (typeof (Student), "fromIdentifier1");
-      AdditionalFromClause fromClause = CreateAdditionalFromClause (identifier);
+      AdditionalFromClause fromClause = CreateAdditionalFromClause (Expression.Parameter (typeof (Student), "fromIdentifier1"));
 
       var context = new JoinedTableContext ();
       var policy = new SelectFieldAccessPolicy ();
       var resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, policy);
-      FieldDescriptor fieldDescriptor = fromClause.ResolveField (resolver, identifier, context);
+      FieldDescriptor fieldDescriptor = fromClause.ResolveField (resolver, new QuerySourceReferenceExpression (fromClause), context);
       Assert.AreEqual (new Column (new Table ("studentTable", "fromIdentifier1"), "*"), fieldDescriptor.Column);
     }
 

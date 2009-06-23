@@ -13,10 +13,11 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using Remotion.Data.Linq;
+using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing;
@@ -30,25 +31,20 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details.SelectProjectionParsing
     [Test]
     public void Parse ()
     {
-      ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (parameter, ExpressionHelper.CreateQuerySource ());
-      QueryModel queryModel = ExpressionHelper.CreateQueryModel (fromClause);
+      var resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, new SelectFieldAccessPolicy());
 
-      ClauseFieldResolver resolver =
-          new ClauseFieldResolver (StubDatabaseInfo.Instance, new SelectFieldAccessPolicy ());
-
-      MemberExpressionParser parser = new MemberExpressionParser (resolver);
-      List<FieldDescriptor> fieldDescriptorCollection = new List<FieldDescriptor> ();
-      MemberExpression memberExpression = Expression.MakeMemberAccess (parameter, typeof (Student).GetProperty ("ID"));
-      var fromSource = fromClause.GetColumnSource (StubDatabaseInfo.Instance);
-      FieldSourcePath path = new FieldSourcePath (fromSource, new SingleJoin[0]);
-      FieldDescriptor expectedFieldDescriptor = new FieldDescriptor (null, path, new Column (fromSource, "IDColumn"));
+      var parser = new MemberExpressionParser (resolver);
+      var fieldDescriptorCollection = new List<FieldDescriptor>();
+      MemberExpression memberExpression = Expression.MakeMemberAccess (StudentReference, typeof (Student).GetProperty ("ID"));
+      IColumnSource fromSource = StudentClause.GetColumnSource (StubDatabaseInfo.Instance);
+      var path = new FieldSourcePath (fromSource, new SingleJoin[0]);
+      var expectedFieldDescriptor = new FieldDescriptor (null, path, new Column (fromSource, "IDColumn"));
 
       IEvaluation actualEvaluation = parser.Parse (memberExpression, ParseContext);
       IEvaluation expectedEvaluation = expectedFieldDescriptor.Column;
 
-      Assert.IsNotNull (fieldDescriptorCollection);
-      Assert.AreEqual (expectedEvaluation, actualEvaluation);
+      Assert.That (fieldDescriptorCollection, Is.Not.Null);
+      Assert.That (actualEvaluation, Is.EqualTo (expectedEvaluation));
     }
   }
 }

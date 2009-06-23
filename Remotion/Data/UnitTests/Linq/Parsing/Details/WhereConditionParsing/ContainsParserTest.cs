@@ -18,9 +18,10 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
-using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Clauses.Expressions;
+using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Details;
 using Remotion.Data.Linq.Parsing.Details.WhereConditionParsing;
@@ -34,62 +35,62 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details.WhereConditionParsing
     [Test]
     public void ParseContainsWithSubQuery ()
     {
-      IQueryable<Student> querySource = ExpressionHelper.CreateQuerySource ();
-      Data.Linq.QueryModel queryModel = ExpressionHelper.CreateQueryModel ();
-      SubQueryExpression subQueryExpression = new SubQueryExpression (queryModel);
-      Student item = new Student ();
+      IQueryable<Student> querySource = ExpressionHelper.CreateQuerySource();
+      QueryModel subQueryModel = ExpressionHelper.CreateQueryModel();
+      var subQueryExpression = new SubQueryExpression (subQueryModel);
+      var item = new Student();
       ConstantExpression checkedExpression = Expression.Constant (item);
-      ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
-      MemberExpression memberAccess = Expression.MakeMemberAccess (parameter, typeof (Student).GetProperty ("First"));
 
       MethodInfo containsMethod = ParserUtility.GetMethod (() => querySource.Contains (item));
       MethodCallExpression methodCallExpression = Expression.Call (
-          memberAccess,
+          Student_First_Expression,
           containsMethod,
           subQueryExpression,
           checkedExpression
           );
 
-      ClauseFieldResolver resolver =
+      var resolver =
           new ClauseFieldResolver (StubDatabaseInfo.Instance, new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
-      WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
+      var parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
       parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
       parserRegistry.RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (resolver));
       parserRegistry.RegisterParser (typeof (MemberExpression), new MemberExpressionParser (resolver));
 
-      ContainsParser parser = new ContainsParser (parserRegistry);
+      var parser = new ContainsParser (parserRegistry);
 
       ICriterion actualCriterion = parser.Parse (methodCallExpression, ParseContext);
-      SubQuery expectedSubQuery = new SubQuery (queryModel, ParseMode.SubQueryInSelect, null);
+      var expectedSubQuery = new SubQuery (subQueryModel, ParseMode.SubQueryInSelect, null);
       IValue expectedCheckedItem = new Constant (0);
       ICriterion expectedCriterion = new BinaryCondition (expectedSubQuery, expectedCheckedItem, BinaryCondition.ConditionKind.Contains);
 
-      Assert.AreEqual (expectedCriterion, actualCriterion);
+      Assert.That (actualCriterion, Is.EqualTo (expectedCriterion));
     }
 
     [Test]
     [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected Contains with expression for method call expression in where "
-      + "condition, found 'Contains'.")]
+                                                                    + "condition, found 'Contains'.")]
     public void ParseContains_NoArguments ()
     {
       MethodInfo containsMethod = typeof (ContainsParserTest).GetMethod ("Contains");
       MethodCallExpression methodCallExpression = Expression.Call (
           null,
-          containsMethod
-          );
-      ClauseFieldResolver resolver =
+          containsMethod);
+      var resolver =
           new ClauseFieldResolver (StubDatabaseInfo.Instance, new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
 
-      WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
+      var parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
       parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
       parserRegistry.RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (resolver));
       parserRegistry.RegisterParser (typeof (MemberExpression), new MemberExpressionParser (resolver));
 
-      ContainsParser parser = new ContainsParser (parserRegistry);
-      
+      var parser = new ContainsParser (parserRegistry);
+
       parser.Parse (methodCallExpression, ParseContext);
     }
 
-    public static bool Contains () { return true; }
+    public static bool Contains ()
+    {
+      return true;
+    }
   }
 }

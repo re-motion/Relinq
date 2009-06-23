@@ -13,7 +13,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-using System.Collections.Generic;
+using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Data.Linq.DataObjectModel;
@@ -25,11 +25,11 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details.WhereConditionParsing
   public class ConstantExpressionParserTest : DetailParserTestBase
   {
     [Test]
-    public void Parse()
+    public void Parse ()
     {
       object expected = new Constant (5);
-      ConstantExpressionParser parser = new ConstantExpressionParser (StubDatabaseInfo.Instance);
-      object result = parser.Parse (Expression.Constant(5, typeof (int)), ParseContext);
+      var parser = new ConstantExpressionParser (StubDatabaseInfo.Instance);
+      object result = parser.Parse (Expression.Constant (5, typeof (int)), ParseContext);
       Assert.AreEqual (expected, result);
     }
   }

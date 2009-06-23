@@ -17,8 +17,10 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using Remotion.Data.Linq.DataObjectModel;
+using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses.Expressions;
+using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Details;
 using Remotion.Data.Linq.Parsing.Details.WhereConditionParsing;
@@ -32,38 +34,32 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details.WhereConditionParsing
     [Test]
     public void CanParse_SubQueryExpression ()
     {
-      Data.Linq.QueryModel queryModel = ExpressionHelper.CreateQueryModel ();
-      SubQueryExpression subQueryExpression = new SubQueryExpression (queryModel);
+      var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel());
 
-      SubQueryExpressionParser subQueryExpressionParser = new SubQueryExpressionParser ();
-
-      Assert.IsTrue (subQueryExpressionParser.CanParse (subQueryExpression));
+      var subQueryExpressionParser = new SubQueryExpressionParser();
+      Assert.That (subQueryExpressionParser.CanParse (subQueryExpression), Is.True);
     }
 
     [Test]
     public void ParseSubQuery ()
     {
-      IQueryable<Student> querySource = ExpressionHelper.CreateQuerySource ();
-      Data.Linq.QueryModel queryModel = ExpressionHelper.CreateQueryModel ();
-      SubQueryExpression subQueryExpression = new SubQueryExpression (queryModel);
-      
-      ClauseFieldResolver resolver =
+      QueryModel subQueryModel = ExpressionHelper.CreateQueryModel();
+      var subQueryExpression = new SubQueryExpression (subQueryModel);
+
+      var resolver =
           new ClauseFieldResolver (StubDatabaseInfo.Instance, new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
-      WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
+      var parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
       parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
       parserRegistry.RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (resolver));
       parserRegistry.RegisterParser (typeof (MemberExpression), new MemberExpressionParser (resolver));
 
-      SubQueryExpressionParser subQueryExpressionParser = new SubQueryExpressionParser();
+      var subQueryExpressionParser = new SubQueryExpressionParser();
 
-      SubQuery expectedSubQuery = new SubQuery (queryModel, ParseMode.SubQueryInSelect, null);
+      var expectedSubQuery = new SubQuery (subQueryModel, ParseMode.SubQueryInSelect, null);
 
       ICriterion actualCriterion = subQueryExpressionParser.Parse (subQueryExpression, ParseContext);
 
-
-      Assert.AreEqual (expectedSubQuery, actualCriterion);
+      Assert.That (actualCriterion, Is.EqualTo (expectedSubQuery));
     }
-
-    
   }
 }

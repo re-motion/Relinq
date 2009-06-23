@@ -15,11 +15,11 @@
 // 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing;
 using Remotion.Data.Linq.Parsing.FieldResolving;
-using System.Linq;
 
 namespace Remotion.Data.Linq.Parsing.Details
 {
@@ -29,15 +29,15 @@ namespace Remotion.Data.Linq.Parsing.Details
 
     public SelectProjectionParserRegistry (IDatabaseInfo databaseInfo, ParseMode parseMode)
     {
-      _parserRegistry = new ParserRegistry ();
-      
+      _parserRegistry = new ParserRegistry();
+
       IResolveFieldAccessPolicy policy;
       if (parseMode == ParseMode.SubQueryInWhere)
         policy = new WhereFieldAccessPolicy (databaseInfo);
       else
         policy = new SelectFieldAccessPolicy();
 
-      ClauseFieldResolver resolver = new ClauseFieldResolver (databaseInfo, policy);
+      var resolver = new ClauseFieldResolver (databaseInfo, policy);
 
       RegisterParser (typeof (BinaryExpression), new BinaryExpressionParser (this));
       RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (databaseInfo));
@@ -45,7 +45,7 @@ namespace Remotion.Data.Linq.Parsing.Details
       RegisterParser (typeof (MethodCallExpression), new MethodCallExpressionParser (this));
       RegisterParser (typeof (NewExpression), new NewExpressionParser (this));
       RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (resolver));
-      RegisterParser (typeof (SubQueryExpression), new SubQueryExpressionParser ());
+      RegisterParser (typeof (SubQueryExpression), new SubQueryExpressionParser());
       RegisterParser (typeof (QuerySourceReferenceExpression), new QuerySourceReferenceExpressionParser (resolver));
     }
 

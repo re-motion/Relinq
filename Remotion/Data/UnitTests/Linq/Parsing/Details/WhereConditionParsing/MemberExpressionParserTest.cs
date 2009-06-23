@@ -13,11 +13,9 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-using System.Linq.Expressions;
+using System;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq;
-using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing.Details.WhereConditionParsing;
 using Remotion.Data.Linq.Parsing.FieldResolving;
 
@@ -27,17 +25,14 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details.WhereConditionParsing
   public class MemberExpressionParserTest : DetailParserTestBase
   {
     [Test]
-    public void Parse()
+    public void Parse ()
     {
-      ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
-      
-      ClauseFieldResolver resolver = 
-        new ClauseFieldResolver(StubDatabaseInfo.Instance,new WhereFieldAccessPolicy(StubDatabaseInfo.Instance));
-      MemberExpressionParser parser = new MemberExpressionParser (resolver);
+      var resolver =
+          new ClauseFieldResolver (StubDatabaseInfo.Instance, new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
+      var parser = new MemberExpressionParser (resolver);
 
-      MemberExpression memberExpression = Expression.MakeMemberAccess (parameter, typeof (Student).GetProperty ("ID"));
-      parser.Parse (memberExpression, ParseContext);
-      Assert.That (ParseContext.FieldDescriptors, Is.Not.Empty);
+      parser.Parse (Student_ID_Expression, ParseContext);
+      Assert.That (ParseContext.FieldDescriptors, SyntaxHelper.Not.Empty);
     }
   }
 }

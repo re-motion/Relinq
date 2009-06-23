@@ -238,15 +238,17 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void ResolveField ()
     {
-      ParameterExpression s1 = Expression.Parameter (typeof (String), "s1");
-      ParameterExpression s2 = Expression.Parameter (typeof (String), "s2");
-      MainFromClause mainFromClause = ExpressionHelper.CreateMainFromClause(s1, ExpressionHelper.CreateQuerySource());
-      var additionalFromClause = new AdditionalFromClause (mainFromClause, s2, ExpressionHelper.CreateExpression());
+      MainFromClause mainFromClause = ExpressionHelper.CreateMainFromClause(
+          Expression.Parameter (typeof (String), "s1"), 
+          ExpressionHelper.CreateQuerySource());
+      var additionalFromClause = new AdditionalFromClause (mainFromClause, 
+          Expression.Parameter (typeof (String), "s2"), 
+          ExpressionHelper.CreateExpression());
 
       QueryModel queryModel = ExpressionHelper.CreateQueryModel (mainFromClause);
       queryModel.AddBodyClause (additionalFromClause);
 
-      Expression fieldAccessExpression = Expression.Parameter (typeof (String), "s1");
+      Expression fieldAccessExpression = new QuerySourceReferenceExpression (mainFromClause);
       var context = new JoinedTableContext ();
       var policy = new WhereFieldAccessPolicy (StubDatabaseInfo.Instance);
       var resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, policy);

@@ -19,7 +19,6 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Details;
@@ -31,78 +30,73 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details.SelectProjectionParsing
   [TestFixture]
   public class MethodCallExpressionParserTest : DetailParserTestBase
   {
-    private ParameterExpression _parameter;
     private IColumnSource _fromSource;
-    private MainFromClause _fromClause;
     private SelectProjectionParserRegistry _parserRegistry;
     private ClauseFieldResolver _resolver;
 
-    public override void SetUp()
+    public override void SetUp ()
     {
       base.SetUp();
 
-      _parameter = Expression.Parameter (typeof (Student), "s");
-      _fromClause = ExpressionHelper.CreateMainFromClause (_parameter, ExpressionHelper.CreateQuerySource ());
-      _fromSource = _fromClause.GetColumnSource (StubDatabaseInfo.Instance);
-      QueryModel = ExpressionHelper.CreateQueryModel (_fromClause);
+      _fromSource = StudentClause.GetColumnSource (StubDatabaseInfo.Instance);
+      QueryModel = ExpressionHelper.CreateQueryModel (StudentClause);
       _resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, new SelectFieldAccessPolicy());
-      _parserRegistry = 
-        new SelectProjectionParserRegistry (StubDatabaseInfo.Instance, new ParseMode());
-      _parserRegistry.RegisterParser (typeof(ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
-      _parserRegistry.RegisterParser (typeof(ParameterExpression), new ParameterExpressionParser (_resolver));
-      _parserRegistry.RegisterParser (typeof(MemberExpression), new MemberExpressionParser (_resolver));
-      _parserRegistry.RegisterParser (typeof(MethodCallExpression), new MethodCallExpressionParser (_parserRegistry));
+      _parserRegistry =
+          new SelectProjectionParserRegistry (StubDatabaseInfo.Instance, new ParseMode());
+      _parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
+      _parserRegistry.RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (_resolver));
+      _parserRegistry.RegisterParser (typeof (MemberExpression), new MemberExpressionParser (_resolver));
+      _parserRegistry.RegisterParser (typeof (MethodCallExpression), new MethodCallExpressionParser (_parserRegistry));
     }
 
 
     [Test]
     public void CreateMethodCallEvaluation ()
     {
-      MemberExpression memberExpression = Expression.MakeMemberAccess (_parameter, typeof (Student).GetProperty ("First"));
-      MethodInfo methodInfo = typeof (string).GetMethod ("ToUpper", new Type[] {  });      
+      MemberExpression memberExpression = Expression.MakeMemberAccess (StudentReference, typeof (Student).GetProperty ("First"));
+      MethodInfo methodInfo = typeof (string).GetMethod ("ToUpper", new Type[] { });
       MethodCallExpression methodCallExpression = Expression.Call (memberExpression, methodInfo);
 
       //expected Result
-      Column column = new Column (_fromSource, "FirstColumn");
-      List<IEvaluation> c1 = new List<IEvaluation> { column };
-      MethodCall expected = new MethodCall(methodInfo,column,new List<IEvaluation>());
-      
-      MethodCallExpressionParser methodCallExpressionParser = new MethodCallExpressionParser (_parserRegistry);
+      var column = new Column (_fromSource, "FirstColumn");
+      var c1 = new List<IEvaluation> { column };
+      var expected = new MethodCall (methodInfo, column, new List<IEvaluation>());
+
+      var methodCallExpressionParser = new MethodCallExpressionParser (_parserRegistry);
 
       //result
       IEvaluation result = methodCallExpressionParser.Parse (methodCallExpression, ParseContext);
 
-      Assert.IsEmpty (((MethodCall)result).Arguments);
-      Assert.AreEqual (expected.EvaluationMethodInfo, ((MethodCall) result).EvaluationMethodInfo);
-      Assert.AreEqual (expected.TargetObject, ((MethodCall) result).TargetObject);
+      Assert.IsEmpty (((MethodCall) result).Arguments);
+      Assert.That (((MethodCall) result).EvaluationMethodInfo, Is.EqualTo (expected.EvaluationMethodInfo));
+      Assert.That (((MethodCall) result).TargetObject, Is.EqualTo (expected.TargetObject));
     }
 
     [Test]
     public void CreateMethodCall_WithOneArgument ()
     {
-      MemberExpression memberExpression = Expression.MakeMemberAccess (_parameter, typeof (Student).GetProperty ("First"));
+      MemberExpression memberExpression = Expression.MakeMemberAccess (StudentReference, typeof (Student).GetProperty ("First"));
 
-      MethodInfo methodInfo = typeof (string).GetMethod ("Remove", new Type[] { typeof(int) });
+      MethodInfo methodInfo = typeof (string).GetMethod ("Remove", new[] { typeof (int) });
       MethodCallExpression methodCallExpression = Expression.Call (memberExpression, methodInfo, Expression.Constant (5));
 
       //expected Result
-      Column column = new Column (_fromSource, "FirstColumn");
-      List<IEvaluation> c1 = new List<IEvaluation> { column };
-      Constant item = new Constant(5);
-      List<IEvaluation> item1 = new List<IEvaluation> { item };
-      List<IEvaluation> arguments = new List<IEvaluation> { item};
-      MethodCall expected = new MethodCall (methodInfo, column, arguments);
+      var column = new Column (_fromSource, "FirstColumn");
+      var c1 = new List<IEvaluation> { column };
+      var item = new Constant (5);
+      var item1 = new List<IEvaluation> { item };
+      var arguments = new List<IEvaluation> { item };
+      var expected = new MethodCall (methodInfo, column, arguments);
 
-      MethodCallExpressionParser methodCallExpressionParser =
-        new MethodCallExpressionParser ( _parserRegistry);
+      var methodCallExpressionParser = new MethodCallExpressionParser (_parserRegistry);
 
       //result
       IEvaluation result = methodCallExpressionParser.Parse (methodCallExpression, ParseContext);
 
-      
-      Assert.AreEqual (((MethodCall)result).Arguments, expected.Arguments);
-      Assert.AreEqual (expected.EvaluationMethodInfo, ((MethodCall) result).EvaluationMethodInfo);
-      Assert.AreEqual (expected.TargetObject, ((MethodCall) result).TargetObject);
+
+      Assert.That (expected.Arguments, Is.EqualTo (((MethodCall) result).Arguments));
+      Assert.That (((MethodCall) result).EvaluationMethodInfo, Is.EqualTo (expected.EvaluationMethodInfo));
+      Assert.That (((MethodCall) result).TargetObject, Is.EqualTo (expected.TargetObject));
     }
 
     [Test]
@@ -111,7 +105,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details.SelectProjectionParsing
       MethodInfo methodInfo = typeof (DateTime).GetMethod ("get_Now");
       MethodCallExpression methodCallExpression = Expression.Call (methodInfo);
 
-      MethodCallExpressionParser methodCallExpressionParser = new MethodCallExpressionParser (_parserRegistry);
+      var methodCallExpressionParser = new MethodCallExpressionParser (_parserRegistry);
       IEvaluation result = methodCallExpressionParser.Parse (methodCallExpression, ParseContext);
 
       Assert.That (((MethodCall) result).Arguments, Is.Empty);

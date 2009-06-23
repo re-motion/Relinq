@@ -13,8 +13,10 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing;
 
@@ -28,13 +30,13 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details.SelectProjectionParsing
     {
       ConstantExpression constantExpression = Expression.Constant (5);
 
-      ConstantExpressionParser parser = new ConstantExpressionParser(StubDatabaseInfo.Instance);
+      var parser = new ConstantExpressionParser (StubDatabaseInfo.Instance);
       IEvaluation result = parser.Parse (constantExpression, ParseContext);
 
       //expected
       IEvaluation expected = new Constant (5);
 
-      Assert.AreEqual (expected, result);
+      Assert.That (result, Is.EqualTo (expected));
     }
   }
 }

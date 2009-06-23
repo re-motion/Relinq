@@ -15,6 +15,7 @@
 // 
 using System;
 using System.Reflection;
+using Remotion.Data.Linq.Clauses.Expressions;
 
 namespace Remotion.Data.Linq.Parsing.FieldResolving
 {
@@ -24,14 +25,16 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
   /// </summary>
   public struct FieldAccessInfo
   {
-    public FieldAccessInfo (MemberInfo accessedMember, MemberInfo[] joinMembers)
+    public FieldAccessInfo (MemberInfo accessedMember, MemberInfo[] joinMembers, QuerySourceReferenceExpression querySourceReferenceExpression)
         : this()
     {
       AccessedMember = accessedMember;
       JoinMembers = joinMembers;
+      QuerySourceReferenceExpression = querySourceReferenceExpression;
     }
 
     public MemberInfo AccessedMember { get; private set; }
     public MemberInfo[] JoinMembers { get; private set; }
+    public QuerySourceReferenceExpression QuerySourceReferenceExpression { get; private set; }
   }
 }

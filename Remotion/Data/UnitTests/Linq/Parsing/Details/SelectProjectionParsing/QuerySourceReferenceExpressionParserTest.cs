@@ -27,10 +27,10 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details.SelectProjectionParsing
     [Test]
     public void Parse ()
     {
-      var expression = new QuerySourceReferenceExpression (QueryModel.MainFromClause);
+      var expression = new QuerySourceReferenceExpression (StudentClause);
       var resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, new SelectFieldAccessPolicy());
 
-      var fromSource = QueryModel.MainFromClause.GetColumnSource (StubDatabaseInfo.Instance);
+      var fromSource = StudentClause.GetColumnSource (StubDatabaseInfo.Instance);
       var path = new FieldSourcePath (fromSource, new SingleJoin[0]);
       var expectedFieldDescriptor = new FieldDescriptor (null, path, new Column (fromSource, "*"));
       IEvaluation expectedEvaluation = expectedFieldDescriptor.Column;

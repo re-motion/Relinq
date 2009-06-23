@@ -14,22 +14,22 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Collections;
+using Remotion.Data.Linq.Clauses.Expressions;
 
 namespace Remotion.Data.Linq.Parsing.FieldResolving
 {
   public class SelectFieldAccessPolicy : IResolveFieldAccessPolicy
   {
-    public Tuple<MemberInfo, IEnumerable<MemberInfo>> AdjustMemberInfosForDirectAccessOfQuerySource (ParameterExpression accessedIdentifier)
+    public Tuple<MemberInfo, IEnumerable<MemberInfo>> AdjustMemberInfosForDirectAccessOfQuerySource (QuerySourceReferenceExpression referenceExpression)
     {
       return new Tuple<MemberInfo, IEnumerable<MemberInfo>> (null, new MemberInfo[0]);
     }
 
     public Tuple<MemberInfo, IEnumerable<MemberInfo>> AdjustMemberInfosForRelation (MemberInfo accessedMember, IEnumerable<MemberInfo> joinMembers)
     {
-        List<MemberInfo> newJoinMembers = new List<MemberInfo> (joinMembers);
+        var newJoinMembers = new List<MemberInfo> (joinMembers);
         newJoinMembers.Add (accessedMember);
         return new Tuple<MemberInfo, IEnumerable<MemberInfo>> (null, newJoinMembers); // select full table if relation member is accessed
     }

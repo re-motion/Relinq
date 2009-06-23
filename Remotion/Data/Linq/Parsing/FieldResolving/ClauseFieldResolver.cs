@@ -19,6 +19,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Collections;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Utilities;
 
@@ -43,16 +44,17 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
       ArgumentUtility.CheckNotNull ("clause", clause);
       ArgumentUtility.CheckNotNull ("fieldAccessExpression", fieldAccessExpression);
       
-      var result = ClauseFieldResolverVisitor.ParseFieldAccess(DatabaseInfo, clause, fieldAccessExpression, _policy.OptimizeRelatedKeyAccess());
-      return CreateFieldDescriptor (clause.GetColumnSource (DatabaseInfo), clause.Identifier, result.AccessedMember, result.JoinMembers, joinedTableContext);
+      var result = ClauseFieldResolverVisitor.ParseFieldAccess(DatabaseInfo, fieldAccessExpression, _policy.OptimizeRelatedKeyAccess());
+      // var clause = result.QuerySourceReferenceExpression.ReferencedClause;
+      return CreateFieldDescriptor (clause.GetColumnSource (DatabaseInfo), result.QuerySourceReferenceExpression, result.AccessedMember, result.JoinMembers, joinedTableContext);
     }
 
-    private FieldDescriptor CreateFieldDescriptor (IColumnSource firstSource, ParameterExpression accessedIdentifier, MemberInfo accessedMember, IEnumerable<MemberInfo> joinMembers, JoinedTableContext joinedTableContext)
+    private FieldDescriptor CreateFieldDescriptor (IColumnSource firstSource, QuerySourceReferenceExpression referenceExpression, MemberInfo accessedMember, IEnumerable<MemberInfo> joinMembers, JoinedTableContext joinedTableContext)
     {
       // Documentation example: sdd.Student_Detail.Student.First
       // joinMembers == "Student_Detail", "Student"
 
-      var memberInfos = AdjustMemberInfos (accessedIdentifier, accessedMember, joinMembers);
+      var memberInfos = AdjustMemberInfos (referenceExpression, accessedMember, joinMembers);
       MemberInfo accessedMemberForColumn = memberInfos.A;
       IEnumerable<MemberInfo> joinMembersForCalculation = memberInfos.B;
 
@@ -63,12 +65,12 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
       return new FieldDescriptor (accessedMember, fieldData, column);
     }
     
-    private Tuple<MemberInfo, IEnumerable<MemberInfo>> AdjustMemberInfos (ParameterExpression accessedIdentifier, MemberInfo accessedMember, IEnumerable<MemberInfo> joinMembers)
+    private Tuple<MemberInfo, IEnumerable<MemberInfo>> AdjustMemberInfos (QuerySourceReferenceExpression referenceExpression, MemberInfo accessedMember, IEnumerable<MemberInfo> joinMembers)
     {
       if (accessedMember == null)
       {
         Assertion.IsTrue (joinMembers.Count() == 0);
-        return _policy.AdjustMemberInfosForDirectAccessOfQuerySource (accessedIdentifier);
+        return _policy.AdjustMemberInfosForDirectAccessOfQuerySource (referenceExpression);
       }
       else if (DatabaseInfoUtility.IsRelationMember (DatabaseInfo, accessedMember))
         return _policy.AdjustMemberInfosForRelation (accessedMember, joinMembers);

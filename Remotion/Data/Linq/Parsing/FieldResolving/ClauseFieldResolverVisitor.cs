@@ -17,7 +17,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
-using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Utilities;
 
@@ -28,84 +27,50 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
   /// </summary>
   public class ClauseFieldResolverVisitor : ExpressionTreeVisitor
   {
-    public static FieldAccessInfo ParseFieldAccess (
-        IDatabaseInfo databaseInfo,
-        IResolveableClause resolvedClause,
-        Expression fieldAccessExpression,
-        bool optimizeRelatedKeyAccess)
+    public static FieldAccessInfo ParseFieldAccess (IDatabaseInfo databaseInfo, Expression fieldAccessExpression, bool optimizeRelatedKeyAccess)
     {
       ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
-      ArgumentUtility.CheckNotNull ("resolvedClause", resolvedClause);
       ArgumentUtility.CheckNotNull ("fieldAccessExpression", fieldAccessExpression);
 
-      var visitor = new ClauseFieldResolverVisitor (databaseInfo, resolvedClause, optimizeRelatedKeyAccess);
+      var visitor = new ClauseFieldResolverVisitor (databaseInfo, optimizeRelatedKeyAccess);
       visitor.VisitExpression (fieldAccessExpression);
-      return new FieldAccessInfo (visitor._accessedMember, visitor._joinMembers.ToArray ());
+      return new FieldAccessInfo (visitor._accessedMember, visitor._joinMembers.ToArray (), visitor._referenceExpression);
     }
 
     private readonly IDatabaseInfo _databaseInfo;
-    private readonly IResolveableClause _resolvedClause;
     private readonly List<MemberInfo> _joinMembers;
     private readonly bool _optimizeRelatedKeyAccess;
 
     private MemberInfo _accessedMember;
+    private QuerySourceReferenceExpression _referenceExpression;
 
-    private ClauseFieldResolverVisitor (IDatabaseInfo databaseInfo, IResolveableClause resolvedClause, bool optimizeRelatedKeyAccess)
+    private ClauseFieldResolverVisitor (IDatabaseInfo databaseInfo, bool optimizeRelatedKeyAccess)
     {
       ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
-      ArgumentUtility.CheckNotNull ("resolvedClause", resolvedClause);
 
       _databaseInfo = databaseInfo;
       _optimizeRelatedKeyAccess = optimizeRelatedKeyAccess;
-      _resolvedClause = resolvedClause;
       _joinMembers = new List<MemberInfo> ();
       _accessedMember = null;
+      _referenceExpression = null;
     }
 
     protected override Expression VisitExpression (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      if (expression is ParameterExpression || expression is MemberExpression || expression is QuerySourceReferenceExpression)
+      if (expression is MemberExpression || expression is QuerySourceReferenceExpression)
         return base.VisitExpression (expression);
       else
       {
-        string message = string.Format ("Only MemberExpressions, QuerySourceReferenceExpressions, and ParameterExpressions can be resolved, found "
-            + "'{0}'.", expression);
+        string message = string.Format ("Only MemberExpressions and QuerySourceReferenceExpressions can be resolved, found '{0}'.", expression);
         throw new FieldAccessResolveException (message);
       }
-    }
-
-    protected override Expression VisitParameterExpression (ParameterExpression expression)
-    {
-      ArgumentUtility.CheckNotNull ("expression", expression);
-
-      if (expression.Name != _resolvedClause.Identifier.Name)
-      {
-        string message = string.Format ("This clause can only resolve field accesses for parameters called '{0}', but a parameter "
-                                        + "called '{1}' was given.", _resolvedClause.Identifier.Name, expression.Name);
-        throw new FieldAccessResolveException (message);
-      }
-
-      if (expression.Type != _resolvedClause.Identifier.Type)
-      {
-        string message = string.Format ("This clause can only resolve field accesses for parameters of type '{0}', but a parameter "
-                                        + "of type '{1}' was given.", _resolvedClause.Identifier.Type, expression.Type);
-        throw new FieldAccessResolveException (message);
-      }
-
-      return base.VisitParameterExpression (expression);
     }
 
     protected override Expression VisitQuerySourceReferenceExpression (QuerySourceReferenceExpression expression)
     {
-      if (expression.ReferencedClause != _resolvedClause)
-      {
-        string message = string.Format ("This clause can only resolve field accesses for itself ('{0}'), but a reference to a clause "
-                                        + "called '{1}' was given.", _resolvedClause.Identifier.Name, expression.ReferencedClause.Identifier.Name);
-        throw new FieldAccessResolveException (message);
-      }
-
+      _referenceExpression = expression;
       return base.VisitQuerySourceReferenceExpression (expression);
     }
 

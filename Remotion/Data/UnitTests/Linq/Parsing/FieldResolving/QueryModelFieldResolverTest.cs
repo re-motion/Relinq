@@ -18,6 +18,7 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing.FieldResolving;
 
@@ -43,8 +44,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
     {
       QueryModel queryModel = CreateQueryExpressionForResolve ();
 
-      Expression fieldAccessExpression = Expression.Parameter (typeof (String), "s1");
-      FieldDescriptor descriptor = new QueryModelFieldResolver(queryModel).ResolveField (_resolver, fieldAccessExpression, _context);
+      FieldDescriptor descriptor = new QueryModelFieldResolver(queryModel)
+          .ResolveField (_resolver, new QuerySourceReferenceExpression (queryModel.MainFromClause), _context);
 
       IColumnSource expectedTable = queryModel.MainFromClause.GetColumnSource (StubDatabaseInfo.Instance);
       var expectedPath = new FieldSourcePath(expectedTable, new SingleJoin[0]);
@@ -73,11 +74,12 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
       QueryModel subQueryModel =
           ExpressionHelper.CreateQueryModel (new MainFromClause (Expression.Parameter (typeof (Student), "a"), Expression.Constant (null)));
       subQueryModel.SetParentQuery (parentQueryModel);
-      Expression sourceExpression = Expression.Parameter (typeof (string), "s1");
-
       var fieldResolver = new QueryModelFieldResolver (subQueryModel);
 
-      FieldDescriptor fieldDescriptor = fieldResolver.ResolveField (_resolver, sourceExpression, _context);
+      FieldDescriptor fieldDescriptor = fieldResolver.ResolveField (
+          _resolver, 
+          new QuerySourceReferenceExpression (parentQueryModel.MainFromClause), 
+          _context);
       Assert.AreEqual (parentQueryModel.MainFromClause.JoinClauses, fieldDescriptor.SourcePath.Joins);
     }
 

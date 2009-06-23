@@ -16,8 +16,7 @@
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using Remotion.Data.Linq;
-using Remotion.Data.Linq.Clauses;
+using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Details;
@@ -32,17 +31,17 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details.WhereConditionParsing
     [Test]
     public void ParseStartsWith ()
     {
-      var methodName = "StartsWith";
-      var pattern = "Test%";
+      string methodName = "StartsWith";
+      string pattern = "Test%";
       CheckParsingOfLikeVariant (methodName, pattern);
     }
 
     [Test]
     [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected ConstantExpression for argument 0 of StartsWith method call, "
-        + "found 'ParameterExpression (Test)'.")]
+                                                                    + "found 'ParameterExpression (Test)'.")]
     public void ParseStartsWith_NoConstantExpression ()
     {
-      var methodName = "StartsWith";
+      string methodName = "StartsWith";
       CheckParsingOfLikeVariant_NoConstantExpression (methodName);
     }
 
@@ -50,24 +49,24 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details.WhereConditionParsing
     [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected at least 1 argument for StartsWith method call, found '0 arguments'.")]
     public void ParseStartsWith_NoArguments ()
     {
-      var methodName = "StartsWith";
+      string methodName = "StartsWith";
       CheckParsingOfLikeVariant_NoArguments (methodName);
     }
 
     [Test]
     public void ParseEndsWith ()
     {
-      var methodName = "EndsWith";
-      var pattern = "%Test";
+      string methodName = "EndsWith";
+      string pattern = "%Test";
       CheckParsingOfLikeVariant (methodName, pattern);
     }
 
     [Test]
     [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected ConstantExpression for argument 0 of EndsWith method call, "
-        + "found 'ParameterExpression (Test)'.")]
+                                                                    + "found 'ParameterExpression (Test)'.")]
     public void ParseEndsWith_NoConstantExpression ()
     {
-      var methodName = "EndsWith";
+      string methodName = "EndsWith";
       CheckParsingOfLikeVariant_NoConstantExpression (methodName);
     }
 
@@ -75,109 +74,104 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details.WhereConditionParsing
     [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected at least 1 argument for EndsWith method call, found '0 arguments'.")]
     public void ParseEndsWith_NoArguments ()
     {
-      var methodName = "EndsWith";
+      string methodName = "EndsWith";
       CheckParsingOfLikeVariant_NoArguments (methodName);
     }
 
     [Test]
-    [ExpectedException (typeof (Remotion.Data.Linq.Parsing.ParserException), ExpectedMessage = "Expected StartsWith, EndsWith, Contains with no expression "
-        + "for method call expression in where condition, found 'Equals'.")]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected StartsWith, EndsWith, Contains with no expression "
+                                                                    + "for method call expression in where condition, found 'Equals'.")]
     public void Parse_WithException ()
     {
-      ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
-      MemberExpression memberAccess = Expression.MakeMemberAccess (parameter, typeof (Student).GetProperty ("First"));
       MethodCallExpression methodCallExpression = Expression.Call (
-          memberAccess,
-          typeof (string).GetMethod ("Equals", new Type[] { typeof (object) }),
+          Student_First_Expression,
+          typeof (string).GetMethod ("Equals", new[] { typeof (object) }),
           Expression.Constant ("Test")
           );
 
-      ClauseFieldResolver resolver =
+      var resolver =
           new ClauseFieldResolver (StubDatabaseInfo.Instance, new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
-      WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
+      var parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
       parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
       parserRegistry.RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (resolver));
       parserRegistry.RegisterParser (typeof (MemberExpression), new MemberExpressionParser (resolver));
 
-      LikeParser parser = new LikeParser (parserRegistry);
+      var parser = new LikeParser (parserRegistry);
       parser.Parse (methodCallExpression, ParseContext);
     }
 
     private void CheckParsingOfLikeVariant (string methodName, string pattern)
     {
-      ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
-      MemberExpression memberAccess = Expression.MakeMemberAccess (parameter, typeof (Student).GetProperty ("First"));
-
-      ClauseFieldResolver resolver =
+      var resolver =
           new ClauseFieldResolver (StubDatabaseInfo.Instance, new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
 
-
-      WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
+      var parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
       parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
       parserRegistry.RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (resolver));
       parserRegistry.RegisterParser (typeof (MemberExpression), new MemberExpressionParser (resolver));
 
       MethodCallExpression methodCallExpression = Expression.Call (
-          memberAccess,
-          typeof (string).GetMethod (methodName, new Type[] { typeof (string) }),
+          Student_First_Expression,
+          typeof (string).GetMethod (methodName, new[] { typeof (string) }),
           Expression.Constant ("Test")
           );
 
-      LikeParser parser = new LikeParser (parserRegistry);
+      var parser = new LikeParser (parserRegistry);
 
       ICriterion actualCriterion = parser.Parse (methodCallExpression, ParseContext);
-      ICriterion expectedCriterion = new BinaryCondition (new Column (new Table ("studentTable", "s"), "FirstColumn"), new Constant (pattern), BinaryCondition.ConditionKind.Like);
-      Assert.AreEqual (expectedCriterion, actualCriterion);
+      ICriterion expectedCriterion = new BinaryCondition (
+          new Column (new Table ("studentTable", "s"), "FirstColumn"), new Constant (pattern), BinaryCondition.ConditionKind.Like);
+      Assert.That (actualCriterion, Is.EqualTo (expectedCriterion));
     }
 
     private void CheckParsingOfLikeVariant_NoConstantExpression (string methodName)
     {
-      ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
-      MemberExpression memberAccess = Expression.MakeMemberAccess (parameter, typeof (Student).GetProperty ("First"));
-
-      ClauseFieldResolver resolver =
+      var resolver =
           new ClauseFieldResolver (StubDatabaseInfo.Instance, new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
 
 
-      WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
+      var parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
       parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
       parserRegistry.RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (resolver));
       parserRegistry.RegisterParser (typeof (MemberExpression), new MemberExpressionParser (resolver));
 
       MethodCallExpression methodCallExpression = Expression.Call (
-          memberAccess,
-          typeof (string).GetMethod (methodName, new Type[] { typeof (string) }),
+          Student_First_Expression,
+          typeof (string).GetMethod (methodName, new[] { typeof (string) }),
           Expression.Parameter (typeof (string), "Test")
           );
 
-      LikeParser parser = new LikeParser (parserRegistry);
+      var parser = new LikeParser (parserRegistry);
       parser.Parse (methodCallExpression, ParseContext);
     }
 
     private void CheckParsingOfLikeVariant_NoArguments (string methodName)
     {
-      ParameterExpression parameter = Expression.Parameter (typeof (Student), "s");
-      MemberExpression memberAccess = Expression.MakeMemberAccess (parameter, typeof (Student).GetProperty ("First"));
-
-      ClauseFieldResolver resolver =
+      var resolver =
           new ClauseFieldResolver (StubDatabaseInfo.Instance, new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
 
-
-      WhereConditionParserRegistry parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
+      var parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
       parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
       parserRegistry.RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (resolver));
       parserRegistry.RegisterParser (typeof (MemberExpression), new MemberExpressionParser (resolver));
 
       MethodCallExpression methodCallExpression = Expression.Call (
-          memberAccess,
+          Student_First_Expression,
           typeof (LikeParserTest).GetMethod (methodName)
           );
 
-      LikeParser parser = new LikeParser (parserRegistry);
+      var parser = new LikeParser (parserRegistry);
       parser.Parse (methodCallExpression, ParseContext);
     }
 
-    public static bool StartsWith () { return true; }
-    public static bool EndsWith () { return true; }
+    public static bool StartsWith ()
+    {
+      return true;
+    }
+
+    public static bool EndsWith ()
+    {
+      return true;
+    }
   }
 }

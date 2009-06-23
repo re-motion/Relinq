@@ -14,33 +14,30 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using NUnit.Framework;
 using System.Reflection;
 using Remotion.Collections;
-using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing.FieldResolving;
 using NUnit.Framework.SyntaxHelpers;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
 {
   [TestFixture]
-  public class SelectFieldAccessPolicyTest
+  public class SelectFieldAccessPolicyTest : FieldAccessPolicyTestBase
   {
     private SelectFieldAccessPolicy _policy;
 
     [SetUp]
-    public void SetUp ()
+    public override void SetUp ()
     {
+      base.SetUp ();
       _policy = new SelectFieldAccessPolicy ();
     }
 
     [Test]
     public void AdjustMemberInfosForFromIdentifier ()
     {
-      MainFromClause fromClause =
-          ExpressionHelper.CreateMainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
-      var result = _policy.AdjustMemberInfosForDirectAccessOfQuerySource (fromClause.Identifier);
+      var result = _policy.AdjustMemberInfosForDirectAccessOfQuerySource (StudentReference);
       Assert.That (result.A, Is.Null);
       Assert.That (result.B, Is.Empty);
     }
@@ -48,11 +45,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
     [Test]
     public void AdjustMemberInfosForRelation()
     {
-      MemberInfo joinMember = typeof (Student_Detail_Detail).GetProperty ("Student_Detail");
-      MemberInfo relationMember = typeof (Student_Detail).GetProperty ("Student");
-
-      Tuple<MemberInfo, IEnumerable<MemberInfo>> result = _policy.AdjustMemberInfosForRelation (relationMember, new[] { joinMember });
-      var expected = new Tuple<MemberInfo, IEnumerable<MemberInfo>> (null, new[] {joinMember, relationMember});
+      Tuple<MemberInfo, IEnumerable<MemberInfo>> result = _policy.AdjustMemberInfosForRelation (StudentDetail_Student_Member, new[] { StudentDetailDetail_StudentDetail_Member });
+      var expected = new Tuple<MemberInfo, IEnumerable<MemberInfo>> (null, new[] {StudentDetailDetail_StudentDetail_Member, StudentDetail_Student_Member});
 
       Assert.AreEqual (expected.A, result.A);
       Assert.That (result.B, Is.EqualTo (expected.B));

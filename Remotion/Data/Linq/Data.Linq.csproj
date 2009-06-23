@@ -130,7 +130,6 @@
     <Compile Include="Parsing\Details\SelectProjectionParsing\MethodCallExpressionParser.cs" />
     <Compile Include="Parsing\Details\SelectProjectionParsing\NewExpressionParser.cs" />
     <Compile Include="Parsing\Details\SelectProjectionParsing\ParameterExpressionParser.cs" />
-    <Compile Include="Parsing\Details\SelectProjectionParsing\ResultModifierParser.cs" />
     <Compile Include="Parsing\Details\WhereConditionParserRegistry.cs" />
     <Compile Include="Parsing\Details\WhereConditionParsing\ContainsFullTextParser.cs" />
     <Compile Include="Parsing\Details\WhereConditionParsing\ContainsParser.cs" />
