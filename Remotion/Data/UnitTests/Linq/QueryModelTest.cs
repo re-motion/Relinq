@@ -299,37 +299,33 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void AddBodyClauses_SetsExpressionTreeToNull ()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel ();
       var bodyClause = ExpressionHelper.CreateAdditionalFromClause ();
-      queryModel.AddBodyClause (bodyClause);
-      Assert.That (queryModel.GetExpressionTree(), Is.InstanceOfType (typeof (ConstructedQueryExpression)));
+      _queryModel.AddBodyClause (bodyClause);
+      Assert.That (_queryModel.GetExpressionTree(), Is.InstanceOfType (typeof (ConstructedQueryExpression)));
     }
 
     [Test]
     public void SelectOrGroupClause_Set ()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel ();
       var newSelectClause = ExpressionHelper.CreateSelectClause ();
-      queryModel.SelectOrGroupClause = newSelectClause;
+      _queryModel.SelectOrGroupClause = newSelectClause;
 
-      Assert.That (queryModel.SelectOrGroupClause, Is.SameAs (newSelectClause));
+      Assert.That (_queryModel.SelectOrGroupClause, Is.SameAs (newSelectClause));
     }
 
     [Test]
     [ExpectedException (typeof (ArgumentNullException))]
     public void SelectOrGroupClause_Set_Null ()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel ();
-      queryModel.SelectOrGroupClause = null;
+      _queryModel.SelectOrGroupClause = null;
     }
 
     [Test]
     public void SelectOrGroupClause_Set_InvalidatesExpressionTree ()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel ();
-      var expressionTreeBefore = queryModel.GetExpressionTree ();
-      queryModel.SelectOrGroupClause = ExpressionHelper.CreateSelectClause ();
-      var expressionTreeAfter = queryModel.GetExpressionTree ();
+      var expressionTreeBefore = _queryModel.GetExpressionTree ();
+      _queryModel.SelectOrGroupClause = ExpressionHelper.CreateSelectClause ();
+      var expressionTreeAfter = _queryModel.GetExpressionTree ();
 
       Assert.That (expressionTreeAfter, Is.Not.SameAs (expressionTreeBefore));
     }
@@ -337,18 +333,16 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void GetUniqueIentifier ()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel ();
-      var identifier = queryModel.GetUniqueIdentifier ("test");
+      var identifier = _queryModel.GetUniqueIdentifier ("test");
       Assert.That (identifier, Is.EqualTo ("test0"));
     }
 
     [Test]
     public void GetUniqueIentifier_MoreThanOnce ()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel ();
-      var identifier1 = queryModel.GetUniqueIdentifier ("test");
-      var identifier2 = queryModel.GetUniqueIdentifier ("test");
-      var identifier3 = queryModel.GetUniqueIdentifier ("test");
+      var identifier1 = _queryModel.GetUniqueIdentifier ("test");
+      var identifier2 = _queryModel.GetUniqueIdentifier ("test");
+      var identifier3 = _queryModel.GetUniqueIdentifier ("test");
       Assert.That (identifier1, Is.Not.EqualTo (identifier2));
       Assert.That (identifier2, Is.Not.EqualTo (identifier3));
       Assert.That (identifier1, Is.Not.EqualTo (identifier3));
@@ -366,15 +360,61 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void GetUniqueIentifier_AlreadyExists_BodyClauses ()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel ();
       var additionalFromClause = new AdditionalFromClause (
-          queryModel.MainFromClause, 
+          _queryModel.MainFromClause, 
           Expression.Parameter (typeof (Student), "test0"), 
           ExpressionHelper.CreateExpression());
-      queryModel.AddBodyClause (additionalFromClause);
+      _queryModel.AddBodyClause (additionalFromClause);
 
-      var identifier = queryModel.GetUniqueIdentifier ("test");
+      var identifier = _queryModel.GetUniqueIdentifier ("test");
       Assert.That (identifier, Is.EqualTo ("test1"));
+    }
+
+    [Test]
+    public void InitializeWithISelectOrGroupClauseAndOrderByClause ()
+    {
+      var orderByClause = new OrderByClause (_queryModel.MainFromClause);
+      var ordering = new Ordering (orderByClause, ExpressionHelper.CreateExpression (), OrderingDirection.Asc);
+      orderByClause.AddOrdering (ordering);
+
+      _queryModel.AddBodyClause (orderByClause);
+
+      Assert.That (_queryModel.SelectOrGroupClause, Is.SameAs (_selectClause));
+      Assert.That (_queryModel.BodyClauses.Count, Is.EqualTo (1));
+      Assert.That (_queryModel.BodyClauses, List.Contains (orderByClause));
+    }
+
+    [Test]
+    public void AddSeveralOrderByClauses ()
+    {
+
+      IBodyClause orderByClause1 = ExpressionHelper.CreateOrderByClause ();
+      IBodyClause orderByClause2 = ExpressionHelper.CreateOrderByClause ();
+
+      _queryModel.AddBodyClause (orderByClause1);
+      _queryModel.AddBodyClause (orderByClause2);
+
+      Assert.That (_queryModel.BodyClauses.Count, Is.EqualTo (2));
+      Assert.That (_queryModel.BodyClauses, Is.EqualTo (new object[] { orderByClause1, orderByClause2 }));
+    }
+
+
+    [Test]
+    public void AddBodyClause ()
+    {
+      IBodyClause clause = ExpressionHelper.CreateWhereClause ();
+      _queryModel.AddBodyClause (clause);
+
+      Assert.That (_queryModel.BodyClauses.Count, Is.EqualTo (1));
+      Assert.That (_queryModel.BodyClauses, List.Contains (clause));
+    }
+
+    [Test]
+    public void AddBodyClause_SetsQueryModelOfBodyClause ()
+    {
+      IBodyClause clause = ExpressionHelper.CreateWhereClause ();
+      _queryModel.AddBodyClause (clause);
+      Assert.That (clause.QueryModel, Is.Not.Null);
     }
   }
 }

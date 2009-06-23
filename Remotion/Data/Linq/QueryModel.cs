@@ -115,7 +115,7 @@ namespace Remotion.Data.Linq
       if (clauseAsFromClause != null)
       {
         _uniqueIdentifierGenerator.AddKnownIdentifier (clauseAsFromClause.Identifier.Name);
-        RegisterClause(clauseAsFromClause.Identifier, clauseAsFromClause);
+        //RegisterClause(clauseAsFromClause.Identifier, clauseAsFromClause);
       }
 
       clause.SetQueryModel (this);
