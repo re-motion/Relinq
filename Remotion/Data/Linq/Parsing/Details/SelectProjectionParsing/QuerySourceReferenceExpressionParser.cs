@@ -26,7 +26,7 @@ namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing
     // query source reference expression parsing is the same for where conditions and select projections, so delegate to that implementation
     private readonly WhereConditionParsing.QuerySourceReferenceExpressionParser _innerParser;
 
-    public QuerySourceReferenceExpressionParser (ClauseFieldResolver resolver)
+    public QuerySourceReferenceExpressionParser (FieldResolver resolver)
     {
       ArgumentUtility.CheckNotNull ("resolver", resolver);
       _innerParser = new WhereConditionParsing.QuerySourceReferenceExpressionParser (resolver);

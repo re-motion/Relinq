@@ -31,7 +31,7 @@ using NUnit.Framework.SyntaxHelpers;
 namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
 {
   [TestFixture]
-  public class ClauseFieldResolverTest
+  public class FieldResolverTest
   {
     private JoinedTableContext _context;
     private IResolveFieldAccessPolicy _policy;
@@ -107,7 +107,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
       // s
 
       IColumnSource table = _studentClause.GetColumnSource (StubDatabaseInfo.Instance);
-      FieldDescriptor fieldDescriptor = new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (_studentReference, _context);
+      FieldDescriptor fieldDescriptor = new FieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (_studentReference, _context);
 
       var column = new Column (table, "*");
       var expected = new FieldDescriptor (null, new FieldSourcePath (table, new SingleJoin[0]), column);
@@ -121,7 +121,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
       // s.First
 
       FieldDescriptor fieldDescriptor = 
-          new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy)
+          new FieldResolver (StubDatabaseInfo.Instance, _policy)
           .ResolveField (_student_First_Expression, _context);
       Assert.That (fieldDescriptor.Column, Is.EqualTo (new Column (new Table ("studentTable", "s"), "FirstColumn")));
     }
@@ -132,7 +132,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
       // sd.Student.First
 
       FieldDescriptor fieldDescriptor =
-          new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (_studentDetail_Student_First_Expression, _context);
+          new FieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (_studentDetail_Student_First_Expression, _context);
 
       Assert.That (fieldDescriptor.Column, Is.EqualTo (new Column (new Table ("studentTable", null), "FirstColumn")));
       Assert.That (fieldDescriptor.Member, Is.EqualTo (_student_First_Property));
@@ -152,7 +152,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
       // sdd.Student_Detail.Student.First
 
       FieldDescriptor fieldDescriptor =
-          new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (_studentDetailDetail_StudentDetail_Student_First_Expression, _context);
+          new FieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (_studentDetailDetail_StudentDetail_Student_First_Expression, _context);
 
       Assert.That (fieldDescriptor.Column, Is.EqualTo (new Column (new Table ("studentTable", null), "FirstColumn")));
       Assert.That (fieldDescriptor.Member, Is.EqualTo (_student_First_Property));
@@ -182,7 +182,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
               _student_First_Expression,
               typeof (string).GetProperty ("Length"));
 
-      new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (fieldExpression, _context);
+      new FieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (fieldExpression, _context);
     }
 
     [Test]
@@ -195,7 +195,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
           typeof (Student).GetProperty ("NonDBProperty"));
 
       FieldDescriptor fieldDescriptor =
-          new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (fieldExpression, _context);
+          new FieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (fieldExpression, _context);
 
       var path = new FieldSourcePath (table, new SingleJoin[0]);
       Assert.That (fieldDescriptor, Is.EqualTo (new FieldDescriptor (typeof (Student).GetProperty ("NonDBProperty"), path, null)));
@@ -207,9 +207,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
       // sd.Student.First
 
       FieldDescriptor fieldDescriptor1 =
-          new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (_studentDetail_Student_First_Expression, _context);
+          new FieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (_studentDetail_Student_First_Expression, _context);
       FieldDescriptor fieldDescriptor2 =
-          new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (_studentDetail_Student_First_Expression, _context);
+          new FieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (_studentDetail_Student_First_Expression, _context);
 
       IColumnSource table1 = fieldDescriptor1.SourcePath.Joins[0].RightSide;
       IColumnSource table2 = fieldDescriptor2.SourcePath.Joins[0].RightSide;
@@ -223,7 +223,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
       //sd.Student
 
       FieldDescriptor fieldDescriptor =
-          new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (_studentDetail_Student_Expression, _context);
+          new FieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (_studentDetail_Student_Expression, _context);
 
       IColumnSource detailTable = _studentDetailClause.GetColumnSource (StubDatabaseInfo.Instance);
       Table studentTable = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, _studentDetail_Student_Property);
@@ -241,7 +241,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
       //sdd.Student_Detail.Student
 
       FieldDescriptor fieldDescriptor =
-          new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (_studentDetailDetail_StudentDetail_Student_Expression, _context);
+          new FieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (_studentDetailDetail_StudentDetail_Student_Expression, _context);
 
       IColumnSource detailDetailTable = _studentDetailDetailClause.GetColumnSource (StubDatabaseInfo.Instance);
       Table detailTable = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, _studentDetailDetail_StudentDetail_Property);
@@ -268,7 +268,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
       Expression fieldExpression = Expression.MakeMemberAccess (new QuerySourceReferenceExpression (fromClause), member);
 
       FieldDescriptor fieldDescriptor =
-          new ClauseFieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (fieldExpression, _context);
+          new FieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (fieldExpression, _context);
       var subQuery = (SubQuery) fromClause.GetColumnSource (StubDatabaseInfo.Instance);
       var column = new Column (subQuery, "IDColumn");
       var expected = new FieldDescriptor (member, new FieldSourcePath (subQuery, new SingleJoin[0]), column);
@@ -289,7 +289,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
 
       _policyMock.Replay();
 
-      FieldDescriptor actualFieldDescriptor = new ClauseFieldResolver (StubDatabaseInfo.Instance, _policyMock)
+      FieldDescriptor actualFieldDescriptor = new FieldResolver (StubDatabaseInfo.Instance, _policyMock)
           .ResolveField (_studentDetailDetail_StudentDetail_Student_Expression, _context);
       
       _policyMock.VerifyAllExpectations();
@@ -318,7 +318,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
       _policyMock.Replay ();
 
       FieldDescriptor actualFieldDescriptor = 
-          new ClauseFieldResolver (StubDatabaseInfo.Instance, _policyMock)
+          new FieldResolver (StubDatabaseInfo.Instance, _policyMock)
           .ResolveField (fieldExpression, _context);
       
       _policyMock.VerifyAllExpectations();
@@ -339,7 +339,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
       Assert.That (policy.OptimizeRelatedKeyAccess(), Is.True);
       Expression fieldExpression = ExpressionHelper.Resolve<Student_Detail, int> (_studentDetailClause, sd => sd.IndustrialSector.ID);
 
-      var resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, policy);
+      var resolver = new FieldResolver (StubDatabaseInfo.Instance, policy);
 
       FieldDescriptor result = resolver.ResolveField (fieldExpression, _context);
 
@@ -354,7 +354,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
       Assert.That (policy.OptimizeRelatedKeyAccess(), Is.False);
       Expression fieldExpression = ExpressionHelper.Resolve<Student_Detail, int>(_studentDetailClause, sd => sd.IndustrialSector.ID);
 
-      var resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, policy);
+      var resolver = new FieldResolver (StubDatabaseInfo.Instance, policy);
       FieldDescriptor result = resolver.ResolveField (fieldExpression, _context);
 
       Assert.That (result.Column, Is.EqualTo (new Column (result.SourcePath.LastSource, "IDColumn")));

@@ -23,8 +23,6 @@ using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.StringBuilding;
 using Rhino.Mocks;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.DataObjectModel;
-using Remotion.Data.Linq.Parsing.FieldResolving;
 using NUnit.Framework.SyntaxHelpers;
 
 namespace Remotion.Data.UnitTests.Linq
@@ -233,33 +231,6 @@ namespace Remotion.Data.UnitTests.Linq
 
       model.GetResolveableClause ("s1", typeof (string));
       Assert.Fail ("Expected exception");
-    }
-
-    [Test]
-    public void ResolveField ()
-    {
-      MainFromClause mainFromClause = ExpressionHelper.CreateMainFromClause(
-          Expression.Parameter (typeof (String), "s1"), 
-          ExpressionHelper.CreateQuerySource());
-      var additionalFromClause = new AdditionalFromClause (mainFromClause, 
-          Expression.Parameter (typeof (String), "s2"), 
-          ExpressionHelper.CreateExpression());
-
-      QueryModel queryModel = ExpressionHelper.CreateQueryModel (mainFromClause);
-      queryModel.AddBodyClause (additionalFromClause);
-
-      Expression fieldAccessExpression = new QuerySourceReferenceExpression (mainFromClause);
-      var context = new JoinedTableContext ();
-      var policy = new WhereFieldAccessPolicy (StubDatabaseInfo.Instance);
-      var resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, policy);
-      var descriptor = queryModel.ResolveField (resolver, fieldAccessExpression, context);
-
-      IColumnSource expectedTable = queryModel.MainFromClause.GetColumnSource (StubDatabaseInfo.Instance);
-      var expectedPath = new FieldSourcePath (expectedTable, new SingleJoin[0]);
-
-      Assert.AreEqual (new Column (expectedTable, "*"), descriptor.Column);
-      Assert.IsNull (descriptor.Member);
-      Assert.AreEqual (expectedPath, descriptor.SourcePath);
     }
 
     [Test]

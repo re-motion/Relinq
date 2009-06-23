@@ -23,9 +23,9 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
 {
   public class MemberExpressionParser : IWhereConditionParser
   {
-    private readonly ClauseFieldResolver _resolver;
+    private readonly FieldResolver _resolver;
 
-    public MemberExpressionParser (ClauseFieldResolver resolver)
+    public MemberExpressionParser (FieldResolver resolver)
     {
       ArgumentUtility.CheckNotNull ("resolver", resolver);
       _resolver = resolver;
@@ -33,7 +33,7 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
 
     public virtual ICriterion Parse (MemberExpression memberExpression, ParseContext parseContext)
     {
-      FieldDescriptor fieldDescriptor = parseContext.QueryModel.ResolveField (_resolver, memberExpression, parseContext.JoinedTableContext);
+      FieldDescriptor fieldDescriptor = _resolver.ResolveField (memberExpression, parseContext.JoinedTableContext);
       parseContext.FieldDescriptors.Add (fieldDescriptor);
       return fieldDescriptor.GetMandatoryColumn ();
     }

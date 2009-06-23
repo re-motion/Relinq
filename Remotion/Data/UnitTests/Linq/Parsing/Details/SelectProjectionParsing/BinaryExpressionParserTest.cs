@@ -29,7 +29,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details.SelectProjectionParsing
   [TestFixture]
   public class BinaryExpressionParserTest : DetailParserTestBase
   {
-    private ClauseFieldResolver _resolver;
+    private FieldResolver _resolver;
     private IColumnSource _fromSource;
     private SelectProjectionParserRegistry _parserRegistry;
 
@@ -38,7 +38,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details.SelectProjectionParsing
       base.SetUp();
 
       QueryModel = ExpressionHelper.CreateQueryModel (StudentClause);
-      _resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, new SelectFieldAccessPolicy());
+      _resolver = new FieldResolver (StubDatabaseInfo.Instance, new SelectFieldAccessPolicy());
       _fromSource = StudentClause.GetColumnSource (StubDatabaseInfo.Instance);
       _parserRegistry = new SelectProjectionParserRegistry (StubDatabaseInfo.Instance, new ParseMode());
       _parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));

@@ -31,7 +31,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details.SelectProjectionParsing
     [Test]
     public void Parse ()
     {
-      var resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, new SelectFieldAccessPolicy());
+      var resolver = new FieldResolver (StubDatabaseInfo.Instance, new SelectFieldAccessPolicy());
 
       var parser = new MemberExpressionParser (resolver);
       var fieldDescriptorCollection = new List<FieldDescriptor>();

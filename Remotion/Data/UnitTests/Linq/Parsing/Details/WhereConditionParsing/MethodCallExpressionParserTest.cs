@@ -33,7 +33,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details.WhereConditionParsing
     private IColumnSource _fromSource;
     private MainFromClause _fromClause;
     private WhereConditionParserRegistry _parserRegistry;
-    private ClauseFieldResolver _resolver;
+    private FieldResolver _resolver;
     private MemberExpression _memberExpression;
 
     public override void SetUp ()
@@ -43,7 +43,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details.WhereConditionParsing
       _fromClause = ExpressionHelper.CreateMainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
       _fromSource = _fromClause.GetColumnSource (StubDatabaseInfo.Instance);
       QueryModel = ExpressionHelper.CreateQueryModel (_fromClause);
-      _resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
+      _resolver = new FieldResolver (StubDatabaseInfo.Instance, new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
       _parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
       _parserRegistry.RegisterParser (typeof (BinaryExpression), new BinaryExpressionParser (_parserRegistry));
       _parserRegistry.RegisterParser (typeof (MemberExpression), new MemberExpressionParser (_resolver));

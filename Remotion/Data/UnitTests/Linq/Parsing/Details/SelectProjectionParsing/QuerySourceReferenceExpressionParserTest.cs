@@ -28,7 +28,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details.SelectProjectionParsing
     public void Parse ()
     {
       var expression = new QuerySourceReferenceExpression (StudentClause);
-      var resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, new SelectFieldAccessPolicy());
+      var resolver = new FieldResolver (StubDatabaseInfo.Instance, new SelectFieldAccessPolicy());
 
       var fromSource = StudentClause.GetColumnSource (StubDatabaseInfo.Instance);
       var path = new FieldSourcePath (fromSource, new SingleJoin[0]);

@@ -28,7 +28,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details.WhereConditionParsing
     public void Parse ()
     {
       var resolver =
-          new ClauseFieldResolver (StubDatabaseInfo.Instance, new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
+          new FieldResolver (StubDatabaseInfo.Instance, new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
       var parser = new MemberExpressionParser (resolver);
 
       parser.Parse (Student_ID_Expression, ParseContext);

@@ -23,18 +23,18 @@ namespace Remotion.Data.Linq.Parsing.Details
 {
   public class OrderingFieldParser
   {
-    private readonly ClauseFieldResolver _resolver;
+    private readonly FieldResolver _resolver;
 
     public OrderingFieldParser (IDatabaseInfo databaseInfo)
     {
       ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
 
-      _resolver = new ClauseFieldResolver (databaseInfo, new OrderingFieldAccessPolicy());
+      _resolver = new FieldResolver (databaseInfo, new OrderingFieldAccessPolicy());
     }
 
     public OrderingField Parse (Expression expression, ParseContext parseContext, OrderingDirection orderingDirection)
     {
-      FieldDescriptor fieldDescriptor = parseContext.QueryModel.ResolveField (_resolver, expression, parseContext.JoinedTableContext);
+      FieldDescriptor fieldDescriptor = _resolver.ResolveField (expression, parseContext.JoinedTableContext);
       var orderingField = new OrderingField (fieldDescriptor, orderingDirection);
       return orderingField;
     }

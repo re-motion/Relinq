@@ -24,12 +24,12 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.FieldResolving
 {
-  public class ClauseFieldResolver
+  public class FieldResolver
   {
     public IDatabaseInfo DatabaseInfo { get; private set; }
     private readonly IResolveFieldAccessPolicy _policy;
 
-    public ClauseFieldResolver (IDatabaseInfo databaseInfo, IResolveFieldAccessPolicy policy)
+    public FieldResolver (IDatabaseInfo databaseInfo, IResolveFieldAccessPolicy policy)
     {
       ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
       ArgumentUtility.CheckNotNull ("policy", policy);
@@ -42,7 +42,7 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
     {
       ArgumentUtility.CheckNotNull ("fieldAccessExpression", fieldAccessExpression);
       
-      var result = ClauseFieldResolverVisitor.ParseFieldAccess(DatabaseInfo, fieldAccessExpression, _policy.OptimizeRelatedKeyAccess());
+      var result = FieldResolverVisitor.ParseFieldAccess(DatabaseInfo, fieldAccessExpression, _policy.OptimizeRelatedKeyAccess());
       var clause = result.QuerySourceReferenceExpression.ReferencedClause;
       return CreateFieldDescriptor (clause.GetColumnSource (DatabaseInfo), result.QuerySourceReferenceExpression, result.AccessedMember, result.JoinMembers, joinedTableContext);
     }

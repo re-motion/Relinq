@@ -32,7 +32,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details.SelectProjectionParsing
   {
     private IColumnSource _fromSource;
     private SelectProjectionParserRegistry _parserRegistry;
-    private ClauseFieldResolver _resolver;
+    private FieldResolver _resolver;
 
     public override void SetUp ()
     {
@@ -40,7 +40,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details.SelectProjectionParsing
 
       _fromSource = StudentClause.GetColumnSource (StubDatabaseInfo.Instance);
       QueryModel = ExpressionHelper.CreateQueryModel (StudentClause);
-      _resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, new SelectFieldAccessPolicy());
+      _resolver = new FieldResolver (StubDatabaseInfo.Instance, new SelectFieldAccessPolicy());
       _parserRegistry =
           new SelectProjectionParserRegistry (StubDatabaseInfo.Instance, new ParseMode());
       _parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));

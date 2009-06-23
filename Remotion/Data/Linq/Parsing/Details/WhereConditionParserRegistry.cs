@@ -30,7 +30,7 @@ namespace Remotion.Data.Linq.Parsing.Details
     public WhereConditionParserRegistry (IDatabaseInfo databaseInfo)
     {
       _parserRegistry = new ParserRegistry ();
-      var resolver = new ClauseFieldResolver (databaseInfo, new WhereFieldAccessPolicy (databaseInfo));
+      var resolver = new FieldResolver (databaseInfo, new WhereFieldAccessPolicy (databaseInfo));
 
       RegisterParser (typeof (BinaryExpression), new BinaryExpressionParser (this));
       RegisterParser (typeof (MemberExpression), new MemberExpressionParser (resolver));

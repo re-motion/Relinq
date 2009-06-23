@@ -205,15 +205,6 @@ namespace Remotion.Data.Linq
       _expressionTree = expressionTree;
     }
 
-    public FieldDescriptor ResolveField (ClauseFieldResolver resolver, Expression fieldAccessExpression, JoinedTableContext joinedTableContext)
-    {
-      ArgumentUtility.CheckNotNull ("resolver", resolver);
-      ArgumentUtility.CheckNotNull ("fieldAccessExpression", fieldAccessExpression);
-      ArgumentUtility.CheckNotNull ("joinedTableContext", joinedTableContext);
-      
-      return new QueryModelFieldResolver (this).ResolveField (resolver, fieldAccessExpression, joinedTableContext);
-    }
-
     public QueryModel Clone ()
     {
       return Clone (new ClonedClauseMapping());

@@ -25,14 +25,14 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
   /// <summary>
   /// Identifies the query source and members used by a field access expression.
   /// </summary>
-  public class ClauseFieldResolverVisitor : ExpressionTreeVisitor
+  public class FieldResolverVisitor : ExpressionTreeVisitor
   {
     public static FieldAccessInfo ParseFieldAccess (IDatabaseInfo databaseInfo, Expression fieldAccessExpression, bool optimizeRelatedKeyAccess)
     {
       ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
       ArgumentUtility.CheckNotNull ("fieldAccessExpression", fieldAccessExpression);
 
-      var visitor = new ClauseFieldResolverVisitor (databaseInfo, optimizeRelatedKeyAccess);
+      var visitor = new FieldResolverVisitor (databaseInfo, optimizeRelatedKeyAccess);
       visitor.VisitExpression (fieldAccessExpression);
       return new FieldAccessInfo (visitor._accessedMember, visitor._joinMembers.ToArray (), visitor._referenceExpression);
     }
@@ -44,7 +44,7 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
     private MemberInfo _accessedMember;
     private QuerySourceReferenceExpression _referenceExpression;
 
-    private ClauseFieldResolverVisitor (IDatabaseInfo databaseInfo, bool optimizeRelatedKeyAccess)
+    private FieldResolverVisitor (IDatabaseInfo databaseInfo, bool optimizeRelatedKeyAccess)
     {
       ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
 

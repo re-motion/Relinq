@@ -22,7 +22,6 @@ namespace Remotion.Data.Linq.Clauses
   public interface IResolveableClause : IClause
   {
     ParameterExpression Identifier {get;  }
-    FieldDescriptor ResolveField (ClauseFieldResolver resolver, Expression fieldAccessExpression, JoinedTableContext joinedTableContext);
 
     /// <summary>
     /// Method for getting source of a from clause.

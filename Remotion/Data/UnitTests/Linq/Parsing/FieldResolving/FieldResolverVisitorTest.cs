@@ -24,7 +24,7 @@ using Remotion.Data.Linq.Parsing.FieldResolving;
 namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
 {
   [TestFixture]
-  public class ClauseFieldResolverVisitorTest
+  public class FieldResolverVisitorTest
   {
     private MainFromClause _studentClause;
     private QuerySourceReferenceExpression _studentReference;
@@ -45,7 +45,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
     [Test]
     public void QuerySourceReferenceExpression ()
     {
-      var result = ClauseFieldResolverVisitor.ParseFieldAccess(StubDatabaseInfo.Instance, _studentReference, true);
+      var result = FieldResolverVisitor.ParseFieldAccess(StubDatabaseInfo.Instance, _studentReference, true);
       Assert.That (result.AccessedMember, Is.Null);
       Assert.That (result.JoinMembers, Is.Empty);
       Assert.That (result.QuerySourceReferenceExpression, Is.SameAs (_studentReference));
@@ -55,7 +55,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
     public void NestedQuerySourceReferenceExpression ()
     {
       Expression expressionTree = Expression.MakeMemberAccess (_studentReference, typeof (Student).GetProperty ("First"));
-      FieldAccessInfo result = ClauseFieldResolverVisitor.ParseFieldAccess (StubDatabaseInfo.Instance, expressionTree, true);
+      FieldAccessInfo result = FieldResolverVisitor.ParseFieldAccess (StubDatabaseInfo.Instance, expressionTree, true);
       Assert.That (result.AccessedMember, Is.EqualTo (typeof (Student).GetProperty ("First")));
       Assert.That (result.JoinMembers, Is.Empty);
       Assert.That (result.QuerySourceReferenceExpression, Is.SameAs (_studentReference));
@@ -67,7 +67,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
       Expression expressionTree = Expression.MakeMemberAccess (
           Expression.MakeMemberAccess (_studentDetailReference, typeof (Student_Detail).GetProperty ("Student")),
           typeof (Student).GetProperty ("First"));
-      FieldAccessInfo result = ClauseFieldResolverVisitor.ParseFieldAccess (StubDatabaseInfo.Instance, expressionTree, true);
+      FieldAccessInfo result = FieldResolverVisitor.ParseFieldAccess (StubDatabaseInfo.Instance, expressionTree, true);
 
       Assert.That (result.AccessedMember, Is.EqualTo (typeof (Student).GetProperty ("First")));
       Assert.That (result.JoinMembers, Is.EqualTo (new object[] { typeof (Student_Detail).GetProperty ("Student") }));
@@ -80,14 +80,14 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
     public void InvalidExpression ()
     {
       Expression expressionTree = Expression.Constant (null, typeof (Student));
-      ClauseFieldResolverVisitor.ParseFieldAccess (StubDatabaseInfo.Instance, expressionTree, true);
+      FieldResolverVisitor.ParseFieldAccess (StubDatabaseInfo.Instance, expressionTree, true);
     }
 
     [Test]
     public void VisitMemberExpression_OptimizesAccessToRelatedPrimaryKey ()
     {
       Expression expressionTree = ExpressionHelper.Resolve<Student_Detail, int> (_studentDetailClause, sd => sd.Student.ID);
-      FieldAccessInfo result = ClauseFieldResolverVisitor.ParseFieldAccess (StubDatabaseInfo.Instance, expressionTree, true);
+      FieldAccessInfo result = FieldResolverVisitor.ParseFieldAccess (StubDatabaseInfo.Instance, expressionTree, true);
       Assert.That (result.AccessedMember, Is.EqualTo (ExpressionHelper.GetMember<Student_Detail> (sd => sd.Student)));
       Assert.IsEmpty (result.JoinMembers);
 
@@ -99,7 +99,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
     public void VisitMemberExpression_AccessToRelatedPrimaryKey_OptimizeFalse ()
     {
       Expression expressionTree = ExpressionHelper.Resolve<Student_Detail, int> (_studentDetailClause, sd => sd.Student.ID);
-      FieldAccessInfo result = ClauseFieldResolverVisitor.ParseFieldAccess (StubDatabaseInfo.Instance, expressionTree, false);
+      FieldAccessInfo result = FieldResolverVisitor.ParseFieldAccess (StubDatabaseInfo.Instance, expressionTree, false);
       Assert.That (result.AccessedMember, Is.EqualTo (ExpressionHelper.GetMember<Student> (s => s.ID)));
       Assert.That (result.JoinMembers, Is.EqualTo (new[] { ExpressionHelper.GetMember<Student_Detail> (sd => sd.Student) }));
     }
@@ -108,7 +108,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
     public void VisitMemberExpression_OptimzationWithRelatedPrimaryKeyOverSeveralSteps ()
     {
       Expression expressionTree = ExpressionHelper.Resolve<Student_Detail, int> (_studentDetailClause, sd => sd.Student.OtherStudent.ID);
-      FieldAccessInfo result = ClauseFieldResolverVisitor.ParseFieldAccess (StubDatabaseInfo.Instance, expressionTree, true);
+      FieldAccessInfo result = FieldResolverVisitor.ParseFieldAccess (StubDatabaseInfo.Instance, expressionTree, true);
       Assert.That (result.AccessedMember, Is.EqualTo (ExpressionHelper.GetMember<Student> (s => s.OtherStudent)));
       Assert.That (result.JoinMembers, Is.EqualTo (new[] { ExpressionHelper.GetMember<Student_Detail> (sd => sd.Student) }));
 
@@ -118,7 +118,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
 
     private void CheckOptimization (FieldAccessInfo actualResult, Expression expectedEquivalentOptimization)
     {
-      FieldAccessInfo optimizedResult = ClauseFieldResolverVisitor.ParseFieldAccess (StubDatabaseInfo.Instance, 
+      FieldAccessInfo optimizedResult = FieldResolverVisitor.ParseFieldAccess (StubDatabaseInfo.Instance, 
           expectedEquivalentOptimization, false);
       Assert.That (actualResult.AccessedMember, Is.EqualTo (optimizedResult.AccessedMember));
       Assert.That (actualResult.JoinMembers, Is.EqualTo (optimizedResult.JoinMembers));

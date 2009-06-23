@@ -37,7 +37,7 @@ namespace Remotion.Data.Linq.Parsing.Details
       else
         policy = new SelectFieldAccessPolicy();
 
-      var resolver = new ClauseFieldResolver (databaseInfo, policy);
+      var resolver = new FieldResolver (databaseInfo, policy);
 
       RegisterParser (typeof (BinaryExpression), new BinaryExpressionParser (this));
       RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (databaseInfo));

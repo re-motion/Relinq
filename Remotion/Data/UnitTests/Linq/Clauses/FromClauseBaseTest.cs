@@ -64,36 +64,5 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (fromClause.JoinClauses, Is.EqualTo (new object[] { joinClause1, joinClause2 }));
       Assert.AreEqual (2, fromClause.JoinClauses.Count);
     }
-
-    [Test]
-    public void Resolve_Succeeds_MainFromClause ()
-    {
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause (Expression.Parameter (typeof (Student), "fromIdentifier1"), ExpressionHelper.CreateQuerySource ());
-
-      var context = new JoinedTableContext ();
-      var policy = new SelectFieldAccessPolicy ();
-      var resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, policy);
-      FieldDescriptor fieldDescriptor = fromClause.ResolveField (resolver, new QuerySourceReferenceExpression (fromClause), context);
-      Assert.AreEqual (new Column (new Table ("studentTable", "fromIdentifier1"), "*"), fieldDescriptor.Column);
-    }
-
-    [Test]
-    public void Resolve_Succeeds_AdditionalFromClause ()
-    {
-      AdditionalFromClause fromClause = CreateAdditionalFromClause (Expression.Parameter (typeof (Student), "fromIdentifier1"));
-
-      var context = new JoinedTableContext ();
-      var policy = new SelectFieldAccessPolicy ();
-      var resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, policy);
-      FieldDescriptor fieldDescriptor = fromClause.ResolveField (resolver, new QuerySourceReferenceExpression (fromClause), context);
-      Assert.AreEqual (new Column (new Table ("studentTable", "fromIdentifier1"), "*"), fieldDescriptor.Column);
-    }
-
-    private AdditionalFromClause CreateAdditionalFromClause (ParameterExpression additionalFromIdentifier)
-    {
-      MainFromClause mainFromClause = ExpressionHelper.CreateMainFromClause(ExpressionHelper.CreateParameterExpression (), ExpressionHelper.CreateQuerySource ());
-      var fromExpression = Expression.Constant (null, typeof (IQueryable<Student>));
-      return new AdditionalFromClause (mainFromClause, additionalFromIdentifier, fromExpression);
-    }
   }
 }

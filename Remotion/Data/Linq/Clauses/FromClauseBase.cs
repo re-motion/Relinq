@@ -18,7 +18,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.DataObjectModel;
-using Remotion.Data.Linq.Parsing.FieldResolving;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses
@@ -75,15 +74,6 @@ namespace Remotion.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
       return DatabaseInfoUtility.GetTableForFromClause (databaseInfo, this);
-    }
-
-    public FieldDescriptor ResolveField (ClauseFieldResolver resolver, Expression fieldAccessExpression, JoinedTableContext joinedTableContext)
-    {
-      ArgumentUtility.CheckNotNull ("resolver", resolver);
-      ArgumentUtility.CheckNotNull ("fieldAccessExpression", fieldAccessExpression);
-      ArgumentUtility.CheckNotNull ("joinedTableContext", joinedTableContext);
-
-      return resolver.ResolveField (fieldAccessExpression, joinedTableContext);
     }
 
     public abstract void Accept (IQueryVisitor visitor);

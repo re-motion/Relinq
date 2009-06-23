@@ -29,7 +29,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details.WhereConditionParsing
     public void Parse ()
     {
       var expression = new QuerySourceReferenceExpression (QueryModel.MainFromClause);
-      var resolver = new ClauseFieldResolver (StubDatabaseInfo.Instance, new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
+      var resolver = new FieldResolver (StubDatabaseInfo.Instance, new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
 
       var fromSource = QueryModel.MainFromClause.GetColumnSource (StubDatabaseInfo.Instance);
       var path = new FieldSourcePath (fromSource, new SingleJoin[0]);

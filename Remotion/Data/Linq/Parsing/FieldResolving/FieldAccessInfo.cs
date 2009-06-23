@@ -20,8 +20,8 @@ using Remotion.Data.Linq.Clauses.Expressions;
 namespace Remotion.Data.Linq.Parsing.FieldResolving
 {
   /// <summary>
-  /// Holds information about the members involved in a field access. This is produced by <see cref="ClauseFieldResolverVisitor"/> and 
-  /// used by <see cref="ClauseFieldResolver"/>.
+  /// Holds information about the members involved in a field access. This is produced by <see cref="FieldResolverVisitor"/> and 
+  /// used by <see cref="FieldResolver"/>.
   /// </summary>
   public struct FieldAccessInfo
   {
