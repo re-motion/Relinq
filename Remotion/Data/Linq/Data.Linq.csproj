@@ -205,7 +205,6 @@
     <Compile Include="QueryModel.cs" />
     <Compile Include="Clauses\SelectClause.cs" />
     <Compile Include="Clauses\ISelectGroupClause.cs" />
-    <Compile Include="QueryModelUniqueIdentifierGenerator.cs" />
     <Compile Include="QueryProviderBase.cs" />
     <Compile Include="QueryableBase.cs" />
     <Compile Include="DataObjectModel\BinaryCondition.cs" />

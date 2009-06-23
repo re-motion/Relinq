@@ -74,18 +74,7 @@ namespace Remotion.Data.UnitTests.Linq
       Assert.That (_model.BodyClauses.Count, Is.EqualTo (1));
       Assert.That (_model.BodyClauses, List.Contains (clause));
     }
-
-    [Test]
-    public void AddBodyClause_RegistersFromClause ()
-    {
-      ParameterExpression identifier = Expression.Parameter(typeof(int),"j");
-      AdditionalFromClause additionalFromClause = ExpressionHelper.CreateAdditionalFromClause (identifier);
-      _model.AddBodyClause (additionalFromClause);
-      IResolveableClause resolveableClause = _model.GetResolveableClause (identifier.Name, identifier.Type);
-
-      Assert.That (additionalFromClause, Is.EqualTo (resolveableClause));
-    }
-
+    
     [Test]
     public void AddBodyClause_SetsQueryModelOfBodyClause ()
     {
@@ -114,52 +103,5 @@ namespace Remotion.Data.UnitTests.Linq
       _model.AddBodyClause (clause);
     }
 
-    
-    [Test]
-    public void GetResolveableClause()
-    {
-      var fromExpression = ExpressionHelper.CreateExpression ();
-
-      ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
-      ParameterExpression identifier2 = Expression.Parameter (typeof (Student), "s2");
-      ParameterExpression identifier3 = Expression.Parameter (typeof (Student), "s3");
-
-      var clause1 = new AdditionalFromClause (ExpressionHelper.CreateMainFromClause (), identifier1, fromExpression);
-      var clause2 = new AdditionalFromClause (clause1, identifier2, fromExpression);
-      var clause3 = new AdditionalFromClause (clause2, identifier3, fromExpression);
-
-      _model.AddBodyClause (clause1);
-      _model.AddBodyClause (clause2);
-      _model.AddBodyClause (clause3);
-
-      Assert.That (_model.GetResolveableClause ("s1", typeof (Student)), Is.SameAs (clause1));
-      Assert.That (_model.GetResolveableClause ("s2", typeof (Student)), Is.SameAs (clause2));
-      Assert.That (_model.GetResolveableClause ("s3", typeof (Student)), Is.SameAs (clause3));
-    }
-
-    [Test]
-    public void GetResolveableClause_InvalidName ()
-    {
-      var fromExpression = ExpressionHelper.CreateExpression ();
-      ParameterExpression identifier1 = Expression.Parameter (typeof (Student), "s1");
-      var clause1 = new AdditionalFromClause (ExpressionHelper.CreateMainFromClause (), identifier1, fromExpression);
-
-      _model.AddBodyClause (clause1);
-
-      Assert.That (_model.GetResolveableClause ("fzlbf", typeof (Student)), Is.Null);
-    }
-
-    [Test]
-    [ExpectedException (typeof (ClauseLookupException), ExpectedMessage = "The from clause with identifier 's1' has type "
-        + "'Remotion.Data.UnitTests.Linq.Student', but 'System.String' was requested.")]
-    public void GetResolveableClause_InvalidType ()
-    {
-      var fromExpression = ExpressionHelper.CreateExpression ();
-      var identifier = Expression.Parameter (typeof (Student), "s1");
-      var clause = new AdditionalFromClause (ExpressionHelper.CreateMainFromClause (), identifier, fromExpression);
-
-      _model.AddBodyClause (clause);
-      _model.GetResolveableClause ("s1", typeof (string));
-    }
   }
 }

@@ -19,9 +19,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Clauses.Expressions;
-using Remotion.Data.Linq.Parsing.FieldResolving;
 using Remotion.Data.Linq.StringBuilding;
 using Remotion.Utilities;
 
@@ -35,8 +33,9 @@ namespace Remotion.Data.Linq
   {
     private readonly List<IBodyClause> _bodyClauses = new List<IBodyClause> ();
     private readonly Dictionary<string, IResolveableClause> _clausesByIdentifier = new Dictionary<string, IResolveableClause> ();
-    private readonly QueryModelUniqueIdentifierGenerator _uniqueIdentifierGenerator;
+    private readonly UniqueIdentifierGenerator _uniqueIdentifierGenerator;
 
+    private MainFromClause _mainFromClause;
     private ISelectGroupClause _selectOrGroupClause;
     private Expression _expressionTree;
 
@@ -52,7 +51,7 @@ namespace Remotion.Data.Linq
       ArgumentUtility.CheckNotNull ("mainFromClause", mainFromClause);
       ArgumentUtility.CheckNotNull ("SelectOrGroupClause", selectOrGroupClause);
 
-      _uniqueIdentifierGenerator = new QueryModelUniqueIdentifierGenerator (this);
+      _uniqueIdentifierGenerator = new UniqueIdentifierGenerator ();
 
       ResultType = resultType;
       MainFromClause = mainFromClause;
@@ -75,8 +74,17 @@ namespace Remotion.Data.Linq
       ParentQuery = parentQuery;
     }
 
-    public MainFromClause MainFromClause { get; private set; }
-    
+    public MainFromClause MainFromClause
+    {
+      get { return _mainFromClause; }
+      private set
+      {
+        ArgumentUtility.CheckNotNull ("value", value);
+        _mainFromClause = value;
+        _uniqueIdentifierGenerator.AddKnownIdentifier (value.Identifier.Name);
+      }
+    }
+
     public ISelectGroupClause SelectOrGroupClause
     {
       get { return _selectOrGroupClause; }
@@ -105,7 +113,10 @@ namespace Remotion.Data.Linq
       ArgumentUtility.CheckNotNull ("clause", clause);
       var clauseAsFromClause = clause as FromClauseBase;
       if (clauseAsFromClause != null)
+      {
+        _uniqueIdentifierGenerator.AddKnownIdentifier (clauseAsFromClause.Identifier.Name);
         RegisterClause(clauseAsFromClause.Identifier, clauseAsFromClause);
+      }
 
       clause.SetQueryModel (this);
       _bodyClauses.Add (clause);
@@ -128,39 +139,7 @@ namespace Remotion.Data.Linq
       }
       _clausesByIdentifier.Add (identifier.Name, clauseToBeRegistered);
     }
-
-    /// <summary>
-    /// Method to get <see cref="IResolveableClause"/> by identifier.
-    /// </summary>
-    /// <param name="identifierName">The name of the identifier.</param>
-    /// <param name="identifierType">The type of the identifier.</param>
-    /// <returns>The <see cref="IResolveableClause"/> for the given identifier.</returns>
-    public IResolveableClause GetResolveableClause (string identifierName, Type identifierType)
-    {
-      ArgumentUtility.CheckNotNullOrEmpty ("identifierName", identifierName);
-      ArgumentUtility.CheckNotNull ("identifierType", identifierType);
-
-      IResolveableClause clause = GetResolveableClauseWithoutTypeCheck(identifierName);
-      if (clause != null)
-        CheckResolvedIdentifierType (clause.Identifier, identifierType);
-      return clause;
-    }
-
-    /// <summary>
-    /// Method to get <see cref="IResolveableClause"/> by identifier name, without considering the type of the identifier.
-    /// </summary>
-    /// <param name="identifierName">The name of the identifier.</param>
-    /// <returns>The <see cref="IResolveableClause"/> for the given identifier name.</returns>
-    public IResolveableClause GetResolveableClauseWithoutTypeCheck (string identifierName)
-    {
-      ArgumentUtility.CheckNotNullOrEmpty ("identifierName", identifierName);
-
-      if (identifierName == MainFromClause.Identifier.Name)
-        return MainFromClause;
-      else
-        return GetBodyClauseByIdentifier (identifierName);
-    }
-
+    
     private IResolveableClause GetBodyClauseByIdentifier (string identifierName)
     {
       IResolveableClause clause;
