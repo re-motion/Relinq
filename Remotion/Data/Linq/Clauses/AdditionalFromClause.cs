@@ -50,11 +50,6 @@ namespace Remotion.Data.Linq.Clauses
     [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (FromExpression),nq}")]
     public Expression FromExpression { get; private set; }
 
-    /// <summary>
-    /// The appropriate <see cref="QueryModel"/> of the <see cref="AdditionalFromClause"/>.
-    /// </summary>
-    public QueryModel QueryModel { get; private set; }
-
     public override void Accept (IQueryVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
@@ -66,15 +61,6 @@ namespace Remotion.Data.Linq.Clauses
       return FromExpression.Type;
     }
     
-
-    public void SetQueryModel (QueryModel model)
-    {
-      ArgumentUtility.CheckNotNull ("model", model);
-      if (QueryModel != null)
-        throw new InvalidOperationException ("QueryModel is already set");
-      QueryModel = model;
-    }
-
     public virtual AdditionalFromClause Clone (CloneContext cloneContext)
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);

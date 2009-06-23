@@ -70,36 +70,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
-    public void QueryModelAtInitialization ()
-    {
-      Assert.That (_whereClause.QueryModel, Is.Null);
-    }
-
-    [Test]
-    public void SetQueryModel ()
-    {
-      QueryModel model = ExpressionHelper.CreateQueryModel ();
-      _whereClause.SetQueryModel (model);
-      Assert.That (_whereClause.QueryModel, Is.Not.Null);
-    }
-
-    [Test]
-    [ExpectedException (typeof (ArgumentNullException))]
-    public void SetQueryModelWithNull_Exception ()
-    {
-      _whereClause.SetQueryModel (null);
-    }
-
-    [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "QueryModel is already set")]
-    public void SetQueryModelTwice_Exception ()
-    {
-      QueryModel model = ExpressionHelper.CreateQueryModel ();
-      _whereClause.SetQueryModel (model);
-      _whereClause.SetQueryModel (model);
-    }
-
-    [Test]
     public void Clone ()
     {
       var newPreviousClause = ExpressionHelper.CreateClause ();
@@ -110,7 +80,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clone, Is.Not.SameAs (_whereClause));
       Assert.That (clone.Predicate, Is.SameAs (_whereClause.Predicate));
       Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
-      Assert.That (clone.QueryModel, Is.Null);
     }
 
     [Test]

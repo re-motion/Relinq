@@ -69,20 +69,6 @@ namespace Remotion.Data.Linq.Clauses
       return _fromSource;
     }
 
-    /// <summary>
-    /// The <see cref="QueryModel"/> of the entire linq query.
-    /// </summary>
-    public QueryModel QueryModel { get; private set; }
-
-    public void SetQueryModel (QueryModel model)
-    {
-      ArgumentUtility.CheckNotNull ("model", model);
-      if (QueryModel != null)
-        throw new InvalidOperationException ("QueryModel is already set");
-
-      QueryModel = model;
-    }
-
     public SubQueryFromClause Clone (CloneContext cloneContext)
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);

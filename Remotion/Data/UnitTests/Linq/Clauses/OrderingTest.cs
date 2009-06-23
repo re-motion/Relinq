@@ -14,7 +14,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
@@ -82,36 +81,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
-    public void QueryModelAtInitialization ()
-    {
-      Assert.That (_ordering.QueryModel, Is.Null);
-    }
-
-    [Test]
-    public void SetQueryModel ()
-    {
-      QueryModel model = ExpressionHelper.CreateQueryModel ();
-      _ordering.SetQueryModel (model);
-      Assert.That (_ordering.QueryModel, Is.Not.Null);
-    }
-
-    [Test]
-    [ExpectedException (typeof (ArgumentNullException))]
-    public void SetQueryModelWithNull_Exception ()
-    {
-      _ordering.SetQueryModel (null);
-    }
-
-    [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "QueryModel is already set")]
-    public void SetQueryModelTwice_Exception ()
-    {
-      QueryModel model = ExpressionHelper.CreateQueryModel ();
-      _ordering.SetQueryModel (model);
-      _ordering.SetQueryModel (model);
-    }
-
-    [Test]
     public void Clone ()
     {
       var newOrderByClause = ExpressionHelper.CreateOrderByClause();
@@ -122,7 +91,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clone, Is.Not.SameAs (_ordering));
       Assert.That (clone.Expression, Is.SameAs (_ordering.Expression));
       Assert.That (clone.OrderingDirection, Is.EqualTo (_ordering.OrderingDirection));
-      Assert.That (clone.QueryModel, Is.Null);
       Assert.That (clone.OrderByClause, Is.SameAs (newOrderByClause));
     }
 

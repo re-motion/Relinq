@@ -38,8 +38,6 @@ namespace Remotion.Data.Linq.Clauses
       PreviousClause = previousClause;
     }
 
-    public QueryModel QueryModel { get; private set; }
-
     /// <summary>
     /// A collection of <see cref="Ordering"/>
     /// </summary>
@@ -62,15 +60,6 @@ namespace Remotion.Data.Linq.Clauses
       visitor.VisitOrderByClause (this);
     }
     
-    public void SetQueryModel (QueryModel model)
-    {
-      ArgumentUtility.CheckNotNull ("model", model);
-      if (QueryModel != null)
-        throw new InvalidOperationException("QueryModel is already set");
-      
-      QueryModel = model;
-    }
-
     public OrderByClause Clone (CloneContext cloneContext)
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);

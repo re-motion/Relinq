@@ -77,37 +77,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       _additionalFromClause.Accept (visitorMock);
       visitorMock.AssertWasCalled (mock => mock.VisitAdditionalFromClause (_additionalFromClause));
     }
-
-    [Test]
-    public void QueryModelAtInitialization ()
-    {
-      Assert.IsNull (_additionalFromClause.QueryModel);
-    }
-
-    [Test]
-    public void SetQueryModel ()
-    {
-      QueryModel model = ExpressionHelper.CreateQueryModel ();
-      _additionalFromClause.SetQueryModel (model);
-      Assert.IsNotNull (_additionalFromClause.QueryModel);
-    }
-
-    [Test]
-    [ExpectedException (typeof (ArgumentNullException))]
-    public void SetQueryModelWithNull_Exception ()
-    {
-      _additionalFromClause.SetQueryModel (null);
-    }
-
-    [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "QueryModel is already set")]
-    public void SetQueryModelTwice_Exception ()
-    {
-      QueryModel model = ExpressionHelper.CreateQueryModel ();
-      _additionalFromClause.SetQueryModel (model);
-      _additionalFromClause.SetQueryModel (model);
-    }
-
+    
     [Test]
     public void Clone ()
     {
@@ -120,7 +90,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clone.Identifier, Is.SameAs (_additionalFromClause.Identifier));
       Assert.That (clone.FromExpression, Is.SameAs (_additionalFromClause.FromExpression));
       Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
-      Assert.That (clone.QueryModel, Is.Null);
     }
 
     [Test]

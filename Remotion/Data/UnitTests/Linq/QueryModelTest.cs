@@ -217,12 +217,9 @@ namespace Remotion.Data.UnitTests.Linq
 
       Assert.That (clonedAdditionalFromClause, Is.Not.SameAs (additionalFromClause));
       Assert.That (clonedAdditionalFromClause.Identifier, Is.SameAs (additionalFromClause.Identifier));
-      Assert.That (clonedAdditionalFromClause.QueryModel, Is.SameAs (clone));
       Assert.That (clonedAdditionalFromClause.PreviousClause, Is.SameAs (clone.MainFromClause));
-
       Assert.That (clonedWhereClause, Is.Not.SameAs (whereClause));
       Assert.That (clonedWhereClause.Predicate, Is.EqualTo (whereClause.Predicate));
-      Assert.That (clonedWhereClause.QueryModel, Is.SameAs (clone));
       Assert.That (clonedWhereClause.PreviousClause, Is.SameAs (clonedAdditionalFromClause));
 
       Assert.That (clone.SelectOrGroupClause.PreviousClause, Is.SameAs (clonedWhereClause));
@@ -350,7 +347,6 @@ namespace Remotion.Data.UnitTests.Linq
       Assert.That (_queryModel.BodyClauses, Is.EqualTo (new object[] { orderByClause1, orderByClause2 }));
     }
 
-
     [Test]
     public void AddBodyClause ()
     {
@@ -359,14 +355,6 @@ namespace Remotion.Data.UnitTests.Linq
 
       Assert.That (_queryModel.BodyClauses.Count, Is.EqualTo (1));
       Assert.That (_queryModel.BodyClauses, List.Contains (clause));
-    }
-
-    [Test]
-    public void AddBodyClause_SetsQueryModelOfBodyClause ()
-    {
-      IBodyClause clause = ExpressionHelper.CreateWhereClause ();
-      _queryModel.AddBodyClause (clause);
-      Assert.That (clause.QueryModel, Is.Not.Null);
     }
   }
 }

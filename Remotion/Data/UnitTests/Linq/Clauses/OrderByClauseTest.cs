@@ -14,7 +14,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
@@ -79,36 +78,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
-    public void QueryModelAtInitialization ()
-    {
-      Assert.IsNull (_orderByClause.QueryModel);
-    }
-
-    [Test]
-    public void SetQueryModel ()
-    {
-      QueryModel model = ExpressionHelper.CreateQueryModel ();
-      _orderByClause.SetQueryModel (model);
-      Assert.IsNotNull (_orderByClause.QueryModel);
-    }
-
-    [Test]
-    [ExpectedException (typeof (ArgumentNullException))]
-    public void SetQueryModelWithNull_Exception ()
-    {
-      _orderByClause.SetQueryModel (null);
-    }
-
-    [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "QueryModel is already set")]
-    public void SetQueryModelTwice_Exception ()
-    {
-      QueryModel model = ExpressionHelper.CreateQueryModel ();
-      _orderByClause.SetQueryModel (model);
-      _orderByClause.SetQueryModel (model);
-    }
-
-    [Test]
     public void Clone ()
     {
       var newPreviousClause = ExpressionHelper.CreateClause ();
@@ -118,7 +87,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (_orderByClause));
       Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
-      Assert.That (clone.QueryModel, Is.Null);
     }
 
     [Test]
@@ -144,7 +112,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clone.OrderingList[0], Is.Not.SameAs (_orderByClause.OrderingList[0]));
       Assert.That (clone.OrderingList[0].Expression, Is.SameAs (_orderByClause.OrderingList[0].Expression));
       Assert.That (clone.OrderingList[0].OrderingDirection, Is.EqualTo (_orderByClause.OrderingList[0].OrderingDirection));
-      Assert.That (clone.OrderingList[0].QueryModel, Is.Null);
       Assert.That (clone.OrderingList[0].OrderByClause, Is.SameAs (clone));
     }
 

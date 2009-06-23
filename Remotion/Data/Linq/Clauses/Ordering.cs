@@ -70,17 +70,6 @@ namespace Remotion.Data.Linq.Clauses
       visitor.VisitOrdering (this);
     }
 
-    public QueryModel QueryModel { get; private set; }
-
-    public void SetQueryModel (QueryModel model)
-    {
-      ArgumentUtility.CheckNotNull ("model", model);
-      if (QueryModel != null)
-        throw new InvalidOperationException ("QueryModel is already set");
-
-      QueryModel = model;
-    }
-
     public Ordering Clone (CloneContext cloneContext)
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);

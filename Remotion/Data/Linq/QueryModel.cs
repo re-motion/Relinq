@@ -96,13 +96,11 @@ namespace Remotion.Data.Linq
     public void AddBodyClause (IBodyClause clause)
     {
       ArgumentUtility.CheckNotNull ("clause", clause);
+      
       var clauseAsFromClause = clause as FromClauseBase;
       if (clauseAsFromClause != null)
-      {
         _uniqueIdentifierGenerator.AddKnownIdentifier (clauseAsFromClause.Identifier.Name);
-      }
 
-      clause.SetQueryModel (this);
       _bodyClauses.Add (clause);
 
       InvalidateExpressionTree ();

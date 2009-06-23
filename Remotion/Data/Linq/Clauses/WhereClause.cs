@@ -61,20 +61,6 @@ namespace Remotion.Data.Linq.Clauses
       visitor.VisitWhereClause (this);
     }
 
-    /// <summary>
-    /// The <see cref="QueryModel"/> to which the <see cref="WhereClause"/> belongs.
-    /// </summary>
-    public QueryModel QueryModel { get; private set; }
-
-    public void SetQueryModel (QueryModel model)
-    {
-      ArgumentUtility.CheckNotNull ("model", model);
-      if (QueryModel != null)
-        throw new InvalidOperationException ("QueryModel is already set");
-
-      QueryModel = model;
-    }
-
     public WhereClause Clone (CloneContext cloneContext)
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);

@@ -87,7 +87,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clone.FromExpression, Is.SameAs (_memberFromClause.FromExpression));
       Assert.That (clone.MemberExpression, Is.SameAs (_memberFromClause.MemberExpression));
       Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
-      Assert.That (clone.QueryModel, Is.Null);
     }
 
     [Test]

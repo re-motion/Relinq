@@ -89,36 +89,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
-    public void QueryModelAtInitialization ()
-    {
-      Assert.IsNull (_subQueryFromClause.QueryModel);
-    }
-
-    [Test]
-    public void SetQueryModel ()
-    {
-      QueryModel model = ExpressionHelper.CreateQueryModel();
-      _subQueryFromClause.SetQueryModel (model);
-      Assert.IsNotNull (_subQueryFromClause.QueryModel);
-    }
-
-    [Test]
-    [ExpectedException (typeof (ArgumentNullException))]
-    public void SetQueryModelWithNull_Exception ()
-    {
-      _subQueryFromClause.SetQueryModel (null);
-    }
-
-    [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "QueryModel is already set")]
-    public void SetQueryModelTwice_Exception ()
-    {
-      QueryModel model = ExpressionHelper.CreateQueryModel();
-      _subQueryFromClause.SetQueryModel (model);
-      _subQueryFromClause.SetQueryModel (model);
-    }
-
-    [Test]
     public void Clone ()
     {
       var newPreviousClause = ExpressionHelper.CreateMainFromClause();
@@ -129,7 +99,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clone, Is.Not.SameAs (_subQueryFromClause));
       Assert.That (clone.Identifier, Is.SameAs (_subQueryFromClause.Identifier));
       Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
-      Assert.That (clone.QueryModel, Is.Null);
     }
 
     [Test]
@@ -163,22 +132,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       _cloneContext.ClonedClauseMapping.AddMapping (_subQueryFromClause.PreviousClause, ExpressionHelper.CreateClause());
       var clone = ((IBodyClause) _subQueryFromClause).Clone (_cloneContext);
       Assert.That (_cloneContext.ClonedClauseMapping.GetClause (_subQueryFromClause), Is.SameAs (clone));
-    }
-
-    [Test]
-    public void Clone_SubQueryModelsParent_SetWhenQueryModelIsSet ()
-    {
-      var newPreviousClause = ExpressionHelper.CreateMainFromClause();
-      _cloneContext.ClonedClauseMapping.AddMapping (_subQueryFromClause.PreviousClause, newPreviousClause);
-      var clone = _subQueryFromClause.Clone (_cloneContext);
-
-      Assert.That (clone, Is.Not.Null);
-      Assert.That (clone, Is.Not.SameAs (_subQueryFromClause));
-      Assert.That (clone.QueryModel, Is.Null);
-
-      var newModel = ExpressionHelper.CreateQueryModel();
-      clone.SetQueryModel (newModel);
-      Assert.That (clone.QueryModel, Is.SameAs (newModel));
     }
 
     [Test]
