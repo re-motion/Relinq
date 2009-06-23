@@ -32,7 +32,6 @@ namespace Remotion.Data.Linq
   public class QueryModel : ICloneable
   {
     private readonly List<IBodyClause> _bodyClauses = new List<IBodyClause> ();
-    private readonly Dictionary<string, IResolveableClause> _clausesByIdentifier = new Dictionary<string, IResolveableClause> ();
     private readonly UniqueIdentifierGenerator _uniqueIdentifierGenerator;
 
     private MainFromClause _mainFromClause;
@@ -115,36 +114,12 @@ namespace Remotion.Data.Linq
       if (clauseAsFromClause != null)
       {
         _uniqueIdentifierGenerator.AddKnownIdentifier (clauseAsFromClause.Identifier.Name);
-        //RegisterClause(clauseAsFromClause.Identifier, clauseAsFromClause);
       }
 
       clause.SetQueryModel (this);
       _bodyClauses.Add (clause);
 
       InvalidateExpressionTree ();
-    }
-
-    /// <summary>
-    /// Method to register clauses via <see cref="ParameterExpression"/> 
-    /// </summary>
-    /// <param name="identifier"><see cref="ParameterExpression"/></param>
-    /// <param name="clauseToBeRegistered"><see cref="IResolveableClause"/></param>
-    private void RegisterClause (ParameterExpression identifier, IResolveableClause clauseToBeRegistered)
-    {
-      if (MainFromClause.Identifier.Name == identifier.Name || _clausesByIdentifier.ContainsKey (identifier.Name))
-      {
-        string message = string.Format ("Multiple clauses with the same identifier name ('{0}') are not supported.",
-            identifier.Name);
-        throw new InvalidOperationException (message);
-      }
-      _clausesByIdentifier.Add (identifier.Name, clauseToBeRegistered);
-    }
-    
-    private IResolveableClause GetBodyClauseByIdentifier (string identifierName)
-    {
-      IResolveableClause clause;
-      _clausesByIdentifier.TryGetValue (identifierName, out clause);
-      return clause;
     }
 
     public void Accept (IQueryVisitor visitor)
@@ -216,21 +191,16 @@ namespace Remotion.Data.Linq
       return Clone();
     }
 
-    private void CheckResolvedIdentifierType (ParameterExpression identifier,Type expectedType)
-    {
-      if (identifier.Type != expectedType)
-      {
-        string message = string.Format ("The from clause with identifier '{0}' has type '{1}', but '{2}' was requested.", identifier.Name,
-            identifier.Type, expectedType);
-        throw new ClauseLookupException (message);
-      }
-    }
-
+    // TODO 1176: Remove
     public void InvalidateExpressionTree ()
     {
       _expressionTree = null;
     }
 
+    /// <summary>
+    /// Returns a "unique" identifier with the given prefix. The identifier is different from that of any <see cref="FromClauseBase"/> present
+    /// in the <see cref="QueryModel"/>.
+    /// </summary>
     public string GetUniqueIdentifier (string prefix)
     {
       ArgumentUtility.CheckNotNullOrEmpty ("prefix", prefix);
