@@ -34,7 +34,6 @@ namespace Remotion.Data.Linq.Parsing.Details
 
       RegisterParser (typeof (BinaryExpression), new BinaryExpressionParser (this));
       RegisterParser (typeof (MemberExpression), new MemberExpressionParser (resolver));
-      RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (resolver));
       RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (databaseInfo));
       RegisterParser (typeof (MethodCallExpression), new MethodCallExpressionParser (this));
       RegisterParser (typeof (MethodCallExpression), new LikeParser (this));

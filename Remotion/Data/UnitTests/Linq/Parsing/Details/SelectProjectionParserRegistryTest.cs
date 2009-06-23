@@ -59,7 +59,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details
       Assert.That (selectProjectionParserRegistry.GetParsers (typeof (MemberExpression)).ToArray (), Is.Not.Empty);
       Assert.That (selectProjectionParserRegistry.GetParsers (typeof (MethodCallExpression)).ToArray (), Is.Not.Empty);
       Assert.That (selectProjectionParserRegistry.GetParsers (typeof (NewExpression)).ToArray (), Is.Not.Empty);
-      Assert.That (selectProjectionParserRegistry.GetParsers (typeof (ParameterExpression)).ToArray (), Is.Not.Empty);
       Assert.That (selectProjectionParserRegistry.GetParsers (typeof (SubQueryExpression)).ToArray (), Is.Not.Empty);
       Assert.That (selectProjectionParserRegistry.GetParsers (typeof (QuerySourceReferenceExpression)).ToArray (), Is.Not.Empty);
     }

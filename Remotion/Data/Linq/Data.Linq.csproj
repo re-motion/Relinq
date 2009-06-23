@@ -129,7 +129,6 @@
     <Compile Include="Parsing\Details\SelectProjectionParsing\MemberExpressionParser.cs" />
     <Compile Include="Parsing\Details\SelectProjectionParsing\MethodCallExpressionParser.cs" />
     <Compile Include="Parsing\Details\SelectProjectionParsing\NewExpressionParser.cs" />
-    <Compile Include="Parsing\Details\SelectProjectionParsing\ParameterExpressionParser.cs" />
     <Compile Include="Parsing\Details\WhereConditionParserRegistry.cs" />
     <Compile Include="Parsing\Details\WhereConditionParsing\ContainsFullTextParser.cs" />
     <Compile Include="Parsing\Details\WhereConditionParsing\ContainsParser.cs" />
@@ -145,7 +144,6 @@
     <Compile Include="Parsing\Details\WhereConditionParsing\BinaryExpressionParser.cs" />
     <Compile Include="Parsing\Details\WhereConditionParsing\ConstantExpressionParser.cs" />
     <Compile Include="Parsing\Details\WhereConditionParsing\MemberExpressionParser.cs" />
-    <Compile Include="Parsing\Details\WhereConditionParsing\ParameterExpressionParser.cs" />
     <Compile Include="Parsing\Details\WhereConditionParsing\UnaryExpressionParser.cs" />
     <Compile Include="Parsing\FieldResolving\FieldAccessResolveException.cs" />
     <Compile Include="Parsing\FieldResolving\FieldSourcePathBuilder.cs" />

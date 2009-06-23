@@ -44,7 +44,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details
 
       Assert.That (whereConditionParserRegistry.GetParsers (typeof (BinaryExpression)).ToArray (), Is.Not.Empty);
       Assert.That (whereConditionParserRegistry.GetParsers (typeof (MemberExpression)).ToArray (), Is.Not.Empty);
-      Assert.That (whereConditionParserRegistry.GetParsers (typeof (ParameterExpression)).ToArray (), Is.Not.Empty);
       Assert.That (whereConditionParserRegistry.GetParsers (typeof (ConstantExpression)).ToArray (), Is.Not.Empty);
       Assert.That (whereConditionParserRegistry.GetParsers (typeof (MethodCallExpression)).ToArray (), Is.Not.Empty);
       Assert.That (whereConditionParserRegistry.GetParsers (typeof (SubQueryExpression)).ToArray (), Is.Not.Empty);

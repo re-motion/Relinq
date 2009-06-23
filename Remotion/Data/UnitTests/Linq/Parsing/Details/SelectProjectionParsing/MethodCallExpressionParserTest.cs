@@ -44,7 +44,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details.SelectProjectionParsing
       _parserRegistry =
           new SelectProjectionParserRegistry (StubDatabaseInfo.Instance, new ParseMode());
       _parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
-      _parserRegistry.RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (_resolver));
       _parserRegistry.RegisterParser (typeof (MemberExpression), new MemberExpressionParser (_resolver));
       _parserRegistry.RegisterParser (typeof (MethodCallExpression), new MethodCallExpressionParser (_parserRegistry));
     }

@@ -47,7 +47,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details.WhereConditionParsing
       _parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);
       _parserRegistry.RegisterParser (typeof (BinaryExpression), new BinaryExpressionParser (_parserRegistry));
       _parserRegistry.RegisterParser (typeof (MemberExpression), new MemberExpressionParser (_resolver));
-      _parserRegistry.RegisterParser (typeof (ParameterExpression), new ParameterExpressionParser (_resolver));
       _parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));
 
       _memberExpression = Expression.MakeMemberAccess (new QuerySourceReferenceExpression (_fromClause), typeof (Student).GetProperty ("First"));
