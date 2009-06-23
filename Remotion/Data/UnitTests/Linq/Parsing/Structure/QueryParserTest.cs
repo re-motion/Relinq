@@ -173,18 +173,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
-    public void CreateQueryModel_SubQueries_AreAssociatedWithParentQueries ()
-    {
-      var expression = ExpressionHelper.MakeExpression (
-           () => ExpressionHelper.CreateQuerySource ().Where (i => (from x in ExpressionHelper.CreateQuerySource () select x).Count () > 0));
-
-      var result = _queryParser.GetParsedQuery (expression);
-      var whereClause = (WhereClause) result.BodyClauses[0];
-      var predicateBody = (BinaryExpression) whereClause.Predicate;
-      Assert.That (((SubQueryExpression)predicateBody.Left).QueryModel.ParentQuery, Is.SameAs (result));
-    }
-
-    [Test]
     public void CreateQueryModel_SubQueries_AreResolved ()
     {
       var expression = ExpressionHelper.MakeExpression (

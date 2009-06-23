@@ -38,7 +38,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
       _resultModificationNoDefault = new SingleResultModification (ExpressionHelper.CreateSelectClause (), false);
       _resultModificationWithDefault = new SingleResultModification (ExpressionHelper.CreateSelectClause (), true);
       _clonedClauseMapping = new ClonedClauseMapping ();
-      _cloneContext = new CloneContext (_clonedClauseMapping, new SubQueryRegistry());
+      _cloneContext = new CloneContext (_clonedClauseMapping);
     }
 
     [Test]

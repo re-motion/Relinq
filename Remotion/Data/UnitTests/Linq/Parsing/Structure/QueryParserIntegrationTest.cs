@@ -189,7 +189,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
-    [Ignore ("TODO 1222: Should work again after integrating SubQueryFromClause")]
     public void SimpleSubQueryInAdditionalFromClause ()
     {
       var expression = SubQueryTestQueryGenerator.CreateSimpleSubQueryInAdditionalFromClause (_querySource).Expression;
@@ -200,7 +199,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.IsNotNull (subQueryFromClause);
 
       Assert.That (subQueryFromClause.SubQueryModel, Is.Not.Null);
-      Assert.That (subQueryFromClause.SubQueryModel.ParentQuery, Is.SameAs (queryModel));
       Assert.That (subQueryFromClause.SubQueryModel.MainFromClause, Is.Not.Null);
 
       var subQueryMainFromClause = subQueryFromClause.SubQueryModel.MainFromClause;

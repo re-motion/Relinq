@@ -14,7 +14,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
@@ -150,40 +149,6 @@ namespace Remotion.Data.UnitTests.Linq
     }
    
     [Test]
-    public void ParentQuery_Null ()
-    {
-      Assert.IsNull (_queryModel.ParentQuery);
-    }
-
-    [Test]
-    public void SetParentQuery ()
-    {
-      QueryModel parentQueryModel = ExpressionHelper.CreateQueryModel ();
-      _queryModel.SetParentQuery (parentQueryModel);
-
-      Assert.AreSame (parentQueryModel, _queryModel.ParentQuery);
-    }
-
-    [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "The query already has a parent query.")]
-    public void SetParentQuery_ThrowsOnSecondParent ()
-    {
-      QueryModel parentQueryModel1 = ExpressionHelper.CreateQueryModel ();
-      QueryModel parentQueryModel2 = ExpressionHelper.CreateQueryModel ();
-      _queryModel.SetParentQuery (parentQueryModel1);
-      _queryModel.SetParentQuery (parentQueryModel2);
-    }
-
-    [Test]
-    public void SetParentQuery_IgnoresSecondParent_WhenSame ()
-    {
-      QueryModel parentQueryModel = ExpressionHelper.CreateQueryModel ();
-      _queryModel.SetParentQuery (parentQueryModel);
-      _queryModel.SetParentQuery (parentQueryModel);
-      Assert.That (_queryModel.ParentQuery, Is.SameAs (parentQueryModel));
-    }
-
-    [Test]
     public void Clone_ReturnsNewQueryModel ()
     {
       var queryModel = ExpressionHelper.CreateQueryModel ();
@@ -273,20 +238,7 @@ namespace Remotion.Data.UnitTests.Linq
       var clone = _queryModel.Clone (_clonedClauseMapping);
       Assert.That (_clonedClauseMapping.GetClause (_queryModel.BodyClauses[0]), Is.SameAs (clone.BodyClauses[0]));
     }
-
-    [Test]
-    public void Clone_SetsParentQueryModel_OfClonedSubQueries ()
-    {
-      var mainFromClause = ExpressionHelper.CreateMainFromClause ();
-      var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel ());
-      var selectClause = new SelectClause (mainFromClause, subQueryExpression);
-      var queryModel = new QueryModel (typeof (IEnumerable<int>), mainFromClause, selectClause);
-      
-      var clone = queryModel.Clone ();
-
-      Assert.That (((SubQueryExpression)((SelectClause)clone.SelectOrGroupClause).Selector).QueryModel.ParentQuery, Is.SameAs (clone));
-    }
-
+    
     [Test]
     public void InvalidateExpressionTree ()
     {

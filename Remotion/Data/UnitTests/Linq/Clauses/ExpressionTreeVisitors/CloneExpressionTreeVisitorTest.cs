@@ -14,10 +14,8 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
@@ -32,7 +30,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ExpressionTreeVisitors
     private ClonedClauseMapping _clonedClauseMapping;
     private MainFromClause _oldFromClause;
     private MainFromClause _newFromClause;
-    private SubQueryRegistry _subQueryRegistry;
     private CloneContext _cloneContext;
 
     [SetUp]
@@ -44,9 +41,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ExpressionTreeVisitors
       _clonedClauseMapping = new ClonedClauseMapping ();
       _clonedClauseMapping.AddMapping (_oldFromClause, _newFromClause);
 
-      _subQueryRegistry = new SubQueryRegistry();
-
-      _cloneContext = new CloneContext (_clonedClauseMapping, _subQueryRegistry);
+      _cloneContext = new CloneContext (_clonedClauseMapping);
     }
 
     [Test]
@@ -74,15 +69,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ExpressionTreeVisitors
       var result = CloneExpressionTreeVisitor.ReplaceClauseReferences (expression, _cloneContext);
 
       Assert.That (((SubQueryExpression) result).QueryModel, Is.Not.SameAs (expression.QueryModel));
-    }
-
-    [Test]
-    public void Replaces_SubQueryExpressions_RegistersSubQueries ()
-    {
-      var expression = new SubQueryExpression (ExpressionHelper.CreateQueryModel ());
-      var result = CloneExpressionTreeVisitor.ReplaceClauseReferences (expression, _cloneContext);
-
-      Assert.That (_subQueryRegistry.Contains(((SubQueryExpression) result).QueryModel), Is.True);
     }
 
     [Test]

@@ -38,7 +38,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       ClauseGenerationContext = new ClauseGenerationContext(
           QuerySourceClauseMapping, 
           MethodCallExpressionNodeTypeRegistry.CreateDefault(),
-          new SubQueryRegistry (),
           new ResultModificationExpressionNodeRegistry ());
 
       SourceClause = (FromClauseBase) SourceNode.CreateClause (null, ClauseGenerationContext);

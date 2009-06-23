@@ -35,7 +35,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void SetUp ()
     {
       _groupClause = ExpressionHelper.CreateGroupClause ();
-      _cloneContext = new CloneContext (new ClonedClauseMapping(), new SubQueryRegistry());
+      _cloneContext = new CloneContext (new ClonedClauseMapping());
     }
 
     [Test]

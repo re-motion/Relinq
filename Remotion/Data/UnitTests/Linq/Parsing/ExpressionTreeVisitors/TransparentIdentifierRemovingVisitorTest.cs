@@ -19,8 +19,6 @@ using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq;
-using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Parsing.Structure;
@@ -303,10 +301,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
       
       var selectNode = (SelectExpressionNode) new ExpressionTreeParser (nodeTypeRegistry).ParseTree (query.Expression);
       var clauseGenerationContext = new ClauseGenerationContext (
-          new QuerySourceClauseMapping(), 
-          new MethodCallExpressionNodeTypeRegistry(),
-          new SubQueryRegistry (),
-          new ResultModificationExpressionNodeRegistry ());
+          new QuerySourceClauseMapping(), new MethodCallExpressionNodeTypeRegistry(), new ResultModificationExpressionNodeRegistry ());
 
       var selectManyNode = (SelectManyExpressionNode) selectNode.Source.Source;
       var constantNode = (ConstantExpressionNode) selectManyNode.Source;

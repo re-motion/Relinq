@@ -14,7 +14,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Utilities;
@@ -27,27 +26,23 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
   /// </summary>
   public class SubQueryFindingVisitor : ExpressionTreeVisitor
   {
-    public static Expression ReplaceSubQueries (Expression expressionTree, MethodCallExpressionNodeTypeRegistry nodeTypeRegistry, SubQueryRegistry subQueryRegistry)
+    public static Expression ReplaceSubQueries (Expression expressionTree, MethodCallExpressionNodeTypeRegistry nodeTypeRegistry)
     {
       ArgumentUtility.CheckNotNull ("expressionTree", expressionTree);
       ArgumentUtility.CheckNotNull ("nodeTypeRegistry", nodeTypeRegistry);
-      ArgumentUtility.CheckNotNull ("subQueryRegistry", subQueryRegistry);
       
-      var visitor = new SubQueryFindingVisitor (nodeTypeRegistry, subQueryRegistry);
+      var visitor = new SubQueryFindingVisitor (nodeTypeRegistry);
       return visitor.VisitExpression (expressionTree);
     }
 
     private readonly MethodCallExpressionNodeTypeRegistry _nodeTypeRegistry;
-    private readonly SubQueryRegistry _subQueryRegistry;
     private readonly QueryParser _innerParser;
 
-    private SubQueryFindingVisitor (MethodCallExpressionNodeTypeRegistry nodeTypeRegistry, SubQueryRegistry subQueryRegistry)
+    private SubQueryFindingVisitor (MethodCallExpressionNodeTypeRegistry nodeTypeRegistry)
     {
       ArgumentUtility.CheckNotNull ("nodeTypeRegistry", nodeTypeRegistry);
-      ArgumentUtility.CheckNotNull ("subQueryRegistry", subQueryRegistry);
 
       _nodeTypeRegistry = nodeTypeRegistry;
-      _subQueryRegistry = subQueryRegistry;
       _innerParser = new QueryParser (new ExpressionTreeParser (_nodeTypeRegistry));
     }
 
@@ -68,7 +63,6 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
     private SubQueryExpression CreateSubQueryNode (MethodCallExpression methodCallExpression)
     {
       QueryModel queryModel = _innerParser.GetParsedQuery (methodCallExpression);
-      _subQueryRegistry.Add (queryModel);
       return new SubQueryExpression (queryModel);
     }
   }

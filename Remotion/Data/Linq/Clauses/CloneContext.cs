@@ -23,16 +23,13 @@ namespace Remotion.Data.Linq.Clauses
   /// </summary>
   public class CloneContext
   {
-    public CloneContext (ClonedClauseMapping clonedClauseMapping, SubQueryRegistry subQueryRegistry)
+    public CloneContext (ClonedClauseMapping clonedClauseMapping)
     {
       ArgumentUtility.CheckNotNull ("clonedClauseMapping", clonedClauseMapping);
-      ArgumentUtility.CheckNotNull ("subQueryRegistry", subQueryRegistry);
-
+      
       ClonedClauseMapping = clonedClauseMapping;
-      SubQueryRegistry = subQueryRegistry;
     }
 
     public ClonedClauseMapping ClonedClauseMapping { get; private set; }
-    public SubQueryRegistry SubQueryRegistry { get; private set; }
   }
 }

@@ -40,7 +40,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       _selector = ExpressionHelper.CreateExpression();
       _previousClause = ExpressionHelper.CreateClause ();
       _selectClause = new SelectClause (_previousClause, _selector);
-      _cloneContext = new CloneContext (new ClonedClauseMapping(), new SubQueryRegistry());
+      _cloneContext = new CloneContext (new ClonedClauseMapping());
     }
 
     [Test]

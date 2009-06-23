@@ -13,8 +13,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-using System.Collections.Generic;
-using Remotion.Data.Linq.Clauses;
+using System;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
@@ -25,26 +24,22 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   public struct ClauseGenerationContext
   {
     public ClauseGenerationContext (
-        QuerySourceClauseMapping clauseMapping, 
-        MethodCallExpressionNodeTypeRegistry nodeTypeRegistry, 
-        SubQueryRegistry subQueryRegistry,
+        QuerySourceClauseMapping clauseMapping,
+        MethodCallExpressionNodeTypeRegistry nodeTypeRegistry,
         ResultModificationExpressionNodeRegistry resultModificationNodeRegistry)
-      : this()
+        : this()
     {
       ArgumentUtility.CheckNotNull ("clauseMapping", clauseMapping);
       ArgumentUtility.CheckNotNull ("nodeTypeRegistry", nodeTypeRegistry);
-      ArgumentUtility.CheckNotNull ("subQueryRegistry", subQueryRegistry);
       ArgumentUtility.CheckNotNull ("resultModificationNodeRegistry", resultModificationNodeRegistry);
 
       ClauseMapping = clauseMapping;
       NodeTypeRegistry = nodeTypeRegistry;
-      SubQueryRegistry = subQueryRegistry;
       ResultModificationNodeRegistry = resultModificationNodeRegistry;
     }
 
     public QuerySourceClauseMapping ClauseMapping { get; private set; }
     public MethodCallExpressionNodeTypeRegistry NodeTypeRegistry { get; private set; }
-    public SubQueryRegistry SubQueryRegistry { get; private set; }
     public ResultModificationExpressionNodeRegistry ResultModificationNodeRegistry { get; private set; }
   }
 }

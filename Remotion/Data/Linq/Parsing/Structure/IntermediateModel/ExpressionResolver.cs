@@ -43,11 +43,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
       var resolvedExpression = SourceNode.Resolve (parameterToBeResolved, unresolvedExpression, clauseGenerationContext);
       resolvedExpression = TransparentIdentifierRemovingVisitor.ReplaceTransparentIdentifiers (resolvedExpression);
-      resolvedExpression = SubQueryFindingVisitor.ReplaceSubQueries (
-          resolvedExpression, 
-          clauseGenerationContext.NodeTypeRegistry, 
-          clauseGenerationContext.SubQueryRegistry);
-
+      resolvedExpression = SubQueryFindingVisitor.ReplaceSubQueries (resolvedExpression, clauseGenerationContext.NodeTypeRegistry);
       return resolvedExpression;
     }
   }

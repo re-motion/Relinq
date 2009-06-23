@@ -58,21 +58,7 @@ namespace Remotion.Data.Linq
     }
 
     public Type ResultType { get; private set; }
-    public QueryModel ParentQuery { get; private set; }
-
-    /// <summary>
-    /// Set parent <see cref="QueryModel"/> e.g. needed in a subquery.
-    /// </summary>
-    /// <param name="parentQuery">The parent <see cref="QueryModel"/> of another <see cref="QueryModel"/></param>
-    public void SetParentQuery(QueryModel parentQuery)
-    {
-      ArgumentUtility.CheckNotNull ("parentQueryExpression", parentQuery);
-      if (ParentQuery != null && ParentQuery != parentQuery)
-        throw new InvalidOperationException ("The query already has a parent query.");
-
-      ParentQuery = parentQuery;
-    }
-
+    
     public MainFromClause MainFromClause
     {
       get { return _mainFromClause; }
@@ -168,7 +154,7 @@ namespace Remotion.Data.Linq
     {
       ArgumentUtility.CheckNotNull ("clonedClauseMapping", clonedClauseMapping);
 
-      var cloneContext = new CloneContext (clonedClauseMapping, new SubQueryRegistry());
+      var cloneContext = new CloneContext (clonedClauseMapping);
       var queryModelBuilder = new QueryModelBuilder();
 
       queryModelBuilder.AddClause (MainFromClause.Clone (cloneContext));
@@ -178,8 +164,6 @@ namespace Remotion.Data.Linq
 
       var queryModel = queryModelBuilder.Build (ResultType);
       
-      cloneContext.SubQueryRegistry.UpdateAllParentQueries (queryModel);
-
       if (_expressionTree != null)
         queryModel.SetExpressionTree (_expressionTree);
 

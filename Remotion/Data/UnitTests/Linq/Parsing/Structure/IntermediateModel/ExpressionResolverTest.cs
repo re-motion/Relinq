@@ -68,17 +68,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void GetResolvedExpression_DetectsSubQueries_RegistersSubQueriesInList ()
-    {
-      var unresolvedExpressionWithSubQuery =
-          ExpressionHelper.CreateLambdaExpression<int, int> (i => (from x in ExpressionHelper.CreateQuerySource () select i).Count ());
-      var result = _expressionResolver.GetResolvedExpression (
-          unresolvedExpressionWithSubQuery.Body, unresolvedExpressionWithSubQuery.Parameters[0], ClauseGenerationContext);
-
-      Assert.That (ClauseGenerationContext.SubQueryRegistry.Contains (((SubQueryExpression) result).QueryModel));
-    }
-
-    [Test]
     public void GetResolvedExpression_DetectsSubQueries_AfterResolving ()
     {
       var unresolvedExpressionWithSubQuery =
@@ -97,7 +86,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var nodeTypeRegistry = new MethodCallExpressionNodeTypeRegistry ();
       var context = new ClauseGenerationContext (
-          QuerySourceClauseMapping, nodeTypeRegistry, new SubQueryRegistry(), new ResultModificationExpressionNodeRegistry());
+          QuerySourceClauseMapping, nodeTypeRegistry, new ResultModificationExpressionNodeRegistry());
 
       var unresolvedExpressionWithSubQuery =
           ExpressionHelper.CreateLambdaExpression<int, int> (i => (from x in ExpressionHelper.CreateQuerySource () select i).Count ());

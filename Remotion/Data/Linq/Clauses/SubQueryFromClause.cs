@@ -80,7 +80,6 @@ namespace Remotion.Data.Linq.Clauses
       if (QueryModel != null)
         throw new InvalidOperationException ("QueryModel is already set");
 
-      SubQueryModel.SetParentQuery (model);
       QueryModel = model;
     }
 

@@ -59,7 +59,6 @@ namespace Remotion.Data.Linq.Clauses.ExpressionTreeVisitors
       ArgumentUtility.CheckNotNull ("expression", expression);
       
       var clonedQueryModel = expression.QueryModel.Clone ();
-      _cloneContext.SubQueryRegistry.Add (clonedQueryModel);
       return new SubQueryExpression (clonedQueryModel);
     }
 
@@ -68,5 +67,6 @@ namespace Remotion.Data.Linq.Clauses.ExpressionTreeVisitors
       //ignore
       return expression;
     }
+
   }
 }

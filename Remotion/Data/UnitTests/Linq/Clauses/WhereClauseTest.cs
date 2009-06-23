@@ -34,7 +34,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void SetUp ()
     {
       _whereClause = ExpressionHelper.CreateWhereClause();
-      _cloneContext = new CloneContext (new ClonedClauseMapping(), new SubQueryRegistry());
+      _cloneContext = new CloneContext (new ClonedClauseMapping());
     }
 
     [Test] 

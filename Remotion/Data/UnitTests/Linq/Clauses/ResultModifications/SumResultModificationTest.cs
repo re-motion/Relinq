@@ -41,7 +41,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
       var newSelectClause = ExpressionHelper.CreateSelectClause ();
       var clonedClauseMapping = new ClonedClauseMapping ();
       clonedClauseMapping.AddMapping (_resultModification.SelectClause, newSelectClause);
-      var cloneContext = new CloneContext (clonedClauseMapping, new SubQueryRegistry());
+      var cloneContext = new CloneContext (clonedClauseMapping);
       var clone = _resultModification.Clone (cloneContext);
 
       Assert.That (clone, Is.InstanceOfType (typeof (SumResultModification)));

@@ -35,10 +35,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       base.SetUp ();
       _emptyContext = new ClauseGenerationContext (
-          new QuerySourceClauseMapping(), 
-          new MethodCallExpressionNodeTypeRegistry (), 
-          new SubQueryRegistry(),
-          new ResultModificationExpressionNodeRegistry());
+          new QuerySourceClauseMapping(), new MethodCallExpressionNodeTypeRegistry (),new ResultModificationExpressionNodeRegistry());
       _node = new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3 });
     }
 

@@ -71,10 +71,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       var node = _expressionTreeParser.ParseTree (expressionTreeRoot);
 
       var clauseGenerationContext = new ClauseGenerationContext (
-          new QuerySourceClauseMapping (), 
-          _expressionTreeParser.NodeTypeRegistry, 
-          new SubQueryRegistry(),
-          new ResultModificationExpressionNodeRegistry());
+          new QuerySourceClauseMapping(), _expressionTreeParser.NodeTypeRegistry, new ResultModificationExpressionNodeRegistry());
 
       IClause lastClause = CreateClauseChain (node, clauseGenerationContext);
       SelectClause selectClause = GetOrCreateSelectClause (node, lastClause, clauseGenerationContext);
@@ -86,8 +83,6 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
       var queryModel = queryModelBuilder.Build (expressionTreeRoot.Type);
 
-      clauseGenerationContext.SubQueryRegistry.UpdateAllParentQueries (queryModel);
-
       queryModel.SetExpressionTree (expressionTreeRoot);
       return queryModel;
     }
@@ -95,8 +90,11 @@ namespace Remotion.Data.Linq.Parsing.Structure
     private void AddClauses (IClause clause, QueryModelBuilder queryModelBuilder)
     {
       if (clause.PreviousClause != null)
-        AddClauses (clause.PreviousClause, queryModelBuilder); // need to reverse the list of clauses to have the last clause (nearest to the MainFromClause) first
-      
+      {
+        AddClauses (clause.PreviousClause, queryModelBuilder);
+            // need to reverse the list of clauses to have the last clause (nearest to the MainFromClause) first
+      }
+
       queryModelBuilder.AddClause (clause);
     }
 
@@ -114,7 +112,8 @@ namespace Remotion.Data.Linq.Parsing.Structure
       if (node.Source == null) // this is the end of the node chain, create a clause symbolizing the end of the clause chain
         return node.CreateClause (null, clauseGenerationContext);
       else
-      { // this is not the end of the chain, process the rest of the chain before processing this node
+      {
+        // this is not the end of the chain, process the rest of the chain before processing this node
         var previousClause = CreateClauseChain (node.Source, clauseGenerationContext);
 
         if (previousClause is SelectClause && !(node is ResultModificationExpressionNodeBase))

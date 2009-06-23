@@ -40,7 +40,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
     {
       var newSelectClause = ExpressionHelper.CreateSelectClause ();
       var clonedClauseMapping = new ClonedClauseMapping ();
-      var cloneContext = new CloneContext (clonedClauseMapping, new SubQueryRegistry());
+      var cloneContext = new CloneContext (clonedClauseMapping);
       clonedClauseMapping.AddMapping (_resultModification.SelectClause, newSelectClause);
       var clone = _resultModification.Clone (cloneContext);
 
