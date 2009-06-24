@@ -16,6 +16,7 @@
 using System;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ResultModifications;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
@@ -46,12 +47,15 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void ApplyAllToSelectClause ()
     {
-      var selectClause = ExpressionHelper.CreateSelectClause();
       var node2 = new TakeExpressionNode (CreateParseInfo(), 2);
       _registry.AddResultModificationNode (node2);
       _registry.AddResultModificationNode (_node);
 
-      _registry.ApplyAllToSelectClause (selectClause, ClauseGenerationContext);
+      var queryModel = ExpressionHelper.CreateQueryModel();
+
+      _registry.ApplyAll (queryModel, ClauseGenerationContext);
+      
+      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
 
       Assert.That (selectClause.ResultModifications.Count, Is.EqualTo (2));
       Assert.That (selectClause.ResultModifications[0], Is.InstanceOfType (typeof (TakeResultModification)));

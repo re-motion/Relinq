@@ -18,6 +18,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultModifications;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
@@ -116,34 +117,38 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void ApplyToSelectClause_WithoutOptionalPredicate ()
+    public void Apply_WithoutOptionalPredicate ()
     {
-      TestApplyToSelectClause (_node, typeof (FirstResultModification));
+      TestApply (_node, typeof (FirstResultModification));
     }
 
     [Test]
-    public void ApplyToSelectClause_WithOptionalPredicate_CreatesWhereClause ()
+    public void Apply_WithOptionalPredicate_CreatesWhereClause ()
     {
-      TestApplyToSelectClause_WithOptionalPredicate (_nodeWithPredicate);
+      TestApply_WithOptionalPredicate (_nodeWithPredicate);
     }
 
     [Test]
-    public void ApplyToSelectClause_NoDefaultAllowed ()
+    public void Apply_NoDefaultAllowed ()
     {
       var node = new FirstExpressionNode (CreateParseInfo (FirstExpressionNode.SupportedMethods[0].MakeGenericMethod (typeof (Student))), null);
-      var selectClause = ExpressionHelper.CreateSelectClause ();
-      node.ApplyToSelectClause (selectClause, ClauseGenerationContext);
+      var queryModel = ExpressionHelper.CreateQueryModel ();
 
+      node.Apply (queryModel, ClauseGenerationContext);
+
+      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
       Assert.That (((FirstResultModification) selectClause.ResultModifications[0]).ReturnDefaultWhenEmpty, Is.False);
     }
 
     [Test]
-    public void ApplyToSelectClause_DefaultAllowed ()
+    public void Apply_DefaultAllowed ()
     {
       var node = new FirstExpressionNode (CreateParseInfo (FirstExpressionNode.SupportedMethods[3].MakeGenericMethod (typeof (Student))), null);
-      var selectClause = ExpressionHelper.CreateSelectClause ();
-      node.ApplyToSelectClause (selectClause, ClauseGenerationContext);
+      var queryModel = ExpressionHelper.CreateQueryModel ();
 
+      node.Apply (queryModel, ClauseGenerationContext);
+
+      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
       Assert.That (((FirstResultModification) selectClause.ResultModifications[0]).ReturnDefaultWhenEmpty, Is.True);
     }
 

@@ -139,6 +139,19 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
+    public void CreateQueryModel_OrderOfBodyClauses ()
+    {
+      IQueryable<int> value = new[] { 1, 2, 3 }.AsQueryable ();
+      var expressionTree = (MethodCallExpression) ExpressionHelper.MakeExpression (() => value.Where (i => i > 5).OrderBy (i => i));
+
+      QueryModel queryModel = _queryParser.GetParsedQuery (expressionTree);
+
+      Assert.That (queryModel.BodyClauses.Count, Is.EqualTo (2));
+      Assert.That (queryModel.BodyClauses[0], Is.InstanceOfType (typeof (WhereClause)));
+      Assert.That (queryModel.BodyClauses[1], Is.InstanceOfType (typeof (OrderByClause)));
+    }
+
+    [Test]
     public void CreateQueryModel_AppliesResultModifications ()
     {
       IQueryable<int> value = new[] { 1, 2, 3 }.AsQueryable ();
@@ -151,6 +164,17 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (selectClause.ResultModifications.Count, Is.EqualTo (2));
       Assert.That (selectClause.ResultModifications[0], Is.InstanceOfType (typeof (TakeResultModification)));
       Assert.That (selectClause.ResultModifications[1], Is.InstanceOfType (typeof (CountResultModification)));
+    }
+
+    [Test]
+    public void CreateQueryModel_CollectsWhereClausesOfResultModifications ()
+    {
+      IQueryable<int> value = new[] { 1, 2, 3 }.AsQueryable ();
+      var expressionTree = (MethodCallExpression) ExpressionHelper.MakeExpression (() => value.Count (i => i > 5));
+
+      QueryModel queryModel = _queryParser.GetParsedQuery (expressionTree);
+
+      Assert.That (queryModel.BodyClauses[0], Is.InstanceOfType (typeof (WhereClause)));
     }
 
     [Test]

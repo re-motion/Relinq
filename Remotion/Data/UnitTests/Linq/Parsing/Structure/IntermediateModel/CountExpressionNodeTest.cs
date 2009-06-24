@@ -98,15 +98,15 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void ApplyToSelectClause_WithoutOptionalPredicate ()
+    public void Apply_WithoutOptionalPredicate ()
     {
-      TestApplyToSelectClause (_node, typeof (CountResultModification));
+      TestApply (_node, typeof (CountResultModification));
     }
 
     [Test]
-    public void ApplyToSelectClause_WithOptionalPredicate_CreatesWhereClause ()
+    public void Apply_WithOptionalPredicate_CreatesWhereClause ()
     {
-      TestApplyToSelectClause_WithOptionalPredicate (_nodeWithPredicate);
+      TestApply_WithOptionalPredicate (_nodeWithPredicate);
     }
 
     [Test]

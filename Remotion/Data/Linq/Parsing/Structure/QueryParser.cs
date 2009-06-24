@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses;
@@ -73,68 +74,61 @@ namespace Remotion.Data.Linq.Parsing.Structure
       var clauseGenerationContext = new ClauseGenerationContext (
           new QuerySourceClauseMapping(), _expressionTreeParser.NodeTypeRegistry, new ResultModificationExpressionNodeRegistry());
 
-      IClause lastClause = CreateClauseChain (node, clauseGenerationContext);
-      SelectClause selectClause = GetOrCreateSelectClause (node, lastClause, clauseGenerationContext);
-
-      clauseGenerationContext.ResultModificationNodeRegistry.ApplyAllToSelectClause (selectClause, clauseGenerationContext);
+      var clauses = new List<IClause>();
+      CreateClauses (clauses, node, clauseGenerationContext);
+      CreateSelectClauseIfNecessary (clauses, node, clauseGenerationContext);
 
       var queryModelBuilder = new QueryModelBuilder();
-      AddClauses (selectClause, queryModelBuilder);
+      foreach (var clause in clauses)
+        queryModelBuilder.AddClause (clause);
 
-      return queryModelBuilder.Build (expressionTreeRoot.Type);
-    }
-
-    private void AddClauses (IClause clause, QueryModelBuilder queryModelBuilder)
-    {
-      if (clause.PreviousClause != null)
-      {
-        AddClauses (clause.PreviousClause, queryModelBuilder);
-            // need to reverse the list of clauses to have the last clause (nearest to the MainFromClause) first
-      }
-
-      queryModelBuilder.AddClause (clause);
+      var queryModel = queryModelBuilder.Build (expressionTreeRoot.Type);
+      clauseGenerationContext.ResultModificationNodeRegistry.ApplyAll (queryModel, clauseGenerationContext);
+      return queryModel;
     }
 
     /// <summary>
-    /// Recursively creates <see cref="IClause"/>s from a chain of <see cref="IExpressionNode"/>s, hooking up the clauses in the same
-    /// order as the corresponding nodes.
+    /// Recursively creates <see cref="IClause"/>s from a chain of <see cref="IExpressionNode"/>s, putting the clauses into the 
+    /// <paramref name="clauses"/> list in the same order as the corresponding nodes.
     /// </summary>
+    /// <param name="clauses">The list receiving the clauses.</param>
     /// <param name="node">The last node in the chain to process.</param>
     /// <param name="clauseGenerationContext">A container for all the context information needed for creating clauses. This is used to resolve 
     /// predicates and selectors using <see cref="ExpressionResolver"/>s.</param>
-    /// <returns>An <see cref="IClause"/> that corresponds to <paramref name="node"/>. The chain defined by <see cref="IExpressionNode.Source"/>
-    /// is reflected in the chain defined by <see cref="IClause.PreviousClause"/>.</returns>
-    private IClause CreateClauseChain (IExpressionNode node, ClauseGenerationContext clauseGenerationContext)
+    private void CreateClauses (List<IClause> clauses, IExpressionNode node, ClauseGenerationContext clauseGenerationContext)
     {
       if (node.Source == null) // this is the end of the node chain, create a clause symbolizing the end of the clause chain
-        return node.CreateClause (null, clauseGenerationContext);
+        clauses.Add (node.CreateClause (null, clauseGenerationContext));
       else
       {
         // this is not the end of the chain, process the rest of the chain before processing this node
-        var previousClause = CreateClauseChain (node.Source, clauseGenerationContext);
+        CreateClauses (clauses, node.Source, clauseGenerationContext);
 
-        if (previousClause is SelectClause && !(node is ResultModificationExpressionNodeBase))
-          previousClause = previousClause.PreviousClause;
+        var previousClause = clauses[clauses.Count - 1];
+        if (previousClause is SelectClause && !(node is ResultModificationExpressionNodeBase)) // TODO 1178: Check this check
+          clauses.RemoveAt (clauses.Count - 1);
 
-        return node.CreateClause (previousClause, clauseGenerationContext);
+        var newClause = node.CreateClause (previousClause, clauseGenerationContext);
+        if (newClause != previousClause)
+          clauses.Add (newClause);
       }
     }
 
     /// <summary>
-    /// Gets or create the <see cref="SelectClause"/> marking the end of the clause chain.
+    /// If the last clause in <paramref name="clauses"/> is not a <see cref="SelectClause"/>, this method will create one and add it to the list
+    /// of clauses.
     /// </summary>
+    /// <param name="clauses">The clauses produced by the chain defined by <paramref name="lastNode"/>.</param>
     /// <param name="lastNode">The last node in the chain of <see cref="IExpressionNode"/>s.</param>
-    /// <param name="lastClause">The last clause produced by the chain defined by <paramref name="lastNode"/>.</param>
     /// <param name="clauseGenerationContext">The context info needed to resolve the created selector.</param>
-    /// <returns><paramref name="lastClause"/> if it is a <see cref="SelectClause"/>, or a new <see cref="SelectClause"/> that references
-    /// <paramref name="lastClause"/> as its <see cref="SelectClause.PreviousClause"/>. If a new <see cref="SelectClause"/> is created, its selector
-    /// will take the data streamed out by <paramref name="lastClause"/> and return it unchanged.</returns>
-    private SelectClause GetOrCreateSelectClause (IExpressionNode lastNode, IClause lastClause, ClauseGenerationContext clauseGenerationContext)
+    private void CreateSelectClauseIfNecessary (List<IClause> clauses, IExpressionNode lastNode, ClauseGenerationContext clauseGenerationContext)
     {
-      if (lastClause is SelectClause)
-        return (SelectClause) lastClause;
-      else
-        return lastNode.CreateSelectClause (lastClause, clauseGenerationContext);
+      var lastClause = clauses[clauses.Count - 1];
+      if (!(lastClause is SelectClause))
+      {
+        var selectClause = lastNode.CreateSelectClause (lastClause, clauseGenerationContext);
+        clauses.Add (selectClause);
+      }
     }
   }
 }

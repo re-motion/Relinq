@@ -16,7 +16,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Remotion.Data.Linq.Clauses;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
@@ -45,13 +44,12 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return GetEnumerator();
     }
 
-    public void ApplyAllToSelectClause (SelectClause selectClause, ClauseGenerationContext clauseGenerationContext)
+    public void ApplyAll (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
-      ArgumentUtility.CheckNotNull ("selectClause", selectClause);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+
       foreach (var node in _resultModificationNodes)
-      {
-        node.ApplyToSelectClause (selectClause, clauseGenerationContext);
-      }
+        node.Apply (queryModel, clauseGenerationContext);
     }
   }
 }

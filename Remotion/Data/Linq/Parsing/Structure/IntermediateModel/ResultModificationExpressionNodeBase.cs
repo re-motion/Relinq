@@ -85,56 +85,25 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     /// <summary>
     /// Applies a <see cref="ResultModificationBase"/> representing this <see cref="ResultModificationExpressionNodeBase"/> to the given 
-    /// <see cref="SelectClause"/>, adding a <see cref="WhereClause"/> for the <see cref="OptionalPredicate"/> if present and adjusting the
+    /// <paramref name="queryModel"/>, adding a <see cref="ResultModificationBase"/>, adding a <see cref="WhereClause"/> for the 
+    /// <see cref="OptionalPredicate"/> if present and adjusting the
     /// <see cref="SelectClause.Selector"/> for the <see cref="OptionalSelector"/> if present.
     /// </summary>
-    /// <param name="selectClause">The select clause to apply the modification to.</param>
+    /// <param name="queryModel">The <see cref="QueryModel"/> to apply the changes to.</param>
     /// <param name="clauseGenerationContext">The clause generation context.</param>
-    public void ApplyToSelectClause (SelectClause selectClause, ClauseGenerationContext clauseGenerationContext)
+    public virtual void Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
-      ArgumentUtility.CheckNotNull ("selectClause", selectClause);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
+      var selectClause = ((SelectClause) queryModel.SelectOrGroupClause);
       selectClause.ResultModifications.Add (CreateResultModification (selectClause));
-      CreateWhereClauseForResultModification (selectClause, clauseGenerationContext);
-      AdjustSelectorForResultModification (selectClause);
-    }
-
-    /// <summary>
-    /// Gets and injects the <see cref="WhereClause"/> when implementing the <see cref="MethodCallExpressionNodeBase.CreateClause"/> method for a result modification node with an 
-    /// optional predicate if that predicate is not <see langword="null"/>.
-    /// </summary>
-    /// <remarks>
-    /// Result modification nodes such as <see cref="CountExpressionNode"/> or <see cref="DistinctExpressionNode"/>
-    /// do not identify real clauses, they represent result modifications in the preceding <see cref="SelectClause"/>.
-    /// Some of them contain optional predicates, which need to be transformed into <see cref="WhereClause"/> in the <see cref="MethodCallExpressionNodeBase.CreateClause"/> method.
-    /// That <see cref="WhereClause"/> will be inserted before the <paramref name="selectClause"/> modified by the result modification node.
-    /// Creation and insertion of this <see cref="WhereClause"/> is implemented by this method.
-    /// </remarks>
-    private void CreateWhereClauseForResultModification (SelectClause selectClause, ClauseGenerationContext clauseGenerationContext)
-    {
-      ArgumentUtility.CheckNotNull ("selectClause", selectClause);
 
       if (OptionalPredicate != null)
       {
         var whereClause = new WhereClause (selectClause.PreviousClause, GetResolvedOptionalPredicate (clauseGenerationContext));
         selectClause.PreviousClause = whereClause;
+        queryModel.BodyClauses.Add (whereClause);
       }
-    }
-
-    /// <summary>
-    /// Adjusts the <see cref="SelectClause.Selector"/> of the <paramref name="selectClause"/> modified by a result modification node for a nodes with an 
-    /// optional selector if that selector is not <see langword="null"/>.
-    /// </summary>
-    /// <remarks>
-    /// Result modification nodes such as <see cref="MinExpressionNode"/> or <see cref="SumExpressionNode"/>
-    /// do not identify real clauses, they represent result modifications in the preceding <see cref="SelectClause"/>.
-    /// Some of them contain optional selectors, which need to be combined with the <see cref="SelectClause.Selector"/> of the 
-    /// <paramref name="selectClause"/> modified by the node.
-    /// This process of adjusting the selector is implemented by this method.
-    /// </remarks>
-    private void AdjustSelectorForResultModification (SelectClause selectClause)
-    {
-      ArgumentUtility.CheckNotNull ("selectClause", selectClause);
 
       if (OptionalSelector != null)
       {

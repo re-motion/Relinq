@@ -14,13 +14,11 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.Structure;
@@ -67,44 +65,36 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
 
-    protected void TestApplyToSelectClause (ResultModificationExpressionNodeBase node, Type expectedResultModificationType)
+    protected void TestApply (ResultModificationExpressionNodeBase node, Type expectedResultModificationType)
     {
-      var selectClause = ExpressionHelper.CreateSelectClause();
+      var queryModel = ExpressionHelper.CreateQueryModel ();
 
-      node.ApplyToSelectClause (selectClause, ClauseGenerationContext);
+      node.Apply (queryModel, ClauseGenerationContext);
 
+      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
       Assert.That (selectClause.ResultModifications.Count, Is.EqualTo (1));
       Assert.That (selectClause.ResultModifications[0], Is.InstanceOfType (expectedResultModificationType));
       Assert.That (selectClause.ResultModifications[0].SelectClause, Is.SameAs (selectClause));
     }
 
-    protected void TestApplyToSelectClause_WithOptionalPredicate (ResultModificationExpressionNodeBase node)
+    protected void TestApply_WithOptionalPredicate (ResultModificationExpressionNodeBase node)
     {
-      var selectClause = ExpressionHelper.CreateSelectClause ();
-      var previousPreviousClause = selectClause.PreviousClause;
+      var queryModel = ExpressionHelper.CreateQueryModel ();
 
-      // chain: previousPreviousClause <- previousClause
+      node.Apply (queryModel, ClauseGenerationContext);
 
-      node.ApplyToSelectClause (selectClause, ClauseGenerationContext);
-
-      // chain: previousPreviousClause <- whereClause <- previousClause
-
-      Assert.That (selectClause.PreviousClause, Is.Not.SameAs (previousPreviousClause));
-      var newWhereClause = (WhereClause) selectClause.PreviousClause;
-      Assert.That (newWhereClause.PreviousClause, Is.SameAs (previousPreviousClause));
+      var newWhereClause = (WhereClause) queryModel.BodyClauses[0];
       Assert.That (newWhereClause.Predicate, Is.SameAs (node.GetResolvedOptionalPredicate (ClauseGenerationContext)));
     }
 
-    protected void TestApplyToSelectClause_WithOptionalSelector (ResultModificationExpressionNodeBase node)
+    protected void TestApply_WithOptionalSelector (ResultModificationExpressionNodeBase node)
     {
-      var selectorOfPreviousClause = (MemberExpression) ExpressionHelper.MakeExpression<Student, int> (s => s.ID);
-      var expectedNewSelector = (MethodCallExpression) ExpressionHelper.MakeExpression<Student, string> (s => s.ID.ToString());
+      var expectedNewSelector = (MethodCallExpression) ExpressionHelper.MakeExpression (() => 0.ToString());
+      var queryModel = ExpressionHelper.CreateQueryModel();
 
-      var previousPreviousClause = ExpressionHelper.CreateClause ();
-      var selectClause = new SelectClause (previousPreviousClause, selectorOfPreviousClause);
-
-      node.ApplyToSelectClause(selectClause, ClauseGenerationContext);
-
+      node.Apply (queryModel, ClauseGenerationContext);
+      
+      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
       ExpressionTreeComparer.CheckAreEqualTrees (expectedNewSelector, selectClause.Selector);
     }
 

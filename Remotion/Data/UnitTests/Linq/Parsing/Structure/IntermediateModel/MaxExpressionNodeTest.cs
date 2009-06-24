@@ -14,7 +14,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
@@ -96,15 +95,15 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void ApplyToSelectClause_WithoutSelector ()
+    public void Apply_WithoutSelector ()
     {
-      TestApplyToSelectClause (_node, typeof (MaxResultModification));
+      TestApply (_node, typeof (MaxResultModification));
     }
 
     [Test]
-    public void ApplyToSelectClause_WithSelector_AdjustsSelectClause ()
+    public void Apply_WithSelector_AdjustsSelectClause ()
     {
-      TestApplyToSelectClause_WithOptionalSelector (_nodeWithSelector);
+      TestApply_WithOptionalSelector (_nodeWithSelector);
     }
 
     [Test]

@@ -17,6 +17,7 @@ using System;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultModifications;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
@@ -81,11 +82,13 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void ApplyToSelectClause ()
+    public void Apply ()
     {
-      var selectClause = ExpressionHelper.CreateSelectClause ();
+      var queryModel = ExpressionHelper.CreateQueryModel ();
 
-      _node.ApplyToSelectClause (selectClause, ClauseGenerationContext);
+      _node.Apply (queryModel, ClauseGenerationContext);
+
+      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
       Assert.That (selectClause.ResultModifications[0], Is.InstanceOfType (typeof (DistinctResultModification)));
     }
 
