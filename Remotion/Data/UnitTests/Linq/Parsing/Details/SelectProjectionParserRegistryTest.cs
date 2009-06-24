@@ -45,7 +45,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details
       _selectProjectionParserRegistry = new SelectProjectionParserRegistry (_databaseInfo, _parseMode);
       
       _parseContext = new ParseContext (
-          ExpressionHelper.CreateQueryModel(), ExpressionHelper.CreateExpression(), new List<FieldDescriptor>(), new JoinedTableContext());
+          ExpressionHelper.CreateQueryModel(), new List<FieldDescriptor>(), new JoinedTableContext());
     }
 
     [Test]

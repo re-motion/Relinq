@@ -50,7 +50,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details
       var orderBy = (OrderByClause) parsedQuery.BodyClauses.First ();
       var ordering = orderBy.Orderings.First ();
 
-      var parseContext = new ParseContext (parsedQuery, parsedQuery.GetExpressionTree (), new List<FieldDescriptor> (), _joinedTableContext);
+      var parseContext = new ParseContext (parsedQuery, new List<FieldDescriptor> (), _joinedTableContext);
       var result = _parser.Parse (ordering.Expression, parseContext, ordering.OrderingDirection);
 
       var expectedFieldDescriptor = ExpressionHelper.CreateFieldDescriptor (parsedQuery.MainFromClause, typeof (Student).GetProperty ("First"));
@@ -65,7 +65,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details
       var orderBy = (OrderByClause) parsedQuery.BodyClauses.First ();
       var ordering = orderBy.Orderings.First ();
 
-      var parseContext = new ParseContext (parsedQuery, parsedQuery.GetExpressionTree (), new List<FieldDescriptor> (), _joinedTableContext);
+      var parseContext = new ParseContext (parsedQuery, new List<FieldDescriptor> (), _joinedTableContext);
       var result = _parser.Parse (ordering.Expression, parseContext, ordering.OrderingDirection);
 
       var expectedFieldDescriptor = ExpressionHelper.CreateFieldDescriptor (parsedQuery.MainFromClause, typeof (Student).GetProperty ("First"));
@@ -80,7 +80,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details
       var orderBy = (OrderByClause) parsedQuery.BodyClauses.Last ();
       var ordering = orderBy.Orderings.Last ();
 
-      var parseContext = new ParseContext (parsedQuery, parsedQuery.GetExpressionTree (), new List<FieldDescriptor> (), _joinedTableContext);
+      var parseContext = new ParseContext (parsedQuery, new List<FieldDescriptor> (), _joinedTableContext);
       var result = _parser.Parse (ordering.Expression, parseContext, ordering.OrderingDirection);
 
       FieldDescriptor expectedFieldDescriptor = ExpressionHelper.CreateFieldDescriptor (parsedQuery.MainFromClause, typeof (Student).GetProperty ("Last"));
@@ -96,7 +96,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details
       var orderBy = (OrderByClause) parsedQuery.BodyClauses.Skip (2).First ();
       var ordering = orderBy.Orderings.First ();
 
-      var parseContext = new ParseContext (parsedQuery, parsedQuery.GetExpressionTree (), new List<FieldDescriptor> (), _joinedTableContext);
+      var parseContext = new ParseContext (parsedQuery, new List<FieldDescriptor> (), _joinedTableContext);
       var result = _parser.Parse (ordering.Expression, parseContext, ordering.OrderingDirection);
 
       FieldDescriptor expectedFieldDescriptor = ExpressionHelper.CreateFieldDescriptor (parsedQuery.MainFromClause, typeof (Student).GetProperty ("First"));
@@ -112,7 +112,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details
       var orderBy = (OrderByClause) parsedQuery.BodyClauses.Skip (2).First ();
       var ordering = orderBy.Orderings.Last ();
 
-      var parseContext = new ParseContext (parsedQuery, parsedQuery.GetExpressionTree (), new List<FieldDescriptor> (), _joinedTableContext);
+      var parseContext = new ParseContext (parsedQuery, new List<FieldDescriptor> (), _joinedTableContext);
       var result = _parser.Parse (ordering.Expression, parseContext, ordering.OrderingDirection);
 
       FieldDescriptor expectedFieldDescriptor = ExpressionHelper.CreateFieldDescriptor ((FromClauseBase) parsedQuery.BodyClauses[0], typeof (Student).GetProperty ("Last"));
@@ -129,7 +129,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details
       var orderBy = (OrderByClause) parsedQuery.BodyClauses.First ();
       var ordering = orderBy.Orderings.First ();
 
-      var parseContext = new ParseContext (parsedQuery, parsedQuery.GetExpressionTree (), new List<FieldDescriptor> (), _joinedTableContext);
+      var parseContext = new ParseContext (parsedQuery, new List<FieldDescriptor> (), _joinedTableContext);
       _parser.Parse (ordering.Expression, parseContext, ordering.OrderingDirection);
     }
 
@@ -141,7 +141,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details
       var orderBy = (OrderByClause) parsedQuery.BodyClauses.First ();
       var ordering = orderBy.Orderings.First ();
 
-      var parseContext = new ParseContext (parsedQuery, parsedQuery.GetExpressionTree(), new List<FieldDescriptor>(), _joinedTableContext);
+      var parseContext = new ParseContext (parsedQuery, new List<FieldDescriptor>(), _joinedTableContext);
       var result = _parser.Parse (ordering.Expression, parseContext, ordering.OrderingDirection);
 
       FromClauseBase fromClause = parsedQuery.MainFromClause;
@@ -177,7 +177,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details
       var orderBy = (OrderByClause) parsedQuery.BodyClauses.First ();
       var ordering = orderBy.Orderings.First ();
 
-      var parseContext = new ParseContext (parsedQuery, parsedQuery.GetExpressionTree (), new List<FieldDescriptor> (), _joinedTableContext);
+      var parseContext = new ParseContext (parsedQuery, new List<FieldDescriptor> (), _joinedTableContext);
       _parser.Parse (ordering.Expression, parseContext, ordering.OrderingDirection);
     }
   }
