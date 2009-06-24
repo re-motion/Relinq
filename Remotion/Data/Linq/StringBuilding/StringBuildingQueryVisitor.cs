@@ -73,13 +73,12 @@ namespace Remotion.Data.Linq.StringBuilding
     {
       ArgumentUtility.CheckNotNull ("joinClause", joinClause);
       _sb.AppendFormat (
-          "join {0} {1} in {2} on {3} equals {4} into {5} ",
+          "join {0} {1} in {2} on {3} equals {4} ",
           joinClause.ItemName, 
           joinClause.ItemType, 
           FormatExpression (joinClause.InExpression),
           FormatExpression (joinClause.OnExpression), 
-          FormatExpression (joinClause.EqualityExpression), 
-          FormatExpression (joinClause.IntoIdentifier));
+          FormatExpression (joinClause.EqualityExpression));
     }
 
     public void VisitWhereClause (WhereClause whereClause)

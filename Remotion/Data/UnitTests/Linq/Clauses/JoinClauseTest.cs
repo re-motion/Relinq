@@ -38,7 +38,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
-    public void Intialize_WithIDAndInExprAndOnExprAndEqExpr()
+    public void Intialize()
     {
       Expression inExpression = ExpressionHelper.CreateExpression ();
       Expression onExpression = ExpressionHelper.CreateExpression ();
@@ -55,31 +55,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.AreSame (inExpression, joinClause.InExpression);
       Assert.AreSame (onExpression, joinClause.OnExpression);
       Assert.AreSame (equalityExpression, joinClause.EqualityExpression);
-      
-      Assert.IsNull (joinClause.IntoIdentifier);
-    }
-
-    [Test]
-    public void Intialize_WithIDAndInExprAndOnExprAndEqExprAndIntoID ()
-    {
-      Expression inExpression = ExpressionHelper.CreateExpression ();
-      Expression onExpression = ExpressionHelper.CreateExpression ();
-      Expression equalityExpression = ExpressionHelper.CreateExpression ();
-      ParameterExpression intoIdentifier = ExpressionHelper.CreateParameterExpression ();
-
-      var fromClause = ExpressionHelper.CreateMainFromClause ();
-      var previousClause = ExpressionHelper.CreateClause ();
-      var joinClause = new JoinClause (previousClause, fromClause, "x", typeof (Student), inExpression, onExpression, equalityExpression, intoIdentifier);
-
-      Assert.AreSame (fromClause, joinClause.FromClause);
-      Assert.AreSame (previousClause, joinClause.PreviousClause);
-      Assert.AreSame ("x", joinClause.ItemName);
-      Assert.AreSame (typeof(Student), joinClause.ItemType);
-      Assert.AreSame (inExpression, joinClause.InExpression);
-      Assert.AreSame (onExpression, joinClause.OnExpression);
-      Assert.AreSame (equalityExpression, joinClause.EqualityExpression);
-      Assert.AreSame (equalityExpression, joinClause.EqualityExpression);
-      Assert.AreSame (intoIdentifier, joinClause.IntoIdentifier);
     }
 
     [Test]
@@ -112,7 +87,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clone.ItemName, Is.SameAs (_joinClause.ItemName));
       Assert.That (clone.ItemType, Is.SameAs (_joinClause.ItemType));
       Assert.That (clone.InExpression, Is.SameAs (_joinClause.InExpression));
-      Assert.That (clone.IntoIdentifier, Is.SameAs (_joinClause.IntoIdentifier));
       Assert.That (clone.OnExpression, Is.SameAs (_joinClause.OnExpression));
       Assert.That (clone.FromClause, Is.SameAs (newFromClause));
       Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
