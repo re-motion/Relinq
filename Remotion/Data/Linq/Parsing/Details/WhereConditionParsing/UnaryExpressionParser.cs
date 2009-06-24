@@ -38,8 +38,7 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
         case ExpressionType.Convert: // Convert is simply ignored ATM, change to more sophisticated logic when needed
           return (_parserRegistry.GetParser (unaryExpression.Operand).Parse (unaryExpression.Operand, parseContext));
         default:
-          throw ParserUtility.CreateParserException ("not or convert expression", unaryExpression.NodeType, "unary expression in where condition",
-              parseContext.ExpressionTreeRoot);
+          throw ParserUtility.CreateParserException ("not or convert expression", unaryExpression.NodeType, "unary expression in where condition");
       }
     }
 

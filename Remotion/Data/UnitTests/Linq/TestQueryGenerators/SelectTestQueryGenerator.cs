@@ -17,8 +17,6 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Collections;
-using Remotion.Data.Linq.Parsing;
-using Remotion.Data.UnitTests.Linq.Parsing.FieldResolving;
 
 namespace Remotion.Data.UnitTests.Linq.TestQueryGenerators
 {
@@ -100,7 +98,7 @@ namespace Remotion.Data.UnitTests.Linq.TestQueryGenerators
 
     public static IQueryable<string> CreateUnaryBinaryLambdaInvocationConvertNewArrayExpressionQuery (IQueryable<Student> source1)
     {
-      return from s1 in source1 select ((Func<string, string>) ((string s) => s1.First)) (s1.Last) + new string[] { s1.ToString () }[s1.ID];
+      return from s1 in source1 select ((Func<string, string>) (s => s1.First)) (s1.Last) + new[] { s1.ToString () }[s1.ID];
     }
 
     public static IQueryable<IQueryable<Student>> CreateSubQueryInSelect (IQueryable<Student> source)

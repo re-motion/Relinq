@@ -14,14 +14,13 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Linq.Expressions;
 
 namespace Remotion.Data.Linq.Parsing
 {
   public class ParserException : Exception
   {
     public ParserException (string message)
-        : this (message, null, null, null)
+        : this (message, null, null)
     {
     }
 
@@ -30,14 +29,12 @@ namespace Remotion.Data.Linq.Parsing
     {
     }
 
-    public ParserException (string message, object parsedExpression, Expression expressionTree, Exception inner)
+    public ParserException (string message, object parsedExpression, Exception inner)
         : base (message, inner)
     {
       ParsedExpression = parsedExpression;
-      ExpressionTree = expressionTree;
     }
 
     public object ParsedExpression { get; private set; }
-    public Expression ExpressionTree { get; private set; }
   }
 }

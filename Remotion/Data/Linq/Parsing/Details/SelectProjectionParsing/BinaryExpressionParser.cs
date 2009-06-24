@@ -54,8 +54,7 @@ namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing
       if (!NodeTypeMap.TryGetValue(binaryExpression.NodeType, out evaluationKind))
       {
         throw ParserUtility.CreateParserException(GetSupportedNodeTypeString(), binaryExpression.NodeType,
-                                                  "binary expression in select projection",
-                                                  parseContext.ExpressionTreeRoot);
+                                                  "binary expression in select projection");
       }
       return new BinaryEvaluation(leftSide, rightSide, evaluationKind);
     }

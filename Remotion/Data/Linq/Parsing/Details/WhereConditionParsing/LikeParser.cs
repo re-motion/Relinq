@@ -13,7 +13,6 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Utilities;
@@ -34,24 +33,24 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
     {
       if (methodCallExpression.Method.Name == "StartsWith")
       {
-        ParserUtility.CheckNumberOfArguments (methodCallExpression, "StartsWith", 1, parseContext.ExpressionTreeRoot);
-        ParserUtility.CheckParameterType<ConstantExpression> (methodCallExpression, "StartsWith", 0, parseContext.ExpressionTreeRoot);
+        ParserUtility.CheckNumberOfArguments (methodCallExpression, "StartsWith", 1);
+        ParserUtility.CheckParameterType<ConstantExpression> (methodCallExpression, "StartsWith", 0);
         return CreateLike (methodCallExpression, ((ConstantExpression) methodCallExpression.Arguments[0]).Value + "%", parseContext);
       }
       else if (methodCallExpression.Method.Name == "EndsWith")
       {
-        ParserUtility.CheckNumberOfArguments (methodCallExpression, "EndsWith", 1, parseContext.ExpressionTreeRoot);
-        ParserUtility.CheckParameterType<ConstantExpression> (methodCallExpression, "EndsWith", 0, parseContext.ExpressionTreeRoot);
+        ParserUtility.CheckNumberOfArguments (methodCallExpression, "EndsWith", 1);
+        ParserUtility.CheckParameterType<ConstantExpression> (methodCallExpression, "EndsWith", 0);
         return CreateLike (methodCallExpression, "%" + ((ConstantExpression) methodCallExpression.Arguments[0]).Value, parseContext);
       }
       else if (methodCallExpression.Method.Name == "Contains" && !methodCallExpression.Method.IsGenericMethod)
       {
-        ParserUtility.CheckNumberOfArguments (methodCallExpression, "Contains", 1, parseContext.ExpressionTreeRoot);
-        ParserUtility.CheckParameterType<ConstantExpression> (methodCallExpression, "Contains", 0, parseContext.ExpressionTreeRoot);
+        ParserUtility.CheckNumberOfArguments (methodCallExpression, "Contains", 1);
+        ParserUtility.CheckParameterType<ConstantExpression> (methodCallExpression, "Contains", 0);
         return CreateLike (methodCallExpression, "%" + ((ConstantExpression) methodCallExpression.Arguments[0]).Value + "%", parseContext);
       }
-      throw ParserUtility.CreateParserException ("StartsWith, EndsWith, Contains with no expression", methodCallExpression.Method.Name,
-          "method call expression in where condition", parseContext.ExpressionTreeRoot);
+      throw ParserUtility.CreateParserException (
+          "StartsWith, EndsWith, Contains with no expression", methodCallExpression.Method.Name, "method call expression in where condition");
     }
 
     ICriterion IWhereConditionParser.Parse (Expression expression, ParseContext parseContext)

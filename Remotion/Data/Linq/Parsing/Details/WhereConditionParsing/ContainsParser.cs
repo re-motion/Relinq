@@ -13,9 +13,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Utilities;
 
@@ -38,7 +36,7 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
 
       if (CanParse (methodCallExpression))
       {
-        ParserUtility.CheckNumberOfArguments (methodCallExpression, "Contains", 2, parseContext.ExpressionTreeRoot);
+        ParserUtility.CheckNumberOfArguments (methodCallExpression, "Contains", 2);
         return CreateContains (methodCallExpression.Arguments[0], methodCallExpression.Arguments[1], parseContext);
       }
       else
@@ -46,8 +44,7 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
         throw ParserUtility.CreateParserException (
             "Contains with expression",
             methodCallExpression.Method.Name,
-            "method call expression in where condition",
-            parseContext.ExpressionTreeRoot);
+            "method call expression in where condition");
       }
     }
 

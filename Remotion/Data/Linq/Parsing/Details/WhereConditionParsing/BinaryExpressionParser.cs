@@ -65,8 +65,8 @@ namespace Remotion.Data.Linq.Parsing.Details.WhereConditionParsing
         
 
         default:
-          throw ParserUtility.CreateParserException ("and, or, or comparison expression", binaryExpression.NodeType, 
-              "binary expression in where condition", parseContext.ExpressionTreeRoot);
+          throw ParserUtility.CreateParserException (
+              "and, or, or comparison expression", binaryExpression.NodeType, "binary expression in where condition");
       }
     }
 

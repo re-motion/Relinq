@@ -39,7 +39,7 @@ namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing
       ArgumentUtility.CheckNotNull ("parseContext", parseContext);
 
       throw new ParserException (
-          "This version of re-linq does not support subqueries in the select projection of a query.", expression, expression, null);
+          "This version of re-linq does not support subqueries in the select projection of a query.", expression, null);
     }
   }
 }
