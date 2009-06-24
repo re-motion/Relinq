@@ -280,34 +280,34 @@ namespace Remotion.Data.UnitTests.Linq
     }
 
     [Test]
-    public void GetUniqueIentifier ()
+    public void GetNewName ()
     {
-      var identifier = _queryModel.GetUniqueIdentifier ("test");
+      var identifier = _queryModel.GetNewName ("test");
       Assert.That (identifier, Is.EqualTo ("test0"));
     }
 
     [Test]
-    public void GetUniqueIentifier_MoreThanOnce ()
+    public void GetNewName_MoreThanOnce ()
     {
-      var identifier1 = _queryModel.GetUniqueIdentifier ("test");
-      var identifier2 = _queryModel.GetUniqueIdentifier ("test");
-      var identifier3 = _queryModel.GetUniqueIdentifier ("test");
+      var identifier1 = _queryModel.GetNewName ("test");
+      var identifier2 = _queryModel.GetNewName ("test");
+      var identifier3 = _queryModel.GetNewName ("test");
       Assert.That (identifier1, Is.Not.EqualTo (identifier2));
       Assert.That (identifier2, Is.Not.EqualTo (identifier3));
       Assert.That (identifier1, Is.Not.EqualTo (identifier3));
     }
 
     [Test]
-    public void GetUniqueIentifier_AlreadyExists_MainFromClause ()
+    public void GetNewName_AlreadyExists_MainFromClause ()
     {
       var mainFromClause = new MainFromClause (Expression.Parameter (typeof (Student), "test0"), ExpressionHelper.CreateQuerySource ().Expression);
       var queryModel = ExpressionHelper.CreateQueryModel (mainFromClause);
-      var identifier = queryModel.GetUniqueIdentifier ("test");
+      var identifier = queryModel.GetNewName ("test");
       Assert.That (identifier, Is.EqualTo ("test1"));
     }
 
     [Test]
-    public void GetUniqueIentifier_AlreadyExists_BodyClauses ()
+    public void GetNewName_AlreadyExists_BodyClauses ()
     {
       var additionalFromClause = new AdditionalFromClause (
           _queryModel.MainFromClause, 
@@ -315,7 +315,7 @@ namespace Remotion.Data.UnitTests.Linq
           ExpressionHelper.CreateExpression());
       _queryModel.AddBodyClause (additionalFromClause);
 
-      var identifier = _queryModel.GetUniqueIdentifier ("test");
+      var identifier = _queryModel.GetNewName ("test");
       Assert.That (identifier, Is.EqualTo ("test1"));
     }
 

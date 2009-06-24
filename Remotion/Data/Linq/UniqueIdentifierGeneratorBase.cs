@@ -21,7 +21,7 @@ namespace Remotion.Data.Linq
   /// <summary>
   /// Acts as a base class for classes generating unique identifiers by appending numbers to a given prefix. Concrete subclasses override 
   /// <see cref="IsKnownIdentifier"/> to specify whether an identifier is unique or not. This is used whenever an identifier for a clause is 
-  /// generated which should be unique for the whole query, e.g. by <see cref="QueryModel.GetUniqueIdentifier"/>.
+  /// generated which should be unique for the whole query, e.g. by <see cref="QueryModel.GetNewName"/>.
   /// </summary>
   public abstract class UniqueIdentifierGeneratorBase
   {

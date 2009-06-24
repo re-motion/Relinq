@@ -180,10 +180,12 @@ namespace Remotion.Data.Linq
     }
 
     /// <summary>
-    /// Returns a "unique" identifier with the given prefix. The identifier is different from that of any <see cref="FromClauseBase"/> present
-    /// in the <see cref="QueryModel"/>.
+    /// Returns a new name with the given prefix. The name is different from that of any <see cref="FromClauseBase"/> added
+    /// in the <see cref="QueryModel"/>. Note that clause names that are changed after the clause is added as well as names of other clauses
+    /// than from clauses are not considered when determining "unique" names. Use names only for readability and debugging, not
+    /// for programmatically identifying clauses.
     /// </summary>
-    public string GetUniqueIdentifier (string prefix)
+    public string GetNewName (string prefix)
     {
       ArgumentUtility.CheckNotNullOrEmpty ("prefix", prefix);
       return _uniqueIdentifierGenerator.GetUniqueIdentifier (prefix);

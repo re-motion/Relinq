@@ -49,7 +49,7 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
       {
         var table = (Table) _tables[i];
         if (table.Alias == null)
-          table.SetAlias (queryModel.GetUniqueIdentifier ("#j"));
+          table.SetAlias (queryModel.GetNewName ("#j"));
       }
     }
   }
