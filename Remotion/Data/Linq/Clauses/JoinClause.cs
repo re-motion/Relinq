@@ -13,6 +13,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+using System;
 using System.Diagnostics;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
@@ -24,22 +25,24 @@ namespace Remotion.Data.Linq.Clauses
   {
     private readonly IClause _previousClause;
     private readonly FromClauseBase _fromClause;
-    private ParameterExpression _identifier;
+    private Type _itemType;
+    private string _itemName;
     private ParameterExpression _intoIdentifier;
     private Expression _inExpression;
     private Expression _equalityExpression;
     private Expression _onExpression;
 
-    public JoinClause (IClause previousClause, FromClauseBase fromClause, ParameterExpression identifier, Expression inExpression, Expression onExpression, Expression equalityExpression)
-      : this (previousClause, fromClause, identifier, inExpression, onExpression, equalityExpression, null)
+    public JoinClause (IClause previousClause, FromClauseBase fromClause, string name, Type itemType, Expression inExpression, Expression onExpression, Expression equalityExpression)
+      : this (previousClause, fromClause, name, itemType, inExpression, onExpression, equalityExpression, null)
     {
     }
 
-    public JoinClause (IClause previousClause, FromClauseBase fromClause, ParameterExpression identifier, Expression inExpression, Expression onExpression, 
+    public JoinClause (IClause previousClause, FromClauseBase fromClause, string name, Type itemType, Expression inExpression, Expression onExpression, 
                        Expression equalityExpression,ParameterExpression intoIdentifier)
     {
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
-      ArgumentUtility.CheckNotNull ("identifier", identifier);
+      ArgumentUtility.CheckNotNull ("name", name);
+      ArgumentUtility.CheckNotNull ("itemType", itemType);
       ArgumentUtility.CheckNotNull ("inExpression", inExpression);
       ArgumentUtility.CheckNotNull ("onExpression", onExpression);
       ArgumentUtility.CheckNotNull ("equalityExpression", equalityExpression);
@@ -47,7 +50,8 @@ namespace Remotion.Data.Linq.Clauses
 
       _previousClause = previousClause;
       _fromClause = fromClause;
-      _identifier = identifier;
+      _itemName = name;
+      _itemType = itemType;
       _inExpression = inExpression;
       _onExpression = onExpression;
       _equalityExpression = equalityExpression;
@@ -65,10 +69,16 @@ namespace Remotion.Data.Linq.Clauses
       get { return _fromClause; }
     }
 
-    public ParameterExpression Identifier
+    public Type ItemType
     {
-      get { return _identifier; }
-      set { _identifier = ArgumentUtility.CheckNotNull ("value", value); }
+      get { return _itemType; }
+      set { _itemType = ArgumentUtility.CheckNotNull("value",value); }
+    }
+
+    public string ItemName
+    {
+      get { return _itemName; }
+      set { _itemName = ArgumentUtility.CheckNotNullOrEmpty("value",value); }
     }
 
     [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (InExpression),nq}")]
@@ -113,7 +123,7 @@ namespace Remotion.Data.Linq.Clauses
       var newInExpression = CloneExpressionTreeVisitor.ReplaceClauseReferences (InExpression, cloneContext);
       var newOnExpression = CloneExpressionTreeVisitor.ReplaceClauseReferences (OnExpression, cloneContext);
       var newEqualityExpression = CloneExpressionTreeVisitor.ReplaceClauseReferences (EqualityExpression, cloneContext);
-      var result = new JoinClause (newPreviousClause, newFromClause, Identifier, newInExpression, newOnExpression, newEqualityExpression, IntoIdentifier);
+      var result = new JoinClause (newPreviousClause, newFromClause, ItemName, ItemType, newInExpression, newOnExpression, newEqualityExpression, IntoIdentifier);
       cloneContext.ClonedClauseMapping.AddMapping (this, result);
       return result;
     }

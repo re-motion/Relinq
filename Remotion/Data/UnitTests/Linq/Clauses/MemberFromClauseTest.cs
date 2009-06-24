@@ -166,7 +166,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       var originalJoinClause = new JoinClause (
           _memberFromClause,
           _memberFromClause,
-          ExpressionHelper.CreateParameterExpression (),
+          "x",
+          typeof(Student),
           new QuerySourceReferenceExpression (oldFromClause),
           ExpressionHelper.CreateExpression (),
           ExpressionHelper.CreateExpression ());

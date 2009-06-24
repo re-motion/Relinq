@@ -14,7 +14,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
@@ -41,18 +40,18 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Intialize_WithIDAndInExprAndOnExprAndEqExpr()
     {
-      ParameterExpression identifier = ExpressionHelper.CreateParameterExpression ();
       Expression inExpression = ExpressionHelper.CreateExpression ();
       Expression onExpression = ExpressionHelper.CreateExpression ();
       Expression equalityExpression = ExpressionHelper.CreateExpression ();
 
       var previousClause = ExpressionHelper.CreateClause();
       var fromClause = ExpressionHelper.CreateMainFromClause ();
-      var joinClause = new JoinClause (previousClause, fromClause, identifier, inExpression, onExpression, equalityExpression);
+      var joinClause = new JoinClause (previousClause, fromClause, "x", typeof(Student), inExpression, onExpression, equalityExpression);
 
       Assert.AreSame (fromClause, joinClause.FromClause);
       Assert.AreSame (previousClause, joinClause.PreviousClause);
-      Assert.AreSame (identifier, joinClause.Identifier);
+      Assert.AreSame ("x", joinClause.ItemName);
+      Assert.AreSame (typeof(Student), joinClause.ItemType);
       Assert.AreSame (inExpression, joinClause.InExpression);
       Assert.AreSame (onExpression, joinClause.OnExpression);
       Assert.AreSame (equalityExpression, joinClause.EqualityExpression);
@@ -63,7 +62,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Intialize_WithIDAndInExprAndOnExprAndEqExprAndIntoID ()
     {
-      ParameterExpression identifier = ExpressionHelper.CreateParameterExpression ();
       Expression inExpression = ExpressionHelper.CreateExpression ();
       Expression onExpression = ExpressionHelper.CreateExpression ();
       Expression equalityExpression = ExpressionHelper.CreateExpression ();
@@ -71,11 +69,12 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
 
       var fromClause = ExpressionHelper.CreateMainFromClause ();
       var previousClause = ExpressionHelper.CreateClause ();
-      var joinClause = new JoinClause (previousClause, fromClause, identifier, inExpression, onExpression, equalityExpression, intoIdentifier);
+      var joinClause = new JoinClause (previousClause, fromClause, "x", typeof (Student), inExpression, onExpression, equalityExpression, intoIdentifier);
 
       Assert.AreSame (fromClause, joinClause.FromClause);
       Assert.AreSame (previousClause, joinClause.PreviousClause);
-      Assert.AreSame (identifier, joinClause.Identifier);
+      Assert.AreSame ("x", joinClause.ItemName);
+      Assert.AreSame (typeof(Student), joinClause.ItemType);
       Assert.AreSame (inExpression, joinClause.InExpression);
       Assert.AreSame (onExpression, joinClause.OnExpression);
       Assert.AreSame (equalityExpression, joinClause.EqualityExpression);
@@ -110,7 +109,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (_joinClause));
       Assert.That (clone.EqualityExpression, Is.SameAs (_joinClause.EqualityExpression));
-      Assert.That (clone.Identifier, Is.SameAs (_joinClause.Identifier));
+      Assert.That (clone.ItemName, Is.SameAs (_joinClause.ItemName));
+      Assert.That (clone.ItemType, Is.SameAs (_joinClause.ItemType));
       Assert.That (clone.InExpression, Is.SameAs (_joinClause.InExpression));
       Assert.That (clone.IntoIdentifier, Is.SameAs (_joinClause.IntoIdentifier));
       Assert.That (clone.OnExpression, Is.SameAs (_joinClause.OnExpression));
@@ -127,8 +127,9 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       var equalityExpression = new QuerySourceReferenceExpression (mainFromClause);
       var joinClause = new JoinClause (
           mainFromClause, 
-          mainFromClause, 
-          ExpressionHelper.CreateParameterExpression(), 
+          mainFromClause,
+          "x",
+          typeof (Student), 
           inExpression, 
           onExpression, 
           equalityExpression);

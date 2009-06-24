@@ -62,7 +62,8 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
           repository.StrictMock<JoinClause> (
               ExpressionHelper.CreateClause(),
               fromClause,
-              ExpressionHelper.CreateParameterExpression(),
+              "x",
+              typeof(Student),
               ExpressionHelper.CreateExpression(),
               ExpressionHelper.CreateExpression(),
               ExpressionHelper.CreateExpression());
@@ -70,7 +71,8 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
           repository.StrictMock<JoinClause> (
               ExpressionHelper.CreateClause(),
               fromClause,
-              ExpressionHelper.CreateParameterExpression(),
+              "x",
+              typeof(Student),
               ExpressionHelper.CreateExpression(),
               ExpressionHelper.CreateExpression(),
               ExpressionHelper.CreateExpression());
