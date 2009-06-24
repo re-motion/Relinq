@@ -54,7 +54,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void SelectWithMethodCall_ResultModifications ()
     {
       var resultModifierClause = new DistinctResultModification (_selectClause);
-      _selectClause.AddResultModification (resultModifierClause);
+      _selectClause.ResultModifications.Add (resultModifierClause);
 
       Assert.IsNotEmpty (_selectClause.ResultModifications);
       Assert.That (_selectClause.ResultModifications, Is.EqualTo (new[] { resultModifierClause }));
@@ -128,9 +128,9 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       _cloneContext.ClonedClauseMapping.AddMapping (_selectClause.PreviousClause, newPreviousClause);
 
       var resultModifierClause1 = ExpressionHelper.CreateResultModification (_selectClause);
-      _selectClause.AddResultModification (resultModifierClause1);
+      _selectClause.ResultModifications.Add (resultModifierClause1);
       var resultModifierClause2 = ExpressionHelper.CreateResultModification (_selectClause);
-      _selectClause.AddResultModification (resultModifierClause2);
+      _selectClause.ResultModifications.Add (resultModifierClause2);
 
       var clone = _selectClause.Clone (_cloneContext);
 
@@ -148,7 +148,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       _cloneContext.ClonedClauseMapping.AddMapping (_selectClause.PreviousClause, newPreviousClause);
 
       var resultModifierClauseMock = MockRepository.GenerateMock<ResultModificationBase> (_selectClause, CollectionExecutionStrategy.Instance);
-      _selectClause.AddResultModification (resultModifierClauseMock);
+      _selectClause.ResultModifications.Add (resultModifierClauseMock);
 
       resultModifierClauseMock
           .Expect (mock => mock.Clone (Arg.Is (_cloneContext)))
@@ -170,7 +170,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void GetExecutionStrategy_WithResultModifiers ()
     {
       var firstModifier = new FirstResultModification (_selectClause, true);
-      _selectClause.AddResultModification (firstModifier);
+      _selectClause.ResultModifications.Add (firstModifier);
 
       Assert.That (_selectClause.GetExecutionStrategy (), Is.SameAs (firstModifier.ExecutionStrategy));
     }
@@ -181,9 +181,9 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       var takeModifier = new TakeResultModification (_selectClause, 7);
       var distinctModifier = new DistinctResultModification (_selectClause);
       var countModifier = new CountResultModification (_selectClause);
-      _selectClause.AddResultModification (takeModifier);
-      _selectClause.AddResultModification (distinctModifier);
-      _selectClause.AddResultModification (countModifier);
+      _selectClause.ResultModifications.Add (takeModifier);
+      _selectClause.ResultModifications.Add (distinctModifier);
+      _selectClause.ResultModifications.Add (countModifier);
 
       Assert.That (_selectClause.GetExecutionStrategy (), Is.SameAs (countModifier.ExecutionStrategy));
     }

@@ -122,10 +122,10 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Clone_JoinClauses ()
     {
       var originalJoinClause1 = ExpressionHelper.CreateJoinClause (_additionalFromClause, _additionalFromClause);
-      _additionalFromClause.AddJoinClause (originalJoinClause1);
+      _additionalFromClause.JoinClauses.Add (originalJoinClause1);
 
       var originalJoinClause2 = ExpressionHelper.CreateJoinClause (originalJoinClause1, _additionalFromClause);
-      _additionalFromClause.AddJoinClause (originalJoinClause2);
+      _additionalFromClause.JoinClauses.Add (originalJoinClause2);
 
       var newPreviousClause = ExpressionHelper.CreateClause();
       _cloneContext.ClonedClauseMapping.AddMapping (_additionalFromClause.PreviousClause, newPreviousClause);
@@ -156,7 +156,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
           new QuerySourceReferenceExpression (oldFromClause),
           ExpressionHelper.CreateExpression (),
           ExpressionHelper.CreateExpression ());
-      _additionalFromClause.AddJoinClause (originalJoinClause);
+      _additionalFromClause.JoinClauses.Add (originalJoinClause);
 
       var newFromClause = ExpressionHelper.CreateMainFromClause ();
       _cloneContext.ClonedClauseMapping.AddMapping (oldFromClause, newFromClause);

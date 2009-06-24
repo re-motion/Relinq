@@ -83,15 +83,15 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var previousClause = ExpressionHelper.CreateOrderByClause ();
       var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
       var node = new ThenByDescendingExpressionNode (CreateParseInfo (), selector);
-      var oldCount = previousClause.OrderingList.Count;
+      var oldCount = previousClause.Orderings.Count;
 
       var clause = (OrderByClause) node.CreateClause (previousClause, ClauseGenerationContext);
 
       Assert.That (clause, Is.SameAs (previousClause));
-      Assert.That (clause.OrderingList.Count, Is.EqualTo (oldCount + 1));
-      Assert.That (clause.OrderingList.Last ().OrderingDirection, Is.EqualTo (OrderingDirection.Desc));
-      Assert.That (clause.OrderingList.Last ().Expression, Is.SameAs (node.GetResolvedKeySelector (ClauseGenerationContext)));
-      Assert.That (clause.OrderingList.Last ().OrderByClause, Is.SameAs (previousClause));
+      Assert.That (clause.Orderings.Count, Is.EqualTo (oldCount + 1));
+      Assert.That (clause.Orderings.Last ().OrderingDirection, Is.EqualTo (OrderingDirection.Desc));
+      Assert.That (clause.Orderings.Last ().Expression, Is.SameAs (node.GetResolvedKeySelector (ClauseGenerationContext)));
+      Assert.That (clause.Orderings.Last ().OrderByClause, Is.SameAs (previousClause));
     }
 
     [Test]

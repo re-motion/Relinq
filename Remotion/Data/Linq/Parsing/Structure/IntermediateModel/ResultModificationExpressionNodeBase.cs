@@ -94,7 +94,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     {
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);
 
-      selectClause.AddResultModification (CreateResultModification (selectClause));
+      selectClause.ResultModifications.Add (CreateResultModification (selectClause));
       CreateWhereClauseForResultModification (selectClause, clauseGenerationContext);
       AdjustSelectorForResultModification (selectClause);
     }

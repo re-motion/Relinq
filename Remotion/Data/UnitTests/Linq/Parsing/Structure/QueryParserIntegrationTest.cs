@@ -315,9 +315,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var navigator = new ExpressionTreeNavigator (expression);
 
       var orderByClause = (OrderByClause) queryModel.BodyClauses[0];
-      var ordering1 = orderByClause.OrderingList[0];
-      var ordering2 = orderByClause.OrderingList[1];
-      var ordering3 = orderByClause.OrderingList[2];
+      var ordering1 = orderByClause.Orderings[0];
+      var ordering2 = orderByClause.Orderings[1];
+      var ordering3 = orderByClause.Orderings[2];
 
       var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
       var mainFromClause = queryModel.MainFromClause;
@@ -328,7 +328,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 
       Assert.That (mainFromClause.PreviousClause, Is.Null);
       Assert.That (mainFromClause.Identifier.Name, Is.EqualTo ("s"));
-      Assert.That (orderByClause.OrderingList.Count, Is.EqualTo (3));
+      Assert.That (orderByClause.Orderings.Count, Is.EqualTo (3));
       Assert.That (orderByClause.PreviousClause, Is.SameAs (mainFromClause));
       Assert.That (selectClause.PreviousClause, Is.SameAs (orderByClause));
 
@@ -347,9 +347,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var mainFromClause = queryModel.MainFromClause;
       Assert.That (mainFromClause.PreviousClause, Is.Null);
       var orderByClause1 = (OrderByClause) queryModel.BodyClauses[0];
-      Assert.That (orderByClause1.OrderingList.Count, Is.EqualTo (3));
+      Assert.That (orderByClause1.Orderings.Count, Is.EqualTo (3));
       var orderByClause2 = (OrderByClause) queryModel.BodyClauses[1];
-      Assert.That (orderByClause2.OrderingList.Count, Is.EqualTo (1));
+      Assert.That (orderByClause2.Orderings.Count, Is.EqualTo (1));
 
       Assert.That (orderByClause1.PreviousClause, Is.SameAs (mainFromClause));
       Assert.That (orderByClause2.PreviousClause, Is.SameAs (orderByClause1));

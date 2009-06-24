@@ -48,7 +48,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details
       IQueryable<Student> query = OrderByTestQueryGenerator.CreateSimpleOrderByQuery (ExpressionHelper.CreateQuerySource ());
       QueryModel parsedQuery = ExpressionHelper.ParseQuery (query);
       var orderBy = (OrderByClause) parsedQuery.BodyClauses.First ();
-      var ordering = orderBy.OrderingList.First ();
+      var ordering = orderBy.Orderings.First ();
 
       var parseContext = new ParseContext (parsedQuery, parsedQuery.GetExpressionTree (), new List<FieldDescriptor> (), _joinedTableContext);
       var result = _parser.Parse (ordering.Expression, parseContext, ordering.OrderingDirection);
@@ -63,7 +63,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details
       IQueryable<Student> query = OrderByTestQueryGenerator.CreateTwoOrderByQuery (ExpressionHelper.CreateQuerySource ());
       QueryModel parsedQuery = ExpressionHelper.ParseQuery (query);
       var orderBy = (OrderByClause) parsedQuery.BodyClauses.First ();
-      var ordering = orderBy.OrderingList.First ();
+      var ordering = orderBy.Orderings.First ();
 
       var parseContext = new ParseContext (parsedQuery, parsedQuery.GetExpressionTree (), new List<FieldDescriptor> (), _joinedTableContext);
       var result = _parser.Parse (ordering.Expression, parseContext, ordering.OrderingDirection);
@@ -78,7 +78,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details
       IQueryable<Student> query = OrderByTestQueryGenerator.CreateTwoOrderByQuery (ExpressionHelper.CreateQuerySource ());
       QueryModel parsedQuery = ExpressionHelper.ParseQuery (query);
       var orderBy = (OrderByClause) parsedQuery.BodyClauses.Last ();
-      var ordering = orderBy.OrderingList.Last ();
+      var ordering = orderBy.Orderings.Last ();
 
       var parseContext = new ParseContext (parsedQuery, parsedQuery.GetExpressionTree (), new List<FieldDescriptor> (), _joinedTableContext);
       var result = _parser.Parse (ordering.Expression, parseContext, ordering.OrderingDirection);
@@ -94,7 +94,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details
           MixedTestQueryGenerator.CreateMultiFromWhereOrderByQuery (ExpressionHelper.CreateQuerySource (), ExpressionHelper.CreateQuerySource ());
       QueryModel parsedQuery = ExpressionHelper.ParseQuery (query);
       var orderBy = (OrderByClause) parsedQuery.BodyClauses.Skip (2).First ();
-      var ordering = orderBy.OrderingList.First ();
+      var ordering = orderBy.Orderings.First ();
 
       var parseContext = new ParseContext (parsedQuery, parsedQuery.GetExpressionTree (), new List<FieldDescriptor> (), _joinedTableContext);
       var result = _parser.Parse (ordering.Expression, parseContext, ordering.OrderingDirection);
@@ -110,7 +110,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details
           MixedTestQueryGenerator.CreateMultiFromWhereOrderByQuery (ExpressionHelper.CreateQuerySource (), ExpressionHelper.CreateQuerySource ());
       QueryModel parsedQuery = ExpressionHelper.ParseQuery (query);
       var orderBy = (OrderByClause) parsedQuery.BodyClauses.Skip (2).First ();
-      var ordering = orderBy.OrderingList.Last ();
+      var ordering = orderBy.Orderings.Last ();
 
       var parseContext = new ParseContext (parsedQuery, parsedQuery.GetExpressionTree (), new List<FieldDescriptor> (), _joinedTableContext);
       var result = _parser.Parse (ordering.Expression, parseContext, ordering.OrderingDirection);
@@ -127,7 +127,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details
       IQueryable<Student> query = OrderByTestQueryGenerator.CreateOrderByNonDBPropertyQuery (ExpressionHelper.CreateQuerySource ());
       QueryModel parsedQuery = ExpressionHelper.ParseQuery (query);
       var orderBy = (OrderByClause) parsedQuery.BodyClauses.First ();
-      var ordering = orderBy.OrderingList.First ();
+      var ordering = orderBy.Orderings.First ();
 
       var parseContext = new ParseContext (parsedQuery, parsedQuery.GetExpressionTree (), new List<FieldDescriptor> (), _joinedTableContext);
       _parser.Parse (ordering.Expression, parseContext, ordering.OrderingDirection);
@@ -139,7 +139,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details
       IQueryable<Student_Detail> query = JoinTestQueryGenerator.CreateSimpleImplicitOrderByJoin (ExpressionHelper.CreateQuerySource_Detail ());
       QueryModel parsedQuery = ExpressionHelper.ParseQuery (query);
       var orderBy = (OrderByClause) parsedQuery.BodyClauses.First ();
-      var ordering = orderBy.OrderingList.First ();
+      var ordering = orderBy.Orderings.First ();
 
       var parseContext = new ParseContext (parsedQuery, parsedQuery.GetExpressionTree(), new List<FieldDescriptor>(), _joinedTableContext);
       var result = _parser.Parse (ordering.Expression, parseContext, ordering.OrderingDirection);
@@ -175,7 +175,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details
       IQueryable<Student_Detail> query = OrderByTestQueryGenerator.CreateRelationMemberOrderByQuery (ExpressionHelper.CreateQuerySource_Detail ());
       QueryModel parsedQuery = ExpressionHelper.ParseQuery (query);
       var orderBy = (OrderByClause) parsedQuery.BodyClauses.First ();
-      var ordering = orderBy.OrderingList.First ();
+      var ordering = orderBy.Orderings.First ();
 
       var parseContext = new ParseContext (parsedQuery, parsedQuery.GetExpressionTree (), new List<FieldDescriptor> (), _joinedTableContext);
       _parser.Parse (ordering.Expression, parseContext, ordering.OrderingDirection);

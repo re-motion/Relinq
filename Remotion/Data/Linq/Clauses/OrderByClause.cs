@@ -15,7 +15,6 @@
 // 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses
@@ -26,8 +25,6 @@ namespace Remotion.Data.Linq.Clauses
   /// </summary>
   public class OrderByClause : IBodyClause
   {
-    private readonly List<Ordering> _orderings = new List<Ordering>();
-    
     /// <summary>
     /// Initialize a new instance of <see cref="OrderByClause"/>
     /// </summary>
@@ -36,21 +33,13 @@ namespace Remotion.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
       PreviousClause = previousClause;
+      Orderings = new List<Ordering>();
     }
 
     /// <summary>
     /// A collection of <see cref="Ordering"/>
     /// </summary>
-    public ReadOnlyCollection<Ordering> OrderingList
-    {
-      get { return new ReadOnlyCollection<Ordering>(_orderings); }
-    }
-
-    public void AddOrdering(Ordering ordering)
-    {
-      ArgumentUtility.CheckNotNull ("ordering", ordering);
-      _orderings.Add (ordering);
-    }
+    public List<Ordering> Orderings { get; private set; }
 
     public IClause PreviousClause { get; private set; }
 
@@ -67,10 +56,10 @@ namespace Remotion.Data.Linq.Clauses
       var newPreviousClause = cloneContext.ClonedClauseMapping.GetClause<IClause> (PreviousClause);
       var result = new OrderByClause (newPreviousClause);
       cloneContext.ClonedClauseMapping.AddMapping (this, result);
-      foreach (var ordering in _orderings)
+      foreach (var ordering in Orderings)
       {
         var orderingClone = ordering.Clone (cloneContext);
-        result.AddOrdering (orderingClone);
+        result.Orderings.Add (orderingClone);
       }
 
       return result;

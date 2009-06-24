@@ -15,7 +15,6 @@
 // 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Utilities;
@@ -28,7 +27,6 @@ namespace Remotion.Data.Linq.Clauses
   public abstract class FromClauseBase : IResolveableClause
   {
     private ParameterExpression _identifier;
-    private readonly List<JoinClause> _joinClauses = new List<JoinClause>();
 
     /// <summary>
     /// Initialize a new instance of <see cref="FromClauseBase"/>
@@ -41,6 +39,7 @@ namespace Remotion.Data.Linq.Clauses
 
       _identifier = identifier;
       PreviousClause = previousClause;
+      JoinClauses = new List<JoinClause>();
     }
 
     public IClause PreviousClause { get; private set; }
@@ -51,20 +50,7 @@ namespace Remotion.Data.Linq.Clauses
       set { _identifier = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
-    public ReadOnlyCollection<JoinClause> JoinClauses
-    {
-      get { return _joinClauses.AsReadOnly(); }
-    }
-
-    /// <summary>
-    /// Method for adding a <see cref="JoinClause"/>
-    /// </summary>
-    /// <param name="joinClause"><see cref="JoinClause"/></param>
-    public void AddJoinClause (JoinClause joinClause)
-    {
-      ArgumentUtility.CheckNotNull ("joinClause", joinClause);
-      _joinClauses.Add (joinClause);
-    }
+    public List<JoinClause> JoinClauses {get;private set; }
 
     /// <summary>
     /// Method for getting source of a from clause.
@@ -88,7 +74,7 @@ namespace Remotion.Data.Linq.Clauses
       foreach (var joinClause in originalJoinClauses)
       {
         var joinClauseClone = joinClause.Clone (cloneContext);
-        AddJoinClause (joinClauseClone);
+        JoinClauses.Add (joinClauseClone);
       }
     }
   }

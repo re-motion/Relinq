@@ -42,7 +42,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void InitializeWithoutOrdering()
     {
-      Assert.AreEqual (0, _orderByClause.OrderingList.Count);
+      Assert.AreEqual (0, _orderByClause.Orderings.Count);
       Assert.IsNotNull (_orderByClause.PreviousClause);
       Assert.AreSame (_previousClause, _orderByClause.PreviousClause);
     }
@@ -53,11 +53,11 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Ordering ordering1 = ExpressionHelper.CreateOrdering ();
       Ordering ordering2 = ExpressionHelper.CreateOrdering ();
 
-      _orderByClause.AddOrdering (ordering1);
-      _orderByClause.AddOrdering (ordering2);
+      _orderByClause.Orderings.Add (ordering1);
+      _orderByClause.Orderings.Add (ordering2);
 
-      Assert.That (_orderByClause.OrderingList, Is.EqualTo (new object[] { ordering1, ordering2 }));
-      Assert.AreEqual (2, _orderByClause.OrderingList.Count);
+      Assert.That (_orderByClause.Orderings, Is.EqualTo (new object[] { ordering1, ordering2 }));
+      Assert.AreEqual (2, _orderByClause.Orderings.Count);
 
       Assert.IsNotNull (_orderByClause.PreviousClause);
     }
@@ -101,18 +101,18 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Clone_Orderings ()
     {
       var ordering = ExpressionHelper.CreateOrdering(_orderByClause);
-      _orderByClause.AddOrdering (ordering);
+      _orderByClause.Orderings.Add (ordering);
 
       var newPreviousClause = ExpressionHelper.CreateMainFromClause ();
       _cloneContext.ClonedClauseMapping.AddMapping (_orderByClause.PreviousClause, newPreviousClause);
       var clone = _orderByClause.Clone (_cloneContext);
 
-      Assert.That (clone.OrderingList.Count, Is.EqualTo (1));
+      Assert.That (clone.Orderings.Count, Is.EqualTo (1));
 
-      Assert.That (clone.OrderingList[0], Is.Not.SameAs (_orderByClause.OrderingList[0]));
-      Assert.That (clone.OrderingList[0].Expression, Is.SameAs (_orderByClause.OrderingList[0].Expression));
-      Assert.That (clone.OrderingList[0].OrderingDirection, Is.EqualTo (_orderByClause.OrderingList[0].OrderingDirection));
-      Assert.That (clone.OrderingList[0].OrderByClause, Is.SameAs (clone));
+      Assert.That (clone.Orderings[0], Is.Not.SameAs (_orderByClause.Orderings[0]));
+      Assert.That (clone.Orderings[0].Expression, Is.SameAs (_orderByClause.Orderings[0].Expression));
+      Assert.That (clone.Orderings[0].OrderingDirection, Is.EqualTo (_orderByClause.Orderings[0].OrderingDirection));
+      Assert.That (clone.Orderings[0].OrderByClause, Is.SameAs (clone));
     }
 
     [Test]
@@ -122,13 +122,13 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
 
       var oldReferencedClause = ExpressionHelper.CreateMainFromClause();
       var ordering = new Ordering (_orderByClause, new QuerySourceReferenceExpression (oldReferencedClause), OrderingDirection.Asc);
-      _orderByClause.AddOrdering (ordering);
+      _orderByClause.Orderings.Add (ordering);
 
       _cloneContext.ClonedClauseMapping.AddMapping (_orderByClause.PreviousClause, ExpressionHelper.CreateClause());
       _cloneContext.ClonedClauseMapping.AddMapping (oldReferencedClause, newReferencedClause);
 
       var clone = _orderByClause.Clone (_cloneContext);
-      var clonedOrdering = clone.OrderingList[0];
+      var clonedOrdering = clone.Orderings[0];
       
       Assert.That (((QuerySourceReferenceExpression) clonedOrdering.Expression).ReferencedClause, Is.SameAs (newReferencedClause));
     }

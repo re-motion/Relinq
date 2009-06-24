@@ -324,7 +324,7 @@ namespace Remotion.Data.UnitTests.Linq
     {
       var orderByClause = new OrderByClause (_queryModel.MainFromClause);
       var ordering = new Ordering (orderByClause, ExpressionHelper.CreateExpression (), OrderingDirection.Asc);
-      orderByClause.AddOrdering (ordering);
+      orderByClause.Orderings.Add (ordering);
 
       _queryModel.AddBodyClause (orderByClause);
 

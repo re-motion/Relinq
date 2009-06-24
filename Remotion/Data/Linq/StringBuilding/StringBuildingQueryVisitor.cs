@@ -93,7 +93,7 @@ namespace Remotion.Data.Linq.StringBuilding
     {
       ArgumentUtility.CheckNotNull ("orderByClause", orderByClause);
       _sb.Append ("orderby ");
-      foreach (Ordering oC in orderByClause.OrderingList)
+      foreach (Ordering oC in orderByClause.Orderings)
         oC.Accept (this);
     }
 

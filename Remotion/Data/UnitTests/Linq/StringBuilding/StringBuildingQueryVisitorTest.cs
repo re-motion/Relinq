@@ -75,8 +75,8 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
               ExpressionHelper.CreateExpression(),
               ExpressionHelper.CreateExpression());
 
-      fromClause.AddJoinClause (joinClause1);
-      fromClause.AddJoinClause (joinClause2);
+      fromClause.JoinClauses.Add (joinClause1);
+      fromClause.JoinClauses.Add (joinClause2);
 
       var sv = new StringBuildingQueryVisitor();
 
@@ -121,8 +121,8 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
     public void StringVisitorForSelectClause_WithResultModifications ()
     {
       SelectClause selectClause = ExpressionHelper.CreateSelectClause ();
-      selectClause.AddResultModification (new TakeResultModification (selectClause, 5));
-      selectClause.AddResultModification (new CountResultModification (selectClause));
+      selectClause.ResultModifications.Add (new TakeResultModification (selectClause, 5));
+      selectClause.ResultModifications.Add (new CountResultModification (selectClause));
       var sv = new StringBuildingQueryVisitor ();
 
       sv.VisitSelectClause (selectClause);
@@ -190,8 +190,8 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
       var ordering2 = repository.StrictMock<Ordering> (
           ExpressionHelper.CreateOrderByClause (), ExpressionHelper.CreateExpression (), OrderingDirection.Asc);
 
-      orderByClause.AddOrdering (ordering1);
-      orderByClause.AddOrdering (ordering2);
+      orderByClause.Orderings.Add (ordering1);
+      orderByClause.Orderings.Add (ordering2);
 
       var sv = new StringBuildingQueryVisitor();
 
@@ -222,8 +222,8 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
       var ordering2 =
           repository.StrictMock<Ordering> (ExpressionHelper.CreateOrderByClause (), ExpressionHelper.CreateExpression (), OrderingDirection.Desc);
 
-      orderByClause.AddOrdering (ordering1);
-      orderByClause.AddOrdering (ordering2);
+      orderByClause.Orderings.Add (ordering1);
+      orderByClause.Orderings.Add (ordering2);
 
       var sv = new StringBuildingQueryVisitor();
 
@@ -253,8 +253,8 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
       var ordering2 =
           repository.StrictMock<Ordering> (ExpressionHelper.CreateOrderByClause (), ExpressionHelper.CreateExpression (), OrderingDirection.Asc);
 
-      orderByClause.AddOrdering (ordering1);
-      orderByClause.AddOrdering (ordering2);
+      orderByClause.Orderings.Add (ordering1);
+      orderByClause.Orderings.Add (ordering2);
 
       var sv = new StringBuildingQueryVisitor();
 

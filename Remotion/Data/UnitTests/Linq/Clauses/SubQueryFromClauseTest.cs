@@ -138,10 +138,10 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Clone_JoinClauses ()
     {
       var originalJoinClause1 = ExpressionHelper.CreateJoinClause (_subQueryFromClause, _subQueryFromClause);
-      _subQueryFromClause.AddJoinClause (originalJoinClause1);
+      _subQueryFromClause.JoinClauses.Add (originalJoinClause1);
 
       var originalJoinClause2 = ExpressionHelper.CreateJoinClause (originalJoinClause1, _subQueryFromClause);
-      _subQueryFromClause.AddJoinClause (originalJoinClause2);
+      _subQueryFromClause.JoinClauses.Add (originalJoinClause2);
 
       var newPreviousClause = ExpressionHelper.CreateClause();
       _cloneContext.ClonedClauseMapping.AddMapping (_subQueryFromClause.PreviousClause, newPreviousClause);
@@ -173,7 +173,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
           new QuerySourceReferenceExpression (oldFromClause),
           ExpressionHelper.CreateExpression(),
           ExpressionHelper.CreateExpression());
-      _subQueryFromClause.AddJoinClause (originalJoinClause);
+      _subQueryFromClause.JoinClauses.Add (originalJoinClause);
 
       var newFromClause = ExpressionHelper.CreateMainFromClause();
       _cloneContext.ClonedClauseMapping.AddMapping (oldFromClause, newFromClause);

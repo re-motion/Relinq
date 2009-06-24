@@ -15,7 +15,6 @@
 // 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
@@ -30,8 +29,6 @@ namespace Remotion.Data.Linq.Clauses
   /// </summary>
   public class SelectClause : ISelectGroupClause
   {
-    private readonly List<ResultModificationBase> _resultModifications = new List<ResultModificationBase> ();
-
     private IClause _previousClause;
     private Expression _selector;
 
@@ -47,6 +44,7 @@ namespace Remotion.Data.Linq.Clauses
 
       PreviousClause = previousClause;
       _selector = selector;
+      ResultModifications = new List<ResultModificationBase> ();
     }
 
     /// <summary>
@@ -65,16 +63,7 @@ namespace Remotion.Data.Linq.Clauses
       set { _selector = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
-    public ReadOnlyCollection<ResultModificationBase> ResultModifications
-    {
-      get { return _resultModifications.AsReadOnly(); }
-    }
-
-    public void AddResultModification (ResultModificationBase resultModification)
-    {
-      ArgumentUtility.CheckNotNull ("resultModification", resultModification);
-      _resultModifications.Add (resultModification);
-    }
+    public List<ResultModificationBase> ResultModifications { get; private set; }
 
     public virtual void Accept (IQueryVisitor visitor)
     {
@@ -93,7 +82,7 @@ namespace Remotion.Data.Linq.Clauses
       foreach (var resultModification in ResultModifications)
       {
         var resultModificationClone = resultModification.Clone (cloneContext);
-        result.AddResultModification (resultModificationClone);
+        result.ResultModifications.Add (resultModificationClone);
       }
 
       return result;

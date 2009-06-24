@@ -87,10 +87,10 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var clause = (OrderByClause) node.CreateClause (previousClause, ClauseGenerationContext);
 
       Assert.That (clause.PreviousClause, Is.SameAs (previousClause));
-      Assert.That (clause.OrderingList.Count, Is.EqualTo (1));
-      Assert.That (clause.OrderingList[0].OrderingDirection, Is.EqualTo (OrderingDirection.Asc));
-      Assert.That (clause.OrderingList[0].Expression, Is.SameAs (node.GetResolvedKeySelector (ClauseGenerationContext)));
-      Assert.That (clause.OrderingList[0].OrderByClause, Is.SameAs(clause));
+      Assert.That (clause.Orderings.Count, Is.EqualTo (1));
+      Assert.That (clause.Orderings[0].OrderingDirection, Is.EqualTo (OrderingDirection.Asc));
+      Assert.That (clause.Orderings[0].Expression, Is.SameAs (node.GetResolvedKeySelector (ClauseGenerationContext)));
+      Assert.That (clause.Orderings[0].OrderByClause, Is.SameAs(clause));
     }
 
     [Test]
