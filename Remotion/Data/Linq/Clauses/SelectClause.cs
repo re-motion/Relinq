@@ -63,7 +63,7 @@ namespace Remotion.Data.Linq.Clauses
       set { _selector = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
-    public List<ResultModificationBase> ResultModifications { get; private set; }
+    public IList<ResultModificationBase> ResultModifications { get; private set; }
 
     public virtual void Accept (IQueryVisitor visitor)
     {

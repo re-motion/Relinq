@@ -79,25 +79,14 @@ namespace Remotion.Data.Linq
     /// <summary>
     /// Collection of different clauses of a <see cref="QueryModel"/>
     /// </summary>
-    public ReadOnlyCollection<IBodyClause> BodyClauses
+    public IList<IBodyClause> BodyClauses
     {
-      get { return _bodyClauses.AsReadOnly (); }
+      get { return _bodyClauses; }
     }
 
-    /// <summary>
-    /// Method to add <see cref="IBodyClause"/> to a <see cref="QueryModel"/>
-    /// </summary>
-    /// <param name="clause"><see cref="IBodyClause"/></param>
-    public void AddBodyClause (IBodyClause clause)
-    {
-      ArgumentUtility.CheckNotNull ("clause", clause);
-      
-      var clauseAsFromClause = clause as FromClauseBase;
-      if (clauseAsFromClause != null)
-        _uniqueIdentifierGenerator.AddKnownIdentifier (clauseAsFromClause.ItemName);
-
-      _bodyClauses.Add (clause);
-    }
+    // TODO:       var clauseAsFromClause = clause as FromClauseBase;
+    //     if (clauseAsFromClause != null)
+    //     _uniqueIdentifierGenerator.AddKnownIdentifier (clauseAsFromClause.ItemName);
 
     public void Accept (IQueryVisitor visitor)
     {

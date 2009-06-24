@@ -65,7 +65,7 @@ namespace Remotion.Data.Linq.Clauses
       set { _itemType = ArgumentUtility.CheckNotNull ("value",value); }
     }
 
-    public List<JoinClause> JoinClauses {get;private set; }
+    public IList<JoinClause> JoinClauses { get; private set; }
 
     /// <summary>
     /// Method for getting source of a from clause.

@@ -46,8 +46,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void InitializeWithExpression ()
     {
-      Assert.AreSame (_previousClause, _selectClause.PreviousClause);
-      Assert.AreEqual (_selector, _selectClause.Selector);
+      Assert.That (_selectClause.PreviousClause, Is.SameAs (_previousClause));
+      Assert.That (_selectClause.Selector, Is.EqualTo (_selector));
     }
 
     [Test]
@@ -56,14 +56,14 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       var resultModifierClause = new DistinctResultModification (_selectClause);
       _selectClause.ResultModifications.Add (resultModifierClause);
 
-      Assert.IsNotEmpty (_selectClause.ResultModifications);
+      Assert.That (_selectClause.ResultModifications, Is.Not.Empty);
       Assert.That (_selectClause.ResultModifications, Is.EqualTo (new[] { resultModifierClause }));
     }
 
     [Test]
     public void SelectClause_ImplementISelectGroupClause()
     {
-      Assert.IsInstanceOfType (typeof(ISelectGroupClause),_selectClause);
+      Assert.That (_selectClause, Is.InstanceOfType (typeof (ISelectGroupClause)));
     }
         
     [Test]

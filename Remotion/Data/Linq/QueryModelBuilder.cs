@@ -88,7 +88,7 @@ namespace Remotion.Data.Linq
       var queryModel = new QueryModel(resultType, MainFromClause, SelectOrGroupClause);
 
       foreach (var bodyClause in BodyClauses)
-        queryModel.AddBodyClause (bodyClause);
+        queryModel.BodyClauses.Add (bodyClause);
 
       return queryModel;
     }

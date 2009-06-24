@@ -318,9 +318,9 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
           repository.StrictMock<WhereClause> (ExpressionHelper.CreateClause(), ExpressionHelper.CreateExpression());
 
       var queryModel = new QueryModel (typeof (IQueryable<string>), fromClause, selectClause1);
-      queryModel.AddBodyClause (orderByClause1);
-      queryModel.AddBodyClause (fromClause1);
-      queryModel.AddBodyClause (whereClause1);
+      queryModel.BodyClauses.Add (orderByClause1);
+      queryModel.BodyClauses.Add (fromClause1);
+      queryModel.BodyClauses.Add (whereClause1);
 
       var sv = new StringBuildingQueryVisitor();
 

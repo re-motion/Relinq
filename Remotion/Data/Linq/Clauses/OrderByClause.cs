@@ -39,7 +39,7 @@ namespace Remotion.Data.Linq.Clauses
     /// <summary>
     /// A collection of <see cref="Ordering"/>
     /// </summary>
-    public List<Ordering> Orderings { get; private set; }
+    public IList<Ordering> Orderings { get; private set; }
 
     public IClause PreviousClause { get; private set; }
 
