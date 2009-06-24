@@ -27,6 +27,8 @@ namespace Remotion.Data.Linq.Clauses
   /// </summary>
   public class WhereClause : IBodyClause
   {
+    private Expression _predicate;
+    
     /// <summary>
     /// Initialize a new instance of <see cref="WhereClause"/>
     /// </summary>
@@ -37,8 +39,8 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
       ArgumentUtility.CheckNotNull ("predicate", predicate);
 
-      Predicate = predicate;
       PreviousClause = previousClause;
+      _predicate = predicate;
     }
 
     /// <summary>
@@ -52,7 +54,8 @@ namespace Remotion.Data.Linq.Clauses
     [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (Predicate),nq}")]
     public Expression Predicate
     {
-      get; private set;
+      get { return _predicate; }
+      set { _predicate = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
     public virtual void Accept (IQueryVisitor visitor)

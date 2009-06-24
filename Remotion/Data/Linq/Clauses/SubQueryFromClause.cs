@@ -15,9 +15,9 @@
 // 
 using System;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Utilities;
-using Remotion.Data.Linq.DataObjectModel;
 
 namespace Remotion.Data.Linq.Clauses
 {
@@ -28,7 +28,8 @@ namespace Remotion.Data.Linq.Clauses
   /// </summary>
   public class SubQueryFromClause : FromClauseBase, IBodyClause
   {
-    private readonly SubQuery _fromSource;
+    private SubQuery _fromSource;
+    private QueryModel _subQueryModel;
 
     /// <summary>
     /// Initialize a new instance of <see cref="QueryModel"/>
@@ -44,14 +45,20 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("subQuery", subQuery);
 
       SubQueryModel = subQuery;
-
-      _fromSource = new SubQuery (SubQueryModel, ParseMode.SubQueryInFrom, Identifier.Name);
     }
 
     /// <summary>
     /// The subquery which contains the <see cref="SubQueryFromClause"/>with is represented by a new <see cref="QueryModel"/>.<see cref="QueryModel"/>
     /// </summary>
-    public QueryModel SubQueryModel { get; private set; }
+    public QueryModel SubQueryModel
+    {
+      get { return _subQueryModel; }
+      set
+      {
+        _subQueryModel = ArgumentUtility.CheckNotNull ("value", value);
+        _fromSource = new SubQuery (value, ParseMode.SubQueryInFrom, Identifier.Name);
+      }
+    }
 
     public override void Accept (IQueryVisitor visitor)
     {

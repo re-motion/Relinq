@@ -46,7 +46,7 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("selector", selector);
 
       PreviousClause = previousClause;
-      Selector = selector;
+      _selector = selector;
     }
 
     /// <summary>

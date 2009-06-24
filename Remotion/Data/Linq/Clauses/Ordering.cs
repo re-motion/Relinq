@@ -26,8 +26,8 @@ namespace Remotion.Data.Linq.Clauses
   /// </summary>
   public class Ordering
   {
-    private readonly Expression _expression;
-    private readonly OrderingDirection _orderingDirection;
+    private OrderingDirection _orderingDirection;
+    private Expression _expression;
     
     /// <summary>
     /// Initialize a new instance of <see cref="Ordering"/>
@@ -40,9 +40,9 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("orderByClause", orderByClause);
       ArgumentUtility.CheckNotNull ("expression", expression);
 
+      OrderByClause = orderByClause;
       _expression = expression;
       _orderingDirection = direction;
-      OrderByClause = orderByClause;
     }
 
     /// <summary>
@@ -57,11 +57,13 @@ namespace Remotion.Data.Linq.Clauses
     public Expression Expression
     {
       get { return _expression; }
+      set { _expression = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
     public OrderingDirection OrderingDirection
     {
       get { return _orderingDirection; }
+      set { _orderingDirection = value; }
     }
 
     public virtual void Accept (IQueryVisitor visitor)

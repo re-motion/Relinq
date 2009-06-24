@@ -21,6 +21,7 @@ using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.DataObjectModel;
+using Remotion.Utilities;
 using Rhino.Mocks;
 
 namespace Remotion.Data.UnitTests.Linq.Clauses
@@ -45,14 +46,30 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "FromExpression must contain a MemberExpression.\r\nParameter name: fromExpression")]
-    public void FromExpressionContainNoMemberExpression ()
+    public void MemberExpression_SetModifiesFromExpression ()
     {
-      var previousClause = ExpressionHelper.CreateClause ();
-      var identifier = ExpressionHelper.CreateParameterExpression ();
-      var bodyExpression = Expression.Constant ("test");
-      var fromExpression = bodyExpression;
-      new MemberFromClause (previousClause, identifier, fromExpression);
+      var memberExpression = (MemberExpression) ExpressionHelper.MakeExpression<Student, int> (s => s.ID);
+      _memberFromClause.MemberExpression = memberExpression;
+
+      Assert.That (_memberFromClause.MemberExpression, Is.SameAs (memberExpression));
+      Assert.That (_memberFromClause.FromExpression, Is.SameAs (memberExpression));
+    }
+
+    [Test]
+    public void FromExpression_SetModifiesMemberExpression ()
+    {
+      var memberExpression = (MemberExpression) ExpressionHelper.MakeExpression<Student, int> (s => s.ID);
+      _memberFromClause.FromExpression = memberExpression;
+
+      Assert.That (_memberFromClause.FromExpression, Is.SameAs (memberExpression));
+      Assert.That (_memberFromClause.MemberExpression, Is.SameAs (memberExpression));
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentTypeException))]
+    public void FromExpression_SetWithNonMemberExpressionThrows ()
+    {
+      _memberFromClause.FromExpression = Expression.Constant (null);
     }
 
     [Test]

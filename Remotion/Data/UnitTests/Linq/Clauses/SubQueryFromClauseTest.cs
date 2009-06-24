@@ -189,5 +189,16 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       var clone = _subQueryFromClause.Clone (_cloneContext);
       Assert.That (_cloneContext.ClonedClauseMapping.GetClause (_subQueryFromClause), Is.SameAs (clone));
     }
+
+    [Test]
+    public void SubQueryModel_Set_ChangesColumnSource ()
+    {
+      var oldSource = _subQueryFromClause.GetColumnSource (StubDatabaseInfo.Instance);
+      _subQueryFromClause.SubQueryModel = ExpressionHelper.CreateQueryModel();
+      var newSource = _subQueryFromClause.GetColumnSource (StubDatabaseInfo.Instance);
+
+      Assert.That (oldSource, Is.Not.EqualTo (newSource));
+      Assert.That (((SubQuery) newSource).QueryModel, Is.SameAs (_subQueryFromClause.SubQueryModel));
+    }
   }
 }

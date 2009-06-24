@@ -27,6 +27,8 @@ namespace Remotion.Data.Linq.Clauses
   /// </summary>
   public class AdditionalFromClause : FromClauseBase, IBodyClause
   {
+    private Expression _fromExpression;
+
     /// <summary>
     /// Initialize a new instance of <see cref="AdditionalFromClause"/>
     /// </summary>
@@ -40,15 +42,19 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("identifier", identifier);
       ArgumentUtility.CheckNotNull ("fromExpression", fromExpression);
 
-      FromExpression = fromExpression;
+      _fromExpression = fromExpression;
     }
-
+    
     /// <summary>
     /// The expression of a from expression.
     /// </summary>
     // TODO 1158: Maybe replace by QuerySourceType
     [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (FromExpression),nq}")]
-    public Expression FromExpression { get; private set; }
+    public virtual Expression FromExpression
+    {
+      get { return _fromExpression; }
+      set { _fromExpression = ArgumentUtility.CheckNotNull("value", value); }
+    }
 
     public override void Accept (IQueryVisitor visitor)
     {

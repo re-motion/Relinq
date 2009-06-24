@@ -24,11 +24,11 @@ namespace Remotion.Data.Linq.Clauses
   {
     private readonly IClause _previousClause;
     private readonly FromClauseBase _fromClause;
-    private readonly ParameterExpression _identifier;
-    private readonly Expression _inExpression;
-    private readonly Expression _onExpression;
-    private readonly Expression _equalityExpression;
-    private readonly ParameterExpression _intoIdentifier;
+    private ParameterExpression _identifier;
+    private ParameterExpression _intoIdentifier;
+    private Expression _inExpression;
+    private Expression _equalityExpression;
+    private Expression _onExpression;
 
     public JoinClause (IClause previousClause, FromClauseBase fromClause, ParameterExpression identifier, Expression inExpression, Expression onExpression, Expression equalityExpression)
       : this (previousClause, fromClause, identifier, inExpression, onExpression, equalityExpression, null)
@@ -46,11 +46,11 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
 
       _previousClause = previousClause;
+      _fromClause = fromClause;
       _identifier = identifier;
       _inExpression = inExpression;
       _onExpression = onExpression;
       _equalityExpression = equalityExpression;
-      _fromClause = fromClause;
       _intoIdentifier = intoIdentifier;
     }
 
@@ -68,29 +68,34 @@ namespace Remotion.Data.Linq.Clauses
     public ParameterExpression Identifier
     {
       get { return _identifier; }
+      set { _identifier = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
     [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (InExpression),nq}")]
     public Expression InExpression
     {
       get { return _inExpression; }
+      set { _inExpression = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
     [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (OnExpression),nq}")]
     public Expression OnExpression
     {
       get { return _onExpression; }
+      set { _onExpression = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
     [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (EqualityExpression),nq}")]
     public Expression EqualityExpression
     {
       get { return _equalityExpression; }
+      set { _equalityExpression = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
     public ParameterExpression IntoIdentifier
     {
       get { return _intoIdentifier; }
+      set { _intoIdentifier = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
     public virtual void Accept (IQueryVisitor visitor)

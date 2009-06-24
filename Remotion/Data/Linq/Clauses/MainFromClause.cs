@@ -29,6 +29,8 @@ namespace Remotion.Data.Linq.Clauses
   /// </summary>
   public class MainFromClause : FromClauseBase
   {
+    private Expression _querySource;
+
     /// <summary>
     /// Initialize a new instance of <see cref="MainFromClause"/>.
     /// </summary>
@@ -37,7 +39,7 @@ namespace Remotion.Data.Linq.Clauses
     public MainFromClause (ParameterExpression identifier, Expression querySource): base(null,identifier)
     {
       ArgumentUtility.CheckNotNull ("querySource", querySource);
-      QuerySource = querySource;
+      _querySource = querySource;
     }
 
     /// <summary>
@@ -45,7 +47,11 @@ namespace Remotion.Data.Linq.Clauses
     /// </summary>
     // TODO 1158: Replace by QuerySourceType
     [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (QuerySource),nq}")]
-    public Expression QuerySource { get; private set; }
+    public Expression QuerySource
+    {
+      get { return _querySource; }
+      set { _querySource = ArgumentUtility.CheckNotNull ("value", value); }
+    }
 
     public override void Accept (IQueryVisitor visitor)
     {

@@ -27,7 +27,7 @@ namespace Remotion.Data.Linq.Clauses
   /// </summary>
   public abstract class FromClauseBase : IResolveableClause
   {
-    private readonly ParameterExpression _identifier;
+    private ParameterExpression _identifier;
     private readonly List<JoinClause> _joinClauses = new List<JoinClause>();
 
     /// <summary>
@@ -48,6 +48,7 @@ namespace Remotion.Data.Linq.Clauses
     public ParameterExpression Identifier
     {
       get { return _identifier; }
+      set { _identifier = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
     public ReadOnlyCollection<JoinClause> JoinClauses

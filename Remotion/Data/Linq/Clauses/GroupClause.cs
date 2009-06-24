@@ -23,8 +23,8 @@ namespace Remotion.Data.Linq.Clauses
 {
   public class GroupClause : ISelectGroupClause
   {
-    private readonly Expression _groupExpression;
-    private readonly Expression _byExpression;
+    private Expression _groupExpression;
+    private Expression _byExpression;
 
     public GroupClause (IClause previousClause,Expression groupExpression, Expression byExpression)
     {
@@ -43,12 +43,14 @@ namespace Remotion.Data.Linq.Clauses
     public Expression GroupExpression
     {
       get { return _groupExpression; }
+      set { _groupExpression = ArgumentUtility.CheckNotNull("value", value); }
     }
 
     [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (ByExpression),nq}")]
     public Expression ByExpression
     {
       get { return _byExpression; }
+      set { _byExpression = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
     public void Accept (IQueryVisitor visitor)
