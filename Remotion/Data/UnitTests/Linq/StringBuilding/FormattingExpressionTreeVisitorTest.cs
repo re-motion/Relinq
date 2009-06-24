@@ -38,7 +38,7 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
     [Test]
     public void QuerySourceReferenceExpression ()
     {
-      var referencedClause = ExpressionHelper.CreateMainFromClause (Expression.Parameter (typeof (int), "i"), ExpressionHelper.CreateQuerySource());
+      var referencedClause = ExpressionHelper.CreateMainFromClause ("i", typeof (int), ExpressionHelper.CreateQuerySource());
       
       var expression = Expression.MakeBinary (ExpressionType.GreaterThan, new QuerySourceReferenceExpression (referencedClause), Expression.Constant (2));
       var formattedExpression = FormattingExpressionTreeVisitor.Format (expression);

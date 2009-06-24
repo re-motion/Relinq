@@ -43,7 +43,7 @@ namespace Remotion.Data.Linq.StringBuilding
     protected override Expression VisitQuerySourceReferenceExpression (QuerySourceReferenceExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      return Expression.Parameter (expression.Type, "[" + expression.ReferencedClause.Identifier.Name + "]");
+      return Expression.Parameter (expression.Type, "[" + expression.ReferencedClause.ItemName + "]");
     }
 
     protected override Expression VisitSubQueryExpression (SubQueryExpression expression)

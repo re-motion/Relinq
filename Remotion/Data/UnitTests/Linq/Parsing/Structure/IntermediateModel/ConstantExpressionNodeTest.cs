@@ -92,8 +92,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var constantClause = (MainFromClause) _node.CreateClause(null, ClauseGenerationContext);
 
-      Assert.That (constantClause.Identifier.Name, Is.EqualTo ("x"));
-      Assert.That (constantClause.Identifier.Type, Is.SameAs(typeof(int)));    
+      Assert.That (constantClause.ItemName, Is.EqualTo ("x"));
+      Assert.That (constantClause.ItemType, Is.SameAs(typeof(int)));    
       Assert.That (constantClause.QuerySource, Is.InstanceOfType (typeof (ConstantExpression)));
       Assert.That (((ConstantExpression) constantClause.QuerySource).Value, Is.SameAs (_node.Value));
       Assert.That (constantClause.QuerySource.Type, Is.SameAs (_node.QuerySourceType));
@@ -120,8 +120,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var constantClause = (MainFromClause) _node.CreateClause (null, _emptyContext);
 
-      Assert.That (constantClause.Identifier.Name, Is.EqualTo ("x"));
-      Assert.That (constantClause.Identifier.Type, Is.SameAs (typeof (int)));
+      Assert.That (constantClause.ItemName, Is.EqualTo ("x"));
+      Assert.That (constantClause.ItemType, Is.SameAs (typeof (int)));
       Assert.That (constantClause.QuerySource, Is.InstanceOfType (typeof (ConstantExpression)));
       Assert.That (((ConstantExpression) constantClause.QuerySource).Value, Is.SameAs (_node.Value));
       Assert.That (constantClause.QuerySource.Type, Is.SameAs (_node.QuerySourceType));

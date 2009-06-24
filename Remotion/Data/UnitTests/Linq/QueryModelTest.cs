@@ -173,7 +173,8 @@ namespace Remotion.Data.UnitTests.Linq
       var clone = _queryModel.Clone ();
 
       Assert.That (clone.MainFromClause, Is.Not.SameAs (_queryModel.MainFromClause));
-      Assert.That (clone.MainFromClause.Identifier, Is.EqualTo (_queryModel.MainFromClause.Identifier));
+      Assert.That (clone.MainFromClause.ItemName, Is.EqualTo (_queryModel.MainFromClause.ItemName));
+      Assert.That (clone.MainFromClause.ItemType, Is.SameAs (_queryModel.MainFromClause.ItemType));
     }
 
     [Test]
@@ -216,7 +217,8 @@ namespace Remotion.Data.UnitTests.Linq
       var clonedWhereClause = (WhereClause) clone.BodyClauses[1];
 
       Assert.That (clonedAdditionalFromClause, Is.Not.SameAs (additionalFromClause));
-      Assert.That (clonedAdditionalFromClause.Identifier, Is.SameAs (additionalFromClause.Identifier));
+      Assert.That (clonedAdditionalFromClause.ItemName, Is.EqualTo (additionalFromClause.ItemName));
+      Assert.That (clonedAdditionalFromClause.ItemType, Is.SameAs (additionalFromClause.ItemType));
       Assert.That (clonedAdditionalFromClause.PreviousClause, Is.SameAs (clone.MainFromClause));
       Assert.That (clonedWhereClause, Is.Not.SameAs (whereClause));
       Assert.That (clonedWhereClause.Predicate, Is.EqualTo (whereClause.Predicate));
@@ -300,7 +302,7 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void GetNewName_AlreadyExists_MainFromClause ()
     {
-      var mainFromClause = new MainFromClause (Expression.Parameter (typeof (Student), "test0"), ExpressionHelper.CreateQuerySource ().Expression);
+      var mainFromClause = new MainFromClause ("test0", typeof (Student), ExpressionHelper.CreateQuerySource ().Expression);
       var queryModel = ExpressionHelper.CreateQueryModel (mainFromClause);
       var identifier = queryModel.GetNewName ("test");
       Assert.That (identifier, Is.EqualTo ("test1"));
@@ -311,7 +313,8 @@ namespace Remotion.Data.UnitTests.Linq
     {
       var additionalFromClause = new AdditionalFromClause (
           _queryModel.MainFromClause, 
-          Expression.Parameter (typeof (Student), "test0"), 
+          "test0",
+          typeof (Student),
           ExpressionHelper.CreateExpression());
       _queryModel.AddBodyClause (additionalFromClause);
 

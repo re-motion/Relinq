@@ -102,7 +102,6 @@
     <Compile Include="DataObjectModel\BinaryEvaluation.cs" />
     <Compile Include="DataObjectModel\FieldSourcePath.cs" />
     <Compile Include="DataObjectModel\IColumnSource.cs" />
-    <Compile Include="Clauses\IResolveableClause.cs" />
     <Compile Include="DataObjectModel\IEvaluation.cs" />
     <Compile Include="DataObjectModel\IEvaluationVisitor.cs" />
     <Compile Include="DataObjectModel\MethodCall.cs" />

@@ -31,7 +31,7 @@ namespace Remotion.Data.UnitTests.Linq
 {
   public static class ExpressionHelper
   {
-    public static IQueryExecutor s_executor = CreateExecutor();
+    private static readonly IQueryExecutor s_executor = CreateExecutor();
 
     public static Expression CreateExpression ()
     {
@@ -90,37 +90,49 @@ namespace Remotion.Data.UnitTests.Linq
 
     public static QueryModel CreateQueryModel ()
     {
-      return CreateQueryModel (CreateMainFromClause(Expression.Parameter (typeof (Student), "s"), CreateQuerySource()));
+      return CreateQueryModel (CreateMainFromClause("s", typeof (Student), CreateQuerySource()));
     }
 
 
     public static MainFromClause CreateMainFromClause ()
     {
-      ParameterExpression id = CreateParameterExpression ();
       IQueryable querySource = CreateQuerySource (); 
-      return CreateMainFromClause(id, querySource);
+      return CreateMainFromClause("main", typeof (int), querySource);
+    }
+
+    public static MainFromClause CreateMainFromClause_Student ()
+    {
+      return CreateMainFromClause ("s", typeof (Student), CreateQuerySource());
+    }
+
+    public static MainFromClause CreateMainFromClause_Detail ()
+    {
+      return CreateMainFromClause ("sd", typeof (Student_Detail), CreateQuerySource_Detail ());
+    }
+
+    public static MainFromClause CreateMainFromClause_Detail_Detail ()
+    {
+      return CreateMainFromClause ("sdd", typeof (Student_Detail_Detail), CreateQuerySource_Detail_Detail());
     }
 
     public static AdditionalFromClause CreateAdditionalFromClause ()
     {
-      ParameterExpression identifier = CreateParameterExpression ("additional");
-      return CreateAdditionalFromClause(identifier);
+      return CreateAdditionalFromClause ("additional", typeof (int));
     }
 
     public static AdditionalFromClause CreateAdditionalFromClause (IClause previousClause)
     {
-      ParameterExpression identifier = CreateParameterExpression ("additional");
-      return CreateAdditionalFromClause (previousClause, identifier);
+      return CreateAdditionalFromClause (previousClause, "additional", typeof (int));
     }
 
-    public static AdditionalFromClause CreateAdditionalFromClause (ParameterExpression identifier)
+    public static AdditionalFromClause CreateAdditionalFromClause (string itemName, Type itemType)
     {
-      return new AdditionalFromClause (CreateClause (), identifier, CreateExpression ());
+      return new AdditionalFromClause (CreateClause (), itemName, itemType, CreateExpression ());
     }
 
-    public static AdditionalFromClause CreateAdditionalFromClause (IClause previousClause, ParameterExpression identifier)
+    public static AdditionalFromClause CreateAdditionalFromClause (IClause previousClause, string itemName, Type itemType)
     {
-      return new AdditionalFromClause (previousClause, identifier, CreateExpression ());
+      return new AdditionalFromClause (previousClause, itemName, itemType, CreateExpression ());
     }
 
     public static GroupClause CreateGroupClause ()
@@ -278,19 +290,19 @@ namespace Remotion.Data.UnitTests.Linq
       return new FieldSourcePath (table, new SingleJoin[0]);
     }
 
-    public static MainFromClause CreateMainFromClause (ParameterExpression identifier, IQueryable querySource)
+    public static MainFromClause CreateMainFromClause (string itemName, Type itemType, IQueryable querySource)
     {
-      return new MainFromClause (identifier, Expression.Constant (querySource));
+      return new MainFromClause (itemName, itemType, Expression.Constant (querySource));
     }
 
     public static SubQueryFromClause CreateSubQueryFromClause ()
     {
-      return CreateSubQueryFromClause (CreateParameterExpression());
+      return CreateSubQueryFromClause ("subQuery", typeof (int));
     }
 
-    public static SubQueryFromClause CreateSubQueryFromClause (ParameterExpression identifier)
+    public static SubQueryFromClause CreateSubQueryFromClause (string itemName, Type itemType)
     {
-      return new SubQueryFromClause (CreateClause (), identifier, CreateQueryModel ());
+      return new SubQueryFromClause (CreateClause (), itemName, itemType, CreateQueryModel ());
     }
 
     public static Expression MakeExpression<TRet> (Expression<Func<TRet>> expression)
@@ -314,9 +326,8 @@ namespace Remotion.Data.UnitTests.Linq
     public static MemberFromClause CreateMemberFromClause ()
     {
       var previousClause = CreateClause();
-      var identifier = CreateParameterExpression();
       var fromExpression = Expression.MakeMemberAccess (Expression.Constant (null, typeof (IndustrialSector)), typeof (IndustrialSector).GetProperty ("Students"));
-      return new MemberFromClause (previousClause, identifier, fromExpression);
+      return new MemberFromClause (previousClause, "member", typeof (Student), fromExpression);
     }
 
     public static ResultModificationBase CreateResultModification (SelectClause selectClause)

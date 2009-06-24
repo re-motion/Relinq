@@ -40,7 +40,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details.WhereConditionParsing
     {
       base.SetUp();
 
-      _fromClause = ExpressionHelper.CreateMainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
+      _fromClause = ExpressionHelper.CreateMainFromClause_Student ();
       _fromSource = _fromClause.GetColumnSource (StubDatabaseInfo.Instance);
       QueryModel = ExpressionHelper.CreateQueryModel (_fromClause);
       _resolver = new FieldResolver (StubDatabaseInfo.Instance, new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));

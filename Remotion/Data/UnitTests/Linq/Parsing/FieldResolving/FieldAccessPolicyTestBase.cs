@@ -69,7 +69,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
 
     public virtual void SetUp ()
     {
-      _studentClause = ExpressionHelper.CreateMainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource());
+      _studentClause = ExpressionHelper.CreateMainFromClause_Student ();
       _studentReference = new QuerySourceReferenceExpression (StudentClause);
       _studentDetailDetail_StudentDetail_Member = typeof (Student_Detail_Detail).GetProperty ("Student_Detail");
       _studentDetail_Student_Member = typeof (Student_Detail).GetProperty ("Student");

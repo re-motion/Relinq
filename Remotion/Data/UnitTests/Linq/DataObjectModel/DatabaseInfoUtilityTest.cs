@@ -14,9 +14,9 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Rhino.Mocks;
 using Remotion.Collections;
@@ -39,13 +39,13 @@ namespace Remotion.Data.UnitTests.Linq.DataObjectModel
     [Test]
     public void GetTableForFromClause()
     {
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource());
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause_Student();
       Table table = DatabaseInfoUtility.GetTableForFromClause (_databaseInfo, fromClause);
-      Assert.AreEqual (new Table ("studentTable", "s"), table);
+      Assert.That (table, Is.EqualTo (new Table ("studentTable", "s")));
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "The from clause with identifier i and query source type <null> does not "
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "The from clause with identifier subQuery and query source type <null> does not "
         + "identify a queryable table.\r\nParameter name: fromClause")]
     public void GetTableForFromClause_WithSubQueryFromClause ()
     {
@@ -56,16 +56,16 @@ namespace Remotion.Data.UnitTests.Linq.DataObjectModel
     [Test]
     public void GetTableForFromClause_CachesTable ()
     {
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause_Student();
       Table table1 = DatabaseInfoUtility.GetTableForFromClause (_databaseInfo, fromClause);
       Table table2 = DatabaseInfoUtility.GetTableForFromClause (_databaseInfo, fromClause);
-      Assert.AreSame (table1, table2);
+      Assert.That (table2, Is.SameAs (table1));
     }
 
     [Test]
     public void GetTableForFromClause_CachesTable_PerDatabaseInfo ()
     {
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause_Student();
 
       MockRepository repository = new MockRepository();
       IDatabaseInfo databaseInfoMock = repository.StrictMock<IDatabaseInfo>();
@@ -76,7 +76,7 @@ namespace Remotion.Data.UnitTests.Linq.DataObjectModel
 
       Table table1 = DatabaseInfoUtility.GetTableForFromClause (_databaseInfo, fromClause);
       Table table2 = DatabaseInfoUtility.GetTableForFromClause (databaseInfoMock, fromClause);
-      Assert.AreNotSame (table1, table2);
+      Assert.That (table2, Is.Not.SameAs (table1));
 
       repository.VerifyAll();
     }
@@ -88,7 +88,7 @@ namespace Remotion.Data.UnitTests.Linq.DataObjectModel
     public void GetTableForFromClause_InvalidSource ()
     {
       TestQueryable<int> ints = new TestQueryable<int> (ExpressionHelper.CreateExecutor());
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(Expression.Parameter (typeof (int), "i"), ints);
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause("i", typeof (int) , ints);
       DatabaseInfoUtility.GetTableForFromClause (_databaseInfo, fromClause);
     }
 
@@ -96,7 +96,7 @@ namespace Remotion.Data.UnitTests.Linq.DataObjectModel
     public void GetRelatedTable ()
     {
       Table table = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, typeof (Student_Detail).GetProperty ("Student"));
-      Assert.AreEqual (new Table ("studentTable", null), table);
+      Assert.That (table, Is.EqualTo (new Table ("studentTable", null)));
     }
 
     [Test]
@@ -111,7 +111,7 @@ namespace Remotion.Data.UnitTests.Linq.DataObjectModel
     public void GetJoinColumns()
     {
       Tuple<string, string> columns = DatabaseInfoUtility.GetJoinColumnNames (StubDatabaseInfo.Instance, typeof (Student_Detail).GetProperty ("Student"));
-      Assert.AreEqual (Tuple.NewTuple("Student_Detail_PK", "Student_Detail_to_Student_FK"), columns);
+      Assert.That (columns, Is.EqualTo (Tuple.NewTuple ("Student_Detail_PK", "Student_Detail_to_Student_FK")));
     }
 
     [Test]
@@ -125,53 +125,54 @@ namespace Remotion.Data.UnitTests.Linq.DataObjectModel
     [Test]
     public void IsRelationMember_True ()
     {
-      Assert.IsTrue (DatabaseInfoUtility.IsRelationMember (StubDatabaseInfo.Instance, typeof (Student_Detail_Detail).GetProperty ("Student_Detail")));
-      Assert.IsTrue (DatabaseInfoUtility.IsRelationMember (StubDatabaseInfo.Instance, typeof (Student_Detail).GetProperty ("Student")));
+      Assert.That (
+          DatabaseInfoUtility.IsRelationMember (StubDatabaseInfo.Instance, typeof (Student_Detail_Detail).GetProperty ("Student_Detail")), Is.True);
+      Assert.That (DatabaseInfoUtility.IsRelationMember (StubDatabaseInfo.Instance, typeof (Student_Detail).GetProperty ("Student")), Is.True);
     }
 
     [Test]
     public void IsRelationMember_False ()
     {
-      Assert.IsFalse (DatabaseInfoUtility.IsRelationMember (StubDatabaseInfo.Instance, typeof (Student).GetProperty ("First")));
+      Assert.That (DatabaseInfoUtility.IsRelationMember (StubDatabaseInfo.Instance, typeof (Student).GetProperty ("First")), Is.False);
     }
 
     [Test]
     public void IsRelationMember_NonDBMember ()
     {
-      Assert.IsFalse (DatabaseInfoUtility.IsRelationMember (StubDatabaseInfo.Instance, typeof (Student).GetProperty ("NonDBProperty")));
+      Assert.That (DatabaseInfoUtility.IsRelationMember (StubDatabaseInfo.Instance, typeof (Student).GetProperty ("NonDBProperty")), Is.False);
     }
 
     [Test]
     public void IsVirtualColumn_True()
     {
-      Assert.IsTrue (DatabaseInfoUtility.IsVirtualColumn (_databaseInfo, typeof(IndustrialSector).GetProperty ("Student_Detail")));
+      Assert.That (DatabaseInfoUtility.IsVirtualColumn (_databaseInfo, typeof (IndustrialSector).GetProperty ("Student_Detail")), Is.True);
     }
 
     [Test]
     public void IsVirtualColumn_False_RealSide ()
     {
-      Assert.IsFalse (DatabaseInfoUtility.IsVirtualColumn (_databaseInfo, typeof (Student_Detail).GetProperty ("IndustrialSector")));
+      Assert.That (DatabaseInfoUtility.IsVirtualColumn (_databaseInfo, typeof (Student_Detail).GetProperty ("IndustrialSector")), Is.False);
     }
 
     [Test]
     public void IsVirtualColumn_False_NonRelationMember ()
     {
-      Assert.IsFalse (DatabaseInfoUtility.IsVirtualColumn (_databaseInfo, typeof (Student).GetProperty ("ID")));
+      Assert.That (DatabaseInfoUtility.IsVirtualColumn (_databaseInfo, typeof (Student).GetProperty ("ID")), Is.False);
     }
 
     [Test]
     public void IsVirtualColumn_False_NonDBMember ()
     {
-      Assert.IsFalse (DatabaseInfoUtility.IsVirtualColumn (_databaseInfo, typeof (Student).GetProperty ("NonDBProperty")));
+      Assert.That (DatabaseInfoUtility.IsVirtualColumn (_databaseInfo, typeof (Student).GetProperty ("NonDBProperty")), Is.False);
     }
 
     [Test]
     public void GetColumnForFromClause ()
     {
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause_Student();
       IColumnSource table = fromClause.GetColumnSource (_databaseInfo);
       Column column = DatabaseInfoUtility.GetColumn (_databaseInfo, table, typeof (Student).GetProperty ("First")).Value;
-      Assert.AreEqual (new Column (table, "FirstColumn"), column);
+      Assert.That (column, Is.EqualTo (new Column (table, "FirstColumn")));
     }
 
     [Test]
@@ -179,7 +180,7 @@ namespace Remotion.Data.UnitTests.Linq.DataObjectModel
     {
       IColumnSource table = new LetColumnSource ("s", false);
       Column column = DatabaseInfoUtility.GetColumn (_databaseInfo, table, null).Value;
-      Assert.AreEqual (new Column(table,null),column);
+      Assert.That (column, Is.EqualTo (new Column (table, null)));
     }
 
     [Test]
@@ -187,22 +188,22 @@ namespace Remotion.Data.UnitTests.Linq.DataObjectModel
     {
       IColumnSource table = new LetColumnSource ("s", false);
       Column column = DatabaseInfoUtility.GetColumn (_databaseInfo, table, typeof (Student).GetProperty ("First")).Value;
-      Assert.AreEqual (new Column (table, "FirstColumn"), column);
+      Assert.That (column, Is.EqualTo (new Column (table, "FirstColumn")));
     }
 
     [Test]
     public void GetColumnForFromClause_InvalidMember ()
     {
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause_Student();
       IColumnSource table = fromClause.GetColumnSource (_databaseInfo);
-      Assert.IsNull (DatabaseInfoUtility.GetColumn (_databaseInfo, table, typeof (Student).GetProperty ("NonDBProperty")));
+      Assert.That (DatabaseInfoUtility.GetColumn (_databaseInfo, table, typeof (Student).GetProperty ("NonDBProperty")), Is.Null);
     }
 
     [Test]
     public void GetPrimaryKeyMember ()
     {
-      MemberInfo studentDetailPKMember = DatabaseInfoUtility.GetPrimaryKeyMember (_databaseInfo, typeof (Student_Detail));
-      Assert.AreEqual (typeof (Student_Detail).GetProperty ("ID"), studentDetailPKMember);
+      MemberInfo studentDetailKeyMember = DatabaseInfoUtility.GetPrimaryKeyMember (_databaseInfo, typeof (Student_Detail));
+      Assert.That (studentDetailKeyMember, Is.EqualTo (typeof (Student_Detail).GetProperty ("ID")));
     }
 
     [Test]

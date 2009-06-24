@@ -29,7 +29,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
   public class SubQueryFromClauseTest
   {
     private IClause _previousClause;
-    private ParameterExpression _identifier;
     private QueryModel _subQueryModel;
     private SubQueryFromClause _subQueryFromClause;
     private CloneContext _cloneContext;
@@ -38,18 +37,18 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void SetUp ()
     {
       _previousClause = ExpressionHelper.CreateMainFromClause();
-      _identifier = ExpressionHelper.CreateParameterExpression();
       _subQueryModel = ExpressionHelper.CreateQueryModel();
-      _subQueryFromClause = new SubQueryFromClause (_previousClause, _identifier, _subQueryModel);
+      _subQueryFromClause = new SubQueryFromClause (_previousClause, "s", typeof (Student), _subQueryModel);
       _cloneContext = new CloneContext (new ClonedClauseMapping());
     }
 
     [Test]
     public void Initialize ()
     {
-      Assert.AreSame (_previousClause, _subQueryFromClause.PreviousClause);
-      Assert.AreSame (_identifier, _subQueryFromClause.Identifier);
-      Assert.AreSame (_subQueryModel, _subQueryFromClause.SubQueryModel);
+      Assert.That (_subQueryFromClause.PreviousClause, Is.SameAs (_previousClause));
+      Assert.That (_subQueryFromClause.ItemName, Is.EqualTo ("s"));
+      Assert.That (_subQueryFromClause.ItemType, Is.EqualTo (typeof (Student)));
+      Assert.That (_subQueryFromClause.SubQueryModel, Is.SameAs (_subQueryModel));
     }
 
     [Test]
@@ -68,7 +67,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void GetQueriedEntityType ()
     {
-      Assert.AreEqual (null, _subQueryFromClause.GetQuerySourceType());
+      Assert.That (_subQueryFromClause.GetQuerySourceType(), Is.EqualTo (null));
     }
 
     [Test]
@@ -76,8 +75,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     {
       IColumnSource columnSource = _subQueryFromClause.GetColumnSource (StubDatabaseInfo.Instance);
       var subQuery = (SubQuery) columnSource;
-      Assert.AreEqual (_identifier.Name, subQuery.Alias);
-      Assert.AreSame (_subQueryModel, subQuery.QueryModel);
+      Assert.That (subQuery.Alias, Is.EqualTo ("s"));
+      Assert.That (subQuery.QueryModel, Is.SameAs (_subQueryModel));
     }
 
     [Test]
@@ -85,7 +84,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     {
       var subQuery1 = (SubQuery) _subQueryFromClause.GetColumnSource (StubDatabaseInfo.Instance);
       var subQuery2 = (SubQuery) _subQueryFromClause.GetColumnSource (StubDatabaseInfo.Instance);
-      Assert.AreSame (subQuery1, subQuery2);
+      Assert.That (subQuery2, Is.SameAs (subQuery1));
     }
 
     [Test]
@@ -97,7 +96,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
 
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (_subQueryFromClause));
-      Assert.That (clone.Identifier, Is.SameAs (_subQueryFromClause.Identifier));
+      Assert.That (clone.ItemName, Is.EqualTo (_subQueryFromClause.ItemName));
+      Assert.That (clone.ItemType, Is.SameAs (_subQueryFromClause.ItemType));
       Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
     }
 

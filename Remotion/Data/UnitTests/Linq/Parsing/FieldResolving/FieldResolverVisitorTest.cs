@@ -35,10 +35,10 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
     [SetUp]
     public void SetUp ()
     {
-      _studentClause = ExpressionHelper.CreateMainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource());
+      _studentClause = ExpressionHelper.CreateMainFromClause_Student ();
       _studentReference = new QuerySourceReferenceExpression (_studentClause);
 
-      _studentDetailClause = ExpressionHelper.CreateMainFromClause (Expression.Parameter (typeof (Student_Detail), "sd"), ExpressionHelper.CreateQuerySource_Detail ());
+      _studentDetailClause = ExpressionHelper.CreateMainFromClause_Detail ();
       _studentDetailReference = new QuerySourceReferenceExpression (_studentDetailClause);
     }
 

@@ -43,7 +43,7 @@ namespace Remotion.Data.Linq.StringBuilding
     public void VisitMainFromClause (MainFromClause fromClause)
     {
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
-      _sb.AppendFormat ("from {0} {1} in {2} ", fromClause.Identifier.Type.Name, fromClause.Identifier.Name, FormatExpression (fromClause.QuerySource));
+      _sb.AppendFormat ("from {0} {1} in {2} ", fromClause.ItemType.Name, fromClause.ItemName, FormatExpression (fromClause.QuerySource));
 
       foreach (JoinClause jc in fromClause.JoinClauses)
         jc.Accept (this);
@@ -53,7 +53,7 @@ namespace Remotion.Data.Linq.StringBuilding
     {
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
 
-      _sb.AppendFormat ("from {0} {1} in {2} ", fromClause.Identifier.Type.Name, fromClause.Identifier.Name, FormatExpression (fromClause.FromExpression));
+      _sb.AppendFormat ("from {0} {1} in {2} ", fromClause.ItemType.Name, fromClause.ItemName, FormatExpression (fromClause.FromExpression));
       foreach (JoinClause jc in fromClause.JoinClauses)
         jc.Accept (this);
     }
@@ -66,7 +66,7 @@ namespace Remotion.Data.Linq.StringBuilding
     public void VisitSubQueryFromClause (SubQueryFromClause fromClause)
     {
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
-      _sb.AppendFormat ("from {0} {1} in ({2}) ", fromClause.Identifier.Type.Name, fromClause.Identifier.Name, fromClause.SubQueryModel);
+      _sb.AppendFormat ("from {0} {1} in ({2}) ", fromClause.ItemType.Name, fromClause.ItemName, fromClause.SubQueryModel);
     }
 
     public void VisitJoinClause (JoinClause joinClause)

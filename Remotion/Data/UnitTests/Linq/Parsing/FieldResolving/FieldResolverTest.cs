@@ -66,19 +66,13 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
     {
       _context = new JoinedTableContext();
       _policy = new SelectFieldAccessPolicy();
-      _studentClause = ExpressionHelper.CreateMainFromClause (
-          Expression.Parameter (typeof (Student), "s"), 
-          ExpressionHelper.CreateQuerySource ());
+      _studentClause = ExpressionHelper.CreateMainFromClause_Student ();
       _studentReference = new QuerySourceReferenceExpression (_studentClause);
 
-      _studentDetailClause = ExpressionHelper.CreateMainFromClause (
-          Expression.Parameter (typeof (Student_Detail), "sd"),
-          ExpressionHelper.CreateQuerySource_Detail());
+      _studentDetailClause = ExpressionHelper.CreateMainFromClause_Detail ();
       _studentDetailReference = new QuerySourceReferenceExpression (_studentDetailClause);
 
-      _studentDetailDetailClause = ExpressionHelper.CreateMainFromClause (
-          Expression.Parameter (typeof (Student_Detail_Detail), "sdd"),
-          ExpressionHelper.CreateQuerySource_Detail_Detail());
+      _studentDetailDetailClause = ExpressionHelper.CreateMainFromClause_Detail_Detail ();
       _studentDetailDetailReference = new QuerySourceReferenceExpression (_studentDetailDetailClause);
 
       _student_ID_Property = typeof (Student).GetProperty ("ID");
@@ -262,7 +256,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
     {
       // from x in (...)
       // select x.ID
-      SubQueryFromClause fromClause = ExpressionHelper.CreateSubQueryFromClause (Expression.Parameter (typeof (Student), "x"));
+      SubQueryFromClause fromClause = ExpressionHelper.CreateSubQueryFromClause ("x", typeof (Student));
 
       PropertyInfo member = typeof (Student).GetProperty ("ID");
       Expression fieldExpression = Expression.MakeMemberAccess (new QuerySourceReferenceExpression (fromClause), member);

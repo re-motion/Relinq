@@ -102,7 +102,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       }
 
       var fromClause = new MainFromClause (
-          Expression.Parameter (QuerySourceElementType, AssociatedIdentifier), 
+          AssociatedIdentifier,
+          QuerySourceElementType,
           Expression.Constant (Value, QuerySourceType));
 
       clauseGenerationContext.ClauseMapping.AddMapping (this, fromClause);

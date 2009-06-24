@@ -69,7 +69,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details
       QueryModel = ExpressionHelper.CreateQueryModel ();
       ParseContext = new ParseContext(QueryModel, QueryModel.GetExpressionTree(), new List<FieldDescriptor>(), new JoinedTableContext());
 
-      _studentClause = ExpressionHelper.CreateMainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
+      _studentClause = ExpressionHelper.CreateMainFromClause_Student ();
       _studentReference = new QuerySourceReferenceExpression (_studentClause);
       _student_First_Expression = Expression.MakeMemberAccess (_studentReference, typeof (Student).GetProperty ("First"));
       _student_Last_Expression = Expression.MakeMemberAccess (_studentReference, typeof (Student).GetProperty ("Last"));

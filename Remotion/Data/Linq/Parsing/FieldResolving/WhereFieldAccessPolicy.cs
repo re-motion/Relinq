@@ -36,7 +36,7 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
     public Tuple<MemberInfo, IEnumerable<MemberInfo>> AdjustMemberInfosForDirectAccessOfQuerySource (QuerySourceReferenceExpression referenceExpression)
     {
       ArgumentUtility.CheckNotNull ("referenceExpression", referenceExpression);
-      var primaryKeyMember = _databaseInfo.GetPrimaryKeyMember (referenceExpression.ReferencedClause.Identifier.Type);
+      var primaryKeyMember = _databaseInfo.GetPrimaryKeyMember (referenceExpression.ReferencedClause.ItemType);
       return new Tuple<MemberInfo, IEnumerable<MemberInfo>> (primaryKeyMember, new MemberInfo[0]);
     }
 

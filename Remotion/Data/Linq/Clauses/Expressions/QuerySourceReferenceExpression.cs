@@ -25,7 +25,7 @@ namespace Remotion.Data.Linq.Clauses.Expressions
   public class QuerySourceReferenceExpression : Expression
   {
     public QuerySourceReferenceExpression (FromClauseBase fromClause)
-        : base ((ExpressionType) (-1), ArgumentUtility.CheckNotNull ("fromClause", fromClause).Identifier.Type)
+        : base ((ExpressionType) (-1), ArgumentUtility.CheckNotNull ("fromClause", fromClause).ItemType)
     {
       ReferencedClause = fromClause;
     }

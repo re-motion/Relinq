@@ -15,13 +15,10 @@
 // 
 using System;
 using System.Linq;
-using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.DataObjectModel;
-using Remotion.Data.Linq.Parsing.FieldResolving;
 
 namespace Remotion.Data.UnitTests.Linq.Clauses
 {
@@ -31,20 +28,16 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void GetTable ()
     {
-      ParameterExpression id = Expression.Parameter (typeof (Student), "s1");
       IQueryable querySource = ExpressionHelper.CreateQuerySource ();
 
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(id, querySource);
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause ("s1", typeof (Student), querySource);
       Assert.AreEqual (new Table ("studentTable", "s1"), fromClause.GetColumnSource (StubDatabaseInfo.Instance));
     }
 
     [Test]
     public void GetTable_CachesInstance ()
     {
-      ParameterExpression id = Expression.Parameter (typeof (Student), "s1");
-      IQueryable querySource = ExpressionHelper.CreateQuerySource ();
-
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(id, querySource);
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause_Student ();
       IColumnSource t1 = fromClause.GetColumnSource (StubDatabaseInfo.Instance);
       IColumnSource t2 = fromClause.GetColumnSource (StubDatabaseInfo.Instance);
       Assert.AreSame (t1, t2);

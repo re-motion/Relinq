@@ -14,7 +14,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
@@ -40,34 +39,32 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
-    public void Initialize_WithIDAndConstant ()
+    public void Initialize ()
     {
-      ParameterExpression id = ExpressionHelper.CreateParameterExpression ();
       IQueryable querySource = ExpressionHelper.CreateQuerySource ();
 
       ConstantExpression constantExpression = Expression.Constant (querySource);
-      var fromClause = new MainFromClause (id, constantExpression);
+      var fromClause = new MainFromClause ("s", typeof (Student), constantExpression);
 
-      Assert.AreSame (id, fromClause.Identifier);
-      Assert.AreSame (constantExpression, fromClause.QuerySource);
+      Assert.That (fromClause.ItemName, Is.EqualTo ("s"));
+      Assert.That (fromClause.ItemType, Is.SameAs (typeof (Student)));
+      Assert.That (fromClause.QuerySource, Is.SameAs (constantExpression));
 
       Assert.That (fromClause.JoinClauses, Is.Empty);
-      Assert.AreEqual (0, fromClause.JoinClauses.Count);
+      Assert.That (fromClause.JoinClauses.Count, Is.EqualTo (0));
 
-      Assert.IsNull (fromClause.PreviousClause);
+      Assert.That (fromClause.PreviousClause, Is.Null);
     }
 
     [Test]
-    public void Initialize_WithExpression ()
+    public void Initialize_WithNonConstantExpression ()
     {
-      ParameterExpression id = ExpressionHelper.CreateParameterExpression ();
       IQueryable querySource = ExpressionHelper.CreateQuerySource ();
       var anonymous = new {source = querySource};
       MemberExpression sourceExpression = Expression.MakeMemberAccess (Expression.Constant (anonymous), anonymous.GetType().GetProperty ("source"));
 
-      var fromClause = new MainFromClause (id, sourceExpression);
-
-      Assert.AreSame (sourceExpression, fromClause.QuerySource);
+      var fromClause = new MainFromClause ("s", typeof (Student), sourceExpression);
+      Assert.That (fromClause.QuerySource, Is.SameAs (sourceExpression));
     }
 
     [Test]
@@ -89,8 +86,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void GetQueriedEntityType ()
     {
       IQueryable<Student> querySource = ExpressionHelper.CreateQuerySource();
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause(ExpressionHelper.CreateParameterExpression(), querySource);
-      Assert.AreSame (typeof (TestQueryable<Student>), fromClause.GetQuerySourceType());
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause ("s", typeof (Student), querySource);
+      Assert.That (fromClause.GetQuerySourceType(), Is.SameAs (typeof (TestQueryable<Student>)));
     }
 
     [Test]
@@ -100,7 +97,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
 
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (_mainFromClause));
-      Assert.That (clone.Identifier, Is.SameAs (_mainFromClause.Identifier));
+      Assert.That (clone.ItemName, Is.EqualTo (_mainFromClause.ItemName));
+      Assert.That (clone.ItemType, Is.SameAs (_mainFromClause.ItemType));
       Assert.That (clone.QuerySource, Is.SameAs (_mainFromClause.QuerySource));
     }
 
@@ -109,7 +107,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     {
       var oldReferencedClause = ExpressionHelper.CreateMainFromClause();
       var querySource = new QuerySourceReferenceExpression (oldReferencedClause);
-      var mainFromClause = new MainFromClause (ExpressionHelper.CreateParameterExpression(), querySource);
+      var mainFromClause = new MainFromClause ("s", typeof (Student), querySource);
 
       var newReferencedClause = ExpressionHelper.CreateMainFromClause ();
       _cloneContext.ClonedClauseMapping.AddMapping (oldReferencedClause, newReferencedClause);

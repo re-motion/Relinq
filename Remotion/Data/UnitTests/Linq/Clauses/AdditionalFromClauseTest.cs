@@ -39,26 +39,26 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
-    public void Initialize_WithIDAndExpression ()
+    public void Initialize ()
     {
-      var id = ExpressionHelper.CreateParameterExpression ();
       var fromExpression = ExpressionHelper.CreateExpression ();
       var previousClause = ExpressionHelper.CreateClause();
       
-      var fromClause = new AdditionalFromClause (previousClause, id, fromExpression);
+      var fromClause = new AdditionalFromClause (previousClause, "s", typeof (Student), fromExpression);
 
-      Assert.AreSame (id, fromClause.Identifier);
-      Assert.AreSame (fromExpression, fromClause.FromExpression);
-      Assert.AreSame (previousClause, fromClause.PreviousClause);
+      Assert.That (fromClause.ItemName, Is.EqualTo ("s"));
+      Assert.That (fromClause.ItemType, Is.SameAs (typeof (Student)));
+      Assert.That (fromClause.FromExpression, Is.SameAs (fromExpression));
+      Assert.That (fromClause.PreviousClause, Is.SameAs (previousClause));
 
       Assert.That (fromClause.JoinClauses, Is.Empty);
-      Assert.AreEqual (0, fromClause.JoinClauses.Count);
+      Assert.That (fromClause.JoinClauses.Count, Is.EqualTo (0));
     }
 
     [Test]
     public void ImplementInterface_IFromLetWhereClause ()
     {
-      Assert.IsInstanceOfType (typeof (IBodyClause), _additionalFromClause);
+      Assert.That (_additionalFromClause, Is.InstanceOfType (typeof (IBodyClause)));
     }
 
     [Test]
@@ -66,8 +66,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     {
       IQueryable<Student> querySource = ExpressionHelper.CreateQuerySource();
       var fromExpression = Expression.Constant (querySource);
-      var fromClause = new AdditionalFromClause (ExpressionHelper.CreateClause(), ExpressionHelper.CreateParameterExpression(), fromExpression);
-      Assert.AreSame (typeof (TestQueryable<Student>), fromClause.GetQuerySourceType());
+      var fromClause = new AdditionalFromClause (ExpressionHelper.CreateClause(), "s", typeof (Student), fromExpression);
+      Assert.That (fromClause.GetQuerySourceType(), Is.SameAs (typeof (TestQueryable<Student>)));
     }
 
     [Test]
@@ -87,7 +87,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
 
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (_additionalFromClause));
-      Assert.That (clone.Identifier, Is.SameAs (_additionalFromClause.Identifier));
+      Assert.That (clone.ItemName, Is.EqualTo (_additionalFromClause.ItemName));
+      Assert.That (clone.ItemType, Is.SameAs (_additionalFromClause.ItemType));
       Assert.That (clone.FromExpression, Is.SameAs (_additionalFromClause.FromExpression));
       Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
     }
@@ -99,7 +100,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       var fromExpression = new QuerySourceReferenceExpression (mainFromClause);
       var additionalFromClause = new AdditionalFromClause (
           mainFromClause, 
-          ExpressionHelper.CreateParameterExpression(), 
+          "s",
+          typeof (Student), 
           fromExpression);
 
       var newMainFromClause = ExpressionHelper.CreateMainFromClause ();

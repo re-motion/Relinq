@@ -42,11 +42,11 @@ namespace Remotion.Data.Linq.DataObjectModel
       {
         Type queriedEntityType = fromClause.GetQuerySourceType();
         string message = string.Format ("The from clause with identifier {0} and query source type {1} does not identify a queryable table.",
-          fromClause.Identifier, queriedEntityType != null ? queriedEntityType.FullName : "<null>");
+          fromClause.ItemName, queriedEntityType != null ? queriedEntityType.FullName : "<null>");
         throw new ArgumentException (message, "fromClause");
       }
       else
-        return new Table (tableName, fromClause.Identifier.Name);
+        return new Table (tableName, fromClause.ItemName);
     }
 
     public static Table GetRelatedTable (IDatabaseInfo databaseInfo, MemberInfo relationMember)

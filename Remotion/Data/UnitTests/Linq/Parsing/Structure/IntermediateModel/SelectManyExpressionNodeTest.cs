@@ -127,8 +127,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       var clause = (AdditionalFromClause) node.CreateClause (previousClause, ClauseGenerationContext);
 
-      Assert.That (clause.Identifier.Name, Is.EqualTo ("j"));
-      Assert.That (clause.Identifier.Type, Is.SameAs (typeof (int)));
+      Assert.That (clause.ItemName, Is.EqualTo ("j"));
+      Assert.That (clause.ItemType, Is.SameAs (typeof (int)));
       Assert.That (clause.FromExpression, Is.SameAs (node.GetResolvedCollectionSelector (ClauseGenerationContext)));
       Assert.That (clause.PreviousClause, Is.SameAs (previousClause));
     }
@@ -136,7 +136,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void CreateClause_WithMemberFromInFromExpression ()
     {
-      var previousClause = ExpressionHelper.CreateMainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource());
+      var previousClause = ExpressionHelper.CreateMainFromClause_Student ();
       var collectionSelector = ExpressionHelper.CreateLambdaExpression<Student, IEnumerable<Student>> (s => s.Friends);
 
       var studentSource = new ConstantExpressionNode ("s", typeof (IQueryable<Student>), null);
@@ -145,8 +145,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       var clause = (MemberFromClause) node.CreateClause (previousClause, ClauseGenerationContext);
 
-      Assert.That (clause.Identifier.Name, Is.EqualTo ("j"));
-      Assert.That (clause.Identifier.Type, Is.SameAs (typeof (int)));
+      Assert.That (clause.ItemName, Is.EqualTo ("j"));
+      Assert.That (clause.ItemType, Is.SameAs (typeof (int)));
       Assert.That (clause.FromExpression, Is.SameAs (node.GetResolvedCollectionSelector (ClauseGenerationContext)));
       Assert.That (clause.MemberExpression, Is.SameAs (node.GetResolvedCollectionSelector (ClauseGenerationContext)));
       Assert.That (clause.PreviousClause, Is.SameAs (previousClause));
@@ -163,8 +163,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       var clause = (SubQueryFromClause) node.CreateClause (previousClause, ClauseGenerationContext);
       
-      Assert.That (clause.Identifier.Name, Is.EqualTo ("j"));
-      Assert.That (clause.Identifier.Type, Is.SameAs (typeof (int)));
+      Assert.That (clause.ItemName, Is.EqualTo ("j"));
+      Assert.That (clause.ItemType, Is.SameAs (typeof (int)));
       Assert.That (clause.SubQueryModel, Is.SameAs (subQueryExpression.QueryModel));
       Assert.That (clause.PreviousClause, Is.SameAs (previousClause));
     }

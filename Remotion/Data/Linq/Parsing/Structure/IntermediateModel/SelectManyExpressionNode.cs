@@ -134,22 +134,25 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     {
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
 
-      var identifier = ResultSelector.Parameters[1];
-      
-      FromClauseBase clause = CreateFromClauseOfCorrectType(previousClause, identifier, clauseGenerationContext);
+      FromClauseBase clause = CreateFromClauseOfCorrectType (
+          previousClause, 
+          ResultSelector.Parameters[1].Name, 
+          ResultSelector.Parameters[1].Type, 
+          clauseGenerationContext);
+
       clauseGenerationContext.ClauseMapping.AddMapping (this, clause);
       return clause;
     }
 
-    private FromClauseBase CreateFromClauseOfCorrectType (IClause previousClause, ParameterExpression identifier, ClauseGenerationContext clauseGenerationContext)
+    private FromClauseBase CreateFromClauseOfCorrectType (IClause previousClause, string itemName, Type itemType, ClauseGenerationContext clauseGenerationContext)
     {
       var resolvedCollectionSelector = GetResolvedCollectionSelector (clauseGenerationContext);
       if (resolvedCollectionSelector is MemberExpression)
-        return new MemberFromClause (previousClause, identifier, (MemberExpression) resolvedCollectionSelector);
+        return new MemberFromClause (previousClause, itemName, itemType, (MemberExpression) resolvedCollectionSelector);
       else if (resolvedCollectionSelector is SubQueryExpression)
-        return new SubQueryFromClause (previousClause, identifier, ((SubQueryExpression) resolvedCollectionSelector).QueryModel);
+        return new SubQueryFromClause (previousClause, itemName, itemType, ((SubQueryExpression) resolvedCollectionSelector).QueryModel);
       else
-        return new AdditionalFromClause (previousClause, identifier, resolvedCollectionSelector);
+        return new AdditionalFromClause (previousClause, itemName, itemType, resolvedCollectionSelector);
     }
   }
 }

@@ -66,7 +66,7 @@ namespace Remotion.Data.Linq
       {
         ArgumentUtility.CheckNotNull ("value", value);
         _mainFromClause = value;
-        _uniqueIdentifierGenerator.AddKnownIdentifier (value.Identifier.Name);
+        _uniqueIdentifierGenerator.AddKnownIdentifier (value.ItemName);
       }
     }
 
@@ -99,7 +99,7 @@ namespace Remotion.Data.Linq
       
       var clauseAsFromClause = clause as FromClauseBase;
       if (clauseAsFromClause != null)
-        _uniqueIdentifierGenerator.AddKnownIdentifier (clauseAsFromClause.Identifier.Name);
+        _uniqueIdentifierGenerator.AddKnownIdentifier (clauseAsFromClause.ItemName);
 
       _bodyClauses.Add (clause);
 

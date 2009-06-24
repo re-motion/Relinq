@@ -95,7 +95,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       QueryModel queryModel = _queryParser.GetParsedQuery (constantExpression);
 
       Assert.That (queryModel.MainFromClause, Is.Not.Null);
-      Assert.That (queryModel.MainFromClause.Identifier.Name, Is.EqualTo ("<generated>_0"));
+      Assert.That (queryModel.MainFromClause.ItemName, Is.EqualTo ("<generated>_0"));
       Assert.That (((ConstantExpression) queryModel.MainFromClause.QuerySource).Value, Is.SameAs (value));
     }
 
@@ -122,7 +122,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       QueryModel queryModel = _queryParser.GetParsedQuery (expressionTree);
 
       Assert.That (queryModel.MainFromClause, Is.Not.Null);
-      Assert.That (queryModel.MainFromClause.Identifier.Name, Is.EqualTo ("i"));
+      Assert.That (queryModel.MainFromClause.ItemName, Is.EqualTo ("i"));
     }
 
     [Test]

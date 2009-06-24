@@ -88,7 +88,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (columnSource is Table);
       var tableSource = (Table) columnSource;
       Assert.That (tableSource.Name, Is.EqualTo ("studentTable"));
-      Assert.That (tableSource.Alias, Is.EqualTo (_memberFromClause.Identifier.Name));
+      Assert.That (tableSource.Alias, Is.EqualTo (_memberFromClause.ItemName));
     }
 
     [Test]
@@ -100,7 +100,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
 
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (_memberFromClause));
-      Assert.That (clone.Identifier, Is.SameAs (_memberFromClause.Identifier));
+      Assert.That (clone.ItemName, Is.EqualTo (_memberFromClause.ItemName));
+      Assert.That (clone.ItemType, Is.SameAs (_memberFromClause.ItemType));
       Assert.That (clone.FromExpression, Is.SameAs (_memberFromClause.FromExpression));
       Assert.That (clone.MemberExpression, Is.SameAs (_memberFromClause.MemberExpression));
       Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
@@ -109,14 +110,15 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone_AdjustsExpressions ()
     {
-      var mainFromClause = ExpressionHelper.CreateMainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource());
+      var mainFromClause = ExpressionHelper.CreateMainFromClause_Student();
       var fromExpression = Expression.MakeMemberAccess (new QuerySourceReferenceExpression (mainFromClause), typeof (Student).GetProperty ("OtherStudent"));
       var memberFromClause = new MemberFromClause (
           mainFromClause, 
-          ExpressionHelper.CreateParameterExpression(), 
+          "s", 
+          typeof (Student),
           fromExpression);
 
-      var newMainFromClause = ExpressionHelper.CreateMainFromClause (Expression.Parameter (typeof (Student), "s"), ExpressionHelper.CreateQuerySource ());
+      var newMainFromClause = ExpressionHelper.CreateMainFromClause_Student();
       _cloneContext.ClonedClauseMapping.AddMapping (mainFromClause, newMainFromClause);
 
       var clone = (MemberFromClause) memberFromClause.Clone (_cloneContext);
