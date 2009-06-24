@@ -15,8 +15,8 @@
 // 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
+using Remotion.Collections;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.StringBuilding;
 using Remotion.Utilities;
@@ -29,7 +29,7 @@ namespace Remotion.Data.Linq
   /// </summary>
   public class QueryModel : ICloneable
   {
-    private readonly List<IBodyClause> _bodyClauses = new List<IBodyClause> ();
+    private readonly ObservableCollection<IBodyClause> _bodyClauses = new ObservableCollection<IBodyClause>();
     private readonly UniqueIdentifierGenerator _uniqueIdentifierGenerator;
 
     private MainFromClause _mainFromClause;
@@ -47,14 +47,17 @@ namespace Remotion.Data.Linq
       ArgumentUtility.CheckNotNull ("mainFromClause", mainFromClause);
       ArgumentUtility.CheckNotNull ("SelectOrGroupClause", selectOrGroupClause);
 
-      _uniqueIdentifierGenerator = new UniqueIdentifierGenerator ();
+      _uniqueIdentifierGenerator = new UniqueIdentifierGenerator();
       ResultType = resultType;
       MainFromClause = mainFromClause;
       SelectOrGroupClause = selectOrGroupClause;
+
+      _bodyClauses.ItemInserted += BodyClauses_Added;
+      _bodyClauses.ItemSet += BodyClauses_Added;
     }
 
     public Type ResultType { get; private set; }
-    
+
     public MainFromClause MainFromClause
     {
       get { return _mainFromClause; }
@@ -69,7 +72,7 @@ namespace Remotion.Data.Linq
     public ISelectGroupClause SelectOrGroupClause
     {
       get { return _selectOrGroupClause; }
-      set 
+      set
       {
         ArgumentUtility.CheckNotNull ("value", value);
         _selectOrGroupClause = value;
@@ -83,10 +86,6 @@ namespace Remotion.Data.Linq
     {
       get { return _bodyClauses; }
     }
-
-    // TODO:       var clauseAsFromClause = clause as FromClauseBase;
-    //     if (clauseAsFromClause != null)
-    //     _uniqueIdentifierGenerator.AddKnownIdentifier (clauseAsFromClause.ItemName);
 
     public void Accept (IQueryVisitor visitor)
     {
@@ -137,6 +136,13 @@ namespace Remotion.Data.Linq
     {
       ArgumentUtility.CheckNotNullOrEmpty ("prefix", prefix);
       return _uniqueIdentifierGenerator.GetUniqueIdentifier (prefix);
+    }
+
+    private void BodyClauses_Added (object sender, ObservableCollectionChangedEventArgs<IBodyClause> e)
+    {
+      var clauseAsFromClause = e.Item as FromClauseBase;
+      if (clauseAsFromClause != null)
+        _uniqueIdentifierGenerator.AddKnownIdentifier (clauseAsFromClause.ItemName);
     }
   }
 }

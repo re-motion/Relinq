@@ -204,8 +204,17 @@ namespace Remotion.Data.UnitTests.Linq
       Assert.That (identifier, Is.EqualTo ("test1"));
     }
 
+    //[Test] // TODO 1187
+    //public void GetNewName_AlreadyExists_ChangedMainFromClause ()
+    //{
+    //  var mainFromClause = new MainFromClause ("test0", typeof (Student), ExpressionHelper.CreateQuerySource ().Expression);
+    //  var queryModel = ExpressionHelper.CreateQueryModel ();
+    //  queryModel.MainFromClause = mainFromClause;
+    //  var identifier = queryModel.GetNewName ("test");
+    //  Assert.That (identifier, Is.EqualTo ("test1"));
+    //}
+
     [Test]
-    [Ignore("TODO 1178")]
     public void GetNewName_AlreadyExists_BodyClauses ()
     {
       var additionalFromClause = new AdditionalFromClause (
@@ -214,6 +223,22 @@ namespace Remotion.Data.UnitTests.Linq
           typeof (Student),
           ExpressionHelper.CreateExpression());
       _queryModel.BodyClauses.Add (additionalFromClause);
+
+      var identifier = _queryModel.GetNewName ("test");
+      Assert.That (identifier, Is.EqualTo ("test1"));
+    }
+
+    [Test]
+    public void GetNewName_AlreadyExists_ReplacedBodyClauses ()
+    {
+      _queryModel.BodyClauses.Add (ExpressionHelper.CreateAdditionalFromClause ());
+
+      var additionalFromClause = new AdditionalFromClause (
+          _queryModel.MainFromClause,
+          "test0",
+          typeof (Student),
+          ExpressionHelper.CreateExpression ());
+      _queryModel.BodyClauses[0] = additionalFromClause;
 
       var identifier = _queryModel.GetNewName ("test");
       Assert.That (identifier, Is.EqualTo ("test1"));
