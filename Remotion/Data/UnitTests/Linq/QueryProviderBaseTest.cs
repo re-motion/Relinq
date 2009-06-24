@@ -20,6 +20,8 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
+using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.EagerFetching;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Structure;
@@ -91,7 +93,8 @@ namespace Remotion.Data.UnitTests.Linq
       Expression expression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource ());
       var queryModel = _queryProvider.GenerateQueryModel (expression);
 
-      Assert.That (queryModel.GetExpressionTree (), Is.SameAs (expression));
+      Assert.That (((QuerySourceReferenceExpression) ((SelectClause) queryModel.SelectOrGroupClause).Selector).ReferencedClause,
+          Is.SameAs (queryModel.MainFromClause));
     }
 
     [Test]
@@ -100,7 +103,7 @@ namespace Remotion.Data.UnitTests.Linq
       var expectedResult = new Student[0];
       Expression expression = (from s in _queryableWithExecutorMock select s).Expression;
       _executorMock.Expect (mock => mock.ExecuteCollection<Student> (
-          Arg<QueryModel>.Matches (queryModel => queryModel.GetExpressionTree () == expression),
+          Arg<QueryModel>.Is.Anything,
           Arg<FetchRequestBase[]>.List.Equal (new FetchManyRequest[0]))).Return (expectedResult);
 
       _executorMock.Replay ();
@@ -116,7 +119,7 @@ namespace Remotion.Data.UnitTests.Linq
       var expectedResult = new Student[0];
       Expression expression = (from s in _queryableWithExecutorMock select s).Expression;
       _executorMock.Expect (mock => mock.ExecuteCollection<Student> (
-          Arg<QueryModel>.Matches (queryModel => queryModel.GetExpressionTree () == expression),
+          Arg<QueryModel>.Is.Anything,
           Arg<FetchRequestBase[]>.List.Equal (new FetchManyRequest[0]))).Return (new Student[0]);
 
       _executorMock.Replay ();

@@ -17,9 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.StringBuilding;
 using Remotion.Utilities;
 
@@ -36,7 +34,6 @@ namespace Remotion.Data.Linq
 
     private MainFromClause _mainFromClause;
     private ISelectGroupClause _selectOrGroupClause;
-    private Expression _expressionTree;
 
     /// <summary>
     /// Initializes a new instance of <see cref="QueryModel"/>
@@ -51,7 +48,6 @@ namespace Remotion.Data.Linq
       ArgumentUtility.CheckNotNull ("SelectOrGroupClause", selectOrGroupClause);
 
       _uniqueIdentifierGenerator = new UniqueIdentifierGenerator ();
-
       ResultType = resultType;
       MainFromClause = mainFromClause;
       SelectOrGroupClause = selectOrGroupClause;
@@ -77,7 +73,6 @@ namespace Remotion.Data.Linq
       {
         ArgumentUtility.CheckNotNull ("value", value);
         _selectOrGroupClause = value;
-        InvalidateExpressionTree ();
       }
     }
 
@@ -102,8 +97,6 @@ namespace Remotion.Data.Linq
         _uniqueIdentifierGenerator.AddKnownIdentifier (clauseAsFromClause.ItemName);
 
       _bodyClauses.Add (clause);
-
-      InvalidateExpressionTree ();
     }
 
     public void Accept (IQueryVisitor visitor)
@@ -118,29 +111,6 @@ namespace Remotion.Data.Linq
       var sv = new StringBuildingQueryVisitor();
       sv.VisitQueryModel (this);
       return sv.ToString();
-    }
-
-    // Once we have a working ExpressionTreeBuildingVisitor, we could use it to build trees for constructed models. For now, we just create
-    // a special ConstructedQueryExpression node.
-    // TODO 1067: Changes made to the query model's clauses should cause this Expression to become invalid.
-    public Expression GetExpressionTree ()
-    {
-      if (_expressionTree == null)
-        _expressionTree = new ConstructedQueryExpression (this);
-      return _expressionTree;
-    }
-
-    /// <summary>
-    /// Set expression tree whenever the query model changes.
-    /// </summary>
-    /// <param name="expressionTree">The expression of a linq query.</param>
-    public void SetExpressionTree (Expression expressionTree)
-    {
-      ArgumentUtility.CheckNotNull ("expressionTree", expressionTree);
-      if (_expressionTree != null && _expressionTree != expressionTree)
-        throw new InvalidOperationException  ("This QueryModel already has an expression tree. Call InvalidateExpressionTree before setting a new one.");
-
-      _expressionTree = expressionTree;
     }
 
     public QueryModel Clone ()
@@ -160,23 +130,12 @@ namespace Remotion.Data.Linq
         queryModelBuilder.AddClause (bodyClause.Clone (cloneContext));
       queryModelBuilder.AddClause (SelectOrGroupClause.Clone (cloneContext));
 
-      var queryModel = queryModelBuilder.Build (ResultType);
-      
-      if (_expressionTree != null)
-        queryModel.SetExpressionTree (_expressionTree);
-
-      return queryModel;
+      return queryModelBuilder.Build (ResultType);
     }
 
     object ICloneable.Clone ()
     {
       return Clone();
-    }
-
-    // TODO 1176: Remove
-    public void InvalidateExpressionTree ()
-    {
-      _expressionTree = null;
     }
 
     /// <summary>

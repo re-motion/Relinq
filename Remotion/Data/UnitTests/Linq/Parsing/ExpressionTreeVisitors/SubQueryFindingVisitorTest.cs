@@ -18,6 +18,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Parsing.Structure;
@@ -61,7 +62,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
       Assert.That (newLambdaExpression.Body, Is.InstanceOfType (typeof (SubQueryExpression)));
 
       var newSubQueryExpression = (SubQueryExpression) newLambdaExpression.Body;
-      Assert.That (newSubQueryExpression.QueryModel.GetExpressionTree (), Is.SameAs (subQuery));
+      Assert.That (((QuerySourceReferenceExpression) ((SelectClause) newSubQueryExpression.QueryModel.SelectOrGroupClause).Selector).ReferencedClause,
+          Is.SameAs (newSubQueryExpression.QueryModel.MainFromClause));
     }
 
     [Test]

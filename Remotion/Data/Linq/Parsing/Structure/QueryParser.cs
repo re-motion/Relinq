@@ -81,10 +81,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       var queryModelBuilder = new QueryModelBuilder();
       AddClauses (selectClause, queryModelBuilder);
 
-      var queryModel = queryModelBuilder.Build (expressionTreeRoot.Type);
-
-      queryModel.SetExpressionTree (expressionTreeRoot);
-      return queryModel;
+      return queryModelBuilder.Build (expressionTreeRoot.Type);
     }
 
     private void AddClauses (IClause clause, QueryModelBuilder queryModelBuilder)

@@ -15,10 +15,8 @@
 // 
 using System;
 using System.Linq;
-using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Data.Linq;
-using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.StringBuilding;
 using Rhino.Mocks;
 using Remotion.Data.Linq.Clauses;
@@ -29,7 +27,6 @@ namespace Remotion.Data.UnitTests.Linq
   [TestFixture]
   public class QueryModelTest
   {
-    private Expression _expressionTree;
     private MainFromClause _mainFromClause;
     private SelectClause _selectClause;
     private QueryModel _queryModel;
@@ -38,29 +35,18 @@ namespace Remotion.Data.UnitTests.Linq
     [SetUp]
     public void SetUp ()
     {
-      _expressionTree = ExpressionHelper.CreateExpression ();
       _mainFromClause = ExpressionHelper.CreateMainFromClause ();
       _selectClause = ExpressionHelper.CreateSelectClause (_mainFromClause);
       _queryModel = new QueryModel (typeof (IQueryable<string>), _mainFromClause, _selectClause);
-      _queryModel.SetExpressionTree(_expressionTree);
       _clonedClauseMapping = new ClonedClauseMapping ();
     }
 
     [Test]
-    public void Initialize_WithFromClauseAndBody ()
+    public void Initialize ()
     {
-      Assert.AreSame (_mainFromClause, _queryModel.MainFromClause);
-      Assert.AreSame (_selectClause, _queryModel.SelectOrGroupClause);
-      Assert.IsNotNull (_queryModel.GetExpressionTree ());
-      Assert.AreEqual (typeof (IQueryable<string>), _queryModel.ResultType);
-    }
-
-    [Test]
-    public void Initialize_WithExpressionTree ()
-    {
-      Assert.AreSame (_mainFromClause, _queryModel.MainFromClause);
-      Assert.AreSame (_selectClause, _queryModel.SelectOrGroupClause);
-      Assert.AreSame (_expressionTree, _queryModel.GetExpressionTree ());
+      Assert.That (_queryModel.MainFromClause, Is.SameAs (_mainFromClause));
+      Assert.That (_queryModel.SelectOrGroupClause, Is.SameAs (_selectClause));
+      Assert.That (_queryModel.ResultType, Is.EqualTo (typeof (IQueryable<string>)));
     }
 
     [Test]
@@ -83,71 +69,9 @@ namespace Remotion.Data.UnitTests.Linq
     {
       var sv = new StringBuildingQueryVisitor();
       sv.VisitQueryModel (_queryModel);
-      Assert.AreEqual (sv.ToString (), _queryModel.ToString ());
+      Assert.That (_queryModel.ToString(), Is.EqualTo (sv.ToString()));
     }
 
-    [Test]
-    public void GetExpressionTree_ForSuppliedTree ()
-    {
-      Expression expressionTree = _queryModel.GetExpressionTree ();
-      Assert.That (expressionTree, Is.Not.Null);
-      Assert.That (expressionTree, Is.SameAs (_expressionTree));
-    }
-
-    [Test]
-    public void GetExpressionTree_ForConstructedTree ()
-    {
-      var queryModel = new QueryModel (typeof (IQueryable<Student>), ExpressionHelper.CreateMainFromClause (), ExpressionHelper.CreateSelectClause ());
-
-      Expression expressionTree = queryModel.GetExpressionTree();
-      Assert.That (expressionTree, Is.Not.Null);
-      Assert.That (expressionTree, Is.InstanceOfType (typeof (ConstructedQueryExpression)));
-    }
-
-    [Test]
-    public void GetExpressionTree_ForConstructedTree_Twice ()
-    {
-      var queryModel = new QueryModel (typeof (IQueryable<Student>), ExpressionHelper.CreateMainFromClause (), ExpressionHelper.CreateSelectClause ());
-
-      Expression expressionTree1 = queryModel.GetExpressionTree ();
-      Expression expressionTree2 = queryModel.GetExpressionTree ();
-      Assert.That (expressionTree1, Is.SameAs (expressionTree2));
-    }
-
-    [Test]
-    public void SetExpressionTree ()
-    {
-      var queryModel = new QueryModel (typeof (IQueryable<Student>), ExpressionHelper.CreateMainFromClause (), ExpressionHelper.CreateSelectClause ());
-      var expression = ExpressionHelper.CreateExpression ();
-      queryModel.SetExpressionTree (expression);
-
-      Assert.That (queryModel.GetExpressionTree (), Is.SameAs (expression));
-    }
-
-    [Test]
-    [ExpectedException (typeof (ArgumentNullException))]
-    public void SetExpressionTree_Null ()
-    {
-      var queryModel = new QueryModel (typeof (IQueryable<Student>), ExpressionHelper.CreateMainFromClause (), ExpressionHelper.CreateSelectClause ());
-      queryModel.SetExpressionTree (null);
-    }
-
-
-    [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "This QueryModel already has an expression tree. Call InvalidateExpressionTree before setting a new one.")]
-    public void SetExpressionTree_AlreadyHasOne ()
-    {
-      _queryModel.SetExpressionTree (ExpressionHelper.CreateExpression());
-    }
-
-    [Test]
-    public void SetExpressionTree_Same ()
-    {
-      var previousTree = _queryModel.GetExpressionTree();
-      _queryModel.SetExpressionTree (previousTree);
-      Assert.That (_queryModel.GetExpressionTree (), Is.SameAs (previousTree));
-    }
-   
     [Test]
     public void Clone_ReturnsNewQueryModel ()
     {
@@ -159,12 +83,11 @@ namespace Remotion.Data.UnitTests.Linq
     }
 
     [Test]
-    public void Clone_HasSameResultTypeAndExpressionTree ()
+    public void Clone_HasSameResultType ()
     {
       var clone = _queryModel.Clone ();
 
       Assert.That (clone.ResultType, Is.SameAs (_queryModel.ResultType));
-      Assert.That (clone.GetExpressionTree(), Is.SameAs (_queryModel.GetExpressionTree()));
     }
 
     [Test]
@@ -239,23 +162,6 @@ namespace Remotion.Data.UnitTests.Linq
     }
     
     [Test]
-    public void InvalidateExpressionTree ()
-    {
-      Assert.That (_queryModel.GetExpressionTree (), Is.SameAs (_expressionTree));
-      _queryModel.InvalidateExpressionTree ();
-      Assert.That (_queryModel.GetExpressionTree (), Is.Not.SameAs (_expressionTree));
-      Assert.That (_queryModel.GetExpressionTree (), Is.InstanceOfType (typeof (ConstructedQueryExpression)));
-    }
-
-    [Test]
-    public void AddBodyClauses_SetsExpressionTreeToNull ()
-    {
-      var bodyClause = ExpressionHelper.CreateAdditionalFromClause ();
-      _queryModel.AddBodyClause (bodyClause);
-      Assert.That (_queryModel.GetExpressionTree(), Is.InstanceOfType (typeof (ConstructedQueryExpression)));
-    }
-
-    [Test]
     public void SelectOrGroupClause_Set ()
     {
       var newSelectClause = ExpressionHelper.CreateSelectClause ();
@@ -269,16 +175,6 @@ namespace Remotion.Data.UnitTests.Linq
     public void SelectOrGroupClause_Set_Null ()
     {
       _queryModel.SelectOrGroupClause = null;
-    }
-
-    [Test]
-    public void SelectOrGroupClause_Set_InvalidatesExpressionTree ()
-    {
-      var expressionTreeBefore = _queryModel.GetExpressionTree ();
-      _queryModel.SelectOrGroupClause = ExpressionHelper.CreateSelectClause ();
-      var expressionTreeAfter = _queryModel.GetExpressionTree ();
-
-      Assert.That (expressionTreeAfter, Is.Not.SameAs (expressionTreeBefore));
     }
 
     [Test]
