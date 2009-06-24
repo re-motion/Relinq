@@ -14,9 +14,11 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Runtime.Serialization;
 
 namespace Remotion.Data.Linq.Parsing
 {
+  [Serializable]
   public class ParserException : Exception
   {
     public ParserException (string message)
@@ -35,6 +37,19 @@ namespace Remotion.Data.Linq.Parsing
       ParsedExpression = parsedExpression;
     }
 
+    protected ParserException (SerializationInfo info, StreamingContext context)
+        : base(info, context)
+    {
+      ParsedExpression = info.GetValue ("ParserException.ParsedExpression", typeof (object));
+    }
+
     public object ParsedExpression { get; private set; }
+
+    public override void GetObjectData (SerializationInfo info, StreamingContext context)
+    {
+      base.GetObjectData (info, context);
+      
+      info.AddValue ("ParserException.ParsedExpression", ParsedExpression);
+    }
   }
 }
