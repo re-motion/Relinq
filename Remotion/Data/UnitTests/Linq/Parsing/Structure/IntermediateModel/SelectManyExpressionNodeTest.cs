@@ -132,16 +132,17 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var studentClause = ExpressionHelper.CreateMainFromClause_Student ();
       var collectionSelector = ExpressionHelper.CreateLambdaExpression<Student, IEnumerable<Student>> (s => s.Friends);
+      var resultSelector = ExpressionHelper.CreateLambdaExpression<Student, Student, Student> ((s1, s2) => s1);
 
       var studentSource = new ConstantExpressionNode ("s", typeof (IQueryable<Student>), null);
       ClauseGenerationContext.ClauseMapping.AddMapping (studentSource, studentClause);
-      var node = new SelectManyExpressionNode (CreateParseInfo (studentSource), collectionSelector, _resultSelector);
+      var node = new SelectManyExpressionNode (CreateParseInfo (studentSource), collectionSelector, resultSelector);
 
       node.Apply (QueryModel, ClauseGenerationContext);
       var clause = (MemberFromClause) QueryModel.BodyClauses[0];
 
-      Assert.That (clause.ItemName, Is.EqualTo ("j"));
-      Assert.That (clause.ItemType, Is.SameAs (typeof (int)));
+      Assert.That (clause.ItemName, Is.EqualTo ("s2"));
+      Assert.That (clause.ItemType, Is.SameAs (typeof (Student)));
       Assert.That (clause.FromExpression, Is.SameAs (node.GetResolvedCollectionSelector (ClauseGenerationContext)));
       Assert.That (clause.MemberExpression, Is.SameAs (node.GetResolvedCollectionSelector (ClauseGenerationContext)));
     }
@@ -169,6 +170,15 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var clause = (AdditionalFromClause) QueryModel.BodyClauses[0];
 
       Assert.That (QuerySourceClauseMapping.GetClause (_node), Is.SameAs (clause));
+    }
+
+    [Test]
+    public void Apply_AdaptsSelector ()
+    {
+      _node.Apply (QueryModel, ClauseGenerationContext);
+      var clause = (SelectClause) QueryModel.SelectOrGroupClause;
+
+      Assert.That (clause.Selector, Is.SameAs (_node.GetResolvedResultSelector (ClauseGenerationContext)));
     }
 
     [Test]

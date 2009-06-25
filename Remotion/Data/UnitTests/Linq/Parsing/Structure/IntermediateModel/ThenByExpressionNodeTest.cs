@@ -99,6 +99,18 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
+    public void Apply_UsesLastClause ()
+    {
+      var clause = new OrderByClause ();
+      QueryModel.BodyClauses.Add (new OrderByClause ());
+      QueryModel.BodyClauses.Add (clause);
+
+      _node.Apply (QueryModel, ClauseGenerationContext);
+
+      Assert.That (clause.Orderings.Count, Is.EqualTo (1));
+    }
+
+    [Test]
     [ExpectedException (typeof (ParserException))]
     public void Apply_NoPreviousClause ()
     {

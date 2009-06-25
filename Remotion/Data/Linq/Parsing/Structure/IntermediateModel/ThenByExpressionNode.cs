@@ -36,7 +36,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Queryable.ThenBy<object, object> (null, null))
                                                            };
 
-    private ResolvedExpressionCache _cachedSelector;
+    private readonly ResolvedExpressionCache _cachedSelector;
 
     public ThenByExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression keySelector)
         : base (parseInfo)
@@ -82,11 +82,20 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     public override void Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
-      if (queryModel.BodyClauses.Count == 0 || !(queryModel.BodyClauses[0] is OrderByClause))
-        throw new ParserException ("ThenBy expressions must follow OrderBy, OrderByDescending, ThenBy, or ThenByDescending expressions.");
+      var orderByClause = GetOrderByClause (queryModel);
 
-      var clause = (OrderByClause) queryModel.BodyClauses[queryModel.BodyClauses.Count - 1];
-      clause.Orderings.Add (new Ordering (GetResolvedKeySelector (clauseGenerationContext), OrderingDirection.Asc));
+      if (orderByClause == null)
+        throw new ParserException ("ThenByDescending expressions must follow OrderBy, OrderByDescending, ThenBy, or ThenByDescending expressions.");
+
+      orderByClause.Orderings.Add (new Ordering (GetResolvedKeySelector (clauseGenerationContext), OrderingDirection.Asc));
+    }
+
+    private OrderByClause GetOrderByClause (QueryModel queryModel)
+    {
+      if (queryModel.BodyClauses.Count == 0)
+        return null;
+      else
+        return queryModel.BodyClauses[queryModel.BodyClauses.Count - 1] as OrderByClause;
     }
   }
 }

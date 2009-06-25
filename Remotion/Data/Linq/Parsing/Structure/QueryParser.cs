@@ -14,10 +14,10 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Utilities;
 
@@ -74,60 +74,33 @@ namespace Remotion.Data.Linq.Parsing.Structure
       var clauseGenerationContext = new ClauseGenerationContext (
           new QuerySourceClauseMapping(), _expressionTreeParser.NodeTypeRegistry, new ResultModificationExpressionNodeRegistry());
 
-      var clauses = new List<IClause>();
-      CreateClauses (clauses, node, clauseGenerationContext);
-      CreateSelectClauseIfNecessary (clauses, node, clauseGenerationContext);
-
-      var queryModelBuilder = new QueryModelBuilder();
-      foreach (var clause in clauses)
-        queryModelBuilder.AddClause (clause);
-
-      var queryModel = queryModelBuilder.Build (expressionTreeRoot.Type);
-      clauseGenerationContext.ResultModificationNodeRegistry.ApplyAll (queryModel, clauseGenerationContext);
+      QueryModel queryModel = ApplyAllNodes (expressionTreeRoot.Type, node, clauseGenerationContext);
       return queryModel;
     }
 
     /// <summary>
-    /// Recursively creates <see cref="IClause"/>s from a chain of <see cref="IExpressionNode"/>s, putting the clauses into the 
-    /// <paramref name="clauses"/> list in the same order as the corresponding nodes.
+    /// Applies all nodes to a <see cref="QueryModel"/>, which is created by the trailing <see cref="ConstantExpressionNode"/> in the 
+    /// <paramref name="node"/> chain.
     /// </summary>
-    /// <param name="clauses">The list receiving the clauses.</param>
-    /// <param name="node">The last node in the chain to process.</param>
-    /// <param name="clauseGenerationContext">A container for all the context information needed for creating clauses. This is used to resolve 
-    /// predicates and selectors using <see cref="ExpressionResolver"/>s.</param>
-    private void CreateClauses (List<IClause> clauses, IExpressionNode node, ClauseGenerationContext clauseGenerationContext)
+    /// <param name="resultType">The result type to put into the <see cref="QueryModel"/>.</param>
+    /// <param name="node">The entry point to the <see cref="IExpressionNode"/> chain.</param>
+    /// <param name="clauseGenerationContext">The clause generation context collecting context information during the parsing process.</param>
+    /// <returns>A <see cref="QueryModel"/> created by the training <see cref="ConstantExpressionNode"/> and transformed by each node in the
+    /// <see cref="IExpressionNode"/> chain.</returns>
+    private QueryModel ApplyAllNodes (Type resultType, IExpressionNode node, ClauseGenerationContext clauseGenerationContext)
     {
-      if (node.Source == null) // this is the end of the node chain, create a clause symbolizing the end of the clause chain
-        clauses.Add (node.CreateClause (null, clauseGenerationContext));
-      else
+      if (node.Source == null) // this is the last node, create a MainFromClause and a QueryModel
       {
-        // this is not the end of the chain, process the rest of the chain before processing this node
-        CreateClauses (clauses, node.Source, clauseGenerationContext);
-
-        var previousClause = clauses[clauses.Count - 1];
-        if (previousClause is SelectClause && !(node is ResultModificationExpressionNodeBase)) // TODO 1178: Check this check
-          clauses.RemoveAt (clauses.Count - 1);
-
-        var newClause = node.CreateClause (previousClause, clauseGenerationContext);
-        if (newClause != previousClause)
-          clauses.Add (newClause);
+        var constantExpressionNode = (ConstantExpressionNode) node;
+        var mainFromClause = (MainFromClause) constantExpressionNode.CreateClause (null, clauseGenerationContext);
+        var defaultSelectClause = new SelectClause (new QuerySourceReferenceExpression (mainFromClause));
+        return new QueryModel (resultType, mainFromClause, defaultSelectClause);
       }
-    }
-
-    /// <summary>
-    /// If the last clause in <paramref name="clauses"/> is not a <see cref="SelectClause"/>, this method will create one and add it to the list
-    /// of clauses.
-    /// </summary>
-    /// <param name="clauses">The clauses produced by the chain defined by <paramref name="lastNode"/>.</param>
-    /// <param name="lastNode">The last node in the chain of <see cref="IExpressionNode"/>s.</param>
-    /// <param name="clauseGenerationContext">The context info needed to resolve the created selector.</param>
-    private void CreateSelectClauseIfNecessary (List<IClause> clauses, IExpressionNode lastNode, ClauseGenerationContext clauseGenerationContext)
-    {
-      var lastClause = clauses[clauses.Count - 1];
-      if (!(lastClause is SelectClause))
+      else // first go to the next node, then transform the queryModel (created by the last node) by applying the node to i
       {
-        var selectClause = lastNode.CreateSelectClause (lastClause, clauseGenerationContext);
-        clauses.Add (selectClause);
+        var queryModel = ApplyAllNodes (resultType, node.Source, clauseGenerationContext);
+        node.Apply (queryModel, clauseGenerationContext);
+        return queryModel;
       }
     }
   }

@@ -100,6 +100,11 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     /// also implement <see cref="IQuerySourceExpressionNode"/> (such as 
     /// <see cref="ConstantExpressionNode"/> or <see cref="SelectManyExpressionNode"/>) must add their clauses to the mapping in 
     /// <see cref="Apply"/> in order to be able to implement <see cref="Resolve"/> correctly.</param>
+    /// <remarks>
+    /// For <see cref="ConstantExpressionNode"/> objects, which mark the end of an <see cref="IExpressionNode"/> chain, this method must not be called.
+    /// Instead, use <see cref="ConstantExpressionNode.CreateClause"/> to generate a <see cref="MainFromClause"/> and instantiate a new 
+    /// <see cref="QueryModel"/> with that clause.
+    /// </remarks>
     void Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext);
   }
 }

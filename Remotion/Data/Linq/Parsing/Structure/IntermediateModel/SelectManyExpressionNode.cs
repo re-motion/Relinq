@@ -154,6 +154,9 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       queryModel.BodyClauses.Add ((IBodyClause) clause);
 
       clauseGenerationContext.ClauseMapping.AddMapping (this, clause);
+
+      var selectClause = ((SelectClause) queryModel.SelectOrGroupClause);
+      selectClause.Selector = GetResolvedResultSelector (clauseGenerationContext);
     }
 
     private FromClauseBase CreateFromClauseOfCorrectType (string itemName, Type itemType, ClauseGenerationContext clauseGenerationContext)

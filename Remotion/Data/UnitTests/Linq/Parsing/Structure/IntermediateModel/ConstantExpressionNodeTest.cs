@@ -88,26 +88,10 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void Apply ()
+    [ExpectedException (typeof (NotSupportedException))]
+    public void Apply_Throws ()
     {
       _node.Apply (QueryModel, ClauseGenerationContext);
-      var constantClause = QueryModel.MainFromClause;
-
-      Assert.That (constantClause.ItemName, Is.EqualTo ("x"));
-      Assert.That (constantClause.ItemType, Is.SameAs (typeof (int)));
-      Assert.That (constantClause.FromExpression, Is.InstanceOfType (typeof (ConstantExpression)));
-      Assert.That (((ConstantExpression) constantClause.FromExpression).Value, Is.SameAs (_node.Value));
-      Assert.That (constantClause.FromExpression.Type, Is.SameAs (_node.QuerySourceType));
-    }
-
-    [Test]
-    public void Apply_AddsMapping ()
-    {
-      _node.Apply (QueryModel, _emptyContext);
-      var clause = QueryModel.MainFromClause;
-
-      Assert.That (_emptyContext.ClauseMapping.Count, Is.EqualTo (1));
-      Assert.That (_emptyContext.ClauseMapping.GetClause (_node), Is.SameAs (clause));
     }
 
     [Test]

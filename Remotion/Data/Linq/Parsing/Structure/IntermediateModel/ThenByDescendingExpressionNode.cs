@@ -83,11 +83,20 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     public override void Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
-      if (queryModel.BodyClauses.Count == 0 || !(queryModel.BodyClauses[0] is OrderByClause))
+      var orderByClause = GetOrderByClause (queryModel);
+
+      if (orderByClause == null)
         throw new ParserException ("ThenByDescending expressions must follow OrderBy, OrderByDescending, ThenBy, or ThenByDescending expressions.");
-      
-      var clause = (OrderByClause) queryModel.BodyClauses[queryModel.BodyClauses.Count - 1];
-      clause.Orderings.Add (new Ordering (GetResolvedKeySelector (clauseGenerationContext), OrderingDirection.Desc));
+
+      orderByClause.Orderings.Add (new Ordering (GetResolvedKeySelector (clauseGenerationContext), OrderingDirection.Desc));
+    }
+
+    private OrderByClause GetOrderByClause (QueryModel queryModel)
+    {
+      if (queryModel.BodyClauses.Count == 0)
+        return null;
+      else
+        return queryModel.BodyClauses[queryModel.BodyClauses.Count - 1] as OrderByClause;
     }
   }
 }
