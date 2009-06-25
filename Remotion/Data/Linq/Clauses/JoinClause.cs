@@ -50,7 +50,6 @@ namespace Remotion.Data.Linq.Clauses
         Expression onExpression,
         Expression equalityExpression)
     {
-      ArgumentUtility.CheckNotNull ("previousClause", previousClause);
       ArgumentUtility.CheckNotNull ("itemName", itemName);
       ArgumentUtility.CheckNotNull ("itemType", itemType);
       ArgumentUtility.CheckNotNull ("inExpression", inExpression);
@@ -127,12 +126,11 @@ namespace Remotion.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 
-      var newPreviousClause = cloneContext.ClonedClauseMapping.GetClause<IClause> (PreviousClause);
       var newFromClause = cloneContext.ClonedClauseMapping.GetClause<FromClauseBase> (FromClause);
       var newInExpression = CloneExpressionTreeVisitor.ReplaceClauseReferences (InExpression, cloneContext);
       var newOnExpression = CloneExpressionTreeVisitor.ReplaceClauseReferences (OnExpression, cloneContext);
       var newEqualityExpression = CloneExpressionTreeVisitor.ReplaceClauseReferences (EqualityExpression, cloneContext);
-      var result = new JoinClause (newPreviousClause, newFromClause, ItemName, ItemType, newInExpression, newOnExpression, newEqualityExpression);
+      var result = new JoinClause (null, newFromClause, ItemName, ItemType, newInExpression, newOnExpression, newEqualityExpression);
       cloneContext.ClonedClauseMapping.AddMapping (this, result);
       return result;
     }

@@ -92,8 +92,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone ()
     {
-      var newPreviousClause = ExpressionHelper.CreateClause ();
-      _cloneContext.ClonedClauseMapping.AddMapping (_orderByClause.PreviousClause, newPreviousClause);
       var clone = _orderByClause.Clone (_cloneContext);
 
       Assert.That (clone, Is.Not.Null);
@@ -103,7 +101,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone_ViaInterface_PassesMapping ()
     {
-      _cloneContext.ClonedClauseMapping.AddMapping (_orderByClause.PreviousClause, ExpressionHelper.CreateClause ());
       var clone = ((IBodyClause) _orderByClause).Clone (_cloneContext);
       Assert.That (_cloneContext.ClonedClauseMapping.GetClause (_orderByClause), Is.SameAs (clone));
     }
@@ -114,8 +111,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       var ordering = ExpressionHelper.CreateOrdering(_orderByClause);
       _orderByClause.Orderings.Add (ordering);
 
-      var newPreviousClause = ExpressionHelper.CreateMainFromClause ();
-      _cloneContext.ClonedClauseMapping.AddMapping (_orderByClause.PreviousClause, newPreviousClause);
       var clone = _orderByClause.Clone (_cloneContext);
 
       Assert.That (clone.Orderings.Count, Is.EqualTo (1));
@@ -135,7 +130,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       var ordering = new Ordering (_orderByClause, new QuerySourceReferenceExpression (oldReferencedClause), OrderingDirection.Asc);
       _orderByClause.Orderings.Add (ordering);
 
-      _cloneContext.ClonedClauseMapping.AddMapping (_orderByClause.PreviousClause, ExpressionHelper.CreateClause());
       _cloneContext.ClonedClauseMapping.AddMapping (oldReferencedClause, newReferencedClause);
 
       var clone = _orderByClause.Clone (_cloneContext);
@@ -147,7 +141,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone_AddsClauseToMapping ()
     {
-      _cloneContext.ClonedClauseMapping.AddMapping (_orderByClause.PreviousClause, ExpressionHelper.CreateClause ());
       var clone = _orderByClause.Clone (_cloneContext);
       Assert.That (_cloneContext.ClonedClauseMapping.GetClause (_orderByClause), Is.SameAs (clone));
     }

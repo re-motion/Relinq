@@ -30,7 +30,6 @@ namespace Remotion.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("groupExpression", groupExpression);
       ArgumentUtility.CheckNotNull ("byExpression", byExpression);
-      ArgumentUtility.CheckNotNull ("previousClause", previousClause);
 
       _groupExpression = groupExpression;
       _byExpression = byExpression;
@@ -63,10 +62,9 @@ namespace Remotion.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 
-      var newPreviousClause = cloneContext.ClonedClauseMapping.GetClause<IClause>(PreviousClause);
       var newGroupExpression = CloneExpressionTreeVisitor.ReplaceClauseReferences (GroupExpression, cloneContext);
       var newByExpression = CloneExpressionTreeVisitor.ReplaceClauseReferences (ByExpression, cloneContext);
-      var result = new GroupClause (newPreviousClause, newGroupExpression, newByExpression);
+      var result = new GroupClause (null, newGroupExpression, newByExpression);
       cloneContext.ClonedClauseMapping.AddMapping (this, result);
       return result;
     }

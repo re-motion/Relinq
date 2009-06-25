@@ -26,7 +26,6 @@ namespace Remotion.Data.Linq.Clauses
   /// </summary>
   public class Ordering
   {
-    private OrderingDirection _orderingDirection;
     private Expression _expression;
     
     /// <summary>
@@ -42,7 +41,7 @@ namespace Remotion.Data.Linq.Clauses
 
       OrderByClause = orderByClause;
       _expression = expression;
-      _orderingDirection = direction;
+      OrderingDirection = direction;
     }
 
     /// <summary>
@@ -60,11 +59,7 @@ namespace Remotion.Data.Linq.Clauses
       set { _expression = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
-    public OrderingDirection OrderingDirection
-    {
-      get { return _orderingDirection; }
-      set { _orderingDirection = value; }
-    }
+    public OrderingDirection OrderingDirection { get; set; }
 
     public virtual void Accept (IQueryVisitor visitor)
     {

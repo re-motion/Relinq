@@ -40,7 +40,6 @@ namespace Remotion.Data.Linq.Clauses
     /// <param name="selector">The projection within the select part of the linq query.</param>
     public SelectClause (IClause previousClause, Expression selector)
     {
-      ArgumentUtility.CheckNotNull ("previousClause", previousClause);
       ArgumentUtility.CheckNotNull ("selector", selector);
 
       PreviousClause = previousClause;
@@ -57,7 +56,7 @@ namespace Remotion.Data.Linq.Clauses
     public IClause PreviousClause
     {
       get { return _previousClause; }
-      set { _previousClause = ArgumentUtility.CheckNotNull ("value", value); }
+      set { _previousClause = value; }
     }
 
     [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (Selector),nq}")]
@@ -79,9 +78,8 @@ namespace Remotion.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 
-      var newPreviousClause = cloneContext.ClonedClauseMapping.GetClause<IClause>(PreviousClause);
       var newSelector = CloneExpressionTreeVisitor.ReplaceClauseReferences (Selector, cloneContext);
-      var result = new SelectClause (newPreviousClause, newSelector);
+      var result = new SelectClause (null, newSelector);
       cloneContext.ClonedClauseMapping.AddMapping (this, result);
       foreach (var resultModification in ResultModifications)
       {

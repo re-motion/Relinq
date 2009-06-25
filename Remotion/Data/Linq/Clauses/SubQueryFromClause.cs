@@ -41,7 +41,6 @@ namespace Remotion.Data.Linq.Clauses
     public SubQueryFromClause (IClause previousClause, string itemName, Type itemType, QueryModel subQuery)
         : base (previousClause, itemName, itemType)
     {
-      ArgumentUtility.CheckNotNull ("previousClause", previousClause);
       ArgumentUtility.CheckNotNull ("subQuery", subQuery);
 
       SubQueryModel = subQuery;
@@ -80,9 +79,8 @@ namespace Remotion.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 
-      var newPreviousClause = cloneContext.ClonedClauseMapping.GetClause<IClause> (PreviousClause);
       var clonedSubQueryModel = SubQueryModel.Clone (cloneContext.ClonedClauseMapping);
-      var result = new SubQueryFromClause (newPreviousClause, ItemName, ItemType, clonedSubQueryModel);
+      var result = new SubQueryFromClause (null, ItemName, ItemType, clonedSubQueryModel);
       cloneContext.ClonedClauseMapping.AddMapping (this, result);
       result.AddClonedJoinClauses (JoinClauses, cloneContext);
       return result;

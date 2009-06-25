@@ -80,8 +80,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone ()
     {
-      var newPreviousClause = ExpressionHelper.CreateMainFromClause ();
-      _cloneContext.ClonedClauseMapping.AddMapping (_additionalFromClause.PreviousClause, newPreviousClause);
       var clone = _additionalFromClause.Clone (_cloneContext);
 
       Assert.That (clone, Is.Not.Null);
@@ -113,7 +111,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone_ViaInterface_PassesMapping ()
     {
-      _cloneContext.ClonedClauseMapping.AddMapping (_additionalFromClause.PreviousClause, ExpressionHelper.CreateClause ());
       var clone = ((IBodyClause) _additionalFromClause).Clone (_cloneContext);
       Assert.That (_cloneContext.ClonedClauseMapping.GetClause (_additionalFromClause), Is.SameAs (clone));
     }
@@ -127,8 +124,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       var originalJoinClause2 = ExpressionHelper.CreateJoinClause (originalJoinClause1, _additionalFromClause);
       _additionalFromClause.JoinClauses.Add (originalJoinClause2);
 
-      var newPreviousClause = ExpressionHelper.CreateClause();
-      _cloneContext.ClonedClauseMapping.AddMapping (_additionalFromClause.PreviousClause, newPreviousClause);
       var clone = _additionalFromClause.Clone (_cloneContext);
       Assert.That (clone.JoinClauses.Count, Is.EqualTo (2));
 
@@ -159,7 +154,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
 
       var newFromClause = ExpressionHelper.CreateMainFromClause ();
       _cloneContext.ClonedClauseMapping.AddMapping (oldFromClause, newFromClause);
-      _cloneContext.ClonedClauseMapping.AddMapping (_additionalFromClause.PreviousClause, ExpressionHelper.CreateClause ());
 
       var clone = _additionalFromClause.Clone (_cloneContext);
       Assert.That (((QuerySourceReferenceExpression) clone.JoinClauses[0].InExpression).ReferencedClause, Is.SameAs (newFromClause));
@@ -168,7 +162,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone_AddsClauseToMapping ()
     {
-      _cloneContext.ClonedClauseMapping.AddMapping (_additionalFromClause.PreviousClause, ExpressionHelper.CreateClause ());
       var clone = _additionalFromClause.Clone (_cloneContext);
       Assert.That (_cloneContext.ClonedClauseMapping.GetClause (_additionalFromClause), Is.SameAs (clone));
     }

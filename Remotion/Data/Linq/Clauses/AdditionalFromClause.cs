@@ -42,7 +42,6 @@ namespace Remotion.Data.Linq.Clauses
           ArgumentUtility.CheckNotNullOrEmpty ("itemName", itemName),
           ArgumentUtility.CheckNotNull ("itemType", itemType))
     {
-      ArgumentUtility.CheckNotNull ("previousClause", previousClause);
       ArgumentUtility.CheckNotNull ("fromExpression", fromExpression);
 
       _fromExpression = fromExpression;
@@ -74,9 +73,8 @@ namespace Remotion.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 
-      var newPreviousClause = cloneContext.ClonedClauseMapping.GetClause<IClause> (PreviousClause);
       var newFromExpression = CloneExpressionTreeVisitor.ReplaceClauseReferences (FromExpression, cloneContext);
-      var result = new AdditionalFromClause (newPreviousClause, ItemName, ItemType, newFromExpression);
+      var result = new AdditionalFromClause (null, ItemName, ItemType, newFromExpression);
       cloneContext.ClonedClauseMapping.AddMapping (this, result);
       result.AddClonedJoinClauses (JoinClauses, cloneContext);
       return result;

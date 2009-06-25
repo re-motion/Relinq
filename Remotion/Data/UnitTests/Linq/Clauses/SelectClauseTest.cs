@@ -95,8 +95,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone ()
     {
-      var newPreviousClause = ExpressionHelper.CreateMainFromClause ();
-      _cloneContext.ClonedClauseMapping.AddMapping (_selectClause.PreviousClause, newPreviousClause);
       var clone = _selectClause.Clone (_cloneContext);
 
       Assert.That (clone, Is.Not.Null);
@@ -107,7 +105,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone_ViaInterface_PassesMapping ()
     {
-      _cloneContext.ClonedClauseMapping.AddMapping (_selectClause.PreviousClause, ExpressionHelper.CreateClause());
       var clone = ((ISelectGroupClause) _selectClause).Clone (_cloneContext);
       Assert.That (_cloneContext.ClonedClauseMapping.GetClause (_selectClause), Is.SameAs (clone));
     }
@@ -115,7 +112,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone_AddsClauseToMapping ()
     {
-      _cloneContext.ClonedClauseMapping.AddMapping (_selectClause.PreviousClause, ExpressionHelper.CreateClause ());
       var clone = _selectClause.Clone (_cloneContext);
       Assert.That (_cloneContext.ClonedClauseMapping.GetClause (_selectClause), Is.SameAs (clone));
     }
@@ -138,9 +134,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone_ResultModifiers ()
     {
-      var newPreviousClause = ExpressionHelper.CreateMainFromClause ();
-      _cloneContext.ClonedClauseMapping.AddMapping (_selectClause.PreviousClause, newPreviousClause);
-
       var resultModifierClause1 = ExpressionHelper.CreateResultModification (_selectClause);
       _selectClause.ResultModifications.Add (resultModifierClause1);
       var resultModifierClause2 = ExpressionHelper.CreateResultModification (_selectClause);
@@ -158,9 +151,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone_ResultModifiers_PassesMapping ()
     {
-      var newPreviousClause = ExpressionHelper.CreateMainFromClause ();
-      _cloneContext.ClonedClauseMapping.AddMapping (_selectClause.PreviousClause, newPreviousClause);
-
       var resultModifierClauseMock = MockRepository.GenerateMock<ResultModificationBase> (_selectClause, CollectionExecutionStrategy.Instance);
       _selectClause.ResultModifications.Add (resultModifierClauseMock);
 

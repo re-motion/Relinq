@@ -36,7 +36,6 @@ namespace Remotion.Data.Linq.Clauses
     /// <param name="predicate">The expression which represents the where conditions.</param>
     public WhereClause (IClause previousClause, Expression predicate)
     {
-      ArgumentUtility.CheckNotNull ("previousClause", previousClause);
       ArgumentUtility.CheckNotNull ("predicate", predicate);
 
       PreviousClause = previousClause;
@@ -68,9 +67,8 @@ namespace Remotion.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 
-      var newPreviousClause = cloneContext.ClonedClauseMapping.GetClause<IClause> (PreviousClause);
       var newPredicate = CloneExpressionTreeVisitor.ReplaceClauseReferences (Predicate, cloneContext);
-      var result = new WhereClause (newPreviousClause, newPredicate);
+      var result = new WhereClause (null, newPredicate);
       cloneContext.ClonedClauseMapping.AddMapping (this, result);
       return result;
     }

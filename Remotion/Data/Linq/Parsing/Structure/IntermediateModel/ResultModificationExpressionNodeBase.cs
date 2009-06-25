@@ -100,7 +100,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
       if (OptionalPredicate != null)
       {
-        var whereClause = new WhereClause (selectClause.PreviousClause, GetResolvedOptionalPredicate (clauseGenerationContext));
+        var whereClause = new WhereClause (null, GetResolvedOptionalPredicate (clauseGenerationContext));
         selectClause.PreviousClause = whereClause;
         queryModel.BodyClauses.Add (whereClause);
       }
