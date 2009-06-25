@@ -14,7 +14,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using Remotion.Collections;
 using Remotion.Utilities;
 
@@ -32,8 +31,8 @@ namespace Remotion.Data.Linq.Clauses
     public OrderByClause ()
     {
       Orderings = new ObservableCollection<Ordering>();
-      Orderings.ItemInserted += CheckForNullValues;
-      Orderings.ItemSet += CheckForNullValues;
+      Orderings.ItemInserted += Orderings_ItemAdded;
+      Orderings.ItemSet += Orderings_ItemAdded;
     }
 
     /// <summary>
@@ -62,7 +61,7 @@ namespace Remotion.Data.Linq.Clauses
       return result;
     }
 
-    private void CheckForNullValues (object sender, ObservableCollectionChangedEventArgs<Ordering> e)
+    private void Orderings_ItemAdded (object sender, ObservableCollectionChangedEventArgs<Ordering> e)
     {
       ArgumentUtility.CheckNotNull ("e.Item", e.Item);
     }

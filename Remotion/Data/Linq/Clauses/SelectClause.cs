@@ -40,9 +40,10 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("selector", selector);
 
       _selector = selector;
+
       ResultModifications = new ObservableCollection<ResultModificationBase> ();
-      ResultModifications.ItemInserted += CheckForNullValues;
-      ResultModifications.ItemSet += CheckForNullValues;
+      ResultModifications.ItemInserted += ResultModifications_ItemAdded;
+      ResultModifications.ItemSet += ResultModifications_ItemAdded;
 
     }
 
@@ -90,10 +91,9 @@ namespace Remotion.Data.Linq.Clauses
         return CollectionExecutionStrategy.Instance;
     }
 
-    private void CheckForNullValues (object sender, ObservableCollectionChangedEventArgs<ResultModificationBase> e)
+    private void ResultModifications_ItemAdded (object sender, ObservableCollectionChangedEventArgs<ResultModificationBase> e)
     {
       ArgumentUtility.CheckNotNull ("e.Item", e.Item);
-    }
-    
+    }    
   }
 }

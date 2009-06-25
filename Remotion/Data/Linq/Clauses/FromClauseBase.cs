@@ -41,10 +41,10 @@ namespace Remotion.Data.Linq.Clauses
 
       _itemName = itemName;
       _itemType = itemType;
-      JoinClauses = new ObservableCollection<JoinClause> ();
-      JoinClauses.ItemInserted += CheckForNullValues;
-      JoinClauses.ItemSet += CheckForNullValues;
 
+      JoinClauses = new ObservableCollection<JoinClause> ();
+      JoinClauses.ItemInserted += JoinClause_ItemAdded;
+      JoinClauses.ItemSet += JoinClause_ItemAdded;
     }
 
     /// <summary>
@@ -93,7 +93,7 @@ namespace Remotion.Data.Linq.Clauses
       }
     }
 
-    private void CheckForNullValues (object sender, ObservableCollectionChangedEventArgs<JoinClause> e)
+    private void JoinClause_ItemAdded (object sender, ObservableCollectionChangedEventArgs<JoinClause> e)
     {
       ArgumentUtility.CheckNotNull ("e.Item", e.Item);
     }
