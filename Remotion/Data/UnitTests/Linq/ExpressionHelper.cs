@@ -70,16 +70,11 @@ namespace Remotion.Data.UnitTests.Linq
 
     public static JoinClause CreateJoinClause ()
     {
-      return CreateJoinClause (CreateMainFromClause());
-    }
-
-    public static JoinClause CreateJoinClause (FromClauseBase fromClause)
-    {
       Expression inExpression = CreateExpression ();
       Expression onExpression = CreateExpression ();
       Expression equalityExpression = CreateExpression ();
 
-      return new JoinClause (fromClause, "x", typeof(Student), inExpression, onExpression, equalityExpression);
+      return new JoinClause ("x", typeof(Student), inExpression, onExpression, equalityExpression);
     }
 
     public static QueryModel CreateQueryModel (MainFromClause mainFromClause)

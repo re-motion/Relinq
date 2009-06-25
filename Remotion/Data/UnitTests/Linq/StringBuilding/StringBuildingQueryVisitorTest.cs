@@ -59,7 +59,6 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
       var repository = new MockRepository();
       var joinClause1 =
           repository.StrictMock<JoinClause> (
-              fromClause,
               "x",
               typeof(Student),
               ExpressionHelper.CreateExpression(),
@@ -67,7 +66,6 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
               ExpressionHelper.CreateExpression());
       var joinClause2 =
           repository.StrictMock<JoinClause> (
-              fromClause,
               "x",
               typeof(Student),
               ExpressionHelper.CreateExpression(),

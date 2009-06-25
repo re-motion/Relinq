@@ -44,10 +44,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Expression onExpression = ExpressionHelper.CreateExpression ();
       Expression equalityExpression = ExpressionHelper.CreateExpression ();
 
-      var fromClause = ExpressionHelper.CreateMainFromClause ();
-      var joinClause = new JoinClause (fromClause, "x", typeof(Student), inExpression, onExpression, equalityExpression);
+      var joinClause = new JoinClause ("x", typeof(Student), inExpression, onExpression, equalityExpression);
 
-      Assert.That (joinClause.FromClause, Is.SameAs (fromClause));
       Assert.That (joinClause.ItemName, Is.SameAs ("x"));
       Assert.That (joinClause.ItemType, Is.SameAs (typeof (Student)));
       Assert.That (joinClause.InExpression, Is.SameAs (inExpression));
@@ -73,8 +71,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone ()
     {
-      var newFromClause = ExpressionHelper.CreateMainFromClause ();
-      _cloneContext.ClonedClauseMapping.AddMapping (_joinClause.FromClause, newFromClause);
       var clone = _joinClause.Clone (_cloneContext);
 
       Assert.That (clone, Is.Not.Null);
@@ -84,37 +80,35 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clone.ItemType, Is.SameAs (_joinClause.ItemType));
       Assert.That (clone.InExpression, Is.SameAs (_joinClause.InExpression));
       Assert.That (clone.OnExpression, Is.SameAs (_joinClause.OnExpression));
-      Assert.That (clone.FromClause, Is.SameAs (newFromClause));
     }
 
     [Test]
     public void Clone_AdjustsExpressions ()
     {
-      var mainFromClause = ExpressionHelper.CreateMainFromClause();
-      var inExpression = new QuerySourceReferenceExpression (mainFromClause);
-      var onExpression = new QuerySourceReferenceExpression (mainFromClause);
-      var equalityExpression = new QuerySourceReferenceExpression (mainFromClause);
-      var joinClause = new JoinClause (mainFromClause,
+      var referencedExpression = ExpressionHelper.CreateMainFromClause();
+      var inExpression = new QuerySourceReferenceExpression (referencedExpression);
+      var onExpression = new QuerySourceReferenceExpression (referencedExpression);
+      var equalityExpression = new QuerySourceReferenceExpression (referencedExpression);
+      var joinClause = new JoinClause (
           "x",
           typeof (Student), 
           inExpression, 
           onExpression, 
           equalityExpression);
 
-      var newMainFromClause = ExpressionHelper.CreateMainFromClause ();
-      _cloneContext.ClonedClauseMapping.AddMapping (mainFromClause, newMainFromClause);
+      var newReferencedExpression = ExpressionHelper.CreateMainFromClause ();
+      _cloneContext.ClonedClauseMapping.AddMapping (referencedExpression, newReferencedExpression);
 
       var clone = joinClause.Clone (_cloneContext);
 
-      Assert.That (((QuerySourceReferenceExpression) clone.InExpression).ReferencedClause, Is.SameAs (newMainFromClause));
-      Assert.That (((QuerySourceReferenceExpression) clone.OnExpression).ReferencedClause, Is.SameAs (newMainFromClause));
-      Assert.That (((QuerySourceReferenceExpression) clone.EqualityExpression).ReferencedClause, Is.SameAs (newMainFromClause));
+      Assert.That (((QuerySourceReferenceExpression) clone.InExpression).ReferencedClause, Is.SameAs (newReferencedExpression));
+      Assert.That (((QuerySourceReferenceExpression) clone.OnExpression).ReferencedClause, Is.SameAs (newReferencedExpression));
+      Assert.That (((QuerySourceReferenceExpression) clone.EqualityExpression).ReferencedClause, Is.SameAs (newReferencedExpression));
     }
 
     [Test]
     public void Clone_AddsClauseToMapping ()
     {
-      _cloneContext.ClonedClauseMapping.AddMapping (_joinClause.FromClause, ExpressionHelper.CreateMainFromClause ());
       var clone = _joinClause.Clone (_cloneContext);
       Assert.That (_cloneContext.ClonedClauseMapping.GetClause (_joinClause), Is.SameAs (clone));
     }
