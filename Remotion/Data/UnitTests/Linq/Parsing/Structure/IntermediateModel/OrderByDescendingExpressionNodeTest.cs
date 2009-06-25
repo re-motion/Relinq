@@ -19,7 +19,6 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
-using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
 using Rhino.Mocks;
@@ -29,6 +28,16 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
   [TestFixture]
   public class OrderByDescendingExpressionNodeTest : ExpressionNodeTestBase
   {
+    private OrderByDescendingExpressionNode _node;
+
+    public override void SetUp ()
+    {
+      base.SetUp ();
+
+      var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
+      _node = new OrderByDescendingExpressionNode (CreateParseInfo (), selector);
+    }
+
     [Test]
     public void SupportedMethod_WithoutComparer ()
     {
@@ -76,29 +85,37 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
+
+    [Test]
+    public void Apply ()
+    {
+      _node.Apply (QueryModel, ClauseGenerationContext);
+
+      Assert.That (QueryModel.BodyClauses.Count, Is.EqualTo (1));
+      
+      var clause = ((OrderByClause)QueryModel.BodyClauses[0]);
+      Assert.That (clause.Orderings.Count, Is.EqualTo (1));
+      Assert.That (clause.Orderings[0].OrderingDirection, Is.EqualTo (OrderingDirection.Desc));
+      Assert.That (clause.Orderings[0].Expression, Is.SameAs (_node.GetResolvedKeySelector (ClauseGenerationContext)));
+    }
     
     [Test]
     public void CreateClause ()
     {
       var previousClause = ExpressionHelper.CreateClause ();
-      var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new OrderByDescendingExpressionNode (CreateParseInfo (), selector);
 
-      var clause = (OrderByClause) node.CreateClause (previousClause, ClauseGenerationContext);
+      var clause = (OrderByClause) _node.CreateClause (previousClause, ClauseGenerationContext);
 
       Assert.That (clause.Orderings.Count, Is.EqualTo (1));
       Assert.That (clause.Orderings[0].OrderingDirection, Is.EqualTo (OrderingDirection.Desc));
-      Assert.That (clause.Orderings[0].Expression, Is.SameAs (node.GetResolvedKeySelector (ClauseGenerationContext)));
+      Assert.That (clause.Orderings[0].Expression, Is.SameAs (_node.GetResolvedKeySelector (ClauseGenerationContext)));
     }
 
     [Test]
     public void CreateSelectClause ()
     {
       var previousClause = ExpressionHelper.CreateClause ();
-      var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new OrderByDescendingExpressionNode (CreateParseInfo (), selector);
-
-      var selectClause = node.CreateSelectClause (previousClause, ClauseGenerationContext);
+      var selectClause = _node.CreateSelectClause (previousClause, ClauseGenerationContext);
       Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedClause, Is.SameAs (SourceClause));
     }
   }

@@ -74,5 +74,13 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     {
       return new WhereClause (GetResolvedPredicate (clauseGenerationContext));
     }
+
+    public override void Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
+    {
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+
+      var clause = new WhereClause (GetResolvedPredicate (clauseGenerationContext));
+      queryModel.BodyClauses.Add (clause);
+    }
   }
 }

@@ -57,6 +57,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public abstract Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext);
     public abstract ParameterExpression CreateParameterForOutput ();
     public abstract IClause CreateClause (IClause previousClause, ClauseGenerationContext clauseGenerationContext);
+    public abstract void Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext);
 
     protected InvalidOperationException CreateResolveNotSupportedException ()
     {

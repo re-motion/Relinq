@@ -79,5 +79,14 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       clause.Orderings.Add (new Ordering (GetResolvedKeySelector (clauseGenerationContext), OrderingDirection.Asc));
       return clause;
     }
+
+    public override void Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
+    {
+      if (queryModel.BodyClauses.Count == 0 || !(queryModel.BodyClauses[0] is OrderByClause))
+        throw new ParserException ("ThenBy expressions must follow OrderBy, OrderByDescending, ThenBy, or ThenByDescending expressions.");
+
+      var clause = (OrderByClause) queryModel.BodyClauses[queryModel.BodyClauses.Count - 1];
+      clause.Orderings.Add (new Ordering (GetResolvedKeySelector (clauseGenerationContext), OrderingDirection.Asc));
+    }
   }
 }

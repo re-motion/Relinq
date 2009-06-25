@@ -19,17 +19,24 @@ using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Clauses.Expressions;
-using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
-using Rhino.Mocks;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 {
   [TestFixture]
   public class SelectExpressionNodeTest : ExpressionNodeTestBase
   {
+    private SelectExpressionNode _node;
+
+    public override void SetUp ()
+    {
+      base.SetUp ();
+
+      var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
+      _node = new SelectExpressionNode (CreateParseInfo (), selector);
+    }
+
     [Test]
     public void SupportedMethod_WithoutPosition ()
     {
@@ -66,20 +73,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void CreateClause ()
-    {
-      var previousClause = ExpressionHelper.CreateClause();
-      var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new SelectExpressionNode (CreateParseInfo (), selector);
-
-      var selectClause = (SelectClause) node.CreateClause (previousClause, ClauseGenerationContext);
-
-      Assert.That (selectClause.ResultModifications, Is.Empty);
-      Assert.That (selectClause.Selector, Is.EqualTo (node.GetResolvedSelector(ClauseGenerationContext)));
-      
-    }
-
-    [Test]
     public void CreateParameterForOutput ()
     {
       var node = new SelectExpressionNode (CreateParseInfo (SourceNode, "z"), ExpressionHelper.CreateLambdaExpression<int, string> (y => y.ToString()));
@@ -91,13 +84,30 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
+    public void Apply ()
+    {
+      _node.Apply (QueryModel, ClauseGenerationContext);
+      var selectClause = (SelectClause) QueryModel.SelectOrGroupClause;
+
+      Assert.That (selectClause.ResultModifications, Is.Empty);
+      Assert.That (selectClause.Selector, Is.EqualTo (_node.GetResolvedSelector (ClauseGenerationContext)));
+    }
+
+    [Test]
+    public void CreateClause ()
+    {
+      var previousClause = ExpressionHelper.CreateClause ();
+      var selectClause = (SelectClause) _node.CreateClause (previousClause, ClauseGenerationContext);
+
+      Assert.That (selectClause.ResultModifications, Is.Empty);
+      Assert.That (selectClause.Selector, Is.EqualTo (_node.GetResolvedSelector (ClauseGenerationContext)));
+    }
+
+    [Test]
     public void CreateSelectClause ()
     {
       var previousClause = ExpressionHelper.CreateClause ();
-      var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new SelectExpressionNode (CreateParseInfo (), selector);
-
-      var selectClause = node.CreateSelectClause (previousClause, ClauseGenerationContext);
+      var selectClause = _node.CreateSelectClause (previousClause, ClauseGenerationContext);
 
       var expectedSelector = ExpressionHelper.Resolve<int, bool> (SourceClause, i => i > 5);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedSelector, selectClause.Selector);

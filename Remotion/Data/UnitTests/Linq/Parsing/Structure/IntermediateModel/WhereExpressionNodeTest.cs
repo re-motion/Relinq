@@ -20,7 +20,6 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
-using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
 using Rhino.Mocks;
@@ -30,6 +29,16 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
   [TestFixture]
   public class WhereExpressionNodeTest : ExpressionNodeTestBase
   {
+    private WhereExpressionNode _node;
+
+    public override void SetUp ()
+    {
+      base.SetUp ();
+      
+      var predicate = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
+      _node = new WhereExpressionNode (CreateParseInfo (), predicate);
+    }
+
     [Test]
     public void SupportedMethod_WithoutPosition ()
     {
@@ -80,25 +89,28 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
+    public void Apply ()
+    {
+      _node.Apply (QueryModel, ClauseGenerationContext);
+      var clause = (WhereClause) QueryModel.BodyClauses[0];
+
+      Assert.That (clause.Predicate, Is.EqualTo (_node.GetResolvedPredicate (ClauseGenerationContext)));
+    }
+
+    [Test]
     public void CreateClause ()
     {
       var previousClause = ExpressionHelper.CreateClause ();
-      var predicate = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new WhereExpressionNode (CreateParseInfo (), predicate);
+      var clause = (WhereClause) _node.CreateClause (previousClause, ClauseGenerationContext);
 
-      var clause = (WhereClause) node.CreateClause (previousClause, ClauseGenerationContext);
-
-      Assert.That (clause.Predicate, Is.EqualTo (node.GetResolvedPredicate(ClauseGenerationContext)));
+      Assert.That (clause.Predicate, Is.EqualTo (_node.GetResolvedPredicate(ClauseGenerationContext)));
     }
 
     [Test]
     public void CreateSelectClause ()
     {
       var previousClause = ExpressionHelper.CreateClause ();
-      var predicate = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new WhereExpressionNode (CreateParseInfo (), predicate);
-
-      var selectClause = node.CreateSelectClause (previousClause, ClauseGenerationContext);
+      var selectClause = _node.CreateSelectClause (previousClause, ClauseGenerationContext);
       Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedClause, Is.SameAs (SourceClause));
     }
   }

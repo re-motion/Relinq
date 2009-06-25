@@ -18,6 +18,7 @@ using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Rhino.Mocks;
@@ -27,6 +28,14 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
   [TestFixture]
   public class CastExpressionNodeTest : ExpressionNodeTestBase
   {
+    private CastExpressionNode _node;
+
+    public override void SetUp ()
+    {
+      base.SetUp ();
+      _node = new CastExpressionNode (CreateParseInfo ());
+    }
+
     [Test]
     public void SupportedMethod ()
     {
@@ -63,12 +72,17 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
+    public void Apply ()
+    {
+      _node.Apply (QueryModel, ClauseGenerationContext);
+      Assert.That (QueryModel.BodyClauses.Count, Is.EqualTo (0));
+    }
+
+    [Test]
     public void CreateClause ()
     {
       var previousClause = ExpressionHelper.CreateClause ();
-      var node = new CastExpressionNode (CreateParseInfo());
-
-      var clause = node.CreateClause (previousClause, ClauseGenerationContext);
+      var clause = _node.CreateClause (previousClause, ClauseGenerationContext);
 
       Assert.That (clause, Is.SameAs (previousClause));
     }
@@ -77,9 +91,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void CreateSelectClause ()
     {
       var previousClause = ExpressionHelper.CreateClause ();
-      var node = new CastExpressionNode (CreateParseInfo ());
-
-      var selectClause = node.CreateSelectClause (previousClause, ClauseGenerationContext);
+      var selectClause = _node.CreateSelectClause (previousClause, ClauseGenerationContext);
       Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedClause, Is.SameAs (SourceClause));
     }
   }

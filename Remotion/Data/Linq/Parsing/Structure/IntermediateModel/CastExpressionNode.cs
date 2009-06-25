@@ -61,5 +61,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       //currently there is no clause for 'CastNodes'
       return previousClause;
     }
+
+    public override void Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
+    {
+      //currently there is no clause for 'CastNodes'
+    }
   }
 }

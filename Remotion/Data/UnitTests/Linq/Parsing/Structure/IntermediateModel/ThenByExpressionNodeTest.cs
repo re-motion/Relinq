@@ -19,6 +19,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
+using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
 using Remotion.Utilities;
@@ -29,6 +30,16 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
   [TestFixture]
   public class ThenByExpressionNodeTest : ExpressionNodeTestBase
   {
+    private ThenByExpressionNode _node;
+
+    public override void SetUp ()
+    {
+      base.SetUp ();
+
+      var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
+      _node = new ThenByExpressionNode (CreateParseInfo (), selector);
+    }
+
     [Test]
     public void SupportedMethod_WithoutComparer ()
     {
@@ -67,30 +78,53 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void GetResolvedSelector ()
     {
-      var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new ThenByExpressionNode (CreateParseInfo (), selector);
-
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
 
-      var result = node.GetResolvedKeySelector (ClauseGenerationContext);
+      var result = _node.GetResolvedKeySelector (ClauseGenerationContext);
 
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
+    }
+
+    [Test]
+    public void Apply ()
+    {
+      var clause = new OrderByClause ();
+      QueryModel.BodyClauses.Add (clause);
+
+      _node.Apply (QueryModel, ClauseGenerationContext);
+
+      Assert.That (clause.Orderings.Count, Is.EqualTo (1));
+      Assert.That (clause.Orderings[0].OrderingDirection, Is.EqualTo (OrderingDirection.Asc));
+      Assert.That (clause.Orderings[0].Expression, Is.SameAs (_node.GetResolvedKeySelector (ClauseGenerationContext)));
+    }
+
+    [Test]
+    [ExpectedException (typeof (ParserException))]
+    public void Apply_NoPreviousClause ()
+    {
+      _node.Apply (QueryModel, ClauseGenerationContext);
+    }
+
+    [Test]
+    [ExpectedException (typeof (ParserException))]
+    public void Apply_InvalidPreviousClause ()
+    {
+      QueryModel.BodyClauses.Add (new WhereClause (ExpressionHelper.CreateExpression ()));
+      _node.Apply (QueryModel, ClauseGenerationContext);
     }
 
     [Test]
     public void CreateClause ()
     {
       var previousClause = ExpressionHelper.CreateOrderByClause();
-      var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new ThenByExpressionNode (CreateParseInfo (), selector);
       var oldCount = previousClause.Orderings.Count;
 
-      var clause = (OrderByClause) node.CreateClause (previousClause, ClauseGenerationContext);
+      var clause = (OrderByClause) _node.CreateClause (previousClause, ClauseGenerationContext);
 
       Assert.That (clause, Is.SameAs (previousClause));
       Assert.That (clause.Orderings.Count, Is.EqualTo (oldCount + 1));
       Assert.That (clause.Orderings.Last ().OrderingDirection, Is.EqualTo (OrderingDirection.Asc));
-      Assert.That (clause.Orderings.Last ().Expression, Is.SameAs (node.GetResolvedKeySelector (ClauseGenerationContext)));
+      Assert.That (clause.Orderings.Last ().Expression, Is.SameAs (_node.GetResolvedKeySelector (ClauseGenerationContext)));
     }
 
     [Test]
@@ -98,20 +132,14 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void CreateClause_InvalidPreviousClause ()
     {
       var previousClause = ExpressionHelper.CreateMainFromClause();
-      var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new ThenByExpressionNode (CreateParseInfo (), selector);
-
-      node.CreateClause (previousClause, ClauseGenerationContext);
+      _node.CreateClause (previousClause, ClauseGenerationContext);
     }
 
     [Test]
     public void CreateSelectClause ()
     {
       var previousClause = ExpressionHelper.CreateClause ();
-      var selector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new ThenByExpressionNode (CreateParseInfo (), selector);
-
-      var selectClause = node.CreateSelectClause (previousClause, ClauseGenerationContext);
+      var selectClause = _node.CreateSelectClause (previousClause, ClauseGenerationContext);
       Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedClause, Is.SameAs (SourceClause));
     }
   }

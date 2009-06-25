@@ -78,5 +78,11 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     {
       return new SelectClause (GetResolvedSelector (clauseGenerationContext));
     }
+
+    public override void Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
+    {
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+      ((SelectClause) queryModel.SelectOrGroupClause).Selector = GetResolvedSelector (clauseGenerationContext);
+    }
   }
 }

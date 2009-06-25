@@ -19,6 +19,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.Structure;
@@ -38,15 +39,19 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
           MethodCallExpressionNodeTypeRegistry.CreateDefault(),
           new ResultModificationExpressionNodeRegistry ());
 
-      SourceClause = (FromClauseBase) SourceNode.CreateClause (null, ClauseGenerationContext);
+      SourceClause = (MainFromClause) SourceNode.CreateClause (null, ClauseGenerationContext);
       SourceReference = new QuerySourceReferenceExpression (SourceClause);
+
+      QueryModel = new QueryModel (typeof (IQueryable<Student>), SourceClause, new SelectClause (SourceReference));
     }
 
     public IQuerySourceExpressionNode SourceNode { get; private set; }
-    public FromClauseBase SourceClause { get; private set; }
+    public MainFromClause SourceClause { get; private set; }
     public QuerySourceReferenceExpression SourceReference { get; private set; }
     public ClauseGenerationContext ClauseGenerationContext { get; private set; }
     public QuerySourceClauseMapping QuerySourceClauseMapping { get; private set; }
+    public QueryModel QueryModel { get; private set; }
+
 
     public Expression<Func<int, string>> OptionalSelector
     {
@@ -67,33 +72,27 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
     protected void TestApply (ResultModificationExpressionNodeBase node, Type expectedResultModificationType)
     {
-      var queryModel = ExpressionHelper.CreateQueryModel ();
+      node.Apply (QueryModel, ClauseGenerationContext);
 
-      node.Apply (queryModel, ClauseGenerationContext);
-
-      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
+      var selectClause = (SelectClause) QueryModel.SelectOrGroupClause;
       Assert.That (selectClause.ResultModifications.Count, Is.EqualTo (1));
       Assert.That (selectClause.ResultModifications[0], Is.InstanceOfType (expectedResultModificationType));
     }
 
     protected void TestApply_WithOptionalPredicate (ResultModificationExpressionNodeBase node)
     {
-      var queryModel = ExpressionHelper.CreateQueryModel ();
+      node.Apply (QueryModel, ClauseGenerationContext);
 
-      node.Apply (queryModel, ClauseGenerationContext);
-
-      var newWhereClause = (WhereClause) queryModel.BodyClauses[0];
+      var newWhereClause = (WhereClause) QueryModel.BodyClauses[0];
       Assert.That (newWhereClause.Predicate, Is.SameAs (node.GetResolvedOptionalPredicate (ClauseGenerationContext)));
     }
 
     protected void TestApply_WithOptionalSelector (ResultModificationExpressionNodeBase node)
     {
-      var expectedNewSelector = (MethodCallExpression) ExpressionHelper.MakeExpression (() => 0.ToString());
-      var queryModel = ExpressionHelper.CreateQueryModel();
-
-      node.Apply (queryModel, ClauseGenerationContext);
+      var expectedNewSelector = (MethodCallExpression) ExpressionHelper.Resolve<int, string> (SourceClause, i => i.ToString());
+      node.Apply (QueryModel, ClauseGenerationContext);
       
-      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
+      var selectClause = (SelectClause) QueryModel.SelectOrGroupClause;
       ExpressionTreeComparer.CheckAreEqualTrees (expectedNewSelector, selectClause.Selector);
     }
 

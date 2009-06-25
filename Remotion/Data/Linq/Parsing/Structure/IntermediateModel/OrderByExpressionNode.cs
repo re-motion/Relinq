@@ -78,5 +78,14 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       clause.Orderings.Add (new Ordering (GetResolvedKeySelector (clauseGenerationContext), OrderingDirection.Asc));
       return clause;
     }
+
+    public override void Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
+    {
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+
+      var clause = new OrderByClause ();
+      clause.Orderings.Add (new Ordering (GetResolvedKeySelector (clauseGenerationContext), OrderingDirection.Asc));
+      queryModel.BodyClauses.Add (clause);
+    }
   }
 }

@@ -13,6 +13,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+using System;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
@@ -47,7 +48,5 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     //  var parseInfo = new MethodCallExpressionParseInfo ("trans", source, ExpressionHelper.CreateMethodCallExpression ());
     //  return new SelectManyExpressionNode (parseInfo, collectionSelector, resultSelector);
     //}
-
-
   }
 }

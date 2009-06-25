@@ -31,6 +31,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
   {
     private Expression<Func<int, bool>> _collectionSelector;
     private Expression<Func<int, int, bool>> _resultSelector;
+    private SelectManyExpressionNode _node;
 
     public override void SetUp ()
     {
@@ -38,6 +39,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       _collectionSelector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
       _resultSelector = ExpressionHelper.CreateLambdaExpression<int, int, bool> ((i, j) => i > j);
+      _node = new SelectManyExpressionNode (CreateParseInfo (SourceNode, "j"), _collectionSelector, _resultSelector);
     }
 
     [Test]
@@ -50,9 +52,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void QuerySourceType ()
     {
-      SelectManyExpressionNode node = ExpressionNodeObjectMother.CreateSelectMany (SourceNode);
-
-      Assert.That (node.QuerySourceElementType, Is.SameAs (typeof (Student_Detail)));
+      Assert.That (_node.QuerySourceElementType, Is.SameAs (typeof (int)));
     }
 
     [Test]
@@ -87,11 +87,10 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void GetResolvedResultSelector ()
     {
-      var node = new SelectManyExpressionNode (CreateParseInfo(), _collectionSelector, _resultSelector);
-      var clause = (FromClauseBase) node.CreateClause (SourceClause, ClauseGenerationContext);
+      var clause = (FromClauseBase) _node.CreateClause (SourceClause, ClauseGenerationContext);
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, new QuerySourceReferenceExpression (clause));
 
-      var result = node.GetResolvedResultSelector (ClauseGenerationContext);
+      var result = _node.GetResolvedResultSelector (ClauseGenerationContext);
 
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
@@ -104,32 +103,83 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
         )]
     public void GetResolvedResultSelector_WithoutClause ()
     {
-      var node = new SelectManyExpressionNode (CreateParseInfo(), _collectionSelector, _resultSelector);
-      node.GetResolvedResultSelector (ClauseGenerationContext);
+      _node.GetResolvedResultSelector (ClauseGenerationContext);
     }
 
     [Test]
     public void GetResolvedCollectionSelector ()
     {
-      var node = new SelectManyExpressionNode (CreateParseInfo(), _collectionSelector, _resultSelector);
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
 
-      var result = node.GetResolvedCollectionSelector (ClauseGenerationContext);
+      var result = _node.GetResolvedCollectionSelector (ClauseGenerationContext);
 
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
+    }
+
+    [Test]
+    public void Apply ()
+    {
+      _node.Apply (QueryModel, ClauseGenerationContext);
+      var clause = (AdditionalFromClause) QueryModel.BodyClauses[0];
+
+      Assert.That (clause.ItemName, Is.EqualTo ("j"));
+      Assert.That (clause.ItemType, Is.SameAs (typeof (int)));
+      Assert.That (clause.FromExpression, Is.SameAs (_node.GetResolvedCollectionSelector (ClauseGenerationContext)));
+    }
+
+    [Test]
+    public void Apply_WithMemberFromInFromExpression ()
+    {
+      var studentClause = ExpressionHelper.CreateMainFromClause_Student ();
+      var collectionSelector = ExpressionHelper.CreateLambdaExpression<Student, IEnumerable<Student>> (s => s.Friends);
+
+      var studentSource = new ConstantExpressionNode ("s", typeof (IQueryable<Student>), null);
+      ClauseGenerationContext.ClauseMapping.AddMapping (studentSource, studentClause);
+      var node = new SelectManyExpressionNode (CreateParseInfo (studentSource), collectionSelector, _resultSelector);
+
+      node.Apply (QueryModel, ClauseGenerationContext);
+      var clause = (MemberFromClause) QueryModel.BodyClauses[0];
+
+      Assert.That (clause.ItemName, Is.EqualTo ("j"));
+      Assert.That (clause.ItemType, Is.SameAs (typeof (int)));
+      Assert.That (clause.FromExpression, Is.SameAs (node.GetResolvedCollectionSelector (ClauseGenerationContext)));
+      Assert.That (clause.MemberExpression, Is.SameAs (node.GetResolvedCollectionSelector (ClauseGenerationContext)));
+    }
+
+    [Test]
+    public void Apply_WithSubQueryInFromExpression ()
+    {
+      var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel ());
+
+      var collectionSelector = Expression.Lambda (subQueryExpression, Expression.Parameter (typeof (int), "i"));
+      var node = new SelectManyExpressionNode (CreateParseInfo (), collectionSelector, _resultSelector);
+
+      node.Apply (QueryModel, ClauseGenerationContext);
+      var clause = (SubQueryFromClause) QueryModel.BodyClauses[0];
+
+      Assert.That (clause.ItemName, Is.EqualTo ("j"));
+      Assert.That (clause.ItemType, Is.SameAs (typeof (int)));
+      Assert.That (clause.SubQueryModel, Is.SameAs (subQueryExpression.QueryModel));
+    }
+
+    [Test]
+    public void Apply_AddsMapping ()
+    {
+      _node.Apply (QueryModel, ClauseGenerationContext);
+      var clause = (AdditionalFromClause) QueryModel.BodyClauses[0];
+
+      Assert.That (QuerySourceClauseMapping.GetClause (_node), Is.SameAs (clause));
     }
 
     [Test]
     public void CreateClause ()
     {
       IClause previousClause = ExpressionHelper.CreateClause();
-      var node = new SelectManyExpressionNode (CreateParseInfo (SourceNode, "j"), _collectionSelector, _resultSelector);
-
-      var clause = (AdditionalFromClause) node.CreateClause (previousClause, ClauseGenerationContext);
+      var clause = (AdditionalFromClause) _node.CreateClause (previousClause, ClauseGenerationContext);
 
       Assert.That (clause.ItemName, Is.EqualTo ("j"));
       Assert.That (clause.ItemType, Is.SameAs (typeof (int)));
-      Assert.That (clause.FromExpression, Is.SameAs (node.GetResolvedCollectionSelector (ClauseGenerationContext)));
+      Assert.That (clause.FromExpression, Is.SameAs (_node.GetResolvedCollectionSelector (ClauseGenerationContext)));
     }
 
     [Test]

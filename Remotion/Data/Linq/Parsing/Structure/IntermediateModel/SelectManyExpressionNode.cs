@@ -143,6 +143,19 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return clause;
     }
 
+    public override void Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
+    {
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+
+      var clause = CreateFromClauseOfCorrectType (
+          ResultSelector.Parameters[1].Name,
+          ResultSelector.Parameters[1].Type,
+          clauseGenerationContext);
+      queryModel.BodyClauses.Add ((IBodyClause) clause);
+
+      clauseGenerationContext.ClauseMapping.AddMapping (this, clause);
+    }
+
     private FromClauseBase CreateFromClauseOfCorrectType (string itemName, Type itemType, ClauseGenerationContext clauseGenerationContext)
     {
       var resolvedCollectionSelector = GetResolvedCollectionSelector (clauseGenerationContext);

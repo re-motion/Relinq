@@ -91,7 +91,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     /// </summary>
     /// <param name="queryModel">The <see cref="QueryModel"/> to apply the changes to.</param>
     /// <param name="clauseGenerationContext">The clause generation context.</param>
-    public virtual void Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
+    public override void Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
