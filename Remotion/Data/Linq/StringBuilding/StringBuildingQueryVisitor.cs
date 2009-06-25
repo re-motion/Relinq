@@ -43,7 +43,7 @@ namespace Remotion.Data.Linq.StringBuilding
     public void VisitMainFromClause (MainFromClause fromClause)
     {
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
-      _sb.AppendFormat ("from {0} {1} in {2} ", fromClause.ItemType.Name, fromClause.ItemName, FormatExpression (fromClause.QuerySource));
+      _sb.AppendFormat ("from {0} {1} in {2} ", fromClause.ItemType.Name, fromClause.ItemName, FormatExpression (fromClause.FromExpression));
 
       foreach (JoinClause jc in fromClause.JoinClauses)
         jc.Accept (this);

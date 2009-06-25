@@ -93,7 +93,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var expression = WhereTestQueryGenerator.CreateWhereQueryWithDifferentComparisons (_querySource).Expression;
       var queryModel = _queryParser.GetParsedQuery (expression);
 
-      CheckConstantQuerySource (queryModel.MainFromClause.QuerySource, _querySource);
+      CheckConstantQuerySource (queryModel.MainFromClause.FromExpression, _querySource);
 
       var whereClause = (WhereClause) queryModel.BodyClauses[0];
       CheckResolvedExpression<Student, bool> (whereClause.Predicate, 
@@ -110,7 +110,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var queryModel = _queryParser.GetParsedQuery (expression);
 
       var mainFromClause = queryModel.MainFromClause;
-      CheckConstantQuerySource (mainFromClause.QuerySource, _querySource);
+      CheckConstantQuerySource (mainFromClause.FromExpression, _querySource);
 
       var additionalFromClause = (AdditionalFromClause) queryModel.BodyClauses[0];
       CheckConstantQuerySource (additionalFromClause.FromExpression, _querySource);
@@ -129,7 +129,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var queryModel = _queryParser.GetParsedQuery (expression);
 
       var mainFromClause = queryModel.MainFromClause;
-      CheckConstantQuerySource (mainFromClause.QuerySource, _industrialSectorQuerySource);
+      CheckConstantQuerySource (mainFromClause.FromExpression, _industrialSectorQuerySource);
 
       var memberFromClause = (MemberFromClause) queryModel.BodyClauses[0];
       CheckResolvedExpression<IndustrialSector, IEnumerable<Student>> (memberFromClause.MemberExpression, mainFromClause, sector => sector.Students);
@@ -145,7 +145,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var queryModel = _queryParser.GetParsedQuery (expression);
 
       var mainFromClause = queryModel.MainFromClause;
-      CheckConstantQuerySource (mainFromClause.QuerySource, _querySource);
+      CheckConstantQuerySource (mainFromClause.FromExpression, _querySource);
       Assert.That (mainFromClause.ItemName, Is.EqualTo ("s1"));
       Assert.That (mainFromClause.ItemType, Is.SameAs (typeof (Student)));
 
@@ -173,7 +173,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 
       var subQueryMainFromClause = subQueryFromClause.SubQueryModel.MainFromClause;
       Assert.That (subQueryMainFromClause.ItemName, Is.EqualTo ("s3"));
-      CheckConstantQuerySource (subQueryMainFromClause.QuerySource, _querySource);
+      CheckConstantQuerySource (subQueryMainFromClause.FromExpression, _querySource);
 
       var subQuerySelectClause = (SelectClause) subQueryFromClause.SubQueryModel.SelectOrGroupClause;
       CheckResolvedExpression<Student, Student> (subQuerySelectClause.Selector, subQueryMainFromClause, s3 => s3);
@@ -186,7 +186,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var queryModel = _queryParser.GetParsedQuery (expression);
 
       var mainFromClause = queryModel.MainFromClause;
-      CheckConstantQuerySource (mainFromClause.QuerySource, _querySource);
+      CheckConstantQuerySource (mainFromClause.FromExpression, _querySource);
 
       Assert.That (queryModel.BodyClauses.Count, Is.EqualTo (2));
 
@@ -205,7 +205,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var queryModel = _queryParser.GetParsedQuery (expression);
 
       var mainFromClause = queryModel.MainFromClause;
-      CheckConstantQuerySource (mainFromClause.QuerySource, _querySource);
+      CheckConstantQuerySource (mainFromClause.FromExpression, _querySource);
 
       var additionalFromClause1 = (AdditionalFromClause) queryModel.BodyClauses[0];
       Assert.That (additionalFromClause1.ItemName, Is.EqualTo ("s2"));
@@ -279,7 +279,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 
       var mainFromClause = queryModel.MainFromClause;
       Assert.That (mainFromClause.ItemName, Is.EqualTo ("s"));
-      CheckConstantQuerySource (mainFromClause.QuerySource, _querySource);
+      CheckConstantQuerySource (mainFromClause.FromExpression, _querySource);
 
       var orderByClause = (OrderByClause) queryModel.BodyClauses[0];
       Assert.That (orderByClause.Orderings.Count, Is.EqualTo (3));
@@ -307,7 +307,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var queryModel = _queryParser.GetParsedQuery (expression);
 
       var mainFromClause = queryModel.MainFromClause;
-      CheckConstantQuerySource (mainFromClause.QuerySource, _querySource);
+      CheckConstantQuerySource (mainFromClause.FromExpression, _querySource);
       
       var orderByClause1 = (OrderByClause) queryModel.BodyClauses[0];
       Assert.That (orderByClause1.Orderings.Count, Is.EqualTo (3));

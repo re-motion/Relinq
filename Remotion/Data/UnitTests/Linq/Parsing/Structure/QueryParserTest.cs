@@ -77,7 +77,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 
       Assert.That (queryModel.MainFromClause, Is.Not.Null);
       Assert.That (queryModel.MainFromClause.ItemName, Is.EqualTo ("<generated>_0"));
-      Assert.That (((ConstantExpression) queryModel.MainFromClause.QuerySource).Value, Is.SameAs (value));
+      Assert.That (((ConstantExpression) queryModel.MainFromClause.FromExpression).Value, Is.SameAs (value));
     }
 
     [Test]

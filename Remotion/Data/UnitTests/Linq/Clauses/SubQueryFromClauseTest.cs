@@ -100,7 +100,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       var clone = _subQueryFromClause.Clone (_cloneContext);
 
       Assert.That (clone.SubQueryModel, Is.Not.SameAs (_subQueryFromClause.SubQueryModel));
-      Assert.That (clone.SubQueryModel.MainFromClause.QuerySource, Is.SameAs (_subQueryFromClause.SubQueryModel.MainFromClause.QuerySource));
+      Assert.That (clone.SubQueryModel.MainFromClause.FromExpression, Is.SameAs (_subQueryFromClause.SubQueryModel.MainFromClause.FromExpression));
     }
 
     [Test]
@@ -109,7 +109,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       var clone = _subQueryFromClause.Clone (_cloneContext);
 
       Assert.That (clone.SubQueryModel, Is.Not.SameAs (_subQueryFromClause.SubQueryModel));
-      Assert.That (clone.SubQueryModel.MainFromClause.QuerySource, Is.SameAs (_subQueryFromClause.SubQueryModel.MainFromClause.QuerySource));
+      Assert.That (clone.SubQueryModel.MainFromClause.FromExpression, Is.SameAs (_subQueryFromClause.SubQueryModel.MainFromClause.FromExpression));
       Assert.That (
           _cloneContext.ClonedClauseMapping.GetClause (_subQueryFromClause.SubQueryModel.MainFromClause),
           Is.SameAs (clone.SubQueryModel.MainFromClause));

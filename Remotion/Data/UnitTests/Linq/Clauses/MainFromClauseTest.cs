@@ -48,7 +48,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
 
       Assert.That (fromClause.ItemName, Is.EqualTo ("s"));
       Assert.That (fromClause.ItemType, Is.SameAs (typeof (Student)));
-      Assert.That (fromClause.QuerySource, Is.SameAs (constantExpression));
+      Assert.That (fromClause.FromExpression, Is.SameAs (constantExpression));
 
       Assert.That (fromClause.JoinClauses, Is.Empty);
       Assert.That (fromClause.JoinClauses.Count, Is.EqualTo (0));
@@ -62,7 +62,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       MemberExpression sourceExpression = Expression.MakeMemberAccess (Expression.Constant (anonymous), anonymous.GetType().GetProperty ("source"));
 
       var fromClause = new MainFromClause ("s", typeof (Student), sourceExpression);
-      Assert.That (fromClause.QuerySource, Is.SameAs (sourceExpression));
+      Assert.That (fromClause.FromExpression, Is.SameAs (sourceExpression));
     }
 
     [Test]
@@ -97,7 +97,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clone, Is.Not.SameAs (_mainFromClause));
       Assert.That (clone.ItemName, Is.EqualTo (_mainFromClause.ItemName));
       Assert.That (clone.ItemType, Is.SameAs (_mainFromClause.ItemType));
-      Assert.That (clone.QuerySource, Is.SameAs (_mainFromClause.QuerySource));
+      Assert.That (clone.FromExpression, Is.SameAs (_mainFromClause.FromExpression));
     }
 
     [Test]
@@ -112,7 +112,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
 
       var clone = mainFromClause.Clone (_cloneContext);
 
-      Assert.That (((QuerySourceReferenceExpression) clone.QuerySource).ReferencedClause, Is.SameAs (newReferencedClause));
+      Assert.That (((QuerySourceReferenceExpression) clone.FromExpression).ReferencedClause, Is.SameAs (newReferencedClause));
     }
 
     [Test]
