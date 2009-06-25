@@ -46,7 +46,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void InitializeWithExpression ()
     {
-      Assert.That (_selectClause.PreviousClause, Is.SameAs (_previousClause));
       Assert.That (_selectClause.Selector, Is.EqualTo (_selector));
     }
 
@@ -87,7 +86,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (_selectClause));
       Assert.That (clone.Selector, Is.SameAs (_selectClause.Selector));
-      Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
     }
 
     [Test]

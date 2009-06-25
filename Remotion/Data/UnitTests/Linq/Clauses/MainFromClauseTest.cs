@@ -52,8 +52,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
 
       Assert.That (fromClause.JoinClauses, Is.Empty);
       Assert.That (fromClause.JoinClauses.Count, Is.EqualTo (0));
-
-      Assert.That (fromClause.PreviousClause, Is.Null);
     }
 
     [Test]
@@ -133,13 +131,11 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clone.JoinClauses[0].EqualityExpression, Is.SameAs (originalJoinClause1.EqualityExpression));
       Assert.That (clone.JoinClauses[0].InExpression, Is.SameAs (originalJoinClause1.InExpression));
       Assert.That (clone.JoinClauses[0].FromClause, Is.SameAs (clone));
-      Assert.That (clone.JoinClauses[0].PreviousClause, Is.SameAs (clone));
 
       Assert.That (clone.JoinClauses[1], Is.Not.SameAs (originalJoinClause2));
       Assert.That (clone.JoinClauses[1].EqualityExpression, Is.SameAs (originalJoinClause2.EqualityExpression));
       Assert.That (clone.JoinClauses[1].InExpression, Is.SameAs (originalJoinClause2.InExpression));
       Assert.That (clone.JoinClauses[1].FromClause, Is.SameAs (clone));
-      Assert.That (clone.JoinClauses[1].PreviousClause, Is.SameAs (clone.JoinClauses[0]));
     }
 
     [Test]

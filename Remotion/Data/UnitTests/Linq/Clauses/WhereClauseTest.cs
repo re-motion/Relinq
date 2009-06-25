@@ -44,7 +44,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       IClause clause = ExpressionHelper.CreateClause();
       
       var whereClause = new WhereClause(clause, predicate);
-      Assert.That (whereClause.PreviousClause, Is.SameAs (clause));
       Assert.That (whereClause.Predicate, Is.SameAs (predicate));
     }
 
@@ -79,7 +78,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (_whereClause));
       Assert.That (clone.Predicate, Is.SameAs (_whereClause.Predicate));
-      Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
     }
 
     [Test]

@@ -47,15 +47,14 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       IClause clause = ExpressionHelper.CreateClause();
       var groupClause = new GroupClause (clause, groupExpression, byExpression);
 
-      Assert.AreSame (clause, groupClause.PreviousClause);
-      Assert.AreSame (groupExpression, groupClause.GroupExpression);
-      Assert.AreSame (byExpression, groupClause.ByExpression);
+      Assert.That (groupClause.GroupExpression, Is.SameAs (groupExpression));
+      Assert.That (groupClause.ByExpression, Is.SameAs (byExpression));
     }
 
     [Test]
     public void GroupClause_ImplementISelectGroupClause ()
     {
-      Assert.IsInstanceOfType (typeof (ISelectGroupClause), _groupClause);
+      Assert.That (_groupClause, Is.InstanceOfType (typeof (ISelectGroupClause)));
     }
 
     [Test]
@@ -83,7 +82,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clone, Is.Not.SameAs (_groupClause));
       Assert.That (clone.ByExpression, Is.SameAs (_groupClause.ByExpression));
       Assert.That (clone.GroupExpression, Is.SameAs (_groupClause.GroupExpression));
-      Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
     }
 
     [Test]

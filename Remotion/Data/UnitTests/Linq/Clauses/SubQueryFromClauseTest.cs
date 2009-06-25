@@ -45,7 +45,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Initialize ()
     {
-      Assert.That (_subQueryFromClause.PreviousClause, Is.SameAs (_previousClause));
       Assert.That (_subQueryFromClause.ItemName, Is.EqualTo ("s"));
       Assert.That (_subQueryFromClause.ItemType, Is.EqualTo (typeof (Student)));
       Assert.That (_subQueryFromClause.SubQueryModel, Is.SameAs (_subQueryModel));
@@ -98,7 +97,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clone, Is.Not.SameAs (_subQueryFromClause));
       Assert.That (clone.ItemName, Is.EqualTo (_subQueryFromClause.ItemName));
       Assert.That (clone.ItemType, Is.SameAs (_subQueryFromClause.ItemType));
-      Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
     }
 
     [Test]
@@ -152,13 +150,11 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clone.JoinClauses[0].EqualityExpression, Is.SameAs (originalJoinClause1.EqualityExpression));
       Assert.That (clone.JoinClauses[0].InExpression, Is.SameAs (originalJoinClause1.InExpression));
       Assert.That (clone.JoinClauses[0].FromClause, Is.SameAs (clone));
-      Assert.That (clone.JoinClauses[0].PreviousClause, Is.SameAs (clone));
 
       Assert.That (clone.JoinClauses[1], Is.Not.SameAs (originalJoinClause2));
       Assert.That (clone.JoinClauses[1].EqualityExpression, Is.SameAs (originalJoinClause2.EqualityExpression));
       Assert.That (clone.JoinClauses[1].InExpression, Is.SameAs (originalJoinClause2.InExpression));
       Assert.That (clone.JoinClauses[1].FromClause, Is.SameAs (clone));
-      Assert.That (clone.JoinClauses[1].PreviousClause, Is.SameAs (clone.JoinClauses[0]));
     }
 
     [Test]

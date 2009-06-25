@@ -48,13 +48,12 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       var fromClause = ExpressionHelper.CreateMainFromClause ();
       var joinClause = new JoinClause (previousClause, fromClause, "x", typeof(Student), inExpression, onExpression, equalityExpression);
 
-      Assert.AreSame (fromClause, joinClause.FromClause);
-      Assert.AreSame (previousClause, joinClause.PreviousClause);
-      Assert.AreSame ("x", joinClause.ItemName);
-      Assert.AreSame (typeof(Student), joinClause.ItemType);
-      Assert.AreSame (inExpression, joinClause.InExpression);
-      Assert.AreSame (onExpression, joinClause.OnExpression);
-      Assert.AreSame (equalityExpression, joinClause.EqualityExpression);
+      Assert.That (joinClause.FromClause, Is.SameAs (fromClause));
+      Assert.That (joinClause.ItemName, Is.SameAs ("x"));
+      Assert.That (joinClause.ItemType, Is.SameAs (typeof (Student)));
+      Assert.That (joinClause.InExpression, Is.SameAs (inExpression));
+      Assert.That (joinClause.OnExpression, Is.SameAs (onExpression));
+      Assert.That (joinClause.EqualityExpression, Is.SameAs (equalityExpression));
     }
 
     [Test]
@@ -89,7 +88,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clone.InExpression, Is.SameAs (_joinClause.InExpression));
       Assert.That (clone.OnExpression, Is.SameAs (_joinClause.OnExpression));
       Assert.That (clone.FromClause, Is.SameAs (newFromClause));
-      Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
     }
 
     [Test]

@@ -130,7 +130,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       Assert.That (clause.ItemName, Is.EqualTo ("j"));
       Assert.That (clause.ItemType, Is.SameAs (typeof (int)));
       Assert.That (clause.FromExpression, Is.SameAs (node.GetResolvedCollectionSelector (ClauseGenerationContext)));
-      Assert.That (clause.PreviousClause, Is.SameAs (previousClause));
     }
 
     [Test]
@@ -149,7 +148,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       Assert.That (clause.ItemType, Is.SameAs (typeof (int)));
       Assert.That (clause.FromExpression, Is.SameAs (node.GetResolvedCollectionSelector (ClauseGenerationContext)));
       Assert.That (clause.MemberExpression, Is.SameAs (node.GetResolvedCollectionSelector (ClauseGenerationContext)));
-      Assert.That (clause.PreviousClause, Is.SameAs (previousClause));
     }
 
     [Test]
@@ -166,7 +164,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       Assert.That (clause.ItemName, Is.EqualTo ("j"));
       Assert.That (clause.ItemType, Is.SameAs (typeof (int)));
       Assert.That (clause.SubQueryModel, Is.SameAs (subQueryExpression.QueryModel));
-      Assert.That (clause.PreviousClause, Is.SameAs (previousClause));
     }
 
     [Test]

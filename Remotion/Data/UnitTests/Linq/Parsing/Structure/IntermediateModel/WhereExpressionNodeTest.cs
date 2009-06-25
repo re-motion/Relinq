@@ -88,7 +88,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       var clause = (WhereClause) node.CreateClause (previousClause, ClauseGenerationContext);
 
-      Assert.That (clause.PreviousClause, Is.SameAs (previousClause));
       Assert.That (clause.Predicate, Is.EqualTo (node.GetResolvedPredicate(ClauseGenerationContext)));
     }
 

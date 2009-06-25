@@ -42,9 +42,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void InitializeWithoutOrdering()
     {
-      Assert.AreEqual (0, _orderByClause.Orderings.Count);
-      Assert.IsNotNull (_orderByClause.PreviousClause);
-      Assert.AreSame (_previousClause, _orderByClause.PreviousClause);
+      Assert.That (_orderByClause.Orderings.Count, Is.EqualTo (0));
     }
     
     [Test]
@@ -57,9 +55,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       _orderByClause.Orderings.Add (ordering2);
 
       Assert.That (_orderByClause.Orderings, Is.EqualTo (new object[] { ordering1, ordering2 }));
-      Assert.AreEqual (2, _orderByClause.Orderings.Count);
-
-      Assert.IsNotNull (_orderByClause.PreviousClause);
+      Assert.That (_orderByClause.Orderings.Count, Is.EqualTo (2));
     }
 
     [Test]
@@ -86,7 +82,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
 
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (_orderByClause));
-      Assert.That (clone.PreviousClause, Is.SameAs (newPreviousClause));
     }
 
     [Test]

@@ -89,7 +89,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       QueryModel queryModel = _queryParser.GetParsedQuery (expressionTree);
 
       Assert.That (queryModel.SelectOrGroupClause, Is.Not.Null);
-      Assert.That (queryModel.SelectOrGroupClause.PreviousClause, Is.SameAs (queryModel.MainFromClause));
       Assert.That (((SelectClause) queryModel.SelectOrGroupClause).Selector, Is.InstanceOfType (typeof (MethodCallExpression)));
       Assert.That (((MethodCallExpression)((SelectClause) queryModel.SelectOrGroupClause).Selector).Method.Name, Is.EqualTo("ToString"));
     }
@@ -116,8 +115,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       QueryModel queryModel = _queryParser.GetParsedQuery (expressionTree);
 
       Assert.That (queryModel.SelectOrGroupClause, Is.Not.Null);
-      Assert.That (queryModel.SelectOrGroupClause.PreviousClause, Is.InstanceOfType (typeof (WhereClause)));
-      
+
       var newSelector = ((SelectClause) queryModel.SelectOrGroupClause).Selector;
       Assert.That (newSelector, Is.InstanceOfType (typeof (QuerySourceReferenceExpression)));
       Assert.That (((QuerySourceReferenceExpression) newSelector).ReferencedClause, Is.SameAs (queryModel.MainFromClause));
@@ -132,7 +130,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       QueryModel queryModel = _queryParser.GetParsedQuery (expressionTree);
       
       Assert.That (queryModel.BodyClauses.Count, Is.EqualTo (1));
-      Assert.That (((WhereClause) queryModel.BodyClauses[0]).PreviousClause, Is.SameAs (queryModel.MainFromClause));
       
       var expectedPredicate = ExpressionHelper.Resolve<int, bool> (queryModel.MainFromClause, i => i > 5);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedPredicate, ((WhereClause) queryModel.BodyClauses[0]).Predicate);
@@ -262,7 +259,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 
       Assert.That (selectClause.ResultModifications.Count, Is.EqualTo (1));
       Assert.That (selectClause.ResultModifications[0], Is.InstanceOfType (typeof (TakeResultModification)));
-      Assert.That (selectClause.PreviousClause, Is.InstanceOfType (typeof (WhereClause)));
     }
   }
 }
