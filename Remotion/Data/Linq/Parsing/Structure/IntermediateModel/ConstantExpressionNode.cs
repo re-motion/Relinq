@@ -92,6 +92,19 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       }
     }
 
+    public void Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
+    {
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+
+      var fromClause = new MainFromClause (
+          AssociatedIdentifier,
+          QuerySourceElementType,
+          Expression.Constant (Value, QuerySourceType));
+
+      clauseGenerationContext.ClauseMapping.AddMapping (this, fromClause);
+      queryModel.MainFromClause = fromClause;
+    }
+
     public IClause CreateClause (IClause previousClause, ClauseGenerationContext clauseGenerationContext)
     {
       if (previousClause != null)

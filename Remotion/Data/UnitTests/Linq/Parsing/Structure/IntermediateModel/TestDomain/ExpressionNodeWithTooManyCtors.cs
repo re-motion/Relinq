@@ -15,6 +15,7 @@
 // 
 using System;
 using System.Linq.Expressions;
+using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 
@@ -53,6 +54,11 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel.TestD
     }
 
     public SelectClause CreateSelectClause (IClause previousClause, ClauseGenerationContext clauseGenerationContext)
+    {
+      throw new NotImplementedException();
+    }
+
+    public void Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
       throw new NotImplementedException();
     }

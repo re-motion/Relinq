@@ -89,5 +89,17 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     /// <see cref="CreateClause"/> if they want to be able to implement <see cref="Resolve"/> correctly.</param>
     /// <returns>A new <see cref="SelectClause"/> that can be used for the query in which this node takes place.</returns>
     SelectClause CreateSelectClause (IClause previousClause, ClauseGenerationContext clauseGenerationContext);
+
+    /// <summary>
+    /// Applies this <see cref="IExpressionNode"/> to the specified query model. Nodes can add or replace clauses, add or replace expressions, and
+    /// add or replace <see cref="ResultModificationBase"/> objects, depending on their semantics.
+    /// </summary>
+    /// <param name="queryModel">The query model this node should be applied to.</param>
+    /// <param name="clauseGenerationContext">Context information used during the current parsing process. The <see cref="QuerySourceClauseMapping"/>
+    /// contained in this structure maps <see cref="IQuerySourceExpressionNode"/>s to the clauses created from them. Implementers that 
+    /// also implement <see cref="IQuerySourceExpressionNode"/> (such as 
+    /// <see cref="ConstantExpressionNode"/> or <see cref="SelectManyExpressionNode"/>) must add their clauses to the mapping in 
+    /// <see cref="Apply"/> in order to be able to implement <see cref="Resolve"/> correctly.</param>
+    void Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext);
   }
 }
