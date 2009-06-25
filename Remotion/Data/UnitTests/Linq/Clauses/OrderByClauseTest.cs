@@ -59,6 +59,22 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void AddOrderings_Null_ThrowsArgumentNullException ()
+    {
+      _orderByClause.Orderings.Add (null);
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentNullException))]
+    public void ChangeOrdering_WithNull_ThrowsArgumentNullException ()
+    {
+      Ordering ordering1 = ExpressionHelper.CreateOrdering ();
+      _orderByClause.Orderings.Add (ordering1);
+      _orderByClause.Orderings[0] = null;
+    }
+
+    [Test]
     public void Accept()
     {
       var repository = new MockRepository();

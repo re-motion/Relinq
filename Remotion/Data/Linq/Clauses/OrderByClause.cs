@@ -15,6 +15,7 @@
 // 
 using System;
 using System.Collections.Generic;
+using Remotion.Collections;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses
@@ -33,13 +34,20 @@ namespace Remotion.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
       PreviousClause = previousClause;
-      Orderings = new List<Ordering>();
+      Orderings = new ObservableCollection<Ordering>();
+      Orderings.ItemInserted += CheckForNullValues;
+      Orderings.ItemSet += CheckForNullValues;
+    }
+
+    private void CheckForNullValues (object sender, ObservableCollectionChangedEventArgs<Ordering> e)
+    {
+      ArgumentUtility.CheckNotNull ("e.Item", e.Item);
     }
 
     /// <summary>
     /// A collection of <see cref="Ordering"/>
     /// </summary>
-    public IList<Ordering> Orderings { get; private set; }
+    public ObservableCollection<Ordering> Orderings { get; private set; }
 
     public IClause PreviousClause { get; private set; }
 
