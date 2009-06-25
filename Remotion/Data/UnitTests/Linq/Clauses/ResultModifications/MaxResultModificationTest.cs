@@ -14,10 +14,8 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.ResultModifications;
@@ -32,27 +30,24 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
     [SetUp]
     public void SetUp ()
     {
-      _resultModification = new MaxResultModification (ExpressionHelper.CreateSelectClause ());
+      _resultModification = new MaxResultModification ();
     }
 
     [Test]
     public void Clone ()
     {
-      var newSelectClause = ExpressionHelper.CreateSelectClause ();
       var clonedClauseMapping = new ClonedClauseMapping ();
-      clonedClauseMapping.AddMapping (_resultModification.SelectClause, newSelectClause);
       var cloneContext = new CloneContext (clonedClauseMapping);
       var clone = _resultModification.Clone (cloneContext);
 
       Assert.That (clone, Is.InstanceOfType (typeof (MaxResultModification)));
-      Assert.That (clone.SelectClause, Is.SameAs (newSelectClause));
     }
 
     [Test]
     public void ExecuteInMemory ()
     {
       var items = new[] { 1, 2, 3, 0, 2 };
-      var resultModification = new MaxResultModification (ExpressionHelper.CreateSelectClause ());
+      var resultModification = new MaxResultModification ();
 
       var result = resultModification.ExecuteInMemory (items);
 

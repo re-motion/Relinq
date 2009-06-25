@@ -25,14 +25,14 @@ namespace Remotion.Data.Linq.Clauses.ResultModifications
 {
   public class SumResultModification : ResultModificationBase
   {
-    public SumResultModification (SelectClause selectClause)
-        : base (selectClause, ScalarExecutionStrategy.Instance)
+    public SumResultModification ()
+        : base (ScalarExecutionStrategy.Instance)
     {
     }
 
     public override ResultModificationBase Clone (CloneContext cloneContext)
     {
-      return new SumResultModification (cloneContext.ClonedClauseMapping.GetClause<SelectClause> (SelectClause));
+      return new SumResultModification ();
     }
 
     public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)

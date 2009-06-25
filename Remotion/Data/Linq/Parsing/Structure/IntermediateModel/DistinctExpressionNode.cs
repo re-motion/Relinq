@@ -56,10 +56,9 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return Source.CreateParameterForOutput();
     }
 
-    protected override ResultModificationBase CreateResultModification (SelectClause selectClause)
+    protected override ResultModificationBase CreateResultModification ()
     {
-      ArgumentUtility.CheckNotNull ("selectClause", selectClause);
-      return new DistinctResultModification (selectClause);
+      return new DistinctResultModification ();
     }
   }
 }

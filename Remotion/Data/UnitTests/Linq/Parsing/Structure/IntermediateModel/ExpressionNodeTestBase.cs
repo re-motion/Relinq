@@ -74,7 +74,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
       Assert.That (selectClause.ResultModifications.Count, Is.EqualTo (1));
       Assert.That (selectClause.ResultModifications[0], Is.InstanceOfType (expectedResultModificationType));
-      Assert.That (selectClause.ResultModifications[0].SelectClause, Is.SameAs (selectClause));
     }
 
     protected void TestApply_WithOptionalPredicate (ResultModificationExpressionNodeBase node)

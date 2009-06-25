@@ -14,10 +14,8 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.ResultModifications;
@@ -35,8 +33,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
     [SetUp]
     public void SetUp ()
     {
-      _resultModificationNoDefault = new FirstResultModification (ExpressionHelper.CreateSelectClause (), false);
-      _resultModificationWithDefault = new FirstResultModification (ExpressionHelper.CreateSelectClause (), true);
+      _resultModificationNoDefault = new FirstResultModification (false);
+      _resultModificationWithDefault = new FirstResultModification (true);
       _clonedClauseMapping = new ClonedClauseMapping ();
       _cloneContext = new CloneContext (_clonedClauseMapping);
     }
@@ -44,24 +42,18 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
     [Test]
     public void Clone ()
     {
-      var newSelectClause = ExpressionHelper.CreateSelectClause ();
-      _clonedClauseMapping.AddMapping (_resultModificationWithDefault.SelectClause, newSelectClause);
       var clone = _resultModificationWithDefault.Clone (_cloneContext);
 
       Assert.That (clone, Is.InstanceOfType (typeof (FirstResultModification)));
-      Assert.That (clone.SelectClause, Is.SameAs (newSelectClause));
       Assert.That (((FirstResultModification) clone).ReturnDefaultWhenEmpty, Is.True);
     }
 
     [Test]
     public void Clone_ReturnDefaultIfEmpty_False ()
     {
-      var newSelectClause = ExpressionHelper.CreateSelectClause ();
-      _clonedClauseMapping.AddMapping (_resultModificationNoDefault.SelectClause, newSelectClause);
       var clone = _resultModificationNoDefault.Clone (_cloneContext);
 
       Assert.That (clone, Is.InstanceOfType (typeof (FirstResultModification)));
-      Assert.That (clone.SelectClause, Is.SameAs (newSelectClause));
       Assert.That (((FirstResultModification) clone).ReturnDefaultWhenEmpty, Is.False);
     }
 

@@ -24,14 +24,14 @@ namespace Remotion.Data.Linq.Clauses.ResultModifications
 {
   public class DistinctResultModification : ResultModificationBase
   {
-    public DistinctResultModification (SelectClause selectClause)
-        : base (selectClause, CollectionExecutionStrategy.Instance)
+    public DistinctResultModification ()
+        : base (CollectionExecutionStrategy.Instance)
     {
     }
 
     public override ResultModificationBase Clone (CloneContext cloneContext)
     {
-      return new DistinctResultModification (cloneContext.ClonedClauseMapping.GetClause<SelectClause> (SelectClause));
+      return new DistinctResultModification ();
     }
 
     public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)

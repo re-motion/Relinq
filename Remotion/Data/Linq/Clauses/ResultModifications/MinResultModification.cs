@@ -24,14 +24,14 @@ namespace Remotion.Data.Linq.Clauses.ResultModifications
 {
   public class MinResultModification : ResultModificationBase
   {
-    public MinResultModification (SelectClause selectClause)
-        : base (selectClause, ScalarExecutionStrategy.Instance)
+    public MinResultModification ()
+        : base (ScalarExecutionStrategy.Instance)
     {
     }
 
     public override ResultModificationBase Clone (CloneContext cloneContext)
     {
-      return new MinResultModification (cloneContext.ClonedClauseMapping.GetClause<SelectClause> (SelectClause));
+      return new MinResultModification ();
     }
 
     public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)

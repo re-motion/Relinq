@@ -26,15 +26,15 @@ namespace Remotion.Data.Linq.Clauses.ResultModifications
   {
     public int Count { get; set; }
 
-    public TakeResultModification (SelectClause selectClause, int count)
-        : base (selectClause, CollectionExecutionStrategy.Instance)
+    public TakeResultModification (int count)
+        : base (CollectionExecutionStrategy.Instance)
     {
       Count = count;
     }
 
     public override ResultModificationBase Clone (CloneContext cloneContext)
     {
-      return new TakeResultModification (cloneContext.ClonedClauseMapping.GetClause<SelectClause> (SelectClause), Count);
+      return new TakeResultModification (Count);
     }
 
     public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)

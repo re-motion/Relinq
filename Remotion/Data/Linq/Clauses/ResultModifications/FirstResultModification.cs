@@ -24,9 +24,8 @@ namespace Remotion.Data.Linq.Clauses.ResultModifications
 {
   public class FirstResultModification : ResultModificationBase
   {
-    public FirstResultModification (SelectClause selectClause, bool returnDefaultWhenEmpty)
+    public FirstResultModification (bool returnDefaultWhenEmpty)
         : base (
-            selectClause,
             returnDefaultWhenEmpty ? SingleExecutionStrategy.InstanceWithDefaultWhenEmpty : SingleExecutionStrategy.InstanceNoDefaultWhenEmpty)
     {
       ReturnDefaultWhenEmpty = returnDefaultWhenEmpty;
@@ -36,7 +35,7 @@ namespace Remotion.Data.Linq.Clauses.ResultModifications
 
     public override ResultModificationBase Clone (CloneContext cloneContext)
     {
-      return new FirstResultModification (cloneContext.ClonedClauseMapping.GetClause<SelectClause> (SelectClause), ReturnDefaultWhenEmpty);
+      return new FirstResultModification (ReturnDefaultWhenEmpty);
     }
 
     public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)

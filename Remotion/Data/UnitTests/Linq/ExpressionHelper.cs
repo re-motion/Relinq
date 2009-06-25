@@ -309,14 +309,9 @@ namespace Remotion.Data.UnitTests.Linq
       return new MemberFromClause ("member", typeof (Student), fromExpression);
     }
 
-    public static ResultModificationBase CreateResultModification (SelectClause selectClause)
-    {
-      return new DistinctResultModification (selectClause);
-    }
-
     public static ResultModificationBase CreateResultModification ()
     {
-      return CreateResultModification (CreateSelectClause ());
+      return new DistinctResultModification ();
     }
 
     public static Expression Resolve<TParameter, TResult> (FromClauseBase fromClauseToReference, Expression<Func<TParameter, TResult>> expressionToBeResolved)

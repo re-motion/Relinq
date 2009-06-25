@@ -61,10 +61,9 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       throw CreateOutputParameterNotSupportedException();
     }
 
-    protected override ResultModificationBase CreateResultModification (SelectClause selectClause)
+    protected override ResultModificationBase CreateResultModification ()
     {
-      ArgumentUtility.CheckNotNull ("selectClause", selectClause);
-      return new SingleResultModification (selectClause, ParsedExpression.Method.Name.EndsWith ("OrDefault"));
+      return new SingleResultModification (ParsedExpression.Method.Name.EndsWith ("OrDefault"));
     }
   }
 }

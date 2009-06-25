@@ -50,7 +50,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
         _cachedSelector = new ResolvedExpressionCache (Source);
     }
 
-    protected abstract ResultModificationBase CreateResultModification (SelectClause selectClause);
+    protected abstract ResultModificationBase CreateResultModification ();
 
     public LambdaExpression OptionalPredicate { get; private set; }
     public LambdaExpression OptionalSelector { get; private set; }
@@ -96,7 +96,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
       var selectClause = ((SelectClause) queryModel.SelectOrGroupClause);
-      selectClause.ResultModifications.Add (CreateResultModification (selectClause));
+      selectClause.ResultModifications.Add (CreateResultModification ());
 
       if (OptionalPredicate != null)
       {

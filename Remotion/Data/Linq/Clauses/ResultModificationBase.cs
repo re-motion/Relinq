@@ -20,19 +20,14 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses
 {
-  // TODO MG: Unfinished Refactoring: test
   public abstract class ResultModificationBase
   {
-    protected ResultModificationBase (SelectClause selectClause, IExecutionStrategy executionStrategy)
+    protected ResultModificationBase (IExecutionStrategy executionStrategy)
     {
-      ArgumentUtility.CheckNotNull ("selectClause", selectClause);
       ArgumentUtility.CheckNotNull ("executionStrategy", executionStrategy);
-
-      SelectClause = selectClause;
       ExecutionStrategy = executionStrategy;
     }
 
-    public SelectClause SelectClause { get; private set; }
     public IExecutionStrategy ExecutionStrategy { get; private set; }
 
     // TODO MG: Unfinished Refactoring: test, implement, and adapt IQueryVisitor and its implementations

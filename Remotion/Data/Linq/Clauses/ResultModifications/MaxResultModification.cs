@@ -24,14 +24,14 @@ namespace Remotion.Data.Linq.Clauses.ResultModifications
 {
   public class MaxResultModification : ResultModificationBase
   {
-    public MaxResultModification (SelectClause selectClause)
-        : base (selectClause, ScalarExecutionStrategy.Instance)
+    public MaxResultModification ()
+        : base (ScalarExecutionStrategy.Instance)
     {
     }
 
     public override ResultModificationBase Clone (CloneContext cloneContext)
     {
-      return new MaxResultModification (cloneContext.ClonedClauseMapping.GetClause<SelectClause> (SelectClause));
+      return new MaxResultModification ();
     }
 
     public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)

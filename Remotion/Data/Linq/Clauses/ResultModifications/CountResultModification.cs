@@ -24,14 +24,14 @@ namespace Remotion.Data.Linq.Clauses.ResultModifications
 {
   public class CountResultModification : ResultModificationBase
   {
-    public CountResultModification (SelectClause selectClause)
-        : base (selectClause, ScalarExecutionStrategy.Instance)
+    public CountResultModification ()
+        : base (ScalarExecutionStrategy.Instance)
     {
     }
 
     public override ResultModificationBase Clone (CloneContext cloneContext)
     {
-      return new CountResultModification (cloneContext.ClonedClauseMapping.GetClause<SelectClause> (SelectClause));
+      return new CountResultModification ();
     }
 
     public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)

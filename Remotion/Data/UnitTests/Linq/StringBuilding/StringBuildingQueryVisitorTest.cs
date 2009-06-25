@@ -120,8 +120,8 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
     public void StringVisitorForSelectClause_WithResultModifications ()
     {
       SelectClause selectClause = ExpressionHelper.CreateSelectClause ();
-      selectClause.ResultModifications.Add (new TakeResultModification (selectClause, 5));
-      selectClause.ResultModifications.Add (new CountResultModification (selectClause));
+      selectClause.ResultModifications.Add (new TakeResultModification (5));
+      selectClause.ResultModifications.Add (new CountResultModification ());
       var sv = new StringBuildingQueryVisitor ();
 
       sv.VisitSelectClause (selectClause);
