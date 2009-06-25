@@ -39,11 +39,6 @@ namespace Remotion.Data.Linq.Clauses
       Orderings.ItemSet += CheckForNullValues;
     }
 
-    private void CheckForNullValues (object sender, ObservableCollectionChangedEventArgs<Ordering> e)
-    {
-      ArgumentUtility.CheckNotNull ("e.Item", e.Item);
-    }
-
     /// <summary>
     /// A collection of <see cref="Ordering"/>
     /// </summary>
@@ -71,6 +66,11 @@ namespace Remotion.Data.Linq.Clauses
       }
 
       return result;
+    }
+
+    private void CheckForNullValues (object sender, ObservableCollectionChangedEventArgs<Ordering> e)
+    {
+      ArgumentUtility.CheckNotNull ("e.Item", e.Item);
     }
 
     IBodyClause IBodyClause.Clone (CloneContext cloneContext)

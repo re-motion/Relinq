@@ -60,6 +60,22 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
+    [ExpectedException (typeof (ArgumentNullException))]
+    public void AddResultModification_Null_ThrowsArgumentNullException ()
+    {
+      _selectClause.ResultModifications.Add (null);
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentNullException))]
+    public void AddResultModification_WithNull_ThrowsArgumentNullException ()
+    {
+      var resultModifierClause = new DistinctResultModification (_selectClause);
+      _selectClause.ResultModifications.Add (resultModifierClause);
+      _selectClause.ResultModifications[0] = null;
+    }
+
+    [Test]
     public void SelectClause_ImplementISelectGroupClause()
     {
       Assert.That (_selectClause, Is.InstanceOfType (typeof (ISelectGroupClause)));

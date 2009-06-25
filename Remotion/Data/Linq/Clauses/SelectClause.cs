@@ -16,6 +16,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Remotion.Collections;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Utilities;
@@ -44,9 +45,12 @@ namespace Remotion.Data.Linq.Clauses
 
       PreviousClause = previousClause;
       _selector = selector;
-      ResultModifications = new List<ResultModificationBase> ();
-    }
+      ResultModifications = new ObservableCollection<ResultModificationBase> ();
+      ResultModifications.ItemInserted += CheckForNullValues;
+      ResultModifications.ItemSet += CheckForNullValues;
 
+    }
+    
     /// <summary>
     /// The previous clause of type <see cref="IClause"/> in the <see cref="QueryModel"/>.
     /// </summary>
@@ -63,7 +67,7 @@ namespace Remotion.Data.Linq.Clauses
       set { _selector = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
-    public IList<ResultModificationBase> ResultModifications { get; private set; }
+    public ObservableCollection<ResultModificationBase> ResultModifications { get; private set; }
 
     public virtual void Accept (IQueryVisitor visitor)
     {
@@ -100,5 +104,11 @@ namespace Remotion.Data.Linq.Clauses
       else
         return CollectionExecutionStrategy.Instance;
     }
+
+    private void CheckForNullValues (object sender, ObservableCollectionChangedEventArgs<ResultModificationBase> e)
+    {
+      ArgumentUtility.CheckNotNull ("e.Item", e.Item);
+    }
+    
   }
 }
