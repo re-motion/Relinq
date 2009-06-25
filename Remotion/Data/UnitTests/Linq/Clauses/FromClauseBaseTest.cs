@@ -57,5 +57,23 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (fromClause.JoinClauses, Is.EqualTo (new object[] { joinClause1, joinClause2 }));
       Assert.AreEqual (2, fromClause.JoinClauses.Count);
     }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentNullException))]
+    public void AddJoinClause_Null_ThrowsArgumentNullException ()
+    {
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause ();
+      fromClause.JoinClauses.Add (null);
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentNullException))]
+    public void ChangeJoinClause_WithNull_ThrowsArgumentNullException ()
+    {
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause ();
+      JoinClause joinClause = ExpressionHelper.CreateJoinClause ();
+      fromClause.JoinClauses.Add (joinClause);
+      fromClause.JoinClauses[0] = null;
+    }
   }
 }

@@ -15,6 +15,7 @@
 // 
 using System;
 using System.Collections.Generic;
+using Remotion.Collections;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Utilities;
 
@@ -42,7 +43,10 @@ namespace Remotion.Data.Linq.Clauses
       PreviousClause = previousClause;
       _itemName = itemName;
       _itemType = itemType;
-      JoinClauses = new List<JoinClause>();
+      JoinClauses = new ObservableCollection<JoinClause> ();
+      JoinClauses.ItemInserted += CheckForNullValues;
+      JoinClauses.ItemSet += CheckForNullValues;
+
     }
 
     public IClause PreviousClause { get; private set; }
@@ -65,7 +69,7 @@ namespace Remotion.Data.Linq.Clauses
       set { _itemType = ArgumentUtility.CheckNotNull ("value",value); }
     }
 
-    public IList<JoinClause> JoinClauses { get; private set; }
+    public ObservableCollection<JoinClause> JoinClauses { get; private set; }
 
     /// <summary>
     /// Method for getting source of a from clause.
@@ -91,6 +95,11 @@ namespace Remotion.Data.Linq.Clauses
         var joinClauseClone = joinClause.Clone (cloneContext);
         JoinClauses.Add (joinClauseClone);
       }
+    }
+
+    private void CheckForNullValues (object sender, ObservableCollectionChangedEventArgs<JoinClause> e)
+    {
+      ArgumentUtility.CheckNotNull ("e.Item", e.Item);
     }
   }
 }
