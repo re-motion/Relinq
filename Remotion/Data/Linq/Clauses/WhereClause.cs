@@ -32,20 +32,12 @@ namespace Remotion.Data.Linq.Clauses
     /// <summary>
     /// Initialize a new instance of <see cref="WhereClause"/>
     /// </summary>
-    /// <param name="previousClause">The previous clause of type <see cref="IClause"/> in the <see cref="QueryModel"/>.</param>
     /// <param name="predicate">The expression which represents the where conditions.</param>
-    public WhereClause (IClause previousClause, Expression predicate)
+    public WhereClause (Expression predicate)
     {
       ArgumentUtility.CheckNotNull ("predicate", predicate);
-
-      PreviousClause = previousClause;
       _predicate = predicate;
     }
-
-    /// <summary>
-    /// The previous clause of type <see cref="IClause"/> in the <see cref="QueryModel"/>.
-    /// </summary>
-    public IClause PreviousClause { get; private set; }
 
     /// <summary>
     /// The expression which represents the where conditions.
@@ -68,7 +60,7 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 
       var newPredicate = CloneExpressionTreeVisitor.ReplaceClauseReferences (Predicate, cloneContext);
-      var result = new WhereClause (null, newPredicate);
+      var result = new WhereClause (newPredicate);
       cloneContext.ClonedClauseMapping.AddMapping (this, result);
       return result;
     }

@@ -17,7 +17,6 @@ namespace Remotion.Data.Linq.Clauses
 {
   public interface IClause
   {
-    IClause PreviousClause { get; }
     void Accept (IQueryVisitor visitor);
   }
 }

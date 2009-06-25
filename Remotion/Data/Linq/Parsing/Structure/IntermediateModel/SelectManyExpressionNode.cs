@@ -135,7 +135,6 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       ArgumentUtility.CheckNotNull ("previousClause", previousClause);
 
       FromClauseBase clause = CreateFromClauseOfCorrectType (
-          previousClause, 
           ResultSelector.Parameters[1].Name, 
           ResultSelector.Parameters[1].Type, 
           clauseGenerationContext);
@@ -144,15 +143,15 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return clause;
     }
 
-    private FromClauseBase CreateFromClauseOfCorrectType (IClause previousClause, string itemName, Type itemType, ClauseGenerationContext clauseGenerationContext)
+    private FromClauseBase CreateFromClauseOfCorrectType (string itemName, Type itemType, ClauseGenerationContext clauseGenerationContext)
     {
       var resolvedCollectionSelector = GetResolvedCollectionSelector (clauseGenerationContext);
       if (resolvedCollectionSelector is MemberExpression)
-        return new MemberFromClause (previousClause, itemName, itemType, (MemberExpression) resolvedCollectionSelector);
+        return new MemberFromClause (itemName, itemType, (MemberExpression) resolvedCollectionSelector);
       else if (resolvedCollectionSelector is SubQueryExpression)
-        return new SubQueryFromClause (previousClause, itemName, itemType, ((SubQueryExpression) resolvedCollectionSelector).QueryModel);
+        return new SubQueryFromClause (itemName, itemType, ((SubQueryExpression) resolvedCollectionSelector).QueryModel);
       else
-        return new AdditionalFromClause (previousClause, itemName, itemType, resolvedCollectionSelector);
+        return new AdditionalFromClause (itemName, itemType, resolvedCollectionSelector);
     }
   }
 }

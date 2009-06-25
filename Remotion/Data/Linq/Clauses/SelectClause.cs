@@ -14,7 +14,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using Remotion.Collections;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
@@ -30,33 +29,21 @@ namespace Remotion.Data.Linq.Clauses
   /// </summary>
   public class SelectClause : ISelectGroupClause
   {
-    private IClause _previousClause;
     private Expression _selector;
 
     /// <summary>
     /// Initialize a new instance of <see cref="SelectClause"/>.
     /// </summary>
-    /// <param name="previousClause">The previous clause of type <see cref="IClause"/> in the <see cref="QueryModel"/>.</param>
     /// <param name="selector">The projection within the select part of the linq query.</param>
-    public SelectClause (IClause previousClause, Expression selector)
+    public SelectClause (Expression selector)
     {
       ArgumentUtility.CheckNotNull ("selector", selector);
 
-      PreviousClause = previousClause;
       _selector = selector;
       ResultModifications = new ObservableCollection<ResultModificationBase> ();
       ResultModifications.ItemInserted += CheckForNullValues;
       ResultModifications.ItemSet += CheckForNullValues;
 
-    }
-    
-    /// <summary>
-    /// The previous clause of type <see cref="IClause"/> in the <see cref="QueryModel"/>.
-    /// </summary>
-    public IClause PreviousClause
-    {
-      get { return _previousClause; }
-      set { _previousClause = value; }
     }
 
     [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (Selector),nq}")]
@@ -79,7 +66,7 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 
       var newSelector = CloneExpressionTreeVisitor.ReplaceClauseReferences (Selector, cloneContext);
-      var result = new SelectClause (null, newSelector);
+      var result = new SelectClause (newSelector);
       cloneContext.ClonedClauseMapping.AddMapping (this, result);
       foreach (var resultModification in ResultModifications)
       {

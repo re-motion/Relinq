@@ -30,7 +30,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
   public class SelectClauseTest
   {
     private Expression _selector;
-    private IClause _previousClause;
     private SelectClause _selectClause;
     private CloneContext _cloneContext;
 
@@ -38,8 +37,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void SetUp ()
     {
       _selector = ExpressionHelper.CreateExpression();
-      _previousClause = ExpressionHelper.CreateClause ();
-      _selectClause = new SelectClause (_previousClause, _selector);
+      _selectClause = new SelectClause (_selector);
       _cloneContext = new CloneContext (new ClonedClauseMapping());
     }
 
@@ -121,7 +119,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     {
       var mainFromClause = ExpressionHelper.CreateMainFromClause();
       var selector = new QuerySourceReferenceExpression (mainFromClause);
-      var selectClause = new SelectClause (mainFromClause, selector);
+      var selectClause = new SelectClause (selector);
 
       var newMainFromClause = ExpressionHelper.CreateMainFromClause ();
       _cloneContext.ClonedClauseMapping.AddMapping (mainFromClause, newMainFromClause);

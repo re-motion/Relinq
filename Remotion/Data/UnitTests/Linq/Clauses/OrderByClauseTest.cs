@@ -29,14 +29,12 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
   {
     private CloneContext _cloneContext;
     private OrderByClause _orderByClause;
-    private IClause _previousClause;
 
     [SetUp]
     public void SetUp ()
     {
       _cloneContext = new CloneContext (new ClonedClauseMapping ());
-      _previousClause = ExpressionHelper.CreateClause();
-      _orderByClause = new OrderByClause (_previousClause);
+      _orderByClause = new OrderByClause ();
     }
 
     [Test]

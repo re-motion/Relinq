@@ -29,10 +29,8 @@ namespace Remotion.Data.Linq.Clauses
     /// <summary>
     /// Initialize a new instance of <see cref="OrderByClause"/>
     /// </summary>
-    /// <param name="previousClause">The previous clause of type <see cref="IClause"/> in the <see cref="QueryModel"/>.</param>
-    public OrderByClause (IClause previousClause)
+    public OrderByClause ()
     {
-      PreviousClause = previousClause;
       Orderings = new ObservableCollection<Ordering>();
       Orderings.ItemInserted += CheckForNullValues;
       Orderings.ItemSet += CheckForNullValues;
@@ -42,8 +40,6 @@ namespace Remotion.Data.Linq.Clauses
     /// A collection of <see cref="Ordering"/>
     /// </summary>
     public ObservableCollection<Ordering> Orderings { get; private set; }
-
-    public IClause PreviousClause { get; private set; }
 
     public virtual void Accept (IQueryVisitor visitor)
     {
@@ -55,7 +51,7 @@ namespace Remotion.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 
-      var result = new OrderByClause (null);
+      var result = new OrderByClause ();
       cloneContext.ClonedClauseMapping.AddMapping (this, result);
       foreach (var ordering in Orderings)
       {

@@ -107,20 +107,18 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone_AdjustsExpressions ()
     {
-      var mainFromClause = ExpressionHelper.CreateMainFromClause_Student();
-      var fromExpression = Expression.MakeMemberAccess (new QuerySourceReferenceExpression (mainFromClause), typeof (Student).GetProperty ("OtherStudent"));
-      var memberFromClause = new MemberFromClause (
-          mainFromClause, 
-          "s", 
+      var referencedExpression = ExpressionHelper.CreateMainFromClause_Student();
+      var fromExpression = Expression.MakeMemberAccess (new QuerySourceReferenceExpression (referencedExpression), typeof (Student).GetProperty ("OtherStudent"));
+      var memberFromClause = new MemberFromClause ("s", 
           typeof (Student),
           fromExpression);
 
-      var newMainFromClause = ExpressionHelper.CreateMainFromClause_Student();
-      _cloneContext.ClonedClauseMapping.AddMapping (mainFromClause, newMainFromClause);
+      var newReferencedExpression = ExpressionHelper.CreateMainFromClause_Student();
+      _cloneContext.ClonedClauseMapping.AddMapping (referencedExpression, newReferencedExpression);
 
       var clone = (MemberFromClause) memberFromClause.Clone (_cloneContext);
 
-      Assert.That (((QuerySourceReferenceExpression) clone.MemberExpression.Expression).ReferencedClause, Is.SameAs (newMainFromClause));
+      Assert.That (((QuerySourceReferenceExpression) clone.MemberExpression.Expression).ReferencedClause, Is.SameAs (newReferencedExpression));
     }
 
     [Test]
@@ -133,10 +131,10 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone_JoinClauses ()
     {
-      var originalJoinClause1 = ExpressionHelper.CreateJoinClause (_memberFromClause, _memberFromClause);
+      var originalJoinClause1 = ExpressionHelper.CreateJoinClause (_memberFromClause);
       _memberFromClause.JoinClauses.Add (originalJoinClause1);
 
-      var originalJoinClause2 = ExpressionHelper.CreateJoinClause (originalJoinClause1, _memberFromClause);
+      var originalJoinClause2 = ExpressionHelper.CreateJoinClause (_memberFromClause);
       _memberFromClause.JoinClauses.Add (originalJoinClause2);
 
       var clone = _memberFromClause.Clone (_cloneContext);
@@ -157,9 +155,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Clone_JoinClauses_PassesMapping ()
     {
       var oldFromClause = ExpressionHelper.CreateMainFromClause ();
-      var originalJoinClause = new JoinClause (
-          _memberFromClause,
-          _memberFromClause,
+      var originalJoinClause = new JoinClause (_memberFromClause,
           "x",
           typeof(Student),
           new QuerySourceReferenceExpression (oldFromClause),

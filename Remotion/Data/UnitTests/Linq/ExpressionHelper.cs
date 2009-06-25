@@ -70,21 +70,21 @@ namespace Remotion.Data.UnitTests.Linq
 
     public static JoinClause CreateJoinClause ()
     {
-      return CreateJoinClause (CreateClause(), CreateMainFromClause());
+      return CreateJoinClause (CreateMainFromClause());
     }
 
-    public static JoinClause CreateJoinClause (IClause previousClause, FromClauseBase fromClause)
+    public static JoinClause CreateJoinClause (FromClauseBase fromClause)
     {
       Expression inExpression = CreateExpression ();
       Expression onExpression = CreateExpression ();
       Expression equalityExpression = CreateExpression ();
 
-      return new JoinClause (previousClause, fromClause, "x", typeof(Student), inExpression, onExpression, equalityExpression);
+      return new JoinClause (fromClause, "x", typeof(Student), inExpression, onExpression, equalityExpression);
     }
 
     public static QueryModel CreateQueryModel (MainFromClause mainFromClause)
     {
-      var selectClause = CreateSelectClause (mainFromClause);
+      var selectClause = CreateSelectClause ();
       return new QueryModel (typeof (IQueryable<Student>), mainFromClause, selectClause);
     }
 
@@ -120,19 +120,9 @@ namespace Remotion.Data.UnitTests.Linq
       return CreateAdditionalFromClause ("additional", typeof (int));
     }
 
-    public static AdditionalFromClause CreateAdditionalFromClause (IClause previousClause)
-    {
-      return CreateAdditionalFromClause (previousClause, "additional", typeof (int));
-    }
-
     public static AdditionalFromClause CreateAdditionalFromClause (string itemName, Type itemType)
     {
-      return new AdditionalFromClause (CreateClause (), itemName, itemType, CreateExpression ());
-    }
-
-    public static AdditionalFromClause CreateAdditionalFromClause (IClause previousClause, string itemName, Type itemType)
-    {
-      return new AdditionalFromClause (previousClause, itemName, itemType, CreateExpression ());
+      return new AdditionalFromClause (itemName, itemType, CreateExpression ());
     }
 
     public static GroupClause CreateGroupClause ()
@@ -140,7 +130,7 @@ namespace Remotion.Data.UnitTests.Linq
       Expression groupExpression = CreateExpression ();
       Expression byExpression = CreateExpression ();
 
-      return new GroupClause (CreateClause (), groupExpression, byExpression);
+      return new GroupClause (groupExpression, byExpression);
     }
     
     public static Ordering CreateOrdering (OrderByClause orderByClause)
@@ -155,18 +145,13 @@ namespace Remotion.Data.UnitTests.Linq
 
     public static OrderByClause CreateOrderByClause()
     {
-      return new OrderByClause (CreateClause());
+      return new OrderByClause ();
     }
 
     public static SelectClause CreateSelectClause ()
     {
-      return CreateSelectClause (CreateClause ());
-    }
-
-    public static SelectClause CreateSelectClause (IClause previousClause)
-    {
       var selector = Expression.Constant (0);
-      return new SelectClause (previousClause, selector);
+      return new SelectClause (selector);
     }
 
     public static MethodCallExpression CreateMethodCallExpression (IQueryable<Student> query)
@@ -182,13 +167,8 @@ namespace Remotion.Data.UnitTests.Linq
 
     public static WhereClause CreateWhereClause ()
     {
-      return CreateWhereClause (CreateClause());
-    }
-
-    public static WhereClause CreateWhereClause (IClause previousClause)
-    {
       var predicate = Expression.MakeBinary (ExpressionType.Equal, Expression.Constant (1), Expression.Constant (2));
-      return new WhereClause (previousClause, predicate);
+      return new WhereClause (predicate);
     }
 
     public static IClause CreateClause()
@@ -302,7 +282,7 @@ namespace Remotion.Data.UnitTests.Linq
 
     public static SubQueryFromClause CreateSubQueryFromClause (string itemName, Type itemType)
     {
-      return new SubQueryFromClause (CreateClause (), itemName, itemType, CreateQueryModel ());
+      return new SubQueryFromClause (itemName, itemType, CreateQueryModel ());
     }
 
     public static Expression MakeExpression<TRet> (Expression<Func<TRet>> expression)
@@ -325,9 +305,8 @@ namespace Remotion.Data.UnitTests.Linq
 
     public static MemberFromClause CreateMemberFromClause ()
     {
-      var previousClause = CreateClause();
       var fromExpression = Expression.MakeMemberAccess (Expression.Constant (null, typeof (IndustrialSector)), typeof (IndustrialSector).GetProperty ("Students"));
-      return new MemberFromClause (previousClause, "member", typeof (Student), fromExpression);
+      return new MemberFromClause ("member", typeof (Student), fromExpression);
     }
 
     public static ResultModificationBase CreateResultModification (SelectClause selectClause)

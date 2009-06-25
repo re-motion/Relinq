@@ -41,9 +41,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void InitializeWithboolExpression()
     {
       var predicate = Expression.Constant (false);
-      IClause clause = ExpressionHelper.CreateClause();
-      
-      var whereClause = new WhereClause(clause, predicate);
+      var whereClause = new WhereClause(predicate);
+
       Assert.That (whereClause.Predicate, Is.SameAs (predicate));
     }
 
@@ -97,7 +96,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     {
       var mainFromClause = ExpressionHelper.CreateMainFromClause();
       var predicate = new QuerySourceReferenceExpression (mainFromClause);
-      var whereClause = new WhereClause (mainFromClause, predicate);
+      var whereClause = new WhereClause (predicate);
 
       var newMainFromClause = ExpressionHelper.CreateMainFromClause ();
       _cloneContext.ClonedClauseMapping.AddMapping (mainFromClause, newMainFromClause);

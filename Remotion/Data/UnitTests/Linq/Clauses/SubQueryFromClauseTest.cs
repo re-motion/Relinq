@@ -14,7 +14,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
@@ -28,7 +27,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
   [TestFixture]
   public class SubQueryFromClauseTest
   {
-    private IClause _previousClause;
     private QueryModel _subQueryModel;
     private SubQueryFromClause _subQueryFromClause;
     private CloneContext _cloneContext;
@@ -36,9 +34,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [SetUp]
     public void SetUp ()
     {
-      _previousClause = ExpressionHelper.CreateMainFromClause();
       _subQueryModel = ExpressionHelper.CreateQueryModel();
-      _subQueryFromClause = new SubQueryFromClause (_previousClause, "s", typeof (Student), _subQueryModel);
+      _subQueryFromClause = new SubQueryFromClause ("s", typeof (Student), _subQueryModel);
       _cloneContext = new CloneContext (new ClonedClauseMapping());
     }
 
@@ -128,10 +125,10 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone_JoinClauses ()
     {
-      var originalJoinClause1 = ExpressionHelper.CreateJoinClause (_subQueryFromClause, _subQueryFromClause);
+      var originalJoinClause1 = ExpressionHelper.CreateJoinClause (_subQueryFromClause);
       _subQueryFromClause.JoinClauses.Add (originalJoinClause1);
 
-      var originalJoinClause2 = ExpressionHelper.CreateJoinClause (originalJoinClause1, _subQueryFromClause);
+      var originalJoinClause2 = ExpressionHelper.CreateJoinClause (_subQueryFromClause);
       _subQueryFromClause.JoinClauses.Add (originalJoinClause2);
 
       var clone = _subQueryFromClause.Clone (_cloneContext);
@@ -152,9 +149,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Clone_JoinClauses_PassesMapping ()
     {
       var oldFromClause = ExpressionHelper.CreateMainFromClause();
-      var originalJoinClause = new JoinClause (
-          _subQueryFromClause,
-          _subQueryFromClause,
+      var originalJoinClause = new JoinClause (_subQueryFromClause,
           "x",
           typeof(Student),
           new QuerySourceReferenceExpression (oldFromClause),

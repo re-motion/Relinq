@@ -35,7 +35,7 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
     {
       var referencedClause = ExpressionHelper.CreateMainFromClause ("i", typeof (int), ExpressionHelper.CreateQuerySource ());
       var predicate = Expression.MakeBinary (ExpressionType.GreaterThan, new QuerySourceReferenceExpression (referencedClause), Expression.Constant (0));
-      var whereClause = new WhereClause (ExpressionHelper.CreateClause (), predicate);
+      var whereClause = new WhereClause (predicate);
       var sv = new StringBuildingQueryVisitor ();
 
       sv.VisitWhereClause (whereClause);
@@ -59,7 +59,6 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
       var repository = new MockRepository();
       var joinClause1 =
           repository.StrictMock<JoinClause> (
-              ExpressionHelper.CreateClause(),
               fromClause,
               "x",
               typeof(Student),
@@ -68,7 +67,6 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
               ExpressionHelper.CreateExpression());
       var joinClause2 =
           repository.StrictMock<JoinClause> (
-              ExpressionHelper.CreateClause(),
               fromClause,
               "x",
               typeof(Student),
@@ -134,8 +132,7 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
     [Test]
     public void StringVisitorForGroupClause ()
     {
-      var groupClause =
-          new GroupClause (ExpressionHelper.CreateClause(), ExpressionHelper.CreateExpression(), ExpressionHelper.CreateExpression());
+      var groupClause = new GroupClause (ExpressionHelper.CreateExpression(), ExpressionHelper.CreateExpression());
       var sv = new StringBuildingQueryVisitor();
 
       sv.VisitGroupClause (groupClause);
@@ -279,8 +276,7 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
       var repository = new MockRepository();
 
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause();
-      var selectClause1 =
-          repository.StrictMock<SelectClause> (ExpressionHelper.CreateClause(), ExpressionHelper.CreateExpression());
+      var selectClause1 = repository.StrictMock<SelectClause> (ExpressionHelper.CreateExpression());
 
       var queryModel = new QueryModel (typeof (IQueryable<string>), fromClause, selectClause1);
 
@@ -305,17 +301,16 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
 
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause();
       var selectClause1 =
-          repository.StrictMock<SelectClause> (ExpressionHelper.CreateClause(), ExpressionHelper.CreateExpression());
+          repository.StrictMock<SelectClause> (ExpressionHelper.CreateExpression());
       var orderByClause1 =
-          repository.StrictMock<OrderByClause> (ExpressionHelper.CreateClause());
+          repository.StrictMock<OrderByClause> ();
       var fromClause1 =
           repository.StrictMock<AdditionalFromClause> (
-              ExpressionHelper.CreateClause(),
               "p",
               typeof (Student),
               ExpressionHelper.CreateExpression());
       var whereClause1 =
-          repository.StrictMock<WhereClause> (ExpressionHelper.CreateClause(), ExpressionHelper.CreateExpression());
+          repository.StrictMock<WhereClause> (ExpressionHelper.CreateExpression());
 
       var queryModel = new QueryModel (typeof (IQueryable<string>), fromClause, selectClause1);
       queryModel.BodyClauses.Add (orderByClause1);
@@ -345,9 +340,7 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
       var mainFromClause = ExpressionHelper.CreateMainFromClause_Detail();
       var fromExpression = ExpressionHelper.Resolve<Student_Detail, Student> (mainFromClause, sd => sd.Student);
 
-      var fromClause = new AdditionalFromClause (
-          ExpressionHelper.CreateClause(),
-          "i",
+      var fromClause = new AdditionalFromClause ("i",
           typeof (int),
           fromExpression);
 
@@ -362,9 +355,7 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
     {
       var fromExpression = Expression.Constant (1);
 
-      var fromClause = new AdditionalFromClause (
-          ExpressionHelper.CreateClause(),
-          "i",
+      var fromClause = new AdditionalFromClause ("i",
           typeof (int),
           fromExpression);
 
@@ -380,9 +371,7 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
     {
       var fromExpression = Expression.Constant (null);
 
-      var fromClause = new AdditionalFromClause (
-          ExpressionHelper.CreateClause(),
-          "i",
+      var fromClause = new AdditionalFromClause ("i",
           typeof (int),
           fromExpression);
 
@@ -396,15 +385,14 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
     [Test]
     public void StringVisitorForSubQueryFromClause ()
     {
-      IClause previousClause = ExpressionHelper.CreateMainFromClause();
       Expression querySource = Expression.Constant (null);
       var mainFromClause = new MainFromClause ("s2", typeof (Student), querySource);
       Expression subQuerySelector = Expression.Constant (1);
-      var selectClause = new SelectClause (previousClause, subQuerySelector);
+      var selectClause = new SelectClause (subQuerySelector);
 
       var subQuery = new QueryModel (typeof (string), mainFromClause, selectClause);
 
-      var subQueryFromClause = new SubQueryFromClause (previousClause, "s", typeof (Student), subQuery);
+      var subQueryFromClause = new SubQueryFromClause ("s", typeof (Student), subQuery);
 
       var sv = new StringBuildingQueryVisitor();
       sv.VisitSubQueryFromClause (subQueryFromClause);
@@ -415,10 +403,8 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
     [Test]
     public void StringVisitorForMemberFromClause ()
     {
-      IClause previousClause = ExpressionHelper.CreateMainFromClause();
       var fromExpression = Expression.MakeMemberAccess (Expression.Constant ("test"), typeof (string).GetProperty ("Length"));
-
-      var memberFromClause = new MemberFromClause (previousClause, "s", typeof (Student), fromExpression);
+      var memberFromClause = new MemberFromClause ("s", typeof (Student), fromExpression);
 
       var sv = new StringBuildingQueryVisitor();
       sv.VisitMemberFromClause (memberFromClause);

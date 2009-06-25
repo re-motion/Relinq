@@ -118,10 +118,10 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone_JoinClauses ()
     {
-      var originalJoinClause1 = ExpressionHelper.CreateJoinClause (_mainFromClause, _mainFromClause);
+      var originalJoinClause1 = ExpressionHelper.CreateJoinClause (_mainFromClause);
       _mainFromClause.JoinClauses.Add (originalJoinClause1);
 
-      var originalJoinClause2 = ExpressionHelper.CreateJoinClause (originalJoinClause1, _mainFromClause);
+      var originalJoinClause2 = ExpressionHelper.CreateJoinClause (_mainFromClause);
       _mainFromClause.JoinClauses.Add (originalJoinClause2);
 
       var clone = _mainFromClause.Clone (_cloneContext);
@@ -142,9 +142,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Clone_JoinClauses_PassesMapping ()
     {
       var oldFromClause = ExpressionHelper.CreateMainFromClause ();
-      var originalJoinClause = new JoinClause (
-          _mainFromClause,
-          _mainFromClause,
+      var originalJoinClause = new JoinClause (_mainFromClause,
           "x", 
           typeof(Student),
           new QuerySourceReferenceExpression (oldFromClause),

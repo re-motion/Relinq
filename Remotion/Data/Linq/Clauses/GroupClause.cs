@@ -26,17 +26,14 @@ namespace Remotion.Data.Linq.Clauses
     private Expression _groupExpression;
     private Expression _byExpression;
 
-    public GroupClause (IClause previousClause,Expression groupExpression, Expression byExpression)
+    public GroupClause (Expression groupExpression, Expression byExpression)
     {
       ArgumentUtility.CheckNotNull ("groupExpression", groupExpression);
       ArgumentUtility.CheckNotNull ("byExpression", byExpression);
 
       _groupExpression = groupExpression;
       _byExpression = byExpression;
-      PreviousClause = previousClause;
     }
-
-    public IClause PreviousClause { get; private set; }
 
     [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (GroupExpression),nq}")]
     public Expression GroupExpression
@@ -64,7 +61,7 @@ namespace Remotion.Data.Linq.Clauses
 
       var newGroupExpression = CloneExpressionTreeVisitor.ReplaceClauseReferences (GroupExpression, cloneContext);
       var newByExpression = CloneExpressionTreeVisitor.ReplaceClauseReferences (ByExpression, cloneContext);
-      var result = new GroupClause (null, newGroupExpression, newByExpression);
+      var result = new GroupClause (newGroupExpression, newByExpression);
       cloneContext.ClonedClauseMapping.AddMapping (this, result);
       return result;
     }

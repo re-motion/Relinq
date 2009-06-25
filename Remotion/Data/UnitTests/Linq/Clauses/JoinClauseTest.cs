@@ -44,9 +44,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Expression onExpression = ExpressionHelper.CreateExpression ();
       Expression equalityExpression = ExpressionHelper.CreateExpression ();
 
-      var previousClause = ExpressionHelper.CreateClause();
       var fromClause = ExpressionHelper.CreateMainFromClause ();
-      var joinClause = new JoinClause (previousClause, fromClause, "x", typeof(Student), inExpression, onExpression, equalityExpression);
+      var joinClause = new JoinClause (fromClause, "x", typeof(Student), inExpression, onExpression, equalityExpression);
 
       Assert.That (joinClause.FromClause, Is.SameAs (fromClause));
       Assert.That (joinClause.ItemName, Is.SameAs ("x"));
@@ -95,9 +94,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       var inExpression = new QuerySourceReferenceExpression (mainFromClause);
       var onExpression = new QuerySourceReferenceExpression (mainFromClause);
       var equalityExpression = new QuerySourceReferenceExpression (mainFromClause);
-      var joinClause = new JoinClause (
-          mainFromClause, 
-          mainFromClause,
+      var joinClause = new JoinClause (mainFromClause,
           "x",
           typeof (Student), 
           inExpression, 

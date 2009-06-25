@@ -42,9 +42,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Initialize ()
     {
       var fromExpression = ExpressionHelper.CreateExpression ();
-      var previousClause = ExpressionHelper.CreateClause();
-      
-      var fromClause = new AdditionalFromClause (previousClause, "s", typeof (Student), fromExpression);
+      var fromClause = new AdditionalFromClause ("s", typeof (Student), fromExpression);
 
       Assert.That (fromClause.ItemName, Is.EqualTo ("s"));
       Assert.That (fromClause.ItemType, Is.SameAs (typeof (Student)));
@@ -65,7 +63,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     {
       IQueryable<Student> querySource = ExpressionHelper.CreateQuerySource();
       var fromExpression = Expression.Constant (querySource);
-      var fromClause = new AdditionalFromClause (ExpressionHelper.CreateClause(), "s", typeof (Student), fromExpression);
+      var fromClause = new AdditionalFromClause ("s", typeof (Student), fromExpression);
       Assert.That (fromClause.GetQuerySourceType(), Is.SameAs (typeof (TestQueryable<Student>)));
     }
 
@@ -92,20 +90,18 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone_AdjustsExpressions ()
     {
-      var mainFromClause = ExpressionHelper.CreateMainFromClause();
-      var fromExpression = new QuerySourceReferenceExpression (mainFromClause);
-      var additionalFromClause = new AdditionalFromClause (
-          mainFromClause, 
-          "s",
+      var referencedClause = ExpressionHelper.CreateMainFromClause();
+      var fromExpression = new QuerySourceReferenceExpression (referencedClause);
+      var additionalFromClause = new AdditionalFromClause ("s",
           typeof (Student), 
           fromExpression);
 
-      var newMainFromClause = ExpressionHelper.CreateMainFromClause ();
-      _cloneContext.ClonedClauseMapping.AddMapping (mainFromClause, newMainFromClause);
+      var newReferencedClause = ExpressionHelper.CreateMainFromClause ();
+      _cloneContext.ClonedClauseMapping.AddMapping (referencedClause, newReferencedClause);
 
       var clone = additionalFromClause.Clone (_cloneContext);
 
-      Assert.That (((QuerySourceReferenceExpression) clone.FromExpression).ReferencedClause, Is.SameAs (newMainFromClause));
+      Assert.That (((QuerySourceReferenceExpression) clone.FromExpression).ReferencedClause, Is.SameAs (newReferencedClause));
     }
 
     [Test]
@@ -118,10 +114,10 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone_JoinClauses ()
     {
-      var originalJoinClause1 = ExpressionHelper.CreateJoinClause (_additionalFromClause, _additionalFromClause);
+      var originalJoinClause1 = ExpressionHelper.CreateJoinClause (_additionalFromClause);
       _additionalFromClause.JoinClauses.Add (originalJoinClause1);
 
-      var originalJoinClause2 = ExpressionHelper.CreateJoinClause (originalJoinClause1, _additionalFromClause);
+      var originalJoinClause2 = ExpressionHelper.CreateJoinClause (_additionalFromClause);
       _additionalFromClause.JoinClauses.Add (originalJoinClause2);
 
       var clone = _additionalFromClause.Clone (_cloneContext);
@@ -142,9 +138,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Clone_JoinClauses_PassesMapping ()
     {
       var oldFromClause = ExpressionHelper.CreateMainFromClause ();
-      var originalJoinClause = new JoinClause (
-          _additionalFromClause,
-          _additionalFromClause,
+      var originalJoinClause = new JoinClause (_additionalFromClause,
           "x",
           typeof(Student),
           new QuerySourceReferenceExpression (oldFromClause),

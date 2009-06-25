@@ -112,11 +112,9 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     public SelectClause CreateSelectClause (IClause previousClause, ClauseGenerationContext clauseGenerationContext)
     {
-      ArgumentUtility.CheckNotNull ("previousClause", previousClause);
-
       var parameterExpression = CreateParameterForOutput();
       var selector = Resolve (parameterExpression, parameterExpression, clauseGenerationContext);
-      return new SelectClause (previousClause, selector);
+      return new SelectClause (selector);
     }
 
     public ParameterExpression CreateParameterForOutput ()
