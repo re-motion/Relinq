@@ -27,7 +27,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
   public class OrderingTest
   {
     private ClonedClauseMapping _clonedClauseMapping;
-    private OrderByClause _orderByClause;
     private Ordering _ordering;
     private CloneContext _cloneContext;
 
@@ -35,8 +34,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void SetUp ()
     {
       _clonedClauseMapping = new ClonedClauseMapping ();
-      _orderByClause = ExpressionHelper.CreateOrderByClause ();
-      _ordering = ExpressionHelper.CreateOrdering (_orderByClause);
+      _ordering = ExpressionHelper.CreateOrdering ();
       _cloneContext = new CloneContext (_clonedClauseMapping);
     }
 
@@ -45,9 +43,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     {
       var expression = ExpressionHelper.CreateExpression ();
 
-      var ordering = new Ordering(_orderByClause, expression, OrderingDirection.Asc);
+      var ordering = new Ordering (expression, OrderingDirection.Asc);
 
-      Assert.That (ordering.OrderByClause, Is.SameAs (_orderByClause));
       Assert.That (ordering.Expression, Is.SameAs (expression));
       Assert.That (ordering.OrderingDirection, Is.EqualTo (OrderingDirection.Asc));
     }
@@ -58,9 +55,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       var expression = ExpressionHelper.CreateExpression ();
       const OrderingDirection directionAsc = OrderingDirection.Asc;
 
-      var ordering = new Ordering (_orderByClause, expression, directionAsc);
+      var ordering = new Ordering (expression, directionAsc);
 
-      Assert.That (ordering.OrderByClause, Is.SameAs (_orderByClause));
       Assert.That (ordering.Expression, Is.SameAs (expression));
       Assert.That (ordering.OrderingDirection, Is.EqualTo (directionAsc));
     }
@@ -83,15 +79,12 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone ()
     {
-      var newOrderByClause = ExpressionHelper.CreateOrderByClause();
-      _clonedClauseMapping.AddMapping (_orderByClause, newOrderByClause);
       var clone = _ordering.Clone (_cloneContext);
 
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (_ordering));
       Assert.That (clone.Expression, Is.SameAs (_ordering.Expression));
       Assert.That (clone.OrderingDirection, Is.EqualTo (_ordering.OrderingDirection));
-      Assert.That (clone.OrderByClause, Is.SameAs (newOrderByClause));
     }
 
     [Test]
@@ -99,11 +92,10 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     {
       var mainFromClause = ExpressionHelper.CreateMainFromClause();
       var expression = new QuerySourceReferenceExpression (mainFromClause);
-      var whereClause = new Ordering (_orderByClause, expression, OrderingDirection.Asc);
+      var whereClause = new Ordering (expression, OrderingDirection.Asc);
 
       var newMainFromClause = ExpressionHelper.CreateMainFromClause ();
       _cloneContext.ClonedClauseMapping.AddMapping (mainFromClause, newMainFromClause);
-      _cloneContext.ClonedClauseMapping.AddMapping (_orderByClause, ExpressionHelper.CreateOrderByClause());
 
       var clone = whereClause.Clone (_cloneContext);
 

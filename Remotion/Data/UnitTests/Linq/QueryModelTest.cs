@@ -239,7 +239,7 @@ namespace Remotion.Data.UnitTests.Linq
       var orderByClause = new OrderByClause ();
       _queryModel.BodyClauses.Add (orderByClause);
 
-      var ordering = new Ordering (orderByClause, ExpressionHelper.CreateExpression (), OrderingDirection.Asc);
+      var ordering = new Ordering (ExpressionHelper.CreateExpression (), OrderingDirection.Asc);
       orderByClause.Orderings.Add (ordering);
 
       Assert.That (_queryModel.SelectOrGroupClause, Is.SameAs (_selectClause));

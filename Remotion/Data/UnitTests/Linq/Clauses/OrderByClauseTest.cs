@@ -106,7 +106,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone_Orderings ()
     {
-      var ordering = ExpressionHelper.CreateOrdering(_orderByClause);
+      var ordering = ExpressionHelper.CreateOrdering();
       _orderByClause.Orderings.Add (ordering);
 
       var clone = _orderByClause.Clone (_cloneContext);
@@ -116,7 +116,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clone.Orderings[0], Is.Not.SameAs (_orderByClause.Orderings[0]));
       Assert.That (clone.Orderings[0].Expression, Is.SameAs (_orderByClause.Orderings[0].Expression));
       Assert.That (clone.Orderings[0].OrderingDirection, Is.EqualTo (_orderByClause.Orderings[0].OrderingDirection));
-      Assert.That (clone.Orderings[0].OrderByClause, Is.SameAs (clone));
     }
 
     [Test]
@@ -125,7 +124,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       var newReferencedClause = ExpressionHelper.CreateMainFromClause ();
 
       var oldReferencedClause = ExpressionHelper.CreateMainFromClause();
-      var ordering = new Ordering (_orderByClause, new QuerySourceReferenceExpression (oldReferencedClause), OrderingDirection.Asc);
+      var ordering = new Ordering  (new QuerySourceReferenceExpression (oldReferencedClause), OrderingDirection.Asc);
       _orderByClause.Orderings.Add (ordering);
 
       _cloneContext.ClonedClauseMapping.AddMapping (oldReferencedClause, newReferencedClause);

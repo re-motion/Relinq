@@ -31,15 +31,12 @@ namespace Remotion.Data.Linq.Clauses
     /// <summary>
     /// Initialize a new instance of <see cref="Ordering"/>
     /// </summary>
-    /// <param name="orderByClause">The <see cref="OrderByClause"/> associated with this <see cref="Ordering"/>.</param>
     /// <param name="expression">The expression from one part of a order by in a linq query.</param>
     /// <param name="direction"></param>
-    public Ordering (OrderByClause orderByClause, Expression expression, OrderingDirection direction)
+    public Ordering (Expression expression, OrderingDirection direction)
     {
-      ArgumentUtility.CheckNotNull ("orderByClause", orderByClause);
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      OrderByClause = orderByClause;
       _expression = expression;
       OrderingDirection = direction;
     }
@@ -71,9 +68,8 @@ namespace Remotion.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 
-      var newOrderByClause = cloneContext.ClonedClauseMapping.GetClause<OrderByClause> (OrderByClause);
       var newExpression = CloneExpressionTreeVisitor.ReplaceClauseReferences (Expression, cloneContext);
-      return new Ordering (newOrderByClause, newExpression, OrderingDirection);
+      return new Ordering (newExpression, OrderingDirection);
     }
   }
 }

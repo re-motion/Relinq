@@ -133,14 +133,9 @@ namespace Remotion.Data.UnitTests.Linq
       return new GroupClause (groupExpression, byExpression);
     }
     
-    public static Ordering CreateOrdering (OrderByClause orderByClause)
-    {
-      return new Ordering (orderByClause, CreateExpression (), OrderingDirection.Asc);
-    }
-
     public static Ordering CreateOrdering ()
     {
-      return CreateOrdering (CreateOrderByClause ());
+      return new Ordering (CreateExpression (), OrderingDirection.Asc);
     }
 
     public static OrderByClause CreateOrderByClause()

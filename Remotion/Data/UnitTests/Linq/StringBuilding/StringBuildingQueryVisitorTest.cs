@@ -166,7 +166,6 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
     public void StringVisitorForOrderingClauseDesc ()
     {
       var ordering = new Ordering (
-          ExpressionHelper.CreateOrderByClause(),
           ExpressionHelper.CreateExpression(),
           OrderingDirection.Desc);
 
@@ -183,10 +182,8 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
 
       var repository = new MockRepository();
 
-      var ordering1 = repository.StrictMock<Ordering> (
-          ExpressionHelper.CreateOrderByClause (), ExpressionHelper.CreateExpression (), OrderingDirection.Asc);
-      var ordering2 = repository.StrictMock<Ordering> (
-          ExpressionHelper.CreateOrderByClause (), ExpressionHelper.CreateExpression (), OrderingDirection.Asc);
+      var ordering1 = repository.StrictMock<Ordering> (ExpressionHelper.CreateExpression (), OrderingDirection.Asc);
+      var ordering2 = repository.StrictMock<Ordering> (ExpressionHelper.CreateExpression (), OrderingDirection.Asc);
 
       orderByClause.Orderings.Add (ordering1);
       orderByClause.Orderings.Add (ordering2);
@@ -215,10 +212,8 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
 
       var repository = new MockRepository();
 
-      var ordering1 =
-          repository.StrictMock<Ordering> (ExpressionHelper.CreateOrderByClause (), ExpressionHelper.CreateExpression (), OrderingDirection.Desc);
-      var ordering2 =
-          repository.StrictMock<Ordering> (ExpressionHelper.CreateOrderByClause (), ExpressionHelper.CreateExpression (), OrderingDirection.Desc);
+      var ordering1 = repository.StrictMock<Ordering> (ExpressionHelper.CreateExpression (), OrderingDirection.Desc);
+      var ordering2 = repository.StrictMock<Ordering> (ExpressionHelper.CreateExpression (), OrderingDirection.Desc);
 
       orderByClause.Orderings.Add (ordering1);
       orderByClause.Orderings.Add (ordering2);
@@ -246,10 +241,8 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
 
       var repository = new MockRepository();
 
-      var ordering1 =
-          repository.StrictMock<Ordering> (ExpressionHelper.CreateOrderByClause(), ExpressionHelper.CreateExpression(), OrderingDirection.Desc);
-      var ordering2 =
-          repository.StrictMock<Ordering> (ExpressionHelper.CreateOrderByClause (), ExpressionHelper.CreateExpression (), OrderingDirection.Asc);
+      var ordering1 = repository.StrictMock<Ordering> (ExpressionHelper.CreateExpression(), OrderingDirection.Desc);
+      var ordering2 = repository.StrictMock<Ordering> (ExpressionHelper.CreateExpression (), OrderingDirection.Asc);
 
       orderByClause.Orderings.Add (ordering1);
       orderByClause.Orderings.Add (ordering2);
