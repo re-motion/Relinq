@@ -73,17 +73,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void CreateParameterForOutput ()
-    {
-      var node = new SelectExpressionNode (CreateParseInfo (SourceNode, "z"), ExpressionHelper.CreateLambdaExpression<int, string> (y => y.ToString()));
-
-      var parameter = node.CreateParameterForOutput ();
-
-      Assert.That (parameter.Name, Is.EqualTo ("z"));
-      Assert.That (parameter.Type, Is.SameAs (typeof (string)));
-    }
-
-    [Test]
     public void Apply ()
     {
       _node.Apply (QueryModel, ClauseGenerationContext);

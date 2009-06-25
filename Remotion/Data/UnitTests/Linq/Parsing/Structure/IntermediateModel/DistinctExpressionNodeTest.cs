@@ -61,17 +61,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void CreateParameterForOutput ()
-    {
-      var source = new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3, 4, 5 });
-      var node = new DistinctExpressionNode (CreateParseInfo (source, "y"));
-      var parameter = node.CreateParameterForOutput ();
-
-      Assert.That (parameter.Name, Is.EqualTo ("x"));
-      Assert.That (parameter.Type, Is.SameAs (typeof (int)));
-    }
-
-    [Test]
     public void Apply ()
     {
       var queryModel = ExpressionHelper.CreateQueryModel ();

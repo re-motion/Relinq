@@ -68,12 +68,6 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       throw CreateResolveNotSupportedException();
     }
 
-    public override ParameterExpression CreateParameterForOutput ()
-    {
-      // no data streams out from this node, so we cannot create a parameter accepting that data
-      throw CreateOutputParameterNotSupportedException();
-    }
-
     protected override ResultModificationBase CreateResultModification ()
     {
       return new SumResultModification ();

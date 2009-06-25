@@ -76,18 +76,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void CreateParameterForOutput ()
-    {
-      var source = new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3, 4, 5 });
-      var node = new WhereExpressionNode (CreateParseInfo (source, "y"), ExpressionHelper.CreateLambdaExpression<int, bool> (y => y > 4));
-
-      var parameter = node.CreateParameterForOutput ();
-
-      Assert.That (parameter.Name, Is.EqualTo ("x"));
-      Assert.That (parameter.Type, Is.SameAs (typeof (int)));
-    }
-
-    [Test]
     public void Apply ()
     {
       _node.Apply (QueryModel, ClauseGenerationContext);

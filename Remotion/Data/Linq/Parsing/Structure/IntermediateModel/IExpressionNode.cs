@@ -52,17 +52,6 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext);
 
     /// <summary>
-    /// Creates a <see cref="ParameterExpression"/> that can take elements of the output stream provided by this node. This 
-    /// <see cref="ParameterExpression"/> can be used by the following <see cref="IExpressionNode"/> as an input to its selector or predicate
-    /// <see cref="LambdaExpression"/>.
-    /// </summary>
-    /// <returns>A <see cref="ParameterExpression"/> whose name and type corresponds to the elements streamed out of this node.</returns>
-    /// <exception cref="InvalidOperationException">
-    /// This node does not support this operation because it does not stream any data to subsequent nodes.
-    /// </exception>
-    ParameterExpression CreateParameterForOutput ();
-
-    /// <summary>
     /// Applies this <see cref="IExpressionNode"/> to the specified query model. Nodes can add or replace clauses, add or replace expressions, and
     /// add or replace <see cref="ResultModificationBase"/> objects, depending on their semantics.
     /// </summary>

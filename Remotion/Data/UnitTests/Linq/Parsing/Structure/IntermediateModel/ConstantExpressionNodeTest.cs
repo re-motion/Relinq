@@ -74,15 +74,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void CreateParameterForOutput ()
-    {
-      var parameter = _node.CreateParameterForOutput ();
-
-      Assert.That (parameter.Name, Is.EqualTo ("x"));
-      Assert.That (parameter.Type, Is.SameAs (typeof (int)));
-    }
-
-    [Test]
     [ExpectedException (typeof (NotSupportedException))]
     public void Apply_Throws ()
     {

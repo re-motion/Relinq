@@ -123,13 +123,6 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return ReplacingVisitor.Replace (inputParameter, resolvedResultSelector, expressionToBeResolved);
     }
 
-    public override ParameterExpression CreateParameterForOutput ()
-    {
-      // we modify the structure of the stream of data coming into this node by our result selector,
-      // so we create a parameter capable of holding the modified stream elements
-      return Expression.Parameter (ResultSelector.Body.Type, AssociatedIdentifier);
-    }
-
     public override void Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);

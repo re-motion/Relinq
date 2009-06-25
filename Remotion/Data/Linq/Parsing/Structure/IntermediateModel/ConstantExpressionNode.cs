@@ -109,10 +109,5 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       clauseGenerationContext.ClauseMapping.AddMapping (this, fromClause);
       return fromClause;
     }
-
-    public ParameterExpression CreateParameterForOutput ()
-    {
-      return Expression.Parameter (QuerySourceElementType, AssociatedIdentifier);
-    }
   }
 }

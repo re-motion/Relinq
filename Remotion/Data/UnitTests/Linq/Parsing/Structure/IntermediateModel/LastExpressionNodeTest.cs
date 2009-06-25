@@ -99,13 +99,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException))]
-    public void CreateParameterForOutput ()
-    {
-      _node.CreateParameterForOutput ();
-    }
-
-    [Test]
     public void Apply_WithoutOptionalPredicate ()
     {
       TestApply (_node, typeof (LastResultModification));

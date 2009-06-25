@@ -43,11 +43,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel.TestD
       throw new NotImplementedException();
     }
 
-    public ParameterExpression CreateParameterForOutput ()
-    {
-      throw new NotImplementedException();
-    }
-
     public IClause CreateClause (IClause previousClause, ClauseGenerationContext clauseGenerationContext)
     {
       throw new NotImplementedException();

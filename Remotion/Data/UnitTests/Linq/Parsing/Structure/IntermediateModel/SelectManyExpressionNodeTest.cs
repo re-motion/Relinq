@@ -119,20 +119,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void CreateParameterForOutput ()
-    {
-      var node = new SelectManyExpressionNode (
-          CreateParseInfo (),
-          ExpressionHelper.CreateLambdaExpression<Student, IEnumerable<int>> (y => y.Scores),
-          ExpressionHelper.CreateLambdaExpression<Student, int, AnonymousType> ((s, i) => new AnonymousType ()));
-
-      var parameter = node.CreateParameterForOutput ();
-
-      Assert.That (parameter.Name, Is.EqualTo ("x"));
-      Assert.That (parameter.Type, Is.SameAs (typeof (AnonymousType)));
-    }
-
-    [Test]
     public void Apply ()
     {
       _node.Apply (QueryModel, ClauseGenerationContext);

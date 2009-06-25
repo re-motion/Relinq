@@ -67,12 +67,6 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return Source.Resolve (inputParameter, expressionToBeResolved, clauseGenerationContext);
     }
 
-    public override ParameterExpression CreateParameterForOutput ()
-    {
-      // this simply streams its input data to the output without modifying its structure, so we let the previous node create the parameter      return Source.CreateParameterForOutput ();
-      return Source.CreateParameterForOutput();
-    }
-
     public override void Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
       var orderByClause = GetOrderByClause (queryModel);
