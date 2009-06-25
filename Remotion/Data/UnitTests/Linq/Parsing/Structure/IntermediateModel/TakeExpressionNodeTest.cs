@@ -72,16 +72,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void CreateClause ()
-    {
-      var previousClause = ExpressionHelper.CreateClause ();
-
-      var result = _node.CreateClause (previousClause, ClauseGenerationContext);
-      Assert.That (result, Is.SameAs (previousClause));
-      Assert.That (ClauseGenerationContext.ResultModificationNodeRegistry.ToArray (), List.Contains (_node));
-    }
-
-    [Test]
     public void Apply ()
     {
       var queryModel = ExpressionHelper.CreateQueryModel();
@@ -90,15 +80,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       
       var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
       Assert.That (((TakeResultModification) selectClause.ResultModifications[0]).Count, Is.EqualTo (3));
-    }
-
-    [Test]
-    public void CreateSelectClause ()
-    {
-      var previousClause = ExpressionHelper.CreateClause ();
-
-      var selectClause = _node.CreateSelectClause (previousClause, ClauseGenerationContext);
-      Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedClause, Is.SameAs (SourceClause));
     }
   }
 }

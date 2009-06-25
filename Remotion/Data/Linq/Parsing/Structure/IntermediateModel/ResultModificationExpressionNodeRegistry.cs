@@ -20,10 +20,6 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 {
-  /// <summary>
-  /// Gathers the list of <see cref="ResultModificationExpressionNodeBase"/> instances encountered while parsing an expression tree.
-  /// Items are added to this list in <see cref="ResultModificationExpressionNodeBase.CreateClause"/>.
-  /// </summary>
   public class ResultModificationExpressionNodeRegistry : IEnumerable<ResultModificationExpressionNodeBase>
   {
     private readonly List<ResultModificationExpressionNodeBase> _resultModificationNodes = new List<ResultModificationExpressionNodeBase> ();

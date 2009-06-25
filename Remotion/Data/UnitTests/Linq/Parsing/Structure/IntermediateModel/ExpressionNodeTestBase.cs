@@ -39,13 +39,13 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
           MethodCallExpressionNodeTypeRegistry.CreateDefault(),
           new ResultModificationExpressionNodeRegistry ());
 
-      SourceClause = (MainFromClause) SourceNode.CreateClause (null, ClauseGenerationContext);
+      SourceClause = SourceNode.CreateMainFromClause (ClauseGenerationContext);
       SourceReference = new QuerySourceReferenceExpression (SourceClause);
 
       QueryModel = new QueryModel (typeof (IQueryable<Student>), SourceClause, new SelectClause (SourceReference));
     }
 
-    public IQuerySourceExpressionNode SourceNode { get; private set; }
+    public ConstantExpressionNode SourceNode { get; private set; }
     public MainFromClause SourceClause { get; private set; }
     public QuerySourceReferenceExpression SourceReference { get; private set; }
     public ClauseGenerationContext ClauseGenerationContext { get; private set; }

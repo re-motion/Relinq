@@ -43,7 +43,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     /// <param name="clauseGenerationContext">Context information used during the current parsing process. The <see cref="QuerySourceClauseMapping"/>
     /// contained in this structure maps <see cref="IQuerySourceExpressionNode"/>s  to the clauses created from them. Implementers that also implement 
     /// <see cref="IQuerySourceExpressionNode"/> (such as  <see cref="ConstantExpressionNode"/> or <see cref="SelectManyExpressionNode"/>) must add 
-    /// their clauses to the mapping in <see cref="CreateClause"/> if they want to be able to implement <see cref="Resolve"/> correctly.</param>
+    /// their clauses to the mapping in <see cref="Apply"/> if they want to be able to implement <see cref="Resolve"/> correctly.</param>
     /// <returns>An equivalent of <paramref name="expressionToBeResolved"/> with each occurrence of <paramref name="inputParameter"/> replaced by
     /// the projection data streaming out of this <see cref="IExpressionNode"/>.</returns>
     /// <exception cref="InvalidOperationException">
@@ -63,34 +63,6 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     ParameterExpression CreateParameterForOutput ();
 
     /// <summary>
-    /// Creates an instance of <see cref="IClause"/> that can represent the current <see cref="IExpressionNode"/> in a <see cref="QueryModel"/>.
-    /// All expressions of the <see cref="IExpressionNode"/> are passed to the new <see cref="IClause"/> as required.
-    /// </summary>
-    /// <param name="previousClause">The previous clause the new <see cref="IClause"/> should link to. For <see cref="IExpressionNode"/>
-    /// instances representing the end of a query chain (e.g. <see cref="ConstantExpressionNode"/>), this must be <see langword="null"/>.</param>
-    /// <param name="clauseGenerationContext">Context information used during the current parsing process. The <see cref="QuerySourceClauseMapping"/>
-    /// contained in this structure maps <see cref="IQuerySourceExpressionNode"/>s to the clauses created from them. Implementers that 
-    /// also implement <see cref="IQuerySourceExpressionNode"/> (such as 
-    /// <see cref="ConstantExpressionNode"/> or <see cref="SelectManyExpressionNode"/>) must add their clauses to the mapping in 
-    /// <see cref="CreateClause"/> if they want to be able to implement <see cref="Resolve"/> correctly.</param>
-    /// <returns>A new <see cref="IClause"/> instance representing this <see cref="IExpressionNode"/>.</returns>
-    IClause CreateClause (IClause previousClause, ClauseGenerationContext clauseGenerationContext);
-
-    /// <summary>
-    /// Creates a select clause that corresponds to this <see cref="IExpressionNode"/>.
-    /// This is used by <see cref="QueryParser"/> in order to create the <see cref="SelectClause"/> for queries without 
-    /// <see cref="SelectExpressionNode"/>. In those queries, a <see cref="SelectClause"/> with an identity projection must be simulated.
-    /// </summary>
-    /// <param name="previousClause">The previous clause for the <see cref="SelectClause"/>.</param>
-    /// <param name="clauseGenerationContext">Context information used during the current parsing process. The <see cref="QuerySourceClauseMapping"/>
-    /// contained in this structure maps <see cref="IQuerySourceExpressionNode"/>s to the clauses created from them. Implementers that 
-    /// also implement <see cref="IQuerySourceExpressionNode"/> (such as 
-    /// <see cref="ConstantExpressionNode"/> or <see cref="SelectManyExpressionNode"/>) must add their clauses to the mapping in 
-    /// <see cref="CreateClause"/> if they want to be able to implement <see cref="Resolve"/> correctly.</param>
-    /// <returns>A new <see cref="SelectClause"/> that can be used for the query in which this node takes place.</returns>
-    SelectClause CreateSelectClause (IClause previousClause, ClauseGenerationContext clauseGenerationContext);
-
-    /// <summary>
     /// Applies this <see cref="IExpressionNode"/> to the specified query model. Nodes can add or replace clauses, add or replace expressions, and
     /// add or replace <see cref="ResultModificationBase"/> objects, depending on their semantics.
     /// </summary>
@@ -102,7 +74,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     /// <see cref="Apply"/> in order to be able to implement <see cref="Resolve"/> correctly.</param>
     /// <remarks>
     /// For <see cref="ConstantExpressionNode"/> objects, which mark the end of an <see cref="IExpressionNode"/> chain, this method must not be called.
-    /// Instead, use <see cref="ConstantExpressionNode.CreateClause"/> to generate a <see cref="MainFromClause"/> and instantiate a new 
+    /// Instead, use <see cref="ConstantExpressionNode.CreateMainFromClause"/> to generate a <see cref="MainFromClause"/> and instantiate a new 
     /// <see cref="QueryModel"/> with that clause.
     /// </remarks>
     void Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext);

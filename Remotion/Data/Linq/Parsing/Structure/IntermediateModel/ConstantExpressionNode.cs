@@ -99,15 +99,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
           + "query. Use CreateClause to create a MainFromClause from this node.");
     }
 
-    public IClause CreateClause (IClause previousClause, ClauseGenerationContext clauseGenerationContext)
+    public MainFromClause CreateMainFromClause (ClauseGenerationContext clauseGenerationContext)
     {
-      if (previousClause != null)
-      {
-        throw new InvalidOperationException (
-            "A ConstantExpressionNode cannot create a clause with a previous clause because it represents the end "
-            + "of a query call chain. Set previousClause to null.");
-      }
-
       var fromClause = new MainFromClause (
           AssociatedIdentifier,
           QuerySourceElementType,
@@ -115,13 +108,6 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
       clauseGenerationContext.ClauseMapping.AddMapping (this, fromClause);
       return fromClause;
-    }
-
-    public SelectClause CreateSelectClause (IClause previousClause, ClauseGenerationContext clauseGenerationContext)
-    {
-      var parameterExpression = CreateParameterForOutput();
-      var selector = Resolve (parameterExpression, parameterExpression, clauseGenerationContext);
-      return new SelectClause (selector);
     }
 
     public ParameterExpression CreateParameterForOutput ()

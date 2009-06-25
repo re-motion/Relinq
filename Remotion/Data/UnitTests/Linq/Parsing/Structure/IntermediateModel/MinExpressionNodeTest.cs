@@ -86,15 +86,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void CreateClause ()
-    {
-      var previousClause = ExpressionHelper.CreateClause ();
-      var result = _node.CreateClause (previousClause, ClauseGenerationContext);
-      Assert.That (result, Is.SameAs (previousClause));
-      Assert.That (ClauseGenerationContext.ResultModificationNodeRegistry.ToArray (), List.Contains (_node));
-    }
-
-    [Test]
     public void Apply_WithoutSelector ()
     {
       TestApply (_node, typeof (MinResultModification));
@@ -104,15 +95,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void Apply_WithSelector_AdjustsSelectClause ()
     {
       TestApply_WithOptionalSelector (_nodeWithSelector);
-    }
-
-    [Test]
-    public void CreateSelectClause ()
-    {
-      var previousClause = ExpressionHelper.CreateClause ();
-
-      var selectClause = _node.CreateSelectClause (previousClause, ClauseGenerationContext);
-      Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedClause, Is.SameAs (SourceClause));
     }
   }
 }

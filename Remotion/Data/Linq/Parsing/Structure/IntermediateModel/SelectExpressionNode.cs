@@ -74,11 +74,6 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return Expression.Parameter (Selector.Body.Type, AssociatedIdentifier);
     }
 
-    public override IClause CreateClause (IClause previousClause, ClauseGenerationContext clauseGenerationContext)
-    {
-      return new SelectClause (GetResolvedSelector (clauseGenerationContext));
-    }
-
     public override void Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);

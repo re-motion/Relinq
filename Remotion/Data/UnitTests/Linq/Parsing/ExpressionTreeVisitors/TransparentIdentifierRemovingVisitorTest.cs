@@ -24,6 +24,8 @@ using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq.Expressions;
+using Remotion.Data.Linq;
+using Remotion.Data.Linq.Clauses;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
 {
@@ -306,8 +308,10 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
       var selectManyNode = (SelectManyExpressionNode) selectNode.Source.Source;
       var constantNode = (ConstantExpressionNode) selectManyNode.Source;
 
-      var mainFromClause = constantNode.CreateClause (null, clauseGenerationContext);
-      selectManyNode.CreateClause (mainFromClause, clauseGenerationContext); // only to add the clause to the mapping
+      var mainFromClause = constantNode.CreateMainFromClause (clauseGenerationContext);
+      var queryModel = new QueryModel (query.Expression.Type, mainFromClause, new SelectClause (new QuerySourceReferenceExpression (mainFromClause)));
+      
+      selectManyNode.Apply (queryModel, clauseGenerationContext); // only to add the clause to the mapping
 
       var selectProjection = selectNode.GetResolvedSelector (clauseGenerationContext); // new ( a = IR (a), b = IR (b) ).a.ID
 

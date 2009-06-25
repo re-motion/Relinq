@@ -62,7 +62,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
           CreateParseInfo(),
           _collectionSelector,
           ExpressionHelper.CreateLambdaExpression<int, int, AnonymousType> ((a, b) => new AnonymousType (a, b)));
-      var clause = (FromClauseBase) node.CreateClause (SourceClause, ClauseGenerationContext);
+      node.Apply (QueryModel, ClauseGenerationContext);
+      var clause = (FromClauseBase) QueryModel.BodyClauses[0];
 
       var expression = ExpressionHelper.CreateLambdaExpression<AnonymousType, bool> (i => i.a > 5 && i.b > 6);
       var result = node.Resolve (expression.Parameters[0], expression.Body, ClauseGenerationContext);
@@ -87,7 +88,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void GetResolvedResultSelector ()
     {
-      var clause = (FromClauseBase) _node.CreateClause (SourceClause, ClauseGenerationContext);
+      _node.Apply (QueryModel, ClauseGenerationContext);
+      var clause = (FromClauseBase) QueryModel.BodyClauses[0];
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, new QuerySourceReferenceExpression (clause));
 
       var result = _node.GetResolvedResultSelector (ClauseGenerationContext);
@@ -114,6 +116,20 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var result = _node.GetResolvedCollectionSelector (ClauseGenerationContext);
 
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
+    }
+
+    [Test]
+    public void CreateParameterForOutput ()
+    {
+      var node = new SelectManyExpressionNode (
+          CreateParseInfo (),
+          ExpressionHelper.CreateLambdaExpression<Student, IEnumerable<int>> (y => y.Scores),
+          ExpressionHelper.CreateLambdaExpression<Student, int, AnonymousType> ((s, i) => new AnonymousType ()));
+
+      var parameter = node.CreateParameterForOutput ();
+
+      Assert.That (parameter.Name, Is.EqualTo ("x"));
+      Assert.That (parameter.Type, Is.SameAs (typeof (AnonymousType)));
     }
 
     [Test]
@@ -179,91 +195,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var clause = (SelectClause) QueryModel.SelectOrGroupClause;
 
       Assert.That (clause.Selector, Is.SameAs (_node.GetResolvedResultSelector (ClauseGenerationContext)));
-    }
-
-    [Test]
-    public void CreateClause ()
-    {
-      IClause previousClause = ExpressionHelper.CreateClause();
-      var clause = (AdditionalFromClause) _node.CreateClause (previousClause, ClauseGenerationContext);
-
-      Assert.That (clause.ItemName, Is.EqualTo ("j"));
-      Assert.That (clause.ItemType, Is.SameAs (typeof (int)));
-      Assert.That (clause.FromExpression, Is.SameAs (_node.GetResolvedCollectionSelector (ClauseGenerationContext)));
-    }
-
-    [Test]
-    public void CreateClause_WithMemberFromInFromExpression ()
-    {
-      var previousClause = ExpressionHelper.CreateMainFromClause_Student ();
-      var collectionSelector = ExpressionHelper.CreateLambdaExpression<Student, IEnumerable<Student>> (s => s.Friends);
-
-      var studentSource = new ConstantExpressionNode ("s", typeof (IQueryable<Student>), null);
-      ClauseGenerationContext.ClauseMapping.AddMapping (studentSource, previousClause);
-      var node = new SelectManyExpressionNode (CreateParseInfo (studentSource), collectionSelector, _resultSelector);
-
-      var clause = (MemberFromClause) node.CreateClause (previousClause, ClauseGenerationContext);
-
-      Assert.That (clause.ItemName, Is.EqualTo ("j"));
-      Assert.That (clause.ItemType, Is.SameAs (typeof (int)));
-      Assert.That (clause.FromExpression, Is.SameAs (node.GetResolvedCollectionSelector (ClauseGenerationContext)));
-      Assert.That (clause.MemberExpression, Is.SameAs (node.GetResolvedCollectionSelector (ClauseGenerationContext)));
-    }
-
-    [Test]
-    public void CreateClause_WithSubQueryInFromExpression ()
-    {
-      IClause previousClause = ExpressionHelper.CreateClause();
-      var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel());
-      
-      var collectionSelector = Expression.Lambda (subQueryExpression, Expression.Parameter (typeof (int), "i"));
-      var node = new SelectManyExpressionNode (CreateParseInfo(), collectionSelector, _resultSelector);
-
-      var clause = (SubQueryFromClause) node.CreateClause (previousClause, ClauseGenerationContext);
-      
-      Assert.That (clause.ItemName, Is.EqualTo ("j"));
-      Assert.That (clause.ItemType, Is.SameAs (typeof (int)));
-      Assert.That (clause.SubQueryModel, Is.SameAs (subQueryExpression.QueryModel));
-    }
-
-    [Test]
-    public void CreateClause_AddsMapping ()
-    {
-      IClause previousClause = ExpressionHelper.CreateClause();
-      var node = new SelectManyExpressionNode (CreateParseInfo (SourceNode, "j"), _collectionSelector, _resultSelector);
-      var clause = (AdditionalFromClause) node.CreateClause (previousClause, ClauseGenerationContext);
-
-      Assert.That (QuerySourceClauseMapping.GetClause (node), Is.SameAs (clause));
-    }
-
-    [Test]
-    public void CreateParameterForOutput ()
-    {
-      var node = new SelectManyExpressionNode (
-          CreateParseInfo(),
-          ExpressionHelper.CreateLambdaExpression<Student, IEnumerable<int>> (y => y.Scores),
-          ExpressionHelper.CreateLambdaExpression<Student, int, AnonymousType> ((s, i) => new AnonymousType()));
-
-      var parameter = node.CreateParameterForOutput();
-
-      Assert.That (parameter.Name, Is.EqualTo ("x"));
-      Assert.That (parameter.Type, Is.SameAs (typeof (AnonymousType)));
-    }
-
-    [Test]
-    public void CreateSelectClause ()
-    {
-      var previousClause = ExpressionHelper.CreateClause ();
-      var node = new SelectManyExpressionNode (
-          CreateParseInfo (),
-          ExpressionHelper.CreateLambdaExpression<int, IEnumerable<int>> (y => new int[0]),
-          ExpressionHelper.CreateLambdaExpression<int, int, AnonymousType> ((j, i) => new AnonymousType {a = i, b = i}));
-
-      var selectManyClause = (AdditionalFromClause) node.CreateClause (previousClause, ClauseGenerationContext);
-      var selectClause = node.CreateSelectClause (selectManyClause, ClauseGenerationContext);
-
-      var expectedSelector = ExpressionHelper.Resolve<int, AnonymousType> (selectManyClause, i => new AnonymousType {a = i, b = i});
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedSelector, selectClause.Selector);
     }
   }
 }

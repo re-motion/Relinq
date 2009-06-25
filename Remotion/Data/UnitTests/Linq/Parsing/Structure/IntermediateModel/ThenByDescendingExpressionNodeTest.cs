@@ -18,11 +18,9 @@ using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
-using Remotion.Utilities;
 using Rhino.Mocks;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
@@ -123,36 +121,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       QueryModel.BodyClauses.Add (new WhereClause (ExpressionHelper.CreateExpression ()));
       _node.Apply (QueryModel, ClauseGenerationContext);
-    }
-
-    [Test]
-    public void CreateClause ()
-    {
-      var previousClause = ExpressionHelper.CreateOrderByClause ();
-      var oldCount = previousClause.Orderings.Count;
-
-      var clause = (OrderByClause) _node.CreateClause (previousClause, ClauseGenerationContext);
-
-      Assert.That (clause, Is.SameAs (previousClause));
-      Assert.That (clause.Orderings.Count, Is.EqualTo (oldCount + 1));
-      Assert.That (clause.Orderings.Last ().OrderingDirection, Is.EqualTo (OrderingDirection.Desc));
-      Assert.That (clause.Orderings.Last ().Expression, Is.SameAs (_node.GetResolvedKeySelector (ClauseGenerationContext)));
-    }
-
-    [Test]
-    [ExpectedException (typeof (ArgumentTypeException))]
-    public void CreateClause_InvalidPreviousClause ()
-    {
-      var previousClause = ExpressionHelper.CreateMainFromClause ();
-      _node.CreateClause (previousClause, ClauseGenerationContext);
-    }
-
-    [Test]
-    public void CreateSelectClause ()
-    {
-      var previousClause = ExpressionHelper.CreateClause ();
-      var selectClause = _node.CreateSelectClause (previousClause, ClauseGenerationContext);
-      Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedClause, Is.SameAs (SourceClause));
     }
   }
 }

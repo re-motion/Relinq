@@ -18,7 +18,6 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultModifications;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
@@ -89,15 +88,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void CreateClause ()
-    {
-      var previousClause = ExpressionHelper.CreateClause();
-      var result = _node.CreateClause (previousClause, ClauseGenerationContext);
-      Assert.That (result, Is.SameAs (previousClause));
-      Assert.That (ClauseGenerationContext.ResultModificationNodeRegistry.ToArray(), List.Contains (_node));
-    }
-
-    [Test]
     public void Apply_WithoutOptionalPredicate ()
     {
       TestApply (_node, typeof (CountResultModification));
@@ -107,15 +97,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void Apply_WithOptionalPredicate_CreatesWhereClause ()
     {
       TestApply_WithOptionalPredicate (_nodeWithPredicate);
-    }
-
-    [Test]
-    public void CreateSelectClause ()
-    {
-      var previousClause = ExpressionHelper.CreateClause ();
-
-      var selectClause = _node.CreateSelectClause (previousClause, ClauseGenerationContext);
-      Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedClause, Is.SameAs (SourceClause));
     }
   }
 }

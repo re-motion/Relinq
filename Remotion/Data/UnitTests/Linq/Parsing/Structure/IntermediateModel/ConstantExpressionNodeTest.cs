@@ -17,9 +17,7 @@ using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
-using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Utilities;
 
@@ -28,14 +26,11 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
   [TestFixture]
   public class ConstantExpressionNodeTest : ExpressionNodeTestBase
   {
-    private ClauseGenerationContext _emptyContext;
     private ConstantExpressionNode _node;
 
     public override void SetUp ()
     {
       base.SetUp ();
-      _emptyContext = new ClauseGenerationContext (
-          new QuerySourceClauseMapping(), new MethodCallExpressionNodeTypeRegistry (),new ResultModificationExpressionNodeRegistry());
       _node = new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3 });
     }
 
@@ -92,46 +87,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void Apply_Throws ()
     {
       _node.Apply (QueryModel, ClauseGenerationContext);
-    }
-
-    [Test]
-    public void CreateClause ()
-    {
-      var constantClause = (MainFromClause) _node.CreateClause(null, ClauseGenerationContext);
-
-      Assert.That (constantClause.ItemName, Is.EqualTo ("x"));
-      Assert.That (constantClause.ItemType, Is.SameAs(typeof(int)));    
-      Assert.That (constantClause.FromExpression, Is.InstanceOfType (typeof (ConstantExpression)));
-      Assert.That (((ConstantExpression) constantClause.FromExpression).Value, Is.SameAs (_node.Value));
-      Assert.That (constantClause.FromExpression.Type, Is.SameAs (_node.QuerySourceType));
-    }
-
-    [Test]
-    public void CreateClause_AddsMapping ()
-    {
-      var clause = _node.CreateClause (null, _emptyContext);
-
-      Assert.That (_emptyContext.ClauseMapping.Count, Is.EqualTo (1));
-      Assert.That (_emptyContext.ClauseMapping.GetClause (_node), Is.SameAs (clause));
-    }
-
-    [Test]
-    [ExpectedException (typeof (InvalidOperationException))]
-    public void CreateClause_WithNonNullPreviousClause ()
-    {
-      _node.CreateClause (ExpressionHelper.CreateClause(), _emptyContext);
-    }
-
-    [Test]
-    public void CreateSelectClause ()
-    {
-      var previousClause = ExpressionHelper.CreateClause();
-      var mainFromClause = ExpressionHelper.CreateMainFromClause();
-
-      ClauseGenerationContext.ClauseMapping.AddMapping (_node, mainFromClause);
-
-      var selectClause = _node.CreateSelectClause (previousClause, ClauseGenerationContext);
-      Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedClause, Is.SameAs (mainFromClause));
     }
   }
 }

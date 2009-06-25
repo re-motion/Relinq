@@ -16,7 +16,6 @@
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
-using Remotion.Data.Linq.Clauses;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
@@ -56,7 +55,6 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     public abstract Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext);
     public abstract ParameterExpression CreateParameterForOutput ();
-    public abstract IClause CreateClause (IClause previousClause, ClauseGenerationContext clauseGenerationContext);
     public abstract void Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext);
 
     protected InvalidOperationException CreateResolveNotSupportedException ()
@@ -71,13 +69,6 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return
           new InvalidOperationException (
               GetType().Name + " does not support creating a parameter for its output because it does not stream any data to the following node.");
-    }
-
-    public virtual SelectClause CreateSelectClause (IClause previousClause, ClauseGenerationContext clauseGenerationContext)
-    {
-      var parameterExpression = CreateParameterForOutput ();
-      var selector = Resolve (parameterExpression, parameterExpression, clauseGenerationContext);
-      return new SelectClause (selector);
     }
   }
 }

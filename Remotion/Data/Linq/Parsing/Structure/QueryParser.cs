@@ -26,8 +26,8 @@ namespace Remotion.Data.Linq.Parsing.Structure
   /// <summary>
   /// Takes an <see cref="Expression"/> tree and parses it into a <see cref="QueryModel"/> by use of an <see cref="ExpressionTreeParser"/>.
   /// It first transforms the <see cref="Expression"/> tree into a chain of <see cref="IExpressionNode"/> instances, and then calls 
-  /// <see cref="IExpressionNode.CreateClause"/> to instantiate the <see cref="IClause"/>s. With those, a <see cref="QueryModel"/> is
-  /// created and returned.
+  /// <see cref="ConstantExpressionNode.CreateMainFromClause"/> and <see cref="IExpressionNode.Apply"/> in order to instantiate all the 
+  /// <see cref="IClause"/>s. With those, a <see cref="QueryModel"/> is created and returned.
   /// </summary>
   public class QueryParser
   {
@@ -92,7 +92,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       if (node.Source == null) // this is the last node, create a MainFromClause and a QueryModel
       {
         var constantExpressionNode = (ConstantExpressionNode) node;
-        var mainFromClause = (MainFromClause) constantExpressionNode.CreateClause (null, clauseGenerationContext);
+        var mainFromClause = constantExpressionNode.CreateMainFromClause (clauseGenerationContext);
         var defaultSelectClause = new SelectClause (new QuerySourceReferenceExpression (mainFromClause));
         return new QueryModel (resultType, mainFromClause, defaultSelectClause);
       }

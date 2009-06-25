@@ -72,14 +72,6 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return Source.CreateParameterForOutput();
     }
 
-    public override IClause CreateClause (IClause previousClause, ClauseGenerationContext clauseGenerationContext)
-    {
-      var clause = ArgumentUtility.CheckNotNullAndType<OrderByClause> ("previousClause", previousClause);
-
-      clause.Orderings.Add (new Ordering (GetResolvedKeySelector (clauseGenerationContext), OrderingDirection.Asc));
-      return clause;
-    }
-
     public override void Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
       var orderByClause = GetOrderByClause (queryModel);

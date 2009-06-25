@@ -54,14 +54,6 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return Source.CreateParameterForOutput();
     }
 
-    public override IClause CreateClause (IClause previousClause, ClauseGenerationContext clauseGenerationContext)
-    {
-      ArgumentUtility.CheckNotNull ("previousClause", previousClause);
-
-      //currently there is no clause for 'CastNodes'
-      return previousClause;
-    }
-
     public override void Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
       //currently there is no clause for 'CastNodes'

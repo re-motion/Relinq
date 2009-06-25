@@ -71,26 +71,6 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return _cachedSelector.GetOrCreate (r => r.GetResolvedExpression (OptionalSelector.Body, OptionalSelector.Parameters[0], clauseGenerationContext));
     }
 
-    public override IClause CreateClause (IClause previousClause, ClauseGenerationContext clauseGenerationContext)
-    {
-      ArgumentUtility.CheckNotNull ("previousClause", previousClause);
-      clauseGenerationContext.ResultModificationNodeRegistry.AddResultModificationNode (this);
-      return previousClause;
-    }
-
-    public override SelectClause CreateSelectClause (IClause previousClause, ClauseGenerationContext clauseGenerationContext)
-    {
-      return Source.CreateSelectClause (previousClause, clauseGenerationContext);
-    }
-
-    /// <summary>
-    /// Applies a <see cref="ResultModificationBase"/> representing this <see cref="ResultModificationExpressionNodeBase"/> to the given 
-    /// <paramref name="queryModel"/>, adding a <see cref="ResultModificationBase"/>, adding a <see cref="WhereClause"/> for the 
-    /// <see cref="OptionalPredicate"/> if present and adjusting the
-    /// <see cref="SelectClause.Selector"/> for the <see cref="OptionalSelector"/> if present.
-    /// </summary>
-    /// <param name="queryModel">The <see cref="QueryModel"/> to apply the changes to.</param>
-    /// <param name="clauseGenerationContext">The clause generation context.</param>
     public override void Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);

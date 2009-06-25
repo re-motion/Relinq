@@ -70,11 +70,6 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return Source.CreateParameterForOutput();
     }
 
-    public override IClause CreateClause (IClause previousClause, ClauseGenerationContext clauseGenerationContext)
-    {
-      return new WhereClause (GetResolvedPredicate (clauseGenerationContext));
-    }
-
     public override void Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);

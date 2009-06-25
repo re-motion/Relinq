@@ -19,7 +19,6 @@ using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
 using Rhino.Mocks;
@@ -95,23 +94,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var clause = (WhereClause) QueryModel.BodyClauses[0];
 
       Assert.That (clause.Predicate, Is.EqualTo (_node.GetResolvedPredicate (ClauseGenerationContext)));
-    }
-
-    [Test]
-    public void CreateClause ()
-    {
-      var previousClause = ExpressionHelper.CreateClause ();
-      var clause = (WhereClause) _node.CreateClause (previousClause, ClauseGenerationContext);
-
-      Assert.That (clause.Predicate, Is.EqualTo (_node.GetResolvedPredicate(ClauseGenerationContext)));
-    }
-
-    [Test]
-    public void CreateSelectClause ()
-    {
-      var previousClause = ExpressionHelper.CreateClause ();
-      var selectClause = _node.CreateSelectClause (previousClause, ClauseGenerationContext);
-      Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedClause, Is.SameAs (SourceClause));
     }
   }
 }
