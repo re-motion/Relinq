@@ -61,7 +61,7 @@ namespace Remotion.Data.Linq
     public MainFromClause MainFromClause
     {
       get { return _mainFromClause; }
-      private set
+      set
       {
         ArgumentUtility.CheckNotNull ("value", value);
         _mainFromClause = value;

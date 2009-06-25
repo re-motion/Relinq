@@ -197,15 +197,15 @@ namespace Remotion.Data.UnitTests.Linq
       Assert.That (identifier, Is.EqualTo ("test1"));
     }
 
-    //[Test] // TODO 1187
-    //public void GetNewName_AlreadyExists_ChangedMainFromClause ()
-    //{
-    //  var mainFromClause = new MainFromClause ("test0", typeof (Student), ExpressionHelper.CreateQuerySource ().Expression);
-    //  var queryModel = ExpressionHelper.CreateQueryModel ();
-    //  queryModel.MainFromClause = mainFromClause;
-    //  var identifier = queryModel.GetNewName ("test");
-    //  Assert.That (identifier, Is.EqualTo ("test1"));
-    //}
+    [Test]
+    public void GetNewName_AlreadyExists_ChangedMainFromClause ()
+    {
+      var mainFromClause = new MainFromClause ("test0", typeof (Student), ExpressionHelper.CreateQuerySource ().Expression);
+      var queryModel = ExpressionHelper.CreateQueryModel ();
+      queryModel.MainFromClause = mainFromClause;
+      var identifier = queryModel.GetNewName ("test");
+      Assert.That (identifier, Is.EqualTo ("test1"));
+    }
 
     [Test]
     public void GetNewName_AlreadyExists_BodyClauses ()
