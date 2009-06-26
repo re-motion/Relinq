@@ -42,11 +42,6 @@ namespace Remotion.Data.Linq.StringBuilding
       base.VisitAdditionalFromClause (fromClause);
     }
 
-    public override void VisitMemberFromClause (MemberFromClause fromClause)
-    {
-      VisitAdditionalFromClause (fromClause);
-    }
-
     public override void VisitSubQueryFromClause (SubQueryFromClause fromClause)
     {
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);

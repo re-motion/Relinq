@@ -49,12 +49,6 @@ namespace Remotion.Data.Linq
       VisitJoinClauses (fromClause, fromClause.JoinClauses);
     }
 
-    public virtual void VisitMemberFromClause (MemberFromClause fromClause)
-    {
-      ArgumentUtility.CheckNotNull ("fromClause", fromClause);
-      VisitJoinClauses (fromClause, fromClause.JoinClauses);
-    }
-
     public virtual void VisitSubQueryFromClause (SubQueryFromClause fromClause)
     {
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);

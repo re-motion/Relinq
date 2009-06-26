@@ -73,14 +73,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
-    public void Accept ()
-    {
-      var visitorMock = MockRepository.GenerateMock<IQueryModelVisitor> ();
-      _memberFromClause.Accept (visitorMock);
-      visitorMock.AssertWasCalled (mock => mock.VisitMemberFromClause (_memberFromClause));
-    }
-
-    [Test]
     public void GetFromSource ()
     {
       var columnSource = _memberFromClause.GetColumnSource (StubDatabaseInfo.Instance);

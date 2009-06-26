@@ -196,17 +196,5 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
 
       Assert.That (sv.ToString (), Is.EqualTo ("from Student s in (from Student s2 in null select 1) "));
     }
-
-    [Test]
-    public void StringVisitorForMemberFromClause ()
-    {
-      var fromExpression = Expression.MakeMemberAccess (Expression.Constant ("test"), typeof (string).GetProperty ("Length"));
-      var memberFromClause = new MemberFromClause ("s", typeof (Student), fromExpression);
-
-      var sv = new StringBuildingQueryModelVisitor();
-      sv.VisitMemberFromClause (memberFromClause);
-
-      Assert.That (sv.ToString (), Is.EqualTo ("from Student s in \"test\".Length "));
-    }
   }
 }

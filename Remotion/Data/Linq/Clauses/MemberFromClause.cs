@@ -58,12 +58,6 @@ namespace Remotion.Data.Linq.Clauses
       }
     }
 
-    public override void Accept (IQueryModelVisitor visitor)
-    {
-      ArgumentUtility.CheckNotNull ("visitor", visitor);
-      visitor.VisitMemberFromClause (this);
-    }
-
     public override AdditionalFromClause Clone (CloneContext cloneContext)
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);

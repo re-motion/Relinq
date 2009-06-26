@@ -104,26 +104,6 @@ namespace Remotion.Data.UnitTests.Linq
     }
 
     [Test]
-    public void VisitMemberFromClause ()
-    {
-      var memberFromClause = ExpressionHelper.CreateMemberFromClause ();
-      using (_mockRepository.Ordered ())
-      {
-        _visitorMock
-            .Expect (mock => mock.VisitMemberFromClause (memberFromClause))
-            .CallOriginalMethod (OriginalCallOptions.CreateExpectation);
-        _visitorMock
-            .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitJoinClauses", memberFromClause, memberFromClause.JoinClauses));
-      }
-
-      _visitorMock.Replay ();
-
-      memberFromClause.Accept (_visitorMock);
-
-      _visitorMock.VerifyAllExpectations ();
-    }
-
-    [Test]
     public void VisitSubQueryFromClause ()
     {
       var subQueryFromClause = ExpressionHelper.CreateSubQueryFromClause ();
