@@ -15,6 +15,11 @@
 // 
 namespace Remotion.Data.Linq.Clauses
 {
+  /// <summary>
+  /// Represents the <see cref="SelectClause"/> or <see cref="GroupClause"/> of a query. This is the end point of the query, it defines what is 
+  /// atually returned for each of the  items coming from the <see cref="QueryModel.MainFromClause"/> and passing the 
+  /// <see cref="QueryModel.BodyClauses"/>.
+  /// </summary>
   public interface ISelectGroupClause : IClause
   {
     ISelectGroupClause Clone (CloneContext cloneContext);

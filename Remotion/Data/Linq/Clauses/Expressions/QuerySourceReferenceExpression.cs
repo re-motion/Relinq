@@ -20,7 +20,8 @@ using Remotion.Utilities;
 namespace Remotion.Data.Linq.Clauses.Expressions
 {
   /// <summary>
-  /// Represents an expression tree node that points to a query source represented by a <see cref="FromClauseBase"/>.
+  /// Represents an expression tree node that points to a query source represented by a <see cref="FromClauseBase"/>. Note that you should always
+  /// point back, to a clause defined prior to the clause holding this reference. Otherwise, exceptions might be thrown at runtime.
   /// </summary>
   public class QuerySourceReferenceExpression : Expression
   {

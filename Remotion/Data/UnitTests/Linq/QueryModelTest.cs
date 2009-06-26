@@ -270,5 +270,20 @@ namespace Remotion.Data.UnitTests.Linq
       Assert.That (_queryModel.BodyClauses.Count, Is.EqualTo (1));
       Assert.That (_queryModel.BodyClauses, List.Contains (clause));
     }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentNullException))]
+    public void AddBodyClause_Null ()
+    {
+      _queryModel.BodyClauses.Add (null);
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentNullException))]
+    public void SetBodyClause_Null ()
+    {
+      _queryModel.BodyClauses.Add (ExpressionHelper.CreateWhereClause ());
+      _queryModel.BodyClauses[0] = null;
+    }
   }
 }
