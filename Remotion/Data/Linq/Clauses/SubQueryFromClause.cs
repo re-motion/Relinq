@@ -29,7 +29,6 @@ namespace Remotion.Data.Linq.Clauses
   /// </summary>
   public class SubQueryFromClause : AdditionalFromClause
   {
-    private SubQuery _fromSource;
     private QueryModel _subQueryModel;
 
     /// <summary>
@@ -42,8 +41,6 @@ namespace Remotion.Data.Linq.Clauses
         : base (itemName, itemType, subQueryExpression)
     {
       ArgumentUtility.CheckNotNull ("subQueryExpression", subQueryExpression);
-
-      SubQueryModel = subQueryExpression.QueryModel;
     }
 
     /// <summary>
@@ -51,22 +48,12 @@ namespace Remotion.Data.Linq.Clauses
     /// </summary>
     public QueryModel SubQueryModel
     {
-      get { return _subQueryModel; }
-      set
-      {
-        _subQueryModel = ArgumentUtility.CheckNotNull ("value", value);
-        _fromSource = new SubQuery (value, ParseMode.SubQueryInFrom, ItemName);
-      }
+      get { return ((SubQueryExpression)FromExpression).QueryModel; }
     }
 
     public override Type GetQuerySourceType ()
     {
       return null;
-    }
-
-    public override IColumnSource GetColumnSource (IDatabaseInfo databaseInfo)
-    {
-      return _fromSource;
     }
 
     public override AdditionalFromClause Clone (CloneContext cloneContext)

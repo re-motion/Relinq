@@ -159,7 +159,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void SubQueryModel_Set_ChangesColumnSource ()
     {
       var oldSource = _subQueryFromClause.GetColumnSource (StubDatabaseInfo.Instance);
-      _subQueryFromClause.SubQueryModel = ExpressionHelper.CreateQueryModel();
+      _subQueryFromClause.FromExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel());
       var newSource = _subQueryFromClause.GetColumnSource (StubDatabaseInfo.Instance);
 
       Assert.That (oldSource, Is.Not.EqualTo (newSource));

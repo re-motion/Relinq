@@ -14,7 +14,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Diagnostics;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Utilities;
@@ -28,8 +27,6 @@ namespace Remotion.Data.Linq.Clauses
   /// </summary>
   public class MainFromClause : FromClauseBase
   {
-    private Expression _fromExpression;
-
     /// <summary>
     /// Initialize a new instance of <see cref="MainFromClause"/>.
     /// </summary>
@@ -39,20 +36,9 @@ namespace Remotion.Data.Linq.Clauses
     public MainFromClause (string itemName, Type itemType, Expression fromExpression)
       : base (
           ArgumentUtility.CheckNotNullOrEmpty ("itemName", itemName),
-          ArgumentUtility.CheckNotNull ("itemType", itemType))
+          ArgumentUtility.CheckNotNull ("itemType", itemType),
+          ArgumentUtility.CheckNotNull ("fromExpression", fromExpression))
     {
-      ArgumentUtility.CheckNotNull ("fromExpression", fromExpression);
-      _fromExpression = fromExpression;
-    }
-
-    /// <summary>
-    /// The query (data) source which is requested
-    /// </summary>
-    [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (FromExpression),nq}")]
-    public Expression FromExpression
-    {
-      get { return _fromExpression; }
-      set { _fromExpression = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
     public override void Accept (IQueryModelVisitor visitor)
