@@ -143,7 +143,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     {
       var resolvedCollectionSelector = GetResolvedCollectionSelector (clauseGenerationContext);
       if (resolvedCollectionSelector is SubQueryExpression)
-        return new SubQueryFromClause (itemName, itemType, ((SubQueryExpression) resolvedCollectionSelector).QueryModel);
+        return new SubQueryFromClause (itemName, itemType, (SubQueryExpression) resolvedCollectionSelector);
       else
         return new AdditionalFromClause (itemName, itemType, resolvedCollectionSelector);
     }

@@ -14,7 +14,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
@@ -58,7 +57,7 @@ namespace Remotion.Data.Linq.Clauses.ExpressionTreeVisitors
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       
-      var clonedQueryModel = expression.QueryModel.Clone ();
+      var clonedQueryModel = expression.QueryModel.Clone (_cloneContext.ClonedClauseMapping);
       return new SubQueryExpression (clonedQueryModel);
     }
 

@@ -272,7 +272,7 @@ namespace Remotion.Data.UnitTests.Linq
 
     public static SubQueryFromClause CreateSubQueryFromClause (string itemName, Type itemType)
     {
-      return new SubQueryFromClause (itemName, itemType, CreateQueryModel ());
+      return new SubQueryFromClause (itemName, itemType, new SubQueryExpression (CreateQueryModel ()));
     }
 
     public static Expression MakeExpression<TRet> (Expression<Func<TRet>> expression)

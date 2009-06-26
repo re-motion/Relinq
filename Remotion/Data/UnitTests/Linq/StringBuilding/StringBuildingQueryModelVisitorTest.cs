@@ -189,12 +189,12 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
 
       var subQuery = new QueryModel (typeof (string), mainFromClause, selectClause);
 
-      var subQueryFromClause = new SubQueryFromClause ("s", typeof (Student), subQuery);
+      var subQueryFromClause = new SubQueryFromClause ("s", typeof (Student), new SubQueryExpression (subQuery));
 
       var sv = new StringBuildingQueryModelVisitor();
-      sv.VisitSubQueryFromClause (subQueryFromClause);
+      sv.VisitAdditionalFromClause (subQueryFromClause);
 
-      Assert.That (sv.ToString (), Is.EqualTo ("from Student s in (from Student s2 in null select 1) "));
+      Assert.That (sv.ToString (), Is.EqualTo ("from Student s in {from Student s2 in null select 1} "));
     }
   }
 }

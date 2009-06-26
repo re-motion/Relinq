@@ -42,14 +42,6 @@ namespace Remotion.Data.Linq.StringBuilding
       base.VisitAdditionalFromClause (fromClause);
     }
 
-    public override void VisitSubQueryFromClause (SubQueryFromClause fromClause)
-    {
-      ArgumentUtility.CheckNotNull ("fromClause", fromClause);
-
-      _sb.AppendFormat ("from {0} {1} in ({2}) ", fromClause.ItemType.Name, fromClause.ItemName, fromClause.SubQueryModel);
-      base.VisitSubQueryFromClause (fromClause);
-    }
-
     public override void VisitJoinClause (JoinClause joinClause)
     {
       ArgumentUtility.CheckNotNull ("joinClause", joinClause);

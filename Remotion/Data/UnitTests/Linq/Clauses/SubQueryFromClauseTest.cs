@@ -20,7 +20,6 @@ using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.DataObjectModel;
-using Rhino.Mocks;
 
 namespace Remotion.Data.UnitTests.Linq.Clauses
 {
@@ -35,7 +34,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void SetUp ()
     {
       _subQueryModel = ExpressionHelper.CreateQueryModel();
-      _subQueryFromClause = new SubQueryFromClause ("s", typeof (Student), _subQueryModel);
+      _subQueryFromClause = new SubQueryFromClause ("s", typeof (Student), new SubQueryExpression (_subQueryModel));
       _cloneContext = new CloneContext (new ClonedClauseMapping());
     }
 
@@ -45,19 +44,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (_subQueryFromClause.ItemName, Is.EqualTo ("s"));
       Assert.That (_subQueryFromClause.ItemType, Is.EqualTo (typeof (Student)));
       Assert.That (_subQueryFromClause.SubQueryModel, Is.SameAs (_subQueryModel));
-    }
-
-    [Test]
-    public void Accept ()
-    {
-      var mockRepository = new MockRepository();
-      var visitorMock = mockRepository.StrictMock<IQueryModelVisitor>();
-
-      visitorMock.Expect (mock => mock.VisitSubQueryFromClause (_subQueryFromClause));
-
-      mockRepository.ReplayAll();
-      _subQueryFromClause.Accept (visitorMock);
-      mockRepository.VerifyAll();
     }
 
     [Test]
@@ -97,7 +83,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone_ClonesSubQueryModel ()
     {
-      var clone = _subQueryFromClause.Clone (_cloneContext);
+      var clone = (SubQueryFromClause) _subQueryFromClause.Clone (_cloneContext);
 
       Assert.That (clone.SubQueryModel, Is.Not.SameAs (_subQueryFromClause.SubQueryModel));
       Assert.That (clone.SubQueryModel.MainFromClause.FromExpression, Is.SameAs (_subQueryFromClause.SubQueryModel.MainFromClause.FromExpression));
@@ -106,7 +92,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone_ClonesSubQueryModel_WithCorrectMapping ()
     {
-      var clone = _subQueryFromClause.Clone (_cloneContext);
+      var clone = (SubQueryFromClause) _subQueryFromClause.Clone (_cloneContext);
 
       Assert.That (clone.SubQueryModel, Is.Not.SameAs (_subQueryFromClause.SubQueryModel));
       Assert.That (clone.SubQueryModel.MainFromClause.FromExpression, Is.SameAs (_subQueryFromClause.SubQueryModel.MainFromClause.FromExpression));
