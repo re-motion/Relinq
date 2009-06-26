@@ -44,7 +44,7 @@ namespace Remotion.Data.Linq.Clauses
 
     public abstract ResultModificationBase Clone (CloneContext cloneContext);
 
-    public void Accept (IQueryModelVisitor visitor)
+    public virtual void Accept (IQueryModelVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       visitor.VisitResultModification (this);

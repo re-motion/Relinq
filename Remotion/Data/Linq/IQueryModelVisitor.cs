@@ -29,7 +29,7 @@ namespace Remotion.Data.Linq
     void VisitMainFromClause (MainFromClause fromClause);
     void VisitAdditionalFromClause (AdditionalFromClause fromClause);
     void VisitMemberFromClause (MemberFromClause fromClause);
-    void VisitSubQueryFromClause (SubQueryFromClause clause);
+    void VisitSubQueryFromClause (SubQueryFromClause fromClause);
     void VisitJoinClause (JoinClause joinClause);
     void VisitWhereClause (WhereClause whereClause);
     void VisitOrderByClause (OrderByClause orderByClause);
