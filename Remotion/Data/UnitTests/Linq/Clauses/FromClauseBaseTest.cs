@@ -18,6 +18,7 @@ using System.Linq;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.DataObjectModel;
 
 namespace Remotion.Data.UnitTests.Linq.Clauses
@@ -26,7 +27,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
   public class FromClauseBaseTest
   {
     [Test]
-    public void GetTable ()
+    public void GetColumnSource ()
     {
       IQueryable querySource = ExpressionHelper.CreateQuerySource ();
 
@@ -35,12 +36,24 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
-    public void GetTable_CachesInstance ()
+    public void GetColumnSource_CachesInstance ()
     {
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause_Student ();
       IColumnSource t1 = fromClause.GetColumnSource (StubDatabaseInfo.Instance);
       IColumnSource t2 = fromClause.GetColumnSource (StubDatabaseInfo.Instance);
       Assert.AreSame (t1, t2);
+    }
+
+    [Test]
+    public void GetColumnSource_SubQuery ()
+    {
+      var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel ());
+      var fromClause = new AdditionalFromClause ("s", typeof (Student), subQueryExpression);
+      
+      IColumnSource columnSource = fromClause.GetColumnSource (StubDatabaseInfo.Instance);
+      var subQuery = (SubQuery) columnSource;
+      Assert.That (subQuery.Alias, Is.EqualTo ("s"));
+      Assert.That (subQuery.QueryModel, Is.SameAs (subQueryExpression.QueryModel));
     }
 
     [Test]

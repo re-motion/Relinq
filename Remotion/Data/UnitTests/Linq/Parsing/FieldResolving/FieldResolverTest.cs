@@ -256,7 +256,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
     {
       // from x in (...)
       // select x.ID
-      SubQueryFromClause fromClause = ExpressionHelper.CreateSubQueryFromClause ("x", typeof (Student));
+      var fromClause = new AdditionalFromClause ("x", typeof (Student), new SubQueryExpression (ExpressionHelper.CreateQueryModel ()));
 
       PropertyInfo member = typeof (Student).GetProperty ("ID");
       Expression fieldExpression = Expression.MakeMemberAccess (new QuerySourceReferenceExpression (fromClause), member);

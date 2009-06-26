@@ -130,22 +130,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void Apply_WithSubQueryInFromExpression ()
-    {
-      var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel ());
-
-      var collectionSelector = Expression.Lambda (subQueryExpression, Expression.Parameter (typeof (int), "i"));
-      var node = new SelectManyExpressionNode (CreateParseInfo (), collectionSelector, _resultSelector);
-
-      node.Apply (QueryModel, ClauseGenerationContext);
-      var clause = (SubQueryFromClause) QueryModel.BodyClauses[0];
-
-      Assert.That (clause.ItemName, Is.EqualTo ("j"));
-      Assert.That (clause.ItemType, Is.SameAs (typeof (int)));
-      Assert.That (clause.SubQueryModel, Is.SameAs (subQueryExpression.QueryModel));
-    }
-
-    [Test]
     public void Apply_AddsMapping ()
     {
       _node.Apply (QueryModel, ClauseGenerationContext);

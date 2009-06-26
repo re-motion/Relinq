@@ -97,7 +97,6 @@
     <Compile Include="EagerFetching\FetchRequestCollection.cs" />
     <Compile Include="Clauses\OrderingDirection.cs" />
     <Compile Include="Clauses\ResultModificationBase.cs" />
-    <Compile Include="Clauses\SubQueryFromClause.cs" />
     <Compile Include="DataObjectModel\BinaryEvaluation.cs" />
     <Compile Include="DataObjectModel\FieldSourcePath.cs" />
     <Compile Include="DataObjectModel\IColumnSource.cs" />

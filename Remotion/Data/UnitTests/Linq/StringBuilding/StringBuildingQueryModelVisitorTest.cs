@@ -189,7 +189,7 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
 
       var subQuery = new QueryModel (typeof (string), mainFromClause, selectClause);
 
-      var subQueryFromClause = new SubQueryFromClause ("s", typeof (Student), new SubQueryExpression (subQuery));
+      var subQueryFromClause = new AdditionalFromClause ("s", typeof (Student), new SubQueryExpression (subQuery));
 
       var sv = new StringBuildingQueryModelVisitor();
       sv.VisitAdditionalFromClause (subQueryFromClause);

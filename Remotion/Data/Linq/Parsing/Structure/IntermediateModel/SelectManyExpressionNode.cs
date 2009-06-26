@@ -127,25 +127,14 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
-      var clause = CreateFromClauseOfCorrectType (
-          ResultSelector.Parameters[1].Name,
-          ResultSelector.Parameters[1].Type,
-          clauseGenerationContext);
-      queryModel.BodyClauses.Add ((IBodyClause) clause);
+      var resolvedCollectionSelector = GetResolvedCollectionSelector (clauseGenerationContext);
+      var clause = new AdditionalFromClause (ResultSelector.Parameters[1].Name, ResultSelector.Parameters[1].Type, resolvedCollectionSelector);
+      queryModel.BodyClauses.Add (clause);
 
       clauseGenerationContext.ClauseMapping.AddMapping (this, clause);
 
       var selectClause = ((SelectClause) queryModel.SelectOrGroupClause);
       selectClause.Selector = GetResolvedResultSelector (clauseGenerationContext);
-    }
-
-    private FromClauseBase CreateFromClauseOfCorrectType (string itemName, Type itemType, ClauseGenerationContext clauseGenerationContext)
-    {
-      var resolvedCollectionSelector = GetResolvedCollectionSelector (clauseGenerationContext);
-      if (resolvedCollectionSelector is SubQueryExpression)
-        return new SubQueryFromClause (itemName, itemType, (SubQueryExpression) resolvedCollectionSelector);
-      else
-        return new AdditionalFromClause (itemName, itemType, resolvedCollectionSelector);
     }
   }
 }

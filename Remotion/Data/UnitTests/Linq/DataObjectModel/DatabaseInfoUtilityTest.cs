@@ -18,6 +18,7 @@ using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Rhino.Mocks;
 using Remotion.Collections;
 using Remotion.Data.Linq.Clauses;
@@ -42,15 +43,6 @@ namespace Remotion.Data.UnitTests.Linq.DataObjectModel
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause_Student();
       Table table = DatabaseInfoUtility.GetTableForFromClause (_databaseInfo, fromClause);
       Assert.That (table, Is.EqualTo (new Table ("studentTable", "s")));
-    }
-
-    [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "The from clause with identifier subQuery and query source type <null> does not "
-        + "identify a queryable table.\r\nParameter name: fromClause")]
-    public void GetTableForFromClause_WithSubQueryFromClause ()
-    {
-      SubQueryFromClause fromClause = ExpressionHelper.CreateSubQueryFromClause ();
-      DatabaseInfoUtility.GetTableForFromClause (_databaseInfo, fromClause);
     }
 
     [Test]

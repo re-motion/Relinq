@@ -265,16 +265,6 @@ namespace Remotion.Data.UnitTests.Linq
       return new MainFromClause (itemName, itemType, Expression.Constant (querySource));
     }
 
-    public static SubQueryFromClause CreateSubQueryFromClause ()
-    {
-      return CreateSubQueryFromClause ("subQuery", typeof (int));
-    }
-
-    public static SubQueryFromClause CreateSubQueryFromClause (string itemName, Type itemType)
-    {
-      return new SubQueryFromClause (itemName, itemType, new SubQueryExpression (CreateQueryModel ()));
-    }
-
     public static Expression MakeExpression<TRet> (Expression<Func<TRet>> expression)
     {
       return expression.Body;

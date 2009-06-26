@@ -20,6 +20,7 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 
@@ -165,17 +166,14 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var queryModel = _queryParser.GetParsedQuery (expression);
 
       Assert.That (queryModel.BodyClauses.Count, Is.EqualTo (1));
-      var subQueryFromClause = queryModel.BodyClauses[0] as SubQueryFromClause;
-      Assert.IsNotNull (subQueryFromClause);
+      var subQueryFromClause = (AdditionalFromClause) queryModel.BodyClauses[0];
 
-      Assert.That (subQueryFromClause.SubQueryModel, Is.Not.Null);
-      Assert.That (subQueryFromClause.SubQueryModel.MainFromClause, Is.Not.Null);
-
-      var subQueryMainFromClause = subQueryFromClause.SubQueryModel.MainFromClause;
+      var subQueryModel = ((SubQueryExpression) subQueryFromClause.FromExpression).QueryModel;
+      var subQueryMainFromClause = subQueryModel.MainFromClause;
       Assert.That (subQueryMainFromClause.ItemName, Is.EqualTo ("s3"));
       CheckConstantQuerySource (subQueryMainFromClause.FromExpression, _querySource);
 
-      var subQuerySelectClause = (SelectClause) subQueryFromClause.SubQueryModel.SelectOrGroupClause;
+      var subQuerySelectClause = (SelectClause) subQueryModel.SelectOrGroupClause;
       CheckResolvedExpression<Student, Student> (subQuerySelectClause.Selector, subQueryMainFromClause, s3 => s3);
     }
 
