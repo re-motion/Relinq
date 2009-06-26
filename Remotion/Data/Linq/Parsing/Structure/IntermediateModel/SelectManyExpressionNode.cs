@@ -142,9 +142,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     private FromClauseBase CreateFromClauseOfCorrectType (string itemName, Type itemType, ClauseGenerationContext clauseGenerationContext)
     {
       var resolvedCollectionSelector = GetResolvedCollectionSelector (clauseGenerationContext);
-      if (resolvedCollectionSelector is MemberExpression)
-        return new MemberFromClause (itemName, itemType, (MemberExpression) resolvedCollectionSelector);
-      else if (resolvedCollectionSelector is SubQueryExpression)
+      if (resolvedCollectionSelector is SubQueryExpression)
         return new SubQueryFromClause (itemName, itemType, ((SubQueryExpression) resolvedCollectionSelector).QueryModel);
       else
         return new AdditionalFromClause (itemName, itemType, resolvedCollectionSelector);

@@ -293,12 +293,6 @@ namespace Remotion.Data.UnitTests.Linq
       return ((MemberExpression) expression).Member;
     }
 
-    public static MemberFromClause CreateMemberFromClause ()
-    {
-      var fromExpression = Expression.MakeMemberAccess (Expression.Constant (null, typeof (IndustrialSector)), typeof (IndustrialSector).GetProperty ("Students"));
-      return new MemberFromClause ("member", typeof (Student), fromExpression);
-    }
-
     public static ResultModificationBase CreateResultModification ()
     {
       return new DistinctResultModification ();

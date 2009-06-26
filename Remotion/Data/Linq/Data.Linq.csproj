@@ -95,7 +95,6 @@
     <Compile Include="EagerFetching\FetchExpression.cs" />
     <Compile Include="EagerFetching\FetchManyRequest.cs" />
     <Compile Include="EagerFetching\FetchRequestCollection.cs" />
-    <Compile Include="Clauses\MemberFromClause.cs" />
     <Compile Include="Clauses\OrderingDirection.cs" />
     <Compile Include="Clauses\ResultModificationBase.cs" />
     <Compile Include="Clauses\SubQueryFromClause.cs" />

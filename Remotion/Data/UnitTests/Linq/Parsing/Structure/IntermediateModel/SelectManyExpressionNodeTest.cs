@@ -130,26 +130,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void Apply_WithMemberFromInFromExpression ()
-    {
-      var studentClause = ExpressionHelper.CreateMainFromClause_Student ();
-      var collectionSelector = ExpressionHelper.CreateLambdaExpression<Student, IEnumerable<Student>> (s => s.Friends);
-      var resultSelector = ExpressionHelper.CreateLambdaExpression<Student, Student, Student> ((s1, s2) => s1);
-
-      var studentSource = new ConstantExpressionNode ("s", typeof (IQueryable<Student>), null);
-      ClauseGenerationContext.ClauseMapping.AddMapping (studentSource, studentClause);
-      var node = new SelectManyExpressionNode (CreateParseInfo (studentSource), collectionSelector, resultSelector);
-
-      node.Apply (QueryModel, ClauseGenerationContext);
-      var clause = (MemberFromClause) QueryModel.BodyClauses[0];
-
-      Assert.That (clause.ItemName, Is.EqualTo ("s2"));
-      Assert.That (clause.ItemType, Is.SameAs (typeof (Student)));
-      Assert.That (clause.FromExpression, Is.SameAs (node.GetResolvedCollectionSelector (ClauseGenerationContext)));
-      Assert.That (clause.MemberExpression, Is.SameAs (node.GetResolvedCollectionSelector (ClauseGenerationContext)));
-    }
-
-    [Test]
     public void Apply_WithSubQueryInFromExpression ()
     {
       var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel ());

@@ -131,8 +131,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var mainFromClause = queryModel.MainFromClause;
       CheckConstantQuerySource (mainFromClause.FromExpression, _industrialSectorQuerySource);
 
-      var memberFromClause = (MemberFromClause) queryModel.BodyClauses[0];
-      CheckResolvedExpression<IndustrialSector, IEnumerable<Student>> (memberFromClause.MemberExpression, mainFromClause, sector => sector.Students);
+      var memberFromClause = (AdditionalFromClause) queryModel.BodyClauses[0];
+      CheckResolvedExpression<IndustrialSector, IEnumerable<Student>> (memberFromClause.FromExpression, mainFromClause, sector => sector.Students);
 
       var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
       CheckResolvedExpression<Student, Student> (selectClause.Selector, memberFromClause, s1 => s1);
