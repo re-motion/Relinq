@@ -108,7 +108,6 @@
     <Compile Include="DataObjectModel\SingleJoin.cs" />
     <Compile Include="DataObjectModel\SourceMarkerEvaluation.cs" />
     <Compile Include="DataObjectModel\SubQuery.cs" />
-    <Compile Include="Clauses\Expressions\QueryModelExpressionBase.cs" />
     <Compile Include="Clauses\Expressions\SubQueryExpression.cs" />
     <Compile Include="ExtensionMethods\ExtensionMethods.cs" />
     <Compile Include="EagerFetching\FluentFetchRequest.cs" />

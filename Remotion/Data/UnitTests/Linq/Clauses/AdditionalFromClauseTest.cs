@@ -59,15 +59,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
-    public void GetQueriedEntityType ()
-    {
-      IQueryable<Student> querySource = ExpressionHelper.CreateQuerySource();
-      var fromExpression = Expression.Constant (querySource);
-      var fromClause = new AdditionalFromClause ("s", typeof (Student), fromExpression);
-      Assert.That (fromClause.GetQuerySourceType(), Is.SameAs (typeof (TestQueryable<Student>)));
-    }
-
-    [Test]
     public void Accept ()
     {
       var visitorMock = MockRepository.GenerateMock<IQueryModelVisitor> ();

@@ -46,11 +46,6 @@ namespace Remotion.Data.Linq.Clauses
       visitor.VisitAdditionalFromClause (this);
     }
 
-    public override Type GetQuerySourceType ()
-    {
-      return FromExpression.Type;
-    }
-    
     public virtual AdditionalFromClause Clone (CloneContext cloneContext)
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);

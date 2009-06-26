@@ -23,7 +23,7 @@ namespace Remotion.Data.Linq.Clauses.ExpressionTreeVisitors
 {
   /// <summary>
   /// Takes an expression and replaces all <see cref="QuerySourceReferenceExpression"/>s to clauses with references to their cloned counterparts.
-  /// Also replaces <see cref="SubQueryExpression"/>s to hold a cloned version of the <see cref="QueryModelExpressionBase.QueryModel"/>.
+  /// Also replaces <see cref="SubQueryExpression"/>s to hold a cloned version of the <see cref="SubQueryExpression.QueryModel"/>.
   /// This is used when a <see cref="QueryModel"/> is cloned in order to ensure that all expressions its clauses hold correctly refer to the other
   /// cloned clauses afterwards.
   /// </summary>

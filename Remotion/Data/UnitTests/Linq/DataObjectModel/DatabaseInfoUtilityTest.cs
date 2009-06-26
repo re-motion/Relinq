@@ -18,7 +18,6 @@ using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
-using Remotion.Data.Linq.Clauses.Expressions;
 using Rhino.Mocks;
 using Remotion.Collections;
 using Remotion.Data.Linq.Clauses;
@@ -74,9 +73,8 @@ namespace Remotion.Data.UnitTests.Linq.DataObjectModel
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "The from clause with identifier i and query source type "
-        + "Remotion.Data.UnitTests.Linq.TestQueryable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]] "
-            + "does not identify a queryable table.", MatchType = MessageMatch.Contains)]
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "The from clause with identifier i and item type "
+        + "System.Int32 does not identify a queryable table.", MatchType = MessageMatch.Contains)]
     public void GetTableForFromClause_InvalidSource ()
     {
       TestQueryable<int> ints = new TestQueryable<int> (ExpressionHelper.CreateExecutor());

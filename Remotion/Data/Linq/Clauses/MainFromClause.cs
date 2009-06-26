@@ -47,11 +47,6 @@ namespace Remotion.Data.Linq.Clauses
       visitor.VisitMainFromClause (this);
     }
 
-    public override Type GetQuerySourceType ()
-    {
-      return FromExpression.Type;
-    }
-
     public MainFromClause Clone (CloneContext cloneContext)
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);

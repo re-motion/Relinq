@@ -81,14 +81,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
-    public void GetQueriedEntityType ()
-    {
-      IQueryable<Student> querySource = ExpressionHelper.CreateQuerySource();
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause ("s", typeof (Student), querySource);
-      Assert.That (fromClause.GetQuerySourceType(), Is.SameAs (typeof (TestQueryable<Student>)));
-    }
-
-    [Test]
     public void Clone ()
     {
       var clone = _mainFromClause.Clone (_cloneContext);

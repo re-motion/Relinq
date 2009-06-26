@@ -87,6 +87,8 @@ namespace Remotion.Data.Linq.Clauses
 
     private SubQuery _subQueryFromSource;
 
+    public abstract void Accept (IQueryModelVisitor visitor);
+
     /// <summary>
     /// Method for getting source of a from clause.
     /// </summary>
@@ -107,9 +109,6 @@ namespace Remotion.Data.Linq.Clauses
 
       return DatabaseInfoUtility.GetTableForFromClause (databaseInfo, this);
     }
-
-    public abstract void Accept (IQueryModelVisitor visitor);
-    public abstract Type GetQuerySourceType ();
 
     protected void AddClonedJoinClauses (IEnumerable<JoinClause> originalJoinClauses, CloneContext cloneContext)
     {
