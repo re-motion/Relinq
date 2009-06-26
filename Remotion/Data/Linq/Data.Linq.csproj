@@ -253,7 +253,7 @@
     <Compile Include="SqlGeneration\SqlGeneratorVisitor.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitor.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\PartialTreeEvaluatingVisitor.cs" />
-    <Compile Include="StringBuilding\StringBuildingQueryVisitor.cs" />
+    <Compile Include="StringBuilding\StringBuildingQueryModelVisitor.cs" />
     <Compile Include="Clauses\WhereClause.cs" />
     <Compile Include="UniqueIdentifierGeneratorBase.cs" />
   </ItemGroup>

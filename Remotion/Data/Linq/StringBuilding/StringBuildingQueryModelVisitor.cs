@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
 using Remotion.Data.Linq.Clauses;
@@ -21,58 +22,43 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.StringBuilding
 {
-  public class StringBuildingQueryVisitor : IQueryModelVisitor
+  public class StringBuildingQueryModelVisitor : QueryModelVisitorBase
   {
-    private readonly StringBuilder _sb = null;
+    private readonly StringBuilder _sb = new StringBuilder ();
 
-    public StringBuildingQueryVisitor()
-    {
-      _sb = new StringBuilder();
-    }
-
-    public void VisitQueryModel (QueryModel queryModel)
-    {
-      ArgumentUtility.CheckNotNull ("queryExpression", queryModel);
-
-      queryModel.MainFromClause.Accept (this);
-      foreach (IBodyClause bodyClause in queryModel.BodyClauses)
-        bodyClause.Accept (this);
-
-      queryModel.SelectOrGroupClause.Accept (this);
-    }
-
-    public void VisitMainFromClause (MainFromClause fromClause)
-    {
-      ArgumentUtility.CheckNotNull ("fromClause", fromClause);
-      _sb.AppendFormat ("from {0} {1} in {2} ", fromClause.ItemType.Name, fromClause.ItemName, FormatExpression (fromClause.FromExpression));
-
-      foreach (JoinClause jc in fromClause.JoinClauses)
-        jc.Accept (this);
-    }
-
-    public void VisitAdditionalFromClause (AdditionalFromClause fromClause)
+    public override void VisitMainFromClause (MainFromClause fromClause)
     {
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
 
       _sb.AppendFormat ("from {0} {1} in {2} ", fromClause.ItemType.Name, fromClause.ItemName, FormatExpression (fromClause.FromExpression));
-      foreach (JoinClause jc in fromClause.JoinClauses)
-        jc.Accept (this);
+      base.VisitMainFromClause (fromClause);
     }
 
-    public void VisitMemberFromClause (MemberFromClause fromClause)
+    public override void VisitAdditionalFromClause (AdditionalFromClause fromClause)
+    {
+      ArgumentUtility.CheckNotNull ("fromClause", fromClause);
+
+      _sb.AppendFormat ("from {0} {1} in {2} ", fromClause.ItemType.Name, fromClause.ItemName, FormatExpression (fromClause.FromExpression));
+      base.VisitAdditionalFromClause (fromClause);
+    }
+
+    public override void VisitMemberFromClause (MemberFromClause fromClause)
     {
       VisitAdditionalFromClause (fromClause);
     }
 
-    public void VisitSubQueryFromClause (SubQueryFromClause fromClause)
+    public override void VisitSubQueryFromClause (SubQueryFromClause fromClause)
     {
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
+
       _sb.AppendFormat ("from {0} {1} in ({2}) ", fromClause.ItemType.Name, fromClause.ItemName, fromClause.SubQueryModel);
+      base.VisitSubQueryFromClause (fromClause);
     }
 
-    public void VisitJoinClause (JoinClause joinClause)
+    public override void VisitJoinClause (JoinClause joinClause)
     {
       ArgumentUtility.CheckNotNull ("joinClause", joinClause);
+
       _sb.AppendFormat (
           "join {0} {1} in {2} on {3} equals {4} ",
           joinClause.ItemName, 
@@ -80,24 +66,26 @@ namespace Remotion.Data.Linq.StringBuilding
           FormatExpression (joinClause.InExpression),
           FormatExpression (joinClause.OnExpression), 
           FormatExpression (joinClause.EqualityExpression));
+      base.VisitJoinClause (joinClause);
     }
 
-    public void VisitWhereClause (WhereClause whereClause)
+    public override void VisitWhereClause (WhereClause whereClause)
     {
       ArgumentUtility.CheckNotNull ("whereClause", whereClause);
 
       _sb.AppendFormat ("where {0} ", FormatExpression (whereClause.Predicate));
+      base.VisitWhereClause (whereClause);
     }
 
-    public void VisitOrderByClause (OrderByClause orderByClause)
+    public override void VisitOrderByClause (OrderByClause orderByClause)
     {
       ArgumentUtility.CheckNotNull ("orderByClause", orderByClause);
+
       _sb.Append ("orderby ");
-      foreach (Ordering oC in orderByClause.Orderings)
-        oC.Accept (this);
+      base.VisitOrderByClause (orderByClause);
     }
 
-    public void VisitOrdering (Ordering ordering)
+    public override void VisitOrdering (Ordering ordering)
     {
       ArgumentUtility.CheckNotNull ("ordering", ordering);
 
@@ -110,35 +98,45 @@ namespace Remotion.Data.Linq.StringBuilding
           _sb.AppendFormat ("{0} descending ", FormatExpression (ordering.Expression));
           break;
       }
+      base.VisitOrdering (ordering);
     }
 
-    public void VisitSelectClause (SelectClause selectClause)
+    public override void VisitSelectClause (SelectClause selectClause)
     {
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);
+      
       _sb.AppendFormat ("select {0}", FormatExpression (selectClause.Selector));
+      base.VisitSelectClause (selectClause);
+    }
 
-      if (selectClause.ResultModifications.Count > 0)
+    protected override void VisitResultModifications (SelectClause selectClause, IList<ResultModificationBase> resultModifications)
+    {
+      ArgumentUtility.CheckNotNull ("resultModifications", resultModifications);
+
+      if (resultModifications.Count > 0)
       {
         _sb.Insert (0, "(");
         _sb.Append (")");
-
-        foreach (var resultModification in selectClause.ResultModifications)
-        {
-          _sb.Append (".");
-          _sb.Append (resultModification.ToString ());
-        }
       }
+
+      base.VisitResultModifications (selectClause, resultModifications);
     }
 
-    public void VisitResultModification (ResultModificationBase resultModification)
+    public override void VisitResultModification (ResultModificationBase resultModification)
     {
-      throw new NotImplementedException();
+      ArgumentUtility.CheckNotNull ("resultModification", resultModification);
+
+      _sb.Append (".");
+      _sb.Append (resultModification.ToString ());
+      base.VisitResultModification (resultModification);
     }
 
-    public void VisitGroupClause (GroupClause groupClause)
+    public override void VisitGroupClause (GroupClause groupClause)
     {
       ArgumentUtility.CheckNotNull ("groupClause", groupClause);
+      
       _sb.AppendFormat ("group {0} by {1}", FormatExpression (groupClause.GroupExpression), FormatExpression (groupClause.ByExpression));
+      base.VisitGroupClause (groupClause);
     }
 
     public override string ToString ()

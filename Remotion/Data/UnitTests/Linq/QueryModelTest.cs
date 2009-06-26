@@ -67,7 +67,7 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void Override_ToString()
     {
-      var sv = new StringBuildingQueryVisitor();
+      var sv = new StringBuildingQueryModelVisitor();
       sv.VisitQueryModel (_queryModel);
       Assert.That (_queryModel.ToString(), Is.EqualTo (sv.ToString()));
     }

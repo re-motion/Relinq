@@ -96,7 +96,7 @@ namespace Remotion.Data.Linq
 
     public override string ToString ()
     {
-      var sv = new StringBuildingQueryVisitor();
+      var sv = new StringBuildingQueryModelVisitor();
       sv.VisitQueryModel (this);
       return sv.ToString();
     }
