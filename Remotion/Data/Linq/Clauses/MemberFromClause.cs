@@ -17,7 +17,6 @@ using System;
 using System.Diagnostics;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
-using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses
@@ -63,14 +62,6 @@ namespace Remotion.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       visitor.VisitMemberFromClause (this);
-    }
-
-    public override IColumnSource GetColumnSource (IDatabaseInfo databaseInfo)
-    {
-      ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
-      var relatedTable = DatabaseInfoUtility.GetRelatedTable (databaseInfo, MemberExpression.Member);
-      relatedTable.SetAlias (ItemName);
-      return relatedTable;
     }
 
     public override AdditionalFromClause Clone (CloneContext cloneContext)

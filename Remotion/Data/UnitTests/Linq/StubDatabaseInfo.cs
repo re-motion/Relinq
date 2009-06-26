@@ -33,17 +33,19 @@ namespace Remotion.Data.UnitTests.Linq
 
     public string GetTableName (FromClauseBase fromClause)
     {
-      Type querySourceType = fromClause.GetQuerySourceType();
-      if (typeof (IQueryable<Student>).IsAssignableFrom (querySourceType))
-        return "studentTable";
-      else if (typeof (IQueryable<Student_Detail>).IsAssignableFrom (querySourceType))
-        return "detailTable";
-      else if (typeof (IQueryable<Student_Detail_Detail>).IsAssignableFrom (querySourceType))
-        return "detailDetailTable";
-      else if (typeof(IQueryable<IndustrialSector>).IsAssignableFrom(querySourceType))
-        return "industrialTable";
-      else
-        return null;
+      switch (fromClause.ItemType.Name)
+      {
+        case "Student":
+          return "studentTable";
+        case "Student_Detail":
+          return "detailTable";
+        case "Student_Detail_Detail":
+          return "detailDetailTable";
+        case "IndustrialSector":
+          return "industrialTable";
+        default:
+          return null;
+      }
     }
 
     public string GetRelatedTableName (MemberInfo relationMember)
