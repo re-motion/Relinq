@@ -49,7 +49,7 @@ namespace Remotion.Data.Linq.Clauses
       set { _predicate = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
-    public virtual void Accept (IQueryVisitor visitor)
+    public virtual void Accept (IQueryModelVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       visitor.VisitWhereClause (this);

@@ -53,7 +53,7 @@ namespace Remotion.Data.UnitTests.Linq
     public void Accept()
     {
       var repository = new MockRepository ();
-      var visitorMock = repository.StrictMock<IQueryVisitor> ();
+      var visitorMock = repository.StrictMock<IQueryModelVisitor> ();
 
       visitorMock.Expect (mock => mock.VisitQueryModel (_queryModel));
 

@@ -13,10 +13,28 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-namespace Remotion.Data.Linq.Clauses
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using Remotion.Data.Linq.Clauses;
+
+namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
 {
-  public interface IClause
+  public class TestResultModification : ResultModificationBase
   {
-    void Accept (IQueryModelVisitor visitor);
+    public TestResultModification (IExecutionStrategy executionStrategy)
+        : base(executionStrategy)
+    {
+    }
+
+    public override ResultModificationBase Clone (CloneContext cloneContext)
+    {
+      throw new NotImplementedException();
+    }
+
+    public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)
+    {
+      throw new NotImplementedException();
+    }
   }
 }

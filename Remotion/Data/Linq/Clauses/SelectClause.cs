@@ -56,7 +56,7 @@ namespace Remotion.Data.Linq.Clauses
 
     public ObservableCollection<ResultModificationBase> ResultModifications { get; private set; }
 
-    public virtual void Accept (IQueryVisitor visitor)
+    public virtual void Accept (IQueryModelVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       visitor.VisitSelectClause (this);

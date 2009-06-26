@@ -49,7 +49,7 @@ namespace Remotion.Data.Linq.Clauses
       set { _byExpression = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
-    public void Accept (IQueryVisitor visitor)
+    public void Accept (IQueryModelVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       visitor.VisitGroupClause (this);

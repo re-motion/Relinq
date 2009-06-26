@@ -87,7 +87,7 @@ namespace Remotion.Data.Linq
       get { return _bodyClauses; }
     }
 
-    public void Accept (IQueryVisitor visitor)
+    public void Accept (IQueryModelVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
 

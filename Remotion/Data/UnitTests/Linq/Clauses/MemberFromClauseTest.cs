@@ -75,7 +75,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Accept ()
     {
-      var visitorMock = MockRepository.GenerateMock<IQueryVisitor> ();
+      var visitorMock = MockRepository.GenerateMock<IQueryModelVisitor> ();
       _memberFromClause.Accept (visitorMock);
       visitorMock.AssertWasCalled (mock => mock.VisitMemberFromClause (_memberFromClause));
     }

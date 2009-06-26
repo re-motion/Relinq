@@ -51,7 +51,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Accept ()
     {
       var mockRepository = new MockRepository();
-      var visitorMock = mockRepository.StrictMock<IQueryVisitor>();
+      var visitorMock = mockRepository.StrictMock<IQueryModelVisitor>();
 
       visitorMock.Expect (mock => mock.VisitSubQueryFromClause (_subQueryFromClause));
 

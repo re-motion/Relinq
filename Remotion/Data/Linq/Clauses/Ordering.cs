@@ -58,7 +58,7 @@ namespace Remotion.Data.Linq.Clauses
 
     public OrderingDirection OrderingDirection { get; set; }
 
-    public virtual void Accept (IQueryVisitor visitor)
+    public virtual void Accept (IQueryModelVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       visitor.VisitOrdering (this);

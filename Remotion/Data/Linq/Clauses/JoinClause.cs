@@ -91,7 +91,7 @@ namespace Remotion.Data.Linq.Clauses
       set { _equalityExpression = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
-    public virtual void Accept (IQueryVisitor visitor)
+    public virtual void Accept (IQueryModelVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       visitor.VisitJoinClause (this);

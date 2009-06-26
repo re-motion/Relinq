@@ -16,9 +16,11 @@
 using System;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.ResultModifications;
+using Rhino.Mocks;
 
 namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
 {

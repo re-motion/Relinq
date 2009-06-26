@@ -13,6 +13,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+using System;
 using System.Linq.Expressions;
 using System.Text;
 using Remotion.Data.Linq.Clauses;
@@ -20,7 +21,7 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.StringBuilding
 {
-  public class StringBuildingQueryVisitor : IQueryVisitor
+  public class StringBuildingQueryVisitor : IQueryModelVisitor
   {
     private readonly StringBuilder _sb = null;
 
@@ -127,6 +128,11 @@ namespace Remotion.Data.Linq.StringBuilding
           _sb.Append (resultModification.ToString ());
         }
       }
+    }
+
+    public void VisitResultModification (ResultModificationBase resultModification)
+    {
+      throw new NotImplementedException();
     }
 
     public void VisitGroupClause (GroupClause groupClause)

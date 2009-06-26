@@ -78,7 +78,7 @@ namespace Remotion.Data.Linq.Clauses
       return DatabaseInfoUtility.GetTableForFromClause (databaseInfo, this);
     }
 
-    public abstract void Accept (IQueryVisitor visitor);
+    public abstract void Accept (IQueryModelVisitor visitor);
     public abstract Type GetQuerySourceType ();
 
     protected void AddClonedJoinClauses (IEnumerable<JoinClause> originalJoinClauses, CloneContext cloneContext)

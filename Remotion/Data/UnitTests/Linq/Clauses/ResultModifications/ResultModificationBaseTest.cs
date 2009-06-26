@@ -13,22 +13,33 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+using System;
+using NUnit.Framework;
+using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.ExecutionStrategies;
+using Rhino.Mocks;
 
-namespace Remotion.Data.Linq
+namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
 {
-  public interface IQueryVisitor
+  [TestFixture]
+  public class ResultModificationBaseTest
   {
-    void VisitQueryModel (QueryModel queryModel);
-    void VisitMainFromClause (MainFromClause fromClause);
-    void VisitAdditionalFromClause (AdditionalFromClause fromClause);
-    void VisitMemberFromClause (MemberFromClause fromClause);
-    void VisitSubQueryFromClause (SubQueryFromClause clause);
-    void VisitJoinClause (JoinClause joinClause);
-    void VisitWhereClause (WhereClause whereClause);
-    void VisitOrderByClause (OrderByClause orderByClause);
-    void VisitOrdering (Ordering ordering);
-    void VisitSelectClause (SelectClause selectClause);
-    void VisitGroupClause (GroupClause groupClause);
+    ResultModificationBase _resultModification;
+
+    [SetUp]
+    public void SetUp ()
+    {
+      _resultModification = new TestResultModification (CollectionExecutionStrategy.Instance);
+    }
+
+    [Test]
+    public void Accept ()
+    {
+      var visitorMock = MockRepository.GenerateMock<IQueryModelVisitor> ();
+      _resultModification.Accept (visitorMock);
+
+      visitorMock.AssertWasCalled (mock => mock.VisitResultModification (_resultModification));
+    }
   }
 }

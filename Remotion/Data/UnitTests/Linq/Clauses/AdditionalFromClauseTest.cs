@@ -70,7 +70,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Accept ()
     {
-      var visitorMock = MockRepository.GenerateMock<IQueryVisitor> ();
+      var visitorMock = MockRepository.GenerateMock<IQueryModelVisitor> ();
       _additionalFromClause.Accept (visitorMock);
       visitorMock.AssertWasCalled (mock => mock.VisitAdditionalFromClause (_additionalFromClause));
     }

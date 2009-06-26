@@ -40,7 +40,7 @@ namespace Remotion.Data.Linq.Clauses
     /// </summary>
     public ObservableCollection<Ordering> Orderings { get; private set; }
 
-    public virtual void Accept (IQueryVisitor visitor)
+    public virtual void Accept (IQueryModelVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       visitor.VisitOrderByClause (this);

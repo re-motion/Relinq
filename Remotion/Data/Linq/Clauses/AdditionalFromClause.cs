@@ -55,7 +55,7 @@ namespace Remotion.Data.Linq.Clauses
       set { _fromExpression = ArgumentUtility.CheckNotNull("value", value); }
     }
 
-    public override void Accept (IQueryVisitor visitor)
+    public override void Accept (IQueryModelVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       visitor.VisitAdditionalFromClause (this);

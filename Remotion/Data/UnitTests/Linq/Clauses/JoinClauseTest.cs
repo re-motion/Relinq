@@ -57,7 +57,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Accept ()
     {
       var repository = new MockRepository ();
-      var visitorMock = repository.StrictMock<IQueryVisitor> ();
+      var visitorMock = repository.StrictMock<IQueryModelVisitor> ();
 
       visitorMock.VisitJoinClause (_joinClause);
 

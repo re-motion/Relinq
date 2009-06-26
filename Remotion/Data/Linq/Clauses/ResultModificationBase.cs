@@ -20,6 +20,10 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses
 {
+  /// <summary>
+  /// Represents an operation that is executed on the result set of the query, aggregating, filtering, or restricting the number of result items
+  /// before the query result is returned.
+  /// </summary>
   public abstract class ResultModificationBase
   {
     protected ResultModificationBase (IExecutionStrategy executionStrategy)
@@ -30,16 +34,6 @@ namespace Remotion.Data.Linq.Clauses
 
     public IExecutionStrategy ExecutionStrategy { get; private set; }
 
-    // TODO MG: Unfinished Refactoring: test, implement, and adapt IQueryVisitor and its implementations
-    public void Accept (IQueryVisitor visitor)
-    {
-      //ArgumentUtility.CheckNotNull ("visitor", visitor);
-      //visitor.VisitResultModifierClause (this);
-      throw new NotImplementedException();
-    }
-
-    public abstract ResultModificationBase Clone (CloneContext cloneContext);
-
     /// <summary>
     /// Executes this result modification in memory, on a given enumeration of items. Executing result modifications in memory should only be 
     /// performed if the target query system does not support the modification.
@@ -47,5 +41,13 @@ namespace Remotion.Data.Linq.Clauses
     /// <returns>An enumerable containing the results of the modiciation. This is either a filtered version of <param name="items"/> or a
     /// new <see cref="IEnumerable"/> containing exactly one value or item, depending on the modification.</returns>
     public abstract IEnumerable ExecuteInMemory<T> (IEnumerable<T> items);
+
+    public abstract ResultModificationBase Clone (CloneContext cloneContext);
+
+    public void Accept (IQueryModelVisitor visitor)
+    {
+      ArgumentUtility.CheckNotNull ("visitor", visitor);
+      visitor.VisitResultModification (this);
+    }
   }
 }
