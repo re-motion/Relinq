@@ -59,7 +59,7 @@ namespace Remotion.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 
-      var newPredicate = CloneExpressionTreeVisitor.ReplaceClauseReferences (Predicate, cloneContext);
+      var newPredicate = ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (Predicate, cloneContext);
       return new WhereClause (newPredicate);
     }
 

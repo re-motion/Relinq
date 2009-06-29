@@ -101,9 +101,9 @@ namespace Remotion.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 
-      var newInExpression = CloneExpressionTreeVisitor.ReplaceClauseReferences (InExpression, cloneContext);
-      var newOnExpression = CloneExpressionTreeVisitor.ReplaceClauseReferences (OnExpression, cloneContext);
-      var newEqualityExpression = CloneExpressionTreeVisitor.ReplaceClauseReferences (EqualityExpression, cloneContext);
+      var newInExpression = ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (InExpression, cloneContext);
+      var newOnExpression = ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (OnExpression, cloneContext);
+      var newEqualityExpression = ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (EqualityExpression, cloneContext);
       return new JoinClause (ItemName, ItemType, newInExpression, newOnExpression, newEqualityExpression);
     }
   }

@@ -59,8 +59,8 @@ namespace Remotion.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 
-      var newGroupExpression = CloneExpressionTreeVisitor.ReplaceClauseReferences (GroupExpression, cloneContext);
-      var newByExpression = CloneExpressionTreeVisitor.ReplaceClauseReferences (ByExpression, cloneContext);
+      var newGroupExpression = ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (GroupExpression, cloneContext);
+      var newByExpression = ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (ByExpression, cloneContext);
       return new GroupClause (newGroupExpression, newByExpression);
     }
 

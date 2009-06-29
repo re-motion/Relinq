@@ -66,7 +66,7 @@ namespace Remotion.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 
-      var newSelector = CloneExpressionTreeVisitor.ReplaceClauseReferences (Selector, cloneContext);
+      var newSelector = ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (Selector, cloneContext);
       var result = new SelectClause (newSelector);
       foreach (var resultModification in ResultModifications)
       {

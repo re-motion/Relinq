@@ -27,19 +27,19 @@ namespace Remotion.Data.Linq.Clauses.ExpressionTreeVisitors
   /// This is used when a <see cref="QueryModel"/> is cloned in order to ensure that all expressions its clauses hold correctly refer to the other
   /// cloned clauses afterwards.
   /// </summary>
-  public class CloneExpressionTreeVisitor : ExpressionTreeVisitor
+  public class ReferenceReplacingExpressionTreeVisitor : ExpressionTreeVisitor
   {
     public static Expression ReplaceClauseReferences (Expression expression, CloneContext cloneContext)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 
-      return new CloneExpressionTreeVisitor (cloneContext).VisitExpression (expression);
+      return new ReferenceReplacingExpressionTreeVisitor (cloneContext).VisitExpression (expression);
     }
 
     private readonly CloneContext _cloneContext;
 
-    private CloneExpressionTreeVisitor (CloneContext cloneContext)
+    private ReferenceReplacingExpressionTreeVisitor (CloneContext cloneContext)
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
       _cloneContext = cloneContext;
@@ -66,6 +66,5 @@ namespace Remotion.Data.Linq.Clauses.ExpressionTreeVisitors
       //ignore
       return expression;
     }
-
   }
 }
