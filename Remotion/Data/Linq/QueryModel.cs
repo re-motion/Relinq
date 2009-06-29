@@ -14,7 +14,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Remotion.Collections;
 using Remotion.Data.Linq.Clauses;
@@ -36,7 +35,6 @@ namespace Remotion.Data.Linq
   /// </remarks>
   public class QueryModel : ICloneable
   {
-    private readonly ObservableCollection<IBodyClause> _bodyClauses = new ObservableCollection<IBodyClause>();
     private readonly UniqueIdentifierGenerator _uniqueIdentifierGenerator;
 
     private MainFromClause _mainFromClause;
@@ -62,8 +60,9 @@ namespace Remotion.Data.Linq
       MainFromClause = mainFromClause;
       SelectOrGroupClause = selectOrGroupClause;
 
-      _bodyClauses.ItemInserted += BodyClauses_Added;
-      _bodyClauses.ItemSet += BodyClauses_Added;
+      BodyClauses = new ObservableCollection<IBodyClause> ();
+      BodyClauses.ItemInserted += BodyClauses_Added;
+      BodyClauses.ItemSet += BodyClauses_Added;
     }
 
     /// <summary>
@@ -105,10 +104,7 @@ namespace Remotion.Data.Linq
     /// filtering (<see cref="WhereClause"/>), ordering (<see cref="OrderByClause"/>), augmenting (<see cref="AdditionalFromClause"/>), or otherwise
     /// processing them before they are passed to the <see cref="SelectOrGroupClause"/>.
     /// </summary>
-    public IList<IBodyClause> BodyClauses
-    {
-      get { return _bodyClauses; }
-    }
+    public ObservableCollection<IBodyClause> BodyClauses { get; private set; }
 
     /// <summary>
     /// Accepts an implementation of <see cref="IQueryModelVisitor"/> or <see cref="QueryModelVisitorBase"/>, as defined by the Visitor pattern.

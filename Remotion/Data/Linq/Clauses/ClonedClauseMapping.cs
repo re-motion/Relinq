@@ -20,7 +20,7 @@ using Remotion.Utilities;
 namespace Remotion.Data.Linq.Clauses
 {
   /// <summary>
-  /// Maps old <see cref="IClause"/> instances to new <see cref="IClause"/> instances. This is used by <see cref="QueryModel.Clone"/>
+  /// Maps old <see cref="IClause"/> instances to new <see cref="IClause"/> instances. This is used by <see cref="QueryModel.Clone()"/>
   /// and the clauses' Clone methods in order to be able to correctly update references to old clauses to point to the new clauses.
   /// </summary>
   public class ClonedClauseMapping
