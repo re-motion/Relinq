@@ -52,7 +52,7 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 
       var clone = new AdditionalFromClause (ItemName, ItemType, FromExpression);
-      clone.TransformExpressions (ex => ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (ex, cloneContext));
+      clone.TransformExpressions (ex => ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (ex, cloneContext.ClauseMapping));
       cloneContext.ClauseMapping.AddMapping (this, new QuerySourceReferenceExpression (clone));
       clone.AddClonedJoinClauses (JoinClauses, cloneContext);
       return clone;

@@ -29,27 +29,27 @@ namespace Remotion.Data.Linq.Clauses.ExpressionTreeVisitors
   /// </summary>
   public class ReferenceReplacingExpressionTreeVisitor : ExpressionTreeVisitor
   {
-    public static Expression ReplaceClauseReferences (Expression expression, CloneContext cloneContext)
+    public static Expression ReplaceClauseReferences (Expression expression, ClauseMapping clauseMapping)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
+      ArgumentUtility.CheckNotNull ("clauseMapping", clauseMapping);
 
-      return new ReferenceReplacingExpressionTreeVisitor (cloneContext).VisitExpression (expression);
+      return new ReferenceReplacingExpressionTreeVisitor (clauseMapping).VisitExpression (expression);
     }
 
-    private readonly CloneContext _cloneContext;
+    private readonly ClauseMapping _clauseMapping;
 
-    private ReferenceReplacingExpressionTreeVisitor (CloneContext cloneContext)
+    private ReferenceReplacingExpressionTreeVisitor (ClauseMapping clauseMapping)
     {
-      ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
-      _cloneContext = cloneContext;
+      ArgumentUtility.CheckNotNull ("clauseMapping", clauseMapping);
+      _clauseMapping = clauseMapping;
     }
 
     protected override Expression VisitQuerySourceReferenceExpression (QuerySourceReferenceExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      var mappedExpression = _cloneContext.ClauseMapping.GetExpression (expression.ReferencedClause);
+      var mappedExpression = _clauseMapping.GetExpression (expression.ReferencedClause);
       return mappedExpression;
     }
 
@@ -57,7 +57,7 @@ namespace Remotion.Data.Linq.Clauses.ExpressionTreeVisitors
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       
-      var clonedQueryModel = expression.QueryModel.Clone (_cloneContext.ClauseMapping);
+      var clonedQueryModel = expression.QueryModel.Clone (_clauseMapping);
       return new SubQueryExpression (clonedQueryModel);
     }
 
