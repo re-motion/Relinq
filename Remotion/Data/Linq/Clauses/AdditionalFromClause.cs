@@ -51,11 +51,11 @@ namespace Remotion.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 
-      var newFromExpression = ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (FromExpression, cloneContext);
-      var result = new AdditionalFromClause (ItemName, ItemType, newFromExpression);
-      cloneContext.ClauseMapping.AddMapping (this, new QuerySourceReferenceExpression(result));
-      result.AddClonedJoinClauses (JoinClauses, cloneContext);
-      return result;
+      var clone = new AdditionalFromClause (ItemName, ItemType, FromExpression);
+      clone.TransformExpressions (ex => ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (ex, cloneContext));
+      cloneContext.ClauseMapping.AddMapping (this, new QuerySourceReferenceExpression (clone));
+      clone.AddClonedJoinClauses (JoinClauses, cloneContext);
+      return clone;
     }
 
     IBodyClause IBodyClause.Clone (CloneContext cloneContext)

@@ -110,6 +110,12 @@ namespace Remotion.Data.Linq.Clauses
       return DatabaseInfoUtility.GetTableForFromClause (databaseInfo, this);
     }
 
+    public void TransformExpressions (Func<Expression, Expression> transformation)
+    {
+      ArgumentUtility.CheckNotNull ("transformation", transformation);
+      FromExpression = transformation (FromExpression);
+    }
+
     protected void AddClonedJoinClauses (IEnumerable<JoinClause> originalJoinClauses, CloneContext cloneContext)
     {
       ArgumentUtility.CheckNotNull ("originalJoinClauses", originalJoinClauses);

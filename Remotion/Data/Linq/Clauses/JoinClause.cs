@@ -101,10 +101,17 @@ namespace Remotion.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 
-      var newInExpression = ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (InExpression, cloneContext);
-      var newOnExpression = ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (OnExpression, cloneContext);
-      var newEqualityExpression = ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (EqualityExpression, cloneContext);
-      return new JoinClause (ItemName, ItemType, newInExpression, newOnExpression, newEqualityExpression);
+      var clone = new JoinClause (ItemName, ItemType, InExpression, OnExpression, EqualityExpression);
+      clone.TransformExpressions (ex => ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (ex, cloneContext));
+      return clone;
+    }
+
+    public void TransformExpressions (Func<Expression, Expression> transformation)
+    {
+      ArgumentUtility.CheckNotNull ("transformation", transformation);
+      InExpression = transformation (InExpression);
+      OnExpression = transformation (OnExpression);
+      EqualityExpression = transformation (EqualityExpression);
     }
   }
 }

@@ -93,16 +93,32 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone_AdjustsExpressions ()
     {
-      var mainFromClause = ExpressionHelper.CreateMainFromClause();
-      var predicate = new QuerySourceReferenceExpression (mainFromClause);
+      var oldReferencedClause = ExpressionHelper.CreateMainFromClause();
+      var predicate = new QuerySourceReferenceExpression (oldReferencedClause);
       var whereClause = new WhereClause (predicate);
 
-      var newMainFromClause = ExpressionHelper.CreateMainFromClause ();
-      _cloneContext.ClauseMapping.AddMapping (mainFromClause, new QuerySourceReferenceExpression(newMainFromClause));
+      var newReferencedClause = ExpressionHelper.CreateMainFromClause ();
+      _cloneContext.ClauseMapping.AddMapping (oldReferencedClause, new QuerySourceReferenceExpression(newReferencedClause));
 
       var clone = whereClause.Clone (_cloneContext);
 
-      Assert.That (((QuerySourceReferenceExpression) clone.Predicate).ReferencedClause, Is.SameAs (newMainFromClause));
+      Assert.That (((QuerySourceReferenceExpression) clone.Predicate).ReferencedClause, Is.SameAs (newReferencedClause));
+    }
+
+    [Test]
+    public void TransformExpressions ()
+    {
+      var oldExpression = ExpressionHelper.CreateExpression ();
+      var newExpression = ExpressionHelper.CreateExpression ();
+      var clause = new WhereClause (oldExpression);
+
+      clause.TransformExpressions (ex =>
+          {
+            Assert.That (ex, Is.SameAs (oldExpression));
+            return newExpression;
+          });
+
+      Assert.That (clause.Predicate, Is.SameAs (newExpression));
     }
   }
 }

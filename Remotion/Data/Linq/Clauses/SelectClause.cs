@@ -66,8 +66,8 @@ namespace Remotion.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 
-      var newSelector = ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (Selector, cloneContext);
-      var result = new SelectClause (newSelector);
+      var result = new SelectClause (Selector);
+      result.TransformExpressions (ex => ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (ex, cloneContext));
       foreach (var resultModification in ResultModifications)
       {
         var resultModificationClone = resultModification.Clone (cloneContext);
@@ -93,6 +93,12 @@ namespace Remotion.Data.Linq.Clauses
     private void ResultModifications_ItemAdded (object sender, ObservableCollectionChangedEventArgs<ResultModificationBase> e)
     {
       ArgumentUtility.CheckNotNull ("e.Item", e.Item);
-    }    
+    }
+
+    public void TransformExpressions (Func<Expression, Expression> transformation)
+    {
+      ArgumentUtility.CheckNotNull ("transformation", transformation);
+      Selector = transformation (Selector);
+    }
   }
 }

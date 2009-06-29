@@ -162,6 +162,22 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
+    public void TransformExpressions ()
+    {
+      var oldExpression = ExpressionHelper.CreateExpression ();
+      var newExpression = ExpressionHelper.CreateExpression ();
+      var clause = new SelectClause (oldExpression);
+
+      clause.TransformExpressions (ex =>
+      {
+        Assert.That (ex, Is.SameAs (oldExpression));
+        return newExpression;
+      });
+
+      Assert.That (clause.Selector, Is.SameAs (newExpression));
+    }
+
+    [Test]
     public void GetExecutionStrategy_WithoutResultModifiers ()
     {
       Assert.That (_selectClause.GetExecutionStrategy (), Is.SameAs (CollectionExecutionStrategy.Instance));

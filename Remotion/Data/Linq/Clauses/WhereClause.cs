@@ -55,12 +55,19 @@ namespace Remotion.Data.Linq.Clauses
       visitor.VisitWhereClause (this);
     }
 
+    public void TransformExpressions (Func<Expression, Expression> transformation)
+    {
+      ArgumentUtility.CheckNotNull ("transformation", transformation);
+      Predicate = transformation (Predicate);
+    }
+
     public WhereClause Clone (CloneContext cloneContext)
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 
-      var newPredicate = ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (Predicate, cloneContext);
-      return new WhereClause (newPredicate);
+      var clone = new WhereClause (Predicate);
+      clone.TransformExpressions (ex => ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (ex, cloneContext));
+      return clone;
     }
 
     IBodyClause IBodyClause.Clone (CloneContext cloneContext)

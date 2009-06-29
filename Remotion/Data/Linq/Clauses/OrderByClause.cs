@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Linq.Expressions;
 using Remotion.Collections;
 using Remotion.Utilities;
 
@@ -45,7 +46,12 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       visitor.VisitOrderByClause (this);
     }
-    
+
+    public void TransformExpressions (Func<Expression, Expression> transformation)
+    {
+      // nothing to do, this clause has no expressions
+    }
+
     public OrderByClause Clone (CloneContext cloneContext)
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);

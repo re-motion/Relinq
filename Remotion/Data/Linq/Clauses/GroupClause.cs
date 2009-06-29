@@ -59,9 +59,9 @@ namespace Remotion.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 
-      var newGroupExpression = ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (GroupExpression, cloneContext);
-      var newByExpression = ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (ByExpression, cloneContext);
-      return new GroupClause (newGroupExpression, newByExpression);
+      var clone = new GroupClause (GroupExpression, ByExpression);
+      clone.TransformExpressions (ex => ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (ex, cloneContext));
+      return clone;
     }
 
     public IExecutionStrategy GetExecutionStrategy ()
@@ -72,6 +72,14 @@ namespace Remotion.Data.Linq.Clauses
     ISelectGroupClause ISelectGroupClause.Clone (CloneContext cloneContext)
     {
       return Clone (cloneContext);
+    }
+
+    public void TransformExpressions (Func<Expression, Expression> transformation)
+    {
+      ArgumentUtility.CheckNotNull ("transformation", transformation);
+
+      GroupExpression = transformation (GroupExpression);
+      ByExpression = transformation (ByExpression);
     }
   }
 }

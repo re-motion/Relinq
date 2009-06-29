@@ -123,6 +123,5 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clone.Orderings[0].Expression, Is.SameAs (_orderByClause.Orderings[0].Expression));
       Assert.That (clone.Orderings[0].OrderingDirection, Is.EqualTo (_orderByClause.Orderings[0].OrderingDirection));
     }
-
   }
 }

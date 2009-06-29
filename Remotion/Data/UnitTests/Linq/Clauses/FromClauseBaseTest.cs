@@ -88,5 +88,21 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       fromClause.JoinClauses.Add (joinClause);
       fromClause.JoinClauses[0] = null;
     }
+
+    [Test]
+    public void TransformExpressions ()
+    {
+      var oldExpression = ExpressionHelper.CreateExpression ();
+      var newExpression = ExpressionHelper.CreateExpression ();
+      var clause = new MainFromClause ("x", typeof (Student), oldExpression);
+
+      clause.TransformExpressions (ex =>
+      {
+        Assert.That (ex, Is.SameAs (oldExpression));
+        return newExpression;
+      });
+
+      Assert.That (clause.FromExpression, Is.SameAs (newExpression));
+    }
   }
 }

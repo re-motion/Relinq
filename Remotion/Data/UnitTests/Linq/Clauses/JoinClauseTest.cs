@@ -106,5 +106,36 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (((QuerySourceReferenceExpression) clone.EqualityExpression).ReferencedClause, Is.SameAs (newReferencedExpression));
     }
 
+    [Test]
+    public void TransformExpressions ()
+    {
+      var oldInExpression = ExpressionHelper.CreateExpression ();
+      var oldOnExpression = ExpressionHelper.CreateExpression ();
+      var oldEqualityExpression = ExpressionHelper.CreateExpression ();
+      var newInExpression = ExpressionHelper.CreateExpression ();
+      var newOnExpression = ExpressionHelper.CreateExpression ();
+      var newEqualityExpression = ExpressionHelper.CreateExpression ();
+
+      var clause = new JoinClause ("x", typeof (Student), oldInExpression, oldOnExpression, oldEqualityExpression);
+
+      clause.TransformExpressions (ex =>
+          {
+            if (ex == oldInExpression)
+              return newInExpression;
+            else if (ex == oldOnExpression)
+              return newOnExpression;
+            else if (ex == oldEqualityExpression)
+              return newEqualityExpression;
+            else
+            {
+              Assert.Fail();
+              return null;
+            }
+          });
+
+      Assert.That (clause.InExpression, Is.SameAs (newInExpression));
+      Assert.That (clause.OnExpression, Is.SameAs (newOnExpression));
+      Assert.That (clause.EqualityExpression, Is.SameAs (newEqualityExpression));
+    }
   }
 }

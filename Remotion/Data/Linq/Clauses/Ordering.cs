@@ -68,8 +68,15 @@ namespace Remotion.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 
-      var newExpression = ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (Expression, cloneContext);
-      return new Ordering (newExpression, OrderingDirection);
+      var clone = new Ordering (Expression, OrderingDirection);
+      clone.TransformExpressions (ex => ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (ex, cloneContext));
+      return clone;
+    }
+
+    public void TransformExpressions (Func<Expression, Expression> transformation)
+    {
+      ArgumentUtility.CheckNotNull ("transformation", transformation);
+      Expression = transformation (Expression);
     }
   }
 }

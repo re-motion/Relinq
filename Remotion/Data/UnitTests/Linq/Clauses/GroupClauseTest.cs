@@ -109,5 +109,31 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       var clone = ((ISelectGroupClause) _groupClause).Clone (_cloneContext);
       Assert.That (((GroupClause) clone).GroupExpression, Is.SameAs (newReferenceExpression));
     }
+
+    [Test]
+    public void TransformExpressions ()
+    {
+      var oldGroupExpression = ExpressionHelper.CreateExpression ();
+      var oldByExpression = ExpressionHelper.CreateExpression ();
+      var newGroupExpression = ExpressionHelper.CreateExpression ();
+      var newByExpression = ExpressionHelper.CreateExpression ();
+      var clause = new GroupClause (oldGroupExpression, oldByExpression);
+
+      clause.TransformExpressions (ex =>
+          {
+            if (ex == oldGroupExpression)
+              return newGroupExpression;
+            else if (ex == oldByExpression)
+              return newByExpression;
+            else
+            {
+              Assert.Fail();
+              return null;
+            }
+          });
+
+      Assert.That (clause.GroupExpression, Is.SameAs (newGroupExpression));
+      Assert.That (clause.ByExpression, Is.SameAs (newByExpression));
+    }
   }
 }
