@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
+using Remotion.Collections;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Utilities;
 
@@ -96,7 +97,7 @@ namespace Remotion.Data.Linq.StringBuilding
       base.VisitSelectClause (selectClause);
     }
 
-    protected override void VisitResultModifications (SelectClause selectClause, IList<ResultModificationBase> resultModifications)
+    protected override void VisitResultModifications (SelectClause selectClause, ObservableCollection<ResultModificationBase> resultModifications)
     {
       ArgumentUtility.CheckNotNull ("resultModifications", resultModifications);
 

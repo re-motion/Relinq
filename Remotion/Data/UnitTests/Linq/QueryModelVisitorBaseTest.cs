@@ -171,6 +171,33 @@ namespace Remotion.Data.UnitTests.Linq
     }
 
     [Test]
+    public void VisitBodyClauses_WithChangingCollection ()
+    {
+      var queryModel = ExpressionHelper.CreateQueryModel ();
+      var bodyClause1 = ExpressionHelper.CreateWhereClause ();
+      var bodyClause2 = ExpressionHelper.CreateWhereClause ();
+      queryModel.BodyClauses.Add (bodyClause1);
+      queryModel.BodyClauses.Add (bodyClause2);
+
+      using (_mockRepository.Ordered ())
+      {
+        _visitorMock
+            .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitBodyClauses", queryModel, queryModel.BodyClauses))
+            .CallOriginalMethod (OriginalCallOptions.CreateExpectation);
+        _visitorMock
+            .Expect (mock => mock.VisitWhereClause (bodyClause1)).WhenCalled (mi => queryModel.BodyClauses.RemoveAt (0));
+        _visitorMock
+            .Expect (mock => mock.VisitWhereClause (bodyClause2));
+      }
+
+      _mockRepository.ReplayAll ();
+
+      PrivateInvoke.InvokeNonPublicMethod (_visitorMock, "VisitBodyClauses", queryModel, queryModel.BodyClauses);
+
+      _mockRepository.VerifyAll ();
+    }
+
+    [Test]
     public void VisitJoinClauses ()
     {
       var mainFromClause = ExpressionHelper.CreateMainFromClause ();
@@ -207,6 +234,33 @@ namespace Remotion.Data.UnitTests.Linq
     }
 
     [Test]
+    public void VisitJoinClauses_WithChangingCollection ()
+    {
+      var fromClause = ExpressionHelper.CreateMainFromClause ();
+      var joinClause1 = ExpressionHelper.CreateJoinClause ();
+      var joinClause2 = ExpressionHelper.CreateJoinClause ();
+      fromClause.JoinClauses.Add (joinClause1);
+      fromClause.JoinClauses.Add (joinClause2);
+
+      using (_mockRepository.Ordered ())
+      {
+        _visitorMock
+            .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitJoinClauses", fromClause, fromClause.JoinClauses))
+            .CallOriginalMethod (OriginalCallOptions.CreateExpectation);
+        _visitorMock
+            .Expect (mock => mock.VisitJoinClause (joinClause1)).WhenCalled (mi => fromClause.JoinClauses.RemoveAt (0));
+        _visitorMock
+            .Expect (mock => mock.VisitJoinClause (joinClause2));
+      }
+
+      _mockRepository.ReplayAll ();
+
+      PrivateInvoke.InvokeNonPublicMethod (_visitorMock, "VisitJoinClauses", fromClause, fromClause.JoinClauses);
+
+      _mockRepository.VerifyAll ();
+    }
+
+    [Test]
     public void VisitOrderings ()
     {
       var orderByClause = ExpressionHelper.CreateOrderByClause ();
@@ -224,6 +278,33 @@ namespace Remotion.Data.UnitTests.Linq
             .CallOriginalMethod (OriginalCallOptions.CreateExpectation);
         orderingMock1.Expect (mock => mock.Accept (_visitorMock));
         orderingMock2.Expect (mock => mock.Accept (_visitorMock));
+      }
+
+      _mockRepository.ReplayAll ();
+
+      PrivateInvoke.InvokeNonPublicMethod (_visitorMock, "VisitOrderings", orderByClause, orderByClause.Orderings);
+
+      _mockRepository.VerifyAll ();
+    }
+
+    [Test]
+    public void VisitOrderings_WithChangingCollection ()
+    {
+      var orderByClause = ExpressionHelper.CreateOrderByClause ();
+      var ordering1 = ExpressionHelper.CreateOrdering ();
+      var ordering2 = ExpressionHelper.CreateOrdering ();
+      orderByClause.Orderings.Add (ordering1);
+      orderByClause.Orderings.Add (ordering2);
+     
+      using (_mockRepository.Ordered ())
+      {
+        _visitorMock
+            .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitOrderings", orderByClause, orderByClause.Orderings))
+            .CallOriginalMethod (OriginalCallOptions.CreateExpectation);
+        _visitorMock
+            .Expect (mock => mock.VisitOrdering (ordering1)).WhenCalled (mi => orderByClause.Orderings.RemoveAt(0));
+        _visitorMock
+            .Expect (mock => mock.VisitOrdering(ordering2));
       }
 
       _mockRepository.ReplayAll ();
@@ -259,6 +340,34 @@ namespace Remotion.Data.UnitTests.Linq
 
       _mockRepository.VerifyAll ();
     }
+
+    [Test]
+    public void VisitResultModifications_WithChangingCollection ()
+    {
+      var selectClause = ExpressionHelper.CreateSelectClause ();
+      var resultModification1 = ExpressionHelper.CreateResultModification ();
+      var resultModification2 = ExpressionHelper.CreateResultModification ();
+      selectClause.ResultModifications.Add (resultModification1);
+      selectClause.ResultModifications.Add (resultModification2);
+      
+      using (_mockRepository.Ordered ())
+      {
+        _visitorMock
+            .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitResultModifications", selectClause, selectClause.ResultModifications))
+            .CallOriginalMethod (OriginalCallOptions.CreateExpectation);
+        _visitorMock
+            .Expect (mock => mock.VisitResultModification (resultModification1)).WhenCalled (mi => selectClause.ResultModifications.RemoveAt (0));
+        _visitorMock
+            .Expect (mock => mock.VisitResultModification (resultModification2));
+      }
+
+      _mockRepository.ReplayAll ();
+
+      PrivateInvoke.InvokeNonPublicMethod (_visitorMock, "VisitResultModifications", selectClause, selectClause.ResultModifications);
+
+      _mockRepository.VerifyAll ();
+    }
+
 
   }
 }

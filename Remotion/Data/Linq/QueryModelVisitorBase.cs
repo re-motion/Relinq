@@ -15,6 +15,7 @@
 // 
 using System;
 using System.Collections.Generic;
+using Remotion.Collections;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Utilities;
 
@@ -86,27 +87,27 @@ namespace Remotion.Data.Linq
       // nothing to do here
     }
 
-    protected virtual void VisitBodyClauses (QueryModel queryModel, IList<IBodyClause> bodyClauses)
+    protected virtual void VisitBodyClauses (QueryModel queryModel, ObservableCollection<IBodyClause> bodyClauses)
     {
-      foreach (var bodyClause in queryModel.BodyClauses)
+      foreach (var bodyClause in queryModel.BodyClauses.AsChangeResistantEnumerable())
         bodyClause.Accept (this);
     }
 
-    protected virtual void VisitJoinClauses (FromClauseBase fromClause, IList<JoinClause> joinClauses)
+    protected virtual void VisitJoinClauses (FromClauseBase fromClause, ObservableCollection<JoinClause> joinClauses)
     {
-      foreach (var joinClause in joinClauses)
+      foreach (var joinClause in joinClauses.AsChangeResistantEnumerable())
         joinClause.Accept (this);
     }
 
-    protected virtual void VisitOrderings (OrderByClause orderByClause, IList<Ordering> orderings)
+    protected virtual void VisitOrderings (OrderByClause orderByClause, ObservableCollection<Ordering> orderings)
     {
-      foreach (var ordering in orderings)
+      foreach (var ordering in orderings.AsChangeResistantEnumerable())
         ordering.Accept (this);
     }
 
-    protected virtual void VisitResultModifications (SelectClause selectClause, IList<ResultModificationBase> resultModifications)
+    protected virtual void VisitResultModifications (SelectClause selectClause, ObservableCollection<ResultModificationBase> resultModifications)
     {
-      foreach (var resultModification in resultModifications)
+      foreach (var resultModification in resultModifications.AsChangeResistantEnumerable())
         resultModification.Accept (this);
     }
   }
