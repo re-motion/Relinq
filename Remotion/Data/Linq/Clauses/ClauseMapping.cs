@@ -15,17 +15,18 @@
 // 
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses
 {
   /// <summary>
-  /// Maps old <see cref="IClause"/> instances to new <see cref="IClause"/> instances. This is used by <see cref="QueryModel.Clone()"/>
+  /// Maps <see cref="IClause"/> instances to <see cref="Expression"/> instances. This is used by <see cref="QueryModel.Clone()"/>
   /// and the clauses' Clone methods in order to be able to correctly update references to old clauses to point to the new clauses.
   /// </summary>
   public class ClauseMapping
   {
-    private readonly Dictionary<IClause, IClause> _lookup = new Dictionary<IClause, IClause> ();
+    private readonly Dictionary<IClause, Expression> _lookup = new Dictionary<IClause, Expression> ();
 
     public bool ContainsMapping (IClause clause)
     {
@@ -33,63 +34,44 @@ namespace Remotion.Data.Linq.Clauses
       return _lookup.ContainsKey (clause);
     }
 
-    public void AddMapping (IClause oldClause, IClause newClause)
+    public void AddMapping (IClause clause, Expression expression)
     {
-      ArgumentUtility.CheckNotNull ("oldClause", oldClause);
-      ArgumentUtility.CheckNotNull ("newClause", newClause);
+      ArgumentUtility.CheckNotNull ("clause", clause);
+      ArgumentUtility.CheckNotNull ("expression", expression);
 
       try
       {
-        _lookup.Add (oldClause, newClause);
+        _lookup.Add (clause, expression);
       }
       catch (ArgumentException)
       {
-        throw new InvalidOperationException ("Clause has already been associated with a new clause.");
+        throw new InvalidOperationException ("Clause has already been associated with an expression.");
       }
     }
 
-    public void ReplaceMapping (IClause oldClause, IClause newClause)
+    public void ReplaceMapping (IClause clause, Expression expression)
     {
-      ArgumentUtility.CheckNotNull ("oldClause", oldClause);
-      ArgumentUtility.CheckNotNull ("newClause", newClause);
+      ArgumentUtility.CheckNotNull ("clause", clause);
+      ArgumentUtility.CheckNotNull ("expression", expression);
 
-      if (!ContainsMapping (oldClause))
-        throw new InvalidOperationException ("Clause has not been associated with a clause, cannot replace its mapping.");
+      if (!ContainsMapping (clause))
+        throw new InvalidOperationException ("Clause has not been associated with an expression, cannot replace its mapping.");
 
-      _lookup[oldClause] = newClause;
+      _lookup[clause] = expression;
     }
 
-    public IClause GetClause (IClause oldClause)
+    public Expression GetExpression (IClause clause)
     {
-      ArgumentUtility.CheckNotNull ("oldClause", oldClause);
+      ArgumentUtility.CheckNotNull ("clause", clause);
       try
       {
-        return _lookup[oldClause];
+        return _lookup[clause];
       }
       catch (KeyNotFoundException)
       {
-        throw new KeyNotFoundException ("Clause has not been associated with a new clause.");
+        throw new KeyNotFoundException ("Clause has not been associated with an expression.");
       }
     }
 
-    public T GetClause<T> (IClause clause) where T : class, IClause
-    {
-      ArgumentUtility.CheckNotNull ("clause", clause);
-
-      var mappedClause = GetClause (clause);
-
-      var castClause = mappedClause as T;
-      if (castClause == null)
-      {
-        var message = string.Format (
-            "Expected a {0} as the mapped clone of the given {1}, but a {2} was registered.",
-            typeof (T).Name,
-            clause.GetType().Name,
-            mappedClause.GetType().Name);
-        throw new InvalidOperationException (message);
-      }
-
-      return castClause;
-    }
   }
 }

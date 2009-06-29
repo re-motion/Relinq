@@ -61,9 +61,7 @@ namespace Remotion.Data.Linq.Clauses
 
       var newGroupExpression = CloneExpressionTreeVisitor.ReplaceClauseReferences (GroupExpression, cloneContext);
       var newByExpression = CloneExpressionTreeVisitor.ReplaceClauseReferences (ByExpression, cloneContext);
-      var result = new GroupClause (newGroupExpression, newByExpression);
-      cloneContext.ClauseMapping.AddMapping (this, result);
-      return result;
+      return new GroupClause (newGroupExpression, newByExpression);
     }
 
     public IExecutionStrategy GetExecutionStrategy ()

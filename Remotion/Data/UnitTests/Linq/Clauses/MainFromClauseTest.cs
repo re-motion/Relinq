@@ -100,7 +100,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       var mainFromClause = new MainFromClause ("s", typeof (Student), querySource);
 
       var newReferencedClause = ExpressionHelper.CreateMainFromClause ();
-      _cloneContext.ClauseMapping.AddMapping (oldReferencedClause, newReferencedClause);
+      _cloneContext.ClauseMapping.AddMapping (oldReferencedClause, new QuerySourceReferenceExpression(newReferencedClause));
 
       var clone = mainFromClause.Clone (_cloneContext);
 
@@ -141,7 +141,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       _mainFromClause.JoinClauses.Add (originalJoinClause);
 
       var newFromClause = ExpressionHelper.CreateMainFromClause ();
-      _cloneContext.ClauseMapping.AddMapping (oldFromClause, newFromClause);
+      _cloneContext.ClauseMapping.AddMapping (oldFromClause, new QuerySourceReferenceExpression(newFromClause));
 
       var clone = _mainFromClause.Clone (_cloneContext);
       Assert.That (((QuerySourceReferenceExpression) clone.JoinClauses[0].InExpression).ReferencedClause, Is.SameAs (newFromClause));
@@ -151,7 +151,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Clone_AddsClauseToMapping ()
     {
       var clone = _mainFromClause.Clone (_cloneContext);
-      Assert.That (_cloneContext.ClauseMapping.GetClause (_mainFromClause), Is.SameAs (clone));
+      Assert.That (((QuerySourceReferenceExpression) _cloneContext.ClauseMapping.GetExpression (_mainFromClause)).ReferencedClause, Is.SameAs (clone));
     }
   }
 }

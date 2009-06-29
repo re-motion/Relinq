@@ -103,30 +103,29 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone_ViaInterface_PassesMapping ()
     {
-      var clone = ((ISelectGroupClause) _selectClause).Clone (_cloneContext);
-      Assert.That (_cloneContext.ClauseMapping.GetClause (_selectClause), Is.SameAs (clone));
-    }
+      var fromClause = ExpressionHelper.CreateMainFromClause ();
+      _selectClause.Selector = new QuerySourceReferenceExpression (fromClause);
 
-    [Test]
-    public void Clone_AddsClauseToMapping ()
-    {
-      var clone = _selectClause.Clone (_cloneContext);
-      Assert.That (_cloneContext.ClauseMapping.GetClause (_selectClause), Is.SameAs (clone));
+      var newReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause ());
+      _cloneContext.ClauseMapping.AddMapping (fromClause, newReferenceExpression);
+
+      var clone = ((ISelectGroupClause) _selectClause).Clone (_cloneContext);
+      Assert.That (((SelectClause) clone).Selector, Is.SameAs (newReferenceExpression));
     }
 
     [Test]
     public void Clone_AdjustsExpressions ()
     {
-      var mainFromClause = ExpressionHelper.CreateMainFromClause();
-      var selector = new QuerySourceReferenceExpression (mainFromClause);
+      var oldReferencedExpression = ExpressionHelper.CreateMainFromClause();
+      var selector = new QuerySourceReferenceExpression (oldReferencedExpression);
       var selectClause = new SelectClause (selector);
 
-      var newMainFromClause = ExpressionHelper.CreateMainFromClause ();
-      _cloneContext.ClauseMapping.AddMapping (mainFromClause, newMainFromClause);
+      var newReferencedExpression = ExpressionHelper.CreateMainFromClause ();
+      _cloneContext.ClauseMapping.AddMapping (oldReferencedExpression, new QuerySourceReferenceExpression (newReferencedExpression));
 
       var clone = selectClause.Clone (_cloneContext);
 
-      Assert.That (((QuerySourceReferenceExpression) clone.Selector).ReferencedClause, Is.SameAs (newMainFromClause));
+      Assert.That (((QuerySourceReferenceExpression) clone.Selector).ReferencedClause, Is.SameAs (newReferencedExpression));
     }
 
     [Test]

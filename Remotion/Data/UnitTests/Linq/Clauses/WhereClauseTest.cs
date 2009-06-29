@@ -80,15 +80,14 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone_ViaInterface_PassesMapping ()
     {
-      var clone = ((IBodyClause) _whereClause).Clone (_cloneContext);
-      Assert.That (_cloneContext.ClauseMapping.GetClause (_whereClause), Is.SameAs (clone));
-    }
+      var fromClause = ExpressionHelper.CreateMainFromClause ();
+      _whereClause.Predicate = new QuerySourceReferenceExpression (fromClause);
 
-    [Test]
-    public void Clone_AddsClauseToMapping ()
-    {
-      var clone = _whereClause.Clone (_cloneContext);
-      Assert.That (_cloneContext.ClauseMapping.GetClause (_whereClause), Is.SameAs (clone));
+      var newReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause ());
+      _cloneContext.ClauseMapping.AddMapping (fromClause, newReferenceExpression);
+
+      var clone = ((IBodyClause) _whereClause).Clone (_cloneContext);
+      Assert.That (((WhereClause) clone).Predicate, Is.SameAs (newReferenceExpression));
     }
 
     [Test]
@@ -99,7 +98,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       var whereClause = new WhereClause (predicate);
 
       var newMainFromClause = ExpressionHelper.CreateMainFromClause ();
-      _cloneContext.ClauseMapping.AddMapping (mainFromClause, newMainFromClause);
+      _cloneContext.ClauseMapping.AddMapping (mainFromClause, new QuerySourceReferenceExpression(newMainFromClause));
 
       var clone = whereClause.Clone (_cloneContext);
 

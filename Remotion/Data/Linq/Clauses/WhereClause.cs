@@ -60,9 +60,7 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 
       var newPredicate = CloneExpressionTreeVisitor.ReplaceClauseReferences (Predicate, cloneContext);
-      var result = new WhereClause (newPredicate);
-      cloneContext.ClauseMapping.AddMapping (this, result);
-      return result;
+      return new WhereClause (newPredicate);
     }
 
     IBodyClause IBodyClause.Clone (CloneContext cloneContext)

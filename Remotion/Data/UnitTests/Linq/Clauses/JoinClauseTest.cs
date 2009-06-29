@@ -97,7 +97,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
           equalityExpression);
 
       var newReferencedExpression = ExpressionHelper.CreateMainFromClause ();
-      _cloneContext.ClauseMapping.AddMapping (referencedExpression, newReferencedExpression);
+      _cloneContext.ClauseMapping.AddMapping (referencedExpression, new QuerySourceReferenceExpression(newReferencedExpression));
 
       var clone = joinClause.Clone (_cloneContext);
 
@@ -106,11 +106,5 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (((QuerySourceReferenceExpression) clone.EqualityExpression).ReferencedClause, Is.SameAs (newReferencedExpression));
     }
 
-    [Test]
-    public void Clone_AddsClauseToMapping ()
-    {
-      var clone = _joinClause.Clone (_cloneContext);
-      Assert.That (_cloneContext.ClauseMapping.GetClause (_joinClause), Is.SameAs (clone));
-    }
   }
 }

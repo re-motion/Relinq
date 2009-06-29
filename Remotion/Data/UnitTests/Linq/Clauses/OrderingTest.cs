@@ -95,7 +95,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       var whereClause = new Ordering (expression, OrderingDirection.Asc);
 
       var newMainFromClause = ExpressionHelper.CreateMainFromClause ();
-      _cloneContext.ClauseMapping.AddMapping (mainFromClause, newMainFromClause);
+      _cloneContext.ClauseMapping.AddMapping (mainFromClause, new QuerySourceReferenceExpression(newMainFromClause));
 
       var clone = whereClause.Clone (_cloneContext);
 

@@ -14,8 +14,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Linq;
-using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
@@ -88,7 +86,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
           fromExpression);
 
       var newReferencedClause = ExpressionHelper.CreateMainFromClause ();
-      _cloneContext.ClauseMapping.AddMapping (referencedClause, newReferencedClause);
+      _cloneContext.ClauseMapping.AddMapping (referencedClause, new QuerySourceReferenceExpression(newReferencedClause));
 
       var clone = additionalFromClause.Clone (_cloneContext);
 
@@ -98,8 +96,14 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone_ViaInterface_PassesMapping ()
     {
+      var fromClause = ExpressionHelper.CreateMainFromClause ();
+      _additionalFromClause.FromExpression = new QuerySourceReferenceExpression (fromClause);
+
+      var newReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause ());
+      _cloneContext.ClauseMapping.AddMapping (fromClause, newReferenceExpression);
+
       var clone = ((IBodyClause) _additionalFromClause).Clone (_cloneContext);
-      Assert.That (_cloneContext.ClauseMapping.GetClause (_additionalFromClause), Is.SameAs (clone));
+      Assert.That (((AdditionalFromClause) clone).FromExpression, Is.SameAs (newReferenceExpression));
     }
 
     [Test]
@@ -136,7 +140,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       _additionalFromClause.JoinClauses.Add (originalJoinClause);
 
       var newFromClause = ExpressionHelper.CreateMainFromClause ();
-      _cloneContext.ClauseMapping.AddMapping (oldFromClause, newFromClause);
+      _cloneContext.ClauseMapping.AddMapping (oldFromClause, new QuerySourceReferenceExpression(newFromClause));
 
       var clone = _additionalFromClause.Clone (_cloneContext);
       Assert.That (((QuerySourceReferenceExpression) clone.JoinClauses[0].InExpression).ReferencedClause, Is.SameAs (newFromClause));
@@ -146,7 +150,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Clone_AddsClauseToMapping ()
     {
       var clone = _additionalFromClause.Clone (_cloneContext);
-      Assert.That (_cloneContext.ClauseMapping.GetClause (_additionalFromClause), Is.SameAs (clone));
+      Assert.That (((QuerySourceReferenceExpression) _cloneContext.ClauseMapping.GetExpression (_additionalFromClause)).ReferencedClause,
+          Is.SameAs (clone));
     }
   }
 }

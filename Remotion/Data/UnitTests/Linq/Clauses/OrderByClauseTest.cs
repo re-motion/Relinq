@@ -97,10 +97,16 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
-    public void Clone_ViaInterface_PassesMapping ()
+    public void Clone_ViaInterface_PassesMappingToOrderings ()
     {
+      var fromClause = ExpressionHelper.CreateMainFromClause ();
+      _orderByClause.Orderings.Add (new Ordering (new QuerySourceReferenceExpression (fromClause), OrderingDirection.Asc));
+
+      var newReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause ());
+      _cloneContext.ClauseMapping.AddMapping (fromClause, newReferenceExpression);
+
       var clone = ((IBodyClause) _orderByClause).Clone (_cloneContext);
-      Assert.That (_cloneContext.ClauseMapping.GetClause (_orderByClause), Is.SameAs (clone));
+      Assert.That (((OrderByClause) clone).Orderings[0].Expression, Is.SameAs (newReferenceExpression));
     }
 
     [Test]
@@ -118,28 +124,5 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clone.Orderings[0].OrderingDirection, Is.EqualTo (_orderByClause.Orderings[0].OrderingDirection));
     }
 
-    [Test]
-    public void Clone_Orderings_PassesMapping ()
-    {
-      var newReferencedClause = ExpressionHelper.CreateMainFromClause ();
-
-      var oldReferencedClause = ExpressionHelper.CreateMainFromClause();
-      var ordering = new Ordering  (new QuerySourceReferenceExpression (oldReferencedClause), OrderingDirection.Asc);
-      _orderByClause.Orderings.Add (ordering);
-
-      _cloneContext.ClauseMapping.AddMapping (oldReferencedClause, newReferencedClause);
-
-      var clone = _orderByClause.Clone (_cloneContext);
-      var clonedOrdering = clone.Orderings[0];
-      
-      Assert.That (((QuerySourceReferenceExpression) clonedOrdering.Expression).ReferencedClause, Is.SameAs (newReferencedClause));
-    }
-
-    [Test]
-    public void Clone_AddsClauseToMapping ()
-    {
-      var clone = _orderByClause.Clone (_cloneContext);
-      Assert.That (_cloneContext.ClauseMapping.GetClause (_orderByClause), Is.SameAs (clone));
-    }
   }
 }

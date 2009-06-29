@@ -104,9 +104,7 @@ namespace Remotion.Data.Linq.Clauses
       var newInExpression = CloneExpressionTreeVisitor.ReplaceClauseReferences (InExpression, cloneContext);
       var newOnExpression = CloneExpressionTreeVisitor.ReplaceClauseReferences (OnExpression, cloneContext);
       var newEqualityExpression = CloneExpressionTreeVisitor.ReplaceClauseReferences (EqualityExpression, cloneContext);
-      var result = new JoinClause (ItemName, ItemType, newInExpression, newOnExpression, newEqualityExpression);
-      cloneContext.ClauseMapping.AddMapping (this, result);
-      return result;
+      return new JoinClause (ItemName, ItemType, newInExpression, newOnExpression, newEqualityExpression);
     }
   }
 }

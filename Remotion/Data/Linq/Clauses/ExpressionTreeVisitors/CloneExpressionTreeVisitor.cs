@@ -49,8 +49,8 @@ namespace Remotion.Data.Linq.Clauses.ExpressionTreeVisitors
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      var newReferencedClause = _cloneContext.ClauseMapping.GetClause<FromClauseBase> (expression.ReferencedClause);
-      return new QuerySourceReferenceExpression (newReferencedClause);
+      var mappedExpression = _cloneContext.ClauseMapping.GetExpression (expression.ReferencedClause);
+      return mappedExpression;
     }
 
     protected override Expression VisitSubQueryExpression (SubQueryExpression expression)

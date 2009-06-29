@@ -39,7 +39,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ExpressionTreeVisitors
       _newFromClause = ExpressionHelper.CreateMainFromClause ();
 
       _clauseMapping = new ClauseMapping ();
-      _clauseMapping.AddMapping (_oldFromClause, _newFromClause);
+      _clauseMapping.AddMapping (_oldFromClause, new QuerySourceReferenceExpression(_newFromClause));
 
       _cloneContext = new CloneContext (_clauseMapping);
     }
@@ -79,12 +79,12 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ExpressionTreeVisitors
       ((SelectClause)subQueryModel.SelectOrGroupClause).Selector = new QuerySourceReferenceExpression (referencedClause);
       var expression = new SubQueryExpression (subQueryModel);
 
-      var newReferencedClause = ExpressionHelper.CreateMainFromClause ();
-      _clauseMapping.AddMapping (referencedClause, newReferencedClause);
+      var newReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause ());
+      _clauseMapping.AddMapping (referencedClause, newReferenceExpression);
       
       var result = CloneExpressionTreeVisitor.ReplaceClauseReferences (expression, _cloneContext);
       var newSubQuerySelectClause = (SelectClause) ((SubQueryExpression) result).QueryModel.SelectOrGroupClause;
-      Assert.That (((QuerySourceReferenceExpression) newSubQuerySelectClause.Selector).ReferencedClause, Is.SameAs (newReferencedClause));
+      Assert.That (newSubQuerySelectClause.Selector, Is.SameAs (newReferenceExpression));
     }
 
     [Test]

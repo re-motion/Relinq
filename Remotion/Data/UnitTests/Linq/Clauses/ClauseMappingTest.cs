@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.Expressions;
 
 namespace Remotion.Data.UnitTests.Linq.Clauses
 {
@@ -29,6 +30,10 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     private MainFromClause _clause2;
     private MainFromClause _clause3;
 
+    private QuerySourceReferenceExpression _querySourceReferenceExpression1;
+    private QuerySourceReferenceExpression _querySourceReferenceExpression2;
+    private QuerySourceReferenceExpression _querySourceReferenceExpression3;
+
     [SetUp]
     public void SetUp ()
     {
@@ -36,43 +41,47 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       _clause1 = ExpressionHelper.CreateMainFromClause ();
       _clause2 = ExpressionHelper.CreateMainFromClause ();
       _clause3 = ExpressionHelper.CreateMainFromClause ();
+
+      _querySourceReferenceExpression1 = new QuerySourceReferenceExpression (_clause1);
+      _querySourceReferenceExpression2 = new QuerySourceReferenceExpression (_clause2);
+      _querySourceReferenceExpression3 = new QuerySourceReferenceExpression (_clause3);
     }
 
     [Test]
     public void AddMapping ()
     {
-      _mapping.AddMapping (_clause1, _clause2);
-      Assert.That (_mapping.GetClause (_clause1), Is.SameAs (_clause2));
+      _mapping.AddMapping (_clause1, _querySourceReferenceExpression1);
+      Assert.That (_mapping.GetExpression (_clause1), Is.SameAs (_querySourceReferenceExpression1));
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Clause has already been associated with a new clause.")]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Clause has already been associated with an expression.")]
     public void AddMapping_Twice ()
     {
-      _mapping.AddMapping (_clause1, _clause2);
-      _mapping.AddMapping (_clause1, _clause2);
+      _mapping.AddMapping (_clause1, _querySourceReferenceExpression1);
+      _mapping.AddMapping (_clause1, _querySourceReferenceExpression2);
     }
 
     [Test]
     public void ReplaceMapping ()
     {
-      _mapping.AddMapping (_clause1, _clause2);
-      _mapping.ReplaceMapping (_clause1, _clause3);
+      _mapping.AddMapping (_clause1, _querySourceReferenceExpression2);
+      _mapping.ReplaceMapping (_clause1, _querySourceReferenceExpression3);
 
-      Assert.That (_mapping.GetClause (_clause1), Is.SameAs (_clause3));
+      Assert.That (_mapping.GetExpression (_clause1), Is.SameAs (_querySourceReferenceExpression3));
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Clause has not been associated with a clause, cannot replace its mapping.")]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Clause has not been associated with an expression, cannot replace its mapping.")]
     public void ReplaceMapping_WithoutAdding ()
     {
-      _mapping.ReplaceMapping (_clause1, _clause2);
+      _mapping.ReplaceMapping (_clause1, _querySourceReferenceExpression2);
     }
 
     [Test]
     public void ContainsMapping_True ()
     {
-      _mapping.AddMapping (_clause1, _clause2);
+      _mapping.AddMapping (_clause1, _querySourceReferenceExpression2);
       Assert.That (_mapping.ContainsMapping (_clause1), Is.True);
     }
 
@@ -83,27 +92,11 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
-    [ExpectedException (typeof (KeyNotFoundException), ExpectedMessage = "Clause has not been associated with a new clause.")]
-    public void GetClause_WithoutAssociatedClause ()
+    [ExpectedException (typeof (KeyNotFoundException), ExpectedMessage = "Clause has not been associated with an expression.")]
+    public void GetExpression_WithoutAssociatedClause ()
     {
-      _mapping.GetClause (_clause1);
+      _mapping.GetExpression (_clause1);
     }
 
-    [Test]
-    public void GetClause_Generic ()
-    {
-      _mapping.AddMapping (_clause1, _clause2);
-      Assert.That (_mapping.GetClause<MainFromClause> (_clause1), Is.SameAs (_clause2));
-    }
-
-    [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Expected a SelectClause as the mapped clone of the given SelectClause, "
-      + "but a MainFromClause was registered.")]
-    public void GetClause_Generic_InvalidType ()
-    {
-      var selectClause = ExpressionHelper.CreateSelectClause();
-      _mapping.AddMapping (selectClause, _clause1);
-      _mapping.GetClause<SelectClause> (selectClause);
-    }
   }
 }

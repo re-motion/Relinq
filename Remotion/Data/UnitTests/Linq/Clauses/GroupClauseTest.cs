@@ -14,7 +14,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
@@ -90,7 +89,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       var groupClause = new GroupClause (groupExpression, byExpression);
 
       var newReferencedExpression = ExpressionHelper.CreateMainFromClause ();
-      _cloneContext.ClauseMapping.AddMapping (referencedExpression, newReferencedExpression);
+      _cloneContext.ClauseMapping.AddMapping (referencedExpression, new QuerySourceReferenceExpression(newReferencedExpression));
 
       var clone = groupClause.Clone (_cloneContext);
 
@@ -101,15 +100,14 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone_ViaInterface_PassesMapping ()
     {
-      var clone = ((ISelectGroupClause) _groupClause).Clone (_cloneContext);
-      Assert.That (_cloneContext.ClauseMapping.GetClause (_groupClause), Is.SameAs (clone));
-    }
+      var fromClause = ExpressionHelper.CreateMainFromClause ();
+      _groupClause.GroupExpression = new QuerySourceReferenceExpression (fromClause);
 
-    [Test]
-    public void Clone_AddsClauseToMapping ()
-    {
-      var clone = _groupClause.Clone (_cloneContext);
-      Assert.That (_cloneContext.ClauseMapping.GetClause (_groupClause), Is.SameAs (clone));
+      var newReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause ());
+      _cloneContext.ClauseMapping.AddMapping (fromClause, newReferenceExpression);
+
+      var clone = ((ISelectGroupClause) _groupClause).Clone (_cloneContext);
+      Assert.That (((GroupClause) clone).GroupExpression, Is.SameAs (newReferenceExpression));
     }
   }
 }
