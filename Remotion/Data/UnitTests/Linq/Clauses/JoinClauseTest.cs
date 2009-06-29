@@ -34,7 +34,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void SetUp ()
     {
       _joinClause = ExpressionHelper.CreateJoinClause ();
-      _cloneContext = new CloneContext (new ClonedClauseMapping());
+      _cloneContext = new CloneContext (new ClauseMapping());
     }
 
     [Test]
@@ -97,7 +97,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
           equalityExpression);
 
       var newReferencedExpression = ExpressionHelper.CreateMainFromClause ();
-      _cloneContext.ClonedClauseMapping.AddMapping (referencedExpression, newReferencedExpression);
+      _cloneContext.ClauseMapping.AddMapping (referencedExpression, newReferencedExpression);
 
       var clone = joinClause.Clone (_cloneContext);
 
@@ -110,7 +110,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Clone_AddsClauseToMapping ()
     {
       var clone = _joinClause.Clone (_cloneContext);
-      Assert.That (_cloneContext.ClonedClauseMapping.GetClause (_joinClause), Is.SameAs (clone));
+      Assert.That (_cloneContext.ClauseMapping.GetClause (_joinClause), Is.SameAs (clone));
     }
   }
 }

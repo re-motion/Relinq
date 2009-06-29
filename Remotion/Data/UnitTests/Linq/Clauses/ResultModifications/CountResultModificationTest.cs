@@ -38,7 +38,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
     [Test]
     public void Clone ()
     {
-      var clonedClauseMapping = new ClonedClauseMapping ();
+      var clonedClauseMapping = new ClauseMapping ();
       var cloneContext = new CloneContext (clonedClauseMapping);
       var clone = _resultModification.Clone (cloneContext);
 

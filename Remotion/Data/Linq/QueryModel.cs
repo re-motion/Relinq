@@ -134,7 +134,7 @@ namespace Remotion.Data.Linq
     /// </summary>
     public QueryModel Clone ()
     {
-      return Clone (new ClonedClauseMapping());
+      return Clone (new ClauseMapping());
     }
 
     /// <summary>
@@ -143,16 +143,16 @@ namespace Remotion.Data.Linq
     /// this <see cref="QueryModel"/> (including its subqueries) are adjusted to point to the respective clones. Any subquery nested in the 
     /// <see cref="QueryModel"/> is also cloned.
     /// </summary>
-    /// <param name="clonedClauseMapping">The <see cref="ClonedClauseMapping"/> defining how to adjust instances of 
+    /// <param name="clauseMapping">The <see cref="ClauseMapping"/> defining how to adjust instances of 
     /// <see cref="QuerySourceReferenceExpression"/> in the cloned <see cref="QueryModel"/>. If there is a <see cref="QuerySourceReferenceExpression"/>
     /// that points out of the <see cref="QueryModel"/> being cloned, specify its replacement via this parameter. At the end of the cloning process,
     /// this object maps all the clauses in this original <see cref="QueryModel"/> to the clones created in the process.
     /// </param>
-    public QueryModel Clone (ClonedClauseMapping clonedClauseMapping)
+    public QueryModel Clone (ClauseMapping clauseMapping)
     {
-      ArgumentUtility.CheckNotNull ("clonedClauseMapping", clonedClauseMapping);
+      ArgumentUtility.CheckNotNull ("clauseMapping", clauseMapping);
 
-      var cloneContext = new CloneContext (clonedClauseMapping);
+      var cloneContext = new CloneContext (clauseMapping);
       var queryModelBuilder = new QueryModelBuilder();
 
       queryModelBuilder.AddClause (MainFromClause.Clone (cloneContext));

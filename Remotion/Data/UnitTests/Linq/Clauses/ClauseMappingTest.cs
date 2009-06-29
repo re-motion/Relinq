@@ -22,9 +22,9 @@ using Remotion.Data.Linq.Clauses;
 namespace Remotion.Data.UnitTests.Linq.Clauses
 {
   [TestFixture]
-  public class ClonedClauseMappingTest
+  public class ClauseMappingTest
   {
-    private ClonedClauseMapping _mapping;
+    private ClauseMapping _mapping;
     private MainFromClause _clause1;
     private MainFromClause _clause2;
     private MainFromClause _clause3;
@@ -32,7 +32,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [SetUp]
     public void SetUp ()
     {
-      _mapping = new ClonedClauseMapping ();
+      _mapping = new ClauseMapping ();
       _clause1 = ExpressionHelper.CreateMainFromClause ();
       _clause2 = ExpressionHelper.CreateMainFromClause ();
       _clause3 = ExpressionHelper.CreateMainFromClause ();

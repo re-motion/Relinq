@@ -35,7 +35,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void SetUp ()
     {
       _groupClause = ExpressionHelper.CreateGroupClause ();
-      _cloneContext = new CloneContext (new ClonedClauseMapping());
+      _cloneContext = new CloneContext (new ClauseMapping());
     }
 
     [Test]
@@ -90,7 +90,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       var groupClause = new GroupClause (groupExpression, byExpression);
 
       var newReferencedExpression = ExpressionHelper.CreateMainFromClause ();
-      _cloneContext.ClonedClauseMapping.AddMapping (referencedExpression, newReferencedExpression);
+      _cloneContext.ClauseMapping.AddMapping (referencedExpression, newReferencedExpression);
 
       var clone = groupClause.Clone (_cloneContext);
 
@@ -102,14 +102,14 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Clone_ViaInterface_PassesMapping ()
     {
       var clone = ((ISelectGroupClause) _groupClause).Clone (_cloneContext);
-      Assert.That (_cloneContext.ClonedClauseMapping.GetClause (_groupClause), Is.SameAs (clone));
+      Assert.That (_cloneContext.ClauseMapping.GetClause (_groupClause), Is.SameAs (clone));
     }
 
     [Test]
     public void Clone_AddsClauseToMapping ()
     {
       var clone = _groupClause.Clone (_cloneContext);
-      Assert.That (_cloneContext.ClonedClauseMapping.GetClause (_groupClause), Is.SameAs (clone));
+      Assert.That (_cloneContext.ClauseMapping.GetClause (_groupClause), Is.SameAs (clone));
     }
   }
 }

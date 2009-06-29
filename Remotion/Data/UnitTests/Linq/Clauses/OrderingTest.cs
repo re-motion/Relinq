@@ -26,16 +26,16 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
   [TestFixture]
   public class OrderingTest
   {
-    private ClonedClauseMapping _clonedClauseMapping;
+    private ClauseMapping _clauseMapping;
     private Ordering _ordering;
     private CloneContext _cloneContext;
 
     [SetUp]
     public void SetUp ()
     {
-      _clonedClauseMapping = new ClonedClauseMapping ();
+      _clauseMapping = new ClauseMapping ();
       _ordering = ExpressionHelper.CreateOrdering ();
-      _cloneContext = new CloneContext (_clonedClauseMapping);
+      _cloneContext = new CloneContext (_clauseMapping);
     }
 
     [Test]
@@ -95,7 +95,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       var whereClause = new Ordering (expression, OrderingDirection.Asc);
 
       var newMainFromClause = ExpressionHelper.CreateMainFromClause ();
-      _cloneContext.ClonedClauseMapping.AddMapping (mainFromClause, newMainFromClause);
+      _cloneContext.ClauseMapping.AddMapping (mainFromClause, newMainFromClause);
 
       var clone = whereClause.Clone (_cloneContext);
 

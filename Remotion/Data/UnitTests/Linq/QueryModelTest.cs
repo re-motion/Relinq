@@ -30,7 +30,7 @@ namespace Remotion.Data.UnitTests.Linq
     private MainFromClause _mainFromClause;
     private SelectClause _selectClause;
     private QueryModel _queryModel;
-    private ClonedClauseMapping _clonedClauseMapping;
+    private ClauseMapping _clauseMapping;
 
     [SetUp]
     public void SetUp ()
@@ -38,7 +38,7 @@ namespace Remotion.Data.UnitTests.Linq
       _mainFromClause = ExpressionHelper.CreateMainFromClause ();
       _selectClause = ExpressionHelper.CreateSelectClause ();
       _queryModel = new QueryModel (typeof (IQueryable<string>), _mainFromClause, _selectClause);
-      _clonedClauseMapping = new ClonedClauseMapping ();
+      _clauseMapping = new ClauseMapping ();
     }
 
     [Test]
@@ -103,8 +103,8 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void Clone_HasCloneForMainFromClause_PassesMapping ()
     {
-      var clone = _queryModel.Clone (_clonedClauseMapping);
-      Assert.That (_clonedClauseMapping.GetClause (_queryModel.MainFromClause), Is.SameAs (clone.MainFromClause));
+      var clone = _queryModel.Clone (_clauseMapping);
+      Assert.That (_clauseMapping.GetClause (_queryModel.MainFromClause), Is.SameAs (clone.MainFromClause));
     }
 
     [Test]
@@ -121,8 +121,8 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void Clone_HasCloneForSelectClause_PassesMapping ()
     {
-      var clone = _queryModel.Clone (_clonedClauseMapping);
-      Assert.That (_clonedClauseMapping.GetClause (_queryModel.SelectOrGroupClause), Is.SameAs (clone.SelectOrGroupClause));
+      var clone = _queryModel.Clone (_clauseMapping);
+      Assert.That (_clauseMapping.GetClause (_queryModel.SelectOrGroupClause), Is.SameAs (clone.SelectOrGroupClause));
     }
 
     [Test]
@@ -150,8 +150,8 @@ namespace Remotion.Data.UnitTests.Linq
       var bodyClause = ExpressionHelper.CreateWhereClause();
       _queryModel.BodyClauses.Add (bodyClause);
 
-      var clone = _queryModel.Clone (_clonedClauseMapping);
-      Assert.That (_clonedClauseMapping.GetClause (_queryModel.BodyClauses[0]), Is.SameAs (clone.BodyClauses[0]));
+      var clone = _queryModel.Clone (_clauseMapping);
+      Assert.That (_clauseMapping.GetClause (_queryModel.BodyClauses[0]), Is.SameAs (clone.BodyClauses[0]));
     }
     
     [Test]

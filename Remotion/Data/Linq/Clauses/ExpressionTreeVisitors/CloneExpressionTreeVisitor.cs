@@ -49,7 +49,7 @@ namespace Remotion.Data.Linq.Clauses.ExpressionTreeVisitors
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      var newReferencedClause = _cloneContext.ClonedClauseMapping.GetClause<FromClauseBase> (expression.ReferencedClause);
+      var newReferencedClause = _cloneContext.ClauseMapping.GetClause<FromClauseBase> (expression.ReferencedClause);
       return new QuerySourceReferenceExpression (newReferencedClause);
     }
 
@@ -57,7 +57,7 @@ namespace Remotion.Data.Linq.Clauses.ExpressionTreeVisitors
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       
-      var clonedQueryModel = expression.QueryModel.Clone (_cloneContext.ClonedClauseMapping);
+      var clonedQueryModel = expression.QueryModel.Clone (_cloneContext.ClauseMapping);
       return new SubQueryExpression (clonedQueryModel);
     }
 

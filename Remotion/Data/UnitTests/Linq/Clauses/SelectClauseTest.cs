@@ -38,7 +38,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     {
       _selector = ExpressionHelper.CreateExpression();
       _selectClause = new SelectClause (_selector);
-      _cloneContext = new CloneContext (new ClonedClauseMapping());
+      _cloneContext = new CloneContext (new ClauseMapping());
     }
 
     [Test]
@@ -104,14 +104,14 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Clone_ViaInterface_PassesMapping ()
     {
       var clone = ((ISelectGroupClause) _selectClause).Clone (_cloneContext);
-      Assert.That (_cloneContext.ClonedClauseMapping.GetClause (_selectClause), Is.SameAs (clone));
+      Assert.That (_cloneContext.ClauseMapping.GetClause (_selectClause), Is.SameAs (clone));
     }
 
     [Test]
     public void Clone_AddsClauseToMapping ()
     {
       var clone = _selectClause.Clone (_cloneContext);
-      Assert.That (_cloneContext.ClonedClauseMapping.GetClause (_selectClause), Is.SameAs (clone));
+      Assert.That (_cloneContext.ClauseMapping.GetClause (_selectClause), Is.SameAs (clone));
     }
 
     [Test]
@@ -122,7 +122,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       var selectClause = new SelectClause (selector);
 
       var newMainFromClause = ExpressionHelper.CreateMainFromClause ();
-      _cloneContext.ClonedClauseMapping.AddMapping (mainFromClause, newMainFromClause);
+      _cloneContext.ClauseMapping.AddMapping (mainFromClause, newMainFromClause);
 
       var clone = selectClause.Clone (_cloneContext);
 

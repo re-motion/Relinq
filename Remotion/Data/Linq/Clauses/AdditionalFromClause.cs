@@ -52,7 +52,7 @@ namespace Remotion.Data.Linq.Clauses
 
       var newFromExpression = CloneExpressionTreeVisitor.ReplaceClauseReferences (FromExpression, cloneContext);
       var result = new AdditionalFromClause (ItemName, ItemType, newFromExpression);
-      cloneContext.ClonedClauseMapping.AddMapping (this, result);
+      cloneContext.ClauseMapping.AddMapping (this, result);
       result.AddClonedJoinClauses (JoinClauses, cloneContext);
       return result;
     }

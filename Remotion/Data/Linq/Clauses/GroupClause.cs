@@ -62,7 +62,7 @@ namespace Remotion.Data.Linq.Clauses
       var newGroupExpression = CloneExpressionTreeVisitor.ReplaceClauseReferences (GroupExpression, cloneContext);
       var newByExpression = CloneExpressionTreeVisitor.ReplaceClauseReferences (ByExpression, cloneContext);
       var result = new GroupClause (newGroupExpression, newByExpression);
-      cloneContext.ClonedClauseMapping.AddMapping (this, result);
+      cloneContext.ClauseMapping.AddMapping (this, result);
       return result;
     }
 

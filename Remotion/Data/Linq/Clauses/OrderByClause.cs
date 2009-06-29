@@ -51,7 +51,7 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 
       var result = new OrderByClause ();
-      cloneContext.ClonedClauseMapping.AddMapping (this, result);
+      cloneContext.ClauseMapping.AddMapping (this, result);
       foreach (var ordering in Orderings)
       {
         var orderingClone = ordering.Clone (cloneContext);

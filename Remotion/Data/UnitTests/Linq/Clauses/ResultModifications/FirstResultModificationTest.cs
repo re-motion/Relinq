@@ -27,7 +27,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
   {
     private FirstResultModification _resultModificationNoDefault;
     private FirstResultModification _resultModificationWithDefault;
-    private ClonedClauseMapping _clonedClauseMapping;
+    private ClauseMapping _clauseMapping;
     private CloneContext _cloneContext;
 
     [SetUp]
@@ -35,8 +35,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
     {
       _resultModificationNoDefault = new FirstResultModification (false);
       _resultModificationWithDefault = new FirstResultModification (true);
-      _clonedClauseMapping = new ClonedClauseMapping ();
-      _cloneContext = new CloneContext (_clonedClauseMapping);
+      _clauseMapping = new ClauseMapping ();
+      _cloneContext = new CloneContext (_clauseMapping);
     }
 
     [Test]

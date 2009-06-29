@@ -27,7 +27,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ExpressionTreeVisitors
   [TestFixture]
   public class CloneExpressionTreeVisitorTest
   {
-    private ClonedClauseMapping _clonedClauseMapping;
+    private ClauseMapping _clauseMapping;
     private MainFromClause _oldFromClause;
     private MainFromClause _newFromClause;
     private CloneContext _cloneContext;
@@ -38,10 +38,10 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ExpressionTreeVisitors
       _oldFromClause = ExpressionHelper.CreateMainFromClause ();
       _newFromClause = ExpressionHelper.CreateMainFromClause ();
 
-      _clonedClauseMapping = new ClonedClauseMapping ();
-      _clonedClauseMapping.AddMapping (_oldFromClause, _newFromClause);
+      _clauseMapping = new ClauseMapping ();
+      _clauseMapping.AddMapping (_oldFromClause, _newFromClause);
 
-      _cloneContext = new CloneContext (_clonedClauseMapping);
+      _cloneContext = new CloneContext (_clauseMapping);
     }
 
     [Test]
@@ -80,7 +80,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ExpressionTreeVisitors
       var expression = new SubQueryExpression (subQueryModel);
 
       var newReferencedClause = ExpressionHelper.CreateMainFromClause ();
-      _clonedClauseMapping.AddMapping (referencedClause, newReferencedClause);
+      _clauseMapping.AddMapping (referencedClause, newReferencedClause);
       
       var result = CloneExpressionTreeVisitor.ReplaceClauseReferences (expression, _cloneContext);
       var newSubQuerySelectClause = (SelectClause) ((SubQueryExpression) result).QueryModel.SelectOrGroupClause;

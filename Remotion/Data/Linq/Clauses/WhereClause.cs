@@ -61,7 +61,7 @@ namespace Remotion.Data.Linq.Clauses
 
       var newPredicate = CloneExpressionTreeVisitor.ReplaceClauseReferences (Predicate, cloneContext);
       var result = new WhereClause (newPredicate);
-      cloneContext.ClonedClauseMapping.AddMapping (this, result);
+      cloneContext.ClauseMapping.AddMapping (this, result);
       return result;
     }
 

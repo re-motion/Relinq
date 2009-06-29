@@ -23,13 +23,13 @@ namespace Remotion.Data.Linq.Clauses
   /// </summary>
   public class CloneContext
   {
-    public CloneContext (ClonedClauseMapping clonedClauseMapping)
+    public CloneContext (ClauseMapping clauseMapping)
     {
-      ArgumentUtility.CheckNotNull ("clonedClauseMapping", clonedClauseMapping);
+      ArgumentUtility.CheckNotNull ("clauseMapping", clauseMapping);
       
-      ClonedClauseMapping = clonedClauseMapping;
+      ClauseMapping = clauseMapping;
     }
 
-    public ClonedClauseMapping ClonedClauseMapping { get; private set; }
+    public ClauseMapping ClauseMapping { get; private set; }
   }
 }

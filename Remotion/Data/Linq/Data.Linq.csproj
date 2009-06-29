@@ -55,7 +55,7 @@
     <Compile Include="Clauses\ExecutionStrategies\CollectionExecutionStrategy.cs" />
     <Compile Include="Clauses\ExecutionStrategies\SingleExecutionStrategy.cs" />
     <Compile Include="Clauses\ExecutionStrategies\ScalarExecutionStrategy.cs" />
-    <Compile Include="Clauses\ClonedClauseMapping.cs" />
+    <Compile Include="Clauses\ClauseMapping.cs" />
     <Compile Include="Clauses\ExpressionTreeVisitors\CloneExpressionTreeVisitor.cs" />
     <Compile Include="Clauses\IExecutionStrategy.cs" />
     <Compile Include="Clauses\ResultModifications\SumResultModification.cs" />

@@ -53,7 +53,7 @@ namespace Remotion.Data.Linq.Clauses
 
       var newQuerySource = CloneExpressionTreeVisitor.ReplaceClauseReferences (FromExpression, cloneContext);
       var result = new MainFromClause (ItemName, ItemType, newQuerySource);
-      cloneContext.ClonedClauseMapping.AddMapping (this, result);
+      cloneContext.ClauseMapping.AddMapping (this, result);
       result.AddClonedJoinClauses (JoinClauses, cloneContext);
       return result;
     }

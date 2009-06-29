@@ -68,7 +68,7 @@ namespace Remotion.Data.Linq.Clauses
 
       var newSelector = CloneExpressionTreeVisitor.ReplaceClauseReferences (Selector, cloneContext);
       var result = new SelectClause (newSelector);
-      cloneContext.ClonedClauseMapping.AddMapping (this, result);
+      cloneContext.ClauseMapping.AddMapping (this, result);
       foreach (var resultModification in ResultModifications)
       {
         var resultModificationClone = resultModification.Clone (cloneContext);

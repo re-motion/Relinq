@@ -33,7 +33,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [SetUp]
     public void SetUp ()
     {
-      _cloneContext = new CloneContext (new ClonedClauseMapping ());
+      _cloneContext = new CloneContext (new ClauseMapping ());
       _orderByClause = new OrderByClause ();
     }
 
@@ -100,7 +100,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Clone_ViaInterface_PassesMapping ()
     {
       var clone = ((IBodyClause) _orderByClause).Clone (_cloneContext);
-      Assert.That (_cloneContext.ClonedClauseMapping.GetClause (_orderByClause), Is.SameAs (clone));
+      Assert.That (_cloneContext.ClauseMapping.GetClause (_orderByClause), Is.SameAs (clone));
     }
 
     [Test]
@@ -127,7 +127,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       var ordering = new Ordering  (new QuerySourceReferenceExpression (oldReferencedClause), OrderingDirection.Asc);
       _orderByClause.Orderings.Add (ordering);
 
-      _cloneContext.ClonedClauseMapping.AddMapping (oldReferencedClause, newReferencedClause);
+      _cloneContext.ClauseMapping.AddMapping (oldReferencedClause, newReferencedClause);
 
       var clone = _orderByClause.Clone (_cloneContext);
       var clonedOrdering = clone.Orderings[0];
@@ -139,7 +139,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Clone_AddsClauseToMapping ()
     {
       var clone = _orderByClause.Clone (_cloneContext);
-      Assert.That (_cloneContext.ClonedClauseMapping.GetClause (_orderByClause), Is.SameAs (clone));
+      Assert.That (_cloneContext.ClauseMapping.GetClause (_orderByClause), Is.SameAs (clone));
     }
   }
 }
