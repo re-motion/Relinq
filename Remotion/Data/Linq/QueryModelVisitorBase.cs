@@ -31,7 +31,6 @@ namespace Remotion.Data.Linq
     private QueryModel _currentQueryModel;
     private int _currentJoinClauseIndex = -1;
     private int _currentOrderingIndex = -1;
-    private int _currentResultModificationIndex = -1;
 
     public QueryModel CurrentQueryModel
     {
@@ -64,20 +63,6 @@ namespace Remotion.Data.Linq
         return _currentOrderingIndex;
       }
       protected set { _currentOrderingIndex = value; }
-    }
-
-    public int CurrentResultModificationIndex
-    {
-      get
-      {
-        if (_currentResultModificationIndex == -1)
-        {
-          throw new InvalidOperationException (
-              "CurrentResultModificationIndex can only be called while VisitResultModifications is visiting result modifications.");
-        }
-        return _currentResultModificationIndex;
-      }
-      protected set { _currentResultModificationIndex = value; }
     }
 
     void IQueryModelVisitor.VisitQueryModel (QueryModel queryModel)
@@ -136,10 +121,10 @@ namespace Remotion.Data.Linq
     {
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
-      VisitResultModifications (selectClause, selectClause.ResultModifications);
+      VisitResultModifications (queryModel, selectClause, selectClause.ResultModifications);
     }
 
-    public virtual void VisitResultModification (ResultModificationBase resultModification)
+    public virtual void VisitResultModification (ResultModificationBase resultModification, QueryModel queryModel, SelectClause selectClause, int index)
     {
       // nothing to do here
     }
@@ -177,12 +162,14 @@ namespace Remotion.Data.Linq
       VisitCollection (orderings, ordering => ordering.Accept (this), index => CurrentOrderingIndex = index);
     }
 
-    protected virtual void VisitResultModifications (SelectClause selectClause, ObservableCollection<ResultModificationBase> resultModifications)
+    protected virtual void VisitResultModifications (QueryModel queryModel, SelectClause selectClause, ObservableCollection<ResultModificationBase> resultModifications)
     {
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);
       ArgumentUtility.CheckNotNull ("resultModifications", resultModifications);
 
-      VisitCollection (resultModifications, resultModification => resultModification.Accept (this), index => CurrentResultModificationIndex = index);
+      foreach (var indexValuePair in resultModifications.AsChangeResistantEnumerableWithIndex ())
+        indexValuePair.Value.Accept (this, queryModel, selectClause, indexValuePair.Index);
     }
 
     private void VisitCollection<T> (ObservableCollection<T> collection, Action<T> acceptAction, Action<int> indexSetter)

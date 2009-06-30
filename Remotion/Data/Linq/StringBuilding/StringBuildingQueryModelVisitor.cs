@@ -97,26 +97,28 @@ namespace Remotion.Data.Linq.StringBuilding
       base.VisitSelectClause (selectClause, queryModel);
     }
 
-    protected override void VisitResultModifications (SelectClause selectClause, ObservableCollection<ResultModificationBase> resultModifications)
+    protected override void VisitResultModifications (QueryModel queryModel, SelectClause selectClause, ObservableCollection<ResultModificationBase> resultModifications)
     {
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+      ArgumentUtility.CheckNotNull ("selectClause", selectClause);
       ArgumentUtility.CheckNotNull ("resultModifications", resultModifications);
-
+      
       if (resultModifications.Count > 0)
       {
         _sb.Insert (0, "(");
         _sb.Append (")");
       }
 
-      base.VisitResultModifications (selectClause, resultModifications);
+      base.VisitResultModifications (queryModel, selectClause, resultModifications);
     }
 
-    public override void VisitResultModification (ResultModificationBase resultModification)
+    public override void VisitResultModification (ResultModificationBase resultModification, QueryModel queryModel, SelectClause selectClause, int index)
     {
       ArgumentUtility.CheckNotNull ("resultModification", resultModification);
 
       _sb.Append (".");
       _sb.Append (resultModification.ToString ());
-      base.VisitResultModification (resultModification);
+      base.VisitResultModification (resultModification, queryModel, selectClause, index);
     }
 
     public override void VisitGroupClause (GroupClause groupClause, QueryModel queryModel)

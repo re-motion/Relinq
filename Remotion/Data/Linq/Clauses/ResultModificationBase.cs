@@ -44,10 +44,10 @@ namespace Remotion.Data.Linq.Clauses
 
     public abstract ResultModificationBase Clone (CloneContext cloneContext);
 
-    public virtual void Accept (IQueryModelVisitor visitor)
+    public virtual void Accept (IQueryModelVisitor visitor, QueryModel queryModel, SelectClause selectClause, int index)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
-      visitor.VisitResultModification (this);
+      visitor.VisitResultModification (this, queryModel, selectClause, index);
     }
   }
 }
