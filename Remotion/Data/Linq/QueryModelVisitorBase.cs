@@ -87,28 +87,39 @@ namespace Remotion.Data.Linq
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
-      VisitJoinClauses (fromClause, fromClause.JoinClauses);
+      VisitJoinClauses (queryModel, fromClause, fromClause.JoinClauses);
     }
 
     public virtual void VisitAdditionalFromClause (AdditionalFromClause fromClause, QueryModel queryModel, int index)
     {
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
-      VisitJoinClauses (fromClause, fromClause.JoinClauses);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+
+      VisitJoinClauses (queryModel, fromClause, fromClause.JoinClauses);
     }
 
-    public virtual void VisitJoinClause (JoinClause joinClause)
+    public virtual void VisitJoinClause (JoinClause joinClause, QueryModel queryModel, FromClauseBase fromClause, int index)
     {
+      ArgumentUtility.CheckNotNull ("joinClause", joinClause);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+      ArgumentUtility.CheckNotNull ("fromClause", fromClause);
+
       // nothing to do here
     }
 
     public virtual void VisitWhereClause (WhereClause whereClause, QueryModel queryModel, int index)
     {
+      ArgumentUtility.CheckNotNull ("whereClause", whereClause);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+
       // nothing to do here
     }
 
     public virtual void VisitOrderByClause (OrderByClause orderByClause, QueryModel queryModel, int index)
     {
       ArgumentUtility.CheckNotNull ("orderByClause", orderByClause);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+
       VisitOrderings (orderByClause, orderByClause.Orderings);
     }
 
@@ -121,11 +132,16 @@ namespace Remotion.Data.Linq
     {
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+
       VisitResultModifications (queryModel, selectClause, selectClause.ResultModifications);
     }
 
     public virtual void VisitResultModification (ResultModificationBase resultModification, QueryModel queryModel, SelectClause selectClause, int index)
     {
+      ArgumentUtility.CheckNotNull ("resultModification", resultModification);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+      ArgumentUtility.CheckNotNull ("selectClause", selectClause);
+
       // nothing to do here
     }
 
@@ -146,12 +162,14 @@ namespace Remotion.Data.Linq
         indexValuePair.Value.Accept (this, queryModel, indexValuePair.Index);
     }
 
-    protected virtual void VisitJoinClauses (FromClauseBase fromClause, ObservableCollection<JoinClause> joinClauses)
+    protected virtual void VisitJoinClauses (QueryModel queryModel, FromClauseBase fromClause, ObservableCollection<JoinClause> joinClauses)
     {
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
       ArgumentUtility.CheckNotNull ("joinClauses", joinClauses);
 
-      VisitCollection (joinClauses, clause => clause.Accept (this), index => CurrentJoinClauseIndex = index);
+      foreach (var indexValuePair in joinClauses.AsChangeResistantEnumerableWithIndex ())
+        indexValuePair.Value.Accept (this, queryModel, fromClause, indexValuePair.Index);
     }
 
     protected virtual void VisitOrderings (OrderByClause orderByClause, ObservableCollection<Ordering> orderings)

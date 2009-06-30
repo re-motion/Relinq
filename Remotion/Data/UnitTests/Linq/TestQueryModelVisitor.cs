@@ -44,9 +44,9 @@ namespace Remotion.Data.UnitTests.Linq
       base.VisitBodyClauses (queryModel, bodyClauses);
     }
 
-    public new void VisitJoinClauses (FromClauseBase fromClause, ObservableCollection<JoinClause> joinClauses)
+    public new void VisitJoinClauses (QueryModel queryModel, FromClauseBase fromClause, ObservableCollection<JoinClause> joinClauses)
     {
-      base.VisitJoinClauses (fromClause, joinClauses);
+      base.VisitJoinClauses (queryModel, fromClause, joinClauses);
     }
 
     public new void VisitOrderings (OrderByClause orderByClause, ObservableCollection<Ordering> orderings)

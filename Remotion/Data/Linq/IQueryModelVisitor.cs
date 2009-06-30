@@ -28,7 +28,7 @@ namespace Remotion.Data.Linq
     void VisitQueryModel (QueryModel queryModel);
     void VisitMainFromClause (MainFromClause fromClause, QueryModel queryModel);
     void VisitAdditionalFromClause (AdditionalFromClause fromClause, QueryModel queryModel, int index);
-    void VisitJoinClause (JoinClause joinClause);
+    void VisitJoinClause (JoinClause joinClause, QueryModel queryModel, FromClauseBase fromClause, int index);
     void VisitWhereClause (WhereClause whereClause, QueryModel queryModel, int index);
     void VisitOrderByClause (OrderByClause orderByClause, QueryModel queryModel, int index);
     void VisitOrdering (Ordering ordering);

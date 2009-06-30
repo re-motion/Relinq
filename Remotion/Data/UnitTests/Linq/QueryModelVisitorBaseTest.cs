@@ -117,7 +117,7 @@ namespace Remotion.Data.UnitTests.Linq
             .Expect (mock => mock.VisitMainFromClause (_mainFromClause, _queryModel))
             .CallOriginalMethod (OriginalCallOptions.CreateExpectation);
         _visitorMock
-            .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitJoinClauses", _mainFromClause, _mainFromClause.JoinClauses));
+            .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitJoinClauses", _queryModel, _mainFromClause, _mainFromClause.JoinClauses));
       }
 
       _visitorMock.Replay();
@@ -136,7 +136,7 @@ namespace Remotion.Data.UnitTests.Linq
             .Expect (mock => mock.VisitAdditionalFromClause (_additionalFromClause, _queryModel, 1))
             .CallOriginalMethod (OriginalCallOptions.CreateExpectation);
         _visitorMock
-            .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitJoinClauses", _additionalFromClause, _additionalFromClause.JoinClauses));
+            .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitJoinClauses", _queryModel, _additionalFromClause, _additionalFromClause.JoinClauses));
       }
 
       _visitorMock.Replay();
@@ -230,13 +230,13 @@ namespace Remotion.Data.UnitTests.Linq
 
       using (_mockRepository.Ordered())
       {
-        _joinClauseMock1.Expect (mock => mock.Accept (_testVisitor));
-        _joinClauseMock2.Expect (mock => mock.Accept (_testVisitor));
+        _joinClauseMock1.Expect (mock => mock.Accept (_testVisitor, _queryModel, _mainFromClause, 0));
+        _joinClauseMock2.Expect (mock => mock.Accept (_testVisitor, _queryModel, _mainFromClause, 1));
       }
 
       _mockRepository.ReplayAll();
 
-      _testVisitor.VisitJoinClauses (_mainFromClause, joinClauses);
+      _testVisitor.VisitJoinClauses (_queryModel, _mainFromClause, joinClauses);
 
       _mockRepository.VerifyAll();
     }
@@ -248,13 +248,13 @@ namespace Remotion.Data.UnitTests.Linq
 
       using (_mockRepository.Ordered())
       {
-        _joinClauseMock1.Expect (mock => mock.Accept (_testVisitor)).WhenCalled (mi => joinClauses.RemoveAt (0));
-        _joinClauseMock2.Expect (mock => mock.Accept (_testVisitor));
+        _joinClauseMock1.Expect (mock => mock.Accept (_testVisitor, _queryModel, _mainFromClause, 0)).WhenCalled (mi => joinClauses.RemoveAt (0));
+        _joinClauseMock2.Expect (mock => mock.Accept (_testVisitor, _queryModel, _mainFromClause, 0));
       }
 
       _mockRepository.ReplayAll();
 
-      _testVisitor.VisitJoinClauses (_mainFromClause, joinClauses);
+      _testVisitor.VisitJoinClauses (_queryModel, _mainFromClause, joinClauses);
 
       _mockRepository.VerifyAll();
     }

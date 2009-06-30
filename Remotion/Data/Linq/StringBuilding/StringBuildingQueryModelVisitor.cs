@@ -43,7 +43,7 @@ namespace Remotion.Data.Linq.StringBuilding
       base.VisitAdditionalFromClause (fromClause, queryModel, index);
     }
 
-    public override void VisitJoinClause (JoinClause joinClause)
+    public override void VisitJoinClause (JoinClause joinClause, QueryModel queryModel, FromClauseBase fromClause, int index)
     {
       ArgumentUtility.CheckNotNull ("joinClause", joinClause);
 
@@ -54,7 +54,7 @@ namespace Remotion.Data.Linq.StringBuilding
           FormatExpression (joinClause.InExpression),
           FormatExpression (joinClause.OnExpression), 
           FormatExpression (joinClause.EqualityExpression));
-      base.VisitJoinClause (joinClause);
+      base.VisitJoinClause (joinClause, queryModel, fromClause, index);
     }
 
     public override void VisitWhereClause (WhereClause whereClause, QueryModel queryModel, int index)

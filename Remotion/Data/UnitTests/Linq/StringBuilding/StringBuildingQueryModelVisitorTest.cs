@@ -57,7 +57,7 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
 
       var sv = new StringBuildingQueryModelVisitor();
 
-      sv.VisitJoinClause (joinClause);
+      sv.VisitJoinClause (joinClause, ExpressionHelper.CreateQueryModel(), ExpressionHelper.CreateMainFromClause(), 0);
 
       Assert.That (sv.ToString(), NUnit.Framework.SyntaxHelpers.Text.Contains ("join"));
     }
