@@ -23,7 +23,7 @@ namespace Remotion.Data.Linq.Clauses
   public interface ISelectGroupClause : IClause
   {
     ISelectGroupClause Clone (CloneContext cloneContext);
-    void Accept (IQueryModelVisitor visitor);
+    void Accept (IQueryModelVisitor visitor, QueryModel queryModel);
     
     /// <summary>
     /// Gets the execution strategy to use for the given select or group clause. The execution strategy defines how to dispatch a query

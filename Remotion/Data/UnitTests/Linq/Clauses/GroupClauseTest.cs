@@ -58,13 +58,14 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Accept()
     {
+      var queryModel = ExpressionHelper.CreateQueryModel ();
       var repository = new MockRepository();
       var visitorMock = repository.StrictMock<IQueryModelVisitor>();
-      visitorMock.VisitGroupClause (_groupClause);
+      visitorMock.VisitGroupClause (_groupClause, queryModel);
 
       repository.ReplayAll();
 
-      _groupClause.Accept (visitorMock);
+      _groupClause.Accept (visitorMock, queryModel);
 
       repository.VerifyAll();
     }

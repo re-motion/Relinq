@@ -70,12 +70,13 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     {
       var repository = new MockRepository ();
       var visitorMock = repository.StrictMock<IQueryModelVisitor> ();
+      var queryModel = ExpressionHelper.CreateQueryModel ();
 
-      visitorMock.VisitMainFromClause (_mainFromClause);
+      visitorMock.VisitMainFromClause (_mainFromClause, queryModel);
 
       repository.ReplayAll ();
 
-      _mainFromClause.Accept (visitorMock);
+      _mainFromClause.Accept (visitorMock, queryModel);
 
       repository.VerifyAll ();
     }

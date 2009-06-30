@@ -26,12 +26,13 @@ namespace Remotion.Data.Linq.StringBuilding
   {
     private readonly StringBuilder _sb = new StringBuilder ();
 
-    public override void VisitMainFromClause (MainFromClause fromClause)
+    public override void VisitMainFromClause (MainFromClause fromClause, QueryModel queryModel)
     {
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
       _sb.AppendFormat ("from {0} {1} in {2} ", fromClause.ItemType.Name, fromClause.ItemName, FormatExpression (fromClause.FromExpression));
-      base.VisitMainFromClause (fromClause);
+      base.VisitMainFromClause (fromClause, queryModel);
     }
 
     public override void VisitAdditionalFromClause (AdditionalFromClause fromClause, QueryModel queryModel, int index)
@@ -88,12 +89,12 @@ namespace Remotion.Data.Linq.StringBuilding
       base.VisitOrdering (ordering);
     }
 
-    public override void VisitSelectClause (SelectClause selectClause)
+    public override void VisitSelectClause (SelectClause selectClause, QueryModel queryModel)
     {
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);
       
       _sb.AppendFormat ("select {0}", FormatExpression (selectClause.Selector));
-      base.VisitSelectClause (selectClause);
+      base.VisitSelectClause (selectClause, queryModel);
     }
 
     protected override void VisitResultModifications (SelectClause selectClause, ObservableCollection<ResultModificationBase> resultModifications)
@@ -118,12 +119,13 @@ namespace Remotion.Data.Linq.StringBuilding
       base.VisitResultModification (resultModification);
     }
 
-    public override void VisitGroupClause (GroupClause groupClause)
+    public override void VisitGroupClause (GroupClause groupClause, QueryModel queryModel)
     {
       ArgumentUtility.CheckNotNull ("groupClause", groupClause);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
       
       _sb.AppendFormat ("group {0} by {1}", FormatExpression (groupClause.GroupExpression), FormatExpression (groupClause.ByExpression));
-      base.VisitGroupClause (groupClause);
+      base.VisitGroupClause (groupClause, queryModel);
     }
 
     public override string ToString ()

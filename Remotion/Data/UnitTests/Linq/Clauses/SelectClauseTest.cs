@@ -82,11 +82,12 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Accept()
     {
+      var queryModel = ExpressionHelper.CreateQueryModel ();
       var repository = new MockRepository();
       var visitorMock = repository.StrictMock<IQueryModelVisitor>();
-      visitorMock.VisitSelectClause (_selectClause);
+      visitorMock.VisitSelectClause (_selectClause, queryModel);
       repository.ReplayAll();
-      _selectClause.Accept (visitorMock);
+      _selectClause.Accept (visitorMock, queryModel);
       repository.VerifyAll();
     }
 

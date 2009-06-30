@@ -43,9 +43,10 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
     [Test]
     public void StringVisitorForMainFromClause ()
     {
+      var queryModel = ExpressionHelper.CreateQueryModel ();
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause();
       var sv = new StringBuildingQueryModelVisitor();
-      sv.VisitMainFromClause (fromClause);
+      sv.VisitMainFromClause (fromClause, queryModel);
       Assert.That (sv.ToString (), Is.EqualTo ("from Int32 main in TestQueryable<Student>() "));
     }
 
@@ -64,10 +65,11 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
     [Test]
     public void StringVisitorForSelectClause ()
     {
+      var queryModel = ExpressionHelper.CreateQueryModel ();
       SelectClause selectClause = ExpressionHelper.CreateSelectClause();
       var sv = new StringBuildingQueryModelVisitor();
 
-      sv.VisitSelectClause (selectClause);
+      sv.VisitSelectClause (selectClause, queryModel);
 
       Assert.That (sv.ToString (), Is.EqualTo ("select 0"));
     }
@@ -75,12 +77,13 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
     [Test]
     public void StringVisitorForSelectClause_WithResultModifications ()
     {
+      var queryModel = ExpressionHelper.CreateQueryModel ();
       SelectClause selectClause = ExpressionHelper.CreateSelectClause ();
       selectClause.ResultModifications.Add (new TakeResultModification (5));
       selectClause.ResultModifications.Add (new CountResultModification ());
       var sv = new StringBuildingQueryModelVisitor ();
 
-      sv.VisitSelectClause (selectClause);
+      sv.VisitSelectClause (selectClause, queryModel);
 
       Assert.That (sv.ToString (), Is.EqualTo ("(select 0).Take(5).Count()"));
     }
@@ -88,10 +91,11 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
     [Test]
     public void StringVisitorForGroupClause ()
     {
-      var groupClause = new GroupClause (ExpressionHelper.CreateExpression(), ExpressionHelper.CreateExpression());
+      var queryModel = ExpressionHelper.CreateQueryModel ();
+      var groupClause = new GroupClause (ExpressionHelper.CreateExpression (), ExpressionHelper.CreateExpression ());
       var sv = new StringBuildingQueryModelVisitor();
 
-      sv.VisitGroupClause (groupClause);
+      sv.VisitGroupClause (groupClause, queryModel);
 
       Assert.That (sv.ToString(), NUnit.Framework.SyntaxHelpers.Text.Contains ("group"));
     }

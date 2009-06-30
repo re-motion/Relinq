@@ -49,10 +49,11 @@ namespace Remotion.Data.Linq.Clauses
       set { _byExpression = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
-    public void Accept (IQueryModelVisitor visitor)
+    public void Accept (IQueryModelVisitor visitor, QueryModel queryModel)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
-      visitor.VisitGroupClause (this);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+      visitor.VisitGroupClause (this, queryModel);
     }
 
     public GroupClause Clone (CloneContext cloneContext)

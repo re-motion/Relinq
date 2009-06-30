@@ -92,14 +92,16 @@ namespace Remotion.Data.Linq
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
-      queryModel.MainFromClause.Accept (this);
+      queryModel.MainFromClause.Accept (this, queryModel);
       VisitBodyClauses (queryModel, queryModel.BodyClauses);
-      queryModel.SelectOrGroupClause.Accept (this);
+      queryModel.SelectOrGroupClause.Accept (this, queryModel);
     }
 
-    public virtual void VisitMainFromClause (MainFromClause fromClause)
+    public virtual void VisitMainFromClause (MainFromClause fromClause, QueryModel queryModel)
     {
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+
       VisitJoinClauses (fromClause, fromClause.JoinClauses);
     }
 
@@ -130,9 +132,10 @@ namespace Remotion.Data.Linq
       // nothing to do here
     }
 
-    public virtual void VisitSelectClause (SelectClause selectClause)
+    public virtual void VisitSelectClause (SelectClause selectClause, QueryModel queryModel)
     {
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
       VisitResultModifications (selectClause, selectClause.ResultModifications);
     }
 
@@ -141,8 +144,11 @@ namespace Remotion.Data.Linq
       // nothing to do here
     }
 
-    public virtual void VisitGroupClause (GroupClause groupClause)
+    public virtual void VisitGroupClause (GroupClause groupClause, QueryModel queryModel)
     {
+      ArgumentUtility.CheckNotNull ("groupClause", groupClause);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+
       // nothing to do here
     }
 

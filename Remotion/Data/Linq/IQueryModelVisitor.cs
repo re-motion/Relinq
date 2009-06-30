@@ -26,14 +26,14 @@ namespace Remotion.Data.Linq
   public interface IQueryModelVisitor
   {
     void VisitQueryModel (QueryModel queryModel);
-    void VisitMainFromClause (MainFromClause fromClause);
+    void VisitMainFromClause (MainFromClause fromClause, QueryModel queryModel);
     void VisitAdditionalFromClause (AdditionalFromClause fromClause, QueryModel queryModel, int index);
     void VisitJoinClause (JoinClause joinClause);
     void VisitWhereClause (WhereClause whereClause, QueryModel queryModel, int index);
     void VisitOrderByClause (OrderByClause orderByClause, QueryModel queryModel, int index);
     void VisitOrdering (Ordering ordering);
-    void VisitSelectClause (SelectClause selectClause);
+    void VisitSelectClause (SelectClause selectClause, QueryModel queryModel);
     void VisitResultModification (ResultModificationBase resultModification);
-    void VisitGroupClause (GroupClause groupClause);
+    void VisitGroupClause (GroupClause groupClause, QueryModel queryModel);
   }
 }

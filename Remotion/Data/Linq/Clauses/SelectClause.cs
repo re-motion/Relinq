@@ -56,10 +56,12 @@ namespace Remotion.Data.Linq.Clauses
 
     public ObservableCollection<ResultModificationBase> ResultModifications { get; private set; }
 
-    public virtual void Accept (IQueryModelVisitor visitor)
+    public virtual void Accept (IQueryModelVisitor visitor, QueryModel queryModel)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
-      visitor.VisitSelectClause (this);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+
+      visitor.VisitSelectClause (this, queryModel);
     }
 
     public SelectClause Clone (CloneContext cloneContext)

@@ -87,10 +87,10 @@ namespace Remotion.Data.UnitTests.Linq
         _visitorMock
             .Expect (mock => mock.VisitQueryModel (queryModel))
             .CallOriginalMethod (OriginalCallOptions.CreateExpectation);
-        mainFromClauseMock.Expect (mock => mock.Accept (_visitorMock));
+        mainFromClauseMock.Expect (mock => mock.Accept (_visitorMock, queryModel));
         _visitorMock
             .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitBodyClauses", queryModel, queryModel.BodyClauses));
-        selectClauseMock.Expect (mock => mock.Accept (_visitorMock));
+        selectClauseMock.Expect (mock => mock.Accept (_visitorMock, queryModel));
       }
 
       _mockRepository.ReplayAll();
@@ -103,11 +103,12 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void VisitMainFromClause ()
     {
+      var queryModel = ExpressionHelper.CreateQueryModel ();
       var mainFromClause = ExpressionHelper.CreateMainFromClause();
       using (_mockRepository.Ordered())
       {
         _visitorMock
-            .Expect (mock => mock.VisitMainFromClause (mainFromClause))
+            .Expect (mock => mock.VisitMainFromClause (mainFromClause, queryModel))
             .CallOriginalMethod (OriginalCallOptions.CreateExpectation);
         _visitorMock
             .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitJoinClauses", mainFromClause, mainFromClause.JoinClauses));
@@ -115,7 +116,7 @@ namespace Remotion.Data.UnitTests.Linq
 
       _visitorMock.Replay();
 
-      _visitorMock.VisitMainFromClause (mainFromClause);
+      _visitorMock.VisitMainFromClause (mainFromClause, queryModel);
 
       _visitorMock.VerifyAllExpectations();
     }
@@ -163,11 +164,12 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void VisitSelectClause ()
     {
+      var queryModel = ExpressionHelper.CreateQueryModel ();
       var selectClause = ExpressionHelper.CreateSelectClause();
       using (_mockRepository.Ordered())
       {
         _visitorMock
-            .Expect (mock => mock.VisitSelectClause (selectClause))
+            .Expect (mock => mock.VisitSelectClause (selectClause, queryModel))
             .CallOriginalMethod (OriginalCallOptions.CreateExpectation);
         _visitorMock
             .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitResultModifications", selectClause, selectClause.ResultModifications));
@@ -175,7 +177,7 @@ namespace Remotion.Data.UnitTests.Linq
 
       _visitorMock.Replay();
 
-      _visitorMock.VisitSelectClause (selectClause);
+      _visitorMock.VisitSelectClause (selectClause, queryModel);
 
       _visitorMock.VerifyAllExpectations();
     }
