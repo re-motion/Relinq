@@ -38,7 +38,8 @@ namespace Remotion.Data.Linq.StringBuilding
     public override void VisitAdditionalFromClause (AdditionalFromClause fromClause, QueryModel queryModel, int index)
     {
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
-
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+      
       _sb.AppendFormat ("from {0} {1} in {2} ", fromClause.ItemType.Name, fromClause.ItemName, FormatExpression (fromClause.FromExpression));
       base.VisitAdditionalFromClause (fromClause, queryModel, index);
     }
@@ -46,6 +47,8 @@ namespace Remotion.Data.Linq.StringBuilding
     public override void VisitJoinClause (JoinClause joinClause, QueryModel queryModel, FromClauseBase fromClause, int index)
     {
       ArgumentUtility.CheckNotNull ("joinClause", joinClause);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+      ArgumentUtility.CheckNotNull ("fromClause", fromClause);
 
       _sb.AppendFormat (
           "join {0} {1} in {2} on {3} equals {4} ",
@@ -60,6 +63,7 @@ namespace Remotion.Data.Linq.StringBuilding
     public override void VisitWhereClause (WhereClause whereClause, QueryModel queryModel, int index)
     {
       ArgumentUtility.CheckNotNull ("whereClause", whereClause);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
       _sb.AppendFormat ("where {0} ", FormatExpression (whereClause.Predicate));
       base.VisitWhereClause (whereClause, queryModel, index);
@@ -68,15 +72,18 @@ namespace Remotion.Data.Linq.StringBuilding
     public override void VisitOrderByClause (OrderByClause orderByClause, QueryModel queryModel, int index)
     {
       ArgumentUtility.CheckNotNull ("orderByClause", orderByClause);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
       _sb.Append ("orderby ");
       base.VisitOrderByClause (orderByClause, queryModel, index);
     }
 
-    public override void VisitOrdering (Ordering ordering)
+    public override void VisitOrdering (Ordering ordering, QueryModel queryModel, OrderByClause orderByClause, int index)
     {
       ArgumentUtility.CheckNotNull ("ordering", ordering);
-
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+      ArgumentUtility.CheckNotNull ("orderByClause", orderByClause);
+      
       switch (ordering.OrderingDirection)
       {
         case OrderingDirection.Asc:
@@ -86,13 +93,14 @@ namespace Remotion.Data.Linq.StringBuilding
           _sb.AppendFormat ("{0} descending ", FormatExpression (ordering.Expression));
           break;
       }
-      base.VisitOrdering (ordering);
+      base.VisitOrdering (ordering, queryModel, orderByClause, index);
     }
 
     public override void VisitSelectClause (SelectClause selectClause, QueryModel queryModel)
     {
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);
-      
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+
       _sb.AppendFormat ("select {0}", FormatExpression (selectClause.Selector));
       base.VisitSelectClause (selectClause, queryModel);
     }
@@ -115,6 +123,8 @@ namespace Remotion.Data.Linq.StringBuilding
     public override void VisitResultModification (ResultModificationBase resultModification, QueryModel queryModel, SelectClause selectClause, int index)
     {
       ArgumentUtility.CheckNotNull ("resultModification", resultModification);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+      ArgumentUtility.CheckNotNull ("selectClause", selectClause);
 
       _sb.Append (".");
       _sb.Append (resultModification.ToString ());

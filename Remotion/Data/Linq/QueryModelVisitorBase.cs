@@ -28,51 +28,6 @@ namespace Remotion.Data.Linq
   /// </summary>
   public abstract class QueryModelVisitorBase : IQueryModelVisitor
   {
-    private QueryModel _currentQueryModel;
-    private int _currentJoinClauseIndex = -1;
-    private int _currentOrderingIndex = -1;
-
-    public QueryModel CurrentQueryModel
-    {
-      get
-      {
-        if (_currentQueryModel == null)
-          throw new InvalidOperationException ("CurrentQueryModel can only be called after a QueryModel has accepted this visitor.");
-        return _currentQueryModel;
-      }
-      private set { _currentQueryModel = value; }
-    }
-
-    public int CurrentJoinClauseIndex
-    {
-      get
-      {
-        if (_currentJoinClauseIndex == -1)
-          throw new InvalidOperationException ("CurrentJoinClauseIndex can only be called while VisitJoinClauses is visiting join clauses.");
-        return _currentJoinClauseIndex;
-      }
-      protected set { _currentJoinClauseIndex = value; }
-    }
-
-    public int CurrentOrderingIndex
-    {
-      get
-      {
-        if (_currentOrderingIndex == -1)
-          throw new InvalidOperationException ("CurrentOrderingIndex can only be called while VisitCurrentOrderings is visiting orderings.");
-        return _currentOrderingIndex;
-      }
-      protected set { _currentOrderingIndex = value; }
-    }
-
-    void IQueryModelVisitor.VisitQueryModel (QueryModel queryModel)
-    {
-      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
-
-      CurrentQueryModel = queryModel;
-      VisitQueryModel (queryModel);
-    }
-
     public virtual void VisitQueryModel (QueryModel queryModel)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
@@ -120,11 +75,15 @@ namespace Remotion.Data.Linq
       ArgumentUtility.CheckNotNull ("orderByClause", orderByClause);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
-      VisitOrderings (orderByClause, orderByClause.Orderings);
+      VisitOrderings (queryModel, orderByClause, orderByClause.Orderings);
     }
 
-    public virtual void VisitOrdering (Ordering ordering)
+    public virtual void VisitOrdering (Ordering ordering, QueryModel queryModel, OrderByClause orderByClause, int index)
     {
+      ArgumentUtility.CheckNotNull ("ordering", ordering);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+      ArgumentUtility.CheckNotNull ("orderByClause", orderByClause);
+
       // nothing to do here
     }
 
@@ -172,12 +131,14 @@ namespace Remotion.Data.Linq
         indexValuePair.Value.Accept (this, queryModel, fromClause, indexValuePair.Index);
     }
 
-    protected virtual void VisitOrderings (OrderByClause orderByClause, ObservableCollection<Ordering> orderings)
+    protected virtual void VisitOrderings (QueryModel queryModel, OrderByClause orderByClause, ObservableCollection<Ordering> orderings)
     {
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
       ArgumentUtility.CheckNotNull ("orderByClause", orderByClause);
       ArgumentUtility.CheckNotNull ("orderings", orderings);
 
-      VisitCollection (orderings, ordering => ordering.Accept (this), index => CurrentOrderingIndex = index);
+      foreach (var indexValuePair in orderings.AsChangeResistantEnumerableWithIndex ())
+        indexValuePair.Value.Accept (this, queryModel, orderByClause, indexValuePair.Index);
     }
 
     protected virtual void VisitResultModifications (QueryModel queryModel, SelectClause selectClause, ObservableCollection<ResultModificationBase> resultModifications)
@@ -188,22 +149,6 @@ namespace Remotion.Data.Linq
 
       foreach (var indexValuePair in resultModifications.AsChangeResistantEnumerableWithIndex ())
         indexValuePair.Value.Accept (this, queryModel, selectClause, indexValuePair.Index);
-    }
-
-    private void VisitCollection<T> (ObservableCollection<T> collection, Action<T> acceptAction, Action<int> indexSetter)
-    {
-      try
-      {
-        foreach (var itemWithIndex in collection.AsChangeResistantEnumerableWithIndex())
-        {
-          indexSetter (itemWithIndex.Index);
-          acceptAction (itemWithIndex.Value);
-        }
-      }
-      finally
-      {
-        indexSetter (-1);
-      }
     }
   }
 }

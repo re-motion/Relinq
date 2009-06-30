@@ -117,7 +117,7 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
       Ordering ordering = ExpressionHelper.CreateOrdering();
       var sv = new StringBuildingQueryModelVisitor();
 
-      sv.VisitOrdering (ordering);
+      sv.VisitOrdering (ordering, ExpressionHelper.CreateQueryModel(), ExpressionHelper.CreateOrderByClause(), 0);
 
       Assert.That (sv.ToString(), NUnit.Framework.SyntaxHelpers.Text.Contains ("ascending"));
     }
@@ -130,7 +130,7 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
           OrderingDirection.Desc);
 
       var sv = new StringBuildingQueryModelVisitor();
-      sv.VisitOrdering (ordering);
+      sv.VisitOrdering (ordering, ExpressionHelper.CreateQueryModel (), ExpressionHelper.CreateOrderByClause (), 0);
 
       Assert.That (sv.ToString(), NUnit.Framework.SyntaxHelpers.Text.Contains ("descending"));
     }

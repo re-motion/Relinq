@@ -65,13 +65,15 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Accept()
     {
       var repository = new MockRepository();
+      var queryModel = ExpressionHelper.CreateQueryModel ();
+      var orderByClause = ExpressionHelper.CreateOrderByClause ();
       var visitorMock = repository.StrictMock<IQueryModelVisitor>();
 
-      visitorMock.VisitOrdering (_ordering);
+      visitorMock.VisitOrdering (_ordering, queryModel, orderByClause, 1);
 
       repository.ReplayAll();
 
-      _ordering.Accept (visitorMock);
+      _ordering.Accept (visitorMock, queryModel, orderByClause, 1);
 
       repository.VerifyAll();
     }

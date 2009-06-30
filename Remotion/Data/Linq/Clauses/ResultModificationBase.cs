@@ -47,6 +47,9 @@ namespace Remotion.Data.Linq.Clauses
     public virtual void Accept (IQueryModelVisitor visitor, QueryModel queryModel, SelectClause selectClause, int index)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+      ArgumentUtility.CheckNotNull ("selectClause", selectClause);
+      
       visitor.VisitResultModification (this, queryModel, selectClause, index);
     }
   }

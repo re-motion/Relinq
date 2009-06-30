@@ -155,7 +155,7 @@ namespace Remotion.Data.UnitTests.Linq
             .Expect (mock => mock.VisitOrderByClause (_orderByClause, _queryModel, 1))
             .CallOriginalMethod (OriginalCallOptions.CreateExpectation);
         _visitorMock
-            .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitOrderings", _orderByClause, _orderByClause.Orderings));
+            .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitOrderings", _queryModel, _orderByClause, _orderByClause.Orderings));
       }
 
       _visitorMock.Replay();
@@ -266,13 +266,13 @@ namespace Remotion.Data.UnitTests.Linq
 
       using (_mockRepository.Ordered())
       {
-        _orderingMock1.Expect (mock => mock.Accept (_testVisitor));
-        _orderingMock2.Expect (mock => mock.Accept (_testVisitor));
+        _orderingMock1.Expect (mock => mock.Accept (_testVisitor, _queryModel, _orderByClause, 0));
+        _orderingMock2.Expect (mock => mock.Accept (_testVisitor, _queryModel, _orderByClause, 1));
       }
 
       _mockRepository.ReplayAll();
 
-      _testVisitor.VisitOrderings (_orderByClause, orderings);
+      _testVisitor.VisitOrderings (_queryModel, _orderByClause, orderings);
 
       _mockRepository.VerifyAll();
     }
@@ -284,13 +284,13 @@ namespace Remotion.Data.UnitTests.Linq
 
       using (_mockRepository.Ordered())
       {
-        _orderingMock1.Expect (mock => mock.Accept (_testVisitor)).WhenCalled (mi => orderings.RemoveAt (0));
-        _orderingMock2.Expect (mock => mock.Accept (_testVisitor));
+        _orderingMock1.Expect (mock => mock.Accept (_testVisitor, _queryModel, _orderByClause, 0)).WhenCalled (mi => orderings.RemoveAt (0));
+        _orderingMock2.Expect (mock => mock.Accept (_testVisitor, _queryModel, _orderByClause, 0));
       }
 
       _mockRepository.ReplayAll();
 
-      _testVisitor.VisitOrderings (_orderByClause, orderings);
+      _testVisitor.VisitOrderings (_queryModel, _orderByClause, orderings);
 
       _mockRepository.VerifyAll();
     }

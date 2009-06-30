@@ -58,10 +58,13 @@ namespace Remotion.Data.Linq.Clauses
 
     public OrderingDirection OrderingDirection { get; set; }
 
-    public virtual void Accept (IQueryModelVisitor visitor)
+    public virtual void Accept (IQueryModelVisitor visitor, QueryModel queryModel, OrderByClause orderByClause, int index)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
-      visitor.VisitOrdering (this);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+      ArgumentUtility.CheckNotNull ("orderByClause", orderByClause);
+      
+      visitor.VisitOrdering (this, queryModel, orderByClause, index);
     }
 
     public Ordering Clone (CloneContext cloneContext)
