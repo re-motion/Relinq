@@ -39,24 +39,24 @@ namespace Remotion.Data.UnitTests.Linq
       }
     }
 
-    public new void VisitBodyClauses (QueryModel queryModel, ObservableCollection<IBodyClause> bodyClauses)
+    public new void VisitBodyClauses (ObservableCollection<IBodyClause> bodyClauses, QueryModel queryModel)
     {
-      base.VisitBodyClauses (queryModel, bodyClauses);
+      base.VisitBodyClauses (bodyClauses, queryModel);
     }
 
-    public new void VisitJoinClauses (QueryModel queryModel, FromClauseBase fromClause, ObservableCollection<JoinClause> joinClauses)
+    public new void VisitJoinClauses (ObservableCollection<JoinClause> joinClauses, QueryModel queryModel, FromClauseBase fromClause)
     {
-      base.VisitJoinClauses (queryModel, fromClause, joinClauses);
+      base.VisitJoinClauses (joinClauses, queryModel, fromClause);
     }
 
-    public new void VisitOrderings (QueryModel queryModel, OrderByClause orderByClause, ObservableCollection<Ordering> orderings)
+    public new void VisitOrderings (ObservableCollection<Ordering> orderings, QueryModel queryModel, OrderByClause orderByClause)
     {
-      base.VisitOrderings (queryModel, orderByClause, orderings);
+      base.VisitOrderings (orderings, queryModel, orderByClause);
     }
 
-    public new void VisitResultModifications (QueryModel queryModel, SelectClause selectClause, ObservableCollection<ResultModificationBase> resultModifications)
+    public new void VisitResultModifications (ObservableCollection<ResultModificationBase> resultModifications, QueryModel queryModel, SelectClause selectClause)
     {
-      base.VisitResultModifications (queryModel, selectClause, resultModifications);
+      base.VisitResultModifications (resultModifications, queryModel, selectClause);
     }
   }
 }

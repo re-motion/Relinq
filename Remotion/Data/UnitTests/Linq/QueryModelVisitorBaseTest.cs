@@ -97,7 +97,7 @@ namespace Remotion.Data.UnitTests.Linq
             .CallOriginalMethod (OriginalCallOptions.CreateExpectation);
         mainFromClauseMock.Expect (mock => mock.Accept (_visitorMock, queryModel));
         _visitorMock
-            .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitBodyClauses", queryModel, queryModel.BodyClauses));
+            .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitBodyClauses", queryModel.BodyClauses, queryModel));
         selectClauseMock.Expect (mock => mock.Accept (_visitorMock, queryModel));
       }
 
@@ -117,7 +117,7 @@ namespace Remotion.Data.UnitTests.Linq
             .Expect (mock => mock.VisitMainFromClause (_mainFromClause, _queryModel))
             .CallOriginalMethod (OriginalCallOptions.CreateExpectation);
         _visitorMock
-            .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitJoinClauses", _queryModel, _mainFromClause, _mainFromClause.JoinClauses));
+            .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitJoinClauses", _mainFromClause.JoinClauses, _queryModel, _mainFromClause));
       }
 
       _visitorMock.Replay();
@@ -136,7 +136,7 @@ namespace Remotion.Data.UnitTests.Linq
             .Expect (mock => mock.VisitAdditionalFromClause (_additionalFromClause, _queryModel, 1))
             .CallOriginalMethod (OriginalCallOptions.CreateExpectation);
         _visitorMock
-            .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitJoinClauses", _queryModel, _additionalFromClause, _additionalFromClause.JoinClauses));
+            .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitJoinClauses", _additionalFromClause.JoinClauses, _queryModel, _additionalFromClause));
       }
 
       _visitorMock.Replay();
@@ -155,7 +155,7 @@ namespace Remotion.Data.UnitTests.Linq
             .Expect (mock => mock.VisitOrderByClause (_orderByClause, _queryModel, 1))
             .CallOriginalMethod (OriginalCallOptions.CreateExpectation);
         _visitorMock
-            .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitOrderings", _queryModel, _orderByClause, _orderByClause.Orderings));
+            .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitOrderings", _orderByClause.Orderings, _queryModel, _orderByClause));
       }
 
       _visitorMock.Replay();
@@ -174,7 +174,7 @@ namespace Remotion.Data.UnitTests.Linq
             .Expect (mock => mock.VisitSelectClause (_selectClause, _queryModel))
             .CallOriginalMethod (OriginalCallOptions.CreateExpectation);
         _visitorMock
-            .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitResultModifications", _queryModel, _selectClause, _selectClause.ResultModifications));
+            .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitResultModifications", _selectClause.ResultModifications, _queryModel, _selectClause));
       }
 
       _visitorMock.Replay();
@@ -197,7 +197,7 @@ namespace Remotion.Data.UnitTests.Linq
 
       _mockRepository.ReplayAll();
 
-      _testVisitor.VisitBodyClauses (_queryModel, bodyClauses);
+      _testVisitor.VisitBodyClauses (bodyClauses, _queryModel);
 
       _mockRepository.VerifyAll();
     }
@@ -218,7 +218,7 @@ namespace Remotion.Data.UnitTests.Linq
 
       _mockRepository.ReplayAll();
 
-      _testVisitor.VisitBodyClauses (_queryModel, bodyClauses);
+      _testVisitor.VisitBodyClauses (bodyClauses, _queryModel);
 
       _mockRepository.VerifyAll();
     }
@@ -236,7 +236,7 @@ namespace Remotion.Data.UnitTests.Linq
 
       _mockRepository.ReplayAll();
 
-      _testVisitor.VisitJoinClauses (_queryModel, _mainFromClause, joinClauses);
+      _testVisitor.VisitJoinClauses (joinClauses, _queryModel, _mainFromClause);
 
       _mockRepository.VerifyAll();
     }
@@ -254,7 +254,7 @@ namespace Remotion.Data.UnitTests.Linq
 
       _mockRepository.ReplayAll();
 
-      _testVisitor.VisitJoinClauses (_queryModel, _mainFromClause, joinClauses);
+      _testVisitor.VisitJoinClauses (joinClauses, _queryModel, _mainFromClause);
 
       _mockRepository.VerifyAll();
     }
@@ -272,7 +272,7 @@ namespace Remotion.Data.UnitTests.Linq
 
       _mockRepository.ReplayAll();
 
-      _testVisitor.VisitOrderings (_queryModel, _orderByClause, orderings);
+      _testVisitor.VisitOrderings (orderings, _queryModel, _orderByClause);
 
       _mockRepository.VerifyAll();
     }
@@ -290,7 +290,7 @@ namespace Remotion.Data.UnitTests.Linq
 
       _mockRepository.ReplayAll();
 
-      _testVisitor.VisitOrderings (_queryModel, _orderByClause, orderings);
+      _testVisitor.VisitOrderings (orderings, _queryModel, _orderByClause);
 
       _mockRepository.VerifyAll();
     }
@@ -308,7 +308,7 @@ namespace Remotion.Data.UnitTests.Linq
 
       _mockRepository.ReplayAll();
 
-      _testVisitor.VisitResultModifications (_queryModel, _selectClause, resultModifications);
+      _testVisitor.VisitResultModifications (resultModifications, _queryModel, _selectClause);
 
       _mockRepository.VerifyAll();
     }
@@ -329,7 +329,7 @@ namespace Remotion.Data.UnitTests.Linq
 
       _mockRepository.ReplayAll();
 
-      _testVisitor.VisitResultModifications (_queryModel, _selectClause, resultModifications);
+      _testVisitor.VisitResultModifications (resultModifications, _queryModel, _selectClause);
 
       _mockRepository.VerifyAll();
     }

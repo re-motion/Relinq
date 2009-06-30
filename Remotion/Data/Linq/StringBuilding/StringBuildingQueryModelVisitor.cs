@@ -105,7 +105,7 @@ namespace Remotion.Data.Linq.StringBuilding
       base.VisitSelectClause (selectClause, queryModel);
     }
 
-    protected override void VisitResultModifications (QueryModel queryModel, SelectClause selectClause, ObservableCollection<ResultModificationBase> resultModifications)
+    protected override void VisitResultModifications (ObservableCollection<ResultModificationBase> resultModifications, QueryModel queryModel, SelectClause selectClause)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);
@@ -117,7 +117,7 @@ namespace Remotion.Data.Linq.StringBuilding
         _sb.Append (")");
       }
 
-      base.VisitResultModifications (queryModel, selectClause, resultModifications);
+      base.VisitResultModifications (resultModifications, queryModel, selectClause);
     }
 
     public override void VisitResultModification (ResultModificationBase resultModification, QueryModel queryModel, SelectClause selectClause, int index)

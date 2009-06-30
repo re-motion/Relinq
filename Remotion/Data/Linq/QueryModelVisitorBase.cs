@@ -33,7 +33,7 @@ namespace Remotion.Data.Linq
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
       queryModel.MainFromClause.Accept (this, queryModel);
-      VisitBodyClauses (queryModel, queryModel.BodyClauses);
+      VisitBodyClauses (queryModel.BodyClauses, queryModel);
       queryModel.SelectOrGroupClause.Accept (this, queryModel);
     }
 
@@ -42,7 +42,7 @@ namespace Remotion.Data.Linq
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
-      VisitJoinClauses (queryModel, fromClause, fromClause.JoinClauses);
+      VisitJoinClauses (fromClause.JoinClauses, queryModel, fromClause);
     }
 
     public virtual void VisitAdditionalFromClause (AdditionalFromClause fromClause, QueryModel queryModel, int index)
@@ -50,7 +50,7 @@ namespace Remotion.Data.Linq
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
-      VisitJoinClauses (queryModel, fromClause, fromClause.JoinClauses);
+      VisitJoinClauses (fromClause.JoinClauses, queryModel, fromClause);
     }
 
     public virtual void VisitJoinClause (JoinClause joinClause, QueryModel queryModel, FromClauseBase fromClause, int index)
@@ -75,7 +75,7 @@ namespace Remotion.Data.Linq
       ArgumentUtility.CheckNotNull ("orderByClause", orderByClause);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
-      VisitOrderings (queryModel, orderByClause, orderByClause.Orderings);
+      VisitOrderings (orderByClause.Orderings, queryModel, orderByClause);
     }
 
     public virtual void VisitOrdering (Ordering ordering, QueryModel queryModel, OrderByClause orderByClause, int index)
@@ -92,7 +92,7 @@ namespace Remotion.Data.Linq
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
-      VisitResultModifications (queryModel, selectClause, selectClause.ResultModifications);
+      VisitResultModifications (selectClause.ResultModifications, queryModel, selectClause);
     }
 
     public virtual void VisitResultModification (ResultModificationBase resultModification, QueryModel queryModel, SelectClause selectClause, int index)
@@ -112,7 +112,7 @@ namespace Remotion.Data.Linq
       // nothing to do here
     }
 
-    protected virtual void VisitBodyClauses (QueryModel queryModel, ObservableCollection<IBodyClause> bodyClauses)
+    protected virtual void VisitBodyClauses (ObservableCollection<IBodyClause> bodyClauses, QueryModel queryModel)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
       ArgumentUtility.CheckNotNull ("bodyClauses", bodyClauses);
@@ -121,7 +121,7 @@ namespace Remotion.Data.Linq
         indexValuePair.Value.Accept (this, queryModel, indexValuePair.Index);
     }
 
-    protected virtual void VisitJoinClauses (QueryModel queryModel, FromClauseBase fromClause, ObservableCollection<JoinClause> joinClauses)
+    protected virtual void VisitJoinClauses (ObservableCollection<JoinClause> joinClauses, QueryModel queryModel, FromClauseBase fromClause)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
@@ -131,7 +131,7 @@ namespace Remotion.Data.Linq
         indexValuePair.Value.Accept (this, queryModel, fromClause, indexValuePair.Index);
     }
 
-    protected virtual void VisitOrderings (QueryModel queryModel, OrderByClause orderByClause, ObservableCollection<Ordering> orderings)
+    protected virtual void VisitOrderings (ObservableCollection<Ordering> orderings, QueryModel queryModel, OrderByClause orderByClause)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
       ArgumentUtility.CheckNotNull ("orderByClause", orderByClause);
@@ -141,7 +141,7 @@ namespace Remotion.Data.Linq
         indexValuePair.Value.Accept (this, queryModel, orderByClause, indexValuePair.Index);
     }
 
-    protected virtual void VisitResultModifications (QueryModel queryModel, SelectClause selectClause, ObservableCollection<ResultModificationBase> resultModifications)
+    protected virtual void VisitResultModifications (ObservableCollection<ResultModificationBase> resultModifications, QueryModel queryModel, SelectClause selectClause)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);
