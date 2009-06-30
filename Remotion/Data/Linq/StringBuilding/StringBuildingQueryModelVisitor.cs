@@ -14,7 +14,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
 using Remotion.Collections;
@@ -35,12 +34,12 @@ namespace Remotion.Data.Linq.StringBuilding
       base.VisitMainFromClause (fromClause);
     }
 
-    public override void VisitAdditionalFromClause (AdditionalFromClause fromClause)
+    public override void VisitAdditionalFromClause (AdditionalFromClause fromClause, QueryModel queryModel, int index)
     {
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
 
       _sb.AppendFormat ("from {0} {1} in {2} ", fromClause.ItemType.Name, fromClause.ItemName, FormatExpression (fromClause.FromExpression));
-      base.VisitAdditionalFromClause (fromClause);
+      base.VisitAdditionalFromClause (fromClause, queryModel, index);
     }
 
     public override void VisitJoinClause (JoinClause joinClause)
@@ -57,20 +56,20 @@ namespace Remotion.Data.Linq.StringBuilding
       base.VisitJoinClause (joinClause);
     }
 
-    public override void VisitWhereClause (WhereClause whereClause)
+    public override void VisitWhereClause (WhereClause whereClause, QueryModel queryModel, int index)
     {
       ArgumentUtility.CheckNotNull ("whereClause", whereClause);
 
       _sb.AppendFormat ("where {0} ", FormatExpression (whereClause.Predicate));
-      base.VisitWhereClause (whereClause);
+      base.VisitWhereClause (whereClause, queryModel, index);
     }
 
-    public override void VisitOrderByClause (OrderByClause orderByClause)
+    public override void VisitOrderByClause (OrderByClause orderByClause, QueryModel queryModel, int index)
     {
       ArgumentUtility.CheckNotNull ("orderByClause", orderByClause);
 
       _sb.Append ("orderby ");
-      base.VisitOrderByClause (orderByClause);
+      base.VisitOrderByClause (orderByClause, queryModel, index);
     }
 
     public override void VisitOrdering (Ordering ordering)

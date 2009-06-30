@@ -22,14 +22,13 @@ namespace Remotion.Data.Linq
 {
   /// <summary>
   /// Provides a default implementation of <see cref="IQueryModelVisitor"/> which automatically visits child items. That is, the default 
-  /// implementation of <see cref="VisitQueryModel"/> automatically calls <see cref="IClause.Accept"/> on all clauses in the <see cref="QueryModel"/>,
+  /// implementation of <see cref="VisitQueryModel"/> automatically calls <c>Accept</c> on all clauses in the <see cref="QueryModel"/>,
   /// the default implementation of <see cref="VisitMainFromClause"/> automatically calls <see cref="JoinClause.Accept"/> on the 
   /// <see cref="JoinClause"/> instances in its <see cref="FromClauseBase.JoinClauses"/> collection, and so on.
   /// </summary>
   public abstract class QueryModelVisitorBase : IQueryModelVisitor
   {
     private QueryModel _currentQueryModel;
-    private int _currentBodyClauseIndex = -1;
     private int _currentJoinClauseIndex = -1;
     private int _currentOrderingIndex = -1;
     private int _currentResultModificationIndex = -1;
@@ -43,17 +42,6 @@ namespace Remotion.Data.Linq
         return _currentQueryModel;
       }
       private set { _currentQueryModel = value; }
-    }
-
-    public int CurrentBodyClauseIndex
-    {
-      get
-      {
-        if (_currentBodyClauseIndex == -1)
-          throw new InvalidOperationException ("CurrentBodyClauseIndex can only be called while VisitBodyClauses is visiting body clauses.");
-        return _currentBodyClauseIndex;
-      }
-      protected set { _currentBodyClauseIndex = value; }
     }
 
     public int CurrentJoinClauseIndex
@@ -73,7 +61,8 @@ namespace Remotion.Data.Linq
       {
         if (_currentOrderingIndex == -1)
           throw new InvalidOperationException ("CurrentOrderingIndex can only be called while VisitCurrentOrderings is visiting orderings.");
-        return _currentOrderingIndex; }
+        return _currentOrderingIndex;
+      }
       protected set { _currentOrderingIndex = value; }
     }
 
@@ -114,7 +103,7 @@ namespace Remotion.Data.Linq
       VisitJoinClauses (fromClause, fromClause.JoinClauses);
     }
 
-    public virtual void VisitAdditionalFromClause (AdditionalFromClause fromClause)
+    public virtual void VisitAdditionalFromClause (AdditionalFromClause fromClause, QueryModel queryModel, int index)
     {
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
       VisitJoinClauses (fromClause, fromClause.JoinClauses);
@@ -125,12 +114,12 @@ namespace Remotion.Data.Linq
       // nothing to do here
     }
 
-    public virtual void VisitWhereClause (WhereClause whereClause)
+    public virtual void VisitWhereClause (WhereClause whereClause, QueryModel queryModel, int index)
     {
       // nothing to do here
     }
 
-    public virtual void VisitOrderByClause (OrderByClause orderByClause)
+    public virtual void VisitOrderByClause (OrderByClause orderByClause, QueryModel queryModel, int index)
     {
       ArgumentUtility.CheckNotNull ("orderByClause", orderByClause);
       VisitOrderings (orderByClause, orderByClause.Orderings);
@@ -157,37 +146,15 @@ namespace Remotion.Data.Linq
       // nothing to do here
     }
 
-    /// <summary>
-    /// Visits the body clauses of a <see cref="QueryModel"/> by calling <see cref="IClause.Accept"/> on them. This will cause one of the
-    /// <see cref="VisitWhereClause"/>, <see cref="VisitAdditionalFromClause"/>, or <see cref="VisitOrderByClause"/> methods to be invoked, as
-    /// defined by the <see cref="IClause.Accept"/> method.
-    /// </summary>
-    /// <param name="queryModel">The query model holding the body clauses.</param>
-    /// <param name="bodyClauses">The body clauses to visit.</param>
-    /// <remarks>
-    /// Note to implementers: This method not only calls <see cref="IClause.Accept"/> on the given <paramref name="bodyClauses"/>, it also sets
-    /// <see cref="CurrentBodyClauseIndex"/>. If the method is overridden, the overrider is responsible for either calling the base implementation
-    /// or manually setting <see cref="CurrentBodyClauseIndex"/>.
-    /// </remarks>
     protected virtual void VisitBodyClauses (QueryModel queryModel, ObservableCollection<IBodyClause> bodyClauses)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
       ArgumentUtility.CheckNotNull ("bodyClauses", bodyClauses);
 
-      VisitCollection (bodyClauses, clause => clause.Accept (this), index => CurrentBodyClauseIndex = index);
+      foreach (var indexValuePair in bodyClauses.AsChangeResistantEnumerableWithIndex())
+        indexValuePair.Value.Accept (this, queryModel, indexValuePair.Index);
     }
 
-    /// <summary>
-    /// Visits the join clauses of a <see cref="FromClauseBase"/> by calling <see cref="IClause.Accept"/> on them. This will cause the
-    /// <see cref="VisitJoinClause"/> method to be invoked, as defined by the <see cref="IClause.Accept"/> method.
-    /// </summary>
-    /// <param name="fromClause">The from clause holding the join clauses.</param>
-    /// <param name="joinClauses">The join clauses to visit.</param>
-    /// <remarks>
-    /// Note to implementers: This method not only calls <see cref="IClause.Accept"/> on the given <paramref name="joinClauses"/>, it also sets
-    /// <see cref="CurrentJoinClauseIndex"/>. If the method is overridden, the overrider is responsible for either calling the base implementation
-    /// or manually setting <see cref="CurrentJoinClauseIndex"/>.
-    /// </remarks>
     protected virtual void VisitJoinClauses (FromClauseBase fromClause, ObservableCollection<JoinClause> joinClauses)
     {
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
@@ -196,17 +163,6 @@ namespace Remotion.Data.Linq
       VisitCollection (joinClauses, clause => clause.Accept (this), index => CurrentJoinClauseIndex = index);
     }
 
-    /// <summary>
-    /// Visits the orderings of an <see cref="OrderByClause"/> by calling <see cref="Ordering.Accept"/> on them. This will cause the
-    /// <see cref="VisitOrdering"/> method to be invoked, as defined by the <see cref="Ordering.Accept"/> method.
-    /// </summary>
-    /// <param name="orderByClause">The order-by clause holding the orderings.</param>
-    /// <param name="orderings">The orderings to visit.</param>
-    /// <remarks>
-    /// Note to implementers: This method not only calls <see cref="Ordering.Accept"/> on the given <paramref name="orderings"/>, it also sets
-    /// <see cref="CurrentOrderingIndex"/>. If the method is overridden, the overrider is responsible for either calling the base implementation
-    /// or manually setting <see cref="CurrentOrderingIndex"/>.
-    /// </remarks>
     protected virtual void VisitOrderings (OrderByClause orderByClause, ObservableCollection<Ordering> orderings)
     {
       ArgumentUtility.CheckNotNull ("orderByClause", orderByClause);
@@ -215,17 +171,6 @@ namespace Remotion.Data.Linq
       VisitCollection (orderings, ordering => ordering.Accept (this), index => CurrentOrderingIndex = index);
     }
 
-    /// <summary>
-    /// Visits the result modifications of a <see cref="SelectClause"/> by calling <see cref="ResultModificationBase.Accept"/> on them. This will cause the
-    /// <see cref="VisitResultModification"/> method to be invoked, as defined by the <see cref="ResultModificationBase.Accept"/> method.
-    /// </summary>
-    /// <param name="selectClause">The select clause holding the result modifications.</param>
-    /// <param name="resultModifications">The result modifications to visit.</param>
-    /// <remarks>
-    /// Note to implementers: This method not only calls <see cref="ResultModificationBase.Accept"/> on the given <paramref name="resultModifications"/>, it also sets
-    /// <see cref="CurrentResultModificationIndex"/>. If the method is overridden, the overrider is responsible for either calling the base implementation
-    /// or manually setting <see cref="CurrentResultModificationIndex"/>.
-    /// </remarks>
     protected virtual void VisitResultModifications (SelectClause selectClause, ObservableCollection<ResultModificationBase> resultModifications)
     {
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);

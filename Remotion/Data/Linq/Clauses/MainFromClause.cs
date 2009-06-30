@@ -42,7 +42,7 @@ namespace Remotion.Data.Linq.Clauses
     {
     }
 
-    public override void Accept (IQueryModelVisitor visitor)
+    public virtual void Accept (IQueryModelVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       visitor.VisitMainFromClause (this);

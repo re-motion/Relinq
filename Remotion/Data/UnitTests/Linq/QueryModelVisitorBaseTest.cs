@@ -15,7 +15,6 @@
 // 
 using System;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Collections;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
@@ -41,13 +40,14 @@ namespace Remotion.Data.UnitTests.Linq
     private Ordering _orderingMock2;
     private ResultModificationBase _resultModificationMock1;
     private ResultModificationBase _resultModificationMock2;
+    private QueryModel _queryModel;
 
     [SetUp]
     public void SetUp ()
     {
       _mockRepository = new MockRepository();
       _visitorMock = _mockRepository.StrictMock<QueryModelVisitorBase>();
-      _testVisitor = new TestQueryModelVisitor();
+      _testVisitor = new TestQueryModelVisitor ();
 
       _bodyClauseMock1 = _mockRepository.StrictMock<WhereClause> (ExpressionHelper.CreateExpression());
       _bodyClauseMock2 = _mockRepository.StrictMock<WhereClause> (ExpressionHelper.CreateExpression());
@@ -71,6 +71,8 @@ namespace Remotion.Data.UnitTests.Linq
 
       _resultModificationMock1 = _mockRepository.StrictMock<ResultModificationBase> (CollectionExecutionStrategy.Instance);
       _resultModificationMock2 = _mockRepository.StrictMock<ResultModificationBase> (CollectionExecutionStrategy.Instance);
+
+      _queryModel = ExpressionHelper.CreateQueryModel ();
     }
 
     [Test]
@@ -125,7 +127,7 @@ namespace Remotion.Data.UnitTests.Linq
       using (_mockRepository.Ordered())
       {
         _visitorMock
-            .Expect (mock => mock.VisitAdditionalFromClause (additionalFromClause))
+            .Expect (mock => mock.VisitAdditionalFromClause (additionalFromClause, _queryModel, 1))
             .CallOriginalMethod (OriginalCallOptions.CreateExpectation);
         _visitorMock
             .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitJoinClauses", additionalFromClause, additionalFromClause.JoinClauses));
@@ -133,7 +135,7 @@ namespace Remotion.Data.UnitTests.Linq
 
       _visitorMock.Replay();
 
-      _visitorMock.VisitAdditionalFromClause (additionalFromClause);
+      _visitorMock.VisitAdditionalFromClause (additionalFromClause, _queryModel, 1);
 
       _visitorMock.VerifyAllExpectations();
     }
@@ -145,7 +147,7 @@ namespace Remotion.Data.UnitTests.Linq
       using (_mockRepository.Ordered())
       {
         _visitorMock
-            .Expect (mock => mock.VisitOrderByClause (orderByClause))
+            .Expect (mock => mock.VisitOrderByClause (orderByClause, _queryModel, 1))
             .CallOriginalMethod (OriginalCallOptions.CreateExpectation);
         _visitorMock
             .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitOrderings", orderByClause, orderByClause.Orderings));
@@ -153,7 +155,7 @@ namespace Remotion.Data.UnitTests.Linq
 
       _visitorMock.Replay();
 
-      _visitorMock.VisitOrderByClause (orderByClause);
+      _visitorMock.VisitOrderByClause (orderByClause, _queryModel, 1);
 
       _visitorMock.VerifyAllExpectations();
     }
@@ -185,13 +187,13 @@ namespace Remotion.Data.UnitTests.Linq
 
       using (_mockRepository.Ordered())
       {
-        _bodyClauseMock1.Expect (mock => mock.Accept (_testVisitor));
-        _bodyClauseMock2.Expect (mock => mock.Accept (_testVisitor));
+        _bodyClauseMock1.Expect (mock => mock.Accept (Arg.Is (_testVisitor), Arg<QueryModel>.Is.Anything, Arg<int>.Is.Anything));
+        _bodyClauseMock2.Expect (mock => mock.Accept (Arg.Is (_testVisitor), Arg<QueryModel>.Is.Anything, Arg<int>.Is.Anything));
       }
 
       _mockRepository.ReplayAll();
 
-      _testVisitor.VisitBodyClauses (ExpressionHelper.CreateQueryModel(), bodyClauses);
+      _testVisitor.VisitBodyClauses (_queryModel, bodyClauses);
 
       _mockRepository.VerifyAll();
     }
@@ -203,17 +205,38 @@ namespace Remotion.Data.UnitTests.Linq
 
       using (_mockRepository.Ordered())
       {
-        _bodyClauseMock1.Expect (mock => mock.Accept (_testVisitor)).WhenCalled (mi => bodyClauses.RemoveAt (0));
-        _bodyClauseMock2.Expect (mock => mock.Accept (_testVisitor));
+        _bodyClauseMock1
+            .Expect (mock => mock.Accept (Arg.Is (_testVisitor), Arg<QueryModel>.Is.Anything, Arg<int>.Is.Anything))
+            .WhenCalled (mi => bodyClauses.RemoveAt (0));
+        _bodyClauseMock2
+            .Expect (mock => mock.Accept (Arg.Is (_testVisitor), Arg<QueryModel>.Is.Anything, Arg<int>.Is.Anything));
       }
 
       _mockRepository.ReplayAll();
 
-      _testVisitor.VisitBodyClauses (ExpressionHelper.CreateQueryModel(), bodyClauses);
+      _testVisitor.VisitBodyClauses (_queryModel, bodyClauses);
 
       _mockRepository.VerifyAll();
     }
 
+    [Test]
+    public void VisitBodyClauses_Index_QueryModel ()
+    {
+      var bodyClauses = new ObservableCollection<IBodyClause> { _bodyClauseMock1, _bodyClauseMock2 };
+
+      using (_mockRepository.Ordered ())
+      {
+        _bodyClauseMock1.Expect (mock => mock.Accept (_testVisitor, _queryModel, 0));
+        _bodyClauseMock2.Expect (mock => mock.Accept (_testVisitor, _queryModel, 1));
+      }
+
+      _mockRepository.ReplayAll ();
+
+      _testVisitor.VisitBodyClauses (_queryModel, bodyClauses);
+
+      _mockRepository.VerifyAll ();
+    }
+    
     [Test]
     public void VisitJoinClauses ()
     {
@@ -320,204 +343,6 @@ namespace Remotion.Data.UnitTests.Linq
       _testVisitor.VisitResultModifications (ExpressionHelper.CreateSelectClause(), resultModifications);
 
       _mockRepository.VerifyAll();
-    }
-
-    [Test]
-    [ExpectedException (typeof (InvalidOperationException))]
-    public void CurrentQueryModel_BeforeVisitQueryModel ()
-    {
-      Dev.Null = _visitorMock.CurrentQueryModel;
-    }
-
-    [Test]
-    public void CurrentQueryModel_InVisitQueryModel ()
-    {
-      var queryModel = ExpressionHelper.CreateQueryModel();
-
-      _visitorMock
-          .Expect (mock => mock.VisitQueryModel (queryModel))
-          .WhenCalled (mi => Assert.That (_visitorMock.CurrentQueryModel, Is.SameAs (queryModel)));
-
-      _visitorMock.Replay();
-
-      queryModel.Accept (_visitorMock);
-
-      _visitorMock.VerifyAllExpectations();
-    }
-
-    [Test]
-    [ExpectedException (typeof (InvalidOperationException))]
-    public void CurrentBodyClauseIndex_BeforeBodyClauses ()
-    {
-      Dev.Null = _testVisitor.CurrentBodyClauseIndex;
-    }
-
-    [Test]
-    public void CurrentBodyClauseIndex_WithinVisitBodyClauses ()
-    {
-      _bodyClauseMock1
-          .Expect (mock => mock.Accept (_testVisitor))
-          .WhenCalled (mi => Assert.That (_testVisitor.CurrentBodyClauseIndex, Is.EqualTo (0)));
-      _bodyClauseMock2
-          .Expect (mock => mock.Accept (_testVisitor))
-          .WhenCalled (mi => Assert.That (_testVisitor.CurrentBodyClauseIndex, Is.EqualTo (1)));
-
-      _mockRepository.ReplayAll();
-
-      _testVisitor.VisitBodyClauses (
-          ExpressionHelper.CreateQueryModel(), new ObservableCollection<IBodyClause> { _bodyClauseMock1, _bodyClauseMock2 });
-
-      _mockRepository.VerifyAll();
-    }
-
-    [Test]
-    [ExpectedException (typeof (InvalidOperationException))]
-    public void CurrentJoinClauseIndex_BeforeJoinClauses ()
-    {
-      Dev.Null = _testVisitor.CurrentJoinClauseIndex;
-    }
-
-    [Test]
-    public void CurrentJoinClauseIndex_WithinVisitJoinClauses ()
-    {
-      _joinClauseMock1
-          .Expect (mock => mock.Accept (_testVisitor))
-          .WhenCalled (mi => Assert.That (_testVisitor.CurrentJoinClauseIndex, Is.EqualTo (0)));
-      _joinClauseMock2
-          .Expect (mock => mock.Accept (_testVisitor))
-          .WhenCalled (mi => Assert.That (_testVisitor.CurrentJoinClauseIndex, Is.EqualTo (1)));
-
-      _mockRepository.ReplayAll ();
-
-      _testVisitor.VisitJoinClauses (
-          ExpressionHelper.CreateMainFromClause(), new ObservableCollection<JoinClause> { _joinClauseMock1, _joinClauseMock2 });
-
-      _mockRepository.VerifyAll ();
-    }
-
-    [Test]
-    [ExpectedException (typeof (InvalidOperationException))]
-    public void CurrentOrderingIndex_BeforeOrderings ()
-    {
-      Dev.Null = _testVisitor.CurrentOrderingIndex;
-    }
-
-    [Test]
-    public void CurrentOrderingIndex_WithinVisitOrderings ()
-    {
-      _orderingMock1
-          .Expect (mock => mock.Accept (_testVisitor))
-          .WhenCalled (mi => Assert.That (_testVisitor.CurrentOrderingIndex, Is.EqualTo (0)));
-      _orderingMock2
-          .Expect (mock => mock.Accept (_testVisitor))
-          .WhenCalled (mi => Assert.That (_testVisitor.CurrentOrderingIndex, Is.EqualTo (1)));
-
-      _mockRepository.ReplayAll ();
-
-      _testVisitor.VisitOrderings (
-          ExpressionHelper.CreateOrderByClause (), new ObservableCollection<Ordering> { _orderingMock1, _orderingMock2 });
-
-      _mockRepository.VerifyAll ();
-    }
-
-    [Test]
-    [ExpectedException (typeof (InvalidOperationException))]
-    public void CurrentResultModificationIndex_BeforeResultModifications ()
-    {
-      Dev.Null = _visitorMock.CurrentResultModificationIndex;
-    }
-
-    [Test]
-    public void CurrentResultModificationIndex_WithinVisitResultModifications ()
-    {
-      _resultModificationMock1
-          .Expect (mock => mock.Accept (_testVisitor))
-          .WhenCalled (mi => Assert.That (_testVisitor.CurrentResultModificationIndex, Is.EqualTo (0)));
-      _resultModificationMock2
-          .Expect (mock => mock.Accept (_testVisitor))
-          .WhenCalled (mi => Assert.That (_testVisitor.CurrentResultModificationIndex, Is.EqualTo (1)));
-
-      _mockRepository.ReplayAll();
-
-      _testVisitor.VisitResultModifications (
-          ExpressionHelper.CreateSelectClause(),
-          new ObservableCollection<ResultModificationBase> { _resultModificationMock1, _resultModificationMock2 });
-
-      _mockRepository.VerifyAll();
-    }
-
-    [Test]
-    public void VisitCollection_VisitsItems ()
-    {
-      var collection = new ObservableCollection<string> { "a", "b" };
-
-      string visitedString = "";
-
-      _testVisitor.VisitCollection (
-          collection,
-          delegate (string item) { visitedString += item; },
-          delegate { });
-
-      Assert.That (visitedString, Is.EqualTo ("ab"));
-    }
-
-    [Test]
-    public void VisitCollection_SetsIndex ()
-    {
-      var collection = new ObservableCollection<string> { "a", "b" };
-
-      int index = -1;
-
-      _testVisitor.VisitCollection (
-          collection,
-          delegate (string item)
-          {
-            // ReSharper disable AccessToModifiedClosure
-            if (item == "a")
-              Assert.That (index, Is.EqualTo (0));
-            else
-              Assert.That (index, Is.EqualTo (1));
-            // ReSharper restore AccessToModifiedClosure
-          },
-          i => index = i);
-    }
-
-    [Test]
-    public void VisitCollection_ResetsIndex ()
-    {
-      var collection = new ObservableCollection<string> { "a", "b" };
-
-      int index = -1;
-
-      _testVisitor.VisitCollection (
-          collection,
-          delegate { },
-          i => index = i);
-
-      Assert.That (index, Is.EqualTo (-1));
-    }
-
-    [Test]
-    public void VisitCollection_ResetsIndex_WhenExceptionThrown ()
-    {
-      var collection = new ObservableCollection<string> { "a", "b" };
-
-      int index = -1;
-
-      try
-      {
-        _testVisitor.VisitCollection (
-            collection,
-            obj => { throw new NotSupportedException(); },
-            i => index = i);
-        Assert.Fail ("Expected exception");
-      }
-      catch (NotSupportedException)
-      {
-        // expected
-      }
-
-      Assert.That (index, Is.EqualTo (-1));
     }
   }
 }

@@ -49,10 +49,12 @@ namespace Remotion.Data.Linq.Clauses
       set { _predicate = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
-    public virtual void Accept (IQueryModelVisitor visitor)
+    public virtual void Accept (IQueryModelVisitor visitor, QueryModel queryModel, int index)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
-      visitor.VisitWhereClause (this);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+
+      visitor.VisitWhereClause (this, queryModel, index);
     }
 
     public void TransformExpressions (Func<Expression, Expression> transformation)

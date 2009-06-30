@@ -19,18 +19,18 @@ namespace Remotion.Data.Linq
 {
   /// <summary>
   /// Defines an interface for visiting the clauses of a <see cref="QueryModel"/>. 
-  /// When implement this interface, implement <see cref="VisitQueryModel"/>, then call <see cref="IClause.Accept"/> on every clause that should
+  /// When implement this interface, implement <see cref="VisitQueryModel"/>, then call <c>Accept</c> on every clause that should
   /// be visited. Note that clauses, orderings, and result modifications are never visited automatically, they always need to be explicitly visited 
-  /// via  <see cref="IClause.Accept"/>, <see cref="Ordering.Accept"/>, and <see cref="ResultModificationBase.Accept"/>.
+  /// via <see cref="JoinClause.Accept"/>, <see cref="Ordering.Accept"/>, and <see cref="ResultModificationBase.Accept"/>.
   /// </summary>
   public interface IQueryModelVisitor
   {
     void VisitQueryModel (QueryModel queryModel);
     void VisitMainFromClause (MainFromClause fromClause);
-    void VisitAdditionalFromClause (AdditionalFromClause fromClause);
+    void VisitAdditionalFromClause (AdditionalFromClause fromClause, QueryModel queryModel, int index);
     void VisitJoinClause (JoinClause joinClause);
-    void VisitWhereClause (WhereClause whereClause);
-    void VisitOrderByClause (OrderByClause orderByClause);
+    void VisitWhereClause (WhereClause whereClause, QueryModel queryModel, int index);
+    void VisitOrderByClause (OrderByClause orderByClause, QueryModel queryModel, int index);
     void VisitOrdering (Ordering ordering);
     void VisitSelectClause (SelectClause selectClause);
     void VisitResultModification (ResultModificationBase resultModification);

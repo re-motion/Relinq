@@ -23,7 +23,6 @@ namespace Remotion.Data.Linq.Clauses
   /// </summary>
   public interface IClause
   {
-    void Accept (IQueryModelVisitor visitor);
     void TransformExpressions (Func<Expression, Expression> transformation);
   }
 }

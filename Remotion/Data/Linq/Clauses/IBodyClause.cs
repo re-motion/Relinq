@@ -22,6 +22,7 @@ namespace Remotion.Data.Linq.Clauses
   /// </summary>
   public interface IBodyClause : IClause
   {
+    void Accept (IQueryModelVisitor visitor, QueryModel queryModel, int index);
     IBodyClause Clone (CloneContext cloneContext);
   }
 }

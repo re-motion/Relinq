@@ -41,10 +41,12 @@ namespace Remotion.Data.Linq.Clauses
     /// </summary>
     public ObservableCollection<Ordering> Orderings { get; private set; }
 
-    public virtual void Accept (IQueryModelVisitor visitor)
+    public virtual void Accept (IQueryModelVisitor visitor, QueryModel queryModel, int index)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
-      visitor.VisitOrderByClause (this);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+
+      visitor.VisitOrderByClause (this, queryModel, index);
     }
 
     public void TransformExpressions (Func<Expression, Expression> transformation)

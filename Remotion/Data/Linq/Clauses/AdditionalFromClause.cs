@@ -41,10 +41,12 @@ namespace Remotion.Data.Linq.Clauses
     {
     }
     
-    public override void Accept (IQueryModelVisitor visitor)
+    public virtual void Accept (IQueryModelVisitor visitor, QueryModel queryModel, int index)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
-      visitor.VisitAdditionalFromClause (this);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+
+      visitor.VisitAdditionalFromClause (this, queryModel, index);
     }
 
     public virtual AdditionalFromClause Clone (CloneContext cloneContext)

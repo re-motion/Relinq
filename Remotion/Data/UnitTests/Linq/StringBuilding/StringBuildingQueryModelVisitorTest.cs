@@ -36,7 +36,7 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
       var whereClause = new WhereClause (predicate);
       var sv = new StringBuildingQueryModelVisitor ();
 
-      sv.VisitWhereClause (whereClause);
+      sv.VisitWhereClause (whereClause, ExpressionHelper.CreateQueryModel(), 0);
       Assert.That (sv.ToString(), Is.EqualTo ("where ([i] > 0) "));
     }
 
@@ -99,10 +99,10 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
     [Test]
     public void StringVisitorForWhereClause ()
     {
-      WhereClause whereClasue = ExpressionHelper.CreateWhereClause();
+      WhereClause whereClause = ExpressionHelper.CreateWhereClause();
       var sv = new StringBuildingQueryModelVisitor();
 
-      sv.VisitWhereClause (whereClasue);
+      sv.VisitWhereClause (whereClause, ExpressionHelper.CreateQueryModel(), 0);
 
       Assert.That (sv.ToString (), Is.EqualTo ("where (1 = 2) "));
     }
@@ -143,7 +143,7 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
 
       var sv = new StringBuildingQueryModelVisitor();
 
-      sv.VisitAdditionalFromClause (fromClause);
+      sv.VisitAdditionalFromClause (fromClause, ExpressionHelper.CreateQueryModel(), 0);
 
       Assert.That (sv.ToString (), Is.EqualTo ("from Int32 i in [sd].Student "));
     }
@@ -158,7 +158,7 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
 
       var sv = new StringBuildingQueryModelVisitor();
 
-      sv.VisitAdditionalFromClause (fromClause);
+      sv.VisitAdditionalFromClause (fromClause, ExpressionHelper.CreateQueryModel(), 0);
 
       Assert.That (sv.ToString (), Is.EqualTo ("from Int32 i in 1 "));
     }
@@ -174,7 +174,7 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
 
       var sv = new StringBuildingQueryModelVisitor();
 
-      sv.VisitAdditionalFromClause (fromClause);
+      sv.VisitAdditionalFromClause (fromClause, ExpressionHelper.CreateQueryModel(), 0);
 
       Assert.That (sv.ToString (), Is.EqualTo ("from Int32 i in null "));
     }
@@ -192,7 +192,7 @@ namespace Remotion.Data.UnitTests.Linq.StringBuilding
       var subQueryFromClause = new AdditionalFromClause ("s", typeof (Student), new SubQueryExpression (subQuery));
 
       var sv = new StringBuildingQueryModelVisitor();
-      sv.VisitAdditionalFromClause (subQueryFromClause);
+      sv.VisitAdditionalFromClause (subQueryFromClause, ExpressionHelper.CreateQueryModel(), 0);
 
       Assert.That (sv.ToString (), Is.EqualTo ("from Student s in {from Student s2 in null select 1} "));
     }
