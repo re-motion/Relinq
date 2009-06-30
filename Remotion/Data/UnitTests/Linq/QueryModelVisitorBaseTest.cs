@@ -15,6 +15,8 @@
 // 
 using System;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
+using Remotion.Collections;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
@@ -30,22 +32,55 @@ namespace Remotion.Data.UnitTests.Linq
   {
     private MockRepository _mockRepository;
     private QueryModelVisitorBase _visitorMock;
+    private TestQueryModelVisitor _testVisitor;
+    private WhereClause _bodyClauseMock1;
+    private WhereClause _bodyClauseMock2;
+    private JoinClause _joinClauseMock1;
+    private JoinClause _joinClauseMock2;
+    private Ordering _orderingMock1;
+    private Ordering _orderingMock2;
+    private ResultModificationBase _resultModificationMock1;
+    private ResultModificationBase _resultModificationMock2;
 
     [SetUp]
     public void SetUp ()
     {
       _mockRepository = new MockRepository();
-      _visitorMock = _mockRepository.StrictMock<QueryModelVisitorBase> ();
+      _visitorMock = _mockRepository.StrictMock<QueryModelVisitorBase>();
+      _testVisitor = new TestQueryModelVisitor();
+
+      _bodyClauseMock1 = _mockRepository.StrictMock<WhereClause> (ExpressionHelper.CreateExpression());
+      _bodyClauseMock2 = _mockRepository.StrictMock<WhereClause> (ExpressionHelper.CreateExpression());
+
+      _joinClauseMock1 = _mockRepository.StrictMock<JoinClause> (
+          "x",
+          typeof (Student),
+          ExpressionHelper.CreateExpression(),
+          ExpressionHelper.CreateExpression(),
+          ExpressionHelper.CreateExpression());
+
+      _joinClauseMock2 = _mockRepository.StrictMock<JoinClause> (
+          "x",
+          typeof (Student),
+          ExpressionHelper.CreateExpression(),
+          ExpressionHelper.CreateExpression(),
+          ExpressionHelper.CreateExpression());
+
+      _orderingMock1 = _mockRepository.StrictMock<Ordering> (ExpressionHelper.CreateExpression(), OrderingDirection.Asc);
+      _orderingMock2 = _mockRepository.StrictMock<Ordering> (ExpressionHelper.CreateExpression(), OrderingDirection.Asc);
+
+      _resultModificationMock1 = _mockRepository.StrictMock<ResultModificationBase> (CollectionExecutionStrategy.Instance);
+      _resultModificationMock2 = _mockRepository.StrictMock<ResultModificationBase> (CollectionExecutionStrategy.Instance);
     }
 
     [Test]
     public void VisitQueryModel ()
     {
       var mainFromClauseMock = _mockRepository.StrictMock<MainFromClause> ("x", typeof (Student), ExpressionHelper.CreateExpression());
-      var selectClauseMock = _mockRepository.StrictMock<SelectClause> (ExpressionHelper.CreateExpression ());
+      var selectClauseMock = _mockRepository.StrictMock<SelectClause> (ExpressionHelper.CreateExpression());
       var queryModel = new QueryModel (typeof (IQueryable<Student>), mainFromClauseMock, selectClauseMock);
 
-      using (_mockRepository.Ordered ())
+      using (_mockRepository.Ordered())
       {
         _visitorMock
             .Expect (mock => mock.VisitQueryModel (queryModel))
@@ -56,18 +91,18 @@ namespace Remotion.Data.UnitTests.Linq
         selectClauseMock.Expect (mock => mock.Accept (_visitorMock));
       }
 
-      _mockRepository.ReplayAll ();
+      _mockRepository.ReplayAll();
 
       queryModel.Accept (_visitorMock);
 
-      _mockRepository.VerifyAll ();
+      _mockRepository.VerifyAll();
     }
 
     [Test]
     public void VisitMainFromClause ()
     {
-      var mainFromClause = ExpressionHelper.CreateMainFromClause ();
-      using (_mockRepository.Ordered ())
+      var mainFromClause = ExpressionHelper.CreateMainFromClause();
+      using (_mockRepository.Ordered())
       {
         _visitorMock
             .Expect (mock => mock.VisitMainFromClause (mainFromClause))
@@ -76,18 +111,18 @@ namespace Remotion.Data.UnitTests.Linq
             .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitJoinClauses", mainFromClause, mainFromClause.JoinClauses));
       }
 
-      _visitorMock.Replay ();
+      _visitorMock.Replay();
 
-      mainFromClause.Accept (_visitorMock);
+      _visitorMock.VisitMainFromClause (mainFromClause);
 
-      _visitorMock.VerifyAllExpectations ();
+      _visitorMock.VerifyAllExpectations();
     }
 
     [Test]
     public void VisitAdditionalFromClause ()
     {
-      var additionalFromClause = ExpressionHelper.CreateAdditionalFromClause ();
-      using (_mockRepository.Ordered ())
+      var additionalFromClause = ExpressionHelper.CreateAdditionalFromClause();
+      using (_mockRepository.Ordered())
       {
         _visitorMock
             .Expect (mock => mock.VisitAdditionalFromClause (additionalFromClause))
@@ -96,18 +131,18 @@ namespace Remotion.Data.UnitTests.Linq
             .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitJoinClauses", additionalFromClause, additionalFromClause.JoinClauses));
       }
 
-      _visitorMock.Replay ();
+      _visitorMock.Replay();
 
-      additionalFromClause.Accept (_visitorMock);
+      _visitorMock.VisitAdditionalFromClause (additionalFromClause);
 
-      _visitorMock.VerifyAllExpectations ();
+      _visitorMock.VerifyAllExpectations();
     }
 
     [Test]
     public void VisitOrderByClause ()
     {
-      var orderByClause = ExpressionHelper.CreateOrderByClause ();
-      using (_mockRepository.Ordered ())
+      var orderByClause = ExpressionHelper.CreateOrderByClause();
+      using (_mockRepository.Ordered())
       {
         _visitorMock
             .Expect (mock => mock.VisitOrderByClause (orderByClause))
@@ -116,18 +151,18 @@ namespace Remotion.Data.UnitTests.Linq
             .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitOrderings", orderByClause, orderByClause.Orderings));
       }
 
-      _visitorMock.Replay ();
+      _visitorMock.Replay();
 
-      orderByClause.Accept (_visitorMock);
+      _visitorMock.VisitOrderByClause (orderByClause);
 
-      _visitorMock.VerifyAllExpectations ();
+      _visitorMock.VerifyAllExpectations();
     }
 
     [Test]
     public void VisitSelectClause ()
     {
-      var selectClause = ExpressionHelper.CreateSelectClause ();
-      using (_mockRepository.Ordered ())
+      var selectClause = ExpressionHelper.CreateSelectClause();
+      using (_mockRepository.Ordered())
       {
         _visitorMock
             .Expect (mock => mock.VisitSelectClause (selectClause))
@@ -136,238 +171,353 @@ namespace Remotion.Data.UnitTests.Linq
             .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitResultModifications", selectClause, selectClause.ResultModifications));
       }
 
-      _visitorMock.Replay ();
+      _visitorMock.Replay();
 
-      selectClause.Accept (_visitorMock);
+      _visitorMock.VisitSelectClause (selectClause);
 
-      _visitorMock.VerifyAllExpectations ();
+      _visitorMock.VerifyAllExpectations();
     }
 
     [Test]
     public void VisitBodyClauses ()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel ();
+      var bodyClauses = new ObservableCollection<IBodyClause> { _bodyClauseMock1, _bodyClauseMock2 };
 
-      var bodyClauseMock1 = _mockRepository.StrictMock<WhereClause> (ExpressionHelper.CreateExpression());
-      queryModel.BodyClauses.Add (bodyClauseMock1);
-
-      var bodyClauseMock2 = _mockRepository.StrictMock<WhereClause> (ExpressionHelper.CreateExpression ());
-      queryModel.BodyClauses.Add (bodyClauseMock2);
-
-      using (_mockRepository.Ordered ())
+      using (_mockRepository.Ordered())
       {
-        _visitorMock
-            .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitBodyClauses", queryModel, queryModel.BodyClauses))
-            .CallOriginalMethod (OriginalCallOptions.CreateExpectation);
-        bodyClauseMock1.Expect (mock => mock.Accept (_visitorMock));
-        bodyClauseMock2.Expect (mock => mock.Accept (_visitorMock));
+        _bodyClauseMock1.Expect (mock => mock.Accept (_testVisitor));
+        _bodyClauseMock2.Expect (mock => mock.Accept (_testVisitor));
       }
 
-      _mockRepository.ReplayAll ();
+      _mockRepository.ReplayAll();
 
-      PrivateInvoke.InvokeNonPublicMethod (_visitorMock, "VisitBodyClauses", queryModel, queryModel.BodyClauses);
+      _testVisitor.VisitBodyClauses (ExpressionHelper.CreateQueryModel(), bodyClauses);
 
-      _mockRepository.VerifyAll ();
+      _mockRepository.VerifyAll();
     }
 
     [Test]
     public void VisitBodyClauses_WithChangingCollection ()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel ();
-      var bodyClause1 = ExpressionHelper.CreateWhereClause ();
-      var bodyClause2 = ExpressionHelper.CreateWhereClause ();
-      queryModel.BodyClauses.Add (bodyClause1);
-      queryModel.BodyClauses.Add (bodyClause2);
+      var bodyClauses = new ObservableCollection<IBodyClause> { _bodyClauseMock1, _bodyClauseMock2 };
 
-      using (_mockRepository.Ordered ())
+      using (_mockRepository.Ordered())
       {
-        _visitorMock
-            .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitBodyClauses", queryModel, queryModel.BodyClauses))
-            .CallOriginalMethod (OriginalCallOptions.CreateExpectation);
-        _visitorMock
-            .Expect (mock => mock.VisitWhereClause (bodyClause1)).WhenCalled (mi => queryModel.BodyClauses.RemoveAt (0));
-        _visitorMock
-            .Expect (mock => mock.VisitWhereClause (bodyClause2));
+        _bodyClauseMock1.Expect (mock => mock.Accept (_testVisitor)).WhenCalled (mi => bodyClauses.RemoveAt (0));
+        _bodyClauseMock2.Expect (mock => mock.Accept (_testVisitor));
       }
 
-      _mockRepository.ReplayAll ();
+      _mockRepository.ReplayAll();
 
-      PrivateInvoke.InvokeNonPublicMethod (_visitorMock, "VisitBodyClauses", queryModel, queryModel.BodyClauses);
+      _testVisitor.VisitBodyClauses (ExpressionHelper.CreateQueryModel(), bodyClauses);
 
-      _mockRepository.VerifyAll ();
+      _mockRepository.VerifyAll();
     }
 
     [Test]
     public void VisitJoinClauses ()
     {
-      var mainFromClause = ExpressionHelper.CreateMainFromClause ();
-      var joinClauseMock1 = _mockRepository.StrictMock<JoinClause> (
-          "x", 
-          typeof (Student), 
-          ExpressionHelper.CreateExpression (), 
-          ExpressionHelper.CreateExpression (), 
-          ExpressionHelper.CreateExpression ());
-      mainFromClause.JoinClauses.Add (joinClauseMock1);
+      var joinClauses = new ObservableCollection<JoinClause> { _joinClauseMock1, _joinClauseMock2 };
 
-      var joinClauseMock2 = _mockRepository.StrictMock<JoinClause> (
-          "x",
-          typeof (Student),
-          ExpressionHelper.CreateExpression (),
-          ExpressionHelper.CreateExpression (),
-          ExpressionHelper.CreateExpression ());
-      mainFromClause.JoinClauses.Add (joinClauseMock2);
-
-      using (_mockRepository.Ordered ())
+      using (_mockRepository.Ordered())
       {
-        _visitorMock
-            .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitJoinClauses", mainFromClause, mainFromClause.JoinClauses))
-            .CallOriginalMethod (OriginalCallOptions.CreateExpectation);
-        joinClauseMock1.Expect (mock => mock.Accept (_visitorMock));
-        joinClauseMock2.Expect (mock => mock.Accept (_visitorMock));
+        _joinClauseMock1.Expect (mock => mock.Accept (_testVisitor));
+        _joinClauseMock2.Expect (mock => mock.Accept (_testVisitor));
       }
 
-      _mockRepository.ReplayAll ();
+      _mockRepository.ReplayAll();
 
-      PrivateInvoke.InvokeNonPublicMethod (_visitorMock, "VisitJoinClauses", mainFromClause, mainFromClause.JoinClauses);
+      _testVisitor.VisitJoinClauses (ExpressionHelper.CreateMainFromClause(), joinClauses);
 
-      _mockRepository.VerifyAll ();
+      _mockRepository.VerifyAll();
     }
 
     [Test]
     public void VisitJoinClauses_WithChangingCollection ()
     {
-      var fromClause = ExpressionHelper.CreateMainFromClause ();
-      var joinClause1 = ExpressionHelper.CreateJoinClause ();
-      var joinClause2 = ExpressionHelper.CreateJoinClause ();
-      fromClause.JoinClauses.Add (joinClause1);
-      fromClause.JoinClauses.Add (joinClause2);
+      var joinClauses = new ObservableCollection<JoinClause> { _joinClauseMock1, _joinClauseMock2 };
 
-      using (_mockRepository.Ordered ())
+      using (_mockRepository.Ordered())
       {
-        _visitorMock
-            .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitJoinClauses", fromClause, fromClause.JoinClauses))
-            .CallOriginalMethod (OriginalCallOptions.CreateExpectation);
-        _visitorMock
-            .Expect (mock => mock.VisitJoinClause (joinClause1)).WhenCalled (mi => fromClause.JoinClauses.RemoveAt (0));
-        _visitorMock
-            .Expect (mock => mock.VisitJoinClause (joinClause2));
+        _joinClauseMock1.Expect (mock => mock.Accept (_testVisitor)).WhenCalled (mi => joinClauses.RemoveAt (0));
+        _joinClauseMock2.Expect (mock => mock.Accept (_testVisitor));
       }
 
-      _mockRepository.ReplayAll ();
+      _mockRepository.ReplayAll();
 
-      PrivateInvoke.InvokeNonPublicMethod (_visitorMock, "VisitJoinClauses", fromClause, fromClause.JoinClauses);
+      _testVisitor.VisitJoinClauses (ExpressionHelper.CreateMainFromClause(), joinClauses);
 
-      _mockRepository.VerifyAll ();
+      _mockRepository.VerifyAll();
     }
 
     [Test]
     public void VisitOrderings ()
     {
-      var orderByClause = ExpressionHelper.CreateOrderByClause ();
+      var orderings = new ObservableCollection<Ordering> { _orderingMock1, _orderingMock2 };
 
-      var orderingMock1 = _mockRepository.StrictMock<Ordering> (ExpressionHelper.CreateExpression (), OrderingDirection.Asc);
-      orderByClause.Orderings.Add (orderingMock1);
-
-      var orderingMock2 = _mockRepository.StrictMock<Ordering> (ExpressionHelper.CreateExpression (), OrderingDirection.Asc);
-      orderByClause.Orderings.Add (orderingMock2);
-
-      using (_mockRepository.Ordered ())
+      using (_mockRepository.Ordered())
       {
-        _visitorMock
-            .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitOrderings", orderByClause, orderByClause.Orderings))
-            .CallOriginalMethod (OriginalCallOptions.CreateExpectation);
-        orderingMock1.Expect (mock => mock.Accept (_visitorMock));
-        orderingMock2.Expect (mock => mock.Accept (_visitorMock));
+        _orderingMock1.Expect (mock => mock.Accept (_testVisitor));
+        _orderingMock2.Expect (mock => mock.Accept (_testVisitor));
       }
 
-      _mockRepository.ReplayAll ();
+      _mockRepository.ReplayAll();
 
-      PrivateInvoke.InvokeNonPublicMethod (_visitorMock, "VisitOrderings", orderByClause, orderByClause.Orderings);
+      _testVisitor.VisitOrderings (ExpressionHelper.CreateOrderByClause(), orderings);
 
-      _mockRepository.VerifyAll ();
+      _mockRepository.VerifyAll();
     }
 
     [Test]
     public void VisitOrderings_WithChangingCollection ()
     {
-      var orderByClause = ExpressionHelper.CreateOrderByClause ();
-      var ordering1 = ExpressionHelper.CreateOrdering ();
-      var ordering2 = ExpressionHelper.CreateOrdering ();
-      orderByClause.Orderings.Add (ordering1);
-      orderByClause.Orderings.Add (ordering2);
-     
-      using (_mockRepository.Ordered ())
+      var orderings = new ObservableCollection<Ordering> { _orderingMock1, _orderingMock2 };
+
+      using (_mockRepository.Ordered())
       {
-        _visitorMock
-            .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitOrderings", orderByClause, orderByClause.Orderings))
-            .CallOriginalMethod (OriginalCallOptions.CreateExpectation);
-        _visitorMock
-            .Expect (mock => mock.VisitOrdering (ordering1)).WhenCalled (mi => orderByClause.Orderings.RemoveAt(0));
-        _visitorMock
-            .Expect (mock => mock.VisitOrdering(ordering2));
+        _orderingMock1.Expect (mock => mock.Accept (_testVisitor)).WhenCalled (mi => orderings.RemoveAt (0));
+        _orderingMock2.Expect (mock => mock.Accept (_testVisitor));
       }
 
-      _mockRepository.ReplayAll ();
+      _mockRepository.ReplayAll();
 
-      PrivateInvoke.InvokeNonPublicMethod (_visitorMock, "VisitOrderings", orderByClause, orderByClause.Orderings);
+      _testVisitor.VisitOrderings (ExpressionHelper.CreateOrderByClause(), orderings);
 
-      _mockRepository.VerifyAll ();
+      _mockRepository.VerifyAll();
     }
 
     [Test]
     public void VisitResultModifications ()
     {
-      var selectClause = ExpressionHelper.CreateSelectClause ();
+      var resultModifications = new ObservableCollection<ResultModificationBase> { _resultModificationMock1, _resultModificationMock2 };
 
-      var resultModificationMock1 = _mockRepository.StrictMock<ResultModificationBase> (CollectionExecutionStrategy.Instance);
-      selectClause.ResultModifications.Add (resultModificationMock1);
-
-      var resultModificationMock2 = _mockRepository.StrictMock<ResultModificationBase> (CollectionExecutionStrategy.Instance);
-      selectClause.ResultModifications.Add (resultModificationMock2);
-
-      using (_mockRepository.Ordered ())
+      using (_mockRepository.Ordered())
       {
-        _visitorMock
-            .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitResultModifications", selectClause, selectClause.ResultModifications))
-            .CallOriginalMethod (OriginalCallOptions.CreateExpectation);
-        resultModificationMock1.Expect (mock => mock.Accept (_visitorMock));
-        resultModificationMock2.Expect (mock => mock.Accept (_visitorMock));
+        _resultModificationMock1.Expect (mock => mock.Accept (_testVisitor));
+        _resultModificationMock2.Expect (mock => mock.Accept (_testVisitor));
       }
 
-      _mockRepository.ReplayAll ();
+      _mockRepository.ReplayAll();
 
-      PrivateInvoke.InvokeNonPublicMethod (_visitorMock, "VisitResultModifications", selectClause, selectClause.ResultModifications);
+      _testVisitor.VisitResultModifications (ExpressionHelper.CreateSelectClause(), resultModifications);
 
-      _mockRepository.VerifyAll ();
+      _mockRepository.VerifyAll();
     }
 
     [Test]
     public void VisitResultModifications_WithChangingCollection ()
     {
-      var selectClause = ExpressionHelper.CreateSelectClause ();
-      var resultModification1 = ExpressionHelper.CreateResultModification ();
-      var resultModification2 = ExpressionHelper.CreateResultModification ();
-      selectClause.ResultModifications.Add (resultModification1);
-      selectClause.ResultModifications.Add (resultModification2);
-      
-      using (_mockRepository.Ordered ())
+      var resultModifications = new ObservableCollection<ResultModificationBase> { _resultModificationMock1, _resultModificationMock2 };
+
+      using (_mockRepository.Ordered())
       {
-        _visitorMock
-            .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitResultModifications", selectClause, selectClause.ResultModifications))
-            .CallOriginalMethod (OriginalCallOptions.CreateExpectation);
-        _visitorMock
-            .Expect (mock => mock.VisitResultModification (resultModification1)).WhenCalled (mi => selectClause.ResultModifications.RemoveAt (0));
-        _visitorMock
-            .Expect (mock => mock.VisitResultModification (resultModification2));
+        _resultModificationMock1.Expect (mock => mock.Accept (_testVisitor)).WhenCalled (mi => resultModifications.RemoveAt (0));
+        _resultModificationMock2.Expect (mock => mock.Accept (_testVisitor));
       }
+
+      _mockRepository.ReplayAll();
+
+      _testVisitor.VisitResultModifications (ExpressionHelper.CreateSelectClause(), resultModifications);
+
+      _mockRepository.VerifyAll();
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException))]
+    public void CurrentQueryModel_BeforeVisitQueryModel ()
+    {
+      Dev.Null = _visitorMock.CurrentQueryModel;
+    }
+
+    [Test]
+    public void CurrentQueryModel_InVisitQueryModel ()
+    {
+      var queryModel = ExpressionHelper.CreateQueryModel();
+
+      _visitorMock
+          .Expect (mock => mock.VisitQueryModel (queryModel))
+          .WhenCalled (mi => Assert.That (_visitorMock.CurrentQueryModel, Is.SameAs (queryModel)));
+
+      _visitorMock.Replay();
+
+      queryModel.Accept (_visitorMock);
+
+      _visitorMock.VerifyAllExpectations();
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException))]
+    public void CurrentBodyClauseIndex_BeforeBodyClauses ()
+    {
+      Dev.Null = _testVisitor.CurrentBodyClauseIndex;
+    }
+
+    [Test]
+    public void CurrentBodyClauseIndex_WithinVisitBodyClauses ()
+    {
+      _bodyClauseMock1
+          .Expect (mock => mock.Accept (_testVisitor))
+          .WhenCalled (mi => Assert.That (_testVisitor.CurrentBodyClauseIndex, Is.EqualTo (0)));
+      _bodyClauseMock2
+          .Expect (mock => mock.Accept (_testVisitor))
+          .WhenCalled (mi => Assert.That (_testVisitor.CurrentBodyClauseIndex, Is.EqualTo (1)));
+
+      _mockRepository.ReplayAll();
+
+      _testVisitor.VisitBodyClauses (
+          ExpressionHelper.CreateQueryModel(), new ObservableCollection<IBodyClause> { _bodyClauseMock1, _bodyClauseMock2 });
+
+      _mockRepository.VerifyAll();
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException))]
+    public void CurrentJoinClauseIndex_BeforeJoinClauses ()
+    {
+      Dev.Null = _testVisitor.CurrentJoinClauseIndex;
+    }
+
+    [Test]
+    public void CurrentJoinClauseIndex_WithinVisitJoinClauses ()
+    {
+      _joinClauseMock1
+          .Expect (mock => mock.Accept (_testVisitor))
+          .WhenCalled (mi => Assert.That (_testVisitor.CurrentJoinClauseIndex, Is.EqualTo (0)));
+      _joinClauseMock2
+          .Expect (mock => mock.Accept (_testVisitor))
+          .WhenCalled (mi => Assert.That (_testVisitor.CurrentJoinClauseIndex, Is.EqualTo (1)));
 
       _mockRepository.ReplayAll ();
 
-      PrivateInvoke.InvokeNonPublicMethod (_visitorMock, "VisitResultModifications", selectClause, selectClause.ResultModifications);
+      _testVisitor.VisitJoinClauses (
+          ExpressionHelper.CreateMainFromClause(), new ObservableCollection<JoinClause> { _joinClauseMock1, _joinClauseMock2 });
 
       _mockRepository.VerifyAll ();
     }
 
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException))]
+    public void CurrentOrderingIndex_BeforeOrderings ()
+    {
+      Dev.Null = _testVisitor.CurrentOrderingIndex;
+    }
 
+    [Test]
+    public void CurrentOrderingIndex_WithinVisitOrderings ()
+    {
+      _orderingMock1
+          .Expect (mock => mock.Accept (_testVisitor))
+          .WhenCalled (mi => Assert.That (_testVisitor.CurrentOrderingIndex, Is.EqualTo (0)));
+      _orderingMock2
+          .Expect (mock => mock.Accept (_testVisitor))
+          .WhenCalled (mi => Assert.That (_testVisitor.CurrentOrderingIndex, Is.EqualTo (1)));
+
+      _mockRepository.ReplayAll ();
+
+      _testVisitor.VisitOrderings (
+          ExpressionHelper.CreateOrderByClause (), new ObservableCollection<Ordering> { _orderingMock1, _orderingMock2 });
+
+      _mockRepository.VerifyAll ();
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException))]
+    public void CurrentResultModificationIndex_BeforeResultModifications ()
+    {
+      Dev.Null = _visitorMock.CurrentResultModificationIndex;
+    }
+
+    [Test]
+    public void CurrentResultModificationIndex_WithinVisitResultModifications ()
+    {
+      _resultModificationMock1
+          .Expect (mock => mock.Accept (_testVisitor))
+          .WhenCalled (mi => Assert.That (_testVisitor.CurrentResultModificationIndex, Is.EqualTo (0)));
+      _resultModificationMock2
+          .Expect (mock => mock.Accept (_testVisitor))
+          .WhenCalled (mi => Assert.That (_testVisitor.CurrentResultModificationIndex, Is.EqualTo (1)));
+
+      _mockRepository.ReplayAll();
+
+      _testVisitor.VisitResultModifications (
+          ExpressionHelper.CreateSelectClause(),
+          new ObservableCollection<ResultModificationBase> { _resultModificationMock1, _resultModificationMock2 });
+
+      _mockRepository.VerifyAll();
+    }
+
+    [Test]
+    public void VisitCollection_VisitsItems ()
+    {
+      var collection = new ObservableCollection<string> { "a", "b" };
+
+      string visitedString = "";
+
+      _testVisitor.VisitCollection (
+          collection,
+          delegate (string item) { visitedString += item; },
+          delegate { });
+
+      Assert.That (visitedString, Is.EqualTo ("ab"));
+    }
+
+    [Test]
+    public void VisitCollection_SetsIndex ()
+    {
+      var collection = new ObservableCollection<string> { "a", "b" };
+
+      int index = -1;
+
+      _testVisitor.VisitCollection (
+          collection,
+          delegate (string item)
+          {
+            // ReSharper disable AccessToModifiedClosure
+            if (item == "a")
+              Assert.That (index, Is.EqualTo (0));
+            else
+              Assert.That (index, Is.EqualTo (1));
+            // ReSharper restore AccessToModifiedClosure
+          },
+          i => index = i);
+    }
+
+    [Test]
+    public void VisitCollection_ResetsIndex ()
+    {
+      var collection = new ObservableCollection<string> { "a", "b" };
+
+      int index = -1;
+
+      _testVisitor.VisitCollection (
+          collection,
+          delegate { },
+          i => index = i);
+
+      Assert.That (index, Is.EqualTo (-1));
+    }
+
+    [Test]
+    public void VisitCollection_ResetsIndex_WhenExceptionThrown ()
+    {
+      var collection = new ObservableCollection<string> { "a", "b" };
+
+      int index = -1;
+
+      try
+      {
+        _testVisitor.VisitCollection (
+            collection,
+            obj => { throw new NotSupportedException(); },
+            i => index = i);
+        Assert.Fail ("Expected exception");
+      }
+      catch (NotSupportedException)
+      {
+        // expected
+      }
+
+      Assert.That (index, Is.EqualTo (-1));
+    }
   }
 }
