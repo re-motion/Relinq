@@ -92,5 +92,30 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ExpressionTreeVisitors
 
       Assert.That (result, Is.SameAs (expression));
     }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException))]
+    public void VisitUnmappedReference_Throws ()
+    {
+      var expression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause ());
+      ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (expression, _clauseMapping);
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException))]
+    public void VisitUnmappedReference_IgnoreFalse_Throws ()
+    {
+      var expression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause ());
+      ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (expression, _clauseMapping, false);
+    }
+
+    [Test]
+    public void VisitUnmappedReference_IgnoreTrue_Ignored ()
+    {
+      var expression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause ());
+      var result = ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (expression, _clauseMapping, true);
+
+      Assert.That (result, Is.SameAs (expression));
+    }
   }
 }

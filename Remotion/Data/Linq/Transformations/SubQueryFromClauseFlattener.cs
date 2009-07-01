@@ -13,6 +13,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+using System.Linq.Expressions;
 using Remotion.Collections;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
@@ -62,6 +63,34 @@ namespace Remotion.Data.Linq.Transformations
   /// </example>
   public class SubQueryFromClauseFlattener : QueryModelVisitorBase
   {
+    class InnerBodyClauseInsertData
+    {
+      public ObservableCollection<IBodyClause> BodyClauses;
+      public int DestinationIndex;
+
+      public InnerBodyClauseInsertData (ObservableCollection<IBodyClause> bodyClauses, int destinationIndex)
+      {
+        BodyClauses = bodyClauses;
+        DestinationIndex = destinationIndex;
+      }
+    }
+
+    private readonly ClauseMapping _innerBodyClauseMapping = new ClauseMapping ();
+    private InnerBodyClauseInsertData _innerBodyClauseInsertData;
+    private ClauseMapping _innerSelectorMapping;
+
+    public override void VisitQueryModel (QueryModel queryModel)
+    {
+      base.VisitQueryModel (queryModel);
+
+      if (_innerSelectorMapping != null)
+        queryModel.TransformExpressions (ex => ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (ex, _innerSelectorMapping, true));
+      if (_innerBodyClauseInsertData != null)
+        InsertBodyClauses (_innerBodyClauseInsertData.BodyClauses, queryModel, _innerBodyClauseInsertData.DestinationIndex);
+
+      queryModel.TransformExpressions (ex => ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (ex, _innerBodyClauseMapping, true));
+    }
+
     public override void VisitAdditionalFromClause (AdditionalFromClause fromClause, QueryModel queryModel, int index)
     {
       var subQueryExpression = fromClause.FromExpression as SubQueryExpression;
@@ -69,9 +98,12 @@ namespace Remotion.Data.Linq.Transformations
       {
         var innerMainFromClause = subQueryExpression.QueryModel.MainFromClause;
         CopyFromClauseData (innerMainFromClause, fromClause);
-        var clauseMapping = new ClauseMapping ();
-        clauseMapping.AddMapping (innerMainFromClause, new QuerySourceReferenceExpression (fromClause));
-        InsertBodyClauses(subQueryExpression.QueryModel.BodyClauses, queryModel, index + 1, clauseMapping);
+
+        _innerBodyClauseMapping.AddMapping (innerMainFromClause, new QuerySourceReferenceExpression (fromClause));
+        _innerBodyClauseInsertData = new InnerBodyClauseInsertData (subQueryExpression.QueryModel.BodyClauses, index + 1);
+
+        _innerSelectorMapping = new ClauseMapping ();
+        _innerSelectorMapping.AddMapping (fromClause, ((SelectClause) subQueryExpression.QueryModel.SelectOrGroupClause).Selector);
       }
 
       base.VisitAdditionalFromClause (fromClause, queryModel, index);
@@ -84,12 +116,11 @@ namespace Remotion.Data.Linq.Transformations
       destination.ItemType = source.ItemType;
     }
 
-    private void InsertBodyClauses (ObservableCollection<IBodyClause> bodyClauses, QueryModel destinationQueryModel, int destinationIndex, ClauseMapping clauseMapping)
+    private void InsertBodyClauses (ObservableCollection<IBodyClause> bodyClauses, QueryModel destinationQueryModel, int destinationIndex)
     {
       foreach (var bodyClause in bodyClauses)
       {
         destinationQueryModel.BodyClauses.Insert (destinationIndex, bodyClause);
-        bodyClause.TransformExpressions(ex => ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences(ex,clauseMapping));
         ++destinationIndex;
       }
     }

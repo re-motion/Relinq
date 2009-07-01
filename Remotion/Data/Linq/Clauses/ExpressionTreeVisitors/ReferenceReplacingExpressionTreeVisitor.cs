@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
@@ -34,23 +35,45 @@ namespace Remotion.Data.Linq.Clauses.ExpressionTreeVisitors
       ArgumentUtility.CheckNotNull ("expression", expression);
       ArgumentUtility.CheckNotNull ("clauseMapping", clauseMapping);
 
-      return new ReferenceReplacingExpressionTreeVisitor (clauseMapping).VisitExpression (expression);
+      return ReplaceClauseReferences (expression, clauseMapping, false);
+    }
+
+    public static Expression ReplaceClauseReferences (Expression expression, ClauseMapping clauseMapping, bool ignoreUnmappedReferences)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+      ArgumentUtility.CheckNotNull ("clauseMapping", clauseMapping);
+
+      return new ReferenceReplacingExpressionTreeVisitor (clauseMapping, ignoreUnmappedReferences).VisitExpression (expression);
     }
 
     private readonly ClauseMapping _clauseMapping;
+    private readonly bool _ignoreUnmappedReferences;
 
-    private ReferenceReplacingExpressionTreeVisitor (ClauseMapping clauseMapping)
+    private ReferenceReplacingExpressionTreeVisitor (ClauseMapping clauseMapping, bool ignoreUnmappedReferences)
     {
       ArgumentUtility.CheckNotNull ("clauseMapping", clauseMapping);
       _clauseMapping = clauseMapping;
+      _ignoreUnmappedReferences = ignoreUnmappedReferences;
     }
 
     protected override Expression VisitQuerySourceReferenceExpression (QuerySourceReferenceExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      var mappedExpression = _clauseMapping.GetExpression (expression.ReferencedClause);
-      return mappedExpression;
+      if (!_ignoreUnmappedReferences || _clauseMapping.ContainsMapping (expression.ReferencedClause))
+      {
+        try
+        {
+          return _clauseMapping.GetExpression (expression.ReferencedClause);
+        }
+        catch (KeyNotFoundException)
+        {
+          var message = "Cannot replace reference to clause '" + expression.ReferencedClause.ItemName + "', there is no mapped expression.";
+          throw new InvalidOperationException (message);
+        }
+      }
+      else
+        return expression;
     }
 
     protected override Expression VisitSubQueryExpression (SubQueryExpression expression)

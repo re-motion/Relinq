@@ -41,7 +41,6 @@ namespace Remotion.Data.UnitTests.Linq.Transformations
     private MainFromClause _innerMainFromClauseA;
     private WhereClause _innerWhereClauseA;
     private OrderByClause _innerOrderByA;
-    private SelectClause _innerSelectClauseA;
 
     private MainFromClause _innerMainFromClauseM;
     private WhereClause _innerWhereClauseM;
@@ -85,7 +84,6 @@ namespace Remotion.Data.UnitTests.Linq.Transformations
       _innerMainFromClauseA = subQueryExpressionA.QueryModel.MainFromClause;
       _innerWhereClauseA = (WhereClause) subQueryExpressionA.QueryModel.BodyClauses[0];
       _innerOrderByA = (OrderByClause) subQueryExpressionA.QueryModel.BodyClauses[1];
-      _innerSelectClauseA = (SelectClause) subQueryExpressionA.QueryModel.SelectOrGroupClause;
 
       var subQueryExpressionM = (SubQueryExpression) _mainFromClause.FromExpression;
       _innerMainFromClauseM = subQueryExpressionM.QueryModel.MainFromClause;
@@ -119,9 +117,9 @@ namespace Remotion.Data.UnitTests.Linq.Transformations
     }
 
     [Test]
-    public void VisitAdditionalFromClause_PullsOutInnerBodyClauses ()
+    public void VisitQueryModel_PullsOutInnerBodyClauses ()
     {
-      _visitor.VisitAdditionalFromClause (_additionalFromClause1, _queryModel, 0);
+      _visitor.VisitQueryModel (_queryModel);
 
       Assert.That (_queryModel.BodyClauses[1], Is.SameAs (_innerWhereClauseA));
       Assert.That (_queryModel.BodyClauses[2], Is.SameAs (_innerOrderByA));
@@ -130,13 +128,29 @@ namespace Remotion.Data.UnitTests.Linq.Transformations
     }
 
     [Test]
-    public void VisitAdditionalFromClause_AdaptsReferencesOfInnerBodyClauses ()
+    public void VisitQueryModel_AdaptsReferencesOfInnerBodyClauses ()
     {
-      _visitor.VisitAdditionalFromClause (_additionalFromClause1, _queryModel, 0);
+      _visitor.VisitQueryModel (_queryModel);
 
       var orderingExpression = (MemberExpression) _innerOrderByA.Orderings[0].Expression;
       var referenceExpression = (QuerySourceReferenceExpression) orderingExpression.Expression;
       Assert.That (referenceExpression.ReferencedClause, Is.SameAs (_additionalFromClause1));
+    }
+
+    [Test]
+    public void VisitQueryModel_AdaptsReferencesToFromClause_WithInnerSelector ()
+    {
+      _visitor.VisitQueryModel (_queryModel);
+
+      var expectedPredicate = 
+          ExpressionHelper.Resolve<IndustrialSector, bool> (_additionalFromClause1, sector => sector.Student_Detail.Subject == "Maths");
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedPredicate, _whereClause.Predicate);
+
+      var expectedSelector = ExpressionHelper.Resolve<Student, IndustrialSector, Tuple<Student, Student_Detail>> (
+          _mainFromClause, 
+          _additionalFromClause1, 
+          (s1, sector) => new Tuple<Student, Student_Detail> (s1, sector.Student_Detail));
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedSelector, _selectClause.Selector);
     }
 
     [Test]
