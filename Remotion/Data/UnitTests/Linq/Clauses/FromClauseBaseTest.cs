@@ -15,11 +15,13 @@
 // 
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.DataObjectModel;
+using Rhino.Mocks;
 
 namespace Remotion.Data.UnitTests.Linq.Clauses
 {
@@ -103,6 +105,24 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       });
 
       Assert.That (clause.FromExpression, Is.SameAs (newExpression));
+    }
+
+    [Test]
+    public void TransformExpressions_PassedToJoinClauses ()
+    {
+      Func<Expression, Expression> transformer = ex => ex;
+      var expression = ExpressionHelper.CreateExpression ();
+      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause ();
+      var joinClauseMock = MockRepository.GenerateMock<JoinClause> ("item", typeof(string), expression, expression, expression);
+      fromClause.JoinClauses.Add (joinClauseMock);
+
+      joinClauseMock.Expect (mock => mock.TransformExpressions (transformer));
+
+      joinClauseMock.Replay ();
+
+      fromClause.TransformExpressions (transformer);
+
+      joinClauseMock.VerifyAllExpectations ();
     }
   }
 }

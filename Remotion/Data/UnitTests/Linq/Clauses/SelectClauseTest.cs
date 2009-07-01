@@ -149,17 +149,17 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Clone_ResultModifiers_PassesMapping ()
     {
-      var resultModifierClauseMock = MockRepository.GenerateMock<ResultModificationBase> (CollectionExecutionStrategy.Instance);
-      _selectClause.ResultModifications.Add (resultModifierClauseMock);
+      var resultModificationMock = MockRepository.GenerateMock<ResultModificationBase> (CollectionExecutionStrategy.Instance);
+      _selectClause.ResultModifications.Add (resultModificationMock);
 
-      resultModifierClauseMock
+      resultModificationMock
           .Expect (mock => mock.Clone (Arg.Is (_cloneContext)))
           .Return (ExpressionHelper.CreateResultModification());
-      resultModifierClauseMock.Replay();
+      resultModificationMock.Replay();
 
       _selectClause.Clone (_cloneContext);
 
-      resultModifierClauseMock.VerifyAllExpectations();
+      resultModificationMock.VerifyAllExpectations();
     }
 
     [Test]
@@ -176,6 +176,21 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       });
 
       Assert.That (clause.Selector, Is.SameAs (newExpression));
+    }
+
+    [Test]
+    public void TransformExpressions_PassedToResultModifications ()
+    {
+      Func<Expression, Expression> transformer = ex => ex;
+      var resultModificationMock = MockRepository.GenerateMock<ResultModificationBase> (CollectionExecutionStrategy.Instance);    
+      _selectClause.ResultModifications.Add (resultModificationMock);
+      resultModificationMock.Expect (mock => mock.TransformExpressions (transformer));
+      
+      resultModificationMock.Replay ();
+
+      _selectClause.TransformExpressions (transformer);
+
+      resultModificationMock.VerifyAllExpectations ();
     }
 
     [Test]

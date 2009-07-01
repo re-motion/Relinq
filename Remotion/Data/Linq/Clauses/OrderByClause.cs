@@ -51,7 +51,12 @@ namespace Remotion.Data.Linq.Clauses
 
     public void TransformExpressions (Func<Expression, Expression> transformation)
     {
-      // nothing to do, this clause has no expressions
+      ArgumentUtility.CheckNotNull ("transformation", transformation);
+
+      foreach (var ordering in Orderings)
+      {
+        ordering.TransformExpressions (transformation);
+      }
     }
 
     public OrderByClause Clone (CloneContext cloneContext)

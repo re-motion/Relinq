@@ -112,6 +112,11 @@ namespace Remotion.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("transformation", transformation);
       FromExpression = transformation (FromExpression);
+
+      foreach (var joinClause in JoinClauses)
+      {
+        joinClause.TransformExpressions (transformation);
+      }
     }
 
     protected void AddClonedJoinClauses (IEnumerable<JoinClause> originalJoinClauses, CloneContext cloneContext)

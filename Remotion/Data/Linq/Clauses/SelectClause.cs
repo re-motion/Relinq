@@ -101,6 +101,10 @@ namespace Remotion.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("transformation", transformation);
       Selector = transformation (Selector);
+      foreach (var resultModification in ResultModifications)
+      {
+        resultModification.TransformExpressions (transformation);
+      }
     }
   }
 }

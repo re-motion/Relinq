@@ -16,6 +16,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses
@@ -51,6 +52,11 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);
       
       visitor.VisitResultModification (this, queryModel, selectClause, index);
+    }
+
+    public virtual void TransformExpressions (Func<Expression, Expression> transformation)
+    {
+      //nothing to do here
     }
   }
 }

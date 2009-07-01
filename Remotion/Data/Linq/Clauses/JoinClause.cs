@@ -109,12 +109,12 @@ namespace Remotion.Data.Linq.Clauses
       return clone;
     }
 
-    public void TransformExpressions (Func<Expression, Expression> transformation)
+    public virtual void TransformExpressions (Func<Expression, Expression> transformation)
     {
       ArgumentUtility.CheckNotNull ("transformation", transformation);
       InExpression = transformation (InExpression);
       OnExpression = transformation (OnExpression);
-      EqualityExpression = transformation (EqualityExpression);
+      EqualityExpression = transformation (EqualityExpression); 
     }
   }
 }

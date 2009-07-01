@@ -33,16 +33,16 @@ namespace Remotion.Data.UnitTests.Linq.Parsing
       comparer.CheckAreEqualNodes (expressionTree1, expressionTree2);
     }
 
-    private readonly Expression _expressionTreeRoot1;
-    private readonly Expression _expressionTreeRoot2;
+    private readonly object _object1;
+    private readonly object _object2;
 
-    public ExpressionTreeComparer (Expression expressionTreeRoot1, Expression expressionTreeRoot2)
+    public ExpressionTreeComparer (object object1, object object2)
     {
-      ArgumentUtility.CheckNotNull ("expressionTreeRoot1", expressionTreeRoot1);
-      ArgumentUtility.CheckNotNull ("expressionTreeRoot2", expressionTreeRoot2);
+      ArgumentUtility.CheckNotNull ("object1", object1);
+      ArgumentUtility.CheckNotNull ("object2", object2);
 
-      _expressionTreeRoot1 = expressionTreeRoot1;
-      _expressionTreeRoot2 = expressionTreeRoot2;
+      _object1 = object1;
+      _object2 = object2;
     }
 
     public void CheckAreEqualNodes (Expression e1, Expression e2)
@@ -57,7 +57,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing
       }
     }
 
-    private void CheckAreEqualObjects (object e1, object e2)
+    public void CheckAreEqualObjects (object e1, object e2)
     {
       Assert.AreEqual (e1.GetType(), e2.GetType(), GetMessage (e1, e2, "GetType()"));
 
@@ -107,8 +107,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing
 
     private string GetMessage (object e1, object e2, string context)
     {
-      return string.Format ("Trees are not equal: {0}\nNode 1: {1}\nNode 2: {2}\nTree 1: {3}\nTree 2: {4}", context, e1, e2, _expressionTreeRoot1,
-          _expressionTreeRoot2);
+      return string.Format ("Trees are not equal: {0}\nNode 1: {1}\nNode 2: {2}\nTree 1: {3}\nTree 2: {4}", context, e1, e2, _object1,
+          _object2);
     }
   }
 }
