@@ -108,7 +108,7 @@ namespace Remotion.Data.Linq.Clauses
       return DatabaseInfoUtility.GetTableForFromClause (databaseInfo, this);
     }
 
-    public void TransformExpressions (Func<Expression, Expression> transformation)
+    public virtual void TransformExpressions (Func<Expression, Expression> transformation)
     {
       ArgumentUtility.CheckNotNull ("transformation", transformation);
       FromExpression = transformation (FromExpression);

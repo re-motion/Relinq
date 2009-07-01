@@ -15,6 +15,7 @@
 // 
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses.Expressions;
@@ -36,10 +37,10 @@ namespace Remotion.Data.UnitTests.Linq
     [SetUp]
     public void SetUp ()
     {
-      _mainFromClause = ExpressionHelper.CreateMainFromClause ();
-      _selectClause = ExpressionHelper.CreateSelectClause ();
+      _mainFromClause = ExpressionHelper.CreateMainFromClause();
+      _selectClause = ExpressionHelper.CreateSelectClause();
       _queryModel = new QueryModel (typeof (IQueryable<string>), _mainFromClause, _selectClause);
-      _clauseMapping = new ClauseMapping ();
+      _clauseMapping = new ClauseMapping();
     }
 
     [Test]
@@ -51,22 +52,22 @@ namespace Remotion.Data.UnitTests.Linq
     }
 
     [Test]
-    public void Accept()
+    public void Accept ()
     {
-      var repository = new MockRepository ();
-      var visitorMock = repository.StrictMock<IQueryModelVisitor> ();
+      var repository = new MockRepository();
+      var visitorMock = repository.StrictMock<IQueryModelVisitor>();
 
       visitorMock.Expect (mock => mock.VisitQueryModel (_queryModel));
 
-      repository.ReplayAll ();
+      repository.ReplayAll();
 
       _queryModel.Accept (visitorMock);
 
-      repository.VerifyAll ();
+      repository.VerifyAll();
     }
 
     [Test]
-    public void Override_ToString()
+    public void Override_ToString ()
     {
       var sv = new StringBuildingQueryModelVisitor();
       sv.VisitQueryModel (_queryModel);
@@ -76,8 +77,8 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void Clone_ReturnsNewQueryModel ()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel ();
-      var clone = queryModel.Clone ();
+      var queryModel = ExpressionHelper.CreateQueryModel();
+      var clone = queryModel.Clone();
 
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (queryModel));
@@ -86,7 +87,7 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void Clone_HasSameResultType ()
     {
-      var clone = _queryModel.Clone ();
+      var clone = _queryModel.Clone();
 
       Assert.That (clone.ResultType, Is.SameAs (_queryModel.ResultType));
     }
@@ -94,7 +95,7 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void Clone_HasCloneForMainFromClause ()
     {
-      var clone = _queryModel.Clone ();
+      var clone = _queryModel.Clone();
 
       Assert.That (clone.MainFromClause, Is.Not.SameAs (_queryModel.MainFromClause));
       Assert.That (clone.MainFromClause.ItemName, Is.EqualTo (_queryModel.MainFromClause.ItemName));
@@ -105,7 +106,8 @@ namespace Remotion.Data.UnitTests.Linq
     public void Clone_HasCloneForMainFromClause_PassesMapping ()
     {
       var clone = _queryModel.Clone (_clauseMapping);
-      Assert.That (((QuerySourceReferenceExpression) _clauseMapping.GetExpression (_queryModel.MainFromClause)).ReferencedClause, 
+      Assert.That (
+          ((QuerySourceReferenceExpression) _clauseMapping.GetExpression (_queryModel.MainFromClause)).ReferencedClause,
           Is.SameAs (clone.MainFromClause));
     }
 
@@ -113,7 +115,7 @@ namespace Remotion.Data.UnitTests.Linq
     public void Clone_HasCloneForSelectClause ()
     {
       var selectClause = (SelectClause) _queryModel.SelectOrGroupClause;
-      var clone = _queryModel.Clone ();
+      var clone = _queryModel.Clone();
 
       Assert.That (clone.SelectOrGroupClause, Is.Not.SameAs (_queryModel.SelectOrGroupClause));
       var cloneSelectClause = ((SelectClause) clone.SelectOrGroupClause);
@@ -123,10 +125,10 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void Clone_HasCloneForSelectClause_PassesMapping ()
     {
-      var oldReferencedClause = ExpressionHelper.CreateMainFromClause ();
+      var oldReferencedClause = ExpressionHelper.CreateMainFromClause();
       ((SelectClause) _queryModel.SelectOrGroupClause).Selector = new QuerySourceReferenceExpression (oldReferencedClause);
 
-      var newReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause ());
+      var newReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause());
       _clauseMapping.AddMapping (oldReferencedClause, newReferenceExpression);
 
       var clone = _queryModel.Clone (_clauseMapping);
@@ -136,12 +138,12 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void Clone_HasClonesForBodyClauses ()
     {
-      var additionalFromClause = ExpressionHelper.CreateAdditionalFromClause ();
+      var additionalFromClause = ExpressionHelper.CreateAdditionalFromClause();
       var whereClause = ExpressionHelper.CreateWhereClause();
       _queryModel.BodyClauses.Add (additionalFromClause);
       _queryModel.BodyClauses.Add (whereClause);
 
-      var clone = _queryModel.Clone ();
+      var clone = _queryModel.Clone();
       var clonedAdditionalFromClause = (AdditionalFromClause) clone.BodyClauses[0];
       var clonedWhereClause = (WhereClause) clone.BodyClauses[1];
 
@@ -156,7 +158,7 @@ namespace Remotion.Data.UnitTests.Linq
     public void Clone_HasCloneForBodyClauses_PassesMapping ()
     {
       var bodyClause = ExpressionHelper.CreateWhereClause();
-      var oldReferencedClause = ExpressionHelper.CreateMainFromClause ();
+      var oldReferencedClause = ExpressionHelper.CreateMainFromClause();
       bodyClause.Predicate = new QuerySourceReferenceExpression (oldReferencedClause);
       _queryModel.BodyClauses.Add (bodyClause);
 
@@ -166,11 +168,29 @@ namespace Remotion.Data.UnitTests.Linq
       var clone = _queryModel.Clone (_clauseMapping);
       Assert.That (((WhereClause) clone.BodyClauses[0]).Predicate, Is.SameAs (newReferenceExpression));
     }
-    
+
+    [Test]
+    public void TransformExpressions ()
+    {
+      Func<Expression, Expression> transformation = ex => ex;
+      var fromClauseMock = MockRepository.GenerateMock<MainFromClause> ("item", typeof (string), ExpressionHelper.CreateExpression());
+      var bodyClauseMock = MockRepository.GenerateMock<IBodyClause>();
+      var selectClauseMock = MockRepository.GenerateMock<ISelectGroupClause>();
+
+      var queryModel = new QueryModel (typeof (IQueryable<string>), fromClauseMock, selectClauseMock);
+      queryModel.BodyClauses.Add (bodyClauseMock);
+
+      queryModel.TransformExpressions (transformation);
+
+      fromClauseMock.AssertWasCalled (mock => mock.TransformExpressions (transformation));
+      bodyClauseMock.AssertWasCalled (mock => mock.TransformExpressions (transformation));
+      selectClauseMock.AssertWasCalled (mock => mock.TransformExpressions (transformation));
+    }
+
     [Test]
     public void SelectOrGroupClause_Set ()
     {
-      var newSelectClause = ExpressionHelper.CreateSelectClause ();
+      var newSelectClause = ExpressionHelper.CreateSelectClause();
       _queryModel.SelectOrGroupClause = newSelectClause;
 
       Assert.That (_queryModel.SelectOrGroupClause, Is.SameAs (newSelectClause));
@@ -204,7 +224,7 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void GetNewName_AlreadyExists_MainFromClause ()
     {
-      var mainFromClause = new MainFromClause ("test0", typeof (Student), ExpressionHelper.CreateQuerySource ().Expression);
+      var mainFromClause = new MainFromClause ("test0", typeof (Student), ExpressionHelper.CreateQuerySource().Expression);
       var queryModel = ExpressionHelper.CreateQueryModel (mainFromClause);
       var identifier = queryModel.GetNewName ("test");
       Assert.That (identifier, Is.EqualTo ("test1"));
@@ -213,8 +233,8 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void GetNewName_AlreadyExists_ChangedMainFromClause ()
     {
-      var mainFromClause = new MainFromClause ("test0", typeof (Student), ExpressionHelper.CreateQuerySource ().Expression);
-      var queryModel = ExpressionHelper.CreateQueryModel ();
+      var mainFromClause = new MainFromClause ("test0", typeof (Student), ExpressionHelper.CreateQuerySource().Expression);
+      var queryModel = ExpressionHelper.CreateQueryModel();
       queryModel.MainFromClause = mainFromClause;
       var identifier = queryModel.GetNewName ("test");
       Assert.That (identifier, Is.EqualTo ("test1"));
@@ -223,7 +243,8 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void GetNewName_AlreadyExists_BodyClauses ()
     {
-      var additionalFromClause = new AdditionalFromClause ("test0",
+      var additionalFromClause = new AdditionalFromClause (
+          "test0",
           typeof (Student),
           ExpressionHelper.CreateExpression());
       _queryModel.BodyClauses.Add (additionalFromClause);
@@ -235,11 +256,12 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void GetNewName_AlreadyExists_ReplacedBodyClauses ()
     {
-      _queryModel.BodyClauses.Add (ExpressionHelper.CreateAdditionalFromClause ());
+      _queryModel.BodyClauses.Add (ExpressionHelper.CreateAdditionalFromClause());
 
-      var additionalFromClause = new AdditionalFromClause ("test0",
+      var additionalFromClause = new AdditionalFromClause (
+          "test0",
           typeof (Student),
-          ExpressionHelper.CreateExpression ());
+          ExpressionHelper.CreateExpression());
       _queryModel.BodyClauses[0] = additionalFromClause;
 
       var identifier = _queryModel.GetNewName ("test");
@@ -249,10 +271,10 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void InitializeWithISelectOrGroupClauseAndOrderByClause ()
     {
-      var orderByClause = new OrderByClause ();
+      var orderByClause = new OrderByClause();
       _queryModel.BodyClauses.Add (orderByClause);
 
-      var ordering = new Ordering (ExpressionHelper.CreateExpression (), OrderingDirection.Asc);
+      var ordering = new Ordering (ExpressionHelper.CreateExpression(), OrderingDirection.Asc);
       orderByClause.Orderings.Add (ordering);
 
       Assert.That (_queryModel.SelectOrGroupClause, Is.SameAs (_selectClause));
@@ -263,9 +285,8 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void AddSeveralOrderByClauses ()
     {
-
-      IBodyClause orderByClause1 = ExpressionHelper.CreateOrderByClause ();
-      IBodyClause orderByClause2 = ExpressionHelper.CreateOrderByClause ();
+      IBodyClause orderByClause1 = ExpressionHelper.CreateOrderByClause();
+      IBodyClause orderByClause2 = ExpressionHelper.CreateOrderByClause();
 
       _queryModel.BodyClauses.Add (orderByClause1);
       _queryModel.BodyClauses.Add (orderByClause2);
@@ -277,7 +298,7 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void AddBodyClause ()
     {
-      IBodyClause clause = ExpressionHelper.CreateWhereClause ();
+      IBodyClause clause = ExpressionHelper.CreateWhereClause();
       _queryModel.BodyClauses.Add (clause);
 
       Assert.That (_queryModel.BodyClauses.Count, Is.EqualTo (1));
@@ -295,7 +316,7 @@ namespace Remotion.Data.UnitTests.Linq
     [ExpectedException (typeof (ArgumentNullException))]
     public void SetBodyClause_Null ()
     {
-      _queryModel.BodyClauses.Add (ExpressionHelper.CreateWhereClause ());
+      _queryModel.BodyClauses.Add (ExpressionHelper.CreateWhereClause());
       _queryModel.BodyClauses[0] = null;
     }
   }
