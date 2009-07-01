@@ -58,5 +58,7 @@ namespace Remotion.Data.Linq.Clauses
     {
       //nothing to do here
     }
+
+    
   }
 }

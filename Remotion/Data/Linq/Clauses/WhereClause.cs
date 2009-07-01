@@ -17,6 +17,7 @@ using System;
 using System.Diagnostics;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
+using Remotion.Data.Linq.StringBuilding;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses
@@ -75,6 +76,16 @@ namespace Remotion.Data.Linq.Clauses
     IBodyClause IBodyClause.Clone (CloneContext cloneContext)
     {
       return Clone (cloneContext);
+    }
+
+    public override string ToString ()
+    {
+      string predicate;
+      if (Predicate != null)
+        predicate = FormattingExpressionTreeVisitor.Format (Predicate);
+      else
+        predicate = "<null>";
+      return string.Format ("where {0} ", predicate);
     }
   }
 }

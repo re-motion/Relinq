@@ -82,5 +82,14 @@ namespace Remotion.Data.Linq.Clauses
     {
       return Clone (cloneContext);
     }
+
+    public override string ToString ()
+    {
+      foreach (var ordering in Orderings)
+      {
+        ordering.ToString();
+      }
+      return "orderby ";
+    }
   }
 }

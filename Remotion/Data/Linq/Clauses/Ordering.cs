@@ -17,6 +17,7 @@ using System;
 using System.Diagnostics;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
+using Remotion.Data.Linq.StringBuilding;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses
@@ -80,6 +81,26 @@ namespace Remotion.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("transformation", transformation);
       Expression = transformation (Expression);
+    }
+
+    public override string ToString ()
+    {
+      switch (OrderingDirection)
+      {
+        case OrderingDirection.Asc:
+          return string.Format ("{0} ascending ", FormatExpression (Expression));
+        case OrderingDirection.Desc:
+          return string.Format ("{0} descending ", FormatExpression (Expression));
+      }
+      return base.ToString ();
+    }
+
+    private string FormatExpression (Expression expression)
+    {
+      if (expression != null)
+        return FormattingExpressionTreeVisitor.Format (expression);
+      else
+        return "<null>";
     }
   }
 }

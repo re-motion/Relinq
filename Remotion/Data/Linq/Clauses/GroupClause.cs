@@ -16,7 +16,9 @@
 using System;
 using System.Diagnostics;
 using System.Linq.Expressions;
+using System.Text;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
+using Remotion.Data.Linq.StringBuilding;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses
@@ -81,6 +83,19 @@ namespace Remotion.Data.Linq.Clauses
 
       GroupExpression = transformation (GroupExpression);
       ByExpression = transformation (ByExpression);
+    }
+
+    public override string ToString ()
+    {
+      return string.Format ("group {0} by {1}", FormatExpression (GroupExpression), FormatExpression (ByExpression)); 
+    }
+
+    private string FormatExpression (Expression expression)
+    {
+      if (expression != null)
+        return FormattingExpressionTreeVisitor.Format (expression);
+      else
+        return "<null>";
     }
   }
 }

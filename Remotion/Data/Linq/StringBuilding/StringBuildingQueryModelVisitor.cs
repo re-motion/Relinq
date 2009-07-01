@@ -30,8 +30,8 @@ namespace Remotion.Data.Linq.StringBuilding
     {
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
-
-      _sb.AppendFormat ("from {0} {1} in {2} ", fromClause.ItemType.Name, fromClause.ItemName, FormatExpression (fromClause.FromExpression));
+      
+      _sb.Append (fromClause.ToString());
       base.VisitMainFromClause (fromClause, queryModel);
     }
 
@@ -40,7 +40,7 @@ namespace Remotion.Data.Linq.StringBuilding
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
       
-      _sb.AppendFormat ("from {0} {1} in {2} ", fromClause.ItemType.Name, fromClause.ItemName, FormatExpression (fromClause.FromExpression));
+      _sb.Append (fromClause.ToString ());      
       base.VisitAdditionalFromClause (fromClause, queryModel, index);
     }
 
@@ -50,13 +50,7 @@ namespace Remotion.Data.Linq.StringBuilding
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
 
-      _sb.AppendFormat (
-          "join {0} {1} in {2} on {3} equals {4} ",
-          joinClause.ItemName, 
-          joinClause.ItemType, 
-          FormatExpression (joinClause.InExpression),
-          FormatExpression (joinClause.OnExpression), 
-          FormatExpression (joinClause.EqualityExpression));
+      _sb.Append (joinClause.ToString());
       base.VisitJoinClause (joinClause, queryModel, fromClause, index);
     }
 
@@ -65,7 +59,7 @@ namespace Remotion.Data.Linq.StringBuilding
       ArgumentUtility.CheckNotNull ("whereClause", whereClause);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
-      _sb.AppendFormat ("where {0} ", FormatExpression (whereClause.Predicate));
+      _sb.Append (whereClause.ToString());
       base.VisitWhereClause (whereClause, queryModel, index);
     }
 
@@ -74,7 +68,7 @@ namespace Remotion.Data.Linq.StringBuilding
       ArgumentUtility.CheckNotNull ("orderByClause", orderByClause);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
-      _sb.Append ("orderby ");
+      _sb.Append (orderByClause.ToString());
       base.VisitOrderByClause (orderByClause, queryModel, index);
     }
 
@@ -84,15 +78,7 @@ namespace Remotion.Data.Linq.StringBuilding
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
       ArgumentUtility.CheckNotNull ("orderByClause", orderByClause);
       
-      switch (ordering.OrderingDirection)
-      {
-        case OrderingDirection.Asc:
-          _sb.AppendFormat ("{0} ascending ", FormatExpression (ordering.Expression));
-          break;
-        case OrderingDirection.Desc:
-          _sb.AppendFormat ("{0} descending ", FormatExpression (ordering.Expression));
-          break;
-      }
+      _sb.Append (ordering.ToString());
       base.VisitOrdering (ordering, queryModel, orderByClause, index);
     }
 
@@ -101,7 +87,7 @@ namespace Remotion.Data.Linq.StringBuilding
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
-      _sb.AppendFormat ("select {0}", FormatExpression (selectClause.Selector));
+      _sb.Append(selectClause.ToString());
       base.VisitSelectClause (selectClause, queryModel);
     }
 
@@ -136,21 +122,13 @@ namespace Remotion.Data.Linq.StringBuilding
       ArgumentUtility.CheckNotNull ("groupClause", groupClause);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
       
-      _sb.AppendFormat ("group {0} by {1}", FormatExpression (groupClause.GroupExpression), FormatExpression (groupClause.ByExpression));
+      _sb.Append (groupClause.ToString());
       base.VisitGroupClause (groupClause, queryModel);
     }
 
     public override string ToString ()
     {
       return _sb.ToString();
-    }
-
-    private string FormatExpression (Expression expression)
-    {
-      if (expression != null)
-        return FormattingExpressionTreeVisitor.Format (expression);
-      else
-        return "<null>";
     }
   }
 }

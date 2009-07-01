@@ -17,6 +17,7 @@ using System;
 using System.Diagnostics;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
+using Remotion.Data.Linq.StringBuilding;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses
@@ -115,6 +116,25 @@ namespace Remotion.Data.Linq.Clauses
       InExpression = transformation (InExpression);
       OnExpression = transformation (OnExpression);
       EqualityExpression = transformation (EqualityExpression); 
+    }
+
+    public override string ToString ()
+    {
+      return string.Format (
+          "join {0} {1} in {2} on {3} equals {4} ",
+          ItemName,
+          ItemType,
+          FormatExpression (InExpression),
+          FormatExpression (OnExpression),
+          FormatExpression (EqualityExpression));
+    }
+
+    private string FormatExpression (Expression expression)
+    {
+      if (expression != null)
+        return FormattingExpressionTreeVisitor.Format (expression);
+      else
+        return "<null>";
     }
   }
 }

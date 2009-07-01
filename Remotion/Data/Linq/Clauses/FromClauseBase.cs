@@ -21,6 +21,7 @@ using Remotion.Collections;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing;
+using Remotion.Data.Linq.StringBuilding;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses
@@ -117,6 +118,21 @@ namespace Remotion.Data.Linq.Clauses
       {
         joinClause.TransformExpressions (transformation);
       }
+    }
+
+    public override string ToString ()
+    {
+      string fromExpression;
+      if (FromExpression != null)
+        fromExpression = FormattingExpressionTreeVisitor.Format (FromExpression);
+      else
+        fromExpression = "<null>";
+      
+      foreach (var joinClause in JoinClauses)
+      {
+        joinClause.ToString();
+      }
+      return string.Format ("from {0} {1} in {2} ", ItemType.Name, ItemName, fromExpression);
     }
 
     protected void AddClonedJoinClauses (IEnumerable<JoinClause> originalJoinClauses, CloneContext cloneContext)

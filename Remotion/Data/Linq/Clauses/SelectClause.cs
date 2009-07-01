@@ -15,9 +15,11 @@
 // 
 using System;
 using System.Diagnostics;
+using System.Text;
 using Remotion.Collections;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
+using Remotion.Data.Linq.StringBuilding;
 using Remotion.Utilities;
 using System.Linq.Expressions;
 
@@ -105,6 +107,21 @@ namespace Remotion.Data.Linq.Clauses
       {
         resultModification.TransformExpressions (transformation);
       }
+    }
+
+    public override string ToString ()
+    {
+      string selector;
+      if (Selector != null)
+        selector =  FormattingExpressionTreeVisitor.Format (Selector);
+      else
+        selector = "<null>";
+
+      foreach (var resultModification in ResultModifications)
+      {
+        resultModification.ToString();
+      }
+      return string.Format ("select {0}", selector);
     }
   }
 }
