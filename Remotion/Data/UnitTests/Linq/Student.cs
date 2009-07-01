@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Remotion.Data.UnitTests.Linq
 {
@@ -23,7 +24,7 @@ namespace Remotion.Data.UnitTests.Linq
     public string Last { get; set; }
     public int ID { get; set; }
     public List<int> Scores { get; set; }
-    public List<Student> Friends { get; set; }
+    public IQueryable<Student> Friends { get; set; }
     public string NonDBProperty { get; set; }
     public bool NonDBBoolProperty { get; set; }
     public bool IsOld { get; set; }

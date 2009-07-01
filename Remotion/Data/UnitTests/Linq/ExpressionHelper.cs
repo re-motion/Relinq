@@ -298,5 +298,12 @@ namespace Remotion.Data.UnitTests.Linq
       var result1 = ReplacingVisitor.Replace (expressionToBeResolved.Parameters[0], new QuerySourceReferenceExpression (fromClauseToReference1), expressionToBeResolved.Body);
       return ReplacingVisitor.Replace (expressionToBeResolved.Parameters[1], new QuerySourceReferenceExpression (fromClauseToReference2), result1);
     }
+
+    public static Expression Resolve<TParameter1, TParameter2, TParameter3, TResult> (FromClauseBase fromClauseToReference1, FromClauseBase fromClauseToReference2, FromClauseBase fromClauseToReference3, Expression<Func<TParameter1, TParameter2, TParameter3, TResult>> expressionToBeResolved)
+    {
+      var result1 = ReplacingVisitor.Replace (expressionToBeResolved.Parameters[0], new QuerySourceReferenceExpression (fromClauseToReference1), expressionToBeResolved.Body);
+      var result2 = ReplacingVisitor.Replace (expressionToBeResolved.Parameters[1], new QuerySourceReferenceExpression (fromClauseToReference2), result1);
+      return ReplacingVisitor.Replace (expressionToBeResolved.Parameters[2], new QuerySourceReferenceExpression (fromClauseToReference3), result2);
+    }
   }
 }

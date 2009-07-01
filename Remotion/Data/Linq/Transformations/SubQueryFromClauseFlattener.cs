@@ -63,50 +63,38 @@ namespace Remotion.Data.Linq.Transformations
   /// </example>
   public class SubQueryFromClauseFlattener : QueryModelVisitorBase
   {
-    class InnerBodyClauseInsertData
+    public override void VisitMainFromClause (MainFromClause fromClause, QueryModel queryModel)
     {
-      public ObservableCollection<IBodyClause> BodyClauses;
-      public int DestinationIndex;
+      var subQueryExpression = fromClause.FromExpression as SubQueryExpression;
+      if (subQueryExpression != null)
+        FlattenSubQuery (subQueryExpression, fromClause, queryModel, 0);
 
-      public InnerBodyClauseInsertData (ObservableCollection<IBodyClause> bodyClauses, int destinationIndex)
-      {
-        BodyClauses = bodyClauses;
-        DestinationIndex = destinationIndex;
-      }
-    }
-
-    private readonly ClauseMapping _innerBodyClauseMapping = new ClauseMapping ();
-    private InnerBodyClauseInsertData _innerBodyClauseInsertData;
-    private ClauseMapping _innerSelectorMapping;
-
-    public override void VisitQueryModel (QueryModel queryModel)
-    {
-      base.VisitQueryModel (queryModel);
-
-      if (_innerSelectorMapping != null)
-        queryModel.TransformExpressions (ex => ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (ex, _innerSelectorMapping, true));
-      if (_innerBodyClauseInsertData != null)
-        InsertBodyClauses (_innerBodyClauseInsertData.BodyClauses, queryModel, _innerBodyClauseInsertData.DestinationIndex);
-
-      queryModel.TransformExpressions (ex => ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (ex, _innerBodyClauseMapping, true));
+      base.VisitMainFromClause (fromClause, queryModel);
     }
 
     public override void VisitAdditionalFromClause (AdditionalFromClause fromClause, QueryModel queryModel, int index)
     {
       var subQueryExpression = fromClause.FromExpression as SubQueryExpression;
       if (subQueryExpression != null)
-      {
-        var innerMainFromClause = subQueryExpression.QueryModel.MainFromClause;
-        CopyFromClauseData (innerMainFromClause, fromClause);
-
-        _innerBodyClauseMapping.AddMapping (innerMainFromClause, new QuerySourceReferenceExpression (fromClause));
-        _innerBodyClauseInsertData = new InnerBodyClauseInsertData (subQueryExpression.QueryModel.BodyClauses, index + 1);
-
-        _innerSelectorMapping = new ClauseMapping ();
-        _innerSelectorMapping.AddMapping (fromClause, ((SelectClause) subQueryExpression.QueryModel.SelectOrGroupClause).Selector);
-      }
+        FlattenSubQuery (subQueryExpression, fromClause, queryModel, index + 1);
 
       base.VisitAdditionalFromClause (fromClause, queryModel, index);
+    }
+
+    private void FlattenSubQuery (SubQueryExpression subQueryExpression, FromClauseBase fromClause, QueryModel queryModel, int destinationIndex)
+    {
+      var innerMainFromClause = subQueryExpression.QueryModel.MainFromClause;
+      CopyFromClauseData (innerMainFromClause, fromClause);
+
+      var innerSelectorMapping = new ClauseMapping ();
+      innerSelectorMapping.AddMapping (fromClause, ((SelectClause) subQueryExpression.QueryModel.SelectOrGroupClause).Selector);
+      queryModel.TransformExpressions (ex => ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (ex, innerSelectorMapping, true));
+
+      InsertBodyClauses (subQueryExpression.QueryModel.BodyClauses, queryModel, destinationIndex);
+
+      var innerBodyClauseMapping = new ClauseMapping ();
+      innerBodyClauseMapping.AddMapping (innerMainFromClause, new QuerySourceReferenceExpression (fromClause));
+      queryModel.TransformExpressions (ex => ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (ex, innerBodyClauseMapping, true));
     }
 
     private void CopyFromClauseData (FromClauseBase source, FromClauseBase destination)

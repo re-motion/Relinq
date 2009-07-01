@@ -42,10 +42,6 @@ namespace Remotion.Data.UnitTests.Linq.Transformations
     private WhereClause _innerWhereClauseA;
     private OrderByClause _innerOrderByA;
 
-    private MainFromClause _innerMainFromClauseM;
-    private WhereClause _innerWhereClauseM;
-    private OrderByClause _innerOrderByM;
-    private SelectClause _innerSelectClauseM;
     private SubQueryFromClauseFlattener _visitor;
     private IQueryable<Student_Detail> _detailSource;
     private IQueryable<IndustrialSector> _sectorSource;
@@ -67,13 +63,6 @@ namespace Remotion.Data.UnitTests.Linq.Transformations
                   select new Tuple<Student, Student_Detail> (s1, sd);
       _queryModel = ExpressionHelper.ParseQuery (query);
 
-      var mainFromSubQuery = from sd in _detailSource
-                             where sd.Subject == "Maths"
-                             orderby sd.ID
-                             select sd.Student;
-      var parsedMainFromSubQuery = ExpressionHelper.ParseQuery (mainFromSubQuery);
-      _queryModel.MainFromClause.FromExpression = new SubQueryExpression (parsedMainFromSubQuery); // change to be a from clause with a sub query
-
       _mainFromClause = _queryModel.MainFromClause;
       _additionalFromClause1 = (AdditionalFromClause) _queryModel.BodyClauses[0];
       _additionalFromClause2 = (AdditionalFromClause) _queryModel.BodyClauses[1];
@@ -84,12 +73,6 @@ namespace Remotion.Data.UnitTests.Linq.Transformations
       _innerMainFromClauseA = subQueryExpressionA.QueryModel.MainFromClause;
       _innerWhereClauseA = (WhereClause) subQueryExpressionA.QueryModel.BodyClauses[0];
       _innerOrderByA = (OrderByClause) subQueryExpressionA.QueryModel.BodyClauses[1];
-
-      var subQueryExpressionM = (SubQueryExpression) _mainFromClause.FromExpression;
-      _innerMainFromClauseM = subQueryExpressionM.QueryModel.MainFromClause;
-      _innerWhereClauseM = (WhereClause) subQueryExpressionM.QueryModel.BodyClauses[0];
-      _innerOrderByM = (OrderByClause) subQueryExpressionM.QueryModel.BodyClauses[1];
-      _innerSelectClauseM = (SelectClause) subQueryExpressionM.QueryModel.SelectOrGroupClause;
 
       _visitor = new SubQueryFromClauseFlattener();
     }
@@ -117,9 +100,9 @@ namespace Remotion.Data.UnitTests.Linq.Transformations
     }
 
     [Test]
-    public void VisitQueryModel_PullsOutInnerBodyClauses ()
+    public void VisitAdditionalFromClause_PullsOutInnerBodyClauses ()
     {
-      _visitor.VisitQueryModel (_queryModel);
+      _visitor.VisitAdditionalFromClause (_additionalFromClause1, _queryModel, 0);
 
       Assert.That (_queryModel.BodyClauses[1], Is.SameAs (_innerWhereClauseA));
       Assert.That (_queryModel.BodyClauses[2], Is.SameAs (_innerOrderByA));
@@ -128,9 +111,9 @@ namespace Remotion.Data.UnitTests.Linq.Transformations
     }
 
     [Test]
-    public void VisitQueryModel_AdaptsReferencesOfInnerBodyClauses ()
+    public void VisitAdditionalFromClause_AdaptsReferencesOfInnerBodyClauses ()
     {
-      _visitor.VisitQueryModel (_queryModel);
+      _visitor.VisitAdditionalFromClause (_additionalFromClause1, _queryModel, 0);
 
       var orderingExpression = (MemberExpression) _innerOrderByA.Orderings[0].Expression;
       var referenceExpression = (QuerySourceReferenceExpression) orderingExpression.Expression;
@@ -138,26 +121,71 @@ namespace Remotion.Data.UnitTests.Linq.Transformations
     }
 
     [Test]
-    public void VisitQueryModel_AdaptsReferencesToFromClause_WithInnerSelector ()
+    public void VisitAdditionalFromClause_AdaptsReferencesToFromClause_WithInnerSelector ()
     {
-      _visitor.VisitQueryModel (_queryModel);
+      _visitor.VisitAdditionalFromClause (_additionalFromClause1, _queryModel, 0);
 
       var expectedPredicate = 
           ExpressionHelper.Resolve<IndustrialSector, bool> (_additionalFromClause1, sector => sector.Student_Detail.Subject == "Maths");
       ExpressionTreeComparer.CheckAreEqualTrees (expectedPredicate, _whereClause.Predicate);
 
       var expectedSelector = ExpressionHelper.Resolve<Student, IndustrialSector, Tuple<Student, Student_Detail>> (
-          _mainFromClause, 
-          _additionalFromClause1, 
+          _mainFromClause,
+          _additionalFromClause1,
           (s1, sector) => new Tuple<Student, Student_Detail> (s1, sector.Student_Detail));
       ExpressionTreeComparer.CheckAreEqualTrees (expectedSelector, _selectClause.Selector);
     }
 
     [Test]
-    [Ignore ("TODO 1259")]
+    public void VisitMainFromClause_AlsoFlattens ()
+    {
+      var mainFromSubQuery = from sd in _detailSource
+                             where sd.Subject == "Maths"
+                             orderby sd.ID
+                             select sd.Student;
+      var parsedMainFromSubQuery = ExpressionHelper.ParseQuery (mainFromSubQuery);
+
+      var query = from s in ExpressionHelper.CreateQuerySource()
+                  select s.First;
+      var parsedQuery = ExpressionHelper.ParseQuery (query);
+      parsedQuery.MainFromClause.FromExpression = new SubQueryExpression (parsedMainFromSubQuery);
+
+      parsedQuery.Accept (_visitor);
+
+      var expectedSelector = ExpressionHelper.Resolve<Student_Detail, string> (parsedQuery.MainFromClause, sd => sd.Student.First);
+
+      Assert.That (parsedQuery.MainFromClause.FromExpression, Is.Not.InstanceOfType (typeof (SubQueryExpression)));
+      Assert.That (parsedQuery.BodyClauses.Count, Is.EqualTo (2));
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedSelector, ((SelectClause) parsedQuery.SelectOrGroupClause).Selector);
+    }
+
+    [Test]
+    [Ignore ("TODO 1268")]
     public void IntegrationTest_TransformedQueryModel ()
     {
-      _queryModel.Accept (_visitor);
+      var query = from s1 in ExpressionHelper.CreateQuerySource ()
+                  from sd in
+                    (from sector in _sectorSource
+                     where sector.ID > 10
+                     orderby sector.ID
+                     select sector.Student_Detail)
+                  from s2 in s1.Friends
+                  where sd.Subject == "Maths"
+                  from s3 in
+                    (from a in s1.Friends
+                     from b in sd.Student.Friends
+                     select new Tuple<Student, Student> (a, b))
+                  select new Tuple<Student, Student_Detail, Student, Student> (s1, sd, s3.A, s3.B);
+
+      var queryModel = ExpressionHelper.ParseQuery (query);
+      var mainFromSubQuery = from sd in _detailSource
+                             where sd.Subject == "Maths"
+                             orderby sd.ID
+                             select sd.Student;
+      var parsedMainFromSubQuery = ExpressionHelper.ParseQuery (mainFromSubQuery);
+      queryModel.MainFromClause.FromExpression = new SubQueryExpression (parsedMainFromSubQuery); // change to be a from clause with a sub query
+
+      queryModel.Accept (_visitor);
 
       var expectedQuery = from sd in _detailSource
                           where sd.Subject == "Maths"
@@ -167,10 +195,16 @@ namespace Remotion.Data.UnitTests.Linq.Transformations
                           orderby sector.ID
                           from s2 in sd.Student.Friends
                           where sector.Student_Detail.Subject == "Maths"
-                          select new Tuple<Student, Student_Detail> (sector.Student_Detail.Student, sector.Student_Detail);
+                          from a in sd.Student.Friends
+                          from b in sector.Student_Detail.Student.Friends
+                          select new Tuple<Student, Student_Detail, Student, Student> (
+                              sd.Student, 
+                              sector.Student_Detail, 
+                              new Tuple<Student, Student> (a, b).A, 
+                              new Tuple<Student, Student> (a, b).B);
 
       var expectedQueryModel = ExpressionHelper.ParseQuery (expectedQuery);
-      QueryModelComparer.CheckAreEqualModels (expectedQueryModel, _queryModel);
+      QueryModelComparer.CheckAreEqualModels (expectedQueryModel, queryModel);
     }
   }
 }
