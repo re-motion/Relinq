@@ -27,6 +27,7 @@ namespace Remotion.Data.Linq
   /// <summary>
   /// Provides a default implementation of <see cref="IQueryProvider"/> that executes queries (subclasses of <see cref="QueryableBase{T}"/>) by
   /// first parsing them into a <see cref="QueryModel"/> and then passing that to a given implementation of <see cref="IQueryExecutor"/>.
+  /// Usually, <see cref="DefaultQueryProvider"/> should be used unless <see cref="CreateQueryable{T}"/> must be manually implemented.
   /// </summary>
   public abstract class QueryProviderBase : IQueryProvider
   {

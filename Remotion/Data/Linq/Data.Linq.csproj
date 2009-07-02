@@ -67,6 +67,7 @@
     <Compile Include="Clauses\ResultModifications\SingleResultModification.cs" />
     <Compile Include="Clauses\ResultModifications\DistinctResultModification.cs" />
     <Compile Include="Clauses\ResultModifications\CountResultModification.cs" />
+    <Compile Include="DefaultQueryProvider.cs" />
     <Compile Include="Parsing\Details\SelectProjectionParsing\QuerySourceReferenceExpressionParser.cs" />
     <Compile Include="Parsing\Details\SelectProjectionParsing\SubQueryExpressionParser.cs" />
     <Compile Include="Parsing\Details\WhereConditionParsing\QuerySourceReferenceExpressionParser.cs" />

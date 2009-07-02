@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Rhino.Mocks;
 using Remotion.Utilities;
@@ -42,25 +43,37 @@ namespace Remotion.Data.UnitTests.Linq
     }
 
     [Test]
-    public void Initialize ()
+    public void Initialize_WithProviderAndExpression ()
     {
       QueryableBase<int> queryable = new TestQueryable<int> (_providerMock, _intArrayExpression);
 
-      Assert.AreSame (_providerMock, queryable.Provider);
-      Assert.AreSame (_intArrayExpression, queryable.Expression);
+      Assert.That (queryable.Provider, Is.SameAs (_providerMock));
+      Assert.That (queryable.Expression, Is.SameAs (_intArrayExpression));
 
-      Assert.AreEqual (typeof (int), queryable.ElementType);
+      Assert.That (queryable.ElementType, Is.EqualTo (typeof (int)));
     }
 
     [Test]
-    public void InitializeWithDefaultConstructor ()
+    public void Initialize_WithProvider ()
     {
-      var executor = _mockRepository.StrictMock<IQueryExecutor>();
+      QueryableBase<int> queryable = new TestQueryable<int> (_providerMock);
+
+      Assert.That (queryable.Provider, Is.SameAs (_providerMock));
+      Assert.That (queryable.Expression, Is.Not.Null);
+      Assert.That (queryable.Expression.NodeType, Is.EqualTo (ExpressionType.Constant));
+    }
+
+    [Test]
+    public void Initialize_WithExecutor ()
+    {
+      var executor = _mockRepository.StrictMock<IQueryExecutor> ();
       QueryableBase<int> queryable = new TestQueryable<int> (executor);
 
-      Assert.IsNotNull (queryable.Provider);
-      Assert.IsNotNull (queryable.Expression);
-      Assert.AreEqual (ExpressionType.Constant, queryable.Expression.NodeType);
+      Assert.That (queryable.Provider, Is.InstanceOfType (typeof (DefaultQueryProvider)));
+      Assert.That (((DefaultQueryProvider) queryable.Provider).Executor, Is.SameAs (executor));
+      Assert.That (((DefaultQueryProvider) queryable.Provider).QueryableType, Is.SameAs (typeof (TestQueryable<>)));
+      Assert.That (queryable.Expression, Is.Not.Null);
+      Assert.That (queryable.Expression.NodeType, Is.EqualTo (ExpressionType.Constant));
     }
 
     [Test]
