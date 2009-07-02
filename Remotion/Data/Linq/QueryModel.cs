@@ -122,9 +122,7 @@ namespace Remotion.Data.Linq
     /// </summary>
     public override string ToString ()
     {
-      var sv = new StringBuildingQueryModelVisitor();
-      sv.VisitQueryModel (this);
-      return sv.ToString();
+      return MainFromClause + BodyClauses.Aggregate ("", (s, b) => s + " " + b) + " " + SelectOrGroupClause;
     }
 
     /// <summary>

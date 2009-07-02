@@ -44,6 +44,5 @@ namespace Remotion.Data.Linq.Clauses.ResultModifications
     {
       return "Count()";
     }
-    
   }
 }

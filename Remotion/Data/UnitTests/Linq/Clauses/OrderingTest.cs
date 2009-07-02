@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
@@ -118,6 +119,16 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
           });
 
       Assert.That (ordering.Expression, Is.SameAs (newExpression));
+    }
+
+    [Test]
+    public new void ToString ()
+    {
+      var ordering1 = new Ordering (Expression.Constant (0), OrderingDirection.Asc);
+      var ordering2 = new Ordering (Expression.Constant (0), OrderingDirection.Desc);
+
+      Assert.That (ordering1.ToString (), Is.EqualTo ("0 asc"));
+      Assert.That (ordering2.ToString (), Is.EqualTo ("0 desc"));
     }
   }
 }

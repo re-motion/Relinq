@@ -20,6 +20,7 @@ using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Rhino.Mocks;
 using Remotion.Data.Linq.Clauses;
+using System.Linq.Expressions;
 
 
 namespace Remotion.Data.UnitTests.Linq.Clauses
@@ -136,6 +137,29 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       _orderByClause.TransformExpressions (ex => expectedReplacement);
 
       Assert.That (ordering.Expression, Is.SameAs (expectedReplacement));
+    }
+
+    [Test]
+    public new void ToString ()
+    {
+      Assert.That (_orderByClause.ToString (), Is.EqualTo ("orderby"));
+    }
+
+    [Test]
+    public void ToString_WithOrdering ()
+    {
+      _orderByClause.Orderings.Add (new Ordering (Expression.Constant (0), OrderingDirection.Asc));
+
+      Assert.That (_orderByClause.ToString (), Is.EqualTo ("orderby 0 asc"));
+    }
+
+    [Test]
+    public void ToString_WithOrderings ()
+    {
+      _orderByClause.Orderings.Add (new Ordering (Expression.Constant (0), OrderingDirection.Asc));
+      _orderByClause.Orderings.Add (new Ordering (Expression.Constant (1), OrderingDirection.Desc));
+
+      Assert.That (_orderByClause.ToString (), Is.EqualTo ("orderby 0 asc, 1 desc"));
     }
   }
 }

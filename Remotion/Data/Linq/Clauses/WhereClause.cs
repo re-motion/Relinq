@@ -80,12 +80,7 @@ namespace Remotion.Data.Linq.Clauses
 
     public override string ToString ()
     {
-      string predicate;
-      if (Predicate != null)
-        predicate = FormattingExpressionTreeVisitor.Format (Predicate);
-      else
-        predicate = "<null>";
-      return string.Format ("where {0} ", predicate);
+      return "where " + FormattingExpressionTreeVisitor.Format (Predicate);
     }
   }
 }

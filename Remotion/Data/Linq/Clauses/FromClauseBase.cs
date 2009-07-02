@@ -23,6 +23,7 @@ using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.StringBuilding;
 using Remotion.Utilities;
+using System.Linq;
 
 namespace Remotion.Data.Linq.Clauses
 {
@@ -122,17 +123,8 @@ namespace Remotion.Data.Linq.Clauses
 
     public override string ToString ()
     {
-      string fromExpression;
-      if (FromExpression != null)
-        fromExpression = FormattingExpressionTreeVisitor.Format (FromExpression);
-      else
-        fromExpression = "<null>";
-      
-      foreach (var joinClause in JoinClauses)
-      {
-        joinClause.ToString();
-      }
-      return string.Format ("from {0} {1} in {2} ", ItemType.Name, ItemName, fromExpression);
+      var result = string.Format ("from {0} {1} in {2}", ItemType.Name, ItemName, FormattingExpressionTreeVisitor.Format (FromExpression));
+      return JoinClauses.Aggregate (result, (s, j) => s + " " + j);
     }
 
     protected void AddClonedJoinClauses (IEnumerable<JoinClause> originalJoinClauses, CloneContext cloneContext)

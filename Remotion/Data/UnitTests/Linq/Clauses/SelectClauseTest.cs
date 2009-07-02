@@ -220,5 +220,22 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
 
       Assert.That (_selectClause.GetExecutionStrategy (), Is.SameAs (countModifier.ExecutionStrategy));
     }
+
+    [Test]
+    public new void ToString ()
+    {
+      var selectClause = new SelectClause (Expression.Constant (0));
+      Assert.That (selectClause.ToString (), Is.EqualTo ("select 0"));
+    }
+
+    [Test]
+    public void ToString_WithResultModifications ()
+    {
+      var selectClause = new SelectClause (Expression.Constant (0));
+      selectClause.ResultModifications.Add (new DistinctResultModification ());
+      selectClause.ResultModifications.Add (new CountResultModification ());
+
+      Assert.That (selectClause.ToString (), Is.EqualTo ("select 0 => Distinct() => Count()"));
+    }
   }
 }

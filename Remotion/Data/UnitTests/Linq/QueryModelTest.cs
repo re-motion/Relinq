@@ -67,11 +67,28 @@ namespace Remotion.Data.UnitTests.Linq
     }
 
     [Test]
-    public void Override_ToString ()
+    public new void ToString ()
     {
-      var sv = new StringBuildingQueryModelVisitor();
-      sv.VisitQueryModel (_queryModel);
-      Assert.That (_queryModel.ToString(), Is.EqualTo (sv.ToString()));
+      var queryModel = new QueryModel (
+          typeof (IQueryable<Student>), 
+          new MainFromClause ("x", typeof (Student), Expression.Constant (0)), 
+          new SelectClause (Expression.Constant (0)));
+      Assert.That (queryModel.ToString(), Is.EqualTo ("from Student x in 0 select 0"));
+    }
+
+    [Test]
+    public void ToString_WithBodyClauses ()
+    {
+      var queryModel = new QueryModel (
+          typeof (IQueryable<Student>),
+          new MainFromClause ("x", typeof (Student), Expression.Constant (0)),
+          new SelectClause (Expression.Constant (0)));
+      queryModel.BodyClauses.Add (new WhereClause (Expression.Constant (false)));
+      var orderByClause = new OrderByClause ();
+      orderByClause.Orderings.Add (new Ordering (Expression.Constant (1), OrderingDirection.Asc));
+      queryModel.BodyClauses.Add (orderByClause);
+      
+      Assert.That (queryModel.ToString (), Is.EqualTo ("from Student x in 0 where False orderby 1 asc select 0"));
     }
 
     [Test]

@@ -121,5 +121,13 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
 
       Assert.That (clause.Predicate, Is.SameAs (newExpression));
     }
+
+    [Test]
+    public new void ToString ()
+    {
+      var whereClause = new WhereClause (Expression.Constant (true));
+
+      Assert.That (whereClause.ToString (), Is.EqualTo ("where True"));
+    }
   }
 }

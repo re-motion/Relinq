@@ -139,5 +139,12 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clause.OnExpression, Is.SameAs (newOnExpression));
       Assert.That (clause.EqualityExpression, Is.SameAs (newEqualityExpression));
     }
+
+    [Test]
+    public new void ToString ()
+    {
+      var joinClause = new JoinClause ("x", typeof (Student), Expression.Constant (0), Expression.Constant (1), Expression.Constant (2));
+      Assert.That (joinClause.ToString (), Is.EqualTo ("join Student x in 0 on 1 equals 2"));
+    }
   }
 }

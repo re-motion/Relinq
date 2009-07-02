@@ -20,8 +20,10 @@ using Remotion.Collections;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Data.Linq.StringBuilding;
+using Remotion.Text;
 using Remotion.Utilities;
 using System.Linq.Expressions;
+using System.Linq;
 
 namespace Remotion.Data.Linq.Clauses
 {
@@ -111,17 +113,8 @@ namespace Remotion.Data.Linq.Clauses
 
     public override string ToString ()
     {
-      string selector;
-      if (Selector != null)
-        selector =  FormattingExpressionTreeVisitor.Format (Selector);
-      else
-        selector = "<null>";
-
-      foreach (var resultModification in ResultModifications)
-      {
-        resultModification.ToString();
-      }
-      return string.Format ("select {0}", selector);
+      var result = "select " + FormattingExpressionTreeVisitor.Format (Selector);
+      return ResultModifications.Aggregate (result, (s, r) => s + " => " + r);
     }
   }
 }

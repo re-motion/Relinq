@@ -17,6 +17,7 @@ using System;
 using System.Linq.Expressions;
 using Remotion.Collections;
 using Remotion.Utilities;
+using System.Linq;
 
 namespace Remotion.Data.Linq.Clauses
 {
@@ -85,11 +86,11 @@ namespace Remotion.Data.Linq.Clauses
 
     public override string ToString ()
     {
-      foreach (var ordering in Orderings)
-      {
-        ordering.ToString();
-      }
-      return "orderby ";
+      var result = "orderby";
+      if (Orderings.Count > 0)
+        result = Orderings.Take (Orderings.Count - 1).Aggregate (result + " ", (s, o) => s + o + ", ") + Orderings[Orderings.Count - 1];
+
+      return result;
     }
   }
 }

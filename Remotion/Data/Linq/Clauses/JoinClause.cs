@@ -121,20 +121,12 @@ namespace Remotion.Data.Linq.Clauses
     public override string ToString ()
     {
       return string.Format (
-          "join {0} {1} in {2} on {3} equals {4} ",
+          "join {0} {1} in {2} on {3} equals {4}",
+          ItemType.Name,
           ItemName,
-          ItemType,
-          FormatExpression (InExpression),
-          FormatExpression (OnExpression),
-          FormatExpression (EqualityExpression));
-    }
-
-    private string FormatExpression (Expression expression)
-    {
-      if (expression != null)
-        return FormattingExpressionTreeVisitor.Format (expression);
-      else
-        return "<null>";
+          FormattingExpressionTreeVisitor.Format (InExpression),
+          FormattingExpressionTreeVisitor.Format (OnExpression),
+          FormattingExpressionTreeVisitor.Format (EqualityExpression));
     }
   }
 }

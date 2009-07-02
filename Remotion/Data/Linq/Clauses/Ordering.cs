@@ -85,22 +85,7 @@ namespace Remotion.Data.Linq.Clauses
 
     public override string ToString ()
     {
-      switch (OrderingDirection)
-      {
-        case OrderingDirection.Asc:
-          return string.Format ("{0} ascending ", FormatExpression (Expression));
-        case OrderingDirection.Desc:
-          return string.Format ("{0} descending ", FormatExpression (Expression));
-      }
-      return base.ToString ();
-    }
-
-    private string FormatExpression (Expression expression)
-    {
-      if (expression != null)
-        return FormattingExpressionTreeVisitor.Format (expression);
-      else
-        return "<null>";
+      return FormattingExpressionTreeVisitor.Format (Expression) + (OrderingDirection == OrderingDirection.Asc ? " asc" : " desc");
     }
   }
 }
