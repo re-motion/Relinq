@@ -211,32 +211,32 @@ namespace Remotion.Data.Linq.Parsing
       return base.VisitElementInit (elementInit);
     }
 
-    protected override MemberAssignment VisitMemberAssignment (MemberAssignment memberAssigment)
+    protected override MemberBinding VisitMemberAssignment (MemberAssignment memberAssigment)
     {
-      return VisitUnhandledItem<MemberAssignment, MemberAssignment> (memberAssigment, "VisitMemberAssignment", BaseVisitMemberAssignment);
+      return VisitUnhandledItem<MemberAssignment, MemberBinding> (memberAssigment, "VisitMemberAssignment", BaseVisitMemberAssignment);
     }
 
-    protected MemberAssignment BaseVisitMemberAssignment (MemberAssignment memberAssigment)
+    protected MemberBinding BaseVisitMemberAssignment (MemberAssignment memberAssigment)
     {
       return base.VisitMemberAssignment (memberAssigment);
     }
 
-    protected override MemberMemberBinding VisitMemberMemberBinding (MemberMemberBinding binding)
+    protected override MemberBinding VisitMemberMemberBinding (MemberMemberBinding binding)
     {
-      return VisitUnhandledItem<MemberMemberBinding, MemberMemberBinding> (binding, "VisitMemberMemberBinding", BaseVisitMemberMemberBinding);
+      return VisitUnhandledItem<MemberMemberBinding, MemberBinding> (binding, "VisitMemberMemberBinding", BaseVisitMemberMemberBinding);
     }
 
-    protected MemberMemberBinding BaseVisitMemberMemberBinding (MemberMemberBinding binding)
+    protected MemberBinding BaseVisitMemberMemberBinding (MemberMemberBinding binding)
     {
       return base.VisitMemberMemberBinding (binding);
     }
 
-    protected override MemberListBinding VisitMemberListBinding (MemberListBinding listBinding)
+    protected override MemberBinding VisitMemberListBinding (MemberListBinding listBinding)
     {
-      return VisitUnhandledItem<MemberListBinding, MemberListBinding> (listBinding, "VisitMemberListBinding", BaseVisitMemberListBinding);
+      return VisitUnhandledItem<MemberListBinding, MemberBinding> (listBinding, "VisitMemberListBinding", BaseVisitMemberListBinding);
     }
 
-    protected MemberListBinding BaseVisitMemberListBinding (MemberListBinding listBinding)
+    protected MemberBinding BaseVisitMemberListBinding (MemberListBinding listBinding)
     {
       return base.VisitMemberListBinding (listBinding);
     }

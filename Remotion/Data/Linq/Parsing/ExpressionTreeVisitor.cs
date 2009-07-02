@@ -290,7 +290,7 @@ namespace Remotion.Data.Linq.Parsing
       }
     }
 
-    protected virtual MemberAssignment VisitMemberAssignment (MemberAssignment memberAssigment)
+    protected virtual MemberBinding VisitMemberAssignment (MemberAssignment memberAssigment)
     {
       ArgumentUtility.CheckNotNull ("memberAssigment", memberAssigment);
 
@@ -302,7 +302,7 @@ namespace Remotion.Data.Linq.Parsing
       return memberAssigment;
     }
 
-    protected virtual MemberMemberBinding VisitMemberMemberBinding (MemberMemberBinding binding)
+    protected virtual MemberBinding VisitMemberMemberBinding (MemberMemberBinding binding)
     {
       ArgumentUtility.CheckNotNull ("binding", binding);
 
@@ -315,7 +315,7 @@ namespace Remotion.Data.Linq.Parsing
       
     }
 
-    protected virtual MemberListBinding VisitMemberListBinding (MemberListBinding listBinding)
+    protected virtual MemberBinding VisitMemberListBinding (MemberListBinding listBinding)
     {
       ArgumentUtility.CheckNotNull ("listBinding", listBinding);
       ReadOnlyCollection<ElementInit> newInitializers = VisitElementInitList (listBinding.Initializers);
