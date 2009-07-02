@@ -497,7 +497,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitorTests
     [Test]
     public void VisitElementInit_Unchanged ()
     {
-      ElementInit elementInit = Expression.ElementInit (typeof (List<int>).GetMethod ("Add"), Expression.Constant (1));
+      ElementInit elementInit = ExpressionInstanceCreator.CreateElementInit();
       Expect.Call (InvokeVisitExpressionListMethod (elementInit.Arguments)).Return (elementInit.Arguments);
 
       var result = (ElementInit) InvokeAndCheckVisitObject ("VisitElementInit", elementInit);
@@ -507,7 +507,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitorTests
     [Test]
     public void VisitElementInit_Changed ()
     {
-      ElementInit elementInit = Expression.ElementInit (typeof (List<int>).GetMethod ("Add"), Expression.Constant (1));
+      ElementInit elementInit = ExpressionInstanceCreator.CreateElementInit ();
       ReadOnlyCollection<Expression> newArguments = new List<Expression> (new Expression[] { Expression.Constant (1) }).AsReadOnly();
       Expect.Call (InvokeVisitExpressionListMethod (elementInit.Arguments)).Return (newArguments);
 
@@ -520,7 +520,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitorTests
     [Test]
     public void VisitMemberBinding_Delegation_MemberAssignment ()
     {
-      MemberAssignment memberAssignment = Expression.Bind (typeof (SimpleClass).GetField ("Value"), Expression.Constant ("test"));
+      MemberAssignment memberAssignment = ExpressionInstanceCreator.CreateMemberAssignment();
 
       Expect.Call (InvokeVisitMethod ("VisitMemberBinding", memberAssignment)).CallOriginalMethod (OriginalCallOptions.CreateExpectation);
 
@@ -536,7 +536,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitorTests
     [Test]
     public void VisitMemberBinding_Delegation_MemberBinding ()
     {
-      MemberMemberBinding memberMemberBinding = Expression.MemberBind (typeof (SimpleClass).GetField ("Value"), new List<MemberBinding>());
+      MemberMemberBinding memberMemberBinding = ExpressionInstanceCreator.CreateMemberMemberBinding();
 
       Expect.Call (InvokeVisitMethod ("VisitMemberBinding", memberMemberBinding)).CallOriginalMethod (OriginalCallOptions.CreateExpectation);
       Expect.Call (InvokeVisitMethod ("VisitMemberMemberBinding", memberMemberBinding)).Return (memberMemberBinding);
@@ -551,8 +551,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitorTests
     [Test]
     public void VisitMemberBinding_Delegation_ListBinding ()
     {
-      MemberListBinding memberListBinding =
-          Expression.ListBind (typeof (SimpleClass).GetField ("Value"), new ElementInit[] { });
+      MemberListBinding memberListBinding = ExpressionInstanceCreator.CreateMemberListBinding();
 
       Expect.Call (InvokeVisitMethod ("VisitMemberBinding", memberListBinding)).CallOriginalMethod (OriginalCallOptions.CreateExpectation);
       Expect.Call (InvokeVisitMethod ("VisitMemberListBinding", memberListBinding)).Return (memberListBinding);
@@ -567,7 +566,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitorTests
     [Test]
     public void VisitMemberAssignment_Unchanged ()
     {
-      MemberAssignment memberAssignment = Expression.Bind (typeof (SimpleClass).GetField ("Value"), Expression.Constant ("1"));
+      MemberAssignment memberAssignment = ExpressionInstanceCreator.CreateMemberAssignment();
       Expect.Call (InvokeVisitMethod ("VisitExpression", memberAssignment.Expression)).Return (memberAssignment.Expression);
       var result = (MemberAssignment) InvokeAndCheckVisitObject ("VisitMemberAssignment", memberAssignment);
       Assert.That (result, Is.SameAs (memberAssignment));
@@ -576,7 +575,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitorTests
     [Test]
     public void VisitMemberAssignment_Changed ()
     {
-      MemberAssignment memberAssignment = Expression.Bind (typeof (SimpleClass).GetField ("Value"), Expression.Constant ("1"));
+      MemberAssignment memberAssignment = ExpressionInstanceCreator.CreateMemberAssignment ();
       MemberAssignment newMemberAssignment = Expression.Bind (typeof (SimpleClass).GetField ("Value"), Expression.Constant ("2"));
 
       Expect.Call (InvokeVisitMethod ("VisitExpression", memberAssignment.Expression)).Return (newMemberAssignment.Expression);
@@ -588,7 +587,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitorTests
     [Test]
     public void VisitMemberMemberBinding_Unchanged ()
     {
-      MemberMemberBinding memberMemberBinding = Expression.MemberBind (typeof (SimpleClass).GetField ("Value"), new List<MemberBinding>());
+      MemberMemberBinding memberMemberBinding = ExpressionInstanceCreator.CreateMemberMemberBinding();
       Expect.Call (InvokeVisitMethod ("VisitMemberBindingList", memberMemberBinding.Bindings)).Return (memberMemberBinding.Bindings);
       var result = (MemberMemberBinding) InvokeAndCheckVisitObject ("VisitMemberMemberBinding", memberMemberBinding);
       Assert.That (result, Is.SameAs (memberMemberBinding));
@@ -597,7 +596,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitorTests
     [Test]
     public void VisitMemberMemberBinding_Changed ()
     {
-      MemberMemberBinding memberMemberBinding = Expression.MemberBind (typeof (SimpleClass).GetField ("Value"), new List<MemberBinding>());
+      MemberMemberBinding memberMemberBinding = ExpressionInstanceCreator.CreateMemberMemberBinding ();
       ReadOnlyCollection<MemberBinding> newBindings = new List<MemberBinding>().AsReadOnly();
       Expect.Call (InvokeVisitMethod ("VisitMemberBindingList", memberMemberBinding.Bindings)).Return (newBindings);
       var result = (MemberMemberBinding) InvokeAndCheckVisitObject ("VisitMemberMemberBinding", memberMemberBinding);
@@ -610,8 +609,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitorTests
     [Test]
     public void VisitMemberListBinding_Unchanged ()
     {
-      MemberListBinding memberListBinding =
-          Expression.ListBind (typeof (SimpleClass).GetField ("Value"), new ElementInit[] { });
+      MemberListBinding memberListBinding = ExpressionInstanceCreator.CreateMemberListBinding();
       Expect.Call (InvokeVisitMethod ("VisitElementInitList", memberListBinding.Initializers)).Return (memberListBinding.Initializers);
       var result = (MemberListBinding) InvokeAndCheckVisitObject ("VisitMemberListBinding", memberListBinding);
       Assert.That (result, Is.SameAs (memberListBinding));
@@ -620,8 +618,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitorTests
     [Test]
     public void VisitMemberListBinding_Changed ()
     {
-      MemberListBinding memberListBinding =
-          Expression.ListBind (typeof (SimpleClass).GetField ("Value"), new ElementInit[] { });
+      MemberListBinding memberListBinding = ExpressionInstanceCreator.CreateMemberListBinding();
       ReadOnlyCollection<ElementInit> newInitializers = new List<ElementInit>().AsReadOnly();
       Expect.Call (InvokeVisitMethod ("VisitElementInitList", memberListBinding.Initializers)).Return (newInitializers);
       var result = (MemberListBinding) InvokeAndCheckVisitObject ("VisitMemberListBinding", memberListBinding);

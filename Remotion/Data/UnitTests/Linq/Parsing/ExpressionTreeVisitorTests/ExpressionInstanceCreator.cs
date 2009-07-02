@@ -25,7 +25,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitorTests
 
     private static Dictionary<ExpressionType, Expression> InitializeExpressionTypeMap ()
     {
-      Dictionary<ExpressionType, Expression> map = new Dictionary<ExpressionType, Expression> ();
+      var map = new Dictionary<ExpressionType, Expression> ();
 
       Expression zero = Expression.Constant (0);
       Expression zeroDouble = Expression.Constant (0.0);
@@ -88,6 +88,26 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitorTests
     public static Expression GetExpressionInstance (ExpressionType type)
     {
       return s_expressionTypeMap[type];
+    }
+
+    public static ElementInit CreateElementInit ()
+    {
+      return Expression.ElementInit (typeof (List<int>).GetMethod ("Add"), Expression.Constant (1));
+    }
+
+    public static MemberAssignment CreateMemberAssignment ()
+    {
+      return Expression.Bind (typeof (SimpleClass).GetField ("Value"), Expression.Constant ("test"));
+    }
+
+    public static MemberMemberBinding CreateMemberMemberBinding ()
+    {
+      return Expression.MemberBind (typeof (SimpleClass).GetField ("Value"), new List<MemberBinding>());
+    }
+
+    public static MemberListBinding CreateMemberListBinding ()
+    {
+      return Expression.ListBind (typeof (SimpleClass).GetField ("Value"), new ElementInit[] { });
     }
   }
 }
