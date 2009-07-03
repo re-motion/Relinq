@@ -46,6 +46,7 @@
         <include name="QueryProviderImplementation/**/*.cs"/>
         <include name="StringBuilding/**/*.cs"/>
         <include name="SqlGeneration/**/*.cs"/>
+        <include name="Transformations/**/*.cs"/>
         <exclude name="Properties/AssemblyInfoTemplate.cs" />
       </sources>
       <references failonempty="true">
