@@ -16,13 +16,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses
 {
   /// <summary>
   /// Maps <see cref="IClause"/> instances to <see cref="Expression"/> instances. This is used by <see cref="QueryModel.Clone()"/>
-  /// and the clauses' Clone methods in order to be able to correctly update references to old clauses to point to the new clauses.
+  /// and the clauses' Clone methods in order to be able to correctly update references to old clauses to point to the new clauses. Via
+  /// <see cref="ReferenceReplacingExpressionTreeVisitor"/>, it can also be used manually.
   /// </summary>
   public class ClauseMapping
   {

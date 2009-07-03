@@ -20,14 +20,14 @@ using Remotion.Collections;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.Structure;
-using Remotion.Data.Linq.StringBuilding;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq
 {
   /// <summary>
   /// Provides an abstraction of an expression tree created for a LINQ query. <see cref="QueryModel"/> instances are passed to LINQ providers based
-  /// on re-linq via <see cref="IQueryExecutor"/>, but you can also use <see cref="QueryParser"/> to parse an expression tree by hand.
+  /// on re-linq via <see cref="IQueryExecutor"/>, but you can also use <see cref="QueryParser"/> to parse an expression tree by hand or construct
+  /// a <see cref="QueryModel"/> manually via its constructor.
   /// </summary>
   /// <remarks>
   /// The different parts of the query are mapped to clauses, see <see cref="MainFromClause"/>, <see cref="BodyClauses"/>, and 
@@ -46,7 +46,7 @@ namespace Remotion.Data.Linq
     /// </summary>
     /// <param name="resultType">The type of the underlying LINQ query, usually a type implementing <see cref="IQueryable{T}"/>.</param>
     /// <param name="mainFromClause">The <see cref="Clauses.MainFromClause"/> of the query. This is the starting point of the query, generating items 
-    /// that  are filtered and projected by the query.</param>
+    /// that are filtered and projected by the query.</param>
     /// <param name="selectOrGroupClause">The <see cref="SelectClause"/> or <see cref="GroupClause"/> of the query. This is the end point of
     /// the query, it defines what is atually returned for each of the items coming from the <see cref="MainFromClause"/> and passing the 
     /// <see cref="BodyClauses"/>.</param>
@@ -113,7 +113,6 @@ namespace Remotion.Data.Linq
     public void Accept (IQueryModelVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
-
       visitor.VisitQueryModel (this);
     }
 
@@ -126,10 +125,10 @@ namespace Remotion.Data.Linq
     }
 
     /// <summary>
-    /// Clones this <see cref="QueryModel"/>, returning a new <see cref="QueryModel"/> equivalent to this instance, but with their clauses being
-    /// clones of this instance's clauses. Any <see cref="QuerySourceReferenceExpression"/> in the clause clones that point back to another clause in 
-    /// this <see cref="QueryModel"/> (including its subqueries) are adjusted to point to the respective clones. Any subquery nested in the 
-    /// <see cref="QueryModel"/> is also cloned.
+    /// Clones this <see cref="QueryModel"/>, returning a new <see cref="QueryModel"/> equivalent to this instance, but with its clauses being
+    /// clones of this instance's clauses. Any <see cref="QuerySourceReferenceExpression"/> in the cloned clauses that points back to another clause 
+    /// in this <see cref="QueryModel"/> (including its subqueries) is adjusted to point to the respective clones in the cloned 
+    /// <see cref="QueryModel"/>. Any subquery nested in the <see cref="QueryModel"/> is also cloned.
     /// </summary>
     public QueryModel Clone ()
     {
@@ -137,10 +136,10 @@ namespace Remotion.Data.Linq
     }
 
     /// <summary>
-    /// Clones this <see cref="QueryModel"/>, returning a new <see cref="QueryModel"/> equivalent to this instance, but with their clauses being
-    /// clones of this instance's clauses. Any <see cref="QuerySourceReferenceExpression"/> in the clause clones that point back to another clause in 
-    /// this <see cref="QueryModel"/> (including its subqueries) are adjusted to point to the respective clones. Any subquery nested in the 
-    /// <see cref="QueryModel"/> is also cloned.
+    /// Clones this <see cref="QueryModel"/>, returning a new <see cref="QueryModel"/> equivalent to this instance, but with its clauses being
+    /// clones of this instance's clauses. Any <see cref="QuerySourceReferenceExpression"/> in the cloned clauses that points back to another clause 
+    /// in  this <see cref="QueryModel"/> (including its subqueries) is adjusted to point to the respective clones in the cloned 
+    /// <see cref="QueryModel"/>. Any subquery nested in the <see cref="QueryModel"/> is also cloned.
     /// </summary>
     /// <param name="clauseMapping">The <see cref="ClauseMapping"/> defining how to adjust instances of 
     /// <see cref="QuerySourceReferenceExpression"/> in the cloned <see cref="QueryModel"/>. If there is a <see cref="QuerySourceReferenceExpression"/>
@@ -167,6 +166,11 @@ namespace Remotion.Data.Linq
       return Clone();
     }
 
+    /// <summary>
+    /// Transforms all the expressions in this <see cref="QueryModel"/>'s clauses via the given <paramref name="transformation"/> delegate.
+    /// </summary>
+    /// <param name="transformation">The transformation object. This delegate is called for each <see cref="Expression"/> within this 
+    /// <see cref="QueryModel"/>, and those expressions will be replaced with what the delegate returns.</param>
     public void TransformExpressions (Func<Expression, Expression> transformation)
     {
       ArgumentUtility.CheckNotNull ("transformation", transformation);
@@ -183,7 +187,7 @@ namespace Remotion.Data.Linq
     /// Returns a new name with the given prefix. The name is different from that of any <see cref="FromClauseBase"/> added
     /// in the <see cref="QueryModel"/>. Note that clause names that are changed after the clause is added as well as names of other clauses
     /// than from clauses are not considered when determining "unique" names. Use names only for readability and debugging, not
-    /// for programmatically identifying clauses.
+    /// for uniquely identifying clauses.
     /// </summary>
     public string GetNewName (string prefix)
     {

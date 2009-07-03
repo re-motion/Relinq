@@ -13,13 +13,14 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-using System.Linq.Expressions;
+using System;
 using Remotion.Collections;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Clauses.ResultModifications;
 using Remotion.Data.Linq.Parsing.Structure;
+using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Transformations
 {
@@ -65,6 +66,9 @@ namespace Remotion.Data.Linq.Transformations
   {
     public override void VisitMainFromClause (MainFromClause fromClause, QueryModel queryModel)
     {
+      ArgumentUtility.CheckNotNull ("fromClause", fromClause);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+
       var subQueryExpression = fromClause.FromExpression as SubQueryExpression;
       if (subQueryExpression != null)
         FlattenSubQuery (subQueryExpression, fromClause, queryModel, 0);
@@ -74,6 +78,9 @@ namespace Remotion.Data.Linq.Transformations
 
     public override void VisitAdditionalFromClause (AdditionalFromClause fromClause, QueryModel queryModel, int index)
     {
+      ArgumentUtility.CheckNotNull ("fromClause", fromClause);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+
       var subQueryExpression = fromClause.FromExpression as SubQueryExpression;
       if (subQueryExpression != null)
         FlattenSubQuery (subQueryExpression, fromClause, queryModel, index + 1);
@@ -81,8 +88,14 @@ namespace Remotion.Data.Linq.Transformations
       base.VisitAdditionalFromClause (fromClause, queryModel, index);
     }
 
-    private void FlattenSubQuery (SubQueryExpression subQueryExpression, FromClauseBase fromClause, QueryModel queryModel, int destinationIndex)
+    protected virtual void FlattenSubQuery (SubQueryExpression subQueryExpression, FromClauseBase fromClause, QueryModel queryModel, int destinationIndex)
     {
+      ArgumentUtility.CheckNotNull ("subQueryExpression", subQueryExpression);
+      ArgumentUtility.CheckNotNull ("fromClause", fromClause);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+
+      CheckForResultModifications (subQueryExpression.QueryModel);
+
       var innerMainFromClause = subQueryExpression.QueryModel.MainFromClause;
       CopyFromClauseData (innerMainFromClause, fromClause);
 
@@ -97,15 +110,34 @@ namespace Remotion.Data.Linq.Transformations
       queryModel.TransformExpressions (ex => ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (ex, innerBodyClauseMapping, true));
     }
 
-    private void CopyFromClauseData (FromClauseBase source, FromClauseBase destination)
+    protected virtual void CheckForResultModifications (QueryModel subQueryModel)
     {
+      ArgumentUtility.CheckNotNull ("subQueryModel", subQueryModel);
+
+      if (((SelectClause) subQueryModel.SelectOrGroupClause).ResultModifications.Count > 0)
+      {
+        var message = string.Format (
+            "The subquery '{0}' cannot be flattened and pulled out of the from clause because it contains result modifications.", 
+            subQueryModel);
+        throw new NotSupportedException (message);
+      }
+    }
+
+    protected void CopyFromClauseData (FromClauseBase source, FromClauseBase destination)
+    {
+      ArgumentUtility.CheckNotNull ("source", source);
+      ArgumentUtility.CheckNotNull ("destination", destination);
+
       destination.FromExpression = source.FromExpression;
       destination.ItemName = source.ItemName;
       destination.ItemType = source.ItemType;
     }
 
-    private void InsertBodyClauses (ObservableCollection<IBodyClause> bodyClauses, QueryModel destinationQueryModel, int destinationIndex)
+    protected void InsertBodyClauses (ObservableCollection<IBodyClause> bodyClauses, QueryModel destinationQueryModel, int destinationIndex)
     {
+      ArgumentUtility.CheckNotNull ("bodyClauses", bodyClauses);
+      ArgumentUtility.CheckNotNull ("destinationQueryModel", destinationQueryModel);
+
       foreach (var bodyClause in bodyClauses)
       {
         destinationQueryModel.BodyClauses.Insert (destinationIndex, bodyClause);

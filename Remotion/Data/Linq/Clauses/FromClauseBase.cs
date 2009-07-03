@@ -25,7 +25,8 @@ using System.Linq;
 namespace Remotion.Data.Linq.Clauses
 {
   /// <summary>
-  /// Base class for all kinds of from clauses in <see cref="QueryModel"/>
+  /// Base class for from clauses (<see cref="AdditionalFromClause"/> and <see cref="MainFromClause"/>). From clauses define query sources that
+  /// provide data items to the query which are filtered, ordered, projected, or otherwise processed by the following clauses.
   /// </summary>
   public abstract class FromClauseBase : IClause
   {
@@ -82,8 +83,16 @@ namespace Remotion.Data.Linq.Clauses
       set { _fromExpression = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
+    /// <summary>
+    /// Gets the join clauses associated with this <see cref="FromClauseBase"/>.
+    /// </summary>
     public ObservableCollection<JoinClause> JoinClauses { get; private set; }
 
+    /// <summary>
+    /// Transforms all the expressions in this clause and its child objects via the given <paramref name="transformation"/> delegate.
+    /// </summary>
+    /// <param name="transformation">The transformation object. This delegate is called for each <see cref="Expression"/> within this
+    /// clause, and those expressions will be replaced with what the delegate returns.</param>
     public virtual void TransformExpressions (Func<Expression, Expression> transformation)
     {
       ArgumentUtility.CheckNotNull ("transformation", transformation);

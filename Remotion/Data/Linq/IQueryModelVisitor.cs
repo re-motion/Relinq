@@ -18,11 +18,19 @@ using Remotion.Data.Linq.Clauses;
 namespace Remotion.Data.Linq
 {
   /// <summary>
-  /// Defines an interface for visiting the clauses of a <see cref="QueryModel"/>. 
-  /// When implement this interface, implement <see cref="VisitQueryModel"/>, then call <c>Accept</c> on every clause that should
-  /// be visited. Note that clauses, orderings, and result modifications are never visited automatically, they always need to be explicitly visited 
-  /// via <see cref="JoinClause.Accept"/>, <see cref="Ordering.Accept"/>, and <see cref="ResultModificationBase.Accept"/>.
+  /// Defines an interface for visiting the clauses of a <see cref="QueryModel"/>.
   /// </summary>
+  /// <remarks>
+  /// <para>
+  /// When implement this interface, implement <see cref="VisitQueryModel"/>, then call <c>Accept</c> on every clause that should
+  /// be visited. Child clauses, joins, orderings, and result modifications are not visited automatically; they always need to be explicitly visited 
+  /// via <see cref="IBodyClause.Accept"/>, <see cref="JoinClause.Accept"/>, <see cref="Ordering.Accept"/>, 
+  /// <see cref="ResultModificationBase.Accept"/>, and so on.
+  /// </para>
+  /// <para>
+  /// <see cref="QueryModelVisitorBase"/> provides a robust default implementation of this interface that can be used as a base for other visitors.
+  /// </para>
+  /// </remarks>
   public interface IQueryModelVisitor
   {
     void VisitQueryModel (QueryModel queryModel);

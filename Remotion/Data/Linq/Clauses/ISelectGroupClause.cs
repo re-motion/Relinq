@@ -13,6 +13,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+using Remotion.Data.Linq.Clauses.Expressions;
+
 namespace Remotion.Data.Linq.Clauses
 {
   /// <summary>
@@ -22,9 +24,21 @@ namespace Remotion.Data.Linq.Clauses
   /// </summary>
   public interface ISelectGroupClause : IClause
   {
-    ISelectGroupClause Clone (CloneContext cloneContext);
+    /// <summary>
+    /// Accepts the specified visitor by calling one of its Visit... methods.
+    /// </summary>
+    /// <param name="visitor">The visitor to accept.</param>
+    /// <param name="queryModel">The query model in whose context this clause is visited.</param>
     void Accept (IQueryModelVisitor visitor, QueryModel queryModel);
-    
+
+    /// <summary>
+    /// Clones this clause, adjusting all <see cref="QuerySourceReferenceExpression"/> instances held by it as defined by
+    /// <paramref name="cloneContext"/>.
+    /// </summary>
+    /// <param name="cloneContext">The clone context to use for replacing <see cref="QuerySourceReferenceExpression"/> objects.</param>
+    /// <returns>A clone of this clause.</returns>
+    ISelectGroupClause Clone (CloneContext cloneContext);
+   
     /// <summary>
     /// Gets the execution strategy to use for the given select or group clause. The execution strategy defines how to dispatch a query
     /// to an implementation of <see cref="IQueryExecutor"/> when the <see cref="QueryProviderBase"/> needs to execute a query.

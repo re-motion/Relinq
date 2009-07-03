@@ -23,6 +23,11 @@ namespace Remotion.Data.Linq.Clauses
   /// </summary>
   public interface IClause
   {
+    /// <summary>
+    /// Transforms all the expressions in this clause and its child objects via the given <paramref name="transformation"/> delegate.
+    /// </summary>
+    /// <param name="transformation">The transformation object. This delegate is called for each <see cref="Expression"/> within this 
+    /// clause, and those expressions will be replaced with what the delegate returns.</param>
     void TransformExpressions (Func<Expression, Expression> transformation);
   }
 }

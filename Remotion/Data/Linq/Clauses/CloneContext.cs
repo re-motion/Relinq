@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses
@@ -30,6 +31,10 @@ namespace Remotion.Data.Linq.Clauses
       ClauseMapping = clauseMapping;
     }
 
+    /// <summary>
+    /// Gets the clause mapping used during the cloning process. This is used to adjust the <see cref="QuerySourceReferenceExpression"/> instances
+    /// of clauses to point to clauses in the cloned <see cref="QueryModel"/>.
+    /// </summary>
     public ClauseMapping ClauseMapping { get; private set; }
   }
 }

@@ -24,8 +24,8 @@ namespace Remotion.Data.Linq
 {
   /// <summary>
   /// Acts as a common base class for <see cref="IQueryable{T}"/> implementations based on re-linq. In a specific LINQ provider, a custom queryable
-  /// class should derive from <see cref="QueryableBase{T}"/> and supply an implementation of <see cref="IQueryExecutor"/> that is used to execute
-  /// the query represented by the queryable.
+  /// class should be derived from <see cref="QueryableBase{T}"/> which supplies an implementation of <see cref="IQueryExecutor"/> that is used to 
+  /// execute the query. This is then used as an entry point (the main data source) of a LINQ query.
   /// </summary>
   /// <typeparam name="T">The type of the result items yielded by this query.</typeparam>
   public abstract class QueryableBase<T> : IOrderedQueryable<T>
@@ -81,18 +81,47 @@ namespace Remotion.Data.Linq
       Expression = expression;
     }
 
+    /// <summary>
+    /// Gets the expression tree that is associated with the instance of <see cref="T:System.Linq.IQueryable"/>. This expression describes the
+    /// query represented by this <see cref="QueryableBase{T}"/>.
+    /// </summary>
+    /// <value></value>
+    /// <returns>
+    /// The <see cref="T:System.Linq.Expressions.Expression"/> that is associated with this instance of <see cref="T:System.Linq.IQueryable"/>.
+    /// </returns>
     public Expression Expression { get; private set; }
 
+    /// <summary>
+    /// Gets the query provider that is associated with this data source. The provider is used to execute the query. By default, a 
+    /// <see cref="DefaultQueryProvider"/> is used that parses the query and passes it on to an implementation of <see cref="IQueryExecutor"/>.
+    /// </summary>
+    /// <value></value>
+    /// <returns>
+    /// The <see cref="T:System.Linq.IQueryProvider"/> that is associated with this data source.
+    /// </returns>
     public IQueryProvider Provider
     {
       get { return _queryProvider; }
     }
 
+    /// <summary>
+    /// Gets the type of the element(s) that are returned when the expression tree associated with this instance of <see cref="T:System.Linq.IQueryable"/> is executed.
+    /// </summary>
+    /// <value></value>
+    /// <returns>
+    /// A <see cref="T:System.Type"/> that represents the type of the element(s) that are returned when the expression tree associated with this object is executed.
+    /// </returns>
     public Type ElementType
     {
       get { return typeof (T); }
     }
 
+    /// <summary>
+    /// Executes the query via the <see cref="Provider"/> and returns an enumerator that iterates through the items returned by the query.
+    /// </summary>
+    /// <returns>
+    /// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the query result.
+    /// </returns>
     public IEnumerator<T> GetEnumerator()
     {
       return _queryProvider.Execute<IEnumerable<T>> (Expression).GetEnumerator();

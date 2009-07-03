@@ -27,11 +27,13 @@ namespace Remotion.Data.Linq
   /// <summary>
   /// Provides a default implementation of <see cref="IQueryProvider"/> that executes queries (subclasses of <see cref="QueryableBase{T}"/>) by
   /// first parsing them into a <see cref="QueryModel"/> and then passing that to a given implementation of <see cref="IQueryExecutor"/>.
-  /// Usually, <see cref="DefaultQueryProvider"/> should be used unless <see cref="CreateQueryable{T}"/> must be manually implemented.
+  /// Usually, <see cref="DefaultQueryProvider"/> should be used unless <see cref="CreateQuery{T}"/> must be manually implemented.
   /// </summary>
   public abstract class QueryProviderBase : IQueryProvider
   {
     private readonly ExpressionTreeParser _expressionTreeParser;
+    private static readonly MethodInfo s_genericCreateQueryMethod = 
+        typeof (QueryProviderBase).GetMethods ().Where (m => m.Name == "CreateQuery" && m.IsGenericMethod).Single ();
 
     /// <summary>
     /// Initializes a new instance of <see cref="QueryProviderBase"/> using the default <see cref="MethodCallExpressionNodeTypeRegistry"/>.
@@ -46,7 +48,8 @@ namespace Remotion.Data.Linq
     }
 
     /// <summary>
-    /// Initializes a new instance of <see cref="QueryProviderBase"/> using a custom <see cref="MethodCallExpressionNodeTypeRegistry"/>.
+    /// Initializes a new instance of <see cref="QueryProviderBase"/> using a custom <see cref="MethodCallExpressionNodeTypeRegistry"/>. Use this
+    /// constructor to specify a specific set of parsers to use when analyzing the query.
     /// </summary>
     /// <param name="executor">The <see cref="IQueryExecutor"/> used to execute queries against a specific query backend.</param>
     /// <param name="nodeTypeRegistry">The <see cref="MethodCallExpressionNodeTypeRegistry"/> containing the <see cref="MethodCallExpression"/>
@@ -58,17 +61,28 @@ namespace Remotion.Data.Linq
       _expressionTreeParser = new ExpressionTreeParser (nodeTypeRegistry);
     }
 
+    /// <summary>
+    /// Gets or sets the implementation of <see cref="IQueryExecutor"/> used to execute queries created via <see cref="CreateQuery{T}"/>.
+    /// </summary>
+    /// <value>The executor used to execute queries.</value>
     public IQueryExecutor Executor { get; private set; }
-    
+
+    /// <summary>
+    /// Constructs an <see cref="IQueryable"/> object that can evaluate the query represented by a specified expression tree. This
+    /// method delegates to <see cref="CreateQuery{T}"/>.
+    /// </summary>
+    /// <param name="expression">An expression tree that represents a LINQ query.</param>
+    /// <returns>
+    /// An <see cref="IQueryable"/> that can evaluate the query represented by the specified expression tree.
+    /// </returns>
     public IQueryable CreateQuery (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      MethodInfo genericCreateQueryMethod = typeof (QueryProviderBase).GetMethod ("CreateQueryable", BindingFlags.NonPublic | BindingFlags.Instance);
 
       Type elementType = ReflectionUtility.GetAscribedGenericArguments (expression.Type, typeof (IEnumerable<>))[0];
       try
       {
-        return (IQueryable) genericCreateQueryMethod.MakeGenericMethod (elementType).Invoke(this, new object[] {expression});
+        return (IQueryable) s_genericCreateQueryMethod.MakeGenericMethod (elementType).Invoke(this, new object[] {expression});
       }
       catch (TargetInvocationException tie)
       {
@@ -77,18 +91,14 @@ namespace Remotion.Data.Linq
     }
 
     /// <summary>
-    /// Queryable's collection-returning standard query operators call this method.
+    /// Constructs an <see cref="IQueryable{T}"/> object that can evaluate the query represented by a specified expression tree. This method is 
+    /// called by the standard query operators defined by the <see cref="Queryable"/> class.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="expression">The query as expression chain.</param>
-    /// <returns><see cref="IQueryable{T}"/></returns>
-    public IQueryable<T> CreateQuery<T> (Expression expression)
-    {
-      ArgumentUtility.CheckNotNull ("expression", expression);
-      return CreateQueryable<T> (expression);
-    }
-
-    protected abstract IQueryable<T> CreateQueryable<T> (Expression expression);
+    /// <param name="expression">An expression tree that represents a LINQ query.</param>
+    /// <returns>
+    /// An <see cref="IQueryable{T}"/> that can evaluate the query represented by the specified expression tree.
+    /// </returns>
+    public abstract IQueryable<T> CreateQuery<T> (Expression expression);
 
     /// <summary>
     /// Executes the query defined by the specified expression by first extracting any fetch requests, then parsing it with a 

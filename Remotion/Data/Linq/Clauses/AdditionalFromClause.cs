@@ -22,9 +22,16 @@ using Remotion.Utilities;
 namespace Remotion.Data.Linq.Clauses
 {
   /// <summary>
-  /// Extends <see cref="FromClauseBase"/>. <see cref="AdditionalFromClause"/> is used for from clauses which is no <see cref="MainFromClause"/>.
-  /// example:from a in queryable1 from b in queryable (the additional <see cref="AdditionalFromClause"/> is the second from)
+  /// Represents a data source in a query that adds new data items in addition to those provided by the <see cref="MainFromClause"/>.
   /// </summary>
+  /// <example>
+  /// In C#, the second "from" clause in the following sample corresponds to an <see cref="AdditionalFromClause"/>:
+  /// <ode>
+  /// var query = from s in Students
+  ///             from f in s.Friends
+  ///             select f;
+  /// </ode>
+  /// </example>
   public class AdditionalFromClause : FromClauseBase, IBodyClause
   {
     /// <summary>
@@ -40,7 +47,13 @@ namespace Remotion.Data.Linq.Clauses
             ArgumentUtility.CheckNotNull ("fromExpression", fromExpression))
     {
     }
-    
+
+    /// <summary>
+    /// Accepts the specified visitor by calling its <see cref="IQueryModelVisitor.VisitAdditionalFromClause"/> method.
+    /// </summary>
+    /// <param name="visitor">The visitor to accept.</param>
+    /// <param name="queryModel">The query model in whose context this clause is visited.</param>
+    /// <param name="index">The index of this clause in the <paramref name="queryModel"/>'s <see cref="QueryModel.BodyClauses"/> collection.</param>
     public virtual void Accept (IQueryModelVisitor visitor, QueryModel queryModel, int index)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
@@ -49,6 +62,12 @@ namespace Remotion.Data.Linq.Clauses
       visitor.VisitAdditionalFromClause (this, queryModel, index);
     }
 
+    /// <summary>
+    /// Clones this clause, adjusting all <see cref="QuerySourceReferenceExpression"/> instances held by it as defined by
+    /// <paramref name="cloneContext"/>.
+    /// </summary>
+    /// <param name="cloneContext">The clone context to use for replacing <see cref="QuerySourceReferenceExpression"/> objects.</param>
+    /// <returns>A clone of this clause.</returns>
     public virtual AdditionalFromClause Clone (CloneContext cloneContext)
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);

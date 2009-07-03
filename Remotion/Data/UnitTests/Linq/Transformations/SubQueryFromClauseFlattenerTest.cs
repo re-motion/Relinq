@@ -23,6 +23,7 @@ using Remotion.Data.Linq;
 using System.Linq;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
+using Remotion.Data.Linq.Clauses.ResultModifications;
 using Remotion.Data.Linq.Transformations;
 using Remotion.Data.UnitTests.Linq.Parsing;
 
@@ -134,6 +135,18 @@ namespace Remotion.Data.UnitTests.Linq.Transformations
           _additionalFromClause1,
           (s1, sector) => new Tuple<Student, Student_Detail> (s1, sector.Student_Detail));
       ExpressionTreeComparer.CheckAreEqualTrees (expectedSelector, _selectClause.Selector);
+    }
+
+    [Test]
+    [ExpectedException (typeof(NotSupportedException), ExpectedMessage = "The subquery "
+        + "'from Student s in TestQueryable<Student>() select 0 => Distinct()' cannot be flattened and pulled out of the from clause because it "
+        + "contains result modifications.")]
+    public void VisitAdditionalFromClause_ThrowsOnResultModification ()
+    {
+      var queryModel = ExpressionHelper.CreateQueryModel ();
+      ((SelectClause) queryModel.SelectOrGroupClause).ResultModifications.Add (new DistinctResultModification ());
+      var clause = new AdditionalFromClause ("x", typeof (Student), new SubQueryExpression (queryModel));
+      _visitor.VisitAdditionalFromClause (clause, queryModel, 0);
     }
 
     [Test]

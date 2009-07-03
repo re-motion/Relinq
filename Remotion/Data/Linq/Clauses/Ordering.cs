@@ -16,6 +16,7 @@
 using System;
 using System.Diagnostics;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Data.Linq.StringBuilding;
 using Remotion.Utilities;
@@ -23,17 +24,17 @@ using Remotion.Utilities;
 namespace Remotion.Data.Linq.Clauses
 {
   /// <summary>
-  /// Represents one expression of a order by in a linq query.
+  /// Represents a single ordering instruction in an <see cref="OrderByClause"/>.
   /// </summary>
   public class Ordering
   {
     private Expression _expression;
-    
+
     /// <summary>
-    /// Initialize a new instance of <see cref="Ordering"/>
+    /// Initializes a new instance of the <see cref="Ordering"/> class.
     /// </summary>
-    /// <param name="expression">The expression from one part of a order by in a linq query.</param>
-    /// <param name="direction"></param>
+    /// <param name="expression">The expression used to order the data items returned by the query.</param>
+    /// <param name="direction">The <see cref="OrderingDirection"/> to use for sorting.</param>
     public Ordering (Expression expression, OrderingDirection direction)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
@@ -43,13 +44,9 @@ namespace Remotion.Data.Linq.Clauses
     }
 
     /// <summary>
-    /// The previous clause of type <see cref="IClause"/> in the <see cref="QueryModel"/>.
+    /// Gets or sets the expression used to order the data items returned by the query.
     /// </summary>
-    public OrderByClause OrderByClause { get; set; }
-
-    /// <summary>
-    /// The expression from one part of a order by in a linq query.
-    /// </summary>
+    /// <value>The expression.</value>
     [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (Expression),nq}")]
     public Expression Expression
     {
@@ -57,8 +54,18 @@ namespace Remotion.Data.Linq.Clauses
       set { _expression = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
+    /// <summary>
+    /// Gets or sets the direction to use for ordering data items.
+    /// </summary>
     public OrderingDirection OrderingDirection { get; set; }
 
+    /// <summary>
+    /// Accepts the specified visitor by calling its <see cref="IQueryModelVisitor.VisitOrdering"/> method.
+    /// </summary>
+    /// <param name="visitor">The visitor to accept.</param>
+    /// <param name="queryModel">The query model in whose context this clause is visited.</param>
+    /// <param name="orderByClause">The <see cref="OrderByClause"/> in whose context this item is visited.</param>
+    /// <param name="index">The index of this item in the <paramref name="orderByClause"/>'s <see cref="OrderByClause.Orderings"/> collection.</param>
     public virtual void Accept (IQueryModelVisitor visitor, QueryModel queryModel, OrderByClause orderByClause, int index)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
@@ -68,6 +75,12 @@ namespace Remotion.Data.Linq.Clauses
       visitor.VisitOrdering (this, queryModel, orderByClause, index);
     }
 
+    /// <summary>
+    /// Clones this item, adjusting all <see cref="QuerySourceReferenceExpression"/> instances held by it as defined by
+    /// <paramref name="cloneContext"/>.
+    /// </summary>
+    /// <param name="cloneContext">The clone context to use for replacing <see cref="QuerySourceReferenceExpression"/> objects.</param>
+    /// <returns>A clone of this item.</returns>
     public Ordering Clone (CloneContext cloneContext)
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
@@ -77,6 +90,11 @@ namespace Remotion.Data.Linq.Clauses
       return clone;
     }
 
+    /// <summary>
+    /// Transforms all the expressions in this item via the given <paramref name="transformation"/> delegate.
+    /// </summary>
+    /// <param name="transformation">The transformation object. This delegate is called for each <see cref="Expression"/> within this
+    /// item, and those expressions will be replaced with what the delegate returns.</param>
     public void TransformExpressions (Func<Expression, Expression> transformation)
     {
       ArgumentUtility.CheckNotNull ("transformation", transformation);

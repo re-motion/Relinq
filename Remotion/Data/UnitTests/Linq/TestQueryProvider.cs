@@ -32,7 +32,7 @@ namespace Remotion.Data.UnitTests.Linq
     {
     }
 
-    protected override IQueryable<T> CreateQueryable<T> (Expression expression)
+    public override IQueryable<T> CreateQuery<T> (Expression expression)
     {
       return new TestQueryable<T> (this, expression);
     }

@@ -136,5 +136,13 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clause.GroupExpression, Is.SameAs (newGroupExpression));
       Assert.That (clause.ByExpression, Is.SameAs (newByExpression));
     }
+
+    [Test]
+    public new void ToString ()
+    {
+      var groupClause = new GroupClause (Expression.Constant (0), Expression.Constant (1));
+
+      Assert.That (groupClause.ToString (), Is.EqualTo ("group 0 by 1"));
+    }
   }
 }

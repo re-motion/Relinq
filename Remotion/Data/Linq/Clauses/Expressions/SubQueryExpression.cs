@@ -18,6 +18,9 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.Expressions
 {
+  /// <summary>
+  /// Represents an <see cref="Expression"/> that holds a subquery. The subquery is held by <see cref="QueryModel"/> in its parsed form.
+  /// </summary>
   public class SubQueryExpression : Expression
   {
     public SubQueryExpression (QueryModel queryModel)

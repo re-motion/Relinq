@@ -26,6 +26,12 @@ namespace Remotion.Data.Linq
   /// the default implementation of <see cref="VisitMainFromClause"/> automatically calls <see cref="JoinClause.Accept"/> on the 
   /// <see cref="JoinClause"/> instances in its <see cref="FromClauseBase.JoinClauses"/> collection, and so on.
   /// </summary>
+  /// <remarks>
+  /// This visitor is hardened against modifications performed on the visited <see cref="QueryModel"/> while the model is currently being visited.
+  /// That is, if a the <see cref="QueryModel.BodyClauses"/> collection changes while a body clause (or a child item of a body clause) is currently 
+  /// being processed, the visitor will handle that gracefully. The same applies to <see cref="SelectClause.ResultModifications"/>, 
+  /// <see cref="OrderByClause.Orderings"/>, and <see cref="FromClauseBase.JoinClauses"/>.
+  /// </remarks>
   public abstract class QueryModelVisitorBase : IQueryModelVisitor
   {
     public virtual void VisitQueryModel (QueryModel queryModel)

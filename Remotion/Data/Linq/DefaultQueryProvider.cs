@@ -23,7 +23,9 @@ namespace Remotion.Data.Linq
 {
   /// <summary>
   /// Represents a default implementation of <see cref="QueryProviderBase"/> that is automatically used by <see cref="QueryableBase{T}"/>
-  /// unless a custom <see cref="IQueryProvider"/> is specified.
+  /// unless a custom <see cref="IQueryProvider"/> is specified. The <see cref="DefaultQueryProvider"/> executes queries by parsing them into
+  /// an instance of type <see cref="QueryModel"/>, which is then passed to an implementation of <see cref="IQueryExecutor"/> to obtain the
+  /// result set.
   /// </summary>
   public class DefaultQueryProvider : QueryProviderBase
   {
@@ -77,7 +79,14 @@ namespace Remotion.Data.Linq
       get { return _queryableType; }
     }
 
-    protected override IQueryable<T> CreateQueryable<T> (Expression expression)
+    /// <summary>
+    /// Creates a new <see cref="IQueryable"/> (of type <see cref="QueryableType"/> with <typeparamref name="T"/> as its generic argument) that
+    /// represents the query defined by <paramref name="expression"/> and is able to enumerate its results.
+    /// </summary>
+    /// <typeparam name="T">The type of the data items returned by the query.</typeparam>
+    /// <param name="expression">An expression representing the query for which a <see cref="IQueryable{T}"/> should be created.</param>
+    /// <returns>An <see cref="IQueryable{T}"/> that represents the query defined by <paramref name="expression"/>.</returns>
+    public override IQueryable<T> CreateQuery<T> (Expression expression)
     {
       return (IQueryable<T>) Activator.CreateInstance (QueryableType.MakeGenericType (typeof (T)), this, expression);
     }

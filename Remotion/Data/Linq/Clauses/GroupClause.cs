@@ -16,7 +16,7 @@
 using System;
 using System.Diagnostics;
 using System.Linq.Expressions;
-using System.Text;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Data.Linq.StringBuilding;
 using Remotion.Utilities;
@@ -51,6 +51,11 @@ namespace Remotion.Data.Linq.Clauses
       set { _byExpression = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
+    /// <summary>
+    /// Accepts the specified visitor by calling one its <see cref="IQueryModelVisitor.VisitGroupClause"/> method.
+    /// </summary>
+    /// <param name="visitor">The visitor to accept.</param>
+    /// <param name="queryModel">The query model in whose context this clause is visited.</param>
     public void Accept (IQueryModelVisitor visitor, QueryModel queryModel)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
@@ -58,6 +63,12 @@ namespace Remotion.Data.Linq.Clauses
       visitor.VisitGroupClause (this, queryModel);
     }
 
+    /// <summary>
+    /// Clones this clause, adjusting all <see cref="QuerySourceReferenceExpression"/> instances held by it as defined by
+    /// <paramref name="cloneContext"/>.
+    /// </summary>
+    /// <param name="cloneContext">The clone context to use for replacing <see cref="QuerySourceReferenceExpression"/> objects.</param>
+    /// <returns>A clone of this clause.</returns>
     public GroupClause Clone (CloneContext cloneContext)
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
@@ -67,16 +78,21 @@ namespace Remotion.Data.Linq.Clauses
       return clone;
     }
 
-    public IExecutionStrategy GetExecutionStrategy ()
-    {
-      throw new NotImplementedException();
-    }
-
     ISelectGroupClause ISelectGroupClause.Clone (CloneContext cloneContext)
     {
       return Clone (cloneContext);
     }
 
+    public IExecutionStrategy GetExecutionStrategy ()
+    {
+      throw new NotImplementedException ();
+    }
+
+    /// <summary>
+    /// Transforms all the expressions in this clause and its child objects via the given <paramref name="transformation"/> delegate.
+    /// </summary>
+    /// <param name="transformation">The transformation object. This delegate is called for each <see cref="Expression"/> within this
+    /// clause, and those expressions will be replaced with what the delegate returns.</param>
     public void TransformExpressions (Func<Expression, Expression> transformation)
     {
       ArgumentUtility.CheckNotNull ("transformation", transformation);
@@ -87,15 +103,10 @@ namespace Remotion.Data.Linq.Clauses
 
     public override string ToString ()
     {
-      return string.Format ("group {0} by {1}", FormatExpression (GroupExpression), FormatExpression (ByExpression)); 
-    }
-
-    private string FormatExpression (Expression expression)
-    {
-      if (expression != null)
-        return FormattingExpressionTreeVisitor.Format (expression);
-      else
-        return "<null>";
+      return string.Format (
+          "group {0} by {1}", 
+          FormattingExpressionTreeVisitor.Format (GroupExpression), 
+          FormattingExpressionTreeVisitor.Format (ByExpression)); 
     }
   }
 }

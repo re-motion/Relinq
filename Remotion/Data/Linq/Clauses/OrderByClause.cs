@@ -16,19 +16,28 @@
 using System;
 using System.Linq.Expressions;
 using Remotion.Collections;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Utilities;
 using System.Linq;
 
 namespace Remotion.Data.Linq.Clauses
 {
   /// <summary>
-  /// Represents the whole order by part of a linq query.
-  /// example: orderby expression
+  /// Represents the orderby part of a query, ordering data items according to some <see cref="Orderings"/>.
   /// </summary>
+  /// <example>
+  /// In C#, the whole "orderby" clause in the following sample (including two orderings) corresponds to an <see cref="OrderByClause"/>:
+  /// <ode>
+  /// var query = from s in Students
+  ///             orderby s.Last, s.First
+  ///             select s;
+  /// </ode>
+  /// </example>
+
   public class OrderByClause : IBodyClause
   {
     /// <summary>
-    /// Initialize a new instance of <see cref="OrderByClause"/>
+    /// Initializes a new instance of the <see cref="OrderByClause"/> class.
     /// </summary>
     public OrderByClause ()
     {
@@ -38,10 +47,18 @@ namespace Remotion.Data.Linq.Clauses
     }
 
     /// <summary>
-    /// A collection of <see cref="Ordering"/>
+    /// Gets the <see cref="Ordering"/> instances that define how to sort the items coming from previous clauses. The order of the 
+    /// <see cref="Orderings"/> in the collection defines their priorities. For example, { LastName, FirstName } would sort all items by
+    /// LastName, and only those items that have equal LastName values would be sorted by FirstName.
     /// </summary>
     public ObservableCollection<Ordering> Orderings { get; private set; }
 
+    /// <summary>
+    /// Accepts the specified visitor by calling its <see cref="IQueryModelVisitor.VisitOrderByClause"/> method.
+    /// </summary>
+    /// <param name="visitor">The visitor to accept.</param>
+    /// <param name="queryModel">The query model in whose context this clause is visited.</param>
+    /// <param name="index">The index of this clause in the <paramref name="queryModel"/>'s <see cref="QueryModel.BodyClauses"/> collection.</param>
     public virtual void Accept (IQueryModelVisitor visitor, QueryModel queryModel, int index)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
@@ -50,6 +67,11 @@ namespace Remotion.Data.Linq.Clauses
       visitor.VisitOrderByClause (this, queryModel, index);
     }
 
+    /// <summary>
+    /// Transforms all the expressions in this clause and its child objects via the given <paramref name="transformation"/> delegate.
+    /// </summary>
+    /// <param name="transformation">The transformation object. This delegate is called for each <see cref="Expression"/> within this
+    /// clause, and those expressions will be replaced with what the delegate returns.</param>
     public void TransformExpressions (Func<Expression, Expression> transformation)
     {
       ArgumentUtility.CheckNotNull ("transformation", transformation);
@@ -60,6 +82,12 @@ namespace Remotion.Data.Linq.Clauses
       }
     }
 
+    /// <summary>
+    /// Clones this clause, adjusting all <see cref="QuerySourceReferenceExpression"/> instances held by it as defined by
+    /// <paramref name="cloneContext"/>.
+    /// </summary>
+    /// <param name="cloneContext">The clone context to use for replacing <see cref="QuerySourceReferenceExpression"/> objects.</param>
+    /// <returns>A clone of this clause.</returns>
     public OrderByClause Clone (CloneContext cloneContext)
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
@@ -74,11 +102,6 @@ namespace Remotion.Data.Linq.Clauses
       return result;
     }
 
-    private void Orderings_ItemAdded (object sender, ObservableCollectionChangedEventArgs<Ordering> e)
-    {
-      ArgumentUtility.CheckNotNull ("e.Item", e.Item);
-    }
-
     IBodyClause IBodyClause.Clone (CloneContext cloneContext)
     {
       return Clone (cloneContext);
@@ -91,6 +114,11 @@ namespace Remotion.Data.Linq.Clauses
         result = Orderings.Take (Orderings.Count - 1).Aggregate (result + " ", (s, o) => s + o + ", ") + Orderings[Orderings.Count - 1];
 
       return result;
+    }
+
+    private void Orderings_ItemAdded (object sender, ObservableCollectionChangedEventArgs<Ordering> e)
+    {
+      ArgumentUtility.CheckNotNull ("e.Item", e.Item);
     }
   }
 }
