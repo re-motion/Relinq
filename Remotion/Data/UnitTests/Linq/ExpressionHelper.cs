@@ -22,6 +22,7 @@ using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultModifications;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
+using Remotion.Data.Linq.Parsing.FieldResolving;
 using Remotion.Data.Linq.Parsing.Structure;
 using Rhino.Mocks;
 using Remotion.Data.Linq.Clauses;
@@ -229,15 +230,14 @@ namespace Remotion.Data.UnitTests.Linq
       return parser.GetParsedQuery (queryExpression);
     }
 
-    public static FieldDescriptor CreateFieldDescriptor (FromClauseBase fromClause, MemberInfo member)
+    public static FieldDescriptor CreateFieldDescriptor (JoinedTableContext joinedTableContext, FromClauseBase fromClause, MemberInfo member)
     {
-      MemberInfo originalMember = member;
-      return CreateFieldDescriptor(fromClause, member, originalMember);
+      return CreateFieldDescriptor(joinedTableContext, fromClause, member, member);
     }
 
-    public static FieldDescriptor CreateFieldDescriptor (FromClauseBase fromClause, MemberInfo member, MemberInfo originalMember)
+    public static FieldDescriptor CreateFieldDescriptor (JoinedTableContext joinedTableContext, FromClauseBase fromClause, MemberInfo member, MemberInfo originalMember)
     {
-      IColumnSource table = fromClause.GetColumnSource (StubDatabaseInfo.Instance);
+      IColumnSource table = joinedTableContext.GetColumnSource (fromClause);
       Column? column = DatabaseInfoUtility.GetColumn (StubDatabaseInfo.Instance, table, member);
       var sourcePath = new FieldSourcePath (table, new SingleJoin[0]);
       var fieldDescriptor = new FieldDescriptor (originalMember, sourcePath, column);

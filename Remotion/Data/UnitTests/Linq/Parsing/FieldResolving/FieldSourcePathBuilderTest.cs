@@ -15,6 +15,7 @@
 // 
 using System.Reflection;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Remotion.Collections;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Parsing.FieldResolving;
@@ -32,7 +33,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
     [SetUp]
     public void SetUp()
     {
-      _context = new JoinedTableContext();
+      _context = new JoinedTableContext (StubDatabaseInfo.Instance);
       _initialTable = new Table ("initial", "i");
 
       _studentDetailMember = typeof (Student_Detail_Detail).GetProperty ("Student_Detail");
@@ -42,33 +43,33 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
     [Test]
     public void BuildFieldSourcePath_NoJoin ()
     {
-      MemberInfo[] joinMembers = new MemberInfo[] { };
+      var joinMembers = new MemberInfo[] { };
       FieldSourcePath result =
           new FieldSourcePathBuilder ().BuildFieldSourcePath (StubDatabaseInfo.Instance, _context, _initialTable, joinMembers);
 
-      FieldSourcePath expected = new FieldSourcePath(_initialTable, new SingleJoin[0]);
-      Assert.AreEqual (expected, result);
+      var expected = new FieldSourcePath(_initialTable, new SingleJoin[0]);
+      Assert.That (result, Is.EqualTo (expected));
     }
 
     [Test]
     public void BuildFieldSourcePath_SimpleJoin ()
     {
-      MemberInfo[] joinMembers = new MemberInfo[] { _studentMember };
+      var joinMembers = new MemberInfo[] { _studentMember };
       FieldSourcePath result =
           new FieldSourcePathBuilder ().BuildFieldSourcePath (StubDatabaseInfo.Instance, _context, _initialTable, joinMembers);
 
       Table relatedTable = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, _studentMember);
       Tuple<string, string> joinColumns = DatabaseInfoUtility.GetJoinColumnNames (StubDatabaseInfo.Instance, _studentMember);
 
-      SingleJoin singleJoin = new SingleJoin (new Column (_initialTable, joinColumns.A), new Column (relatedTable, joinColumns.B));
-      FieldSourcePath expected = new FieldSourcePath (_initialTable, new[] { singleJoin });
-      Assert.AreEqual (expected, result);
+      var singleJoin = new SingleJoin (new Column (_initialTable, joinColumns.A), new Column (relatedTable, joinColumns.B));
+      var expected = new FieldSourcePath (_initialTable, new[] { singleJoin });
+      Assert.That (result, Is.EqualTo (expected));
     }
 
     [Test]
     public void BuildFieldSourcePath_NestedJoin ()
     {
-      MemberInfo[] joinMembers = new MemberInfo[] { _studentDetailMember, _studentMember };
+      var joinMembers = new MemberInfo[] { _studentDetailMember, _studentMember };
       FieldSourcePath result =
           new FieldSourcePathBuilder ().BuildFieldSourcePath (StubDatabaseInfo.Instance, _context, _initialTable, joinMembers);
 
@@ -78,18 +79,18 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
       Table relatedTable2 = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, _studentMember);
       Tuple<string, string> joinColumns2 = DatabaseInfoUtility.GetJoinColumnNames (StubDatabaseInfo.Instance, _studentMember);
 
-      SingleJoin singleJoin1 = new SingleJoin (new Column (_initialTable, joinColumns1.A), new Column (relatedTable1, joinColumns1.B));
-      SingleJoin singleJoin2 = new SingleJoin (new Column (relatedTable1, joinColumns2.A), new Column (relatedTable2, joinColumns2.B));
-      FieldSourcePath expected = new FieldSourcePath (_initialTable, new[] { singleJoin1, singleJoin2 });
-      Assert.AreEqual (expected, result);
+      var singleJoin1 = new SingleJoin (new Column (_initialTable, joinColumns1.A), new Column (relatedTable1, joinColumns1.B));
+      var singleJoin2 = new SingleJoin (new Column (relatedTable1, joinColumns2.A), new Column (relatedTable2, joinColumns2.B));
+      var expected = new FieldSourcePath (_initialTable, new[] { singleJoin1, singleJoin2 });
+      Assert.That (result, Is.EqualTo (expected));
     }
 
     [Test]
     public void BuildFieldSourcePath_UsesContext ()
     {
-      Assert.AreEqual (0, _context.Count);
+      Assert.That (_context.Count, Is.EqualTo (0));
       BuildFieldSourcePath_SimpleJoin ();
-      Assert.AreEqual (1, _context.Count);
+      Assert.That (_context.Count, Is.EqualTo (1));
     }
 
   }

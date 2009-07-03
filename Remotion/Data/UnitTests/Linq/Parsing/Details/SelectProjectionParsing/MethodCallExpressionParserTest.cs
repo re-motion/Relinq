@@ -38,7 +38,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details.SelectProjectionParsing
     {
       base.SetUp();
 
-      _fromSource = StudentClause.GetColumnSource (StubDatabaseInfo.Instance);
+      _fromSource = ParseContext.JoinedTableContext.GetColumnSource (StudentClause);
       QueryModel = ExpressionHelper.CreateQueryModel (StudentClause);
       _resolver = new FieldResolver (StubDatabaseInfo.Instance, new SelectFieldAccessPolicy());
       _parserRegistry =

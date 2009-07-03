@@ -13,9 +13,12 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+using System;
 using System.Collections.Specialized;
 using System.Reflection;
 using Remotion.Collections;
+using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Utilities;
 
@@ -23,11 +26,19 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
 {
   public class JoinedTableContext
   {
-    private readonly OrderedDictionary _tables = new OrderedDictionary ();
+    private readonly IDatabaseInfo _databaseInfo;
+    private readonly SimpleDataStore<FromClauseBase, IColumnSource> _columnSources = new SimpleDataStore<FromClauseBase, IColumnSource> ();
+    private readonly OrderedDictionary _joinedTables = new OrderedDictionary ();
+
+    public JoinedTableContext (IDatabaseInfo databaseInfo)
+    {
+      ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
+      _databaseInfo = databaseInfo;
+    }
 
     public int Count
     {
-      get { return _tables.Count; }
+      get { return _joinedTables.Count; }
     }
 
     public Table GetJoinedTable (IDatabaseInfo databaseInfo, FieldSourcePath fieldSourcePath, MemberInfo relationMember)
@@ -38,19 +49,34 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
 
       Tuple<FieldSourcePath, MemberInfo> key = Tuple.NewTuple (fieldSourcePath, relationMember);
 
-      if (!_tables.Contains (key))
-        _tables.Add (key, DatabaseInfoUtility.GetRelatedTable (databaseInfo, relationMember));
-      return (Table) _tables[key];
+      if (!_joinedTables.Contains (key))
+        _joinedTables.Add (key, DatabaseInfoUtility.GetRelatedTable (databaseInfo, relationMember));
+      return (Table) _joinedTables[key];
     }
 
     public void CreateAliases (QueryModel queryModel)
     {
       for (int i = 0; i < Count; ++i)
       {
-        var table = (Table) _tables[i];
+        var table = (Table) _joinedTables[i];
         if (table.Alias == null)
           table.SetAlias (queryModel.GetNewName ("#j"));
       }
+    }
+
+    public IColumnSource GetColumnSource (FromClauseBase fromClause)
+    {
+      ArgumentUtility.CheckNotNull ("fromClause", fromClause);
+      return _columnSources.GetOrCreateValue (fromClause, CreateColumnSource);
+    }
+
+    private IColumnSource CreateColumnSource (FromClauseBase clause)
+    {
+      var subQueryExpression = clause.FromExpression as SubQueryExpression;
+      if (subQueryExpression != null)
+        return new SubQuery (subQueryExpression.QueryModel, ParseMode.SubQueryInFrom, clause.ItemName);
+      else
+        return DatabaseInfoUtility.GetTableForFromClause (_databaseInfo, clause);
     }
   }
 }

@@ -40,7 +40,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details.SelectProjectionParsing
 
       QueryModel = ExpressionHelper.CreateQueryModel (StudentClause);
       _resolver = new FieldResolver (StubDatabaseInfo.Instance, new SelectFieldAccessPolicy());
-      _fromSource = StudentClause.GetColumnSource (StubDatabaseInfo.Instance);
+      _fromSource = ParseContext.JoinedTableContext.GetColumnSource (StudentClause);
 
       _parserRegistry = new SelectProjectionParserRegistry (StubDatabaseInfo.Instance, new ParseMode());
       _parserRegistry.RegisterParser (typeof (ConstantExpression), new ConstantExpressionParser (StubDatabaseInfo.Instance));

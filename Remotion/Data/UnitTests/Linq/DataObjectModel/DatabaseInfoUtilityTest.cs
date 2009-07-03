@@ -18,7 +18,6 @@ using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
-using Rhino.Mocks;
 using Remotion.Collections;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.DataObjectModel;
@@ -45,39 +44,11 @@ namespace Remotion.Data.UnitTests.Linq.DataObjectModel
     }
 
     [Test]
-    public void GetTableForFromClause_CachesTable ()
-    {
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause_Student();
-      Table table1 = DatabaseInfoUtility.GetTableForFromClause (_databaseInfo, fromClause);
-      Table table2 = DatabaseInfoUtility.GetTableForFromClause (_databaseInfo, fromClause);
-      Assert.That (table2, Is.SameAs (table1));
-    }
-
-    [Test]
-    public void GetTableForFromClause_CachesTable_PerDatabaseInfo ()
-    {
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause_Student();
-
-      MockRepository repository = new MockRepository();
-      IDatabaseInfo databaseInfoMock = repository.StrictMock<IDatabaseInfo>();
-
-      Expect.Call (databaseInfoMock.GetTableName (fromClause)).Return ("studentTable");
-
-      repository.ReplayAll();
-
-      Table table1 = DatabaseInfoUtility.GetTableForFromClause (_databaseInfo, fromClause);
-      Table table2 = DatabaseInfoUtility.GetTableForFromClause (databaseInfoMock, fromClause);
-      Assert.That (table2, Is.Not.SameAs (table1));
-
-      repository.VerifyAll();
-    }
-
-    [Test]
     [ExpectedException (typeof (ArgumentException), ExpectedMessage = "The from clause with identifier i and item type "
         + "System.Int32 does not identify a queryable table.", MatchType = MessageMatch.Contains)]
     public void GetTableForFromClause_InvalidSource ()
     {
-      TestQueryable<int> ints = new TestQueryable<int> (ExpressionHelper.CreateExecutor());
+      var ints = new TestQueryable<int> (ExpressionHelper.CreateExecutor());
       MainFromClause fromClause = ExpressionHelper.CreateMainFromClause("i", typeof (int) , ints);
       DatabaseInfoUtility.GetTableForFromClause (_databaseInfo, fromClause);
     }
@@ -157,10 +128,9 @@ namespace Remotion.Data.UnitTests.Linq.DataObjectModel
     }
 
     [Test]
-    public void GetColumnForFromClause ()
+    public void GetColumn ()
     {
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause_Student();
-      IColumnSource table = fromClause.GetColumnSource (_databaseInfo);
+      var table = new Table ("Student", "s");
       Column column = DatabaseInfoUtility.GetColumn (_databaseInfo, table, typeof (Student).GetProperty ("First")).Value;
       Assert.That (column, Is.EqualTo (new Column (table, "FirstColumn")));
     }
@@ -182,10 +152,9 @@ namespace Remotion.Data.UnitTests.Linq.DataObjectModel
     }
 
     [Test]
-    public void GetColumnForFromClause_InvalidMember ()
+    public void GetColumn_InvalidMember ()
     {
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause_Student();
-      IColumnSource table = fromClause.GetColumnSource (_databaseInfo);
+      IColumnSource table = new Table ("Student", "s");
       Assert.That (DatabaseInfoUtility.GetColumn (_databaseInfo, table, typeof (Student).GetProperty ("NonDBProperty")), Is.Null);
     }
 

@@ -18,9 +18,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq.Expressions;
 using Remotion.Collections;
-using Remotion.Data.Linq.Clauses.Expressions;
-using Remotion.Data.Linq.DataObjectModel;
-using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.StringBuilding;
 using Remotion.Utilities;
 using System.Linq;
@@ -82,33 +79,10 @@ namespace Remotion.Data.Linq.Clauses
     public Expression FromExpression
     {
       get { return _fromExpression; }
-      set { _fromExpression = ArgumentUtility.CheckNotNull ("value", value); _subQueryFromSource = null; }
+      set { _fromExpression = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
     public ObservableCollection<JoinClause> JoinClauses { get; private set; }
-
-    private SubQuery _subQueryFromSource;
-
-    /// <summary>
-    /// Method for getting source of a from clause.
-    /// </summary>
-    /// <param name="databaseInfo"></param>
-    /// <returns><see cref="IColumnSource"/></returns>
-    public virtual IColumnSource GetColumnSource (IDatabaseInfo databaseInfo)
-    {
-      ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
-
-      // TODO 1250: Hack, remove
-      var subQueryExpression = FromExpression as SubQueryExpression;
-      if (subQueryExpression != null)
-      {
-        if (_subQueryFromSource == null)
-          _subQueryFromSource = new SubQuery (subQueryExpression.QueryModel, ParseMode.SubQueryInFrom, ItemName);
-        return _subQueryFromSource;
-      }
-
-      return DatabaseInfoUtility.GetTableForFromClause (databaseInfo, this);
-    }
 
     public virtual void TransformExpressions (Func<Expression, Expression> transformation)
     {

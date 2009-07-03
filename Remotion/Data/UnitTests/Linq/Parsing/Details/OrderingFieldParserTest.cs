@@ -38,7 +38,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details
     [SetUp]
     public void SetUp ()
     {
-      _joinedTableContext = new JoinedTableContext();
+      _joinedTableContext = new JoinedTableContext (StubDatabaseInfo.Instance);
       _parser = new OrderingFieldParser (StubDatabaseInfo.Instance);
     }
 
@@ -53,7 +53,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details
       var parseContext = new ParseContext (parsedQuery, new List<FieldDescriptor> (), _joinedTableContext);
       var result = _parser.Parse (ordering.Expression, parseContext, ordering.OrderingDirection);
 
-      var expectedFieldDescriptor = ExpressionHelper.CreateFieldDescriptor (parsedQuery.MainFromClause, typeof (Student).GetProperty ("First"));
+      var expectedFieldDescriptor = ExpressionHelper.CreateFieldDescriptor (_joinedTableContext, parsedQuery.MainFromClause, typeof (Student).GetProperty ("First"));
       Assert.That (result, Is.EqualTo (new OrderingField (expectedFieldDescriptor, OrderingDirection.Asc)));
     }
 
@@ -68,7 +68,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details
       var parseContext = new ParseContext (parsedQuery, new List<FieldDescriptor> (), _joinedTableContext);
       var result = _parser.Parse (ordering.Expression, parseContext, ordering.OrderingDirection);
 
-      var expectedFieldDescriptor = ExpressionHelper.CreateFieldDescriptor (parsedQuery.MainFromClause, typeof (Student).GetProperty ("First"));
+      var expectedFieldDescriptor = ExpressionHelper.CreateFieldDescriptor (_joinedTableContext, parsedQuery.MainFromClause, typeof (Student).GetProperty ("First"));
       Assert.That (result, Is.EqualTo (new OrderingField (expectedFieldDescriptor, OrderingDirection.Asc)));
     }
 
@@ -83,7 +83,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details
       var parseContext = new ParseContext (parsedQuery, new List<FieldDescriptor> (), _joinedTableContext);
       var result = _parser.Parse (ordering.Expression, parseContext, ordering.OrderingDirection);
 
-      FieldDescriptor expectedFieldDescriptor = ExpressionHelper.CreateFieldDescriptor (parsedQuery.MainFromClause, typeof (Student).GetProperty ("Last"));
+      FieldDescriptor expectedFieldDescriptor = ExpressionHelper.CreateFieldDescriptor (_joinedTableContext, parsedQuery.MainFromClause, typeof (Student).GetProperty ("Last"));
       Assert.That (result, Is.EqualTo (new OrderingField (expectedFieldDescriptor, OrderingDirection.Desc)));
     }
 
@@ -99,7 +99,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details
       var parseContext = new ParseContext (parsedQuery, new List<FieldDescriptor> (), _joinedTableContext);
       var result = _parser.Parse (ordering.Expression, parseContext, ordering.OrderingDirection);
 
-      FieldDescriptor expectedFieldDescriptor = ExpressionHelper.CreateFieldDescriptor (parsedQuery.MainFromClause, typeof (Student).GetProperty ("First"));
+      FieldDescriptor expectedFieldDescriptor = ExpressionHelper.CreateFieldDescriptor (_joinedTableContext, parsedQuery.MainFromClause, typeof (Student).GetProperty ("First"));
       Assert.That (result, Is.EqualTo (new OrderingField (expectedFieldDescriptor, OrderingDirection.Asc)));
     }
 
@@ -115,7 +115,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details
       var parseContext = new ParseContext (parsedQuery, new List<FieldDescriptor> (), _joinedTableContext);
       var result = _parser.Parse (ordering.Expression, parseContext, ordering.OrderingDirection);
 
-      FieldDescriptor expectedFieldDescriptor = ExpressionHelper.CreateFieldDescriptor ((FromClauseBase) parsedQuery.BodyClauses[0], typeof (Student).GetProperty ("Last"));
+      FieldDescriptor expectedFieldDescriptor = ExpressionHelper.CreateFieldDescriptor (_joinedTableContext, (FromClauseBase) parsedQuery.BodyClauses[0], typeof (Student).GetProperty ("Last"));
       Assert.That (result, Is.EqualTo (new OrderingField (expectedFieldDescriptor, OrderingDirection.Desc)));
     }
 
@@ -146,7 +146,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details
 
       FromClauseBase fromClause = parsedQuery.MainFromClause;
       PropertyInfo relationMember = typeof (Student_Detail).GetProperty ("Student");
-      IColumnSource sourceTable = fromClause.GetColumnSource (StubDatabaseInfo.Instance); // Student_Detail
+      IColumnSource sourceTable = _joinedTableContext.GetColumnSource (fromClause); // Student_Detail
       Table relatedTable = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, relationMember); // Student
       Tuple<string, string> columns = DatabaseInfoUtility.GetJoinColumnNames (StubDatabaseInfo.Instance, relationMember);
 

@@ -41,7 +41,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details.WhereConditionParsing
       base.SetUp();
 
       _fromClause = ExpressionHelper.CreateMainFromClause_Student ();
-      _fromSource = _fromClause.GetColumnSource (StubDatabaseInfo.Instance);
+      _fromSource = ParseContext.JoinedTableContext.GetColumnSource (_fromClause);
       QueryModel = ExpressionHelper.CreateQueryModel (_fromClause);
       _resolver = new FieldResolver (StubDatabaseInfo.Instance, new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
       _parserRegistry = new WhereConditionParserRegistry (StubDatabaseInfo.Instance);

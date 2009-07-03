@@ -64,7 +64,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
     [SetUp]
     public void SetUp ()
     {
-      _context = new JoinedTableContext();
+      _context = new JoinedTableContext(StubDatabaseInfo.Instance);
       _policy = new SelectFieldAccessPolicy();
       _studentClause = ExpressionHelper.CreateMainFromClause_Student ();
       _studentReference = new QuerySourceReferenceExpression (_studentClause);
@@ -100,7 +100,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
     {
       // s
 
-      IColumnSource table = _studentClause.GetColumnSource (StubDatabaseInfo.Instance);
+      IColumnSource table = _context.GetColumnSource (_studentClause);
       FieldDescriptor fieldDescriptor = new FieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (_studentReference, _context);
 
       var column = new Column (table, "*");
@@ -182,7 +182,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
     [Test]
     public void Resolve_SimpleMemberAccess_InvalidField ()
     {
-      IColumnSource table = _studentClause.GetColumnSource (StubDatabaseInfo.Instance);
+      IColumnSource table = _context.GetColumnSource (_studentClause);
 
       Expression fieldExpression = Expression.MakeMemberAccess (
           _studentReference,
@@ -219,7 +219,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
       FieldDescriptor fieldDescriptor =
           new FieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (_studentDetail_Student_Expression, _context);
 
-      IColumnSource detailTable = _studentDetailClause.GetColumnSource (StubDatabaseInfo.Instance);
+      IColumnSource detailTable = _context.GetColumnSource (_studentDetailClause);
       Table studentTable = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, _studentDetail_Student_Property);
       Tuple<string, string> joinColumns = DatabaseInfoUtility.GetJoinColumnNames (StubDatabaseInfo.Instance, _studentDetail_Student_Property);
       var join = new SingleJoin (new Column (detailTable, joinColumns.A), new Column (studentTable, joinColumns.B));
@@ -237,7 +237,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
       FieldDescriptor fieldDescriptor =
           new FieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (_studentDetailDetail_StudentDetail_Student_Expression, _context);
 
-      IColumnSource detailDetailTable = _studentDetailDetailClause.GetColumnSource (StubDatabaseInfo.Instance);
+      IColumnSource detailDetailTable = _context.GetColumnSource (_studentDetailDetailClause);
       Table detailTable = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, _studentDetailDetail_StudentDetail_Property);
       Table studentTable = DatabaseInfoUtility.GetRelatedTable (StubDatabaseInfo.Instance, _studentDetail_Student_Property);
       Tuple<string, string> innerJoinColumns = DatabaseInfoUtility.GetJoinColumnNames (StubDatabaseInfo.Instance, _studentDetailDetail_StudentDetail_Property);
@@ -263,7 +263,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
 
       FieldDescriptor fieldDescriptor =
           new FieldResolver (StubDatabaseInfo.Instance, _policy).ResolveField (fieldExpression, _context);
-      var subQuery = (SubQuery) fromClause.GetColumnSource (StubDatabaseInfo.Instance);
+      var subQuery = (SubQuery) _context.GetColumnSource (fromClause);
       var column = new Column (subQuery, "IDColumn");
       var expected = new FieldDescriptor (member, new FieldSourcePath (subQuery, new SingleJoin[0]), column);
 
@@ -291,7 +291,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
       var expectedPath = new FieldSourcePathBuilder().BuildFieldSourcePath (
           StubDatabaseInfo.Instance,
           _context,
-          _studentDetailDetailClause.GetColumnSource (StubDatabaseInfo.Instance),
+          _context.GetColumnSource (_studentDetailDetailClause),
           newJoinMembers);
       var expectedFieldDescriptor = new FieldDescriptor (_studentDetail_Student_Property, expectedPath, new Column (expectedPath.LastSource, "IDColumn"));
       Assert.That (actualFieldDescriptor, Is.EqualTo (expectedFieldDescriptor));
@@ -320,7 +320,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
       FieldSourcePath path = new FieldSourcePathBuilder().BuildFieldSourcePath (
           StubDatabaseInfo.Instance,
           _context,
-          _studentDetailDetailClause.GetColumnSource (StubDatabaseInfo.Instance),
+          _context.GetColumnSource (_studentDetailDetailClause),
           newJoinMembers);
       var expectedFieldDescriptor = new FieldDescriptor (null, path, new Column (path.LastSource, "IDColumn"));
       Assert.That (actualFieldDescriptor, Is.EqualTo (expectedFieldDescriptor));
@@ -338,7 +338,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
       FieldDescriptor result = resolver.ResolveField (fieldExpression, _context);
 
       Assert.That (
-          result.Column, Is.EqualTo (new Column (_studentDetailClause.GetColumnSource (StubDatabaseInfo.Instance), "Student_Detail_to_IndustrialSector_FK")));
+          result.Column, Is.EqualTo (new Column (_context.GetColumnSource (_studentDetailClause), "Student_Detail_to_IndustrialSector_FK")));
     }
 
     [Test]

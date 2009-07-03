@@ -31,7 +31,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details.WhereConditionParsing
       var expression = new QuerySourceReferenceExpression (QueryModel.MainFromClause);
       var resolver = new FieldResolver (StubDatabaseInfo.Instance, new WhereFieldAccessPolicy (StubDatabaseInfo.Instance));
 
-      var fromSource = QueryModel.MainFromClause.GetColumnSource (StubDatabaseInfo.Instance);
+      var fromSource = ParseContext.JoinedTableContext.GetColumnSource (QueryModel.MainFromClause);
       var path = new FieldSourcePath (fromSource, new SingleJoin[0]);
       var expectedFieldDescriptor = new FieldDescriptor (null, path, new Column (fromSource, "IDColumn"));
       ICriterion expectedCriterion = expectedFieldDescriptor.Column;

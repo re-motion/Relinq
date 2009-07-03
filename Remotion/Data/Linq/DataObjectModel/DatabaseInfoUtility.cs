@@ -17,26 +17,17 @@ using System;
 using System.Reflection;
 using Remotion.Collections;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.DataObjectModel
 {
   public static class DatabaseInfoUtility
   {
-    private static readonly InterlockedCache<Tuple<IDatabaseInfo, FromClauseBase>, Table> _tableCache =
-        new InterlockedCache<Tuple<IDatabaseInfo, FromClauseBase>, Table>();
-
     public static Table GetTableForFromClause (IDatabaseInfo databaseInfo, FromClauseBase fromClause)
     {
       ArgumentUtility.CheckNotNull ("databaseInfo", databaseInfo);
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
 
-      return _tableCache.GetOrCreateValue (Tuple.NewTuple (databaseInfo, fromClause), key => GetTableFromDatabaseInfo (databaseInfo, fromClause));
-    }
-
-    private static Table GetTableFromDatabaseInfo (IDatabaseInfo databaseInfo, FromClauseBase fromClause)
-    {
       string tableName = databaseInfo.GetTableName (fromClause);
       if (tableName == null)
       {

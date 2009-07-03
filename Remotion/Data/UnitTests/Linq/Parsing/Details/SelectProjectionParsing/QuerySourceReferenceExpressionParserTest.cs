@@ -30,7 +30,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details.SelectProjectionParsing
       var expression = new QuerySourceReferenceExpression (StudentClause);
       var resolver = new FieldResolver (StubDatabaseInfo.Instance, new SelectFieldAccessPolicy());
 
-      var fromSource = StudentClause.GetColumnSource (StubDatabaseInfo.Instance);
+      var fromSource = ParseContext.JoinedTableContext.GetColumnSource (StudentClause);
       var path = new FieldSourcePath (fromSource, new SingleJoin[0]);
       var expectedFieldDescriptor = new FieldDescriptor (null, path, new Column (fromSource, "*"));
       IEvaluation expectedEvaluation = expectedFieldDescriptor.Column;

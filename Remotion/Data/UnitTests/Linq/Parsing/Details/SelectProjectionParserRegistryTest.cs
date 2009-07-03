@@ -18,7 +18,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Data.Linq;
-using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.DataObjectModel;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
@@ -45,7 +44,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details
       _selectProjectionParserRegistry = new SelectProjectionParserRegistry (_databaseInfo, _parseMode);
       
       _parseContext = new ParseContext (
-          ExpressionHelper.CreateQueryModel(), new List<FieldDescriptor>(), new JoinedTableContext());
+          ExpressionHelper.CreateQueryModel(), 
+          new List<FieldDescriptor>(), 
+          new JoinedTableContext(StubDatabaseInfo.Instance));
     }
 
     [Test]
@@ -68,8 +69,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details
         ExpectedMessage = "This version of re-linq does not support subqueries in the select projection of a query.")]
     public void Initialization_AddsErrorParser_ForSubQueryExpression ()
     {
-      SelectProjectionParserRegistry selectProjectionParserRegistry =
-        new SelectProjectionParserRegistry (_databaseInfo, _parseMode);
+      var selectProjectionParserRegistry = new SelectProjectionParserRegistry (_databaseInfo, _parseMode);
 
       var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel());
       var parser = selectProjectionParserRegistry.GetParser (subQueryExpression);
@@ -82,7 +82,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details
     {
       Assert.That (_selectProjectionParserRegistry.GetParsers (typeof (MethodCallExpression)).Count (), Is.EqualTo (1));
 
-      MethodCallExpressionParser methodCallExpressionParser = new MethodCallExpressionParser (_selectProjectionParserRegistry);
+      var methodCallExpressionParser = new MethodCallExpressionParser (_selectProjectionParserRegistry);
       _selectProjectionParserRegistry.RegisterParser (typeof (MethodCallExpression), methodCallExpressionParser);
       Assert.That (_selectProjectionParserRegistry.GetParsers (typeof (MethodCallExpression)).Count (), Is.EqualTo (2));
       Assert.That (_selectProjectionParserRegistry.GetParsers (typeof (MethodCallExpression)).First(), Is.SameAs (methodCallExpressionParser));

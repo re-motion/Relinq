@@ -46,7 +46,7 @@ namespace Remotion.Data.Linq.DataObjectModel
     
     public override bool Equals (object obj)
     {
-      SubQuery other = obj as SubQuery;
+      var other = obj as SubQuery;
       return other != null && object.Equals (QueryModel, other.QueryModel) && object.Equals (Alias, other.Alias);
     }
 

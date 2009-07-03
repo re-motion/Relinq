@@ -42,9 +42,9 @@ namespace Remotion.Data.Linq.Parsing.FieldResolving
     {
       ArgumentUtility.CheckNotNull ("fieldAccessExpression", fieldAccessExpression);
       
-      var result = FieldResolverVisitor.ParseFieldAccess(DatabaseInfo, fieldAccessExpression, _policy.OptimizeRelatedKeyAccess());
+      var result = FieldResolverVisitor.ParseFieldAccess (DatabaseInfo, fieldAccessExpression, _policy.OptimizeRelatedKeyAccess());
       var clause = result.QuerySourceReferenceExpression.ReferencedClause;
-      return CreateFieldDescriptor (clause.GetColumnSource (DatabaseInfo), result.QuerySourceReferenceExpression, result.AccessedMember, result.JoinMembers, joinedTableContext);
+      return CreateFieldDescriptor (joinedTableContext.GetColumnSource (clause), result.QuerySourceReferenceExpression, result.AccessedMember, result.JoinMembers, joinedTableContext);
     }
 
     private FieldDescriptor CreateFieldDescriptor (IColumnSource firstSource, QuerySourceReferenceExpression referenceExpression, MemberInfo accessedMember, IEnumerable<MemberInfo> joinMembers, JoinedTableContext joinedTableContext)

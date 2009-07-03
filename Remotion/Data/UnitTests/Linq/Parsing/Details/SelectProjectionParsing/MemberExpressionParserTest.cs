@@ -36,7 +36,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details.SelectProjectionParsing
       var parser = new MemberExpressionParser (resolver);
       var fieldDescriptorCollection = new List<FieldDescriptor>();
       MemberExpression memberExpression = Expression.MakeMemberAccess (StudentReference, typeof (Student).GetProperty ("ID"));
-      IColumnSource fromSource = StudentClause.GetColumnSource (StubDatabaseInfo.Instance);
+      IColumnSource fromSource = ParseContext.JoinedTableContext.GetColumnSource (StudentClause);
       var path = new FieldSourcePath (fromSource, new SingleJoin[0]);
       var expectedFieldDescriptor = new FieldDescriptor (null, path, new Column (fromSource, "IDColumn"));
 
