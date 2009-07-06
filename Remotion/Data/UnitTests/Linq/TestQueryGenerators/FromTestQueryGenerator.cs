@@ -47,6 +47,13 @@ namespace Remotion.Data.UnitTests.Linq.TestQueryGenerators
              select s1;
     }
 
+    public static IQueryable<Student> CreateFromQueryWithMemberQuerySource_InMainFromClauseOfSubQuery (IQueryable<IndustrialSector> source)
+    {
+      return from sector in source
+             from s1 in (from s2 in sector.Students select s2)
+             select s1;
+    }
+
     public static IQueryable<Student> CreateFromQueryWithMemberQuerySourceAndOptimizableJoin (IQueryable<Student_Detail> source)
     {
       return from sd in source

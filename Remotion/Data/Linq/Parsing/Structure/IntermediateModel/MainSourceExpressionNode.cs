@@ -30,7 +30,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public class MainSourceExpressionNode : IQuerySourceExpressionNode
   {
-    public MainSourceExpressionNode (string associatedIdentifier,Expression expression)
+    public MainSourceExpressionNode (string associatedIdentifier, Expression expression)
     {
       ArgumentUtility.CheckNotNullOrEmpty ("associatedIdentifier", associatedIdentifier);
       ArgumentUtility.CheckNotNull ("expression", expression);

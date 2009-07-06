@@ -173,7 +173,7 @@ namespace Remotion.Data.UnitTests.Linq.Transformations
     }
 
     [Test]
-    [Ignore ("TODO 1268")]
+    [Ignore ("TODO 1308")]
     public void IntegrationTest_TransformedQueryModel ()
     {
       var query = from s1 in ExpressionHelper.CreateQuerySource ()

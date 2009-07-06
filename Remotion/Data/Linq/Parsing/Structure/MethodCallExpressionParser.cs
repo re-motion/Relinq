@@ -67,15 +67,18 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
     private object ConvertExpressionToParameterValue (Expression expression)
     {
-      // Each argument of a MethodCallExpression will either be a UnaryExpression/Quote, which represents an expression passed to the method,
+      // Each argument of a MethodCallExpression will either be a UnaryExpression/Quote, which represents an expression passed to a Queryable method,
+      // a LambdaExpression, which represents an expression passed to an Enumerable method,
       // a ConstantExpression that contains the expression passed to the method,
       // or any other expression that represents a constant passed to the method.
-      // We only support the former two, to support the latter, PartialTreeEvaluatingVisitor must be used.
+      // We only support the former three, to support the latter, PartialTreeEvaluatingVisitor must be used.
 
       if (expression.NodeType == ExpressionType.Constant)
         return ((ConstantExpression) expression).Value;
       else if (expression.NodeType == ExpressionType.Quote)
         return ((UnaryExpression) expression).Operand;
+      else if (expression.NodeType == ExpressionType.Lambda)
+        return expression;
       else
       {
         var message = string.Format (

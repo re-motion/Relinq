@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
@@ -51,14 +52,29 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     public void Parse_WithUnary ()
     {
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (q => q.Where (i => i > 5));
-      var whereCondition = (LambdaExpression) ((UnaryExpression) methodCallExpression.Arguments[1]).Operand;
 
       var result = _parser.Parse ("x", _source, methodCallExpression);
 
+      var whereCondition = (LambdaExpression) ((UnaryExpression) methodCallExpression.Arguments[1]).Operand;
       Assert.That (result, Is.InstanceOfType (typeof (WhereExpressionNode)));
       Assert.That (((WhereExpressionNode) result).AssociatedIdentifier, Is.EqualTo ("x"));
       Assert.That (((WhereExpressionNode) result).Source, Is.SameAs (_source));
       Assert.That (((WhereExpressionNode) result).Predicate, Is.SameAs (whereCondition));
+    }
+
+    [Test]
+    public void Parse_WithLambda ()
+    {
+      var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IEnumerable<Student>, IEnumerable<Student>> (e => e.Select (s => s));
+
+      var result = _parser.Parse ("x", _source, methodCallExpression);
+
+      Assert.That (result, Is.InstanceOfType (typeof (SelectExpressionNode)));
+      Assert.That (((SelectExpressionNode) result).AssociatedIdentifier, Is.EqualTo ("x"));
+      Assert.That (((SelectExpressionNode) result).Source, Is.SameAs (_source));
+
+      var expectedSelector = ExpressionHelper.CreateLambdaExpression<Student, Student>(s => s);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedSelector, ((SelectExpressionNode) result).Selector);
     }
 
     [Test]
