@@ -159,7 +159,7 @@
     <Compile Include="Parsing\Structure\MethodCallExpressionNodeTypeRegistry.cs" />
     <Compile Include="Parsing\Structure\ExpressionTreeParser.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\MethodCallExpressionNodeFactory.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\ConstantExpressionNode.cs" />
+    <Compile Include="Parsing\Structure\IntermediateModel\MainSourceExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\MethodCallExpressionNodeBase.cs" />
     <Compile Include="Clauses\Expressions\QuerySourceReferenceExpression.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\IQuerySourceExpressionNode.cs" />

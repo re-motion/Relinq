@@ -26,7 +26,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
   /// <summary>
   /// Takes an <see cref="Expression"/> tree and parses it into a <see cref="QueryModel"/> by use of an <see cref="ExpressionTreeParser"/>.
   /// It first transforms the <see cref="Expression"/> tree into a chain of <see cref="IExpressionNode"/> instances, and then calls 
-  /// <see cref="ConstantExpressionNode.CreateMainFromClause"/> and <see cref="IExpressionNode.Apply"/> in order to instantiate all the 
+  /// <see cref="MainSourceExpressionNode.CreateMainFromClause"/> and <see cref="IExpressionNode.Apply"/> in order to instantiate all the 
   /// <see cref="IClause"/>s. With those, a <see cref="QueryModel"/> is created and returned.
   /// </summary>
   public class QueryParser
@@ -78,20 +78,20 @@ namespace Remotion.Data.Linq.Parsing.Structure
     }
 
     /// <summary>
-    /// Applies all nodes to a <see cref="QueryModel"/>, which is created by the trailing <see cref="ConstantExpressionNode"/> in the 
+    /// Applies all nodes to a <see cref="QueryModel"/>, which is created by the trailing <see cref="MainSourceExpressionNode"/> in the 
     /// <paramref name="node"/> chain.
     /// </summary>
     /// <param name="resultType">The result type to put into the <see cref="QueryModel"/>.</param>
     /// <param name="node">The entry point to the <see cref="IExpressionNode"/> chain.</param>
     /// <param name="clauseGenerationContext">The clause generation context collecting context information during the parsing process.</param>
-    /// <returns>A <see cref="QueryModel"/> created by the training <see cref="ConstantExpressionNode"/> and transformed by each node in the
+    /// <returns>A <see cref="QueryModel"/> created by the training <see cref="MainSourceExpressionNode"/> and transformed by each node in the
     /// <see cref="IExpressionNode"/> chain.</returns>
     private QueryModel ApplyAllNodes (Type resultType, IExpressionNode node, ClauseGenerationContext clauseGenerationContext)
     {
       if (node.Source == null) // this is the last node, create a MainFromClause and a QueryModel
       {
-        var constantExpressionNode = (ConstantExpressionNode) node;
-        var mainFromClause = constantExpressionNode.CreateMainFromClause (clauseGenerationContext);
+        var mainSourceExpressionNode = (MainSourceExpressionNode) node;
+        var mainFromClause = mainSourceExpressionNode.CreateMainFromClause (clauseGenerationContext);
         var defaultSelectClause = new SelectClause (new QuerySourceReferenceExpression (mainFromClause));
         return new QueryModel (resultType, mainFromClause, defaultSelectClause);
       }

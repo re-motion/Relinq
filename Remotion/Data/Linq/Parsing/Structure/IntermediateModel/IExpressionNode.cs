@@ -42,7 +42,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     /// is replaced.</param>
     /// <param name="clauseGenerationContext">Context information used during the current parsing process. The <see cref="QuerySourceClauseMapping"/>
     /// contained in this structure maps <see cref="IQuerySourceExpressionNode"/>s  to the clauses created from them. Implementers that also implement 
-    /// <see cref="IQuerySourceExpressionNode"/> (such as  <see cref="ConstantExpressionNode"/> or <see cref="SelectManyExpressionNode"/>) must add 
+    /// <see cref="IQuerySourceExpressionNode"/> (such as  <see cref="MainSourceExpressionNode"/> or <see cref="SelectManyExpressionNode"/>) must add 
     /// their clauses to the mapping in <see cref="Apply"/> if they want to be able to implement <see cref="Resolve"/> correctly.</param>
     /// <returns>An equivalent of <paramref name="expressionToBeResolved"/> with each occurrence of <paramref name="inputParameter"/> replaced by
     /// the projection data streaming out of this <see cref="IExpressionNode"/>.</returns>
@@ -59,11 +59,11 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     /// <param name="clauseGenerationContext">Context information used during the current parsing process. The <see cref="QuerySourceClauseMapping"/>
     /// contained in this structure maps <see cref="IQuerySourceExpressionNode"/>s to the clauses created from them. Implementers that 
     /// also implement <see cref="IQuerySourceExpressionNode"/> (such as 
-    /// <see cref="ConstantExpressionNode"/> or <see cref="SelectManyExpressionNode"/>) must add their clauses to the mapping in 
+    /// <see cref="MainSourceExpressionNode"/> or <see cref="SelectManyExpressionNode"/>) must add their clauses to the mapping in 
     /// <see cref="Apply"/> in order to be able to implement <see cref="Resolve"/> correctly.</param>
     /// <remarks>
-    /// For <see cref="ConstantExpressionNode"/> objects, which mark the end of an <see cref="IExpressionNode"/> chain, this method must not be called.
-    /// Instead, use <see cref="ConstantExpressionNode.CreateMainFromClause"/> to generate a <see cref="MainFromClause"/> and instantiate a new 
+    /// For <see cref="MainSourceExpressionNode"/> objects, which mark the end of an <see cref="IExpressionNode"/> chain, this method must not be called.
+    /// Instead, use <see cref="MainSourceExpressionNode.CreateMainFromClause"/> to generate a <see cref="MainFromClause"/> and instantiate a new 
     /// <see cref="QueryModel"/> with that clause.
     /// </remarks>
     void Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext);

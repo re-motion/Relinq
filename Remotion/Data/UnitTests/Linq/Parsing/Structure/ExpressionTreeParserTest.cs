@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
@@ -49,24 +50,29 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
+    public void ParseTree_Expression ()
+    {
+      var expression = Expression.MakeMemberAccess (new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Student ()), typeof (Student).GetProperty ("Friends"));
+
+      var result = _expressionTreeParser.ParseTree (expression);
+
+      Assert.That (result, Is.InstanceOfType (typeof (MainSourceExpressionNode)));
+      Assert.That (((MainSourceExpressionNode) result).Expression, Is.SameAs (expression));
+      Assert.That (((MainSourceExpressionNode) result).QuerySourceElementType, Is.SameAs (typeof (Student)));
+      Assert.That (((MainSourceExpressionNode) result).AssociatedIdentifier, Is.EqualTo ("<generated>_0"));
+    }
+
+    [Test]
     public void ParseTree_ConstantExpression ()
     {
       var constantExpression = Expression.Constant (_intSource);
 
       var result = _expressionTreeParser.ParseTree (constantExpression);
 
-      Assert.That (result, Is.InstanceOfType (typeof (ConstantExpressionNode)));
-      Assert.That (((ConstantExpressionNode) result).Value, Is.SameAs (_intSource));
-      Assert.That (((ConstantExpressionNode) result).QuerySourceElementType, Is.SameAs (typeof (int)));
-      Assert.That (((ConstantExpressionNode) result).AssociatedIdentifier, Is.EqualTo ("<generated>_0"));
-    }
-
-    [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Query sources cannot be null.")]
-    public void ParseTree_ConstantExpression_Null ()
-    {
-      var constantExpression = Expression.Constant (null, typeof (IQueryable<int>));
-      _expressionTreeParser.ParseTree (constantExpression);
+      Assert.That (result, Is.InstanceOfType (typeof (MainSourceExpressionNode)));
+      Assert.That (((MainSourceExpressionNode) result).Expression, Is.SameAs (constantExpression));
+      Assert.That (((MainSourceExpressionNode) result).QuerySourceElementType, Is.SameAs (typeof (int)));
+      Assert.That (((MainSourceExpressionNode) result).AssociatedIdentifier, Is.EqualTo ("<generated>_0"));
     }
 
     [Test]
@@ -77,20 +83,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var result1 = _expressionTreeParser.ParseTree (constantExpression);
       var result2 = _expressionTreeParser.ParseTree (constantExpression);
 
-      Assert.That (((ConstantExpressionNode) result1).AssociatedIdentifier, Is.EqualTo ("<generated>_0"));
-      Assert.That (((ConstantExpressionNode) result2).AssociatedIdentifier, Is.EqualTo ("<generated>_1"));
-    }
-
-    [Test]
-    public void ParseTree_ConstantExpression_TypeNotInferrableFromValue ()
-    {
-      var constantExpression = Expression.Constant (new Student[0], typeof (object[]));
-
-      var result = _expressionTreeParser.ParseTree (constantExpression);
-
-      Assert.That (result, Is.InstanceOfType (typeof (ConstantExpressionNode)));
-      Assert.That (((ConstantExpressionNode) result).Value, Is.InstanceOfType (typeof (Student[])));
-      Assert.That (((ConstantExpressionNode) result).QuerySourceElementType, Is.SameAs (typeof (object)));
+      Assert.That (((MainSourceExpressionNode) result1).AssociatedIdentifier, Is.EqualTo ("<generated>_0"));
+      Assert.That (((MainSourceExpressionNode) result2).AssociatedIdentifier, Is.EqualTo ("<generated>_1"));
     }
 
     [Test]
@@ -106,8 +100,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (((SelectExpressionNode) result).Selector, Is.SameAs (selector));
 
       var source = ((SelectExpressionNode) result).Source;
-      Assert.That (source, Is.InstanceOfType (typeof (ConstantExpressionNode)));
-      Assert.That (((ConstantExpressionNode) source).Value, Is.SameAs (querySource));
+      Assert.That (source, Is.InstanceOfType (typeof (MainSourceExpressionNode)));
+      Assert.That (((ConstantExpression) ((MainSourceExpressionNode) source).Expression).Value, Is.SameAs (querySource));
     }
 
     [Test]
@@ -126,13 +120,13 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     public void ParseTree_MethodCallExpression_PropagatesNameToSourceNode ()
     {
       var querySource = ExpressionHelper.CreateQuerySource ();
-      var expression = ExpressionHelper.MakeExpression (() => querySource.Select (s => s.ID)); // "s" gets propagated to ConstantExpressionNode
+      var expression = ExpressionHelper.MakeExpression (() => querySource.Select (s => s.ID)); // "s" gets propagated to MainSourceExpressionNode
 
       var result = _expressionTreeParser.ParseTree (expression);
 
       var source = ((SelectExpressionNode) result).Source;
-      Assert.That (source, Is.InstanceOfType (typeof (ConstantExpressionNode)));
-      Assert.That (((ConstantExpressionNode) source).AssociatedIdentifier, Is.EqualTo ("s"));
+      Assert.That (source, Is.InstanceOfType (typeof (MainSourceExpressionNode)));
+      Assert.That (((MainSourceExpressionNode) source).AssociatedIdentifier, Is.EqualTo ("s"));
     }
 
     [Test]
@@ -153,16 +147,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (((WhereExpressionNode) where).Predicate, Is.SameAs (predicate));
 
       var source = ((WhereExpressionNode) where).Source;
-      Assert.That (source, Is.InstanceOfType (typeof (ConstantExpressionNode)));
-      Assert.That (((ConstantExpressionNode) source).Value, Is.SameAs (querySource));
-    }
-
-    [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Cannot parse expression '() => 0' as it is of type 'Lambda'. Only "
-        + "MethodCallExpressions and expressions that can be evaluated to a constant query source can be parsed.")]
-    public void ParseTree_InvalidExpression ()
-    {
-      _expressionTreeParser.ParseTree (ExpressionHelper.CreateLambdaExpression ());
+      Assert.That (source, Is.InstanceOfType (typeof (MainSourceExpressionNode)));
+      Assert.That (((ConstantExpression) ((MainSourceExpressionNode) source).Expression).Value, Is.SameAs (querySource));
     }
 
     [Test]

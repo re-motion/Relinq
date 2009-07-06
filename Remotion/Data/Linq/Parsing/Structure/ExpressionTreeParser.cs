@@ -14,7 +14,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
@@ -63,37 +62,18 @@ namespace Remotion.Data.Linq.Parsing.Structure
         return ParseMethodCallExpression (methodCallExpression, associatedIdentifier);
       else
       {
-        var constantExpression = expression as ConstantExpression;
-        if (constantExpression == null)
+        try
+        {
+          return new MainSourceExpressionNode (associatedIdentifier, expression);
+        }
+        catch (ArgumentTypeException ex)
         {
           var message = string.Format (
-              "Cannot parse expression '{0}' as it is of type '{1}'. Only MethodCallExpressions and expressions that can be evaluated to a constant "
-              + "query source can be parsed.", 
-              expression, 
-              expression.NodeType) ;
-          throw new ParserException (message);
+              "Cannot parse expression '{0}' as it has an unsupported type. Only query sources (that is, expressions that implement IEnumerable) "
+              + "can be parsed.",
+              expression);
+          throw new ParserException (message, ex);
         }
-
-        return ParseConstantExpression(constantExpression, associatedIdentifier);
-      }
-    }
-
-    private IExpressionNode ParseConstantExpression (ConstantExpression constantExpression, string associatedIdentifier)
-    {
-      if (constantExpression.Value == null)
-        throw new ParserException ("Query sources cannot be null.");
-
-      try
-      {
-        return new ConstantExpressionNode (associatedIdentifier, constantExpression.Type, constantExpression.Value);
-      }
-      catch (ArgumentTypeException ex)
-      {
-        var message = string.Format (
-            "Cannot parse expression '{0}' as it has an unsupported type. Only query sources (that is, expressions that implement IEnumerable) "
-            + "can be parsed.",
-            constantExpression);
-        throw new ParserException (message, ex);
       }
     }
 

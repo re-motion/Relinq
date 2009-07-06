@@ -24,14 +24,14 @@ using Remotion.Utilities;
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 {
   [TestFixture]
-  public class ConstantExpressionNodeTest : ExpressionNodeTestBase
+  public class MainSouceExpressionNodeTest : ExpressionNodeTestBase
   {
-    private ConstantExpressionNode _node;
+    private MainSourceExpressionNode _node;
 
     public override void SetUp ()
     {
       base.SetUp ();
-      _node = new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3 });
+      _node = ExpressionNodeObjectMother.CreateMainSource ();
     }
 
     [Test]
@@ -47,7 +47,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
         )]
     public void Initialization_TypeNotEnumerable ()
     { 
-      new ConstantExpressionNode ("x", typeof (int), 5);
+      new MainSourceExpressionNode ("x", Expression.Constant(5));
     }
 
 
@@ -65,7 +65,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Cannot resolve with a ConstantExpressionNode for which no clause was "
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Cannot resolve with a MainSourceExpressionNode for which no clause was "
         + "created. Be sure to call CreateClause before calling Resolve, and pass in the same QuerySourceClauseMapping to both methods.")]
     public void Resolve_WithoutClause ()
     {

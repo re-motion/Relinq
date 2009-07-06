@@ -33,7 +33,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [SetUp]
     public virtual void SetUp ()
     {
-      SourceNode = ExpressionNodeObjectMother.CreateConstant();
+      SourceNode = ExpressionNodeObjectMother.CreateMainSource();
       QuerySourceClauseMapping = new QuerySourceClauseMapping();
       ClauseGenerationContext = new ClauseGenerationContext(
           QuerySourceClauseMapping, 
@@ -45,7 +45,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       QueryModel = new QueryModel (typeof (IQueryable<Student>), SourceClause, new SelectClause (SourceReference));
     }
 
-    public ConstantExpressionNode SourceNode { get; private set; }
+    public MainSourceExpressionNode SourceNode { get; private set; }
     public MainFromClause SourceClause { get; private set; }
     public QuerySourceReferenceExpression SourceReference { get; private set; }
     public ClauseGenerationContext ClauseGenerationContext { get; private set; }

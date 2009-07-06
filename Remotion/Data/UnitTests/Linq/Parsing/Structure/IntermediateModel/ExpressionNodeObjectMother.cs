@@ -15,16 +15,15 @@
 // 
 using System;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 {
   public static class ExpressionNodeObjectMother
   {
-    public static ConstantExpressionNode CreateConstant ()
+    public static MainSourceExpressionNode CreateMainSource ()
     {
-      return new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3 });
+      return new MainSourceExpressionNode ("x", Expression.Constant (new[] { 1, 2, 3 }));
     }
 
     public static SelectManyExpressionNode CreateSelectMany (IExpressionNode source)

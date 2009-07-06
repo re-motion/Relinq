@@ -28,7 +28,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [SetUp]
     public void SetUp ()
     {
-      _cache = new ResolvedExpressionCache (ExpressionNodeObjectMother.CreateConstant ());
+      _cache = new ResolvedExpressionCache (ExpressionNodeObjectMother.CreateMainSource ());
     }
 
     [Test]

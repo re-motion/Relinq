@@ -20,6 +20,7 @@ using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
+using Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 {
@@ -27,13 +28,13 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
   public class QuerySourceClauseMappingTest
   {
     private QuerySourceClauseMapping _mapping;
-    private ConstantExpressionNode _node;
+    private MainSourceExpressionNode _node;
     private MainFromClause _clause;
 
     [SetUp]
     public void SetUp ()
     {
-      _node = new ConstantExpressionNode ("x", typeof (int[]), new[] { 1, 2, 3 });
+      _node = ExpressionNodeObjectMother.CreateMainSource ();
       _mapping = new QuerySourceClauseMapping ();
       _clause = ExpressionHelper.CreateMainFromClause ();
     }

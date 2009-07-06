@@ -31,7 +31,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [SetUp]
     public void SetUp ()
     {
-      _source = ExpressionNodeObjectMother.CreateConstant();
+      _source = ExpressionNodeObjectMother.CreateMainSource();
       _parseInfo = new MethodCallExpressionParseInfo ("foo", _source, ExpressionHelper.CreateMethodCallExpression());
     }
 

@@ -30,7 +30,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
   {
     private MethodCallExpressionNodeTypeRegistry _nodeTypeRegistry;
     private MethodCallExpressionParser _parser;
-    private ConstantExpressionNode _source;
+    private MainSourceExpressionNode _source;
 
     [SetUp]
     public void SetUp ()
@@ -44,7 +44,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 
       _parser = new MethodCallExpressionParser (_nodeTypeRegistry);
 
-      _source = ExpressionNodeObjectMother.CreateConstant();
+      _source = ExpressionNodeObjectMother.CreateMainSource();
     }
 
     [Test]
