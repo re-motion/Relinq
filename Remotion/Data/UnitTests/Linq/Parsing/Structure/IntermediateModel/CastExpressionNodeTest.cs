@@ -15,7 +15,6 @@
 // 
 using System;
 using System.Linq;
-using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
@@ -35,10 +34,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void SupportedMethod ()
+    public void SupportedMethods ()
     {
-      MethodInfo method = GetGenericMethodDefinition (q => q.Cast<int> ());
-      Assert.That (CastExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_Generic (CastExpressionNode.SupportedMethods, q => q.Cast<int> (), e => e.Cast<int> ());
     }
 
     [Test]

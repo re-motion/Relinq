@@ -33,7 +33,9 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public static readonly MethodInfo[] SupportedMethods = new[]
                                                            {
                                                                GetSupportedMethod (() => Queryable.Min<object> (null)),
-                                                               GetSupportedMethod (() => Queryable.Min<object, object> (null, null))
+                                                               GetSupportedMethod (() => Queryable.Min<object, object> (null, null)),
+                                                               GetSupportedMethod (() => Enumerable.Min<object> (null)),
+                                                               GetSupportedMethod (() => Enumerable.Min<object, object> (null, null)),
                                                            };
 
     public MinExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalSelector)

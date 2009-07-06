@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -57,16 +58,28 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       get { return (i => i.ToString ()); }
     }
 
-    protected MethodInfo GetGenericMethodDefinition<TReturn> (Expression<Func<IQueryable<int>, TReturn>> methodCallLambda)
+    protected MethodInfo GetGenericMethodDefinition<TReturn> (Expression<Func<IQueryable<object>, TReturn>> methodCallLambda)
     {
       return GetMethod (methodCallLambda).GetGenericMethodDefinition ();
     }
 
-    protected MethodInfo GetMethod<TReturn> (Expression<Func<IQueryable<int>, TReturn>> methodCallLambda)
+    protected MethodInfo GetMethod<TReturn> (Expression<Func<IQueryable<object>, TReturn>> methodCallLambda)
     {
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression (methodCallLambda);
       return methodCallExpression.Method;
     }
+
+    protected MethodInfo GetGenericMethodDefinition_Enumerable<TReturn> (Expression<Func<IEnumerable<object>, TReturn>> methodCallLambda)
+    {
+      return GetMethod_Enumerable (methodCallLambda).GetGenericMethodDefinition ();
+    }
+
+    protected MethodInfo GetMethod_Enumerable<TReturn> (Expression<Func<IEnumerable<object>, TReturn>> methodCallLambda)
+    {
+      var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression (methodCallLambda);
+      return methodCallExpression.Method;
+    }
+
 
 
     protected void TestApply (ResultModificationExpressionNodeBase node, Type expectedResultModificationType)
@@ -119,6 +132,30 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var methodCallExpression = Expression.Call (method, arguments.ToArray());
 
       return new MethodCallExpressionParseInfo ("x", SourceNode, methodCallExpression);
+    }
+
+    protected void AssertSupportedMethod_Generic<TResult1, TResult2> (
+        MethodInfo[] supportedMethods, 
+        Expression<Func<IQueryable<object>, TResult1>> queryableMethodCall,
+        Expression<Func<IEnumerable<object>, TResult2>> enumerableMethodCall)
+    {
+      var queryableMethod = GetGenericMethodDefinition (queryableMethodCall);
+      Assert.That (supportedMethods, List.Contains (queryableMethod));
+
+      var enumerableMethod = GetGenericMethodDefinition_Enumerable (enumerableMethodCall);
+      Assert.That (supportedMethods, List.Contains (enumerableMethod));
+    }
+
+    protected void AssertSupportedMethod_NonGeneric<TResult> (
+        MethodInfo[] supportedMethods,
+        Expression<Func<IQueryable<object>, TResult>> queryableMethodCall,
+        Expression<Func<IEnumerable<object>, TResult>> enumerableMethodCall)
+    {
+      var queryableMethod = GetMethod (queryableMethodCall);
+      Assert.That (supportedMethods, List.Contains (queryableMethod));
+
+      var enumerableMethod = GetMethod_Enumerable (enumerableMethodCall);
+      Assert.That (supportedMethods, List.Contains (enumerableMethod));
     }
   }
 }

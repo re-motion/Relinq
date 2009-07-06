@@ -47,29 +47,25 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void SupportedMethod_WithoutPredicate ()
     {
-      MethodInfo method = GetGenericMethodDefinition (q => q.Single ());
-      Assert.That (SingleExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_Generic (SingleExpressionNode.SupportedMethods, q => q.Single (), e => e.Single ());
     }
 
     [Test]
     public void SupportedMethod_WithPredicate ()
     {
-      MethodInfo method = GetGenericMethodDefinition (q => q.Single (i => i > 5));
-      Assert.That (SingleExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_Generic (SingleExpressionNode.SupportedMethods, q => q.Single (o => o == null), e => e.Single (o => o == null));
     }
 
     [Test]
     public void SupportedMethod_SingleOrDefault_WithoutPredicate ()
     {
-      MethodInfo method = GetGenericMethodDefinition (q => q.SingleOrDefault ());
-      Assert.That (SingleExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_Generic (SingleExpressionNode.SupportedMethods, q => q.SingleOrDefault (), e => e.SingleOrDefault ());
     }
 
     [Test]
     public void SupportedMethod_SingleOrDefault_WithPredicate ()
     {
-      MethodInfo method = GetGenericMethodDefinition (q => q.SingleOrDefault (i => i > 5));
-      Assert.That (SingleExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_Generic (SingleExpressionNode.SupportedMethods, q => q.SingleOrDefault (o => o == null), e => e.SingleOrDefault (o => o == null));
     }
 
     [Test]

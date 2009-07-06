@@ -31,7 +31,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   {
     public static readonly MethodInfo[] SupportedMethods = new[]
                                                            {
-                                                               GetSupportedMethod (() => Queryable.Where<object> (null, o => true))
+                                                               GetSupportedMethod (() => Queryable.Where<object> (null, o => true)),
+                                                               GetSupportedMethod (() => Enumerable.Where<object> (null, o => true)),
                                                            };
 
     private readonly ResolvedExpressionCache _cachedPredicate;

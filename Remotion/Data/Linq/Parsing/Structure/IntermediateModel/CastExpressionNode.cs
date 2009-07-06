@@ -17,7 +17,6 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Remotion.Data.Linq.Clauses;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
@@ -31,7 +30,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   {
     public static readonly MethodInfo[] SupportedMethods = new[]
                                                            {
-                                                               GetSupportedMethod (() => Queryable.Cast<object> (null))
+                                                               GetSupportedMethod (() => Queryable.Cast<object> (null)),
+                                                               GetSupportedMethod (() => Enumerable.Cast<object> (null)),
                                                            };
 
     public CastExpressionNode (MethodCallExpressionParseInfo parseInfo)

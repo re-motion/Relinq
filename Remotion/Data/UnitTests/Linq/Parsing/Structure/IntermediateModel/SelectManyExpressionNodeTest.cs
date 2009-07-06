@@ -45,8 +45,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void SupportedMethod_WithoutPosition ()
     {
-      MethodInfo method = GetGenericMethodDefinition (q => q.SelectMany (i => new[] { 1, 2, 3 }, (i, j) => new { i, j }));
-      Assert.That (SelectManyExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_Generic (SelectManyExpressionNode.SupportedMethods, q => q.SelectMany (i => new[] { 1, 2, 3 }, (i, j) => new { i, j }), e => e.SelectMany (i => new[] { 1, 2, 3 }, (i, j) => new { i, j }));
     }
 
     [Test]

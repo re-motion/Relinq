@@ -32,7 +32,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   {
     public static readonly MethodInfo[] SupportedMethods = new[]
                                                            {
-                                                               GetSupportedMethod (() => Queryable.Select<object, object> (null, o => null))
+                                                               GetSupportedMethod (() => Queryable.Select<object, object> (null, o => null)),
+                                                               GetSupportedMethod (() => Enumerable.Select<object, object> (null, o => null)),
                                                            };
 
     private readonly ResolvedExpressionCache _cachedSelector;

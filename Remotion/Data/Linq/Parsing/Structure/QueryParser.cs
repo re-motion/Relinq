@@ -71,8 +71,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
       var node = _expressionTreeParser.ParseTree (expressionTreeRoot);
 
-      var clauseGenerationContext = new ClauseGenerationContext (
-          new QuerySourceClauseMapping(), _expressionTreeParser.NodeTypeRegistry);
+      var clauseGenerationContext = new ClauseGenerationContext (new QuerySourceClauseMapping(), _expressionTreeParser.NodeTypeRegistry);
 
       QueryModel queryModel = ApplyAllNodes (expressionTreeRoot.Type, node, clauseGenerationContext);
       return queryModel;

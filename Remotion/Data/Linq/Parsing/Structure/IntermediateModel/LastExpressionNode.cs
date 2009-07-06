@@ -38,7 +38,11 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Queryable.Last<object> (null)),
                                                                GetSupportedMethod (() => Queryable.Last<object> (null, null)),
                                                                GetSupportedMethod (() => Queryable.LastOrDefault<object> (null)),
-                                                               GetSupportedMethod (() => Queryable.LastOrDefault<object> (null, null))
+                                                               GetSupportedMethod (() => Queryable.LastOrDefault<object> (null, null)),
+                                                               GetSupportedMethod (() => Enumerable.Last<object> (null)),
+                                                               GetSupportedMethod (() => Enumerable.Last<object> (null, null)),
+                                                               GetSupportedMethod (() => Enumerable.LastOrDefault<object> (null)),
+                                                               GetSupportedMethod (() => Enumerable.LastOrDefault<object> (null, null)),
                                                            };
 
     public LastExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalPredicate)

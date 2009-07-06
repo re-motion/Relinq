@@ -34,7 +34,9 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public static readonly MethodInfo[] SupportedMethods = new[]
                                                            {
                                                                GetSupportedMethod (() => Queryable.Count<object> (null)),
-                                                               GetSupportedMethod (() => Queryable.Count<object> (null, null))
+                                                               GetSupportedMethod (() => Queryable.Count<object> (null, null)),
+                                                               GetSupportedMethod (() => Enumerable.Count<object> (null)),
+                                                               GetSupportedMethod (() => Enumerable.Count<object> (null, null)),
                                                            };
 
 

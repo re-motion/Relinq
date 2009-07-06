@@ -47,29 +47,25 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void SupportedMethod_WithoutPredicate ()
     {
-      MethodInfo method = GetGenericMethodDefinition (q => q.Last ());
-      Assert.That (LastExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_Generic (LastExpressionNode.SupportedMethods, q => q.Last (), e => e.Last ());
     }
 
     [Test]
     public void SupportedMethod_WithPredicate ()
     {
-      MethodInfo method = GetGenericMethodDefinition (q => q.Last (i => i > 5));
-      Assert.That (LastExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_Generic (LastExpressionNode.SupportedMethods, q => q.Last (o => o == null), e => e.Last (o => o == null));
     }
 
     [Test]
     public void SupportedMethod_LastOrDefault_WithoutPredicate ()
     {
-      MethodInfo method = GetGenericMethodDefinition (q => q.LastOrDefault ());
-      Assert.That (LastExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_Generic (LastExpressionNode.SupportedMethods, q => q.LastOrDefault (), e => e.LastOrDefault ());
     }
 
     [Test]
     public void SupportedMethod_LastOrDefault_WithPredicate ()
     {
-      MethodInfo method = GetGenericMethodDefinition (q => q.LastOrDefault (i => i > 5));
-      Assert.That (LastExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_Generic (LastExpressionNode.SupportedMethods, q => q.LastOrDefault (o => o == null), e => e.LastOrDefault (o => o == null));
     }
 
     [Test]

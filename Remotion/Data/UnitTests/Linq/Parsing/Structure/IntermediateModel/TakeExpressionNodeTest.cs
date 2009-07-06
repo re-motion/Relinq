@@ -40,8 +40,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void SupportedMethod ()
     {
-      MethodInfo method = GetGenericMethodDefinition (q => q.Take(3));
-      Assert.That (TakeExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_Generic (TakeExpressionNode.SupportedMethods, q => q.Take(3), e => e.Take(3));
     }
 
     [Test]

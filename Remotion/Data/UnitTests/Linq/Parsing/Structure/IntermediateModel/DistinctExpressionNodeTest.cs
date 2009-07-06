@@ -40,8 +40,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void SupportedMethod_WithoutComparer ()
     {
-      MethodInfo method = GetGenericMethodDefinition (q => q.Distinct());
-      Assert.That (DistinctExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_Generic (DistinctExpressionNode.SupportedMethods, q => q.Distinct(), e => e.Distinct());
     }
 
     [Test]

@@ -43,15 +43,13 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void SupportedMethod_WithoutPredicate ()
     {
-      MethodInfo method = GetGenericMethodDefinition (q => q.Count());
-      Assert.That (CountExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_Generic (CountExpressionNode.SupportedMethods, q => q.Count (), e => e.Count ());
     }
 
     [Test]
     public void SupportedMethod_WithPredicate ()
     {
-      var method = GetGenericMethodDefinition (q => q.Count (i => i > 5));
-      Assert.That (CountExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_Generic (CountExpressionNode.SupportedMethods, q => q.Count (o => o == null), e => e.Count (o => o == null));
     }
 
     [Test]

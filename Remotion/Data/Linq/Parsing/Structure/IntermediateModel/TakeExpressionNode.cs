@@ -33,7 +33,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   {
     public static readonly MethodInfo[] SupportedMethods = new[]
                                                            {
-                                                               GetSupportedMethod (() => Queryable.Take<object> (null, 0))
+                                                               GetSupportedMethod (() => Queryable.Take<object> (null, 0)),
+                                                               GetSupportedMethod (() => Enumerable.Take<object> (null, 0)),
                                                            };
 
     public TakeExpressionNode (MethodCallExpressionParseInfo parseInfo, int count)

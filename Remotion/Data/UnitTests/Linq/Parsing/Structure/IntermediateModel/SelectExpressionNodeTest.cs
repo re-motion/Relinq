@@ -40,8 +40,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void SupportedMethod_WithoutPosition ()
     {
-      MethodInfo method = GetGenericMethodDefinition (q => q.Select (i => i.ToString()));
-      Assert.That (SelectExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_Generic (SelectExpressionNode.SupportedMethods, q => q.Select (i => i.ToString()), e => e.Select (i => i.ToString()));
     }
 
     [Test]

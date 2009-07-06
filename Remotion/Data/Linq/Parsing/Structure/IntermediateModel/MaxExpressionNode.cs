@@ -33,7 +33,9 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public static readonly MethodInfo[] SupportedMethods = new[]
                                                            {
                                                                GetSupportedMethod (() => Queryable.Max<object> (null)),
-                                                               GetSupportedMethod (() => Queryable.Max<object, object> (null, null))
+                                                               GetSupportedMethod (() => Queryable.Max<object, object> (null, null)),
+                                                               GetSupportedMethod (() => Enumerable.Max<object> (null)),
+                                                               GetSupportedMethod (() => Enumerable.Max<object, object> (null, null)),
                                                            };
 
     public MaxExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalSelector)

@@ -15,7 +15,6 @@
 // 
 using System;
 using System.Linq.Expressions;
-using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
@@ -47,29 +46,25 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void SupportedMethod_WithoutPredicate ()
     {
-      MethodInfo method = GetGenericMethodDefinition (q => q.First());
-      Assert.That (FirstExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_Generic (FirstExpressionNode.SupportedMethods, q => q.First(), e => e.First());
     }
 
     [Test]
     public void SupportedMethod_WithPredicate ()
     {
-      MethodInfo method = GetGenericMethodDefinition (q => q.First (i => i > 5));
-      Assert.That (FirstExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_Generic (FirstExpressionNode.SupportedMethods, q => q.First (o => o == null), e => e.First (o => o == null));
     }
 
     [Test]
     public void SupportedMethod_FirstOrDefault_WithoutPredicate ()
     {
-      MethodInfo method = GetGenericMethodDefinition (q => q.FirstOrDefault ());
-      Assert.That (FirstExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_Generic (FirstExpressionNode.SupportedMethods, q => q.FirstOrDefault (), e => e.FirstOrDefault ());
     }
 
     [Test]
     public void SupportedMethod_FirstOrDefault_WithPredicate ()
     {
-      MethodInfo method = GetGenericMethodDefinition (q => q.FirstOrDefault (i => i > 5));
-      Assert.That (FirstExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_Generic (FirstExpressionNode.SupportedMethods, q => q.FirstOrDefault (o => o == null), e => e.FirstOrDefault (o => o == null));
     }
 
     [Test]

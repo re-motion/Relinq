@@ -14,10 +14,9 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Reflection;
+using System.Collections.Generic;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultModifications;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
@@ -33,162 +32,145 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
     public override void SetUp ()
     {
-      base.SetUp ();
-      _nodeWithSelector = new SumExpressionNode (CreateParseInfo (), OptionalSelector);
-      _node = new SumExpressionNode (CreateParseInfo (), null);
+      base.SetUp();
+      _nodeWithSelector = new SumExpressionNode (CreateParseInfo(), OptionalSelector);
+      _node = new SumExpressionNode (CreateParseInfo(), null);
     }
 
     [Test]
     public void SupportedMethod_WithoutSelector_OnDecimal ()
     {
-      MethodInfo method = GetMethod (q => ((IQueryable<decimal>) q).Sum ());
-      Assert.That (SumExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_NonGeneric (
+          SumExpressionNode.SupportedMethods, 
+          q => ((IQueryable<decimal>) q).Sum(),
+          e => ((IEnumerable<decimal>) e).Sum ());
     }
 
     [Test]
     public void SupportedMethod_WithoutSelector_OnNDecimal ()
     {
-      MethodInfo method = GetMethod (q => ((IQueryable<decimal?>) q).Sum ());
-      Assert.That (SumExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_NonGeneric (SumExpressionNode.SupportedMethods, q => ((IQueryable<decimal?>) q).Sum(), e => ((IEnumerable<decimal?>) e).Sum());
     }
 
     [Test]
     public void SupportedMethod_WithoutSelector_OnDouble ()
     {
-      MethodInfo method = GetMethod (q => ((IQueryable<double>) q).Sum ());
-      Assert.That (SumExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_NonGeneric (SumExpressionNode.SupportedMethods, q => ((IQueryable<double>) q).Sum(), e => ((IEnumerable<double>) e).Sum());
     }
 
     [Test]
     public void SupportedMethod_WithoutSelector_OnNDouble ()
     {
-      MethodInfo method = GetMethod (q => ((IQueryable<double?>) q).Sum ());
-      Assert.That (SumExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_NonGeneric (SumExpressionNode.SupportedMethods, q => ((IQueryable<double?>) q).Sum(), e => ((IEnumerable<double?>) e).Sum());
     }
 
     [Test]
     public void SupportedMethod_WithoutSelector_OnSingle ()
     {
-      MethodInfo method = GetMethod (q => ((IQueryable<float>) q).Sum ());
-      Assert.That (SumExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_NonGeneric (SumExpressionNode.SupportedMethods, q => ((IQueryable<float>) q).Sum(), e => ((IEnumerable<float>) e).Sum());
     }
 
     [Test]
     public void SupportedMethod_WithoutSelector_OnNSingle ()
     {
-      MethodInfo method = GetMethod (q => ((IQueryable<float?>) q).Sum ());
-      Assert.That (SumExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_NonGeneric (SumExpressionNode.SupportedMethods, q => ((IQueryable<float?>) q).Sum(), e => ((IEnumerable<float?>) e).Sum());
     }
 
     [Test]
     public void SupportedMethod_WithoutSelector_OnInt32 ()
     {
-      MethodInfo method = GetMethod (q => q.Sum ());
-      Assert.That (SumExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_NonGeneric (SumExpressionNode.SupportedMethods, q => ((IQueryable<int>) q).Sum (), e => ((IEnumerable<int>) e).Sum ());
     }
 
     [Test]
     public void SupportedMethod_WithoutSelector_OnNInt32 ()
     {
-      MethodInfo method = GetMethod (q => ((IQueryable<int?>) q).Sum ());
-      Assert.That (SumExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_NonGeneric (SumExpressionNode.SupportedMethods, q => ((IQueryable<int?>) q).Sum(), e => ((IEnumerable<int?>) e).Sum());
     }
 
     [Test]
     public void SupportedMethod_WithoutSelector_OnInt64 ()
     {
-      MethodInfo method = GetMethod (q => ((IQueryable<long>) q).Sum ());
-      Assert.That (SumExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_NonGeneric (SumExpressionNode.SupportedMethods, q => ((IQueryable<long>) q).Sum(), e => ((IEnumerable<long>) e).Sum());
     }
 
     [Test]
     public void SupportedMethod_WithoutSelector_OnNInt64 ()
     {
-      MethodInfo method = GetMethod (q => ((IQueryable<long?>) q).Sum ());
-      Assert.That (SumExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_NonGeneric (SumExpressionNode.SupportedMethods, q => ((IQueryable<long?>) q).Sum(), e => ((IEnumerable<long?>) e).Sum());
     }
 
     [Test]
     public void SupportedMethod_WithDecimalSelector ()
     {
-      MethodInfo method = GetGenericMethodDefinition (q => q.Sum (i => 0.0m));
-      Assert.That (SumExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_Generic (SumExpressionNode.SupportedMethods, q => q.Sum (i => 0.0m), e => e.Sum (i => 0.0m));
     }
 
     [Test]
     public void SupportedMethod_WithNDecimalSelector ()
     {
-      MethodInfo method = GetGenericMethodDefinition (q => q.Sum (i => (decimal?) 0.0m));
-      Assert.That (SumExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_Generic (SumExpressionNode.SupportedMethods, q => q.Sum (i => (decimal?) 0.0m), e => e.Sum (i => (decimal?) 0.0m));
     }
 
     [Test]
     public void SupportedMethod_WithDoubleSelector ()
     {
-      MethodInfo method = GetGenericMethodDefinition (q => q.Sum (i => 0.0));
-      Assert.That (SumExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_Generic (SumExpressionNode.SupportedMethods, q => q.Sum (i => 0.0), e => e.Sum (i => 0.0));
     }
 
     [Test]
     public void SupportedMethod_WithNDoubleSelector ()
     {
-      MethodInfo method = GetGenericMethodDefinition (q => q.Sum (i => (double?) 0.0));
-      Assert.That (SumExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_Generic (SumExpressionNode.SupportedMethods, q => q.Sum (i => (double?) 0.0), e => e.Sum (i => (double?) 0.0));
     }
 
     [Test]
     public void SupportedMethod_WithSingleSelector ()
     {
-      MethodInfo method = GetGenericMethodDefinition (q => q.Sum (i => 0.0f));
-      Assert.That (SumExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_Generic (SumExpressionNode.SupportedMethods, q => q.Sum (i => 0.0f), e => e.Sum (i => 0.0f));
     }
 
     [Test]
     public void SupportedMethod_WithNSingleSelector ()
     {
-      MethodInfo method = GetGenericMethodDefinition (q => q.Sum (i => (float?) 0.0f));
-      Assert.That (SumExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_Generic (SumExpressionNode.SupportedMethods, q => q.Sum (i => (float?) 0.0f), e => e.Sum (i => (float?) 0.0f));
     }
 
     [Test]
     public void SupportedMethod_WithInt32Selector ()
     {
-      MethodInfo method = GetGenericMethodDefinition (q => q.Sum (i => 0));
-      Assert.That (SumExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_Generic (SumExpressionNode.SupportedMethods, q => q.Sum (i => 0), e => e.Sum (i => 0));
     }
 
     [Test]
     public void SupportedMethod_WithNInt32Selector ()
     {
-      MethodInfo method = GetGenericMethodDefinition (q => q.Sum (i => (int?) 0));
-      Assert.That (SumExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_Generic (SumExpressionNode.SupportedMethods, q => q.Sum (i => (int?) 0), e => e.Sum (i => (int?) 0));
     }
 
     [Test]
     public void SupportedMethod_WithInt64Selector ()
     {
-      MethodInfo method = GetGenericMethodDefinition (q => q.Sum (i => 0L));
-      Assert.That (SumExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_Generic (SumExpressionNode.SupportedMethods, q => q.Sum (i => 0L), e => e.Sum (i => 0L));
     }
 
     [Test]
     public void SupportedMethod_WithNInt64Selector ()
     {
-      MethodInfo method = GetGenericMethodDefinition (q => q.Sum (i => (long?) 0L));
-      Assert.That (SumExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_Generic (SumExpressionNode.SupportedMethods, q => q.Sum (i => (long?) 0L), e => e.Sum (i => (long?) 0L));
     }
 
     [Test]
     [ExpectedException (typeof (InvalidOperationException))]
     public void Resolve_ThrowsInvalidOperationException ()
     {
-      _node.Resolve (ExpressionHelper.CreateParameterExpression (), ExpressionHelper.CreateExpression (), ClauseGenerationContext);
+      _node.Resolve (ExpressionHelper.CreateParameterExpression(), ExpressionHelper.CreateExpression(), ClauseGenerationContext);
     }
 
     [Test]
     public void GetResolvedSelector ()
     {
-      var expectedResult = ExpressionHelper.Resolve<int, string> (SourceClause, i => i.ToString ());
+      var expectedResult = ExpressionHelper.Resolve<int, string> (SourceClause, i => i.ToString());
 
       var result = _nodeWithSelector.GetResolvedOptionalSelector (ClauseGenerationContext);
 
@@ -198,8 +180,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void GetResolvedSelector_Null ()
     {
-      var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();
-      var node = new SumExpressionNode(CreateParseInfo (sourceMock), null);
+      var sourceMock = MockRepository.GenerateMock<IExpressionNode>();
+      var node = new SumExpressionNode (CreateParseInfo (sourceMock), null);
       var result = node.GetResolvedOptionalSelector (ClauseGenerationContext);
       Assert.That (result, Is.Null);
     }

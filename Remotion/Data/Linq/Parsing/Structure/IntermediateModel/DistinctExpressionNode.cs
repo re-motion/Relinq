@@ -33,7 +33,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   {
     public static readonly MethodInfo[] SupportedMethods = new[]
                                                            {
-                                                               GetSupportedMethod (() => Queryable.Distinct<object> (null))
+                                                               GetSupportedMethod (() => Queryable.Distinct<object> (null)),
+                                                               GetSupportedMethod (() => Enumerable.Distinct<object> (null)),
                                                            };
 
     public DistinctExpressionNode (MethodCallExpressionParseInfo parseInfo)

@@ -41,15 +41,13 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void SupportedMethod_WithoutSelector ()
     {
-      MethodInfo method = GetGenericMethodDefinition (q => q.Min ());
-      Assert.That (MinExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_Generic (MinExpressionNode.SupportedMethods, q => q.Min (), e => e.Min ());
     }
 
     [Test]
     public void SupportedMethod_WithSelector ()
     {
-      MethodInfo method = GetGenericMethodDefinition (q => q.Min (i => i.ToString ()));
-      Assert.That (MinExpressionNode.SupportedMethods, List.Contains (method));
+      AssertSupportedMethod_Generic (MinExpressionNode.SupportedMethods, q => q.Min (i => i.ToString ()), e => e.Min (i => i.ToString ()));
     }
 
     [Test]

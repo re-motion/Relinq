@@ -38,7 +38,11 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Queryable.Single<object> (null)),
                                                                GetSupportedMethod (() => Queryable.Single<object> (null, null)),
                                                                GetSupportedMethod (() => Queryable.SingleOrDefault<object> (null)),
-                                                               GetSupportedMethod (() => Queryable.SingleOrDefault<object> (null, null))
+                                                               GetSupportedMethod (() => Queryable.SingleOrDefault<object> (null, null)),
+                                                               GetSupportedMethod (() => Enumerable.Single<object> (null)),
+                                                               GetSupportedMethod (() => Enumerable.Single<object> (null, null)),
+                                                               GetSupportedMethod (() => Enumerable.SingleOrDefault<object> (null)),
+                                                               GetSupportedMethod (() => Enumerable.SingleOrDefault<object> (null, null)),
                                                            };
 
     public SingleExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalPredicate)

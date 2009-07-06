@@ -36,7 +36,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 
       registry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
 
-      Assert.That(registry.Count, Is.EqualTo (1));
+      Assert.That(registry.Count, Is.EqualTo (2));
     }
 
     [Test]

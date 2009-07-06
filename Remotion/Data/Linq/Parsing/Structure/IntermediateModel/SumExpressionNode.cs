@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -52,6 +53,26 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Queryable.Sum<object> (null, o => (long?) 0)),
                                                                GetSupportedMethod (() => Queryable.Sum<object> (null, o => (float) 0)),
                                                                GetSupportedMethod (() => Queryable.Sum<object> (null, o => (float?) 0)),
+                                                               GetSupportedMethod (() => Enumerable.Sum ((IEnumerable<decimal>) null)),
+                                                               GetSupportedMethod (() => Enumerable.Sum ((IEnumerable<decimal?>) null)),
+                                                               GetSupportedMethod (() => Enumerable.Sum ((IEnumerable<double>) null)),
+                                                               GetSupportedMethod (() => Enumerable.Sum ((IEnumerable<double?>) null)),
+                                                               GetSupportedMethod (() => Enumerable.Sum ((IEnumerable<int>) null)),
+                                                               GetSupportedMethod (() => Enumerable.Sum ((IEnumerable<int?>) null)),
+                                                               GetSupportedMethod (() => Enumerable.Sum ((IEnumerable<long>) null)),
+                                                               GetSupportedMethod (() => Enumerable.Sum ((IEnumerable<long?>) null)),
+                                                               GetSupportedMethod (() => Enumerable.Sum ((IEnumerable<float>) null)),
+                                                               GetSupportedMethod (() => Enumerable.Sum ((IEnumerable<float?>) null)),
+                                                               GetSupportedMethod (() => Enumerable.Sum<object> (null, o => (decimal) 0)),
+                                                               GetSupportedMethod (() => Enumerable.Sum<object> (null, o => (decimal?) 0)),
+                                                               GetSupportedMethod (() => Enumerable.Sum<object> (null, o => (double) 0)),
+                                                               GetSupportedMethod (() => Enumerable.Sum<object> (null, o => (double?) 0)),
+                                                               GetSupportedMethod (() => Enumerable.Sum<object> (null, o => (int) 0)),
+                                                               GetSupportedMethod (() => Enumerable.Sum<object> (null, o => (int?) 0)),
+                                                               GetSupportedMethod (() => Enumerable.Sum<object> (null, o => (long) 0)),
+                                                               GetSupportedMethod (() => Enumerable.Sum<object> (null, o => (long?) 0)),
+                                                               GetSupportedMethod (() => Enumerable.Sum<object> (null, o => (float) 0)),
+                                                               GetSupportedMethod (() => Enumerable.Sum<object> (null, o => (float?) 0)),
                                                            };
 
     public SumExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalSelector)
