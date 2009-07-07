@@ -23,7 +23,7 @@ using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Backend.Details;
 using Remotion.Data.Linq.Backend.Details.SelectProjectionParsing;
-using Remotion.Data.Linq.Parsing.FieldResolving;
+using Remotion.Data.Linq.Backend.FieldResolving;
 using NUnit.Framework.SyntaxHelpers;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Details

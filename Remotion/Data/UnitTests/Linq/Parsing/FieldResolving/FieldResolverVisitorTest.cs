@@ -17,9 +17,9 @@ using System;
 using NUnit.Framework;
 using System.Linq.Expressions;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Backend.FieldResolving;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
-using Remotion.Data.Linq.Parsing.FieldResolving;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
 {

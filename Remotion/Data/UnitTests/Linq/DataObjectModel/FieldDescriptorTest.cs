@@ -18,7 +18,7 @@ using System.Reflection;
 using NUnit.Framework;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Backend.DataObjectModel;
-using Remotion.Data.Linq.Parsing.FieldResolving;
+using Remotion.Data.Linq.Backend.FieldResolving;
 
 namespace Remotion.Data.UnitTests.Linq.DataObjectModel
 {

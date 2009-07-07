@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using System.Reflection;
 using Remotion.Collections;
-using Remotion.Data.Linq.Parsing.FieldResolving;
+using Remotion.Data.Linq.Backend.FieldResolving;
 using NUnit.Framework.SyntaxHelpers;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.FieldResolving
