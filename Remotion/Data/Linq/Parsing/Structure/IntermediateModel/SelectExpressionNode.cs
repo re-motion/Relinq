@@ -47,7 +47,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
         throw new ArgumentException ("Selector must have exactly one parameter.", "selector");
 
       Selector = selector;
-      _cachedSelector = new ResolvedExpressionCache (Source);
+      _cachedSelector = new ResolvedExpressionCache (this);
     }
 
     public LambdaExpression Selector { get; private set; }

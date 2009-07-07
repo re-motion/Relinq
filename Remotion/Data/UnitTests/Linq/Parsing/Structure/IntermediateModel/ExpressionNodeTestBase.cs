@@ -23,6 +23,7 @@ using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
+using Remotion.Data.Linq.Clauses.ResultModifications;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 
@@ -88,6 +89,15 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var selectClause = (SelectClause) QueryModel.SelectOrGroupClause;
       Assert.That (selectClause.ResultModifications.Count, Is.EqualTo (1));
       Assert.That (selectClause.ResultModifications[0], Is.InstanceOfType (expectedResultModificationType));
+
+      TestApply_DoesNotWrapQueryModel_AfterResultModification (node);
+    }
+
+    public void TestApply_DoesNotWrapQueryModel_AfterResultModification (ResultModificationExpressionNodeBase node)
+    {
+      ((SelectClause) QueryModel.SelectOrGroupClause).ResultModifications.Add (new DistinctResultModification ());
+      var result = node.Apply (QueryModel, ClauseGenerationContext);
+      Assert.That (result, Is.SameAs (QueryModel));
     }
 
     protected void TestApply_WithOptionalPredicate (ResultModificationExpressionNodeBase node)

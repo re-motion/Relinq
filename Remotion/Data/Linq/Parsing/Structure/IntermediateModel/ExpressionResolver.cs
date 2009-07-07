@@ -27,21 +27,22 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public class ExpressionResolver
   {
-    public ExpressionResolver (IExpressionNode sourceNode)
+    public ExpressionResolver (IExpressionNode currentNode)
     {
-      ArgumentUtility.CheckNotNull ("sourceNode", sourceNode);
+      ArgumentUtility.CheckNotNull ("currentNode", currentNode);
 
-      SourceNode = sourceNode;
+      CurrentNode = currentNode;
     }
 
-    public IExpressionNode SourceNode { get; set; }
+    public IExpressionNode CurrentNode { get; set; }
 
     public Expression GetResolvedExpression (Expression unresolvedExpression, ParameterExpression parameterToBeResolved, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("unresolvedExpression", unresolvedExpression);
       ArgumentUtility.CheckNotNull ("parameterToBeResolved", parameterToBeResolved);
 
-      var resolvedExpression = SourceNode.Resolve (parameterToBeResolved, unresolvedExpression, clauseGenerationContext);
+      var sourceNode = CurrentNode.Source;
+      var resolvedExpression = sourceNode.Resolve (parameterToBeResolved, unresolvedExpression, clauseGenerationContext);
       resolvedExpression = TransparentIdentifierRemovingVisitor.ReplaceTransparentIdentifiers (resolvedExpression);
       resolvedExpression = SubQueryFindingVisitor.ReplaceSubQueries (resolvedExpression, clauseGenerationContext.NodeTypeRegistry);
       return resolvedExpression;

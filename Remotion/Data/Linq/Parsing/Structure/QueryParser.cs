@@ -95,13 +95,12 @@ namespace Remotion.Data.Linq.Parsing.Structure
         var defaultSelectClause = new SelectClause (new QuerySourceReferenceExpression (mainFromClause));
         return new QueryModel (resultType, mainFromClause, defaultSelectClause);
 
-        // return node.Apply (null, clauseGenerationContext);
+        // return node.Apply (null, clauseGenerationContext); // TODO 1310
       }
       else // first go to the next node, then transform the queryModel (created by the last node) by applying the node to i
       {
         var queryModel = ApplyAllNodes (resultType, node.Source, clauseGenerationContext);
-        node.Apply (queryModel, clauseGenerationContext);
-        return queryModel;
+        return node.Apply (queryModel, clauseGenerationContext); // TODO 1310: There is only an integration test for this "return", but 1310 will add the unit test.
       }
     }
   }

@@ -17,6 +17,7 @@ using System;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
+using Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel.TestDomain;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 {
@@ -28,7 +29,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [SetUp]
     public void SetUp ()
     {
-      _cache = new ResolvedExpressionCache (ExpressionNodeObjectMother.CreateMainSource ());
+      var parseInfo = new MethodCallExpressionParseInfo("x", ExpressionNodeObjectMother.CreateMainSource(), ExpressionHelper.CreateMethodCallExpression());
+      _cache = new ResolvedExpressionCache (new TestMethodCallExpressionNode (parseInfo, null)) ;
     }
 
     [Test]

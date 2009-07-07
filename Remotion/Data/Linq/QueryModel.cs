@@ -19,6 +19,7 @@ using System.Linq.Expressions;
 using Remotion.Collections;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
+using Remotion.Data.Linq.Clauses.ResultModifications;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Utilities;
 
@@ -38,6 +39,7 @@ namespace Remotion.Data.Linq
   {
     private readonly UniqueIdentifierGenerator _uniqueIdentifierGenerator;
 
+    private Type _resultType;
     private MainFromClause _mainFromClause;
     private ISelectGroupClause _selectOrGroupClause;
 
@@ -67,9 +69,15 @@ namespace Remotion.Data.Linq
     }
 
     /// <summary>
-    /// Gets the type of the underlying LINQ query, which usually implements <see cref="IQueryable{T}"/>.
+    /// Gets or sets the result type of the underlying LINQ query. This is usually a type that implements <see cref="IQueryable{T}"/>, unless the
+    /// query ends with a <see cref="ResultModificationBase"/>. For example, if the query ends with a <see cref="CountResultModification"/>, the
+    /// result type will be <see cref="int"/>.
     /// </summary>
-    public Type ResultType { get; private set; }
+    public Type ResultType
+    {
+      get { return _resultType; }
+      set { _resultType = ArgumentUtility.CheckNotNull ("value", value); }
+    }
 
     /// <summary>
     /// Gets or sets the query's <see cref="Clauses.MainFromClause"/>. This is the starting point of the query, generating items that are processed by 

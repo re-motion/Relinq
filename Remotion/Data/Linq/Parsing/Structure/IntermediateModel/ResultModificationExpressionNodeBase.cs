@@ -44,10 +44,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       OptionalSelector = optionalSelector;
 
       if (optionalPredicate != null)
-        _cachedPredicate = new ResolvedExpressionCache (Source);
+        _cachedPredicate = new ResolvedExpressionCache (this);
 
       if (optionalSelector != null)
-        _cachedSelector = new ResolvedExpressionCache (Source);
+        _cachedSelector = new ResolvedExpressionCache (this);
     }
 
     protected abstract ResultModificationBase CreateResultModification ();
@@ -97,6 +97,15 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
         selectClause.Selector = newSelector;
       }
 
+      return queryModel;
+    }
+
+    protected override QueryModel WrapQueryModelAfterResultModification (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
+    {
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+
+      // Result modifications can safely be appended to the previous query model even after another result modification, so do not wrap the previous
+      // query model.
       return queryModel;
     }
   }

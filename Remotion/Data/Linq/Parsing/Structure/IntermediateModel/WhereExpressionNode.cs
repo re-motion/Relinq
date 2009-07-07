@@ -46,7 +46,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
         throw new ArgumentException ("Predicate must have exactly one parameter.", "predicate");
 
       Predicate = predicate;
-      _cachedPredicate = new ResolvedExpressionCache (Source);
+      _cachedPredicate = new ResolvedExpressionCache (this);
     }
 
     public LambdaExpression Predicate { get; private set; }

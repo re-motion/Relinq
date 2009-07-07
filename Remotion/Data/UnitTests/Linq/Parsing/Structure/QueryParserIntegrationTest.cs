@@ -349,21 +349,24 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
-    [Ignore ("TODO 1269")]
     public void SubQueryInMainFromClauseWithResultModifier ()
     {
       var query = from s in
-                    (from s1 in ExpressionHelper.CreateQuerySource () select s1).Take (5)
+                    (from sd1 in ExpressionHelper.CreateQuerySource_Detail () select sd1.Student).Take (5)
                   from sd in ExpressionHelper.CreateQuerySource_Detail ()
                   select new Tuple<Student, Student_Detail> ( s, sd );
       var expression = query.Expression;
       var queryModel = _queryParser.GetParsedQuery (expression);
+      Assert.That (queryModel.ResultType, Is.SameAs (typeof (IQueryable<Tuple<Student, Student_Detail>>)));
 
       var mainFromClause = queryModel.MainFromClause;
       Assert.That (mainFromClause.FromExpression, Is.InstanceOfType (typeof (SubQueryExpression)));
+      Assert.That (mainFromClause.ItemType, Is.SameAs (typeof (Student)));
+      Assert.That (mainFromClause.ItemName, Is.EqualTo("s"));
 
       var subQueryModel = ((SubQueryExpression) mainFromClause.FromExpression).QueryModel;
       Assert.That (((SelectClause) subQueryModel.SelectOrGroupClause).ResultModifications[0], Is.InstanceOfType (typeof (TakeResultModification)));
+      Assert.That (subQueryModel.ResultType, Is.SameAs (typeof (IQueryable<Student>)));
       
       var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
       var additionalFromClause = (AdditionalFromClause) queryModel.BodyClauses[0];

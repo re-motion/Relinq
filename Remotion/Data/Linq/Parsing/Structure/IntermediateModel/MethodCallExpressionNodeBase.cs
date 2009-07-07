@@ -16,6 +16,8 @@
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
+using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
@@ -48,17 +50,47 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       ParsedExpression = parseInfo.ParsedExpression;
     }
 
-    public string AssociatedIdentifier { get; set; }
+    public string AssociatedIdentifier { get; private set; }
     public IExpressionNode Source { get; private set; }
     public MethodCallExpression ParsedExpression { get; private set; }
 
-    public abstract Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext);
+    Expression IExpressionNode.ParsedExpression
+    {
+      get { return ParsedExpression; }
+    }
+
+    public abstract Expression Resolve (
+        ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext);
+
     protected abstract QueryModel ApplyNodeSpecificSemantics (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext);
 
     public QueryModel Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
-      return ApplyNodeSpecificSemantics (queryModel, clauseGenerationContext);
+
+      queryModel = WrapQueryModelAfterResultModification (queryModel, clauseGenerationContext);
+      queryModel = ApplyNodeSpecificSemantics (queryModel, clauseGenerationContext);
+      return queryModel;
+    }
+
+    protected virtual QueryModel WrapQueryModelAfterResultModification (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
+    {
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+      if (((SelectClause) queryModel.SelectOrGroupClause).ResultModifications.Count > 0)
+      {
+        var oldResultType = queryModel.ResultType;
+        queryModel.ResultType = Source.ParsedExpression.Type;
+
+        var subQueryExpression = new SubQueryExpression (queryModel);
+        var newMainSourceNode = new MainSourceExpressionNode (Source.AssociatedIdentifier, subQueryExpression);
+        Source = newMainSourceNode;
+        
+        var newMainFromClause = newMainSourceNode.CreateMainFromClause (clauseGenerationContext);
+        var newSelectClause = new SelectClause (new QuerySourceReferenceExpression (newMainFromClause));
+        return new QueryModel (oldResultType, newMainFromClause, newSelectClause);
+      }
+      else
+        return queryModel;
     }
 
     protected InvalidOperationException CreateResolveNotSupportedException ()

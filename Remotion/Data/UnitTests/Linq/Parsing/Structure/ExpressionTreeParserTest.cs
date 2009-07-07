@@ -57,7 +57,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var result = _expressionTreeParser.ParseTree (expression);
 
       Assert.That (result, Is.InstanceOfType (typeof (MainSourceExpressionNode)));
-      Assert.That (((MainSourceExpressionNode) result).Expression, Is.SameAs (expression));
+      Assert.That (((MainSourceExpressionNode) result).ParsedExpression, Is.SameAs (expression));
       Assert.That (((MainSourceExpressionNode) result).QuerySourceElementType, Is.SameAs (typeof (Student)));
       Assert.That (((MainSourceExpressionNode) result).AssociatedIdentifier, Is.EqualTo ("<generated>_0"));
     }
@@ -70,7 +70,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var result = _expressionTreeParser.ParseTree (constantExpression);
 
       Assert.That (result, Is.InstanceOfType (typeof (MainSourceExpressionNode)));
-      Assert.That (((MainSourceExpressionNode) result).Expression, Is.SameAs (constantExpression));
+      Assert.That (((MainSourceExpressionNode) result).ParsedExpression, Is.SameAs (constantExpression));
       Assert.That (((MainSourceExpressionNode) result).QuerySourceElementType, Is.SameAs (typeof (int)));
       Assert.That (((MainSourceExpressionNode) result).AssociatedIdentifier, Is.EqualTo ("<generated>_0"));
     }
@@ -101,7 +101,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 
       var source = ((SelectExpressionNode) result).Source;
       Assert.That (source, Is.InstanceOfType (typeof (MainSourceExpressionNode)));
-      Assert.That (((ConstantExpression) ((MainSourceExpressionNode) source).Expression).Value, Is.SameAs (querySource));
+      Assert.That (((ConstantExpression) ((MainSourceExpressionNode) source).ParsedExpression).Value, Is.SameAs (querySource));
     }
 
     [Test]
@@ -148,7 +148,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 
       var source = ((WhereExpressionNode) where).Source;
       Assert.That (source, Is.InstanceOfType (typeof (MainSourceExpressionNode)));
-      Assert.That (((ConstantExpression) ((MainSourceExpressionNode) source).Expression).Value, Is.SameAs (querySource));
+      Assert.That (((ConstantExpression) ((MainSourceExpressionNode) source).ParsedExpression).Value, Is.SameAs (querySource));
     }
 
     [Test]

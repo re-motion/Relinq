@@ -22,6 +22,8 @@ using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
+using Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel.TestDomain;
+using Remotion.Development.UnitTesting;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 {
@@ -30,29 +32,45 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
   {
     private ExpressionResolver _expressionResolver;
     private Expression<Func<int, bool>> _unresolvedLambda;
+    private IExpressionNode _currentNode;
 
     public override void SetUp ()
     {
       base.SetUp();
       _unresolvedLambda = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      _expressionResolver = new ExpressionResolver (SourceNode);
+      _currentNode = new TestMethodCallExpressionNode (CreateParseInfo (), null);
+      _expressionResolver = new ExpressionResolver (_currentNode);
     }
 
     [Test]
     public void GetResolvedExpression ()
     {
-      var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
       var result = _expressionResolver.GetResolvedExpression (_unresolvedLambda.Body, _unresolvedLambda.Parameters[0], ClauseGenerationContext);
 
+      var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
+    }
+
+    [Test]
+    public void GetResolvedExpression_NoticesChangesOfSourceNode ()
+    {
+      var newSourceNode = ExpressionNodeObjectMother.CreateMainSource ();
+      var newSourceClause = newSourceNode.CreateMainFromClause (ClauseGenerationContext);
+      var newSourceReference = new QuerySourceReferenceExpression (newSourceClause);
+
+      PrivateInvoke.InvokeNonPublicMethod (_currentNode, typeof (MethodCallExpressionNodeBase), "set_Source", newSourceNode);
+      var result = _expressionResolver.GetResolvedExpression (_unresolvedLambda.Body, _unresolvedLambda.Parameters[0], ClauseGenerationContext);
+
+      var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, newSourceReference, Expression.Constant (5));
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
 
     [Test]
     public void GetResolvedExpression_RemovesTransparentIdentifiers ()
     {
-      var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
       var result = _expressionResolver.GetResolvedExpression (_unresolvedLambda.Body, _unresolvedLambda.Parameters[0], ClauseGenerationContext);
 
+      var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
 

@@ -46,7 +46,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
         throw new ArgumentException ("KeySelector must have exactly one parameter.", "keySelector");
       
       KeySelector = keySelector;
-      _cachedSelector = new ResolvedExpressionCache (Source);
+      _cachedSelector = new ResolvedExpressionCache (this);
     }
 
     public LambdaExpression KeySelector { get; private set; }

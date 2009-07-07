@@ -38,6 +38,16 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel.TestD
       get { throw new NotImplementedException(); }
     }
 
+    public Expression ParsedExpression
+    {
+      get { throw new NotImplementedException(); }
+    }
+
+    public string AssociatedIdentifier
+    {
+      get { throw new NotImplementedException(); }
+    }
+
     public Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
     {
       throw new NotImplementedException();

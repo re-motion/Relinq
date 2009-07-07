@@ -57,8 +57,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       CollectionSelector = collectionSelector;
       ResultSelector = resultSelector;
 
-      _cachedCollectionSelector = new ResolvedExpressionCache (Source);
-      _cachedResultSelector = new ResolvedExpressionCache (Source);
+      _cachedCollectionSelector = new ResolvedExpressionCache (this);
+      _cachedResultSelector = new ResolvedExpressionCache (this);
     }
 
     public LambdaExpression CollectionSelector { get; private set; }

@@ -27,11 +27,11 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     private readonly ExpressionResolver _resolver;
     private Expression _cachedExpression;
 
-    public ResolvedExpressionCache (IExpressionNode sourceNode)
+    public ResolvedExpressionCache (IExpressionNode currentNode)
     {
-      ArgumentUtility.CheckNotNull ("sourceNode", sourceNode);
+      ArgumentUtility.CheckNotNull ("currentNode", currentNode);
 
-      _resolver = new ExpressionResolver (sourceNode);
+      _resolver = new ExpressionResolver (currentNode);
       _cachedExpression = null;
     }
 
