@@ -135,7 +135,7 @@
     <Compile Include="Parsing\ExpressionTreeVisitors\MemberBindings\MemberBinding.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\MemberBindings\MethodInfoBinding.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\MemberBindings\PropertyInfoBinding.cs" />
-    <Compile Include="Parsing\ParseMode.cs" />
+    <Compile Include="Backend\ParseMode.cs" />
     <Compile Include="Backend\Details\WhereConditionParsing\BinaryExpressionParser.cs" />
     <Compile Include="Backend\Details\WhereConditionParsing\ConstantExpressionParser.cs" />
     <Compile Include="Backend\Details\WhereConditionParsing\MemberExpressionParser.cs" />
