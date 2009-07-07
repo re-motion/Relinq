@@ -32,6 +32,8 @@ namespace Remotion.Data.UnitTests.Linq
     private WhereClause _whereClause1;
     private WhereClause _whereClause2;
     private SelectClause _selectClause;
+    private ResultOperatorBase _resultOperator1;
+    private ResultOperatorBase _resultOperator2;
 
     [SetUp]
     public void SetUp ()
@@ -41,6 +43,8 @@ namespace Remotion.Data.UnitTests.Linq
       _whereClause1 = ExpressionHelper.CreateWhereClause ();
       _whereClause2 = ExpressionHelper.CreateWhereClause ();
       _selectClause = ExpressionHelper.CreateSelectClause ();
+      _resultOperator1 = ExpressionHelper.CreateResultOperator ();
+      _resultOperator2 = ExpressionHelper.CreateResultOperator ();
     }
 
     [Test]
@@ -91,18 +95,36 @@ namespace Remotion.Data.UnitTests.Linq
     }
 
     [Test]
+    public void AddResultOperator ()
+    {
+      _builder.AddResultOperator (_resultOperator1);
+      Assert.That (_builder.ResultOperators, List.Contains (_resultOperator1));
+    }
+
+    [Test]
+    public void AddResultOperator_OrderIsRetained ()
+    {
+      _builder.AddResultOperator (_resultOperator1);
+      _builder.AddResultOperator (_resultOperator2);
+      Assert.That (_builder.ResultOperators, Is.EqualTo (new[] { _resultOperator1, _resultOperator2 }));
+    }
+
+    [Test]
     public void Build ()
     {
+      _builder.AddResultOperator (_resultOperator1);
       _builder.AddClause (_whereClause1);
       _builder.AddClause (_mainFromClause);
       _builder.AddClause (_whereClause2);
       _builder.AddClause (_selectClause);
+      _builder.AddResultOperator (_resultOperator2);
 
       var queryModel = _builder.Build(typeof (IQueryable<int>));
 
       Assert.That (queryModel.MainFromClause, Is.SameAs (_mainFromClause));
       Assert.That (queryModel.SelectOrGroupClause, Is.SameAs (_selectClause));
-      Assert.That (queryModel.BodyClauses, Is.EqualTo(new[] { _whereClause1, _whereClause2 }));
+      Assert.That (queryModel.BodyClauses, Is.EqualTo (new[] { _whereClause1, _whereClause2 }));
+      Assert.That (queryModel.ResultOperators, Is.EqualTo (new[] { _resultOperator1, _resultOperator2 }));
     }
 
     [Test]

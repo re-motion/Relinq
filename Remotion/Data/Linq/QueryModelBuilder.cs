@@ -28,6 +28,7 @@ namespace Remotion.Data.Linq
   /// </summary>
   public class QueryModelBuilder
   {
+    private readonly List<ResultOperatorBase> _resultOperators = new List<ResultOperatorBase> ();
     private readonly List<IBodyClause> _bodyClauses = new List<IBodyClause> ();
 
     public MainFromClause MainFromClause { get; private set; }
@@ -36,6 +37,11 @@ namespace Remotion.Data.Linq
     public ReadOnlyCollection<IBodyClause> BodyClauses
     {
       get { return _bodyClauses.AsReadOnly(); }
+    }
+
+    public ReadOnlyCollection<ResultOperatorBase> ResultOperators
+    {
+      get { return _resultOperators.AsReadOnly (); }
     }
 
     public void AddClause (IClause clause)
@@ -75,6 +81,12 @@ namespace Remotion.Data.Linq
       throw new ArgumentTypeException (message, "clause", null, clause.GetType());
     }
 
+    public void AddResultOperator (ResultOperatorBase resultOperator)
+    {
+      ArgumentUtility.CheckNotNull ("resultOperator", resultOperator);
+      _resultOperators.Add (resultOperator);
+    }
+
     public QueryModel Build (Type resultType)
     {
       ArgumentUtility.CheckNotNull ("resultType", resultType);
@@ -89,6 +101,9 @@ namespace Remotion.Data.Linq
 
       foreach (var bodyClause in BodyClauses)
         queryModel.BodyClauses.Add (bodyClause);
+
+      foreach (var resultOperator in ResultOperators)
+        queryModel.ResultOperators.Add (resultOperator);
 
       return queryModel;
     }

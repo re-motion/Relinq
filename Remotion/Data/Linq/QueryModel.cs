@@ -196,15 +196,13 @@ namespace Remotion.Data.Linq
         queryModelBuilder.AddClause (bodyClause.Clone (cloneContext));
       queryModelBuilder.AddClause (SelectOrGroupClause.Clone (cloneContext));
 
-      var result = queryModelBuilder.Build (ResultType);
-
       foreach (var resultOperator in ResultOperators)
       {
         var resultOperatorClone = resultOperator.Clone (cloneContext);
-        result.ResultOperators.Add (resultOperatorClone);
+        queryModelBuilder.AddResultOperator (resultOperatorClone);
       }
 
-      return result;
+      return queryModelBuilder.Build (ResultType);
     }
 
     object ICloneable.Clone ()
