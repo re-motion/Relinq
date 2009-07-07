@@ -79,7 +79,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       var selectClause = (SelectClause) QueryModel.SelectOrGroupClause;
 
-      Assert.That (selectClause.ResultModifications, Is.Empty);
+      Assert.That (selectClause.ResultOperators, Is.Empty);
       Assert.That (selectClause.Selector, Is.EqualTo (_node.GetResolvedSelector (ClauseGenerationContext)));
     }
   }

@@ -16,23 +16,21 @@
 using System;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.ResultModifications;
-using Rhino.Mocks;
 
 namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
 {
   [TestFixture]
-  public class CountResultModificationTest
+  public class CountResultOperatorTest
   {
-    private CountResultModification _resultModification;
+    private CountResultOperator _resultOperator;
 
     [SetUp]
     public void SetUp ()
     {
-      _resultModification = new CountResultModification ();
+      _resultOperator = new CountResultOperator ();
     }
 
     [Test]
@@ -40,16 +38,16 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
     {
       var clonedClauseMapping = new ClauseMapping ();
       var cloneContext = new CloneContext (clonedClauseMapping);
-      var clone = _resultModification.Clone (cloneContext);
+      var clone = _resultOperator.Clone (cloneContext);
 
-      Assert.That (clone, Is.InstanceOfType (typeof (CountResultModification)));
+      Assert.That (clone, Is.InstanceOfType (typeof (CountResultOperator)));
     }
 
     [Test]
     public void ExecuteInMemory ()
     {
       var items = new[] { 1, 2, 3 };
-      var result = _resultModification.ExecuteInMemory (items);
+      var result = _resultOperator.ExecuteInMemory (items);
 
       Assert.That (result, Is.EqualTo (new[] { 3 }));
     }
@@ -57,7 +55,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
     [Test]
     public void ExecutionStrategy ()
     {
-      Assert.That (_resultModification.ExecutionStrategy, Is.SameAs (ScalarExecutionStrategy.Instance));
+      Assert.That (_resultOperator.ExecutionStrategy, Is.SameAs (ScalarExecutionStrategy.Instance));
     }
   }
 }

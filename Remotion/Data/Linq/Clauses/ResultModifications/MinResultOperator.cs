@@ -22,27 +22,27 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultModifications
 {
-  public class DistinctResultModification : ResultModificationBase
+  public class MinResultOperator : ResultOperatorBase
   {
-    public DistinctResultModification ()
-        : base (CollectionExecutionStrategy.Instance)
+    public MinResultOperator ()
+        : base (ScalarExecutionStrategy.Instance)
     {
     }
 
-    public override ResultModificationBase Clone (CloneContext cloneContext)
+    public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
-      return new DistinctResultModification ();
+      return new MinResultOperator ();
     }
 
     public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)
     {
       ArgumentUtility.CheckNotNull ("items", items);
-      return items.Distinct ();
+      return new[] { items.Min () };
     }
 
     public override string ToString ()
     {
-      return "Distinct()";
+      return "Min()";
     }
   }
 }

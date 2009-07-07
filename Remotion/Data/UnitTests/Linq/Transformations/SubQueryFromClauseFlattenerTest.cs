@@ -144,7 +144,7 @@ namespace Remotion.Data.UnitTests.Linq.Transformations
     public void VisitAdditionalFromClause_ThrowsOnResultModification ()
     {
       var queryModel = ExpressionHelper.CreateQueryModel ();
-      ((SelectClause) queryModel.SelectOrGroupClause).ResultModifications.Add (new DistinctResultModification ());
+      ((SelectClause) queryModel.SelectOrGroupClause).ResultOperators.Add (new DistinctResultOperator ());
       var clause = new AdditionalFromClause ("x", typeof (Student), new SubQueryExpression (queryModel));
       _visitor.VisitAdditionalFromClause (clause, queryModel, 0);
     }

@@ -97,7 +97,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void Apply_WithoutOptionalPredicate ()
     {
-      TestApply (_node, typeof (SingleResultModification));
+      TestApply (_node, typeof (SingleResultOperator));
     }
 
     [Test]
@@ -115,7 +115,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       node.Apply (queryModel, ClauseGenerationContext);
 
       var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
-      Assert.That (((SingleResultModification) selectClause.ResultModifications[0]).ReturnDefaultWhenEmpty, Is.False);
+      Assert.That (((SingleResultOperator) selectClause.ResultOperators[0]).ReturnDefaultWhenEmpty, Is.False);
     }
 
     [Test]
@@ -127,7 +127,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       node.Apply (queryModel, ClauseGenerationContext);
 
       var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
-      Assert.That (((SingleResultModification) selectClause.ResultModifications[0]).ReturnDefaultWhenEmpty, Is.True);
+      Assert.That (((SingleResultOperator) selectClause.ResultOperators[0]).ReturnDefaultWhenEmpty, Is.True);
     }
   }
 }

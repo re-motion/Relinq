@@ -57,7 +57,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void Apply_WrapsQueryModel_AfterResultModification ()
     {
-      ((SelectClause) QueryModel.SelectOrGroupClause).ResultModifications.Add (new DistinctResultModification ());
+      ((SelectClause) QueryModel.SelectOrGroupClause).ResultOperators.Add (new DistinctResultOperator ());
       var newQueryModel = _node.Apply (QueryModel, ClauseGenerationContext);
 
       Assert.That (newQueryModel, Is.Not.SameAs (QueryModel));
@@ -73,7 +73,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void Apply_WrapsQueryModel_WithCorrectResultTypes ()
     {
-      ((SelectClause) QueryModel.SelectOrGroupClause).ResultModifications.Add (new DistinctResultModification ());
+      ((SelectClause) QueryModel.SelectOrGroupClause).ResultOperators.Add (new DistinctResultOperator ());
       var oldResultType = QueryModel.ResultType;
 
       var newQueryModel = _node.Apply (QueryModel, ClauseGenerationContext);
@@ -86,7 +86,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void Apply_WrapsQueryModel_AfterResultModification_BeforeApplyingNodeSpecificSemantics ()
     {
-      ((SelectClause) QueryModel.SelectOrGroupClause).ResultModifications.Add (new DistinctResultModification ());
+      ((SelectClause) QueryModel.SelectOrGroupClause).ResultOperators.Add (new DistinctResultOperator ());
       var newQueryModel = _node.Apply (QueryModel, ClauseGenerationContext);
 
       Assert.That (newQueryModel, Is.Not.SameAs (QueryModel));
@@ -96,7 +96,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void Apply_WrapsQueryModel_AndEnsuresResolveWorksCorrectly ()
     {
-      ((SelectClause) QueryModel.SelectOrGroupClause).ResultModifications.Add (new DistinctResultModification ());
+      ((SelectClause) QueryModel.SelectOrGroupClause).ResultOperators.Add (new DistinctResultOperator ());
       var newQueryModel = _node.Apply (QueryModel, ClauseGenerationContext);
 
       Expression<Func<int, string>> selector = i => i.ToString();

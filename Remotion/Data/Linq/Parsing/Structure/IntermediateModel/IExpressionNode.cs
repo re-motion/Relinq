@@ -67,7 +67,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     /// <summary>
     /// Applies this <see cref="IExpressionNode"/> to the specified query model. Nodes can add or replace clauses, add or replace expressions, 
-    /// add or replace <see cref="ResultModificationBase"/> objects, or even create a completely new <see cref="QueryModel"/>, depending on their semantics.
+    /// add or replace <see cref="ResultOperatorBase"/> objects, or even create a completely new <see cref="QueryModel"/>, depending on their semantics.
     /// </summary>
     /// <param name="queryModel">The query model this node should be applied to.</param>
     /// <param name="clauseGenerationContext">Context information used during the current parsing process. The <see cref="QuerySourceClauseMapping"/>

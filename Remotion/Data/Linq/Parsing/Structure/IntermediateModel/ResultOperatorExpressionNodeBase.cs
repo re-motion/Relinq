@@ -22,15 +22,15 @@ using Remotion.Utilities;
 namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 {
   /// <summary>
-  /// Acts as a base class for <see cref="IExpressionNode"/>s standing for <see cref="MethodCallExpression"/>s that modify the result of the query
+  /// Acts as a base class for <see cref="IExpressionNode"/>s standing for <see cref="MethodCallExpression"/>s that operate on the result of the query
   /// rather than representing actual clauses, such as <see cref="CountExpressionNode"/> or <see cref="DistinctExpressionNode"/>.
   /// </summary>
-  public abstract class ResultModificationExpressionNodeBase : MethodCallExpressionNodeBase
+  public abstract class ResultOperatorExpressionNodeBase : MethodCallExpressionNodeBase
   {
     private readonly ResolvedExpressionCache _cachedPredicate;
     private readonly ResolvedExpressionCache _cachedSelector;
     
-    protected ResultModificationExpressionNodeBase (
+    protected ResultOperatorExpressionNodeBase (
         MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalPredicate, LambdaExpression optionalSelector)
         : base (parseInfo)
     {
@@ -50,7 +50,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
         _cachedSelector = new ResolvedExpressionCache (this);
     }
 
-    protected abstract ResultModificationBase CreateResultModification ();
+    protected abstract ResultOperatorBase CreateResultModification ();
 
     public LambdaExpression OptionalPredicate { get; private set; }
     public LambdaExpression OptionalSelector { get; private set; }
@@ -76,7 +76,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
       var selectClause = ((SelectClause) queryModel.SelectOrGroupClause);
-      selectClause.ResultModifications.Add (CreateResultModification ());
+      selectClause.ResultOperators.Add (CreateResultModification ());
 
       if (OptionalPredicate != null)
       {

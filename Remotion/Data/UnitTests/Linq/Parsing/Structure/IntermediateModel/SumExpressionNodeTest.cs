@@ -189,7 +189,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void Apply_WithoutSelector ()
     {
-      TestApply (_node, typeof (SumResultModification));
+      TestApply (_node, typeof (SumResultOperator));
     }
 
     [Test]

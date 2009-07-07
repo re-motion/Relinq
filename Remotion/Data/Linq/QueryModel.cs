@@ -70,7 +70,7 @@ namespace Remotion.Data.Linq
 
     /// <summary>
     /// Gets or sets the result type of the underlying LINQ query. This is usually a type that implements <see cref="IQueryable{T}"/>, unless the
-    /// query ends with a <see cref="ResultModificationBase"/>. For example, if the query ends with a <see cref="CountResultModification"/>, the
+    /// query ends with a <see cref="ResultOperatorBase"/>. For example, if the query ends with a <see cref="CountResultOperator"/>, the
     /// result type will be <see cref="int"/>.
     /// </summary>
     public Type ResultType

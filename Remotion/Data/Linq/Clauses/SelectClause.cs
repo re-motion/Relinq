@@ -52,9 +52,9 @@ namespace Remotion.Data.Linq.Clauses
 
       _selector = selector;
 
-      ResultModifications = new ObservableCollection<ResultModificationBase> ();
-      ResultModifications.ItemInserted += ResultModifications_ItemAdded;
-      ResultModifications.ItemSet += ResultModifications_ItemAdded;
+      ResultOperators = new ObservableCollection<ResultOperatorBase> ();
+      ResultOperators.ItemInserted += ResultModifications_ItemAdded;
+      ResultOperators.ItemSet += ResultModifications_ItemAdded;
     }
 
     /// <summary>
@@ -71,7 +71,7 @@ namespace Remotion.Data.Linq.Clauses
     /// Gets the result modifications attached to this <see cref="SelectClause"/>. Result modifications modify the query's result set, aggregating,
     /// filtering, or otherwise processing the result before it is returned.
     /// </summary>
-    public ObservableCollection<ResultModificationBase> ResultModifications { get; private set; }
+    public ObservableCollection<ResultOperatorBase> ResultOperators { get; private set; }
 
     /// <summary>
     /// Accepts the specified visitor by calling its <see cref="IQueryModelVisitor.VisitSelectClause"/> method.
@@ -98,10 +98,10 @@ namespace Remotion.Data.Linq.Clauses
 
       var result = new SelectClause (Selector);
       result.TransformExpressions (ex => ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (ex, cloneContext.ClauseMapping));
-      foreach (var resultModification in ResultModifications)
+      foreach (var resultModification in ResultOperators)
       {
         var resultModificationClone = resultModification.Clone (cloneContext);
-        result.ResultModifications.Add (resultModificationClone);
+        result.ResultOperators.Add (resultModificationClone);
       }
 
       return result;
@@ -115,17 +115,17 @@ namespace Remotion.Data.Linq.Clauses
     /// <summary>
     /// Gets the execution strategy to use for this clause. The execution strategy defines how to dispatch a query
     /// to an implementation of <see cref="IQueryExecutor"/> when the <see cref="QueryProviderBase"/> needs to execute a query.
-    /// By default, it is <see cref="CollectionExecutionStrategy"/>, but this can be modified by the <see cref="ResultModifications"/>.
+    /// By default, it is <see cref="CollectionExecutionStrategy"/>, but this can be modified by the <see cref="ResultOperators"/>.
     /// </summary>
     public IExecutionStrategy GetExecutionStrategy ()
     {
-      if (ResultModifications.Count > 0)
-        return ResultModifications[ResultModifications.Count - 1].ExecutionStrategy;
+      if (ResultOperators.Count > 0)
+        return ResultOperators[ResultOperators.Count - 1].ExecutionStrategy;
       else
         return CollectionExecutionStrategy.Instance;
     }
 
-    private void ResultModifications_ItemAdded (object sender, ObservableCollectionChangedEventArgs<ResultModificationBase> e)
+    private void ResultModifications_ItemAdded (object sender, ObservableCollectionChangedEventArgs<ResultOperatorBase> e)
     {
       ArgumentUtility.CheckNotNull ("e.Item", e.Item);
     }
@@ -139,7 +139,7 @@ namespace Remotion.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("transformation", transformation);
       Selector = transformation (Selector);
-      foreach (var resultModification in ResultModifications)
+      foreach (var resultModification in ResultOperators)
       {
         resultModification.TransformExpressions (transformation);
       }
@@ -148,7 +148,7 @@ namespace Remotion.Data.Linq.Clauses
     public override string ToString ()
     {
       var result = "select " + FormattingExpressionTreeVisitor.Format (Selector);
-      return ResultModifications.Aggregate (result, (s, r) => s + " => " + r);
+      return ResultOperators.Aggregate (result, (s, r) => s + " => " + r);
     }
   }
 }

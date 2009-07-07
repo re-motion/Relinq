@@ -22,9 +22,9 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultModifications
 {
-  public class FirstResultModification : ResultModificationBase
+  public class LastResultOperator : ResultOperatorBase
   {
-    public FirstResultModification (bool returnDefaultWhenEmpty)
+    public LastResultOperator (bool returnDefaultWhenEmpty)
         : base (
             returnDefaultWhenEmpty ? SingleExecutionStrategy.InstanceWithDefaultWhenEmpty : SingleExecutionStrategy.InstanceNoDefaultWhenEmpty)
     {
@@ -33,9 +33,9 @@ namespace Remotion.Data.Linq.Clauses.ResultModifications
 
     public bool ReturnDefaultWhenEmpty { get; set; }
 
-    public override ResultModificationBase Clone (CloneContext cloneContext)
+    public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
-      return new FirstResultModification (ReturnDefaultWhenEmpty);
+      return new LastResultOperator (ReturnDefaultWhenEmpty);
     }
 
     public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)
@@ -43,17 +43,17 @@ namespace Remotion.Data.Linq.Clauses.ResultModifications
       ArgumentUtility.CheckNotNull ("items", items);
 
       if (ReturnDefaultWhenEmpty)
-        return new[] { items.FirstOrDefault () };
+        return new[] { items.LastOrDefault() };
       else
-        return new[] { items.First () };
+        return new[] { items.Last() };
     }
 
     public override string ToString ()
     {
       if (ReturnDefaultWhenEmpty)
-        return "FirstOrDefault()";
+        return "LastOrDefault()";
       else
-        return "First()";
+        return "Last()";
     }
   }
 }

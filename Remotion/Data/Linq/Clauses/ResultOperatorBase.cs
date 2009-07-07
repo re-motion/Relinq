@@ -17,7 +17,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Utilities;
 
@@ -27,16 +26,16 @@ namespace Remotion.Data.Linq.Clauses
   /// Represents an operation that is executed on the result set of the query, aggregating, filtering, or restricting the number of result items
   /// before the query result is returned.
   /// </summary>
-  public abstract class ResultModificationBase
+  public abstract class ResultOperatorBase
   {
-    protected ResultModificationBase (IExecutionStrategy executionStrategy)
+    protected ResultOperatorBase (IExecutionStrategy executionStrategy)
     {
       ArgumentUtility.CheckNotNull ("executionStrategy", executionStrategy);
       ExecutionStrategy = executionStrategy;
     }
 
     /// <summary>
-    /// Gets the execution strategy to use for this <see cref="ResultModificationBase"/>. The execution strategy defines how to dispatch a query
+    /// Gets the execution strategy to use for this <see cref="ResultOperatorBase"/>. The execution strategy defines how to dispatch a query
     /// to an implementation of <see cref="IQueryExecutor"/> when the <see cref="QueryProviderBase"/> needs to execute a query.
     /// </summary>
     public IExecutionStrategy ExecutionStrategy { get; private set; }
@@ -55,10 +54,10 @@ namespace Remotion.Data.Linq.Clauses
     /// </summary>
     /// <param name="cloneContext">The clone context to use for replacing <see cref="QuerySourceReferenceExpression"/> objects.</param>
     /// <returns>A clone of this item.</returns>
-    public abstract ResultModificationBase Clone (CloneContext cloneContext);
+    public abstract ResultOperatorBase Clone (CloneContext cloneContext);
 
     /// <summary>
-    /// Accepts the specified visitor by calling its <see cref="IQueryModelVisitor.VisitResultModification"/> method.
+    /// Accepts the specified visitor by calling its <see cref="IQueryModelVisitor.VisitResultOperator"/> method.
     /// </summary>
     /// <param name="visitor">The visitor to accept.</param>
     /// <param name="queryModel">The query model in whose context this clause is visited.</param>
@@ -70,7 +69,7 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);
       
-      visitor.VisitResultModification (this, queryModel, selectClause, index);
+      visitor.VisitResultOperator (this, queryModel, selectClause, index);
     }
 
     /// <summary>

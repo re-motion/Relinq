@@ -77,7 +77,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void Apply_WithoutSelector ()
     {
-      TestApply (_node, typeof (MaxResultModification));
+      TestApply (_node, typeof (MaxResultOperator));
     }
 
     [Test]

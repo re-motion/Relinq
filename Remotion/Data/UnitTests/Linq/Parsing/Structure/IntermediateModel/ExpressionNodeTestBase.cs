@@ -81,26 +81,26 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       return methodCallExpression.Method;
     }
     
-    protected void TestApply (ResultModificationExpressionNodeBase node, Type expectedResultModificationType)
+    protected void TestApply (ResultOperatorExpressionNodeBase node, Type expectedResultModificationType)
     {
       var result = node.Apply (QueryModel, ClauseGenerationContext);
       Assert.That (result, Is.SameAs (QueryModel));
 
       var selectClause = (SelectClause) QueryModel.SelectOrGroupClause;
-      Assert.That (selectClause.ResultModifications.Count, Is.EqualTo (1));
-      Assert.That (selectClause.ResultModifications[0], Is.InstanceOfType (expectedResultModificationType));
+      Assert.That (selectClause.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (selectClause.ResultOperators[0], Is.InstanceOfType (expectedResultModificationType));
 
       TestApply_DoesNotWrapQueryModel_AfterResultModification (node);
     }
 
-    public void TestApply_DoesNotWrapQueryModel_AfterResultModification (ResultModificationExpressionNodeBase node)
+    public void TestApply_DoesNotWrapQueryModel_AfterResultModification (ResultOperatorExpressionNodeBase node)
     {
-      ((SelectClause) QueryModel.SelectOrGroupClause).ResultModifications.Add (new DistinctResultModification ());
+      ((SelectClause) QueryModel.SelectOrGroupClause).ResultOperators.Add (new DistinctResultOperator ());
       var result = node.Apply (QueryModel, ClauseGenerationContext);
       Assert.That (result, Is.SameAs (QueryModel));
     }
 
-    protected void TestApply_WithOptionalPredicate (ResultModificationExpressionNodeBase node)
+    protected void TestApply_WithOptionalPredicate (ResultOperatorExpressionNodeBase node)
     {
       node.Apply (QueryModel, ClauseGenerationContext);
 
@@ -108,7 +108,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       Assert.That (newWhereClause.Predicate, Is.SameAs (node.GetResolvedOptionalPredicate (ClauseGenerationContext)));
     }
 
-    protected void TestApply_WithOptionalSelector (ResultModificationExpressionNodeBase node)
+    protected void TestApply_WithOptionalSelector (ResultOperatorExpressionNodeBase node)
     {
       var expectedNewSelector = (MethodCallExpression) ExpressionHelper.Resolve<int, string> (SourceClause, i => i.ToString());
       node.Apply (QueryModel, ClauseGenerationContext);

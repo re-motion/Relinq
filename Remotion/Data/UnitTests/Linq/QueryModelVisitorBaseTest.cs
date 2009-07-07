@@ -38,8 +38,8 @@ namespace Remotion.Data.UnitTests.Linq
     private JoinClause _joinClauseMock2;
     private Ordering _orderingMock1;
     private Ordering _orderingMock2;
-    private ResultModificationBase _resultModificationMock1;
-    private ResultModificationBase _resultModificationMock2;
+    private ResultOperatorBase _resultOperatorMock1;
+    private ResultOperatorBase _resultOperatorMock2;
     private QueryModel _queryModel;
     private SelectClause _selectClause;
     private MainFromClause _mainFromClause;
@@ -73,8 +73,8 @@ namespace Remotion.Data.UnitTests.Linq
       _orderingMock1 = _mockRepository.StrictMock<Ordering> (ExpressionHelper.CreateExpression(), OrderingDirection.Asc);
       _orderingMock2 = _mockRepository.StrictMock<Ordering> (ExpressionHelper.CreateExpression(), OrderingDirection.Asc);
 
-      _resultModificationMock1 = _mockRepository.StrictMock<ResultModificationBase> (CollectionExecutionStrategy.Instance);
-      _resultModificationMock2 = _mockRepository.StrictMock<ResultModificationBase> (CollectionExecutionStrategy.Instance);
+      _resultOperatorMock1 = _mockRepository.StrictMock<ResultOperatorBase> (CollectionExecutionStrategy.Instance);
+      _resultOperatorMock2 = _mockRepository.StrictMock<ResultOperatorBase> (CollectionExecutionStrategy.Instance);
 
       _queryModel = ExpressionHelper.CreateQueryModel ();
       _selectClause = ExpressionHelper.CreateSelectClause ();
@@ -174,7 +174,7 @@ namespace Remotion.Data.UnitTests.Linq
             .Expect (mock => mock.VisitSelectClause (_selectClause, _queryModel))
             .CallOriginalMethod (OriginalCallOptions.CreateExpectation);
         _visitorMock
-            .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitResultModifications", _selectClause.ResultModifications, _queryModel, _selectClause));
+            .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitResultOperators", _selectClause.ResultOperators, _queryModel, _selectClause));
       }
 
       _visitorMock.Replay();
@@ -298,12 +298,12 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void VisitResultModifications ()
     {
-      var resultModifications = new ObservableCollection<ResultModificationBase> { _resultModificationMock1, _resultModificationMock2 };
+      var resultModifications = new ObservableCollection<ResultOperatorBase> { _resultOperatorMock1, _resultOperatorMock2 };
 
       using (_mockRepository.Ordered())
       {
-        _resultModificationMock1.Expect (mock => mock.Accept (_testVisitor, _queryModel, _selectClause, 0));
-        _resultModificationMock2.Expect (mock => mock.Accept (_testVisitor, _queryModel, _selectClause, 1));
+        _resultOperatorMock1.Expect (mock => mock.Accept (_testVisitor, _queryModel, _selectClause, 0));
+        _resultOperatorMock2.Expect (mock => mock.Accept (_testVisitor, _queryModel, _selectClause, 1));
       }
 
       _mockRepository.ReplayAll();
@@ -316,14 +316,14 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void VisitResultModifications_WithChangingCollection ()
     {
-      var resultModifications = new ObservableCollection<ResultModificationBase> { _resultModificationMock1, _resultModificationMock2 };
+      var resultModifications = new ObservableCollection<ResultOperatorBase> { _resultOperatorMock1, _resultOperatorMock2 };
 
       using (_mockRepository.Ordered())
       {
-        _resultModificationMock1
+        _resultOperatorMock1
             .Expect (mock => mock.Accept (_testVisitor, _queryModel, _selectClause, 0))
             .WhenCalled (mi => resultModifications.RemoveAt (0));
-        _resultModificationMock2
+        _resultOperatorMock2
             .Expect (mock => mock.Accept (_testVisitor, _queryModel, _selectClause, 0));
       }
 

@@ -14,7 +14,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Linq;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
@@ -24,14 +23,14 @@ using Remotion.Data.Linq.Clauses.ResultModifications;
 namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
 {
   [TestFixture]
-  public class DistinctResultModificationTest
+  public class MinResultOperatorTest
   {
-    private DistinctResultModification _resultModification;
+    private MinResultOperator _resultOperator;
 
     [SetUp]
     public void SetUp ()
     {
-      _resultModification = new DistinctResultModification ();
+      _resultOperator = new MinResultOperator ();
     }
 
     [Test]
@@ -39,24 +38,26 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
     {
       var clonedClauseMapping = new ClauseMapping ();
       var cloneContext = new CloneContext (clonedClauseMapping);
-      var clone = _resultModification.Clone (cloneContext);
+      var clone = _resultOperator.Clone (cloneContext);
 
-      Assert.That (clone, Is.InstanceOfType (typeof (DistinctResultModification)));
+      Assert.That (clone, Is.InstanceOfType (typeof (MinResultOperator)));
     }
 
     [Test]
     public void ExecuteInMemory ()
     {
-      var items = new[] { 1, 2, 3, 2, 1 };
-      var result = _resultModification.ExecuteInMemory (items);
+      var items = new[] { 1, 2, 3, 0, 2 };
+      var resultModification = new MinResultOperator ();
 
-      Assert.That (result.Cast<int>().ToArray(), Is.EquivalentTo (new[] { 1, 2, 3 }));
+      var result = resultModification.ExecuteInMemory (items);
+
+      Assert.That (result, Is.EqualTo (new[] { 0 }));
     }
 
     [Test]
     public void ExecutionStrategy ()
     {
-      Assert.That (_resultModification.ExecutionStrategy, Is.SameAs (CollectionExecutionStrategy.Instance));
+      Assert.That (_resultOperator.ExecutionStrategy, Is.SameAs (ScalarExecutionStrategy.Instance));
     }
   }
 }

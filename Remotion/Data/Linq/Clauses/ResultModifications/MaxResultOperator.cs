@@ -16,25 +16,33 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Remotion.Data.Linq.Clauses;
+using System.Linq;
+using Remotion.Data.Linq.Clauses.ExecutionStrategies;
+using Remotion.Utilities;
 
-namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
+namespace Remotion.Data.Linq.Clauses.ResultModifications
 {
-  public class TestResultModification : ResultModificationBase
+  public class MaxResultOperator : ResultOperatorBase
   {
-    public TestResultModification (IExecutionStrategy executionStrategy)
-        : base(executionStrategy)
+    public MaxResultOperator ()
+        : base (ScalarExecutionStrategy.Instance)
     {
     }
 
-    public override ResultModificationBase Clone (CloneContext cloneContext)
+    public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
-      throw new NotImplementedException();
+      return new MaxResultOperator ();
     }
 
     public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)
     {
-      throw new NotImplementedException();
+      ArgumentUtility.CheckNotNull ("items", items);
+      return new[] { items.Max () };
+    }
+
+    public override string ToString ()
+    {
+      return "Max()";
     }
   }
 }

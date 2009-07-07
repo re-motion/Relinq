@@ -74,9 +74,9 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     }
 
     /// <summary>
-    /// Wraps the <paramref name="queryModel"/> into a subquery after a <see cref="ResultModificationBase"/> has been created. Override this method
+    /// Wraps the <paramref name="queryModel"/> into a subquery after a <see cref="ResultOperatorBase"/> has been created. Override this method
     /// when implementing a <see cref="IExpressionNode"/> that does not need a subquery to be created if it occurs after a 
-    /// <see cref="ResultModificationBase"/>.
+    /// <see cref="ResultOperatorBase"/>.
     /// </summary>
     /// <remarks>
     /// <para>
@@ -110,7 +110,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
-      if (((SelectClause) queryModel.SelectOrGroupClause).ResultModifications.Count > 0)
+      if (((SelectClause) queryModel.SelectOrGroupClause).ResultOperators.Count > 0)
       {
         var oldResultType = queryModel.ResultType;
         queryModel.ResultType = Source.ParsedExpression.Type; // the result type of the old query model is what the last node's expression says it should be

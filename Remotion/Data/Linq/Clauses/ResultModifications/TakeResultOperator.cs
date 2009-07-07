@@ -16,33 +16,36 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Utilities;
+using System.Linq;
 
 namespace Remotion.Data.Linq.Clauses.ResultModifications
 {
-  public class MaxResultModification : ResultModificationBase
+  public class TakeResultOperator : ResultOperatorBase
   {
-    public MaxResultModification ()
-        : base (ScalarExecutionStrategy.Instance)
+    public int Count { get; set; }
+
+    public TakeResultOperator (int count)
+        : base (CollectionExecutionStrategy.Instance)
     {
+      Count = count;
     }
 
-    public override ResultModificationBase Clone (CloneContext cloneContext)
+    public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
-      return new MaxResultModification ();
+      return new TakeResultOperator (Count);
     }
 
     public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)
     {
       ArgumentUtility.CheckNotNull ("items", items);
-      return new[] { items.Max () };
+      return items.Take (Count);
     }
 
     public override string ToString ()
     {
-      return "Max()";
+      return "Take(" + Count + ")";
     }
   }
 }

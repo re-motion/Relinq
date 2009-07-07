@@ -22,27 +22,38 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultModifications
 {
-  public class MinResultModification : ResultModificationBase
+  public class FirstResultOperator : ResultOperatorBase
   {
-    public MinResultModification ()
-        : base (ScalarExecutionStrategy.Instance)
+    public FirstResultOperator (bool returnDefaultWhenEmpty)
+        : base (
+            returnDefaultWhenEmpty ? SingleExecutionStrategy.InstanceWithDefaultWhenEmpty : SingleExecutionStrategy.InstanceNoDefaultWhenEmpty)
     {
+      ReturnDefaultWhenEmpty = returnDefaultWhenEmpty;
     }
 
-    public override ResultModificationBase Clone (CloneContext cloneContext)
+    public bool ReturnDefaultWhenEmpty { get; set; }
+
+    public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
-      return new MinResultModification ();
+      return new FirstResultOperator (ReturnDefaultWhenEmpty);
     }
 
     public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)
     {
       ArgumentUtility.CheckNotNull ("items", items);
-      return new[] { items.Min () };
+
+      if (ReturnDefaultWhenEmpty)
+        return new[] { items.FirstOrDefault () };
+      else
+        return new[] { items.First () };
     }
 
     public override string ToString ()
     {
-      return "Min()";
+      if (ReturnDefaultWhenEmpty)
+        return "FirstOrDefault()";
+      else
+        return "First()";
     }
   }
 }

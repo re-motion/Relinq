@@ -22,16 +22,16 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultModifications
 {
-  public class CountResultModification : ResultModificationBase
+  public class CountResultOperator : ResultOperatorBase
   {
-    public CountResultModification ()
+    public CountResultOperator ()
         : base (ScalarExecutionStrategy.Instance)
     {
     }
 
-    public override ResultModificationBase Clone (CloneContext cloneContext)
+    public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
-      return new CountResultModification ();
+      return new CountResultOperator ();
     }
 
     public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)

@@ -27,7 +27,7 @@ namespace Remotion.Data.Linq.Transformations
   /// <summary>
   /// Takes a <see cref="QueryModel"/> and transforms it by replacing its <see cref="FromClauseBase"/> instances (<see cref="MainFromClause"/> and
   /// <see cref="AdditionalFromClause"/>) that contain subqueries with equivalent flattened clauses. Subqueries that contain a 
-  /// <see cref="ResultModificationBase"/> (such as <see cref="DistinctResultModification"/> or <see cref="TakeResultModification"/>) cannot be
+  /// <see cref="ResultOperatorBase"/> (such as <see cref="DistinctResultOperator"/> or <see cref="TakeResultOperator"/>) cannot be
   /// flattened.
   /// </summary>
   /// <example>
@@ -114,7 +114,7 @@ namespace Remotion.Data.Linq.Transformations
     {
       ArgumentUtility.CheckNotNull ("subQueryModel", subQueryModel);
 
-      if (((SelectClause) subQueryModel.SelectOrGroupClause).ResultModifications.Count > 0)
+      if (((SelectClause) subQueryModel.SelectOrGroupClause).ResultOperators.Count > 0)
       {
         var message = string.Format (
             "The subquery '{0}' cannot be flattened and pulled out of the from clause because it contains result modifications.", 

@@ -283,9 +283,9 @@ namespace Remotion.Data.UnitTests.Linq
       return ((MemberExpression) expression).Member;
     }
 
-    public static ResultModificationBase CreateResultModification ()
+    public static ResultOperatorBase CreateResultModification ()
     {
-      return new DistinctResultModification ();
+      return new DistinctResultOperator ();
     }
 
     public static Expression Resolve<TParameter, TResult> (FromClauseBase fromClauseToReference, Expression<Func<TParameter, TResult>> expressionToBeResolved)

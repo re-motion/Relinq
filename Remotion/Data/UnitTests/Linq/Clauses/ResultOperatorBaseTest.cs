@@ -14,38 +14,36 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using NUnit.Framework;
+using Remotion.Data.Linq;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
-using Remotion.Utilities;
-using System.Linq;
+using Remotion.Data.UnitTests.Linq.Clauses.ResultModifications;
+using Rhino.Mocks;
 
-namespace Remotion.Data.Linq.Clauses.ResultModifications
+namespace Remotion.Data.UnitTests.Linq.Clauses
 {
-  public class TakeResultModification : ResultModificationBase
+  [TestFixture]
+  public class ResultOperatorBaseTest
   {
-    public int Count { get; set; }
+    ResultOperatorBase _resultOperator;
 
-    public TakeResultModification (int count)
-        : base (CollectionExecutionStrategy.Instance)
+    [SetUp]
+    public void SetUp ()
     {
-      Count = count;
+      _resultOperator = new TestResultOperator (CollectionExecutionStrategy.Instance);
     }
 
-    public override ResultModificationBase Clone (CloneContext cloneContext)
+    [Test]
+    public void Accept ()
     {
-      return new TakeResultModification (Count);
-    }
+      var queryModel = ExpressionHelper.CreateQueryModel ();
+      var selectClause = ExpressionHelper.CreateSelectClause ();
 
-    public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)
-    {
-      ArgumentUtility.CheckNotNull ("items", items);
-      return items.Take (Count);
-    }
+      var visitorMock = MockRepository.GenerateMock<IQueryModelVisitor> ();
+      _resultOperator.Accept (visitorMock, queryModel, selectClause, 1);
 
-    public override string ToString ()
-    {
-      return "Take(" + Count + ")";
+      visitorMock.AssertWasCalled (mock => mock.VisitResultOperator (_resultOperator, queryModel, selectClause, 1));
     }
   }
 }

@@ -29,7 +29,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   /// When this node is used, it usually follows (or replaces) a <see cref="SelectExpressionNode"/> of an <see cref="IExpressionNode"/> chain that 
   /// represents a query.
   /// </summary>
-  public class DistinctExpressionNode : ResultModificationExpressionNodeBase
+  public class DistinctExpressionNode : ResultOperatorExpressionNodeBase
   {
     public static readonly MethodInfo[] SupportedMethods = new[]
                                                            {
@@ -51,9 +51,9 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return Source.Resolve (inputParameter, expressionToBeResolved, clauseGenerationContext);
     }
 
-    protected override ResultModificationBase CreateResultModification ()
+    protected override ResultOperatorBase CreateResultModification ()
     {
-      return new DistinctResultModification ();
+      return new DistinctResultOperator ();
     }
   }
 }

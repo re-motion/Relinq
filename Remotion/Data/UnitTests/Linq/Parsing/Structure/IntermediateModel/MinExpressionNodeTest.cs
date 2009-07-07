@@ -77,7 +77,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void Apply_WithoutSelector ()
     {
-      TestApply (_node, typeof (MinResultModification));
+      TestApply (_node, typeof (MinResultOperator));
     }
 
     [Test]

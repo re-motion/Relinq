@@ -81,7 +81,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void Apply_WithoutOptionalPredicate ()
     {
-      TestApply (_node, typeof (CountResultModification));
+      TestApply (_node, typeof (CountResultOperator));
     }
 
     [Test]

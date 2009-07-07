@@ -129,17 +129,17 @@ namespace Remotion.Data.UnitTests.Linq
       base.VisitSelectClause (selectClause, queryModel);
     }
 
-    public override void VisitResultModification (
-        ResultModificationBase resultModification, QueryModel queryModel, SelectClause selectClause, int index)
+    public override void VisitResultOperator (
+        ResultOperatorBase resultOperator, QueryModel queryModel, SelectClause selectClause, int index)
     {
       var expectedSelectClause = ((SelectClause) _expected.SelectOrGroupClause);
-      var expectedResultModification = expectedSelectClause.ResultModifications[index];
+      var expectedResultModification = expectedSelectClause.ResultOperators[index];
 
-      Assert.That (resultModification.GetType(), Is.SameAs (expectedResultModification.GetType()));
-      var comparer = new ExpressionTreeComparer (expectedResultModification, resultModification);
-      comparer.CheckAreEqualObjects (expectedResultModification, resultModification);
+      Assert.That (resultOperator.GetType(), Is.SameAs (expectedResultModification.GetType()));
+      var comparer = new ExpressionTreeComparer (expectedResultModification, resultOperator);
+      comparer.CheckAreEqualObjects (expectedResultModification, resultOperator);
 
-      base.VisitResultModification (resultModification, queryModel, selectClause, index);
+      base.VisitResultOperator (resultOperator, queryModel, selectClause, index);
     }
 
     public override void VisitGroupClause (GroupClause groupClause, QueryModel queryModel)
@@ -182,13 +182,13 @@ namespace Remotion.Data.UnitTests.Linq
       base.VisitOrderings (orderings, queryModel, orderByClause);
     }
 
-    protected override void VisitResultModifications (
-        ObservableCollection<ResultModificationBase> resultModifications, QueryModel queryModel, SelectClause selectClause)
+    protected override void VisitResultOperators (
+        ObservableCollection<ResultOperatorBase> resultOperators, QueryModel queryModel, SelectClause selectClause)
     {
       var expectedSelectClause = (SelectClause) _expected.SelectOrGroupClause;
 
-      Assert.That (selectClause.ResultModifications.Count, Is.EqualTo (expectedSelectClause.ResultModifications.Count));
-      base.VisitResultModifications (resultModifications, queryModel, selectClause);
+      Assert.That (selectClause.ResultOperators.Count, Is.EqualTo (expectedSelectClause.ResultOperators.Count));
+      base.VisitResultOperators (resultOperators, queryModel, selectClause);
     }
   }
 }

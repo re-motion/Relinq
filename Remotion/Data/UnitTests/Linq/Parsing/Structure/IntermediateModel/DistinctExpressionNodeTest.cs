@@ -62,7 +62,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void Apply ()
     {
-      TestApply (_node, typeof (DistinctResultModification));
+      TestApply (_node, typeof (DistinctResultOperator));
     }
   }
 }

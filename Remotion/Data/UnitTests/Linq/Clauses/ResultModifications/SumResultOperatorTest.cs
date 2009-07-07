@@ -23,14 +23,14 @@ using Remotion.Data.Linq.Clauses.ResultModifications;
 namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
 {
   [TestFixture]
-  public class SumResultModificationTest
+  public class SumResultOperatorTest
   {
-    private SumResultModification _resultModification;
+    private SumResultOperator _resultOperator;
 
     [SetUp]
     public void SetUp ()
     {
-      _resultModification = new SumResultModification ();
+      _resultOperator = new SumResultOperator ();
     }
 
     [Test]
@@ -38,16 +38,16 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
     {
       var clonedClauseMapping = new ClauseMapping ();
       var cloneContext = new CloneContext (clonedClauseMapping);
-      var clone = _resultModification.Clone (cloneContext);
+      var clone = _resultOperator.Clone (cloneContext);
 
-      Assert.That (clone, Is.InstanceOfType (typeof (SumResultModification)));
+      Assert.That (clone, Is.InstanceOfType (typeof (SumResultOperator)));
     }
 
     [Test]
     public void ExecuteInMemory ()
     {
       var items = new[] { 1, 2, 3 };
-      var result = _resultModification.ExecuteInMemory(items);
+      var result = _resultOperator.ExecuteInMemory(items);
 
       Assert.That (result, Is.EqualTo (new[] { 6 }));
     }
@@ -57,13 +57,13 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
     public void ExecuteInMemory_UnsupportedType ()
     {
       var items = new[] { "1", "2", "3" };
-      _resultModification.ExecuteInMemory (items);
+      _resultOperator.ExecuteInMemory (items);
     }
 
     [Test]
     public void ExecutionStrategy ()
     {
-      Assert.That (_resultModification.ExecutionStrategy, Is.SameAs (ScalarExecutionStrategy.Instance));
+      Assert.That (_resultOperator.ExecutionStrategy, Is.SameAs (ScalarExecutionStrategy.Instance));
     }
   }
 }

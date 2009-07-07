@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Linq;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
@@ -23,14 +24,14 @@ using Remotion.Data.Linq.Clauses.ResultModifications;
 namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
 {
   [TestFixture]
-  public class MaxResultModificationTest
+  public class TakeResultOperatorTest
   {
-    private MaxResultModification _resultModification;
+    private TakeResultOperator _resultOperator;
 
     [SetUp]
     public void SetUp ()
     {
-      _resultModification = new MaxResultModification ();
+      _resultOperator = new TakeResultOperator (2);
     }
 
     [Test]
@@ -38,26 +39,24 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
     {
       var clonedClauseMapping = new ClauseMapping ();
       var cloneContext = new CloneContext (clonedClauseMapping);
-      var clone = _resultModification.Clone (cloneContext);
+      var clone = _resultOperator.Clone (cloneContext);
 
-      Assert.That (clone, Is.InstanceOfType (typeof (MaxResultModification)));
+      Assert.That (clone, Is.InstanceOfType (typeof (TakeResultOperator)));
     }
 
     [Test]
     public void ExecuteInMemory ()
     {
       var items = new[] { 1, 2, 3, 0, 2 };
-      var resultModification = new MaxResultModification ();
+      var result = _resultOperator.ExecuteInMemory (items);
 
-      var result = resultModification.ExecuteInMemory (items);
-
-      Assert.That (result, Is.EqualTo (new[] { 3 }));
+      Assert.That (result.Cast<int>().ToArray(), Is.EqualTo (new[] { 1, 2 }));
     }
 
     [Test]
     public void ExecutionStrategy ()
     {
-      Assert.That (_resultModification.ExecutionStrategy, Is.SameAs (ScalarExecutionStrategy.Instance));
+      Assert.That (_resultOperator.ExecutionStrategy, Is.SameAs (CollectionExecutionStrategy.Instance));
     }
   }
 }

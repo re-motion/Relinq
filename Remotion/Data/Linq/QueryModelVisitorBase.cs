@@ -29,7 +29,7 @@ namespace Remotion.Data.Linq
   /// <remarks>
   /// This visitor is hardened against modifications performed on the visited <see cref="QueryModel"/> while the model is currently being visited.
   /// That is, if a the <see cref="QueryModel.BodyClauses"/> collection changes while a body clause (or a child item of a body clause) is currently 
-  /// being processed, the visitor will handle that gracefully. The same applies to <see cref="SelectClause.ResultModifications"/>, 
+  /// being processed, the visitor will handle that gracefully. The same applies to <see cref="SelectClause.ResultOperators"/>, 
   /// <see cref="OrderByClause.Orderings"/>, and <see cref="FromClauseBase.JoinClauses"/>.
   /// </remarks>
   public abstract class QueryModelVisitorBase : IQueryModelVisitor
@@ -98,12 +98,12 @@ namespace Remotion.Data.Linq
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
-      VisitResultModifications (selectClause.ResultModifications, queryModel, selectClause);
+      VisitResultOperators (selectClause.ResultOperators, queryModel, selectClause);
     }
 
-    public virtual void VisitResultModification (ResultModificationBase resultModification, QueryModel queryModel, SelectClause selectClause, int index)
+    public virtual void VisitResultOperator (ResultOperatorBase resultOperator, QueryModel queryModel, SelectClause selectClause, int index)
     {
-      ArgumentUtility.CheckNotNull ("resultModification", resultModification);
+      ArgumentUtility.CheckNotNull ("resultOperator", resultOperator);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);
 
@@ -147,13 +147,13 @@ namespace Remotion.Data.Linq
         indexValuePair.Value.Accept (this, queryModel, orderByClause, indexValuePair.Index);
     }
 
-    protected virtual void VisitResultModifications (ObservableCollection<ResultModificationBase> resultModifications, QueryModel queryModel, SelectClause selectClause)
+    protected virtual void VisitResultOperators (ObservableCollection<ResultOperatorBase> resultOperators, QueryModel queryModel, SelectClause selectClause)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);
-      ArgumentUtility.CheckNotNull ("resultModifications", resultModifications);
+      ArgumentUtility.CheckNotNull ("resultOperators", resultOperators);
 
-      foreach (var indexValuePair in resultModifications.AsChangeResistantEnumerableWithIndex ())
+      foreach (var indexValuePair in resultOperators.AsChangeResistantEnumerableWithIndex ())
         indexValuePair.Value.Accept (this, queryModel, selectClause, indexValuePair.Index);
     }
   }

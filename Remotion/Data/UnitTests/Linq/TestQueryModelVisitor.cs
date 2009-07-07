@@ -54,9 +54,9 @@ namespace Remotion.Data.UnitTests.Linq
       base.VisitOrderings (orderings, queryModel, orderByClause);
     }
 
-    public new void VisitResultModifications (ObservableCollection<ResultModificationBase> resultModifications, QueryModel queryModel, SelectClause selectClause)
+    public new void VisitResultModifications (ObservableCollection<ResultOperatorBase> resultModifications, QueryModel queryModel, SelectClause selectClause)
     {
-      base.VisitResultModifications (resultModifications, queryModel, selectClause);
+      base.VisitResultOperators (resultModifications, queryModel, selectClause);
     }
   }
 }

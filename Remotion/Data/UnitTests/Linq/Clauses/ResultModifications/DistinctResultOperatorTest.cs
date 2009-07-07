@@ -24,14 +24,14 @@ using Remotion.Data.Linq.Clauses.ResultModifications;
 namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
 {
   [TestFixture]
-  public class TakeResultModificationTest
+  public class DistinctResultOperatorTest
   {
-    private TakeResultModification _resultModification;
+    private DistinctResultOperator _resultOperator;
 
     [SetUp]
     public void SetUp ()
     {
-      _resultModification = new TakeResultModification (2);
+      _resultOperator = new DistinctResultOperator ();
     }
 
     [Test]
@@ -39,24 +39,24 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
     {
       var clonedClauseMapping = new ClauseMapping ();
       var cloneContext = new CloneContext (clonedClauseMapping);
-      var clone = _resultModification.Clone (cloneContext);
+      var clone = _resultOperator.Clone (cloneContext);
 
-      Assert.That (clone, Is.InstanceOfType (typeof (TakeResultModification)));
+      Assert.That (clone, Is.InstanceOfType (typeof (DistinctResultOperator)));
     }
 
     [Test]
     public void ExecuteInMemory ()
     {
-      var items = new[] { 1, 2, 3, 0, 2 };
-      var result = _resultModification.ExecuteInMemory (items);
+      var items = new[] { 1, 2, 3, 2, 1 };
+      var result = _resultOperator.ExecuteInMemory (items);
 
-      Assert.That (result.Cast<int>().ToArray(), Is.EqualTo (new[] { 1, 2 }));
+      Assert.That (result.Cast<int>().ToArray(), Is.EquivalentTo (new[] { 1, 2, 3 }));
     }
 
     [Test]
     public void ExecutionStrategy ()
     {
-      Assert.That (_resultModification.ExecutionStrategy, Is.SameAs (CollectionExecutionStrategy.Instance));
+      Assert.That (_resultOperator.ExecutionStrategy, Is.SameAs (CollectionExecutionStrategy.Instance));
     }
   }
 }

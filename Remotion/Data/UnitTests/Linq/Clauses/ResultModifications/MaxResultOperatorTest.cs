@@ -15,34 +15,49 @@
 // 
 using System;
 using NUnit.Framework;
-using Remotion.Data.Linq;
+using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
-using Rhino.Mocks;
+using Remotion.Data.Linq.Clauses.ResultModifications;
 
 namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
 {
   [TestFixture]
-  public class ResultModificationBaseTest
+  public class MaxResultOperatorTest
   {
-    ResultModificationBase _resultModification;
+    private MaxResultOperator _resultOperator;
 
     [SetUp]
     public void SetUp ()
     {
-      _resultModification = new TestResultModification (CollectionExecutionStrategy.Instance);
+      _resultOperator = new MaxResultOperator ();
     }
 
     [Test]
-    public void Accept ()
+    public void Clone ()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel ();
-      var selectClause = ExpressionHelper.CreateSelectClause ();
+      var clonedClauseMapping = new ClauseMapping ();
+      var cloneContext = new CloneContext (clonedClauseMapping);
+      var clone = _resultOperator.Clone (cloneContext);
 
-      var visitorMock = MockRepository.GenerateMock<IQueryModelVisitor> ();
-      _resultModification.Accept (visitorMock, queryModel, selectClause, 1);
+      Assert.That (clone, Is.InstanceOfType (typeof (MaxResultOperator)));
+    }
 
-      visitorMock.AssertWasCalled (mock => mock.VisitResultModification (_resultModification, queryModel, selectClause, 1));
+    [Test]
+    public void ExecuteInMemory ()
+    {
+      var items = new[] { 1, 2, 3, 0, 2 };
+      var resultModification = new MaxResultOperator ();
+
+      var result = resultModification.ExecuteInMemory (items);
+
+      Assert.That (result, Is.EqualTo (new[] { 3 }));
+    }
+
+    [Test]
+    public void ExecutionStrategy ()
+    {
+      Assert.That (_resultOperator.ExecutionStrategy, Is.SameAs (ScalarExecutionStrategy.Instance));
     }
   }
 }

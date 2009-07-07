@@ -22,37 +22,27 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultModifications
 {
-  public class SingleResultModification : ResultModificationBase
+  public class DistinctResultOperator : ResultOperatorBase
   {
-    public SingleResultModification (bool returnDefaultWhenEmpty)
-        : base (returnDefaultWhenEmpty ? SingleExecutionStrategy.InstanceWithDefaultWhenEmpty : SingleExecutionStrategy.InstanceNoDefaultWhenEmpty)
+    public DistinctResultOperator ()
+        : base (CollectionExecutionStrategy.Instance)
     {
-      ReturnDefaultWhenEmpty = returnDefaultWhenEmpty;
     }
 
-    public bool ReturnDefaultWhenEmpty { get; set; }
-
-    public override ResultModificationBase Clone (CloneContext cloneContext)
+    public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
-      return new SingleResultModification (ReturnDefaultWhenEmpty);
+      return new DistinctResultOperator ();
     }
 
     public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)
     {
       ArgumentUtility.CheckNotNull ("items", items);
-
-      if (ReturnDefaultWhenEmpty)
-        return new[] { items.SingleOrDefault() };
-      else
-        return new[] { items.Single() };
+      return items.Distinct ();
     }
 
     public override string ToString ()
     {
-      if (ReturnDefaultWhenEmpty)
-        return "SingleOrDefault()";
-      else
-        return "Single()";
+      return "Distinct()";
     }
   }
 }
