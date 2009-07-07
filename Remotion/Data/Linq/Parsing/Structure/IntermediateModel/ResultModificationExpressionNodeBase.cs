@@ -71,7 +71,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return _cachedSelector.GetOrCreate (r => r.GetResolvedExpression (OptionalSelector.Body, OptionalSelector.Parameters[0], clauseGenerationContext));
     }
 
-    public override QueryModel Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
+    protected override QueryModel ApplyNodeSpecificSemantics (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 

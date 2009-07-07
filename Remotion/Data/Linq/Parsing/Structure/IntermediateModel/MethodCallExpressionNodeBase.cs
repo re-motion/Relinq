@@ -48,13 +48,18 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       ParsedExpression = parseInfo.ParsedExpression;
     }
 
-
     public string AssociatedIdentifier { get; set; }
     public IExpressionNode Source { get; private set; }
     public MethodCallExpression ParsedExpression { get; private set; }
 
     public abstract Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext);
-    public abstract QueryModel Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext);
+    protected abstract QueryModel ApplyNodeSpecificSemantics (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext);
+
+    public QueryModel Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
+    {
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+      return ApplyNodeSpecificSemantics (queryModel, clauseGenerationContext);
+    }
 
     protected InvalidOperationException CreateResolveNotSupportedException ()
     {
