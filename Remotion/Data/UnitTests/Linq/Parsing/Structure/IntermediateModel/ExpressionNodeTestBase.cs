@@ -85,17 +85,16 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var result = node.Apply (QueryModel, ClauseGenerationContext);
       Assert.That (result, Is.SameAs (QueryModel));
-
-      var selectClause = (SelectClause) QueryModel.SelectOrGroupClause;
-      Assert.That (selectClause.ResultOperators.Count, Is.EqualTo (1));
-      Assert.That (selectClause.ResultOperators[0], Is.InstanceOfType (expectedResultOperatorType));
+      
+      Assert.That (QueryModel.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (QueryModel.ResultOperators[0], Is.InstanceOfType (expectedResultOperatorType));
 
       TestApply_DoesNotWrapQueryModel_AfterResultOperator (node);
     }
 
-    public void TestApply_DoesNotWrapQueryModel_AfterResultOperator (ResultOperatorExpressionNodeBase node)
+    protected void TestApply_DoesNotWrapQueryModel_AfterResultOperator (ResultOperatorExpressionNodeBase node)
     {
-      ((SelectClause) QueryModel.SelectOrGroupClause).ResultOperators.Add (new DistinctResultOperator ());
+      QueryModel.ResultOperators.Add (new DistinctResultOperator ());
       var result = node.Apply (QueryModel, ClauseGenerationContext);
       Assert.That (result, Is.SameAs (QueryModel));
     }

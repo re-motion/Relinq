@@ -18,6 +18,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Collections;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Parsing.Structure;
@@ -66,6 +67,10 @@ namespace Remotion.Data.Linq
       BodyClauses = new ObservableCollection<IBodyClause> ();
       BodyClauses.ItemInserted += BodyClauses_Added;
       BodyClauses.ItemSet += BodyClauses_Added;
+
+      ResultOperators = new ObservableCollection<ResultOperatorBase> ();
+      ResultOperators.ItemInserted += ResultOperators_ItemAdded;
+      ResultOperators.ItemSet += ResultOperators_ItemAdded;
     }
 
     /// <summary>
@@ -116,6 +121,30 @@ namespace Remotion.Data.Linq
     public ObservableCollection<IBodyClause> BodyClauses { get; private set; }
 
     /// <summary>
+    /// Gets the result operators attached to this <see cref="SelectClause"/>. Result operators modify the query's result set, aggregating,
+    /// filtering, or otherwise processing the result before it is returned.
+    /// </summary>
+    public ObservableCollection<ResultOperatorBase> ResultOperators { get; private set; }
+
+    /// <summary>
+    /// Gets the execution strategy to use for this <see cref="QueryModel"/>. The execution strategy defines how to dispatch a query
+    /// to an implementation of <see cref="IQueryExecutor"/> when the <see cref="QueryProviderBase"/> needs to execute a query.
+    /// By default, it is <see cref="CollectionExecutionStrategy"/>, but this can be modified by the <see cref="ResultOperators"/>.
+    /// </summary>
+    public IExecutionStrategy GetExecutionStrategy ()
+    {
+      if (ResultOperators.Count > 0)
+        return ResultOperators[ResultOperators.Count - 1].ExecutionStrategy;
+      else
+        return SelectOrGroupClause.GetExecutionStrategy ();
+    }
+
+    private void ResultOperators_ItemAdded (object sender, ObservableCollectionChangedEventArgs<ResultOperatorBase> e)
+    {
+      ArgumentUtility.CheckNotNull ("e.Item", e.Item);
+    }
+
+    /// <summary>
     /// Accepts an implementation of <see cref="IQueryModelVisitor"/> or <see cref="QueryModelVisitorBase"/>, as defined by the Visitor pattern.
     /// </summary>
     public void Accept (IQueryModelVisitor visitor)
@@ -129,7 +158,8 @@ namespace Remotion.Data.Linq
     /// </summary>
     public override string ToString ()
     {
-      return MainFromClause + BodyClauses.Aggregate ("", (s, b) => s + " " + b) + " " + SelectOrGroupClause;
+      var result = MainFromClause + BodyClauses.Aggregate ("", (s, b) => s + " " + b) + " " + SelectOrGroupClause;
+      return ResultOperators.Aggregate (result, (s, r) => s + " => " + r);
     }
 
     /// <summary>
@@ -166,7 +196,15 @@ namespace Remotion.Data.Linq
         queryModelBuilder.AddClause (bodyClause.Clone (cloneContext));
       queryModelBuilder.AddClause (SelectOrGroupClause.Clone (cloneContext));
 
-      return queryModelBuilder.Build (ResultType);
+      var result = queryModelBuilder.Build (ResultType);
+
+      foreach (var resultOperator in ResultOperators)
+      {
+        var resultOperatorClone = resultOperator.Clone (cloneContext);
+        result.ResultOperators.Add (resultOperatorClone);
+      }
+
+      return result;
     }
 
     object ICloneable.Clone ()
@@ -189,6 +227,11 @@ namespace Remotion.Data.Linq
         bodyClause.TransformExpressions (transformation);
 
       SelectOrGroupClause.TransformExpressions (transformation);
+
+      foreach (var resultOperator in ResultOperators)
+      {
+        resultOperator.TransformExpressions (transformation);
+      }
     }
 
     /// <summary>

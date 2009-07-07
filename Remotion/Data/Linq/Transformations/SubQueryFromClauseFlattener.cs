@@ -114,7 +114,7 @@ namespace Remotion.Data.Linq.Transformations
     {
       ArgumentUtility.CheckNotNull ("subQueryModel", subQueryModel);
 
-      if (((SelectClause) subQueryModel.SelectOrGroupClause).ResultOperators.Count > 0)
+      if (subQueryModel.ResultOperators.Count > 0)
       {
         var message = string.Format (
             "The subquery '{0}' cannot be flattened and pulled out of the from clause because it contains result operators.", 

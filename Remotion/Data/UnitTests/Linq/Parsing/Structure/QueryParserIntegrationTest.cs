@@ -365,7 +365,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (mainFromClause.ItemName, Is.EqualTo("s"));
 
       var subQueryModel = ((SubQueryExpression) mainFromClause.FromExpression).QueryModel;
-      Assert.That (((SelectClause) subQueryModel.SelectOrGroupClause).ResultOperators[0], Is.InstanceOfType (typeof (TakeResultOperator)));
+      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (TakeResultOperator)));
       Assert.That (subQueryModel.ResultType, Is.SameAs (typeof (IQueryable<Student>)));
       
       var selectClause = (SelectClause) queryModel.SelectOrGroupClause;

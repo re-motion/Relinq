@@ -15,10 +15,8 @@
 // 
 using System;
 using System.Linq.Expressions;
-using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
@@ -110,24 +108,20 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void Apply_NoDefaultAllowed ()
     {
       var node = new LastExpressionNode (CreateParseInfo (LastExpressionNode.SupportedMethods[0].MakeGenericMethod (typeof (Student))), null);
-      var queryModel = ExpressionHelper.CreateQueryModel ();
-
-      node.Apply (queryModel, ClauseGenerationContext);
-
-      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
-      Assert.That (((LastResultOperator) selectClause.ResultOperators[0]).ReturnDefaultWhenEmpty, Is.False);
+      
+      node.Apply (QueryModel, ClauseGenerationContext);
+      
+      Assert.That (((LastResultOperator) QueryModel.ResultOperators[0]).ReturnDefaultWhenEmpty, Is.False);
     }
 
     [Test]
     public void Apply_DefaultAllowed ()
     {
       var node = new LastExpressionNode (CreateParseInfo (LastExpressionNode.SupportedMethods[3].MakeGenericMethod (typeof (Student))), null);
-      var queryModel = ExpressionHelper.CreateQueryModel ();
+      
+      node.Apply (QueryModel, ClauseGenerationContext);
 
-      node.Apply (queryModel, ClauseGenerationContext);
-
-      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
-      Assert.That (((LastResultOperator) selectClause.ResultOperators[0]).ReturnDefaultWhenEmpty, Is.True);
+      Assert.That (((LastResultOperator) QueryModel.ResultOperators[0]).ReturnDefaultWhenEmpty, Is.True);
     }
   }
 }

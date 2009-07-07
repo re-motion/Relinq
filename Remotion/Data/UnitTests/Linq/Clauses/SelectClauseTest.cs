@@ -48,32 +48,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
-    public void SelectWithMethodCall_ResultOperators ()
-    {
-      var resultOperator = new DistinctResultOperator ();
-      _selectClause.ResultOperators.Add (resultOperator);
-
-      Assert.That (_selectClause.ResultOperators, Is.Not.Empty);
-      Assert.That (_selectClause.ResultOperators, Is.EqualTo (new[] { resultOperator }));
-    }
-
-    [Test]
-    [ExpectedException (typeof (ArgumentNullException))]
-    public void AddResultOperator_Null_ThrowsArgumentNullException ()
-    {
-      _selectClause.ResultOperators.Add (null);
-    }
-
-    [Test]
-    [ExpectedException (typeof (ArgumentNullException))]
-    public void AddResultOperator_WithNull_ThrowsArgumentNullException ()
-    {
-      var resultOperator = new DistinctResultOperator ();
-      _selectClause.ResultOperators.Add (resultOperator);
-      _selectClause.ResultOperators[0] = null;
-    }
-
-    [Test]
     public void SelectClause_ImplementISelectGroupClause()
     {
       Assert.That (_selectClause, Is.InstanceOfType (typeof (ISelectGroupClause)));
@@ -130,39 +104,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
-    public void Clone_ResultOperators ()
-    {
-      var resultOperator1 = ExpressionHelper.CreateResultOperator ();
-      _selectClause.ResultOperators.Add (resultOperator1);
-      var resultOperator2 = ExpressionHelper.CreateResultOperator ();
-      _selectClause.ResultOperators.Add (resultOperator2);
-
-      var clone = _selectClause.Clone (_cloneContext);
-
-      Assert.That (clone.ResultOperators.Count, Is.EqualTo (2));
-      Assert.That (clone.ResultOperators[0], Is.Not.SameAs (resultOperator1));
-      Assert.That (clone.ResultOperators[0].GetType(), Is.SameAs (resultOperator1.GetType()));
-      Assert.That (clone.ResultOperators[1], Is.Not.SameAs (resultOperator2));
-      Assert.That (clone.ResultOperators[1].GetType (), Is.SameAs (resultOperator2.GetType ()));
-    }
-
-    [Test]
-    public void Clone_ResultOperators_PassesMapping ()
-    {
-      var resultOperatorMock = MockRepository.GenerateMock<ResultOperatorBase> (CollectionExecutionStrategy.Instance);
-      _selectClause.ResultOperators.Add (resultOperatorMock);
-
-      resultOperatorMock
-          .Expect (mock => mock.Clone (Arg.Is (_cloneContext)))
-          .Return (ExpressionHelper.CreateResultOperator());
-      resultOperatorMock.Replay();
-
-      _selectClause.Clone (_cloneContext);
-
-      resultOperatorMock.VerifyAllExpectations();
-    }
-
-    [Test]
     public void TransformExpressions ()
     {
       var oldExpression = ExpressionHelper.CreateExpression ();
@@ -179,46 +120,9 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
-    public void TransformExpressions_PassedToResultOperators ()
-    {
-      Func<Expression, Expression> transformer = ex => ex;
-      var resultOperatorMock = MockRepository.GenerateMock<ResultOperatorBase> (CollectionExecutionStrategy.Instance);    
-      _selectClause.ResultOperators.Add (resultOperatorMock);
-      resultOperatorMock.Expect (mock => mock.TransformExpressions (transformer));
-      
-      resultOperatorMock.Replay ();
-
-      _selectClause.TransformExpressions (transformer);
-
-      resultOperatorMock.VerifyAllExpectations ();
-    }
-
-    [Test]
-    public void GetExecutionStrategy_WithoutResultOperators ()
+    public void GetExecutionStrategy ()
     {
       Assert.That (_selectClause.GetExecutionStrategy (), Is.SameAs (CollectionExecutionStrategy.Instance));
-    }
-
-    [Test]
-    public void GetExecutionStrategy_WithResultOperators ()
-    {
-      var firstOperator = new FirstResultOperator (true);
-      _selectClause.ResultOperators.Add (firstOperator);
-
-      Assert.That (_selectClause.GetExecutionStrategy (), Is.SameAs (firstOperator.ExecutionStrategy));
-    }
-
-    [Test]
-    public void GetExecutionStrategy_WithManyResultOperators ()
-    {
-      var takeOperator = new TakeResultOperator (7);
-      var distinctOperator = new DistinctResultOperator ();
-      var countOperator = new CountResultOperator ();
-      _selectClause.ResultOperators.Add (takeOperator);
-      _selectClause.ResultOperators.Add (distinctOperator);
-      _selectClause.ResultOperators.Add (countOperator);
-
-      Assert.That (_selectClause.GetExecutionStrategy (), Is.SameAs (countOperator.ExecutionStrategy));
     }
 
     [Test]
@@ -226,16 +130,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     {
       var selectClause = new SelectClause (Expression.Constant (0));
       Assert.That (selectClause.ToString (), Is.EqualTo ("select 0"));
-    }
-
-    [Test]
-    public void ToString_WithResultOperators ()
-    {
-      var selectClause = new SelectClause (Expression.Constant (0));
-      selectClause.ResultOperators.Add (new DistinctResultOperator ());
-      selectClause.ResultOperators.Add (new CountResultOperator ());
-
-      Assert.That (selectClause.ToString (), Is.EqualTo ("select 0 => Distinct() => Count()"));
     }
   }
 }

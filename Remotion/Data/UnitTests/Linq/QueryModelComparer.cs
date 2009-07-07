@@ -130,16 +130,15 @@ namespace Remotion.Data.UnitTests.Linq
     }
 
     public override void VisitResultOperator (
-        ResultOperatorBase resultOperator, QueryModel queryModel, SelectClause selectClause, int index)
+        ResultOperatorBase resultOperator, QueryModel queryModel, int index)
     {
-      var expectedSelectClause = ((SelectClause) _expected.SelectOrGroupClause);
-      var expectedResultOperator = expectedSelectClause.ResultOperators[index];
+      var expectedResultOperator = _expected.ResultOperators[index];
 
       Assert.That (resultOperator.GetType(), Is.SameAs (expectedResultOperator.GetType()));
       var comparer = new ExpressionTreeComparer (expectedResultOperator, resultOperator);
       comparer.CheckAreEqualObjects (expectedResultOperator, resultOperator);
 
-      base.VisitResultOperator (resultOperator, queryModel, selectClause, index);
+      base.VisitResultOperator (resultOperator, queryModel, index);
     }
 
     public override void VisitGroupClause (GroupClause groupClause, QueryModel queryModel)
@@ -183,12 +182,10 @@ namespace Remotion.Data.UnitTests.Linq
     }
 
     protected override void VisitResultOperators (
-        ObservableCollection<ResultOperatorBase> resultOperators, QueryModel queryModel, SelectClause selectClause)
+        ObservableCollection<ResultOperatorBase> resultOperators, QueryModel queryModel)
     {
-      var expectedSelectClause = (SelectClause) _expected.SelectOrGroupClause;
-
-      Assert.That (selectClause.ResultOperators.Count, Is.EqualTo (expectedSelectClause.ResultOperators.Count));
-      base.VisitResultOperators (resultOperators, queryModel, selectClause);
+      Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (_expected.ResultOperators.Count));
+      base.VisitResultOperators (resultOperators, queryModel);
     }
   }
 }

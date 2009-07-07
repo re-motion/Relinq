@@ -75,8 +75,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
-      var selectClause = ((SelectClause) queryModel.SelectOrGroupClause);
-      selectClause.ResultOperators.Add (CreateResultOperator ());
+      queryModel.ResultOperators.Add (CreateResultOperator ());
 
       if (OptionalPredicate != null)
       {
@@ -93,6 +92,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
         // we use OptionalSelector instead of GetResolvedOptionalSelector because we are substituting the selector's parameter with
         // selectClause.Selector (which is already resolved)
 
+        var selectClause = ((SelectClause) queryModel.SelectOrGroupClause);
         var newSelector = ReplacingVisitor.Replace (OptionalSelector.Parameters[0], selectClause.Selector, OptionalSelector.Body);
         selectClause.Selector = newSelector;
       }

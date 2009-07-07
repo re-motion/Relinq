@@ -110,7 +110,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
-      if (((SelectClause) queryModel.SelectOrGroupClause).ResultOperators.Count > 0)
+      if (queryModel.ResultOperators.Count > 0)
       {
         var oldResultType = queryModel.ResultType;
         queryModel.ResultType = Source.ParsedExpression.Type; // the result type of the old query model is what the last node's expression says it should be

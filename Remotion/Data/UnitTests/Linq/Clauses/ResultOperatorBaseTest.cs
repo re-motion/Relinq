@@ -38,12 +38,10 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Accept ()
     {
       var queryModel = ExpressionHelper.CreateQueryModel ();
-      var selectClause = ExpressionHelper.CreateSelectClause ();
-
       var visitorMock = MockRepository.GenerateMock<IQueryModelVisitor> ();
-      _resultOperator.Accept (visitorMock, queryModel, selectClause, 1);
+      _resultOperator.Accept (visitorMock, queryModel, 1);
 
-      visitorMock.AssertWasCalled (mock => mock.VisitResultOperator (_resultOperator, queryModel, selectClause, 1));
+      visitorMock.AssertWasCalled (mock => mock.VisitResultOperator (_resultOperator, queryModel, 1));
     }
   }
 }

@@ -61,15 +61,13 @@ namespace Remotion.Data.Linq.Clauses
     /// </summary>
     /// <param name="visitor">The visitor to accept.</param>
     /// <param name="queryModel">The query model in whose context this clause is visited.</param>
-    /// <param name="selectClause">The <see cref="SelectClause"/> in whose context this item is visited.</param>
-    /// <param name="index">The index of this item in the <paramref name="selectClause"/>'s <see cref="OrderByClause.Orderings"/> collection.</param>
-    public virtual void Accept (IQueryModelVisitor visitor, QueryModel queryModel, SelectClause selectClause, int index)
+    /// <param name="index">The index of this item in the <paramref name="queryModel"/>'s <see cref="QueryModel.ResultOperators"/> collection.</param>
+    public virtual void Accept (IQueryModelVisitor visitor, QueryModel queryModel, int index)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
-      ArgumentUtility.CheckNotNull ("selectClause", selectClause);
       
-      visitor.VisitResultOperator (this, queryModel, selectClause, index);
+      visitor.VisitResultOperator (this, queryModel, index);
     }
 
     /// <summary>

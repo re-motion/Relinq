@@ -18,8 +18,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Data.Linq;
+using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.Expressions;
-using Remotion.Data.Linq.StringBuilding;
+using Remotion.Data.Linq.Clauses.ResultOperators;
 using Rhino.Mocks;
 using Remotion.Data.Linq.Clauses;
 using NUnit.Framework.SyntaxHelpers;
@@ -89,6 +90,19 @@ namespace Remotion.Data.UnitTests.Linq
       queryModel.BodyClauses.Add (orderByClause);
       
       Assert.That (queryModel.ToString (), Is.EqualTo ("from Student x in 0 where False orderby 1 asc select 0"));
+    }
+
+    [Test]
+    public void ToString_WithResultOperators ()
+    {
+      var queryModel = new QueryModel (
+          typeof (IQueryable<Student>),
+          new MainFromClause ("x", typeof (Student), Expression.Constant (0)),
+          new SelectClause (Expression.Constant (0)));
+      queryModel.ResultOperators.Add (new DistinctResultOperator ());
+      queryModel.ResultOperators.Add (new CountResultOperator ());
+
+      Assert.That (queryModel.ToString (), Is.EqualTo ("from Student x in 0 select 0 => Distinct() => Count()"));
     }
 
     [Test]
@@ -187,6 +201,40 @@ namespace Remotion.Data.UnitTests.Linq
     }
 
     [Test]
+    public void Clone_ResultOperators ()
+    {
+      var resultOperator1 = ExpressionHelper.CreateResultOperator ();
+      _queryModel.ResultOperators.Add (resultOperator1);
+      var resultOperator2 = ExpressionHelper.CreateResultOperator ();
+      _queryModel.ResultOperators.Add (resultOperator2);
+
+      var clone = _queryModel.Clone ();
+
+      Assert.That (clone.ResultOperators.Count, Is.EqualTo (2));
+      Assert.That (clone.ResultOperators[0], Is.Not.SameAs (resultOperator1));
+      Assert.That (clone.ResultOperators[0].GetType (), Is.SameAs (resultOperator1.GetType ()));
+      Assert.That (clone.ResultOperators[1], Is.Not.SameAs (resultOperator2));
+      Assert.That (clone.ResultOperators[1].GetType (), Is.SameAs (resultOperator2.GetType ()));
+    }
+
+    [Test]
+    public void Clone_ResultOperators_PassesMapping ()
+    {
+      var resultOperatorMock = MockRepository.GenerateMock<ResultOperatorBase> (CollectionExecutionStrategy.Instance);
+      _queryModel.ResultOperators.Add (resultOperatorMock);
+
+      resultOperatorMock
+          .Expect (mock => mock.Clone (Arg<CloneContext>.Matches (cc => cc.ClauseMapping == _clauseMapping)))
+          .Return (ExpressionHelper.CreateResultOperator ());
+      resultOperatorMock.Replay ();
+
+      _queryModel.Clone (_clauseMapping);
+
+      resultOperatorMock.VerifyAllExpectations ();
+    }
+
+
+    [Test]
     public void TransformExpressions ()
     {
       Func<Expression, Expression> transformation = ex => ex;
@@ -203,6 +251,22 @@ namespace Remotion.Data.UnitTests.Linq
       bodyClauseMock.AssertWasCalled (mock => mock.TransformExpressions (transformation));
       selectClauseMock.AssertWasCalled (mock => mock.TransformExpressions (transformation));
     }
+
+    [Test]
+    public void TransformExpressions_PassedToResultOperators ()
+    {
+      Func<Expression, Expression> transformer = ex => ex;
+      var resultOperatorMock = MockRepository.GenerateMock<ResultOperatorBase> (CollectionExecutionStrategy.Instance);
+      _queryModel.ResultOperators.Add (resultOperatorMock);
+      resultOperatorMock.Expect (mock => mock.TransformExpressions (transformer));
+
+      resultOperatorMock.Replay ();
+
+      _queryModel.TransformExpressions (transformer);
+
+      resultOperatorMock.VerifyAllExpectations ();
+    }
+
 
     [Test]
     public void SelectOrGroupClause_Set ()
@@ -335,6 +399,50 @@ namespace Remotion.Data.UnitTests.Linq
     {
       _queryModel.BodyClauses.Add (ExpressionHelper.CreateWhereClause());
       _queryModel.BodyClauses[0] = null;
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentNullException))]
+    public void AddResultOperator_Null_ThrowsArgumentNullException ()
+    {
+      _queryModel.ResultOperators.Add (null);
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentNullException))]
+    public void SetResultOperator_Null_ThrowsArgumentNullException ()
+    {
+      var resultOperator = new DistinctResultOperator ();
+      _queryModel.ResultOperators.Add (resultOperator);
+      _queryModel.ResultOperators[0] = null;
+    }
+
+    [Test]
+    public void GetExecutionStrategy ()
+    {
+      Assert.That (_queryModel.GetExecutionStrategy (), Is.SameAs (CollectionExecutionStrategy.Instance));
+    }
+
+    [Test]
+    public void GetExecutionStrategy_WithResultOperators ()
+    {
+      var firstOperator = new FirstResultOperator (true);
+      _queryModel.ResultOperators.Add (firstOperator);
+
+      Assert.That (_queryModel.GetExecutionStrategy (), Is.SameAs (firstOperator.ExecutionStrategy));
+    }
+
+    [Test]
+    public void GetExecutionStrategy_WithManyResultOperators ()
+    {
+      var takeOperator = new TakeResultOperator (7);
+      var distinctOperator = new DistinctResultOperator ();
+      var countOperator = new CountResultOperator ();
+      _queryModel.ResultOperators.Add (takeOperator);
+      _queryModel.ResultOperators.Add (distinctOperator);
+      _queryModel.ResultOperators.Add (countOperator);
+
+      Assert.That (_queryModel.GetExecutionStrategy (), Is.SameAs (countOperator.ExecutionStrategy));
     }
   }
 }

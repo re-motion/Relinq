@@ -15,14 +15,12 @@
 // 
 using System;
 using System.Diagnostics;
-using Remotion.Collections;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Data.Linq.StringBuilding;
 using Remotion.Utilities;
 using System.Linq.Expressions;
-using System.Linq;
 
 namespace Remotion.Data.Linq.Clauses
 {
@@ -51,10 +49,6 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("selector", selector);
 
       _selector = selector;
-
-      ResultOperators = new ObservableCollection<ResultOperatorBase> ();
-      ResultOperators.ItemInserted += ResultOperators_ItemAdded;
-      ResultOperators.ItemSet += ResultOperators_ItemAdded;
     }
 
     /// <summary>
@@ -66,12 +60,6 @@ namespace Remotion.Data.Linq.Clauses
       get { return _selector; }
       set { _selector = ArgumentUtility.CheckNotNull ("value", value); }
     }
-
-    /// <summary>
-    /// Gets the result operators attached to this <see cref="SelectClause"/>. Result operators modify the query's result set, aggregating,
-    /// filtering, or otherwise processing the result before it is returned.
-    /// </summary>
-    public ObservableCollection<ResultOperatorBase> ResultOperators { get; private set; }
 
     /// <summary>
     /// Accepts the specified visitor by calling its <see cref="IQueryModelVisitor.VisitSelectClause"/> method.
@@ -98,12 +86,7 @@ namespace Remotion.Data.Linq.Clauses
 
       var result = new SelectClause (Selector);
       result.TransformExpressions (ex => ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (ex, cloneContext.ClauseMapping));
-      foreach (var resultOperator in ResultOperators)
-      {
-        var resultOperatorClone = resultOperator.Clone (cloneContext);
-        result.ResultOperators.Add (resultOperatorClone);
-      }
-
+      
       return result;
     }
 
@@ -115,21 +98,12 @@ namespace Remotion.Data.Linq.Clauses
     /// <summary>
     /// Gets the execution strategy to use for this clause. The execution strategy defines how to dispatch a query
     /// to an implementation of <see cref="IQueryExecutor"/> when the <see cref="QueryProviderBase"/> needs to execute a query.
-    /// By default, it is <see cref="CollectionExecutionStrategy"/>, but this can be modified by the <see cref="ResultOperators"/>.
     /// </summary>
     public IExecutionStrategy GetExecutionStrategy ()
     {
-      if (ResultOperators.Count > 0)
-        return ResultOperators[ResultOperators.Count - 1].ExecutionStrategy;
-      else
-        return CollectionExecutionStrategy.Instance;
+      return CollectionExecutionStrategy.Instance;
     }
-
-    private void ResultOperators_ItemAdded (object sender, ObservableCollectionChangedEventArgs<ResultOperatorBase> e)
-    {
-      ArgumentUtility.CheckNotNull ("e.Item", e.Item);
-    }
-
+    
     /// <summary>
     /// Transforms all the expressions in this clause and its child objects via the given <paramref name="transformation"/> delegate.
     /// </summary>
@@ -139,16 +113,11 @@ namespace Remotion.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("transformation", transformation);
       Selector = transformation (Selector);
-      foreach (var resultOperator in ResultOperators)
-      {
-        resultOperator.TransformExpressions (transformation);
-      }
     }
 
     public override string ToString ()
     {
-      var result = "select " + FormattingExpressionTreeVisitor.Format (Selector);
-      return ResultOperators.Aggregate (result, (s, r) => s + " => " + r);
+      return "select " + FormattingExpressionTreeVisitor.Format (Selector);
     }
   }
 }

@@ -99,6 +99,8 @@ namespace Remotion.Data.UnitTests.Linq
         _visitorMock
             .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitBodyClauses", queryModel.BodyClauses, queryModel));
         selectClauseMock.Expect (mock => mock.Accept (_visitorMock, queryModel));
+        _visitorMock
+            .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitResultOperators", queryModel.ResultOperators, queryModel));
       }
 
       _mockRepository.ReplayAll();
@@ -173,8 +175,6 @@ namespace Remotion.Data.UnitTests.Linq
         _visitorMock
             .Expect (mock => mock.VisitSelectClause (_selectClause, _queryModel))
             .CallOriginalMethod (OriginalCallOptions.CreateExpectation);
-        _visitorMock
-            .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitResultOperators", _selectClause.ResultOperators, _queryModel, _selectClause));
       }
 
       _visitorMock.Replay();
@@ -302,13 +302,13 @@ namespace Remotion.Data.UnitTests.Linq
 
       using (_mockRepository.Ordered())
       {
-        _resultOperatorMock1.Expect (mock => mock.Accept (_testVisitor, _queryModel, _selectClause, 0));
-        _resultOperatorMock2.Expect (mock => mock.Accept (_testVisitor, _queryModel, _selectClause, 1));
+        _resultOperatorMock1.Expect (mock => mock.Accept (_testVisitor, _queryModel, 0));
+        _resultOperatorMock2.Expect (mock => mock.Accept (_testVisitor, _queryModel, 1));
       }
 
       _mockRepository.ReplayAll();
 
-      _testVisitor.VisitResultOperators (resultOperators, _queryModel, _selectClause);
+      _testVisitor.VisitResultOperators (resultOperators, _queryModel);
 
       _mockRepository.VerifyAll();
     }
@@ -321,15 +321,15 @@ namespace Remotion.Data.UnitTests.Linq
       using (_mockRepository.Ordered())
       {
         _resultOperatorMock1
-            .Expect (mock => mock.Accept (_testVisitor, _queryModel, _selectClause, 0))
+            .Expect (mock => mock.Accept (_testVisitor, _queryModel, 0))
             .WhenCalled (mi => resultOperators.RemoveAt (0));
         _resultOperatorMock2
-            .Expect (mock => mock.Accept (_testVisitor, _queryModel, _selectClause, 0));
+            .Expect (mock => mock.Accept (_testVisitor, _queryModel, 0));
       }
 
       _mockRepository.ReplayAll();
 
-      _testVisitor.VisitResultOperators (resultOperators, _queryModel, _selectClause);
+      _testVisitor.VisitResultOperators (resultOperators, _queryModel);
 
       _mockRepository.VerifyAll();
     }

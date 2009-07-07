@@ -16,7 +16,6 @@
 using System;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
@@ -60,13 +59,10 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void Apply ()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel();
-
-      var result = _node.Apply (queryModel, ClauseGenerationContext);
-      Assert.That (result, Is.SameAs (queryModel));
+      var result = _node.Apply (QueryModel, ClauseGenerationContext);
+      Assert.That (result, Is.SameAs (QueryModel));
       
-      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
-      Assert.That (((TakeResultOperator) selectClause.ResultOperators[0]).Count, Is.EqualTo (3));
+      Assert.That (((TakeResultOperator) QueryModel.ResultOperators[0]).Count, Is.EqualTo (3));
     }
   }
 }
