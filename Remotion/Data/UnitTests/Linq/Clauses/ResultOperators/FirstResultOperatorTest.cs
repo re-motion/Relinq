@@ -20,7 +20,7 @@ using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 
-namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
+namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
 {
   [TestFixture]
   public class FirstResultOperatorTest

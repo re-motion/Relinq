@@ -18,7 +18,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Remotion.Data.Linq.Clauses;
 
-namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
+namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
 {
   public class TestResultOperator : ResultOperatorBase
   {

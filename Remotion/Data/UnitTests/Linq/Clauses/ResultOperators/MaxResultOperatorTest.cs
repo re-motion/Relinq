@@ -20,17 +20,17 @@ using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 
-namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
+namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
 {
   [TestFixture]
-  public class MinResultOperatorTest
+  public class MaxResultOperatorTest
   {
-    private MinResultOperator _resultOperator;
+    private MaxResultOperator _resultOperator;
 
     [SetUp]
     public void SetUp ()
     {
-      _resultOperator = new MinResultOperator ();
+      _resultOperator = new MaxResultOperator ();
     }
 
     [Test]
@@ -40,18 +40,18 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
       var cloneContext = new CloneContext (clonedClauseMapping);
       var clone = _resultOperator.Clone (cloneContext);
 
-      Assert.That (clone, Is.InstanceOfType (typeof (MinResultOperator)));
+      Assert.That (clone, Is.InstanceOfType (typeof (MaxResultOperator)));
     }
 
     [Test]
     public void ExecuteInMemory ()
     {
       var items = new[] { 1, 2, 3, 0, 2 };
-      var resultModification = new MinResultOperator ();
+      var resultModification = new MaxResultOperator ();
 
       var result = resultModification.ExecuteInMemory (items);
 
-      Assert.That (result, Is.EqualTo (new[] { 0 }));
+      Assert.That (result, Is.EqualTo (new[] { 3 }));
     }
 
     [Test]
