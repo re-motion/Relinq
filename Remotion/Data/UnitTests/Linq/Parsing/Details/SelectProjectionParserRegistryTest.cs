@@ -21,8 +21,8 @@ using Remotion.Data.Linq.Backend;
 using Remotion.Data.Linq.Backend.DataObjectModel;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
-using Remotion.Data.Linq.Parsing.Details;
-using Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing;
+using Remotion.Data.Linq.Backend.Details;
+using Remotion.Data.Linq.Backend.Details.SelectProjectionParsing;
 using Remotion.Data.Linq.Parsing.FieldResolving;
 using NUnit.Framework.SyntaxHelpers;
 

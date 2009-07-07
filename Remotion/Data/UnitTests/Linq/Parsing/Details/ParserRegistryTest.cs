@@ -17,9 +17,9 @@ using System.Collections;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Data.Linq.Parsing;
-using Remotion.Data.Linq.Parsing.Details;
+using Remotion.Data.Linq.Backend.Details;
 using Remotion.Utilities;
-using ConstantExpressionParser=Remotion.Data.Linq.Parsing.Details.WhereConditionParsing.ConstantExpressionParser;
+using ConstantExpressionParser=Remotion.Data.Linq.Backend.Details.WhereConditionParsing.ConstantExpressionParser;
 using NUnit.Framework.SyntaxHelpers;
 using System.Linq;
 

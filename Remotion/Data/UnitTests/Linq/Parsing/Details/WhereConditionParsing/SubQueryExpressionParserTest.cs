@@ -22,8 +22,8 @@ using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Backend.DataObjectModel;
 using Remotion.Data.Linq.Parsing;
-using Remotion.Data.Linq.Parsing.Details;
-using Remotion.Data.Linq.Parsing.Details.WhereConditionParsing;
+using Remotion.Data.Linq.Backend.Details;
+using Remotion.Data.Linq.Backend.Details.WhereConditionParsing;
 using Remotion.Data.Linq.Parsing.FieldResolving;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Details.WhereConditionParsing
