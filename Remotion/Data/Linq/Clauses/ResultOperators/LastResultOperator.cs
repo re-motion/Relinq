@@ -17,39 +17,43 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Utilities;
 
-namespace Remotion.Data.Linq.Clauses.ResultModifications
+namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
-  public class SumResultOperator : ResultOperatorBase
+  public class LastResultOperator : ResultOperatorBase
   {
-    public SumResultOperator ()
-        : base (ScalarExecutionStrategy.Instance)
+    public LastResultOperator (bool returnDefaultWhenEmpty)
+        : base (
+            returnDefaultWhenEmpty ? SingleExecutionStrategy.InstanceWithDefaultWhenEmpty : SingleExecutionStrategy.InstanceNoDefaultWhenEmpty)
     {
+      ReturnDefaultWhenEmpty = returnDefaultWhenEmpty;
     }
+
+    public bool ReturnDefaultWhenEmpty { get; set; }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
-      return new SumResultOperator ();
+      return new LastResultOperator (ReturnDefaultWhenEmpty);
     }
 
     public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)
     {
       ArgumentUtility.CheckNotNull ("items", items);
-      var method = typeof (Enumerable).GetMethod ("Sum", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof (IEnumerable<T>) }, null);
-      if (method == null)
-      {
-        var message = string.Format ("Cannot calculate the sum of elements of type '{0}' in memory.", typeof (T).FullName);
-        throw new NotSupportedException (message);
-      }
-      return new[] { (T) method.Invoke (null, new object[] { items }) };
+
+      if (ReturnDefaultWhenEmpty)
+        return new[] { items.LastOrDefault() };
+      else
+        return new[] { items.Last() };
     }
 
     public override string ToString ()
     {
-      return "Sum()";
+      if (ReturnDefaultWhenEmpty)
+        return "LastOrDefault()";
+      else
+        return "Last()";
     }
   }
 }

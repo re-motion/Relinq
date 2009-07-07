@@ -20,29 +20,40 @@ using System.Linq;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Utilities;
 
-namespace Remotion.Data.Linq.Clauses.ResultModifications
+namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
-  public class MinResultOperator : ResultOperatorBase
+  public class FirstResultOperator : ResultOperatorBase
   {
-    public MinResultOperator ()
-        : base (ScalarExecutionStrategy.Instance)
+    public FirstResultOperator (bool returnDefaultWhenEmpty)
+        : base (
+            returnDefaultWhenEmpty ? SingleExecutionStrategy.InstanceWithDefaultWhenEmpty : SingleExecutionStrategy.InstanceNoDefaultWhenEmpty)
     {
+      ReturnDefaultWhenEmpty = returnDefaultWhenEmpty;
     }
+
+    public bool ReturnDefaultWhenEmpty { get; set; }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
-      return new MinResultOperator ();
+      return new FirstResultOperator (ReturnDefaultWhenEmpty);
     }
 
     public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)
     {
       ArgumentUtility.CheckNotNull ("items", items);
-      return new[] { items.Min () };
+
+      if (ReturnDefaultWhenEmpty)
+        return new[] { items.FirstOrDefault () };
+      else
+        return new[] { items.First () };
     }
 
     public override string ToString ()
     {
-      return "Min()";
+      if (ReturnDefaultWhenEmpty)
+        return "FirstOrDefault()";
+      else
+        return "First()";
     }
   }
 }

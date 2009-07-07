@@ -23,7 +23,7 @@ using Remotion.Data.Linq;
 using System.Linq;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
-using Remotion.Data.Linq.Clauses.ResultModifications;
+using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Transformations;
 using Remotion.Data.UnitTests.Linq.Parsing;
 

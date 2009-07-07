@@ -18,7 +18,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
-using Remotion.Data.Linq.Clauses.ResultModifications;
+using Remotion.Data.Linq.Clauses.ResultOperators;
 
 namespace Remotion.Data.UnitTests.Linq.Clauses.ResultModifications
 {

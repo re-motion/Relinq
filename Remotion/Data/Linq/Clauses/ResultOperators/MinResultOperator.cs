@@ -20,29 +20,29 @@ using System.Linq;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Utilities;
 
-namespace Remotion.Data.Linq.Clauses.ResultModifications
+namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
-  public class DistinctResultOperator : ResultOperatorBase
+  public class MinResultOperator : ResultOperatorBase
   {
-    public DistinctResultOperator ()
-        : base (CollectionExecutionStrategy.Instance)
+    public MinResultOperator ()
+        : base (ScalarExecutionStrategy.Instance)
     {
     }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
-      return new DistinctResultOperator ();
+      return new MinResultOperator ();
     }
 
     public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)
     {
       ArgumentUtility.CheckNotNull ("items", items);
-      return items.Distinct ();
+      return new[] { items.Min () };
     }
 
     public override string ToString ()
     {
-      return "Distinct()";
+      return "Min()";
     }
   }
 }

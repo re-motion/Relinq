@@ -20,39 +20,29 @@ using System.Linq;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Utilities;
 
-namespace Remotion.Data.Linq.Clauses.ResultModifications
+namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
-  public class SingleResultOperator : ResultOperatorBase
+  public class MaxResultOperator : ResultOperatorBase
   {
-    public SingleResultOperator (bool returnDefaultWhenEmpty)
-        : base (returnDefaultWhenEmpty ? SingleExecutionStrategy.InstanceWithDefaultWhenEmpty : SingleExecutionStrategy.InstanceNoDefaultWhenEmpty)
+    public MaxResultOperator ()
+        : base (ScalarExecutionStrategy.Instance)
     {
-      ReturnDefaultWhenEmpty = returnDefaultWhenEmpty;
     }
-
-    public bool ReturnDefaultWhenEmpty { get; set; }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
-      return new SingleResultOperator (ReturnDefaultWhenEmpty);
+      return new MaxResultOperator ();
     }
 
     public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)
     {
       ArgumentUtility.CheckNotNull ("items", items);
-
-      if (ReturnDefaultWhenEmpty)
-        return new[] { items.SingleOrDefault() };
-      else
-        return new[] { items.Single() };
+      return new[] { items.Max () };
     }
 
     public override string ToString ()
     {
-      if (ReturnDefaultWhenEmpty)
-        return "SingleOrDefault()";
-      else
-        return "Single()";
+      return "Max()";
     }
   }
 }

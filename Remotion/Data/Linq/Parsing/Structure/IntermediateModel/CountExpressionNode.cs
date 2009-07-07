@@ -16,7 +16,7 @@
 using System;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Clauses.ResultModifications;
+using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Utilities;
 using System.Reflection;
 using System.Linq;

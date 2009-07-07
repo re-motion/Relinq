@@ -19,7 +19,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses.Expressions;
-using Remotion.Data.Linq.Clauses.ResultModifications;
+using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Parsing.FieldResolving;

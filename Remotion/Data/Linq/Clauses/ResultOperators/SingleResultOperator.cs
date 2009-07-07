@@ -20,13 +20,12 @@ using System.Linq;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Utilities;
 
-namespace Remotion.Data.Linq.Clauses.ResultModifications
+namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
-  public class LastResultOperator : ResultOperatorBase
+  public class SingleResultOperator : ResultOperatorBase
   {
-    public LastResultOperator (bool returnDefaultWhenEmpty)
-        : base (
-            returnDefaultWhenEmpty ? SingleExecutionStrategy.InstanceWithDefaultWhenEmpty : SingleExecutionStrategy.InstanceNoDefaultWhenEmpty)
+    public SingleResultOperator (bool returnDefaultWhenEmpty)
+        : base (returnDefaultWhenEmpty ? SingleExecutionStrategy.InstanceWithDefaultWhenEmpty : SingleExecutionStrategy.InstanceNoDefaultWhenEmpty)
     {
       ReturnDefaultWhenEmpty = returnDefaultWhenEmpty;
     }
@@ -35,7 +34,7 @@ namespace Remotion.Data.Linq.Clauses.ResultModifications
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
-      return new LastResultOperator (ReturnDefaultWhenEmpty);
+      return new SingleResultOperator (ReturnDefaultWhenEmpty);
     }
 
     public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)
@@ -43,17 +42,17 @@ namespace Remotion.Data.Linq.Clauses.ResultModifications
       ArgumentUtility.CheckNotNull ("items", items);
 
       if (ReturnDefaultWhenEmpty)
-        return new[] { items.LastOrDefault() };
+        return new[] { items.SingleOrDefault() };
       else
-        return new[] { items.Last() };
+        return new[] { items.Single() };
     }
 
     public override string ToString ()
     {
       if (ReturnDefaultWhenEmpty)
-        return "LastOrDefault()";
+        return "SingleOrDefault()";
       else
-        return "Last()";
+        return "Single()";
     }
   }
 }

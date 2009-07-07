@@ -20,40 +20,29 @@ using System.Linq;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Utilities;
 
-namespace Remotion.Data.Linq.Clauses.ResultModifications
+namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
-  public class FirstResultOperator : ResultOperatorBase
+  public class DistinctResultOperator : ResultOperatorBase
   {
-    public FirstResultOperator (bool returnDefaultWhenEmpty)
-        : base (
-            returnDefaultWhenEmpty ? SingleExecutionStrategy.InstanceWithDefaultWhenEmpty : SingleExecutionStrategy.InstanceNoDefaultWhenEmpty)
+    public DistinctResultOperator ()
+        : base (CollectionExecutionStrategy.Instance)
     {
-      ReturnDefaultWhenEmpty = returnDefaultWhenEmpty;
     }
-
-    public bool ReturnDefaultWhenEmpty { get; set; }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
-      return new FirstResultOperator (ReturnDefaultWhenEmpty);
+      return new DistinctResultOperator ();
     }
 
     public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)
     {
       ArgumentUtility.CheckNotNull ("items", items);
-
-      if (ReturnDefaultWhenEmpty)
-        return new[] { items.FirstOrDefault () };
-      else
-        return new[] { items.First () };
+      return items.Distinct ();
     }
 
     public override string ToString ()
     {
-      if (ReturnDefaultWhenEmpty)
-        return "FirstOrDefault()";
-      else
-        return "First()";
+      return "Distinct()";
     }
   }
 }
