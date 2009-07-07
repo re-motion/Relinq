@@ -92,7 +92,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       }
     }
 
-    public void Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
+    public QueryModel Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
       throw new NotSupportedException (
           "ConstantExpression nodes cannot be applied to a query model because they constitute the main source of the "

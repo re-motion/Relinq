@@ -14,7 +14,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System.Linq.Expressions;
-using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
@@ -80,7 +79,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var clause = new OrderByClause ();
       QueryModel.BodyClauses.Add (clause);
 
-      _node.Apply (QueryModel, ClauseGenerationContext);
+      var result = _node.Apply (QueryModel, ClauseGenerationContext);
+      Assert.That (result, Is.SameAs (QueryModel));
 
       Assert.That (clause.Orderings.Count, Is.EqualTo (1));
       Assert.That (clause.Orderings[0].OrderingDirection, Is.EqualTo (OrderingDirection.Asc));

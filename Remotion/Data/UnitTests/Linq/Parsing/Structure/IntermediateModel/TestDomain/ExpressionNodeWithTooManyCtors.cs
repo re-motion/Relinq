@@ -53,7 +53,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel.TestD
       throw new NotImplementedException();
     }
 
-    public void Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
+    public QueryModel Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
       throw new NotImplementedException();
     }

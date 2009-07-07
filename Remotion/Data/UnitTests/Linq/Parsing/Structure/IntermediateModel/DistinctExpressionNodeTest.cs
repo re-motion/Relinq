@@ -62,12 +62,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void Apply ()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel ();
-
-      _node.Apply (queryModel, ClauseGenerationContext);
-
-      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
-      Assert.That (selectClause.ResultModifications[0], Is.InstanceOfType (typeof (DistinctResultModification)));
+      TestApply (_node, typeof (DistinctResultModification));
     }
   }
 }

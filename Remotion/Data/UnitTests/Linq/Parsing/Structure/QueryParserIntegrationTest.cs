@@ -19,8 +19,10 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Collections;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
+using Remotion.Data.Linq.Clauses.ResultModifications;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 
@@ -346,9 +348,41 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       CheckResolvedExpression<Student, string> (orderByClause.Orderings[1].Expression, additionalFromClause, s2 => s2.Last);
     }
 
+    [Test]
+    [Ignore ("TODO 1269")]
+    public void SubQueryInMainFromClauseWithResultModifier ()
+    {
+      var query = from s in
+                    (from s1 in ExpressionHelper.CreateQuerySource () select s1).Take (5)
+                  from sd in ExpressionHelper.CreateQuerySource_Detail ()
+                  select new Tuple<Student, Student_Detail> ( s, sd );
+      var expression = query.Expression;
+      var queryModel = _queryParser.GetParsedQuery (expression);
+
+      var mainFromClause = queryModel.MainFromClause;
+      Assert.That (mainFromClause.FromExpression, Is.InstanceOfType (typeof (SubQueryExpression)));
+
+      var subQueryModel = ((SubQueryExpression) mainFromClause.FromExpression).QueryModel;
+      Assert.That (((SelectClause) subQueryModel.SelectOrGroupClause).ResultModifications[0], Is.InstanceOfType (typeof (TakeResultModification)));
+      
+      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
+      var additionalFromClause = (AdditionalFromClause) queryModel.BodyClauses[0];
+      CheckResolvedExpression<Student, Student_Detail, Tuple<Student, Student_Detail>> (
+          selectClause.Selector, 
+          mainFromClause, 
+          additionalFromClause, 
+          (s, sd) => new Tuple<Student, Student_Detail> (s, sd));
+    }
+
     private void CheckResolvedExpression<TParameter, TResult> (Expression expressionToCheck, FromClauseBase clauseToReference, Expression<Func<TParameter, TResult>> expectedUnresolvedExpression)
     {
       var expectedPredicate = ExpressionHelper.Resolve (clauseToReference, expectedUnresolvedExpression);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedPredicate, expressionToCheck);
+    }
+
+    private void CheckResolvedExpression<TParameter1, TParameter2, TResult> (Expression expressionToCheck, FromClauseBase clauseToReference1, FromClauseBase clauseToReference2, Expression<Func<TParameter1, TParameter2, TResult>> expectedUnresolvedExpression)
+    {
+      var expectedPredicate = ExpressionHelper.Resolve (clauseToReference1, clauseToReference2, expectedUnresolvedExpression);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedPredicate, expressionToCheck);
     }
 

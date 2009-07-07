@@ -18,7 +18,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
@@ -68,14 +67,16 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return Source.Resolve (inputParameter, expressionToBeResolved, clauseGenerationContext);
     }
 
-    public override void Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
+    public override QueryModel Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
-      var orderByClause = GetOrderByClause (queryModel);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
+      var orderByClause = GetOrderByClause (queryModel);
       if (orderByClause == null)
         throw new ParserException ("ThenByDescending expressions must follow OrderBy, OrderByDescending, ThenBy, or ThenByDescending expressions.");
 
       orderByClause.Orderings.Add (new Ordering (GetResolvedKeySelector (clauseGenerationContext), OrderingDirection.Desc));
+      return queryModel;
     }
 
     private OrderByClause GetOrderByClause (QueryModel queryModel)

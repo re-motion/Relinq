@@ -68,10 +68,11 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return ReplacingVisitor.Replace (inputParameter, resolvedSelector, expressionToBeResolved);
     }
 
-    public override void Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
+    public override QueryModel Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
       ((SelectClause) queryModel.SelectOrGroupClause).Selector = GetResolvedSelector (clauseGenerationContext);
+      return queryModel;
     }
   }
 }

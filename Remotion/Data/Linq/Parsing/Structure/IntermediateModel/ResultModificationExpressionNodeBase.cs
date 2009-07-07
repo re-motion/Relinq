@@ -71,7 +71,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return _cachedSelector.GetOrCreate (r => r.GetResolvedExpression (OptionalSelector.Body, OptionalSelector.Parameters[0], clauseGenerationContext));
     }
 
-    public override void Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
+    public override QueryModel Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
@@ -96,6 +96,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
         var newSelector = ReplacingVisitor.Replace (OptionalSelector.Parameters[0], selectClause.Selector, OptionalSelector.Body);
         selectClause.Selector = newSelector;
       }
+
+      return queryModel;
     }
   }
 }

@@ -14,11 +14,9 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultModifications;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
@@ -64,7 +62,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var queryModel = ExpressionHelper.CreateQueryModel();
 
-      _node.Apply (queryModel, ClauseGenerationContext);
+      var result = _node.Apply (queryModel, ClauseGenerationContext);
+      Assert.That (result, Is.SameAs (queryModel));
       
       var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
       Assert.That (((TakeResultModification) selectClause.ResultModifications[0]).Count, Is.EqualTo (3));

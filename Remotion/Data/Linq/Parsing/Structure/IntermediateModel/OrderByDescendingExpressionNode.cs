@@ -65,13 +65,15 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return Source.Resolve (inputParameter, expressionToBeResolved, clauseGenerationContext);
     }
 
-    public override void Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
+    public override QueryModel Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
       var clause = new OrderByClause ();
       clause.Orderings.Add (new Ordering (GetResolvedKeySelector (clauseGenerationContext), OrderingDirection.Desc));
       queryModel.BodyClauses.Add (clause);
+
+      return queryModel;
     }
   }
 }

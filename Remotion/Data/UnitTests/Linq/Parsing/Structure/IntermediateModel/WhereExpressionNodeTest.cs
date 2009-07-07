@@ -15,7 +15,6 @@
 // 
 using System;
 using System.Linq.Expressions;
-using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
@@ -77,9 +76,10 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void Apply ()
     {
-      _node.Apply (QueryModel, ClauseGenerationContext);
-      var clause = (WhereClause) QueryModel.BodyClauses[0];
+      var result = _node.Apply (QueryModel, ClauseGenerationContext);
+      Assert.That (result, Is.SameAs (QueryModel));
 
+      var clause = (WhereClause) QueryModel.BodyClauses[0];
       Assert.That (clause.Predicate, Is.EqualTo (_node.GetResolvedPredicate (ClauseGenerationContext)));
     }
   }

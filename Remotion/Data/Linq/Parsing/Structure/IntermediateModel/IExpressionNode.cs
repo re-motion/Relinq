@@ -52,8 +52,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext);
 
     /// <summary>
-    /// Applies this <see cref="IExpressionNode"/> to the specified query model. Nodes can add or replace clauses, add or replace expressions, and
-    /// add or replace <see cref="ResultModificationBase"/> objects, depending on their semantics.
+    /// Applies this <see cref="IExpressionNode"/> to the specified query model. Nodes can add or replace clauses, add or replace expressions, 
+    /// add or replace <see cref="ResultModificationBase"/> objects, or even create a completely new <see cref="QueryModel"/>, depending on their semantics.
     /// </summary>
     /// <param name="queryModel">The query model this node should be applied to.</param>
     /// <param name="clauseGenerationContext">Context information used during the current parsing process. The <see cref="QuerySourceClauseMapping"/>
@@ -61,11 +61,12 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     /// also implement <see cref="IQuerySourceExpressionNode"/> (such as 
     /// <see cref="MainSourceExpressionNode"/> or <see cref="SelectManyExpressionNode"/>) must add their clauses to the mapping in 
     /// <see cref="Apply"/> in order to be able to implement <see cref="Resolve"/> correctly.</param>
+    /// <returns>The modified <paramref name="queryModel"/> or a new <see cref="QueryModel"/> that reflects the changes made by this node.</returns>
     /// <remarks>
     /// For <see cref="MainSourceExpressionNode"/> objects, which mark the end of an <see cref="IExpressionNode"/> chain, this method must not be called.
     /// Instead, use <see cref="MainSourceExpressionNode.CreateMainFromClause"/> to generate a <see cref="MainFromClause"/> and instantiate a new 
     /// <see cref="QueryModel"/> with that clause.
     /// </remarks>
-    void Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext);
+    QueryModel Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext);
   }
 }

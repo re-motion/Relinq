@@ -14,9 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
@@ -46,12 +44,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void SupportedMethod_WithoutPosition ()
     {
       AssertSupportedMethod_Generic (SelectManyExpressionNode.SupportedMethods, q => q.SelectMany (i => new[] { 1, 2, 3 }, (i, j) => new { i, j }), e => e.SelectMany (i => new[] { 1, 2, 3 }, (i, j) => new { i, j }));
-    }
-
-    [Test]
-    public void QuerySourceType ()
-    {
-      Assert.That (_node.QuerySourceElementType, Is.SameAs (typeof (int)));
     }
 
     [Test]
@@ -120,7 +112,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void Apply ()
     {
-      _node.Apply (QueryModel, ClauseGenerationContext);
+      var result = _node.Apply (QueryModel, ClauseGenerationContext);
+      Assert.That (result, Is.SameAs (QueryModel));
+
       var clause = (AdditionalFromClause) QueryModel.BodyClauses[0];
 
       Assert.That (clause.ItemName, Is.EqualTo ("j"));

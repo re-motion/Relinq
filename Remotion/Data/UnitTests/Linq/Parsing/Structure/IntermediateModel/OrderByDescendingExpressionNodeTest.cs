@@ -77,7 +77,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void Apply ()
     {
-      _node.Apply (QueryModel, ClauseGenerationContext);
+      var result = _node.Apply (QueryModel, ClauseGenerationContext);
+      Assert.That (result, Is.SameAs (QueryModel));
 
       Assert.That (QueryModel.BodyClauses.Count, Is.EqualTo (1));
       

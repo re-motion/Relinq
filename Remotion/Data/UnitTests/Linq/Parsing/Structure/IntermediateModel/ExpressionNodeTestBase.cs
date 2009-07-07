@@ -79,12 +79,11 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression (methodCallLambda);
       return methodCallExpression.Method;
     }
-
-
-
+    
     protected void TestApply (ResultModificationExpressionNodeBase node, Type expectedResultModificationType)
     {
-      node.Apply (QueryModel, ClauseGenerationContext);
+      var result = node.Apply (QueryModel, ClauseGenerationContext);
+      Assert.That (result, Is.SameAs (QueryModel));
 
       var selectClause = (SelectClause) QueryModel.SelectOrGroupClause;
       Assert.That (selectClause.ResultModifications.Count, Is.EqualTo (1));

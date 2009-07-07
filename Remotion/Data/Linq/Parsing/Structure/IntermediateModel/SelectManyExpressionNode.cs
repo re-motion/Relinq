@@ -64,11 +64,6 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public LambdaExpression CollectionSelector { get; private set; }
     public LambdaExpression ResultSelector { get; private set; }
 
-    public Type QuerySourceElementType
-    {
-      get { return ResultSelector.Parameters[1].Type; }
-    }
-
     public Expression GetResolvedCollectionSelector (ClauseGenerationContext clauseGenerationContext)
     {
       return _cachedCollectionSelector.GetOrCreate (r => r.GetResolvedExpression (CollectionSelector.Body, CollectionSelector.Parameters[0], clauseGenerationContext));
@@ -123,7 +118,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return ReplacingVisitor.Replace (inputParameter, resolvedResultSelector, expressionToBeResolved);
     }
 
-    public override void Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
+    public override QueryModel Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
@@ -135,6 +130,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
       var selectClause = ((SelectClause) queryModel.SelectOrGroupClause);
       selectClause.Selector = GetResolvedResultSelector (clauseGenerationContext);
+
+      return queryModel;
     }
   }
 }
