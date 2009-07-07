@@ -81,19 +81,19 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       return methodCallExpression.Method;
     }
     
-    protected void TestApply (ResultOperatorExpressionNodeBase node, Type expectedResultModificationType)
+    protected void TestApply (ResultOperatorExpressionNodeBase node, Type expectedResultOperatorType)
     {
       var result = node.Apply (QueryModel, ClauseGenerationContext);
       Assert.That (result, Is.SameAs (QueryModel));
 
       var selectClause = (SelectClause) QueryModel.SelectOrGroupClause;
       Assert.That (selectClause.ResultOperators.Count, Is.EqualTo (1));
-      Assert.That (selectClause.ResultOperators[0], Is.InstanceOfType (expectedResultModificationType));
+      Assert.That (selectClause.ResultOperators[0], Is.InstanceOfType (expectedResultOperatorType));
 
-      TestApply_DoesNotWrapQueryModel_AfterResultModification (node);
+      TestApply_DoesNotWrapQueryModel_AfterResultOperator (node);
     }
 
-    public void TestApply_DoesNotWrapQueryModel_AfterResultModification (ResultOperatorExpressionNodeBase node)
+    public void TestApply_DoesNotWrapQueryModel_AfterResultOperator (ResultOperatorExpressionNodeBase node)
     {
       ((SelectClause) QueryModel.SelectOrGroupClause).ResultOperators.Add (new DistinctResultOperator ());
       var result = node.Apply (QueryModel, ClauseGenerationContext);

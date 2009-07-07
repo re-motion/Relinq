@@ -283,7 +283,7 @@ namespace Remotion.Data.UnitTests.Linq
       return ((MemberExpression) expression).Member;
     }
 
-    public static ResultOperatorBase CreateResultModification ()
+    public static ResultOperatorBase CreateResultOperator ()
     {
       return new DistinctResultOperator ();
     }

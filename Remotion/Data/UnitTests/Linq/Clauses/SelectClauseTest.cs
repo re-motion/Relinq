@@ -48,28 +48,28 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
-    public void SelectWithMethodCall_ResultModifications ()
+    public void SelectWithMethodCall_ResultOperators ()
     {
-      var resultModifierClause = new DistinctResultOperator ();
-      _selectClause.ResultOperators.Add (resultModifierClause);
+      var resultOperator = new DistinctResultOperator ();
+      _selectClause.ResultOperators.Add (resultOperator);
 
       Assert.That (_selectClause.ResultOperators, Is.Not.Empty);
-      Assert.That (_selectClause.ResultOperators, Is.EqualTo (new[] { resultModifierClause }));
+      Assert.That (_selectClause.ResultOperators, Is.EqualTo (new[] { resultOperator }));
     }
 
     [Test]
     [ExpectedException (typeof (ArgumentNullException))]
-    public void AddResultModification_Null_ThrowsArgumentNullException ()
+    public void AddResultOperator_Null_ThrowsArgumentNullException ()
     {
       _selectClause.ResultOperators.Add (null);
     }
 
     [Test]
     [ExpectedException (typeof (ArgumentNullException))]
-    public void AddResultModification_WithNull_ThrowsArgumentNullException ()
+    public void AddResultOperator_WithNull_ThrowsArgumentNullException ()
     {
-      var resultModifierClause = new DistinctResultOperator ();
-      _selectClause.ResultOperators.Add (resultModifierClause);
+      var resultOperator = new DistinctResultOperator ();
+      _selectClause.ResultOperators.Add (resultOperator);
       _selectClause.ResultOperators[0] = null;
     }
 
@@ -130,36 +130,36 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
-    public void Clone_ResultModifiers ()
+    public void Clone_ResultOperators ()
     {
-      var resultModifierClause1 = ExpressionHelper.CreateResultModification ();
-      _selectClause.ResultOperators.Add (resultModifierClause1);
-      var resultModifierClause2 = ExpressionHelper.CreateResultModification ();
-      _selectClause.ResultOperators.Add (resultModifierClause2);
+      var resultOperator1 = ExpressionHelper.CreateResultOperator ();
+      _selectClause.ResultOperators.Add (resultOperator1);
+      var resultOperator2 = ExpressionHelper.CreateResultOperator ();
+      _selectClause.ResultOperators.Add (resultOperator2);
 
       var clone = _selectClause.Clone (_cloneContext);
 
       Assert.That (clone.ResultOperators.Count, Is.EqualTo (2));
-      Assert.That (clone.ResultOperators[0], Is.Not.SameAs (resultModifierClause1));
-      Assert.That (clone.ResultOperators[0].GetType(), Is.SameAs (resultModifierClause1.GetType()));
-      Assert.That (clone.ResultOperators[1], Is.Not.SameAs (resultModifierClause2));
-      Assert.That (clone.ResultOperators[1].GetType (), Is.SameAs (resultModifierClause2.GetType ()));
+      Assert.That (clone.ResultOperators[0], Is.Not.SameAs (resultOperator1));
+      Assert.That (clone.ResultOperators[0].GetType(), Is.SameAs (resultOperator1.GetType()));
+      Assert.That (clone.ResultOperators[1], Is.Not.SameAs (resultOperator2));
+      Assert.That (clone.ResultOperators[1].GetType (), Is.SameAs (resultOperator2.GetType ()));
     }
 
     [Test]
-    public void Clone_ResultModifiers_PassesMapping ()
+    public void Clone_ResultOperators_PassesMapping ()
     {
-      var resultModificationMock = MockRepository.GenerateMock<ResultOperatorBase> (CollectionExecutionStrategy.Instance);
-      _selectClause.ResultOperators.Add (resultModificationMock);
+      var resultOperatorMock = MockRepository.GenerateMock<ResultOperatorBase> (CollectionExecutionStrategy.Instance);
+      _selectClause.ResultOperators.Add (resultOperatorMock);
 
-      resultModificationMock
+      resultOperatorMock
           .Expect (mock => mock.Clone (Arg.Is (_cloneContext)))
-          .Return (ExpressionHelper.CreateResultModification());
-      resultModificationMock.Replay();
+          .Return (ExpressionHelper.CreateResultOperator());
+      resultOperatorMock.Replay();
 
       _selectClause.Clone (_cloneContext);
 
-      resultModificationMock.VerifyAllExpectations();
+      resultOperatorMock.VerifyAllExpectations();
     }
 
     [Test]
@@ -179,46 +179,46 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
-    public void TransformExpressions_PassedToResultModifications ()
+    public void TransformExpressions_PassedToResultOperators ()
     {
       Func<Expression, Expression> transformer = ex => ex;
-      var resultModificationMock = MockRepository.GenerateMock<ResultOperatorBase> (CollectionExecutionStrategy.Instance);    
-      _selectClause.ResultOperators.Add (resultModificationMock);
-      resultModificationMock.Expect (mock => mock.TransformExpressions (transformer));
+      var resultOperatorMock = MockRepository.GenerateMock<ResultOperatorBase> (CollectionExecutionStrategy.Instance);    
+      _selectClause.ResultOperators.Add (resultOperatorMock);
+      resultOperatorMock.Expect (mock => mock.TransformExpressions (transformer));
       
-      resultModificationMock.Replay ();
+      resultOperatorMock.Replay ();
 
       _selectClause.TransformExpressions (transformer);
 
-      resultModificationMock.VerifyAllExpectations ();
+      resultOperatorMock.VerifyAllExpectations ();
     }
 
     [Test]
-    public void GetExecutionStrategy_WithoutResultModifiers ()
+    public void GetExecutionStrategy_WithoutResultOperators ()
     {
       Assert.That (_selectClause.GetExecutionStrategy (), Is.SameAs (CollectionExecutionStrategy.Instance));
     }
 
     [Test]
-    public void GetExecutionStrategy_WithResultModifiers ()
+    public void GetExecutionStrategy_WithResultOperators ()
     {
-      var firstModifier = new FirstResultOperator (true);
-      _selectClause.ResultOperators.Add (firstModifier);
+      var firstOperator = new FirstResultOperator (true);
+      _selectClause.ResultOperators.Add (firstOperator);
 
-      Assert.That (_selectClause.GetExecutionStrategy (), Is.SameAs (firstModifier.ExecutionStrategy));
+      Assert.That (_selectClause.GetExecutionStrategy (), Is.SameAs (firstOperator.ExecutionStrategy));
     }
 
     [Test]
-    public void GetExecutionStrategy_WithManyResultModifiers ()
+    public void GetExecutionStrategy_WithManyResultOperators ()
     {
-      var takeModifier = new TakeResultOperator (7);
-      var distinctModifier = new DistinctResultOperator ();
-      var countModifier = new CountResultOperator ();
-      _selectClause.ResultOperators.Add (takeModifier);
-      _selectClause.ResultOperators.Add (distinctModifier);
-      _selectClause.ResultOperators.Add (countModifier);
+      var takeOperator = new TakeResultOperator (7);
+      var distinctOperator = new DistinctResultOperator ();
+      var countOperator = new CountResultOperator ();
+      _selectClause.ResultOperators.Add (takeOperator);
+      _selectClause.ResultOperators.Add (distinctOperator);
+      _selectClause.ResultOperators.Add (countOperator);
 
-      Assert.That (_selectClause.GetExecutionStrategy (), Is.SameAs (countModifier.ExecutionStrategy));
+      Assert.That (_selectClause.GetExecutionStrategy (), Is.SameAs (countOperator.ExecutionStrategy));
     }
 
     [Test]
@@ -229,7 +229,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
-    public void ToString_WithResultModifications ()
+    public void ToString_WithResultOperators ()
     {
       var selectClause = new SelectClause (Expression.Constant (0));
       selectClause.ResultOperators.Add (new DistinctResultOperator ());

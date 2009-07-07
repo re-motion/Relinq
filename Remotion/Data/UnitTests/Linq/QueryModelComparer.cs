@@ -133,11 +133,11 @@ namespace Remotion.Data.UnitTests.Linq
         ResultOperatorBase resultOperator, QueryModel queryModel, SelectClause selectClause, int index)
     {
       var expectedSelectClause = ((SelectClause) _expected.SelectOrGroupClause);
-      var expectedResultModification = expectedSelectClause.ResultOperators[index];
+      var expectedResultOperator = expectedSelectClause.ResultOperators[index];
 
-      Assert.That (resultOperator.GetType(), Is.SameAs (expectedResultModification.GetType()));
-      var comparer = new ExpressionTreeComparer (expectedResultModification, resultOperator);
-      comparer.CheckAreEqualObjects (expectedResultModification, resultOperator);
+      Assert.That (resultOperator.GetType(), Is.SameAs (expectedResultOperator.GetType()));
+      var comparer = new ExpressionTreeComparer (expectedResultOperator, resultOperator);
+      comparer.CheckAreEqualObjects (expectedResultOperator, resultOperator);
 
       base.VisitResultOperator (resultOperator, queryModel, selectClause, index);
     }

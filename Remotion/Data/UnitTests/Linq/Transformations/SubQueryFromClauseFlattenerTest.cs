@@ -140,8 +140,8 @@ namespace Remotion.Data.UnitTests.Linq.Transformations
     [Test]
     [ExpectedException (typeof(NotSupportedException), ExpectedMessage = "The subquery "
         + "'from Student s in TestQueryable<Student>() select 0 => Distinct()' cannot be flattened and pulled out of the from clause because it "
-        + "contains result modifications.")]
-    public void VisitAdditionalFromClause_ThrowsOnResultModification ()
+        + "contains result operators.")]
+    public void VisitAdditionalFromClause_ThrowsOnResultOperator ()
     {
       var queryModel = ExpressionHelper.CreateQueryModel ();
       ((SelectClause) queryModel.SelectOrGroupClause).ResultOperators.Add (new DistinctResultOperator ());

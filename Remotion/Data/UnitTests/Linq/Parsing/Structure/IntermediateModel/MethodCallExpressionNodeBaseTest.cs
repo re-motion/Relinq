@@ -40,7 +40,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void Apply_LeavesQueryModel_WithoutResultModification ()
+    public void Apply_LeavesQueryModel_WithoutResultOperator ()
     {
       var newQueryModel = _node.Apply (QueryModel, ClauseGenerationContext);
       Assert.That (newQueryModel, Is.SameAs (QueryModel));
@@ -55,7 +55,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void Apply_WrapsQueryModel_AfterResultModification ()
+    public void Apply_WrapsQueryModel_AfterResultOperator ()
     {
       ((SelectClause) QueryModel.SelectOrGroupClause).ResultOperators.Add (new DistinctResultOperator ());
       var newQueryModel = _node.Apply (QueryModel, ClauseGenerationContext);
@@ -84,7 +84,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void Apply_WrapsQueryModel_AfterResultModification_BeforeApplyingNodeSpecificSemantics ()
+    public void Apply_WrapsQueryModel_AfterResultOperator_BeforeApplyingNodeSpecificSemantics ()
     {
       ((SelectClause) QueryModel.SelectOrGroupClause).ResultOperators.Add (new DistinctResultOperator ());
       var newQueryModel = _node.Apply (QueryModel, ClauseGenerationContext);

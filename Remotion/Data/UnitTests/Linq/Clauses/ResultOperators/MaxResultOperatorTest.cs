@@ -47,9 +47,9 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     public void ExecuteInMemory ()
     {
       var items = new[] { 1, 2, 3, 0, 2 };
-      var resultModification = new MaxResultOperator ();
+      var resultOperator = new MaxResultOperator ();
 
-      var result = resultModification.ExecuteInMemory (items);
+      var result = resultOperator.ExecuteInMemory (items);
 
       Assert.That (result, Is.EqualTo (new[] { 3 }));
     }

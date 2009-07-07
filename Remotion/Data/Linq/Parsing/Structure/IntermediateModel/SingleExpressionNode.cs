@@ -59,7 +59,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       throw CreateResolveNotSupportedException();
     }
 
-    protected override ResultOperatorBase CreateResultModification ()
+    protected override ResultOperatorBase CreateResultOperator ()
     {
       return new SingleResultOperator (ParsedExpression.Method.Name.EndsWith ("OrDefault"));
     }

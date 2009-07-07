@@ -41,11 +41,11 @@ namespace Remotion.Data.Linq.Clauses
     public IExecutionStrategy ExecutionStrategy { get; private set; }
 
     /// <summary>
-    /// Executes this result modification in memory, on a given enumeration of items. Executing result modifications in memory should only be 
-    /// performed if the target query system does not support the modification.
+    /// Executes this result operator in memory, on a given enumeration of items. Executing result operator in memory should only be 
+    /// performed if the target query system does not support the operator.
     /// </summary>
     /// <returns>An enumerable containing the results of the modiciation. This is either a filtered version of <param name="items"/> or a
-    /// new <see cref="IEnumerable"/> containing exactly one value or item, depending on the modification.</returns>
+    /// new <see cref="IEnumerable"/> containing exactly one value or item, depending on the operator.</returns>
     public abstract IEnumerable ExecuteInMemory<T> (IEnumerable<T> items);
 
     /// <summary>

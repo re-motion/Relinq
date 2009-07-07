@@ -50,7 +50,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
         _cachedSelector = new ResolvedExpressionCache (this);
     }
 
-    protected abstract ResultOperatorBase CreateResultModification ();
+    protected abstract ResultOperatorBase CreateResultOperator ();
 
     public LambdaExpression OptionalPredicate { get; private set; }
     public LambdaExpression OptionalSelector { get; private set; }
@@ -76,7 +76,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
       var selectClause = ((SelectClause) queryModel.SelectOrGroupClause);
-      selectClause.ResultOperators.Add (CreateResultModification ());
+      selectClause.ResultOperators.Add (CreateResultOperator ());
 
       if (OptionalPredicate != null)
       {
@@ -100,11 +100,11 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return queryModel;
     }
 
-    protected override QueryModel WrapQueryModelAfterResultModification (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
+    protected override QueryModel WrapQueryModelAfterResultOperator (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
-      // Result modifications can safely be appended to the previous query model even after another result modification, so do not wrap the previous
+      // Result operators can safely be appended to the previous query model even after another result operator, so do not wrap the previous
       // query model.
       return queryModel;
     }

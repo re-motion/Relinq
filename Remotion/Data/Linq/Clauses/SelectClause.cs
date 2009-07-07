@@ -53,8 +53,8 @@ namespace Remotion.Data.Linq.Clauses
       _selector = selector;
 
       ResultOperators = new ObservableCollection<ResultOperatorBase> ();
-      ResultOperators.ItemInserted += ResultModifications_ItemAdded;
-      ResultOperators.ItemSet += ResultModifications_ItemAdded;
+      ResultOperators.ItemInserted += ResultOperators_ItemAdded;
+      ResultOperators.ItemSet += ResultOperators_ItemAdded;
     }
 
     /// <summary>
@@ -68,7 +68,7 @@ namespace Remotion.Data.Linq.Clauses
     }
 
     /// <summary>
-    /// Gets the result modifications attached to this <see cref="SelectClause"/>. Result modifications modify the query's result set, aggregating,
+    /// Gets the result operators attached to this <see cref="SelectClause"/>. Result operators modify the query's result set, aggregating,
     /// filtering, or otherwise processing the result before it is returned.
     /// </summary>
     public ObservableCollection<ResultOperatorBase> ResultOperators { get; private set; }
@@ -98,10 +98,10 @@ namespace Remotion.Data.Linq.Clauses
 
       var result = new SelectClause (Selector);
       result.TransformExpressions (ex => ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (ex, cloneContext.ClauseMapping));
-      foreach (var resultModification in ResultOperators)
+      foreach (var resultOperator in ResultOperators)
       {
-        var resultModificationClone = resultModification.Clone (cloneContext);
-        result.ResultOperators.Add (resultModificationClone);
+        var resultOperatorClone = resultOperator.Clone (cloneContext);
+        result.ResultOperators.Add (resultOperatorClone);
       }
 
       return result;
@@ -125,7 +125,7 @@ namespace Remotion.Data.Linq.Clauses
         return CollectionExecutionStrategy.Instance;
     }
 
-    private void ResultModifications_ItemAdded (object sender, ObservableCollectionChangedEventArgs<ResultOperatorBase> e)
+    private void ResultOperators_ItemAdded (object sender, ObservableCollectionChangedEventArgs<ResultOperatorBase> e)
     {
       ArgumentUtility.CheckNotNull ("e.Item", e.Item);
     }
@@ -139,9 +139,9 @@ namespace Remotion.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("transformation", transformation);
       Selector = transformation (Selector);
-      foreach (var resultModification in ResultOperators)
+      foreach (var resultOperator in ResultOperators)
       {
-        resultModification.TransformExpressions (transformation);
+        resultOperator.TransformExpressions (transformation);
       }
     }
 

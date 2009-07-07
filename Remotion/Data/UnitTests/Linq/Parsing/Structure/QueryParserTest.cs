@@ -149,7 +149,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
-    public void CreateQueryModel_AppliesResultModifications ()
+    public void CreateQueryModel_AppliesResultOperators ()
     {
       IQueryable<int> value = new[] { 1, 2, 3 }.AsQueryable ();
       var expressionTree = (MethodCallExpression) ExpressionHelper.MakeExpression (() => value.Take (3).Count ());
@@ -164,7 +164,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
-    public void CreateQueryModel_CollectsWhereClausesOfResultModifications ()
+    public void CreateQueryModel_CollectsWhereClausesOfResultOperators ()
     {
       IQueryable<int> value = new[] { 1, 2, 3 }.AsQueryable ();
       var expressionTree = (MethodCallExpression) ExpressionHelper.MakeExpression (() => value.Count (i => i > 5));
@@ -211,7 +211,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
-    public void IntegrationTest_CreateQueryModel_WithNonTrivialSelectClause_BeforeResultModification ()
+    public void IntegrationTest_CreateQueryModel_WithNonTrivialSelectClause_BeforeResultOperator ()
     {
       IQueryable<int> value = new[] { 1, 2, 3 }.AsQueryable ();
       // ReSharper disable RedundantAnonymousTypePropertyName
@@ -226,7 +226,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
-    public void IntegrationTest_CreateQueryModel_WithMultipleResultModifications ()
+    public void IntegrationTest_CreateQueryModel_WithMultipleResultOperators ()
     {
       IQueryable<int> value = new[] { 1, 2, 3 }.AsQueryable ();
       // ReSharper disable RedundantAnonymousTypePropertyName
@@ -244,7 +244,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
-    public void IntegrationTest_CreateQueryModel_WithResultModification_BeforeWhere ()
+    public void IntegrationTest_CreateQueryModel_WithResultOperator_BeforeWhere ()
     {
       IQueryable<int> value = new[] { 1, 2, 3 }.AsQueryable ();
       // ReSharper disable RedundantAnonymousTypePropertyName

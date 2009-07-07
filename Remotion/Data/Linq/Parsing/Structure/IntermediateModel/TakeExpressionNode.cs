@@ -54,7 +54,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return Source.Resolve (inputParameter, expressionToBeResolved, clauseGenerationContext);
     }
 
-    protected override ResultOperatorBase CreateResultModification ()
+    protected override ResultOperatorBase CreateResultOperator ()
     {
       return new TakeResultOperator (Count);
     }

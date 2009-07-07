@@ -296,9 +296,9 @@ namespace Remotion.Data.UnitTests.Linq
     }
 
     [Test]
-    public void VisitResultModifications ()
+    public void VisitResultOperators ()
     {
-      var resultModifications = new ObservableCollection<ResultOperatorBase> { _resultOperatorMock1, _resultOperatorMock2 };
+      var resultOperators = new ObservableCollection<ResultOperatorBase> { _resultOperatorMock1, _resultOperatorMock2 };
 
       using (_mockRepository.Ordered())
       {
@@ -308,28 +308,28 @@ namespace Remotion.Data.UnitTests.Linq
 
       _mockRepository.ReplayAll();
 
-      _testVisitor.VisitResultModifications (resultModifications, _queryModel, _selectClause);
+      _testVisitor.VisitResultOperators (resultOperators, _queryModel, _selectClause);
 
       _mockRepository.VerifyAll();
     }
 
     [Test]
-    public void VisitResultModifications_WithChangingCollection ()
+    public void VisitResultOperators_WithChangingCollection ()
     {
-      var resultModifications = new ObservableCollection<ResultOperatorBase> { _resultOperatorMock1, _resultOperatorMock2 };
+      var resultOperators = new ObservableCollection<ResultOperatorBase> { _resultOperatorMock1, _resultOperatorMock2 };
 
       using (_mockRepository.Ordered())
       {
         _resultOperatorMock1
             .Expect (mock => mock.Accept (_testVisitor, _queryModel, _selectClause, 0))
-            .WhenCalled (mi => resultModifications.RemoveAt (0));
+            .WhenCalled (mi => resultOperators.RemoveAt (0));
         _resultOperatorMock2
             .Expect (mock => mock.Accept (_testVisitor, _queryModel, _selectClause, 0));
       }
 
       _mockRepository.ReplayAll();
 
-      _testVisitor.VisitResultModifications (resultModifications, _queryModel, _selectClause);
+      _testVisitor.VisitResultOperators (resultOperators, _queryModel, _selectClause);
 
       _mockRepository.VerifyAll();
     }

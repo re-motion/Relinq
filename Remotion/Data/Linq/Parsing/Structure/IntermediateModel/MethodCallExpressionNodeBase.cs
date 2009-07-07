@@ -68,7 +68,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
-      queryModel = WrapQueryModelAfterResultModification (queryModel, clauseGenerationContext);
+      queryModel = WrapQueryModelAfterResultOperator (queryModel, clauseGenerationContext);
       queryModel = ApplyNodeSpecificSemantics (queryModel, clauseGenerationContext);
       return queryModel;
     }
@@ -81,8 +81,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     /// <remarks>
     /// <para>
     /// When an ordinary node 
-    /// follows a result modification node,  it cannot simply append its clauses to the <paramref name="queryModel"/> because semantically, the 
-    /// result modification must be executed _before_ the clause. Therefore, in such scenarios, we wrap the current query model into a 
+    /// follows a result operator node,  it cannot simply append its clauses to the <paramref name="queryModel"/> because semantically, the 
+    /// result operator must be executed _before_ the clause. Therefore, in such scenarios, we wrap the current query model into a 
     /// <see cref="SubQueryExpression"/> that we put into the <see cref="MainFromClause"/> of a new <see cref="QueryModel"/>.
     /// </para>
     /// <para>
@@ -106,7 +106,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     /// Now, the last Select node resolves to the new <see cref="MainFromClause"/>.
     /// </para>
     /// </remarks>
-    protected virtual QueryModel WrapQueryModelAfterResultModification (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
+    protected virtual QueryModel WrapQueryModelAfterResultOperator (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 

@@ -28,7 +28,7 @@ namespace Remotion.Data.Linq
   {
     /// <summary>
     /// Executes the given <paramref name="queryModel"/> as a scalar query, i.e. as a query returning a scalar value of type <typeparamref name="T"/>.
-    /// The query ends with a scalar result modification, for example a <see cref="CountResultOperator"/> or a <see cref="SumResultOperator"/>.
+    /// The query ends with a scalar result operator, for example a <see cref="CountResultOperator"/> or a <see cref="SumResultOperator"/>.
     /// </summary>
     /// <typeparam name="T">The type of the scalar value returned by the query.</typeparam>
     /// <param name="queryModel">The <see cref="QueryModel"/> representing the query to be executed. Analyze this via an 
@@ -41,9 +41,9 @@ namespace Remotion.Data.Linq
 
     /// <summary>
     /// Executes the given <paramref name="queryModel"/> as a collection query, i.e. as a query returning objects of type <typeparamref name="T"/>. 
-    /// The query does not end with a scalar result modification, but it can end with a single result modification, for example 
+    /// The query does not end with a scalar result operator, but it can end with a single result operator, for example 
     /// <see cref="SingleResultOperator"/> or <see cref="FirstResultOperator"/>. In such a case, the returned enumerable must yield exactly 
-    /// one object (or none if the last result modification allows empty result sets).
+    /// one object (or none if the last result operator allows empty result sets).
     /// </summary>
     /// <typeparam name="T">The type of the items returned by the query.</typeparam>
     /// <param name="queryModel">The <see cref="QueryModel"/> representing the query to be executed. Analyze this via an 

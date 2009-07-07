@@ -349,7 +349,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
-    public void SubQueryInMainFromClauseWithResultModifier ()
+    public void SubQueryInMainFromClauseWithResultOperator ()
     {
       var query = from s in
                     (from sd1 in ExpressionHelper.CreateQuerySource_Detail () select sd1.Student).Take (5)

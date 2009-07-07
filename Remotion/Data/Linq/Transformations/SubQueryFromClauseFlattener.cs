@@ -94,7 +94,7 @@ namespace Remotion.Data.Linq.Transformations
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
-      CheckForResultModifications (subQueryExpression.QueryModel);
+      CheckForResultOperators (subQueryExpression.QueryModel);
 
       var innerMainFromClause = subQueryExpression.QueryModel.MainFromClause;
       CopyFromClauseData (innerMainFromClause, fromClause);
@@ -110,14 +110,14 @@ namespace Remotion.Data.Linq.Transformations
       queryModel.TransformExpressions (ex => ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (ex, innerBodyClauseMapping, true));
     }
 
-    protected virtual void CheckForResultModifications (QueryModel subQueryModel)
+    protected virtual void CheckForResultOperators (QueryModel subQueryModel)
     {
       ArgumentUtility.CheckNotNull ("subQueryModel", subQueryModel);
 
       if (((SelectClause) subQueryModel.SelectOrGroupClause).ResultOperators.Count > 0)
       {
         var message = string.Format (
-            "The subquery '{0}' cannot be flattened and pulled out of the from clause because it contains result modifications.", 
+            "The subquery '{0}' cannot be flattened and pulled out of the from clause because it contains result operators.", 
             subQueryModel);
         throw new NotSupportedException (message);
       }
