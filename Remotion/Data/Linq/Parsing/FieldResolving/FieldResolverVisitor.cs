@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
+using Remotion.Data.Linq.Backend;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Utilities;
 

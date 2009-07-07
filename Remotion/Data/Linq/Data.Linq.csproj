@@ -248,7 +248,7 @@
     <Compile Include="Backend\SqlGeneration\SqlServer\CommandBuilder.cs" />
     <Compile Include="Backend\SqlGeneration\SqlServer\WhereBuilder.cs" />
     <Compile Include="Backend\SqlGeneration\SqlUtility.cs" />
-    <Compile Include="IDatabaseInfo.cs" />
+    <Compile Include="Backend\IDatabaseInfo.cs" />
     <Compile Include="Backend\SqlGeneration\SqlGeneratorVisitor.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitor.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\PartialTreeEvaluatingVisitor.cs" />
