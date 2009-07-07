@@ -15,7 +15,7 @@
 // 
 using System;
 using NUnit.Framework;
-using Remotion.Data.Linq.DataObjectModel;
+using Remotion.Data.Linq.Backend.DataObjectModel;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Utilities;
 

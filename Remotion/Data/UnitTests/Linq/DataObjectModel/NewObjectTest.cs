@@ -15,7 +15,7 @@
 // 
 using System;
 using NUnit.Framework;
-using Remotion.Data.Linq.DataObjectModel;
+using Remotion.Data.Linq.Backend.DataObjectModel;
 using NUnit.Framework.SyntaxHelpers;
 
 namespace Remotion.Data.UnitTests.Linq.DataObjectModel

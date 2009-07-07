@@ -18,7 +18,7 @@ using System.Reflection;
 using Remotion.Collections;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.Expressions;
-using Remotion.Data.Linq.DataObjectModel;
+using Remotion.Data.Linq.Backend.DataObjectModel;
 
 namespace Remotion.Data.Linq.Parsing.FieldResolving
 {

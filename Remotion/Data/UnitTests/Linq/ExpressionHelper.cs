@@ -26,7 +26,7 @@ using Remotion.Data.Linq.Parsing.FieldResolving;
 using Remotion.Data.Linq.Parsing.Structure;
 using Rhino.Mocks;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.DataObjectModel;
+using Remotion.Data.Linq.Backend.DataObjectModel;
 
 namespace Remotion.Data.UnitTests.Linq
 {

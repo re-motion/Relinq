@@ -18,7 +18,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Remotion.Data.Linq.DataObjectModel;
+using Remotion.Data.Linq.Backend.DataObjectModel;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Details.SelectProjectionParsing

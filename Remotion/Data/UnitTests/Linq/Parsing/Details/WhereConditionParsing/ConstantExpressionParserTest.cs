@@ -16,7 +16,7 @@
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using Remotion.Data.Linq.DataObjectModel;
+using Remotion.Data.Linq.Backend.DataObjectModel;
 using Remotion.Data.Linq.Parsing.Details.WhereConditionParsing;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Details.WhereConditionParsing

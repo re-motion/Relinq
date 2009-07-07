@@ -99,17 +99,17 @@
     <Compile Include="EagerFetching\FetchRequestCollection.cs" />
     <Compile Include="Clauses\OrderingDirection.cs" />
     <Compile Include="Clauses\ResultOperatorBase.cs" />
-    <Compile Include="DataObjectModel\BinaryEvaluation.cs" />
-    <Compile Include="DataObjectModel\FieldSourcePath.cs" />
-    <Compile Include="DataObjectModel\IColumnSource.cs" />
-    <Compile Include="DataObjectModel\IEvaluation.cs" />
-    <Compile Include="DataObjectModel\IEvaluationVisitor.cs" />
-    <Compile Include="DataObjectModel\MethodCall.cs" />
-    <Compile Include="DataObjectModel\LetColumnSource.cs" />
-    <Compile Include="DataObjectModel\NewObject.cs" />
-    <Compile Include="DataObjectModel\SingleJoin.cs" />
-    <Compile Include="DataObjectModel\SourceMarkerEvaluation.cs" />
-    <Compile Include="DataObjectModel\SubQuery.cs" />
+    <Compile Include="Backend\DataObjectModel\BinaryEvaluation.cs" />
+    <Compile Include="Backend\DataObjectModel\FieldSourcePath.cs" />
+    <Compile Include="Backend\DataObjectModel\IColumnSource.cs" />
+    <Compile Include="Backend\DataObjectModel\IEvaluation.cs" />
+    <Compile Include="Backend\DataObjectModel\IEvaluationVisitor.cs" />
+    <Compile Include="Backend\DataObjectModel\MethodCall.cs" />
+    <Compile Include="Backend\DataObjectModel\LetColumnSource.cs" />
+    <Compile Include="Backend\DataObjectModel\NewObject.cs" />
+    <Compile Include="Backend\DataObjectModel\SingleJoin.cs" />
+    <Compile Include="Backend\DataObjectModel\SourceMarkerEvaluation.cs" />
+    <Compile Include="Backend\DataObjectModel\SubQuery.cs" />
     <Compile Include="Clauses\Expressions\SubQueryExpression.cs" />
     <Compile Include="ExtensionMethods\ExtensionMethods.cs" />
     <Compile Include="EagerFetching\FluentFetchRequest.cs" />
@@ -147,11 +147,11 @@
     <Compile Include="Parsing\FieldResolving\IResolveFieldAccessPolicy.cs" />
     <Compile Include="Parsing\FieldResolving\JoinedTableContext.cs" />
     <Compile Include="Parsing\FieldResolving\OrderingFieldAccessPolicy.cs" />
-    <Compile Include="DataObjectModel\FieldDescriptor.cs" />
+    <Compile Include="Backend\DataObjectModel\FieldDescriptor.cs" />
     <Compile Include="Clauses\FromClauseBase.cs" />
     <Compile Include="Clauses\GroupClause.cs" />
     <Compile Include="Clauses\IBodyClause.cs" />
-    <Compile Include="DataObjectModel\OrderingField.cs" />
+    <Compile Include="Backend\DataObjectModel\OrderingField.cs" />
     <Compile Include="Parsing\FieldResolving\SelectFieldAccessPolicy.cs" />
     <Compile Include="Parsing\FieldResolving\WhereFieldAccessPolicy.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\ReplacingVisitor.cs" />
@@ -180,8 +180,8 @@
     <Compile Include="Parsing\Structure\IntermediateModel\SelectManyExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\IExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\SelectExpressionNode.cs" />
-    <Compile Include="DataObjectModel\DatabaseInfoUtility.cs" />
-    <Compile Include="DataObjectModel\NotCriterion.cs" />
+    <Compile Include="Backend\DataObjectModel\DatabaseInfoUtility.cs" />
+    <Compile Include="Backend\DataObjectModel\NotCriterion.cs" />
     <Compile Include="Clauses\IClause.cs" />
     <Compile Include="IQueryExecutor.cs" />
     <Compile Include="IQueryModelVisitor.cs" />
@@ -203,13 +203,13 @@
     <Compile Include="Clauses\ISelectGroupClause.cs" />
     <Compile Include="QueryProviderBase.cs" />
     <Compile Include="QueryableBase.cs" />
-    <Compile Include="DataObjectModel\BinaryCondition.cs" />
-    <Compile Include="DataObjectModel\ComplexCriterion.cs" />
-    <Compile Include="DataObjectModel\Column.cs" />
-    <Compile Include="DataObjectModel\Constant.cs" />
-    <Compile Include="DataObjectModel\ICriterion.cs" />
-    <Compile Include="DataObjectModel\Table.cs" />
-    <Compile Include="DataObjectModel\IValue.cs" />
+    <Compile Include="Backend\DataObjectModel\BinaryCondition.cs" />
+    <Compile Include="Backend\DataObjectModel\ComplexCriterion.cs" />
+    <Compile Include="Backend\DataObjectModel\Column.cs" />
+    <Compile Include="Backend\DataObjectModel\Constant.cs" />
+    <Compile Include="Backend\DataObjectModel\ICriterion.cs" />
+    <Compile Include="Backend\DataObjectModel\Table.cs" />
+    <Compile Include="Backend\DataObjectModel\IValue.cs" />
     <Compile Include="SqlGeneration\CommandData.cs" />
     <Compile Include="SqlGeneration\CommandParameter.cs" />
     <Compile Include="SqlGeneration\ISqlGenerationContext.cs" />
@@ -260,7 +260,7 @@
       <Link>remotion.snk</Link>
     </None>
     <None Include="Data.Linq.build" />
-    <None Include="DataObjectModel\RelationalView.cd" />
+    <None Include="Backend\DataObjectModel\RelationalView.cd" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Core\Core.Core.csproj">
