@@ -73,21 +73,57 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return queryModel;
     }
 
+    /// <summary>
+    /// Wraps the <paramref name="queryModel"/> into a subquery after a <see cref="ResultModificationBase"/> has been created. Override this method
+    /// when implementing a <see cref="IExpressionNode"/> that does not need a subquery to be created if it occurs after a 
+    /// <see cref="ResultModificationBase"/>.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// When an ordinary node 
+    /// follows a result modification node,  it cannot simply append its clauses to the <paramref name="queryModel"/> because semantically, the 
+    /// result modification must be executed _before_ the clause. Therefore, in such scenarios, we wrap the current query model into a 
+    /// <see cref="SubQueryExpression"/> that we put into the <see cref="MainFromClause"/> of a new <see cref="QueryModel"/>.
+    /// </para>
+    /// <para>
+    /// This method also changes the <see cref="Source"/> of this node because logically, all <see cref="Resolve"/> operations must be handled
+    /// by the new <see cref="MainFromClause"/> holding the <see cref="SubQueryExpression"/>. For example, consider the following call chain:
+    /// <code>
+    /// MainSource (...)
+    ///   .Select (x => x)
+    ///   .Distinct ()
+    ///   .Select (x => x)
+    /// </code>
+    /// 
+    /// Naively, the last Select node would resolve (via Distinct and Select) to the <see cref="MainFromClause"/> created by the initial MainSource.
+    /// After this method is executed, however, that <see cref="MainFromClause"/> is part of the sub query, and a new <see cref="MainFromClause"/> 
+    /// has been created to hold it. Therefore, we replace the chain as follows:
+    /// <code>
+    /// MainSource (MainSource (...).Select (x => x).Distinct ())
+    ///   .Select (x => x)
+    /// </code>
+    /// 
+    /// Now, the last Select node resolves to the new <see cref="MainFromClause"/>.
+    /// </para>
+    /// </remarks>
     protected virtual QueryModel WrapQueryModelAfterResultModification (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+
       if (((SelectClause) queryModel.SelectOrGroupClause).ResultModifications.Count > 0)
       {
         var oldResultType = queryModel.ResultType;
-        queryModel.ResultType = Source.ParsedExpression.Type;
+        queryModel.ResultType = Source.ParsedExpression.Type; // the result type of the old query model is what the last node's expression says it should be
 
         var subQueryExpression = new SubQueryExpression (queryModel);
+        
+        // change the Source of this node so that Resolve will later correctly go to the new main from clause we create for the sub query
         var newMainSourceNode = new MainSourceExpressionNode (Source.AssociatedIdentifier, subQueryExpression);
         Source = newMainSourceNode;
-        
+
         var newMainFromClause = newMainSourceNode.CreateMainFromClause (clauseGenerationContext);
         var newSelectClause = new SelectClause (new QuerySourceReferenceExpression (newMainFromClause));
-        return new QueryModel (oldResultType, newMainFromClause, newSelectClause);
+        return new QueryModel (oldResultType, newMainFromClause, newSelectClause); // the new query model gets the result type the old query model would have gotten, hadn't it been wrapped
       }
       else
         return queryModel;
