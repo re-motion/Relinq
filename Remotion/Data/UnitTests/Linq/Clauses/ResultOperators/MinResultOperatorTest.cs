@@ -49,9 +49,9 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       var items = new[] { 1, 2, 3, 0, 2 };
       var resultOperator = new MinResultOperator ();
 
-      var result = resultOperator.ExecuteInMemory (items);
+      var result = resultOperator.ExecuteInMemory<int, int> (items);
 
-      Assert.That (result, Is.EqualTo (new[] { 0 }));
+      Assert.That (result, Is.EqualTo (0));
     }
 
     [Test]

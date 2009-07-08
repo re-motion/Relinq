@@ -14,30 +14,23 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
-  public class MaxResultOperator : ResultOperatorBase
+  public class MaxResultOperator : ScalarResultOperatorBase
   {
-    public MaxResultOperator ()
-        : base (ScalarExecutionStrategy.Instance)
-    {
-    }
-
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
       return new MaxResultOperator();
     }
 
-    public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)
+    public override TScalar ExecuteInMemory<TItem, TScalar> (IEnumerable<TItem> items)
     {
       ArgumentUtility.CheckNotNull ("items", items);
-      return new[] { items.Max() };
+      return (TScalar) (object) items.Max();
     }
 
     public override string ToString ()

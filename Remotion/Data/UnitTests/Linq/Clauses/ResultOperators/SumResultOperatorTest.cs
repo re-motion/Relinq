@@ -47,9 +47,9 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     public void ExecuteInMemory ()
     {
       var items = new[] { 1, 2, 3 };
-      var result = _resultOperator.ExecuteInMemory(items);
+      var result = _resultOperator.ExecuteInMemory<int, int> (items);
 
-      Assert.That (result, Is.EqualTo (new[] { 6 }));
+      Assert.That (result, Is.EqualTo (6));
     }
 
     [Test]
@@ -57,7 +57,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     public void ExecuteInMemory_UnsupportedType ()
     {
       var items = new[] { "1", "2", "3" };
-      _resultOperator.ExecuteInMemory (items);
+      _resultOperator.ExecuteInMemory<string, int> (items);
     }
 
     [Test]

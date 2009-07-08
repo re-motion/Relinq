@@ -14,30 +14,23 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
-  public class MinResultOperator : ResultOperatorBase
+  public class MinResultOperator : ScalarResultOperatorBase
   {
-    public MinResultOperator ()
-        : base (ScalarExecutionStrategy.Instance)
-    {
-    }
-
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
       return new MinResultOperator();
     }
 
-    public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)
+    public override TScalar ExecuteInMemory<TItem, TScalar> (IEnumerable<TItem> items)
     {
       ArgumentUtility.CheckNotNull ("items", items);
-      return new[] { items.Min() };
+      return (TScalar) ((object) items.Min());
     }
 
     public override string ToString ()

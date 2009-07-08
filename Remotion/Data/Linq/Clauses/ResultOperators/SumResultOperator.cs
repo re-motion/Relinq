@@ -14,37 +14,30 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
-  public class SumResultOperator : ResultOperatorBase
+  public class SumResultOperator : ScalarResultOperatorBase
   {
-    public SumResultOperator ()
-        : base (ScalarExecutionStrategy.Instance)
-    {
-    }
-
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
       return new SumResultOperator();
     }
 
-    public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)
+    public override TScalar ExecuteInMemory<TItem, TScalar> (IEnumerable<TItem> items)
     {
       ArgumentUtility.CheckNotNull ("items", items);
-      var method = typeof (Enumerable).GetMethod ("Sum", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof (IEnumerable<T>) }, null);
+      var method = typeof (Enumerable).GetMethod ("Sum", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof (IEnumerable<TItem>) }, null);
       if (method == null)
       {
-        var message = string.Format ("Cannot calculate the sum of elements of type '{0}' in memory.", typeof (T).FullName);
+        var message = string.Format ("Cannot calculate the sum of elements of type '{0}' in memory.", typeof (TItem).FullName);
         throw new NotSupportedException (message);
       }
-      return new[] { (T) method.Invoke (null, new object[] { items }) };
+      return (TScalar) method.Invoke (null, new object[] { items });
     }
 
     public override string ToString ()

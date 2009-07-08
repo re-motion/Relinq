@@ -14,7 +14,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
@@ -22,7 +21,7 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
-  public class FirstResultOperator : ResultOperatorBase
+  public class FirstResultOperator : NonScalarResultOperatorBase
   {
     public FirstResultOperator (bool returnDefaultWhenEmpty)
         : base (
@@ -38,7 +37,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new FirstResultOperator (ReturnDefaultWhenEmpty);
     }
 
-    public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)
+    public override IEnumerable<T> ExecuteInMemory<T> (IEnumerable<T> items)
     {
       ArgumentUtility.CheckNotNull ("items", items);
 

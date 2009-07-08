@@ -28,10 +28,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                            {
                                                                GetSupportedMethod (() => Queryable.GroupBy<object, object> (null, o => null)),
                                                                GetSupportedMethod (() => Enumerable.GroupBy<object, object> (null, o => null)),
-                                                               GetSupportedMethod (
-                                                                   () => Queryable.GroupBy<object, object, object> (null, o => null, o => null)),
-                                                               GetSupportedMethod (
-                                                                   () => Enumerable.GroupBy<object, object, object> (null, o => null, o => null)),
+                                                               GetSupportedMethod (() => Queryable.GroupBy<object, object, object> (null, o => null, o => null)),
+                                                               GetSupportedMethod (() => Enumerable.GroupBy<object, object, object> (null, o => null, o => null)),
                                                            };
 
     private readonly ResolvedExpressionCache _cachedKeySelector;

@@ -14,7 +14,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
@@ -22,7 +21,7 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
-  public class DistinctResultOperator : ResultOperatorBase
+  public class DistinctResultOperator : NonScalarResultOperatorBase
   {
     public DistinctResultOperator ()
         : base (CollectionExecutionStrategy.Instance)
@@ -34,7 +33,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new DistinctResultOperator();
     }
 
-    public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)
+    public override IEnumerable<T> ExecuteInMemory<T> (IEnumerable<T> items)
     {
       ArgumentUtility.CheckNotNull ("items", items);
       return items.Distinct();

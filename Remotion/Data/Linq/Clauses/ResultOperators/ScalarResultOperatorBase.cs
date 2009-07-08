@@ -13,29 +13,26 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using Remotion.Utilities;
+using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
-  public class CountResultOperator : ScalarResultOperatorBase
+  /// <summary>
+  /// Represents a result operator that returns a scalar value, e.g. <see cref="CountResultOperator"/> or <see cref="SumResultOperator"/>.
+  /// </summary>
+  public abstract class ScalarResultOperatorBase : ResultOperatorBase
   {
-    public override ResultOperatorBase Clone (CloneContext cloneContext)
+    protected ScalarResultOperatorBase ()
+        : base (ScalarExecutionStrategy.Instance)
     {
-      return new CountResultOperator();
     }
 
-    public override TScalar ExecuteInMemory<TItem, TScalar> (IEnumerable<TItem> items)
-    {
-      ArgumentUtility.CheckNotNull ("items", items);
-      return (TScalar) (object) items.Count ();
-    }
-
-    public override string ToString ()
-    {
-      return "Count()";
-    }
+    /// <summary>
+    /// Executes this result operator in memory, on a given enumeration of items. Executing result operator in memory should only be 
+    /// performed if the target query system does not support the operator.
+    /// </summary>
+    /// <returns>A scalar value representing the result of the operator. </returns>
+    public abstract TScalar ExecuteInMemory<TItem, TScalar> (IEnumerable<TItem> items);
   }
 }
