@@ -28,7 +28,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
   {
     private LambdaExpression _keySelector;
     private LambdaExpression _elementSelector;
-    private GroupByExpressionNode _node;
+    private GroupByExpressionNode _nodeWithElementSelector;
+    private GroupByExpressionNode _nodeWithoutElementSelector;
 
     public override void SetUp ()
     {
@@ -36,7 +37,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       _keySelector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
       _elementSelector = ExpressionHelper.CreateLambdaExpression<int, string> (i => i.ToString());
-      _node = new GroupByExpressionNode (CreateParseInfo (SourceNode, "g"), _keySelector, _elementSelector);
+      _nodeWithElementSelector = new GroupByExpressionNode (CreateParseInfo (SourceNode, "g"), _keySelector, _elementSelector);
+      _nodeWithoutElementSelector = new GroupByExpressionNode (CreateParseInfo (SourceNode, "g"), _keySelector, null);
     }
 
     [Test]
@@ -83,32 +85,49 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void GetResolvedKeySelector ()
     {
-      var resolvedKeySelector = _node.GetResolvedKeySelector (ClauseGenerationContext);
+      var resolvedKeySelector = _nodeWithElementSelector.GetResolvedKeySelector (ClauseGenerationContext);
 
       var expectedExpression = ExpressionHelper.Resolve<int, bool> (SourceClause, i => i > 5);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, resolvedKeySelector);
     }
 
     [Test]
-    public void GetResolvedElementSelector ()
+    public void GetResolvedOptionalElementSelector ()
     {
-      var resolvedElementSelector = _node.GetResolvedElementSelector (ClauseGenerationContext);
+      var resolvedElementSelector = _nodeWithElementSelector.GetResolvedOptionalElementSelector (ClauseGenerationContext);
 
       var expectedExpression = ExpressionHelper.Resolve<int, string> (SourceClause, i => i.ToString());
       ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, resolvedElementSelector);
     }
 
     [Test]
+    public void GetResolvedOptionalElementSelector_Null ()
+    {
+      var resolvedElementSelector = _nodeWithoutElementSelector.GetResolvedOptionalElementSelector (ClauseGenerationContext);
+      Assert.That (resolvedElementSelector, Is.Null);
+    }
+
+    [Test]
     public void Apply ()
     {
-      var newQueryModel = _node.Apply (QueryModel, ClauseGenerationContext);
+      var newQueryModel = _nodeWithElementSelector.Apply (QueryModel, ClauseGenerationContext);
 
       Assert.That (newQueryModel, Is.SameAs (QueryModel));
 
       Assert.That (QueryModel.SelectOrGroupClause, Is.InstanceOfType (typeof (GroupClause)));
       var groupClause = (GroupClause) QueryModel.SelectOrGroupClause;
-      Assert.That (groupClause.ByExpression, Is.SameAs (_node.GetResolvedKeySelector (ClauseGenerationContext)));
-      Assert.That (groupClause.GroupExpression, Is.SameAs (_node.GetResolvedElementSelector (ClauseGenerationContext)));
+      Assert.That (groupClause.ByExpression, Is.SameAs (_nodeWithElementSelector.GetResolvedKeySelector (ClauseGenerationContext)));
+      Assert.That (groupClause.GroupExpression, Is.SameAs (_nodeWithElementSelector.GetResolvedOptionalElementSelector (ClauseGenerationContext)));
+    }
+
+    [Test]
+    public void Apply_WithoutElementSelector_SuppliesStandardSelector ()
+    {
+      _nodeWithoutElementSelector.Apply (QueryModel, ClauseGenerationContext);
+      var groupClause = (GroupClause) QueryModel.SelectOrGroupClause;
+
+      var expectedElementSelector = ExpressionHelper.Resolve<int, int> (QueryModel.MainFromClause, i => i);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedElementSelector, groupClause.GroupExpression);
     }
   }
 }

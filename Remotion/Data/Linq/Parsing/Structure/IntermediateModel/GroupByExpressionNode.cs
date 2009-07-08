@@ -35,36 +35,40 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     private readonly ResolvedExpressionCache _cachedKeySelector;
     private readonly ResolvedExpressionCache _cachedElementSelector;
 
-    public GroupByExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression keySelector, LambdaExpression elementSelector)
+    public GroupByExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression keySelector, LambdaExpression optionalElementSelector)
         : base (parseInfo)
     {
       ArgumentUtility.CheckNotNull ("keySelector", keySelector);
-      ArgumentUtility.CheckNotNull ("elementSelector", elementSelector);
 
       if (keySelector.Parameters.Count != 1)
         throw new ArgumentException ("KeySelector must have exactly one parameter.", "keySelector");
 
-      if (elementSelector.Parameters.Count != 1)
-        throw new ArgumentException ("ElementSelector must have exactly one parameter.", "elementSelector");
+      if (optionalElementSelector != null && optionalElementSelector.Parameters.Count != 1)
+        throw new ArgumentException ("ElementSelector must have exactly one parameter.", "optionalElementSelector");
 
       KeySelector = keySelector;
-      ElementSelector = elementSelector;
+      OptionalElementSelector = optionalElementSelector;
 
       _cachedKeySelector = new ResolvedExpressionCache (this);
-      _cachedElementSelector = new ResolvedExpressionCache (this);
+
+      if (optionalElementSelector != null)
+        _cachedElementSelector = new ResolvedExpressionCache (this);
     }
 
     public LambdaExpression KeySelector { get; private set; }
-    public LambdaExpression ElementSelector { get; private set; }
+    public LambdaExpression OptionalElementSelector { get; private set; }
 
     public Expression GetResolvedKeySelector (ClauseGenerationContext clauseGenerationContext)
     {
       return _cachedKeySelector.GetOrCreate (r => r.GetResolvedExpression (KeySelector.Body, KeySelector.Parameters[0], clauseGenerationContext));
     }
 
-    public Expression GetResolvedElementSelector (ClauseGenerationContext clauseGenerationContext)
+    public Expression GetResolvedOptionalElementSelector (ClauseGenerationContext clauseGenerationContext)
     {
-      return _cachedElementSelector.GetOrCreate (r => r.GetResolvedExpression (ElementSelector.Body, ElementSelector.Parameters[0], clauseGenerationContext));
+      if (OptionalElementSelector == null)
+        return null;
+
+      return _cachedElementSelector.GetOrCreate (r => r.GetResolvedExpression (OptionalElementSelector.Body, OptionalElementSelector.Parameters[0], clauseGenerationContext));
     }
 
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
@@ -75,8 +79,18 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     protected override QueryModel ApplyNodeSpecificSemantics (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
-      queryModel.SelectOrGroupClause = 
-          new GroupClause (GetResolvedElementSelector (clauseGenerationContext), GetResolvedKeySelector (clauseGenerationContext));
+
+      var resolvedElementSelector = GetResolvedOptionalElementSelector (clauseGenerationContext);
+      if (resolvedElementSelector == null)
+      {
+        // supply a default element selector if none is given
+        // just resolve KeySelector.Parameters[0], that's the input data flowing in from the source node
+        resolvedElementSelector = Source.Resolve (KeySelector.Parameters[0], KeySelector.Parameters[0], clauseGenerationContext);
+      }
+
+      var resolvedKeySelector = GetResolvedKeySelector (clauseGenerationContext);
+
+      queryModel.SelectOrGroupClause = new GroupClause (resolvedElementSelector, resolvedKeySelector);
       return queryModel;
     }
   }
