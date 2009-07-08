@@ -29,7 +29,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   {
     private readonly ResolvedExpressionCache _cachedPredicate;
     private readonly ResolvedExpressionCache _cachedSelector;
-    
+
     protected ResultOperatorExpressionNodeBase (
         MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalPredicate, LambdaExpression optionalSelector)
         : base (parseInfo)
@@ -60,7 +60,9 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       if (OptionalPredicate == null)
         return null;
 
-      return _cachedPredicate.GetOrCreate (r => r.GetResolvedExpression (OptionalPredicate.Body, OptionalPredicate.Parameters[0], clauseGenerationContext));
+      return
+          _cachedPredicate.GetOrCreate (
+              r => r.GetResolvedExpression (OptionalPredicate.Body, OptionalPredicate.Parameters[0], clauseGenerationContext));
     }
 
     public Expression GetResolvedOptionalSelector (ClauseGenerationContext clauseGenerationContext)
@@ -68,14 +70,15 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       if (OptionalSelector == null)
         return null;
 
-      return _cachedSelector.GetOrCreate (r => r.GetResolvedExpression (OptionalSelector.Body, OptionalSelector.Parameters[0], clauseGenerationContext));
+      return
+          _cachedSelector.GetOrCreate (r => r.GetResolvedExpression (OptionalSelector.Body, OptionalSelector.Parameters[0], clauseGenerationContext));
     }
 
     protected override QueryModel ApplyNodeSpecificSemantics (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
-      queryModel.ResultOperators.Add (CreateResultOperator ());
+      queryModel.ResultOperators.Add (CreateResultOperator());
 
       if (OptionalPredicate != null)
       {

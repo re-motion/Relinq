@@ -17,8 +17,8 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Remotion.Utilities;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 {
@@ -28,8 +28,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                            {
                                                                GetSupportedMethod (() => Queryable.GroupBy<object, object> (null, o => null)),
                                                                GetSupportedMethod (() => Enumerable.GroupBy<object, object> (null, o => null)),
-                                                               GetSupportedMethod (() => Queryable.GroupBy<object, object, object> (null, o => null, o => null)),
-                                                               GetSupportedMethod (() => Enumerable.GroupBy<object, object, object> (null, o => null, o => null)),
+                                                               GetSupportedMethod (
+                                                                   () => Queryable.GroupBy<object, object, object> (null, o => null, o => null)),
+                                                               GetSupportedMethod (
+                                                                   () => Enumerable.GroupBy<object, object, object> (null, o => null, o => null)),
                                                            };
 
     private readonly ResolvedExpressionCache _cachedKeySelector;
@@ -68,10 +70,13 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       if (OptionalElementSelector == null)
         return null;
 
-      return _cachedElementSelector.GetOrCreate (r => r.GetResolvedExpression (OptionalElementSelector.Body, OptionalElementSelector.Parameters[0], clauseGenerationContext));
+      return
+          _cachedElementSelector.GetOrCreate (
+              r => r.GetResolvedExpression (OptionalElementSelector.Body, OptionalElementSelector.Parameters[0], clauseGenerationContext));
     }
 
-    public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
+    public override Expression Resolve (
+        ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
     {
       throw new NotImplementedException();
     }

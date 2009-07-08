@@ -42,7 +42,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     {
     }
 
-    public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
+    public override Expression Resolve (
+        ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("inputParameter", inputParameter);
       ArgumentUtility.CheckNotNull ("expressionToBeResolved", expressionToBeResolved);
@@ -53,7 +54,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     protected override ResultOperatorBase CreateResultOperator ()
     {
-      return new DistinctResultOperator ();
+      return new DistinctResultOperator();
     }
   }
 }

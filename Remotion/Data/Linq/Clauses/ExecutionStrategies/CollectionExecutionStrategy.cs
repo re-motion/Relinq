@@ -30,7 +30,7 @@ namespace Remotion.Data.Linq.Clauses.ExecutionStrategies
   /// </summary>
   public class CollectionExecutionStrategy : IExecutionStrategy
   {
-    public static readonly CollectionExecutionStrategy Instance = new CollectionExecutionStrategy ();
+    public static readonly CollectionExecutionStrategy Instance = new CollectionExecutionStrategy();
 
     private CollectionExecutionStrategy ()
     {
@@ -41,17 +41,19 @@ namespace Remotion.Data.Linq.Clauses.ExecutionStrategies
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
       ArgumentUtility.CheckNotNull ("fetchRequests", fetchRequests);
 
-      var itemType = GetItemType<TResult> ();
+      var itemType = GetItemType<TResult>();
 
       var executeCollectionMethod = typeof (IQueryExecutor).GetMethod ("ExecuteCollection");
-      var asQueryableMethod = ParserUtility.GetMethod (() => Queryable.AsQueryable<object>(null))
+      var asQueryableMethod = ParserUtility.GetMethod (() => Queryable.AsQueryable<object> (null))
           .GetGenericMethodDefinition()
           .MakeGenericMethod (itemType);
 
       var executorParameter = Expression.Parameter (typeof (IQueryExecutor), "queryExecutor");
       var executeCollectionCall = Expression.Call (
-          executorParameter, 
-          executeCollectionMethod.MakeGenericMethod (itemType), Expression.Constant (queryModel), Expression.Constant (fetchRequests));
+          executorParameter,
+          executeCollectionMethod.MakeGenericMethod (itemType),
+          Expression.Constant (queryModel),
+          Expression.Constant (fetchRequests));
 
       var asQueryableCall = Expression.Call (asQueryableMethod, executeCollectionCall);
 
@@ -70,7 +72,7 @@ namespace Remotion.Data.Linq.Clauses.ExecutionStrategies
       {
         var message = string.Format (
             "A query that returns a collection of elements cannot be executed with a result type of '{0}'. Specify a result type that implements "
-            + "IEnumerable<T>.", 
+            + "IEnumerable<T>.",
             typeof (TResult).FullName);
 
         throw new InvalidOperationException (message, ex);

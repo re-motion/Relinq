@@ -15,8 +15,8 @@
 // 
 using System;
 using System.Collections;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Utilities;
 
@@ -31,13 +31,13 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
-      return new CountResultOperator ();
+      return new CountResultOperator();
     }
 
     public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)
     {
       ArgumentUtility.CheckNotNull ("items", items);
-      return new[] { items.Count () };
+      return new[] { items.Count() };
     }
 
     public override string ToString ()

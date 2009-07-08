@@ -14,11 +14,11 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Collections;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Utilities;
-using System.Linq;
 
 namespace Remotion.Data.Linq.Clauses
 {
@@ -33,7 +33,6 @@ namespace Remotion.Data.Linq.Clauses
   ///             select s;
   /// </ode>
   /// </example>
-
   public class OrderByClause : IBodyClause
   {
     /// <summary>
@@ -77,9 +76,7 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("transformation", transformation);
 
       foreach (var ordering in Orderings)
-      {
         ordering.TransformExpressions (transformation);
-      }
     }
 
     /// <summary>
@@ -92,7 +89,7 @@ namespace Remotion.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 
-      var result = new OrderByClause ();
+      var result = new OrderByClause();
       foreach (var ordering in Orderings)
       {
         var orderingClone = ordering.Clone (cloneContext);

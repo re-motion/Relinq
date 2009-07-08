@@ -31,13 +31,13 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
-      return new DistinctResultOperator ();
+      return new DistinctResultOperator();
     }
 
     public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)
     {
       ArgumentUtility.CheckNotNull ("items", items);
-      return items.Distinct ();
+      return items.Distinct();
     }
 
     public override string ToString ()

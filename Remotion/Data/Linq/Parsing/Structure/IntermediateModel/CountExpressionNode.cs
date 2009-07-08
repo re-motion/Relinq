@@ -14,12 +14,12 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Utilities;
-using System.Reflection;
-using System.Linq;
 
 namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 {
@@ -45,7 +45,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     {
     }
 
-    public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
+    public override Expression Resolve (
+        ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("inputParameter", inputParameter);
       ArgumentUtility.CheckNotNull ("expressionToBeResolved", expressionToBeResolved);
@@ -56,7 +57,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     protected override ResultOperatorBase CreateResultOperator ()
     {
-      return new CountResultOperator ();
+      return new CountResultOperator();
     }
   }
 }

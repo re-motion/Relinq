@@ -38,7 +38,7 @@ namespace Remotion.Data.Linq.Parsing
     }
 
     protected ParserException (SerializationInfo info, StreamingContext context)
-        : base(info, context)
+        : base (info, context)
     {
       ParsedExpression = info.GetValue ("ParserException.ParsedExpression", typeof (object));
     }
@@ -48,7 +48,7 @@ namespace Remotion.Data.Linq.Parsing
     public override void GetObjectData (SerializationInfo info, StreamingContext context)
     {
       base.GetObjectData (info, context);
-      
+
       info.AddValue ("ParserException.ParsedExpression", ParsedExpression);
     }
   }

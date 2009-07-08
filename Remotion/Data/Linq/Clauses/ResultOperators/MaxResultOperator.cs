@@ -31,13 +31,13 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
-      return new MaxResultOperator ();
+      return new MaxResultOperator();
     }
 
     public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)
     {
       ArgumentUtility.CheckNotNull ("items", items);
-      return new[] { items.Max () };
+      return new[] { items.Max() };
     }
 
     public override string ToString ()

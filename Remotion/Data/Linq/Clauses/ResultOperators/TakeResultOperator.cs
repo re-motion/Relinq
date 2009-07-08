@@ -16,9 +16,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Utilities;
-using System.Linq;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {

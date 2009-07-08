@@ -107,7 +107,7 @@ namespace Remotion.Data.Linq
     {
       ArgumentUtility.CheckNotNull ("resultOperator", resultOperator);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
-      
+
       // nothing to do here
     }
 
@@ -134,7 +134,7 @@ namespace Remotion.Data.Linq
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
       ArgumentUtility.CheckNotNull ("joinClauses", joinClauses);
 
-      foreach (var indexValuePair in joinClauses.AsChangeResistantEnumerableWithIndex ())
+      foreach (var indexValuePair in joinClauses.AsChangeResistantEnumerableWithIndex())
         indexValuePair.Value.Accept (this, queryModel, fromClause, indexValuePair.Index);
     }
 
@@ -144,7 +144,7 @@ namespace Remotion.Data.Linq
       ArgumentUtility.CheckNotNull ("orderByClause", orderByClause);
       ArgumentUtility.CheckNotNull ("orderings", orderings);
 
-      foreach (var indexValuePair in orderings.AsChangeResistantEnumerableWithIndex ())
+      foreach (var indexValuePair in orderings.AsChangeResistantEnumerableWithIndex())
         indexValuePair.Value.Accept (this, queryModel, orderByClause, indexValuePair.Index);
     }
 
@@ -153,7 +153,7 @@ namespace Remotion.Data.Linq
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
       ArgumentUtility.CheckNotNull ("resultOperators", resultOperators);
 
-      foreach (var indexValuePair in resultOperators.AsChangeResistantEnumerableWithIndex ())
+      foreach (var indexValuePair in resultOperators.AsChangeResistantEnumerableWithIndex())
         indexValuePair.Value.Accept (this, queryModel, indexValuePair.Index);
     }
   }

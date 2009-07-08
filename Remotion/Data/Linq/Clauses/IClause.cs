@@ -15,6 +15,7 @@
 // 
 using System;
 using System.Linq.Expressions;
+
 namespace Remotion.Data.Linq.Clauses
 {
   /// <summary>

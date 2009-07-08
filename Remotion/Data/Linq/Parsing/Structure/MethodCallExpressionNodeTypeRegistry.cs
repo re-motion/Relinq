@@ -38,16 +38,16 @@ namespace Remotion.Data.Linq.Parsing.Structure
     /// field registered.</returns>
     public static MethodCallExpressionNodeTypeRegistry CreateDefault ()
     {
-      var expressionNodeTypes = from t in typeof (MethodCallExpressionNodeTypeRegistry).Assembly.GetTypes ()
-                  where typeof (IExpressionNode).IsAssignableFrom (t)
-                  select t;
+      var expressionNodeTypes = from t in typeof (MethodCallExpressionNodeTypeRegistry).Assembly.GetTypes()
+                                where typeof (IExpressionNode).IsAssignableFrom (t)
+                                select t;
 
       var supportedMethodsForTypes = from t in expressionNodeTypes
                                      let supportedMethodsField = t.GetField ("SupportedMethods", BindingFlags.Static | BindingFlags.Public)
                                      where supportedMethodsField != null
                                      select new { Type = t, Methods = (IEnumerable<MethodInfo>) supportedMethodsField.GetValue (null) };
 
-      var registry = new MethodCallExpressionNodeTypeRegistry ();
+      var registry = new MethodCallExpressionNodeTypeRegistry();
       foreach (var methodsForType in supportedMethodsForTypes)
         registry.Register (methodsForType.Methods, methodsForType.Type);
 
@@ -102,7 +102,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
     {
       ArgumentUtility.CheckNotNull ("method", method);
 
-      var methodDefinition = GetMethodDefinition(method);
+      var methodDefinition = GetMethodDefinition (method);
       try
       {
         return _registeredTypes[methodDefinition];

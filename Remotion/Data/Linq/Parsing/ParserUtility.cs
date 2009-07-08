@@ -28,9 +28,7 @@ namespace Remotion.Data.Linq.Parsing
       ArgumentUtility.CheckNotNull ("context", context);
 
       if (!(expression is T))
-      {
         throw CreateParserException (typeof (T).Name, expression, context);
-      }
       else
         return (T) expression;
     }
@@ -43,7 +41,7 @@ namespace Remotion.Data.Linq.Parsing
 
       string message;
       if (expression is Expression)
-        message = string.Format ("Expected {0} for {1}, found '{2}' ({3}).", expected, context, expression, expression.GetType ().Name);
+        message = string.Format ("Expected {0} for {1}, found '{2}' ({3}).", expected, context, expression, expression.GetType().Name);
       else
         message = string.Format ("Expected {0} for {1}, found '{2}'.", expected, context, expression);
       return new ParserException (message, expression, null);

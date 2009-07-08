@@ -35,8 +35,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   {
     public static readonly MethodInfo[] SupportedMethods = new[]
                                                            {
-                                                               GetSupportedMethod (() => Queryable.SelectMany<object, object[], object> (null, o => null, null)),
-                                                               GetSupportedMethod (() => Enumerable.SelectMany<object, object[], object> (null, o => null, null)),
+                                                               GetSupportedMethod (
+                                                                   () => Queryable.SelectMany<object, object[], object> (null, o => null, null)),
+                                                               GetSupportedMethod (
+                                                                   () => Enumerable.SelectMany<object, object[], object> (null, o => null, null)),
                                                            };
 
     private readonly ResolvedExpressionCache _cachedCollectionSelector;
@@ -66,7 +68,9 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     public Expression GetResolvedCollectionSelector (ClauseGenerationContext clauseGenerationContext)
     {
-      return _cachedCollectionSelector.GetOrCreate (r => r.GetResolvedExpression (CollectionSelector.Body, CollectionSelector.Parameters[0], clauseGenerationContext));
+      return
+          _cachedCollectionSelector.GetOrCreate (
+              r => r.GetResolvedExpression (CollectionSelector.Body, CollectionSelector.Parameters[0], clauseGenerationContext));
     }
 
     public Expression GetResolvedResultSelector (ClauseGenerationContext clauseGenerationContext)
@@ -77,10 +81,11 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       // we resolve the selector by first substituting j by a QuerySourceReferenceExpression pointing back to us, before asking the previous node 
       // to resolve i
 
-      return _cachedResultSelector.GetOrCreate (r => r.GetResolvedExpression (
-          GetResultSelectorWithBackReference (clauseGenerationContext.ClauseMapping),
-          ResultSelector.Parameters[0],
-          clauseGenerationContext));
+      return _cachedResultSelector.GetOrCreate (
+          r => r.GetResolvedExpression (
+                   GetResultSelectorWithBackReference (clauseGenerationContext.ClauseMapping),
+                   ResultSelector.Parameters[0],
+                   clauseGenerationContext));
     }
 
     private Expression GetResultSelectorWithBackReference (QuerySourceClauseMapping querySourceClauseMapping)
@@ -102,12 +107,13 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
         var message = string.Format (
             "Cannot resolve with a {0} for which no clause was created. Be sure to call CreateClause before calling GetResolvedResultSelector, and pass in the same "
             + "QuerySourceClauseMapping to both methods.",
-            GetType ().Name);
+            GetType().Name);
         throw new InvalidOperationException (message, ex);
       }
     }
 
-    public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
+    public override Expression Resolve (
+        ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("inputParameter", inputParameter);
       ArgumentUtility.CheckNotNull ("expressionToBeResolved", expressionToBeResolved);

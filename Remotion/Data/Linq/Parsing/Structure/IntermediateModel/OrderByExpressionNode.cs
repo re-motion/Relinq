@@ -56,11 +56,12 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return _cachedSelector.GetOrCreate (r => r.GetResolvedExpression (KeySelector.Body, KeySelector.Parameters[0], clauseGenerationContext));
     }
 
-    public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
+    public override Expression Resolve (
+        ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("inputParameter", inputParameter);
       ArgumentUtility.CheckNotNull ("expressionToBeResolved", expressionToBeResolved);
-      
+
       // this simply streams its input data to the output without modifying its structure, so we resolve by passing on the data to the previous node
       return Source.Resolve (inputParameter, expressionToBeResolved, clauseGenerationContext);
     }
@@ -69,7 +70,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
-      var clause = new OrderByClause ();
+      var clause = new OrderByClause();
       clause.Orderings.Add (new Ordering (GetResolvedKeySelector (clauseGenerationContext), OrderingDirection.Asc));
       queryModel.BodyClauses.Add (clause);
 

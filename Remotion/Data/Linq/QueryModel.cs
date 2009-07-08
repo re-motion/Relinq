@@ -64,11 +64,11 @@ namespace Remotion.Data.Linq
       MainFromClause = mainFromClause;
       SelectOrGroupClause = selectOrGroupClause;
 
-      BodyClauses = new ObservableCollection<IBodyClause> ();
+      BodyClauses = new ObservableCollection<IBodyClause>();
       BodyClauses.ItemInserted += BodyClauses_Added;
       BodyClauses.ItemSet += BodyClauses_Added;
 
-      ResultOperators = new ObservableCollection<ResultOperatorBase> ();
+      ResultOperators = new ObservableCollection<ResultOperatorBase>();
       ResultOperators.ItemInserted += ResultOperators_ItemAdded;
       ResultOperators.ItemSet += ResultOperators_ItemAdded;
     }
@@ -136,7 +136,7 @@ namespace Remotion.Data.Linq
       if (ResultOperators.Count > 0)
         return ResultOperators[ResultOperators.Count - 1].ExecutionStrategy;
       else
-        return SelectOrGroupClause.GetExecutionStrategy ();
+        return SelectOrGroupClause.GetExecutionStrategy();
     }
 
     private void ResultOperators_ItemAdded (object sender, ObservableCollectionChangedEventArgs<ResultOperatorBase> e)
@@ -220,16 +220,14 @@ namespace Remotion.Data.Linq
       ArgumentUtility.CheckNotNull ("transformation", transformation);
 
       MainFromClause.TransformExpressions (transformation);
-      
+
       foreach (var bodyClause in BodyClauses)
         bodyClause.TransformExpressions (transformation);
 
       SelectOrGroupClause.TransformExpressions (transformation);
 
       foreach (var resultOperator in ResultOperators)
-      {
         resultOperator.TransformExpressions (transformation);
-      }
     }
 
     /// <summary>

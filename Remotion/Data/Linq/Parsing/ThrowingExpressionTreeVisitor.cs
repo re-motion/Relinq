@@ -42,7 +42,7 @@ namespace Remotion.Data.Linq.Parsing
     /// <param name="baseBehavior">The behavior exposed by <see cref="ExpressionTreeVisitor"/> for this item type.</param>
     /// <returns>An object to replace <paramref name="unhandledItem"/> in the expression tree. Alternatively, the method can throw any exception.</returns>
     protected virtual TResult VisitUnhandledItem<TItem, TResult> (TItem unhandledItem, string visitMethod, Func<TItem, TResult> baseBehavior)
-        where TItem : TResult
+        where TItem: TResult
     {
       ArgumentUtility.CheckNotNull ("unhandledItem", unhandledItem);
       ArgumentUtility.CheckNotNullOrEmpty ("visitMethod", visitMethod);
@@ -253,7 +253,8 @@ namespace Remotion.Data.Linq.Parsing
 
     protected override Expression VisitQuerySourceReferenceExpression (QuerySourceReferenceExpression expression)
     {
-      return VisitUnhandledItem<QuerySourceReferenceExpression, Expression> (expression, "VisitQuerySourceReferenceExpression", BaseVisitQuerySourceReferenceExpression);
+      return VisitUnhandledItem<QuerySourceReferenceExpression, Expression> (
+          expression, "VisitQuerySourceReferenceExpression", BaseVisitQuerySourceReferenceExpression);
     }
 
     protected Expression BaseVisitQuerySourceReferenceExpression (QuerySourceReferenceExpression expression)

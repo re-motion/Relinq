@@ -22,15 +22,15 @@ using System.Reflection;
 // associated with an assembly.
 //
 
-[assembly: AssemblyTitle("Remotion Linq Library")]
-[assembly: AssemblyDescription("Framework for working with linq queries.")]
-[assembly: AssemblyConfiguration(".NET Framework: net-3.5, build type: debug")]
-[assembly: AssemblyCompany("rubicon informationstechnologie gmbh")]
-[assembly: AssemblyProduct("re-motion core framework (www.re-motion.org)")]
-[assembly: AssemblyCopyright("(c) 2005 - 2009 rubicon informationstechnologie gmbh, www.rubicon.eu")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
-[assembly: CLSCompliant(true)]
+[assembly: AssemblyTitle ("Remotion Linq Library")]
+[assembly: AssemblyDescription ("Framework for working with linq queries.")]
+[assembly: AssemblyConfiguration (".NET Framework: net-3.5, build type: debug")]
+[assembly: AssemblyCompany ("rubicon informationstechnologie gmbh")]
+[assembly: AssemblyProduct ("re-motion core framework (www.re-motion.org)")]
+[assembly: AssemblyCopyright ("(c) 2005 - 2009 rubicon informationstechnologie gmbh, www.rubicon.eu")]
+[assembly: AssemblyTrademark ("")]
+[assembly: AssemblyCulture ("")]
+[assembly: CLSCompliant (true)]
 
 //
 // Version information for an assembly consists of the following four values:
@@ -43,4 +43,4 @@ using System.Reflection;
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("1.13.9.2")]
+[assembly: AssemblyVersion ("1.13.9.2")]

@@ -47,7 +47,7 @@ namespace Remotion.Data.Linq
 
     public void Reset ()
     {
-      _knownIdentifiers.Clear ();
+      _knownIdentifiers.Clear();
       _identifierCounter = 0;
     }
 

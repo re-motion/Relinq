@@ -28,7 +28,7 @@ namespace Remotion.Data.Linq.Clauses
   /// </summary>
   public class ClauseMapping
   {
-    private readonly Dictionary<IClause, Expression> _lookup = new Dictionary<IClause, Expression> ();
+    private readonly Dictionary<IClause, Expression> _lookup = new Dictionary<IClause, Expression>();
 
     public bool ContainsMapping (IClause clause)
     {
@@ -74,6 +74,5 @@ namespace Remotion.Data.Linq.Clauses
         throw new KeyNotFoundException ("Clause has not been associated with an expression.");
       }
     }
-
   }
 }

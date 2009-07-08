@@ -15,11 +15,11 @@
 // 
 using System;
 using System.Diagnostics;
+using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Utilities;
-using System.Linq.Expressions;
 
 namespace Remotion.Data.Linq.Clauses
 {
@@ -54,7 +54,7 @@ namespace Remotion.Data.Linq.Clauses
     /// Gets the selector defining what parts of the data items are returned by the query.
     /// </summary>
     [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (Selector),nq}")]
-    public Expression Selector 
+    public Expression Selector
     {
       get { return _selector; }
       set { _selector = ArgumentUtility.CheckNotNull ("value", value); }
@@ -85,7 +85,7 @@ namespace Remotion.Data.Linq.Clauses
 
       var result = new SelectClause (Selector);
       result.TransformExpressions (ex => ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (ex, cloneContext.ClauseMapping));
-      
+
       return result;
     }
 
@@ -102,7 +102,7 @@ namespace Remotion.Data.Linq.Clauses
     {
       return CollectionExecutionStrategy.Instance;
     }
-    
+
     /// <summary>
     /// Transforms all the expressions in this clause and its child objects via the given <paramref name="transformation"/> delegate.
     /// </summary>

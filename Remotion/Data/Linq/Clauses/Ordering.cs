@@ -70,7 +70,7 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
       ArgumentUtility.CheckNotNull ("orderByClause", orderByClause);
-      
+
       visitor.VisitOrdering (this, queryModel, orderByClause, index);
     }
 

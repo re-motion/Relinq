@@ -30,7 +30,7 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
       var visitor = new ReplacingVisitor (replacedExpression, replacementExpression);
       return visitor.VisitExpression (sourceTree);
     }
-    
+
     private readonly Expression _replacedExpression;
     private readonly Expression _replacementExpression;
 

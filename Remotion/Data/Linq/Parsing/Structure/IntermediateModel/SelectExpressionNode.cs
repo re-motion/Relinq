@@ -57,14 +57,15 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return _cachedSelector.GetOrCreate (r => r.GetResolvedExpression (Selector.Body, Selector.Parameters[0], clauseGenerationContext));
     }
 
-    public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
+    public override Expression Resolve (
+        ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("inputParameter", inputParameter);
       ArgumentUtility.CheckNotNull ("expressionToBeResolved", expressionToBeResolved);
 
       // we modify the structure of the stream of data coming into this node by our selector,
       // so we first resolve the selector, then we substitute the result for the inputParameter in the expressionToBeResolved
-      var resolvedSelector = GetResolvedSelector(clauseGenerationContext);
+      var resolvedSelector = GetResolvedSelector (clauseGenerationContext);
       return ReplacingVisitor.Replace (inputParameter, resolvedSelector, expressionToBeResolved);
     }
 

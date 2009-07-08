@@ -79,7 +79,7 @@ namespace Remotion.Data.Linq.Clauses.ExpressionTreeVisitors
     protected override Expression VisitSubQueryExpression (SubQueryExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      
+
       var clonedQueryModel = expression.QueryModel.Clone (_clauseMapping);
       return new SubQueryExpression (clonedQueryModel);
     }

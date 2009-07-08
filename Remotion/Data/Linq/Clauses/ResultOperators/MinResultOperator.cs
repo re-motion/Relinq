@@ -31,13 +31,13 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
-      return new MinResultOperator ();
+      return new MinResultOperator();
     }
 
     public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)
     {
       ArgumentUtility.CheckNotNull ("items", items);
-      return new[] { items.Min () };
+      return new[] { items.Min() };
     }
 
     public override string ToString ()

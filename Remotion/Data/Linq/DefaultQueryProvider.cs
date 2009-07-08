@@ -52,11 +52,11 @@ namespace Remotion.Data.Linq
     private void CheckQueryableType (Type queryableType)
     {
       ArgumentUtility.CheckTypeIsAssignableFrom ("queryableType", queryableType, typeof (IQueryable));
-      
+
       if (!queryableType.IsGenericTypeDefinition)
       {
         var message = string.Format (
-            "Expected the generic type definition of an implementation of IQueryable<T>, but was '{0}'.", 
+            "Expected the generic type definition of an implementation of IQueryable<T>, but was '{0}'.",
             queryableType.FullName);
         throw new ArgumentTypeException (message, "queryableType", typeof (IQueryable<>), queryableType);
       }

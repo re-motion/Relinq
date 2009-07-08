@@ -122,14 +122,14 @@ namespace Remotion.Data.Linq
     /// <returns>
     /// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the query result.
     /// </returns>
-    public IEnumerator<T> GetEnumerator()
+    public IEnumerator<T> GetEnumerator ()
     {
       return _queryProvider.Execute<IEnumerable<T>> (Expression).GetEnumerator();
     }
 
-    IEnumerator IEnumerable.GetEnumerator()
+    IEnumerator IEnumerable.GetEnumerator ()
     {
-      return ((IEnumerable)_queryProvider.Execute (Expression)).GetEnumerator();
+      return ((IEnumerable) _queryProvider.Execute (Expression)).GetEnumerator();
     }
   }
 }

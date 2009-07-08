@@ -13,6 +13,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+using System;
 using Remotion.Data.Linq.Clauses.Expressions;
 
 namespace Remotion.Data.Linq.Clauses
@@ -38,7 +39,7 @@ namespace Remotion.Data.Linq.Clauses
     /// <param name="cloneContext">The clone context to use for replacing <see cref="QuerySourceReferenceExpression"/> objects.</param>
     /// <returns>A clone of this clause.</returns>
     ISelectGroupClause Clone (CloneContext cloneContext);
-   
+
     /// <summary>
     /// Gets the execution strategy to use for the given select or group clause. The execution strategy defines how to dispatch a query
     /// to an implementation of <see cref="IQueryExecutor"/> when the <see cref="QueryProviderBase"/> needs to execute a query.

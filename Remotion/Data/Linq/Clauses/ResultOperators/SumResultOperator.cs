@@ -32,7 +32,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
-      return new SumResultOperator ();
+      return new SumResultOperator();
     }
 
     public override IEnumerable ExecuteInMemory<T> (IEnumerable<T> items)

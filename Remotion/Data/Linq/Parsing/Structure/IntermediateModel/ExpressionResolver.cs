@@ -36,7 +36,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     public IExpressionNode CurrentNode { get; set; }
 
-    public Expression GetResolvedExpression (Expression unresolvedExpression, ParameterExpression parameterToBeResolved, ClauseGenerationContext clauseGenerationContext)
+    public Expression GetResolvedExpression (
+        Expression unresolvedExpression, ParameterExpression parameterToBeResolved, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("unresolvedExpression", unresolvedExpression);
       ArgumentUtility.CheckNotNull ("parameterToBeResolved", parameterToBeResolved);

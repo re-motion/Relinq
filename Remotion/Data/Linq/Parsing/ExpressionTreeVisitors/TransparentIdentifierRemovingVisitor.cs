@@ -15,9 +15,9 @@
 // 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Utilities;
-using System.Linq;
 using MemberBinding=Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.MemberBindings.MemberBinding;
 
 namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
@@ -39,7 +39,7 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
       do
       {
         expressionBeforeRemove = expressionAfterRemove;
-        expressionAfterRemove = new TransparentIdentifierRemovingVisitor ().VisitExpression (expressionAfterRemove);
+        expressionAfterRemove = new TransparentIdentifierRemovingVisitor().VisitExpression (expressionAfterRemove);
       } while (expressionAfterRemove != expressionBeforeRemove);
 
       return expressionAfterRemove;

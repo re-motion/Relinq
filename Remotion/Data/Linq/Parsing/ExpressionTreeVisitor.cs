@@ -135,7 +135,10 @@ namespace Remotion.Data.Linq.Parsing
       Expression newRight = VisitExpression (expression.Right);
       var newConversion = (LambdaExpression) VisitExpression (expression.Conversion);
       if (newLeft != expression.Left || newRight != expression.Right || newConversion != expression.Conversion)
-        return Expression.MakeBinary (expression.NodeType, newLeft, newRight, expression.IsLiftedToNull, expression.Method, newConversion);//, expression.IsLiftedToNull, expression.Method, expression.Conversion);
+      {
+        return Expression.MakeBinary (expression.NodeType, newLeft, newRight, expression.IsLiftedToNull, expression.Method, newConversion);
+            //, expression.IsLiftedToNull, expression.Method, expression.Conversion);
+      }
       return expression;
     }
 
@@ -146,7 +149,6 @@ namespace Remotion.Data.Linq.Parsing
       if (newExpression != expression.Expression)
         return Expression.TypeIs (newExpression, expression.TypeOperand);
       return expression;
-      
     }
 
     protected virtual Expression VisitConstantExpression (ConstantExpression expression)
@@ -180,7 +182,6 @@ namespace Remotion.Data.Linq.Parsing
       if ((newBody != expression.Body) || (newParameters != expression.Parameters))
         return Expression.Lambda (expression.Type, newBody, newParameters);
       return expression;
-      
     }
 
     protected virtual Expression VisitMethodCallExpression (MethodCallExpression expression)
@@ -202,7 +203,7 @@ namespace Remotion.Data.Linq.Parsing
         return Expression.Invoke (newExpression, newArguments);
       return expression;
     }
- 
+
     protected virtual Expression VisitMemberExpression (MemberExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
@@ -245,8 +246,9 @@ namespace Remotion.Data.Linq.Parsing
       ArgumentUtility.CheckNotNull ("expression", expression);
       var newNewExpression = VisitExpression (expression.NewExpression) as NewExpression;
       if (newNewExpression == null)
-        throw new NotSupportedException ("MemberInitExpressions only support non-null instances of type 'NewExpression' as their NewExpression member.");
-      
+        throw new NotSupportedException (
+            "MemberInitExpressions only support non-null instances of type 'NewExpression' as their NewExpression member.");
+
       ReadOnlyCollection<MemberBinding> newBindings = VisitMemberBindingList (expression.Bindings);
       if (newNewExpression != expression.NewExpression || newBindings != expression.Bindings)
         return Expression.MemberInit (newNewExpression, newBindings);
@@ -284,8 +286,9 @@ namespace Remotion.Data.Linq.Parsing
         case MemberBindingType.MemberBinding:
           return VisitMemberMemberBinding ((MemberMemberBinding) memberBinding);
         default:
-          Assertion.IsTrue (memberBinding.BindingType == MemberBindingType.ListBinding,
-                            "Invalid member binding type " + memberBinding.GetType ().FullName);
+          Assertion.IsTrue (
+              memberBinding.BindingType == MemberBindingType.ListBinding,
+              "Invalid member binding type " + memberBinding.GetType().FullName);
           return VisitMemberListBinding ((MemberListBinding) memberBinding);
       }
     }
@@ -296,9 +299,7 @@ namespace Remotion.Data.Linq.Parsing
 
       Expression expression = VisitExpression (memberAssigment.Expression);
       if (expression != memberAssigment.Expression)
-      {
         return Expression.Bind (memberAssigment.Member, expression);
-      }
       return memberAssigment;
     }
 
@@ -308,11 +309,8 @@ namespace Remotion.Data.Linq.Parsing
 
       ReadOnlyCollection<MemberBinding> newBindings = VisitMemberBindingList (binding.Bindings);
       if (newBindings != binding.Bindings)
-      {
         return Expression.MemberBind (binding.Member, newBindings);
-      }
       return binding;
-      
     }
 
     protected virtual MemberBinding VisitMemberListBinding (MemberListBinding listBinding)
@@ -321,13 +319,11 @@ namespace Remotion.Data.Linq.Parsing
       ReadOnlyCollection<ElementInit> newInitializers = VisitElementInitList (listBinding.Initializers);
 
       if (newInitializers != listBinding.Initializers)
-      {
         return Expression.ListBind (listBinding.Member, newInitializers);
-      }
       return listBinding;
     }
 
-    protected virtual ReadOnlyCollection<T> VisitExpressionList<T> (ReadOnlyCollection<T> expressions) where T : Expression
+    protected virtual ReadOnlyCollection<T> VisitExpressionList<T> (ReadOnlyCollection<T> expressions) where T: Expression
     {
       return VisitList (expressions, VisitExpression);
     }
@@ -353,7 +349,7 @@ namespace Remotion.Data.Linq.Parsing
     }
 
     private ReadOnlyCollection<T> VisitList<T> (ReadOnlyCollection<T> list, Func<T, object> visitMethod)
-        where T : class
+        where T: class
     {
       List<T> newList = null;
 
@@ -374,7 +370,7 @@ namespace Remotion.Data.Linq.Parsing
       }
 
       if (newList != null)
-        return newList.AsReadOnly ();
+        return newList.AsReadOnly();
       else
         return list;
     }

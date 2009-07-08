@@ -66,7 +66,7 @@ namespace Remotion.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
-      
+
       visitor.VisitResultOperator (this, queryModel, index);
     }
 
@@ -80,7 +80,5 @@ namespace Remotion.Data.Linq.Clauses
     {
       //nothing to do here
     }
-
-    
   }
 }

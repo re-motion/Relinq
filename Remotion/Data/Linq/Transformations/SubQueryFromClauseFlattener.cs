@@ -88,7 +88,8 @@ namespace Remotion.Data.Linq.Transformations
       base.VisitAdditionalFromClause (fromClause, queryModel, index);
     }
 
-    protected virtual void FlattenSubQuery (SubQueryExpression subQueryExpression, FromClauseBase fromClause, QueryModel queryModel, int destinationIndex)
+    protected virtual void FlattenSubQuery (
+        SubQueryExpression subQueryExpression, FromClauseBase fromClause, QueryModel queryModel, int destinationIndex)
     {
       ArgumentUtility.CheckNotNull ("subQueryExpression", subQueryExpression);
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
@@ -99,13 +100,13 @@ namespace Remotion.Data.Linq.Transformations
       var innerMainFromClause = subQueryExpression.QueryModel.MainFromClause;
       CopyFromClauseData (innerMainFromClause, fromClause);
 
-      var innerSelectorMapping = new ClauseMapping ();
+      var innerSelectorMapping = new ClauseMapping();
       innerSelectorMapping.AddMapping (fromClause, ((SelectClause) subQueryExpression.QueryModel.SelectOrGroupClause).Selector);
       queryModel.TransformExpressions (ex => ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (ex, innerSelectorMapping, true));
 
       InsertBodyClauses (subQueryExpression.QueryModel.BodyClauses, queryModel, destinationIndex);
 
-      var innerBodyClauseMapping = new ClauseMapping ();
+      var innerBodyClauseMapping = new ClauseMapping();
       innerBodyClauseMapping.AddMapping (innerMainFromClause, new QuerySourceReferenceExpression (fromClause));
       queryModel.TransformExpressions (ex => ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (ex, innerBodyClauseMapping, true));
     }
@@ -117,7 +118,7 @@ namespace Remotion.Data.Linq.Transformations
       if (subQueryModel.ResultOperators.Count > 0)
       {
         var message = string.Format (
-            "The subquery '{0}' cannot be flattened and pulled out of the from clause because it contains result operators.", 
+            "The subquery '{0}' cannot be flattened and pulled out of the from clause because it contains result operators.",
             subQueryModel);
         throw new NotSupportedException (message);
       }

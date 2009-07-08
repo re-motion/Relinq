@@ -104,7 +104,7 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
-      
+
       visitor.VisitJoinClause (this, queryModel, fromClause, index);
     }
 
@@ -133,7 +133,7 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("transformation", transformation);
       InExpression = transformation (InExpression);
       OnExpression = transformation (OnExpression);
-      EqualityExpression = transformation (EqualityExpression); 
+      EqualityExpression = transformation (EqualityExpression);
     }
 
     public override string ToString ()

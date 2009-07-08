@@ -43,9 +43,9 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       ArgumentUtility.CheckNotNull ("items", items);
 
       if (ReturnDefaultWhenEmpty)
-        return new[] { items.FirstOrDefault () };
+        return new[] { items.FirstOrDefault() };
       else
-        return new[] { items.First () };
+        return new[] { items.First() };
     }
 
     public override string ToString ()

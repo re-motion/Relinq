@@ -27,7 +27,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
   public class ExpressionTreeParser
   {
     private readonly MethodCallExpressionNodeTypeRegistry _nodeTypeRegistry;
-    private readonly UniqueIdentifierGenerator _identifierGenerator = new UniqueIdentifierGenerator ();
+    private readonly UniqueIdentifierGenerator _identifierGenerator = new UniqueIdentifierGenerator();
 
     public ExpressionTreeParser (MethodCallExpressionNodeTypeRegistry nodeTypeRegistry)
     {

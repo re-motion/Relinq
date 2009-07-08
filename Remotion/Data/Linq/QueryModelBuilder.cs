@@ -28,8 +28,8 @@ namespace Remotion.Data.Linq
   /// </summary>
   public class QueryModelBuilder
   {
-    private readonly List<ResultOperatorBase> _resultOperators = new List<ResultOperatorBase> ();
-    private readonly List<IBodyClause> _bodyClauses = new List<IBodyClause> ();
+    private readonly List<ResultOperatorBase> _resultOperators = new List<ResultOperatorBase>();
+    private readonly List<IBodyClause> _bodyClauses = new List<IBodyClause>();
 
     public MainFromClause MainFromClause { get; private set; }
     public ISelectGroupClause SelectOrGroupClause { get; private set; }
@@ -41,7 +41,7 @@ namespace Remotion.Data.Linq
 
     public ReadOnlyCollection<ResultOperatorBase> ResultOperators
     {
-      get { return _resultOperators.AsReadOnly (); }
+      get { return _resultOperators.AsReadOnly(); }
     }
 
     public void AddClause (IClause clause)
@@ -97,7 +97,7 @@ namespace Remotion.Data.Linq
       if (SelectOrGroupClause == null)
         throw new InvalidOperationException ("No SelectOrGroupClause was added to the builder.");
 
-      var queryModel = new QueryModel(resultType, MainFromClause, SelectOrGroupClause);
+      var queryModel = new QueryModel (resultType, MainFromClause, SelectOrGroupClause);
 
       foreach (var bodyClause in BodyClauses)
         queryModel.BodyClauses.Add (bodyClause);

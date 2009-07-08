@@ -32,19 +32,20 @@ namespace Remotion.Data.Linq
   public abstract class QueryProviderBase : IQueryProvider
   {
     private readonly ExpressionTreeParser _expressionTreeParser;
-    private static readonly MethodInfo s_genericCreateQueryMethod = 
-        typeof (QueryProviderBase).GetMethods ().Where (m => m.Name == "CreateQuery" && m.IsGenericMethod).Single ();
+
+    private static readonly MethodInfo s_genericCreateQueryMethod =
+        typeof (QueryProviderBase).GetMethods().Where (m => m.Name == "CreateQuery" && m.IsGenericMethod).Single();
 
     /// <summary>
     /// Initializes a new instance of <see cref="QueryProviderBase"/> using the default <see cref="MethodCallExpressionNodeTypeRegistry"/>.
     /// </summary>
     /// <param name="executor">The <see cref="IQueryExecutor"/> used to execute queries against a specific query backend.</param>
     protected QueryProviderBase (IQueryExecutor executor)
-        : this (executor, MethodCallExpressionNodeTypeRegistry.CreateDefault ())
+        : this (executor, MethodCallExpressionNodeTypeRegistry.CreateDefault())
     {
       ArgumentUtility.CheckNotNull ("executor", executor);
       Executor = executor;
-      _expressionTreeParser = new ExpressionTreeParser (MethodCallExpressionNodeTypeRegistry.CreateDefault ());
+      _expressionTreeParser = new ExpressionTreeParser (MethodCallExpressionNodeTypeRegistry.CreateDefault());
     }
 
     /// <summary>
@@ -82,7 +83,7 @@ namespace Remotion.Data.Linq
       Type elementType = ReflectionUtility.GetAscribedGenericArguments (expression.Type, typeof (IEnumerable<>))[0];
       try
       {
-        return (IQueryable) s_genericCreateQueryMethod.MakeGenericMethod (elementType).Invoke(this, new object[] {expression});
+        return (IQueryable) s_genericCreateQueryMethod.MakeGenericMethod (elementType).Invoke (this, new object[] { expression });
       }
       catch (TargetInvocationException tie)
       {
@@ -117,13 +118,13 @@ namespace Remotion.Data.Linq
 
       var executionStrategy = queryModel.GetExecutionStrategy();
       var executionLambda = executionStrategy.GetExecutionExpression<TResult> (queryModel, fetchRequests);
-      var result = executionLambda.Compile () (Executor);
+      var result = executionLambda.Compile() (Executor);
       return result;
     }
 
     object IQueryProvider.Execute (Expression expression)
     {
-      var executeMethod = 
+      var executeMethod =
           typeof (QueryProviderBase).GetMethod ("Execute", BindingFlags.Public | BindingFlags.Instance).MakeGenericMethod (expression.Type);
       return executeMethod.Invoke (this, new object[] { expression });
     }

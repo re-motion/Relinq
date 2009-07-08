@@ -16,11 +16,11 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Collections;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Utilities;
-using System.Linq;
 
 namespace Remotion.Data.Linq.Clauses
 {
@@ -50,7 +50,7 @@ namespace Remotion.Data.Linq.Clauses
       _itemType = itemType;
       _fromExpression = fromExpression;
 
-      JoinClauses = new ObservableCollection<JoinClause> ();
+      JoinClauses = new ObservableCollection<JoinClause>();
       JoinClauses.ItemInserted += JoinClause_ItemAdded;
       JoinClauses.ItemSet += JoinClause_ItemAdded;
     }
@@ -61,7 +61,7 @@ namespace Remotion.Data.Linq.Clauses
     public string ItemName
     {
       get { return _itemName; }
-      set { _itemName = ArgumentUtility.CheckNotNullOrEmpty ("value",value); }
+      set { _itemName = ArgumentUtility.CheckNotNullOrEmpty ("value", value); }
     }
 
     /// <summary>
@@ -70,7 +70,7 @@ namespace Remotion.Data.Linq.Clauses
     public Type ItemType
     {
       get { return _itemType; }
-      set { _itemType = ArgumentUtility.CheckNotNull ("value",value); }
+      set { _itemType = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
     /// <summary>
@@ -99,9 +99,7 @@ namespace Remotion.Data.Linq.Clauses
       FromExpression = transformation (FromExpression);
 
       foreach (var joinClause in JoinClauses)
-      {
         joinClause.TransformExpressions (transformation);
-      }
     }
 
     public override string ToString ()

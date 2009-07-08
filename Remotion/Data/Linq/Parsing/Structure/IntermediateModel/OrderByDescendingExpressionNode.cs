@@ -44,7 +44,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
       if (keySelector.Parameters.Count != 1)
         throw new ArgumentException ("KeySelector must have exactly one parameter.", "keySelector");
-      
+
       KeySelector = keySelector;
       _cachedSelector = new ResolvedExpressionCache (this);
     }
@@ -56,7 +56,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return _cachedSelector.GetOrCreate (r => r.GetResolvedExpression (KeySelector.Body, KeySelector.Parameters[0], clauseGenerationContext));
     }
 
-    public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
+    public override Expression Resolve (
+        ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("inputParameter", inputParameter);
       ArgumentUtility.CheckNotNull ("expressionToBeResolved", expressionToBeResolved);
@@ -69,7 +70,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
-      var clause = new OrderByClause ();
+      var clause = new OrderByClause();
       clause.Orderings.Add (new Ordering (GetResolvedKeySelector (clauseGenerationContext), OrderingDirection.Desc));
       queryModel.BodyClauses.Add (clause);
 

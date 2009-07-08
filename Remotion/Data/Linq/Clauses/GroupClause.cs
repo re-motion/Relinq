@@ -40,7 +40,7 @@ namespace Remotion.Data.Linq.Clauses
     public Expression GroupExpression
     {
       get { return _groupExpression; }
-      set { _groupExpression = ArgumentUtility.CheckNotNull("value", value); }
+      set { _groupExpression = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
     [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (ByExpression),nq}")]
@@ -84,7 +84,7 @@ namespace Remotion.Data.Linq.Clauses
 
     public IExecutionStrategy GetExecutionStrategy ()
     {
-      throw new NotImplementedException ();
+      throw new NotImplementedException();
     }
 
     /// <summary>
@@ -103,9 +103,9 @@ namespace Remotion.Data.Linq.Clauses
     public override string ToString ()
     {
       return string.Format (
-          "group {0} by {1}", 
-          FormattingExpressionTreeVisitor.Format (GroupExpression), 
-          FormattingExpressionTreeVisitor.Format (ByExpression)); 
+          "group {0} by {1}",
+          FormattingExpressionTreeVisitor.Format (GroupExpression),
+          FormattingExpressionTreeVisitor.Format (ByExpression));
     }
   }
 }

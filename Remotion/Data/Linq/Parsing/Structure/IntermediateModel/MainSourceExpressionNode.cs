@@ -64,7 +64,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     {
       get { return null; }
     }
-    
+
     public Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("inputParameter", inputParameter);
@@ -85,8 +85,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       catch (KeyNotFoundException ex)
       {
         var message = string.Format (
-            "Cannot resolve with a {0} for which no clause was created. Be sure to call CreateClause before calling Resolve, and pass in the same " 
-            + "QuerySourceClauseMapping to both methods.", 
+            "Cannot resolve with a {0} for which no clause was created. Be sure to call CreateClause before calling Resolve, and pass in the same "
+            + "QuerySourceClauseMapping to both methods.",
             GetType().Name);
         throw new InvalidOperationException (message, ex);
       }

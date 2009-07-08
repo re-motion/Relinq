@@ -27,7 +27,7 @@ namespace Remotion.Data.Linq.Clauses.ExecutionStrategies
   /// </summary>
   public class ScalarExecutionStrategy : IExecutionStrategy
   {
-    public static readonly ScalarExecutionStrategy Instance = new ScalarExecutionStrategy ();
+    public static readonly ScalarExecutionStrategy Instance = new ScalarExecutionStrategy();
 
     private ScalarExecutionStrategy ()
     {
@@ -42,7 +42,11 @@ namespace Remotion.Data.Linq.Clauses.ExecutionStrategies
 
       var executorParameter = Expression.Parameter (typeof (IQueryExecutor), "queryExecutor");
       return Expression.Lambda<Func<IQueryExecutor, TResult>> (
-          Expression.Call (executorParameter, executeScalarMethod.MakeGenericMethod (typeof (TResult)), Expression.Constant (queryModel), Expression.Constant (fetchRequests)),
+          Expression.Call (
+              executorParameter,
+              executeScalarMethod.MakeGenericMethod (typeof (TResult)),
+              Expression.Constant (queryModel),
+              Expression.Constant (fetchRequests)),
           executorParameter);
     }
   }

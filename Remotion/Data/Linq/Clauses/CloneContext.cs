@@ -27,7 +27,7 @@ namespace Remotion.Data.Linq.Clauses
     public CloneContext (ClauseMapping clauseMapping)
     {
       ArgumentUtility.CheckNotNull ("clauseMapping", clauseMapping);
-      
+
       ClauseMapping = clauseMapping;
     }
 

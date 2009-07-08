@@ -51,8 +51,11 @@ namespace Remotion.Data.Linq.Clauses.ExecutionStrategies
 
       var executorParameter = Expression.Parameter (typeof (IQueryExecutor), "queryExecutor");
       var collectionMethodCall =
-          Expression.Call (executorParameter, executeCollectionMethod.MakeGenericMethod (typeof (TResult)),
-          Expression.Constant (queryModel), Expression.Constant (fetchRequests));
+          Expression.Call (
+              executorParameter,
+              executeCollectionMethod.MakeGenericMethod (typeof (TResult)),
+              Expression.Constant (queryModel),
+              Expression.Constant (fetchRequests));
 
       var singleMethodCall = Expression.Call (singleMethodToUse, collectionMethodCall);
       return Expression.Lambda<Func<IQueryExecutor, TResult>> (singleMethodCall, executorParameter);
