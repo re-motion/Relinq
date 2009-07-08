@@ -22,7 +22,6 @@ using Remotion.Data.Linq;
 using Remotion.Data.Linq.Backend;
 using Remotion.Data.Linq.Backend.DataObjectModel;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.ExtensionMethods;
 using Remotion.Data.Linq.Backend.DetailParser;
 using Remotion.Data.Linq.Backend.DetailParser.WhereConditionParsing;
 using Remotion.Data.Linq.Backend.FieldResolving;

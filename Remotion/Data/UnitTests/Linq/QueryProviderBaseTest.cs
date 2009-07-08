@@ -29,7 +29,6 @@ using Rhino.Mocks;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 using Remotion.Utilities;
 using System.Collections;
-using Remotion.Data.Linq.ExtensionMethods;
 
 namespace Remotion.Data.UnitTests.Linq
 {

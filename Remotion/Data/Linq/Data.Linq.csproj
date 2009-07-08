@@ -113,7 +113,7 @@
     <Compile Include="Backend\DataObjectModel\SourceMarkerEvaluation.cs" />
     <Compile Include="Backend\DataObjectModel\SubQuery.cs" />
     <Compile Include="Clauses\Expressions\SubQueryExpression.cs" />
-    <Compile Include="ExtensionMethods\ExtensionMethods.cs" />
+    <Compile Include="EagerFetching\ExtensionMethods.cs" />
     <Compile Include="EagerFetching\FluentFetchRequest.cs" />
     <Compile Include="Backend\DetailParser\DetailParserRegistries.cs" />
     <Compile Include="Backend\DetailParser\IParser.cs" />

@@ -20,7 +20,6 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.EagerFetching;
-using Remotion.Data.Linq.ExtensionMethods;
 using Remotion.Data.UnitTests.Linq.Parsing;
 using System.Linq.Expressions;
 using Remotion.Utilities;
