@@ -20,7 +20,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Backend.DataObjectModel;
-using Remotion.Data.Linq.Backend.Details.SelectProjectionParsing;
+using Remotion.Data.Linq.Backend.DetailParser.SelectProjectionParsing;
 using Remotion.Data.Linq.Backend.FieldResolving;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Details.SelectProjectionParsing

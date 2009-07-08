@@ -18,8 +18,8 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Data.Linq.Backend;
 using Remotion.Data.Linq.Clauses.Expressions;
-using Remotion.Data.Linq.Backend.Details;
-using Remotion.Data.Linq.Backend.Details.WhereConditionParsing;
+using Remotion.Data.Linq.Backend.DetailParser;
+using Remotion.Data.Linq.Backend.DetailParser.WhereConditionParsing;
 using NUnit.Framework.SyntaxHelpers;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Details

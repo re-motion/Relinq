@@ -16,7 +16,7 @@
 using NUnit.Framework;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Backend.DataObjectModel;
-using Remotion.Data.Linq.Backend.Details.WhereConditionParsing;
+using Remotion.Data.Linq.Backend.DetailParser.WhereConditionParsing;
 using Remotion.Data.Linq.Backend.FieldResolving;
 using NUnit.Framework.SyntaxHelpers;
 
