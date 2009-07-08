@@ -50,7 +50,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Details.WhereConditionParsing
 
       MethodCallExpression methodCallExpression = Expression.Call (
           memberAccess,
-          typeof (ExtensionMethods).GetMethod (methodName),
+          typeof (ContainsFulltextExtensionMethod).GetMethod (methodName),
           Student_First_Expression,
           Expression.Constant ("Test"));
 

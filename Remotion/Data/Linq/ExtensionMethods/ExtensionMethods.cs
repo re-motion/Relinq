@@ -24,11 +24,6 @@ namespace Remotion.Data.Linq.ExtensionMethods
 {
   public static class ExtensionMethods
   {
-    public static bool ContainsFulltext(this string extension, string search)
-    {
-      throw new NotImplementedException ("This method should not be executed. It should be used only in queries analyzed and parsed by re-linq.");
-    }
-
     /// <summary>
     /// Specifies that, when the <paramref name="query"/> is executed, the relation indicated by <paramref name="relatedObjectSelector"/> should be eagerly
     /// fetched if supported by the query provider implementation. The relation must be a collection property.
