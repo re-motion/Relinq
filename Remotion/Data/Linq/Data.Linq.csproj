@@ -82,7 +82,7 @@
     <Compile Include="Parsing\ThrowingExpressionTreeVisitor.cs" />
     <Compile Include="QueryModelBuilder.cs" />
     <Compile Include="QueryModelVisitorBase.cs" />
-    <Compile Include="StringBuilding\FormattingExpressionTreeVisitor.cs" />
+    <Compile Include="Clauses\ExpressionTreeVisitors\FormattingExpressionTreeVisitor.cs" />
     <Compile Include="Transformations\SubQueryFromClauseFlattener.cs" />
     <Compile Include="UniqueIdentifierGenerator.cs" />
     <Compile Include="EagerFetching\ThenFetchManyExpression.cs" />

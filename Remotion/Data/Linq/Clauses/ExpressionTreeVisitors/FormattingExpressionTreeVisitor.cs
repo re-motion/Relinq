@@ -19,7 +19,7 @@ using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Utilities;
 
-namespace Remotion.Data.Linq.StringBuilding
+namespace Remotion.Data.Linq.Clauses.ExpressionTreeVisitors
 {
   /// <summary>
   /// Transforms an expression tree into a human-readable string, taking all the custom expression nodes into account.

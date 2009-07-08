@@ -18,7 +18,6 @@ using System.Diagnostics;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
-using Remotion.Data.Linq.StringBuilding;
 using Remotion.Utilities;
 using System.Linq.Expressions;
 

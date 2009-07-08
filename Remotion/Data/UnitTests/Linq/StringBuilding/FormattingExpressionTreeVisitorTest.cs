@@ -19,7 +19,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.Expressions;
-using Remotion.Data.Linq.StringBuilding;
+using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors;
 
 namespace Remotion.Data.UnitTests.Linq.StringBuilding
