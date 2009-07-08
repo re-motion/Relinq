@@ -76,6 +76,7 @@
     <Compile Include="Backend\FieldResolving\FieldAccessInfo.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ClauseGenerationContext.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ExpressionResolver.cs" />
+    <Compile Include="Parsing\Structure\IntermediateModel\GroupByExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ResolvedExpressionCache.cs" />
     <Compile Include="Parsing\Structure\QuerySourceClauseMapping.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\CastExpressionNode.cs" />
