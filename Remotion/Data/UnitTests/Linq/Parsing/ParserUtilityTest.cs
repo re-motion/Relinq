@@ -17,6 +17,7 @@ using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Backend;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 using System.Reflection;
@@ -41,37 +42,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing
     {
       Expression sourceExpression = ExpressionHelper.CreateParameterExpression();
       ParserUtility.GetTypedExpression<NewArrayExpression> (sourceExpression, "source expression");
-    }
-
-    [Test]
-    public void CheckNumberOfArguments_Succeed ()
-    {
-      MethodCallExpression selectExpression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource ());
-      ParserUtility.CheckNumberOfArguments (selectExpression, "Select", 2);
-    }
-
-    [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected at least 1 argument for Select method call, found '2 arguments'.")]
-    public void CheckNumberOfArguments_Fail ()
-    {
-      MethodCallExpression selectExpression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource ());
-      ParserUtility.CheckNumberOfArguments (selectExpression, "Select", 1);
-    }
-
-    [Test]
-    public void CheckParameterType_Succeed ()
-    {
-      MethodCallExpression selectExpression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource ());
-      ParserUtility.CheckParameterType<ConstantExpression> (selectExpression, "Select", 0);
-    }
-
-    [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expected ParameterExpression for argument 0 of Select method call, found " 
-        + "'ConstantExpression (TestQueryable<Student>())'.")]
-    public void CheckParameterType_Fail ()
-    {
-      MethodCallExpression selectExpression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource ());
-      ParserUtility.CheckParameterType<ParameterExpression> (selectExpression, "Select", 0);
     }
 
     [Test]

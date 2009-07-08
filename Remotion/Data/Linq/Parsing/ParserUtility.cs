@@ -49,36 +49,6 @@ namespace Remotion.Data.Linq.Parsing
       return new ParserException (message, expression, null);
     }
 
-    public static void CheckNumberOfArguments (MethodCallExpression expression, string methodName, int expectedArgumentCount)
-    {
-      ArgumentUtility.CheckNotNull ("expression", expression);
-      ArgumentUtility.CheckNotNull ("methodName", methodName);
-      ArgumentUtility.CheckNotNull ("expectedArgumentCount", expectedArgumentCount);
-
-      if (expression.Arguments.Count != expectedArgumentCount)
-      {
-        throw CreateParserException (
-            "at least " + expectedArgumentCount + " argument",
-            expression.Arguments.Count + " arguments",
-            methodName + " method call");
-      }
-    }
-
-    public static void CheckParameterType<T> (MethodCallExpression expression, string methodName, int parameterIndex)
-    {
-      ArgumentUtility.CheckNotNull ("expression", expression);
-      ArgumentUtility.CheckNotNull ("methodName", methodName);
-      ArgumentUtility.CheckNotNull ("parameterIndex", parameterIndex);
-
-      if (!(expression.Arguments[parameterIndex] is T))
-      {
-        throw CreateParserException (
-            typeof (T).Name,
-            expression.Arguments[parameterIndex].GetType().Name + " (" + expression.Arguments[parameterIndex] + ")",
-            "argument " + parameterIndex + " of " + methodName + " method call");
-      }
-    }
-
     public static MethodInfo GetMethod<T> (Expression<Func<T>> wrappedCall)
     {
       ArgumentUtility.CheckNotNull ("wrappedCall", wrappedCall);
