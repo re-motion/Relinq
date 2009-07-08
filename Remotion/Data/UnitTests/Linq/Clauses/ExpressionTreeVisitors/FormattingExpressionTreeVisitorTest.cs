@@ -22,7 +22,7 @@ using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors;
 
-namespace Remotion.Data.UnitTests.Linq.StringBuilding
+namespace Remotion.Data.UnitTests.Linq.Clauses.ExpressionTreeVisitors
 {
   [TestFixture]
   public class FormattingExpressionTreeVisitorTest
