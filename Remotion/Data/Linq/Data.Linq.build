@@ -36,16 +36,11 @@
       <warnaserror refid="doc-warn-as-error"/>
       <sources failonempty="true">
         <include name="*.cs"/>
+        <include name="Backend/**/*.cs"/>
         <include name="Clauses/**/*.cs"/>
-        <include name="DataObjectModel/**/*.cs"/>
         <include name="EagerFetching/**/*.cs"/>
-        <include name="Expressions/**/*.cs"/>
-        <include name="ExtensionMethods/**/*.cs"/>
         <include name="Parsing/**/*.cs"/>
         <include name="Properties/**/*.cs" />
-        <include name="QueryProviderImplementation/**/*.cs"/>
-        <include name="StringBuilding/**/*.cs"/>
-        <include name="SqlGeneration/**/*.cs"/>
         <include name="Transformations/**/*.cs"/>
         <exclude name="Properties/AssemblyInfoTemplate.cs" />
       </sources>
