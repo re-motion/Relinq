@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Backend\ContainsFulltextExtensionMethod.cs" />
     <Compile Include="Backend\DetailParserUtility.cs" />
+    <Compile Include="Backend\InMemoryGroupByQueryExecutor.cs" />
     <Compile Include="Clauses\AdditionalFromClause.cs" />
     <Compile Include="Clauses\CloneContext.cs" />
     <Compile Include="Clauses\ExecutionStrategies\CollectionExecutionStrategy.cs" />
