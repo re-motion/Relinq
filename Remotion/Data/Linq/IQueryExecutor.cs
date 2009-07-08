@@ -15,6 +15,7 @@
 // 
 using System;
 using System.Collections.Generic;
+using Remotion.Data.Linq.Backend;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.EagerFetching;
 
@@ -52,6 +53,7 @@ namespace Remotion.Data.Linq
     /// should (in addition to returning its result set) fetch a number of dependent objects as well. The fetched objects are not returned, but
     /// they can be cached by the implementation of <see cref="IQueryExecutor"/> so that later queries for them can be faster to execute.</param>
     /// <returns>A scalar value of type <typeparamref name="T"/> that represents the query's result.</returns>
+    /// <seealso cref="InMemoryGroupByQueryExecutor"/>
     IEnumerable<T> ExecuteCollection<T> (QueryModel queryModel, IEnumerable<FetchRequestBase> fetchRequests);
   }
 }

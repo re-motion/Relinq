@@ -22,7 +22,6 @@ using Remotion.Utilities;
 using System.Reflection;
 using Assertion=Remotion.Utilities.Assertion;
 
-
 namespace Remotion.Data.UnitTests.Linq.Parsing
 {
   public class ExpressionTreeComparer
