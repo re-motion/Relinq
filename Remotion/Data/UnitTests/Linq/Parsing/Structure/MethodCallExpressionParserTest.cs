@@ -93,8 +93,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     [Test]
     public void Parse_ParsedExpression ()
     {
-      var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (q => q.Select (i => i + 1));
-      var result = (SelectExpressionNode) _parser.Parse ("x", _source, methodCallExpression);
+      var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, int> (q => q.Select (i => i + 1).Count());
+      var result = (CountExpressionNode) _parser.Parse ("x", _source, methodCallExpression);
 
       Assert.That (result.ParsedExpression, Is.SameAs (methodCallExpression));
     }

@@ -14,47 +14,30 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using NUnit.Framework;
+using System.Linq.Expressions;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
-using System.Linq;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 {
-  [TestFixture]
-  public class MinExpressionNodeTest : ExpressionNodeTestBase
+  public class TestResultOperatorExpressionNode : ResultOperatorExpressionNodeBase
   {
-    private MinExpressionNode _node;
-
-    public override void SetUp ()
+    public TestResultOperatorExpressionNode (
+        MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalPredicate, LambdaExpression optionalSelector)
+        : base (parseInfo, optionalPredicate, optionalSelector)
     {
-      base.SetUp ();
-      _node = new MinExpressionNode (CreateParseInfo (), null);
     }
 
-    [Test]
-    public void SupportedMethod_WithoutSelector ()
+    public override Expression Resolve (
+        ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
     {
-      AssertSupportedMethod_Generic (MinExpressionNode.SupportedMethods, q => q.Min (), e => e.Min ());
+      throw new NotImplementedException();
     }
 
-    [Test]
-    public void SupportedMethod_WithSelector ()
+    protected override ResultOperatorBase CreateResultOperator ()
     {
-      AssertSupportedMethod_Generic (MinExpressionNode.SupportedMethods, q => q.Min (i => i.ToString ()), e => e.Min (i => i.ToString ()));
-    }
-
-    [Test]
-    [ExpectedException (typeof (InvalidOperationException))]
-    public void Resolve_ThrowsInvalidOperationException ()
-    {
-      _node.Resolve (ExpressionHelper.CreateParameterExpression (), ExpressionHelper.CreateExpression (), ClauseGenerationContext);
-    }
-
-    [Test]
-    public void Apply ()
-    {
-      TestApply (_node, typeof (MinResultOperator));
+      return new TakeResultOperator (100);
     }
   }
 }

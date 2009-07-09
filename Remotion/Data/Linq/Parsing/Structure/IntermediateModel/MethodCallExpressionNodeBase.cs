@@ -27,6 +27,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public abstract class MethodCallExpressionNodeBase : IExpressionNode
   {
+    private IExpressionNode _source;
+
     /// <summary>
     /// Gets the <see cref="MethodInfo"/> from a given <see cref="LambdaExpression"/> that has to wrap a <see cref="MethodCallExpression"/>.
     /// If the method is a generic method, its open generic method definition is returned.
@@ -47,18 +49,16 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     {
       AssociatedIdentifier = parseInfo.AssociatedIdentifier;
       Source = parseInfo.Source;
-      ParsedExpression = parseInfo.ParsedExpression;
     }
 
     public string AssociatedIdentifier { get; private set; }
-    public IExpressionNode Source { get; private set; }
-    public MethodCallExpression ParsedExpression { get; private set; }
 
-    Expression IExpressionNode.ParsedExpression
+    public IExpressionNode Source
     {
-      get { return ParsedExpression; }
+      get { return _source; }
+      protected set { _source = ArgumentUtility.CheckNotNull ("value", value); }
     }
-
+    
     public abstract Expression Resolve (
         ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext);
 
@@ -110,16 +110,16 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
-      if (queryModel.ResultOperators.Count > 0)
+      var sourceAsResultOperatorNode = Source as ResultOperatorExpressionNodeBase;
+      if (sourceAsResultOperatorNode != null)
       {
         var oldResultType = queryModel.ResultType;
-        queryModel.ResultType = Source.ParsedExpression.Type;
-            // the result type of the old query model is what the last node's expression says it should be
+        queryModel.ResultType = sourceAsResultOperatorNode.ParsedExpression.Type; // the result type of the old query model is what the last node's expression says it should be
 
         var subQueryExpression = new SubQueryExpression (queryModel);
 
         // change the Source of this node so that Resolve will later correctly go to the new main from clause we create for the sub query
-        var newMainSourceNode = new MainSourceExpressionNode (Source.AssociatedIdentifier, subQueryExpression);
+        var newMainSourceNode = new MainSourceExpressionNode (sourceAsResultOperatorNode.AssociatedIdentifier, subQueryExpression);
         Source = newMainSourceNode;
 
         var newMainFromClause = newMainSourceNode.CreateMainFromClause (clauseGenerationContext);

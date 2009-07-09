@@ -28,8 +28,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
   public class SingleExpressionNodeTest : ExpressionNodeTestBase
   {
     private SingleExpressionNode _node;
-    private SingleExpressionNode _nodeWithPredicate;
-    private Expression<Func<int, bool>> _predicate;
 
     [SetUp]
     public override void SetUp ()
@@ -37,9 +35,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       base.SetUp ();
 
       _node = new SingleExpressionNode (CreateParseInfo (), null);
-      _predicate = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      _nodeWithPredicate = new SingleExpressionNode (CreateParseInfo (), _predicate);
-
     }
 
     [Test]
@@ -74,34 +69,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void GetResolvedPredicate ()
-    {
-      var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
-
-      var result = _nodeWithPredicate.GetResolvedOptionalPredicate (ClauseGenerationContext);
-
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
-    }
-
-    [Test]
-    public void GetResolvedPredicate_Null ()
-    {
-      var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();
-      var node = new SingleExpressionNode (CreateParseInfo (sourceMock), null);
-      var result = node.GetResolvedOptionalPredicate (ClauseGenerationContext);
-      Assert.That (result, Is.Null);
-    }
-
-    [Test]
-    public void Apply_WithoutOptionalPredicate ()
+    public void Apply ()
     {
       TestApply (_node, typeof (SingleResultOperator));
-    }
-
-    [Test]
-    public void Apply_WithOptionalPredicate_CreatesWhereClause ()
-    {
-      TestApply_WithOptionalPredicate (_nodeWithPredicate);
     }
 
     [Test]

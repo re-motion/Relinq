@@ -54,7 +54,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       Assert.That (result, Is.InstanceOfType (typeof (FirstExpressionNode)));
       Assert.That (((FirstExpressionNode) result).Source, Is.SameAs (_source));
-      Assert.That (((FirstExpressionNode) result).OptionalPredicate, Is.Null);
+      Assert.That (((FirstExpressionNode) result).Source, Is.SameAs (_parseInfo.Source));
     }
 
     [Test]

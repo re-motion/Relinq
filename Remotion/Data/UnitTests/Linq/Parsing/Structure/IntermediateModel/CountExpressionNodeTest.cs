@@ -14,14 +14,10 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Linq.Expressions;
-using System.Reflection;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
-using Rhino.Mocks;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 {
@@ -29,15 +25,11 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
   public class CountExpressionNodeTest : ExpressionNodeTestBase
   {
     private CountExpressionNode _node;
-    private CountExpressionNode _nodeWithPredicate;
-    private Expression<Func<int, bool>> _predicate;
 
     public override void SetUp ()
     {
       base.SetUp ();
       _node = new CountExpressionNode (CreateParseInfo (), null);
-      _predicate = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      _nodeWithPredicate = new CountExpressionNode (CreateParseInfo (), _predicate);
     }
 
     [Test]
@@ -60,34 +52,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void GetResolvedPredicate ()
-    {
-      var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
-
-      var result = _nodeWithPredicate.GetResolvedOptionalPredicate (ClauseGenerationContext);
-
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
-    }
-
-    [Test]
-    public void GetResolvedPredicate_Null ()
-    {
-      var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();
-      var node = new CountExpressionNode (CreateParseInfo (sourceMock), null);
-      var result = node.GetResolvedOptionalPredicate (ClauseGenerationContext);
-      Assert.That (result, Is.Null);
-    }
-
-    [Test]
-    public void Apply_WithoutOptionalPredicate ()
+    public void Apply ()
     {
       TestApply (_node, typeof (CountResultOperator));
-    }
-
-    [Test]
-    public void Apply_WithOptionalPredicate_CreatesWhereClause ()
-    {
-      TestApply_WithOptionalPredicate (_nodeWithPredicate);
     }
   }
 }

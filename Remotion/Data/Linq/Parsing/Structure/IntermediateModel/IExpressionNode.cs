@@ -32,12 +32,6 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     IExpressionNode Source { get; }
 
     /// <summary>
-    /// Gets the expression for which this node was created.
-    /// </summary>
-    /// <value>The parsed expression.</value>
-    Expression ParsedExpression { get; }
-
-    /// <summary>
     /// Gets the identifier associated with this <see cref="IExpressionNode"/>. <see cref="ExpressionTreeParser"/> tries to find the identifier
     /// that was originally associated with this node in the query written by the user by analyzing the parameter names of the next expression in the 
     /// method call chain.

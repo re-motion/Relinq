@@ -16,9 +16,11 @@
 using System;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultOperators;
+using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq.Expressions;
 using System.Linq;
@@ -32,11 +34,21 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     private MethodCallExpressionNodeBase _node;
     private WhereClause _clauseToAddInApply;
 
+    private TestMethodCallExpressionNode _nodeWithResultOperatorSource;
+    private QueryModel _queryModelWithResultOperator;
+    private DistinctExpressionNode _resultOperatorSource;
+
     public override void SetUp ()
     {
       base.SetUp ();
       _clauseToAddInApply = new WhereClause (Expression.Constant (false));
       _node = new TestMethodCallExpressionNode (CreateParseInfo (SourceNode, "test"), _clauseToAddInApply);
+      
+      var method = ParserUtility.GetMethod (() => new int[0].Distinct ());
+      _resultOperatorSource = new DistinctExpressionNode (CreateParseInfo(method));
+      _nodeWithResultOperatorSource = new TestMethodCallExpressionNode (CreateParseInfo (_resultOperatorSource, "test"), _clauseToAddInApply);
+      _queryModelWithResultOperator = QueryModel.Clone ();
+      _queryModelWithResultOperator.ResultOperators.Add (new DistinctResultOperator ());
     }
 
     [Test]
@@ -57,14 +69,13 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void Apply_WrapsQueryModel_AfterResultOperator ()
     {
-      QueryModel.ResultOperators.Add (new DistinctResultOperator ());
-      var newQueryModel = _node.Apply (QueryModel, ClauseGenerationContext);
+      var newQueryModel = _nodeWithResultOperatorSource.Apply (_queryModelWithResultOperator, ClauseGenerationContext);
 
-      Assert.That (newQueryModel, Is.Not.SameAs (QueryModel));
+      Assert.That (newQueryModel, Is.Not.SameAs (_queryModelWithResultOperator));
       Assert.That (newQueryModel.MainFromClause.ItemType, Is.SameAs (typeof (int))); // because SourceNode is of type int[]
       Assert.That (newQueryModel.MainFromClause.ItemName, Is.EqualTo (SourceNode.AssociatedIdentifier));
       Assert.That (newQueryModel.MainFromClause.FromExpression, Is.InstanceOfType (typeof (SubQueryExpression)));
-      Assert.That (((SubQueryExpression) newQueryModel.MainFromClause.FromExpression).QueryModel, Is.SameAs (QueryModel));
+      Assert.That (((SubQueryExpression) newQueryModel.MainFromClause.FromExpression).QueryModel, Is.SameAs (_queryModelWithResultOperator));
 
       var newSelectClause = ((SelectClause) newQueryModel.SelectOrGroupClause);
       Assert.That (((QuerySourceReferenceExpression) newSelectClause.Selector).ReferencedClause, Is.SameAs (newQueryModel.MainFromClause));
@@ -73,35 +84,32 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void Apply_WrapsQueryModel_WithCorrectResultTypes ()
     {
-      QueryModel.ResultOperators.Add (new DistinctResultOperator ());
-      var oldResultType = QueryModel.ResultType;
+      var oldResultType = _queryModelWithResultOperator.ResultType;
 
-      var newQueryModel = _node.Apply (QueryModel, ClauseGenerationContext);
+      var newQueryModel = _nodeWithResultOperatorSource.Apply (_queryModelWithResultOperator, ClauseGenerationContext);
 
-      Assert.That (newQueryModel, Is.Not.SameAs (QueryModel));
+      Assert.That (newQueryModel, Is.Not.SameAs (_queryModelWithResultOperator));
       Assert.That (newQueryModel.ResultType, Is.SameAs (oldResultType));
-      Assert.That (QueryModel.ResultType, Is.SameAs (SourceNode.ParsedExpression.Type));
+      Assert.That (_queryModelWithResultOperator.ResultType, Is.SameAs (_resultOperatorSource.ParsedExpression.Type));
     }
 
     [Test]
     public void Apply_WrapsQueryModel_AfterResultOperator_BeforeApplyingNodeSpecificSemantics ()
     {
-      QueryModel.ResultOperators.Add (new DistinctResultOperator ());
-      var newQueryModel = _node.Apply (QueryModel, ClauseGenerationContext);
+      var newQueryModel = _nodeWithResultOperatorSource.Apply (_queryModelWithResultOperator, ClauseGenerationContext);
 
-      Assert.That (newQueryModel, Is.Not.SameAs (QueryModel));
+      Assert.That (newQueryModel, Is.Not.SameAs (_queryModelWithResultOperator));
       Assert.That (newQueryModel.BodyClauses[0], Is.SameAs (_clauseToAddInApply));
     }
 
     [Test]
     public void Apply_WrapsQueryModel_AndEnsuresResolveWorksCorrectly ()
     {
-      QueryModel.ResultOperators.Add (new DistinctResultOperator ());
-      var newQueryModel = _node.Apply (QueryModel, ClauseGenerationContext);
+      var newQueryModel = _nodeWithResultOperatorSource.Apply (_queryModelWithResultOperator, ClauseGenerationContext);
 
       Expression<Func<int, string>> selector = i => i.ToString();
       var selectCall = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<string>> (q => q.Select (selector));
-      var selectExpressionNode = new SelectExpressionNode (new MethodCallExpressionParseInfo ("y", _node, selectCall), selector);
+      var selectExpressionNode = new SelectExpressionNode (new MethodCallExpressionParseInfo ("y", _nodeWithResultOperatorSource, selectCall), selector);
 
       selectExpressionNode.Apply (newQueryModel, ClauseGenerationContext);
 

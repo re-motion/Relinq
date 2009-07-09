@@ -27,13 +27,11 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
   [TestFixture]
   public class SumExpressionNodeTest : ExpressionNodeTestBase
   {
-    private SumExpressionNode _nodeWithSelector;
     private SumExpressionNode _node;
 
     public override void SetUp ()
     {
       base.SetUp();
-      _nodeWithSelector = new SumExpressionNode (CreateParseInfo(), OptionalSelector);
       _node = new SumExpressionNode (CreateParseInfo(), null);
     }
 
@@ -168,34 +166,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void GetResolvedSelector ()
-    {
-      var expectedResult = ExpressionHelper.Resolve<int, string> (SourceClause, i => i.ToString());
-
-      var result = _nodeWithSelector.GetResolvedOptionalSelector (ClauseGenerationContext);
-
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
-    }
-
-    [Test]
-    public void GetResolvedSelector_Null ()
-    {
-      var sourceMock = MockRepository.GenerateMock<IExpressionNode>();
-      var node = new SumExpressionNode (CreateParseInfo (sourceMock), null);
-      var result = node.GetResolvedOptionalSelector (ClauseGenerationContext);
-      Assert.That (result, Is.Null);
-    }
-
-    [Test]
-    public void Apply_WithoutSelector ()
+    public void Apply ()
     {
       TestApply (_node, typeof (SumResultOperator));
-    }
-
-    [Test]
-    public void Apply_WithSelector_AdjustsSelectClause ()
-    {
-      TestApply_WithOptionalSelector (_nodeWithSelector);
     }
   }
 }

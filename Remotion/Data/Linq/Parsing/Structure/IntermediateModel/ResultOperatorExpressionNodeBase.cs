@@ -16,7 +16,6 @@
 using System;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
@@ -27,9 +26,6 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public abstract class ResultOperatorExpressionNodeBase : MethodCallExpressionNodeBase
   {
-    private readonly ResolvedExpressionCache _cachedPredicate;
-    private readonly ResolvedExpressionCache _cachedSelector;
-
     protected ResultOperatorExpressionNodeBase (
         MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalPredicate, LambdaExpression optionalSelector)
         : base (parseInfo)
@@ -40,66 +36,27 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       if (optionalSelector != null && optionalSelector.Parameters.Count != 1)
         throw new ArgumentException ("OptionalSelector must have exactly one parameter.", "optionalSelector");
 
-      OptionalPredicate = optionalPredicate;
-      OptionalSelector = optionalSelector;
-
       if (optionalPredicate != null)
-        _cachedPredicate = new ResolvedExpressionCache (this);
+        Source = new WhereExpressionNode (parseInfo, optionalPredicate);
 
       if (optionalSelector != null)
-        _cachedSelector = new ResolvedExpressionCache (this);
+      {
+        var newParseInfo = new MethodCallExpressionParseInfo (parseInfo.AssociatedIdentifier, Source, parseInfo.ParsedExpression);
+        Source = new SelectExpressionNode (newParseInfo, optionalSelector);
+      }
+
+      ParsedExpression = parseInfo.ParsedExpression;
     }
 
     protected abstract ResultOperatorBase CreateResultOperator ();
 
-    public LambdaExpression OptionalPredicate { get; private set; }
-    public LambdaExpression OptionalSelector { get; private set; }
-
-    public Expression GetResolvedOptionalPredicate (ClauseGenerationContext clauseGenerationContext)
-    {
-      if (OptionalPredicate == null)
-        return null;
-
-      return
-          _cachedPredicate.GetOrCreate (
-              r => r.GetResolvedExpression (OptionalPredicate.Body, OptionalPredicate.Parameters[0], clauseGenerationContext));
-    }
-
-    public Expression GetResolvedOptionalSelector (ClauseGenerationContext clauseGenerationContext)
-    {
-      if (OptionalSelector == null)
-        return null;
-
-      return
-          _cachedSelector.GetOrCreate (r => r.GetResolvedExpression (OptionalSelector.Body, OptionalSelector.Parameters[0], clauseGenerationContext));
-    }
+    public MethodCallExpression ParsedExpression { get; private set; }
 
     protected override QueryModel ApplyNodeSpecificSemantics (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
       queryModel.ResultOperators.Add (CreateResultOperator());
-
-      if (OptionalPredicate != null)
-      {
-        var whereClause = new WhereClause (GetResolvedOptionalPredicate (clauseGenerationContext));
-        queryModel.BodyClauses.Add (whereClause);
-      }
-
-      if (OptionalSelector != null)
-      {
-        // for a selectClause.Selector of x => x.Property1
-        // and an OptionalSelector of a => a.Property2
-        // make x => x.Property1.Property2 by replacing a (OptionalSelector.Parameters[0]) with the body of selectClause.Selector
-
-        // we use OptionalSelector instead of GetResolvedOptionalSelector because we are substituting the selector's parameter with
-        // selectClause.Selector (which is already resolved)
-
-        var selectClause = ((SelectClause) queryModel.SelectOrGroupClause);
-        var newSelector = ReplacingVisitor.Replace (OptionalSelector.Parameters[0], selectClause.Selector, OptionalSelector.Body);
-        selectClause.Selector = newSelector;
-      }
-
       return queryModel;
     }
 

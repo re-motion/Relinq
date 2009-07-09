@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.ResultOperators;
@@ -27,13 +28,11 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
   public class MaxExpressionNodeTest : ExpressionNodeTestBase
   {
     private MaxExpressionNode _node;
-    private MaxExpressionNode _nodeWithSelector;
 
     public override void SetUp ()
     {
       base.SetUp ();
       _node = new MaxExpressionNode (CreateParseInfo (), null);
-      _nodeWithSelector = new MaxExpressionNode (CreateParseInfo (), OptionalSelector);
     }
 
     [Test]
@@ -56,34 +55,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void GetResolvedSelector ()
-    {
-      var expectedResult = ExpressionHelper.Resolve<int, string> (SourceClause, i => i.ToString());
-
-      var result = _nodeWithSelector.GetResolvedOptionalSelector (ClauseGenerationContext);
-
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
-    }
-
-    [Test]
-    public void GetResolvedSelector_Null ()
-    {
-      var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();
-      var node = new MaxExpressionNode (CreateParseInfo (sourceMock), null);
-      var result = node.GetResolvedOptionalSelector (ClauseGenerationContext);
-      Assert.That (result, Is.Null);
-    }
-
-    [Test]
-    public void Apply_WithoutSelector ()
+    public void ApplySelector ()
     {
       TestApply (_node, typeof (MaxResultOperator));
-    }
-
-    [Test]
-    public void Apply_WithSelector_AdjustsSelectClause ()
-    {
-      TestApply_WithOptionalSelector (_nodeWithSelector);
     }
   }
 }

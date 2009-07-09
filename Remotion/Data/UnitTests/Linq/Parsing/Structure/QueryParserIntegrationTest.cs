@@ -377,6 +377,59 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
           (s, sd) => new Tuple<Student, Student_Detail> (s, sd));
     }
 
+    [Test]
+    public void QueryWithWhereClauseFollowingResultOperator ()
+    {
+      var query = (from s in ExpressionHelper.CreateQuerySource ()
+                   select s).Distinct ().Where (x => x.ID > 0);
+      
+      var expression = query.Expression;
+      var queryModel = _queryParser.GetParsedQuery (expression);
+      Assert.That (queryModel.ResultType, Is.SameAs (typeof (IQueryable<Student>)));
+
+      var mainFromClause = queryModel.MainFromClause;
+      Assert.That (mainFromClause.FromExpression, Is.InstanceOfType (typeof (SubQueryExpression)));
+      Assert.That (mainFromClause.ItemType, Is.SameAs (typeof (Student)));
+      Assert.That (mainFromClause.ItemName, Is.EqualTo ("x"));
+
+      var subQueryModel = ((SubQueryExpression) mainFromClause.FromExpression).QueryModel;
+      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (DistinctResultOperator)));
+      Assert.That (subQueryModel.ResultType, Is.SameAs (typeof (IQueryable<Student>)));
+
+      var whereClause = (WhereClause) queryModel.BodyClauses[0];
+      CheckResolvedExpression<Student, bool> (whereClause.Predicate, mainFromClause, x => x.ID > 0);
+
+      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
+      Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedClause, Is.SameAs (mainFromClause));
+    }
+
+    [Test]
+    public void QueryWithOptionalPredicateFollowingResultOperator ()
+    {
+      var expression = ExpressionHelper.MakeExpression (() => (from s in ExpressionHelper.CreateQuerySource ()
+                                                               select s).Distinct ().Count(x => x.ID > 0));
+
+      var queryModel = _queryParser.GetParsedQuery (expression);
+      Assert.That (queryModel.ResultType, Is.SameAs (typeof (int)));
+
+      var mainFromClause = queryModel.MainFromClause;
+      Assert.That (mainFromClause.FromExpression, Is.InstanceOfType (typeof (SubQueryExpression)));
+      Assert.That (mainFromClause.ItemType, Is.SameAs (typeof (Student)));
+      Assert.That (mainFromClause.ItemName, Is.EqualTo ("x"));
+
+      var subQueryModel = ((SubQueryExpression) mainFromClause.FromExpression).QueryModel;
+      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (DistinctResultOperator)));
+      Assert.That (subQueryModel.ResultType, Is.SameAs (typeof (IQueryable<Student>)));
+
+      var whereClause = (WhereClause) queryModel.BodyClauses[0];
+      CheckResolvedExpression<Student, bool> (whereClause.Predicate, mainFromClause, x => x.ID > 0);
+
+      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
+      Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedClause, Is.SameAs (mainFromClause));
+
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (CountResultOperator)));
+    }
+
     private void CheckResolvedExpression<TParameter, TResult> (Expression expressionToCheck, FromClauseBase clauseToReference, Expression<Func<TParameter, TResult>> expectedUnresolvedExpression)
     {
       var expectedPredicate = ExpressionHelper.Resolve (clauseToReference, expectedUnresolvedExpression);

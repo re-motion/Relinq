@@ -53,12 +53,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public QuerySourceClauseMapping QuerySourceClauseMapping { get; private set; }
     public QueryModel QueryModel { get; private set; }
 
-
-    public Expression<Func<int, string>> OptionalSelector
-    {
-      get { return (i => i.ToString ()); }
-    }
-
     protected MethodInfo GetGenericMethodDefinition<TReturn> (Expression<Func<IQueryable<object>, TReturn>> methodCallLambda)
     {
       return GetMethod (methodCallLambda).GetGenericMethodDefinition ();
@@ -88,32 +82,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       
       Assert.That (QueryModel.ResultOperators.Count, Is.EqualTo (1));
       Assert.That (QueryModel.ResultOperators[0], Is.InstanceOfType (expectedResultOperatorType));
-
-      TestApply_DoesNotWrapQueryModel_AfterResultOperator (node);
-    }
-
-    protected void TestApply_DoesNotWrapQueryModel_AfterResultOperator (ResultOperatorExpressionNodeBase node)
-    {
-      QueryModel.ResultOperators.Add (new DistinctResultOperator ());
-      var result = node.Apply (QueryModel, ClauseGenerationContext);
-      Assert.That (result, Is.SameAs (QueryModel));
-    }
-
-    protected void TestApply_WithOptionalPredicate (ResultOperatorExpressionNodeBase node)
-    {
-      node.Apply (QueryModel, ClauseGenerationContext);
-
-      var newWhereClause = (WhereClause) QueryModel.BodyClauses[0];
-      Assert.That (newWhereClause.Predicate, Is.SameAs (node.GetResolvedOptionalPredicate (ClauseGenerationContext)));
-    }
-
-    protected void TestApply_WithOptionalSelector (ResultOperatorExpressionNodeBase node)
-    {
-      var expectedNewSelector = (MethodCallExpression) ExpressionHelper.Resolve<int, string> (SourceClause, i => i.ToString());
-      node.Apply (QueryModel, ClauseGenerationContext);
-      
-      var selectClause = (SelectClause) QueryModel.SelectOrGroupClause;
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedNewSelector, selectClause.Selector);
     }
 
     protected MethodCallExpressionParseInfo CreateParseInfo ()
