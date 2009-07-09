@@ -60,7 +60,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       throw CreateResolveNotSupportedException();
     }
 
-    protected override ResultOperatorBase CreateResultOperator ()
+    protected override ResultOperatorBase CreateResultOperator (ClauseGenerationContext clauseGenerationContext)
     {
       return new FirstResultOperator (ParsedExpression.Method.Name.EndsWith ("OrDefault"));
     }

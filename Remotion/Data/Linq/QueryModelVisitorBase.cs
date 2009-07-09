@@ -111,14 +111,6 @@ namespace Remotion.Data.Linq
       // nothing to do here
     }
 
-    public virtual void VisitGroupClause (GroupClause groupClause, QueryModel queryModel)
-    {
-      ArgumentUtility.CheckNotNull ("groupClause", groupClause);
-      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
-
-      // nothing to do here
-    }
-
     protected virtual void VisitBodyClauses (ObservableCollection<IBodyClause> bodyClauses, QueryModel queryModel)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);

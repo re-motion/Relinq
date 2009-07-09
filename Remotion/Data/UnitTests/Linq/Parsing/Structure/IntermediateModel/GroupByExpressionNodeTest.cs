@@ -16,7 +16,7 @@
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
 using NUnit.Framework.SyntaxHelpers;
@@ -114,20 +114,20 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       Assert.That (newQueryModel, Is.SameAs (QueryModel));
 
-      Assert.That (QueryModel.SelectOrGroupClause, Is.InstanceOfType (typeof (GroupClause)));
-      var groupClause = (GroupClause) QueryModel.SelectOrGroupClause;
-      Assert.That (groupClause.KeySelector, Is.SameAs (_nodeWithElementSelector.GetResolvedKeySelector (ClauseGenerationContext)));
-      Assert.That (groupClause.ElementSelector, Is.SameAs (_nodeWithElementSelector.GetResolvedOptionalElementSelector (ClauseGenerationContext)));
+      Assert.That (QueryModel.ResultOperators[0], Is.InstanceOfType (typeof (GroupResultOperator)));
+      var resultOperator = (GroupResultOperator) QueryModel.ResultOperators[0];
+      Assert.That (resultOperator.KeySelector, Is.SameAs (_nodeWithElementSelector.GetResolvedKeySelector (ClauseGenerationContext)));
+      Assert.That (resultOperator.ElementSelector, Is.SameAs (_nodeWithElementSelector.GetResolvedOptionalElementSelector (ClauseGenerationContext)));
     }
 
     [Test]
     public void Apply_WithoutElementSelector_SuppliesStandardSelector ()
     {
       _nodeWithoutElementSelector.Apply (QueryModel, ClauseGenerationContext);
-      var groupClause = (GroupClause) QueryModel.SelectOrGroupClause;
+      var resultOperator = (GroupResultOperator) QueryModel.ResultOperators[0];
 
       var expectedElementSelector = ExpressionHelper.Resolve<int, int> (QueryModel.MainFromClause, i => i);
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedElementSelector, groupClause.ElementSelector);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedElementSelector, resultOperator.ElementSelector);
     }
   }
 }

@@ -121,12 +121,12 @@ namespace Remotion.Data.UnitTests.Linq
       return new AdditionalFromClause (itemName, itemType, CreateExpression ());
     }
 
-    public static GroupClause CreateGroupClause ()
+    public static GroupResultOperator CreateGroupResultOperator ()
     {
       Expression keyExpression = CreateExpression ();
       Expression elementExpression = CreateExpression ();
 
-      return new GroupClause (keyExpression, elementExpression);
+      return new GroupResultOperator (keyExpression, elementExpression);
     }
     
     public static Ordering CreateOrdering ()

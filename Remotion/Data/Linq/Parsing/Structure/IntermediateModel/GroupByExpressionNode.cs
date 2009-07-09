@@ -18,11 +18,12 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 {
-  public class GroupByExpressionNode : MethodCallExpressionNodeBase
+  public class GroupByExpressionNode : ResultOperatorExpressionNodeBase
   {
     public static readonly MethodInfo[] SupportedMethods = new[]
                                                            {
@@ -36,7 +37,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     private readonly ResolvedExpressionCache _cachedElementSelector;
 
     public GroupByExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression keySelector, LambdaExpression optionalElementSelector)
-        : base (parseInfo)
+        : base (parseInfo, null, null)
     {
       ArgumentUtility.CheckNotNull ("keySelector", keySelector);
 
@@ -46,7 +47,6 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       if (optionalElementSelector != null && optionalElementSelector.Parameters.Count != 1)
         throw new ArgumentException ("ElementSelector must have exactly one parameter.", "optionalElementSelector");
 
-      ParsedExpression = parseInfo.ParsedExpression;
       KeySelector = keySelector;
       OptionalElementSelector = optionalElementSelector;
 
@@ -56,7 +56,6 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
         _cachedElementSelector = new ResolvedExpressionCache (this);
     }
 
-    public MethodCallExpression ParsedExpression { get; private set; }
     public LambdaExpression KeySelector { get; private set; }
     public LambdaExpression OptionalElementSelector { get; private set; }
 
@@ -84,10 +83,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
           + " MethodCallExpressionNodeBase.WrapQueryModelAfterEndOfQuery.");
     }
 
-    protected override QueryModel ApplyNodeSpecificSemantics (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
+    protected override ResultOperatorBase CreateResultOperator (ClauseGenerationContext clauseGenerationContext)
     {
-      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
-
       var resolvedElementSelector = GetResolvedOptionalElementSelector (clauseGenerationContext);
       if (resolvedElementSelector == null)
       {
@@ -97,9 +94,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       }
 
       var resolvedKeySelector = GetResolvedKeySelector (clauseGenerationContext);
-
-      queryModel.SelectOrGroupClause = new GroupClause (resolvedKeySelector, resolvedElementSelector);
-      return queryModel;
+      return new GroupResultOperator (resolvedKeySelector, resolvedElementSelector);
     }
   }
 }

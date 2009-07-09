@@ -15,6 +15,7 @@
 // 
 using System;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.ResultOperators;
 
 namespace Remotion.Data.Linq
 {
@@ -43,6 +44,5 @@ namespace Remotion.Data.Linq
     void VisitOrdering (Ordering ordering, QueryModel queryModel, OrderByClause orderByClause, int index);
     void VisitSelectClause (SelectClause selectClause, QueryModel queryModel);
     void VisitResultOperator (ResultOperatorBase resultOperator, QueryModel queryModel, int index);
-    void VisitGroupClause (GroupClause groupClause, QueryModel queryModel);
   }
 }

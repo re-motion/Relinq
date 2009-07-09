@@ -141,16 +141,6 @@ namespace Remotion.Data.UnitTests.Linq
       base.VisitResultOperator (resultOperator, queryModel, index);
     }
 
-    public override void VisitGroupClause (GroupClause groupClause, QueryModel queryModel)
-    {
-      var expectedGroupClause = ((GroupClause) _expected.SelectOrGroupClause);
-      Assert.That (groupClause.GetType(), Is.SameAs (expectedGroupClause.GetType()));
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedGroupClause.ElementSelector, groupClause.ElementSelector);
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedGroupClause.KeySelector, groupClause.KeySelector);
-
-      base.VisitGroupClause (groupClause, queryModel);
-    }
-
     protected override void VisitBodyClauses (ObservableCollection<IBodyClause> bodyClauses, QueryModel queryModel)
     {
       Assert.That (queryModel.BodyClauses.Count, Is.EqualTo (_expected.BodyClauses.Count));

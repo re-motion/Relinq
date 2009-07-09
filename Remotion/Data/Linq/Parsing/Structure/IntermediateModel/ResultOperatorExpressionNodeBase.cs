@@ -48,7 +48,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       ParsedExpression = parseInfo.ParsedExpression;
     }
 
-    protected abstract ResultOperatorBase CreateResultOperator ();
+    protected abstract ResultOperatorBase CreateResultOperator (ClauseGenerationContext clauseGenerationContext);
 
     public MethodCallExpression ParsedExpression { get; private set; }
 
@@ -56,7 +56,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
-      queryModel.ResultOperators.Add (CreateResultOperator());
+      var resultOperator = CreateResultOperator (clauseGenerationContext);
+      queryModel.ResultOperators.Add (resultOperator);
       return queryModel;
     }
 

@@ -50,9 +50,9 @@ namespace Remotion.Data.Linq
     /// <param name="resultType">The type of the underlying LINQ query, usually a type implementing <see cref="IQueryable{T}"/>.</param>
     /// <param name="mainFromClause">The <see cref="Clauses.MainFromClause"/> of the query. This is the starting point of the query, generating items 
     /// that are filtered and projected by the query.</param>
-    /// <param name="selectOrGroupClause">The <see cref="SelectClause"/> or <see cref="GroupClause"/> of the query. This is the end point of
-    /// the query, it defines what is atually returned for each of the items coming from the <see cref="MainFromClause"/> and passing the 
-    /// <see cref="BodyClauses"/>.</param>
+    /// <param name="selectOrGroupClause">The <see cref="SelectClause"/> of the query. This is the end point of
+    /// the query, it defines what is actually returned for each of the items coming from the <see cref="MainFromClause"/> and passing the 
+    /// <see cref="BodyClauses"/>. After it, only the <see cref="ResultOperators"/> modify the result of the query.</param>
     public QueryModel (Type resultType, MainFromClause mainFromClause, ISelectGroupClause selectOrGroupClause)
     {
       ArgumentUtility.CheckNotNull ("resultType", resultType);
@@ -100,8 +100,9 @@ namespace Remotion.Data.Linq
     }
 
     /// <summary>
-    /// Gets or sets the query's select or group clause. This is the end point of the query, it defines what is atually returned for each of the 
-    /// items coming from the <see cref="MainFromClause"/> and passing the <see cref="BodyClauses"/>.
+    /// Gets or sets the query's select clause. This is the end point of the query, it defines what is actually returned for each of the 
+    /// items coming from the <see cref="MainFromClause"/> and passing the <see cref="BodyClauses"/>. After it, only the <see cref="ResultOperators"/>
+    /// modify the result of the query.
     /// </summary>
     public ISelectGroupClause SelectOrGroupClause
     {

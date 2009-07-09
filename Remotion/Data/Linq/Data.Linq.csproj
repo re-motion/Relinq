@@ -155,7 +155,7 @@
     <Compile Include="Backend\FieldResolving\OrderingFieldAccessPolicy.cs" />
     <Compile Include="Backend\DataObjectModel\FieldDescriptor.cs" />
     <Compile Include="Clauses\FromClauseBase.cs" />
-    <Compile Include="Clauses\GroupClause.cs" />
+    <Compile Include="Clauses\ResultOperators\GroupResultOperator.cs" />
     <Compile Include="Clauses\IBodyClause.cs" />
     <Compile Include="Backend\DataObjectModel\OrderingField.cs" />
     <Compile Include="Backend\FieldResolving\SelectFieldAccessPolicy.cs" />

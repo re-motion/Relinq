@@ -41,6 +41,9 @@ namespace Remotion.Data.Linq.Clauses.ExecutionStrategies
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
       ArgumentUtility.CheckNotNull ("fetchRequests", fetchRequests);
 
+      // TODO 1325: Ensure TResult is (exactly) IEnumerable<?>, other TResults are not supported by IQueryExecutor
+      // (Workaround: Implement your own QueryProvider without using IQueryExecutor.)
+
       var itemType = GetItemType<TResult>();
 
       var executeCollectionMethod = typeof (IQueryExecutor).GetMethod ("ExecuteCollection");
