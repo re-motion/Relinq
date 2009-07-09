@@ -431,7 +431,98 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
-    public void WhereClauseFollowingGroupClause ()
+    public void GroupBy ()
+    {
+      var query = (from s in _querySource group s.ID by s.HasDog);
+      
+      var queryModel = _queryParser.GetParsedQuery (query.Expression);
+      Assert.That (queryModel.ResultType, Is.SameAs (typeof (IQueryable<IGrouping<bool, int>>)));
+
+      var mainFromClause = queryModel.MainFromClause;
+      CheckConstantQuerySource (mainFromClause.FromExpression, _querySource);
+      Assert.That (mainFromClause.ItemType, Is.SameAs (typeof (Student)));
+      Assert.That (mainFromClause.ItemName, Is.EqualTo ("s"));
+
+      var groupClause = (GroupClause) queryModel.SelectOrGroupClause;
+      CheckResolvedExpression<Student, bool> (groupClause.KeySelector, mainFromClause, s => s.HasDog);
+      CheckResolvedExpression<Student, int> (groupClause.ElementSelector, mainFromClause, s => s.ID);
+    }
+
+    [Test]
+    public void GroupByWithoutElementSelector ()
+    {
+      var query = _querySource.GroupBy (s => s.HasDog);
+      
+      var queryModel = _queryParser.GetParsedQuery (query.Expression);
+      Assert.That (queryModel.ResultType, Is.SameAs (typeof (IQueryable<IGrouping<bool, Student>>)));
+
+      var mainFromClause = queryModel.MainFromClause;
+      CheckConstantQuerySource (mainFromClause.FromExpression, _querySource);
+      Assert.That (mainFromClause.ItemType, Is.SameAs (typeof (Student)));
+      Assert.That (mainFromClause.ItemName, Is.EqualTo ("s"));
+
+      var groupClause = (GroupClause) queryModel.SelectOrGroupClause;
+      CheckResolvedExpression<Student, bool> (groupClause.KeySelector, mainFromClause, s => s.HasDog);
+      CheckResolvedExpression<Student, Student> (groupClause.ElementSelector, mainFromClause, s => s);
+    }
+
+    [Test]
+    public void GroupIntoWithAggregate ()
+    {
+      var query = from s in _querySource 
+                  group s.ID by s.HasDog 
+                  into x 
+                  where x.Count() > 0
+                  select x;
+
+      // equivalent to:
+      //var query2 = from x in
+      //               (from s in _querySource
+      //                group s.ID by s.HasDog)
+      //             where x.Count () > 0
+      //             select x;
+
+      // parsed as:
+      //var query2 = from x in
+      //               (from s in _querySource
+      //                group s.ID by s.HasDog)
+      //             where (from generated in x select generated).Count () > 0
+      //             select x;
+
+      var queryModel = _queryParser.GetParsedQuery (query.Expression);
+      Assert.That (queryModel.ResultType, Is.SameAs (typeof (IQueryable<IGrouping<bool, int>>)));
+
+      var mainFromClause = queryModel.MainFromClause;
+      Assert.That (mainFromClause.FromExpression, Is.InstanceOfType (typeof (SubQueryExpression)));
+      Assert.That (mainFromClause.ItemType, Is.SameAs (typeof (IGrouping<bool, int>)));
+      Assert.That (mainFromClause.ItemName, Is.EqualTo ("x"));
+
+      var subQueryModel = ((SubQueryExpression) mainFromClause.FromExpression).QueryModel;
+      Assert.That (subQueryModel.SelectOrGroupClause, Is.InstanceOfType (typeof (GroupClause)));
+      var subQueryGroupClause = (GroupClause) subQueryModel.SelectOrGroupClause;
+      CheckResolvedExpression<Student, bool> (subQueryGroupClause.KeySelector, subQueryModel.MainFromClause, s => s.HasDog);
+      CheckResolvedExpression<Student, int> (subQueryGroupClause.ElementSelector, subQueryModel.MainFromClause, s => s.ID);
+      
+      Assert.That (subQueryModel.ResultType, Is.SameAs (typeof (IQueryable<IGrouping<bool, int>>)));
+
+      var whereClause = (WhereClause) queryModel.BodyClauses[0];
+      Assert.That (whereClause.Predicate, Is.InstanceOfType (typeof (BinaryExpression)));
+      var predicateLeftSide = ((BinaryExpression) whereClause.Predicate).Left;
+      Assert.That (predicateLeftSide, Is.InstanceOfType (typeof (SubQueryExpression)));
+      var predicateSubQueryModel = ((SubQueryExpression) predicateLeftSide).QueryModel;
+      Assert.That (predicateSubQueryModel.MainFromClause.ItemType, Is.SameAs (typeof (int)));
+      Assert.That (predicateSubQueryModel.MainFromClause.ItemName, NUnit.Framework.SyntaxHelpers.Text.StartsWith ("<generated>"));
+      Assert.That (((QuerySourceReferenceExpression) predicateSubQueryModel.MainFromClause.FromExpression).ReferencedClause, Is.SameAs (mainFromClause));
+      Assert.That (((QuerySourceReferenceExpression) ((SelectClause) predicateSubQueryModel.SelectOrGroupClause).Selector).ReferencedClause, 
+          Is.SameAs (predicateSubQueryModel.MainFromClause));
+      Assert.That (predicateSubQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (CountResultOperator)));
+      
+      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
+      Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedClause, Is.SameAs (mainFromClause));
+    }
+
+    [Test]
+    public void GroupByFollowedByWhere ()
     {
       var query = (from s in ExpressionHelper.CreateQuerySource ()
                    group s by s.HasDog).Where (g => g.Key);
