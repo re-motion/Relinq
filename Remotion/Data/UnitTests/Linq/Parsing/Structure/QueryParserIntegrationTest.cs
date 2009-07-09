@@ -378,7 +378,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
-    public void QueryWithWhereClauseFollowingResultOperator ()
+    public void WhereClauseFollowingResultOperator ()
     {
       var query = (from s in ExpressionHelper.CreateQuerySource ()
                    select s).Distinct ().Where (x => x.ID > 0);
@@ -404,7 +404,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
-    public void QueryWithOptionalPredicateFollowingResultOperator ()
+    public void PredicateFollowingResultOperator ()
     {
       var expression = ExpressionHelper.MakeExpression (() => (from s in ExpressionHelper.CreateQuerySource ()
                                                                select s).Distinct ().Count(x => x.ID > 0));
@@ -428,6 +428,31 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedClause, Is.SameAs (mainFromClause));
 
       Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (CountResultOperator)));
+    }
+
+    [Test]
+    public void WhereClauseFollowingGroupClause ()
+    {
+      var query = (from s in ExpressionHelper.CreateQuerySource ()
+                   group s by s.HasDog).Where (g => g.Key);
+
+      var queryModel = _queryParser.GetParsedQuery (query.Expression);
+      Assert.That (queryModel.ResultType, Is.SameAs (typeof (IQueryable<IGrouping<bool, Student>>)));
+
+      var mainFromClause = queryModel.MainFromClause;
+      Assert.That (mainFromClause.FromExpression, Is.InstanceOfType (typeof (SubQueryExpression)));
+      Assert.That (mainFromClause.ItemType, Is.SameAs (typeof (IGrouping<bool, Student>)));
+      Assert.That (mainFromClause.ItemName, Is.EqualTo ("g"));
+
+      var subQueryModel = ((SubQueryExpression) mainFromClause.FromExpression).QueryModel;
+      Assert.That (subQueryModel.SelectOrGroupClause, Is.InstanceOfType (typeof (GroupClause)));
+      Assert.That (subQueryModel.ResultType, Is.SameAs (typeof (IQueryable<IGrouping<bool, Student>>)));
+
+      var whereClause = (WhereClause) queryModel.BodyClauses[0];
+      CheckResolvedExpression<IGrouping<bool, Student>, bool> (whereClause.Predicate, mainFromClause, g => g.Key);
+
+      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
+      Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedClause, Is.SameAs (mainFromClause));
     }
 
     private void CheckResolvedExpression<TParameter, TResult> (Expression expressionToCheck, FromClauseBase clauseToReference, Expression<Func<TParameter, TResult>> expectedUnresolvedExpression)

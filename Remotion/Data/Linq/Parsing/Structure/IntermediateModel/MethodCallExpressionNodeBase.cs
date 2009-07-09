@@ -111,24 +111,34 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
       var sourceAsResultOperatorNode = Source as ResultOperatorExpressionNodeBase;
+      var sourceAsGroupByNode = Source as GroupByExpressionNode;
       if (sourceAsResultOperatorNode != null)
       {
-        var oldResultType = queryModel.ResultType;
-        queryModel.ResultType = sourceAsResultOperatorNode.ParsedExpression.Type; // the result type of the old query model is what the last node's expression says it should be
-
-        var subQueryExpression = new SubQueryExpression (queryModel);
-
-        // change the Source of this node so that Resolve will later correctly go to the new main from clause we create for the sub query
-        var newMainSourceNode = new MainSourceExpressionNode (sourceAsResultOperatorNode.AssociatedIdentifier, subQueryExpression);
-        Source = newMainSourceNode;
-
-        var newMainFromClause = newMainSourceNode.CreateMainFromClause (clauseGenerationContext);
-        var newSelectClause = new SelectClause (new QuerySourceReferenceExpression (newMainFromClause));
-        return new QueryModel (oldResultType, newMainFromClause, newSelectClause);
-            // the new query model gets the result type the old query model would have gotten, hadn't it been wrapped
+        return WrapQueryModel(queryModel, sourceAsResultOperatorNode.ParsedExpression.Type, sourceAsResultOperatorNode.AssociatedIdentifier, clauseGenerationContext);
       }
-      else
+      else if (sourceAsGroupByNode != null)
+      {
+        return WrapQueryModel (queryModel, sourceAsGroupByNode.ParsedExpression.Type, sourceAsGroupByNode.AssociatedIdentifier, clauseGenerationContext);
+      }
+    else
         return queryModel;
+    }
+
+    private QueryModel WrapQueryModel (QueryModel queryModel, Type resultType, string associatedIdentifier, ClauseGenerationContext clauseGenerationContext)
+    {
+      // the new query model gets the result type the old query model would have gotten, hadn't it been wrapped
+      var oldResultType = queryModel.ResultType;
+      queryModel.ResultType = resultType; // the result type of the old query model is what the last node's expression says it should be
+
+      var subQueryExpression = new SubQueryExpression (queryModel);
+
+      // change the Source of this node so that Resolve will later correctly go to the new main from clause we create for the sub query
+      var newMainSourceNode = new MainSourceExpressionNode (associatedIdentifier, subQueryExpression);
+      Source = newMainSourceNode;
+
+      var newMainFromClause = newMainSourceNode.CreateMainFromClause (clauseGenerationContext);
+      var newSelectClause = new SelectClause (new QuerySourceReferenceExpression (newMainFromClause));
+      return new QueryModel (oldResultType, newMainFromClause, newSelectClause);
     }
 
     protected InvalidOperationException CreateResolveNotSupportedException ()

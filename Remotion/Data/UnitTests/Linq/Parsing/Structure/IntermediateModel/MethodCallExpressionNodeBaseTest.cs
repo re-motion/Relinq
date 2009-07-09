@@ -38,17 +38,29 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     private QueryModel _queryModelWithResultOperator;
     private DistinctExpressionNode _resultOperatorSource;
 
+    private TestMethodCallExpressionNode _nodeWithGroupBySource;
+    private QueryModel _queryModelWithGroupBy;
+    private GroupByExpressionNode _groupBySource;
+
     public override void SetUp ()
     {
       base.SetUp ();
       _clauseToAddInApply = new WhereClause (Expression.Constant (false));
       _node = new TestMethodCallExpressionNode (CreateParseInfo (SourceNode, "test"), _clauseToAddInApply);
       
-      var method = ParserUtility.GetMethod (() => new int[0].Distinct ());
-      _resultOperatorSource = new DistinctExpressionNode (CreateParseInfo(method));
+      var distinctMethod = ParserUtility.GetMethod (() => new int[0].Distinct ());
+      _resultOperatorSource = new DistinctExpressionNode (CreateParseInfo (SourceNode, "distinct", distinctMethod));
       _nodeWithResultOperatorSource = new TestMethodCallExpressionNode (CreateParseInfo (_resultOperatorSource, "test"), _clauseToAddInApply);
       _queryModelWithResultOperator = QueryModel.Clone ();
       _queryModelWithResultOperator.ResultOperators.Add (new DistinctResultOperator ());
+
+      Expression<Func<int, int>> keySelector = i => i;
+      Expression<Func<int, string>> elementSelector = i => i.ToString();
+      var groupMethod = ParserUtility.GetMethod (() => new int[0].GroupBy (i => i, i => i.ToString ()));
+      _groupBySource = new GroupByExpressionNode (CreateParseInfo (SourceNode, "groupBy", groupMethod), keySelector, elementSelector);
+      _nodeWithGroupBySource = new TestMethodCallExpressionNode (CreateParseInfo (_groupBySource, "test"), _clauseToAddInApply);
+      _queryModelWithGroupBy = QueryModel.Clone ();
+      _queryModelWithGroupBy.SelectOrGroupClause = ExpressionHelper.CreateGroupClause ();
     }
 
     [Test]
@@ -73,9 +85,24 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       Assert.That (newQueryModel, Is.Not.SameAs (_queryModelWithResultOperator));
       Assert.That (newQueryModel.MainFromClause.ItemType, Is.SameAs (typeof (int))); // because SourceNode is of type int[]
-      Assert.That (newQueryModel.MainFromClause.ItemName, Is.EqualTo (SourceNode.AssociatedIdentifier));
+      Assert.That (newQueryModel.MainFromClause.ItemName, Is.EqualTo ("distinct"));
       Assert.That (newQueryModel.MainFromClause.FromExpression, Is.InstanceOfType (typeof (SubQueryExpression)));
       Assert.That (((SubQueryExpression) newQueryModel.MainFromClause.FromExpression).QueryModel, Is.SameAs (_queryModelWithResultOperator));
+
+      var newSelectClause = ((SelectClause) newQueryModel.SelectOrGroupClause);
+      Assert.That (((QuerySourceReferenceExpression) newSelectClause.Selector).ReferencedClause, Is.SameAs (newQueryModel.MainFromClause));
+    }
+
+    [Test]
+    public void Apply_WrapsQueryModel_AfterGroupByExpression ()
+    {
+      var newQueryModel = _nodeWithGroupBySource.Apply (_queryModelWithGroupBy, ClauseGenerationContext);
+
+      Assert.That (newQueryModel, Is.Not.SameAs (_queryModelWithGroupBy));
+      Assert.That (newQueryModel.MainFromClause.ItemType, Is.SameAs (typeof (IGrouping<int, string>))); // because SourceNode is of type int[]
+      Assert.That (newQueryModel.MainFromClause.ItemName, Is.EqualTo ("groupBy"));
+      Assert.That (newQueryModel.MainFromClause.FromExpression, Is.InstanceOfType (typeof (SubQueryExpression)));
+      Assert.That (((SubQueryExpression) newQueryModel.MainFromClause.FromExpression).QueryModel, Is.SameAs (_queryModelWithGroupBy));
 
       var newSelectClause = ((SelectClause) newQueryModel.SelectOrGroupClause);
       Assert.That (((QuerySourceReferenceExpression) newSelectClause.Selector).ReferencedClause, Is.SameAs (newQueryModel.MainFromClause));

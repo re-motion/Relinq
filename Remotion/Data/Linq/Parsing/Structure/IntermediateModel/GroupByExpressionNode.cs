@@ -46,6 +46,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       if (optionalElementSelector != null && optionalElementSelector.Parameters.Count != 1)
         throw new ArgumentException ("ElementSelector must have exactly one parameter.", "optionalElementSelector");
 
+      ParsedExpression = parseInfo.ParsedExpression;
       KeySelector = keySelector;
       OptionalElementSelector = optionalElementSelector;
 
@@ -55,6 +56,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
         _cachedElementSelector = new ResolvedExpressionCache (this);
     }
 
+    public MethodCallExpression ParsedExpression { get; private set; }
     public LambdaExpression KeySelector { get; private set; }
     public LambdaExpression OptionalElementSelector { get; private set; }
 
