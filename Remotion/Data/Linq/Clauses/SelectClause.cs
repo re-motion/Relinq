@@ -98,6 +98,8 @@ namespace Remotion.Data.Linq.Clauses
     /// Gets the execution strategy to use for this clause. The execution strategy defines how to dispatch a query
     /// to an implementation of <see cref="IQueryExecutor"/> when the <see cref="QueryProviderBase"/> needs to execute a query.
     /// </summary>
+    /// <returns><see cref="CollectionExecutionStrategy.Instance"/> because <see cref="SelectClause"/> always selects items that are returned as a
+    /// collection.</returns>
     public IExecutionStrategy GetExecutionStrategy ()
     {
       return CollectionExecutionStrategy.Instance;

@@ -116,8 +116,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       Assert.That (QueryModel.SelectOrGroupClause, Is.InstanceOfType (typeof (GroupClause)));
       var groupClause = (GroupClause) QueryModel.SelectOrGroupClause;
-      Assert.That (groupClause.ByExpression, Is.SameAs (_nodeWithElementSelector.GetResolvedKeySelector (ClauseGenerationContext)));
-      Assert.That (groupClause.GroupExpression, Is.SameAs (_nodeWithElementSelector.GetResolvedOptionalElementSelector (ClauseGenerationContext)));
+      Assert.That (groupClause.KeySelector, Is.SameAs (_nodeWithElementSelector.GetResolvedKeySelector (ClauseGenerationContext)));
+      Assert.That (groupClause.ElementSelector, Is.SameAs (_nodeWithElementSelector.GetResolvedOptionalElementSelector (ClauseGenerationContext)));
     }
 
     [Test]
@@ -127,7 +127,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var groupClause = (GroupClause) QueryModel.SelectOrGroupClause;
 
       var expectedElementSelector = ExpressionHelper.Resolve<int, int> (QueryModel.MainFromClause, i => i);
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedElementSelector, groupClause.GroupExpression);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedElementSelector, groupClause.ElementSelector);
     }
   }
 }

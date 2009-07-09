@@ -93,7 +93,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
       var resolvedKeySelector = GetResolvedKeySelector (clauseGenerationContext);
 
-      queryModel.SelectOrGroupClause = new GroupClause (resolvedElementSelector, resolvedKeySelector);
+      queryModel.SelectOrGroupClause = new GroupClause (resolvedKeySelector, resolvedElementSelector);
       return queryModel;
     }
   }

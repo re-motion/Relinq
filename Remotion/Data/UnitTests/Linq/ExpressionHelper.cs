@@ -123,10 +123,10 @@ namespace Remotion.Data.UnitTests.Linq
 
     public static GroupClause CreateGroupClause ()
     {
-      Expression groupExpression = CreateExpression ();
-      Expression byExpression = CreateExpression ();
+      Expression keyExpression = CreateExpression ();
+      Expression elementExpression = CreateExpression ();
 
-      return new GroupClause (groupExpression, byExpression);
+      return new GroupClause (keyExpression, elementExpression);
     }
     
     public static Ordering CreateOrdering ()

@@ -16,38 +16,66 @@
 using System;
 using System.Diagnostics;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses
 {
+  /// <summary>
+  /// Represents the group part of a query, grouping items given by an <see cref="ElementSelector"/> according to some key retrieved by a
+  /// <see cref="KeySelector"/>.
+  /// </summary>
+  /// <example>
+  /// In C#, the "group by" clause in the following sample corresponds to a <see cref="GroupClause"/>. "s" (a reference to the query source "s", see
+  /// <see cref="QuerySourceReferenceExpression"/>) is the <see cref="ElementSelector"/> expression, "s.Country" is the <see cref="KeySelector"/>
+  /// expression:
+  /// <ode>
+  /// var query = from s in Students
+  ///             where s.First == "Hugo"
+  ///             group s by s.Country;
+  /// </ode>
+  /// </example>
   public class GroupClause : ISelectGroupClause
   {
-    private Expression _groupExpression;
-    private Expression _byExpression;
+    private Expression _keySelector;
+    private Expression _elementSelector;
 
-    public GroupClause (Expression groupExpression, Expression byExpression)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="GroupClause"/> class.
+    /// </summary>
+    /// <param name="keySelector">The selector retrieving the key by which to group items.</param>
+    /// <param name="elementSelector">The selector retrieving the elements to group.</param>
+    public GroupClause (Expression keySelector, Expression elementSelector)
     {
-      ArgumentUtility.CheckNotNull ("groupExpression", groupExpression);
-      ArgumentUtility.CheckNotNull ("byExpression", byExpression);
+      ArgumentUtility.CheckNotNull ("elementSelector", elementSelector);
+      ArgumentUtility.CheckNotNull ("keySelector", keySelector);
 
-      _groupExpression = groupExpression;
-      _byExpression = byExpression;
+      _elementSelector = elementSelector;
+      _keySelector = keySelector;
     }
 
-    [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (GroupExpression),nq}")]
-    public Expression GroupExpression
+    /// <summary>
+    /// Gets or sets the selector retrieving the key by which to group items.
+    /// </summary>
+    /// <value>The key selector.</value>
+    [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (KeySelector),nq}")]
+    public Expression KeySelector
     {
-      get { return _groupExpression; }
-      set { _groupExpression = ArgumentUtility.CheckNotNull ("value", value); }
+      get { return _keySelector; }
+      set { _keySelector = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
-    [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (ByExpression),nq}")]
-    public Expression ByExpression
+    /// <summary>
+    /// Gets or sets the selector retrieving the elements to group.
+    /// </summary>
+    /// <value>The element selector.</value>
+    [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (ElementSelector),nq}")]
+    public Expression ElementSelector
     {
-      get { return _byExpression; }
-      set { _byExpression = ArgumentUtility.CheckNotNull ("value", value); }
+      get { return _elementSelector; }
+      set { _elementSelector = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
     /// <summary>
@@ -59,6 +87,7 @@ namespace Remotion.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+
       visitor.VisitGroupClause (this, queryModel);
     }
 
@@ -72,7 +101,7 @@ namespace Remotion.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 
-      var clone = new GroupClause (GroupExpression, ByExpression);
+      var clone = new GroupClause (KeySelector, ElementSelector);
       clone.TransformExpressions (ex => ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (ex, cloneContext.ClauseMapping));
       return clone;
     }
@@ -82,9 +111,16 @@ namespace Remotion.Data.Linq.Clauses
       return Clone (cloneContext);
     }
 
+    /// <summary>
+    /// Gets the execution strategy to use for the given select or group clause. The execution strategy defines how to dispatch a query
+    /// to an implementation of <see cref="IQueryExecutor"/> when the <see cref="QueryProviderBase"/> needs to execute a query.
+    /// </summary>
+    /// <returns>
+    /// <see cref="CollectionExecutionStrategy.Instance"/> because <see cref="GroupClause"/> always selects a collection of groupings.
+    /// </returns>
     public IExecutionStrategy GetExecutionStrategy ()
     {
-      throw new NotImplementedException();
+      return CollectionExecutionStrategy.Instance;
     }
 
     /// <summary>
@@ -96,16 +132,16 @@ namespace Remotion.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("transformation", transformation);
 
-      GroupExpression = transformation (GroupExpression);
-      ByExpression = transformation (ByExpression);
+      ElementSelector = transformation (ElementSelector);
+      KeySelector = transformation (KeySelector);
     }
 
     public override string ToString ()
     {
       return string.Format (
           "group {0} by {1}",
-          FormattingExpressionTreeVisitor.Format (GroupExpression),
-          FormattingExpressionTreeVisitor.Format (ByExpression));
+          FormattingExpressionTreeVisitor.Format (ElementSelector),
+          FormattingExpressionTreeVisitor.Format (KeySelector));
     }
   }
 }

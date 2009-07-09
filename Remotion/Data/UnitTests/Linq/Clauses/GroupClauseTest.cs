@@ -18,6 +18,7 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
+using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Rhino.Mocks;
 using Remotion.Data.Linq.Clauses;
@@ -38,15 +39,15 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
-    public void InitializeWithGroupExpressionAndByExpression()
+    public void Initialize()
     {
-      Expression groupExpression = ExpressionHelper.CreateExpression();
-      Expression byExpression = ExpressionHelper.CreateExpression();
+      Expression keySelector = ExpressionHelper.CreateExpression();
+      Expression elementSelector = ExpressionHelper.CreateExpression ();
 
-      var groupClause = new GroupClause (groupExpression, byExpression);
+      var groupClause = new GroupClause (keySelector, elementSelector);
 
-      Assert.That (groupClause.GroupExpression, Is.SameAs (groupExpression));
-      Assert.That (groupClause.ByExpression, Is.SameAs (byExpression));
+      Assert.That (groupClause.KeySelector, Is.SameAs (keySelector));
+      Assert.That (groupClause.ElementSelector, Is.SameAs (elementSelector));
     }
 
     [Test]
@@ -77,55 +78,55 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
 
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (_groupClause));
-      Assert.That (clone.ByExpression, Is.SameAs (_groupClause.ByExpression));
-      Assert.That (clone.GroupExpression, Is.SameAs (_groupClause.GroupExpression));
+      Assert.That (clone.KeySelector, Is.SameAs (_groupClause.KeySelector));
+      Assert.That (clone.ElementSelector, Is.SameAs (_groupClause.ElementSelector));
     }
 
     [Test]
     public void Clone_AdjustsExpressions ()
     {
       var referencedExpression = ExpressionHelper.CreateMainFromClause();
-      var groupExpression = new QuerySourceReferenceExpression (referencedExpression);
-      var byExpression = new QuerySourceReferenceExpression (referencedExpression);
-      var groupClause = new GroupClause (groupExpression, byExpression);
+      var keySelector = new QuerySourceReferenceExpression (referencedExpression);
+      var elementSelector = new QuerySourceReferenceExpression (referencedExpression);
+      var groupClause = new GroupClause (keySelector, elementSelector);
 
       var newReferencedExpression = ExpressionHelper.CreateMainFromClause ();
       _cloneContext.ClauseMapping.AddMapping (referencedExpression, new QuerySourceReferenceExpression(newReferencedExpression));
 
       var clone = groupClause.Clone (_cloneContext);
 
-      Assert.That (((QuerySourceReferenceExpression) clone.GroupExpression).ReferencedClause, Is.SameAs (newReferencedExpression));
-      Assert.That (((QuerySourceReferenceExpression) clone.ByExpression).ReferencedClause, Is.SameAs (newReferencedExpression));
+      Assert.That (((QuerySourceReferenceExpression) clone.KeySelector).ReferencedClause, Is.SameAs (newReferencedExpression));
+      Assert.That (((QuerySourceReferenceExpression) clone.ElementSelector).ReferencedClause, Is.SameAs (newReferencedExpression));
     }
 
     [Test]
     public void Clone_ViaInterface_PassesMapping ()
     {
       var fromClause = ExpressionHelper.CreateMainFromClause ();
-      _groupClause.GroupExpression = new QuerySourceReferenceExpression (fromClause);
+      _groupClause.ElementSelector = new QuerySourceReferenceExpression (fromClause);
 
       var newReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause ());
       _cloneContext.ClauseMapping.AddMapping (fromClause, newReferenceExpression);
 
       var clone = ((ISelectGroupClause) _groupClause).Clone (_cloneContext);
-      Assert.That (((GroupClause) clone).GroupExpression, Is.SameAs (newReferenceExpression));
+      Assert.That (((GroupClause) clone).ElementSelector, Is.SameAs (newReferenceExpression));
     }
 
     [Test]
     public void TransformExpressions ()
     {
-      var oldGroupExpression = ExpressionHelper.CreateExpression ();
-      var oldByExpression = ExpressionHelper.CreateExpression ();
-      var newGroupExpression = ExpressionHelper.CreateExpression ();
-      var newByExpression = ExpressionHelper.CreateExpression ();
-      var clause = new GroupClause (oldGroupExpression, oldByExpression);
+      var oldKeySelector = ExpressionHelper.CreateExpression ();
+      var oldElementSelector = ExpressionHelper.CreateExpression ();
+      var clause = new GroupClause (oldKeySelector, oldElementSelector);
 
+      var newKeySelector = ExpressionHelper.CreateExpression ();
+      var newElementSelector = ExpressionHelper.CreateExpression ();
       clause.TransformExpressions (ex =>
           {
-            if (ex == oldGroupExpression)
-              return newGroupExpression;
-            else if (ex == oldByExpression)
-              return newByExpression;
+            if (ex == oldElementSelector)
+              return newElementSelector;
+            else if (ex == oldKeySelector)
+              return newKeySelector;
             else
             {
               Assert.Fail();
@@ -133,16 +134,22 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
             }
           });
 
-      Assert.That (clause.GroupExpression, Is.SameAs (newGroupExpression));
-      Assert.That (clause.ByExpression, Is.SameAs (newByExpression));
+      Assert.That (clause.KeySelector, Is.SameAs (newKeySelector));
+      Assert.That (clause.ElementSelector, Is.SameAs (newElementSelector));
     }
 
     [Test]
     public new void ToString ()
     {
-      var groupClause = new GroupClause (Expression.Constant (0), Expression.Constant (1));
+      var groupClause = new GroupClause (Expression.Constant (1), Expression.Constant (0));
 
       Assert.That (groupClause.ToString (), Is.EqualTo ("group 0 by 1"));
+    }
+
+    [Test]
+    public void GetExecutionStrategy ()
+    {
+      Assert.That (_groupClause.GetExecutionStrategy (), Is.SameAs (CollectionExecutionStrategy.Instance));
     }
   }
 }

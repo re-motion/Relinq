@@ -145,8 +145,8 @@ namespace Remotion.Data.UnitTests.Linq
     {
       var expectedGroupClause = ((GroupClause) _expected.SelectOrGroupClause);
       Assert.That (groupClause.GetType(), Is.SameAs (expectedGroupClause.GetType()));
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedGroupClause.GroupExpression, groupClause.GroupExpression);
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedGroupClause.ByExpression, groupClause.ByExpression);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedGroupClause.ElementSelector, groupClause.ElementSelector);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedGroupClause.KeySelector, groupClause.KeySelector);
 
       base.VisitGroupClause (groupClause, queryModel);
     }
