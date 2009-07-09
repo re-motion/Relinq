@@ -68,22 +68,22 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
-      queryModel = WrapQueryModelAfterResultOperator (queryModel, clauseGenerationContext);
+      queryModel = WrapQueryModelAfterEndOfQuery (queryModel, clauseGenerationContext);
       queryModel = ApplyNodeSpecificSemantics (queryModel, clauseGenerationContext);
       return queryModel;
     }
 
     /// <summary>
-    /// Wraps the <paramref name="queryModel"/> into a subquery after a <see cref="ResultOperatorBase"/> has been created. Override this method
-    /// when implementing a <see cref="IExpressionNode"/> that does not need a subquery to be created if it occurs after a 
-    /// <see cref="ResultOperatorBase"/>.
+    /// Wraps the <paramref name="queryModel"/> into a subquery after a node that indicates the end of the query (
+    /// <see cref="ResultOperatorExpressionNodeBase"/> or <see cref="GroupByExpressionNode"/>). Override this method
+    /// when implementing a <see cref="IExpressionNode"/> that does not need a subquery to be created if it occurs after the query end.
     /// </summary>
     /// <remarks>
     /// <para>
-    /// When an ordinary node 
-    /// follows a result operator node,  it cannot simply append its clauses to the <paramref name="queryModel"/> because semantically, the 
-    /// result operator must be executed _before_ the clause. Therefore, in such scenarios, we wrap the current query model into a 
-    /// <see cref="SubQueryExpression"/> that we put into the <see cref="MainFromClause"/> of a new <see cref="QueryModel"/>.
+    /// When an ordinary node follows a result operator or group node, it cannot simply append its clauses to the <paramref name="queryModel"/> 
+    /// because semantically, the result operator (or grouping) must be executed _before_ the clause. Therefore, in such scenarios, we wrap 
+    /// the current query model into a <see cref="SubQueryExpression"/> that we put into the <see cref="MainFromClause"/> of a new 
+    /// <see cref="QueryModel"/>.
     /// </para>
     /// <para>
     /// This method also changes the <see cref="Source"/> of this node because logically, all <see cref="Resolve"/> operations must be handled
@@ -106,7 +106,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     /// Now, the last Select node resolves to the new <see cref="MainFromClause"/>.
     /// </para>
     /// </remarks>
-    protected virtual QueryModel WrapQueryModelAfterResultOperator (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
+    protected virtual QueryModel WrapQueryModelAfterEndOfQuery (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 

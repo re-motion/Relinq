@@ -78,7 +78,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public override Expression Resolve (
         ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
     {
-      throw new NotImplementedException();
+      throw new InvalidOperationException ("GroupByExpressionNode does not support resolving of expressions because it must not be followed "
+          + " by any node that requires its output data. If a node follows, the previous nodes must be regarded as a subquery and wrapped into"
+          + " a MainSourceExpressionNode. That node can then be used to resolve expressions. See"
+          + " MethodCallExpressionNodeBase.WrapQueryModelAfterEndOfQuery.");
     }
 
     protected override QueryModel ApplyNodeSpecificSemantics (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)

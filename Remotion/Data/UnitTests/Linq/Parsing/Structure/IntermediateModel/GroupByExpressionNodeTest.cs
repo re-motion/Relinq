@@ -76,10 +76,10 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    [Ignore ("TODO 1304")]
-    public void Resolve ()
+    [ExpectedException (typeof (InvalidOperationException))]
+    public void Resolve_ThrowsInvalidOperationException ()
     {
-      Assert.Fail ("TODO");
+      _nodeWithoutElementSelector.Resolve (ExpressionHelper.CreateParameterExpression (), ExpressionHelper.CreateExpression (), ClauseGenerationContext);
     }
 
     [Test]
