@@ -60,9 +60,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 
       QueryModel queryModel = _queryParser.GetParsedQuery(constantExpression);
 
-      Assert.That (queryModel.SelectOrGroupClause, Is.Not.Null);
+      Assert.That (queryModel.SelectClause, Is.Not.Null);
       
-      var newSelector = ((SelectClause) queryModel.SelectOrGroupClause).Selector;
+      var newSelector = queryModel.SelectClause.Selector;
       Assert.That (newSelector, Is.InstanceOfType (typeof (QuerySourceReferenceExpression)));
       Assert.That (((QuerySourceReferenceExpression) newSelector).ReferencedClause, Is.SameAs (queryModel.MainFromClause));
     }
@@ -88,9 +88,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 
       QueryModel queryModel = _queryParser.GetParsedQuery (expressionTree);
 
-      Assert.That (queryModel.SelectOrGroupClause, Is.Not.Null);
-      Assert.That (((SelectClause) queryModel.SelectOrGroupClause).Selector, Is.InstanceOfType (typeof (MethodCallExpression)));
-      Assert.That (((MethodCallExpression)((SelectClause) queryModel.SelectOrGroupClause).Selector).Method.Name, Is.EqualTo("ToString"));
+      Assert.That (queryModel.SelectClause, Is.Not.Null);
+      Assert.That (queryModel.SelectClause.Selector, Is.InstanceOfType (typeof (MethodCallExpression)));
+      Assert.That (((MethodCallExpression)queryModel.SelectClause.Selector).Method.Name, Is.EqualTo("ToString"));
     }
 
     [Test]
@@ -114,9 +114,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 
       QueryModel queryModel = _queryParser.GetParsedQuery (expressionTree);
 
-      Assert.That (queryModel.SelectOrGroupClause, Is.Not.Null);
+      Assert.That (queryModel.SelectClause, Is.Not.Null);
 
-      var newSelector = ((SelectClause) queryModel.SelectOrGroupClause).Selector;
+      var newSelector = queryModel.SelectClause.Selector;
       Assert.That (newSelector, Is.InstanceOfType (typeof (QuerySourceReferenceExpression)));
       Assert.That (((QuerySourceReferenceExpression) newSelector).ReferencedClause, Is.SameAs (queryModel.MainFromClause));
     }
@@ -181,7 +181,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var result = _queryParser.GetParsedQuery (expression);
       var whereClause = (WhereClause) result.BodyClauses[0];
       var predicateBody = (BinaryExpression) whereClause.Predicate;
-      var subQuerySelector = ((SelectClause)((SubQueryExpression) predicateBody.Left).QueryModel.SelectOrGroupClause).Selector;
+      var subQuerySelector = ((SubQueryExpression) predicateBody.Left).QueryModel.SelectClause.Selector;
       Assert.That (subQuerySelector, Is.InstanceOfType (typeof (QuerySourceReferenceExpression)));
       Assert.That (((QuerySourceReferenceExpression)subQuerySelector).ReferencedClause, Is.SameAs (result.MainFromClause));
     }
@@ -199,7 +199,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 
       Assert.That (queryModel.BodyClauses.Count (), Is.EqualTo (1));
       var whereClause = (WhereClause) (queryModel.BodyClauses[0]);
-      var selectClause = (SelectClause) (queryModel.SelectOrGroupClause);
+      var selectClause = queryModel.SelectClause;
 
       var expectedPredicate = ExpressionHelper.Resolve<int, bool> (queryModel.MainFromClause, i => i > 5);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedPredicate, whereClause.Predicate);
@@ -217,7 +217,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       // ReSharper restore RedundantAnonymousTypePropertyName
 
       QueryModel queryModel = _queryParser.GetParsedQuery (expressionTree);
-      var selectClause = (SelectClause) (queryModel.SelectOrGroupClause);
+      var selectClause = queryModel.SelectClause;
 
       var expectedSelector = ExpressionHelper.Resolve<int, int> (queryModel.MainFromClause, i => i + 1);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedSelector, selectClause.Selector);
@@ -232,7 +232,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       // ReSharper restore RedundantAnonymousTypePropertyName
 
       QueryModel queryModel = _queryParser.GetParsedQuery (expressionTree);
-      var selectClause = (SelectClause) (queryModel.SelectOrGroupClause);
+      var selectClause = queryModel.SelectClause;
 
       var expectedSelector = ExpressionHelper.Resolve<int, int> (queryModel.MainFromClause, i => i + 1);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedSelector, selectClause.Selector);
@@ -252,12 +252,12 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       QueryModel queryModel = _queryParser.GetParsedQuery (expressionTree);
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (0));
 
-      var selectClause = (SelectClause) (queryModel.SelectOrGroupClause);
+      var selectClause = queryModel.SelectClause;
       var expectedSelector = ExpressionHelper.Resolve<int, int> (queryModel.MainFromClause, i => i);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedSelector, selectClause.Selector);
 
       var subQueryModel = ((SubQueryExpression) queryModel.MainFromClause.FromExpression).QueryModel;
-      var subSelectClause = (SelectClause) (subQueryModel.SelectOrGroupClause);
+      var subSelectClause = subQueryModel.SelectClause;
 
       var expectedSubSelector = ExpressionHelper.Resolve<int, int> (subQueryModel.MainFromClause, i => i + 1);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedSubSelector, subSelectClause.Selector);

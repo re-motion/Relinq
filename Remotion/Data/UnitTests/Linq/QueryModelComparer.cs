@@ -122,7 +122,7 @@ namespace Remotion.Data.UnitTests.Linq
 
     public override void VisitSelectClause (SelectClause selectClause, QueryModel queryModel)
     {
-      var expectedSelectClause = ((SelectClause) _expected.SelectOrGroupClause);
+      var expectedSelectClause = _expected.SelectClause;
       Assert.That (selectClause.GetType(), Is.SameAs (expectedSelectClause.GetType()));
       ExpressionTreeComparer.CheckAreEqualTrees (expectedSelectClause.Selector, selectClause.Selector);
 

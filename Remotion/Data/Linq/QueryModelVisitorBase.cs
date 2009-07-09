@@ -40,7 +40,7 @@ namespace Remotion.Data.Linq
 
       queryModel.MainFromClause.Accept (this, queryModel);
       VisitBodyClauses (queryModel.BodyClauses, queryModel);
-      queryModel.SelectOrGroupClause.Accept (this, queryModel);
+      queryModel.SelectClause.Accept (this, queryModel);
 
       VisitResultOperators (queryModel.ResultOperators, queryModel);
     }

@@ -60,7 +60,7 @@ namespace Remotion.Data.UnitTests.Linq
     {
       _builder.AddClause (_selectClause);
 
-      Assert.That (_builder.SelectOrGroupClause, Is.SameAs (_selectClause));
+      Assert.That (_builder.SelectClause, Is.SameAs (_selectClause));
     }
 
     [Test]
@@ -122,7 +122,7 @@ namespace Remotion.Data.UnitTests.Linq
       var queryModel = _builder.Build(typeof (IQueryable<int>));
 
       Assert.That (queryModel.MainFromClause, Is.SameAs (_mainFromClause));
-      Assert.That (queryModel.SelectOrGroupClause, Is.SameAs (_selectClause));
+      Assert.That (queryModel.SelectClause, Is.SameAs (_selectClause));
       Assert.That (queryModel.BodyClauses, Is.EqualTo (new[] { _whereClause1, _whereClause2 }));
       Assert.That (queryModel.ResultOperators, Is.EqualTo (new[] { _resultOperator1, _resultOperator2 }));
     }

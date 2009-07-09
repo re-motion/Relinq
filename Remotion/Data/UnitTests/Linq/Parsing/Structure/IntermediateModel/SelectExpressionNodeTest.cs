@@ -77,7 +77,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var result = _node.Apply (QueryModel, ClauseGenerationContext);
       Assert.That (result, Is.SameAs (QueryModel));
 
-      var selectClause = (SelectClause) QueryModel.SelectOrGroupClause;
+      var selectClause = QueryModel.SelectClause;
       
       Assert.That (selectClause.Selector, Is.EqualTo (_node.GetResolvedSelector (ClauseGenerationContext)));
     }

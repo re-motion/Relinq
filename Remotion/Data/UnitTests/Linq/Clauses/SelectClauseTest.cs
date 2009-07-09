@@ -20,7 +20,6 @@ using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.Expressions;
-using Remotion.Data.Linq.Clauses.ResultOperators;
 using Rhino.Mocks;
 using Remotion.Data.Linq.Clauses;
 
@@ -48,12 +47,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
-    public void SelectClause_ImplementISelectGroupClause()
-    {
-      Assert.That (_selectClause, Is.InstanceOfType (typeof (ISelectGroupClause)));
-    }
-        
-    [Test]
     public void Accept()
     {
       var queryModel = ExpressionHelper.CreateQueryModel ();
@@ -73,19 +66,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (_selectClause));
       Assert.That (clone.Selector, Is.SameAs (_selectClause.Selector));
-    }
-
-    [Test]
-    public void Clone_ViaInterface_PassesMapping ()
-    {
-      var fromClause = ExpressionHelper.CreateMainFromClause ();
-      _selectClause.Selector = new QuerySourceReferenceExpression (fromClause);
-
-      var newReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause ());
-      _cloneContext.ClauseMapping.AddMapping (fromClause, newReferenceExpression);
-
-      var clone = ((ISelectGroupClause) _selectClause).Clone (_cloneContext);
-      Assert.That (((SelectClause) clone).Selector, Is.SameAs (newReferenceExpression));
     }
 
     [Test]

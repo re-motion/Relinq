@@ -68,7 +68,7 @@ namespace Remotion.Data.UnitTests.Linq.Transformations
       _additionalFromClause1 = (AdditionalFromClause) _queryModel.BodyClauses[0];
       _additionalFromClause2 = (AdditionalFromClause) _queryModel.BodyClauses[1];
       _whereClause = (WhereClause) _queryModel.BodyClauses[2];
-      _selectClause = (SelectClause) _queryModel.SelectOrGroupClause;
+      _selectClause = _queryModel.SelectClause;
 
       var subQueryExpressionA = (SubQueryExpression) _additionalFromClause1.FromExpression;
       _innerMainFromClauseA = subQueryExpressionA.QueryModel.MainFromClause;
@@ -169,7 +169,7 @@ namespace Remotion.Data.UnitTests.Linq.Transformations
 
       Assert.That (parsedQuery.MainFromClause.FromExpression, Is.Not.InstanceOfType (typeof (SubQueryExpression)));
       Assert.That (parsedQuery.BodyClauses.Count, Is.EqualTo (2));
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedSelector, ((SelectClause) parsedQuery.SelectOrGroupClause).Selector);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedSelector, parsedQuery.SelectClause.Selector);
     }
 
     [Test]

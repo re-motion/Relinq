@@ -111,7 +111,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       _nodeWithSelector.Source.Apply (QueryModel, ClauseGenerationContext);
       _nodeWithSelector.Apply (QueryModel, ClauseGenerationContext);
 
-      var selectClause = (SelectClause) QueryModel.SelectOrGroupClause;
+      var selectClause = QueryModel.SelectClause;
       var expectedNewSelector = (MethodCallExpression) ExpressionHelper.Resolve<int, string> (SourceClause, i => i.ToString ());
       ExpressionTreeComparer.CheckAreEqualTrees (expectedNewSelector, selectClause.Selector);
     }

@@ -49,7 +49,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var expression = SelectTestQueryGenerator.CreateSimpleQuery (_querySource).Expression;
       var queryModel = _queryParser.GetParsedQuery (expression);
 
-      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
+      var selectClause = queryModel.SelectClause;
       CheckResolvedExpression<Student, Student> (selectClause.Selector, queryModel.MainFromClause, s => s);
     }
 
@@ -65,7 +65,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var whereClause = (WhereClause) queryModel.BodyClauses[0];
       CheckResolvedExpression<Student, bool> (whereClause.Predicate, queryModel.MainFromClause, s => s.Last == "Garcia");
 
-      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
+      var selectClause = queryModel.SelectClause;
       CheckResolvedExpression<Student, Student> (selectClause.Selector, queryModel.MainFromClause, s => s);
     }
 
@@ -86,7 +86,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var whereClause3 = (WhereClause) queryModel.BodyClauses[2];
       CheckResolvedExpression<Student, bool> (whereClause3.Predicate, queryModel.MainFromClause, s => s.ID > 100);
 
-      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
+      var selectClause = queryModel.SelectClause;
       CheckResolvedExpression<Student, Student> (selectClause.Selector, queryModel.MainFromClause, s => s);
     }
 
@@ -102,7 +102,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       CheckResolvedExpression<Student, bool> (whereClause.Predicate, 
         queryModel.MainFromClause, s => s.First != "Garcia" && s.ID > 5 && s.ID >= 6 && s.ID < 7 && s.ID <= 6 && s.ID == 6);
 
-      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
+      var selectClause = queryModel.SelectClause;
       CheckResolvedExpression<Student, Student> (selectClause.Selector, queryModel.MainFromClause, s => s);
     }
 
@@ -121,7 +121,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var whereClause = (WhereClause) queryModel.BodyClauses[1];
       CheckResolvedExpression<Student, bool> (whereClause.Predicate, queryModel.MainFromClause, s1 => s1.Last == "Garcia");
 
-      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
+      var selectClause = queryModel.SelectClause;
       CheckResolvedExpression<Student, Student> (selectClause.Selector, queryModel.MainFromClause, s1 => s1);
     }
 
@@ -137,7 +137,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var memberFromClause = (AdditionalFromClause) queryModel.BodyClauses[0];
       CheckResolvedExpression<IndustrialSector, IEnumerable<Student>> (memberFromClause.FromExpression, mainFromClause, sector => sector.Students);
 
-      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
+      var selectClause = queryModel.SelectClause;
       CheckResolvedExpression<Student, Student> (selectClause.Selector, memberFromClause, s1 => s1);
     }
 
@@ -157,7 +157,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (additionalFromClause.ItemName, Is.EqualTo ("s2"));
       CheckConstantQuerySource (additionalFromClause.FromExpression, _querySource);
 
-      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
+      var selectClause = queryModel.SelectClause;
       CheckResolvedExpression<Student, Student> (selectClause.Selector, queryModel.MainFromClause, s1 => s1);
     }
 
@@ -175,7 +175,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (subQueryMainFromClause.ItemName, Is.EqualTo ("s3"));
       CheckConstantQuerySource (subQueryMainFromClause.FromExpression, _querySource);
 
-      var subQuerySelectClause = (SelectClause) subQueryModel.SelectOrGroupClause;
+      var subQuerySelectClause = subQueryModel.SelectClause;
       CheckResolvedExpression<Student, Student> (subQuerySelectClause.Selector, subQueryMainFromClause, s3 => s3);
     }
 
@@ -232,7 +232,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       CheckResolvedExpression<Student, bool> (whereClause.Predicate, mainFromClause, s1 => s1.Last == "Garcia");
       Assert.That (queryModel.BodyClauses.Last (), Is.InstanceOfType (typeof (AdditionalFromClause)));
       
-      var selectClause = (SelectClause)queryModel.SelectOrGroupClause;
+      var selectClause = queryModel.SelectClause;
       CheckResolvedExpression<Student, Student> (selectClause.Selector, mainFromClause, s1 => s1);
     }
 
@@ -254,7 +254,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var additionalFromClause = (AdditionalFromClause) queryModel.BodyClauses[1];
       CheckConstantQuerySource (additionalFromClause.FromExpression, _querySource);
       
-      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
+      var selectClause = queryModel.SelectClause;
       CheckResolvedExpression<Student, string> (selectClause.Selector, (AdditionalFromClause) queryModel.BodyClauses.Last(), s2 => s2.Last);
     }
 
@@ -265,7 +265,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var queryModel = _queryParser.GetParsedQuery (expression);
 
       var mainFromClause = queryModel.MainFromClause;
-      var selectClause = ((SelectClause) queryModel.SelectOrGroupClause);
+      var selectClause = queryModel.SelectClause;
 
       Assert.That (queryModel.BodyClauses.Count (), Is.EqualTo (0));
       CheckResolvedExpression<Student, string> (selectClause.Selector, mainFromClause, s => s.First + s.Last);
@@ -296,7 +296,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (ordering3.OrderingDirection, Is.EqualTo (OrderingDirection.Asc));
       CheckResolvedExpression<Student, List<int>> (ordering3.Expression, mainFromClause, s => s.Scores);
 
-      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
+      var selectClause = queryModel.SelectClause;
       CheckResolvedExpression<Student, Student> (selectClause.Selector, queryModel.MainFromClause, s => s);
     }
 
@@ -368,7 +368,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (TakeResultOperator)));
       Assert.That (subQueryModel.ResultType, Is.SameAs (typeof (IQueryable<Student>)));
       
-      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
+      var selectClause = queryModel.SelectClause;
       var additionalFromClause = (AdditionalFromClause) queryModel.BodyClauses[0];
       CheckResolvedExpression<Student, Student_Detail, Tuple<Student, Student_Detail>> (
           selectClause.Selector, 
@@ -399,7 +399,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var whereClause = (WhereClause) queryModel.BodyClauses[0];
       CheckResolvedExpression<Student, bool> (whereClause.Predicate, mainFromClause, x => x.ID > 0);
 
-      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
+      var selectClause = queryModel.SelectClause;
       Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedClause, Is.SameAs (mainFromClause));
     }
 
@@ -424,7 +424,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var whereClause = (WhereClause) queryModel.BodyClauses[0];
       CheckResolvedExpression<Student, bool> (whereClause.Predicate, mainFromClause, x => x.ID > 0);
 
-      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
+      var selectClause = queryModel.SelectClause;
       Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedClause, Is.SameAs (mainFromClause));
 
       Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (CountResultOperator)));
@@ -444,7 +444,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (mainFromClause.ItemType, Is.SameAs (typeof (Student)));
       Assert.That (mainFromClause.ItemName, Is.EqualTo ("s"));
 
-      var groupClause = (GroupResultOperator) queryModel.SelectOrGroupClause;
+      var groupClause = (GroupResultOperator) null;
       CheckResolvedExpression<Student, bool> (groupClause.KeySelector, mainFromClause, s => s.HasDog);
       CheckResolvedExpression<Student, int> (groupClause.ElementSelector, mainFromClause, s => s.ID);
     }
@@ -463,7 +463,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (mainFromClause.ItemType, Is.SameAs (typeof (Student)));
       Assert.That (mainFromClause.ItemName, Is.EqualTo ("s"));
 
-      var groupClause = (GroupResultOperator) queryModel.SelectOrGroupClause;
+      var groupClause = (GroupResultOperator) null;
       CheckResolvedExpression<Student, bool> (groupClause.KeySelector, mainFromClause, s => s.HasDog);
       CheckResolvedExpression<Student, Student> (groupClause.ElementSelector, mainFromClause, s => s);
     }
@@ -501,8 +501,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (mainFromClause.ItemName, Is.EqualTo ("x"));
 
       var subQueryModel = ((SubQueryExpression) mainFromClause.FromExpression).QueryModel;
-      Assert.That (subQueryModel.SelectOrGroupClause, Is.InstanceOfType (typeof (GroupResultOperator)));
-      var subQueryGroupClause = (GroupResultOperator) subQueryModel.SelectOrGroupClause;
+      Assert.That (subQueryModel.SelectClause, Is.InstanceOfType (typeof (GroupResultOperator)));
+      var subQueryGroupClause = (GroupResultOperator) null;
       CheckResolvedExpression<Student, bool> (subQueryGroupClause.KeySelector, subQueryModel.MainFromClause, s => s.HasDog);
       CheckResolvedExpression<Student, int> (subQueryGroupClause.ElementSelector, subQueryModel.MainFromClause, s => s.ID);
       
@@ -516,11 +516,11 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (predicateSubQueryModel.MainFromClause.ItemType, Is.SameAs (typeof (int)));
       Assert.That (predicateSubQueryModel.MainFromClause.ItemName, NUnit.Framework.SyntaxHelpers.Text.StartsWith ("<generated>"));
       Assert.That (((QuerySourceReferenceExpression) predicateSubQueryModel.MainFromClause.FromExpression).ReferencedClause, Is.SameAs (mainFromClause));
-      Assert.That (((QuerySourceReferenceExpression) ((SelectClause) predicateSubQueryModel.SelectOrGroupClause).Selector).ReferencedClause, 
+      Assert.That (((QuerySourceReferenceExpression) predicateSubQueryModel.SelectClause.Selector).ReferencedClause, 
           Is.SameAs (predicateSubQueryModel.MainFromClause));
       Assert.That (predicateSubQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (CountResultOperator)));
       
-      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
+      var selectClause = queryModel.SelectClause;
       Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedClause, Is.SameAs (mainFromClause));
     }
 
@@ -540,13 +540,13 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (mainFromClause.ItemName, Is.EqualTo ("g"));
 
       var subQueryModel = ((SubQueryExpression) mainFromClause.FromExpression).QueryModel;
-      Assert.That (subQueryModel.SelectOrGroupClause, Is.InstanceOfType (typeof (GroupResultOperator)));
+      Assert.That (subQueryModel.SelectClause, Is.InstanceOfType (typeof (GroupResultOperator)));
       Assert.That (subQueryModel.ResultType, Is.SameAs (typeof (IQueryable<IGrouping<bool, Student>>)));
 
       var whereClause = (WhereClause) queryModel.BodyClauses[0];
       CheckResolvedExpression<IGrouping<bool, Student>, bool> (whereClause.Predicate, mainFromClause, g => g.Key);
 
-      var selectClause = (SelectClause) queryModel.SelectOrGroupClause;
+      var selectClause = queryModel.SelectClause;
       Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedClause, Is.SameAs (mainFromClause));
     }
 

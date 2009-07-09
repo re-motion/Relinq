@@ -35,7 +35,7 @@ namespace Remotion.Data.Linq.Clauses
   ///             select s;
   /// </ode>
   /// </example>
-  public class SelectClause : ISelectGroupClause
+  public class SelectClause : IClause
   {
     private Expression _selector;
 
@@ -89,11 +89,6 @@ namespace Remotion.Data.Linq.Clauses
       return result;
     }
 
-    ISelectGroupClause ISelectGroupClause.Clone (CloneContext cloneContext)
-    {
-      return Clone (cloneContext);
-    }
-
     /// <summary>
     /// Gets the execution strategy to use for this clause. The execution strategy defines how to dispatch a query
     /// to an implementation of <see cref="IQueryExecutor"/> when the <see cref="QueryProviderBase"/> needs to execute a query.
@@ -110,7 +105,7 @@ namespace Remotion.Data.Linq.Clauses
     /// </summary>
     /// <param name="transformation">The transformation object. This delegate is called for each <see cref="Expression"/> within this
     /// clause, and those expressions will be replaced with what the delegate returns.</param>
-    public void TransformExpressions (Func<Expression, Expression> transformation)
+    public virtual void TransformExpressions (Func<Expression, Expression> transformation)
     {
       ArgumentUtility.CheckNotNull ("transformation", transformation);
       Selector = transformation (Selector);

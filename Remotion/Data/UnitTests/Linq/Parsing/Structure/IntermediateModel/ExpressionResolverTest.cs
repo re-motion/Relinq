@@ -94,7 +94,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
           unresolvedExpressionWithSubQuery.Body, unresolvedExpressionWithSubQuery.Parameters[0], ClauseGenerationContext);
 
       var subQueryExpression = (SubQueryExpression) result;
-      var subQuerySelector = ((SelectClause) subQueryExpression.QueryModel.SelectOrGroupClause).Selector;
+      var subQuerySelector = subQueryExpression.QueryModel.SelectClause.Selector;
       Assert.That (subQuerySelector, Is.InstanceOfType (typeof (QuerySourceReferenceExpression)));
       Assert.That (((QuerySourceReferenceExpression) subQuerySelector).ReferencedClause, Is.SameAs (SourceClause));
     }

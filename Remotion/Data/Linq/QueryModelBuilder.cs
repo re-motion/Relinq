@@ -23,7 +23,7 @@ namespace Remotion.Data.Linq
 {
   /// <summary>
   /// Collects clauses and creates a <see cref="QueryModel"/> from them. This provides a simple way to first add all the clauses and then
-  /// create the <see cref="QueryModel"/> rather than the two-step approach (first <see cref="ISelectGroupClause"/> and <see cref="MainFromClause"/>,
+  /// create the <see cref="QueryModel"/> rather than the two-step approach (first <see cref="SelectClause"/> and <see cref="MainFromClause"/>,
   /// then the <see cref="IBodyClause"/>s) required by <see cref="QueryModel"/>'s constructor.
   /// </summary>
   public class QueryModelBuilder
@@ -32,7 +32,7 @@ namespace Remotion.Data.Linq
     private readonly List<IBodyClause> _bodyClauses = new List<IBodyClause>();
 
     public MainFromClause MainFromClause { get; private set; }
-    public ISelectGroupClause SelectOrGroupClause { get; private set; }
+    public SelectClause SelectClause { get; private set; }
 
     public ReadOnlyCollection<IBodyClause> BodyClauses
     {
@@ -58,13 +58,13 @@ namespace Remotion.Data.Linq
         return;
       }
 
-      var clauseAsSelectGroupClause = clause as ISelectGroupClause;
-      if (clauseAsSelectGroupClause != null)
+      var clauseAsSelectClause = clause as SelectClause;
+      if (clauseAsSelectClause != null)
       {
-        if (SelectOrGroupClause != null)
-          throw new InvalidOperationException ("Builder already has a SelectOrGroupClause.");
+        if (SelectClause != null)
+          throw new InvalidOperationException ("Builder already has a SelectClause.");
 
-        SelectOrGroupClause = clauseAsSelectGroupClause;
+        SelectClause = clauseAsSelectClause;
         return;
       }
 
@@ -94,10 +94,10 @@ namespace Remotion.Data.Linq
       if (MainFromClause == null)
         throw new InvalidOperationException ("No MainFromClause was added to the builder.");
 
-      if (SelectOrGroupClause == null)
+      if (SelectClause == null)
         throw new InvalidOperationException ("No SelectOrGroupClause was added to the builder.");
 
-      var queryModel = new QueryModel (resultType, MainFromClause, SelectOrGroupClause);
+      var queryModel = new QueryModel (resultType, MainFromClause, SelectClause);
 
       foreach (var bodyClause in BodyClauses)
         queryModel.BodyClauses.Add (bodyClause);

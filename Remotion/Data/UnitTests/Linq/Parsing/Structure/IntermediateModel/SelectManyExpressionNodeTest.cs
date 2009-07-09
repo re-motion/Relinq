@@ -135,7 +135,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void Apply_AdaptsSelector ()
     {
       _node.Apply (QueryModel, ClauseGenerationContext);
-      var clause = (SelectClause) QueryModel.SelectOrGroupClause;
+      var clause = QueryModel.SelectClause;
 
       Assert.That (clause.Selector, Is.SameAs (_node.GetResolvedResultSelector (ClauseGenerationContext)));
     }

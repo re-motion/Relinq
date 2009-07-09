@@ -19,7 +19,7 @@ using System.Linq.Expressions;
 namespace Remotion.Data.Linq.Clauses
 {
   /// <summary>
-  /// Represents a clause within the <see cref="QueryModel"/>. Implemented by <see cref="MainFromClause"/>, <see cref="ISelectGroupClause"/>, 
+  /// Represents a clause within the <see cref="QueryModel"/>. Implemented by <see cref="MainFromClause"/>, <see cref="SelectClause"/>, 
   /// <see cref="IBodyClause"/>, and <see cref="JoinClause"/>.
   /// </summary>
   public interface IClause

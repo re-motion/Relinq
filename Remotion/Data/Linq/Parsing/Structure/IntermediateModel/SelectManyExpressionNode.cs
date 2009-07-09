@@ -134,7 +134,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
       clauseGenerationContext.ClauseMapping.AddMapping (this, clause);
 
-      var selectClause = ((SelectClause) queryModel.SelectOrGroupClause);
+      var selectClause = queryModel.SelectClause;
       selectClause.Selector = GetResolvedResultSelector (clauseGenerationContext);
 
       return queryModel;

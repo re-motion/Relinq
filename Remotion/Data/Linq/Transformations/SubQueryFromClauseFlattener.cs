@@ -101,7 +101,7 @@ namespace Remotion.Data.Linq.Transformations
       CopyFromClauseData (innerMainFromClause, fromClause);
 
       var innerSelectorMapping = new ClauseMapping();
-      innerSelectorMapping.AddMapping (fromClause, ((SelectClause) subQueryExpression.QueryModel.SelectOrGroupClause).Selector);
+      innerSelectorMapping.AddMapping (fromClause, subQueryExpression.QueryModel.SelectClause.Selector);
       queryModel.TransformExpressions (ex => ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (ex, innerSelectorMapping, true));
 
       InsertBodyClauses (subQueryExpression.QueryModel.BodyClauses, queryModel, destinationIndex);

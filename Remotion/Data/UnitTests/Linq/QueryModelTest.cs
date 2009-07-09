@@ -48,7 +48,7 @@ namespace Remotion.Data.UnitTests.Linq
     public void Initialize ()
     {
       Assert.That (_queryModel.MainFromClause, Is.SameAs (_mainFromClause));
-      Assert.That (_queryModel.SelectOrGroupClause, Is.SameAs (_selectClause));
+      Assert.That (_queryModel.SelectClause, Is.SameAs (_selectClause));
       Assert.That (_queryModel.ResultType, Is.EqualTo (typeof (IQueryable<string>)));
     }
 
@@ -145,11 +145,11 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void Clone_HasCloneForSelectClause ()
     {
-      var selectClause = (SelectClause) _queryModel.SelectOrGroupClause;
+      var selectClause = _queryModel.SelectClause;
       var clone = _queryModel.Clone();
 
-      Assert.That (clone.SelectOrGroupClause, Is.Not.SameAs (_queryModel.SelectOrGroupClause));
-      var cloneSelectClause = ((SelectClause) clone.SelectOrGroupClause);
+      Assert.That (clone.SelectClause, Is.Not.SameAs (_queryModel.SelectClause));
+      var cloneSelectClause = clone.SelectClause;
       Assert.That (cloneSelectClause.Selector, Is.EqualTo (selectClause.Selector));
     }
 
@@ -157,13 +157,13 @@ namespace Remotion.Data.UnitTests.Linq
     public void Clone_HasCloneForSelectClause_PassesMapping ()
     {
       var oldReferencedClause = ExpressionHelper.CreateMainFromClause();
-      ((SelectClause) _queryModel.SelectOrGroupClause).Selector = new QuerySourceReferenceExpression (oldReferencedClause);
+      _queryModel.SelectClause.Selector = new QuerySourceReferenceExpression (oldReferencedClause);
 
       var newReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause());
       _clauseMapping.AddMapping (oldReferencedClause, newReferenceExpression);
 
       var clone = _queryModel.Clone (_clauseMapping);
-      Assert.That (((SelectClause) clone.SelectOrGroupClause).Selector, Is.SameAs (newReferenceExpression));
+      Assert.That (clone.SelectClause.Selector, Is.SameAs (newReferenceExpression));
     }
 
     [Test]
@@ -240,7 +240,7 @@ namespace Remotion.Data.UnitTests.Linq
       Func<Expression, Expression> transformation = ex => ex;
       var fromClauseMock = MockRepository.GenerateMock<MainFromClause> ("item", typeof (string), ExpressionHelper.CreateExpression());
       var bodyClauseMock = MockRepository.GenerateMock<IBodyClause>();
-      var selectClauseMock = MockRepository.GenerateMock<ISelectGroupClause>();
+      var selectClauseMock = MockRepository.GenerateMock<SelectClause> (ExpressionHelper.CreateExpression());
 
       var queryModel = new QueryModel (typeof (IQueryable<string>), fromClauseMock, selectClauseMock);
       queryModel.BodyClauses.Add (bodyClauseMock);
@@ -272,16 +272,16 @@ namespace Remotion.Data.UnitTests.Linq
     public void SelectOrGroupClause_Set ()
     {
       var newSelectClause = ExpressionHelper.CreateSelectClause();
-      _queryModel.SelectOrGroupClause = newSelectClause;
+      _queryModel.SelectClause = newSelectClause;
 
-      Assert.That (_queryModel.SelectOrGroupClause, Is.SameAs (newSelectClause));
+      Assert.That (_queryModel.SelectClause, Is.SameAs (newSelectClause));
     }
 
     [Test]
     [ExpectedException (typeof (ArgumentNullException))]
     public void SelectOrGroupClause_Set_Null ()
     {
-      _queryModel.SelectOrGroupClause = null;
+      _queryModel.SelectClause = null;
     }
 
     [Test]
@@ -358,7 +358,7 @@ namespace Remotion.Data.UnitTests.Linq
       var ordering = new Ordering (ExpressionHelper.CreateExpression(), OrderingDirection.Asc);
       orderByClause.Orderings.Add (ordering);
 
-      Assert.That (_queryModel.SelectOrGroupClause, Is.SameAs (_selectClause));
+      Assert.That (_queryModel.SelectClause, Is.SameAs (_selectClause));
       Assert.That (_queryModel.BodyClauses.Count, Is.EqualTo (1));
       Assert.That (_queryModel.BodyClauses, List.Contains (orderByClause));
     }

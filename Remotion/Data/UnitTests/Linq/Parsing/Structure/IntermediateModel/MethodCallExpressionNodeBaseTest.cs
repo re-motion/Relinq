@@ -77,7 +77,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       Assert.That (newQueryModel.MainFromClause.FromExpression, Is.InstanceOfType (typeof (SubQueryExpression)));
       Assert.That (((SubQueryExpression) newQueryModel.MainFromClause.FromExpression).QueryModel, Is.SameAs (_queryModelWithResultOperator));
 
-      var newSelectClause = ((SelectClause) newQueryModel.SelectOrGroupClause);
+      var newSelectClause = newQueryModel.SelectClause;
       Assert.That (((QuerySourceReferenceExpression) newSelectClause.Selector).ReferencedClause, Is.SameAs (newQueryModel.MainFromClause));
     }
 
@@ -113,7 +113,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       selectExpressionNode.Apply (newQueryModel, ClauseGenerationContext);
 
-      var newSelector = (MethodCallExpression) ((SelectClause) newQueryModel.SelectOrGroupClause).Selector;
+      var newSelector = (MethodCallExpression) newQueryModel.SelectClause.Selector;
       Assert.That (((QuerySourceReferenceExpression) newSelector.Object).ReferencedClause, Is.SameAs (newQueryModel.MainFromClause));
     }
   }

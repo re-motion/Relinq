@@ -92,7 +92,7 @@ namespace Remotion.Data.UnitTests.Linq
       Expression expression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource ());
       var queryModel = _queryProvider.GenerateQueryModel (expression);
 
-      Assert.That (((QuerySourceReferenceExpression) ((SelectClause) queryModel.SelectOrGroupClause).Selector).ReferencedClause,
+      Assert.That (((QuerySourceReferenceExpression) queryModel.SelectClause.Selector).ReferencedClause,
           Is.SameAs (queryModel.MainFromClause));
     }
 
