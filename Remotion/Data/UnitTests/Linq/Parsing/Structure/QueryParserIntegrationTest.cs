@@ -431,7 +431,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
-    [Ignore ("TODO 1328")]
     public void GroupBy ()
     {
       var query = (from s in _querySource group s.ID by s.HasDog);
@@ -444,13 +443,15 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (mainFromClause.ItemType, Is.SameAs (typeof (Student)));
       Assert.That (mainFromClause.ItemName, Is.EqualTo ("s"));
 
-      var groupClause = (GroupResultOperator) null;
-      CheckResolvedExpression<Student, bool> (groupClause.KeySelector, mainFromClause, s => s.HasDog);
-      CheckResolvedExpression<Student, int> (groupClause.ElementSelector, mainFromClause, s => s.ID);
+      var selectClause = queryModel.SelectClause;
+      CheckResolvedExpression<Student, Student> (selectClause.Selector, mainFromClause, s => s);
+
+      var groupResultOperator = (GroupResultOperator) queryModel.ResultOperators[0];
+      CheckResolvedExpression<Student, bool> (groupResultOperator.KeySelector, mainFromClause, s => s.HasDog);
+      CheckResolvedExpression<Student, int> (groupResultOperator.ElementSelector, mainFromClause, s => s.ID);
     }
 
     [Test]
-    [Ignore ("TODO 1328")]
     public void GroupByWithoutElementSelector ()
     {
       var query = _querySource.GroupBy (s => s.HasDog);
@@ -463,13 +464,15 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (mainFromClause.ItemType, Is.SameAs (typeof (Student)));
       Assert.That (mainFromClause.ItemName, Is.EqualTo ("s"));
 
-      var groupClause = (GroupResultOperator) null;
-      CheckResolvedExpression<Student, bool> (groupClause.KeySelector, mainFromClause, s => s.HasDog);
-      CheckResolvedExpression<Student, Student> (groupClause.ElementSelector, mainFromClause, s => s);
+      var selectClause = queryModel.SelectClause;
+      CheckResolvedExpression<Student, Student> (selectClause.Selector, mainFromClause, s => s);
+
+      var groupResultOperator = (GroupResultOperator) queryModel.ResultOperators[0];
+      CheckResolvedExpression<Student, bool> (groupResultOperator.KeySelector, mainFromClause, s => s.HasDog);
+      CheckResolvedExpression<Student, Student> (groupResultOperator.ElementSelector, mainFromClause, s => s);
     }
 
     [Test]
-    [Ignore ("TODO 1328")]
     public void GroupIntoWithAggregate ()
     {
       var query = from s in _querySource 
@@ -501,10 +504,12 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (mainFromClause.ItemName, Is.EqualTo ("x"));
 
       var subQueryModel = ((SubQueryExpression) mainFromClause.FromExpression).QueryModel;
-      Assert.That (subQueryModel.SelectClause, Is.InstanceOfType (typeof (GroupResultOperator)));
-      var subQueryGroupClause = (GroupResultOperator) null;
-      CheckResolvedExpression<Student, bool> (subQueryGroupClause.KeySelector, subQueryModel.MainFromClause, s => s.HasDog);
-      CheckResolvedExpression<Student, int> (subQueryGroupClause.ElementSelector, subQueryModel.MainFromClause, s => s.ID);
+      var subQuerySelectClause = queryModel.SelectClause;
+      CheckResolvedExpression<Student, Student> (subQuerySelectClause.Selector, mainFromClause, s => s);
+      
+      var subQueryGroupResultOperator = (GroupResultOperator) subQueryModel.ResultOperators[0];
+      CheckResolvedExpression<Student, bool> (subQueryGroupResultOperator.KeySelector, subQueryModel.MainFromClause, s => s.HasDog);
+      CheckResolvedExpression<Student, int> (subQueryGroupResultOperator.ElementSelector, subQueryModel.MainFromClause, s => s.ID);
       
       Assert.That (subQueryModel.ResultType, Is.SameAs (typeof (IQueryable<IGrouping<bool, int>>)));
 
@@ -525,7 +530,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
-    [Ignore ("TODO 1328")]
     public void GroupByFollowedByWhere ()
     {
       var query = (from s in ExpressionHelper.CreateQuerySource ()
@@ -540,7 +544,11 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (mainFromClause.ItemName, Is.EqualTo ("g"));
 
       var subQueryModel = ((SubQueryExpression) mainFromClause.FromExpression).QueryModel;
-      Assert.That (subQueryModel.SelectClause, Is.InstanceOfType (typeof (GroupResultOperator)));
+      var subQuerySelectClause = subQueryModel.SelectClause;
+      CheckResolvedExpression<Student, Student> (subQuerySelectClause.Selector, subQueryModel.MainFromClause, s => s);
+
+      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (GroupResultOperator)));
+
       Assert.That (subQueryModel.ResultType, Is.SameAs (typeof (IQueryable<IGrouping<bool, Student>>)));
 
       var whereClause = (WhereClause) queryModel.BodyClauses[0];
