@@ -41,7 +41,6 @@ namespace Remotion.Data.UnitTests.Linq.Transformations
 
     private MainFromClause _innerMainFromClauseA;
     private WhereClause _innerWhereClauseA;
-    private OrderByClause _innerOrderByA;
 
     private SubQueryFromClauseFlattener _visitor;
     private IQueryable<Student_Detail> _detailSource;
@@ -57,7 +56,6 @@ namespace Remotion.Data.UnitTests.Linq.Transformations
                   from sd in
                       (from sector in _sectorSource
                        where sector.ID > 10
-                       orderby sector.ID
                        select sector.Student_Detail)
                   from s2 in s1.Friends
                   where sd.Subject == "Maths"
@@ -73,7 +71,6 @@ namespace Remotion.Data.UnitTests.Linq.Transformations
       var subQueryExpressionA = (SubQueryExpression) _additionalFromClause1.FromExpression;
       _innerMainFromClauseA = subQueryExpressionA.QueryModel.MainFromClause;
       _innerWhereClauseA = (WhereClause) subQueryExpressionA.QueryModel.BodyClauses[0];
-      _innerOrderByA = (OrderByClause) subQueryExpressionA.QueryModel.BodyClauses[1];
 
       _visitor = new SubQueryFromClauseFlattener();
     }
@@ -106,9 +103,8 @@ namespace Remotion.Data.UnitTests.Linq.Transformations
       _visitor.VisitAdditionalFromClause (_additionalFromClause1, _queryModel, 0);
 
       Assert.That (_queryModel.BodyClauses[1], Is.SameAs (_innerWhereClauseA));
-      Assert.That (_queryModel.BodyClauses[2], Is.SameAs (_innerOrderByA));
-      Assert.That (_queryModel.BodyClauses[3], Is.SameAs (_additionalFromClause2));
-      Assert.That (_queryModel.BodyClauses[4], Is.SameAs (_whereClause));
+      Assert.That (_queryModel.BodyClauses[2], Is.SameAs (_additionalFromClause2));
+      Assert.That (_queryModel.BodyClauses[3], Is.SameAs (_whereClause));
     }
 
     [Test]
@@ -116,8 +112,8 @@ namespace Remotion.Data.UnitTests.Linq.Transformations
     {
       _visitor.VisitAdditionalFromClause (_additionalFromClause1, _queryModel, 0);
 
-      var orderingExpression = (MemberExpression) _innerOrderByA.Orderings[0].Expression;
-      var referenceExpression = (QuerySourceReferenceExpression) orderingExpression.Expression;
+      var predicateLeftSide = (MemberExpression) ((BinaryExpression) _innerWhereClauseA.Predicate).Left;
+      var referenceExpression = (QuerySourceReferenceExpression) predicateLeftSide.Expression;
       Assert.That (referenceExpression.ReferencedClause, Is.SameAs (_additionalFromClause1));
     }
 
@@ -146,7 +142,21 @@ namespace Remotion.Data.UnitTests.Linq.Transformations
       var queryModel = ExpressionHelper.CreateQueryModel ();
       queryModel.ResultOperators.Add (new DistinctResultOperator ());
       var clause = new AdditionalFromClause ("x", typeof (Student), new SubQueryExpression (queryModel));
-      _visitor.VisitAdditionalFromClause (clause, queryModel, 0);
+      _visitor.VisitAdditionalFromClause (clause, _queryModel, 0);
+    }
+
+    [Test]
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "The subquery "
+        + "'from Student s in TestQueryable<Student>() orderby 0 asc select 0' cannot be flattened and pulled out of the from clause because it "
+        + "contains an OrderByClause.")]
+    public void VisitAdditionalFromClause_ThrowsOnOrderBy ()
+    {
+      var queryModel = ExpressionHelper.CreateQueryModel ();
+      var orderByClause = new OrderByClause ();
+      orderByClause.Orderings.Add (new Ordering (Expression.Constant (0), OrderingDirection.Asc));
+      queryModel.BodyClauses.Add (orderByClause);
+      var clause = new AdditionalFromClause ("x", typeof (Student), new SubQueryExpression (queryModel));
+      _visitor.VisitAdditionalFromClause (clause, _queryModel, 0);
     }
 
     [Test]
@@ -154,7 +164,6 @@ namespace Remotion.Data.UnitTests.Linq.Transformations
     {
       var mainFromSubQuery = from sd in _detailSource
                              where sd.Subject == "Maths"
-                             orderby sd.ID
                              select sd.Student;
       var parsedMainFromSubQuery = ExpressionHelper.ParseQuery (mainFromSubQuery);
 
@@ -168,7 +177,7 @@ namespace Remotion.Data.UnitTests.Linq.Transformations
       var expectedSelector = ExpressionHelper.Resolve<Student_Detail, string> (parsedQuery.MainFromClause, sd => sd.Student.First);
 
       Assert.That (parsedQuery.MainFromClause.FromExpression, Is.Not.InstanceOfType (typeof (SubQueryExpression)));
-      Assert.That (parsedQuery.BodyClauses.Count, Is.EqualTo (2));
+      Assert.That (parsedQuery.BodyClauses.Count, Is.EqualTo (1));
       ExpressionTreeComparer.CheckAreEqualTrees (expectedSelector, parsedQuery.SelectClause.Selector);
     }
 
@@ -180,7 +189,6 @@ namespace Remotion.Data.UnitTests.Linq.Transformations
                   from sd in
                     (from sector in _sectorSource
                      where sector.ID > 10
-                     orderby sector.ID
                      select sector.Student_Detail)
                   from s2 in s1.Friends
                   where sd.Subject == "Maths"
@@ -193,7 +201,6 @@ namespace Remotion.Data.UnitTests.Linq.Transformations
       var queryModel = ExpressionHelper.ParseQuery (query);
       var mainFromSubQuery = from sd in _detailSource
                              where sd.Subject == "Maths"
-                             orderby sd.ID
                              select sd.Student;
       var parsedMainFromSubQuery = ExpressionHelper.ParseQuery (mainFromSubQuery);
       queryModel.MainFromClause.FromExpression = new SubQueryExpression (parsedMainFromSubQuery); // change to be a from clause with a sub query
@@ -202,10 +209,8 @@ namespace Remotion.Data.UnitTests.Linq.Transformations
 
       var expectedQuery = from sd in _detailSource
                           where sd.Subject == "Maths"
-                          orderby sd.ID
                           from sector in _sectorSource
                           where sector.ID > 10
-                          orderby sector.ID
                           from s2 in sd.Student.Friends
                           where sector.Student_Detail.Subject == "Maths"
                           from a in sd.Student.Friends

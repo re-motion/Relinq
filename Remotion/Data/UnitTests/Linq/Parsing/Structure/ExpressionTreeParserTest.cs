@@ -241,9 +241,19 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
-    public void InferAssociatedIdentifierForSource ()
+    public void InferAssociatedIdentifierForSource_WithUnary ()
     {
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression (() => _intSource.Select (i => i));
+
+      var identifier = (string) PrivateInvoke.InvokeNonPublicMethod (_expressionTreeParser, "InferAssociatedIdentifierForSource", methodCallExpression);
+
+      Assert.That (identifier, Is.EqualTo ("i"));
+    }
+
+    [Test]
+    public void InferAssociatedIdentifierForSource_WithLambda ()
+    {
+      var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression (() => ((IEnumerable<int>)_intSource).Select (i => i));
 
       var identifier = (string) PrivateInvoke.InvokeNonPublicMethod (_expressionTreeParser, "InferAssociatedIdentifierForSource", methodCallExpression);
 

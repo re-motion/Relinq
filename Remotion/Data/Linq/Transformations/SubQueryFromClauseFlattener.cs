@@ -21,6 +21,7 @@ using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Utilities;
+using System.Linq;
 
 namespace Remotion.Data.Linq.Transformations
 {
@@ -95,7 +96,7 @@ namespace Remotion.Data.Linq.Transformations
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
-      CheckForResultOperators (subQueryExpression.QueryModel);
+      CheckFlattenable (subQueryExpression.QueryModel);
 
       var innerMainFromClause = subQueryExpression.QueryModel.MainFromClause;
       CopyFromClauseData (innerMainFromClause, fromClause);
@@ -111,7 +112,7 @@ namespace Remotion.Data.Linq.Transformations
       queryModel.TransformExpressions (ex => ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (ex, innerBodyClauseMapping, true));
     }
 
-    protected virtual void CheckForResultOperators (QueryModel subQueryModel)
+    protected virtual void CheckFlattenable (QueryModel subQueryModel)
     {
       ArgumentUtility.CheckNotNull ("subQueryModel", subQueryModel);
 
@@ -119,6 +120,14 @@ namespace Remotion.Data.Linq.Transformations
       {
         var message = string.Format (
             "The subquery '{0}' cannot be flattened and pulled out of the from clause because it contains result operators.",
+            subQueryModel);
+        throw new NotSupportedException (message);
+      }
+
+      if (subQueryModel.BodyClauses.Any (bc => bc is OrderByClause))
+      {
+        var message = string.Format (
+            "The subquery '{0}' cannot be flattened and pulled out of the from clause because it contains an OrderByClause.",
             subQueryModel);
         throw new NotSupportedException (message);
       }

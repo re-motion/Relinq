@@ -103,14 +103,29 @@ namespace Remotion.Data.Linq.Parsing.Structure
     /// </summary>
     private string InferAssociatedIdentifierForSource (MethodCallExpression methodCallExpression)
     {
-      if (methodCallExpression.Arguments.Count > 1 && methodCallExpression.Arguments[1] is UnaryExpression)
-      {
-        var operand = ((UnaryExpression) methodCallExpression.Arguments[1]).Operand;
-        var lambdaExpression = operand as LambdaExpression;
-        if (lambdaExpression != null && lambdaExpression.Parameters.Count == 1)
+      var lambdaExpression = GetLambdaArgument (methodCallExpression);
+      if (lambdaExpression != null && lambdaExpression.Parameters.Count == 1)
           return lambdaExpression.Parameters[0].Name;
+      else
+        return null;
+    }
+
+    private LambdaExpression GetLambdaArgument (MethodCallExpression methodCallExpression)
+    {
+      if (methodCallExpression.Arguments.Count <= 1)
+        return null;
+      
+      var lambdaExpression = methodCallExpression.Arguments[1] as LambdaExpression;
+      if (lambdaExpression != null)
+        return lambdaExpression;
+      else
+      {
+        var unaryExpression = methodCallExpression.Arguments[1] as UnaryExpression;
+        if (unaryExpression != null)
+          return unaryExpression.Operand as LambdaExpression;
+        else
+          return null;
       }
-      return null;
     }
   }
 }
