@@ -14,18 +14,16 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
-  public class FirstResultOperator : NonScalarResultOperatorBase
+  public class FirstResultOperator : ResultOperatorBase
   {
     public FirstResultOperator (bool returnDefaultWhenEmpty)
-        : base (
-            returnDefaultWhenEmpty ? SingleExecutionStrategy.InstanceWithDefaultWhenEmpty : SingleExecutionStrategy.InstanceNoDefaultWhenEmpty)
+        : base (returnDefaultWhenEmpty ? SingleExecutionStrategy.InstanceWithDefaultWhenEmpty : SingleExecutionStrategy.InstanceNoDefaultWhenEmpty)
     {
       ReturnDefaultWhenEmpty = returnDefaultWhenEmpty;
     }
@@ -37,16 +35,15 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new FirstResultOperator (ReturnDefaultWhenEmpty);
     }
 
-    public override IEnumerable<T> ExecuteInMemory<T> (IEnumerable<T> items)
+    public override object ExecuteInMemory (object input)
     {
-      ArgumentUtility.CheckNotNull ("items", items);
-
+      ArgumentUtility.CheckNotNull ("input", input);
       if (ReturnDefaultWhenEmpty)
-        return new[] { items.FirstOrDefault() };
+        return InvokeGenericOnEnumerable (input, e => e.FirstOrDefault ());
       else
-        return new[] { items.First() };
+        return InvokeGenericOnEnumerable (input, e => e.First ());
     }
-
+    
     public override string ToString ()
     {
       if (ReturnDefaultWhenEmpty)

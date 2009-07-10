@@ -14,18 +14,16 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
-  public class LastResultOperator : NonScalarResultOperatorBase
+  public class LastResultOperator : ResultOperatorBase
   {
     public LastResultOperator (bool returnDefaultWhenEmpty)
-        : base (
-            returnDefaultWhenEmpty ? SingleExecutionStrategy.InstanceWithDefaultWhenEmpty : SingleExecutionStrategy.InstanceNoDefaultWhenEmpty)
+        : base (returnDefaultWhenEmpty ? SingleExecutionStrategy.InstanceWithDefaultWhenEmpty : SingleExecutionStrategy.InstanceNoDefaultWhenEmpty)
     {
       ReturnDefaultWhenEmpty = returnDefaultWhenEmpty;
     }
@@ -37,14 +35,13 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new LastResultOperator (ReturnDefaultWhenEmpty);
     }
 
-    public override IEnumerable<T> ExecuteInMemory<T> (IEnumerable<T> items)
+    public override object ExecuteInMemory (object input)
     {
-      ArgumentUtility.CheckNotNull ("items", items);
-
+      ArgumentUtility.CheckNotNull ("input", input);
       if (ReturnDefaultWhenEmpty)
-        return new[] { items.LastOrDefault() };
+        return InvokeGenericOnEnumerable (input, e => e.LastOrDefault ());
       else
-        return new[] { items.Last() };
+        return InvokeGenericOnEnumerable (input, e => e.Last ());
     }
 
     public override string ToString ()

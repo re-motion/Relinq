@@ -51,7 +51,6 @@
   <ItemGroup>
     <Compile Include="Backend\ContainsFulltextExtensionMethod.cs" />
     <Compile Include="Backend\DetailParserUtility.cs" />
-    <Compile Include="Backend\InMemoryGroupByQueryExecutor.cs" />
     <Compile Include="Clauses\AdditionalFromClause.cs" />
     <Compile Include="Clauses\CloneContext.cs" />
     <Compile Include="Clauses\ExecutionStrategies\CollectionExecutionStrategy.cs" />
@@ -60,8 +59,6 @@
     <Compile Include="Clauses\ClauseMapping.cs" />
     <Compile Include="Clauses\ExpressionTreeVisitors\ReferenceReplacingExpressionTreeVisitor.cs" />
     <Compile Include="Clauses\IExecutionStrategy.cs" />
-    <Compile Include="Clauses\ResultOperators\NonScalarResultOperatorBase.cs" />
-    <Compile Include="Clauses\ResultOperators\ScalarResultOperatorBase.cs" />
     <Compile Include="Clauses\ResultOperators\SumResultOperator.cs" />
     <Compile Include="Clauses\ResultOperators\MaxResultOperator.cs" />
     <Compile Include="Clauses\ResultOperators\MinResultOperator.cs" />

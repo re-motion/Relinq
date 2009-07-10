@@ -21,7 +21,7 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
-  public class SingleResultOperator : NonScalarResultOperatorBase
+  public class SingleResultOperator : ResultOperatorBase
   {
     public SingleResultOperator (bool returnDefaultWhenEmpty)
         : base (returnDefaultWhenEmpty ? SingleExecutionStrategy.InstanceWithDefaultWhenEmpty : SingleExecutionStrategy.InstanceNoDefaultWhenEmpty)
@@ -36,14 +36,13 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new SingleResultOperator (ReturnDefaultWhenEmpty);
     }
 
-    public override IEnumerable<T> ExecuteInMemory<T> (IEnumerable<T> items)
+    public override object ExecuteInMemory (object input)
     {
-      ArgumentUtility.CheckNotNull ("items", items);
-
+      ArgumentUtility.CheckNotNull ("input", input);
       if (ReturnDefaultWhenEmpty)
-        return new[] { items.SingleOrDefault() };
+        return InvokeGenericOnEnumerable (input, e => e.SingleOrDefault ());
       else
-        return new[] { items.Single() };
+        return InvokeGenericOnEnumerable (input, e => e.Single ());
     }
 
     public override string ToString ()

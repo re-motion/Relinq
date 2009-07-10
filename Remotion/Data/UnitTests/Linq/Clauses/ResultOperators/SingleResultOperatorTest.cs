@@ -63,7 +63,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
        var items = new[] { 1 };
        var result = _resultOperatorWithDefault.ExecuteInMemory (items);
 
-       Assert.That (result, Is.EqualTo (new[] { 1 }));
+       Assert.That (result, Is.EqualTo (1));
      }
 
      [Test]
@@ -72,7 +72,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
        var items = new int[0];
        var result = _resultOperatorWithDefault.ExecuteInMemory (items);
 
-       Assert.That (result, Is.EqualTo (new[] { 0 }));
+       Assert.That (result, Is.EqualTo (0));
      }
 
      [Test]

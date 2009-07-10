@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
@@ -50,7 +51,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       var items = new[] { 1, 2, 3, 0, 2 };
       var result = _resultOperator.ExecuteInMemory (items);
 
-      Assert.That (result.Cast<int>().ToArray(), Is.EqualTo (new[] { 1, 2 }));
+      Assert.That (((IEnumerable<int>)result).ToArray(), Is.EqualTo (new[] { 1, 2 }));
     }
 
     [Test]

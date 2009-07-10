@@ -21,7 +21,7 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
-  public class TakeResultOperator : NonScalarResultOperatorBase
+  public class TakeResultOperator : ResultOperatorBase
   {
     public int Count { get; set; }
 
@@ -31,15 +31,16 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       Count = count;
     }
 
+
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
       return new TakeResultOperator (Count);
     }
 
-    public override IEnumerable<T> ExecuteInMemory<T> (IEnumerable<T> items)
+    public override object ExecuteInMemory (object input)
     {
-      ArgumentUtility.CheckNotNull ("items", items);
-      return items.Take (Count);
+      ArgumentUtility.CheckNotNull ("input", input);
+      return InvokeGenericOnEnumerable (input, e => e.Take (0), Count);
     }
 
     public override string ToString ()

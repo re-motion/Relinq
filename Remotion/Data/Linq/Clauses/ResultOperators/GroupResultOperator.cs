@@ -21,6 +21,7 @@ using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Utilities;
+using System.Linq;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
@@ -38,7 +39,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   ///             group s by s.Country;
   /// </ode>
   /// </example>
-  public class GroupResultOperator : NonScalarResultOperatorBase
+  public class GroupResultOperator : ResultOperatorBase
   {
     private Expression _keySelector;
     private Expression _elementSelector;
@@ -108,9 +109,10 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       KeySelector = transformation (KeySelector);
     }
 
-    public override IEnumerable<T> ExecuteInMemory<T> (IEnumerable<T> items)
+    public override object ExecuteInMemory (object input)
     {
-      throw new NotImplementedException(); // TODO 1319
+      ArgumentUtility.CheckNotNull ("input", input);
+      throw new NotImplementedException ();
     }
 
     public override string ToString ()

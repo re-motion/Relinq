@@ -17,27 +17,34 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
-  public class SumResultOperator : ScalarResultOperatorBase
+  public class SumResultOperator : ResultOperatorBase
   {
+    public SumResultOperator ()
+        : base (ScalarExecutionStrategy.Instance)
+    {
+    }
+
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
       return new SumResultOperator();
     }
 
-    public override TScalar ExecuteInMemory<TItem, TScalar> (IEnumerable<TItem> items)
+    public override object ExecuteInMemory (object input)
     {
-      ArgumentUtility.CheckNotNull ("items", items);
-      var method = typeof (Enumerable).GetMethod ("Sum", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof (IEnumerable<TItem>) }, null);
+      ArgumentUtility.CheckNotNull ("input", input);
+
+      var method = typeof (Enumerable).GetMethod ("Sum", BindingFlags.Public | BindingFlags.Static, null, new[] { input.GetType() }, null);
       if (method == null)
       {
-        var message = string.Format ("Cannot calculate the sum of elements of type '{0}' in memory.", typeof (TItem).FullName);
+        var message = string.Format ("Cannot calculate the sum of an object of type '{0}' in memory.", input.GetType().FullName);
         throw new NotSupportedException (message);
       }
-      return (TScalar) method.Invoke (null, new object[] { items });
+      return method.Invoke (null, new[] { input });
     }
 
     public override string ToString ()

@@ -25,6 +25,11 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     {
     }
 
+    public override object ExecuteInMemory (object input)
+    {
+      throw new NotImplementedException();
+    }
+
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
       throw new NotImplementedException();
