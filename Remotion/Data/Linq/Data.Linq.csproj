@@ -59,6 +59,7 @@
     <Compile Include="Clauses\ClauseMapping.cs" />
     <Compile Include="Clauses\ExpressionTreeVisitors\ReferenceReplacingExpressionTreeVisitor.cs" />
     <Compile Include="Clauses\IExecutionStrategy.cs" />
+    <Compile Include="Clauses\ResultOperators\InputDependentExpression.cs" />
     <Compile Include="Clauses\ResultOperators\SumResultOperator.cs" />
     <Compile Include="Clauses\ResultOperators\MaxResultOperator.cs" />
     <Compile Include="Clauses\ResultOperators\MinResultOperator.cs" />

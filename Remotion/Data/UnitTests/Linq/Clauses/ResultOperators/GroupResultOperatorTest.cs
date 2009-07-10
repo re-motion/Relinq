@@ -21,6 +21,7 @@ using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.UnitTests.Linq.Parsing;
 
 namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
 {
@@ -38,16 +39,9 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     }
 
     [Test]
-    public void Initialize()
+    public void ExecutionStrategy()
     {
-      Expression keySelector = ExpressionHelper.CreateExpression();
-      Expression elementSelector = ExpressionHelper.CreateExpression ();
-
-      var groupClause = new GroupResultOperator (keySelector, elementSelector);
-
-      Assert.That (groupClause.KeySelector, Is.SameAs (keySelector));
-      Assert.That (groupClause.ElementSelector, Is.SameAs (elementSelector));
-      Assert.That (groupClause.ExecutionStrategy, Is.SameAs (CollectionExecutionStrategy.Instance));
+      Assert.That (_resultOperator.ExecutionStrategy, Is.SameAs (CollectionExecutionStrategy.Instance));
     }
 
     [Test]
@@ -57,16 +51,22 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
 
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (_resultOperator));
-      Assert.That (clone.KeySelector, Is.SameAs (_resultOperator.KeySelector));
-      Assert.That (clone.ElementSelector, Is.SameAs (_resultOperator.ElementSelector));
+
+      ExpressionTreeComparer.CheckAreEqualTrees (_resultOperator.KeySelector.DependentExpression, clone.KeySelector.DependentExpression);
+      ExpressionTreeComparer.CheckAreEqualTrees (_resultOperator.ElementSelector.DependentExpression, clone.ElementSelector.DependentExpression);
+      
+      Assert.That (clone.KeySelector.ExpectedInput, Is.SameAs (_resultOperator.KeySelector.ExpectedInput));
+      Assert.That (clone.ElementSelector.ExpectedInput, Is.SameAs (_resultOperator.ElementSelector.ExpectedInput));
     }
 
     [Test]
     public void Clone_AdjustsExpressions ()
     {
       var referencedExpression = ExpressionHelper.CreateMainFromClause();
-      var keySelector = new QuerySourceReferenceExpression (referencedExpression);
-      var elementSelector = new QuerySourceReferenceExpression (referencedExpression);
+      
+      var keySelector = ExpressionHelper.CreateInputDependentExpression (new QuerySourceReferenceExpression (referencedExpression));
+      var elementSelector = ExpressionHelper.CreateInputDependentExpression (new QuerySourceReferenceExpression (referencedExpression));
+      
       var groupClause = new GroupResultOperator (keySelector, elementSelector);
 
       var newReferencedExpression = ExpressionHelper.CreateMainFromClause ();
@@ -74,16 +74,18 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
 
       var clone = (GroupResultOperator) groupClause.Clone (_cloneContext);
 
-      Assert.That (((QuerySourceReferenceExpression) clone.KeySelector).ReferencedClause, Is.SameAs (newReferencedExpression));
-      Assert.That (((QuerySourceReferenceExpression) clone.ElementSelector).ReferencedClause, Is.SameAs (newReferencedExpression));
+      Assert.That (((QuerySourceReferenceExpression) clone.KeySelector.ResolvedExpression).ReferencedClause, Is.SameAs (newReferencedExpression));
+      Assert.That (((QuerySourceReferenceExpression) clone.ElementSelector.ResolvedExpression).ReferencedClause, Is.SameAs (newReferencedExpression));
     }
 
     [Test]
-    public void TransformExpressions ()
+    public void TransformExpressions_ExpectedInput ()
     {
       var oldKeySelector = ExpressionHelper.CreateExpression ();
       var oldElementSelector = ExpressionHelper.CreateExpression ();
-      var clause = new GroupResultOperator (oldKeySelector, oldElementSelector);
+      var clause = new GroupResultOperator (
+          ExpressionHelper.CreateInputDependentExpression (oldKeySelector), 
+          ExpressionHelper.CreateInputDependentExpression (oldElementSelector));
 
       var newKeySelector = ExpressionHelper.CreateExpression ();
       var newElementSelector = ExpressionHelper.CreateExpression ();
@@ -94,22 +96,51 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
         else if (ex == oldKeySelector)
           return newKeySelector;
         else
-        {
-          Assert.Fail();
-          return null;
-        }
+          return ex;
       });
 
-      Assert.That (clause.KeySelector, Is.SameAs (newKeySelector));
-      Assert.That (clause.ElementSelector, Is.SameAs (newElementSelector));
+      Assert.That (clause.KeySelector.ExpectedInput, Is.SameAs (newKeySelector));
+      Assert.That (clause.ElementSelector.ExpectedInput, Is.SameAs (newElementSelector));
+    }
+
+    [Test]
+    public void TransformExpressions_DependentExpressionBody ()
+    {
+      var oldKeySelector = ExpressionHelper.CreateExpression ();
+      var oldElementSelector = ExpressionHelper.CreateExpression ();
+
+      var expectedInput = ExpressionHelper.CreateExpression ();
+      var parameter = Expression.Parameter (expectedInput.Type, "x");
+
+      var inputDependentKeySelector = new InputDependentExpression (Expression.Lambda (oldKeySelector, parameter), expectedInput);
+      var inputDependentElementSelector = new InputDependentExpression (Expression.Lambda (oldElementSelector, parameter), expectedInput);
+
+      var clause = new GroupResultOperator (inputDependentKeySelector, inputDependentElementSelector);
+
+      var newKeySelector = ExpressionHelper.CreateExpression ();
+      var newElementSelector = ExpressionHelper.CreateExpression ();
+      clause.TransformExpressions (ex =>
+      {
+        if (ex == oldElementSelector)
+          return newElementSelector;
+        else if (ex == oldKeySelector)
+          return newKeySelector;
+        else
+          return ex;
+      });
+
+      Assert.That (clause.KeySelector.DependentExpression.Body, Is.SameAs (newKeySelector));
+      Assert.That (clause.ElementSelector.DependentExpression.Body, Is.SameAs (newElementSelector));
     }
 
     [Test]
     public new void ToString ()
     {
-      var groupClause = new GroupResultOperator (Expression.Constant (1), Expression.Constant (0));
+      var resultOperator = new GroupResultOperator (
+          ExpressionHelper.CreateInputDependentExpression (Expression.Constant (1)), 
+          ExpressionHelper.CreateInputDependentExpression (Expression.Constant (0)));
 
-      Assert.That (groupClause.ToString (), Is.EqualTo ("GroupBy(1, 0)"));
+      Assert.That (resultOperator.ToString (), Is.EqualTo ("GroupBy(1, 0)"));
     }
   }
 }

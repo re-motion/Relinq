@@ -14,14 +14,11 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Utilities;
-using System.Linq;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
@@ -41,15 +38,15 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   /// </example>
   public class GroupResultOperator : ResultOperatorBase
   {
-    private Expression _keySelector;
-    private Expression _elementSelector;
+    private InputDependentExpression _keySelector;
+    private InputDependentExpression _elementSelector;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GroupResultOperator"/> class.
     /// </summary>
     /// <param name="keySelector">The selector retrieving the key by which to group items.</param>
     /// <param name="elementSelector">The selector retrieving the elements to group.</param>
-    public GroupResultOperator (Expression keySelector, Expression elementSelector)
+    public GroupResultOperator (InputDependentExpression keySelector, InputDependentExpression elementSelector)
       : base (CollectionExecutionStrategy.Instance)
     {
       ArgumentUtility.CheckNotNull ("elementSelector", elementSelector);
@@ -63,8 +60,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     /// Gets or sets the selector retrieving the key by which to group items.
     /// </summary>
     /// <value>The key selector.</value>
-    [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (KeySelector),nq}")]
-    public Expression KeySelector
+    public InputDependentExpression KeySelector
     {
       get { return _keySelector; }
       set { _keySelector = ArgumentUtility.CheckNotNull ("value", value); }
@@ -74,8 +70,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     /// Gets or sets the selector retrieving the elements to group.
     /// </summary>
     /// <value>The element selector.</value>
-    [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (ElementSelector),nq}")]
-    public Expression ElementSelector
+    public InputDependentExpression ElementSelector
     {
       get { return _elementSelector; }
       set { _elementSelector = ArgumentUtility.CheckNotNull ("value", value); }
@@ -105,8 +100,13 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     {
       ArgumentUtility.CheckNotNull ("transformation", transformation);
 
-      ElementSelector = transformation (ElementSelector);
-      KeySelector = transformation (KeySelector);
+      ElementSelector = new InputDependentExpression (
+          Expression.Lambda (transformation (ElementSelector.DependentExpression.Body), ElementSelector.InputParameter),
+          transformation (ElementSelector.ExpectedInput));
+
+      KeySelector = new InputDependentExpression (
+          Expression.Lambda (transformation (KeySelector.DependentExpression.Body), KeySelector.InputParameter),
+          transformation (KeySelector.ExpectedInput));
     }
 
     public override object ExecuteInMemory (object input)
@@ -117,10 +117,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
 
     public override string ToString ()
     {
-      return string.Format (
-          "GroupBy({0}, {1})",
-          FormattingExpressionTreeVisitor.Format (KeySelector),
-          FormattingExpressionTreeVisitor.Format (ElementSelector));
+      return string.Format ("GroupBy({0}, {1})", KeySelector, ElementSelector);
     }
   }
 }

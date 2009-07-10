@@ -447,8 +447,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       CheckResolvedExpression<Student, Student> (selectClause.Selector, mainFromClause, s => s);
 
       var groupResultOperator = (GroupResultOperator) queryModel.ResultOperators[0];
-      CheckResolvedExpression<Student, bool> (groupResultOperator.KeySelector, mainFromClause, s => s.HasDog);
-      CheckResolvedExpression<Student, int> (groupResultOperator.ElementSelector, mainFromClause, s => s.ID);
+      CheckResolvedExpression<Student, bool> (groupResultOperator.KeySelector.ResolvedExpression, mainFromClause, s => s.HasDog);
+      CheckResolvedExpression<Student, int> (groupResultOperator.ElementSelector.ResolvedExpression, mainFromClause, s => s.ID);
     }
 
     [Test]
@@ -468,8 +468,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       CheckResolvedExpression<Student, Student> (selectClause.Selector, mainFromClause, s => s);
 
       var groupResultOperator = (GroupResultOperator) queryModel.ResultOperators[0];
-      CheckResolvedExpression<Student, bool> (groupResultOperator.KeySelector, mainFromClause, s => s.HasDog);
-      CheckResolvedExpression<Student, Student> (groupResultOperator.ElementSelector, mainFromClause, s => s);
+      CheckResolvedExpression<Student, bool> (groupResultOperator.KeySelector.ResolvedExpression, mainFromClause, s => s.HasDog);
+      CheckResolvedExpression<Student, Student> (groupResultOperator.ElementSelector.ResolvedExpression, mainFromClause, s => s);
     }
 
     [Test]
@@ -508,8 +508,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       CheckResolvedExpression<Student, Student> (subQuerySelectClause.Selector, mainFromClause, s => s);
       
       var subQueryGroupResultOperator = (GroupResultOperator) subQueryModel.ResultOperators[0];
-      CheckResolvedExpression<Student, bool> (subQueryGroupResultOperator.KeySelector, subQueryModel.MainFromClause, s => s.HasDog);
-      CheckResolvedExpression<Student, int> (subQueryGroupResultOperator.ElementSelector, subQueryModel.MainFromClause, s => s.ID);
+      CheckResolvedExpression<Student, bool> (subQueryGroupResultOperator.KeySelector.ResolvedExpression, subQueryModel.MainFromClause, s => s.HasDog);
+      CheckResolvedExpression<Student, int> (subQueryGroupResultOperator.ElementSelector.ResolvedExpression, subQueryModel.MainFromClause, s => s.ID);
       
       Assert.That (subQueryModel.ResultType, Is.SameAs (typeof (IQueryable<IGrouping<bool, int>>)));
 
