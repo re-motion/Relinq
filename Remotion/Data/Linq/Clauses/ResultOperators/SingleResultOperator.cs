@@ -39,10 +39,17 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     public override object ExecuteInMemory (object input)
     {
       ArgumentUtility.CheckNotNull ("input", input);
+      return InvokeGenericOnEnumerable<object> (input, ExecuteInMemory);
+    }
+
+    public T ExecuteInMemory<T> (IEnumerable<T> input)
+    {
+      ArgumentUtility.CheckNotNull ("input", input);
+
       if (ReturnDefaultWhenEmpty)
-        return InvokeGenericOnEnumerable (input, e => e.SingleOrDefault ());
+        return input.SingleOrDefault();
       else
-        return InvokeGenericOnEnumerable (input, e => e.Single ());
+        return input.Single();
     }
 
     public override string ToString ()

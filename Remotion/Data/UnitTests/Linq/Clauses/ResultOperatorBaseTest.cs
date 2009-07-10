@@ -14,11 +14,14 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
-using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.UnitTests.Linq.Clauses.ResultOperators;
+using Remotion.Utilities;
 using Rhino.Mocks;
 
 namespace Remotion.Data.UnitTests.Linq.Clauses
@@ -26,7 +29,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
   [TestFixture]
   public class ResultOperatorBaseTest
   {
-    ResultOperatorBase _resultOperator;
+    TestResultOperator _resultOperator;
 
     [SetUp]
     public void SetUp ()
@@ -42,6 +45,58 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       _resultOperator.Accept (visitorMock, queryModel, 1);
 
       visitorMock.AssertWasCalled (mock => mock.VisitResultOperator (_resultOperator, queryModel, 1));
+    }
+
+    [Test]
+    public void InvokeGenericOnEnumerable ()
+    {
+      var input = new[] { 1, 2, 3, 4, 3, 2, 1 };
+      var result = _resultOperator.InvokeGenericOnEnumerable (input, _resultOperator.DistinctExecuteMethod);
+
+      Assert.That (((IEnumerable<int>) result).ToArray(), Is.EquivalentTo (new[] { 1, 2, 3, 4 }));
+    }
+
+    [Test]
+    [ExpectedException (typeof (NotImplementedException), ExpectedMessage = "Test")]
+    public void InvokeGenericOnEnumerable_Throws ()
+    {
+      var input = new[] { 1, 2, 3, 4, 3, 2, 1 };
+      var result = _resultOperator.InvokeGenericOnEnumerable (input, _resultOperator.ThrowingExecuteMethod);
+
+      Assert.That (((IEnumerable<int>) result).ToArray (), Is.EquivalentTo (new[] { 1, 2, 3, 4 }));
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage = "Argument input has type System.Int32 when type "
+        + "System.Collections.Generic.IEnumerable`1[T] was expected.\r\nParameter name: input")]
+    public void InvokeGenericOnEnumerable_InvalidInputType ()
+    {
+      _resultOperator.InvokeGenericOnEnumerable (14, e => e.Count ());
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "Method to invoke ('NonGenericExecuteMethod') must be a public generic method "
+        + "with exactly one generic argument.\r\nParameter name: genericMethodCaller")]
+    public void InvokeGenericOnEnumerable_NonGenericMethod ()
+    {
+      _resultOperator.InvokeGenericOnEnumerable (new[] { 1, 2, 3 }, _resultOperator.NonGenericExecuteMethod);
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "Method to invoke ('NonPublicExecuteMethod') must be a public generic method "
+        + "with exactly one generic argument.\r\nParameter name: genericMethodCaller")]
+    public void InvokeGenericOnEnumerable_NonPublicTestMethod ()
+    {
+      _resultOperator.InvokeGenericOnEnumerable (new[] { 1, 2, 3 }, _resultOperator.NonPublicExecuteMethod);
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "Cannot call method 'ExecuteMethodWithNonMatchingArgumentType' on input of type "
+        + "'System.Int32[]': Object of type 'System.Int32[]' cannot be converted to type 'System.Collections.Generic.IEnumerable`1[System.Object]'."
+        + "\r\nParameter name: genericMethodCaller")]
+    public void InvokeGenericOnEnumerable_NonMatchingArgument ()
+    {
+      _resultOperator.InvokeGenericOnEnumerable (new[] { 1, 2, 3 }, _resultOperator.ExecuteMethodWithNonMatchingArgumentType<object>);
     }
   }
 }

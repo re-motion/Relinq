@@ -49,8 +49,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     { 
       new MainSourceExpressionNode ("x", Expression.Constant(5));
     }
-
-
+    
     [Test]
     public void Resolve_ReplacesParameter_WithQuerySourceReference ()
     {

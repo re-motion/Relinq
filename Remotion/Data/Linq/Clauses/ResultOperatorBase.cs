@@ -14,11 +14,12 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq.Clauses.Expressions;
+using Remotion.Data.Linq.Clauses.ResultOperators;
+using Remotion.Data.Linq.Parsing;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses
@@ -45,7 +46,9 @@ namespace Remotion.Data.Linq.Clauses
     /// Executes this result operator in memory, on a given input. Executing result operators in memory should only be 
     /// performed if the target query system does not support the operator.
     /// </summary>
+    /// <param name="input">The input for the result operator. This must match the type expected by the operator.</param>
     /// <returns>The result of the operator. This can be an enumerable, a single item, or a scalar value, depending on the operator.</returns>
+    /// <seealso cref="InvokeGenericOnEnumerable{TResult}"/>
     public abstract object ExecuteInMemory (object input);
 
     /// <summary>
@@ -81,27 +84,68 @@ namespace Remotion.Data.Linq.Clauses
       //nothing to do here
     }
 
-    protected object InvokeGenericOnEnumerable<TResult> (object input, Expression<Func<IEnumerable<object>, TResult>> methodInvocation, params object[] args)
+    /// <summary>
+    /// Invokes a given generic method on an enumerable input via Reflection. Use this to implement <see cref="ExecuteInMemory"/> by defining
+    /// a strongly typed, generic variant of <see cref="ExecuteInMemory"/>; then invoke that strongly typed variant via 
+    /// <see cref="InvokeGenericOnEnumerable{TResult}"/>.
+    /// </summary>
+    /// <typeparam name="TResult">The result type of the method passed via <paramref name="genericMethodCaller"/>.</typeparam>
+    /// <param name="input">The input object to invoke the method on. If this object does not implement <see cref="IEnumerable{T}"/>, this
+    /// method will throw an <see cref="ArgumentTypeException"/>.</param>
+    /// <param name="genericMethodCaller">A delegate holding exactly one public generic method with exactly one generic argument. This method is
+    /// called via Reflection on the given <paramref name="input"/> argument.</param>
+    /// <returns>The result of invoking the method in <paramref name="genericMethodCaller"/> on <paramref name="input"/>.</returns>
+    /// <example>
+    /// The <see cref="TakeResultOperator"/> uses this method as follows:
+    /// <code>
+    /// public override object ExecuteInMemory (object input)
+    /// {
+    ///   ArgumentUtility.CheckNotNull ("input", input);
+    ///   return InvokeGenericOnEnumerable&lt;IEnumerable&lt;object&gt;&gt; (input, ExecuteInMemory);
+    /// }
+    /// 
+    /// public IEnumerable&lt;T&gt; ExecuteInMemory&lt;T&gt; (IEnumerable&lt;T&gt; input)
+    /// {
+    ///   ArgumentUtility.CheckNotNull ("input", input);
+    ///   return input.Take (Count);
+    /// }
+    /// </code>
+    /// </example>
+    protected object InvokeGenericOnEnumerable<TResult> (object input, Func<IEnumerable<object>, TResult> genericMethodCaller)
     {
       ArgumentUtility.CheckNotNull ("input", input);
-      ArgumentUtility.CheckNotNull ("methodInvocation", methodInvocation);
-      ArgumentUtility.CheckNotNull ("args", args);
+      ArgumentUtility.CheckNotNull ("genericMethodCaller", genericMethodCaller);
 
-      var methodCallExpression = methodInvocation.Body as MethodCallExpression;
-      // TODO 1319: Throw exception if null
+      Type itemType;
+      try
+      {
+        itemType = ParserUtility.GetItemTypeOfIEnumerable (input.GetType ());
+      }
+      catch (ArgumentTypeException)
+      {
+        throw new ArgumentTypeException ("input", typeof (IEnumerable<>), input.GetType ());
+      }
 
-      var allArguments = new object[1 + args.Length];
-      allArguments[0] = input;
-      args.CopyTo (allArguments, 1);
+      var method = genericMethodCaller.Method;
+      if (!method.IsGenericMethod || !method.IsPublic)
+      {
+        throw new ArgumentException (
+            "Method to invoke ('" + method.Name + "') must be a public generic method with exactly one generic argument.", 
+            "genericMethodCaller");
+      }
 
       try
       {
-        var itemType = ReflectionUtility.GetAscribedGenericArguments (input.GetType (), typeof (IEnumerable<>))[0];
-        return methodCallExpression.Method.GetGenericMethodDefinition ().MakeGenericMethod (itemType).Invoke (this, allArguments);
+        return method.GetGenericMethodDefinition ().MakeGenericMethod (itemType).Invoke (this, new[] { input });
       }
       catch (TargetInvocationException ex)
       {
-        throw ex.InnerException.PreserveStackTrace ();
+        throw ex.InnerException;
+      }
+      catch (ArgumentException ex)
+      {
+        var message = string.Format ("Cannot call method '{0}' on input of type '{1}': {2}", method.Name, input.GetType (), ex.Message);
+        throw new ArgumentException (message, "genericMethodCaller");
       }
     }
   }

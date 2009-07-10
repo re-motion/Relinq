@@ -16,7 +16,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
+using Remotion.Data.Linq.Parsing;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
@@ -40,7 +42,13 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     public override object ExecuteInMemory (object input)
     {
       ArgumentUtility.CheckNotNull ("input", input);
-      return InvokeGenericOnEnumerable (input, e => e.Take (0), Count);
+      return InvokeGenericOnEnumerable<IEnumerable<object>> (input, ExecuteInMemory);
+    }
+
+    public IEnumerable<T> ExecuteInMemory<T> (IEnumerable<T> input)
+    {
+      ArgumentUtility.CheckNotNull ("input", input);
+      return input.Take (Count);
     }
 
     public override string ToString ()

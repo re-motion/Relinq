@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Utilities;
@@ -35,7 +36,12 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     public override object ExecuteInMemory (object input)
     {
       ArgumentUtility.CheckNotNull ("input", input);
-      return InvokeGenericOnEnumerable (input, e => e.Distinct());
+      return InvokeGenericOnEnumerable<IEnumerable<object>> (input, ExecuteInMemory);
+    }
+
+    public IEnumerable<T> ExecuteInMemory<T> (IEnumerable<T> input)
+    {
+      return input.Distinct ();
     }
 
     public override string ToString ()

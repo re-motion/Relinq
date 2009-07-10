@@ -14,6 +14,8 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Utilities;
@@ -51,6 +53,37 @@ namespace Remotion.Data.Linq.Parsing
     {
       ArgumentUtility.CheckNotNull ("wrappedCall", wrappedCall);
       return ((MethodCallExpression) wrappedCall.Body).Method;
+    }
+
+    public static Type GetItemTypeOfIEnumerable (Type enumerableType)
+    {
+      Type implementedEnumerableInterface = GetImplementedIEnumerableType(enumerableType);
+      if (implementedEnumerableInterface == null)
+      {
+        var message = string.Format ("Expected a type implementing IEnumerable<T>, but found '{0}'.", enumerableType.FullName);
+        throw new ArgumentTypeException (message, "enumerableType", typeof (IEnumerable<>), enumerableType);
+      }
+
+      return implementedEnumerableInterface.GetGenericArguments ()[0];
+    }
+
+    private static Type GetImplementedIEnumerableType (Type enumerableType)
+    {
+      if (IsIEnumerable (enumerableType))
+      {
+        return enumerableType;
+      }
+      else
+      {
+        return (from i in enumerableType.GetInterfaces()
+                where i.IsGenericType && i.GetGenericTypeDefinition() == typeof (IEnumerable<>)
+                select i).FirstOrDefault();
+      }
+    }
+
+    private static bool IsIEnumerable (Type enumerableType)
+    {
+      return enumerableType.IsGenericType && enumerableType.GetGenericTypeDefinition() == typeof (IEnumerable<>);
     }
   }
 }

@@ -21,6 +21,8 @@ using Remotion.Data.Linq.Backend;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 using System.Reflection;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing
 {
@@ -49,6 +51,26 @@ namespace Remotion.Data.UnitTests.Linq.Parsing
     {
       MethodInfo method = ParserUtility.GetMethod (() => "x".ToUpper());
       Assert.That (method, Is.EqualTo (typeof (string).GetMethod ("ToUpper", new Type[0])));
+    }
+
+    [Test]
+    public void GetItemTypeOfIEnumerable_ArgumentImplementsIEnumerable ()
+    {
+      Assert.That (ParserUtility.GetItemTypeOfIEnumerable (typeof (List<int>)), Is.SameAs (typeof (int)));
+    }
+
+    [Test]
+    public void GetItemTypeOfIEnumerable_ArgumentIsIEnumerable ()
+    {
+      Assert.That (ParserUtility.GetItemTypeOfIEnumerable (typeof (IEnumerable<int>)), Is.SameAs (typeof (int)));
+      Assert.That (ParserUtility.GetItemTypeOfIEnumerable (typeof (IEnumerable<IEnumerable<string>>)), Is.SameAs (typeof (IEnumerable<string>)));
+    }
+
+    [Test]
+    [ExpectedException (ExpectedMessage = "Expected a type implementing IEnumerable<T>, but found 'System.Int32'.\r\nParameter name: enumerableType")]
+    public void GetItemTypeOfIEnumerable_InvalidType ()
+    {
+      ParserUtility.GetItemTypeOfIEnumerable (typeof (int));
     }
   }
 }

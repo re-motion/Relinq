@@ -36,23 +36,18 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       ArgumentUtility.CheckNotNull ("expression", expression);
 
       QuerySourceType = expression.Type;
-      QuerySourceElementType = GetQuerySourceElementType (QuerySourceType);
-      AssociatedIdentifier = associatedIdentifier;
-      ParsedExpression = expression;
-    }
 
-    private Type GetQuerySourceElementType (Type enumerableType)
-    {
       try
       {
-        // To get the element type streamed out by this node, we try to see what kind of IEnumerable<T> is implemented by the given type.
-        // T is the element type we want to find out.
-        return ReflectionUtility.GetAscribedGenericArguments (enumerableType, typeof (IEnumerable<>))[0];
+        QuerySourceElementType = ParserUtility.GetItemTypeOfIEnumerable (expression.Type);
       }
       catch (ArgumentTypeException)
       {
-        throw new ArgumentTypeException ("expression", typeof (IEnumerable<>), enumerableType);
+        throw new ArgumentTypeException ("expression", typeof (IEnumerable<>), expression.Type);
       }
+
+      AssociatedIdentifier = associatedIdentifier;
+      ParsedExpression = expression;
     }
 
     public Type QuerySourceElementType { get; private set; }
