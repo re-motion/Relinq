@@ -116,15 +116,7 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("input", input);
       ArgumentUtility.CheckNotNull ("genericMethodCaller", genericMethodCaller);
 
-      Type itemType;
-      try
-      {
-        itemType = ParserUtility.GetItemTypeOfIEnumerable (input.GetType ());
-      }
-      catch (ArgumentTypeException)
-      {
-        throw new ArgumentTypeException ("input", typeof (IEnumerable<>), input.GetType ());
-      }
+      Type itemType = GetInputItemType (input);
 
       var method = genericMethodCaller.Method;
       if (!method.IsGenericMethod || !method.IsPublic)
@@ -134,9 +126,41 @@ namespace Remotion.Data.Linq.Clauses
             "genericMethodCaller");
       }
 
+      var closedGenericMethod = method.GetGenericMethodDefinition ().MakeGenericMethod (itemType);
+      return InvokeExecuteMethod (input, closedGenericMethod);
+    }
+
+    /// <summary>
+    /// Gets the type of the items enumerated by <paramref name="input"/>.
+    /// </summary>
+    /// <param name="input">The input whose item type to retrieve. Must implement <see cref="IEnumerable{T}"/>, otherwise an exception
+    /// is thrown.</param>
+    /// <returns>The item type enumerated by <paramref name="input"/>.</returns>
+    protected Type GetInputItemType (object input)
+    {
+      Type itemType;
       try
       {
-        return method.GetGenericMethodDefinition ().MakeGenericMethod (itemType).Invoke (this, new[] { input });
+        itemType = ParserUtility.GetItemTypeOfIEnumerable (input.GetType ());
+      }
+      catch (ArgumentTypeException)
+      {
+        throw new ArgumentTypeException ("input", typeof (IEnumerable<>), input.GetType ());
+      }
+      return itemType;
+    }
+
+    /// <summary>
+    /// Invokes the given <paramref name="method"/> via reflection on the given <paramref name="input"/>.
+    /// </summary>
+    /// <param name="input">The input to invoke the method with.</param>
+    /// <param name="method">The method to be invoked.</param>
+    /// <returns>The result of the invocation</returns>
+    protected object InvokeExecuteMethod (object input, MethodInfo method)
+    {
+      try
+      {
+        return method.Invoke (this, new[] { input });
       }
       catch (TargetInvocationException ex)
       {
@@ -145,7 +169,7 @@ namespace Remotion.Data.Linq.Clauses
       catch (ArgumentException ex)
       {
         var message = string.Format ("Cannot call method '{0}' on input of type '{1}': {2}", method.Name, input.GetType (), ex.Message);
-        throw new ArgumentException (message, "genericMethodCaller");
+        throw new ArgumentException (message, "method");
       }
     }
   }

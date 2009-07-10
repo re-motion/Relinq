@@ -14,6 +14,8 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
@@ -141,6 +143,28 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
           ExpressionHelper.CreateInputDependentExpression (Expression.Constant (0)));
 
       Assert.That (resultOperator.ToString (), Is.EqualTo ("GroupBy(1, 0)"));
+    }
+
+    [Test]
+    public void ExecuteInMemory ()
+    {
+      var input = new[] { 1, 2, 3, 4, 5 };
+
+      // group i.ToString() by i % 3
+
+      var expectedInput = new QuerySourceReferenceExpression (
+          ExpressionHelper.CreateMainFromClause("i", typeof (int), ExpressionHelper.CreateQuerySource()));
+
+      var keySelector = new InputDependentExpression (ExpressionHelper.CreateLambdaExpression<int, int> (i => i % 3), expectedInput);
+      var elementSelector = new InputDependentExpression (ExpressionHelper.CreateLambdaExpression<int, string> (i => i.ToString()), expectedInput);
+      var resultOperator = new GroupResultOperator (keySelector, elementSelector);
+
+      var result = ((IEnumerable<IGrouping<int, string>>) resultOperator.ExecuteInMemory (input)).ToArray();
+
+      Assert.That (result.Length, Is.EqualTo (3));
+      Assert.That (result[0].ToArray (), Is.EqualTo (new[] { "1", "4" }));
+      Assert.That (result[1].ToArray (), Is.EqualTo (new[] { "2", "5" }));
+      Assert.That (result[2].ToArray (), Is.EqualTo (new[] { "3" }));
     }
   }
 }

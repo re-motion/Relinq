@@ -93,7 +93,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     [ExpectedException (typeof (ArgumentException), ExpectedMessage = "Cannot call method 'ExecuteMethodWithNonMatchingArgumentType' on input of type "
         + "'System.Int32[]': Object of type 'System.Int32[]' cannot be converted to type 'System.Collections.Generic.IEnumerable`1[System.Object]'."
-        + "\r\nParameter name: genericMethodCaller")]
+        + "\r\nParameter name: method")]
     public void InvokeGenericOnEnumerable_NonMatchingArgument ()
     {
       _resultOperator.InvokeGenericOnEnumerable (new[] { 1, 2, 3 }, _resultOperator.ExecuteMethodWithNonMatchingArgumentType<object>);

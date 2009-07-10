@@ -14,10 +14,14 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
+using Remotion.Data.Linq.Parsing;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
@@ -112,7 +116,25 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     public override object ExecuteInMemory (object input)
     {
       ArgumentUtility.CheckNotNull ("input", input);
-      throw new NotImplementedException ();
+
+      var itemType = GetInputItemType (input);
+
+      var executeMethod = typeof (GroupResultOperator).GetMethod ("ExecuteGroupingInMemory");
+      var closedExecuteMethod = executeMethod.MakeGenericMethod (
+          KeySelector.DependentExpression.Body.Type,
+          ElementSelector.DependentExpression.Body.Type,
+          itemType);
+
+      return InvokeExecuteMethod (input, closedExecuteMethod);
+    }
+
+    public IEnumerable<IGrouping<TKey, TElement>> ExecuteGroupingInMemory<TKey, TElement, TInput> (IEnumerable<TInput> input)
+    {
+      ArgumentUtility.CheckNotNull ("input", input);
+
+      return input.GroupBy (
+          (Func<TInput, TKey>) KeySelector.DependentExpression.Compile (),
+          (Func<TInput, TElement>) ElementSelector.DependentExpression.Compile ());
     }
 
     public override string ToString ()
