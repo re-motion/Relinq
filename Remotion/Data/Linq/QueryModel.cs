@@ -20,6 +20,7 @@ using Remotion.Collections;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.Expressions;
+using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Utilities;
@@ -203,7 +204,9 @@ namespace Remotion.Data.Linq
         queryModelBuilder.AddResultOperator (resultOperatorClone);
       }
 
-      return queryModelBuilder.Build (ResultType);
+      var clone = queryModelBuilder.Build (ResultType);
+      clone.TransformExpressions (ex => CloningExpressionTreeVisitor.AdjustExpressionAfterCloning (ex, cloneContext.ClauseMapping));
+      return clone;
     }
 
     object ICloneable.Clone ()

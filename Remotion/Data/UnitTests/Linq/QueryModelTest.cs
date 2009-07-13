@@ -154,7 +154,7 @@ namespace Remotion.Data.UnitTests.Linq
     }
 
     [Test]
-    public void Clone_HasCloneForSelectClause_PassesMapping ()
+    public void Clone_HasCloneForSelectClause_TransformExpressions ()
     {
       var oldReferencedClause = ExpressionHelper.CreateMainFromClause();
       _queryModel.SelectClause.Selector = new QuerySourceReferenceExpression (oldReferencedClause);
@@ -186,7 +186,7 @@ namespace Remotion.Data.UnitTests.Linq
     }
 
     [Test]
-    public void Clone_HasCloneForBodyClauses_PassesMapping ()
+    public void Clone_HasCloneForBodyClauses_TransformExpressions ()
     {
       var bodyClause = ExpressionHelper.CreateWhereClause();
       var oldReferencedClause = ExpressionHelper.CreateMainFromClause();

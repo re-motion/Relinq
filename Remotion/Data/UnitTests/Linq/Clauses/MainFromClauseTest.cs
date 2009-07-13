@@ -93,21 +93,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clone.FromExpression, Is.SameAs (_mainFromClause.FromExpression));
     }
 
-    [Test]
-    public void Clone_AdjustsExpressions ()
-    {
-      var oldReferencedClause = ExpressionHelper.CreateMainFromClause();
-      var querySource = new QuerySourceReferenceExpression (oldReferencedClause);
-      var mainFromClause = new MainFromClause ("s", typeof (Student), querySource);
-
-      var newReferencedClause = ExpressionHelper.CreateMainFromClause ();
-      _cloneContext.ClauseMapping.AddMapping (oldReferencedClause, new QuerySourceReferenceExpression(newReferencedClause));
-
-      var clone = mainFromClause.Clone (_cloneContext);
-
-      Assert.That (((QuerySourceReferenceExpression) clone.FromExpression).ReferencedClause, Is.SameAs (newReferencedClause));
-    }
-
+    
     [Test]
     public void Clone_JoinClauses ()
     {
@@ -127,25 +113,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clone.JoinClauses[1], Is.Not.SameAs (originalJoinClause2));
       Assert.That (clone.JoinClauses[1].EqualityExpression, Is.SameAs (originalJoinClause2.EqualityExpression));
       Assert.That (clone.JoinClauses[1].InExpression, Is.SameAs (originalJoinClause2.InExpression));
-    }
-
-    [Test]
-    public void Clone_JoinClauses_PassesMapping ()
-    {
-      var oldFromClause = ExpressionHelper.CreateMainFromClause ();
-      var originalJoinClause = new JoinClause (
-          "x", 
-          typeof(Student),
-          new QuerySourceReferenceExpression (oldFromClause),
-          ExpressionHelper.CreateExpression(),
-          ExpressionHelper.CreateExpression());
-      _mainFromClause.JoinClauses.Add (originalJoinClause);
-
-      var newFromClause = ExpressionHelper.CreateMainFromClause ();
-      _cloneContext.ClauseMapping.AddMapping (oldFromClause, new QuerySourceReferenceExpression(newFromClause));
-
-      var clone = _mainFromClause.Clone (_cloneContext);
-      Assert.That (((QuerySourceReferenceExpression) clone.JoinClauses[0].InExpression).ReferencedClause, Is.SameAs (newFromClause));
     }
 
     [Test]

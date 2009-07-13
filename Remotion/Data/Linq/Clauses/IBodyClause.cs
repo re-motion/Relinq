@@ -34,10 +34,9 @@ namespace Remotion.Data.Linq.Clauses
     void Accept (IQueryModelVisitor visitor, QueryModel queryModel, int index);
 
     /// <summary>
-    /// Clones this clause, adjusting all <see cref="QuerySourceReferenceExpression"/> instances held by it as defined by
-    /// <paramref name="cloneContext"/>.
+    /// Clones this clause, registering its clone with the <paramref name="cloneContext"/> if it is a query source clause.
     /// </summary>
-    /// <param name="cloneContext">The clone context to use for replacing <see cref="QuerySourceReferenceExpression"/> objects.</param>
+    /// <param name="cloneContext">The clones of all query source clauses are registered with this <see cref="CloneContext"/>.</param>
     /// <returns>A clone of this clause.</returns>
     IBodyClause Clone (CloneContext cloneContext);
   }

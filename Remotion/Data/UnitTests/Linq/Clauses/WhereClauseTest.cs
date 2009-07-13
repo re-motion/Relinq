@@ -79,34 +79,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
-    public void Clone_ViaInterface_PassesMapping ()
-    {
-      var fromClause = ExpressionHelper.CreateMainFromClause ();
-      _whereClause.Predicate = new QuerySourceReferenceExpression (fromClause);
-
-      var newReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause ());
-      _cloneContext.ClauseMapping.AddMapping (fromClause, newReferenceExpression);
-
-      var clone = ((IBodyClause) _whereClause).Clone (_cloneContext);
-      Assert.That (((WhereClause) clone).Predicate, Is.SameAs (newReferenceExpression));
-    }
-
-    [Test]
-    public void Clone_AdjustsExpressions ()
-    {
-      var oldReferencedClause = ExpressionHelper.CreateMainFromClause();
-      var predicate = new QuerySourceReferenceExpression (oldReferencedClause);
-      var whereClause = new WhereClause (predicate);
-
-      var newReferencedClause = ExpressionHelper.CreateMainFromClause ();
-      _cloneContext.ClauseMapping.AddMapping (oldReferencedClause, new QuerySourceReferenceExpression(newReferencedClause));
-
-      var clone = whereClause.Clone (_cloneContext);
-
-      Assert.That (((QuerySourceReferenceExpression) clone.Predicate).ReferencedClause, Is.SameAs (newReferencedClause));
-    }
-
-    [Test]
     public void TransformExpressions ()
     {
       var oldExpression = ExpressionHelper.CreateExpression ();

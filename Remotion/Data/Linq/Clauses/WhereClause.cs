@@ -83,17 +83,15 @@ namespace Remotion.Data.Linq.Clauses
     }
 
     /// <summary>
-    /// Clones this clause, adjusting all <see cref="QuerySourceReferenceExpression"/> instances held by it as defined by
-    /// <paramref name="cloneContext"/>.
+    /// Clones this clause.
     /// </summary>
-    /// <param name="cloneContext">The clone context to use for replacing <see cref="QuerySourceReferenceExpression"/> objects.</param>
+    /// <param name="cloneContext">The clones of all query source clauses are registered with this <see cref="CloneContext"/>.</param>
     /// <returns></returns>
-    public WhereClause Clone (CloneContext cloneContext)
+    public virtual WhereClause Clone (CloneContext cloneContext)
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 
       var clone = new WhereClause (Predicate);
-      clone.TransformExpressions (ex => ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (ex, cloneContext.ClauseMapping));
       return clone;
     }
 

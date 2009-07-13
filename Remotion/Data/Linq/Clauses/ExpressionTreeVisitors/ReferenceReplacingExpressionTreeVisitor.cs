@@ -23,65 +23,70 @@ using Remotion.Utilities;
 namespace Remotion.Data.Linq.Clauses.ExpressionTreeVisitors
 {
   /// <summary>
-  /// Takes an expression and replaces all <see cref="QuerySourceReferenceExpression"/>s to clauses with references to their cloned counterparts.
-  /// Also replaces <see cref="SubQueryExpression"/>s to hold a cloned version of the <see cref="SubQueryExpression.QueryModel"/>.
-  /// This is used when a <see cref="QueryModel"/> is cloned in order to ensure that all expressions its clauses hold correctly refer to the other
-  /// cloned clauses afterwards.
+  /// Takes an expression and replaces all <see cref="QuerySourceReferenceExpression"/> instances, as defined by a given <see cref="ClauseMapping"/>.
+  /// This is used whenever references to query sources should be replaced by a transformation.
   /// </summary>
   public class ReferenceReplacingExpressionTreeVisitor : ExpressionTreeVisitor
   {
-    public static Expression ReplaceClauseReferences (Expression expression, ClauseMapping clauseMapping)
+    /// <summary>
+    /// Takes an expression and replaces all <see cref="QuerySourceReferenceExpression"/> instances, as defined by a given 
+    /// <paramref name="clauseMapping"/>.
+    /// </summary>
+    /// <param name="expression">The expression to be scanned for references.</param>
+    /// <param name="clauseMapping">The clause mapping to be used for replacing <see cref="QuerySourceReferenceExpression"/> instances.</param>
+    /// <param name="throwOnUnmappedReferences">If <see langword="true"/>, the visitor will throw an exception when 
+    /// <see cref="QuerySourceReferenceExpression"/> not mapped in the <paramref name="clauseMapping"/> is encountered. If <see langword="false"/>,
+    /// the visitor will ignore such expressions.</param>
+    /// <returns>An expression with its <see cref="QuerySourceReferenceExpression"/> instances replaced as defined by the 
+    /// <paramref name="clauseMapping"/>.</returns>
+    public static Expression ReplaceClauseReferences (Expression expression, ClauseMapping clauseMapping, bool throwOnUnmappedReferences)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       ArgumentUtility.CheckNotNull ("clauseMapping", clauseMapping);
 
-      return ReplaceClauseReferences (expression, clauseMapping, false);
-    }
-
-    public static Expression ReplaceClauseReferences (Expression expression, ClauseMapping clauseMapping, bool ignoreUnmappedReferences)
-    {
-      ArgumentUtility.CheckNotNull ("expression", expression);
-      ArgumentUtility.CheckNotNull ("clauseMapping", clauseMapping);
-
-      return new ReferenceReplacingExpressionTreeVisitor (clauseMapping, ignoreUnmappedReferences).VisitExpression (expression);
+      return new ReferenceReplacingExpressionTreeVisitor (clauseMapping, throwOnUnmappedReferences).VisitExpression (expression);
     }
 
     private readonly ClauseMapping _clauseMapping;
-    private readonly bool _ignoreUnmappedReferences;
+    private readonly bool _throwOnUnmappedReferences;
 
-    private ReferenceReplacingExpressionTreeVisitor (ClauseMapping clauseMapping, bool ignoreUnmappedReferences)
+    protected ReferenceReplacingExpressionTreeVisitor (ClauseMapping clauseMapping, bool throwOnUnmappedReferences)
     {
       ArgumentUtility.CheckNotNull ("clauseMapping", clauseMapping);
       _clauseMapping = clauseMapping;
-      _ignoreUnmappedReferences = ignoreUnmappedReferences;
+      _throwOnUnmappedReferences = throwOnUnmappedReferences;
+    }
+
+    protected ClauseMapping ClauseMapping
+    {
+      get { return _clauseMapping; }
     }
 
     protected override Expression VisitQuerySourceReferenceExpression (QuerySourceReferenceExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      if (!_ignoreUnmappedReferences || _clauseMapping.ContainsMapping (expression.ReferencedClause))
+      if (ClauseMapping.ContainsMapping (expression.ReferencedClause))
       {
-        try
-        {
-          return _clauseMapping.GetExpression (expression.ReferencedClause);
-        }
-        catch (KeyNotFoundException)
-        {
-          var message = "Cannot replace reference to clause '" + expression.ReferencedClause.ItemName + "', there is no mapped expression.";
-          throw new InvalidOperationException (message);
-        }
+        return ClauseMapping.GetExpression (expression.ReferencedClause);
+      }
+      else if (_throwOnUnmappedReferences)
+      {
+        var message = "Cannot replace reference to clause '" + expression.ReferencedClause.ItemName + "', there is no mapped expression.";
+        throw new InvalidOperationException (message);
       }
       else
+      {
         return expression;
+      }
     }
 
     protected override Expression VisitSubQueryExpression (SubQueryExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      var clonedQueryModel = expression.QueryModel.Clone (_clauseMapping);
-      return new SubQueryExpression (clonedQueryModel);
+      expression.QueryModel.TransformExpressions (ex => ReplaceClauseReferences (ex, _clauseMapping, _throwOnUnmappedReferences));
+      return expression;
     }
 
     protected override Expression VisitUnknownExpression (Expression expression)
@@ -89,5 +94,7 @@ namespace Remotion.Data.Linq.Clauses.ExpressionTreeVisitors
       //ignore
       return expression;
     }
+
   }
+
 }

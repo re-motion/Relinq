@@ -80,10 +80,9 @@ namespace Remotion.Data.Linq.Clauses
     }
 
     /// <summary>
-    /// Clones this clause, adjusting all <see cref="QuerySourceReferenceExpression"/> instances held by it as defined by
-    /// <paramref name="cloneContext"/>.
+    /// Clones this clause.
     /// </summary>
-    /// <param name="cloneContext">The clone context to use for replacing <see cref="QuerySourceReferenceExpression"/> objects.</param>
+    /// <param name="cloneContext">The clones of all query source clauses are registered with this <see cref="CloneContext"/>.</param>
     /// <returns>A clone of this clause.</returns>
     public OrderByClause Clone (CloneContext cloneContext)
     {

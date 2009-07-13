@@ -52,10 +52,9 @@ namespace Remotion.Data.Linq.Clauses
     public abstract object ExecuteInMemory (object input);
 
     /// <summary>
-    /// Clones this item, adjusting all <see cref="QuerySourceReferenceExpression"/> instances held by it as defined by
-    /// <paramref name="cloneContext"/>.
+    /// Clones this item, registering its clone with the <paramref name="cloneContext"/> if it is a query source clause.
     /// </summary>
-    /// <param name="cloneContext">The clone context to use for replacing <see cref="QuerySourceReferenceExpression"/> objects.</param>
+    /// <param name="cloneContext">The clones of all query source clauses are registered with this <see cref="CloneContext"/>.</param>
     /// <returns>A clone of this item.</returns>
     public abstract ResultOperatorBase Clone (CloneContext cloneContext);
 

@@ -69,21 +69,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
-    public void Clone_AdjustsExpressions ()
-    {
-      var oldReferencedExpression = ExpressionHelper.CreateMainFromClause();
-      var selector = new QuerySourceReferenceExpression (oldReferencedExpression);
-      var selectClause = new SelectClause (selector);
-
-      var newReferencedExpression = ExpressionHelper.CreateMainFromClause ();
-      _cloneContext.ClauseMapping.AddMapping (oldReferencedExpression, new QuerySourceReferenceExpression (newReferencedExpression));
-
-      var clone = selectClause.Clone (_cloneContext);
-
-      Assert.That (((QuerySourceReferenceExpression) clone.Selector).ReferencedClause, Is.SameAs (newReferencedExpression));
-    }
-
-    [Test]
     public void TransformExpressions ()
     {
       var oldExpression = ExpressionHelper.CreateExpression ();

@@ -103,13 +103,13 @@ namespace Remotion.Data.Linq.Transformations
 
       var innerSelectorMapping = new ClauseMapping();
       innerSelectorMapping.AddMapping (fromClause, subQueryExpression.QueryModel.SelectClause.Selector);
-      queryModel.TransformExpressions (ex => ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (ex, innerSelectorMapping, true));
+      queryModel.TransformExpressions (ex => ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (ex, innerSelectorMapping, false));
 
       InsertBodyClauses (subQueryExpression.QueryModel.BodyClauses, queryModel, destinationIndex);
 
       var innerBodyClauseMapping = new ClauseMapping();
       innerBodyClauseMapping.AddMapping (innerMainFromClause, new QuerySourceReferenceExpression (fromClause));
-      queryModel.TransformExpressions (ex => ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (ex, innerBodyClauseMapping, true));
+      queryModel.TransformExpressions (ex => ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (ex, innerBodyClauseMapping, false));
     }
 
     protected virtual void CheckFlattenable (QueryModel subQueryModel)

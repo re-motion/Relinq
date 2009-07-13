@@ -182,7 +182,6 @@ namespace Remotion.Data.UnitTests.Linq.Transformations
     }
 
     [Test]
-    [Ignore ("TODO 1308")]
     public void IntegrationTest_TransformedQueryModel ()
     {
       var query = from s1 in ExpressionHelper.CreateQuerySource ()
@@ -222,7 +221,7 @@ namespace Remotion.Data.UnitTests.Linq.Transformations
                               new Tuple<Student, Student> (a, b).B);
 
       var expectedQueryModel = ExpressionHelper.ParseQuery (expectedQuery);
-      QueryModelComparer.CheckAreEqualModels (expectedQueryModel, queryModel);
+      Assert.That (expectedQueryModel.ToString(), Is.EqualTo (queryModel.ToString()));
     }
   }
 }

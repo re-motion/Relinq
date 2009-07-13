@@ -57,6 +57,7 @@
     <Compile Include="Clauses\ExecutionStrategies\SingleExecutionStrategy.cs" />
     <Compile Include="Clauses\ExecutionStrategies\ScalarExecutionStrategy.cs" />
     <Compile Include="Clauses\ClauseMapping.cs" />
+    <Compile Include="Clauses\ExpressionTreeVisitors\CloningExpressionTreeVisitor.cs" />
     <Compile Include="Clauses\ExpressionTreeVisitors\ReferenceReplacingExpressionTreeVisitor.cs" />
     <Compile Include="Clauses\IExecutionStrategy.cs" />
     <Compile Include="Clauses\ResultOperators\InputDependentExpression.cs" />

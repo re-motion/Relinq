@@ -62,25 +62,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     }
 
     [Test]
-    public void Clone_AdjustsExpressions ()
-    {
-      var referencedExpression = ExpressionHelper.CreateMainFromClause();
-      
-      var keySelector = ExpressionHelper.CreateInputDependentExpression (new QuerySourceReferenceExpression (referencedExpression));
-      var elementSelector = ExpressionHelper.CreateInputDependentExpression (new QuerySourceReferenceExpression (referencedExpression));
-      
-      var groupClause = new GroupResultOperator (keySelector, elementSelector);
-
-      var newReferencedExpression = ExpressionHelper.CreateMainFromClause ();
-      _cloneContext.ClauseMapping.AddMapping (referencedExpression, new QuerySourceReferenceExpression(newReferencedExpression));
-
-      var clone = (GroupResultOperator) groupClause.Clone (_cloneContext);
-
-      Assert.That (((QuerySourceReferenceExpression) clone.KeySelector.ResolvedExpression).ReferencedClause, Is.SameAs (newReferencedExpression));
-      Assert.That (((QuerySourceReferenceExpression) clone.ElementSelector.ResolvedExpression).ReferencedClause, Is.SameAs (newReferencedExpression));
-    }
-
-    [Test]
     public void TransformExpressions_ExpectedInput ()
     {
       var oldKeySelector = ExpressionHelper.CreateExpression ();

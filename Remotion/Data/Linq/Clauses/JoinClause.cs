@@ -109,17 +109,15 @@ namespace Remotion.Data.Linq.Clauses
     }
 
     /// <summary>
-    /// Clones this clause, adjusting all <see cref="QuerySourceReferenceExpression"/> instances held by it as defined by
-    /// <paramref name="cloneContext"/>.
+    /// Clones this clause, registering its clone with the <paramref name="cloneContext"/>.
     /// </summary>
-    /// <param name="cloneContext">The clone context to use for replacing <see cref="QuerySourceReferenceExpression"/> objects.</param>
+    /// <param name="cloneContext">The clones of all query source clauses are registered with this <see cref="CloneContext"/>.</param>
     /// <returns>A clone of this clause.</returns>
     public JoinClause Clone (CloneContext cloneContext)
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 
       var clone = new JoinClause (ItemName, ItemType, InExpression, OnExpression, EqualityExpression);
-      clone.TransformExpressions (ex => ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (ex, cloneContext.ClauseMapping));
       return clone;
     }
 

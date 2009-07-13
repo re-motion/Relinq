@@ -85,30 +85,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
-    public void Clone_AdjustsExpressions ()
-    {
-      var referencedExpression = ExpressionHelper.CreateMainFromClause();
-      var inExpression = new QuerySourceReferenceExpression (referencedExpression);
-      var onExpression = new QuerySourceReferenceExpression (referencedExpression);
-      var equalityExpression = new QuerySourceReferenceExpression (referencedExpression);
-      var joinClause = new JoinClause (
-          "x",
-          typeof (Student), 
-          inExpression, 
-          onExpression, 
-          equalityExpression);
-
-      var newReferencedExpression = ExpressionHelper.CreateMainFromClause ();
-      _cloneContext.ClauseMapping.AddMapping (referencedExpression, new QuerySourceReferenceExpression(newReferencedExpression));
-
-      var clone = joinClause.Clone (_cloneContext);
-
-      Assert.That (((QuerySourceReferenceExpression) clone.InExpression).ReferencedClause, Is.SameAs (newReferencedExpression));
-      Assert.That (((QuerySourceReferenceExpression) clone.OnExpression).ReferencedClause, Is.SameAs (newReferencedExpression));
-      Assert.That (((QuerySourceReferenceExpression) clone.EqualityExpression).ReferencedClause, Is.SameAs (newReferencedExpression));
-    }
-
-    [Test]
     public void TransformExpressions ()
     {
       var oldInExpression = ExpressionHelper.CreateExpression ();
