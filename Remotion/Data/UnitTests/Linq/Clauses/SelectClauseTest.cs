@@ -37,7 +37,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     {
       _selector = ExpressionHelper.CreateExpression();
       _selectClause = new SelectClause (_selector);
-      _cloneContext = new CloneContext (new ClauseMapping());
+      _cloneContext = new CloneContext (new QuerySourceMapping());
     }
 
     [Test]

@@ -23,9 +23,9 @@ using Remotion.Data.Linq.Clauses.Expressions;
 namespace Remotion.Data.UnitTests.Linq.Clauses
 {
   [TestFixture]
-  public class ClauseMappingTest
+  public class QuerySourceMappingTest
   {
-    private ClauseMapping _mapping;
+    private QuerySourceMapping _mapping;
     private MainFromClause _clause1;
     private MainFromClause _clause2;
     private MainFromClause _clause3;
@@ -37,7 +37,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [SetUp]
     public void SetUp ()
     {
-      _mapping = new ClauseMapping ();
+      _mapping = new QuerySourceMapping ();
       _clause1 = ExpressionHelper.CreateMainFromClause ();
       _clause2 = ExpressionHelper.CreateMainFromClause ();
       _clause3 = ExpressionHelper.CreateMainFromClause ();
@@ -55,7 +55,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Clause has already been associated with an expression.")]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Query source has already been associated with an expression.")]
     public void AddMapping_Twice ()
     {
       _mapping.AddMapping (_clause1, _querySourceReferenceExpression1);
@@ -72,7 +72,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Clause has not been associated with an expression, cannot replace its mapping.")]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Query source has not been associated with an expression, cannot replace its mapping.")]
     public void ReplaceMapping_WithoutAdding ()
     {
       _mapping.ReplaceMapping (_clause1, _querySourceReferenceExpression2);
@@ -92,7 +92,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
-    [ExpectedException (typeof (KeyNotFoundException), ExpectedMessage = "Clause has not been associated with an expression.")]
+    [ExpectedException (typeof (KeyNotFoundException), ExpectedMessage = "Query source has not been associated with an expression.")]
     public void GetExpression_WithoutAssociatedClause ()
     {
       _mapping.GetExpression (_clause1);

@@ -34,7 +34,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void SetUp ()
     {
       _joinClause = ExpressionHelper.CreateJoinClause ();
-      _cloneContext = new CloneContext (new ClauseMapping());
+      _cloneContext = new CloneContext (new QuerySourceMapping());
     }
 
     [Test]

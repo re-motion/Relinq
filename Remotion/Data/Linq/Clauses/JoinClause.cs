@@ -16,13 +16,12 @@
 using System;
 using System.Diagnostics;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses
 {
-  public class JoinClause : IClause
+  public class JoinClause : IClause, IQuerySource
   {
     private Type _itemType;
     private string _itemName;

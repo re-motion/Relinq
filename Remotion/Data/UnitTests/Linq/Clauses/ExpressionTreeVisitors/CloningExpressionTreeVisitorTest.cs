@@ -25,7 +25,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ExpressionTreeVisitors
   [TestFixture]
   public class CloningExpressionTreeVisitorTest
   {
-    private ClauseMapping _clauseMapping;
+    private QuerySourceMapping _querySourceMapping;
     private MainFromClause _oldFromClause;
     private MainFromClause _newFromClause;
 
@@ -35,15 +35,15 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ExpressionTreeVisitors
       _oldFromClause = ExpressionHelper.CreateMainFromClause ();
       _newFromClause = ExpressionHelper.CreateMainFromClause ();
 
-      _clauseMapping = new ClauseMapping ();
-      _clauseMapping.AddMapping (_oldFromClause, new QuerySourceReferenceExpression (_newFromClause));
+      _querySourceMapping = new QuerySourceMapping ();
+      _querySourceMapping.AddMapping (_oldFromClause, new QuerySourceReferenceExpression (_newFromClause));
     }
     
     [Test]
     public void Replaces_SubQueryExpressions ()
     {
       var expression = new SubQueryExpression (ExpressionHelper.CreateQueryModel ());
-      var result = CloningExpressionTreeVisitor.AdjustExpressionAfterCloning (expression, _clauseMapping);
+      var result = CloningExpressionTreeVisitor.AdjustExpressionAfterCloning (expression, _querySourceMapping);
 
       Assert.That (((SubQueryExpression) result).QueryModel, Is.Not.SameAs (expression.QueryModel));
     }
@@ -57,9 +57,9 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ExpressionTreeVisitors
       var expression = new SubQueryExpression (subQueryModel);
 
       var newReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause ());
-      _clauseMapping.AddMapping (referencedClause, newReferenceExpression);
+      _querySourceMapping.AddMapping (referencedClause, newReferenceExpression);
 
-      var result = CloningExpressionTreeVisitor.AdjustExpressionAfterCloning (expression, _clauseMapping);
+      var result = CloningExpressionTreeVisitor.AdjustExpressionAfterCloning (expression, _querySourceMapping);
       var newSubQuerySelectClause = ((SubQueryExpression) result).QueryModel.SelectClause;
       Assert.That (newSubQuerySelectClause.Selector, Is.SameAs (newReferenceExpression));
     }

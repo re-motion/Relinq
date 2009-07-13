@@ -301,7 +301,7 @@ namespace Remotion.Data.UnitTests.Linq
       return new DistinctResultOperator ();
     }
 
-    public static Expression Resolve<TParameter, TResult> (FromClauseBase fromClauseToReference, Expression<Func<TParameter, TResult>> expressionToBeResolved)
+    public static Expression Resolve<TParameter, TResult> (IQuerySource fromClauseToReference, Expression<Func<TParameter, TResult>> expressionToBeResolved)
     {
       return ReplacingVisitor.Replace (expressionToBeResolved.Parameters[0], new QuerySourceReferenceExpression (fromClauseToReference), expressionToBeResolved.Body);
     }

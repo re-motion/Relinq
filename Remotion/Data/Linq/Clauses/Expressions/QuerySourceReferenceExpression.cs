@@ -26,12 +26,12 @@ namespace Remotion.Data.Linq.Clauses.Expressions
   /// </summary>
   public class QuerySourceReferenceExpression : Expression
   {
-    public QuerySourceReferenceExpression (FromClauseBase fromClause)
+    public QuerySourceReferenceExpression (IQuerySource fromClause)
         : base ((ExpressionType) (-1), ArgumentUtility.CheckNotNull ("fromClause", fromClause).ItemType)
     {
       ReferencedClause = fromClause;
     }
 
-    public FromClauseBase ReferencedClause { get; private set; }
+    public IQuerySource ReferencedClause { get; private set; }
   }
 }

@@ -27,7 +27,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
   {
     private FirstResultOperator _resultOperatorNoDefault;
     private FirstResultOperator _resultOperatorWithDefault;
-    private ClauseMapping _clauseMapping;
+    private QuerySourceMapping _querySourceMapping;
     private CloneContext _cloneContext;
 
     [SetUp]
@@ -35,8 +35,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     {
       _resultOperatorNoDefault = new FirstResultOperator (false);
       _resultOperatorWithDefault = new FirstResultOperator (true);
-      _clauseMapping = new ClauseMapping ();
-      _cloneContext = new CloneContext (_clauseMapping);
+      _querySourceMapping = new QuerySourceMapping ();
+      _cloneContext = new CloneContext (_querySourceMapping);
     }
 
     [Test]

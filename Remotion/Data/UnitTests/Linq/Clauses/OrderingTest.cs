@@ -27,16 +27,16 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
   [TestFixture]
   public class OrderingTest
   {
-    private ClauseMapping _clauseMapping;
+    private QuerySourceMapping _querySourceMapping;
     private Ordering _ordering;
     private CloneContext _cloneContext;
 
     [SetUp]
     public void SetUp ()
     {
-      _clauseMapping = new ClauseMapping ();
+      _querySourceMapping = new QuerySourceMapping ();
       _ordering = ExpressionHelper.CreateOrdering ();
-      _cloneContext = new CloneContext (_clauseMapping);
+      _cloneContext = new CloneContext (_querySourceMapping);
     }
 
     [Test]

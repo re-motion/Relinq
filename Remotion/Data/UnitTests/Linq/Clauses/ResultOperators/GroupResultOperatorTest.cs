@@ -37,7 +37,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     public void SetUp ()
     {
       _resultOperator = ExpressionHelper.CreateGroupResultOperator ();
-      _cloneContext = new CloneContext (new ClauseMapping());
+      _cloneContext = new CloneContext (new QuerySourceMapping());
     }
 
     [Test]

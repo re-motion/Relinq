@@ -34,7 +34,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [SetUp]
     public void SetUp ()
     {
-      _cloneContext = new CloneContext (new ClauseMapping ());
+      _cloneContext = new CloneContext (new QuerySourceMapping ());
       _orderByClause = new OrderByClause ();
     }
 
@@ -106,7 +106,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       _orderByClause.Orderings.Add (orderingMock);
 
       var newReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause ());
-      _cloneContext.ClauseMapping.AddMapping (referencedClause, newReferenceExpression);
+      _cloneContext.QuerySourceMapping.AddMapping (referencedClause, newReferenceExpression);
 
       orderingMock.Expect (mock => mock.Clone (_cloneContext)).Return (
           new Ordering (new QuerySourceReferenceExpression (referencedClause), OrderingDirection.Asc));

@@ -22,31 +22,31 @@ namespace Remotion.Data.Linq.Clauses.ExpressionTreeVisitors
 {
   /// <summary>
   /// Visits an <see cref="Expression"/> tree, replacing all <see cref="QuerySourceReferenceExpression"/> instances with references to cloned clauses,
-  /// as defined by a <see cref="ClauseMapping"/>. In addition, all <see cref="QueryModel"/> instances in 
+  /// as defined by a <see cref="QuerySourceMapping"/>. In addition, all <see cref="QueryModel"/> instances in 
   /// <see cref="SubQueryExpression">SubQueryExpressions</see> are cloned, and their references also replaces. All referenced clauses must be mapped
-  /// to cloned clauses in the given <see cref="ClauseMapping"/>, otherwise an expression is thrown. This is used by <see cref="QueryModel.Clone()"/>
+  /// to cloned clauses in the given <see cref="QuerySourceMapping"/>, otherwise an expression is thrown. This is used by <see cref="QueryModel.Clone()"/>
   /// to adjust references to the old <see cref="QueryModel"/> with references to the new <see cref="QueryModel"/>.
   /// </summary>
   public class CloningExpressionTreeVisitor : ReferenceReplacingExpressionTreeVisitor
   {
     /// <summary>
     /// Adjusts the given expression for cloning, that is replaces <see cref="QuerySourceReferenceExpression"/> and <see cref="SubQueryExpression"/> 
-    /// instances. All referenced clauses must be mapped to clones in the given <paramref name="clauseMapping"/>, otherwise an exception is thrown.
+    /// instances. All referenced clauses must be mapped to clones in the given <paramref name="querySourceMapping"/>, otherwise an exception is thrown.
     /// </summary>
     /// <param name="expression">The expression to be adjusted.</param>
-    /// <param name="clauseMapping">The clause mapping to be used for replacing <see cref="QuerySourceReferenceExpression"/> instances.</param>
+    /// <param name="querySourceMapping">The clause mapping to be used for replacing <see cref="QuerySourceReferenceExpression"/> instances.</param>
     /// <returns>An expression with all <see cref="QuerySourceReferenceExpression"/> and <see cref="SubQueryExpression"/> instances replaced
     /// as required by a <see cref="QueryModel.Clone()"/> operation.</returns>
-    public static Expression AdjustExpressionAfterCloning (Expression expression, ClauseMapping clauseMapping)
+    public static Expression AdjustExpressionAfterCloning (Expression expression, QuerySourceMapping querySourceMapping)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      ArgumentUtility.CheckNotNull ("clauseMapping", clauseMapping);
+      ArgumentUtility.CheckNotNull ("querySourceMapping", querySourceMapping);
 
-      return new CloningExpressionTreeVisitor (clauseMapping, false).VisitExpression (expression);
+      return new CloningExpressionTreeVisitor (querySourceMapping, false).VisitExpression (expression);
     }
     
-    private CloningExpressionTreeVisitor (ClauseMapping clauseMapping, bool ignoreUnmappedReferences)
-      : base (clauseMapping, ignoreUnmappedReferences)
+    private CloningExpressionTreeVisitor (QuerySourceMapping querySourceMapping, bool ignoreUnmappedReferences)
+      : base (querySourceMapping, ignoreUnmappedReferences)
     {
     }
 
@@ -54,7 +54,7 @@ namespace Remotion.Data.Linq.Clauses.ExpressionTreeVisitors
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      var clonedQueryModel = expression.QueryModel.Clone (ClauseMapping);
+      var clonedQueryModel = expression.QueryModel.Clone (QuerySourceMapping);
       return new SubQueryExpression (clonedQueryModel);
     }
   }

@@ -33,7 +33,7 @@ namespace Remotion.Data.UnitTests.Linq
     private MainFromClause _mainFromClause;
     private SelectClause _selectClause;
     private QueryModel _queryModel;
-    private ClauseMapping _clauseMapping;
+    private QuerySourceMapping _querySourceMapping;
 
     [SetUp]
     public void SetUp ()
@@ -41,7 +41,7 @@ namespace Remotion.Data.UnitTests.Linq
       _mainFromClause = ExpressionHelper.CreateMainFromClause();
       _selectClause = ExpressionHelper.CreateSelectClause();
       _queryModel = new QueryModel (typeof (IQueryable<string>), _mainFromClause, _selectClause);
-      _clauseMapping = new ClauseMapping();
+      _querySourceMapping = new QuerySourceMapping();
     }
 
     [Test]
@@ -136,9 +136,9 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void Clone_HasCloneForMainFromClause_PassesMapping ()
     {
-      var clone = _queryModel.Clone (_clauseMapping);
+      var clone = _queryModel.Clone (_querySourceMapping);
       Assert.That (
-          ((QuerySourceReferenceExpression) _clauseMapping.GetExpression (_queryModel.MainFromClause)).ReferencedClause,
+          ((QuerySourceReferenceExpression) _querySourceMapping.GetExpression (_queryModel.MainFromClause)).ReferencedClause,
           Is.SameAs (clone.MainFromClause));
     }
 
@@ -160,9 +160,9 @@ namespace Remotion.Data.UnitTests.Linq
       _queryModel.SelectClause.Selector = new QuerySourceReferenceExpression (oldReferencedClause);
 
       var newReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause());
-      _clauseMapping.AddMapping (oldReferencedClause, newReferenceExpression);
+      _querySourceMapping.AddMapping (oldReferencedClause, newReferenceExpression);
 
-      var clone = _queryModel.Clone (_clauseMapping);
+      var clone = _queryModel.Clone (_querySourceMapping);
       Assert.That (clone.SelectClause.Selector, Is.SameAs (newReferenceExpression));
     }
 
@@ -194,9 +194,9 @@ namespace Remotion.Data.UnitTests.Linq
       _queryModel.BodyClauses.Add (bodyClause);
 
       var newReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause());
-      _clauseMapping.AddMapping (oldReferencedClause, newReferenceExpression);
+      _querySourceMapping.AddMapping (oldReferencedClause, newReferenceExpression);
 
-      var clone = _queryModel.Clone (_clauseMapping);
+      var clone = _queryModel.Clone (_querySourceMapping);
       Assert.That (((WhereClause) clone.BodyClauses[0]).Predicate, Is.SameAs (newReferenceExpression));
     }
 
@@ -224,11 +224,11 @@ namespace Remotion.Data.UnitTests.Linq
       _queryModel.ResultOperators.Add (resultOperatorMock);
 
       resultOperatorMock
-          .Expect (mock => mock.Clone (Arg<CloneContext>.Matches (cc => cc.ClauseMapping == _clauseMapping)))
+          .Expect (mock => mock.Clone (Arg<CloneContext>.Matches (cc => cc.QuerySourceMapping == _querySourceMapping)))
           .Return (ExpressionHelper.CreateResultOperator ());
       resultOperatorMock.Replay ();
 
-      _queryModel.Clone (_clauseMapping);
+      _queryModel.Clone (_querySourceMapping);
 
       resultOperatorMock.VerifyAllExpectations ();
     }

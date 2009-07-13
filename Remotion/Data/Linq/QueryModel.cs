@@ -172,7 +172,7 @@ namespace Remotion.Data.Linq
     /// </summary>
     public QueryModel Clone ()
     {
-      return Clone (new ClauseMapping());
+      return Clone (new QuerySourceMapping());
     }
 
     /// <summary>
@@ -181,16 +181,16 @@ namespace Remotion.Data.Linq
     /// in  this <see cref="QueryModel"/> (including its subqueries) is adjusted to point to the respective clones in the cloned 
     /// <see cref="QueryModel"/>. Any subquery nested in the <see cref="QueryModel"/> is also cloned.
     /// </summary>
-    /// <param name="clauseMapping">The <see cref="ClauseMapping"/> defining how to adjust instances of 
+    /// <param name="querySourceMapping">The <see cref="QuerySourceMapping"/> defining how to adjust instances of 
     /// <see cref="QuerySourceReferenceExpression"/> in the cloned <see cref="QueryModel"/>. If there is a <see cref="QuerySourceReferenceExpression"/>
     /// that points out of the <see cref="QueryModel"/> being cloned, specify its replacement via this parameter. At the end of the cloning process,
     /// this object maps all the clauses in this original <see cref="QueryModel"/> to the clones created in the process.
     /// </param>
-    public QueryModel Clone (ClauseMapping clauseMapping)
+    public QueryModel Clone (QuerySourceMapping querySourceMapping)
     {
-      ArgumentUtility.CheckNotNull ("clauseMapping", clauseMapping);
+      ArgumentUtility.CheckNotNull ("querySourceMapping", querySourceMapping);
 
-      var cloneContext = new CloneContext (clauseMapping);
+      var cloneContext = new CloneContext (querySourceMapping);
       var queryModelBuilder = new QueryModelBuilder();
 
       queryModelBuilder.AddClause (MainFromClause.Clone (cloneContext));
@@ -205,7 +205,7 @@ namespace Remotion.Data.Linq
       }
 
       var clone = queryModelBuilder.Build (ResultType);
-      clone.TransformExpressions (ex => CloningExpressionTreeVisitor.AdjustExpressionAfterCloning (ex, cloneContext.ClauseMapping));
+      clone.TransformExpressions (ex => CloningExpressionTreeVisitor.AdjustExpressionAfterCloning (ex, cloneContext.QuerySourceMapping));
       return clone;
     }
 

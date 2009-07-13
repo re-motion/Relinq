@@ -28,7 +28,7 @@ namespace Remotion.Data.Linq.Clauses
   /// Base class for from clauses (<see cref="AdditionalFromClause"/> and <see cref="MainFromClause"/>). From clauses define query sources that
   /// provide data items to the query which are filtered, ordered, projected, or otherwise processed by the following clauses.
   /// </summary>
-  public abstract class FromClauseBase : IClause
+  public abstract class FromClauseBase : IClause, IQuerySource
   {
     private string _itemName;
     private Type _itemType;

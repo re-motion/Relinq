@@ -36,7 +36,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     [Test]
     public void Clone ()
     {
-      var clonedClauseMapping = new ClauseMapping ();
+      var clonedClauseMapping = new QuerySourceMapping ();
       var cloneContext = new CloneContext (clonedClauseMapping);
       var clone = _resultOperator.Clone (cloneContext);
 

@@ -35,7 +35,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void SetUp ()
     {
       _mainFromClause = ExpressionHelper.CreateMainFromClause();
-      _cloneContext = new CloneContext (new ClauseMapping());
+      _cloneContext = new CloneContext (new QuerySourceMapping());
     }
 
     [Test]
@@ -119,7 +119,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Clone_AddsClauseToMapping ()
     {
       var clone = _mainFromClause.Clone (_cloneContext);
-      Assert.That (((QuerySourceReferenceExpression) _cloneContext.ClauseMapping.GetExpression (_mainFromClause)).ReferencedClause, Is.SameAs (clone));
+      Assert.That (((QuerySourceReferenceExpression) _cloneContext.QuerySourceMapping.GetExpression (_mainFromClause)).ReferencedClause, Is.SameAs (clone));
     }
   }
 }
