@@ -42,6 +42,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       _nodeTypeRegistry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
       _nodeTypeRegistry.Register (TakeExpressionNode.SupportedMethods, typeof (TakeExpressionNode));
       _nodeTypeRegistry.Register (CountExpressionNode.SupportedMethods, typeof (CountExpressionNode));
+      _nodeTypeRegistry.Register (JoinExpressionNode.SupportedMethods, typeof (JoinExpressionNode));
 
       _parser = new MethodCallExpressionParser (_nodeTypeRegistry);
 
@@ -100,29 +101,47 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
-    public void Parse_TakeMethod_WithConstant ()
+    public void Parse_WithConstantExpression ()
     {
-      var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (q => q.Take (5));
+      var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (
+          q => q.Join (ExpressionHelper.CreateQuerySource(), i => i, s => s.ID, (i, s) => i));
 
       var result = _parser.Parse ("x", _source, methodCallExpression);
 
-      Assert.That (result, Is.InstanceOfType (typeof (TakeExpressionNode)));
-      Assert.That (((TakeExpressionNode) result).Source, Is.SameAs (_source));
-      Assert.That (((TakeExpressionNode) result).Count, Is.EqualTo (5));
+      Assert.That (result, Is.InstanceOfType (typeof (JoinExpressionNode)));
+      Assert.That (((JoinExpressionNode) result).Source, Is.SameAs (_source));
+      Assert.That (((JoinExpressionNode) result).InnerSequence, Is.InstanceOfType (typeof (MethodCallExpression)));
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "The parameter expression type 'Add' is not supported by " 
-        + "MethodCallExpressionParser. Only UnaryExpressions and ConstantExpressions are supported. To transform other expressions to "
-        + "ConstantExpressions, use PartialTreeEvaluatingVisitor to simplify the expression tree.")]
+    public void Parse_WithConstantExpression_ContainingAnExpression ()
+    {
+      var selectMethod = ParserUtility.GetMethod (() => ((IQueryable<int>) null).Select (i => i));
+      var p = Expression.Parameter (typeof (int), "i");
+      var methodCallExpression = Expression.Call (
+          selectMethod,
+          Expression.Parameter (typeof (IQueryable<int>), "e"),
+          Expression.Constant (Expression.Lambda<Func<int, int>> (p, p)));
+        
+      var result = _parser.Parse ("x", _source, methodCallExpression);
+
+      Assert.That (result, Is.InstanceOfType (typeof (SelectExpressionNode)));
+      Assert.That (((SelectExpressionNode) result).Source, Is.SameAs (_source));
+      Assert.That (((SelectExpressionNode) result).Selector, Is.InstanceOfType (typeof (LambdaExpression)));
+    }
+
+    [Test]
     public void Parse_WithNonEvaluatedParameter ()
     {
-// ReSharper disable ConvertToConstant.Local
-      var outer = 4;
-// ReSharper restore ConvertToConstant.Local
-      var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (q => q.Take (outer + 1));
+      var innerSequence = ExpressionHelper.CreateQuerySource ();
+      var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (
+          q => q.Join (innerSequence, i => i, s => s.ID, (i, s) => i));
 
-      _parser.Parse ("x", _source, methodCallExpression);
+      var result = _parser.Parse ("x", _source, methodCallExpression);
+
+      Assert.That (result, Is.InstanceOfType (typeof (JoinExpressionNode)));
+      Assert.That (((JoinExpressionNode) result).Source, Is.SameAs (_source));
+      Assert.That (((JoinExpressionNode) result).InnerSequence, Is.InstanceOfType (typeof (MemberExpression)));
     }
 
     [Test]

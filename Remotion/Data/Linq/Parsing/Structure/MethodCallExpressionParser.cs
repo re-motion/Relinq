@@ -67,7 +67,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       }
     }
 
-    private object ConvertExpressionToParameterValue (Expression expression)
+    private Expression ConvertExpressionToParameterValue (Expression expression)
     {
       // Each argument of a MethodCallExpression will either be a UnaryExpression/Quote, which represents an expression passed to a Queryable method,
       // a LambdaExpression, which represents an expression passed to an Enumerable method,
@@ -75,20 +75,27 @@ namespace Remotion.Data.Linq.Parsing.Structure
       // or any other expression that represents a constant passed to the method.
       // We only support the former three, to support the latter, PartialTreeEvaluatingVisitor must be used.
 
-      if (expression.NodeType == ExpressionType.Constant)
-        return ((ConstantExpression) expression).Value;
-      else if (expression.NodeType == ExpressionType.Quote)
+      if (expression.NodeType == ExpressionType.Quote)
         return ((UnaryExpression) expression).Operand;
-      else if (expression.NodeType == ExpressionType.Lambda)
-        return expression;
+      else if (expression.NodeType == ExpressionType.Constant && ((ConstantExpression) expression).Value is LambdaExpression)
+        return (Expression) ((ConstantExpression) expression).Value;
       else
-      {
-        var message = string.Format (
-            "The parameter expression type '{0}' is not supported by MethodCallExpressionParser. Only UnaryExpressions and ConstantExpressions are "
-            + "supported. To transform other expressions to ConstantExpressions, use PartialTreeEvaluatingVisitor to simplify the expression tree.",
-            expression.NodeType);
-        throw new ParserException (message);
-      }
+        return expression;
+
+      //if (expression.NodeType == ExpressionType.Constant)
+      //  return ((ConstantExpression) expression).Value;
+      //else if (expression.NodeType == ExpressionType.Quote)
+      //  return ((UnaryExpression) expression).Operand;
+      //else if (expression.NodeType == ExpressionType.Lambda)
+      //  return expression;
+      //else
+      //{
+      //  var message = string.Format (
+      //      "The parameter expression type '{0}' is not supported by MethodCallExpressionParser. Only UnaryExpressions and ConstantExpressions are "
+      //      + "supported. To transform other expressions to ConstantExpressions, use PartialTreeEvaluatingVisitor to simplify the expression tree.",
+      //      expression.NodeType);
+      //  throw new ParserException (message);
+      //}
     }
 
     private IExpressionNode CreateExpressionNode (Type nodeType, MethodCallExpressionParseInfo parseInfo, object[] additionalConstructorParameters)

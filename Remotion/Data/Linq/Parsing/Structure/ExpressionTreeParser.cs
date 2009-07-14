@@ -112,15 +112,23 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
     private LambdaExpression GetLambdaArgument (MethodCallExpression methodCallExpression)
     {
-      if (methodCallExpression.Arguments.Count <= 1)
-        return null;
-      
-      var lambdaExpression = methodCallExpression.Arguments[1] as LambdaExpression;
+      foreach (var argument in methodCallExpression.Arguments)
+      {
+        var lambdaExpression = GetLambdaExpression(argument);
+        if (lambdaExpression != null)
+          return lambdaExpression;
+      }
+      return null;
+    }
+
+    private LambdaExpression GetLambdaExpression (Expression expression)
+    {
+      var lambdaExpression = expression as LambdaExpression;
       if (lambdaExpression != null)
         return lambdaExpression;
       else
       {
-        var unaryExpression = methodCallExpression.Arguments[1] as UnaryExpression;
+        var unaryExpression = expression as UnaryExpression;
         if (unaryExpression != null)
           return unaryExpression.Operand as LambdaExpression;
         else

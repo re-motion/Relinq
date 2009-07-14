@@ -152,12 +152,12 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     public void CreateQueryModel_AppliesResultOperators ()
     {
       IQueryable<int> value = new[] { 1, 2, 3 }.AsQueryable ();
-      var expressionTree = (MethodCallExpression) ExpressionHelper.MakeExpression (() => value.Take (3).Count ());
+      var expressionTree = (MethodCallExpression) ExpressionHelper.MakeExpression (() => value.Distinct().Count ());
 
       QueryModel queryModel = _queryParser.GetParsedQuery (expressionTree);
 
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (2));
-      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (TakeResultOperator)));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (DistinctResultOperator)));
       Assert.That (queryModel.ResultOperators[1], Is.InstanceOfType (typeof (CountResultOperator)));
     }
 
@@ -228,7 +228,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     {
       IQueryable<int> value = new[] { 1, 2, 3 }.AsQueryable ();
       // ReSharper disable RedundantAnonymousTypePropertyName
-      var expressionTree = (MethodCallExpression) ExpressionHelper.MakeExpression (() => value.Select (i => i + 1).Take (1).Count ());
+      var expressionTree = (MethodCallExpression) ExpressionHelper.MakeExpression (() => value.Select (i => i + 1).Distinct().Count ());
       // ReSharper restore RedundantAnonymousTypePropertyName
 
       QueryModel queryModel = _queryParser.GetParsedQuery (expressionTree);
@@ -237,7 +237,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var expectedSelector = ExpressionHelper.Resolve<int, int> (queryModel.MainFromClause, i => i + 1);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedSelector, selectClause.Selector);
 
-      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (TakeResultOperator)));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (DistinctResultOperator)));
       Assert.That (queryModel.ResultOperators[1], Is.InstanceOfType (typeof (CountResultOperator)));
     }
 
@@ -246,7 +246,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     {
       IQueryable<int> value = new[] { 1, 2, 3 }.AsQueryable ();
       // ReSharper disable RedundantAnonymousTypePropertyName
-      var expressionTree = (MethodCallExpression) ExpressionHelper.MakeExpression (() => value.Select (i => i + 1).Take (1).Where (i => i > 5));
+      var expressionTree = (MethodCallExpression) ExpressionHelper.MakeExpression (() => value.Select (i => i + 1).Distinct().Where (i => i > 5));
       // ReSharper restore RedundantAnonymousTypePropertyName
 
       QueryModel queryModel = _queryParser.GetParsedQuery (expressionTree);
@@ -263,7 +263,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       ExpressionTreeComparer.CheckAreEqualTrees (expectedSubSelector, subSelectClause.Selector);
 
       Assert.That (subQueryModel.ResultOperators.Count, Is.EqualTo (1));
-      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (TakeResultOperator)));
+      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (DistinctResultOperator)));
     }
   }
 }

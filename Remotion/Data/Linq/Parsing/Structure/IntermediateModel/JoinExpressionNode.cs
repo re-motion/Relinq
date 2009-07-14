@@ -142,7 +142,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       // get the real inner key selector.
       var dummyInnerKeySelector = Expression.Constant (null);
       var joinClause = new JoinClause (
-          AssociatedIdentifier,
+          ResultSelector.Parameters[1].Name,
           ResultSelector.Parameters[1].Type,
           InnerSequence,
           GetResolvedOuterKeySelector (clauseGenerationContext),

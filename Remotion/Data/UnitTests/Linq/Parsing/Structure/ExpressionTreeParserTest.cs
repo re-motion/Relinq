@@ -251,6 +251,16 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
+    public void InferAssociatedIdentifierForSource_WithUnary_AfterConstant ()
+    {
+      var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression (
+          () => _intSource.Join (ExpressionHelper.CreateQuerySource(), i => i, s => s.ID, (i, s) => i));
+
+      var identifier = (string) PrivateInvoke.InvokeNonPublicMethod (_expressionTreeParser, "InferAssociatedIdentifierForSource", methodCallExpression);
+      Assert.That (identifier, Is.EqualTo ("i"));
+    }
+
+    [Test]
     public void InferAssociatedIdentifierForSource_WithLambda ()
     {
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression (() => ((IEnumerable<int>)_intSource).Select (i => i));

@@ -34,13 +34,15 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     private IQueryable<Student> _querySource;
     private QueryParser _queryParser;
     private IQueryable<IndustrialSector> _industrialSectorQuerySource;
+    private IQueryable<Student_Detail> _detailQuerySource;
 
     [SetUp]
     public void SetUp ()
     {
       _querySource = ExpressionHelper.CreateQuerySource ();
       _industrialSectorQuerySource = ExpressionHelper.CreateQuerySource_IndustrialSector();
-      _queryParser = new QueryParser();
+      _detailQuerySource = ExpressionHelper.CreateQuerySource_Detail ();
+      _queryParser = new QueryParser ();
     }
 
     [Test]
@@ -346,11 +348,12 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
+    [Ignore ("TODO 1366")]
     public void SubQueryInMainFromClauseWithResultOperator ()
     {
       var query = from s in
-                    (from sd1 in ExpressionHelper.CreateQuerySource_Detail () select sd1.Student).Take (5)
-                  from sd in ExpressionHelper.CreateQuerySource_Detail ()
+                    (from sd1 in _detailQuerySource select sd1.Student).Take (5)
+                  from sd in _detailQuerySource
                   select new Tuple<Student, Student_Detail> ( s, sd );
       var expression = query.Expression;
       var queryModel = _queryParser.GetParsedQuery (expression);
@@ -555,13 +558,88 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedClause, Is.SameAs (mainFromClause));
     }
 
-    private void CheckResolvedExpression<TParameter, TResult> (Expression expressionToCheck, FromClauseBase clauseToReference, Expression<Func<TParameter, TResult>> expectedUnresolvedExpression)
+    [Test]
+    public void Join ()
+    {
+      var query = from s in _querySource
+                  join sd in _detailQuerySource on s.ID equals sd.StudentID
+                  select Tuple.NewTuple (s, sd);
+
+      var queryModel = _queryParser.GetParsedQuery (query.Expression);
+      Assert.That (queryModel.ResultType, Is.SameAs (typeof (IQueryable<Tuple<Student, Student_Detail>>)));
+
+      var mainFromClause = queryModel.MainFromClause;
+      Assert.That (((ConstantExpression) mainFromClause.FromExpression).Value, Is.SameAs (_querySource));
+      Assert.That (mainFromClause.ItemType, Is.SameAs (typeof (Student)));
+      Assert.That (mainFromClause.ItemName, Is.EqualTo ("s"));
+
+      var joinClause = ((JoinClause) queryModel.BodyClauses[0]);
+      Assert.That (((ConstantExpression) joinClause.InnerSequence).Value, Is.SameAs (_detailQuerySource));
+      Assert.That (joinClause.ItemType, Is.SameAs (typeof (Student_Detail)));
+      Assert.That (joinClause.ItemName, Is.EqualTo ("sd"));
+      CheckResolvedExpression<Student, int> (joinClause.OuterKeySelector, mainFromClause, s => s.ID);
+      CheckResolvedExpression<Student_Detail, int> (joinClause.InnerKeySelector, joinClause, sd => sd.StudentID);
+
+      var selectClause = queryModel.SelectClause;
+      CheckResolvedExpression<Student, Student_Detail, Tuple<Student, Student_Detail>> (
+          selectClause.Selector, 
+          mainFromClause, 
+          joinClause, 
+          (s, sd) => Tuple.NewTuple (s, sd));
+    }
+
+    [Test]
+    public void Join_InnerSequenceDependingOnOuter ()
+    {
+      var query = from s in _querySource
+                  from s2 in (from s1 in _querySource join s2 in s.Friends on s.ID equals s2.ID select s2)
+                  select s2;
+
+      var queryModel = _queryParser.GetParsedQuery (query.Expression);
+      var mainFromClause = queryModel.MainFromClause;
+      var additionalFromClause = (AdditionalFromClause) queryModel.BodyClauses[0];
+      
+      var innerJoinClause = ((JoinClause) ((SubQueryExpression) additionalFromClause.FromExpression).QueryModel.BodyClauses[0]);
+      CheckResolvedExpression<Student, IEnumerable<Student>> (innerJoinClause.InnerSequence, mainFromClause, s => s.Friends);
+      Assert.That (innerJoinClause.ItemType, Is.SameAs (typeof (Student)));
+      Assert.That (innerJoinClause.ItemName, Is.EqualTo ("s2"));
+    }
+
+    [Test]
+    public void Join_WithoutSelect ()
+    {
+      var query = _querySource.Join (_detailQuerySource, s => s, sd => sd.Student, (s, sd) => Tuple.NewTuple (s, sd));
+
+      var queryModel = _queryParser.GetParsedQuery (query.Expression);
+      Assert.That (queryModel.ResultType, Is.SameAs (typeof (IQueryable<Tuple<Student, Student_Detail>>)));
+
+      var mainFromClause = queryModel.MainFromClause;
+      Assert.That (((ConstantExpression) mainFromClause.FromExpression).Value, Is.SameAs (_querySource));
+      Assert.That (mainFromClause.ItemType, Is.SameAs (typeof (Student)));
+      Assert.That (mainFromClause.ItemName, Is.EqualTo ("s"));
+
+      var joinClause = (JoinClause) queryModel.BodyClauses[0];
+      Assert.That (((ConstantExpression) joinClause.InnerSequence).Value, Is.SameAs (_detailQuerySource));
+      Assert.That (joinClause.ItemType, Is.SameAs (typeof (Student_Detail)));
+      Assert.That (joinClause.ItemName, Is.EqualTo ("sd"));
+      CheckResolvedExpression<Student, Student> (joinClause.OuterKeySelector, mainFromClause, s => s);
+      CheckResolvedExpression<Student_Detail, Student> (joinClause.InnerKeySelector, joinClause, sd => sd.Student);
+
+      var selectClause = queryModel.SelectClause;
+      CheckResolvedExpression<Student, Student_Detail, Tuple<Student, Student_Detail>> (
+          selectClause.Selector,
+          mainFromClause,
+          joinClause,
+          (s, sd) => Tuple.NewTuple (s, sd));
+    }
+
+    private void CheckResolvedExpression<TParameter, TResult> (Expression expressionToCheck, IQuerySource clauseToReference, Expression<Func<TParameter, TResult>> expectedUnresolvedExpression)
     {
       var expectedPredicate = ExpressionHelper.Resolve (clauseToReference, expectedUnresolvedExpression);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedPredicate, expressionToCheck);
     }
 
-    private void CheckResolvedExpression<TParameter1, TParameter2, TResult> (Expression expressionToCheck, FromClauseBase clauseToReference1, FromClauseBase clauseToReference2, Expression<Func<TParameter1, TParameter2, TResult>> expectedUnresolvedExpression)
+    private void CheckResolvedExpression<TParameter1, TParameter2, TResult> (Expression expressionToCheck, IQuerySource clauseToReference1, IQuerySource clauseToReference2, Expression<Func<TParameter1, TParameter2, TResult>> expectedUnresolvedExpression)
     {
       var expectedPredicate = ExpressionHelper.Resolve (clauseToReference1, clauseToReference2, expectedUnresolvedExpression);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedPredicate, expressionToCheck);

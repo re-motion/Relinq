@@ -123,7 +123,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       var clause = (JoinClause) QueryModel.BodyClauses[0];
 
-      Assert.That (clause.ItemName, Is.EqualTo ("join"));
+      Assert.That (clause.ItemName, Is.EqualTo ("i"));
       Assert.That (clause.ItemType, Is.SameAs (typeof (string)));
       Assert.That (clause.InnerSequence, Is.SameAs (_innerSequence));
       Assert.That (clause.OuterKeySelector, Is.SameAs (_node.GetResolvedOuterKeySelector (ClauseGenerationContext)));
