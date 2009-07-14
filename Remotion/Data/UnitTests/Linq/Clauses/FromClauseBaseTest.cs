@@ -18,46 +18,12 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
-using Rhino.Mocks;
 
 namespace Remotion.Data.UnitTests.Linq.Clauses
 {
   [TestFixture]
   public class FromClauseBaseTest
   {
-    [Test]
-    public void AddJoinClause()
-    {
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause();
-
-      JoinClause joinClause1 = ExpressionHelper.CreateJoinClause();
-      JoinClause joinClause2 = ExpressionHelper.CreateJoinClause();
-
-      fromClause.JoinClauses.Add (joinClause1);
-      fromClause.JoinClauses.Add (joinClause2);
-
-      Assert.That (fromClause.JoinClauses, Is.EqualTo (new object[] { joinClause1, joinClause2 }));
-      Assert.AreEqual (2, fromClause.JoinClauses.Count);
-    }
-
-    [Test]
-    [ExpectedException (typeof (ArgumentNullException))]
-    public void AddJoinClause_Null_ThrowsArgumentNullException ()
-    {
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause ();
-      fromClause.JoinClauses.Add (null);
-    }
-
-    [Test]
-    [ExpectedException (typeof (ArgumentNullException))]
-    public void ChangeJoinClause_WithNull_ThrowsArgumentNullException ()
-    {
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause ();
-      JoinClause joinClause = ExpressionHelper.CreateJoinClause ();
-      fromClause.JoinClauses.Add (joinClause);
-      fromClause.JoinClauses[0] = null;
-    }
-
     [Test]
     public void TransformExpressions ()
     {
@@ -75,38 +41,11 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
-    public void TransformExpressions_PassedToJoinClauses ()
-    {
-      Func<Expression, Expression> transformer = ex => ex;
-      var expression = ExpressionHelper.CreateExpression ();
-      MainFromClause fromClause = ExpressionHelper.CreateMainFromClause ();
-      var joinClauseMock = MockRepository.GenerateMock<JoinClause> ("item", typeof(string), expression, expression, expression);
-      fromClause.JoinClauses.Add (joinClauseMock);
-
-      joinClauseMock.Expect (mock => mock.TransformExpressions (transformer));
-
-      joinClauseMock.Replay ();
-
-      fromClause.TransformExpressions (transformer);
-
-      joinClauseMock.VerifyAllExpectations ();
-    }
-
-    [Test]
     public new void ToString ()
     {
       var fromClause = new MainFromClause ("x", typeof (Student), Expression.Constant (0));
       Assert.That (fromClause.ToString (), Is.EqualTo ("from Student x in 0"));
     }
 
-    [Test]
-    public void ToString_WithJoins ()
-    {
-      var fromClause = new MainFromClause ("x", typeof (Student), Expression.Constant (0));
-      fromClause.JoinClauses.Add (new JoinClause ("y", typeof (Student), Expression.Constant (1), Expression.Constant (2), Expression.Constant (3)));
-      fromClause.JoinClauses.Add (new JoinClause ("z", typeof (Student), Expression.Constant (4), Expression.Constant (5), Expression.Constant (6)));
-
-      Assert.That (fromClause.ToString (), Is.EqualTo ("from Student x in 0 join Student y in 1 on 2 equals 3 join Student z in 4 on 5 equals 6"));
-    }
   }
 }

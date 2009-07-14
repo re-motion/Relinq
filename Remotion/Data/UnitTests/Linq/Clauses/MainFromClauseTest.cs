@@ -49,9 +49,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (fromClause.ItemName, Is.EqualTo ("s"));
       Assert.That (fromClause.ItemType, Is.SameAs (typeof (Student)));
       Assert.That (fromClause.FromExpression, Is.SameAs (constantExpression));
-
-      Assert.That (fromClause.JoinClauses, Is.Empty);
-      Assert.That (fromClause.JoinClauses.Count, Is.EqualTo (0));
     }
 
     [Test]
@@ -91,28 +88,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clone.ItemName, Is.EqualTo (_mainFromClause.ItemName));
       Assert.That (clone.ItemType, Is.SameAs (_mainFromClause.ItemType));
       Assert.That (clone.FromExpression, Is.SameAs (_mainFromClause.FromExpression));
-    }
-
-    
-    [Test]
-    public void Clone_JoinClauses ()
-    {
-      var originalJoinClause1 = ExpressionHelper.CreateJoinClause ();
-      _mainFromClause.JoinClauses.Add (originalJoinClause1);
-
-      var originalJoinClause2 = ExpressionHelper.CreateJoinClause ();
-      _mainFromClause.JoinClauses.Add (originalJoinClause2);
-
-      var clone = _mainFromClause.Clone (_cloneContext);
-      Assert.That (clone.JoinClauses.Count, Is.EqualTo (2));
-      
-      Assert.That (clone.JoinClauses[0], Is.Not.SameAs (originalJoinClause1));
-      Assert.That (clone.JoinClauses[0].EqualityExpression, Is.SameAs (originalJoinClause1.EqualityExpression));
-      Assert.That (clone.JoinClauses[0].InExpression, Is.SameAs (originalJoinClause1.InExpression));
-
-      Assert.That (clone.JoinClauses[1], Is.Not.SameAs (originalJoinClause2));
-      Assert.That (clone.JoinClauses[1].EqualityExpression, Is.SameAs (originalJoinClause2.EqualityExpression));
-      Assert.That (clone.JoinClauses[1].InExpression, Is.SameAs (originalJoinClause2.InExpression));
     }
 
     [Test]

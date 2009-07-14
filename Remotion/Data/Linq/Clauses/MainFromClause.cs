@@ -16,7 +16,6 @@
 using System;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.Expressions;
-using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses
@@ -73,7 +72,6 @@ namespace Remotion.Data.Linq.Clauses
 
       var clone = new MainFromClause (ItemName, ItemType, FromExpression);
       cloneContext.QuerySourceMapping.AddMapping (this, new QuerySourceReferenceExpression (clone));
-      clone.AddClonedJoinClauses (JoinClauses, cloneContext);
       return clone;
     }
   }

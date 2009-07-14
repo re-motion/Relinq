@@ -22,15 +22,15 @@ namespace Remotion.Data.Linq
 {
   /// <summary>
   /// Provides a default implementation of <see cref="IQueryModelVisitor"/> which automatically visits child items. That is, the default 
-  /// implementation of <see cref="VisitQueryModel"/> automatically calls <c>Accept</c> on all clauses in the <see cref="QueryModel"/>,
-  /// the default implementation of <see cref="VisitMainFromClause"/> automatically calls <see cref="JoinClause.Accept"/> on the 
-  /// <see cref="JoinClause"/> instances in its <see cref="FromClauseBase.JoinClauses"/> collection, and so on.
+  /// implementation of <see cref="VisitQueryModel"/> automatically calls <c>Accept</c> on all clauses in the <see cref="QueryModel"/>
+  /// and the default implementation of <see cref="VisitOrderByClause"/> automatically calls <see cref="Ordering.Accept"/> on the 
+  /// <see cref="Ordering"/> instances in its <see cref="OrderByClause.Orderings"/> collection, and so on.
   /// </summary>
   /// <remarks>
   /// This visitor is hardened against modifications performed on the visited <see cref="QueryModel"/> while the model is currently being visited.
   /// That is, if a the <see cref="QueryModel.BodyClauses"/> collection changes while a body clause (or a child item of a body clause) is currently 
-  /// being processed, the visitor will handle that gracefully. The same applies to <see cref="QueryModel.ResultOperators"/>, 
-  /// <see cref="OrderByClause.Orderings"/>, and <see cref="FromClauseBase.JoinClauses"/>.
+  /// being processed, the visitor will handle that gracefully. The same applies to <see cref="QueryModel.ResultOperators"/> and
+  /// <see cref="OrderByClause.Orderings"/>.
   /// </remarks>
   public abstract class QueryModelVisitorBase : IQueryModelVisitor
   {
@@ -50,7 +50,7 @@ namespace Remotion.Data.Linq
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
-      VisitJoinClauses (fromClause.JoinClauses, queryModel, fromClause);
+      // nothing to do here      
     }
 
     public virtual void VisitAdditionalFromClause (AdditionalFromClause fromClause, QueryModel queryModel, int index)
@@ -58,15 +58,14 @@ namespace Remotion.Data.Linq
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
-      VisitJoinClauses (fromClause.JoinClauses, queryModel, fromClause);
+      // nothing to do here
     }
 
-    public virtual void VisitJoinClause (JoinClause joinClause, QueryModel queryModel, FromClauseBase fromClause, int index)
+    public virtual void VisitJoinClause (JoinClause joinClause, QueryModel queryModel, int index)
     {
       ArgumentUtility.CheckNotNull ("joinClause", joinClause);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
-      ArgumentUtility.CheckNotNull ("fromClause", fromClause);
-
+      
       // nothing to do here
     }
 
@@ -118,16 +117,6 @@ namespace Remotion.Data.Linq
 
       foreach (var indexValuePair in bodyClauses.AsChangeResistantEnumerableWithIndex())
         indexValuePair.Value.Accept (this, queryModel, indexValuePair.Index);
-    }
-
-    protected virtual void VisitJoinClauses (ObservableCollection<JoinClause> joinClauses, QueryModel queryModel, FromClauseBase fromClause)
-    {
-      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
-      ArgumentUtility.CheckNotNull ("fromClause", fromClause);
-      ArgumentUtility.CheckNotNull ("joinClauses", joinClauses);
-
-      foreach (var indexValuePair in joinClauses.AsChangeResistantEnumerableWithIndex())
-        indexValuePair.Value.Accept (this, queryModel, fromClause, indexValuePair.Index);
     }
 
     protected virtual void VisitOrderings (ObservableCollection<Ordering> orderings, QueryModel queryModel, OrderByClause orderByClause)

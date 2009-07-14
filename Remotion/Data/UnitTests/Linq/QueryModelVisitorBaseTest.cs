@@ -34,16 +34,11 @@ namespace Remotion.Data.UnitTests.Linq
     private TestQueryModelVisitor _testVisitor;
     private WhereClause _bodyClauseMock1;
     private WhereClause _bodyClauseMock2;
-    private JoinClause _joinClauseMock1;
-    private JoinClause _joinClauseMock2;
     private Ordering _orderingMock1;
     private Ordering _orderingMock2;
     private ResultOperatorBase _resultOperatorMock1;
     private ResultOperatorBase _resultOperatorMock2;
     private QueryModel _queryModel;
-    private SelectClause _selectClause;
-    private MainFromClause _mainFromClause;
-    private AdditionalFromClause _additionalFromClause;
     private OrderByClause _orderByClause;
 
     [SetUp]
@@ -56,20 +51,6 @@ namespace Remotion.Data.UnitTests.Linq
       _bodyClauseMock1 = _mockRepository.StrictMock<WhereClause> (ExpressionHelper.CreateExpression());
       _bodyClauseMock2 = _mockRepository.StrictMock<WhereClause> (ExpressionHelper.CreateExpression());
 
-      _joinClauseMock1 = _mockRepository.StrictMock<JoinClause> (
-          "x",
-          typeof (Student),
-          ExpressionHelper.CreateExpression(),
-          ExpressionHelper.CreateExpression(),
-          ExpressionHelper.CreateExpression());
-
-      _joinClauseMock2 = _mockRepository.StrictMock<JoinClause> (
-          "x",
-          typeof (Student),
-          ExpressionHelper.CreateExpression(),
-          ExpressionHelper.CreateExpression(),
-          ExpressionHelper.CreateExpression());
-
       _orderingMock1 = _mockRepository.StrictMock<Ordering> (ExpressionHelper.CreateExpression(), OrderingDirection.Asc);
       _orderingMock2 = _mockRepository.StrictMock<Ordering> (ExpressionHelper.CreateExpression(), OrderingDirection.Asc);
 
@@ -77,9 +58,6 @@ namespace Remotion.Data.UnitTests.Linq
       _resultOperatorMock2 = _mockRepository.StrictMock<ResultOperatorBase> (CollectionExecutionStrategy.Instance);
 
       _queryModel = ExpressionHelper.CreateQueryModel ();
-      _selectClause = ExpressionHelper.CreateSelectClause ();
-      _mainFromClause = ExpressionHelper.CreateMainFromClause ();
-      _additionalFromClause = ExpressionHelper.CreateAdditionalFromClause ();
       _orderByClause = ExpressionHelper.CreateOrderByClause ();
     }
 
@@ -111,44 +89,6 @@ namespace Remotion.Data.UnitTests.Linq
     }
 
     [Test]
-    public void VisitMainFromClause ()
-    {
-      using (_mockRepository.Ordered())
-      {
-        _visitorMock
-            .Expect (mock => mock.VisitMainFromClause (_mainFromClause, _queryModel))
-            .CallOriginalMethod (OriginalCallOptions.CreateExpectation);
-        _visitorMock
-            .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitJoinClauses", _mainFromClause.JoinClauses, _queryModel, _mainFromClause));
-      }
-
-      _visitorMock.Replay();
-
-      _visitorMock.VisitMainFromClause (_mainFromClause, _queryModel);
-
-      _visitorMock.VerifyAllExpectations();
-    }
-
-    [Test]
-    public void VisitAdditionalFromClause ()
-    {
-      using (_mockRepository.Ordered())
-      {
-        _visitorMock
-            .Expect (mock => mock.VisitAdditionalFromClause (_additionalFromClause, _queryModel, 1))
-            .CallOriginalMethod (OriginalCallOptions.CreateExpectation);
-        _visitorMock
-            .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitJoinClauses", _additionalFromClause.JoinClauses, _queryModel, _additionalFromClause));
-      }
-
-      _visitorMock.Replay();
-
-      _visitorMock.VisitAdditionalFromClause (_additionalFromClause, _queryModel, 1);
-
-      _visitorMock.VerifyAllExpectations();
-    }
-
-    [Test]
     public void VisitOrderByClause ()
     {
       using (_mockRepository.Ordered())
@@ -163,23 +103,6 @@ namespace Remotion.Data.UnitTests.Linq
       _visitorMock.Replay();
 
       _visitorMock.VisitOrderByClause (_orderByClause, _queryModel, 1);
-
-      _visitorMock.VerifyAllExpectations();
-    }
-
-    [Test]
-    public void VisitSelectClause ()
-    {
-      using (_mockRepository.Ordered())
-      {
-        _visitorMock
-            .Expect (mock => mock.VisitSelectClause (_selectClause, _queryModel))
-            .CallOriginalMethod (OriginalCallOptions.CreateExpectation);
-      }
-
-      _visitorMock.Replay();
-
-      _visitorMock.VisitSelectClause (_selectClause, _queryModel);
 
       _visitorMock.VerifyAllExpectations();
     }
@@ -223,42 +146,6 @@ namespace Remotion.Data.UnitTests.Linq
       _mockRepository.VerifyAll();
     }
     
-    [Test]
-    public void VisitJoinClauses ()
-    {
-      var joinClauses = new ObservableCollection<JoinClause> { _joinClauseMock1, _joinClauseMock2 };
-
-      using (_mockRepository.Ordered())
-      {
-        _joinClauseMock1.Expect (mock => mock.Accept (_testVisitor, _queryModel, _mainFromClause, 0));
-        _joinClauseMock2.Expect (mock => mock.Accept (_testVisitor, _queryModel, _mainFromClause, 1));
-      }
-
-      _mockRepository.ReplayAll();
-
-      _testVisitor.VisitJoinClauses (joinClauses, _queryModel, _mainFromClause);
-
-      _mockRepository.VerifyAll();
-    }
-
-    [Test]
-    public void VisitJoinClauses_WithChangingCollection ()
-    {
-      var joinClauses = new ObservableCollection<JoinClause> { _joinClauseMock1, _joinClauseMock2 };
-
-      using (_mockRepository.Ordered())
-      {
-        _joinClauseMock1.Expect (mock => mock.Accept (_testVisitor, _queryModel, _mainFromClause, 0)).WhenCalled (mi => joinClauses.RemoveAt (0));
-        _joinClauseMock2.Expect (mock => mock.Accept (_testVisitor, _queryModel, _mainFromClause, 0));
-      }
-
-      _mockRepository.ReplayAll();
-
-      _testVisitor.VisitJoinClauses (joinClauses, _queryModel, _mainFromClause);
-
-      _mockRepository.VerifyAll();
-    }
-
     [Test]
     public void VisitOrderings ()
     {

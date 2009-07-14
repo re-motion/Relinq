@@ -14,11 +14,8 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Linq.Expressions;
-using Remotion.Collections;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Utilities;
 
@@ -49,10 +46,6 @@ namespace Remotion.Data.Linq.Clauses
       _itemName = itemName;
       _itemType = itemType;
       _fromExpression = fromExpression;
-
-      JoinClauses = new ObservableCollection<JoinClause>();
-      JoinClauses.ItemInserted += JoinClause_ItemAdded;
-      JoinClauses.ItemSet += JoinClause_ItemAdded;
     }
 
     /// <summary>
@@ -84,11 +77,6 @@ namespace Remotion.Data.Linq.Clauses
     }
 
     /// <summary>
-    /// Gets the join clauses associated with this <see cref="FromClauseBase"/>.
-    /// </summary>
-    public ObservableCollection<JoinClause> JoinClauses { get; private set; }
-
-    /// <summary>
     /// Transforms all the expressions in this clause and its child objects via the given <paramref name="transformation"/> delegate.
     /// </summary>
     /// <param name="transformation">The transformation object. This delegate is called for each <see cref="Expression"/> within this
@@ -97,32 +85,13 @@ namespace Remotion.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("transformation", transformation);
       FromExpression = transformation (FromExpression);
-
-      foreach (var joinClause in JoinClauses)
-        joinClause.TransformExpressions (transformation);
     }
 
     public override string ToString ()
     {
       var result = string.Format ("from {0} {1} in {2}", ItemType.Name, ItemName, FormattingExpressionTreeVisitor.Format (FromExpression));
-      return JoinClauses.Aggregate (result, (s, j) => s + " " + j);
+      return result;
     }
 
-    protected void AddClonedJoinClauses (IEnumerable<JoinClause> originalJoinClauses, CloneContext cloneContext)
-    {
-      ArgumentUtility.CheckNotNull ("originalJoinClauses", originalJoinClauses);
-      ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
-
-      foreach (var joinClause in originalJoinClauses)
-      {
-        var joinClauseClone = joinClause.Clone (cloneContext);
-        JoinClauses.Add (joinClauseClone);
-      }
-    }
-
-    private void JoinClause_ItemAdded (object sender, ObservableCollectionChangedEventArgs<JoinClause> e)
-    {
-      ArgumentUtility.CheckNotNull ("e.Item", e.Item);
-    }
   }
 }

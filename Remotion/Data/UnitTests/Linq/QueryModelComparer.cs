@@ -69,17 +69,10 @@ namespace Remotion.Data.UnitTests.Linq
       base.VisitAdditionalFromClause (fromClause, queryModel, index);
     }
 
-    public override void VisitJoinClause (JoinClause joinClause, QueryModel queryModel, FromClauseBase fromClause, int index)
+    public override void VisitJoinClause (JoinClause joinClause, QueryModel queryModel, int index)
     {
-      JoinClause expectedJoinClause;
-      if (fromClause is MainFromClause)
-        expectedJoinClause = _expected.MainFromClause.JoinClauses[index];
-      else
-      {
-        var fromClauseIndex = queryModel.BodyClauses.IndexOf ((AdditionalFromClause) fromClause);
-        expectedJoinClause = ((AdditionalFromClause) _expected.BodyClauses[fromClauseIndex]).JoinClauses[index];
-      }
-
+      var expectedJoinClause = (JoinClause) _expected.BodyClauses[index];
+      
       Assert.That (joinClause.GetType(), Is.SameAs (expectedJoinClause.GetType()));
       Assert.That (joinClause.ItemName, Is.EqualTo (expectedJoinClause.ItemName));
       Assert.That (joinClause.ItemType, Is.SameAs (expectedJoinClause.ItemType));
@@ -87,7 +80,7 @@ namespace Remotion.Data.UnitTests.Linq
       ExpressionTreeComparer.CheckAreEqualTrees (expectedJoinClause.OnExpression, joinClause.OnExpression);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedJoinClause.EqualityExpression, joinClause.EqualityExpression);
 
-      base.VisitJoinClause (joinClause, queryModel, fromClause, index);
+      base.VisitJoinClause (joinClause, queryModel, index);
     }
 
     public override void VisitWhereClause (WhereClause whereClause, QueryModel queryModel, int index)
@@ -145,21 +138,6 @@ namespace Remotion.Data.UnitTests.Linq
     {
       Assert.That (queryModel.BodyClauses.Count, Is.EqualTo (_expected.BodyClauses.Count));
       base.VisitBodyClauses (bodyClauses, queryModel);
-    }
-
-    protected override void VisitJoinClauses (ObservableCollection<JoinClause> joinClauses, QueryModel queryModel, FromClauseBase fromClause)
-    {
-      FromClauseBase expectedFromClause;
-      if (fromClause is MainFromClause)
-        expectedFromClause = _expected.MainFromClause;
-      else
-      {
-        var fromClauseIndex = queryModel.BodyClauses.IndexOf ((AdditionalFromClause) fromClause);
-        expectedFromClause = (AdditionalFromClause) _expected.BodyClauses[fromClauseIndex];
-      }
-
-      Assert.That (fromClause.JoinClauses.Count, Is.EqualTo (expectedFromClause.JoinClauses.Count));
-      base.VisitJoinClauses (joinClauses, queryModel, fromClause);
     }
 
     protected override void VisitOrderings (ObservableCollection<Ordering> orderings, QueryModel queryModel, OrderByClause orderByClause)

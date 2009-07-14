@@ -58,14 +58,13 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     {
       var repository = new MockRepository ();
       var queryModel = ExpressionHelper.CreateQueryModel ();
-      var fromClause = ExpressionHelper.CreateMainFromClause ();
       var visitorMock = repository.StrictMock<IQueryModelVisitor> ();
 
-      visitorMock.VisitJoinClause (_joinClause, queryModel, fromClause, 1);
+      visitorMock.VisitJoinClause (_joinClause, queryModel, 1);
 
       repository.ReplayAll ();
 
-      _joinClause.Accept (visitorMock, queryModel, fromClause, 1);
+      _joinClause.Accept (visitorMock, queryModel, 1);
 
       repository.VerifyAll ();
     }
@@ -82,6 +81,14 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       Assert.That (clone.ItemType, Is.SameAs (_joinClause.ItemType));
       Assert.That (clone.InExpression, Is.SameAs (_joinClause.InExpression));
       Assert.That (clone.OnExpression, Is.SameAs (_joinClause.OnExpression));
+    }
+
+    [Test]
+    public void Clone_AddsMapping ()
+    {
+      var clone = _joinClause.Clone (_cloneContext);
+      Assert.That (((QuerySourceReferenceExpression) _cloneContext.QuerySourceMapping.GetExpression (_joinClause)).ReferencedClause,
+          Is.SameAs (clone));
     }
 
     [Test]

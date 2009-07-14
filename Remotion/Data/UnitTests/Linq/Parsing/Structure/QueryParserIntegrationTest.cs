@@ -60,8 +60,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var queryModel = _queryParser.GetParsedQuery (expression);
 
       Assert.That (queryModel.MainFromClause.ItemName, Is.EqualTo ("s"));
-      Assert.That (queryModel.MainFromClause.JoinClauses, Is.Empty);
-
+      
       var whereClause = (WhereClause) queryModel.BodyClauses[0];
       CheckResolvedExpression<Student, bool> (whereClause.Predicate, queryModel.MainFromClause, s => s.Last == "Garcia");
 
@@ -244,8 +243,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 
       var mainFromClause = queryModel.MainFromClause;
       Assert.That (mainFromClause.ItemName, Is.EqualTo ("s1"));
-      Assert.That (mainFromClause.JoinClauses.Count, Is.EqualTo (0));
-
       Assert.That (queryModel.BodyClauses.Count, Is.EqualTo (2));
 
       var whereClause = (WhereClause) queryModel.BodyClauses[0];

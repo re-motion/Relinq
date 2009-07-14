@@ -16,12 +16,13 @@
 using System;
 using System.Diagnostics;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses
 {
-  public class JoinClause : IClause, IQuerySource
+  public class JoinClause : IBodyClause, IQuerySource
   {
     private Type _itemType;
     private string _itemName;
@@ -96,15 +97,13 @@ namespace Remotion.Data.Linq.Clauses
     /// </summary>
     /// <param name="visitor">The visitor to accept.</param>
     /// <param name="queryModel">The query model in whose context this clause is visited.</param>
-    /// <param name="fromClause">The from clause in whose context this clause is visited.</param>
-    /// <param name="index">The index of this clause in the <paramref name="fromClause"/>'s <see cref="FromClauseBase.JoinClauses"/> collection.</param>
-    public virtual void Accept (IQueryModelVisitor visitor, QueryModel queryModel, FromClauseBase fromClause, int index)
+    /// <param name="index">The index of this clause in the <paramref name="queryModel"/>'s <see cref="QueryModel.BodyClauses"/> collection.</param>
+   public virtual void Accept (IQueryModelVisitor visitor, QueryModel queryModel, int index)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
-      ArgumentUtility.CheckNotNull ("fromClause", fromClause);
 
-      visitor.VisitJoinClause (this, queryModel, fromClause, index);
+      visitor.VisitJoinClause (this, queryModel, index);
     }
 
     /// <summary>
@@ -117,7 +116,13 @@ namespace Remotion.Data.Linq.Clauses
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 
       var clone = new JoinClause (ItemName, ItemType, InExpression, OnExpression, EqualityExpression);
+      cloneContext.QuerySourceMapping.AddMapping (this, new QuerySourceReferenceExpression (clone));
       return clone;
+    }
+
+    IBodyClause IBodyClause.Clone (CloneContext cloneContext)
+    {
+      return Clone (cloneContext);
     }
 
     /// <summary>
