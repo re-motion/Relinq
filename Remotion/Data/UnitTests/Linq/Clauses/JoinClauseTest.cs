@@ -41,10 +41,10 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Intialize()
     {
       Expression innerSequence = ExpressionHelper.CreateExpression ();
-      Expression innerKeySelector = ExpressionHelper.CreateExpression ();
       Expression outerKeySelector = ExpressionHelper.CreateExpression ();
+      Expression innerKeySelector = ExpressionHelper.CreateExpression ();
 
-      var joinClause = new JoinClause ("x", typeof(Student), innerSequence, innerKeySelector, outerKeySelector);
+      var joinClause = new JoinClause ("x", typeof(Student), innerSequence, outerKeySelector, innerKeySelector);
 
       Assert.That (joinClause.ItemName, Is.SameAs ("x"));
       Assert.That (joinClause.ItemType, Is.SameAs (typeof (Student)));
@@ -101,7 +101,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       var newOuterKeySelector = ExpressionHelper.CreateExpression ();
       var newInnerKeySelector = ExpressionHelper.CreateExpression ();
 
-      var clause = new JoinClause ("x", typeof (Student), oldInnerSequence, oldInnerKeySelector, oldOuterKeySelector);
+      var clause = new JoinClause ("x", typeof (Student), oldInnerSequence, oldOuterKeySelector, oldInnerKeySelector);
 
       clause.TransformExpressions (ex =>
           {
@@ -119,14 +119,14 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
           });
 
       Assert.That (clause.InnerSequence, Is.SameAs (newInnerSequence));
-      Assert.That (clause.InnerKeySelector, Is.SameAs (newInnerKeySelector));
       Assert.That (clause.OuterKeySelector, Is.SameAs (newOuterKeySelector));
+      Assert.That (clause.InnerKeySelector, Is.SameAs (newInnerKeySelector));
     }
 
     [Test]
     public new void ToString ()
     {
-      var joinClause = new JoinClause ("x", typeof (Student), Expression.Constant (0), Expression.Constant (2), Expression.Constant (1));
+      var joinClause = new JoinClause ("x", typeof (Student), Expression.Constant (0), Expression.Constant (1), Expression.Constant (2));
       Assert.That (joinClause.ToString (), Is.EqualTo ("join Student x in 0 on 1 equals 2"));
     }
   }

@@ -27,8 +27,8 @@ namespace Remotion.Data.Linq.Clauses
     private Type _itemType;
     private string _itemName;
     private Expression _innerSequence;
-    private Expression _innerKeySelector;
     private Expression _outerKeySelector;
+    private Expression _innerKeySelector;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="JoinClause"/> class.
@@ -38,19 +38,19 @@ namespace Remotion.Data.Linq.Clauses
     /// <param name="innerSequence">The expression that generates the inner sequence, i.e. the items of this <see cref="JoinClause"/>.</param>
     /// <param name="outerKeySelector">An expression that selects the left side of the comparison by which source items and inner items are joined.</param>
     /// <param name="innerKeySelector">An expression that selects the right side of the comparison by which source items and inner items are joined.</param>
-    public JoinClause (string itemName, Type itemType, Expression innerSequence, Expression innerKeySelector, Expression outerKeySelector)
+    public JoinClause (string itemName, Type itemType, Expression innerSequence, Expression outerKeySelector, Expression innerKeySelector)
     {
       ArgumentUtility.CheckNotNull ("itemName", itemName);
       ArgumentUtility.CheckNotNull ("itemType", itemType);
       ArgumentUtility.CheckNotNull ("innerSequence", innerSequence);
-      ArgumentUtility.CheckNotNull ("innerKeySelector", innerKeySelector);
       ArgumentUtility.CheckNotNull ("outerKeySelector", outerKeySelector);
+      ArgumentUtility.CheckNotNull ("innerKeySelector", innerKeySelector);
 
       _itemName = itemName;
       _itemType = itemType;
       _innerSequence = innerSequence;
-      _innerKeySelector = innerKeySelector;
       _outerKeySelector = outerKeySelector;
+      _innerKeySelector = innerKeySelector;
     }
 
     /// <summary>
@@ -83,17 +83,6 @@ namespace Remotion.Data.Linq.Clauses
     }
 
     /// <summary>
-    /// Gets or sets the inner key selector, an expression that selects the left side of the comparison by which source items and inner items are joined.
-    /// </summary>
-    /// <value>The inner key selector.</value>
-    [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (InnerKeySelector),nq}")]
-    public Expression InnerKeySelector
-    {
-      get { return _innerKeySelector; }
-      set { _innerKeySelector = ArgumentUtility.CheckNotNull ("value", value); }
-    }
-
-    /// <summary>
     /// Gets or sets the outer key selector, an expression that selects the right side of the comparison by which source items and inner items are joined.
     /// </summary>
     /// <value>The outer key selector.</value>
@@ -102,6 +91,17 @@ namespace Remotion.Data.Linq.Clauses
     {
       get { return _outerKeySelector; }
       set { _outerKeySelector = ArgumentUtility.CheckNotNull ("value", value); }
+    }
+
+    /// <summary>
+    /// Gets or sets the inner key selector, an expression that selects the left side of the comparison by which source items and inner items are joined.
+    /// </summary>
+    /// <value>The inner key selector.</value>
+    [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (InnerKeySelector),nq}")]
+    public Expression InnerKeySelector
+    {
+      get { return _innerKeySelector; }
+      set { _innerKeySelector = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
     /// <summary>
@@ -127,7 +127,7 @@ namespace Remotion.Data.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 
-      var clone = new JoinClause (ItemName, ItemType, InnerSequence, InnerKeySelector, OuterKeySelector);
+      var clone = new JoinClause (ItemName, ItemType, InnerSequence, OuterKeySelector, InnerKeySelector);
       cloneContext.QuerySourceMapping.AddMapping (this, new QuerySourceReferenceExpression (clone));
       return clone;
     }
