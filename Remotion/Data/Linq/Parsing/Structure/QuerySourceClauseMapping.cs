@@ -40,14 +40,14 @@ namespace Remotion.Data.Linq.Parsing.Structure
       get { return _lookup.Count; }
     }
 
-    public void AddMapping (IQuerySourceExpressionNode node, IQuerySource fromClause)
+    public void AddMapping (IQuerySourceExpressionNode node, IQuerySource querySource)
     {
       ArgumentUtility.CheckNotNull ("node", node);
-      ArgumentUtility.CheckNotNull ("fromClause", fromClause);
+      ArgumentUtility.CheckNotNull ("querySource", querySource);
 
       try
       {
-        _lookup.Add (node, fromClause);
+        _lookup.Add (node, querySource);
       }
       catch (ArgumentException)
       {
@@ -59,11 +59,11 @@ namespace Remotion.Data.Linq.Parsing.Structure
     {
       ArgumentUtility.CheckNotNull ("node", node);
 
-      IQuerySource fromClause;
-      if (!_lookup.TryGetValue (node, out fromClause))
+      IQuerySource querySource;
+      if (!_lookup.TryGetValue (node, out querySource))
         throw new KeyNotFoundException ("Node has no associated clause.");
 
-      return fromClause;
+      return querySource;
     }
   }
 }

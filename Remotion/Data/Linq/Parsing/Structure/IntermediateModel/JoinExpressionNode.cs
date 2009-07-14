@@ -112,11 +112,6 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       return ReplacingExpressionTreeVisitor.Replace (inputParameter, resolvedResultSelector, expressionToBeResolved);
     }
 
-    protected override QueryModel ApplyNodeSpecificSemantics (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
-    {
-      throw new NotImplementedException();
-    }
-
     private Expression GetExpressionWithBackReference (ParameterExpression parameter, Expression expression, QuerySourceClauseMapping querySourceClauseMapping)
     {
       var clause = GetClauseForResolve (querySourceClauseMapping);
@@ -139,6 +134,29 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
             GetType ().Name);
         throw new InvalidOperationException (message, ex);
       }
+    }
+    
+    protected override QueryModel ApplyNodeSpecificSemantics (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
+    {
+      // The resolved inner key selector has a back-reference to the clause, so we need to create the clause with a dummy selector before we can 
+      // get the real inner key selector.
+      var dummyInnerKeySelector = Expression.Constant (null);
+      var joinClause = new JoinClause (
+          AssociatedIdentifier,
+          ResultSelector.Parameters[1].Type,
+          InnerSequence,
+          GetResolvedOuterKeySelector (clauseGenerationContext),
+          dummyInnerKeySelector);
+      
+      clauseGenerationContext.ClauseMapping.AddMapping (this, joinClause);
+
+      joinClause.InnerKeySelector = GetResolvedInnerKeySelector (clauseGenerationContext);
+      queryModel.BodyClauses.Add (joinClause);
+
+      var selectClause = queryModel.SelectClause;
+      selectClause.Selector = GetResolvedResultSelector (clauseGenerationContext);
+
+      return queryModel;
     }
   }
 }

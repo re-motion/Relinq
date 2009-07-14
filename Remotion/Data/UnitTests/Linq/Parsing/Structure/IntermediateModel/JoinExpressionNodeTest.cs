@@ -16,6 +16,7 @@
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
@@ -42,9 +43,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       _innerKeySelector = ExpressionHelper.CreateLambdaExpression<string, string> (i => i.ToString ());
       _resultSelector = ExpressionHelper.CreateLambdaExpression<string, string, string> ((o, i) => o.ToString () + i.ToString ());
 
-      _node = new JoinExpressionNode (CreateParseInfo(), _innerSequence, _outerKeySelector, _innerKeySelector, _resultSelector);
+      _node = new JoinExpressionNode (CreateParseInfo (SourceNode, "join"), _innerSequence, _outerKeySelector, _innerKeySelector, _resultSelector);
       _joinClause = ExpressionHelper.CreateJoinClause ();
-      ClauseGenerationContext.ClauseMapping.AddMapping (_node, _joinClause);
     }
 
     [Test]
@@ -68,9 +68,11 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void GetResolvedInnerKeySelector ()
     {
-      var resolvedExpression = _node.GetResolvedInnerKeySelector (ClauseGenerationContext);
-      var expectedExpression = ExpressionHelper.Resolve<string, string> (_joinClause, i => i.ToString ());
+      ClauseGenerationContext.ClauseMapping.AddMapping (_node, _joinClause);
 
+      var resolvedExpression = _node.GetResolvedInnerKeySelector (ClauseGenerationContext);
+      
+      var expectedExpression = ExpressionHelper.Resolve<string, string> (_joinClause, i => i.ToString ());
       ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, resolvedExpression);
     }
 
@@ -79,16 +81,17 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
         + "created. Be sure to call Apply before calling GetResolved..., and pass in the same QuerySourceClauseMapping to both methods.")]
     public void GetResolvedInnerKeySelector_WithoutClause ()
     {
-      var node = new JoinExpressionNode (CreateParseInfo(), _innerSequence, _outerKeySelector, _innerKeySelector, _resultSelector);
-      node.GetResolvedInnerKeySelector (ClauseGenerationContext);
+      _node.GetResolvedInnerKeySelector (ClauseGenerationContext);
     }
 
     [Test]
     public void GetResolvedResultSelector ()
     {
-      var resolvedExpression = _node.GetResolvedResultSelector (ClauseGenerationContext);
-      var expectedExpression = ExpressionHelper.Resolve<string, string, string> (SourceClause, _joinClause, (o, i) => o.ToString () + i.ToString ());
+      ClauseGenerationContext.ClauseMapping.AddMapping (_node, _joinClause);
 
+      var resolvedExpression = _node.GetResolvedResultSelector (ClauseGenerationContext);
+      
+      var expectedExpression = ExpressionHelper.Resolve<string, string, string> (SourceClause, _joinClause, (o, i) => o.ToString () + i.ToString ());
       ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, resolvedExpression);
     }
 
@@ -97,18 +100,52 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
        + "created. Be sure to call Apply before calling GetResolved..., and pass in the same QuerySourceClauseMapping to both methods.")]
     public void GetResolvedResultSelector_WithoutClause ()
     {
-      var node = new JoinExpressionNode (CreateParseInfo (), _innerSequence, _outerKeySelector, _innerKeySelector, _resultSelector);
-      node.GetResolvedResultSelector (ClauseGenerationContext);
+      _node.GetResolvedResultSelector (ClauseGenerationContext);
     }
 
     [Test]
     public void Resolve ()
     {
+      ClauseGenerationContext.ClauseMapping.AddMapping (_node, _joinClause);
+
       var parameter = Expression.Parameter (typeof (string), "s");
       var result = _node.Resolve (parameter, parameter, ClauseGenerationContext);
 
       var expectedResult = ExpressionHelper.Resolve<string, string, string> (SourceClause, _joinClause, (o, i) => o.ToString() + i.ToString());
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
+    }
+
+    [Test]
+    public void Apply ()
+    {
+      var result = _node.Apply (QueryModel, ClauseGenerationContext);
+      Assert.That (result, Is.SameAs (QueryModel));
+
+      var clause = (JoinClause) QueryModel.BodyClauses[0];
+
+      Assert.That (clause.ItemName, Is.EqualTo ("join"));
+      Assert.That (clause.ItemType, Is.SameAs (typeof (string)));
+      Assert.That (clause.InnerSequence, Is.SameAs (_innerSequence));
+      Assert.That (clause.OuterKeySelector, Is.SameAs (_node.GetResolvedOuterKeySelector (ClauseGenerationContext)));
+      Assert.That (clause.InnerKeySelector, Is.SameAs (_node.GetResolvedInnerKeySelector (ClauseGenerationContext)));     
+    }
+
+    [Test]
+    public void Apply_AddsMapping ()
+    {
+      _node.Apply (QueryModel, ClauseGenerationContext);
+      var clause = (JoinClause) QueryModel.BodyClauses[0];
+
+      Assert.That (QuerySourceClauseMapping.GetClause (_node), Is.SameAs (clause));
+    }
+
+    [Test]
+    public void Apply_AdaptsSelector ()
+    {
+      _node.Apply (QueryModel, ClauseGenerationContext);
+      var clause = QueryModel.SelectClause;
+
+      Assert.That (clause.Selector, Is.SameAs (_node.GetResolvedResultSelector (ClauseGenerationContext)));
     }
 
   }
