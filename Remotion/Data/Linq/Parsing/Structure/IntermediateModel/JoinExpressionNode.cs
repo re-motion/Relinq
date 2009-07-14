@@ -42,7 +42,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     public JoinExpressionNode (
         MethodCallExpressionParseInfo parseInfo,
-        IEnumerable innerSequence,
+        Expression innerSequence,
         LambdaExpression outerKeySelector,
         LambdaExpression innerKeySelector,
         LambdaExpression resultSelector)
@@ -59,7 +59,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       ResultSelector = resultSelector;
     }
 
-    public IEnumerable InnerSequence { get; private set; }
+    public Expression InnerSequence { get; private set; }
     public LambdaExpression OuterKeySelector { get; private set; }
     public LambdaExpression InnerKeySelector { get; private set; }
     public LambdaExpression ResultSelector { get; private set; }

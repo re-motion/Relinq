@@ -14,12 +14,8 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Reflection;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
 
@@ -29,16 +25,16 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
   public class JoinExpressionNodeTest : ExpressionNodeTestBase
   {
     private JoinExpressionNode _node;
-    private List<string> _innerSequence;
+    private Expression _innerSequence;
 
     [SetUp]
     public override void SetUp ()
     {
       base.SetUp ();
 
-      _innerSequence = new List<string> { "1", "2", "3" };
-      var outerKeySelector = ExpressionHelper.CreateLambdaExpression<string, string> (i => i.ToString ());
+      _innerSequence = ExpressionHelper.CreateExpression();
       var innerKeySelector = ExpressionHelper.CreateLambdaExpression<string, string> (o => o.ToString ());
+      var outerKeySelector = ExpressionHelper.CreateLambdaExpression<string, string> (i => i.ToString ());
       var resultSelector = ExpressionHelper.CreateLambdaExpression<string, string, string> ((i, o) => o.ToString());
       _node = new JoinExpressionNode (CreateParseInfo(), _innerSequence, outerKeySelector, innerKeySelector, resultSelector);
     }
@@ -48,8 +44,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       AssertSupportedMethod_Generic (
         JoinExpressionNode.SupportedMethods,
-        q => q.Join (_innerSequence, i => i.ToString (), o => o, (i, o) => o),
-        e => e.Join (_innerSequence, i => i.ToString (), o => o, (i, o) => o));      
+        q => q.Join (new string[0], i => i.ToString (), o => o, (i, o) => o),
+        e => e.Join (new string[0], i => i.ToString (), o => o, (i, o) => o));      
     }
 
   }

@@ -40,17 +40,17 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void Intialize()
     {
-      Expression inExpression = ExpressionHelper.CreateExpression ();
-      Expression onExpression = ExpressionHelper.CreateExpression ();
-      Expression equalityExpression = ExpressionHelper.CreateExpression ();
+      Expression innerSequence = ExpressionHelper.CreateExpression ();
+      Expression innerKeySelector = ExpressionHelper.CreateExpression ();
+      Expression outerKeySelector = ExpressionHelper.CreateExpression ();
 
-      var joinClause = new JoinClause ("x", typeof(Student), inExpression, onExpression, equalityExpression);
+      var joinClause = new JoinClause ("x", typeof(Student), innerSequence, innerKeySelector, outerKeySelector);
 
       Assert.That (joinClause.ItemName, Is.SameAs ("x"));
       Assert.That (joinClause.ItemType, Is.SameAs (typeof (Student)));
-      Assert.That (joinClause.InExpression, Is.SameAs (inExpression));
-      Assert.That (joinClause.OnExpression, Is.SameAs (onExpression));
-      Assert.That (joinClause.EqualityExpression, Is.SameAs (equalityExpression));
+      Assert.That (joinClause.InnerSequence, Is.SameAs (innerSequence));
+      Assert.That (joinClause.InnerKeySelector, Is.SameAs (innerKeySelector));
+      Assert.That (joinClause.OuterKeySelector, Is.SameAs (outerKeySelector));
     }
 
     [Test]
@@ -76,11 +76,11 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
 
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (_joinClause));
-      Assert.That (clone.EqualityExpression, Is.SameAs (_joinClause.EqualityExpression));
       Assert.That (clone.ItemName, Is.SameAs (_joinClause.ItemName));
       Assert.That (clone.ItemType, Is.SameAs (_joinClause.ItemType));
-      Assert.That (clone.InExpression, Is.SameAs (_joinClause.InExpression));
-      Assert.That (clone.OnExpression, Is.SameAs (_joinClause.OnExpression));
+      Assert.That (clone.InnerSequence, Is.SameAs (_joinClause.InnerSequence));
+      Assert.That (clone.InnerKeySelector, Is.SameAs (_joinClause.InnerKeySelector));
+      Assert.That (clone.OuterKeySelector, Is.SameAs (_joinClause.OuterKeySelector));
     }
 
     [Test]
@@ -94,23 +94,23 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void TransformExpressions ()
     {
-      var oldInExpression = ExpressionHelper.CreateExpression ();
-      var oldOnExpression = ExpressionHelper.CreateExpression ();
-      var oldEqualityExpression = ExpressionHelper.CreateExpression ();
-      var newInExpression = ExpressionHelper.CreateExpression ();
-      var newOnExpression = ExpressionHelper.CreateExpression ();
-      var newEqualityExpression = ExpressionHelper.CreateExpression ();
+      var oldInnerSequence = ExpressionHelper.CreateExpression ();
+      var oldOuterKeySelector = ExpressionHelper.CreateExpression ();
+      var oldInnerKeySelector = ExpressionHelper.CreateExpression ();
+      var newInnerSequence = ExpressionHelper.CreateExpression ();
+      var newOuterKeySelector = ExpressionHelper.CreateExpression ();
+      var newInnerKeySelector = ExpressionHelper.CreateExpression ();
 
-      var clause = new JoinClause ("x", typeof (Student), oldInExpression, oldOnExpression, oldEqualityExpression);
+      var clause = new JoinClause ("x", typeof (Student), oldInnerSequence, oldInnerKeySelector, oldOuterKeySelector);
 
       clause.TransformExpressions (ex =>
           {
-            if (ex == oldInExpression)
-              return newInExpression;
-            else if (ex == oldOnExpression)
-              return newOnExpression;
-            else if (ex == oldEqualityExpression)
-              return newEqualityExpression;
+            if (ex == oldInnerSequence)
+              return newInnerSequence;
+            else if (ex == oldOuterKeySelector)
+              return newOuterKeySelector;
+            else if (ex == oldInnerKeySelector)
+              return newInnerKeySelector;
             else
             {
               Assert.Fail();
@@ -118,15 +118,15 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
             }
           });
 
-      Assert.That (clause.InExpression, Is.SameAs (newInExpression));
-      Assert.That (clause.OnExpression, Is.SameAs (newOnExpression));
-      Assert.That (clause.EqualityExpression, Is.SameAs (newEqualityExpression));
+      Assert.That (clause.InnerSequence, Is.SameAs (newInnerSequence));
+      Assert.That (clause.InnerKeySelector, Is.SameAs (newInnerKeySelector));
+      Assert.That (clause.OuterKeySelector, Is.SameAs (newOuterKeySelector));
     }
 
     [Test]
     public new void ToString ()
     {
-      var joinClause = new JoinClause ("x", typeof (Student), Expression.Constant (0), Expression.Constant (1), Expression.Constant (2));
+      var joinClause = new JoinClause ("x", typeof (Student), Expression.Constant (0), Expression.Constant (2), Expression.Constant (1));
       Assert.That (joinClause.ToString (), Is.EqualTo ("join Student x in 0 on 1 equals 2"));
     }
   }

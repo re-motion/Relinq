@@ -76,9 +76,9 @@ namespace Remotion.Data.UnitTests.Linq
       Assert.That (joinClause.GetType(), Is.SameAs (expectedJoinClause.GetType()));
       Assert.That (joinClause.ItemName, Is.EqualTo (expectedJoinClause.ItemName));
       Assert.That (joinClause.ItemType, Is.SameAs (expectedJoinClause.ItemType));
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedJoinClause.InExpression, joinClause.InExpression);
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedJoinClause.OnExpression, joinClause.OnExpression);
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedJoinClause.EqualityExpression, joinClause.EqualityExpression);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedJoinClause.InnerSequence, joinClause.InnerSequence);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedJoinClause.OuterKeySelector, joinClause.OuterKeySelector);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedJoinClause.InnerKeySelector, joinClause.InnerKeySelector);
 
       base.VisitJoinClause (joinClause, queryModel, index);
     }

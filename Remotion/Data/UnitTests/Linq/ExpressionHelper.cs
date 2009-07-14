@@ -71,11 +71,11 @@ namespace Remotion.Data.UnitTests.Linq
 
     public static JoinClause CreateJoinClause ()
     {
-      Expression inExpression = CreateExpression ();
-      Expression onExpression = CreateExpression ();
-      Expression equalityExpression = CreateExpression ();
+      Expression innerSequence = CreateExpression ();
+      Expression innerKeySelector = CreateExpression ();
+      Expression outerKeySelector = CreateExpression ();
 
-      return new JoinClause ("x", typeof(Student), inExpression, onExpression, equalityExpression);
+      return new JoinClause ("x", typeof(Student), innerSequence, innerKeySelector, outerKeySelector);
     }
 
     public static QueryModel CreateQueryModel (MainFromClause mainFromClause)
