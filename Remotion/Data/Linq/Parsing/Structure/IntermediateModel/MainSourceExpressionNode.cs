@@ -66,12 +66,12 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       ArgumentUtility.CheckNotNull ("expressionToBeResolved", expressionToBeResolved);
 
       // query sources resolve into references that point back to the respective clauses
-      FromClauseBase clause = GetClauseForResolve (clauseGenerationContext.ClauseMapping);
+      var clause = GetClauseForResolve (clauseGenerationContext.ClauseMapping);
       var reference = new QuerySourceReferenceExpression (clause);
-      return ReplacingVisitor.Replace (inputParameter, reference, expressionToBeResolved);
+      return ReplacingExpressionTreeVisitor.Replace (inputParameter, reference, expressionToBeResolved);
     }
 
-    private FromClauseBase GetClauseForResolve (QuerySourceClauseMapping querySourceClauseMapping)
+    private IQuerySource GetClauseForResolve (QuerySourceClauseMapping querySourceClauseMapping)
     {
       try
       {
@@ -80,7 +80,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       catch (KeyNotFoundException ex)
       {
         var message = string.Format (
-            "Cannot resolve with a {0} for which no clause was created. Be sure to call CreateClause before calling Resolve, and pass in the same "
+            "Cannot resolve with a {0} for which no clause was created. Be sure to call Apply before calling Resolve, and pass in the same "
             + "QuerySourceClauseMapping to both methods.",
             GetType().Name);
         throw new InvalidOperationException (message, ex);
@@ -91,7 +91,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     {
       throw new NotSupportedException (
           "ConstantExpression nodes cannot be applied to a query model because they constitute the main source of the "
-          + "query. Use CreateClause to create a MainFromClause from this node.");
+          + "query. Use CreateMainFromClause to create a MainFromClause from this node.");
     }
 
     public MainFromClause CreateMainFromClause (ClauseGenerationContext clauseGenerationContext)

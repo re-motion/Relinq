@@ -62,7 +62,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       DependentExpression = dependentExpression;
       ExpectedInput = expectedInput;
 
-      ResolvedExpression = ReplacingVisitor.Replace (InputParameter, ExpectedInput, DependentExpression.Body);
+      ResolvedExpression = ReplacingExpressionTreeVisitor.Replace (InputParameter, ExpectedInput, DependentExpression.Body);
     }
 
     public LambdaExpression DependentExpression { get; private set; }

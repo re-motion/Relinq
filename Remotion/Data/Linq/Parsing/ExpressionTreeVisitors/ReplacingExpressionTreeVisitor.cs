@@ -19,7 +19,7 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
 {
-  public class ReplacingVisitor : ExpressionTreeVisitor
+  public class ReplacingExpressionTreeVisitor : ExpressionTreeVisitor
   {
     public static Expression Replace (Expression replacedExpression, Expression replacementExpression, Expression sourceTree)
     {
@@ -27,14 +27,14 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
       ArgumentUtility.CheckNotNull ("replacementExpression", replacementExpression);
       ArgumentUtility.CheckNotNull ("sourceTree", sourceTree);
 
-      var visitor = new ReplacingVisitor (replacedExpression, replacementExpression);
+      var visitor = new ReplacingExpressionTreeVisitor (replacedExpression, replacementExpression);
       return visitor.VisitExpression (sourceTree);
     }
 
     private readonly Expression _replacedExpression;
     private readonly Expression _replacementExpression;
 
-    private ReplacingVisitor (Expression replacedExpression, Expression replacementExpression)
+    private ReplacingExpressionTreeVisitor (Expression replacedExpression, Expression replacementExpression)
     {
       _replacedExpression = replacedExpression;
       _replacementExpression = replacementExpression;

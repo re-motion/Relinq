@@ -22,7 +22,7 @@ using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
 {
   [TestFixture]
-  public class ReplacingVisitorTest
+  public class ReplacingExpressionTreeVisitorTest
   {
     private ParameterExpression _replacedNode;
     private ParameterExpression _replacementNode;
@@ -39,7 +39,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
     {
       var tree = _replacedNode;
 
-      var result = ReplacingVisitor.Replace (_replacedNode, _replacementNode, tree);
+      var result = ReplacingExpressionTreeVisitor.Replace (_replacedNode, _replacementNode, tree);
       Assert.That (result, Is.SameAs (_replacementNode));
     }
 
@@ -48,7 +48,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
     {
       var tree = ExpressionHelper.CreateLambdaExpression();
 
-      var result = ReplacingVisitor.Replace (_replacedNode, _replacementNode, tree);
+      var result = ReplacingExpressionTreeVisitor.Replace (_replacedNode, _replacementNode, tree);
       Assert.That (result, Is.SameAs (tree));
     }
 
@@ -57,7 +57,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
     {
       var tree = Expression.MakeBinary (ExpressionType.Add, Expression.Constant (0), _replacedNode);
 
-      var result = ReplacingVisitor.Replace (_replacedNode, _replacementNode, tree);
+      var result = ReplacingExpressionTreeVisitor.Replace (_replacedNode, _replacementNode, tree);
 
       var expectedResult = Expression.MakeBinary (ExpressionType.Add, Expression.Constant (0), _replacementNode);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
@@ -67,7 +67,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
     public void VisitUnknownExpression_Ignored ()
     {
       var expression = new UnknownExpression (typeof (object));
-      var result = ReplacingVisitor.Replace (_replacedNode, _replacementNode, expression);
+      var result = ReplacingExpressionTreeVisitor.Replace (_replacedNode, _replacementNode, expression);
 
       Assert.That (result, Is.SameAs (expression));
     }

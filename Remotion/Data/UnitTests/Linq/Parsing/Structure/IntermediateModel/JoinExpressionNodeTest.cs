@@ -16,6 +16,7 @@
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
 
@@ -26,6 +27,10 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
   {
     private JoinExpressionNode _node;
     private Expression _innerSequence;
+    private Expression<Func<string, string>> _outerKeySelector;
+    private Expression<Func<string, string>> _innerKeySelector;
+    private Expression<Func<string, string, string>> _resultSelector;
+    private JoinClause _joinClause;
 
     [SetUp]
     public override void SetUp ()
@@ -33,10 +38,13 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       base.SetUp ();
 
       _innerSequence = ExpressionHelper.CreateExpression();
-      var innerKeySelector = ExpressionHelper.CreateLambdaExpression<string, string> (o => o.ToString ());
-      var outerKeySelector = ExpressionHelper.CreateLambdaExpression<string, string> (i => i.ToString ());
-      var resultSelector = ExpressionHelper.CreateLambdaExpression<string, string, string> ((i, o) => o.ToString());
-      _node = new JoinExpressionNode (CreateParseInfo(), _innerSequence, outerKeySelector, innerKeySelector, resultSelector);
+      _outerKeySelector = ExpressionHelper.CreateLambdaExpression<string, string> (o => o.ToString ());
+      _innerKeySelector = ExpressionHelper.CreateLambdaExpression<string, string> (i => i.ToString ());
+      _resultSelector = ExpressionHelper.CreateLambdaExpression<string, string, string> ((o, i) => o.ToString () + i.ToString ());
+
+      _node = new JoinExpressionNode (CreateParseInfo(), _innerSequence, _outerKeySelector, _innerKeySelector, _resultSelector);
+      _joinClause = ExpressionHelper.CreateJoinClause ();
+      ClauseGenerationContext.ClauseMapping.AddMapping (_node, _joinClause);
     }
 
     [Test]
@@ -44,8 +52,63 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       AssertSupportedMethod_Generic (
         JoinExpressionNode.SupportedMethods,
-        q => q.Join (new string[0], i => i.ToString (), o => o, (i, o) => o),
-        e => e.Join (new string[0], i => i.ToString (), o => o, (i, o) => o));      
+        q => q.Join (new string[0], o => o.ToString (), i => i, (o, i) => o),
+        e => e.Join (new string[0], o => o.ToString (), i => i, (o, i) => o));      
+    }
+
+    [Test]
+    public void GetResolvedOuterKeySelector ()
+    {
+      var resolvedExpression = _node.GetResolvedOuterKeySelector (ClauseGenerationContext);
+      var expectedExpression = ExpressionHelper.Resolve<string, string> (SourceClause, o => o.ToString());
+
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, resolvedExpression);
+    }
+
+    [Test]
+    public void GetResolvedInnerKeySelector ()
+    {
+      var resolvedExpression = _node.GetResolvedInnerKeySelector (ClauseGenerationContext);
+      var expectedExpression = ExpressionHelper.Resolve<string, string> (_joinClause, i => i.ToString ());
+
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, resolvedExpression);
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Cannot resolve with a JoinExpressionNode for which no clause was "
+        + "created. Be sure to call Apply before calling GetResolved..., and pass in the same QuerySourceClauseMapping to both methods.")]
+    public void GetResolvedInnerKeySelector_WithoutClause ()
+    {
+      var node = new JoinExpressionNode (CreateParseInfo(), _innerSequence, _outerKeySelector, _innerKeySelector, _resultSelector);
+      node.GetResolvedInnerKeySelector (ClauseGenerationContext);
+    }
+
+    [Test]
+    public void GetResolvedResultSelector ()
+    {
+      var resolvedExpression = _node.GetResolvedResultSelector (ClauseGenerationContext);
+      var expectedExpression = ExpressionHelper.Resolve<string, string, string> (SourceClause, _joinClause, (o, i) => o.ToString () + i.ToString ());
+
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, resolvedExpression);
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Cannot resolve with a JoinExpressionNode for which no clause was "
+       + "created. Be sure to call Apply before calling GetResolved..., and pass in the same QuerySourceClauseMapping to both methods.")]
+    public void GetResolvedResultSelector_WithoutClause ()
+    {
+      var node = new JoinExpressionNode (CreateParseInfo (), _innerSequence, _outerKeySelector, _innerKeySelector, _resultSelector);
+      node.GetResolvedResultSelector (ClauseGenerationContext);
+    }
+
+    [Test]
+    public void Resolve ()
+    {
+      var parameter = Expression.Parameter (typeof (string), "s");
+      var result = _node.Resolve (parameter, parameter, ClauseGenerationContext);
+
+      var expectedResult = ExpressionHelper.Resolve<string, string, string> (SourceClause, _joinClause, (o, i) => o.ToString() + i.ToString());
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
 
   }

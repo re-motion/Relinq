@@ -161,7 +161,7 @@
     <Compile Include="Backend\DataObjectModel\OrderingField.cs" />
     <Compile Include="Backend\FieldResolving\SelectFieldAccessPolicy.cs" />
     <Compile Include="Backend\FieldResolving\WhereFieldAccessPolicy.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\ReplacingVisitor.cs" />
+    <Compile Include="Parsing\ExpressionTreeVisitors\ReplacingExpressionTreeVisitor.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ResultOperatorExpressionNodeBase.cs" />
     <Compile Include="Parsing\Structure\MethodCallExpressionNodeTypeRegistry.cs" />
     <Compile Include="Parsing\Structure\ExpressionTreeParser.cs" />
