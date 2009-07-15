@@ -26,7 +26,7 @@ namespace Remotion.Data.Linq
   /// <para>
   /// When implement this interface, implement <see cref="VisitQueryModel"/>, then call <c>Accept</c> on every clause that should
   /// be visited. Child clauses, joins, orderings, and result operators are not visited automatically; they always need to be explicitly visited 
-  /// via <see cref="IBodyClause.Accept"/>, <see cref="JoinClause.Accept"/>, <see cref="Ordering.Accept"/>, 
+  /// via <see cref="IBodyClause.Accept"/>, <see cref="O:JoinClause.Accept"/>, <see cref="Ordering.Accept"/>, 
   /// <see cref="ResultOperatorBase.Accept"/>, and so on.
   /// </para>
   /// <para>
@@ -39,6 +39,8 @@ namespace Remotion.Data.Linq
     void VisitMainFromClause (MainFromClause fromClause, QueryModel queryModel);
     void VisitAdditionalFromClause (AdditionalFromClause fromClause, QueryModel queryModel, int index);
     void VisitJoinClause (JoinClause joinClause, QueryModel queryModel, int index);
+    void VisitJoinClause (JoinClause joinClause, QueryModel queryModel, GroupJoinClause groupJoinClause);
+    void VisitGroupJoinClause (GroupJoinClause joinClause, QueryModel queryModel, int index);
     void VisitWhereClause (WhereClause whereClause, QueryModel queryModel, int index);
     void VisitOrderByClause (OrderByClause orderByClause, QueryModel queryModel, int index);
     void VisitOrdering (Ordering ordering, QueryModel queryModel, OrderByClause orderByClause, int index);

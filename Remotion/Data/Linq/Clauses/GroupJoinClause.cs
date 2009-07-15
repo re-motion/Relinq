@@ -118,14 +118,17 @@ namespace Remotion.Data.Linq.Clauses
     }
 
     /// <summary>
-    /// Accepts the specified visitor by calling its see cref="IQueryModelVisitor.VisitGroupJoinClause" method. // TODO 1353
+    /// Accepts the specified visitor by calling its <see cref="IQueryModelVisitor.VisitGroupJoinClause"/> method.
     /// </summary>
     /// <param name="visitor">The visitor to accept.</param>
     /// <param name="queryModel">The query model in whose context this clause is visited.</param>
     /// <param name="index">The index of this clause in the <paramref name="queryModel"/>'s <see cref="QueryModel.BodyClauses"/> collection.</param>
     public void Accept (IQueryModelVisitor visitor, QueryModel queryModel, int index)
     {
-      throw new NotImplementedException();
+      ArgumentUtility.CheckNotNull ("visitor", visitor);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+
+      visitor.VisitGroupJoinClause (this, queryModel, index);
     }
 
     /// <summary>

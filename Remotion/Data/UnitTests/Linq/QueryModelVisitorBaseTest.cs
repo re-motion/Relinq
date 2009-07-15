@@ -40,6 +40,7 @@ namespace Remotion.Data.UnitTests.Linq
     private ResultOperatorBase _resultOperatorMock2;
     private QueryModel _queryModel;
     private OrderByClause _orderByClause;
+    private GroupJoinClause _groupJoinClause;
 
     [SetUp]
     public void SetUp ()
@@ -59,6 +60,7 @@ namespace Remotion.Data.UnitTests.Linq
 
       _queryModel = ExpressionHelper.CreateQueryModel ();
       _orderByClause = ExpressionHelper.CreateOrderByClause ();
+      _groupJoinClause = ExpressionHelper.CreateGroupJoinClause ();
     }
 
     [Test]
@@ -105,6 +107,25 @@ namespace Remotion.Data.UnitTests.Linq
       _visitorMock.VisitOrderByClause (_orderByClause, _queryModel, 1);
 
       _visitorMock.VerifyAllExpectations();
+    }
+
+    [Test]
+    public void VisitGroupJoinClause ()
+    {
+      using (_mockRepository.Ordered ())
+      {
+        _visitorMock
+            .Expect (mock => mock.VisitGroupJoinClause (_groupJoinClause, _queryModel, 1))
+            .CallOriginalMethod (OriginalCallOptions.CreateExpectation);
+        _visitorMock
+            .Expect (mock => mock.VisitJoinClause (_groupJoinClause.JoinClause, _queryModel, _groupJoinClause));
+      }
+
+      _visitorMock.Replay ();
+
+      _visitorMock.VisitGroupJoinClause (_groupJoinClause, _queryModel, 1);
+
+      _visitorMock.VerifyAllExpectations ();
     }
 
     [Test]

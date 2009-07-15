@@ -126,7 +126,8 @@ namespace Remotion.Data.Linq.Clauses
     }
 
     /// <summary>
-    /// Accepts the specified visitor by calling one its <see cref="IQueryModelVisitor.VisitJoinClause"/> method.
+    /// Accepts the specified visitor by calling its <see cref="IQueryModelVisitor.VisitJoinClause(Remotion.Data.Linq.Clauses.JoinClause,Remotion.Data.Linq.QueryModel,int)"/> 
+    /// method.
     /// </summary>
     /// <param name="visitor">The visitor to accept.</param>
     /// <param name="queryModel">The query model in whose context this clause is visited.</param>
@@ -138,6 +139,22 @@ namespace Remotion.Data.Linq.Clauses
 
       visitor.VisitJoinClause (this, queryModel, index);
     }
+
+   /// <summary>
+   /// Accepts the specified visitor by calling its <see cref="IQueryModelVisitor.VisitJoinClause(Remotion.Data.Linq.Clauses.JoinClause,Remotion.Data.Linq.QueryModel,Remotion.Data.Linq.Clauses.GroupJoinClause)"/> 
+   /// method. This overload is used when visiting a <see cref="JoinClause"/> that is held by a <see cref="GroupJoinClause"/>.
+   /// </summary>
+   /// <param name="visitor">The visitor to accept.</param>
+   /// <param name="queryModel">The query model in whose context this clause is visited.</param>
+   /// <param name="groupJoinClause">The <see cref="GroupJoinClause"/> holding this <see cref="JoinClause"/> instance.</param>
+   public virtual void Accept (IQueryModelVisitor visitor, QueryModel queryModel, GroupJoinClause groupJoinClause)
+   {
+     ArgumentUtility.CheckNotNull ("visitor", visitor);
+     ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+     ArgumentUtility.CheckNotNull ("groupJoinClause", groupJoinClause);
+
+     visitor.VisitJoinClause (this, queryModel, groupJoinClause);
+   }
 
     /// <summary>
     /// Clones this clause, registering its clone with the <paramref name="cloneContext"/>.

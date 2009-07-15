@@ -69,6 +69,23 @@ namespace Remotion.Data.Linq
       // nothing to do here
     }
 
+    public virtual void VisitJoinClause (JoinClause joinClause, QueryModel queryModel, GroupJoinClause groupJoinClause)
+    {
+      ArgumentUtility.CheckNotNull ("joinClause", joinClause);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+      ArgumentUtility.CheckNotNull ("groupJoinClause", groupJoinClause);
+
+      // nothing to do here
+    }
+
+    public virtual void VisitGroupJoinClause (GroupJoinClause groupJoinClause, QueryModel queryModel, int index)
+    {
+      ArgumentUtility.CheckNotNull ("groupJoinClause", groupJoinClause);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+
+      groupJoinClause.JoinClause.Accept (this, queryModel, groupJoinClause);
+    }
+
     public virtual void VisitWhereClause (WhereClause whereClause, QueryModel queryModel, int index)
     {
       ArgumentUtility.CheckNotNull ("whereClause", whereClause);

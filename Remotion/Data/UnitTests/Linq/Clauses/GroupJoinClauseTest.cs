@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Utilities;
@@ -58,20 +59,19 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
-    [Ignore ("TODO 1353")]
     public void Accept ()
     {
-      //var repository = new MockRepository ();
-      //var queryModel = ExpressionHelper.CreateQueryModel ();
-      //var visitorMock = repository.StrictMock<IQueryModelVisitor> ();
+      var repository = new MockRepository ();
+      var queryModel = ExpressionHelper.CreateQueryModel ();
+      var visitorMock = repository.StrictMock<IQueryModelVisitor> ();
 
-      //visitorMock.VisitGroupJoinClause (_groupJoinClause, queryModel, 1);
+      visitorMock.VisitGroupJoinClause (_groupJoinClause, queryModel, 1);
 
-      //repository.ReplayAll ();
+      repository.ReplayAll ();
 
-      //_groupJoinClause.Accept (visitorMock, queryModel, 1);
+      _groupJoinClause.Accept (visitorMock, queryModel, 1);
 
-      //repository.VerifyAll ();
+      repository.VerifyAll ();
     }
 
     [Test]

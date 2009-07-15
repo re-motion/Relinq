@@ -70,6 +70,23 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
+    public void Accept_WithGroupJoinClause ()
+    {
+      var repository = new MockRepository ();
+      var queryModel = ExpressionHelper.CreateQueryModel ();
+      var groupJoinClause = ExpressionHelper.CreateGroupJoinClause ();
+      var visitorMock = repository.StrictMock<IQueryModelVisitor> ();
+
+      visitorMock.VisitJoinClause (_joinClause, queryModel, groupJoinClause);
+
+      repository.ReplayAll ();
+
+      _joinClause.Accept (visitorMock, queryModel, groupJoinClause);
+
+      repository.VerifyAll ();
+    }
+
+    [Test]
     public void Clone ()
     {
       var clone = _joinClause.Clone (_cloneContext);
