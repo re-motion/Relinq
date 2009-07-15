@@ -97,7 +97,18 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     protected override QueryModel ApplyNodeSpecificSemantics (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
-      throw new NotImplementedException ();
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+
+      var joinClause = JoinExpressionNode.CreateJoinClause (clauseGenerationContext);
+      var groupJoinClause = new GroupJoinClause (ResultSelector.Parameters[1].Name, ResultSelector.Parameters[1].Type, joinClause);
+
+      clauseGenerationContext.ClauseMapping.AddMapping (this, groupJoinClause);
+      queryModel.BodyClauses.Add (groupJoinClause);
+
+      var selectClause = queryModel.SelectClause;
+      selectClause.Selector = GetResolvedResultSelector (clauseGenerationContext);
+
+      return queryModel;
     }
 
     private Expression GetExpressionWithBackReference (ParameterExpression parameter, Expression expression, QuerySourceClauseMapping querySourceClauseMapping)

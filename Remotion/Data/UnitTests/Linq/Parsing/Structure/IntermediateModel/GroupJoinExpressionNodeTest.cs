@@ -94,7 +94,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    [Ignore ("TODO 1356")]
     public void Apply ()
     {
       var result = _node.Apply (QueryModel, ClauseGenerationContext);
@@ -109,6 +108,24 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       Assert.That (clause.JoinClause.InnerSequence, Is.SameAs (_innerSequence));
       Assert.That (clause.JoinClause.OuterKeySelector, Is.SameAs (_node.JoinExpressionNode.GetResolvedOuterKeySelector (ClauseGenerationContext)));
       Assert.That (clause.JoinClause.InnerKeySelector, Is.SameAs (_node.JoinExpressionNode.GetResolvedInnerKeySelector (ClauseGenerationContext)));
+    }
+
+    [Test]
+    public void Apply_AddsMapping ()
+    {
+      _node.Apply (QueryModel, ClauseGenerationContext);
+      var clause = (GroupJoinClause) QueryModel.BodyClauses[0];
+
+      Assert.That (QuerySourceClauseMapping.GetClause (_node), Is.SameAs (clause));
+    }
+
+    [Test]
+    public void Apply_AdaptsSelector ()
+    {
+      _node.Apply (QueryModel, ClauseGenerationContext);
+      var clause = QueryModel.SelectClause;
+
+      Assert.That (clause.Selector, Is.SameAs (_node.GetResolvedResultSelector (ClauseGenerationContext)));
     }
   }
 }
