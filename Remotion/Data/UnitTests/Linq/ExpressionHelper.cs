@@ -27,6 +27,7 @@ using Remotion.Data.Linq.Parsing.Structure;
 using Rhino.Mocks;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Backend.DataObjectModel;
+using System.Collections.Generic;
 
 namespace Remotion.Data.UnitTests.Linq
 {
@@ -76,6 +77,16 @@ namespace Remotion.Data.UnitTests.Linq
       Expression innerKeySelector = CreateExpression ();
 
       return new JoinClause ("x", typeof(Student), innerSequence, outerKeySelector, innerKeySelector);
+    }
+
+    public static GroupJoinClause CreateGroupJoinClause ()
+    {
+      return CreateGroupJoinClause (CreateJoinClause ());
+    }
+
+    public static GroupJoinClause CreateGroupJoinClause (JoinClause joinClause)
+    {
+      return new GroupJoinClause ("xs", typeof (IEnumerable<Student>), joinClause);
     }
 
     public static QueryModel CreateQueryModel (MainFromClause mainFromClause)

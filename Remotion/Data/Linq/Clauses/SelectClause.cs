@@ -29,11 +29,11 @@ namespace Remotion.Data.Linq.Clauses
   /// <example>
   /// In C#, the "select" clause in the following sample corresponds to a <see cref="SelectClause"/>. "s" (a reference to the query source "s", see
   /// <see cref="QuerySourceReferenceExpression"/>) is the <see cref="Selector"/> expression:
-  /// <ode>
+  /// <code>
   /// var query = from s in Students
   ///             where s.First == "Hugo"
   ///             select s;
-  /// </ode>
+  /// </code>
   /// </example>
   public class SelectClause : IClause
   {

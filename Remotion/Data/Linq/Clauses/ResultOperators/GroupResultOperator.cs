@@ -14,14 +14,11 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.Expressions;
-using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
-using Remotion.Data.Linq.Parsing;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
@@ -34,11 +31,11 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   /// In C#, the "group by" clause in the following sample corresponds to a <see cref="GroupResultOperator"/>. "s" (a reference to the query source "s", see
   /// <see cref="QuerySourceReferenceExpression"/>) is the <see cref="ElementSelector"/> expression, "s.Country" is the <see cref="KeySelector"/>
   /// expression:
-  /// <ode>
+  /// <code>
   /// var query = from s in Students
   ///             where s.First == "Hugo"
   ///             group s by s.Country;
-  /// </ode>
+  /// </code>
   /// </example>
   public class GroupResultOperator : ResultOperatorBase
   {
