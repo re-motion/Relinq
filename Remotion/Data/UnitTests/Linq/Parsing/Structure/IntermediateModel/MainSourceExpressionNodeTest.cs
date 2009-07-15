@@ -24,7 +24,7 @@ using Remotion.Utilities;
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 {
   [TestFixture]
-  public class MainSouceExpressionNodeTest : ExpressionNodeTestBase
+  public class MainSourceExpressionNodeTest : ExpressionNodeTestBase
   {
     private MainSourceExpressionNode _node;
 
@@ -64,8 +64,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Cannot resolve with a MainSourceExpressionNode for which no clause was "
-        + "created. Be sure to call Apply before calling Resolve, and pass in the same QuerySourceClauseMapping to both methods.")]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Cannot retrieve an IQuerySource for the given MainSourceExpressionNode. "
+        + "Be sure to call Apply before calling methods that require IQuerySources, and pass in the same QuerySourceClauseMapping to both.")]
     public void Resolve_WithoutClause ()
     {
       var expression = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);

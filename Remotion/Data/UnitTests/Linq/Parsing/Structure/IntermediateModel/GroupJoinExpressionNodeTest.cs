@@ -71,8 +71,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Cannot resolve with a GroupJoinExpressionNode for which no clause was "
-       + "created. Be sure to call Apply before calling GetResolved..., and pass in the same QuerySourceClauseMapping to both methods.")]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Cannot retrieve an IQuerySource for the given GroupJoinExpressionNode. "
+        + "Be sure to call Apply before calling methods that require IQuerySources, and pass in the same QuerySourceClauseMapping to both.")]
     public void GetResolvedResultSelector_WithoutClause ()
     {
       _node.GetResolvedResultSelector (ClauseGenerationContext);

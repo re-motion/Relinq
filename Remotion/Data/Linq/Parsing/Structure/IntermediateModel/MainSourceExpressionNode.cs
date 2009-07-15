@@ -66,25 +66,11 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       ArgumentUtility.CheckNotNull ("expressionToBeResolved", expressionToBeResolved);
 
       // query sources resolve into references that point back to the respective clauses
-      var clause = GetClauseForResolve (clauseGenerationContext.ClauseMapping);
-      var reference = new QuerySourceReferenceExpression (clause);
-      return ReplacingExpressionTreeVisitor.Replace (inputParameter, reference, expressionToBeResolved);
-    }
-
-    private IQuerySource GetClauseForResolve (QuerySourceClauseMapping querySourceClauseMapping)
-    {
-      try
-      {
-        return querySourceClauseMapping.GetClause (this);
-      }
-      catch (KeyNotFoundException ex)
-      {
-        var message = string.Format (
-            "Cannot resolve with a {0} for which no clause was created. Be sure to call Apply before calling Resolve, and pass in the same "
-            + "QuerySourceClauseMapping to both methods.",
-            GetType().Name);
-        throw new InvalidOperationException (message, ex);
-      }
+      return QuerySourceExpressionNodeUtility.ReplaceParameterWithReference (
+          this, 
+          inputParameter, 
+          expressionToBeResolved, 
+          clauseGenerationContext.ClauseMapping);
     }
 
     public QueryModel Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)

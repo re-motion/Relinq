@@ -14,12 +14,10 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Utilities;
 
@@ -82,7 +80,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
       return _cachedResultSelector.GetOrCreate (
           r => r.GetResolvedExpression (
-                   GetResultSelectorWithBackReference (clauseGenerationContext.ClauseMapping),
+                   QuerySourceExpressionNodeUtility.ReplaceParameterWithReference (this, ResultSelector.Parameters[1], ResultSelector.Body, clauseGenerationContext.ClauseMapping),
                    ResultSelector.Parameters[0],
                    clauseGenerationContext));
     }
@@ -113,30 +111,6 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       selectClause.Selector = GetResolvedResultSelector (clauseGenerationContext);
 
       return queryModel;
-    }
-
-    private Expression GetResultSelectorWithBackReference (QuerySourceClauseMapping querySourceClauseMapping)
-    {
-      var clause = GetClauseForResolve (querySourceClauseMapping);
-      var referenceExpression = new QuerySourceReferenceExpression (clause);
-
-      return ReplacingExpressionTreeVisitor.Replace (ResultSelector.Parameters[1], referenceExpression, ResultSelector.Body);
-    }
-
-    private IQuerySource GetClauseForResolve (QuerySourceClauseMapping querySourceClauseMapping)
-    {
-      try
-      {
-        return querySourceClauseMapping.GetClause (this);
-      }
-      catch (KeyNotFoundException ex)
-      {
-        var message = string.Format (
-            "Cannot resolve with a {0} for which no clause was created. Be sure to call Apply before calling GetResolvedResultSelector, and pass in the same "
-            + "QuerySourceClauseMapping to both methods.",
-            GetType ().Name);
-        throw new InvalidOperationException (message, ex);
-      }
     }
   }
 }

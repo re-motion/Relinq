@@ -79,7 +79,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public Expression GetResolvedResultSelector (ClauseGenerationContext clauseGenerationContext)
     {
       return _cachedResultSelector.GetOrCreate (r => r.GetResolvedExpression (
-          GetExpressionWithBackReference (ResultSelector.Parameters[1], ResultSelector.Body, clauseGenerationContext.ClauseMapping),
+          QuerySourceExpressionNodeUtility.ReplaceParameterWithReference (this, ResultSelector.Parameters[1], ResultSelector.Body, clauseGenerationContext.ClauseMapping),
           ResultSelector.Parameters[0], clauseGenerationContext));
     }
 
@@ -109,30 +109,6 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       selectClause.Selector = GetResolvedResultSelector (clauseGenerationContext);
 
       return queryModel;
-    }
-
-    private Expression GetExpressionWithBackReference (ParameterExpression parameter, Expression expression, QuerySourceClauseMapping querySourceClauseMapping)
-    {
-      var clause = GetClauseForResolve (querySourceClauseMapping);
-      var referenceExpression = new QuerySourceReferenceExpression (clause);
-
-      return ReplacingExpressionTreeVisitor.Replace (parameter, referenceExpression, expression);
-    }
-
-    private IQuerySource GetClauseForResolve (QuerySourceClauseMapping querySourceClauseMapping)
-    {
-      try
-      {
-        return querySourceClauseMapping.GetClause (this);
-      }
-      catch (KeyNotFoundException ex)
-      {
-        var message = string.Format (
-            "Cannot resolve with a {0} for which no clause was created. Be sure to call Apply before calling GetResolved..., and pass in the same "
-            + "QuerySourceClauseMapping to both methods.",
-            GetType ().Name);
-        throw new InvalidOperationException (message, ex);
-      }
     }
   }
 }

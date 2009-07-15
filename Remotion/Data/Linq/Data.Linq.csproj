@@ -84,6 +84,7 @@
     <Compile Include="Parsing\Structure\IntermediateModel\GroupByExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\GroupJoinExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\JoinExpressionNode.cs" />
+    <Compile Include="Parsing\Structure\IntermediateModel\QuerySourceExpressionNodeUtility.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ResolvedExpressionCache.cs" />
     <Compile Include="Parsing\Structure\QuerySourceClauseMapping.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\CastExpressionNode.cs" />
