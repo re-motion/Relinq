@@ -202,7 +202,7 @@ namespace Remotion.Data.UnitTests.Linq.Transformations
                              where sd.Subject == "Maths"
                              select sd.Student;
       var parsedMainFromSubQuery = ExpressionHelper.ParseQuery (mainFromSubQuery);
-      queryModel.MainFromClause.FromExpression = new SubQueryExpression (parsedMainFromSubQuery); // change to be a from clause with a sub query
+      queryModel.MainFromClause.FromExpression = new SubQueryExpression (parsedMainFromSubQuery);
 
       queryModel.Accept (_visitor);
 
