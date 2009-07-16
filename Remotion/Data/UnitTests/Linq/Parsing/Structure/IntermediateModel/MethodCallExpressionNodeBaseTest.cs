@@ -89,7 +89,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       Assert.That (newQueryModel, Is.Not.SameAs (_queryModelWithResultOperator));
       Assert.That (newQueryModel.ResultType, Is.SameAs (oldResultType));
-      Assert.That (_queryModelWithResultOperator.ResultType, Is.SameAs (_resultOperatorSource.ParsedExpression.Type));
+      Assert.That (_queryModelWithResultOperator.ResultType, Is.SameAs (typeof (IQueryable<int>)));
     }
 
     [Test]

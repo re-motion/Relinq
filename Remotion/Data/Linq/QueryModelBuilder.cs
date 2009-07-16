@@ -87,17 +87,15 @@ namespace Remotion.Data.Linq
       _resultOperators.Add (resultOperator);
     }
 
-    public QueryModel Build (Type resultType)
+    public QueryModel Build ()
     {
-      ArgumentUtility.CheckNotNull ("resultType", resultType);
-
       if (MainFromClause == null)
         throw new InvalidOperationException ("No MainFromClause was added to the builder.");
 
       if (SelectClause == null)
         throw new InvalidOperationException ("No SelectOrGroupClause was added to the builder.");
 
-      var queryModel = new QueryModel (resultType, MainFromClause, SelectClause);
+      var queryModel = new QueryModel (null, MainFromClause, SelectClause);
 
       foreach (var bodyClause in BodyClauses)
         queryModel.BodyClauses.Add (bodyClause);

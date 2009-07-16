@@ -18,7 +18,6 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
-using System.Linq;
 using Remotion.Utilities;
 using Rhino.Mocks;
 
@@ -119,7 +118,7 @@ namespace Remotion.Data.UnitTests.Linq
       _builder.AddClause (_selectClause);
       _builder.AddResultOperator (_resultOperator2);
 
-      var queryModel = _builder.Build(typeof (IQueryable<int>));
+      var queryModel = _builder.Build ();
 
       Assert.That (queryModel.MainFromClause, Is.SameAs (_mainFromClause));
       Assert.That (queryModel.SelectClause, Is.SameAs (_selectClause));
@@ -135,7 +134,7 @@ namespace Remotion.Data.UnitTests.Linq
       _builder.AddClause (_whereClause2);
       _builder.AddClause (_selectClause);
 
-      _builder.Build (typeof (IQueryable<int>));
+      _builder.Build ();
     }
 
     [Test]
@@ -146,7 +145,7 @@ namespace Remotion.Data.UnitTests.Linq
       _builder.AddClause (_whereClause2);
       _builder.AddClause (_mainFromClause);
 
-      _builder.Build (typeof (IQueryable<int>));
+      _builder.Build ();
     }
   }
 }

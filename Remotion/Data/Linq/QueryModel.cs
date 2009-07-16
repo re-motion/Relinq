@@ -56,12 +56,11 @@ namespace Remotion.Data.Linq
     /// <see cref="BodyClauses"/>. After it, only the <see cref="ResultOperators"/> modify the result of the query.</param>
     public QueryModel (Type resultType, MainFromClause mainFromClause, SelectClause selectClause)
     {
-      ArgumentUtility.CheckNotNull ("resultType", resultType);
       ArgumentUtility.CheckNotNull ("mainFromClause", mainFromClause);
       ArgumentUtility.CheckNotNull ("SelectOrGroupClause", selectClause);
 
       _uniqueIdentifierGenerator = new UniqueIdentifierGenerator();
-      ResultType = resultType;
+
       MainFromClause = mainFromClause;
       SelectClause = selectClause;
 
@@ -81,8 +80,12 @@ namespace Remotion.Data.Linq
     /// </summary>
     public Type ResultType
     {
-      get { return _resultType; }
-      set { _resultType = ArgumentUtility.CheckNotNull ("value", value); }
+      get {
+        var resultType = SelectClause.GetResultType ();
+        foreach (var resultOperator in ResultOperators)
+          resultType = resultOperator.GetResultType (resultType);
+        return resultType;
+      }
     }
 
     /// <summary>
@@ -204,7 +207,7 @@ namespace Remotion.Data.Linq
         queryModelBuilder.AddResultOperator (resultOperatorClone);
       }
 
-      var clone = queryModelBuilder.Build (ResultType);
+      var clone = queryModelBuilder.Build ();
       clone.TransformExpressions (ex => CloningExpressionTreeVisitor.AdjustExpressionAfterCloning (ex, cloneContext.QuerySourceMapping));
       return clone;
     }

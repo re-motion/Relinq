@@ -49,7 +49,6 @@ namespace Remotion.Data.UnitTests.Linq
     {
       Assert.That (_queryModel.MainFromClause, Is.SameAs (_mainFromClause));
       Assert.That (_queryModel.SelectClause, Is.SameAs (_selectClause));
-      Assert.That (_queryModel.ResultType, Is.EqualTo (typeof (IQueryable<string>)));
     }
 
     [Test]
@@ -65,6 +64,27 @@ namespace Remotion.Data.UnitTests.Linq
       _queryModel.Accept (visitorMock);
 
       repository.VerifyAll();
+    }
+
+    [Test]
+    public void GetResultType_FromSelectClause ()
+    {
+      Assert.That (_queryModel.ResultType, Is.EqualTo (typeof (IQueryable<int>)));
+    }
+
+    [Test]
+    public void GetResultType_FromResultOperator ()
+    {
+      _queryModel.ResultOperators.Add (new CountResultOperator ());
+      Assert.That (_queryModel.ResultType, Is.EqualTo (typeof (int)));
+    }
+
+    [Test]
+    public void GetResultType_FromMultipleResultOperators ()
+    {
+      _queryModel.ResultOperators.Add (new DistinctResultOperator());
+      _queryModel.ResultOperators.Add (new SingleResultOperator (false));
+      Assert.That (_queryModel.ResultType, Is.EqualTo (typeof (int)));
     }
 
     [Test]
@@ -113,14 +133,6 @@ namespace Remotion.Data.UnitTests.Linq
 
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (queryModel));
-    }
-
-    [Test]
-    public void Clone_HasSameResultType ()
-    {
-      var clone = _queryModel.Clone();
-
-      Assert.That (clone.ResultType, Is.SameAs (_queryModel.ResultType));
     }
 
     [Test]
