@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
+using Remotion.Data.Linq.Parsing;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
@@ -42,6 +43,14 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     public IEnumerable<T> ExecuteInMemory<T> (IEnumerable<T> input)
     {
       return input.Distinct ();
+    }
+
+    public override Type GetResultType (Type inputResultType)
+    {
+      ArgumentUtility.CheckNotNull ("inputResultType", inputResultType);
+      ParserUtility.GetItemTypeOfIEnumerable (inputResultType, "inputResultType"); // check whether inputResultType implements IEnumerable<T>
+
+      return inputResultType;
     }
 
     public override string ToString ()

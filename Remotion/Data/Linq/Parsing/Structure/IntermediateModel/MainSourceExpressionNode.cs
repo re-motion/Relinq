@@ -14,11 +14,8 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Clauses.Expressions;
-using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
@@ -36,15 +33,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       ArgumentUtility.CheckNotNull ("expression", expression);
 
       QuerySourceType = expression.Type;
-
-      try
-      {
-        QuerySourceElementType = ParserUtility.GetItemTypeOfIEnumerable (expression.Type);
-      }
-      catch (ArgumentTypeException)
-      {
-        throw new ArgumentTypeException ("expression", typeof (IEnumerable<>), expression.Type);
-      }
+      QuerySourceElementType = ParserUtility.GetItemTypeOfIEnumerable (expression.Type, "expression");
 
       AssociatedIdentifier = associatedIdentifier;
       ParsedExpression = expression;

@@ -56,21 +56,21 @@ namespace Remotion.Data.UnitTests.Linq.Parsing
     [Test]
     public void GetItemTypeOfIEnumerable_ArgumentImplementsIEnumerable ()
     {
-      Assert.That (ParserUtility.GetItemTypeOfIEnumerable (typeof (List<int>)), Is.SameAs (typeof (int)));
+      Assert.That (ParserUtility.GetItemTypeOfIEnumerable (typeof (List<int>), "x"), Is.SameAs (typeof (int)));
     }
 
     [Test]
     public void GetItemTypeOfIEnumerable_ArgumentIsIEnumerable ()
     {
-      Assert.That (ParserUtility.GetItemTypeOfIEnumerable (typeof (IEnumerable<int>)), Is.SameAs (typeof (int)));
-      Assert.That (ParserUtility.GetItemTypeOfIEnumerable (typeof (IEnumerable<IEnumerable<string>>)), Is.SameAs (typeof (IEnumerable<string>)));
+      Assert.That (ParserUtility.GetItemTypeOfIEnumerable (typeof (IEnumerable<int>), "x"), Is.SameAs (typeof (int)));
+      Assert.That (ParserUtility.GetItemTypeOfIEnumerable (typeof (IEnumerable<IEnumerable<string>>), "x"), Is.SameAs (typeof (IEnumerable<string>)));
     }
 
     [Test]
-    [ExpectedException (ExpectedMessage = "Expected a type implementing IEnumerable<T>, but found 'System.Int32'.\r\nParameter name: enumerableType")]
+    [ExpectedException (ExpectedMessage = "Expected a type implementing IEnumerable<T>, but found 'System.Int32'.\r\nParameter name: x")]
     public void GetItemTypeOfIEnumerable_InvalidType ()
     {
-      ParserUtility.GetItemTypeOfIEnumerable (typeof (int));
+      ParserUtility.GetItemTypeOfIEnumerable (typeof (int), "x");
     }
   }
 }

@@ -80,15 +80,7 @@ namespace Remotion.Data.Linq.Clauses
       set 
       {
         ArgumentUtility.CheckNotNull ("value", value);
-        try
-        {
-          ParserUtility.GetItemTypeOfIEnumerable (value);
-        }
-        catch (ArgumentTypeException)
-        {
-          var message = string.Format ("Expected a type implementing IEnumerable<T>, but found '{0}'.", value.FullName);
-          throw new ArgumentTypeException (message, "value", typeof (IEnumerable<>), value);
-        }
+        ParserUtility.GetItemTypeOfIEnumerable (value, "value"); // check whether value implements IEnumerable<T>
 
         _itemType = value;
       }

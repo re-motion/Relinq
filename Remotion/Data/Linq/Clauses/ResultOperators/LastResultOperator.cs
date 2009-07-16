@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
+using Remotion.Data.Linq.Parsing;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
@@ -50,6 +51,12 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
         return input.LastOrDefault();
       else
         return input.Last();
+    }
+
+    public override Type GetResultType (Type inputResultType)
+    {
+      ArgumentUtility.CheckNotNull ("inputResultType", inputResultType);
+      return ParserUtility.GetItemTypeOfIEnumerable (inputResultType, "inputResultType");
     }
 
     public override string ToString ()

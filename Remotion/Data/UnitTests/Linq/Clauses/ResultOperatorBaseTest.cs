@@ -68,8 +68,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage = "Argument input has type System.Int32 when type "
-        + "System.Collections.Generic.IEnumerable`1[T] was expected.\r\nParameter name: input")]
+    [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage = "Expected a type implementing IEnumerable<T>, but found 'System.Int32'."
+        + "\r\nParameter name: input")]
     public void InvokeGenericOnEnumerable_InvalidInputType ()
     {
       _resultOperator.InvokeGenericOnEnumerable (14, e => e.Count ());

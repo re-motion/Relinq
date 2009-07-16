@@ -14,11 +14,13 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Linq;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.ResultOperators;
+using Remotion.Utilities;
 
 namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
 {
@@ -94,6 +96,19 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     public void ExecutionStrategy_NoDefault ()
     {
       Assert.That (_resultOperatorNoDefault.ExecutionStrategy, Is.SameAs (SingleExecutionStrategy.InstanceNoDefaultWhenEmpty));
+    }
+
+    [Test]
+    public void GetResultType ()
+    {
+      Assert.That (_resultOperatorNoDefault.GetResultType (typeof (IQueryable<Student>)), Is.SameAs (typeof (Student)));
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentTypeException))]
+    public void GetResultType_InvalidType ()
+    {
+      _resultOperatorNoDefault.GetResultType (typeof (Student));
     }
   }
 }

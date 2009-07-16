@@ -15,9 +15,9 @@
 // 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Utilities;
@@ -50,6 +50,17 @@ namespace Remotion.Data.Linq.Clauses
     /// <returns>The result of the operator. This can be an enumerable, a single item, or a scalar value, depending on the operator.</returns>
     /// <seealso cref="InvokeGenericOnEnumerable{TResult}"/>
     public abstract object ExecuteInMemory (object input);
+
+    /// <summary>
+    /// Gets the result type a query would have if it ended with this <see cref="ResultOperatorBase"/>. This can be an instantiation of 
+    /// <see cref="IQueryable{T}"/>, the type of a single item, or a scalar type, depending on the kind of this <see cref="ResultOperatorBase"/>.
+    /// Use <see cref="QueryModel.ResultType"/> to obtain the real result type of a query model, including all other 
+    /// <see cref="QueryModel.ResultOperators"/>.
+    /// </summary>
+    /// <param name="inputResultType">The result type produced by the preceding <see cref="ResultOperatorBase"/>, or the <see cref="SelectClause"/>
+    /// or the query if no previous <see cref="ResultOperatorBase"/> exists.</param>
+    /// <returns>Gets the result type a query would have if it ended with this <see cref="ResultOperatorBase"/></returns>
+    public abstract Type GetResultType (Type inputResultType);
 
     /// <summary>
     /// Clones this item, registering its clone with the <paramref name="cloneContext"/> if it is a query source clause.
@@ -137,15 +148,7 @@ namespace Remotion.Data.Linq.Clauses
     /// <returns>The item type enumerated by <paramref name="input"/>.</returns>
     protected Type GetInputItemType (object input)
     {
-      Type itemType;
-      try
-      {
-        itemType = ParserUtility.GetItemTypeOfIEnumerable (input.GetType ());
-      }
-      catch (ArgumentTypeException)
-      {
-        throw new ArgumentTypeException ("input", typeof (IEnumerable<>), input.GetType ());
-      }
+      Type itemType = ParserUtility.GetItemTypeOfIEnumerable (input.GetType (), "input");
       return itemType;
     }
 

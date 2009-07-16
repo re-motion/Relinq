@@ -24,6 +24,7 @@ using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.UnitTests.Linq.Parsing;
+using Remotion.Utilities;
 
 namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
 {
@@ -146,6 +147,62 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       Assert.That (result[0].ToArray (), Is.EqualTo (new[] { "1", "4" }));
       Assert.That (result[1].ToArray (), Is.EqualTo (new[] { "2", "5" }));
       Assert.That (result[2].ToArray (), Is.EqualTo (new[] { "3" }));
+    }
+
+    [Test]
+    public void GetResultType ()
+    {
+      var expectedInput = new QuerySourceReferenceExpression (
+          ExpressionHelper.CreateMainFromClause ("s", typeof (Student), ExpressionHelper.CreateQuerySource ()));
+
+      var keySelector = new InputDependentExpression (ExpressionHelper.CreateLambdaExpression<Student, int> (s => s.ID), expectedInput);
+      var elementSelector = new InputDependentExpression (ExpressionHelper.CreateLambdaExpression<Student, string> (s => s.ToString ()), expectedInput);
+      var resultOperator = new GroupResultOperator (keySelector, elementSelector);
+
+      Assert.That (resultOperator.GetResultType (typeof (IQueryable<Student>)), Is.SameAs (typeof (IQueryable<IGrouping<int, string>>)));
+    }
+
+    [Test]
+    public void GetResultType_DerivedItemType ()
+    {
+      var expectedInput = new QuerySourceReferenceExpression (
+          ExpressionHelper.CreateMainFromClause ("s", typeof (Student), ExpressionHelper.CreateQuerySource ()));
+
+      var keySelector = new InputDependentExpression (ExpressionHelper.CreateLambdaExpression<Student, int> (s => s.ID), expectedInput);
+      var elementSelector = new InputDependentExpression (ExpressionHelper.CreateLambdaExpression<Student, string> (s => s.ToString ()), expectedInput);
+      var resultOperator = new GroupResultOperator (keySelector, elementSelector);
+
+      Assert.That (resultOperator.GetResultType (typeof (IQueryable<GoodStudent>)), Is.SameAs (typeof (IQueryable<IGrouping<int, string>>)));
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentTypeException))]
+    public void GetResultType_InvalidType_WrongItemType ()
+    {
+      _resultOperator.GetResultType (typeof (IQueryable<int>));
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentTypeException))]
+    public void GetResultType_InvalidType_NoIQueryable ()
+    {
+      _resultOperator.GetResultType (typeof (int));
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException))]
+    public void GetResultType_KeyAndElementSelectorDontMatch ()
+    {
+      var expectedInput1 = new QuerySourceReferenceExpression (
+          ExpressionHelper.CreateMainFromClause ("s", typeof (Student), ExpressionHelper.CreateQuerySource ()));
+      var expectedInput2 = new QuerySourceReferenceExpression (
+          ExpressionHelper.CreateMainFromClause ("i", typeof (int), ExpressionHelper.CreateQuerySource ()));
+
+      var keySelector = new InputDependentExpression (ExpressionHelper.CreateLambdaExpression<Student, int> (s => s.ID), expectedInput1);
+      var elementSelector = new InputDependentExpression (ExpressionHelper.CreateLambdaExpression<int, string> (i => i.ToString ()), expectedInput2);
+      var resultOperator = new GroupResultOperator (keySelector, elementSelector);
+
+      resultOperator.GetResultType (typeof (IQueryable<Student>));
     }
   }
 }

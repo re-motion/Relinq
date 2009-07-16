@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
+using Remotion.Data.Linq.Parsing;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
@@ -43,6 +44,14 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     {
       ArgumentUtility.CheckNotNull ("input", input);
       return input.Count ();
+    }
+
+    public override Type GetResultType (Type inputResultType)
+    {
+      ArgumentUtility.CheckNotNull ("inputResultType", inputResultType);
+      ParserUtility.GetItemTypeOfIEnumerable (inputResultType, "inputResultType"); // check whether inputResultType implements IEnumerable<T>
+
+      return typeof (int);
     }
 
     public override string ToString ()

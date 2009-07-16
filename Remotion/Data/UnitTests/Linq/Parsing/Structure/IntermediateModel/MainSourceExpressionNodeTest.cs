@@ -41,10 +41,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentTypeException),
-        ExpectedMessage =
-            "Argument expression has type System.Int32 when type System.Collections.Generic.IEnumerable`1[T] was expected.\r\nParameter name: expression"
-        )]
+    [ExpectedException (typeof (ArgumentTypeException), 
+        ExpectedMessage = "Expected a type implementing IEnumerable<T>, but found 'System.Int32'.\r\nParameter name: expression")]
     public void Initialization_TypeNotEnumerable ()
     { 
       new MainSourceExpressionNode ("x", Expression.Constant(5));

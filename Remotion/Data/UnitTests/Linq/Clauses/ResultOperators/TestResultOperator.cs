@@ -32,6 +32,11 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       throw new NotImplementedException();
     }
 
+    public override Type GetResultType (Type inputResultType)
+    {
+      throw new NotImplementedException();
+    }
+
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
       throw new NotImplementedException();
@@ -52,10 +57,12 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       throw new NotImplementedException ("Test");
     }
 
+// ReSharper disable UnusedTypeParameter
     public object ExecuteMethodWithNonMatchingArgumentType<T> (IEnumerable<object> arg)
     {
       throw new NotImplementedException ("Test");
     }
+// ReSharper restore UnusedTypeParameter
 
     public object NonGenericExecuteMethod (IEnumerable<object> arg)
     {

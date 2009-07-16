@@ -17,8 +17,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.Serialization;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.Expressions;
+using Remotion.Data.Linq.Parsing;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
@@ -131,6 +133,36 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return input.GroupBy (
           (Func<TInput, TKey>) KeySelector.DependentExpression.Compile (),
           (Func<TInput, TElement>) ElementSelector.DependentExpression.Compile ());
+    }
+
+    public override Type GetResultType (Type inputResultType)
+    {
+      ArgumentUtility.CheckNotNull ("inputResultType", inputResultType);
+      var itemType = ParserUtility.GetItemTypeOfIEnumerable (inputResultType, "inputResultType");
+
+      if (KeySelector.InputParameter.Type != ElementSelector.InputParameter.Type)
+      {
+        throw new InvalidOperationException (
+            "Cannot get a result type for this GroupResultOperator, its KeySelector and ElementSelector's input types don't match.");
+      }
+
+      if (!KeySelector.InputParameter.Type.IsAssignableFrom (itemType))
+      {
+        var expectedEnumerableType = typeof (IEnumerable<>).MakeGenericType (KeySelector.InputParameter.Type);
+        var message = string.Format (
+            "The input's item type must be assignable to the input type of the KeySelector and ElementSelector. Expected a type assignable to '{0}', "
+            + "but got '{1}'.",
+            expectedEnumerableType,
+            inputResultType);
+        throw new ArgumentTypeException (
+            message, 
+            "inputResultType",
+            expectedEnumerableType, 
+            inputResultType);
+      }
+
+      var groupingType = typeof (IGrouping<,>).MakeGenericType (KeySelector.ResolvedExpression.Type, ElementSelector.ResolvedExpression.Type);
+      return typeof (IQueryable<>).MakeGenericType (groupingType);
     }
 
     public override string ToString ()

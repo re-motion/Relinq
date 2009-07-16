@@ -14,12 +14,12 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
-using Remotion.Data.Linq.Clauses.Expressions;
 using Rhino.Mocks;
 using Remotion.Data.Linq.Clauses;
 
@@ -35,7 +35,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [SetUp]
     public void SetUp ()
     {
-      _selector = ExpressionHelper.CreateExpression();
+      _selector = Expression.Constant (new Student ());
       _selectClause = new SelectClause (_selector);
       _cloneContext = new CloneContext (new QuerySourceMapping());
     }
@@ -95,6 +95,13 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     {
       var selectClause = new SelectClause (Expression.Constant (0));
       Assert.That (selectClause.ToString (), Is.EqualTo ("select 0"));
+    }
+
+    [Test]
+    public void GetResultType ()
+    {
+      var type = _selectClause.GetResultType ();
+      Assert.That (type, Is.SameAs (typeof (IQueryable<Student>)));
     }
   }
 }

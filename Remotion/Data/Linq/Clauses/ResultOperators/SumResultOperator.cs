@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
+using Remotion.Data.Linq.Parsing;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
@@ -45,6 +46,12 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
         throw new NotSupportedException (message);
       }
       return method.Invoke (null, new[] { input });
+    }
+
+    public override Type GetResultType (Type inputResultType)
+    {
+      ArgumentUtility.CheckNotNull ("inputResultType", inputResultType);
+      return ParserUtility.GetItemTypeOfIEnumerable (inputResultType, "inputResultType");
     }
 
     public override string ToString ()

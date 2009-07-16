@@ -55,13 +55,16 @@ namespace Remotion.Data.Linq.Parsing
       return ((MethodCallExpression) wrappedCall.Body).Method;
     }
 
-    public static Type GetItemTypeOfIEnumerable (Type enumerableType)
+    public static Type GetItemTypeOfIEnumerable (Type enumerableType, string argumentName)
     {
+      ArgumentUtility.CheckNotNull ("enumerableType", enumerableType);
+      ArgumentUtility.CheckNotNullOrEmpty ("argumentName", argumentName);
+
       Type implementedEnumerableInterface = GetImplementedIEnumerableType(enumerableType);
       if (implementedEnumerableInterface == null)
       {
         var message = string.Format ("Expected a type implementing IEnumerable<T>, but found '{0}'.", enumerableType.FullName);
-        throw new ArgumentTypeException (message, "enumerableType", typeof (IEnumerable<>), enumerableType);
+        throw new ArgumentTypeException (message, argumentName, typeof (IEnumerable<>), enumerableType);
       }
 
       return implementedEnumerableInterface.GetGenericArguments ()[0];
