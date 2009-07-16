@@ -70,10 +70,9 @@ namespace Remotion.Data.Linq.Parsing.Structure
       ArgumentUtility.CheckNotNull ("expressionTreeRoot", expressionTreeRoot);
 
       var node = _expressionTreeParser.ParseTree (expressionTreeRoot);
-
       var clauseGenerationContext = new ClauseGenerationContext (new QuerySourceClauseMapping(), _expressionTreeParser.NodeTypeRegistry);
 
-      QueryModel queryModel = ApplyAllNodes (expressionTreeRoot.Type, node, clauseGenerationContext);
+      QueryModel queryModel = ApplyAllNodes (node, clauseGenerationContext);
       return queryModel;
     }
 
@@ -81,25 +80,24 @@ namespace Remotion.Data.Linq.Parsing.Structure
     /// Applies all nodes to a <see cref="QueryModel"/>, which is created by the trailing <see cref="MainSourceExpressionNode"/> in the 
     /// <paramref name="node"/> chain.
     /// </summary>
-    /// <param name="resultType">The result type to put into the <see cref="QueryModel"/>.</param>
     /// <param name="node">The entry point to the <see cref="IExpressionNode"/> chain.</param>
     /// <param name="clauseGenerationContext">The clause generation context collecting context information during the parsing process.</param>
     /// <returns>A <see cref="QueryModel"/> created by the training <see cref="MainSourceExpressionNode"/> and transformed by each node in the
     /// <see cref="IExpressionNode"/> chain.</returns>
-    private QueryModel ApplyAllNodes (Type resultType, IExpressionNode node, ClauseGenerationContext clauseGenerationContext)
+    private QueryModel ApplyAllNodes (IExpressionNode node, ClauseGenerationContext clauseGenerationContext)
     {
       if (node.Source == null) // this is the last node, create a MainFromClause and a QueryModel
       {
         var mainSourceExpressionNode = (MainSourceExpressionNode) node;
         var mainFromClause = mainSourceExpressionNode.CreateMainFromClause (clauseGenerationContext);
         var defaultSelectClause = new SelectClause (new QuerySourceReferenceExpression (mainFromClause));
-        return new QueryModel (resultType, mainFromClause, defaultSelectClause);
+        return new QueryModel (mainFromClause, defaultSelectClause);
 
         // return node.Apply (null, clauseGenerationContext); // TODO 1310
       }
       else // first go to the next node, then transform the queryModel (created by the last node) by applying the node to i
       {
-        var queryModel = ApplyAllNodes (resultType, node.Source, clauseGenerationContext);
+        var queryModel = ApplyAllNodes (node.Source, clauseGenerationContext);
         return node.Apply (queryModel, clauseGenerationContext);
             // TODO 1310: There is only an integration test for this "return", but 1310 will add the unit test.
       }

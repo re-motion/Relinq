@@ -34,7 +34,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.QueryParserIntegrationT
                   select Tuple.NewTuple (s, sds);
 
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
-      Assert.That (queryModel.ResultType, Is.SameAs (typeof (IQueryable<Tuple<Student, IEnumerable<Student_Detail>>>)));
+      Assert.That (queryModel.GetResultType(), Is.SameAs (typeof (IQueryable<Tuple<Student, IEnumerable<Student_Detail>>>)));
 
       var mainFromClause = queryModel.MainFromClause;
       CheckConstantQuerySource (mainFromClause.FromExpression, QuerySource);
@@ -64,7 +64,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.QueryParserIntegrationT
       var query = QuerySource.GroupJoin (DetailQuerySource, s => s.ID, sd => sd.StudentID, (s, sds) => Tuple.NewTuple (s, sds));
 
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
-      Assert.That (queryModel.ResultType, Is.SameAs (typeof (IQueryable<Tuple<Student, IEnumerable<Student_Detail>>>)));
+      Assert.That (queryModel.GetResultType(), Is.SameAs (typeof (IQueryable<Tuple<Student, IEnumerable<Student_Detail>>>)));
 
       var mainFromClause = queryModel.MainFromClause;
       CheckConstantQuerySource (mainFromClause.FromExpression, QuerySource);

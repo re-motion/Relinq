@@ -37,7 +37,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.QueryParserIntegrationT
                   select new Tuple<Student, Student_Detail> ( s, sd );
       var expression = query.Expression;
       var queryModel = QueryParser.GetParsedQuery (expression);
-      Assert.That (queryModel.ResultType, Is.SameAs (typeof (IQueryable<Tuple<Student, Student_Detail>>)));
+      Assert.That (queryModel.GetResultType(), Is.SameAs (typeof (IQueryable<Tuple<Student, Student_Detail>>)));
 
       var mainFromClause = queryModel.MainFromClause;
       Assert.That (mainFromClause.FromExpression, Is.InstanceOfType (typeof (SubQueryExpression)));
@@ -46,7 +46,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.QueryParserIntegrationT
 
       var subQueryModel = ((SubQueryExpression) mainFromClause.FromExpression).QueryModel;
       Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (TakeResultOperator)));
-      Assert.That (subQueryModel.ResultType, Is.SameAs (typeof (IQueryable<Student>)));
+      Assert.That (subQueryModel.GetResultType(), Is.SameAs (typeof (IQueryable<Student>)));
       
       var selectClause = queryModel.SelectClause;
       var additionalFromClause = (AdditionalFromClause) queryModel.BodyClauses[0];
@@ -65,7 +65,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.QueryParserIntegrationT
       
       var expression = query.Expression;
       var queryModel = QueryParser.GetParsedQuery (expression);
-      Assert.That (queryModel.ResultType, Is.SameAs (typeof (IQueryable<Student>)));
+      Assert.That (queryModel.GetResultType(), Is.SameAs (typeof (IQueryable<Student>)));
 
       var mainFromClause = queryModel.MainFromClause;
       Assert.That (mainFromClause.FromExpression, Is.InstanceOfType (typeof (SubQueryExpression)));
@@ -74,7 +74,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.QueryParserIntegrationT
 
       var subQueryModel = ((SubQueryExpression) mainFromClause.FromExpression).QueryModel;
       Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (DistinctResultOperator)));
-      Assert.That (subQueryModel.ResultType, Is.SameAs (typeof (IQueryable<Student>)));
+      Assert.That (subQueryModel.GetResultType(), Is.SameAs (typeof (IQueryable<Student>)));
 
       var whereClause = (WhereClause) queryModel.BodyClauses[0];
       CheckResolvedExpression<Student, bool> (whereClause.Predicate, mainFromClause, x => x.ID > 0);
@@ -90,7 +90,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.QueryParserIntegrationT
                                                                select s).Distinct ().Count(x => x.ID > 0));
 
       var queryModel = QueryParser.GetParsedQuery (expression);
-      Assert.That (queryModel.ResultType, Is.SameAs (typeof (int)));
+      Assert.That (queryModel.GetResultType(), Is.SameAs (typeof (int)));
 
       var mainFromClause = queryModel.MainFromClause;
       Assert.That (mainFromClause.FromExpression, Is.InstanceOfType (typeof (SubQueryExpression)));
@@ -99,7 +99,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.QueryParserIntegrationT
 
       var subQueryModel = ((SubQueryExpression) mainFromClause.FromExpression).QueryModel;
       Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (DistinctResultOperator)));
-      Assert.That (subQueryModel.ResultType, Is.SameAs (typeof (IQueryable<Student>)));
+      Assert.That (subQueryModel.GetResultType(), Is.SameAs (typeof (IQueryable<Student>)));
 
       var whereClause = (WhereClause) queryModel.BodyClauses[0];
       CheckResolvedExpression<Student, bool> (whereClause.Predicate, mainFromClause, x => x.ID > 0);

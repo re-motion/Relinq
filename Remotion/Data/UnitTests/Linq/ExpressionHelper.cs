@@ -91,7 +91,7 @@ namespace Remotion.Data.UnitTests.Linq
     public static QueryModel CreateQueryModel (MainFromClause mainFromClause)
     {
       var selectClause = CreateSelectClause ();
-      return new QueryModel (typeof (IQueryable<Student>), mainFromClause, selectClause);
+      return new QueryModel (mainFromClause, selectClause);
     }
 
     public static QueryModel CreateQueryModel ()

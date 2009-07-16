@@ -25,7 +25,7 @@ namespace Remotion.Data.Linq.Clauses.Expressions
   public class SubQueryExpression : Expression
   {
     public SubQueryExpression (QueryModel queryModel)
-        : base ((ExpressionType) int.MaxValue, queryModel.ResultType)
+        : base ((ExpressionType) int.MaxValue, queryModel.GetResultType())
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
       QueryModel = queryModel;

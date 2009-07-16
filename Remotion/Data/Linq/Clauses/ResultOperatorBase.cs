@@ -54,7 +54,7 @@ namespace Remotion.Data.Linq.Clauses
     /// <summary>
     /// Gets the result type a query would have if it ended with this <see cref="ResultOperatorBase"/>. This can be an instantiation of 
     /// <see cref="IQueryable{T}"/>, the type of a single item, or a scalar type, depending on the kind of this <see cref="ResultOperatorBase"/>.
-    /// Use <see cref="QueryModel.ResultType"/> to obtain the real result type of a query model, including all other 
+    /// Use <see cref="QueryModel.GetResultType"/> to obtain the real result type of a query model, including all other 
     /// <see cref="QueryModel.ResultOperators"/>.
     /// </summary>
     /// <param name="inputResultType">The result type produced by the preceding <see cref="ResultOperatorBase"/>, or the <see cref="SelectClause"/>

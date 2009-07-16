@@ -40,7 +40,7 @@ namespace Remotion.Data.UnitTests.Linq
     {
       _mainFromClause = ExpressionHelper.CreateMainFromClause();
       _selectClause = ExpressionHelper.CreateSelectClause();
-      _queryModel = new QueryModel (typeof (IQueryable<string>), _mainFromClause, _selectClause);
+      _queryModel = new QueryModel (_mainFromClause, _selectClause);
       _querySourceMapping = new QuerySourceMapping();
     }
 
@@ -69,14 +69,14 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void GetResultType_FromSelectClause ()
     {
-      Assert.That (_queryModel.ResultType, Is.EqualTo (typeof (IQueryable<int>)));
+      Assert.That (_queryModel.GetResultType(), Is.EqualTo (typeof (IQueryable<int>)));
     }
 
     [Test]
     public void GetResultType_FromResultOperator ()
     {
       _queryModel.ResultOperators.Add (new CountResultOperator ());
-      Assert.That (_queryModel.ResultType, Is.EqualTo (typeof (int)));
+      Assert.That (_queryModel.GetResultType(), Is.EqualTo (typeof (int)));
     }
 
     [Test]
@@ -84,15 +84,13 @@ namespace Remotion.Data.UnitTests.Linq
     {
       _queryModel.ResultOperators.Add (new DistinctResultOperator());
       _queryModel.ResultOperators.Add (new SingleResultOperator (false));
-      Assert.That (_queryModel.ResultType, Is.EqualTo (typeof (int)));
+      Assert.That (_queryModel.GetResultType(), Is.EqualTo (typeof (int)));
     }
 
     [Test]
     public new void ToString ()
     {
-      var queryModel = new QueryModel (
-          typeof (IQueryable<Student>), 
-          new MainFromClause ("x", typeof (Student), Expression.Constant (0)), 
+      var queryModel = new QueryModel (new MainFromClause ("x", typeof (Student), Expression.Constant (0)), 
           new SelectClause (Expression.Constant (0)));
       Assert.That (queryModel.ToString(), Is.EqualTo ("from Student x in 0 select 0"));
     }
@@ -100,9 +98,7 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void ToString_WithBodyClauses ()
     {
-      var queryModel = new QueryModel (
-          typeof (IQueryable<Student>),
-          new MainFromClause ("x", typeof (Student), Expression.Constant (0)),
+      var queryModel = new QueryModel (new MainFromClause ("x", typeof (Student), Expression.Constant (0)),
           new SelectClause (Expression.Constant (0)));
       queryModel.BodyClauses.Add (new WhereClause (Expression.Constant (false)));
       var orderByClause = new OrderByClause ();
@@ -115,9 +111,7 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void ToString_WithResultOperators ()
     {
-      var queryModel = new QueryModel (
-          typeof (IQueryable<Student>),
-          new MainFromClause ("x", typeof (Student), Expression.Constant (0)),
+      var queryModel = new QueryModel (new MainFromClause ("x", typeof (Student), Expression.Constant (0)),
           new SelectClause (Expression.Constant (0)));
       queryModel.ResultOperators.Add (new DistinctResultOperator ());
       queryModel.ResultOperators.Add (new CountResultOperator ());
@@ -254,7 +248,7 @@ namespace Remotion.Data.UnitTests.Linq
       var bodyClauseMock = MockRepository.GenerateMock<IBodyClause>();
       var selectClauseMock = MockRepository.GenerateMock<SelectClause> (ExpressionHelper.CreateExpression());
 
-      var queryModel = new QueryModel (typeof (IQueryable<string>), fromClauseMock, selectClauseMock);
+      var queryModel = new QueryModel (fromClauseMock, selectClauseMock);
       queryModel.BodyClauses.Add (bodyClauseMock);
 
       queryModel.TransformExpressions (transformation);

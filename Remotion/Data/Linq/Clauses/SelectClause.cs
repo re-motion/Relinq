@@ -116,7 +116,7 @@ namespace Remotion.Data.Linq.Clauses
 
     /// <summary>
     /// Gets the result type a query would have if it ended with this <see cref="SelectClause"/>. This is <see cref="IQueryable{T}"/> instantiated
-    /// with the type of <see cref="Selector"/> as its generic parameter. Use <see cref="QueryModel.ResultType"/> to obtain the real result type of
+    /// with the type of <see cref="Selector"/> as its generic parameter. Use <see cref="QueryModel.GetResultType"/> to obtain the real result type of
     /// a query model, including the <see cref="QueryModel.ResultOperators"/>.
     /// </summary>
     /// <returns>Gets the result type a query would have if it ended with this <see cref="SelectClause"/></returns>

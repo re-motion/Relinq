@@ -41,20 +41,18 @@ namespace Remotion.Data.Linq
   {
     private readonly UniqueIdentifierGenerator _uniqueIdentifierGenerator;
 
-    private Type _resultType;
     private MainFromClause _mainFromClause;
     private SelectClause _selectClause;
 
     /// <summary>
     /// Initializes a new instance of <see cref="QueryModel"/>
     /// </summary>
-    /// <param name="resultType">The type of the underlying LINQ query, usually a type implementing <see cref="IQueryable{T}"/>.</param>
     /// <param name="mainFromClause">The <see cref="Clauses.MainFromClause"/> of the query. This is the starting point of the query, generating items 
     /// that are filtered and projected by the query.</param>
     /// <param name="selectClause">The <see cref="SelectClause"/> of the query. This is the end point of
     /// the query, it defines what is actually returned for each of the items coming from the <see cref="MainFromClause"/> and passing the 
     /// <see cref="BodyClauses"/>. After it, only the <see cref="ResultOperators"/> modify the result of the query.</param>
-    public QueryModel (Type resultType, MainFromClause mainFromClause, SelectClause selectClause)
+    public QueryModel (MainFromClause mainFromClause, SelectClause selectClause)
     {
       ArgumentUtility.CheckNotNull ("mainFromClause", mainFromClause);
       ArgumentUtility.CheckNotNull ("SelectOrGroupClause", selectClause);
@@ -74,18 +72,18 @@ namespace Remotion.Data.Linq
     }
 
     /// <summary>
-    /// Gets or sets the result type of the underlying LINQ query. This is usually a type that implements <see cref="IQueryable{T}"/>, unless the
+    /// Gets the result type of the underlying LINQ query. This is usually a type that implements <see cref="IQueryable{T}"/>, unless the
     /// query ends with a <see cref="ResultOperatorBase"/>. For example, if the query ends with a <see cref="CountResultOperator"/>, the
     /// result type will be <see cref="int"/>.
     /// </summary>
-    public Type ResultType
+    public Type GetResultType ()
     {
-      get {
-        var resultType = SelectClause.GetResultType ();
-        foreach (var resultOperator in ResultOperators)
-          resultType = resultOperator.GetResultType (resultType);
-        return resultType;
-      }
+      var resultType = SelectClause.GetResultType();
+
+      foreach (var resultOperator in ResultOperators)
+        resultType = resultOperator.GetResultType (resultType);
+
+      return resultType;
     }
 
     /// <summary>

@@ -33,7 +33,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.QueryParserIntegrationT
       var query = (from s in QuerySource group s.ID by s.HasDog);
       
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
-      Assert.That (queryModel.ResultType, Is.SameAs (typeof (IQueryable<IGrouping<bool, int>>)));
+      Assert.That (queryModel.GetResultType(), Is.SameAs (typeof (IQueryable<IGrouping<bool, int>>)));
 
       var mainFromClause = queryModel.MainFromClause;
       CheckConstantQuerySource (mainFromClause.FromExpression, QuerySource);
@@ -54,7 +54,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.QueryParserIntegrationT
       var query = QuerySource.GroupBy (s => s.HasDog);
       
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
-      Assert.That (queryModel.ResultType, Is.SameAs (typeof (IQueryable<IGrouping<bool, Student>>)));
+      Assert.That (queryModel.GetResultType(), Is.SameAs (typeof (IQueryable<IGrouping<bool, Student>>)));
 
       var mainFromClause = queryModel.MainFromClause;
       CheckConstantQuerySource (mainFromClause.FromExpression, QuerySource);
@@ -93,7 +93,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.QueryParserIntegrationT
       //             select x;
 
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
-      Assert.That (queryModel.ResultType, Is.SameAs (typeof (IQueryable<IGrouping<bool, int>>)));
+      Assert.That (queryModel.GetResultType(), Is.SameAs (typeof (IQueryable<IGrouping<bool, int>>)));
 
       var mainFromClause = queryModel.MainFromClause;
       Assert.That (mainFromClause.FromExpression, Is.InstanceOfType (typeof (SubQueryExpression)));
@@ -108,7 +108,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.QueryParserIntegrationT
       CheckResolvedExpression<Student, bool> (subQueryGroupResultOperator.KeySelector.ResolvedExpression, subQueryModel.MainFromClause, s => s.HasDog);
       CheckResolvedExpression<Student, int> (subQueryGroupResultOperator.ElementSelector.ResolvedExpression, subQueryModel.MainFromClause, s => s.ID);
       
-      Assert.That (subQueryModel.ResultType, Is.SameAs (typeof (IQueryable<IGrouping<bool, int>>)));
+      Assert.That (subQueryModel.GetResultType(), Is.SameAs (typeof (IQueryable<IGrouping<bool, int>>)));
 
       var whereClause = (WhereClause) queryModel.BodyClauses[0];
       Assert.That (whereClause.Predicate, Is.InstanceOfType (typeof (BinaryExpression)));
@@ -133,7 +133,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.QueryParserIntegrationT
                    group s by s.HasDog).Where (g => g.Key);
 
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
-      Assert.That (queryModel.ResultType, Is.SameAs (typeof (IQueryable<IGrouping<bool, Student>>)));
+      Assert.That (queryModel.GetResultType(), Is.SameAs (typeof (IQueryable<IGrouping<bool, Student>>)));
 
       var mainFromClause = queryModel.MainFromClause;
       Assert.That (mainFromClause.FromExpression, Is.InstanceOfType (typeof (SubQueryExpression)));
@@ -146,7 +146,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.QueryParserIntegrationT
 
       Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (GroupResultOperator)));
 
-      Assert.That (subQueryModel.ResultType, Is.SameAs (typeof (IQueryable<IGrouping<bool, Student>>)));
+      Assert.That (subQueryModel.GetResultType(), Is.SameAs (typeof (IQueryable<IGrouping<bool, Student>>)));
 
       var whereClause = (WhereClause) queryModel.BodyClauses[0];
       CheckResolvedExpression<IGrouping<bool, Student>, bool> (whereClause.Predicate, mainFromClause, g => g.Key);

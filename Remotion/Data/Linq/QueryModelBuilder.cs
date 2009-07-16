@@ -95,7 +95,7 @@ namespace Remotion.Data.Linq
       if (SelectClause == null)
         throw new InvalidOperationException ("No SelectOrGroupClause was added to the builder.");
 
-      var queryModel = new QueryModel (null, MainFromClause, SelectClause);
+      var queryModel = new QueryModel (MainFromClause, SelectClause);
 
       foreach (var bodyClause in BodyClauses)
         queryModel.BodyClauses.Add (bodyClause);

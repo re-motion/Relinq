@@ -126,8 +126,6 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     private QueryModel WrapQueryModel (QueryModel queryModel, string associatedIdentifier, ClauseGenerationContext clauseGenerationContext)
     {
-      // the new query model gets the result type the old query model would have gotten, hadn't it been wrapped
-      var oldResultType = queryModel.ResultType;
       var subQueryExpression = new SubQueryExpression (queryModel);
 
       // change the Source of this node so that Resolve will later correctly go to the new main from clause we create for the sub query
@@ -136,7 +134,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
       var newMainFromClause = newMainSourceNode.CreateMainFromClause (clauseGenerationContext);
       var newSelectClause = new SelectClause (new QuerySourceReferenceExpression (newMainFromClause));
-      return new QueryModel (oldResultType, newMainFromClause, newSelectClause);
+      return new QueryModel (newMainFromClause, newSelectClause);
     }
 
     protected InvalidOperationException CreateResolveNotSupportedException ()

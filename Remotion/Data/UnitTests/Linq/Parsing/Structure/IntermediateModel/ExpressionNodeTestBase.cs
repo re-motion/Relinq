@@ -43,7 +43,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       SourceClause = SourceNode.CreateMainFromClause (ClauseGenerationContext);
       SourceReference = new QuerySourceReferenceExpression (SourceClause);
 
-      QueryModel = new QueryModel (typeof (IQueryable<Student>), SourceClause, new SelectClause (SourceReference));
+      QueryModel = new QueryModel (SourceClause, new SelectClause (SourceReference));
     }
 
     public MainSourceExpressionNode SourceNode { get; private set; }

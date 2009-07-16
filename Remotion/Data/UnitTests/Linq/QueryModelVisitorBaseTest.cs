@@ -68,7 +68,7 @@ namespace Remotion.Data.UnitTests.Linq
     {
       var mainFromClauseMock = _mockRepository.StrictMock<MainFromClause> ("x", typeof (Student), ExpressionHelper.CreateExpression());
       var selectClauseMock = _mockRepository.StrictMock<SelectClause> (ExpressionHelper.CreateExpression());
-      var queryModel = new QueryModel (typeof (IQueryable<Student>), mainFromClauseMock, selectClauseMock);
+      var queryModel = new QueryModel (mainFromClauseMock, selectClauseMock);
 
       using (_mockRepository.Ordered())
       {
