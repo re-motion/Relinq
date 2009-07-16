@@ -16,6 +16,7 @@
 using System;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
+using Remotion.Data.UnitTests.Linq.TestDomain;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 {

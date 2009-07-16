@@ -19,6 +19,7 @@ using Remotion.Collections;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
+using Remotion.Data.UnitTests.Linq.TestDomain;
 using Remotion.Development.UnitTesting;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;

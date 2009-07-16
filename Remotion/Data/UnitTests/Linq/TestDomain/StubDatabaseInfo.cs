@@ -14,14 +14,12 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Linq;
 using System.Reflection;
 using Remotion.Collections;
 using Remotion.Data.Linq.Backend;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Backend.DataObjectModel;
 
-namespace Remotion.Data.UnitTests.Linq
+namespace Remotion.Data.UnitTests.Linq.TestDomain
 {
   public class StubDatabaseInfo : IDatabaseInfo
   {

@@ -16,25 +16,29 @@
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Data.Linq;
-using Remotion.Data.Linq.Parsing.Structure;
 
-namespace Remotion.Data.UnitTests.Linq
+namespace Remotion.Data.UnitTests.Linq.TestDomain
 {
-  public class TestQueryProvider : QueryProviderBase
+  public class TestQueryable<T> : QueryableBase<T>
   {
-    public TestQueryProvider (IQueryExecutor executor)
+    public TestQueryable (IQueryProvider provider, Expression expression)
+        : base (provider, expression)
+    {
+    }
+
+    public TestQueryable (IQueryExecutor executor)
         : base (executor)
     {
     }
 
-    public TestQueryProvider (IQueryExecutor executor, MethodCallExpressionNodeTypeRegistry nodeTypeRegistry)
-        : base(executor, nodeTypeRegistry)
+    public TestQueryable (IQueryProvider provider)
+        : base (provider)
     {
     }
 
-    public override IQueryable<T> CreateQuery<T> (Expression expression)
+    public override string ToString ()
     {
-      return new TestQueryable<T> (this, expression);
+      return "TestQueryable<" + typeof (T).Name + ">()";
     }
   }
 }

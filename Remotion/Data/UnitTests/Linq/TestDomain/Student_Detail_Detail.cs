@@ -13,13 +13,11 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-using System.Collections.Generic;
-namespace Remotion.Data.UnitTests.Linq
+namespace Remotion.Data.UnitTests.Linq.TestDomain
 {
-  public class IndustrialSector
+  public class Student_Detail_Detail
   {
-    public int ID { get; set; }
     public Student_Detail Student_Detail { get; set; }
-    public IEnumerable<Student> Students { get; set; }
+    public IndustrialSector IndustrialSector { get; set; }
   }
 }

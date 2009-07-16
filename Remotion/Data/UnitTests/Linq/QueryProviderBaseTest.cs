@@ -25,6 +25,7 @@ using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.EagerFetching;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Structure;
+using Remotion.Data.UnitTests.Linq.TestDomain;
 using Rhino.Mocks;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 using Remotion.Utilities;

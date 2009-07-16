@@ -20,6 +20,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing.Structure;
+using Remotion.Data.UnitTests.Linq.TestDomain;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.QueryParserIntegrationTests
 {

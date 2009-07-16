@@ -13,39 +13,22 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 
-namespace Remotion.Data.UnitTests.Linq
+namespace Remotion.Data.UnitTests.Linq.TestDomain
 {
-  public class QueryableWithTooManyArguments<T1, T2> : IQueryable<T1>
+  public class Student
   {
-    public IEnumerator<T1> GetEnumerator ()
-    {
-      throw new NotImplementedException();
-    }
-
-    IEnumerator IEnumerable.GetEnumerator ()
-    {
-      return GetEnumerator();
-    }
-
-    public Expression Expression
-    {
-      get { throw new NotImplementedException(); }
-    }
-
-    public Type ElementType
-    {
-      get { throw new NotImplementedException(); }
-    }
-
-    public IQueryProvider Provider
-    {
-      get { throw new NotImplementedException(); }
-    }
+    public string First { get; set; }
+    public string Last { get; set; }
+    public int ID { get; set; }
+    public List<int> Scores { get; set; }
+    public IQueryable<Student> Friends { get; set; }
+    public string NonDBProperty { get; set; }
+    public bool NonDBBoolProperty { get; set; }
+    public bool IsOld { get; set; }
+    public bool HasDog { get; set; }
+    public Student OtherStudent { get; set; }
   }
 }

@@ -20,6 +20,7 @@ using Remotion.Data.Linq.Clauses.ResultOperators;
 using System.Linq.Expressions;
 using Remotion.Data.UnitTests.Linq.Parsing;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.UnitTests.Linq.TestDomain;
 
 namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
 {

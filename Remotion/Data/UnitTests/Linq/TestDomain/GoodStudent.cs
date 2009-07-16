@@ -13,11 +13,9 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-namespace Remotion.Data.UnitTests.Linq
+namespace Remotion.Data.UnitTests.Linq.TestDomain
 {
-  public class Student_Detail_Detail
+  public class GoodStudent : Student
   {
-    public Student_Detail Student_Detail { get; set; }
-    public IndustrialSector IndustrialSector { get; set; }
   }
 }

@@ -20,6 +20,7 @@ using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
+using Remotion.Data.UnitTests.Linq.TestDomain;
 using Rhino.Mocks;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel

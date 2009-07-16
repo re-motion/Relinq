@@ -22,6 +22,7 @@ using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Collections;
 using System.Collections.Generic;
+using Remotion.Data.UnitTests.Linq.TestDomain;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
 {

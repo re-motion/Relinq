@@ -13,14 +13,29 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-namespace Remotion.Data.UnitTests.Linq
+using System.Linq;
+using System.Linq.Expressions;
+using Remotion.Data.Linq;
+using Remotion.Data.Linq.Parsing.Structure;
+using Remotion.Data.UnitTests.Linq.TestDomain;
+
+namespace Remotion.Data.UnitTests.Linq.TestQueryGenerators
 {
-  public class Student_Detail
+  public class TestQueryProvider : QueryProviderBase
   {
-    public int ID { get; set; }
-    public Student Student { get; set; }
-    public string Subject { get; set; }
-    public int StudentID { get; set; }
-    public IndustrialSector IndustrialSector { get; set; }
+    public TestQueryProvider (IQueryExecutor executor)
+        : base (executor)
+    {
+    }
+
+    public TestQueryProvider (IQueryExecutor executor, MethodCallExpressionNodeTypeRegistry nodeTypeRegistry)
+        : base(executor, nodeTypeRegistry)
+    {
+    }
+
+    public override IQueryable<T> CreateQuery<T> (Expression expression)
+    {
+      return new TestQueryable<T> (this, expression);
+    }
   }
 }

@@ -22,6 +22,7 @@ using Remotion.Data.Linq;
 using Remotion.Data.Linq.EagerFetching;
 using Remotion.Data.UnitTests.Linq.Parsing;
 using System.Linq.Expressions;
+using Remotion.Data.UnitTests.Linq.TestDomain;
 using Remotion.Utilities;
 
 namespace Remotion.Data.UnitTests.Linq

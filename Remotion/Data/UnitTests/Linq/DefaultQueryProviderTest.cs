@@ -18,6 +18,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Parsing.Structure;
+using Remotion.Data.UnitTests.Linq.TestDomain;
 using Remotion.Utilities;
 using Rhino.Mocks;
 using System.Collections.Generic;

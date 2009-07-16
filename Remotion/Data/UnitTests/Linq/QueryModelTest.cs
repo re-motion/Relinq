@@ -21,6 +21,7 @@ using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultOperators;
+using Remotion.Data.UnitTests.Linq.TestDomain;
 using Rhino.Mocks;
 using Remotion.Data.Linq.Clauses;
 using NUnit.Framework.SyntaxHelpers;

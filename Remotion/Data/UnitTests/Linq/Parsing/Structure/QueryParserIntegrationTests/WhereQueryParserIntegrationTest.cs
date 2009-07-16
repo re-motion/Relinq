@@ -17,6 +17,7 @@ using System;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.UnitTests.Linq.TestDomain;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.QueryParserIntegrationTests

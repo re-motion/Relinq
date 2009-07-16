@@ -23,6 +23,7 @@ using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Backend.FieldResolving;
 using Remotion.Data.Linq.Parsing.Structure;
+using Remotion.Data.UnitTests.Linq.TestDomain;
 using Rhino.Mocks;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Backend.DataObjectModel;

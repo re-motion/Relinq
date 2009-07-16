@@ -23,6 +23,7 @@ using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
+using Remotion.Data.UnitTests.Linq.TestDomain;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors

@@ -24,6 +24,7 @@ using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.UnitTests.Linq.Parsing;
+using Remotion.Data.UnitTests.Linq.TestDomain;
 using Remotion.Utilities;
 
 namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
