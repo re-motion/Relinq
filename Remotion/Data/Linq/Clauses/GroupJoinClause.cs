@@ -80,7 +80,7 @@ namespace Remotion.Data.Linq.Clauses
       set 
       {
         ArgumentUtility.CheckNotNull ("value", value);
-        ParserUtility.GetItemTypeOfIEnumerable (value, "value"); // check whether value implements IEnumerable<T>
+        ReflectionUtility.GetItemTypeOfIEnumerable (value, "value"); // check whether value implements IEnumerable<T>
 
         _itemType = value;
       }

@@ -198,7 +198,7 @@
     <Compile Include="Clauses\JoinClause.cs" />
     <Compile Include="Clauses\OrderByClause.cs" />
     <Compile Include="Clauses\Ordering.cs" />
-    <Compile Include="Parsing\ParserUtility.cs" />
+    <Compile Include="ReflectionUtility.cs" />
     <Compile Include="Parsing\ParserException.cs" />
     <Compile Include="Backend\DetailParsing\OrderingFieldParser.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\SubQueryFindingVisitor.cs" />

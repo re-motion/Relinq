@@ -47,7 +47,7 @@ namespace Remotion.Data.Linq.Clauses.ExecutionStrategies
       var itemType = GetItemType<TResult>();
 
       var executeCollectionMethod = typeof (IQueryExecutor).GetMethod ("ExecuteCollection");
-      var asQueryableMethod = ParserUtility.GetMethod (() => Queryable.AsQueryable<object> (null))
+      var asQueryableMethod = ReflectionUtility.GetMethod (() => Queryable.AsQueryable<object> (null))
           .GetGenericMethodDefinition()
           .MakeGenericMethod (itemType);
 
@@ -69,7 +69,7 @@ namespace Remotion.Data.Linq.Clauses.ExecutionStrategies
     {
       try
       {
-        return ReflectionUtility.GetAscribedGenericArguments (typeof (TResult), typeof (IEnumerable<>))[0];
+        return Utilities.ReflectionUtility.GetAscribedGenericArguments (typeof (TResult), typeof (IEnumerable<>))[0];
       }
       catch (ArgumentTypeException ex)
       {

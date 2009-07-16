@@ -20,7 +20,6 @@ using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultOperators;
-using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq.Expressions;
 using System.Linq;
@@ -44,7 +43,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       _clauseToAddInApply = new WhereClause (Expression.Constant (false));
       _node = new TestMethodCallExpressionNode (CreateParseInfo (SourceNode, "test"), _clauseToAddInApply);
       
-      var distinctMethod = ParserUtility.GetMethod (() => new int[0].Distinct ());
+      var distinctMethod = ReflectionUtility.GetMethod (() => new int[0].Distinct ());
       _resultOperatorSource = new DistinctExpressionNode (CreateParseInfo (SourceNode, "distinct", distinctMethod));
       _nodeWithResultOperatorSource = new TestMethodCallExpressionNode (CreateParseInfo (_resultOperatorSource, "test"), _clauseToAddInApply);
       _queryModelWithResultOperator = QueryModel.Clone ();

@@ -20,35 +20,10 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Utilities;
 
-namespace Remotion.Data.Linq.Parsing
+namespace Remotion.Data.Linq
 {
-  public static class ParserUtility
+  public static class ReflectionUtility
   {
-    public static T GetTypedExpression<T> (object expression, string context)
-    {
-      ArgumentUtility.CheckNotNull ("expression", expression);
-      ArgumentUtility.CheckNotNull ("context", context);
-
-      if (!(expression is T))
-        throw CreateParserException (typeof (T).Name, expression, context);
-      else
-        return (T) expression;
-    }
-
-    public static ParserException CreateParserException (object expected, object expression, string context)
-    {
-      ArgumentUtility.CheckNotNull ("expected", expected);
-      ArgumentUtility.CheckNotNull ("expression", expression);
-      ArgumentUtility.CheckNotNull ("context", context);
-
-      string message;
-      if (expression is Expression)
-        message = string.Format ("Expected {0} for {1}, found '{2}' ({3}).", expected, context, expression, expression.GetType().Name);
-      else
-        message = string.Format ("Expected {0} for {1}, found '{2}'.", expected, context, expression);
-      return new ParserException (message, expression, null);
-    }
-
     public static MethodInfo GetMethod<T> (Expression<Func<T>> wrappedCall)
     {
       ArgumentUtility.CheckNotNull ("wrappedCall", wrappedCall);

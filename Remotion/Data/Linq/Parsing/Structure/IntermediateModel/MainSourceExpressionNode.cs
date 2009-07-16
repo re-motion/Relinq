@@ -33,7 +33,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       ArgumentUtility.CheckNotNull ("expression", expression);
 
       QuerySourceType = expression.Type;
-      QuerySourceElementType = ParserUtility.GetItemTypeOfIEnumerable (expression.Type, "expression");
+      QuerySourceElementType = ReflectionUtility.GetItemTypeOfIEnumerable (expression.Type, "expression");
 
       AssociatedIdentifier = associatedIdentifier;
       ParsedExpression = expression;

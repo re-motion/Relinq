@@ -80,7 +80,7 @@ namespace Remotion.Data.Linq
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      Type elementType = ReflectionUtility.GetAscribedGenericArguments (expression.Type, typeof (IEnumerable<>))[0];
+      Type elementType = Utilities.ReflectionUtility.GetAscribedGenericArguments (expression.Type, typeof (IEnumerable<>))[0];
       try
       {
         return (IQueryable) s_genericCreateQueryMethod.MakeGenericMethod (elementType).Invoke (this, new object[] { expression });

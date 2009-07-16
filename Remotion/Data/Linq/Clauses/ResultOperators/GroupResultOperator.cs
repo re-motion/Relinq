@@ -138,7 +138,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     public override Type GetResultType (Type inputResultType)
     {
       ArgumentUtility.CheckNotNull ("inputResultType", inputResultType);
-      var itemType = ParserUtility.GetItemTypeOfIEnumerable (inputResultType, "inputResultType");
+      var itemType = ReflectionUtility.GetItemTypeOfIEnumerable (inputResultType, "inputResultType");
 
       if (KeySelector.InputParameter.Type != ElementSelector.InputParameter.Type)
       {

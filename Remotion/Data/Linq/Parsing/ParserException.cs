@@ -14,13 +14,27 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Linq.Expressions;
 using System.Runtime.Serialization;
+using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing
 {
   [Serializable]
   public class ParserException : Exception
   {
+    private static string CreateMessage (object expected, object expression, string context)
+    {
+      ArgumentUtility.CheckNotNull ("expected", expected);
+      ArgumentUtility.CheckNotNull ("expression", expression);
+      ArgumentUtility.CheckNotNull ("context", context);
+
+      if (expression is Expression)
+        return string.Format ("Expected {0} for {1}, found '{2}' ({3}).", expected, context, expression, expression.GetType ().Name);
+      else
+        return string.Format ("Expected {0} for {1}, found '{2}'.", expected, context, expression);
+    }
+
     public ParserException (string message)
         : this (message, null, null)
     {
@@ -35,6 +49,11 @@ namespace Remotion.Data.Linq.Parsing
         : base (message, inner)
     {
       ParsedExpression = parsedExpression;
+    }
+
+    public ParserException (object expected, object expression, string context)
+      : this (CreateMessage (expected, expression, context), expression, null)
+    {
     }
 
     protected ParserException (SerializationInfo info, StreamingContext context)

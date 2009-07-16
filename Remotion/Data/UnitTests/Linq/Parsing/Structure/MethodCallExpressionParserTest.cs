@@ -19,6 +19,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
@@ -116,7 +117,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     [Test]
     public void Parse_WithConstantExpression_ContainingAnExpression ()
     {
-      var selectMethod = ParserUtility.GetMethod (() => ((IQueryable<int>) null).Select (i => i));
+      var selectMethod = ReflectionUtility.GetMethod (() => ((IQueryable<int>) null).Select (i => i));
       var p = Expression.Parameter (typeof (int), "i");
       var methodCallExpression = Expression.Call (
           selectMethod,

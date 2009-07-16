@@ -53,7 +53,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     public override Type GetResultType (Type inputResultType)
     {
       ArgumentUtility.CheckNotNull ("inputResultType", inputResultType);
-      ParserUtility.GetItemTypeOfIEnumerable (inputResultType, "inputResultType");
+      ReflectionUtility.GetItemTypeOfIEnumerable (inputResultType, "inputResultType");
 
       return inputResultType;
     }

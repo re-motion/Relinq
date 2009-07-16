@@ -148,7 +148,7 @@ namespace Remotion.Data.Linq.Clauses
     /// <returns>The item type enumerated by <paramref name="input"/>.</returns>
     protected Type GetInputItemType (object input)
     {
-      Type itemType = ParserUtility.GetItemTypeOfIEnumerable (input.GetType (), "input");
+      Type itemType = ReflectionUtility.GetItemTypeOfIEnumerable (input.GetType (), "input");
       return itemType;
     }
 

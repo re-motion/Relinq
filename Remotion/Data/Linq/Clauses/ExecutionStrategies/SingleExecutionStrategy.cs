@@ -45,8 +45,8 @@ namespace Remotion.Data.Linq.Clauses.ExecutionStrategies
       ArgumentUtility.CheckNotNull ("fetchRequests", fetchRequests);
 
       var executeCollectionMethod = typeof (IQueryExecutor).GetMethod ("ExecuteCollection");
-      var singleMethod = ParserUtility.GetMethod (() => ((Enumerable.Single<TResult> (null))));
-      var singleOrDefaultMethod = ParserUtility.GetMethod (() => ((Enumerable.SingleOrDefault<TResult> (null))));
+      var singleMethod = ReflectionUtility.GetMethod (() => ((Enumerable.Single<TResult> (null))));
+      var singleOrDefaultMethod = ReflectionUtility.GetMethod (() => ((Enumerable.SingleOrDefault<TResult> (null))));
       var singleMethodToUse = _returnDefaultWhenEmpty ? singleOrDefaultMethod : singleMethod;
 
       var executorParameter = Expression.Parameter (typeof (IQueryExecutor), "queryExecutor");

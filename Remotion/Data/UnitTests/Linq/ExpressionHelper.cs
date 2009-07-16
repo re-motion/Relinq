@@ -20,7 +20,6 @@ using System.Reflection;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultOperators;
-using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Backend.FieldResolving;
 using Remotion.Data.Linq.Parsing.Structure;
@@ -171,7 +170,7 @@ namespace Remotion.Data.UnitTests.Linq
 
     public static MethodCallExpression CreateMethodCallExpression (IQueryable<Student> query)
     {
-      var methodInfo = ParserUtility.GetMethod (() => query.Count ());
+      var methodInfo = ReflectionUtility.GetMethod (() => query.Count ());
       return Expression.Call (methodInfo, query.Expression);
     }
 
