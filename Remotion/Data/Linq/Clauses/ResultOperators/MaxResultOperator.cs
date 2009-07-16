@@ -22,16 +22,26 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
-  public class MaxResultOperator : ResultOperatorBase
+  public class MaxResultOperator : ResultOperatorBase, IQuerySource
   {
-    public MaxResultOperator ()
+    private string _itemName;
+
+    public MaxResultOperator (string itemName)
         : base (ScalarExecutionStrategy.Instance)
     {
+      ArgumentUtility.CheckNotNull ("itemName", itemName);
+      _itemName = itemName;
+    }
+
+    public string ItemName
+    {
+      get { return _itemName; }
+      set { _itemName = ArgumentUtility.CheckNotNullOrEmpty ("value", value); }
     }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
-      return new MaxResultOperator();
+      return new MaxResultOperator(ItemName);
     }
 
     public override object ExecuteInMemory (object input)

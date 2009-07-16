@@ -95,7 +95,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Clone_AddsClauseToMapping ()
     {
       var clone = _mainFromClause.Clone (_cloneContext);
-      Assert.That (((QuerySourceReferenceExpression) _cloneContext.QuerySourceMapping.GetExpression (_mainFromClause)).ReferencedClause, Is.SameAs (clone));
+      Assert.That (((QuerySourceReferenceExpression) _cloneContext.QuerySourceMapping.GetExpression (_mainFromClause)).ReferencedQuerySource, Is.SameAs (clone));
     }
   }
 }

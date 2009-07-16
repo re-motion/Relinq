@@ -22,16 +22,26 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
-  public class CountResultOperator : ResultOperatorBase
+  public class CountResultOperator : ResultOperatorBase, IQuerySource
   {
-    public CountResultOperator ()
+    private string _itemName;
+
+    public CountResultOperator (string itemName)
         : base (ScalarExecutionStrategy.Instance)
     {
+      ArgumentUtility.CheckNotNullOrEmpty ("itemName", itemName);
+      ItemName = itemName;
+    }
+
+    public string ItemName
+    {
+      get { return _itemName; }
+      set { _itemName = ArgumentUtility.CheckNotNullOrEmpty ("value", value); }
     }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
-      return new CountResultOperator();
+      return new CountResultOperator(ItemName);
     }
 
     public override object ExecuteInMemory (object input)

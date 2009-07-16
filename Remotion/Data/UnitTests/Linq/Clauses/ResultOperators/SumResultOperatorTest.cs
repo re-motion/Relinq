@@ -32,7 +32,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     [SetUp]
     public void SetUp ()
     {
-      _resultOperator = new SumResultOperator ();
+      _resultOperator = new SumResultOperator ("x");
     }
 
     [Test]

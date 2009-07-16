@@ -115,7 +115,7 @@ namespace Remotion.Data.UnitTests.Linq.Transformations
 
       var predicateLeftSide = (MemberExpression) ((BinaryExpression) _innerWhereClauseA.Predicate).Left;
       var referenceExpression = (QuerySourceReferenceExpression) predicateLeftSide.Expression;
-      Assert.That (referenceExpression.ReferencedClause, Is.SameAs (_additionalFromClause1));
+      Assert.That (referenceExpression.ReferencedQuerySource, Is.SameAs (_additionalFromClause1));
     }
 
     [Test]

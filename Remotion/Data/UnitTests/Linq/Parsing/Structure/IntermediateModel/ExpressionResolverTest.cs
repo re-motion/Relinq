@@ -96,7 +96,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var subQueryExpression = (SubQueryExpression) result;
       var subQuerySelector = subQueryExpression.QueryModel.SelectClause.Selector;
       Assert.That (subQuerySelector, Is.InstanceOfType (typeof (QuerySourceReferenceExpression)));
-      Assert.That (((QuerySourceReferenceExpression) subQuerySelector).ReferencedClause, Is.SameAs (SourceClause));
+      Assert.That (((QuerySourceReferenceExpression) subQuerySelector).ReferencedQuerySource, Is.SameAs (SourceClause));
     }
 
     [Test]

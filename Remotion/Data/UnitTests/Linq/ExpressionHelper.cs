@@ -312,18 +312,18 @@ namespace Remotion.Data.UnitTests.Linq
       return new DistinctResultOperator ();
     }
 
-    public static Expression Resolve<TParameter, TResult> (IQuerySource sourceToReference, Expression<Func<TParameter, TResult>> expressionToBeResolved)
+    public static Expression Resolve<TParameter, TResult> (IQuerySourceWithItemType sourceToReference, Expression<Func<TParameter, TResult>> expressionToBeResolved)
     {
       return ReplacingExpressionTreeVisitor.Replace (expressionToBeResolved.Parameters[0], new QuerySourceReferenceExpression (sourceToReference), expressionToBeResolved.Body);
     }
 
-    public static Expression Resolve<TParameter1, TParameter2, TResult> (IQuerySource sourceToReference1, IQuerySource sourceToReference2, Expression<Func<TParameter1, TParameter2, TResult>> expressionToBeResolved)
+    public static Expression Resolve<TParameter1, TParameter2, TResult> (IQuerySourceWithItemType sourceToReference1, IQuerySourceWithItemType sourceToReference2, Expression<Func<TParameter1, TParameter2, TResult>> expressionToBeResolved)
     {
       var result1 = ReplacingExpressionTreeVisitor.Replace (expressionToBeResolved.Parameters[0], new QuerySourceReferenceExpression (sourceToReference1), expressionToBeResolved.Body);
       return ReplacingExpressionTreeVisitor.Replace (expressionToBeResolved.Parameters[1], new QuerySourceReferenceExpression (sourceToReference2), result1);
     }
 
-    public static Expression Resolve<TParameter1, TParameter2, TParameter3, TResult> (IQuerySource sourceToReference1, IQuerySource sourceToReference2, IQuerySource sourceToReference3, Expression<Func<TParameter1, TParameter2, TParameter3, TResult>> expressionToBeResolved)
+    public static Expression Resolve<TParameter1, TParameter2, TParameter3, TResult> (IQuerySourceWithItemType sourceToReference1, IQuerySourceWithItemType sourceToReference2, IQuerySourceWithItemType sourceToReference3, Expression<Func<TParameter1, TParameter2, TParameter3, TResult>> expressionToBeResolved)
     {
       var result1 = ReplacingExpressionTreeVisitor.Replace (expressionToBeResolved.Parameters[0], new QuerySourceReferenceExpression (sourceToReference1), expressionToBeResolved.Body);
       var result2 = ReplacingExpressionTreeVisitor.Replace (expressionToBeResolved.Parameters[1], new QuerySourceReferenceExpression (sourceToReference2), result1);

@@ -17,24 +17,34 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
-using Remotion.Data.Linq.Parsing;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
-  public class LastResultOperator : ResultOperatorBase
+  public class LastResultOperator : ResultOperatorBase, IQuerySource
   {
-    public LastResultOperator (bool returnDefaultWhenEmpty)
+    private string _itemName;
+
+    public LastResultOperator (string itemName, bool returnDefaultWhenEmpty)
         : base (returnDefaultWhenEmpty ? SingleExecutionStrategy.InstanceWithDefaultWhenEmpty : SingleExecutionStrategy.InstanceNoDefaultWhenEmpty)
     {
+      ArgumentUtility.CheckNotNull ("itemName", itemName);
+      
+      _itemName = itemName;
       ReturnDefaultWhenEmpty = returnDefaultWhenEmpty;
+    }
+
+    public string ItemName
+    {
+      get { return _itemName; }
+      set { _itemName = ArgumentUtility.CheckNotNullOrEmpty ("value", value); }
     }
 
     public bool ReturnDefaultWhenEmpty { get; set; }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
-      return new LastResultOperator (ReturnDefaultWhenEmpty);
+      return new LastResultOperator (ItemName, ReturnDefaultWhenEmpty);
     }
 
     public override object ExecuteInMemory (object input)

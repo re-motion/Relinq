@@ -24,7 +24,9 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
   public class TakeResultOperator : ResultOperatorBase
   {
-    public int Count { get; set; }
+    private string _itemName;
+
+    
 
     public TakeResultOperator (int count)
         : base (CollectionExecutionStrategy.Instance)
@@ -32,6 +34,13 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       Count = count;
     }
 
+    public int Count { get; set; }
+    
+    public string ItemName
+    {
+      get { return _itemName; }
+      set { _itemName = ArgumentUtility.CheckNotNullOrEmpty ("value", value); }
+    }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {

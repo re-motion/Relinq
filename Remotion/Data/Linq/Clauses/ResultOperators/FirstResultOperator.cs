@@ -17,24 +17,34 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
-using Remotion.Data.Linq.Parsing;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
-  public class FirstResultOperator : ResultOperatorBase
+  public class FirstResultOperator : ResultOperatorBase, IQuerySource
   {
-    public FirstResultOperator (bool returnDefaultWhenEmpty)
+    private string _itemName;
+
+    public FirstResultOperator (string itemName, bool returnDefaultWhenEmpty)
         : base (returnDefaultWhenEmpty ? SingleExecutionStrategy.InstanceWithDefaultWhenEmpty : SingleExecutionStrategy.InstanceNoDefaultWhenEmpty)
     {
+      ArgumentUtility.CheckNotNull ("itemName", itemName);
       ReturnDefaultWhenEmpty = returnDefaultWhenEmpty;
+
+      _itemName = itemName;
     }
 
     public bool ReturnDefaultWhenEmpty { get; set; }
 
+    public string ItemName
+    {
+      get { return _itemName; }
+      set { _itemName = ArgumentUtility.CheckNotNullOrEmpty ("value", value); }
+    }
+
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
-      return new FirstResultOperator (ReturnDefaultWhenEmpty);
+      return new FirstResultOperator (ItemName, ReturnDefaultWhenEmpty);
     }
 
     public override object ExecuteInMemory (object input)
@@ -66,5 +76,6 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       else
         return "First()";
     }
+
   }
 }

@@ -66,13 +66,13 @@ namespace Remotion.Data.Linq.Clauses.ExpressionTreeVisitors
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      if (QuerySourceMapping.ContainsMapping (expression.ReferencedClause))
+      if (QuerySourceMapping.ContainsMapping (expression.ReferencedQuerySource))
       {
-        return QuerySourceMapping.GetExpression (expression.ReferencedClause);
+        return QuerySourceMapping.GetExpression (expression.ReferencedQuerySource);
       }
       else if (_throwOnUnmappedReferences)
       {
-        var message = "Cannot replace reference to clause '" + expression.ReferencedClause.ItemName + "', there is no mapped expression.";
+        var message = "Cannot replace reference to clause '" + expression.ReferencedQuerySource.ItemName + "', there is no mapped expression.";
         throw new InvalidOperationException (message);
       }
       else

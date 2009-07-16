@@ -320,7 +320,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
       Assert.That (result, Is.InstanceOfType (typeof (MemberExpression)));
       Expression innerExpression = ((MemberExpression)result).Expression;
       Assert.That (innerExpression, Is.InstanceOfType (typeof (QuerySourceReferenceExpression)));
-      Assert.That (((QuerySourceReferenceExpression) innerExpression).ReferencedClause, Is.SameAs (mainFromClause));
+      Assert.That (((QuerySourceReferenceExpression) innerExpression).ReferencedQuerySource, Is.SameAs (mainFromClause));
     }
 
     [Test]

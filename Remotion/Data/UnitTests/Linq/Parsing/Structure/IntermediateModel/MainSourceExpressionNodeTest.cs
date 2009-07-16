@@ -83,7 +83,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       Assert.That (queryModel.MainFromClause.ItemName, Is.EqualTo ("x"));
       Assert.That (queryModel.MainFromClause.FromExpression, Is.SameAs (_node.ParsedExpression));
       Assert.That (queryModel.SelectClause, Is.Not.Null);
-      Assert.That (((QuerySourceReferenceExpression) queryModel.SelectClause.Selector).ReferencedClause, Is.SameAs (queryModel.MainFromClause));
+      Assert.That (((QuerySourceReferenceExpression) queryModel.SelectClause.Selector).ReferencedQuerySource, Is.SameAs (queryModel.MainFromClause));
     }
 
     [Test]

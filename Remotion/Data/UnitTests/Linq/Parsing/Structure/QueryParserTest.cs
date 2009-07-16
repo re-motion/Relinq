@@ -64,7 +64,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       
       var newSelector = queryModel.SelectClause.Selector;
       Assert.That (newSelector, Is.InstanceOfType (typeof (QuerySourceReferenceExpression)));
-      Assert.That (((QuerySourceReferenceExpression) newSelector).ReferencedClause, Is.SameAs (queryModel.MainFromClause));
+      Assert.That (((QuerySourceReferenceExpression) newSelector).ReferencedQuerySource, Is.SameAs (queryModel.MainFromClause));
     }
 
     [Test]
@@ -118,7 +118,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 
       var newSelector = queryModel.SelectClause.Selector;
       Assert.That (newSelector, Is.InstanceOfType (typeof (QuerySourceReferenceExpression)));
-      Assert.That (((QuerySourceReferenceExpression) newSelector).ReferencedClause, Is.SameAs (queryModel.MainFromClause));
+      Assert.That (((QuerySourceReferenceExpression) newSelector).ReferencedQuerySource, Is.SameAs (queryModel.MainFromClause));
     }
 
     [Test]
@@ -183,7 +183,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var predicateBody = (BinaryExpression) whereClause.Predicate;
       var subQuerySelector = ((SubQueryExpression) predicateBody.Left).QueryModel.SelectClause.Selector;
       Assert.That (subQuerySelector, Is.InstanceOfType (typeof (QuerySourceReferenceExpression)));
-      Assert.That (((QuerySourceReferenceExpression)subQuerySelector).ReferencedClause, Is.SameAs (result.MainFromClause));
+      Assert.That (((QuerySourceReferenceExpression)subQuerySelector).ReferencedQuerySource, Is.SameAs (result.MainFromClause));
     }
 
     [Test]

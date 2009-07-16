@@ -27,7 +27,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
   public class QuerySourceExpressionNodeUtilityTest
   {
     private IQuerySourceExpressionNode _node;
-    private IQuerySource _querySource;
+    private IQuerySourceWithItemType _querySource;
     private QuerySourceClauseMapping _clauseMapping;
 
     [SetUp]

@@ -63,7 +63,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
       Assert.That (newLambdaExpression.Body, Is.InstanceOfType (typeof (SubQueryExpression)));
 
       var newSubQueryExpression = (SubQueryExpression) newLambdaExpression.Body;
-      Assert.That (((QuerySourceReferenceExpression) newSubQueryExpression.QueryModel.SelectClause.Selector).ReferencedClause,
+      Assert.That (((QuerySourceReferenceExpression) newSubQueryExpression.QueryModel.SelectClause.Selector).ReferencedQuerySource,
           Is.SameAs (newSubQueryExpression.QueryModel.MainFromClause));
     }
 

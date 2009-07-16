@@ -54,7 +54,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     protected override ResultOperatorBase CreateResultOperator (ClauseGenerationContext clauseGenerationContext)
     {
-      return new CountResultOperator();
+      return new CountResultOperator(AssociatedIdentifier);
     }
   }
 }

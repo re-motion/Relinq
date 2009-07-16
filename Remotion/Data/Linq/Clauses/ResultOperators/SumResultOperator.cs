@@ -14,25 +14,33 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
-using Remotion.Data.Linq.Parsing;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
-  public class SumResultOperator : ResultOperatorBase
+  public class SumResultOperator : ResultOperatorBase, IQuerySource
   {
-    public SumResultOperator ()
+    private string _itemName;
+
+    public SumResultOperator (string itemName)
         : base (ScalarExecutionStrategy.Instance)
     {
+      ArgumentUtility.CheckNotNull ("itemName", itemName);
+      _itemName = itemName;
+    }
+
+    public string ItemName
+    {
+      get { return _itemName; }
+      set { _itemName = ArgumentUtility.CheckNotNullOrEmpty ("value", value); }
     }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
-      return new SumResultOperator();
+      return new SumResultOperator(_itemName);
     }
 
     public override object ExecuteInMemory (object input)

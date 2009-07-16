@@ -32,7 +32,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     [SetUp]
     public void SetUp ()
     {
-      _resultOperator = new MaxResultOperator ();
+      _resultOperator = new MaxResultOperator ("x");
     }
 
     [Test]
@@ -49,7 +49,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     public void ExecuteInMemory ()
     {
       var items = new[] { 1, 2, 3, 0, 2 };
-      var resultOperator = new MaxResultOperator ();
+      var resultOperator = new MaxResultOperator ("x");
 
       var result = resultOperator.ExecuteInMemory (items);
 

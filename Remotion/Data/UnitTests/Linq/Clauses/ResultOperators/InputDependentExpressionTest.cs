@@ -15,6 +15,7 @@
 // 
 using System;
 using NUnit.Framework;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using System.Linq.Expressions;
@@ -59,7 +60,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     [Test]
     public void ResolvedExpression ()
     {
-      var expectedResolvedExpression = ExpressionHelper.Resolve<Student, string> (_expectedInput.ReferencedClause, s => s.First);
+      var expectedResolvedExpression = ExpressionHelper.Resolve<Student, string> ((IQuerySourceWithItemType) _expectedInput.ReferencedQuerySource, s => s.First);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResolvedExpression, _expression.ResolvedExpression);
     }
 
