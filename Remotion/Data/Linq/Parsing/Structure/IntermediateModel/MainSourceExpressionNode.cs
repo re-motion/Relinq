@@ -16,6 +16,7 @@
 using System;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
@@ -64,12 +65,15 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     public QueryModel Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
-      throw new NotSupportedException (
-          "ConstantExpression nodes cannot be applied to a query model because they constitute the main source of the "
-          + "query. Use CreateMainFromClause to create a MainFromClause from this node.");
+      if (queryModel != null)
+        throw new ArgumentException ("QueryModel has to be null because MainSourceExpressionNode marks the start of a query.", "queryModel");
+
+      var mainFromClause = CreateMainFromClause (clauseGenerationContext);
+      var defaultSelectClause = new SelectClause (new QuerySourceReferenceExpression (mainFromClause));
+      return new QueryModel (mainFromClause, defaultSelectClause);
     }
 
-    public MainFromClause CreateMainFromClause (ClauseGenerationContext clauseGenerationContext)
+    private MainFromClause CreateMainFromClause (ClauseGenerationContext clauseGenerationContext)
     {
       var fromClause = new MainFromClause (
           AssociatedIdentifier,

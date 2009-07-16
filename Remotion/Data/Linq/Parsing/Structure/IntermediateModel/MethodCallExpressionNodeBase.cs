@@ -132,9 +132,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       var newMainSourceNode = new MainSourceExpressionNode (associatedIdentifier, subQueryExpression);
       Source = newMainSourceNode;
 
-      var newMainFromClause = newMainSourceNode.CreateMainFromClause (clauseGenerationContext);
-      var newSelectClause = new SelectClause (new QuerySourceReferenceExpression (newMainFromClause));
-      return new QueryModel (newMainFromClause, newSelectClause);
+      return newMainSourceNode.Apply (null, clauseGenerationContext);
     }
 
     protected InvalidOperationException CreateResolveNotSupportedException ()

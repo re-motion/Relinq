@@ -40,10 +40,10 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
           QuerySourceClauseMapping, 
           MethodCallExpressionNodeTypeRegistry.CreateDefault());
 
-      SourceClause = SourceNode.CreateMainFromClause (ClauseGenerationContext);
-      SourceReference = new QuerySourceReferenceExpression (SourceClause);
+      QueryModel = SourceNode.Apply (null, ClauseGenerationContext);
+      SourceClause = QueryModel.MainFromClause;
+      SourceReference = (QuerySourceReferenceExpression) QueryModel.SelectClause.Selector;
 
-      QueryModel = new QueryModel (SourceClause, new SelectClause (SourceReference));
     }
 
     public MainSourceExpressionNode SourceNode { get; private set; }

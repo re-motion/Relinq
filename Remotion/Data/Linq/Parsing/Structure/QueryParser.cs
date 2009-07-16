@@ -86,21 +86,11 @@ namespace Remotion.Data.Linq.Parsing.Structure
     /// <see cref="IExpressionNode"/> chain.</returns>
     private QueryModel ApplyAllNodes (IExpressionNode node, ClauseGenerationContext clauseGenerationContext)
     {
-      if (node.Source == null) // this is the last node, create a MainFromClause and a QueryModel
-      {
-        var mainSourceExpressionNode = (MainSourceExpressionNode) node;
-        var mainFromClause = mainSourceExpressionNode.CreateMainFromClause (clauseGenerationContext);
-        var defaultSelectClause = new SelectClause (new QuerySourceReferenceExpression (mainFromClause));
-        return new QueryModel (mainFromClause, defaultSelectClause);
+      QueryModel queryModel = null;
+      if (node.Source != null)
+        queryModel = ApplyAllNodes (node.Source, clauseGenerationContext);
 
-        // return node.Apply (null, clauseGenerationContext); // TODO 1310
-      }
-      else // first go to the next node, then transform the queryModel (created by the last node) by applying the node to i
-      {
-        var queryModel = ApplyAllNodes (node.Source, clauseGenerationContext);
-        return node.Apply (queryModel, clauseGenerationContext);
-            // TODO 1310: There is only an integration test for this "return", but 1310 will add the unit test.
-      }
+      return node.Apply (queryModel, clauseGenerationContext);
     }
   }
 }

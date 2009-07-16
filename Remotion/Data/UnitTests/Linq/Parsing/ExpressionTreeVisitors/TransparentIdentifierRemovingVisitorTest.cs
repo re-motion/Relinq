@@ -307,8 +307,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
       var selectManyNode = (SelectManyExpressionNode) selectNode.Source.Source;
       var mainSourceExpressionNode = (MainSourceExpressionNode) selectManyNode.Source;
 
-      var mainFromClause = mainSourceExpressionNode.CreateMainFromClause (clauseGenerationContext);
-      var queryModel = new QueryModel (mainFromClause, new SelectClause (new QuerySourceReferenceExpression (mainFromClause)));
+      var queryModel = mainSourceExpressionNode.Apply (null, clauseGenerationContext);
+      var mainFromClause = queryModel.MainFromClause;
       
       selectManyNode.Apply (queryModel, clauseGenerationContext); // only to add the clause to the mapping
 

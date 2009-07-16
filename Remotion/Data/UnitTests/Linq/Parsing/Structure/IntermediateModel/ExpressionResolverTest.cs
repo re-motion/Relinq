@@ -55,8 +55,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void GetResolvedExpression_NoticesChangesOfSourceNode ()
     {
       var newSourceNode = ExpressionNodeObjectMother.CreateMainSource ();
-      var newSourceClause = newSourceNode.CreateMainFromClause (ClauseGenerationContext);
-      var newSourceReference = new QuerySourceReferenceExpression (newSourceClause);
+      var newQueryModel = newSourceNode.Apply (null, ClauseGenerationContext);
+      var newSourceReference = ((QuerySourceReferenceExpression) newQueryModel.SelectClause.Selector);
 
       PrivateInvoke.InvokeNonPublicMethod (_currentNode, typeof (MethodCallExpressionNodeBase), "set_Source", newSourceNode);
       var result = _expressionResolver.GetResolvedExpression (_unresolvedLambda.Body, _unresolvedLambda.Parameters[0], ClauseGenerationContext);

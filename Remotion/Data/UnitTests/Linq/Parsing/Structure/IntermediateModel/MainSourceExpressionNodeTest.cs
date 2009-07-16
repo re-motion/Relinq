@@ -17,7 +17,10 @@ using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
+using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Utilities;
 
@@ -71,7 +74,20 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException))]
+    public void Apply ()
+    {
+      var queryModel = _node.Apply (null, ClauseGenerationContext);
+      
+      Assert.That (queryModel.MainFromClause, Is.Not.Null);
+      Assert.That (queryModel.MainFromClause.ItemType, Is.EqualTo (typeof (int)));
+      Assert.That (queryModel.MainFromClause.ItemName, Is.EqualTo ("x"));
+      Assert.That (queryModel.MainFromClause.FromExpression, Is.SameAs (_node.ParsedExpression));
+      Assert.That (queryModel.SelectClause, Is.Not.Null);
+      Assert.That (((QuerySourceReferenceExpression) queryModel.SelectClause.Selector).ReferencedClause, Is.SameAs (queryModel.MainFromClause));
+    }
+
+    [Test]
+    [ExpectedException(typeof(ArgumentException))]
     public void Apply_Throws ()
     {
       _node.Apply (QueryModel, ClauseGenerationContext);
