@@ -17,17 +17,28 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
-using Remotion.Data.Linq.Parsing;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
+  /// <summary>
+  /// Represents the take part of a query. This is a result operator, operating on the whole result set of a query.
+  /// </summary>
+  /// <example>
+  /// In C#, the "take" clause in the following example corresponds to a <see cref="TakeResultOperator"/>.
+  /// <code>
+  /// var query = (from s in Students
+  ///              select s).Take(3);
+  /// </code>
+  /// </example>
   public class TakeResultOperator : ResultOperatorBase
   {
     private string _itemName;
-
     
-
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TakeResultOperator"/>.
+    /// </summary>
+    /// <param name="count">The number of elements which should be returned.</param>
     public TakeResultOperator (int count)
         : base (CollectionExecutionStrategy.Instance)
     {

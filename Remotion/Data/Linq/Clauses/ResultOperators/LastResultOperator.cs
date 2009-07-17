@@ -21,10 +21,25 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
+  /// <summary>
+  /// Represents the last part of a query. This is a result operator, operating on the whole result set of a query.
+  /// </summary>
+  /// <example>
+  /// In C#, the "last" clause in the following example corresponds to a <see cref="LastResultOperator"/>.
+  /// <code>
+  /// var query = (from s in Students
+  ///              select s).Last();
+  /// </code>
+  /// </example>
   public class LastResultOperator : ResultOperatorBase, IQuerySource
   {
     private string _itemName;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LastResultOperator"/>.
+    /// </summary>
+    /// <param name="itemName"></param>
+    /// <param name="returnDefaultWhenEmpty">The flag defines if a default expression should be regarded.</param>
     public LastResultOperator (string itemName, bool returnDefaultWhenEmpty)
         : base (returnDefaultWhenEmpty ? SingleExecutionStrategy.InstanceWithDefaultWhenEmpty : SingleExecutionStrategy.InstanceNoDefaultWhenEmpty)
     {

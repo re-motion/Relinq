@@ -17,15 +17,28 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
-using Remotion.Data.Linq.Parsing;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
+  /// <summary>
+  /// Represents the max part of a query. This is a result operator, operating on the whole result set of a query.
+  /// </summary>
+  /// <example>
+  /// In C#, the "max" clause in the following example corresponds to a <see cref="MaxResultOperator"/>.
+  /// <code>
+  /// var query = (from s in Students
+  ///              select s.ID).Max();
+  /// </code>
+  /// </example>
   public class MaxResultOperator : ResultOperatorBase, IQuerySource
   {
     private string _itemName;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MaxResultOperator"/>.
+    /// </summary>
+    /// <param name="itemName"></param>
     public MaxResultOperator (string itemName)
         : base (ScalarExecutionStrategy.Instance)
     {

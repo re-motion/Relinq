@@ -21,10 +21,25 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
+  /// <summary>
+  /// Represents the first part of a query. This is a result operator, operating on the whole result set of a query.
+  /// </summary>
+  /// <example>
+  /// In C#, the "first" clause in the following example corresponds to a <see cref="FirstResultOperator"/>.
+  /// <code>
+  /// var query = (from s in Students
+  ///              select s).First();
+  /// </code>
+  /// </example>
   public class FirstResultOperator : ResultOperatorBase, IQuerySource
   {
     private string _itemName;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DistinctResultOperator"/>.
+    /// </summary>
+    /// <param name="itemName"></param>
+    /// <param name="returnDefaultWhenEmpty">The flag defines if a default expression should be regarded.</param>
     public FirstResultOperator (string itemName, bool returnDefaultWhenEmpty)
         : base (returnDefaultWhenEmpty ? SingleExecutionStrategy.InstanceWithDefaultWhenEmpty : SingleExecutionStrategy.InstanceNoDefaultWhenEmpty)
     {

@@ -17,13 +17,26 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
-using Remotion.Data.Linq.Parsing;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
+  /// <summary>
+  /// Represents the single part of a query. This is a result operator, operating on the whole result set of a query.
+  /// </summary>
+  /// <example>
+  /// In C#, the "single" clause in the following example corresponds to a <see cref="SingleResultOperator"/>.
+  /// <code>
+  /// var query = (from s in Students
+  ///              select s).Single();
+  /// </code>
+  /// </example>
   public class SingleResultOperator : ResultOperatorBase
   {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SingleResultOperator"/>.
+    /// </summary>
+    /// <param name="returnDefaultWhenEmpty">The flag defines if a default expression should be regarded.</param>
     public SingleResultOperator (bool returnDefaultWhenEmpty)
         : base (returnDefaultWhenEmpty ? SingleExecutionStrategy.InstanceWithDefaultWhenEmpty : SingleExecutionStrategy.InstanceNoDefaultWhenEmpty)
     {

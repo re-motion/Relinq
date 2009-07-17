@@ -17,19 +17,32 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
-using Remotion.Data.Linq.Parsing;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
+  /// <summary>
+  /// Represents the min part of a query. This is a result operator, operating on the whole result set of a query.
+  /// </summary>
+  /// <example>
+  /// In C#, the "min" clause in the following example corresponds to a <see cref="MinResultOperator"/>.
+  /// <code>
+  /// var query = (from s in Students
+  ///              select s.ID).Min();
+  /// </code>
+  /// </example>
   public class MinResultOperator : ResultOperatorBase, IQuerySource
   {
     private string _itemName;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MinResultOperator"/>.
+    /// </summary>
+    /// <param name="itemName"></param>
     public MinResultOperator (string itemName)
         : base (ScalarExecutionStrategy.Instance)
     {
-      ArgumentUtility.CheckNotNull ("itemName", itemName);
+      ArgumentUtility.CheckNotNullOrEmpty ("itemName", itemName);
       _itemName = itemName;
     }
 

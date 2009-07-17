@@ -21,10 +21,24 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
+  /// <summary>
+  /// Represents the sum part of a query. This is a result operator, operating on the whole result set of a query.
+  /// </summary>
+  /// <example>
+  /// In C#, the "sum" clause in the following example corresponds to a <see cref="SumResultOperator"/>.
+  /// <code>
+  /// var query = (from s in Students
+  ///              select s.ID).Sum();
+  /// </code>
+  /// </example>
   public class SumResultOperator : ResultOperatorBase, IQuerySource
   {
     private string _itemName;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SumResultOperator"/>.
+    /// </summary>
+    /// <param name="itemName"></param>
     public SumResultOperator (string itemName)
         : base (ScalarExecutionStrategy.Instance)
     {
