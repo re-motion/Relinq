@@ -16,6 +16,7 @@
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using Remotion.Collections;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using System.Linq;
@@ -76,10 +77,18 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException))]
-    public void Resolve_ThrowsInvalidOperationException ()
+    public void Resolve ()
     {
-      _nodeWithoutElementSelector.Resolve (ExpressionHelper.CreateParameterExpression (), ExpressionHelper.CreateExpression (), ClauseGenerationContext);
+      var querySource = ExpressionHelper.CreateGroupResultOperator ();
+      ClauseGenerationContext.ClauseMapping.AddMapping (_nodeWithoutElementSelector, querySource);
+
+      var lambdaExpression =
+          ExpressionHelper.CreateLambdaExpression<IGrouping<string, string>, Tuple<string, int>> (g => Tuple.NewTuple (g.Key, g.Count ()));
+      
+      var result = _nodeWithoutElementSelector.Resolve (lambdaExpression.Parameters[0], lambdaExpression.Body, ClauseGenerationContext);
+
+      var expectedResult = ExpressionHelper.Resolve<IGrouping<string, string>, Tuple<string, int>> (querySource, g => Tuple.NewTuple (g.Key, g.Count ()));
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
 
     [Test]
@@ -117,11 +126,21 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       Assert.That (QueryModel.ResultOperators[0], Is.InstanceOfType (typeof (GroupResultOperator)));
       var resultOperator = (GroupResultOperator) QueryModel.ResultOperators[0];
 
+      Assert.That (resultOperator.ItemName, Is.EqualTo (_nodeWithElementSelector.AssociatedIdentifier));
       Assert.That (resultOperator.KeySelector.DependentExpression, Is.SameAs (_nodeWithElementSelector.KeySelector));
       Assert.That (resultOperator.ElementSelector.DependentExpression, Is.SameAs (_nodeWithElementSelector.OptionalElementSelector));
 
       ExpressionTreeComparer.CheckAreEqualTrees (SourceReference, resultOperator.KeySelector.ExpectedInput);
       ExpressionTreeComparer.CheckAreEqualTrees (SourceReference, resultOperator.ElementSelector.ExpectedInput);
+    }
+
+    [Test]
+    public void Apply_AddsMapping ()
+    {
+      _nodeWithElementSelector.Apply (QueryModel, ClauseGenerationContext);
+
+      var resultOperator = (GroupResultOperator) QueryModel.ResultOperators[0];
+      Assert.That (QuerySourceClauseMapping.GetClause (_nodeWithElementSelector), Is.SameAs (resultOperator));
     }
 
     [Test]

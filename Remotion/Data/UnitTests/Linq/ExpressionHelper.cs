@@ -134,7 +134,7 @@ namespace Remotion.Data.UnitTests.Linq
 
     public static GroupResultOperator CreateGroupResultOperator ()
     {
-      return new GroupResultOperator (CreateInputDependentExpression(), CreateInputDependentExpression());
+      return new GroupResultOperator ("groupings", CreateInputDependentExpression (), CreateInputDependentExpression ());
     }
 
     public static InputDependentExpression CreateInputDependentExpression ()

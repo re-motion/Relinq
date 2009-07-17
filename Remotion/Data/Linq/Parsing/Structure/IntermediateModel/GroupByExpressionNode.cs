@@ -23,7 +23,7 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 {
-  public class GroupByExpressionNode : ResultOperatorExpressionNodeBase
+  public class GroupByExpressionNode : ResultOperatorExpressionNodeBase, IQuerySourceExpressionNode
   {
     public static readonly MethodInfo[] SupportedMethods = new[]
                                                            {
@@ -77,10 +77,11 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public override Expression Resolve (
         ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
     {
-      throw new InvalidOperationException ("GroupByExpressionNode does not support resolving of expressions because it must not be followed "
-          + " by any node that requires its output data. If a node follows, the previous nodes must be regarded as a subquery and wrapped into"
-          + " a MainSourceExpressionNode. That node can then be used to resolve expressions. See"
-          + " MethodCallExpressionNodeBase.WrapQueryModelAfterEndOfQuery.");
+      return QuerySourceExpressionNodeUtility.ReplaceParameterWithReference (
+          this, 
+          inputParameter, 
+          expressionToBeResolved, 
+          clauseGenerationContext.ClauseMapping);
     }
 
     protected override ResultOperatorBase CreateResultOperator (ClauseGenerationContext clauseGenerationContext)
@@ -92,7 +93,9 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       var elementSelector = OptionalElementSelector ?? Expression.Lambda (KeySelector.Parameters[0], KeySelector.Parameters[0]);
       var inputDependentElementSelector = new InputDependentExpression (elementSelector, resolvedInput);
 
-      return new GroupResultOperator (inputDependentKeySelector, inputDependentElementSelector);
+      var resultOperator = new GroupResultOperator (AssociatedIdentifier, inputDependentKeySelector, inputDependentElementSelector);
+      clauseGenerationContext.ClauseMapping.AddMapping (this, resultOperator);
+      return resultOperator;
     }
   }
 }

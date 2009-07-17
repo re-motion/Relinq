@@ -49,6 +49,16 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     }
 
     [Test]
+    public void ItemType ()
+    {
+      var expectedItemType = typeof (IGrouping<,>).MakeGenericType (
+          _resultOperator.KeySelector.ResolvedExpression.Type, 
+          _resultOperator.ElementSelector.ResolvedExpression.Type);
+
+      Assert.That (_resultOperator.ItemType, Is.SameAs (expectedItemType));
+    }
+
+    [Test]
     public void Clone ()
     {
       var clone = (GroupResultOperator) _resultOperator.Clone (_cloneContext);
@@ -69,6 +79,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       var oldKeySelector = ExpressionHelper.CreateExpression ();
       var oldElementSelector = ExpressionHelper.CreateExpression ();
       var clause = new GroupResultOperator (
+          "groupings",
           ExpressionHelper.CreateInputDependentExpression (oldKeySelector), 
           ExpressionHelper.CreateInputDependentExpression (oldElementSelector));
 
@@ -100,7 +111,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       var inputDependentKeySelector = new InputDependentExpression (Expression.Lambda (oldKeySelector, parameter), expectedInput);
       var inputDependentElementSelector = new InputDependentExpression (Expression.Lambda (oldElementSelector, parameter), expectedInput);
 
-      var clause = new GroupResultOperator (inputDependentKeySelector, inputDependentElementSelector);
+      var clause = new GroupResultOperator ("groupings", inputDependentKeySelector, inputDependentElementSelector);
 
       var newKeySelector = ExpressionHelper.CreateExpression ();
       var newElementSelector = ExpressionHelper.CreateExpression ();
@@ -122,6 +133,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     public new void ToString ()
     {
       var resultOperator = new GroupResultOperator (
+          "groupings",
           ExpressionHelper.CreateInputDependentExpression (Expression.Constant (1)), 
           ExpressionHelper.CreateInputDependentExpression (Expression.Constant (0)));
 
@@ -140,7 +152,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
 
       var keySelector = new InputDependentExpression (ExpressionHelper.CreateLambdaExpression<int, int> (i => i % 3), expectedInput);
       var elementSelector = new InputDependentExpression (ExpressionHelper.CreateLambdaExpression<int, string> (i => i.ToString()), expectedInput);
-      var resultOperator = new GroupResultOperator (keySelector, elementSelector);
+      var resultOperator = new GroupResultOperator ("groupings", keySelector, elementSelector);
 
       var result = ((IEnumerable<IGrouping<int, string>>) resultOperator.ExecuteInMemory (input)).ToArray();
 
@@ -158,7 +170,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
 
       var keySelector = new InputDependentExpression (ExpressionHelper.CreateLambdaExpression<Student, int> (s => s.ID), expectedInput);
       var elementSelector = new InputDependentExpression (ExpressionHelper.CreateLambdaExpression<Student, string> (s => s.ToString ()), expectedInput);
-      var resultOperator = new GroupResultOperator (keySelector, elementSelector);
+      var resultOperator = new GroupResultOperator ("groupings", keySelector, elementSelector);
 
       Assert.That (resultOperator.GetResultType (typeof (IQueryable<Student>)), Is.SameAs (typeof (IQueryable<IGrouping<int, string>>)));
     }
@@ -171,7 +183,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
 
       var keySelector = new InputDependentExpression (ExpressionHelper.CreateLambdaExpression<Student, int> (s => s.ID), expectedInput);
       var elementSelector = new InputDependentExpression (ExpressionHelper.CreateLambdaExpression<Student, string> (s => s.ToString ()), expectedInput);
-      var resultOperator = new GroupResultOperator (keySelector, elementSelector);
+      var resultOperator = new GroupResultOperator ("groupings", keySelector, elementSelector);
 
       Assert.That (resultOperator.GetResultType (typeof (IQueryable<GoodStudent>)), Is.SameAs (typeof (IQueryable<IGrouping<int, string>>)));
     }
@@ -201,7 +213,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
 
       var keySelector = new InputDependentExpression (ExpressionHelper.CreateLambdaExpression<Student, int> (s => s.ID), expectedInput1);
       var elementSelector = new InputDependentExpression (ExpressionHelper.CreateLambdaExpression<int, string> (i => i.ToString ()), expectedInput2);
-      var resultOperator = new GroupResultOperator (keySelector, elementSelector);
+      var resultOperator = new GroupResultOperator ("groupings", keySelector, elementSelector);
 
       resultOperator.GetResultType (typeof (IQueryable<Student>));
     }
