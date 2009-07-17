@@ -31,35 +31,23 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   ///              select s).Last();
   /// </code>
   /// </example>
-  public class LastResultOperator : ResultOperatorBase, IQuerySource
+  public class LastResultOperator : ResultOperatorBase
   {
-    private string _itemName;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="LastResultOperator"/>.
     /// </summary>
-    /// <param name="itemName"></param>
     /// <param name="returnDefaultWhenEmpty">The flag defines if a default expression should be regarded.</param>
-    public LastResultOperator (string itemName, bool returnDefaultWhenEmpty)
+    public LastResultOperator (bool returnDefaultWhenEmpty)
         : base (returnDefaultWhenEmpty ? SingleExecutionStrategy.InstanceWithDefaultWhenEmpty : SingleExecutionStrategy.InstanceNoDefaultWhenEmpty)
     {
-      ArgumentUtility.CheckNotNull ("itemName", itemName);
-      
-      _itemName = itemName;
       ReturnDefaultWhenEmpty = returnDefaultWhenEmpty;
-    }
-
-    public string ItemName
-    {
-      get { return _itemName; }
-      set { _itemName = ArgumentUtility.CheckNotNullOrEmpty ("value", value); }
     }
 
     public bool ReturnDefaultWhenEmpty { get; set; }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
-      return new LastResultOperator (ItemName, ReturnDefaultWhenEmpty);
+      return new LastResultOperator (ReturnDefaultWhenEmpty);
     }
 
     public override object ExecuteInMemory (object input)

@@ -29,7 +29,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   public class QuerySourceExpressionNodeUtility
   {
     /// <summary>
-    /// Replaces the given parameter with a back-reference to the <see cref="IQuerySourceWithItemType"/> corresponding to <paramref name="referencedNode"/>.
+    /// Replaces the given parameter with a back-reference to the <see cref="IQuerySource"/> corresponding to <paramref name="referencedNode"/>.
     /// </summary>
     /// <param name="referencedNode">The referenced node.</param>
     /// <param name="parameterToReplace">The parameter to replace with a <see cref="QuerySourceReferenceExpression"/>.</param>
@@ -55,13 +55,13 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     }
 
     /// <summary>
-    /// Gets the <see cref="IQuerySourceWithItemType"/> corresponding to the given <paramref name="node"/>, throwing an <see cref="InvalidOperationException"/>
+    /// Gets the <see cref="IQuerySource"/> corresponding to the given <paramref name="node"/>, throwing an <see cref="InvalidOperationException"/>
     /// if no such clause has been registered in the given <paramref name="querySourceClauseMapping"/>.
     /// </summary>
-    /// <param name="node">The node for which the <see cref="IQuerySourceWithItemType"/> should be returned.</param>
+    /// <param name="node">The node for which the <see cref="IQuerySource"/> should be returned.</param>
     /// <param name="querySourceClauseMapping">The query source clause mapping.</param>
-    /// <returns>The <see cref="IQuerySourceWithItemType"/> corresponding to <paramref name="node"/>.</returns>
-    public static IQuerySourceWithItemType GetQuerySourceForNode (IQuerySourceExpressionNode node, QuerySourceClauseMapping querySourceClauseMapping)
+    /// <returns>The <see cref="IQuerySource"/> corresponding to <paramref name="node"/>.</returns>
+    public static IQuerySource GetQuerySourceForNode (IQuerySourceExpressionNode node, QuerySourceClauseMapping querySourceClauseMapping)
     {
       try
       {

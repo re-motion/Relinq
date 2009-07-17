@@ -31,30 +31,19 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   ///              select s.ID).Max();
   /// </code>
   /// </example>
-  public class MaxResultOperator : ResultOperatorBase, IQuerySource
+  public class MaxResultOperator : ResultOperatorBase
   {
-    private string _itemName;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="MaxResultOperator"/>.
     /// </summary>
-    /// <param name="itemName"></param>
-    public MaxResultOperator (string itemName)
+    public MaxResultOperator ()
         : base (ScalarExecutionStrategy.Instance)
     {
-      ArgumentUtility.CheckNotNull ("itemName", itemName);
-      _itemName = itemName;
-    }
-
-    public string ItemName
-    {
-      get { return _itemName; }
-      set { _itemName = ArgumentUtility.CheckNotNullOrEmpty ("value", value); }
     }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
-      return new MaxResultOperator(ItemName);
+      return new MaxResultOperator();
     }
 
     public override object ExecuteInMemory (object input)

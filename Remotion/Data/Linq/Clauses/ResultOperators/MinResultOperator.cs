@@ -31,30 +31,19 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   ///              select s.ID).Min();
   /// </code>
   /// </example>
-  public class MinResultOperator : ResultOperatorBase, IQuerySource
+  public class MinResultOperator : ResultOperatorBase
   {
-    private string _itemName;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="MinResultOperator"/>.
     /// </summary>
-    /// <param name="itemName"></param>
-    public MinResultOperator (string itemName)
+    public MinResultOperator ()
         : base (ScalarExecutionStrategy.Instance)
     {
-      ArgumentUtility.CheckNotNullOrEmpty ("itemName", itemName);
-      _itemName = itemName;
-    }
-
-    public string ItemName
-    {
-      get { return _itemName; }
-      set { _itemName = ArgumentUtility.CheckNotNullOrEmpty ("value", value); }
     }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
-      return new MinResultOperator(ItemName);
+      return new MinResultOperator();
     }
 
     public override object ExecuteInMemory (object input)

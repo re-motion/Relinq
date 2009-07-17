@@ -57,12 +57,11 @@
     <Compile Include="Clauses\ExecutionStrategies\SingleExecutionStrategy.cs" />
     <Compile Include="Clauses\ExecutionStrategies\ScalarExecutionStrategy.cs" />
     <Compile Include="Clauses\GroupJoinClause.cs" />
-    <Compile Include="Clauses\IQuerySource.cs" />
     <Compile Include="Clauses\QuerySourceMapping.cs" />
     <Compile Include="Clauses\ExpressionTreeVisitors\CloningExpressionTreeVisitor.cs" />
     <Compile Include="Clauses\ExpressionTreeVisitors\ReferenceReplacingExpressionTreeVisitor.cs" />
     <Compile Include="Clauses\IExecutionStrategy.cs" />
-    <Compile Include="Clauses\IQuerySourceWithItemType.cs" />
+    <Compile Include="Clauses\IQuerySource.cs" />
     <Compile Include="Clauses\ResultOperators\InputDependentExpression.cs" />
     <Compile Include="Clauses\ResultOperators\SumResultOperator.cs" />
     <Compile Include="Clauses\ResultOperators\MaxResultOperator.cs" />

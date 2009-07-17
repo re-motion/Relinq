@@ -40,13 +40,13 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.QueryParserIntegrationT
       QueryParser = new QueryParser ();
     }
 
-    protected void CheckResolvedExpression<TParameter, TResult> (Expression expressionToCheck, IQuerySourceWithItemType clauseToReference, Expression<Func<TParameter, TResult>> expectedUnresolvedExpression)
+    protected void CheckResolvedExpression<TParameter, TResult> (Expression expressionToCheck, IQuerySource clauseToReference, Expression<Func<TParameter, TResult>> expectedUnresolvedExpression)
     {
       var expectedPredicate = ExpressionHelper.Resolve (clauseToReference, expectedUnresolvedExpression);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedPredicate, expressionToCheck);
     }
 
-    protected void CheckResolvedExpression<TParameter1, TParameter2, TResult> (Expression expressionToCheck, IQuerySourceWithItemType clauseToReference1, IQuerySourceWithItemType clauseToReference2, Expression<Func<TParameter1, TParameter2, TResult>> expectedUnresolvedExpression)
+    protected void CheckResolvedExpression<TParameter1, TParameter2, TResult> (Expression expressionToCheck, IQuerySource clauseToReference1, IQuerySource clauseToReference2, Expression<Func<TParameter1, TParameter2, TResult>> expectedUnresolvedExpression)
     {
       var expectedPredicate = ExpressionHelper.Resolve (clauseToReference1, clauseToReference2, expectedUnresolvedExpression);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedPredicate, expressionToCheck);

@@ -62,7 +62,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     protected override ResultOperatorBase CreateResultOperator (ClauseGenerationContext clauseGenerationContext)
     {
-      return new FirstResultOperator (AssociatedIdentifier, ParsedExpression.Method.Name.EndsWith ("OrDefault"));
+      return new FirstResultOperator (ParsedExpression.Method.Name.EndsWith ("OrDefault"));
     }
   }
 }

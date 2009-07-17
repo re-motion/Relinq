@@ -31,30 +31,19 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   ///              select s.ID).Sum();
   /// </code>
   /// </example>
-  public class SumResultOperator : ResultOperatorBase, IQuerySource
+  public class SumResultOperator : ResultOperatorBase
   {
-    private string _itemName;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="SumResultOperator"/>.
     /// </summary>
-    /// <param name="itemName"></param>
-    public SumResultOperator (string itemName)
+    public SumResultOperator ()
         : base (ScalarExecutionStrategy.Instance)
     {
-      ArgumentUtility.CheckNotNull ("itemName", itemName);
-      _itemName = itemName;
-    }
-
-    public string ItemName
-    {
-      get { return _itemName; }
-      set { _itemName = ArgumentUtility.CheckNotNullOrEmpty ("value", value); }
     }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
-      return new SumResultOperator(_itemName);
+      return new SumResultOperator();
     }
 
     public override object ExecuteInMemory (object input)

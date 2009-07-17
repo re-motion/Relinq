@@ -76,7 +76,7 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void GetResultType_FromResultOperator ()
     {
-      _queryModel.ResultOperators.Add (new CountResultOperator ("x"));
+      _queryModel.ResultOperators.Add (new CountResultOperator ());
       Assert.That (_queryModel.GetResultType(), Is.EqualTo (typeof (int)));
     }
 
@@ -115,7 +115,7 @@ namespace Remotion.Data.UnitTests.Linq
       var queryModel = new QueryModel (new MainFromClause ("x", typeof (Student), Expression.Constant (0)),
           new SelectClause (Expression.Constant (0)));
       queryModel.ResultOperators.Add (new DistinctResultOperator ());
-      queryModel.ResultOperators.Add (new CountResultOperator ("z"));
+      queryModel.ResultOperators.Add (new CountResultOperator ());
 
       Assert.That (queryModel.ToString (), Is.EqualTo ("from Student x in 0 select 0 => Distinct() => Count()"));
     }
@@ -433,7 +433,7 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void GetExecutionStrategy_WithResultOperators ()
     {
-      var firstOperator = new FirstResultOperator ("x", true);
+      var firstOperator = new FirstResultOperator (true);
       _queryModel.ResultOperators.Add (firstOperator);
 
       Assert.That (_queryModel.GetExecutionStrategy (), Is.SameAs (firstOperator.ExecutionStrategy));
@@ -444,7 +444,7 @@ namespace Remotion.Data.UnitTests.Linq
     {
       var takeOperator = new TakeResultOperator (7);
       var distinctOperator = new DistinctResultOperator ();
-      var countOperator = new CountResultOperator ("x");
+      var countOperator = new CountResultOperator ();
       _queryModel.ResultOperators.Add (takeOperator);
       _queryModel.ResultOperators.Add (distinctOperator);
       _queryModel.ResultOperators.Add (countOperator);

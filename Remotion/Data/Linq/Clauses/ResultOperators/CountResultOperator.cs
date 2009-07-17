@@ -31,30 +31,19 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   ///              select s).Count();
   /// </code>
   /// </example>
-  public class CountResultOperator : ResultOperatorBase, IQuerySource
+  public class CountResultOperator : ResultOperatorBase
   {
-    private string _itemName;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="CountResultOperator"/>.
     /// </summary>
-    /// <param name="itemName"></param>
-    public CountResultOperator (string itemName)
+    public CountResultOperator ()
         : base (ScalarExecutionStrategy.Instance)
     {
-      ArgumentUtility.CheckNotNullOrEmpty ("itemName", itemName);
-      ItemName = itemName;
-    }
-
-    public string ItemName
-    {
-      get { return _itemName; }
-      set { _itemName = ArgumentUtility.CheckNotNullOrEmpty ("value", value); }
     }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
-      return new CountResultOperator(ItemName);
+      return new CountResultOperator();
     }
 
     public override object ExecuteInMemory (object input)

@@ -28,11 +28,11 @@ namespace Remotion.Data.Linq.Parsing.Structure
   /// </summary>
   public class QuerySourceClauseMapping
   {
-    private readonly Dictionary<IQuerySourceExpressionNode, IQuerySourceWithItemType> _lookup;
+    private readonly Dictionary<IQuerySourceExpressionNode, IQuerySource> _lookup;
 
     public QuerySourceClauseMapping ()
     {
-      _lookup = new Dictionary<IQuerySourceExpressionNode, IQuerySourceWithItemType> ();
+      _lookup = new Dictionary<IQuerySourceExpressionNode, IQuerySource> ();
     }
 
     public int Count
@@ -40,7 +40,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       get { return _lookup.Count; }
     }
 
-    public void AddMapping (IQuerySourceExpressionNode node, IQuerySourceWithItemType querySource)
+    public void AddMapping (IQuerySourceExpressionNode node, IQuerySource querySource)
     {
       ArgumentUtility.CheckNotNull ("node", node);
       ArgumentUtility.CheckNotNull ("querySource", querySource);
@@ -55,11 +55,11 @@ namespace Remotion.Data.Linq.Parsing.Structure
       }
     }
 
-    public IQuerySourceWithItemType GetClause (IQuerySourceExpressionNode node)
+    public IQuerySource GetClause (IQuerySourceExpressionNode node)
     {
       ArgumentUtility.CheckNotNull ("node", node);
 
-      IQuerySourceWithItemType querySource;
+      IQuerySource querySource;
       if (!_lookup.TryGetValue (node, out querySource))
         throw new KeyNotFoundException ("Node has no associated clause.");
 

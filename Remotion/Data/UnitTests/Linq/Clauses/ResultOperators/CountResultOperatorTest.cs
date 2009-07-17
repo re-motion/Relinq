@@ -33,7 +33,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     [SetUp]
     public void SetUp ()
     {
-      _resultOperator = new CountResultOperator ("x");
+      _resultOperator = new CountResultOperator ();
     }
 
     [Test]

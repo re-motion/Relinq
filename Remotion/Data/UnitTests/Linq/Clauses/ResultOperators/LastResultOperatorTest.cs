@@ -36,8 +36,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     [SetUp]
     public void SetUp ()
     {
-      _resultOperatorNoDefault = new LastResultOperator ("x", false);
-      _resultOperatorWithDefault = new LastResultOperator ("x", true);
+      _resultOperatorNoDefault = new LastResultOperator (false);
+      _resultOperatorWithDefault = new LastResultOperator (true);
       _querySourceMapping = new QuerySourceMapping ();
       _cloneContext = new CloneContext(_querySourceMapping);
     }

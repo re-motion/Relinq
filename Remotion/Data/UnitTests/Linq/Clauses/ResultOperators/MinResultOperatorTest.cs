@@ -32,7 +32,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     [SetUp]
     public void SetUp ()
     {
-      _resultOperator = new MinResultOperator ("x");
+      _resultOperator = new MinResultOperator ();
     }
 
     [Test]
@@ -49,7 +49,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     public void ExecuteInMemory ()
     {
       var items = new[] { 1, 2, 3, 0, 2 };
-      var resultOperator = new MinResultOperator ("x");
+      var resultOperator = new MinResultOperator ();
 
       var result = resultOperator.ExecuteInMemory (items);
 
