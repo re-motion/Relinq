@@ -29,7 +29,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.QueryParserIntegrationT
   public class ResultOperatorQueryParserIntegrationTest : QueryParserIntegrationTestBase
   {
     [Test]
-    [Ignore ("TODO 1366")]
     public void SubQueryInMainFromClauseWithResultOperator ()
     {
       var query = from s in
@@ -109,6 +108,29 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.QueryParserIntegrationT
       Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedQuerySource, Is.SameAs (mainFromClause));
 
       Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (CountResultOperator)));
+    }
+
+    [Test]
+    public void TakeWithBackReference ()
+    {
+      var query =
+          from s in QuerySource
+          from s1 in s.Friends.Take (s.ID)
+          select s1;
+
+      var queryModel = QueryParser.GetParsedQuery (query.Expression);
+      Assert.That (queryModel.GetResultType (), Is.SameAs (typeof (IQueryable<Student>)));
+
+      var mainFromClause = queryModel.MainFromClause;
+      var additionalFromClause = (AdditionalFromClause) queryModel.BodyClauses[0];
+
+      var subQueryModel = ((SubQueryExpression) additionalFromClause.FromExpression).QueryModel;
+      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (TakeResultOperator)));
+
+      var takeResultOperator = (TakeResultOperator) subQueryModel.ResultOperators[0];
+      CheckResolvedExpression<Student, int> (takeResultOperator.Count, mainFromClause, s => s.ID);
+
+      Assert.That (subQueryModel.GetResultType (), Is.SameAs (typeof (IQueryable<Student>)));
     }
   }
 }

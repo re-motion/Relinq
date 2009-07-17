@@ -16,7 +16,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
+using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
@@ -33,24 +35,55 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   /// </example>
   public class TakeResultOperator : ResultOperatorBase
   {
-    private string _itemName;
+    private Expression _count;
     
     /// <summary>
     /// Initializes a new instance of the <see cref="TakeResultOperator"/>.
     /// </summary>
     /// <param name="count">The number of elements which should be returned.</param>
-    public TakeResultOperator (int count)
+    public TakeResultOperator (Expression count)
         : base (CollectionExecutionStrategy.Instance)
     {
+      ArgumentUtility.CheckNotNull ("count", count);
       Count = count;
     }
 
-    public int Count { get; set; }
-    
-    public string ItemName
+    public Expression Count
     {
-      get { return _itemName; }
-      set { _itemName = ArgumentUtility.CheckNotNullOrEmpty ("value", value); }
+      get { return _count; }
+      set 
+      {
+        ArgumentUtility.CheckNotNull ("value", value);
+        if (value.Type != typeof (int))
+        {
+          var message = string.Format ("The value expression returns '{0}', an expression returning 'System.Int32' was expected.", value.Type);
+          throw new ArgumentException (message, "value");
+        }
+
+        _count = value; 
+      }
+    }
+
+    /// <summary>
+    /// Gets the constant <see cref="int"/> value of the <see cref="Count"/> property, assuming it is a <see cref="ConstantExpression"/>. If it is
+    /// not, an expression is thrown.
+    /// </summary>
+    /// <returns>The constant <see cref="int"/> value of the <see cref="Count"/> property.</returns>
+    public int GetConstantCount ()
+    {
+      var countAsConstantExpression = Count as ConstantExpression;
+      if (countAsConstantExpression != null)
+      {
+        return (int) countAsConstantExpression.Value;
+      }
+      else
+      {
+        var message = string.Format (
+            "Count ('{0}') is no ConstantExpression, it is a {1}.", 
+            FormattingExpressionTreeVisitor.Format (Count), 
+            Count.GetType().Name);
+        throw new InvalidOperationException (message);
+      }
     }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)
@@ -67,7 +100,9 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     public IEnumerable<T> ExecuteInMemory<T> (IEnumerable<T> input)
     {
       ArgumentUtility.CheckNotNull ("input", input);
-      return input.Take (Count);
+
+      var count = GetConstantCount ();
+      return input.Take (count);
     }
 
     public override Type GetResultType (Type inputResultType)

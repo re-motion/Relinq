@@ -37,7 +37,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
     protected override ResultOperatorBase CreateResultOperator (ClauseGenerationContext clauseGenerationContext)
     {
-      return new TakeResultOperator (100);
+      return new TakeResultOperator (Expression.Constant (100));
     }
   }
 }

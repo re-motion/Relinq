@@ -14,12 +14,13 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.UnitTests.Linq.TestDomain;
 using Remotion.Utilities;
@@ -34,7 +35,14 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     [SetUp]
     public void SetUp ()
     {
-      _resultOperator = new TakeResultOperator (2);
+      _resultOperator = new TakeResultOperator (Expression.Constant (2));
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentException))]
+    public void Initialization_NoIntExpression ()
+    {
+      new TakeResultOperator (Expression.Constant ("12"));
     }
 
     [Test]
@@ -53,13 +61,27 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       var items = new[] { 1, 2, 3, 0, 2 };
       var result = _resultOperator.ExecuteInMemory (items);
 
-      Assert.That (((IEnumerable<int>)result).ToArray(), Is.EqualTo (new[] { 1, 2 }));
+      Assert.That (result.ToArray(), Is.EqualTo (new[] { 1, 2 }));
     }
 
     [Test]
     public void ExecutionStrategy ()
     {
       Assert.That (_resultOperator.ExecutionStrategy, Is.SameAs (CollectionExecutionStrategy.Instance));
+    }
+
+    [Test]
+    public void GetConstantCount ()
+    {
+      Assert.That (_resultOperator.GetConstantCount (), Is.EqualTo (2));
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException))]
+    public void GetConstantCount_NoConstantExpression ()
+    {
+      var resultOperator = new TakeResultOperator (new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause ()));
+      resultOperator.GetConstantCount ();
     }
 
     [Test]

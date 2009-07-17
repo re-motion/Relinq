@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.ResultOperators;
@@ -31,7 +32,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public override void SetUp ()
     {
       base.SetUp ();
-      _node = new TakeExpressionNode (CreateParseInfo (), 3);
+      _node = new TakeExpressionNode (CreateParseInfo (), Expression.Constant (3));
     }
 
     [Test]
@@ -44,7 +45,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void Resolve_PassesExpressionToSource ()
     {
       var sourceMock = MockRepository.GenerateMock<IExpressionNode>();
-      var node = new TakeExpressionNode (CreateParseInfo (sourceMock),0);
+      var node = new TakeExpressionNode (CreateParseInfo (sourceMock), Expression.Constant (2));
       var expression = ExpressionHelper.CreateLambdaExpression();
       var parameter = ExpressionHelper.CreateParameterExpression();
       var expectedResult = ExpressionHelper.CreateExpression();
@@ -61,8 +62,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var result = _node.Apply (QueryModel, ClauseGenerationContext);
       Assert.That (result, Is.SameAs (QueryModel));
-      
-      Assert.That (((TakeResultOperator) QueryModel.ResultOperators[0]).Count, Is.EqualTo (3));
+
+      Assert.That (((TakeResultOperator) QueryModel.ResultOperators[0]).Count, Is.SameAs (_node.Count));
+      Assert.That (((TakeResultOperator) QueryModel.ResultOperators[0]).GetConstantCount(), Is.EqualTo (3));
     }
   }
 }

@@ -442,7 +442,7 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void GetExecutionStrategy_WithManyResultOperators ()
     {
-      var takeOperator = new TakeResultOperator (7);
+      var takeOperator = new TakeResultOperator (Expression.Constant(7));
       var distinctOperator = new DistinctResultOperator ();
       var countOperator = new CountResultOperator ();
       _queryModel.ResultOperators.Add (takeOperator);

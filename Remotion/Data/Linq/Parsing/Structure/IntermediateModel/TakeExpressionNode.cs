@@ -37,13 +37,13 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Enumerable.Take<object> (null, 0)),
                                                            };
 
-    public TakeExpressionNode (MethodCallExpressionParseInfo parseInfo, int count)
+    public TakeExpressionNode (MethodCallExpressionParseInfo parseInfo, Expression count)
         : base (parseInfo, null, null)
     {
       Count = count;
     }
 
-    public int Count { get; set; }
+    public Expression Count { get; set; }
 
     public override Expression Resolve (
         ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
