@@ -62,6 +62,7 @@
     <Compile Include="Clauses\ExpressionTreeVisitors\ReferenceReplacingExpressionTreeVisitor.cs" />
     <Compile Include="Clauses\IExecutionStrategy.cs" />
     <Compile Include="Clauses\IQuerySource.cs" />
+    <Compile Include="Clauses\ResultOperators\AverageResultOperator.cs" />
     <Compile Include="Clauses\ResultOperators\InputDependentExpression.cs" />
     <Compile Include="Clauses\ResultOperators\SumResultOperator.cs" />
     <Compile Include="Clauses\ResultOperators\MaxResultOperator.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\EvaluatableTreeFindingVisitor.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\PartialEvaluationInfo.cs" />
     <Compile Include="Backend\FieldResolving\FieldAccessInfo.cs" />
+    <Compile Include="Parsing\Structure\IntermediateModel\AverageExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ClauseGenerationContext.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ExpressionResolver.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\GroupByExpressionNode.cs" />
