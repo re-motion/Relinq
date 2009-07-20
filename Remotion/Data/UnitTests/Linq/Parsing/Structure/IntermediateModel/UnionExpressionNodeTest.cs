@@ -14,52 +14,54 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Linq;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
-using System.Linq;
 using Rhino.Mocks;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 {
   [TestFixture]
-  public class DistinctExpressionNodeTest : ExpressionNodeTestBase
+  public class UnionExpressionNodeTest : ExpressionNodeTestBase
   {
-    private DistinctExpressionNode _node;
+    private UnionExpressionNode _node;
+    private string[] _source2;
 
     public override void SetUp ()
     {
       base.SetUp ();
-      _node = new DistinctExpressionNode (CreateParseInfo ());
+      _source2 = new[] { "test", "test2" };
+      _node = new UnionExpressionNode (CreateParseInfo (), _source2);
     }
 
     [Test]
     public void SupportedMethod_WithoutComparer ()
     {
-      AssertSupportedMethod_Generic (DistinctExpressionNode.SupportedMethods, q => q.Distinct(), e => e.Distinct());
+      AssertSupportedMethod_Generic (UnionExpressionNode.SupportedMethods, q => q.Union (null), e => e.Union (null));
     }
 
     [Test]
     public void Resolve_PassesExpressionToSource ()
     {
-      var sourceMock = MockRepository.GenerateMock<IExpressionNode>();
-      var node = new DistinctExpressionNode (CreateParseInfo (sourceMock));
-      var expression = ExpressionHelper.CreateLambdaExpression();
-      var parameter = ExpressionHelper.CreateParameterExpression();
-      var expectedResult = ExpressionHelper.CreateExpression();
+      var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();
+      var node = new UnionExpressionNode (CreateParseInfo (sourceMock), _source2);
+      var expression = ExpressionHelper.CreateLambdaExpression ();
+      var parameter = ExpressionHelper.CreateParameterExpression ();
+      var expectedResult = ExpressionHelper.CreateExpression ();
       sourceMock.Expect (mock => mock.Resolve (parameter, expression, ClauseGenerationContext)).Return (expectedResult);
 
       var result = node.Resolve (parameter, expression, ClauseGenerationContext);
 
-      sourceMock.VerifyAllExpectations();
+      sourceMock.VerifyAllExpectations ();
       Assert.That (result, Is.SameAs (expectedResult));
     }
 
     [Test]
     public void Apply ()
     {
-      TestApply (_node, typeof (DistinctResultOperator));
+      TestApply (_node, typeof (UnionResultOperator));
     }
   }
 }
