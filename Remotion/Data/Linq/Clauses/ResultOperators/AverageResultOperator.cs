@@ -65,5 +65,10 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return ReflectionUtility.GetItemTypeOfIEnumerable (inputResultType, "inputResultType");
     }
 
+    public override string ToString ()
+    {
+      return "Average()";
+    }
+
   }
 }

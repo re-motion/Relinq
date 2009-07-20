@@ -14,10 +14,23 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
+using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
+  /// <summary>
+  /// Represents the long count part of a query. This is a result operator, operating on the whole result set of a query.
+  /// </summary>
+  /// <example>
+  /// In C#, the "LongCount" clause in the following example corresponds to a <see cref="LongCountResultOperator"/>.
+  /// <code>
+  /// var query = (from s in Students
+  ///              select s).LongCount();
+  /// </code>
+  /// </example>
   public class LongCountResultOperator : ResultOperatorBase
   {
     public LongCountResultOperator ()
@@ -25,19 +38,36 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     {
     }
 
+    public override ResultOperatorBase Clone (CloneContext cloneContext)
+    {
+      return new LongCountResultOperator();
+    }
+
     public override object ExecuteInMemory (object input)
     {
-      throw new NotImplementedException();
+      ArgumentUtility.CheckNotNull ("input", input);
+      return InvokeGenericOnEnumerable<long> (input, ExecuteInMemory);
+    }
+
+    public long ExecuteInMemory<T> (IEnumerable<T> input)
+    {
+      ArgumentUtility.CheckNotNull ("input", input);
+      return input.LongCount ();
     }
 
     public override Type GetResultType (Type inputResultType)
     {
-      throw new NotImplementedException();
+      ArgumentUtility.CheckNotNull ("inputResultType", inputResultType);
+      ReflectionUtility.GetItemTypeOfIEnumerable (inputResultType, "inputResultType"); // check whether inputResultType implements IEnumerable<T>
+
+      return typeof (long);
     }
 
-    public override ResultOperatorBase Clone (CloneContext cloneContext)
+    public override string ToString ()
     {
-      throw new NotImplementedException();
+      return "LongCount()";
     }
+
+    
   }
 }
