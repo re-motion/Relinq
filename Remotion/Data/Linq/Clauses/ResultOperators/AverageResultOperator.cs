@@ -14,30 +14,56 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Linq;
+using System.Reflection;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
+using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
+  /// <summary>
+  /// Represents the average part of a query. This is a result operator, operating on the whole result set of a query.
+  /// </summary>
+  /// <example>
+  /// In C#, the "average" clause in the following example corresponds to a <see cref="AverageResultOperator"/>.
+  /// <code>
+  /// var query = (from s in Students
+  ///              select s.ID).Average();
+  /// </code>
+  /// </example>
   public class AverageResultOperator : ResultOperatorBase
   {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AverageResultOperator"/>.
+    /// </summary>
     public AverageResultOperator ()
       : base (ScalarExecutionStrategy.Instance)
     {
     }
 
+    public override ResultOperatorBase Clone (CloneContext cloneContext)
+    {
+      return new AverageResultOperator();
+    }
+
     public override object ExecuteInMemory (object input)
     {
-      throw new NotImplementedException();
+      ArgumentUtility.CheckNotNull ("input", input);
+
+      var method = typeof (Enumerable).GetMethod ("Average", BindingFlags.Public | BindingFlags.Static, null, new[] { input.GetType () }, null);
+      if (method == null)
+      {
+        var message = string.Format ("Cannot calculate the average of an object of type '{0}' in memory.", input.GetType ().FullName);
+        throw new NotSupportedException (message);
+      }
+      return method.Invoke (null, new[] { input });
     }
 
     public override Type GetResultType (Type inputResultType)
     {
-      throw new NotImplementedException();
+      ArgumentUtility.CheckNotNull ("inputResultType", inputResultType);
+      return ReflectionUtility.GetItemTypeOfIEnumerable (inputResultType, "inputResultType");
     }
 
-    public override ResultOperatorBase Clone (CloneContext cloneContext)
-    {
-      throw new NotImplementedException();
-    }
   }
 }
