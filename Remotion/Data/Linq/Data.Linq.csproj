@@ -64,6 +64,7 @@
     <Compile Include="Clauses\IQuerySource.cs" />
     <Compile Include="Clauses\ResultOperators\AverageResultOperator.cs" />
     <Compile Include="Clauses\ResultOperators\InputDependentExpression.cs" />
+    <Compile Include="Clauses\ResultOperators\LongCountResultOperator.cs" />
     <Compile Include="Clauses\ResultOperators\SumResultOperator.cs" />
     <Compile Include="Clauses\ResultOperators\MaxResultOperator.cs" />
     <Compile Include="Clauses\ResultOperators\MinResultOperator.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="Parsing\Structure\IntermediateModel\GroupByExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\GroupJoinExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\JoinExpressionNode.cs" />
+    <Compile Include="Parsing\Structure\IntermediateModel\LongCountExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\QuerySourceExpressionNodeUtility.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ResolvedExpressionCache.cs" />
     <Compile Include="Parsing\Structure\QuerySourceClauseMapping.cs" />
