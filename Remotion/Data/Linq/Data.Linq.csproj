@@ -63,6 +63,7 @@
     <Compile Include="Clauses\IExecutionStrategy.cs" />
     <Compile Include="Clauses\IQuerySource.cs" />
     <Compile Include="Clauses\ResultOperators\AverageResultOperator.cs" />
+    <Compile Include="Clauses\ResultOperators\ContainsResultOperator.cs" />
     <Compile Include="Clauses\ResultOperators\InputDependentExpression.cs" />
     <Compile Include="Clauses\ResultOperators\LongCountResultOperator.cs" />
     <Compile Include="Clauses\ResultOperators\SkipResultOperator.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="Backend\FieldResolving\FieldAccessInfo.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\AverageExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ClauseGenerationContext.cs" />
+    <Compile Include="Parsing\Structure\IntermediateModel\ContainsExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ExpressionResolver.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\GroupByExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\GroupJoinExpressionNode.cs" />
