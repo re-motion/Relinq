@@ -64,6 +64,7 @@
     <Compile Include="Clauses\IQuerySource.cs" />
     <Compile Include="Clauses\ResultOperators\AverageResultOperator.cs" />
     <Compile Include="Clauses\ResultOperators\ContainsResultOperator.cs" />
+    <Compile Include="Clauses\ResultOperators\DefaultIfEmptyResultOperator.cs" />
     <Compile Include="Clauses\ResultOperators\ExceptResultOperator.cs" />
     <Compile Include="Clauses\ResultOperators\InputDependentExpression.cs" />
     <Compile Include="Clauses\ResultOperators\IntersectResultOperator.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="Parsing\Structure\IntermediateModel\AverageExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ClauseGenerationContext.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ContainsExpressionNode.cs" />
+    <Compile Include="Parsing\Structure\IntermediateModel\DefaultIfEmptyExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ExceptExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ExpressionResolver.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\GroupByExpressionNode.cs" />
