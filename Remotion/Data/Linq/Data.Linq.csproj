@@ -71,6 +71,7 @@
     <Compile Include="Clauses\ResultOperators\InputDependentExpression.cs" />
     <Compile Include="Clauses\ResultOperators\IntersectResultOperator.cs" />
     <Compile Include="Clauses\ResultOperators\LongCountResultOperator.cs" />
+    <Compile Include="Clauses\ResultOperators\OfTypeResultOperator.cs" />
     <Compile Include="Clauses\ResultOperators\ReverseResultOperator.cs" />
     <Compile Include="Clauses\ResultOperators\SkipResultOperator.cs" />
     <Compile Include="Clauses\ResultOperators\SumResultOperator.cs" />
@@ -101,6 +102,7 @@
     <Compile Include="Parsing\Structure\IntermediateModel\IntersectExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\JoinExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\LongCountExpressionNode.cs" />
+    <Compile Include="Parsing\Structure\IntermediateModel\OfTypeExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\QuerySourceExpressionNodeUtility.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ResolvedExpressionCache.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ReverseExpressionNode.cs" />
