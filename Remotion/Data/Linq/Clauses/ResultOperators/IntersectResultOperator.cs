@@ -15,30 +15,60 @@
 // 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
+using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
+  /// <summary>
+  /// Represents the intersect part of a query. This is a result operator, operating on the whole result set of a query.
+  /// </summary>
+  /// <example>
+  /// In C#, the "intersect" clause in the following example corresponds to a <see cref="IntersectResultOperator"/>.
+  /// <code>
+  /// var query = (from s in Students
+  ///              select s).Intersect(students2);
+  /// </code>
+  /// </example>
   public class IntersectResultOperator : ResultOperatorBase
   {
     public IntersectResultOperator (IEnumerable<object> source2)
       : base (CollectionExecutionStrategy.Instance)
     {
+      ArgumentUtility.CheckNotNull ("source2", source2);
+      Source2 = source2;
+    }
+
+    protected IEnumerable<object> Source2 { get; set; }
+
+    public override ResultOperatorBase Clone (CloneContext cloneContext)
+    {
+      return new IntersectResultOperator (Source2);
     }
 
     public override object ExecuteInMemory (object input)
     {
-      throw new NotImplementedException();
+      ArgumentUtility.CheckNotNull ("input", input);
+      return InvokeGenericOnEnumerable<IEnumerable<object>> (input, ExecuteInMemory);
+    }
+
+    public IEnumerable<T> ExecuteInMemory<T> (IEnumerable<T> input)
+    {
+      return input.Intersect<T> ((IEnumerable<T>) Source2);
     }
 
     public override Type GetResultType (Type inputResultType)
     {
-      throw new NotImplementedException();
+      ArgumentUtility.CheckNotNull ("inputResultType", inputResultType);
+      ReflectionUtility.GetItemTypeOfIEnumerable (inputResultType, "inputResultType"); // check whether inputResultType implements IEnumerable<T>
+
+      return inputResultType;
     }
 
-    public override ResultOperatorBase Clone (CloneContext cloneContext)
+    public override string ToString ()
     {
-      throw new NotImplementedException();
+      return "Intersect()";
     }
   }
 }

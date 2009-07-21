@@ -14,30 +14,57 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
+using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
+  /// <summary>
+  /// Represents the reverse part of a query. This is a result operator, operating on the whole result set of a query.
+  /// </summary>
+  /// <example>
+  /// In C#, the "reverse" clause in the following example corresponds to a <see cref="ReverseResultOperator"/>.
+  /// <code>
+  /// var query = (from s in Students
+  ///              select s).Reverse();
+  /// </code>
+  /// </example>
   public class ReverseResultOperator : ResultOperatorBase
   {
     public ReverseResultOperator ()
-      : base (CollectionExecutionStrategy.Instance)
+        : base (CollectionExecutionStrategy.Instance)
     {
-    }
-
-    public override object ExecuteInMemory (object input)
-    {
-      throw new NotImplementedException();
-    }
-
-    public override Type GetResultType (Type inputResultType)
-    {
-      throw new NotImplementedException();
     }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
-      throw new NotImplementedException();
+      return new ReverseResultOperator ();
+    }
+
+    public override object ExecuteInMemory (object input)
+    {
+      ArgumentUtility.CheckNotNull ("input", input);
+      return InvokeGenericOnEnumerable<IEnumerable<object>> (input, ExecuteInMemory);
+    }
+
+    public IEnumerable<T> ExecuteInMemory<T> (IEnumerable<T> input)
+    {
+      return input.Reverse ();
+    }
+
+    public override Type GetResultType (Type inputResultType)
+    {
+      ArgumentUtility.CheckNotNull ("inputResultType", inputResultType);
+      ReflectionUtility.GetItemTypeOfIEnumerable (inputResultType, "inputResultType"); // check whether inputResultType implements IEnumerable<T>
+
+      return inputResultType;
+    }
+
+    public override string ToString ()
+    {
+      return "Reverse()";
     }
   }
 }
