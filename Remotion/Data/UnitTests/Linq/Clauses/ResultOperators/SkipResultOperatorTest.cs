@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
@@ -53,15 +54,16 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       var clone = _resultOperator.Clone (cloneContext);
 
       Assert.That (clone, Is.InstanceOfType (typeof (SkipResultOperator)));
+      Assert.That (((SkipResultOperator) clone).Count, Is.SameAs (_resultOperator.Count));
     }
 
     [Test]
     public void ExecuteInMemory ()
     {
-      var items = new[] { 1, 2, 3, 0, 2 };
+      object items = new[] { 1, 2, 3, 0, 2 };
       var result = _resultOperator.ExecuteInMemory (items);
 
-      Assert.That (result.ToArray (), Is.EqualTo (new[] { 3, 0, 2 }));
+      Assert.That (((IEnumerable<int>) result).ToArray (), Is.EqualTo (new[] { 3, 0, 2 }));
     }
 
     [Test]

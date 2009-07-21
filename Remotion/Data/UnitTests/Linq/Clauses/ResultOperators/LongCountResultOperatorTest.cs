@@ -49,7 +49,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     [Test]
     public void ExecuteInMemory ()
     {
-      var items = new[] { "1", "2", "3" };
+      object items = new[] { "1", "2", "3" };
       var result = _resultOperator.ExecuteInMemory (items);
 
       Assert.That (result, Is.EqualTo (3));

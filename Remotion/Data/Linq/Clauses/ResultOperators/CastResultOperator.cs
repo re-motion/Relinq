@@ -14,72 +14,66 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq.Expressions;
+using System.Linq;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Utilities;
-using System.Linq;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
-  /// <summary>
-  /// Represents the contains part of a query. This is a result operator, operating on the whole result set of a query.
-  /// </summary>
-  /// <example>
-  /// In C#, the "contains" clause in the following example corresponds to a <see cref="ContainsResultOperator"/>.
-  /// <code>
-  /// var query = (from s in Students
-  ///              select s).Contains(student);
-  /// </code>
-  /// </example>
-  public class ContainsResultOperator : ResultOperatorBase
+  public class CastResultOperator : ResultOperatorBase
   {
-    private object _item;
+    private Type _castItemType;
 
-    public ContainsResultOperator (object item)
-        : base (ScalarExecutionStrategy.Instance)
+    public CastResultOperator (Type castItemType)
+        : base (CollectionExecutionStrategy.Instance)
     {
-      Item = item;
+      ArgumentUtility.CheckNotNull ("castItemType", castItemType);
+      CastItemType = castItemType;
     }
 
-    public object Item
+    public Type CastItemType
     {
-      get { return _item; }
+      get { return _castItemType; }
       set
       {
         ArgumentUtility.CheckNotNull ("value", value);
-        _item = value;
+        _castItemType = value;
       }
     }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
-      return new ContainsResultOperator (Item);
+      return new CastResultOperator(CastItemType);
     }
 
     public override object ExecuteInMemory (object input)
     {
       ArgumentUtility.CheckNotNull ("input", input);
-      return InvokeGenericOnEnumerable<bool> (input, ExecuteInMemory);
+
+      var method = (from m in typeof (CastResultOperator).GetMethods ()
+                    where m.Name == "ExecuteInMemory" && m.IsGenericMethod
+                    select m.MakeGenericMethod (CastItemType)).Single();
+      return InvokeExecuteMethod (input, method);
     }
 
-    public bool ExecuteInMemory<T> (IEnumerable<T> input)
+    public IEnumerable<TResult> ExecuteInMemory<TResult> (IEnumerable input)
     {
-      ArgumentUtility.CheckNotNull ("input", input);
-      return input.Contains ((T) Item);
+      return input.Cast<TResult>();
     }
 
     public override Type GetResultType (Type inputResultType)
     {
       ArgumentUtility.CheckNotNull ("inputResultType", inputResultType);
-      return typeof (bool);
+      ReflectionUtility.GetItemTypeOfIEnumerable (inputResultType, "inputResultType"); // check whether inputResultType implements IEnumerable<T>
+
+      return typeof (IQueryable<>).MakeGenericType (CastItemType);
     }
 
     public override string ToString ()
     {
-      return "Contains(" + Item + ")";
+      return "Cast()";
     }
-
-     
   }
 }

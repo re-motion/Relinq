@@ -17,7 +17,10 @@ using System;
 using System.Linq;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq;
+using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
+using Remotion.Data.UnitTests.Linq.TestDomain;
 using Rhino.Mocks;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
@@ -30,7 +33,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public override void SetUp ()
     {
       base.SetUp ();
-      _node = new CastExpressionNode (CreateParseInfo ());
+      
+      var method = ReflectionUtility.GetMethod (() => ((IQueryable<Student>)null).Cast<GoodStudent>());
+      _node = new CastExpressionNode (CreateParseInfo (method));
     }
 
     [Test]
@@ -60,7 +65,10 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var result = _node.Apply (QueryModel, ClauseGenerationContext);
       Assert.That (result, Is.SameAs (QueryModel));
-      Assert.That (QueryModel.BodyClauses.Count, Is.EqualTo (0));
+      Assert.That (QueryModel.ResultOperators.Count, Is.EqualTo (1));
+
+      var castResultOperator = (CastResultOperator) QueryModel.ResultOperators[0];
+      Assert.That (castResultOperator.CastItemType, Is.SameAs (typeof (GoodStudent)));
     }
   }
 }

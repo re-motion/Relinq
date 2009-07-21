@@ -41,7 +41,11 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       OptionalDefaultValue = optionalDefaultValue;
     }
 
-    Expression OptionalDefaultValue { get; set; }
+    /// <summary>
+    /// Gets or sets the optional default value.
+    /// </summary>
+    /// <value>The optional default value.</value>
+    public Expression OptionalDefaultValue { get; set; }
 
     /// <summary>
     /// Gets the constant <see cref="object"/> value of the <see cref="OptionalDefaultValue"/> property, assuming it is a <see cref="ConstantExpression"/>. If it is

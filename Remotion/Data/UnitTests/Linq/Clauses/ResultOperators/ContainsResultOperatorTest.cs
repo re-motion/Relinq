@@ -48,7 +48,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     [Test]
     public void ExecuteInMemory ()
     {
-      var items = new[] { "one", "two", "three", "test"};
+      object items = new[] { "one", "two", "three", "test"};
       var result = _resultOperator.ExecuteInMemory (items);
 
       Assert.That (result, Is.True);

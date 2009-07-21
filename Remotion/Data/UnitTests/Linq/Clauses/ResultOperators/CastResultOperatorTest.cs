@@ -24,26 +24,17 @@ using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.UnitTests.Linq.TestDomain;
 using Remotion.Utilities;
 
-
 namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
 {
   [TestFixture]
-  public class UnionResultOperatorTest
+  public class CastResultOperatorTest
   {
-    private UnionResultOperator _resultOperator;
-    private string[] _source2;
+    private CastResultOperator _resultOperator;
 
     [SetUp]
     public void SetUp ()
     {
-      _source2 = new[] { "test1", "test2" };
-      _resultOperator = new UnionResultOperator (_source2);
-    }
-
-    [Test]
-    public void ExecutionStrategy ()
-    {
-      Assert.That (_resultOperator.ExecutionStrategy, Is.SameAs (CollectionExecutionStrategy.Instance));
+      _resultOperator = new CastResultOperator (typeof (GoodStudent));
     }
 
     [Test]
@@ -53,22 +44,32 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       var cloneContext = new CloneContext (clonedClauseMapping);
       var clone = _resultOperator.Clone (cloneContext);
 
-      Assert.That (clone, Is.InstanceOfType (typeof (UnionResultOperator)));
+      Assert.That (clone, Is.InstanceOfType (typeof (CastResultOperator)));
+      Assert.That (((CastResultOperator) clone).CastItemType, Is.SameAs (_resultOperator.CastItemType));
     }
 
     [Test]
     public void ExecuteInMemory ()
     {
-      object items = new[] {"test3"};
+      var student1 = new GoodStudent ();
+      var student2 = new GoodStudent ();
+      object items = new Student[] { student1, student2 };
+
       var result = _resultOperator.ExecuteInMemory (items);
 
-      Assert.That (((IEnumerable<string>) result).ToArray (), Is.EquivalentTo (new[] { "test1", "test2", "test3" }));
+      Assert.That (((IEnumerable<GoodStudent>) result).ToArray (), Is.EquivalentTo (new[] { student1, student2 }));
+    }
+
+    [Test]
+    public void ExecutionStrategy ()
+    {
+      Assert.That (_resultOperator.ExecutionStrategy, Is.SameAs (CollectionExecutionStrategy.Instance));
     }
 
     [Test]
     public void GetResultType ()
     {
-      Assert.That (_resultOperator.GetResultType (typeof (IQueryable<Student>)), Is.SameAs (typeof (IQueryable<Student>)));
+      Assert.That (_resultOperator.GetResultType (typeof (IQueryable<Student>)), Is.SameAs (typeof (IQueryable<GoodStudent>)));
     }
 
     [Test]

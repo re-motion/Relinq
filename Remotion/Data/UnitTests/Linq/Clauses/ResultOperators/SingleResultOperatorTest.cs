@@ -63,7 +63,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
      [Test]
      public void ExecuteInMemory ()
      {
-       var items = new[] { 1 };
+       object items = new[] { 1 };
        var result = _resultOperatorWithDefault.ExecuteInMemory (items);
 
        Assert.That (result, Is.EqualTo (1));
@@ -72,7 +72,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
      [Test]
      public void ExecuteInMemory_Empty_Default ()
      {
-       var items = new int[0];
+       object items = new int[0];
        var result = _resultOperatorWithDefault.ExecuteInMemory (items);
 
        Assert.That (result, Is.EqualTo (0));
@@ -82,7 +82,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
      [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Sequence contains no elements")]
      public void ExecuteInMemory_Empty_NoDefault ()
      {
-       var items = new int[0];
+       object items = new int[0];
        _resultOperatorNoDefault.ExecuteInMemory (items);
      }
 
@@ -90,7 +90,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
      [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Sequence contains more than one element")]
      public void ExecuteInMemory_TooManyItems ()
      {
-       var items = new[] { 1, 2 };
+       object items = new[] { 1, 2 };
        _resultOperatorWithDefault.ExecuteInMemory (items);
      }
 

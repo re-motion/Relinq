@@ -48,7 +48,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     [Test]
     public void ExecuteInMemory ()
     {
-      var items = new[] { 1, 2, 3, 0, 2 };
+      object items = new[] { 1, 2, 3, 0, 2 };
       var resultOperator = new MinResultOperator ();
 
       var result = resultOperator.ExecuteInMemory (items);

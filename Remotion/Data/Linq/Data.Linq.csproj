@@ -63,6 +63,7 @@
     <Compile Include="Clauses\IExecutionStrategy.cs" />
     <Compile Include="Clauses\IQuerySource.cs" />
     <Compile Include="Clauses\ResultOperators\AverageResultOperator.cs" />
+    <Compile Include="Clauses\ResultOperators\CastResultOperator.cs" />
     <Compile Include="Clauses\ResultOperators\ContainsResultOperator.cs" />
     <Compile Include="Clauses\ResultOperators\DefaultIfEmptyResultOperator.cs" />
     <Compile Include="Clauses\ResultOperators\ExceptResultOperator.cs" />

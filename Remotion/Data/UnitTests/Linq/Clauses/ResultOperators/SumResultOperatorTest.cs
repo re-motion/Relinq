@@ -48,7 +48,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     [Test]
     public void ExecuteInMemory ()
     {
-      var items = new[] { 1, 2, 3 };
+      object items = new[] { 1, 2, 3 };
       var result = _resultOperator.ExecuteInMemory (items);
 
       Assert.That (result, Is.EqualTo (6));
@@ -58,7 +58,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Cannot calculate the sum of an object of type 'System.String[]' in memory.")]
     public void ExecuteInMemory_UnsupportedType ()
     {
-      var items = new[] { "1", "2", "3" };
+      object items = new[] { "1", "2", "3" };
       _resultOperator.ExecuteInMemory (items);
     }
 

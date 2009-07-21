@@ -30,11 +30,11 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public class ContainsExpressionNode : ResultOperatorExpressionNodeBase
   {
-    //public static readonly MethodInfo[] SupportedMethods = new[]
-    //                                                       {
-    //                                                         GetSupportedMethod (() => Queryable.Contains<object> (null, null)),
-    //                                                         GetSupportedMethod (() => Enumerable.Contains<object>(null, null))
-    //                                                       };
+    public static readonly MethodInfo[] SupportedMethods = new[]
+                                                           {
+                                                             GetSupportedMethod (() => Queryable.Contains<object> (null, null)),
+                                                             GetSupportedMethod (() => Enumerable.Contains<object>(null, null))
+                                                           };
 
     public ContainsExpressionNode (MethodCallExpressionParseInfo parseInfo, object item)
         : base(parseInfo, null, null)

@@ -129,14 +129,15 @@ namespace Remotion.Data.Linq.Clauses
       Type itemType = GetInputItemType (input);
 
       var method = genericMethodCaller.Method;
-      if (!method.IsGenericMethod || !method.IsPublic)
+      if (!method.IsGenericMethod)
       {
         throw new ArgumentException (
-            "Method to invoke ('" + method.Name + "') must be a public generic method with exactly one generic argument.", 
+            "Method to invoke ('" + method.Name + "') must be a generic method with exactly one generic argument.",
             "genericMethodCaller");
       }
 
       var closedGenericMethod = method.GetGenericMethodDefinition ().MakeGenericMethod (itemType);
+
       return InvokeExecuteMethod (input, closedGenericMethod);
     }
 
@@ -160,6 +161,9 @@ namespace Remotion.Data.Linq.Clauses
     /// <returns>The result of the invocation</returns>
     protected object InvokeExecuteMethod (object input, MethodInfo method)
     {
+      if (!method.IsPublic)
+        throw new ArgumentException ("Method to invoke ('" + method.Name + "') must be a public method.", "method");
+
       try
       {
         return method.Invoke (this, new[] { input });

@@ -76,7 +76,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "Method to invoke ('NonGenericExecuteMethod') must be a public generic method "
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "Method to invoke ('NonGenericExecuteMethod') must be a generic method "
         + "with exactly one generic argument.\r\nParameter name: genericMethodCaller")]
     public void InvokeGenericOnEnumerable_NonGenericMethod ()
     {
@@ -84,8 +84,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "Method to invoke ('NonPublicExecuteMethod') must be a public generic method "
-        + "with exactly one generic argument.\r\nParameter name: genericMethodCaller")]
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "Method to invoke ('NonPublicExecuteMethod') must be a public method.\r\n"
+        + "Parameter name: method")]
     public void InvokeGenericOnEnumerable_NonPublicTestMethod ()
     {
       _resultOperator.InvokeGenericOnEnumerable (new[] { 1, 2, 3 }, _resultOperator.NonPublicExecuteMethod);

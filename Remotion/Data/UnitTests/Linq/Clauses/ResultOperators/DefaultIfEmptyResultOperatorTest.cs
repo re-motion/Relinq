@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
@@ -73,24 +74,25 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       var clone = _resultOperatorWithDefaultValue.Clone (cloneContext);
 
       Assert.That (clone, Is.InstanceOfType (typeof (DefaultIfEmptyResultOperator)));
+      Assert.That (((DefaultIfEmptyResultOperator) clone).OptionalDefaultValue, Is.SameAs (_resultOperatorWithDefaultValue.OptionalDefaultValue));
     }
 
     [Test]
     public void ExecuteInMemory_WithDefaultValue ()
     {
-      var items = new int[0];
+      object items = new int[0];
       var result = _resultOperatorWithDefaultValue.ExecuteInMemory (items);
 
-      Assert.That (result.ToArray (), Is.EqualTo (new[] { 100 }));
+      Assert.That (((IEnumerable<int>) result).ToArray (), Is.EqualTo (new[] { 100 }));
     }
 
     [Test]
     public void ExecuteInMemory_WithoutDefaultValue ()
     {
-      var items = new int[0];
+      object items = new int[0];
       var result = _resultOperatorWithoutDefaultValue.ExecuteInMemory (items);
 
-      Assert.That (result.ToArray (), Is.EqualTo (new[] { 0 }));
+      Assert.That (((IEnumerable<int>) result).ToArray (), Is.EqualTo (new[] { 0 }));
     }
 
     [Test]
