@@ -18,6 +18,23 @@ using System.Collections.Generic;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing
 {
+  public class AnonymousType<TA, TB>
+  {
+    public AnonymousType ()
+    {
+    }
+
+    public AnonymousType (TA a, TB b)
+    {
+      this.a = a;
+      this.b = b;
+    }
+
+    public TA a { get; set; }
+    public TB b { get; set; }
+    public List<int> List { get; set; }
+  }
+
   public class AnonymousType
   {
     public AnonymousType ()
