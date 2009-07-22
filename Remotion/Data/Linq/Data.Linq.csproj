@@ -158,7 +158,6 @@
     <Compile Include="Backend\DetailParsing\SelectProjectionParsing\NewExpressionParser.cs" />
     <Compile Include="Backend\DetailParsing\WhereConditionParserRegistry.cs" />
     <Compile Include="Backend\DetailParsing\WhereConditionParsing\ContainsFullTextParser.cs" />
-    <Compile Include="Backend\DetailParsing\WhereConditionParsing\ContainsParser.cs" />
     <Compile Include="Backend\DetailParsing\WhereConditionParsing\IWhereConditionParser.cs" />
     <Compile Include="Backend\DetailParsing\WhereConditionParsing\LikeParser.cs" />
     <Compile Include="Backend\DetailParsing\WhereConditionParsing\MethodCallExpressionParser.cs" />
