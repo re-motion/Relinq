@@ -14,6 +14,8 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
@@ -79,21 +81,24 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
     private IExpressionNode ParseMethodCallExpression (MethodCallExpression methodCallExpression, string associatedIdentifier)
     {
-      if (methodCallExpression.Arguments.Count == 0)
+      string associatedIdentifierForSource = InferAssociatedIdentifierForSource (methodCallExpression);
+
+      Expression sourceExpression;
+      IEnumerable<Expression> arguments;
+      if (methodCallExpression.Object != null)
       {
-        var message = string.Format (
-            "Cannot parse expression '{0}' because it calls the unsupported method '{1}'. Only query methods "
-            + "whose first parameter represents the remaining query chain are supported.",
-            methodCallExpression,
-            methodCallExpression.Method.Name);
-        throw new ParserException (message);
+        sourceExpression = methodCallExpression.Object;
+        arguments = methodCallExpression.Arguments;
+      }
+      else
+      {
+        sourceExpression = methodCallExpression.Arguments[0];
+        arguments = methodCallExpression.Arguments.Skip (1);
       }
 
-      string associatedIdentifierForSource = InferAssociatedIdentifierForSource (methodCallExpression);
-      var source = ParseNode (methodCallExpression.Arguments[0], associatedIdentifierForSource);
-
+      var source = ParseNode (sourceExpression, associatedIdentifierForSource);
       var parser = new MethodCallExpressionParser (_nodeTypeRegistry);
-      return parser.Parse (associatedIdentifier, source, methodCallExpression);
+      return parser.Parse (associatedIdentifier, source, arguments, methodCallExpression);
     }
 
     /// <summary>

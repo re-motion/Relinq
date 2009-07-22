@@ -19,6 +19,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ResultOperators;
+using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 {
@@ -39,10 +40,11 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public ContainsExpressionNode (MethodCallExpressionParseInfo parseInfo, Expression item)
         : base(parseInfo, null, null)
     {
+      ArgumentUtility.CheckNotNull ("item", item);
       Item = item;
     }
 
-    public Expression Item { get; set; }
+    public Expression Item { get; private set; }
 
 
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)

@@ -18,6 +18,8 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.DomainObjects;
+using Remotion.Data.DomainObjects.Linq;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Structure;
@@ -131,6 +133,26 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
+    public void ParseTree_MethodCallExpression_WithInstanceMethod ()
+    {
+      var containsMethod = typeof (List<int>).GetMethod ("Contains");
+      _nodeTypeRegistry.Register (new[] { containsMethod }, typeof (ContainsExpressionNode));
+
+      var querySourceExpression = Expression.Parameter (typeof (List<int>), "querySource");
+      var itemExpression = Expression.Constant (4);
+      var expression = Expression.Call (querySourceExpression, containsMethod, itemExpression);
+
+      var result = _expressionTreeParser.ParseTree (expression);
+
+      Assert.That (result, Is.InstanceOfType (typeof (ContainsExpressionNode)));
+      Assert.That (((ContainsExpressionNode) result).Item, Is.SameAs (itemExpression));
+
+      var source = ((ContainsExpressionNode) result).Source;
+      Assert.That (source, Is.InstanceOfType (typeof (MainSourceExpressionNode)));
+      Assert.That (((MainSourceExpressionNode) source).ParsedExpression, Is.SameAs (querySourceExpression));
+    }
+
+    [Test]
     public void ParseTree_ComplexMethodCallExpression ()
     {
       var querySource = ExpressionHelper.CreateStudentQueryable();
@@ -158,15 +180,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     public void ParseTree_InvalidConstantExpression ()
     {
       _expressionTreeParser.ParseTree (Expression.Constant(0));
-    }
-
-    [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Cannot parse expression 'i.ToString()' because it calls the unsupported method "
-        + "'ToString'. Only query methods whose first parameter represents the remaining query chain are supported.")]
-    public void ParseTree_InvalidMethodCall_NonQueryMethod ()
-    {
-      var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<int, string> (i => i.ToString ());
-      _expressionTreeParser.ParseTree (methodCallExpression);
     }
 
     [Test]

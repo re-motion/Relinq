@@ -36,13 +36,12 @@ namespace Remotion.Data.Linq.Parsing.Structure
       _nodeTypeRegistry = nodeTypeRegistry;
     }
 
-    public IExpressionNode Parse (string associatedIdentifier, IExpressionNode source, MethodCallExpression expressionToParse)
+    public IExpressionNode Parse (string associatedIdentifier, IExpressionNode source, IEnumerable<Expression> arguments, MethodCallExpression expressionToParse)
     {
       ArgumentUtility.CheckNotNull ("expressionToParse", expressionToParse);
 
       Type nodeType = GetNodeType (expressionToParse);
-      var additionalConstructorParameters = expressionToParse.Arguments
-          .Skip (1) // skip the expression corresponding to the source argument
+      var additionalConstructorParameters = arguments
           .Select (expr => ConvertExpressionToParameterValue (expr)) // convert the remaining argument expressions to their actual values
           .ToArray();
 

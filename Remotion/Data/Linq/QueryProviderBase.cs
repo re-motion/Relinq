@@ -69,6 +69,16 @@ namespace Remotion.Data.Linq
     public IQueryExecutor Executor { get; private set; }
 
     /// <summary>
+    /// Gets the <see cref="ExpressionTreeParser"/> used by this <see cref="QueryProviderBase"/> to parse LINQ <see cref="Expression"/>
+    /// trees.
+    /// </summary>
+    /// <value>The expression tree parser.</value>
+    public ExpressionTreeParser ExpressionTreeParser
+    {
+      get { return _expressionTreeParser; }
+    }
+
+    /// <summary>
     /// Constructs an <see cref="IQueryable"/> object that can evaluate the query represented by a specified expression tree. This
     /// method delegates to <see cref="CreateQuery{T}"/>.
     /// </summary>
