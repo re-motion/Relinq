@@ -50,7 +50,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Backend\ContainsFulltextExtensionMethod.cs" />
-    <Compile Include="Backend\DataObjectModel\ContainsCriterion.cs" />
     <Compile Include="Backend\DetailParserUtility.cs" />
     <Compile Include="Clauses\AdditionalFromClause.cs" />
     <Compile Include="Clauses\CloneContext.cs" />
