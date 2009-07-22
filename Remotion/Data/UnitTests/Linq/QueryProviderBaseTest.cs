@@ -90,7 +90,7 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void GenerateQueryModel ()
     {
-      Expression expression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQuerySource ());
+      Expression expression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateStudentQueryable ());
       var queryModel = _queryProvider.GenerateQueryModel (expression);
 
       Assert.That (((QuerySourceReferenceExpression) queryModel.SelectClause.Selector).ReferencedQuerySource,
@@ -199,7 +199,7 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void Execute_WithDefaultRegistry ()
     {
-      Expression expression = ExpressionHelper.MakeExpression (() => from s in ExpressionHelper.CreateQuerySource () select s);
+      Expression expression = ExpressionHelper.MakeExpression (() => from s in ExpressionHelper.CreateStudentQueryable () select s);
       _executorMock
           .Expect (mock => mock.ExecuteCollection<Student> (Arg<QueryModel>.Is.Anything, Arg<IEnumerable<FetchRequestBase>>.Is.Anything))
           .Return (new Student[0]);
@@ -213,7 +213,7 @@ namespace Remotion.Data.UnitTests.Linq
         + "overload of the method 'System.Linq.Queryable.Select' is currently not supported, but you can register your own parser if needed.")]
     public void Execute_WithSpecificRegistry ()
     {
-      Expression expression = ExpressionHelper.MakeExpression (() => from s in ExpressionHelper.CreateQuerySource () select s);
+      Expression expression = ExpressionHelper.MakeExpression (() => from s in ExpressionHelper.CreateStudentQueryable () select s);
       _executorMock
           .Expect (mock => mock.ExecuteCollection<Student> (Arg<QueryModel>.Is.Anything, Arg<IEnumerable<FetchRequestBase>>.Is.Anything))
           .Return (new Student[0]);

@@ -50,10 +50,10 @@ namespace Remotion.Data.UnitTests.Linq.Transformations
     [SetUp]
     public void SetUp ()
     {
-      _detailSource = ExpressionHelper.CreateQuerySource_Detail();
-      _sectorSource = ExpressionHelper.CreateQuerySource_IndustrialSector();
+      _detailSource = ExpressionHelper.CreateStudentDetailQueryable();
+      _sectorSource = ExpressionHelper.CreateIndustrialSectorQueryable();
 
-      var query = from s1 in ExpressionHelper.CreateQuerySource()
+      var query = from s1 in ExpressionHelper.CreateStudentQueryable()
                   from sd in
                       (from sector in _sectorSource
                        where sector.ID > 10
@@ -168,7 +168,7 @@ namespace Remotion.Data.UnitTests.Linq.Transformations
                              select sd.Student;
       var parsedMainFromSubQuery = ExpressionHelper.ParseQuery (mainFromSubQuery);
 
-      var query = from s in ExpressionHelper.CreateQuerySource()
+      var query = from s in ExpressionHelper.CreateStudentQueryable()
                   select s.First;
       var parsedQuery = ExpressionHelper.ParseQuery (query);
       parsedQuery.MainFromClause.FromExpression = new SubQueryExpression (parsedMainFromSubQuery);
@@ -185,7 +185,7 @@ namespace Remotion.Data.UnitTests.Linq.Transformations
     [Test]
     public void IntegrationTest_TransformedQueryModel ()
     {
-      var query = from s1 in ExpressionHelper.CreateQuerySource ()
+      var query = from s1 in ExpressionHelper.CreateStudentQueryable ()
                   from sd in
                     (from sector in _sectorSource
                      where sector.ID > 10

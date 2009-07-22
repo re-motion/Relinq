@@ -97,29 +97,29 @@ namespace Remotion.Data.UnitTests.Linq
 
     public static QueryModel CreateQueryModel ()
     {
-      return CreateQueryModel (CreateMainFromClause("s", typeof (Student), CreateQuerySource()));
+      return CreateQueryModel (CreateMainFromClause("s", typeof (Student), CreateStudentQueryable()));
     }
 
 
     public static MainFromClause CreateMainFromClause ()
     {
-      IQueryable querySource = CreateQuerySource (); 
+      IQueryable querySource = CreateStudentQueryable (); 
       return CreateMainFromClause("main", typeof (int), querySource);
     }
 
     public static MainFromClause CreateMainFromClause_Student ()
     {
-      return CreateMainFromClause ("s", typeof (Student), CreateQuerySource());
+      return CreateMainFromClause ("s", typeof (Student), CreateStudentQueryable());
     }
 
     public static MainFromClause CreateMainFromClause_Detail ()
     {
-      return CreateMainFromClause ("sd", typeof (Student_Detail), CreateQuerySource_Detail ());
+      return CreateMainFromClause ("sd", typeof (Student_Detail), CreateStudentDetailQueryable ());
     }
 
     public static MainFromClause CreateMainFromClause_Detail_Detail ()
     {
-      return CreateMainFromClause ("sdd", typeof (Student_Detail_Detail), CreateQuerySource_Detail_Detail());
+      return CreateMainFromClause ("sdd", typeof (Student_Detail_Detail), CreateStudentDetailDetailQueryable());
     }
 
     public static AdditionalFromClause CreateAdditionalFromClause ()
@@ -177,7 +177,7 @@ namespace Remotion.Data.UnitTests.Linq
 
     public static MethodCallExpression CreateMethodCallExpression ()
     {
-      return CreateMethodCallExpression (CreateQuerySource ());
+      return CreateMethodCallExpression (CreateStudentQueryable ());
     }
 
     public static WhereClause CreateWhereClause ()
@@ -191,42 +191,42 @@ namespace Remotion.Data.UnitTests.Linq
       return CreateMainFromClause();
     }
 
-    public static IQueryable<Student> CreateQuerySource()
+    public static IQueryable<Student> CreateStudentQueryable()
     {
-      return CreateQuerySource (s_executor);
+      return CreateStudentQueryable (s_executor);
     }
         
-    public static IQueryable<Student> CreateQuerySource (IQueryExecutor executor)
+    public static IQueryable<Student> CreateStudentQueryable (IQueryExecutor executor)
     {
       return new TestQueryable<Student> (executor);
     }
 
-    public static IQueryable<Student_Detail> CreateQuerySource_Detail()
+    public static IQueryable<Student_Detail> CreateStudentDetailQueryable()
     {
-      return CreateQuerySource_Detail (s_executor);
+      return CreateStudentDetailQueryable (s_executor);
     }
 
-    public static IQueryable<Student_Detail> CreateQuerySource_Detail (IQueryExecutor executor)
+    public static IQueryable<Student_Detail> CreateStudentDetailQueryable (IQueryExecutor executor)
     {
       return new TestQueryable<Student_Detail> (executor);
     }
 
-    public static IQueryable<Student_Detail_Detail> CreateQuerySource_Detail_Detail ()
+    public static IQueryable<Student_Detail_Detail> CreateStudentDetailDetailQueryable ()
     {
-      return CreateQuerySource_Detail_Detail (s_executor);
+      return CreateStudentDetailDetailQueryable (s_executor);
     }
 
-    public static IQueryable<Student_Detail_Detail> CreateQuerySource_Detail_Detail (IQueryExecutor executor)
+    public static IQueryable<Student_Detail_Detail> CreateStudentDetailDetailQueryable (IQueryExecutor executor)
     {
       return new TestQueryable<Student_Detail_Detail> (executor);
     }
 
-    public static  IQueryable<IndustrialSector> CreateQuerySource_IndustrialSector ()
+    public static  IQueryable<IndustrialSector> CreateIndustrialSectorQueryable ()
     {
-      return CreateQuerySource_IndustrialSector (s_executor);
+      return CreateIndustrialSectorQueryable (s_executor);
     }
 
-    public static IQueryable<IndustrialSector> CreateQuerySource_IndustrialSector( IQueryExecutor executor)
+    public static IQueryable<IndustrialSector> CreateIndustrialSectorQueryable( IQueryExecutor executor)
     {
       return new TestQueryable<IndustrialSector> (executor);
     }

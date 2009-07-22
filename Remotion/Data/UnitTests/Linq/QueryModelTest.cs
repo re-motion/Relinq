@@ -312,7 +312,7 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void GetNewName_AlreadyExists_MainFromClause ()
     {
-      var mainFromClause = new MainFromClause ("test0", typeof (Student), ExpressionHelper.CreateQuerySource().Expression);
+      var mainFromClause = new MainFromClause ("test0", typeof (Student), ExpressionHelper.CreateStudentQueryable().Expression);
       var queryModel = ExpressionHelper.CreateQueryModel (mainFromClause);
       var identifier = queryModel.GetNewName ("test");
       Assert.That (identifier, Is.EqualTo ("test1"));
@@ -321,7 +321,7 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void GetNewName_AlreadyExists_ChangedMainFromClause ()
     {
-      var mainFromClause = new MainFromClause ("test0", typeof (Student), ExpressionHelper.CreateQuerySource().Expression);
+      var mainFromClause = new MainFromClause ("test0", typeof (Student), ExpressionHelper.CreateStudentQueryable().Expression);
       var queryModel = ExpressionHelper.CreateQueryModel();
       queryModel.MainFromClause = mainFromClause;
       var identifier = queryModel.GetNewName ("test");

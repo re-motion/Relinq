@@ -130,7 +130,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.QueryParserIntegrationT
     [Test]
     public void GroupByFollowedByWhere ()
     {
-      var query = (from s in ExpressionHelper.CreateQuerySource ()
+      var query = (from s in ExpressionHelper.CreateStudentQueryable ()
                    group s by s.HasDog).Where (g => g.Key);
 
       var queryModel = QueryParser.GetParsedQuery (query.Expression);

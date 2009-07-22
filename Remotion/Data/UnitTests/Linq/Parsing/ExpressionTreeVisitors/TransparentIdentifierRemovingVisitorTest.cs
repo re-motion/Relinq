@@ -291,8 +291,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
     [Test]
     public void IntegrationTest_WithExpressionNodes ()
     {
-      var query = from a in ExpressionHelper.CreateQuerySource ()
-                  from b in ExpressionHelper.CreateQuerySource()
+      var query = from a in ExpressionHelper.CreateStudentQueryable ()
+                  from b in ExpressionHelper.CreateStudentQueryable()
                   where a.ID > 5
                   select a.ID;
 

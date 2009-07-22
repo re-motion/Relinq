@@ -91,7 +91,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     [Test]
     public void ParseTree_MethodCallExpression ()
     {
-      var querySource = ExpressionHelper.CreateQuerySource();
+      var querySource = ExpressionHelper.CreateStudentQueryable();
       Expression<Func<Student, int>> selector = s => s.ID;
       var expression = ExpressionHelper.MakeExpression (() => querySource.Select (selector));
 
@@ -108,7 +108,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     [Test]
     public void ParseTree_MethodCallExpression_GetsGeneratedIdentifier ()
     {
-      var querySource = ExpressionHelper.CreateQuerySource ();
+      var querySource = ExpressionHelper.CreateStudentQueryable ();
       Expression<Func<Student, int>> selector = s => s.ID;
       var expression = ExpressionHelper.MakeExpression (() => querySource.Select (selector));
 
@@ -120,7 +120,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     [Test]
     public void ParseTree_MethodCallExpression_PropagatesNameToSourceNode ()
     {
-      var querySource = ExpressionHelper.CreateQuerySource ();
+      var querySource = ExpressionHelper.CreateStudentQueryable ();
       var expression = ExpressionHelper.MakeExpression (() => querySource.Select (s => s.ID)); // "s" gets propagated to MainSourceExpressionNode
 
       var result = _expressionTreeParser.ParseTree (expression);
@@ -133,7 +133,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     [Test]
     public void ParseTree_ComplexMethodCallExpression ()
     {
-      var querySource = ExpressionHelper.CreateQuerySource();
+      var querySource = ExpressionHelper.CreateStudentQueryable();
       Expression<Func<Student, int>> selector = s => s.ID;
       Expression<Func<Student, bool>> predicate = s => s.HasDog;
       var expression = ExpressionHelper.MakeExpression (() => querySource.Where (predicate).Select (selector));
@@ -255,7 +255,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     public void InferAssociatedIdentifierForSource_WithUnary_AfterConstant ()
     {
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression (
-          () => _intSource.Join (ExpressionHelper.CreateQuerySource(), i => i, s => s.ID, (i, s) => i));
+          () => _intSource.Join (ExpressionHelper.CreateStudentQueryable(), i => i, s => s.ID, (i, s) => i));
 
       var identifier = (string) PrivateInvoke.InvokeNonPublicMethod (_expressionTreeParser, "InferAssociatedIdentifierForSource", methodCallExpression);
       Assert.That (identifier, Is.EqualTo ("i"));

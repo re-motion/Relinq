@@ -60,7 +60,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.QueryParserIntegrationT
     [Test]
     public void WhereClauseFollowingResultOperator ()
     {
-      var query = (from s in ExpressionHelper.CreateQuerySource ()
+      var query = (from s in ExpressionHelper.CreateStudentQueryable ()
                    select s).Distinct ().Where (x => x.ID > 0);
       
       var expression = query.Expression;
@@ -86,7 +86,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.QueryParserIntegrationT
     [Test]
     public void PredicateFollowingResultOperator ()
     {
-      var expression = ExpressionHelper.MakeExpression (() => (from s in ExpressionHelper.CreateQuerySource ()
+      var expression = ExpressionHelper.MakeExpression (() => (from s in ExpressionHelper.CreateStudentQueryable ()
                                                                select s).Distinct ().Count(x => x.ID > 0));
 
       var queryModel = QueryParser.GetParsedQuery (expression);

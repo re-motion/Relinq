@@ -78,7 +78,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void GetResolvedExpression_DetectsSubQueries ()
     {
       var unresolvedExpressionWithSubQuery = 
-          ExpressionHelper.CreateLambdaExpression<int, int> (i => (from x in ExpressionHelper.CreateQuerySource () select i).Count());
+          ExpressionHelper.CreateLambdaExpression<int, int> (i => (from x in ExpressionHelper.CreateStudentQueryable () select i).Count());
       var result = _expressionResolver.GetResolvedExpression (
           unresolvedExpressionWithSubQuery.Body, unresolvedExpressionWithSubQuery.Parameters[0], ClauseGenerationContext);
 
@@ -89,7 +89,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void GetResolvedExpression_DetectsSubQueries_AfterResolving ()
     {
       var unresolvedExpressionWithSubQuery =
-          ExpressionHelper.CreateLambdaExpression<int, int> (i => (from x in ExpressionHelper.CreateQuerySource () select i).Count ());
+          ExpressionHelper.CreateLambdaExpression<int, int> (i => (from x in ExpressionHelper.CreateStudentQueryable () select i).Count ());
       var result = _expressionResolver.GetResolvedExpression (
           unresolvedExpressionWithSubQuery.Body, unresolvedExpressionWithSubQuery.Parameters[0], ClauseGenerationContext);
 
@@ -106,7 +106,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var context = new ClauseGenerationContext (QuerySourceClauseMapping, nodeTypeRegistry);
 
       var unresolvedExpressionWithSubQuery =
-          ExpressionHelper.CreateLambdaExpression<int, int> (i => (from x in ExpressionHelper.CreateQuerySource () select i).Count ());
+          ExpressionHelper.CreateLambdaExpression<int, int> (i => (from x in ExpressionHelper.CreateStudentQueryable () select i).Count ());
       var result = _expressionResolver.GetResolvedExpression (
           unresolvedExpressionWithSubQuery.Body, unresolvedExpressionWithSubQuery.Parameters[0], context);
 

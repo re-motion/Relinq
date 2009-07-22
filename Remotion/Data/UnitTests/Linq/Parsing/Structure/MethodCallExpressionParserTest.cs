@@ -106,7 +106,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     public void Parse_WithConstantExpression ()
     {
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (
-          q => q.Join (ExpressionHelper.CreateQuerySource(), i => i, s => s.ID, (i, s) => i));
+          q => q.Join (ExpressionHelper.CreateStudentQueryable(), i => i, s => s.ID, (i, s) => i));
 
       var result = _parser.Parse ("x", _source, methodCallExpression);
 
@@ -135,7 +135,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     [Test]
     public void Parse_WithNonEvaluatedParameter ()
     {
-      var innerSequence = ExpressionHelper.CreateQuerySource ();
+      var innerSequence = ExpressionHelper.CreateStudentQueryable ();
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (
           q => q.Join (innerSequence, i => i, s => s.ID, (i, s) => i));
 

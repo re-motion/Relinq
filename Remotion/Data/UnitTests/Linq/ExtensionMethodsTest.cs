@@ -33,7 +33,7 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void FetchMany ()
     {
-      var query = ExpressionHelper.CreateQuerySource();
+      var query = ExpressionHelper.CreateStudentQueryable();
       Expression<Func<Student, IEnumerable<int>>> relatedObjectSelector = s => s.Scores;
       var fetchedQuery = query.FetchMany (relatedObjectSelector);
 
@@ -47,7 +47,7 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void FetchOne ()
     {
-      var query = ExpressionHelper.CreateQuerySource ();
+      var query = ExpressionHelper.CreateStudentQueryable ();
       Expression<Func<Student, Student>> relatedObjectSelector = s => s.OtherStudent;
       var fetchedQuery = query.FetchOne (relatedObjectSelector);
 
@@ -61,7 +61,7 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void Fetch_WithSelectDifferentFromQueryBase ()
     {
-      var query = from sd in ExpressionHelper.CreateQuerySource_Detail ()
+      var query = from sd in ExpressionHelper.CreateStudentDetailQueryable ()
                   select sd.IndustrialSector;
       Expression<Func<IndustrialSector, IEnumerable<Student>>> relatedObjectSelector = i => i.Students;
       var fetchedQuery = query.FetchMany (relatedObjectSelector);
@@ -76,7 +76,7 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void Fetch_MultipleTimes ()
     {
-      var query = ExpressionHelper.CreateQuerySource ();
+      var query = ExpressionHelper.CreateStudentQueryable ();
       var f1 = query.FetchMany (s => s.Scores);
       var f2 = f1.FetchMany (s => s.Friends);
       var f3 = query.FetchMany (s => s.Scores);
@@ -107,7 +107,7 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void Fetch_Result ()
     {
-      var query = ExpressionHelper.CreateQuerySource_IndustrialSector ();
+      var query = ExpressionHelper.CreateIndustrialSectorQueryable ();
       Expression<Func<IndustrialSector, IEnumerable<Student>>> relatedObjectSelector1 = i => i.Students;
       Expression<Func<Student, IEnumerable<Student>>> relatedObjectSelector2 = s => s.Friends;
       Expression<Func<Student, IEnumerable<int>>> relatedObjectSelector3 = s => s.Scores;

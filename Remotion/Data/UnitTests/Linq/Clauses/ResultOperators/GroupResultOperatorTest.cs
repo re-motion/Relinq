@@ -148,7 +148,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       // group i.ToString() by i % 3
 
       var expectedInput = new QuerySourceReferenceExpression (
-          ExpressionHelper.CreateMainFromClause("i", typeof (int), ExpressionHelper.CreateQuerySource()));
+          ExpressionHelper.CreateMainFromClause("i", typeof (int), ExpressionHelper.CreateStudentQueryable()));
 
       var keySelector = new InputDependentExpression (ExpressionHelper.CreateLambdaExpression<int, int> (i => i % 3), expectedInput);
       var elementSelector = new InputDependentExpression (ExpressionHelper.CreateLambdaExpression<int, string> (i => i.ToString()), expectedInput);
@@ -166,7 +166,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     public void GetResultType ()
     {
       var expectedInput = new QuerySourceReferenceExpression (
-          ExpressionHelper.CreateMainFromClause ("s", typeof (Student), ExpressionHelper.CreateQuerySource ()));
+          ExpressionHelper.CreateMainFromClause ("s", typeof (Student), ExpressionHelper.CreateStudentQueryable ()));
 
       var keySelector = new InputDependentExpression (ExpressionHelper.CreateLambdaExpression<Student, int> (s => s.ID), expectedInput);
       var elementSelector = new InputDependentExpression (ExpressionHelper.CreateLambdaExpression<Student, string> (s => s.ToString ()), expectedInput);
@@ -179,7 +179,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     public void GetResultType_DerivedItemType ()
     {
       var expectedInput = new QuerySourceReferenceExpression (
-          ExpressionHelper.CreateMainFromClause ("s", typeof (Student), ExpressionHelper.CreateQuerySource ()));
+          ExpressionHelper.CreateMainFromClause ("s", typeof (Student), ExpressionHelper.CreateStudentQueryable ()));
 
       var keySelector = new InputDependentExpression (ExpressionHelper.CreateLambdaExpression<Student, int> (s => s.ID), expectedInput);
       var elementSelector = new InputDependentExpression (ExpressionHelper.CreateLambdaExpression<Student, string> (s => s.ToString ()), expectedInput);
@@ -207,9 +207,9 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     public void GetResultType_KeyAndElementSelectorDontMatch ()
     {
       var expectedInput1 = new QuerySourceReferenceExpression (
-          ExpressionHelper.CreateMainFromClause ("s", typeof (Student), ExpressionHelper.CreateQuerySource ()));
+          ExpressionHelper.CreateMainFromClause ("s", typeof (Student), ExpressionHelper.CreateStudentQueryable ()));
       var expectedInput2 = new QuerySourceReferenceExpression (
-          ExpressionHelper.CreateMainFromClause ("i", typeof (int), ExpressionHelper.CreateQuerySource ()));
+          ExpressionHelper.CreateMainFromClause ("i", typeof (int), ExpressionHelper.CreateStudentQueryable ()));
 
       var keySelector = new InputDependentExpression (ExpressionHelper.CreateLambdaExpression<Student, int> (s => s.ID), expectedInput1);
       var elementSelector = new InputDependentExpression (ExpressionHelper.CreateLambdaExpression<int, string> (i => i.ToString ()), expectedInput2);

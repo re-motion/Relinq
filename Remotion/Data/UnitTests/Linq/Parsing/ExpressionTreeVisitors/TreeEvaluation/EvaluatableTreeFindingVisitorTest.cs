@@ -108,7 +108,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors.TreeEvalua
     [Test]
     public void MethodCall_WithIQueryableObject_IsNotEvaluatable ()
     {
-      var source = ExpressionHelper.CreateQuerySource ();
+      var source = ExpressionHelper.CreateStudentQueryable ();
       var expression = ExpressionHelper.MakeExpression (() => source.ToString());
 
       var evaluationInfo = EvaluatableTreeFindingVisitor.Analyze (expression);
@@ -118,7 +118,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors.TreeEvalua
     [Test]
     public void MethodCall_WithIQueryableParameter_IsNotEvaluatable ()
     {
-      var source = ExpressionHelper.CreateQuerySource ();
+      var source = ExpressionHelper.CreateStudentQueryable ();
       var expression = ExpressionHelper.MakeExpression (() => source.Count ());
 
       var evaluationInfo = EvaluatableTreeFindingVisitor.Analyze (expression);

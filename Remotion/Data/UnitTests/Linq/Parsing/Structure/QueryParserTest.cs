@@ -176,7 +176,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     public void CreateQueryModel_SubQueries_AreResolved ()
     {
       var expression = ExpressionHelper.MakeExpression (
-           () => ExpressionHelper.CreateQuerySource ().Where (i => (from x in ExpressionHelper.CreateQuerySource () select i).Count () > 0));
+           () => ExpressionHelper.CreateStudentQueryable ().Where (i => (from x in ExpressionHelper.CreateStudentQueryable () select i).Count () > 0));
 
       var result = _queryParser.GetParsedQuery (expression);
       var whereClause = (WhereClause) result.BodyClauses[0];

@@ -36,7 +36,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     public void SetUp ()
     {
       _dependentExpression = ExpressionHelper.CreateLambdaExpression<Student, string> (s => s.First);
-      var mainFromClause = ExpressionHelper.CreateMainFromClause ("s", typeof (Student), ExpressionHelper.CreateQuerySource());
+      var mainFromClause = ExpressionHelper.CreateMainFromClause ("s", typeof (Student), ExpressionHelper.CreateStudentQueryable());
       _expectedInput = new QuerySourceReferenceExpression (mainFromClause);
       _expression = new InputDependentExpression (_dependentExpression, _expectedInput);
     }
