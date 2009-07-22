@@ -15,6 +15,7 @@
 // 
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
@@ -32,7 +33,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     [SetUp]
     public void SetUp ()
     {
-      _resultOperator = new ContainsResultOperator ("test");
+      _resultOperator = new ContainsResultOperator (Expression.Constant("test"));
     }
 
     [Test]
@@ -46,6 +47,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     }
 
     [Test]
+    [ExpectedException (typeof (NotImplementedException))]
     public void ExecuteInMemory ()
     {
       object items = new[] { "one", "two", "three", "test"};

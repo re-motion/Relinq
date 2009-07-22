@@ -48,11 +48,6 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       OptionalDefaultValue = optionalDefaultValue;
     }
 
-    public DefaultIfEmptyExpressionNode (MethodCallExpressionParseInfo parseInfo)
-      : this (parseInfo, null)
-    {
-    }
-
     public Expression OptionalDefaultValue { get; set; }
 
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)

@@ -36,13 +36,13 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                              GetSupportedMethod (() => Enumerable.Contains<object>(null, null))
                                                            };
 
-    public ContainsExpressionNode (MethodCallExpressionParseInfo parseInfo, object item)
+    public ContainsExpressionNode (MethodCallExpressionParseInfo parseInfo, Expression item)
         : base(parseInfo, null, null)
     {
       Item = item;
     }
 
-    public object Item { get; set; }
+    public Expression Item { get; set; }
 
 
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)

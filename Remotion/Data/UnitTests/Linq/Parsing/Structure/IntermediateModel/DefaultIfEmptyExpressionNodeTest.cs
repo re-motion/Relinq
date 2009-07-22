@@ -14,9 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.ResultOperators;
@@ -29,26 +27,35 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
   [TestFixture]
   public class DefaultIfEmptyExpressionNodeTest : ExpressionNodeTestBase
   {
-    private DefaultIfEmptyExpressionNode _node;
+    private DefaultIfEmptyExpressionNode _nodeWithDefaultValue;
+    private DefaultIfEmptyExpressionNode _nodeWithoutDefaultValue;
+    private ConstantExpression _defaultValue;
 
     public override void SetUp ()
     {
       base.SetUp ();
-      _node = new DefaultIfEmptyExpressionNode (CreateParseInfo ());
+      _defaultValue = Expression.Constant (100);
+      _nodeWithDefaultValue = new DefaultIfEmptyExpressionNode (CreateParseInfo (), _defaultValue);
+      _nodeWithoutDefaultValue = new DefaultIfEmptyExpressionNode (CreateParseInfo (), null);
     }
 
     [Test]
-    public void SupportedMethod ()
+    public void SupportedMethod_NoDefaultValue ()
     {
-      AssertSupportedMethod_Generic (DefaultIfEmptyExpressionNode.SupportedMethods, 
-          q => q.DefaultIfEmpty (), q => q.DefaultIfEmpty (null), e => e.DefaultIfEmpty (), e => e.DefaultIfEmpty (null));
+      AssertSupportedMethod_Generic (DefaultIfEmptyExpressionNode.SupportedMethods,  q => q.DefaultIfEmpty (), e => e.DefaultIfEmpty ());
+    }
+
+    [Test]
+    public void SupportedMethod_WithDefaultValue ()
+    {
+      AssertSupportedMethod_Generic (DefaultIfEmptyExpressionNode.SupportedMethods, q => q.DefaultIfEmpty (null), e => e.DefaultIfEmpty (null));
     }
 
     [Test]
     public void Resolve_PassesExpressionToSource ()
     {
       var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();
-      var node = new DefaultIfEmptyExpressionNode (CreateParseInfo (sourceMock));
+      var node = new DefaultIfEmptyExpressionNode (CreateParseInfo (sourceMock), null);
       var expression = ExpressionHelper.CreateLambdaExpression ();
       var parameter = ExpressionHelper.CreateParameterExpression ();
       var expectedResult = ExpressionHelper.CreateExpression ();
@@ -63,28 +70,23 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void Apply ()
     {
-      var result = _node.Apply (QueryModel, ClauseGenerationContext);
-      Assert.That (result, Is.SameAs (QueryModel));      
+      TestApply (_nodeWithDefaultValue, typeof (DefaultIfEmptyResultOperator));
     }
 
-    private void AssertSupportedMethod_Generic<TResult1, TResult2, TResult3, TResult4> (
-       MethodInfo[] supportedMethods,
-       Expression<Func<IQueryable<object>, TResult1>> queryableMethodCall1,
-       Expression<Func<IQueryable<object>, TResult2>> queryableMethodCall2,
-       Expression<Func<IEnumerable<object>, TResult3>> enumerableMethodCall1,
-       Expression<Func<IEnumerable<object>, TResult4>> enumerableMethodCall2)
+    [Test]
+    public void Apply_WithDefaultValue ()
     {
-      var queryableMethod1 = GetGenericMethodDefinition (queryableMethodCall1);
-      Assert.That (supportedMethods, List.Contains (queryableMethod1));
+      _nodeWithDefaultValue.Apply (QueryModel, ClauseGenerationContext);
+      var resultOperator = ((DefaultIfEmptyResultOperator) QueryModel.ResultOperators[0]);
+      Assert.That (resultOperator.OptionalDefaultValue, Is.SameAs (_defaultValue));
+    }
 
-      var queryableMethod2 = GetGenericMethodDefinition (queryableMethodCall2);
-      Assert.That (supportedMethods, List.Contains (queryableMethod2));
-
-      var enumerableMethod1 = GetGenericMethodDefinition_Enumerable (enumerableMethodCall1);
-      Assert.That (supportedMethods, List.Contains (enumerableMethod1));
-
-      var enumerableMethod2 = GetGenericMethodDefinition_Enumerable (enumerableMethodCall2);
-      Assert.That (supportedMethods, List.Contains (enumerableMethod2));
+    [Test]
+    public void Apply_WithoutDefaultValue ()
+    {
+      _nodeWithoutDefaultValue.Apply (QueryModel, ClauseGenerationContext);
+      var resultOperator = ((DefaultIfEmptyResultOperator) QueryModel.ResultOperators[0]);
+      Assert.That (resultOperator.OptionalDefaultValue, Is.Null);
     }
   }
 }

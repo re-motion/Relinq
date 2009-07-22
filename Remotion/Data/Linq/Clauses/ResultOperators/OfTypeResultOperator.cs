@@ -22,6 +22,16 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
+  /// <summary>
+  /// Represents the "OfType" part of a query. This is a result operator, operating on the whole result set of a query.
+  /// </summary>
+  /// <example>
+  /// In C#, the "OfType" clause in the following example corresponds to a <see cref="OfTypeResultOperator"/>.
+  /// <code>
+  /// var query = (from s in Students
+  ///              select s.ID).OfType&lt;int&gt;();
+  /// </code>
+  /// </example>
   public class OfTypeResultOperator: ResultOperatorBase
   {
     private Type _ofTypeItem;

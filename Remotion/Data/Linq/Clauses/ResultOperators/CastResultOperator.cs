@@ -22,6 +22,16 @@ using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
+  /// <summary>
+  /// Represents the "Cast" part of a query. This is a result operator, operating on the whole result set of a query.
+  /// </summary>
+  /// <example>
+  /// In C#, the "Cast" clause in the following example corresponds to a <see cref="CastResultOperator"/>.
+  /// <code>
+  /// var query = (from s in Students
+  ///              select s.ID).Cast&lt;int&gt;();
+  /// </code>
+  /// </example>
   public class CastResultOperator : ResultOperatorBase
   {
     private Type _castItemType;

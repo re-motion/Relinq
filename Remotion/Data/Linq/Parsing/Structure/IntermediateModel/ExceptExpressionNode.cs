@@ -40,13 +40,14 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Enumerable.Except<object> (null, null)),
                                                            };
 
-    public ExceptExpressionNode (MethodCallExpressionParseInfo parseInfo, IEnumerable<object> source2)
+    public ExceptExpressionNode (MethodCallExpressionParseInfo parseInfo, Expression source2)
         : base (parseInfo, null, null)
     {
+      ArgumentUtility.CheckNotNull ("source2", source2);
       Source2 = source2;
     }
 
-    protected IEnumerable<object> Source2 { get; set; }
+    public Expression Source2 { get; private set; }
     
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
     {

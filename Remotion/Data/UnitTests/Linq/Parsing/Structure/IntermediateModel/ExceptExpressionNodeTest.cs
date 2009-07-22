@@ -14,8 +14,8 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.ResultOperators;
@@ -28,12 +28,12 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
   public class ExceptExpressionNodeTest : ExpressionNodeTestBase
   {
     private ExceptExpressionNode _node;
-    private string[] _source2;
+    private Expression _source2;
 
     public override void SetUp ()
     {
       base.SetUp ();
-      _source2 = new[] {"test", "test2"};
+      _source2 = Expression.Constant (new[] { "test1", "test2" });
       _node = new ExceptExpressionNode (CreateParseInfo (), _source2);
     }
 
@@ -62,7 +62,10 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void Apply ()
     {
-      TestApply (_node, typeof (ExceptResultOperator));
+      var result = _node.Apply (QueryModel, ClauseGenerationContext);
+      Assert.That (result, Is.SameAs (QueryModel));
+
+      Assert.That (((ExceptResultOperator) QueryModel.ResultOperators[0]).Source2, Is.SameAs (_source2));
     }
   }
 }

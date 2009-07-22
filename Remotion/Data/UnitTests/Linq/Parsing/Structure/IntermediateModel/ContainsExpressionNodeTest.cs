@@ -14,11 +14,11 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
-using System.Linq;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 {
@@ -30,14 +30,14 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public override void SetUp ()
     {
       base.SetUp ();
-      _node = new ContainsExpressionNode (CreateParseInfo (), "test");
+      _node = new ContainsExpressionNode (CreateParseInfo (), Expression.Constant("test"));
     }
 
-    //[Test]
-    //public void SupportedMethods ()
-    //{
-    //  AssertSupportedMethod_Generic (ContainsExpressionNode.SupportedMethods, q => q.Contains (null), e => e.Contains (null));
-    //}
+    [Test]
+    public void SupportedMethods ()
+    {
+      AssertSupportedMethod_Generic (ContainsExpressionNode.SupportedMethods, q => q.Contains (null), e => e.Contains (null));
+    }
 
     [Test]
     [ExpectedException (typeof (InvalidOperationException))]

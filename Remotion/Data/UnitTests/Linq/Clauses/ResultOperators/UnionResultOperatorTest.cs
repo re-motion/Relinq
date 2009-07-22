@@ -16,6 +16,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
@@ -24,20 +25,33 @@ using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.UnitTests.Linq.TestDomain;
 using Remotion.Utilities;
 
-
 namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
 {
   [TestFixture]
   public class UnionResultOperatorTest
   {
     private UnionResultOperator _resultOperator;
-    private string[] _source2;
+    private Expression _source2;
 
     [SetUp]
     public void SetUp ()
     {
-      _source2 = new[] { "test1", "test2" };
+      _source2 = Expression.Constant (new[] { "test2" });
       _resultOperator = new UnionResultOperator (_source2);
+    }
+
+    [Test]
+    public void GetConstantSource2 ()
+    {
+      Assert.That (_resultOperator.GetConstantSource2 (), Is.EqualTo (new[] { "test2" }));
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException))]
+    public void GetConstantSource2_NoConstantExpression ()
+    {
+      var resultOperator = new UnionResultOperator (Expression.Parameter (typeof (IEnumerable<string>), "ss"));
+      resultOperator.GetConstantSource2 ();
     }
 
     [Test]
@@ -54,21 +68,22 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       var clone = _resultOperator.Clone (cloneContext);
 
       Assert.That (clone, Is.InstanceOfType (typeof (UnionResultOperator)));
+      Assert.That (((UnionResultOperator) clone).Source2, Is.SameAs (_source2));
     }
 
     [Test]
     public void ExecuteInMemory ()
     {
-      object items = new[] {"test3"};
+      var items = new[] { "test1", "test3" };
       var result = _resultOperator.ExecuteInMemory (items);
 
-      Assert.That (((IEnumerable<string>) result).ToArray (), Is.EquivalentTo (new[] { "test1", "test2", "test3" }));
+      Assert.That (result.ToArray (), Is.EquivalentTo (new[] { "test1", "test2", "test3" }));
     }
 
     [Test]
     public void GetResultType ()
     {
-      Assert.That (_resultOperator.GetResultType (typeof (IQueryable<Student>)), Is.SameAs (typeof (IQueryable<Student>)));
+      Assert.That (_resultOperator.GetResultType (typeof (IQueryable<string>)), Is.SameAs (typeof (IQueryable<string>)));
     }
 
     [Test]
@@ -76,6 +91,13 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     public void GetResultType_InvalidType ()
     {
       _resultOperator.GetResultType (typeof (Student));
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentTypeException))]
+    public void GetResultType_InvalidEnumerable ()
+    {
+      _resultOperator.GetResultType (typeof (IEnumerable<Student>));
     }
   }
 }

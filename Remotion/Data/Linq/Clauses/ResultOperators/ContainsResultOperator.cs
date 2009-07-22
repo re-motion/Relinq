@@ -34,15 +34,15 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   /// </example>
   public class ContainsResultOperator : ResultOperatorBase
   {
-    private object _item;
+    private Expression _item;
 
-    public ContainsResultOperator (object item)
+    public ContainsResultOperator (Expression item)
         : base (ScalarExecutionStrategy.Instance)
     {
       Item = item;
     }
 
-    public object Item
+    public Expression Item
     {
       get { return _item; }
       set
@@ -66,7 +66,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     public bool ExecuteInMemory<T> (IEnumerable<T> input)
     {
       ArgumentUtility.CheckNotNull ("input", input);
-      return input.Contains ((T) Item);
+      throw new NotImplementedException();
     }
 
     public override Type GetResultType (Type inputResultType)

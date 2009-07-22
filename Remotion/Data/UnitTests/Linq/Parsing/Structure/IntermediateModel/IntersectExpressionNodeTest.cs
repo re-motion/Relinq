@@ -15,6 +15,7 @@
 // 
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.ResultOperators;
@@ -27,12 +28,12 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
   public class IntersectExpressionNodeTest : ExpressionNodeTestBase
   {
     private IntersectExpressionNode _node;
-    private string[] _source2;
+    private Expression _source2;
 
     public override void SetUp ()
     {
       base.SetUp ();
-      _source2 = new[] { "test", "test2" };
+      _source2 = Expression.Constant (new[] { "test1", "test2" });
       _node = new IntersectExpressionNode (CreateParseInfo (), _source2);
     }
 
@@ -46,7 +47,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void Resolve_PassesExpressionToSource ()
     {
       var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();
-      var node = new IntersectExpressionNode (CreateParseInfo (sourceMock), _source2);
+      var node = new IntersectExpressionNode (CreateParseInfo (sourceMock),_source2);
       var expression = ExpressionHelper.CreateLambdaExpression ();
       var parameter = ExpressionHelper.CreateParameterExpression ();
       var expectedResult = ExpressionHelper.CreateExpression ();
@@ -61,7 +62,10 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void Apply ()
     {
-      TestApply (_node, typeof (IntersectResultOperator));
+      var result = _node.Apply (QueryModel, ClauseGenerationContext);
+      Assert.That (result, Is.SameAs (QueryModel));
+
+      Assert.That (((IntersectResultOperator) QueryModel.ResultOperators[0]).Source2, Is.SameAs (_source2));
     }
   }
 }

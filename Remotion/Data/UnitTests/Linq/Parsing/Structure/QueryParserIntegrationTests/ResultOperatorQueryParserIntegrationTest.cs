@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
@@ -131,6 +132,187 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.QueryParserIntegrationT
       CheckResolvedExpression<Student, int> (takeResultOperator.Count, mainFromClause, s => s.ID);
 
       Assert.That (subQueryModel.GetResultType (), Is.SameAs (typeof (IQueryable<Student>)));
+    }
+
+    [Test]
+    public void Average ()
+    {
+      var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
+                                                          select s.ID).Average());
+
+      var queryModel = QueryParser.GetParsedQuery (expression);
+
+      Assert.That (queryModel.GetResultType (), Is.SameAs (typeof (int)));
+
+      var mainFromClause = queryModel.MainFromClause;
+      CheckConstantQuerySource (mainFromClause.FromExpression, QuerySource);
+
+      Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (AverageResultOperator)));
+      
+      CheckResolvedExpression<Student, int> (queryModel.SelectClause.Selector, mainFromClause, s => s.ID);
+    }
+
+    [Test]
+    public void LongCount ()
+    {
+      var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
+                                                               select s.ID).LongCount ());
+
+      var queryModel = QueryParser.GetParsedQuery (expression);
+
+      Assert.That (queryModel.GetResultType (), Is.SameAs (typeof (long)));
+
+      var mainFromClause = queryModel.MainFromClause;
+      CheckConstantQuerySource (mainFromClause.FromExpression, QuerySource);
+
+      Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (LongCountResultOperator)));
+
+      CheckResolvedExpression<Student, int> (queryModel.SelectClause.Selector, mainFromClause, s => s.ID);
+    }
+
+    [Test]
+    public void Skip ()
+    {
+      var query = (from s in ExpressionHelper.CreateStudentQueryable() 
+                   select s.ID).Skip (1);
+
+      var queryModel = QueryParser.GetParsedQuery (query.Expression);
+      Assert.That (queryModel.GetResultType (), Is.SameAs (typeof (IQueryable<int>)));
+
+      var mainFromClause = queryModel.MainFromClause;
+
+      Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (SkipResultOperator)));
+      var skipResultOperator = (SkipResultOperator) queryModel.ResultOperators[0];
+      CheckResolvedExpression<int,int> (skipResultOperator.Count, mainFromClause, i => 1);
+    }
+
+    [Test]
+    public void Reverse ()
+    {
+      var query = (from s in ExpressionHelper.CreateStudentQueryable ()
+                   select s).Reverse ();
+
+      var queryModel = QueryParser.GetParsedQuery (query.Expression);
+      Assert.That (queryModel.GetResultType (), Is.SameAs (typeof (IQueryable<Student>)));
+
+      var mainFromClause = queryModel.MainFromClause;
+
+      Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (ReverseResultOperator)));
+      var skipResultOperator = (ReverseResultOperator) queryModel.ResultOperators[0];
+      Assert.That (skipResultOperator, Is.Not.Null);
+
+      var selectClause = queryModel.SelectClause;
+      Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedQuerySource, Is.SameAs (mainFromClause));
+    }
+
+    [Test]
+    public void Except ()
+    {
+      IEnumerable<Student> students = new[] { new Student() };
+      var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
+                                                               select s).Except (students));
+      
+      var queryModel = QueryParser.GetParsedQuery (expression);
+      Assert.That (queryModel.GetResultType (), Is.SameAs (typeof (IQueryable<Student>)));
+
+      var mainFromClause = queryModel.MainFromClause;
+
+      Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (ExceptResultOperator)));
+      Assert.That (((ExceptResultOperator) queryModel.ResultOperators[0]).GetConstantSource2(), Is.SameAs (students));
+      
+      var selectClause = queryModel.SelectClause;
+      Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedQuerySource, Is.SameAs (mainFromClause));
+    }
+
+    [Test]
+    public void Intersect ()
+    {
+      IEnumerable<Student> students = new[] { new Student () };
+      var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
+                                                               select s).Intersect (students));
+
+      var queryModel = QueryParser.GetParsedQuery (expression);
+      Assert.That (queryModel.GetResultType (), Is.SameAs (typeof (IQueryable<Student>)));
+
+      var mainFromClause = queryModel.MainFromClause;
+
+      Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (IntersectResultOperator)));
+      Assert.That (((IntersectResultOperator) queryModel.ResultOperators[0]).GetConstantSource2 (), Is.SameAs (students));
+      
+      var selectClause = queryModel.SelectClause;
+      Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedQuerySource, Is.SameAs (mainFromClause));
+    }
+
+    [Test]
+    public void Union ()
+    {
+      IEnumerable<Student> students = new[] { new Student () };
+      var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
+                                                               select s).Union (students));
+
+
+      var queryModel = QueryParser.GetParsedQuery (expression);
+      Assert.That (queryModel.GetResultType (), Is.SameAs (typeof (IQueryable<Student>)));
+
+      var mainFromClause = queryModel.MainFromClause;
+
+      Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (UnionResultOperator)));
+      Assert.That (((UnionResultOperator) queryModel.ResultOperators[0]).GetConstantSource2 (), Is.SameAs (students));
+      
+      var selectClause = queryModel.SelectClause;
+      Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedQuerySource, Is.SameAs (mainFromClause));
+    }
+
+    [Test]
+    public void DefaultIfEmpty ()
+    {
+      var student = new Student ();
+      var query = (from s in ExpressionHelper.CreateStudentQueryable ()
+                   select s).DefaultIfEmpty (student);
+
+      var queryModel = QueryParser.GetParsedQuery (query.Expression);
+      Assert.That (queryModel.GetResultType (), Is.SameAs (typeof (IQueryable<Student>)));
+
+      Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (DefaultIfEmptyResultOperator)));
+      Assert.That (((DefaultIfEmptyResultOperator) queryModel.ResultOperators[0]).GetConstantOptionalDefaultValue(), Is.SameAs (student));
+    }
+
+    [Test]
+    public void Cast ()
+    {
+      var query = (from s in ExpressionHelper.CreateStudentQueryable()
+                   select s.ID).Cast<double>();
+      
+      var queryModel = QueryParser.GetParsedQuery (query.Expression);
+      Assert.That (queryModel.GetResultType (), Is.SameAs (typeof (IQueryable<double>)));
+
+      var castResultOperator = (CastResultOperator) queryModel.ResultOperators[0];
+      Assert.That (castResultOperator.CastItemType, Is.SameAs (typeof (double)));
+
+      Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (CastResultOperator)));
+    }
+
+    [Test]
+    public void Contains ()
+    {
+      var student = new Student ();
+      var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
+                                                               select s).Contains (student));
+
+      var queryModel = QueryParser.GetParsedQuery (expression);
+      Assert.That (queryModel.GetResultType (), Is.SameAs (typeof (bool)));
+
+      Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (ContainsResultOperator)));
     }
   }
 }

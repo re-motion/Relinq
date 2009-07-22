@@ -37,10 +37,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void SupportedMethod_WithoutSelector_OnDecimal ()
     {
-      AssertSupportedMethod_NonGeneric (
-          AverageExpressionNode.SupportedMethods,
-          q => ((IQueryable<decimal>) q).Average (),
-          e => ((IEnumerable<decimal>) e).Average ());
+      AssertSupportedMethod_NonGeneric (AverageExpressionNode.SupportedMethods, q => ((IQueryable<decimal>) q).Average (), e => ((IEnumerable<decimal>) e).Average ());
     }
 
     [Test]

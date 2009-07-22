@@ -14,9 +14,12 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
+using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
@@ -25,7 +28,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   /// Represents the union part of a query. This is a result operator, operating on the whole result set of a query.
   /// </summary>
   /// <example>
-  /// In C#, the "union" clause in the following example corresponds to a <see cref="UnionResultOperator"/>.
+  /// In C#, the "Union" clause in the following example corresponds to a <see cref="UnionResultOperator"/>.
   /// <code>
   /// var query = (from s in Students
   ///              select s).Union(students2);
@@ -33,14 +36,51 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   /// </example>
   public class UnionResultOperator : ResultOperatorBase
   {
-    public UnionResultOperator (IEnumerable<object> source2)
+    private Expression _source2;
+    
+    public UnionResultOperator (Expression source2)
       : base (CollectionExecutionStrategy.Instance)
     {
       ArgumentUtility.CheckNotNull ("source2", source2);
       Source2 = source2;
     }
 
-    protected IEnumerable<object> Source2 { get; set; }
+    /// <summary>
+    /// Gets or sets the second source of this result operator, that is, an enumerable containing the items united with the input sequence.
+    /// </summary>
+    public Expression Source2
+    {
+      get { return _source2; }
+      set 
+      {
+        ArgumentUtility.CheckNotNull ("value", value);
+        ReflectionUtility.GetItemTypeOfIEnumerable (value.Type, "value"); // check that Source2 really is an IEnumerable<T>
+
+        _source2 = value; 
+      }
+    }
+
+    /// <summary>
+    /// Gets the value of <see cref="Source2"/>, assuming <see cref="Source2"/> holds a <see cref="ConstantExpression"/>. If it doesn't,
+    /// an Exception is thrown.
+    /// </summary>
+    /// <returns>The constant value of <see cref="Source2"/>.</returns>
+    public IEnumerable GetConstantSource2 ()
+    {
+      var source2AsConstantExpression = Source2 as ConstantExpression;
+      if (source2AsConstantExpression != null)
+      {
+        return (IEnumerable) source2AsConstantExpression.Value;
+      }
+      else
+      {
+        var message = string.Format (
+            "Source2 ('{0}') is no ConstantExpression, it is a {1}.",
+            FormattingExpressionTreeVisitor.Format (Source2),
+            Source2.GetType ().Name);
+        throw new InvalidOperationException (message);
+      }
+    }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
@@ -55,13 +95,29 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
 
     public IEnumerable<T> ExecuteInMemory<T> (IEnumerable<T> input)
     {
-      return input.Union<T> ((IEnumerable<T>) Source2);
+
+      return input.Union ((IEnumerable<T>) GetConstantSource2());
     }
 
     public override Type GetResultType (Type inputResultType)
     {
       ArgumentUtility.CheckNotNull ("inputResultType", inputResultType);
-      ReflectionUtility.GetItemTypeOfIEnumerable (inputResultType, "inputResultType"); // check whether inputResultType implements IEnumerable<T>
+      var inputItemType = ReflectionUtility.GetItemTypeOfIEnumerable (inputResultType, "inputResultType");
+      var source2ItemType = ReflectionUtility.GetItemTypeOfIEnumerable (Source2.Type, "Source2");
+
+      if (inputItemType != source2ItemType)
+      {
+        var expectedEnumerableType = typeof (IEnumerable<>).MakeGenericType (Source2.Type);
+        var message = string.Format (
+            "The input's item type must be the same as Source2's item type. Expected '{0}', but got '{1}'.",
+            expectedEnumerableType,
+            inputResultType);
+        throw new ArgumentTypeException (
+            message,
+            "inputResultType",
+            expectedEnumerableType,
+            inputResultType);
+      }
 
       return inputResultType;
     }
@@ -70,5 +126,6 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     {
       return "Union()";
     }
+    
   }
 }
