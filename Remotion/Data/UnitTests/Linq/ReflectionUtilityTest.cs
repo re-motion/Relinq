@@ -51,5 +51,24 @@ namespace Remotion.Data.UnitTests.Linq
     {
       ReflectionUtility.GetItemTypeOfIEnumerable (typeof (int), "x");
     }
+
+    [Test]
+    public void TryGetItemTypeOfIEnumerable_ArgumentImplementsIEnumerable ()
+    {
+      Assert.That (ReflectionUtility.TryGetItemTypeOfIEnumerable (typeof (List<int>)), Is.SameAs (typeof (int)));
+    }
+
+    [Test]
+    public void TryGetItemTypeOfIEnumerable_ArgumentIsIEnumerable ()
+    {
+      Assert.That (ReflectionUtility.TryGetItemTypeOfIEnumerable (typeof (IEnumerable<int>)), Is.SameAs (typeof (int)));
+      Assert.That (ReflectionUtility.TryGetItemTypeOfIEnumerable (typeof (IEnumerable<IEnumerable<string>>)), Is.SameAs (typeof (IEnumerable<string>)));
+    }
+
+    [Test]
+    public void TryGetItemTypeOfIEnumerable_InvalidType ()
+    {
+      Assert.That (ReflectionUtility.TryGetItemTypeOfIEnumerable (typeof (int)), Is.Null);
+    }
   }
 }

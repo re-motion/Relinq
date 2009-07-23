@@ -35,14 +35,25 @@ namespace Remotion.Data.Linq
       ArgumentUtility.CheckNotNull ("enumerableType", enumerableType);
       ArgumentUtility.CheckNotNullOrEmpty ("argumentName", argumentName);
 
-      Type implementedEnumerableInterface = GetImplementedIEnumerableType(enumerableType);
-      if (implementedEnumerableInterface == null)
+      Type itemType = TryGetItemTypeOfIEnumerable (enumerableType);
+      if (itemType == null)
       {
         var message = string.Format ("Expected a type implementing IEnumerable<T>, but found '{0}'.", enumerableType.FullName);
         throw new ArgumentTypeException (message, argumentName, typeof (IEnumerable<>), enumerableType);
       }
 
-      return implementedEnumerableInterface.GetGenericArguments ()[0];
+      return itemType;
+    }
+
+    public static Type TryGetItemTypeOfIEnumerable (Type possibleEnumerableType)
+    {
+      ArgumentUtility.CheckNotNull ("possibleEnumerableType", possibleEnumerableType);
+
+      Type implementedEnumerableInterface = GetImplementedIEnumerableType (possibleEnumerableType);
+      if (implementedEnumerableInterface == null)
+        return null;
+      else
+        return implementedEnumerableInterface.GetGenericArguments ()[0];
     }
 
     private static Type GetImplementedIEnumerableType (Type enumerableType)
