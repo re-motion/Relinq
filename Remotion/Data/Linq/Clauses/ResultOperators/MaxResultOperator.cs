@@ -14,7 +14,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Utilities;
@@ -46,16 +45,17 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new MaxResultOperator();
     }
 
-    public override object ExecuteInMemory (object input)
+    public override IExecuteInMemoryData ExecuteInMemory (IExecuteInMemoryData input)
     {
       ArgumentUtility.CheckNotNull ("input", input);
-      return InvokeGenericOnEnumerable<object> (input, ExecuteInMemory);
+      return InvokeGenericExecuteMethod<ExecuteInMemorySequenceData, ExecuteInMemoryValueData> (input, ExecuteInMemory<object>);
     }
 
-    public T ExecuteInMemory<T> (IEnumerable<T> input)
+    public ExecuteInMemoryValueData ExecuteInMemory<T> (ExecuteInMemorySequenceData input)
     {
-      ArgumentUtility.CheckNotNull ("input", input);
-      return input.Max();
+      var sequence = input.GetCurrentSequence<T> ();
+      var result = sequence.A.Max ();
+      return new ExecuteInMemoryValueData (result);
     }
 
     public override Type GetResultType (Type inputResultType)

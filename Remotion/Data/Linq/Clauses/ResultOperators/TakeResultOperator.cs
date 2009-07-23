@@ -14,7 +14,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
@@ -91,18 +90,17 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new TakeResultOperator (Count);
     }
 
-    public override object ExecuteInMemory (object input)
+    public override IExecuteInMemoryData ExecuteInMemory (IExecuteInMemoryData input)
     {
       ArgumentUtility.CheckNotNull ("input", input);
-      return InvokeGenericOnEnumerable<IEnumerable<object>> (input, ExecuteInMemory);
+      return InvokeGenericExecuteMethod<ExecuteInMemorySequenceData, ExecuteInMemorySequenceData> (input, ExecuteInMemory<object>);
     }
 
-    public IEnumerable<T> ExecuteInMemory<T> (IEnumerable<T> input)
+    public ExecuteInMemorySequenceData ExecuteInMemory<T> (ExecuteInMemorySequenceData input)
     {
-      ArgumentUtility.CheckNotNull ("input", input);
-
-      var count = GetConstantCount ();
-      return input.Take (count);
+      var sequence = input.GetCurrentSequence<T> ();
+      var result = sequence.A.Take (GetConstantCount ());
+      return new ExecuteInMemorySequenceData (result, sequence.B);
     }
 
     public override Type GetResultType (Type inputResultType)

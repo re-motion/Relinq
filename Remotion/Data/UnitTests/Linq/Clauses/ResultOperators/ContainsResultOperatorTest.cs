@@ -22,6 +22,7 @@ using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.UnitTests.Linq.TestDomain;
+using Remotion.Utilities;
 
 namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
 {
@@ -33,7 +34,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     [SetUp]
     public void SetUp ()
     {
-      _resultOperator = new ContainsResultOperator (Expression.Constant("test"));
+      _resultOperator = new ContainsResultOperator (Expression.Constant (2));
     }
 
     [Test]
@@ -47,13 +48,14 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     }
 
     [Test]
-    [ExpectedException (typeof (NotImplementedException))]
+    [Ignore ("TODO 1378")]
     public void ExecuteInMemory ()
     {
-      object items = new[] { "one", "two", "three", "test"};
-      var result = _resultOperator.ExecuteInMemory (items);
+      object items = new[] { 1, 2, 3, 4};
+      var input = new ExecuteInMemorySequenceData (items, Expression.Constant (0));
+      var result = _resultOperator.ExecuteInMemory (input);
 
-      Assert.That (result, Is.True);
+      Assert.That (result.GetCurrentSingleValue<bool>(), Is.True);
     }
 
     [Test]
@@ -65,7 +67,14 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     [Test]
     public void GetResultType ()
     {
-      Assert.That (_resultOperator.GetResultType (typeof (IQueryable<Student>)), Is.SameAs (typeof(bool)));
+      Assert.That (_resultOperator.GetResultType (typeof (IQueryable<int>)), Is.SameAs (typeof (bool)));
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentTypeException))]
+    public void GetResultType_InvalidInput ()
+    {
+      _resultOperator.GetResultType (typeof (Student));
     }
   }
 }

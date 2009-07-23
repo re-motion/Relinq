@@ -18,7 +18,6 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Utilities;
-using System.Linq;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
@@ -52,26 +51,30 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       }
     }
 
+    public override IExecuteInMemoryData ExecuteInMemory (IExecuteInMemoryData input)
+    {
+      ArgumentUtility.CheckNotNull ("input", input);
+      return InvokeGenericExecuteMethod<ExecuteInMemorySequenceData, ExecuteInMemoryValueData> (input, ExecuteInMemory<object>);
+    }
+
+    public ExecuteInMemoryValueData ExecuteInMemory<T> (ExecuteInMemorySequenceData input)
+    {
+      throw new NotImplementedException ();
+      // var sequence = input.GetCurrentSequence<T> ();
+      // return sequence.A.Contains (Item);
+    }
+
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
       return new ContainsResultOperator (Item);
     }
 
-    public override object ExecuteInMemory (object input)
-    {
-      ArgumentUtility.CheckNotNull ("input", input);
-      return InvokeGenericOnEnumerable<bool> (input, ExecuteInMemory);
-    }
-
-    public bool ExecuteInMemory<T> (IEnumerable<T> input)
-    {
-      ArgumentUtility.CheckNotNull ("input", input);
-      throw new NotImplementedException();
-    }
-
     public override Type GetResultType (Type inputResultType)
     {
       ArgumentUtility.CheckNotNull ("inputResultType", inputResultType);
+      if (ReflectionUtility.GetItemTypeOfIEnumerable (inputResultType, "inputResultType") != Item.Type)
+        throw new ArgumentTypeException ("inputResultType", typeof (IEnumerable<>).MakeGenericType (Item.Type), inputResultType);
+
       return typeof (bool);
     }
 

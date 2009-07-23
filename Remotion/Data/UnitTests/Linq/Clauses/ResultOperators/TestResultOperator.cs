@@ -14,7 +14,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ResultOperators;
@@ -28,7 +27,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     {
     }
 
-    public override object ExecuteInMemory (object input)
+    public override IExecuteInMemoryData ExecuteInMemory (IExecuteInMemoryData input)
     {
       throw new NotImplementedException();
     }
@@ -56,24 +55,21 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       return new ExecuteInMemorySequenceData (currentSequence.A.Distinct (), currentSequence.B);
     }
 
+    // ReSharper disable UnusedTypeParameter
     public ExecuteInMemorySequenceData ThrowingExecuteMethod<T> (ExecuteInMemorySequenceData arg)
     {
       throw new NotImplementedException ("Test");
     }
 
-// ReSharper disable UnusedTypeParameter
     public ExecuteInMemoryValueData InvalidExecuteInMemory_TooManyGenericParameters<T1, T2> (ExecuteInMemorySequenceData input)
     {
       throw new NotImplementedException();
     }
-// ReSharper restore UnusedTypeParameter
 
-// ReSharper disable UnusedTypeParameter
     public ExecuteInMemoryValueData ExecuteMethodWithNonMatchingArgumentType<T> (ExecuteInMemoryValueData arg)
     {
       throw new NotImplementedException ("Test");
     }
-// ReSharper restore UnusedTypeParameter
 
     public ExecuteInMemorySequenceData NonGenericExecuteMethod (ExecuteInMemorySequenceData arg)
     {
@@ -84,5 +80,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     {
       throw new NotImplementedException ();
     }
+    // ReSharper restore UnusedTypeParameter
   }
 }

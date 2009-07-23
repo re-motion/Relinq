@@ -58,11 +58,6 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new ExecuteInMemoryValueData (result);
     }
 
-    public override object ExecuteInMemory (object input)
-    {
-      throw new NotImplementedException ();
-    }
-
     public override Type GetResultType (Type inputResultType)
     {
       ArgumentUtility.CheckNotNull ("inputResultType", inputResultType);

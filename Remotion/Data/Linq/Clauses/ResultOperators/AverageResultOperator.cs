@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
@@ -46,17 +47,25 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new AverageResultOperator();
     }
 
-    public override object ExecuteInMemory (object input)
+    public override IExecuteInMemoryData ExecuteInMemory (IExecuteInMemoryData input)
+    {
+      ArgumentUtility.CheckNotNull ("input", input);
+      return InvokeGenericExecuteMethod<ExecuteInMemorySequenceData, ExecuteInMemoryValueData> (input, ExecuteInMemory<object>);
+    }
+
+    public ExecuteInMemoryValueData ExecuteInMemory<T> (ExecuteInMemorySequenceData input)
     {
       ArgumentUtility.CheckNotNull ("input", input);
 
-      var method = typeof (Enumerable).GetMethod ("Average", BindingFlags.Public | BindingFlags.Static, null, new[] { input.GetType () }, null);
+      var method = typeof (Enumerable).GetMethod ("Average", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof (IEnumerable<T>) }, null);
       if (method == null)
       {
-        var message = string.Format ("Cannot calculate the average of an object of type '{0}' in memory.", input.GetType ().FullName);
+        var message = string.Format ("Cannot calculate the average of objects of type '{0}' in memory.", typeof (T).FullName);
         throw new NotSupportedException (message);
       }
-      return method.Invoke (null, new[] { input });
+      
+      var result = method.Invoke (null, new[] { input.GetCurrentSequence<T>().A });
+      return new ExecuteInMemoryValueData (result);
     }
 
     public override Type GetResultType (Type inputResultType)

@@ -15,8 +15,8 @@
 // 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Utilities;
 
@@ -34,43 +34,43 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   /// </example>
   public class OfTypeResultOperator: ResultOperatorBase
   {
-    private Type _ofTypeItem;
+    private Type _searchedItemType;
 
-    public OfTypeResultOperator (Type ofTypeItemType)
+    public OfTypeResultOperator (Type searchedItemType)
         : base (CollectionExecutionStrategy.Instance)
     {
-      ArgumentUtility.CheckNotNull ("ofTypeItemType", ofTypeItemType);
-      OfTypeItem = ofTypeItemType;
+      ArgumentUtility.CheckNotNull ("searchedItemType", searchedItemType);
+      SearchedItemType = searchedItemType;
     }
 
-    public Type OfTypeItem
+    public Type SearchedItemType
     {
-      get { return _ofTypeItem; }
+      get { return _searchedItemType; }
       set
       {
         ArgumentUtility.CheckNotNull ("value", value);
-        _ofTypeItem = value;
+        _searchedItemType = value;
       }
     }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
-      return new OfTypeResultOperator (OfTypeItem);
+      return new OfTypeResultOperator (SearchedItemType);
     }
 
-    public override object ExecuteInMemory (object input)
+    public override IExecuteInMemoryData ExecuteInMemory (IExecuteInMemoryData input)
     {
       ArgumentUtility.CheckNotNull ("input", input);
-
-      var method = (from m in typeof (OfTypeResultOperator).GetMethods ()
-                    where m.Name == "ExecuteInMemory" && m.IsGenericMethod
-                    select m.MakeGenericMethod (OfTypeItem)).Single ();
-      return InvokeExecuteMethod (input, method);
+      return InvokeGenericExecuteMethod<ExecuteInMemorySequenceData, ExecuteInMemorySequenceData> (input, ExecuteInMemory<object>);
     }
 
-    public IEnumerable<TResult> ExecuteInMemory<TResult> (IEnumerable input)
+    public ExecuteInMemorySequenceData ExecuteInMemory<TInput> (ExecuteInMemorySequenceData input)
     {
-      return input.OfType<TResult> ();
+      var sequence = input.GetCurrentSequence<TInput> ();
+      var castMethod = typeof (Enumerable).GetMethod ("OfType", new[] { typeof (IEnumerable) }).MakeGenericMethod (SearchedItemType);
+      var result = InvokeExecuteMethod (sequence.A, castMethod);
+      var resultItemExpression = Expression.Convert (sequence.B, SearchedItemType);
+      return new ExecuteInMemorySequenceData (result, resultItemExpression);
     }
 
     public override Type GetResultType (Type inputResultType)
@@ -78,7 +78,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       ArgumentUtility.CheckNotNull ("inputResultType", inputResultType);
       ReflectionUtility.GetItemTypeOfIEnumerable (inputResultType, "inputResultType"); // check whether inputResultType implements IEnumerable<T>
 
-      return typeof (IQueryable<>).MakeGenericType (OfTypeItem);
+      return typeof (IQueryable<>).MakeGenericType (SearchedItemType);
     }
 
     public override string ToString ()

@@ -87,16 +87,17 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new IntersectResultOperator (Source2);
     }
 
-    public override object ExecuteInMemory (object input)
+    public override IExecuteInMemoryData ExecuteInMemory (IExecuteInMemoryData input)
     {
       ArgumentUtility.CheckNotNull ("input", input);
-      return InvokeGenericOnEnumerable<IEnumerable<object>> (input, ExecuteInMemory);
+      return InvokeGenericExecuteMethod<ExecuteInMemorySequenceData, ExecuteInMemorySequenceData> (input, ExecuteInMemory<object>);
     }
 
-    public IEnumerable<T> ExecuteInMemory<T> (IEnumerable<T> input)
+    public ExecuteInMemorySequenceData ExecuteInMemory<T> (ExecuteInMemorySequenceData input)
     {
-
-      return input.Intersect ((IEnumerable<T>) GetConstantSource2 ());
+      var sequence = input.GetCurrentSequence<T> ();
+      var result = sequence.A.Intersect ((IEnumerable<T>) GetConstantSource2 ());
+      return new ExecuteInMemorySequenceData (result, sequence.B);
     }
 
     public override Type GetResultType (Type inputResultType)

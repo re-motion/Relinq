@@ -14,7 +14,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
@@ -76,22 +75,27 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new DefaultIfEmptyResultOperator (OptionalDefaultValue);
     }
 
-    public override object ExecuteInMemory (object input)
+    public override IExecuteInMemoryData ExecuteInMemory (IExecuteInMemoryData input)
     {
       ArgumentUtility.CheckNotNull ("input", input);
-      return InvokeGenericOnEnumerable<IEnumerable<object>> (input, ExecuteInMemory);
+      return InvokeGenericExecuteMethod<ExecuteInMemorySequenceData, ExecuteInMemorySequenceData> (input, ExecuteInMemory<object>);
     }
 
-    public IEnumerable<T> ExecuteInMemory<T> (IEnumerable<T> input)
+    public ExecuteInMemorySequenceData ExecuteInMemory<T> (ExecuteInMemorySequenceData input)
     {
-      ArgumentUtility.CheckNotNull ("input", input);
-
-      var defaultValue = GetConstantOptionalDefaultValue ();
-      if (defaultValue != null)
-        return input.DefaultIfEmpty ((T) defaultValue);
+      var sequence = input.GetCurrentSequence<T> ();
+      if (OptionalDefaultValue != null)
+      {
+        var result = sequence.A.DefaultIfEmpty ((T) GetConstantOptionalDefaultValue ());
+        return new ExecuteInMemorySequenceData (result, sequence.B);
+      }
       else
-        return input.DefaultIfEmpty ();
+      {
+        var result = sequence.A.DefaultIfEmpty ();
+        return new ExecuteInMemorySequenceData (result, sequence.B);
+      }
     }
+
 
     public override Type GetResultType (Type inputResultType)
     {

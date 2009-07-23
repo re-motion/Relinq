@@ -132,7 +132,12 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
           transformation (KeySelector.ExpectedInput));
     }
 
-    public override object ExecuteInMemory (object input)
+    public override IExecuteInMemoryData ExecuteInMemory (IExecuteInMemoryData input)
+    {
+      throw new NotImplementedException ();
+    }
+
+    public object ExecuteInMemory (object input)
     {
       ArgumentUtility.CheckNotNull ("input", input);
 

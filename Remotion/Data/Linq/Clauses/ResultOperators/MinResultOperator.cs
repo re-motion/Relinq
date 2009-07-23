@@ -14,7 +14,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Utilities;
@@ -46,22 +45,23 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new MinResultOperator();
     }
 
-    public override object ExecuteInMemory (object input)
-    {
-      ArgumentUtility.CheckNotNull ("input", input);
-      return InvokeGenericOnEnumerable<object> (input, ExecuteInMemory);
-    }
-
-    public T ExecuteInMemory<T> (IEnumerable<T> input)
-    {
-      ArgumentUtility.CheckNotNull ("input", input);
-      return input.Min ();
-    }
-
     public override Type GetResultType (Type inputResultType)
     {
       ArgumentUtility.CheckNotNull ("inputResultType", inputResultType);
       return ReflectionUtility.GetItemTypeOfIEnumerable (inputResultType, "inputResultType");
+    }
+
+    public override IExecuteInMemoryData ExecuteInMemory (IExecuteInMemoryData input)
+    {
+      ArgumentUtility.CheckNotNull ("input", input);
+      return InvokeGenericExecuteMethod<ExecuteInMemorySequenceData, ExecuteInMemoryValueData> (input, ExecuteInMemory<object>);
+    }
+
+    public ExecuteInMemoryValueData ExecuteInMemory<T> (ExecuteInMemorySequenceData input)
+    {
+      var sequence = input.GetCurrentSequence<T> ();
+      var result = sequence.A.Min ();
+      return new ExecuteInMemoryValueData (result);
     }
 
     public override string ToString ()

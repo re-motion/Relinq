@@ -68,7 +68,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       Assert.That (QueryModel.ResultOperators.Count, Is.EqualTo (1));
 
       var ofTypeResultOperator = (OfTypeResultOperator) QueryModel.ResultOperators[0];
-      Assert.That (ofTypeResultOperator.OfTypeItem, Is.SameAs (typeof (GoodStudent)));
+      Assert.That (ofTypeResultOperator.SearchedItemType, Is.SameAs (typeof (GoodStudent)));
     }
   }
 }

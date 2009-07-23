@@ -48,9 +48,7 @@ namespace Remotion.Data.Linq.Clauses
     /// <param name="input">The input for the result operator. This must match the type of <see cref="IExecuteInMemoryData"/> expected by the operator.</param>
     /// <returns>The result of the operator.</returns>
     /// <seealso cref="InvokeGenericExecuteMethod{TInput,TResult}"/>
-    public virtual IExecuteInMemoryData ExecuteInMemory (IExecuteInMemoryData input) { throw new NotImplementedException (); } // TODO 1376: Make abstract.
-    
-    public abstract object ExecuteInMemory (object input);
+    public abstract IExecuteInMemoryData ExecuteInMemory (IExecuteInMemoryData input);
 
     /// <summary>
     /// Gets the result type a query would have if it ended with this <see cref="ResultOperatorBase"/>. This can be an instantiation of 
@@ -93,27 +91,6 @@ namespace Remotion.Data.Linq.Clauses
     public virtual void TransformExpressions (Func<Expression, Expression> transformation)
     {
       //nothing to do here
-    }
-
-    // TODO 1376: Remove.
-    protected object InvokeGenericOnEnumerable<TResult> (object input, Func<IEnumerable<object>, TResult> genericMethodCaller)
-    {
-      ArgumentUtility.CheckNotNull ("input", input);
-      ArgumentUtility.CheckNotNull ("genericMethodCaller", genericMethodCaller);
-
-      Type itemType = GetInputItemType (input);
-
-      var method = genericMethodCaller.Method;
-      if (!method.IsGenericMethod)
-      {
-        throw new ArgumentException (
-            "Method to invoke ('" + method.Name + "') must be a generic method with exactly one generic argument.",
-            "genericMethodCaller");
-      }
-
-      var closedGenericMethod = method.GetGenericMethodDefinition ().MakeGenericMethod (itemType);
-
-      return InvokeExecuteMethod (input, closedGenericMethod);
     }
 
     /// <summary>
@@ -187,9 +164,10 @@ namespace Remotion.Data.Linq.Clauses
       if (!method.IsPublic)
         throw new ArgumentException ("Method to invoke ('" + method.Name + "') must be a public method.", "method");
 
+      var targetObject = method.IsStatic ? null : this;
       try
       {
-        return method.Invoke (this, new[] { input });
+        return method.Invoke (targetObject, new[] { input });
       }
       catch (TargetInvocationException ex)
       {

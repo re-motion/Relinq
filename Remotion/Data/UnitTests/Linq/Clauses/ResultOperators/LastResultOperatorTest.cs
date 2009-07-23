@@ -15,6 +15,7 @@
 // 
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
@@ -65,18 +66,20 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     public void ExecuteInMemory ()
     {
       object items = new[] { 1, 2, 3 };
-      var result = _resultOperatorWithDefault.ExecuteInMemory (items);
+      var input = new ExecuteInMemorySequenceData (items, Expression.Constant (0));
+      var result = _resultOperatorWithDefault.ExecuteInMemory (input);
 
-      Assert.That (result, Is.EqualTo (3));
+      Assert.That (result.GetCurrentSingleValue<int>(), Is.EqualTo (3));
     }
 
     [Test]
     public void ExecuteInMemory_Empty_Default ()
     {
       object items = new int[0];
-      var result = _resultOperatorWithDefault.ExecuteInMemory (items);
+      var input = new ExecuteInMemorySequenceData (items, Expression.Constant (0));
+      var result = _resultOperatorWithDefault.ExecuteInMemory (input);
 
-      Assert.That (result, Is.EqualTo (0));
+      Assert.That (result.GetCurrentSingleValue<int>(), Is.EqualTo (0));
     }
 
     [Test]
@@ -84,8 +87,10 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     public void ExecuteInMemory_Empty_NoDefault ()
     {
       object items = new int[0];
-      _resultOperatorNoDefault.ExecuteInMemory (items);
+      var input = new ExecuteInMemorySequenceData (items, Expression.Constant (0));
+      _resultOperatorNoDefault.ExecuteInMemory (input);
     }
+
 
     [Test]
     public void ExecutionStrategy_Default ()

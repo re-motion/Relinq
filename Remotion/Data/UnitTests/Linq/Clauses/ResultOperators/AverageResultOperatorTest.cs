@@ -15,6 +15,7 @@
 // 
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
@@ -54,18 +55,18 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     [Test]
     public void ExecuteInMemory ()
     {
-      object items = new[] { 1, 2, 3 };
-      var result = _resultOperator.ExecuteInMemory (items);
+      IExecuteInMemoryData input = new ExecuteInMemorySequenceData (new[] { 1, 2, 3 }, Expression.Constant (0));
+      var result = _resultOperator.ExecuteInMemory (input);
 
-      Assert.That (result, Is.EqualTo (2));
+      Assert.That (result.GetCurrentSingleValue<double>(), Is.EqualTo (2.0));
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Cannot calculate the average of an object of type 'System.String[]' in memory.")]
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Cannot calculate the average of objects of type 'System.String' in memory.")]
     public void ExecuteInMemory_UnsupportedType ()
     {
-      object items = new[] { "1", "2", "3" };
-      _resultOperator.ExecuteInMemory (items);
+      IExecuteInMemoryData input = new ExecuteInMemorySequenceData (new[] { "1", "2", "3" }, Expression.Constant ("0"));
+      _resultOperator.ExecuteInMemory (input);
     }
 
     [Test]

@@ -15,10 +15,10 @@
 // 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Utilities;
+using System.Linq.Expressions;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
@@ -53,25 +53,26 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       }
     }
 
+    public override IExecuteInMemoryData ExecuteInMemory (IExecuteInMemoryData input)
+    {
+      ArgumentUtility.CheckNotNull ("input", input);
+      return InvokeGenericExecuteMethod<ExecuteInMemorySequenceData, ExecuteInMemorySequenceData> (input, ExecuteInMemory<object>);
+    }
+
+    public ExecuteInMemorySequenceData ExecuteInMemory<TInput> (ExecuteInMemorySequenceData input)
+    {
+      var sequence = input.GetCurrentSequence<TInput> ();
+      var castMethod = typeof (Enumerable).GetMethod ("Cast", new[] { typeof (IEnumerable) }).MakeGenericMethod (CastItemType);
+      var result = InvokeExecuteMethod (sequence.A, castMethod);
+      var resultItemExpression = Expression.Convert (sequence.B, CastItemType);
+      return new ExecuteInMemorySequenceData (result, resultItemExpression);
+    }
+
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
       return new CastResultOperator(CastItemType);
     }
 
-    public override object ExecuteInMemory (object input)
-    {
-      ArgumentUtility.CheckNotNull ("input", input);
-
-      var method = (from m in typeof (CastResultOperator).GetMethods ()
-                    where m.Name == "ExecuteInMemory" && m.IsGenericMethod
-                    select m.MakeGenericMethod (CastItemType)).Single();
-      return InvokeExecuteMethod (input, method);
-    }
-
-    public IEnumerable<TResult> ExecuteInMemory<TResult> (IEnumerable input)
-    {
-      return input.Cast<TResult>();
-    }
 
     public override Type GetResultType (Type inputResultType)
     {

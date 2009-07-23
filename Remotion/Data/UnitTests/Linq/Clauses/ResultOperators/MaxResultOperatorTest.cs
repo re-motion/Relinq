@@ -15,6 +15,7 @@
 // 
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
@@ -49,11 +50,11 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     public void ExecuteInMemory ()
     {
       object items = new[] { 1, 2, 3, 0, 2 };
-      var resultOperator = new MaxResultOperator ();
+      var input = new ExecuteInMemorySequenceData (items, Expression.Constant (0));
 
-      var result = resultOperator.ExecuteInMemory (items);
+      var result = _resultOperator.ExecuteInMemory (input);
 
-      Assert.That (result, Is.EqualTo (3));
+      Assert.That (result.GetCurrentSingleValue<int>(), Is.EqualTo (3));
     }
 
     [Test]

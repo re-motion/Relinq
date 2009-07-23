@@ -36,14 +36,14 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     [SetUp]
     public void SetUp ()
     {
-      _source2 = Expression.Constant (new[] { "test2" });
+      _source2 = Expression.Constant (new[] { 2 });
       _resultOperator = new IntersectResultOperator (_source2);
     }
 
     [Test]
     public void GetConstantSource2 ()
     {
-      Assert.That (_resultOperator.GetConstantSource2 (), Is.EqualTo (new[] { "test2" }));
+      Assert.That (_resultOperator.GetConstantSource2 (), Is.SameAs (((ConstantExpression) _source2).Value));
     }
 
     [Test]
@@ -74,16 +74,17 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     [Test]
     public void ExecuteInMemory ()
     {
-      var items = new[] { "test1", "test2", "test3" };
-      var result = _resultOperator.ExecuteInMemory (items);
+      var items = new[] { 1, 2, 3 };
+      var input = new ExecuteInMemorySequenceData (items, Expression.Constant (0));
+      var result = _resultOperator.ExecuteInMemory (input);
 
-      Assert.That (result.ToArray (), Is.EquivalentTo (new[] { "test2" }));
+      Assert.That (result.GetCurrentSequence<int>().A.ToArray(), Is.EquivalentTo (new[] { 2 }));
     }
 
     [Test]
     public void GetResultType ()
     {
-      Assert.That (_resultOperator.GetResultType (typeof (IQueryable<string>)), Is.SameAs (typeof (IQueryable<string>)));
+      Assert.That (_resultOperator.GetResultType (typeof (IQueryable<int>)), Is.SameAs (typeof (IQueryable<int>)));
     }
 
     [Test]

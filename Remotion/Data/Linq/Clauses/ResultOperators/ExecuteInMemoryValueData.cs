@@ -23,7 +23,7 @@ using Remotion.Utilities;
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
   /// <summary>
-  /// Holds data needed in order to execute a <see cref="ResultOperatorBase"/> in memory via <see cref="ResultOperatorBase.ExecuteInMemory"/>.
+  /// Holds data needed in order to execute a <see cref="ResultOperatorBase"/> in memory via <see cref="ResultOperatorBase.ExecuteInMemory(Remotion.Data.Linq.Clauses.ResultOperators.IExecuteInMemoryData)"/>.
   /// The data is a single, non-sequence value and can only be consumed by result operators working with single values.
   /// </summary>
   public class ExecuteInMemoryValueData : IExecuteInMemoryData
@@ -38,7 +38,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     }
 
     /// <summary>
-    /// Gets the current value for the <see cref="ResultOperatorBase.ExecuteInMemory"/> operation. If the object is used as input, this 
+    /// Gets the current value for the <see cref="ResultOperatorBase.ExecuteInMemory(Remotion.Data.Linq.Clauses.ResultOperators.IExecuteInMemoryData)"/> operation. If the object is used as input, this 
     /// holds the input value for the operation. If the object is used as output, this holds the result of the operation.
     /// </summary>
     /// <value>The current value.</value>

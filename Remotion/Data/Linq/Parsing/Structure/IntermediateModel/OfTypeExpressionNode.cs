@@ -52,8 +52,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     protected override ResultOperatorBase CreateResultOperator (ClauseGenerationContext clauseGenerationContext)
     {
-      var ofTypeItem = ParsedExpression.Method.GetGenericArguments ()[0];
-      return new OfTypeResultOperator (ofTypeItem);
+      var searchedItemType = ParsedExpression.Method.GetGenericArguments ()[0];
+      return new OfTypeResultOperator (searchedItemType);
     }
   }
 }
