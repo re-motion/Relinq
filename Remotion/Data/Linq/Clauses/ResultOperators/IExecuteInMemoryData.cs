@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Remotion.Collections;
+using System.Reflection;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
@@ -30,5 +31,14 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     /// <exception cref="InvalidOperationException">Thrown when this object holds a single value instead of a sequence or the item type is not the 
     /// expected type <typeparamref name="T"/>.</exception>
     Tuple<IEnumerable<T>, Expression> GetCurrentSequence<T> ();
+
+    /// <summary>
+    /// Takes the given <paramref name="genericMethodDefinition"/> and instantiates it, substituting its generic parameter with the value
+    /// or item type of the value held by this object. The method must have exactly one generic parameter.
+    /// </summary>
+    /// <param name="genericMethodDefinition">The generic method definition to instantiate.</param>
+    /// <returns>A closed generic instantiation of <paramref name="genericMethodDefinition"/> with this object's value or item type substituted for
+    /// the generic parameter.</returns>
+    MethodInfo MakeClosedGenericExecuteMethod (MethodInfo genericMethodDefinition);
   }
 }

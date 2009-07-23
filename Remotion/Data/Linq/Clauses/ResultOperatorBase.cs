@@ -19,7 +19,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq.Clauses.ResultOperators;
-using Remotion.Data.Linq.Parsing;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses
@@ -46,9 +45,11 @@ namespace Remotion.Data.Linq.Clauses
     /// Executes this result operator in memory, on a given input. Executing result operators in memory should only be 
     /// performed if the target query system does not support the operator.
     /// </summary>
-    /// <param name="input">The input for the result operator. This must match the type expected by the operator.</param>
-    /// <returns>The result of the operator. This can be an enumerable, a single item, or a scalar value, depending on the operator.</returns>
-    /// <seealso cref="InvokeGenericOnEnumerable{TResult}"/>
+    /// <param name="input">The input for the result operator. This must match the type of <see cref="IExecuteInMemoryData"/> expected by the operator.</param>
+    /// <returns>The result of the operator.</returns>
+    /// <seealso cref="InvokeGenericExecuteMethod{TInput,TResult}"/>
+    public virtual IExecuteInMemoryData ExecuteInMemory (IExecuteInMemoryData input) { throw new NotImplementedException (); } // TODO 1376: Make abstract.
+    
     public abstract object ExecuteInMemory (object input);
 
     /// <summary>
@@ -94,33 +95,7 @@ namespace Remotion.Data.Linq.Clauses
       //nothing to do here
     }
 
-    /// <summary>
-    /// Invokes a given generic method on an enumerable input via Reflection. Use this to implement <see cref="ExecuteInMemory"/> by defining
-    /// a strongly typed, generic variant of <see cref="ExecuteInMemory"/>; then invoke that strongly typed variant via 
-    /// <see cref="InvokeGenericOnEnumerable{TResult}"/>.
-    /// </summary>
-    /// <typeparam name="TResult">The result type of the method passed via <paramref name="genericMethodCaller"/>.</typeparam>
-    /// <param name="input">The input object to invoke the method on. If this object does not implement <see cref="IEnumerable{T}"/>, this
-    /// method will throw an <see cref="ArgumentTypeException"/>.</param>
-    /// <param name="genericMethodCaller">A delegate holding exactly one public generic method with exactly one generic argument. This method is
-    /// called via Reflection on the given <paramref name="input"/> argument.</param>
-    /// <returns>The result of invoking the method in <paramref name="genericMethodCaller"/> on <paramref name="input"/>.</returns>
-    /// <example>
-    /// The <see cref="TakeResultOperator"/> uses this method as follows:
-    /// <code>
-    /// public override object ExecuteInMemory (object input)
-    /// {
-    ///   ArgumentUtility.CheckNotNull ("input", input);
-    ///   return InvokeGenericOnEnumerable&lt;IEnumerable&lt;object&gt;&gt; (input, ExecuteInMemory);
-    /// }
-    /// 
-    /// public IEnumerable&lt;T&gt; ExecuteInMemory&lt;T&gt; (IEnumerable&lt;T&gt; input)
-    /// {
-    ///   ArgumentUtility.CheckNotNull ("input", input);
-    ///   return input.Take (Count);
-    /// }
-    /// </code>
-    /// </example>
+    // TODO 1376: Remove.
     protected object InvokeGenericOnEnumerable<TResult> (object input, Func<IEnumerable<object>, TResult> genericMethodCaller)
     {
       ArgumentUtility.CheckNotNull ("input", input);
@@ -151,6 +126,54 @@ namespace Remotion.Data.Linq.Clauses
     {
       Type itemType = ReflectionUtility.GetItemTypeOfIEnumerable (input.GetType (), "input");
       return itemType;
+    }
+
+    /// <summary>
+    /// Invokes a given generic method on an <see cref="IExecuteInMemoryData"/> input via Reflection. Use this to implement 
+    /// <see cref="ExecuteInMemory(Remotion.Data.Linq.Clauses.ResultOperators.IExecuteInMemoryData)"/> by defining a strongly typed, generic variant 
+    /// of <see cref="ExecuteInMemory(Remotion.Data.Linq.Clauses.ResultOperators.IExecuteInMemoryData)"/>; then invoke that strongly typed 
+    /// variant via  <see cref="InvokeGenericExecuteMethod{TInput,TResult}"/>.
+    /// </summary>
+    /// <typeparam name="TInput">The type of <see cref="IExecuteInMemoryData"/> expected as an input to <paramref name="genericExecuteCaller"/>.</typeparam>
+    /// <typeparam name="TResult">The type of <see cref="IExecuteInMemoryData"/> expected as the output of <paramref name="genericExecuteCaller"/>.</typeparam>
+    /// <param name="input">The input <see cref="IExecuteInMemoryData"/> object to invoke the method on..</param>
+    /// <param name="genericExecuteCaller">A delegate holding exactly one public generic method with exactly one generic argument. This method is
+    /// called via Reflection on the given <paramref name="input"/> argument.</param>
+    /// <returns>The result of invoking the method in <paramref name="genericExecuteCaller"/> on <paramref name="input"/>.</returns>
+    /// <example>
+    /// The <see cref="CountResultOperator"/> uses this method as follows:
+    /// <code>
+    /// public IExecuteInMemoryData ExecuteInMemory (IExecuteInMemoryData input)
+    /// {
+    ///   ArgumentUtility.CheckNotNull ("input", input);
+    ///   return InvokeGenericExecuteMethod&lt;ExecuteInMemorySequenceData, ExecuteInMemoryValueData&gt; (input, ExecuteInMemory&lt;object&gt;);
+    /// }
+    ///
+    /// public ExecuteInMemoryValueData ExecuteInMemory&lt;T&gt; (ExecuteInMemorySequenceData input)
+    /// {
+    ///   var sequence = input.GetCurrentSequence&lt;T&gt; ();
+    ///   var result = sequence.A.Count ();
+    ///   return new ExecuteInMemoryValueData (result);
+    /// }
+    /// </code>
+    /// </example>
+    protected TResult InvokeGenericExecuteMethod<TInput, TResult> (IExecuteInMemoryData input, Func<TInput, TResult> genericExecuteCaller)
+      where TInput : IExecuteInMemoryData
+      where TResult : IExecuteInMemoryData
+    {
+      ArgumentUtility.CheckNotNull ("input", input);
+      ArgumentUtility.CheckNotNull ("genericExecuteCaller", genericExecuteCaller);
+
+      var method = genericExecuteCaller.Method;
+      if (!method.IsGenericMethod || method.GetGenericArguments ().Length != 1)
+      {
+        throw new ArgumentException (
+            "Method to invoke ('" + method.Name + "') must be a generic method with exactly one generic argument.",
+            "genericExecuteCaller");
+      }
+
+      var closedGenericMethod = input.MakeClosedGenericExecuteMethod (method.GetGenericMethodDefinition ());
+      return (TResult) InvokeExecuteMethod (input, closedGenericMethod);
     }
 
     /// <summary>

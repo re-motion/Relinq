@@ -24,19 +24,20 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
   public class ExecuteInMemoryValueDataTest
   {
     private ExecuteInMemoryValueData _dataWithIntValue;
+    private ExecuteInMemoryValueData _dataWithNullValue;
 
     [SetUp]
     public void SetUp ()
     {
       _dataWithIntValue = new ExecuteInMemoryValueData (0);
+      _dataWithNullValue = new ExecuteInMemoryValueData (null);
     }
 
     [Test]
     public void Initialization_NullValuePossible ()
     {
-      var dataWithNullValue = new ExecuteInMemoryValueData (null);
-      Assert.That (dataWithNullValue.CurrentValue, Is.Null);
-      Assert.That (dataWithNullValue.GetCurrentSingleValue<object>(), Is.Null);
+      Assert.That (_dataWithNullValue.CurrentValue, Is.Null);
+      Assert.That (_dataWithNullValue.GetCurrentSingleValue<object>(), Is.Null);
     }
 
     [Test]
@@ -59,6 +60,54 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     public void GetCurrentSequence_NoSequence ()
     {
       _dataWithIntValue.GetCurrentSequence<int> ();
+    }
+
+    [Test]
+    public void MakeClosedGenericExecuteMethod ()
+    {
+      var executeMethod = typeof (CountResultOperator).GetMethod ("ExecuteInMemory", new[] { typeof (ExecuteInMemorySequenceData) });
+      var result = _dataWithIntValue.MakeClosedGenericExecuteMethod (executeMethod);
+
+      Assert.That (result.GetGenericArguments (), Is.EqualTo (new[] { typeof (int) }));
+    }
+
+    [Test]
+    public void MakeClosedGenericExecuteMethod_Null ()
+    {
+      var executeMethod = typeof (CountResultOperator).GetMethod ("ExecuteInMemory", new[] { typeof (ExecuteInMemorySequenceData) });
+      var result = _dataWithNullValue.MakeClosedGenericExecuteMethod (executeMethod);
+
+      Assert.That (result.GetGenericArguments (), Is.EqualTo (new[] { typeof (object) }));
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentException), 
+        ExpectedMessage = "GenericMethodDefinition must be a generic method definition.\r\nParameter name: genericMethodDefinition")]
+    public void MakeClosedGenericExecuteMethod_NonGenericMethod ()
+    {
+      var executeMethod = typeof (CountResultOperator).GetMethod ("ExecuteInMemory", new[] { typeof (IExecuteInMemoryData) });
+      _dataWithIntValue.MakeClosedGenericExecuteMethod (executeMethod);
+      Assert.Fail ();
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentException),
+        ExpectedMessage = "GenericMethodDefinition must be a generic method definition.\r\nParameter name: genericMethodDefinition")]
+    public void MakeClosedGenericExecuteMethod_NonGenericMethodDefinition ()
+    {
+      var executeMethod = typeof (CountResultOperator)
+          .GetMethod ("ExecuteInMemory", new[] { typeof (ExecuteInMemorySequenceData) })
+          .MakeGenericMethod (typeof (int));
+      _dataWithIntValue.MakeClosedGenericExecuteMethod (executeMethod);
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentException),
+        ExpectedMessage = "GenericMethodDefinition must have exactly one generic parameter.\r\nParameter name: genericMethodDefinition")]
+    public void MakeClosedGenericExecuteMethod_WrongNumberOfGenericParameters ()
+    {
+      var executeMethod = typeof (TestResultOperator).GetMethod ("InvalidExecuteInMemory_TooManyGenericParameters");
+      _dataWithIntValue.MakeClosedGenericExecuteMethod (executeMethod);
     }
   }
 }

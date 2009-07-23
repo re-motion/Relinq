@@ -77,5 +77,43 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     {
       _dataWithIntSequence.GetCurrentSequence<string> ();
     }
+
+    [Test]
+    public void MakeClosedGenericExecuteMethod ()
+    {
+      var executeMethod = typeof (CountResultOperator).GetMethod ("ExecuteInMemory", new[] { typeof (ExecuteInMemorySequenceData) });
+      var result = _dataWithIntSequence.MakeClosedGenericExecuteMethod (executeMethod);
+
+      Assert.That (result.GetGenericArguments (), Is.EqualTo (new[] { typeof (int) }));
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentException),
+        ExpectedMessage = "GenericMethodDefinition must be a generic method definition.\r\nParameter name: genericMethodDefinition")]
+    public void MakeClosedGenericExecuteMethod_NonGenericMethod ()
+    {
+      var executeMethod = typeof (CountResultOperator).GetMethod ("ExecuteInMemory", new[] { typeof (IExecuteInMemoryData) });
+      _dataWithIntSequence.MakeClosedGenericExecuteMethod (executeMethod);
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentException),
+        ExpectedMessage = "GenericMethodDefinition must be a generic method definition.\r\nParameter name: genericMethodDefinition")]
+    public void MakeClosedGenericExecuteMethod_NonGenericMethodDefinition ()
+    {
+      var executeMethod = typeof (CountResultOperator)
+          .GetMethod ("ExecuteInMemory", new[] { typeof (ExecuteInMemorySequenceData) })
+          .MakeGenericMethod (typeof (int));
+      _dataWithIntSequence.MakeClosedGenericExecuteMethod (executeMethod);
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentException),
+        ExpectedMessage = "GenericMethodDefinition must have exactly one generic parameter.\r\nParameter name: genericMethodDefinition")]
+    public void MakeClosedGenericExecuteMethod_WrongNumberOfGenericParameters ()
+    {
+      var executeMethod = typeof (TestResultOperator).GetMethod ("InvalidExecuteInMemory_TooManyGenericParameters");
+      _dataWithIntSequence.MakeClosedGenericExecuteMethod (executeMethod);
+    }
   }
 }

@@ -16,6 +16,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Reflection;
 using Remotion.Collections;
 using Remotion.Utilities;
 
@@ -99,6 +100,28 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
 
         throw new InvalidOperationException (message, ex);
       }
+    }
+
+    /// <summary>
+    /// Takes the given <paramref name="genericMethodDefinition"/> and instantiates it, substituting its generic parameter with the 
+    /// item type of the value held by this object. The method must have exactly one generic parameter.
+    /// </summary>
+    /// <param name="genericMethodDefinition">The generic method definition to instantiate.</param>
+    /// <returns>
+    /// A closed generic instantiation of <paramref name="genericMethodDefinition"/> with this object's item type substituted for
+    /// the generic parameter.
+    /// </returns>
+    public MethodInfo MakeClosedGenericExecuteMethod (MethodInfo genericMethodDefinition)
+    {
+      ArgumentUtility.CheckNotNull ("genericMethodDefinition", genericMethodDefinition);
+
+      if (!genericMethodDefinition.IsGenericMethodDefinition)
+        throw new ArgumentException ("GenericMethodDefinition must be a generic method definition.", "genericMethodDefinition");
+
+      if (genericMethodDefinition.GetGenericArguments ().Length != 1)
+        throw new ArgumentException ("GenericMethodDefinition must have exactly one generic parameter.", "genericMethodDefinition");
+
+      return genericMethodDefinition.MakeGenericMethod (ItemExpression.Type);
     }
   }
 }

@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.ResultOperators;
 
 namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
 {
@@ -42,34 +43,44 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       throw new NotImplementedException();
     }
 
-    public object InvokeGenericOnEnumerable (object input, Func<IEnumerable<object>, object> genericMethodCaller)
+    public new IExecuteInMemoryData InvokeGenericExecuteMethod<TSource, TResult> (IExecuteInMemoryData input, Func<TSource, TResult> genericMethodCaller)
+      where TSource : IExecuteInMemoryData
+      where TResult : IExecuteInMemoryData 
     {
-      return base.InvokeGenericOnEnumerable (input, genericMethodCaller);
+      return base.InvokeGenericExecuteMethod (input, genericMethodCaller);
     }
 
-    public IEnumerable<T> DistinctExecuteMethod<T> (IEnumerable<T> arg)
+    public ExecuteInMemorySequenceData DistinctExecuteMethod<T> (ExecuteInMemorySequenceData arg)
     {
-      return arg.Distinct ();
+      var currentSequence = arg.GetCurrentSequence<T>();
+      return new ExecuteInMemorySequenceData (currentSequence.A.Distinct (), currentSequence.B);
     }
 
-    public IEnumerable<T> ThrowingExecuteMethod<T> (IEnumerable<T> arg)
+    public ExecuteInMemorySequenceData ThrowingExecuteMethod<T> (ExecuteInMemorySequenceData arg)
     {
       throw new NotImplementedException ("Test");
     }
 
 // ReSharper disable UnusedTypeParameter
-    public object ExecuteMethodWithNonMatchingArgumentType<T> (IEnumerable<object> arg)
+    public ExecuteInMemoryValueData InvalidExecuteInMemory_TooManyGenericParameters<T1, T2> (ExecuteInMemorySequenceData input)
+    {
+      throw new NotImplementedException();
+    }
+// ReSharper restore UnusedTypeParameter
+
+// ReSharper disable UnusedTypeParameter
+    public ExecuteInMemoryValueData ExecuteMethodWithNonMatchingArgumentType<T> (ExecuteInMemoryValueData arg)
     {
       throw new NotImplementedException ("Test");
     }
 // ReSharper restore UnusedTypeParameter
 
-    public object NonGenericExecuteMethod (IEnumerable<object> arg)
+    public ExecuteInMemorySequenceData NonGenericExecuteMethod (ExecuteInMemorySequenceData arg)
     {
       throw new NotImplementedException ();
     }
 
-    internal object NonPublicExecuteMethod<T> (IEnumerable<T> arg)
+    internal ExecuteInMemorySequenceData NonPublicExecuteMethod<T> (ExecuteInMemorySequenceData arg)
     {
       throw new NotImplementedException ();
     }

@@ -14,15 +14,14 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
-using Remotion.Data.Linq.Parsing.Structure;
+using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.UnitTests.Linq.Clauses.ResultOperators;
-using Remotion.Utilities;
 using Rhino.Mocks;
 
 namespace Remotion.Data.UnitTests.Linq.Clauses
@@ -30,12 +29,14 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
   [TestFixture]
   public class ResultOperatorBaseTest
   {
-    TestResultOperator _resultOperator;
+    private TestResultOperator _resultOperator;
+    private ExecuteInMemorySequenceData _executeInMemoryInput;
 
     [SetUp]
     public void SetUp ()
     {
       _resultOperator = new TestResultOperator (CollectionExecutionStrategy.Instance);
+      _executeInMemoryInput = new ExecuteInMemorySequenceData (new[] { 1, 2, 3, 4, 3, 2, 1 }, Expression.Constant (0));
     }
 
     [Test]
@@ -49,55 +50,64 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
-    public void InvokeGenericOnEnumerable ()
+    public void InvokeGenericExecuteMethod ()
     {
-      var input = new[] { 1, 2, 3, 4, 3, 2, 1 };
-      var result = _resultOperator.InvokeGenericOnEnumerable (input, _resultOperator.DistinctExecuteMethod);
+      var result = _resultOperator.InvokeGenericExecuteMethod<ExecuteInMemorySequenceData, ExecuteInMemorySequenceData> (
+          _executeInMemoryInput, 
+          _resultOperator.DistinctExecuteMethod<object>);
 
-      Assert.That (((IEnumerable<int>) result).ToArray(), Is.EquivalentTo (new[] { 1, 2, 3, 4 }));
+      Assert.That (result.GetCurrentSequence<int>().A.ToArray(), Is.EquivalentTo (new[] { 1, 2, 3, 4 }));
     }
 
     [Test]
     [ExpectedException (typeof (NotImplementedException), ExpectedMessage = "Test")]
-    public void InvokeGenericOnEnumerable_Throws ()
+    public void InvokeGenericExecuteMethod_Throws ()
     {
-      var input = new[] { 1, 2, 3, 4, 3, 2, 1 };
-      var result = _resultOperator.InvokeGenericOnEnumerable (input, _resultOperator.ThrowingExecuteMethod);
-
-      Assert.That (((IEnumerable<int>) result).ToArray (), Is.EquivalentTo (new[] { 1, 2, 3, 4 }));
-    }
-
-    [Test]
-    [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage = "Expected a type implementing IEnumerable<T>, but found 'System.Int32'."
-        + "\r\nParameter name: input")]
-    public void InvokeGenericOnEnumerable_InvalidInputType ()
-    {
-      _resultOperator.InvokeGenericOnEnumerable (14, e => e.Count ());
+      _resultOperator.InvokeGenericExecuteMethod<ExecuteInMemorySequenceData, ExecuteInMemorySequenceData> (
+          _executeInMemoryInput, 
+          _resultOperator.ThrowingExecuteMethod<object>);
     }
 
     [Test]
     [ExpectedException (typeof (ArgumentException), ExpectedMessage = "Method to invoke ('NonGenericExecuteMethod') must be a generic method "
-        + "with exactly one generic argument.\r\nParameter name: genericMethodCaller")]
-    public void InvokeGenericOnEnumerable_NonGenericMethod ()
+        + "with exactly one generic argument.\r\nParameter name: genericExecuteCaller")]
+    public void InvokeGenericExecuteMethod_NonGenericMethod ()
     {
-      _resultOperator.InvokeGenericOnEnumerable (new[] { 1, 2, 3 }, _resultOperator.NonGenericExecuteMethod);
+      _resultOperator.InvokeGenericExecuteMethod<ExecuteInMemorySequenceData, ExecuteInMemorySequenceData> (
+          _executeInMemoryInput,
+          _resultOperator.NonGenericExecuteMethod);
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "Method to invoke ('InvalidExecuteInMemory_TooManyGenericParameters') must be a generic method "
+        + "with exactly one generic argument.\r\nParameter name: genericExecuteCaller")]
+    public void InvokeGenericExecuteMethod_WrongNumberOfGenericArguments ()
+    {
+      _resultOperator.InvokeGenericExecuteMethod<ExecuteInMemorySequenceData, ExecuteInMemoryValueData> (
+          _executeInMemoryInput,
+          _resultOperator.InvalidExecuteInMemory_TooManyGenericParameters<object, object>);
     }
 
     [Test]
     [ExpectedException (typeof (ArgumentException), ExpectedMessage = "Method to invoke ('NonPublicExecuteMethod') must be a public method.\r\n"
         + "Parameter name: method")]
-    public void InvokeGenericOnEnumerable_NonPublicTestMethod ()
+    public void InvokeGenericExecuteMethod_NonPublicMethod ()
     {
-      _resultOperator.InvokeGenericOnEnumerable (new[] { 1, 2, 3 }, _resultOperator.NonPublicExecuteMethod);
+      _resultOperator.InvokeGenericExecuteMethod<ExecuteInMemorySequenceData, ExecuteInMemorySequenceData> (
+          _executeInMemoryInput,
+          _resultOperator.NonPublicExecuteMethod<object>);
     }
 
     [Test]
     [ExpectedException (typeof (ArgumentException), ExpectedMessage = "Cannot call method 'ExecuteMethodWithNonMatchingArgumentType' on input of type "
-        + "'System.Int32[]': Object of type 'System.Int32[]' cannot be converted to type 'System.Collections.Generic.IEnumerable`1[System.Object]'."
+        + "'Remotion.Data.Linq.Clauses.ResultOperators.ExecuteInMemorySequenceData': Object of type 'Remotion.Data.Linq.Clauses.ResultOperators."
+        + "ExecuteInMemorySequenceData' cannot be converted to type 'Remotion.Data.Linq.Clauses.ResultOperators.ExecuteInMemoryValueData'."
         + "\r\nParameter name: method")]
-    public void InvokeGenericOnEnumerable_NonMatchingArgument ()
+    public void InvokeGenericExecuteMethod_NonMatchingArgument ()
     {
-      _resultOperator.InvokeGenericOnEnumerable (new[] { 1, 2, 3 }, _resultOperator.ExecuteMethodWithNonMatchingArgumentType<object>);
+      _resultOperator.InvokeGenericExecuteMethod<ExecuteInMemoryValueData, ExecuteInMemoryValueData> (
+          _executeInMemoryInput,
+          _resultOperator.ExecuteMethodWithNonMatchingArgumentType<object>);
     }
   }
 }
