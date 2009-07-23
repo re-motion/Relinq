@@ -38,6 +38,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ExpressionTreeVisitors
 
     private ParameterExpression _simpleInputParameter;
     private ParameterExpression _nestedInputParameter;
+    private ParameterExpression _intInputParameter;
 
     [SetUp]
     public void SetUp ()
@@ -54,15 +55,37 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ExpressionTreeVisitors
 
       _simpleInputParameter = Expression.Parameter (typeof (AnonymousType), "input");
       _nestedInputParameter = Expression.Parameter (typeof (AnonymousType<int, AnonymousType>), "input");
+      _intInputParameter = Expression.Parameter (typeof (int), "input");
     }
 
     [Test]
     public void TrivialExpression ()
     {
-      var trivialParameter = Expression.Parameter (typeof (int), "input");
-      var result = AccessorFindingExpressionTreeVisitor.FindAccessorLambda (_searchedExpression, _searchedExpression, trivialParameter);
+      var result = AccessorFindingExpressionTreeVisitor.FindAccessorLambda (_searchedExpression, _searchedExpression, _intInputParameter);
 
       Expression<Func<int, int>> expectedResult = input => input;
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
+    }
+
+    [Test]
+    public void ConvertExpression ()
+    {
+      var parameter = Expression.Parameter (typeof (long), "input");
+      var fullExpression = Expression.Convert (_searchedExpression, typeof (long));
+      var result = AccessorFindingExpressionTreeVisitor.FindAccessorLambda (_searchedExpression, fullExpression, parameter);
+
+      Expression<Func<long, int>> expectedResult = input => (int) input;
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
+    }
+
+    [Test]
+    public void ConvertCheckedExpression ()
+    {
+      var parameter = Expression.Parameter (typeof (long), "input");
+      var fullExpression = Expression.ConvertChecked (_searchedExpression, typeof (long));
+      var result = AccessorFindingExpressionTreeVisitor.FindAccessorLambda (_searchedExpression, fullExpression, parameter);
+
+      Expression<Func<long, int>> expectedResult = input => (int) input;
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
 
@@ -198,6 +221,15 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ExpressionTreeVisitors
           Expression.Bind (_anonymousTypeBProperty, Expression.Constant (1)));
 
       AccessorFindingExpressionTreeVisitor.FindAccessorLambda (_searchedExpression, fullExpression, _simpleInputParameter);
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "The given expression '+0' does not contain the searched expression '0' in a "
+        + "nested NewExpression with member assignments or a MemberBindingExpression.\r\nParameter name: fullExpression")]
+    public void SearchedExpressionNotFound_AlthoughInUnaryPlusExpression ()
+    {
+      var fullExpression = Expression.UnaryPlus (_searchedExpression);
+      AccessorFindingExpressionTreeVisitor.FindAccessorLambda (_searchedExpression, fullExpression, _intInputParameter);
     }
   }
 }

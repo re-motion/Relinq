@@ -15,7 +15,6 @@
 // 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq.Parsing;
@@ -90,7 +89,7 @@ namespace Remotion.Data.Linq.Clauses.ExpressionTreeVisitors
     private readonly Expression _searchedExpression;
     private readonly ParameterExpression _inputParameter;
 
-    private readonly Stack<MemberInfo> _members = new Stack<MemberInfo> ();
+    private readonly Stack<Expression> _accessorPathStack = new Stack<Expression> ();
 
     private AccessorFindingExpressionTreeVisitor (Expression searchedExpression, ParameterExpression inputParameter)
     {
@@ -99,6 +98,7 @@ namespace Remotion.Data.Linq.Clauses.ExpressionTreeVisitors
 
       _searchedExpression = searchedExpression;
       _inputParameter = inputParameter;
+      _accessorPathStack.Push (_inputParameter);
     }
 
     public LambdaExpression AccessorPath { get; private set; }
@@ -107,10 +107,12 @@ namespace Remotion.Data.Linq.Clauses.ExpressionTreeVisitors
     {
       if (expression == _searchedExpression)
       {
-        AccessorPath = MakeAccessorPath ();
+        Expression path = _accessorPathStack.Peek ();
+        AccessorPath = Expression.Lambda (path, _inputParameter);
+
         return expression;
       }
-      else if (expression is NewExpression || expression is MemberInitExpression)
+      else if (expression is NewExpression || expression is MemberInitExpression || expression is UnaryExpression)
       {
         return base.VisitExpression (expression);
       }
@@ -126,6 +128,19 @@ namespace Remotion.Data.Linq.Clauses.ExpressionTreeVisitors
       {
         for (int i = 0; i < expression.Members.Count; i++)
           CheckAndVisitMemberAssignment (expression.Members[i], expression.Arguments[i]);
+      }
+
+      return expression;
+    }
+
+    protected override Expression VisitUnaryExpression (UnaryExpression expression)
+    {
+      if (expression.NodeType == ExpressionType.Convert || expression.NodeType == ExpressionType.ConvertChecked)
+      {
+        var reverseConvert = Expression.Convert (_accessorPathStack.Peek (), expression.Operand.Type);
+        _accessorPathStack.Push (reverseConvert);
+        base.VisitUnaryExpression (expression);
+        _accessorPathStack.Pop ();
       }
 
       return expression;
@@ -147,18 +162,10 @@ namespace Remotion.Data.Linq.Clauses.ExpressionTreeVisitors
 
     private void CheckAndVisitMemberAssignment (MemberInfo member, Expression expression)
     {
-      _members.Push (member);
+      var memberAccess = GetMemberAccessExpression (_accessorPathStack.Peek (), member);
+      _accessorPathStack.Push (memberAccess);
       VisitExpression (expression);
-      _members.Pop();
-    }
-
-    private LambdaExpression MakeAccessorPath ()
-    {
-      Expression path = _inputParameter;
-      foreach (var member in _members.Reverse())
-        path = GetMemberAccessExpression (path, member);
-
-      return Expression.Lambda (path, _inputParameter);
+      _accessorPathStack.Pop ();
     }
 
     private Expression GetMemberAccessExpression (Expression input, MemberInfo member)
