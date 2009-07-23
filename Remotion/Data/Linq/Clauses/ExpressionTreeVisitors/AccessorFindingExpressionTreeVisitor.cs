@@ -105,7 +105,7 @@ namespace Remotion.Data.Linq.Clauses.ExpressionTreeVisitors
 
     protected override Expression VisitExpression (Expression expression)
     {
-      if (expression == _searchedExpression)
+      if (Equals (expression, _searchedExpression))
       {
         Expression path = _accessorPathStack.Peek ();
         AccessorPath = Expression.Lambda (path, _inputParameter);

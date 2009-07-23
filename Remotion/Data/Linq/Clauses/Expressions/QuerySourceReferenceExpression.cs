@@ -24,6 +24,10 @@ namespace Remotion.Data.Linq.Clauses.Expressions
   /// point back, to a clause defined prior to the clause holding a <see cref="QuerySourceReferenceExpression"/>. Otherwise, exceptions might be 
   /// thrown at runtime.
   /// </summary>
+  /// <remarks>
+  /// This particular expression overrides <see cref="Equals"/>, i.e. it can be compared to another <see cref="QuerySourceReferenceExpression"/> based
+  /// on the <see cref="ReferencedQuerySource"/>.
+  /// </remarks>
   public class QuerySourceReferenceExpression : Expression
   {
     public QuerySourceReferenceExpression (IQuerySource querySource)
@@ -32,12 +36,30 @@ namespace Remotion.Data.Linq.Clauses.Expressions
       ReferencedQuerySource = querySource;
     }
 
-    public QuerySourceReferenceExpression (IQuerySource querySource, Type expressionType)
-      : base ((ExpressionType) (-1), ArgumentUtility.CheckNotNull ("expressionType", expressionType))
+    /// <summary>
+    /// Gets the query source referenced by this expression.
+    /// </summary>
+    /// <value>The referenced query source.</value>
+    public IQuerySource ReferencedQuerySource { get; private set; }
+
+    /// <summary>
+    /// Determines whether the specified <see cref="T:System.Object"/> is equal to the current <see cref="QuerySourceReferenceExpression"/> by 
+    /// comparing the <see cref="ReferencedQuerySource"/> properties for reference equality.
+    /// </summary>
+    /// <param name="obj">The <see cref="T:System.Object"/> to compare with the current <see cref="QuerySourceReferenceExpression"/>.</param>
+    /// <returns>
+    /// <see langword="true" /> if the specified <see cref="T:System.Object"/> is a <see cref="QuerySourceReferenceExpression"/> that points to the 
+    /// same <see cref="ReferencedQuerySource"/>; otherwise, false.
+    /// </returns>
+    public override bool Equals (object obj)
     {
-      ReferencedQuerySource = querySource;
+      var other = obj as QuerySourceReferenceExpression;
+      return other != null && ReferencedQuerySource == other.ReferencedQuerySource;
     }
 
-    public IQuerySource ReferencedQuerySource { get; private set; }
+    public override int GetHashCode ()
+    {
+      return ReferencedQuerySource.GetHashCode ();
+    }
   }
 }

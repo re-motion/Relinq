@@ -106,8 +106,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing
 
     private string GetMessage (object e1, object e2, string context)
     {
-      return string.Format ("Trees are not equal: {0}\nNode 1: {1}\nNode 2: {2}\nTree 1: {3}\nTree 2: {4}", context, e1, e2, _object1,
-          _object2);
+      return string.Format ("Trees are not equal: {0}\nNode 1: {1}\nNode 2: {2}\nTree 1: {3}\nTree 2: {4}", context, e1, e2, _object1, _object2);
     }
   }
 }

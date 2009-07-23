@@ -30,5 +30,29 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.Expressions
       var referenceExpression = new QuerySourceReferenceExpression (SourceClause);
       Assert.That (referenceExpression.Type, Is.SameAs (typeof (int)));
     }
+
+    [Test]
+    public void Equals_True ()
+    {
+      var referenceExpression1 = new QuerySourceReferenceExpression (SourceClause);
+      var referenceExpression2 = new QuerySourceReferenceExpression (SourceClause);
+      Assert.That (referenceExpression1, Is.EqualTo (referenceExpression2));
+    }
+
+    [Test]
+    public void Equals_False ()
+    {
+      var referenceExpression1 = new QuerySourceReferenceExpression (SourceClause);
+      var referenceExpression2 = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause());
+      Assert.That (referenceExpression1, Is.Not.EqualTo (referenceExpression2));
+    }
+
+    [Test]
+    public void GetHashCode_EqualObjects ()
+    {
+      var referenceExpression1 = new QuerySourceReferenceExpression (SourceClause);
+      var referenceExpression2 = new QuerySourceReferenceExpression (SourceClause);
+      Assert.That (referenceExpression1.GetHashCode (), Is.EqualTo (referenceExpression2.GetHashCode ()));
+    }
   }
 }
