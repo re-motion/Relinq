@@ -143,22 +143,6 @@ namespace Remotion.Data.UnitTests.Linq
       return new GroupResultOperator ("groupings", keySelector, elementSelector);
     }
 
-    public static InputDependentExpression CreateInputDependentExpression ()
-    {
-      var dependentExpression = CreateLambdaExpression<Student, string> (s => s.First);
-      var expectedInput = Expression.Constant (null, typeof (Student));
-
-      return new InputDependentExpression (dependentExpression, expectedInput);
-    }
-
-    public static InputDependentExpression CreateInputDependentExpression (Expression expectedInput)
-    {
-      var parameter = Expression.Parameter (expectedInput.Type, "x");
-      var dependentExpression = Expression.Lambda (parameter, parameter);
-
-      return new InputDependentExpression (dependentExpression, expectedInput);
-    }
-
     public static Ordering CreateOrdering ()
     {
       return new Ordering (CreateExpression (), OrderingDirection.Asc);

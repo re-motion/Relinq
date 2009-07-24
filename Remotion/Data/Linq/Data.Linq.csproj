@@ -72,7 +72,6 @@
     <Compile Include="Clauses\ResultOperators\DefaultIfEmptyResultOperator.cs" />
     <Compile Include="Clauses\ResultOperators\ExceptResultOperator.cs" />
     <Compile Include="Clauses\ResultOperators\IExecuteInMemoryData.cs" />
-    <Compile Include="Clauses\ResultOperators\InputDependentExpression.cs" />
     <Compile Include="Clauses\ResultOperators\IntersectResultOperator.cs" />
     <Compile Include="Clauses\ResultOperators\LongCountResultOperator.cs" />
     <Compile Include="Clauses\ResultOperators\OfTypeResultOperator.cs" />
