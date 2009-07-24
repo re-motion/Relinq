@@ -77,7 +77,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     /// </summary>
     /// <typeparam name="T">The expected item type of the sequence.</typeparam>
     /// <exception cref="InvalidOperationException">This object does not hold a sequence.</exception>
-    public Tuple<IEnumerable<T>, Expression> GetCurrentSequence<T> ()
+    public ExecuteInMemorySequenceData.TypedSequenceInfo<T> GetCurrentSequenceInfo<T> ()
     {
       throw new InvalidOperationException ("Cannot retrieve the current value as a sequence because it is a value.");
     }

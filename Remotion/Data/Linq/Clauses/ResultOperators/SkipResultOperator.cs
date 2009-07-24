@@ -94,9 +94,9 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
 
     public ExecuteInMemorySequenceData ExecuteInMemory<T> (ExecuteInMemorySequenceData input)
     {
-      var sequence = input.GetCurrentSequence<T> ();
-      var result = sequence.A.Skip (GetConstantCount());
-      return new ExecuteInMemorySequenceData (result, sequence.B);
+      var sequence = input.GetCurrentSequenceInfo<T> ();
+      var result = sequence.Sequence.Skip (GetConstantCount());
+      return new ExecuteInMemorySequenceData (result, sequence.ItemExpression);
     }
 
     public override Type GetResultType (Type inputResultType)

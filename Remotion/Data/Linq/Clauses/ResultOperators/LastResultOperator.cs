@@ -57,15 +57,15 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
 
     public ExecuteInMemoryValueData ExecuteInMemory<T> (ExecuteInMemorySequenceData input)
     {
-      var sequence = input.GetCurrentSequence<T> ();
+      var sequence = input.GetCurrentSequenceInfo<T> ();
       if (ReturnDefaultWhenEmpty)
       {
-        var result = sequence.A.LastOrDefault();
+        var result = sequence.Sequence.LastOrDefault();
         return new ExecuteInMemoryValueData (result);
       }
       else
       {
-        var result = sequence.A.Last ();
+        var result = sequence.Sequence.Last ();
         return new ExecuteInMemoryValueData (result);
       }
     }

@@ -83,16 +83,16 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
 
     public ExecuteInMemorySequenceData ExecuteInMemory<T> (ExecuteInMemorySequenceData input)
     {
-      var sequence = input.GetCurrentSequence<T> ();
+      var sequence = input.GetCurrentSequenceInfo<T> ();
       if (OptionalDefaultValue != null)
       {
-        var result = sequence.A.DefaultIfEmpty ((T) GetConstantOptionalDefaultValue ());
-        return new ExecuteInMemorySequenceData (result, sequence.B);
+        var result = sequence.Sequence.DefaultIfEmpty ((T) GetConstantOptionalDefaultValue ());
+        return new ExecuteInMemorySequenceData (result, sequence.ItemExpression);
       }
       else
       {
-        var result = sequence.A.DefaultIfEmpty ();
-        return new ExecuteInMemorySequenceData (result, sequence.B);
+        var result = sequence.Sequence.DefaultIfEmpty ();
+        return new ExecuteInMemorySequenceData (result, sequence.ItemExpression);
       }
     }
 

@@ -56,7 +56,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
           _executeInMemoryInput, 
           _resultOperator.DistinctExecuteMethod<object>);
 
-      Assert.That (result.GetCurrentSequence<int>().A.ToArray(), Is.EquivalentTo (new[] { 1, 2, 3, 4 }));
+      Assert.That (result.GetCurrentSequenceInfo<int>().Sequence.ToArray(), Is.EquivalentTo (new[] { 1, 2, 3, 4 }));
     }
 
     [Test]

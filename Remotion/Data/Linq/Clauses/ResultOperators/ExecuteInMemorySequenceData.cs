@@ -17,7 +17,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
-using Remotion.Collections;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
@@ -28,6 +27,22 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   /// </summary>
   public class ExecuteInMemorySequenceData : IExecuteInMemoryData
   {
+    public struct TypedSequenceInfo<T>
+    {
+      public TypedSequenceInfo (IEnumerable<T> sequence, Expression itemExpression)
+          : this()
+      {
+        ArgumentUtility.CheckNotNull ("sequence", sequence);
+        ArgumentUtility.CheckNotNull ("itemExpression", itemExpression);
+
+        Sequence = sequence;
+        ItemExpression = itemExpression;
+      }
+
+      public IEnumerable<T> Sequence { get; private set; }
+      public Expression ItemExpression { get; private set; }
+    }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ExecuteInMemorySequenceData"/> class, setting the <see cref="CurrentSequence"/> and 
     /// <see cref="ItemExpression"/> properties.
@@ -85,11 +100,11 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     /// The sequence and an <see cref="Expression"/> describing its items.
     /// </returns>
     /// <exception cref="InvalidOperationException">Thrown when the item type is not the expected type <typeparamref name="T"/>.</exception>
-    public Tuple<IEnumerable<T>, Expression> GetCurrentSequence<T> ()
+    public TypedSequenceInfo<T> GetCurrentSequenceInfo<T> ()
     {
       try
       {
-        return Tuple.NewTuple ((IEnumerable<T>) CurrentSequence, ItemExpression);
+        return new TypedSequenceInfo<T> ((IEnumerable<T>) CurrentSequence, ItemExpression);
       }
       catch (InvalidCastException ex)
       {

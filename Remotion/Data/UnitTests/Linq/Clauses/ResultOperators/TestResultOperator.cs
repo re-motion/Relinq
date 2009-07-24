@@ -51,8 +51,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
 
     public ExecuteInMemorySequenceData DistinctExecuteMethod<T> (ExecuteInMemorySequenceData arg)
     {
-      var currentSequence = arg.GetCurrentSequence<T>();
-      return new ExecuteInMemorySequenceData (currentSequence.A.Distinct (), currentSequence.B);
+      var currentSequence = arg.GetCurrentSequenceInfo<T>();
+      return new ExecuteInMemorySequenceData (currentSequence.Sequence.Distinct (), currentSequence.ItemExpression);
     }
 
     // ReSharper disable UnusedTypeParameter

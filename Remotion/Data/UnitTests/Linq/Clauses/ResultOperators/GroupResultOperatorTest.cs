@@ -167,16 +167,16 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       var elementSelector = new InputDependentExpression (ExpressionHelper.CreateLambdaExpression<AnonymousType, string> (trans => trans.a.ToString ()), expectedInput);
       var resultOperator = new GroupResultOperator ("groupings", keySelector, elementSelector);
 
-      var result = resultOperator.ExecuteInMemory (input).GetCurrentSequence<IGrouping<int, string>> ();
+      var result = resultOperator.ExecuteInMemory (input).GetCurrentSequenceInfo<IGrouping<int, string>> ();
 
-      var resultArray = result.A.ToArray ();
+      var resultArray = result.Sequence.ToArray ();
       Assert.That (resultArray.Length, Is.EqualTo (3));
       Assert.That (resultArray[0].ToArray (), Is.EqualTo (new[] { "111", "444" }));
       Assert.That (resultArray[1].ToArray (), Is.EqualTo (new[] { "222", "555" }));
       Assert.That (resultArray[2].ToArray (), Is.EqualTo (new[] { "333" }));
 
-      Assert.That (result.B, Is.InstanceOfType (typeof (QuerySourceReferenceExpression)));
-      Assert.That (((QuerySourceReferenceExpression) result.B).ReferencedQuerySource, Is.SameAs (resultOperator));
+      Assert.That (result.ItemExpression, Is.InstanceOfType (typeof (QuerySourceReferenceExpression)));
+      Assert.That (((QuerySourceReferenceExpression) result.ItemExpression).ReferencedQuerySource, Is.SameAs (resultOperator));
     }
 
     [Test]

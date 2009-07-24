@@ -83,7 +83,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       IExecuteInMemoryData input = new ExecuteInMemorySequenceData (items, Expression.Constant (0));
       var result = _resultOperatorWithDefaultValue.ExecuteInMemory (input);
 
-      Assert.That (result.GetCurrentSequence<int>().A.ToArray(), Is.EqualTo (new[] { 100 }));
+      Assert.That (result.GetCurrentSequenceInfo<int>().Sequence.ToArray(), Is.EqualTo (new[] { 100 }));
     }
 
     [Test]
@@ -93,7 +93,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       IExecuteInMemoryData input = new ExecuteInMemorySequenceData (items, Expression.Constant (0));
       var result = _resultOperatorWithoutDefaultValue.ExecuteInMemory (input);
 
-      Assert.That (result.GetCurrentSequence<int>().A.ToArray(), Is.EqualTo (new[] { 0 }));
+      Assert.That (result.GetCurrentSequenceInfo<int>().Sequence.ToArray(), Is.EqualTo (new[] { 0 }));
     }
 
     [Test]

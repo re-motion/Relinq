@@ -96,9 +96,9 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     {
       ArgumentUtility.CheckNotNull ("input", input);
 
-      var sequence = input.GetCurrentSequence<T> ();
+      var sequence = input.GetCurrentSequenceInfo<T> ();
       var item = GetConstantItem<T> ();
-      return new ExecuteInMemoryValueData (sequence.A.Contains (item));
+      return new ExecuteInMemoryValueData (sequence.Sequence.Contains (item));
     }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)

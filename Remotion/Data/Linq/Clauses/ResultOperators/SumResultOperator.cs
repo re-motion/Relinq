@@ -64,7 +64,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
         throw new NotSupportedException (message);
       }
 
-      var result = method.Invoke (null, new[] { input.GetCurrentSequence<T> ().A });
+      var result = method.Invoke (null, new[] { input.GetCurrentSequenceInfo<T> ().Sequence });
       return new ExecuteInMemoryValueData (result);
     }
 

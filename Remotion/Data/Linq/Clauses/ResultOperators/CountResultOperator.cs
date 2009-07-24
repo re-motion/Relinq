@@ -53,8 +53,8 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
 
     public ExecuteInMemoryValueData ExecuteInMemory<T> (ExecuteInMemorySequenceData input)
     {
-      var sequence = input.GetCurrentSequence<T> ();
-      var result = sequence.A.Count ();
+      var sequence = input.GetCurrentSequenceInfo<T> ();
+      var result = sequence.Sequence.Count ();
       return new ExecuteInMemoryValueData (result);
     }
 

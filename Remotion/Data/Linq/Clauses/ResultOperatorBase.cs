@@ -128,8 +128,8 @@ namespace Remotion.Data.Linq.Clauses
     ///
     /// public ExecuteInMemoryValueData ExecuteInMemory&lt;T&gt; (ExecuteInMemorySequenceData input)
     /// {
-    ///   var sequence = input.GetCurrentSequence&lt;T&gt; ();
-    ///   var result = sequence.A.Count ();
+    ///   var sequence = input.GetCurrentSequenceInfo&lt;T&gt; ();
+    ///   var result = sequence.Sequence.Count ();
     ///   return new ExecuteInMemoryValueData (result);
     /// }
     /// </code>

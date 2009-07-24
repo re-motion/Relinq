@@ -59,7 +59,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
         ExpectedMessage = "Cannot retrieve the current value as a sequence because it is a value.")]
     public void GetCurrentSequence_NoSequence ()
     {
-      _dataWithIntValue.GetCurrentSequence<int> ();
+      _dataWithIntValue.GetCurrentSequenceInfo<int> ();
     }
 
     [Test]

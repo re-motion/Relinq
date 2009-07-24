@@ -66,10 +66,10 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
 
     public ExecuteInMemorySequenceData ExecuteInMemory<TInput> (ExecuteInMemorySequenceData input)
     {
-      var sequence = input.GetCurrentSequence<TInput> ();
+      var sequence = input.GetCurrentSequenceInfo<TInput> ();
       var castMethod = typeof (Enumerable).GetMethod ("OfType", new[] { typeof (IEnumerable) }).MakeGenericMethod (SearchedItemType);
-      var result = InvokeExecuteMethod (castMethod, sequence.A);
-      var resultItemExpression = Expression.Convert (sequence.B, SearchedItemType);
+      var result = InvokeExecuteMethod (castMethod, sequence.Sequence);
+      var resultItemExpression = Expression.Convert (sequence.ItemExpression, SearchedItemType);
       return new ExecuteInMemorySequenceData (result, resultItemExpression);
     }
 

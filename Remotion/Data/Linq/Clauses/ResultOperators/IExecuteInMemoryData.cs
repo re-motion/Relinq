@@ -30,7 +30,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     /// <returns>The sequence and an <see cref="Expression"/> describing its items.</returns>
     /// <exception cref="InvalidOperationException">Thrown when this object holds a single value instead of a sequence or the item type is not the 
     /// expected type <typeparamref name="T"/>.</exception>
-    Tuple<IEnumerable<T>, Expression> GetCurrentSequence<T> ();
+    ExecuteInMemorySequenceData.TypedSequenceInfo<T> GetCurrentSequenceInfo<T> ();
 
     /// <summary>
     /// Takes the given <paramref name="genericMethodDefinition"/> and instantiates it, substituting its generic parameter with the value

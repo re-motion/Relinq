@@ -14,10 +14,8 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Collections;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using System.Linq.Expressions;
 using Remotion.Utilities;
@@ -65,9 +63,9 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     [Test]
     public void GetCurrentSequence ()
     {
-      Tuple<IEnumerable<int>, Expression> sequenceData = _dataWithIntSequence.GetCurrentSequence<int> ();
-      Assert.That (sequenceData.A, Is.SameAs (_intSequence));
-      Assert.That (sequenceData.B, Is.SameAs (_intExpression));
+      var sequenceData = _dataWithIntSequence.GetCurrentSequenceInfo<int> ();
+      Assert.That (sequenceData.Sequence, Is.SameAs (_intSequence));
+      Assert.That (sequenceData.ItemExpression, Is.SameAs (_intExpression));
     }
 
     [Test]
@@ -75,7 +73,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
         + "'System.String' because its items are of type 'System.Int32'.")]
     public void GetCurrentSequence_InvalidItemType ()
     {
-      _dataWithIntSequence.GetCurrentSequence<string> ();
+      _dataWithIntSequence.GetCurrentSequenceInfo<string> ();
     }
 
     [Test]
