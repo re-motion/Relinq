@@ -60,7 +60,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     public void ExecuteInMemory ()
     {
       object items = new[] { 1, 2, 3, 0, 2 };
-      var input = new ExecuteInMemorySequenceData (items, Expression.Constant (0));
+      IExecuteInMemoryData input = new ExecuteInMemorySequenceData (items, Expression.Constant (0));
       var result = _resultOperator.ExecuteInMemory (input);
 
       Assert.That (result.GetCurrentSequence<int>().A.ToArray (), Is.EqualTo (new[] { 3, 0, 2 }));

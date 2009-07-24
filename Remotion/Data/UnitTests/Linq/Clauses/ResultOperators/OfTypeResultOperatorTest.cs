@@ -55,14 +55,15 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       var student2 = new GoodStudent ();
       var student3 = new Student ();
       object items = new Student[] { student1, student2, student3 };
-      var input = new ExecuteInMemorySequenceData (items, Expression.Constant (student3, typeof (Student)));
+      var itemExpression = Expression.Constant (student3, typeof (Student));
+      IExecuteInMemoryData input = new ExecuteInMemorySequenceData (items, itemExpression);
 
       var result = _resultOperator.ExecuteInMemory (input);
 
       var sequence = result.GetCurrentSequence<GoodStudent> ();
       Assert.That (sequence.A.ToArray (), Is.EquivalentTo (new[] { student1, student2 }));
       Assert.That (sequence.B.Type, Is.EqualTo (typeof (GoodStudent)));
-      Assert.That (((UnaryExpression) sequence.B).Operand, Is.SameAs (input.ItemExpression));
+      Assert.That (((UnaryExpression) sequence.B).Operand, Is.SameAs (itemExpression));
     }
 
     [Test]

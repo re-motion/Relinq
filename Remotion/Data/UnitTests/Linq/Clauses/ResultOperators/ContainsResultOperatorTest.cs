@@ -52,7 +52,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     public void ExecuteInMemory ()
     {
       object items = new[] { 1, 2, 3, 4};
-      var input = new ExecuteInMemorySequenceData (items, Expression.Constant (0));
+      IExecuteInMemoryData input = new ExecuteInMemorySequenceData (items, Expression.Constant (0));
       var result = _resultOperator.ExecuteInMemory (input);
 
       Assert.That (result.GetCurrentSingleValue<bool>(), Is.True);

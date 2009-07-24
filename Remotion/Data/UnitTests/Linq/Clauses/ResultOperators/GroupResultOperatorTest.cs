@@ -161,7 +161,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
           new AnonymousType (555, 5) 
       };
 
-      var input = new ExecuteInMemorySequenceData (items, expectedInput);
+      IExecuteInMemoryData input = new ExecuteInMemorySequenceData (items, expectedInput);
       
       var keySelector = new InputDependentExpression (ExpressionHelper.CreateLambdaExpression<AnonymousType, int> (trans => trans.b % 3), expectedInput);
       var elementSelector = new InputDependentExpression (ExpressionHelper.CreateLambdaExpression<AnonymousType, string> (trans => trans.a.ToString ()), expectedInput);
