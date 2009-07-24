@@ -107,11 +107,15 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return inputResultType;
     }
 
-    public override string ToString ()
+    public override void TransformExpressions (Func<Expression, Expression> transformation)
     {
-      return "Skip(" + Count + ")";
+      ArgumentUtility.CheckNotNull ("transformation", transformation);
+      Count = transformation (Count);
     }
 
-    
+    public override string ToString ()
+    {
+      return "Skip(" + FormattingExpressionTreeVisitor.Format (Count) + ")";
+    }
   }
 }

@@ -199,7 +199,10 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
 
     public override string ToString ()
     {
-      return string.Format ("GroupBy({0}, {1})", KeySelector, ElementSelector);
+      return string.Format (
+          "GroupBy({0}, {1})", 
+          FormattingExpressionTreeVisitor.Format (KeySelector.ResolvedExpression), 
+          FormattingExpressionTreeVisitor.Format (ElementSelector.ResolvedExpression));
     }
   }
 }

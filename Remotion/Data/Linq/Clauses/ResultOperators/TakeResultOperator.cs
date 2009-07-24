@@ -111,9 +111,15 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return inputResultType;
     }
 
+    public override void TransformExpressions (Func<Expression, Expression> transformation)
+    {
+      ArgumentUtility.CheckNotNull ("transformation", transformation);
+      Count = transformation (Count);
+    }
+
     public override string ToString ()
     {
-      return "Take(" + Count + ")";
+      return "Take(" + FormattingExpressionTreeVisitor.Format (Count) + ")";
     }
   }
 }

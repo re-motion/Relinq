@@ -16,7 +16,6 @@
 using System;
 using System.Diagnostics;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Utilities;
 
@@ -50,7 +49,7 @@ namespace Remotion.Data.Linq.Clauses
     /// <summary>
     /// Gets the predicate, the expression representing the where condition by which the data items are filtered
     /// </summary>
-    [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (Predicate),nq}")]
+    [DebuggerDisplay ("{Remotion.Data.Linq.Clauses.ExpressionTreeVisitors.FormattingExpressionTreeVisitor.Format (Predicate),nq}")]
     public Expression Predicate
     {
       get { return _predicate; }

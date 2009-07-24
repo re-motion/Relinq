@@ -95,8 +95,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
         return new ExecuteInMemorySequenceData (result, sequence.ItemExpression);
       }
     }
-
-
+    
     public override Type GetResultType (Type inputResultType)
     {
       ArgumentUtility.CheckNotNull ("inputResultType", inputResultType);
@@ -105,11 +104,20 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return inputResultType;
     }
 
-    public override string ToString ()
+    public override void TransformExpressions (Func<Expression, Expression> transformation)
     {
-      return "DefaultIfEmpty()";
+      ArgumentUtility.CheckNotNull ("transformation", transformation);
+      
+      if (OptionalDefaultValue != null)
+        OptionalDefaultValue = transformation (OptionalDefaultValue);
     }
 
-    
+    public override string ToString ()
+    {
+      if (OptionalDefaultValue == null)
+        return "DefaultIfEmpty()";
+      else
+        return "DefaultIfEmpty(" + FormattingExpressionTreeVisitor.Format (OptionalDefaultValue) + ")";
+    }
   }
 }

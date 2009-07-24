@@ -96,7 +96,7 @@ namespace Remotion.Data.Linq.Clauses
     /// Gets or sets the inner sequence, the expression that generates the inner sequence, i.e. the items of this <see cref="JoinClause"/>.
     /// </summary>
     /// <value>The inner sequence.</value>
-    [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (InnerSequence),nq}")]
+    [DebuggerDisplay ("{Remotion.Data.Linq.Clauses.ExpressionTreeVisitors.FormattingExpressionTreeVisitor.Format (InnerSequence),nq}")]
     public Expression InnerSequence
     {
       get { return _innerSequence; }
@@ -107,7 +107,7 @@ namespace Remotion.Data.Linq.Clauses
     /// Gets or sets the outer key selector, an expression that selects the right side of the comparison by which source items and inner items are joined.
     /// </summary>
     /// <value>The outer key selector.</value>
-    [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (OuterKeySelector),nq}")]
+    [DebuggerDisplay ("{Remotion.Data.Linq.Clauses.ExpressionTreeVisitors.FormattingExpressionTreeVisitor.Format (OuterKeySelector),nq}")]
     public Expression OuterKeySelector
     {
       get { return _outerKeySelector; }
@@ -118,7 +118,7 @@ namespace Remotion.Data.Linq.Clauses
     /// Gets or sets the inner key selector, an expression that selects the left side of the comparison by which source items and inner items are joined.
     /// </summary>
     /// <value>The inner key selector.</value>
-    [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (InnerKeySelector),nq}")]
+    [DebuggerDisplay ("{Remotion.Data.Linq.Clauses.ExpressionTreeVisitors.FormattingExpressionTreeVisitor.Format (InnerKeySelector),nq}")]
     public Expression InnerKeySelector
     {
       get { return _innerKeySelector; }

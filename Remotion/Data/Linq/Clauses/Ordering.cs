@@ -16,7 +16,6 @@
 using System;
 using System.Diagnostics;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Utilities;
 
@@ -46,7 +45,7 @@ namespace Remotion.Data.Linq.Clauses
     /// Gets or sets the expression used to order the data items returned by the query.
     /// </summary>
     /// <value>The expression.</value>
-    [DebuggerDisplay ("{Remotion.Data.Linq.StringBuilding.FormattingExpressionTreeVisitor.Format (Expression),nq}")]
+    [DebuggerDisplay ("{Remotion.Data.Linq.Clauses.ExpressionTreeVisitors.FormattingExpressionTreeVisitor.Format (Expression),nq}")]
     public Expression Expression
     {
       get { return _expression; }

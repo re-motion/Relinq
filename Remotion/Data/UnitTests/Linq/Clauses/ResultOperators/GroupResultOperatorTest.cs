@@ -234,5 +234,30 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
 
       resultOperator.GetResultType (typeof (IQueryable<Student>));
     }
+
+    [Test]
+    [Ignore ("TODO 1379")]
+    public void TransformExpressions ()
+    {
+      //var oldExpression1 = ExpressionHelper.CreateExpression ();
+      //var oldExpression2 = ExpressionHelper.CreateExpression ();
+      //var newExpression1 = ExpressionHelper.CreateExpression ();
+      //var newExpression2 = ExpressionHelper.CreateExpression ();
+      //var resultOperator = new GroupResultOperator ("x", oldExpression1, oldExpression2);
+
+      //resultOperator.TransformExpressions (ex =>
+      //{
+      //  if (ex == oldExpression1)
+      //    return newExpression1;
+      //  else
+      //  {
+      //    Assert.That (ex, Is.SameAs (oldExpression2));
+      //    return newExpression2;
+      //  }
+      //});
+
+      //Assert.That (resultOperator.KeySelector.ResolvedExpression, Is.SameAs (newExpression1));
+      //Assert.That (resultOperator.ElementSelector.ResolvedExpression, Is.SameAs (newExpression2));
+    }
   }
 }

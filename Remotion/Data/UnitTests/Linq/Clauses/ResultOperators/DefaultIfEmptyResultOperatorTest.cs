@@ -102,5 +102,34 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       Assert.That (_resultOperatorWithDefaultValue.GetResultType (typeof (IQueryable<Student>)), Is.SameAs (typeof (IQueryable<Student>)));
     }
 
+    [Test]
+    public void TransformExpressions_WithDefaultValue ()
+    {
+      var oldExpression = ExpressionHelper.CreateExpression ();
+      var newExpression = ExpressionHelper.CreateExpression ();
+      var resultOperator = new DefaultIfEmptyResultOperator (oldExpression);
+
+      resultOperator.TransformExpressions (ex =>
+      {
+        Assert.That (ex, Is.SameAs (oldExpression));
+        return newExpression;
+      });
+
+      Assert.That (resultOperator.OptionalDefaultValue, Is.SameAs (newExpression));
+    }
+
+    [Test]
+    public void TransformExpressions_WithoutDefaultValue ()
+    {
+      var resultOperator = new DefaultIfEmptyResultOperator (null);
+
+      resultOperator.TransformExpressions (ex =>
+      {
+        Assert.Fail ("Must not be called.");
+        throw new NotImplementedException ();
+      });
+    }
+
+
   }
 }

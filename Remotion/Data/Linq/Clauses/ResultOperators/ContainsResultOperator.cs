@@ -46,11 +46,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     public Expression Item
     {
       get { return _item; }
-      set
-      {
-        ArgumentUtility.CheckNotNull ("value", value);
-        _item = value;
-      }
+      set { _item = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
     /// <summary>
@@ -115,9 +111,15 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return typeof (bool);
     }
 
+    public override void TransformExpressions (Func<Expression, Expression> transformation)
+    {
+      ArgumentUtility.CheckNotNull ("transformation", transformation);
+      Item = transformation (Item);
+    }
+
     public override string ToString ()
     {
-      return "Contains(" + Item + ")";
+      return "Contains(" + FormattingExpressionTreeVisitor.Format (Item) + ")";
     }
   }
 }

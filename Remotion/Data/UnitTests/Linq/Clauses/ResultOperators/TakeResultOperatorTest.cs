@@ -97,5 +97,21 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     {
       _resultOperator.GetResultType (typeof (Student));
     }
+
+    [Test]
+    public void TransformExpressions ()
+    {
+      var oldExpression = Expression.Constant (0);
+      var newExpression = Expression.Constant (1);
+      var resultOperator = new TakeResultOperator (oldExpression);
+
+      resultOperator.TransformExpressions (ex =>
+      {
+        Assert.That (ex, Is.SameAs (oldExpression));
+        return newExpression;
+      });
+
+      Assert.That (resultOperator.Count, Is.SameAs (newExpression));
+    }
   }
 }
