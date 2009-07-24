@@ -19,6 +19,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.Expressions;
+using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
@@ -134,31 +135,37 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
 
     public override IExecuteInMemoryData ExecuteInMemory (IExecuteInMemoryData input)
     {
-      throw new NotImplementedException ();
+      ArgumentUtility.CheckNotNull ("input", input);
+      return InvokeGenericExecuteMethod<ExecuteInMemorySequenceData, ExecuteInMemorySequenceData> (input, ExecuteInMemory<object>);
     }
 
-    public object ExecuteInMemory (object input)
+    public ExecuteInMemorySequenceData ExecuteInMemory<TInput> (ExecuteInMemorySequenceData input)
     {
       ArgumentUtility.CheckNotNull ("input", input);
-
-      var itemType = GetInputItemType (input);
 
       var executeMethod = typeof (GroupResultOperator).GetMethod ("ExecuteGroupingInMemory");
       var closedExecuteMethod = executeMethod.MakeGenericMethod (
-          KeySelector.DependentExpression.Body.Type,
-          ElementSelector.DependentExpression.Body.Type,
-          itemType);
+          typeof (TInput),
+          KeySelector.ResolvedExpression.Type,
+          ElementSelector.ResolvedExpression.Type);
 
-      return InvokeExecuteMethod (input, closedExecuteMethod);
+      return (ExecuteInMemorySequenceData) InvokeExecuteMethod (closedExecuteMethod, input);
     }
 
-    public IEnumerable<IGrouping<TKey, TElement>> ExecuteGroupingInMemory<TKey, TElement, TInput> (IEnumerable<TInput> input)
+    public ExecuteInMemorySequenceData ExecuteGroupingInMemory<TSource, TKey, TElement> (ExecuteInMemorySequenceData input)
     {
       ArgumentUtility.CheckNotNull ("input", input);
 
-      return input.GroupBy (
-          (Func<TInput, TKey>) KeySelector.DependentExpression.Compile (),
-          (Func<TInput, TElement>) ElementSelector.DependentExpression.Compile ());
+      var inputSequence = input.GetCurrentSequence<TSource>().A;
+
+      var keySelectorLambda = ReverseResolvingExpressionTreeVisitor.ReverseResolve (input.ItemExpression, KeySelector.ResolvedExpression);
+      var keySelector = (Func<TSource, TKey>) keySelectorLambda.Compile ();
+
+      var elementSelectorLambda = ReverseResolvingExpressionTreeVisitor.ReverseResolve (input.ItemExpression, ElementSelector.ResolvedExpression);
+      var elementSelector = (Func<TSource, TElement>) elementSelectorLambda.Compile ();
+
+      var resultSequence = inputSequence.GroupBy (keySelector, elementSelector);
+      return new ExecuteInMemorySequenceData (resultSequence, new QuerySourceReferenceExpression (this));
     }
 
     public override Type GetResultType (Type inputResultType)

@@ -14,9 +14,9 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
@@ -143,23 +143,40 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     [Test]
     public void ExecuteInMemory ()
     {
-      var input = new[] { 1, 2, 3, 4, 5 };
+      // group [i].ToString() by [j] % 3
+      // expected input: new AnonymousType ( a = [i], b = [j] )
 
-      // group i.ToString() by i % 3
+      var fromClause1 = ExpressionHelper.CreateMainFromClause ("i", typeof (int), ExpressionHelper.CreateIntQueryable ());
+      var fromClause2 = ExpressionHelper.CreateMainFromClause ("j", typeof (int), ExpressionHelper.CreateIntQueryable ());
+      var expectedInput = Expression.New (
+        typeof (AnonymousType).GetConstructor (new[] {typeof (int), typeof (int) }), 
+        new Expression[] { new QuerySourceReferenceExpression (fromClause1), new QuerySourceReferenceExpression (fromClause2) },
+        new MemberInfo[] { typeof (AnonymousType).GetProperty ("a"), typeof (AnonymousType).GetProperty ("b") });
 
-      var expectedInput = new QuerySourceReferenceExpression (
-          ExpressionHelper.CreateMainFromClause("i", typeof (int), ExpressionHelper.CreateStudentQueryable()));
+      var items = new[] { 
+          new AnonymousType (111, 1), 
+          new AnonymousType (222, 2), 
+          new AnonymousType (333, 3), 
+          new AnonymousType (444, 4), 
+          new AnonymousType (555, 5) 
+      };
 
-      var keySelector = new InputDependentExpression (ExpressionHelper.CreateLambdaExpression<int, int> (i => i % 3), expectedInput);
-      var elementSelector = new InputDependentExpression (ExpressionHelper.CreateLambdaExpression<int, string> (i => i.ToString()), expectedInput);
+      var input = new ExecuteInMemorySequenceData (items, expectedInput);
+      
+      var keySelector = new InputDependentExpression (ExpressionHelper.CreateLambdaExpression<AnonymousType, int> (trans => trans.b % 3), expectedInput);
+      var elementSelector = new InputDependentExpression (ExpressionHelper.CreateLambdaExpression<AnonymousType, string> (trans => trans.a.ToString ()), expectedInput);
       var resultOperator = new GroupResultOperator ("groupings", keySelector, elementSelector);
 
-      var result = ((IEnumerable<IGrouping<int, string>>) resultOperator.ExecuteInMemory (input)).ToArray();
+      var result = resultOperator.ExecuteInMemory (input).GetCurrentSequence<IGrouping<int, string>> ();
 
-      Assert.That (result.Length, Is.EqualTo (3));
-      Assert.That (result[0].ToArray (), Is.EqualTo (new[] { "1", "4" }));
-      Assert.That (result[1].ToArray (), Is.EqualTo (new[] { "2", "5" }));
-      Assert.That (result[2].ToArray (), Is.EqualTo (new[] { "3" }));
+      var resultArray = result.A.ToArray ();
+      Assert.That (resultArray.Length, Is.EqualTo (3));
+      Assert.That (resultArray[0].ToArray (), Is.EqualTo (new[] { "111", "444" }));
+      Assert.That (resultArray[1].ToArray (), Is.EqualTo (new[] { "222", "555" }));
+      Assert.That (resultArray[2].ToArray (), Is.EqualTo (new[] { "333" }));
+
+      Assert.That (result.B, Is.InstanceOfType (typeof (QuerySourceReferenceExpression)));
+      Assert.That (((QuerySourceReferenceExpression) result.B).ReferencedQuerySource, Is.SameAs (resultOperator));
     }
 
     [Test]

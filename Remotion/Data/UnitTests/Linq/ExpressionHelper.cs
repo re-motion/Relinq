@@ -191,6 +191,11 @@ namespace Remotion.Data.UnitTests.Linq
       return CreateMainFromClause();
     }
 
+    public static IQueryable<int> CreateIntQueryable ()
+    {
+      return new TestQueryable<int> (s_executor);
+    }
+
     public static IQueryable<Student> CreateStudentQueryable()
     {
       return CreateStudentQueryable (s_executor);

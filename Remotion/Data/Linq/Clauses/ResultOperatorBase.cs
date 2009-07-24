@@ -150,7 +150,7 @@ namespace Remotion.Data.Linq.Clauses
       }
 
       var closedGenericMethod = input.MakeClosedGenericExecuteMethod (method.GetGenericMethodDefinition ());
-      return (TResult) InvokeExecuteMethod (input, closedGenericMethod);
+      return (TResult) InvokeExecuteMethod (closedGenericMethod, input);
     }
 
     /// <summary>
@@ -159,7 +159,7 @@ namespace Remotion.Data.Linq.Clauses
     /// <param name="input">The input to invoke the method with.</param>
     /// <param name="method">The method to be invoked.</param>
     /// <returns>The result of the invocation</returns>
-    protected object InvokeExecuteMethod (object input, MethodInfo method)
+    protected object InvokeExecuteMethod (MethodInfo method, object input)
     {
       if (!method.IsPublic)
         throw new ArgumentException ("Method to invoke ('" + method.Name + "') must be a public method.", "method");

@@ -63,7 +63,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     {
       var sequence = input.GetCurrentSequence<TInput> ();
       var castMethod = typeof (Enumerable).GetMethod ("Cast", new[] { typeof (IEnumerable) }).MakeGenericMethod (CastItemType);
-      var result = InvokeExecuteMethod (sequence.A, castMethod);
+      var result = InvokeExecuteMethod (castMethod, sequence.A);
       var resultItemExpression = Expression.Convert (sequence.B, CastItemType);
       return new ExecuteInMemorySequenceData (result, resultItemExpression);
     }
