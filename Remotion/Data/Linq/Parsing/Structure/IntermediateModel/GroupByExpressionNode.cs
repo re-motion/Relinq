@@ -86,14 +86,17 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     protected override ResultOperatorBase CreateResultOperator (ClauseGenerationContext clauseGenerationContext)
     {
-      var resolvedInput = Source.Resolve (KeySelector.Parameters[0], KeySelector.Parameters[0], clauseGenerationContext);
+      var resolvedKeySelector = GetResolvedKeySelector (clauseGenerationContext);
 
-      var inputDependentKeySelector = new InputDependentExpression (KeySelector, resolvedInput);
+      var resolvedElementSelector = GetResolvedOptionalElementSelector (clauseGenerationContext);
+      if (resolvedElementSelector == null)
+      {
+        // supply a default element selector if none is given
+        // just resolve KeySelector.Parameters[0], that's the input data flowing in from the source node
+        resolvedElementSelector = Source.Resolve (KeySelector.Parameters[0], KeySelector.Parameters[0], clauseGenerationContext);
+      }
       
-      var elementSelector = OptionalElementSelector ?? Expression.Lambda (KeySelector.Parameters[0], KeySelector.Parameters[0]);
-      var inputDependentElementSelector = new InputDependentExpression (elementSelector, resolvedInput);
-
-      var resultOperator = new GroupResultOperator (AssociatedIdentifier, inputDependentKeySelector, inputDependentElementSelector);
+      var resultOperator = new GroupResultOperator (AssociatedIdentifier, resolvedKeySelector, resolvedElementSelector);
       clauseGenerationContext.ClauseMapping.AddMapping (this, resultOperator);
       return resultOperator;
     }

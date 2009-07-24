@@ -134,7 +134,13 @@ namespace Remotion.Data.UnitTests.Linq
 
     public static GroupResultOperator CreateGroupResultOperator ()
     {
-      return new GroupResultOperator ("groupings", CreateInputDependentExpression (), CreateInputDependentExpression ());
+      MainFromClause fromClause1 = CreateMainFromClause ("i", typeof (int), CreateIntQueryable());
+      MainFromClause fromClause2 = CreateMainFromClause ("j", typeof (int), CreateIntQueryable());
+
+      var keySelector = Resolve<int, string> (fromClause2, j => (j % 3).ToString());
+      var elementSelector = Resolve<int, string> (fromClause1, i => i.ToString ());
+
+      return new GroupResultOperator ("groupings", keySelector, elementSelector);
     }
 
     public static InputDependentExpression CreateInputDependentExpression ()

@@ -24,8 +24,6 @@ using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.UnitTests.Linq.Parsing;
-using Remotion.Data.UnitTests.Linq.TestDomain;
-using Remotion.Utilities;
 
 namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
 {
@@ -34,12 +32,22 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
   {
     private GroupResultOperator _resultOperator;
     private CloneContext _cloneContext;
+    private MainFromClause _fromClause1;
+    private MainFromClause _fromClause2;
+    private Expression _keySelector;
+    private Expression _elementSelector;
 
     [SetUp]
     public void SetUp ()
     {
-      _resultOperator = ExpressionHelper.CreateGroupResultOperator ();
-      _cloneContext = new CloneContext (new QuerySourceMapping());
+      _fromClause1 = ExpressionHelper.CreateMainFromClause ("i", typeof (int), ExpressionHelper.CreateIntQueryable ());
+      _fromClause2 = ExpressionHelper.CreateMainFromClause ("j", typeof (int), ExpressionHelper.CreateIntQueryable ());
+
+      _keySelector = ExpressionHelper.Resolve<int, int> (_fromClause2, j => j % 3);
+      _elementSelector = ExpressionHelper.Resolve<int, string> (_fromClause1, i => i.ToString ());
+      _resultOperator = new GroupResultOperator ("groupings", _keySelector, _elementSelector);
+
+      _cloneContext = new CloneContext (new QuerySourceMapping ());
     }
 
     [Test]
@@ -52,8 +60,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     public void ItemType ()
     {
       var expectedItemType = typeof (IGrouping<,>).MakeGenericType (
-          _resultOperator.KeySelector.ResolvedExpression.Type, 
-          _resultOperator.ElementSelector.ResolvedExpression.Type);
+          _resultOperator.KeySelector.Type, 
+          _resultOperator.ElementSelector.Type);
 
       Assert.That (_resultOperator.ItemType, Is.SameAs (expectedItemType));
     }
@@ -66,78 +74,14 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       Assert.That (clone, Is.Not.Null);
       Assert.That (clone, Is.Not.SameAs (_resultOperator));
 
-      ExpressionTreeComparer.CheckAreEqualTrees (_resultOperator.KeySelector.DependentExpression, clone.KeySelector.DependentExpression);
-      ExpressionTreeComparer.CheckAreEqualTrees (_resultOperator.ElementSelector.DependentExpression, clone.ElementSelector.DependentExpression);
-      
-      Assert.That (clone.KeySelector.ExpectedInput, Is.SameAs (_resultOperator.KeySelector.ExpectedInput));
-      Assert.That (clone.ElementSelector.ExpectedInput, Is.SameAs (_resultOperator.ElementSelector.ExpectedInput));
-    }
-
-    [Test]
-    public void TransformExpressions_ExpectedInput ()
-    {
-      var oldKeySelector = ExpressionHelper.CreateExpression ();
-      var oldElementSelector = ExpressionHelper.CreateExpression ();
-      var clause = new GroupResultOperator (
-          "groupings",
-          ExpressionHelper.CreateInputDependentExpression (oldKeySelector), 
-          ExpressionHelper.CreateInputDependentExpression (oldElementSelector));
-
-      var newKeySelector = ExpressionHelper.CreateExpression ();
-      var newElementSelector = ExpressionHelper.CreateExpression ();
-      clause.TransformExpressions (ex =>
-      {
-        if (ex == oldElementSelector)
-          return newElementSelector;
-        else if (ex == oldKeySelector)
-          return newKeySelector;
-        else
-          return ex;
-      });
-
-      Assert.That (clause.KeySelector.ExpectedInput, Is.SameAs (newKeySelector));
-      Assert.That (clause.ElementSelector.ExpectedInput, Is.SameAs (newElementSelector));
-    }
-
-    [Test]
-    public void TransformExpressions_DependentExpressionBody ()
-    {
-      var oldKeySelector = ExpressionHelper.CreateExpression ();
-      var oldElementSelector = ExpressionHelper.CreateExpression ();
-
-      var expectedInput = ExpressionHelper.CreateExpression ();
-      var parameter = Expression.Parameter (expectedInput.Type, "x");
-
-      var inputDependentKeySelector = new InputDependentExpression (Expression.Lambda (oldKeySelector, parameter), expectedInput);
-      var inputDependentElementSelector = new InputDependentExpression (Expression.Lambda (oldElementSelector, parameter), expectedInput);
-
-      var clause = new GroupResultOperator ("groupings", inputDependentKeySelector, inputDependentElementSelector);
-
-      var newKeySelector = ExpressionHelper.CreateExpression ();
-      var newElementSelector = ExpressionHelper.CreateExpression ();
-      clause.TransformExpressions (ex =>
-      {
-        if (ex == oldElementSelector)
-          return newElementSelector;
-        else if (ex == oldKeySelector)
-          return newKeySelector;
-        else
-          return ex;
-      });
-
-      Assert.That (clause.KeySelector.DependentExpression.Body, Is.SameAs (newKeySelector));
-      Assert.That (clause.ElementSelector.DependentExpression.Body, Is.SameAs (newElementSelector));
+      Assert.That (clone.KeySelector, Is.SameAs (_resultOperator.KeySelector));
+      Assert.That (clone.ElementSelector, Is.SameAs (_resultOperator.ElementSelector));
     }
 
     [Test]
     public new void ToString ()
     {
-      var resultOperator = new GroupResultOperator (
-          "groupings",
-          ExpressionHelper.CreateInputDependentExpression (Expression.Constant (1)), 
-          ExpressionHelper.CreateInputDependentExpression (Expression.Constant (0)));
-
-      Assert.That (resultOperator.ToString (), Is.EqualTo ("GroupBy(1, 0)"));
+      Assert.That (_resultOperator.ToString (), Is.EqualTo ("GroupBy(([j] % 3), [i].ToString())"));
     }
 
     [Test]
@@ -146,11 +90,9 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       // group [i].ToString() by [j] % 3
       // expected input: new AnonymousType ( a = [i], b = [j] )
 
-      var fromClause1 = ExpressionHelper.CreateMainFromClause ("i", typeof (int), ExpressionHelper.CreateIntQueryable ());
-      var fromClause2 = ExpressionHelper.CreateMainFromClause ("j", typeof (int), ExpressionHelper.CreateIntQueryable ());
       var expectedInput = Expression.New (
         typeof (AnonymousType).GetConstructor (new[] {typeof (int), typeof (int) }), 
-        new Expression[] { new QuerySourceReferenceExpression (fromClause1), new QuerySourceReferenceExpression (fromClause2) },
+        new Expression[] { new QuerySourceReferenceExpression (_fromClause1), new QuerySourceReferenceExpression (_fromClause2) },
         new MemberInfo[] { typeof (AnonymousType).GetProperty ("a"), typeof (AnonymousType).GetProperty ("b") });
 
       var items = new[] { 
@@ -162,12 +104,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       };
 
       IExecuteInMemoryData input = new ExecuteInMemorySequenceData (items, expectedInput);
-      
-      var keySelector = new InputDependentExpression (ExpressionHelper.CreateLambdaExpression<AnonymousType, int> (trans => trans.b % 3), expectedInput);
-      var elementSelector = new InputDependentExpression (ExpressionHelper.CreateLambdaExpression<AnonymousType, string> (trans => trans.a.ToString ()), expectedInput);
-      var resultOperator = new GroupResultOperator ("groupings", keySelector, elementSelector);
 
-      var result = resultOperator.ExecuteInMemory (input).GetCurrentSequenceInfo<IGrouping<int, string>> ();
+      var result = _resultOperator.ExecuteInMemory (input).GetCurrentSequenceInfo<IGrouping<int, string>> ();
 
       var resultArray = result.Sequence.ToArray ();
       Assert.That (resultArray.Length, Is.EqualTo (3));
@@ -176,88 +114,37 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       Assert.That (resultArray[2].ToArray (), Is.EqualTo (new[] { "333" }));
 
       Assert.That (result.ItemExpression, Is.InstanceOfType (typeof (QuerySourceReferenceExpression)));
-      Assert.That (((QuerySourceReferenceExpression) result.ItemExpression).ReferencedQuerySource, Is.SameAs (resultOperator));
+      Assert.That (((QuerySourceReferenceExpression) result.ItemExpression).ReferencedQuerySource, Is.SameAs (_resultOperator));
     }
 
     [Test]
     public void GetResultType ()
     {
-      var expectedInput = new QuerySourceReferenceExpression (
-          ExpressionHelper.CreateMainFromClause ("s", typeof (Student), ExpressionHelper.CreateStudentQueryable ()));
-
-      var keySelector = new InputDependentExpression (ExpressionHelper.CreateLambdaExpression<Student, int> (s => s.ID), expectedInput);
-      var elementSelector = new InputDependentExpression (ExpressionHelper.CreateLambdaExpression<Student, string> (s => s.ToString ()), expectedInput);
-      var resultOperator = new GroupResultOperator ("groupings", keySelector, elementSelector);
-
-      Assert.That (resultOperator.GetResultType (typeof (IQueryable<Student>)), Is.SameAs (typeof (IQueryable<IGrouping<int, string>>)));
+      Assert.That (_resultOperator.GetResultType (typeof (IQueryable<AnonymousType>)), Is.SameAs (typeof (IQueryable<IGrouping<int, string>>)));
     }
 
     [Test]
-    public void GetResultType_DerivedItemType ()
-    {
-      var expectedInput = new QuerySourceReferenceExpression (
-          ExpressionHelper.CreateMainFromClause ("s", typeof (Student), ExpressionHelper.CreateStudentQueryable ()));
-
-      var keySelector = new InputDependentExpression (ExpressionHelper.CreateLambdaExpression<Student, int> (s => s.ID), expectedInput);
-      var elementSelector = new InputDependentExpression (ExpressionHelper.CreateLambdaExpression<Student, string> (s => s.ToString ()), expectedInput);
-      var resultOperator = new GroupResultOperator ("groupings", keySelector, elementSelector);
-
-      Assert.That (resultOperator.GetResultType (typeof (IQueryable<GoodStudent>)), Is.SameAs (typeof (IQueryable<IGrouping<int, string>>)));
-    }
-
-    [Test]
-    [ExpectedException (typeof (ArgumentTypeException))]
-    public void GetResultType_InvalidType_WrongItemType ()
-    {
-      _resultOperator.GetResultType (typeof (IQueryable<int>));
-    }
-
-    [Test]
-    [ExpectedException (typeof (ArgumentTypeException))]
-    public void GetResultType_InvalidType_NoIQueryable ()
-    {
-      _resultOperator.GetResultType (typeof (int));
-    }
-
-    [Test]
-    [ExpectedException (typeof (InvalidOperationException))]
-    public void GetResultType_KeyAndElementSelectorDontMatch ()
-    {
-      var expectedInput1 = new QuerySourceReferenceExpression (
-          ExpressionHelper.CreateMainFromClause ("s", typeof (Student), ExpressionHelper.CreateStudentQueryable ()));
-      var expectedInput2 = new QuerySourceReferenceExpression (
-          ExpressionHelper.CreateMainFromClause ("i", typeof (int), ExpressionHelper.CreateStudentQueryable ()));
-
-      var keySelector = new InputDependentExpression (ExpressionHelper.CreateLambdaExpression<Student, int> (s => s.ID), expectedInput1);
-      var elementSelector = new InputDependentExpression (ExpressionHelper.CreateLambdaExpression<int, string> (i => i.ToString ()), expectedInput2);
-      var resultOperator = new GroupResultOperator ("groupings", keySelector, elementSelector);
-
-      resultOperator.GetResultType (typeof (IQueryable<Student>));
-    }
-
-    [Test]
-    [Ignore ("TODO 1379")]
     public void TransformExpressions ()
     {
-      //var oldExpression1 = ExpressionHelper.CreateExpression ();
-      //var oldExpression2 = ExpressionHelper.CreateExpression ();
-      //var newExpression1 = ExpressionHelper.CreateExpression ();
-      //var newExpression2 = ExpressionHelper.CreateExpression ();
-      //var resultOperator = new GroupResultOperator ("x", oldExpression1, oldExpression2);
+      var oldExpression1 = ExpressionHelper.CreateExpression ();
+      var oldExpression2 = ExpressionHelper.CreateExpression ();
+      var newExpression1 = ExpressionHelper.CreateExpression ();
+      var newExpression2 = ExpressionHelper.CreateExpression ();
+      var resultOperator = new GroupResultOperator ("x", oldExpression1, oldExpression2);
 
-      //resultOperator.TransformExpressions (ex =>
-      //{
-      //  if (ex == oldExpression1)
-      //    return newExpression1;
-      //  else
-      //  {
-      //    Assert.That (ex, Is.SameAs (oldExpression2));
-      //    return newExpression2;
-      //  }
-      //});
+      resultOperator.TransformExpressions (ex =>
+      {
+        if (ex == oldExpression1)
+          return newExpression1;
+        else
+        {
+          Assert.That (ex, Is.SameAs (oldExpression2));
+          return newExpression2;
+        }
+      });
 
-      //Assert.That (resultOperator.KeySelector.ResolvedExpression, Is.SameAs (newExpression1));
-      //Assert.That (resultOperator.ElementSelector.ResolvedExpression, Is.SameAs (newExpression2));
+      Assert.That (resultOperator.KeySelector, Is.SameAs (newExpression1));
+      Assert.That (resultOperator.ElementSelector, Is.SameAs (newExpression2));
     }
   }
 }

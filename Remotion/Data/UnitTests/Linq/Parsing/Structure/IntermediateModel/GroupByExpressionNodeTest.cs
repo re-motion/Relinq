@@ -127,11 +127,8 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var resultOperator = (GroupResultOperator) QueryModel.ResultOperators[0];
 
       Assert.That (resultOperator.ItemName, Is.EqualTo (_nodeWithElementSelector.AssociatedIdentifier));
-      Assert.That (resultOperator.KeySelector.DependentExpression, Is.SameAs (_nodeWithElementSelector.KeySelector));
-      Assert.That (resultOperator.ElementSelector.DependentExpression, Is.SameAs (_nodeWithElementSelector.OptionalElementSelector));
-
-      ExpressionTreeComparer.CheckAreEqualTrees (SourceReference, resultOperator.KeySelector.ExpectedInput);
-      ExpressionTreeComparer.CheckAreEqualTrees (SourceReference, resultOperator.ElementSelector.ExpectedInput);
+      Assert.That (resultOperator.KeySelector, Is.SameAs (_nodeWithElementSelector.GetResolvedKeySelector (ClauseGenerationContext)));
+      Assert.That (resultOperator.ElementSelector, Is.SameAs (_nodeWithElementSelector.GetResolvedOptionalElementSelector (ClauseGenerationContext)));
     }
 
     [Test]
@@ -150,7 +147,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       var resultOperator = (GroupResultOperator) QueryModel.ResultOperators[0];
 
       var expectedElementSelector = ExpressionHelper.Resolve<int, int> (QueryModel.MainFromClause, i => i);
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedElementSelector, resultOperator.ElementSelector.ResolvedExpression);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedElementSelector, resultOperator.ElementSelector);
     }
   }
 }
