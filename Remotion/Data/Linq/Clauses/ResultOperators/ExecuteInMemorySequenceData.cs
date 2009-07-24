@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -27,29 +28,13 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   /// </summary>
   public class ExecuteInMemorySequenceData : IExecuteInMemoryData
   {
-    public struct TypedSequenceInfo<T>
-    {
-      public TypedSequenceInfo (IEnumerable<T> sequence, Expression itemExpression)
-          : this()
-      {
-        ArgumentUtility.CheckNotNull ("sequence", sequence);
-        ArgumentUtility.CheckNotNull ("itemExpression", itemExpression);
-
-        Sequence = sequence;
-        ItemExpression = itemExpression;
-      }
-
-      public IEnumerable<T> Sequence { get; private set; }
-      public Expression ItemExpression { get; private set; }
-    }
-
     /// <summary>
     /// Initializes a new instance of the <see cref="ExecuteInMemorySequenceData"/> class, setting the <see cref="CurrentSequence"/> and 
     /// <see cref="ItemExpression"/> properties.
     /// </summary>
     /// <param name="currentSequence">The current sequence.</param>
     /// <param name="itemExpression">The item expression describing <paramref name="currentSequence"/>'s items.</param>
-    public ExecuteInMemorySequenceData (object currentSequence, Expression itemExpression)
+    public ExecuteInMemorySequenceData (IEnumerable currentSequence, Expression itemExpression)
     {
       ArgumentUtility.CheckNotNull ("currentSequence", currentSequence);
       ArgumentUtility.CheckNotNull ("itemExpression", itemExpression);
@@ -70,7 +55,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     /// holds the input sequence for the operation. If the object is used as output, this holds the result of the operation.
     /// </summary>
     /// <value>The current sequence.</value>
-    public object CurrentSequence { get; private set; }
+    public IEnumerable CurrentSequence { get; private set; }
 
     /// <summary>
     /// Gets an expression that describes the items held by <see cref="CurrentSequence"/>.
@@ -83,7 +68,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     /// </summary>
     /// <typeparam name="T">The expected type of the value.</typeparam>
     /// <exception cref="InvalidOperationException">This object does not hold a single value.</exception>
-    public T GetCurrentSingleValue<T> ()
+    T IExecuteInMemoryData.GetCurrentSingleValue<T> ()
     {
         string message = string.Format (
             "Cannot retrieve the current single value because the current value is a sequence of type '{0}'.",
@@ -115,6 +100,18 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
 
         throw new InvalidOperationException (message, ex);
       }
+    }
+
+    /// <summary>
+    /// Gets the current sequence held by this object as well as an <see cref="Expression"/> describing the
+    /// sequence's items.
+    /// </summary>
+    /// <returns>
+    /// The sequence and an <see cref="Expression"/> describing its items.
+    /// </returns>
+    public UntypedSequenceInfo GetCurrentSequenceInfo ()
+    {
+      return new UntypedSequenceInfo (CurrentSequence, ItemExpression);
     }
 
     /// <summary>

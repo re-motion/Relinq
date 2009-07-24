@@ -30,7 +30,15 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     /// <returns>The sequence and an <see cref="Expression"/> describing its items.</returns>
     /// <exception cref="InvalidOperationException">Thrown when this object holds a single value instead of a sequence or the item type is not the 
     /// expected type <typeparamref name="T"/>.</exception>
-    ExecuteInMemorySequenceData.TypedSequenceInfo<T> GetCurrentSequenceInfo<T> ();
+    TypedSequenceInfo<T> GetCurrentSequenceInfo<T> ();
+
+    /// <summary>
+    /// Gets the current sequence held by this <see cref="IExecuteInMemoryData"/> object as well as an <see cref="Expression"/> describing the 
+    /// sequence's items, throwing an exception if the object does not hold a sequence of items.
+    /// </summary>
+    /// <returns>The sequence and an <see cref="Expression"/> describing its items.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when this object holds a single value instead of a sequence.</exception>
+    UntypedSequenceInfo GetCurrentSequenceInfo ();
 
     /// <summary>
     /// Takes the given <paramref name="genericMethodDefinition"/> and instantiates it, substituting its generic parameter with the value

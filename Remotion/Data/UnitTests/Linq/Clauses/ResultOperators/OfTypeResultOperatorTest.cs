@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
@@ -54,7 +55,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       var student1 = new GoodStudent ();
       var student2 = new GoodStudent ();
       var student3 = new Student ();
-      object items = new Student[] { student1, student2, student3 };
+      IEnumerable items = new Student[] { student1, student2, student3 };
       var itemExpression = Expression.Constant (student3, typeof (Student));
       IExecuteInMemoryData input = new ExecuteInMemorySequenceData (items, itemExpression);
 

@@ -86,7 +86,9 @@
     <Compile Include="Clauses\ResultOperators\SingleResultOperator.cs" />
     <Compile Include="Clauses\ResultOperators\DistinctResultOperator.cs" />
     <Compile Include="Clauses\ResultOperators\CountResultOperator.cs" />
+    <Compile Include="Clauses\ResultOperators\TypedSequenceInfo.cs" />
     <Compile Include="Clauses\ResultOperators\UnionResultOperator.cs" />
+    <Compile Include="Clauses\ResultOperators\UntypedSequenceInfo.cs" />
     <Compile Include="DefaultQueryProvider.cs" />
     <Compile Include="Backend\DetailParsing\SelectProjectionParsing\QuerySourceReferenceExpressionParser.cs" />
     <Compile Include="Backend\DetailParsing\SelectProjectionParsing\SubQueryExpressionParser.cs" />

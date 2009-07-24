@@ -57,13 +57,21 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
         ExpectedMessage = "Cannot retrieve the current single value because the current value is a sequence of type 'System.Int32[]'.")]
     public void GetCurrentSingleValue_InvalidType ()
     {
-      _dataWithIntSequence.GetCurrentSingleValue<string> ();
+      ((IExecuteInMemoryData) _dataWithIntSequence).GetCurrentSingleValue<string> ();
     }
 
     [Test]
     public void GetCurrentSequence ()
     {
       var sequenceData = _dataWithIntSequence.GetCurrentSequenceInfo<int> ();
+      Assert.That (sequenceData.Sequence, Is.SameAs (_intSequence));
+      Assert.That (sequenceData.ItemExpression, Is.SameAs (_intExpression));
+    }
+
+    [Test]
+    public void GetCurrentSequence_Untyped ()
+    {
+      var sequenceData = _dataWithIntSequence.GetCurrentSequenceInfo ();
       Assert.That (sequenceData.Sequence, Is.SameAs (_intSequence));
       Assert.That (sequenceData.ItemExpression, Is.SameAs (_intExpression));
     }

@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
@@ -64,7 +65,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
      [Test]
      public void ExecuteInMemory ()
      {
-       object items = new[] { 1 };
+       IEnumerable items = new[] { 1 };
        IExecuteInMemoryData input = new ExecuteInMemorySequenceData (items, Expression.Constant (0));
        var result = _resultOperatorWithDefault.ExecuteInMemory (input);
 
@@ -74,7 +75,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
      [Test]
      public void ExecuteInMemory_Empty_Default ()
      {
-       object items = new int[0];
+       IEnumerable items = new int[0];
        IExecuteInMemoryData input = new ExecuteInMemorySequenceData (items, Expression.Constant (0));
        var result = _resultOperatorWithDefault.ExecuteInMemory (input);
 
@@ -85,7 +86,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
      [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Sequence contains no elements")]
      public void ExecuteInMemory_Empty_NoDefault ()
      {
-       object items = new int[0];
+       IEnumerable items = new int[0];
        IExecuteInMemoryData input = new ExecuteInMemorySequenceData (items, Expression.Constant (0));
        _resultOperatorNoDefault.ExecuteInMemory (input);
      }
@@ -94,7 +95,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
      [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Sequence contains more than one element")]
      public void ExecuteInMemory_TooManyItems ()
      {
-       object items = new[] { 1, 2 };
+       IEnumerable items = new[] { 1, 2 };
        IExecuteInMemoryData input = new ExecuteInMemorySequenceData (items, Expression.Constant (0));
        _resultOperatorWithDefault.ExecuteInMemory (input);
      }

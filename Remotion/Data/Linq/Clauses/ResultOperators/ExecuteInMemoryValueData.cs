@@ -14,10 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
 using System.Reflection;
-using Remotion.Collections;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
@@ -77,7 +74,16 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     /// </summary>
     /// <typeparam name="T">The expected item type of the sequence.</typeparam>
     /// <exception cref="InvalidOperationException">This object does not hold a sequence.</exception>
-    public ExecuteInMemorySequenceData.TypedSequenceInfo<T> GetCurrentSequenceInfo<T> ()
+    TypedSequenceInfo<T> IExecuteInMemoryData.GetCurrentSequenceInfo<T> ()
+    {
+      throw new InvalidOperationException ("Cannot retrieve the current value as a sequence because it is a value.");
+    }
+
+    /// <summary>
+    /// Throws an exception because the value is not a sequence.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">This object does not hold a sequence.</exception>
+    UntypedSequenceInfo IExecuteInMemoryData.GetCurrentSequenceInfo ()
     {
       throw new InvalidOperationException ("Cannot retrieve the current value as a sequence because it is a value.");
     }

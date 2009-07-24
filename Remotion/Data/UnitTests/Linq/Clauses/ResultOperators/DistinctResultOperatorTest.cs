@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
@@ -50,7 +51,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     [Test]
     public void ExecuteInMemory ()
     {
-      object items = new[] { 1, 2, 3, 2, 1 };
+      IEnumerable items = new[] { 1, 2, 3, 2, 1 };
       IExecuteInMemoryData input = new ExecuteInMemorySequenceData (items, Expression.Constant (0));
       var result = _resultOperator.ExecuteInMemory (input);
 
