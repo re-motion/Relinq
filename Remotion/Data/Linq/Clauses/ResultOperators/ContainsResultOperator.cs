@@ -17,7 +17,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
+using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Utilities;
+using System.Linq;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
@@ -51,6 +53,39 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       }
     }
 
+    /// <summary>
+    /// Gets the constant <see cref="object"/> value of the <see cref="Item"/> property, assuming it is a <see cref="ConstantExpression"/>. If it is
+    /// not, an <see cref="InvalidOperationException"/> is thrown.
+    /// </summary>
+    /// <typeparam name="T">The expected item type. If the item is not of this type, an <see cref="InvalidOperationException"/> is thrown.</typeparam>
+    /// <returns>The constant <see cref="object"/> value of the <see cref="Item"/> property.</returns>
+    public T GetConstantItem<T> ()
+    {
+      if (!typeof (T).IsAssignableFrom (Item.Type))
+      {
+        var message = string.Format (
+            "The value stored by Item ('{0}') is not of type '{1}', it is of type '{2}'.",
+            FormattingExpressionTreeVisitor.Format (Item),
+            typeof (T),
+            Item.Type);
+        throw new InvalidOperationException (message);
+      }
+
+      var itemAsConstantExpression = Item as ConstantExpression;
+      if (itemAsConstantExpression != null)
+      {
+        return (T) itemAsConstantExpression.Value;
+      }
+      else
+      {
+        var message = string.Format (
+            "Item ('{0}') is no ConstantExpression, it is a {1}.",
+            FormattingExpressionTreeVisitor.Format (Item),
+            Item.GetType ().Name);
+        throw new InvalidOperationException (message);
+      }
+    }
+
     public override IExecuteInMemoryData ExecuteInMemory (IExecuteInMemoryData input)
     {
       ArgumentUtility.CheckNotNull ("input", input);
@@ -59,9 +94,11 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
 
     public ExecuteInMemoryValueData ExecuteInMemory<T> (ExecuteInMemorySequenceData input)
     {
-      throw new NotImplementedException ();
-      // var sequence = input.GetCurrentSequence<T> ();
-      // return sequence.A.Contains (Item);
+      ArgumentUtility.CheckNotNull ("input", input);
+
+      var sequence = input.GetCurrentSequence<T> ();
+      var item = GetConstantItem<T> ();
+      return new ExecuteInMemoryValueData (sequence.A.Contains (item));
     }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)
@@ -82,7 +119,5 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     {
       return "Contains(" + Item + ")";
     }
-
-     
   }
 }

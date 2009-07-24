@@ -20,6 +20,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.UnitTests.Linq.TestDomain;
 using Remotion.Utilities;
@@ -48,7 +49,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     }
 
     [Test]
-    [Ignore ("TODO 1378")]
     public void ExecuteInMemory ()
     {
       object items = new[] { 1, 2, 3, 4};
@@ -62,6 +62,29 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     public void ExecutionStrategy ()
     {
       Assert.That (_resultOperator.ExecutionStrategy, Is.SameAs (ScalarExecutionStrategy.Instance));
+    }
+
+    [Test]
+    public void GetConstantItem ()
+    {
+      Assert.That (_resultOperator.GetConstantItem<int> (), Is.EqualTo (2));
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException), 
+        ExpectedMessage = "Item ('[main]') is no ConstantExpression, it is a QuerySourceReferenceExpression.")]
+    public void GetConstantItem_NoConstantExpression ()
+    {
+      var resultOperator = new ContainsResultOperator (new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause ()));
+      resultOperator.GetConstantItem<object> ();
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException), 
+        ExpectedMessage = "The value stored by Item ('2') is not of type 'System.DateTime', it is of type 'System.Int32'.")]
+    public void GetConstantItem_NotExpectedType ()
+    {
+      _resultOperator.GetConstantItem<DateTime> ();
     }
 
     [Test]
