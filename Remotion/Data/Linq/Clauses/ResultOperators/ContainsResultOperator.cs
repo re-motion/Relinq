@@ -82,19 +82,19 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       }
     }
 
-    public override IExecuteInMemoryData ExecuteInMemory (IExecuteInMemoryData input)
+    public override IStreamedData ExecuteInMemory (IStreamedData input)
     {
       ArgumentUtility.CheckNotNull ("input", input);
-      return InvokeGenericExecuteMethod<ExecuteInMemorySequenceData, ExecuteInMemoryValueData> (input, ExecuteInMemory<object>);
+      return InvokeGenericExecuteMethod<StreamedSequence, StreamedValue> (input, ExecuteInMemory<object>);
     }
 
-    public ExecuteInMemoryValueData ExecuteInMemory<T> (ExecuteInMemorySequenceData input)
+    public StreamedValue ExecuteInMemory<T> (StreamedSequence input)
     {
       ArgumentUtility.CheckNotNull ("input", input);
 
       var sequence = input.GetCurrentSequenceInfo<T> ();
       var item = GetConstantItem<T> ();
-      return new ExecuteInMemoryValueData (sequence.Sequence.Contains (item));
+      return new StreamedValue (sequence.Sequence.Contains (item));
     }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)

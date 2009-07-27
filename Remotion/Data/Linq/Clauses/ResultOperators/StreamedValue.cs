@@ -20,26 +20,35 @@ using Remotion.Utilities;
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
   /// <summary>
-  /// Holds data needed in order to execute a <see cref="ResultOperatorBase"/> in memory via <see cref="ResultOperatorBase.ExecuteInMemory(Remotion.Data.Linq.Clauses.ResultOperators.IExecuteInMemoryData)"/>.
+  /// Holds data needed in order to execute a <see cref="ResultOperatorBase"/> in memory via <see cref="ResultOperatorBase.ExecuteInMemory(IStreamedData)"/>.
   /// The data is a single, non-sequence value and can only be consumed by result operators working with single values.
   /// </summary>
-  public class ExecuteInMemoryValueData : IExecuteInMemoryData
+  public class StreamedValue : IStreamedData
   {
     /// <summary>
-    /// Initializes a new instance of the <see cref="ExecuteInMemoryValueData"/> class, setting the <see cref="CurrentValue"/> property.
+    /// Initializes a new instance of the <see cref="StreamedValue"/> class, setting the <see cref="CurrentValue"/> property.
     /// </summary>
     /// <param name="currentValue">The current value or sequence.</param>
-    public ExecuteInMemoryValueData (object currentValue)
+    public StreamedValue (object currentValue)
     {
       CurrentValue = currentValue;
     }
 
     /// <summary>
-    /// Gets the current value for the <see cref="ResultOperatorBase.ExecuteInMemory(Remotion.Data.Linq.Clauses.ResultOperators.IExecuteInMemoryData)"/> operation. If the object is used as input, this 
+    /// Gets the current value for the <see cref="ResultOperatorBase.ExecuteInMemory(IStreamedData)"/> operation. If the object is used as input, this 
     /// holds the input value for the operation. If the object is used as output, this holds the result of the operation.
     /// </summary>
     /// <value>The current value.</value>
     public object CurrentValue { get; private set; }
+
+    /// <summary>
+    /// Gets the type of the data described by this <see cref="IStreamedData"/> instance. This is the type of the <see cref="CurrentValue"/>, or
+    /// <see cref="object"/> if the <see cref="CurrentValue"/> is <see langword="null" />.
+    /// </summary>
+    public Type DataType
+    {
+      get { return CurrentValue != null ? CurrentValue.GetType () : typeof (object); }
+    }
 
     /// <summary>
     /// Gets the current single value held by <see cref="CurrentValue"/>, throwing an exception if the value is not of type 
@@ -74,7 +83,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     /// </summary>
     /// <typeparam name="T">The expected item type of the sequence.</typeparam>
     /// <exception cref="InvalidOperationException">This object does not hold a sequence.</exception>
-    TypedSequenceInfo<T> IExecuteInMemoryData.GetCurrentSequenceInfo<T> ()
+    TypedSequenceInfo<T> IStreamedData.GetCurrentSequenceInfo<T> ()
     {
       throw new InvalidOperationException ("Cannot retrieve the current value as a sequence because it is a value.");
     }
@@ -83,7 +92,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     /// Throws an exception because the value is not a sequence.
     /// </summary>
     /// <exception cref="InvalidOperationException">This object does not hold a sequence.</exception>
-    UntypedSequenceInfo IExecuteInMemoryData.GetCurrentSequenceInfo ()
+    UntypedSequenceInfo IStreamedData.GetCurrentSequenceInfo ()
     {
       throw new InvalidOperationException ("Cannot retrieve the current value as a sequence because it is a value.");
     }

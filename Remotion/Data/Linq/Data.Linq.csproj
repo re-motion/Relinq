@@ -54,8 +54,8 @@
     <Compile Include="Clauses\AdditionalFromClause.cs" />
     <Compile Include="Clauses\CloneContext.cs" />
     <Compile Include="Clauses\ExpressionTreeVisitors\ReverseResolvingExpressionTreeVisitor.cs" />
-    <Compile Include="Clauses\ResultOperators\ExecuteInMemorySequenceData.cs" />
-    <Compile Include="Clauses\ResultOperators\ExecuteInMemoryValueData.cs" />
+    <Compile Include="Clauses\ResultOperators\StreamedSequence.cs" />
+    <Compile Include="Clauses\ResultOperators\StreamedValue.cs" />
     <Compile Include="Clauses\ExecutionStrategies\CollectionExecutionStrategy.cs" />
     <Compile Include="Clauses\ExecutionStrategies\SingleExecutionStrategy.cs" />
     <Compile Include="Clauses\ExecutionStrategies\ScalarExecutionStrategy.cs" />
@@ -71,7 +71,7 @@
     <Compile Include="Clauses\ResultOperators\ContainsResultOperator.cs" />
     <Compile Include="Clauses\ResultOperators\DefaultIfEmptyResultOperator.cs" />
     <Compile Include="Clauses\ResultOperators\ExceptResultOperator.cs" />
-    <Compile Include="Clauses\ResultOperators\IExecuteInMemoryData.cs" />
+    <Compile Include="Clauses\ResultOperators\IStreamedData.cs" />
     <Compile Include="Clauses\ResultOperators\IntersectResultOperator.cs" />
     <Compile Include="Clauses\ResultOperators\LongCountResultOperator.cs" />
     <Compile Include="Clauses\ResultOperators\OfTypeResultOperator.cs" />

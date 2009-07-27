@@ -75,7 +75,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     public void ExecuteInMemory ()
     {
       var items = new[] { 1, 2, 3 };
-      IExecuteInMemoryData input = new ExecuteInMemorySequenceData (items, Expression.Constant (0));
+      IStreamedData input = new StreamedSequence (items, Expression.Constant (0));
       var result = _resultOperator.ExecuteInMemory (input);
 
       Assert.That (result.GetCurrentSequenceInfo<int>().Sequence.ToArray(), Is.EquivalentTo (new[] { 2 }));

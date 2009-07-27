@@ -82,7 +82,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     public void ExecuteInMemory_WithDefaultValue ()
     {
       IEnumerable items = new int[0];
-      IExecuteInMemoryData input = new ExecuteInMemorySequenceData (items, Expression.Constant (0));
+      IStreamedData input = new StreamedSequence (items, Expression.Constant (0));
       var result = _resultOperatorWithDefaultValue.ExecuteInMemory (input);
 
       Assert.That (result.GetCurrentSequenceInfo<int>().Sequence.ToArray(), Is.EqualTo (new[] { 100 }));
@@ -92,7 +92,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     public void ExecuteInMemory_WithoutDefaultValue ()
     {
       IEnumerable items = new int[0];
-      IExecuteInMemoryData input = new ExecuteInMemorySequenceData (items, Expression.Constant (0));
+      IStreamedData input = new StreamedSequence (items, Expression.Constant (0));
       var result = _resultOperatorWithoutDefaultValue.ExecuteInMemory (input);
 
       Assert.That (result.GetCurrentSequenceInfo<int>().Sequence.ToArray(), Is.EqualTo (new[] { 0 }));

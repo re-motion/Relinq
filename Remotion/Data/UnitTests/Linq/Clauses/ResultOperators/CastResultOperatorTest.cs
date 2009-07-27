@@ -56,7 +56,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       var student2 = new GoodStudent ();
       IEnumerable items = new Student[] { student1, student2 };
       var itemExpression = Expression.Constant (student1, typeof (Student));
-      IExecuteInMemoryData input = new ExecuteInMemorySequenceData (items, itemExpression);
+      IStreamedData input = new StreamedSequence (items, itemExpression);
 
       var result = _resultOperator.ExecuteInMemory (input);
 

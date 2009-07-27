@@ -90,17 +90,17 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new TakeResultOperator (Count);
     }
 
-    public override IExecuteInMemoryData ExecuteInMemory (IExecuteInMemoryData input)
+    public override IStreamedData ExecuteInMemory (IStreamedData input)
     {
       ArgumentUtility.CheckNotNull ("input", input);
-      return InvokeGenericExecuteMethod<ExecuteInMemorySequenceData, ExecuteInMemorySequenceData> (input, ExecuteInMemory<object>);
+      return InvokeGenericExecuteMethod<StreamedSequence, StreamedSequence> (input, ExecuteInMemory<object>);
     }
 
-    public ExecuteInMemorySequenceData ExecuteInMemory<T> (ExecuteInMemorySequenceData input)
+    public StreamedSequence ExecuteInMemory<T> (StreamedSequence input)
     {
       var sequence = input.GetCurrentSequenceInfo<T> ();
       var result = sequence.Sequence.Take (GetConstantCount ());
-      return new ExecuteInMemorySequenceData (result, sequence.ItemExpression);
+      return new StreamedSequence (result, sequence.ItemExpression);
     }
 
     public override Type GetResultType (Type inputResultType)

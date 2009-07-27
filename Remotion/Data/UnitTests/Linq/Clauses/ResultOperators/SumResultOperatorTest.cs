@@ -49,7 +49,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     [Test]
     public void ExecuteInMemory ()
     {
-      IExecuteInMemoryData input = new ExecuteInMemorySequenceData (new[] { 1, 2, 3 }, Expression.Constant (0));
+      IStreamedData input = new StreamedSequence (new[] { 1, 2, 3 }, Expression.Constant (0));
       var result = _resultOperator.ExecuteInMemory (input);
 
       Assert.That (result.GetCurrentSingleValue<int>(), Is.EqualTo (6));
@@ -59,7 +59,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Cannot calculate the sum of objects of type 'System.String' in memory.")]
     public void ExecuteInMemory_UnsupportedType ()
     {
-      IExecuteInMemoryData input = new ExecuteInMemorySequenceData (new[] { "1", "2", "3" }, Expression.Constant ("0"));
+      IStreamedData input = new StreamedSequence (new[] { "1", "2", "3" }, Expression.Constant ("0"));
       _resultOperator.ExecuteInMemory (input);
     }
 

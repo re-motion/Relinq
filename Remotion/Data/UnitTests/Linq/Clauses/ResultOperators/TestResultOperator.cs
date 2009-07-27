@@ -27,7 +27,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     {
     }
 
-    public override IExecuteInMemoryData ExecuteInMemory (IExecuteInMemoryData input)
+    public override IStreamedData ExecuteInMemory (IStreamedData input)
     {
       throw new NotImplementedException();
     }
@@ -42,41 +42,41 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       throw new NotImplementedException();
     }
 
-    public new IExecuteInMemoryData InvokeGenericExecuteMethod<TSource, TResult> (IExecuteInMemoryData input, Func<TSource, TResult> genericMethodCaller)
-      where TSource : IExecuteInMemoryData
-      where TResult : IExecuteInMemoryData 
+    public new IStreamedData InvokeGenericExecuteMethod<TSource, TResult> (IStreamedData input, Func<TSource, TResult> genericMethodCaller)
+      where TSource : IStreamedData
+      where TResult : IStreamedData 
     {
       return base.InvokeGenericExecuteMethod (input, genericMethodCaller);
     }
 
-    public ExecuteInMemorySequenceData DistinctExecuteMethod<T> (ExecuteInMemorySequenceData arg)
+    public StreamedSequence DistinctExecuteMethod<T> (StreamedSequence arg)
     {
       var currentSequence = arg.GetCurrentSequenceInfo<T>();
-      return new ExecuteInMemorySequenceData (currentSequence.Sequence.Distinct (), currentSequence.ItemExpression);
+      return new StreamedSequence (currentSequence.Sequence.Distinct (), currentSequence.ItemExpression);
     }
 
     // ReSharper disable UnusedTypeParameter
-    public ExecuteInMemorySequenceData ThrowingExecuteMethod<T> (ExecuteInMemorySequenceData arg)
+    public StreamedSequence ThrowingExecuteMethod<T> (StreamedSequence arg)
     {
       throw new NotImplementedException ("Test");
     }
 
-    public ExecuteInMemoryValueData InvalidExecuteInMemory_TooManyGenericParameters<T1, T2> (ExecuteInMemorySequenceData input)
+    public StreamedValue InvalidExecuteInMemory_TooManyGenericParameters<T1, T2> (StreamedSequence input)
     {
       throw new NotImplementedException();
     }
 
-    public ExecuteInMemoryValueData ExecuteMethodWithNonMatchingArgumentType<T> (ExecuteInMemoryValueData arg)
+    public StreamedValue ExecuteMethodWithNonMatchingArgumentType<T> (StreamedValue arg)
     {
       throw new NotImplementedException ("Test");
     }
 
-    public ExecuteInMemorySequenceData NonGenericExecuteMethod (ExecuteInMemorySequenceData arg)
+    public StreamedSequence NonGenericExecuteMethod (StreamedSequence arg)
     {
       throw new NotImplementedException ();
     }
 
-    internal ExecuteInMemorySequenceData NonPublicExecuteMethod<T> (ExecuteInMemorySequenceData arg)
+    internal StreamedSequence NonPublicExecuteMethod<T> (StreamedSequence arg)
     {
       throw new NotImplementedException ();
     }

@@ -21,16 +21,16 @@ using Remotion.Data.Linq.Clauses.ResultOperators;
 namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
 {
   [TestFixture]
-  public class ExecuteInMemoryValueDataTest
+  public class StreamedValueTest
   {
-    private ExecuteInMemoryValueData _dataWithIntValue;
-    private ExecuteInMemoryValueData _dataWithNullValue;
+    private StreamedValue _dataWithIntValue;
+    private StreamedValue _dataWithNullValue;
 
     [SetUp]
     public void SetUp ()
     {
-      _dataWithIntValue = new ExecuteInMemoryValueData (0);
-      _dataWithNullValue = new ExecuteInMemoryValueData (null);
+      _dataWithIntValue = new StreamedValue (0);
+      _dataWithNullValue = new StreamedValue (null);
     }
 
     [Test]
@@ -38,6 +38,18 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     {
       Assert.That (_dataWithNullValue.CurrentValue, Is.Null);
       Assert.That (_dataWithNullValue.GetCurrentSingleValue<object>(), Is.Null);
+    }
+
+    [Test]
+    public void DataType ()
+    {
+      Assert.That (_dataWithIntValue.DataType, Is.SameAs (typeof (int)));
+    }
+
+    [Test]
+    public void DataType_Null ()
+    {
+      Assert.That (_dataWithNullValue.DataType, Is.SameAs (typeof (object)));
     }
 
     [Test]
@@ -59,7 +71,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
         ExpectedMessage = "Cannot retrieve the current value as a sequence because it is a value.")]
     public void GetCurrentSequence_NoSequence ()
     {
-      ((IExecuteInMemoryData) _dataWithIntValue).GetCurrentSequenceInfo<int> ();
+      ((IStreamedData) _dataWithIntValue).GetCurrentSequenceInfo<int> ();
     }
 
     [Test]
@@ -67,13 +79,13 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
         ExpectedMessage = "Cannot retrieve the current value as a sequence because it is a value.")]
     public void GetCurrentSequence_Untyped_NoSequence ()
     {
-      ((IExecuteInMemoryData) _dataWithIntValue).GetCurrentSequenceInfo ();
+      ((IStreamedData) _dataWithIntValue).GetCurrentSequenceInfo ();
     }
 
     [Test]
     public void MakeClosedGenericExecuteMethod ()
     {
-      var executeMethod = typeof (CountResultOperator).GetMethod ("ExecuteInMemory", new[] { typeof (ExecuteInMemorySequenceData) });
+      var executeMethod = typeof (CountResultOperator).GetMethod ("ExecuteInMemory", new[] { typeof (StreamedSequence) });
       var result = _dataWithIntValue.MakeClosedGenericExecuteMethod (executeMethod);
 
       Assert.That (result.GetGenericArguments (), Is.EqualTo (new[] { typeof (int) }));
@@ -82,7 +94,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     [Test]
     public void MakeClosedGenericExecuteMethod_Null ()
     {
-      var executeMethod = typeof (CountResultOperator).GetMethod ("ExecuteInMemory", new[] { typeof (ExecuteInMemorySequenceData) });
+      var executeMethod = typeof (CountResultOperator).GetMethod ("ExecuteInMemory", new[] { typeof (StreamedSequence) });
       var result = _dataWithNullValue.MakeClosedGenericExecuteMethod (executeMethod);
 
       Assert.That (result.GetGenericArguments (), Is.EqualTo (new[] { typeof (object) }));
@@ -93,7 +105,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
         ExpectedMessage = "GenericMethodDefinition must be a generic method definition.\r\nParameter name: genericMethodDefinition")]
     public void MakeClosedGenericExecuteMethod_NonGenericMethod ()
     {
-      var executeMethod = typeof (CountResultOperator).GetMethod ("ExecuteInMemory", new[] { typeof (IExecuteInMemoryData) });
+      var executeMethod = typeof (CountResultOperator).GetMethod ("ExecuteInMemory", new[] { typeof (IStreamedData) });
       _dataWithIntValue.MakeClosedGenericExecuteMethod (executeMethod);
       Assert.Fail ();
     }
@@ -104,7 +116,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     public void MakeClosedGenericExecuteMethod_NonGenericMethodDefinition ()
     {
       var executeMethod = typeof (CountResultOperator)
-          .GetMethod ("ExecuteInMemory", new[] { typeof (ExecuteInMemorySequenceData) })
+          .GetMethod ("ExecuteInMemory", new[] { typeof (StreamedSequence) })
           .MakeGenericMethod (typeof (int));
       _dataWithIntValue.MakeClosedGenericExecuteMethod (executeMethod);
     }

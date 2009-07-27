@@ -45,17 +45,17 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new MaxResultOperator();
     }
 
-    public override IExecuteInMemoryData ExecuteInMemory (IExecuteInMemoryData input)
+    public override IStreamedData ExecuteInMemory (IStreamedData input)
     {
       ArgumentUtility.CheckNotNull ("input", input);
-      return InvokeGenericExecuteMethod<ExecuteInMemorySequenceData, ExecuteInMemoryValueData> (input, ExecuteInMemory<object>);
+      return InvokeGenericExecuteMethod<StreamedSequence, StreamedValue> (input, ExecuteInMemory<object>);
     }
 
-    public ExecuteInMemoryValueData ExecuteInMemory<T> (ExecuteInMemorySequenceData input)
+    public StreamedValue ExecuteInMemory<T> (StreamedSequence input)
     {
       var sequence = input.GetCurrentSequenceInfo<T> ();
       var result = sequence.Sequence.Max ();
-      return new ExecuteInMemoryValueData (result);
+      return new StreamedValue (result);
     }
 
     public override Type GetResultType (Type inputResultType)

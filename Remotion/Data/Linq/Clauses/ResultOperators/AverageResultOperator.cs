@@ -47,13 +47,13 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new AverageResultOperator();
     }
 
-    public override IExecuteInMemoryData ExecuteInMemory (IExecuteInMemoryData input)
+    public override IStreamedData ExecuteInMemory (IStreamedData input)
     {
       ArgumentUtility.CheckNotNull ("input", input);
-      return InvokeGenericExecuteMethod<ExecuteInMemorySequenceData, ExecuteInMemoryValueData> (input, ExecuteInMemory<object>);
+      return InvokeGenericExecuteMethod<StreamedSequence, StreamedValue> (input, ExecuteInMemory<object>);
     }
 
-    public ExecuteInMemoryValueData ExecuteInMemory<T> (ExecuteInMemorySequenceData input)
+    public StreamedValue ExecuteInMemory<T> (StreamedSequence input)
     {
       ArgumentUtility.CheckNotNull ("input", input);
 
@@ -65,7 +65,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       }
       
       var result = method.Invoke (null, new[] { input.GetCurrentSequenceInfo<T>().Sequence });
-      return new ExecuteInMemoryValueData (result);
+      return new StreamedValue (result);
     }
 
     public override Type GetResultType (Type inputResultType)

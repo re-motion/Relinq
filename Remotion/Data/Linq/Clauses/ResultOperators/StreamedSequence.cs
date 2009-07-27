@@ -23,18 +23,18 @@ using Remotion.Utilities;
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
   /// <summary>
-  /// Holds data needed in order to execute a <see cref="ResultOperatorBase"/> in memory via <see cref="ResultOperatorBase.ExecuteInMemory(Remotion.Data.Linq.Clauses.ResultOperators.IExecuteInMemoryData)"/>. The
+  /// Holds data needed in order to execute a <see cref="ResultOperatorBase"/> in memory via <see cref="ResultOperatorBase.ExecuteInMemory(IStreamedData)"/>. The
   /// data consists of a sequence of items.
   /// </summary>
-  public class ExecuteInMemorySequenceData : IExecuteInMemoryData
+  public class StreamedSequence : IStreamedData
   {
     /// <summary>
-    /// Initializes a new instance of the <see cref="ExecuteInMemorySequenceData"/> class, setting the <see cref="CurrentSequence"/> and 
+    /// Initializes a new instance of the <see cref="StreamedSequence"/> class, setting the <see cref="CurrentSequence"/> and 
     /// <see cref="ItemExpression"/> properties.
     /// </summary>
     /// <param name="currentSequence">The current sequence.</param>
     /// <param name="itemExpression">The item expression describing <paramref name="currentSequence"/>'s items.</param>
-    public ExecuteInMemorySequenceData (IEnumerable currentSequence, Expression itemExpression)
+    public StreamedSequence (IEnumerable currentSequence, Expression itemExpression)
     {
       ArgumentUtility.CheckNotNull ("currentSequence", currentSequence);
       ArgumentUtility.CheckNotNull ("itemExpression", itemExpression);
@@ -51,7 +51,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     }
 
     /// <summary>
-    /// Gets the current sequence for the <see cref="ResultOperatorBase.ExecuteInMemory(Remotion.Data.Linq.Clauses.ResultOperators.IExecuteInMemoryData)"/> operation. If the object is used as input, this 
+    /// Gets the current sequence for the <see cref="ResultOperatorBase.ExecuteInMemory(IStreamedData)"/> operation. If the object is used as input, this 
     /// holds the input sequence for the operation. If the object is used as output, this holds the result of the operation.
     /// </summary>
     /// <value>The current sequence.</value>
@@ -64,11 +64,20 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     public Expression ItemExpression { get; private set; }
 
     /// <summary>
+    /// Gets the type of the data described by this <see cref="IStreamedData"/> instance. This is a type implementing
+    /// <see cref="IEnumerable{T}"/>, where <c>T</c> is instantiated with a concrete type.
+    /// </summary>
+    public Type DataType
+    {
+      get { return CurrentSequence.GetType (); }
+    }
+
+    /// <summary>
     /// Always throws an exception because this object does not hold a single value, but a sequence.
     /// </summary>
     /// <typeparam name="T">The expected type of the value.</typeparam>
     /// <exception cref="InvalidOperationException">This object does not hold a single value.</exception>
-    T IExecuteInMemoryData.GetCurrentSingleValue<T> ()
+    T IStreamedData.GetCurrentSingleValue<T> ()
     {
         string message = string.Format (
             "Cannot retrieve the current single value because the current value is a sequence of type '{0}'.",

@@ -45,10 +45,10 @@ namespace Remotion.Data.Linq.Clauses
     /// Executes this result operator in memory, on a given input. Executing result operators in memory should only be 
     /// performed if the target query system does not support the operator.
     /// </summary>
-    /// <param name="input">The input for the result operator. This must match the type of <see cref="IExecuteInMemoryData"/> expected by the operator.</param>
+    /// <param name="input">The input for the result operator. This must match the type of <see cref="IStreamedData"/> expected by the operator.</param>
     /// <returns>The result of the operator.</returns>
     /// <seealso cref="InvokeGenericExecuteMethod{TInput,TResult}"/>
-    public abstract IExecuteInMemoryData ExecuteInMemory (IExecuteInMemoryData input);
+    public abstract IStreamedData ExecuteInMemory (IStreamedData input);
 
     /// <summary>
     /// Gets the result type a query would have if it ended with this <see cref="ResultOperatorBase"/>. This can be an instantiation of 
@@ -106,37 +106,37 @@ namespace Remotion.Data.Linq.Clauses
     }
 
     /// <summary>
-    /// Invokes a given generic method on an <see cref="IExecuteInMemoryData"/> input via Reflection. Use this to implement 
-    /// <see cref="ExecuteInMemory(Remotion.Data.Linq.Clauses.ResultOperators.IExecuteInMemoryData)"/> by defining a strongly typed, generic variant 
-    /// of <see cref="ExecuteInMemory(Remotion.Data.Linq.Clauses.ResultOperators.IExecuteInMemoryData)"/>; then invoke that strongly typed 
+    /// Invokes a given generic method on an <see cref="IStreamedData"/> input via Reflection. Use this to implement 
+    /// <see cref="ExecuteInMemory(IStreamedData)"/> by defining a strongly typed, generic variant 
+    /// of <see cref="ExecuteInMemory(IStreamedData)"/>; then invoke that strongly typed 
     /// variant via  <see cref="InvokeGenericExecuteMethod{TInput,TResult}"/>.
     /// </summary>
-    /// <typeparam name="TInput">The type of <see cref="IExecuteInMemoryData"/> expected as an input to <paramref name="genericExecuteCaller"/>.</typeparam>
-    /// <typeparam name="TResult">The type of <see cref="IExecuteInMemoryData"/> expected as the output of <paramref name="genericExecuteCaller"/>.</typeparam>
-    /// <param name="input">The input <see cref="IExecuteInMemoryData"/> object to invoke the method on..</param>
+    /// <typeparam name="TInput">The type of <see cref="IStreamedData"/> expected as an input to <paramref name="genericExecuteCaller"/>.</typeparam>
+    /// <typeparam name="TResult">The type of <see cref="IStreamedData"/> expected as the output of <paramref name="genericExecuteCaller"/>.</typeparam>
+    /// <param name="input">The input <see cref="IStreamedData"/> object to invoke the method on..</param>
     /// <param name="genericExecuteCaller">A delegate holding exactly one public generic method with exactly one generic argument. This method is
     /// called via Reflection on the given <paramref name="input"/> argument.</param>
     /// <returns>The result of invoking the method in <paramref name="genericExecuteCaller"/> on <paramref name="input"/>.</returns>
     /// <example>
     /// The <see cref="CountResultOperator"/> uses this method as follows:
     /// <code>
-    /// public IExecuteInMemoryData ExecuteInMemory (IExecuteInMemoryData input)
+    /// public IStreamedData ExecuteInMemory (IStreamedData input)
     /// {
     ///   ArgumentUtility.CheckNotNull ("input", input);
-    ///   return InvokeGenericExecuteMethod&lt;ExecuteInMemorySequenceData, ExecuteInMemoryValueData&gt; (input, ExecuteInMemory&lt;object&gt;);
+    ///   return InvokeGenericExecuteMethod&lt;StreamedSequence, StreamedValue&gt; (input, ExecuteInMemory&lt;object&gt;);
     /// }
     ///
-    /// public ExecuteInMemoryValueData ExecuteInMemory&lt;T&gt; (ExecuteInMemorySequenceData input)
+    /// public StreamedValue ExecuteInMemory&lt;T&gt; (StreamedSequence input)
     /// {
     ///   var sequence = input.GetCurrentSequenceInfo&lt;T&gt; ();
     ///   var result = sequence.Sequence.Count ();
-    ///   return new ExecuteInMemoryValueData (result);
+    ///   return new StreamedValue (result);
     /// }
     /// </code>
     /// </example>
-    protected TResult InvokeGenericExecuteMethod<TInput, TResult> (IExecuteInMemoryData input, Func<TInput, TResult> genericExecuteCaller)
-      where TInput : IExecuteInMemoryData
-      where TResult : IExecuteInMemoryData
+    protected TResult InvokeGenericExecuteMethod<TInput, TResult> (IStreamedData input, Func<TInput, TResult> genericExecuteCaller)
+      where TInput : IStreamedData
+      where TResult : IStreamedData
     {
       ArgumentUtility.CheckNotNull ("input", input);
       ArgumentUtility.CheckNotNull ("genericExecuteCaller", genericExecuteCaller);

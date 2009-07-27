@@ -127,13 +127,13 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       ElementSelector = transformation (ElementSelector);
     }
 
-    public override IExecuteInMemoryData ExecuteInMemory (IExecuteInMemoryData input)
+    public override IStreamedData ExecuteInMemory (IStreamedData input)
     {
       ArgumentUtility.CheckNotNull ("input", input);
-      return InvokeGenericExecuteMethod<ExecuteInMemorySequenceData, ExecuteInMemorySequenceData> (input, ExecuteInMemory<object>);
+      return InvokeGenericExecuteMethod<StreamedSequence, StreamedSequence> (input, ExecuteInMemory<object>);
     }
 
-    public ExecuteInMemorySequenceData ExecuteInMemory<TInput> (ExecuteInMemorySequenceData input)
+    public StreamedSequence ExecuteInMemory<TInput> (StreamedSequence input)
     {
       ArgumentUtility.CheckNotNull ("input", input);
 
@@ -143,10 +143,10 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
           KeySelector.Type,
           ElementSelector.Type);
 
-      return (ExecuteInMemorySequenceData) InvokeExecuteMethod (closedExecuteMethod, input);
+      return (StreamedSequence) InvokeExecuteMethod (closedExecuteMethod, input);
     }
 
-    public ExecuteInMemorySequenceData ExecuteGroupingInMemory<TSource, TKey, TElement> (ExecuteInMemorySequenceData input)
+    public StreamedSequence ExecuteGroupingInMemory<TSource, TKey, TElement> (StreamedSequence input)
     {
       ArgumentUtility.CheckNotNull ("input", input);
 
@@ -159,7 +159,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       var elementSelector = (Func<TSource, TElement>) elementSelectorLambda.Compile ();
 
       var resultSequence = inputSequence.GroupBy (keySelector, elementSelector);
-      return new ExecuteInMemorySequenceData (resultSequence, new QuerySourceReferenceExpression (this));
+      return new StreamedSequence (resultSequence, new QuerySourceReferenceExpression (this));
     }
 
     public override Type GetResultType (Type inputResultType)

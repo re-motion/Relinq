@@ -103,7 +103,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
           new AnonymousType (555, 5) 
       };
 
-      IExecuteInMemoryData input = new ExecuteInMemorySequenceData (items, expectedInput);
+      IStreamedData input = new StreamedSequence (items, expectedInput);
 
       var result = _resultOperator.ExecuteInMemory (input).GetCurrentSequenceInfo<IGrouping<int, string>> ();
 

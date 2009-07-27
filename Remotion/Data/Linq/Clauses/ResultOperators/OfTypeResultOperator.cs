@@ -58,19 +58,19 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new OfTypeResultOperator (SearchedItemType);
     }
 
-    public override IExecuteInMemoryData ExecuteInMemory (IExecuteInMemoryData input)
+    public override IStreamedData ExecuteInMemory (IStreamedData input)
     {
       ArgumentUtility.CheckNotNull ("input", input);
-      return InvokeGenericExecuteMethod<ExecuteInMemorySequenceData, ExecuteInMemorySequenceData> (input, ExecuteInMemory<object>);
+      return InvokeGenericExecuteMethod<StreamedSequence, StreamedSequence> (input, ExecuteInMemory<object>);
     }
 
-    public ExecuteInMemorySequenceData ExecuteInMemory<TInput> (ExecuteInMemorySequenceData input)
+    public StreamedSequence ExecuteInMemory<TInput> (StreamedSequence input)
     {
       var sequence = input.GetCurrentSequenceInfo<TInput> ();
       var castMethod = typeof (Enumerable).GetMethod ("OfType", new[] { typeof (IEnumerable) }).MakeGenericMethod (SearchedItemType);
       var result = (IEnumerable) InvokeExecuteMethod (castMethod, sequence.Sequence);
       var resultItemExpression = Expression.Convert (sequence.ItemExpression, SearchedItemType);
-      return new ExecuteInMemorySequenceData (result, resultItemExpression);
+      return new StreamedSequence (result, resultItemExpression);
     }
 
     public override Type GetResultType (Type inputResultType)

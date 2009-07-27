@@ -30,13 +30,13 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
   public class ResultOperatorBaseTest
   {
     private TestResultOperator _resultOperator;
-    private ExecuteInMemorySequenceData _executeInMemoryInput;
+    private StreamedSequence _executeInMemoryInput;
 
     [SetUp]
     public void SetUp ()
     {
       _resultOperator = new TestResultOperator (CollectionExecutionStrategy.Instance);
-      _executeInMemoryInput = new ExecuteInMemorySequenceData (new[] { 1, 2, 3, 4, 3, 2, 1 }, Expression.Constant (0));
+      _executeInMemoryInput = new StreamedSequence (new[] { 1, 2, 3, 4, 3, 2, 1 }, Expression.Constant (0));
     }
 
     [Test]
@@ -52,7 +52,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [Test]
     public void InvokeGenericExecuteMethod ()
     {
-      var result = _resultOperator.InvokeGenericExecuteMethod<ExecuteInMemorySequenceData, ExecuteInMemorySequenceData> (
+      var result = _resultOperator.InvokeGenericExecuteMethod<StreamedSequence, StreamedSequence> (
           _executeInMemoryInput, 
           _resultOperator.DistinctExecuteMethod<object>);
 
@@ -63,7 +63,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     [ExpectedException (typeof (NotImplementedException), ExpectedMessage = "Test")]
     public void InvokeGenericExecuteMethod_Throws ()
     {
-      _resultOperator.InvokeGenericExecuteMethod<ExecuteInMemorySequenceData, ExecuteInMemorySequenceData> (
+      _resultOperator.InvokeGenericExecuteMethod<StreamedSequence, StreamedSequence> (
           _executeInMemoryInput, 
           _resultOperator.ThrowingExecuteMethod<object>);
     }
@@ -73,7 +73,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
         + "with exactly one generic argument.\r\nParameter name: genericExecuteCaller")]
     public void InvokeGenericExecuteMethod_NonGenericMethod ()
     {
-      _resultOperator.InvokeGenericExecuteMethod<ExecuteInMemorySequenceData, ExecuteInMemorySequenceData> (
+      _resultOperator.InvokeGenericExecuteMethod<StreamedSequence, StreamedSequence> (
           _executeInMemoryInput,
           _resultOperator.NonGenericExecuteMethod);
     }
@@ -83,7 +83,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
         + "with exactly one generic argument.\r\nParameter name: genericExecuteCaller")]
     public void InvokeGenericExecuteMethod_WrongNumberOfGenericArguments ()
     {
-      _resultOperator.InvokeGenericExecuteMethod<ExecuteInMemorySequenceData, ExecuteInMemoryValueData> (
+      _resultOperator.InvokeGenericExecuteMethod<StreamedSequence, StreamedValue> (
           _executeInMemoryInput,
           _resultOperator.InvalidExecuteInMemory_TooManyGenericParameters<object, object>);
     }
@@ -93,19 +93,19 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
         + "Parameter name: method")]
     public void InvokeGenericExecuteMethod_NonPublicMethod ()
     {
-      _resultOperator.InvokeGenericExecuteMethod<ExecuteInMemorySequenceData, ExecuteInMemorySequenceData> (
+      _resultOperator.InvokeGenericExecuteMethod<StreamedSequence, StreamedSequence> (
           _executeInMemoryInput,
           _resultOperator.NonPublicExecuteMethod<object>);
     }
 
     [Test]
     [ExpectedException (typeof (ArgumentException), ExpectedMessage = "Cannot call method 'ExecuteMethodWithNonMatchingArgumentType' on input of type "
-        + "'Remotion.Data.Linq.Clauses.ResultOperators.ExecuteInMemorySequenceData': Object of type 'Remotion.Data.Linq.Clauses.ResultOperators."
-        + "ExecuteInMemorySequenceData' cannot be converted to type 'Remotion.Data.Linq.Clauses.ResultOperators.ExecuteInMemoryValueData'."
+        + "'Remotion.Data.Linq.Clauses.ResultOperators.StreamedSequence': Object of type 'Remotion.Data.Linq.Clauses.ResultOperators."
+        + "StreamedSequence' cannot be converted to type 'Remotion.Data.Linq.Clauses.ResultOperators.StreamedValue'."
         + "\r\nParameter name: method")]
     public void InvokeGenericExecuteMethod_NonMatchingArgument ()
     {
-      _resultOperator.InvokeGenericExecuteMethod<ExecuteInMemoryValueData, ExecuteInMemoryValueData> (
+      _resultOperator.InvokeGenericExecuteMethod<StreamedValue, StreamedValue> (
           _executeInMemoryInput,
           _resultOperator.ExecuteMethodWithNonMatchingArgumentType<object>);
     }

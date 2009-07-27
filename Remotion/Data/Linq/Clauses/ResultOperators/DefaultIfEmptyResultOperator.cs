@@ -75,24 +75,24 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new DefaultIfEmptyResultOperator (OptionalDefaultValue);
     }
 
-    public override IExecuteInMemoryData ExecuteInMemory (IExecuteInMemoryData input)
+    public override IStreamedData ExecuteInMemory (IStreamedData input)
     {
       ArgumentUtility.CheckNotNull ("input", input);
-      return InvokeGenericExecuteMethod<ExecuteInMemorySequenceData, ExecuteInMemorySequenceData> (input, ExecuteInMemory<object>);
+      return InvokeGenericExecuteMethod<StreamedSequence, StreamedSequence> (input, ExecuteInMemory<object>);
     }
 
-    public ExecuteInMemorySequenceData ExecuteInMemory<T> (ExecuteInMemorySequenceData input)
+    public StreamedSequence ExecuteInMemory<T> (StreamedSequence input)
     {
       var sequence = input.GetCurrentSequenceInfo<T> ();
       if (OptionalDefaultValue != null)
       {
         var result = sequence.Sequence.DefaultIfEmpty ((T) GetConstantOptionalDefaultValue ());
-        return new ExecuteInMemorySequenceData (result, sequence.ItemExpression);
+        return new StreamedSequence (result, sequence.ItemExpression);
       }
       else
       {
         var result = sequence.Sequence.DefaultIfEmpty ();
-        return new ExecuteInMemorySequenceData (result, sequence.ItemExpression);
+        return new StreamedSequence (result, sequence.ItemExpression);
       }
     }
     

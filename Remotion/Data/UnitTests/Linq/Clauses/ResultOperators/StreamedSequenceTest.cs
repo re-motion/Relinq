@@ -23,11 +23,11 @@ using Remotion.Utilities;
 namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
 {
   [TestFixture]
-  public class ExecuteInMemorySequenceDataTest
+  public class StreamedSequenceTest
   {
     private ConstantExpression _intExpression;
     private int[] _intSequence;
-    private ExecuteInMemorySequenceData _dataWithIntSequence;
+    private StreamedSequence _dataWithIntSequence;
 
     [SetUp]
     public void SetUp ()
@@ -35,21 +35,21 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       _intExpression = Expression.Constant (0);
       _intSequence = new[] { 0, 0, 0 };
 
-      _dataWithIntSequence = new ExecuteInMemorySequenceData (_intSequence, _intExpression);
+      _dataWithIntSequence = new StreamedSequence (_intSequence, _intExpression);
     }
 
     [Test]
     [ExpectedException (typeof (ArgumentNullException))]
     public void Initialization_CurrentSequence_WithoutItemExpression ()
     {
-      new ExecuteInMemorySequenceData (_intSequence, null);
+      new StreamedSequence (_intSequence, null);
     }
 
     [Test]
     [ExpectedException (typeof (ArgumentTypeException))]
     public void Initialization_CurrentSequence_WrongItemExpression ()
     {
-      new ExecuteInMemorySequenceData (new[] { "1", "2", "3" }, _intExpression);
+      new StreamedSequence (new[] { "1", "2", "3" }, _intExpression);
     }
 
     [Test]
@@ -57,7 +57,13 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
         ExpectedMessage = "Cannot retrieve the current single value because the current value is a sequence of type 'System.Int32[]'.")]
     public void GetCurrentSingleValue_InvalidType ()
     {
-      ((IExecuteInMemoryData) _dataWithIntSequence).GetCurrentSingleValue<string> ();
+      ((IStreamedData) _dataWithIntSequence).GetCurrentSingleValue<string> ();
+    }
+
+    [Test]
+    public void DataType ()
+    {
+      Assert.That (_dataWithIntSequence.DataType, Is.SameAs (typeof (int[])));
     }
 
     [Test]
@@ -87,7 +93,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     [Test]
     public void MakeClosedGenericExecuteMethod ()
     {
-      var executeMethod = typeof (CountResultOperator).GetMethod ("ExecuteInMemory", new[] { typeof (ExecuteInMemorySequenceData) });
+      var executeMethod = typeof (CountResultOperator).GetMethod ("ExecuteInMemory", new[] { typeof (StreamedSequence) });
       var result = _dataWithIntSequence.MakeClosedGenericExecuteMethod (executeMethod);
 
       Assert.That (result.GetGenericArguments (), Is.EqualTo (new[] { typeof (int) }));
@@ -98,7 +104,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
         ExpectedMessage = "GenericMethodDefinition must be a generic method definition.\r\nParameter name: genericMethodDefinition")]
     public void MakeClosedGenericExecuteMethod_NonGenericMethod ()
     {
-      var executeMethod = typeof (CountResultOperator).GetMethod ("ExecuteInMemory", new[] { typeof (IExecuteInMemoryData) });
+      var executeMethod = typeof (CountResultOperator).GetMethod ("ExecuteInMemory", new[] { typeof (IStreamedData) });
       _dataWithIntSequence.MakeClosedGenericExecuteMethod (executeMethod);
     }
 
@@ -108,7 +114,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     public void MakeClosedGenericExecuteMethod_NonGenericMethodDefinition ()
     {
       var executeMethod = typeof (CountResultOperator)
-          .GetMethod ("ExecuteInMemory", new[] { typeof (ExecuteInMemorySequenceData) })
+          .GetMethod ("ExecuteInMemory", new[] { typeof (StreamedSequence) })
           .MakeGenericMethod (typeof (int));
       _dataWithIntSequence.MakeClosedGenericExecuteMethod (executeMethod);
     }

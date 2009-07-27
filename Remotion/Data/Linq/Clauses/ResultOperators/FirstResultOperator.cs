@@ -49,24 +49,24 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new FirstResultOperator (ReturnDefaultWhenEmpty);
     }
 
-    public override IExecuteInMemoryData ExecuteInMemory (IExecuteInMemoryData input)
+    public override IStreamedData ExecuteInMemory (IStreamedData input)
     {
       ArgumentUtility.CheckNotNull ("input", input);
-      return InvokeGenericExecuteMethod<ExecuteInMemorySequenceData, ExecuteInMemoryValueData> (input, ExecuteInMemory<object>);
+      return InvokeGenericExecuteMethod<StreamedSequence, StreamedValue> (input, ExecuteInMemory<object>);
     }
 
-    public ExecuteInMemoryValueData ExecuteInMemory<T> (ExecuteInMemorySequenceData input)
+    public StreamedValue ExecuteInMemory<T> (StreamedSequence input)
     {
       var sequence = input.GetCurrentSequenceInfo<T> ();
       if (ReturnDefaultWhenEmpty)
       {
         var result = sequence.Sequence.FirstOrDefault ();
-        return new ExecuteInMemoryValueData (result);
+        return new StreamedValue (result);
       }
       else
       {
         var result = sequence.Sequence.First();
-        return new ExecuteInMemoryValueData (result);
+        return new StreamedValue (result);
       }
     }
 
