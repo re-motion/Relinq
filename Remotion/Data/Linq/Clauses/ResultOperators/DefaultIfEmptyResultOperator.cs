@@ -15,7 +15,6 @@
 // 
 using System;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Clauses.StreamedData;
 using Remotion.Utilities;
@@ -33,10 +32,9 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   ///              select s).DefaultIfEmpty ("student");
   /// </code>
   /// </example>
-  public class DefaultIfEmptyResultOperator : ResultOperatorBase
+  public class DefaultIfEmptyResultOperator : SequenceTypePreservingResultOperatorBase
   {
     public DefaultIfEmptyResultOperator (Expression optionalDefaultValue)
-      : base (CollectionExecutionStrategy.Instance)
     {
       OptionalDefaultValue = optionalDefaultValue;
     }
@@ -76,13 +74,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new DefaultIfEmptyResultOperator (OptionalDefaultValue);
     }
 
-    public override IStreamedData ExecuteInMemory (IStreamedData input)
-    {
-      ArgumentUtility.CheckNotNull ("input", input);
-      return InvokeGenericExecuteMethod<StreamedSequence, StreamedSequence> (input, ExecuteInMemory<object>);
-    }
-
-    public StreamedSequence ExecuteInMemory<T> (StreamedSequence input)
+    public override StreamedSequence ExecuteInMemory<T> (StreamedSequence input)
     {
       var sequence = input.GetCurrentSequenceInfo<T> ();
       if (OptionalDefaultValue != null)

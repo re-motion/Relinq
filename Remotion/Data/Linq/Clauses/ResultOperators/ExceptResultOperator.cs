@@ -18,7 +18,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Clauses.StreamedData;
 using Remotion.Utilities;
@@ -35,12 +34,11 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   ///              select s).Except(students2);
   /// </code>
   /// </example>
-  public class ExceptResultOperator : ResultOperatorBase
+  public class ExceptResultOperator : SequenceTypePreservingResultOperatorBase
   {
     private Expression _source2;
     
     public ExceptResultOperator (Expression source2)
-      : base (CollectionExecutionStrategy.Instance)
     {
       ArgumentUtility.CheckNotNull ("source2", source2);
       Source2 = source2;
@@ -88,13 +86,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new ExceptResultOperator (Source2);
     }
 
-    public override IStreamedData ExecuteInMemory (IStreamedData input)
-    {
-      ArgumentUtility.CheckNotNull ("input", input);
-      return InvokeGenericExecuteMethod<StreamedSequence, StreamedSequence> (input, ExecuteInMemory<object>);
-    }
-
-    public StreamedSequence ExecuteInMemory<T> (StreamedSequence input)
+    public override StreamedSequence ExecuteInMemory<T> (StreamedSequence input)
     {
       var sequence = input.GetCurrentSequenceInfo<T> ();
       var result = sequence.Sequence.Except ((IEnumerable<T>) GetConstantSource2());

@@ -15,7 +15,6 @@
 // 
 using System;
 using System.Linq;
-using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.StreamedData;
 using Remotion.Utilities;
 
@@ -31,14 +30,14 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   ///              select s).Last();
   /// </code>
   /// </example>
-  public class LastResultOperator : ResultOperatorBase
+  public class LastResultOperator : ChoiceResultOperatorBase
   {
     /// <summary>
     /// Initializes a new instance of the <see cref="LastResultOperator"/>.
     /// </summary>
     /// <param name="returnDefaultWhenEmpty">The flag defines if a default expression should be regarded.</param>
     public LastResultOperator (bool returnDefaultWhenEmpty)
-        : base (returnDefaultWhenEmpty ? SingleExecutionStrategy.InstanceWithDefaultWhenEmpty : SingleExecutionStrategy.InstanceNoDefaultWhenEmpty)
+      : base (returnDefaultWhenEmpty)
     {
       ReturnDefaultWhenEmpty = returnDefaultWhenEmpty;
     }
@@ -50,13 +49,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new LastResultOperator (ReturnDefaultWhenEmpty);
     }
 
-    public override IStreamedData ExecuteInMemory (IStreamedData input)
-    {
-      ArgumentUtility.CheckNotNull ("input", input);
-      return InvokeGenericExecuteMethod<StreamedSequence, StreamedValue> (input, ExecuteInMemory<object>);
-    }
-
-    public StreamedValue ExecuteInMemory<T> (StreamedSequence input)
+    public override StreamedValue ExecuteInMemory<T> (StreamedSequence input)
     {
       var sequence = input.GetCurrentSequenceInfo<T> ();
       if (ReturnDefaultWhenEmpty)

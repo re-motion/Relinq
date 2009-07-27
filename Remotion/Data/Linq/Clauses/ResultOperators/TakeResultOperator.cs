@@ -16,7 +16,6 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Clauses.StreamedData;
 using Remotion.Utilities;
@@ -33,7 +32,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   ///              select s).Take(3);
   /// </code>
   /// </example>
-  public class TakeResultOperator : ResultOperatorBase
+  public class TakeResultOperator : SequenceTypePreservingResultOperatorBase
   {
     private Expression _count;
     
@@ -42,7 +41,6 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     /// </summary>
     /// <param name="count">The number of elements which should be returned.</param>
     public TakeResultOperator (Expression count)
-        : base (CollectionExecutionStrategy.Instance)
     {
       ArgumentUtility.CheckNotNull ("count", count);
       Count = count;
@@ -91,13 +89,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new TakeResultOperator (Count);
     }
 
-    public override IStreamedData ExecuteInMemory (IStreamedData input)
-    {
-      ArgumentUtility.CheckNotNull ("input", input);
-      return InvokeGenericExecuteMethod<StreamedSequence, StreamedSequence> (input, ExecuteInMemory<object>);
-    }
-
-    public StreamedSequence ExecuteInMemory<T> (StreamedSequence input)
+    public override StreamedSequence ExecuteInMemory<T> (StreamedSequence input)
     {
       var sequence = input.GetCurrentSequenceInfo<T> ();
       var result = sequence.Sequence.Take (GetConstantCount ());

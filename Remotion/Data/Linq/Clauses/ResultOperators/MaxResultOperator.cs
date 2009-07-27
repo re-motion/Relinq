@@ -15,7 +15,6 @@
 // 
 using System;
 using System.Linq;
-using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.StreamedData;
 using Remotion.Utilities;
 
@@ -31,13 +30,13 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   ///              select s.ID).Max();
   /// </code>
   /// </example>
-  public class MaxResultOperator : ResultOperatorBase
+  public class MaxResultOperator : ChoiceResultOperatorBase
   {
     /// <summary>
     /// Initializes a new instance of the <see cref="MaxResultOperator"/>.
     /// </summary>
     public MaxResultOperator ()
-        : base (ScalarExecutionStrategy.Instance)
+      : base (false)
     {
     }
 
@@ -46,13 +45,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new MaxResultOperator();
     }
 
-    public override IStreamedData ExecuteInMemory (IStreamedData input)
-    {
-      ArgumentUtility.CheckNotNull ("input", input);
-      return InvokeGenericExecuteMethod<StreamedSequence, StreamedValue> (input, ExecuteInMemory<object>);
-    }
-
-    public StreamedValue ExecuteInMemory<T> (StreamedSequence input)
+    public override StreamedValue ExecuteInMemory<T> (StreamedSequence input)
     {
       var sequence = input.GetCurrentSequenceInfo<T> ();
       var result = sequence.Sequence.Max ();

@@ -16,7 +16,6 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Clauses.StreamedData;
@@ -38,7 +37,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   ///             group s by s.Country;
   /// </code>
   /// </example>
-  public class GroupResultOperator : ResultOperatorBase, IQuerySource
+  public class GroupResultOperator : SequenceFromSequenceResultOperatorBase, IQuerySource
   {
     private string _itemName;
 
@@ -52,7 +51,6 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     /// <param name="keySelector">The selector retrieving the key by which to group items.</param>
     /// <param name="elementSelector">The selector retrieving the elements to group.</param>
     public GroupResultOperator (string itemName, Expression keySelector, Expression elementSelector)
-      : base (CollectionExecutionStrategy.Instance)
     {
       ArgumentUtility.CheckNotNullOrEmpty ("itemName", itemName);
       ArgumentUtility.CheckNotNull ("keySelector", keySelector);
@@ -128,13 +126,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       ElementSelector = transformation (ElementSelector);
     }
 
-    public override IStreamedData ExecuteInMemory (IStreamedData input)
-    {
-      ArgumentUtility.CheckNotNull ("input", input);
-      return InvokeGenericExecuteMethod<StreamedSequence, StreamedSequence> (input, ExecuteInMemory<object>);
-    }
-
-    public StreamedSequence ExecuteInMemory<TInput> (StreamedSequence input)
+    public override StreamedSequence ExecuteInMemory<TInput> (StreamedSequence input)
     {
       ArgumentUtility.CheckNotNull ("input", input);
 

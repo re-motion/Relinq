@@ -15,7 +15,6 @@
 // 
 using System;
 using System.Linq;
-using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.StreamedData;
 using Remotion.Utilities;
 
@@ -31,28 +30,14 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   ///              select s).Distinct();
   /// </code>
   /// </example>
-  public class DistinctResultOperator : ResultOperatorBase
+  public class DistinctResultOperator : SequenceTypePreservingResultOperatorBase
   {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="DistinctResultOperator"/>.
-    /// </summary>
-    public DistinctResultOperator ()
-        : base (CollectionExecutionStrategy.Instance)
-    {
-    }
-
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
       return new DistinctResultOperator();
     }
 
-    public override IStreamedData ExecuteInMemory (IStreamedData input)
-    {
-      ArgumentUtility.CheckNotNull ("input", input);
-      return InvokeGenericExecuteMethod<StreamedSequence, StreamedSequence> (input, ExecuteInMemory<object>);
-    }
-
-    public StreamedSequence ExecuteInMemory<T> (StreamedSequence input)
+    public override StreamedSequence ExecuteInMemory<T> (StreamedSequence input)
     {
       var sequence = input.GetCurrentSequenceInfo<T> ();
       var result = sequence.Sequence.Distinct();

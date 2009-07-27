@@ -17,7 +17,6 @@ using System;
 using System.Collections;
 using System.Linq;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.StreamedData;
 using Remotion.Utilities;
 
@@ -33,12 +32,11 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   ///              select s.ID).OfType&lt;int&gt;();
   /// </code>
   /// </example>
-  public class OfTypeResultOperator: ResultOperatorBase
+  public class OfTypeResultOperator : SequenceFromSequenceResultOperatorBase
   {
     private Type _searchedItemType;
 
     public OfTypeResultOperator (Type searchedItemType)
-        : base (CollectionExecutionStrategy.Instance)
     {
       ArgumentUtility.CheckNotNull ("searchedItemType", searchedItemType);
       SearchedItemType = searchedItemType;
@@ -59,13 +57,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new OfTypeResultOperator (SearchedItemType);
     }
 
-    public override IStreamedData ExecuteInMemory (IStreamedData input)
-    {
-      ArgumentUtility.CheckNotNull ("input", input);
-      return InvokeGenericExecuteMethod<StreamedSequence, StreamedSequence> (input, ExecuteInMemory<object>);
-    }
-
-    public StreamedSequence ExecuteInMemory<TInput> (StreamedSequence input)
+    public override StreamedSequence ExecuteInMemory<TInput> (StreamedSequence input)
     {
       var sequence = input.GetCurrentSequenceInfo<TInput> ();
       var castMethod = typeof (Enumerable).GetMethod ("OfType", new[] { typeof (IEnumerable) }).MakeGenericMethod (SearchedItemType);

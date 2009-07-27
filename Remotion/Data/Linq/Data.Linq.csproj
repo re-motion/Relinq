@@ -54,6 +54,10 @@
     <Compile Include="Clauses\AdditionalFromClause.cs" />
     <Compile Include="Clauses\CloneContext.cs" />
     <Compile Include="Clauses\ExpressionTreeVisitors\ReverseResolvingExpressionTreeVisitor.cs" />
+    <Compile Include="Clauses\ResultOperators\ChoiceResultOperatorBase.cs" />
+    <Compile Include="Clauses\ResultOperators\SequenceTypePreservingResultOperatorBase.cs" />
+    <Compile Include="Clauses\ResultOperators\SequenceFromSequenceResultOperatorBase.cs" />
+    <Compile Include="Clauses\ResultOperators\ValueFromSequenceResultOperatorBase.cs" />
     <Compile Include="Clauses\StreamedData\IStreamedDataInfo.cs" />
     <Compile Include="Clauses\StreamedData\StreamedSequence.cs" />
     <Compile Include="Clauses\StreamedData\StreamedSequenceInfo.cs" />

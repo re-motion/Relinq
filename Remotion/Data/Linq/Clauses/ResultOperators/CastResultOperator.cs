@@ -16,7 +16,6 @@
 using System;
 using System.Collections;
 using System.Linq;
-using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.StreamedData;
 using Remotion.Utilities;
 using System.Linq.Expressions;
@@ -33,12 +32,11 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   ///              select s.ID).Cast&lt;int&gt;();
   /// </code>
   /// </example>
-  public class CastResultOperator : ResultOperatorBase
+  public class CastResultOperator : SequenceFromSequenceResultOperatorBase
   {
     private Type _castItemType;
 
     public CastResultOperator (Type castItemType)
-        : base (CollectionExecutionStrategy.Instance)
     {
       ArgumentUtility.CheckNotNull ("castItemType", castItemType);
       CastItemType = castItemType;
@@ -53,14 +51,8 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
         _castItemType = value;
       }
     }
-
-    public override IStreamedData ExecuteInMemory (IStreamedData input)
-    {
-      ArgumentUtility.CheckNotNull ("input", input);
-      return InvokeGenericExecuteMethod<StreamedSequence, StreamedSequence> (input, ExecuteInMemory<object>);
-    }
-
-    public StreamedSequence ExecuteInMemory<TInput> (StreamedSequence input)
+    
+    public override StreamedSequence ExecuteInMemory<TInput> (StreamedSequence input)
     {
       var sequence = input.GetCurrentSequenceInfo<TInput> ();
       var castMethod = typeof (Enumerable).GetMethod ("Cast", new[] { typeof (IEnumerable) }).MakeGenericMethod (CastItemType);

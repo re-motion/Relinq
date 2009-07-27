@@ -34,7 +34,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   ///              select s).Contains(student);
   /// </code>
   /// </example>
-  public class ContainsResultOperator : ResultOperatorBase
+  public class ContainsResultOperator : ValueFromSequenceResultOperatorBase
   {
     private Expression _item;
 
@@ -83,13 +83,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       }
     }
 
-    public override IStreamedData ExecuteInMemory (IStreamedData input)
-    {
-      ArgumentUtility.CheckNotNull ("input", input);
-      return InvokeGenericExecuteMethod<StreamedSequence, StreamedValue> (input, ExecuteInMemory<object>);
-    }
-
-    public StreamedValue ExecuteInMemory<T> (StreamedSequence input)
+    public override StreamedValue ExecuteInMemory<T> (StreamedSequence input)
     {
       ArgumentUtility.CheckNotNull ("input", input);
 

@@ -31,7 +31,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   ///              select s).Count();
   /// </code>
   /// </example>
-  public class CountResultOperator : ResultOperatorBase
+  public class CountResultOperator : ValueFromSequenceResultOperatorBase
   {
     /// <summary>
     /// Initializes a new instance of the <see cref="CountResultOperator"/>.
@@ -46,13 +46,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new CountResultOperator();
     }
 
-    public override IStreamedData ExecuteInMemory (IStreamedData input)
-    {
-      ArgumentUtility.CheckNotNull ("input", input);
-      return InvokeGenericExecuteMethod<StreamedSequence, StreamedValue> (input, ExecuteInMemory<object>);
-    }
-
-    public StreamedValue ExecuteInMemory<T> (StreamedSequence input)
+    public override StreamedValue ExecuteInMemory<T> (StreamedSequence input)
     {
       var sequence = input.GetCurrentSequenceInfo<T> ();
       var result = sequence.Sequence.Count ();

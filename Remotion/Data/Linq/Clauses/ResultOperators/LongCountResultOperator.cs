@@ -31,7 +31,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   ///              select s).LongCount();
   /// </code>
   /// </example>
-  public class LongCountResultOperator : ResultOperatorBase
+  public class LongCountResultOperator : ValueFromSequenceResultOperatorBase
   {
     public LongCountResultOperator ()
       : base (ScalarExecutionStrategy.Instance)
@@ -43,13 +43,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new LongCountResultOperator();
     }
 
-    public override IStreamedData ExecuteInMemory (IStreamedData input)
-    {
-      ArgumentUtility.CheckNotNull ("input", input);
-      return InvokeGenericExecuteMethod<StreamedSequence, StreamedValue> (input, ExecuteInMemory<object>);
-    }
-
-    public StreamedValue ExecuteInMemory<T> (StreamedSequence input)
+    public override StreamedValue ExecuteInMemory<T> (StreamedSequence input)
     {
       var sequence = input.GetCurrentSequenceInfo<T> ();
       var result = sequence.Sequence.LongCount();
