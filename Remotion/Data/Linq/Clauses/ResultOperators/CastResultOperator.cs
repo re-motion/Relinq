@@ -54,6 +54,8 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     
     public override StreamedSequence ExecuteInMemory<TInput> (StreamedSequence input)
     {
+      ArgumentUtility.CheckNotNull ("input", input);
+
       var sequence = input.GetCurrentSequenceInfo<TInput> ();
       var castMethod = typeof (Enumerable).GetMethod ("Cast", new[] { typeof (IEnumerable) }).MakeGenericMethod (CastItemType);
       var result = (IEnumerable) InvokeExecuteMethod (castMethod, sequence.Sequence);
@@ -66,6 +68,13 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new CastResultOperator(CastItemType);
     }
 
+    public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
+    {
+      var sequenceInfo = ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
+      return new StreamedSequenceInfo (
+          typeof (IQueryable<>).MakeGenericType (CastItemType), 
+          Expression.Convert (sequenceInfo.ItemExpression, CastItemType));
+    }
 
     public override Type GetResultType (Type inputResultType)
     {

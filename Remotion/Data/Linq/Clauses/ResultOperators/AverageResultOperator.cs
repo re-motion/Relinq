@@ -63,10 +63,16 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new StreamedValue (result);
     }
 
+    public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
+    {
+      ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
+      return new StreamedValueInfo (typeof (double)); // TODO 1407: Fix this.
+    }
+
     public override Type GetResultType (Type inputResultType)
     {
       ArgumentUtility.CheckNotNull ("inputResultType", inputResultType);
-      return ReflectionUtility.GetItemTypeOfIEnumerable (inputResultType, "inputResultType");
+      return typeof (double); // TODO 1407: Fix this.
     }
 
     public override string ToString ()

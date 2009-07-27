@@ -14,13 +14,43 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Clauses.StreamedData;
+using Remotion.Data.UnitTests.Linq.TestDomain;
+using Remotion.Utilities;
 
 namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
 {
   [TestFixture]
   public class SequenceTypePreservingResultOperatorBaseTest
   {
+    private TestSequenceTypePreservingResultOperator _resultOperator;
+
+    [SetUp]
+    public void SetUp ()
+    {
+      _resultOperator = new TestSequenceTypePreservingResultOperator ();
+    }
+
+    [Test]
+    public void GetOutputDataInfo ()
+    {
+      var studentExpression = Expression.Constant (new Student ());
+      var input = new StreamedSequenceInfo (typeof (Student[]), studentExpression);
+      var result = _resultOperator.GetOutputDataInfo (input);
+
+      Assert.That (result, Is.InstanceOfType (typeof (StreamedSequenceInfo)));
+      Assert.That (result, Is.SameAs (input));
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentTypeException))]
+    public void GetOutputDataInfo_InvalidInput ()
+    {
+      var input = new StreamedValueInfo (typeof (Student));
+      _resultOperator.GetOutputDataInfo (input);
+    }
   }
 }

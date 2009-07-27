@@ -50,6 +50,11 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new StreamedValue (result);
     }
 
+    public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
+    {
+      ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
+      return new StreamedValueInfo (typeof (long));
+    }
 
     public override Type GetResultType (Type inputResultType)
     {

@@ -155,6 +155,12 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new StreamedSequence (resultSequence, new QuerySourceReferenceExpression (this));
     }
 
+    public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
+    {
+      ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
+      return new StreamedSequenceInfo (typeof (IQueryable<>).MakeGenericType (ItemType), new QuerySourceReferenceExpression (this));
+    }
+
     public override Type GetResultType (Type inputResultType)
     {
       ArgumentUtility.CheckNotNull ("inputResultType", inputResultType);

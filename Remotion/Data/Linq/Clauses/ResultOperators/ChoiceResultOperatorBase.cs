@@ -15,6 +15,8 @@
 // 
 using System;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
+using Remotion.Data.Linq.Clauses.StreamedData;
+using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
@@ -26,6 +28,12 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     protected ChoiceResultOperatorBase (bool returnDefaultWhenEmpty)
       : base (returnDefaultWhenEmpty ? SingleExecutionStrategy.InstanceWithDefaultWhenEmpty : SingleExecutionStrategy.InstanceNoDefaultWhenEmpty)
     {
+    }
+
+    public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
+    {
+      var inputSequenceInfo = ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
+      return new StreamedValueInfo (inputSequenceInfo.ItemExpression.Type);
     }
   }
 }

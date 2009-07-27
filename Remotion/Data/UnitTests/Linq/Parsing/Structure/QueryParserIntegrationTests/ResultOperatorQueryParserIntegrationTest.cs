@@ -142,7 +142,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.QueryParserIntegrationT
 
       var queryModel = QueryParser.GetParsedQuery (expression);
 
-      Assert.That (queryModel.GetResultType (), Is.SameAs (typeof (int)));
+      Assert.That (queryModel.GetResultType (), Is.SameAs (typeof (double)));
 
       var mainFromClause = queryModel.MainFromClause;
       CheckConstantQuerySource (mainFromClause.FromExpression, QuerySource);

@@ -14,21 +14,29 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Clauses.StreamedData;
-using Remotion.Utilities;
+using System.Linq;
 
-namespace Remotion.Data.Linq.Clauses.ResultOperators
+namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
 {
-  /// <summary>
-  /// Represents a <see cref="SequenceFromSequenceResultOperatorBase"/> that is executed on a sequence, returning a new sequence with the same
-  /// item type as its result.
-  /// </summary>
-  public abstract class SequenceTypePreservingResultOperatorBase : SequenceFromSequenceResultOperatorBase
+  public class TestSequenceTypePreservingResultOperator : SequenceTypePreservingResultOperatorBase
   {
-    public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
+    public override StreamedSequence ExecuteInMemory<T> (StreamedSequence sequence)
     {
-      ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
-      return inputInfo;
+      var sequenceInfo = sequence.GetCurrentSequenceInfo<T> ();
+      return new StreamedSequence (sequenceInfo.Sequence.Distinct(), sequenceInfo.ItemExpression);
+    }
+
+    public override Type GetResultType (Type inputResultType)
+    {
+      throw new NotImplementedException();
+    }
+
+    public override ResultOperatorBase Clone (CloneContext cloneContext)
+    {
+      throw new NotImplementedException();
     }
   }
 }

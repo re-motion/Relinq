@@ -66,6 +66,14 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new StreamedSequence (result, resultItemExpression);
     }
 
+    public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
+    {
+      var sequenceInfo = ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
+      return new StreamedSequenceInfo (
+          typeof (IQueryable<>).MakeGenericType (SearchedItemType),
+          Expression.Convert (sequenceInfo.ItemExpression, SearchedItemType));
+    }
+
     public override Type GetResultType (Type inputResultType)
     {
       ArgumentUtility.CheckNotNull ("inputResultType", inputResultType);

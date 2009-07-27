@@ -22,6 +22,7 @@ using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Clauses.StreamedData;
+using Remotion.Data.UnitTests.Linq.TestDomain;
 using Remotion.Utilities;
 
 namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
@@ -71,16 +72,29 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     }
 
     [Test]
-    public void GetResultType ()
+    public void GetOutputDataInfo ()
     {
-      Assert.That (_resultOperator.GetResultType (typeof (IQueryable<int>)), Is.SameAs (typeof (int)));
+      var studentExpression = Expression.Constant (new Student ());
+      var input = new StreamedSequenceInfo (typeof (Student[]), studentExpression);
+      var result = _resultOperator.GetOutputDataInfo (input);
+
+      Assert.That (result, Is.InstanceOfType (typeof (StreamedValueInfo)));
+      Assert.That (result.DataType, Is.SameAs (typeof (double)));
     }
 
     [Test]
     [ExpectedException (typeof (ArgumentTypeException))]
-    public void GetResultType_InvalidType ()
+    public void GetOutputDataInfo_InvalidInput ()
     {
-      _resultOperator.GetResultType (typeof (int));
+      var input = new StreamedValueInfo (typeof (Student));
+      _resultOperator.GetOutputDataInfo (input);
     }
+
+    [Test]
+    public void GetResultType ()
+    {
+      Assert.That (_resultOperator.GetResultType (typeof (IQueryable<int>)), Is.SameAs (typeof (double)));
+    }
+
   }
 }

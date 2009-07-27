@@ -35,6 +35,11 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       return new StreamedValue (sequenceInfo.Sequence.Count ());
     }
 
+    public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
+    {
+      throw new NotImplementedException();
+    }
+
     public override Type GetResultType (Type inputResultType)
     {
       throw new NotImplementedException();

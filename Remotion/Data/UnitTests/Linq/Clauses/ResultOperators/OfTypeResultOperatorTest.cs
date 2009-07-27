@@ -75,6 +75,29 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     }
 
     [Test]
+    public void GetOutputDataInfo ()
+    {
+      var studentExpression = Expression.Constant (new Student ());
+      var input = new StreamedSequenceInfo (typeof (Student[]), studentExpression);
+      var result = _resultOperator.GetOutputDataInfo (input);
+
+      Assert.That (result, Is.InstanceOfType (typeof (StreamedSequenceInfo)));
+      Assert.That (result.DataType, Is.SameAs (typeof (IQueryable<GoodStudent>)));
+      Assert.That (((StreamedSequenceInfo) result).ItemExpression, Is.InstanceOfType (typeof (UnaryExpression)));
+      Assert.That (((StreamedSequenceInfo) result).ItemExpression.NodeType, Is.EqualTo (ExpressionType.Convert));
+      Assert.That (((StreamedSequenceInfo) result).ItemExpression.Type, Is.SameAs (typeof (GoodStudent)));
+      Assert.That (((UnaryExpression) ((StreamedSequenceInfo) result).ItemExpression).Operand, Is.SameAs (input.ItemExpression));
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentTypeException))]
+    public void GetOutputDataInfo_InvalidInput ()
+    {
+      var input = new StreamedValueInfo (typeof (Student));
+      _resultOperator.GetOutputDataInfo (input);
+    }
+
+    [Test]
     public void GetResultType ()
     {
       Assert.That (_resultOperator.GetResultType (typeof (IQueryable<Student>)), Is.SameAs (typeof (IQueryable<GoodStudent>)));

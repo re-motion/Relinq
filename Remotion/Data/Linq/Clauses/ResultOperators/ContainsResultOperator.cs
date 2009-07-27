@@ -97,6 +97,22 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new ContainsResultOperator (Item);
     }
 
+    public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
+    {
+      var sequenceInfo = ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
+      if (sequenceInfo.ItemExpression.Type != Item.Type)
+      {
+        var message = string.Format (
+            "The input sequence must have items of type '{0}', but it has items of type '{1}'.",
+            Item.Type, 
+            sequenceInfo.ItemExpression.Type);
+
+        throw new ArgumentTypeException (message, "inputInfo", typeof (IEnumerable<>).MakeGenericType (Item.Type), sequenceInfo.ItemExpression.Type);
+      }
+
+      return new StreamedValueInfo (typeof (bool));
+    }
+
     public override Type GetResultType (Type inputResultType)
     {
       ArgumentUtility.CheckNotNull ("inputResultType", inputResultType);

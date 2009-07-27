@@ -71,6 +71,25 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     }
 
     [Test]
+    public void GetOutputDataInfo ()
+    {
+      var studentExpression = Expression.Constant (0.0f);
+      var input = new StreamedSequenceInfo (typeof (float[]), studentExpression);
+      var result = _resultOperator.GetOutputDataInfo (input);
+
+      Assert.That (result, Is.InstanceOfType (typeof (StreamedValueInfo)));
+      Assert.That (result.DataType, Is.SameAs (typeof (float)));
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentTypeException))]
+    public void GetOutputDataInfo_InvalidInput ()
+    {
+      var input = new StreamedValueInfo (typeof (float));
+      _resultOperator.GetOutputDataInfo (input);
+    }
+
+    [Test]
     public void GetResultType ()
     {
       Assert.That (_resultOperator.GetResultType (typeof (IQueryable<int>)), Is.SameAs (typeof (int)));

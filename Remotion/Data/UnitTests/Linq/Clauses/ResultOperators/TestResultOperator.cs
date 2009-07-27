@@ -32,6 +32,11 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       throw new NotImplementedException();
     }
 
+    public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
+    {
+      throw new NotImplementedException();
+    }
+
     public override Type GetResultType (Type inputResultType)
     {
       throw new NotImplementedException();

@@ -14,9 +14,13 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
+using Remotion.Data.Linq.Clauses.StreamedData;
+using Remotion.Data.UnitTests.Linq.TestDomain;
+using Remotion.Utilities;
 
 namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
 {
@@ -38,6 +42,25 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     {
       Assert.That (_resultOperatorWithDefaultWhenEmpty.ExecutionStrategy, Is.SameAs (SingleExecutionStrategy.InstanceWithDefaultWhenEmpty));
       Assert.That (_resultOperatorNoDefaultWhenEmpty.ExecutionStrategy, Is.SameAs (SingleExecutionStrategy.InstanceNoDefaultWhenEmpty));
+    }
+
+    [Test]
+    public void GetOutputDataInfo ()
+    {
+      var studentExpression = Expression.Constant (new Student ());
+      var input = new StreamedSequenceInfo (typeof (Student[]), studentExpression);
+      var result = _resultOperatorNoDefaultWhenEmpty.GetOutputDataInfo (input);
+
+      Assert.That (result, Is.InstanceOfType (typeof (StreamedValueInfo)));
+      Assert.That (result.DataType, Is.SameAs (typeof (Student)));
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentTypeException))]
+    public void GetOutputDataInfo_InvalidInput ()
+    {
+      var input = new StreamedValueInfo (typeof (Student));
+      _resultOperatorNoDefaultWhenEmpty.GetOutputDataInfo (input);
     }
   }
 }

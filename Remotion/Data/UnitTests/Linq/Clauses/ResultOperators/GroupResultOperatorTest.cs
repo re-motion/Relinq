@@ -25,6 +25,8 @@ using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.StreamedData;
 using Remotion.Data.UnitTests.Linq.Parsing;
+using Remotion.Data.UnitTests.Linq.TestDomain;
+using Remotion.Utilities;
 
 namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
 {
@@ -116,6 +118,28 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
 
       Assert.That (result.ItemExpression, Is.InstanceOfType (typeof (QuerySourceReferenceExpression)));
       Assert.That (((QuerySourceReferenceExpression) result.ItemExpression).ReferencedQuerySource, Is.SameAs (_resultOperator));
+    }
+
+    [Test]
+    public void GetOutputDataInfo ()
+    {
+      var studentExpression = Expression.Constant (0);
+      var input = new StreamedSequenceInfo (typeof (int[]), studentExpression);
+      var result = _resultOperator.GetOutputDataInfo (input);
+
+      Assert.That (result, Is.InstanceOfType (typeof (StreamedSequenceInfo)));
+      Assert.That (result.DataType, Is.SameAs (typeof (IQueryable<IGrouping<int, string>>)));
+      Assert.That (((StreamedSequenceInfo) result).ItemExpression, Is.InstanceOfType (typeof (QuerySourceReferenceExpression)));
+      Assert.That (((QuerySourceReferenceExpression) ((StreamedSequenceInfo) result).ItemExpression).ReferencedQuerySource,
+          Is.SameAs (_resultOperator));
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentTypeException))]
+    public void GetOutputDataInfo_InvalidInput ()
+    {
+      var input = new StreamedValueInfo (typeof (Student));
+      _resultOperator.GetOutputDataInfo (input);
     }
 
     [Test]

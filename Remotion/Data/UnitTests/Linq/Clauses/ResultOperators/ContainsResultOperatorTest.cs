@@ -67,6 +67,35 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     }
 
     [Test]
+    public void GetOutputDataInfo ()
+    {
+      var studentExpression = Expression.Constant (0);
+      var input = new StreamedSequenceInfo (typeof (int[]), studentExpression);
+      var result = _resultOperator.GetOutputDataInfo (input);
+
+      Assert.That (result, Is.InstanceOfType (typeof (StreamedValueInfo)));
+      Assert.That (result.DataType, Is.SameAs (typeof (bool)));
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentTypeException))]
+    public void GetOutputDataInfo_InvalidInput ()
+    {
+      var input = new StreamedValueInfo (typeof (Student));
+      _resultOperator.GetOutputDataInfo (input);
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage = "The input sequence must have items of type 'System.Int32', but it has "
+        + "items of type 'Remotion.Data.UnitTests.Linq.TestDomain.Student'.\r\nParameter name: inputInfo")]
+    public void GetOutputDataInfo_InvalidInput_DoesntMatchItem ()
+    {
+      var input = new StreamedSequenceInfo (typeof (Student[]), Expression.Constant (new Student()));
+      _resultOperator.GetOutputDataInfo (input);
+      Assert.Fail ("Expected exception.");
+    }
+
+    [Test]
     public void GetConstantItem ()
     {
       Assert.That (_resultOperator.GetConstantItem<int> (), Is.EqualTo (2));
