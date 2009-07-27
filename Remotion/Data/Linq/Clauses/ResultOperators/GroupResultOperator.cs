@@ -153,10 +153,10 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
 
       var inputSequence = input.GetCurrentSequenceInfo<TSource>().Sequence;
 
-      var keySelectorLambda = ReverseResolvingExpressionTreeVisitor.ReverseResolve (input.ItemExpression, KeySelector);
+      var keySelectorLambda = ReverseResolvingExpressionTreeVisitor.ReverseResolve (input.DataInfo.ItemExpression, KeySelector);
       var keySelector = (Func<TSource, TKey>) keySelectorLambda.Compile ();
 
-      var elementSelectorLambda = ReverseResolvingExpressionTreeVisitor.ReverseResolve (input.ItemExpression, ElementSelector);
+      var elementSelectorLambda = ReverseResolvingExpressionTreeVisitor.ReverseResolve (input.DataInfo.ItemExpression, ElementSelector);
       var elementSelector = (Func<TSource, TElement>) elementSelectorLambda.Compile ();
 
       var resultSequence = inputSequence.GroupBy (keySelector, elementSelector);

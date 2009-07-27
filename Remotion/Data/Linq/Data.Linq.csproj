@@ -54,7 +54,9 @@
     <Compile Include="Clauses\AdditionalFromClause.cs" />
     <Compile Include="Clauses\CloneContext.cs" />
     <Compile Include="Clauses\ExpressionTreeVisitors\ReverseResolvingExpressionTreeVisitor.cs" />
+    <Compile Include="Clauses\StreamedData\IStreamedDataInfo.cs" />
     <Compile Include="Clauses\StreamedData\StreamedSequence.cs" />
+    <Compile Include="Clauses\StreamedData\StreamedSequenceInfo.cs" />
     <Compile Include="Clauses\StreamedData\StreamedValue.cs" />
     <Compile Include="Clauses\ExecutionStrategies\CollectionExecutionStrategy.cs" />
     <Compile Include="Clauses\ExecutionStrategies\SingleExecutionStrategy.cs" />
@@ -89,6 +91,7 @@
     <Compile Include="Clauses\ResultOperators\TypedSequenceInfo.cs" />
     <Compile Include="Clauses\ResultOperators\UnionResultOperator.cs" />
     <Compile Include="Clauses\ResultOperators\UntypedSequenceInfo.cs" />
+    <Compile Include="Clauses\StreamedData\StreamedValueInfo.cs" />
     <Compile Include="DefaultQueryProvider.cs" />
     <Compile Include="Backend\DetailParsing\SelectProjectionParsing\QuerySourceReferenceExpressionParser.cs" />
     <Compile Include="Backend\DetailParsing\SelectProjectionParsing\SubQueryExpressionParser.cs" />

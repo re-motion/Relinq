@@ -17,7 +17,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Reflection;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Utilities;
 
@@ -31,7 +30,7 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
   {
     /// <summary>
     /// Initializes a new instance of the <see cref="StreamedSequence"/> class, setting the <see cref="CurrentSequence"/> and 
-    /// <see cref="ItemExpression"/> properties.
+    /// <see cref="DataInfo"/> properties.
     /// </summary>
     /// <param name="currentSequence">The current sequence.</param>
     /// <param name="itemExpression">The item expression describing <paramref name="currentSequence"/>'s items.</param>
@@ -40,15 +39,15 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
       ArgumentUtility.CheckNotNull ("currentSequence", currentSequence);
       ArgumentUtility.CheckNotNull ("itemExpression", itemExpression);
 
-      var resultItemType = ReflectionUtility.TryGetItemTypeOfIEnumerable (currentSequence.GetType ());
-      if (itemExpression.Type != resultItemType)
-      {
-        var message = string.Format ("ItemExpression is of type {0} but should be {1}.", itemExpression.Type, resultItemType);
-        throw new ArgumentTypeException (message, "itemExpression", resultItemType, itemExpression.Type);
-      }
-
+      DataInfo = new StreamedSequenceInfo (currentSequence.GetType (), itemExpression);
       CurrentSequence = currentSequence;
-      ItemExpression = itemExpression;
+    }
+
+    public StreamedSequenceInfo DataInfo { get; private set; }
+
+    IStreamedDataInfo IStreamedData.DataInfo
+    {
+      get { return DataInfo; }
     }
 
     /// <summary>
@@ -57,21 +56,6 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
     /// </summary>
     /// <value>The current sequence.</value>
     public IEnumerable CurrentSequence { get; private set; }
-
-    /// <summary>
-    /// Gets an expression that describes the items held by <see cref="CurrentSequence"/>.
-    /// </summary>
-    /// <value>The expression for current sequence's items.</value>
-    public Expression ItemExpression { get; private set; }
-
-    /// <summary>
-    /// Gets the type of the data described by this <see cref="IStreamedData"/> instance. This is a type implementing
-    /// <see cref="IEnumerable{T}"/>, where <c>T</c> is instantiated with a concrete type.
-    /// </summary>
-    public Type DataType
-    {
-      get { return CurrentSequence.GetType (); }
-    }
 
     /// <summary>
     /// Always throws an exception because this object does not hold a single value, but a sequence.
@@ -99,14 +83,14 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
     {
       try
       {
-        return new TypedSequenceInfo<T> ((IEnumerable<T>) CurrentSequence, ItemExpression);
+        return new TypedSequenceInfo<T> ((IEnumerable<T>) CurrentSequence, DataInfo.ItemExpression);
       }
       catch (InvalidCastException ex)
       {
         string message = string.Format (
             "Cannot retrieve the current value as a sequence with item type '{0}' because its items are of type '{1}'.",
             typeof (T).FullName,
-            ItemExpression.Type.FullName);
+            DataInfo.ItemExpression.Type.FullName);
 
         throw new InvalidOperationException (message, ex);
       }
@@ -121,29 +105,7 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
     /// </returns>
     public UntypedSequenceInfo GetCurrentSequenceInfo ()
     {
-      return new UntypedSequenceInfo (CurrentSequence, ItemExpression);
-    }
-
-    /// <summary>
-    /// Takes the given <paramref name="genericMethodDefinition"/> and instantiates it, substituting its generic parameter with the 
-    /// item type of the value held by this object. The method must have exactly one generic parameter.
-    /// </summary>
-    /// <param name="genericMethodDefinition">The generic method definition to instantiate.</param>
-    /// <returns>
-    /// A closed generic instantiation of <paramref name="genericMethodDefinition"/> with this object's item type substituted for
-    /// the generic parameter.
-    /// </returns>
-    public MethodInfo MakeClosedGenericExecuteMethod (MethodInfo genericMethodDefinition)
-    {
-      ArgumentUtility.CheckNotNull ("genericMethodDefinition", genericMethodDefinition);
-
-      if (!genericMethodDefinition.IsGenericMethodDefinition)
-        throw new ArgumentException ("GenericMethodDefinition must be a generic method definition.", "genericMethodDefinition");
-
-      if (genericMethodDefinition.GetGenericArguments ().Length != 1)
-        throw new ArgumentException ("GenericMethodDefinition must have exactly one generic parameter.", "genericMethodDefinition");
-
-      return genericMethodDefinition.MakeGenericMethod (ItemExpression.Type);
+      return new UntypedSequenceInfo (CurrentSequence, DataInfo.ItemExpression);
     }
   }
 }

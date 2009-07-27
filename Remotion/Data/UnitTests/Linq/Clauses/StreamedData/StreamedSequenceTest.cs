@@ -16,10 +16,8 @@
 using System;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.Clauses.ResultOperators;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.StreamedData;
-using Remotion.Data.UnitTests.Linq.Clauses.ResultOperators;
 using Remotion.Utilities;
 
 namespace Remotion.Data.UnitTests.Linq.Clauses.StreamedData
@@ -63,9 +61,10 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.StreamedData
     }
 
     [Test]
-    public void DataType ()
+    public void DataInfo ()
     {
-      Assert.That (_dataWithIntSequence.DataType, Is.SameAs (typeof (int[])));
+      Assert.That (_dataWithIntSequence.DataInfo.DataType, Is.SameAs (typeof (int[])));
+      Assert.That (_dataWithIntSequence.DataInfo.ItemExpression, Is.SameAs (_intExpression));
     }
 
     [Test]
@@ -90,44 +89,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.StreamedData
     public void GetCurrentSequence_InvalidItemType ()
     {
       _dataWithIntSequence.GetCurrentSequenceInfo<string> ();
-    }
-
-    [Test]
-    public void MakeClosedGenericExecuteMethod ()
-    {
-      var executeMethod = typeof (CountResultOperator).GetMethod ("ExecuteInMemory", new[] { typeof (StreamedSequence) });
-      var result = _dataWithIntSequence.MakeClosedGenericExecuteMethod (executeMethod);
-
-      Assert.That (result.GetGenericArguments (), Is.EqualTo (new[] { typeof (int) }));
-    }
-
-    [Test]
-    [ExpectedException (typeof (ArgumentException),
-        ExpectedMessage = "GenericMethodDefinition must be a generic method definition.\r\nParameter name: genericMethodDefinition")]
-    public void MakeClosedGenericExecuteMethod_NonGenericMethod ()
-    {
-      var executeMethod = typeof (CountResultOperator).GetMethod ("ExecuteInMemory", new[] { typeof (IStreamedData) });
-      _dataWithIntSequence.MakeClosedGenericExecuteMethod (executeMethod);
-    }
-
-    [Test]
-    [ExpectedException (typeof (ArgumentException),
-        ExpectedMessage = "GenericMethodDefinition must be a generic method definition.\r\nParameter name: genericMethodDefinition")]
-    public void MakeClosedGenericExecuteMethod_NonGenericMethodDefinition ()
-    {
-      var executeMethod = typeof (CountResultOperator)
-          .GetMethod ("ExecuteInMemory", new[] { typeof (StreamedSequence) })
-          .MakeGenericMethod (typeof (int));
-      _dataWithIntSequence.MakeClosedGenericExecuteMethod (executeMethod);
-    }
-
-    [Test]
-    [ExpectedException (typeof (ArgumentException),
-        ExpectedMessage = "GenericMethodDefinition must have exactly one generic parameter.\r\nParameter name: genericMethodDefinition")]
-    public void MakeClosedGenericExecuteMethod_WrongNumberOfGenericParameters ()
-    {
-      var executeMethod = typeof (TestResultOperator).GetMethod ("InvalidExecuteInMemory_TooManyGenericParameters");
-      _dataWithIntSequence.MakeClosedGenericExecuteMethod (executeMethod);
     }
   }
 }

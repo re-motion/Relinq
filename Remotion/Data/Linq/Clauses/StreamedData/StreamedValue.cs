@@ -14,9 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Reflection;
 using Remotion.Data.Linq.Clauses.ResultOperators;
-using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.StreamedData
 {
@@ -34,6 +32,7 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
     public StreamedValue (object currentValue)
     {
       CurrentValue = currentValue;
+      DataInfo = new StreamedValueInfo (currentValue != null ? currentValue.GetType () : typeof (object));
     }
 
     /// <summary>
@@ -44,15 +43,19 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
     public object CurrentValue { get; private set; }
 
     /// <summary>
-    /// Gets the type of the data described by this <see cref="IStreamedData"/> instance. This is the type of the <see cref="CurrentValue"/>, or
-    /// <see cref="object"/> if the <see cref="CurrentValue"/> is <see langword="null" />.
+    /// Gets an object describing the data held by this <see cref="StreamedValue"/> instance.
     /// </summary>
-    public Type DataType
-    {
-      get { return CurrentValue != null ? CurrentValue.GetType () : typeof (object); }
+    /// <value>
+    /// An <see cref="StreamedValueInfo"/> object describing the data held by this <see cref="StreamedValue"/> instance.
+    /// </value>
+    public StreamedValueInfo DataInfo { get; private set; }
+
+    IStreamedDataInfo IStreamedData.DataInfo 
+    { 
+      get { return DataInfo; } 
     }
 
-    /// <summary>
+      /// <summary>
     /// Gets the current single value held by <see cref="CurrentValue"/>, throwing an exception if the value is not of type 
     /// <typeparamref name="T"/>.
     /// </summary>
@@ -97,31 +100,6 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
     UntypedSequenceInfo IStreamedData.GetCurrentSequenceInfo ()
     {
       throw new InvalidOperationException ("Cannot retrieve the current value as a sequence because it is a value.");
-    }
-
-    /// <summary>
-    /// Takes the given <paramref name="genericMethodDefinition"/> and instantiates it, substituting its generic parameter with the value
-    /// type of the value held by this object. The method must have exactly one generic parameter.
-    /// </summary>
-    /// <param name="genericMethodDefinition">The generic method definition to instantiate.</param>
-    /// <returns>
-    /// A closed generic instantiation of <paramref name="genericMethodDefinition"/> with this object's value type substituted for
-    /// the generic parameter.
-    /// </returns>
-    public MethodInfo MakeClosedGenericExecuteMethod (MethodInfo genericMethodDefinition)
-    {
-      ArgumentUtility.CheckNotNull ("genericMethodDefinition", genericMethodDefinition);
-
-      if (!genericMethodDefinition.IsGenericMethodDefinition)
-        throw new ArgumentException ("GenericMethodDefinition must be a generic method definition.", "genericMethodDefinition");
-
-      if (genericMethodDefinition.GetGenericArguments ().Length != 1)
-        throw new ArgumentException ("GenericMethodDefinition must have exactly one generic parameter.", "genericMethodDefinition");
-
-      if (CurrentValue == null)
-        return genericMethodDefinition.MakeGenericMethod (typeof (object));
-      else
-        return genericMethodDefinition.MakeGenericMethod (CurrentValue.GetType ());
     }
   }
 }

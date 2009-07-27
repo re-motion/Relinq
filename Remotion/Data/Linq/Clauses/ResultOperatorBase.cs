@@ -150,7 +150,7 @@ namespace Remotion.Data.Linq.Clauses
             "genericExecuteCaller");
       }
 
-      var closedGenericMethod = input.MakeClosedGenericExecuteMethod (method.GetGenericMethodDefinition ());
+      var closedGenericMethod = input.DataInfo.MakeClosedGenericExecuteMethod (method.GetGenericMethodDefinition ());
       return (TResult) InvokeExecuteMethod (closedGenericMethod, input);
     }
 
