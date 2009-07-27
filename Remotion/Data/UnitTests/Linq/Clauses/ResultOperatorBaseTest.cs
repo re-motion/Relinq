@@ -20,7 +20,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
-using Remotion.Data.Linq.Clauses.ResultOperators;
+using Remotion.Data.Linq.Clauses.StreamedData;
 using Remotion.Data.UnitTests.Linq.Clauses.ResultOperators;
 using Rhino.Mocks;
 
@@ -100,8 +100,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
 
     [Test]
     [ExpectedException (typeof (ArgumentException), ExpectedMessage = "Cannot call method 'ExecuteMethodWithNonMatchingArgumentType' on input of type "
-        + "'Remotion.Data.Linq.Clauses.ResultOperators.StreamedSequence': Object of type 'Remotion.Data.Linq.Clauses.ResultOperators."
-        + "StreamedSequence' cannot be converted to type 'Remotion.Data.Linq.Clauses.ResultOperators.StreamedValue'."
+        + "'Remotion.Data.Linq.Clauses.StreamedData.StreamedSequence': Object of type 'Remotion.Data.Linq.Clauses.StreamedData."
+        + "StreamedSequence' cannot be converted to type 'Remotion.Data.Linq.Clauses.StreamedData.StreamedValue'."
         + "\r\nParameter name: method")]
     public void InvokeGenericExecuteMethod_NonMatchingArgument ()
     {

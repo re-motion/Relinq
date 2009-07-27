@@ -18,13 +18,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
+using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Utilities;
 
-namespace Remotion.Data.Linq.Clauses.ResultOperators
+namespace Remotion.Data.Linq.Clauses.StreamedData
 {
   /// <summary>
-  /// Holds data needed in order to execute a <see cref="ResultOperatorBase"/> in memory via <see cref="ResultOperatorBase.ExecuteInMemory(IStreamedData)"/>. The
-  /// data consists of a sequence of items.
+  /// Holds the data needed to represent the output or input of a part of a query in memory. This is mainly used for 
+  /// <see cref="ResultOperatorBase.ExecuteInMemory"/>.  The data consists of a sequence of items.
   /// </summary>
   public class StreamedSequence : IStreamedData
   {
@@ -79,10 +80,10 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     /// <exception cref="InvalidOperationException">This object does not hold a single value.</exception>
     T IStreamedData.GetCurrentSingleValue<T> ()
     {
-        string message = string.Format (
-            "Cannot retrieve the current single value because the current value is a sequence of type '{0}'.",
-            CurrentSequence.GetType());
-        throw new InvalidOperationException (message);
+      string message = string.Format (
+          "Cannot retrieve the current single value because the current value is a sequence of type '{0}'.",
+          CurrentSequence.GetType());
+      throw new InvalidOperationException (message);
     }
 
     /// <summary>

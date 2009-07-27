@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Remotion.Collections;
 using System.Reflection;
+using Remotion.Data.Linq.Clauses.ResultOperators;
 
-namespace Remotion.Data.Linq.Clauses.ResultOperators
+namespace Remotion.Data.Linq.Clauses.StreamedData
 {
   /// <summary>
-  /// Holds data needed in order to execute a <see cref="ResultOperatorBase"/> in memory via <see cref="ResultOperatorBase.ExecuteInMemory"/>. The
-  /// data can be either a value or a sequence.
+  /// Holds the data needed to represent the output or input of a part of a query in memory. This is mainly used for 
+  /// <see cref="ResultOperatorBase.ExecuteInMemory"/>. The data held by implementations of this interface can be either a value or a sequence.
   /// </summary>
   public interface IStreamedData
   {

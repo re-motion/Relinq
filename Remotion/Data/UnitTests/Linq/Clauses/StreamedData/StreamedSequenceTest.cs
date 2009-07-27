@@ -18,9 +18,11 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Clauses.StreamedData;
+using Remotion.Data.UnitTests.Linq.Clauses.ResultOperators;
 using Remotion.Utilities;
 
-namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
+namespace Remotion.Data.UnitTests.Linq.Clauses.StreamedData
 {
   [TestFixture]
   public class StreamedSequenceTest
@@ -84,7 +86,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
 
     [Test]
     [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Cannot retrieve the current value as a sequence with item type "
-        + "'System.String' because its items are of type 'System.Int32'.")]
+                                                                              + "'System.String' because its items are of type 'System.Int32'.")]
     public void GetCurrentSequence_InvalidItemType ()
     {
       _dataWithIntSequence.GetCurrentSequenceInfo<string> ();

@@ -17,6 +17,7 @@ using System;
 using System.Collections;
 using System.Linq;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
+using Remotion.Data.Linq.Clauses.StreamedData;
 using Remotion.Utilities;
 using System.Linq.Expressions;
 

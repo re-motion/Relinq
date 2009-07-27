@@ -15,13 +15,15 @@
 // 
 using System;
 using System.Reflection;
+using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Utilities;
 
-namespace Remotion.Data.Linq.Clauses.ResultOperators
+namespace Remotion.Data.Linq.Clauses.StreamedData
 {
   /// <summary>
-  /// Holds data needed in order to execute a <see cref="ResultOperatorBase"/> in memory via <see cref="ResultOperatorBase.ExecuteInMemory(IStreamedData)"/>.
-  /// The data is a single, non-sequence value and can only be consumed by result operators working with single values.
+  /// Holds the data needed to represent the output or input of a part of a query in memory. This is mainly used for 
+  /// <see cref="ResultOperatorBase.ExecuteInMemory"/>.  The data is a single, non-sequence value and can only be consumed by result operators 
+  /// working with single values.
   /// </summary>
   public class StreamedValue : IStreamedData
   {

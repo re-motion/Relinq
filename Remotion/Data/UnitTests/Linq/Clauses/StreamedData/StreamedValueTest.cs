@@ -17,8 +17,10 @@ using System;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.ResultOperators;
+using Remotion.Data.Linq.Clauses.StreamedData;
+using Remotion.Data.UnitTests.Linq.Clauses.ResultOperators;
 
-namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
+namespace Remotion.Data.UnitTests.Linq.Clauses.StreamedData
 {
   [TestFixture]
   public class StreamedValueTest

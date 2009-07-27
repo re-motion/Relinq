@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
+using Remotion.Data.Linq.Clauses.StreamedData;
 using Remotion.Utilities;
 using System.Linq;
 

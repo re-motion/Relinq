@@ -19,6 +19,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq.Clauses.ResultOperators;
+using Remotion.Data.Linq.Clauses.StreamedData;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses
