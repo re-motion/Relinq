@@ -15,13 +15,15 @@
 // 
 using System;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Data.UnitTests.Linq.TestDomain;
-using Rhino.Mocks;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 {
@@ -29,13 +31,20 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
   public class CastExpressionNodeTest : ExpressionNodeTestBase
   {
     private CastExpressionNode _node;
+    private MethodInfo _castToGoodStudentMethod;
+    private MainSourceExpressionNode _studentSource;
+    private MainFromClause _studentClause;
 
     public override void SetUp ()
     {
       base.SetUp ();
-      
-      var method = ReflectionUtility.GetMethod (() => ((IQueryable<Student>)null).Cast<GoodStudent>());
-      _node = new CastExpressionNode (CreateParseInfo (method));
+
+      _studentSource = new MainSourceExpressionNode ("s", Expression.Constant (new[] { new Student () }));
+      _studentClause = ExpressionHelper.CreateMainFromClause_Student ();
+      ClauseGenerationContext.ClauseMapping.AddMapping (_studentSource, _studentClause);
+
+      _castToGoodStudentMethod = ReflectionUtility.GetMethod (() => ((IQueryable<Student[]>)null).Cast<GoodStudent>());
+      _node = new CastExpressionNode (CreateParseInfo (_studentSource, "s", _castToGoodStudentMethod));
     }
 
     [Test]
@@ -45,19 +54,19 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void Resolve_PassesExpressionToSource ()
+    public void CastItemType ()
     {
-      var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();
-      var node = new CastExpressionNode (CreateParseInfo (sourceMock));
-      var expression = ExpressionHelper.CreateLambdaExpression ();
-      var parameter = ExpressionHelper.CreateParameterExpression ();
-      var expectedResult = ExpressionHelper.CreateExpression ();
-      sourceMock.Expect (mock => mock.Resolve (parameter, expression, ClauseGenerationContext)).Return (expectedResult);
+      Assert.That (_node.CastItemType, Is.SameAs (typeof (GoodStudent)));
+    }
 
-      var result = node.Resolve (parameter, expression, ClauseGenerationContext);
+    [Test]
+    public void Resolve_PassesConvertedExpressionToSource ()
+    {
+      var expression = ExpressionHelper.CreateLambdaExpression<GoodStudent, string> (s => s.LetterOfRecommendation);
+      var result = _node.Resolve (expression.Parameters[0], expression.Body, ClauseGenerationContext);
 
-      sourceMock.VerifyAllExpectations ();
-      Assert.That (result, Is.SameAs (expectedResult));
+      var expectedResult = ExpressionHelper.Resolve<Student, string> (_studentClause, s => ((GoodStudent) s).LetterOfRecommendation);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
 
     [Test]

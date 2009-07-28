@@ -19,6 +19,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ResultOperators;
+using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
@@ -43,19 +44,28 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
         throw new ArgumentException ("The parsed method must have exactly one generic argument.", "parseInfo");
     }
 
+    public Type CastItemType
+    {
+      get
+      {
+        return ParsedExpression.Method.GetGenericArguments ()[0];
+      }
+    }
+
     public override Expression Resolve (
         ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("inputParameter", inputParameter);
       ArgumentUtility.CheckNotNull ("expressionToBeResolved", expressionToBeResolved);
 
-      // this simply streams its input data to the output without modifying its structure, so we resolve by passing on the data to the previous node
-      return Source.Resolve (inputParameter, expressionToBeResolved, clauseGenerationContext);
+      var convertExpression = Expression.Convert (inputParameter, CastItemType);
+      var expressionWithCast = ReplacingExpressionTreeVisitor.Replace (inputParameter, convertExpression, expressionToBeResolved);
+      return Source.Resolve (inputParameter, expressionWithCast, clauseGenerationContext);
     }
 
     protected override ResultOperatorBase CreateResultOperator (ClauseGenerationContext clauseGenerationContext)
     {
-      var castItemType = ParsedExpression.Method.GetGenericArguments()[0];
+      var castItemType = CastItemType;
       return new CastResultOperator (castItemType);
     }
   }

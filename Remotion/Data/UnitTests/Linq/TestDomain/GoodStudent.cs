@@ -19,5 +19,6 @@ namespace Remotion.Data.UnitTests.Linq.TestDomain
 {
   public class GoodStudent : Student
   {
+    public string LetterOfRecommendation { get; set; }
   }
 }
