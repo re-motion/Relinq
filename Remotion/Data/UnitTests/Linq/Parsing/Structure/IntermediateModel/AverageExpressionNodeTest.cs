@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 
@@ -165,6 +166,24 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void Apply ()
     {
       TestApply (_node, typeof (AverageResultOperator));
+    }
+
+    [Test]
+    public void Apply_DoubleResultType ()
+    {
+      var method = AverageExpressionNode.SupportedMethods[2];
+      var node = new AverageExpressionNode (CreateParseInfo (method), null);
+      var result = node.Apply (QueryModel, ClauseGenerationContext);
+      Assert.That (((AverageResultOperator) result.ResultOperators[0]).ResultType, Is.SameAs (typeof (double)));
+    }
+
+    [Test]
+    public void Apply_DecimalResultType ()
+    {
+      var method = AverageExpressionNode.SupportedMethods[0];
+      var node = new AverageExpressionNode (CreateParseInfo (method), null);
+      var result = node.Apply (QueryModel, ClauseGenerationContext);
+      Assert.That (((AverageResultOperator) result.ResultOperators[0]).ResultType, Is.SameAs (typeof (decimal)));
     }
   }
 }

@@ -35,17 +35,32 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   /// </example>
   public class AverageResultOperator : ValueFromSequenceResultOperatorBase
   {
+    private Type _resultType;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="AverageResultOperator"/>.
     /// </summary>
-    public AverageResultOperator ()
+    /// <param name="resultType">The type of the value returned by this <see cref="AverageResultOperator"/>.</param>
+    public AverageResultOperator (Type resultType)
       : base (ScalarExecutionStrategy.Instance)
     {
+      ArgumentUtility.CheckNotNull ("resultType", resultType);
+      ResultType = resultType;
+    }
+
+    /// <summary>
+    /// Gets or sets the type of the value returned by this <see cref="AverageResultOperator"/>.
+    /// </summary>
+    /// <value>The result type of this <see cref="AverageResultOperator"/>.</value>
+    public Type ResultType
+    {
+      get { return _resultType; }
+      set { _resultType = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
-      return new AverageResultOperator();
+      return new AverageResultOperator (ResultType);
     }
 
     public override StreamedValue ExecuteInMemory<T> (StreamedSequence input)
@@ -58,7 +73,19 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
         var message = string.Format ("Cannot calculate the average of objects of type '{0}' in memory.", typeof (T).FullName);
         throw new NotSupportedException (message);
       }
-      
+
+      if (!ResultType.IsAssignableFrom (method.ReturnType))
+      {
+        var message = string.Format (
+            "Cannot calculate the average of items of type '{0}' in memory so "
+            + "that a value of type '{1}' is returned. Instead, a value of type '{2}' would be returned. This does not match the "
+            + "ResultType of the AverageResultOperator.",
+            typeof (T),
+            ResultType,
+            method.ReturnType);
+        throw new NotSupportedException (message);
+      }
+
       var result = method.Invoke (null, new[] { input.GetTypedSequence<T>() });
       return new StreamedValue (result);
     }
@@ -66,13 +93,13 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
     {
       ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
-      return new StreamedValueInfo (typeof (double)); // TODO 1407: Fix this.
+      return new StreamedValueInfo (ResultType);
     }
 
     public override Type GetResultType (Type inputResultType)
     {
       ArgumentUtility.CheckNotNull ("inputResultType", inputResultType);
-      return typeof (double); // TODO 1407: Fix this.
+      return ResultType;
     }
 
     public override string ToString ()

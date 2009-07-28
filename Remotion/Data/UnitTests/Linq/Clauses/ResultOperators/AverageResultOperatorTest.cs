@@ -30,18 +30,20 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
   [TestFixture]
   public class AverageResultOperatorTest
   {
-    private AverageResultOperator _resultOperator;
+    private AverageResultOperator _resultOperatorWithDateTimeResult;
+    private AverageResultOperator _resultOperatorWithDoubleResult;
 
     [SetUp]
     public void SetUp ()
     {
-      _resultOperator = new AverageResultOperator();
+      _resultOperatorWithDateTimeResult = new AverageResultOperator (typeof (DateTime));
+      _resultOperatorWithDoubleResult = new AverageResultOperator (typeof (double));
     }
 
     [Test]
     public void ExecutionStrategy ()
     {
-      Assert.That (_resultOperator.ExecutionStrategy, Is.SameAs (ScalarExecutionStrategy.Instance));
+      Assert.That (_resultOperatorWithDateTimeResult.ExecutionStrategy, Is.SameAs (ScalarExecutionStrategy.Instance));
     }
 
     [Test]
@@ -49,16 +51,17 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     {
       var clonedClauseMapping = new QuerySourceMapping ();
       var cloneContext = new CloneContext (clonedClauseMapping);
-      var clone = _resultOperator.Clone (cloneContext);
+      var clone = _resultOperatorWithDateTimeResult.Clone (cloneContext);
 
       Assert.That (clone, Is.InstanceOfType (typeof (AverageResultOperator)));
+      Assert.That (((AverageResultOperator) clone).ResultType, Is.SameAs (typeof (DateTime)));
     }
 
     [Test]
     public void ExecuteInMemory ()
     {
       var input = new StreamedSequence (new[] { 1, 2, 3 }, Expression.Constant (0));
-      var result = _resultOperator.ExecuteInMemory<int> (input);
+      var result = _resultOperatorWithDoubleResult.ExecuteInMemory<int> (input);
 
       Assert.That (result.Value, Is.EqualTo (2.0));
     }
@@ -68,7 +71,17 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     public void ExecuteInMemory_UnsupportedType ()
     {
       var input = new StreamedSequence (new[] { "1", "2", "3" }, Expression.Constant ("0"));
-      _resultOperator.ExecuteInMemory<string> (input);
+      _resultOperatorWithDoubleResult.ExecuteInMemory<string> (input);
+    }
+
+    [Test]
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Cannot calculate the average of items of type 'System.Int32' in memory so "
+        + "that a value of type 'System.DateTime' is returned. Instead, a value of type 'System.Double' would be returned. This does not match the "
+        + "ResultType of the AverageResultOperator.")]
+    public void ExecuteInMemory_EnumerableMethodDoesntMatchResultType ()
+    {
+      var input = new StreamedSequence (new[] { 1, 2, 3 }, Expression.Constant (0));
+      _resultOperatorWithDateTimeResult.ExecuteInMemory<int> (input);
     }
 
     [Test]
@@ -76,10 +89,10 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     {
       var studentExpression = Expression.Constant (new Student ());
       var input = new StreamedSequenceInfo (typeof (Student[]), studentExpression);
-      var result = _resultOperator.GetOutputDataInfo (input);
+      var result = _resultOperatorWithDateTimeResult.GetOutputDataInfo (input);
 
       Assert.That (result, Is.InstanceOfType (typeof (StreamedValueInfo)));
-      Assert.That (result.DataType, Is.SameAs (typeof (double)));
+      Assert.That (result.DataType, Is.SameAs (typeof (DateTime)));
     }
 
     [Test]
@@ -87,13 +100,13 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     public void GetOutputDataInfo_InvalidInput ()
     {
       var input = new StreamedValueInfo (typeof (Student));
-      _resultOperator.GetOutputDataInfo (input);
+      _resultOperatorWithDateTimeResult.GetOutputDataInfo (input);
     }
 
     [Test]
     public void GetResultType ()
     {
-      Assert.That (_resultOperator.GetResultType (typeof (IQueryable<int>)), Is.SameAs (typeof (double)));
+      Assert.That (_resultOperatorWithDoubleResult.GetResultType (typeof (IQueryable<int>)), Is.SameAs (typeof (double)));
     }
 
   }
