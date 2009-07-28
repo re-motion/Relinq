@@ -17,9 +17,9 @@ using System;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
+using System.Reflection;
 using NUnit.Framework;
 using Remotion.Utilities;
-using System.Reflection;
 using Assertion=Remotion.Utilities.Assertion;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing

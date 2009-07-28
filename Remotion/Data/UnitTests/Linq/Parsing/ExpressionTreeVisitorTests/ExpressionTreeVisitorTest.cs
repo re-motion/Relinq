@@ -14,16 +14,15 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
-using NUnit.Framework;
 using System.Linq.Expressions;
+using System.Reflection;
+using NUnit.Framework;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
-using Rhino.Mocks;
-using System.Reflection;
-using Rhino.Mocks.Interfaces;
 using Remotion.Development.UnitTesting;
+using Rhino.Mocks;
+using Rhino.Mocks.Interfaces;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitorTests
 {

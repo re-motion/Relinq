@@ -15,7 +15,6 @@
 // 
 using System;
 using System.Collections.Generic;
-using Remotion.Data.Linq.Backend;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.EagerFetching;
 

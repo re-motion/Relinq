@@ -16,9 +16,9 @@
 using System;
 using System.Collections;
 using System.Linq;
+using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.StreamedData;
 using Remotion.Utilities;
-using System.Linq.Expressions;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {

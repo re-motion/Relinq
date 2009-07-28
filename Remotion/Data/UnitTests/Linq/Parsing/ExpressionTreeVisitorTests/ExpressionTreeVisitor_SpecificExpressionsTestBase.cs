@@ -18,7 +18,6 @@ using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
-using Remotion.Data.DomainObjects;
 using Remotion.Data.Linq.Parsing;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;

@@ -15,7 +15,6 @@
 // 
 using System;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Clauses.ResultOperators;
 
 namespace Remotion.Data.Linq
 {

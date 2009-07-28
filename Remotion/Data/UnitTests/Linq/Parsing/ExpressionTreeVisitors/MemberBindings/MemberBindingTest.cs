@@ -17,7 +17,6 @@ using System;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.MemberBindings;
-using MemberBinding=Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.MemberBindings.MemberBinding;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors.MemberBindings
 {

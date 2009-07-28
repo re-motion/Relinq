@@ -23,7 +23,6 @@ using Remotion.Data.UnitTests.Linq.TestDomain;
 using Remotion.Development.UnitTesting;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;
-using System.Linq;
 
 namespace Remotion.Data.UnitTests.Linq
 {

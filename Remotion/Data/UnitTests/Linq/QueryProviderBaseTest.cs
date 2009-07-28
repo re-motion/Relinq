@@ -14,22 +14,21 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
-using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.EagerFetching;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.UnitTests.Linq.TestDomain;
-using Rhino.Mocks;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
 using Remotion.Utilities;
-using System.Collections;
+using Rhino.Mocks;
 
 namespace Remotion.Data.UnitTests.Linq
 {
