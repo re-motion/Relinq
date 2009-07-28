@@ -152,13 +152,13 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       var elementSelector = (Func<TSource, TElement>) elementSelectorLambda.Compile ();
 
       var resultSequence = inputSequence.GroupBy (keySelector, elementSelector);
-      return new StreamedSequence (resultSequence, new QuerySourceReferenceExpression (this));
+      return new StreamedSequence (resultSequence, GetNewItemExpression());
     }
 
     public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
     {
       ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
-      return new StreamedSequenceInfo (typeof (IQueryable<>).MakeGenericType (ItemType), new QuerySourceReferenceExpression (this));
+      return new StreamedSequenceInfo (typeof (IQueryable<>).MakeGenericType (ItemType), GetNewItemExpression());
     }
 
     public override Type GetResultType (Type inputResultType)
@@ -176,5 +176,11 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
           FormattingExpressionTreeVisitor.Format (KeySelector), 
           FormattingExpressionTreeVisitor.Format (ElementSelector));
     }
+
+    private QuerySourceReferenceExpression GetNewItemExpression ()
+    {
+      return new QuerySourceReferenceExpression (this);
+    }
+
   }
 }

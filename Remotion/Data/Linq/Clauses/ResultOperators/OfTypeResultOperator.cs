@@ -62,8 +62,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       var sequence = input.GetTypedSequence<TInput> ();
       var castMethod = typeof (Enumerable).GetMethod ("OfType", new[] { typeof (IEnumerable) }).MakeGenericMethod (SearchedItemType);
       var result = (IEnumerable) InvokeExecuteMethod (castMethod, sequence);
-      var resultItemExpression = Expression.Convert (input.DataInfo.ItemExpression, SearchedItemType);
-      return new StreamedSequence (result, resultItemExpression);
+      return new StreamedSequence (result, GetNewItemExpression (input.DataInfo.ItemExpression));
     }
 
     public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
@@ -71,7 +70,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       var sequenceInfo = ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
       return new StreamedSequenceInfo (
           typeof (IQueryable<>).MakeGenericType (SearchedItemType),
-          Expression.Convert (sequenceInfo.ItemExpression, SearchedItemType));
+          GetNewItemExpression (sequenceInfo.ItemExpression));
     }
 
     public override Type GetResultType (Type inputResultType)
@@ -86,6 +85,11 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     {
       return "OfType()";
     }
-    
+
+    private UnaryExpression GetNewItemExpression (Expression inputItemExpression)
+    {
+      return Expression.Convert (inputItemExpression, SearchedItemType);
+    }
+   
   }
 }

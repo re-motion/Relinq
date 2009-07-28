@@ -51,6 +51,11 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
         _castItemType = value;
       }
     }
+
+    public override ResultOperatorBase Clone (CloneContext cloneContext)
+    {
+      return new CastResultOperator (CastItemType);
+    }
     
     public override StreamedSequence ExecuteInMemory<TInput> (StreamedSequence input)
     {
@@ -59,13 +64,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       var sequence = input.GetTypedSequence<TInput> ();
       var castMethod = typeof (Enumerable).GetMethod ("Cast", new[] { typeof (IEnumerable) }).MakeGenericMethod (CastItemType);
       var result = (IEnumerable) InvokeExecuteMethod (castMethod, sequence);
-      var resultItemExpression = Expression.Convert (input.DataInfo.ItemExpression, CastItemType);
-      return new StreamedSequence (result, resultItemExpression);
-    }
-
-    public override ResultOperatorBase Clone (CloneContext cloneContext)
-    {
-      return new CastResultOperator(CastItemType);
+      return new StreamedSequence (result, GetNewItemExpression (input.DataInfo.ItemExpression));
     }
 
     public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
@@ -73,7 +72,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       var sequenceInfo = ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
       return new StreamedSequenceInfo (
           typeof (IQueryable<>).MakeGenericType (CastItemType), 
-          Expression.Convert (sequenceInfo.ItemExpression, CastItemType));
+          GetNewItemExpression (sequenceInfo.ItemExpression));
     }
 
     public override Type GetResultType (Type inputResultType)
@@ -87,6 +86,11 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     public override string ToString ()
     {
       return "Cast()";
+    }
+
+    private UnaryExpression GetNewItemExpression (Expression inputItemExpression)
+    {
+      return Expression.Convert (inputItemExpression, CastItemType);
     }
   }
 }
