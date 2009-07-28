@@ -15,16 +15,17 @@
 // 
 using System;
 using System.Reflection;
+using Remotion.Data.Linq.EagerFetching;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.StreamedData
 {
   /// <summary>
-  /// Describes a single value streamed out of a <see cref="QueryModel"/> or <see cref="ResultOperatorBase"/>.
+  /// Describes a single or scalar value streamed out of a <see cref="QueryModel"/> or <see cref="ResultOperatorBase"/>.
   /// </summary>
-  public class StreamedValueInfo : IStreamedDataInfo
+  public abstract class StreamedValueInfo : IStreamedDataInfo
   {
-    public StreamedValueInfo (Type dataType)
+    protected StreamedValueInfo (Type dataType)
     {
       ArgumentUtility.CheckNotNull ("dataType", dataType);
       DataType = dataType;
@@ -35,6 +36,8 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
     /// <see cref="object"/> if the value is <see langword="null" />.
     /// </summary>
     public Type DataType { get; private set; }
+
+    public abstract IStreamedData ExecuteQueryModel (QueryModel queryModel, FetchRequestBase[] fetchRequests, IQueryExecutor executor);
 
     /// <summary>
     /// Takes the given <paramref name="genericMethodDefinition"/> and instantiates it, substituting its generic parameter with the value

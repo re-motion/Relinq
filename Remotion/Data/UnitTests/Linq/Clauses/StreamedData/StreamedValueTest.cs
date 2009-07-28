@@ -29,8 +29,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.StreamedData
     [SetUp]
     public void SetUp ()
     {
-      _dataWithIntValue = new StreamedValue (0);
-      _dataWithNullValue = new StreamedValue (null);
+      _dataWithIntValue = new StreamedValue (0, new StreamedScalarValueInfo (typeof(int)));
+      _dataWithNullValue = new StreamedValue (null, new StreamedSingleValueInfo(typeof(object)));
     }
 
     [Test]

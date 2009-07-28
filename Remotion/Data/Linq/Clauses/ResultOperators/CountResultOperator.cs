@@ -50,13 +50,13 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     {
       var sequence = input.GetTypedSequence<T> ();
       var result = sequence.Count ();
-      return new StreamedValue (result);
+      return new StreamedValue (result, (StreamedValueInfo) GetOutputDataInfo (input.DataInfo));
     }
 
     public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
     {
       ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
-      return new StreamedValueInfo (typeof (int));
+      return new StreamedScalarValueInfo (typeof (int));
     }
 
     public override string ToString ()

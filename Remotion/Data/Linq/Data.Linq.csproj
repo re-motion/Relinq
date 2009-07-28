@@ -59,8 +59,10 @@
     <Compile Include="Clauses\ResultOperators\SequenceFromSequenceResultOperatorBase.cs" />
     <Compile Include="Clauses\ResultOperators\ValueFromSequenceResultOperatorBase.cs" />
     <Compile Include="Clauses\StreamedData\IStreamedDataInfo.cs" />
+    <Compile Include="Clauses\StreamedData\StreamedScalarValueInfo.cs" />
     <Compile Include="Clauses\StreamedData\StreamedSequence.cs" />
     <Compile Include="Clauses\StreamedData\StreamedSequenceInfo.cs" />
+    <Compile Include="Clauses\StreamedData\StreamedSingleValueInfo.cs" />
     <Compile Include="Clauses\StreamedData\StreamedValue.cs" />
     <Compile Include="Clauses\ExecutionStrategies\CollectionExecutionStrategy.cs" />
     <Compile Include="Clauses\ExecutionStrategies\SingleExecutionStrategy.cs" />

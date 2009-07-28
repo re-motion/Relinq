@@ -89,7 +89,8 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
 
       var sequence = input.GetTypedSequence<T> ();
       var item = GetConstantItem<T> ();
-      return new StreamedValue (sequence.Contains (item));
+      var result = sequence.Contains (item);
+      return new StreamedValue (result, (StreamedValueInfo) GetOutputDataInfo (input.DataInfo));
     }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)
@@ -110,7 +111,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
         throw new ArgumentTypeException (message, "inputInfo", typeof (IEnumerable<>).MakeGenericType (Item.Type), sequenceInfo.ItemExpression.Type);
       }
 
-      return new StreamedValueInfo (typeof (bool));
+      return new StreamedScalarValueInfo (typeof (bool));
     }
 
     public override void TransformExpressions (Func<Expression, Expression> transformation)

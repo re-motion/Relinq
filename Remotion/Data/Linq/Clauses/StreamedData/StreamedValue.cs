@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.StreamedData
 {
@@ -25,13 +26,17 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
   public class StreamedValue : IStreamedData
   {
     /// <summary>
-    /// Initializes a new instance of the <see cref="StreamedValue"/> class, setting the <see cref="Value"/> property.
+    /// Initializes a new instance of the <see cref="StreamedValue"/> class, setting the <see cref="Value"/> and <see cref="DataInfo"/> properties.
     /// </summary>
-    /// <param name="currentValue">The current value or sequence.</param>
-    public StreamedValue (object currentValue)
+    /// <param name="value">The value.</param>
+    /// <param name="streamedValueInfo">A <see cref="StreamedValueInfo"/> describing the value.</param>
+    public StreamedValue (object value, StreamedValueInfo streamedValueInfo)
     {
-      Value = currentValue;
-      DataInfo = new StreamedValueInfo (currentValue != null ? currentValue.GetType () : typeof (object));
+      ArgumentUtility.CheckNotNull ("streamedValueInfo", streamedValueInfo);
+      ArgumentUtility.CheckType ("value", value, streamedValueInfo.DataType);
+
+      Value = value;
+      DataInfo = streamedValueInfo;
     }
 
     /// <summary>

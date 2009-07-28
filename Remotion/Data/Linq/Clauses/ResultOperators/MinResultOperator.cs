@@ -48,7 +48,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     {
       var sequence = input.GetTypedSequence<T> ();
       var result = sequence.Min ();
-      return new StreamedValue (result);
+      return new StreamedValue (result, (StreamedValueInfo) GetOutputDataInfo (input.DataInfo));
     }
 
     public override string ToString ()

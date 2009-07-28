@@ -30,7 +30,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.StreamedData
     [SetUp]
     public void SetUp ()
     {
-      _infoWithIntValue = new StreamedValueInfo (typeof (int));
+      _infoWithIntValue = new TestStreamedValueInfo (typeof (int));
     }
 
     [Test]

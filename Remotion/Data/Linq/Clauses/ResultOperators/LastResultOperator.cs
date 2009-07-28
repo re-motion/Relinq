@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Remotion.Data.Linq.Clauses.StreamedData;
 
@@ -51,16 +52,9 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     public override StreamedValue ExecuteInMemory<T> (StreamedSequence input)
     {
       var sequence = input.GetTypedSequence<T> ();
-      if (ReturnDefaultWhenEmpty)
-      {
-        var result = sequence.LastOrDefault();
-        return new StreamedValue (result);
-      }
-      else
-      {
-        var result = sequence.Last ();
-        return new StreamedValue (result);
-      }
+
+      T result = ReturnDefaultWhenEmpty ? sequence.LastOrDefault() : sequence.Last ();
+      return new StreamedValue (result, (StreamedValueInfo) GetOutputDataInfo (input.DataInfo));
     }
 
     public override string ToString ()

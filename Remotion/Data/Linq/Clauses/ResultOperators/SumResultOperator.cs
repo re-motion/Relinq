@@ -60,13 +60,13 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       }
 
       var result = method.Invoke (null, new[] { input.GetTypedSequence<T> () });
-      return new StreamedValue (result);
+      return new StreamedValue (result, (StreamedValueInfo) GetOutputDataInfo (input.DataInfo));
     }
 
     public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
     {
       var sequenceInfo = ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
-      return new StreamedValueInfo (sequenceInfo.ItemExpression.Type);
+      return new StreamedScalarValueInfo (sequenceInfo.ItemExpression.Type);
     }
 
     public override string ToString ()

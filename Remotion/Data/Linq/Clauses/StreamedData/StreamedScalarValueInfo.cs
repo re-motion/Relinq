@@ -14,33 +14,23 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.ResultOperators;
-using Remotion.Data.Linq.Clauses.StreamedData;
+using Remotion.Data.Linq.EagerFetching;
 
-namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
+namespace Remotion.Data.Linq.Clauses.StreamedData
 {
-  public class TestValueFromSequenceResultOperator : ValueFromSequenceResultOperatorBase
+  /// <summary>
+  /// Describes a scalar value streamed out of a <see cref="QueryModel"/> or <see cref="ResultOperatorBase"/>. A scalar value corresponds to a
+  /// value calculated from the result set, as produced by <see cref="CountResultOperator"/> or <see cref="ContainsResultOperator"/>, for instance.
+  /// </summary>
+  public class StreamedScalarValueInfo : StreamedValueInfo
   {
-    public TestValueFromSequenceResultOperator ()
-        : base(SingleExecutionStrategy.InstanceNoDefaultWhenEmpty)
+    public StreamedScalarValueInfo (Type dataType)
+        : base(dataType)
     {
     }
 
-    public override StreamedValue ExecuteInMemory<T> (StreamedSequence sequence)
-    {
-      return new StreamedValue (sequence.GetTypedSequence<T> ().Count (), (StreamedValueInfo) GetOutputDataInfo(sequence.DataInfo));
-    }
-
-    public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
-    {
-      return new StreamedScalarValueInfo (typeof (int));
-    }
-
-    public override ResultOperatorBase Clone (CloneContext cloneContext)
+    public override IStreamedData ExecuteQueryModel (QueryModel queryModel, FetchRequestBase[] fetchRequests, IQueryExecutor executor)
     {
       throw new NotImplementedException();
     }

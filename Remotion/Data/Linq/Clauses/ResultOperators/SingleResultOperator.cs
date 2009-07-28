@@ -51,16 +51,9 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     public override StreamedValue ExecuteInMemory<T> (StreamedSequence input)
     {
       var sequence = input.GetTypedSequence<T> ();
-      if (ReturnDefaultWhenEmpty)
-      {
-        var result = sequence.SingleOrDefault();
-        return new StreamedValue (result);
-      }
-      else
-      {
-        var result = sequence.Single();
-        return new StreamedValue (result);
-      }
+      T result = ReturnDefaultWhenEmpty ? sequence.SingleOrDefault () : sequence.Single ();
+      return new StreamedValue (result, (StreamedValueInfo) GetOutputDataInfo (input.DataInfo));
+
     }
 
     public override string ToString ()

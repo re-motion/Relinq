@@ -93,7 +93,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     [ExpectedException (typeof (ArgumentTypeException))]
     public void GetOutputDataInfo_InvalidInput ()
     {
-      var input = new StreamedValueInfo (typeof (Student));
+      var input = new StreamedScalarValueInfo (typeof (Student));
       _resultOperator.GetOutputDataInfo (input);
     }
   }

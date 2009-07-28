@@ -47,13 +47,13 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     {
       var sequence = input.GetTypedSequence<T> ();
       var result = sequence.LongCount();
-      return new StreamedValue (result);
+      return new StreamedValue (result, (StreamedValueInfo) GetOutputDataInfo (input.DataInfo));
     }
 
     public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
     {
       ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
-      return new StreamedValueInfo (typeof (long));
+      return new StreamedScalarValueInfo (typeof (long));
     }
 
     public override string ToString ()

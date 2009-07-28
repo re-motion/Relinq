@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
+using Remotion.Data.Linq.EagerFetching;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.StreamedData
@@ -75,6 +76,11 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
         throw new ArgumentException ("GenericMethodDefinition must have exactly one generic parameter.", "genericMethodDefinition");
 
       return genericMethodDefinition.MakeGenericMethod (ItemExpression.Type);
+    }
+
+    public IStreamedData ExecuteQueryModel (QueryModel queryModel, FetchRequestBase[] fetchRequests, IQueryExecutor executor)
+    {
+      throw new NotImplementedException();
     }
   }
 }
