@@ -29,11 +29,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       return new StreamedSequence (sequenceInfo.Distinct(), sequence.DataInfo.ItemExpression);
     }
 
-    public override Type GetResultType (Type inputResultType)
-    {
-      throw new NotImplementedException();
-    }
-
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
       throw new NotImplementedException();

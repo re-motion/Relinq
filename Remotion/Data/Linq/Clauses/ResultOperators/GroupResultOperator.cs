@@ -161,14 +161,6 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new StreamedSequenceInfo (typeof (IQueryable<>).MakeGenericType (ItemType), GetNewItemExpression());
     }
 
-    public override Type GetResultType (Type inputResultType)
-    {
-      ArgumentUtility.CheckNotNull ("inputResultType", inputResultType);
-      ReflectionUtility.GetItemTypeOfIEnumerable (inputResultType, "inputResultType"); // check that the input is a sequence
-
-      return typeof (IQueryable<>).MakeGenericType (ItemType);
-    }
-
     public override string ToString ()
     {
       return string.Format (

@@ -56,14 +56,6 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new StreamedValueInfo (typeof (long));
     }
 
-    public override Type GetResultType (Type inputResultType)
-    {
-      ArgumentUtility.CheckNotNull ("inputResultType", inputResultType);
-      ReflectionUtility.GetItemTypeOfIEnumerable (inputResultType, "inputResultType"); // check whether inputResultType implements IEnumerable<T>
-
-      return typeof (long);
-    }
-
     public override string ToString ()
     {
       return "LongCount()";

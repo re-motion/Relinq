@@ -96,12 +96,6 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new StreamedValueInfo (ResultType);
     }
 
-    public override Type GetResultType (Type inputResultType)
-    {
-      ArgumentUtility.CheckNotNull ("inputResultType", inputResultType);
-      return ResultType;
-    }
-
     public override string ToString ()
     {
       return "Average()";

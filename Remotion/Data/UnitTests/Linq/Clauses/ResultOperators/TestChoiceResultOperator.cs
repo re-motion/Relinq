@@ -34,11 +34,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       return new StreamedValue (sequenceInfo.First ());
     }
 
-    public override Type GetResultType (Type inputResultType)
-    {
-      throw new NotImplementedException();
-    }
-
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
       throw new NotImplementedException();

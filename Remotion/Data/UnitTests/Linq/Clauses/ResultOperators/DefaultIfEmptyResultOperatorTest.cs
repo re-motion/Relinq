@@ -99,12 +99,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     }
 
     [Test]
-    public void GetResultType ()
-    {
-      Assert.That (_resultOperatorWithDefaultValue.GetResultType (typeof (IQueryable<Student>)), Is.SameAs (typeof (IQueryable<Student>)));
-    }
-
-    [Test]
     public void TransformExpressions_WithDefaultValue ()
     {
       var oldExpression = ExpressionHelper.CreateExpression ();

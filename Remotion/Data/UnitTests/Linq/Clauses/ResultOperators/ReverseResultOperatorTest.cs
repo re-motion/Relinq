@@ -64,18 +64,5 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
 
       Assert.That (result.GetTypedSequence<int>().ToArray(), Is.EquivalentTo (new[] { 3, 2, 1 }));
     }
-
-    [Test]
-    public void GetResultType ()
-    {
-      Assert.That (_resultOperator.GetResultType (typeof (IQueryable<Student>)), Is.SameAs (typeof (IQueryable<Student>)));
-    }
-
-    [Test]
-    [ExpectedException (typeof (ArgumentTypeException))]
-    public void GetResultType_InvalidType ()
-    {
-      _resultOperator.GetResultType (typeof (Student));
-    }
   }
 }

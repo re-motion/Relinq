@@ -113,15 +113,6 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new StreamedValueInfo (typeof (bool));
     }
 
-    public override Type GetResultType (Type inputResultType)
-    {
-      ArgumentUtility.CheckNotNull ("inputResultType", inputResultType);
-      if (ReflectionUtility.GetItemTypeOfIEnumerable (inputResultType, "inputResultType") != Item.Type)
-        throw new ArgumentTypeException ("inputResultType", typeof (IEnumerable<>).MakeGenericType (Item.Type), inputResultType);
-
-      return typeof (bool);
-    }
-
     public override void TransformExpressions (Func<Expression, Expression> transformation)
     {
       ArgumentUtility.CheckNotNull ("transformation", transformation);

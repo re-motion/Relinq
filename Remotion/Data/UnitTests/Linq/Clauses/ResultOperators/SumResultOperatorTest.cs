@@ -88,18 +88,5 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       var input = new StreamedValueInfo (typeof (float));
       _resultOperator.GetOutputDataInfo (input);
     }
-
-    [Test]
-    public void GetResultType ()
-    {
-      Assert.That (_resultOperator.GetResultType (typeof (IQueryable<int>)), Is.SameAs (typeof (int)));
-    }
-
-    [Test]
-    [ExpectedException (typeof (ArgumentTypeException))]
-    public void GetResultType_InvalidType ()
-    {
-      _resultOperator.GetResultType (typeof (int));
-    }
   }
 }

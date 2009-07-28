@@ -72,19 +72,9 @@ namespace Remotion.Data.Linq
       ResultOperators.ItemSet += ResultOperators_ItemAdded;
     }
 
-    /// <summary>
-    /// Gets the result type of the underlying LINQ query. This is usually a type that implements <see cref="IQueryable{T}"/>, unless the
-    /// query ends with a <see cref="ResultOperatorBase"/>. For example, if the query ends with a <see cref="CountResultOperator"/>, the
-    /// result type will be <see cref="int"/>.
-    /// </summary>
     public Type GetResultType ()
     {
-      var resultType = SelectClause.GetResultType();
-
-      foreach (var resultOperator in ResultOperators)
-        resultType = resultOperator.GetResultType (resultType);
-
-      return resultType;
+      return GetOutputDataInfo ().DataType;
     }
 
     /// <summary>

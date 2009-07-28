@@ -32,11 +32,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       throw new NotImplementedException();
     }
 
-    public override Type GetResultType (Type inputResultType)
-    {
-      throw new NotImplementedException();
-    }
-
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
       throw new NotImplementedException();

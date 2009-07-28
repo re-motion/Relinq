@@ -144,12 +144,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     }
 
     [Test]
-    public void GetResultType ()
-    {
-      Assert.That (_resultOperator.GetResultType (typeof (IQueryable<AnonymousType>)), Is.SameAs (typeof (IQueryable<IGrouping<int, string>>)));
-    }
-
-    [Test]
     public void TransformExpressions ()
     {
       var oldExpression1 = ExpressionHelper.CreateExpression ();

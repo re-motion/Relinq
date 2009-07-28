@@ -75,14 +75,6 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
           GetNewItemExpression (sequenceInfo.ItemExpression));
     }
 
-    public override Type GetResultType (Type inputResultType)
-    {
-      ArgumentUtility.CheckNotNull ("inputResultType", inputResultType);
-      ReflectionUtility.GetItemTypeOfIEnumerable (inputResultType, "inputResultType"); // check whether inputResultType implements IEnumerable<T>
-
-      return typeof (IQueryable<>).MakeGenericType (CastItemType);
-    }
-
     public override string ToString ()
     {
       return "Cast()";

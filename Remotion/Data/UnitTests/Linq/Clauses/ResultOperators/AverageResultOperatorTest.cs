@@ -102,12 +102,5 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       var input = new StreamedValueInfo (typeof (Student));
       _resultOperatorWithDateTimeResult.GetOutputDataInfo (input);
     }
-
-    [Test]
-    public void GetResultType ()
-    {
-      Assert.That (_resultOperatorWithDoubleResult.GetResultType (typeof (IQueryable<int>)), Is.SameAs (typeof (double)));
-    }
-
   }
 }

@@ -23,8 +23,6 @@ using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Clauses.StreamedData;
-using Remotion.Data.UnitTests.Linq.TestDomain;
-using Remotion.Utilities;
 
 namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
 {
@@ -80,26 +78,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       var result = _resultOperator.ExecuteInMemory<int> (input);
 
       Assert.That (result.GetTypedSequence<int>().ToArray(), Is.EquivalentTo (new[] { 1, 2, 3 }));
-    }
-
-    [Test]
-    public void GetResultType ()
-    {
-      Assert.That (_resultOperator.GetResultType (typeof (IQueryable<int>)), Is.SameAs (typeof (IQueryable<int>)));
-    }
-
-    [Test]
-    [ExpectedException (typeof (ArgumentTypeException))]
-    public void GetResultType_InvalidType ()
-    {
-      _resultOperator.GetResultType (typeof (Student));
-    }
-
-    [Test]
-    [ExpectedException (typeof (ArgumentTypeException))]
-    public void GetResultType_InvalidEnumerable ()
-    {
-      _resultOperator.GetResultType (typeof (IEnumerable<Student>));
     }
 
     [Test]

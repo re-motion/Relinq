@@ -83,26 +83,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     }
 
     [Test]
-    public void GetResultType ()
-    {
-      Assert.That (_resultOperator.GetResultType (typeof (IQueryable<int>)), Is.SameAs (typeof (IQueryable<int>)));
-    }
-
-    [Test]
-    [ExpectedException (typeof (ArgumentTypeException))]
-    public void GetResultType_InvalidType ()
-    {
-      _resultOperator.GetResultType (typeof (Student));
-    }
-
-    [Test]
-    [ExpectedException (typeof (ArgumentTypeException))]
-    public void GetResultType_InvalidEnumerable ()
-    {
-      _resultOperator.GetResultType (typeof (IEnumerable<Student>));
-    }
-
-    [Test]
     public void TransformExpressions ()
     {
       var oldExpression = ExpressionHelper.CreateExpression ();

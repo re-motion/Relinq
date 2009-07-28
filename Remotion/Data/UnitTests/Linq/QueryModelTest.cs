@@ -69,27 +69,6 @@ namespace Remotion.Data.UnitTests.Linq
     }
 
     [Test]
-    public void GetResultType_FromSelectClause ()
-    {
-      Assert.That (_queryModel.GetResultType(), Is.EqualTo (typeof (IQueryable<int>)));
-    }
-
-    [Test]
-    public void GetResultType_FromResultOperator ()
-    {
-      _queryModel.ResultOperators.Add (new CountResultOperator ());
-      Assert.That (_queryModel.GetResultType(), Is.EqualTo (typeof (int)));
-    }
-
-    [Test]
-    public void GetResultType_FromMultipleResultOperators ()
-    {
-      _queryModel.ResultOperators.Add (new DistinctResultOperator());
-      _queryModel.ResultOperators.Add (new SingleResultOperator (false));
-      Assert.That (_queryModel.GetResultType(), Is.EqualTo (typeof (int)));
-    }
-
-    [Test]
     public void GetOutputDataInfo_FromSelectClause ()
     {
       var outputDataInfo = _queryModel.GetOutputDataInfo ();

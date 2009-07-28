@@ -15,10 +15,8 @@
 // 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Threading;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Clauses.StreamedData;
 using Remotion.Utilities;
@@ -61,17 +59,6 @@ namespace Remotion.Data.Linq.Clauses
     /// of the query if no previous <see cref="ResultOperatorBase"/> exists.</param>
     /// <returns>Gets information about the data streamed out of this <see cref="ResultOperatorBase"/>.</returns>
     public abstract IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo);
-
-    /// <summary>
-    /// Gets the result type a query would have if it ended with this <see cref="ResultOperatorBase"/>. This can be an instantiation of 
-    /// <see cref="IQueryable{T}"/>, the type of a single item, or a scalar type, depending on the kind of this <see cref="ResultOperatorBase"/>.
-    /// Use <see cref="QueryModel.GetResultType"/> to obtain the real result type of a query model, including all other 
-    /// <see cref="QueryModel.ResultOperators"/>.
-    /// </summary>
-    /// <param name="inputResultType">The result type produced by the preceding <see cref="ResultOperatorBase"/>, or the <see cref="SelectClause"/>
-    /// of the query if no previous <see cref="ResultOperatorBase"/> exists.</param>
-    /// <returns>Gets the result type a query would have if it ended with this <see cref="ResultOperatorBase"/></returns>
-    public abstract Type GetResultType (Type inputResultType);
 
     /// <summary>
     /// Clones this item, registering its clone with the <paramref name="cloneContext"/> if it is a query source clause.

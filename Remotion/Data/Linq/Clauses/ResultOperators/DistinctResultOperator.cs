@@ -44,14 +44,6 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new StreamedSequence (result, input.DataInfo.ItemExpression);
     }
 
-    public override Type GetResultType (Type inputResultType)
-    {
-      ArgumentUtility.CheckNotNull ("inputResultType", inputResultType);
-      ReflectionUtility.GetItemTypeOfIEnumerable (inputResultType, "inputResultType"); // check whether inputResultType implements IEnumerable<T>
-
-      return inputResultType;
-    }
-
     public override string ToString ()
     {
       return "Distinct()";

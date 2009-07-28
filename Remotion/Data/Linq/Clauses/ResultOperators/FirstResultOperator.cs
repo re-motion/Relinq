@@ -64,12 +64,6 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       }
     }
 
-    public override Type GetResultType (Type inputResultType)
-    {
-      ArgumentUtility.CheckNotNull ("inputResultType", inputResultType);
-      return ReflectionUtility.GetItemTypeOfIEnumerable (inputResultType, "inputResultType");
-    }
-    
     public override string ToString ()
     {
       if (ReturnDefaultWhenEmpty)

@@ -99,13 +99,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     }
 
     [Test]
-    public void GetResultType ()
-    {
-      var type = _selectClause.GetResultType ();
-      Assert.That (type, Is.SameAs (typeof (IQueryable<Student>)));
-    }
-
-    [Test]
     public void GetOutputDataInfo ()
     {
       var info = _selectClause.GetOutputDataInfo ();

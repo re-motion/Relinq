@@ -45,12 +45,6 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new MinResultOperator();
     }
 
-    public override Type GetResultType (Type inputResultType)
-    {
-      ArgumentUtility.CheckNotNull ("inputResultType", inputResultType);
-      return ReflectionUtility.GetItemTypeOfIEnumerable (inputResultType, "inputResultType");
-    }
-
     public override StreamedValue ExecuteInMemory<T> (StreamedSequence input)
     {
       var sequence = input.GetTypedSequence<T> ();

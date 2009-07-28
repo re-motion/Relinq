@@ -83,13 +83,13 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void Apply_WrapsQueryModel_WithCorrectResultTypes ()
     {
-      var oldResultType = _queryModelWithResultOperator.GetResultType();
+      var oldResultType = _queryModelWithResultOperator.GetOutputDataInfo ().DataType;
 
       var newQueryModel = _nodeWithResultOperatorSource.Apply (_queryModelWithResultOperator, ClauseGenerationContext);
 
       Assert.That (newQueryModel, Is.Not.SameAs (_queryModelWithResultOperator));
-      Assert.That (newQueryModel.GetResultType(), Is.SameAs (oldResultType));
-      Assert.That (_queryModelWithResultOperator.GetResultType(), Is.SameAs (typeof (IQueryable<int>)));
+      Assert.That (newQueryModel.GetOutputDataInfo ().DataType, Is.SameAs (oldResultType));
+      Assert.That (_queryModelWithResultOperator.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<int>)));
     }
 
     [Test]

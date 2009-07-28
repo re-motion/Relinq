@@ -52,12 +52,6 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new StreamedValue (result);
     }
 
-    public override Type GetResultType (Type inputResultType)
-    {
-      ArgumentUtility.CheckNotNull ("inputResultType", inputResultType);
-      return ReflectionUtility.GetItemTypeOfIEnumerable (inputResultType, "inputResultType");
-    }
-
     public override string ToString ()
     {
       return "Max()";

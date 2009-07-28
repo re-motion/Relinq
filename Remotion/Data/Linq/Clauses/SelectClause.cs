@@ -116,17 +116,6 @@ namespace Remotion.Data.Linq.Clauses
     }
 
     /// <summary>
-    /// Gets the result type a query would have if it ended with this <see cref="SelectClause"/>. This is <see cref="IQueryable{T}"/> instantiated
-    /// with the type of <see cref="Selector"/> as its generic parameter. Use <see cref="QueryModel.GetResultType"/> to obtain the real result type of
-    /// a query model, including the <see cref="QueryModel.ResultOperators"/>.
-    /// </summary>
-    /// <returns>Gets the result type a query would have if it ended with this <see cref="SelectClause"/></returns>
-    public Type GetResultType ()
-    {
-      return typeof (IQueryable<>).MakeGenericType (Selector.Type);
-    }
-
-    /// <summary>
     /// Gets an <see cref="StreamedSequenceInfo"/> object describing the data streaming out of this <see cref="SelectClause"/>. If a query ends with
     /// the <see cref="SelectClause"/>, this corresponds to the query's output data. If a query has <see cref="QueryModel.ResultOperators"/>, the data
     /// is further modified by those operators. Use <see cref="QueryModel.GetOutputDataInfo"/> to obtain the real result type of

@@ -93,29 +93,6 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new StreamedSequence (result, input.DataInfo.ItemExpression);
     }
 
-    public override Type GetResultType (Type inputResultType)
-    {
-      ArgumentUtility.CheckNotNull ("inputResultType", inputResultType);
-      var inputItemType = ReflectionUtility.GetItemTypeOfIEnumerable (inputResultType, "inputResultType");
-      var source2ItemType = ReflectionUtility.GetItemTypeOfIEnumerable (Source2.Type, "Source2");
-
-      if (inputItemType != source2ItemType)
-      {
-        var expectedEnumerableType = typeof (IEnumerable<>).MakeGenericType (Source2.Type);
-        var message = string.Format (
-            "The input's item type must be the same as Source2's item type. Expected '{0}', but got '{1}'.",
-            expectedEnumerableType,
-            inputResultType);
-        throw new ArgumentTypeException (
-            message,
-            "inputResultType",
-            expectedEnumerableType,
-            inputResultType);
-      }
-
-      return inputResultType;
-    }
-
     public override void TransformExpressions (Func<Expression, Expression> transformation)
     {
       ArgumentUtility.CheckNotNull ("transformation", transformation);

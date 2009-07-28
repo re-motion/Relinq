@@ -104,18 +104,5 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     {
       Assert.That (_resultOperatorNoDefault.ExecutionStrategy, Is.SameAs (SingleExecutionStrategy.InstanceNoDefaultWhenEmpty));
     }
-
-    [Test]
-    public void GetResultType ()
-    {
-      Assert.That (_resultOperatorNoDefault.GetResultType (typeof (IQueryable<Student>)), Is.SameAs (typeof (Student)));
-    }
-
-    [Test]
-    [ExpectedException (typeof (ArgumentTypeException))]
-    public void GetResultType_InvalidType ()
-    {
-      _resultOperatorNoDefault.GetResultType (typeof (Student));
-    }
   }
 }

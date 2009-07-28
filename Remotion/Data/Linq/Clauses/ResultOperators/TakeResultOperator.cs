@@ -96,14 +96,6 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new StreamedSequence (result, input.DataInfo.ItemExpression);
     }
 
-    public override Type GetResultType (Type inputResultType)
-    {
-      ArgumentUtility.CheckNotNull ("inputResultType", inputResultType);
-      ReflectionUtility.GetItemTypeOfIEnumerable (inputResultType, "inputResultType");
-
-      return inputResultType;
-    }
-
     public override void TransformExpressions (Func<Expression, Expression> transformation)
     {
       ArgumentUtility.CheckNotNull ("transformation", transformation);

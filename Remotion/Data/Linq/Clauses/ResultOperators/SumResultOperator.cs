@@ -69,12 +69,6 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new StreamedValueInfo (sequenceInfo.ItemExpression.Type);
     }
 
-    public override Type GetResultType (Type inputResultType)
-    {
-      ArgumentUtility.CheckNotNull ("inputResultType", inputResultType);
-      return ReflectionUtility.GetItemTypeOfIEnumerable (inputResultType, "inputResultType");
-    }
-
     public override string ToString ()
     {
       return "Sum()";
