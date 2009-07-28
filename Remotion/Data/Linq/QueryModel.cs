@@ -22,6 +22,7 @@ using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Clauses.ResultOperators;
+using Remotion.Data.Linq.Clauses.StreamedData;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Utilities;
 
@@ -84,6 +85,28 @@ namespace Remotion.Data.Linq
         resultType = resultOperator.GetResultType (resultType);
 
       return resultType;
+    }
+
+    /// <summary>
+    /// Gets an <see cref="IStreamedDataInfo"/> object describing the data streaming out of this <see cref="QueryModel"/>. If a query ends with
+    /// the <see cref="SelectClause"/>, this corresponds to <see cref="Clauses.SelectClause.GetOutputDataInfo"/>. If a query has 
+    /// <see cref="QueryModel.ResultOperators"/>, the data is further modified by those operators.
+    /// </summary>
+    /// <returns>Gets a <see cref="IStreamedDataInfo"/> object describing the data streaming out of this <see cref="QueryModel"/>.</returns>
+    /// <remarks>
+    /// The data streamed from a <see cref="QueryModel"/> is often of type <see cref="IQueryable{T}"/> instantiated
+    /// with a specific item type, unless the
+    /// query ends with a <see cref="ResultOperatorBase"/>. For example, if the query ends with a <see cref="CountResultOperator"/>, the
+    /// result type will be <see cref="int"/>.
+    /// </remarks>
+    public IStreamedDataInfo GetOutputDataInfo ()
+    {
+      IStreamedDataInfo outputDataInfo = SelectClause.GetOutputDataInfo ();
+
+      foreach (var resultOperator in ResultOperators)
+        outputDataInfo = resultOperator.GetOutputDataInfo (outputDataInfo);
+
+      return outputDataInfo;
     }
 
     /// <summary>

@@ -21,6 +21,7 @@ using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultOperators;
+using Remotion.Data.Linq.Clauses.StreamedData;
 using Remotion.Data.UnitTests.Linq.TestDomain;
 using Rhino.Mocks;
 using Remotion.Data.Linq.Clauses;
@@ -86,6 +87,36 @@ namespace Remotion.Data.UnitTests.Linq
       _queryModel.ResultOperators.Add (new DistinctResultOperator());
       _queryModel.ResultOperators.Add (new SingleResultOperator (false));
       Assert.That (_queryModel.GetResultType(), Is.EqualTo (typeof (int)));
+    }
+
+    [Test]
+    public void GetOutputDataInfo_FromSelectClause ()
+    {
+      var outputDataInfo = _queryModel.GetOutputDataInfo ();
+      Assert.That (outputDataInfo, Is.InstanceOfType (typeof (StreamedSequenceInfo)));
+      Assert.That (outputDataInfo.DataType, Is.SameAs (typeof (IQueryable<int>)));
+      Assert.That (((StreamedSequenceInfo) outputDataInfo).ItemExpression, Is.SameAs (_queryModel.SelectClause.Selector));
+    }
+
+    [Test]
+    public void GetOutputDataInfo_FromResultOperator ()
+    {
+      _queryModel.ResultOperators.Add (new CountResultOperator ());
+
+      var outputDataInfo = _queryModel.GetOutputDataInfo ();
+      Assert.That (outputDataInfo, Is.InstanceOfType (typeof (StreamedValueInfo)));
+      Assert.That (outputDataInfo.DataType, Is.SameAs (typeof (int)));
+    }
+
+    [Test]
+    public void GetOutputDataInfo_FromMultipleResultOperators ()
+    {
+      _queryModel.ResultOperators.Add (new DistinctResultOperator ());
+      _queryModel.ResultOperators.Add (new SingleResultOperator (false));
+
+      var outputDataInfo = _queryModel.GetOutputDataInfo ();
+      Assert.That (outputDataInfo, Is.InstanceOfType (typeof (StreamedValueInfo)));
+      Assert.That (outputDataInfo.DataType, Is.SameAs (typeof (int)));
     }
 
     [Test]

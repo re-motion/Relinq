@@ -104,5 +104,13 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       var type = _selectClause.GetResultType ();
       Assert.That (type, Is.SameAs (typeof (IQueryable<Student>)));
     }
+
+    [Test]
+    public void GetOutputDataInfo ()
+    {
+      var info = _selectClause.GetOutputDataInfo ();
+      Assert.That (info.DataType, Is.SameAs (typeof (IQueryable<Student>)));
+      Assert.That (info.ItemExpression, Is.SameAs (_selectClause.Selector));
+    }
   }
 }
