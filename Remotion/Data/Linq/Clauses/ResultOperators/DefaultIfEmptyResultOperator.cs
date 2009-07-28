@@ -76,16 +76,16 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
 
     public override StreamedSequence ExecuteInMemory<T> (StreamedSequence input)
     {
-      var sequence = input.GetCurrentSequenceInfo<T> ();
+      var sequence = input.GetTypedSequence<T> ();
       if (OptionalDefaultValue != null)
       {
-        var result = sequence.Sequence.DefaultIfEmpty ((T) GetConstantOptionalDefaultValue ());
-        return new StreamedSequence (result, sequence.ItemExpression);
+        var result = sequence.DefaultIfEmpty ((T) GetConstantOptionalDefaultValue ());
+        return new StreamedSequence (result, input.DataInfo.ItemExpression);
       }
       else
       {
-        var result = sequence.Sequence.DefaultIfEmpty ();
-        return new StreamedSequence (result, sequence.ItemExpression);
+        var result = sequence.DefaultIfEmpty ();
+        return new StreamedSequence (result, input.DataInfo.ItemExpression);
       }
     }
     

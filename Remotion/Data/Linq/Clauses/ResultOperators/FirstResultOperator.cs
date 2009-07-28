@@ -51,15 +51,15 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
 
     public override StreamedValue ExecuteInMemory<T> (StreamedSequence input)
     {
-      var sequence = input.GetCurrentSequenceInfo<T> ();
+      var sequence = input.GetTypedSequence<T> ();
       if (ReturnDefaultWhenEmpty)
       {
-        var result = sequence.Sequence.FirstOrDefault ();
+        var result = sequence.FirstOrDefault ();
         return new StreamedValue (result);
       }
       else
       {
-        var result = sequence.Sequence.First();
+        var result = sequence.First();
         return new StreamedValue (result);
       }
     }

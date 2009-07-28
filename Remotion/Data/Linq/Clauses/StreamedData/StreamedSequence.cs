@@ -29,7 +29,7 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
   public class StreamedSequence : IStreamedData
   {
     /// <summary>
-    /// Initializes a new instance of the <see cref="StreamedSequence"/> class, setting the <see cref="CurrentSequence"/> and 
+    /// Initializes a new instance of the <see cref="StreamedSequence"/> class, setting the <see cref="Sequence"/> and 
     /// <see cref="DataInfo"/> properties.
     /// </summary>
     /// <param name="currentSequence">The current sequence.</param>
@@ -40,10 +40,15 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
       ArgumentUtility.CheckNotNull ("itemExpression", itemExpression);
 
       DataInfo = new StreamedSequenceInfo (currentSequence.GetType (), itemExpression);
-      CurrentSequence = currentSequence;
+      Sequence = currentSequence;
     }
 
     public StreamedSequenceInfo DataInfo { get; private set; }
+
+    object IStreamedData.Value
+    {
+      get { return Sequence; }
+    }
 
     IStreamedDataInfo IStreamedData.DataInfo
     {
@@ -55,20 +60,7 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
     /// holds the input sequence for the operation. If the object is used as output, this holds the result of the operation.
     /// </summary>
     /// <value>The current sequence.</value>
-    public IEnumerable CurrentSequence { get; private set; }
-
-    /// <summary>
-    /// Always throws an exception because this object does not hold a single value, but a sequence.
-    /// </summary>
-    /// <typeparam name="T">The expected type of the value.</typeparam>
-    /// <exception cref="InvalidOperationException">This object does not hold a single value.</exception>
-    T IStreamedData.GetCurrentSingleValue<T> ()
-    {
-      string message = string.Format (
-          "Cannot retrieve the current single value because the current value is a sequence of type '{0}'.",
-          CurrentSequence.GetType());
-      throw new InvalidOperationException (message);
-    }
+    public IEnumerable Sequence { get; private set; }
 
     /// <summary>
     /// Gets the current sequence held by this object as well as an <see cref="Expression"/> describing the
@@ -79,11 +71,11 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
     /// The sequence and an <see cref="Expression"/> describing its items.
     /// </returns>
     /// <exception cref="InvalidOperationException">Thrown when the item type is not the expected type <typeparamref name="T"/>.</exception>
-    public TypedSequenceInfo<T> GetCurrentSequenceInfo<T> ()
+    public IEnumerable<T> GetTypedSequence<T> ()
     {
       try
       {
-        return new TypedSequenceInfo<T> ((IEnumerable<T>) CurrentSequence, DataInfo.ItemExpression);
+        return (IEnumerable<T>) Sequence;
       }
       catch (InvalidCastException ex)
       {
@@ -94,18 +86,6 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
 
         throw new InvalidOperationException (message, ex);
       }
-    }
-
-    /// <summary>
-    /// Gets the current sequence held by this object as well as an <see cref="Expression"/> describing the
-    /// sequence's items.
-    /// </summary>
-    /// <returns>
-    /// The sequence and an <see cref="Expression"/> describing its items.
-    /// </returns>
-    public UntypedSequenceInfo GetCurrentSequenceInfo ()
-    {
-      return new UntypedSequenceInfo (CurrentSequence, DataInfo.ItemExpression);
     }
   }
 }

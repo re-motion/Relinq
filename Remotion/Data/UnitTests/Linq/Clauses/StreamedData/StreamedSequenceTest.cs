@@ -53,14 +53,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.StreamedData
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), 
-        ExpectedMessage = "Cannot retrieve the current single value because the current value is a sequence of type 'System.Int32[]'.")]
-    public void GetCurrentSingleValue_InvalidType ()
-    {
-      ((IStreamedData) _dataWithIntSequence).GetCurrentSingleValue<string> ();
-    }
-
-    [Test]
     public void DataInfo ()
     {
       Assert.That (_dataWithIntSequence.DataInfo.DataType, Is.SameAs (typeof (int[])));
@@ -68,27 +60,18 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.StreamedData
     }
 
     [Test]
-    public void GetCurrentSequence ()
+    public void GetTypedSequence ()
     {
-      var sequenceData = _dataWithIntSequence.GetCurrentSequenceInfo<int> ();
-      Assert.That (sequenceData.Sequence, Is.SameAs (_intSequence));
-      Assert.That (sequenceData.ItemExpression, Is.SameAs (_intExpression));
-    }
-
-    [Test]
-    public void GetCurrentSequence_Untyped ()
-    {
-      var sequenceData = _dataWithIntSequence.GetCurrentSequenceInfo ();
-      Assert.That (sequenceData.Sequence, Is.SameAs (_intSequence));
-      Assert.That (sequenceData.ItemExpression, Is.SameAs (_intExpression));
+      var sequenceData = _dataWithIntSequence.GetTypedSequence<int> ();
+      Assert.That (sequenceData, Is.SameAs (_intSequence));
     }
 
     [Test]
     [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Cannot retrieve the current value as a sequence with item type "
                                                                               + "'System.String' because its items are of type 'System.Int32'.")]
-    public void GetCurrentSequence_InvalidItemType ()
+    public void GetTypedSequence_InvalidItemType ()
     {
-      _dataWithIntSequence.GetCurrentSequenceInfo<string> ();
+      _dataWithIntSequence.GetTypedSequence<string> ();
     }
   }
 }

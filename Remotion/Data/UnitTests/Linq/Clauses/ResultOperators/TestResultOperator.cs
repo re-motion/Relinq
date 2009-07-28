@@ -47,7 +47,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       throw new NotImplementedException();
     }
 
-    public new IStreamedData InvokeGenericExecuteMethod<TSource, TResult> (IStreamedData input, Func<TSource, TResult> genericMethodCaller)
+    public new TResult InvokeGenericExecuteMethod<TSource, TResult> (IStreamedData input, Func<TSource, TResult> genericMethodCaller)
       where TSource : IStreamedData
       where TResult : IStreamedData 
     {
@@ -56,8 +56,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
 
     public StreamedSequence DistinctExecuteMethod<T> (StreamedSequence arg)
     {
-      var currentSequence = arg.GetCurrentSequenceInfo<T>();
-      return new StreamedSequence (currentSequence.Sequence.Distinct (), currentSequence.ItemExpression);
+      var currentSequence = arg.GetTypedSequence<T>();
+      return new StreamedSequence (currentSequence.Distinct (), arg.DataInfo.ItemExpression);
     }
 
     // ReSharper disable UnusedTypeParameter

@@ -57,14 +57,14 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       var student2 = new GoodStudent ();
       IEnumerable items = new Student[] { student1, student2 };
       var itemExpression = Expression.Constant (student1, typeof (Student));
-      IStreamedData input = new StreamedSequence (items, itemExpression);
+      var input = new StreamedSequence (items, itemExpression);
 
-      var result = _resultOperator.ExecuteInMemory (input);
+      var result = _resultOperator.ExecuteInMemory<Student> (input);
 
-      var sequence = result.GetCurrentSequenceInfo<GoodStudent>();
-      Assert.That (sequence.Sequence.ToArray (), Is.EquivalentTo (new[] { student1, student2 }));
-      Assert.That (sequence.ItemExpression.Type, Is.EqualTo (typeof (GoodStudent)));
-      Assert.That (((UnaryExpression) sequence.ItemExpression).Operand, Is.SameAs (itemExpression));
+      var sequence = result.GetTypedSequence<GoodStudent>();
+      Assert.That (sequence.ToArray (), Is.EquivalentTo (new[] { student1, student2 }));
+      Assert.That (result.DataInfo.ItemExpression.Type, Is.EqualTo (typeof (GoodStudent)));
+      Assert.That (((UnaryExpression) result.DataInfo.ItemExpression).Operand, Is.SameAs (itemExpression));
     }
 
     [Test]

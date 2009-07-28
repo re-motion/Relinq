@@ -53,8 +53,8 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
 
     public override StreamedValue ExecuteInMemory<T> (StreamedSequence input)
     {
-      var sequence = input.GetCurrentSequenceInfo<T> ();
-      var result = sequence.Sequence.Min ();
+      var sequence = input.GetTypedSequence<T> ();
+      var result = sequence.Min ();
       return new StreamedValue (result);
     }
 

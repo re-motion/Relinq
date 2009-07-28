@@ -51,10 +51,10 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     [Test]
     public void ExecuteInMemory ()
     {
-      IStreamedData input = new StreamedSequence (new[] { 1, 2, 3 }, Expression.Constant (0));
-      var result = _resultOperator.ExecuteInMemory (input);
+      var input = new StreamedSequence (new[] { 1, 2, 3 }, Expression.Constant (0));
+      var result = _resultOperator.ExecuteInMemory<int> (input);
 
-      Assert.That (result.GetCurrentSingleValue<int>(), Is.EqualTo (3));
+      Assert.That (result.Value, Is.EqualTo (3));
     }
 
     [Test]

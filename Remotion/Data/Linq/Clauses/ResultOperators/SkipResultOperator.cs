@@ -87,9 +87,9 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
 
     public override StreamedSequence ExecuteInMemory<T> (StreamedSequence input)
     {
-      var sequence = input.GetCurrentSequenceInfo<T> ();
-      var result = sequence.Sequence.Skip (GetConstantCount());
-      return new StreamedSequence (result, sequence.ItemExpression);
+      var sequence = input.GetTypedSequence<T> ();
+      var result = sequence.Skip (GetConstantCount());
+      return new StreamedSequence (result, input.DataInfo.ItemExpression);
     }
 
     public override Type GetResultType (Type inputResultType)

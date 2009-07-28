@@ -56,10 +56,10 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     {
       ArgumentUtility.CheckNotNull ("input", input);
 
-      var sequence = input.GetCurrentSequenceInfo<TInput> ();
+      var sequence = input.GetTypedSequence<TInput> ();
       var castMethod = typeof (Enumerable).GetMethod ("Cast", new[] { typeof (IEnumerable) }).MakeGenericMethod (CastItemType);
-      var result = (IEnumerable) InvokeExecuteMethod (castMethod, sequence.Sequence);
-      var resultItemExpression = Expression.Convert (sequence.ItemExpression, CastItemType);
+      var result = (IEnumerable) InvokeExecuteMethod (castMethod, sequence);
+      var resultItemExpression = Expression.Convert (input.DataInfo.ItemExpression, CastItemType);
       return new StreamedSequence (result, resultItemExpression);
     }
 

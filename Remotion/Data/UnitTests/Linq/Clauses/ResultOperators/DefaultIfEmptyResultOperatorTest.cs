@@ -15,7 +15,6 @@
 // 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
@@ -83,20 +82,20 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     public void ExecuteInMemory_WithDefaultValue ()
     {
       IEnumerable items = new int[0];
-      IStreamedData input = new StreamedSequence (items, Expression.Constant (0));
-      var result = _resultOperatorWithDefaultValue.ExecuteInMemory (input);
+      var input = new StreamedSequence (items, Expression.Constant (0));
+      var result = _resultOperatorWithDefaultValue.ExecuteInMemory<int> (input);
 
-      Assert.That (result.GetCurrentSequenceInfo<int>().Sequence.ToArray(), Is.EqualTo (new[] { 100 }));
+      Assert.That (result.GetTypedSequence<int>().ToArray(), Is.EqualTo (new[] { 100 }));
     }
 
     [Test]
     public void ExecuteInMemory_WithoutDefaultValue ()
     {
       IEnumerable items = new int[0];
-      IStreamedData input = new StreamedSequence (items, Expression.Constant (0));
-      var result = _resultOperatorWithoutDefaultValue.ExecuteInMemory (input);
+      var input = new StreamedSequence (items, Expression.Constant (0));
+      var result = _resultOperatorWithoutDefaultValue.ExecuteInMemory<int> (input);
 
-      Assert.That (result.GetCurrentSequenceInfo<int>().Sequence.ToArray(), Is.EqualTo (new[] { 0 }));
+      Assert.That (result.GetTypedSequence<int>().ToArray(), Is.EqualTo (new[] { 0 }));
     }
 
     [Test]

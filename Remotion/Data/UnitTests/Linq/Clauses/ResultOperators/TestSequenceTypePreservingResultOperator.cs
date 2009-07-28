@@ -25,8 +25,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
   {
     public override StreamedSequence ExecuteInMemory<T> (StreamedSequence sequence)
     {
-      var sequenceInfo = sequence.GetCurrentSequenceInfo<T> ();
-      return new StreamedSequence (sequenceInfo.Sequence.Distinct(), sequenceInfo.ItemExpression);
+      var sequenceInfo = sequence.GetTypedSequence<T> ();
+      return new StreamedSequence (sequenceInfo.Distinct(), sequence.DataInfo.ItemExpression);
     }
 
     public override Type GetResultType (Type inputResultType)

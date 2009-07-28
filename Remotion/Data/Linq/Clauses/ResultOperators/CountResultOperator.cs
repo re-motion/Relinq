@@ -48,8 +48,8 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
 
     public override StreamedValue ExecuteInMemory<T> (StreamedSequence input)
     {
-      var sequence = input.GetCurrentSequenceInfo<T> ();
-      var result = sequence.Sequence.Count ();
+      var sequence = input.GetTypedSequence<T> ();
+      var result = sequence.Count ();
       return new StreamedValue (result);
     }
 

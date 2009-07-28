@@ -47,8 +47,8 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
 
     public override StreamedValue ExecuteInMemory<T> (StreamedSequence input)
     {
-      var sequence = input.GetCurrentSequenceInfo<T> ();
-      var result = sequence.Sequence.Max ();
+      var sequence = input.GetTypedSequence<T> ();
+      var result = sequence.Max ();
       return new StreamedValue (result);
     }
 

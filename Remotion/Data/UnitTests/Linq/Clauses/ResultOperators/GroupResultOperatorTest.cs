@@ -106,18 +106,19 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
           new AnonymousType (555, 5) 
       };
 
-      IStreamedData input = new StreamedSequence (items, expectedInput);
+      var input = new StreamedSequence (items, expectedInput);
 
-      var result = _resultOperator.ExecuteInMemory (input).GetCurrentSequenceInfo<IGrouping<int, string>> ();
+      var result = _resultOperator.ExecuteInMemory<AnonymousType> (input);
+      var sequence = result.GetTypedSequence<IGrouping<int, string>> ();
 
-      var resultArray = result.Sequence.ToArray ();
+      var resultArray = sequence.ToArray ();
       Assert.That (resultArray.Length, Is.EqualTo (3));
       Assert.That (resultArray[0].ToArray (), Is.EqualTo (new[] { "111", "444" }));
       Assert.That (resultArray[1].ToArray (), Is.EqualTo (new[] { "222", "555" }));
       Assert.That (resultArray[2].ToArray (), Is.EqualTo (new[] { "333" }));
 
-      Assert.That (result.ItemExpression, Is.InstanceOfType (typeof (QuerySourceReferenceExpression)));
-      Assert.That (((QuerySourceReferenceExpression) result.ItemExpression).ReferencedQuerySource, Is.SameAs (_resultOperator));
+      Assert.That (result.DataInfo.ItemExpression, Is.InstanceOfType (typeof (QuerySourceReferenceExpression)));
+      Assert.That (((QuerySourceReferenceExpression) result.DataInfo.ItemExpression).ReferencedQuerySource, Is.SameAs (_resultOperator));
     }
 
     [Test]

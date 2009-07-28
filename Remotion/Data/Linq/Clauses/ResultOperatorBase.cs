@@ -140,7 +140,7 @@ namespace Remotion.Data.Linq.Clauses
     ///
     /// public StreamedValue ExecuteInMemory&lt;T&gt; (StreamedSequence input)
     /// {
-    ///   var sequence = input.GetCurrentSequenceInfo&lt;T&gt; ();
+    ///   var sequence = input.GetTypedSequence&lt;T&gt; ();
     ///   var result = sequence.Sequence.Count ();
     ///   return new StreamedValue (result);
     /// }

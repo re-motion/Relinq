@@ -31,8 +31,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
 
     public override StreamedValue ExecuteInMemory<T> (StreamedSequence sequence)
     {
-      var sequenceInfo = sequence.GetCurrentSequenceInfo<T> ();
-      return new StreamedValue (sequenceInfo.Sequence.Count ());
+      var sequenceInfo = sequence.GetTypedSequence<T> ();
+      return new StreamedValue (sequenceInfo.Count ());
     }
 
     public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)

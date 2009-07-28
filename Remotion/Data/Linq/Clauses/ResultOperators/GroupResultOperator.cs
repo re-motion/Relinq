@@ -143,7 +143,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     {
       ArgumentUtility.CheckNotNull ("input", input);
 
-      var inputSequence = input.GetCurrentSequenceInfo<TSource>().Sequence;
+      var inputSequence = input.GetTypedSequence<TSource>();
 
       var keySelectorLambda = ReverseResolvingExpressionTreeVisitor.ReverseResolve (input.DataInfo.ItemExpression, KeySelector);
       var keySelector = (Func<TSource, TKey>) keySelectorLambda.Compile ();

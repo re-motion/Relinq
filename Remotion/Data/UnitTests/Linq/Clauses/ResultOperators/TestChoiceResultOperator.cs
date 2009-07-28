@@ -30,8 +30,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
 
     public override StreamedValue ExecuteInMemory<T> (StreamedSequence sequence)
     {
-      var sequenceInfo = sequence.GetCurrentSequenceInfo<T> ();
-      return new StreamedValue (sequenceInfo.Sequence.First ());
+      var sequenceInfo = sequence.GetTypedSequence<T> ();
+      return new StreamedValue (sequenceInfo.First ());
     }
 
     public override Type GetResultType (Type inputResultType)

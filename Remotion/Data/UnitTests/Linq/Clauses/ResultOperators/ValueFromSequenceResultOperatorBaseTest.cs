@@ -38,7 +38,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       IStreamedData input = new StreamedSequence (new[] { 1, 2, 3 }, Expression.Constant (0));
       var result = _resultOperator.ExecuteInMemory (input);
 
-      Assert.That (result.GetCurrentSingleValue<int> (), Is.EqualTo (3));
+      Assert.That (result.Value, Is.EqualTo (3));
     }
   }
 }

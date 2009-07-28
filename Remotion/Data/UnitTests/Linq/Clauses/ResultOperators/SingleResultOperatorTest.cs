@@ -67,20 +67,20 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
      public void ExecuteInMemory ()
      {
        IEnumerable items = new[] { 1 };
-       IStreamedData input = new StreamedSequence (items, Expression.Constant (0));
+       var input = new StreamedSequence (items, Expression.Constant (0));
        var result = _resultOperatorWithDefault.ExecuteInMemory (input);
 
-       Assert.That (result.GetCurrentSingleValue<int>(), Is.EqualTo (1));
+       Assert.That (result.Value, Is.EqualTo (1));
      }
 
      [Test]
      public void ExecuteInMemory_Empty_Default ()
      {
        IEnumerable items = new int[0];
-       IStreamedData input = new StreamedSequence (items, Expression.Constant (0));
+       var input = new StreamedSequence (items, Expression.Constant (0));
        var result = _resultOperatorWithDefault.ExecuteInMemory (input);
 
-       Assert.That (result.GetCurrentSingleValue<int>(), Is.EqualTo (0));
+       Assert.That (result.Value, Is.EqualTo (0));
      }
 
      [Test]
@@ -88,7 +88,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
      public void ExecuteInMemory_Empty_NoDefault ()
      {
        IEnumerable items = new int[0];
-       IStreamedData input = new StreamedSequence (items, Expression.Constant (0));
+       var input = new StreamedSequence (items, Expression.Constant (0));
        _resultOperatorNoDefault.ExecuteInMemory (input);
      }
 
@@ -97,7 +97,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
      public void ExecuteInMemory_TooManyItems ()
      {
        IEnumerable items = new[] { 1, 2 };
-       IStreamedData input = new StreamedSequence (items, Expression.Constant (0));
+       var input = new StreamedSequence (items, Expression.Constant (0));
        _resultOperatorWithDefault.ExecuteInMemory (input);
      }
 

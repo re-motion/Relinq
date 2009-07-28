@@ -59,7 +59,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
         throw new NotSupportedException (message);
       }
 
-      var result = method.Invoke (null, new[] { input.GetCurrentSequenceInfo<T> ().Sequence });
+      var result = method.Invoke (null, new[] { input.GetTypedSequence<T> () });
       return new StreamedValue (result);
     }
 

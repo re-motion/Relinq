@@ -54,10 +54,10 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     public void ExecuteInMemory ()
     {
       IEnumerable items = new[] { 1, 2, 3, 4 };
-      IStreamedData input = new StreamedSequence (items, Expression.Constant (0));
-      var result = _resultOperator.ExecuteInMemory (input);
+      var input = new StreamedSequence (items, Expression.Constant (0));
+      var result = _resultOperator.ExecuteInMemory<int> (input);
 
-      Assert.That (result.GetCurrentSingleValue<bool>(), Is.True);
+      Assert.That (result.Value, Is.True);
     }
 
     [Test]

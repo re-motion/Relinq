@@ -36,8 +36,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.StreamedData
     [Test]
     public void Initialization_NullValuePossible ()
     {
-      Assert.That (_dataWithNullValue.CurrentValue, Is.Null);
-      Assert.That (_dataWithNullValue.GetCurrentSingleValue<object>(), Is.Null);
+      Assert.That (_dataWithNullValue.Value, Is.Null);
+      Assert.That (_dataWithNullValue.GetTypedValue<object>(), Is.Null);
     }
 
     [Test]
@@ -55,7 +55,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.StreamedData
     [Test]
     public void GetCurrentSingleValue ()
     {
-      Assert.That (_dataWithIntValue.GetCurrentSingleValue<int> (), Is.EqualTo (0));
+      Assert.That (_dataWithIntValue.GetTypedValue<int> (), Is.EqualTo (0));
     }
 
     [Test]
@@ -63,24 +63,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.StreamedData
         ExpectedMessage = "Cannot retrieve the current value as type 'System.String' because it is of type 'System.Int32'.")]
     public void GetCurrentSingleValue_InvalidType ()
     {
-      _dataWithIntValue.GetCurrentSingleValue<string> ();
+      _dataWithIntValue.GetTypedValue<string> ();
     }
-
-    [Test]
-    [ExpectedException (typeof (InvalidOperationException), 
-        ExpectedMessage = "Cannot retrieve the current value as a sequence because it is a value.")]
-    public void GetCurrentSequence_NoSequence ()
-    {
-      ((IStreamedData) _dataWithIntValue).GetCurrentSequenceInfo<int> ();
-    }
-
-    [Test]
-    [ExpectedException (typeof (InvalidOperationException),
-        ExpectedMessage = "Cannot retrieve the current value as a sequence because it is a value.")]
-    public void GetCurrentSequence_Untyped_NoSequence ()
-    {
-      ((IStreamedData) _dataWithIntValue).GetCurrentSequenceInfo ();
-    }
-   
   }
 }

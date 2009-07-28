@@ -59,10 +59,10 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
 
     public override StreamedSequence ExecuteInMemory<TInput> (StreamedSequence input)
     {
-      var sequence = input.GetCurrentSequenceInfo<TInput> ();
+      var sequence = input.GetTypedSequence<TInput> ();
       var castMethod = typeof (Enumerable).GetMethod ("OfType", new[] { typeof (IEnumerable) }).MakeGenericMethod (SearchedItemType);
-      var result = (IEnumerable) InvokeExecuteMethod (castMethod, sequence.Sequence);
-      var resultItemExpression = Expression.Convert (sequence.ItemExpression, SearchedItemType);
+      var result = (IEnumerable) InvokeExecuteMethod (castMethod, sequence);
+      var resultItemExpression = Expression.Convert (input.DataInfo.ItemExpression, SearchedItemType);
       return new StreamedSequence (result, resultItemExpression);
     }
 
