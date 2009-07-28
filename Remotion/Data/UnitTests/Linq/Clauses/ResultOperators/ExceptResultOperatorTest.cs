@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -74,7 +75,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     public void ExecuteInMemory ()
     {
       var items = new[] { 1, 2, 3 };
-      var input = new StreamedSequence (items, Expression.Constant (0));
+      var input = new StreamedSequence (items, new StreamedSequenceInfo (typeof (int[]), Expression.Constant (0)));
       var result = _resultOperator.ExecuteInMemory<int> (input);
 
       Assert.That (result.GetTypedSequence<int>().ToArray(), Is.EquivalentTo (new[] { 1, 3 }));

@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -106,7 +107,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
           new AnonymousType (555, 5) 
       };
 
-      var input = new StreamedSequence (items, expectedInput);
+      var input = new StreamedSequence (items, new StreamedSequenceInfo (typeof (AnonymousType[]), expectedInput));
 
       var result = _resultOperator.ExecuteInMemory<AnonymousType> (input);
       var sequence = result.GetTypedSequence<IGrouping<int, string>> ();

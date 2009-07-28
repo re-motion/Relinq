@@ -30,7 +30,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     {
     }
 
-    public abstract StreamedSequence ExecuteInMemory<T> (StreamedSequence sequence);
+    public abstract StreamedSequence ExecuteInMemory<T> (StreamedSequence input);
 
     public override IStreamedData ExecuteInMemory (IStreamedData input)
     {

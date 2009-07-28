@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
@@ -36,7 +37,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void SetUp ()
     {
       _resultOperator = new TestResultOperator (CollectionExecutionStrategy.Instance);
-      _executeInMemoryInput = new StreamedSequence (new[] { 1, 2, 3, 4, 3, 2, 1 }, Expression.Constant (0));
+      _executeInMemoryInput = new StreamedSequence (new[] { 1, 2, 3, 4, 3, 2, 1 }, new StreamedSequenceInfo (typeof (int[]), Expression.Constant (0)));
     }
 
     [Test]

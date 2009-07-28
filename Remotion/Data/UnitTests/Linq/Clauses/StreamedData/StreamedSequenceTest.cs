@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
@@ -35,7 +36,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.StreamedData
       _intExpression = Expression.Constant (0);
       _intSequence = new[] { 0, 0, 0 };
 
-      _dataWithIntSequence = new StreamedSequence (_intSequence, _intExpression);
+      _dataWithIntSequence = new StreamedSequence (_intSequence, new StreamedSequenceInfo (typeof (int[]), _intExpression));
     }
 
     [Test]
@@ -49,7 +50,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.StreamedData
     [ExpectedException (typeof (ArgumentTypeException))]
     public void Initialization_CurrentSequence_WrongItemExpression ()
     {
-      new StreamedSequence (new[] { "1", "2", "3" }, _intExpression);
+      new StreamedSequence (new[] { "1", "2", "3" }, new StreamedSequenceInfo (typeof (string[]), _intExpression));
     }
 
     [Test]

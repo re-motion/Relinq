@@ -15,6 +15,7 @@
 // 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
@@ -58,7 +59,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       var student3 = new Student ();
       IEnumerable items = new Student[] { student1, student2, student3 };
       var itemExpression = Expression.Constant (student3, typeof (Student));
-      var input = new StreamedSequence (items, itemExpression);
+      var input = new StreamedSequence (items, new StreamedSequenceInfo (typeof (Student[]), itemExpression));
 
       var result = _resultOperator.ExecuteInMemory<Student> (input);
 

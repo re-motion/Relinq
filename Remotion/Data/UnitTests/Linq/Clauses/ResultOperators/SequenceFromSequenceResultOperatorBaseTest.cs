@@ -2,6 +2,7 @@
 // All rights reserved.
 
 using System;
+using System.Collections;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
@@ -30,7 +31,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     [Test]
     public void ExecuteInMemory ()
     {
-      IStreamedData input = new StreamedSequence (new[] { 1, 2, 3 }, Expression.Constant (0));
+      IStreamedData input = new StreamedSequence (new[] { 1, 2, 3 }, new StreamedSequenceInfo (typeof (int[]), Expression.Constant (0)));
       var result = _resultOperator.ExecuteInMemory (input);
 
       Assert.That (result, Is.SameAs (input));

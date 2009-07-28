@@ -15,6 +15,7 @@
 // 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.StreamedData;
@@ -64,7 +65,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       var sequence = input.GetTypedSequence<TInput> ();
       var castMethod = typeof (Enumerable).GetMethod ("Cast", new[] { typeof (IEnumerable) }).MakeGenericMethod (CastItemType);
       var result = (IEnumerable) InvokeExecuteMethod (castMethod, sequence);
-      return new StreamedSequence (result, GetNewItemExpression (input.DataInfo.ItemExpression));
+      return new StreamedSequence (result.AsQueryable(), (StreamedSequenceInfo) GetOutputDataInfo (input.DataInfo));
     }
 
     public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)

@@ -14,9 +14,11 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.StreamedData;
+using Remotion.Utilities;
 
 namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
 {
@@ -34,7 +36,8 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
 
     public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
     {
-      throw new NotImplementedException();
+      var inputSequenceInfo = ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo>("inputInfo", inputInfo);
+      return new StreamedSequenceInfo (typeof (IEnumerable<>).MakeGenericType (inputSequenceInfo.ItemExpression.Type), inputSequenceInfo.ItemExpression);
     }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)
@@ -49,10 +52,10 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       return base.InvokeGenericExecuteMethod (input, genericMethodCaller);
     }
 
-    public StreamedSequence DistinctExecuteMethod<T> (StreamedSequence arg)
+    public StreamedSequence DistinctExecuteMethod<T> (StreamedSequence input)
     {
-      var currentSequence = arg.GetTypedSequence<T>();
-      return new StreamedSequence (currentSequence.Distinct (), arg.DataInfo.ItemExpression);
+      var currentSequence = input.GetTypedSequence<T>();
+      return new StreamedSequence (currentSequence.Distinct (), (StreamedSequenceInfo) GetOutputDataInfo (input.DataInfo));
     }
 
     // ReSharper disable UnusedTypeParameter

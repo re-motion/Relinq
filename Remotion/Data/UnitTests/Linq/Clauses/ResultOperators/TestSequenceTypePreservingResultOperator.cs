@@ -23,10 +23,10 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
 {
   public class TestSequenceTypePreservingResultOperator : SequenceTypePreservingResultOperatorBase
   {
-    public override StreamedSequence ExecuteInMemory<T> (StreamedSequence sequence)
+    public override StreamedSequence ExecuteInMemory<T> (StreamedSequence input)
     {
-      var sequenceInfo = sequence.GetTypedSequence<T> ();
-      return new StreamedSequence (sequenceInfo.Distinct(), sequence.DataInfo.ItemExpression);
+      var sequenceInfo = input.GetTypedSequence<T> ();
+      return new StreamedSequence (sequenceInfo.Distinct ().AsQueryable (), (StreamedSequenceInfo) GetOutputDataInfo (input.DataInfo));
     }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)

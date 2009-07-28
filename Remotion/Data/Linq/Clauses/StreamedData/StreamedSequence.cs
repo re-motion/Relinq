@@ -31,15 +31,16 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
     /// Initializes a new instance of the <see cref="StreamedSequence"/> class, setting the <see cref="Sequence"/> and 
     /// <see cref="DataInfo"/> properties.
     /// </summary>
-    /// <param name="currentSequence">The current sequence.</param>
-    /// <param name="itemExpression">The item expression describing <paramref name="currentSequence"/>'s items.</param>
-    public StreamedSequence (IEnumerable currentSequence, Expression itemExpression)
+    /// <param name="sequence">The sequence.</param>
+    /// <param name="streamedSequenceInfo">An instance of <see cref="StreamedSequenceInfo"/> describing the sequence.</param>
+    public StreamedSequence (IEnumerable sequence, StreamedSequenceInfo streamedSequenceInfo)
     {
-      ArgumentUtility.CheckNotNull ("currentSequence", currentSequence);
-      ArgumentUtility.CheckNotNull ("itemExpression", itemExpression);
+      ArgumentUtility.CheckNotNull ("sequence", sequence);
+      ArgumentUtility.CheckNotNull ("streamedSequenceInfo", streamedSequenceInfo);
+      ArgumentUtility.CheckType ("sequence", sequence, streamedSequenceInfo.DataType);
 
-      DataInfo = new StreamedSequenceInfo (currentSequence.GetType (), itemExpression);
-      Sequence = currentSequence;
+      DataInfo = streamedSequenceInfo;
+      Sequence = sequence;
     }
 
     public StreamedSequenceInfo DataInfo { get; private set; }

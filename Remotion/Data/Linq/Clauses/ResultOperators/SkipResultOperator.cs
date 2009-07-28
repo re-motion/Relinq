@@ -89,7 +89,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     {
       var sequence = input.GetTypedSequence<T> ();
       var result = sequence.Skip (GetConstantCount());
-      return new StreamedSequence (result, input.DataInfo.ItemExpression);
+      return new StreamedSequence (result.AsQueryable (), (StreamedSequenceInfo) GetOutputDataInfo (input.DataInfo));
     }
 
     public override void TransformExpressions (Func<Expression, Expression> transformation)

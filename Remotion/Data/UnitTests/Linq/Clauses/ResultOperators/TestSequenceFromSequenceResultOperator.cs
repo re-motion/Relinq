@@ -22,9 +22,9 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
 {
   public class TestSequenceFromSequenceResultOperator : SequenceFromSequenceResultOperatorBase
   {
-    public override StreamedSequence ExecuteInMemory<T> (StreamedSequence sequence)
+    public override StreamedSequence ExecuteInMemory<T> (StreamedSequence input)
     {
-      return sequence;
+      return input;
     }
 
     public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)

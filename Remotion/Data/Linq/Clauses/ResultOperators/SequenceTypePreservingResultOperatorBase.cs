@@ -14,6 +14,8 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Remotion.Data.Linq.Clauses.StreamedData;
 using Remotion.Utilities;
 
@@ -27,8 +29,8 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   {
     public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
     {
-      ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
-      return inputInfo;
+      var inputSequenceInfo = ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
+      return new StreamedSequenceInfo (typeof (IQueryable<>).MakeGenericType (inputSequenceInfo.ItemExpression.Type), inputSequenceInfo.ItemExpression);
     }
   }
 }

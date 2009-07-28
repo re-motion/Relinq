@@ -17,10 +17,13 @@ using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Clauses.StreamedData;
+using Remotion.Data.Linq.EagerFetching;
 using Remotion.Data.UnitTests.Linq.Clauses.ResultOperators;
 using Remotion.Utilities;
+using Rhino.Mocks;
 
 namespace Remotion.Data.UnitTests.Linq.Clauses.StreamedData
 {
@@ -86,6 +89,37 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.StreamedData
     {
       var executeMethod = typeof (TestResultOperator).GetMethod ("InvalidExecuteInMemory_TooManyGenericParameters");
       _infoWithIntSequence.MakeClosedGenericExecuteMethod (executeMethod);
+    }
+
+    [Test]
+    public void ExecuteQueryModel ()
+    {
+      var queryModel = ExpressionHelper.CreateQueryModel ();
+      var fetchRequests = new FetchRequestBase[0];
+
+      var executorMock = MockRepository.GenerateMock<IQueryExecutor> ();
+      executorMock.Expect (mock => mock.ExecuteCollection<int> (queryModel, fetchRequests)).Return (new[] { 1, 2, 3 });
+
+      var streamedData = _infoWithIntSequence.ExecuteQueryModel (queryModel, fetchRequests, executorMock);
+
+      executorMock.VerifyAllExpectations ();
+
+      Assert.That (streamedData, Is.InstanceOfType (typeof (StreamedSequence)));
+      Assert.That (streamedData.DataInfo, Is.SameAs (_infoWithIntSequence));
+      Assert.That (streamedData.Value, Is.EqualTo (new[] { 1, 2, 3 }));
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Test")]
+    public void ExecuteQueryModel_WithException ()
+    {
+      var queryModel = ExpressionHelper.CreateQueryModel ();
+      var fetchRequests = new FetchRequestBase[0];
+
+      var executorMock = MockRepository.GenerateMock<IQueryExecutor> ();
+      executorMock.Expect (mock => mock.ExecuteCollection<int> (queryModel, fetchRequests)).Throw (new InvalidOperationException ("Test"));
+
+      _infoWithIntSequence.ExecuteQueryModel (queryModel, fetchRequests, executorMock);
     }
   }
 }

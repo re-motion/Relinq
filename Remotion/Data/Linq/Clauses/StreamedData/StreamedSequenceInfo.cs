@@ -19,6 +19,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq.EagerFetching;
 using Remotion.Utilities;
+using System.Collections;
 
 namespace Remotion.Data.Linq.Clauses.StreamedData
 {
@@ -28,6 +29,17 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
   /// </summary>
   public class StreamedSequenceInfo : IStreamedDataInfo
   {
+    private static readonly MethodInfo s_executeMethod = (typeof (StreamedSequenceInfo).GetMethod ("ExecuteCollectionQueryModel"));
+
+    public static IEnumerable ExecuteCollectionQueryModel<T> (QueryModel queryModel, FetchRequestBase[] fetchRequests, IQueryExecutor executor)
+    {
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+      ArgumentUtility.CheckNotNull ("fetchRequests", fetchRequests);
+      ArgumentUtility.CheckNotNull ("executor", executor);
+
+      return executor.ExecuteCollection<T> (queryModel, fetchRequests);
+    }
+
     public StreamedSequenceInfo (Type dataType, Expression itemExpression)
     {
       ArgumentUtility.CheckNotNull ("dataType", dataType);
@@ -80,7 +92,19 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
 
     public IStreamedData ExecuteQueryModel (QueryModel queryModel, FetchRequestBase[] fetchRequests, IQueryExecutor executor)
     {
-      throw new NotImplementedException();
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+      ArgumentUtility.CheckNotNull ("fetchRequests", fetchRequests);
+      ArgumentUtility.CheckNotNull ("executor", executor);
+
+      var executeMethod = s_executeMethod.MakeGenericMethod (ItemExpression.Type);
+
+      // wrap executeMethod into a delegate instead of calling Invoke in order to allow for exceptions that are bubbled up correctly
+      var func = (Func<QueryModel, FetchRequestBase[], IQueryExecutor, IEnumerable>)
+          Delegate.CreateDelegate (typeof (Func<QueryModel, FetchRequestBase[], IQueryExecutor, IEnumerable>), executeMethod);
+      var result = func (queryModel, fetchRequests, executor);
+
+      return new StreamedSequence (result, this);
     }
+
   }
 }

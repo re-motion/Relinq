@@ -20,6 +20,7 @@ using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Clauses.StreamedData;
 using Remotion.Utilities;
+using System.Collections.Generic;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
@@ -152,7 +153,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       var elementSelector = (Func<TSource, TElement>) elementSelectorLambda.Compile ();
 
       var resultSequence = inputSequence.GroupBy (keySelector, elementSelector);
-      return new StreamedSequence (resultSequence, GetNewItemExpression());
+      return new StreamedSequence (resultSequence.AsQueryable(), (StreamedSequenceInfo) GetOutputDataInfo (input.DataInfo));
     }
 
     public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)

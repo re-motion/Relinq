@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
@@ -77,16 +78,9 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     public override StreamedSequence ExecuteInMemory<T> (StreamedSequence input)
     {
       var sequence = input.GetTypedSequence<T> ();
-      if (OptionalDefaultValue != null)
-      {
-        var result = sequence.DefaultIfEmpty ((T) GetConstantOptionalDefaultValue ());
-        return new StreamedSequence (result, input.DataInfo.ItemExpression);
-      }
-      else
-      {
-        var result = sequence.DefaultIfEmpty ();
-        return new StreamedSequence (result, input.DataInfo.ItemExpression);
-      }
+      IEnumerable<T> result = 
+          OptionalDefaultValue != null ? sequence.DefaultIfEmpty ((T) GetConstantOptionalDefaultValue ()) : sequence.DefaultIfEmpty ();
+      return new StreamedSequence (result.AsQueryable(), (StreamedSequenceInfo) GetOutputDataInfo (input.DataInfo));
     }
 
     public override void TransformExpressions (Func<Expression, Expression> transformation)
