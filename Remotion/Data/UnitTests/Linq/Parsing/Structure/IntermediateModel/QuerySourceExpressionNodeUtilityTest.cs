@@ -28,12 +28,12 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
   {
     private IQuerySourceExpressionNode _node;
     private IQuerySource _querySource;
-    private QuerySourceClauseMapping _clauseMapping;
+    private ClauseGenerationContext _context;
 
     [SetUp]
     public void SetUp ()
     {
-      _clauseMapping = new QuerySourceClauseMapping();
+      _context = new ClauseGenerationContext (new MethodCallExpressionNodeTypeRegistry());
       _node = new MainSourceExpressionNode ("x", Expression.Constant (new int[0]));
       _querySource = new MainFromClause ("x", typeof (int), Expression.Constant (new int[0]));
     }
@@ -41,9 +41,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void GetQuerySourceForNode ()
     {
-      _clauseMapping.AddMapping (_node, _querySource);
+      _context.AddContextInfo (_node, _querySource);
 
-      Assert.That (QuerySourceExpressionNodeUtility.GetQuerySourceForNode (_node, _clauseMapping), Is.SameAs (_querySource));
+      Assert.That (QuerySourceExpressionNodeUtility.GetQuerySourceForNode (_node, _context), Is.SameAs (_querySource));
     }
 
     [Test]
@@ -51,17 +51,17 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
         + "Be sure to call Apply before calling methods that require IQuerySources, and pass in the same QuerySourceClauseMapping to both.")]
     public void GetQuerySourceForNode_NoClauseRegistered ()
     {
-      QuerySourceExpressionNodeUtility.GetQuerySourceForNode (_node, _clauseMapping);
+      QuerySourceExpressionNodeUtility.GetQuerySourceForNode (_node, _context);
     }
 
     [Test]
     public void ReplaceParameterWithReference ()
     {
-      _clauseMapping.AddMapping (_node, _querySource);
+      _context.AddContextInfo (_node, _querySource);
 
       var parameter = Expression.Parameter (typeof (int), "x");
       var expression = Expression.MakeBinary (ExpressionType.Add, Expression.Constant (1), parameter);
-      var result = QuerySourceExpressionNodeUtility.ReplaceParameterWithReference (_node, parameter, expression, _clauseMapping);
+      var result = QuerySourceExpressionNodeUtility.ReplaceParameterWithReference (_node, parameter, expression, _context);
 
       var expected = ExpressionHelper.Resolve<int, int> (_querySource, (i => 1 + i));
 
@@ -75,7 +75,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var parameter = Expression.Parameter (typeof (int), "x");
       var expression = Expression.MakeBinary (ExpressionType.Add, Expression.Constant (1), parameter);
-      QuerySourceExpressionNodeUtility.ReplaceParameterWithReference (_node, parameter, expression, _clauseMapping);
+      QuerySourceExpressionNodeUtility.ReplaceParameterWithReference (_node, parameter, expression, _context);
     }
   }
 }

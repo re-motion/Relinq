@@ -53,7 +53,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     {
       var expression = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
       var clause = ExpressionHelper.CreateMainFromClause ();
-      QuerySourceClauseMapping.AddMapping (_node, clause);
+      ClauseGenerationContext.AddContextInfo (_node, clause);
 
       var result = _node.Resolve (expression.Parameters[0], expression.Body, ClauseGenerationContext);
 

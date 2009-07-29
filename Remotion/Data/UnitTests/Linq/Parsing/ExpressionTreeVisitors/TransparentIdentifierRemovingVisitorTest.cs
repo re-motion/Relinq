@@ -300,7 +300,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
       nodeTypeRegistry.Register (WhereExpressionNode.SupportedMethods, typeof (WhereExpressionNode));
       
       var selectNode = (SelectExpressionNode) new ExpressionTreeParser (nodeTypeRegistry).ParseTree (query.Expression);
-      var clauseGenerationContext = new ClauseGenerationContext (new QuerySourceClauseMapping(), new MethodCallExpressionNodeTypeRegistry());
+      var clauseGenerationContext = new ClauseGenerationContext (new MethodCallExpressionNodeTypeRegistry());
 
       var selectManyNode = (SelectManyExpressionNode) selectNode.Source.Source;
       var mainSourceExpressionNode = (MainSourceExpressionNode) selectManyNode.Source;

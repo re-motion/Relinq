@@ -121,7 +121,6 @@
     <Compile Include="Parsing\Structure\IntermediateModel\ReverseExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\SkipExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\UnionExpressionNode.cs" />
-    <Compile Include="Parsing\Structure\QuerySourceClauseMapping.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\CastExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\IExpressionNodeParseInfo.cs" />
     <Compile Include="Parsing\ThrowingExpressionTreeVisitor.cs" />

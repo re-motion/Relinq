@@ -59,7 +59,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void GetResolvedResultSelector ()
     {
-      ClauseGenerationContext.ClauseMapping.AddMapping (_node, _groupJoinClause);
+      ClauseGenerationContext.AddContextInfo (_node, _groupJoinClause);
 
       var resolvedExpression = _node.GetResolvedResultSelector (ClauseGenerationContext);
 
@@ -81,7 +81,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     [Test]
     public void Resolve ()
     {
-      ClauseGenerationContext.ClauseMapping.AddMapping (_node, _groupJoinClause);
+      ClauseGenerationContext.AddContextInfo (_node, _groupJoinClause);
 
       var parameter = Expression.Parameter (typeof (string), "s");
       var result = _node.Resolve (parameter, parameter, ClauseGenerationContext);
@@ -116,7 +116,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       _node.Apply (QueryModel, ClauseGenerationContext);
       var clause = (GroupJoinClause) QueryModel.BodyClauses[0];
 
-      Assert.That (QuerySourceClauseMapping.GetClause (_node), Is.SameAs (clause));
+      Assert.That (ClauseGenerationContext.GetContextInfo (_node), Is.SameAs (clause));
     }
 
     [Test]

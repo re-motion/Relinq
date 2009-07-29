@@ -34,21 +34,21 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     /// <param name="referencedNode">The referenced node.</param>
     /// <param name="parameterToReplace">The parameter to replace with a <see cref="QuerySourceReferenceExpression"/>.</param>
     /// <param name="expression">The expression in which to replace the parameter.</param>
-    /// <param name="querySourceClauseMapping">The query source clause mapping.</param>
+    /// <param name="context">The clause generation context.</param>
     /// <returns><paramref name="expression"/>, with <paramref name="parameterToReplace"/> replaced with a <see cref="QuerySourceReferenceExpression"/>
     /// pointing to the clause corresponding to <paramref name="referencedNode"/>.</returns>
     public static Expression ReplaceParameterWithReference (
         IQuerySourceExpressionNode referencedNode, 
         ParameterExpression parameterToReplace, 
         Expression expression, 
-        QuerySourceClauseMapping querySourceClauseMapping)
+        ClauseGenerationContext context)
     {
       ArgumentUtility.CheckNotNull ("referencedNode", referencedNode);
       ArgumentUtility.CheckNotNull ("parameterToReplace", parameterToReplace);
       ArgumentUtility.CheckNotNull ("expression", expression);
-      ArgumentUtility.CheckNotNull ("querySourceClauseMapping", querySourceClauseMapping);
+      ArgumentUtility.CheckNotNull ("context", context);
 
-      var clause = GetQuerySourceForNode (referencedNode, querySourceClauseMapping);
+      var clause = GetQuerySourceForNode (referencedNode, context);
       var referenceExpression = new QuerySourceReferenceExpression (clause);
 
       return ReplacingExpressionTreeVisitor.Replace (parameterToReplace, referenceExpression, expression);
@@ -56,16 +56,16 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     /// <summary>
     /// Gets the <see cref="IQuerySource"/> corresponding to the given <paramref name="node"/>, throwing an <see cref="InvalidOperationException"/>
-    /// if no such clause has been registered in the given <paramref name="querySourceClauseMapping"/>.
+    /// if no such clause has been registered in the given <paramref name="context"/>.
     /// </summary>
     /// <param name="node">The node for which the <see cref="IQuerySource"/> should be returned.</param>
-    /// <param name="querySourceClauseMapping">The query source clause mapping.</param>
+    /// <param name="context">The clause generation context.</param>
     /// <returns>The <see cref="IQuerySource"/> corresponding to <paramref name="node"/>.</returns>
-    public static IQuerySource GetQuerySourceForNode (IQuerySourceExpressionNode node, QuerySourceClauseMapping querySourceClauseMapping)
+    public static IQuerySource GetQuerySourceForNode (IQuerySourceExpressionNode node, ClauseGenerationContext context)
     {
       try
       {
-        return querySourceClauseMapping.GetClause (node);
+        return (IQuerySource) context.GetContextInfo (node);
       }
       catch (KeyNotFoundException ex)
       {

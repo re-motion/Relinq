@@ -102,7 +102,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void GetResolvedExpression_UsesNodeTypeRegistry ()
     {
       var nodeTypeRegistry = new MethodCallExpressionNodeTypeRegistry ();
-      var context = new ClauseGenerationContext (QuerySourceClauseMapping, nodeTypeRegistry);
+      var context = new ClauseGenerationContext (nodeTypeRegistry);
+
+      SourceNode.Apply (null, context);
 
       var unresolvedExpressionWithSubQuery =
           ExpressionHelper.CreateLambdaExpression<int, int> (i => (from x in ExpressionHelper.CreateStudentQueryable () select i).Count ());

@@ -41,7 +41,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 
       _studentSource = new MainSourceExpressionNode ("s", Expression.Constant (new[] { new Student () }));
       _studentClause = ExpressionHelper.CreateMainFromClause_Student ();
-      ClauseGenerationContext.ClauseMapping.AddMapping (_studentSource, _studentClause);
+      ClauseGenerationContext.AddContextInfo (_studentSource, _studentClause);
 
       _ofTypeWithGoodStudentMethod = ReflectionUtility.GetMethod (() => ((IQueryable<Student[]>) null).OfType<GoodStudent> ());
       _node = new OfTypeExpressionNode (CreateParseInfo (_studentSource, "s", _ofTypeWithGoodStudentMethod));

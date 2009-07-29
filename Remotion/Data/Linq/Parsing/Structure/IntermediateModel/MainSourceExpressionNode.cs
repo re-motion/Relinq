@@ -60,7 +60,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
           this, 
           inputParameter, 
           expressionToBeResolved, 
-          clauseGenerationContext.ClauseMapping);
+          clauseGenerationContext);
     }
 
     public QueryModel Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
@@ -80,7 +80,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
           QuerySourceElementType,
           ParsedExpression);
 
-      clauseGenerationContext.ClauseMapping.AddMapping (this, fromClause);
+      clauseGenerationContext.AddContextInfo (this, fromClause);
       return fromClause;
     }
   }

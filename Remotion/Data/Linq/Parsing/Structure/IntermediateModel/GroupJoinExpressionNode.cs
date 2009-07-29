@@ -77,7 +77,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public Expression GetResolvedResultSelector (ClauseGenerationContext clauseGenerationContext)
     {
       return _cachedResultSelector.GetOrCreate (r => r.GetResolvedExpression (
-          QuerySourceExpressionNodeUtility.ReplaceParameterWithReference (this, ResultSelector.Parameters[1], ResultSelector.Body, clauseGenerationContext.ClauseMapping),
+          QuerySourceExpressionNodeUtility.ReplaceParameterWithReference (this, ResultSelector.Parameters[1], ResultSelector.Body, clauseGenerationContext),
           ResultSelector.Parameters[0], clauseGenerationContext));
     }
 
@@ -100,7 +100,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       var joinClause = JoinExpressionNode.CreateJoinClause (clauseGenerationContext);
       var groupJoinClause = new GroupJoinClause (ResultSelector.Parameters[1].Name, ResultSelector.Parameters[1].Type, joinClause);
 
-      clauseGenerationContext.ClauseMapping.AddMapping (this, groupJoinClause);
+      clauseGenerationContext.AddContextInfo (this, groupJoinClause);
       queryModel.BodyClauses.Add (groupJoinClause);
 
       var selectClause = queryModel.SelectClause;

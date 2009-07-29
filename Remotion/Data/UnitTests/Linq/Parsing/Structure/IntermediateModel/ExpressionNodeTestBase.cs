@@ -34,22 +34,18 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public virtual void SetUp ()
     {
       SourceNode = ExpressionNodeObjectMother.CreateMainSource();
-      QuerySourceClauseMapping = new QuerySourceClauseMapping();
       ClauseGenerationContext = new ClauseGenerationContext(
-          QuerySourceClauseMapping, 
           MethodCallExpressionNodeTypeRegistry.CreateDefault());
 
       QueryModel = SourceNode.Apply (null, ClauseGenerationContext);
       SourceClause = QueryModel.MainFromClause;
       SourceReference = (QuerySourceReferenceExpression) QueryModel.SelectClause.Selector;
-
     }
 
     public MainSourceExpressionNode SourceNode { get; private set; }
     public MainFromClause SourceClause { get; private set; }
     public QuerySourceReferenceExpression SourceReference { get; private set; }
     public ClauseGenerationContext ClauseGenerationContext { get; private set; }
-    public QuerySourceClauseMapping QuerySourceClauseMapping { get; private set; }
     public QueryModel QueryModel { get; private set; }
 
     protected MethodInfo GetGenericMethodDefinition<TReturn> (Expression<Func<IQueryable<object>, TReturn>> methodCallLambda)

@@ -125,7 +125,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       _node.Apply (QueryModel, ClauseGenerationContext);
       var clause = (AdditionalFromClause) QueryModel.BodyClauses[0];
 
-      Assert.That (QuerySourceClauseMapping.GetClause (_node), Is.SameAs (clause));
+      Assert.That (ClauseGenerationContext.GetContextInfo (_node), Is.SameAs (clause));
     }
 
     [Test]

@@ -80,7 +80,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void Resolve ()
     {
       var querySource = ExpressionHelper.CreateGroupResultOperator ();
-      ClauseGenerationContext.ClauseMapping.AddMapping (_nodeWithoutElementSelector, querySource);
+      ClauseGenerationContext.AddContextInfo (_nodeWithoutElementSelector, querySource);
 
       var lambdaExpression =
           ExpressionHelper.CreateLambdaExpression<IGrouping<string, string>, Tuple<string, int>> (g => Tuple.NewTuple (g.Key, g.Count ()));
@@ -137,7 +137,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       _nodeWithElementSelector.Apply (QueryModel, ClauseGenerationContext);
 
       var resultOperator = (GroupResultOperator) QueryModel.ResultOperators[0];
-      Assert.That (QuerySourceClauseMapping.GetClause (_nodeWithElementSelector), Is.SameAs (resultOperator));
+      Assert.That (ClauseGenerationContext.GetContextInfo (_nodeWithElementSelector), Is.SameAs (resultOperator));
     }
 
     [Test]

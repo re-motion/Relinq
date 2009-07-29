@@ -81,7 +81,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
           this, 
           inputParameter, 
           expressionToBeResolved, 
-          clauseGenerationContext.ClauseMapping);
+          clauseGenerationContext);
     }
 
     protected override ResultOperatorBase CreateResultOperator (ClauseGenerationContext clauseGenerationContext)
@@ -97,7 +97,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       }
       
       var resultOperator = new GroupResultOperator (AssociatedIdentifier, resolvedKeySelector, resolvedElementSelector);
-      clauseGenerationContext.ClauseMapping.AddMapping (this, resultOperator);
+      clauseGenerationContext.AddContextInfo (this, resultOperator);
       return resultOperator;
     }
   }

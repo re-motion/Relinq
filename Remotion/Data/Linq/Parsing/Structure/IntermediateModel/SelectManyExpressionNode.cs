@@ -80,7 +80,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
       return _cachedResultSelector.GetOrCreate (
           r => r.GetResolvedExpression (
-                   QuerySourceExpressionNodeUtility.ReplaceParameterWithReference (this, ResultSelector.Parameters[1], ResultSelector.Body, clauseGenerationContext.ClauseMapping),
+                   QuerySourceExpressionNodeUtility.ReplaceParameterWithReference (this, ResultSelector.Parameters[1], ResultSelector.Body, clauseGenerationContext),
                    ResultSelector.Parameters[0],
                    clauseGenerationContext));
     }
@@ -105,7 +105,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       var clause = new AdditionalFromClause (ResultSelector.Parameters[1].Name, ResultSelector.Parameters[1].Type, resolvedCollectionSelector);
       queryModel.BodyClauses.Add (clause);
 
-      clauseGenerationContext.ClauseMapping.AddMapping (this, clause);
+      clauseGenerationContext.AddContextInfo (this, clause);
 
       var selectClause = queryModel.SelectClause;
       selectClause.Selector = GetResolvedResultSelector (clauseGenerationContext);

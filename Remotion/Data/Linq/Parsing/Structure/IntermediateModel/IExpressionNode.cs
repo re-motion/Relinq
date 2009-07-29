@@ -48,8 +48,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     /// by the projection data coming out of this <see cref="IExpressionNode"/>.</param>
     /// <param name="expressionToBeResolved">The expression to be resolved. Any occurrence of <paramref name="inputParameter"/> in this expression
     /// is replaced.</param>
-    /// <param name="clauseGenerationContext">Context information used during the current parsing process. The <see cref="QuerySourceClauseMapping"/>
-    /// contained in this structure maps <see cref="IQuerySourceExpressionNode"/>s  to the clauses created from them. Implementers that also implement 
+    /// <param name="clauseGenerationContext">Context information used during the current parsing process. This structure maps 
+    /// <see cref="IQuerySourceExpressionNode"/>s  to the clauses created from them. Implementers that also implement 
     /// <see cref="IQuerySourceExpressionNode"/> (such as  <see cref="MainSourceExpressionNode"/> or <see cref="SelectManyExpressionNode"/>) must add 
     /// their clauses to the mapping in <see cref="Apply"/> if they want to be able to implement <see cref="Resolve"/> correctly.</param>
     /// <returns>An equivalent of <paramref name="expressionToBeResolved"/> with each occurrence of <paramref name="inputParameter"/> replaced by
@@ -64,8 +64,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     /// add or replace <see cref="ResultOperatorBase"/> objects, or even create a completely new <see cref="QueryModel"/>, depending on their semantics.
     /// </summary>
     /// <param name="queryModel">The query model this node should be applied to.</param>
-    /// <param name="clauseGenerationContext">Context information used during the current parsing process. The <see cref="QuerySourceClauseMapping"/>
-    /// contained in this structure maps <see cref="IQuerySourceExpressionNode"/>s to the clauses created from them. Implementers that 
+    /// <param name="clauseGenerationContext">Context information used during the current parsing process. This structure maps 
+    /// <see cref="IQuerySourceExpressionNode"/>s to the clauses created from them. Implementers that 
     /// also implement <see cref="IQuerySourceExpressionNode"/> (such as 
     /// <see cref="MainSourceExpressionNode"/> or <see cref="SelectManyExpressionNode"/>) must add their clauses to the mapping in 
     /// <see cref="Apply"/> in order to be able to implement <see cref="Resolve"/> correctly.</param>

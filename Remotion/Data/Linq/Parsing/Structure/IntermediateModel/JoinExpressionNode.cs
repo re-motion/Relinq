@@ -90,13 +90,13 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     {
       return _cachedInnerKeySelector.GetOrCreate (
           r => QuerySourceExpressionNodeUtility.ReplaceParameterWithReference (
-              this, InnerKeySelector.Parameters[0], InnerKeySelector.Body, clauseGenerationContext.ClauseMapping));
+              this, InnerKeySelector.Parameters[0], InnerKeySelector.Body, clauseGenerationContext));
     }
 
     public Expression GetResolvedResultSelector (ClauseGenerationContext clauseGenerationContext)
     {
       return _cachedResultSelector.GetOrCreate (r => r.GetResolvedExpression (
-          QuerySourceExpressionNodeUtility.ReplaceParameterWithReference (this, ResultSelector.Parameters[1], ResultSelector.Body, clauseGenerationContext.ClauseMapping),
+          QuerySourceExpressionNodeUtility.ReplaceParameterWithReference (this, ResultSelector.Parameters[1], ResultSelector.Body, clauseGenerationContext),
           ResultSelector.Parameters[0], clauseGenerationContext));
     }
 
@@ -135,7 +135,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
           GetResolvedOuterKeySelector (clauseGenerationContext),
           dummyInnerKeySelector);
       
-      clauseGenerationContext.ClauseMapping.AddMapping (this, joinClause);
+      clauseGenerationContext.AddContextInfo (this, joinClause);
 
       joinClause.InnerKeySelector = GetResolvedInnerKeySelector (clauseGenerationContext);
       return joinClause;

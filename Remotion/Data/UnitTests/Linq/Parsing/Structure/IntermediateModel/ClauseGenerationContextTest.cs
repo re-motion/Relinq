@@ -20,14 +20,13 @@ using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
-using Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
+namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 {
   [TestFixture]
-  public class QuerySourceClauseMappingTest
+  public class ClauseGenerationContextTest
   {
-    private QuerySourceClauseMapping _mapping;
+    private ClauseGenerationContext _context;
     private MainSourceExpressionNode _node;
     private MainFromClause _clause;
 
@@ -35,47 +34,47 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     public void SetUp ()
     {
       _node = ExpressionNodeObjectMother.CreateMainSource ();
-      _mapping = new QuerySourceClauseMapping ();
+      _context = new ClauseGenerationContext (new MethodCallExpressionNodeTypeRegistry ());
       _clause = ExpressionHelper.CreateMainFromClause ();
     }
 
     [Test]
-    public void AddMapping ()
+    public void AddContextInfo ()
     {
-      _mapping.AddMapping (_node, _clause);
+      _context.AddContextInfo (_node, _clause);
 
-      Assert.That (_mapping.GetClause (_node), Is.Not.Null);
+      Assert.That (_context.GetContextInfo (_node), Is.Not.Null);
     }
 
     [Test]
-    public void AddMapping_IncreasesCount ()
+    public void AddContextInfo_IncreasesCount ()
     {
-      _mapping.AddMapping (_node, _clause);
+      _context.AddContextInfo (_node, _clause);
 
-      Assert.That (_mapping.Count, Is.EqualTo (1));
+      Assert.That (_context.Count, Is.EqualTo (1));
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Node already has an associated clause.")]
-    public void AddMappingTwice ()
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Node already has associated context info.")]
+    public void AddContextInfoTwice ()
     {
-      _mapping.AddMapping (_node, _clause);
-      _mapping.AddMapping (_node, _clause);
+      _context.AddContextInfo (_node, _clause);
+      _context.AddContextInfo (_node, _clause);
     }
 
     [Test]
-    public void GetClause ()
+    public void GetContextInfo ()
     {
-      _mapping.AddMapping (_node, _clause);
+      _context.AddContextInfo (_node, _clause);
 
-      Assert.That (_mapping.GetClause (_node), Is.SameAs (_clause));
+      Assert.That (_context.GetContextInfo (_node), Is.SameAs (_clause));
     }
 
     [Test]
-    [ExpectedException (typeof (KeyNotFoundException), ExpectedMessage = "Node has no associated clause.")]
-    public void GetClause_ThrowsException ()
+    [ExpectedException (typeof (KeyNotFoundException), ExpectedMessage = "Node has no associated context info.")]
+    public void GetContextInfo_ThrowsException ()
     {
-      _mapping.GetClause (_node);
+      _context.GetContextInfo (_node);
     }
     
   }

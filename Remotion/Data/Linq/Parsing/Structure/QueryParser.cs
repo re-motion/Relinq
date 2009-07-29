@@ -69,7 +69,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       ArgumentUtility.CheckNotNull ("expressionTreeRoot", expressionTreeRoot);
 
       var node = _expressionTreeParser.ParseTree (expressionTreeRoot);
-      var clauseGenerationContext = new ClauseGenerationContext (new QuerySourceClauseMapping(), _expressionTreeParser.NodeTypeRegistry);
+      var clauseGenerationContext = new ClauseGenerationContext (_expressionTreeParser.NodeTypeRegistry);
 
       QueryModel queryModel = ApplyAllNodes (node, clauseGenerationContext);
       return queryModel;
