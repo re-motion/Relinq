@@ -51,8 +51,18 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       var input = new StreamedSequenceInfo (typeof (Student[]), studentExpression);
       var result = _resultOperatorNoDefaultWhenEmpty.GetOutputDataInfo (input);
 
-      Assert.That (result, Is.InstanceOfType (typeof (StreamedValueInfo)));
+      Assert.That (result, Is.InstanceOfType (typeof (StreamedSingleValueInfo)));
       Assert.That (result.DataType, Is.SameAs (typeof (Student)));
+    }
+
+    [Test]
+    public void GetOutputDataInfo_DefaultWhenEmpty ()
+    {
+      var studentExpression = Expression.Constant (new Student ());
+      var input = new StreamedSequenceInfo (typeof (Student[]), studentExpression);
+
+      Assert.That (((StreamedSingleValueInfo) _resultOperatorWithDefaultWhenEmpty.GetOutputDataInfo (input)).ReturnDefaultWhenEmpty, Is.True);
+      Assert.That (((StreamedSingleValueInfo) _resultOperatorNoDefaultWhenEmpty.GetOutputDataInfo (input)).ReturnDefaultWhenEmpty, Is.False);
     }
 
     [Test]

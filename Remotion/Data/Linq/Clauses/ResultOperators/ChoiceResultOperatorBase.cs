@@ -25,15 +25,18 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   /// </summary>
   public abstract class ChoiceResultOperatorBase : ValueFromSequenceResultOperatorBase
   {
+    private readonly bool _returnDefaultWhenEmpty;
+
     protected ChoiceResultOperatorBase (bool returnDefaultWhenEmpty)
       : base (returnDefaultWhenEmpty ? SingleExecutionStrategy.InstanceWithDefaultWhenEmpty : SingleExecutionStrategy.InstanceNoDefaultWhenEmpty)
     {
+      _returnDefaultWhenEmpty = returnDefaultWhenEmpty;
     }
 
     public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
     {
       var inputSequenceInfo = ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
-      return new StreamedSingleValueInfo (inputSequenceInfo.ItemExpression.Type);
+      return new StreamedSingleValueInfo (inputSequenceInfo.ItemExpression.Type, _returnDefaultWhenEmpty);
     }
   }
 }

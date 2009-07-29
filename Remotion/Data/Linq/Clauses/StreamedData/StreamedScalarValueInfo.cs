@@ -30,15 +30,6 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
   {
     private static readonly MethodInfo s_executeMethod = (typeof (StreamedScalarValueInfo).GetMethod ("ExecuteScalarQueryModel"));
 
-    public static object ExecuteScalarQueryModel<T> (QueryModel queryModel, FetchRequestBase[] fetchRequests, IQueryExecutor executor)
-    {
-      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
-      ArgumentUtility.CheckNotNull ("fetchRequests", fetchRequests);
-      ArgumentUtility.CheckNotNull ("executor", executor);
-
-      return executor.ExecuteScalar<T> (queryModel, fetchRequests);
-    }
-
     public StreamedScalarValueInfo (Type dataType)
         : base(dataType)
     {
@@ -54,10 +45,19 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
       
       // wrap executeMethod into a delegate instead of calling Invoke in order to allow for exceptions that are bubbled up correctly
       var func = (Func<QueryModel, FetchRequestBase[], IQueryExecutor, object>) 
-          Delegate.CreateDelegate (typeof (Func<QueryModel, FetchRequestBase[], IQueryExecutor, object>), executeMethod);
+          Delegate.CreateDelegate (typeof (Func<QueryModel, FetchRequestBase[], IQueryExecutor, object>), this, executeMethod);
       var result = func (queryModel, fetchRequests, executor);
 
       return new StreamedValue (result, this);
+    }
+
+    public object ExecuteScalarQueryModel<T> (QueryModel queryModel, FetchRequestBase[] fetchRequests, IQueryExecutor executor)
+    {
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+      ArgumentUtility.CheckNotNull ("fetchRequests", fetchRequests);
+      ArgumentUtility.CheckNotNull ("executor", executor);
+
+      return executor.ExecuteScalar<T> (queryModel, fetchRequests);
     }
   }
 }

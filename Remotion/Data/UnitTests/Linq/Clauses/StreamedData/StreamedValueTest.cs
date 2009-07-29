@@ -30,7 +30,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.StreamedData
     public void SetUp ()
     {
       _dataWithIntValue = new StreamedValue (0, new StreamedScalarValueInfo (typeof(int)));
-      _dataWithNullValue = new StreamedValue (null, new StreamedSingleValueInfo(typeof(object)));
+      _dataWithNullValue = new StreamedValue (null, new StreamedSingleValueInfo (typeof(object), false));
     }
 
     [Test]

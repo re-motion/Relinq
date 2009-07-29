@@ -14,8 +14,11 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Reflection;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.EagerFetching;
+using Remotion.Utilities;
+using System.Linq;
 
 namespace Remotion.Data.Linq.Clauses.StreamedData
 {
@@ -25,14 +28,50 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
   /// </summary>
   public class StreamedSingleValueInfo : StreamedValueInfo
   {
-    public StreamedSingleValueInfo (Type dataType)
+    private static readonly MethodInfo s_executeMethod = (typeof (StreamedSingleValueInfo).GetMethod ("ExecuteSingleQueryModel"));
+
+    private readonly bool _returnDefaultWhenEmpty;
+
+    public StreamedSingleValueInfo (Type dataType, bool returnDefaultWhenEmpty)
         : base(dataType)
     {
+      _returnDefaultWhenEmpty = returnDefaultWhenEmpty;
+    }
+
+    public bool ReturnDefaultWhenEmpty
+    {
+      get { return _returnDefaultWhenEmpty; }
     }
 
     public override IStreamedData ExecuteQueryModel (QueryModel queryModel, FetchRequestBase[] fetchRequests, IQueryExecutor executor)
     {
-      throw new NotImplementedException();
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+      ArgumentUtility.CheckNotNull ("fetchRequests", fetchRequests);
+      ArgumentUtility.CheckNotNull ("executor", executor);
+
+      var executeMethod = s_executeMethod.MakeGenericMethod (DataType);
+      // wrap executeMethod into a delegate instead of calling Invoke in order to allow for exceptions that are bubbled up correctly
+      var func = (Func<QueryModel, FetchRequestBase[], IQueryExecutor, object>)
+          Delegate.CreateDelegate (typeof (Func<QueryModel, FetchRequestBase[], IQueryExecutor, object>), this, executeMethod);
+      var result = func (queryModel, fetchRequests, executor);
+
+      return new StreamedValue (result, this);
+    }
+
+    public T ExecuteSingleQueryModel<T> (QueryModel queryModel, FetchRequestBase[] fetchRequests, IQueryExecutor executor)
+    {
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+      ArgumentUtility.CheckNotNull ("fetchRequests", fetchRequests);
+      ArgumentUtility.CheckNotNull ("executor", executor);
+
+      // TODO 1330: Call ExecuteSingle, pass in _returnDefaultWhenEmpty, do not call Single(OrDefault)
+      // return executor.ExecuteSingle<T> (queryModel, fetchRequests, _returnDefaultWhenEmpty);
+
+      var result = executor.ExecuteCollection<T> (queryModel, fetchRequests);
+      if (_returnDefaultWhenEmpty)
+        return result.SingleOrDefault();
+      else
+        return result.Single ();
     }
   }
 }
