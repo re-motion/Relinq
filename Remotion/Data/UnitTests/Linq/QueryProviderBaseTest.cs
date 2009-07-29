@@ -18,6 +18,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
@@ -42,6 +43,9 @@ namespace Remotion.Data.UnitTests.Linq
     private MethodCallExpressionNodeTypeRegistry _nodeTypeRegistry;
     private TestQueryProvider _queryProviderWithSpecificRegistry;
 
+    private PropertyInfo _scoresMember;
+    private PropertyInfo _friendsMember;
+
     [SetUp]
     public void SetUp()
     {
@@ -51,6 +55,9 @@ namespace Remotion.Data.UnitTests.Linq
       _nodeTypeRegistry = new MethodCallExpressionNodeTypeRegistry ();
       _queryProviderWithSpecificRegistry = new TestQueryProvider (_executorMock, _nodeTypeRegistry);
       _queryableWithExecutorMock = new TestQueryable<Student> (_executorMock);
+
+      _scoresMember = typeof (Student).GetProperty ("Scores");
+      _friendsMember = typeof (Student).GetProperty ("Friends");
     }
 
     [Test]
@@ -245,8 +252,7 @@ namespace Remotion.Data.UnitTests.Linq
       var requests = _queryProvider.GetFetchRequests (ref expression);
 
       Assert.That (requests.Length, Is.EqualTo (2));
-      Assert.That (requests.Select (fr => fr.RelatedObjectSelector).ToArray (), 
-          Is.EquivalentTo (new Expression[] { relatedObjectSelector1, relatedObjectSelector2 }));
+      Assert.That (requests.Select (fr => fr.RelationMember).ToArray (), Is.EquivalentTo (new[] { _friendsMember, _scoresMember }));
       Assert.That (expression, Is.Not.SameAs (originalExpression));
       Assert.That (expression, Is.SameAs (innerExpression));
     }
@@ -263,9 +269,9 @@ namespace Remotion.Data.UnitTests.Linq
       var requests = _queryProvider.GetFetchRequests (ref expression);
 
       Assert.That (requests.Length, Is.EqualTo (1));
-      Assert.That (requests.Single ().RelatedObjectSelector, Is.SameAs (relatedObjectSelector1));
+      Assert.That (requests.Single ().RelationMember, Is.SameAs (_friendsMember));
       Assert.That (requests.Single ().InnerFetchRequests.Count (), Is.EqualTo (1));
-      Assert.That (requests.Single ().InnerFetchRequests.Single ().RelatedObjectSelector, Is.SameAs (relatedObjectSelector2));
+      Assert.That (requests.Single ().InnerFetchRequests.Single ().RelationMember, Is.SameAs (_scoresMember));
       Assert.That (expression, Is.Not.SameAs (originalExpression));
       Assert.That (expression, Is.SameAs (innerExpression));
     }
@@ -278,7 +284,7 @@ namespace Remotion.Data.UnitTests.Linq
 
       _executorMock.Expect (mock => mock.ExecuteCollection<Student> (
           Arg<QueryModel>.Is.Anything,
-          Arg<FetchRequestBase[]>.Matches (frs => frs.Single().RelatedObjectSelector == relatedObjectSelector)))
+          Arg<FetchRequestBase[]>.Matches (frs => frs.Single().RelationMember == _friendsMember)))
           .Return (new Student[0]);
 
       _executorMock.Replay ();

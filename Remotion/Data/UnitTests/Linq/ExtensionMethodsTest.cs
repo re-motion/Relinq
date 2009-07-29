@@ -95,12 +95,13 @@ namespace Remotion.Data.UnitTests.Linq
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage = "Argument query.Provider has type System.Linq.EnumerableQuery`1[System.Int32] when " 
+    [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage = "Argument query.Provider has type "
+        + "System.Linq.EnumerableQuery`1[Remotion.Data.UnitTests.Linq.TestDomain.Student] when " 
         + "type Remotion.Data.Linq.QueryProviderBase was expected.\r\nParameter name: query.Provider")]
     public void Fetch_NoQueryable ()
     {
-      var query = new[] { 1, 2, 3 }.AsQueryable ();
-      query.FetchMany (i => (int[]) null);
+      var query = new[] { new Student() }.AsQueryable ();
+      query.FetchMany (s => s.Friends);
     }
 
     [Test]
