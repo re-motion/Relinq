@@ -169,16 +169,16 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void Execute_IntegrationWithSingle ()
     {
-      var expectedResult = new[] { new Student () };
+      var expectedResult = new Student ();
       _executorMock
-                .Expect (mock => mock.ExecuteCollection<Student> (Arg<QueryModel>.Is.Anything, Arg<FetchRequestBase[]>.Is.Anything))
+                .Expect (mock => mock.ExecuteSingle<Student> (Arg<QueryModel>.Is.Anything, Arg<FetchRequestBase[]>.Is.Anything, Arg<bool>.Is.Equal (false)))
                 .Return (expectedResult);
 
       _executorMock.Replay ();
       var result = (from s in _queryableWithExecutorMock select s).Single();
       _executorMock.VerifyAllExpectations ();
 
-      Assert.That (result, Is.SameAs(expectedResult[0]));
+      Assert.That (result, Is.SameAs(expectedResult));
     }
 
     [Test]

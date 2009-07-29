@@ -64,14 +64,7 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
       ArgumentUtility.CheckNotNull ("fetchRequests", fetchRequests);
       ArgumentUtility.CheckNotNull ("executor", executor);
 
-      // TODO 1330: Call ExecuteSingle, pass in _returnDefaultWhenEmpty, do not call Single(OrDefault)
-      // return executor.ExecuteSingle<T> (queryModel, fetchRequests, _returnDefaultWhenEmpty);
-
-      var result = executor.ExecuteCollection<T> (queryModel, fetchRequests);
-      if (_returnDefaultWhenEmpty)
-        return result.SingleOrDefault();
-      else
-        return result.Single ();
+      return executor.ExecuteSingle<T> (queryModel, fetchRequests, _returnDefaultWhenEmpty);
     }
   }
 }
