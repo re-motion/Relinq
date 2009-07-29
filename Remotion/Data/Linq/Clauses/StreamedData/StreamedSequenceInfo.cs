@@ -20,6 +20,7 @@ using System.Reflection;
 using Remotion.Data.Linq.EagerFetching;
 using Remotion.Utilities;
 using System.Collections;
+using System.Linq;
 
 namespace Remotion.Data.Linq.Clauses.StreamedData
 {
@@ -92,9 +93,9 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
       // wrap executeMethod into a delegate instead of calling Invoke in order to allow for exceptions that are bubbled up correctly
       var func = (Func<QueryModel, FetchRequestBase[], IQueryExecutor, IEnumerable>)
           Delegate.CreateDelegate (typeof (Func<QueryModel, FetchRequestBase[], IQueryExecutor, IEnumerable>), this, executeMethod);
-      var result = func (queryModel, fetchRequests, executor);
+      var result = func (queryModel, fetchRequests, executor).AsQueryable ();
 
-      return new StreamedSequence (result, this);
+      return new StreamedSequence (result, new StreamedSequenceInfo (result.GetType(), ItemExpression));
     }
 
     public IEnumerable ExecuteCollectionQueryModel<T> (QueryModel queryModel, FetchRequestBase[] fetchRequests, IQueryExecutor executor)

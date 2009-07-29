@@ -24,6 +24,7 @@ using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Clauses.StreamedData;
+using Remotion.Data.Linq.EagerFetching;
 using Remotion.Data.UnitTests.Linq.TestDomain;
 using Rhino.Mocks;
 
@@ -460,6 +461,20 @@ namespace Remotion.Data.UnitTests.Linq
       _queryModel.ResultOperators.Add (countOperator);
 
       Assert.That (_queryModel.GetExecutionStrategy (), Is.SameAs (countOperator.ExecutionStrategy));
+    }
+
+    [Test]
+    public void Execute ()
+    {
+      var executorMock = MockRepository.GenerateMock<IQueryExecutor>();
+      var fetchRequests = new FetchRequestBase[0];
+      var mockResult = new[] { 0, 0, 0 };
+      executorMock.Expect (mock => mock.ExecuteCollection<int> (_queryModel, fetchRequests)).Return (mockResult);
+
+      var result = (StreamedSequence) _queryModel.Execute (fetchRequests, executorMock);
+
+      executorMock.VerifyAllExpectations();
+      Assert.That (result.GetTypedSequence<int>().ToArray(), Is.EqualTo (mockResult));
     }
   }
 }

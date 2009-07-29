@@ -126,10 +126,8 @@ namespace Remotion.Data.Linq
       var fetchRequests = GetFetchRequests (ref expression);
       var queryModel = GenerateQueryModel (expression);
 
-      var executionStrategy = queryModel.GetExecutionStrategy();
-      var executionLambda = executionStrategy.GetExecutionExpression<TResult> (queryModel, fetchRequests);
-      var result = executionLambda.Compile() (Executor);
-      return result;
+      var result = queryModel.Execute (fetchRequests, Executor);
+      return (TResult) result.Value;
     }
 
     object IQueryProvider.Execute (Expression expression)

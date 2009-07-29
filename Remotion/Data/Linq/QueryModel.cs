@@ -23,6 +23,7 @@ using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Clauses.StreamedData;
+using Remotion.Data.Linq.EagerFetching;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Utilities;
 
@@ -267,6 +268,15 @@ namespace Remotion.Data.Linq
       var clauseAsFromClause = e.Item as FromClauseBase;
       if (clauseAsFromClause != null)
         _uniqueIdentifierGenerator.AddKnownIdentifier (clauseAsFromClause.ItemName);
+    }
+
+    public IStreamedData Execute (FetchRequestBase[] fetchRequests, IQueryExecutor executor)
+    {
+      ArgumentUtility.CheckNotNull ("fetchRequests", fetchRequests);
+      ArgumentUtility.CheckNotNull ("executor", executor);
+
+      var dataInfo = GetOutputDataInfo();
+      return dataInfo.ExecuteQueryModel (this, fetchRequests, executor);
     }
   }
 }

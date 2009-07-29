@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
@@ -100,13 +101,15 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.StreamedData
       var executorMock = MockRepository.GenerateMock<IQueryExecutor> ();
       executorMock.Expect (mock => mock.ExecuteCollection<int> (queryModel, fetchRequests)).Return (new[] { 1, 2, 3 });
 
-      var streamedData = _infoWithIntSequence.ExecuteQueryModel (queryModel, fetchRequests, executorMock);
+      var streamedData = (StreamedSequence) _infoWithIntSequence.ExecuteQueryModel (queryModel, fetchRequests, executorMock);
 
       executorMock.VerifyAllExpectations ();
 
       Assert.That (streamedData, Is.InstanceOfType (typeof (StreamedSequence)));
-      Assert.That (streamedData.DataInfo, Is.SameAs (_infoWithIntSequence));
-      Assert.That (streamedData.Value, Is.EqualTo (new[] { 1, 2, 3 }));
+      Assert.That (streamedData.DataInfo.ItemExpression, Is.SameAs (_infoWithIntSequence.ItemExpression));
+      Assert.That (typeof (IQueryable<int>).IsAssignableFrom (streamedData.DataInfo.DataType), Is.True);
+      Assert.That (streamedData.GetTypedSequence<int>().ToArray(), Is.EqualTo (new[] { 1, 2, 3 }));
+      Assert.That (streamedData.Sequence, Is.InstanceOfType (typeof (IQueryable<int>)));
     }
 
     [Test]
