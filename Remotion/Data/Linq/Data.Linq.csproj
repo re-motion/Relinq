@@ -96,6 +96,11 @@
     <Compile Include="Backend\DetailParsing\SelectProjectionParsing\QuerySourceReferenceExpressionParser.cs" />
     <Compile Include="Backend\DetailParsing\SelectProjectionParsing\SubQueryExpressionParser.cs" />
     <Compile Include="Backend\DetailParsing\WhereConditionParsing\QuerySourceReferenceExpressionParser.cs" />
+    <Compile Include="EagerFetching\ThenFetchManyExpressionNode.cs" />
+    <Compile Include="EagerFetching\ThenFetchOneExpressionNode.cs" />
+    <Compile Include="EagerFetching\FetchManyExpressionNode.cs" />
+    <Compile Include="EagerFetching\FetchExpressionNodeBase.cs" />
+    <Compile Include="EagerFetching\FetchOneExpressionNode.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\EvaluatableTreeFindingVisitor.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\PartialEvaluationInfo.cs" />
     <Compile Include="Backend\FieldResolving\FieldAccessInfo.cs" />
