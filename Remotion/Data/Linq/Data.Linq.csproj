@@ -64,15 +64,11 @@
     <Compile Include="Clauses\StreamedData\StreamedSequenceInfo.cs" />
     <Compile Include="Clauses\StreamedData\StreamedSingleValueInfo.cs" />
     <Compile Include="Clauses\StreamedData\StreamedValue.cs" />
-    <Compile Include="Clauses\ExecutionStrategies\CollectionExecutionStrategy.cs" />
-    <Compile Include="Clauses\ExecutionStrategies\SingleExecutionStrategy.cs" />
-    <Compile Include="Clauses\ExecutionStrategies\ScalarExecutionStrategy.cs" />
     <Compile Include="Clauses\ExpressionTreeVisitors\AccessorFindingExpressionTreeVisitor.cs" />
     <Compile Include="Clauses\GroupJoinClause.cs" />
     <Compile Include="Clauses\QuerySourceMapping.cs" />
     <Compile Include="Clauses\ExpressionTreeVisitors\CloningExpressionTreeVisitor.cs" />
     <Compile Include="Clauses\ExpressionTreeVisitors\ReferenceReplacingExpressionTreeVisitor.cs" />
-    <Compile Include="Clauses\IExecutionStrategy.cs" />
     <Compile Include="Clauses\IQuerySource.cs" />
     <Compile Include="Clauses\ResultOperators\AverageResultOperator.cs" />
     <Compile Include="Clauses\ResultOperators\CastResultOperator.cs" />

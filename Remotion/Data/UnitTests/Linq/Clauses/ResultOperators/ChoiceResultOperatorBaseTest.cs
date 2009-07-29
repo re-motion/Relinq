@@ -17,7 +17,6 @@ using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.StreamedData;
 using Remotion.Data.UnitTests.Linq.TestDomain;
 using Remotion.Utilities;
@@ -35,13 +34,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     {
       _resultOperatorWithDefaultWhenEmpty = new TestChoiceResultOperator (true);
       _resultOperatorNoDefaultWhenEmpty = new TestChoiceResultOperator (false);
-    }
-
-    [Test]
-    public void ExecutionStrategy ()
-    {
-      Assert.That (_resultOperatorWithDefaultWhenEmpty.ExecutionStrategy, Is.SameAs (SingleExecutionStrategy.InstanceWithDefaultWhenEmpty));
-      Assert.That (_resultOperatorNoDefaultWhenEmpty.ExecutionStrategy, Is.SameAs (SingleExecutionStrategy.InstanceNoDefaultWhenEmpty));
     }
 
     [Test]

@@ -38,10 +38,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     public SingleResultOperator (bool returnDefaultWhenEmpty)
       : base (returnDefaultWhenEmpty)
     {
-      ReturnDefaultWhenEmpty = returnDefaultWhenEmpty;
     }
-
-    public bool ReturnDefaultWhenEmpty { get; set; }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {

@@ -14,11 +14,9 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Clauses.StreamedData;
@@ -87,17 +85,6 @@ namespace Remotion.Data.Linq.Clauses
 
       var result = new SelectClause (Selector);
       return result;
-    }
-
-    /// <summary>
-    /// Gets the execution strategy to use for this clause. The execution strategy defines how to dispatch a query
-    /// to an implementation of <see cref="IQueryExecutor"/> when the <see cref="QueryProviderBase"/> needs to execute a query.
-    /// </summary>
-    /// <returns><see cref="CollectionExecutionStrategy.Instance"/> because <see cref="SelectClause"/> always selects items that are returned as a
-    /// collection.</returns>
-    public IExecutionStrategy GetExecutionStrategy ()
-    {
-      return CollectionExecutionStrategy.Instance;
     }
 
     /// <summary>

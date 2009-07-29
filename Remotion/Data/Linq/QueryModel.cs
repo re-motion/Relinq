@@ -18,7 +18,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Collections;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Clauses.ResultOperators;
@@ -143,19 +142,6 @@ namespace Remotion.Data.Linq
     /// </summary>
     public ObservableCollection<ResultOperatorBase> ResultOperators { get; private set; }
 
-    /// <summary>
-    /// Gets the execution strategy to use for this <see cref="QueryModel"/>. The execution strategy defines how to dispatch a query
-    /// to an implementation of <see cref="IQueryExecutor"/> when the <see cref="QueryProviderBase"/> needs to execute a query.
-    /// By default, it is <see cref="CollectionExecutionStrategy"/>, but this can be modified by the <see cref="ResultOperators"/>.
-    /// </summary>
-    public IExecutionStrategy GetExecutionStrategy ()
-    {
-      if (ResultOperators.Count > 0)
-        return ResultOperators[ResultOperators.Count - 1].ExecutionStrategy;
-      else
-        return SelectClause.GetExecutionStrategy();
-    }
-
     private void ResultOperators_ItemAdded (object sender, ObservableCollectionChangedEventArgs<ResultOperatorBase> e)
     {
       ArgumentUtility.CheckNotNull ("e.Item", e.Item);
@@ -270,6 +256,10 @@ namespace Remotion.Data.Linq
         _uniqueIdentifierGenerator.AddKnownIdentifier (clauseAsFromClause.ItemName);
     }
 
+    /// <summary>
+    /// Executes this <see cref="QueryModel"/> via the given <see cref="IQueryExecutor"/>. By default, this indirectly calls 
+    /// <see cref="IQueryExecutor.ExecuteCollection{T}"/>, but this can be modified by the <see cref="ResultOperators"/>.
+    /// </summary>
     public IStreamedData Execute (FetchRequestBase[] fetchRequests, IQueryExecutor executor)
     {
       ArgumentUtility.CheckNotNull ("fetchRequests", fetchRequests);

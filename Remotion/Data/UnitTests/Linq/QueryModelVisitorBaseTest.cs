@@ -18,7 +18,6 @@ using NUnit.Framework;
 using Remotion.Collections;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.UnitTests.Linq.TestDomain;
 using Remotion.Development.UnitTesting;
 using Rhino.Mocks;
@@ -55,8 +54,8 @@ namespace Remotion.Data.UnitTests.Linq
       _orderingMock1 = _mockRepository.StrictMock<Ordering> (ExpressionHelper.CreateExpression(), OrderingDirection.Asc);
       _orderingMock2 = _mockRepository.StrictMock<Ordering> (ExpressionHelper.CreateExpression(), OrderingDirection.Asc);
 
-      _resultOperatorMock1 = _mockRepository.StrictMock<ResultOperatorBase> (CollectionExecutionStrategy.Instance);
-      _resultOperatorMock2 = _mockRepository.StrictMock<ResultOperatorBase> (CollectionExecutionStrategy.Instance);
+      _resultOperatorMock1 = _mockRepository.StrictMock<ResultOperatorBase> ();
+      _resultOperatorMock2 = _mockRepository.StrictMock<ResultOperatorBase> ();
 
       _queryModel = ExpressionHelper.CreateQueryModel ();
       _orderByClause = ExpressionHelper.CreateOrderByClause ();

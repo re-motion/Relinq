@@ -14,7 +14,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.StreamedData;
 using Remotion.Utilities;
 
@@ -26,7 +25,6 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   public abstract class SequenceFromSequenceResultOperatorBase : ResultOperatorBase
   {
     protected SequenceFromSequenceResultOperatorBase ()
-        : base (CollectionExecutionStrategy.Instance)
     {
     }
 

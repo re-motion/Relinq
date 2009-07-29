@@ -19,7 +19,6 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Clauses.StreamedData;
 
@@ -87,18 +86,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       IEnumerable items = new int[0];
       var input = new StreamedSequence (items, new StreamedSequenceInfo (typeof (int[]), Expression.Constant (0)));
       _resultOperatorNoDefault.ExecuteInMemory (input);
-    }
-
-    [Test]
-    public void ExecutionStrategy_Default ()
-    {
-      Assert.That (_resultOperatorWithDefault.ExecutionStrategy, Is.SameAs (SingleExecutionStrategy.InstanceWithDefaultWhenEmpty));
-    }
-
-    [Test]
-    public void ExecutionStrategy_NoDefault ()
-    {
-      Assert.That (_resultOperatorNoDefault.ExecutionStrategy, Is.SameAs (SingleExecutionStrategy.InstanceNoDefaultWhenEmpty));
     }
   }
 }

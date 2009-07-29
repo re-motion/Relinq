@@ -17,7 +17,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.StreamedData;
 using Remotion.Utilities;
 
@@ -35,14 +34,6 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   /// </example>
   public class SumResultOperator : ValueFromSequenceResultOperatorBase
   {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SumResultOperator"/>.
-    /// </summary>
-    public SumResultOperator ()
-        : base (ScalarExecutionStrategy.Instance)
-    {
-    }
-
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
       return new SumResultOperator();

@@ -14,12 +14,10 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Clauses.StreamedData;
 using Remotion.Data.UnitTests.Linq.TestDomain;
@@ -38,12 +36,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     {
       _resultOperatorWithDateTimeResult = new AverageResultOperator (typeof (DateTime));
       _resultOperatorWithDoubleResult = new AverageResultOperator (typeof (double));
-    }
-
-    [Test]
-    public void ExecutionStrategy ()
-    {
-      Assert.That (_resultOperatorWithDateTimeResult.ExecutionStrategy, Is.SameAs (ScalarExecutionStrategy.Instance));
     }
 
     [Test]

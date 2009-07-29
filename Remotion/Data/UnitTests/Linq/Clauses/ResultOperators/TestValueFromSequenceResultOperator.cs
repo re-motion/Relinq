@@ -14,10 +14,8 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Clauses.StreamedData;
 
@@ -26,7 +24,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
   public class TestValueFromSequenceResultOperator : ValueFromSequenceResultOperatorBase
   {
     public TestValueFromSequenceResultOperator ()
-        : base(SingleExecutionStrategy.InstanceNoDefaultWhenEmpty)
     {
     }
 

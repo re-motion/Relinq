@@ -20,7 +20,6 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.UnitTests.Linq.TestDomain;
 using Rhino.Mocks;
 
@@ -83,12 +82,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
       });
 
       Assert.That (clause.Selector, Is.SameAs (newExpression));
-    }
-
-    [Test]
-    public void GetExecutionStrategy ()
-    {
-      Assert.That (_selectClause.GetExecutionStrategy (), Is.SameAs (CollectionExecutionStrategy.Instance));
     }
 
     [Test]

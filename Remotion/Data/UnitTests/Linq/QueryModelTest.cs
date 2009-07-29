@@ -20,7 +20,6 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Clauses.StreamedData;
@@ -238,7 +237,7 @@ namespace Remotion.Data.UnitTests.Linq
     [Test]
     public void Clone_ResultOperators_PassesMapping ()
     {
-      var resultOperatorMock = MockRepository.GenerateMock<ResultOperatorBase> (CollectionExecutionStrategy.Instance);
+      var resultOperatorMock = MockRepository.GenerateMock<ResultOperatorBase> ();
       _queryModel.ResultOperators.Add (resultOperatorMock);
 
       resultOperatorMock
@@ -274,7 +273,7 @@ namespace Remotion.Data.UnitTests.Linq
     public void TransformExpressions_PassedToResultOperators ()
     {
       Func<Expression, Expression> transformer = ex => ex;
-      var resultOperatorMock = MockRepository.GenerateMock<ResultOperatorBase> (CollectionExecutionStrategy.Instance);
+      var resultOperatorMock = MockRepository.GenerateMock<ResultOperatorBase> ();
       _queryModel.ResultOperators.Add (resultOperatorMock);
       resultOperatorMock.Expect (mock => mock.TransformExpressions (transformer));
 
@@ -433,34 +432,6 @@ namespace Remotion.Data.UnitTests.Linq
       var resultOperator = new DistinctResultOperator ();
       _queryModel.ResultOperators.Add (resultOperator);
       _queryModel.ResultOperators[0] = null;
-    }
-
-    [Test]
-    public void GetExecutionStrategy ()
-    {
-      Assert.That (_queryModel.GetExecutionStrategy (), Is.SameAs (CollectionExecutionStrategy.Instance));
-    }
-
-    [Test]
-    public void GetExecutionStrategy_WithResultOperators ()
-    {
-      var firstOperator = new FirstResultOperator (true);
-      _queryModel.ResultOperators.Add (firstOperator);
-
-      Assert.That (_queryModel.GetExecutionStrategy (), Is.SameAs (firstOperator.ExecutionStrategy));
-    }
-
-    [Test]
-    public void GetExecutionStrategy_WithManyResultOperators ()
-    {
-      var takeOperator = new TakeResultOperator (Expression.Constant(7));
-      var distinctOperator = new DistinctResultOperator ();
-      var countOperator = new CountResultOperator ();
-      _queryModel.ResultOperators.Add (takeOperator);
-      _queryModel.ResultOperators.Add (distinctOperator);
-      _queryModel.ResultOperators.Add (countOperator);
-
-      Assert.That (_queryModel.GetExecutionStrategy (), Is.SameAs (countOperator.ExecutionStrategy));
     }
 
     [Test]

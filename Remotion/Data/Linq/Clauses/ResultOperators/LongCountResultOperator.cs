@@ -15,7 +15,6 @@
 // 
 using System;
 using System.Linq;
-using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.StreamedData;
 using Remotion.Utilities;
 
@@ -33,11 +32,6 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   /// </example>
   public class LongCountResultOperator : ValueFromSequenceResultOperatorBase
   {
-    public LongCountResultOperator ()
-      : base (ScalarExecutionStrategy.Instance)
-    {
-    }
-
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
       return new LongCountResultOperator();

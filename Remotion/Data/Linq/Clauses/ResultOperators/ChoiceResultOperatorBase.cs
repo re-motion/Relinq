@@ -14,7 +14,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.StreamedData;
 using Remotion.Utilities;
 
@@ -25,18 +24,17 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   /// </summary>
   public abstract class ChoiceResultOperatorBase : ValueFromSequenceResultOperatorBase
   {
-    private readonly bool _returnDefaultWhenEmpty;
-
     protected ChoiceResultOperatorBase (bool returnDefaultWhenEmpty)
-      : base (returnDefaultWhenEmpty ? SingleExecutionStrategy.InstanceWithDefaultWhenEmpty : SingleExecutionStrategy.InstanceNoDefaultWhenEmpty)
     {
-      _returnDefaultWhenEmpty = returnDefaultWhenEmpty;
+      ReturnDefaultWhenEmpty = returnDefaultWhenEmpty;
     }
+
+    public bool ReturnDefaultWhenEmpty { get; set; }
 
     public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
     {
       var inputSequenceInfo = ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
-      return new StreamedSingleValueInfo (inputSequenceInfo.ItemExpression.Type, _returnDefaultWhenEmpty);
+      return new StreamedSingleValueInfo (inputSequenceInfo.ItemExpression.Type, ReturnDefaultWhenEmpty);
     }
   }
 }

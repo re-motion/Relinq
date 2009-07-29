@@ -20,7 +20,6 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Clauses.StreamedData;
@@ -38,12 +37,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     {
       _resultOperatorWithDefaultValue = new DefaultIfEmptyResultOperator (Expression.Constant (100));
       _resultOperatorWithoutDefaultValue = new DefaultIfEmptyResultOperator (null);
-    }
-
-    [Test]
-    public void ExecutionStrategy ()
-    {
-      Assert.That (_resultOperatorWithDefaultValue.ExecutionStrategy, Is.SameAs (CollectionExecutionStrategy.Instance));
     }
 
     [Test]

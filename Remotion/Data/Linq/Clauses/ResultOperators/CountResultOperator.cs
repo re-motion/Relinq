@@ -15,7 +15,6 @@
 // 
 using System;
 using System.Linq;
-using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.StreamedData;
 using Remotion.Utilities;
 
@@ -33,14 +32,6 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   /// </example>
   public class CountResultOperator : ValueFromSequenceResultOperatorBase
   {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="CountResultOperator"/>.
-    /// </summary>
-    public CountResultOperator ()
-        : base (ScalarExecutionStrategy.Instance)
-    {
-    }
-
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
       return new CountResultOperator();

@@ -14,14 +14,12 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Clauses.StreamedData;
 
@@ -52,12 +50,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     {
       var resultOperator = new ExceptResultOperator (Expression.Parameter (typeof (IEnumerable<string>), "ss"));
       resultOperator.GetConstantSource2 ();
-    }
-    
-    [Test]
-    public void ExecutionStrategy ()
-    {
-      Assert.That (_resultOperator.ExecutionStrategy, Is.SameAs (CollectionExecutionStrategy.Instance));
     }
 
     [Test]

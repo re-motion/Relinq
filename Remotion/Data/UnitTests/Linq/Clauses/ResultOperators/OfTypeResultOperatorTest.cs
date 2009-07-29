@@ -15,13 +15,11 @@
 // 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Clauses.StreamedData;
 using Remotion.Data.UnitTests.Linq.TestDomain;
@@ -67,12 +65,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
       Assert.That (sequence.ToArray (), Is.EquivalentTo (new[] { student1, student2 }));
       Assert.That (result.DataInfo.ItemExpression.Type, Is.EqualTo (typeof (GoodStudent)));
       Assert.That (((UnaryExpression) result.DataInfo.ItemExpression).Operand, Is.SameAs (itemExpression));
-    }
-
-    [Test]
-    public void ExecutionStrategy ()
-    {
-      Assert.That (_resultOperator.ExecutionStrategy, Is.SameAs (CollectionExecutionStrategy.Instance));
     }
 
     [Test]

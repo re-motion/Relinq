@@ -17,7 +17,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Remotion.Data.Linq.Clauses.ExecutionStrategies;
 using Remotion.Data.Linq.Clauses.StreamedData;
 using Remotion.Utilities;
 
@@ -42,7 +41,6 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     /// </summary>
     /// <param name="resultType">The type of the value returned by this <see cref="AverageResultOperator"/>.</param>
     public AverageResultOperator (Type resultType)
-      : base (ScalarExecutionStrategy.Instance)
     {
       ArgumentUtility.CheckNotNull ("resultType", resultType);
       ResultType = resultType;

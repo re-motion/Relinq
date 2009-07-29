@@ -24,11 +24,6 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
 {
   public class TestResultOperator : ResultOperatorBase
   {
-    public TestResultOperator (IExecutionStrategy executionStrategy)
-        : base(executionStrategy)
-    {
-    }
-
     public override IStreamedData ExecuteInMemory (IStreamedData input)
     {
       throw new NotImplementedException();

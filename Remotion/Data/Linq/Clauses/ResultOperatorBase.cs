@@ -29,18 +29,6 @@ namespace Remotion.Data.Linq.Clauses
   /// </summary>
   public abstract class ResultOperatorBase
   {
-    protected ResultOperatorBase (IExecutionStrategy executionStrategy)
-    {
-      ArgumentUtility.CheckNotNull ("executionStrategy", executionStrategy);
-      ExecutionStrategy = executionStrategy;
-    }
-
-    /// <summary>
-    /// Gets the execution strategy to use for this <see cref="ResultOperatorBase"/>. The execution strategy defines how to dispatch a query
-    /// to an implementation of <see cref="IQueryExecutor"/> when the <see cref="QueryProviderBase"/> needs to execute a query.
-    /// </summary>
-    public IExecutionStrategy ExecutionStrategy { get; private set; }
-
     /// <summary>
     /// Executes this result operator in memory, on a given input. Executing result operators in memory should only be 
     /// performed if the target query system does not support the operator.
