@@ -21,6 +21,11 @@ namespace Remotion.Data.UnitTests.Linq.TestQueryGenerators
 {
   public class SubQueryTestQueryGenerator
   {
+    public static IQueryable<Student> CreateSimpleSubQueryInMainFromClause (IQueryable<Student> source)
+    {
+      return from s in (from s2 in source select s2).Take (1) select s;
+    }
+
     public static IQueryable<Student> CreateSimpleSubQueryInAdditionalFromClause(IQueryable<Student> source)
     {
       return from s in source from s2 in (from s3 in source select s3) select s;
