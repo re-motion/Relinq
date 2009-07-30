@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- This file is part of the re-motion Core Framework (www.re-motion.org)
+ ! Copyright (C) 2005-2009 rubicon informationstechnologie gmbh, www.rubicon.eu
+ ! 
+ ! The re-motion Core Framework is free software; you can redistribute it 
+ ! and/or modify it under the terms of the GNU Lesser General Public License 
+ ! version 3.0 as published by the Free Software Foundation.
+ ! 
+ ! re-motion is distributed in the hope that it will be useful, 
+ ! but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ ! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ ! GNU Lesser General Public License for more details.
+ ! 
+ ! You should have received a copy of the GNU Lesser General Public License
+ ! along with re-motion; if not, see http://www.gnu.org/licenses.
+-->
+<namespaces>
+  <namespace name="Remotion.Data.Linq.EagerFetching">
+    <para>
+      re-linq provides an infrastructure for eager fetching, which can easily be integrated into LINQ providers based on re-linq.
+      To make use of eager fetching, first supply a set of extension methods:
+    </para>
+    <para>
+      <code>
+public static class EagerFetchingExtensionMethods
+{
+  public static FluentFetchRequest&lt;TOriginating, TRelated&gt; FetchMany&lt;TOriginating, TRelated&gt; (
+      this IQueryable&lt;TOriginating&gt; query, Expression&lt;Func&lt;TOriginating, IEnumerable&lt;TRelated&gt;&gt;&gt; relatedObjectSelector)
+  {
+    ArgumentUtility.CheckNotNull ("query", query);
+    ArgumentUtility.CheckNotNull ("relatedObjectSelector", relatedObjectSelector);
+
+    var methodInfo = ((MethodInfo) MethodBase.GetCurrentMethod ()).MakeGenericMethod (typeof (TOriginating), typeof (TRelated));
+    return CreateFluentFetchRequest&lt;TOriginating, TRelated&gt; (methodInfo, query, relatedObjectSelector);
+  }
+
+  public static FluentFetchRequest&lt;TOriginating, TRelated&gt; FetchOne&lt;TOriginating, TRelated&gt; (
+      this IQueryable&lt;TOriginating&gt; query, Expression&lt;Func&lt;TOriginating, TRelated&gt;&gt; relatedObjectSelector)
+  {
+    ArgumentUtility.CheckNotNull ("query", query);
+    ArgumentUtility.CheckNotNull ("relatedObjectSelector", relatedObjectSelector);
+
+    var methodInfo = ((MethodInfo) MethodBase.GetCurrentMethod ()).MakeGenericMethod (typeof (TOriginating), typeof (TRelated));
+    return CreateFluentFetchRequest&lt;TOriginating, TRelated&gt; (methodInfo, query, relatedObjectSelector);
+  }
+
+  public static FluentFetchRequest&lt;TQueried, TRelated&gt; ThenFetchMany&lt;TQueried, TFetch, TRelated&gt; (this FluentFetchRequest&lt;TQueried, TFetch&gt; query, Expression&lt;Func&lt;TFetch, IEnumerable&lt;TRelated&gt;&gt;&gt; relatedObjectSelector)
+  {
+    ArgumentUtility.CheckNotNull ("query", query);
+    ArgumentUtility.CheckNotNull ("relatedObjectSelector", relatedObjectSelector);
+
+    var methodInfo = ((MethodInfo) MethodBase.GetCurrentMethod ()).MakeGenericMethod (typeof (TQueried), typeof (TFetch), typeof (TRelated));
+    return CreateFluentFetchRequest&lt;TQueried, TRelated&gt; (methodInfo, query, relatedObjectSelector);
+  }
+
+  public static FluentFetchRequest&lt;TQueried, TRelated&gt; ThenFetchOne&lt;TQueried, TFetch, TRelated&gt; (this FluentFetchRequest&lt;TQueried, TFetch&gt; query, Expression&lt;Func&lt;TFetch, TRelated&gt;&gt; relatedObjectSelector)
+  {
+    ArgumentUtility.CheckNotNull ("query", query);
+    ArgumentUtility.CheckNotNull ("relatedObjectSelector", relatedObjectSelector);
+    
+    var methodInfo = ((MethodInfo) MethodBase.GetCurrentMethod ()).MakeGenericMethod (typeof (TQueried), typeof (TFetch), typeof (TRelated));
+    return CreateFluentFetchRequest&lt;TQueried, TRelated&gt; (methodInfo, query, relatedObjectSelector);
+  }
+
+  private static FluentFetchRequest&lt;TOriginating, TRelated&gt; CreateFluentFetchRequest&lt;TOriginating, TRelated&gt; (
+      MethodInfo currentFetchMethod, 
+      IQueryable&lt;TOriginating&gt; query, 
+      LambdaExpression relatedObjectSelector)
+  {
+    var queryProvider = ArgumentUtility.CheckNotNullAndType&lt;QueryProviderBase&gt; ("query.Provider", query.Provider);
+    var callExpression = Expression.Call (currentFetchMethod, query.Expression, relatedObjectSelector);
+    return new FluentFetchRequest&lt;TOriginating, TRelated&gt; (queryProvider, callExpression);
+  }
+}
+      </code>
+    </para>
+    
+    <para>
+      Then, register those extension methods from within your implementation of <see cref="Remotion.Data.Linq.QueryableBase{T}"/>:
+      <code>
+var nodeTypeRegistry = MethodCallExpressionNodeTypeRegistry.CreateDefault();
+
+nodeTypeRegistry.Register (new[] { typeof (EagerFetchingExtensionMethods).GetMethod ("FetchOne") }, typeof (FetchOneExpressionNode));
+nodeTypeRegistry.Register (new[] { typeof (EagerFetchingExtensionMethods).GetMethod ("FetchMany") }, typeof (FetchManyExpressionNode));
+nodeTypeRegistry.Register (new[] { typeof (EagerFetchingExtensionMethods).GetMethod ("ThenFetchOne") }, typeof (ThenFetchOneExpressionNode));
+nodeTypeRegistry.Register (new[] { typeof (EagerFetchingExtensionMethods).GetMethod ("ThenFetchMany") }, typeof (ThenFetchManyExpressionNode));
+
+return new DefaultQueryProvider (typeof (MyQueryable&lt;&gt;), executor, nodeTypeRegistry);
+      </code>
+      (Pass that query provider to <see cref="Remotion.Data.Linq.QueryableBase{T}"/>'s base constructor from your queryable class.)
+    </para>
+
+    <para>
+      This will result in parsed query models containing instances of <see cref="Remotion.Data.Linq.EagerFetching.FetchRequestBase"/>.
+      Extract them via <see cref="Remotion.Data.Linq.EagerFetching.FetchFilteringQueryModelVisitor"/> from within your 
+      <see cref="Remotion.Data.Linq.IQueryExecutor"/> implementation. Then use <see cref="Remotion.Data.Linq.EagerFetching.CreateFetchQueryModel"/>
+      to get a new query for each fetch request which specifies what objects should be fetched. These objects should not influence the
+      result of the query, but they should be pre-fetched for performance reasons.
+    </para>    
+  </namespace>  
+</namespaces>

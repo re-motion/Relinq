@@ -148,7 +148,6 @@
     <Compile Include="Backend\DataObjectModel\SourceMarkerEvaluation.cs" />
     <Compile Include="Backend\DataObjectModel\SubQuery.cs" />
     <Compile Include="Clauses\Expressions\SubQueryExpression.cs" />
-    <Compile Include="EagerFetching\ExtensionMethods.cs" />
     <Compile Include="EagerFetching\FluentFetchRequest.cs" />
     <Compile Include="Backend\DetailParsing\DetailParserRegistries.cs" />
     <Compile Include="Backend\DetailParsing\IParser.cs" />
@@ -305,6 +304,9 @@
       <Project>{BD061F4A-A9E6-461E-A804-7999623A0060}</Project>
       <Name>Core.Interfaces</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Doc\include\NamespaceDoc.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
