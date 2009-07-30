@@ -284,7 +284,7 @@ namespace Remotion.Data.UnitTests.Linq
 
       _executorMock.Expect (mock => mock.ExecuteCollection<Student> (
           Arg<QueryModel>.Is.Anything,
-          Arg<FetchRequestBase[]>.Matches (frs => frs.Single().RelationMember == _friendsMember)))
+          Arg<FetchRequestBase[]>.Is.Anything))
           .Return (new Student[0]);
 
       _executorMock.Replay ();

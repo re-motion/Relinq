@@ -124,6 +124,8 @@ namespace Remotion.Data.Linq
       ArgumentUtility.CheckNotNull ("expression", expression);
 
       var fetchRequests = GetFetchRequests (ref expression);
+      Assertion.IsTrue (fetchRequests.Length == 0);
+
       var queryModel = GenerateQueryModel (expression);
 
       var result = queryModel.Execute (fetchRequests, Executor);
