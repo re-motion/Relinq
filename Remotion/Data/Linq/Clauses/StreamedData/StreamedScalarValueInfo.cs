@@ -14,10 +14,8 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq.Clauses.ResultOperators;
-using Remotion.Data.Linq.EagerFetching;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.StreamedData
@@ -35,29 +33,27 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
     {
     }
 
-    public override IStreamedData ExecuteQueryModel (QueryModel queryModel, FetchRequestBase[] fetchRequests, IQueryExecutor executor)
+    public override IStreamedData ExecuteQueryModel (QueryModel queryModel, IQueryExecutor executor)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
-      ArgumentUtility.CheckNotNull ("fetchRequests", fetchRequests);
       ArgumentUtility.CheckNotNull ("executor", executor);
 
       var executeMethod = s_executeMethod.MakeGenericMethod (DataType);
       
       // wrap executeMethod into a delegate instead of calling Invoke in order to allow for exceptions that are bubbled up correctly
-      var func = (Func<QueryModel, FetchRequestBase[], IQueryExecutor, object>) 
-          Delegate.CreateDelegate (typeof (Func<QueryModel, FetchRequestBase[], IQueryExecutor, object>), this, executeMethod);
-      var result = func (queryModel, fetchRequests, executor);
+      var func = (Func<QueryModel, IQueryExecutor, object>) 
+          Delegate.CreateDelegate (typeof (Func<QueryModel, IQueryExecutor, object>), this, executeMethod);
+      var result = func (queryModel, executor);
 
       return new StreamedValue (result, this);
     }
 
-    public object ExecuteScalarQueryModel<T> (QueryModel queryModel, FetchRequestBase[] fetchRequests, IQueryExecutor executor)
+    public object ExecuteScalarQueryModel<T> (QueryModel queryModel, IQueryExecutor executor)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
-      ArgumentUtility.CheckNotNull ("fetchRequests", fetchRequests);
       ArgumentUtility.CheckNotNull ("executor", executor);
 
-      return executor.ExecuteScalar<T> (queryModel, fetchRequests);
+      return executor.ExecuteScalar<T> (queryModel);
     }
   }
 }

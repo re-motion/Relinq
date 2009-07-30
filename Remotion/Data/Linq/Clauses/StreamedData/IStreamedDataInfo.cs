@@ -31,9 +31,8 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
     /// from this interface.
     /// </summary>
     /// <param name="queryModel">The query model to be executed.</param>
-    /// <param name="fetchRequests">The fetch requests to pass to <paramref name="executor"/>.</param>
     /// <param name="executor">The executor to use.</param>
     /// <returns>An <see cref="IStreamedData"/> object holding the results of the query execution.</returns>
-    IStreamedData ExecuteQueryModel (QueryModel queryModel, FetchRequestBase[] fetchRequests, IQueryExecutor executor);
+    IStreamedData ExecuteQueryModel (QueryModel queryModel, IQueryExecutor executor);
   }
 }

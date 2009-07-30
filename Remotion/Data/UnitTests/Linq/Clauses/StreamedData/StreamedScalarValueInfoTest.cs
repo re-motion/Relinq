@@ -18,7 +18,6 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses.StreamedData;
-using Remotion.Data.Linq.EagerFetching;
 using Rhino.Mocks;
 
 namespace Remotion.Data.UnitTests.Linq.Clauses.StreamedData
@@ -38,12 +37,10 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.StreamedData
     public void ExecuteQueryModel ()
     {
       var queryModel = ExpressionHelper.CreateQueryModel ();
-      var fetchRequests = new FetchRequestBase[0];
-
       var executorMock = MockRepository.GenerateMock<IQueryExecutor> ();
-      executorMock.Expect (mock => mock.ExecuteScalar<int> (queryModel, fetchRequests)).Return(1);
+      executorMock.Expect (mock => mock.ExecuteScalar<int> (queryModel)).Return(1);
 
-      var streamedData = _streamedScalarValueInfo.ExecuteQueryModel (queryModel, fetchRequests, executorMock);
+      var streamedData = _streamedScalarValueInfo.ExecuteQueryModel (queryModel, executorMock);
 
       executorMock.VerifyAllExpectations ();
 
@@ -57,12 +54,11 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.StreamedData
     public void ExecuteQueryModel_WithException ()
     {
       var queryModel = ExpressionHelper.CreateQueryModel ();
-      var fetchRequests = new FetchRequestBase[0];
 
       var executorMock = MockRepository.GenerateMock<IQueryExecutor> ();
-      executorMock.Expect (mock => mock.ExecuteScalar<int> (queryModel, fetchRequests)).Throw (new InvalidOperationException ("Test"));
+      executorMock.Expect (mock => mock.ExecuteScalar<int> (queryModel)).Throw (new InvalidOperationException ("Test"));
 
-      _streamedScalarValueInfo.ExecuteQueryModel (queryModel, fetchRequests, executorMock);
+      _streamedScalarValueInfo.ExecuteQueryModel (queryModel, executorMock);
     }
   }
 }

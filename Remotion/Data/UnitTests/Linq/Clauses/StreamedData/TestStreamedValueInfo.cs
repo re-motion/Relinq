@@ -16,7 +16,6 @@
 using System;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses.StreamedData;
-using Remotion.Data.Linq.EagerFetching;
 
 namespace Remotion.Data.UnitTests.Linq.Clauses.StreamedData
 {
@@ -27,7 +26,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.StreamedData
     {
     }
 
-    public override IStreamedData ExecuteQueryModel (QueryModel queryModel, FetchRequestBase[] fetchRequests, IQueryExecutor executor)
+    public override IStreamedData ExecuteQueryModel (QueryModel queryModel, IQueryExecutor executor)
     {
       throw new NotImplementedException();
     }

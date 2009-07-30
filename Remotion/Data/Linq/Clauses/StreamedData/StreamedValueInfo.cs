@@ -15,7 +15,6 @@
 // 
 using System;
 using System.Reflection;
-using Remotion.Data.Linq.EagerFetching;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.StreamedData
@@ -37,7 +36,7 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
     /// </summary>
     public Type DataType { get; private set; }
 
-    public abstract IStreamedData ExecuteQueryModel (QueryModel queryModel, FetchRequestBase[] fetchRequests, IQueryExecutor executor);
+    public abstract IStreamedData ExecuteQueryModel (QueryModel queryModel, IQueryExecutor executor);
 
     /// <summary>
     /// Takes the given <paramref name="genericMethodDefinition"/> and instantiates it, substituting its generic parameter with the value

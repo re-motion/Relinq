@@ -22,7 +22,6 @@ using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Clauses.StreamedData;
-using Remotion.Data.Linq.EagerFetching;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Utilities;
 
@@ -260,13 +259,13 @@ namespace Remotion.Data.Linq
     /// Executes this <see cref="QueryModel"/> via the given <see cref="IQueryExecutor"/>. By default, this indirectly calls 
     /// <see cref="IQueryExecutor.ExecuteCollection{T}"/>, but this can be modified by the <see cref="ResultOperators"/>.
     /// </summary>
-    public IStreamedData Execute (FetchRequestBase[] fetchRequests, IQueryExecutor executor)
+    /// <param name="executor">The <see cref="IQueryExecutor"/> to use for executing this query.</param>
+    public IStreamedData Execute (IQueryExecutor executor)
     {
-      ArgumentUtility.CheckNotNull ("fetchRequests", fetchRequests);
       ArgumentUtility.CheckNotNull ("executor", executor);
 
       var dataInfo = GetOutputDataInfo();
-      return dataInfo.ExecuteQueryModel (this, fetchRequests, executor);
+      return dataInfo.ExecuteQueryModel (this, executor);
     }
   }
 }

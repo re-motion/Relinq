@@ -16,9 +16,7 @@
 using System;
 using System.Reflection;
 using Remotion.Data.Linq.Clauses.ResultOperators;
-using Remotion.Data.Linq.EagerFetching;
 using Remotion.Utilities;
-using System.Linq;
 
 namespace Remotion.Data.Linq.Clauses.StreamedData
 {
@@ -43,28 +41,26 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
       get { return _returnDefaultWhenEmpty; }
     }
 
-    public override IStreamedData ExecuteQueryModel (QueryModel queryModel, FetchRequestBase[] fetchRequests, IQueryExecutor executor)
+    public override IStreamedData ExecuteQueryModel (QueryModel queryModel, IQueryExecutor executor)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
-      ArgumentUtility.CheckNotNull ("fetchRequests", fetchRequests);
       ArgumentUtility.CheckNotNull ("executor", executor);
 
       var executeMethod = s_executeMethod.MakeGenericMethod (DataType);
       // wrap executeMethod into a delegate instead of calling Invoke in order to allow for exceptions that are bubbled up correctly
-      var func = (Func<QueryModel, FetchRequestBase[], IQueryExecutor, object>)
-          Delegate.CreateDelegate (typeof (Func<QueryModel, FetchRequestBase[], IQueryExecutor, object>), this, executeMethod);
-      var result = func (queryModel, fetchRequests, executor);
+      var func = (Func<QueryModel, IQueryExecutor, object>)
+          Delegate.CreateDelegate (typeof (Func<QueryModel, IQueryExecutor, object>), this, executeMethod);
+      var result = func (queryModel, executor);
 
       return new StreamedValue (result, this);
     }
 
-    public T ExecuteSingleQueryModel<T> (QueryModel queryModel, FetchRequestBase[] fetchRequests, IQueryExecutor executor)
+    public T ExecuteSingleQueryModel<T> (QueryModel queryModel, IQueryExecutor executor)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
-      ArgumentUtility.CheckNotNull ("fetchRequests", fetchRequests);
       ArgumentUtility.CheckNotNull ("executor", executor);
 
-      return executor.ExecuteSingle<T> (queryModel, fetchRequests, _returnDefaultWhenEmpty);
+      return executor.ExecuteSingle<T> (queryModel, _returnDefaultWhenEmpty);
     }
   }
 }

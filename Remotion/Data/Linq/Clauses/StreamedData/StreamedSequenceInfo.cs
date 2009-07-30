@@ -17,7 +17,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
-using Remotion.Data.Linq.EagerFetching;
 using Remotion.Utilities;
 using System.Collections;
 using System.Linq;
@@ -82,29 +81,27 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
       return genericMethodDefinition.MakeGenericMethod (ItemExpression.Type);
     }
 
-    public IStreamedData ExecuteQueryModel (QueryModel queryModel, FetchRequestBase[] fetchRequests, IQueryExecutor executor)
+    public IStreamedData ExecuteQueryModel (QueryModel queryModel, IQueryExecutor executor)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
-      ArgumentUtility.CheckNotNull ("fetchRequests", fetchRequests);
       ArgumentUtility.CheckNotNull ("executor", executor);
 
       var executeMethod = s_executeMethod.MakeGenericMethod (ItemExpression.Type);
 
       // wrap executeMethod into a delegate instead of calling Invoke in order to allow for exceptions that are bubbled up correctly
-      var func = (Func<QueryModel, FetchRequestBase[], IQueryExecutor, IEnumerable>)
-          Delegate.CreateDelegate (typeof (Func<QueryModel, FetchRequestBase[], IQueryExecutor, IEnumerable>), this, executeMethod);
-      var result = func (queryModel, fetchRequests, executor).AsQueryable ();
+      var func = (Func<QueryModel, IQueryExecutor, IEnumerable>)
+          Delegate.CreateDelegate (typeof (Func<QueryModel, IQueryExecutor, IEnumerable>), this, executeMethod);
+      var result = func (queryModel, executor).AsQueryable ();
 
       return new StreamedSequence (result, new StreamedSequenceInfo (result.GetType(), ItemExpression));
     }
 
-    public IEnumerable ExecuteCollectionQueryModel<T> (QueryModel queryModel, FetchRequestBase[] fetchRequests, IQueryExecutor executor)
+    public IEnumerable ExecuteCollectionQueryModel<T> (QueryModel queryModel, IQueryExecutor executor)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
-      ArgumentUtility.CheckNotNull ("fetchRequests", fetchRequests);
       ArgumentUtility.CheckNotNull ("executor", executor);
 
-      return executor.ExecuteCollection<T> (queryModel, fetchRequests);
+      return executor.ExecuteCollection<T> (queryModel);
     }
   }
 }

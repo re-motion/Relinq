@@ -21,7 +21,6 @@ using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Clauses.StreamedData;
-using Remotion.Data.Linq.EagerFetching;
 using Remotion.Data.UnitTests.Linq.Clauses.ResultOperators;
 using Remotion.Utilities;
 using Rhino.Mocks;
@@ -96,12 +95,11 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.StreamedData
     public void ExecuteQueryModel ()
     {
       var queryModel = ExpressionHelper.CreateQueryModel ();
-      var fetchRequests = new FetchRequestBase[0];
 
       var executorMock = MockRepository.GenerateMock<IQueryExecutor> ();
-      executorMock.Expect (mock => mock.ExecuteCollection<int> (queryModel, fetchRequests)).Return (new[] { 1, 2, 3 });
+      executorMock.Expect (mock => mock.ExecuteCollection<int> (queryModel)).Return (new[] { 1, 2, 3 });
 
-      var streamedData = (StreamedSequence) _infoWithIntSequence.ExecuteQueryModel (queryModel, fetchRequests, executorMock);
+      var streamedData = (StreamedSequence) _infoWithIntSequence.ExecuteQueryModel (queryModel, executorMock);
 
       executorMock.VerifyAllExpectations ();
 
@@ -117,12 +115,11 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.StreamedData
     public void ExecuteQueryModel_WithException ()
     {
       var queryModel = ExpressionHelper.CreateQueryModel ();
-      var fetchRequests = new FetchRequestBase[0];
 
       var executorMock = MockRepository.GenerateMock<IQueryExecutor> ();
-      executorMock.Expect (mock => mock.ExecuteCollection<int> (queryModel, fetchRequests)).Throw (new InvalidOperationException ("Test"));
+      executorMock.Expect (mock => mock.ExecuteCollection<int> (queryModel)).Throw (new InvalidOperationException ("Test"));
 
-      _infoWithIntSequence.ExecuteQueryModel (queryModel, fetchRequests, executorMock);
+      _infoWithIntSequence.ExecuteQueryModel (queryModel, executorMock);
     }
   }
 }

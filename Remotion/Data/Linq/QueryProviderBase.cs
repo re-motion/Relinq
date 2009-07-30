@@ -18,7 +18,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Remotion.Data.Linq.EagerFetching;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Utilities;
 
@@ -112,8 +111,8 @@ namespace Remotion.Data.Linq
     public abstract IQueryable<T> CreateQuery<T> (Expression expression);
 
     /// <summary>
-    /// Executes the query defined by the specified expression by first extracting any fetch requests, then parsing it with a 
-    /// <see cref="QueryParser"/>, and lastly running it through the <see cref="Executor"/>.
+    /// Executes the query defined by the specified expression by parsing it with a 
+    /// <see cref="QueryParser"/> and then running it through the <see cref="Executor"/>.
     /// This method is invoked through the <see cref="IQueryProvider"/> interface by methods such as 
     /// <see cref="Queryable.First{TSource}(System.Linq.IQueryable{TSource})"/> and 
     /// <see cref="Queryable.Count{TSource}(System.Linq.IQueryable{TSource})"/>, and it's also invoked by <see cref="QueryableBase{T}"/>
@@ -123,12 +122,9 @@ namespace Remotion.Data.Linq
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      var fetchRequests = GetFetchRequests (ref expression);
-      Assertion.IsTrue (fetchRequests.Length == 0);
-
       var queryModel = GenerateQueryModel (expression);
 
-      var result = queryModel.Execute (fetchRequests, Executor);
+      var result = queryModel.Execute (Executor);
       return (TResult) result.Value;
     }
 
@@ -137,21 +133,6 @@ namespace Remotion.Data.Linq
       var executeMethod =
           typeof (QueryProviderBase).GetMethod ("Execute", BindingFlags.Public | BindingFlags.Instance).MakeGenericMethod (expression.Type);
       return executeMethod.Invoke (this, new object[] { expression });
-    }
-
-    /// <summary>
-    /// Gets all the fetch requests embedded in a query's <see cref="Expression"/> tree as a hierarchical set of <see cref="FetchRequestBase"/> objects.
-    /// </summary>
-    /// <param name="expression">The expression tree to search for fetch requests. If any is found, the parameter returns a new 
-    /// <see cref="Expression"/> instance with all fetch expressions removed from the expression tree.</param>
-    /// <returns>An array of <see cref="FetchRequestBase"/> objects that hold the top-level fetch requests for the expression tree.</returns>
-    public FetchRequestBase[] GetFetchRequests (ref Expression expression)
-    {
-      ArgumentUtility.CheckNotNull ("expression", expression);
-
-      var result = FetchFilteringExpressionTreeVisitor.Visit (expression);
-      expression = result.NewExpression;
-      return result.FetchRequests.ToArray();
     }
 
     /// <summary>
