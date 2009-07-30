@@ -96,6 +96,7 @@
     <Compile Include="Backend\DetailParsing\SelectProjectionParsing\QuerySourceReferenceExpressionParser.cs" />
     <Compile Include="Backend\DetailParsing\SelectProjectionParsing\SubQueryExpressionParser.cs" />
     <Compile Include="Backend\DetailParsing\WhereConditionParsing\QuerySourceReferenceExpressionParser.cs" />
+    <Compile Include="EagerFetching\FetchFilteringQueryModelVisitor.cs" />
     <Compile Include="EagerFetching\ThenFetchManyExpressionNode.cs" />
     <Compile Include="EagerFetching\ThenFetchOneExpressionNode.cs" />
     <Compile Include="EagerFetching\FetchManyExpressionNode.cs" />
