@@ -136,7 +136,7 @@ namespace Remotion.Data.UnitTests.Linq.Transformations
 
     [Test]
     [ExpectedException (typeof(NotSupportedException), ExpectedMessage = "The subquery "
-        + "'from Student s in TestQueryable<Student>() select 0 => Distinct()' cannot be flattened and pulled out of the from clause because it "
+        + "'from Student s in TestQueryable<Student>() select [s] => Distinct()' cannot be flattened and pulled out of the from clause because it "
         + "contains result operators.")]
     public void VisitAdditionalFromClause_ThrowsOnResultOperator ()
     {
@@ -148,7 +148,7 @@ namespace Remotion.Data.UnitTests.Linq.Transformations
 
     [Test]
     [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "The subquery "
-        + "'from Student s in TestQueryable<Student>() orderby 0 asc select 0' cannot be flattened and pulled out of the from clause because it "
+        + "'from Student s in TestQueryable<Student>() orderby 0 asc select [s]' cannot be flattened and pulled out of the from clause because it "
         + "contains an OrderByClause.")]
     public void VisitAdditionalFromClause_ThrowsOnOrderBy ()
     {

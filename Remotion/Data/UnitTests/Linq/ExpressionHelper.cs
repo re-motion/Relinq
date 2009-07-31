@@ -91,7 +91,7 @@ namespace Remotion.Data.UnitTests.Linq
 
     public static QueryModel CreateQueryModel (MainFromClause mainFromClause)
     {
-      var selectClause = CreateSelectClause ();
+      var selectClause = new SelectClause (new QuerySourceReferenceExpression (mainFromClause));
       return new QueryModel (mainFromClause, selectClause);
     }
 
