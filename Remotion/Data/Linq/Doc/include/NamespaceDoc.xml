@@ -93,7 +93,7 @@ return new DefaultQueryProvider (typeof (MyQueryable&lt;&gt;), executor, nodeTyp
     <para>
       This will result in parsed query models containing instances of <see cref="Remotion.Data.Linq.EagerFetching.FetchRequestBase"/>.
       Extract them via <see cref="Remotion.Data.Linq.EagerFetching.FetchFilteringQueryModelVisitor"/> from within your 
-      <see cref="Remotion.Data.Linq.IQueryExecutor"/> implementation. Then use <see cref="Remotion.Data.Linq.EagerFetching.CreateFetchQueryModel"/>
+      <see cref="Remotion.Data.Linq.IQueryExecutor"/> implementation. Then use <see cref="Remotion.Data.Linq.EagerFetching.FetchQueryModelBuilder.GetOrCreateFetchQueryModel"/>
       to get a new query for each fetch request which specifies what objects should be fetched. These objects should not influence the
       result of the query, but they should be pre-fetched for performance reasons.
     </para>    
