@@ -140,7 +140,7 @@ namespace Remotion.Data.Linq
     /// </summary>
     /// <param name="expression">The query as expression chain.</param>
     /// <returns>a <see cref="QueryModel"/></returns>
-    public QueryModel GenerateQueryModel (Expression expression)
+    public virtual QueryModel GenerateQueryModel (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
