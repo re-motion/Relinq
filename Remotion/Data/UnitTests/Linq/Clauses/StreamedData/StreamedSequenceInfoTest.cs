@@ -94,7 +94,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.StreamedData
     [Test]
     public void ExecuteQueryModel ()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel ();
+      var queryModel = ExpressionHelper.CreateQueryModel_Student ();
 
       var executorMock = MockRepository.GenerateMock<IQueryExecutor> ();
       executorMock.Expect (mock => mock.ExecuteCollection<int> (queryModel)).Return (new[] { 1, 2, 3 });
@@ -114,7 +114,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.StreamedData
     [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Test")]
     public void ExecuteQueryModel_WithException ()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel ();
+      var queryModel = ExpressionHelper.CreateQueryModel_Student ();
 
       var executorMock = MockRepository.GenerateMock<IQueryExecutor> ();
       executorMock.Expect (mock => mock.ExecuteCollection<int> (queryModel)).Throw (new InvalidOperationException ("Test"));

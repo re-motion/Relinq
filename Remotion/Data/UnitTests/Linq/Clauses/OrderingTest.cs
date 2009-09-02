@@ -65,7 +65,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses
     public void Accept()
     {
       var repository = new MockRepository();
-      var queryModel = ExpressionHelper.CreateQueryModel ();
+      var queryModel = ExpressionHelper.CreateQueryModel_Student ();
       var orderByClause = ExpressionHelper.CreateOrderByClause ();
       var visitorMock = repository.StrictMock<IQueryModelVisitor>();
 

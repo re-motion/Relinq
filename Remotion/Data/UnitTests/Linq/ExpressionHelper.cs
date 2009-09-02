@@ -95,11 +95,15 @@ namespace Remotion.Data.UnitTests.Linq
       return new QueryModel (mainFromClause, selectClause);
     }
 
-    public static QueryModel CreateQueryModel ()
+    public static QueryModel CreateQueryModel_Student ()
     {
       return CreateQueryModel (CreateMainFromClause("s", typeof (Student), CreateStudentQueryable()));
     }
 
+    public static QueryModel CreateQueryModel_Int ()
+    {
+      return CreateQueryModel (CreateMainFromClause ("i", typeof (int), CreateIntQueryable ()));
+    }
 
     public static MainFromClause CreateMainFromClause ()
     {

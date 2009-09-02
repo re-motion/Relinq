@@ -39,7 +39,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.StreamedData
     [Test]
     public void ExecuteQueryModel_WithDefaultWhenEmpty ()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel ();
+      var queryModel = ExpressionHelper.CreateQueryModel_Student ();
       var student1 = new Student();
       
       var executorMock = MockRepository.GenerateMock<IQueryExecutor> ();
@@ -57,7 +57,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.StreamedData
     [Test]
     public void ExecuteQueryModel_NoDefaultWhenEmpty ()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel ();
+      var queryModel = ExpressionHelper.CreateQueryModel_Student ();
       var student1 = new Student ();
 
       var executorMock = MockRepository.GenerateMock<IQueryExecutor> ();
@@ -73,10 +73,28 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.StreamedData
     }
 
     [Test]
+    public void ExecuteQueryModel_WithValueType ()
+    {
+      var queryModel = ExpressionHelper.CreateQueryModel_Int ();
+
+      var executorMock = MockRepository.GenerateMock<IQueryExecutor> ();
+      executorMock.Expect (mock => mock.ExecuteSingle<int> (queryModel, true)).Return (5);
+
+      var streamedSingleValueInfo = new StreamedSingleValueInfo (typeof (int), true);
+      var streamedData = streamedSingleValueInfo.ExecuteQueryModel (queryModel, executorMock);
+
+      executorMock.VerifyAllExpectations ();
+
+      Assert.That (streamedData, Is.InstanceOfType (typeof (StreamedValue)));
+      Assert.That (streamedData.DataInfo, Is.SameAs (streamedSingleValueInfo));
+      Assert.That (streamedData.Value, Is.EqualTo (5));
+    }
+
+    [Test]
     [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Test")]
     public void ExecuteQueryModel_WithException ()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel ();
+      var queryModel = ExpressionHelper.CreateQueryModel_Student ();
 
       var executorMock = MockRepository.GenerateMock<IQueryExecutor> ();
       executorMock.Expect (mock => mock.ExecuteSingle<Student> (queryModel, true)).Throw (new InvalidOperationException ("Test"));

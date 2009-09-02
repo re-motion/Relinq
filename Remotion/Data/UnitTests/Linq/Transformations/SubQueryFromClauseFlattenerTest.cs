@@ -140,7 +140,7 @@ namespace Remotion.Data.UnitTests.Linq.Transformations
         + "contains result operators.")]
     public void VisitAdditionalFromClause_ThrowsOnResultOperator ()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel ();
+      var queryModel = ExpressionHelper.CreateQueryModel_Student ();
       queryModel.ResultOperators.Add (new DistinctResultOperator ());
       var clause = new AdditionalFromClause ("x", typeof (Student), new SubQueryExpression (queryModel));
       _visitor.VisitAdditionalFromClause (clause, _queryModel, 0);
@@ -152,7 +152,7 @@ namespace Remotion.Data.UnitTests.Linq.Transformations
         + "contains an OrderByClause.")]
     public void VisitAdditionalFromClause_ThrowsOnOrderBy ()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel ();
+      var queryModel = ExpressionHelper.CreateQueryModel_Student ();
       var orderByClause = new OrderByClause ();
       orderByClause.Orderings.Add (new Ordering (Expression.Constant (0), OrderingDirection.Asc));
       queryModel.BodyClauses.Add (orderByClause);

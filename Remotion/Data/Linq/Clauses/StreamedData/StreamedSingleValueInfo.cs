@@ -55,7 +55,7 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
       return new StreamedValue (result, this);
     }
 
-    public T ExecuteSingleQueryModel<T> (QueryModel queryModel, IQueryExecutor executor)
+    public object ExecuteSingleQueryModel<T> (QueryModel queryModel, IQueryExecutor executor)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
       ArgumentUtility.CheckNotNull ("executor", executor);

@@ -85,7 +85,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors.TreeEvalua
     [Test]
     public void NonStandardExpressions_AreNotEvaluatable ()
     {
-      var expression = new SubQueryExpression (ExpressionHelper.CreateQueryModel());
+      var expression = new SubQueryExpression (ExpressionHelper.CreateQueryModel_Student());
       var evaluationInfo = EvaluatableTreeFindingVisitor.Analyze (expression);
 
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);

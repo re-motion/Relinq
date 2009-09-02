@@ -42,7 +42,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ExpressionTreeVisitors
     [Test]
     public void Replaces_SubQueryExpressions ()
     {
-      var expression = new SubQueryExpression (ExpressionHelper.CreateQueryModel ());
+      var expression = new SubQueryExpression (ExpressionHelper.CreateQueryModel_Student ());
       var result = CloningExpressionTreeVisitor.AdjustExpressionAfterCloning (expression, _querySourceMapping);
 
       Assert.That (((SubQueryExpression) result).QueryModel, Is.Not.SameAs (expression.QueryModel));
@@ -51,7 +51,7 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ExpressionTreeVisitors
     [Test]
     public void Replaces_SubQueryExpressions_WithCorrectCloneContext ()
     {
-      var subQueryModel = ExpressionHelper.CreateQueryModel ();
+      var subQueryModel = ExpressionHelper.CreateQueryModel_Student ();
       var referencedClause = ExpressionHelper.CreateMainFromClause ();
       subQueryModel.SelectClause.Selector = new QuerySourceReferenceExpression (referencedClause);
       var expression = new SubQueryExpression (subQueryModel);
