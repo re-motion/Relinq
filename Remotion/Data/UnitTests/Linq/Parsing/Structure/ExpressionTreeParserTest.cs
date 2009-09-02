@@ -23,6 +23,7 @@ using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
+using Remotion.Data.UnitTests.Linq.Parsing.Structure.TestDomain;
 using Remotion.Data.UnitTests.Linq.TestDomain;
 using Remotion.Development.UnitTesting;
 
@@ -133,9 +134,30 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     [Test]
     public void ParseTree_MethodCallExpression_WithInstanceMethod ()
     {
-      var containsMethod = typeof (List<int>).GetMethod ("Contains");
-      _nodeTypeRegistry.Register (new[] { containsMethod }, typeof (ContainsExpressionNode));
+      var instanceMethod = typeof (NonGenericFakeCollection).GetMethod ("Contains"); // use non-generic class
+      _nodeTypeRegistry.Register (new[] { instanceMethod }, typeof (ContainsExpressionNode));
 
+      var querySourceExpression = Expression.Parameter (typeof (NonGenericFakeCollection), "querySource");
+      var itemExpression = Expression.Constant (null);
+      var expression = Expression.Call (querySourceExpression, instanceMethod, itemExpression);
+
+      var result = _expressionTreeParser.ParseTree (expression);
+
+      Assert.That (result, Is.InstanceOfType (typeof (ContainsExpressionNode)));
+      Assert.That (((ContainsExpressionNode) result).Item, Is.SameAs (itemExpression));
+
+      var source = ((ContainsExpressionNode) result).Source;
+      Assert.That (source, Is.InstanceOfType (typeof (MainSourceExpressionNode)));
+      Assert.That (((MainSourceExpressionNode) source).ParsedExpression, Is.SameAs (querySourceExpression));
+    }
+
+    [Test]
+    public void ParseTree_MethodCallExpression_WithInstanceMethod_InGenericType ()
+    {
+      var containsMethodInTypeDefinition = typeof (List<>).GetMethod ("Contains");
+      _nodeTypeRegistry.Register (new[] { containsMethodInTypeDefinition }, typeof (ContainsExpressionNode));
+
+      var containsMethod = typeof (List<int>).GetMethod ("Contains");
       var querySourceExpression = Expression.Parameter (typeof (List<int>), "querySource");
       var itemExpression = Expression.Constant (4);
       var expression = Expression.Call (querySourceExpression, containsMethod, itemExpression);

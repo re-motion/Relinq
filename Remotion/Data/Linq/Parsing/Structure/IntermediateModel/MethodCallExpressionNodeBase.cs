@@ -42,7 +42,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       ArgumentUtility.CheckNotNull ("methodCall", methodCall);
 
       var method = ReflectionUtility.GetMethod (methodCall);
-      return method.IsGenericMethod ? method.GetGenericMethodDefinition() : method;
+      return MethodCallExpressionNodeTypeRegistry.GetRegisterableMethodDefinition (method);
     }
 
     protected MethodCallExpressionNodeBase (MethodCallExpressionParseInfo parseInfo)

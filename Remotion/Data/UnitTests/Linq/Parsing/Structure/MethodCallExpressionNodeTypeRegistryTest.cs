@@ -20,8 +20,10 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
+using Remotion.Data.UnitTests.Linq.Parsing.Structure.TestDomain;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 {
@@ -34,6 +36,60 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     public void SetUp ()
     {
       _registry = new MethodCallExpressionNodeTypeRegistry ();
+    }
+
+    [Test]
+    public void GetRegisterableMethodDefinition_OrdinaryMethod ()
+    {
+      var method = typeof (object).GetMethod ("Equals", BindingFlags.Public | BindingFlags.Instance);
+      var registerableMethod = MethodCallExpressionNodeTypeRegistry.GetRegisterableMethodDefinition (method);
+
+      Assert.That (registerableMethod, Is.SameAs (method));
+    }
+
+    [Test]
+    public void GetRegisterableMethodDefinition_GenericMethodDefinition ()
+    {
+      var method = ReflectionUtility.GetMethod (() => Queryable.Count<object> (null)).GetGenericMethodDefinition();
+      var registerableMethod = MethodCallExpressionNodeTypeRegistry.GetRegisterableMethodDefinition (method);
+
+      Assert.That (registerableMethod, Is.SameAs (method));
+    }
+
+    [Test]
+    public void GetRegisterableMethodDefinition_ClosedGenericMethod ()
+    {
+      var method = ReflectionUtility.GetMethod (() => Queryable.Count<object> (null));
+      var registerableMethod = MethodCallExpressionNodeTypeRegistry.GetRegisterableMethodDefinition (method);
+
+      Assert.That (registerableMethod, Is.SameAs (method.GetGenericMethodDefinition()));
+    }
+
+    [Test]
+    public void GetRegisterableMethodDefinition_NonGenericMethod_InGenericTypeDefinition ()
+    {
+      var method = typeof (GenericClass<>).GetMethod ("NonGenericMethod");
+      var registerableMethod = MethodCallExpressionNodeTypeRegistry.GetRegisterableMethodDefinition (method);
+
+      Assert.That (registerableMethod, Is.SameAs (method));
+    }
+
+    [Test]
+    public void GetRegisterableMethodDefinition_NonGenericMethod_InClosedGenericType ()
+    {
+      var method = typeof (GenericClass<int>).GetMethod ("NonGenericMethod");
+      var registerableMethod = MethodCallExpressionNodeTypeRegistry.GetRegisterableMethodDefinition (method);
+
+      Assert.That (registerableMethod, Is.SameAs (typeof (GenericClass<>).GetMethod ("NonGenericMethod")));
+    }
+
+    [Test]
+    public void GetRegisterableMethodDefinition_ClosedGenericMethod_InClosedGenericType ()
+    {
+      var method = typeof (GenericClass<int>).GetMethod ("GenericMethod").MakeGenericMethod (typeof (string));
+      var registerableMethod = MethodCallExpressionNodeTypeRegistry.GetRegisterableMethodDefinition (method);
+
+      Assert.That (registerableMethod, Is.SameAs (typeof (GenericClass<>).GetMethod ("GenericMethod")));
     }
 
     [Test]
@@ -58,7 +114,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     [ExpectedException (typeof (InvalidOperationException))]
     public void Register_MethodInClosedGenericType_NotAllowed ()
     {
-      var methodInClosedGenericType = typeof (List<int>).GetMethod ("Contains");
+      var methodInClosedGenericType = typeof (GenericClass<int>).GetMethod ("NonGenericMethod");
       _registry.Register (new[] { methodInClosedGenericType }, typeof (SelectExpressionNode));
     }
 
@@ -116,11 +172,11 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     [Test]
     public void GetNodeType_MethodInClosedGenericType ()
     {
-      var methodInOpenGenericType = typeof (List<>).GetMethod ("Contains");
+      var methodInOpenGenericType = typeof (GenericClass<>).GetMethod ("NonGenericMethod");
       _registry.Register (new[] { methodInOpenGenericType }, typeof (SelectExpressionNode));
 
       var methodCallExpressionInClosedGenericType =
-          (MethodCallExpression) ExpressionHelper.MakeExpression<List<int>, bool> (l => l.Contains (12));
+          (MethodCallExpression) ExpressionHelper.MakeExpression<GenericClass<int>, bool> (l => l.NonGenericMethod (12));
       var type = _registry.GetNodeType (methodCallExpressionInClosedGenericType.Method);
 
       Assert.That (type, Is.SameAs (typeof (SelectExpressionNode)));

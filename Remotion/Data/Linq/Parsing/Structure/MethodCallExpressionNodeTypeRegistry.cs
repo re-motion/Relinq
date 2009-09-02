@@ -54,6 +54,30 @@ namespace Remotion.Data.Linq.Parsing.Structure
       return registry;
     }
 
+    /// <summary>
+    /// Gets the registerable method definition from a given <see cref="MethodInfo"/>. A registerable method is a <see cref="MethodInfo"/> object
+    /// that can be registered via a call to <see cref="Register"/>. When the given <paramref name="method"/> is passed to 
+    /// <see cref="GetNodeType"/> and its corresponding registerable method was registered, the correct node type is returned.
+    /// </summary>
+    /// <param name="method">The method for which the registerable method should be retrieved.</param>
+    /// <returns><paramref name="method"/> itself, unless it is a closed generic method or declared in a closed generic type. In the latter cases,
+    /// the corresponding generic method definition respectively the method declared in a generic type definition is returned.</returns>
+    public static MethodInfo GetRegisterableMethodDefinition (MethodInfo method)
+    {
+      var genericMethodDefinition = method.IsGenericMethod ? method.GetGenericMethodDefinition () : method;
+      if (genericMethodDefinition.DeclaringType.IsGenericType)
+      {
+        var declaringTypeDefinition = genericMethodDefinition.DeclaringType.GetGenericTypeDefinition ();
+
+        // find corresponding method on the generic type definition
+        return (MethodInfo) MethodBase.GetMethodFromHandle (genericMethodDefinition.MethodHandle, declaringTypeDefinition.TypeHandle);
+      }
+      else
+      {
+        return genericMethodDefinition;
+      }
+    }
+
     private readonly Dictionary<MethodInfo, Type> _registeredTypes = new Dictionary<MethodInfo, Type>();
 
     public int Count
@@ -99,7 +123,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
     {
       ArgumentUtility.CheckNotNull ("method", method);
 
-      var methodDefinition = GetMethodDefinition (method);
+      var methodDefinition = GetRegisterableMethodDefinition (method);
       return _registeredTypes.ContainsKey (methodDefinition);
     }
 
@@ -111,7 +135,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
     {
       ArgumentUtility.CheckNotNull ("method", method);
 
-      var methodDefinition = GetMethodDefinition (method);
+      var methodDefinition = GetRegisterableMethodDefinition (method);
       try
       {
         return _registeredTypes[methodDefinition];
@@ -123,22 +147,6 @@ namespace Remotion.Data.Linq.Parsing.Structure
             methodDefinition.DeclaringType.FullName,
             methodDefinition.Name);
         throw new KeyNotFoundException (message, ex);
-      }
-    }
-
-    private MethodInfo GetMethodDefinition (MethodInfo method)
-    {
-      var genericMethodDefinition = method.IsGenericMethod ? method.GetGenericMethodDefinition() : method;
-      if (genericMethodDefinition.DeclaringType.IsGenericType)
-      {
-        var declaringTypeDefinition = genericMethodDefinition.DeclaringType.GetGenericTypeDefinition ();
-
-        // find corresponding method on the generic type definition
-        return (MethodInfo) MethodBase.GetMethodFromHandle (genericMethodDefinition.MethodHandle, declaringTypeDefinition.TypeHandle);
-      }
-      else
-      {
-        return genericMethodDefinition;
       }
     }
   }
