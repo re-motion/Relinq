@@ -14,6 +14,8 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -36,6 +38,12 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Queryable.Count<object> (null, null)),
                                                                GetSupportedMethod (() => Enumerable.Count<object> (null)),
                                                                GetSupportedMethod (() => Enumerable.Count<object> (null, null)),
+// ReSharper disable PossibleNullReferenceException
+                                                               GetSupportedMethod (() => ((List<int>) null).Count),
+                                                               GetSupportedMethod (() => ((ICollection<int>) null).Count),
+                                                               GetSupportedMethod (() => ((ArrayList) null).Count),
+                                                               GetSupportedMethod (() => ((ICollection) null).Count),
+// ReSharper restore PossibleNullReferenceException
                                                            };
 
 

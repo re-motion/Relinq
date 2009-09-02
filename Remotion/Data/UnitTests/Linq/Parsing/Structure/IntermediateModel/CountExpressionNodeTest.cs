@@ -14,10 +14,13 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections;
 using System.Linq;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
+using System.Collections.Generic;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
 {
@@ -33,9 +36,18 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void SupportedMethod_WithoutPredicate ()
+    public void SupportedMethods_WithoutPredicate ()
     {
       AssertSupportedMethod_Generic (CountExpressionNode.SupportedMethods, q => q.Count (), e => e.Count ());
+    }
+
+    [Test]
+    public void SupportedMethods_WithoutPredicate_FromCollections ()
+    {
+      Assert.That (CountExpressionNode.SupportedMethods, List.Contains (typeof (List<>).GetProperty ("Count").GetGetMethod()));
+      Assert.That (CountExpressionNode.SupportedMethods, List.Contains (typeof (ArrayList).GetProperty ("Count").GetGetMethod ()));
+      Assert.That (CountExpressionNode.SupportedMethods, List.Contains (typeof (ICollection<>).GetProperty ("Count").GetGetMethod ()));
+      Assert.That (CountExpressionNode.SupportedMethods, List.Contains (typeof (ICollection).GetProperty ("Count").GetGetMethod ()));
     }
 
     [Test]

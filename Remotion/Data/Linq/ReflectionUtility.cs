@@ -27,7 +27,21 @@ namespace Remotion.Data.Linq
     public static MethodInfo GetMethod<T> (Expression<Func<T>> wrappedCall)
     {
       ArgumentUtility.CheckNotNull ("wrappedCall", wrappedCall);
-      return ((MethodCallExpression) wrappedCall.Body).Method;
+
+      switch (wrappedCall.Body.NodeType)
+      {
+        case ExpressionType.Call:
+          return ((MethodCallExpression) wrappedCall.Body).Method;
+        case ExpressionType.MemberAccess:
+          var memberExpression = (MemberExpression) wrappedCall.Body;
+          var property = memberExpression.Member as PropertyInfo;
+          var method = property != null ? property.GetGetMethod() : null;
+          if (method != null)
+            return method;
+          break;
+      }
+
+      throw new ArgumentException (string.Format ("Cannot extract a method from the given expression '{0}'.", wrappedCall.Body), "wrappedCall");
     }
 
     public static Type GetItemTypeOfIEnumerable (Type enumerableType, string argumentName)

@@ -33,6 +33,20 @@ namespace Remotion.Data.UnitTests.Linq
     }
 
     [Test]
+    public void GetMethod_PropertyAccess ()
+    {
+      MethodInfo method = ReflectionUtility.GetMethod (() => "x".Length);
+      Assert.That (method, Is.EqualTo (typeof (string).GetMethod ("get_Length", new Type[0])));
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentException))]
+    public void GetMethod_InvalidExpression ()
+    {
+      ReflectionUtility.GetMethod (() => "x");
+    }
+
+    [Test]
     public void GetItemTypeOfIEnumerable_ArgumentImplementsIEnumerable ()
     {
       Assert.That (ReflectionUtility.GetItemTypeOfIEnumerable (typeof (List<int>), "x"), Is.SameAs (typeof (int)));
