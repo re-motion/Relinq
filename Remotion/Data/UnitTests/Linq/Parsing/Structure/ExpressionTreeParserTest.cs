@@ -65,7 +65,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
-    public void ParseTree_ConstantExpression ()
+    public void ParseTree_NonQueryOperatorExpression ()
     {
       var constantExpression = Expression.Constant (_intSource);
 
@@ -78,7 +78,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
-    public void ParseTree_ConstantExpression_IdentifierNameGetsIncremented ()
+    public void ParseTree_NonQueryOperatorExpression_IdentifierNameGetsIncremented ()
     {
       var constantExpression = Expression.Constant (_intSource);
 
@@ -87,6 +87,14 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 
       Assert.That (((MainSourceExpressionNode) result1).AssociatedIdentifier, Is.EqualTo ("<generated>_0"));
       Assert.That (((MainSourceExpressionNode) result2).AssociatedIdentifier, Is.EqualTo ("<generated>_1"));
+    }
+
+    [Test]
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Cannot parse expression '0' as it has an unsupported type. Only query sources "
+        + "(that is, expressions that implement IEnumerable) and query operators can be parsed.")]
+    public void ParseTree_InvalidNonQueryOperatorExpression ()
+    {
+      _expressionTreeParser.ParseTree (Expression.Constant (0));
     }
 
     [Test]
@@ -195,11 +203,38 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Cannot parse expression '0' as it has an unsupported type. Only query sources " 
-        + "(that is, expressions that implement IEnumerable) can be parsed.")]
-    public void ParseTree_InvalidConstantExpression ()
+    [Ignore ("TODO 1556")]
+    public void ParseTree_MemberExpression_WithProperty ()
     {
-      _expressionTreeParser.ParseTree (Expression.Constant(0));
+      var querySource = new QueryableFakeWithCount<int> ();
+      var expression = ExpressionHelper.MakeExpression (() => querySource.Count);
+
+      var result = _expressionTreeParser.ParseTree (expression);
+
+      Assert.That (result, Is.InstanceOfType (typeof (CountExpressionNode)));
+    }
+
+    [Test]
+    public void ParseTree_MemberExpression_WithProperty_WithoutVisibleGetter ()
+    {
+      var querySource = new QueryableFakeWithCount<int> ();
+      var expression = ExpressionHelper.MakeExpression (() => querySource.InternalProperty);
+
+      var result = _expressionTreeParser.ParseTree (expression);
+
+      Assert.That (result, Is.InstanceOfType (typeof (MainSourceExpressionNode)));
+      Assert.That (((MainSourceExpressionNode) result).ParsedExpression, Is.InstanceOfType (typeof (MemberExpression)));
+    }
+
+    [Test]
+    public void ParseTree_MemberExpression_WithField ()
+    {
+      var querySource = new QueryableFakeWithCount<int> ();
+      var expression = ExpressionHelper.MakeExpression (() => querySource.Field);
+
+      var result = _expressionTreeParser.ParseTree (expression);
+
+      Assert.That (result, Is.InstanceOfType (typeof (MainSourceExpressionNode)));
     }
 
     [Test]

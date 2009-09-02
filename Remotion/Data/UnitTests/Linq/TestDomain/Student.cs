@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -24,6 +25,8 @@ namespace Remotion.Data.UnitTests.Linq.TestDomain
     public string First { get; set; }
     public string Last { get; set; }
     public int ID { get; set; }
+    public ArrayList Kids { get; set; }
+    public int[] LotteryNumbers { get; set; }
     public List<int> Scores { get; set; }
     public IQueryable<Student> Friends { get; set; }
     public string NonDBProperty { get; set; }

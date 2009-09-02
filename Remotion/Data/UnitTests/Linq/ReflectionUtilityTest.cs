@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework;
@@ -77,6 +78,18 @@ namespace Remotion.Data.UnitTests.Linq
     {
       Assert.That (ReflectionUtility.TryGetItemTypeOfIEnumerable (typeof (IEnumerable<int>)), Is.SameAs (typeof (int)));
       Assert.That (ReflectionUtility.TryGetItemTypeOfIEnumerable (typeof (IEnumerable<IEnumerable<string>>)), Is.SameAs (typeof (IEnumerable<string>)));
+    }
+
+    [Test]
+    public void TryGetItemTypeOfIEnumerable_ArgumentImplementsIEnumerable_NonGeneric ()
+    {
+      Assert.That (ReflectionUtility.TryGetItemTypeOfIEnumerable (typeof (ArrayList)), Is.SameAs (typeof (object)));
+    }
+
+    [Test]
+    public void TryGetItemTypeOfIEnumerable_ArgumentImplementsIEnumerable_BothGenericAndNonGeneric ()
+    {
+      Assert.That (ReflectionUtility.TryGetItemTypeOfIEnumerable (typeof (int[])), Is.SameAs (typeof (int)));
     }
 
     [Test]

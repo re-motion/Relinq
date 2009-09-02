@@ -63,20 +63,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       if (methodCallExpression != null)
         return ParseMethodCallExpression (methodCallExpression, associatedIdentifier);
       else
-      {
-        try
-        {
-          return new MainSourceExpressionNode (associatedIdentifier, expression);
-        }
-        catch (ArgumentTypeException ex)
-        {
-          var message = string.Format (
-              "Cannot parse expression '{0}' as it has an unsupported type. Only query sources (that is, expressions that implement IEnumerable) "
-              + "can be parsed.",
-              expression);
-          throw new ParserException (message, ex);
-        }
-      }
+        return ParseNonQueryOperatorExpression(expression, associatedIdentifier);
     }
 
     private IExpressionNode ParseMethodCallExpression (MethodCallExpression methodCallExpression, string associatedIdentifier)
@@ -99,6 +86,22 @@ namespace Remotion.Data.Linq.Parsing.Structure
       var source = ParseNode (sourceExpression, associatedIdentifierForSource);
       var parser = new MethodCallExpressionParser (_nodeTypeRegistry);
       return parser.Parse (associatedIdentifier, source, arguments, methodCallExpression);
+    }
+
+    private IExpressionNode ParseNonQueryOperatorExpression (Expression expression, string associatedIdentifier)
+    {
+      try
+      {
+        return new MainSourceExpressionNode (associatedIdentifier, expression);
+      }
+      catch (ArgumentTypeException ex)
+      {
+        var message = string.Format (
+            "Cannot parse expression '{0}' as it has an unsupported type. Only query sources (that is, expressions that implement IEnumerable) "
+            + "and query operators can be parsed.",
+            expression);
+        throw new ParserException (message, ex);
+      }
     }
 
     /// <summary>

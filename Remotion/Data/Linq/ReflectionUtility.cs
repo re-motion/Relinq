@@ -14,6 +14,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -65,9 +66,16 @@ namespace Remotion.Data.Linq
 
       Type implementedEnumerableInterface = GetImplementedIEnumerableType (possibleEnumerableType);
       if (implementedEnumerableInterface == null)
+      {
         return null;
+      }
       else
-        return implementedEnumerableInterface.GetGenericArguments ()[0];
+      {
+        if (implementedEnumerableInterface.IsGenericType)
+          return implementedEnumerableInterface.GetGenericArguments ()[0];
+        else
+          return typeof (object);
+      }
     }
 
     private static Type GetImplementedIEnumerableType (Type enumerableType)
@@ -79,14 +87,17 @@ namespace Remotion.Data.Linq
       else
       {
         return (from i in enumerableType.GetInterfaces()
-                where i.IsGenericType && i.GetGenericTypeDefinition() == typeof (IEnumerable<>)
+                where IsIEnumerable (i)
+                let genericArgsCount = i.IsGenericType ? i.GetGenericArguments ().Length : 0
+                orderby genericArgsCount descending
                 select i).FirstOrDefault();
       }
     }
 
     private static bool IsIEnumerable (Type enumerableType)
     {
-      return enumerableType.IsGenericType && enumerableType.GetGenericTypeDefinition() == typeof (IEnumerable<>);
+      return enumerableType == typeof (IEnumerable) 
+          || (enumerableType.IsGenericType && enumerableType.GetGenericTypeDefinition() == typeof (IEnumerable<>));
     }
   }
 }

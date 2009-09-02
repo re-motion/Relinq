@@ -173,6 +173,57 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.QueryParserIntegrationT
     }
 
     [Test]
+    [Ignore ("TODO 1557")]
+    public void ListCount ()
+    {
+      var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
+                                                               select s.Scores.Count));
+
+      var queryModel = QueryParser.GetParsedQuery (expression);
+
+      var selectClause = queryModel.SelectClause;
+      Assert.That (selectClause.Selector, Is.InstanceOfType (typeof (SubQueryExpression)));
+
+      var subQueryModel = ((SubQueryExpression) selectClause.Selector).QueryModel;
+      Assert.That (subQueryModel.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (CountResultOperator)));
+    }
+
+    [Test]
+    [Ignore ("TODO 1557")]
+    public void ArrayListCount ()
+    {
+      var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
+                                                               select s.Kids.Count));
+
+      var queryModel = QueryParser.GetParsedQuery (expression);
+
+      var selectClause = queryModel.SelectClause;
+      Assert.That (selectClause.Selector, Is.InstanceOfType (typeof (SubQueryExpression)));
+
+      var subQueryModel = ((SubQueryExpression) selectClause.Selector).QueryModel;
+      Assert.That (subQueryModel.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (CountResultOperator)));
+    }
+
+    [Test]
+    [Ignore ("TODO 1557")]
+    public void ArrayLength ()
+    {
+      var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
+                                                               select s.LotteryNumbers.Length));
+
+      var queryModel = QueryParser.GetParsedQuery (expression);
+
+      var selectClause = queryModel.SelectClause;
+      Assert.That (selectClause.Selector, Is.InstanceOfType (typeof (SubQueryExpression)));
+
+      var subQueryModel = ((SubQueryExpression) selectClause.Selector).QueryModel;
+      Assert.That (subQueryModel.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (CountResultOperator)));
+    }
+
+    [Test]
     public void Skip ()
     {
       var query = (from s in ExpressionHelper.CreateStudentQueryable() 

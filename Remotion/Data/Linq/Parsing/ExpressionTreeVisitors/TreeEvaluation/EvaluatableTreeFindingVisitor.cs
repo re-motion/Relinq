@@ -110,6 +110,16 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation
       return base.VisitMethodCallExpression (expression);
     }
 
+    protected override Expression VisitMemberExpression (MemberExpression expression)
+    {
+      // MemberExpressions are only evaluatable if they do not involve IQueryable objects.
+
+      if (IsQueryableExpression (expression.Expression))
+        _isCurrentSubtreeEvaluatable = false;
+
+      return base.VisitMemberExpression (expression);
+    }
+
     protected override Expression VisitMemberInitExpression (MemberInitExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);

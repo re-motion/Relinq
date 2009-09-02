@@ -21,6 +21,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation;
+using Remotion.Data.UnitTests.Linq.Parsing.Structure.TestDomain;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation
 {
@@ -120,6 +121,16 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors.TreeEvalua
     {
       var source = ExpressionHelper.CreateStudentQueryable ();
       var expression = ExpressionHelper.MakeExpression (() => source.Count ());
+
+      var evaluationInfo = EvaluatableTreeFindingVisitor.Analyze (expression);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
+    }
+
+    [Test]
+    public void MemberExpression_WithIQueryableObject_IsNotEvaluatable ()
+    {
+      var source = new QueryableFakeWithCount<int>();
+      var expression = ExpressionHelper.MakeExpression (() => source.Count);
 
       var evaluationInfo = EvaluatableTreeFindingVisitor.Analyze (expression);
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
