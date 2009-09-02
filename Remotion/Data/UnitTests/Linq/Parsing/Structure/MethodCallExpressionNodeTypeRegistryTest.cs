@@ -28,33 +28,46 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
   [TestFixture]
   public class MethodCallExpressionNodeTypeRegistryTest
   {
+    private MethodCallExpressionNodeTypeRegistry _registry;
+
+    [SetUp]
+    public void SetUp ()
+    {
+      _registry = new MethodCallExpressionNodeTypeRegistry ();
+    }
+
     [Test]
     public void Register ()
     {
-      var registry = new MethodCallExpressionNodeTypeRegistry ();
-      Assert.That (registry.Count, Is.EqualTo (0));
+      Assert.That (_registry.Count, Is.EqualTo (0));
 
-      registry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
+      _registry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
 
-      Assert.That(registry.Count, Is.EqualTo (2));
+      Assert.That(_registry.Count, Is.EqualTo (2));
     }
 
     [Test]
     [ExpectedException (typeof (InvalidOperationException))]
     public void Register_ClosedGenericMethod_NotAllowed ()
     {
-      var registry = new MethodCallExpressionNodeTypeRegistry ();
       var closedGenericMethod = SelectExpressionNode.SupportedMethods[0].MakeGenericMethod (typeof (int), typeof (int));
-      registry.Register (new[] { closedGenericMethod }, typeof (SelectExpressionNode));
+      _registry.Register (new[] { closedGenericMethod }, typeof (SelectExpressionNode));
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException))]
+    public void Register_MethodInClosedGenericType_NotAllowed ()
+    {
+      var methodInClosedGenericType = typeof (List<int>).GetMethod ("Contains");
+      _registry.Register (new[] { methodInClosedGenericType }, typeof (SelectExpressionNode));
     }
 
     [Test]
     public void GetNodeType ()
     {
-      var registry = new MethodCallExpressionNodeTypeRegistry ();
-      registry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
+      _registry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
 
-      var type = registry.GetNodeType (SelectExpressionNode.SupportedMethods[0]);
+      var type = _registry.GetNodeType (SelectExpressionNode.SupportedMethods[0]);
 
       Assert.That (type, Is.SameAs (typeof (SelectExpressionNode)));
     }
@@ -62,13 +75,12 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     [Test]
     public void GetNodeType_WithMultipleNodes ()
     {
-      var registry = new MethodCallExpressionNodeTypeRegistry ();
-      registry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
-      registry.Register (SumExpressionNode.SupportedMethods, typeof (SumExpressionNode));
+      _registry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
+      _registry.Register (SumExpressionNode.SupportedMethods, typeof (SumExpressionNode));
 
-      var type1 = registry.GetNodeType (SelectExpressionNode.SupportedMethods[0]);
-      var type2 = registry.GetNodeType (SumExpressionNode.SupportedMethods[0]);
-      var type3 = registry.GetNodeType (SumExpressionNode.SupportedMethods[1]);
+      var type1 = _registry.GetNodeType (SelectExpressionNode.SupportedMethods[0]);
+      var type2 = _registry.GetNodeType (SumExpressionNode.SupportedMethods[0]);
+      var type3 = _registry.GetNodeType (SumExpressionNode.SupportedMethods[1]);
 
       Assert.That (type1, Is.SameAs (typeof (SelectExpressionNode)));
       Assert.That (type2, Is.SameAs (typeof (SumExpressionNode)));
@@ -78,12 +90,11 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     [Test]
     public void GetNodeType_ClosedGenericMethod ()
     {
-      var registry = new MethodCallExpressionNodeTypeRegistry ();
-      registry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
+      _registry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
 
       var closedGenericMethodCallExpression = 
           (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (q => q.Select (i => i + 1));
-      var type = registry.GetNodeType (closedGenericMethodCallExpression.Method);
+      var type = _registry.GetNodeType (closedGenericMethodCallExpression.Method);
 
       Assert.That (type, Is.SameAs (typeof (SelectExpressionNode)));
     }
@@ -91,7 +102,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     [Test]
     public void GetNodeType_NonGenericMethod ()
     {
-      var registry = new MethodCallExpressionNodeTypeRegistry ();
+      var registry = _registry;
       registry.Register (SumExpressionNode.SupportedMethods, typeof (SumExpressionNode));
 
       var nonGenericMethod = SumExpressionNode.SupportedMethods[0];
@@ -103,18 +114,31 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
+    public void GetNodeType_MethodInClosedGenericType ()
+    {
+      var methodInOpenGenericType = typeof (List<>).GetMethod ("Contains");
+      _registry.Register (new[] { methodInOpenGenericType }, typeof (SelectExpressionNode));
+
+      var methodCallExpressionInClosedGenericType =
+          (MethodCallExpression) ExpressionHelper.MakeExpression<List<int>, bool> (l => l.Contains (12));
+      var type = _registry.GetNodeType (methodCallExpressionInClosedGenericType.Method);
+
+      Assert.That (type, Is.SameAs (typeof (SelectExpressionNode)));
+    }
+
+    [Test]
     [ExpectedException (typeof (KeyNotFoundException), 
         ExpectedMessage = "No corresponding expression node type was registered for method 'System.Linq.Queryable.Select'.")]
     public void GetNodeType_UnknownMethod ()
     {
-      var registry = new MethodCallExpressionNodeTypeRegistry ();
+      var registry = _registry;
       registry.GetNodeType (SelectExpressionNode.SupportedMethods[0]);
     }
 
     [Test]
     public void Register_SameMethodTwice_OverridesPreviousNodeType ()
     {
-      var registry = new MethodCallExpressionNodeTypeRegistry ();
+      var registry = _registry;
       registry.Register (WhereExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
       registry.Register (WhereExpressionNode.SupportedMethods, typeof (WhereExpressionNode));
 
@@ -125,7 +149,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     [Test]
     public void IsRegistered_True ()
     {
-      var registry = new MethodCallExpressionNodeTypeRegistry ();
+      var registry = _registry;
       registry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
 
       var result = registry.IsRegistered (SelectExpressionNode.SupportedMethods[0]);
@@ -135,7 +159,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     [Test]
     public void IsRegistered_True_ClosedGenericMethod ()
     {
-      var registry = new MethodCallExpressionNodeTypeRegistry ();
+      var registry = _registry;
       registry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
 
       var closedGenericMethodCallExpression =
@@ -148,7 +172,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     [Test]
     public void IsRegistered_True_NonGenericMethod ()
     {
-      var registry = new MethodCallExpressionNodeTypeRegistry ();
+      var registry = _registry;
       registry.Register (SumExpressionNode.SupportedMethods, typeof (SumExpressionNode));
 
       var nonGenericMethod = SumExpressionNode.SupportedMethods[0];
@@ -162,7 +186,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     [Test]
     public void IsRegistered_False ()
     {
-      var registry = new MethodCallExpressionNodeTypeRegistry ();
+      var registry = _registry;
       var result = registry.IsRegistered (SelectExpressionNode.SupportedMethods[0]);
       Assert.That (result, Is.False);
     }

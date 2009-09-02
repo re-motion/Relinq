@@ -79,6 +79,15 @@ namespace Remotion.Data.Linq.Parsing.Structure
           throw new InvalidOperationException (message);
         }
 
+        if (method.DeclaringType.IsGenericType && !method.DeclaringType.IsGenericTypeDefinition)
+        {
+          var message = string.Format (
+              "Cannot register method '{0}' in closed generic type '{1}', try to register its equivalent in the generic type definition instead.", 
+              method.Name,
+              method.DeclaringType);
+          throw new InvalidOperationException (message);
+        }
+
         _registeredTypes[method] = nodeType;
       }
     }
@@ -119,7 +128,18 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
     private MethodInfo GetMethodDefinition (MethodInfo method)
     {
-      return method.IsGenericMethod ? method.GetGenericMethodDefinition() : method;
+      var genericMethodDefinition = method.IsGenericMethod ? method.GetGenericMethodDefinition() : method;
+      if (genericMethodDefinition.DeclaringType.IsGenericType)
+      {
+        var declaringTypeDefinition = genericMethodDefinition.DeclaringType.GetGenericTypeDefinition ();
+
+        // find corresponding method on the generic type definition
+        return (MethodInfo) MethodBase.GetMethodFromHandle (genericMethodDefinition.MethodHandle, declaringTypeDefinition.TypeHandle);
+      }
+      else
+      {
+        return genericMethodDefinition;
+      }
     }
   }
 }
