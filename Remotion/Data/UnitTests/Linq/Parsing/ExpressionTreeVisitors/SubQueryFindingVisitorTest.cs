@@ -22,8 +22,10 @@ using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
+using Remotion.Data.UnitTests.Linq.Parsing.Structure.TestDomain;
 using Remotion.Data.UnitTests.Linq.TestDomain;
 using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
+using System.Collections.Generic;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
 {
@@ -77,6 +79,18 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
 
       var newLambdaExpression =
           (LambdaExpression) SubQueryFindingVisitor.ReplaceSubQueries (surroundingExpression, emptyNodeTypeRegistry);
+      Assert.That (newLambdaExpression.Body, Is.InstanceOfType (typeof (SubQueryExpression)));
+    }
+
+    [Test]
+    public void VisitorUsesExpressionTreeVisitor_ToGetPotentialQueryOperator ()
+    {
+      _nodeTypeRegistry.Register (new[] { typeof (QueryableFakeWithCount<>).GetMethod ("get_Count") }, typeof (CountExpressionNode));
+      Expression subQuery = ExpressionHelper.MakeExpression (() => new QueryableFakeWithCount<int>().Count);
+      Expression surroundingExpression = Expression.Lambda (subQuery);
+
+      var newLambdaExpression =
+          (LambdaExpression) SubQueryFindingVisitor.ReplaceSubQueries (surroundingExpression, _nodeTypeRegistry);
       Assert.That (newLambdaExpression.Body, Is.InstanceOfType (typeof (SubQueryExpression)));
     }
 

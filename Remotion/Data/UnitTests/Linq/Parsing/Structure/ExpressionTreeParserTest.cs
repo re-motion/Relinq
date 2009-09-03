@@ -203,38 +203,15 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     }
 
     [Test]
-    [Ignore ("TODO 1556")]
     public void ParseTree_MemberExpression_WithProperty ()
     {
+      _nodeTypeRegistry.Register (new[] { typeof (QueryableFakeWithCount<>).GetMethod ("get_Count") }, typeof (CountExpressionNode));
       var querySource = new QueryableFakeWithCount<int> ();
       var expression = ExpressionHelper.MakeExpression (() => querySource.Count);
 
       var result = _expressionTreeParser.ParseTree (expression);
 
       Assert.That (result, Is.InstanceOfType (typeof (CountExpressionNode)));
-    }
-
-    [Test]
-    public void ParseTree_MemberExpression_WithProperty_WithoutVisibleGetter ()
-    {
-      var querySource = new QueryableFakeWithCount<int> ();
-      var expression = ExpressionHelper.MakeExpression (() => querySource.InternalProperty);
-
-      var result = _expressionTreeParser.ParseTree (expression);
-
-      Assert.That (result, Is.InstanceOfType (typeof (MainSourceExpressionNode)));
-      Assert.That (((MainSourceExpressionNode) result).ParsedExpression, Is.InstanceOfType (typeof (MemberExpression)));
-    }
-
-    [Test]
-    public void ParseTree_MemberExpression_WithField ()
-    {
-      var querySource = new QueryableFakeWithCount<int> ();
-      var expression = ExpressionHelper.MakeExpression (() => querySource.Field);
-
-      var result = _expressionTreeParser.ParseTree (expression);
-
-      Assert.That (result, Is.InstanceOfType (typeof (MainSourceExpressionNode)));
     }
 
     [Test]
@@ -337,6 +314,62 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var identifier = (string) PrivateInvoke.InvokeNonPublicMethod (_expressionTreeParser, "InferAssociatedIdentifierForSource", methodCallExpression);
 
       Assert.That (identifier, Is.EqualTo ("i"));
+    }
+
+    [Test]
+    public void GetQueryOperatorExpression_MethodCallExpression ()
+    {
+      var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression (() => ((IEnumerable<int>) _intSource).Select (i => i));
+      var queryOperatorExpression = _expressionTreeParser.GetQueryOperatorExpression (methodCallExpression);
+      Assert.That (queryOperatorExpression, Is.SameAs (methodCallExpression));
+    }
+
+    [Test]
+    public void GetQueryOperatorExpression_MemberExpression_Registered ()
+    {
+      var memberExpression = (MemberExpression) ExpressionHelper.MakeExpression (() => new List<int>().Count);
+      var queryOperatorExpression = _expressionTreeParser.GetQueryOperatorExpression (memberExpression);
+
+      Assert.That (queryOperatorExpression, Is.Not.Null);
+      Assert.That (queryOperatorExpression.Method, Is.SameAs (typeof (List<int>).GetProperty ("Count").GetGetMethod()));
+      Assert.That (queryOperatorExpression.Arguments, Is.Empty);
+      Assert.That (queryOperatorExpression.Object, Is.SameAs (memberExpression.Expression));
+    }
+
+    [Test]
+    public void GetQueryOperatorExpression_MemberExpression_NotRegistered ()
+    {
+      var expressionTreeParser = new ExpressionTreeParser (new MethodCallExpressionNodeTypeRegistry ());
+      var memberExpression = (MemberExpression) ExpressionHelper.MakeExpression (() => new List<int> ().Count);
+      var queryOperatorExpression = expressionTreeParser.GetQueryOperatorExpression (memberExpression);
+
+      Assert.That (queryOperatorExpression, Is.Null);
+    }
+
+    [Test]
+    public void GetQueryOperatorExpression_MemberExpression_NoAccessibleGetter ()
+    {
+      var memberExpression = (MemberExpression) ExpressionHelper.MakeExpression (() => new QueryableFakeWithCount<int> ().InternalProperty);
+      var queryOperatorExpression = _expressionTreeParser.GetQueryOperatorExpression (memberExpression);
+
+      Assert.That (queryOperatorExpression, Is.Null);
+    }
+
+    [Test]
+    public void GetQueryOperatorExpression_MemberExpression_Field ()
+    {
+      var memberExpression = (MemberExpression) ExpressionHelper.MakeExpression (() => new QueryableFakeWithCount<int>().Field);
+      var queryOperatorExpression = _expressionTreeParser.GetQueryOperatorExpression (memberExpression);
+
+      Assert.That (queryOperatorExpression, Is.Null);
+    }
+
+    [Test]
+    public void GetQueryOperatorExpression_OtherExpression ()
+    {
+      var expression = Expression.Constant (new int[0]);
+      var queryOperatorExpression = _expressionTreeParser.GetQueryOperatorExpression (expression);
+      Assert.That (queryOperatorExpression, Is.Null);
     }
 
     public int TestQueryableMethod_WithLambda_WithMoreThanOneParameter (IEnumerable<int> source, Expression<Func<int, int, int>> func)

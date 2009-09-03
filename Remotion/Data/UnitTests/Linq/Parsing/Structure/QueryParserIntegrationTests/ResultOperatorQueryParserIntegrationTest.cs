@@ -16,6 +16,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Collections;
@@ -173,7 +174,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.QueryParserIntegrationT
     }
 
     [Test]
-    [Ignore ("TODO 1557")]
     public void ListCount ()
     {
       var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
@@ -190,7 +190,19 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.QueryParserIntegrationT
     }
 
     [Test]
-    [Ignore ("TODO 1557")]
+    public void ListCount_NotSubQuery ()
+    {
+      var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
+                                                               select new List<int>().Count));
+
+      var queryModel = QueryParser.GetParsedQuery (expression);
+
+      var selectClause = queryModel.SelectClause;
+      Assert.That (selectClause.Selector, Is.InstanceOfType (typeof (ConstantExpression)));
+      Assert.That (((ConstantExpression) selectClause.Selector).Value, Is.EqualTo (0));
+    }
+
+    [Test]
     public void ArrayListCount ()
     {
       var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource

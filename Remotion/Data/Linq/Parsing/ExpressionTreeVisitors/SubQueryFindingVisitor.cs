@@ -47,12 +47,14 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
       _innerParser = new QueryParser (new ExpressionTreeParser (_nodeTypeRegistry));
     }
 
-    protected override Expression VisitMethodCallExpression (MethodCallExpression expression)
+    protected override Expression VisitExpression (Expression expression)
     {
-      if (_nodeTypeRegistry.IsRegistered (expression.Method))
-        return CreateSubQueryNode (expression);
+      var potentialQueryOperatorExpression = _innerParser.ExpressionTreeParser.GetQueryOperatorExpression (expression);
+      if (potentialQueryOperatorExpression != null
+          && _innerParser.ExpressionTreeParser.NodeTypeRegistry.IsRegistered (potentialQueryOperatorExpression.Method))
+        return CreateSubQueryNode (potentialQueryOperatorExpression);
       else
-        return base.VisitMethodCallExpression (expression);
+        return base.VisitExpression (expression);
     }
 
     protected override Expression VisitUnknownExpression (Expression expression)

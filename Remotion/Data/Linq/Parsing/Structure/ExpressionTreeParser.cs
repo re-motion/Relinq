@@ -20,6 +20,7 @@ using System.Linq.Expressions;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Utilities;
+using System.Reflection;
 
 namespace Remotion.Data.Linq.Parsing.Structure
 {
@@ -37,12 +38,21 @@ namespace Remotion.Data.Linq.Parsing.Structure
       _nodeTypeRegistry = nodeTypeRegistry;
     }
 
+    /// <summary>
+    /// Gets the node type registry used to parse <see cref="MethodCallExpression"/> instances in <see cref="ParseTree"/>.
+    /// </summary>
+    /// <value>The node type registry.</value>
     public MethodCallExpressionNodeTypeRegistry NodeTypeRegistry
     {
       get { return _nodeTypeRegistry; }
     }
-
-
+    
+    /// <summary>
+    /// Parses the given <paramref name="expressionTree"/> into a chain of <see cref="IExpressionNode"/> instances, using 
+    /// <see cref="MethodCallExpressionNodeTypeRegistry"/> to convert expressions to nodes.
+    /// </summary>
+    /// <param name="expressionTree">The expression tree to parse.</param>
+    /// <returns>A chain of <see cref="IExpressionNode"/> instances representing the <paramref name="expressionTree"/>.</returns>
     public IExpressionNode ParseTree (Expression expressionTree)
     {
       ArgumentUtility.CheckNotNull ("expressionTree", expressionTree);
@@ -54,12 +64,44 @@ namespace Remotion.Data.Linq.Parsing.Structure
       return ParseNode (simplifiedExpressionTree, null);
     }
 
+    /// <summary>
+    /// Gets the query operator <see cref="MethodCallExpression"/> represented by <paramref name="expression"/>. If <paramref name="expression"/>
+    /// is already a <see cref="MethodCallExpression"/>, that is the assumed query operator. If <paramref name="expression"/> is a 
+    /// <see cref="MemberExpression"/> and the member's getter is registered with <see cref="NodeTypeRegistry"/>, a corresponding 
+    /// <see cref="MethodCallExpression"/> is constructed and returned. Otherwise, <see langword="null" /> is returned.
+    /// </summary>
+    /// <param name="expression">The expression to get a query operator expression for.</param>
+    /// <returns>A <see cref="MethodCallExpression"/> to be parsed as a query operator, or <see langword="null"/> if the expression does not represent
+    /// a query operator.</returns>
+    public MethodCallExpression GetQueryOperatorExpression (Expression expression)
+    {
+      var methodCallExpression = expression as MethodCallExpression;
+      if (methodCallExpression != null)
+        return methodCallExpression;
+
+      var memberExpression = expression as MemberExpression;
+      if (memberExpression != null)
+      {
+        var propertyInfo = memberExpression.Member as PropertyInfo;
+        if (propertyInfo == null)
+          return null;
+
+        var getterMethod = propertyInfo.GetGetMethod ();
+        if (getterMethod == null || !_nodeTypeRegistry.IsRegistered (getterMethod))
+          return null;
+
+        return Expression.Call (memberExpression.Expression, getterMethod);
+      }
+
+      return null;
+    }
+
     private IExpressionNode ParseNode (Expression expression, string associatedIdentifier)
     {
       if (associatedIdentifier == null)
         associatedIdentifier = _identifierGenerator.GetUniqueIdentifier ("<generated>_");
 
-      var methodCallExpression = expression as MethodCallExpression;
+      var methodCallExpression = GetQueryOperatorExpression(expression);
       if (methodCallExpression != null)
         return ParseMethodCallExpression (methodCallExpression, associatedIdentifier);
       else
@@ -113,7 +155,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
     {
       var lambdaExpression = GetLambdaArgument (methodCallExpression);
       if (lambdaExpression != null && lambdaExpression.Parameters.Count == 1)
-          return lambdaExpression.Parameters[0].Name;
+        return lambdaExpression.Parameters[0].Name;
       else
         return null;
     }

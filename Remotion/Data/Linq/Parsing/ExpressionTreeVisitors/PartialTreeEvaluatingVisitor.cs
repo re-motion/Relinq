@@ -31,27 +31,8 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
   /// This visitor visits each tree node at most twice: once via the <see cref="EvaluatableTreeFindingVisitor"/> for analysis and once
   /// again to replace nodes if possible (unless the parent node has already been replaced).
   /// </remarks>
-  public sealed class PartialTreeEvaluatingVisitor : ExpressionTreeVisitor
+  public class PartialTreeEvaluatingVisitor : ExpressionTreeVisitor
   {
-    /// <summary>
-    /// Evaluates an evaluatable <see cref="Expression"/> subtree, i.e. an independent expression tree that is compilable and executable
-    /// without any data being passed in. The result of the evaluation is returned as a <see cref="ConstantExpression"/>; if the subtree
-    /// is already a <see cref="ConstantExpression"/>, no evaluation is performed.
-    /// </summary>
-    public static ConstantExpression EvaluateSubtree (Expression subtree)
-    {
-      ArgumentUtility.CheckNotNull ("subtree", subtree);
-
-      if (subtree.NodeType == ExpressionType.Constant)
-        return (ConstantExpression) subtree;
-      else
-      {
-        LambdaExpression lambdaWithoutParameters = Expression.Lambda (subtree);
-        object value = lambdaWithoutParameters.Compile().DynamicInvoke();
-        return Expression.Constant (value, subtree.Type);
-      }
-    }
-
     /// <summary>
     /// Takes an expression tree and finds and evaluates all its evaluatable subtrees.
     /// </summary>
@@ -92,6 +73,27 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
         return EvaluateSubtree (expression);
       else
         return base.VisitExpression (expression);
+    }
+
+    /// <summary>
+    /// Evaluates an evaluatable <see cref="Expression"/> subtree, i.e. an independent expression tree that is compilable and executable
+    /// without any data being passed in. The result of the evaluation is returned as a <see cref="ConstantExpression"/>; if the subtree
+    /// is already a <see cref="ConstantExpression"/>, no evaluation is performed.
+    /// </summary>
+    /// <param name="subtree">The subtree to be evaluated.</param>
+    /// <returns>A <see cref="ConstantExpression"/> holding the result of the evaluation.</returns>
+    protected ConstantExpression EvaluateSubtree (Expression subtree)
+    {
+      ArgumentUtility.CheckNotNull ("subtree", subtree);
+
+      if (subtree.NodeType == ExpressionType.Constant)
+        return (ConstantExpression) subtree;
+      else
+      {
+        LambdaExpression lambdaWithoutParameters = Expression.Lambda (subtree);
+        object value = lambdaWithoutParameters.Compile ().DynamicInvoke ();
+        return Expression.Constant (value, subtree.Type);
+      }
     }
   }
 }
