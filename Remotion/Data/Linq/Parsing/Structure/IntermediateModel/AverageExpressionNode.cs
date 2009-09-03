@@ -91,7 +91,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
     protected override ResultOperatorBase CreateResultOperator (ClauseGenerationContext clauseGenerationContext)
     {
-      return new AverageResultOperator (ParsedExpression.Method.ReturnType);
+      return new AverageResultOperator ();
     }
   }
 }

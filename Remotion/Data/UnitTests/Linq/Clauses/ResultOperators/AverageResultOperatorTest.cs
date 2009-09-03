@@ -28,14 +28,12 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
   [TestFixture]
   public class AverageResultOperatorTest
   {
-    private AverageResultOperator _resultOperatorWithDateTimeResult;
-    private AverageResultOperator _resultOperatorWithDoubleResult;
+    private AverageResultOperator _resultOperator;
 
     [SetUp]
     public void SetUp ()
     {
-      _resultOperatorWithDateTimeResult = new AverageResultOperator (typeof (DateTime));
-      _resultOperatorWithDoubleResult = new AverageResultOperator (typeof (double));
+      _resultOperator = new AverageResultOperator ();
     }
 
     [Test]
@@ -43,18 +41,18 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     {
       var clonedClauseMapping = new QuerySourceMapping ();
       var cloneContext = new CloneContext (clonedClauseMapping);
-      var clone = _resultOperatorWithDateTimeResult.Clone (cloneContext);
+      var clone = _resultOperator.Clone (cloneContext);
 
       Assert.That (clone, Is.InstanceOfType (typeof (AverageResultOperator)));
-      Assert.That (((AverageResultOperator) clone).ResultType, Is.SameAs (typeof (DateTime)));
     }
 
     [Test]
     public void ExecuteInMemory ()
     {
       var input = new StreamedSequence (new[] { 1, 2, 3 }, new StreamedSequenceInfo (typeof (int[]), Expression.Constant (0)));
-      var result = _resultOperatorWithDoubleResult.ExecuteInMemory<int> (input);
+      var result = _resultOperator.ExecuteInMemory<int> (input);
 
+      Assert.That (result.Value, Is.InstanceOfType (typeof (double)));
       Assert.That (result.Value, Is.EqualTo (2.0));
     }
 
@@ -63,28 +61,27 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     public void ExecuteInMemory_UnsupportedType ()
     {
       var input = new StreamedSequence (new[] { "1", "2", "3" }, new StreamedSequenceInfo (typeof (string[]), Expression.Constant ("0")));
-      _resultOperatorWithDoubleResult.ExecuteInMemory<string> (input);
+      _resultOperator.ExecuteInMemory<string> (input);
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Cannot calculate the average of items of type 'System.Int32' in memory so "
-        + "that a value of type 'System.DateTime' is returned. Instead, a value of type 'System.Double' would be returned. This does not match the "
-        + "ResultType of the AverageResultOperator.")]
-    public void ExecuteInMemory_EnumerableMethodDoesntMatchResultType ()
-    {
-      var input = new StreamedSequence (new[] { 1, 2, 3 }, new StreamedSequenceInfo (typeof (int[]), Expression.Constant (0)));
-      _resultOperatorWithDateTimeResult.ExecuteInMemory<int> (input);
-    }
-
-    [Test]
-    public void GetOutputDataInfo ()
+    public void GetOutputDataInfo_OutputTypeEqualsItemTypeByDefault ()
     {
       var studentExpression = Expression.Constant (new Student ());
       var input = new StreamedSequenceInfo (typeof (Student[]), studentExpression);
-      var result = _resultOperatorWithDateTimeResult.GetOutputDataInfo (input);
+      var result = _resultOperator.GetOutputDataInfo (input);
 
       Assert.That (result, Is.InstanceOfType (typeof (StreamedValueInfo)));
-      Assert.That (result.DataType, Is.SameAs (typeof (DateTime)));
+      Assert.That (result.DataType, Is.SameAs (typeof (Student)));
+    }
+
+    [Test]
+    public void GetOutputDataInfo_IntegerTypesGoToDouble ()
+    {
+      CheckOutputDataInfo (typeof (int), typeof (double));
+      CheckOutputDataInfo (typeof (int?), typeof (double?));
+      CheckOutputDataInfo (typeof (long), typeof (double));
+      CheckOutputDataInfo (typeof (long?), typeof (double?));
     }
 
     [Test]
@@ -92,7 +89,17 @@ namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
     public void GetOutputDataInfo_InvalidInput ()
     {
       var input = new StreamedScalarValueInfo (typeof (Student));
-      _resultOperatorWithDateTimeResult.GetOutputDataInfo (input);
+      _resultOperator.GetOutputDataInfo (input);
+    }
+
+    private void CheckOutputDataInfo (Type itemType, Type expectedOutputType)
+    {
+      var itemExpression = Expression.Constant (Activator.CreateInstance (itemType), itemType);
+      var inputInfo = new StreamedSequenceInfo (itemType.MakeArrayType(), itemExpression);
+      var outputInfo = _resultOperator.GetOutputDataInfo (inputInfo);
+
+      Assert.That (outputInfo, Is.InstanceOfType (typeof (StreamedValueInfo)));
+      Assert.That (outputInfo.DataType, Is.SameAs (expectedOutputType));
     }
   }
 }
