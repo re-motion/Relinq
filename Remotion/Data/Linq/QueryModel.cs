@@ -160,8 +160,13 @@ namespace Remotion.Data.Linq
     /// </summary>
     public override string ToString ()
     {
-      var result = MainFromClause + BodyClauses.Aggregate ("", (s, b) => s + " " + b) + " " + SelectClause;
-      return ResultOperators.Aggregate (result, (s, r) => s + " => " + r);
+      string mainQueryString;
+      if (IsIdentityQuery())
+        mainQueryString = FormattingExpressionTreeVisitor.Format (MainFromClause.FromExpression);
+      else
+        mainQueryString = MainFromClause + BodyClauses.Aggregate ("", (s, b) => s + " " + b) + " " + SelectClause;
+
+      return ResultOperators.Aggregate (mainQueryString, (s, r) => s + " => " + r);
     }
 
     /// <summary>
@@ -266,6 +271,34 @@ namespace Remotion.Data.Linq
 
       var dataInfo = GetOutputDataInfo();
       return dataInfo.ExecuteQueryModel (this, executor);
+    }
+
+    /// <summary>
+    /// Determines whether this <see cref="QueryModel"/> represents an identity query. An identity query is a query without any body clauses
+    /// whose <see cref="SelectClause"/> selects exactly the items produced by its <see cref="MainFromClause"/>. An identity query can have
+    /// <see cref="ResultOperators"/>.
+    /// </summary>
+    /// <returns>
+    /// 	<see langword="true" /> if this <see cref="QueryModel"/> represents an identity query; otherwise, <see langword="false" />.
+    /// </returns>
+    /// <example>
+    /// An example for an identity query is the subquery in that is produced for the <see cref="Clauses.SelectClause.Selector"/> in the following 
+    /// query:
+    /// <code>
+    /// from order in ...
+    /// select order.OrderItems.Count()
+    /// </code>
+    /// In this query, the <see cref="Clauses.SelectClause.Selector"/> will become a <see cref="SubQueryExpression"/> because 
+    /// <see cref="Enumerable.Count{TSource}(System.Collections.Generic.IEnumerable{TSource})"/> is treated as a query operator. The 
+    /// <see cref="QueryModel"/> in that <see cref="SubQueryExpression"/> has no <see cref="BodyClauses"/> and a trivial <see cref="SelectClause"/>,
+    /// so its <see cref="IsIdentityQuery"/> method returns <see langword="true" />. The outer <see cref="QueryModel"/>, on the other hand, does not
+    /// have a trivial <see cref="SelectClause"/>, so its <see cref="IsIdentityQuery"/> method returns <see langword="false" />.
+    /// </example>
+    public bool IsIdentityQuery ()
+    {
+      return BodyClauses.Count == 0
+             && SelectClause.Selector is QuerySourceReferenceExpression
+             && ((QuerySourceReferenceExpression) SelectClause.Selector).ReferencedQuerySource == MainFromClause;
     }
   }
 }

@@ -39,6 +39,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.QueryParserIntegrationT
                   select new Tuple<Student, Student_Detail> ( s, sd );
       var expression = query.Expression;
       var queryModel = QueryParser.GetParsedQuery (expression);
+
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Tuple<Student, Student_Detail>>)));
 
       var mainFromClause = queryModel.MainFromClause;

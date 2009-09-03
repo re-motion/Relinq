@@ -130,6 +130,23 @@ namespace Remotion.Data.UnitTests.Linq
     }
 
     [Test]
+    public void ToString_IdentityQuery ()
+    {
+      var mainFromClause = new MainFromClause ("x", typeof (Student), Expression.Constant (0));
+      var queryModel = new QueryModel (mainFromClause, new SelectClause (new QuerySourceReferenceExpression (mainFromClause)));
+      Assert.That (queryModel.ToString (), Is.EqualTo ("0"));
+    }
+
+    [Test]
+    public void ToString_IdentityQuery_UsesFormatter ()
+    {
+      var referencedSource = new MainFromClause ("y", typeof (Student), Expression.Constant (0));
+      var mainFromClause = new MainFromClause ("x", typeof (Student), new QuerySourceReferenceExpression (referencedSource));
+      var queryModel = new QueryModel (mainFromClause, new SelectClause (new QuerySourceReferenceExpression (mainFromClause)));
+      Assert.That (queryModel.ToString (), Is.EqualTo ("[y]"));
+    }
+
+    [Test]
     public void Clone_ReturnsNewQueryModel ()
     {
       var queryModel = ExpressionHelper.CreateQueryModel_Student();
@@ -444,6 +461,43 @@ namespace Remotion.Data.UnitTests.Linq
 
       executorMock.VerifyAllExpectations();
       Assert.That (result.GetTypedSequence<int>().ToArray(), Is.EqualTo (mockResult));
+    }
+
+    [Test]
+    public void IsIdentityQuery_True ()
+    {
+      var queryModel = new QueryModel (_mainFromClause, new SelectClause (new QuerySourceReferenceExpression (_mainFromClause)));
+      Assert.That (queryModel.IsIdentityQuery (), Is.True);
+    }
+
+    [Test]
+    public void IsIdentityQuery_True_WithResultOperator ()
+    {
+      var queryModel = new QueryModel (_mainFromClause, new SelectClause (new QuerySourceReferenceExpression (_mainFromClause)));
+      queryModel.ResultOperators.Add (new DistinctResultOperator ());
+      Assert.That (queryModel.IsIdentityQuery (), Is.True);
+    }
+
+    [Test]
+    public void IsIdentityQuery_False_BodyClause ()
+    {
+      var queryModel = new QueryModel (_mainFromClause, new SelectClause (new QuerySourceReferenceExpression (_mainFromClause)));
+      queryModel.BodyClauses.Add (new WhereClause (Expression.Constant (false)));
+      Assert.That (queryModel.IsIdentityQuery (), Is.False);
+    }
+
+    [Test]
+    public void IsIdentityQuery_False_Selector_NonReference ()
+    {
+      var queryModel = new QueryModel (_mainFromClause, new SelectClause (Expression.Constant(0)));
+      Assert.That (queryModel.IsIdentityQuery (), Is.False);
+    }
+
+    [Test]
+    public void IsIdentityQuery_False_Selector_WrongReference ()
+    {
+      var queryModel = new QueryModel (_mainFromClause, new SelectClause (new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause())));
+      Assert.That (queryModel.IsIdentityQuery (), Is.False);
     }
   }
 }
