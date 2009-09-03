@@ -31,6 +31,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
   {
     private readonly MethodCallExpressionNodeTypeRegistry _nodeTypeRegistry;
     private readonly UniqueIdentifierGenerator _identifierGenerator = new UniqueIdentifierGenerator();
+    private static readonly MethodInfo s_getArrayLengthMethod = typeof (Array).GetMethod ("get_Length");
 
     public ExpressionTreeParser (MethodCallExpressionNodeTypeRegistry nodeTypeRegistry)
     {
@@ -91,6 +92,13 @@ namespace Remotion.Data.Linq.Parsing.Structure
           return null;
 
         return Expression.Call (memberExpression.Expression, getterMethod);
+      }
+
+      var unaryExpression = expression as UnaryExpression;
+      if (unaryExpression != null)
+      {
+        if (unaryExpression.NodeType == ExpressionType.ArrayLength && _nodeTypeRegistry.IsRegistered (s_getArrayLengthMethod))
+          return Expression.Call (unaryExpression.Operand, s_getArrayLengthMethod);
       }
 
       return null;

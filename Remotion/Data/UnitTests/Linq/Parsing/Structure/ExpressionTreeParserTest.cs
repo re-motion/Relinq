@@ -26,6 +26,7 @@ using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Data.UnitTests.Linq.Parsing.Structure.TestDomain;
 using Remotion.Data.UnitTests.Linq.TestDomain;
 using Remotion.Development.UnitTesting;
+using Remotion.Web.UI.Controls;
 
 namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 {
@@ -362,6 +363,37 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
       var queryOperatorExpression = _expressionTreeParser.GetQueryOperatorExpression (memberExpression);
 
       Assert.That (queryOperatorExpression, Is.Null);
+    }
+
+    [Test]
+    public void GetQueryOperatorExpression_ArrayLength ()
+    {
+      var memberExpression = (UnaryExpression) ExpressionHelper.MakeExpression (() => new int[0].Length);
+      var queryOperatorExpression = _expressionTreeParser.GetQueryOperatorExpression (memberExpression);
+
+      Assert.That (queryOperatorExpression, Is.Not.Null);
+      Assert.That (queryOperatorExpression.Method, Is.EqualTo (typeof (Array).GetMethod ("get_Length")));
+    }
+
+    [Test]
+    public void GetQueryOperatorExpression_ArrayLength_NotRegistered ()
+    {
+      var expressionTreeParser = new ExpressionTreeParser (new MethodCallExpressionNodeTypeRegistry ());
+      var memberExpression = (UnaryExpression) ExpressionHelper.MakeExpression (() => new int[0].Length);
+      var queryOperatorExpression = expressionTreeParser.GetQueryOperatorExpression (memberExpression);
+
+      Assert.That (queryOperatorExpression, Is.Null);
+    }
+
+    [Test]
+    public void GetQueryOperatorExpression_ArrayLongLength ()
+    {
+      _nodeTypeRegistry.Register (LongCountExpressionNode.SupportedMethods, typeof (LongCountExpressionNode));
+      var memberExpression = (MemberExpression) ExpressionHelper.MakeExpression (() => new int[0].LongLength);
+      var queryOperatorExpression = _expressionTreeParser.GetQueryOperatorExpression (memberExpression);
+
+      Assert.That (queryOperatorExpression, Is.Not.Null);
+      Assert.That (queryOperatorExpression.Method, Is.EqualTo (typeof (Array).GetMethod ("get_LongLength")));
     }
 
     [Test]

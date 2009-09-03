@@ -219,7 +219,6 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.QueryParserIntegrationT
     }
 
     [Test]
-    [Ignore ("TODO 1557")]
     public void ArrayLength ()
     {
       var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
@@ -233,6 +232,22 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.QueryParserIntegrationT
       var subQueryModel = ((SubQueryExpression) selectClause.Selector).QueryModel;
       Assert.That (subQueryModel.ResultOperators.Count, Is.EqualTo (1));
       Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (CountResultOperator)));
+    }
+
+    [Test]
+    public void ArrayLongLength ()
+    {
+      var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
+                                                               select s.LotteryNumbers.LongLength));
+
+      var queryModel = QueryParser.GetParsedQuery (expression);
+
+      var selectClause = queryModel.SelectClause;
+      Assert.That (selectClause.Selector, Is.InstanceOfType (typeof (SubQueryExpression)));
+
+      var subQueryModel = ((SubQueryExpression) selectClause.Selector).QueryModel;
+      Assert.That (subQueryModel.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (LongCountResultOperator)));
     }
 
     [Test]

@@ -16,6 +16,7 @@
 using System;
 using System.Linq;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 
@@ -36,6 +37,12 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     public void SupportedMethod_WithoutPredicate ()
     {
       AssertSupportedMethod_Generic (LongCountExpressionNode.SupportedMethods, q => q.LongCount (), e => e.LongCount ());
+    }
+
+    [Test]
+    public void SupportedMethods_WithoutPredicate_ForArrays ()
+    {
+      Assert.That (LongCountExpressionNode.SupportedMethods, List.Contains (typeof (Array).GetProperty ("LongLength").GetGetMethod ()));
     }
 
     [Test]

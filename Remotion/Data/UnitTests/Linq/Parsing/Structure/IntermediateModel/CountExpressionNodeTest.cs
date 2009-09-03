@@ -48,6 +48,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
       Assert.That (CountExpressionNode.SupportedMethods, List.Contains (typeof (ArrayList).GetProperty ("Count").GetGetMethod ()));
       Assert.That (CountExpressionNode.SupportedMethods, List.Contains (typeof (ICollection<>).GetProperty ("Count").GetGetMethod ()));
       Assert.That (CountExpressionNode.SupportedMethods, List.Contains (typeof (ICollection).GetProperty ("Count").GetGetMethod ()));
+      Assert.That (CountExpressionNode.SupportedMethods, List.Contains (typeof (Array).GetProperty ("Length").GetGetMethod ()));
     }
 
     [Test]
