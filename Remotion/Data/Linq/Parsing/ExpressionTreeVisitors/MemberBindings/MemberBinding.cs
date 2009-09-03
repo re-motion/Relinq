@@ -22,7 +22,7 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.MemberBindings
 {
   /// <summary>
   /// Represents a <see cref="MemberInfo"/> being bound to an associated <see cref="Expression"/> instance. This is used by the 
-  /// <see cref="TransparentIdentifierRemovingVisitor"/> to represent assignments in constructor calls such as <c>new AnonymousType (a = 5)</c>, 
+  /// <see cref="TransparentIdentifierRemovingExpressionTreeVisitor"/> to represent assignments in constructor calls such as <c>new AnonymousType (a = 5)</c>, 
   /// where <c>a</c> is the member of <c>AnonymousType</c> and <c>5</c> is the associated expression.
   /// The <see cref="MatchesReadAccess"/> method can be used to check whether the member bound to an expression matches a given <see cref="MemberInfo"/>
   /// (considering read access). See the subclasses for details.

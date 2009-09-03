@@ -26,7 +26,7 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
   /// Replaces expression patterns of the form <c>new T { x = 1, y = 2 }.x</c> (<see cref="MemberInitExpression"/>) or 
   /// <c>new T ( x = 1, y = 2 ).x</c> (<see cref="NewExpression"/>) to <c>1</c> (or <c>2</c> if <c>y</c> is accessed instead of <c>x</c>).
   /// </summary>
-  public class TransparentIdentifierRemovingVisitor : ExpressionTreeVisitor
+  public class TransparentIdentifierRemovingExpressionTreeVisitor : ExpressionTreeVisitor
   {
     public static Expression ReplaceTransparentIdentifiers (Expression expression)
     {
@@ -39,13 +39,13 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
       do
       {
         expressionBeforeRemove = expressionAfterRemove;
-        expressionAfterRemove = new TransparentIdentifierRemovingVisitor().VisitExpression (expressionAfterRemove);
+        expressionAfterRemove = new TransparentIdentifierRemovingExpressionTreeVisitor().VisitExpression (expressionAfterRemove);
       } while (expressionAfterRemove != expressionBeforeRemove);
 
       return expressionAfterRemove;
     }
 
-    private TransparentIdentifierRemovingVisitor ()
+    private TransparentIdentifierRemovingExpressionTreeVisitor ()
     {
     }
 

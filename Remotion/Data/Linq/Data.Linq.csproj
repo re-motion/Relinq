@@ -103,7 +103,7 @@
     <Compile Include="EagerFetching\Parsing\FetchManyExpressionNode.cs" />
     <Compile Include="EagerFetching\Parsing\FetchExpressionNodeBase.cs" />
     <Compile Include="EagerFetching\Parsing\FetchOneExpressionNode.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\EvaluatableTreeFindingVisitor.cs" />
+    <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\EvaluatableTreeFindingExpressionTreeVisitor.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\PartialEvaluationInfo.cs" />
     <Compile Include="Backend\FieldResolving\FieldAccessInfo.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\AverageExpressionNode.cs" />
@@ -227,9 +227,9 @@
     <Compile Include="ReflectionUtility.cs" />
     <Compile Include="Parsing\ParserException.cs" />
     <Compile Include="Backend\DetailParsing\OrderingFieldParser.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\SubQueryFindingVisitor.cs" />
+    <Compile Include="Parsing\ExpressionTreeVisitors\SubQueryFindingExpressionTreeVisitor.cs" />
     <Compile Include="Parsing\Structure\MethodCallExpressionParser.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\TransparentIdentifierRemovingVisitor.cs" />
+    <Compile Include="Parsing\ExpressionTreeVisitors\TransparentIdentifierRemovingExpressionTreeVisitor.cs" />
     <Compile Include="Parsing\Structure\QueryParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Clauses\MainFromClause.cs" />
@@ -286,7 +286,7 @@
     <Compile Include="Backend\IDatabaseInfo.cs" />
     <Compile Include="Backend\SqlGeneration\SqlGeneratorVisitor.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitor.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\PartialTreeEvaluatingVisitor.cs" />
+    <Compile Include="Parsing\ExpressionTreeVisitors\PartialEvaluatingExpressionTreeVisitor.cs" />
     <Compile Include="Clauses\WhereClause.cs" />
   </ItemGroup>
   <ItemGroup>

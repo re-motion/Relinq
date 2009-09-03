@@ -44,8 +44,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
       var sourceNode = CurrentNode.Source;
       var resolvedExpression = sourceNode.Resolve (parameterToBeResolved, unresolvedExpression, clauseGenerationContext);
-      resolvedExpression = TransparentIdentifierRemovingVisitor.ReplaceTransparentIdentifiers (resolvedExpression);
-      resolvedExpression = SubQueryFindingVisitor.ReplaceSubQueries (resolvedExpression, clauseGenerationContext.NodeTypeRegistry);
+      resolvedExpression = TransparentIdentifierRemovingExpressionTreeVisitor.ReplaceTransparentIdentifiers (resolvedExpression);
+      resolvedExpression = SubQueryFindingExpressionTreeVisitor.ReplaceSubQueries (resolvedExpression, clauseGenerationContext.NodeTypeRegistry);
       return resolvedExpression;
     }
   }

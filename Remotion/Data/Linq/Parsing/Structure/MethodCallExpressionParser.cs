@@ -72,7 +72,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       // a LambdaExpression, which represents an expression passed to an Enumerable method,
       // a ConstantExpression that contains the expression passed to the method,
       // or any other expression that represents a constant passed to the method.
-      // We only support the former three, to support the latter, PartialTreeEvaluatingVisitor must be used.
+      // We only support the former three, to support the latter, PartialEvaluatingExpressionTreeVisitor must be used.
 
       if (expression.NodeType == ExpressionType.Quote)
         return ((UnaryExpression) expression).Operand;
@@ -91,7 +91,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       //{
       //  var message = string.Format (
       //      "The parameter expression type '{0}' is not supported by MethodCallExpressionParser. Only UnaryExpressions and ConstantExpressions are "
-      //      + "supported. To transform other expressions to ConstantExpressions, use PartialTreeEvaluatingVisitor to simplify the expression tree.",
+      //      + "supported. To transform other expressions to ConstantExpressions, use PartialEvaluatingExpressionTreeVisitor to simplify the expression tree.",
       //      expression.NodeType);
       //  throw new ParserException (message);
       //}

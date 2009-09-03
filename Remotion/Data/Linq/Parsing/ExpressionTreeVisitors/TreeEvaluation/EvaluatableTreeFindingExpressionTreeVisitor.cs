@@ -37,13 +37,13 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation
   /// should usually be translated into the target query syntax.
   /// Non-standard expressions are not evaluatable because they cannot be compiled and evaluated by LINQ.
   /// </remarks>
-  public class EvaluatableTreeFindingVisitor : ExpressionTreeVisitor
+  public class EvaluatableTreeFindingExpressionTreeVisitor : ExpressionTreeVisitor
   {
     public static PartialEvaluationInfo Analyze (Expression expressionTree)
     {
       ArgumentUtility.CheckNotNull ("expressionTree", expressionTree);
 
-      var visitor = new EvaluatableTreeFindingVisitor();
+      var visitor = new EvaluatableTreeFindingExpressionTreeVisitor();
       visitor.VisitExpression (expressionTree);
       return visitor._partialEvaluationInfo;
     }

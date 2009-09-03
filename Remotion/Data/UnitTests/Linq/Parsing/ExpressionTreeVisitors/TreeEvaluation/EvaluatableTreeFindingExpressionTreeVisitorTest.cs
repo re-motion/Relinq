@@ -26,13 +26,13 @@ using Remotion.Data.UnitTests.Linq.Parsing.Structure.TestDomain;
 namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation
 {
   [TestFixture]
-  public class EvaluatableTreeFindingVisitorTest
+  public class EvaluatableTreeFindingExpressionTreeVisitorTest
   {
     [Test]
     public void SimpleExpression_IsEvaluatable ()
     {
       var expression = Expression.Constant (0);
-      var evaluationInfo = EvaluatableTreeFindingVisitor.Analyze (expression);
+      var evaluationInfo = EvaluatableTreeFindingExpressionTreeVisitor.Analyze (expression);
 
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.True);
     }
@@ -43,7 +43,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors.TreeEvalua
       var innerExpressionLeft = Expression.Constant (0);
       var innerExpressionRight = Expression.Constant (0);
       var outerExpression = Expression.MakeBinary (ExpressionType.Add, innerExpressionLeft, innerExpressionRight);
-      var evaluationInfo = EvaluatableTreeFindingVisitor.Analyze (outerExpression);
+      var evaluationInfo = EvaluatableTreeFindingExpressionTreeVisitor.Analyze (outerExpression);
 
       Assert.That (evaluationInfo.IsEvaluatableExpression (outerExpression), Is.True);
       Assert.That (evaluationInfo.IsEvaluatableExpression (innerExpressionLeft), Is.True);
@@ -54,7 +54,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors.TreeEvalua
     public void ParameterExpression_IsNotEvaluatable ()
     {
       var expression = ExpressionHelper.CreateParameterExpression ();
-      var evaluationInfo = EvaluatableTreeFindingVisitor.Analyze (expression);
+      var evaluationInfo = EvaluatableTreeFindingExpressionTreeVisitor.Analyze (expression);
 
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
     }
@@ -67,7 +67,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors.TreeEvalua
           ExpressionHelper.CreateParameterExpression (), 
           ExpressionHelper.CreateParameterExpression ());
       
-      var evaluationInfo = EvaluatableTreeFindingVisitor.Analyze (expression);
+      var evaluationInfo = EvaluatableTreeFindingExpressionTreeVisitor.Analyze (expression);
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
     }
 
@@ -79,7 +79,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors.TreeEvalua
           ExpressionHelper.CreateParameterExpression (),
           Expression.Constant (0));
 
-      var evaluationInfo = EvaluatableTreeFindingVisitor.Analyze (expression);
+      var evaluationInfo = EvaluatableTreeFindingExpressionTreeVisitor.Analyze (expression);
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression.Right), Is.True);
     }
 
@@ -87,7 +87,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors.TreeEvalua
     public void NonStandardExpressions_AreNotEvaluatable ()
     {
       var expression = new SubQueryExpression (ExpressionHelper.CreateQueryModel_Student());
-      var evaluationInfo = EvaluatableTreeFindingVisitor.Analyze (expression);
+      var evaluationInfo = EvaluatableTreeFindingExpressionTreeVisitor.Analyze (expression);
 
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
     }
@@ -102,7 +102,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors.TreeEvalua
 
       Assert.That (expression.Conversion, Is.Null);
 
-      var evaluationInfo = EvaluatableTreeFindingVisitor.Analyze (expression);
+      var evaluationInfo = EvaluatableTreeFindingExpressionTreeVisitor.Analyze (expression);
       Assert.That (evaluationInfo.Count, Is.EqualTo (0));
     }
 
@@ -112,7 +112,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors.TreeEvalua
       var source = ExpressionHelper.CreateStudentQueryable ();
       var expression = ExpressionHelper.MakeExpression (() => source.ToString());
 
-      var evaluationInfo = EvaluatableTreeFindingVisitor.Analyze (expression);
+      var evaluationInfo = EvaluatableTreeFindingExpressionTreeVisitor.Analyze (expression);
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
     }
 
@@ -122,7 +122,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors.TreeEvalua
       var source = ExpressionHelper.CreateStudentQueryable ();
       var expression = ExpressionHelper.MakeExpression (() => source.Count ());
 
-      var evaluationInfo = EvaluatableTreeFindingVisitor.Analyze (expression);
+      var evaluationInfo = EvaluatableTreeFindingExpressionTreeVisitor.Analyze (expression);
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
     }
 
@@ -132,7 +132,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors.TreeEvalua
       var source = new QueryableFakeWithCount<int>();
       var expression = ExpressionHelper.MakeExpression (() => source.Count);
 
-      var evaluationInfo = EvaluatableTreeFindingVisitor.Analyze (expression);
+      var evaluationInfo = EvaluatableTreeFindingExpressionTreeVisitor.Analyze (expression);
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
     }
 
@@ -141,7 +141,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors.TreeEvalua
     {
       var expression = (MemberInitExpression) ExpressionHelper.MakeExpression<int, AnonymousType> (i => new AnonymousType { a = i, b = 1 });
 
-      var evaluationInfo = EvaluatableTreeFindingVisitor.Analyze (expression);
+      var evaluationInfo = EvaluatableTreeFindingExpressionTreeVisitor.Analyze (expression);
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression.NewExpression), Is.False);
     }
@@ -151,7 +151,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors.TreeEvalua
     {
       var expression = (ListInitExpression) ExpressionHelper.MakeExpression<int, List<int>> (i => new List<int> { i, 1 });
 
-      var evaluationInfo = EvaluatableTreeFindingVisitor.Analyze (expression);
+      var evaluationInfo = EvaluatableTreeFindingExpressionTreeVisitor.Analyze (expression);
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression.NewExpression), Is.False);
     }
@@ -161,7 +161,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors.TreeEvalua
     {
       var expression = (MemberInitExpression) ExpressionHelper.MakeExpression<int, AnonymousType> (i => new AnonymousType { a = 1, b = 1 });
 
-      var evaluationInfo = EvaluatableTreeFindingVisitor.Analyze (expression);
+      var evaluationInfo = EvaluatableTreeFindingExpressionTreeVisitor.Analyze (expression);
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.True);
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression.NewExpression), Is.True);
     }
@@ -171,7 +171,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors.TreeEvalua
     {
       var expression = (ListInitExpression) ExpressionHelper.MakeExpression<int, List<int>> (i => new List<int> { 2, 1 });
 
-      var evaluationInfo = EvaluatableTreeFindingVisitor.Analyze (expression);
+      var evaluationInfo = EvaluatableTreeFindingExpressionTreeVisitor.Analyze (expression);
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.True);
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression.NewExpression), Is.True);
     }
@@ -180,7 +180,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors.TreeEvalua
     public void VisitUnknownExpression_Ignored ()
     {
       var expression = new UnknownExpression (typeof (object));
-      var result = EvaluatableTreeFindingVisitor.Analyze (expression);
+      var result = EvaluatableTreeFindingExpressionTreeVisitor.Analyze (expression);
 
       Assert.That (result.IsEvaluatableExpression (expression), Is.False);
     }

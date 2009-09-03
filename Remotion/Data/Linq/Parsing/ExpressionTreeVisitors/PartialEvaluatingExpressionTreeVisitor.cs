@@ -21,17 +21,17 @@ using Remotion.Utilities;
 namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
 {
   /// <summary>
-  /// Takes an expression tree and first analyzes it for evaluatable subtrees (using <see cref="EvaluatableTreeFindingVisitor"/>), i.e.
+  /// Takes an expression tree and first analyzes it for evaluatable subtrees (using <see cref="EvaluatableTreeFindingExpressionTreeVisitor"/>), i.e.
   /// subtrees that can be pre-evaluated before actually generating the query. Examples for evaluatable subtrees are operations on constant
   /// values (constant folding), access to closure variables (variables used by the LINQ query that are defined in an outer scope), or method
   /// calls on known objects or their members. In a second step, it replaces all of the evaluatable subtrees (top-down and non-recursive) by 
   /// their evaluated counterparts.
   /// </summary>
   /// <remarks>
-  /// This visitor visits each tree node at most twice: once via the <see cref="EvaluatableTreeFindingVisitor"/> for analysis and once
+  /// This visitor visits each tree node at most twice: once via the <see cref="EvaluatableTreeFindingExpressionTreeVisitor"/> for analysis and once
   /// again to replace nodes if possible (unless the parent node has already been replaced).
   /// </remarks>
-  public class PartialTreeEvaluatingVisitor : ExpressionTreeVisitor
+  public class PartialEvaluatingExpressionTreeVisitor : ExpressionTreeVisitor
   {
     /// <summary>
     /// Takes an expression tree and finds and evaluates all its evaluatable subtrees.
@@ -40,16 +40,16 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
     {
       ArgumentUtility.CheckNotNull ("expressionTree", expressionTree);
 
-      var partialEvaluationInfo = EvaluatableTreeFindingVisitor.Analyze (expressionTree);
+      var partialEvaluationInfo = EvaluatableTreeFindingExpressionTreeVisitor.Analyze (expressionTree);
 
-      var visitor = new PartialTreeEvaluatingVisitor (expressionTree, partialEvaluationInfo);
+      var visitor = new PartialEvaluatingExpressionTreeVisitor (expressionTree, partialEvaluationInfo);
       return visitor.VisitExpression (expressionTree);
     }
 
     // _partialEvaluationInfo contains a list of the expressions that are safe to be evaluated.
     private readonly PartialEvaluationInfo _partialEvaluationInfo;
 
-    private PartialTreeEvaluatingVisitor (Expression treeRoot, PartialEvaluationInfo partialEvaluationInfo)
+    private PartialEvaluatingExpressionTreeVisitor (Expression treeRoot, PartialEvaluationInfo partialEvaluationInfo)
     {
       ArgumentUtility.CheckNotNull ("treeRoot", treeRoot);
       ArgumentUtility.CheckNotNull ("partialEvaluationInfo", partialEvaluationInfo);
