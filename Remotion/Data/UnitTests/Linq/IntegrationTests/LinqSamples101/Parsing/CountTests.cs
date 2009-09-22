@@ -18,18 +18,20 @@ using System.Linq;
 using NUnit.Framework;
 using Remotion.Data.UnitTests.Linq.IntegrationTests.LinqSamples101.TestDomain;
 
-namespace Remotion.Data.UnitTests.Linq.IntegrationTests.LinqSamples101.Parsing.CSharp
+namespace Remotion.Data.UnitTests.Linq.IntegrationTests.LinqSamples101.Parsing
 {
   /// <summary>
   /// http://msdn.microsoft.com/en-us/bb737922.aspx
   /// </summary>
   [TestFixture]
-  public class Count : TestBase
+  public class CountTest : TestBase
   {
     [Test]
     public void Test_Simple ()
     {
-      CheckParsedQuery (() => QuerySource.Customers.Count (), "Customers => Count()");
+      CheckParsedQuery (
+          () => QuerySource.Customers.Count(),
+          "Customers => Count()");
     }
   }
 }

@@ -18,13 +18,13 @@ using System.Linq;
 using NUnit.Framework;
 using Remotion.Data.UnitTests.Linq.IntegrationTests.LinqSamples101.TestDomain;
 
-namespace Remotion.Data.UnitTests.Linq.IntegrationTests.LinqSamples101.Parsing.CSharp
+namespace Remotion.Data.UnitTests.Linq.IntegrationTests.LinqSamples101.Parsing
 {
   /// <summary>
   /// http://msdn.microsoft.com/en-us/bb737944.aspx
   /// </summary>
   [TestFixture]
-  public class Where : TestBase
+  public class WhereTest : TestBase
   {
     [Test]
     public void Test_01 ()
