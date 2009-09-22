@@ -14,7 +14,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
@@ -31,7 +30,7 @@ namespace Remotion.Data.UnitTests.Linq.IntegrationTests
       ArgumentUtility.CheckNotNull ("expectedStringRepresentation", expectedStringRepresentation);
 
       Expression unwrappedExpression = ExpressionHelper.MakeExpression (actualExpression);
-      Assert.That (new QueryParser ().GetParsedQuery (unwrappedExpression).ToString (), Is.EqualTo (expectedStringRepresentation));
+      Assert.That (new QueryParser().GetParsedQuery (unwrappedExpression).ToString(), Is.EqualTo (expectedStringRepresentation));
     }
   }
 }
