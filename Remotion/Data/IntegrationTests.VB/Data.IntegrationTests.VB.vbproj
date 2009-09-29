@@ -64,6 +64,7 @@
     <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Linq\LinqSamples101\Parsing\WhereTest.vb" />
     <Compile Include="Linq\LinqSamples101\Parsing\CountTest.vb" />
     <Compile Include="Linq\LinqSamples101\Parsing\SelectTest.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />

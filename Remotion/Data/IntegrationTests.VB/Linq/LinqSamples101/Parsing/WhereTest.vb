@@ -5,17 +5,18 @@ Imports Remotion.Data.UnitTests.Linq.IntegrationTests.LinqSamples101.TestDomain
 Namespace Remotion.Data.IntegrationTests.VB.Linq.LinqSamples101.Parsing
 
   ''' <summary>
-  ''' http://msdn.microsoft.com/en-us/bb737922.aspx
+  ''' http://msdn.microsoft.com/en-us/bb737944.aspx
   ''' </summary>
   <TestFixture()> _
-  Public Class CountTest
+  Public Class WhereTest
     Inherits TestBase
 
     <Test()> _
-    Public Sub Test_Simple()
+    <Ignore("Should be 'from Customer c in Customers where ([c].City = ""London"") select [c]'")> _
+    Public Sub Test_01()
       CheckParsedQuery( _
-          (Function() QuerySource.Customers.Count()), _
-          "Customers => Count()")
+          (Function() From c In QuerySource.Customers Where c.City = "London"), _
+          "from Customer c in Customers where (CompareString([c].City, ""London"", False) = 0) select [c]")
     End Sub
 
   End Class
