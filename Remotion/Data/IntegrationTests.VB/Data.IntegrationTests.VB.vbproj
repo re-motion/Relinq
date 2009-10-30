@@ -7,8 +7,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{CC698D05-D96D-4FFF-B87A-263AB22B0EB1}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Data.IntegrationTests.VB</RootNamespace>
-    <AssemblyName>Data.IntegrationTests.VB</AssemblyName>
+    <RootNamespace>Remotion.Data.IntegrationTests.VB</RootNamespace>
+    <AssemblyName>Remotion.Data.IntegrationTests.VB</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>Windows</MyType>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
@@ -23,7 +23,7 @@
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\Debug\</OutputPath>
-    <DocumentationFile>Data.IntegrationTests.VB.xml</DocumentationFile>
+    <DocumentationFile>Remotion.Data.IntegrationTests.VB.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -32,7 +32,7 @@
     <DefineTrace>true</DefineTrace>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>Data.IntegrationTests.VB.xml</DocumentationFile>
+    <DocumentationFile>Remotion.Data.IntegrationTests.VB.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <ItemGroup>
