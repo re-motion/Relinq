@@ -25,7 +25,7 @@ filter add-licenseHeader([string]$pathToLicenseHeaderFile)
   move-item $tempFile $pathToSourceFile -force
 }
 
-#get-ChildItem -path $rootPath -include '*.cs' -exclude 'prereq\*' -recurse | add-licenseHeader 'licenseHeader.cs.txt'
+get-ChildItem -path $rootPath\Remotion -include '*.cs' -exclude '*.designer.cs' -recurse | add-licenseHeader 'licenseHeader.cs.txt'
 #get-ChildItem -path $rootPath -include '*.js' -exclude 'prereq\*' -recurse | add-licenseHeader 'licenseHeader.cs.txt'
 #get-ChildItem -path $rootPath -include '*.aspx' -exclude 'prereq\*' -recurse | add-licenseHeader 'licenseHeader.asx.txt'
 #get-ChildItem -path $rootPath -include '*.ascx' -exclude 'prereq\*' -recurse | add-licenseHeader 'licenseHeader.asx.txt'

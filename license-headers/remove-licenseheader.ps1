@@ -46,7 +46,7 @@ filter remove-licenseHeader([string]$pathToOldLicenseHeaderFile)
   move-item $tempFile $pathToSourceFile -force
 }
 
-#get-ChildItem -path $rootPath\Remotion -include '*.designer.cs' -recurse | remove-licenseHeader 'licenseHeader.cs.txt' 
+get-ChildItem -path $rootPath\Remotion  -include '*.cs' -exclude '*.designer.cs' -recurse | remove-licenseHeader 'licenseHeader_old.cs.txt' 
 #get-ChildItem -path $rootPath\SecurityManager -include '*.designer.cs' -recurse | remove-licenseHeader 'licenseHeaderRestrict.cs.txt' 
 #get-ChildItem -path $rootPath\SecurityManager -include '*.designer.cs' -recurse | remove-licenseHeader 'licenseHeaderRestrict_old.cs.txt' 
 #get-ChildItem -path $rootPath\DMS -include '*.designer.cs' -recurse | remove-licenseHeader 'licenseHeaderRevision.cs.txt'
