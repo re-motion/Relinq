@@ -22,7 +22,7 @@ using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Utilities;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
+namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.IntermediateModel
 {
   [TestFixture]
   public class MainSourceExpressionNodeTest : ExpressionNodeTestBase

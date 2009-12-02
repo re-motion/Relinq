@@ -23,9 +23,9 @@ using NUnit.Framework.SyntaxHelpers;
 using Remotion.Collections;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
-using Remotion.Data.UnitTests.Linq.TestDomain;
+using Remotion.Data.Linq.UnitTests.TestDomain;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
+namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitors
 {
   [TestFixture]
   public class PartialEvaluatingExpressionTreeVisitorTest

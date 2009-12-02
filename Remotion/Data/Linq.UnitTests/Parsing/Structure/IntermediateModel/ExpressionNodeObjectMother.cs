@@ -17,9 +17,9 @@
 using System;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
-using Remotion.Data.UnitTests.Linq.TestDomain;
+using Remotion.Data.Linq.UnitTests.TestDomain;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
+namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.IntermediateModel
 {
   public static class ExpressionNodeObjectMother
   {

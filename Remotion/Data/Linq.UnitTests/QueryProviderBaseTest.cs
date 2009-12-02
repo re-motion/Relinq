@@ -25,12 +25,12 @@ using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Structure;
-using Remotion.Data.UnitTests.Linq.TestDomain;
-using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
+using Remotion.Data.Linq.UnitTests.TestDomain;
+using Remotion.Data.Linq.UnitTests.TestQueryGenerators;
 using Remotion.Utilities;
 using Rhino.Mocks;
 
-namespace Remotion.Data.UnitTests.Linq
+namespace Remotion.Data.Linq.UnitTests
 {
   [TestFixture]
   public class QueryProviderBaseTest

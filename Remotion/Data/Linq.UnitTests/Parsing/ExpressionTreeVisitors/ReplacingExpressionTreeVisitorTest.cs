@@ -20,7 +20,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
+namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitors
 {
   [TestFixture]
   public class ReplacingExpressionTreeVisitorTest

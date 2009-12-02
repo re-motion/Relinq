@@ -23,7 +23,7 @@ using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Rhino.Mocks;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
+namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.IntermediateModel
 {
   [TestFixture]
   public class DefaultIfEmptyExpressionNodeTest : ExpressionNodeTestBase

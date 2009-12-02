@@ -23,7 +23,7 @@ using NUnit.Framework;
 using Remotion.Utilities;
 using Assertion=Remotion.Utilities.Assertion;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing
+namespace Remotion.Data.Linq.UnitTests.Parsing
 {
   public class ExpressionTreeComparer
   {
@@ -81,9 +81,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing
       {
         CheckAreEqualObjects (value1, value2);
       }
-      else if (ReflectionUtility.CanAscribe (valueType, typeof (ReadOnlyCollection<>)))
+      else if (Remotion.Utilities.ReflectionUtility.CanAscribe (valueType, typeof (ReadOnlyCollection<>)))
       {
-        Type[] collectionGenericArguments = ReflectionUtility.GetAscribedGenericArguments (valueType, typeof (ReadOnlyCollection<>));
+        Type[] collectionGenericArguments = Remotion.Utilities.ReflectionUtility.GetAscribedGenericArguments (valueType, typeof (ReadOnlyCollection<>));
         Assertion.IsTrue (collectionGenericArguments.Length == 1, "ReadOnlyCollection only has one generic argument");
         Type elementType = collectionGenericArguments[0];
         

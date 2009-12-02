@@ -20,9 +20,9 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
-using Remotion.Data.UnitTests.Linq.TestDomain;
+using Remotion.Data.Linq.UnitTests.TestDomain;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
+namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.IntermediateModel
 {
   [TestFixture]
   public class LastExpressionNodeTest : ExpressionNodeTestBase

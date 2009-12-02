@@ -16,7 +16,7 @@
 // 
 using System;
 
-namespace Remotion.Data.UnitTests.Linq.TestDomain
+namespace Remotion.Data.Linq.UnitTests.TestDomain
 {
   public class Student_Detail
   {

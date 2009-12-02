@@ -22,7 +22,7 @@ using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
 using Rhino.Mocks;
 
-namespace Remotion.Data.UnitTests.Linq.Clauses
+namespace Remotion.Data.Linq.UnitTests.Clauses
 {
   [TestFixture]
   public class WhereClauseTest

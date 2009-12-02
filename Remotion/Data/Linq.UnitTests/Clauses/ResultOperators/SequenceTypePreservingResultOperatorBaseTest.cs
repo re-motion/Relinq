@@ -20,10 +20,10 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.StreamedData;
-using Remotion.Data.UnitTests.Linq.TestDomain;
+using Remotion.Data.Linq.UnitTests.TestDomain;
 using Remotion.Utilities;
 
-namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
+namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
 {
   [TestFixture]
   public class SequenceTypePreservingResultOperatorBaseTest

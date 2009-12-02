@@ -18,7 +18,7 @@ using System;
 using Remotion.Data.Linq;
 using Remotion.Utilities;
 
-namespace Remotion.Data.UnitTests.Linq.IntegrationTests
+namespace Remotion.Data.Linq.UnitTests.IntegrationTests
 {
   public class TestQueryable<T> : QueryableBase<T>
   {

@@ -18,9 +18,9 @@ using System;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.Expressions;
-using Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel;
+using Remotion.Data.Linq.UnitTests.Parsing.Structure.IntermediateModel;
 
-namespace Remotion.Data.UnitTests.Linq.Clauses.Expressions
+namespace Remotion.Data.Linq.UnitTests.Clauses.Expressions
 {
   [TestFixture]
   public class QuerySourceReferenceExpressionTest : ExpressionNodeTestBase

@@ -24,10 +24,10 @@ using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Clauses.StreamedData;
-using Remotion.Data.UnitTests.Linq.TestDomain;
+using Remotion.Data.Linq.UnitTests.TestDomain;
 using Rhino.Mocks;
 
-namespace Remotion.Data.UnitTests.Linq
+namespace Remotion.Data.Linq.UnitTests
 {
   [TestFixture]
   public class QueryModelTest

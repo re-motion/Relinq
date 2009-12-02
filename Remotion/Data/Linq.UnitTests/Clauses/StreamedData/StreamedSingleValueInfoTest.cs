@@ -19,10 +19,10 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses.StreamedData;
-using Remotion.Data.UnitTests.Linq.TestDomain;
+using Remotion.Data.Linq.UnitTests.TestDomain;
 using Rhino.Mocks;
 
-namespace Remotion.Data.UnitTests.Linq.Clauses.StreamedData
+namespace Remotion.Data.Linq.UnitTests.Clauses.StreamedData
 {
   [TestFixture]
   public class StreamedSingleValueInfoTest

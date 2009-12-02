@@ -18,9 +18,9 @@ using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Data.Linq.Clauses.Expressions;
-using Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitorTests;
+using Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing
+namespace Remotion.Data.Linq.UnitTests.Parsing
 {
   [TestFixture]
   public class ThrowingExpressionTreeVisitorTest

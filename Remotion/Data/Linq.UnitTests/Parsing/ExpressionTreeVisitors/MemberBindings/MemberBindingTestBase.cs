@@ -20,7 +20,7 @@ using System.Reflection;
 using NUnit.Framework;
 using Remotion.Development.UnitTesting;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors.MemberBindings
+namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitors.MemberBindings
 {
   public abstract class MemberBindingTestBase
   {

@@ -19,9 +19,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Remotion.Data.UnitTests.Linq.TestDomain;
+using Remotion.Data.Linq.UnitTests.TestDomain;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.TestDomain
+namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.TestDomain
 {
   public class QueryableFakeWithCount<T> : IQueryable<T>, IQueryProvider
   {

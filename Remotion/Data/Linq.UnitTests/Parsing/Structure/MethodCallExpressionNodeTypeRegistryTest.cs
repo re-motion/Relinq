@@ -24,9 +24,9 @@ using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
-using Remotion.Data.UnitTests.Linq.Parsing.Structure.TestDomain;
+using Remotion.Data.Linq.UnitTests.Parsing.Structure.TestDomain;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
+namespace Remotion.Data.Linq.UnitTests.Parsing.Structure
 {
   [TestFixture]
   public class MethodCallExpressionNodeTypeRegistryTest

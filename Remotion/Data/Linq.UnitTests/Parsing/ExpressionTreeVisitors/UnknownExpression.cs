@@ -17,7 +17,7 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
+namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitors
 {
   public class UnknownExpression : Expression
   {

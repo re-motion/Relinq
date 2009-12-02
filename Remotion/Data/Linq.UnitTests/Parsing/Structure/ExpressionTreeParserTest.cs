@@ -24,11 +24,12 @@ using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
-using Remotion.Data.UnitTests.Linq.Parsing.Structure.TestDomain;
-using Remotion.Data.UnitTests.Linq.TestDomain;
+using Remotion.Data.Linq.UnitTests;
+using Remotion.Data.Linq.UnitTests.Parsing.Structure.TestDomain;
+using Remotion.Data.Linq.UnitTests.TestDomain;
 using Remotion.Development.UnitTesting;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
+namespace Remotion.Data.Linq.UnitTests.Parsing.Structure
 {
   [TestFixture]
   public class ExpressionTreeParserTest
@@ -92,7 +93,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
 
     [Test]
     [ExpectedException (typeof (ParserException), ExpectedMessage = "Cannot parse expression '0' as it has an unsupported type. Only query sources "
-        + "(that is, expressions that implement IEnumerable) and query operators can be parsed.")]
+                                                                    + "(that is, expressions that implement IEnumerable) and query operators can be parsed.")]
     public void ParseTree_InvalidNonQueryOperatorExpression ()
     {
       _expressionTreeParser.ParseTree (Expression.Constant (0));
@@ -234,9 +235,9 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     [Test]
     public void ParseTree_SimplifiesTree ()
     {
-// ReSharper disable ConvertToConstant.Local
+      // ReSharper disable ConvertToConstant.Local
       var outerI = 1;
-// ReSharper restore ConvertToConstant.Local
+      // ReSharper restore ConvertToConstant.Local
       var expression = _intSource.Where (i => 1 > outerI).Expression;
 
       var result = (WhereExpressionNode) _expressionTreeParser.ParseTree (expression);
@@ -301,7 +302,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure
     public void InferAssociatedIdentifierForSource_WithUnary_AfterConstant ()
     {
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression (
-          () => _intSource.Join (ExpressionHelper.CreateStudentQueryable(), i => i, s => s.ID, (i, s) => i));
+                                                            () => _intSource.Join (ExpressionHelper.CreateStudentQueryable(), i => i, s => s.ID, (i, s) => i));
 
       var identifier = (string) PrivateInvoke.InvokeNonPublicMethod (_expressionTreeParser, "InferAssociatedIdentifierForSource", methodCallExpression);
       Assert.That (identifier, Is.EqualTo ("i"));

@@ -21,10 +21,10 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses.StreamedData;
-using Remotion.Data.UnitTests.Linq.Clauses.ResultOperators;
+using Remotion.Data.Linq.UnitTests.Clauses.ResultOperators;
 using Rhino.Mocks;
 
-namespace Remotion.Data.UnitTests.Linq.Clauses
+namespace Remotion.Data.Linq.UnitTests.Clauses
 {
   [TestFixture]
   public class ResultOperatorBaseTest

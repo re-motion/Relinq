@@ -25,7 +25,7 @@ using Remotion.Development.UnitTesting;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitorTests
+namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
 {
   [TestFixture]
   public class ExpressionTreeVisitorTest

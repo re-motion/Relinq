@@ -17,7 +17,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Remotion.Data.UnitTests.Linq.TestDomain
+namespace Remotion.Data.Linq.UnitTests.TestDomain
 {
   public class IndustrialSector
   {

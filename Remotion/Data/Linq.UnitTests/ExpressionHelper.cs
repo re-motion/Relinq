@@ -27,10 +27,10 @@ using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Parsing.Structure;
-using Remotion.Data.UnitTests.Linq.TestDomain;
+using Remotion.Data.Linq.UnitTests.TestDomain;
 using Rhino.Mocks;
 
-namespace Remotion.Data.UnitTests.Linq
+namespace Remotion.Data.Linq.UnitTests
 {
   public static class ExpressionHelper
   {

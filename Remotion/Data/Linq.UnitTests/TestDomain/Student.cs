@@ -19,7 +19,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Remotion.Data.UnitTests.Linq.TestDomain
+namespace Remotion.Data.Linq.UnitTests.TestDomain
 {
   public class Student
   {

@@ -21,7 +21,7 @@ using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses.StreamedData;
 using Rhino.Mocks;
 
-namespace Remotion.Data.UnitTests.Linq.Clauses.StreamedData
+namespace Remotion.Data.Linq.UnitTests.Clauses.StreamedData
 {
   [TestFixture]
   public class StreamedScalarValueInfoTest

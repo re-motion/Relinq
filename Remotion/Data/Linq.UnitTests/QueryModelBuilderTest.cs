@@ -22,7 +22,7 @@ using Remotion.Data.Linq.Clauses;
 using Remotion.Utilities;
 using Rhino.Mocks;
 
-namespace Remotion.Data.UnitTests.Linq
+namespace Remotion.Data.Linq.UnitTests
 {
   [TestFixture]
   public class QueryModelBuilderTest

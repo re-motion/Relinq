@@ -17,7 +17,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing
+namespace Remotion.Data.Linq.UnitTests.Parsing
 {
   public class AnonymousType<TA, TB>
   {

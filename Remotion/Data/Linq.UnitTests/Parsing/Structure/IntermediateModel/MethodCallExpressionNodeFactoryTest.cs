@@ -18,10 +18,10 @@ using System;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
-using Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel.TestDomain;
+using Remotion.Data.Linq.UnitTests.Parsing.Structure.IntermediateModel.TestDomain;
 using Remotion.Utilities;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
+namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.IntermediateModel
 {
   [TestFixture]
   public class MethodCallExpressionNodeFactoryTest
@@ -66,7 +66,7 @@ namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "Expression node type 'Remotion.Data.UnitTests.Linq.Parsing.Structure."
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "Expression node type 'Remotion.Data.Linq.UnitTests.Parsing.Structure."
         + "IntermediateModel.TestDomain.ExpressionNodeWithTooManyCtors' contains too many constructors. It must only contain a single constructor, allowing null "
         + "to be passed for any optional arguments.\r\nParameter name: nodeType")]
     public void CreateExpressionNode_MoreThanOneCtor ()

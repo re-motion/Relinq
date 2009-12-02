@@ -24,7 +24,7 @@ using Remotion.Data.Linq.Clauses.Expressions;
 using Rhino.Mocks;
 
 
-namespace Remotion.Data.UnitTests.Linq.Clauses
+namespace Remotion.Data.Linq.UnitTests.Clauses
 {
   [TestFixture]
   public class OrderByClauseTest

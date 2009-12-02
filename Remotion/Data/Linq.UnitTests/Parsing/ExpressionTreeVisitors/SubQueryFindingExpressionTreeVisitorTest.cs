@@ -23,11 +23,11 @@ using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
-using Remotion.Data.UnitTests.Linq.Parsing.Structure.TestDomain;
-using Remotion.Data.UnitTests.Linq.TestDomain;
-using Remotion.Data.UnitTests.Linq.TestQueryGenerators;
+using Remotion.Data.Linq.UnitTests.Parsing.Structure.TestDomain;
+using Remotion.Data.Linq.UnitTests.TestDomain;
+using Remotion.Data.Linq.UnitTests.TestQueryGenerators;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors
+namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitors
 {
   [TestFixture]
   public class SubQueryFindingExpressionTreeVisitorTest

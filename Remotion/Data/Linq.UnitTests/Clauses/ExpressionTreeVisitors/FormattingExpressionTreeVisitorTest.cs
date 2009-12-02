@@ -21,9 +21,9 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
-using Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors;
+using Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitors;
 
-namespace Remotion.Data.UnitTests.Linq.Clauses.ExpressionTreeVisitors
+namespace Remotion.Data.Linq.UnitTests.Clauses.ExpressionTreeVisitors
 {
   [TestFixture]
   public class FormattingExpressionTreeVisitorTest

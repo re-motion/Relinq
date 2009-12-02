@@ -21,9 +21,9 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Collections;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.UnitTests.Linq.TestDomain;
+using Remotion.Data.Linq.UnitTests.TestDomain;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.QueryParserIntegrationTests
+namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
 {
   [TestFixture]
   public class GroupJoinQueryParserIntegrationTest : QueryParserIntegrationTestBase

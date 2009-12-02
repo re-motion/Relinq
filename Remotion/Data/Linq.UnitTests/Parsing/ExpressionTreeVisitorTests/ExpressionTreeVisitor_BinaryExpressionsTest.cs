@@ -21,7 +21,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Rhino.Mocks;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitorTests
+namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
 {
   [TestFixture]
   public class ExpressionTreeVisitor_BinaryExpressionsTest : ExpressionTreeVisitor_SpecificExpressionsTestBase

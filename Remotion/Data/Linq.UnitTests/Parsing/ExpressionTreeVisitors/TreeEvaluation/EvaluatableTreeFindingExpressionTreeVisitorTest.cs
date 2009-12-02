@@ -22,9 +22,9 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation;
-using Remotion.Data.UnitTests.Linq.Parsing.Structure.TestDomain;
+using Remotion.Data.Linq.UnitTests.Parsing.Structure.TestDomain;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation
+namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitors.TreeEvaluation
 {
   [TestFixture]
   public class EvaluatableTreeFindingExpressionTreeVisitorTest

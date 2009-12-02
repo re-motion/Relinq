@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Remotion.Data.UnitTests.Linq.TestDomain
+namespace Remotion.Data.Linq.UnitTests.TestDomain
 {
 // ReSharper disable UnusedTypeParameter
   public class QueryableWithTooManyArguments<T1, T2> : IQueryable<T1>

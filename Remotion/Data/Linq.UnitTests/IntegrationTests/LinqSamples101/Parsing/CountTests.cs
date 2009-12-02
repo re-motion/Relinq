@@ -17,9 +17,9 @@
 using System;
 using System.Linq;
 using NUnit.Framework;
-using Remotion.Data.UnitTests.Linq.IntegrationTests.LinqSamples101.TestDomain;
+using Remotion.Data.Linq.UnitTests.IntegrationTests.LinqSamples101.TestDomain;
 
-namespace Remotion.Data.UnitTests.Linq.IntegrationTests.LinqSamples101.Parsing
+namespace Remotion.Data.Linq.UnitTests.IntegrationTests.LinqSamples101.Parsing
 {
   /// <summary>
   /// http://msdn.microsoft.com/en-us/bb737922.aspx

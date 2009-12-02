@@ -20,7 +20,7 @@ using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Development.UnitTesting;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing
+namespace Remotion.Data.Linq.UnitTests.Parsing
 {
   [TestFixture]
   public class ParserExceptionTest

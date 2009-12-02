@@ -21,7 +21,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.StreamedData;
 
-namespace Remotion.Data.UnitTests.Linq.Clauses.ResultOperators
+namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
 {
   [TestFixture]
   public class ValueFromSequenceResultOperatorBaseTest

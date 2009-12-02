@@ -18,7 +18,7 @@ using System;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses.StreamedData;
 
-namespace Remotion.Data.UnitTests.Linq.Clauses.StreamedData
+namespace Remotion.Data.Linq.UnitTests.Clauses.StreamedData
 {
   public class TestStreamedValueInfo : StreamedValueInfo
   {

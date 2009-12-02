@@ -23,7 +23,7 @@ using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Parsing;
 using Assertion=Remotion.Utilities.Assertion;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing
+namespace Remotion.Data.Linq.UnitTests.Parsing
 {
   public class TestThrowingExpressionTreeVisitor : ThrowingExpressionTreeVisitor
   {

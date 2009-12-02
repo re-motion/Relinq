@@ -21,10 +21,10 @@ using System.Reflection;
 using NUnit.Framework;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
-using Remotion.Data.UnitTests.Linq.Parsing;
-using Remotion.Data.UnitTests.Linq.TestDomain;
+using Remotion.Data.Linq.UnitTests.Parsing;
+using Remotion.Data.Linq.UnitTests.TestDomain;
 
-namespace Remotion.Data.UnitTests.Linq.Clauses.ExpressionTreeVisitors
+namespace Remotion.Data.Linq.UnitTests.Clauses.ExpressionTreeVisitors
 {
   [TestFixture]
   public class AccessorFindingExpressionTreeVisitorTest

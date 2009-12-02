@@ -16,9 +16,9 @@
 // 
 using System;
 using System.Linq;
-using Remotion.Data.UnitTests.Linq.TestDomain;
+using Remotion.Data.Linq.UnitTests.TestDomain;
 
-namespace Remotion.Data.UnitTests.Linq.TestQueryGenerators
+namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
 {
   public class SubQueryTestQueryGenerator
   {

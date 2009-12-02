@@ -17,7 +17,7 @@
 using System;
 using System.Linq;
 
-namespace Remotion.Data.UnitTests.Linq.IntegrationTests.LinqSamples101.TestDomain
+namespace Remotion.Data.Linq.UnitTests.IntegrationTests.LinqSamples101.TestDomain
 {
   /// <summary>
   /// The <see cref="QuerySource"/> type exposes all domain types in a queryable form.

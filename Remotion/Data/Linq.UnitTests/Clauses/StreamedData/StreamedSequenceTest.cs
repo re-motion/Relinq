@@ -22,7 +22,7 @@ using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.StreamedData;
 using Remotion.Utilities;
 
-namespace Remotion.Data.UnitTests.Linq.Clauses.StreamedData
+namespace Remotion.Data.Linq.UnitTests.Clauses.StreamedData
 {
   [TestFixture]
   public class StreamedSequenceTest

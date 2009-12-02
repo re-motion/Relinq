@@ -26,10 +26,10 @@ using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Transformations;
-using Remotion.Data.UnitTests.Linq.Parsing;
-using Remotion.Data.UnitTests.Linq.TestDomain;
+using Remotion.Data.Linq.UnitTests.Parsing;
+using Remotion.Data.Linq.UnitTests.TestDomain;
 
-namespace Remotion.Data.UnitTests.Linq.Transformations
+namespace Remotion.Data.Linq.UnitTests.Transformations
 {
   [TestFixture]
   public class SubQueryFromClauseFlattenerTest

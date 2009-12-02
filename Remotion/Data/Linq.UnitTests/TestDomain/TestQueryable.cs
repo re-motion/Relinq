@@ -19,7 +19,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Data.Linq;
 
-namespace Remotion.Data.UnitTests.Linq.TestDomain
+namespace Remotion.Data.Linq.UnitTests.TestDomain
 {
   public class TestQueryable<T> : QueryableBase<T>
   {

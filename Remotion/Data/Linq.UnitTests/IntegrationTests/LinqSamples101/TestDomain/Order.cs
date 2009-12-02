@@ -16,7 +16,7 @@
 // 
 using System;
 
-namespace Remotion.Data.UnitTests.Linq.IntegrationTests.LinqSamples101.TestDomain
+namespace Remotion.Data.Linq.UnitTests.IntegrationTests.LinqSamples101.TestDomain
 {
   public class Order
   {

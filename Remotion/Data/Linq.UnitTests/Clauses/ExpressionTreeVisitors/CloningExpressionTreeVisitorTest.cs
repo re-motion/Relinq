@@ -21,7 +21,7 @@ using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 
-namespace Remotion.Data.UnitTests.Linq.Clauses.ExpressionTreeVisitors
+namespace Remotion.Data.Linq.UnitTests.Clauses.ExpressionTreeVisitors
 {
   [TestFixture]
   public class CloningExpressionTreeVisitorTest

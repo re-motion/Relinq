@@ -22,9 +22,9 @@ using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultOperators;
-using Remotion.Data.UnitTests.Linq.TestDomain;
+using Remotion.Data.Linq.UnitTests.TestDomain;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing.Structure.QueryParserIntegrationTests
+namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
 {
   [TestFixture]
   public class GroupByQueryParserIntegrationTest : QueryParserIntegrationTestBase

@@ -19,7 +19,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.MemberBindings;
 
-namespace Remotion.Data.UnitTests.Linq.Parsing.ExpressionTreeVisitors.MemberBindings
+namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitors.MemberBindings
 {
   [TestFixture]
   public class FieldInfoBindingTest : MemberBindingTestBase
