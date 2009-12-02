@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- This file is part of the re-motion Core Framework (www.re-motion.org)
+ ! Copyright (C) 2005-2009 rubicon informationstechnologie gmbh, www.rubicon.eu
+ ! 
+ ! The re-motion Core Framework is free software; you can redistribute it 
+ ! and/or modify it under the terms of the GNU Lesser General Public License 
+ ! as published by the Free Software Foundation; either version 2.1 of the 
+ ! License, or (at your option) any later version.
+ ! 
+ ! re-motion is distributed in the hope that it will be useful, 
+ ! but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ ! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ ! GNU Lesser General Public License for more details.
+ ! 
+ ! You should have received a copy of the GNU Lesser General Public License
+ ! along with re-motion; if not, see http://www.gnu.org/licenses.
+-->
+<!--EXTERNAL_PROPERTIES: build.outputdir;build.test.outputdir;project.output;project.extension;project.doc;build.debug;build.csc.define-->
+<project xmlns="nant-schema" name="Remotion.Data.UnitTests">
+  
+  <target name="build" description="perform a build">
+    <csc  target="library"
+          output="${build.test.outputdir}/${project.output}.${project.extension}"
+          debug="${build.debug}"
+          define="${build.csc.define}"
+          keyfile="${solution.key-file}"
+          noconfig="true">
+      <nowarn>
+        <!-- obsolete warning -->
+        <warning number="0618" />
+      </nowarn>
+      <sources failonempty="true">
+        <include name="**/*.cs"/>
+        <exclude name="bin/**" />
+        <exclude name="Properties/AssemblyInfoTemplate.cs" />   
+      </sources>
+      <references failonempty="true">
+        <include asis="true" name="${build.test.outputdir}/log4net.dll"/>
+        <include asis="true" name="${build.test.outputdir}/nunit.framework.dll"/>
+        <include asis="true" name="${build.test.outputdir}/Rhino.Mocks.dll"/>
+        <include asis="true" name="${build.test.outputdir}/Remotion.dll"/>
+        <include asis="true" name="${build.test.outputdir}/Remotion.Data.DomainObjects.dll"/>
+        <include asis="true" name="${build.test.outputdir}/Remotion.Data.DomainObjects.Security.dll"/>
+        <include asis="true" name="${build.test.outputdir}/Remotion.Data.Interfaces.dll"/>
+        <include asis="true" name="${build.test.outputdir}/Remotion.Data.Linq.dll"/>
+        <include asis="true" name="${build.test.outputdir}/Remotion.Development.dll"/>
+        <include asis="true" name="${build.test.outputdir}/Remotion.Development.Data.dll"/>
+        <include asis="true" name="${build.test.outputdir}/Remotion.Development.Web.dll"/>
+        <include asis="true" name="${build.test.outputdir}/Remotion.Interfaces.dll"/>
+        <include asis="true" name="System.dll"/>
+        <include asis="true" name="System.Core.dll"/>
+        <include asis="true" name="System.Configuration.dll"/>
+        <include asis="true" name="System.Data.dll"/>
+        <include asis="true" name="System.Web.dll"/>
+        <include asis="true" name="System.Xml.dll"/>
+      </references>
+    </csc>
+
+    <copy todir="${build.test.outputdir}" overwrite="true">
+      <fileset>
+        <include name="**/*.xml" />
+        <exclude name="bin/**/*.xml" />
+        <exclude name="obj/**/*.xml" />
+      </fileset>
+    </copy>
+
+  </target>
+  
+</project>

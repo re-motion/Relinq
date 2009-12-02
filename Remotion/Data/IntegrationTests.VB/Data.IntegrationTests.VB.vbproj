@@ -103,9 +103,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\UnitTests\Data.UnitTests.csproj">
-      <Project>{6DEF9C11-1D5A-4B14-A4EB-F4C7E7CC3E7B}</Project>
-      <Name>Data.UnitTests</Name>
+    <ProjectReference Include="..\Linq.UnitTests\Data.Linq.UnitTests.csproj">
+      <Project>{1D56FFB7-8118-463A-81EA-37A8668BCD31}</Project>
+      <Name>Data.Linq.UnitTests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Linq\Data.Linq.csproj">
+      <Project>{DD9AA076-BE37-4A42-BA9E-C35ECC6955C9}</Project>
+      <Name>Data.Linq</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
