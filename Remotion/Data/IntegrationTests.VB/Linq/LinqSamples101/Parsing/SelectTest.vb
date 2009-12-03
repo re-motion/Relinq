@@ -1,6 +1,6 @@
 ﻿Imports NUnit.Framework
-Imports Remotion.Data.UnitTests.Linq.IntegrationTests
-Imports Remotion.Data.UnitTests.Linq.IntegrationTests.LinqSamples101.TestDomain
+Imports Remotion.Data.Linq.UnitTests.IntegrationTests
+Imports Remotion.Data.Linq.UnitTests.IntegrationTests.LinqSamples101.TestDomain
 
 Namespace Remotion.Data.IntegrationTests.VB.Linq.LinqSamples101.Parsing
 
