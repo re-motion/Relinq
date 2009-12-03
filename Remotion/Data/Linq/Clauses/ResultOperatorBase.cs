@@ -20,7 +20,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Clauses.StreamedData;
-using Remotion.Utilities;
+using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.Clauses
 {
@@ -87,6 +87,7 @@ namespace Remotion.Data.Linq.Clauses
     /// <param name="input">The input whose item type to retrieve. Must implement <see cref="IEnumerable{T}"/>, otherwise an exception
     /// is thrown.</param>
     /// <returns>The item type enumerated by <paramref name="input"/>.</returns>
+    //TODO: Seems not to be used. Possibly delete?
     protected Type GetInputItemType (object input)
     {
       Type itemType = ReflectionUtility.GetItemTypeOfIEnumerable (input.GetType (), "input");

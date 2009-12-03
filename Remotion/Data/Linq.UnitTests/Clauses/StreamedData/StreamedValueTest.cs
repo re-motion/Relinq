@@ -18,6 +18,7 @@ using System;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.StreamedData;
+using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.UnitTests.Clauses.StreamedData
 {
@@ -65,6 +66,13 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.StreamedData
     public void GetCurrentSingleValue_InvalidType ()
     {
       _dataWithIntValue.GetTypedValue<string> ();
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentTypeException))]
+    public void Initialization_CurrentValue_WrongItemExpression ()
+    {
+      new StreamedValue (0, new StreamedScalarValueInfo (typeof (string)));
     }
   }
 }

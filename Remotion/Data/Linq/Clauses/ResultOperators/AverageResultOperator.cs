@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Remotion.Data.Linq.Clauses.StreamedData;
-using Remotion.Utilities;
+using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
@@ -51,7 +51,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
         throw new NotSupportedException (message);
       }
 
-      Assertion.IsTrue (GetOutputDataInfo (input.DataInfo).DataType == method.ReturnType);
+      Remotion.Utilities.Assertion.IsTrue (GetOutputDataInfo (input.DataInfo).DataType == method.ReturnType);
 
       var result = method.Invoke (null, new[] { input.GetTypedSequence<T>() });
       return new StreamedValue (result, (StreamedValueInfo) GetOutputDataInfo (input.DataInfo));

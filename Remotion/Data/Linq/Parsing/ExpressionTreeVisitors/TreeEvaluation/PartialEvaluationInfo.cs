@@ -17,7 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Remotion.Utilities;
+using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation
 {

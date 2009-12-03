@@ -15,7 +15,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using Remotion.Utilities;
+using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.StreamedData
 {
@@ -34,7 +34,8 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
     public StreamedValue (object value, StreamedValueInfo streamedValueInfo)
     {
       ArgumentUtility.CheckNotNull ("streamedValueInfo", streamedValueInfo);
-      ArgumentUtility.CheckType ("value", value, streamedValueInfo.DataType);
+      if (value != null && !streamedValueInfo.DataType.IsInstanceOfType (value))
+        throw new ArgumentTypeException ("value", streamedValueInfo.DataType, value.GetType ());
 
       Value = value;
       DataInfo = streamedValueInfo;

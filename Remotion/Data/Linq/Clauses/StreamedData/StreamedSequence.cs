@@ -18,7 +18,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Remotion.Utilities;
+using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.StreamedData
 {
@@ -38,7 +38,8 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
     {
       ArgumentUtility.CheckNotNull ("sequence", sequence);
       ArgumentUtility.CheckNotNull ("streamedSequenceInfo", streamedSequenceInfo);
-      ArgumentUtility.CheckType ("sequence", sequence, streamedSequenceInfo.DataType);
+      if (!streamedSequenceInfo.DataType.IsInstanceOfType (sequence))
+        throw new ArgumentTypeException ("sequence", streamedSequenceInfo.DataType, sequence.GetType ());
 
       DataInfo = streamedSequenceInfo;
       Sequence = sequence;

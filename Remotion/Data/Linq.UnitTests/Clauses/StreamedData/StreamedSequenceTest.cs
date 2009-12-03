@@ -15,12 +15,11 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.StreamedData;
-using Remotion.Utilities;
+using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.UnitTests.Clauses.StreamedData
 {
@@ -48,10 +47,11 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.StreamedData
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentTypeException))]
+    [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage = 
+        "Argument sequence has type System.String[] when type System.Int32[] was expected.\r\nParameter name: sequence")]
     public void Initialization_CurrentSequence_WrongItemExpression ()
     {
-      new StreamedSequence (new[] { "1", "2", "3" }, new StreamedSequenceInfo (typeof (string[]), _intExpression));
+      new StreamedSequence (new[] { "1", "2", "3" }, new StreamedSequenceInfo (typeof (int[]), _intExpression));
     }
 
     [Test]
@@ -69,11 +69,11 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.StreamedData
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Cannot retrieve the current value as a sequence with item type "
-                                                                              + "'System.String' because its items are of type 'System.Int32'.")]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = 
+        "Cannot retrieve the current value as a sequence with item type 'System.String' because its items are of type 'System.Int32'.")]
     public void GetTypedSequence_InvalidItemType ()
     {
-      _dataWithIntSequence.GetTypedSequence<string> ();
+      _dataWithIntSequence.GetTypedSequence<string>();
     }
   }
 }

@@ -16,7 +16,7 @@
 // 
 using System;
 using System.Reflection;
-using Remotion.Utilities;
+using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 {
@@ -33,7 +33,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public static IExpressionNode CreateExpressionNode (
         Type nodeType, MethodCallExpressionParseInfo parseInfo, object[] additionalConstructorParameters)
     {
-      ArgumentUtility.CheckNotNullAndTypeIsAssignableFrom ("nodeType", nodeType, typeof (IExpressionNode));
+      ArgumentUtility.CheckNotNull ("nodeType", nodeType);
+      ArgumentUtility.CheckTypeIsAssignableFrom ("nodeType", nodeType, typeof (IExpressionNode));
       ArgumentUtility.CheckNotNull ("additionalConstructorParameters", additionalConstructorParameters);
 
       var constructors = nodeType.GetConstructors();

@@ -386,6 +386,10 @@
     <Compile Include="TestQueryGenerators\WhereTestQueryGenerator.cs" />
     <Compile Include="Transformations\SubQueryFromClauseFlattenerTest.cs" />
     <Compile Include="UniqueIdentifierGeneratorTest.cs" />
+    <Compile Include="Utilities\ArgumentUtilityTests\CheckNotNull.cs" />
+    <Compile Include="Utilities\ArgumentUtilityTests\CheckNotNullAndType.cs" />
+    <Compile Include="Utilities\ArgumentUtilityTests\CheckNotNullOrEmpty.cs" />
+    <Compile Include="Utilities\ArgumentUtilityTests\CheckTypeIsAssignableFrom.cs" />
     <None Include="Data.Linq.UnitTests.build" />
     <None Include="Parsing\ExpressionTrees\ExpressionTree_Grammar.docx" />
     <None Include="Properties\AssemblyInfoTemplate.cs">

@@ -20,7 +20,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
-using Remotion.Utilities;
+using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure
 {
@@ -93,7 +93,8 @@ namespace Remotion.Data.Linq.Parsing.Structure
     public void Register (IEnumerable<MethodInfo> methods, Type nodeType)
     {
       ArgumentUtility.CheckNotNull ("methods", methods);
-      ArgumentUtility.CheckNotNullAndTypeIsAssignableFrom ("nodeType", nodeType, typeof (IExpressionNode));
+      ArgumentUtility.CheckNotNull ("nodeType", nodeType);
+      ArgumentUtility.CheckTypeIsAssignableFrom ("nodeType", nodeType, typeof (IExpressionNode));
 
       foreach (var method in methods)
       {
