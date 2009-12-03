@@ -244,6 +244,8 @@
     <Compile Include="Clauses\StreamedData\StreamedValueTest.cs" />
     <Compile Include="Clauses\StreamedData\TestStreamedValueInfo.cs" />
     <Compile Include="Clauses\WhereClauseTest.cs" />
+    <Compile Include="Collections\ChangeResistantObservableCollectionEnumeratorTest.cs" />
+    <Compile Include="Collections\ObservableCollectionTest.cs" />
     <Compile Include="DefaultQueryProviderTest.cs" />
     <Compile Include="EagerFetching\FetchFilteringQueryModelVisitorTest.cs" />
     <Compile Include="EagerFetching\FetchManyRequestTest.cs" />

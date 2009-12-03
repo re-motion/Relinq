@@ -16,9 +16,9 @@
 // 
 using System;
 using System.Reflection;
-using Remotion.Collections;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Collections;
 using Remotion.Utilities;
 
 namespace Remotion.Data.Linq.UnitTests.TestDomain

@@ -16,11 +16,11 @@
 // 
 using System;
 using System.Linq;
-using Remotion.Collections;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Clauses.ResultOperators;
+using Remotion.Data.Linq.Collections;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Utilities;
 
