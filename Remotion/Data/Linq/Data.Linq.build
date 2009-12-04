@@ -39,10 +39,12 @@
         <include name="*.cs"/>
         <include name="Backend/**/*.cs"/>
         <include name="Clauses/**/*.cs"/>
+        <include name="Collections/**/*.cs"/>
         <include name="EagerFetching/**/*.cs"/>
         <include name="Parsing/**/*.cs"/>
         <include name="Properties/**/*.cs" />
         <include name="Transformations/**/*.cs"/>
+        <include name="Utilities/**/*.cs"/>
         <exclude name="Properties/AssemblyInfoTemplate.cs" />
       </sources>
       <references failonempty="true">
