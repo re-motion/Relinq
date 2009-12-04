@@ -36,7 +36,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.IntermediateModel
     {
       _node = ExpressionNodeObjectMother.CreateMainSource ();
       _context = new ClauseGenerationContext (new MethodCallExpressionNodeTypeRegistry ());
-      _clause = ExpressionHelper.CreateMainFromClause ();
+      _clause = ExpressionHelper.CreateMainFromClause_Int ();
     }
 
     [Test]

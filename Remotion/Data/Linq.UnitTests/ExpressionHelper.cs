@@ -98,33 +98,33 @@ namespace Remotion.Data.Linq.UnitTests
 
     public static QueryModel CreateQueryModel_Student ()
     {
-      return CreateQueryModel (CreateMainFromClause("s", typeof (Student), CreateStudentQueryable()));
+      return CreateQueryModel (CreateMainFromClause_Int("s", typeof (Student), CreateStudentQueryable()));
     }
 
     public static QueryModel CreateQueryModel_Int ()
     {
-      return CreateQueryModel (CreateMainFromClause ("i", typeof (int), CreateIntQueryable ()));
+      return CreateQueryModel (CreateMainFromClause_Int ("i", typeof (int), CreateIntQueryable ()));
     }
 
-    public static MainFromClause CreateMainFromClause ()
+    public static MainFromClause CreateMainFromClause_Int ()
     {
-      IQueryable querySource = CreateStudentQueryable (); 
-      return CreateMainFromClause("main", typeof (int), querySource);
+      IQueryable querySource = CreateIntQueryable (); 
+      return CreateMainFromClause_Int("main", typeof (int), querySource);
     }
 
     public static MainFromClause CreateMainFromClause_Student ()
     {
-      return CreateMainFromClause ("s", typeof (Student), CreateStudentQueryable());
+      return CreateMainFromClause_Int ("s", typeof (Student), CreateStudentQueryable());
     }
 
     public static MainFromClause CreateMainFromClause_Detail ()
     {
-      return CreateMainFromClause ("sd", typeof (Student_Detail), CreateStudentDetailQueryable ());
+      return CreateMainFromClause_Int ("sd", typeof (Student_Detail), CreateStudentDetailQueryable ());
     }
 
     public static MainFromClause CreateMainFromClause_Detail_Detail ()
     {
-      return CreateMainFromClause ("sdd", typeof (Student_Detail_Detail), CreateStudentDetailDetailQueryable());
+      return CreateMainFromClause_Int ("sdd", typeof (Student_Detail_Detail), CreateStudentDetailDetailQueryable());
     }
 
     public static AdditionalFromClause CreateAdditionalFromClause ()
@@ -139,8 +139,8 @@ namespace Remotion.Data.Linq.UnitTests
 
     public static GroupResultOperator CreateGroupResultOperator ()
     {
-      MainFromClause fromClause1 = CreateMainFromClause ("i", typeof (int), CreateIntQueryable());
-      MainFromClause fromClause2 = CreateMainFromClause ("j", typeof (int), CreateIntQueryable());
+      MainFromClause fromClause1 = CreateMainFromClause_Int ("i", typeof (int), CreateIntQueryable());
+      MainFromClause fromClause2 = CreateMainFromClause_Int ("j", typeof (int), CreateIntQueryable());
 
       var keySelector = Resolve<int, string> (fromClause2, j => (j % 3).ToString());
       var elementSelector = Resolve<int, string> (fromClause1, i => i.ToString ());
@@ -183,7 +183,7 @@ namespace Remotion.Data.Linq.UnitTests
 
     public static IClause CreateClause()
     {
-      return CreateMainFromClause();
+      return CreateMainFromClause_Int();
     }
 
     public static IQueryable<int> CreateIntQueryable ()
@@ -284,7 +284,7 @@ namespace Remotion.Data.Linq.UnitTests
       return new FieldSourcePath (table, new SingleJoin[0]);
     }
 
-    public static MainFromClause CreateMainFromClause (string itemName, Type itemType, IQueryable querySource)
+    public static MainFromClause CreateMainFromClause_Int (string itemName, Type itemType, IQueryable querySource)
     {
       return new MainFromClause (itemName, itemType, Expression.Constant (querySource));
     }

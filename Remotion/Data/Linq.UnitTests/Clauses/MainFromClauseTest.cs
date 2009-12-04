@@ -36,7 +36,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses
     [SetUp]
     public void SetUp ()
     {
-      _mainFromClause = ExpressionHelper.CreateMainFromClause();
+      _mainFromClause = ExpressionHelper.CreateMainFromClause_Int();
       _cloneContext = new CloneContext (new QuerySourceMapping());
     }
 

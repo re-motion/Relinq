@@ -99,7 +99,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
         ExpectedMessage = "Item ('[main]') is no ConstantExpression, it is a QuerySourceReferenceExpression.")]
     public void GetConstantItem_NoConstantExpression ()
     {
-      var resultOperator = new ContainsResultOperator (new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause ()));
+      var resultOperator = new ContainsResultOperator (new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ()));
       resultOperator.GetConstantItem<object> ();
     }
 

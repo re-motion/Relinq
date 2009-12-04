@@ -177,7 +177,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing
     [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitQuerySourceReferenceExpression: ", MatchType = MessageMatch.Contains)]
     public void VisitQuerySourceReferenceExpression ()
     {
-      _visitor.VisitExpression (new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause ()));
+      _visitor.VisitExpression (new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ()));
     }
 
     private void VisitExpression (TestThrowingExpressionTreeVisitor visitor, ExpressionType nodeType)

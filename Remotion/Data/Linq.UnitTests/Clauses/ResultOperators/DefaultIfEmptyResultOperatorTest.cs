@@ -50,7 +50,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
     [ExpectedException (typeof (InvalidOperationException))]
     public void GetConstantOptionalDefaultValue_WithDefaultValue_NoConstantExpression ()
     {
-      var resultOperator = new DefaultIfEmptyResultOperator (new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause ()));
+      var resultOperator = new DefaultIfEmptyResultOperator (new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ()));
       resultOperator.GetConstantOptionalDefaultValue ();
     }
 

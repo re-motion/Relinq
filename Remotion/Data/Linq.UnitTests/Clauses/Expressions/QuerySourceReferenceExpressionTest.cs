@@ -44,7 +44,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.Expressions
     public void Equals_False ()
     {
       var referenceExpression1 = new QuerySourceReferenceExpression (SourceClause);
-      var referenceExpression2 = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause());
+      var referenceExpression2 = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int());
       Assert.That (referenceExpression1, Is.Not.EqualTo (referenceExpression2));
     }
 

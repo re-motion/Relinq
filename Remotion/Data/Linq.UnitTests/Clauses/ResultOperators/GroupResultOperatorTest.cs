@@ -43,8 +43,8 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
     [SetUp]
     public void SetUp ()
     {
-      _fromClause1 = ExpressionHelper.CreateMainFromClause ("i", typeof (int), ExpressionHelper.CreateIntQueryable ());
-      _fromClause2 = ExpressionHelper.CreateMainFromClause ("j", typeof (int), ExpressionHelper.CreateIntQueryable ());
+      _fromClause1 = ExpressionHelper.CreateMainFromClause_Int ("i", typeof (int), ExpressionHelper.CreateIntQueryable ());
+      _fromClause2 = ExpressionHelper.CreateMainFromClause_Int ("j", typeof (int), ExpressionHelper.CreateIntQueryable ());
 
       _keySelector = ExpressionHelper.Resolve<int, int> (_fromClause2, j => j % 3);
       _elementSelector = ExpressionHelper.Resolve<int, string> (_fromClause1, i => i.ToString ());

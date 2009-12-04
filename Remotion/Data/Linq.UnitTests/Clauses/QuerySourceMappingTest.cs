@@ -39,9 +39,9 @@ namespace Remotion.Data.Linq.UnitTests.Clauses
     public void SetUp ()
     {
       _mapping = new QuerySourceMapping ();
-      _clause1 = ExpressionHelper.CreateMainFromClause ();
-      _clause2 = ExpressionHelper.CreateMainFromClause ();
-      _clause3 = ExpressionHelper.CreateMainFromClause ();
+      _clause1 = ExpressionHelper.CreateMainFromClause_Int ();
+      _clause2 = ExpressionHelper.CreateMainFromClause_Int ();
+      _clause3 = ExpressionHelper.CreateMainFromClause_Int ();
 
       _querySourceReferenceExpression1 = new QuerySourceReferenceExpression (_clause1);
       _querySourceReferenceExpression2 = new QuerySourceReferenceExpression (_clause2);

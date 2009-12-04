@@ -38,7 +38,7 @@ namespace Remotion.Data.Linq.UnitTests
     public void SetUp ()
     {
       _builder = new QueryModelBuilder();
-      _mainFromClause = ExpressionHelper.CreateMainFromClause ();
+      _mainFromClause = ExpressionHelper.CreateMainFromClause_Int ();
       _whereClause1 = ExpressionHelper.CreateWhereClause ();
       _whereClause2 = ExpressionHelper.CreateWhereClause ();
       _selectClause = ExpressionHelper.CreateSelectClause ();

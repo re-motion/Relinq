@@ -205,6 +205,8 @@
     <Compile Include="Clauses\OrderingTest.cs" />
     <Compile Include="Clauses\QuerySourceMappingTest.cs" />
     <Compile Include="Clauses\ResultOperatorBaseTest.cs" />
+    <Compile Include="Clauses\ResultOperators\AllResultOperatorTest.cs" />
+    <Compile Include="Clauses\ResultOperators\AnyResultOperatorTest.cs" />
     <Compile Include="Clauses\ResultOperators\AverageResultOperatorTest.cs" />
     <Compile Include="Clauses\ResultOperators\CastResultOperatorTest.cs" />
     <Compile Include="Clauses\ResultOperators\ChoiceResultOperatorBaseTest.cs" />

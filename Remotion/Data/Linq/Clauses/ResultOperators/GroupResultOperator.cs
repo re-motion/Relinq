@@ -21,7 +21,6 @@ using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Clauses.StreamedData;
 using Remotion.Data.Linq.Utilities;
-using System.Collections.Generic;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {

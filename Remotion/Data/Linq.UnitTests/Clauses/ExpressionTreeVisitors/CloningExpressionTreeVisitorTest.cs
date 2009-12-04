@@ -33,8 +33,8 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ExpressionTreeVisitors
     [SetUp]
     public void SetUp ()
     {
-      _oldFromClause = ExpressionHelper.CreateMainFromClause ();
-      _newFromClause = ExpressionHelper.CreateMainFromClause ();
+      _oldFromClause = ExpressionHelper.CreateMainFromClause_Int ();
+      _newFromClause = ExpressionHelper.CreateMainFromClause_Int ();
 
       _querySourceMapping = new QuerySourceMapping ();
       _querySourceMapping.AddMapping (_oldFromClause, new QuerySourceReferenceExpression (_newFromClause));
@@ -53,11 +53,11 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ExpressionTreeVisitors
     public void Replaces_SubQueryExpressions_WithCorrectCloneContext ()
     {
       var subQueryModel = ExpressionHelper.CreateQueryModel_Student ();
-      var referencedClause = ExpressionHelper.CreateMainFromClause ();
+      var referencedClause = ExpressionHelper.CreateMainFromClause_Int ();
       subQueryModel.SelectClause.Selector = new QuerySourceReferenceExpression (referencedClause);
       var expression = new SubQueryExpression (subQueryModel);
 
-      var newReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause ());
+      var newReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ());
       _querySourceMapping.AddMapping (referencedClause, newReferenceExpression);
 
       var result = CloningExpressionTreeVisitor.AdjustExpressionAfterCloning (expression, _querySourceMapping);

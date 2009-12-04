@@ -76,7 +76,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
     [ExpectedException (typeof (InvalidOperationException))]
     public void GetConstantCount_NoConstantExpression ()
     {
-      var resultOperator = new SkipResultOperator (new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause ()));
+      var resultOperator = new SkipResultOperator (new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ()));
       resultOperator.GetConstantCount ();
     }
 

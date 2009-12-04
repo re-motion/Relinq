@@ -40,7 +40,7 @@ namespace Remotion.Data.Linq.UnitTests
     [SetUp]
     public void SetUp ()
     {
-      _mainFromClause = ExpressionHelper.CreateMainFromClause();
+      _mainFromClause = ExpressionHelper.CreateMainFromClause_Int();
       _selectClause = ExpressionHelper.CreateSelectClause();
       _queryModel = new QueryModel (_mainFromClause, _selectClause);
       _querySourceMapping = new QuerySourceMapping();
@@ -190,10 +190,10 @@ namespace Remotion.Data.Linq.UnitTests
     [Test]
     public void Clone_HasCloneForSelectClause_TransformExpressions ()
     {
-      var oldReferencedClause = ExpressionHelper.CreateMainFromClause();
+      var oldReferencedClause = ExpressionHelper.CreateMainFromClause_Int();
       _queryModel.SelectClause.Selector = new QuerySourceReferenceExpression (oldReferencedClause);
 
-      var newReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause());
+      var newReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int());
       _querySourceMapping.AddMapping (oldReferencedClause, newReferenceExpression);
 
       var clone = _queryModel.Clone (_querySourceMapping);
@@ -223,11 +223,11 @@ namespace Remotion.Data.Linq.UnitTests
     public void Clone_HasCloneForBodyClauses_TransformExpressions ()
     {
       var bodyClause = ExpressionHelper.CreateWhereClause();
-      var oldReferencedClause = ExpressionHelper.CreateMainFromClause();
+      var oldReferencedClause = ExpressionHelper.CreateMainFromClause_Int();
       bodyClause.Predicate = new QuerySourceReferenceExpression (oldReferencedClause);
       _queryModel.BodyClauses.Add (bodyClause);
 
-      var newReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause());
+      var newReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int());
       _querySourceMapping.AddMapping (oldReferencedClause, newReferenceExpression);
 
       var clone = _queryModel.Clone (_querySourceMapping);
@@ -497,7 +497,7 @@ namespace Remotion.Data.Linq.UnitTests
     [Test]
     public void IsIdentityQuery_False_Selector_WrongReference ()
     {
-      var queryModel = new QueryModel (_mainFromClause, new SelectClause (new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause())));
+      var queryModel = new QueryModel (_mainFromClause, new SelectClause (new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int())));
       Assert.That (queryModel.IsIdentityQuery (), Is.False);
     }
   }
