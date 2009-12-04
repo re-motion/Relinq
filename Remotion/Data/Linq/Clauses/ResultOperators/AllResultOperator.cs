@@ -38,12 +38,23 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   {
     private Expression _predicate;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AllResultOperator"/> class.
+    /// </summary>
+    /// <param name="predicate">The predicate to evaluate. This is a resolved version of the body of the <see cref="LambdaExpression"/> that would be 
+    /// passed to <see cref="Queryable.All{TSource}"/>.</param>
     public AllResultOperator (Expression predicate)
     {
       ArgumentUtility.CheckNotNull ("predicate", predicate);
       Predicate = predicate;
     }
 
+    /// <summary>
+    /// Gets or sets the predicate to evaluate on all items in the sequence.
+    /// This is a resolved version of the body of the <see cref="LambdaExpression"/> that would be 
+    /// passed to <see cref="Queryable.All{TSource}"/>.
+    /// </summary>
+    /// <value>The predicate.</value>
     public Expression Predicate
     {
       get { return _predicate; }
@@ -55,22 +66,12 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       ArgumentUtility.CheckNotNull ("input", input);
 
       var sequence = input.GetTypedSequence<T> ();
-      var result = ExecuteInMemory(sequence);
-      return new StreamedValue (result, (StreamedValueInfo) GetOutputDataInfo (input.DataInfo));
-    }
 
-    private bool ExecuteInMemory<T> (IEnumerable<T> sequence)
-    {
-      var queryable = sequence.AsQueryable ();
-      try
-      {
-        return queryable.All ((Expression<Func<T, bool>>) Predicate);
-      }
-      catch (ArgumentException ex)
-      {
-        var message = string.Format ("Cannot execute the result operator '{0}' in memory because the Predicate cannot be evaluated.", this);
-        throw new NotSupportedException (message, ex);
-      }
+      var predicateLambda = ReverseResolvingExpressionTreeVisitor.ReverseResolve (input.DataInfo.ItemExpression, Predicate);
+      var predicate = (Func<T, bool>) predicateLambda.Compile ();
+
+      var result = sequence.All (predicate);
+      return new StreamedValue (result, (StreamedValueInfo) GetOutputDataInfo (input.DataInfo));
     }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)

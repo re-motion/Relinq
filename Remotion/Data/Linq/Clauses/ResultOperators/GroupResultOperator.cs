@@ -82,6 +82,8 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
 
     /// <summary>
     /// Gets or sets the selector retrieving the key by which to group items.
+    /// This is a resolved version of the body of the <see cref="LambdaExpression"/> that would be 
+    /// passed to <see cref="Queryable.GroupBy{TSource,TKey,TElement}(System.Linq.IQueryable{TSource},System.Linq.Expressions.Expression{System.Func{TSource,TKey}},System.Linq.Expressions.Expression{System.Func{TSource,TElement}})"/>.
     /// </summary>
     /// <value>The key selector.</value>
     public Expression KeySelector
@@ -92,6 +94,8 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
 
     /// <summary>
     /// Gets or sets the selector retrieving the elements to group.
+    /// This is a resolved version of the body of the <see cref="LambdaExpression"/> that would be 
+    /// passed to <see cref="Queryable.GroupBy{TSource,TKey,TElement}(System.Linq.IQueryable{TSource},System.Linq.Expressions.Expression{System.Func{TSource,TKey}},System.Linq.Expressions.Expression{System.Func{TSource,TElement}})"/>.
     /// </summary>
     /// <value>The element selector.</value>
     public Expression ElementSelector
@@ -144,7 +148,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     {
       ArgumentUtility.CheckNotNull ("input", input);
 
-      var inputSequence = input.GetTypedSequence<TSource>();
+      var inputSequence = input.GetTypedSequence<TSource> ();
 
       var keySelectorLambda = ReverseResolvingExpressionTreeVisitor.ReverseResolve (input.DataInfo.ItemExpression, KeySelector);
       var keySelector = (Func<TSource, TKey>) keySelectorLambda.Compile ();

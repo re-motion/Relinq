@@ -393,6 +393,57 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
 
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
       Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (ContainsResultOperator)));
+      Assert.That (((ContainsResultOperator) queryModel.ResultOperators[0]).GetConstantItem<Student>(), Is.SameAs (student));
+
+    }
+
+    [Test]
+    [Ignore ("TODO 1412")]
+    public void All ()
+    {
+      var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
+                                                               select s).All (s => s.IsOld));
+
+      var queryModel = QueryParser.GetParsedQuery (expression);
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (bool)));
+
+      Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (AllResultOperator)));
+
+      CheckResolvedExpression<Student, bool> (((AllResultOperator) queryModel.ResultOperators[0]).Predicate, queryModel.MainFromClause, s => s.IsOld);
+    }
+
+    [Test]
+    [Ignore ("TODO 1412")]
+    public void Any ()
+    {
+      var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
+                                                               select s).Any ());
+
+      var queryModel = QueryParser.GetParsedQuery (expression);
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (bool)));
+
+      Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (AnyResultOperator)));
+    }
+
+    [Test]
+    [Ignore ("TODO 1412")]
+    public void Any_WithPredicate ()
+    {
+      var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
+                                                               select s).Any (s => s.IsOld));
+
+      var queryModel = QueryParser.GetParsedQuery (expression);
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (bool)));
+
+      Assert.That (queryModel.BodyClauses.Count, Is.EqualTo (1));
+      Assert.That (queryModel.BodyClauses[0], Is.InstanceOfType (typeof (WhereClause)));
+
+      CheckResolvedExpression<Student, bool> (((WhereClause) queryModel.BodyClauses[0]).Predicate, queryModel.MainFromClause, s => s.IsOld);
+      
+      Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (AnyResultOperator)));
     }
   }
 }

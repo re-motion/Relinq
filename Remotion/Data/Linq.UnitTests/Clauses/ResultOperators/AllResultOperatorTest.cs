@@ -31,13 +31,18 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
   [TestFixture]
   public class AllResultOperatorTest
   {
+    private MainFromClause _fromClause;
+    private Expression _predicate;
+
     private AllResultOperator _resultOperator;
 
     [SetUp]
     public void SetUp ()
     {
-      var predicate = ExpressionHelper.CreateLambdaExpression<int, bool> (t => t > 2);
-      _resultOperator = new AllResultOperator (predicate);
+      _fromClause = ExpressionHelper.CreateMainFromClause_Int ("i", typeof (int), ExpressionHelper.CreateIntQueryable ());
+      _predicate = ExpressionHelper.Resolve<int, bool> (_fromClause, j => j > 2);
+
+      _resultOperator = new AllResultOperator (_predicate);
     }
 
     [Test]
@@ -55,7 +60,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
     public void ExecuteInMemory_True ()
     {
       IEnumerable items = new[] { 3, 4 };
-      var input = new StreamedSequence (items, new StreamedSequenceInfo (typeof (int[]), Expression.Constant (0)));
+      var input = new StreamedSequence (items, new StreamedSequenceInfo (typeof (int[]), new QuerySourceReferenceExpression (_fromClause)));
       var result = _resultOperator.ExecuteInMemory<int> (input);
 
       Assert.That (result.Value, Is.True);
@@ -65,30 +70,10 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
     public void ExecuteInMemory_False ()
     {
       IEnumerable items = new[] { 1, 2, 3, 4 };
-      var input = new StreamedSequence (items, new StreamedSequenceInfo (typeof (int[]), Expression.Constant (0)));
+      var input = new StreamedSequence (items, new StreamedSequenceInfo (typeof (int[]), new QuerySourceReferenceExpression (_fromClause)));
       var result = _resultOperator.ExecuteInMemory<int> (input);
 
       Assert.That (result.Value, Is.False);
-    }
-
-    [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = 
-        "Cannot execute the result operator 'All(i => (i > [main]))' in memory because the Predicate cannot be evaluated.")]
-    public void ExecuteInMemory_ExpressionNotCompilable ()
-    {
-      var querySourceReference = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int());
-
-      var predicateParameter = Expression.Parameter (typeof (int), "i");
-      var predicate = Expression.Lambda (
-          Expression.MakeBinary (ExpressionType.GreaterThan, predicateParameter, querySourceReference), 
-          predicateParameter);
-      _resultOperator = new AllResultOperator (predicate);
-
-      IEnumerable items = new[] { 1, 2, 3, 4 };
-      var input = new StreamedSequence (items, new StreamedSequenceInfo (typeof (int[]), Expression.Constant (0)));
-      _resultOperator.ExecuteInMemory<int> (input);
-
-      Assert.Fail ();
     }
 
     [Test]
@@ -129,16 +114,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
     [Test]
     public new void ToString ()
     {
-      var querySource = ExpressionHelper.CreateMainFromClause_Int ("x", typeof (int), ExpressionHelper.CreateIntQueryable());
-      var querySourceReference = new QuerySourceReferenceExpression (querySource);
-      
-      var predicateParameter = Expression.Parameter (typeof (int), "i");
-      var predicate = Expression.Lambda (
-          Expression.MakeBinary (ExpressionType.GreaterThan, predicateParameter, querySourceReference), 
-          predicateParameter);
-      
-      var resultOperator = new AllResultOperator (predicate);
-      Assert.That (resultOperator.ToString (), Is.EqualTo ("All(i => (i > [x]))"));
+      Assert.That (_resultOperator.ToString (), Is.EqualTo ("All(([i] > 2))"));
     }
   }
 }
