@@ -211,6 +211,8 @@
     <Compile Include="Clauses\ResultOperators\CastResultOperatorTest.cs" />
     <Compile Include="Clauses\ResultOperators\ChoiceResultOperatorBaseTest.cs" />
     <Compile Include="Clauses\ResultOperators\ContainsResultOperatorTest.cs" />
+    <Compile Include="Clauses\ResultOperators\AggregateResultOperatorTest.cs" />
+    <Compile Include="Clauses\ResultOperators\AggregateFromSeedResultOperatorTest.cs" />
     <Compile Include="Clauses\ResultOperators\CountResultOperatorTest.cs" />
     <Compile Include="Clauses\ResultOperators\DefaultIfEmptyResultOperatorTest.cs" />
     <Compile Include="Clauses\ResultOperators\DistinctResultOperatorTest.cs" />

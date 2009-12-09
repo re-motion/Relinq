@@ -71,19 +71,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     /// <returns>The constant <see cref="int"/> value of the <see cref="Count"/> property.</returns>
     public int GetConstantCount ()
     {
-      var countAsConstantExpression = Count as ConstantExpression;
-      if (countAsConstantExpression != null)
-      {
-        return (int) countAsConstantExpression.Value;
-      }
-      else
-      {
-        var message = string.Format (
-            "Count ('{0}') is no ConstantExpression, it is a {1}.", 
-            FormattingExpressionTreeVisitor.Format (Count), 
-            Count.GetType().Name);
-        throw new InvalidOperationException (message);
-      }
+      return GetConstantValueFromExpression<int> (Count);
     }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)

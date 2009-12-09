@@ -1,0 +1,264 @@
+// This file is part of the re-motion Core Framework (www.re-motion.org)
+// Copyright (C) 2005-2009 rubicon informationstechnologie gmbh, www.rubicon.eu
+// 
+// The re-motion Core Framework is free software; you can redistribute it 
+// and/or modify it under the terms of the GNU Lesser General Public License 
+// as published by the Free Software Foundation; either version 2.1 of the 
+// License, or (at your option) any later version.
+// 
+// re-motion is distributed in the hope that it will be useful, 
+// but WITHOUT ANY WARRANTY; without even the implied warranty of 
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+// GNU Lesser General Public License for more details.
+// 
+// You should have received a copy of the GNU Lesser General Public License
+// along with re-motion; if not, see http://www.gnu.org/licenses.
+// 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Runtime.Serialization;
+using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
+using Remotion.Data.Linq.Clauses.StreamedData;
+using Remotion.Data.Linq.Utilities;
+
+namespace Remotion.Data.Linq.Clauses.ResultOperators
+{
+  /// <summary>
+  /// Represents aggregating the items returned by a query into a single value with an initial seeding value.
+  /// This is a result operator, operating on the whole result set of a query.
+  /// </summary>
+  /// <example>
+  /// In C#, the "Aggregate" call in the following example corresponds to an <see cref="AggregateFromSeedResultOperator"/>.
+  /// <code>
+  /// var result = (from s in Students
+  ///              select s).Aggregate(0, (totalAge, s) => totalAge + s.Age);
+  /// </code>
+  /// </example>
+  public class AggregateFromSeedResultOperator : ValueFromSequenceResultOperatorBase
+  {
+    private Expression _seed;
+    private LambdaExpression _func;
+    private LambdaExpression _resultSelector;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AggregateFromSeedResultOperator"/> class.
+    /// </summary>
+    /// <param name="seed">The seed expression.</param>
+    /// <param name="func">The aggregating function.</param>
+    /// <param name="resultSelector">The result selector, can be <see langword="null" />.</param>
+    public AggregateFromSeedResultOperator (Expression seed, LambdaExpression func, LambdaExpression resultSelector)
+    {
+      ArgumentUtility.CheckNotNull ("seed", seed);
+      ArgumentUtility.CheckNotNull ("func", func);
+
+      Seed = seed;
+      Func = func;
+      ResultSelector = resultSelector;
+    }
+
+    /// <summary>
+    /// Gets or sets the aggregating function. This is a <see cref="LambdaExpression"/> taking the value accumulated so far and the current item
+    /// from the query's result set, combining them into a new accumulated item.
+    /// </summary>
+    /// <value>The aggregating function.</value>
+    public LambdaExpression Func
+    {
+      get { return _func; }
+      set
+      {
+        ArgumentUtility.CheckNotNull ("value", value);
+
+        if (!DescribesValidFuncType (value))
+        {
+          var message = string.Format (
+              "The aggregating function must be a LambdaExpression that describes an instantiation of 'Func<TAccumulate,TSource,TAccumulate>', but it is '{0}'.",
+              value.Type);
+          throw new ArgumentTypeException (message, "value", typeof (Func<,,>), value.Type);
+        }
+
+        _func = value;
+      }
+    }
+
+    /// <summary>
+    /// Gets or sets the seed of the accumulation. This is an <see cref="Expression"/> denoting the starting value of the aggregation.
+    /// </summary>
+    /// <value>The seed of the accumulation.</value>
+    public Expression Seed
+    {
+      get { return _seed; }
+      set { _seed = ArgumentUtility.CheckNotNull ("value", value); }
+    }
+
+    /// <summary>
+    /// Gets or sets the result selector. This is a <see cref="LambdaExpression"/> applied after the aggregation to select the final value.
+    /// Can be <see langword="null" />.
+    /// </summary>
+    /// <value>The result selector.</value>
+    public LambdaExpression ResultSelector
+    {
+      get { return _resultSelector; }
+      set
+      {
+        if (!DescribesValidResultSelectorType (value))
+        {
+          var message = string.Format (
+              "The result selector must be a LambdaExpression that describes an instantiation of 'Func<TAccumulate,TResult>', but it is '{0}'.",
+              value.Type);
+          throw new ArgumentTypeException (message, "value", typeof (Func<,,>), value.Type);
+        }
+
+        _resultSelector = value;
+      }
+    }
+
+    /// <summary>
+    /// Gets the constant value of the <see cref="Seed"/> property, assuming it is a <see cref="ConstantExpression"/>. If it is
+    /// not, an <see cref="InvalidOperationException"/> is thrown.
+    /// </summary>
+    /// <typeparam name="T">The expected seed type. If the item is not of this type, an <see cref="InvalidOperationException"/> is thrown.</typeparam>
+    /// <returns>The constant value of the <see cref="Seed"/> property.</returns>
+    public T GetConstantSeed<T> ()
+    {
+      return GetConstantValueFromExpression<T> (Seed);
+    }
+
+    /// <inheritdoc />
+    public override StreamedValue ExecuteInMemory<TInput> (StreamedSequence input)
+    {
+      ArgumentUtility.CheckNotNull ("input", input);
+
+      var executeMethod = typeof (AggregateFromSeedResultOperator).GetMethod ("ExecuteAggregateInMemory");
+      var closedExecuteMethod = executeMethod.MakeGenericMethod (
+          typeof (TInput),
+          Seed.Type,
+          GetResultType());
+
+      return (StreamedValue) InvokeExecuteMethod (closedExecuteMethod, input);
+    }
+
+    /// <summary>
+    /// Executes the aggregating operation in memory.
+    /// </summary>
+    /// <typeparam name="TInput">The type of the source items.</typeparam>
+    /// <typeparam name="TAggregate">The type of the aggregated items.</typeparam>
+    /// <typeparam name="TResult">The type of the result items.</typeparam>
+    /// <param name="input">The input sequence.</param>
+    /// <returns>A <see cref="StreamedValue"/> object holding the aggregated value.</returns>
+    public StreamedValue ExecuteAggregateInMemory<TInput, TAggregate, TResult> (StreamedSequence input)
+    {
+      ArgumentUtility.CheckNotNull ("input", input);
+
+      var sequence = input.GetTypedSequence<TInput> ();
+      var seed = GetConstantSeed<TAggregate>();
+      var func = (Func<TAggregate, TInput, TAggregate>) Func.Compile();
+
+      var aggregated = sequence.Aggregate (seed, func);
+      var outputDataInfo = (StreamedValueInfo) GetOutputDataInfo (input.DataInfo);
+      if (ResultSelector == null)
+      {
+        return new StreamedValue (aggregated, outputDataInfo);
+      }
+      else
+      {
+        var resultSelector = (Func<TAggregate, TResult>) ResultSelector.Compile();
+        var result = resultSelector (aggregated);
+        return new StreamedValue (result, outputDataInfo);
+      }
+    }
+
+    /// <inheritdoc />
+    public override ResultOperatorBase Clone (CloneContext cloneContext)
+    {
+      return new AggregateFromSeedResultOperator (Seed, Func, ResultSelector);
+    }
+
+    /// <inheritdoc />
+    public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
+    {
+      var sequenceInfo = ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
+
+      var aggregatedType = Func.Type.GetGenericArguments ()[0];
+      if (aggregatedType != Seed.Type)
+      {
+        var message = string.Format (
+            "The seed expression and the aggregating function don't have matching types. The seed is of type '{0}', but the function aggregates '{1}'.",
+            Seed.Type,
+            aggregatedType);
+        throw new InvalidOperationException (message);
+      }
+
+      var resultTransformedType = ResultSelector != null ? ResultSelector.Type.GetGenericArguments ()[0] : null;
+      if (resultTransformedType != null && aggregatedType != resultTransformedType)
+      {
+        var message = string.Format (
+            "The aggregating function and the result selector don't have matching types. The function aggregates type '{0}', but the result selector "
+            + "takes '{1}'.",
+            aggregatedType,
+            resultTransformedType);
+        throw new InvalidOperationException (message);
+      }
+
+      var expectedItemType = GetExpectedItemType ();
+      CheckSequenceItemType (sequenceInfo, expectedItemType);
+
+      var resultType = GetResultType ();
+      return new StreamedScalarValueInfo (resultType);
+    }
+
+    public override void TransformExpressions (Func<Expression, Expression> transformation)
+    {
+      Seed = transformation (Seed);
+      Func = (LambdaExpression) transformation (Func);
+      if (ResultSelector != null)
+        ResultSelector = (LambdaExpression) transformation (ResultSelector);
+    }
+
+    /// <inheritdoc />
+    public override string ToString ()
+    {
+      if (ResultSelector != null)
+      {
+        return string.Format (
+            "Aggregate({0}, {1}, {2})",
+            FormattingExpressionTreeVisitor.Format (Seed),
+            FormattingExpressionTreeVisitor.Format (Func),
+            FormattingExpressionTreeVisitor.Format (ResultSelector));
+      }
+      else
+      {
+        return string.Format (
+            "Aggregate({0}, {1})",
+            FormattingExpressionTreeVisitor.Format (Seed),
+            FormattingExpressionTreeVisitor.Format (Func));
+      }
+    }
+
+    private Type GetExpectedItemType ()
+    {
+      return Func.Type.GetGenericArguments ()[0];
+    }
+
+    private Type GetResultType ()
+    {
+      return ResultSelector != null ? ResultSelector.Body.Type : Func.Body.Type;
+    }
+
+    private bool DescribesValidFuncType (LambdaExpression value)
+    {
+      var funcType = value.Type;
+      if (!funcType.IsGenericType || funcType.GetGenericTypeDefinition () != typeof (Func<,,>))
+        return false;
+
+      var genericArguments = funcType.GetGenericArguments ();
+      return genericArguments[0] == genericArguments[2];
+    }
+
+    private bool DescribesValidResultSelectorType (LambdaExpression value)
+    {
+      return value == null || (value.Type.IsGenericType && value.Type.GetGenericTypeDefinition() == typeof (Func<,>));
+    }
+  }
+}

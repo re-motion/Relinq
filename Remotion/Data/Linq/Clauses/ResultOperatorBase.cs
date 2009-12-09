@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
+using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Clauses.StreamedData;
 using Remotion.Data.Linq.Utilities;
@@ -166,6 +167,63 @@ namespace Remotion.Data.Linq.Clauses
       {
         var message = string.Format ("Cannot call method '{0}' on input of type '{1}': {2}", method.Name, input.GetType (), ex.Message);
         throw new ArgumentException (message, "method");
+      }
+    }
+
+    /// <summary>
+    /// Checks the type of the items retrieved by the sequence, throwing an <see cref="ArgumentTypeException"/> if the items don't match the
+    /// expected type.
+    /// </summary>
+    /// <param name="sequenceInfo">The <see cref="StreamedSequenceInfo"/> object describing the sequence.</param>
+    /// <param name="expectedItemType">The expected item type.</param>
+    /// <exception cref="ArgumentTypeException">The items don't match the expected type.</exception>
+    protected void CheckSequenceItemType (StreamedSequenceInfo sequenceInfo, Type expectedItemType)
+    {
+      if (sequenceInfo.ItemExpression.Type != expectedItemType)
+      {
+        var message = string.Format (
+            "The input sequence must have items of type '{0}', but it has items of type '{1}'.",
+            expectedItemType,
+            sequenceInfo.ItemExpression.Type);
+
+        throw new ArgumentTypeException (message, "inputInfo", typeof (IEnumerable<>).MakeGenericType (expectedItemType), sequenceInfo.ItemExpression.Type);
+      }
+    }
+
+    /// <summary>
+    /// Gets the constant value of the given expression, assuming it is a <see cref="ConstantExpression"/>. If it is
+    /// not, an <see cref="InvalidOperationException"/> is thrown.
+    /// </summary>
+    /// <typeparam name="T">The expected value type. If the value is not of this type, an <see cref="InvalidOperationException"/> is thrown.</typeparam>
+    /// <param name="expression">The expression whose value to get.</param>
+    /// <returns>
+    /// The constant value of the given <paramref name="expression"/>.
+    /// </returns>
+    protected T GetConstantValueFromExpression<T> (Expression expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+      if (!typeof (T).IsAssignableFrom (expression.Type))
+      {
+        var message = string.Format (
+            "The value stored by the expression ('{0}') is not of type '{1}', it is of type '{2}'.",
+            FormattingExpressionTreeVisitor.Format (expression),
+            typeof (T),
+            expression.Type);
+        throw new InvalidOperationException (message);
+      }
+
+      var itemAsConstantExpression = expression as ConstantExpression;
+      if (itemAsConstantExpression != null)
+      {
+        return (T) itemAsConstantExpression.Value;
+      }
+      else
+      {
+        var message = string.Format (
+            "Expression ('{0}') is no ConstantExpression, it is a {1}.",
+            FormattingExpressionTreeVisitor.Format (expression),
+            expression.GetType ().Name);
+        throw new InvalidOperationException (message);
       }
     }
   }

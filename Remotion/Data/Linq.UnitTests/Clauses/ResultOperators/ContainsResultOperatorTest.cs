@@ -47,6 +47,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
       var clone = _resultOperator.Clone (cloneContext);
 
       Assert.That (clone, Is.InstanceOfType (typeof (ContainsResultOperator)));
+      Assert.That (((ContainsResultOperator) clone).Item, Is.SameAs (_resultOperator.Item));
     }
 
     [Test]
@@ -62,11 +63,11 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
     [Test]
     public void GetOutputDataInfo ()
     {
-      var studentExpression = Expression.Constant (0);
-      var input = new StreamedSequenceInfo (typeof (int[]), studentExpression);
+      var itemExpression = Expression.Constant (0);
+      var input = new StreamedSequenceInfo (typeof (int[]), itemExpression);
       var result = _resultOperator.GetOutputDataInfo (input);
 
-      Assert.That (result, Is.InstanceOfType (typeof (StreamedValueInfo)));
+      Assert.That (result, Is.InstanceOfType (typeof (StreamedScalarValueInfo)));
       Assert.That (result.DataType, Is.SameAs (typeof (bool)));
     }
 
@@ -95,8 +96,8 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), 
-        ExpectedMessage = "Item ('[main]') is no ConstantExpression, it is a QuerySourceReferenceExpression.")]
+    [ExpectedException (typeof (InvalidOperationException),
+        ExpectedMessage = "Expression ('[main]') is no ConstantExpression, it is a QuerySourceReferenceExpression.")]
     public void GetConstantItem_NoConstantExpression ()
     {
       var resultOperator = new ContainsResultOperator (new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ()));
@@ -105,7 +106,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
 
     [Test]
     [ExpectedException (typeof (InvalidOperationException), 
-        ExpectedMessage = "The value stored by Item ('2') is not of type 'System.DateTime', it is of type 'System.Int32'.")]
+        ExpectedMessage = "The value stored by the expression ('2') is not of type 'System.DateTime', it is of type 'System.Int32'.")]
     public void GetConstantItem_NotExpectedType ()
     {
       _resultOperator.GetConstantItem<DateTime> ();

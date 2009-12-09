@@ -61,6 +61,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       set { _predicate = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
+    /// <inheritdoc />
     public override StreamedValue ExecuteInMemory<T> (StreamedSequence input)
     {
       ArgumentUtility.CheckNotNull ("input", input);
@@ -74,23 +75,27 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new StreamedValue (result, (StreamedValueInfo) GetOutputDataInfo (input.DataInfo));
     }
 
+    /// <inheritdoc />
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
       return new AllResultOperator (Predicate);
     }
 
+    /// <inheritdoc />
     public override void TransformExpressions (Func<Expression, Expression> transformation)
     {
       ArgumentUtility.CheckNotNull ("transformation", transformation);
       Predicate = transformation (Predicate);
     }
 
+    /// <inheritdoc />
     public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
     {
       ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
       return new StreamedScalarValueInfo (typeof (bool));
     }
 
+    /// <inheritdoc />
     public override string ToString ()
     {
       return "All(" + FormattingExpressionTreeVisitor.Format (Predicate) + ")";

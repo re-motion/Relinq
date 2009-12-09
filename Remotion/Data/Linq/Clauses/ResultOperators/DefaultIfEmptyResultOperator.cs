@@ -57,19 +57,8 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     {
       if (OptionalDefaultValue == null)
         return null;
-      var optionalDefaultValueAsConstant = OptionalDefaultValue as ConstantExpression;
-      if (optionalDefaultValueAsConstant != null)
-      {
-        return optionalDefaultValueAsConstant.Value;
-      }
-      else
-      {
-        var message = string.Format (
-            "OptionalDefaultValue ('{0}') is no ConstantExpression, it is a {1}.",
-            FormattingExpressionTreeVisitor.Format (OptionalDefaultValue),
-            OptionalDefaultValue.GetType ().Name);
-        throw new InvalidOperationException (message);
-      }
+
+      return GetConstantValueFromExpression<object> (OptionalDefaultValue);
     }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)

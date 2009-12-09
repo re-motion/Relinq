@@ -68,19 +68,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     /// <returns>The constant value of <see cref="Source2"/>.</returns>
     public IEnumerable GetConstantSource2 ()
     {
-      var source2AsConstantExpression = Source2 as ConstantExpression;
-      if (source2AsConstantExpression != null)
-      {
-        return (IEnumerable) source2AsConstantExpression.Value;
-      }
-      else
-      {
-        var message = string.Format (
-            "Source2 ('{0}') is no ConstantExpression, it is a {1}.",
-            FormattingExpressionTreeVisitor.Format (Source2),
-            Source2.GetType ().Name);
-        throw new InvalidOperationException (message);
-      }
+      return GetConstantValueFromExpression<IEnumerable> (Source2);
     }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)

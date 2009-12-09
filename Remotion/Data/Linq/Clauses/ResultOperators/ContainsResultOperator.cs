@@ -39,12 +39,20 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   {
     private Expression _item;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ContainsResultOperator"/> class.
+    /// </summary>
+    /// <param name="item">The item for which to be searched.</param>
     public ContainsResultOperator (Expression item)
     {
       ArgumentUtility.CheckNotNull ("item", item);
       Item = item;
     }
 
+    /// <summary>
+    /// Gets or sets an expression yielding the item for which to be searched.
+    /// </summary>
+    /// <value>The item expression.</value>
     public Expression Item
     {
       get { return _item; }
@@ -52,36 +60,14 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     }
 
     /// <summary>
-    /// Gets the constant <see cref="object"/> value of the <see cref="Item"/> property, assuming it is a <see cref="ConstantExpression"/>. If it is
+    /// Gets the constant value of the <see cref="Item"/> property, assuming it is a <see cref="ConstantExpression"/>. If it is
     /// not, an <see cref="InvalidOperationException"/> is thrown.
     /// </summary>
     /// <typeparam name="T">The expected item type. If the item is not of this type, an <see cref="InvalidOperationException"/> is thrown.</typeparam>
-    /// <returns>The constant <see cref="object"/> value of the <see cref="Item"/> property.</returns>
+    /// <returns>The constant value of the <see cref="Item"/> property.</returns>
     public T GetConstantItem<T> ()
     {
-      if (!typeof (T).IsAssignableFrom (Item.Type))
-      {
-        var message = string.Format (
-            "The value stored by Item ('{0}') is not of type '{1}', it is of type '{2}'.",
-            FormattingExpressionTreeVisitor.Format (Item),
-            typeof (T),
-            Item.Type);
-        throw new InvalidOperationException (message);
-      }
-
-      var itemAsConstantExpression = Item as ConstantExpression;
-      if (itemAsConstantExpression != null)
-      {
-        return (T) itemAsConstantExpression.Value;
-      }
-      else
-      {
-        var message = string.Format (
-            "Item ('{0}') is no ConstantExpression, it is a {1}.",
-            FormattingExpressionTreeVisitor.Format (Item),
-            Item.GetType ().Name);
-        throw new InvalidOperationException (message);
-      }
+      return GetConstantValueFromExpression<T> (Item);
     }
 
     public override StreamedValue ExecuteInMemory<T> (StreamedSequence input)
@@ -102,15 +88,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
     {
       var sequenceInfo = ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
-      if (sequenceInfo.ItemExpression.Type != Item.Type)
-      {
-        var message = string.Format (
-            "The input sequence must have items of type '{0}', but it has items of type '{1}'.",
-            Item.Type, 
-            sequenceInfo.ItemExpression.Type);
-
-        throw new ArgumentTypeException (message, "inputInfo", typeof (IEnumerable<>).MakeGenericType (Item.Type), sequenceInfo.ItemExpression.Type);
-      }
+      CheckSequenceItemType (sequenceInfo, Item.Type);
 
       return new StreamedScalarValueInfo (typeof (bool));
     }

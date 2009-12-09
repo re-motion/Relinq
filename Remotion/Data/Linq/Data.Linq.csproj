@@ -57,6 +57,8 @@
     <Compile Include="Clauses\ResultOperators\ChoiceResultOperatorBase.cs" />
     <Compile Include="Clauses\ResultOperators\AnyResultOperator.cs" />
     <Compile Include="Clauses\ResultOperators\AllResultOperator.cs" />
+    <Compile Include="Clauses\ResultOperators\AggregateResultOperator.cs" />
+    <Compile Include="Clauses\ResultOperators\AggregateFromSeedResultOperator.cs" />
     <Compile Include="Clauses\ResultOperators\SequenceTypePreservingResultOperatorBase.cs" />
     <Compile Include="Clauses\ResultOperators\SequenceFromSequenceResultOperatorBase.cs" />
     <Compile Include="Clauses\ResultOperators\ValueFromSequenceResultOperatorBase.cs" />

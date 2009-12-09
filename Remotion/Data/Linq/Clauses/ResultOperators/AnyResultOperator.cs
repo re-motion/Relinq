@@ -38,6 +38,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   /// </example>
   public class AnyResultOperator : ValueFromSequenceResultOperatorBase
   {
+    /// <inheritdoc />
     public override StreamedValue ExecuteInMemory<T> (StreamedSequence input)
     {
       ArgumentUtility.CheckNotNull ("input", input);
@@ -47,17 +48,20 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new StreamedValue (result, (StreamedValueInfo) GetOutputDataInfo (input.DataInfo));
     }
 
+    /// <inheritdoc />
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
       return new AnyResultOperator ();
     }
 
+    /// <inheritdoc />
     public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
     {
       ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
       return new StreamedScalarValueInfo (typeof (bool));
     }
 
+    /// <inheritdoc />
     public override string ToString ()
     {
       return "Any()";
