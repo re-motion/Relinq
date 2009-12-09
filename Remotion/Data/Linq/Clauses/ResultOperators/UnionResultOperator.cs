@@ -26,10 +26,11 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
   /// <summary>
-  /// Represents the union part of a query. This is a result operator, operating on the whole result set of a query.
+  /// Represents forming the mathematical union of  a given set of items and the items returned by a query. 
+  /// This is a result operator, operating on the whole result set of a query.
   /// </summary>
   /// <example>
-  /// In C#, the "Union" clause in the following example corresponds to a <see cref="UnionResultOperator"/>.
+  /// In C#, the "Union" call in the following example corresponds to a <see cref="UnionResultOperator"/>.
   /// <code>
   /// var query = (from s in Students
   ///              select s).Union(students2);

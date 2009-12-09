@@ -24,10 +24,11 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
   /// <summary>
-  /// Represents the sum part of a query. This is a result operator, operating on the whole result set of a query.
+  /// Represents calculating the sum of the items returned by a query. 
+  /// This is a result operator, operating on the whole result set of a query.
   /// </summary>
   /// <example>
-  /// In C#, the "sum" clause in the following example corresponds to a <see cref="SumResultOperator"/>.
+  /// In C#, the "Sum" call in the following example corresponds to a <see cref="SumResultOperator"/>.
   /// <code>
   /// var query = (from s in Students
   ///              select s.ID).Sum();

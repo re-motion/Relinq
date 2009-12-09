@@ -24,13 +24,14 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
   /// <summary>
-  /// Represents the skip part of a query. This is a result operator, operating on the whole result set of a query.
+  /// Represents skipping a number of the items returned by a query.
+  /// This is a result operator, operating on the whole result set of a query.
   /// </summary>
   /// <example>
-  /// In C#, the "skip" clause in the following example corresponds to a <see cref="SkipResultOperator"/>.
+  /// In C#, the "Skip" call in the following example corresponds to a <see cref="SkipResultOperator"/>.
   /// <code>
   /// var query = (from s in Students
-  ///              select s).Skip(3);
+  ///              select s).Skip (3);
   /// </code>
   /// </example>
   public class SkipResultOperator : SequenceTypePreservingResultOperatorBase

@@ -24,10 +24,11 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
   /// <summary>
-  /// Represents the average part of a query. This is a result operator, operating on the whole result set of a query.
+  /// Represents a calculation of an average value from the items returned by a query.
+  /// This is a result operator, operating on the whole result set of a query.
   /// </summary>
   /// <example>
-  /// In C#, the "average" clause in the following example corresponds to a <see cref="AverageResultOperator"/>.
+  /// In C#, the "Average" call in the following example corresponds to an <see cref="AverageResultOperator"/>.
   /// <code>
   /// var query = (from s in Students
   ///              select s.ID).Average();

@@ -26,10 +26,11 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
   /// <summary>
-  /// Represents the intersect part of a query. This is a result operator, operating on the whole result set of a query.
+  /// Represents taking the mathematical intersection of a given set of items and the items returned by a query. 
+  /// This is a result operator, operating on the whole result set of a query.
   /// </summary>
   /// <example>
-  /// In C#, the "Intersect" clause in the following example corresponds to a <see cref="IntersectResultOperator"/>.
+  /// In C#, the "Intersect" call in the following example corresponds to a <see cref="IntersectResultOperator"/>.
   /// <code>
   /// var query = (from s in Students
   ///              select s).Intersect(students2);

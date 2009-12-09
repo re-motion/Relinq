@@ -26,10 +26,11 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
   /// <summary>
-  /// Represents the except part of a query. This is a result operator, operating on the whole result set of a query.
+  /// Represents the removal of a given set of items from the result set of a query.
+  /// This is a result operator, operating on the whole result set of a query.
   /// </summary>
   /// <example>
-  /// In C#, the "except" clause in the following example corresponds to a <see cref="ExceptResultOperator"/>.
+  /// In C#, the "Except" call in the following example corresponds to a <see cref="ExceptResultOperator"/>.
   /// <code>
   /// var query = (from s in Students
   ///              select s).Except(students2);

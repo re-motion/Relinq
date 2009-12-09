@@ -21,10 +21,11 @@ using Remotion.Data.Linq.Clauses.StreamedData;
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
   /// <summary>
-  /// Represents the distinct part of a query. This is a result operator, operating on the whole result set of a query.
+  /// Represents the removal of duplicate values from the items returned by a query.
+  /// This is a result operator, operating on the whole result set of a query.
   /// </summary>
   /// <example>
-  /// In C#, the "distinct" clause in the following example corresponds to a <see cref="DistinctResultOperator"/>.
+  /// In C#, the "Distinct" call in the following example corresponds to a <see cref="DistinctResultOperator"/>.
   /// <code>
   /// var query = (from s in Students
   ///              select s).Distinct();

@@ -25,10 +25,11 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
   /// <summary>
-  /// Represents the defaultifempty part of a query. This is a result operator, operating on the whole result set of a query.
+  /// Represents a guard clause yielding a singleton sequence with a default value if no items are returned by a query.
+  /// This is a result operator, operating on the whole result set of a query.
   /// </summary>
   /// <example>
-  /// In C#, the "defaultifempty" clause in the following example corresponds to a <see cref="DefaultIfEmptyResultOperator"/>.
+  /// In C#, the "Defaultifempty" call in the following example corresponds to a <see cref="DefaultIfEmptyResultOperator"/>.
   /// <code>
   /// var query = (from s in Students
   ///              select s).DefaultIfEmpty ("student");

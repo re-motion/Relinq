@@ -16,7 +16,6 @@
 // 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.StreamedData;
@@ -25,10 +24,11 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
   /// <summary>
-  /// Represents the "OfType" part of a query. This is a result operator, operating on the whole result set of a query.
+  /// Represents filtering the items returned by a query to only return those items that are of a specific type. 
+  /// This is a result operator, operating on the whole result set of a query.
   /// </summary>
   /// <example>
-  /// In C#, the "OfType" clause in the following example corresponds to a <see cref="OfTypeResultOperator"/>.
+  /// In C#, the "OfType" call in the following example corresponds to a <see cref="OfTypeResultOperator"/>.
   /// <code>
   /// var query = (from s in Students
   ///              select s.ID).OfType&lt;int&gt;();

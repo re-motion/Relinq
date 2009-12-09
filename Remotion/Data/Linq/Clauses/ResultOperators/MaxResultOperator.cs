@@ -21,10 +21,15 @@ using Remotion.Data.Linq.Clauses.StreamedData;
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
   /// <summary>
-  /// Represents the max part of a query. This is a result operator, operating on the whole result set of a query.
+  /// Represents taking only the greatest one of the items returned by a query.
+  /// This is a result operator, operating on the whole result set of a query.
   /// </summary>
+  /// <remarks>
+  /// The semantics of "greatest" are defined by the query provider. "Max" query methods taking a selector are represented as a combination
+  /// of a <see cref="SelectClause"/> and a <see cref="MaxResultOperator"/>.
+  /// </remarks>
   /// <example>
-  /// In C#, the "max" clause in the following example corresponds to a <see cref="MaxResultOperator"/>.
+  /// In C#, the "Max" call in the following example corresponds to a <see cref="MaxResultOperator"/>.
   /// <code>
   /// var query = (from s in Students
   ///              select s.ID).Max();

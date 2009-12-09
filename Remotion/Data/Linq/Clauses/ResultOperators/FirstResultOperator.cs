@@ -21,10 +21,14 @@ using Remotion.Data.Linq.Clauses.StreamedData;
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
   /// <summary>
-  /// Represents the first part of a query. This is a result operator, operating on the whole result set of a query.
+  /// Represents taking only the first of the items returned by a query.
+  /// This is a result operator, operating on the whole result set of a query.
   /// </summary>
+  /// <remarks>
+  /// "First" query methods taking a predicate are represented as a combination of a <see cref="WhereClause"/> and a <see cref="FirstResultOperator"/>.
+  /// </remarks>
   /// <example>
-  /// In C#, the "first" clause in the following example corresponds to a <see cref="FirstResultOperator"/>.
+  /// In C#, the "First" call in the following example corresponds to a <see cref="FirstResultOperator"/>.
   /// <code>
   /// var query = (from s in Students
   ///              select s).First();

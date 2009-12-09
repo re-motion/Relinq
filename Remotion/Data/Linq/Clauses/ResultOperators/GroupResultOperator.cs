@@ -25,13 +25,13 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
   /// <summary>
-  /// Represents the group part of a query, grouping items given by an <see cref="ElementSelector"/> according to some key retrieved by a
-  /// <see cref="KeySelector"/>. This is a result operator, operating on the whole result set of the query.
+  /// Represents grouping the items returned by a query according to some key retrieved by a <see cref="KeySelector"/>, applying by an 
+  /// <see cref="ElementSelector"/> to the grouped items. This is a result operator, operating on the whole result set of the query.
   /// </summary>
   /// <example>
-  /// In C#, the "group by" clause in the following sample corresponds to a <see cref="GroupResultOperator"/>. "s" (a reference to the query source "s", see
-  /// <see cref="QuerySourceReferenceExpression"/>) is the <see cref="ElementSelector"/> expression, "s.Country" is the <see cref="KeySelector"/>
-  /// expression:
+  /// In C#, the "group by" clause in the following sample corresponds to a <see cref="GroupResultOperator"/>. "s" (a reference to the query source 
+  /// "s", see <see cref="QuerySourceReferenceExpression"/>) is the <see cref="ElementSelector"/> expression, "s.Country" is the 
+  /// <see cref="KeySelector"/> expression:
   /// <code>
   /// var query = from s in Students
   ///             where s.First == "Hugo"

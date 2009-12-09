@@ -24,10 +24,11 @@ using Remotion.Utilities;
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
   /// <summary>
-  /// Represents the "all" part of a query. This is a result operator, operating on the whole result set of a query.
+  /// Represents a check whether all items returned by a query satisfy a predicate.
+  /// This is a result operator, operating on the whole result set of a query.
   /// </summary>
   /// <example>
-  /// In C#, the "All" clause in the following example corresponds to an <see cref="AllResultOperator"/>.
+  /// In C#, the "All" call in the following example corresponds to an <see cref="AllResultOperator"/>.
   /// <code>
   /// var result = (from s in Students
   ///              select s).All();

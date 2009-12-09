@@ -24,10 +24,11 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
   /// <summary>
-  /// Represents the take part of a query. This is a result operator, operating on the whole result set of a query.
+  /// Represents taking only a specific number of items returned by a query. 
+  /// This is a result operator, operating on the whole result set of a query.
   /// </summary>
   /// <example>
-  /// In C#, the "take" clause in the following example corresponds to a <see cref="TakeResultOperator"/>.
+  /// In C#, the "Take" call in the following example corresponds to a <see cref="TakeResultOperator"/>.
   /// <code>
   /// var query = (from s in Students
   ///              select s).Take(3);

@@ -25,10 +25,6 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   /// </summary>
   public abstract class SequenceFromSequenceResultOperatorBase : ResultOperatorBase
   {
-    protected SequenceFromSequenceResultOperatorBase ()
-    {
-    }
-
     public abstract StreamedSequence ExecuteInMemory<T> (StreamedSequence input);
 
     public override IStreamedData ExecuteInMemory (IStreamedData input)

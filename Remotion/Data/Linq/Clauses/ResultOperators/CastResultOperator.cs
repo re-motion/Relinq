@@ -16,7 +16,6 @@
 // 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.StreamedData;
@@ -25,10 +24,11 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
   /// <summary>
-  /// Represents the "Cast" part of a query. This is a result operator, operating on the whole result set of a query.
+  /// Represents a cast of the items returned by a query to a different type.
+  /// This is a result operator, operating on the whole result set of a query.
   /// </summary>
   /// <example>
-  /// In C#, the "Cast" clause in the following example corresponds to a <see cref="CastResultOperator"/>.
+  /// In C#, "Cast" call in the following example corresponds to a <see cref="CastResultOperator"/>.
   /// <code>
   /// var query = (from s in Students
   ///              select s.ID).Cast&lt;int&gt;();

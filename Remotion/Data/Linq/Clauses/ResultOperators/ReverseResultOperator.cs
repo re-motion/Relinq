@@ -21,10 +21,11 @@ using Remotion.Data.Linq.Clauses.StreamedData;
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
   /// <summary>
-  /// Represents the reverse part of a query. This is a result operator, operating on the whole result set of a query.
+  /// Represents reversing the sequence of items returned by of a query. 
+  /// This is a result operator, operating on the whole result set of a query.
   /// </summary>
   /// <example>
-  /// In C#, the "reverse" clause in the following example corresponds to a <see cref="ReverseResultOperator"/>.
+  /// In C#, the "Reverse" call in the following example corresponds to a <see cref="ReverseResultOperator"/>.
   /// <code>
   /// var query = (from s in Students
   ///              select s).Reverse();

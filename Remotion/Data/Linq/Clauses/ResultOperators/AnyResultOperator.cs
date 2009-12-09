@@ -22,10 +22,15 @@ using Remotion.Utilities;
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
   /// <summary>
-  /// Represents the "any" part of a query. This is a result operator, operating on the whole result set of a query.
+  /// Represents a check whether any items are returned by a query.
+  /// This is a result operator, operating on the whole result set of a query.
   /// </summary>
+  /// <remarks>
+  /// "Any" query methods taking a predicate are represented as into a combination of a <see cref="WhereClause"/> and an 
+  /// <see cref="AnyResultOperator"/>.
+  /// </remarks>
   /// <example>
-  /// In C#, the "Any" clause in the following example corresponds to an <see cref="AnyResultOperator"/>.
+  /// In C#, the "Any" call in the following example corresponds to an <see cref="AnyResultOperator"/>.
   /// <code>
   /// var result = (from s in Students
   ///              select s).Any();

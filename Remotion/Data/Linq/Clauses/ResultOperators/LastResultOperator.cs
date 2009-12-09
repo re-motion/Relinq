@@ -21,10 +21,14 @@ using Remotion.Data.Linq.Clauses.StreamedData;
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
   /// <summary>
-  /// Represents the last part of a query. This is a result operator, operating on the whole result set of a query.
+  /// Represents taking only the last one of the items returned by a query. 
+  /// This is a result operator, operating on the whole result set of a query.
   /// </summary>
+  /// <remarks>
+  /// "Last" query methods taking a predicate are represented as a combination of a <see cref="WhereClause"/> and a <see cref="LastResultOperator"/>.
+  /// </remarks>
   /// <example>
-  /// In C#, the "last" clause in the following example corresponds to a <see cref="LastResultOperator"/>.
+  /// In C#, the "Last" call in the following example corresponds to a <see cref="LastResultOperator"/>.
   /// <code>
   /// var query = (from s in Students
   ///              select s).Last();

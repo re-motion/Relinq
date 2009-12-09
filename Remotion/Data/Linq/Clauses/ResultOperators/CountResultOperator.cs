@@ -22,10 +22,13 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
   /// <summary>
-  /// Represents the count part of a query. This is a result operator, operating on the whole result set of a query.
+  /// Represents counting the number of items returned by a query.
+  /// This is a result operator, operating on the whole result set of a query.
   /// </summary>
-  /// <example>
-  /// In C#, the "count" clause in the following example corresponds to a <see cref="CountResultOperator"/>.
+  /// <remarks>
+  /// "Count" query methods taking a predicate are represented as a combination of a <see cref="WhereClause"/> and a <see cref="CountResultOperator"/>.
+  /// </remarks>  /// <example>
+  /// In C#, the "Count" call in the following example corresponds to a <see cref="CountResultOperator"/>.
   /// <code>
   /// var query = (from s in Students
   ///              select s).Count();

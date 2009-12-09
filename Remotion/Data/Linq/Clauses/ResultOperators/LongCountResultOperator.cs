@@ -22,10 +22,15 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
   /// <summary>
-  /// Represents the long count part of a query. This is a result operator, operating on the whole result set of a query.
+  /// Represents counting the number of items returned by a query as a 64-bit number.
+  /// This is a result operator, operating on the whole result set of a query.
   /// </summary>
+  /// <remarks>
+  /// "LongCount" query methods taking a predicate are represented as a combination of a <see cref="WhereClause"/> and a 
+  /// <see cref="LongCountResultOperator"/>.
+  /// </remarks>
   /// <example>
-  /// In C#, the "LongCount" clause in the following example corresponds to a <see cref="LongCountResultOperator"/>.
+  /// In C#, the "LongCount" call in the following example corresponds to a <see cref="LongCountResultOperator"/>.
   /// <code>
   /// var query = (from s in Students
   ///              select s).LongCount();
