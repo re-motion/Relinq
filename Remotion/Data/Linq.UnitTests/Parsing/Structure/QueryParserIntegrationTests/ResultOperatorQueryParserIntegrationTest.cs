@@ -397,7 +397,6 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
     }
 
     [Test]
-    [Ignore ("TODO 1912")]
     public void All ()
     {
       var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
