@@ -77,7 +77,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
 
     public override string ToString ()
     {
-      return "OfType()";
+      return "OfType<" + SearchedItemType + ">()";
     }
 
     private UnaryExpression GetNewItemExpression (Expression inputItemExpression)

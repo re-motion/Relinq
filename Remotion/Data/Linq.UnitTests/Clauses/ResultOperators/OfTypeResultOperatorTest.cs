@@ -90,5 +90,11 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
       var input = new StreamedScalarValueInfo (typeof (Student));
       _resultOperator.GetOutputDataInfo (input);
     }
+
+    [Test]
+    public new void ToString ()
+    {
+      Assert.That (_resultOperator.ToString (), Is.EqualTo ("OfType<Remotion.Data.Linq.UnitTests.TestDomain.GoodStudent>()"));
+    }
   }
 }

@@ -15,55 +15,43 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections;
 using System.Linq;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
-using System.Collections.Generic;
 
 namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.IntermediateModel
 {
   [TestFixture]
-  public class CountExpressionNodeTest : ExpressionNodeTestBase
+  public class AnyExpressionNodeTest : ExpressionNodeTestBase
   {
-    private CountExpressionNode _node;
+    private AnyExpressionNode _node;
 
     public override void SetUp ()
     {
       base.SetUp ();
-      _node = new CountExpressionNode (CreateParseInfo (), null);
+      _node = new AnyExpressionNode (CreateParseInfo (), null);
     }
 
     [Test]
     public void SupportedMethods_WithoutPredicate ()
     {
-      AssertSupportedMethod_Generic (CountExpressionNode.SupportedMethods, q => q.Count (), e => e.Count ());
-    }
-
-    [Test]
-    public void SupportedMethods_WithoutPredicate_FromCollections ()
-    {
-      Assert.That (CountExpressionNode.SupportedMethods, List.Contains (typeof (List<>).GetProperty ("Count").GetGetMethod()));
-      Assert.That (CountExpressionNode.SupportedMethods, List.Contains (typeof (ArrayList).GetProperty ("Count").GetGetMethod ()));
-      Assert.That (CountExpressionNode.SupportedMethods, List.Contains (typeof (ICollection<>).GetProperty ("Count").GetGetMethod ()));
-      Assert.That (CountExpressionNode.SupportedMethods, List.Contains (typeof (ICollection).GetProperty ("Count").GetGetMethod ()));
-      Assert.That (CountExpressionNode.SupportedMethods, List.Contains (typeof (Array).GetProperty ("Length").GetGetMethod ()));
+      AssertSupportedMethod_Generic (AnyExpressionNode.SupportedMethods, q => q.Any (), e => e.Any ());
     }
 
     [Test]
     public void SupportedMethod_WithPredicate ()
     {
-      AssertSupportedMethod_Generic (CountExpressionNode.SupportedMethods, q => q.Count (o => o == null), e => e.Count (o => o == null));
+      AssertSupportedMethod_Generic (AnyExpressionNode.SupportedMethods, q => q.Any (o => o == null), e => e.Any (o => o == null));
     }
 
     [Test]
     public void Initialization_WithPredicate ()
     {
-      var parseInfo = CreateParseInfo();
+      var parseInfo = CreateParseInfo ();
       var predicate = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      var node = new CountExpressionNode (parseInfo, predicate);
+      var node = new AnyExpressionNode (parseInfo, predicate);
 
       Assert.That (node.Source, Is.InstanceOfType (typeof (WhereExpressionNode)));
       Assert.That (((WhereExpressionNode) node.Source).Predicate, Is.SameAs (predicate));
@@ -74,7 +62,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.IntermediateModel
     public void Initialization_WithoutPredicate ()
     {
       var parseInfo = CreateParseInfo ();
-      var node = new CountExpressionNode (parseInfo, null);
+      var node = new AnyExpressionNode (parseInfo, null);
 
       Assert.That (node.Source, Is.SameAs (SourceNode));
     }
@@ -89,7 +77,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.IntermediateModel
     [Test]
     public void Apply ()
     {
-      TestApply (_node, typeof (CountResultOperator));
+      TestApply (_node, typeof (AnyResultOperator));
     }
   }
 }

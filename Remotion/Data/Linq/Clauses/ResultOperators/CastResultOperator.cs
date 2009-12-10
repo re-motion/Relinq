@@ -79,7 +79,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
 
     public override string ToString ()
     {
-      return "Cast()";
+      return "Cast<" + CastItemType + ">()";
     }
 
     private UnaryExpression GetNewItemExpression (Expression inputItemExpression)

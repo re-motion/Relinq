@@ -116,6 +116,7 @@
     <Compile Include="Parsing\Structure\IntermediateModel\AverageExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ClauseGenerationContext.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ContainsExpressionNode.cs" />
+    <Compile Include="Parsing\Structure\IntermediateModel\AnyExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\DefaultIfEmptyExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ExceptExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ExpressionResolver.cs" />

@@ -413,7 +413,6 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
     }
 
     [Test]
-    [Ignore ("TODO 1912")]
     public void Any ()
     {
       var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
@@ -422,19 +421,23 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       var queryModel = QueryParser.GetParsedQuery (expression);
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (bool)));
 
+      CheckConstantQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
+      
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
       Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (AnyResultOperator)));
     }
 
     [Test]
-    [Ignore ("TODO 1912")]
     public void Any_WithPredicate ()
     {
       var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
                                                                select s).Any (s => s.IsOld));
 
       var queryModel = QueryParser.GetParsedQuery (expression);
+      Console.WriteLine (queryModel);
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (bool)));
+
+      CheckConstantQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
 
       Assert.That (queryModel.BodyClauses.Count, Is.EqualTo (1));
       Assert.That (queryModel.BodyClauses[0], Is.InstanceOfType (typeof (WhereClause)));
@@ -454,6 +457,8 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
 
       var queryModel = QueryParser.GetParsedQuery (expression);
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (string)));
+      
+      CheckConstantQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
 
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
       Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (AggregateResultOperator)));
@@ -474,6 +479,8 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       var queryModel = QueryParser.GetParsedQuery (expression);
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (string)));
 
+      CheckConstantQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
+      
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
       Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (AggregateFromSeedResultOperator)));
 
@@ -496,6 +503,8 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       var queryModel = QueryParser.GetParsedQuery (expression);
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (string)));
 
+      CheckConstantQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
+      
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
       Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (AggregateFromSeedResultOperator)));
 
