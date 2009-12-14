@@ -21,13 +21,12 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.UnitTests.TestDomain;
 using Remotion.Data.Linq.UnitTests.TestQueryGenerators;
-using Remotion.Utilities;
+using Remotion.Data.Linq.Utilities;
 using Rhino.Mocks;
 
 namespace Remotion.Data.Linq.UnitTests
@@ -70,8 +69,11 @@ namespace Remotion.Data.Linq.UnitTests
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentTypeException))]
-    public void CreateQueryUnwrapsException ()
+    [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage = 
+        "Expected a type implementing IEnumerable<T>, but found "
+        + "'System.Func`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]'.\r\n"
+        + "Parameter name: expression")]
+    public void CreateQuery_NonEnumerableExpression ()
     {
       Expression expression = ExpressionHelper.CreateLambdaExpression ();
       _queryProvider.CreateQuery (expression);

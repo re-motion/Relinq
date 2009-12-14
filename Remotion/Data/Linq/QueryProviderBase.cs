@@ -15,7 +15,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -90,15 +89,8 @@ namespace Remotion.Data.Linq
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      Type elementType = Remotion.Utilities.ReflectionUtility.GetAscribedGenericArguments (expression.Type, typeof (IEnumerable<>))[0];
-      try
-      {
-        return (IQueryable) s_genericCreateQueryMethod.MakeGenericMethod (elementType).Invoke (this, new object[] { expression });
-      }
-      catch (TargetInvocationException tie)
-      {
-        throw tie.InnerException;
-      }
+      Type elementType = ReflectionUtility.GetItemTypeOfIEnumerable (expression.Type, "expression");
+      return (IQueryable) s_genericCreateQueryMethod.MakeGenericMethod (elementType).Invoke (this, new object[] { expression });
     }
 
     /// <summary>
