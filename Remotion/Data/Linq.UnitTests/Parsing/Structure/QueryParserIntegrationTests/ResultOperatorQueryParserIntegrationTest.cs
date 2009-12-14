@@ -433,7 +433,6 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
                                                                select s).Any (s => s.IsOld));
 
       var queryModel = QueryParser.GetParsedQuery (expression);
-      Console.WriteLine (queryModel);
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (bool)));
 
       CheckConstantQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
