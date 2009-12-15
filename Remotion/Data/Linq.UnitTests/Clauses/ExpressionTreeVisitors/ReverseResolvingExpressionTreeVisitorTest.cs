@@ -56,7 +56,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ExpressionTreeVisitors
     }
 
     [Test]
-    public void NoReferenceExpression ()
+    public void ReverseResolve_NoReferenceExpression ()
     {
       // itemExpression: new AnonymousType<Student, Student> ( a = [s1], b = [s2] )
       // resolvedExpression: 0
@@ -71,7 +71,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ExpressionTreeVisitors
     }
 
     [Test]
-    public void TopLevelReferenceExpression ()
+    public void ReverseResolve_TopLevelReferenceExpression ()
     {
       // itemExpression: new AnonymousType<Student, Student> ( a = [s1], b = [s2] )
       // resolvedExpression: [s1]
@@ -89,7 +89,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ExpressionTreeVisitors
     [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Cannot create a LambdaExpression that retrieves the value of '[s3]' "
         + "from items with a structure of 'new AnonymousType`2(a = [s1], b = [s2])'. The item expression does not contain the value or it is too "
         + "complex.")]
-    public void NonAccessibleReferenceExpression_Throws ()
+    public void ReverseResolve_NonAccessibleReferenceExpression_Throws ()
     {
       // itemExpression: new AnonymousType<Student, Student> ( a = [s1], b = [s2] )
       // resolvedExpression: [s3]
@@ -102,7 +102,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ExpressionTreeVisitors
     }
 
     [Test]
-    public void MultipleNestedReferenceExpressions ()
+    public void ReverseResolve_MultipleNestedReferenceExpressions ()
     {
       // itemExpression: new AnonymousType<Student, Student> ( a = [s1], b = [s2] )
       // resolvedExpression: [s1].ID + [s2].ID
@@ -114,6 +114,53 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ExpressionTreeVisitors
 
       var expectedExpression = ExpressionHelper.CreateLambdaExpression<AnonymousType<Student, Student>, int> (input => input.a.ID + input.b.ID);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, lambdaExpression);
+    }
+
+    [Test]
+    public void ReverseResolveLambda ()
+    {
+      // itemExpression: new AnonymousType<Student, Student> ( a = [s1], b = [s2] )
+      // resolvedExpression: (x, y) => 0
+      // expected result: (x, input, y) => 0
+
+      var parameter1 = Expression.Parameter (typeof (int), "x");
+      var parameter2 = Expression.Parameter (typeof (string), "y");
+      var resolvedExpression = Expression.Lambda (Expression.Constant (0), parameter1, parameter2);
+
+      var lambdaExpression = ReverseResolvingExpressionTreeVisitor.ReverseResolveLambda (_itemExpression, resolvedExpression, 1);
+
+      var expectedExpression = ExpressionHelper.CreateLambdaExpression<int, AnonymousType<Student, Student>, string, int> ((x, input, y) => 0);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, lambdaExpression);
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentOutOfRangeException))]
+    public void ReverseResolveLambda_InvalidPosition_TooBig ()
+    {
+      // itemExpression: new AnonymousType<Student, Student> ( a = [s1], b = [s2] )
+      // resolvedExpression: (x, y) => 0
+      // expected result: (x, input, y) => 0
+
+      var parameter1 = Expression.Parameter (typeof (int), "x");
+      var parameter2 = Expression.Parameter (typeof (string), "y");
+      var resolvedExpression = Expression.Lambda (Expression.Constant (0), parameter1, parameter2);
+
+      ReverseResolvingExpressionTreeVisitor.ReverseResolveLambda (_itemExpression, resolvedExpression, 3);
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentOutOfRangeException))]
+    public void ReverseResolveLambda_InvalidPosition_TooSmall ()
+    {
+      // itemExpression: new AnonymousType<Student, Student> ( a = [s1], b = [s2] )
+      // resolvedExpression: (x, y) => 0
+      // expected result: (x, input, y) => 0
+
+      var parameter1 = Expression.Parameter (typeof (int), "x");
+      var parameter2 = Expression.Parameter (typeof (string), "y");
+      var resolvedExpression = Expression.Lambda (Expression.Constant (0), parameter1, parameter2);
+
+      ReverseResolvingExpressionTreeVisitor.ReverseResolveLambda (_itemExpression, resolvedExpression, -1);
     }
   }
 }

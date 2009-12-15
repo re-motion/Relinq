@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Remotion.Data.Linq;
 using Remotion.Data.Linq.Backend.DataObjectModel;
 using Remotion.Data.Linq.Backend.FieldResolving;
 using Remotion.Data.Linq.Clauses;
@@ -52,6 +51,11 @@ namespace Remotion.Data.Linq.UnitTests
     }
 
     public static Expression<Func<TSource1, TSource2, TResult>> CreateLambdaExpression<TSource1, TSource2, TResult> (Expression<Func<TSource1, TSource2, TResult>> expression)
+    {
+      return expression;
+    }
+
+    public static Expression<Func<TSource1, TSource2, TSource3, TResult>> CreateLambdaExpression<TSource1, TSource2, TSource3, TResult> (Expression<Func<TSource1, TSource2, TSource3, TResult>> expression)
     {
       return expression;
     }

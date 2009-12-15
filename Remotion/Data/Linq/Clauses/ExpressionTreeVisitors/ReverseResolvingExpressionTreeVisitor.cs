@@ -15,6 +15,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
@@ -58,6 +59,36 @@ namespace Remotion.Data.Linq.Clauses.ExpressionTreeVisitors
       var result = visitor.VisitExpression (resolvedExpression);
       return Expression.Lambda (result, lambdaParameter);
     }
+
+    /// <summary>
+    /// Performs a reverse <see cref="IExpressionNode.Resolve"/> operation on a <see cref="LambdaExpression"/>, i.e. creates a new 
+    /// <see cref="LambdaExpression"/> with an additional parameter from a given resolved <see cref="LambdaExpression"/>, 
+    /// substituting all <see cref="QuerySourceReferenceExpression"/> objects by getting the referenced objects from the new input parameter.
+    /// </summary>
+    /// <param name="itemExpression">The item expression representing the items passed to the generated <see cref="LambdaExpression"/> via its new
+    /// input parameter.</param>
+    /// <param name="resolvedExpression">The resolved <see cref="LambdaExpression"/> for which to generate a reverse resolved <see cref="LambdaExpression"/>.</param>
+    /// <param name="parameterInsertionPosition">The position at which to insert the new parameter.</param>
+    /// <returns>A <see cref="LambdaExpression"/> similar to the given resolved expression, substituting all <see cref="QuerySourceReferenceExpression"/> 
+    /// objects by getting the referenced objects from an additional input parameter. The new input parameter is of the type defined by 
+    /// <paramref name="itemExpression"/>.</returns>
+    public static LambdaExpression ReverseResolveLambda (NewExpression itemExpression, LambdaExpression resolvedExpression, int parameterInsertionPosition)
+    {
+      ArgumentUtility.CheckNotNull ("itemExpression", itemExpression);
+      ArgumentUtility.CheckNotNull ("resolvedExpression", resolvedExpression);
+
+      if (parameterInsertionPosition < 0 || parameterInsertionPosition > resolvedExpression.Parameters.Count)
+        throw new ArgumentOutOfRangeException ("parameterInsertionPosition");
+
+      var lambdaParameter = Expression.Parameter (itemExpression.Type, "input");
+      var visitor = new ReverseResolvingExpressionTreeVisitor (itemExpression, lambdaParameter);
+      var result = visitor.VisitExpression (resolvedExpression.Body);
+      
+      var parameters = new List<ParameterExpression> (resolvedExpression.Parameters);
+      parameters.Insert (parameterInsertionPosition, lambdaParameter);
+      return Expression.Lambda (result, parameters.ToArray());
+    }
+
 
     private readonly Expression _itemExpression;
     private readonly ParameterExpression _lambdaParameter;
