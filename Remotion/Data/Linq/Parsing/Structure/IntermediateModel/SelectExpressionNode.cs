@@ -36,7 +36,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Enumerable.Select<object, object> (null, o => null)),
                                                            };
 
-    private readonly ResolvedExpressionCache _cachedSelector;
+    private readonly ResolvedExpressionCache<Expression> _cachedSelector;
 
     public SelectExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression selector)
         : base (parseInfo)
@@ -47,7 +47,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
         throw new ArgumentException ("Selector must have exactly one parameter.", "selector");
 
       Selector = selector;
-      _cachedSelector = new ResolvedExpressionCache (this);
+      _cachedSelector = new ResolvedExpressionCache<Expression> (this);
     }
 
     public LambdaExpression Selector { get; private set; }

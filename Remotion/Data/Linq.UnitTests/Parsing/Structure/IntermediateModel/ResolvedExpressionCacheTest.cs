@@ -15,6 +15,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
@@ -25,13 +26,13 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.IntermediateModel
   [TestFixture]
   public class ResolvedExpressionCacheTest
   {
-    private ResolvedExpressionCache _cache;
+    private ResolvedExpressionCache<Expression> _cache;
 
     [SetUp]
     public void SetUp ()
     {
       var parseInfo = new MethodCallExpressionParseInfo("x", ExpressionNodeObjectMother.CreateMainSource(), ExpressionHelper.CreateMethodCallExpression());
-      _cache = new ResolvedExpressionCache (new TestMethodCallExpressionNode (parseInfo, null)) ;
+      _cache = new ResolvedExpressionCache<Expression> (new TestMethodCallExpressionNode (parseInfo, null));
     }
 
     [Test]

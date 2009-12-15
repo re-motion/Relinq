@@ -23,10 +23,11 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   /// <summary>
   /// Caches a resolved expression in the <see cref="IExpressionNode"/> classes.
   /// </summary>
-  public class ResolvedExpressionCache
+  public class ResolvedExpressionCache<T>
+      where T : Expression
   {
     private readonly ExpressionResolver _resolver;
-    private Expression _cachedExpression;
+    private T _cachedExpression;
 
     public ResolvedExpressionCache (IExpressionNode currentNode)
     {
@@ -36,7 +37,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       _cachedExpression = null;
     }
 
-    public Expression GetOrCreate (Func<ExpressionResolver, Expression> generator)
+    public T GetOrCreate (Func<ExpressionResolver, T> generator)
     {
       if (_cachedExpression == null)
         _cachedExpression = generator (_resolver);

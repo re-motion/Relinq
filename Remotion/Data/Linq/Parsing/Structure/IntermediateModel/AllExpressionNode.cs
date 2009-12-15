@@ -39,7 +39,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Enumerable.All<object> (null, null))
                                                            };
 
-    private readonly ResolvedExpressionCache _cachedPredicate;
+    private readonly ResolvedExpressionCache<Expression> _cachedPredicate;
 
     public AllExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression predicate)
         : base (parseInfo, null, null)
@@ -47,7 +47,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       ArgumentUtility.CheckNotNull ("predicate", predicate);
 
       Predicate = predicate;
-      _cachedPredicate = new ResolvedExpressionCache (this);
+      _cachedPredicate = new ResolvedExpressionCache<Expression> (this);
     }
 
     public LambdaExpression Predicate { get; private set; }

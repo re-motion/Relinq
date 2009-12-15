@@ -36,7 +36,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Enumerable.OrderByDescending<object, object> (null, null)),
                                                            };
 
-    private readonly ResolvedExpressionCache _cachedSelector;
+    private readonly ResolvedExpressionCache<Expression> _cachedSelector;
 
     public OrderByDescendingExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression keySelector)
         : base (parseInfo)
@@ -47,7 +47,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
         throw new ArgumentException ("KeySelector must have exactly one parameter.", "keySelector");
 
       KeySelector = keySelector;
-      _cachedSelector = new ResolvedExpressionCache (this);
+      _cachedSelector = new ResolvedExpressionCache<Expression> (this);
     }
 
     public LambdaExpression KeySelector { get; private set; }

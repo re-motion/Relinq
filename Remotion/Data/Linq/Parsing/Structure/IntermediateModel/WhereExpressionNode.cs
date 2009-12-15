@@ -36,7 +36,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Enumerable.Where<object> (null, o => true)),
                                                            };
 
-    private readonly ResolvedExpressionCache _cachedPredicate;
+    private readonly ResolvedExpressionCache<Expression> _cachedPredicate;
 
     public WhereExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression predicate)
         : base (parseInfo)
@@ -47,7 +47,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
         throw new ArgumentException ("Predicate must have exactly one parameter.", "predicate");
 
       Predicate = predicate;
-      _cachedPredicate = new ResolvedExpressionCache (this);
+      _cachedPredicate = new ResolvedExpressionCache<Expression> (this);
     }
 
     public LambdaExpression Predicate { get; private set; }

@@ -42,7 +42,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                              null, null, o => null, o => null, (o, i) => null)),
                                                            };
 
-    private readonly ResolvedExpressionCache _cachedResultSelector;
+    private readonly ResolvedExpressionCache<Expression> _cachedResultSelector;
 
     public GroupJoinExpressionNode (
         MethodCallExpressionParseInfo parseInfo, 
@@ -68,7 +68,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       JoinExpressionNode = new JoinExpressionNode (parseInfo, innerSequence, outerKeySelector, innerKeySelector, joinResultSelector);
       
       ResultSelector = resultSelector;
-      _cachedResultSelector = new ResolvedExpressionCache (this);
+      _cachedResultSelector = new ResolvedExpressionCache<Expression> (this);
     }
 
     public JoinExpressionNode JoinExpressionNode { get; private set; }

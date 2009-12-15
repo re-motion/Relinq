@@ -40,8 +40,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                    () => Enumerable.SelectMany<object, object[], object> (null, o => null, null)),
                                                            };
 
-    private readonly ResolvedExpressionCache _cachedCollectionSelector;
-    private readonly ResolvedExpressionCache _cachedResultSelector;
+    private readonly ResolvedExpressionCache<Expression> _cachedCollectionSelector;
+    private readonly ResolvedExpressionCache<Expression> _cachedResultSelector;
 
     public SelectManyExpressionNode (
         MethodCallExpressionParseInfo parseInfo, LambdaExpression collectionSelector, LambdaExpression resultSelector)
@@ -58,8 +58,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       CollectionSelector = collectionSelector;
       ResultSelector = resultSelector;
 
-      _cachedCollectionSelector = new ResolvedExpressionCache (this);
-      _cachedResultSelector = new ResolvedExpressionCache (this);
+      _cachedCollectionSelector = new ResolvedExpressionCache<Expression> (this);
+      _cachedResultSelector = new ResolvedExpressionCache<Expression> (this);
     }
 
     public LambdaExpression CollectionSelector { get; private set; }

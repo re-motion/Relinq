@@ -34,8 +34,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Enumerable.GroupBy<object, object, object> (null, o => null, o => null)),
                                                            };
 
-    private readonly ResolvedExpressionCache _cachedKeySelector;
-    private readonly ResolvedExpressionCache _cachedElementSelector;
+    private readonly ResolvedExpressionCache<Expression> _cachedKeySelector;
+    private readonly ResolvedExpressionCache<Expression> _cachedElementSelector;
 
     public GroupByExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression keySelector, LambdaExpression optionalElementSelector)
         : base (parseInfo, null, null)
@@ -51,10 +51,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       KeySelector = keySelector;
       OptionalElementSelector = optionalElementSelector;
 
-      _cachedKeySelector = new ResolvedExpressionCache (this);
+      _cachedKeySelector = new ResolvedExpressionCache<Expression> (this);
 
       if (optionalElementSelector != null)
-        _cachedElementSelector = new ResolvedExpressionCache (this);
+        _cachedElementSelector = new ResolvedExpressionCache<Expression> (this);
     }
 
     public LambdaExpression KeySelector { get; private set; }

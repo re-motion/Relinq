@@ -42,9 +42,9 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                              null, null, o => null, o => null, (o, i) => null)),
                                                            };
 
-    private readonly ResolvedExpressionCache _cachedOuterKeySelector;
-    private readonly ResolvedExpressionCache _cachedInnerKeySelector;
-    private readonly ResolvedExpressionCache _cachedResultSelector;
+    private readonly ResolvedExpressionCache<Expression> _cachedOuterKeySelector;
+    private readonly ResolvedExpressionCache<Expression> _cachedInnerKeySelector;
+    private readonly ResolvedExpressionCache<Expression> _cachedResultSelector;
 
     public JoinExpressionNode (
         MethodCallExpressionParseInfo parseInfo,
@@ -71,9 +71,9 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       InnerKeySelector = innerKeySelector;
       ResultSelector = resultSelector;
 
-      _cachedOuterKeySelector = new ResolvedExpressionCache (this);
-      _cachedInnerKeySelector = new ResolvedExpressionCache (this);
-      _cachedResultSelector = new ResolvedExpressionCache (this);
+      _cachedOuterKeySelector = new ResolvedExpressionCache<Expression> (this);
+      _cachedInnerKeySelector = new ResolvedExpressionCache<Expression> (this);
+      _cachedResultSelector = new ResolvedExpressionCache<Expression> (this);
     }
 
     public Expression InnerSequence { get; private set; }
