@@ -77,6 +77,12 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
           GetNewItemExpression (sequenceInfo.ItemExpression));
     }
 
+    /// <inheritdoc />
+    public override void TransformExpressions (Func<Expression, Expression> transformation)
+    {
+      //nothing to do here
+    }
+
     public override string ToString ()
     {
       return "Cast<" + CastItemType + ">()";

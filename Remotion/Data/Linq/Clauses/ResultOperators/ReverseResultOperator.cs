@@ -16,6 +16,7 @@
 // 
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.StreamedData;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
@@ -43,6 +44,12 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       var sequence = input.GetTypedSequence<T> ();
       var result = sequence.Reverse();
       return new StreamedSequence (result.AsQueryable (), (StreamedSequenceInfo) GetOutputDataInfo (input.DataInfo));
+    }
+
+    /// <inheritdoc />
+    public override void TransformExpressions (Func<Expression, Expression> transformation)
+    {
+      //nothing to do here
     }
 
     public override string ToString ()

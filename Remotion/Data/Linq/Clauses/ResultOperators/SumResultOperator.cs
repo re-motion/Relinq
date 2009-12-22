@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq.Clauses.StreamedData;
 using Remotion.Data.Linq.Utilities;
@@ -60,6 +61,12 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     {
       var sequenceInfo = ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
       return new StreamedScalarValueInfo (sequenceInfo.ItemExpression.Type);
+    }
+
+    /// <inheritdoc />
+    public override void TransformExpressions (Func<Expression, Expression> transformation)
+    {
+      //nothing to do here
     }
 
     public override string ToString ()

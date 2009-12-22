@@ -72,15 +72,13 @@ namespace Remotion.Data.Linq.Clauses
     }
 
     /// <summary>
-    /// Transforms all the expressions in this item via the given <paramref name="transformation"/> delegate. Subclasses must override this method
-    /// if they hold any expressions.
+    /// Transforms all the expressions in this item via the given <paramref name="transformation"/> delegate. Subclasses must apply the 
+    /// <paramref name="transformation"/> to any expressions they hold. If a subclass does not hold any expressions, it shouldn't do anything
+    /// in the implementation of this method.
     /// </summary>
     /// <param name="transformation">The transformation object. This delegate is called for each <see cref="Expression"/> within this
     /// item, and those expressions will be replaced with what the delegate returns.</param>
-    public virtual void TransformExpressions (Func<Expression, Expression> transformation)
-    {
-      //nothing to do here
-    }
+    public abstract void TransformExpressions (Func<Expression, Expression> transformation);
 
     /// <summary>
     /// Invokes a given generic method on an <see cref="IStreamedData"/> input via Reflection. Use this to implement 

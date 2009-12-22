@@ -16,6 +16,7 @@
 // 
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.StreamedData;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
@@ -56,6 +57,12 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
 
       T result = ReturnDefaultWhenEmpty ? sequence.LastOrDefault() : sequence.Last ();
       return new StreamedValue (result, (StreamedValueInfo) GetOutputDataInfo (input.DataInfo));
+    }
+
+    /// <inheritdoc />
+    public override void TransformExpressions (Func<Expression, Expression> transformation)
+    {
+      //nothing to do here
     }
 
     public override string ToString ()

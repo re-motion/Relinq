@@ -38,5 +38,10 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
     {
       throw new NotImplementedException();
     }
+
+    public override void TransformExpressions (Func<System.Linq.Expressions.Expression, System.Linq.Expressions.Expression> transformation)
+    {
+      throw new NotImplementedException ();
+    }
   }
 }

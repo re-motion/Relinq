@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq.Clauses.StreamedData;
 using Remotion.Data.Linq.Utilities;
@@ -66,6 +67,17 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       return new StreamedScalarValueInfo (resultType);
     }
 
+    /// <inheritdoc />
+    public override void TransformExpressions (Func<Expression, Expression> transformation)
+    {
+      //nothing to do here
+    }
+
+    public override string ToString ()
+    {
+      return "Average()";
+    }
+
     private Type GetResultType (Type inputItemType)
     {
       if (inputItemType == typeof (int) || inputItemType == typeof (long))
@@ -75,11 +87,5 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       else
         return inputItemType;
     }
-
-    public override string ToString ()
-    {
-      return "Average()";
-    }
-
   }
 }

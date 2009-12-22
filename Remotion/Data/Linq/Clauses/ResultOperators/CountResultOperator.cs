@@ -16,6 +16,7 @@
 // 
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.StreamedData;
 using Remotion.Data.Linq.Utilities;
 
@@ -52,6 +53,12 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     {
       ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
       return new StreamedScalarValueInfo (typeof (int));
+    }
+
+    /// <inheritdoc />
+    public override void TransformExpressions (Func<Expression, Expression> transformation)
+    {
+      //nothing to do here
     }
 
     public override string ToString ()
