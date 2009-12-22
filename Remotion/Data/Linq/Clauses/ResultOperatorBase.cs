@@ -83,19 +83,6 @@ namespace Remotion.Data.Linq.Clauses
     }
 
     /// <summary>
-    /// Gets the type of the items enumerated by <paramref name="input"/>.
-    /// </summary>
-    /// <param name="input">The input whose item type to retrieve. Must implement <see cref="IEnumerable{T}"/>, otherwise an exception
-    /// is thrown.</param>
-    /// <returns>The item type enumerated by <paramref name="input"/>.</returns>
-    //TODO: Seems not to be used. Possibly delete?
-    protected Type GetInputItemType (object input)
-    {
-      Type itemType = ReflectionUtility.GetItemTypeOfIEnumerable (input.GetType (), "input");
-      return itemType;
-    }
-
-    /// <summary>
     /// Invokes a given generic method on an <see cref="IStreamedData"/> input via Reflection. Use this to implement 
     /// <see cref="ExecuteInMemory(IStreamedData)"/> by defining a strongly typed, generic variant 
     /// of <see cref="ExecuteInMemory(IStreamedData)"/>; then invoke that strongly typed 
