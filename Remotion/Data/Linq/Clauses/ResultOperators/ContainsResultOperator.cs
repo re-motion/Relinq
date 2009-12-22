@@ -67,7 +67,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     /// <returns>The constant value of the <see cref="Item"/> property.</returns>
     public T GetConstantItem<T> ()
     {
-      return GetConstantValueFromExpression<T> (Item);
+      return GetConstantValueFromExpression<T> ("item", Item);
     }
 
     public override StreamedValue ExecuteInMemory<T> (StreamedSequence input)

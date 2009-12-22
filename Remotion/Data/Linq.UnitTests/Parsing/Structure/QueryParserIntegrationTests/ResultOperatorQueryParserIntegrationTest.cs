@@ -463,59 +463,66 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
 
       var resultOperator = (AggregateResultOperator) queryModel.ResultOperators[0];
 
-      var expectedFunc = ExpressionHelper.CreateLambdaExpression<string, string, string> ((allNames, name) => allNames + " " + name);
+      var expectedFunc = ExpressionHelper.ResolveLambdaParameter<string, Student, string> (
+          1, 
+          queryModel.MainFromClause,
+          (allNames, student) => allNames + " " + student.Last);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedFunc, resultOperator.Func);
     }
 
-    //[Test]
-    //[Ignore ("TODO 1988")]
-    //public void Aggregate_Seed_NoResultSelector ()
-    //{
-    //  var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
-    //                                                           select s).Aggregate (0, (totalIDs, s) => totalIDs + s.ID));
+    [Test]
+    [Ignore ("TODO 1988")]
+    public void Aggregate_Seed_NoResultSelector ()
+    {
+      var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
+                                                               select s).Aggregate (0, (totalIDs, s) => totalIDs + s.ID));
 
-    //  var queryModel = QueryParser.GetParsedQuery (expression);
-    //  Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (string)));
+      var queryModel = QueryParser.GetParsedQuery (expression);
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (string)));
 
-    //  CheckConstantQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
-      
-    //  Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
-    //  Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (AggregateFromSeedResultOperator)));
+      CheckConstantQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
 
-    //  var resultOperator = (AggregateFromSeedResultOperator) queryModel.ResultOperators[0];
-    //  Assert.That (resultOperator.GetConstantSeed<int> (), Is.EqualTo (0));
+      Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (AggregateFromSeedResultOperator)));
 
-    //  var expectedFunc = ExpressionHelper.CreateLambdaExpression<int, Student, int> ((totalIDs, s) => totalIDs + s.ID);
-    //  ExpressionTreeComparer.CheckAreEqualTrees (expectedFunc, resultOperator.Func);
+      var resultOperator = (AggregateFromSeedResultOperator) queryModel.ResultOperators[0];
+      Assert.That (resultOperator.GetConstantSeed<int> (), Is.EqualTo (0));
 
-    //  Assert.That (resultOperator.ResultSelector, Is.Null);
-    //}
+      var expectedFunc = ExpressionHelper.ResolveLambdaParameter<int, Student, int> (
+          1,
+          queryModel.MainFromClause,
+          (totalIDs, s) => totalIDs + s.ID);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedFunc, resultOperator.Func);
 
-    //[Test]
-    //[Ignore ("TODO 1988")]
-    //public void Aggregate_Seed_WithResultSelector ()
-    //{
-    //  var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
-    //                                                           select s).Aggregate (0, (totalIDs, s) => totalIDs + s.ID, totalIDs => totalIDs.ToString()));
+      Assert.That (resultOperator.ResultSelector, Is.Null);
+    }
 
-    //  var queryModel = QueryParser.GetParsedQuery (expression);
-    //  Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (string)));
+    [Test]
+    [Ignore ("TODO 1988")]
+    public void Aggregate_Seed_WithResultSelector ()
+    {
+      var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
+                                                               select s).Aggregate (0, (totalIDs, s) => totalIDs + s.ID, totalIDs => totalIDs.ToString ()));
 
-    //  CheckConstantQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
-      
-    //  Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
-    //  Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (AggregateFromSeedResultOperator)));
+      var queryModel = QueryParser.GetParsedQuery (expression);
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (string)));
 
-    //  var resultOperator = (AggregateFromSeedResultOperator) queryModel.ResultOperators[0];
-    //  Assert.That (resultOperator.GetConstantSeed<int> (), Is.EqualTo (0));
+      CheckConstantQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
 
-    //  var expectedFunc = ExpressionHelper.CreateLambdaExpression<int, Student, int> ((totalIDs, s) => totalIDs + s.ID);
-    //  ExpressionTreeComparer.CheckAreEqualTrees (expectedFunc, resultOperator.Func);
+      Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (AggregateFromSeedResultOperator)));
 
-    //  var expectedResultSelector = ExpressionHelper.CreateLambdaExpression<int, string> (totalIDs => totalIDs.ToString());
-    //  ExpressionTreeComparer.CheckAreEqualTrees (expectedResultSelector, resultOperator.ResultSelector);
-    //}
+      var resultOperator = (AggregateFromSeedResultOperator) queryModel.ResultOperators[0];
+      Assert.That (resultOperator.GetConstantSeed<int> (), Is.EqualTo (0));
 
+      var expectedFunc = ExpressionHelper.ResolveLambdaParameter<int, Student, int> (
+          1,
+          queryModel.MainFromClause,
+          (totalIDs, s) => totalIDs + s.ID);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedFunc, resultOperator.Func);
 
+      var expectedResultSelector = ExpressionHelper.CreateLambdaExpression<int, string> (totalIDs => totalIDs.ToString ());
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedResultSelector, resultOperator.ResultSelector);
+    }
   }
 }

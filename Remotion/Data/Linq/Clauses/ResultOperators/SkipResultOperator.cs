@@ -67,7 +67,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     /// <returns>The constant <see cref="int"/> value of the <see cref="Count"/> property.</returns>
     public int GetConstantCount ()
     {
-      return GetConstantValueFromExpression<int> (Count);
+      return GetConstantValueFromExpression<int> ("count", Count);
     }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)

@@ -195,17 +195,19 @@ namespace Remotion.Data.Linq.Clauses
     /// not, an <see cref="InvalidOperationException"/> is thrown.
     /// </summary>
     /// <typeparam name="T">The expected value type. If the value is not of this type, an <see cref="InvalidOperationException"/> is thrown.</typeparam>
+    /// <param name="expressionName">A string describing the value; this will be included in the exception message if an exception is thrown.</param>
     /// <param name="expression">The expression whose value to get.</param>
     /// <returns>
     /// The constant value of the given <paramref name="expression"/>.
     /// </returns>
-    protected T GetConstantValueFromExpression<T> (Expression expression)
+    protected T GetConstantValueFromExpression<T> (string expressionName, Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       if (!typeof (T).IsAssignableFrom (expression.Type))
       {
         var message = string.Format (
-            "The value stored by the expression ('{0}') is not of type '{1}', it is of type '{2}'.",
+            "The value stored by the {0} expression ('{1}') is not of type '{2}', it is of type '{3}'.",
+            expressionName,
             FormattingExpressionTreeVisitor.Format (expression),
             typeof (T),
             expression.Type);
@@ -220,7 +222,8 @@ namespace Remotion.Data.Linq.Clauses
       else
       {
         var message = string.Format (
-            "Expression ('{0}') is no ConstantExpression, it is a {1}.",
+            "The {0} expression ('{1}') is no ConstantExpression, it is a {2}.",
+            expressionName,
             FormattingExpressionTreeVisitor.Format (expression),
             expression.GetType ().Name);
         throw new InvalidOperationException (message);

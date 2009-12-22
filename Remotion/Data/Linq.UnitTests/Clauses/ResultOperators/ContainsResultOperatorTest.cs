@@ -97,7 +97,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
 
     [Test]
     [ExpectedException (typeof (InvalidOperationException),
-        ExpectedMessage = "Expression ('[main]') is no ConstantExpression, it is a QuerySourceReferenceExpression.")]
+        ExpectedMessage = "The item expression ('[main]') is no ConstantExpression, it is a QuerySourceReferenceExpression.")]
     public void GetConstantItem_NoConstantExpression ()
     {
       var resultOperator = new ContainsResultOperator (new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ()));
@@ -106,7 +106,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
 
     [Test]
     [ExpectedException (typeof (InvalidOperationException), 
-        ExpectedMessage = "The value stored by the expression ('2') is not of type 'System.DateTime', it is of type 'System.Int32'.")]
+        ExpectedMessage = "The value stored by the item expression ('2') is not of type 'System.DateTime', it is of type 'System.Int32'.")]
     public void GetConstantItem_NotExpectedType ()
     {
       _resultOperator.GetConstantItem<DateTime> ();

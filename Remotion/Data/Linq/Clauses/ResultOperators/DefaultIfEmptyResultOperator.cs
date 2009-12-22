@@ -58,7 +58,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
       if (OptionalDefaultValue == null)
         return null;
 
-      return GetConstantValueFromExpression<object> (OptionalDefaultValue);
+      return GetConstantValueFromExpression<object> ("default value", OptionalDefaultValue);
     }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)

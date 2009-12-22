@@ -40,6 +40,12 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   {
     private LambdaExpression _func;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AggregateResultOperator"/> class.
+    /// </summary>
+    /// <param name="func">The aggregating function. This is a <see cref="LambdaExpression"/> taking a parameter that represents the value accumulated so 
+    /// far and returns a new accumulated value. This is a resolved expression, i.e. items streaming in from prior clauses and result operators
+    /// are represented as expressions containing <see cref="QuerySourceReferenceExpression"/> nodes.</param>
     public AggregateResultOperator (LambdaExpression func)
     {
       ArgumentUtility.CheckNotNull ("func", func);

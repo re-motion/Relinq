@@ -24,328 +24,327 @@ using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Clauses.StreamedData;
+using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Data.Linq.UnitTests.TestDomain;
 using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
 {
-  // TODO 1988
-  //[TestFixture]
-  //public class AggregateFromSeedResultOperatorTest
-  //{
-  //  private AggregateFromSeedResultOperator _resultOperatorWithoutResultSelector;
-  //  private AggregateFromSeedResultOperator _resultOperatorWithResultSelector;
+  [TestFixture]
+  public class AggregateFromSeedResultOperatorTest
+  {
+    private AggregateFromSeedResultOperator _resultOperatorWithoutResultSelector;
+    private AggregateFromSeedResultOperator _resultOperatorWithResultSelector;
 
-  //  private Expression _seed;
-  //  private LambdaExpression _func;
-  //  private LambdaExpression _resultSelector;
+    private IQuerySource _querySource;
+    private QuerySourceReferenceExpression _sourceExpression;
 
-  //  [SetUp]
-  //  public void SetUp ()
-  //  {
-  //    _seed = Expression.Constant (12);
-  //    _func = ExpressionHelper.CreateLambdaExpression<int, int, int> ((total, i) => total + i);
-  //    _resultSelector = ExpressionHelper.CreateLambdaExpression<int, string> (total => total.ToString());
+    private LambdaExpression _func;
+    private Expression _seed;
+    private LambdaExpression _resultSelector;
 
-  //    _resultOperatorWithoutResultSelector = new AggregateFromSeedResultOperator (_seed, _func, null);
-  //    _resultOperatorWithResultSelector = new AggregateFromSeedResultOperator (_seed, _func, _resultSelector);
-  //  }
+    [SetUp]
+    public void SetUp ()
+    {
+      _querySource = ExpressionHelper.CreateMainFromClause_Int ();
+      _sourceExpression = new QuerySourceReferenceExpression (_querySource);
 
-  //  [Test]
-  //  public void Func ()
-  //  {
-  //    var func = Expression.Lambda (
-  //        typeof (Func<int, int, int>), 
-  //        Expression.Constant (0), 
-  //        Expression.Parameter (typeof (int), "i"), 
-  //        Expression.Parameter (typeof (int), "j"));
-  //    _resultOperatorWithResultSelector.Func = func;
+      var originalFunc = ExpressionHelper.CreateLambdaExpression<int, int, int> ((total, i) => total + i);
+      _func = Expression.Lambda (
+          ReplacingExpressionTreeVisitor.Replace (originalFunc.Parameters[1], _sourceExpression, originalFunc.Body), 
+          originalFunc.Parameters[0]);
+      _resultSelector = ExpressionHelper.CreateLambdaExpression<int, string> (total => total.ToString ());
 
-  //    Assert.That (_resultOperatorWithResultSelector.Func, Is.SameAs (func));
-  //  }
+      _seed = Expression.Constant (12);
+      _resultOperatorWithoutResultSelector = new AggregateFromSeedResultOperator (_seed, _func, null);
+      _resultOperatorWithResultSelector = new AggregateFromSeedResultOperator (_seed, _func, _resultSelector);
+    }
 
-  //  [Test]
-  //  [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage = 
-  //      "The aggregating function must be a LambdaExpression that describes an instantiation of 'Func<TAccumulate,TSource,TAccumulate>', but it is "
-  //      + "'System.Reflection.MemberFilter'.\r\nParameter name: value")]
-  //  public void Func_NonGeneric ()
-  //  {
-  //    var func = Expression.Lambda (
-  //        typeof (MemberFilter), 
-  //        Expression.Constant (true), 
-  //        Expression.Parameter (typeof (MemberInfo), "m"), 
-  //        Expression.Parameter (typeof (object), "filterCriteria"));
-      
-  //    _resultOperatorWithResultSelector.Func = func;
-  //  }
+    [Test]
+    public void Func ()
+    {
+      var func = Expression.Lambda (
+          typeof (Func<int, int>),
+          Expression.Constant (0),
+          Expression.Parameter (typeof (int), "i"));
+      _resultOperatorWithResultSelector.Func = func;
 
-  //  [Test]
-  //  [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage =
-  //      "The aggregating function must be a LambdaExpression that describes an instantiation of 'Func<TAccumulate,TSource,TAccumulate>', but it is "
-  //      + "'System.Func`1[System.Boolean]'.\r\nParameter name: value")]
-  //  public void Func_Generic_WrongDefinition ()
-  //  {
-  //    var func = Expression.Lambda (typeof (Func<bool>), Expression.Constant (true));
+      Assert.That (_resultOperatorWithResultSelector.Func, Is.SameAs (func));
+    }
 
-  //    _resultOperatorWithResultSelector.Func = func;
-  //  }
+    [Test]
+    [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage =
+        "The aggregating function must be a LambdaExpression that describes an instantiation of 'Func<TAccumulate,TAccumulate>', but it is "
+        + "'System.Reflection.MemberFilter'.\r\nParameter name: value")]
+    public void Func_NonGeneric ()
+    {
+      var func = Expression.Lambda (
+          typeof (MemberFilter),
+          Expression.Constant (true),
+          Expression.Parameter (typeof (MemberInfo), "m"),
+          Expression.Parameter (typeof (object), "filterCriteria"));
 
-  //  [Test]
-  //  [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage =
-  //      "The aggregating function must be a LambdaExpression that describes an instantiation of 'Func<TAccumulate,TSource,TAccumulate>', but it is "
-  //      + "'System.Func`3[System.Int32,System.Int32,System.Boolean]'.\r\nParameter name: value")]
-  //  public void Func_Generic_WrongReturnType ()
-  //  {
-  //    var func = Expression.Lambda (typeof (Func<int, int, bool>), Expression.Constant (true), Expression.Parameter (typeof (int), "i"), Expression.Parameter (typeof (int), "j"));
+      _resultOperatorWithResultSelector.Func = func;
+    }
 
-  //    _resultOperatorWithResultSelector.Func = func;
-  //  }
+    [Test]
+    [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage =
+        "The aggregating function must be a LambdaExpression that describes an instantiation of 'Func<TAccumulate,TAccumulate>', but it is "
+        + "'System.Func`1[System.Boolean]'.\r\nParameter name: value")]
+    public void Func_Generic_WrongDefinition ()
+    {
+      var func = Expression.Lambda (typeof (Func<bool>), Expression.Constant (true));
 
-  //  [Test]
-  //  public void GetConstantSeed ()
-  //  {
-  //    Assert.That (_resultOperatorWithResultSelector.GetConstantSeed<int> (), Is.EqualTo (12));
-  //  }
+      _resultOperatorWithResultSelector.Func = func;
+    }
 
-  //  [Test]
-  //  [ExpectedException (typeof (InvalidOperationException),
-  //      ExpectedMessage = "Expression ('[main]') is no ConstantExpression, it is a QuerySourceReferenceExpression.")]
-  //  public void GetConstantSeed_NoConstantExpression ()
-  //  {
-  //    var resultOperator = new AggregateFromSeedResultOperator (
-  //        new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ()), 
-  //        _func, 
-  //        _resultSelector);
-  //    resultOperator.GetConstantSeed<object> ();
-  //  }
+    [Test]
+    [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage =
+        "The aggregating function must be a LambdaExpression that describes an instantiation of 'Func<TAccumulate,TAccumulate>', but it is "
+        + "'System.Func`2[System.Int32,System.Boolean]'.\r\nParameter name: value")]
+    public void Func_Generic_WrongReturnType ()
+    {
+      var func = Expression.Lambda (typeof (Func<int, bool>), Expression.Constant (true), Expression.Parameter (typeof (int), "i"));
 
-  //  [Test]
-  //  [ExpectedException (typeof (InvalidOperationException),
-  //      ExpectedMessage = "The value stored by the expression ('12') is not of type 'System.DateTime', it is of type 'System.Int32'.")]
-  //  public void GetConstantSeed_NotExpectedType ()
-  //  {
-  //    _resultOperatorWithResultSelector.GetConstantSeed<DateTime> ();
-  //  }
+      _resultOperatorWithResultSelector.Func = func;
+    }
 
-  //  [Test]
-  //  public void ResultSelector ()
-  //  {
-  //    var resultSelector = Expression.Lambda (
-  //        typeof (Func<int, string>),
-  //        Expression.Constant ("0"),
-  //        Expression.Parameter (typeof (int), "i"));
-  //    _resultOperatorWithResultSelector.ResultSelector = resultSelector;
+    [Test]
+    public void GetConstantSeed ()
+    {
+      Assert.That (_resultOperatorWithResultSelector.GetConstantSeed<int> (), Is.EqualTo (12));
+    }
 
-  //    Assert.That (_resultOperatorWithResultSelector.ResultSelector, Is.SameAs (resultSelector));
-  //  }
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException),
+        ExpectedMessage = "The seed expression ('[main]') is no ConstantExpression, it is a QuerySourceReferenceExpression.")]
+    public void GetConstantSeed_NoConstantExpression ()
+    {
+      var resultOperator = new AggregateFromSeedResultOperator (
+          new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ()),
+          _func,
+          _resultSelector);
+      resultOperator.GetConstantSeed<object> ();
+    }
 
-  //  [Test]
-  //  public void ResultSelector_Null ()
-  //  {
-  //    _resultOperatorWithResultSelector.ResultSelector = null;
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException),
+        ExpectedMessage = "The value stored by the seed expression ('12') is not of type 'System.DateTime', it is of type 'System.Int32'.")]
+    public void GetConstantSeed_NotExpectedType ()
+    {
+      _resultOperatorWithResultSelector.GetConstantSeed<DateTime> ();
+    }
 
-  //    Assert.That (_resultOperatorWithResultSelector.ResultSelector, Is.Null);
-  //  }
+    [Test]
+    public void ResultSelector ()
+    {
+      var resultSelector = Expression.Lambda (
+          typeof (Func<int, string>),
+          Expression.Constant ("0"),
+          Expression.Parameter (typeof (int), "i"));
+      _resultOperatorWithResultSelector.ResultSelector = resultSelector;
 
-  //  [Test]
-  //  [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage =
-  //      "The result selector must be a LambdaExpression that describes an instantiation of 'Func<TAccumulate,TResult>', but it is "
-  //      + "'System.Reflection.MemberFilter'.\r\nParameter name: value")]
-  //  public void ResultSelector_NonGeneric ()
-  //  {
-  //    var resultSelector = Expression.Lambda (
-  //        typeof (MemberFilter),
-  //        Expression.Constant (true),
-  //        Expression.Parameter (typeof (MemberInfo), "m"),
-  //        Expression.Parameter (typeof (object), "filterCriteria"));
+      Assert.That (_resultOperatorWithResultSelector.ResultSelector, Is.SameAs (resultSelector));
+    }
 
-  //    _resultOperatorWithResultSelector.ResultSelector = resultSelector;
-  //  }
+    [Test]
+    public void ResultSelector_Null ()
+    {
+      _resultOperatorWithResultSelector.ResultSelector = null;
 
-  //  [Test]
-  //  [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage =
-  //      "The result selector must be a LambdaExpression that describes an instantiation of 'Func<TAccumulate,TResult>', but it is "
-  //      + "'System.Func`1[System.Boolean]'.\r\nParameter name: value")]
-  //  public void ResultSelector_Generic_WrongDefinition ()
-  //  {
-  //    var resultSelector = Expression.Lambda (typeof (Func<bool>), Expression.Constant (true));
+      Assert.That (_resultOperatorWithResultSelector.ResultSelector, Is.Null);
+    }
 
-  //    _resultOperatorWithResultSelector.ResultSelector = resultSelector;
-  //  }
+    [Test]
+    [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage =
+        "The result selector must be a LambdaExpression that describes an instantiation of 'Func<TAccumulate,TResult>', but it is "
+        + "'System.Reflection.MemberFilter'.\r\nParameter name: value")]
+    public void ResultSelector_NonGeneric ()
+    {
+      var resultSelector = Expression.Lambda (
+          typeof (MemberFilter),
+          Expression.Constant (true),
+          Expression.Parameter (typeof (MemberInfo), "m"),
+          Expression.Parameter (typeof (object), "filterCriteria"));
 
-  //  [Test]
-  //  public void GetOutputDataInfo_WithResultSelector ()
-  //  {
-  //    var itemExpression = Expression.Constant (0);
-  //    var input = new StreamedSequenceInfo (typeof (int[]), itemExpression);
-  //    var result = _resultOperatorWithResultSelector.GetOutputDataInfo (input);
+      _resultOperatorWithResultSelector.ResultSelector = resultSelector;
+    }
 
-  //    Assert.That (result, Is.InstanceOfType (typeof (StreamedScalarValueInfo)));
-  //    Assert.That (result.DataType, Is.SameAs (typeof (string)));
-  //  }
+    [Test]
+    [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage =
+        "The result selector must be a LambdaExpression that describes an instantiation of 'Func<TAccumulate,TResult>', but it is "
+        + "'System.Func`1[System.Boolean]'.\r\nParameter name: value")]
+    public void ResultSelector_Generic_WrongDefinition ()
+    {
+      var resultSelector = Expression.Lambda (typeof (Func<bool>), Expression.Constant (true));
 
-  //  [Test]
-  //  public void GetOutputDataInfo_WithoutResultSelector ()
-  //  {
-  //    var itemExpression = Expression.Constant (0);
-  //    var input = new StreamedSequenceInfo (typeof (int[]), itemExpression);
-  //    var result = _resultOperatorWithoutResultSelector.GetOutputDataInfo (input);
+      _resultOperatorWithResultSelector.ResultSelector = resultSelector;
+    }
 
-  //    Assert.That (result, Is.InstanceOfType (typeof (StreamedScalarValueInfo)));
-  //    Assert.That (result.DataType, Is.SameAs (typeof (int)));
-  //  }
+    [Test]
+    public void GetOutputDataInfo_WithResultSelector ()
+    {
+      var itemExpression = Expression.Constant (0);
+      var input = new StreamedSequenceInfo (typeof (int[]), itemExpression);
+      var result = _resultOperatorWithResultSelector.GetOutputDataInfo (input);
 
-  //  [Test]
-  //  [ExpectedException (typeof (ArgumentTypeException))]
-  //  public void GetOutputDataInfo_InvalidInput ()
-  //  {
-  //    var input = new StreamedScalarValueInfo (typeof (Student));
-  //    _resultOperatorWithResultSelector.GetOutputDataInfo (input);
-  //  }
+      Assert.That (result, Is.InstanceOfType (typeof (StreamedScalarValueInfo)));
+      Assert.That (result.DataType, Is.SameAs (typeof (string)));
+    }
 
-  //  [Test]
-  //  [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage = "The input sequence must have items of type 'System.Int32', but it has "
-  //      + "items of type 'Remotion.Data.Linq.UnitTests.TestDomain.Student'.\r\nParameter name: inputInfo")]
-  //  public void GetOutputDataInfo_InvalidInput_DoesntMatchItem ()
-  //  {
-  //    var input = new StreamedSequenceInfo (typeof (Student[]), Expression.Constant (new Student ()));
-  //    _resultOperatorWithResultSelector.GetOutputDataInfo (input);
-  //  }
+    [Test]
+    public void GetOutputDataInfo_WithoutResultSelector ()
+    {
+      var itemExpression = Expression.Constant (0);
+      var input = new StreamedSequenceInfo (typeof (int[]), itemExpression);
+      var result = _resultOperatorWithoutResultSelector.GetOutputDataInfo (input);
 
-  //  [Test]
-  //  [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = 
-  //      "The seed expression and the aggregating function don't have matching types. The seed is of type 'System.String', but the function aggregates "
-  //      + "'System.Int32'.")]
-  //  public void GetOutputDataInfo_NonMatchingFunc ()
-  //  {
-  //    _resultOperatorWithResultSelector.Seed = Expression.Constant ("0");
+      Assert.That (result, Is.InstanceOfType (typeof (StreamedScalarValueInfo)));
+      Assert.That (result.DataType, Is.SameAs (typeof (int)));
+    }
 
-  //    var itemExpression = Expression.Constant (0);
-  //    var input = new StreamedSequenceInfo (typeof (int[]), itemExpression);
-  //    _resultOperatorWithResultSelector.GetOutputDataInfo (input);
-  //  }
+    [Test]
+    [ExpectedException (typeof (ArgumentTypeException))]
+    public void GetOutputDataInfo_InvalidInput ()
+    {
+      var input = new StreamedScalarValueInfo (typeof (Student));
+      _resultOperatorWithResultSelector.GetOutputDataInfo (input);
+    }
 
-  //  [Test]
-  //  [ExpectedException (typeof (InvalidOperationException), ExpectedMessage =
-  //      "The aggregating function and the result selector don't have matching types. The function aggregates type 'System.Int32', but the "
-  //      + "result selector takes 'System.String'.")]
-  //  public void GetOutputDataInfo_NonMatchingResultSelector ()
-  //  {
-  //    var resultSelector = Expression.Lambda (
-  //        typeof (Func<string, int>),
-  //        Expression.Constant (0),
-  //        Expression.Parameter (typeof (string), "i"));
-  //    _resultOperatorWithResultSelector.ResultSelector = resultSelector;
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage =
+        "The seed expression and the aggregating function don't have matching types. The seed is of type 'System.String', but the function aggregates "
+        + "'System.Int32'.")]
+    public void GetOutputDataInfo_NonMatchingFunc ()
+    {
+      _resultOperatorWithResultSelector.Seed = Expression.Constant ("0");
 
-  //    var itemExpression = Expression.Constant (0);
-  //    var input = new StreamedSequenceInfo (typeof (int[]), itemExpression);
-  //    _resultOperatorWithResultSelector.GetOutputDataInfo (input);
-  //  }
+      var itemExpression = Expression.Constant (0);
+      var input = new StreamedSequenceInfo (typeof (int[]), itemExpression);
+      _resultOperatorWithResultSelector.GetOutputDataInfo (input);
+    }
 
-  //  [Test]
-  //  public void ExecuteInMemory_WithResultSelector ()
-  //  {
-  //    IEnumerable items = new[] { 1, 2, 3, 4 };
-  //    var input = new StreamedSequence (items, new StreamedSequenceInfo (typeof (int[]), Expression.Constant (0)));
-  //    var result = _resultOperatorWithResultSelector.ExecuteInMemory<int> (input);
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage =
+        "The aggregating function and the result selector don't have matching types. The function aggregates type 'System.Int32', but the "
+        + "result selector takes 'System.String'.")]
+    public void GetOutputDataInfo_NonMatchingResultSelector ()
+    {
+      var resultSelector = Expression.Lambda (
+          typeof (Func<string, int>),
+          Expression.Constant (0),
+          Expression.Parameter (typeof (string), "i"));
+      _resultOperatorWithResultSelector.ResultSelector = resultSelector;
 
-  //    Assert.That (result.Value, Is.EqualTo ("22"));
-  //  }
+      var itemExpression = Expression.Constant (0);
+      var input = new StreamedSequenceInfo (typeof (int[]), itemExpression);
+      _resultOperatorWithResultSelector.GetOutputDataInfo (input);
+    }
 
-  //  [Test]
-  //  public void ExecuteInMemory_WithoutResultSelector ()
-  //  {
-  //    IEnumerable items = new[] { 1, 2, 3, 4 };
-  //    var input = new StreamedSequence (items, new StreamedSequenceInfo (typeof (int[]), Expression.Constant (0)));
-  //    var result = _resultOperatorWithoutResultSelector.ExecuteInMemory<int> (input);
+    [Test]
+    public void ExecuteInMemory_WithResultSelector ()
+    {
+      IEnumerable items = new[] { 1, 2, 3, 4 };
+      var input = new StreamedSequence (items, new StreamedSequenceInfo (typeof (int[]), _sourceExpression));
+      var result = _resultOperatorWithResultSelector.ExecuteInMemory<int> (input);
 
-  //    Assert.That (result.Value, Is.EqualTo (22));
-  //  }
+      Assert.That (result.Value, Is.EqualTo ("22"));
+    }
 
-  //  [Test]
-  //  public void Clone_WithResultSelector ()
-  //  {
-  //    var clonedClauseMapping = new QuerySourceMapping ();
-  //    var cloneContext = new CloneContext (clonedClauseMapping);
-  //    var clone = _resultOperatorWithResultSelector.Clone (cloneContext);
+    [Test]
+    public void ExecuteInMemory_WithoutResultSelector ()
+    {
+      IEnumerable items = new[] { 1, 2, 3, 4 };
+      var input = new StreamedSequence (items, new StreamedSequenceInfo (typeof (int[]), _sourceExpression));
+      var result = _resultOperatorWithoutResultSelector.ExecuteInMemory<int> (input);
 
-  //    Assert.That (clone, Is.InstanceOfType (typeof (AggregateFromSeedResultOperator)));
-  //    Assert.That (((AggregateFromSeedResultOperator) clone).Seed, Is.SameAs (_resultOperatorWithResultSelector.Seed));
-  //    Assert.That (((AggregateFromSeedResultOperator) clone).Func, Is.SameAs (_resultOperatorWithResultSelector.Func));
-  //    Assert.That (((AggregateFromSeedResultOperator) clone).ResultSelector, Is.SameAs (_resultOperatorWithResultSelector.ResultSelector));
-  //  }
+      Assert.That (result.Value, Is.EqualTo (22));
+    }
 
-  //  [Test]
-  //  public void Clone_WithoutResultSelector ()
-  //  {
-  //    var clonedClauseMapping = new QuerySourceMapping ();
-  //    var cloneContext = new CloneContext (clonedClauseMapping);
-  //    var clone = _resultOperatorWithoutResultSelector.Clone (cloneContext);
+    [Test]
+    public void Clone_WithResultSelector ()
+    {
+      var clonedClauseMapping = new QuerySourceMapping ();
+      var cloneContext = new CloneContext (clonedClauseMapping);
+      var clone = _resultOperatorWithResultSelector.Clone (cloneContext);
 
-  //    Assert.That (clone, Is.InstanceOfType (typeof (AggregateFromSeedResultOperator)));
-  //    Assert.That (((AggregateFromSeedResultOperator) clone).Seed, Is.SameAs (_resultOperatorWithResultSelector.Seed));
-  //    Assert.That (((AggregateFromSeedResultOperator) clone).Func, Is.SameAs (_resultOperatorWithResultSelector.Func));
-  //    Assert.That (((AggregateFromSeedResultOperator) clone).ResultSelector, Is.Null);
-  //  }
+      Assert.That (clone, Is.InstanceOfType (typeof (AggregateFromSeedResultOperator)));
+      Assert.That (((AggregateFromSeedResultOperator) clone).Seed, Is.SameAs (_resultOperatorWithResultSelector.Seed));
+      Assert.That (((AggregateFromSeedResultOperator) clone).Func, Is.SameAs (_resultOperatorWithResultSelector.Func));
+      Assert.That (((AggregateFromSeedResultOperator) clone).ResultSelector, Is.SameAs (_resultOperatorWithResultSelector.ResultSelector));
+    }
 
-  //  [Test]
-  //  public void TransformExpressions_WithResultSelector ()
-  //  {
-  //    var newSeed = Expression.Constant (1);
-  //    var newFunc = ExpressionHelper.CreateLambdaExpression<int, int, int> ((total, i) => total - i);
-  //    var newResultSelector = ExpressionHelper.CreateLambdaExpression<int, string> (i => i.ToString() + "!");
+    [Test]
+    public void Clone_WithoutResultSelector ()
+    {
+      var clonedClauseMapping = new QuerySourceMapping ();
+      var cloneContext = new CloneContext (clonedClauseMapping);
+      var clone = _resultOperatorWithoutResultSelector.Clone (cloneContext);
 
-  //    _resultOperatorWithResultSelector.TransformExpressions (ex =>
-  //    {
-  //      if (ex == _seed)
-  //        return newSeed;
-  //      else if (ex == _func)
-  //        return newFunc;
-  //      else
-  //      {
-  //        Assert.That (ex, Is.SameAs (_resultSelector), "Expected one of the expressions.");
-  //        return newResultSelector;
-  //      }
-  //    });
+      Assert.That (clone, Is.InstanceOfType (typeof (AggregateFromSeedResultOperator)));
+      Assert.That (((AggregateFromSeedResultOperator) clone).Seed, Is.SameAs (_resultOperatorWithResultSelector.Seed));
+      Assert.That (((AggregateFromSeedResultOperator) clone).Func, Is.SameAs (_resultOperatorWithResultSelector.Func));
+      Assert.That (((AggregateFromSeedResultOperator) clone).ResultSelector, Is.Null);
+    }
 
-  //    Assert.That (_resultOperatorWithResultSelector.Seed, Is.SameAs (newSeed));
-  //    Assert.That (_resultOperatorWithResultSelector.Func, Is.SameAs (newFunc));
-  //    Assert.That (_resultOperatorWithResultSelector.ResultSelector, Is.SameAs (newResultSelector));
-  //  }
+    [Test]
+    public void TransformExpressions_WithResultSelector ()
+    {
+      var newSeed = Expression.Constant (1);
+      var newFunc = ExpressionHelper.CreateLambdaExpression<int, int> (total => total + 1);
+      var newResultSelector = ExpressionHelper.CreateLambdaExpression<int, string> (i => i.ToString () + "!");
 
-  //  [Test]
-  //  public void TransformExpressions_WithoutResultSelector ()
-  //  {
-  //    var newSeed = Expression.Constant (1);
-  //    var newFunc = ExpressionHelper.CreateLambdaExpression<int, int, int> ((total, i) => total - i);
+      _resultOperatorWithResultSelector.TransformExpressions (ex =>
+      {
+        if (ex == _seed)
+          return newSeed;
+        else if (ex == _func)
+          return newFunc;
+        else
+        {
+          Assert.That (ex, Is.SameAs (_resultSelector), "Expected one of the expressions.");
+          return newResultSelector;
+        }
+      });
 
-  //    _resultOperatorWithoutResultSelector.TransformExpressions (ex =>
-  //    {
-  //      if (ex == _seed)
-  //        return newSeed;
-  //      else
-  //      {
-  //        Assert.That (ex, Is.SameAs (_func), "Expected one of the expressions.");
-  //        return newFunc;
-  //      }
-  //    });
+      Assert.That (_resultOperatorWithResultSelector.Seed, Is.SameAs (newSeed));
+      Assert.That (_resultOperatorWithResultSelector.Func, Is.SameAs (newFunc));
+      Assert.That (_resultOperatorWithResultSelector.ResultSelector, Is.SameAs (newResultSelector));
+    }
 
-  //    Assert.That (_resultOperatorWithoutResultSelector.Seed, Is.SameAs (newSeed));
-  //    Assert.That (_resultOperatorWithoutResultSelector.Func, Is.SameAs (newFunc));
-  //    Assert.That (_resultOperatorWithoutResultSelector.ResultSelector, Is.Null);
-  //  }
+    [Test]
+    public void TransformExpressions_WithoutResultSelector ()
+    {
+      var newSeed = Expression.Constant (0);
+      var newFunc = ExpressionHelper.CreateLambdaExpression<int, int> (total => total + 1);
 
-  //  [Test]
-  //  public void ToString_WithResultSelector ()
-  //  {
-  //    Assert.That (_resultOperatorWithResultSelector.ToString (), Is.EqualTo ("Aggregate(12, (total, i) => (total + i), total => total.ToString())"));
-  //  }
+      _resultOperatorWithoutResultSelector.TransformExpressions (ex =>
+      {
+        if (ex == _seed)
+          return newSeed;
+        else
+        {
+          Assert.That (ex, Is.SameAs (_func), "Expected one of the expressions.");
+          return newFunc;
+        }
+      });
 
-  //  [Test]
-  //  public void ToString_WithoutResultSelector ()
-  //  {
-  //    Assert.That (_resultOperatorWithoutResultSelector.ToString (), Is.EqualTo ("Aggregate(12, (total, i) => (total + i))"));
-  //  }
+      Assert.That (_resultOperatorWithoutResultSelector.Seed, Is.SameAs (newSeed));
+      Assert.That (_resultOperatorWithoutResultSelector.Func, Is.SameAs (newFunc));
+      Assert.That (_resultOperatorWithoutResultSelector.ResultSelector, Is.Null);
+    }
 
-  //}
+    [Test]
+    public void ToString_WithResultSelector ()
+    {
+      Assert.That (_resultOperatorWithResultSelector.ToString (), Is.EqualTo ("Aggregate(12, total => (total + [main]), total => total.ToString())"));
+    }
+
+    [Test]
+    public void ToString_WithoutResultSelector ()
+    {
+      Assert.That (_resultOperatorWithoutResultSelector.ToString (), Is.EqualTo ("Aggregate(12, total => (total + [main]))"));
+    }
+
+  }
 }

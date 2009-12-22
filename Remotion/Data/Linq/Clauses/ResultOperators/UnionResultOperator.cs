@@ -68,7 +68,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     /// <returns>The constant value of <see cref="Source2"/>.</returns>
     public IEnumerable GetConstantSource2 ()
     {
-      return GetConstantValueFromExpression<IEnumerable> (Source2);
+      return GetConstantValueFromExpression<IEnumerable> ("source2", Source2);
     }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)

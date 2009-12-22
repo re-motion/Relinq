@@ -333,5 +333,23 @@ namespace Remotion.Data.Linq.UnitTests
       var result2 = ReplacingExpressionTreeVisitor.Replace (expressionToBeResolved.Parameters[1], new QuerySourceReferenceExpression (sourceToReference2), result1);
       return ReplacingExpressionTreeVisitor.Replace (expressionToBeResolved.Parameters[2], new QuerySourceReferenceExpression (sourceToReference3), result2);
     }
+
+    public static Expression ResolveLambdaParameter<TParameter1, TParameter2, TResult> (
+        int parameterToResolveIndex, 
+        IQuerySource source, 
+        Expression<Func<TParameter1, TParameter2, TResult>> expressionToBeResolved)
+    {
+      var parameterToResolve = expressionToBeResolved.Parameters[parameterToResolveIndex];
+
+      var resolvedBody = ReplacingExpressionTreeVisitor.Replace (
+          parameterToResolve, 
+          new QuerySourceReferenceExpression (source),
+          expressionToBeResolved.Body);
+
+      var remainingParameters = new List<ParameterExpression> (expressionToBeResolved.Parameters);
+      remainingParameters.Remove (parameterToResolve);
+
+      return Expression.Lambda (resolvedBody, remainingParameters.ToArray());
+    }
   }
 }
