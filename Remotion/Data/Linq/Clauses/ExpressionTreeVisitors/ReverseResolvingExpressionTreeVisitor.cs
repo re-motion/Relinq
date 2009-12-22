@@ -72,7 +72,7 @@ namespace Remotion.Data.Linq.Clauses.ExpressionTreeVisitors
     /// <returns>A <see cref="LambdaExpression"/> similar to the given resolved expression, substituting all <see cref="QuerySourceReferenceExpression"/> 
     /// objects by getting the referenced objects from an additional input parameter. The new input parameter is of the type defined by 
     /// <paramref name="itemExpression"/>.</returns>
-    public static LambdaExpression ReverseResolveLambda (NewExpression itemExpression, LambdaExpression resolvedExpression, int parameterInsertionPosition)
+    public static LambdaExpression ReverseResolveLambda (Expression itemExpression, LambdaExpression resolvedExpression, int parameterInsertionPosition)
     {
       ArgumentUtility.CheckNotNull ("itemExpression", itemExpression);
       ArgumentUtility.CheckNotNull ("resolvedExpression", resolvedExpression);

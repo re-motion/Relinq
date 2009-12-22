@@ -446,28 +446,26 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (AnyResultOperator)));
     }
 
-    // TODO 1988
+    [Test]
+    [Ignore ("TODO 1988")]
+    public void Aggregate_NoSeed ()
+    {
+      var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
+                                                               select s.Last).Aggregate ((allNames, name) => allNames + " " + name));
 
-    //[Test]
-    //[Ignore ("TODO 1988")]
-    //public void Aggregate_NoSeed ()
-    //{
-    //  var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
-    //                                                           select s.Last).Aggregate ((allNames, name) => allNames + " " + name));
+      var queryModel = QueryParser.GetParsedQuery (expression);
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (string)));
 
-    //  var queryModel = QueryParser.GetParsedQuery (expression);
-    //  Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (string)));
-      
-    //  CheckConstantQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
+      CheckConstantQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
 
-    //  Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
-    //  Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (AggregateResultOperator)));
+      Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (AggregateResultOperator)));
 
-    //  var resultOperator = (AggregateResultOperator) queryModel.ResultOperators[0];
+      var resultOperator = (AggregateResultOperator) queryModel.ResultOperators[0];
 
-    //  var expectedFunc = ExpressionHelper.CreateLambdaExpression<string, string, string> ((allNames, name) => allNames + " " + name);
-    //  ExpressionTreeComparer.CheckAreEqualTrees (expectedFunc, resultOperator.Func);
-    //}
+      var expectedFunc = ExpressionHelper.CreateLambdaExpression<string, string, string> ((allNames, name) => allNames + " " + name);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedFunc, resultOperator.Func);
+    }
 
     //[Test]
     //[Ignore ("TODO 1988")]

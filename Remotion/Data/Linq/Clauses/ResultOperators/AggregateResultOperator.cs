@@ -15,116 +15,117 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Linq;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Utilities;
 using Remotion.Data.Linq.Clauses.StreamedData;
 
 namespace Remotion.Data.Linq.Clauses.ResultOperators
 {
-  // TODO 1988
-  ///// <summary>
-  ///// Represents aggregating the items returned by a query into a single value. The first item is used as the seeding value for the aggregating 
-  ///// function.
-  ///// This is a result operator, operating on the whole result set of a query.
-  ///// </summary>
-  ///// <example>
-  ///// In C#, the "Aggregate" call in the following example corresponds to an <see cref="AggregateResultOperator"/>.
-  ///// <code>
-  ///// var result = (from s in Students
-  /////              select s.Name).Aggregate((allNames, name) => allNames + " " + name);
-  ///// </code>
-  ///// </example>
-  //public class AggregateResultOperator : ValueFromSequenceResultOperatorBase
-  //{
-  //  private LambdaExpression _func;
+  /// <summary>
+  /// Represents aggregating the items returned by a query into a single value. The first item is used as the seeding value for the aggregating 
+  /// function.
+  /// This is a result operator, operating on the whole result set of a query.
+  /// </summary>
+  /// <example>
+  /// In C#, the "Aggregate" call in the following example corresponds to an <see cref="AggregateResultOperator"/>.
+  /// <code>
+  /// var result = (from s in Students
+  ///              select s.Name).Aggregate((allNames, name) => allNames + " " + name);
+  /// </code>
+  /// </example>
+  public class AggregateResultOperator : ValueFromSequenceResultOperatorBase
+  {
+    private LambdaExpression _func;
 
-  //  public AggregateResultOperator (LambdaExpression func)
-  //  {
-  //    ArgumentUtility.CheckNotNull ("func", func);
+    public AggregateResultOperator (LambdaExpression func)
+    {
+      ArgumentUtility.CheckNotNull ("func", func);
 
-  //    Func = func;
-  //  }
+      Func = func;
+    }
 
-  //  /// <summary>
-  //  /// Gets or sets the aggregating function. This is a <see cref="LambdaExpression"/> taking the value accumulated so far and the current item
-  //  /// from the query's result set, combining them into a new accumulated item.
-  //  /// </summary>
-  //  /// <value>The aggregating function.</value>
-  //  public LambdaExpression Func
-  //  {
-  //    get { return _func; }
-  //    set 
-  //    {
-  //      ArgumentUtility.CheckNotNull ("value", value);
+    /// <summary>
+    /// Gets or sets the aggregating function. This is a <see cref="LambdaExpression"/> taking a parameter that represents the value accumulated so 
+    /// far and returns a new accumulated value. This is a resolved expression, i.e. items streaming in from prior clauses and result operators
+    /// are represented as expressions containing <see cref="QuerySourceReferenceExpression"/> nodes.
+    /// </summary>
+    /// <value>The aggregating function.</value>
+    public LambdaExpression Func
+    {
+      get { return _func; }
+      set 
+      {
+        ArgumentUtility.CheckNotNull ("value", value);
 
-  //      if (!DescribesValidFuncType (value))
-  //      {
-  //        var message = string.Format (
-  //            "The aggregating function must be a LambdaExpression that describes an instantiation of 'Func<T,T,T>', but it is '{0}'.", 
-  //            value.Type);
-  //        throw new ArgumentTypeException (message, "value", typeof (Func<,,>), value.Type);
-  //      }
+        if (!DescribesValidFuncType (value))
+        {
+          var message = string.Format (
+              "The aggregating function must be a LambdaExpression that describes an instantiation of 'Func<T,T>', but it is '{0}'.", 
+              value.Type);
+          throw new ArgumentTypeException (message, "value", typeof (Func<,>), value.Type);
+        }
 
-  //      _func = value; 
-  //    }
-  //  }
+        _func = value; 
+      }
+    }
 
-  //  /// <inheritdoc />
-  //  public override StreamedValue ExecuteInMemory<T> (StreamedSequence input)
-  //  {
-  //    ArgumentUtility.CheckNotNull ("input", input);
+    /// <inheritdoc />
+    public override StreamedValue ExecuteInMemory<T> (StreamedSequence input)
+    {
+      ArgumentUtility.CheckNotNull ("input", input);
 
-  //    var sequence = input.GetTypedSequence<T>();
-  //    var func = (Func<T, T, T>) Func.Compile();
-  //    var result = sequence.Aggregate (func);
-  //    return new StreamedValue (result, (StreamedValueInfo) GetOutputDataInfo (input.DataInfo));
-  //  }
+      var sequence = input.GetTypedSequence<T>();
+      var funcLambda = ReverseResolvingExpressionTreeVisitor.ReverseResolveLambda (input.DataInfo.ItemExpression, Func, 1);
+      var func = (Func<T, T, T>) funcLambda.Compile ();
+      var result = sequence.Aggregate (func);
+      return new StreamedValue (result, (StreamedValueInfo) GetOutputDataInfo (input.DataInfo));
+    }
 
-  //  /// <inheritdoc />
-  //  public override ResultOperatorBase Clone (CloneContext cloneContext)
-  //  {
-  //    return new AggregateResultOperator (Func);
-  //  }
+    /// <inheritdoc />
+    public override ResultOperatorBase Clone (CloneContext cloneContext)
+    {
+      return new AggregateResultOperator (Func);
+    }
 
-  //  /// <inheritdoc />
-  //  public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
-  //  {
-  //    var sequenceInfo = ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
+    /// <inheritdoc />
+    public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
+    {
+      var sequenceInfo = ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
 
-  //    var expectedItemType = GetExpectedItemType();
-  //    CheckSequenceItemType (sequenceInfo, expectedItemType);
+      var expectedItemType = GetExpectedItemType();
+      CheckSequenceItemType (sequenceInfo, expectedItemType);
 
-  //    return new StreamedScalarValueInfo (sequenceInfo.ItemExpression.Type);
-  //  }
+      return new StreamedScalarValueInfo (sequenceInfo.ItemExpression.Type);
+    }
 
-  //  public override void TransformExpressions (Func<Expression, Expression> transformation)
-  //  {
-  //    ArgumentUtility.CheckNotNull ("transformation", transformation);
-  //    Func = (LambdaExpression) transformation (Func);
-  //  }
+    public override void TransformExpressions (Func<Expression, Expression> transformation)
+    {
+      ArgumentUtility.CheckNotNull ("transformation", transformation);
+      Func = (LambdaExpression) transformation (Func);
+    }
 
-  //  /// <inheritdoc />
-  //  public override string ToString ()
-  //  {
-  //    return "Aggregate(" + FormattingExpressionTreeVisitor.Format (Func) + ")";
-  //  }
+    /// <inheritdoc />
+    public override string ToString ()
+    {
+      return "Aggregate(" + FormattingExpressionTreeVisitor.Format (Func) + ")";
+    }
 
-  //  private bool DescribesValidFuncType (LambdaExpression value)
-  //  {
-  //    var funcType = value.Type;
-  //    if (!funcType.IsGenericType || funcType.GetGenericTypeDefinition () != typeof (Func<,,>))
-  //      return false;
+    private bool DescribesValidFuncType (LambdaExpression value)
+    {
+      var funcType = value.Type;
+      if (!funcType.IsGenericType || funcType.GetGenericTypeDefinition () != typeof (Func<,>))
+        return false;
 
-  //    var genericArguments = funcType.GetGenericArguments ();
-  //    return genericArguments[0] == genericArguments[1] && genericArguments[0] == genericArguments[2];
-  //  }
+      var genericArguments = funcType.GetGenericArguments ();
+      return genericArguments[0] == genericArguments[1];
+    }
 
-  //  private Type GetExpectedItemType ()
-  //  {
-  //    return Func.Type.GetGenericArguments ()[0];
-  //  }
-  //}
+    private Type GetExpectedItemType ()
+    {
+      return Func.Type.GetGenericArguments ()[0];
+    }
+  }
 }
