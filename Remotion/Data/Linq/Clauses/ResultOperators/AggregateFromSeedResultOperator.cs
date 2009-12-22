@@ -48,15 +48,15 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     /// <param name="func">The aggregating function. This is a <see cref="LambdaExpression"/> taking a parameter that represents the value accumulated so 
     /// far and returns a new accumulated value. This is a resolved expression, i.e. items streaming in from prior clauses and result operators
     /// are represented as expressions containing <see cref="QuerySourceReferenceExpression"/> nodes.</param>
-    /// <param name="resultSelector">The result selector, can be <see langword="null" />.</param>
-    public AggregateFromSeedResultOperator (Expression seed, LambdaExpression func, LambdaExpression resultSelector)
+    /// <param name="optionalResultSelector">The result selector, can be <see langword="null" />.</param>
+    public AggregateFromSeedResultOperator (Expression seed, LambdaExpression func, LambdaExpression optionalResultSelector)
     {
       ArgumentUtility.CheckNotNull ("seed", seed);
       ArgumentUtility.CheckNotNull ("func", func);
 
       Seed = seed;
       Func = func;
-      ResultSelector = resultSelector;
+      OptionalResultSelector = optionalResultSelector;
     }
 
     /// <summary>
@@ -99,7 +99,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     /// Can be <see langword="null" />.
     /// </summary>
     /// <value>The result selector.</value>
-    public LambdaExpression ResultSelector
+    public LambdaExpression OptionalResultSelector
     {
       get { return _resultSelector; }
       set
@@ -160,13 +160,13 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
 
       var aggregated = sequence.Aggregate (seed, func);
       var outputDataInfo = (StreamedValueInfo) GetOutputDataInfo (input.DataInfo);
-      if (ResultSelector == null)
+      if (OptionalResultSelector == null)
       {
         return new StreamedValue (aggregated, outputDataInfo);
       }
       else
       {
-        var resultSelector = (Func<TAggregate, TResult>) ResultSelector.Compile ();
+        var resultSelector = (Func<TAggregate, TResult>) OptionalResultSelector.Compile ();
         var result = resultSelector (aggregated);
         return new StreamedValue (result, outputDataInfo);
       }
@@ -175,7 +175,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     /// <inheritdoc />
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
-      return new AggregateFromSeedResultOperator (Seed, Func, ResultSelector);
+      return new AggregateFromSeedResultOperator (Seed, Func, OptionalResultSelector);
     }
 
     /// <inheritdoc />
@@ -193,7 +193,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
         throw new InvalidOperationException (message);
       }
 
-      var resultTransformedType = ResultSelector != null ? ResultSelector.Type.GetGenericArguments ()[0] : null;
+      var resultTransformedType = OptionalResultSelector != null ? OptionalResultSelector.Type.GetGenericArguments ()[0] : null;
       if (resultTransformedType != null && aggregatedType != resultTransformedType)
       {
         var message = string.Format (
@@ -212,20 +212,20 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     {
       Seed = transformation (Seed);
       Func = (LambdaExpression) transformation (Func);
-      if (ResultSelector != null)
-        ResultSelector = (LambdaExpression) transformation (ResultSelector);
+      if (OptionalResultSelector != null)
+        OptionalResultSelector = (LambdaExpression) transformation (OptionalResultSelector);
     }
 
     /// <inheritdoc />
     public override string ToString ()
     {
-      if (ResultSelector != null)
+      if (OptionalResultSelector != null)
       {
         return string.Format (
             "Aggregate({0}, {1}, {2})",
             FormattingExpressionTreeVisitor.Format (Seed),
             FormattingExpressionTreeVisitor.Format (Func),
-            FormattingExpressionTreeVisitor.Format (ResultSelector));
+            FormattingExpressionTreeVisitor.Format (OptionalResultSelector));
       }
       else
       {
@@ -238,7 +238,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
 
     private Type GetResultType ()
     {
-      return ResultSelector != null ? ResultSelector.Body.Type : Func.Body.Type;
+      return OptionalResultSelector != null ? OptionalResultSelector.Body.Type : Func.Body.Type;
     }
 
     private bool DescribesValidFuncType (LambdaExpression value)

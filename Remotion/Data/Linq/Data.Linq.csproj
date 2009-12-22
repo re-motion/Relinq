@@ -119,6 +119,7 @@
     <Compile Include="Parsing\Structure\IntermediateModel\ContainsExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\AnyExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\AllExpressionNode.cs" />
+    <Compile Include="Parsing\Structure\IntermediateModel\AggregateFromSeedExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\DefaultIfEmptyExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ExceptExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ExpressionResolver.cs" />

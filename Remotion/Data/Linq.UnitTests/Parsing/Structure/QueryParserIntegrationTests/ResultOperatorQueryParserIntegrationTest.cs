@@ -470,14 +470,13 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
     }
 
     [Test]
-    [Ignore ("TODO 1988")]
     public void Aggregate_Seed_NoResultSelector ()
     {
       var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
                                                                select s).Aggregate (0, (totalIDs, s) => totalIDs + s.ID));
 
       var queryModel = QueryParser.GetParsedQuery (expression);
-      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (string)));
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (int)));
 
       CheckConstantQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
 
@@ -493,11 +492,10 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
           (totalIDs, s) => totalIDs + s.ID);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedFunc, resultOperator.Func);
 
-      Assert.That (resultOperator.ResultSelector, Is.Null);
+      Assert.That (resultOperator.OptionalResultSelector, Is.Null);
     }
 
     [Test]
-    [Ignore ("TODO 1988")]
     public void Aggregate_Seed_WithResultSelector ()
     {
       var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
@@ -521,7 +519,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       ExpressionTreeComparer.CheckAreEqualTrees (expectedFunc, resultOperator.Func);
 
       var expectedResultSelector = ExpressionHelper.CreateLambdaExpression<int, string> (totalIDs => totalIDs.ToString ());
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedResultSelector, resultOperator.ResultSelector);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedResultSelector, resultOperator.OptionalResultSelector);
     }
   }
 }

@@ -142,17 +142,17 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
           typeof (Func<int, string>),
           Expression.Constant ("0"),
           Expression.Parameter (typeof (int), "i"));
-      _resultOperatorWithResultSelector.ResultSelector = resultSelector;
+      _resultOperatorWithResultSelector.OptionalResultSelector = resultSelector;
 
-      Assert.That (_resultOperatorWithResultSelector.ResultSelector, Is.SameAs (resultSelector));
+      Assert.That (_resultOperatorWithResultSelector.OptionalResultSelector, Is.SameAs (resultSelector));
     }
 
     [Test]
     public void ResultSelector_Null ()
     {
-      _resultOperatorWithResultSelector.ResultSelector = null;
+      _resultOperatorWithResultSelector.OptionalResultSelector = null;
 
-      Assert.That (_resultOperatorWithResultSelector.ResultSelector, Is.Null);
+      Assert.That (_resultOperatorWithResultSelector.OptionalResultSelector, Is.Null);
     }
 
     [Test]
@@ -167,7 +167,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
           Expression.Parameter (typeof (MemberInfo), "m"),
           Expression.Parameter (typeof (object), "filterCriteria"));
 
-      _resultOperatorWithResultSelector.ResultSelector = resultSelector;
+      _resultOperatorWithResultSelector.OptionalResultSelector = resultSelector;
     }
 
     [Test]
@@ -178,7 +178,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
     {
       var resultSelector = Expression.Lambda (typeof (Func<bool>), Expression.Constant (true));
 
-      _resultOperatorWithResultSelector.ResultSelector = resultSelector;
+      _resultOperatorWithResultSelector.OptionalResultSelector = resultSelector;
     }
 
     [Test]
@@ -234,7 +234,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
           typeof (Func<string, int>),
           Expression.Constant (0),
           Expression.Parameter (typeof (string), "i"));
-      _resultOperatorWithResultSelector.ResultSelector = resultSelector;
+      _resultOperatorWithResultSelector.OptionalResultSelector = resultSelector;
 
       var itemExpression = Expression.Constant (0);
       var input = new StreamedSequenceInfo (typeof (int[]), itemExpression);
@@ -271,7 +271,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
       Assert.That (clone, Is.InstanceOfType (typeof (AggregateFromSeedResultOperator)));
       Assert.That (((AggregateFromSeedResultOperator) clone).Seed, Is.SameAs (_resultOperatorWithResultSelector.Seed));
       Assert.That (((AggregateFromSeedResultOperator) clone).Func, Is.SameAs (_resultOperatorWithResultSelector.Func));
-      Assert.That (((AggregateFromSeedResultOperator) clone).ResultSelector, Is.SameAs (_resultOperatorWithResultSelector.ResultSelector));
+      Assert.That (((AggregateFromSeedResultOperator) clone).OptionalResultSelector, Is.SameAs (_resultOperatorWithResultSelector.OptionalResultSelector));
     }
 
     [Test]
@@ -284,7 +284,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
       Assert.That (clone, Is.InstanceOfType (typeof (AggregateFromSeedResultOperator)));
       Assert.That (((AggregateFromSeedResultOperator) clone).Seed, Is.SameAs (_resultOperatorWithResultSelector.Seed));
       Assert.That (((AggregateFromSeedResultOperator) clone).Func, Is.SameAs (_resultOperatorWithResultSelector.Func));
-      Assert.That (((AggregateFromSeedResultOperator) clone).ResultSelector, Is.Null);
+      Assert.That (((AggregateFromSeedResultOperator) clone).OptionalResultSelector, Is.Null);
     }
 
     [Test]
@@ -309,7 +309,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
 
       Assert.That (_resultOperatorWithResultSelector.Seed, Is.SameAs (newSeed));
       Assert.That (_resultOperatorWithResultSelector.Func, Is.SameAs (newFunc));
-      Assert.That (_resultOperatorWithResultSelector.ResultSelector, Is.SameAs (newResultSelector));
+      Assert.That (_resultOperatorWithResultSelector.OptionalResultSelector, Is.SameAs (newResultSelector));
     }
 
     [Test]
@@ -331,7 +331,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
 
       Assert.That (_resultOperatorWithoutResultSelector.Seed, Is.SameAs (newSeed));
       Assert.That (_resultOperatorWithoutResultSelector.Func, Is.SameAs (newFunc));
-      Assert.That (_resultOperatorWithoutResultSelector.ResultSelector, Is.Null);
+      Assert.That (_resultOperatorWithoutResultSelector.OptionalResultSelector, Is.Null);
     }
 
     [Test]
