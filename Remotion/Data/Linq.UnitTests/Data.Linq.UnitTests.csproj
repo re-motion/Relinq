@@ -306,6 +306,7 @@
     <Compile Include="Parsing\Structure\IntermediateModel\ContainsExpressionNodeTest.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\AnyExpressionNodeTest.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\AllExpressionNodeTest.cs" />
+    <Compile Include="Parsing\Structure\IntermediateModel\AggregateExpressionNodeTest.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\CountExpressionNodeTest.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\DefaultIfEmptyExpressionNodeTest.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\DistinctExpressionNodeTest.cs" />

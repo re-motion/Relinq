@@ -447,7 +447,6 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
     }
 
     [Test]
-    [Ignore ("TODO 1988")]
     public void Aggregate_NoSeed ()
     {
       var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
