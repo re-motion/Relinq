@@ -120,12 +120,12 @@ namespace Remotion.Data.Linq.Collections
 
     public ICollection<TKey> Keys
     {
-      get { throw new NotImplementedException(); }
+      get { return _innerDictionary.Keys; }
     }
 
     public ICollection<IList<TValue>> Values
     {
-      get { throw new NotImplementedException(); }
+      get { return _innerDictionary.Values; }
     }
 
     public int KeyCount

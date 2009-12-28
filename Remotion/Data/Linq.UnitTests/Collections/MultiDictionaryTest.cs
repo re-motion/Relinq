@@ -75,5 +75,104 @@ namespace Remotion.Data.Linq.UnitTests.Collections
       _dictionary.Remove ("key1");
       Assert.That (_dictionary["key1"].Count, Is.EqualTo (0));
     }
+
+    [Test]
+    public void IsReadonly ()
+    {
+      Assert.That (_dictionary.IsReadOnly, Is.True);
+    }
+
+    [Test]
+    public void ContainsKey ()
+    {
+      _dictionary.Add ("key1", new List<string> { "value1", "value2", "value3" });
+      Assert.That (_dictionary.ContainsKey ("key1"), Is.True);
+    }
+
+    [Test]
+    public void ContainsNoKey ()
+    {
+      Assert.That (_dictionary.ContainsKey ("key1"), Is.False);
+    }
+
+    [Test]
+    public void TryGetValue ()
+    {
+      _dictionary.Add ("key1", new List<string> { "value1", "value2", "value3" });
+      IList<string> value;
+      Assert.That(_dictionary.TryGetValue ("key1", out value), Is.True);
+      Assert.That (value, Is.Not.Null);
+    }
+
+    [Test]
+    public void IndexGet ()
+    {
+      var value = new List<string> { "value1", "value2", "value3" };
+      _dictionary.Add ("key1", value);
+      Assert.That (_dictionary["key1"], Is.EqualTo (value));
+    }
+
+    [Test]
+    public void IndexSet ()
+    {
+      var value = new List<string> { "value1", "value2", "value3" };
+      _dictionary.Add ("key1", value);
+      Assert.That (_dictionary["key1"], Is.EqualTo (value));
+
+      var value1 = new List<string> { "value11", "value12", "value13" };
+      _dictionary["key1"] = value1;
+      Assert.That (_dictionary["key1"], Is.EqualTo (value1));
+    }
+
+    [Test]
+    public void Keys ()
+    {
+      var value = new List<string> { "value1", "value2", "value3" };
+      _dictionary.Add ("key1", value);
+      Assert.That (_dictionary.Keys.Count, Is.EqualTo (1));
+    }
+
+    [Test]
+    public void Values ()
+    {
+      var value = new List<string> { "value1", "value2", "value3" };
+      _dictionary.Add ("key1", value);
+      Assert.That (_dictionary.Values.Count, Is.EqualTo (1));
+    }
+
+    [Test]
+    public void KeyCount ()
+    {
+      var value = new List<string> { "value1", "value2", "value3" };
+      _dictionary.Add ("key1", value);
+      Assert.That (_dictionary.KeyCount, Is.EqualTo (1));
+    }
+
+    [Test]
+    public void CountValues ()
+    {
+      var value = new List<string> { "value1", "value2", "value3" };
+      _dictionary.Add ("key1", value);
+      Assert.That (_dictionary.CountValues(), Is.EqualTo (3));
+    }
+
+    [Test]
+    [ExpectedException(typeof(NotImplementedException))]
+    public void CopyToThrowsException ()
+    {
+      var item1 = new KeyValuePair<string, IList<string>>[1];
+      _dictionary.CopyTo (item1, 0);
+    }
+
+    [Test]
+    public void Remove1 ()
+    {
+      var item1 = new KeyValuePair<string, IList<string>> ("key1", new List<string> { "value1", "value2", "value3" });
+      _dictionary.Add (item1);
+      Assert.That (_dictionary["key1"].Count, Is.EqualTo (3));
+      Assert.That (_dictionary.Remove (item1), Is.True);
+      Assert.That (_dictionary["key1"].Count, Is.EqualTo (0));
+    }
+
   }
 }
