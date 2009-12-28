@@ -97,6 +97,7 @@
     <Compile Include="Clauses\ResultOperators\UnionResultOperator.cs" />
     <Compile Include="Clauses\StreamedData\StreamedValueInfo.cs" />
     <Compile Include="Collections\ChangeResistantObservableCollectionEnumerator.cs" />
+    <Compile Include="Collections\MultiDictionary.cs" />
     <Compile Include="Collections\ObservableCollection.cs" />
     <Compile Include="Collections\ObservableCollectionChangedEventArgs.cs" />
     <Compile Include="DefaultQueryProvider.cs" />
