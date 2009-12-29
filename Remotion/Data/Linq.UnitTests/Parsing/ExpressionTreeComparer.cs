@@ -17,11 +17,11 @@
 using System;
 using System.Collections;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using Remotion.Utilities;
-using Assertion=Remotion.Utilities.Assertion;
 
 namespace Remotion.Data.Linq.UnitTests.Parsing
 {
@@ -84,7 +84,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing
       else if (Remotion.Utilities.ReflectionUtility.CanAscribe (valueType, typeof (ReadOnlyCollection<>)))
       {
         Type[] collectionGenericArguments = Remotion.Utilities.ReflectionUtility.GetAscribedGenericArguments (valueType, typeof (ReadOnlyCollection<>));
-        Assertion.IsTrue (collectionGenericArguments.Length == 1, "ReadOnlyCollection only has one generic argument");
+        Debug.WriteLineIf (collectionGenericArguments.Length == 1, "ReadOnlyCollection only has one generic argument");
         Type elementType = collectionGenericArguments[0];
         
         IList list1 = (IList) value1;
