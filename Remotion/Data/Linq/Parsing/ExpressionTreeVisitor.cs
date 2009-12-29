@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Utilities;
@@ -287,9 +288,8 @@ namespace Remotion.Data.Linq.Parsing
         case MemberBindingType.MemberBinding:
           return VisitMemberMemberBinding ((MemberMemberBinding) memberBinding);
         default:
-          Remotion.Utilities.Assertion.IsTrue (
-              memberBinding.BindingType == MemberBindingType.ListBinding,
-              "Invalid member binding type " + memberBinding.GetType().FullName);
+          Debug.WriteLineIf (
+              memberBinding.BindingType == MemberBindingType.ListBinding, "Invalid member binding type " + memberBinding.GetType().FullName);
           return VisitMemberListBinding ((MemberListBinding) memberBinding);
       }
     }
