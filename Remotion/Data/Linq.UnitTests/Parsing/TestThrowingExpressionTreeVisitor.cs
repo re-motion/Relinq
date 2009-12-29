@@ -15,13 +15,13 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Reflection.Emit;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Parsing;
-using Assertion=Remotion.Utilities.Assertion;
 
 namespace Remotion.Data.Linq.UnitTests.Parsing
 {
@@ -67,7 +67,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing
       Assert.That (offset < il.Length, "Found no Method call.");
 
       ++offset;
-      Assertion.IsTrue (offset < il.Length - 4);
+      Debug.WriteLineIf (offset < il.Length - 4, "Assertion failed.");
       var methodToken = il[offset] | (il[offset + 1] << 8) | (il[offset + 2] << 16) | (il[offset + 3] << 24);
       return (MethodInfo) typeof (ThrowingExpressionTreeVisitor).Module.ResolveMethod (methodToken);
     }
