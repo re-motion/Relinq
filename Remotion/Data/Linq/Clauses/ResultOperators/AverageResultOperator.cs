@@ -16,6 +16,7 @@
 // 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -53,7 +54,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
         throw new NotSupportedException (message);
       }
 
-      Remotion.Utilities.Assertion.IsTrue (GetOutputDataInfo (input.DataInfo).DataType == method.ReturnType);
+      Debug.WriteLineIf (GetOutputDataInfo (input.DataInfo).DataType == method.ReturnType, "ReturnType must be true");
 
       var result = method.Invoke (null, new[] { input.GetTypedSequence<T>() });
       return new StreamedValue (result, (StreamedValueInfo) GetOutputDataInfo (input.DataInfo));
