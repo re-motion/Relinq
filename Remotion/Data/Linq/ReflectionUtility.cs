@@ -61,6 +61,16 @@ namespace Remotion.Data.Linq
       return itemType;
     }
 
+    public static Type GetFieldOrPropertyType (MemberInfo fieldOrProperty)
+    {
+      if (fieldOrProperty is FieldInfo)
+        return ((FieldInfo) fieldOrProperty).FieldType;
+      else if (fieldOrProperty is PropertyInfo)
+        return ((PropertyInfo) fieldOrProperty).PropertyType;
+      else
+        throw new ArgumentException ("Argument must be FieldInfo or PropertyInfo.", "fieldOrProperty");
+    }
+
     public static Type TryGetItemTypeOfIEnumerable (Type possibleEnumerableType)
     {
       ArgumentUtility.CheckNotNull ("possibleEnumerableType", possibleEnumerableType);
