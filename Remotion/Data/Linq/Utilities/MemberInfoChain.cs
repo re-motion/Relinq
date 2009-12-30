@@ -19,9 +19,9 @@ using System.Reflection;
 
 namespace Remotion.Data.Linq.Utilities
 {
-  public struct AdjustedMemberInfoChain
+  public struct MemberInfoChain
   {
-    public AdjustedMemberInfoChain (MemberInfo accessedMember, MemberInfo[] joinedMembers) : this()
+    public MemberInfoChain (MemberInfo accessedMember, MemberInfo[] joinedMembers) : this()
     {
       AccessedMember = accessedMember;
       JoinedMembers = joinedMembers;
