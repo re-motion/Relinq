@@ -16,9 +16,9 @@
 // 
 using System;
 using System.Reflection;
-using Remotion.Collections;
 using Remotion.Data.Linq.Backend;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.UnitTests.TestDomain
 {
@@ -87,22 +87,22 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
         return member.Name + "Column";
     }
 
-    public Tuple<string, string> GetJoinColumnNames (MemberInfo relationMember)
+    public JoinColumnNames? GetJoinColumnNames (MemberInfo relationMember)
     {
       if (relationMember == typeof (Student_Detail).GetProperty ("Student"))
-        return Tuple.NewTuple ("Student_Detail_PK", "Student_Detail_to_Student_FK");
+        return new JoinColumnNames("Student_Detail_PK", "Student_Detail_to_Student_FK");
       else if (relationMember == typeof (Student_Detail_Detail).GetProperty ("Student_Detail"))
-        return Tuple.NewTuple ("Student_Detail_Detail_PK", "Student_Detail_Detail_to_Student_Detail_FK");
+        return new JoinColumnNames("Student_Detail_Detail_PK", "Student_Detail_Detail_to_Student_Detail_FK");
       else if (relationMember == typeof (Student_Detail_Detail).GetProperty ("IndustrialSector"))
-        return Tuple.NewTuple ("Student_Detail_Detail_PK", "Student_Detail_Detail_to_IndustrialSector_FK");
+        return new JoinColumnNames("Student_Detail_Detail_PK", "Student_Detail_Detail_to_IndustrialSector_FK");
       else if (relationMember == typeof (IndustrialSector).GetProperty ("Student_Detail"))
-        return Tuple.NewTuple ("IndustrialSector_PK", "Student_Detail_to_IndustrialSector_FK");
+        return new JoinColumnNames ("IndustrialSector_PK", "Student_Detail_to_IndustrialSector_FK");
       else if (relationMember == typeof (Student_Detail).GetProperty ("IndustrialSector"))
-        return Tuple.NewTuple ("Student_Detail_to_IndustrialSector_FK", "IndustrialSector_PK");
+        return new JoinColumnNames("Student_Detail_to_IndustrialSector_FK", "IndustrialSector_PK");
       else if (relationMember == typeof (Student).GetProperty ("OtherStudent"))
-        return Tuple.NewTuple ("Student_to_OtherStudent_FK", "Student_PK");
+        return new JoinColumnNames ("Student_to_OtherStudent_FK", "Student_PK");
       else if (relationMember == typeof (IndustrialSector).GetProperty ("Students"))
-        return Tuple.NewTuple ("Industrial_PK", "Student_to_IndustrialSector_FK");
+        return new JoinColumnNames ("Industrial_PK", "Student_to_IndustrialSector_FK");
       else
         return null;
     }

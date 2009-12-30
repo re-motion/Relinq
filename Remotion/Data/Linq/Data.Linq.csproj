@@ -303,6 +303,7 @@
     <Compile Include="Utilities\ArgumentEmptyException.cs" />
     <Compile Include="Utilities\ArgumentTypeException.cs" />
     <Compile Include="Utilities\ArgumentUtility.cs" />
+    <Compile Include="Utilities\JoinColumnNames.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\remotion.snk">
