@@ -16,7 +16,6 @@
 // 
 using System;
 using System.Reflection;
-using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Collections;
 using Remotion.Utilities;
@@ -25,20 +24,20 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
 {
   public class TestQueryModelVisitor : QueryModelVisitorBase
   {
-    public void VisitCollection<T> (ObservableCollection<T> collection, Action<T> acceptAction, Action<int> indexSetter)
-    {
-      var method = typeof (QueryModelVisitorBase)
-          .GetMethod ("VisitCollection", BindingFlags.NonPublic | BindingFlags.Instance)
-          .MakeGenericMethod (typeof (T));
-      try
-      {
-        method.Invoke (this, new object[] { collection, acceptAction, indexSetter });
-      }
-      catch (TargetInvocationException ex)
-      {
-        throw ex.InnerException.PreserveStackTrace();
-      }
-    }
+    //public void VisitCollection<T> (ObservableCollection<T> collection, Action<T> acceptAction, Action<int> indexSetter)
+    //{
+    //  var method = typeof (QueryModelVisitorBase)
+    //      .GetMethod ("VisitCollection", BindingFlags.NonPublic | BindingFlags.Instance)
+    //      .MakeGenericMethod (typeof (T));
+    //  try
+    //  {
+    //    method.Invoke (this, new object[] { collection, acceptAction, indexSetter });
+    //  }
+    //  catch (TargetInvocationException ex)
+    //  {
+    //    throw ex.InnerException.PreserveStackTrace();
+    //  }
+    //}
 
     public new void VisitBodyClauses (ObservableCollection<IBodyClause> bodyClauses, QueryModel queryModel)
     {

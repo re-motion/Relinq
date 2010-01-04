@@ -401,6 +401,8 @@
     <Compile Include="Utilities\ArgumentUtilityTests\CheckNotNullAndType.cs" />
     <Compile Include="Utilities\ArgumentUtilityTests\CheckNotNullOrEmpty.cs" />
     <Compile Include="Utilities\ArgumentUtilityTests\CheckTypeIsAssignableFrom.cs" />
+    <Compile Include="Utilities\EqualityUtility.cs" />
+    <Compile Include="Utilities\ReflectionUtility.cs" />
     <Compile Include="Utilities\Tuple.cs" />
     <Compile Include="Utilities\TupleAb.cs" />
     <Compile Include="Utilities\TupleAbc.cs" />

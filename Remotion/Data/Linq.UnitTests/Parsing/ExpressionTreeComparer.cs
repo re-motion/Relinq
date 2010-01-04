@@ -21,7 +21,7 @@ using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
-using Remotion.Utilities;
+using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.UnitTests.Parsing
 {
@@ -81,9 +81,9 @@ namespace Remotion.Data.Linq.UnitTests.Parsing
       {
         CheckAreEqualObjects (value1, value2);
       }
-      else if (Remotion.Utilities.ReflectionUtility.CanAscribe (valueType, typeof (ReadOnlyCollection<>)))
+      else if (Remotion.Data.Linq.UnitTests.Utilities.ReflectionUtility.CanAscribe (valueType, typeof (ReadOnlyCollection<>)))
       {
-        Type[] collectionGenericArguments = Remotion.Utilities.ReflectionUtility.GetAscribedGenericArguments (valueType, typeof (ReadOnlyCollection<>));
+        Type[] collectionGenericArguments = Remotion.Data.Linq.UnitTests.Utilities.ReflectionUtility.GetAscribedGenericArguments (valueType, typeof (ReadOnlyCollection<>));
         Debug.WriteLineIf (collectionGenericArguments.Length == 1, "ReadOnlyCollection only has one generic argument");
         Type elementType = collectionGenericArguments[0];
         
