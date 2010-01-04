@@ -54,7 +54,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
         throw new NotSupportedException (message);
       }
 
-      Debug.WriteLineIf (GetOutputDataInfo (input.DataInfo).DataType == method.ReturnType, "ReturnType must be true");
+      Debug.Assert (GetOutputDataInfo (input.DataInfo).DataType == method.ReturnType, "ReturnType must be true");
 
       var result = method.Invoke (null, new[] { input.GetTypedSequence<T>() });
       return new StreamedValue (result, (StreamedValueInfo) GetOutputDataInfo (input.DataInfo));

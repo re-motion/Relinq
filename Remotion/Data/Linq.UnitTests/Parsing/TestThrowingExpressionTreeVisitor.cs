@@ -67,7 +67,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing
       Assert.That (offset < il.Length, "Found no Method call.");
 
       ++offset;
-      Debug.WriteLineIf (offset < il.Length - 4, "Assertion failed.");
+      Debug.Assert (offset < il.Length - 4, "Assertion failed.");
       var methodToken = il[offset] | (il[offset + 1] << 8) | (il[offset + 2] << 16) | (il[offset + 3] << 24);
       return (MethodInfo) typeof (ThrowingExpressionTreeVisitor).Module.ResolveMethod (methodToken);
     }

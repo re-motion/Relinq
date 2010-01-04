@@ -288,7 +288,7 @@ namespace Remotion.Data.Linq.Parsing
         case MemberBindingType.MemberBinding:
           return VisitMemberMemberBinding ((MemberMemberBinding) memberBinding);
         default:
-          Debug.WriteLineIf (
+          Debug.Assert (
               memberBinding.BindingType == MemberBindingType.ListBinding, "Invalid member binding type " + memberBinding.GetType().FullName);
           return VisitMemberListBinding ((MemberListBinding) memberBinding);
       }

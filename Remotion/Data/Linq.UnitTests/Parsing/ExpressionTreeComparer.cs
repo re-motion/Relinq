@@ -84,7 +84,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing
       else if (Remotion.Data.Linq.UnitTests.Utilities.ReflectionUtility.CanAscribe (valueType, typeof (ReadOnlyCollection<>)))
       {
         Type[] collectionGenericArguments = Remotion.Data.Linq.UnitTests.Utilities.ReflectionUtility.GetAscribedGenericArguments (valueType, typeof (ReadOnlyCollection<>));
-        Debug.WriteLineIf (collectionGenericArguments.Length == 1, "ReadOnlyCollection only has one generic argument");
+        Debug.Assert (collectionGenericArguments.Length == 1, "ReadOnlyCollection only has one generic argument");
         Type elementType = collectionGenericArguments[0];
         
         IList list1 = (IList) value1;
