@@ -19,10 +19,10 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Collections;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.UnitTests.TestDomain;
+using Remotion.Data.Linq.UnitTests.Utilities;
 
 namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
 {

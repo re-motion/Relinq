@@ -401,6 +401,10 @@
     <Compile Include="Utilities\ArgumentUtilityTests\CheckNotNullAndType.cs" />
     <Compile Include="Utilities\ArgumentUtilityTests\CheckNotNullOrEmpty.cs" />
     <Compile Include="Utilities\ArgumentUtilityTests\CheckTypeIsAssignableFrom.cs" />
+    <Compile Include="Utilities\Tuple.cs" />
+    <Compile Include="Utilities\TupleAb.cs" />
+    <Compile Include="Utilities\TupleAbc.cs" />
+    <Compile Include="Utilities\TupleAbcd.cs" />
     <None Include="Data.Linq.UnitTests.build" />
     <None Include="Parsing\ExpressionTrees\ExpressionTree_Grammar.docx" />
     <None Include="Properties\AssemblyInfoTemplate.cs">
