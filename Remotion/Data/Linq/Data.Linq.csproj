@@ -315,16 +315,6 @@
     <None Include="Backend\DataObjectModel\RelationalView.cd" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Core\Core\Core.Core.csproj">
-      <Project>{2AA369EC-A4E7-4D75-9101-EFA90E902625}</Project>
-      <Name>Core.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Core\Interfaces\Core.Interfaces.csproj">
-      <Project>{BD061F4A-A9E6-461E-A804-7999623A0060}</Project>
-      <Name>Core.Interfaces</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Doc\include\NamespaceDoc.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
