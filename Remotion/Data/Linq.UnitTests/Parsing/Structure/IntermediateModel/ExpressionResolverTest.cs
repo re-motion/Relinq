@@ -23,7 +23,7 @@ using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Data.Linq.UnitTests.Parsing.Structure.IntermediateModel.TestDomain;
-using Remotion.Development.UnitTesting;
+using Remotion.Data.Linq.UnitTests.Utilities;
 
 namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.IntermediateModel
 {
@@ -58,7 +58,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.IntermediateModel
       var newQueryModel = newSourceNode.Apply (null, ClauseGenerationContext);
       var newSourceReference = ((QuerySourceReferenceExpression) newQueryModel.SelectClause.Selector);
 
-      PrivateInvoke.InvokeNonPublicMethod (_currentNode, typeof (MethodCallExpressionNodeBase), "set_Source", newSourceNode);
+      PrivateInvoke.InvokeNonPublicMethod (_currentNode, "set_Source", newSourceNode);
       var result = _expressionResolver.GetResolvedExpression (_unresolvedLambda.Body, _unresolvedLambda.Parameters[0], ClauseGenerationContext);
 
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, newSourceReference, Expression.Constant (5));

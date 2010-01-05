@@ -38,15 +38,7 @@
         <include asis="true" name="${build.test.outputdir}/log4net.dll"/>
         <include asis="true" name="${build.test.outputdir}/nunit.framework.dll"/>
         <include asis="true" name="${build.test.outputdir}/Rhino.Mocks.dll"/>
-        <include asis="true" name="${build.test.outputdir}/Remotion.dll"/>
-        <include asis="true" name="${build.test.outputdir}/Remotion.Data.DomainObjects.dll"/>
-        <include asis="true" name="${build.test.outputdir}/Remotion.Data.DomainObjects.Security.dll"/>
-        <include asis="true" name="${build.test.outputdir}/Remotion.Data.Interfaces.dll"/>
         <include asis="true" name="${build.test.outputdir}/Remotion.Data.Linq.dll"/>
-        <include asis="true" name="${build.test.outputdir}/Remotion.Development.dll"/>
-        <include asis="true" name="${build.test.outputdir}/Remotion.Development.Data.dll"/>
-        <include asis="true" name="${build.test.outputdir}/Remotion.Development.Web.dll"/>
-        <include asis="true" name="${build.test.outputdir}/Remotion.Interfaces.dll"/>
         <include asis="true" name="System.dll"/>
         <include asis="true" name="System.Core.dll"/>
         <include asis="true" name="System.Configuration.dll"/>

@@ -24,10 +24,9 @@ using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
-using Remotion.Data.Linq.UnitTests;
 using Remotion.Data.Linq.UnitTests.Parsing.Structure.TestDomain;
 using Remotion.Data.Linq.UnitTests.TestDomain;
-using Remotion.Development.UnitTesting;
+using Remotion.Data.Linq.UnitTests.Utilities;
 
 namespace Remotion.Data.Linq.UnitTests.Parsing.Structure
 {

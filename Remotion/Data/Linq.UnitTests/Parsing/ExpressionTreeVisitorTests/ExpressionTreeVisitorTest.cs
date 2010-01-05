@@ -18,10 +18,9 @@ using System;
 using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
-using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
-using Remotion.Development.UnitTesting;
+using Remotion.Data.Linq.UnitTests.Utilities;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;
 

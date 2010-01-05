@@ -15,25 +15,15 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.Parsing;
-using Remotion.Data.Linq.UnitTests.Utilities;
 
-namespace Remotion.Data.Linq.UnitTests.Parsing
+namespace Remotion.Data.Linq.UnitTests.Utilities
 {
-  [TestFixture]
-  public class ParserExceptionTest
+  public static class Dev
   {
-    [Test]
-    public void Serialization ()
+    public static object Null
     {
-      var exception = new ParserException ("test", "expr", new Exception ("test2"));
-
-      var deserializedException = Serializer.SerializeAndDeserialize (exception);
-      Assert.That (deserializedException.Message, Is.EqualTo (exception.Message));
-      Assert.That (deserializedException.ParsedExpression, Is.EqualTo (exception.ParsedExpression));
-      Assert.That (deserializedException.InnerException.Message, Is.EqualTo (exception.InnerException.Message));
+      get { return null; }
+      set {  }
     }
   }
 }

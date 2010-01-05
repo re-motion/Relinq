@@ -102,19 +102,7 @@
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
-    <ProjectReference Include="..\..\Core\Interfaces\Core.Interfaces.csproj">
-      <Project>{BD061F4A-A9E6-461E-A804-7999623A0060}</Project>
-      <Name>Core.Interfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Core\Core\Core.Core.csproj">
-      <Name>Core.Core</Name>
-      <Project>{2AA369EC-A4E7-4D75-9101-EFA90E902625}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Development\Core\Development.Core.csproj">
-      <Project>{B719A305-0493-4C72-88FE-9A2FC6964578}</Project>
-      <Name>Development.Core</Name>
-    </ProjectReference>
+    <Reference Include="System.Xml" />
     <ProjectReference Include="..\Linq\Data.Linq.csproj">
       <Project>{DD9AA076-BE37-4A42-BA9E-C35ECC6955C9}</Project>
       <Name>Data.Linq</Name>
@@ -401,8 +389,11 @@
     <Compile Include="Utilities\ArgumentUtilityTests\CheckNotNullAndType.cs" />
     <Compile Include="Utilities\ArgumentUtilityTests\CheckNotNullOrEmpty.cs" />
     <Compile Include="Utilities\ArgumentUtilityTests\CheckTypeIsAssignableFrom.cs" />
+    <Compile Include="Utilities\Dev.cs" />
     <Compile Include="Utilities\EqualityUtility.cs" />
+    <Compile Include="Utilities\PrivateInvoke.cs" />
     <Compile Include="Utilities\ReflectionUtility.cs" />
+    <Compile Include="Utilities\Serializer.cs" />
     <Compile Include="Utilities\Tuple.cs" />
     <Compile Include="Utilities\TupleAb.cs" />
     <Compile Include="Utilities\TupleAbc.cs" />
