@@ -300,7 +300,6 @@
     <Compile Include="Parsing\ExpressionTreeVisitor.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\PartialEvaluatingExpressionTreeVisitor.cs" />
     <Compile Include="Clauses\WhereClause.cs" />
-    <Compile Include="Utilities\EqualityUtility.cs" />
     <Compile Include="Utilities\JoinedTableKey.cs" />
     <Compile Include="Utilities\MemberInfoChain.cs" />
     <Compile Include="Utilities\ArgumentEmptyException.cs" />

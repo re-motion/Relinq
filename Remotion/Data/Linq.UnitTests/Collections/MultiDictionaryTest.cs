@@ -41,13 +41,6 @@ namespace Remotion.Data.Linq.UnitTests.Collections
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentNullException))]
-    public void AddNullValues ()
-    {
-      _dictionary.Add ("key1", null);
-    }
-
-    [Test]
     public void Clear ()
     {
       _dictionary.Add ("key1", new List<string> { "value1", "value2", "value3" });

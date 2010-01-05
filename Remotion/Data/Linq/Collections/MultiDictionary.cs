@@ -26,7 +26,6 @@ namespace Remotion.Data.Linq.Collections
   {
     private readonly Dictionary<TKey, IList<TValue>> _innerDictionary = new Dictionary<TKey, IList<TValue>>();
 
-
     public IEnumerator<KeyValuePair<TKey, IList<TValue>>> GetEnumerator ()
     {
       return _innerDictionary.GetEnumerator();
@@ -37,10 +36,23 @@ namespace Remotion.Data.Linq.Collections
       return GetEnumerator();
     }
 
+    public void Add (TKey key, TValue item)
+    {
+      ArgumentUtility.CheckNotNull ("item", item);
+      this[key].Add (item);
+    }
+
     public void Add (KeyValuePair<TKey, IList<TValue>> item)
     {
       ArgumentUtility.CheckNotNull ("item", item);
       _innerDictionary.Add (item.Key, item.Value);
+    }
+
+    public void Add (TKey key, IList<TValue> value)
+    {
+      ArgumentUtility.CheckNotNull ("key", key);
+      ArgumentUtility.CheckNotNull ("value", value);
+      _innerDictionary.Add (key, value);
     }
 
     public void Clear ()
@@ -64,7 +76,7 @@ namespace Remotion.Data.Linq.Collections
       ArgumentUtility.CheckNotNull ("item", item);
       return _innerDictionary.Remove (item.Key);
     }
-    
+
     int ICollection<KeyValuePair<TKey, IList<TValue>>>.Count
     {
       get { return KeyCount; }
@@ -78,13 +90,6 @@ namespace Remotion.Data.Linq.Collections
     public bool ContainsKey (TKey key)
     {
       return _innerDictionary.ContainsKey (key);
-    }
-
-    public void Add (TKey key, IList<TValue> value)
-    {
-      ArgumentUtility.CheckNotNull ("key", key);
-      ArgumentUtility.CheckNotNull ("value", value);
-      _innerDictionary.Add (key, value);
     }
 
     public bool Remove (TKey key)
@@ -137,6 +142,5 @@ namespace Remotion.Data.Linq.Collections
     {
       return this.Sum (kvp => kvp.Value.Count);
     }
-
   }
 }
