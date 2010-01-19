@@ -389,6 +389,7 @@
     <Compile Include="TestUtilities\TupleAb.cs" />
     <Compile Include="TestUtilities\TupleAbc.cs" />
     <Compile Include="TestUtilities\TupleAbcd.cs" />
+    <Compile Include="Utilities\HashCodeUtilityTest.cs" />
     <Compile Include="Utilities\SeparatedStringBuilderTest.cs" />
     <None Include="Data.Linq.UnitTests.build" />
     <None Include="Parsing\ExpressionTrees\ExpressionTree_Grammar.docx" />
