@@ -19,15 +19,19 @@ using System.Reflection;
 
 namespace Remotion.Data.Linq.Utilities
 {
+  /// <summary>
+  /// Represents a chain of members leading over several joined members to an accessed member.
+  /// This models the following expression: start.P1.P2.P3 - P1 and P2 are joined members, P3 is the accessed member.
+  /// </summary>
   public struct MemberInfoChain
   {
-    public MemberInfoChain (MemberInfo accessedMember, MemberInfo[] joinedMembers) : this()
+    public MemberInfoChain (MemberInfo[] joinedMembers, MemberInfo accessedMember) : this()
     {
       AccessedMember = accessedMember;
       JoinedMembers = joinedMembers;
     }
 
-    public MemberInfo AccessedMember { get; private set; }
     public MemberInfo[] JoinedMembers { get; private set; }
+    public MemberInfo AccessedMember { get; private set; }
   }
 }
