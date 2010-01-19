@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq;
 
 namespace Remotion.Data.Linq.UnitTests
 {
@@ -97,6 +96,34 @@ namespace Remotion.Data.Linq.UnitTests
     public void TryGetItemTypeOfIEnumerable_InvalidType ()
     {
       Assert.That (ReflectionUtility.TryGetItemTypeOfIEnumerable (typeof (int)), Is.Null);
+    }
+
+    [Test]
+    public void GetFieldOrPropertyType_Field ()
+    {
+      var memberInfo = typeof (DateTime).GetField ("MinValue");
+
+      var type = ReflectionUtility.GetFieldOrPropertyType (memberInfo);
+      Assert.That (type, Is.SameAs (typeof (DateTime)));
+    }
+
+    [Test]
+    public void GetFieldOrPropertyType_Property ()
+    {
+      var memberInfo = typeof (DateTime).GetProperty ("Now");
+
+      var type = ReflectionUtility.GetFieldOrPropertyType (memberInfo);
+      Assert.That (type, Is.SameAs (typeof (DateTime)));
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage = 
+        "Argument must be FieldInfo or PropertyInfo.\r\nParameter name: fieldOrProperty")]
+    public void GetFieldOrPropertyType_Other_Throws ()
+    {
+      var memberInfo = typeof (DateTime).GetMethod ("get_Now");
+
+      ReflectionUtility.GetFieldOrPropertyType (memberInfo);
     }
   }
 }
