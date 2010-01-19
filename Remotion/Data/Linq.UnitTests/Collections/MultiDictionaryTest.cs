@@ -25,146 +25,241 @@ namespace Remotion.Data.Linq.UnitTests.Collections
   [TestFixture]
   public class MultiDictionaryTest
   {
-    MultiDictionary<string, string> _dictionary;
+    private MultiDictionary<string, string> _dictionary;
+    private IDictionary<string, IList<string>> _castDictionary;
+
+    private List<string> _list1;
+    private List<string> _list2;
+
+    private KeyValuePair<string, IList<string>> _item1;
+    private KeyValuePair<string, IList<string>> _item2;
 
     [SetUp]
     public void SetUp ()
     {
       _dictionary = new MultiDictionary<string, string> ();
+      _castDictionary = _dictionary;
+
+      _list1 = new List<string> { "value1", "value2", "value3" };
+      _list2 = new List<string> { "value4", "value5", "value6" };
+
+      _item1 = new KeyValuePair<string, IList<string>> ("key1", _list1);
+      _item2 = new KeyValuePair<string, IList<string>> ("key2", _list2);
     }
 
     [Test]
-    public void Add ()
+    public void Add_List ()
     {
-      _dictionary.Add ("key1", new List<string> { "value1", "value2", "value3" });
-      Assert.That (_dictionary["key1"].Count, Is.EqualTo (3));
+      _dictionary.Add ("key1", _list1);
+      Assert.That (_dictionary["key1"], Is.SameAs (_list1));
     }
 
     [Test]
-    public void Clear ()
+    public void Add_Pair ()
     {
-      _dictionary.Add ("key1", new List<string> { "value1", "value2", "value3" });
-      Assert.That (_dictionary["key1"].Count, Is.EqualTo (3));
-      _dictionary.Clear();
-      Assert.That (_dictionary["key1"].Count, Is.EqualTo (0));
+      _castDictionary.Add (new KeyValuePair<string, IList<string>> ("key1", _list1));
+      Assert.That (_dictionary["key1"], Is.SameAs (_list1));
+    }
+
+    [Test]
+    public void Add_Value ()
+    {
+      _dictionary.Add ("key1", "value1");
+      _dictionary.Add ("key1", "value2");
+      _dictionary.Add ("key2", "value3");
+
+      Assert.That (_dictionary["key1"], Is.EqualTo (new[] { "value1", "value2" }));
+      Assert.That (_dictionary["key2"], Is.EqualTo (new[] { "value3" }));
+    }
+
+    [Test]
+    public void GetEnumerator ()
+    {
+      _castDictionary.Add (_item1);
+      _castDictionary.Add (_item2);
+
+      var items = new List<KeyValuePair<string, IList<string>>> ();
+      using (var enumerator = _dictionary.GetEnumerator ())
+      {
+        Assert.That (enumerator.MoveNext(), Is.True);
+        items.Add (enumerator.Current);
+        Assert.That (enumerator.MoveNext (), Is.True);
+        items.Add (enumerator.Current);
+        Assert.That (enumerator.MoveNext (), Is.False);
+      }
+
+      Assert.That (items, Is.EquivalentTo (new[] { _item1, _item2 }));
     }
 
     [Test]
     public void Contains ()
     {
-      var item1 = new KeyValuePair<string, IList<string>> ("key1", new List<string> { "value1", "value2", "value3" });
-      var item2 = new KeyValuePair<string, IList<string>> ("key2", new List<string> { "value1", "value2", "value3" });
-      _dictionary.Add (item1);
-      Assert.That (_dictionary.Contains (item1), Is.True);
-      Assert.That (_dictionary.Contains (item2), Is.False);
+      _castDictionary.Add (_item1);
+
+      Assert.That (_castDictionary.Contains (_item1), Is.True);
+      Assert.That (_castDictionary.Contains (_item2), Is.False);
     }
 
     [Test]
-    public void Remove ()
+    public void ContainsKey_True ()
     {
-      var item1 = new KeyValuePair<string, IList<string>> ("key1", new List<string> { "value1", "value2", "value3" });
-      _dictionary.Add (item1);
-      Assert.That (_dictionary["key1"].Count, Is.EqualTo (3));
-      _dictionary.Remove ("key1");
-      Assert.That (_dictionary["key1"].Count, Is.EqualTo (0));
-    }
-
-    [Test]
-    public void IsReadonly ()
-    {
-      Assert.That (_dictionary.IsReadOnly, Is.True);
-    }
-
-    [Test]
-    public void ContainsKey ()
-    {
-      _dictionary.Add ("key1", new List<string> { "value1", "value2", "value3" });
+      _dictionary.Add ("key1", _list1);
       Assert.That (_dictionary.ContainsKey ("key1"), Is.True);
     }
 
     [Test]
-    public void ContainsNoKey ()
+    public void ContainsKey_False ()
     {
       Assert.That (_dictionary.ContainsKey ("key1"), Is.False);
     }
 
     [Test]
-    public void TryGetValue ()
+    public void Clear ()
     {
-      _dictionary.Add ("key1", new List<string> { "value1", "value2", "value3" });
-      IList<string> value;
-      Assert.That(_dictionary.TryGetValue ("key1", out value), Is.True);
-      Assert.That (value, Is.Not.Null);
+      _dictionary.Add ("key1", _list1);
+      Assert.That (_dictionary.ContainsKey ("key1"), Is.True);
+      _dictionary.Clear ();
+      Assert.That (_dictionary.ContainsKey ("key1"), Is.False);
     }
 
     [Test]
-    public void IndexGet ()
+    public void Remove_Key ()
     {
-      var value = new List<string> { "value1", "value2", "value3" };
-      _dictionary.Add ("key1", value);
-      Assert.That (_dictionary["key1"], Is.EqualTo (value));
+      _castDictionary.Add (_item1);
+      Assert.That (_dictionary.ContainsKey ("key1"), Is.True);
+
+      var result = _dictionary.Remove ("key1");
+      Assert.That (_dictionary.ContainsKey ("key1"), Is.False);
+      Assert.That (result, Is.True);
+
+      result = _dictionary.Remove ("key1");
+      Assert.That (result, Is.False);
     }
 
     [Test]
-    public void IndexSet ()
+    public void Remove_Item ()
     {
-      var value = new List<string> { "value1", "value2", "value3" };
-      _dictionary.Add ("key1", value);
-      Assert.That (_dictionary["key1"], Is.EqualTo (value));
+      _castDictionary.Add (_item1);
+      Assert.That (_dictionary.ContainsKey ("key1"), Is.True);
 
-      var value1 = new List<string> { "value11", "value12", "value13" };
-      _dictionary["key1"] = value1;
-      Assert.That (_dictionary["key1"], Is.EqualTo (value1));
-    }
+      var result = _castDictionary.Remove (_item1);
+      Assert.That (_dictionary.ContainsKey ("key1"), Is.False);
+      Assert.That (result, Is.True);
 
-    [Test]
-    public void Keys ()
-    {
-      var value = new List<string> { "value1", "value2", "value3" };
-      _dictionary.Add ("key1", value);
-      Assert.That (_dictionary.Keys.Count, Is.EqualTo (1));
-    }
-
-    [Test]
-    public void Values ()
-    {
-      var value = new List<string> { "value1", "value2", "value3" };
-      _dictionary.Add ("key1", value);
-      Assert.That (_dictionary.Values.Count, Is.EqualTo (1));
+      result = _castDictionary.Remove (_item1);
+      Assert.That (result, Is.False);
     }
 
     [Test]
     public void KeyCount ()
     {
-      var value = new List<string> { "value1", "value2", "value3" };
-      _dictionary.Add ("key1", value);
-      Assert.That (_dictionary.KeyCount, Is.EqualTo (1));
+      _dictionary.Add ("key1", _list1);
+      _dictionary.Add ("key2", _list1);
+      Assert.That (_dictionary.KeyCount, Is.EqualTo (2));
     }
 
     [Test]
     public void CountValues ()
     {
-      var value = new List<string> { "value1", "value2", "value3" };
-      _dictionary.Add ("key1", value);
-      Assert.That (_dictionary.CountValues(), Is.EqualTo (3));
+      _dictionary.Add ("key1", _list1);
+      _dictionary.Add ("key2", _list1);
+      Assert.That (_dictionary.CountValues (), Is.EqualTo (6));
     }
 
     [Test]
-    [ExpectedException(typeof(NotImplementedException))]
-    public void CopyToThrowsException ()
+    public void Count ()
     {
-      var item1 = new KeyValuePair<string, IList<string>>[1];
-      _dictionary.CopyTo (item1, 0);
+      Assert.That (_castDictionary.Count, Is.EqualTo (0));
+
+      _dictionary.Add ("key1", "value1");
+      Assert.That (_castDictionary.Count, Is.EqualTo (1));
+
+      _dictionary.Add ("key1", "value2");
+      Assert.That (_castDictionary.Count, Is.EqualTo (1));
+
+      _dictionary.Add ("key2", "value3");
+      Assert.That (_castDictionary.Count, Is.EqualTo (2));
     }
 
     [Test]
-    public void Remove1 ()
+    public void IsReadOnly ()
     {
-      var item1 = new KeyValuePair<string, IList<string>> ("key1", new List<string> { "value1", "value2", "value3" });
-      _dictionary.Add (item1);
-      Assert.That (_dictionary["key1"].Count, Is.EqualTo (3));
-      Assert.That (_dictionary.Remove (item1), Is.True);
-      Assert.That (_dictionary["key1"].Count, Is.EqualTo (0));
+      Assert.That (_dictionary.IsReadOnly, Is.False);
+    }
+
+    [Test]
+    public void TryGetValue ()
+    {
+      _dictionary.Add ("key1", _list1);
+
+      IList<string> value;
+      Assert.That(_dictionary.TryGetValue ("key1", out value), Is.True);
+      
+      Assert.That (value, Is.SameAs (_list1));
+    }
+
+    [Test]
+    public void IndexGet ()
+    {
+      _dictionary.Add ("key1", _list1);
+
+      Assert.That (_dictionary["key1"], Is.SameAs (_list1));
+    }
+
+    [Test]
+    public void IndexGet_NewKey ()
+    {
+      Assert.That (_dictionary.KeyCount, Is.EqualTo (0));
+
+      var result = _dictionary["key1"];
+      Assert.That (result, Is.Not.Null);
+      Assert.That (result, Is.Empty);
+
+      Assert.That (_dictionary.KeyCount, Is.EqualTo (1));
+    }
+
+    [Test]
+    public void IndexSet ()
+    {
+      _dictionary.Add ("key1", _list1);
+      Assert.That (_dictionary["key1"], Is.SameAs (_list1));
+
+      _dictionary["key1"] = _list2;
+      Assert.That (_dictionary["key1"], Is.SameAs (_list2));
+    }
+
+    [Test]
+    public void Keys ()
+    {
+      _dictionary.Add ("key1", _list1);
+      _dictionary.Add ("key2", _list2);
+
+      Assert.That (_dictionary.Keys, Is.EquivalentTo (new[] { "key1", "key2" }));
+    }
+
+    [Test]
+    public void Values ()
+    {
+      _dictionary.Add ("key1", _list1);
+      _dictionary.Add ("key2", _list2);
+
+      Assert.That (_dictionary.Values, Is.EquivalentTo (new[] { _list1, _list2 }));
+    }
+
+    [Test]
+    public void CopyTo ()
+    {
+      _castDictionary.Add (_item1);
+      _castDictionary.Add (_item2);
+
+      var array = new KeyValuePair<string, IList<string>>[4];
+      _castDictionary.CopyTo (array, 1);
+
+      Assert.That (array[0], Is.EqualTo (default (KeyValuePair<string, IList<string>>)));
+      Assert.That (array[3], Is.EqualTo (default (KeyValuePair<string, IList<string>>)));
+
+      Assert.That (array, List.Contains (_item1));
+      Assert.That (array, List.Contains (_item2));
     }
 
   }

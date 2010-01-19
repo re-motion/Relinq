@@ -22,6 +22,12 @@ using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.Collections
 {
+  /// <summary>
+  /// Provides an implementation of <see cref="IDictionary{TKey,TValue}"/> that allows storing multiple values per key. The multiple values
+  /// are represented as an <see cref="IList{T}"/> of value. Access to a key without values returns an empty <see cref="IList{T}"/>.
+  /// </summary>
+  /// <typeparam name="TKey">The type of the keys of the values to be stored.</typeparam>
+  /// <typeparam name="TValue">The type of the values to be stored.</typeparam>
   public class MultiDictionary<TKey, TValue> : IDictionary<TKey, IList<TValue>>
   {
     private readonly Dictionary<TKey, IList<TValue>> _innerDictionary = new Dictionary<TKey, IList<TValue>>();
@@ -42,16 +48,17 @@ namespace Remotion.Data.Linq.Collections
       this[key].Add (item);
     }
 
-    public void Add (KeyValuePair<TKey, IList<TValue>> item)
+    void ICollection<KeyValuePair<TKey, IList<TValue>>>.Add (KeyValuePair<TKey, IList<TValue>> item)
     {
       ArgumentUtility.CheckNotNull ("item", item);
-      _innerDictionary.Add (item.Key, item.Value);
+      Add (item.Key, item.Value);
     }
 
     public void Add (TKey key, IList<TValue> value)
     {
       ArgumentUtility.CheckNotNull ("key", key);
       ArgumentUtility.CheckNotNull ("value", value);
+
       _innerDictionary.Add (key, value);
     }
 
@@ -60,31 +67,10 @@ namespace Remotion.Data.Linq.Collections
       _innerDictionary.Clear();
     }
 
-    public bool Contains (KeyValuePair<TKey, IList<TValue>> item)
+    bool ICollection<KeyValuePair<TKey, IList<TValue>>>.Contains (KeyValuePair<TKey, IList<TValue>> item)
     {
       ArgumentUtility.CheckNotNull ("item", item);
       return _innerDictionary.Contains (item);
-    }
-
-    public void CopyTo (KeyValuePair<TKey, IList<TValue>>[] array, int arrayIndex)
-    {
-      throw new NotImplementedException();
-    }
-
-    public bool Remove (KeyValuePair<TKey, IList<TValue>> item)
-    {
-      ArgumentUtility.CheckNotNull ("item", item);
-      return _innerDictionary.Remove (item.Key);
-    }
-
-    int ICollection<KeyValuePair<TKey, IList<TValue>>>.Count
-    {
-      get { return KeyCount; }
-    }
-
-    public bool IsReadOnly
-    {
-      get { return true; }
     }
 
     public bool ContainsKey (TKey key)
@@ -98,6 +84,32 @@ namespace Remotion.Data.Linq.Collections
       return _innerDictionary.Remove (key);
     }
 
+    bool ICollection<KeyValuePair<TKey, IList<TValue>>>.Remove (KeyValuePair<TKey, IList<TValue>> item)
+    {
+      ArgumentUtility.CheckNotNull ("item", item);
+      return ((IDictionary<TKey, IList<TValue>>) _innerDictionary).Remove (item);
+    }
+
+    public int KeyCount
+    {
+      get { return _innerDictionary.Count; }
+    }
+
+    public int CountValues ()
+    {
+      return this.Sum (kvp => kvp.Value.Count);
+    }
+
+    int ICollection<KeyValuePair<TKey, IList<TValue>>>.Count
+    {
+      get { return KeyCount; }
+    }
+
+    public bool IsReadOnly
+    {
+      get { return false; }
+    }
+    
     public bool TryGetValue (TKey key, out IList<TValue> value)
     {
       ArgumentUtility.CheckNotNull ("key", key);
@@ -133,14 +145,10 @@ namespace Remotion.Data.Linq.Collections
       get { return _innerDictionary.Values; }
     }
 
-    public int KeyCount
+    void ICollection<KeyValuePair<TKey, IList<TValue>>>.CopyTo (KeyValuePair<TKey, IList<TValue>>[] array, int arrayIndex)
     {
-      get { return _innerDictionary.Count; }
+      ((IDictionary<TKey, IList<TValue>>) _innerDictionary).CopyTo (array, arrayIndex);
     }
 
-    public int CountValues ()
-    {
-      return this.Sum (kvp => kvp.Value.Count);
-    }
   }
 }
