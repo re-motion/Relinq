@@ -16,23 +16,52 @@
 // 
 using System;
 
-namespace Remotion.Data.Linq.UnitTests.Utilities
+namespace Remotion.Data.Linq.UnitTests.TestUtilities
 {
-  public static class Tuple
+  [Serializable]
+  public struct Tuple<TA, TB, TC, TD> : IEquatable<Tuple<TA, TB, TC, TD>>
   {
-    public static Tuple<TA, TB> NewTuple<TA, TB> (TA a, TB b)
+    private readonly TA _a;
+    private readonly TB _b;
+    private readonly TC _c;
+    private readonly TD _d;
+
+    public Tuple (TA a, TB b, TC c, TD d)
     {
-      return new Tuple<TA, TB> (a, b);
+      _a = a;
+      _b = b;
+      _c = c;
+      _d = d;
     }
 
-    public static Tuple<TA, TB, TC> NewTuple<TA, TB, TC> (TA a, TB b, TC c)
+    public TA A
     {
-      return new Tuple<TA, TB, TC> (a, b, c);
+      get { return _a; }
     }
 
-    public static Tuple<TA, TB, TC, TD> NewTuple<TA, TB, TC, TD> (TA a, TB b, TC c, TD d)
+    public TB B
     {
-      return new Tuple<TA, TB, TC, TD> (a, b, c, d);
+      get { return _b; }
+    }
+
+    public TC C
+    {
+      get { return _c; }
+    }
+
+    public TD D
+    {
+      get { return _d; }
+    }
+
+    public bool Equals (Tuple<TA, TB, TC, TD> other)
+    {
+      return Equals ((object) other);
+    }
+
+    public override string ToString ()
+    {
+      return string.Format ("<{0}, {1}, {2}, {3}>", _a, _b, _c, _d);
     }
   }
 }

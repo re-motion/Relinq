@@ -20,7 +20,7 @@ using System.Reflection;
 using NUnit.Framework;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
-using Remotion.Data.Linq.UnitTests.Utilities;
+using Remotion.Data.Linq.UnitTests.TestUtilities;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;
 

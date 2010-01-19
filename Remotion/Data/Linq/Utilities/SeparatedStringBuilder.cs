@@ -14,16 +14,31 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace Remotion.Data.Linq.UnitTests.Utilities
+namespace Remotion.Data.Linq.Utilities
 {
-  public static class Dev
+  /// <summary>
+  /// Builds a string from a sequence, separating each item with a given separator string.
+  /// </summary>
+  public static class SeparatedStringBuilder
   {
-    public static object Null
+    public static string Build<T> (string separator, IEnumerable<T> sequence)
     {
-      get { return null; }
-      set {  }
+      var sb = new StringBuilder ();
+      bool first = true;
+
+      foreach (var item in sequence)
+      {
+        if (!first)
+          sb.Append (separator);
+        sb.Append (item);
+
+        first = false;
+      }
+
+      return sb.ToString ();
     }
   }
 }

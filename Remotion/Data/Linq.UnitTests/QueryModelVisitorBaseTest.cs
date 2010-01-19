@@ -20,7 +20,7 @@ using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Collections;
 using Remotion.Data.Linq.UnitTests.TestDomain;
-using Remotion.Data.Linq.UnitTests.Utilities;
+using Remotion.Data.Linq.UnitTests.TestUtilities;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;
 

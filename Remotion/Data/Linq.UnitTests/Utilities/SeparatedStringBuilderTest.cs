@@ -17,23 +17,32 @@
 using System;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.Parsing;
-using Remotion.Data.Linq.UnitTests.TestUtilities;
+using Remotion.Data.Linq.Utilities;
 
-namespace Remotion.Data.Linq.UnitTests.Parsing
+namespace Remotion.Data.Linq.UnitTests.Utilities
 {
   [TestFixture]
-  public class ParserExceptionTest
+  public class SeparatedStringBuilderTest
   {
     [Test]
-    public void Serialization ()
+    public void Build_Empty ()
     {
-      var exception = new ParserException ("test", "expr", new Exception ("test2"));
+      var result = SeparatedStringBuilder.Build (", ", new int[0]);
+      Assert.That (result, Is.EqualTo (""));
+    }
 
-      var deserializedException = Serializer.SerializeAndDeserialize (exception);
-      Assert.That (deserializedException.Message, Is.EqualTo (exception.Message));
-      Assert.That (deserializedException.ParsedExpression, Is.EqualTo (exception.ParsedExpression));
-      Assert.That (deserializedException.InnerException.Message, Is.EqualTo (exception.InnerException.Message));
+    [Test]
+    public void Build_One ()
+    {
+      var result = SeparatedStringBuilder.Build (", ", new[] { 1 });
+      Assert.That (result, Is.EqualTo ("1"));
+    }
+
+    [Test]
+    public void Build_Many ()
+    {
+      var result = SeparatedStringBuilder.Build (", ", new[] { 1, 2, 3 });
+      Assert.That (result, Is.EqualTo ("1, 2, 3"));
     }
   }
 }

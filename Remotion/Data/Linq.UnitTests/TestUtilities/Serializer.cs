@@ -21,7 +21,7 @@ using System.Xml.Serialization;
 using Remotion.Data.Linq.Utilities;
 
 
-namespace Remotion.Data.Linq.UnitTests.Utilities
+namespace Remotion.Data.Linq.UnitTests.TestUtilities
 {
   /// <summary>
   /// Provides quick serialization and deserialization functionality for unit tests.

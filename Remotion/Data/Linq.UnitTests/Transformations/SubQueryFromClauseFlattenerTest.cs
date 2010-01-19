@@ -26,7 +26,7 @@ using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Transformations;
 using Remotion.Data.Linq.UnitTests.Parsing;
 using Remotion.Data.Linq.UnitTests.TestDomain;
-using Remotion.Data.Linq.UnitTests.Utilities;
+using Remotion.Data.Linq.UnitTests.TestUtilities;
 
 namespace Remotion.Data.Linq.UnitTests.Transformations
 {

@@ -15,25 +15,24 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.Parsing;
-using Remotion.Data.Linq.UnitTests.TestUtilities;
 
-namespace Remotion.Data.Linq.UnitTests.Parsing
+namespace Remotion.Data.Linq.UnitTests.TestUtilities
 {
-  [TestFixture]
-  public class ParserExceptionTest
+  public static class Tuple
   {
-    [Test]
-    public void Serialization ()
+    public static Tuple<TA, TB> NewTuple<TA, TB> (TA a, TB b)
     {
-      var exception = new ParserException ("test", "expr", new Exception ("test2"));
+      return new Tuple<TA, TB> (a, b);
+    }
 
-      var deserializedException = Serializer.SerializeAndDeserialize (exception);
-      Assert.That (deserializedException.Message, Is.EqualTo (exception.Message));
-      Assert.That (deserializedException.ParsedExpression, Is.EqualTo (exception.ParsedExpression));
-      Assert.That (deserializedException.InnerException.Message, Is.EqualTo (exception.InnerException.Message));
+    public static Tuple<TA, TB, TC> NewTuple<TA, TB, TC> (TA a, TB b, TC c)
+    {
+      return new Tuple<TA, TB, TC> (a, b, c);
+    }
+
+    public static Tuple<TA, TB, TC, TD> NewTuple<TA, TB, TC, TD> (TA a, TB b, TC c, TD d)
+    {
+      return new Tuple<TA, TB, TC, TD> (a, b, c, d);
     }
   }
 }

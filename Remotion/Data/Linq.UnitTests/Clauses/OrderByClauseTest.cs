@@ -146,7 +146,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses
     [Test]
     public new void ToString ()
     {
-      Assert.That (_orderByClause.ToString (), Is.EqualTo ("orderby"));
+      Assert.That (_orderByClause.ToString (), Is.EqualTo ("orderby "));
     }
 
     [Test]

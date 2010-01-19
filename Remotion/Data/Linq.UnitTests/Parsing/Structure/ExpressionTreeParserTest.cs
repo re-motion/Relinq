@@ -26,7 +26,7 @@ using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Data.Linq.UnitTests.Parsing.Structure.TestDomain;
 using Remotion.Data.Linq.UnitTests.TestDomain;
-using Remotion.Data.Linq.UnitTests.Utilities;
+using Remotion.Data.Linq.UnitTests.TestUtilities;
 
 namespace Remotion.Data.Linq.UnitTests.Parsing.Structure
 {

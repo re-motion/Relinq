@@ -81,12 +81,8 @@ namespace Remotion.Data.Linq.UnitTests.Parsing
       {
         CheckAreEqualObjects (value1, value2);
       }
-      else if (Remotion.Data.Linq.UnitTests.Utilities.ReflectionUtility.CanAscribe (valueType, typeof (ReadOnlyCollection<>)))
+      else if (typeof (IList).IsAssignableFrom (valueType))
       {
-        Type[] collectionGenericArguments = Remotion.Data.Linq.UnitTests.Utilities.ReflectionUtility.GetAscribedGenericArguments (valueType, typeof (ReadOnlyCollection<>));
-        Debug.Assert (collectionGenericArguments.Length == 1, "ReadOnlyCollection only has one generic argument");
-        Type elementType = collectionGenericArguments[0];
-        
         IList list1 = (IList) value1;
         IList list2 = (IList) value2;
         if (list1 == null || list2 == null)
@@ -98,7 +94,20 @@ namespace Remotion.Data.Linq.UnitTests.Parsing
         {
           Assert.AreEqual (list1.Count, list2.Count, GetMessage (e1, e2, "Number of elements in " + property.Name));
           for (int i = 0; i < list1.Count; ++i)
-            CheckAreEqualProperties (property, elementType, list1[i], list2[i], e1, e2);
+          {
+            var elementType1 = list1[i] != null ? list1[i].GetType () : typeof (object);
+            var elementType2 = list2[i] != null ? list2[i].GetType () : typeof (object);
+            Assert.AreSame (
+                elementType1, 
+                elementType2, 
+                string.Format (
+                    "The item types of the items in the lists in {0} differ: One is '{1}', the other is '{2}'.", 
+                    property.Name, 
+                    elementType1, 
+                    elementType2));
+
+            CheckAreEqualProperties (property, elementType1, list1[i], list2[i], e1, e2);
+          }
         }
       }
       else

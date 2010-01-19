@@ -162,10 +162,14 @@ namespace Remotion.Data.Linq
     public override string ToString ()
     {
       string mainQueryString;
-      if (IsIdentityQuery())
+      if (IsIdentityQuery ())
+      {
         mainQueryString = FormattingExpressionTreeVisitor.Format (MainFromClause.FromExpression);
+      }
       else
+      {
         mainQueryString = MainFromClause + BodyClauses.Aggregate ("", (s, b) => s + " " + b) + " " + SelectClause;
+      }
 
       return ResultOperators.Aggregate (mainQueryString, (s, r) => s + " => " + r);
     }
