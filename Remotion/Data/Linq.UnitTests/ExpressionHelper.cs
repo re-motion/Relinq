@@ -266,7 +266,7 @@ namespace Remotion.Data.Linq.UnitTests
     public static FieldDescriptor CreateFieldDescriptor (JoinedTableContext joinedTableContext, FromClauseBase fromClause, MemberInfo member, MemberInfo originalMember)
     {
       IColumnSource table = joinedTableContext.GetColumnSource (fromClause);
-      Column? column = DatabaseInfoUtility.GetColumn (StubDatabaseInfo.Instance, table, member);
+      var column = DatabaseInfoUtility.GetColumn (StubDatabaseInfo.Instance, table, member);
       var sourcePath = new FieldSourcePath (table, new SingleJoin[0]);
       var fieldDescriptor = new FieldDescriptor (originalMember, sourcePath, column);
       return fieldDescriptor;
