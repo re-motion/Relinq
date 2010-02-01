@@ -17,6 +17,7 @@
 using System;
 using System.Reflection;
 using Remotion.Data.Linq.Backend;
+using Remotion.Data.Linq.Backend.DataObjectModel;
 using Remotion.Data.Linq.Clauses;
 
 namespace Remotion.Data.Linq.UnitTests.TestDomain
@@ -29,21 +30,10 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
     {
     }
 
-    public string GetTableName (FromClauseBase fromClause)
+    public Table GetTableForFromClause (FromClauseBase fromClause)
     {
-      switch (fromClause.ItemType.Name)
-      {
-        case "Student":
-          return "studentTable";
-        case "Student_Detail":
-          return "detailTable";
-        case "Student_Detail_Detail":
-          return "detailDetailTable";
-        case "IndustrialSector":
-          return "industrialTable";
-        default:
-          return null;
-      }
+      var tableName = GetTableName (fromClause);
+      return new Table (tableName, fromClause.ItemName);
     }
 
     public string GetRelatedTableName (MemberInfo relationMember)
@@ -134,6 +124,23 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
     public Type IsTableType (MemberInfo member)
     {
       throw new NotImplementedException();
+    }
+
+    private string GetTableName (FromClauseBase fromClause)
+    {
+      switch (fromClause.ItemType.Name)
+      {
+        case "Student":
+          return "studentTable";
+        case "Student_Detail":
+          return "detailTable";
+        case "Student_Detail_Detail":
+          return "detailDetailTable";
+        case "IndustrialSector":
+          return "industrialTable";
+        default:
+          return null;
+      }
     }
   }
 }
