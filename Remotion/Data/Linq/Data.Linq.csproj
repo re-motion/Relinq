@@ -156,7 +156,6 @@
     <Compile Include="Backend\DataObjectModel\IEvaluation.cs" />
     <Compile Include="Backend\DataObjectModel\IEvaluationVisitor.cs" />
     <Compile Include="Backend\DataObjectModel\MethodCall.cs" />
-    <Compile Include="Backend\DataObjectModel\LetColumnSource.cs" />
     <Compile Include="Backend\DataObjectModel\NewObject.cs" />
     <Compile Include="Backend\DataObjectModel\SingleJoin.cs" />
     <Compile Include="Backend\DataObjectModel\SourceMarkerEvaluation.cs" />
