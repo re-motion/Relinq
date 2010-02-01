@@ -58,24 +58,18 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
       return GetColumnName (member) != null;
     }
 
-    public string GetColumnName (MemberInfo member)
+    public Column GetColumnForMember (IColumnSource columnSource, MemberInfo member)
     {
-      if (member.Name == "NonDBProperty" || member.Name == "NonDBBoolProperty")
-        return null;
-      else if (member == typeof (Student_Detail).GetProperty ("Student"))
-        return null;
-      else if (member == typeof (Student_Detail_Detail).GetProperty ("Student_Detail"))
-        return null;
-      else if (member == typeof (Student_Detail_Detail).GetProperty ("IndustrialSector"))
-        return null;
-      else if (member == typeof (IndustrialSector).GetProperty ("Student_Detail"))
-        return null;
-      else if (member == typeof (Student_Detail).GetProperty ("IndustrialSector"))
-        return "Student_Detail_to_IndustrialSector_FK";
-      else if (member == typeof (IndustrialSector).GetProperty ("Students"))
-        return null;
+      var columnName = GetColumnName (member);
+      if (columnName == null)
+      {
+        var message = string.Format ("The member '{0}.{1}' does not identify a queryable column.", member.DeclaringType, member.Name);
+        throw new UnmappedItemException (message);
+      }
       else
-        return member.Name + "Column";
+      {
+        return new Column (columnSource, columnName);
+      }
     }
 
     public JoinColumnNames? GetJoinColumnNames (MemberInfo relationMember)
@@ -100,7 +94,7 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
 
     public object ProcessWhereParameter (object parameter)
     {
-      Student student = parameter as Student;
+      var student = parameter as Student;
       if (student != null)
         return student.ID;
       return parameter;
@@ -155,5 +149,24 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
         return null;
     }
 
+    private string GetColumnName (MemberInfo member)
+    {
+      if (member.Name == "NonDBProperty" || member.Name == "NonDBBoolProperty")
+        return null;
+      else if (member == typeof (Student_Detail).GetProperty ("Student"))
+        return null;
+      else if (member == typeof (Student_Detail_Detail).GetProperty ("Student_Detail"))
+        return null;
+      else if (member == typeof (Student_Detail_Detail).GetProperty ("IndustrialSector"))
+        return null;
+      else if (member == typeof (IndustrialSector).GetProperty ("Student_Detail"))
+        return null;
+      else if (member == typeof (Student_Detail).GetProperty ("IndustrialSector"))
+        return "Student_Detail_to_IndustrialSector_FK";
+      else if (member == typeof (IndustrialSector).GetProperty ("Students"))
+        return null;
+      else
+        return member.Name + "Column";
+    }
   }
 }

@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Remotion.Data.Linq.Backend;
 using Remotion.Data.Linq.Backend.DataObjectModel;
 using Remotion.Data.Linq.Backend.FieldResolving;
 using Remotion.Data.Linq.Clauses;
@@ -266,7 +267,7 @@ namespace Remotion.Data.Linq.UnitTests
     public static FieldDescriptor CreateFieldDescriptor (JoinedTableContext joinedTableContext, FromClauseBase fromClause, MemberInfo member, MemberInfo originalMember)
     {
       IColumnSource table = joinedTableContext.GetColumnSource (fromClause);
-      var column = DatabaseInfoUtility.GetColumn (StubDatabaseInfo.Instance, table, member);
+      var column = ((IDatabaseInfo) StubDatabaseInfo.Instance).GetColumnForMember (table, member);
       var sourcePath = new FieldSourcePath (table, new SingleJoin[0]);
       var fieldDescriptor = new FieldDescriptor (originalMember, sourcePath, column);
       return fieldDescriptor;
