@@ -72,7 +72,7 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
       }
     }
 
-    public JoinColumnNames? GetJoinColumnNames (MemberInfo relationMember)
+    public JoinColumnNames GetJoinColumnNames (MemberInfo relationMember)
     {
       if (relationMember == typeof (Student_Detail).GetProperty ("Student"))
         return new JoinColumnNames("Student_Detail_PK", "Student_Detail_to_Student_FK");
@@ -89,7 +89,11 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
       else if (relationMember == typeof (IndustrialSector).GetProperty ("Students"))
         return new JoinColumnNames ("Industrial_PK", "Student_to_IndustrialSector_FK");
       else
-        return null;
+      {
+        string message = 
+            string.Format ("The member '{0}.{1}' does not identify a relation.", relationMember.DeclaringType.FullName, relationMember.Name);
+        throw new UnmappedItemException (message);
+      }
     }
 
     public object ProcessWhereParameter (object parameter)
