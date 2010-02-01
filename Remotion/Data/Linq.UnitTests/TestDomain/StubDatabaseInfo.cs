@@ -72,25 +72,25 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
       }
     }
 
-    public JoinColumnNames GetJoinColumnNames (MemberInfo relationMember)
+    public SingleJoin GetJoinForMember (MemberInfo relationMember, IColumnSource leftSource, IColumnSource rightSource)
     {
       if (relationMember == typeof (Student_Detail).GetProperty ("Student"))
-        return new JoinColumnNames("Student_Detail_PK", "Student_Detail_to_Student_FK");
+        return new SingleJoin (new Column (leftSource, "Student_Detail_PK"), new Column (rightSource, "Student_Detail_to_Student_FK"));
       else if (relationMember == typeof (Student_Detail_Detail).GetProperty ("Student_Detail"))
-        return new JoinColumnNames("Student_Detail_Detail_PK", "Student_Detail_Detail_to_Student_Detail_FK");
+        return new SingleJoin (new Column (leftSource, "Student_Detail_Detail_PK"), new Column (rightSource, "Student_Detail_Detail_to_Student_Detail_FK"));
       else if (relationMember == typeof (Student_Detail_Detail).GetProperty ("IndustrialSector"))
-        return new JoinColumnNames("Student_Detail_Detail_PK", "Student_Detail_Detail_to_IndustrialSector_FK");
+        return new SingleJoin (new Column (leftSource, "Student_Detail_Detail_PK"), new Column (rightSource, "Student_Detail_Detail_to_IndustrialSector_FK"));
       else if (relationMember == typeof (IndustrialSector).GetProperty ("Student_Detail"))
-        return new JoinColumnNames ("IndustrialSector_PK", "Student_Detail_to_IndustrialSector_FK");
+        return new SingleJoin (new Column (leftSource, "IndustrialSector_PK"), new Column (rightSource, "Student_Detail_to_IndustrialSector_FK"));
       else if (relationMember == typeof (Student_Detail).GetProperty ("IndustrialSector"))
-        return new JoinColumnNames("Student_Detail_to_IndustrialSector_FK", "IndustrialSector_PK");
+        return new SingleJoin (new Column (leftSource, "Student_Detail_to_IndustrialSector_FK"), new Column (rightSource, "IndustrialSector_PK"));
       else if (relationMember == typeof (Student).GetProperty ("OtherStudent"))
-        return new JoinColumnNames ("Student_to_OtherStudent_FK", "Student_PK");
+        return new SingleJoin (new Column (leftSource, "Student_to_OtherStudent_FK"), new Column (rightSource, "Student_PK"));
       else if (relationMember == typeof (IndustrialSector).GetProperty ("Students"))
-        return new JoinColumnNames ("Industrial_PK", "Student_to_IndustrialSector_FK");
+        return new SingleJoin (new Column (leftSource, "Industrial_PK"), new Column (rightSource, "Student_to_IndustrialSector_FK"));
       else
       {
-        string message = 
+        string message =
             string.Format ("The member '{0}.{1}' does not identify a relation.", relationMember.DeclaringType.FullName, relationMember.Name);
         throw new UnmappedItemException (message);
       }

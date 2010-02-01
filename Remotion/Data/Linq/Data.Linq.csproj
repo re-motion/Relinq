@@ -306,7 +306,6 @@
     <Compile Include="Utilities\ArgumentEmptyException.cs" />
     <Compile Include="Utilities\ArgumentTypeException.cs" />
     <Compile Include="Utilities\ArgumentUtility.cs" />
-    <Compile Include="Backend\JoinColumnNames.cs" />
     <Compile Include="Utilities\SeparatedStringBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
