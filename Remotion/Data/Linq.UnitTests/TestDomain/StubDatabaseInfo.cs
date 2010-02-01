@@ -53,7 +53,7 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
       return new Table (tableName, alias);
     }
 
-    public bool HasColumn (MemberInfo member)
+    public bool HasAssociatedColumn (MemberInfo member)
     {
       return GetColumnName (member) != null;
     }
