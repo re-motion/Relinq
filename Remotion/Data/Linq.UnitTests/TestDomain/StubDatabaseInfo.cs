@@ -30,30 +30,27 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
     {
     }
 
-    public Table GetTableForFromClause (FromClauseBase fromClause)
+    public Table GetTableForFromClause (FromClauseBase fromClause, string alias)
     {
       var tableName = GetTableName (fromClause);
-      return new Table (tableName, fromClause.ItemName);
+      if (tableName == null)
+        throw new UnmappedItemException (string.Format ("'{0} {1}' is not a table.", fromClause.ItemType, fromClause.ItemName));
+      return new Table (tableName, alias);
     }
 
-    public string GetRelatedTableName (MemberInfo relationMember)
+    public bool IsRelationMember (MemberInfo member)
     {
-      if (relationMember == typeof (Student_Detail).GetProperty ("Student"))
-        return "studentTable";
-      else if (relationMember == typeof (Student_Detail_Detail).GetProperty ("Student_Detail"))
-        return "detailTable";
-      else if (relationMember == typeof (Student_Detail_Detail).GetProperty ("IndustrialSector"))
-        return "industrialTable";
-      else if (relationMember == typeof (Student_Detail).GetProperty ("IndustrialSector"))
-        return "industrialTable";
-      else if (relationMember == typeof (IndustrialSector).GetProperty ("Student_Detail"))
-        return "detailTable";
-      else if (relationMember == typeof (Student).GetProperty ("OtherStudent"))
-        return "studentTable";
-      else if (relationMember == typeof (IndustrialSector).GetProperty ("Students"))
-        return "studentTable";
-      else
-        return null;
+      var tableName = GetRelatedTableName (member);
+      return tableName != null;
+    }
+
+    public Table GetTableForRelation (MemberInfo relationMember, string alias)
+    {
+      var tableName = GetRelatedTableName (relationMember);
+      if (tableName == null)
+        throw new UnmappedItemException (string.Format ("'{0}.{1}' is not a relation member.", relationMember.DeclaringType, relationMember.Name));
+
+      return new Table (tableName, alias);
     }
 
     public string GetColumnName (MemberInfo member)
@@ -116,16 +113,6 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
         return null;
     }
 
-    public bool IsTableType (Type type)
-    {
-      return type == typeof (Student) || type == typeof (Student_Detail) || type == typeof (Student_Detail_Detail);
-    }
-
-    public Type IsTableType (MemberInfo member)
-    {
-      throw new NotImplementedException();
-    }
-
     private string GetTableName (FromClauseBase fromClause)
     {
       switch (fromClause.ItemType.Name)
@@ -142,5 +129,26 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
           return null;
       }
     }
+
+    private string GetRelatedTableName (MemberInfo relationMember)
+    {
+      if (relationMember == typeof (Student_Detail).GetProperty ("Student"))
+        return "studentTable";
+      else if (relationMember == typeof (Student_Detail_Detail).GetProperty ("Student_Detail"))
+        return "detailTable";
+      else if (relationMember == typeof (Student_Detail_Detail).GetProperty ("IndustrialSector"))
+        return "industrialTable";
+      else if (relationMember == typeof (Student_Detail).GetProperty ("IndustrialSector"))
+        return "industrialTable";
+      else if (relationMember == typeof (IndustrialSector).GetProperty ("Student_Detail"))
+        return "detailTable";
+      else if (relationMember == typeof (Student).GetProperty ("OtherStudent"))
+        return "studentTable";
+      else if (relationMember == typeof (IndustrialSector).GetProperty ("Students"))
+        return "studentTable";
+      else
+        return null;
+    }
+
   }
 }
