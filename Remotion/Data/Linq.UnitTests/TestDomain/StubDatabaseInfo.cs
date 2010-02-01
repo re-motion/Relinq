@@ -53,6 +53,11 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
       return new Table (tableName, alias);
     }
 
+    public bool HasColumn (MemberInfo member)
+    {
+      return GetColumnName (member) != null;
+    }
+
     public string GetColumnName (MemberInfo member)
     {
       if (member.Name == "NonDBProperty" || member.Name == "NonDBBoolProperty")
