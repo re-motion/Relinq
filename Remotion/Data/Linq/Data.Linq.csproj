@@ -267,14 +267,9 @@
     <Compile Include="Backend\SqlGeneration\ISelectBuilder.cs" />
     <Compile Include="Backend\SqlGeneration\IWhereBuilder.cs" />
     <Compile Include="Backend\SqlGeneration\SqlServer\MethodCallGenerators\MethodCallConvertTo.cs" />
-    <Compile Include="Backend\SqlGeneration\SqlServer\MethodCallGenerators\MethodCallCount.cs" />
-    <Compile Include="Backend\SqlGeneration\SqlServer\MethodCallGenerators\MethodCallDistinct.cs" />
-    <Compile Include="Backend\SqlGeneration\SqlServer\MethodCallGenerators\MethodCallFirst.cs" />
     <Compile Include="Backend\SqlGeneration\SqlServer\MethodCallGenerators\MethodCallLower.cs" />
     <Compile Include="Backend\SqlGeneration\SqlServer\MethodCallGenerators\MethodCallRemove.cs" />
-    <Compile Include="Backend\SqlGeneration\SqlServer\MethodCallGenerators\MethodCallSingle.cs" />
     <Compile Include="Backend\SqlGeneration\SqlServer\MethodCallGenerators\MethodCallSubstring.cs" />
-    <Compile Include="Backend\SqlGeneration\SqlServer\MethodCallGenerators\MethodCallTake.cs" />
     <Compile Include="Backend\SqlGeneration\SqlServer\MethodCallGenerators\MethodCallUpper.cs" />
     <Compile Include="Backend\SqlGeneration\SelectedObjectActivator.cs" />
     <Compile Include="Backend\SqlGeneration\SqlGenerationData.cs" />

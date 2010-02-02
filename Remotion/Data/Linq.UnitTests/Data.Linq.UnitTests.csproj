@@ -157,15 +157,11 @@
     <Compile Include="Backend\SqlGeneration\SqlServer\DummyEvaluation.cs" />
     <Compile Include="Backend\SqlGeneration\SqlServer\FromBuilderTest.cs" />
     <Compile Include="Backend\SqlGeneration\SqlServer\MethodCallGenerators\MethodCallConvertToTest.cs" />
-    <Compile Include="Backend\SqlGeneration\SqlServer\MethodCallGenerators\MethodCallCountTest.cs" />
-    <Compile Include="Backend\SqlGeneration\SqlServer\MethodCallGenerators\MethodCallDistinctTest.cs" />
-    <Compile Include="Backend\SqlGeneration\SqlServer\MethodCallGenerators\MethodCallFirstTest.cs" />
     <Compile Include="Backend\SqlGeneration\SqlServer\MethodCallGenerators\MethodCallLowerTest.cs" />
     <Compile Include="Backend\SqlGeneration\SqlServer\MethodCallGenerators\MethodCallRemoveTest.cs" />
-    <Compile Include="Backend\SqlGeneration\SqlServer\MethodCallGenerators\MethodCallSingleTest.cs" />
     <Compile Include="Backend\SqlGeneration\SqlServer\MethodCallGenerators\MethodCallSubstringTest.cs" />
-    <Compile Include="Backend\SqlGeneration\SqlServer\MethodCallGenerators\MethodCallTakeTest.cs" />
     <Compile Include="Backend\SqlGeneration\SqlServer\MethodCallGenerators\MethodCallUpperTest.cs" />
+    <Compile Include="Backend\SqlGeneration\SqlServer\MethodCallGenerators\MethodCalTestBase.cs" />
     <Compile Include="Backend\SqlGeneration\SqlServer\OrderByBuilderTest.cs" />
     <Compile Include="Backend\SqlGeneration\SqlServer\SelectBuilderTest.cs" />
     <Compile Include="Backend\SqlGeneration\SqlServer\SqlServerEvaluationVisitorTest.cs" />
