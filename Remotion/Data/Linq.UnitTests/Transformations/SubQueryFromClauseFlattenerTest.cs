@@ -196,7 +196,7 @@ namespace Remotion.Data.Linq.UnitTests.Transformations
                     (from a in s1.Friends
                      from b in sd.Student.Friends
                      select new Tuple<Student, Student> (a, b))
-                  select new Tuple<Student, Student_Detail, Student, Student> (s1, sd, s3.A, s3.B);
+                  select new Tuple<Student, Student_Detail, Student, Student> (s1, sd, s3.Item1, s3.Item2);
 
       var queryModel = ExpressionHelper.ParseQuery (query);
       var mainFromSubQuery = from sd in _detailSource
@@ -218,8 +218,8 @@ namespace Remotion.Data.Linq.UnitTests.Transformations
                           select new Tuple<Student, Student_Detail, Student, Student> (
                               sd.Student, 
                               sector.Student_Detail, 
-                              new Tuple<Student, Student> (a, b).A, 
-                              new Tuple<Student, Student> (a, b).B);
+                              new Tuple<Student, Student> (a, b).Item1, 
+                              new Tuple<Student, Student> (a, b).Item2);
 
       var expectedQueryModel = ExpressionHelper.ParseQuery (expectedQuery);
       Assert.That (expectedQueryModel.ToString(), Is.EqualTo (queryModel.ToString()));

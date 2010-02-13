@@ -42,9 +42,9 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitors
     [Test]
     public void EvaluateTopMemberAccess ()
     {
-      Tuple<int, int> tuple = Tuple.NewTuple (1, 2);
+      Tuple<int, int> tuple = Tuple.Create (1, 2);
 
-      Expression treeRoot = Expression.MakeMemberAccess (Expression.Constant (tuple), typeof (Tuple<int, int>).GetProperty ("A"));
+      Expression treeRoot = Expression.MakeMemberAccess (Expression.Constant (tuple), typeof (Tuple<int, int>).GetProperty ("Item1"));
       Expression result = PartialEvaluatingExpressionTreeVisitor.EvaluateIndependentSubtrees (treeRoot);
       Expression expected = Expression.Constant (1);
       ExpressionTreeComparer.CheckAreEqualTrees (expected, result);

@@ -22,7 +22,7 @@ using Remotion.Data.Linq.UnitTests.TestUtilities;
 
 namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
 {
-  public static class SelectTestQueryGenerator
+  internal static class SelectTestQueryGenerator
   {
     public static IQueryable<Student> CreateSimpleQueryWithNonDBProjection (IQueryable<Student> source)
     {
@@ -37,7 +37,7 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
     public static IQueryable<Tuple<Student, string, string, string>> CreateSimpleQueryWithSpecialProjection (IQueryable<Student> source)
     {
       string k = "Test";
-      return from s in source select Tuple.NewTuple (s, s.Last, k, "Test2");
+      return from s in source select Tuple.Create (s, s.Last, k, "Test2");
     }
 
     public static IQueryable<string> CreateSimplifyableQuery (IQueryable<Student> source)

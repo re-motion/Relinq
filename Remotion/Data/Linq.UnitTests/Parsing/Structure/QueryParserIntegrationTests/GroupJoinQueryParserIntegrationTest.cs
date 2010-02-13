@@ -33,7 +33,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
     {
       var query = from s in QuerySource
                   join sd in DetailQuerySource on s.ID equals sd.StudentID into sds
-                  select Tuple.NewTuple (s, sds);
+                  select Tuple.Create (s, sds);
 
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Tuple<Student, IEnumerable<Student_Detail>>>)));
@@ -57,13 +57,13 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
           selectClause.Selector,
           mainFromClause,
           groupJoinClause,
-          (s, sds) => Tuple.NewTuple (s, sds));
+          (s, sds) => Tuple.Create (s, sds));
     }
 
     [Test]
     public void GroupJoin_WithoutSelect ()
     {
-      var query = QuerySource.GroupJoin (DetailQuerySource, s => s.ID, sd => sd.StudentID, (s, sds) => Tuple.NewTuple (s, sds));
+      var query = QuerySource.GroupJoin (DetailQuerySource, s => s.ID, sd => sd.StudentID, (s, sds) => Tuple.Create (s, sds));
 
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Tuple<Student, IEnumerable<Student_Detail>>>)));
@@ -87,7 +87,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
           selectClause.Selector,
           mainFromClause,
           groupJoinClause,
-          (s, sds) => Tuple.NewTuple (s, sds));
+          (s, sds) => Tuple.Create (s, sds));
     }
   }
 }

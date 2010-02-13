@@ -14,40 +14,42 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+#if NET_3_5
 using System;
 
 namespace Remotion.Data.Linq.UnitTests.TestUtilities
 {
   [Serializable]
-  public struct Tuple<TA, TB> : IEquatable<Tuple<TA, TB>>
+  internal struct Tuple<T1, T2> : IEquatable<Tuple<T1, T2>>
   {
-    private readonly TA _a;
-    private readonly TB _b;
+    private readonly T1 _item1;
+    private readonly T2 _item2;
 
-    public Tuple (TA a, TB b)
+    public Tuple (T1 item1, T2 item2)
     {
-      _a = a;
-      _b = b;
+      _item1 = item1;
+      _item2 = item2;
     }
 
-    public TA A
+    public T1 Item1
     {
-      get { return _a; }
+      get { return _item1; }
     }
 
-    public TB B
+    public T2 Item2
     {
-      get { return _b; }
+      get { return _item2; }
     }
 
-    public bool Equals (Tuple<TA, TB> other)
+    public bool Equals (Tuple<T1, T2> other)
     {
       return Equals ((object) other);
     }
 
     public override string ToString ()
     {
-      return string.Format ("<{0}, {1}>", _a, _b);
+      return string.Format ("<{0}, {1}>", _item1, _item2);
     }
   }
 }
+#endif

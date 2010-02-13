@@ -21,7 +21,7 @@ using Remotion.Data.Linq.UnitTests.TestUtilities;
 
 namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
 {
-  public static class JoinTestQueryGenerator
+  internal static class JoinTestQueryGenerator
   {
     public static IQueryable<Student> CreateSimpleExplicitJoin (IQueryable<Student_Detail> source1, IQueryable<Student> source2)
     {

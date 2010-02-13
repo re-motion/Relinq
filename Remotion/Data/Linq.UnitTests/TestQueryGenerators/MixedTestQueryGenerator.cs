@@ -22,7 +22,7 @@ using Remotion.Data.Linq.UnitTests.TestUtilities;
 
 namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
 {
-  public static class MixedTestQueryGenerator
+  internal static class MixedTestQueryGenerator
   {
     public static IQueryable<Student> CreateMultiFromWhereQuery (IQueryable<Student> source1, IQueryable<Student> source2)
     {
@@ -58,7 +58,7 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
 
     public static IQueryable<Tuple<string, string, int>> CreateMultiFromQueryWithProjection (IQueryable<Student> source1, IQueryable<Student> source2, IQueryable<Student> source3)
     {
-      return from s1 in source1 from s2 in source2 from s3 in source3 select Tuple.NewTuple (s1.First, s2.Last, s3.ID);
+      return from s1 in source1 from s2 in source2 from s3 in source3 select Tuple.Create (s1.First, s2.Last, s3.ID);
     }
 
     public static IQueryable<Student> CreateOrderByWithWhereCondition (IQueryable<Student> source)
