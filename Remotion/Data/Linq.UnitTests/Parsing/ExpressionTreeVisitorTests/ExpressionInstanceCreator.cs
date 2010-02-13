@@ -75,7 +75,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       map[ExpressionType.OrElse] = Expression.OrElse (trueExpression, trueExpression);
       map[ExpressionType.Parameter] = Expression.Parameter (typeof (object), "bla");
       map[ExpressionType.Power] = Expression.Power (zeroDouble, zeroDouble);
-      map[ExpressionType.Quote] = Expression.Quote (zero);
+      map[ExpressionType.Quote] = Expression.Quote (lambdaExpression);
       map[ExpressionType.RightShift] = Expression.RightShift (zero, zero);
       map[ExpressionType.Subtract] = Expression.Subtract (zero, zero);
       map[ExpressionType.SubtractChecked] = Expression.SubtractChecked (zero, zero);
