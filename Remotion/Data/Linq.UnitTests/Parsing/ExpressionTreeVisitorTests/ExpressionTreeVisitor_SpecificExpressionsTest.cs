@@ -357,8 +357,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     }
 
     [Test]
-    [Ignore ("TODO 2291")]
-    public void VisitNewArrayInitExpression_Changed ()
+    public void VisitNewArrayExpression_Init_Changed ()
     {
       var expression = (NewArrayExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.NewArrayInit);
       ReadOnlyCollection<Expression> newExpressions = new List<Expression> { Expression.Constant (214578) }.AsReadOnly ();
@@ -367,10 +366,11 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.NewArrayInit));
       Assert.That (result.Expressions, Is.EqualTo (newExpressions));
+      Assert.That (result.Type, Is.EqualTo (typeof (int[])));
     }
 
     [Test]
-    public void VisitNewArrayBoundsExpression_Changed ()
+    public void VisitNewArrayExpression_Bounds_Changed ()
     {
       var expression = (NewArrayExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.NewArrayBounds);
       ReadOnlyCollection<Expression> newExpressions = new List<Expression> (new Expression[] { Expression.Constant (214578) }).AsReadOnly ();
@@ -379,6 +379,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.NewArrayBounds));
       Assert.That (result.Expressions, Is.EqualTo (newExpressions));
+      Assert.That (result.Type, Is.EqualTo (typeof (int[])));
     }
 
     [Test]

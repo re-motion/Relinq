@@ -70,7 +70,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       map[ExpressionType.NegateChecked] = Expression.NegateChecked (zero);
       map[ExpressionType.New] = newExpression;
       map[ExpressionType.NewArrayInit] = arrayExpression;
-      map[ExpressionType.NewArrayBounds] = Expression.NewArrayBounds (typeof (object[]), zero);
+      map[ExpressionType.NewArrayBounds] = Expression.NewArrayBounds (typeof (int), zero);
       map[ExpressionType.Not] = Expression.Not (trueExpression);
       map[ExpressionType.NotEqual] = Expression.NotEqual (zero, zero);
       map[ExpressionType.Or] = Expression.Or (trueExpression, trueExpression);
