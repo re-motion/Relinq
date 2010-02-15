@@ -50,25 +50,24 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
 
     protected object InvokeAndCheckVisitObject (string methodName, object argument)
     {
-      return InvokeAndCheckVisitMethod<object, object> (delegate { return InvokeVisitMethod (methodName, argument); }, argument);
+      return InvokeAndCheckVisitMethod (delegate { return InvokeVisitMethod (methodName, argument); }, argument);
     }
 
     protected ReadOnlyCollection<T> InvokeAndCheckVisitExpressionList<T> (ReadOnlyCollection<T> expressions) where T : Expression
     {
-      return InvokeAndCheckVisitMethod<ReadOnlyCollection<T>, ReadOnlyCollection<T>> (
-          delegate { return InvokeVisitExpressionListMethod (expressions); }, expressions);
+      return InvokeAndCheckVisitMethod (arg => InvokeVisitExpressionListMethod (expressions), expressions);
     }
 
     protected ReadOnlyCollection<MemberBinding> InvokeAndCheckVisitMemberBindingList (ReadOnlyCollection<MemberBinding> expressions)
     {
-      return InvokeAndCheckVisitMethod<ReadOnlyCollection<MemberBinding>, ReadOnlyCollection<MemberBinding>> (
-          delegate { return InvokeVisitMethod ("VisitMemberBindingList", expressions); }, expressions);
+      return InvokeAndCheckVisitMethod (
+          arg => (ReadOnlyCollection<MemberBinding>) InvokeVisitMethod ("VisitMemberBindingList", expressions), expressions);
     }
 
     protected ReadOnlyCollection<ElementInit> InvokeAndCheckVisitElementInitList (ReadOnlyCollection<ElementInit> expressions)
     {
-      return InvokeAndCheckVisitMethod<ReadOnlyCollection<ElementInit>, ReadOnlyCollection<ElementInit>> (
-          delegate { return InvokeVisitMethod ("VisitElementInitList", expressions); }, expressions);
+      return InvokeAndCheckVisitMethod (
+          delegate { return (ReadOnlyCollection<ElementInit>) InvokeVisitMethod ("VisitElementInitList", expressions); }, expressions);
     }
 
     private R InvokeAndCheckVisitMethod<A, R> (Func<A, R> visitMethod, A argument)
@@ -83,14 +82,10 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       return result;
     }
 
-    protected T InvokeVisitMethod<T> (string methodName, T argument)
-    {
-      return InvokeVisitMethod<T, T> (methodName, argument);
-    }
 
-    protected TResult InvokeVisitMethod<TArg, TResult> (string methodName, TArg argument)
+    protected object InvokeVisitMethod (string methodName, object argument)
     {
-      return (TResult) _visitorMock.GetType ().GetMethod (methodName, BindingFlags.NonPublic | BindingFlags.Instance).Invoke (_visitorMock, new object[] { argument });
+      return _visitorMock.GetType ().GetMethod (methodName, BindingFlags.NonPublic | BindingFlags.Instance).Invoke (_visitorMock, new[] { argument });
     }
 
     protected ReadOnlyCollection<T> InvokeVisitExpressionListMethod<T> (ReadOnlyCollection<T> expressions) where T : Expression

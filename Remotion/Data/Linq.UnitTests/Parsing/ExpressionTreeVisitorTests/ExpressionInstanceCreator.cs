@@ -34,7 +34,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       NewArrayExpression arrayExpression = Expression.NewArrayInit (typeof (int));
       Expression trueExpression = Expression.Constant (true);
       LambdaExpression lambdaExpression = Expression.Lambda (zero);
-      LambdaExpression lambdaExpressionWithArguments = Expression.Lambda (zero, Expression.Parameter (typeof (int)));
+      LambdaExpression lambdaExpressionWithArguments = Expression.Lambda (zero, Expression.Parameter (typeof (int), "i"));
       NewExpression newExpression = Expression.New (typeof (List<int>).GetConstructor (new[] { typeof (int) }), zero);
 
       map[ExpressionType.Add] = Expression.Add (zero, zero);
