@@ -15,11 +15,13 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 
 namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
 {
   public class SimpleClass
   {
     public string Value;
+    public List<int> ListValue;
   }
 }

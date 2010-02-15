@@ -31,10 +31,11 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       Expression zero = Expression.Constant (0);
       Expression dateTimeValue = Expression.Constant (DateTime.MinValue);
       Expression zeroDouble = Expression.Constant (0.0);
-      NewArrayExpression arrayExpression = Expression.NewArrayInit (typeof (object));
+      NewArrayExpression arrayExpression = Expression.NewArrayInit (typeof (int));
       Expression trueExpression = Expression.Constant (true);
       LambdaExpression lambdaExpression = Expression.Lambda (zero);
-      NewExpression newExpression = Expression.New (typeof (List<int>));
+      LambdaExpression lambdaExpressionWithArguments = Expression.Lambda (zero, Expression.Parameter (typeof (int)));
+      NewExpression newExpression = Expression.New (typeof (List<int>).GetConstructor (new[] { typeof (int) }), zero);
 
       map[ExpressionType.Add] = Expression.Add (zero, zero);
       map[ExpressionType.AddChecked] = Expression.AddChecked (zero, zero);
@@ -42,7 +43,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       map[ExpressionType.AndAlso] = Expression.AndAlso (trueExpression, trueExpression);
       map[ExpressionType.ArrayLength] = Expression.ArrayLength (arrayExpression);
       map[ExpressionType.ArrayIndex] = Expression.ArrayIndex (arrayExpression, zero);
-      map[ExpressionType.Call] = Expression.Call (zero, typeof (int).GetMethod ("GetType"));
+      map[ExpressionType.Call] = Expression.Call (zero, typeof (int).GetMethod ("Equals", new[] { typeof (int) }), zero);
       map[ExpressionType.Coalesce] = Expression.Coalesce (arrayExpression, arrayExpression);
       map[ExpressionType.Conditional] = Expression.Condition (trueExpression, zero, zero);
       map[ExpressionType.Constant] = Expression.Constant (zero);
@@ -53,8 +54,8 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       map[ExpressionType.ExclusiveOr] = Expression.ExclusiveOr (trueExpression, trueExpression);
       map[ExpressionType.GreaterThan] = Expression.GreaterThan (zero, zero);
       map[ExpressionType.GreaterThanOrEqual] = Expression.GreaterThanOrEqual (zero, zero);
-      map[ExpressionType.Invoke] = Expression.Invoke (lambdaExpression);
-      map[ExpressionType.Lambda] = lambdaExpression;
+      map[ExpressionType.Invoke] = Expression.Invoke (lambdaExpressionWithArguments, zero);
+      map[ExpressionType.Lambda] = lambdaExpressionWithArguments;
       map[ExpressionType.LeftShift] = Expression.LeftShift (zero, zero);
       map[ExpressionType.LessThan] = Expression.LessThan (zero, zero);
       map[ExpressionType.LessThanOrEqual] = Expression.LessThanOrEqual (zero, zero);
@@ -104,12 +105,12 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
 
     public static MemberMemberBinding CreateMemberMemberBinding ()
     {
-      return Expression.MemberBind (typeof (SimpleClass).GetField ("Value"), new List<MemberBinding>());
+      return Expression.MemberBind (typeof (SimpleClass).GetField ("ListValue"), new List<MemberBinding>());
     }
 
     public static MemberListBinding CreateMemberListBinding ()
     {
-      return Expression.ListBind (typeof (SimpleClass).GetField ("Value"), new ElementInit[] { });
+      return Expression.ListBind (typeof (SimpleClass).GetField ("ListValue"), new ElementInit[] { });
     }
   }
 }

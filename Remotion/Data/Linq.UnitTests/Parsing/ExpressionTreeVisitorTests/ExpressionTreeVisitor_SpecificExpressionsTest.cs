@@ -189,13 +189,13 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     public void VisitLambdaExpression_ChangedParameters ()
     {
       var expression = (LambdaExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Lambda);
-      ReadOnlyCollection<ParameterExpression> newParameters = new List<ParameterExpression>().AsReadOnly();
+      ReadOnlyCollection<ParameterExpression> newParameters = new List<ParameterExpression> { Expression.Parameter (typeof (int)) }.AsReadOnly ();
       Expect.Call (InvokeVisitMethod<Expression> ("VisitExpression", expression.Body)).Return (expression.Body);
       Expect.Call (InvokeVisitExpressionListMethod (expression.Parameters)).Return (newParameters);
       var result = (LambdaExpression) InvokeAndCheckVisitExpression ("VisitLambdaExpression", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.Lambda));
-      Assert.That (result.Parameters, Is.SameAs (newParameters));
+      Assert.That (result.Parameters, Is.EqualTo (newParameters));
       Assert.That (result.Body, Is.SameAs (expression.Body));
     }
 
@@ -227,13 +227,13 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     public void VisitMethodCallExpression_ChangedArguments ()
     {
       var expression = (MethodCallExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Call);
-      ReadOnlyCollection<Expression> newParameters = new List<Expression>().AsReadOnly();
+      ReadOnlyCollection<Expression> newParameters = new List<Expression> { Expression.Constant (214578) }.AsReadOnly ();
       Expect.Call (InvokeVisitMethod<Expression> ("VisitExpression", expression.Object)).Return (expression.Object);
       Expect.Call (InvokeVisitExpressionListMethod (expression.Arguments)).Return (newParameters);
       var result = (MethodCallExpression) InvokeAndCheckVisitExpression ("VisitMethodCallExpression", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.Call));
-      Assert.That (result.Arguments, Is.SameAs (newParameters));
+      Assert.That (result.Arguments, Is.EqualTo (newParameters));
       Assert.That (result.Object, Is.SameAs (expression.Object));
     }
 
@@ -251,7 +251,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     public void VisitInvocationExpression_ChangedObject ()
     {
       var expression = (InvocationExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Invoke);
-      Expression newExpression = Expression.Lambda (Expression.Constant (1));
+      Expression newExpression = Expression.Lambda (Expression.Constant (1), Expression.Parameter (typeof (int)));
       Expect.Call (InvokeVisitMethod<Expression> ("VisitExpression", expression.Expression)).Return (newExpression);
       Expect.Call (InvokeVisitExpressionListMethod (expression.Arguments)).Return (expression.Arguments);
       var result = (InvocationExpression) InvokeAndCheckVisitExpression ("VisitInvocationExpression", expression);
@@ -265,13 +265,13 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     public void VisitInvocationExpression_ChangedArguments ()
     {
       var expression = (InvocationExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Invoke);
-      ReadOnlyCollection<Expression> newParameters = new List<Expression>().AsReadOnly();
+      ReadOnlyCollection<Expression> newParameters = new List<Expression> { Expression.Constant (214578) }.AsReadOnly ();
       Expect.Call (InvokeVisitMethod<Expression> ("VisitExpression", expression.Expression)).Return (expression.Expression);
       Expect.Call (InvokeVisitExpressionListMethod (expression.Arguments)).Return (newParameters);
       var result = (InvocationExpression) InvokeAndCheckVisitExpression ("VisitInvocationExpression", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.Invoke));
-      Assert.That (result.Arguments, Is.SameAs (newParameters));
+      Assert.That (result.Arguments, Is.EqualTo (newParameters));
       Assert.That (result.Expression, Is.SameAs (expression.Expression));
     }
 
@@ -309,12 +309,12 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     public void VisitNewExpression_ChangedArguments ()
     {
       var expression = (NewExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.New);
-      ReadOnlyCollection<Expression> newArguments = new List<Expression>().AsReadOnly();
+      ReadOnlyCollection<Expression> newArguments = new List<Expression> { Expression.Constant (214578) }.AsReadOnly ();
       Expect.Call (InvokeVisitExpressionListMethod (expression.Arguments)).Return (newArguments);
       var result = (NewExpression) InvokeAndCheckVisitExpression ("VisitNewExpression", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.New));
-      Assert.That (result.Arguments, Is.SameAs (newArguments));
+      Assert.That (result.Arguments, Is.EqualTo (newArguments));
     }
 
     [Test]
@@ -322,12 +322,12 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     {
       NewExpression expression = Expression.New (typeof (TypeForNewExpression).GetConstructors()[0], Expression.Constant (0));
 
-      var newArguments = new List<Expression> { Expression.Constant (1) }.AsReadOnly();
+      var newArguments = new List<Expression> { Expression.Constant (214578) }.AsReadOnly ();
       Expect.Call (InvokeVisitExpressionListMethod (expression.Arguments)).Return (newArguments);
       var result = (NewExpression) InvokeAndCheckVisitExpression ("VisitNewExpression", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.New));
-      Assert.That (result.Arguments, Is.SameAs (newArguments));
+      Assert.That (result.Arguments, Is.EqualTo (newArguments));
     }
 
     [Test]
@@ -338,12 +338,12 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
           new Expression[] { Expression.Constant (0) },
           typeof (TypeForNewExpression).GetProperty ("A"));
 
-      var newArguments = new List<Expression> { Expression.Constant (1) }.AsReadOnly();
+      var newArguments = new List<Expression> { Expression.Constant (214578) }.AsReadOnly ();
       Expect.Call (InvokeVisitExpressionListMethod (expression.Arguments)).Return (newArguments);
       var result = (NewExpression) InvokeAndCheckVisitExpression ("VisitNewExpression", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.New));
-      Assert.That (result.Arguments, Is.SameAs (newArguments));
+      Assert.That (result.Arguments, Is.EqualTo (newArguments));
       Assert.That (result.Members, Is.SameAs (expression.Members));
     }
 
@@ -357,27 +357,28 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     }
 
     [Test]
+    [Ignore ("TODO 2291")]
     public void VisitNewArrayInitExpression_Changed ()
     {
       var expression = (NewArrayExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.NewArrayInit);
-      ReadOnlyCollection<Expression> newExpressions = new List<Expression>().AsReadOnly();
+      ReadOnlyCollection<Expression> newExpressions = new List<Expression> { Expression.Constant (214578) }.AsReadOnly ();
       Expect.Call (InvokeVisitExpressionListMethod (expression.Expressions)).Return (newExpressions);
       var result = (NewArrayExpression) InvokeAndCheckVisitExpression ("VisitNewArrayExpression", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.NewArrayInit));
-      Assert.That (result.Expressions, Is.SameAs (newExpressions));
+      Assert.That (result.Expressions, Is.EqualTo (newExpressions));
     }
 
     [Test]
     public void VisitNewArrayBoundsExpression_Changed ()
     {
       var expression = (NewArrayExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.NewArrayBounds);
-      ReadOnlyCollection<Expression> newExpressions = new List<Expression> (new Expression[] { Expression.Constant (0) }).AsReadOnly();
+      ReadOnlyCollection<Expression> newExpressions = new List<Expression> (new Expression[] { Expression.Constant (214578) }).AsReadOnly ();
       Expect.Call (InvokeVisitExpressionListMethod (expression.Expressions)).Return (newExpressions);
       var result = (NewArrayExpression) InvokeAndCheckVisitExpression ("VisitNewArrayExpression", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.NewArrayBounds));
-      Assert.That (result.Expressions, Is.SameAs (newExpressions));
+      Assert.That (result.Expressions, Is.EqualTo (newExpressions));
     }
 
     [Test]
@@ -426,13 +427,15 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     public void VisitMemberInitExpression_ChangedBindings ()
     {
       var expression = (MemberInitExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.MemberInit);
-      ReadOnlyCollection<MemberBinding> newBindings = new List<MemberBinding>().AsReadOnly();
+      var capacityProperty = expression.NewExpression.Constructor.DeclaringType.GetProperty ("Capacity");
+
+      ReadOnlyCollection<MemberBinding> newBindings = new List<MemberBinding> { Expression.Bind (capacityProperty, Expression.Constant (214578)) }.AsReadOnly ();
       Expect.Call (InvokeVisitMethod<Expression> ("VisitExpression", expression.NewExpression)).Return (expression.NewExpression);
       Expect.Call (InvokeVisitMethod ("VisitMemberBindingList", expression.Bindings)).Return (newBindings);
       var result = (MemberInitExpression) InvokeAndCheckVisitExpression ("VisitMemberInitExpression", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.MemberInit));
-      Assert.That (result.Bindings, Is.SameAs (newBindings));
+      Assert.That (result.Bindings, Is.EqualTo (newBindings));
       Assert.That (result.NewExpression, Is.SameAs (expression.NewExpression));
     }
 
@@ -483,13 +486,13 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     {
       var expression = (ListInitExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.ListInit);
       ReadOnlyCollection<ElementInit> newInitializers =
-          new List<ElementInit> (new[] { Expression.ElementInit (typeof (List<int>).GetMethod ("Add"), Expression.Constant (1)) }).AsReadOnly();
+          new List<ElementInit> (new[] { Expression.ElementInit (typeof (List<int>).GetMethod ("Add"), Expression.Constant (214578)) }).AsReadOnly ();
       Expect.Call (InvokeVisitMethod<Expression> ("VisitExpression", expression.NewExpression)).Return (expression.NewExpression);
       Expect.Call (InvokeVisitMethod ("VisitElementInitList", expression.Initializers)).Return (newInitializers);
       var result = (ListInitExpression) InvokeAndCheckVisitExpression ("VisitListInitExpression", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.ListInit));
-      Assert.That (result.Initializers, Is.SameAs (newInitializers));
+      Assert.That (result.Initializers, Is.EqualTo (newInitializers));
       Assert.That (result.NewExpression, Is.SameAs (expression.NewExpression));
     }
 
@@ -507,13 +510,13 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     public void VisitElementInit_Changed ()
     {
       ElementInit elementInit = ExpressionInstanceCreator.CreateElementInit ();
-      ReadOnlyCollection<Expression> newArguments = new List<Expression> (new Expression[] { Expression.Constant (1) }).AsReadOnly();
+      ReadOnlyCollection<Expression> newArguments = new List<Expression> (new Expression[] { Expression.Constant (214578) }).AsReadOnly();
       Expect.Call (InvokeVisitExpressionListMethod (elementInit.Arguments)).Return (newArguments);
 
       var result = (ElementInit) InvokeAndCheckVisitObject ("VisitElementInit", elementInit);
       Assert.That (result, Is.Not.SameAs (elementInit));
       Assert.That (result.AddMethod, Is.SameAs (elementInit.AddMethod));
-      Assert.That (result.Arguments, Is.SameAs (newArguments));
+      Assert.That (result.Arguments, Is.EqualTo (newArguments));
     }
 
     [Test]
@@ -596,11 +599,13 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     public void VisitMemberMemberBinding_Changed ()
     {
       MemberMemberBinding memberMemberBinding = ExpressionInstanceCreator.CreateMemberMemberBinding ();
-      ReadOnlyCollection<MemberBinding> newBindings = new List<MemberBinding>().AsReadOnly();
+      var capacityProperty = ((FieldInfo) memberMemberBinding.Member).FieldType.GetProperty ("Capacity");
+     
+      ReadOnlyCollection<MemberBinding> newBindings = new List<MemberBinding> { Expression.Bind (capacityProperty, Expression.Constant (2765865)) }.AsReadOnly ();
       Expect.Call (InvokeVisitMethod ("VisitMemberBindingList", memberMemberBinding.Bindings)).Return (newBindings);
       var result = (MemberMemberBinding) InvokeAndCheckVisitObject ("VisitMemberMemberBinding", memberMemberBinding);
       Assert.That (result, Is.Not.SameAs (memberMemberBinding));
-      Assert.That (result.Bindings, Is.SameAs (newBindings));
+      Assert.That (result.Bindings, Is.EqualTo (newBindings));
       Assert.That (result.BindingType, Is.EqualTo (memberMemberBinding.BindingType));
       Assert.That (result.Member, Is.EqualTo (memberMemberBinding.Member));
     }
@@ -618,11 +623,12 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     public void VisitMemberListBinding_Changed ()
     {
       MemberListBinding memberListBinding = ExpressionInstanceCreator.CreateMemberListBinding();
-      ReadOnlyCollection<ElementInit> newInitializers = new List<ElementInit>().AsReadOnly();
+      var addMethod = ((FieldInfo) memberListBinding.Member).FieldType.GetMethod ("Add");
+      ReadOnlyCollection<ElementInit> newInitializers = new List<ElementInit> { Expression.ElementInit(addMethod, Expression.Constant (2765865)) }.AsReadOnly ();
       Expect.Call (InvokeVisitMethod ("VisitElementInitList", memberListBinding.Initializers)).Return (newInitializers);
       var result = (MemberListBinding) InvokeAndCheckVisitObject ("VisitMemberListBinding", memberListBinding);
       Assert.That (result, Is.Not.SameAs (memberListBinding));
-      Assert.That (result.Initializers, Is.SameAs (newInitializers));
+      Assert.That (result.Initializers, Is.EqualTo (newInitializers));
       Assert.That (result.BindingType, Is.EqualTo (memberListBinding.BindingType));
       Assert.That (result.Member, Is.EqualTo (memberListBinding.Member));
     }
