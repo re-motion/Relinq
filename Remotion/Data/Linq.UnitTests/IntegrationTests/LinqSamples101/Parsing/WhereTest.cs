@@ -32,7 +32,12 @@ namespace Remotion.Data.Linq.UnitTests.IntegrationTests.LinqSamples101.Parsing
     {
       CheckParsedQuery (
           () => from c in QuerySource.Customers where c.City == "London" select c,
-          "from Customer c in Customers where ([c].City = \"London\") select [c]");
+#if NET_3_5
+          "from Customer c in Customers where ([c].City = \"London\") select [c]"
+#else
+          "from Customer c in Customers where ([c].City == \"London\") select [c]"
+#endif
+          );
     }
 
     [Test]
