@@ -117,7 +117,13 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ExpressionTreeVisitors
       var result = AccessorFindingExpressionTreeVisitor.FindAccessorLambda (_searchedExpression, fullExpression, _simpleInputParameter);
 
       var inputParameter = Expression.Parameter (typeof (AnonymousType), "input");
-      var expectedResult = Expression.Lambda (Expression.Call (inputParameter, _anonymousTypeAGetter), inputParameter);  // input => input.get_a()
+      var expectedResult = Expression.Lambda (
+#if NET_3_5
+          Expression.Call (inputParameter, _anonymousTypeAGetter), 
+#else
+          Expression.MakeMemberAccess (inputParameter, _anonymousTypeAProperty), // .NET 4.0's Expression.New substitutes "get_a()" with "a"
+#endif
+          inputParameter);  // input => input.get_a()
       
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
@@ -142,6 +148,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ExpressionTreeVisitors
       var outerAnonymousTypeCtor = typeof (AnonymousType<int, AnonymousType>).GetConstructor (new[] { typeof (int), typeof (AnonymousType) });
       var outerAnonymousTypeAGetter = typeof (AnonymousType<int, AnonymousType>).GetMethod ("get_a");
       var outerAnonymousTypeBGetter = typeof (AnonymousType<int, AnonymousType>).GetMethod ("get_b");
+      var outerAnonymousTypeBProperty = typeof (AnonymousType<int, AnonymousType>).GetProperty ("b");
 
       // new AnonymousType (get_a = 2, get_b = new AnonymousType (get_a = _searchedExpression, get_b = 1))
       var innerExpression = Expression.New (
@@ -158,7 +165,11 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ExpressionTreeVisitors
 
       var inputParameter = Expression.Parameter (typeof (AnonymousType<int, AnonymousType>), "input");
       var expectedResult = Expression.Lambda (
+#if NET_3_5
           Expression.Call (Expression.Call (inputParameter, outerAnonymousTypeBGetter), _anonymousTypeAGetter), 
+#else
+          Expression.MakeMemberAccess (Expression.MakeMemberAccess (inputParameter, outerAnonymousTypeBProperty), _anonymousTypeAProperty),
+#endif
           inputParameter);  // input => input.get_b().get_a()
 
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
