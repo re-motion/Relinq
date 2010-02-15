@@ -29,6 +29,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       var map = new Dictionary<ExpressionType, Expression> ();
 
       Expression zero = Expression.Constant (0);
+      Expression dateTimeValue = Expression.Constant (DateTime.MinValue);
       Expression zeroDouble = Expression.Constant (0.0);
       NewArrayExpression arrayExpression = Expression.NewArrayInit (typeof (object));
       Expression trueExpression = Expression.Constant (true);
@@ -58,7 +59,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       map[ExpressionType.LessThan] = Expression.LessThan (zero, zero);
       map[ExpressionType.LessThanOrEqual] = Expression.LessThanOrEqual (zero, zero);
       map[ExpressionType.ListInit] = Expression.ListInit (newExpression, zero);
-      map[ExpressionType.MemberAccess] = Expression.MakeMemberAccess (null, typeof (DateTime).GetProperty ("Now"));
+      map[ExpressionType.MemberAccess] = Expression.MakeMemberAccess (dateTimeValue, typeof (DateTime).GetProperty ("Date"));
       map[ExpressionType.MemberInit] = Expression.MemberInit (newExpression);
       map[ExpressionType.Modulo] = Expression.Modulo (zero, zero);
       map[ExpressionType.Multiply] = Expression.Multiply (zero, zero);
