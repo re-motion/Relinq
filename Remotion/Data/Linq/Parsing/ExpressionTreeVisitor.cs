@@ -235,10 +235,11 @@ namespace Remotion.Data.Linq.Parsing
       ReadOnlyCollection<Expression> newExpressions = VisitExpressionList (expression.Expressions);
       if (newExpressions != expression.Expressions)
       {
+        var elementType = expression.Type.GetElementType();
         if (expression.NodeType == ExpressionType.NewArrayInit)
-          return Expression.NewArrayInit (expression.Type, newExpressions);
+          return Expression.NewArrayInit (elementType, newExpressions);
         else
-          return Expression.NewArrayBounds (expression.Type, newExpressions);
+          return Expression.NewArrayBounds (elementType, newExpressions);
       }
       return expression;
     }
