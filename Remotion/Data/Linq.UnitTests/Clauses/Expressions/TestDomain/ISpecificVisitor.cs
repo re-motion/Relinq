@@ -14,17 +14,12 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-using System;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Parsing;
 
-namespace Remotion.Data.Linq.UnitTests.Clauses.Expressions
+namespace Remotion.Data.Linq.UnitTests.Clauses.Expressions.TestDomain
 {
-  public class SpecificVisitor : ExpressionTreeVisitor, ISpecificVisitor
+  public interface ISpecificVisitor
   {
-    public virtual Expression VisitTestableExtensionExpression (TestableExtensionExpressionWithSpecificVisitor expression)
-    {
-      return expression;
-    }
+    Expression VisitTestableExtensionExpression (TestableExtensionExpressionWithSpecificVisitor expression);
   }
 }

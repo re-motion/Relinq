@@ -15,26 +15,15 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.Expressions;
-using Remotion.Data.Linq.Parsing;
 
-namespace Remotion.Data.Linq.UnitTests.Clauses.Expressions
+namespace Remotion.Data.Linq.UnitTests.Clauses.Expressions.TestDomain
 {
-  public class TestableExtensionExpressionWithSpecificVisitor : ExtensionExpression
+  public class TestableExtensionExpression : ExtensionExpression
   {
-    public TestableExtensionExpressionWithSpecificVisitor (Type type)
+    public TestableExtensionExpression (Type type)
         : base (type)
     {
-    }
-
-    public override Expression Accept (ExpressionTreeVisitor visitor)
-    {
-      var specificVisitor = visitor as ISpecificVisitor;
-      if (specificVisitor != null)
-        return specificVisitor.VisitTestableExtensionExpression (this);
-      else
-        return base.Accept (visitor);
     }
   }
 }

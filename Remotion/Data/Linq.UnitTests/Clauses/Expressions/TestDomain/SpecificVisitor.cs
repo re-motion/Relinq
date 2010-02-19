@@ -15,17 +15,16 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using Remotion.Data.Linq.Clauses.Expressions;
+using System.Linq.Expressions;
 using Remotion.Data.Linq.Parsing;
-using Remotion.Data.Linq.Utilities;
 
-namespace Remotion.Data.Linq.UnitTests.Clauses.Expressions
+namespace Remotion.Data.Linq.UnitTests.Clauses.Expressions.TestDomain
 {
-  public class TestableExtensionExpression : ExtensionExpression
+  public class SpecificVisitor : ExpressionTreeVisitor, ISpecificVisitor
   {
-    public TestableExtensionExpression (Type type)
-        : base (type)
+    public virtual Expression VisitTestableExtensionExpression (TestableExtensionExpressionWithSpecificVisitor expression)
     {
+      return expression;
     }
   }
 }
