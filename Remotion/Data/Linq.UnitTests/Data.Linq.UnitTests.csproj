@@ -175,7 +175,9 @@
     <Compile Include="Clauses\Expressions\ExtensionExpressionIntegrationTest.cs" />
     <Compile Include="Clauses\Expressions\ExtensionExpressionTest.cs" />
     <Compile Include="Clauses\Expressions\QuerySourceReferenceExpressionTest.cs" />
+    <Compile Include="Clauses\Expressions\TestDomain\ReducibleExtensionExpressionNotOverridingReduce.cs" />
     <Compile Include="Clauses\Expressions\TestDomain\ISpecificVisitor.cs" />
+    <Compile Include="Clauses\Expressions\TestDomain\ReducibleExtensionExpression.cs" />
     <Compile Include="Clauses\Expressions\TestDomain\SpecificVisitor.cs" />
     <Compile Include="Clauses\Expressions\TestDomain\TestableExtensionExpression.cs" />
     <Compile Include="Clauses\Expressions\TestDomain\TestableExtensionExpressionWithSpecificVisitor.cs" />

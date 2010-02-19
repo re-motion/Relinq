@@ -29,13 +29,19 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.Expressions
   [TestFixture]
   public class ExtensionExpressionTest
   {
+    private TestableExtensionExpression _expression;
+
+    [SetUp]
+    public void SetUp ()
+    {
+      _expression = new TestableExtensionExpression (typeof (int));
+    }
+
     [Test]
     public void Initialize_WithoutNodeType ()
     {
-      var expression = new TestableExtensionExpression (typeof (int));
-
-      Assert.That (expression.Type, Is.SameAs (typeof (int)));
-      Assert.That (expression.NodeType, Is.EqualTo (ExtensionExpression.ExtensionExpressionNodeType));
+      Assert.That (_expression.Type, Is.SameAs (typeof (int)));
+      Assert.That (_expression.NodeType, Is.EqualTo (ExtensionExpression.ExtensionExpressionNodeType));
     }
 
     [Test]
@@ -43,14 +49,13 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.Expressions
     {
       var mockRepository = new MockRepository ();
       var visitorMock = mockRepository.StrictMock<ExpressionTreeVisitor>();
-      var expression = new TestableExtensionExpression (typeof (int));
 
       visitorMock
-          .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (visitorMock, "VisitUnknownExpression", expression))
-          .Return (expression);
+          .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (visitorMock, "VisitUnknownExpression", _expression))
+          .Return (_expression);
       visitorMock.Replay ();
 
-      expression.Accept (visitorMock);
+      _expression.Accept (visitorMock);
 
       visitorMock.VerifyAllExpectations ();
     }
@@ -60,18 +65,37 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.Expressions
     {
       var mockRepository = new MockRepository ();
       var visitorMock = mockRepository.StrictMock<ExpressionTreeVisitor> ();
-      var expression = new TestableExtensionExpression (typeof (int));
       var expectedResult = Expression.Constant (0);
 
       visitorMock
-          .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (visitorMock, "VisitUnknownExpression", expression))
+          .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (visitorMock, "VisitUnknownExpression", _expression))
           .Return (expectedResult);
       visitorMock.Replay ();
 
-      var result = expression.Accept (visitorMock);
+      var result = _expression.Accept (visitorMock);
 
       visitorMock.VerifyAllExpectations ();
       Assert.That (result, Is.SameAs (expectedResult));
+    }
+
+    [Test]
+    public void CanReduce_False ()
+    {
+      Assert.That (_expression.CanReduce, Is.False);
+    }
+
+    [Test]
+    public void Reduce_NotReducible_ReturnsThis ()
+    {
+      Assert.That (_expression.Reduce (), Is.SameAs (_expression));
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Reducible nodes must override the Reduce method.")]
+    public void Reduce_Reducible_ThrowsIfNotOverridden ()
+    {
+      var expression = new ReducibleExtensionExpressionNotOverridingReduce (typeof (int));
+      expression.Reduce ();
     }
   }
 }

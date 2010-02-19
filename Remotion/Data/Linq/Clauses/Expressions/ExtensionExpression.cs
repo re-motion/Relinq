@@ -27,11 +27,64 @@ namespace Remotion.Data.Linq.Clauses.Expressions
   /// </summary>
   public abstract class ExtensionExpression : Expression
   {
+    /// <summary>
+    /// Defines a standard <see cref="ExpressionType"/> value that is used by all <see cref="ExtensionExpression"/> subclasses.
+    /// </summary>
     public const ExpressionType ExtensionExpressionNodeType = (ExpressionType) int.MaxValue;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ExtensionExpression"/> class.
+    /// </summary>
+    /// <param name="type">The type of the value represented by the <see cref="ExtensionExpression"/>.</param>
     protected ExtensionExpression (Type type)
         : base (ExtensionExpressionNodeType, ArgumentUtility.CheckNotNull ("", type))
     {
+    }
+
+    /// <summary>
+    /// Gets a value indicating whether this instance can be reduced to a tree of standard expressions.
+    /// </summary>
+    /// <value>
+    /// 	<see langword="true"/> if this instance can be reduced; otherwise, <see langword="false"/>.
+    /// </value>
+    /// <remarks>
+    /// <para>
+    /// If this method returns <see langword="true"/>, the <see cref="Reduce"/> method can be called in order to produce a new 
+    /// <see cref="Expression"/> that has the same semantics as this <see cref="ExtensionExpression"/> but consists of 
+    /// expressions of standard node types.
+    /// </para>
+    /// <para>
+    /// Subclasses overriding the <see cref="CanReduce"/> property to return <see langword="true" /> must also override the <see cref="Reduce"/> 
+    /// method and cannot call its base implementation.
+    /// </para>
+    /// </remarks>
+    public virtual bool CanReduce
+    {
+      get { return false; }
+    }
+
+    /// <summary>
+    /// Reduces this instance to a tree of standard expressions. If this instance cannot be reduced, the same <see cref="ExtensionExpression"/>
+    /// is returned.
+    /// </summary>
+    /// <returns>If <see cref="CanReduce"/> is <see langword="true" />, a reduced version of this <see cref="ExtensionExpression"/>; otherwise,
+    /// this <see cref="ExtensionExpression"/>.</returns>
+    /// <remarks>
+    /// <para>
+    /// This method can be called in order to produce a new <see cref="Expression"/> that has the same semantics as this 
+    /// <see cref="ExtensionExpression"/> but consists of expressions of standard node types. The reduction need not be complete, nodes can be 
+    /// returned that themselves must be reduced.
+    /// </para>
+    /// <para>
+    /// Subclasses overriding the <see cref="CanReduce"/> property to return <see langword="true" /> must also override this method and cannot
+    /// call the base implementation.
+    /// </para>
+    /// </remarks>
+    public virtual Expression Reduce ()
+    {
+      if (CanReduce)
+        throw new InvalidOperationException ("Reducible nodes must override the Reduce method.");
+      return this;
     }
 
     /// <summary>

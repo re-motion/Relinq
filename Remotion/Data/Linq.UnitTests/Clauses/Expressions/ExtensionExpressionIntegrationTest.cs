@@ -15,8 +15,11 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Linq.Expressions;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.UnitTests.Clauses.Expressions.TestDomain;
+using Remotion.Data.Linq.UnitTests.Parsing;
 using Rhino.Mocks;
 
 namespace Remotion.Data.Linq.UnitTests.Clauses.Expressions
@@ -33,6 +36,24 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.Expressions
       expression.Accept (visitorMock);
 
       visitorMock.AssertWasCalled (mock => mock.VisitTestableExtensionExpression (expression));
+    }
+
+    [Test]
+    public void CanReduce_True ()
+    {
+      var expression = new ReducibleExtensionExpression (typeof (int));
+      Assert.That (expression.CanReduce, Is.True);
+    }
+
+    [Test]
+    public void Reduce ()
+    {
+      var expression = new ReducibleExtensionExpression (typeof (int));
+
+      var result = expression.Reduce ();
+
+      var expectedExpression = Expression.Constant (0);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, result);
     }
   }
 }
