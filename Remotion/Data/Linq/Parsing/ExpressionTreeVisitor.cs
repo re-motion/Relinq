@@ -139,7 +139,6 @@ namespace Remotion.Data.Linq.Parsing
       if (newLeft != expression.Left || newRight != expression.Right || newConversion != expression.Conversion)
       {
         return Expression.MakeBinary (expression.NodeType, newLeft, newRight, expression.IsLiftedToNull, expression.Method, newConversion);
-            //, expression.IsLiftedToNull, expression.Method, expression.Conversion);
       }
       return expression;
     }
