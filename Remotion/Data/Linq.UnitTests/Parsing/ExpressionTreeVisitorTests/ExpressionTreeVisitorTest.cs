@@ -20,7 +20,6 @@ using System.Reflection;
 using NUnit.Framework;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
-using Remotion.Data.Linq.UnitTests.TestUtilities;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;
 
@@ -42,6 +41,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     {
       CheckDelegation (_mockRepository, "VisitUnknownExpression", (ExpressionType) (-1));
     }
+
 
     [Test]
     public void VisitExpression_Null ()

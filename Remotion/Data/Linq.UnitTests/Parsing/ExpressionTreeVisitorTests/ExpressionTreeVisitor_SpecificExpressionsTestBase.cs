@@ -43,6 +43,11 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       set { _mockRepository = value; }
     }
 
+    public ExpressionTreeVisitor VisitorMock
+    {
+      get { return _visitorMock; }
+    }
+
     protected Expression InvokeAndCheckVisitExpression (string methodName, Expression expression)
     {
       return (Expression) InvokeAndCheckVisitObject (methodName, expression);
@@ -80,11 +85,6 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       _mockRepository.VerifyAll ();
 
       return result;
-    }
-
-    protected Expression InvokeVisitExpressionMethod (Expression argument)
-    {
-      return _visitorMock.VisitExpression (argument);
     }
 
     protected object InvokeVisitMethod (string methodName, object argument)

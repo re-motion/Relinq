@@ -151,6 +151,6 @@ namespace Remotion.Data.Linq.Clauses.Expressions
     /// be returned holding the new child nodes. If the node has no children or the visitor does not replace any child node, the method should
     /// return this <see cref="ExtensionExpression"/>. 
     /// </remarks>
-    protected abstract Expression VisitChildren (ExpressionTreeVisitor visitor);
+    protected internal abstract Expression VisitChildren (ExpressionTreeVisitor visitor);
   }
 }
