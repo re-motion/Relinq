@@ -22,6 +22,7 @@ using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;
+using NUnit.Framework.SyntaxHelpers;
 
 namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
 {
@@ -34,6 +35,23 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     public void Setup()
     {
       _mockRepository = new MockRepository();
+    }
+
+    [Test]
+    public void VisitExpression_ExtensionExpression ()
+    {
+      var expectedResult = Expression.Constant (0);
+
+      var visitor = new TestableExpressionTreeVisitor ();
+      
+      var extensionExpressionMock = _mockRepository.StrictMock<ExtensionExpression> (typeof (int));
+      extensionExpressionMock.Expect (mock => mock.Accept (visitor)).Return (expectedResult);
+      extensionExpressionMock.Replay ();
+
+      var result = visitor.VisitExpression (extensionExpressionMock);
+      extensionExpressionMock.VerifyAllExpectations ();
+
+      Assert.That (result, Is.SameAs (expectedResult));
     }
 
     [Test]

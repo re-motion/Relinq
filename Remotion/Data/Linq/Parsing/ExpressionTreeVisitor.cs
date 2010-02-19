@@ -36,6 +36,10 @@ namespace Remotion.Data.Linq.Parsing
       if (expression == null)
         return null;
 
+      var extensionExpression = expression as ExtensionExpression;
+      if (extensionExpression != null)
+        return extensionExpression.Accept (this);
+
       switch (expression.NodeType)
       {
         case ExpressionType.ArrayLength:
