@@ -15,12 +15,14 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.UnitTests.Clauses.Expressions.TestDomain;
+using Remotion.Data.Linq.UnitTests.Parsing;
 using Rhino.Mocks;
 using Remotion.Data.Linq.UnitTests.TestUtilities;
 
@@ -30,11 +32,13 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.Expressions
   public class ExtensionExpressionTest
   {
     private TestableExtensionExpression _expression;
+    private MockRepository _mockRepository;
 
     [SetUp]
     public void SetUp ()
     {
       _expression = new TestableExtensionExpression (typeof (int));
+      _mockRepository = new MockRepository ();
     }
 
     [Test]
@@ -47,8 +51,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.Expressions
     [Test]
     public void Accept_CallsVisitUnknownExpression ()
     {
-      var mockRepository = new MockRepository ();
-      var visitorMock = mockRepository.StrictMock<ExpressionTreeVisitor>();
+      var visitorMock = _mockRepository.StrictMock<ExpressionTreeVisitor>();
 
       visitorMock
           .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (visitorMock, "VisitUnknownExpression", _expression))
@@ -63,8 +66,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.Expressions
     [Test]
     public void Accept_ReturnsResultOf_VisitUnknownExpression ()
     {
-      var mockRepository = new MockRepository ();
-      var visitorMock = mockRepository.StrictMock<ExpressionTreeVisitor> ();
+      var visitorMock = _mockRepository.StrictMock<ExpressionTreeVisitor> ();
       var expectedResult = Expression.Constant (0);
 
       visitorMock
@@ -96,6 +98,80 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.Expressions
     {
       var expression = new ReducibleExtensionExpressionNotOverridingReduce (typeof (int));
       expression.Reduce ();
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Reduce and check can only be called on reducible nodes.")]   
+    public void ReduceAndCheck_ThrowsIfNotReducible ()
+    {
+      _expression.ReduceAndCheck ();
+    }
+
+    [Test]
+    public void ReduceAndCheck_CallsReduce_IfReducible ()
+    {
+      var expression = new ReducibleExtensionExpression (typeof (int));
+
+      var result = expression.ReduceAndCheck ();
+      
+      var expectedResult = Expression.Constant (0);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Reduce cannot return null.")]
+    public void ReduceAndCheck_ThrowsIfReducesToNull ()
+    {
+      var expressionPartialMock = CreateReduciblePartialMock(typeof (int));
+      expressionPartialMock.Expect (mock => mock.Reduce ()).Return (null);
+      expressionPartialMock.Replay ();
+      
+      expressionPartialMock.ReduceAndCheck ();
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Reduce cannot return the original expression.")]
+    public void ReduceAndCheck_ThrowsIfReducesToSame ()
+    {
+      var expressionPartialMock = CreateReduciblePartialMock (typeof (int));
+      expressionPartialMock.Expect (mock => mock.Reduce ()).Return (expressionPartialMock);
+      expressionPartialMock.Replay ();
+
+      expressionPartialMock.ReduceAndCheck ();
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Reduce must produce an expression of a compatible type.")]
+    public void ReduceAndCheck_ThrowsIfReducesToDifferentType ()
+    {
+      var expressionOfDifferentType = Expression.Constant ("string");
+
+      var expressionPartialMock = CreateReduciblePartialMock (typeof (int));
+      expressionPartialMock.Expect (mock => mock.Reduce ()).Return (expressionOfDifferentType);
+      expressionPartialMock.Replay ();
+
+      expressionPartialMock.ReduceAndCheck ();
+    }
+
+    [Test]
+    public void ReduceAndCheck_SucceedsIfReducesToSubType ()
+    {
+      var expressionOfSubtype = Expression.Constant (new List<int>());
+
+      var expressionPartialMock = CreateReduciblePartialMock (typeof (IList<int>));
+      expressionPartialMock.Expect (mock => mock.Reduce ()).Return (expressionOfSubtype);
+      expressionPartialMock.Replay ();
+
+      var result = expressionPartialMock.ReduceAndCheck ();
+
+      Assert.That (result, Is.SameAs (expressionOfSubtype));
+    }
+    
+    private ExtensionExpression CreateReduciblePartialMock (Type expressionValueType)
+    {
+      var expressionPartialMock = _mockRepository.PartialMock<ExtensionExpression> (expressionValueType);
+      expressionPartialMock.Expect (mock => mock.CanReduce).Return (true);
+      return expressionPartialMock;
     }
   }
 }

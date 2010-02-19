@@ -25,5 +25,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.Expressions.TestDomain
         : base (type)
     {
     }
+
+    
   }
 }

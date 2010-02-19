@@ -88,6 +88,41 @@ namespace Remotion.Data.Linq.Clauses.Expressions
     }
 
     /// <summary>
+    /// Calls the <see cref="Reduce"/> method and checks certain invariants before returning the result. This method can only be called when
+    /// <see cref="CanReduce"/> returns <see langword="true" />.
+    /// </summary>
+    /// <returns>A reduced version of this <see cref="ExtensionExpression"/>.</returns>
+    /// <exception cref="InvalidOperationException">This <see cref="ExtensionExpression"/> is not reducible - or - the <see cref="Reduce"/> method 
+    /// violated one of the invariants (see Remarks).</exception>
+    /// <remarks>
+    ///   This method checks the following invariants:
+    ///   <list type="bullet">
+    ///     <item><see cref="Reduce"/> must not return <see langword="null" />.</item>
+    ///     <item><see cref="Reduce"/> must not return the original <see cref="ExtensionExpression"/>.</item>
+    ///     <item>
+    ///       The new expression returned by <see cref="Reduce"/> must be assignment-compatible with the type of the original 
+    ///       <see cref="ExtensionExpression"/>.
+    ///     </item>
+    ///   </list>
+    ///   </remarks>
+    public Expression ReduceAndCheck ()
+    {
+      if (!CanReduce)
+        throw new InvalidOperationException ("Reduce and check can only be called on reducible nodes.");
+
+      var result = Reduce();
+      
+      if (result == null)
+        throw new InvalidOperationException ("Reduce cannot return null.");
+      if (result == this)
+        throw new InvalidOperationException ("Reduce cannot return the original expression.");
+      if (!Type.IsAssignableFrom (result.Type))
+        throw new InvalidOperationException ("Reduce must produce an expression of a compatible type.");
+
+      return result;
+    }
+
+    /// <summary>
     /// Accepts the specified visitor, by default dispatching to <see cref="ExpressionTreeVisitor.VisitUnknownExpression"/>. 
     /// Inheritors of the <see cref="ExtensionExpression"/> class can override this method in order to dispatch to a specific Visit method.
     /// </summary>
