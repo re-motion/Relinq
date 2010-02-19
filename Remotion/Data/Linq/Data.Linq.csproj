@@ -54,6 +54,7 @@
     <Compile Include="Backend\UnmappedItemException.cs" />
     <Compile Include="Clauses\AdditionalFromClause.cs" />
     <Compile Include="Clauses\CloneContext.cs" />
+    <Compile Include="Clauses\Expressions\ExtensionExpression.cs" />
     <Compile Include="Clauses\ExpressionTreeVisitors\ReverseResolvingExpressionTreeVisitor.cs" />
     <Compile Include="Clauses\ResultOperators\ChoiceResultOperatorBase.cs" />
     <Compile Include="Clauses\ResultOperators\AnyResultOperator.cs" />

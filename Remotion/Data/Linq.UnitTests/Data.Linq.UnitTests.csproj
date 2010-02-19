@@ -172,7 +172,9 @@
     <Compile Include="Backend\SqlGeneration\StubParameterCollection.cs" />
     <Compile Include="Backend\UnmappedItemExceptionTest.cs" />
     <Compile Include="Clauses\AdditionalFromClauseTest.cs" />
+    <Compile Include="Clauses\Expressions\ExtensionExpressionTest.cs" />
     <Compile Include="Clauses\Expressions\QuerySourceReferenceExpressionTest.cs" />
+    <Compile Include="Clauses\Expressions\TestableExtensionExpression.cs" />
     <Compile Include="Clauses\ExpressionTreeVisitors\AccessorFindingExpressionTreeVisitorTest.cs" />
     <Compile Include="Clauses\ExpressionTreeVisitors\CloningExpressionTreeVisitorTest.cs" />
     <Compile Include="Clauses\ExpressionTreeVisitors\FormattingExpressionTreeVisitorTest.cs" />

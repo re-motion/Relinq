@@ -151,7 +151,7 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation
       return expression;
     }
 
-    protected override Expression VisitUnknownExpression (Expression expression)
+    protected internal override Expression VisitUnknownExpression (Expression expression)
     {
       // Ignore
       return expression;

@@ -89,7 +89,7 @@ namespace Remotion.Data.Linq.Clauses.ExpressionTreeVisitors
       return expression;
     }
 
-    protected override Expression VisitUnknownExpression (Expression expression)
+    protected internal override Expression VisitUnknownExpression (Expression expression)
     {
       //ignore
       return expression;

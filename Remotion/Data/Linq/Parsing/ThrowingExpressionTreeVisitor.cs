@@ -52,7 +52,7 @@ namespace Remotion.Data.Linq.Parsing
       throw CreateUnhandledItemException (unhandledItem, visitMethod);
     }
 
-    protected override Expression VisitUnknownExpression (Expression expression)
+    protected internal override Expression VisitUnknownExpression (Expression expression)
     {
       return VisitUnhandledItem<Expression, Expression> (expression, "VisitUnknownExpression", BaseVisitUnknownExpression);
     }

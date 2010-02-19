@@ -53,7 +53,7 @@ namespace Remotion.Data.Linq.Clauses.ExpressionTreeVisitors
       return Expression.Parameter (expression.Type, "{" + expression.QueryModel + "}");
     }
 
-    protected override Expression VisitUnknownExpression (Expression expression)
+    protected internal override Expression VisitUnknownExpression (Expression expression)
     {
       //ignore
       return expression;
