@@ -41,7 +41,7 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
       _replacementExpression = replacementExpression;
     }
 
-    protected override Expression VisitExpression (Expression expression)
+    public override Expression VisitExpression (Expression expression)
     {
       if (expression == _replacedExpression)
         return _replacementExpression;

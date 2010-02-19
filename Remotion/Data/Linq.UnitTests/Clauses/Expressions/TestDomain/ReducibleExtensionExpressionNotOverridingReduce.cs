@@ -15,7 +15,9 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.Expressions;
+using Remotion.Data.Linq.Parsing;
 
 namespace Remotion.Data.Linq.UnitTests.Clauses.Expressions.TestDomain
 {
@@ -29,6 +31,11 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.Expressions.TestDomain
     public override bool CanReduce
     {
       get { return true; }
+    }
+
+    protected override Expression VisitChildren (ExpressionTreeVisitor visitor)
+    {
+      return this;
     }
   }
 }

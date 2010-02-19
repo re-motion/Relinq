@@ -139,5 +139,18 @@ namespace Remotion.Data.Linq.Clauses.Expressions
 
       return visitor.VisitUnknownExpression (this);
     }
+
+    /// <summary>
+    /// Must be overridden by <see cref="ExtensionExpression"/> subclasses by calling <see cref="ExpressionTreeVisitor.VisitExpression"/> on all 
+    /// children of this extension node. 
+    /// </summary>
+    /// <param name="visitor">The visitor to visit the child nodes with.</param>
+    /// <returns>This <see cref="ExtensionExpression"/>, or an expression that should replace it in the surrounding tree.</returns>
+    /// <remarks>
+    /// If the visitor replaces any of the child nodes, a new <see cref="ExtensionExpression"/> instance should
+    /// be returned holding the new child nodes. If the node has no children or the visitor does not replace any child node, the method should
+    /// return this <see cref="ExtensionExpression"/>. 
+    /// </remarks>
+    protected abstract Expression VisitChildren (ExpressionTreeVisitor visitor);
   }
 }

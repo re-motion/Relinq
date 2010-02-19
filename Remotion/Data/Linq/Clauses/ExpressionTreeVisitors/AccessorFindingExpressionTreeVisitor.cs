@@ -104,7 +104,7 @@ namespace Remotion.Data.Linq.Clauses.ExpressionTreeVisitors
 
     public LambdaExpression AccessorPath { get; private set; }
 
-    protected override Expression VisitExpression (Expression expression)
+    public override Expression VisitExpression (Expression expression)
     {
       if (Equals (expression, _searchedExpression))
       {

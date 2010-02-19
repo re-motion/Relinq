@@ -64,7 +64,7 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
       return expression;
     }
 
-    protected override Expression VisitExpression (Expression expression)
+    public override Expression VisitExpression (Expression expression)
     {
       // Only evaluate expressions which do not use any of the surrounding parameter expressions. Don't evaluate
       // lambda expressions (even if you could), we want to analyze those later on.

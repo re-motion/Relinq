@@ -36,5 +36,10 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.Expressions.TestDomain
       else
         return base.Accept (visitor);
     }
+
+    protected override Expression VisitChildren (ExpressionTreeVisitor visitor)
+    {
+      return this;
+    }
   }
 }

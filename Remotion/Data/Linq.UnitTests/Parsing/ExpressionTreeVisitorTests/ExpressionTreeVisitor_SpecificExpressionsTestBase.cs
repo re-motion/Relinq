@@ -82,6 +82,10 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       return result;
     }
 
+    protected Expression InvokeVisitExpressionMethod (Expression argument)
+    {
+      return _visitorMock.VisitExpression (argument);
+    }
 
     protected object InvokeVisitMethod (string methodName, object argument)
     {

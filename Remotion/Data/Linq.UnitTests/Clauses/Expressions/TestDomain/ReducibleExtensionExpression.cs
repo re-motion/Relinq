@@ -17,6 +17,7 @@
 using System;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.Expressions;
+using Remotion.Data.Linq.Parsing;
 
 namespace Remotion.Data.Linq.UnitTests.Clauses.Expressions.TestDomain
 {
@@ -35,6 +36,11 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.Expressions.TestDomain
     public override Expression Reduce ()
     {
       return Constant (0);
+    }
+
+    protected override Expression VisitChildren (ExpressionTreeVisitor visitor)
+    {
+      return this;
     }
   }
 }

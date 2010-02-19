@@ -48,7 +48,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     {
       ExpressionTreeVisitor visitor = _mockRepository.PartialMock<ExpressionTreeVisitor>();
       _mockRepository.ReplayAll ();
-      Assert.IsNull (PrivateInvoke.InvokeNonPublicMethod (visitor, "VisitExpression", new object[] { null }));
+      Assert.IsNull (visitor.VisitExpression (null));
     }
 
     [Test]
@@ -165,21 +165,20 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
 
     private void CheckDelegation (MockRepository repository, string methodName, params Expression[] expressions)
     {
-      ExpressionTreeVisitor visitorMock = repository.StrictMock<ExpressionTreeVisitor> ();
+      var visitorMock = repository.StrictMock<ExpressionTreeVisitor> ();
 
-      MethodInfo visitExpressionMethod = visitorMock.GetType ().GetMethod ("VisitExpression", BindingFlags.NonPublic | BindingFlags.Instance);
       MethodInfo methodToBeCalled = visitorMock.GetType ().GetMethod (methodName, BindingFlags.NonPublic | BindingFlags.Instance);
       Assert.IsNotNull (methodToBeCalled);
 
       foreach (Expression expression in expressions)
       {
         repository.BackToRecord (visitorMock);
-        Expect.Call (visitExpressionMethod.Invoke (visitorMock, new object[] { expression })).CallOriginalMethod (OriginalCallOptions.CreateExpectation);
+        Expect.Call (visitorMock.VisitExpression (expression)).CallOriginalMethod (OriginalCallOptions.CreateExpectation);
         Expect.Call (methodToBeCalled.Invoke (visitorMock, new object[] { expression })).Return (expression);
         
         repository.Replay (visitorMock);
 
-        object result = visitExpressionMethod.Invoke (visitorMock, new object[] { expression });
+        object result = visitorMock.VisitExpression (expression);
         Assert.AreSame (expression, result);
         repository.Verify (visitorMock);
       }

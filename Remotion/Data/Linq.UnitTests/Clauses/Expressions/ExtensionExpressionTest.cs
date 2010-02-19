@@ -166,7 +166,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.Expressions
 
       Assert.That (result, Is.SameAs (expressionOfSubtype));
     }
-    
+
     private ExtensionExpression CreateReduciblePartialMock (Type expressionValueType)
     {
       var expressionPartialMock = _mockRepository.PartialMock<ExtensionExpression> (expressionValueType);

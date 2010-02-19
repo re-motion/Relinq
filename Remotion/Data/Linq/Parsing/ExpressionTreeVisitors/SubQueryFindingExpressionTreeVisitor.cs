@@ -48,7 +48,7 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
       _innerParser = new QueryParser (new ExpressionTreeParser (_nodeTypeRegistry));
     }
 
-    protected override Expression VisitExpression (Expression expression)
+    public override Expression VisitExpression (Expression expression)
     {
       var potentialQueryOperatorExpression = _innerParser.ExpressionTreeParser.GetQueryOperatorExpression (expression);
       if (potentialQueryOperatorExpression != null

@@ -52,7 +52,7 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation
     private readonly PartialEvaluationInfo _partialEvaluationInfo = new PartialEvaluationInfo();
     private bool _isCurrentSubtreeEvaluatable;
 
-    protected override Expression VisitExpression (Expression expression)
+    public override Expression VisitExpression (Expression expression)
     {
       if (expression == null)
         return base.VisitExpression (expression);

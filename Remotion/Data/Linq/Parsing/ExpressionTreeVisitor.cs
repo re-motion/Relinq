@@ -31,7 +31,7 @@ namespace Remotion.Data.Linq.Parsing
   /// </summary>
   public abstract class ExpressionTreeVisitor
   {
-    protected virtual Expression VisitExpression (Expression expression)
+    public virtual Expression VisitExpression (Expression expression)
     {
       if (expression == null)
         return null;
