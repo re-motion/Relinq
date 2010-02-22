@@ -124,7 +124,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.Expressions
     {
       var expressionPartialMock = CreateReduciblePartialMock(typeof (int));
       expressionPartialMock.Expect (mock => mock.Reduce ()).Return (null);
-      expressionPartialMock.Replay ();
+      expressionPartialMock.Replay (); 
       
       expressionPartialMock.ReduceAndCheck ();
     }
