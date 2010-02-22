@@ -15,36 +15,42 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using Remotion.Data.Linq.Clauses;
+using System.Linq.Expressions;
+using Remotion.Data.Linq.Clauses.Expressions;
+using Remotion.Data.Linq.Parsing;
+using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
   /// <summary>
-  /// <see cref="SqlQueryModelVisitor"/> generates a <see cref="SqlStatement"/> from a query model.
+  /// <see cref="SqlTableExpression"/> holds source of a from expression.
   /// </summary>
-  public class SqlQueryModelVisitor : QueryModelVisitorBase
+  public class SqlTableExpression : ExtensionExpression
   {
-    private readonly SqlStatement _sqlStatement;
+    private SqlTableSource _sqlTableSource;
 
-    public SqlQueryModelVisitor ()
+    public SqlTableExpression (Type type)
+        : base (type)
     {
-      _sqlStatement = new SqlStatement();
+    }
+    
+    public SqlTableSource SqlTableSource
+    {
+      get { return _sqlTableSource; }
+      set { _sqlTableSource = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
-    public SqlStatement SqlStatement
+    protected internal override Expression VisitChildren (ExpressionTreeVisitor visitor)
     {
-      get { return _sqlStatement; }
+      return this;
     }
 
-    public override void VisitSelectClause (SelectClause selectClause, QueryModel queryModel)
+    public override Expression Accept (ExpressionTreeVisitor visitor)
     {
-      _sqlStatement.SelectProjection = selectClause.Selector;
+      //cast visitor to needed implementation of ExpressionTreeVisitor
+      //check if casted visitor supports method to call
+      //call correct VisitMethod of visitor
+      throw new NotImplementedException();
     }
-
-    public override void VisitMainFromClause (MainFromClause fromClause, QueryModel queryModel)
-    {
-      _sqlStatement.FromExpression = SqlFromExpressionVisitor.TranslateFromExpression (fromClause.FromExpression);
-    }
-
   }
 }

@@ -15,42 +15,14 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Linq.Expressions;
-using Remotion.Data.Linq.Clauses.Expressions;
-using Remotion.Data.Linq.Parsing;
-using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
   /// <summary>
-  /// <see cref="FromExpression"/> holds expression of from part of an expression query.
+  /// <see cref="SqlTableSource"/> holds the expression from the original FromExpression.
   /// </summary>
-  public class FromExpression : ExtensionExpression
+  public abstract class SqlTableSource
   {
-    private Expression _expression;
-
-    public FromExpression (Type type, Expression expression)
-        : base(type)
-    {
-      ArgumentUtility.CheckNotNull ("expression", expression);
-
-      Expression = expression;
-    }
-
-    public Expression Expression
-    {
-      get { return _expression; }
-      set { _expression = ArgumentUtility.CheckNotNull("value",value); }
-    }
-
-    protected internal override Expression VisitChildren (ExpressionTreeVisitor visitor)
-    {
-      return this;
-    }
-
-    public override Expression Accept (ExpressionTreeVisitor visitor)
-    {
-      throw new NotImplementedException();
-    }
+    
   }
 }

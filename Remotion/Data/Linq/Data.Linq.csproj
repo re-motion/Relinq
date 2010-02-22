@@ -143,10 +143,12 @@
     <Compile Include="QueryModelBuilder.cs" />
     <Compile Include="QueryModelVisitorBase.cs" />
     <Compile Include="Clauses\ExpressionTreeVisitors\FormattingExpressionTreeVisitor.cs" />
-    <Compile Include="SqlBackend\SqlStatementModel\FromExpression.cs" />
-    <Compile Include="SqlBackend\SqlStatementModel\SelectProjection.cs" />
+    <Compile Include="SqlBackend\SqlStatementModel\ConstantTableSource.cs" />
+    <Compile Include="SqlBackend\SqlStatementModel\SqlFromExpressionVisitor.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlQueryModelVisitor.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlStatement.cs" />
+    <Compile Include="SqlBackend\SqlStatementModel\SqlTableExpression.cs" />
+    <Compile Include="SqlBackend\SqlStatementModel\SqlTableSource.cs" />
     <Compile Include="Transformations\SubQueryFromClauseFlattener.cs" />
     <Compile Include="UniqueIdentifierGenerator.cs" />
     <Compile Include="EagerFetching\FetchOneRequest.cs" />

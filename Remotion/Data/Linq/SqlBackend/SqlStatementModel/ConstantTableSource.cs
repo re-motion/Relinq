@@ -16,41 +16,24 @@
 // 
 using System;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Clauses.Expressions;
-using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
   /// <summary>
-  /// <see cref="SelectProjection"/> holds expression of select part of an expression query.
+  /// <see cref="ConstantTableSource"/> holds the constant from the original FromExpression.
   /// </summary>
-  public class SelectProjection : ExtensionExpression
+  public class ConstantTableSource : SqlTableSource
   {
-    private Expression _expression;
-
-    public SelectProjection (Type type, Expression expression)
-        : base (type)
+    public ConstantTableSource (ConstantExpression constantExpression)
     {
-      ArgumentUtility.CheckNotNull ("expression", expression);
-      _expression = expression;
+      ArgumentUtility.CheckNotNull ("constantExpression", constantExpression);
+
+      ConstantExpression = constantExpression;
     }
 
-    public Expression Expression
-    {
-      get { return _expression; }
-      set { _expression = ArgumentUtility.CheckNotNull ("value", value); }
-    }
+    public ConstantExpression ConstantExpression { get; private set; }
+    
 
-    protected internal override Expression VisitChildren (ExpressionTreeVisitor visitor)
-    {
-      return this;
-    }
-
-    public override Expression Accept (ExpressionTreeVisitor visitor)
-    {
-      throw new NotImplementedException();
-    }
   }
 }
