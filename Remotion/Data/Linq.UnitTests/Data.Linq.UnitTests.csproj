@@ -364,6 +364,7 @@
     <Compile Include="QueryModelVisitorBaseTest.cs" />
     <Compile Include="QueryProviderBaseTest.cs" />
     <Compile Include="ReflectionUtilityTest.cs" />
+    <Compile Include="SqlBackend\SqlStatementModel\SqlQueryModelVisitorTest.cs" />
     <Compile Include="TestDomain\GoodStudent.cs" />
     <Compile Include="TestDomain\IndustrialSector.cs" />
     <Compile Include="TestDomain\QueryableWithTooManyArguments.cs" />
