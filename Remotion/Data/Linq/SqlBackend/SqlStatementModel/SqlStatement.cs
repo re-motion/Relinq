@@ -15,6 +15,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Linq.Expressions;
 using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
@@ -24,16 +25,16 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   /// </summary>
   public class SqlStatement
   {
-    private SelectProjection _selectProjection;
-    private FromExpression _fromExpression;
+    private Expression _selectProjection;
+    private Expression _fromExpression;
 
-    public SelectProjection SelectProjection
+    public Expression SelectProjection
     {
       get { return _selectProjection; }
       set { _selectProjection = ArgumentUtility.CheckNotNull("value",value); }
     }
 
-    public FromExpression FromExpression
+    public Expression FromExpression
     {
       get { return _fromExpression; }
       set { _fromExpression = ArgumentUtility.CheckNotNull("value",value); }

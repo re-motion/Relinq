@@ -24,7 +24,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   /// </summary>
   public class SqlQueryModelVisitor : QueryModelVisitorBase
   {
-    private SqlStatement _sqlStatement;
+    private readonly SqlStatement _sqlStatement;
 
     public SqlQueryModelVisitor ()
     {
@@ -38,12 +38,13 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 
     public override void VisitSelectClause (SelectClause selectClause, QueryModel queryModel)
     {
-      _sqlStatement.SelectProjection = new SelectProjection (selectClause.GetType (), selectClause.Selector);
+      _sqlStatement.SelectProjection = selectClause.Selector;
     }
 
     public override void VisitMainFromClause (MainFromClause fromClause, QueryModel queryModel)
     {
-      _sqlStatement.FromExpression = new FromExpression (fromClause.ItemType, fromClause.FromExpression);
+      _sqlStatement.FromExpression = fromClause.FromExpression;
+      // _sqlStatement.FromExpression = SqlFromExpressionVisitor.TranslateFromExpression (fromClause.FromExpression);
     }
 
   }
