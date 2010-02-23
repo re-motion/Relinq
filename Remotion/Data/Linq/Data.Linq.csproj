@@ -147,8 +147,10 @@
     <Compile Include="SqlBackend\SqlStatementModel\SqlFromExpressionVisitor.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlGenerationContext.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlQueryModelVisitor.cs" />
+    <Compile Include="SqlBackend\SqlStatementModel\SqlSelectExpressionVisitor.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlStatement.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlTableExpression.cs" />
+    <Compile Include="SqlBackend\SqlStatementModel\SqlTableReferenceExpression.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlTableSource.cs" />
     <Compile Include="Transformations\SubQueryFromClauseFlattener.cs" />
     <Compile Include="UniqueIdentifierGenerator.cs" />
