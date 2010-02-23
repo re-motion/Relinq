@@ -22,7 +22,6 @@ using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
-
   /// <summary>
   /// <see cref="SqlSelectExpressionVisitor"/> transforms <see cref="SqlStatement.SelectProjection"/> 
   /// to a <see cref="SqlTableReferenceExpression"/>.

@@ -23,6 +23,5 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   /// </summary>
   public abstract class SqlTableSource
   {
-    
   }
 }

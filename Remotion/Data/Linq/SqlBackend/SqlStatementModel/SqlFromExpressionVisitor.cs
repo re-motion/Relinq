@@ -21,7 +21,6 @@ using System.Linq.Expressions;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
-
   /// <summary>
   /// <see cref="SqlFromExpressionVisitor"/> transforms <see cref="SqlStatement.FromExpression"/> to a <see cref="SqlTableExpression"/>.
   /// </summary>
