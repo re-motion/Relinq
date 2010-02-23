@@ -136,7 +136,7 @@ namespace Remotion.Data.Linq.Clauses.Expressions
     public virtual Expression Accept (ExpressionTreeVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
-
+      
       return visitor.VisitUnknownExpression (this);
     }
 

@@ -16,7 +16,6 @@
 // 
 using System;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
@@ -26,7 +25,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   public class SqlQueryModelVisitor : QueryModelVisitorBase
   {
     private readonly SqlStatement _sqlStatement;
-    private SqlGenerationContext _sqlGenerationContext; 
+    private readonly SqlGenerationContext _sqlGenerationContext; 
 
     public SqlQueryModelVisitor ()
     {
