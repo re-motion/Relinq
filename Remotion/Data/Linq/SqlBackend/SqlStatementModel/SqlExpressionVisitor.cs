@@ -27,11 +27,11 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   {
     private readonly SqlStatementResolver _resolver;
 
-    public static SqlTableExpression TranslateSqlTableExpression (Expression expression, SqlStatementResolver resolver)
+    public static Expression TranslateSqlTableExpression (Expression expression, SqlStatementResolver resolver)
     {
       var visitor = new SqlExpressionVisitor (resolver);
       var result = visitor.VisitExpression (expression);
-      return (SqlTableExpression) result;
+      return result;
     }
 
     protected SqlExpressionVisitor (SqlStatementResolver resolver)
@@ -43,6 +43,11 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
     {
       var tableSource = _resolver.ResolveTableSource (tableExpression.TableSource);
       return new SqlTableExpression (tableExpression.Type, tableSource);
+    }
+
+    public Expression VisitSqlTableReferenceExpression (Expression expression)
+    {
+      return _resolver.ResolveSelectProjection (expression);
     }
     
     protected override Exception CreateUnhandledItemException<T> (T unhandledItem, string visitMethod)

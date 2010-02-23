@@ -23,23 +23,33 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
   /// <summary>
-  /// <see cref="SqlTableReferenceExpression"/> points to the corresponding <see cref="SqlStatementModel.SqlTableExpression"/>.
+  /// <see cref="SqlColumnExpression"/> represents a sql-specific column expression.
   /// </summary>
-  public class SqlTableReferenceExpression : ExtensionExpression
+  public class SqlColumnExpression : ExtensionExpression
   {
-    private readonly SqlTableExpression _sqlTableExpression;
-    
-    public SqlTableReferenceExpression (Type type, SqlTableExpression sqlTableExpression)
+    private SqlTableExpression _tableExpression;
+    private string _columnName;
+
+    public SqlColumnExpression (Type type, SqlTableExpression tableExpression, string columnName)
         : base(type)
     {
-      ArgumentUtility.CheckNotNull ("sqlTableExpression", sqlTableExpression);
+      ArgumentUtility.CheckNotNull ("tableExpression", tableExpression);
+      ArgumentUtility.CheckNotNullOrEmpty ("columnName", columnName);
 
-      _sqlTableExpression = sqlTableExpression;
+      ColumnName = columnName;
+      TableExpression = tableExpression;
     }
 
-    public SqlTableExpression SqlTableExpression
+    public SqlTableExpression TableExpression
     {
-      get { return _sqlTableExpression; }
+      get { return _tableExpression; }
+      set { _tableExpression = value; }
+    }
+
+    public string ColumnName
+    {
+      get { return _columnName; }
+      set { _columnName = value; }
     }
 
     protected internal override Expression VisitChildren (ExpressionTreeVisitor visitor)
@@ -49,13 +59,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 
     public override Expression Accept (ExpressionTreeVisitor visitor)
     {
-      var specificVisitor = visitor as ISqlExpressionVisitor;
-      if (specificVisitor != null)
-        return specificVisitor.VisitSqlTableReferenceExpression (this);
-      else
-        return base.Accept (visitor);
+      throw new NotImplementedException();
     }
-
-
   }
 }

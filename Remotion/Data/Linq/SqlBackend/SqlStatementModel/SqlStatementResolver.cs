@@ -15,6 +15,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Linq.Expressions;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
@@ -24,5 +25,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   public abstract class SqlStatementResolver
   {
     public abstract SqlTableSource ResolveTableSource (AbstractTableSource tableSource);
+    public abstract Expression ResolveSelectProjection (Expression expression);
   }
 }

@@ -15,16 +15,42 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Clauses.Expressions;
+using Remotion.Data.Linq.Parsing;
+using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
   /// <summary>
-  /// <see cref="ISqlExpressionVisitor"/> provides methods to visit expressions in sql-statement model.
+  /// <see cref="SqlColumnListExpression"/> holds list of <see cref="SqlColumnExpression"/>.
   /// </summary>
-  public interface ISqlExpressionVisitor
+  public class SqlColumnListExpression : ExtensionExpression
   {
-    SqlTableExpression VisitSqlTableExpression (SqlTableExpression tableExpression);
-    Expression VisitSqlTableReferenceExpression (Expression expression);
+    private readonly List<SqlColumnExpression> _columns;
+
+    public SqlColumnListExpression (Type type, List<SqlColumnExpression> columns)
+        : base(type)
+    {
+      ArgumentUtility.CheckNotNull ("columns", columns);
+
+      _columns = columns;
+    }
+
+    public List<SqlColumnExpression> Columns
+    {
+      get { return _columns; }
+    }
+
+    protected internal override Expression VisitChildren (ExpressionTreeVisitor visitor)
+    {
+      throw new NotImplementedException();
+    }
+
+    public override Expression Accept (ExpressionTreeVisitor visitor)
+    {
+      throw new NotImplementedException();
+    }
   }
 }
