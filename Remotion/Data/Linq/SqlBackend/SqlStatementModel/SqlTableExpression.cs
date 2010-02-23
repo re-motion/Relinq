@@ -25,7 +25,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   /// <summary>
   /// <see cref="SqlTableExpression"/> holds source of a from expression.
   /// </summary>
-  public class SqlTableExpression : ExtensionExpression
+  public class SqlTableExpression : ExtensionExpression // TODO: Consider making this SqlTable (without Expression)
   {
     private AbstractTableSource _tableSource;
 

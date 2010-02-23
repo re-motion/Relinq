@@ -16,8 +16,9 @@
 // 
 using System;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
 
-namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
+namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
 {
   /// <summary>
   /// <see cref="SqlQueryModelVisitor"/> generates a <see cref="SqlStatement"/> from a query model.

@@ -17,9 +17,10 @@
 using System;
 using System.Collections.Generic;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
 using Remotion.Data.Linq.Utilities;
 
-namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
+namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
 {
   /// <summary>
   /// <see cref="SqlGenerationContext"/> is a helper class which maps <see cref="IQuerySource"/> to <see cref="SqlTableExpression"/>.

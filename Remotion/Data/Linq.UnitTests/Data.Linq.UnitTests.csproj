@@ -367,11 +367,11 @@
     <Compile Include="SqlBackend\SqlStatementModel\ClauseObjectMother.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\ExpressionTreeVisitorTest.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\NotSupportedExpression.cs" />
-    <Compile Include="SqlBackend\SqlStatementModel\SqlExpressionVisitorTest.cs" />
-    <Compile Include="SqlBackend\SqlStatementModel\SqlFromExpressionVisitorTest.cs" />
+    <Compile Include="SqlBackend\MappingResolution\SqlExpressionVisitorTest.cs" />
+    <Compile Include="SqlBackend\SqlPreparation\SqlFromExpressionVisitorTest.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlGenerationContextTest.cs" />
-    <Compile Include="SqlBackend\SqlStatementModel\SqlQueryModelVisitorTest.cs" />
-    <Compile Include="SqlBackend\SqlStatementModel\SqlSelectExpressionVisitorTest.cs" />
+    <Compile Include="SqlBackend\SqlPreparation\SqlQueryModelVisitorTest.cs" />
+    <Compile Include="SqlBackend\SqlPreparation\SqlSelectExpressionVisitorTest.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlStatementResolverStub.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlTableExpressionTest.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlTableReferenceExpressionTest.cs" />

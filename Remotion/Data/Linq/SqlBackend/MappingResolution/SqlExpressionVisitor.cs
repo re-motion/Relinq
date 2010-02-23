@@ -15,37 +15,47 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using Remotion.Data.Linq.Parsing;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Parsing;
+using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
 
-namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
+namespace Remotion.Data.Linq.SqlBackend.MappingResolution
 {
   /// <summary>
-  /// <see cref="SqlFromExpressionVisitor"/> transforms <see cref="SqlStatement.FromExpression"/> to a <see cref="SqlTableExpression"/>.
+  /// <see cref="SqlExpressionVisitor"/> implements <see cref="ISqlExpressionVisitor"/> and <see cref="ThrowingExpressionTreeVisitor"/>.
   /// </summary>
-  public class SqlFromExpressionVisitor : ThrowingExpressionTreeVisitor
+  public class SqlExpressionVisitor : ThrowingExpressionTreeVisitor, ISqlExpressionVisitor
   {
-    public static SqlTableExpression TranslateFromExpression (Expression fromExpression)
+    private readonly SqlStatementResolver _resolver;
+
+    public static Expression TranslateSqlTableExpression (Expression expression, SqlStatementResolver resolver)
     {
-      var visitor = new SqlFromExpressionVisitor();
-      var result = visitor.VisitExpression (fromExpression);
-      return (SqlTableExpression) result;
+      var visitor = new SqlExpressionVisitor (resolver);
+      var result = visitor.VisitExpression (expression);
+      return result;
     }
 
-    protected SqlFromExpressionVisitor ()
+    protected SqlExpressionVisitor (SqlStatementResolver resolver)
     {
+      _resolver = resolver;
+    }
+    
+    public SqlTableExpression VisitSqlTableExpression (SqlTableExpression tableExpression)
+    {
+      var tableSource = _resolver.ResolveTableSource (tableExpression.TableSource);
+      return new SqlTableExpression (tableExpression.Type, tableSource);
     }
 
-    protected override Expression VisitConstantExpression (ConstantExpression expression)
+    public Expression VisitSqlTableReferenceExpression (Expression expression)
     {
-      return new SqlTableExpression (expression.Type, new ConstantTableSource (expression));
+      return _resolver.ResolveSelectProjection (expression);
     }
-
+    
     protected override Exception CreateUnhandledItemException<T> (T unhandledItem, string visitMethod)
     {
       var message = string.Format (
           "The given expression type '{0}' is not supported in from clauses. (Expression: '{1}')",
-          unhandledItem.GetType().Name,
+          unhandledItem.GetType ().Name,
           unhandledItem);
       throw new NotSupportedException (message);
     }

@@ -18,9 +18,10 @@ using System;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
+using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
 using Remotion.Data.Linq.Utilities;
 
-namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
+namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
 {
   /// <summary>
   /// <see cref="SqlSelectExpressionVisitor"/> transforms <see cref="SqlStatement.SelectProjection"/> 
@@ -51,9 +52,9 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
     protected override Exception CreateUnhandledItemException<T> (T unhandledItem, string visitMethod)
     {
       var message = string.Format (
-         "The given expression type '{0}' is not supported in select clauses. (Expression: '{1}')",
-         unhandledItem.GetType().Name,
-         unhandledItem);
+          "The given expression type '{0}' is not supported in select clauses. (Expression: '{1}')",
+          unhandledItem.GetType().Name,
+          unhandledItem);
       throw new NotSupportedException (message);
     }
   }

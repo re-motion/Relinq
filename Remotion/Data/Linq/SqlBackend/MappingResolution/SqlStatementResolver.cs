@@ -16,15 +16,17 @@
 // 
 using System;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
 
-namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
+namespace Remotion.Data.Linq.SqlBackend.MappingResolution
 {
   /// <summary>
   /// <see cref="SqlStatementResolver"/> provides methods to resolve expressions and return database-specific information.
   /// </summary>
-  public abstract class SqlStatementResolver
+  public abstract class SqlStatementResolver // TODO: Interface?
   {
-    public abstract SqlTableSource ResolveTableSource (AbstractTableSource tableSource);
+    public abstract SqlTableSource ResolveTableSource (AbstractTableSource tableSource); // TODO: ConstantTableSource
+    // TODO: public abstract Expression ResolveTableReferenceExpression (SqlTableReferenceExpression tableReferenceExpression);
     public abstract Expression ResolveSelectProjection (Expression expression);
   }
 }
