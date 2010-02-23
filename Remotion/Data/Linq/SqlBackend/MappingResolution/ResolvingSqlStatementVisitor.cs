@@ -23,9 +23,9 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
 {
   public class ResolvingSqlStatementVisitor : SqlStatementVisitor
   {
-    private readonly SqlStatementResolver _resolver;
+    private readonly ISqlStatementResolver _resolver;
 
-    public ResolvingSqlStatementVisitor (SqlStatementResolver resolver)
+    public ResolvingSqlStatementVisitor (ISqlStatementResolver resolver)
     {
       ArgumentUtility.CheckNotNull ("resolver", resolver);
       _resolver = resolver;

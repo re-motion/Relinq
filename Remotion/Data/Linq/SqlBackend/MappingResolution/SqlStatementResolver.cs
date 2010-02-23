@@ -21,11 +21,11 @@ using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
 namespace Remotion.Data.Linq.SqlBackend.MappingResolution
 {
   /// <summary>
-  /// <see cref="SqlStatementResolver"/> provides methods to resolve expressions and return database-specific information.
+  /// <see cref="ISqlStatementResolver"/> provides methods to resolve expressions and return database-specific information.
   /// </summary>
-  public abstract class SqlStatementResolver // TODO: Interface?
+  public interface ISqlStatementResolver
   {
-    public abstract SqlTableSource ResolveTableSource (ConstantTableSource tableSource);
-    public abstract Expression ResolveTableReferenceExpression (SqlTableReferenceExpression tableReferenceExpression);
+    SqlTableSource ResolveTableSource (ConstantTableSource tableSource);
+    Expression ResolveTableReferenceExpression (SqlTableReferenceExpression tableReferenceExpression);
   }
 }

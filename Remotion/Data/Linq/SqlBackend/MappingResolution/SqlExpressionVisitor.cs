@@ -26,16 +26,16 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
   /// </summary>
   public class SqlExpressionVisitor : ThrowingExpressionTreeVisitor, ISqlExpressionVisitor
   {
-    private readonly SqlStatementResolver _resolver;
+    private readonly ISqlStatementResolver _resolver;
 
-    public static Expression TranslateSqlTableReferenceExpression (Expression expression, SqlStatementResolver resolver)
+    public static Expression TranslateSqlTableReferenceExpression (Expression expression, ISqlStatementResolver resolver)
     {
       var visitor = new SqlExpressionVisitor (resolver);
       var result = visitor.VisitExpression (expression);
       return result;
     }
 
-    protected SqlExpressionVisitor (SqlStatementResolver resolver)
+    protected SqlExpressionVisitor (ISqlStatementResolver resolver)
     {
       _resolver = resolver;
     }
