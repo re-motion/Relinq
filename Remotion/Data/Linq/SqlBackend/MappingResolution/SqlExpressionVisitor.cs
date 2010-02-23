@@ -28,7 +28,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
   {
     private readonly SqlStatementResolver _resolver;
 
-    public static Expression TranslateSqlTableExpression (Expression expression, SqlStatementResolver resolver)
+    public static Expression TranslateSqlTableReferenceExpression (Expression expression, SqlStatementResolver resolver)
     {
       var visitor = new SqlExpressionVisitor (resolver);
       var result = visitor.VisitExpression (expression);
@@ -40,15 +40,9 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
       _resolver = resolver;
     }
     
-    public SqlTableExpression VisitSqlTableExpression (SqlTableExpression tableExpression)
-    {
-      var tableSource = _resolver.ResolveTableSource (tableExpression.TableSource);
-      return new SqlTableExpression (tableExpression.Type, tableSource);
-    }
-
     public Expression VisitSqlTableReferenceExpression (Expression expression)
     {
-      return _resolver.ResolveSelectProjection (expression);
+      return _resolver.ResolveTableReferenceExpression ((SqlTableReferenceExpression) expression);
     }
     
     protected override Exception CreateUnhandledItemException<T> (T unhandledItem, string visitMethod)

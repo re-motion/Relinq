@@ -49,11 +49,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 
     public override Expression Accept (ExpressionTreeVisitor visitor)
     {
-      var specificVisitor = visitor as ISqlExpressionVisitor;
-      if (specificVisitor != null)
-        return specificVisitor.VisitSqlTableExpression (this);
-      else
-        return base.Accept (visitor);
+      throw new NotImplementedException();
     }
   }
 }

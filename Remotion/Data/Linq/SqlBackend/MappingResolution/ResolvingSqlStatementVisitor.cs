@@ -23,24 +23,22 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
 {
   public class ResolvingSqlStatementVisitor : SqlStatementVisitor
   {
-    private SqlStatementResolver resolver;
+    private readonly SqlStatementResolver _resolver;
 
     public ResolvingSqlStatementVisitor (SqlStatementResolver resolver)
     {
       ArgumentUtility.CheckNotNull ("resolver", resolver);
-      this.resolver = resolver;
+      _resolver = resolver;
     }
 
     protected override Expression VisitSelectProjection (Expression selectProjection)
     {
-      throw new NotImplementedException();
-      // return SqlExpressionVisitor.TranslateSqlTableReferenceExpression (selectProjection);
+      return SqlExpressionVisitor.TranslateSqlTableReferenceExpression (selectProjection, _resolver);
     }
 
     protected override void VisitFromExpression (SqlTableExpression fromExpression)
     {
-      throw new NotImplementedException();
-      // fromExpression.TableSource = _resolver.ResolveTableSource (fromExpression.TableSource);
+      fromExpression.TableSource = _resolver.ResolveTableSource ((ConstantTableSource) fromExpression.TableSource);
     }
   }
 }

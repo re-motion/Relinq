@@ -23,10 +23,8 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   {
     public virtual void VisitSqlStatement (SqlStatement sqlStatement)
     {
-      throw new NotImplementedException();
-
-      // sqlStatement.SelectProjection = VisitSelectProjection (selectProjection);
-      // VisitFromExpression (sqlStatement.FromExpression);
+      sqlStatement.SelectProjection = VisitSelectProjection (sqlStatement.SelectProjection);
+      VisitFromExpression (sqlStatement.FromExpression);
     }
 
     protected abstract Expression VisitSelectProjection (Expression selectProjection);

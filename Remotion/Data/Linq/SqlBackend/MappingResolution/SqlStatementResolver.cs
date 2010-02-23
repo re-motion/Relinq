@@ -25,8 +25,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
   /// </summary>
   public abstract class SqlStatementResolver // TODO: Interface?
   {
-    public abstract SqlTableSource ResolveTableSource (AbstractTableSource tableSource); // TODO: ConstantTableSource
-    // TODO: public abstract Expression ResolveTableReferenceExpression (SqlTableReferenceExpression tableReferenceExpression);
-    public abstract Expression ResolveSelectProjection (Expression expression);
+    public abstract SqlTableSource ResolveTableSource (ConstantTableSource tableSource);
+    public abstract Expression ResolveTableReferenceExpression (SqlTableReferenceExpression tableReferenceExpression);
   }
 }
