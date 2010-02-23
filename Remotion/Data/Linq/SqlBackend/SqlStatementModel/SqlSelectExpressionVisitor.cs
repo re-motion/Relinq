@@ -30,132 +30,31 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   {
     private readonly SqlGenerationContext _context;
 
-    public static SqlTableReferenceExpression TranslateFromExpression (Expression projection, SqlGenerationContext context)
+    public static SqlTableReferenceExpression TranslateSelectExpression (Expression projection, SqlGenerationContext context)
     {
       var visitor = new SqlSelectExpressionVisitor (context);
       var result = visitor.VisitExpression (projection);
       return (SqlTableReferenceExpression) result;
     }
 
-    public SqlSelectExpressionVisitor (SqlGenerationContext context)
+    protected SqlSelectExpressionVisitor (SqlGenerationContext context)
     {
       ArgumentUtility.CheckNotNull ("context", context);
       _context = context;
     }
 
-    protected override Exception CreateUnhandledItemException<T> (T unhandledItem, string visitMethod)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override TResult VisitUnhandledItem<TItem, TResult> (TItem unhandledItem, string visitMethod, Func<TItem, TResult> baseBehavior)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected internal override Expression VisitUnknownExpression (Expression expression)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override Expression VisitUnaryExpression (UnaryExpression expression)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override Expression VisitBinaryExpression (BinaryExpression expression)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override Expression VisitTypeBinaryExpression (TypeBinaryExpression expression)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override Expression VisitConstantExpression (ConstantExpression expression)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override Expression VisitConditionalExpression (ConditionalExpression expression)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override Expression VisitParameterExpression (ParameterExpression expression)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override Expression VisitLambdaExpression (LambdaExpression expression)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override Expression VisitMethodCallExpression (MethodCallExpression expression)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override Expression VisitInvocationExpression (InvocationExpression expression)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override Expression VisitMemberExpression (MemberExpression expression)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override Expression VisitNewExpression (NewExpression expression)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override Expression VisitNewArrayExpression (NewArrayExpression expression)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override Expression VisitMemberInitExpression (MemberInitExpression expression)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override Expression VisitListInitExpression (ListInitExpression expression)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override ElementInit VisitElementInit (ElementInit elementInit)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override MemberBinding VisitMemberAssignment (MemberAssignment memberAssigment)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override MemberBinding VisitMemberMemberBinding (MemberMemberBinding binding)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override MemberBinding VisitMemberListBinding (MemberListBinding listBinding)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override Expression VisitSubQueryExpression (SubQueryExpression expression)
-    {
-      throw new NotImplementedException();
-    }
-
     protected override Expression VisitQuerySourceReferenceExpression (QuerySourceReferenceExpression expression)
     {
-      return new SqlTableReferenceExpression (expression.Type) { SqlTableExpression = _context.Mapping[expression.ReferencedQuerySource] };
+      return new SqlTableReferenceExpression (expression.Type, _context.GetSqlTableExpression(expression.ReferencedQuerySource));
+    }
+
+    protected override Exception CreateUnhandledItemException<T> (T unhandledItem, string visitMethod)
+    {
+      var message = string.Format (
+         "The given expression type '{0}' is not supported in select clauses. (Expression: '{1}')",
+         unhandledItem.GetType().Name,
+         unhandledItem);
+      throw new NotSupportedException (message);
     }
   }
 }

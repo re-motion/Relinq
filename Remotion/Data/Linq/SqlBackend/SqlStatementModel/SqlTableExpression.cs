@@ -27,17 +27,19 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   /// </summary>
   public class SqlTableExpression : ExtensionExpression
   {
-    private SqlTableSource _sqlTableSource;
+    private AbstractTableSource _tableSource;
 
-    public SqlTableExpression (Type type)
+    public SqlTableExpression (Type type, AbstractTableSource tableSource)
         : base (type)
     {
+      ArgumentUtility.CheckNotNull ("tableSource", tableSource);
+      _tableSource = tableSource;
     }
-    
-    public SqlTableSource SqlTableSource
+
+    public AbstractTableSource TableSource
     {
-      get { return _sqlTableSource; }
-      set { _sqlTableSource = ArgumentUtility.CheckNotNull ("value", value); }
+      get { return _tableSource; }
+      set { _tableSource = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
     protected internal override Expression VisitChildren (ExpressionTreeVisitor visitor)
@@ -49,7 +51,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
     {
       //cast visitor to needed implementation of ExpressionTreeVisitor
       //check if casted visitor supports method to call
-      //call correct VisitMethod of visitor
+      //call VisitSqlTableExpression of visitor
       throw new NotImplementedException();
     }
   }

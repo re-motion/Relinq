@@ -33,12 +33,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       _mapping = new Dictionary<IQuerySource, SqlTableExpression>();
     }
 
-    public Dictionary<IQuerySource, SqlTableExpression> Mapping
-    {
-      get { return _mapping; }
-    }
-
-    public void Add (IQuerySource source, SqlTableExpression tableExpression)
+    public void AddQuerySourceMapping (IQuerySource source, SqlTableExpression tableExpression)
     {
       ArgumentUtility.CheckNotNull ("source", source);
       ArgumentUtility.CheckNotNull ("tableExpression", tableExpression);
@@ -46,5 +41,17 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       _mapping.Add (source, tableExpression);
     }
 
+    public Dictionary<IQuerySource, SqlTableExpression> GetQuerySourceMapping ()
+    {
+      return _mapping;
+    }
+
+    public SqlTableExpression GetSqlTableExpression (IQuerySource source)
+    {
+      ArgumentUtility.CheckNotNull ("source", source);
+      if (_mapping.ContainsKey (source))
+        return _mapping[source];
+      throw new KeyNotFoundException();
+    }
   }
 }

@@ -16,6 +16,7 @@
 // 
 using System;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
@@ -25,11 +26,12 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   public class SqlQueryModelVisitor : QueryModelVisitorBase
   {
     private readonly SqlStatement _sqlStatement;
+    private SqlGenerationContext _sqlGenerationContext; 
 
     public SqlQueryModelVisitor ()
     {
       _sqlStatement = new SqlStatement();
-
+      _sqlGenerationContext = new SqlGenerationContext ();
     }
 
     public SqlStatement SqlStatement
@@ -37,15 +39,20 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       get { return _sqlStatement; }
     }
 
+    public SqlGenerationContext SqlGenerationContext
+    {
+      get { return _sqlGenerationContext; }
+    }
+
     public override void VisitSelectClause (SelectClause selectClause, QueryModel queryModel)
     {
-      _sqlStatement.SelectProjection = SqlSelectExpressionVisitor.TranslateFromExpression (selectClause.Selector, _sqlStatement.SqlGenerationContext);
+      _sqlStatement.SelectProjection = SqlSelectExpressionVisitor.TranslateSelectExpression (selectClause.Selector, _sqlGenerationContext);
     }
 
     public override void VisitMainFromClause (MainFromClause fromClause, QueryModel queryModel)
     {
       _sqlStatement.FromExpression = SqlFromExpressionVisitor.TranslateFromExpression (fromClause.FromExpression);
-      _sqlStatement.SqlGenerationContext.Add (fromClause, (SqlTableExpression)_sqlStatement.FromExpression);
+      _sqlGenerationContext.AddQuerySourceMapping (fromClause, _sqlStatement.FromExpression);
     }
 
   }

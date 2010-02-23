@@ -15,7 +15,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
 using System.Linq.Expressions;
 
@@ -33,119 +32,22 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       return (SqlTableExpression) result;
     }
 
-    protected override Expression VisitTypeBinaryExpression (TypeBinaryExpression expression)
+    protected SqlFromExpressionVisitor ()
     {
-      throw new NotImplementedException();
     }
 
     protected override Expression VisitConstantExpression (ConstantExpression expression)
     {
-      return new SqlTableExpression (expression.Type) { SqlTableSource = new ConstantTableSource (expression) };
-    }
-
-    protected override Expression VisitConditionalExpression (ConditionalExpression expression)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override Expression VisitParameterExpression (ParameterExpression expression)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override Expression VisitLambdaExpression (LambdaExpression expression)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override Expression VisitMethodCallExpression (MethodCallExpression expression)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override Expression VisitInvocationExpression (InvocationExpression expression)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override Expression VisitMemberExpression (MemberExpression expression)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override Expression VisitNewExpression (NewExpression expression)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override Expression VisitNewArrayExpression (NewArrayExpression expression)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override Expression VisitMemberInitExpression (MemberInitExpression expression)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override Expression VisitListInitExpression (ListInitExpression expression)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override ElementInit VisitElementInit (ElementInit elementInit)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override MemberBinding VisitMemberAssignment (MemberAssignment memberAssigment)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override MemberBinding VisitMemberMemberBinding (MemberMemberBinding binding)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override MemberBinding VisitMemberListBinding (MemberListBinding listBinding)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override Expression VisitSubQueryExpression (SubQueryExpression expression)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override Expression VisitQuerySourceReferenceExpression (QuerySourceReferenceExpression expression)
-    {
-      throw new NotImplementedException();
+      return new SqlTableExpression (expression.Type, new ConstantTableSource (expression));
     }
 
     protected override Exception CreateUnhandledItemException<T> (T unhandledItem, string visitMethod)
     {
-      throw new NotImplementedException();
-    }
-
-    protected override TResult VisitUnhandledItem<TItem, TResult> (TItem unhandledItem, string visitMethod, Func<TItem, TResult> baseBehavior)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected internal override Expression VisitUnknownExpression (Expression expression)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override Expression VisitUnaryExpression (UnaryExpression expression)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override Expression VisitBinaryExpression (BinaryExpression expression)
-    {
-      throw new NotImplementedException();
+      var message = string.Format (
+          "The given expression type '{0}' is not supported in from clauses. (Expression: '{1}')",
+          unhandledItem.GetType().Name,
+          unhandledItem);
+      throw new NotSupportedException (message);
     }
   }
 }

@@ -18,21 +18,30 @@ using System;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
+using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
   /// <summary>
-  /// <see cref="SqlTableReferenceExpression"/> points to the corresponding SqlTableExpression.
+  /// <see cref="SqlTableReferenceExpression"/> points to the corresponding <see cref="SqlStatementModel.SqlTableExpression"/>.
   /// </summary>
   public class SqlTableReferenceExpression : ExtensionExpression
   {
-    public SqlTableReferenceExpression (Type type)
+    private readonly SqlTableExpression _sqlTableExpression;
+    
+    public SqlTableReferenceExpression (Type type, SqlTableExpression sqlTableExpression)
         : base(type)
     {
+      ArgumentUtility.CheckNotNull ("sqlTableExpression", sqlTableExpression);
+
+      _sqlTableExpression = sqlTableExpression;
     }
 
-    public SqlTableExpression SqlTableExpression { get; set;  }
-    
+    public SqlTableExpression SqlTableExpression
+    {
+      get { return _sqlTableExpression; }
+    }
+
     protected internal override Expression VisitChildren (ExpressionTreeVisitor visitor)
     {
       return this;

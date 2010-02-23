@@ -23,7 +23,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   /// <summary>
   /// <see cref="ConstantTableSource"/> holds the constant from the original FromExpression.
   /// </summary>
-  public class ConstantTableSource : SqlTableSource
+  public class ConstantTableSource : AbstractTableSource
   {
     public ConstantTableSource (ConstantExpression constantExpression)
     {
