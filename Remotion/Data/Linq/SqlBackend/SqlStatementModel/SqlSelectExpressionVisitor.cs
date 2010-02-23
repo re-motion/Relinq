@@ -29,7 +29,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   /// </summary>
   public class SqlSelectExpressionVisitor : ThrowingExpressionTreeVisitor
   {
-    private SqlGenerationContext _context;
+    private readonly SqlGenerationContext _context;
 
     public static SqlTableReferenceExpression TranslateFromExpression (Expression projection, SqlGenerationContext context)
     {

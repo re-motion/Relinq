@@ -39,7 +39,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 
     public override void VisitSelectClause (SelectClause selectClause, QueryModel queryModel)
     {
-      _sqlStatement.SelectProjection = selectClause.Selector;
+      _sqlStatement.SelectProjection = SqlSelectExpressionVisitor.TranslateFromExpression (selectClause.Selector, _sqlStatement.SqlGenerationContext);
     }
 
     public override void VisitMainFromClause (MainFromClause fromClause, QueryModel queryModel)
