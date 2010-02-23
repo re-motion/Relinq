@@ -15,37 +15,35 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
   /// <summary>
-  /// <see cref="SqlQueryModelVisitor"/> generates a <see cref="SqlStatement"/> from a query model.
+  /// <see cref="SqlGenerationContext"/> is a helper class which maps <see cref="IQuerySource"/> to <see cref="SqlTableExpression"/>.
   /// </summary>
-  public class SqlQueryModelVisitor : QueryModelVisitorBase
+  public class SqlGenerationContext
   {
-    private readonly SqlStatement _sqlStatement;
+    private readonly Dictionary<IQuerySource, SqlTableExpression> _mapping;
 
-    public SqlQueryModelVisitor ()
+    public SqlGenerationContext ()
     {
-      _sqlStatement = new SqlStatement();
-
+      _mapping = new Dictionary<IQuerySource, SqlTableExpression>();
     }
 
-    public SqlStatement SqlStatement
+    public Dictionary<IQuerySource, SqlTableExpression> Mapping
     {
-      get { return _sqlStatement; }
+      get { return _mapping; }
     }
 
-    public override void VisitSelectClause (SelectClause selectClause, QueryModel queryModel)
+    public void Add (IQuerySource source, SqlTableExpression tableExpression)
     {
-      _sqlStatement.SelectProjection = selectClause.Selector;
-    }
+      ArgumentUtility.CheckNotNull ("source", source);
+      ArgumentUtility.CheckNotNull ("tableExpression", tableExpression);
 
-    public override void VisitMainFromClause (MainFromClause fromClause, QueryModel queryModel)
-    {
-      _sqlStatement.FromExpression = SqlFromExpressionVisitor.TranslateFromExpression (fromClause.FromExpression);
-      _sqlStatement.SqlGenerationContext.Add (fromClause, (SqlTableExpression)_sqlStatement.FromExpression);
+      _mapping.Add (source, tableExpression);
     }
 
   }

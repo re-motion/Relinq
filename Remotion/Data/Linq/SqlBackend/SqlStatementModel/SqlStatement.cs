@@ -27,6 +27,12 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   {
     private Expression _selectProjection;
     private Expression _fromExpression;
+    private SqlGenerationContext _sqlGenerationContext;
+
+    public SqlStatement ()
+    {
+      _sqlGenerationContext = new SqlGenerationContext();
+    }
 
     public Expression SelectProjection
     {
@@ -39,5 +45,13 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       get { return _fromExpression; }
       set { _fromExpression = ArgumentUtility.CheckNotNull("value",value); }
     }
+    
+    public SqlGenerationContext SqlGenerationContext
+    {
+      get { return _sqlGenerationContext; }
+      set { _sqlGenerationContext = ArgumentUtility.CheckNotNull ("value", value); }
+    }
+
+   
   }
 }
