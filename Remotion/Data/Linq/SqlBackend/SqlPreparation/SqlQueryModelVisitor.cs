@@ -62,8 +62,8 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
       // In the future, we'll probably need a visitor here as well when we support more complext FromExpressions.
-      _sqlStatement.SqlTable = new SqlTable (new ConstantTableSource ((ConstantExpression) fromClause.FromExpression));
-      _sqlPreparationContext.AddQuerySourceMapping (fromClause, _sqlStatement.SqlTable);
+      _sqlStatement.FromExpression.TableSource = new ConstantTableSource ((ConstantExpression) fromClause.FromExpression);
+      _sqlPreparationContext.AddQuerySourceMapping (fromClause, _sqlStatement.FromExpression);
     }
 
   }

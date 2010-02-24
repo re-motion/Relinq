@@ -25,7 +25,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
   /// </summary>
   public interface ISqlStatementResolver
   {
-    SqlTableSource ResolveTableSource (ConstantTableSource tableSource); // TODO: Rename to ResolveConstantTableSource
+    SqlTableSource ResolveConstantTableSource (ConstantTableSource tableSource);
     Expression ResolveTableReferenceExpression (SqlTableReferenceExpression tableReferenceExpression);
   }
 }

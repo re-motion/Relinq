@@ -26,12 +26,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   {
     private AbstractTableSource _tableSource;
 
-    public SqlTable (AbstractTableSource tableSource)
-    {
-      ArgumentUtility.CheckNotNull ("tableSource", tableSource);
-      _tableSource = tableSource;
-    }
-
     public AbstractTableSource TableSource
     {
       get { return _tableSource; }

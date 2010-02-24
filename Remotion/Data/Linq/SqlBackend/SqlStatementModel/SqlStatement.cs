@@ -27,7 +27,12 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   public class SqlStatement
   {
     private Expression _selectProjection;
-    private SqlTable _sqlTable;
+    private readonly SqlTable _fromExpression;
+
+    public SqlStatement ()
+    {
+      _fromExpression = new SqlTable();
+    }
 
     public Expression SelectProjection
     {
@@ -35,11 +40,9 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       set { _selectProjection = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
-    // TODO: Remove setter. SqlTable must not be replaced because other expressions point to it, only its TableSource can be changed.
-    public SqlTable SqlTable // TODO: Rename back to FromExpression in order to represent the respective part of a SQL statement?
+    public SqlTable FromExpression
     {
-      get { return _sqlTable; }
-      set { _sqlTable = ArgumentUtility.CheckNotNull("value",value); }
+      get { return _fromExpression; }
     }
 
     
