@@ -18,17 +18,18 @@ using System;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
+using Remotion.Data.Linq.SqlBackend.SqlGeneration;
 using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
   /// <summary>
-  /// <see cref="SqlColumnExpression"/> represents a SQL column expression.
+  /// <see cref="SqlColumnExpression"/> represents a sql-specific column expression.
   /// </summary>
   public class SqlColumnExpression : ExtensionExpression
   {
-    private readonly SqlTable _sqlTable;
-    private readonly string _columnName;
+    private SqlTable _sqlTable;
+    private string _columnName;
 
     public SqlColumnExpression (Type type, SqlTable sqlTable, string columnName)
         : base(type)
@@ -36,31 +37,34 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
       ArgumentUtility.CheckNotNullOrEmpty ("columnName", columnName);
 
-      _columnName = columnName;
-      _sqlTable = sqlTable;
+      ColumnName = columnName;
+      SqlTable = sqlTable;
     }
 
     public SqlTable SqlTable
     {
       get { return _sqlTable; }
+      set { _sqlTable = value; }
     }
 
     public string ColumnName
     {
       get { return _columnName; }
+      set { _columnName = value; }
     }
 
-    // TODO: Test.
     protected internal override Expression VisitChildren (ExpressionTreeVisitor visitor)
     {
-      ArgumentUtility.CheckNotNull ("visitor", visitor);
       return this;
     }
 
     public override Expression Accept (ExpressionTreeVisitor visitor)
     {
-      ArgumentUtility.CheckNotNull ("visitor", visitor);
-      throw new NotImplementedException();
+      var specificVisitor = visitor as ISqlTextExpressionVisitor;
+      if(specificVisitor!=null)
+        return specificVisitor.VisitSqlColumnExpression (this);
+      else
+        return base.Accept (visitor);
     }
   }
 }

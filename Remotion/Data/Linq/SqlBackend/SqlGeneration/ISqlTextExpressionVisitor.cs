@@ -16,21 +16,16 @@
 // 
 using System;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
 
-namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
+namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 {
   /// <summary>
-  /// <see cref="SqlStatementVisitor"/> provides methods to visit sql-statement classes.
+  /// <see cref="ISqlTextExpressionVisitor"/> provides methods to resolve expressions and returns sql specific text.
   /// </summary>
-  public abstract class SqlStatementVisitor
+  public interface ISqlTextExpressionVisitor
   {
-    public virtual void VisitSqlStatement (SqlStatement sqlStatement)
-    {
-      sqlStatement.SelectProjection = VisitSelectProjection (sqlStatement.SelectProjection);
-      VisitSqlTable (sqlStatement.SqlTable);
-    }
-
-    protected abstract Expression VisitSelectProjection (Expression selectProjection);
-    protected abstract void VisitSqlTable (SqlTable sqlTable);
+    Expression VisitSqlColumListExpression (SqlColumnListExpression expression);
+    Expression VisitSqlColumnExpression (Expression expression);
   }
 }

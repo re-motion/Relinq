@@ -21,6 +21,9 @@ using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.SqlBackend.MappingResolution
 {
+  /// <summary>
+  /// <see cref="ResolvingSqlStatementVisitor"/> implements <see cref="SqlStatementVisitor"/>.
+  /// </summary>
   public class ResolvingSqlStatementVisitor : SqlStatementVisitor
   {
     private readonly ISqlStatementResolver _resolver;

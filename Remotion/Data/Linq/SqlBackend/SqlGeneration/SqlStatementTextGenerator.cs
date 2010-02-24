@@ -15,22 +15,22 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Linq.Expressions;
+using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
 
-namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
+namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 {
   /// <summary>
-  /// <see cref="SqlStatementVisitor"/> provides methods to visit sql-statement classes.
+  /// <see cref="SqlStatementTextGenerator"/> generates sql-text from a given <see cref="SqlStatement"/>.
   /// </summary>
-  public abstract class SqlStatementVisitor
+  public abstract class SqlStatementTextGenerator
   {
-    public virtual void VisitSqlStatement (SqlStatement sqlStatement)
+    public string Build (SqlStatement sqlStatement)
     {
-      sqlStatement.SelectProjection = VisitSelectProjection (sqlStatement.SelectProjection);
-      VisitSqlTable (sqlStatement.SqlTable);
+      throw new NotImplementedException();
     }
 
-    protected abstract Expression VisitSelectProjection (Expression selectProjection);
-    protected abstract void VisitSqlTable (SqlTable sqlTable);
+    protected abstract string BuildSelectPart (SqlColumnListExpression expression);
+    protected abstract string BuildFromPart (SqlTableSource source);
+    
   }
 }

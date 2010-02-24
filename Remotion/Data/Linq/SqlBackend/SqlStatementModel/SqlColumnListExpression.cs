@@ -19,7 +19,9 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
+using Remotion.Data.Linq.SqlBackend.SqlGeneration;
 using Remotion.Data.Linq.Utilities;
+using System.Linq;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
@@ -47,14 +49,32 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
     // TODO: Implement and test - should call visitor.VisitExpression for all _columns.
     protected internal override Expression VisitChildren (ExpressionTreeVisitor visitor)
     {
-      ArgumentUtility.CheckNotNull ("visitor", visitor);
-      throw new NotImplementedException();
+      // TODO: Refactor as soon as ExpressionTreeVisitor.VisitList is public.
+      var newColumns = new List<SqlColumnExpression>();
+      bool isAnyColumnChanged = false;
+
+      foreach (var columnExpression in _columns)
+      {
+        var newColumnExpression = visitor.VisitExpression (columnExpression);  
+        if (newColumnExpression != columnExpression)
+          isAnyColumnChanged = true;
+        newColumns.Add ((SqlColumnExpression) newColumnExpression);
+      }
+
+      if (isAnyColumnChanged)
+        return new SqlColumnListExpression (Type, newColumns);
+      else
+        return this;
+      
     }
 
     public override Expression Accept (ExpressionTreeVisitor visitor)
     {
-      ArgumentUtility.CheckNotNull ("visitor", visitor);
-      throw new NotImplementedException();
+      var specificVisitor = visitor as ISqlTextExpressionVisitor;
+      if (specificVisitor != null)
+        return specificVisitor.VisitSqlColumListExpression (this);
+      else
+        return base.Accept (visitor);
     }
   }
 }
