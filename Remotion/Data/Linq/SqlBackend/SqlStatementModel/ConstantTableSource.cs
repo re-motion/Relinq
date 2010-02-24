@@ -34,6 +34,12 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 
     public ConstantExpression ConstantExpression { get; private set; }
 
+    
+    public override Type Type
+    {
+      get { return ConstantExpression.Type;  }
+    }
+
     // TODO: Implement and test. (Call visitor.VisitConstantTableSource.)
     public override AbstractTableSource Accept (ITableSourceVisitor visitor)
     {
@@ -41,5 +47,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 
       throw new NotImplementedException();
     }
+
+    
   }
 }

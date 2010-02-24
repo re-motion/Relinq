@@ -29,9 +29,8 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   {
     private readonly SqlTable _sqlTable;
     
-    // TODO: Remove type parameter, use sqlTable.TableSource.Type instead. (Add AbstractTableSource.Type property. ConstantTableSource.Type should return ConstantExpression.Type, SqlTableSource.Type should come from SqlTableSource's ctor.)
-    public SqlTableReferenceExpression (Type type, SqlTable sqlTable)
-        : base(type)
+    public SqlTableReferenceExpression (SqlTable sqlTable)
+        : base(sqlTable.TableSource.Type)
     {
       ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
 

@@ -51,7 +51,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
     protected override Expression VisitQuerySourceReferenceExpression (QuerySourceReferenceExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      return new SqlTableReferenceExpression (expression.Type, _context.GetSqlTableForQuerySource(expression.ReferencedQuerySource));
+      return new SqlTableReferenceExpression (_context.GetSqlTableForQuerySource(expression.ReferencedQuerySource));
     }
 
     protected override Exception CreateUnhandledItemException<T> (T unhandledItem, string visitMethod)

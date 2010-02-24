@@ -24,6 +24,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   // TODO: Add Type property.
   public abstract class AbstractTableSource
   {
+    public abstract Type Type { get; }
     public abstract AbstractTableSource Accept (ITableSourceVisitor visitor);
   }
 }

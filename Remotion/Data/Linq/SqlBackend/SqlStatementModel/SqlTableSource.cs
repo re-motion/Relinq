@@ -24,14 +24,17 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   /// </summary>
   public class SqlTableSource : AbstractTableSource
   {
+    private readonly Type _type;
     private readonly string _tableName;
     private readonly string _tableAlias;
 
-    public SqlTableSource (string tableName, string tableAlias)
+    public SqlTableSource (Type type, string tableName, string tableAlias)
     {
+      ArgumentUtility.CheckNotNull ("type", type);
       ArgumentUtility.CheckNotNullOrEmpty ("tableName", tableName);
       ArgumentUtility.CheckNotNullOrEmpty ("tableAlias", tableAlias);
-      
+
+      _type = type;
       _tableName = tableName;
       _tableAlias = tableAlias;
     }
@@ -44,6 +47,11 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
     public string TableAlias
     {
       get { return _tableAlias; }
+    }
+
+    public override Type Type
+    {
+      get { return _type; }
     }
 
     // TODO: Implement and test. (Call visitor.VisitSqlTableSource.)
