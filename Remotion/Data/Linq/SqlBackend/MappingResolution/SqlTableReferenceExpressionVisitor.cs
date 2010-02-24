@@ -46,11 +46,11 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
       _resolver = resolver;
     }
     
-    public Expression VisitSqlTableReferenceExpression (Expression expression)
+    public Expression VisitSqlTableReferenceExpression (SqlTableReferenceExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      return _resolver.ResolveTableReferenceExpression ((SqlTableReferenceExpression) expression);
+      return _resolver.ResolveTableReferenceExpression (expression);
     }
     
     protected override Exception CreateUnhandledItemException<T> (T unhandledItem, string visitMethod)

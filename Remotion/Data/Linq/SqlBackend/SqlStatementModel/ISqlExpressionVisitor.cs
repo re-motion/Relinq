@@ -24,6 +24,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   /// </summary>
   public interface ISqlExpressionVisitor
   {
-    Expression VisitSqlTableReferenceExpression (Expression expression); // TODO: Change parameter type to SqlTableReferenceExpression
+    Expression VisitSqlTableReferenceExpression (SqlTableReferenceExpression expression);
   }
 }
