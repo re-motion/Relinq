@@ -377,6 +377,7 @@
     <Compile Include="SqlBackend\SqlPreparation\SqlSelectExpressionVisitorTest.cs" />
     <Compile Include="SqlBackend\MappingResolution\SqlStatementResolverStub.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlTableReferenceExpressionTest.cs" />
+    <Compile Include="SqlBackend\SqlStatementModel\SqlTableTest.cs" />
     <Compile Include="TestDomain\GoodStudent.cs" />
     <Compile Include="TestDomain\IndustrialSector.cs" />
     <Compile Include="TestDomain\QueryableWithTooManyArguments.cs" />

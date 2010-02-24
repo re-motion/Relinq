@@ -29,7 +29,15 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
     public AbstractTableSource TableSource
     {
       get { return _tableSource; }
-      set { _tableSource = ArgumentUtility.CheckNotNull ("value", value); } // TODO: Check that new table source has same Type property as old table source. Test.
+      set { 
+        ArgumentUtility.CheckNotNull ("value", value);
+        if (_tableSource != null)
+        {
+          if (_tableSource.Type != value.Type)
+            throw new ArgumentTypeException ("value", _tableSource.Type, value.Type);
+        }
+        _tableSource = value;
+      }
     }
   }
 }
