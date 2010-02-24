@@ -23,14 +23,13 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
   /// <summary>
-  /// <see cref="SqlTableExpression"/> holds source of a from expression.
+  /// <see cref="SqlTable"/> holds source of a from expression.
   /// </summary>
-  public class SqlTableExpression : ExtensionExpression // TODO: Consider making this SqlTable (without Expression)
+  public class SqlTable
   {
     private AbstractTableSource _tableSource;
 
-    public SqlTableExpression (Type type, AbstractTableSource tableSource)
-        : base (type)
+    public SqlTable (AbstractTableSource tableSource)
     {
       ArgumentUtility.CheckNotNull ("tableSource", tableSource);
       _tableSource = tableSource;
@@ -40,16 +39,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
     {
       get { return _tableSource; }
       set { _tableSource = ArgumentUtility.CheckNotNull ("value", value); }
-    }
-
-    protected internal override Expression VisitChildren (ExpressionTreeVisitor visitor)
-    {
-      return this;
-    }
-
-    public override Expression Accept (ExpressionTreeVisitor visitor)
-    {
-      throw new NotImplementedException();
     }
   }
 }

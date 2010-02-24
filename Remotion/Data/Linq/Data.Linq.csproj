@@ -149,14 +149,13 @@
     <Compile Include="SqlBackend\SqlStatementModel\SqlColumnExpression.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlColumnListExpression.cs" />
     <Compile Include="SqlBackend\MappingResolution\SqlExpressionVisitor.cs" />
-    <Compile Include="SqlBackend\SqlPreparation\SqlFromExpressionVisitor.cs" />
     <Compile Include="SqlBackend\SqlPreparation\SqlGenerationContext.cs" />
     <Compile Include="SqlBackend\SqlPreparation\SqlQueryModelVisitor.cs" />
     <Compile Include="SqlBackend\SqlPreparation\SqlSelectExpressionVisitor.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlStatement.cs" />
     <Compile Include="SqlBackend\MappingResolution\ISqlStatementResolver.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlStatementVisitor.cs" />
-    <Compile Include="SqlBackend\SqlStatementModel\SqlTableExpression.cs" />
+    <Compile Include="SqlBackend\SqlStatementModel\SqlTable.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlTableReferenceExpression.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\AbstractTableSource.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlTableSource.cs" />

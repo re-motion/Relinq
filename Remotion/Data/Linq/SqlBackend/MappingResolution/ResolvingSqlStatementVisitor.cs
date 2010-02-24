@@ -36,9 +36,9 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
       return SqlExpressionVisitor.TranslateSqlTableReferenceExpression (selectProjection, _resolver);
     }
 
-    protected override void VisitFromExpression (SqlTableExpression fromExpression)
+    protected override void VisitSqlTable (SqlTable sqlTable)
     {
-      fromExpression.TableSource = _resolver.ResolveTableSource ((ConstantTableSource) fromExpression.TableSource);
+      sqlTable.TableSource = _resolver.ResolveTableSource ((ConstantTableSource) sqlTable.TableSource);
     }
   }
 }

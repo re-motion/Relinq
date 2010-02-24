@@ -26,7 +26,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   public class SqlStatement
   {
     private Expression _selectProjection;
-    private SqlTableExpression _fromExpression;
+    private SqlTable _sqlTable;
     
     public SqlStatement ()
     {
@@ -38,10 +38,10 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       set { _selectProjection = ArgumentUtility.CheckNotNull("value",value); }
     }
 
-    public SqlTableExpression FromExpression
+    public SqlTable SqlTable
     {
-      get { return _fromExpression; }
-      set { _fromExpression = ArgumentUtility.CheckNotNull("value",value); }
+      get { return _sqlTable; }
+      set { _sqlTable = ArgumentUtility.CheckNotNull("value",value); }
     }
 
     

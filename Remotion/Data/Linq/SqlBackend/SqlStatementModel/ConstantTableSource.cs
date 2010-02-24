@@ -21,7 +21,7 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
   /// <summary>
-  /// <see cref="ConstantTableSource"/> holds the constant from the original FromExpression.
+  /// <see cref="ConstantTableSource"/> holds the constant from the original SqlTable.
   /// </summary>
   public class ConstantTableSource : AbstractTableSource
   {

@@ -75,7 +75,7 @@ namespace Remotion.Data.Linq.Clauses
     /// <summary>
     /// The expression generating the data items for this from clause.
     /// </summary>
-    [DebuggerDisplay ("{Remotion.Data.Linq.Clauses.ExpressionTreeVisitors.FormattingExpressionTreeVisitor.Format (FromExpression),nq}")]
+    [DebuggerDisplay ("{Remotion.Data.Linq.Clauses.ExpressionTreeVisitors.FormattingExpressionTreeVisitor.Format (SqlTable),nq}")]
     public Expression FromExpression
     {
       get { return _fromExpression; }

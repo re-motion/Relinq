@@ -23,31 +23,31 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
 {
   /// <summary>
-  /// <see cref="SqlGenerationContext"/> is a helper class which maps <see cref="IQuerySource"/> to <see cref="SqlTableExpression"/>.
+  /// <see cref="SqlGenerationContext"/> is a helper class which maps <see cref="IQuerySource"/> to <see cref="SqlTable"/>.
   /// </summary>
   public class SqlGenerationContext
   {
-    private readonly Dictionary<IQuerySource, SqlTableExpression> _mapping;
+    private readonly Dictionary<IQuerySource, SqlTable> _mapping;
 
     public SqlGenerationContext ()
     {
-      _mapping = new Dictionary<IQuerySource, SqlTableExpression>();
+      _mapping = new Dictionary<IQuerySource, SqlTable>();
     }
 
-    public void AddQuerySourceMapping (IQuerySource source, SqlTableExpression tableExpression)
+    public void AddQuerySourceMapping (IQuerySource source, SqlTable sqlTable)
     {
       ArgumentUtility.CheckNotNull ("source", source);
-      ArgumentUtility.CheckNotNull ("tableExpression", tableExpression);
+      ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
 
-      _mapping.Add (source, tableExpression);
+      _mapping.Add (source, sqlTable);
     }
 
-    public Dictionary<IQuerySource, SqlTableExpression> GetQuerySourceMapping ()
+    public Dictionary<IQuerySource, SqlTable> GetQuerySourceMapping ()
     {
       return _mapping;
     }
 
-    public SqlTableExpression GetSqlTableExpression (IQuerySource source)
+    public SqlTable GetSqlTable (IQuerySource source)
     {
       ArgumentUtility.CheckNotNull ("source", source);
       if (_mapping.ContainsKey (source))

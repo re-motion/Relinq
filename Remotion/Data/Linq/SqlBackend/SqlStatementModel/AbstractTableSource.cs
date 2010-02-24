@@ -19,7 +19,7 @@ using System;
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
   /// <summary>
-  /// <see cref="AbstractTableSource"/> holds the expression from the original FromExpression.
+  /// <see cref="AbstractTableSource"/> holds the expression from the original SqlTable.
   /// </summary>
   public abstract class AbstractTableSource
   {

@@ -23,23 +23,23 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
   /// <summary>
-  /// <see cref="SqlTableReferenceExpression"/> points to the corresponding <see cref="SqlStatementModel.SqlTableExpression"/>.
+  /// <see cref="SqlTableReferenceExpression"/> points to the corresponding <see cref="SqlTable"/>.
   /// </summary>
   public class SqlTableReferenceExpression : ExtensionExpression
   {
-    private readonly SqlTableExpression _sqlTableExpression;
+    private readonly SqlTable _sqlTable;
     
-    public SqlTableReferenceExpression (Type type, SqlTableExpression sqlTableExpression)
+    public SqlTableReferenceExpression (Type type, SqlTable sqlTable)
         : base(type)
     {
-      ArgumentUtility.CheckNotNull ("sqlTableExpression", sqlTableExpression);
+      ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
 
-      _sqlTableExpression = sqlTableExpression;
+      _sqlTable = sqlTable;
     }
 
-    public SqlTableExpression SqlTableExpression
+    public SqlTable SqlTable
     {
-      get { return _sqlTableExpression; }
+      get { return _sqlTable; }
     }
 
     protected internal override Expression VisitChildren (ExpressionTreeVisitor visitor)

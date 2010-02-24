@@ -27,23 +27,23 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   /// </summary>
   public class SqlColumnExpression : ExtensionExpression
   {
-    private SqlTableExpression _tableExpression;
+    private SqlTable _sqlTable;
     private string _columnName;
 
-    public SqlColumnExpression (Type type, SqlTableExpression tableExpression, string columnName)
+    public SqlColumnExpression (Type type, SqlTable sqlTable, string columnName)
         : base(type)
     {
-      ArgumentUtility.CheckNotNull ("tableExpression", tableExpression);
+      ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
       ArgumentUtility.CheckNotNullOrEmpty ("columnName", columnName);
 
       ColumnName = columnName;
-      TableExpression = tableExpression;
+      SqlTable = sqlTable;
     }
 
-    public SqlTableExpression TableExpression
+    public SqlTable SqlTable
     {
-      get { return _tableExpression; }
-      set { _tableExpression = value; }
+      get { return _sqlTable; }
+      set { _sqlTable = value; }
     }
 
     public string ColumnName

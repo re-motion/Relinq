@@ -15,6 +15,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
 
@@ -51,8 +52,8 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
 
     public override void VisitMainFromClause (MainFromClause fromClause, QueryModel queryModel)
     {
-      _sqlStatement.FromExpression = SqlFromExpressionVisitor.TranslateFromExpression (fromClause.FromExpression);
-      _sqlGenerationContext.AddQuerySourceMapping (fromClause, _sqlStatement.FromExpression);
+      _sqlStatement.SqlTable = new SqlTable (new ConstantTableSource ((ConstantExpression) fromClause.FromExpression));
+      _sqlGenerationContext.AddQuerySourceMapping (fromClause, _sqlStatement.SqlTable);
     }
 
   }
