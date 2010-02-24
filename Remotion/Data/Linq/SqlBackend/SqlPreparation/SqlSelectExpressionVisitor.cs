@@ -31,15 +31,14 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
   {
     private readonly SqlPreparationContext _context;
 
-    // TODO: Change return type to Expression - in the future, we'll also support more complex expressions in select clauses.
-    public static SqlTableReferenceExpression TranslateSelectExpression (Expression projection, SqlPreparationContext context)
+    public static Expression TranslateSelectExpression (Expression projection, SqlPreparationContext context)
     {
       ArgumentUtility.CheckNotNull ("projection", projection);
       ArgumentUtility.CheckNotNull ("context", context);
 
       var visitor = new SqlSelectExpressionVisitor (context);
       var result = visitor.VisitExpression (projection);
-      return (SqlTableReferenceExpression) result;
+      return result;
     }
 
     protected SqlSelectExpressionVisitor (SqlPreparationContext context)

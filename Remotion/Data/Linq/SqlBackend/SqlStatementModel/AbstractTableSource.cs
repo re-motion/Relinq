@@ -21,7 +21,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   /// <summary>
   /// <see cref="AbstractTableSource"/> represents the actual data in a <see cref="SqlTable"/>.
   /// </summary>
-  // TODO: Add Type property.
   public abstract class AbstractTableSource
   {
     public abstract Type Type { get; }
