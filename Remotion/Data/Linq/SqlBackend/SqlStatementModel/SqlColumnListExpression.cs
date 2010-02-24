@@ -16,12 +16,12 @@
 // 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.SqlBackend.SqlGeneration;
 using Remotion.Data.Linq.Utilities;
-using System.Linq;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
@@ -30,9 +30,9 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   /// </summary>
   public class SqlColumnListExpression : ExtensionExpression
   {
-    private readonly List<SqlColumnExpression> _columns; // TODO: Use SqlColumnExpression[] - the list will not be changed anyway.
+    private readonly SqlColumnExpression[] _columns;
 
-    public SqlColumnListExpression (Type type, List<SqlColumnExpression> columns)
+    public SqlColumnListExpression (Type type, SqlColumnExpression[] columns)
         : base (type)
     {
       ArgumentUtility.CheckNotNull ("columns", columns);
@@ -40,10 +40,9 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       _columns = columns;
     }
 
-    // TODO: Do not expose the Columns as a List, use ReadOnlyCollection instead. (Expressions should be immutable.)
-    public List<SqlColumnExpression> Columns
+    public ReadOnlyCollection<SqlColumnExpression> Columns
     {
-      get { return _columns; }
+      get { return Array.AsReadOnly(_columns); }
     }
 
     // TODO: Implement and test - should call visitor.VisitExpression for all _columns.
@@ -62,7 +61,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       }
 
       if (isAnyColumnChanged)
-        return new SqlColumnListExpression (Type, newColumns);
+        return new SqlColumnListExpression (Type, newColumns.ToArray());
       else
         return this;
       
