@@ -23,12 +23,13 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
   /// <summary>
-  /// <see cref="SqlTableReferenceExpression"/> points to the corresponding <see cref="SqlTable"/>.
+  /// <see cref="SqlTableReferenceExpression"/> represents a data row in a <see cref="SqlTable"/>.
   /// </summary>
   public class SqlTableReferenceExpression : ExtensionExpression
   {
     private readonly SqlTable _sqlTable;
     
+    // TODO: Remove type parameter, use sqlTable.TableSource.Type instead. (Add AbstractTableSource.Type property. ConstantTableSource.Type should return ConstantExpression.Type, SqlTableSource.Type should come from SqlTableSource's ctor.)
     public SqlTableReferenceExpression (Type type, SqlTable sqlTable)
         : base(type)
     {
@@ -44,11 +45,14 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 
     protected internal override Expression VisitChildren (ExpressionTreeVisitor visitor)
     {
+      ArgumentUtility.CheckNotNull ("visitor", visitor);
       return this;
     }
 
     public override Expression Accept (ExpressionTreeVisitor visitor)
     {
+      ArgumentUtility.CheckNotNull ("visitor", visitor);
+
       var specificVisitor = visitor as ISqlExpressionVisitor;
       if (specificVisitor != null)
         return specificVisitor.VisitSqlTableReferenceExpression (this);

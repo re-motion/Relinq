@@ -24,15 +24,19 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
 {
   /// <summary>
-  /// <see cref="SqlSelectExpressionVisitor"/> transforms <see cref="SqlStatement.SelectProjection"/> 
-  /// to a <see cref="SqlTableReferenceExpression"/>.
+  /// <see cref="SqlSelectExpressionVisitor"/> transforms the expressions stored by <see cref="SqlStatement.SelectProjection"/> to a SQL-specific
+  /// format.
   /// </summary>
   public class SqlSelectExpressionVisitor : ThrowingExpressionTreeVisitor
   {
     private readonly SqlGenerationContext _context;
 
+    // TODO: Change return type to Expression - in the future, we'll also support more complex expressions in select clauses.
     public static SqlTableReferenceExpression TranslateSelectExpression (Expression projection, SqlGenerationContext context)
     {
+      ArgumentUtility.CheckNotNull ("projection", projection);
+      ArgumentUtility.CheckNotNull ("context", context);
+
       var visitor = new SqlSelectExpressionVisitor (context);
       var result = visitor.VisitExpression (projection);
       return (SqlTableReferenceExpression) result;
@@ -46,11 +50,15 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
 
     protected override Expression VisitQuerySourceReferenceExpression (QuerySourceReferenceExpression expression)
     {
-      return new SqlTableReferenceExpression (expression.Type, _context.GetSqlTable(expression.ReferencedQuerySource));
+      ArgumentUtility.CheckNotNull ("expression", expression);
+      return new SqlTableReferenceExpression (expression.Type, _context.GetSqlTableForQuerySource(expression.ReferencedQuerySource));
     }
 
     protected override Exception CreateUnhandledItemException<T> (T unhandledItem, string visitMethod)
     {
+      ArgumentUtility.CheckNotNull ("unhandledItem", unhandledItem);
+      ArgumentUtility.CheckNotNullOrEmpty ("visitMethod", visitMethod);
+
       var message = string.Format (
           "The given expression type '{0}' is not supported in select clauses. (Expression: '{1}')",
           unhandledItem.GetType().Name,

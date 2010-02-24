@@ -18,6 +18,7 @@ using System;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
+using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
 {
@@ -26,6 +27,8 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
   /// </summary>
   public class SqlQueryModelVisitor : QueryModelVisitorBase
   {
+    // TODO: Remove _sqlStatement and SqlStatement property. Instead, gather the results of all Visit... methods in member fields and add a method GetSqlStatement that creates a new SqlStatement from those results.
+
     private readonly SqlStatement _sqlStatement;
     private readonly SqlGenerationContext _sqlGenerationContext; 
 
@@ -47,11 +50,18 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
 
     public override void VisitSelectClause (SelectClause selectClause, QueryModel queryModel)
     {
+      ArgumentUtility.CheckNotNull ("selectClause", selectClause);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+
       _sqlStatement.SelectProjection = SqlSelectExpressionVisitor.TranslateSelectExpression (selectClause.Selector, _sqlGenerationContext);
     }
 
     public override void VisitMainFromClause (MainFromClause fromClause, QueryModel queryModel)
     {
+      ArgumentUtility.CheckNotNull ("fromClause", fromClause);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+
+      // In the future, we'll probably need a visitor here as well when we support more complext FromExpressions.
       _sqlStatement.SqlTable = new SqlTable (new ConstantTableSource ((ConstantExpression) fromClause.FromExpression));
       _sqlGenerationContext.AddQuerySourceMapping (fromClause, _sqlStatement.SqlTable);
     }

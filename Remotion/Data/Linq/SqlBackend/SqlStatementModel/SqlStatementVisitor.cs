@@ -16,13 +16,19 @@
 // 
 using System;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
+  /// <summary>
+  /// Provides a base implementation for visiting the parts of and transforming a <see cref="SqlStatement"/>.
+  /// </summary>
   public abstract class SqlStatementVisitor
   {
     public virtual void VisitSqlStatement (SqlStatement sqlStatement)
     {
+      ArgumentUtility.CheckNotNull ("sqlStatement", sqlStatement);
+
       sqlStatement.SelectProjection = VisitSelectProjection (sqlStatement.SelectProjection);
       VisitSqlTable (sqlStatement.SqlTable);
     }

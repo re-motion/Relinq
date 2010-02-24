@@ -20,10 +20,10 @@ using System.Linq.Expressions;
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
   /// <summary>
-  /// <see cref="ISqlExpressionVisitor"/> provides methods to visit expressions in sql-statement model.
+  /// <see cref="ISqlExpressionVisitor"/> provides methods to visit expressions held by the <see cref="SqlStatement"/>.
   /// </summary>
   public interface ISqlExpressionVisitor
   {
-    Expression VisitSqlTableReferenceExpression (Expression expression);
+    Expression VisitSqlTableReferenceExpression (Expression expression); // TODO: Change parameter type to SqlTableReferenceExpression
   }
 }

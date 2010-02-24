@@ -21,24 +21,22 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
   /// <summary>
-  /// <see cref="SqlStatement"/> holds modified expressions for select and from part. The <see cref="QueryModel"/> is translated  to this model.
+  /// <see cref="SqlStatement"/> represents a SQL database query. The <see cref="QueryModel"/> is translated to this model, and the 
+  /// <see cref="SqlStatement"/> is transformed several times until it can easily be translated to SQL text.
   /// </summary>
   public class SqlStatement
   {
     private Expression _selectProjection;
     private SqlTable _sqlTable;
-    
-    public SqlStatement ()
-    {
-    }
 
     public Expression SelectProjection
     {
       get { return _selectProjection; }
-      set { _selectProjection = ArgumentUtility.CheckNotNull("value",value); }
+      set { _selectProjection = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
-    public SqlTable SqlTable
+    // TODO: Remove setter. SqlTable must not be replaced because other expressions point to it, only its TableSource can be changed.
+    public SqlTable SqlTable // TODO: Rename back to FromExpression in order to represent the respective part of a SQL statement?
     {
       get { return _sqlTable; }
       set { _sqlTable = ArgumentUtility.CheckNotNull("value",value); }

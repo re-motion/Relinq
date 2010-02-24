@@ -15,15 +15,12 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Linq.Expressions;
-using Remotion.Data.Linq.Clauses.Expressions;
-using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
   /// <summary>
-  /// <see cref="SqlTable"/> holds source of a from expression.
+  /// <see cref="SqlTable"/> represents a data source in a <see cref="SqlStatement"/>.
   /// </summary>
   public class SqlTable
   {
@@ -38,7 +35,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
     public AbstractTableSource TableSource
     {
       get { return _tableSource; }
-      set { _tableSource = ArgumentUtility.CheckNotNull ("value", value); }
+      set { _tableSource = ArgumentUtility.CheckNotNull ("value", value); } // TODO: Check that new table source has same Type property as old table source. Test.
     }
   }
 }

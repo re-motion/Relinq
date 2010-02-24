@@ -14,32 +14,14 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-using System;
-using System.Linq.Expressions;
-using Remotion.Data.Linq.Utilities;
-
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
   /// <summary>
-  /// <see cref="ConstantTableSource"/> holds a <see cref="ConstantExpression"/> representing the data source defined by a LINQ query.
+  /// Provides a visitor for implementations of <see cref="AbstractTableSource"/>.
   /// </summary>
-  public class ConstantTableSource : AbstractTableSource
+  public interface ITableSourceVisitor
   {
-    public ConstantTableSource (ConstantExpression constantExpression)
-    {
-      ArgumentUtility.CheckNotNull ("constantExpression", constantExpression);
-
-      ConstantExpression = constantExpression;
-    }
-
-    public ConstantExpression ConstantExpression { get; private set; }
-
-    // TODO: Implement and test. (Call visitor.VisitConstantTableSource.)
-    public override AbstractTableSource Accept (ITableSourceVisitor visitor)
-    {
-      ArgumentUtility.CheckNotNull ("visitor", visitor);
-
-      throw new NotImplementedException();
-    }
+    AbstractTableSource VisitConstantTableSource (ConstantTableSource tableSource);
+    AbstractTableSource VisitSqlTableSource (SqlTableSource tableSource);
   }
 }

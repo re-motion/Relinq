@@ -28,16 +28,22 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
     public ResolvingSqlStatementVisitor (ISqlStatementResolver resolver)
     {
       ArgumentUtility.CheckNotNull ("resolver", resolver);
+
       _resolver = resolver;
     }
 
     protected override Expression VisitSelectProjection (Expression selectProjection)
     {
-      return SqlExpressionVisitor.TranslateSqlTableReferenceExpression (selectProjection, _resolver);
+      ArgumentUtility.CheckNotNull ("selectProjection", selectProjection);
+
+      return SqlExpressionVisitor.TranslateSqlTableReferenceExpressions (selectProjection, _resolver);
     }
 
     protected override void VisitSqlTable (SqlTable sqlTable)
     {
+      ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
+
+      // TODO: Implement a TableSourceVisitor (ResolvingTableSourceVisitor) and use it here. (Reason: We'll soon get more complex TableSources.)
       sqlTable.TableSource = _resolver.ResolveTableSource ((ConstantTableSource) sqlTable.TableSource);
     }
   }

@@ -18,18 +18,23 @@ using System;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
+using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.SqlBackend.MappingResolution
 {
   /// <summary>
   /// <see cref="SqlExpressionVisitor"/> implements <see cref="ISqlExpressionVisitor"/> and <see cref="ThrowingExpressionTreeVisitor"/>.
   /// </summary>
+  // TODO: Rename to ResolvingExpressionVisitor.
   public class SqlExpressionVisitor : ThrowingExpressionTreeVisitor, ISqlExpressionVisitor
   {
     private readonly ISqlStatementResolver _resolver;
 
-    public static Expression TranslateSqlTableReferenceExpression (Expression expression, ISqlStatementResolver resolver)
+    public static Expression TranslateSqlTableReferenceExpressions (Expression expression, ISqlStatementResolver resolver)
     {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+      ArgumentUtility.CheckNotNull ("resolver", resolver);
+
       var visitor = new SqlExpressionVisitor (resolver);
       var result = visitor.VisitExpression (expression);
       return result;
@@ -37,16 +42,23 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
 
     protected SqlExpressionVisitor (ISqlStatementResolver resolver)
     {
+      ArgumentUtility.CheckNotNull ("resolver", resolver);
+
       _resolver = resolver;
     }
     
     public Expression VisitSqlTableReferenceExpression (Expression expression)
     {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
       return _resolver.ResolveTableReferenceExpression ((SqlTableReferenceExpression) expression);
     }
     
     protected override Exception CreateUnhandledItemException<T> (T unhandledItem, string visitMethod)
     {
+      ArgumentUtility.CheckNotNull ("unhandledItem", unhandledItem);
+      ArgumentUtility.CheckNotNullOrEmpty ("visitMethod", visitMethod);
+
       var message = string.Format (
           "The given expression type '{0}' is not supported in from clauses. (Expression: '{1}')",
           unhandledItem.GetType ().Name,

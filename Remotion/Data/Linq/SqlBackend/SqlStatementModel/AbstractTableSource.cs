@@ -19,9 +19,11 @@ using System;
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
   /// <summary>
-  /// <see cref="AbstractTableSource"/> holds the expression from the original SqlTable.
+  /// <see cref="AbstractTableSource"/> represents the actual data in a <see cref="SqlTable"/>.
   /// </summary>
+  // TODO: Add Type property.
   public abstract class AbstractTableSource
   {
+    public abstract AbstractTableSource Accept (ITableSourceVisitor visitor);
   }
 }

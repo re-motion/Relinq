@@ -20,7 +20,7 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
   /// <summary>
-  /// <see cref="SqlTableSource"/> holds the sql-specific parts of a from expression.
+  /// <see cref="SqlTableSource"/> represents the data source defined by a table in a relational database.
   /// </summary>
   public class SqlTableSource : AbstractTableSource
   {
@@ -44,6 +44,14 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
     public string TableAlias
     {
       get { return _tableAlias; }
+    }
+
+    // TODO: Implement and test. (Call visitor.VisitSqlTableSource.)
+    public override AbstractTableSource Accept (ITableSourceVisitor visitor)
+    {
+      ArgumentUtility.CheckNotNull ("visitor", visitor);
+
+      throw new NotImplementedException();
     }
   }
 }

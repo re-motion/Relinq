@@ -24,32 +24,36 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
   /// <summary>
-  /// <see cref="SqlColumnListExpression"/> holds list of <see cref="SqlColumnExpression"/>.
+  /// <see cref="SqlColumnListExpression"/> holds a list of <see cref="SqlColumnExpression"/> instances.
   /// </summary>
   public class SqlColumnListExpression : ExtensionExpression
   {
-    private readonly List<SqlColumnExpression> _columns;
+    private readonly List<SqlColumnExpression> _columns; // TODO: Use SqlColumnExpression[] - the list will not be changed anyway.
 
     public SqlColumnListExpression (Type type, List<SqlColumnExpression> columns)
-        : base(type)
+        : base (type)
     {
       ArgumentUtility.CheckNotNull ("columns", columns);
 
       _columns = columns;
     }
 
+    // TODO: Do not expose the Columns as a List, use ReadOnlyCollection instead. (Expressions should be immutable.)
     public List<SqlColumnExpression> Columns
     {
       get { return _columns; }
     }
 
+    // TODO: Implement and test - should call visitor.VisitExpression for all _columns.
     protected internal override Expression VisitChildren (ExpressionTreeVisitor visitor)
     {
+      ArgumentUtility.CheckNotNull ("visitor", visitor);
       throw new NotImplementedException();
     }
 
     public override Expression Accept (ExpressionTreeVisitor visitor)
     {
+      ArgumentUtility.CheckNotNull ("visitor", visitor);
       throw new NotImplementedException();
     }
   }

@@ -23,12 +23,12 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
   /// <summary>
-  /// <see cref="SqlColumnExpression"/> represents a sql-specific column expression.
+  /// <see cref="SqlColumnExpression"/> represents a SQL column expression.
   /// </summary>
   public class SqlColumnExpression : ExtensionExpression
   {
-    private SqlTable _sqlTable;
-    private string _columnName;
+    private readonly SqlTable _sqlTable;
+    private readonly string _columnName;
 
     public SqlColumnExpression (Type type, SqlTable sqlTable, string columnName)
         : base(type)
@@ -36,29 +36,30 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
       ArgumentUtility.CheckNotNullOrEmpty ("columnName", columnName);
 
-      ColumnName = columnName;
-      SqlTable = sqlTable;
+      _columnName = columnName;
+      _sqlTable = sqlTable;
     }
 
     public SqlTable SqlTable
     {
       get { return _sqlTable; }
-      set { _sqlTable = value; }
     }
 
     public string ColumnName
     {
       get { return _columnName; }
-      set { _columnName = value; }
     }
 
+    // TODO: Test.
     protected internal override Expression VisitChildren (ExpressionTreeVisitor visitor)
     {
+      ArgumentUtility.CheckNotNull ("visitor", visitor);
       return this;
     }
 
     public override Expression Accept (ExpressionTreeVisitor visitor)
     {
+      ArgumentUtility.CheckNotNull ("visitor", visitor);
       throw new NotImplementedException();
     }
   }

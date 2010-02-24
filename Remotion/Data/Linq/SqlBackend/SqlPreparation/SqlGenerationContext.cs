@@ -34,6 +34,11 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       _mapping = new Dictionary<IQuerySource, SqlTable>();
     }
 
+    public int QuerySourceMappingCount
+    {
+      get { return _mapping.Count; }
+    }
+
     public void AddQuerySourceMapping (IQuerySource source, SqlTable sqlTable)
     {
       ArgumentUtility.CheckNotNull ("source", source);
@@ -42,17 +47,13 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       _mapping.Add (source, sqlTable);
     }
 
-    public Dictionary<IQuerySource, SqlTable> GetQuerySourceMapping ()
-    {
-      return _mapping;
-    }
-
-    public SqlTable GetSqlTable (IQuerySource source)
+    public SqlTable GetSqlTableForQuerySource (IQuerySource source)
     {
       ArgumentUtility.CheckNotNull ("source", source);
+
       if (_mapping.ContainsKey (source))
         return _mapping[source];
-      throw new KeyNotFoundException();
+      throw new KeyNotFoundException(); // TODO: Remove this and ContainsKey check - Dictionary will throw KeyNotFoundException anyway.
     }
   }
 }
