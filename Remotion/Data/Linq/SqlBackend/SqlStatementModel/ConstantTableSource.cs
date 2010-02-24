@@ -33,7 +33,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
     }
 
     public ConstantExpression ConstantExpression { get; private set; }
-
     
     public override Type Type
     {
