@@ -23,10 +23,9 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.SqlBackend.MappingResolution
 {
   /// <summary>
-  /// <see cref="SqlExpressionVisitor"/> implements <see cref="ISqlExpressionVisitor"/> and <see cref="ThrowingExpressionTreeVisitor"/>.
+  /// <see cref="SqlTableReferenceExpressionVisitor"/> implements <see cref="ISqlExpressionVisitor"/> and <see cref="ThrowingExpressionTreeVisitor"/>.
   /// </summary>
-  // TODO: Rename to ResolvingExpressionVisitor.
-  public class SqlExpressionVisitor : ThrowingExpressionTreeVisitor, ISqlExpressionVisitor
+  public class SqlTableReferenceExpressionVisitor : ThrowingExpressionTreeVisitor, ISqlExpressionVisitor
   {
     private readonly ISqlStatementResolver _resolver;
 
@@ -35,12 +34,12 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
       ArgumentUtility.CheckNotNull ("expression", expression);
       ArgumentUtility.CheckNotNull ("resolver", resolver);
 
-      var visitor = new SqlExpressionVisitor (resolver);
+      var visitor = new SqlTableReferenceExpressionVisitor (resolver);
       var result = visitor.VisitExpression (expression);
       return result;
     }
 
-    protected SqlExpressionVisitor (ISqlStatementResolver resolver)
+    protected SqlTableReferenceExpressionVisitor (ISqlStatementResolver resolver)
     {
       ArgumentUtility.CheckNotNull ("resolver", resolver);
 

@@ -15,39 +15,42 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Linq.Expressions;
+using System.Collections.Generic;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
 using Remotion.Data.Linq.Utilities;
 
-namespace Remotion.Data.Linq.SqlBackend.MappingResolution
+namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
 {
   /// <summary>
-  /// <see cref="ResolvingSqlStatementVisitor"/> implements <see cref="SqlStatementVisitor"/>.
+  /// <see cref="SqlPreparationContext"/> is a helper class which maps <see cref="IQuerySource"/> to <see cref="SqlTable"/>.
   /// </summary>
-  public class ResolvingSqlStatementVisitor : SqlStatementVisitor
+  public class SqlPreparationContext
   {
-    private readonly ISqlStatementResolver _resolver;
+    private readonly Dictionary<IQuerySource, SqlTable> _mapping;
 
-    public ResolvingSqlStatementVisitor (ISqlStatementResolver resolver)
+    public SqlPreparationContext ()
     {
-      ArgumentUtility.CheckNotNull ("resolver", resolver);
-
-      _resolver = resolver;
+      _mapping = new Dictionary<IQuerySource, SqlTable>();
     }
 
-    protected override Expression VisitSelectProjection (Expression selectProjection)
+    public int QuerySourceMappingCount
     {
-      ArgumentUtility.CheckNotNull ("selectProjection", selectProjection);
-
-      return SqlExpressionVisitor.TranslateSqlTableReferenceExpressions (selectProjection, _resolver);
+      get { return _mapping.Count; }
     }
 
-    protected override void VisitSqlTable (SqlTable sqlTable)
+    public void AddQuerySourceMapping (IQuerySource source, SqlTable sqlTable)
     {
+      ArgumentUtility.CheckNotNull ("source", source);
       ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
 
-      // TODO: Implement a TableSourceVisitor (ResolvingTableSourceVisitor) and use it here. (Reason: We'll soon get more complex TableSources.)
-      sqlTable.TableSource = _resolver.ResolveTableSource ((ConstantTableSource) sqlTable.TableSource);
+      _mapping.Add (source, sqlTable);
+    }
+
+    public SqlTable GetSqlTableForQuerySource (IQuerySource source)
+    {
+      ArgumentUtility.CheckNotNull ("source", source);
+      return _mapping[source];
     }
   }
 }

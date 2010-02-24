@@ -21,9 +21,9 @@ using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
 namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 {
   /// <summary>
-  /// <see cref="ISqlTextExpressionVisitor"/> provides methods to resolve expressions and returns sql specific text.
+  /// <see cref="ISqlColumnListExpressionVisitor"/> provides methods to resolve expressions and returns sql specific text.
   /// </summary>
-  public interface ISqlTextExpressionVisitor
+  public interface ISqlColumnListExpressionVisitor
   {
     Expression VisitSqlColumListExpression (SqlColumnListExpression expression);
     Expression VisitSqlColumnExpression (Expression expression);

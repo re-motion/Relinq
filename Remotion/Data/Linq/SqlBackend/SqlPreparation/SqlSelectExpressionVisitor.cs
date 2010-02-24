@@ -29,10 +29,10 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
   /// </summary>
   public class SqlSelectExpressionVisitor : ThrowingExpressionTreeVisitor
   {
-    private readonly SqlGenerationContext _context;
+    private readonly SqlPreparationContext _context;
 
     // TODO: Change return type to Expression - in the future, we'll also support more complex expressions in select clauses.
-    public static SqlTableReferenceExpression TranslateSelectExpression (Expression projection, SqlGenerationContext context)
+    public static SqlTableReferenceExpression TranslateSelectExpression (Expression projection, SqlPreparationContext context)
     {
       ArgumentUtility.CheckNotNull ("projection", projection);
       ArgumentUtility.CheckNotNull ("context", context);
@@ -42,7 +42,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       return (SqlTableReferenceExpression) result;
     }
 
-    protected SqlSelectExpressionVisitor (SqlGenerationContext context)
+    protected SqlSelectExpressionVisitor (SqlPreparationContext context)
     {
       ArgumentUtility.CheckNotNull ("context", context);
       _context = context;

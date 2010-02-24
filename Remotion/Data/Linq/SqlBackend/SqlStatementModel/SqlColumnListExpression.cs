@@ -70,7 +70,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 
     public override Expression Accept (ExpressionTreeVisitor visitor)
     {
-      var specificVisitor = visitor as ISqlTextExpressionVisitor;
+      var specificVisitor = visitor as ISqlColumnListExpressionVisitor;
       if (specificVisitor != null)
         return specificVisitor.VisitSqlColumListExpression (this);
       else

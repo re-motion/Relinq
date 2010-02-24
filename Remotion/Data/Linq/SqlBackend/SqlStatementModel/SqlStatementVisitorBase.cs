@@ -20,9 +20,9 @@ using System.Linq.Expressions;
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
   /// <summary>
-  /// <see cref="SqlStatementVisitor"/> provides methods to visit sql-statement classes.
+  /// <see cref="SqlStatementVisitorBase"/> provides methods to visit sql-statement classes.
   /// </summary>
-  public abstract class SqlStatementVisitor
+  public abstract class SqlStatementVisitorBase
   {
     public virtual void VisitSqlStatement (SqlStatement sqlStatement)
     {

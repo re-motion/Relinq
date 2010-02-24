@@ -24,20 +24,20 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 {
   /// <summary>
-  /// <see cref="SqlTextExpressionVisitor"/> implements <see cref="ThrowingExpressionTreeVisitor"/> and <see cref="ISqlTextExpressionVisitor"/>.
+  /// <see cref="SqlColumnListExpressionVisitor"/> implements <see cref="ThrowingExpressionTreeVisitor"/> and <see cref="ISqlColumnListExpressionVisitor"/>.
   /// </summary>
-  public class SqlTextExpressionVisitor : ThrowingExpressionTreeVisitor, ISqlTextExpressionVisitor
+  public class SqlColumnListExpressionVisitor : ThrowingExpressionTreeVisitor, ISqlColumnListExpressionVisitor
   {
     private readonly StringBuilder _sb;
     private bool _first;
 
     public static void TranslateSqlColumnListExpression (SqlColumnListExpression expression, StringBuilder sb)
     {
-      var visitor = new SqlTextExpressionVisitor(sb);
+      var visitor = new SqlColumnListExpressionVisitor(sb);
       visitor.VisitExpression (expression);
     }
 
-    protected SqlTextExpressionVisitor (StringBuilder sb)
+    protected SqlColumnListExpressionVisitor (StringBuilder sb)
     {
       ArgumentUtility.CheckNotNull ("sb", sb);
       _sb = sb;
