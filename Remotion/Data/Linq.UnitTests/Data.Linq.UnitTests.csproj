@@ -379,6 +379,7 @@
     <Compile Include="SqlBackend\SqlStatementModel\SqlStatementModelObjectMother.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlTableReferenceExpressionTest.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlTableTest.cs" />
+    <Compile Include="SqlBackend\SqlStatementModel\TableSourceVisitorTest.cs" />
     <Compile Include="TestDomain\GoodStudent.cs" />
     <Compile Include="TestDomain\IndustrialSector.cs" />
     <Compile Include="TestDomain\QueryableWithTooManyArguments.cs" />

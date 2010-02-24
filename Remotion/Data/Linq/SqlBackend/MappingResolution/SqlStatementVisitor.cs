@@ -45,9 +45,8 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
     protected override void VisitSqlTable (SqlTable sqlTable)
     {
       ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
-
-      // TODO: Implement a TableSourceVisitor (ResolvingTableSourceVisitor) and use it here. (Reason: We'll soon get more complex TableSources.)
-      sqlTable.TableSource = _resolver.ResolveConstantTableSource ((ConstantTableSource) sqlTable.TableSource);
+      
+      TableSourceVisitor.ReplaceTableSource (sqlTable, _resolver);
     }
   }
 }
