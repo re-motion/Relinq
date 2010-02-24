@@ -368,7 +368,7 @@
     <Compile Include="SqlBackend\SqlGeneration\SqlColumnListExpressionVisitorTest.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\ClauseObjectMother.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\ExpressionTreeVisitorTest.cs" />
-    <Compile Include="SqlBackend\SqlStatementModel\NotSupportedExpression.cs" />
+    <Compile Include="SqlBackend\NotSupportedExpression.cs" />
     <Compile Include="SqlBackend\MappingResolution\SqlTableReferenceExpressionVisitorTest.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlColumnListExpressionTest.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlColumnnExpressionTest.cs" />
@@ -376,6 +376,7 @@
     <Compile Include="SqlBackend\SqlPreparation\SqlQueryModelVisitorTest.cs" />
     <Compile Include="SqlBackend\SqlPreparation\SqlSelectExpressionVisitorTest.cs" />
     <Compile Include="SqlBackend\MappingResolution\SqlStatementResolverStub.cs" />
+    <Compile Include="SqlBackend\SqlStatementModel\SqlStatementModelObjectMother.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlTableReferenceExpressionTest.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlTableTest.cs" />
     <Compile Include="TestDomain\GoodStudent.cs" />

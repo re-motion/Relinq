@@ -54,11 +54,9 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       get { return _type; }
     }
 
-    // TODO: Implement and test. (Call visitor.VisitSqlTableSource.)
+    // TODO: Implement and test when implentation of visitor is tested. (Call visitor.VisitSqlTableSource.)
     public override AbstractTableSource Accept (ITableSourceVisitor visitor)
     {
-      ArgumentUtility.CheckNotNull ("visitor", visitor);
-
       throw new NotImplementedException();
     }
   }

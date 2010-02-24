@@ -39,7 +39,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       get { return ConstantExpression.Type;  }
     }
 
-    // TODO: Implement and test. (Call visitor.VisitConstantTableSource.)
+    // TODO: Implement and test when implentation of visitor is tested.. (Call visitor.VisitConstantTableSource.)
     public override AbstractTableSource Accept (ITableSourceVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);

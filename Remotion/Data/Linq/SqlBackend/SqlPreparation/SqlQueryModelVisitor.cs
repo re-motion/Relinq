@@ -27,13 +27,9 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
   /// </summary>
   public class SqlQueryModelVisitor : QueryModelVisitorBase
   {
-    // TODO: Remove _sqlStatement and SqlStatement property. Instead, gather the results of all Visit... methods in member fields and add a method GetSqlStatement that creates a new SqlStatement from those results.
-
     private readonly SqlPreparationContext _sqlPreparationContext;
     private readonly SqlTable _sqlTable;
     private Expression _projectionExpression;
-    private ConstantTableSource _constantTableSource;
-
 
     public SqlQueryModelVisitor ()
     {
@@ -68,7 +64,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
       // In the future, we'll probably need a visitor here as well when we support more complext FromExpressions.
-      _constantTableSource = new ConstantTableSource ((ConstantExpression) fromClause.FromExpression);
       _sqlTable.TableSource = new ConstantTableSource ((ConstantExpression) fromClause.FromExpression);
       _sqlPreparationContext.AddQuerySourceMapping (fromClause, _sqlTable);
     }
