@@ -44,7 +44,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.IntermediateModel
       _studentClause = ExpressionHelper.CreateMainFromClause_Student ();
       ClauseGenerationContext.AddContextInfo (_studentSource, _studentClause);
 
-      _ofTypeWithGoodStudentMethod = ReflectionUtility.GetMethod (() => ((IQueryable<Cook[]>) null).OfType<GoodStudent> ());
+      _ofTypeWithGoodStudentMethod = ReflectionUtility.GetMethod (() => ((IQueryable<Cook[]>) null).OfType<Chef> ());
       _node = new OfTypeExpressionNode (CreateParseInfo (_studentSource, "s", _ofTypeWithGoodStudentMethod));
     }
 
@@ -57,16 +57,16 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.IntermediateModel
     [Test]
     public void OfTypeItemType ()
     {
-      Assert.That (_node.SearchedItemType, Is.SameAs (typeof (GoodStudent)));
+      Assert.That (_node.SearchedItemType, Is.SameAs (typeof (Chef)));
     }
 
     [Test]
     public void Resolve_PassesConvertedExpressionToSource ()
     {
-      var expression = ExpressionHelper.CreateLambdaExpression<GoodStudent, string> (s => s.LetterOfRecommendation);
+      var expression = ExpressionHelper.CreateLambdaExpression<Chef, string> (s => s.LetterOfRecommendation);
       var result = _node.Resolve (expression.Parameters[0], expression.Body, ClauseGenerationContext);
 
-      var expectedResult = ExpressionHelper.Resolve<Cook, string> (_studentClause, s => ((GoodStudent) s).LetterOfRecommendation);
+      var expectedResult = ExpressionHelper.Resolve<Cook, string> (_studentClause, s => ((Chef) s).LetterOfRecommendation);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
 
@@ -78,7 +78,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.IntermediateModel
       Assert.That (QueryModel.ResultOperators.Count, Is.EqualTo (1));
 
       var OfTypeResultOperator = (OfTypeResultOperator) QueryModel.ResultOperators[0];
-      Assert.That (OfTypeResultOperator.SearchedItemType, Is.SameAs (typeof (GoodStudent)));
+      Assert.That (OfTypeResultOperator.SearchedItemType, Is.SameAs (typeof (Chef)));
     }
   }
 }

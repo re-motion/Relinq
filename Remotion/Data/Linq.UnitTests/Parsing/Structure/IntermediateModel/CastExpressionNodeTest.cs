@@ -44,7 +44,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.IntermediateModel
       _studentClause = ExpressionHelper.CreateMainFromClause_Student ();
       ClauseGenerationContext.AddContextInfo (_studentSource, _studentClause);
 
-      _castToGoodStudentMethod = ReflectionUtility.GetMethod (() => ((IQueryable<Cook[]>)null).Cast<GoodStudent>());
+      _castToGoodStudentMethod = ReflectionUtility.GetMethod (() => ((IQueryable<Cook[]>)null).Cast<Chef>());
       _node = new CastExpressionNode (CreateParseInfo (_studentSource, "s", _castToGoodStudentMethod));
     }
 
@@ -57,16 +57,16 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.IntermediateModel
     [Test]
     public void CastItemType ()
     {
-      Assert.That (_node.CastItemType, Is.SameAs (typeof (GoodStudent)));
+      Assert.That (_node.CastItemType, Is.SameAs (typeof (Chef)));
     }
 
     [Test]
     public void Resolve_PassesConvertedExpressionToSource ()
     {
-      var expression = ExpressionHelper.CreateLambdaExpression<GoodStudent, string> (s => s.LetterOfRecommendation);
+      var expression = ExpressionHelper.CreateLambdaExpression<Chef, string> (s => s.LetterOfRecommendation);
       var result = _node.Resolve (expression.Parameters[0], expression.Body, ClauseGenerationContext);
 
-      var expectedResult = ExpressionHelper.Resolve<Cook, string> (_studentClause, s => ((GoodStudent) s).LetterOfRecommendation);
+      var expectedResult = ExpressionHelper.Resolve<Cook, string> (_studentClause, s => ((Chef) s).LetterOfRecommendation);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
 
@@ -78,7 +78,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.IntermediateModel
       Assert.That (QueryModel.ResultOperators.Count, Is.EqualTo (1));
 
       var castResultOperator = (CastResultOperator) QueryModel.ResultOperators[0];
-      Assert.That (castResultOperator.CastItemType, Is.SameAs (typeof (GoodStudent)));
+      Assert.That (castResultOperator.CastItemType, Is.SameAs (typeof (Chef)));
     }
   }
 }

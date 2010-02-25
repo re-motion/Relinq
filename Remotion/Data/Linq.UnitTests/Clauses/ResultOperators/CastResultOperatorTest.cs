@@ -36,7 +36,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
     [SetUp]
     public void SetUp ()
     {
-      _resultOperator = new CastResultOperator (typeof (GoodStudent));
+      _resultOperator = new CastResultOperator (typeof (Chef));
     }
 
     [Test]
@@ -53,17 +53,17 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
     [Test]
     public void ExecuteInMemory ()
     {
-      var student1 = new GoodStudent ();
-      var student2 = new GoodStudent ();
+      var student1 = new Chef ();
+      var student2 = new Chef ();
       IEnumerable items = new Cook[] { student1, student2 };
       var itemExpression = Expression.Constant (student1, typeof (Cook));
       var input = new StreamedSequence (items, new StreamedSequenceInfo (typeof (Cook[]), itemExpression));
 
       var result = _resultOperator.ExecuteInMemory<Cook> (input);
 
-      var sequence = result.GetTypedSequence<GoodStudent>();
+      var sequence = result.GetTypedSequence<Chef>();
       Assert.That (sequence.ToArray (), Is.EquivalentTo (new[] { student1, student2 }));
-      Assert.That (result.DataInfo.ItemExpression.Type, Is.EqualTo (typeof (GoodStudent)));
+      Assert.That (result.DataInfo.ItemExpression.Type, Is.EqualTo (typeof (Chef)));
       Assert.That (((UnaryExpression) result.DataInfo.ItemExpression).Operand, Is.SameAs (itemExpression));
     }
 
@@ -75,10 +75,10 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
       var result = _resultOperator.GetOutputDataInfo (input);
 
       Assert.That (result, Is.InstanceOfType (typeof (StreamedSequenceInfo)));
-      Assert.That (result.DataType, Is.SameAs (typeof (IQueryable<GoodStudent>)));
+      Assert.That (result.DataType, Is.SameAs (typeof (IQueryable<Chef>)));
       Assert.That (((StreamedSequenceInfo) result).ItemExpression, Is.InstanceOfType (typeof (UnaryExpression)));
       Assert.That (((StreamedSequenceInfo) result).ItemExpression.NodeType, Is.EqualTo (ExpressionType.Convert));
-      Assert.That (((StreamedSequenceInfo) result).ItemExpression.Type, Is.SameAs (typeof (GoodStudent)));
+      Assert.That (((StreamedSequenceInfo) result).ItemExpression.Type, Is.SameAs (typeof (Chef)));
       Assert.That (((UnaryExpression) ((StreamedSequenceInfo) result).ItemExpression).Operand, Is.SameAs (input.ItemExpression));
     }
 
@@ -93,7 +93,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
     [Test]
     public new void ToString ()
     {
-      Assert.That (_resultOperator.ToString (), Is.EqualTo ("Cast<Remotion.Data.Linq.UnitTests.TestDomain.GoodStudent>()"));
+      Assert.That (_resultOperator.ToString (), Is.EqualTo ("Cast<Remotion.Data.Linq.UnitTests.TestDomain.Chef>()"));
     }
   }
 }
