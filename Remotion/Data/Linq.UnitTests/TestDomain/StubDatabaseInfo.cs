@@ -125,7 +125,7 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
         case "Kitchen":
           return "kitchenTable";
         case "Company":
-          return "detailDetailTable";
+          return "companyTable";
         case "Restaurant":
           return "industrialTable";
         default:
