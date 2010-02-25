@@ -32,20 +32,20 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.IntermediateModel
   public class OfTypeExpressionNodeTest : ExpressionNodeTestBase
   {
     private OfTypeExpressionNode _node;
-    private MethodInfo _ofTypeWithGoodStudentMethod;
-    private MainSourceExpressionNode _studentSource;
-    private MainFromClause _studentClause;
+    private MethodInfo _ofTypeWithChefMethod;
+    private MainSourceExpressionNode _cookSource;
+    private MainFromClause _cookClause;
 
     public override void SetUp ()
     {
       base.SetUp ();
 
-      _studentSource = new MainSourceExpressionNode ("s", Expression.Constant (new[] { new Cook () }));
-      _studentClause = ExpressionHelper.CreateMainFromClause_Cook ();
-      ClauseGenerationContext.AddContextInfo (_studentSource, _studentClause);
+      _cookSource = new MainSourceExpressionNode ("s", Expression.Constant (new[] { new Cook () }));
+      _cookClause = ExpressionHelper.CreateMainFromClause_Cook ();
+      ClauseGenerationContext.AddContextInfo (_cookSource, _cookClause);
 
-      _ofTypeWithGoodStudentMethod = ReflectionUtility.GetMethod (() => ((IQueryable<Cook[]>) null).OfType<Chef> ());
-      _node = new OfTypeExpressionNode (CreateParseInfo (_studentSource, "s", _ofTypeWithGoodStudentMethod));
+      _ofTypeWithChefMethod = ReflectionUtility.GetMethod (() => ((IQueryable<Cook[]>) null).OfType<Chef> ());
+      _node = new OfTypeExpressionNode (CreateParseInfo (_cookSource, "s", _ofTypeWithChefMethod));
     }
 
     [Test]
@@ -66,7 +66,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.IntermediateModel
       var expression = ExpressionHelper.CreateLambdaExpression<Chef, string> (s => s.LetterOfRecommendation);
       var result = _node.Resolve (expression.Parameters[0], expression.Body, ClauseGenerationContext);
 
-      var expectedResult = ExpressionHelper.Resolve<Cook, string> (_studentClause, s => ((Chef) s).LetterOfRecommendation);
+      var expectedResult = ExpressionHelper.Resolve<Cook, string> (_cookClause, s => ((Chef) s).LetterOfRecommendation);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
 

@@ -32,20 +32,20 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.IntermediateModel
   public class CastExpressionNodeTest : ExpressionNodeTestBase
   {
     private CastExpressionNode _node;
-    private MethodInfo _castToGoodStudentMethod;
-    private MainSourceExpressionNode _studentSource;
-    private MainFromClause _studentClause;
+    private MethodInfo _castToChefMethod;
+    private MainSourceExpressionNode _cookSource;
+    private MainFromClause _cookClause;
 
     public override void SetUp ()
     {
       base.SetUp ();
 
-      _studentSource = new MainSourceExpressionNode ("s", Expression.Constant (new[] { new Cook () }));
-      _studentClause = ExpressionHelper.CreateMainFromClause_Cook ();
-      ClauseGenerationContext.AddContextInfo (_studentSource, _studentClause);
+      _cookSource = new MainSourceExpressionNode ("s", Expression.Constant (new[] { new Cook () }));
+      _cookClause = ExpressionHelper.CreateMainFromClause_Cook ();
+      ClauseGenerationContext.AddContextInfo (_cookSource, _cookClause);
 
-      _castToGoodStudentMethod = ReflectionUtility.GetMethod (() => ((IQueryable<Cook[]>)null).Cast<Chef>());
-      _node = new CastExpressionNode (CreateParseInfo (_studentSource, "s", _castToGoodStudentMethod));
+      _castToChefMethod = ReflectionUtility.GetMethod (() => ((IQueryable<Cook[]>)null).Cast<Chef>());
+      _node = new CastExpressionNode (CreateParseInfo (_cookSource, "s", _castToChefMethod));
     }
 
     [Test]
@@ -66,7 +66,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.IntermediateModel
       var expression = ExpressionHelper.CreateLambdaExpression<Chef, string> (s => s.LetterOfRecommendation);
       var result = _node.Resolve (expression.Parameters[0], expression.Body, ClauseGenerationContext);
 
-      var expectedResult = ExpressionHelper.Resolve<Cook, string> (_studentClause, s => ((Chef) s).LetterOfRecommendation);
+      var expectedResult = ExpressionHelper.Resolve<Cook, string> (_cookClause, s => ((Chef) s).LetterOfRecommendation);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
 
