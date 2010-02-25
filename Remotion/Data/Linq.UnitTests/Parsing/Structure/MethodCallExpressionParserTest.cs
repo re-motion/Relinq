@@ -69,7 +69,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure
     [Test]
     public void Parse_WithLambda ()
     {
-      var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IEnumerable<Chef>, IEnumerable<Chef>> (e => e.Select (s => s));
+      var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IEnumerable<Cook>, IEnumerable<Cook>> (e => e.Select (s => s));
 
       var result = ParseMethodCallExpression (methodCallExpression);
 
@@ -77,7 +77,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure
       Assert.That (((SelectExpressionNode) result).AssociatedIdentifier, Is.EqualTo ("x"));
       Assert.That (((SelectExpressionNode) result).Source, Is.SameAs (_source));
 
-      var expectedSelector = ExpressionHelper.CreateLambdaExpression<Chef, Chef>(s => s);
+      var expectedSelector = ExpressionHelper.CreateLambdaExpression<Cook, Cook>(s => s);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedSelector, ((SelectExpressionNode) result).Selector);
     }
 

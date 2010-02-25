@@ -66,7 +66,7 @@ namespace Remotion.Data.Linq.UnitTests
     [Test]
     public void VisitQueryModel ()
     {
-      var mainFromClauseMock = _mockRepository.StrictMock<MainFromClause> ("x", typeof (Chef), ExpressionHelper.CreateExpression());
+      var mainFromClauseMock = _mockRepository.StrictMock<MainFromClause> ("x", typeof (Cook), ExpressionHelper.CreateExpression());
       var selectClauseMock = _mockRepository.StrictMock<SelectClause> (ExpressionHelper.CreateExpression());
       var queryModel = new QueryModel (mainFromClauseMock, selectClauseMock);
 

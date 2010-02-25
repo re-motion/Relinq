@@ -21,7 +21,7 @@ using System.Linq;
 
 namespace Remotion.Data.Linq.UnitTests.TestDomain
 {
-  public class Chef
+  public class Cook
   {
     public string FirstName { get; set; }
     public string Name { get; set; }
@@ -29,11 +29,11 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
     public ArrayList Courses { get; set; }
     public int[] EctsCredits { get; set; }
     public List<int> Scores { get; set; }
-    public IQueryable<Chef> Friends { get; set; }
+    public IQueryable<Cook> Friends { get; set; }
     public string NonDBStringProperty { get; set; }
     public bool NonDBBoolProperty { get; set; }
     public bool IsExchangeStudent { get; set; }
     public bool HasDegree { get; set; }
-    public Chef BuddyChef { get; set; }
+    public Cook BuddyCook { get; set; }
   }
 }

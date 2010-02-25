@@ -31,7 +31,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses
     {
       var oldExpression = ExpressionHelper.CreateExpression ();
       var newExpression = ExpressionHelper.CreateExpression ();
-      var clause = new MainFromClause ("x", typeof (Chef), oldExpression);
+      var clause = new MainFromClause ("x", typeof (Cook), oldExpression);
 
       clause.TransformExpressions (ex =>
       {
@@ -45,8 +45,8 @@ namespace Remotion.Data.Linq.UnitTests.Clauses
     [Test]
     public new void ToString ()
     {
-      var fromClause = new MainFromClause ("x", typeof (Chef), Expression.Constant (0));
-      Assert.That (fromClause.ToString (), Is.EqualTo ("from Chef x in 0"));
+      var fromClause = new MainFromClause ("x", typeof (Cook), Expression.Constant (0));
+      Assert.That (fromClause.ToString (), Is.EqualTo ("from Cook x in 0"));
     }
 
   }

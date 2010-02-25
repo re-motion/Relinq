@@ -40,11 +40,11 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.IntermediateModel
     {
       base.SetUp ();
 
-      _studentSource = new MainSourceExpressionNode ("s", Expression.Constant (new[] { new Chef () }));
+      _studentSource = new MainSourceExpressionNode ("s", Expression.Constant (new[] { new Cook () }));
       _studentClause = ExpressionHelper.CreateMainFromClause_Student ();
       ClauseGenerationContext.AddContextInfo (_studentSource, _studentClause);
 
-      _ofTypeWithGoodStudentMethod = ReflectionUtility.GetMethod (() => ((IQueryable<Chef[]>) null).OfType<GoodStudent> ());
+      _ofTypeWithGoodStudentMethod = ReflectionUtility.GetMethod (() => ((IQueryable<Cook[]>) null).OfType<GoodStudent> ());
       _node = new OfTypeExpressionNode (CreateParseInfo (_studentSource, "s", _ofTypeWithGoodStudentMethod));
     }
 
@@ -66,7 +66,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.IntermediateModel
       var expression = ExpressionHelper.CreateLambdaExpression<GoodStudent, string> (s => s.LetterOfRecommendation);
       var result = _node.Resolve (expression.Parameters[0], expression.Body, ClauseGenerationContext);
 
-      var expectedResult = ExpressionHelper.Resolve<Chef, string> (_studentClause, s => ((GoodStudent) s).LetterOfRecommendation);
+      var expectedResult = ExpressionHelper.Resolve<Cook, string> (_studentClause, s => ((GoodStudent) s).LetterOfRecommendation);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
 

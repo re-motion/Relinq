@@ -22,35 +22,35 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
 {
   public class SubQueryTestQueryGenerator
   {
-    public static IQueryable<Chef> CreateSimpleSubQueryInMainFromClause (IQueryable<Chef> source)
+    public static IQueryable<Cook> CreateSimpleSubQueryInMainFromClause (IQueryable<Cook> source)
     {
       return from s in (from s2 in source select s2).Take (1) select s;
     }
 
-    public static IQueryable<Chef> CreateSimpleSubQueryInAdditionalFromClause(IQueryable<Chef> source)
+    public static IQueryable<Cook> CreateSimpleSubQueryInAdditionalFromClause(IQueryable<Cook> source)
     {
       return from s in source from s2 in (from s3 in source select s3) select s;
     }
 
-    public static IQueryable<Chef> CreateComplexSubQueryInAdditionalFromClause (IQueryable<Chef> source)
+    public static IQueryable<Cook> CreateComplexSubQueryInAdditionalFromClause (IQueryable<Cook> source)
     {
       return from s in source from s2 in (from s3 in source where s3.ID == s.ID && s3.ID > 3 select s3) select s2;
     }
 
-    public static IQueryable<Chef> CreateSimpleSubQueryInWhereClause (IQueryable<Chef> source)
+    public static IQueryable<Cook> CreateSimpleSubQueryInWhereClause (IQueryable<Cook> source)
     {
       return from s in source where (from s2 in source select s2).Contains (s) select s;
     }
 
-    public static IQueryable<Chef> CreateSubQueryWithConstantInWhereClause (IQueryable<Chef> source)
+    public static IQueryable<Cook> CreateSubQueryWithConstantInWhereClause (IQueryable<Cook> source)
     {
-      Chef chef = new Chef {ID = 5};
-      return from s in source where (from s2 in source select s2).Contains (chef) select s;
+      Cook cook = new Cook {ID = 5};
+      return from s in source where (from s2 in source select s2).Contains (cook) select s;
     }
 
     
 
-    public static IQueryable<Chef> CreateSubQuerySelectingColumnsWithConstantInWhereClause (IQueryable<Chef> source)
+    public static IQueryable<Cook> CreateSubQuerySelectingColumnsWithConstantInWhereClause (IQueryable<Cook> source)
     {
       return from s in source where (from s2 in source select s2.FirstName).Contains ("Hugo") select s;
     }

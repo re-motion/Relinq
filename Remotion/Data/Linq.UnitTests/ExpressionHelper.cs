@@ -81,7 +81,7 @@ namespace Remotion.Data.Linq.UnitTests
       Expression outerKeySelector = CreateExpression ();
       Expression innerKeySelector = CreateExpression ();
 
-      return new JoinClause ("x", typeof(Chef), innerSequence, outerKeySelector, innerKeySelector);
+      return new JoinClause ("x", typeof(Cook), innerSequence, outerKeySelector, innerKeySelector);
     }
 
     public static GroupJoinClause CreateGroupJoinClause ()
@@ -91,7 +91,7 @@ namespace Remotion.Data.Linq.UnitTests
 
     public static GroupJoinClause CreateGroupJoinClause (JoinClause joinClause)
     {
-      return new GroupJoinClause ("xs", typeof (IEnumerable<Chef>), joinClause);
+      return new GroupJoinClause ("xs", typeof (IEnumerable<Cook>), joinClause);
     }
 
     public static QueryModel CreateQueryModel (MainFromClause mainFromClause)
@@ -102,7 +102,7 @@ namespace Remotion.Data.Linq.UnitTests
 
     public static QueryModel CreateQueryModel_Student ()
     {
-      return CreateQueryModel (CreateMainFromClause_Int("s", typeof (Chef), CreateStudentQueryable()));
+      return CreateQueryModel (CreateMainFromClause_Int("s", typeof (Cook), CreateStudentQueryable()));
     }
 
     public static QueryModel CreateQueryModel_Int ()
@@ -118,7 +118,7 @@ namespace Remotion.Data.Linq.UnitTests
 
     public static MainFromClause CreateMainFromClause_Student ()
     {
-      return CreateMainFromClause_Int ("s", typeof (Chef), CreateStudentQueryable());
+      return CreateMainFromClause_Int ("s", typeof (Cook), CreateStudentQueryable());
     }
 
     public static MainFromClause CreateMainFromClause_Detail ()
@@ -168,7 +168,7 @@ namespace Remotion.Data.Linq.UnitTests
       return new SelectClause (selector);
     }
 
-    public static MethodCallExpression CreateMethodCallExpression (IQueryable<Chef> query)
+    public static MethodCallExpression CreateMethodCallExpression (IQueryable<Cook> query)
     {
       var methodInfo = ReflectionUtility.GetMethod (() => query.Count ());
       return Expression.Call (methodInfo, query.Expression);
@@ -195,14 +195,14 @@ namespace Remotion.Data.Linq.UnitTests
       return new TestQueryable<int> (s_executor);
     }
 
-    public static IQueryable<Chef> CreateStudentQueryable()
+    public static IQueryable<Cook> CreateStudentQueryable()
     {
       return CreateStudentQueryable (s_executor);
     }
         
-    public static IQueryable<Chef> CreateStudentQueryable (IQueryExecutor executor)
+    public static IQueryable<Cook> CreateStudentQueryable (IQueryExecutor executor)
     {
-      return new TestQueryable<Chef> (executor);
+      return new TestQueryable<Cook> (executor);
     }
 
     public static IQueryable<Student_Detail> CreateStudentDetailQueryable()

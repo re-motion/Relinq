@@ -30,7 +30,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.IntermediateModel
 
     public static SelectManyExpressionNode CreateSelectMany (IExpressionNode source)
     {
-      var p1 = Expression.Parameter (typeof (Chef), "s");
+      var p1 = Expression.Parameter (typeof (Cook), "s");
       var p2 = Expression.Parameter (typeof (Student_Detail), "sd");
       var resultSelector = Expression.Lambda (Expression.Constant (null), p1, p2);
       var collectionSelector = Expression.Lambda (Expression.Constant (null), p1);
@@ -41,7 +41,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.IntermediateModel
 
     //public static SelectManyExpressionNode CreateSelectMany (FromClauseBase source)
     //{
-    //  var p1 = Expression.Parameter (typeof (Chef), "s");
+    //  var p1 = Expression.Parameter (typeof (Cook), "s");
     //  var p2 = Expression.Parameter (typeof (Student_Detail), "sd");
     //  var resultSelector = Expression.Lambda (Expression.Constant (null), p1, p2);
     //  var collectionSelector = Expression.Lambda (Expression.Constant (null), p1);

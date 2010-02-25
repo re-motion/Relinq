@@ -39,13 +39,13 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
     [Test]
     public void GetOutputDataInfo ()
     {
-      var studentExpression = Expression.Constant (new Chef ());
-      var input = new StreamedSequenceInfo (typeof (Chef[]), studentExpression);
+      var studentExpression = Expression.Constant (new Cook ());
+      var input = new StreamedSequenceInfo (typeof (Cook[]), studentExpression);
       var result = _resultOperator.GetOutputDataInfo (input);
 
       Assert.That (result, Is.InstanceOfType (typeof (StreamedSequenceInfo)));
       Assert.That (result, Is.Not.SameAs (input));
-      Assert.That (result.DataType, Is.SameAs (typeof (IQueryable<Chef>)));
+      Assert.That (result.DataType, Is.SameAs (typeof (IQueryable<Cook>)));
       Assert.That (((StreamedSequenceInfo) result).ItemExpression, Is.SameAs (studentExpression));
     }
 
@@ -53,7 +53,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
     [ExpectedException (typeof (ArgumentTypeException))]
     public void GetOutputDataInfo_InvalidInput ()
     {
-      var input = new StreamedScalarValueInfo (typeof (Chef));
+      var input = new StreamedScalarValueInfo (typeof (Cook));
       _resultOperator.GetOutputDataInfo (input);
     }
   }

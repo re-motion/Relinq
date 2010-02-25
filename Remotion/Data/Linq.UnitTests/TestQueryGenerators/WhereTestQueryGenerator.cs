@@ -23,77 +23,77 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
 {
   public static class WhereTestQueryGenerator
   {
-    public static IQueryable<Chef> CreateSimpleWhereQuery (IQueryable<Chef> source)
+    public static IQueryable<Cook> CreateSimpleWhereQuery (IQueryable<Cook> source)
     {
       return from s in source where s.Name == "Garcia" select s;
     }
 
-    public static IQueryable<Chef> CreateWhereQueryWithEvaluatableSubExpression (IQueryable<Chef> source)
+    public static IQueryable<Cook> CreateWhereQueryWithEvaluatableSubExpression (IQueryable<Cook> source)
     {
       string cia = "cia";
       return from s in source where s.Name == ("Gar" + cia) select s;
     }
 
-    public static IQueryable<Chef> CreateMultiWhereQuery (IQueryable<Chef> source)
+    public static IQueryable<Cook> CreateMultiWhereQuery (IQueryable<Cook> source)
     {
       return from s in source where s.Name == "Garcia" where s.FirstName == "Hugo" where s.ID > 100 select s;
     }
 
-    public static IQueryable<string> CreateSelectWhereQuery (IQueryable<Chef> source)
+    public static IQueryable<string> CreateSelectWhereQuery (IQueryable<Cook> source)
     {
       return from s in source where s.Name == "Garcia" select s.FirstName;
     }
 
-    public static IQueryable<Chef> CreateWhereQueryWithDifferentComparisons (IQueryable<Chef> source)
+    public static IQueryable<Cook> CreateWhereQueryWithDifferentComparisons (IQueryable<Cook> source)
     {
       return from s in source where s.FirstName != "Garcia" && s.ID > 5 && s.ID >= 6 && s.ID < 7 && s.ID <= 6 && s.ID == 6 select s;
     }
 
-    public static IQueryable<Chef> CreateWhereQueryWithOrAndNot (IQueryable<Chef> source)
+    public static IQueryable<Cook> CreateWhereQueryWithOrAndNot (IQueryable<Cook> source)
     {
       return from s in source where (!(s.FirstName == "Garcia") || s.FirstName == "Garcia") && s.FirstName == "Garcia" select s;
     }
 
-    public static IQueryable<Chef> CreateWhereQueryWithStartsWith (IQueryable<Chef> source)
+    public static IQueryable<Cook> CreateWhereQueryWithStartsWith (IQueryable<Cook> source)
     {
       return from s in source where s.FirstName.StartsWith("Garcia") select s;
     }
 
-    public static IQueryable<Chef> CreateWhereQueryWithEndsWith (IQueryable<Chef> source)
+    public static IQueryable<Cook> CreateWhereQueryWithEndsWith (IQueryable<Cook> source)
     {
       return from s in source where s.FirstName.EndsWith("Garcia") select s;
     }
 
-    public static IQueryable<Chef> CreateWhereQueryNullChecks (IQueryable<Chef> source)
+    public static IQueryable<Cook> CreateWhereQueryNullChecks (IQueryable<Cook> source)
     {
       return from s in source where s.FirstName == null || null != s.Name select s;
     }
 
-    public static IQueryable<Chef> CreateWhereQueryBooleanConstantTrue (IQueryable<Chef> source)
+    public static IQueryable<Cook> CreateWhereQueryBooleanConstantTrue (IQueryable<Cook> source)
     {
       return from s in source where true select s;
     }
 
-    public static IQueryable<Chef> CreateWhereQueryBooleanConstantFalse (IQueryable<Chef> source)
+    public static IQueryable<Cook> CreateWhereQueryBooleanConstantFalse (IQueryable<Cook> source)
     {
       return from s in source where false select s;
     }
 
-    public static MethodCallExpression CreateSimpleWhereQuery_WhereExpression (IQueryable<Chef> source)
+    public static MethodCallExpression CreateSimpleWhereQuery_WhereExpression (IQueryable<Cook> source)
     {
-      IQueryable<Chef> query = CreateSimpleWhereQuery (source);
+      IQueryable<Cook> query = CreateSimpleWhereQuery (source);
       return (MethodCallExpression) query.Expression;
     }
 
-    public static MethodCallExpression CreateWhereQueryWithEvaluatableSubExpression_WhereExpression (IQueryable<Chef> source)
+    public static MethodCallExpression CreateWhereQueryWithEvaluatableSubExpression_WhereExpression (IQueryable<Cook> source)
     {
-      IQueryable<Chef> query = CreateWhereQueryWithEvaluatableSubExpression (source);
+      IQueryable<Cook> query = CreateWhereQueryWithEvaluatableSubExpression (source);
       return (MethodCallExpression) query.Expression;
     }
 
-    public static MethodCallExpression CreateMultiWhereQuery_WhereExpression (IQueryable<Chef> source)
+    public static MethodCallExpression CreateMultiWhereQuery_WhereExpression (IQueryable<Cook> source)
     {
-      IQueryable<Chef> query = CreateMultiWhereQuery (source);
+      IQueryable<Cook> query = CreateMultiWhereQuery (source);
       return (MethodCallExpression) query.Expression;
     }
 
@@ -107,7 +107,7 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
       return from industrial in source where industrial.Student_Detail != null select industrial;
     }
 
-    public static MethodCallExpression CreateSelectWhereQuery_SelectExpression (IQueryable<Chef> source)
+    public static MethodCallExpression CreateSelectWhereQuery_SelectExpression (IQueryable<Cook> source)
     {
       IQueryable<string> query = CreateSelectWhereQuery (source);
       return (MethodCallExpression) query.Expression;
@@ -115,7 +115,7 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
 
     public static IQueryable<Student_Detail> CreateWhereQueryWithRelatedPrimaryKey_VirtualColumn (IQueryable<Student_Detail> source)
     {
-      return from sd in source where sd.Chef.ID == 5 select sd;
+      return from sd in source where sd.Cook.ID == 5 select sd;
     }
 
     public static IQueryable<Student_Detail> CreateWhereQueryWithRelatedPrimaryKey_RealColumn (IQueryable<Student_Detail> source)

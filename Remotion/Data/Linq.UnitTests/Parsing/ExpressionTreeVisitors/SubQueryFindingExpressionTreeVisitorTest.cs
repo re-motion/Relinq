@@ -103,7 +103,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitors
       Assert.That (result, Is.SameAs (expression));
     }
 
-    public static IQueryable<Chef> CustomSelect (IQueryable<Chef> source, Expression<Func<Chef, Chef>> selector)
+    public static IQueryable<Cook> CustomSelect (IQueryable<Cook> source, Expression<Func<Cook, Cook>> selector)
     {
       throw new NotImplementedException ();
     }

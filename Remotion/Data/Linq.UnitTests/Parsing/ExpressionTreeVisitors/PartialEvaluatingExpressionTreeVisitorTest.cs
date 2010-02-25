@@ -159,7 +159,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitors
     {
       var source = ExpressionHelper.CreateStudentQueryable ();
 
-      Expression<Func<Chef, bool>> predicate = s1 => false;
+      Expression<Func<Cook, bool>> predicate = s1 => false;
       var queryExpression = ExpressionHelper.MakeExpression (() => source.Where (predicate));
 
       Assert.That (((MethodCallExpression) queryExpression).Arguments[1].NodeType, Is.EqualTo (ExpressionType.MemberAccess),

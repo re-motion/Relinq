@@ -24,23 +24,23 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
 {
   internal static class SelectTestQueryGenerator
   {
-    public static IQueryable<Chef> CreateSimpleQueryWithNonDBProjection (IQueryable<Chef> source)
+    public static IQueryable<Cook> CreateSimpleQueryWithNonDBProjection (IQueryable<Cook> source)
     {
-      return from s in source select (Chef) null;
+      return from s in source select (Cook) null;
     }
 
-    public static IQueryable<Tuple<string, string>> CreateSimpleQueryWithFieldProjection (IQueryable<Chef> source)
+    public static IQueryable<Tuple<string, string>> CreateSimpleQueryWithFieldProjection (IQueryable<Cook> source)
     {
       return from s in source select new Tuple<string, string> (s.FirstName, s.Name);
     }
 
-    public static IQueryable<Tuple<Chef, string, string, string>> CreateSimpleQueryWithSpecialProjection (IQueryable<Chef> source)
+    public static IQueryable<Tuple<Cook, string, string, string>> CreateSimpleQueryWithSpecialProjection (IQueryable<Cook> source)
     {
       string k = "Test";
       return from s in source select Tuple.Create (s, s.Name, k, "Test2");
     }
 
-    public static IQueryable<string> CreateSimplifyableQuery (IQueryable<Chef> source)
+    public static IQueryable<string> CreateSimplifyableQuery (IQueryable<Cook> source)
     {
       return from s in source select "1" + GetString();
     }
@@ -50,76 +50,76 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
       return "2";
     }
 
-    public static IQueryable<string> CreateSimpleQueryWithProjection (IQueryable<Chef> source)
+    public static IQueryable<string> CreateSimpleQueryWithProjection (IQueryable<Cook> source)
     {
       return from s in source select s.FirstName;
     }
 
-    public static IQueryable<string> CreateSimpleSelectWithNonDbProjection (IQueryable<Chef> source1)
+    public static IQueryable<string> CreateSimpleSelectWithNonDbProjection (IQueryable<Cook> source1)
     {
       return from s1 in source1 select s1.NonDBStringProperty;
     }
 
-    public static IQueryable<int> CreateSimpleSelectWithNonEntityMemberAccess (IQueryable<Chef> source1)
+    public static IQueryable<int> CreateSimpleSelectWithNonEntityMemberAccess (IQueryable<Cook> source1)
     {
       DateTime now = DateTime.Now;
       return from s1 in source1 select now.Day;
     }
 
-    public static IQueryable<Chef> CreateRelationMemberSelectQuery(IQueryable<Student_Detail> source)
+    public static IQueryable<Cook> CreateRelationMemberSelectQuery(IQueryable<Student_Detail> source)
     {
-      return from sd in source select sd.Chef;
+      return from sd in source select sd.Cook;
     }
 
-    public static MethodCallExpression CreateSimpleQuery_SelectExpression (IQueryable<Chef> source)
+    public static MethodCallExpression CreateSimpleQuery_SelectExpression (IQueryable<Cook> source)
     {
-      IQueryable<Chef> query = CreateSimpleQuery (source);
+      IQueryable<Cook> query = CreateSimpleQuery (source);
       return (MethodCallExpression) query.Expression;
     }
 
-    public static MethodCallExpression CreateSubQueryInSelct_SelectExpression (IQueryable<Chef> source)
+    public static MethodCallExpression CreateSubQueryInSelct_SelectExpression (IQueryable<Cook> source)
     {
-      IQueryable<IQueryable<Chef>> query = CreateSubQueryInSelect (source);
+      IQueryable<IQueryable<Cook>> query = CreateSubQueryInSelect (source);
       return (MethodCallExpression) query.Expression;
     }
 
-    public static IQueryable<Chef> CreateSimpleQuery (IQueryable<Chef> source)
+    public static IQueryable<Cook> CreateSimpleQuery (IQueryable<Cook> source)
     {
       return from s in source select s;
     }
 
-    public static IQueryable<string> CreateSimpleQuery_WithProjection (IQueryable<Chef> source)
+    public static IQueryable<string> CreateSimpleQuery_WithProjection (IQueryable<Cook> source)
     {
       return from s in source select s.FirstName;
     }
 
-    public static IQueryable<int> CreateSimpleQueryOnID (IQueryable<Chef> source)
+    public static IQueryable<int> CreateSimpleQueryOnID (IQueryable<Cook> source)
     {
       return from s in source select s.ID;
     }
 
-    public static IQueryable<string> CreateUnaryBinaryLambdaInvocationConvertNewArrayExpressionQuery (IQueryable<Chef> source1)
+    public static IQueryable<string> CreateUnaryBinaryLambdaInvocationConvertNewArrayExpressionQuery (IQueryable<Cook> source1)
     {
       return from s1 in source1 select ((Func<string, string>) (s => s1.FirstName)) (s1.Name) + new[] { s1.ToString () }[s1.ID];
     }
 
-    public static IQueryable<IQueryable<Chef>> CreateSubQueryInSelect (IQueryable<Chef> source)
+    public static IQueryable<IQueryable<Cook>> CreateSubQueryInSelect (IQueryable<Cook> source)
     {
       return from s in source select (from o in source select o);
     }
 
-    public static IQueryable<IQueryable<Chef>> CreateSubQueryInSelect_WithoutExplicitSelect (IQueryable<Chef> source)
+    public static IQueryable<IQueryable<Cook>> CreateSubQueryInSelect_WithoutExplicitSelect (IQueryable<Cook> source)
     {
       return from s in source select (from o in source where o != null select o);
     }
 
-    public static MethodCallExpression CreateSubQueryInMainFrom (IQueryable<Chef> source)
+    public static MethodCallExpression CreateSubQueryInMainFrom (IQueryable<Cook> source)
     {
       var query = from s in (from si in source select si) select s;
       return (MethodCallExpression) query.Expression;
     }
 
-    public static Expression CreateCountQueryExpression (IQueryable<Chef> source)
+    public static Expression CreateCountQueryExpression (IQueryable<Cook> source)
     {
       return ExpressionHelper.MakeExpression (() => (from s in source select s).Count());
     }

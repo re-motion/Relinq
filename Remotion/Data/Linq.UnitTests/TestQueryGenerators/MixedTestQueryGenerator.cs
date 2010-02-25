@@ -24,86 +24,86 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
 {
   internal static class MixedTestQueryGenerator
   {
-    public static IQueryable<Chef> CreateMultiFromWhereQuery (IQueryable<Chef> source1, IQueryable<Chef> source2)
+    public static IQueryable<Cook> CreateMultiFromWhereQuery (IQueryable<Cook> source1, IQueryable<Cook> source2)
     {
       return from s1 in source1 from s2 in source2 where s1.Name == "Garcia" select s1;
     }
 
 
-    public static IQueryable<Chef> CreateMultiFromWhereOrderByQuery (IQueryable<Chef> source1, IQueryable<Chef> source2)
+    public static IQueryable<Cook> CreateMultiFromWhereOrderByQuery (IQueryable<Cook> source1, IQueryable<Cook> source2)
     {
       return from s1 in source1 from s2 in source2 where s1.Name == "Garcia" orderby s1.FirstName ascending, s2.Name descending select s1;
     }
 
 
-    public static IQueryable<Chef> CreateReverseFromWhereQuery (IQueryable<Chef> source1, IQueryable<Chef> source2)
+    public static IQueryable<Cook> CreateReverseFromWhereQuery (IQueryable<Cook> source1, IQueryable<Cook> source2)
     {
       return from s1 in source1 where s1.Name == "Garcia" from s2 in source2 select s1;
     }
 
-    public static IQueryable<string> CreateReverseFromWhereQueryWithProjection (IQueryable<Chef> source1, IQueryable<Chef> source2)
+    public static IQueryable<string> CreateReverseFromWhereQueryWithProjection (IQueryable<Cook> source1, IQueryable<Cook> source2)
     {
       return from s1 in source1 where s1.Name == "Garcia" from s2 in source2 select s2.Name;
     }
 
-    public static IQueryable<Chef> CreateThreeFromWhereQuery (IQueryable<Chef> source1, IQueryable<Chef> source2, IQueryable<Chef> source3)
+    public static IQueryable<Cook> CreateThreeFromWhereQuery (IQueryable<Cook> source1, IQueryable<Cook> source2, IQueryable<Cook> source3)
     {
       return from s1 in source1 from s2 in source2 where s1.FirstName == "Hugo" from s3 in source3 select s1;
     }
 
-    public static IQueryable<Chef> CreateWhereFromWhereQuery (IQueryable<Chef> source1, IQueryable<Chef> source2)
+    public static IQueryable<Cook> CreateWhereFromWhereQuery (IQueryable<Cook> source1, IQueryable<Cook> source2)
     {
       return from s1 in source1 where s1.FirstName == "Hugo" from s2 in source2 where s1.Name == "Garcia" select s1;
     }
 
-    public static IQueryable<Tuple<string, string, int>> CreateMultiFromQueryWithProjection (IQueryable<Chef> source1, IQueryable<Chef> source2, IQueryable<Chef> source3)
+    public static IQueryable<Tuple<string, string, int>> CreateMultiFromQueryWithProjection (IQueryable<Cook> source1, IQueryable<Cook> source2, IQueryable<Cook> source3)
     {
       return from s1 in source1 from s2 in source2 from s3 in source3 select Tuple.Create (s1.FirstName, s2.Name, s3.ID);
     }
 
-    public static IQueryable<Chef> CreateOrderByWithWhereCondition (IQueryable<Chef> source)
+    public static IQueryable<Cook> CreateOrderByWithWhereCondition (IQueryable<Cook> source)
     {
       return from s in source where s.FirstName == "Garcia" orderby s.FirstName select s;
     }
 
-    public static IQueryable<Chef> CreateOrderByWithWhereConditionAndMultiFrom (IQueryable<Chef> source1, IQueryable<Chef> source2)
+    public static IQueryable<Cook> CreateOrderByWithWhereConditionAndMultiFrom (IQueryable<Cook> source1, IQueryable<Cook> source2)
     {
       return from s1 in source1 where s1.FirstName == "Garcia" orderby s1.FirstName from s2 in source2 where s2.Name == "Garcia" orderby s2.FirstName, s2.Name orderby s2.FirstName select s2;
     }
 
-    public static MethodCallExpression CreateMultiFromWhere_WhereExpression (IQueryable<Chef> source1, IQueryable<Chef> source2)
+    public static MethodCallExpression CreateMultiFromWhere_WhereExpression (IQueryable<Cook> source1, IQueryable<Cook> source2)
     {
-      IQueryable<Chef> query = CreateMultiFromWhereQuery (source1, source2);
+      IQueryable<Cook> query = CreateMultiFromWhereQuery (source1, source2);
       return (MethodCallExpression) query.Expression;
     }
 
-    public static MethodCallExpression CreateReverseFromWhere_WhereExpression (IQueryable<Chef> source1, IQueryable<Chef> source2)
+    public static MethodCallExpression CreateReverseFromWhere_WhereExpression (IQueryable<Cook> source1, IQueryable<Cook> source2)
     {
-      IQueryable<Chef> query = CreateReverseFromWhereQuery (source1, source2);
+      IQueryable<Cook> query = CreateReverseFromWhereQuery (source1, source2);
       return (MethodCallExpression) query.Expression;
     }
 
-    public static MethodCallExpression CreateReverseFromWhereWithProjection_SelectExpression (IQueryable<Chef> source1, IQueryable<Chef> source2)
+    public static MethodCallExpression CreateReverseFromWhereWithProjection_SelectExpression (IQueryable<Cook> source1, IQueryable<Cook> source2)
     {
       IQueryable<string> query = CreateReverseFromWhereQueryWithProjection (source1, source2);
       return (MethodCallExpression) query.Expression;
     }
 
-    public static MethodCallExpression CreateWhereFromWhere_WhereExpression (IQueryable<Chef> source1, IQueryable<Chef> source2)
+    public static MethodCallExpression CreateWhereFromWhere_WhereExpression (IQueryable<Cook> source1, IQueryable<Cook> source2)
     {
-      IQueryable<Chef> query = CreateWhereFromWhereQuery (source1, source2);
+      IQueryable<Cook> query = CreateWhereFromWhereQuery (source1, source2);
       return (MethodCallExpression) query.Expression;
     }
 
-    public static MethodCallExpression CreateThreeFromWhereQuery_SelectManyExpression (IQueryable<Chef> source1, IQueryable<Chef> source2, IQueryable<Chef> source3)
+    public static MethodCallExpression CreateThreeFromWhereQuery_SelectManyExpression (IQueryable<Cook> source1, IQueryable<Cook> source2, IQueryable<Cook> source3)
     {
-      IQueryable<Chef> query = CreateThreeFromWhereQuery (source1, source2, source3);
+      IQueryable<Cook> query = CreateThreeFromWhereQuery (source1, source2, source3);
       return (MethodCallExpression) query.Expression;
     }
 
-    public static MethodCallExpression CreateOrderByQueryWithWhere_OrderByExpression (IQueryable<Chef> source)
+    public static MethodCallExpression CreateOrderByQueryWithWhere_OrderByExpression (IQueryable<Cook> source)
     {
-      IQueryable<Chef> query = CreateOrderByWithWhereCondition (source);
+      IQueryable<Cook> query = CreateOrderByWithWhereCondition (source);
       return (MethodCallExpression) query.Expression;
     }
  }

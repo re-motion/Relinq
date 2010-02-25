@@ -37,22 +37,22 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
                   select Tuple.Create (s, sd);
 
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
-      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Tuple<Chef, Student_Detail>>)));
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Tuple<Cook, Student_Detail>>)));
 
       var mainFromClause = queryModel.MainFromClause;
       CheckConstantQuerySource (mainFromClause.FromExpression, QuerySource);
-      Assert.That (mainFromClause.ItemType, Is.SameAs (typeof (Chef)));
+      Assert.That (mainFromClause.ItemType, Is.SameAs (typeof (Cook)));
       Assert.That (mainFromClause.ItemName, Is.EqualTo ("s"));
 
       var joinClause = ((JoinClause) queryModel.BodyClauses[0]);
       CheckConstantQuerySource (joinClause.InnerSequence, DetailQuerySource);
       Assert.That (joinClause.ItemType, Is.SameAs (typeof (Student_Detail)));
       Assert.That (joinClause.ItemName, Is.EqualTo ("sd"));
-      CheckResolvedExpression<Chef, int> (joinClause.OuterKeySelector, mainFromClause, s => s.ID);
+      CheckResolvedExpression<Cook, int> (joinClause.OuterKeySelector, mainFromClause, s => s.ID);
       CheckResolvedExpression<Student_Detail, int> (joinClause.InnerKeySelector, joinClause, sd => sd.StudentID);
 
       var selectClause = queryModel.SelectClause;
-      CheckResolvedExpression<Chef, Student_Detail, Tuple<Chef, Student_Detail>> (
+      CheckResolvedExpression<Cook, Student_Detail, Tuple<Cook, Student_Detail>> (
           selectClause.Selector, 
           mainFromClause, 
           joinClause, 
@@ -71,33 +71,33 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       var additionalFromClause = (AdditionalFromClause) queryModel.BodyClauses[0];
       
       var innerJoinClause = ((JoinClause) ((SubQueryExpression) additionalFromClause.FromExpression).QueryModel.BodyClauses[0]);
-      CheckResolvedExpression<Chef, IEnumerable<Chef>> (innerJoinClause.InnerSequence, mainFromClause, s => s.Friends);
-      Assert.That (innerJoinClause.ItemType, Is.SameAs (typeof (Chef)));
+      CheckResolvedExpression<Cook, IEnumerable<Cook>> (innerJoinClause.InnerSequence, mainFromClause, s => s.Friends);
+      Assert.That (innerJoinClause.ItemType, Is.SameAs (typeof (Cook)));
       Assert.That (innerJoinClause.ItemName, Is.EqualTo ("s2"));
     }
 
     [Test]
     public void Join_WithoutSelect ()
     {
-      var query = QuerySource.Join (DetailQuerySource, s => s, sd => sd.Chef, (s, sd) => Tuple.Create (s, sd));
+      var query = QuerySource.Join (DetailQuerySource, s => s, sd => sd.Cook, (s, sd) => Tuple.Create (s, sd));
 
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
-      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Tuple<Chef, Student_Detail>>)));
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Tuple<Cook, Student_Detail>>)));
 
       var mainFromClause = queryModel.MainFromClause;
       CheckConstantQuerySource (mainFromClause.FromExpression, QuerySource);
-      Assert.That (mainFromClause.ItemType, Is.SameAs (typeof (Chef)));
+      Assert.That (mainFromClause.ItemType, Is.SameAs (typeof (Cook)));
       Assert.That (mainFromClause.ItemName, Is.EqualTo ("s"));
 
       var joinClause = (JoinClause) queryModel.BodyClauses[0];
       CheckConstantQuerySource (joinClause.InnerSequence, DetailQuerySource);
       Assert.That (joinClause.ItemType, Is.SameAs (typeof (Student_Detail)));
       Assert.That (joinClause.ItemName, Is.EqualTo ("sd"));
-      CheckResolvedExpression<Chef, Chef> (joinClause.OuterKeySelector, mainFromClause, s => s);
-      CheckResolvedExpression<Student_Detail, Chef> (joinClause.InnerKeySelector, joinClause, sd => sd.Chef);
+      CheckResolvedExpression<Cook, Cook> (joinClause.OuterKeySelector, mainFromClause, s => s);
+      CheckResolvedExpression<Student_Detail, Cook> (joinClause.InnerKeySelector, joinClause, sd => sd.Cook);
 
       var selectClause = queryModel.SelectClause;
-      CheckResolvedExpression<Chef, Student_Detail, Tuple<Chef, Student_Detail>> (
+      CheckResolvedExpression<Cook, Student_Detail, Tuple<Cook, Student_Detail>> (
           selectClause.Selector,
           mainFromClause,
           joinClause,

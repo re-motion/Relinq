@@ -42,18 +42,18 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
 
       var ordering1 = orderByClause.Orderings[0];
       Assert.That (ordering1.OrderingDirection, Is.EqualTo (OrderingDirection.Asc));
-      CheckResolvedExpression<Chef, string> (ordering1.Expression, mainFromClause, s => s.FirstName);
+      CheckResolvedExpression<Cook, string> (ordering1.Expression, mainFromClause, s => s.FirstName);
 
       var ordering2 = orderByClause.Orderings[1];
       Assert.That (ordering2.OrderingDirection, Is.EqualTo (OrderingDirection.Desc));
-      CheckResolvedExpression<Chef, string> (ordering2.Expression, mainFromClause, s => s.Name);
+      CheckResolvedExpression<Cook, string> (ordering2.Expression, mainFromClause, s => s.Name);
 
       var ordering3 = orderByClause.Orderings[2];
       Assert.That (ordering3.OrderingDirection, Is.EqualTo (OrderingDirection.Asc));
-      CheckResolvedExpression<Chef, List<int>> (ordering3.Expression, mainFromClause, s => s.Scores);
+      CheckResolvedExpression<Cook, List<int>> (ordering3.Expression, mainFromClause, s => s.Scores);
 
       var selectClause = queryModel.SelectClause;
-      CheckResolvedExpression<Chef, Chef> (selectClause.Selector, queryModel.MainFromClause, s => s);
+      CheckResolvedExpression<Cook, Cook> (selectClause.Selector, queryModel.MainFromClause, s => s);
     }
 
     [Test]
@@ -79,10 +79,10 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       var queryModel = QueryParser.GetParsedQuery (expression);
 
       var whereClause = (WhereClause) queryModel.BodyClauses[0];
-      CheckResolvedExpression<Chef, bool> (whereClause.Predicate, queryModel.MainFromClause, s1 => s1.FirstName == "Garcia");
+      CheckResolvedExpression<Cook, bool> (whereClause.Predicate, queryModel.MainFromClause, s1 => s1.FirstName == "Garcia");
 
       var orderByClause = (OrderByClause) queryModel.BodyClauses[1];
-      CheckResolvedExpression<Chef, string> (orderByClause.Orderings[0].Expression, queryModel.MainFromClause, s1 => s1.FirstName);
+      CheckResolvedExpression<Cook, string> (orderByClause.Orderings[0].Expression, queryModel.MainFromClause, s1 => s1.FirstName);
     }
 
     [Test]
@@ -95,13 +95,13 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       CheckConstantQuerySource (additionalFromClause.FromExpression, QuerySource);
 
       var whereClause = (WhereClause) queryModel.BodyClauses[1];
-      CheckResolvedExpression<Chef, bool> (whereClause.Predicate, queryModel.MainFromClause, s1 => s1.Name == "Garcia");
+      CheckResolvedExpression<Cook, bool> (whereClause.Predicate, queryModel.MainFromClause, s1 => s1.Name == "Garcia");
 
       var orderByClause = (OrderByClause) queryModel.BodyClauses[2];
       Assert.That (orderByClause.Orderings[0].OrderingDirection, Is.EqualTo (OrderingDirection.Asc));
-      CheckResolvedExpression<Chef, string> (orderByClause.Orderings[0].Expression, queryModel.MainFromClause, s1 => s1.FirstName);
+      CheckResolvedExpression<Cook, string> (orderByClause.Orderings[0].Expression, queryModel.MainFromClause, s1 => s1.FirstName);
       Assert.That (orderByClause.Orderings[1].OrderingDirection, Is.EqualTo (OrderingDirection.Desc));
-      CheckResolvedExpression<Chef, string> (orderByClause.Orderings[1].Expression, additionalFromClause, s2 => s2.Name);
+      CheckResolvedExpression<Cook, string> (orderByClause.Orderings[1].Expression, additionalFromClause, s2 => s2.Name);
     }
   }
 }

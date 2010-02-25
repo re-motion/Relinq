@@ -42,10 +42,10 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       CheckConstantQuerySource (additionalFromClause.FromExpression, QuerySource);
 
       var whereClause = (WhereClause) queryModel.BodyClauses[1];
-      CheckResolvedExpression<Chef, bool> (whereClause.Predicate, queryModel.MainFromClause, s1 => s1.Name == "Garcia");
+      CheckResolvedExpression<Cook, bool> (whereClause.Predicate, queryModel.MainFromClause, s1 => s1.Name == "Garcia");
 
       var selectClause = queryModel.SelectClause;
-      CheckResolvedExpression<Chef, Chef> (selectClause.Selector, queryModel.MainFromClause, s1 => s1);
+      CheckResolvedExpression<Cook, Cook> (selectClause.Selector, queryModel.MainFromClause, s1 => s1);
     }
 
     [Test]
@@ -58,10 +58,10 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       CheckConstantQuerySource (mainFromClause.FromExpression, IndustrialSectorQuerySource);
 
       var memberFromClause = (AdditionalFromClause) queryModel.BodyClauses[0];
-      CheckResolvedExpression<IndustrialSector, IEnumerable<Chef>> (memberFromClause.FromExpression, mainFromClause, sector => sector.Students);
+      CheckResolvedExpression<IndustrialSector, IEnumerable<Cook>> (memberFromClause.FromExpression, mainFromClause, sector => sector.Students);
 
       var selectClause = queryModel.SelectClause;
-      CheckResolvedExpression<Chef, Chef> (selectClause.Selector, memberFromClause, s1 => s1);
+      CheckResolvedExpression<Cook, Cook> (selectClause.Selector, memberFromClause, s1 => s1);
     }
 
     [Test]
@@ -73,7 +73,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       var mainFromClause = queryModel.MainFromClause;
       CheckConstantQuerySource (mainFromClause.FromExpression, QuerySource);
       Assert.That (mainFromClause.ItemName, Is.EqualTo ("s1"));
-      Assert.That (mainFromClause.ItemType, Is.SameAs (typeof (Chef)));
+      Assert.That (mainFromClause.ItemType, Is.SameAs (typeof (Cook)));
 
       Assert.That (queryModel.BodyClauses[0], Is.InstanceOfType (typeof (AdditionalFromClause)));
       var additionalFromClause = (AdditionalFromClause) queryModel.BodyClauses[0];
@@ -81,7 +81,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       CheckConstantQuerySource (additionalFromClause.FromExpression, QuerySource);
 
       var selectClause = queryModel.SelectClause;
-      CheckResolvedExpression<Chef, Chef> (selectClause.Selector, queryModel.MainFromClause, s1 => s1);
+      CheckResolvedExpression<Cook, Cook> (selectClause.Selector, queryModel.MainFromClause, s1 => s1);
     }
 
     [Test]
@@ -99,7 +99,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       CheckConstantQuerySource (subQueryMainFromClause.FromExpression, QuerySource);
 
       var subQuerySelectClause = subQueryModel.SelectClause;
-      CheckResolvedExpression<Chef, Chef> (subQuerySelectClause.Selector, subQueryMainFromClause, s3 => s3);
+      CheckResolvedExpression<Cook, Cook> (subQuerySelectClause.Selector, subQueryMainFromClause, s3 => s3);
     }
 
     [Test]
@@ -115,7 +115,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       Assert.That (additionalFromClause1.ItemName, Is.EqualTo ("s2"));
       
       var whereClause = (WhereClause) queryModel.BodyClauses[1];
-      CheckResolvedExpression<Chef, bool> (whereClause.Predicate, queryModel.MainFromClause, s1 => s1.FirstName == "Hugo");
+      CheckResolvedExpression<Cook, bool> (whereClause.Predicate, queryModel.MainFromClause, s1 => s1.FirstName == "Hugo");
 
       var additionalFromClause2 = (AdditionalFromClause) queryModel.BodyClauses[2];
       Assert.That (additionalFromClause2.ItemName, Is.EqualTo ("s3"));
@@ -134,14 +134,14 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       Assert.That (queryModel.BodyClauses.Count, Is.EqualTo (2));
 
       var whereClause = (WhereClause) queryModel.BodyClauses[0];
-      CheckResolvedExpression<Chef, bool> (whereClause.Predicate, queryModel.MainFromClause, s1 => s1.Name == "Garcia");
+      CheckResolvedExpression<Cook, bool> (whereClause.Predicate, queryModel.MainFromClause, s1 => s1.Name == "Garcia");
 
       var additionalFromClause = (AdditionalFromClause) queryModel.BodyClauses[1];
       Assert.That (additionalFromClause.ItemName, Is.EqualTo ("s2"));
       CheckConstantQuerySource (additionalFromClause.FromExpression, QuerySource);
 
       var selectClause = queryModel.SelectClause;
-      CheckResolvedExpression<Chef, Chef> (selectClause.Selector, mainFromClause, s1 => s1);
+      CheckResolvedExpression<Cook, Cook> (selectClause.Selector, mainFromClause, s1 => s1);
     }
 
     [Test]
@@ -155,13 +155,13 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       Assert.That (queryModel.BodyClauses.Count, Is.EqualTo (2));
 
       var whereClause = (WhereClause) queryModel.BodyClauses[0];
-      CheckResolvedExpression<Chef, bool> (whereClause.Predicate, queryModel.MainFromClause, s1 => s1.Name == "Garcia");
+      CheckResolvedExpression<Cook, bool> (whereClause.Predicate, queryModel.MainFromClause, s1 => s1.Name == "Garcia");
 
       var additionalFromClause = (AdditionalFromClause) queryModel.BodyClauses[1];
       CheckConstantQuerySource (additionalFromClause.FromExpression, QuerySource);
       
       var selectClause = queryModel.SelectClause;
-      CheckResolvedExpression<Chef, string> (selectClause.Selector, (AdditionalFromClause) queryModel.BodyClauses.Last(), s2 => s2.Name);
+      CheckResolvedExpression<Cook, string> (selectClause.Selector, (AdditionalFromClause) queryModel.BodyClauses.Last(), s2 => s2.Name);
     }
   }
 }

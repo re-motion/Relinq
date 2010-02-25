@@ -46,10 +46,10 @@ namespace Remotion.Data.Linq.UnitTests.Clauses
       Expression outerKeySelector = ExpressionHelper.CreateExpression ();
       Expression innerKeySelector = ExpressionHelper.CreateExpression ();
 
-      var joinClause = new JoinClause ("x", typeof(Chef), innerSequence, outerKeySelector, innerKeySelector);
+      var joinClause = new JoinClause ("x", typeof(Cook), innerSequence, outerKeySelector, innerKeySelector);
 
       Assert.That (joinClause.ItemName, Is.SameAs ("x"));
-      Assert.That (joinClause.ItemType, Is.SameAs (typeof (Chef)));
+      Assert.That (joinClause.ItemType, Is.SameAs (typeof (Cook)));
       Assert.That (joinClause.InnerSequence, Is.SameAs (innerSequence));
       Assert.That (joinClause.InnerKeySelector, Is.SameAs (innerKeySelector));
       Assert.That (joinClause.OuterKeySelector, Is.SameAs (outerKeySelector));
@@ -120,7 +120,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses
       var newOuterKeySelector = ExpressionHelper.CreateExpression ();
       var newInnerKeySelector = ExpressionHelper.CreateExpression ();
 
-      var clause = new JoinClause ("x", typeof (Chef), oldInnerSequence, oldOuterKeySelector, oldInnerKeySelector);
+      var clause = new JoinClause ("x", typeof (Cook), oldInnerSequence, oldOuterKeySelector, oldInnerKeySelector);
 
       clause.TransformExpressions (ex =>
           {
@@ -145,8 +145,8 @@ namespace Remotion.Data.Linq.UnitTests.Clauses
     [Test]
     public new void ToString ()
     {
-      var joinClause = new JoinClause ("x", typeof (Chef), Expression.Constant (0), Expression.Constant (1), Expression.Constant (2));
-      Assert.That (joinClause.ToString (), Is.EqualTo ("join Chef x in 0 on 1 equals 2"));
+      var joinClause = new JoinClause ("x", typeof (Cook), Expression.Constant (0), Expression.Constant (1), Expression.Constant (2));
+      Assert.That (joinClause.ToString (), Is.EqualTo ("join Cook x in 0 on 1 equals 2"));
     }
   }
 }

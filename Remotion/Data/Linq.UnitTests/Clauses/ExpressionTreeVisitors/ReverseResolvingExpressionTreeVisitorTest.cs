@@ -41,24 +41,24 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ExpressionTreeVisitors
     [SetUp]
     public void SetUp ()
     {
-      _anonymousTypeCtor = typeof (AnonymousType<Chef, Chef>).GetConstructor (new[] { typeof (Chef), typeof (Chef) });
+      _anonymousTypeCtor = typeof (AnonymousType<Cook, Cook>).GetConstructor (new[] { typeof (Cook), typeof (Cook) });
 
-      _fromClause1 = ExpressionHelper.CreateMainFromClause_Int ("s1", typeof (Chef), ExpressionHelper.CreateStudentQueryable ());
+      _fromClause1 = ExpressionHelper.CreateMainFromClause_Int ("s1", typeof (Cook), ExpressionHelper.CreateStudentQueryable ());
       _querySource1 = new QuerySourceReferenceExpression (_fromClause1);
 
-      _fromClause2 = ExpressionHelper.CreateMainFromClause_Int ("s2", typeof (Chef), ExpressionHelper.CreateStudentQueryable ());
+      _fromClause2 = ExpressionHelper.CreateMainFromClause_Int ("s2", typeof (Cook), ExpressionHelper.CreateStudentQueryable ());
       _querySource2 = new QuerySourceReferenceExpression (_fromClause2);
 
       _itemExpression = Expression.New (
           _anonymousTypeCtor,
           new Expression[] { _querySource1, _querySource2 },
-          new MemberInfo[] { typeof (AnonymousType<Chef, Chef>).GetProperty ("a"), typeof (AnonymousType<Chef, Chef>).GetProperty ("b") });
+          new MemberInfo[] { typeof (AnonymousType<Cook, Cook>).GetProperty ("a"), typeof (AnonymousType<Cook, Cook>).GetProperty ("b") });
     }
 
     [Test]
     public void ReverseResolve_NoReferenceExpression ()
     {
-      // itemExpression: new AnonymousType<Chef, Chef> ( a = [s1], b = [s2] )
+      // itemExpression: new AnonymousType<Cook, Cook> ( a = [s1], b = [s2] )
       // resolvedExpression: 0
       // expected result: input => 0
 
@@ -66,14 +66,14 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ExpressionTreeVisitors
 
       LambdaExpression lambdaExpression = ReverseResolvingExpressionTreeVisitor.ReverseResolve (_itemExpression, resolvedExpression);
 
-      var expectedExpression = ExpressionHelper.CreateLambdaExpression<AnonymousType<Chef, Chef>, int> (input => 0);
+      var expectedExpression = ExpressionHelper.CreateLambdaExpression<AnonymousType<Cook, Cook>, int> (input => 0);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, lambdaExpression);
     }
 
     [Test]
     public void ReverseResolve_TopLevelReferenceExpression ()
     {
-      // itemExpression: new AnonymousType<Chef, Chef> ( a = [s1], b = [s2] )
+      // itemExpression: new AnonymousType<Cook, Cook> ( a = [s1], b = [s2] )
       // resolvedExpression: [s1]
       // expected result: input => input.a
 
@@ -81,7 +81,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ExpressionTreeVisitors
 
       LambdaExpression lambdaExpression = ReverseResolvingExpressionTreeVisitor.ReverseResolve (_itemExpression, resolvedExpression);
 
-      var expectedExpression = ExpressionHelper.CreateLambdaExpression<AnonymousType<Chef, Chef>, Chef> (input => input.a);
+      var expectedExpression = ExpressionHelper.CreateLambdaExpression<AnonymousType<Cook, Cook>, Cook> (input => input.a);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, lambdaExpression);
     }
 
@@ -91,11 +91,11 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ExpressionTreeVisitors
         + "complex.")]
     public void ReverseResolve_NonAccessibleReferenceExpression_Throws ()
     {
-      // itemExpression: new AnonymousType<Chef, Chef> ( a = [s1], b = [s2] )
+      // itemExpression: new AnonymousType<Cook, Cook> ( a = [s1], b = [s2] )
       // resolvedExpression: [s3]
       // expected result: exception
 
-      var fromClause3 = ExpressionHelper.CreateMainFromClause_Int ("s3", typeof (Chef), ExpressionHelper.CreateStudentQueryable());
+      var fromClause3 = ExpressionHelper.CreateMainFromClause_Int ("s3", typeof (Cook), ExpressionHelper.CreateStudentQueryable());
       var resolvedExpression = new QuerySourceReferenceExpression (fromClause3);
 
       ReverseResolvingExpressionTreeVisitor.ReverseResolve (_itemExpression, resolvedExpression);
@@ -104,22 +104,22 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ExpressionTreeVisitors
     [Test]
     public void ReverseResolve_MultipleNestedReferenceExpressions ()
     {
-      // itemExpression: new AnonymousType<Chef, Chef> ( a = [s1], b = [s2] )
+      // itemExpression: new AnonymousType<Cook, Cook> ( a = [s1], b = [s2] )
       // resolvedExpression: [s1].ID + [s2].ID
       // expected result: input => input.a.ID + input.b.ID
 
-      var resolvedExpression = ExpressionHelper.Resolve<Chef, Chef, int> (_fromClause1, _fromClause2, (s1, s2) => s1.ID + s2.ID);
+      var resolvedExpression = ExpressionHelper.Resolve<Cook, Cook, int> (_fromClause1, _fromClause2, (s1, s2) => s1.ID + s2.ID);
 
       LambdaExpression lambdaExpression = ReverseResolvingExpressionTreeVisitor.ReverseResolve (_itemExpression, resolvedExpression);
 
-      var expectedExpression = ExpressionHelper.CreateLambdaExpression<AnonymousType<Chef, Chef>, int> (input => input.a.ID + input.b.ID);
+      var expectedExpression = ExpressionHelper.CreateLambdaExpression<AnonymousType<Cook, Cook>, int> (input => input.a.ID + input.b.ID);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, lambdaExpression);
     }
 
     [Test]
     public void ReverseResolveLambda ()
     {
-      // itemExpression: new AnonymousType<Chef, Chef> ( a = [s1], b = [s2] )
+      // itemExpression: new AnonymousType<Cook, Cook> ( a = [s1], b = [s2] )
       // resolvedExpression: (x, y) => 0
       // expected result: (x, input, y) => 0
 
@@ -129,7 +129,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ExpressionTreeVisitors
 
       var lambdaExpression = ReverseResolvingExpressionTreeVisitor.ReverseResolveLambda (_itemExpression, resolvedExpression, 1);
 
-      var expectedExpression = ExpressionHelper.CreateLambdaExpression<int, AnonymousType<Chef, Chef>, string, int> ((x, input, y) => 0);
+      var expectedExpression = ExpressionHelper.CreateLambdaExpression<int, AnonymousType<Cook, Cook>, string, int> ((x, input, y) => 0);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, lambdaExpression);
     }
 
@@ -137,7 +137,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ExpressionTreeVisitors
     [ExpectedException (typeof (ArgumentOutOfRangeException))]
     public void ReverseResolveLambda_InvalidPosition_TooBig ()
     {
-      // itemExpression: new AnonymousType<Chef, Chef> ( a = [s1], b = [s2] )
+      // itemExpression: new AnonymousType<Cook, Cook> ( a = [s1], b = [s2] )
       // resolvedExpression: (x, y) => 0
       // expected result: (x, input, y) => 0
 
@@ -152,7 +152,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ExpressionTreeVisitors
     [ExpectedException (typeof (ArgumentOutOfRangeException))]
     public void ReverseResolveLambda_InvalidPosition_TooSmall ()
     {
-      // itemExpression: new AnonymousType<Chef, Chef> ( a = [s1], b = [s2] )
+      // itemExpression: new AnonymousType<Cook, Cook> ( a = [s1], b = [s2] )
       // resolvedExpression: (x, y) => 0
       // expected result: (x, input, y) => 0
 

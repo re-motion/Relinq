@@ -55,13 +55,13 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure
     [Test]
     public void ParseTree_Expression ()
     {
-      var expression = Expression.MakeMemberAccess (new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Student ()), typeof (Chef).GetProperty ("Friends"));
+      var expression = Expression.MakeMemberAccess (new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Student ()), typeof (Cook).GetProperty ("Friends"));
 
       var result = _expressionTreeParser.ParseTree (expression);
 
       Assert.That (result, Is.InstanceOfType (typeof (MainSourceExpressionNode)));
       Assert.That (((MainSourceExpressionNode) result).ParsedExpression, Is.SameAs (expression));
-      Assert.That (((MainSourceExpressionNode) result).QuerySourceElementType, Is.SameAs (typeof (Chef)));
+      Assert.That (((MainSourceExpressionNode) result).QuerySourceElementType, Is.SameAs (typeof (Cook)));
       Assert.That (((MainSourceExpressionNode) result).AssociatedIdentifier, Is.EqualTo ("<generated>_0"));
     }
 
@@ -102,7 +102,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure
     public void ParseTree_MethodCallExpression ()
     {
       var querySource = ExpressionHelper.CreateStudentQueryable();
-      Expression<Func<Chef, int>> selector = s => s.ID;
+      Expression<Func<Cook, int>> selector = s => s.ID;
       var expression = ExpressionHelper.MakeExpression (() => querySource.Select (selector));
 
       var result = _expressionTreeParser.ParseTree (expression);
@@ -119,7 +119,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure
     public void ParseTree_MethodCallExpression_GetsGeneratedIdentifier ()
     {
       var querySource = ExpressionHelper.CreateStudentQueryable ();
-      Expression<Func<Chef, int>> selector = s => s.ID;
+      Expression<Func<Cook, int>> selector = s => s.ID;
       var expression = ExpressionHelper.MakeExpression (() => querySource.Select (selector));
 
       var result = _expressionTreeParser.ParseTree (expression);
@@ -185,8 +185,8 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure
     public void ParseTree_ComplexMethodCallExpression ()
     {
       var querySource = ExpressionHelper.CreateStudentQueryable();
-      Expression<Func<Chef, int>> selector = s => s.ID;
-      Expression<Func<Chef, bool>> predicate = s => s.HasDegree;
+      Expression<Func<Cook, int>> selector = s => s.ID;
+      Expression<Func<Cook, bool>> predicate = s => s.HasDegree;
       var expression = ExpressionHelper.MakeExpression (() => querySource.Where (predicate).Select (selector));
 
       var result = _expressionTreeParser.ParseTree (expression);

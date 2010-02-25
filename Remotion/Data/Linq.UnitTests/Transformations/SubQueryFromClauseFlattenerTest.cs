@@ -60,7 +60,7 @@ namespace Remotion.Data.Linq.UnitTests.Transformations
                        select sector.Student_Detail)
                   from s2 in s1.Friends
                   where sd.Subject == "Maths"
-                  select new Tuple<Chef, Student_Detail> (s1, sd);
+                  select new Tuple<Cook, Student_Detail> (s1, sd);
       _queryModel = ExpressionHelper.ParseQuery (query);
 
       _mainFromClause = _queryModel.MainFromClause;
@@ -82,7 +82,7 @@ namespace Remotion.Data.Linq.UnitTests.Transformations
       _visitor.VisitAdditionalFromClause (_additionalFromClause2, _queryModel, 1);
 
       Assert.That (_queryModel.BodyClauses[1], Is.SameAs (_additionalFromClause2));
-      var expectedExpression = ExpressionHelper.Resolve<Chef, IEnumerable<Chef>> (_mainFromClause, s => s.Friends);
+      var expectedExpression = ExpressionHelper.Resolve<Cook, IEnumerable<Cook>> (_mainFromClause, s => s.Friends);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, _additionalFromClause2.FromExpression);
     }
 
@@ -127,28 +127,28 @@ namespace Remotion.Data.Linq.UnitTests.Transformations
           ExpressionHelper.Resolve<IndustrialSector, bool> (_additionalFromClause1, sector => sector.Student_Detail.Subject == "Maths");
       ExpressionTreeComparer.CheckAreEqualTrees (expectedPredicate, _whereClause.Predicate);
 
-      var expectedSelector = ExpressionHelper.Resolve<Chef, IndustrialSector, Tuple<Chef, Student_Detail>> (
+      var expectedSelector = ExpressionHelper.Resolve<Cook, IndustrialSector, Tuple<Cook, Student_Detail>> (
           _mainFromClause,
           _additionalFromClause1,
-          (s1, sector) => new Tuple<Chef, Student_Detail> (s1, sector.Student_Detail));
+          (s1, sector) => new Tuple<Cook, Student_Detail> (s1, sector.Student_Detail));
       ExpressionTreeComparer.CheckAreEqualTrees (expectedSelector, _selectClause.Selector);
     }
 
     [Test]
     [ExpectedException (typeof(NotSupportedException), ExpectedMessage = "The subquery "
-        + "'TestQueryable<Chef>() => Distinct()' cannot be flattened and pulled out of the from clause because it "
+        + "'TestQueryable<Cook>() => Distinct()' cannot be flattened and pulled out of the from clause because it "
         + "contains result operators.")]
     public void VisitAdditionalFromClause_ThrowsOnResultOperator ()
     {
       var queryModel = ExpressionHelper.CreateQueryModel_Student ();
       queryModel.ResultOperators.Add (new DistinctResultOperator ());
-      var clause = new AdditionalFromClause ("x", typeof (Chef), new SubQueryExpression (queryModel));
+      var clause = new AdditionalFromClause ("x", typeof (Cook), new SubQueryExpression (queryModel));
       _visitor.VisitAdditionalFromClause (clause, _queryModel, 0);
     }
 
     [Test]
     [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "The subquery "
-        + "'from Chef s in TestQueryable<Chef>() orderby 0 asc select [s]' cannot be flattened and pulled out of the from clause because it "
+        + "'from Cook s in TestQueryable<Cook>() orderby 0 asc select [s]' cannot be flattened and pulled out of the from clause because it "
         + "contains an OrderByClause.")]
     public void VisitAdditionalFromClause_ThrowsOnOrderBy ()
     {
@@ -156,7 +156,7 @@ namespace Remotion.Data.Linq.UnitTests.Transformations
       var orderByClause = new OrderByClause ();
       orderByClause.Orderings.Add (new Ordering (Expression.Constant (0), OrderingDirection.Asc));
       queryModel.BodyClauses.Add (orderByClause);
-      var clause = new AdditionalFromClause ("x", typeof (Chef), new SubQueryExpression (queryModel));
+      var clause = new AdditionalFromClause ("x", typeof (Cook), new SubQueryExpression (queryModel));
       _visitor.VisitAdditionalFromClause (clause, _queryModel, 0);
     }
 
@@ -165,7 +165,7 @@ namespace Remotion.Data.Linq.UnitTests.Transformations
     {
       var mainFromSubQuery = from sd in _detailSource
                              where sd.Subject == "Maths"
-                             select sd.Chef;
+                             select sd.Cook;
       var parsedMainFromSubQuery = ExpressionHelper.ParseQuery (mainFromSubQuery);
 
       var query = from s in ExpressionHelper.CreateStudentQueryable()
@@ -175,7 +175,7 @@ namespace Remotion.Data.Linq.UnitTests.Transformations
 
       parsedQuery.Accept (_visitor);
 
-      var expectedSelector = ExpressionHelper.Resolve<Student_Detail, string> (parsedQuery.MainFromClause, sd => sd.Chef.FirstName);
+      var expectedSelector = ExpressionHelper.Resolve<Student_Detail, string> (parsedQuery.MainFromClause, sd => sd.Cook.FirstName);
 
       Assert.That (parsedQuery.MainFromClause.FromExpression, Is.Not.InstanceOfType (typeof (SubQueryExpression)));
       Assert.That (parsedQuery.BodyClauses.Count, Is.EqualTo (1));
@@ -194,14 +194,14 @@ namespace Remotion.Data.Linq.UnitTests.Transformations
                   where sd.Subject == "Maths"
                   from s3 in
                     (from a in s1.Friends
-                     from b in sd.Chef.Friends
-                     select new Tuple<Chef, Chef> (a, b))
-                  select new Tuple<Chef, Student_Detail, Chef, Chef> (s1, sd, s3.Item1, s3.Item2);
+                     from b in sd.Cook.Friends
+                     select new Tuple<Cook, Cook> (a, b))
+                  select new Tuple<Cook, Student_Detail, Cook, Cook> (s1, sd, s3.Item1, s3.Item2);
 
       var queryModel = ExpressionHelper.ParseQuery (query);
       var mainFromSubQuery = from sd in _detailSource
                              where sd.Subject == "Maths"
-                             select sd.Chef;
+                             select sd.Cook;
       var parsedMainFromSubQuery = ExpressionHelper.ParseQuery (mainFromSubQuery);
       queryModel.MainFromClause.FromExpression = new SubQueryExpression (parsedMainFromSubQuery);
 
@@ -211,15 +211,15 @@ namespace Remotion.Data.Linq.UnitTests.Transformations
                           where sd.Subject == "Maths"
                           from sector in _sectorSource
                           where sector.ID > 10
-                          from s2 in sd.Chef.Friends
+                          from s2 in sd.Cook.Friends
                           where sector.Student_Detail.Subject == "Maths"
-                          from a in sd.Chef.Friends
-                          from b in sector.Student_Detail.Chef.Friends
-                          select new Tuple<Chef, Student_Detail, Chef, Chef> (
-                              sd.Chef, 
+                          from a in sd.Cook.Friends
+                          from b in sector.Student_Detail.Cook.Friends
+                          select new Tuple<Cook, Student_Detail, Cook, Cook> (
+                              sd.Cook, 
                               sector.Student_Detail, 
-                              new Tuple<Chef, Chef> (a, b).Item1, 
-                              new Tuple<Chef, Chef> (a, b).Item2);
+                              new Tuple<Cook, Cook> (a, b).Item1, 
+                              new Tuple<Cook, Cook> (a, b).Item2);
 
       var expectedQueryModel = ExpressionHelper.ParseQuery (expectedQuery);
       Assert.That (expectedQueryModel.ToString(), Is.EqualTo (queryModel.ToString()));

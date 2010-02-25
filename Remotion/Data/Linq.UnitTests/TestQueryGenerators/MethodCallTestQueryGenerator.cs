@@ -22,7 +22,7 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
 {
   public class MethodCallTestQueryGenerator
   {
-    public static int CreateQueryWithCount (IQueryable<Chef> source)
+    public static int CreateQueryWithCount (IQueryable<Cook> source)
     {
       return (from s in source select s).Count();
     }

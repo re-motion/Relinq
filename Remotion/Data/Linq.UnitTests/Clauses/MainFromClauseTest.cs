@@ -46,10 +46,10 @@ namespace Remotion.Data.Linq.UnitTests.Clauses
       IQueryable querySource = ExpressionHelper.CreateStudentQueryable ();
 
       ConstantExpression constantExpression = Expression.Constant (querySource);
-      var fromClause = new MainFromClause ("s", typeof (Chef), constantExpression);
+      var fromClause = new MainFromClause ("s", typeof (Cook), constantExpression);
 
       Assert.That (fromClause.ItemName, Is.EqualTo ("s"));
-      Assert.That (fromClause.ItemType, Is.SameAs (typeof (Chef)));
+      Assert.That (fromClause.ItemType, Is.SameAs (typeof (Cook)));
       Assert.That (fromClause.FromExpression, Is.SameAs (constantExpression));
     }
 
@@ -60,7 +60,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses
       var anonymous = new {source = querySource};
       MemberExpression sourceExpression = Expression.MakeMemberAccess (Expression.Constant (anonymous), anonymous.GetType().GetProperty ("source"));
 
-      var fromClause = new MainFromClause ("s", typeof (Chef), sourceExpression);
+      var fromClause = new MainFromClause ("s", typeof (Cook), sourceExpression);
       Assert.That (fromClause.FromExpression, Is.SameAs (sourceExpression));
     }
 

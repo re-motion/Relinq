@@ -59,8 +59,8 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
     [Test]
     public void GetOutputDataInfo ()
     {
-      var studentExpression = Expression.Constant (new Chef ());
-      var input = new StreamedSequenceInfo (typeof (Chef[]), studentExpression);
+      var studentExpression = Expression.Constant (new Cook ());
+      var input = new StreamedSequenceInfo (typeof (Cook[]), studentExpression);
       var result = _resultOperator.GetOutputDataInfo (input);
 
       Assert.That (result, Is.InstanceOfType (typeof (StreamedValueInfo)));
@@ -71,7 +71,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
     [ExpectedException (typeof (ArgumentTypeException))]
     public void GetOutputDataInfo_InvalidInput ()
     {
-      var input = new StreamedScalarValueInfo (typeof (Chef));
+      var input = new StreamedScalarValueInfo (typeof (Cook));
       _resultOperator.GetOutputDataInfo (input);
     }
   }

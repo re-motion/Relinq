@@ -22,7 +22,7 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
 {
   public static class CastTestQueryGenerator
   {
-    public static IQueryable<object> CreateQueryWithTopLevelCastCall (IQueryable<Chef> source)
+    public static IQueryable<object> CreateQueryWithTopLevelCastCall (IQueryable<Cook> source)
     {
       return (from s in source select s).Cast<object> ();
     }

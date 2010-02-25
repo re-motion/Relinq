@@ -33,7 +33,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       var queryModel = QueryParser.GetParsedQuery (expression);
 
       var selectClause = queryModel.SelectClause;
-      CheckResolvedExpression<Chef, Chef> (selectClause.Selector, queryModel.MainFromClause, s => s);
+      CheckResolvedExpression<Cook, Cook> (selectClause.Selector, queryModel.MainFromClause, s => s);
     }
 
     [Test]
@@ -46,7 +46,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       var selectClause = queryModel.SelectClause;
 
       Assert.That (queryModel.BodyClauses.Count (), Is.EqualTo (0));
-      CheckResolvedExpression<Chef, string> (selectClause.Selector, mainFromClause, s => s.FirstName + s.Name);
+      CheckResolvedExpression<Cook, string> (selectClause.Selector, mainFromClause, s => s.FirstName + s.Name);
     }
   }
 }
