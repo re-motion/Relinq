@@ -80,7 +80,7 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
         return new SingleJoin (new Column (leftSource, "Student_Detail_Detail_PK"), new Column (rightSource, "Student_Detail_Detail_to_Student_Detail_FK"));
       else if (relationMember == typeof (Company).GetProperty ("Restaurant"))
         return new SingleJoin (new Column (leftSource, "Student_Detail_Detail_PK"), new Column (rightSource, "Student_Detail_Detail_to_IndustrialSector_FK"));
-      else if (relationMember == typeof (Restaurant).GetProperty ("Kitchen"))
+      else if (relationMember == typeof (Restaurant).GetProperty ("SubKitchen"))
         return new SingleJoin (new Column (leftSource, "IndustrialSector_PK"), new Column (rightSource, "Student_Detail_to_IndustrialSector_FK"));
       else if (relationMember == typeof (Kitchen).GetProperty ("Restaurant"))
         return new SingleJoin (new Column (leftSource, "Student_Detail_to_IndustrialSector_FK"), new Column (rightSource, "IndustrialSector_PK"));
@@ -143,7 +143,7 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
         return "industrialTable";
       else if (relationMember == typeof (Kitchen).GetProperty ("Restaurant"))
         return "industrialTable";
-      else if (relationMember == typeof (Restaurant).GetProperty ("Kitchen"))
+      else if (relationMember == typeof (Restaurant).GetProperty ("SubKitchen"))
         return "detailTable";
       else if (relationMember == typeof (Cook).GetProperty ("Substitution"))
         return "studentTable";
@@ -163,7 +163,7 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
         return null;
       else if (member == typeof (Company).GetProperty ("Restaurant"))
         return null;
-      else if (member == typeof (Restaurant).GetProperty ("Kitchen"))
+      else if (member == typeof (Restaurant).GetProperty ("SubKitchen"))
         return null;
       else if (member == typeof (Kitchen).GetProperty ("Restaurant"))
         return "Student_Detail_to_IndustrialSector_FK";

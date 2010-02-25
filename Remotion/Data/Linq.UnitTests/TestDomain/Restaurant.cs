@@ -22,7 +22,7 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
   public class Restaurant
   {
     public int ID { get; set; }
-    public Kitchen Kitchen { get; set; }
+    public Kitchen SubKitchen { get; set; }
     public IEnumerable<Cook> Cooks { get; set; }
   }
 }

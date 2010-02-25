@@ -57,7 +57,7 @@ namespace Remotion.Data.Linq.UnitTests.Transformations
                   from sd in
                       (from sector in _sectorSource
                        where sector.ID > 10
-                       select sector.Kitchen)
+                       select sector.SubKitchen)
                   from s2 in s1.Assistants
                   where sd.Name == "Maths"
                   select new Tuple<Cook, Kitchen> (s1, sd);
@@ -124,13 +124,13 @@ namespace Remotion.Data.Linq.UnitTests.Transformations
       _visitor.VisitAdditionalFromClause (_additionalFromClause1, _queryModel, 0);
 
       var expectedPredicate = 
-          ExpressionHelper.Resolve<Restaurant, bool> (_additionalFromClause1, sector => sector.Kitchen.Name == "Maths");
+          ExpressionHelper.Resolve<Restaurant, bool> (_additionalFromClause1, sector => sector.SubKitchen.Name == "Maths");
       ExpressionTreeComparer.CheckAreEqualTrees (expectedPredicate, _whereClause.Predicate);
 
       var expectedSelector = ExpressionHelper.Resolve<Cook, Restaurant, Tuple<Cook, Kitchen>> (
           _mainFromClause,
           _additionalFromClause1,
-          (s1, sector) => new Tuple<Cook, Kitchen> (s1, sector.Kitchen));
+          (s1, sector) => new Tuple<Cook, Kitchen> (s1, sector.SubKitchen));
       ExpressionTreeComparer.CheckAreEqualTrees (expectedSelector, _selectClause.Selector);
     }
 
@@ -189,7 +189,7 @@ namespace Remotion.Data.Linq.UnitTests.Transformations
                   from sd in
                     (from sector in _sectorSource
                      where sector.ID > 10
-                     select sector.Kitchen)
+                     select sector.SubKitchen)
                   from s2 in s1.Assistants
                   where sd.Name == "Maths"
                   from s3 in
@@ -212,12 +212,12 @@ namespace Remotion.Data.Linq.UnitTests.Transformations
                           from sector in _sectorSource
                           where sector.ID > 10
                           from s2 in sd.Cook.Assistants
-                          where sector.Kitchen.Name == "Maths"
+                          where sector.SubKitchen.Name == "Maths"
                           from a in sd.Cook.Assistants
-                          from b in sector.Kitchen.Cook.Assistants
+                          from b in sector.SubKitchen.Cook.Assistants
                           select new Tuple<Cook, Kitchen, Cook, Cook> (
                               sd.Cook, 
-                              sector.Kitchen, 
+                              sector.SubKitchen, 
                               new Tuple<Cook, Cook> (a, b).Item1, 
                               new Tuple<Cook, Cook> (a, b).Item2);
 
