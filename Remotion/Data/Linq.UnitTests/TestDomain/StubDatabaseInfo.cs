@@ -75,7 +75,7 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
     public SingleJoin GetJoinForMember (MemberInfo relationMember, IColumnSource leftSource, IColumnSource rightSource)
     {
       if (relationMember == typeof (Kitchen).GetProperty ("Cook"))
-        return new SingleJoin (new Column (leftSource, "Student_Detail_PK"), new Column (rightSource, "Student_Detail_to_Student_FK"));
+        return new SingleJoin (new Column (leftSource, "Kitchen_PK"), new Column (rightSource, "Student_Detail_to_Student_FK"));
       else if (relationMember == typeof (Company).GetProperty ("MainKitchen"))
         return new SingleJoin (new Column (leftSource, "Student_Detail_Detail_PK"), new Column (rightSource, "Student_Detail_Detail_to_Student_Detail_FK"));
       else if (relationMember == typeof (Company).GetProperty ("Restaurant"))
