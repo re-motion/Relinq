@@ -391,7 +391,7 @@
     <Compile Include="TestDomain\StubDatabaseInfo.cs" />
     <Compile Include="TestDomain\Cook.cs" />
     <Compile Include="TestDomain\Kitchen.cs" />
-    <Compile Include="TestDomain\Student_Detail_Detail.cs" />
+    <Compile Include="TestDomain\Restaurant.cs" />
     <Compile Include="TestDomain\TestQueryable.cs" />
     <Compile Include="TestDomain\TestQueryModelVisitor.cs" />
     <Compile Include="TestQueryGenerators\CastTestQueryGenerator.cs" />

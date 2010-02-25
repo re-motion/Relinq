@@ -33,22 +33,22 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
       return from sd in source orderby sd.Cook.FirstName select sd;
     }
 
-    public static IQueryable<Student_Detail_Detail> CreateDoubleImplicitOrderByJoin (IQueryable<Student_Detail_Detail> source)
+    public static IQueryable<Restaurant> CreateDoubleImplicitOrderByJoin (IQueryable<Restaurant> source)
     {
       return from sdd in source orderby sdd.Kitchen.Cook.FirstName select sdd;
     }
 
-    public static IQueryable<Student_Detail_Detail> CreateImplicitOrderByJoinWithMultipleJoins (IQueryable<Student_Detail_Detail> source)
+    public static IQueryable<Restaurant> CreateImplicitOrderByJoinWithMultipleJoins (IQueryable<Restaurant> source)
     {
       return from sdd in source orderby sdd.Kitchen.Cook.FirstName, sdd.IndustrialSector.ID select sdd;
     }
 
-    public static IQueryable<Student_Detail_Detail> CreateImplicitOrderByJoinCheckingCorrectNumberOfEntries (IQueryable<Student_Detail_Detail> source)
+    public static IQueryable<Restaurant> CreateImplicitOrderByJoinCheckingCorrectNumberOfEntries (IQueryable<Restaurant> source)
     {
       return from sdd in source orderby sdd.Kitchen.Cook.FirstName, sdd.Kitchen.Cook.Name select sdd;
     }
 
-    public static IQueryable<Student_Detail_Detail> CreateImplicitOrderByJoinWithDifferentLevels (IQueryable<Student_Detail_Detail> source)
+    public static IQueryable<Restaurant> CreateImplicitOrderByJoinWithDifferentLevels (IQueryable<Restaurant> source)
     {
       return from sdd in source orderby sdd.Kitchen.Cook.FirstName, sdd.Kitchen.IndustrialSector.ID select sdd;
     }
@@ -58,7 +58,7 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
       return from sd in source select sd.Cook.FirstName;
     }
 
-    public static IQueryable<Tuple<string, int>> CreateComplexImplicitSelectJoin (IQueryable<Student_Detail_Detail> source)
+    public static IQueryable<Tuple<string, int>> CreateComplexImplicitSelectJoin (IQueryable<Restaurant> source)
     {
       return from sdd in source select new Tuple<string, int> (sdd.Kitchen.Cook.FirstName, sdd.IndustrialSector.ID);
     }
@@ -68,8 +68,8 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
       return from sd in source where sd.Cook.FirstName == "Garcia" select sd;
     }
 
-    public static IQueryable<Student_Detail_Detail> CreateImplicitOrderByJoinWithMultipleKeys
-    (IQueryable<Student_Detail_Detail> source1, IQueryable<Student_Detail_Detail> source2)
+    public static IQueryable<Restaurant> CreateImplicitOrderByJoinWithMultipleKeys
+    (IQueryable<Restaurant> source1, IQueryable<Restaurant> source2)
     {
       return from sdd1 in source1
              from sdd2 in source2
@@ -78,8 +78,8 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
              select sdd1;
     }
 
-    public static IQueryable<Student_Detail_Detail> CreateImplicitOrderByJoinWithJoinReuse
-        (IQueryable<Student_Detail_Detail> source1, IQueryable<Student_Detail_Detail> source2)
+    public static IQueryable<Restaurant> CreateImplicitOrderByJoinWithJoinReuse
+        (IQueryable<Restaurant> source1, IQueryable<Restaurant> source2)
     {
       return from sdd1 in source1
              from sdd2 in source2
@@ -89,7 +89,7 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
              select sdd1;
     }
 
-    public static IQueryable<Student_Detail_Detail> CreateImplicitOrderByJoinWithJoinPartReuse (IQueryable<Student_Detail_Detail> source)
+    public static IQueryable<Restaurant> CreateImplicitOrderByJoinWithJoinPartReuse (IQueryable<Restaurant> source)
     {
       return from sdd in source
              orderby sdd.Kitchen.Cook.FirstName
