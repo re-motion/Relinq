@@ -148,6 +148,7 @@
     <Compile Include="SqlBackend\SqlGeneration\ISqlColumnListExpressionVisitor.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlStatementTextGenerator.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlColumnListExpressionVisitor.cs" />
+    <Compile Include="SqlBackend\SqlGeneration\SqlTableSourceVisitor.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\ConstantTableSource.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\ISqlExpressionVisitor.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\ITableSourceVisitor.cs" />

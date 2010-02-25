@@ -15,30 +15,31 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Text;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
 using Remotion.Data.Linq.Utilities;
 
-namespace Remotion.Data.Linq.SqlBackend.MappingResolution
+namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 {
   /// <summary>
-  /// <see cref="ConstantTableSourceVisitor"/> modifies <see cref="ConstantTableSource"/>s and generates <see cref="SqlTableSource"/>s.
+  /// <see cref="SqlTableSourceVisitor"/> generates sql-text for <see cref="SqlTableSource"/>.
   /// </summary>
-  public class ConstantTableSourceVisitor : ITableSourceVisitor
+  public class SqlTableSourceVisitor : ITableSourceVisitor
   {
-    private readonly ISqlStatementResolver _resolver;
+    private readonly StringBuilder _sb;
 
-    public static void ReplaceTableSource (SqlTable sqlTable, ISqlStatementResolver resolver)
+    public static void GenerateSql (SqlTable sqlTable, StringBuilder sb)
     {
       ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
-      ArgumentUtility.CheckNotNull ("resolver", resolver);
+      ArgumentUtility.CheckNotNull ("sb", sb);
 
-      var visitor = new ConstantTableSourceVisitor (resolver);
-      sqlTable.TableSource = visitor.VisitTableSource (sqlTable.TableSource);
+      var visitor = new SqlTableSourceVisitor (sb);
+      visitor.VisitTableSource (sqlTable.TableSource);
     }
 
-    protected ConstantTableSourceVisitor (ISqlStatementResolver resolver)
+    public SqlTableSourceVisitor (StringBuilder sb)
     {
-      _resolver = resolver;
+      _sb = sb;
     }
 
     public AbstractTableSource VisitTableSource (AbstractTableSource tableSource)
@@ -49,11 +50,19 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
 
     public AbstractTableSource VisitConstantTableSource (ConstantTableSource tableSource)
     {
-      return  _resolver.ResolveConstantTableSource (tableSource);
+      throw new InvalidOperationException ("ConstantTableSource is not valid at this point.");
     }
 
     public AbstractTableSource VisitSqlTableSource (SqlTableSource tableSource)
     {
+      _sb.Append ("[");
+      _sb.Append (tableSource.TableName);
+      _sb.Append ("]");
+      _sb.Append (" AS ");
+      _sb.Append ("[");
+      _sb.Append (tableSource.TableAlias);
+      _sb.Append ("]");
+
       return tableSource;
     }
   }
