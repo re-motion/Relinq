@@ -58,7 +58,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       CheckConstantQuerySource (mainFromClause.FromExpression, IndustrialSectorQuerySource);
 
       var memberFromClause = (AdditionalFromClause) queryModel.BodyClauses[0];
-      CheckResolvedExpression<IndustrialSector, IEnumerable<Cook>> (memberFromClause.FromExpression, mainFromClause, sector => sector.Cooks);
+      CheckResolvedExpression<Restaurant, IEnumerable<Cook>> (memberFromClause.FromExpression, mainFromClause, sector => sector.Cooks);
 
       var selectClause = queryModel.SelectClause;
       CheckResolvedExpression<Cook, Cook> (selectClause.Selector, memberFromClause, s1 => s1);

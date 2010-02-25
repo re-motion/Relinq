@@ -43,14 +43,14 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
       return from s1 in source1 from s2 in source2 from s3 in source3 select s1;
     }
 
-    public static IQueryable<Cook> CreateFromQueryWithMemberQuerySource (IQueryable<IndustrialSector> source)
+    public static IQueryable<Cook> CreateFromQueryWithMemberQuerySource (IQueryable<Restaurant> source)
     {
       return from sector in source
              from s1 in sector.Cooks
              select s1;
     }
 
-    public static IQueryable<Cook> CreateFromQueryWithMemberQuerySource_InMainFromClauseOfSubQuery (IQueryable<IndustrialSector> source)
+    public static IQueryable<Cook> CreateFromQueryWithMemberQuerySource_InMainFromClauseOfSubQuery (IQueryable<Restaurant> source)
     {
       return from sector in source
              from s1 in (from s2 in sector.Cooks select s2)
@@ -60,14 +60,14 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
     public static IQueryable<Cook> CreateFromQueryWithMemberQuerySourceAndOptimizableJoin (IQueryable<Kitchen> source)
     {
       return from sd in source
-             from s1 in sd.IndustrialSector.Cooks
+             from s1 in sd.Restaurant.Cooks
              select s1;
     }
 
     public static IQueryable<Cook> CreateFromQueryWithMemberQuerySourceAndJoin (IQueryable<Company> source)
     {
       return from sdd in source
-             from s1 in sdd.IndustrialSector.Cooks
+             from s1 in sdd.Restaurant.Cooks
              select s1;
     }
 

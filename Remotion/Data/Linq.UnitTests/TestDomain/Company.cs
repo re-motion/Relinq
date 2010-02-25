@@ -21,6 +21,6 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
   public class Company
   {
     public Kitchen MainKitchen { get; set; }
-    public IndustrialSector IndustrialSector { get; set; }
+    public Restaurant Restaurant { get; set; }
   }
 }

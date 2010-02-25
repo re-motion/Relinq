@@ -24,6 +24,6 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
     public Cook Cook { get; set; }
     public string Name { get; set; }
     public int RoomNumber { get; set; }
-    public IndustrialSector IndustrialSector { get; set; }
+    public Restaurant Restaurant { get; set; }
   }
 }

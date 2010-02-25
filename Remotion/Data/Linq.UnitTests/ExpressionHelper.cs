@@ -225,14 +225,14 @@ namespace Remotion.Data.Linq.UnitTests
       return new TestQueryable<Company> (executor);
     }
 
-    public static  IQueryable<IndustrialSector> CreateIndustrialSectorQueryable ()
+    public static  IQueryable<Restaurant> CreateIndustrialSectorQueryable ()
     {
       return CreateIndustrialSectorQueryable (s_executor);
     }
 
-    public static IQueryable<IndustrialSector> CreateIndustrialSectorQueryable( IQueryExecutor executor)
+    public static IQueryable<Restaurant> CreateIndustrialSectorQueryable( IQueryExecutor executor)
     {
-      return new TestQueryable<IndustrialSector> (executor);
+      return new TestQueryable<Restaurant> (executor);
     }
 
     public static IQueryExecutor CreateExecutor()

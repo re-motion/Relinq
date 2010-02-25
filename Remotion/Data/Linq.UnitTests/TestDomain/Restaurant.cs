@@ -19,7 +19,7 @@ using System.Collections.Generic;
 
 namespace Remotion.Data.Linq.UnitTests.TestDomain
 {
-  public class IndustrialSector
+  public class Restaurant
   {
     public int ID { get; set; }
     public Kitchen Kitchen { get; set; }

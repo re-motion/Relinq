@@ -99,10 +99,10 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
 
     public static IQueryable<Kitchen> CreateRelationMemberWhereQuery (IQueryable<Kitchen> source)
     {
-      return from sd in source where sd.IndustrialSector != null select sd;
+      return from sd in source where sd.Restaurant != null select sd;
     }
 
-    public static IQueryable<IndustrialSector> CreateRelationMemberVirtualSideWhereQuery (IQueryable<IndustrialSector> source)
+    public static IQueryable<Restaurant> CreateRelationMemberVirtualSideWhereQuery (IQueryable<Restaurant> source)
     {
       return from industrial in source where industrial.Kitchen != null select industrial;
     }
@@ -120,7 +120,7 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
 
     public static IQueryable<Kitchen> CreateWhereQueryWithRelatedPrimaryKey_RealColumn (IQueryable<Kitchen> source)
     {
-      return from sd in source where sd.IndustrialSector.ID == 5 select sd;
+      return from sd in source where sd.Restaurant.ID == 5 select sd;
     }
   }
 }

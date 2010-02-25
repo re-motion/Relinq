@@ -386,7 +386,7 @@
     <Compile Include="SqlBackend\SqlStatementModel\SqlTableTest.cs" />
     <Compile Include="SqlBackend\MappingResolution\ResolvingTableSourceVisitorTest.cs" />
     <Compile Include="TestDomain\Chef.cs" />
-    <Compile Include="TestDomain\IndustrialSector.cs" />
+    <Compile Include="TestDomain\Restaurant.cs" />
     <Compile Include="TestDomain\QueryableWithTooManyArguments.cs" />
     <Compile Include="TestDomain\StubDatabaseInfo.cs" />
     <Compile Include="TestDomain\Cook.cs" />

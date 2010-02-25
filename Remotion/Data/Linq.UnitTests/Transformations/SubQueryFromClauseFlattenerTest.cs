@@ -45,7 +45,7 @@ namespace Remotion.Data.Linq.UnitTests.Transformations
 
     private SubQueryFromClauseFlattener _visitor;
     private IQueryable<Kitchen> _detailSource;
-    private IQueryable<IndustrialSector> _sectorSource;
+    private IQueryable<Restaurant> _sectorSource;
 
     [SetUp]
     public void SetUp ()
@@ -95,7 +95,7 @@ namespace Remotion.Data.Linq.UnitTests.Transformations
       Assert.That (_additionalFromClause1.FromExpression, Is.Not.InstanceOfType (typeof (SubQueryExpression)));
       Assert.That (_additionalFromClause1.FromExpression, Is.SameAs (_innerMainFromClauseA.FromExpression));
       Assert.That (_additionalFromClause1.ItemName, Is.EqualTo ("sector"));
-      Assert.That (_additionalFromClause1.ItemType, Is.SameAs (typeof (IndustrialSector)));
+      Assert.That (_additionalFromClause1.ItemType, Is.SameAs (typeof (Restaurant)));
     }
 
     [Test]
@@ -124,10 +124,10 @@ namespace Remotion.Data.Linq.UnitTests.Transformations
       _visitor.VisitAdditionalFromClause (_additionalFromClause1, _queryModel, 0);
 
       var expectedPredicate = 
-          ExpressionHelper.Resolve<IndustrialSector, bool> (_additionalFromClause1, sector => sector.Kitchen.Name == "Maths");
+          ExpressionHelper.Resolve<Restaurant, bool> (_additionalFromClause1, sector => sector.Kitchen.Name == "Maths");
       ExpressionTreeComparer.CheckAreEqualTrees (expectedPredicate, _whereClause.Predicate);
 
-      var expectedSelector = ExpressionHelper.Resolve<Cook, IndustrialSector, Tuple<Cook, Kitchen>> (
+      var expectedSelector = ExpressionHelper.Resolve<Cook, Restaurant, Tuple<Cook, Kitchen>> (
           _mainFromClause,
           _additionalFromClause1,
           (s1, sector) => new Tuple<Cook, Kitchen> (s1, sector.Kitchen));
