@@ -74,7 +74,8 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
     protected override Exception CreateUnhandledItemException<T> (T unhandledItem, string visitMethod)
     {
-      throw new NotImplementedException();
+      throw new NotSupportedException (
+          string.Format ("The expression '{0}' cannot be translated to SQL text by this SQL generator. Expression type '{1}' is not supported.",unhandledItem,unhandledItem.GetType().Name));
     }
   }
 }
