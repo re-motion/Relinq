@@ -15,28 +15,39 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Linq.Expressions;
 using System.Text;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
+using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 {
   /// <summary>
   /// <see cref="SqlStatementTextGenerator"/> generates sql-text from a given <see cref="SqlStatement"/>.
   /// </summary>
-  public abstract class SqlStatementTextGenerator
+  public class SqlStatementTextGenerator
   {
     public string Build (SqlStatement sqlStatement)
     {
+      ArgumentUtility.CheckNotNull ("sqlStatement", sqlStatement);
+
       var sb = new StringBuilder();
       sb.Append ("SELECT ");
-      BuildSelectPart ((SqlColumnListExpression) sqlStatement.SelectProjection, sb);  // TODO: Remove cast
+      BuildSelectPart (sqlStatement.SelectProjection, sb);
       sb.Append (" FROM ");
       BuildFromPart (sqlStatement.FromExpression, sb);
       return sb.ToString();
     }
 
-    protected abstract void BuildSelectPart (SqlColumnListExpression expression, StringBuilder sb); // TODO: Change parameter type to Expression
-    protected abstract void BuildFromPart (SqlTable sqlTable, StringBuilder sb);
+    protected void BuildSelectPart (Expression expression, StringBuilder sb)
+    {
+      SqlGeneratingExpressionVisitor.GenerateSql (expression, sb);
+    }
+
+    protected void BuildFromPart (SqlTable sqlTable, StringBuilder sb)
+    {
+      SqlTableSourceVisitor.GenerateSql (sqlTable, sb);
+    }
     
   }
 }
