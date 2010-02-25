@@ -43,8 +43,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
     public override AbstractTableSource Accept (ITableSourceVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
-
-      throw new NotImplementedException();
+      return visitor.VisitConstantTableSource (this);
     }
 
     

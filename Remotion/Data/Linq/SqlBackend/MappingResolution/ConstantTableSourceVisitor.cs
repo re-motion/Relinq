@@ -15,15 +15,15 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using Remotion.Data.Linq.SqlBackend.MappingResolution;
+using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
 using Remotion.Data.Linq.Utilities;
 
-namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
+namespace Remotion.Data.Linq.SqlBackend.MappingResolution
 {
   /// <summary>
-  /// <see cref="TableSourceVisitor"/> modifies <see cref="AbstractTableSource"/>s.
+  /// <see cref="ConstantTableSourceVisitor"/> modifies <see cref="AbstractTableSource"/>s.
   /// </summary>
-  public class TableSourceVisitor : ITableSourceVisitor
+  public class ConstantTableSourceVisitor : ITableSourceVisitor
   {
     private readonly ISqlStatementResolver _resolver;
 
@@ -32,22 +32,19 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
       ArgumentUtility.CheckNotNull ("resolver", resolver);
 
-      var visitor = new TableSourceVisitor (resolver);
-
-      if (sqlTable.TableSource is ConstantTableSource)
-      {
-        sqlTable.TableSource = visitor.VisitConstantTableSource ((ConstantTableSource) sqlTable.TableSource);
-      }
-      else if (sqlTable.TableSource is SqlTableSource)
-        visitor.VisitSqlTableSource ((SqlTableSource) sqlTable.TableSource);
-      else
-        throw new NotSupportedException (string.Format ("SqlTable.TableSource of type '{0}' is not supported.", sqlTable.TableSource.GetType().Name));
-
+      var visitor = new ConstantTableSourceVisitor (resolver);
+      sqlTable.TableSource = visitor.VisitTableSource (sqlTable.TableSource);
     }
 
-    protected TableSourceVisitor (ISqlStatementResolver resolver)
+    protected ConstantTableSourceVisitor (ISqlStatementResolver resolver)
     {
       _resolver = resolver;
+    }
+
+    public AbstractTableSource VisitTableSource (AbstractTableSource tableSource)
+    {
+      ArgumentUtility.CheckNotNull ("tableSource", tableSource);
+      return tableSource.Accept (this);
     }
 
     public AbstractTableSource VisitConstantTableSource (ConstantTableSource tableSource)
@@ -57,7 +54,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 
     public AbstractTableSource VisitSqlTableSource (SqlTableSource tableSource)
     {
-      throw new NotImplementedException();
+      return tableSource;
     }
   }
 }

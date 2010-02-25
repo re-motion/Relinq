@@ -46,7 +46,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
     {
       ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
       
-      TableSourceVisitor.ReplaceTableSource (sqlTable, _resolver);
+      ConstantTableSourceVisitor.ReplaceTableSource (sqlTable, _resolver);
     }
   }
 }
