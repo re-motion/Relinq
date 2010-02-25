@@ -59,7 +59,7 @@ namespace Remotion.Data.Linq.UnitTests.Transformations
                        where sector.ID > 10
                        select sector.Kitchen)
                   from s2 in s1.Assistants
-                  where sd.Subject == "Maths"
+                  where sd.Name == "Maths"
                   select new Tuple<Cook, Kitchen> (s1, sd);
       _queryModel = ExpressionHelper.ParseQuery (query);
 
@@ -124,7 +124,7 @@ namespace Remotion.Data.Linq.UnitTests.Transformations
       _visitor.VisitAdditionalFromClause (_additionalFromClause1, _queryModel, 0);
 
       var expectedPredicate = 
-          ExpressionHelper.Resolve<IndustrialSector, bool> (_additionalFromClause1, sector => sector.Kitchen.Subject == "Maths");
+          ExpressionHelper.Resolve<IndustrialSector, bool> (_additionalFromClause1, sector => sector.Kitchen.Name == "Maths");
       ExpressionTreeComparer.CheckAreEqualTrees (expectedPredicate, _whereClause.Predicate);
 
       var expectedSelector = ExpressionHelper.Resolve<Cook, IndustrialSector, Tuple<Cook, Kitchen>> (
@@ -164,7 +164,7 @@ namespace Remotion.Data.Linq.UnitTests.Transformations
     public void VisitMainFromClause_AlsoFlattens ()
     {
       var mainFromSubQuery = from sd in _detailSource
-                             where sd.Subject == "Maths"
+                             where sd.Name == "Maths"
                              select sd.Cook;
       var parsedMainFromSubQuery = ExpressionHelper.ParseQuery (mainFromSubQuery);
 
@@ -191,7 +191,7 @@ namespace Remotion.Data.Linq.UnitTests.Transformations
                      where sector.ID > 10
                      select sector.Kitchen)
                   from s2 in s1.Assistants
-                  where sd.Subject == "Maths"
+                  where sd.Name == "Maths"
                   from s3 in
                     (from a in s1.Assistants
                      from b in sd.Cook.Assistants
@@ -200,7 +200,7 @@ namespace Remotion.Data.Linq.UnitTests.Transformations
 
       var queryModel = ExpressionHelper.ParseQuery (query);
       var mainFromSubQuery = from sd in _detailSource
-                             where sd.Subject == "Maths"
+                             where sd.Name == "Maths"
                              select sd.Cook;
       var parsedMainFromSubQuery = ExpressionHelper.ParseQuery (mainFromSubQuery);
       queryModel.MainFromClause.FromExpression = new SubQueryExpression (parsedMainFromSubQuery);
@@ -208,11 +208,11 @@ namespace Remotion.Data.Linq.UnitTests.Transformations
       queryModel.Accept (_visitor);
 
       var expectedQuery = from sd in _detailSource
-                          where sd.Subject == "Maths"
+                          where sd.Name == "Maths"
                           from sector in _sectorSource
                           where sector.ID > 10
                           from s2 in sd.Cook.Assistants
-                          where sector.Kitchen.Subject == "Maths"
+                          where sector.Kitchen.Name == "Maths"
                           from a in sd.Cook.Assistants
                           from b in sector.Kitchen.Cook.Assistants
                           select new Tuple<Cook, Kitchen, Cook, Cook> (
