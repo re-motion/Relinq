@@ -366,6 +366,7 @@
     <Compile Include="ReflectionUtilityTest.cs" />
     <Compile Include="SqlBackend\MappingResolution\SqlStatementVisitorTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlColumnListExpressionVisitorTest.cs" />
+    <Compile Include="SqlBackend\SqlGeneration\SqlServerTextGeneratorTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlTableSourceVisitorTest.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\ClauseObjectMother.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\ConstantTableSourceTest.cs" />

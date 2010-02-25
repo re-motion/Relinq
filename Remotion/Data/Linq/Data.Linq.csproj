@@ -146,6 +146,7 @@
     <Compile Include="SqlBackend\MappingResolution\SqlStatementVisitor.cs" />
     <Compile Include="SqlBackend\MappingResolution\ConstantTableSourceVisitor.cs" />
     <Compile Include="SqlBackend\SqlGeneration\ISqlColumnListExpressionVisitor.cs" />
+    <Compile Include="SqlBackend\SqlGeneration\SqlServerTextGenerator.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlStatementTextGenerator.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlColumnListExpressionVisitor.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlTableSourceVisitor.cs" />

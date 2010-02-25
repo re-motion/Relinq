@@ -31,6 +31,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
     private readonly StringBuilder _sb;
     private bool _first;
 
+    //TODO: possible better name
     public static void TranslateSqlColumnListExpression (SqlColumnListExpression expression, StringBuilder sb)
     {
       var visitor = new SqlColumnListExpressionVisitor(sb);

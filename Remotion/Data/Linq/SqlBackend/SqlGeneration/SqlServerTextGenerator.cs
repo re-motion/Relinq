@@ -20,23 +20,16 @@ using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 {
-  /// <summary>
-  /// <see cref="SqlStatementTextGenerator"/> generates sql-text from a given <see cref="SqlStatement"/>.
-  /// </summary>
-  public abstract class SqlStatementTextGenerator
+  public class SqlServerTextGenerator : SqlStatementTextGenerator
   {
-    public string Build (SqlStatement sqlStatement)
+    protected override void BuildSelectPart (SqlColumnListExpression expression, StringBuilder sb)
     {
-      var sb = new StringBuilder();
-      sb.Append ("SELECT ");
-      BuildSelectPart ((SqlColumnListExpression) sqlStatement.SelectProjection, sb);
-      sb.Append (" FROM ");
-      BuildFromPart (sqlStatement.FromExpression, sb);
-      return sb.ToString();
+      SqlColumnListExpressionVisitor.TranslateSqlColumnListExpression (expression, sb);
     }
 
-    protected abstract void BuildSelectPart (SqlColumnListExpression expression, StringBuilder sb);
-    protected abstract void BuildFromPart (SqlTable sqlTable, StringBuilder sb);
-    
+    protected override void BuildFromPart (SqlTable sqlTable, StringBuilder sb)
+    {
+      SqlTableSourceVisitor.GenerateSql (sqlTable, sb);
+    }
   }
 }
