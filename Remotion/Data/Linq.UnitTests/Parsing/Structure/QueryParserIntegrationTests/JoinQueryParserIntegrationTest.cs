@@ -63,7 +63,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
     public void Join_InnerSequenceDependingOnOuter ()
     {
       var query = from s in QuerySource
-                  from s2 in (from s1 in QuerySource join s2 in s.Friends on s.ID equals s2.ID select s2)
+                  from s2 in (from s1 in QuerySource join s2 in s.Assistants on s.ID equals s2.ID select s2)
                   select s2;
 
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
@@ -71,7 +71,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       var additionalFromClause = (AdditionalFromClause) queryModel.BodyClauses[0];
       
       var innerJoinClause = ((JoinClause) ((SubQueryExpression) additionalFromClause.FromExpression).QueryModel.BodyClauses[0]);
-      CheckResolvedExpression<Cook, IEnumerable<Cook>> (innerJoinClause.InnerSequence, mainFromClause, s => s.Friends);
+      CheckResolvedExpression<Cook, IEnumerable<Cook>> (innerJoinClause.InnerSequence, mainFromClause, s => s.Assistants);
       Assert.That (innerJoinClause.ItemType, Is.SameAs (typeof (Cook)));
       Assert.That (innerJoinClause.ItemName, Is.EqualTo ("s2"));
     }

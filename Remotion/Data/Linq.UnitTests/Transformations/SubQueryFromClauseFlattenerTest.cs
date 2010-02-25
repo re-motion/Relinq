@@ -58,7 +58,7 @@ namespace Remotion.Data.Linq.UnitTests.Transformations
                       (from sector in _sectorSource
                        where sector.ID > 10
                        select sector.Student_Detail)
-                  from s2 in s1.Friends
+                  from s2 in s1.Assistants
                   where sd.Subject == "Maths"
                   select new Tuple<Cook, Student_Detail> (s1, sd);
       _queryModel = ExpressionHelper.ParseQuery (query);
@@ -82,7 +82,7 @@ namespace Remotion.Data.Linq.UnitTests.Transformations
       _visitor.VisitAdditionalFromClause (_additionalFromClause2, _queryModel, 1);
 
       Assert.That (_queryModel.BodyClauses[1], Is.SameAs (_additionalFromClause2));
-      var expectedExpression = ExpressionHelper.Resolve<Cook, IEnumerable<Cook>> (_mainFromClause, s => s.Friends);
+      var expectedExpression = ExpressionHelper.Resolve<Cook, IEnumerable<Cook>> (_mainFromClause, s => s.Assistants);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, _additionalFromClause2.FromExpression);
     }
 
@@ -190,11 +190,11 @@ namespace Remotion.Data.Linq.UnitTests.Transformations
                     (from sector in _sectorSource
                      where sector.ID > 10
                      select sector.Student_Detail)
-                  from s2 in s1.Friends
+                  from s2 in s1.Assistants
                   where sd.Subject == "Maths"
                   from s3 in
-                    (from a in s1.Friends
-                     from b in sd.Cook.Friends
+                    (from a in s1.Assistants
+                     from b in sd.Cook.Assistants
                      select new Tuple<Cook, Cook> (a, b))
                   select new Tuple<Cook, Student_Detail, Cook, Cook> (s1, sd, s3.Item1, s3.Item2);
 
@@ -211,10 +211,10 @@ namespace Remotion.Data.Linq.UnitTests.Transformations
                           where sd.Subject == "Maths"
                           from sector in _sectorSource
                           where sector.ID > 10
-                          from s2 in sd.Cook.Friends
+                          from s2 in sd.Cook.Assistants
                           where sector.Student_Detail.Subject == "Maths"
-                          from a in sd.Cook.Friends
-                          from b in sector.Student_Detail.Cook.Friends
+                          from a in sd.Cook.Assistants
+                          from b in sector.Student_Detail.Cook.Assistants
                           select new Tuple<Cook, Student_Detail, Cook, Cook> (
                               sd.Cook, 
                               sector.Student_Detail, 

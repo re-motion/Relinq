@@ -29,7 +29,7 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
     public ArrayList Courses { get; set; }
     public int[] EctsCredits { get; set; }
     public List<int> Scores { get; set; }
-    public IQueryable<Cook> Friends { get; set; }
+    public IQueryable<Cook> Assistants { get; set; }
     public string NonDBStringProperty { get; set; }
     public bool NonDBBoolProperty { get; set; }
     public bool IsExchangeStudent { get; set; }

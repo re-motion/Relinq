@@ -119,7 +119,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
     {
       var query =
           from s in QuerySource
-          from s1 in s.Friends.Take (s.ID)
+          from s1 in s.Assistants.Take (s.ID)
           select s1;
 
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
