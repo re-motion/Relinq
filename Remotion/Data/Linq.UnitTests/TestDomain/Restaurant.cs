@@ -18,9 +18,9 @@ using System;
 
 namespace Remotion.Data.Linq.UnitTests.TestDomain
 {
-  public class Restaurant
+  public class Company
   {
-    public Kitchen Kitchen { get; set; }
+    public Kitchen MainKitchen { get; set; }
     public IndustrialSector IndustrialSector { get; set; }
   }
 }

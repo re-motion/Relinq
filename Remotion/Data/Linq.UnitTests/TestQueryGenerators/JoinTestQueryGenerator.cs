@@ -33,24 +33,24 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
       return from sd in source orderby sd.Cook.FirstName select sd;
     }
 
-    public static IQueryable<Restaurant> CreateDoubleImplicitOrderByJoin (IQueryable<Restaurant> source)
+    public static IQueryable<Company> CreateDoubleImplicitOrderByJoin (IQueryable<Company> source)
     {
-      return from sdd in source orderby sdd.Kitchen.Cook.FirstName select sdd;
+      return from sdd in source orderby sdd.MainKitchen.Cook.FirstName select sdd;
     }
 
-    public static IQueryable<Restaurant> CreateImplicitOrderByJoinWithMultipleJoins (IQueryable<Restaurant> source)
+    public static IQueryable<Company> CreateImplicitOrderByJoinWithMultipleJoins (IQueryable<Company> source)
     {
-      return from sdd in source orderby sdd.Kitchen.Cook.FirstName, sdd.IndustrialSector.ID select sdd;
+      return from sdd in source orderby sdd.MainKitchen.Cook.FirstName, sdd.IndustrialSector.ID select sdd;
     }
 
-    public static IQueryable<Restaurant> CreateImplicitOrderByJoinCheckingCorrectNumberOfEntries (IQueryable<Restaurant> source)
+    public static IQueryable<Company> CreateImplicitOrderByJoinCheckingCorrectNumberOfEntries (IQueryable<Company> source)
     {
-      return from sdd in source orderby sdd.Kitchen.Cook.FirstName, sdd.Kitchen.Cook.Name select sdd;
+      return from sdd in source orderby sdd.MainKitchen.Cook.FirstName, sdd.MainKitchen.Cook.Name select sdd;
     }
 
-    public static IQueryable<Restaurant> CreateImplicitOrderByJoinWithDifferentLevels (IQueryable<Restaurant> source)
+    public static IQueryable<Company> CreateImplicitOrderByJoinWithDifferentLevels (IQueryable<Company> source)
     {
-      return from sdd in source orderby sdd.Kitchen.Cook.FirstName, sdd.Kitchen.IndustrialSector.ID select sdd;
+      return from sdd in source orderby sdd.MainKitchen.Cook.FirstName, sdd.MainKitchen.IndustrialSector.ID select sdd;
     }
 
     public static IQueryable<string> CreateSimpleImplicitSelectJoin (IQueryable<Kitchen> source)
@@ -58,9 +58,9 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
       return from sd in source select sd.Cook.FirstName;
     }
 
-    public static IQueryable<Tuple<string, int>> CreateComplexImplicitSelectJoin (IQueryable<Restaurant> source)
+    public static IQueryable<Tuple<string, int>> CreateComplexImplicitSelectJoin (IQueryable<Company> source)
     {
-      return from sdd in source select new Tuple<string, int> (sdd.Kitchen.Cook.FirstName, sdd.IndustrialSector.ID);
+      return from sdd in source select new Tuple<string, int> (sdd.MainKitchen.Cook.FirstName, sdd.IndustrialSector.ID);
     }
 
     public static IQueryable<Kitchen> CreateSimpleImplicitWhereJoin (IQueryable<Kitchen> source)
@@ -68,32 +68,32 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
       return from sd in source where sd.Cook.FirstName == "Garcia" select sd;
     }
 
-    public static IQueryable<Restaurant> CreateImplicitOrderByJoinWithMultipleKeys
-    (IQueryable<Restaurant> source1, IQueryable<Restaurant> source2)
+    public static IQueryable<Company> CreateImplicitOrderByJoinWithMultipleKeys
+    (IQueryable<Company> source1, IQueryable<Company> source2)
     {
       return from sdd1 in source1
              from sdd2 in source2
-             orderby sdd1.Kitchen.Cook.FirstName
-             orderby sdd2.Kitchen.Cook.FirstName
+             orderby sdd1.MainKitchen.Cook.FirstName
+             orderby sdd2.MainKitchen.Cook.FirstName
              select sdd1;
     }
 
-    public static IQueryable<Restaurant> CreateImplicitOrderByJoinWithJoinReuse
-        (IQueryable<Restaurant> source1, IQueryable<Restaurant> source2)
+    public static IQueryable<Company> CreateImplicitOrderByJoinWithJoinReuse
+        (IQueryable<Company> source1, IQueryable<Company> source2)
     {
       return from sdd1 in source1
              from sdd2 in source2
-             orderby sdd1.Kitchen.Cook.FirstName
-             orderby sdd2.Kitchen.Cook.FirstName
-             orderby sdd1.Kitchen.Cook.FirstName
+             orderby sdd1.MainKitchen.Cook.FirstName
+             orderby sdd2.MainKitchen.Cook.FirstName
+             orderby sdd1.MainKitchen.Cook.FirstName
              select sdd1;
     }
 
-    public static IQueryable<Restaurant> CreateImplicitOrderByJoinWithJoinPartReuse (IQueryable<Restaurant> source)
+    public static IQueryable<Company> CreateImplicitOrderByJoinWithJoinPartReuse (IQueryable<Company> source)
     {
       return from sdd in source
-             orderby sdd.Kitchen.Cook.FirstName
-             orderby sdd.Kitchen.ID
+             orderby sdd.MainKitchen.Cook.FirstName
+             orderby sdd.MainKitchen.ID
              select sdd;
     }
   }
