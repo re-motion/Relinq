@@ -31,7 +31,7 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
 
     public static IQueryable<Tuple<string, string>> CreateSimpleQueryWithFieldProjection (IQueryable<Student> source)
     {
-      return from s in source select new Tuple<string, string> (s.First, s.Last);
+      return from s in source select new Tuple<string, string> (s.FirstName, s.Last);
     }
 
     public static IQueryable<Tuple<Student, string, string, string>> CreateSimpleQueryWithSpecialProjection (IQueryable<Student> source)
@@ -52,7 +52,7 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
 
     public static IQueryable<string> CreateSimpleQueryWithProjection (IQueryable<Student> source)
     {
-      return from s in source select s.First;
+      return from s in source select s.FirstName;
     }
 
     public static IQueryable<string> CreateSimpleSelectWithNonDbProjection (IQueryable<Student> source1)
@@ -90,7 +90,7 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
 
     public static IQueryable<string> CreateSimpleQuery_WithProjection (IQueryable<Student> source)
     {
-      return from s in source select s.First;
+      return from s in source select s.FirstName;
     }
 
     public static IQueryable<int> CreateSimpleQueryOnID (IQueryable<Student> source)
@@ -100,7 +100,7 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
 
     public static IQueryable<string> CreateUnaryBinaryLambdaInvocationConvertNewArrayExpressionQuery (IQueryable<Student> source1)
     {
-      return from s1 in source1 select ((Func<string, string>) (s => s1.First)) (s1.Last) + new[] { s1.ToString () }[s1.ID];
+      return from s1 in source1 select ((Func<string, string>) (s => s1.FirstName)) (s1.Last) + new[] { s1.ToString () }[s1.ID];
     }
 
     public static IQueryable<IQueryable<Student>> CreateSubQueryInSelect (IQueryable<Student> source)

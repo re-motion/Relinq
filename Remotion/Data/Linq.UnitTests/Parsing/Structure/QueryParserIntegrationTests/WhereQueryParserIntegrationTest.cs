@@ -53,7 +53,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       CheckResolvedExpression<Student, bool> (whereClause1.Predicate, queryModel.MainFromClause, s => s.Last == "Garcia");
 
       var whereClause2 = (WhereClause) queryModel.BodyClauses[1];
-      CheckResolvedExpression<Student, bool> (whereClause2.Predicate, queryModel.MainFromClause, s => s.First == "Hugo");
+      CheckResolvedExpression<Student, bool> (whereClause2.Predicate, queryModel.MainFromClause, s => s.FirstName == "Hugo");
 
       var whereClause3 = (WhereClause) queryModel.BodyClauses[2];
       CheckResolvedExpression<Student, bool> (whereClause3.Predicate, queryModel.MainFromClause, s => s.ID > 100);
@@ -72,7 +72,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
 
       var whereClause = (WhereClause) queryModel.BodyClauses[0];
       CheckResolvedExpression<Student, bool> (whereClause.Predicate, 
-                                              queryModel.MainFromClause, s => s.First != "Garcia" && s.ID > 5 && s.ID >= 6 && s.ID < 7 && s.ID <= 6 && s.ID == 6);
+                                              queryModel.MainFromClause, s => s.FirstName != "Garcia" && s.ID > 5 && s.ID >= 6 && s.ID < 7 && s.ID <= 6 && s.ID == 6);
 
       var selectClause = queryModel.SelectClause;
       CheckResolvedExpression<Student, Student> (selectClause.Selector, queryModel.MainFromClause, s => s);

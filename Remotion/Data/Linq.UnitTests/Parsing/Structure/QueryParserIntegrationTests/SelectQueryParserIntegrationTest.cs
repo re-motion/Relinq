@@ -46,7 +46,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       var selectClause = queryModel.SelectClause;
 
       Assert.That (queryModel.BodyClauses.Count (), Is.EqualTo (0));
-      CheckResolvedExpression<Student, string> (selectClause.Selector, mainFromClause, s => s.First + s.Last);
+      CheckResolvedExpression<Student, string> (selectClause.Selector, mainFromClause, s => s.FirstName + s.Last);
     }
   }
 }

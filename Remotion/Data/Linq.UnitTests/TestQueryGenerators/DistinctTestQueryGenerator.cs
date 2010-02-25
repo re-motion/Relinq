@@ -25,17 +25,17 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
   {
     public static IQueryable<string> CreateSimpleDistinctQuery (IQueryable<Student> source)
     {
-      return (from s in source select s.First).Distinct ();
+      return (from s in source select s.FirstName).Distinct ();
     }
 
     public static IQueryable<Student> CreateDisinctWithWhereQueryWithoutProjection (IQueryable<Student> source)
     {
-      return (from s in source where s.First == "Garcia" select s).Distinct ();
+      return (from s in source where s.FirstName == "Garcia" select s).Distinct ();
     }
 
     public static IQueryable<string> CreateDisinctWithWhereQuery (IQueryable<Student> source)
     {
-      return (from s in source where s.First == "Garcia" select s.First).Distinct ();
+      return (from s in source where s.FirstName == "Garcia" select s.FirstName).Distinct ();
     }
 
     public static MethodCallExpression CreateSimpleDistinctQuery_MethodCallExpression (IQueryable<Student> source)

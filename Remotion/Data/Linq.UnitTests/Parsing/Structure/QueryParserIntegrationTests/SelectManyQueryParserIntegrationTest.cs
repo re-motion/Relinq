@@ -115,7 +115,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       Assert.That (additionalFromClause1.ItemName, Is.EqualTo ("s2"));
       
       var whereClause = (WhereClause) queryModel.BodyClauses[1];
-      CheckResolvedExpression<Student, bool> (whereClause.Predicate, queryModel.MainFromClause, s1 => s1.First == "Hugo");
+      CheckResolvedExpression<Student, bool> (whereClause.Predicate, queryModel.MainFromClause, s1 => s1.FirstName == "Hugo");
 
       var additionalFromClause2 = (AdditionalFromClause) queryModel.BodyClauses[2];
       Assert.That (additionalFromClause2.ItemName, Is.EqualTo ("s3"));

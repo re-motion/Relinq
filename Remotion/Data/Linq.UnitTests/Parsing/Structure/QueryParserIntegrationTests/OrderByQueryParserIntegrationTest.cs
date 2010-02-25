@@ -42,7 +42,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
 
       var ordering1 = orderByClause.Orderings[0];
       Assert.That (ordering1.OrderingDirection, Is.EqualTo (OrderingDirection.Asc));
-      CheckResolvedExpression<Student, string> (ordering1.Expression, mainFromClause, s => s.First);
+      CheckResolvedExpression<Student, string> (ordering1.Expression, mainFromClause, s => s.FirstName);
 
       var ordering2 = orderByClause.Orderings[1];
       Assert.That (ordering2.OrderingDirection, Is.EqualTo (OrderingDirection.Desc));
@@ -79,10 +79,10 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       var queryModel = QueryParser.GetParsedQuery (expression);
 
       var whereClause = (WhereClause) queryModel.BodyClauses[0];
-      CheckResolvedExpression<Student, bool> (whereClause.Predicate, queryModel.MainFromClause, s1 => s1.First == "Garcia");
+      CheckResolvedExpression<Student, bool> (whereClause.Predicate, queryModel.MainFromClause, s1 => s1.FirstName == "Garcia");
 
       var orderByClause = (OrderByClause) queryModel.BodyClauses[1];
-      CheckResolvedExpression<Student, string> (orderByClause.Orderings[0].Expression, queryModel.MainFromClause, s1 => s1.First);
+      CheckResolvedExpression<Student, string> (orderByClause.Orderings[0].Expression, queryModel.MainFromClause, s1 => s1.FirstName);
     }
 
     [Test]
@@ -99,7 +99,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
 
       var orderByClause = (OrderByClause) queryModel.BodyClauses[2];
       Assert.That (orderByClause.Orderings[0].OrderingDirection, Is.EqualTo (OrderingDirection.Asc));
-      CheckResolvedExpression<Student, string> (orderByClause.Orderings[0].Expression, queryModel.MainFromClause, s1 => s1.First);
+      CheckResolvedExpression<Student, string> (orderByClause.Orderings[0].Expression, queryModel.MainFromClause, s1 => s1.FirstName);
       Assert.That (orderByClause.Orderings[1].OrderingDirection, Is.EqualTo (OrderingDirection.Desc));
       CheckResolvedExpression<Student, string> (orderByClause.Orderings[1].Expression, additionalFromClause, s2 => s2.Last);
     }

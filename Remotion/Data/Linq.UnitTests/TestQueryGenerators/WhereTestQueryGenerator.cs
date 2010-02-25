@@ -36,37 +36,37 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
 
     public static IQueryable<Student> CreateMultiWhereQuery (IQueryable<Student> source)
     {
-      return from s in source where s.Last == "Garcia" where s.First == "Hugo" where s.ID > 100 select s;
+      return from s in source where s.Last == "Garcia" where s.FirstName == "Hugo" where s.ID > 100 select s;
     }
 
     public static IQueryable<string> CreateSelectWhereQuery (IQueryable<Student> source)
     {
-      return from s in source where s.Last == "Garcia" select s.First;
+      return from s in source where s.Last == "Garcia" select s.FirstName;
     }
 
     public static IQueryable<Student> CreateWhereQueryWithDifferentComparisons (IQueryable<Student> source)
     {
-      return from s in source where s.First != "Garcia" && s.ID > 5 && s.ID >= 6 && s.ID < 7 && s.ID <= 6 && s.ID == 6 select s;
+      return from s in source where s.FirstName != "Garcia" && s.ID > 5 && s.ID >= 6 && s.ID < 7 && s.ID <= 6 && s.ID == 6 select s;
     }
 
     public static IQueryable<Student> CreateWhereQueryWithOrAndNot (IQueryable<Student> source)
     {
-      return from s in source where (!(s.First == "Garcia") || s.First == "Garcia") && s.First == "Garcia" select s;
+      return from s in source where (!(s.FirstName == "Garcia") || s.FirstName == "Garcia") && s.FirstName == "Garcia" select s;
     }
 
     public static IQueryable<Student> CreateWhereQueryWithStartsWith (IQueryable<Student> source)
     {
-      return from s in source where s.First.StartsWith("Garcia") select s;
+      return from s in source where s.FirstName.StartsWith("Garcia") select s;
     }
 
     public static IQueryable<Student> CreateWhereQueryWithEndsWith (IQueryable<Student> source)
     {
-      return from s in source where s.First.EndsWith("Garcia") select s;
+      return from s in source where s.FirstName.EndsWith("Garcia") select s;
     }
 
     public static IQueryable<Student> CreateWhereQueryNullChecks (IQueryable<Student> source)
     {
-      return from s in source where s.First == null || null != s.Last select s;
+      return from s in source where s.FirstName == null || null != s.Last select s;
     }
 
     public static IQueryable<Student> CreateWhereQueryBooleanConstantTrue (IQueryable<Student> source)

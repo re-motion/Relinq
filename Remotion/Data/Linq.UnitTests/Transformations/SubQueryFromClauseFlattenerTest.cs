@@ -169,13 +169,13 @@ namespace Remotion.Data.Linq.UnitTests.Transformations
       var parsedMainFromSubQuery = ExpressionHelper.ParseQuery (mainFromSubQuery);
 
       var query = from s in ExpressionHelper.CreateStudentQueryable()
-                  select s.First;
+                  select s.FirstName;
       var parsedQuery = ExpressionHelper.ParseQuery (query);
       parsedQuery.MainFromClause.FromExpression = new SubQueryExpression (parsedMainFromSubQuery);
 
       parsedQuery.Accept (_visitor);
 
-      var expectedSelector = ExpressionHelper.Resolve<Student_Detail, string> (parsedQuery.MainFromClause, sd => sd.Student.First);
+      var expectedSelector = ExpressionHelper.Resolve<Student_Detail, string> (parsedQuery.MainFromClause, sd => sd.Student.FirstName);
 
       Assert.That (parsedQuery.MainFromClause.FromExpression, Is.Not.InstanceOfType (typeof (SubQueryExpression)));
       Assert.That (parsedQuery.BodyClauses.Count, Is.EqualTo (1));
