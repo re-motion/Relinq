@@ -29,13 +29,13 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
     {
       var sb = new StringBuilder();
       sb.Append ("SELECT ");
-      BuildSelectPart ((SqlColumnListExpression) sqlStatement.SelectProjection, sb);
+      BuildSelectPart ((SqlColumnListExpression) sqlStatement.SelectProjection, sb);  // TODO: Remove cast
       sb.Append (" FROM ");
       BuildFromPart (sqlStatement.FromExpression, sb);
       return sb.ToString();
     }
 
-    protected abstract void BuildSelectPart (SqlColumnListExpression expression, StringBuilder sb);
+    protected abstract void BuildSelectPart (SqlColumnListExpression expression, StringBuilder sb); // TODO: Change parameter type to Expression
     protected abstract void BuildFromPart (SqlTable sqlTable, StringBuilder sb);
     
   }

@@ -22,13 +22,13 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.SqlBackend.MappingResolution
 {
   /// <summary>
-  /// <see cref="SqlStatementVisitor"/> implements <see cref="SqlStatementVisitorBase"/>.
+  /// <see cref="ResolvingSqlStatementVisitor"/> implements <see cref="SqlStatementVisitorBase"/>.
   /// </summary>
-  public class SqlStatementVisitor : SqlStatementVisitorBase
+  public class ResolvingSqlStatementVisitor : SqlStatementVisitorBase
   {
     private readonly ISqlStatementResolver _resolver;
 
-    public SqlStatementVisitor (ISqlStatementResolver resolver)
+    public ResolvingSqlStatementVisitor (ISqlStatementResolver resolver)
     {
       ArgumentUtility.CheckNotNull ("resolver", resolver);
 
@@ -39,14 +39,14 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
     {
       ArgumentUtility.CheckNotNull ("selectProjection", selectProjection);
 
-      return SqlTableReferenceExpressionVisitor.TranslateSqlTableReferenceExpressions (selectProjection, _resolver);
+      return ResolvingExpressionVisitor.TranslateSqlTableReferenceExpressions (selectProjection, _resolver);
     }
 
     protected override void VisitSqlTable (SqlTable sqlTable)
     {
       ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
       
-      ConstantTableSourceVisitor.ReplaceTableSource (sqlTable, _resolver);
+      ResolvingTableSourceVisitor.ResolveTableSource (sqlTable, _resolver);
     }
   }
 }

@@ -28,29 +28,27 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   /// </summary>
   public class SqlColumnExpression : ExtensionExpression
   {
-    private SqlTable _sqlTable;
-    private string _columnName;
+    private readonly string _owningTableAlias;
+    private readonly string _columnName;
 
-    public SqlColumnExpression (Type type, SqlTable sqlTable, string columnName)
+    public SqlColumnExpression (Type type, string owningTableAlias, string columnName)
         : base(type)
     {
-      ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
+      ArgumentUtility.CheckNotNull ("owningTableAlias", owningTableAlias);
       ArgumentUtility.CheckNotNullOrEmpty ("columnName", columnName);
 
-      ColumnName = columnName;
-      SqlTable = sqlTable;
+      _columnName = columnName;
+      _owningTableAlias = owningTableAlias;
     }
 
-    public SqlTable SqlTable
+    public string OwningTableAlias
     {
-      get { return _sqlTable; }
-      set { _sqlTable = value; }
+      get { return _owningTableAlias; }
     }
 
     public string ColumnName
     {
       get { return _columnName; }
-      set { _columnName = value; }
     }
 
     protected internal override Expression VisitChildren (ExpressionTreeVisitor visitor)

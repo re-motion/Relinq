@@ -37,8 +37,9 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       visitor.VisitTableSource (sqlTable.TableSource);
     }
 
-    public SqlTableSourceVisitor (StringBuilder sb)
+    protected SqlTableSourceVisitor (StringBuilder sb)
     {
+      ArgumentUtility.CheckNotNull ("sb", sb);
       _sb = sb;
     }
 

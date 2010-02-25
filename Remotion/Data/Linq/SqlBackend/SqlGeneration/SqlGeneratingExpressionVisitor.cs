@@ -24,21 +24,22 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 {
   /// <summary>
-  /// <see cref="SqlColumnListExpressionVisitor"/> implements <see cref="ThrowingExpressionTreeVisitor"/> and <see cref="ISqlColumnListExpressionVisitor"/>.
+  /// <see cref="SqlGeneratingExpressionVisitor"/> implements <see cref="ThrowingExpressionTreeVisitor"/> and <see cref="ISqlColumnListExpressionVisitor"/>.
   /// </summary>
-  public class SqlColumnListExpressionVisitor : ThrowingExpressionTreeVisitor, ISqlColumnListExpressionVisitor
+  public class SqlGeneratingExpressionVisitor : ThrowingExpressionTreeVisitor, ISqlColumnListExpressionVisitor
   {
     private readonly StringBuilder _sb;
-    private bool _first;
 
-    //TODO: possible better name
-    public static void TranslateSqlColumnListExpression (SqlColumnListExpression expression, StringBuilder sb)
+    public static void GenerateSql (Expression expression, StringBuilder sb)
     {
-      var visitor = new SqlColumnListExpressionVisitor(sb);
+      ArgumentUtility.CheckNotNull ("expression", expression);
+      ArgumentUtility.CheckNotNull ("sb", sb);
+
+      var visitor = new SqlGeneratingExpressionVisitor(sb);
       visitor.VisitExpression (expression);
     }
 
-    protected SqlColumnListExpressionVisitor (StringBuilder sb)
+    protected SqlGeneratingExpressionVisitor (StringBuilder sb)
     {
       ArgumentUtility.CheckNotNull ("sb", sb);
       _sb = sb;
@@ -46,18 +47,28 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
     public Expression VisitSqlColumListExpression (SqlColumnListExpression expression)
     {
-      return BaseVisitUnknownExpression (expression);
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
+      var first = true;
+      foreach (var column in expression.Columns)
+      {
+        if (!first)
+          _sb.Append (",");
+        column.Accept (this);
+        first = false;
+      }
+
+      return expression;
     }
 
     public Expression VisitSqlColumnExpression (Expression expression)
     {
-      var prefix = ((SqlTableSource) ((SqlColumnExpression) expression).SqlTable.TableSource).TableAlias;
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
+      var prefix = ((SqlColumnExpression) expression).OwningTableAlias;
       var columnName = ((SqlColumnExpression) expression).ColumnName;
-      if (!_first)
-        _sb.Append (string.Format ("[{0}].[{1}]", prefix, columnName));
-      else
-        _sb.Append (string.Format (",[{0}].[{1}]", prefix, columnName));
-      _first = true;
+      _sb.Append (string.Format ("[{0}].[{1}]", prefix, columnName));
+
       return expression; 
     }
 

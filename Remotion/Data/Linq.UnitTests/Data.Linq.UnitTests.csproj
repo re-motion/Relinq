@@ -364,15 +364,15 @@
     <Compile Include="QueryModelVisitorBaseTest.cs" />
     <Compile Include="QueryProviderBaseTest.cs" />
     <Compile Include="ReflectionUtilityTest.cs" />
-    <Compile Include="SqlBackend\MappingResolution\SqlStatementVisitorTest.cs" />
-    <Compile Include="SqlBackend\SqlGeneration\SqlColumnListExpressionVisitorTest.cs" />
+    <Compile Include="SqlBackend\MappingResolution\ResolvingSqlStatementVisitorTest.cs" />
+    <Compile Include="SqlBackend\SqlGeneration\SqlGeneratingExpressionVisitorTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlServerTextGeneratorTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlTableSourceVisitorTest.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\ClauseObjectMother.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\ConstantTableSourceTest.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\ExpressionTreeVisitorTest.cs" />
     <Compile Include="SqlBackend\NotSupportedExpression.cs" />
-    <Compile Include="SqlBackend\MappingResolution\SqlTableReferenceExpressionVisitorTest.cs" />
+    <Compile Include="SqlBackend\MappingResolution\ResolvingExpressionVisitorTest.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlColumnListExpressionTest.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlColumnnExpressionTest.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlPreparationContextTest.cs" />
@@ -383,7 +383,7 @@
     <Compile Include="SqlBackend\SqlStatementModel\SqlTableReferenceExpressionTest.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlTableSourceTest.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlTableTest.cs" />
-    <Compile Include="SqlBackend\MappingResolution\ConstantTableSourceVisitorTest.cs" />
+    <Compile Include="SqlBackend\MappingResolution\ResolvingTableSourceVisitorTest.cs" />
     <Compile Include="TestDomain\GoodStudent.cs" />
     <Compile Include="TestDomain\IndustrialSector.cs" />
     <Compile Include="TestDomain\QueryableWithTooManyArguments.cs" />

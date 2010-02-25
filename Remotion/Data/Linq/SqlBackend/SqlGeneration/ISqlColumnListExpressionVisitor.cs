@@ -18,7 +18,7 @@ using System;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
 
-namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
+namespace Remotion.Data.Linq.SqlBackend.SqlGeneration // TODO: Move to SqlStatementModel
 {
   /// <summary>
   /// <see cref="ISqlColumnListExpressionVisitor"/> provides methods to resolve expressions and returns sql specific text.
@@ -26,6 +26,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
   public interface ISqlColumnListExpressionVisitor
   {
     Expression VisitSqlColumListExpression (SqlColumnListExpression expression);
-    Expression VisitSqlColumnExpression (Expression expression);
+    Expression VisitSqlColumnExpression (Expression expression); // TODO: Change parameter type to SqlColumnExpression
   }
 }

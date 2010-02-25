@@ -44,7 +44,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
 
     public SqlStatement GetSqlStatement ()
     {
-      var sqlStatement = new SqlStatement();
+      var sqlStatement = new SqlStatement(); // TODO: new SqlStatement (_sqlTable, _projectionExpression);
       sqlStatement.FromExpression.TableSource = _sqlTable.TableSource;
       sqlStatement.SelectProjection = _projectionExpression;
       return sqlStatement;

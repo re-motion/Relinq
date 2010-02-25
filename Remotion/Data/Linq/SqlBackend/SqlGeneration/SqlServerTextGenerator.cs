@@ -20,11 +20,11 @@ using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 {
-  public class SqlServerTextGenerator : SqlStatementTextGenerator
+  public class SqlServerTextGenerator : SqlStatementTextGenerator // TODO: Unite classes
   {
     protected override void BuildSelectPart (SqlColumnListExpression expression, StringBuilder sb)
     {
-      SqlColumnListExpressionVisitor.TranslateSqlColumnListExpression (expression, sb);
+      SqlGeneratingExpressionVisitor.GenerateSql (expression, sb);
     }
 
     protected override void BuildFromPart (SqlTable sqlTable, StringBuilder sb)

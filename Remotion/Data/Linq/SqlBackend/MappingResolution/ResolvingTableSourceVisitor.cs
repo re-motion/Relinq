@@ -21,23 +21,24 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.SqlBackend.MappingResolution
 {
   /// <summary>
-  /// <see cref="ConstantTableSourceVisitor"/> modifies <see cref="ConstantTableSource"/>s and generates <see cref="SqlTableSource"/>s.
+  /// <see cref="ResolvingTableSourceVisitor"/> modifies <see cref="ConstantTableSource"/>s and generates <see cref="SqlTableSource"/>s.
   /// </summary>
-  public class ConstantTableSourceVisitor : ITableSourceVisitor
+  public class ResolvingTableSourceVisitor : ITableSourceVisitor
   {
     private readonly ISqlStatementResolver _resolver;
 
-    public static void ReplaceTableSource (SqlTable sqlTable, ISqlStatementResolver resolver)
+    public static void ResolveTableSource (SqlTable sqlTable, ISqlStatementResolver resolver)
     {
       ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
       ArgumentUtility.CheckNotNull ("resolver", resolver);
 
-      var visitor = new ConstantTableSourceVisitor (resolver);
+      var visitor = new ResolvingTableSourceVisitor (resolver);
       sqlTable.TableSource = visitor.VisitTableSource (sqlTable.TableSource);
     }
 
-    protected ConstantTableSourceVisitor (ISqlStatementResolver resolver)
+    protected ResolvingTableSourceVisitor (ISqlStatementResolver resolver)
     {
+      ArgumentUtility.CheckNotNull ("resolver", resolver);
       _resolver = resolver;
     }
 
@@ -49,11 +50,13 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
 
     public AbstractTableSource VisitConstantTableSource (ConstantTableSource tableSource)
     {
+      ArgumentUtility.CheckNotNull ("tableSource", tableSource);
       return  _resolver.ResolveConstantTableSource (tableSource);
     }
 
     public AbstractTableSource VisitSqlTableSource (SqlTableSource tableSource)
     {
+      ArgumentUtility.CheckNotNull ("tableSource", tableSource);
       return tableSource;
     }
   }
