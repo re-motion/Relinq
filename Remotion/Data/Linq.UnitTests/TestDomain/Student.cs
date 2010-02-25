@@ -26,7 +26,7 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
     public string FirstName { get; set; }
     public string Name { get; set; }
     public int ID { get; set; }
-    public ArrayList Kids { get; set; }
+    public ArrayList Courses { get; set; }
     public int[] LotteryNumbers { get; set; }
     public List<int> Scores { get; set; }
     public IQueryable<Student> Friends { get; set; }

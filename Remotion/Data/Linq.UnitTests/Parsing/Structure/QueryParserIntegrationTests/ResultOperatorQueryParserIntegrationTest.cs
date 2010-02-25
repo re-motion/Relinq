@@ -208,7 +208,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
     public void ArrayListCount ()
     {
       var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
-                                                               select s.Kids.Count));
+                                                               select s.Courses.Count));
 
       var queryModel = QueryParser.GetParsedQuery (expression);
 
