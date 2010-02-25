@@ -42,7 +42,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       CheckConstantQuerySource (additionalFromClause.FromExpression, QuerySource);
 
       var whereClause = (WhereClause) queryModel.BodyClauses[1];
-      CheckResolvedExpression<Student, bool> (whereClause.Predicate, queryModel.MainFromClause, s1 => s1.Last == "Garcia");
+      CheckResolvedExpression<Student, bool> (whereClause.Predicate, queryModel.MainFromClause, s1 => s1.Name == "Garcia");
 
       var selectClause = queryModel.SelectClause;
       CheckResolvedExpression<Student, Student> (selectClause.Selector, queryModel.MainFromClause, s1 => s1);
@@ -134,7 +134,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       Assert.That (queryModel.BodyClauses.Count, Is.EqualTo (2));
 
       var whereClause = (WhereClause) queryModel.BodyClauses[0];
-      CheckResolvedExpression<Student, bool> (whereClause.Predicate, queryModel.MainFromClause, s1 => s1.Last == "Garcia");
+      CheckResolvedExpression<Student, bool> (whereClause.Predicate, queryModel.MainFromClause, s1 => s1.Name == "Garcia");
 
       var additionalFromClause = (AdditionalFromClause) queryModel.BodyClauses[1];
       Assert.That (additionalFromClause.ItemName, Is.EqualTo ("s2"));
@@ -155,13 +155,13 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       Assert.That (queryModel.BodyClauses.Count, Is.EqualTo (2));
 
       var whereClause = (WhereClause) queryModel.BodyClauses[0];
-      CheckResolvedExpression<Student, bool> (whereClause.Predicate, queryModel.MainFromClause, s1 => s1.Last == "Garcia");
+      CheckResolvedExpression<Student, bool> (whereClause.Predicate, queryModel.MainFromClause, s1 => s1.Name == "Garcia");
 
       var additionalFromClause = (AdditionalFromClause) queryModel.BodyClauses[1];
       CheckConstantQuerySource (additionalFromClause.FromExpression, QuerySource);
       
       var selectClause = queryModel.SelectClause;
-      CheckResolvedExpression<Student, string> (selectClause.Selector, (AdditionalFromClause) queryModel.BodyClauses.Last(), s2 => s2.Last);
+      CheckResolvedExpression<Student, string> (selectClause.Selector, (AdditionalFromClause) queryModel.BodyClauses.Last(), s2 => s2.Name);
     }
   }
 }

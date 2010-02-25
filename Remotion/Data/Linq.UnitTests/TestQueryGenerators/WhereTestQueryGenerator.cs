@@ -25,23 +25,23 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
   {
     public static IQueryable<Student> CreateSimpleWhereQuery (IQueryable<Student> source)
     {
-      return from s in source where s.Last == "Garcia" select s;
+      return from s in source where s.Name == "Garcia" select s;
     }
 
     public static IQueryable<Student> CreateWhereQueryWithEvaluatableSubExpression (IQueryable<Student> source)
     {
       string cia = "cia";
-      return from s in source where s.Last == ("Gar" + cia) select s;
+      return from s in source where s.Name == ("Gar" + cia) select s;
     }
 
     public static IQueryable<Student> CreateMultiWhereQuery (IQueryable<Student> source)
     {
-      return from s in source where s.Last == "Garcia" where s.FirstName == "Hugo" where s.ID > 100 select s;
+      return from s in source where s.Name == "Garcia" where s.FirstName == "Hugo" where s.ID > 100 select s;
     }
 
     public static IQueryable<string> CreateSelectWhereQuery (IQueryable<Student> source)
     {
-      return from s in source where s.Last == "Garcia" select s.FirstName;
+      return from s in source where s.Name == "Garcia" select s.FirstName;
     }
 
     public static IQueryable<Student> CreateWhereQueryWithDifferentComparisons (IQueryable<Student> source)
@@ -66,7 +66,7 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
 
     public static IQueryable<Student> CreateWhereQueryNullChecks (IQueryable<Student> source)
     {
-      return from s in source where s.FirstName == null || null != s.Last select s;
+      return from s in source where s.FirstName == null || null != s.Name select s;
     }
 
     public static IQueryable<Student> CreateWhereQueryBooleanConstantTrue (IQueryable<Student> source)

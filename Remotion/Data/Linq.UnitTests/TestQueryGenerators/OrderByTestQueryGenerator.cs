@@ -40,22 +40,22 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
 
     public static IQueryable<Student> CreateTwoOrderByQuery (IQueryable<Student> source)
     {
-      return from s1 in source orderby s1.FirstName orderby s1.Last descending select s1;
+      return from s1 in source orderby s1.FirstName orderby s1.Name descending select s1;
     }
 
     public static IQueryable<Student> CreateThreeOrderByQuery (IQueryable<Student> source)
     {
-      return from s1 in source orderby s1.FirstName, s1.Last orderby s1.Last descending select s1;
+      return from s1 in source orderby s1.FirstName, s1.Name orderby s1.Name descending select s1;
     }
 
     public static IQueryable<Student> CreateOrderByQueryWithOrderByAndThenBy (IQueryable<Student> source)
     {
-      return from s in source orderby s.FirstName, s.Last descending, s.Scores select s;
+      return from s in source orderby s.FirstName, s.Name descending, s.Scores select s;
     }
 
     public static IQueryable<Student> CreateOrderByQueryWithMultipleOrderBys (IQueryable<Student> source)
     {
-      return from s in source orderby s.FirstName, s.Last descending, s.Scores orderby s.Last select s;
+      return from s in source orderby s.FirstName, s.Name descending, s.Scores orderby s.Name select s;
     }
 
     public static MethodCallExpression CreateOrderByQueryWithOrderByAndThenBy_OrderByExpression (IQueryable<Student> source)

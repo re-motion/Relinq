@@ -45,7 +45,7 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
 
     public static IQueryable<Student_Detail_Detail> CreateImplicitOrderByJoinCheckingCorrectNumberOfEntries (IQueryable<Student_Detail_Detail> source)
     {
-      return from sdd in source orderby sdd.Student_Detail.Student.FirstName, sdd.Student_Detail.Student.Last select sdd;
+      return from sdd in source orderby sdd.Student_Detail.Student.FirstName, sdd.Student_Detail.Student.Name select sdd;
     }
 
     public static IQueryable<Student_Detail_Detail> CreateImplicitOrderByJoinWithDifferentLevels (IQueryable<Student_Detail_Detail> source)

@@ -25,7 +25,7 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
   {
     public static IQueryable<string> CreateSimpleLetClause (IQueryable<Student> source)
     {
-      return from s in source let x = s.FirstName + s.Last select x;
+      return from s in source let x = s.FirstName + s.Name select x;
     }
 
     public static IQueryable<string> CreateLet_WithJoin_NoTable (IQueryable<Student_Detail> source)

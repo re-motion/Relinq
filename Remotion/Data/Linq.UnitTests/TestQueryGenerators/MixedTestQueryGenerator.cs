@@ -26,24 +26,24 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
   {
     public static IQueryable<Student> CreateMultiFromWhereQuery (IQueryable<Student> source1, IQueryable<Student> source2)
     {
-      return from s1 in source1 from s2 in source2 where s1.Last == "Garcia" select s1;
+      return from s1 in source1 from s2 in source2 where s1.Name == "Garcia" select s1;
     }
 
 
     public static IQueryable<Student> CreateMultiFromWhereOrderByQuery (IQueryable<Student> source1, IQueryable<Student> source2)
     {
-      return from s1 in source1 from s2 in source2 where s1.Last == "Garcia" orderby s1.FirstName ascending, s2.Last descending select s1;
+      return from s1 in source1 from s2 in source2 where s1.Name == "Garcia" orderby s1.FirstName ascending, s2.Name descending select s1;
     }
 
 
     public static IQueryable<Student> CreateReverseFromWhereQuery (IQueryable<Student> source1, IQueryable<Student> source2)
     {
-      return from s1 in source1 where s1.Last == "Garcia" from s2 in source2 select s1;
+      return from s1 in source1 where s1.Name == "Garcia" from s2 in source2 select s1;
     }
 
     public static IQueryable<string> CreateReverseFromWhereQueryWithProjection (IQueryable<Student> source1, IQueryable<Student> source2)
     {
-      return from s1 in source1 where s1.Last == "Garcia" from s2 in source2 select s2.Last;
+      return from s1 in source1 where s1.Name == "Garcia" from s2 in source2 select s2.Name;
     }
 
     public static IQueryable<Student> CreateThreeFromWhereQuery (IQueryable<Student> source1, IQueryable<Student> source2, IQueryable<Student> source3)
@@ -53,12 +53,12 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
 
     public static IQueryable<Student> CreateWhereFromWhereQuery (IQueryable<Student> source1, IQueryable<Student> source2)
     {
-      return from s1 in source1 where s1.FirstName == "Hugo" from s2 in source2 where s1.Last == "Garcia" select s1;
+      return from s1 in source1 where s1.FirstName == "Hugo" from s2 in source2 where s1.Name == "Garcia" select s1;
     }
 
     public static IQueryable<Tuple<string, string, int>> CreateMultiFromQueryWithProjection (IQueryable<Student> source1, IQueryable<Student> source2, IQueryable<Student> source3)
     {
-      return from s1 in source1 from s2 in source2 from s3 in source3 select Tuple.Create (s1.FirstName, s2.Last, s3.ID);
+      return from s1 in source1 from s2 in source2 from s3 in source3 select Tuple.Create (s1.FirstName, s2.Name, s3.ID);
     }
 
     public static IQueryable<Student> CreateOrderByWithWhereCondition (IQueryable<Student> source)
@@ -68,7 +68,7 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
 
     public static IQueryable<Student> CreateOrderByWithWhereConditionAndMultiFrom (IQueryable<Student> source1, IQueryable<Student> source2)
     {
-      return from s1 in source1 where s1.FirstName == "Garcia" orderby s1.FirstName from s2 in source2 where s2.Last == "Garcia" orderby s2.FirstName, s2.Last orderby s2.FirstName select s2;
+      return from s1 in source1 where s1.FirstName == "Garcia" orderby s1.FirstName from s2 in source2 where s2.Name == "Garcia" orderby s2.FirstName, s2.Name orderby s2.FirstName select s2;
     }
 
     public static MethodCallExpression CreateMultiFromWhere_WhereExpression (IQueryable<Student> source1, IQueryable<Student> source2)

@@ -450,7 +450,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
     public void Aggregate_NoSeed ()
     {
       var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
-                                                               select s.Last).Aggregate ((allNames, name) => allNames + " " + name));
+                                                               select s.Name).Aggregate ((allNames, name) => allNames + " " + name));
 
       var queryModel = QueryParser.GetParsedQuery (expression);
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (string)));
@@ -465,7 +465,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       var expectedFunc = ExpressionHelper.ResolveLambdaParameter<string, Student, string> (
           1, 
           queryModel.MainFromClause,
-          (allNames, student) => allNames + " " + student.Last);
+          (allNames, student) => allNames + " " + student.Name);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedFunc, resultOperator.Func);
     }
 
