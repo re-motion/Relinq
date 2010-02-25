@@ -121,7 +121,7 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
       switch (fromClause.ItemType.Name)
       {
         case "Cook":
-          return "studentTable";
+          return "cookTable";
         case "Kitchen":
           return "detailTable";
         case "Company":
@@ -136,7 +136,7 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
     private string GetRelatedTableName (MemberInfo relationMember)
     {
       if (relationMember == typeof (Kitchen).GetProperty ("Cook"))
-        return "studentTable";
+        return "cookTable";
       else if (relationMember == typeof (Company).GetProperty ("MainKitchen"))
         return "detailTable";
       else if (relationMember == typeof (Company).GetProperty ("Restaurant"))
@@ -146,9 +146,9 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
       else if (relationMember == typeof (Restaurant).GetProperty ("SubKitchen"))
         return "detailTable";
       else if (relationMember == typeof (Cook).GetProperty ("Substitution"))
-        return "studentTable";
+        return "cookTable";
       else if (relationMember == typeof (Restaurant).GetProperty ("Cooks"))
-        return "studentTable";
+        return "cookTable";
       else
         return null;
     }
