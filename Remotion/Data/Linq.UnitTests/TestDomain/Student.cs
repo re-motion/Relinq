@@ -33,7 +33,7 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
     public string NonDBStringProperty { get; set; }
     public bool NonDBBoolProperty { get; set; }
     public bool IsExchangeStudent { get; set; }
-    public bool HasDog { get; set; }
+    public bool HasDegree { get; set; }
     public Student OtherStudent { get; set; }
   }
 }

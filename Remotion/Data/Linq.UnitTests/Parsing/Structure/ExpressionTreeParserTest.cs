@@ -186,7 +186,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure
     {
       var querySource = ExpressionHelper.CreateStudentQueryable();
       Expression<Func<Student, int>> selector = s => s.ID;
-      Expression<Func<Student, bool>> predicate = s => s.HasDog;
+      Expression<Func<Student, bool>> predicate = s => s.HasDegree;
       var expression = ExpressionHelper.MakeExpression (() => querySource.Where (predicate).Select (selector));
 
       var result = _expressionTreeParser.ParseTree (expression);
