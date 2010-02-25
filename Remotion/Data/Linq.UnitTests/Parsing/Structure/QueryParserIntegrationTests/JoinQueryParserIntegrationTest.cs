@@ -33,7 +33,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
     public void Join ()
     {
       var query = from s in QuerySource
-                  join sd in DetailQuerySource on s.ID equals sd.StudentID
+                  join sd in DetailQuerySource on s.ID equals sd.RoomNumber
                   select Tuple.Create (s, sd);
 
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
@@ -49,7 +49,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       Assert.That (joinClause.ItemType, Is.SameAs (typeof (Kitchen)));
       Assert.That (joinClause.ItemName, Is.EqualTo ("sd"));
       CheckResolvedExpression<Cook, int> (joinClause.OuterKeySelector, mainFromClause, s => s.ID);
-      CheckResolvedExpression<Kitchen, int> (joinClause.InnerKeySelector, joinClause, sd => sd.StudentID);
+      CheckResolvedExpression<Kitchen, int> (joinClause.InnerKeySelector, joinClause, sd => sd.RoomNumber);
 
       var selectClause = queryModel.SelectClause;
       CheckResolvedExpression<Cook, Kitchen, Tuple<Cook, Kitchen>> (

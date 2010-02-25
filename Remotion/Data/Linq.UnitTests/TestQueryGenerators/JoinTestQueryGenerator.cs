@@ -25,7 +25,7 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
   {
     public static IQueryable<Cook> CreateSimpleExplicitJoin (IQueryable<Kitchen> source1, IQueryable<Cook> source2)
     {
-      return from s1 in source2 join s2 in source1 on s1.ID equals s2.StudentID select s1;
+      return from s1 in source2 join s2 in source1 on s1.ID equals s2.RoomNumber select s1;
     }
 
     public static IQueryable<Kitchen> CreateSimpleImplicitOrderByJoin (IQueryable<Kitchen> source)

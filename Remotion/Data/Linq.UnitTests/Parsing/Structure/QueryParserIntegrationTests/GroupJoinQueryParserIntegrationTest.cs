@@ -32,7 +32,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
     public void GroupJoin ()
     {
       var query = from s in QuerySource
-                  join sd in DetailQuerySource on s.ID equals sd.StudentID into sds
+                  join sd in DetailQuerySource on s.ID equals sd.RoomNumber into sds
                   select Tuple.Create (s, sds);
 
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
@@ -50,7 +50,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       Assert.That (groupJoinClause.JoinClause.ItemType, Is.SameAs (typeof (Kitchen)));
       Assert.That (groupJoinClause.JoinClause.ItemName, Is.EqualTo ("sd"));
       CheckResolvedExpression<Cook, int> (groupJoinClause.JoinClause.OuterKeySelector, mainFromClause, s => s.ID);
-      CheckResolvedExpression<Kitchen, int> (groupJoinClause.JoinClause.InnerKeySelector, groupJoinClause.JoinClause, sd => sd.StudentID);
+      CheckResolvedExpression<Kitchen, int> (groupJoinClause.JoinClause.InnerKeySelector, groupJoinClause.JoinClause, sd => sd.RoomNumber);
 
       var selectClause = queryModel.SelectClause;
       CheckResolvedExpression<Cook, IEnumerable<Kitchen>, Tuple<Cook, IEnumerable<Kitchen>>> (
@@ -63,7 +63,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
     [Test]
     public void GroupJoin_WithoutSelect ()
     {
-      var query = QuerySource.GroupJoin (DetailQuerySource, s => s.ID, sd => sd.StudentID, (s, sds) => Tuple.Create (s, sds));
+      var query = QuerySource.GroupJoin (DetailQuerySource, s => s.ID, sd => sd.RoomNumber, (s, sds) => Tuple.Create (s, sds));
 
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Tuple<Cook, IEnumerable<Kitchen>>>)));
@@ -80,7 +80,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       Assert.That (groupJoinClause.JoinClause.ItemType, Is.SameAs (typeof (Kitchen)));
       Assert.That (groupJoinClause.JoinClause.ItemName, Is.EqualTo ("sd"));
       CheckResolvedExpression<Cook, int> (groupJoinClause.JoinClause.OuterKeySelector, mainFromClause, s => s.ID);
-      CheckResolvedExpression<Kitchen, int> (groupJoinClause.JoinClause.InnerKeySelector, groupJoinClause.JoinClause, sd => sd.StudentID);
+      CheckResolvedExpression<Kitchen, int> (groupJoinClause.JoinClause.InnerKeySelector, groupJoinClause.JoinClause, sd => sd.RoomNumber);
 
       var selectClause = queryModel.SelectClause;
       CheckResolvedExpression<Cook, IEnumerable<Kitchen>, Tuple<Cook, IEnumerable<Kitchen>>> (
