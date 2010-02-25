@@ -400,7 +400,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
     public void All ()
     {
       var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
-                                                               select s).All (s => s.IsOld));
+                                                               select s).All (s => s.IsExchangeStudent));
 
       var queryModel = QueryParser.GetParsedQuery (expression);
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (bool)));
@@ -408,7 +408,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
       Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (AllResultOperator)));
 
-      CheckResolvedExpression<Student, bool> (((AllResultOperator) queryModel.ResultOperators[0]).Predicate, queryModel.MainFromClause, s => s.IsOld);
+      CheckResolvedExpression<Student, bool> (((AllResultOperator) queryModel.ResultOperators[0]).Predicate, queryModel.MainFromClause, s => s.IsExchangeStudent);
     }
 
     [Test]
@@ -430,7 +430,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
     public void Any_WithPredicate ()
     {
       var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
-                                                               select s).Any (s => s.IsOld));
+                                                               select s).Any (s => s.IsExchangeStudent));
 
       var queryModel = QueryParser.GetParsedQuery (expression);
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (bool)));
@@ -440,7 +440,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       Assert.That (queryModel.BodyClauses.Count, Is.EqualTo (1));
       Assert.That (queryModel.BodyClauses[0], Is.InstanceOfType (typeof (WhereClause)));
 
-      CheckResolvedExpression<Student, bool> (((WhereClause) queryModel.BodyClauses[0]).Predicate, queryModel.MainFromClause, s => s.IsOld);
+      CheckResolvedExpression<Student, bool> (((WhereClause) queryModel.BodyClauses[0]).Predicate, queryModel.MainFromClause, s => s.IsExchangeStudent);
       
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
       Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (AnyResultOperator)));
