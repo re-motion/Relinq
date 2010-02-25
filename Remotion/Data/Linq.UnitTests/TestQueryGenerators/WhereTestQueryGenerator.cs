@@ -104,7 +104,7 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
 
     public static IQueryable<Restaurant> CreateRelationMemberVirtualSideWhereQuery (IQueryable<Restaurant> source)
     {
-      return from industrial in source where industrial.SubKitchen != null select industrial;
+      return from restaurant in source where restaurant.SubKitchen != null select restaurant;
     }
 
     public static MethodCallExpression CreateSelectWhereQuery_SelectExpression (IQueryable<Cook> source)
