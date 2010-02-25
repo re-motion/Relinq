@@ -44,7 +44,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       get { return Array.AsReadOnly(_columns); }
     }
 
-    // TODO: Implement and test - should call visitor.VisitExpression for all _columns.
     protected internal override Expression VisitChildren (ExpressionTreeVisitor visitor)
     {
       // TODO: Refactor as soon as ExpressionTreeVisitor.VisitList is public.
