@@ -123,7 +123,7 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
         case "Cook":
           return "cookTable";
         case "Kitchen":
-          return "detailTable";
+          return "kitchenTable";
         case "Company":
           return "detailDetailTable";
         case "Restaurant":
@@ -138,13 +138,13 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
       if (relationMember == typeof (Kitchen).GetProperty ("Cook"))
         return "cookTable";
       else if (relationMember == typeof (Company).GetProperty ("MainKitchen"))
-        return "detailTable";
+        return "kitchenTable";
       else if (relationMember == typeof (Company).GetProperty ("Restaurant"))
         return "industrialTable";
       else if (relationMember == typeof (Kitchen).GetProperty ("Restaurant"))
         return "industrialTable";
       else if (relationMember == typeof (Restaurant).GetProperty ("SubKitchen"))
-        return "detailTable";
+        return "kitchenTable";
       else if (relationMember == typeof (Cook).GetProperty ("Substitution"))
         return "cookTable";
       else if (relationMember == typeof (Restaurant).GetProperty ("Cooks"))
