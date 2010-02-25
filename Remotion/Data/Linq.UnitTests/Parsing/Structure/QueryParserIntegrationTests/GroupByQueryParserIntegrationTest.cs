@@ -32,7 +32,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
     [Test]
     public void GroupBy ()
     {
-      var query = (from s in QuerySource group s.ID by s.HasDegree);
+      var query = (from s in QuerySource group s.ID by s.IsStarredCook);
       
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<IGrouping<bool, int>>)));
@@ -46,14 +46,14 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       CheckResolvedExpression<Cook, Cook> (selectClause.Selector, mainFromClause, s => s);
 
       var groupResultOperator = (GroupResultOperator) queryModel.ResultOperators[0];
-      CheckResolvedExpression<Cook, bool> (groupResultOperator.KeySelector, mainFromClause, s => s.HasDegree);
+      CheckResolvedExpression<Cook, bool> (groupResultOperator.KeySelector, mainFromClause, s => s.IsStarredCook);
       CheckResolvedExpression<Cook, int> (groupResultOperator.ElementSelector, mainFromClause, s => s.ID);
     }
 
     [Test]
     public void GroupByWithoutElementSelector ()
     {
-      var query = QuerySource.GroupBy (s => s.HasDegree);
+      var query = QuerySource.GroupBy (s => s.IsStarredCook);
       
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<IGrouping<bool, Cook>>)));
@@ -67,7 +67,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       CheckResolvedExpression<Cook, Cook> (selectClause.Selector, mainFromClause, s => s);
 
       var groupResultOperator = (GroupResultOperator) queryModel.ResultOperators[0];
-      CheckResolvedExpression<Cook, bool> (groupResultOperator.KeySelector, mainFromClause, s => s.HasDegree);
+      CheckResolvedExpression<Cook, bool> (groupResultOperator.KeySelector, mainFromClause, s => s.IsStarredCook);
       CheckResolvedExpression<Cook, Cook> (groupResultOperator.ElementSelector, mainFromClause, s => s);
     }
 
@@ -75,7 +75,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
     public void GroupIntoWithAggregate ()
     {
       var query = from s in QuerySource 
-                  group s.ID by s.HasDegree 
+                  group s.ID by s.IsStarredCook 
                   into x 
                       where x.Count() > 0
                       select x;
@@ -83,14 +83,14 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       // equivalent to:
       //var query2 = from x in
       //               (from s in _querySource
-      //                group s.ID by s.HasDegree)
+      //                group s.ID by s.IsStarredCook)
       //             where x.Count () > 0
       //             select x;
 
       // parsed as:
       //var query2 = from x in
       //               (from s in _querySource
-      //                group s.ID by s.HasDegree)
+      //                group s.ID by s.IsStarredCook)
       //             where (from generated in x select generated).Count () > 0
       //             select x;
 
@@ -107,7 +107,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       CheckResolvedExpression<Cook, Cook> (subQuerySelectClause.Selector, mainFromClause, s => s);
       
       var subQueryGroupResultOperator = (GroupResultOperator) subQueryModel.ResultOperators[0];
-      CheckResolvedExpression<Cook, bool> (subQueryGroupResultOperator.KeySelector, subQueryModel.MainFromClause, s => s.HasDegree);
+      CheckResolvedExpression<Cook, bool> (subQueryGroupResultOperator.KeySelector, subQueryModel.MainFromClause, s => s.IsStarredCook);
       CheckResolvedExpression<Cook, int> (subQueryGroupResultOperator.ElementSelector, subQueryModel.MainFromClause, s => s.ID);
       
       Assert.That (subQueryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<IGrouping<bool, int>>)));
@@ -132,7 +132,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
     public void GroupByFollowedByWhere ()
     {
       var query = (from s in ExpressionHelper.CreateStudentQueryable ()
-                   group s by s.HasDegree).Where (g => g.Key);
+                   group s by s.IsStarredCook).Where (g => g.Key);
 
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<IGrouping<bool, Cook>>)));

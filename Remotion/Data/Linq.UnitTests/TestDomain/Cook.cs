@@ -32,8 +32,8 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
     public IQueryable<Cook> Assistants { get; set; }
     public string NonDBStringProperty { get; set; }
     public bool NonDBBoolProperty { get; set; }
-    public bool IsExchangeStudent { get; set; }
-    public bool HasDegree { get; set; }
+    public bool IsFullTimeCook { get; set; }
+    public bool IsStarredCook { get; set; }
     public Cook Substitution { get; set; }
   }
 }
