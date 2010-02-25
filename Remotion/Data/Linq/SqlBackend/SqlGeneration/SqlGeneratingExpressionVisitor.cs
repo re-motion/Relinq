@@ -61,12 +61,12 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       return expression;
     }
 
-    public Expression VisitSqlColumnExpression (Expression expression)
+    public Expression VisitSqlColumnExpression (SqlColumnExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      var prefix = ((SqlColumnExpression) expression).OwningTableAlias;
-      var columnName = ((SqlColumnExpression) expression).ColumnName;
+      var prefix = expression.OwningTableAlias;
+      var columnName = expression.ColumnName;
       _sb.Append (string.Format ("[{0}].[{1}]", prefix, columnName));
 
       return expression; 
