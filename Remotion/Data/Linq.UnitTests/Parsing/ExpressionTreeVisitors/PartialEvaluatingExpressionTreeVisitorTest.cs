@@ -112,8 +112,8 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitors
       var i = 1;
 // ReSharper restore ConvertToConstant.Local
 
-      var source1 = ExpressionHelper.CreateStudentQueryable ();
-      var source2 = ExpressionHelper.CreateStudentQueryable ();
+      var source1 = ExpressionHelper.CreateCookQueryable ();
+      var source2 = ExpressionHelper.CreateCookQueryable ();
       var query = from s1 in source1
                   from s2 in source2
                   where 2 > i + 5
@@ -137,7 +137,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitors
     [Test]
     public void EvaluateWholeQueryTree_ThatDoesNotUseItsParameters ()
     {
-      var source = ExpressionHelper.CreateStudentQueryable ();
+      var source = ExpressionHelper.CreateCookQueryable ();
       var query = from s1 in source
                   where false
                   select 0 + int.Parse ("0");
@@ -157,7 +157,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitors
     [Test]
     public void EvaluateWholeQueryTree_WhoseLambdasAreInMemberExpressions_InsteadOfUnaryExpressions ()
     {
-      var source = ExpressionHelper.CreateStudentQueryable ();
+      var source = ExpressionHelper.CreateCookQueryable ();
 
       Expression<Func<Cook, bool>> predicate = s1 => false;
       var queryExpression = ExpressionHelper.MakeExpression (() => source.Where (predicate));
@@ -176,7 +176,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitors
     [Test]
     public void EvaluateWholeQueryTree_WithoutLambdas ()
     {
-      var source = ExpressionHelper.CreateStudentQueryable ();
+      var source = ExpressionHelper.CreateCookQueryable ();
 
       var queryExpression = ExpressionHelper.MakeExpression (() => source.Count ());
 

@@ -131,7 +131,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
     [Test]
     public void GroupByFollowedByWhere ()
     {
-      var query = (from s in ExpressionHelper.CreateStudentQueryable ()
+      var query = (from s in ExpressionHelper.CreateCookQueryable ()
                    group s by s.IsStarredCook).Where (g => g.Key);
 
       var queryModel = QueryParser.GetParsedQuery (query.Expression);

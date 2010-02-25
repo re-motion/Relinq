@@ -290,8 +290,8 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitors
     [Test]
     public void IntegrationTest_WithExpressionNodes ()
     {
-      var query = from a in ExpressionHelper.CreateStudentQueryable ()
-                  from b in ExpressionHelper.CreateStudentQueryable()
+      var query = from a in ExpressionHelper.CreateCookQueryable ()
+                  from b in ExpressionHelper.CreateCookQueryable()
                   where a.ID > 5
                   select a.ID;
 

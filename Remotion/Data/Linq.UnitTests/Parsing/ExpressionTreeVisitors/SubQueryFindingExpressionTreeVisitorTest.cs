@@ -52,7 +52,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitors
     [Test]
     public void TreeWithSubquery ()
     {
-      Expression subQuery = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateStudentQueryable ()).Expression;
+      Expression subQuery = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateCookQueryable ()).Expression;
       Expression surroundingExpression = Expression.Lambda (subQuery);
 
       Expression newExpression = SubQueryFindingExpressionTreeVisitor.ReplaceSubQueries (surroundingExpression, _nodeTypeRegistry);
@@ -71,7 +71,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitors
     [Test]
     public void VisitorUsesNodeTypeRegistry_ToParseAndAnalyzeSubQueries ()
     {
-      Expression subQuery = ExpressionHelper.MakeExpression (() => CustomSelect (ExpressionHelper.CreateStudentQueryable (), s => s));
+      Expression subQuery = ExpressionHelper.MakeExpression (() => CustomSelect (ExpressionHelper.CreateCookQueryable (), s => s));
       Expression surroundingExpression = Expression.Lambda (subQuery);
 
       var emptyNodeTypeRegistry = new MethodCallExpressionNodeTypeRegistry ();

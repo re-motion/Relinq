@@ -25,7 +25,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.TestDomain
 {
   public class QueryableFakeWithCount<T> : IQueryable<T>, IQueryProvider
   {
-    public IQueryable<Cook> Field = ExpressionHelper.CreateStudentQueryable ();
+    public IQueryable<Cook> Field = ExpressionHelper.CreateCookQueryable ();
 
     public QueryableFakeWithCount ()
     {

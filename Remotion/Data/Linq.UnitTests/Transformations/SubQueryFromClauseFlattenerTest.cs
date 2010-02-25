@@ -50,10 +50,10 @@ namespace Remotion.Data.Linq.UnitTests.Transformations
     [SetUp]
     public void SetUp ()
     {
-      _detailSource = ExpressionHelper.CreateStudentDetailQueryable();
-      _sectorSource = ExpressionHelper.CreateIndustrialSectorQueryable();
+      _detailSource = ExpressionHelper.CreateKitchenQueryable();
+      _sectorSource = ExpressionHelper.CreateRestaurantQueryable();
 
-      var query = from s1 in ExpressionHelper.CreateStudentQueryable()
+      var query = from s1 in ExpressionHelper.CreateCookQueryable()
                   from sd in
                       (from sector in _sectorSource
                        where sector.ID > 10
@@ -168,7 +168,7 @@ namespace Remotion.Data.Linq.UnitTests.Transformations
                              select sd.Cook;
       var parsedMainFromSubQuery = ExpressionHelper.ParseQuery (mainFromSubQuery);
 
-      var query = from s in ExpressionHelper.CreateStudentQueryable()
+      var query = from s in ExpressionHelper.CreateCookQueryable()
                   select s.FirstName;
       var parsedQuery = ExpressionHelper.ParseQuery (query);
       parsedQuery.MainFromClause.FromExpression = new SubQueryExpression (parsedMainFromSubQuery);
@@ -185,7 +185,7 @@ namespace Remotion.Data.Linq.UnitTests.Transformations
     [Test]
     public void IntegrationTest_TransformedQueryModel ()
     {
-      var query = from s1 in ExpressionHelper.CreateStudentQueryable ()
+      var query = from s1 in ExpressionHelper.CreateCookQueryable ()
                   from sd in
                     (from sector in _sectorSource
                      where sector.ID > 10

@@ -110,7 +110,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitors.TreeEvalua
     [Test]
     public void MethodCall_WithIQueryableObject_IsNotEvaluatable ()
     {
-      var source = ExpressionHelper.CreateStudentQueryable ();
+      var source = ExpressionHelper.CreateCookQueryable ();
       var expression = ExpressionHelper.MakeExpression (() => source.ToString());
 
       var evaluationInfo = EvaluatableTreeFindingExpressionTreeVisitor.Analyze (expression);
@@ -120,7 +120,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitors.TreeEvalua
     [Test]
     public void MethodCall_WithIQueryableParameter_IsNotEvaluatable ()
     {
-      var source = ExpressionHelper.CreateStudentQueryable ();
+      var source = ExpressionHelper.CreateCookQueryable ();
       var expression = ExpressionHelper.MakeExpression (() => source.Count ());
 
       var evaluationInfo = EvaluatableTreeFindingExpressionTreeVisitor.Analyze (expression);

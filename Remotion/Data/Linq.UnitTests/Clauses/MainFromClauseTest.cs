@@ -43,7 +43,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses
     [Test]
     public void Initialize ()
     {
-      IQueryable querySource = ExpressionHelper.CreateStudentQueryable ();
+      IQueryable querySource = ExpressionHelper.CreateCookQueryable ();
 
       ConstantExpression constantExpression = Expression.Constant (querySource);
       var fromClause = new MainFromClause ("s", typeof (Cook), constantExpression);
@@ -56,7 +56,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses
     [Test]
     public void Initialize_WithNonConstantExpression ()
     {
-      IQueryable querySource = ExpressionHelper.CreateStudentQueryable ();
+      IQueryable querySource = ExpressionHelper.CreateCookQueryable ();
       var anonymous = new {source = querySource};
       MemberExpression sourceExpression = Expression.MakeMemberAccess (Expression.Constant (anonymous), anonymous.GetType().GetProperty ("source"));
 

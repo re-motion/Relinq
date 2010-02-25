@@ -102,7 +102,7 @@ namespace Remotion.Data.Linq.UnitTests
 
     public static QueryModel CreateQueryModel_Student ()
     {
-      return CreateQueryModel (CreateMainFromClause_Int("s", typeof (Cook), CreateStudentQueryable()));
+      return CreateQueryModel (CreateMainFromClause_Int("s", typeof (Cook), CreateCookQueryable()));
     }
 
     public static QueryModel CreateQueryModel_Int ()
@@ -118,17 +118,17 @@ namespace Remotion.Data.Linq.UnitTests
 
     public static MainFromClause CreateMainFromClause_Student ()
     {
-      return CreateMainFromClause_Int ("s", typeof (Cook), CreateStudentQueryable());
+      return CreateMainFromClause_Int ("s", typeof (Cook), CreateCookQueryable());
     }
 
     public static MainFromClause CreateMainFromClause_Detail ()
     {
-      return CreateMainFromClause_Int ("sd", typeof (Kitchen), CreateStudentDetailQueryable ());
+      return CreateMainFromClause_Int ("sd", typeof (Kitchen), CreateKitchenQueryable ());
     }
 
     public static MainFromClause CreateMainFromClause_Detail_Detail ()
     {
-      return CreateMainFromClause_Int ("sdd", typeof (Company), CreateStudentDetailDetailQueryable());
+      return CreateMainFromClause_Int ("sdd", typeof (Company), CreateCompanyQueryable());
     }
 
     public static AdditionalFromClause CreateAdditionalFromClause ()
@@ -176,7 +176,7 @@ namespace Remotion.Data.Linq.UnitTests
 
     public static MethodCallExpression CreateMethodCallExpression ()
     {
-      return CreateMethodCallExpression (CreateStudentQueryable ());
+      return CreateMethodCallExpression (CreateCookQueryable ());
     }
 
     public static WhereClause CreateWhereClause ()
@@ -195,42 +195,42 @@ namespace Remotion.Data.Linq.UnitTests
       return new TestQueryable<int> (s_executor);
     }
 
-    public static IQueryable<Cook> CreateStudentQueryable()
+    public static IQueryable<Cook> CreateCookQueryable()
     {
-      return CreateStudentQueryable (s_executor);
+      return CreateCookQueryable (s_executor);
     }
         
-    public static IQueryable<Cook> CreateStudentQueryable (IQueryExecutor executor)
+    public static IQueryable<Cook> CreateCookQueryable (IQueryExecutor executor)
     {
       return new TestQueryable<Cook> (executor);
     }
 
-    public static IQueryable<Kitchen> CreateStudentDetailQueryable()
+    public static IQueryable<Kitchen> CreateKitchenQueryable()
     {
-      return CreateStudentDetailQueryable (s_executor);
+      return CreateKitchenQueryable (s_executor);
     }
 
-    public static IQueryable<Kitchen> CreateStudentDetailQueryable (IQueryExecutor executor)
+    public static IQueryable<Kitchen> CreateKitchenQueryable (IQueryExecutor executor)
     {
       return new TestQueryable<Kitchen> (executor);
     }
 
-    public static IQueryable<Company> CreateStudentDetailDetailQueryable ()
+    public static IQueryable<Company> CreateCompanyQueryable ()
     {
-      return CreateStudentDetailDetailQueryable (s_executor);
+      return CreateCompanyQueryable (s_executor);
     }
 
-    public static IQueryable<Company> CreateStudentDetailDetailQueryable (IQueryExecutor executor)
+    public static IQueryable<Company> CreateCompanyQueryable (IQueryExecutor executor)
     {
       return new TestQueryable<Company> (executor);
     }
 
-    public static  IQueryable<Restaurant> CreateIndustrialSectorQueryable ()
+    public static  IQueryable<Restaurant> CreateRestaurantQueryable ()
     {
-      return CreateIndustrialSectorQueryable (s_executor);
+      return CreateRestaurantQueryable (s_executor);
     }
 
-    public static IQueryable<Restaurant> CreateIndustrialSectorQueryable( IQueryExecutor executor)
+    public static IQueryable<Restaurant> CreateRestaurantQueryable( IQueryExecutor executor)
     {
       return new TestQueryable<Restaurant> (executor);
     }

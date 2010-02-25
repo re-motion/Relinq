@@ -39,7 +39,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ExpressionTreeVisitors
     [Test]
     public void QuerySourceReferenceExpression ()
     {
-      var referencedClause = ExpressionHelper.CreateMainFromClause_Int ("i", typeof (int), ExpressionHelper.CreateStudentQueryable());
+      var referencedClause = ExpressionHelper.CreateMainFromClause_Int ("i", typeof (int), ExpressionHelper.CreateCookQueryable());
       
       var expression = Expression.MakeBinary (ExpressionType.GreaterThan, new QuerySourceReferenceExpression (referencedClause), Expression.Constant (2));
       var formattedExpression = FormattingExpressionTreeVisitor.Format (expression);
@@ -49,7 +49,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ExpressionTreeVisitors
     [Test]
     public void SubQueryExpression ()
     {
-      var queryExpression = ExpressionHelper.MakeExpression (() => (from s in ExpressionHelper.CreateStudentQueryable () select s).Count());
+      var queryExpression = ExpressionHelper.MakeExpression (() => (from s in ExpressionHelper.CreateCookQueryable () select s).Count());
       var subQueryModel = ExpressionHelper.ParseQuery (queryExpression);
 
       var expression = Expression.MakeBinary (ExpressionType.GreaterThan, new SubQueryExpression (subQueryModel), Expression.Constant (2));

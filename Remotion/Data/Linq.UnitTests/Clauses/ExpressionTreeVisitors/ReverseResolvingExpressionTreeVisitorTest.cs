@@ -43,10 +43,10 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ExpressionTreeVisitors
     {
       _anonymousTypeCtor = typeof (AnonymousType<Cook, Cook>).GetConstructor (new[] { typeof (Cook), typeof (Cook) });
 
-      _fromClause1 = ExpressionHelper.CreateMainFromClause_Int ("s1", typeof (Cook), ExpressionHelper.CreateStudentQueryable ());
+      _fromClause1 = ExpressionHelper.CreateMainFromClause_Int ("s1", typeof (Cook), ExpressionHelper.CreateCookQueryable ());
       _querySource1 = new QuerySourceReferenceExpression (_fromClause1);
 
-      _fromClause2 = ExpressionHelper.CreateMainFromClause_Int ("s2", typeof (Cook), ExpressionHelper.CreateStudentQueryable ());
+      _fromClause2 = ExpressionHelper.CreateMainFromClause_Int ("s2", typeof (Cook), ExpressionHelper.CreateCookQueryable ());
       _querySource2 = new QuerySourceReferenceExpression (_fromClause2);
 
       _itemExpression = Expression.New (
@@ -95,7 +95,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ExpressionTreeVisitors
       // resolvedExpression: [s3]
       // expected result: exception
 
-      var fromClause3 = ExpressionHelper.CreateMainFromClause_Int ("s3", typeof (Cook), ExpressionHelper.CreateStudentQueryable());
+      var fromClause3 = ExpressionHelper.CreateMainFromClause_Int ("s3", typeof (Cook), ExpressionHelper.CreateCookQueryable());
       var resolvedExpression = new QuerySourceReferenceExpression (fromClause3);
 
       ReverseResolvingExpressionTreeVisitor.ReverseResolve (_itemExpression, resolvedExpression);
