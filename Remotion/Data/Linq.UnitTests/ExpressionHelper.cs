@@ -123,7 +123,7 @@ namespace Remotion.Data.Linq.UnitTests
 
     public static MainFromClause CreateMainFromClause_Detail ()
     {
-      return CreateMainFromClause_Int ("sd", typeof (Student_Detail), CreateStudentDetailQueryable ());
+      return CreateMainFromClause_Int ("sd", typeof (Kitchen), CreateStudentDetailQueryable ());
     }
 
     public static MainFromClause CreateMainFromClause_Detail_Detail ()
@@ -205,14 +205,14 @@ namespace Remotion.Data.Linq.UnitTests
       return new TestQueryable<Cook> (executor);
     }
 
-    public static IQueryable<Student_Detail> CreateStudentDetailQueryable()
+    public static IQueryable<Kitchen> CreateStudentDetailQueryable()
     {
       return CreateStudentDetailQueryable (s_executor);
     }
 
-    public static IQueryable<Student_Detail> CreateStudentDetailQueryable (IQueryExecutor executor)
+    public static IQueryable<Kitchen> CreateStudentDetailQueryable (IQueryExecutor executor)
     {
-      return new TestQueryable<Student_Detail> (executor);
+      return new TestQueryable<Kitchen> (executor);
     }
 
     public static IQueryable<Student_Detail_Detail> CreateStudentDetailDetailQueryable ()

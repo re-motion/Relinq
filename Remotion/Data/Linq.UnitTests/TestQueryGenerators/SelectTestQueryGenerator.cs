@@ -66,7 +66,7 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
       return from s1 in source1 select now.Day;
     }
 
-    public static IQueryable<Cook> CreateRelationMemberSelectQuery(IQueryable<Student_Detail> source)
+    public static IQueryable<Cook> CreateRelationMemberSelectQuery(IQueryable<Kitchen> source)
     {
       return from sd in source select sd.Cook;
     }

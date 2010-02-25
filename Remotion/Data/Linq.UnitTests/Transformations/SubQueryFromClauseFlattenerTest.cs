@@ -44,7 +44,7 @@ namespace Remotion.Data.Linq.UnitTests.Transformations
     private WhereClause _innerWhereClauseA;
 
     private SubQueryFromClauseFlattener _visitor;
-    private IQueryable<Student_Detail> _detailSource;
+    private IQueryable<Kitchen> _detailSource;
     private IQueryable<IndustrialSector> _sectorSource;
 
     [SetUp]
@@ -57,10 +57,10 @@ namespace Remotion.Data.Linq.UnitTests.Transformations
                   from sd in
                       (from sector in _sectorSource
                        where sector.ID > 10
-                       select sector.Student_Detail)
+                       select sector.Kitchen)
                   from s2 in s1.Assistants
                   where sd.Subject == "Maths"
-                  select new Tuple<Cook, Student_Detail> (s1, sd);
+                  select new Tuple<Cook, Kitchen> (s1, sd);
       _queryModel = ExpressionHelper.ParseQuery (query);
 
       _mainFromClause = _queryModel.MainFromClause;
@@ -124,13 +124,13 @@ namespace Remotion.Data.Linq.UnitTests.Transformations
       _visitor.VisitAdditionalFromClause (_additionalFromClause1, _queryModel, 0);
 
       var expectedPredicate = 
-          ExpressionHelper.Resolve<IndustrialSector, bool> (_additionalFromClause1, sector => sector.Student_Detail.Subject == "Maths");
+          ExpressionHelper.Resolve<IndustrialSector, bool> (_additionalFromClause1, sector => sector.Kitchen.Subject == "Maths");
       ExpressionTreeComparer.CheckAreEqualTrees (expectedPredicate, _whereClause.Predicate);
 
-      var expectedSelector = ExpressionHelper.Resolve<Cook, IndustrialSector, Tuple<Cook, Student_Detail>> (
+      var expectedSelector = ExpressionHelper.Resolve<Cook, IndustrialSector, Tuple<Cook, Kitchen>> (
           _mainFromClause,
           _additionalFromClause1,
-          (s1, sector) => new Tuple<Cook, Student_Detail> (s1, sector.Student_Detail));
+          (s1, sector) => new Tuple<Cook, Kitchen> (s1, sector.Kitchen));
       ExpressionTreeComparer.CheckAreEqualTrees (expectedSelector, _selectClause.Selector);
     }
 
@@ -175,7 +175,7 @@ namespace Remotion.Data.Linq.UnitTests.Transformations
 
       parsedQuery.Accept (_visitor);
 
-      var expectedSelector = ExpressionHelper.Resolve<Student_Detail, string> (parsedQuery.MainFromClause, sd => sd.Cook.FirstName);
+      var expectedSelector = ExpressionHelper.Resolve<Kitchen, string> (parsedQuery.MainFromClause, sd => sd.Cook.FirstName);
 
       Assert.That (parsedQuery.MainFromClause.FromExpression, Is.Not.InstanceOfType (typeof (SubQueryExpression)));
       Assert.That (parsedQuery.BodyClauses.Count, Is.EqualTo (1));
@@ -189,14 +189,14 @@ namespace Remotion.Data.Linq.UnitTests.Transformations
                   from sd in
                     (from sector in _sectorSource
                      where sector.ID > 10
-                     select sector.Student_Detail)
+                     select sector.Kitchen)
                   from s2 in s1.Assistants
                   where sd.Subject == "Maths"
                   from s3 in
                     (from a in s1.Assistants
                      from b in sd.Cook.Assistants
                      select new Tuple<Cook, Cook> (a, b))
-                  select new Tuple<Cook, Student_Detail, Cook, Cook> (s1, sd, s3.Item1, s3.Item2);
+                  select new Tuple<Cook, Kitchen, Cook, Cook> (s1, sd, s3.Item1, s3.Item2);
 
       var queryModel = ExpressionHelper.ParseQuery (query);
       var mainFromSubQuery = from sd in _detailSource
@@ -212,12 +212,12 @@ namespace Remotion.Data.Linq.UnitTests.Transformations
                           from sector in _sectorSource
                           where sector.ID > 10
                           from s2 in sd.Cook.Assistants
-                          where sector.Student_Detail.Subject == "Maths"
+                          where sector.Kitchen.Subject == "Maths"
                           from a in sd.Cook.Assistants
-                          from b in sector.Student_Detail.Cook.Assistants
-                          select new Tuple<Cook, Student_Detail, Cook, Cook> (
+                          from b in sector.Kitchen.Cook.Assistants
+                          select new Tuple<Cook, Kitchen, Cook, Cook> (
                               sd.Cook, 
-                              sector.Student_Detail, 
+                              sector.Kitchen, 
                               new Tuple<Cook, Cook> (a, b).Item1, 
                               new Tuple<Cook, Cook> (a, b).Item2);
 

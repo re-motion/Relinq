@@ -37,7 +37,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
                   select Tuple.Create (s, sd);
 
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
-      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Tuple<Cook, Student_Detail>>)));
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Tuple<Cook, Kitchen>>)));
 
       var mainFromClause = queryModel.MainFromClause;
       CheckConstantQuerySource (mainFromClause.FromExpression, QuerySource);
@@ -46,13 +46,13 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
 
       var joinClause = ((JoinClause) queryModel.BodyClauses[0]);
       CheckConstantQuerySource (joinClause.InnerSequence, DetailQuerySource);
-      Assert.That (joinClause.ItemType, Is.SameAs (typeof (Student_Detail)));
+      Assert.That (joinClause.ItemType, Is.SameAs (typeof (Kitchen)));
       Assert.That (joinClause.ItemName, Is.EqualTo ("sd"));
       CheckResolvedExpression<Cook, int> (joinClause.OuterKeySelector, mainFromClause, s => s.ID);
-      CheckResolvedExpression<Student_Detail, int> (joinClause.InnerKeySelector, joinClause, sd => sd.StudentID);
+      CheckResolvedExpression<Kitchen, int> (joinClause.InnerKeySelector, joinClause, sd => sd.StudentID);
 
       var selectClause = queryModel.SelectClause;
-      CheckResolvedExpression<Cook, Student_Detail, Tuple<Cook, Student_Detail>> (
+      CheckResolvedExpression<Cook, Kitchen, Tuple<Cook, Kitchen>> (
           selectClause.Selector, 
           mainFromClause, 
           joinClause, 
@@ -82,7 +82,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       var query = QuerySource.Join (DetailQuerySource, s => s, sd => sd.Cook, (s, sd) => Tuple.Create (s, sd));
 
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
-      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Tuple<Cook, Student_Detail>>)));
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Tuple<Cook, Kitchen>>)));
 
       var mainFromClause = queryModel.MainFromClause;
       CheckConstantQuerySource (mainFromClause.FromExpression, QuerySource);
@@ -91,13 +91,13 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
 
       var joinClause = (JoinClause) queryModel.BodyClauses[0];
       CheckConstantQuerySource (joinClause.InnerSequence, DetailQuerySource);
-      Assert.That (joinClause.ItemType, Is.SameAs (typeof (Student_Detail)));
+      Assert.That (joinClause.ItemType, Is.SameAs (typeof (Kitchen)));
       Assert.That (joinClause.ItemName, Is.EqualTo ("sd"));
       CheckResolvedExpression<Cook, Cook> (joinClause.OuterKeySelector, mainFromClause, s => s);
-      CheckResolvedExpression<Student_Detail, Cook> (joinClause.InnerKeySelector, joinClause, sd => sd.Cook);
+      CheckResolvedExpression<Kitchen, Cook> (joinClause.InnerKeySelector, joinClause, sd => sd.Cook);
 
       var selectClause = queryModel.SelectClause;
-      CheckResolvedExpression<Cook, Student_Detail, Tuple<Cook, Student_Detail>> (
+      CheckResolvedExpression<Cook, Kitchen, Tuple<Cook, Kitchen>> (
           selectClause.Selector,
           mainFromClause,
           joinClause,

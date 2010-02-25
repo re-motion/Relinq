@@ -37,11 +37,11 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       var query = from s in
                       (from sd1 in DetailQuerySource select sd1.Cook).Take (5)
                   from sd in DetailQuerySource
-                  select new Tuple<Cook, Student_Detail> ( s, sd );
+                  select new Tuple<Cook, Kitchen> ( s, sd );
       var expression = query.Expression;
       var queryModel = QueryParser.GetParsedQuery (expression);
 
-      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Tuple<Cook, Student_Detail>>)));
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Tuple<Cook, Kitchen>>)));
 
       var mainFromClause = queryModel.MainFromClause;
       Assert.That (mainFromClause.FromExpression, Is.InstanceOfType (typeof (SubQueryExpression)));
@@ -54,11 +54,11 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       
       var selectClause = queryModel.SelectClause;
       var additionalFromClause = (AdditionalFromClause) queryModel.BodyClauses[0];
-      CheckResolvedExpression<Cook, Student_Detail, Tuple<Cook, Student_Detail>> (
+      CheckResolvedExpression<Cook, Kitchen, Tuple<Cook, Kitchen>> (
           selectClause.Selector, 
           mainFromClause, 
           additionalFromClause, 
-          (s, sd) => new Tuple<Cook, Student_Detail> (s, sd));
+          (s, sd) => new Tuple<Cook, Kitchen> (s, sd));
     }
 
     [Test]

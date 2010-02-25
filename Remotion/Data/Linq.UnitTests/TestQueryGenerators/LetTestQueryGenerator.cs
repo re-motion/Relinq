@@ -28,12 +28,12 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
       return from s in source let x = s.FirstName + s.Name select x;
     }
 
-    public static IQueryable<string> CreateLet_WithJoin_NoTable (IQueryable<Student_Detail> source)
+    public static IQueryable<string> CreateLet_WithJoin_NoTable (IQueryable<Kitchen> source)
     {
       return from sd in source let x = sd.Cook.FirstName select x;
     }
 
-    public static IQueryable<Cook> CreateLet_WithJoin_WithTable (IQueryable<Student_Detail> source)
+    public static IQueryable<Cook> CreateLet_WithJoin_WithTable (IQueryable<Kitchen> source)
     {
       return from sd in source let x = sd.Cook select x;
     }

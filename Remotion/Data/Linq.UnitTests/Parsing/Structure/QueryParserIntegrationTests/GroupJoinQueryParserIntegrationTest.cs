@@ -36,7 +36,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
                   select Tuple.Create (s, sds);
 
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
-      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Tuple<Cook, IEnumerable<Student_Detail>>>)));
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Tuple<Cook, IEnumerable<Kitchen>>>)));
 
       var mainFromClause = queryModel.MainFromClause;
       CheckConstantQuerySource (mainFromClause.FromExpression, QuerySource);
@@ -45,15 +45,15 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
 
       var groupJoinClause = ((GroupJoinClause) queryModel.BodyClauses[0]);
       Assert.That (groupJoinClause.ItemName, Is.SameAs ("sds"));
-      Assert.That (groupJoinClause.ItemType, Is.SameAs (typeof (IEnumerable<Student_Detail>)));
+      Assert.That (groupJoinClause.ItemType, Is.SameAs (typeof (IEnumerable<Kitchen>)));
       CheckConstantQuerySource (groupJoinClause.JoinClause.InnerSequence, DetailQuerySource);
-      Assert.That (groupJoinClause.JoinClause.ItemType, Is.SameAs (typeof (Student_Detail)));
+      Assert.That (groupJoinClause.JoinClause.ItemType, Is.SameAs (typeof (Kitchen)));
       Assert.That (groupJoinClause.JoinClause.ItemName, Is.EqualTo ("sd"));
       CheckResolvedExpression<Cook, int> (groupJoinClause.JoinClause.OuterKeySelector, mainFromClause, s => s.ID);
-      CheckResolvedExpression<Student_Detail, int> (groupJoinClause.JoinClause.InnerKeySelector, groupJoinClause.JoinClause, sd => sd.StudentID);
+      CheckResolvedExpression<Kitchen, int> (groupJoinClause.JoinClause.InnerKeySelector, groupJoinClause.JoinClause, sd => sd.StudentID);
 
       var selectClause = queryModel.SelectClause;
-      CheckResolvedExpression<Cook, IEnumerable<Student_Detail>, Tuple<Cook, IEnumerable<Student_Detail>>> (
+      CheckResolvedExpression<Cook, IEnumerable<Kitchen>, Tuple<Cook, IEnumerable<Kitchen>>> (
           selectClause.Selector,
           mainFromClause,
           groupJoinClause,
@@ -66,7 +66,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       var query = QuerySource.GroupJoin (DetailQuerySource, s => s.ID, sd => sd.StudentID, (s, sds) => Tuple.Create (s, sds));
 
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
-      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Tuple<Cook, IEnumerable<Student_Detail>>>)));
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Tuple<Cook, IEnumerable<Kitchen>>>)));
 
       var mainFromClause = queryModel.MainFromClause;
       CheckConstantQuerySource (mainFromClause.FromExpression, QuerySource);
@@ -75,15 +75,15 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
 
       var groupJoinClause = ((GroupJoinClause) queryModel.BodyClauses[0]);
       Assert.That (groupJoinClause.ItemName, Is.SameAs ("sds"));
-      Assert.That (groupJoinClause.ItemType, Is.SameAs (typeof (IEnumerable<Student_Detail>)));
+      Assert.That (groupJoinClause.ItemType, Is.SameAs (typeof (IEnumerable<Kitchen>)));
       CheckConstantQuerySource (groupJoinClause.JoinClause.InnerSequence, DetailQuerySource);
-      Assert.That (groupJoinClause.JoinClause.ItemType, Is.SameAs (typeof (Student_Detail)));
+      Assert.That (groupJoinClause.JoinClause.ItemType, Is.SameAs (typeof (Kitchen)));
       Assert.That (groupJoinClause.JoinClause.ItemName, Is.EqualTo ("sd"));
       CheckResolvedExpression<Cook, int> (groupJoinClause.JoinClause.OuterKeySelector, mainFromClause, s => s.ID);
-      CheckResolvedExpression<Student_Detail, int> (groupJoinClause.JoinClause.InnerKeySelector, groupJoinClause.JoinClause, sd => sd.StudentID);
+      CheckResolvedExpression<Kitchen, int> (groupJoinClause.JoinClause.InnerKeySelector, groupJoinClause.JoinClause, sd => sd.StudentID);
 
       var selectClause = queryModel.SelectClause;
-      CheckResolvedExpression<Cook, IEnumerable<Student_Detail>, Tuple<Cook, IEnumerable<Student_Detail>>> (
+      CheckResolvedExpression<Cook, IEnumerable<Kitchen>, Tuple<Cook, IEnumerable<Kitchen>>> (
           selectClause.Selector,
           mainFromClause,
           groupJoinClause,

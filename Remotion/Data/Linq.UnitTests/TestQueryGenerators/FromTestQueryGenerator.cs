@@ -57,7 +57,7 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
              select s1;
     }
 
-    public static IQueryable<Cook> CreateFromQueryWithMemberQuerySourceAndOptimizableJoin (IQueryable<Student_Detail> source)
+    public static IQueryable<Cook> CreateFromQueryWithMemberQuerySourceAndOptimizableJoin (IQueryable<Kitchen> source)
     {
       return from sd in source
              from s1 in sd.IndustrialSector.Students

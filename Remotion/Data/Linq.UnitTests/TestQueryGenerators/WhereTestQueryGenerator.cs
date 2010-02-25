@@ -97,14 +97,14 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
       return (MethodCallExpression) query.Expression;
     }
 
-    public static IQueryable<Student_Detail> CreateRelationMemberWhereQuery (IQueryable<Student_Detail> source)
+    public static IQueryable<Kitchen> CreateRelationMemberWhereQuery (IQueryable<Kitchen> source)
     {
       return from sd in source where sd.IndustrialSector != null select sd;
     }
 
     public static IQueryable<IndustrialSector> CreateRelationMemberVirtualSideWhereQuery (IQueryable<IndustrialSector> source)
     {
-      return from industrial in source where industrial.Student_Detail != null select industrial;
+      return from industrial in source where industrial.Kitchen != null select industrial;
     }
 
     public static MethodCallExpression CreateSelectWhereQuery_SelectExpression (IQueryable<Cook> source)
@@ -113,12 +113,12 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
       return (MethodCallExpression) query.Expression;
     }
 
-    public static IQueryable<Student_Detail> CreateWhereQueryWithRelatedPrimaryKey_VirtualColumn (IQueryable<Student_Detail> source)
+    public static IQueryable<Kitchen> CreateWhereQueryWithRelatedPrimaryKey_VirtualColumn (IQueryable<Kitchen> source)
     {
       return from sd in source where sd.Cook.ID == 5 select sd;
     }
 
-    public static IQueryable<Student_Detail> CreateWhereQueryWithRelatedPrimaryKey_RealColumn (IQueryable<Student_Detail> source)
+    public static IQueryable<Kitchen> CreateWhereQueryWithRelatedPrimaryKey_RealColumn (IQueryable<Kitchen> source)
     {
       return from sd in source where sd.IndustrialSector.ID == 5 select sd;
     }

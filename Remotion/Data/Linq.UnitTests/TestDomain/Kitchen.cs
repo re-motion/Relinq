@@ -18,7 +18,7 @@ using System;
 
 namespace Remotion.Data.Linq.UnitTests.TestDomain
 {
-  public class Student_Detail
+  public class Kitchen
   {
     public int ID { get; set; }
     public Cook Cook { get; set; }

@@ -30,7 +30,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
     public IQueryable<Cook> QuerySource { get; private set; }
     public QueryParser QueryParser { get; private set; }
     public IQueryable<IndustrialSector> IndustrialSectorQuerySource { get; private set; }
-    public IQueryable<Student_Detail> DetailQuerySource { get; private set; }
+    public IQueryable<Kitchen> DetailQuerySource { get; private set; }
 
     [SetUp]
     public void SetUp ()

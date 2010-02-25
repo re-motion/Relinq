@@ -74,15 +74,15 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
 
     public SingleJoin GetJoinForMember (MemberInfo relationMember, IColumnSource leftSource, IColumnSource rightSource)
     {
-      if (relationMember == typeof (Student_Detail).GetProperty ("Cook"))
+      if (relationMember == typeof (Kitchen).GetProperty ("Cook"))
         return new SingleJoin (new Column (leftSource, "Student_Detail_PK"), new Column (rightSource, "Student_Detail_to_Student_FK"));
-      else if (relationMember == typeof (Student_Detail_Detail).GetProperty ("Student_Detail"))
+      else if (relationMember == typeof (Student_Detail_Detail).GetProperty ("Kitchen"))
         return new SingleJoin (new Column (leftSource, "Student_Detail_Detail_PK"), new Column (rightSource, "Student_Detail_Detail_to_Student_Detail_FK"));
       else if (relationMember == typeof (Student_Detail_Detail).GetProperty ("IndustrialSector"))
         return new SingleJoin (new Column (leftSource, "Student_Detail_Detail_PK"), new Column (rightSource, "Student_Detail_Detail_to_IndustrialSector_FK"));
-      else if (relationMember == typeof (IndustrialSector).GetProperty ("Student_Detail"))
+      else if (relationMember == typeof (IndustrialSector).GetProperty ("Kitchen"))
         return new SingleJoin (new Column (leftSource, "IndustrialSector_PK"), new Column (rightSource, "Student_Detail_to_IndustrialSector_FK"));
-      else if (relationMember == typeof (Student_Detail).GetProperty ("IndustrialSector"))
+      else if (relationMember == typeof (Kitchen).GetProperty ("IndustrialSector"))
         return new SingleJoin (new Column (leftSource, "Student_Detail_to_IndustrialSector_FK"), new Column (rightSource, "IndustrialSector_PK"));
       else if (relationMember == typeof (Cook).GetProperty ("Substitution"))
         return new SingleJoin (new Column (leftSource, "Student_to_OtherStudent_FK"), new Column (rightSource, "Student_PK"));
@@ -106,8 +106,8 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
 
     public MemberInfo GetPrimaryKeyMember (Type entityType)
     {
-      if (entityType == typeof (Student_Detail))
-        return typeof (Student_Detail).GetProperty ("ID");
+      if (entityType == typeof (Kitchen))
+        return typeof (Kitchen).GetProperty ("ID");
       else if (entityType == typeof (Cook))
         return typeof (Cook).GetProperty ("ID");
       else if (entityType == typeof (IndustrialSector))
@@ -122,7 +122,7 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
       {
         case "Cook":
           return "studentTable";
-        case "Student_Detail":
+        case "Kitchen":
           return "detailTable";
         case "Student_Detail_Detail":
           return "detailDetailTable";
@@ -135,15 +135,15 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
 
     private string GetRelatedTableName (MemberInfo relationMember)
     {
-      if (relationMember == typeof (Student_Detail).GetProperty ("Cook"))
+      if (relationMember == typeof (Kitchen).GetProperty ("Cook"))
         return "studentTable";
-      else if (relationMember == typeof (Student_Detail_Detail).GetProperty ("Student_Detail"))
+      else if (relationMember == typeof (Student_Detail_Detail).GetProperty ("Kitchen"))
         return "detailTable";
       else if (relationMember == typeof (Student_Detail_Detail).GetProperty ("IndustrialSector"))
         return "industrialTable";
-      else if (relationMember == typeof (Student_Detail).GetProperty ("IndustrialSector"))
+      else if (relationMember == typeof (Kitchen).GetProperty ("IndustrialSector"))
         return "industrialTable";
-      else if (relationMember == typeof (IndustrialSector).GetProperty ("Student_Detail"))
+      else if (relationMember == typeof (IndustrialSector).GetProperty ("Kitchen"))
         return "detailTable";
       else if (relationMember == typeof (Cook).GetProperty ("Substitution"))
         return "studentTable";
@@ -157,15 +157,15 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
     {
       if (member.Name == "NonDBStringProperty" || member.Name == "NonDBBoolProperty")
         return null;
-      else if (member == typeof (Student_Detail).GetProperty ("Cook"))
+      else if (member == typeof (Kitchen).GetProperty ("Cook"))
         return null;
-      else if (member == typeof (Student_Detail_Detail).GetProperty ("Student_Detail"))
+      else if (member == typeof (Student_Detail_Detail).GetProperty ("Kitchen"))
         return null;
       else if (member == typeof (Student_Detail_Detail).GetProperty ("IndustrialSector"))
         return null;
-      else if (member == typeof (IndustrialSector).GetProperty ("Student_Detail"))
+      else if (member == typeof (IndustrialSector).GetProperty ("Kitchen"))
         return null;
-      else if (member == typeof (Student_Detail).GetProperty ("IndustrialSector"))
+      else if (member == typeof (Kitchen).GetProperty ("IndustrialSector"))
         return "Student_Detail_to_IndustrialSector_FK";
       else if (member == typeof (IndustrialSector).GetProperty ("Students"))
         return null;

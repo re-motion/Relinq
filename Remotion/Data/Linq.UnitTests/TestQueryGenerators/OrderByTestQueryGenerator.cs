@@ -28,7 +28,7 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
       return from s1 in source orderby s1.FirstName select s1;
     }
 
-    public static IQueryable<Student_Detail> CreateRelationMemberOrderByQuery (IQueryable<Student_Detail> source)
+    public static IQueryable<Kitchen> CreateRelationMemberOrderByQuery (IQueryable<Kitchen> source)
     {
       return from sd in source orderby sd.Cook select sd;
     }
