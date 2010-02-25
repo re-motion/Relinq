@@ -29,9 +29,13 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
     private Expression _selectProjection;
     private readonly SqlTable _fromExpression;
 
-    public SqlStatement ()
+    public SqlStatement (Expression selectProjection, SqlTable fromExpression)
     {
-      _fromExpression = new SqlTable();
+      ArgumentUtility.CheckNotNull ("selectProjection", selectProjection);
+      ArgumentUtility.CheckNotNull ("fromExpression", fromExpression);
+      
+      _selectProjection = selectProjection;
+      _fromExpression = fromExpression;
     }
 
     public Expression SelectProjection
