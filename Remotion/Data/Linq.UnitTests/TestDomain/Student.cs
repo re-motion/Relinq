@@ -30,7 +30,7 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
     public int[] EctsCredits { get; set; }
     public List<int> Scores { get; set; }
     public IQueryable<Student> Friends { get; set; }
-    public string NonDBProperty { get; set; }
+    public string NonDBStringProperty { get; set; }
     public bool NonDBBoolProperty { get; set; }
     public bool IsOld { get; set; }
     public bool HasDog { get; set; }

@@ -57,7 +57,7 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
 
     public static IQueryable<string> CreateSimpleSelectWithNonDbProjection (IQueryable<Student> source1)
     {
-      return from s1 in source1 select s1.NonDBProperty;
+      return from s1 in source1 select s1.NonDBStringProperty;
     }
 
     public static IQueryable<int> CreateSimpleSelectWithNonEntityMemberAccess (IQueryable<Student> source1)

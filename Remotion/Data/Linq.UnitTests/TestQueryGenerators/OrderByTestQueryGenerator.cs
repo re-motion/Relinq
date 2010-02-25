@@ -35,7 +35,7 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
 
     public static IQueryable<Student> CreateOrderByNonDBPropertyQuery (IQueryable<Student> source)
     {
-      return from s1 in source orderby s1.NonDBProperty select s1;
+      return from s1 in source orderby s1.NonDBStringProperty select s1;
     }
 
     public static IQueryable<Student> CreateTwoOrderByQuery (IQueryable<Student> source)

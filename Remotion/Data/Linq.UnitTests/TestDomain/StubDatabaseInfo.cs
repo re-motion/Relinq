@@ -155,7 +155,7 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
 
     private string GetColumnName (MemberInfo member)
     {
-      if (member.Name == "NonDBProperty" || member.Name == "NonDBBoolProperty")
+      if (member.Name == "NonDBStringProperty" || member.Name == "NonDBBoolProperty")
         return null;
       else if (member == typeof (Student_Detail).GetProperty ("Student"))
         return null;
