@@ -85,9 +85,9 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
       else if (relationMember == typeof (Kitchen).GetProperty ("Restaurant"))
         return new SingleJoin (new Column (leftSource, "Kitchen_to_Restaurant_FK"), new Column (rightSource, "Restaurant_PK"));
       else if (relationMember == typeof (Cook).GetProperty ("Substitution"))
-        return new SingleJoin (new Column (leftSource, "Student_to_OtherStudent_FK"), new Column (rightSource, "Cook_PK"));
+        return new SingleJoin (new Column (leftSource, "Cook_to_Substitution_FK"), new Column (rightSource, "Cook_PK"));
       else if (relationMember == typeof (Restaurant).GetProperty ("Cooks"))
-        return new SingleJoin (new Column (leftSource, "Industrial_PK"), new Column (rightSource, "Student_to_IndustrialSector_FK"));
+        return new SingleJoin (new Column (leftSource, "Restaurant_PK"), new Column (rightSource, "Cook_to_Restaurant_FK"));
       else
       {
         string message =
