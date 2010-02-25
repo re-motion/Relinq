@@ -23,50 +23,50 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
 {
   public static class OrderByTestQueryGenerator
   {
-    public static IQueryable<Student> CreateSimpleOrderByQuery (IQueryable<Student> source)
+    public static IQueryable<Chef> CreateSimpleOrderByQuery (IQueryable<Chef> source)
     {
       return from s1 in source orderby s1.FirstName select s1;
     }
 
     public static IQueryable<Student_Detail> CreateRelationMemberOrderByQuery (IQueryable<Student_Detail> source)
     {
-      return from sd in source orderby sd.Student select sd;
+      return from sd in source orderby sd.Chef select sd;
     }
 
-    public static IQueryable<Student> CreateOrderByNonDBPropertyQuery (IQueryable<Student> source)
+    public static IQueryable<Chef> CreateOrderByNonDBPropertyQuery (IQueryable<Chef> source)
     {
       return from s1 in source orderby s1.NonDBStringProperty select s1;
     }
 
-    public static IQueryable<Student> CreateTwoOrderByQuery (IQueryable<Student> source)
+    public static IQueryable<Chef> CreateTwoOrderByQuery (IQueryable<Chef> source)
     {
       return from s1 in source orderby s1.FirstName orderby s1.Name descending select s1;
     }
 
-    public static IQueryable<Student> CreateThreeOrderByQuery (IQueryable<Student> source)
+    public static IQueryable<Chef> CreateThreeOrderByQuery (IQueryable<Chef> source)
     {
       return from s1 in source orderby s1.FirstName, s1.Name orderby s1.Name descending select s1;
     }
 
-    public static IQueryable<Student> CreateOrderByQueryWithOrderByAndThenBy (IQueryable<Student> source)
+    public static IQueryable<Chef> CreateOrderByQueryWithOrderByAndThenBy (IQueryable<Chef> source)
     {
       return from s in source orderby s.FirstName, s.Name descending, s.Scores select s;
     }
 
-    public static IQueryable<Student> CreateOrderByQueryWithMultipleOrderBys (IQueryable<Student> source)
+    public static IQueryable<Chef> CreateOrderByQueryWithMultipleOrderBys (IQueryable<Chef> source)
     {
       return from s in source orderby s.FirstName, s.Name descending, s.Scores orderby s.Name select s;
     }
 
-    public static MethodCallExpression CreateOrderByQueryWithOrderByAndThenBy_OrderByExpression (IQueryable<Student> source)
+    public static MethodCallExpression CreateOrderByQueryWithOrderByAndThenBy_OrderByExpression (IQueryable<Chef> source)
     {
-      IQueryable<Student> query = CreateOrderByQueryWithOrderByAndThenBy (source);
+      IQueryable<Chef> query = CreateOrderByQueryWithOrderByAndThenBy (source);
       return (MethodCallExpression) query.Expression;
     }
 
-    public static MethodCallExpression CreateOrderByQueryWithMultipleOrderBys_OrderByExpression (IQueryable<Student> source)
+    public static MethodCallExpression CreateOrderByQueryWithMultipleOrderBys_OrderByExpression (IQueryable<Chef> source)
     {
-      IQueryable<Student> query = CreateOrderByQueryWithMultipleOrderBys (source);
+      IQueryable<Chef> query = CreateOrderByQueryWithMultipleOrderBys (source);
       return (MethodCallExpression) query.Expression;
     }
 

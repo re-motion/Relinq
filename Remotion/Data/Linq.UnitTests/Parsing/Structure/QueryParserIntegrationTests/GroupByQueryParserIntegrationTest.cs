@@ -39,15 +39,15 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
 
       var mainFromClause = queryModel.MainFromClause;
       CheckConstantQuerySource (mainFromClause.FromExpression, QuerySource);
-      Assert.That (mainFromClause.ItemType, Is.SameAs (typeof (Student)));
+      Assert.That (mainFromClause.ItemType, Is.SameAs (typeof (Chef)));
       Assert.That (mainFromClause.ItemName, Is.EqualTo ("s"));
 
       var selectClause = queryModel.SelectClause;
-      CheckResolvedExpression<Student, Student> (selectClause.Selector, mainFromClause, s => s);
+      CheckResolvedExpression<Chef, Chef> (selectClause.Selector, mainFromClause, s => s);
 
       var groupResultOperator = (GroupResultOperator) queryModel.ResultOperators[0];
-      CheckResolvedExpression<Student, bool> (groupResultOperator.KeySelector, mainFromClause, s => s.HasDegree);
-      CheckResolvedExpression<Student, int> (groupResultOperator.ElementSelector, mainFromClause, s => s.ID);
+      CheckResolvedExpression<Chef, bool> (groupResultOperator.KeySelector, mainFromClause, s => s.HasDegree);
+      CheckResolvedExpression<Chef, int> (groupResultOperator.ElementSelector, mainFromClause, s => s.ID);
     }
 
     [Test]
@@ -56,19 +56,19 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       var query = QuerySource.GroupBy (s => s.HasDegree);
       
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
-      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<IGrouping<bool, Student>>)));
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<IGrouping<bool, Chef>>)));
 
       var mainFromClause = queryModel.MainFromClause;
       CheckConstantQuerySource (mainFromClause.FromExpression, QuerySource);
-      Assert.That (mainFromClause.ItemType, Is.SameAs (typeof (Student)));
+      Assert.That (mainFromClause.ItemType, Is.SameAs (typeof (Chef)));
       Assert.That (mainFromClause.ItemName, Is.EqualTo ("s"));
 
       var selectClause = queryModel.SelectClause;
-      CheckResolvedExpression<Student, Student> (selectClause.Selector, mainFromClause, s => s);
+      CheckResolvedExpression<Chef, Chef> (selectClause.Selector, mainFromClause, s => s);
 
       var groupResultOperator = (GroupResultOperator) queryModel.ResultOperators[0];
-      CheckResolvedExpression<Student, bool> (groupResultOperator.KeySelector, mainFromClause, s => s.HasDegree);
-      CheckResolvedExpression<Student, Student> (groupResultOperator.ElementSelector, mainFromClause, s => s);
+      CheckResolvedExpression<Chef, bool> (groupResultOperator.KeySelector, mainFromClause, s => s.HasDegree);
+      CheckResolvedExpression<Chef, Chef> (groupResultOperator.ElementSelector, mainFromClause, s => s);
     }
 
     [Test]
@@ -104,11 +104,11 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
 
       var subQueryModel = ((SubQueryExpression) mainFromClause.FromExpression).QueryModel;
       var subQuerySelectClause = queryModel.SelectClause;
-      CheckResolvedExpression<Student, Student> (subQuerySelectClause.Selector, mainFromClause, s => s);
+      CheckResolvedExpression<Chef, Chef> (subQuerySelectClause.Selector, mainFromClause, s => s);
       
       var subQueryGroupResultOperator = (GroupResultOperator) subQueryModel.ResultOperators[0];
-      CheckResolvedExpression<Student, bool> (subQueryGroupResultOperator.KeySelector, subQueryModel.MainFromClause, s => s.HasDegree);
-      CheckResolvedExpression<Student, int> (subQueryGroupResultOperator.ElementSelector, subQueryModel.MainFromClause, s => s.ID);
+      CheckResolvedExpression<Chef, bool> (subQueryGroupResultOperator.KeySelector, subQueryModel.MainFromClause, s => s.HasDegree);
+      CheckResolvedExpression<Chef, int> (subQueryGroupResultOperator.ElementSelector, subQueryModel.MainFromClause, s => s.ID);
       
       Assert.That (subQueryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<IGrouping<bool, int>>)));
 
@@ -135,23 +135,23 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
                    group s by s.HasDegree).Where (g => g.Key);
 
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
-      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<IGrouping<bool, Student>>)));
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<IGrouping<bool, Chef>>)));
 
       var mainFromClause = queryModel.MainFromClause;
       Assert.That (mainFromClause.FromExpression, Is.InstanceOfType (typeof (SubQueryExpression)));
-      Assert.That (mainFromClause.ItemType, Is.SameAs (typeof (IGrouping<bool, Student>)));
+      Assert.That (mainFromClause.ItemType, Is.SameAs (typeof (IGrouping<bool, Chef>)));
       Assert.That (mainFromClause.ItemName, Is.EqualTo ("g"));
 
       var subQueryModel = ((SubQueryExpression) mainFromClause.FromExpression).QueryModel;
       var subQuerySelectClause = subQueryModel.SelectClause;
-      CheckResolvedExpression<Student, Student> (subQuerySelectClause.Selector, subQueryModel.MainFromClause, s => s);
+      CheckResolvedExpression<Chef, Chef> (subQuerySelectClause.Selector, subQueryModel.MainFromClause, s => s);
 
       Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (GroupResultOperator)));
 
-      Assert.That (subQueryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<IGrouping<bool, Student>>)));
+      Assert.That (subQueryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<IGrouping<bool, Chef>>)));
 
       var whereClause = (WhereClause) queryModel.BodyClauses[0];
-      CheckResolvedExpression<IGrouping<bool, Student>, bool> (whereClause.Predicate, mainFromClause, g => g.Key);
+      CheckResolvedExpression<IGrouping<bool, Chef>, bool> (whereClause.Predicate, mainFromClause, g => g.Key);
 
       var selectClause = queryModel.SelectClause;
       Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedQuerySource, Is.SameAs (mainFromClause));

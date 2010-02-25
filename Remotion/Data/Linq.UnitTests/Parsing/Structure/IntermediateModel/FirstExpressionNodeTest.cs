@@ -77,7 +77,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.IntermediateModel
     [Test]
     public void Apply_NoDefaultAllowed ()
     {
-      var node = new FirstExpressionNode (CreateParseInfo (FirstExpressionNode.SupportedMethods[0].MakeGenericMethod (typeof (Student))), null);
+      var node = new FirstExpressionNode (CreateParseInfo (FirstExpressionNode.SupportedMethods[0].MakeGenericMethod (typeof (Chef))), null);
       node.Apply (QueryModel, ClauseGenerationContext);
       
       Assert.That (((FirstResultOperator) QueryModel.ResultOperators[0]).ReturnDefaultWhenEmpty, Is.False);
@@ -86,7 +86,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.IntermediateModel
     [Test]
     public void Apply_DefaultAllowed ()
     {
-      var node = new FirstExpressionNode (CreateParseInfo (FirstExpressionNode.SupportedMethods[3].MakeGenericMethod (typeof (Student))), null);
+      var node = new FirstExpressionNode (CreateParseInfo (FirstExpressionNode.SupportedMethods[3].MakeGenericMethod (typeof (Chef))), null);
       node.Apply (QueryModel, ClauseGenerationContext);
       
       Assert.That (((FirstResultOperator) QueryModel.ResultOperators[0]).ReturnDefaultWhenEmpty, Is.True);

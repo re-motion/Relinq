@@ -35,30 +35,30 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
     public void SubQueryInMainFromClauseWithResultOperator ()
     {
       var query = from s in
-                      (from sd1 in DetailQuerySource select sd1.Student).Take (5)
+                      (from sd1 in DetailQuerySource select sd1.Chef).Take (5)
                   from sd in DetailQuerySource
-                  select new Tuple<Student, Student_Detail> ( s, sd );
+                  select new Tuple<Chef, Student_Detail> ( s, sd );
       var expression = query.Expression;
       var queryModel = QueryParser.GetParsedQuery (expression);
 
-      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Tuple<Student, Student_Detail>>)));
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Tuple<Chef, Student_Detail>>)));
 
       var mainFromClause = queryModel.MainFromClause;
       Assert.That (mainFromClause.FromExpression, Is.InstanceOfType (typeof (SubQueryExpression)));
-      Assert.That (mainFromClause.ItemType, Is.SameAs (typeof (Student)));
+      Assert.That (mainFromClause.ItemType, Is.SameAs (typeof (Chef)));
       Assert.That (mainFromClause.ItemName, Is.EqualTo("s"));
 
       var subQueryModel = ((SubQueryExpression) mainFromClause.FromExpression).QueryModel;
       Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (TakeResultOperator)));
-      Assert.That (subQueryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Student>)));
+      Assert.That (subQueryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Chef>)));
       
       var selectClause = queryModel.SelectClause;
       var additionalFromClause = (AdditionalFromClause) queryModel.BodyClauses[0];
-      CheckResolvedExpression<Student, Student_Detail, Tuple<Student, Student_Detail>> (
+      CheckResolvedExpression<Chef, Student_Detail, Tuple<Chef, Student_Detail>> (
           selectClause.Selector, 
           mainFromClause, 
           additionalFromClause, 
-          (s, sd) => new Tuple<Student, Student_Detail> (s, sd));
+          (s, sd) => new Tuple<Chef, Student_Detail> (s, sd));
     }
 
     [Test]
@@ -69,19 +69,19 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       
       var expression = query.Expression;
       var queryModel = QueryParser.GetParsedQuery (expression);
-      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Student>)));
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Chef>)));
 
       var mainFromClause = queryModel.MainFromClause;
       Assert.That (mainFromClause.FromExpression, Is.InstanceOfType (typeof (SubQueryExpression)));
-      Assert.That (mainFromClause.ItemType, Is.SameAs (typeof (Student)));
+      Assert.That (mainFromClause.ItemType, Is.SameAs (typeof (Chef)));
       Assert.That (mainFromClause.ItemName, Is.EqualTo ("x"));
 
       var subQueryModel = ((SubQueryExpression) mainFromClause.FromExpression).QueryModel;
       Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (DistinctResultOperator)));
-      Assert.That (subQueryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Student>)));
+      Assert.That (subQueryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Chef>)));
 
       var whereClause = (WhereClause) queryModel.BodyClauses[0];
-      CheckResolvedExpression<Student, bool> (whereClause.Predicate, mainFromClause, x => x.ID > 0);
+      CheckResolvedExpression<Chef, bool> (whereClause.Predicate, mainFromClause, x => x.ID > 0);
 
       var selectClause = queryModel.SelectClause;
       Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedQuerySource, Is.SameAs (mainFromClause));
@@ -98,15 +98,15 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
 
       var mainFromClause = queryModel.MainFromClause;
       Assert.That (mainFromClause.FromExpression, Is.InstanceOfType (typeof (SubQueryExpression)));
-      Assert.That (mainFromClause.ItemType, Is.SameAs (typeof (Student)));
+      Assert.That (mainFromClause.ItemType, Is.SameAs (typeof (Chef)));
       Assert.That (mainFromClause.ItemName, Is.EqualTo ("x"));
 
       var subQueryModel = ((SubQueryExpression) mainFromClause.FromExpression).QueryModel;
       Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (DistinctResultOperator)));
-      Assert.That (subQueryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Student>)));
+      Assert.That (subQueryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Chef>)));
 
       var whereClause = (WhereClause) queryModel.BodyClauses[0];
-      CheckResolvedExpression<Student, bool> (whereClause.Predicate, mainFromClause, x => x.ID > 0);
+      CheckResolvedExpression<Chef, bool> (whereClause.Predicate, mainFromClause, x => x.ID > 0);
 
       var selectClause = queryModel.SelectClause;
       Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedQuerySource, Is.SameAs (mainFromClause));
@@ -123,7 +123,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
           select s1;
 
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
-      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Student>)));
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Chef>)));
 
       var mainFromClause = queryModel.MainFromClause;
       var additionalFromClause = (AdditionalFromClause) queryModel.BodyClauses[0];
@@ -132,9 +132,9 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (TakeResultOperator)));
 
       var takeResultOperator = (TakeResultOperator) subQueryModel.ResultOperators[0];
-      CheckResolvedExpression<Student, int> (takeResultOperator.Count, mainFromClause, s => s.ID);
+      CheckResolvedExpression<Chef, int> (takeResultOperator.Count, mainFromClause, s => s.ID);
 
-      Assert.That (subQueryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Student>)));
+      Assert.That (subQueryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Chef>)));
     }
 
     [Test]
@@ -153,7 +153,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
       Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (AverageResultOperator)));
       
-      CheckResolvedExpression<Student, int> (queryModel.SelectClause.Selector, mainFromClause, s => s.ID);
+      CheckResolvedExpression<Chef, int> (queryModel.SelectClause.Selector, mainFromClause, s => s.ID);
     }
 
     [Test]
@@ -172,7 +172,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
       Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (LongCountResultOperator)));
 
-      CheckResolvedExpression<Student, int> (queryModel.SelectClause.Selector, mainFromClause, s => s.ID);
+      CheckResolvedExpression<Chef, int> (queryModel.SelectClause.Selector, mainFromClause, s => s.ID);
     }
 
     [Test]
@@ -276,7 +276,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
                    select s).Reverse ();
 
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
-      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Student>)));
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Chef>)));
 
       var mainFromClause = queryModel.MainFromClause;
 
@@ -292,12 +292,12 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
     [Test]
     public void Except ()
     {
-      IEnumerable<Student> students = new[] { new Student() };
+      IEnumerable<Chef> students = new[] { new Chef() };
       var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
                                                                select s).Except (students));
       
       var queryModel = QueryParser.GetParsedQuery (expression);
-      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Student>)));
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Chef>)));
 
       var mainFromClause = queryModel.MainFromClause;
 
@@ -312,12 +312,12 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
     [Test]
     public void Intersect ()
     {
-      IEnumerable<Student> students = new[] { new Student () };
+      IEnumerable<Chef> students = new[] { new Chef () };
       var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
                                                                select s).Intersect (students));
 
       var queryModel = QueryParser.GetParsedQuery (expression);
-      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Student>)));
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Chef>)));
 
       var mainFromClause = queryModel.MainFromClause;
 
@@ -332,13 +332,13 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
     [Test]
     public void Union ()
     {
-      IEnumerable<Student> students = new[] { new Student () };
+      IEnumerable<Chef> students = new[] { new Chef () };
       var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
                                                                select s).Union (students));
 
 
       var queryModel = QueryParser.GetParsedQuery (expression);
-      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Student>)));
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Chef>)));
 
       var mainFromClause = queryModel.MainFromClause;
 
@@ -353,12 +353,12 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
     [Test]
     public void DefaultIfEmpty ()
     {
-      var student = new Student ();
+      var student = new Chef ();
       var query = (from s in ExpressionHelper.CreateStudentQueryable ()
                    select s).DefaultIfEmpty (student);
 
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
-      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Student>)));
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Chef>)));
 
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
       Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (DefaultIfEmptyResultOperator)));
@@ -384,7 +384,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
     [Test]
     public void Contains ()
     {
-      var student = new Student ();
+      var student = new Chef ();
       var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
                                                                select s).Contains (student));
 
@@ -393,7 +393,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
 
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
       Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (ContainsResultOperator)));
-      Assert.That (((ContainsResultOperator) queryModel.ResultOperators[0]).GetConstantItem<Student>(), Is.SameAs (student));
+      Assert.That (((ContainsResultOperator) queryModel.ResultOperators[0]).GetConstantItem<Chef>(), Is.SameAs (student));
     }
 
     [Test]
@@ -408,7 +408,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
       Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (AllResultOperator)));
 
-      CheckResolvedExpression<Student, bool> (((AllResultOperator) queryModel.ResultOperators[0]).Predicate, queryModel.MainFromClause, s => s.IsExchangeStudent);
+      CheckResolvedExpression<Chef, bool> (((AllResultOperator) queryModel.ResultOperators[0]).Predicate, queryModel.MainFromClause, s => s.IsExchangeStudent);
     }
 
     [Test]
@@ -440,7 +440,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       Assert.That (queryModel.BodyClauses.Count, Is.EqualTo (1));
       Assert.That (queryModel.BodyClauses[0], Is.InstanceOfType (typeof (WhereClause)));
 
-      CheckResolvedExpression<Student, bool> (((WhereClause) queryModel.BodyClauses[0]).Predicate, queryModel.MainFromClause, s => s.IsExchangeStudent);
+      CheckResolvedExpression<Chef, bool> (((WhereClause) queryModel.BodyClauses[0]).Predicate, queryModel.MainFromClause, s => s.IsExchangeStudent);
       
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
       Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (AnyResultOperator)));
@@ -462,7 +462,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
 
       var resultOperator = (AggregateResultOperator) queryModel.ResultOperators[0];
 
-      var expectedFunc = ExpressionHelper.ResolveLambdaParameter<string, Student, string> (
+      var expectedFunc = ExpressionHelper.ResolveLambdaParameter<string, Chef, string> (
           1, 
           queryModel.MainFromClause,
           (allNames, student) => allNames + " " + student.Name);
@@ -486,7 +486,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       var resultOperator = (AggregateFromSeedResultOperator) queryModel.ResultOperators[0];
       Assert.That (resultOperator.GetConstantSeed<int> (), Is.EqualTo (0));
 
-      var expectedFunc = ExpressionHelper.ResolveLambdaParameter<int, Student, int> (
+      var expectedFunc = ExpressionHelper.ResolveLambdaParameter<int, Chef, int> (
           1,
           queryModel.MainFromClause,
           (totalIDs, s) => totalIDs + s.ID);
@@ -512,7 +512,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       var resultOperator = (AggregateFromSeedResultOperator) queryModel.ResultOperators[0];
       Assert.That (resultOperator.GetConstantSeed<int> (), Is.EqualTo (0));
 
-      var expectedFunc = ExpressionHelper.ResolveLambdaParameter<int, Student, int> (
+      var expectedFunc = ExpressionHelper.ResolveLambdaParameter<int, Chef, int> (
           1,
           queryModel.MainFromClause,
           (totalIDs, s) => totalIDs + s.ID);

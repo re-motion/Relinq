@@ -45,10 +45,10 @@ namespace Remotion.Data.Linq.UnitTests.Clauses
     [Test]
     public void Intialize ()
     {
-      var groupJoinClause = new GroupJoinClause ("x", typeof (IEnumerable<Student>), _joinClause);
+      var groupJoinClause = new GroupJoinClause ("x", typeof (IEnumerable<Chef>), _joinClause);
 
       Assert.That (groupJoinClause.ItemName, Is.SameAs ("x"));
-      Assert.That (groupJoinClause.ItemType, Is.SameAs (typeof (IEnumerable<Student>)));
+      Assert.That (groupJoinClause.ItemType, Is.SameAs (typeof (IEnumerable<Chef>)));
       Assert.That (groupJoinClause.JoinClause, Is.SameAs (_joinClause));
     }
 
@@ -56,7 +56,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses
     [ExpectedException (typeof (ArgumentTypeException))]
     public void Intialize_WithNonEnumerableType_Throws ()
     {
-      new GroupJoinClause ("x", typeof (Student), _joinClause);
+      new GroupJoinClause ("x", typeof (Chef), _joinClause);
     }
 
     [Test]
@@ -108,7 +108,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses
     {
       var joinClauseMock = MockRepository.GenerateMock<JoinClause> (
           "x", 
-          typeof (Student), 
+          typeof (Chef), 
           ExpressionHelper.CreateExpression(), 
           ExpressionHelper.CreateExpression(), 
           ExpressionHelper.CreateExpression());
@@ -123,9 +123,9 @@ namespace Remotion.Data.Linq.UnitTests.Clauses
     [Test]
     public new void ToString ()
     {
-      var joinClause = new JoinClause ("x", typeof (Student), Expression.Constant (0), Expression.Constant (1), Expression.Constant (2));
-      var groupJoinClause = new GroupJoinClause ("y", typeof (IEnumerable<Student>), joinClause);
-      Assert.That (groupJoinClause.ToString (), Is.EqualTo ("join Student x in 0 on 1 equals 2 into IEnumerable`1 y"));
+      var joinClause = new JoinClause ("x", typeof (Chef), Expression.Constant (0), Expression.Constant (1), Expression.Constant (2));
+      var groupJoinClause = new GroupJoinClause ("y", typeof (IEnumerable<Chef>), joinClause);
+      Assert.That (groupJoinClause.ToString (), Is.EqualTo ("join Chef x in 0 on 1 equals 2 into IEnumerable`1 y"));
     }
   }
 }

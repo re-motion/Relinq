@@ -23,63 +23,63 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
 {
   public static class FromTestQueryGenerator
   {
-    public static IQueryable<Student> CreateMultiFromQuery (IQueryable<Student> source1, IQueryable<Student> source2)
+    public static IQueryable<Chef> CreateMultiFromQuery (IQueryable<Chef> source1, IQueryable<Chef> source2)
     {
       return from s1 in source1 from s2 in source2 select s1;
     }
 
-    public static IQueryable<Student> CreateMultiFromQuery_WithCalls (IQueryable<Student> source1, IQueryable<Student> source2)
+    public static IQueryable<Chef> CreateMultiFromQuery_WithCalls (IQueryable<Chef> source1, IQueryable<Chef> source2)
     {
       return from s1 in GetSource (source1) from s2 in GetSource (source2) select s1;
     }
 
-    private static IQueryable<Student> GetSource (IQueryable<Student> source)
+    private static IQueryable<Chef> GetSource (IQueryable<Chef> source)
     {
       return source;
     }
 
-    public static IQueryable<Student> CreateThreeFromQuery (IQueryable<Student> source1, IQueryable<Student> source2, IQueryable<Student> source3)
+    public static IQueryable<Chef> CreateThreeFromQuery (IQueryable<Chef> source1, IQueryable<Chef> source2, IQueryable<Chef> source3)
     {
       return from s1 in source1 from s2 in source2 from s3 in source3 select s1;
     }
 
-    public static IQueryable<Student> CreateFromQueryWithMemberQuerySource (IQueryable<IndustrialSector> source)
+    public static IQueryable<Chef> CreateFromQueryWithMemberQuerySource (IQueryable<IndustrialSector> source)
     {
       return from sector in source
              from s1 in sector.Students
              select s1;
     }
 
-    public static IQueryable<Student> CreateFromQueryWithMemberQuerySource_InMainFromClauseOfSubQuery (IQueryable<IndustrialSector> source)
+    public static IQueryable<Chef> CreateFromQueryWithMemberQuerySource_InMainFromClauseOfSubQuery (IQueryable<IndustrialSector> source)
     {
       return from sector in source
              from s1 in (from s2 in sector.Students select s2)
              select s1;
     }
 
-    public static IQueryable<Student> CreateFromQueryWithMemberQuerySourceAndOptimizableJoin (IQueryable<Student_Detail> source)
+    public static IQueryable<Chef> CreateFromQueryWithMemberQuerySourceAndOptimizableJoin (IQueryable<Student_Detail> source)
     {
       return from sd in source
              from s1 in sd.IndustrialSector.Students
              select s1;
     }
 
-    public static IQueryable<Student> CreateFromQueryWithMemberQuerySourceAndJoin (IQueryable<Student_Detail_Detail> source)
+    public static IQueryable<Chef> CreateFromQueryWithMemberQuerySourceAndJoin (IQueryable<Student_Detail_Detail> source)
     {
       return from sdd in source
              from s1 in sdd.IndustrialSector.Students
              select s1;
     }
 
-    public static MethodCallExpression CreateMultiFromQuery_SelectManyExpression (IQueryable<Student> source1, IQueryable<Student> source2)
+    public static MethodCallExpression CreateMultiFromQuery_SelectManyExpression (IQueryable<Chef> source1, IQueryable<Chef> source2)
     {
-      IQueryable<Student> query = CreateMultiFromQuery (source1, source2);
+      IQueryable<Chef> query = CreateMultiFromQuery (source1, source2);
       return (MethodCallExpression) query.Expression;
     }
 
-    public static MethodCallExpression CreateThreeFromQuery_SelectManyExpression (IQueryable<Student> source1, IQueryable<Student> source2, IQueryable<Student> source3)
+    public static MethodCallExpression CreateThreeFromQuery_SelectManyExpression (IQueryable<Chef> source1, IQueryable<Chef> source2, IQueryable<Chef> source3)
     {
-      IQueryable<Student> query = CreateThreeFromQuery (source1, source2, source3);
+      IQueryable<Chef> query = CreateThreeFromQuery (source1, source2, source3);
       return (MethodCallExpression) query.Expression;
     }
   }

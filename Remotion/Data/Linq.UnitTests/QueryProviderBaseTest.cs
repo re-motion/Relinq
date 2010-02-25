@@ -37,7 +37,7 @@ namespace Remotion.Data.Linq.UnitTests
     private MockRepository _mockRepository;
     private QueryProviderBase _queryProvider;
     private IQueryExecutor _executorMock;
-    private TestQueryable<Student> _queryableWithExecutorMock;
+    private TestQueryable<Chef> _queryableWithExecutorMock;
     private MethodCallExpressionNodeTypeRegistry _nodeTypeRegistry;
     private TestQueryProvider _queryProviderWithSpecificRegistry;
 
@@ -49,7 +49,7 @@ namespace Remotion.Data.Linq.UnitTests
       _queryProvider = new TestQueryProvider (_executorMock);
       _nodeTypeRegistry = new MethodCallExpressionNodeTypeRegistry ();
       _queryProviderWithSpecificRegistry = new TestQueryProvider (_executorMock, _nodeTypeRegistry);
-      _queryableWithExecutorMock = new TestQueryable<Student> (_executorMock);
+      _queryableWithExecutorMock = new TestQueryable<Chef> (_executorMock);
     }
 
     [Test]
@@ -101,13 +101,13 @@ namespace Remotion.Data.Linq.UnitTests
     [Test]
     public void Execute_Generic ()
     {
-      var expectedResult = new Student[0];
+      var expectedResult = new Chef[0];
       Expression expression = (from s in _queryableWithExecutorMock select s).Expression;
-      _executorMock.Expect (mock => mock.ExecuteCollection<Student> (
+      _executorMock.Expect (mock => mock.ExecuteCollection<Chef> (
           Arg<QueryModel>.Is.Anything)).Return (expectedResult);
 
       _executorMock.Replay ();
-      var result = _queryProvider.Execute<IEnumerable<Student>> (expression);
+      var result = _queryProvider.Execute<IEnumerable<Chef>> (expression);
       _executorMock.VerifyAllExpectations ();
 
       Assert.That (result.ToArray(), Is.EqualTo (expectedResult));
@@ -116,16 +116,16 @@ namespace Remotion.Data.Linq.UnitTests
     [Test]
     public void Execute_NonGeneric ()
     {
-      var expectedResult = new Student[0];
+      var expectedResult = new Chef[0];
       Expression expression = (from s in _queryableWithExecutorMock select s).Expression;
-      _executorMock.Expect (mock => mock.ExecuteCollection<Student> (
-          Arg<QueryModel>.Is.Anything)).Return (new Student[0]);
+      _executorMock.Expect (mock => mock.ExecuteCollection<Chef> (
+          Arg<QueryModel>.Is.Anything)).Return (new Chef[0]);
 
       _executorMock.Replay ();
       var result = ((IQueryProvider)_queryProvider).Execute (expression);
       _executorMock.VerifyAllExpectations ();
 
-      Assert.That (((IEnumerable<Student>)result).ToArray (), Is.EqualTo (expectedResult));
+      Assert.That (((IEnumerable<Chef>)result).ToArray (), Is.EqualTo (expectedResult));
     }
 
     [Test]
@@ -133,9 +133,9 @@ namespace Remotion.Data.Linq.UnitTests
     {
       var queryable = from s in _queryableWithExecutorMock select s;
 
-      var expectedResult = new[] { new Student () };
+      var expectedResult = new[] { new Chef () };
       _executorMock
-          .Expect (mock => mock.ExecuteCollection<Student> (Arg<QueryModel>.Is.Anything))
+          .Expect (mock => mock.ExecuteCollection<Chef> (Arg<QueryModel>.Is.Anything))
           .Return (expectedResult);
 
       _executorMock.Replay ();
@@ -150,9 +150,9 @@ namespace Remotion.Data.Linq.UnitTests
     {
       var queryable = from s in _queryableWithExecutorMock select s;
 
-      var expectedResult = new[] { new Student () };
+      var expectedResult = new[] { new Chef () };
       _executorMock
-          .Expect (mock => mock.ExecuteCollection<Student> (Arg<QueryModel>.Is.Anything))
+          .Expect (mock => mock.ExecuteCollection<Chef> (Arg<QueryModel>.Is.Anything))
           .Return (expectedResult);
 
       _executorMock.Replay ();
@@ -169,9 +169,9 @@ namespace Remotion.Data.Linq.UnitTests
     [Test]
     public void Execute_IntegrationWithSingle ()
     {
-      var expectedResult = new Student ();
+      var expectedResult = new Chef ();
       _executorMock
-                .Expect (mock => mock.ExecuteSingle<Student> (Arg<QueryModel>.Is.Anything, Arg<bool>.Is.Equal (false)))
+                .Expect (mock => mock.ExecuteSingle<Chef> (Arg<QueryModel>.Is.Anything, Arg<bool>.Is.Equal (false)))
                 .Return (expectedResult);
 
       _executorMock.Replay ();
@@ -200,24 +200,24 @@ namespace Remotion.Data.Linq.UnitTests
     {
       Expression expression = ExpressionHelper.MakeExpression (() => from s in ExpressionHelper.CreateStudentQueryable () select s);
       _executorMock
-          .Expect (mock => mock.ExecuteCollection<Student> (Arg<QueryModel>.Is.Anything))
-          .Return (new Student[0]);
+          .Expect (mock => mock.ExecuteCollection<Chef> (Arg<QueryModel>.Is.Anything))
+          .Return (new Chef[0]);
       _executorMock.Replay ();
-      _queryProvider.Execute<IEnumerable<Student>> (expression);
+      _queryProvider.Execute<IEnumerable<Chef>> (expression);
       _executorMock.VerifyAllExpectations ();
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Could not parse expression 'TestQueryable<Student>().Select(s => s)': This "
+    [ExpectedException (typeof (ParserException), ExpectedMessage = "Could not parse expression 'TestQueryable<Chef>().Select(s => s)': This "
         + "overload of the method 'System.Linq.Queryable.Select' is currently not supported, but you can register your own parser if needed.")]
     public void Execute_WithSpecificRegistry ()
     {
       Expression expression = ExpressionHelper.MakeExpression (() => from s in ExpressionHelper.CreateStudentQueryable () select s);
       _executorMock
-          .Expect (mock => mock.ExecuteCollection<Student> (Arg<QueryModel>.Is.Anything))
-          .Return (new Student[0]);
+          .Expect (mock => mock.ExecuteCollection<Chef> (Arg<QueryModel>.Is.Anything))
+          .Return (new Chef[0]);
       _executorMock.Replay ();
-      _queryProviderWithSpecificRegistry.Execute<IEnumerable<Student>> (expression);
+      _queryProviderWithSpecificRegistry.Execute<IEnumerable<Chef>> (expression);
       _executorMock.VerifyAllExpectations ();
     }
   }

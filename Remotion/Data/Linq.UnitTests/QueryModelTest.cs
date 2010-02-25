@@ -101,39 +101,39 @@ namespace Remotion.Data.Linq.UnitTests
     [Test]
     public new void ToString ()
     {
-      var queryModel = new QueryModel (new MainFromClause ("x", typeof (Student), Expression.Constant (0)), 
+      var queryModel = new QueryModel (new MainFromClause ("x", typeof (Chef), Expression.Constant (0)), 
           new SelectClause (Expression.Constant (0)));
-      Assert.That (queryModel.ToString(), Is.EqualTo ("from Student x in 0 select 0"));
+      Assert.That (queryModel.ToString(), Is.EqualTo ("from Chef x in 0 select 0"));
     }
 
     [Test]
     public void ToString_WithBodyClauses ()
     {
-      var queryModel = new QueryModel (new MainFromClause ("x", typeof (Student), Expression.Constant (0)),
+      var queryModel = new QueryModel (new MainFromClause ("x", typeof (Chef), Expression.Constant (0)),
           new SelectClause (Expression.Constant (0)));
       queryModel.BodyClauses.Add (new WhereClause (Expression.Constant (false)));
       var orderByClause = new OrderByClause ();
       orderByClause.Orderings.Add (new Ordering (Expression.Constant (1), OrderingDirection.Asc));
       queryModel.BodyClauses.Add (orderByClause);
       
-      Assert.That (queryModel.ToString (), Is.EqualTo ("from Student x in 0 where False orderby 1 asc select 0"));
+      Assert.That (queryModel.ToString (), Is.EqualTo ("from Chef x in 0 where False orderby 1 asc select 0"));
     }
 
     [Test]
     public void ToString_WithResultOperators ()
     {
-      var queryModel = new QueryModel (new MainFromClause ("x", typeof (Student), Expression.Constant (0)),
+      var queryModel = new QueryModel (new MainFromClause ("x", typeof (Chef), Expression.Constant (0)),
           new SelectClause (Expression.Constant (0)));
       queryModel.ResultOperators.Add (new DistinctResultOperator ());
       queryModel.ResultOperators.Add (new CountResultOperator ());
 
-      Assert.That (queryModel.ToString (), Is.EqualTo ("from Student x in 0 select 0 => Distinct() => Count()"));
+      Assert.That (queryModel.ToString (), Is.EqualTo ("from Chef x in 0 select 0 => Distinct() => Count()"));
     }
 
     [Test]
     public void ToString_IdentityQuery ()
     {
-      var mainFromClause = new MainFromClause ("x", typeof (Student), Expression.Constant (0));
+      var mainFromClause = new MainFromClause ("x", typeof (Chef), Expression.Constant (0));
       var queryModel = new QueryModel (mainFromClause, new SelectClause (new QuerySourceReferenceExpression (mainFromClause)));
       Assert.That (queryModel.ToString (), Is.EqualTo ("0"));
     }
@@ -141,8 +141,8 @@ namespace Remotion.Data.Linq.UnitTests
     [Test]
     public void ToString_IdentityQuery_UsesFormatter ()
     {
-      var referencedSource = new MainFromClause ("y", typeof (Student), Expression.Constant (0));
-      var mainFromClause = new MainFromClause ("x", typeof (Student), new QuerySourceReferenceExpression (referencedSource));
+      var referencedSource = new MainFromClause ("y", typeof (Chef), Expression.Constant (0));
+      var mainFromClause = new MainFromClause ("x", typeof (Chef), new QuerySourceReferenceExpression (referencedSource));
       var queryModel = new QueryModel (mainFromClause, new SelectClause (new QuerySourceReferenceExpression (mainFromClause)));
       Assert.That (queryModel.ToString (), Is.EqualTo ("[y]"));
     }
@@ -339,7 +339,7 @@ namespace Remotion.Data.Linq.UnitTests
     [Test]
     public void GetNewName_AlreadyExists_MainFromClause ()
     {
-      var mainFromClause = new MainFromClause ("test0", typeof (Student), ExpressionHelper.CreateStudentQueryable().Expression);
+      var mainFromClause = new MainFromClause ("test0", typeof (Chef), ExpressionHelper.CreateStudentQueryable().Expression);
       var queryModel = ExpressionHelper.CreateQueryModel (mainFromClause);
       var identifier = queryModel.GetNewName ("test");
       Assert.That (identifier, Is.EqualTo ("test1"));
@@ -348,7 +348,7 @@ namespace Remotion.Data.Linq.UnitTests
     [Test]
     public void GetNewName_AlreadyExists_ChangedMainFromClause ()
     {
-      var mainFromClause = new MainFromClause ("test0", typeof (Student), ExpressionHelper.CreateStudentQueryable().Expression);
+      var mainFromClause = new MainFromClause ("test0", typeof (Chef), ExpressionHelper.CreateStudentQueryable().Expression);
       var queryModel = ExpressionHelper.CreateQueryModel_Student();
       queryModel.MainFromClause = mainFromClause;
       var identifier = queryModel.GetNewName ("test");
@@ -360,7 +360,7 @@ namespace Remotion.Data.Linq.UnitTests
     {
       var additionalFromClause = new AdditionalFromClause (
           "test0",
-          typeof (Student),
+          typeof (Chef),
           ExpressionHelper.CreateExpression());
       _queryModel.BodyClauses.Add (additionalFromClause);
 
@@ -375,7 +375,7 @@ namespace Remotion.Data.Linq.UnitTests
 
       var additionalFromClause = new AdditionalFromClause (
           "test0",
-          typeof (Student),
+          typeof (Chef),
           ExpressionHelper.CreateExpression());
       _queryModel.BodyClauses[0] = additionalFromClause;
 

@@ -389,7 +389,7 @@
     <Compile Include="TestDomain\IndustrialSector.cs" />
     <Compile Include="TestDomain\QueryableWithTooManyArguments.cs" />
     <Compile Include="TestDomain\StubDatabaseInfo.cs" />
-    <Compile Include="TestDomain\Student.cs" />
+    <Compile Include="TestDomain\Chef.cs" />
     <Compile Include="TestDomain\Student_Detail.cs" />
     <Compile Include="TestDomain\Student_Detail_Detail.cs" />
     <Compile Include="TestDomain\TestQueryable.cs" />

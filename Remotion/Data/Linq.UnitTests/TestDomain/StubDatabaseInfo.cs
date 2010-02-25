@@ -74,7 +74,7 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
 
     public SingleJoin GetJoinForMember (MemberInfo relationMember, IColumnSource leftSource, IColumnSource rightSource)
     {
-      if (relationMember == typeof (Student_Detail).GetProperty ("Student"))
+      if (relationMember == typeof (Student_Detail).GetProperty ("Chef"))
         return new SingleJoin (new Column (leftSource, "Student_Detail_PK"), new Column (rightSource, "Student_Detail_to_Student_FK"));
       else if (relationMember == typeof (Student_Detail_Detail).GetProperty ("Student_Detail"))
         return new SingleJoin (new Column (leftSource, "Student_Detail_Detail_PK"), new Column (rightSource, "Student_Detail_Detail_to_Student_Detail_FK"));
@@ -84,7 +84,7 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
         return new SingleJoin (new Column (leftSource, "IndustrialSector_PK"), new Column (rightSource, "Student_Detail_to_IndustrialSector_FK"));
       else if (relationMember == typeof (Student_Detail).GetProperty ("IndustrialSector"))
         return new SingleJoin (new Column (leftSource, "Student_Detail_to_IndustrialSector_FK"), new Column (rightSource, "IndustrialSector_PK"));
-      else if (relationMember == typeof (Student).GetProperty ("BuddyStudent"))
+      else if (relationMember == typeof (Chef).GetProperty ("BuddyChef"))
         return new SingleJoin (new Column (leftSource, "Student_to_OtherStudent_FK"), new Column (rightSource, "Student_PK"));
       else if (relationMember == typeof (IndustrialSector).GetProperty ("Students"))
         return new SingleJoin (new Column (leftSource, "Industrial_PK"), new Column (rightSource, "Student_to_IndustrialSector_FK"));
@@ -98,7 +98,7 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
 
     public object ProcessWhereParameter (object parameter)
     {
-      var student = parameter as Student;
+      var student = parameter as Chef;
       if (student != null)
         return student.ID;
       return parameter;
@@ -108,8 +108,8 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
     {
       if (entityType == typeof (Student_Detail))
         return typeof (Student_Detail).GetProperty ("ID");
-      else if (entityType == typeof (Student))
-        return typeof (Student).GetProperty ("ID");
+      else if (entityType == typeof (Chef))
+        return typeof (Chef).GetProperty ("ID");
       else if (entityType == typeof (IndustrialSector))
         return typeof (IndustrialSector).GetProperty ("ID");
       else
@@ -120,7 +120,7 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
     {
       switch (fromClause.ItemType.Name)
       {
-        case "Student":
+        case "Chef":
           return "studentTable";
         case "Student_Detail":
           return "detailTable";
@@ -135,7 +135,7 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
 
     private string GetRelatedTableName (MemberInfo relationMember)
     {
-      if (relationMember == typeof (Student_Detail).GetProperty ("Student"))
+      if (relationMember == typeof (Student_Detail).GetProperty ("Chef"))
         return "studentTable";
       else if (relationMember == typeof (Student_Detail_Detail).GetProperty ("Student_Detail"))
         return "detailTable";
@@ -145,7 +145,7 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
         return "industrialTable";
       else if (relationMember == typeof (IndustrialSector).GetProperty ("Student_Detail"))
         return "detailTable";
-      else if (relationMember == typeof (Student).GetProperty ("BuddyStudent"))
+      else if (relationMember == typeof (Chef).GetProperty ("BuddyChef"))
         return "studentTable";
       else if (relationMember == typeof (IndustrialSector).GetProperty ("Students"))
         return "studentTable";
@@ -157,7 +157,7 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
     {
       if (member.Name == "NonDBStringProperty" || member.Name == "NonDBBoolProperty")
         return null;
-      else if (member == typeof (Student_Detail).GetProperty ("Student"))
+      else if (member == typeof (Student_Detail).GetProperty ("Chef"))
         return null;
       else if (member == typeof (Student_Detail_Detail).GetProperty ("Student_Detail"))
         return null;

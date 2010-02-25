@@ -35,10 +35,10 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       Assert.That (queryModel.MainFromClause.ItemName, Is.EqualTo ("s"));
       
       var whereClause = (WhereClause) queryModel.BodyClauses[0];
-      CheckResolvedExpression<Student, bool> (whereClause.Predicate, queryModel.MainFromClause, s => s.Name == "Garcia");
+      CheckResolvedExpression<Chef, bool> (whereClause.Predicate, queryModel.MainFromClause, s => s.Name == "Garcia");
 
       var selectClause = queryModel.SelectClause;
-      CheckResolvedExpression<Student, Student> (selectClause.Selector, queryModel.MainFromClause, s => s);
+      CheckResolvedExpression<Chef, Chef> (selectClause.Selector, queryModel.MainFromClause, s => s);
     }
 
     [Test]
@@ -50,16 +50,16 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       Assert.That (queryModel.BodyClauses.Count, Is.EqualTo (3));
 
       var whereClause1 = (WhereClause) queryModel.BodyClauses[0];
-      CheckResolvedExpression<Student, bool> (whereClause1.Predicate, queryModel.MainFromClause, s => s.Name == "Garcia");
+      CheckResolvedExpression<Chef, bool> (whereClause1.Predicate, queryModel.MainFromClause, s => s.Name == "Garcia");
 
       var whereClause2 = (WhereClause) queryModel.BodyClauses[1];
-      CheckResolvedExpression<Student, bool> (whereClause2.Predicate, queryModel.MainFromClause, s => s.FirstName == "Hugo");
+      CheckResolvedExpression<Chef, bool> (whereClause2.Predicate, queryModel.MainFromClause, s => s.FirstName == "Hugo");
 
       var whereClause3 = (WhereClause) queryModel.BodyClauses[2];
-      CheckResolvedExpression<Student, bool> (whereClause3.Predicate, queryModel.MainFromClause, s => s.ID > 100);
+      CheckResolvedExpression<Chef, bool> (whereClause3.Predicate, queryModel.MainFromClause, s => s.ID > 100);
 
       var selectClause = queryModel.SelectClause;
-      CheckResolvedExpression<Student, Student> (selectClause.Selector, queryModel.MainFromClause, s => s);
+      CheckResolvedExpression<Chef, Chef> (selectClause.Selector, queryModel.MainFromClause, s => s);
     }
 
     [Test]
@@ -71,11 +71,11 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
       CheckConstantQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
 
       var whereClause = (WhereClause) queryModel.BodyClauses[0];
-      CheckResolvedExpression<Student, bool> (whereClause.Predicate, 
+      CheckResolvedExpression<Chef, bool> (whereClause.Predicate, 
                                               queryModel.MainFromClause, s => s.FirstName != "Garcia" && s.ID > 5 && s.ID >= 6 && s.ID < 7 && s.ID <= 6 && s.ID == 6);
 
       var selectClause = queryModel.SelectClause;
-      CheckResolvedExpression<Student, Student> (selectClause.Selector, queryModel.MainFromClause, s => s);
+      CheckResolvedExpression<Chef, Chef> (selectClause.Selector, queryModel.MainFromClause, s => s);
     }
   }
 }

@@ -207,7 +207,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
     [ExpectedException (typeof (ArgumentTypeException))]
     public void GetOutputDataInfo_InvalidInput ()
     {
-      var input = new StreamedScalarValueInfo (typeof (Student));
+      var input = new StreamedScalarValueInfo (typeof (Chef));
       _resultOperatorWithResultSelector.GetOutputDataInfo (input);
     }
 

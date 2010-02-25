@@ -33,18 +33,18 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.StreamedData
     [SetUp]
     public void SetUp ()
     {
-      _streamedSingleValueInfoWithDefault = new StreamedSingleValueInfo (typeof (Student), true);
-      _streamedSingleValueInfoNoDefault = new StreamedSingleValueInfo (typeof (Student), false);
+      _streamedSingleValueInfoWithDefault = new StreamedSingleValueInfo (typeof (Chef), true);
+      _streamedSingleValueInfoNoDefault = new StreamedSingleValueInfo (typeof (Chef), false);
     }
 
     [Test]
     public void ExecuteQueryModel_WithDefaultWhenEmpty ()
     {
       var queryModel = ExpressionHelper.CreateQueryModel_Student ();
-      var student1 = new Student();
+      var student1 = new Chef();
       
       var executorMock = MockRepository.GenerateMock<IQueryExecutor> ();
-      executorMock.Expect (mock => mock.ExecuteSingle<Student> (queryModel, true)).Return (student1);
+      executorMock.Expect (mock => mock.ExecuteSingle<Chef> (queryModel, true)).Return (student1);
       
       var streamedData = _streamedSingleValueInfoWithDefault.ExecuteQueryModel (queryModel, executorMock);
 
@@ -59,10 +59,10 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.StreamedData
     public void ExecuteQueryModel_NoDefaultWhenEmpty ()
     {
       var queryModel = ExpressionHelper.CreateQueryModel_Student ();
-      var student1 = new Student ();
+      var student1 = new Chef ();
 
       var executorMock = MockRepository.GenerateMock<IQueryExecutor> ();
-      executorMock.Expect (mock => mock.ExecuteSingle<Student> (queryModel, false)).Return (student1);
+      executorMock.Expect (mock => mock.ExecuteSingle<Chef> (queryModel, false)).Return (student1);
 
       var streamedData = _streamedSingleValueInfoNoDefault.ExecuteQueryModel (queryModel, executorMock);
 
@@ -98,7 +98,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.StreamedData
       var queryModel = ExpressionHelper.CreateQueryModel_Student ();
 
       var executorMock = MockRepository.GenerateMock<IQueryExecutor> ();
-      executorMock.Expect (mock => mock.ExecuteSingle<Student> (queryModel, true)).Throw (new InvalidOperationException ("Test"));
+      executorMock.Expect (mock => mock.ExecuteSingle<Chef> (queryModel, true)).Throw (new InvalidOperationException ("Test"));
 
       _streamedSingleValueInfoWithDefault.ExecuteQueryModel (queryModel, executorMock);
     }

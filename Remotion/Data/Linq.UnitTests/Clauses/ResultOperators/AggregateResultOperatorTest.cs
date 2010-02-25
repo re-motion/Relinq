@@ -113,16 +113,16 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
     [ExpectedException (typeof (ArgumentTypeException))]
     public void GetOutputDataInfo_InvalidInput ()
     {
-      var input = new StreamedScalarValueInfo (typeof (Student));
+      var input = new StreamedScalarValueInfo (typeof (Chef));
       _resultOperator.GetOutputDataInfo (input);
     }
 
     [Test]
     [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage = "The input sequence must have items of type 'System.Int32', but it has "
-        + "items of type 'Remotion.Data.Linq.UnitTests.TestDomain.Student'.\r\nParameter name: inputInfo")]
+        + "items of type 'Remotion.Data.Linq.UnitTests.TestDomain.Chef'.\r\nParameter name: inputInfo")]
     public void GetOutputDataInfo_InvalidInput_DoesntMatchItem ()
     {
-      var input = new StreamedSequenceInfo (typeof (Student[]), Expression.Constant (new Student ()));
+      var input = new StreamedSequenceInfo (typeof (Chef[]), Expression.Constant (new Chef ()));
       _resultOperator.GetOutputDataInfo (input);
     }
 

@@ -55,12 +55,12 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
     {
       var student1 = new GoodStudent ();
       var student2 = new GoodStudent ();
-      var student3 = new Student ();
-      IEnumerable items = new Student[] { student1, student2, student3 };
-      var itemExpression = Expression.Constant (student3, typeof (Student));
-      var input = new StreamedSequence (items, new StreamedSequenceInfo (typeof (Student[]), itemExpression));
+      var student3 = new Chef ();
+      IEnumerable items = new Chef[] { student1, student2, student3 };
+      var itemExpression = Expression.Constant (student3, typeof (Chef));
+      var input = new StreamedSequence (items, new StreamedSequenceInfo (typeof (Chef[]), itemExpression));
 
-      var result = _resultOperator.ExecuteInMemory<Student> (input);
+      var result = _resultOperator.ExecuteInMemory<Chef> (input);
 
       var sequence = result.GetTypedSequence<GoodStudent> ();
       Assert.That (sequence.ToArray (), Is.EquivalentTo (new[] { student1, student2 }));
@@ -71,8 +71,8 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
     [Test]
     public void GetOutputDataInfo ()
     {
-      var studentExpression = Expression.Constant (new Student ());
-      var input = new StreamedSequenceInfo (typeof (Student[]), studentExpression);
+      var studentExpression = Expression.Constant (new Chef ());
+      var input = new StreamedSequenceInfo (typeof (Chef[]), studentExpression);
       var result = _resultOperator.GetOutputDataInfo (input);
 
       Assert.That (result, Is.InstanceOfType (typeof (StreamedSequenceInfo)));
@@ -87,7 +87,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
     [ExpectedException (typeof (ArgumentTypeException))]
     public void GetOutputDataInfo_InvalidInput ()
     {
-      var input = new StreamedScalarValueInfo (typeof (Student));
+      var input = new StreamedScalarValueInfo (typeof (Chef));
       _resultOperator.GetOutputDataInfo (input);
     }
 

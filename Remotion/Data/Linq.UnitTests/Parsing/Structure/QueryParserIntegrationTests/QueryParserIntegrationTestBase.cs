@@ -27,7 +27,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
 {
   public abstract class QueryParserIntegrationTestBase
   {
-    public IQueryable<Student> QuerySource { get; private set; }
+    public IQueryable<Chef> QuerySource { get; private set; }
     public QueryParser QueryParser { get; private set; }
     public IQueryable<IndustrialSector> IndustrialSectorQuerySource { get; private set; }
     public IQueryable<Student_Detail> DetailQuerySource { get; private set; }

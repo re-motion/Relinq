@@ -36,7 +36,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses
     [SetUp]
     public void SetUp ()
     {
-      _selector = Expression.Constant (new Student ());
+      _selector = Expression.Constant (new Chef ());
       _selectClause = new SelectClause (_selector);
       _cloneContext = new CloneContext (new QuerySourceMapping());
     }
@@ -96,7 +96,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses
     public void GetOutputDataInfo ()
     {
       var info = _selectClause.GetOutputDataInfo ();
-      Assert.That (info.DataType, Is.SameAs (typeof (IQueryable<Student>)));
+      Assert.That (info.DataType, Is.SameAs (typeof (IQueryable<Chef>)));
       Assert.That (info.ItemExpression, Is.SameAs (_selectClause.Selector));
     }
   }

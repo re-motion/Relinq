@@ -40,19 +40,19 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
     [Test]
     public void GetOutputDataInfo ()
     {
-      var studentExpression = Expression.Constant (new Student ());
-      var input = new StreamedSequenceInfo (typeof (Student[]), studentExpression);
+      var studentExpression = Expression.Constant (new Chef ());
+      var input = new StreamedSequenceInfo (typeof (Chef[]), studentExpression);
       var result = _resultOperatorNoDefaultWhenEmpty.GetOutputDataInfo (input);
 
       Assert.That (result, Is.InstanceOfType (typeof (StreamedSingleValueInfo)));
-      Assert.That (result.DataType, Is.SameAs (typeof (Student)));
+      Assert.That (result.DataType, Is.SameAs (typeof (Chef)));
     }
 
     [Test]
     public void GetOutputDataInfo_DefaultWhenEmpty ()
     {
-      var studentExpression = Expression.Constant (new Student ());
-      var input = new StreamedSequenceInfo (typeof (Student[]), studentExpression);
+      var studentExpression = Expression.Constant (new Chef ());
+      var input = new StreamedSequenceInfo (typeof (Chef[]), studentExpression);
 
       Assert.That (((StreamedSingleValueInfo) _resultOperatorWithDefaultWhenEmpty.GetOutputDataInfo (input)).ReturnDefaultWhenEmpty, Is.True);
       Assert.That (((StreamedSingleValueInfo) _resultOperatorNoDefaultWhenEmpty.GetOutputDataInfo (input)).ReturnDefaultWhenEmpty, Is.False);
@@ -62,7 +62,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ResultOperators
     [ExpectedException (typeof (ArgumentTypeException))]
     public void GetOutputDataInfo_InvalidInput ()
     {
-      var input = new StreamedScalarValueInfo (typeof (Student));
+      var input = new StreamedScalarValueInfo (typeof (Chef));
       _resultOperatorNoDefaultWhenEmpty.GetOutputDataInfo (input);
     }
   }

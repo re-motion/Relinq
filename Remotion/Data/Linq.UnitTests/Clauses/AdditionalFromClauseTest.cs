@@ -42,10 +42,10 @@ namespace Remotion.Data.Linq.UnitTests.Clauses
     public void Initialize ()
     {
       var fromExpression = ExpressionHelper.CreateExpression ();
-      var fromClause = new AdditionalFromClause ("s", typeof (Student), fromExpression);
+      var fromClause = new AdditionalFromClause ("s", typeof (Chef), fromExpression);
 
       Assert.That (fromClause.ItemName, Is.EqualTo ("s"));
-      Assert.That (fromClause.ItemType, Is.SameAs (typeof (Student)));
+      Assert.That (fromClause.ItemType, Is.SameAs (typeof (Chef)));
       Assert.That (fromClause.FromExpression, Is.SameAs (fromExpression));
     }
 

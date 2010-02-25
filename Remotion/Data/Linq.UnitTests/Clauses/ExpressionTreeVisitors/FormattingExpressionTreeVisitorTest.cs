@@ -54,7 +54,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ExpressionTreeVisitors
 
       var expression = Expression.MakeBinary (ExpressionType.GreaterThan, new SubQueryExpression (subQueryModel), Expression.Constant (2));
       var formattedExpression = FormattingExpressionTreeVisitor.Format (expression);
-      Assert.That (formattedExpression, Is.EqualTo ("({TestQueryable<Student>() => Count()} > 2)"));
+      Assert.That (formattedExpression, Is.EqualTo ("({TestQueryable<Chef>() => Count()} > 2)"));
     }
 
     [Test]

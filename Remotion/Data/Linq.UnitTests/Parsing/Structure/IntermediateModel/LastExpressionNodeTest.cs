@@ -77,7 +77,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.IntermediateModel
     [Test]
     public void Apply_NoDefaultAllowed ()
     {
-      var node = new LastExpressionNode (CreateParseInfo (LastExpressionNode.SupportedMethods[0].MakeGenericMethod (typeof (Student))), null);
+      var node = new LastExpressionNode (CreateParseInfo (LastExpressionNode.SupportedMethods[0].MakeGenericMethod (typeof (Chef))), null);
       
       node.Apply (QueryModel, ClauseGenerationContext);
       
@@ -87,7 +87,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.IntermediateModel
     [Test]
     public void Apply_DefaultAllowed ()
     {
-      var node = new LastExpressionNode (CreateParseInfo (LastExpressionNode.SupportedMethods[3].MakeGenericMethod (typeof (Student))), null);
+      var node = new LastExpressionNode (CreateParseInfo (LastExpressionNode.SupportedMethods[3].MakeGenericMethod (typeof (Chef))), null);
       
       node.Apply (QueryModel, ClauseGenerationContext);
 

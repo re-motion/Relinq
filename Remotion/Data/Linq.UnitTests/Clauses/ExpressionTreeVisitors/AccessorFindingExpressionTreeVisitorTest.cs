@@ -76,10 +76,10 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ExpressionTreeVisitors
       var searchedExpression1 = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Student());
       var searchedExpression2 = new QuerySourceReferenceExpression (searchedExpression1.ReferencedQuerySource);
 
-      var inputParameter = Expression.Parameter (typeof (Student), "input");
+      var inputParameter = Expression.Parameter (typeof (Chef), "input");
       var result = AccessorFindingExpressionTreeVisitor.FindAccessorLambda (searchedExpression1, searchedExpression2, inputParameter);
 
-      Expression<Func<Student, Student>> expectedResult = input => input;
+      Expression<Func<Chef, Chef>> expectedResult = input => input;
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
 

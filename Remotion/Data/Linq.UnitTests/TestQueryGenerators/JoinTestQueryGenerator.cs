@@ -23,49 +23,49 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
 {
   internal static class JoinTestQueryGenerator
   {
-    public static IQueryable<Student> CreateSimpleExplicitJoin (IQueryable<Student_Detail> source1, IQueryable<Student> source2)
+    public static IQueryable<Chef> CreateSimpleExplicitJoin (IQueryable<Student_Detail> source1, IQueryable<Chef> source2)
     {
       return from s1 in source2 join s2 in source1 on s1.ID equals s2.StudentID select s1;
     }
 
     public static IQueryable<Student_Detail> CreateSimpleImplicitOrderByJoin (IQueryable<Student_Detail> source)
     {
-      return from sd in source orderby sd.Student.FirstName select sd;
+      return from sd in source orderby sd.Chef.FirstName select sd;
     }
 
     public static IQueryable<Student_Detail_Detail> CreateDoubleImplicitOrderByJoin (IQueryable<Student_Detail_Detail> source)
     {
-      return from sdd in source orderby sdd.Student_Detail.Student.FirstName select sdd;
+      return from sdd in source orderby sdd.Student_Detail.Chef.FirstName select sdd;
     }
 
     public static IQueryable<Student_Detail_Detail> CreateImplicitOrderByJoinWithMultipleJoins (IQueryable<Student_Detail_Detail> source)
     {
-      return from sdd in source orderby sdd.Student_Detail.Student.FirstName, sdd.IndustrialSector.ID select sdd;
+      return from sdd in source orderby sdd.Student_Detail.Chef.FirstName, sdd.IndustrialSector.ID select sdd;
     }
 
     public static IQueryable<Student_Detail_Detail> CreateImplicitOrderByJoinCheckingCorrectNumberOfEntries (IQueryable<Student_Detail_Detail> source)
     {
-      return from sdd in source orderby sdd.Student_Detail.Student.FirstName, sdd.Student_Detail.Student.Name select sdd;
+      return from sdd in source orderby sdd.Student_Detail.Chef.FirstName, sdd.Student_Detail.Chef.Name select sdd;
     }
 
     public static IQueryable<Student_Detail_Detail> CreateImplicitOrderByJoinWithDifferentLevels (IQueryable<Student_Detail_Detail> source)
     {
-      return from sdd in source orderby sdd.Student_Detail.Student.FirstName, sdd.Student_Detail.IndustrialSector.ID select sdd;
+      return from sdd in source orderby sdd.Student_Detail.Chef.FirstName, sdd.Student_Detail.IndustrialSector.ID select sdd;
     }
 
     public static IQueryable<string> CreateSimpleImplicitSelectJoin (IQueryable<Student_Detail> source)
     {
-      return from sd in source select sd.Student.FirstName;
+      return from sd in source select sd.Chef.FirstName;
     }
 
     public static IQueryable<Tuple<string, int>> CreateComplexImplicitSelectJoin (IQueryable<Student_Detail_Detail> source)
     {
-      return from sdd in source select new Tuple<string, int> (sdd.Student_Detail.Student.FirstName, sdd.IndustrialSector.ID);
+      return from sdd in source select new Tuple<string, int> (sdd.Student_Detail.Chef.FirstName, sdd.IndustrialSector.ID);
     }
 
     public static IQueryable<Student_Detail> CreateSimpleImplicitWhereJoin (IQueryable<Student_Detail> source)
     {
-      return from sd in source where sd.Student.FirstName == "Garcia" select sd;
+      return from sd in source where sd.Chef.FirstName == "Garcia" select sd;
     }
 
     public static IQueryable<Student_Detail_Detail> CreateImplicitOrderByJoinWithMultipleKeys
@@ -73,8 +73,8 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
     {
       return from sdd1 in source1
              from sdd2 in source2
-             orderby sdd1.Student_Detail.Student.FirstName
-             orderby sdd2.Student_Detail.Student.FirstName
+             orderby sdd1.Student_Detail.Chef.FirstName
+             orderby sdd2.Student_Detail.Chef.FirstName
              select sdd1;
     }
 
@@ -83,16 +83,16 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
     {
       return from sdd1 in source1
              from sdd2 in source2
-             orderby sdd1.Student_Detail.Student.FirstName
-             orderby sdd2.Student_Detail.Student.FirstName
-             orderby sdd1.Student_Detail.Student.FirstName
+             orderby sdd1.Student_Detail.Chef.FirstName
+             orderby sdd2.Student_Detail.Chef.FirstName
+             orderby sdd1.Student_Detail.Chef.FirstName
              select sdd1;
     }
 
     public static IQueryable<Student_Detail_Detail> CreateImplicitOrderByJoinWithJoinPartReuse (IQueryable<Student_Detail_Detail> source)
     {
       return from sdd in source
-             orderby sdd.Student_Detail.Student.FirstName
+             orderby sdd.Student_Detail.Chef.FirstName
              orderby sdd.Student_Detail.ID
              select sdd;
     }

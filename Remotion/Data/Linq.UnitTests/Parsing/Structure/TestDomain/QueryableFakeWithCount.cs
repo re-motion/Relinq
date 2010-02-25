@@ -25,7 +25,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.TestDomain
 {
   public class QueryableFakeWithCount<T> : IQueryable<T>, IQueryProvider
   {
-    public IQueryable<Student> Field = ExpressionHelper.CreateStudentQueryable ();
+    public IQueryable<Chef> Field = ExpressionHelper.CreateStudentQueryable ();
 
     public QueryableFakeWithCount ()
     {
@@ -54,7 +54,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.TestDomain
       get { throw new NotImplementedException(); }
     }
 
-    internal IQueryable<Student> InternalProperty
+    internal IQueryable<Chef> InternalProperty
     {
       get { throw new NotImplementedException (); }
     }
