@@ -224,7 +224,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
     public void ArrayLength ()
     {
       var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
-                                                               select s.LotteryNumbers.Length));
+                                                               select s.EctsCredits.Length));
 
       var queryModel = QueryParser.GetParsedQuery (expression);
 
@@ -240,7 +240,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
     public void ArrayLongLength ()
     {
       var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
-                                                               select s.LotteryNumbers.LongLength));
+                                                               select s.EctsCredits.LongLength));
 
       var queryModel = QueryParser.GetParsedQuery (expression);
 
