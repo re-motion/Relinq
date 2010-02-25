@@ -50,7 +50,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
 
       var ordering3 = orderByClause.Orderings[2];
       Assert.That (ordering3.OrderingDirection, Is.EqualTo (OrderingDirection.Asc));
-      CheckResolvedExpression<Cook, List<int>> (ordering3.Expression, mainFromClause, s => s.Scores);
+      CheckResolvedExpression<Cook, List<int>> (ordering3.Expression, mainFromClause, s => s.Holidays);
 
       var selectClause = queryModel.SelectClause;
       CheckResolvedExpression<Cook, Cook> (selectClause.Selector, queryModel.MainFromClause, s => s);

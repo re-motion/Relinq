@@ -179,7 +179,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
     public void ListCount ()
     {
       var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
-                                                               select s.Scores.Count));
+                                                               select s.Holidays.Count));
 
       var queryModel = QueryParser.GetParsedQuery (expression);
 
@@ -224,7 +224,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
     public void ArrayLength ()
     {
       var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
-                                                               select s.EctsCredits.Length));
+                                                               select s.IllnessDays.Length));
 
       var queryModel = QueryParser.GetParsedQuery (expression);
 
@@ -240,7 +240,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationT
     public void ArrayLongLength ()
     {
       var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
-                                                               select s.EctsCredits.LongLength));
+                                                               select s.IllnessDays.LongLength));
 
       var queryModel = QueryParser.GetParsedQuery (expression);
 

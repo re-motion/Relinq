@@ -50,12 +50,12 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
 
     public static IQueryable<Cook> CreateOrderByQueryWithOrderByAndThenBy (IQueryable<Cook> source)
     {
-      return from s in source orderby s.FirstName, s.Name descending, s.Scores select s;
+      return from s in source orderby s.FirstName, s.Name descending, s.Holidays select s;
     }
 
     public static IQueryable<Cook> CreateOrderByQueryWithMultipleOrderBys (IQueryable<Cook> source)
     {
-      return from s in source orderby s.FirstName, s.Name descending, s.Scores orderby s.Name select s;
+      return from s in source orderby s.FirstName, s.Name descending, s.Holidays orderby s.Name select s;
     }
 
     public static MethodCallExpression CreateOrderByQueryWithOrderByAndThenBy_OrderByExpression (IQueryable<Cook> source)

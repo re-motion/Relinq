@@ -27,8 +27,8 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
     public string Name { get; set; }
     public int ID { get; set; }
     public ArrayList Courses { get; set; }
-    public int[] EctsCredits { get; set; }
-    public List<int> Scores { get; set; }
+    public int[] IllnessDays { get; set; }
+    public List<int> Holidays { get; set; }
     public IQueryable<Cook> Assistants { get; set; }
     public string NonDBStringProperty { get; set; }
     public bool NonDBBoolProperty { get; set; }
