@@ -46,28 +46,28 @@ namespace Remotion.Data.Linq.UnitTests.TestQueryGenerators
     public static IQueryable<Cook> CreateFromQueryWithMemberQuerySource (IQueryable<IndustrialSector> source)
     {
       return from sector in source
-             from s1 in sector.Students
+             from s1 in sector.Cooks
              select s1;
     }
 
     public static IQueryable<Cook> CreateFromQueryWithMemberQuerySource_InMainFromClauseOfSubQuery (IQueryable<IndustrialSector> source)
     {
       return from sector in source
-             from s1 in (from s2 in sector.Students select s2)
+             from s1 in (from s2 in sector.Cooks select s2)
              select s1;
     }
 
     public static IQueryable<Cook> CreateFromQueryWithMemberQuerySourceAndOptimizableJoin (IQueryable<Kitchen> source)
     {
       return from sd in source
-             from s1 in sd.IndustrialSector.Students
+             from s1 in sd.IndustrialSector.Cooks
              select s1;
     }
 
     public static IQueryable<Cook> CreateFromQueryWithMemberQuerySourceAndJoin (IQueryable<Restaurant> source)
     {
       return from sdd in source
-             from s1 in sdd.IndustrialSector.Students
+             from s1 in sdd.IndustrialSector.Cooks
              select s1;
     }
 
