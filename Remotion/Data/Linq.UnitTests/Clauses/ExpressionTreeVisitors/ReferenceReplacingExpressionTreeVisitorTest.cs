@@ -63,7 +63,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ExpressionTreeVisitors
     [Test]
     public void VisitSubQuery_ExpressionUnchanged ()
     {
-      var expression = new SubQueryExpression (ExpressionHelper.CreateQueryModel_Student ());
+      var expression = new SubQueryExpression (ExpressionHelper.CreateQueryModel_Cook ());
       var result = ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (expression, _querySourceMapping, false);
 
       Assert.That (((SubQueryExpression) result).QueryModel, Is.SameAs (expression.QueryModel));
@@ -72,7 +72,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ExpressionTreeVisitors
     [Test]
     public void Replaces_SubQueryExpressions_WithCorrectCloneContext ()
     {
-      var subQueryModel = ExpressionHelper.CreateQueryModel_Student ();
+      var subQueryModel = ExpressionHelper.CreateQueryModel_Cook ();
       var referencedClause = ExpressionHelper.CreateMainFromClause_Int ();
       subQueryModel.SelectClause.Selector = new QuerySourceReferenceExpression (referencedClause);
       var expression = new SubQueryExpression (subQueryModel);
@@ -89,7 +89,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ExpressionTreeVisitors
     [ExpectedException (typeof (InvalidOperationException))]
     public void VisitSubQuery_PassesFlagToInner_Throw ()
     {
-      var expression = new SubQueryExpression (ExpressionHelper.CreateQueryModel_Student ());
+      var expression = new SubQueryExpression (ExpressionHelper.CreateQueryModel_Cook ());
       expression.QueryModel.SelectClause.Selector = new QuerySourceReferenceExpression (expression.QueryModel.MainFromClause);
       ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (expression, _querySourceMapping, true);
     }
@@ -98,7 +98,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.ExpressionTreeVisitors
     [Test]
     public void VisitSubQuery_PassesFlagToInner_Ignore ()
     {
-      var expression = new SubQueryExpression (ExpressionHelper.CreateQueryModel_Student ());
+      var expression = new SubQueryExpression (ExpressionHelper.CreateQueryModel_Cook ());
       expression.QueryModel.SelectClause.Selector = new QuerySourceReferenceExpression (expression.QueryModel.MainFromClause);
       ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (expression, _querySourceMapping, false);
     }

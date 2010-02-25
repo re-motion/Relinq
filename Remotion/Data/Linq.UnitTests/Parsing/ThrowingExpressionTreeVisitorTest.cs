@@ -170,7 +170,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing
     [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitSubQueryExpression: ", MatchType = MessageMatch.Contains)]
     public void VisitSubQueryExpression ()
     {
-      _visitor.VisitExpression (new SubQueryExpression (ExpressionHelper.CreateQueryModel_Student ()));
+      _visitor.VisitExpression (new SubQueryExpression (ExpressionHelper.CreateQueryModel_Cook ()));
     }
 
     [Test]

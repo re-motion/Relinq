@@ -41,7 +41,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure.IntermediateModel
       base.SetUp ();
 
       _studentSource = new MainSourceExpressionNode ("s", Expression.Constant (new[] { new Cook () }));
-      _studentClause = ExpressionHelper.CreateMainFromClause_Student ();
+      _studentClause = ExpressionHelper.CreateMainFromClause_Cook ();
       ClauseGenerationContext.AddContextInfo (_studentSource, _studentClause);
 
       _ofTypeWithGoodStudentMethod = ReflectionUtility.GetMethod (() => ((IQueryable<Cook[]>) null).OfType<Chef> ());

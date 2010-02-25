@@ -59,7 +59,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses
     public void Accept ()
     {
       var repository = new MockRepository ();
-      var queryModel = ExpressionHelper.CreateQueryModel_Student ();
+      var queryModel = ExpressionHelper.CreateQueryModel_Cook ();
       var visitorMock = repository.StrictMock<IQueryModelVisitor> ();
 
       visitorMock.VisitJoinClause (_joinClause, queryModel, 1);
@@ -75,7 +75,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses
     public void Accept_WithGroupJoinClause ()
     {
       var repository = new MockRepository ();
-      var queryModel = ExpressionHelper.CreateQueryModel_Student ();
+      var queryModel = ExpressionHelper.CreateQueryModel_Cook ();
       var groupJoinClause = ExpressionHelper.CreateGroupJoinClause ();
       var visitorMock = repository.StrictMock<IQueryModelVisitor> ();
 

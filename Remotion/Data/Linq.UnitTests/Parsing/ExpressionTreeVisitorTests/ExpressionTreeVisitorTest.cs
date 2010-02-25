@@ -163,7 +163,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     [Test]
     public void VisitExpression_SubQuery ()
     {
-      QueryModel queryModel = ExpressionHelper.CreateQueryModel_Student ();
+      QueryModel queryModel = ExpressionHelper.CreateQueryModel_Cook ();
       CheckDelegation (_mockRepository, "VisitSubQueryExpression", new SubQueryExpression (queryModel));
     }
 

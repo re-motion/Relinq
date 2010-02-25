@@ -40,7 +40,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.StreamedData
     [Test]
     public void ExecuteQueryModel_WithDefaultWhenEmpty ()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel_Student ();
+      var queryModel = ExpressionHelper.CreateQueryModel_Cook ();
       var student1 = new Cook();
       
       var executorMock = MockRepository.GenerateMock<IQueryExecutor> ();
@@ -58,7 +58,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.StreamedData
     [Test]
     public void ExecuteQueryModel_NoDefaultWhenEmpty ()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel_Student ();
+      var queryModel = ExpressionHelper.CreateQueryModel_Cook ();
       var student1 = new Cook ();
 
       var executorMock = MockRepository.GenerateMock<IQueryExecutor> ();
@@ -95,7 +95,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.StreamedData
     [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Test")]
     public void ExecuteQueryModel_WithException ()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel_Student ();
+      var queryModel = ExpressionHelper.CreateQueryModel_Cook ();
 
       var executorMock = MockRepository.GenerateMock<IQueryExecutor> ();
       executorMock.Expect (mock => mock.ExecuteSingle<Cook> (queryModel, true)).Throw (new InvalidOperationException ("Test"));

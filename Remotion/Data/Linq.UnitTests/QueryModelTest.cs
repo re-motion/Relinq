@@ -150,7 +150,7 @@ namespace Remotion.Data.Linq.UnitTests
     [Test]
     public void Clone_ReturnsNewQueryModel ()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel_Student();
+      var queryModel = ExpressionHelper.CreateQueryModel_Cook();
       var clone = queryModel.Clone();
 
       Assert.That (clone, Is.Not.Null);
@@ -349,7 +349,7 @@ namespace Remotion.Data.Linq.UnitTests
     public void GetNewName_AlreadyExists_ChangedMainFromClause ()
     {
       var mainFromClause = new MainFromClause ("test0", typeof (Cook), ExpressionHelper.CreateCookQueryable().Expression);
-      var queryModel = ExpressionHelper.CreateQueryModel_Student();
+      var queryModel = ExpressionHelper.CreateQueryModel_Cook();
       queryModel.MainFromClause = mainFromClause;
       var identifier = queryModel.GetNewName ("test");
       Assert.That (identifier, Is.EqualTo ("test1"));

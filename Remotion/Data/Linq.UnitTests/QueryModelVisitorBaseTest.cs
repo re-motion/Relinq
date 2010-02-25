@@ -58,7 +58,7 @@ namespace Remotion.Data.Linq.UnitTests
       _resultOperatorMock1 = _mockRepository.StrictMock<ResultOperatorBase> ();
       _resultOperatorMock2 = _mockRepository.StrictMock<ResultOperatorBase> ();
 
-      _queryModel = ExpressionHelper.CreateQueryModel_Student ();
+      _queryModel = ExpressionHelper.CreateQueryModel_Cook ();
       _orderByClause = ExpressionHelper.CreateOrderByClause ();
       _groupJoinClause = ExpressionHelper.CreateGroupJoinClause ();
     }

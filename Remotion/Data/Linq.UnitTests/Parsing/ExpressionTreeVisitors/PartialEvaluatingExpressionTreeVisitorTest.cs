@@ -98,7 +98,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitors
     [Test]
     public void EvaluateLambdaWithSubQuery  ()
     {
-      var subQuery = new SubQueryExpression(ExpressionHelper.CreateQueryModel_Student());
+      var subQuery = new SubQueryExpression(ExpressionHelper.CreateQueryModel_Cook());
       LambdaExpression lambdaExpression = Expression.Lambda (subQuery);
 
       Expression result = PartialEvaluatingExpressionTreeVisitor.EvaluateIndependentSubtrees (lambdaExpression);

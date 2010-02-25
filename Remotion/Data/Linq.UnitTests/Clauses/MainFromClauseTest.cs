@@ -69,7 +69,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses
     {
       var repository = new MockRepository ();
       var visitorMock = repository.StrictMock<IQueryModelVisitor> ();
-      var queryModel = ExpressionHelper.CreateQueryModel_Student ();
+      var queryModel = ExpressionHelper.CreateQueryModel_Cook ();
 
       visitorMock.VisitMainFromClause (_mainFromClause, queryModel);
 

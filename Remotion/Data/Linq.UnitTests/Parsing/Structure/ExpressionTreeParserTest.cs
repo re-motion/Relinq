@@ -55,7 +55,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.Structure
     [Test]
     public void ParseTree_Expression ()
     {
-      var expression = Expression.MakeMemberAccess (new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Student ()), typeof (Cook).GetProperty ("Assistants"));
+      var expression = Expression.MakeMemberAccess (new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Cook ()), typeof (Cook).GetProperty ("Assistants"));
 
       var result = _expressionTreeParser.ParseTree (expression);
 

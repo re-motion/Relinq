@@ -100,7 +100,7 @@ namespace Remotion.Data.Linq.UnitTests
       return new QueryModel (mainFromClause, selectClause);
     }
 
-    public static QueryModel CreateQueryModel_Student ()
+    public static QueryModel CreateQueryModel_Cook ()
     {
       return CreateQueryModel (CreateMainFromClause_Int("s", typeof (Cook), CreateCookQueryable()));
     }
@@ -116,12 +116,12 @@ namespace Remotion.Data.Linq.UnitTests
       return CreateMainFromClause_Int("main", typeof (int), querySource);
     }
 
-    public static MainFromClause CreateMainFromClause_Student ()
+    public static MainFromClause CreateMainFromClause_Cook ()
     {
       return CreateMainFromClause_Int ("s", typeof (Cook), CreateCookQueryable());
     }
 
-    public static MainFromClause CreateMainFromClause_Detail ()
+    public static MainFromClause CreateMainFromClause_Kitchen ()
     {
       return CreateMainFromClause_Int ("sd", typeof (Kitchen), CreateKitchenQueryable ());
     }

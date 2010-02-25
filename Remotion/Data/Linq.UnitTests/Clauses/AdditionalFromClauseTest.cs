@@ -58,7 +58,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses
     [Test]
     public void Accept ()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel_Student ();
+      var queryModel = ExpressionHelper.CreateQueryModel_Cook ();
       var visitorMock = MockRepository.GenerateMock<IQueryModelVisitor> ();
       _additionalFromClause.Accept (visitorMock, queryModel, 1);
       visitorMock.AssertWasCalled (mock => mock.VisitAdditionalFromClause (_additionalFromClause, queryModel, 1));

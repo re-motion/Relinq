@@ -55,7 +55,7 @@ namespace Remotion.Data.Linq.UnitTests.Clauses
     [Test]
     public void Accept()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel_Student ();
+      var queryModel = ExpressionHelper.CreateQueryModel_Cook ();
       var repository = new MockRepository ();
       var visitorMock = repository.StrictMock<IQueryModelVisitor> ();
 
