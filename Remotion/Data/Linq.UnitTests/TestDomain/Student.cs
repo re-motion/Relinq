@@ -34,6 +34,6 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
     public bool NonDBBoolProperty { get; set; }
     public bool IsExchangeStudent { get; set; }
     public bool HasDegree { get; set; }
-    public Student OtherStudent { get; set; }
+    public Student BuddyStudent { get; set; }
   }
 }

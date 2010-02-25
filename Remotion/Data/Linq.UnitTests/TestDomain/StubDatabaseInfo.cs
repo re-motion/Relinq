@@ -84,7 +84,7 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
         return new SingleJoin (new Column (leftSource, "IndustrialSector_PK"), new Column (rightSource, "Student_Detail_to_IndustrialSector_FK"));
       else if (relationMember == typeof (Student_Detail).GetProperty ("IndustrialSector"))
         return new SingleJoin (new Column (leftSource, "Student_Detail_to_IndustrialSector_FK"), new Column (rightSource, "IndustrialSector_PK"));
-      else if (relationMember == typeof (Student).GetProperty ("OtherStudent"))
+      else if (relationMember == typeof (Student).GetProperty ("BuddyStudent"))
         return new SingleJoin (new Column (leftSource, "Student_to_OtherStudent_FK"), new Column (rightSource, "Student_PK"));
       else if (relationMember == typeof (IndustrialSector).GetProperty ("Students"))
         return new SingleJoin (new Column (leftSource, "Industrial_PK"), new Column (rightSource, "Student_to_IndustrialSector_FK"));
@@ -145,7 +145,7 @@ namespace Remotion.Data.Linq.UnitTests.TestDomain
         return "industrialTable";
       else if (relationMember == typeof (IndustrialSector).GetProperty ("Student_Detail"))
         return "detailTable";
-      else if (relationMember == typeof (Student).GetProperty ("OtherStudent"))
+      else if (relationMember == typeof (Student).GetProperty ("BuddyStudent"))
         return "studentTable";
       else if (relationMember == typeof (IndustrialSector).GetProperty ("Students"))
         return "studentTable";
