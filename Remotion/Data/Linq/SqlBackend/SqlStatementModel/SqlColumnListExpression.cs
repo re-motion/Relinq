@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
@@ -29,7 +30,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   /// </summary>
   public class SqlColumnListExpression : ExtensionExpression
   {
-    private readonly SqlColumnExpression[] _columns;
+    private SqlColumnExpression[] _columns;
 
     public SqlColumnListExpression (Type type, SqlColumnExpression[] columns)
         : base (type)
@@ -46,24 +47,8 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 
     protected internal override Expression VisitChildren (ExpressionTreeVisitor visitor)
     {
-      // TODO: Refactor as soon as ExpressionTreeVisitor.VisitList is public.
-
-      var newColumns = new List<SqlColumnExpression>();
-      bool isAnyColumnChanged = false;
-
-      foreach (var columnExpression in _columns)
-      {
-        var newColumnExpression = visitor.VisitExpression (columnExpression);  
-        if (newColumnExpression != columnExpression)
-          isAnyColumnChanged = true;
-        newColumns.Add ((SqlColumnExpression) newColumnExpression);
-      }
-
-      if (isAnyColumnChanged)
-        return new SqlColumnListExpression (Type, newColumns.ToArray());
-      else
-        return this;
-      
+      (visitor.VisitList (Columns, c => (SqlColumnExpression) visitor.VisitExpression (c))).CopyTo (_columns, 0);
+      return this;
     }
 
     public override Expression Accept (ExpressionTreeVisitor visitor)
