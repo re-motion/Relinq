@@ -20,6 +20,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
+using Remotion.Data.Linq.UnitTests.TestUtilities;
 using Rhino.Mocks;
 
 namespace Remotion.Data.Linq.UnitTests.Clauses.Expressions
@@ -37,6 +38,25 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.Expressions
 
       visitorMock
           .Expect (mock => visitMethodCall ((TVisitorInterface) (object) mock))
+          .Return (returnedExpression);
+      visitorMock.Replay ();
+
+      var result = expression.Accept (visitorMock);
+
+      visitorMock.VerifyAllExpectations ();
+
+      Assert.That (result, Is.SameAs (returnedExpression));
+    }
+
+    public static void CheckAcceptForVisitorNotSupportingType<TExpression> (TExpression expression) where TExpression : ExtensionExpression
+    {
+      var mockRepository = new MockRepository ();
+      var visitorMock = mockRepository.StrictMock<ExpressionTreeVisitor> ();
+
+      var returnedExpression = Expression.Constant (0);
+
+      visitorMock
+          .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitUnknownExpression", expression))
           .Return (returnedExpression);
       visitorMock.Replay ();
 
