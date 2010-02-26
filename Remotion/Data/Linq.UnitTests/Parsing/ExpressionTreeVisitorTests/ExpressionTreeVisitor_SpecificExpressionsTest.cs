@@ -168,7 +168,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     {
       var expression = (LambdaExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Lambda);
       Expect.Call (VisitorMock.VisitExpression (expression.Body)).Return (expression.Body);
-      Expect.Call (InvokeVisitExpressionListMethod (expression.Parameters)).Return (expression.Parameters);
+      Expect.Call (InvokeVisitExpressionListMethod (expression.Parameters, "VisitLambdaExpression")).Return (expression.Parameters);
       var result = (LambdaExpression) InvokeAndCheckVisitExpression ("VisitLambdaExpression", expression);
       Assert.That (result, Is.SameAs (expression));
     }
@@ -179,7 +179,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       var expression = (LambdaExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Lambda);
       Expression newBody = Expression.Constant (1);
       Expect.Call (VisitorMock.VisitExpression (expression.Body)).Return (newBody);
-      Expect.Call (InvokeVisitExpressionListMethod (expression.Parameters)).Return (expression.Parameters);
+      Expect.Call (InvokeVisitExpressionListMethod (expression.Parameters, "VisitLambdaExpression")).Return (expression.Parameters);
       var result = (LambdaExpression) InvokeAndCheckVisitExpression ("VisitLambdaExpression", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.Lambda));
@@ -193,7 +193,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       var expression = (LambdaExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Lambda);
       ReadOnlyCollection<ParameterExpression> newParameters = new List<ParameterExpression> { Expression.Parameter (typeof (int), "i") }.AsReadOnly ();
       Expect.Call (VisitorMock.VisitExpression (expression.Body)).Return (expression.Body);
-      Expect.Call (InvokeVisitExpressionListMethod (expression.Parameters)).Return (newParameters);
+      Expect.Call (InvokeVisitExpressionListMethod (expression.Parameters, "VisitLambdaExpression")).Return (newParameters);
       var result = (LambdaExpression) InvokeAndCheckVisitExpression ("VisitLambdaExpression", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.Lambda));
@@ -206,7 +206,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     {
       var expression = (MethodCallExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Call);
       Expect.Call (VisitorMock.VisitExpression (expression.Object)).Return (expression.Object);
-      Expect.Call (InvokeVisitExpressionListMethod (expression.Arguments)).Return (expression.Arguments);
+      Expect.Call (InvokeVisitExpressionListMethod (expression.Arguments, "VisitMethodCallExpression")).Return (expression.Arguments);
       var result = (MethodCallExpression) InvokeAndCheckVisitExpression ("VisitMethodCallExpression", expression);
       Assert.That (result, Is.SameAs (expression));
     }
@@ -217,7 +217,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       var expression = (MethodCallExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Call);
       Expression newObject = Expression.Constant (1);
       Expect.Call (VisitorMock.VisitExpression (expression.Object)).Return (newObject);
-      Expect.Call (InvokeVisitExpressionListMethod (expression.Arguments)).Return (expression.Arguments);
+      Expect.Call (InvokeVisitExpressionListMethod (expression.Arguments, "VisitMethodCallExpression")).Return (expression.Arguments);
       var result = (MethodCallExpression) InvokeAndCheckVisitExpression ("VisitMethodCallExpression", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.Call));
@@ -231,7 +231,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       var expression = (MethodCallExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Call);
       ReadOnlyCollection<Expression> newParameters = new List<Expression> { Expression.Constant (214578) }.AsReadOnly ();
       Expect.Call (VisitorMock.VisitExpression (expression.Object)).Return (expression.Object);
-      Expect.Call (InvokeVisitExpressionListMethod (expression.Arguments)).Return (newParameters);
+      Expect.Call (InvokeVisitExpressionListMethod (expression.Arguments, "VisitMethodCallExpression")).Return (newParameters);
       var result = (MethodCallExpression) InvokeAndCheckVisitExpression ("VisitMethodCallExpression", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.Call));
@@ -244,7 +244,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     {
       var expression = (InvocationExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Invoke);
       Expect.Call (VisitorMock.VisitExpression (expression.Expression)).Return (expression.Expression);
-      Expect.Call (InvokeVisitExpressionListMethod (expression.Arguments)).Return (expression.Arguments);
+      Expect.Call (InvokeVisitExpressionListMethod (expression.Arguments, "VisitInvocationExpression")).Return (expression.Arguments);
       var result = (InvocationExpression) InvokeAndCheckVisitExpression ("VisitInvocationExpression", expression);
       Assert.That (result, Is.SameAs (expression));
     }
@@ -255,7 +255,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       var expression = (InvocationExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Invoke);
       Expression newExpression = Expression.Lambda (Expression.Constant (1), Expression.Parameter (typeof (int), "i"));
       Expect.Call (VisitorMock.VisitExpression (expression.Expression)).Return (newExpression);
-      Expect.Call (InvokeVisitExpressionListMethod (expression.Arguments)).Return (expression.Arguments);
+      Expect.Call (InvokeVisitExpressionListMethod (expression.Arguments, "VisitInvocationExpression")).Return (expression.Arguments);
       var result = (InvocationExpression) InvokeAndCheckVisitExpression ("VisitInvocationExpression", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.Invoke));
@@ -269,7 +269,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       var expression = (InvocationExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Invoke);
       ReadOnlyCollection<Expression> newParameters = new List<Expression> { Expression.Constant (214578) }.AsReadOnly ();
       Expect.Call (VisitorMock.VisitExpression (expression.Expression)).Return (expression.Expression);
-      Expect.Call (InvokeVisitExpressionListMethod (expression.Arguments)).Return (newParameters);
+      Expect.Call (InvokeVisitExpressionListMethod (expression.Arguments, "VisitInvocationExpression")).Return (newParameters);
       var result = (InvocationExpression) InvokeAndCheckVisitExpression ("VisitInvocationExpression", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.Invoke));
@@ -302,7 +302,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     public void VisitNewExpression_Unchanged ()
     {
       var expression = (NewExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.New);
-      Expect.Call (InvokeVisitExpressionListMethod (expression.Arguments)).Return (expression.Arguments);
+      Expect.Call (InvokeVisitExpressionListMethod (expression.Arguments, "VisitNewExpression")).Return (expression.Arguments);
       var result = (NewExpression) InvokeAndCheckVisitExpression ("VisitNewExpression", expression);
       Assert.That (result, Is.SameAs (expression));
     }
@@ -312,7 +312,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     {
       var expression = (NewExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.New);
       ReadOnlyCollection<Expression> newArguments = new List<Expression> { Expression.Constant (214578) }.AsReadOnly ();
-      Expect.Call (InvokeVisitExpressionListMethod (expression.Arguments)).Return (newArguments);
+      Expect.Call (InvokeVisitExpressionListMethod (expression.Arguments, "VisitNewExpression")).Return (newArguments);
       var result = (NewExpression) InvokeAndCheckVisitExpression ("VisitNewExpression", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.New));
@@ -325,7 +325,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       NewExpression expression = Expression.New (typeof (TypeForNewExpression).GetConstructors()[0], Expression.Constant (0));
 
       var newArguments = new List<Expression> { Expression.Constant (214578) }.AsReadOnly ();
-      Expect.Call (InvokeVisitExpressionListMethod (expression.Arguments)).Return (newArguments);
+      Expect.Call (InvokeVisitExpressionListMethod (expression.Arguments, "VisitNewExpression")).Return (newArguments);
       var result = (NewExpression) InvokeAndCheckVisitExpression ("VisitNewExpression", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.New));
@@ -341,7 +341,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
           typeof (TypeForNewExpression).GetProperty ("A"));
 
       var newArguments = new List<Expression> { Expression.Constant (214578) }.AsReadOnly ();
-      Expect.Call (InvokeVisitExpressionListMethod (expression.Arguments)).Return (newArguments);
+      Expect.Call (InvokeVisitExpressionListMethod (expression.Arguments, "VisitNewExpression")).Return (newArguments);
       var result = (NewExpression) InvokeAndCheckVisitExpression ("VisitNewExpression", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.New));
@@ -353,7 +353,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     public void VisitNewArrayExpression_Unchanged ()
     {
       var expression = (NewArrayExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.NewArrayInit);
-      Expect.Call (InvokeVisitExpressionListMethod (expression.Expressions)).Return (expression.Expressions);
+      Expect.Call (InvokeVisitExpressionListMethod (expression.Expressions, "VisitNewArrayExpression")).Return (expression.Expressions);
       var result = (NewArrayExpression) InvokeAndCheckVisitExpression ("VisitNewArrayExpression", expression);
       Assert.That (result, Is.SameAs (expression));
     }
@@ -363,7 +363,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     {
       var expression = (NewArrayExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.NewArrayInit);
       ReadOnlyCollection<Expression> newExpressions = new List<Expression> { Expression.Constant (214578) }.AsReadOnly ();
-      Expect.Call (InvokeVisitExpressionListMethod (expression.Expressions)).Return (newExpressions);
+      Expect.Call (InvokeVisitExpressionListMethod (expression.Expressions, "VisitNewArrayExpression")).Return (newExpressions);
       var result = (NewArrayExpression) InvokeAndCheckVisitExpression ("VisitNewArrayExpression", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.NewArrayInit));
@@ -376,7 +376,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     {
       var expression = (NewArrayExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.NewArrayBounds);
       ReadOnlyCollection<Expression> newExpressions = new List<Expression> (new Expression[] { Expression.Constant (214578) }).AsReadOnly ();
-      Expect.Call (InvokeVisitExpressionListMethod (expression.Expressions)).Return (newExpressions);
+      Expect.Call (InvokeVisitExpressionListMethod (expression.Expressions, "VisitNewArrayExpression")).Return (newExpressions);
       var result = (NewArrayExpression) InvokeAndCheckVisitExpression ("VisitNewArrayExpression", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.NewArrayBounds));
@@ -503,7 +503,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     public void VisitElementInit_Unchanged ()
     {
       ElementInit elementInit = ExpressionInstanceCreator.CreateElementInit();
-      Expect.Call (InvokeVisitExpressionListMethod (elementInit.Arguments)).Return (elementInit.Arguments);
+      Expect.Call (InvokeVisitExpressionListMethod (elementInit.Arguments, "VisitElementInit")).Return (elementInit.Arguments);
 
       var result = (ElementInit) InvokeAndCheckVisitObject ("VisitElementInit", elementInit);
       Assert.That (result, Is.SameAs (elementInit));
@@ -514,7 +514,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     {
       ElementInit elementInit = ExpressionInstanceCreator.CreateElementInit ();
       ReadOnlyCollection<Expression> newArguments = new List<Expression> (new Expression[] { Expression.Constant (214578) }).AsReadOnly();
-      Expect.Call (InvokeVisitExpressionListMethod (elementInit.Arguments)).Return (newArguments);
+      Expect.Call (InvokeVisitExpressionListMethod (elementInit.Arguments, "VisitElementInit")).Return (newArguments);
 
       var result = (ElementInit) InvokeAndCheckVisitObject ("VisitElementInit", elementInit);
       Assert.That (result, Is.Not.SameAs (elementInit));
@@ -646,7 +646,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       Expect.Call (VisitorMock.VisitExpression (expr1)).Return (expr1);
       Expect.Call (VisitorMock.VisitExpression (expr2)).Return (expr2);
 
-      ReadOnlyCollection<Expression> result = InvokeAndCheckVisitExpressionList (expressions);
+      ReadOnlyCollection<Expression> result = InvokeAndCheckVisitExpressionList (expressions, "VisitExpressionList");
 
       Assert.That (result, Is.SameAs (expressions));
     }
@@ -664,7 +664,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       Expect.Call (VisitorMock.VisitExpression (expr2)).Return (newExpression);
       Expect.Call (VisitorMock.VisitExpression (expr3)).Return (expr3);
 
-      ReadOnlyCollection<Expression> result = InvokeAndCheckVisitExpressionList (expressions);
+      ReadOnlyCollection<Expression> result = InvokeAndCheckVisitExpressionList (expressions, "VisitExpressionList");
 
       Assert.That (result, Is.Not.SameAs (expressions));
       Assert.That (result, Is.EqualTo (new object[] { expr1, newExpression, expr3 }));
@@ -687,7 +687,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
 
       try
       {
-        InvokeAndCheckVisitExpressionList (expressions);
+        InvokeAndCheckVisitExpressionList (expressions, "VisitExpressionList");
       }
       catch (TargetInvocationException ex)
       {

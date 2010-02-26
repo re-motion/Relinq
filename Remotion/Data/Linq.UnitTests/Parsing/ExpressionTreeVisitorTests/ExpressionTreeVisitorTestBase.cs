@@ -58,9 +58,9 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       return InvokeAndCheckVisitMethod (delegate { return InvokeVisitMethod (methodName, argument); }, argument);
     }
 
-    protected ReadOnlyCollection<T> InvokeAndCheckVisitExpressionList<T> (ReadOnlyCollection<T> expressions) where T : Expression
+    protected ReadOnlyCollection<T> InvokeAndCheckVisitExpressionList<T> (ReadOnlyCollection<T> expressions, string methodName) where T : Expression
     {
-      return InvokeAndCheckVisitMethod (arg => InvokeVisitExpressionListMethod (expressions), expressions);
+      return InvokeAndCheckVisitMethod (arg => InvokeVisitExpressionListMethod (expressions, methodName), expressions);
     }
 
     protected T InvokeAndCheckVisitAndConvertExpression<T> (T expression, string methodName) where T : Expression
@@ -97,11 +97,9 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       return _visitorMock.GetType ().GetMethod (methodName, BindingFlags.NonPublic | BindingFlags.Instance).Invoke (_visitorMock, new[] { argument });
     }
 
-    protected ReadOnlyCollection<T> InvokeVisitExpressionListMethod<T> (ReadOnlyCollection<T> expressions) where T : Expression
+    protected ReadOnlyCollection<T> InvokeVisitExpressionListMethod<T> (ReadOnlyCollection<T> expressions, string methodName) where T : Expression
     {
-      return (ReadOnlyCollection<T>) _visitorMock.GetType ().GetMethod ("VisitExpressionList", BindingFlags.NonPublic | BindingFlags.Instance)
-                                         .MakeGenericMethod (typeof (T))
-                                         .Invoke (_visitorMock, new object[] { expressions });
+      return _visitorMock.VisitExpressionList (expressions, methodName);
     }
 
     protected T InvokeVisitAndConvertMethod<T> (T expression, string methodName) where T : Expression
