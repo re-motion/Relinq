@@ -25,16 +25,16 @@ using Rhino.Mocks.Interfaces;
 
 namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
 {
-  public class ExpressionTreeVisitor_SpecificExpressionsTestBase
+  public class ExpressionTreeVisitorTestBase
   {
     private MockRepository _mockRepository;
     private ExpressionTreeVisitor _visitorMock;
 
     [SetUp]
-    public void Setup()
+    public virtual void Setup ()
     {
-      _mockRepository = new MockRepository();
-      _visitorMock = _mockRepository.StrictMock<ExpressionTreeVisitor>();
+      _mockRepository = new MockRepository ();
+      _visitorMock = _mockRepository.StrictMock<ExpressionTreeVisitor> ();
     }
 
     protected MockRepository MockRepository
@@ -61,6 +61,11 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     protected ReadOnlyCollection<T> InvokeAndCheckVisitExpressionList<T> (ReadOnlyCollection<T> expressions) where T : Expression
     {
       return InvokeAndCheckVisitMethod (arg => InvokeVisitExpressionListMethod (expressions), expressions);
+    }
+
+    protected T InvokeAndCheckVisitAndConvertExpression<T> (T expression, string methodName) where T : Expression
+    {
+      return InvokeAndCheckVisitMethod (arg => InvokeVisitAndConvertMethod (expression, methodName), expression);
     }
 
     protected ReadOnlyCollection<MemberBinding> InvokeAndCheckVisitMemberBindingList (ReadOnlyCollection<MemberBinding> expressions)
@@ -97,6 +102,13 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       return (ReadOnlyCollection<T>) _visitorMock.GetType ().GetMethod ("VisitExpressionList", BindingFlags.NonPublic | BindingFlags.Instance)
                                          .MakeGenericMethod (typeof (T))
                                          .Invoke (_visitorMock, new object[] { expressions });
+    }
+
+    protected T InvokeVisitAndConvertMethod<T> (T expression, string methodName) where T : Expression
+    {
+      return (T) _visitorMock.GetType ().GetMethod ("VisitAndConvert", BindingFlags.NonPublic | BindingFlags.Instance)
+                     .MakeGenericMethod (typeof (T))
+                     .Invoke (_visitorMock, new object[] { expression, methodName });
     }
   }
 }

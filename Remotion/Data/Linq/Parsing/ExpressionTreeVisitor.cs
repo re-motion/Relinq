@@ -117,12 +117,10 @@ namespace Remotion.Data.Linq.Parsing
     {
       var extensionExpression = expression as ExtensionExpression;
       if (extensionExpression != null)
-      {
         return extensionExpression.VisitChildren (this);
-      }
       else
       {
-        var message = string.Format ("Expression type {0} is not supported by this {1}.", expression.NodeType, GetType ().Name);
+        var message = string.Format ("Expression type {0} is not supported by this {1}.", expression.NodeType, GetType().Name);
         throw new NotSupportedException (message);
       }
     }
@@ -149,9 +147,7 @@ namespace Remotion.Data.Linq.Parsing
       Expression newRight = VisitExpression (expression.Right);
       var newConversion = (LambdaExpression) VisitExpression (expression.Conversion);
       if (newLeft != expression.Left || newRight != expression.Right || newConversion != expression.Conversion)
-      {
         return Expression.MakeBinary (expression.NodeType, newLeft, newRight, expression.IsLiftedToNull, expression.Method, newConversion);
-      }
       return expression;
     }
 
@@ -255,13 +251,35 @@ namespace Remotion.Data.Linq.Parsing
       return expression;
     }
 
+    protected virtual T VisitAndConvert<T> (T expression, string methodName) where T: Expression
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+      ArgumentUtility.CheckNotNull ("methodName", methodName);
+
+      var newExpression = VisitExpression (expression);
+
+      if ((newExpression as T) == null)
+      {
+        var message = string.Format (
+            "When called from '{0}', expressions of type '{1}' can only be replaced with other expressions of type '{2}'.",
+            methodName,
+            newExpression.GetType().Name,
+            typeof (T).Name);
+       
+        throw new InvalidOperationException (message);
+      }
+      return (T) newExpression;
+    }
+
     protected virtual Expression VisitMemberInitExpression (MemberInitExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       var newNewExpression = VisitExpression (expression.NewExpression) as NewExpression;
       if (newNewExpression == null)
+      {
         throw new NotSupportedException (
             "MemberInitExpressions only support non-null instances of type 'NewExpression' as their NewExpression member.");
+      }
 
       ReadOnlyCollection<MemberBinding> newBindings = VisitMemberBindingList (expression.Bindings);
       if (newNewExpression != expression.NewExpression || newBindings != expression.Bindings)
@@ -336,9 +354,12 @@ namespace Remotion.Data.Linq.Parsing
       return listBinding;
     }
 
+    // TODO: make public, add callerName parameter
     protected virtual ReadOnlyCollection<T> VisitExpressionList<T> (ReadOnlyCollection<T> expressions) where T: Expression
     {
       return VisitList (expressions, VisitExpression);
+      //var callerName = "xx";
+      //return VisitList (expressions, expression => VisitAndConvert (expression, callerName));
     }
 
     protected virtual ReadOnlyCollection<MemberBinding> VisitMemberBindingList (ReadOnlyCollection<MemberBinding> expressions)
@@ -362,7 +383,7 @@ namespace Remotion.Data.Linq.Parsing
     }
 
     private ReadOnlyCollection<T> VisitList<T> (ReadOnlyCollection<T> list, Func<T, object> visitMethod)
-        where T: class
+        where T : class
     {
       List<T> newList = null;
 
@@ -383,9 +404,36 @@ namespace Remotion.Data.Linq.Parsing
       }
 
       if (newList != null)
-        return newList.AsReadOnly();
+        return newList.AsReadOnly ();
       else
         return list;
     }
+
+    //private ReadOnlyCollection<T> VisitList<T> (ReadOnlyCollection<T> list, Func<T, T> visitMethod)
+    //    where T: class
+    //{
+    //  List<T> newList = null;
+
+    //  for (int i = 0; i < list.Count; i++)
+    //  {
+    //    T element = list[i];
+    //    T newElement = visitMethod (element) as T;
+    //    if (newElement == null)
+    //      throw new NotSupportedException ("The current list only supports objects of type '" + typeof (T).Name + "' as its elements.");
+
+    //    if (element != newElement)
+    //    {
+    //      if (newList == null)
+    //        newList = new List<T> (list);
+
+    //      newList[i] = newElement;
+    //    }
+    //  }
+
+    //  if (newList != null)
+    //    return newList.AsReadOnly();
+    //  else
+    //    return list;
+    //}
   }
 }

@@ -29,7 +29,7 @@ using Remotion.Data.Linq.UnitTests.TestUtilities;
 namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
 {
   [TestFixture]
-  public class ExpressionTreeVisitor_SpecificExpressionsTest : ExpressionTreeVisitor_SpecificExpressionsTestBase
+  public class ExpressionTreeVisitor_SpecificExpressionsTest : ExpressionTreeVisitorTestBase
   {
     [Test]
     public void VisitUnaryExpression_Unchanges ()
@@ -642,9 +642,12 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       Expression expr1 = Expression.Constant (1);
       Expression expr2 = Expression.Constant (2);
       ReadOnlyCollection<Expression> expressions = new List<Expression> (new[] { expr1, expr2 }).AsReadOnly();
+
       Expect.Call (VisitorMock.VisitExpression (expr1)).Return (expr1);
       Expect.Call (VisitorMock.VisitExpression (expr2)).Return (expr2);
+
       ReadOnlyCollection<Expression> result = InvokeAndCheckVisitExpressionList (expressions);
+
       Assert.That (result, Is.SameAs (expressions));
     }
 
@@ -656,10 +659,13 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       Expression expr3 = Expression.Constant (3);
       Expression newExpression = Expression.Constant (4);
       ReadOnlyCollection<Expression> expressions = new List<Expression> (new[] { expr1, expr2, expr3 }).AsReadOnly();
+
       Expect.Call (VisitorMock.VisitExpression (expr1)).Return (expr1);
       Expect.Call (VisitorMock.VisitExpression (expr2)).Return (newExpression);
       Expect.Call (VisitorMock.VisitExpression (expr3)).Return (expr3);
+
       ReadOnlyCollection<Expression> result = InvokeAndCheckVisitExpressionList (expressions);
+
       Assert.That (result, Is.Not.SameAs (expressions));
       Assert.That (result, Is.EqualTo (new object[] { expr1, newExpression, expr3 }));
     }

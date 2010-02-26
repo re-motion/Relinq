@@ -24,7 +24,7 @@ using Rhino.Mocks;
 namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
 {
   [TestFixture]
-  public class ExpressionTreeVisitor_BinaryExpressionsTest : ExpressionTreeVisitor_SpecificExpressionsTestBase
+  public class ExpressionTreeVisitor_BinaryExpressionsTest : ExpressionTreeVisitorTestBase
   {
     [Test]
     public void VisitBinaryExpression_Unchanged ()

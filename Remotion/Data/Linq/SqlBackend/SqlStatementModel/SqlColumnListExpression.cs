@@ -47,6 +47,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
     protected internal override Expression VisitChildren (ExpressionTreeVisitor visitor)
     {
       // TODO: Refactor as soon as ExpressionTreeVisitor.VisitList is public.
+
       var newColumns = new List<SqlColumnExpression>();
       bool isAnyColumnChanged = false;
 

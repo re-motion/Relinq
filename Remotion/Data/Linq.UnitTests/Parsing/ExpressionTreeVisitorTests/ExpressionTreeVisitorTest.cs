@@ -18,38 +18,30 @@ using System;
 using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;
-using NUnit.Framework.SyntaxHelpers;
 
 namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
 {
   [TestFixture]
-  public class ExpressionTreeVisitorTest
+  public class ExpressionTreeVisitorTest : ExpressionTreeVisitorTestBase
   {
-    private MockRepository _mockRepository;
-
-    [SetUp]
-    public void Setup()
-    {
-      _mockRepository = new MockRepository();
-    }
-
     [Test]
     public void VisitExpression_ExtensionExpression ()
     {
       var expectedResult = Expression.Constant (0);
 
-      var visitor = new TestableExpressionTreeVisitor ();
-      
-      var extensionExpressionMock = _mockRepository.StrictMock<ExtensionExpression> (typeof (int));
+      var visitor = new TestableExpressionTreeVisitor();
+
+      var extensionExpressionMock = MockRepository.StrictMock<ExtensionExpression> (typeof (int));
       extensionExpressionMock.Expect (mock => mock.Accept (visitor)).Return (expectedResult);
-      extensionExpressionMock.Replay ();
+      extensionExpressionMock.Replay();
 
       var result = visitor.VisitExpression (extensionExpressionMock);
-      extensionExpressionMock.VerifyAllExpectations ();
+      extensionExpressionMock.VerifyAllExpectations();
 
       Assert.That (result, Is.SameAs (expectedResult));
     }
@@ -57,148 +49,222 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     [Test]
     public void VisitExpression_Unknown ()
     {
-      CheckDelegation (_mockRepository, "VisitUnknownExpression", (ExpressionType) (-1));
+      CheckDelegation ("VisitUnknownExpression", (ExpressionType) (-1));
     }
 
 
     [Test]
     public void VisitExpression_Null ()
     {
-      ExpressionTreeVisitor visitor = _mockRepository.PartialMock<ExpressionTreeVisitor>();
-      _mockRepository.ReplayAll ();
+      ExpressionTreeVisitor visitor = MockRepository.PartialMock<ExpressionTreeVisitor>();
+      MockRepository.ReplayAll();
       Assert.IsNull (visitor.VisitExpression (null));
     }
 
     [Test]
     public void VisitExpression_Binary ()
     {
-      CheckDelegation (_mockRepository, "VisitBinaryExpression", ExpressionType.Add, ExpressionType.AddChecked, ExpressionType.Divide,
-          ExpressionType.Modulo, ExpressionType.Multiply, ExpressionType.MultiplyChecked, ExpressionType.Power, ExpressionType.Subtract,
-          ExpressionType.SubtractChecked, ExpressionType.And, ExpressionType.Or, ExpressionType.ExclusiveOr, ExpressionType.LeftShift,
-          ExpressionType.RightShift, ExpressionType.AndAlso, ExpressionType.OrElse, ExpressionType.Equal, ExpressionType.NotEqual,
-          ExpressionType.GreaterThanOrEqual, ExpressionType.GreaterThan, ExpressionType.LessThan, ExpressionType.LessThanOrEqual,
-          ExpressionType.Coalesce, ExpressionType.ArrayIndex);
+      CheckDelegation (
+          "VisitBinaryExpression",
+          ExpressionType.Add,
+          ExpressionType.AddChecked,
+          ExpressionType.Divide,
+          ExpressionType.Modulo,
+          ExpressionType.Multiply,
+          ExpressionType.MultiplyChecked,
+          ExpressionType.Power,
+          ExpressionType.Subtract,
+          ExpressionType.SubtractChecked,
+          ExpressionType.And,
+          ExpressionType.Or,
+          ExpressionType.ExclusiveOr,
+          ExpressionType.LeftShift,
+          ExpressionType.RightShift,
+          ExpressionType.AndAlso,
+          ExpressionType.OrElse,
+          ExpressionType.Equal,
+          ExpressionType.NotEqual,
+          ExpressionType.GreaterThanOrEqual,
+          ExpressionType.GreaterThan,
+          ExpressionType.LessThan,
+          ExpressionType.LessThanOrEqual,
+          ExpressionType.Coalesce,
+          ExpressionType.ArrayIndex);
     }
 
     [Test]
     public void VisitExpression_Conditional ()
     {
-      CheckDelegation (_mockRepository, "VisitConditionalExpression", ExpressionType.Conditional);
+      CheckDelegation ("VisitConditionalExpression", ExpressionType.Conditional);
     }
 
     [Test]
     public void VisitExpression_Constant ()
     {
-      CheckDelegation (_mockRepository, "VisitConstantExpression", ExpressionType.Constant);
+      CheckDelegation ("VisitConstantExpression", ExpressionType.Constant);
     }
 
     [Test]
     public void VisitExpression_Invoke ()
     {
-      CheckDelegation (_mockRepository, "VisitInvocationExpression", ExpressionType.Invoke);
+      CheckDelegation ("VisitInvocationExpression", ExpressionType.Invoke);
     }
 
     [Test]
     public void VisitExpression_Lambda ()
     {
-      CheckDelegation (_mockRepository, "VisitLambdaExpression", ExpressionType.Lambda);
+      CheckDelegation ("VisitLambdaExpression", ExpressionType.Lambda);
     }
 
     [Test]
     public void VisitExpression_Member ()
     {
-      CheckDelegation (_mockRepository, "VisitMemberExpression", ExpressionType.MemberAccess);
+      CheckDelegation ("VisitMemberExpression", ExpressionType.MemberAccess);
     }
 
     [Test]
     public void VisitExpression_MethodCall ()
     {
-      CheckDelegation (_mockRepository, "VisitMethodCallExpression", ExpressionType.Call);
+      CheckDelegation ("VisitMethodCallExpression", ExpressionType.Call);
     }
 
     [Test]
     public void VisitExpression_New ()
     {
-      CheckDelegation (_mockRepository, "VisitNewExpression", ExpressionType.New);
+      CheckDelegation ("VisitNewExpression", ExpressionType.New);
     }
 
     [Test]
     public void VisitExpression_NewAray ()
     {
-      CheckDelegation (_mockRepository, "VisitNewArrayExpression", ExpressionType.NewArrayBounds, ExpressionType.NewArrayInit);
+      CheckDelegation ("VisitNewArrayExpression", ExpressionType.NewArrayBounds, ExpressionType.NewArrayInit);
     }
 
     [Test]
     public void VisitExpression_MemberInit ()
     {
-      CheckDelegation (_mockRepository, "VisitMemberInitExpression", ExpressionType.MemberInit);
+      CheckDelegation ("VisitMemberInitExpression", ExpressionType.MemberInit);
     }
 
     [Test]
     public void VisitExpression_ListInit ()
     {
-      CheckDelegation (_mockRepository, "VisitListInitExpression", ExpressionType.ListInit);
+      CheckDelegation ("VisitListInitExpression", ExpressionType.ListInit);
     }
 
     [Test]
     public void VisitExpression_Parameter ()
     {
-      CheckDelegation (_mockRepository, "VisitParameterExpression", ExpressionType.Parameter);
+      CheckDelegation ("VisitParameterExpression", ExpressionType.Parameter);
     }
 
     [Test]
     public void VisitExpression_TypeBinary ()
     {
-      CheckDelegation (_mockRepository, "VisitTypeBinaryExpression", ExpressionType.TypeIs);
+      CheckDelegation ("VisitTypeBinaryExpression", ExpressionType.TypeIs);
     }
 
     [Test]
     public void VisitExpression_Unary ()
     {
-      CheckDelegation (_mockRepository, "VisitUnaryExpression", ExpressionType.UnaryPlus, ExpressionType.Negate, ExpressionType.NegateChecked,
-          ExpressionType.Not, ExpressionType.Convert, ExpressionType.ConvertChecked, ExpressionType.ArrayLength, ExpressionType.Quote,
+      CheckDelegation (
+          "VisitUnaryExpression",
+          ExpressionType.UnaryPlus,
+          ExpressionType.Negate,
+          ExpressionType.NegateChecked,
+          ExpressionType.Not,
+          ExpressionType.Convert,
+          ExpressionType.ConvertChecked,
+          ExpressionType.ArrayLength,
+          ExpressionType.Quote,
           ExpressionType.TypeAs);
     }
 
     [Test]
     public void VisitExpression_SubQuery ()
     {
-      QueryModel queryModel = ExpressionHelper.CreateQueryModel_Cook ();
-      CheckDelegation (_mockRepository, "VisitSubQueryExpression", new SubQueryExpression (queryModel));
+      QueryModel queryModel = ExpressionHelper.CreateQueryModel_Cook();
+      CheckDelegation ("VisitSubQueryExpression", new SubQueryExpression (queryModel));
     }
 
     [Test]
     public void VisitExpression_QuerySourceReference ()
     {
-      var clause = ExpressionHelper.CreateMainFromClause_Int ();
-      CheckDelegation (_mockRepository, "VisitQuerySourceReferenceExpression", new QuerySourceReferenceExpression (clause));
+      var clause = ExpressionHelper.CreateMainFromClause_Int();
+      CheckDelegation ("VisitQuerySourceReferenceExpression", new QuerySourceReferenceExpression (clause));
     }
-    
-    private void CheckDelegation (MockRepository repository, string methodName, params ExpressionType[] expressionTypes)
+
+    [Test]
+    public void VisitAndConvert_NoConvert ()
+    {
+      BinaryExpression expression = (BinaryExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Add);
+      Expect.Call (VisitorMock.VisitExpression (expression)).Return (expression);
+
+      var result = InvokeAndCheckVisitAndConvertExpression (expression, "Add");
+
+      Assert.That (expression, Is.EqualTo (result));
+    }
+
+    [Test]
+    public void VisitAndConvert_NewExpression ()
+    {
+      BinaryExpression expression = (BinaryExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Add);
+      BinaryExpression newExpression = (BinaryExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Or);
+
+      Expect.Call (VisitorMock.VisitExpression (expression)).Return (newExpression);
+
+      var result = InvokeAndCheckVisitAndConvertExpression (expression, "Add");
+
+      Assert.That (newExpression, Is.EqualTo (result));
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException),
+        ExpectedMessage =
+            "When called from 'VisitMethod', expressions of type 'NewExpression' can only be replaced with other expressions of type 'BinaryExpression'.")
+    ]
+    public void VisitAndConvert_ThrowException ()
+    {
+      BinaryExpression expression = (BinaryExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Add);
+      NewExpression newExpression = (NewExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.New);
+
+      Expect.Call (VisitorMock.VisitExpression (expression)).Return (newExpression);
+
+      try
+      {
+        InvokeAndCheckVisitAndConvertExpression (expression, "VisitMethod");
+      }
+      catch (TargetInvocationException ex)
+      {
+        throw ex.InnerException;
+      }
+    }
+
+    private void CheckDelegation (string methodName, params ExpressionType[] expressionTypes)
     {
       Expression[] expressions = Array.ConvertAll<ExpressionType, Expression> (expressionTypes, ExpressionInstanceCreator.GetExpressionInstance);
 
-      CheckDelegation(repository, methodName, expressions);
+      CheckDelegation (methodName, expressions);
     }
 
-    private void CheckDelegation (MockRepository repository, string methodName, params Expression[] expressions)
+    private void CheckDelegation (string methodName, params Expression[] expressions)
     {
-      var visitorMock = repository.StrictMock<ExpressionTreeVisitor> ();
+      var visitorMock = MockRepository.StrictMock<ExpressionTreeVisitor>();
 
-      MethodInfo methodToBeCalled = visitorMock.GetType ().GetMethod (methodName, BindingFlags.NonPublic | BindingFlags.Instance);
+      MethodInfo methodToBeCalled = visitorMock.GetType().GetMethod (methodName, BindingFlags.NonPublic | BindingFlags.Instance);
       Assert.IsNotNull (methodToBeCalled);
 
       foreach (Expression expression in expressions)
       {
-        repository.BackToRecord (visitorMock);
+        MockRepository.BackToRecord (visitorMock);
         Expect.Call (visitorMock.VisitExpression (expression)).CallOriginalMethod (OriginalCallOptions.CreateExpectation);
         Expect.Call (methodToBeCalled.Invoke (visitorMock, new object[] { expression })).Return (expression);
-        
-        repository.Replay (visitorMock);
+
+        MockRepository.Replay (visitorMock);
 
         object result = visitorMock.VisitExpression (expression);
         Assert.AreSame (expression, result);
-        repository.Verify (visitorMock);
+        MockRepository.Verify (visitorMock);
       }
     }
   }
