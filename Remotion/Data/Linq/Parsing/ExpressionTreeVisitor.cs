@@ -113,6 +113,67 @@ namespace Remotion.Data.Linq.Parsing
       }
     }
 
+    public virtual T VisitAndConvert<T> (T expression, string methodName) where T : Expression
+    {
+      ArgumentUtility.CheckNotNull ("methodName", methodName);
+
+      if (expression == null)
+        return null;
+
+      var newExpression = VisitExpression (expression) as T;
+
+      if (newExpression == null)
+      {
+        var message = string.Format (
+            "When called from '{0}', expressions of type '{1}' can only be replaced with other non-null expressions of type '{2}'.",
+            methodName,
+            typeof (T).Name,
+            typeof (T).Name);
+
+        throw new InvalidOperationException (message);
+      }
+
+      return newExpression;
+    }
+
+    public virtual ReadOnlyCollection<T> VisitAndConvert<T> (ReadOnlyCollection<T> expressions, string callerName) where T : Expression
+    {
+      ArgumentUtility.CheckNotNull ("expressions", expressions);
+      ArgumentUtility.CheckNotNullOrEmpty ("callerName", callerName);
+
+      return VisitList (expressions, expression => VisitAndConvert (expression, callerName));
+    }
+
+    public ReadOnlyCollection<T> VisitList<T> (ReadOnlyCollection<T> list, Func<T, T> visitMethod)
+        where T : class
+    {
+      ArgumentUtility.CheckNotNull ("list", list);
+      ArgumentUtility.CheckNotNull ("visitMethod", visitMethod);
+
+      List<T> newList = null;
+
+      for (int i = 0; i < list.Count; i++)
+      {
+        T element = list[i];
+        T newElement = visitMethod (element);
+        if (newElement == null)
+          throw new NotSupportedException ("The current list only supports objects of type '" + typeof (T).Name + "' as its elements.");
+
+        if (element != newElement)
+        {
+          if (newList == null)
+            newList = new List<T> (list);
+
+          newList[i] = newElement;
+        }
+      }
+
+      if (newList != null)
+        return newList.AsReadOnly ();
+      else
+        return list;
+    }
+
     protected internal virtual Expression VisitUnknownExpression (Expression expression)
     {
       var extensionExpression = expression as ExtensionExpression;
@@ -251,26 +312,6 @@ namespace Remotion.Data.Linq.Parsing
       return expression;
     }
 
-    protected virtual T VisitAndConvert<T> (T expression, string methodName) where T: Expression
-    {
-      ArgumentUtility.CheckNotNull ("expression", expression);
-      ArgumentUtility.CheckNotNull ("methodName", methodName);
-
-      var newExpression = VisitExpression (expression);
-
-      if ((newExpression as T) == null)
-      {
-        var message = string.Format (
-            "When called from '{0}', expressions of type '{1}' can only be replaced with other expressions of type '{2}'.",
-            methodName,
-            newExpression.GetType().Name,
-            typeof (T).Name);
-       
-        throw new InvalidOperationException (message);
-      }
-      return (T) newExpression;
-    }
-
     protected virtual Expression VisitMemberInitExpression (MemberInitExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
@@ -354,11 +395,6 @@ namespace Remotion.Data.Linq.Parsing
       return listBinding;
     }
 
-    public virtual ReadOnlyCollection<T> VisitAndConvert<T> (ReadOnlyCollection<T> expressions, string callerName) where T: Expression
-    {
-       return VisitList (expressions, expression => VisitAndConvert (expression, callerName));
-    }
-
     protected virtual ReadOnlyCollection<MemberBinding> VisitMemberBindingList (ReadOnlyCollection<MemberBinding> expressions)
     {
       return VisitList (expressions, VisitMemberBinding);
@@ -377,33 +413,6 @@ namespace Remotion.Data.Linq.Parsing
     protected virtual Expression VisitQuerySourceReferenceExpression (QuerySourceReferenceExpression expression)
     {
       return expression;
-    }
-
-    public ReadOnlyCollection<T> VisitList<T> (ReadOnlyCollection<T> list, Func<T, T> visitMethod)
-        where T : class
-    {
-      List<T> newList = null;
-
-      for (int i = 0; i < list.Count; i++)
-      {
-        T element = list[i];
-        T newElement = visitMethod (element);
-        if (newElement == null)
-          throw new NotSupportedException ("The current list only supports objects of type '" + typeof (T).Name + "' as its elements.");
-
-        if (element != newElement)
-        {
-          if (newList == null)
-            newList = new List<T> (list);
-
-          newList[i] = newElement;
-        }
-      }
-
-      if (newList != null)
-        return newList.AsReadOnly ();
-      else
-        return list;
     }
   }
 }

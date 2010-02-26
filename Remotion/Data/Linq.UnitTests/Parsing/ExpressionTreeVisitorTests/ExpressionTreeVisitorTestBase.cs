@@ -65,7 +65,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
 
     protected T InvokeAndCheckVisitAndConvertExpression<T> (T expression, string methodName) where T : Expression
     {
-      return InvokeAndCheckVisitMethod (arg => InvokeVisitAndConvertMethod (expression, methodName), expression);
+      return InvokeAndCheckVisitMethod (arg => VisitorMock.VisitAndConvert (expression, methodName), expression);
     }
 
     protected ReadOnlyCollection<MemberBinding> InvokeAndCheckVisitMemberBindingList (ReadOnlyCollection<MemberBinding> expressions)

@@ -197,59 +197,75 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     }
 
     [Test]
-    public void VisitAndConvert_NoConvert ()
+    public void VisitAndConvert_Single_OriginalNull ()
     {
-      BinaryExpression expression = (BinaryExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Add);
+      var result = InvokeAndCheckVisitAndConvertExpression<Expression> (null, "Add");
+      Assert.That (result, Is.Null);
+    }
+
+    [Test]
+    public void VisitAndConvert_Single_NoConvert ()
+    {
+      var expression = (BinaryExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Add);
       Expect.Call (VisitorMock.VisitExpression (expression)).Return (expression);
 
       var result = InvokeAndCheckVisitAndConvertExpression (expression, "Add");
 
-      Assert.That (expression, Is.EqualTo (result));
+      Assert.That (result, Is.SameAs (expression));
     }
 
     [Test]
-    public void VisitAndConvert_NewExpression ()
+    public void VisitAndConvert_Single_NewExpression ()
     {
-      BinaryExpression expression = (BinaryExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Add);
-      BinaryExpression newExpression = (BinaryExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Or);
+      var expression = (BinaryExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Add);
+      var newExpression = (BinaryExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Or);
 
       Expect.Call (VisitorMock.VisitExpression (expression)).Return (newExpression);
 
       var result = InvokeAndCheckVisitAndConvertExpression (expression, "Add");
 
-      Assert.That (newExpression, Is.EqualTo (result));
+      Assert.That (result, Is.SameAs (newExpression));
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException),
-        ExpectedMessage =
-            "When called from 'VisitMethod', expressions of type 'NewExpression' can only be replaced with other expressions of type 'BinaryExpression'.")
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage =
+        "When called from 'VisitMethod', expressions of type 'BinaryExpression' can only be replaced with other non-null expressions of type "
+        + "'BinaryExpression'.")
     ]
-    public void VisitAndConvert_ThrowException ()
+    public void VisitAndConvert_Single_ThrowsOnInvalidType ()
     {
-      BinaryExpression expression = (BinaryExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Add);
-      NewExpression newExpression = (NewExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.New);
+      var expression = (BinaryExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Add);
+      var newExpression = (NewExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.New);
 
       Expect.Call (VisitorMock.VisitExpression (expression)).Return (newExpression);
 
-      try
-      {
-        InvokeAndCheckVisitAndConvertExpression (expression, "VisitMethod");
-      }
-      catch (TargetInvocationException ex)
-      {
-        throw ex.InnerException;
-      }
+      InvokeAndCheckVisitAndConvertExpression (expression, "VisitMethod");
     }
 
     [Test]
-    public void VisitExpressionList_Unchanged ()
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage =
+        "When called from 'VisitMethod', expressions of type 'BinaryExpression' can only be replaced with other non-null expressions of type "
+        + "'BinaryExpression'.")
+    ]
+    public void VisitAndConvert_Single_ThrowsOnNull ()
+    {
+      var expression = (BinaryExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Add);
+
+      Expect.Call (VisitorMock.VisitExpression (expression)).Return (null);
+
+      InvokeAndCheckVisitAndConvertExpression (expression, "VisitMethod");
+    }
+
+    [Test]
+    public void VisitList_Unchanged ()
     {
       Expression expr1 = Expression.Constant (1);
       ReadOnlyCollection<Expression> expressions = new List<Expression> (new[] { expr1 }).AsReadOnly ();
 
       Expect.Call (VisitorMock.VisitExpression (expr1)).Return (expr1);
+
       var result = VisitorMock.VisitList (expressions, arg => InvokeAndCheckVisitAndConvertExpression (expr1, "VisitAndConvert"));
+      
       Assert.That (result, Is.SameAs (expressions));
     }
 
@@ -275,6 +291,37 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       ReadOnlyCollection<Expression> expressions = new List<Expression> (new[] { expr1 }).AsReadOnly ();
 
       VisitorMock.VisitList (expressions, arg => null);
+    }
+
+    [Test]
+    [Ignore ("Bug in RhinoMocks currently makes it impossible to run this test.")]
+    public void VisitAndConvert_Collection ()
+    {
+      var expr1 = Expression.Constant (1);
+      var expressions = new List<ConstantExpression> (new[] { expr1 }).AsReadOnly ();
+
+      Expect.Call (VisitorMock.VisitExpression (expr1)).Return (expr1);
+      VisitorMock.Replay ();
+
+      var result = VisitorMock.VisitAndConvert (expressions, "Whatever");
+
+      Assert.That (result, Is.SameAs (expressions));
+      VisitorMock.VerifyAllExpectations ();
+    }
+
+    [Test]
+    [Ignore ("Bug in RhinoMocks currently makes it impossible to run this test.")]
+    public void VisitAndConvert_Collection_ExceptionUsesCallerName ()
+    {
+      var constantExpression = Expression.Constant (1);
+      var expressions = new List<ConstantExpression> (new[] { constantExpression }).AsReadOnly ();
+
+      var newExpression = (NewExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.New);
+
+      Expect.Call (VisitorMock.VisitExpression (constantExpression)).Return (newExpression);
+      VisitorMock.Replay ();
+
+      VisitorMock.VisitAndConvert (expressions, "Whatever");
     }
 
     private void CheckDelegation (string methodName, params ExpressionType[] expressionTypes)
