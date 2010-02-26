@@ -15,6 +15,8 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
@@ -233,6 +235,65 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       try
       {
         InvokeAndCheckVisitAndConvertExpression (expression, "VisitMethod");
+      }
+      catch (TargetInvocationException ex)
+      {
+        throw ex.InnerException;
+      }
+    }
+
+    [Test]
+    public void VisitExpressionList_Unchanged ()
+    {
+      Expression expr1 = Expression.Constant (1);
+      Expression expr2 = Expression.Constant (2);
+      ReadOnlyCollection<Expression> expressions = new List<Expression> (new[] { expr1, expr2 }).AsReadOnly ();
+
+      Expect.Call (VisitorMock.VisitExpression (expr1)).Return (expr1);
+      Expect.Call (VisitorMock.VisitExpression (expr2)).Return (expr2);
+
+      ReadOnlyCollection<Expression> result = InvokeAndCheckVisitExpressionList (expressions, "VisitExpressionList");
+
+      Assert.That (result, Is.SameAs (expressions));
+    }
+
+    [Test]
+    public void VisitExpressionList_Changed ()
+    {
+      Expression expr1 = Expression.Constant (1);
+      Expression expr2 = Expression.Constant (2);
+      Expression expr3 = Expression.Constant (3);
+      Expression newExpression = Expression.Constant (4);
+      ReadOnlyCollection<Expression> expressions = new List<Expression> (new[] { expr1, expr2, expr3 }).AsReadOnly ();
+
+      Expect.Call (VisitorMock.VisitExpression (expr1)).Return (expr1);
+      Expect.Call (VisitorMock.VisitExpression (expr2)).Return (newExpression);
+      Expect.Call (VisitorMock.VisitExpression (expr3)).Return (expr3);
+
+      ReadOnlyCollection<Expression> result = InvokeAndCheckVisitExpressionList (expressions, "VisitExpressionList");
+
+      Assert.That (result, Is.Not.SameAs (expressions));
+      Assert.That (result, Is.EqualTo (new object[] { expr1, newExpression, expr3 }));
+    }
+
+    [Test]
+    [ExpectedException (typeof (NotSupportedException),
+        ExpectedMessage = "The current list only supports objects of type 'ConstantExpression' as its elements.")]
+    public void VisitExpressionList_Changed_InvalidType ()
+    {
+      ConstantExpression expr1 = Expression.Constant (1);
+      ConstantExpression expr2 = Expression.Constant (2);
+      ConstantExpression expr3 = Expression.Constant (3);
+      ParameterExpression newExpression = Expression.Parameter (typeof (int), "a");
+
+      ReadOnlyCollection<ConstantExpression> expressions = new List<ConstantExpression> (new[] { expr1, expr2, expr3 }).AsReadOnly ();
+      Expect.Call (VisitorMock.VisitExpression (expr1)).Return (expr1);
+      Expect.Call (VisitorMock.VisitExpression (expr2)).Return (newExpression);
+      Expect.Call (VisitorMock.VisitExpression (expr3)).Return (expr3);
+
+      try
+      {
+        InvokeAndCheckVisitExpressionList (expressions, "VisitExpressionList");
       }
       catch (TargetInvocationException ex)
       {
