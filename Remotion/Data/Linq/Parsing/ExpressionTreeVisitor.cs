@@ -186,7 +186,7 @@ namespace Remotion.Data.Linq.Parsing
     protected virtual Expression VisitLambdaExpression (LambdaExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      ReadOnlyCollection<ParameterExpression> newParameters = VisitExpressionList (expression.Parameters, "VisitLambdaExpression");
+      ReadOnlyCollection<ParameterExpression> newParameters = VisitAndConvert (expression.Parameters, "VisitLambdaExpression");
       Expression newBody = VisitExpression (expression.Body);
       if ((newBody != expression.Body) || (newParameters != expression.Parameters))
         return Expression.Lambda (expression.Type, newBody, newParameters);
@@ -197,7 +197,7 @@ namespace Remotion.Data.Linq.Parsing
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       Expression newObject = VisitExpression (expression.Object);
-      ReadOnlyCollection<Expression> newArguments = VisitExpressionList (expression.Arguments, "VisitMethodCallExpression");
+      ReadOnlyCollection<Expression> newArguments = VisitAndConvert (expression.Arguments, "VisitMethodCallExpression");
       if ((newObject != expression.Object) || (newArguments != expression.Arguments))
         return Expression.Call (newObject, expression.Method, newArguments);
       return expression;
@@ -207,7 +207,7 @@ namespace Remotion.Data.Linq.Parsing
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       Expression newExpression = VisitExpression (expression.Expression);
-      ReadOnlyCollection<Expression> newArguments = VisitExpressionList (expression.Arguments, "VisitInvocationExpression");
+      ReadOnlyCollection<Expression> newArguments = VisitAndConvert (expression.Arguments, "VisitInvocationExpression");
       if ((newExpression != expression.Expression) || (newArguments != expression.Arguments))
         return Expression.Invoke (newExpression, newArguments);
       return expression;
@@ -225,7 +225,7 @@ namespace Remotion.Data.Linq.Parsing
     protected virtual Expression VisitNewExpression (NewExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      ReadOnlyCollection<Expression> newArguments = VisitExpressionList (expression.Arguments, "VisitNewExpression");
+      ReadOnlyCollection<Expression> newArguments = VisitAndConvert (expression.Arguments, "VisitNewExpression");
       if (newArguments != expression.Arguments)
       {
         if (expression.Members == null)
@@ -239,7 +239,7 @@ namespace Remotion.Data.Linq.Parsing
     protected virtual Expression VisitNewArrayExpression (NewArrayExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      ReadOnlyCollection<Expression> newExpressions = VisitExpressionList (expression.Expressions, "VisitNewArrayExpression");
+      ReadOnlyCollection<Expression> newExpressions = VisitAndConvert (expression.Expressions, "VisitNewArrayExpression");
       if (newExpressions != expression.Expressions)
       {
         var elementType = expression.Type.GetElementType();
@@ -302,7 +302,7 @@ namespace Remotion.Data.Linq.Parsing
     protected virtual ElementInit VisitElementInit (ElementInit elementInit)
     {
       ArgumentUtility.CheckNotNull ("elementInit", elementInit);
-      ReadOnlyCollection<Expression> newArguments = VisitExpressionList (elementInit.Arguments, "VisitElementInit");
+      ReadOnlyCollection<Expression> newArguments = VisitAndConvert (elementInit.Arguments, "VisitElementInit");
       if (newArguments != elementInit.Arguments)
         return Expression.ElementInit (elementInit.AddMethod, newArguments);
       return elementInit;
@@ -354,7 +354,7 @@ namespace Remotion.Data.Linq.Parsing
       return listBinding;
     }
 
-    public virtual ReadOnlyCollection<T> VisitExpressionList<T> (ReadOnlyCollection<T> expressions, string callerName) where T: Expression
+    public virtual ReadOnlyCollection<T> VisitAndConvert<T> (ReadOnlyCollection<T> expressions, string callerName) where T: Expression
     {
        return VisitList (expressions, expression => VisitAndConvert (expression, callerName));
     }
