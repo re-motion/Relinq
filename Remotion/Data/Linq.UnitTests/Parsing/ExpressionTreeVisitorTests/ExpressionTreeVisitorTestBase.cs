@@ -60,7 +60,7 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
 
     protected ReadOnlyCollection<T> InvokeAndCheckVisitExpressionList<T> (ReadOnlyCollection<T> expressions, string methodName) where T : Expression
     {
-      return InvokeAndCheckVisitMethod (arg => InvokeVisitExpressionListMethod (expressions, methodName), expressions);
+      return InvokeAndCheckVisitMethod (arg => VisitorMock.VisitExpressionList (expressions, methodName), expressions);
     }
 
     protected T InvokeAndCheckVisitAndConvertExpression<T> (T expression, string methodName) where T : Expression
@@ -95,11 +95,6 @@ namespace Remotion.Data.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     protected object InvokeVisitMethod (string methodName, object argument)
     {
       return _visitorMock.GetType ().GetMethod (methodName, BindingFlags.NonPublic | BindingFlags.Instance).Invoke (_visitorMock, new[] { argument });
-    }
-
-    protected ReadOnlyCollection<T> InvokeVisitExpressionListMethod<T> (ReadOnlyCollection<T> expressions, string methodName) where T : Expression
-    {
-      return _visitorMock.VisitExpressionList (expressions, methodName);
     }
 
     protected T InvokeVisitAndConvertMethod<T> (T expression, string methodName) where T : Expression

@@ -354,12 +354,9 @@ namespace Remotion.Data.Linq.Parsing
       return listBinding;
     }
 
-    // TODO: make public, add callerName parameter
     public virtual ReadOnlyCollection<T> VisitExpressionList<T> (ReadOnlyCollection<T> expressions, string callerName) where T: Expression
     {
-      return VisitList (expressions, VisitExpression);
-      //var callerName = "xx";
-      //return VisitList (expressions, expression => VisitAndConvert (expression, callerName));
+       return VisitList (expressions, expression => VisitAndConvert (expression, callerName));
     }
 
     protected virtual ReadOnlyCollection<MemberBinding> VisitMemberBindingList (ReadOnlyCollection<MemberBinding> expressions)
@@ -382,7 +379,7 @@ namespace Remotion.Data.Linq.Parsing
       return expression;
     }
 
-    private ReadOnlyCollection<T> VisitList<T> (ReadOnlyCollection<T> list, Func<T, object> visitMethod)
+    public ReadOnlyCollection<T> VisitList<T> (ReadOnlyCollection<T> list, Func<T, T> visitMethod)
         where T : class
     {
       List<T> newList = null;
@@ -390,7 +387,7 @@ namespace Remotion.Data.Linq.Parsing
       for (int i = 0; i < list.Count; i++)
       {
         T element = list[i];
-        T newElement = visitMethod (element) as T;
+        T newElement = visitMethod (element);
         if (newElement == null)
           throw new NotSupportedException ("The current list only supports objects of type '" + typeof (T).Name + "' as its elements.");
 
@@ -408,32 +405,5 @@ namespace Remotion.Data.Linq.Parsing
       else
         return list;
     }
-
-    //private ReadOnlyCollection<T> VisitList<T> (ReadOnlyCollection<T> list, Func<T, T> visitMethod)
-    //    where T: class
-    //{
-    //  List<T> newList = null;
-
-    //  for (int i = 0; i < list.Count; i++)
-    //  {
-    //    T element = list[i];
-    //    T newElement = visitMethod (element) as T;
-    //    if (newElement == null)
-    //      throw new NotSupportedException ("The current list only supports objects of type '" + typeof (T).Name + "' as its elements.");
-
-    //    if (element != newElement)
-    //    {
-    //      if (newList == null)
-    //        newList = new List<T> (list);
-
-    //      newList[i] = newElement;
-    //    }
-    //  }
-
-    //  if (newList != null)
-    //    return newList.AsReadOnly();
-    //  else
-    //    return list;
-    //}
   }
 }
