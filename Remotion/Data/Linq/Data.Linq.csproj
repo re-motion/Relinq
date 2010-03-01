@@ -167,7 +167,7 @@
     <Compile Include="SqlBackend\SqlStatementModel\AbstractTableSource.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlTableSource.cs" />
     <Compile Include="Transformations\SubQueryFromClauseFlattener.cs" />
-    <Compile Include="UniqueIdentifierGenerator.cs" />
+    <Compile Include="SqlBackend\UniqueIdentifierGenerator.cs" />
     <Compile Include="EagerFetching\FetchOneRequest.cs" />
     <Compile Include="EagerFetching\FetchRequestBase.cs" />
     <Compile Include="EagerFetching\FetchManyRequest.cs" />

@@ -24,6 +24,7 @@ using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Clauses.StreamedData;
 using Remotion.Data.Linq.Collections;
 using Remotion.Data.Linq.Parsing.Structure;
+using Remotion.Data.Linq.SqlBackend;
 using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq
