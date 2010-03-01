@@ -15,6 +15,8 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
+using System.Reflection;
 using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
@@ -25,6 +27,12 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   public class SqlTable
   {
     private AbstractTableSource _tableSource;
+    private readonly Dictionary<MemberInfo, SqlTable> _joinedTables; //TODO: MultiDictionary really needed?
+    
+    public SqlTable ()
+    {
+      _joinedTables = new Dictionary<MemberInfo, SqlTable>();
+    }
 
     public AbstractTableSource TableSource
     {
@@ -39,5 +47,21 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
         _tableSource = value;
       }
     }
+
+    public SqlTable GetOrAddJoin (MemberInfo relationMember, AbstractTableSource tableSource)
+    {
+      // check that relation member is defined on type of TableSource
+      if (relationMember.DeclaringType != tableSource.Type)
+      {
+        string message = string.Format ("Type mismatch between {0} and {1}.",relationMember.DeclaringType.Name, tableSource.Type.Name);
+        throw new InvalidOperationException (message);
+      }
+
+      if (!_joinedTables.ContainsKey (relationMember))
+        _joinedTables.Add (relationMember, new SqlTable { TableSource = tableSource });
+
+      return _joinedTables[relationMember];
+    }
+
   }
 }
