@@ -45,7 +45,7 @@ namespace Remotion.Data.Linq.UnitTests.IntegrationTests.LinqSamples101.Parsing
     {
       CheckParsedQuery (
           () => from e in QuerySource.Employees where e.HireDate >= new DateTime (1994, 1, 1) select e,
-          "from Employee e in Employees where ([e].HireDate >= 01.01.1994 00:00:00) select [e]");
+          "from Employee e in Employees where ([e].HireDate >= 01/01/1994 00:00:00) select [e]");
     }
 
     [Test]

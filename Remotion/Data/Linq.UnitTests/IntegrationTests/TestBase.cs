@@ -15,7 +15,9 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Globalization;
 using System.Linq.Expressions;
+using System.Threading;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Parsing.Structure;
@@ -25,6 +27,26 @@ namespace Remotion.Data.Linq.UnitTests.IntegrationTests
 {
   public abstract class TestBase
   {
+    private CultureInfo _oldCulture;
+    private CultureInfo _oldUICulture;
+
+    [SetUp]
+    public virtual void SetUp ()
+    {
+      _oldCulture = CultureInfo.CurrentCulture;
+      _oldUICulture = CultureInfo.CurrentUICulture;
+
+      Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+      Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
+    }
+
+    [TearDown]
+    public virtual void TearDown ()
+    {
+      Thread.CurrentThread.CurrentCulture = _oldCulture;
+      Thread.CurrentThread.CurrentUICulture = _oldUICulture;
+    }
+
     protected void CheckParsedQuery<TReturn> (Expression<Func<TReturn>> actualExpression, string expectedStringRepresentation)
     {
       ArgumentUtility.CheckNotNull ("actualExpression", actualExpression);
