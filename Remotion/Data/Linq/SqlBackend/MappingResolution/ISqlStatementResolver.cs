@@ -27,6 +27,6 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
   {
     SqlTableSource ResolveConstantTableSource (ConstantTableSource tableSource);
     Expression ResolveTableReferenceExpression (SqlTableReferenceExpression tableReferenceExpression);
-    Expression ResolveMemberExpression (SqlMemberExpression memberExpression); 
+    Expression ResolveMemberExpression (SqlMemberExpression memberExpression, UniqueIdentifierGenerator generator); 
   }
 }

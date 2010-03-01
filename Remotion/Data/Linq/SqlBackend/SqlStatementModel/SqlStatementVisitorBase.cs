@@ -26,11 +26,11 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   {
     public virtual void VisitSqlStatement (SqlStatement sqlStatement)
     {
-      sqlStatement.SelectProjection = VisitSelectProjection (sqlStatement.SelectProjection);
+      sqlStatement.SelectProjection = VisitSelectProjection (sqlStatement.SelectProjection, sqlStatement.Generator);
       VisitSqlTable (sqlStatement.FromExpression);
     }
 
-    protected abstract Expression VisitSelectProjection (Expression selectProjection);
+    protected abstract Expression VisitSelectProjection (Expression selectProjection, UniqueIdentifierGenerator generator);
     protected abstract void VisitSqlTable (SqlTable sqlTable);
   }
 }

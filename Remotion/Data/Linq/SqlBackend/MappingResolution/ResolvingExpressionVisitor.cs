@@ -28,22 +28,26 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
   public class ResolvingExpressionVisitor : ThrowingExpressionTreeVisitor, ISqlExpressionVisitor
   {
     private readonly ISqlStatementResolver _resolver;
+    private UniqueIdentifierGenerator _generator;
 
-    public static Expression ResolveExpressions (Expression expression, ISqlStatementResolver resolver)
+    public static Expression ResolveExpressions (Expression expression, ISqlStatementResolver resolver, UniqueIdentifierGenerator generator)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       ArgumentUtility.CheckNotNull ("resolver", resolver);
+      ArgumentUtility.CheckNotNull ("generator", generator);
 
-      var visitor = new ResolvingExpressionVisitor (resolver);
+      var visitor = new ResolvingExpressionVisitor (resolver, generator);
       var result = visitor.VisitExpression (expression);
       return result;
     }
 
-    protected ResolvingExpressionVisitor (ISqlStatementResolver resolver)
+    protected ResolvingExpressionVisitor (ISqlStatementResolver resolver, UniqueIdentifierGenerator generator)
     {
       ArgumentUtility.CheckNotNull ("resolver", resolver);
+      ArgumentUtility.CheckNotNull ("generator", generator);
 
       _resolver = resolver;
+      _generator = generator;
     }
     
     public Expression VisitSqlTableReferenceExpression (SqlTableReferenceExpression expression)
@@ -57,7 +61,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       
-      return _resolver.ResolveMemberExpression (expression);
+      return _resolver.ResolveMemberExpression (expression, _generator);
     }
 
     protected override Exception CreateUnhandledItemException<T> (T unhandledItem, string visitMethod)
