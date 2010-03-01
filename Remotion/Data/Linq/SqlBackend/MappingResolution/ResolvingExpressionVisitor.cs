@@ -56,7 +56,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
     public Expression VisitSqlMemberExpression(SqlMemberExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-
+      
       return _resolver.ResolveMemberExpression (expression);
     }
 

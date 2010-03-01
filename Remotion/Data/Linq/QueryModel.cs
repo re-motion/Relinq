@@ -143,6 +143,15 @@ namespace Remotion.Data.Linq
     /// </summary>
     public ObservableCollection<ResultOperatorBase> ResultOperators { get; private set; }
 
+    /// <summary>
+    /// Gets the <see cref="UniqueIdentifierGenerator"/> which is used by the <see cref="QueryModel"/>.
+    /// </summary>
+    /// <returns></returns>
+    public UniqueIdentifierGenerator GetUniqueIdentfierGenerator ()
+    {
+      return _uniqueIdentifierGenerator;
+    }
+
     private void ResultOperators_ItemAdded (object sender, ObservableCollectionChangedEventArgs<ResultOperatorBase> e)
     {
       ArgumentUtility.CheckNotNull ("e.Item", e.Item);

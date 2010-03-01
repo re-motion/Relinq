@@ -30,6 +30,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
     private readonly SqlPreparationContext _sqlPreparationContext;
     private readonly SqlTable _sqlTable;
     private Expression _projectionExpression;
+    private UniqueIdentifierGenerator _generator;
 
     public SqlQueryModelVisitor ()
     {
@@ -44,7 +45,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
 
     public SqlStatement GetSqlStatement ()
     {
-      var sqlStatement = new SqlStatement (_projectionExpression, _sqlTable);
+      var sqlStatement = new SqlStatement (_projectionExpression, _sqlTable, _generator);
       return sqlStatement;
     }
 
@@ -53,6 +54,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
+      _generator = queryModel.GetUniqueIdentfierGenerator();
       _projectionExpression = SqlSelectExpressionVisitor.TranslateExpression (selectClause.Selector, _sqlPreparationContext);
     }
 
