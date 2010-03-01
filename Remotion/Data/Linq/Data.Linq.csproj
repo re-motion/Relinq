@@ -158,6 +158,7 @@
     <Compile Include="SqlBackend\SqlPreparation\SqlPreparationContext.cs" />
     <Compile Include="SqlBackend\SqlPreparation\SqlQueryModelVisitor.cs" />
     <Compile Include="SqlBackend\SqlPreparation\SqlSelectExpressionVisitor.cs" />
+    <Compile Include="SqlBackend\SqlStatementModel\SqlMemberExpression.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlStatement.cs" />
     <Compile Include="SqlBackend\MappingResolution\ISqlStatementResolver.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlStatementVisitorBase.cs" />

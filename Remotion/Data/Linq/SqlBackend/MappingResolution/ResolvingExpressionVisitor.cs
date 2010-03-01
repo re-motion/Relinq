@@ -29,8 +29,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
   {
     private readonly ISqlStatementResolver _resolver;
 
-    // TODO: Rename to ResolveExpressions.
-    public static Expression TranslateSqlTableReferenceExpressions (Expression expression, ISqlStatementResolver resolver)
+    public static Expression ResolveExpressions (Expression expression, ISqlStatementResolver resolver)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       ArgumentUtility.CheckNotNull ("resolver", resolver);
@@ -53,7 +52,14 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
 
       return _resolver.ResolveTableReferenceExpression (expression);
     }
-    
+
+    public Expression VisitSqlMemberExpression(SqlMemberExpression expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
+      return _resolver.ResolveMemberExpression (expression);
+    }
+
     protected override Exception CreateUnhandledItemException<T> (T unhandledItem, string visitMethod)
     {
       ArgumentUtility.CheckNotNull ("unhandledItem", unhandledItem);

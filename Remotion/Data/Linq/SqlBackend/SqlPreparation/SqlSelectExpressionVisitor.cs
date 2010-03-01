@@ -31,8 +31,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
   {
     private readonly SqlPreparationContext _context;
 
-    // TODO: Rename to TransalateExpression.
-    public static Expression TranslateSelectExpression (Expression projection, SqlPreparationContext context)
+    public static Expression TranslateExpression (Expression projection, SqlPreparationContext context)
     {
       ArgumentUtility.CheckNotNull ("projection", projection);
       ArgumentUtility.CheckNotNull ("context", context);
@@ -51,7 +50,15 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
     protected override Expression VisitQuerySourceReferenceExpression (QuerySourceReferenceExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      return new SqlTableReferenceExpression (_context.GetSqlTableForQuerySource(expression.ReferencedQuerySource));
+      return new SqlTableReferenceExpression (_context.GetSqlTableForQuerySource (expression.ReferencedQuerySource));
+    }
+
+    protected override Expression VisitMemberExpression (MemberExpression expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+      return
+          new SqlMemberExpression (
+              _context.GetSqlTableForQuerySource (((QuerySourceReferenceExpression) expression.Expression).ReferencedQuerySource), expression.Member);
     }
 
     protected override Exception CreateUnhandledItemException<T> (T unhandledItem, string visitMethod)

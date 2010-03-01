@@ -39,7 +39,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
     {
       ArgumentUtility.CheckNotNull ("selectProjection", selectProjection);
 
-      return ResolvingExpressionVisitor.TranslateSqlTableReferenceExpressions (selectProjection, _resolver);
+      return ResolvingExpressionVisitor.ResolveExpressions (selectProjection, _resolver);
     }
 
     protected override void VisitSqlTable (SqlTable sqlTable)

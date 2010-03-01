@@ -25,5 +25,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   public interface ISqlExpressionVisitor
   {
     Expression VisitSqlTableReferenceExpression (SqlTableReferenceExpression expression);
+    Expression VisitSqlMemberExpression (SqlMemberExpression expression);
   }
 }

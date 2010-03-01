@@ -53,7 +53,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
-      _projectionExpression = SqlSelectExpressionVisitor.TranslateSelectExpression (selectClause.Selector, _sqlPreparationContext);
+      _projectionExpression = SqlSelectExpressionVisitor.TranslateExpression (selectClause.Selector, _sqlPreparationContext);
     }
 
     public override void VisitMainFromClause (MainFromClause fromClause, QueryModel queryModel)
