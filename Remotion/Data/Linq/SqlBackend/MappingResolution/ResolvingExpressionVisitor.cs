@@ -29,6 +29,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
   {
     private readonly ISqlStatementResolver _resolver;
 
+    // TODO: Rename to ResolveExpressions.
     public static Expression TranslateSqlTableReferenceExpressions (Expression expression, ISqlStatementResolver resolver)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);

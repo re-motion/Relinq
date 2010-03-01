@@ -31,6 +31,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
   {
     private readonly SqlPreparationContext _context;
 
+    // TODO: Rename to TransalateExpression.
     public static Expression TranslateSelectExpression (Expression projection, SqlPreparationContext context)
     {
       ArgumentUtility.CheckNotNull ("projection", projection);
