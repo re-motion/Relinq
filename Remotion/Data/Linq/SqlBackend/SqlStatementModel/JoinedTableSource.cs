@@ -14,15 +14,40 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+using System;
+using System.Reflection;
+using Remotion.Data.Linq.Utilities;
+
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
   /// <summary>
-  /// Provides a visitor for implementations of <see cref="AbstractTableSource"/>.
+  /// <see cref="JoinedTableSource"/> represents the table source defined by a join in a relational database.
   /// </summary>
-  public interface ITableSourceVisitor
+  public class JoinedTableSource : AbstractTableSource
   {
-    AbstractTableSource VisitConstantTableSource (ConstantTableSource tableSource);
-    AbstractTableSource VisitSqlTableSource (SqlTableSource tableSource);
-    AbstractTableSource VisitJoinedTableSource (JoinedTableSource tableSource);
+    private readonly MemberInfo _memberInfo;
+
+    public JoinedTableSource (MemberInfo memberInfo)
+    {
+      ArgumentUtility.CheckNotNull ("memberInfo", memberInfo);
+
+      _memberInfo = memberInfo;
+    }
+
+    public MemberInfo MemberInfo
+    {
+      get { return _memberInfo; }
+    }
+    
+    public override Type Type
+    {
+      get { return _memberInfo.DeclaringType; }
+    }
+
+    public override AbstractTableSource Accept (ITableSourceVisitor visitor)
+    {
+      ArgumentUtility.CheckNotNull ("visitor", visitor);
+      return visitor.VisitJoinedTableSource (this);
+    }
   }
 }

@@ -152,6 +152,7 @@
     <Compile Include="SqlBackend\SqlStatementModel\ConstantTableSource.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\ISqlExpressionVisitor.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\ITableSourceVisitor.cs" />
+    <Compile Include="SqlBackend\SqlStatementModel\JoinedTableSource.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlColumnExpression.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlColumnListExpression.cs" />
     <Compile Include="SqlBackend\MappingResolution\ResolvingExpressionVisitor.cs" />

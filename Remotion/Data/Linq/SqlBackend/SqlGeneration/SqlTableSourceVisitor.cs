@@ -66,5 +66,10 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
       return tableSource;
     }
+
+    public AbstractTableSource VisitJoinedTableSource (JoinedTableSource tableSource)
+    {
+      throw new NotImplementedException();
+    }
   }
 }

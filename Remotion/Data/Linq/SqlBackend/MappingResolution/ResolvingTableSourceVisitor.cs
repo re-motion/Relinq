@@ -59,5 +59,10 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
       ArgumentUtility.CheckNotNull ("tableSource", tableSource);
       return tableSource;
     }
+
+    public AbstractTableSource VisitJoinedTableSource (JoinedTableSource tableSource)
+    {
+      throw new NotImplementedException();
+    }
   }
 }

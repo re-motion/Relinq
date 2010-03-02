@@ -374,6 +374,7 @@
     <Compile Include="Clauses\Expressions\ExtensionExpressionTestHelper.cs" />
     <Compile Include="SqlBackend\NotSupportedExpression.cs" />
     <Compile Include="SqlBackend\MappingResolution\ResolvingExpressionVisitorTest.cs" />
+    <Compile Include="SqlBackend\SqlStatementModel\JoinedTableSourceTest.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlColumnListExpressionTest.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlColumnnExpressionTest.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlPreparationContextTest.cs" />
