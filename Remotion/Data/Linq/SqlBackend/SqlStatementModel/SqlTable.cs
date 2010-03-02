@@ -50,7 +50,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 
     public SqlTable GetOrAddJoin (MemberInfo relationMember, AbstractTableSource tableSource)
     {
-      // check that relation member is defined on type of TableSource
       if (relationMember.DeclaringType != tableSource.Type)
       {
         string message = string.Format ("Type mismatch between {0} and {1}.",relationMember.DeclaringType.Name, tableSource.Type.Name);

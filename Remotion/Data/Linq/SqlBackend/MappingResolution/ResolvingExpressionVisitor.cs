@@ -28,7 +28,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
   public class ResolvingExpressionVisitor : ThrowingExpressionTreeVisitor, ISqlExpressionVisitor
   {
     private readonly ISqlStatementResolver _resolver;
-    private UniqueIdentifierGenerator _generator;
+    private readonly UniqueIdentifierGenerator _generator;
 
     public static Expression ResolveExpressions (Expression expression, ISqlStatementResolver resolver, UniqueIdentifierGenerator generator)
     {
