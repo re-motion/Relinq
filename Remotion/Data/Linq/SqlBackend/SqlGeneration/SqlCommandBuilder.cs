@@ -61,7 +61,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
     public string GetCommandText ()
     {
-      return _sb.ToString();
+      return _sb.ToString(); //TODO: check parameter with null values, add to _sb
     }
 
     public CommandParameter[] GetCommandParameters ()

@@ -34,7 +34,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       ArgumentUtility.CheckNotNull ("expression", expression);
       ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);
 
-      var visitor = new SqlGeneratingExpressionVisitor(commandBuilder);
+      var visitor = new SqlGeneratingExpressionVisitor (commandBuilder);
       visitor.VisitExpression (expression);
     }
 
@@ -68,18 +68,26 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       var columnName = expression.ColumnName;
       _commandBuilder.Append (string.Format ("[{0}].[{1}]", prefix, columnName));
 
-      return expression; 
+      return expression;
     }
 
-    //protected override Expression VisitConstantExpression (ConstantExpression expression)
-    //{
-    //  return base.VisitConstantExpression (expression);
-    //}
+    protected override Expression VisitConstantExpression (ConstantExpression expression)
+    {
+      if (expression.Type == typeof (bool))
+        _commandBuilder.AddParameter ((bool) expression.Value ? 1 : 0);
+      else
+        _commandBuilder.AddParameter (expression.Value);
+      
+      return expression;
+    }
 
     protected override Exception CreateUnhandledItemException<T> (T unhandledItem, string visitMethod)
     {
       throw new NotSupportedException (
-          string.Format ("The expression '{0}' cannot be translated to SQL text by this SQL generator. Expression type '{1}' is not supported.",unhandledItem,unhandledItem.GetType().Name));
+          string.Format (
+              "The expression '{0}' cannot be translated to SQL text by this SQL generator. Expression type '{1}' is not supported.",
+              unhandledItem,
+              unhandledItem.GetType().Name));
     }
   }
 }
