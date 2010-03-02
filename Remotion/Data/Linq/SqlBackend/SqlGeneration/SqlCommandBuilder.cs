@@ -48,10 +48,15 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
     public CommandParameter AddParameter (object value)
     {
-      ArgumentUtility.CheckNotNull ("value", value);
+      if (value == null)
+      {
+        var parameter = new CommandParameter ("@" + (_parameters.Count + 1), value);
+        _parameters.Add (parameter);
+        return parameter;
+      }
+
       if (IsSupportedType (value.GetType ()))
       {
-
         var parameter = new CommandParameter ("@" + (_parameters.Count + 1), value);
         _parameters.Add (parameter);
         return parameter;
