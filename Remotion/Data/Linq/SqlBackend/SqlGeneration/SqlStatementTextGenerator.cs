@@ -48,6 +48,8 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
     {
       SqlTableSourceVisitor.GenerateSql (sqlTable, sb);
     }
+
+
     
   }
 }

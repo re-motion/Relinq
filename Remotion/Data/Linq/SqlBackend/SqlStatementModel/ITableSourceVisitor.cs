@@ -24,5 +24,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
     AbstractTableSource VisitConstantTableSource (ConstantTableSource tableSource);
     AbstractTableSource VisitSqlTableSource (SqlTableSource tableSource);
     AbstractTableSource VisitJoinedTableSource (JoinedTableSource tableSource);
+    AbstractTableSource VisitSqlJoinedTableSource (SqlJoinedTableSource sqlTableSource);
   }
 }

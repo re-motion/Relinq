@@ -67,9 +67,29 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       return tableSource;
     }
 
+    public AbstractTableSource VisitSqlJoinedTableSource (SqlJoinedTableSource tableSource)
+    {
+      _sb.Append (" JOIN ");
+      _sb.Append ("[");
+      _sb.Append (tableSource.ForeignTableSource.TableName);
+      _sb.Append ("]");
+      _sb.Append (" ON ");
+      _sb.Append ("[");
+      _sb.Append (tableSource.PrimaryTableSource.TableAlias);
+      _sb.Append ("].[");
+      _sb.Append (tableSource.PrimaryKey);
+      _sb.Append ("] = [");
+      _sb.Append (tableSource.ForeignTableSource.TableAlias);
+      _sb.Append ("].[");
+      _sb.Append (tableSource.ForeignKey);
+      _sb.Append ("]");
+
+      return tableSource;
+    }
+
     public AbstractTableSource VisitJoinedTableSource (JoinedTableSource tableSource)
     {
-      throw new NotImplementedException();
+      throw new InvalidOperationException ("JoinedTableSource is not valid at this point.");
     }
   }
 }
