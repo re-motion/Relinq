@@ -26,21 +26,23 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
   /// </summary>
   public class SqlTableSourceVisitor : ITableSourceVisitor
   {
-    private readonly StringBuilder _sb;
+    //private readonly StringBuilder _sb;
+    private readonly SqlCommandBuilder _commandBuilder;
 
-    public static void GenerateSql (SqlTable sqlTable, StringBuilder sb)
+    
+    public static void GenerateSql (SqlTable sqlTable, SqlCommandBuilder commandBuilder)
     {
       ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
-      ArgumentUtility.CheckNotNull ("sb", sb);
+      ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);
 
-      var visitor = new SqlTableSourceVisitor (sb);
+      var visitor = new SqlTableSourceVisitor (commandBuilder);
       visitor.VisitTableSource (sqlTable.TableSource);
     }
 
-    protected SqlTableSourceVisitor (StringBuilder sb)
+    protected SqlTableSourceVisitor (SqlCommandBuilder commandBuilder)
     {
-      ArgumentUtility.CheckNotNull ("sb", sb);
-      _sb = sb;
+      ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);
+      _commandBuilder = commandBuilder;
     }
 
     public AbstractTableSource VisitTableSource (AbstractTableSource tableSource)
@@ -56,33 +58,33 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
     public AbstractTableSource VisitSqlTableSource (SqlTableSource tableSource)
     {
-      _sb.Append ("[");
-      _sb.Append (tableSource.TableName);
-      _sb.Append ("]");
-      _sb.Append (" AS ");
-      _sb.Append ("[");
-      _sb.Append (tableSource.TableAlias);
-      _sb.Append ("]");
+      _commandBuilder.Append ("[");
+      _commandBuilder.Append (tableSource.TableName);
+      _commandBuilder.Append ("]");
+      _commandBuilder.Append (" AS ");
+      _commandBuilder.Append ("[");
+      _commandBuilder.Append (tableSource.TableAlias);
+      _commandBuilder.Append ("]");
 
       return tableSource;
     }
 
     public AbstractTableSource VisitSqlJoinedTableSource (SqlJoinedTableSource tableSource)
     {
-      _sb.Append (" JOIN ");
-      _sb.Append ("[");
-      _sb.Append (tableSource.ForeignTableSource.TableName);
-      _sb.Append ("]");
-      _sb.Append (" ON ");
-      _sb.Append ("[");
-      _sb.Append (tableSource.PrimaryTableSource.TableAlias);
-      _sb.Append ("].[");
-      _sb.Append (tableSource.PrimaryKey);
-      _sb.Append ("] = [");
-      _sb.Append (tableSource.ForeignTableSource.TableAlias);
-      _sb.Append ("].[");
-      _sb.Append (tableSource.ForeignKey);
-      _sb.Append ("]");
+      _commandBuilder.Append (" JOIN ");
+      _commandBuilder.Append ("[");
+      _commandBuilder.Append (tableSource.ForeignTableSource.TableName);
+      _commandBuilder.Append ("]");
+      _commandBuilder.Append (" ON ");
+      _commandBuilder.Append ("[");
+      _commandBuilder.Append (tableSource.PrimaryTableSource.TableAlias);
+      _commandBuilder.Append ("].[");
+      _commandBuilder.Append (tableSource.PrimaryKey);
+      _commandBuilder.Append ("] = [");
+      _commandBuilder.Append (tableSource.ForeignTableSource.TableAlias);
+      _commandBuilder.Append ("].[");
+      _commandBuilder.Append (tableSource.ForeignKey);
+      _commandBuilder.Append ("]");
 
       return tableSource;
     }

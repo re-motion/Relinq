@@ -57,7 +57,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
         return parameter;
       }
       throw new NotSupportedException (string.Format ("Specific type of '{0}' is not supported.", value.GetType().Name));
-      
     } 
 
     public string GetCommandText ()

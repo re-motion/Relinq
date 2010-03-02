@@ -16,7 +16,6 @@
 // 
 using System;
 using System.Linq.Expressions;
-using System.Text;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
 using Remotion.Data.Linq.Utilities;
 
@@ -31,22 +30,22 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
     {
       ArgumentUtility.CheckNotNull ("sqlStatement", sqlStatement);
 
-      var sb = new StringBuilder();
-      sb.Append ("SELECT ");
-      BuildSelectPart (sqlStatement.SelectProjection, sb);
-      sb.Append (" FROM ");
-      BuildFromPart (sqlStatement.FromExpression, sb);
-      return sb.ToString();
+      var commandBuilder = new SqlCommandBuilder();
+      commandBuilder.Append ("SELECT ");
+      BuildSelectPart (sqlStatement.SelectProjection, commandBuilder);
+      commandBuilder.Append (" FROM ");
+      BuildFromPart (sqlStatement.FromExpression, commandBuilder);
+      return commandBuilder.GetCommandText();
     }
 
-    protected void BuildSelectPart (Expression expression, StringBuilder sb)
+    protected void BuildSelectPart (Expression expression, SqlCommandBuilder commandBuilder)
     {
-      SqlGeneratingExpressionVisitor.GenerateSql (expression, sb);
+      SqlGeneratingExpressionVisitor.GenerateSql (expression, commandBuilder);
     }
 
-    protected void BuildFromPart (SqlTable sqlTable, StringBuilder sb)
+    protected void BuildFromPart (SqlTable sqlTable, SqlCommandBuilder commandBuilder)
     {
-      SqlTableSourceVisitor.GenerateSql (sqlTable, sb);
+      SqlTableSourceVisitor.GenerateSql (sqlTable, commandBuilder);
     }
 
 

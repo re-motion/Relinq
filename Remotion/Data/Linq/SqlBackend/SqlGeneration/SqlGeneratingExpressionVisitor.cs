@@ -16,7 +16,6 @@
 // 
 using System;
 using System.Linq.Expressions;
-using System.Text;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
 using Remotion.Data.Linq.Utilities;
@@ -28,21 +27,21 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
   /// </summary>
   public class SqlGeneratingExpressionVisitor : ThrowingExpressionTreeVisitor, ISqlColumnListExpressionVisitor
   {
-    private readonly StringBuilder _sb;
+    private readonly SqlCommandBuilder _commandBuilder;
 
-    public static void GenerateSql (Expression expression, StringBuilder sb)
+    public static void GenerateSql (Expression expression, SqlCommandBuilder commandBuilder)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      ArgumentUtility.CheckNotNull ("sb", sb);
+      ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);
 
-      var visitor = new SqlGeneratingExpressionVisitor(sb);
+      var visitor = new SqlGeneratingExpressionVisitor(commandBuilder);
       visitor.VisitExpression (expression);
     }
 
-    protected SqlGeneratingExpressionVisitor (StringBuilder sb)
+    protected SqlGeneratingExpressionVisitor (SqlCommandBuilder commandBuilder)
     {
-      ArgumentUtility.CheckNotNull ("sb", sb);
-      _sb = sb;
+      ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);
+      _commandBuilder = commandBuilder;
     }
 
     public Expression VisitSqlColumListExpression (SqlColumnListExpression expression)
@@ -53,7 +52,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       foreach (var column in expression.Columns)
       {
         if (!first)
-          _sb.Append (",");
+          _commandBuilder.Append (",");
         column.Accept (this);
         first = false;
       }
@@ -67,7 +66,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
       var prefix = expression.OwningTableAlias;
       var columnName = expression.ColumnName;
-      _sb.Append (string.Format ("[{0}].[{1}]", prefix, columnName));
+      _commandBuilder.Append (string.Format ("[{0}].[{1}]", prefix, columnName));
 
       return expression; 
     }
