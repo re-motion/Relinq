@@ -56,9 +56,38 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
     protected override Expression VisitMemberExpression (MemberExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      return
-          new SqlMemberExpression (
-              _context.GetSqlTableForQuerySource (((QuerySourceReferenceExpression) expression.Expression).ReferencedQuerySource), expression.Member);
+
+      // First process any nested expressions
+      // E.g, for (kitchen.Cook).FirstName, first process kitchen => newExpression1 (SqlTableReferenceExpression)
+      // then newExpression1.Cook => newExpression2 (SqlMemberExpression)
+      // then newExpression2.FirstName => result (SqlMemberExpression)
+      var newExpression = VisitExpression (expression.Expression);
+      
+      // kitchen case: newExpression is a SqlTableReferenceExpression (kitchenTable)
+      // create a SqlMemberExpression (kitchenTable, "Cook")
+      var newExpressionAsTableReference = newExpression as SqlTableReferenceExpression;
+      if (newExpressionAsTableReference != null)
+      {
+        var sqlTable = newExpressionAsTableReference.SqlTable; // kitchenTable
+        return new SqlMemberExpression (sqlTable, expression.Member); // kitchenTable.Cook
+      }
+
+      // kitchen.Cook case: newExpression is a SqlMemberExpression (kitchenTable, "Cook")
+      // create a join kitchenTable => cookTable via "Cook" member
+      // create a SqlMemberExpression (cookTable, "FirstName")
+      var newExpressionAsSqlMemberExpression = newExpression as SqlMemberExpression;
+      if (newExpressionAsSqlMemberExpression != null)
+      {
+        var originalSqlTable = newExpressionAsSqlMemberExpression.SqlTable; // kitchenTable
+        
+        // create cookTable via join
+        var join = originalSqlTable.GetOrAddJoin (
+            newExpressionAsSqlMemberExpression.MemberInfo, // "Cook"
+            new JoinedTableSource (newExpressionAsSqlMemberExpression.MemberInfo));
+
+        return new SqlMemberExpression (originalSqlTable, expression.Member); // cookTable.FirstName
+      }
+      return expression;
     }
 
     protected override Exception CreateUnhandledItemException<T> (T unhandledItem, string visitMethod)
