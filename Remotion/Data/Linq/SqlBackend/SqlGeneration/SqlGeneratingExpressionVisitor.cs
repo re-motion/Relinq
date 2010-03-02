@@ -72,6 +72,11 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       return expression; 
     }
 
+    //protected override Expression VisitConstantExpression (ConstantExpression expression)
+    //{
+    //  return base.VisitConstantExpression (expression);
+    //}
+
     protected override Exception CreateUnhandledItemException<T> (T unhandledItem, string visitMethod)
     {
       throw new NotSupportedException (
