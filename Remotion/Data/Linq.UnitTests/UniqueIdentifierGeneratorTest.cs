@@ -18,7 +18,6 @@ using System;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
-using Remotion.Data.Linq.SqlBackend;
 
 namespace Remotion.Data.Linq.UnitTests
 {
