@@ -24,24 +24,20 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
   /// </summary>
   public class SqlJoinedTableSource : AbstractTableSource
   {
-    private readonly SqlTableSource _primaryTableSource;
     private readonly AbstractTableSource _foreignTableSource;
-    private readonly string _primaryKey;
-    private readonly string _foreignKey;
+    private readonly SqlColumnExpression _primaryColumn;
+    private readonly SqlColumnExpression _foreignColumn;
 
     // TODO: UseSqlColumnExpression for primary key and foreign key, remove primaryTableSource, make foreignTableSource an AbstractTableSource.
-    public SqlJoinedTableSource (SqlTableSource primaryTableSource, AbstractTableSource foreignTableSource, string primaryKey, string foreignKey)
+    public SqlJoinedTableSource (AbstractTableSource foreignTableSource, SqlColumnExpression primaryColumn, SqlColumnExpression foreignColumn)
     {
-      ArgumentUtility.CheckNotNull ("primaryTableSource", primaryTableSource);
       ArgumentUtility.CheckNotNull ("foreignTableSource", foreignTableSource);
-      ArgumentUtility.CheckNotNullOrEmpty ("primaryKey", primaryKey);
-      ArgumentUtility.CheckNotNullOrEmpty ("foreignKey", foreignKey);
+      ArgumentUtility.CheckNotNull ("primaryColumn", primaryColumn);
+      ArgumentUtility.CheckNotNull ("foreignColumn", foreignColumn);
       
-      _primaryTableSource = primaryTableSource;
       _foreignTableSource = foreignTableSource;
-      _primaryKey = primaryKey;
-      _foreignKey = foreignKey;
-
+      _primaryColumn = primaryColumn;
+      _foreignColumn = foreignColumn;
     }
 
     public override Type ItemType
@@ -49,24 +45,19 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
       get { return _foreignTableSource.ItemType; }
     }
 
-    public SqlTableSource PrimaryTableSource
-    {
-      get { return _primaryTableSource; }
-    }
-
     public AbstractTableSource ForeignTableSource
     {
       get { return _foreignTableSource; }
     }
 
-    public string PrimaryKey
+    public SqlColumnExpression PrimaryColumn
     {
-      get { return _primaryKey; }
+      get { return _primaryColumn; }
     }
 
-    public string ForeignKey
+    public SqlColumnExpression ForeignColumn
     {
-      get { return _foreignKey; }
+      get { return _foreignColumn; }
     }
 
     public override AbstractTableSource Accept (ITableSourceVisitor visitor)

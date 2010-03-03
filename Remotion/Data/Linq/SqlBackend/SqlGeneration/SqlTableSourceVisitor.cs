@@ -80,13 +80,13 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       _commandBuilder.Append (" ON ");
       // TODO: Pass SqlGeneratingExpressionVisitor via ctor, use it to generate text for the primary key and foreign key column expressions (after refactoring SqlJoinedTableSource)
       _commandBuilder.Append ("[");
-      _commandBuilder.Append (tableSource.PrimaryTableSource.TableAlias);
+      _commandBuilder.Append (tableSource.PrimaryColumn.OwningTableAlias);
       _commandBuilder.Append ("].[");
-      _commandBuilder.Append (tableSource.PrimaryKey);
+      _commandBuilder.Append (tableSource.PrimaryColumn.ColumnName);
       _commandBuilder.Append ("] = [");
       _commandBuilder.Append (((SqlTableSource)tableSource.ForeignTableSource).TableAlias);
       _commandBuilder.Append ("].[");
-      _commandBuilder.Append (tableSource.ForeignKey);
+      _commandBuilder.Append (tableSource.ForeignColumn.ColumnName);
       _commandBuilder.Append ("]");
 
       return tableSource;
