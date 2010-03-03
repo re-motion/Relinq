@@ -79,7 +79,117 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
         _commandBuilder.AddParameter ((bool) expression.Value ? 1 : 0);
       else
         _commandBuilder.AddParameter (expression.Value);
-      
+
+      return expression;
+    }
+
+    protected override Expression VisitBinaryExpression (BinaryExpression expression)
+    {
+      _commandBuilder.Append ("(");
+      VisitExpression (expression.Left);
+
+      switch (expression.NodeType)
+      {
+        case ExpressionType.Add:
+        case ExpressionType.AddChecked:
+          _commandBuilder.Append (" + ");
+          break;
+        case ExpressionType.And:
+          throw new NotSupportedException();
+        case ExpressionType.AndAlso:
+          throw new NotSupportedException();
+        case ExpressionType.ArrayLength:
+          throw new NotSupportedException();
+        case ExpressionType.ArrayIndex:
+          throw new NotSupportedException();
+        case ExpressionType.Call:
+          throw new NotSupportedException();
+        case ExpressionType.Coalesce:
+          throw new NotSupportedException();
+        case ExpressionType.Conditional:
+          throw new NotSupportedException();
+        case ExpressionType.Constant:
+          throw new NotSupportedException();
+        case ExpressionType.Convert:
+          throw new NotSupportedException();
+        case ExpressionType.ConvertChecked:
+          throw new NotSupportedException();
+        case ExpressionType.Divide:
+          _commandBuilder.Append (" / ");
+          break;
+        case ExpressionType.Equal:
+          throw new NotSupportedException();
+        case ExpressionType.ExclusiveOr:
+          throw new NotSupportedException();
+        case ExpressionType.GreaterThan:
+          throw new NotSupportedException();
+        case ExpressionType.GreaterThanOrEqual:
+          throw new NotSupportedException();
+        case ExpressionType.Invoke:
+          throw new NotSupportedException();
+        case ExpressionType.Lambda:
+          throw new NotSupportedException();
+        case ExpressionType.LeftShift:
+          throw new NotSupportedException();
+        case ExpressionType.LessThan:
+          throw new NotSupportedException();
+        case ExpressionType.LessThanOrEqual:
+          throw new NotSupportedException();
+        case ExpressionType.ListInit:
+          throw new NotSupportedException();
+        case ExpressionType.MemberAccess:
+          throw new NotSupportedException();
+        case ExpressionType.MemberInit:
+          throw new NotSupportedException();
+        case ExpressionType.Modulo:
+          _commandBuilder.Append (" % ");
+          break;
+        case ExpressionType.Multiply:
+        case ExpressionType.MultiplyChecked:
+          _commandBuilder.Append (" * ");
+          break;
+        case ExpressionType.Negate:
+          throw new NotSupportedException();
+        case ExpressionType.UnaryPlus:
+          throw new NotSupportedException();
+        case ExpressionType.NegateChecked:
+          throw new NotSupportedException();
+        case ExpressionType.New:
+          throw new NotSupportedException();
+        case ExpressionType.NewArrayInit:
+          throw new NotSupportedException();
+        case ExpressionType.NewArrayBounds:
+          throw new NotSupportedException();
+        case ExpressionType.Not:
+          throw new NotSupportedException();
+        case ExpressionType.NotEqual:
+          throw new NotSupportedException();
+        case ExpressionType.Or:
+          throw new NotSupportedException();
+        case ExpressionType.OrElse:
+          throw new NotSupportedException();
+        case ExpressionType.Parameter:
+          throw new NotSupportedException();
+        case ExpressionType.Power:
+          throw new NotSupportedException();
+        case ExpressionType.Quote:
+          throw new NotSupportedException();
+        case ExpressionType.RightShift:
+          throw new NotSupportedException();
+        case ExpressionType.Subtract:
+        case ExpressionType.SubtractChecked:
+          _commandBuilder.Append (" - ");
+          break;
+        case ExpressionType.TypeAs:
+          throw new NotSupportedException();
+        case ExpressionType.TypeIs:
+          throw new NotSupportedException();
+        default:
+          throw new ArgumentOutOfRangeException();
+      }
+
+      VisitExpression (expression.Right);
+      _commandBuilder.Append (")");
       return expression;
     }
 

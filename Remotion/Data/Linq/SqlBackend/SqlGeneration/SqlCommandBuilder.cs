@@ -49,7 +49,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
     public CommandParameter AddParameter (object value)
     {
-      if (value == null)
+      if (value == null) //TODO: handle special case (null values): inline in sql
       {
         var parameter = new CommandParameter ("@" + (_parameters.Count + 1), value);
         _parameters.Add (parameter);
@@ -60,6 +60,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       {
         var parameter = new CommandParameter ("@" + (_parameters.Count + 1), value);
         _parameters.Add (parameter);
+        _sb.Append (parameter.Name);
         return parameter;
       }
       throw new NotSupportedException (string.Format ("Specific type of '{0}' is not supported.", value.GetType().Name));
@@ -67,7 +68,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
     public string GetCommandText ()
     {
-      return _sb.ToString(); //TODO: check parameter with null values, add to _sb // TODO: Perform null value check in SqlGeneratingExpressionVisitor instead
+      return _sb.ToString(); //TODO: check parameter with null values, add to _sb
     }
 
     public CommandParameter[] GetCommandParameters ()
