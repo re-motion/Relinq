@@ -57,7 +57,7 @@ namespace Remotion.Data.Linq.UnitTests.TestUtilities
       }
       catch (TargetInvocationException e)
       {
-        typeof (Exception).GetMethod ("InternalPreservestackTrace", BindingFlags.Instance | BindingFlags.NonPublic).Invoke (e.InnerException, null);
+        typeof (Exception).GetMethod ("InternalPreserveStackTrace", BindingFlags.Instance | BindingFlags.NonPublic).Invoke (e.InnerException, null);
         throw e.InnerException;
       }
     }

@@ -29,27 +29,26 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
   /// </summary>
   public class SqlColumnListExpression : ExtensionExpression
   {
-    private readonly SqlColumnExpression[] _columns;
+    private readonly ReadOnlyCollection<SqlColumnExpression> _columns;
 
     public SqlColumnListExpression (Type type, params SqlColumnExpression[] columns)
         : base (type)
     {
       ArgumentUtility.CheckNotNull ("columns", columns);
 
-      _columns = columns;
+      _columns = Array.AsReadOnly (columns);
     }
 
     public ReadOnlyCollection<SqlColumnExpression> Columns
     {
-      get { return Array.AsReadOnly(_columns); }
+      get { return _columns; }
     }
 
     protected internal override Expression VisitChildren (ExpressionTreeVisitor visitor)
     {
       //TODO: check fails always because Array.AsReadOnly returns a new instance
-      var originalColumns = Columns;
-      var newColumns = visitor.VisitAndConvert (originalColumns, "VisitChildren");
-      if (newColumns != originalColumns)
+      var newColumns = visitor.VisitAndConvert (Columns, "VisitChildren");
+      if (newColumns != Columns)
         return new SqlColumnListExpression (Type, newColumns.ToArray());
       else
         return this;

@@ -24,32 +24,29 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
   /// </summary>
   public class SqlJoinedTableSource : AbstractTableSource
   {
-    private readonly Type _itemType;
     private readonly SqlTableSource _primaryTableSource;
     private readonly SqlTableSource _foreignTableSource;
     private readonly string _primaryKey;
     private readonly string _foreignKey;
 
-    // TODO: No need to pass type here, use foreignTableSource.Type instead.
     // TODO: UseSqlColumnExpression for primary key and foreign key, remove primaryTableSource, make foreignTableSource an AbstractTableSource.
-    public SqlJoinedTableSource (SqlTableSource primaryTableSource, SqlTableSource foreignTableSource, string primaryKey, string foreignKey, Type type)
+    public SqlJoinedTableSource (SqlTableSource primaryTableSource, SqlTableSource foreignTableSource, string primaryKey, string foreignKey)
     {
       ArgumentUtility.CheckNotNull ("primaryTableSource", primaryTableSource);
       ArgumentUtility.CheckNotNull ("foreignTableSource", foreignTableSource);
       ArgumentUtility.CheckNotNullOrEmpty ("primaryKey", primaryKey);
       ArgumentUtility.CheckNotNullOrEmpty ("foreignKey", foreignKey);
-      ArgumentUtility.CheckNotNull ("type", type);
-
+      
       _primaryTableSource = primaryTableSource;
       _foreignTableSource = foreignTableSource;
       _primaryKey = primaryKey;
       _foreignKey = foreignKey;
-      _itemType = type;
+
     }
 
     public override Type ItemType
     {
-      get { return _itemType; }
+      get { return _foreignTableSource.ItemType; }
     }
 
     public SqlTableSource PrimaryTableSource
