@@ -20,6 +20,7 @@ using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Utilities;
+using System.Linq;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
 {
@@ -30,7 +31,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
   {
     private readonly SqlColumnExpression[] _columns;
 
-    public SqlColumnListExpression (Type type, SqlColumnExpression[] columns) // TODO: consider making parameter a params[] for convenience
+    public SqlColumnListExpression (Type type, params SqlColumnExpression[] columns)
         : base (type)
     {
       ArgumentUtility.CheckNotNull ("columns", columns);
@@ -45,16 +46,15 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
 
     protected internal override Expression VisitChildren (ExpressionTreeVisitor visitor)
     {
-      // TODO: Change tests to check that if the visitor changes the columns, a new SqlColumnListExpression is created
-      // TODO: Change code as follows:
-      // var originalColumns = Columns;
-      // var newColumns = visitor.VisitAndConvert (originalColumns);
-      // if (newColumns != originalColumns)
-      //   return new SqlColumnListExpression (Type, newColumns);
-      // else
-      //   return this;
-      (visitor.VisitList (Columns, c => (SqlColumnExpression) visitor.VisitExpression (c))).CopyTo (_columns, 0);
-      return this;
+      //TODO: check fails always because Array.AsReadOnly returns a new instance
+      var originalColumns = Columns;
+      var newColumns = visitor.VisitAndConvert (originalColumns, "VisitChildren");
+      if (newColumns != originalColumns)
+        return new SqlColumnListExpression (Type, newColumns.ToArray());
+      else
+        return this;
+      //(visitor.VisitList (Columns, c => (SqlColumnExpression) visitor.VisitExpression (c))).CopyTo (_columns, 0);
+      //return this;
     }
 
     public override Expression Accept (ExpressionTreeVisitor visitor)
