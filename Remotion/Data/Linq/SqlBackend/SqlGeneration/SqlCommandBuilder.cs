@@ -38,6 +38,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       _supportedTypes = new List<Type>();
       _supportedTypes.Add (typeof (string));
       _supportedTypes.Add (typeof (int));
+      _supportedTypes.Add (typeof (double));
       _supportedTypes.Add (typeof (bool));
     }
 
