@@ -15,50 +15,34 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Linq.Expressions;
 using Remotion.Data.Linq.Utilities;
 
-// TODO: Move to SqlStatementModel.Resolved namespace
-namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
+namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved
 {
   /// <summary>
-  /// <see cref="SqlTableSource"/> represents the data source defined by a table in a relational database.
+  /// <see cref="ConstantTableSource"/> holds a <see cref="ConstantExpression"/> representing the data source defined by a LINQ query.
   /// </summary>
-  public class SqlTableSource : AbstractTableSource
+  public class ConstantTableSource : AbstractTableSource
   {
-    private readonly Type _type;
-    private readonly string _tableName;
-    private readonly string _tableAlias;
-
-    public SqlTableSource (Type type, string tableName, string tableAlias)
+    public ConstantTableSource (ConstantExpression constantExpression)
     {
-      ArgumentUtility.CheckNotNull ("type", type);
-      ArgumentUtility.CheckNotNullOrEmpty ("tableName", tableName);
-      ArgumentUtility.CheckNotNullOrEmpty ("tableAlias", tableAlias);
+      ArgumentUtility.CheckNotNull ("constantExpression", constantExpression);
 
-      _type = type;
-      _tableName = tableName;
-      _tableAlias = tableAlias;
+      ConstantExpression = constantExpression;
     }
 
-    public string TableName
+    public ConstantExpression ConstantExpression { get; private set; }
+    
+    public override Type Type // TODO: Rename to "ItemType", initialize via ctor (from initial FromClause.ItemType)
     {
-      get { return _tableName; }
-    }
-
-    public string TableAlias
-    {
-      get { return _tableAlias; }
-    }
-
-    public override Type Type // TODO: Rename to "ItemType"
-    {
-      get { return _type; }
+      get { return ConstantExpression.Type;  }
     }
 
     public override AbstractTableSource Accept (ITableSourceVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
-      return visitor.VisitSqlTableSource (this);
+      return visitor.VisitConstantTableSource (this);
     }
   }
 }

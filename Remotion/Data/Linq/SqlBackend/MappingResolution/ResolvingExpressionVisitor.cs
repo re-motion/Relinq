@@ -17,16 +17,16 @@
 using System;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Parsing;
-using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
+using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved;
 using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.SqlBackend.MappingResolution
 {
   /// <summary>
-  /// <see cref="ResolvingExpressionVisitor"/> implements <see cref="ISqlExpressionVisitor"/> and <see cref="ThrowingExpressionTreeVisitor"/>.
+  /// <see cref="ResolvingExpressionVisitor"/> implements <see cref="IUnresolvedSqlExpressionVisitor"/> and <see cref="ThrowingExpressionTreeVisitor"/>.
   /// </summary>
   // TODO: ResolvingExpressionVisitor should simply ignore any expressions it cannot resolve; derive from ExpressionTreeVisitor rather than ThrowingExpressionTreeVisitor.
-  public class ResolvingExpressionVisitor : ThrowingExpressionTreeVisitor, ISqlExpressionVisitor
+  public class ResolvingExpressionVisitor : ThrowingExpressionTreeVisitor, IUnresolvedSqlExpressionVisitor
   {
     private readonly ISqlStatementResolver _resolver;
     private readonly UniqueIdentifierGenerator _generator;

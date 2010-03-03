@@ -15,40 +15,49 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Reflection;
 using Remotion.Data.Linq.Utilities;
 
-// TODO: Move to SqlStatementModel.Unresolved namespace
-namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
+namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
 {
   /// <summary>
-  /// <see cref="JoinedTableSource"/> represents the table source defined by a join in a relational database.
+  /// <see cref="SqlTableSource"/> represents the data source defined by a table in a relational database.
   /// </summary>
-  public class JoinedTableSource : AbstractTableSource
+  public class SqlTableSource : AbstractTableSource
   {
-    private readonly MemberInfo _memberInfo;
+    private readonly Type _type;
+    private readonly string _tableName;
+    private readonly string _tableAlias;
 
-    public JoinedTableSource (MemberInfo memberInfo)
+    public SqlTableSource (Type type, string tableName, string tableAlias)
     {
-      ArgumentUtility.CheckNotNull ("memberInfo", memberInfo);
+      ArgumentUtility.CheckNotNull ("type", type);
+      ArgumentUtility.CheckNotNullOrEmpty ("tableName", tableName);
+      ArgumentUtility.CheckNotNullOrEmpty ("tableAlias", tableAlias);
 
-      _memberInfo = memberInfo;
+      _type = type;
+      _tableName = tableName;
+      _tableAlias = tableAlias;
     }
 
-    public MemberInfo MemberInfo
+    public string TableName
     {
-      get { return _memberInfo; }
+      get { return _tableName; }
     }
-    
-    public override Type Type
+
+    public string TableAlias
     {
-      get { return _memberInfo.DeclaringType; } // TODO: The type of a joined table source should be the type returned by the member; use ReflectionUtility.GetFieldOrPropertyType.
+      get { return _tableAlias; }
+    }
+
+    public override Type Type // TODO: Rename to "ItemType"
+    {
+      get { return _type; }
     }
 
     public override AbstractTableSource Accept (ITableSourceVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
-      return visitor.VisitJoinedTableSource (this);
+      return visitor.VisitSqlTableSource (this);
     }
   }
 }

@@ -19,36 +19,35 @@ using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Utilities;
+using System.Reflection;
 
-// TODO: Move to SqlStatementModel.Resolved namespace
-namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
+namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved
 {
   /// <summary>
-  /// <see cref="SqlColumnExpression"/> represents a sql-specific column expression.
+  /// <see cref="SqlMemberExpression"/> represents a sql specific member expression.
   /// </summary>
-  public class SqlColumnExpression : ExtensionExpression
+  public class SqlMemberExpression : ExtensionExpression
   {
-    private readonly string _owningTableAlias;
-    private readonly string _columnName;
+    private readonly SqlTable _sqlTable;
+    private readonly MemberInfo _memberInfo;
 
-    public SqlColumnExpression (Type type, string owningTableAlias, string columnName)
-        : base(type)
+    public SqlMemberExpression (SqlTable sqlTable, MemberInfo memberInfo)
+        : base (sqlTable.TableSource.Type) // TODO: Type of SqlMemberExpression is type of object returned by memberInfo. Use ReflectionUtility.GetFieldOrPropertyType
     {
-      ArgumentUtility.CheckNotNull ("owningTableAlias", owningTableAlias);
-      ArgumentUtility.CheckNotNullOrEmpty ("columnName", columnName);
+      ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
 
-      _columnName = columnName;
-      _owningTableAlias = owningTableAlias;
+      _sqlTable = sqlTable;
+      _memberInfo = memberInfo;
     }
 
-    public string OwningTableAlias
+    public SqlTable SqlTable
     {
-      get { return _owningTableAlias; }
+      get { return _sqlTable; }
     }
 
-    public string ColumnName
+    public MemberInfo MemberInfo
     {
-      get { return _columnName; }
+      get { return _memberInfo; }
     }
 
     protected internal override Expression VisitChildren (ExpressionTreeVisitor visitor)
@@ -58,9 +57,11 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 
     public override Expression Accept (ExpressionTreeVisitor visitor)
     {
-      var specificVisitor = visitor as ISqlColumnListExpressionVisitor;
-      if(specificVisitor!=null)
-        return specificVisitor.VisitSqlColumnExpression (this);
+      ArgumentUtility.CheckNotNull ("visitor", visitor);
+
+      var specificVisitor = visitor as IUnresolvedSqlExpressionVisitor;
+      if (specificVisitor != null)
+        return specificVisitor.VisitSqlMemberExpression(this);
       else
         return base.Accept (visitor);
     }

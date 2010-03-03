@@ -15,35 +15,39 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Linq.Expressions;
+using System.Reflection;
 using Remotion.Data.Linq.Utilities;
 
-// TODO: Move to SqlStatementModel.Unresolved namespace
-namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel 
+namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved
 {
   /// <summary>
-  /// <see cref="ConstantTableSource"/> holds a <see cref="ConstantExpression"/> representing the data source defined by a LINQ query.
+  /// <see cref="JoinedTableSource"/> represents the table source defined by a join in a relational database.
   /// </summary>
-  public class ConstantTableSource : AbstractTableSource
+  public class JoinedTableSource : AbstractTableSource
   {
-    public ConstantTableSource (ConstantExpression constantExpression)
-    {
-      ArgumentUtility.CheckNotNull ("constantExpression", constantExpression);
+    private readonly MemberInfo _memberInfo;
 
-      ConstantExpression = constantExpression;
+    public JoinedTableSource (MemberInfo memberInfo)
+    {
+      ArgumentUtility.CheckNotNull ("memberInfo", memberInfo);
+
+      _memberInfo = memberInfo;
     }
 
-    public ConstantExpression ConstantExpression { get; private set; }
-    
-    public override Type Type // TODO: Rename to "ItemType", initialize via ctor (from initial FromClause.ItemType)
+    public MemberInfo MemberInfo
     {
-      get { return ConstantExpression.Type;  }
+      get { return _memberInfo; }
+    }
+    
+    public override Type Type
+    {
+      get { return _memberInfo.DeclaringType; } // TODO: The type of a joined table source should be the type returned by the member; use ReflectionUtility.GetFieldOrPropertyType.
     }
 
     public override AbstractTableSource Accept (ITableSourceVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
-      return visitor.VisitConstantTableSource (this);
+      return visitor.VisitJoinedTableSource (this);
     }
   }
 }

@@ -21,8 +21,7 @@ using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Utilities;
 
-// TODO: Move to SqlStatementModel.Resolved namespace
-namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
+namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
 {
   /// <summary>
   /// <see cref="SqlColumnListExpression"/> holds a list of <see cref="SqlColumnExpression"/> instances.
@@ -60,7 +59,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 
     public override Expression Accept (ExpressionTreeVisitor visitor)
     {
-      var specificVisitor = visitor as ISqlColumnListExpressionVisitor;
+      var specificVisitor = visitor as IResolvedSqlExpressionVisitor;
       if (specificVisitor != null)
         return specificVisitor.VisitSqlColumListExpression (this);
       else

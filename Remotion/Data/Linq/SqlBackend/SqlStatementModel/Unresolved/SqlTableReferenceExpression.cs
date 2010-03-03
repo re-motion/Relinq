@@ -20,8 +20,7 @@ using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Utilities;
 
-// TODO: Move to SqlStatementModel.Unresolved namespace
-namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
+namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved
 {
   /// <summary>
   /// <see cref="SqlTableReferenceExpression"/> represents a data row in a <see cref="SqlTable"/>.
@@ -53,7 +52,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
 
-      var specificVisitor = visitor as ISqlExpressionVisitor;
+      var specificVisitor = visitor as IUnresolvedSqlExpressionVisitor;
       if (specificVisitor != null)
         return specificVisitor.VisitSqlTableReferenceExpression (this);
       else

@@ -17,12 +17,11 @@
 using System;
 using Remotion.Data.Linq.Utilities;
 
-namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
+namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
 {
   /// <summary>
   /// <see cref="SqlJoinedTableSource"/> represents a join between two database tables.
   /// </summary>
-  // TODO: Move to SqlStatementModel.Resolved namespace
   public class SqlJoinedTableSource : AbstractTableSource
   {
     private readonly Type _type;
