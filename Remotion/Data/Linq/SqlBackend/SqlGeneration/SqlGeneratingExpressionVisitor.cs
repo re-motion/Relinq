@@ -95,7 +95,8 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
           _commandBuilder.Append (" + ");
           break;
         case ExpressionType.And:
-          throw new NotSupportedException();
+          _commandBuilder.Append (" & ");
+          break;
         case ExpressionType.AndAlso:
           _commandBuilder.Append (" AND ");
           break;
@@ -121,7 +122,8 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
         case ExpressionType.Equal:
           throw new NotSupportedException();
         case ExpressionType.ExclusiveOr:
-          throw new NotSupportedException();
+          _commandBuilder.Append (" ^ ");
+          break;
         case ExpressionType.GreaterThan:
           throw new NotSupportedException();
         case ExpressionType.GreaterThanOrEqual:
@@ -166,7 +168,8 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
         case ExpressionType.NotEqual:
           throw new NotSupportedException();
         case ExpressionType.Or:
-          throw new NotSupportedException();
+          _commandBuilder.Append (" | ");
+          break;
         case ExpressionType.OrElse:
           _commandBuilder.Append (" OR ");
           break;
