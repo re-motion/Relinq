@@ -25,12 +25,11 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
 {
   /// <summary>
-  /// <see cref="SqlSelectExpressionVisitor"/> transforms the expressions stored by <see cref="SqlStatement.SelectProjection"/> to a SQL-specific
+  /// <see cref="SqlPreparationExpressionVisitor"/> transforms the expressions stored by <see cref="SqlStatement.SelectProjection"/> to a SQL-specific
   /// format.
   /// </summary>
-  // TODO: Rename to SqlPreparationExpressionVisitor
   // TODO: Sql preparation phase should ignore expression types that don't need to be prepared. Therefore, derive from ExpressionTreeVisitor instead.
-  public class SqlSelectExpressionVisitor : ThrowingExpressionTreeVisitor
+  public class SqlPreparationExpressionVisitor : ThrowingExpressionTreeVisitor
   { 
     private readonly SqlPreparationContext _context;
 
@@ -39,12 +38,12 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       ArgumentUtility.CheckNotNull ("projection", projection);
       ArgumentUtility.CheckNotNull ("context", context);
 
-      var visitor = new SqlSelectExpressionVisitor (context);
+      var visitor = new SqlPreparationExpressionVisitor (context);
       var result = visitor.VisitExpression (projection);
       return result;
     }
 
-    protected SqlSelectExpressionVisitor (SqlPreparationContext context)
+    protected SqlPreparationExpressionVisitor (SqlPreparationContext context)
     {
       ArgumentUtility.CheckNotNull ("context", context);
       _context = context;

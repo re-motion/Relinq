@@ -158,8 +158,8 @@
     <Compile Include="SqlBackend\SqlStatementModel\Resolved\SqlColumnListExpression.cs" />
     <Compile Include="SqlBackend\MappingResolution\ResolvingExpressionVisitor.cs" />
     <Compile Include="SqlBackend\SqlPreparation\SqlPreparationContext.cs" />
-    <Compile Include="SqlBackend\SqlPreparation\SqlQueryModelVisitor.cs" />
-    <Compile Include="SqlBackend\SqlPreparation\SqlSelectExpressionVisitor.cs" />
+    <Compile Include="SqlBackend\SqlPreparation\SqlPreparationQueryModelVisitor.cs" />
+    <Compile Include="SqlBackend\SqlPreparation\SqlPreparationExpressionVisitor.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\Resolved\SqlJoinedTableSource.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\Unresolved\SqlMemberExpression.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlStatement.cs" />

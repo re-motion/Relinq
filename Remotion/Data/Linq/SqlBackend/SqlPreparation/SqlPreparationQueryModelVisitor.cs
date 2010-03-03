@@ -24,16 +24,16 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
 {
   /// <summary>
-  /// <see cref="SqlQueryModelVisitor"/> generates a <see cref="SqlStatement"/> from a query model.
+  /// <see cref="SqlPreparationQueryModelVisitor"/> generates a <see cref="SqlStatement"/> from a query model.
   /// </summary>
-  public class SqlQueryModelVisitor : QueryModelVisitorBase // TODO: Rename to SqlPreparationQueryModelVisitor
+  public class SqlPreparationQueryModelVisitor : QueryModelVisitorBase
   {
     private readonly SqlPreparationContext _sqlPreparationContext;
     private readonly SqlTable _sqlTable;
     private Expression _projectionExpression;
     private UniqueIdentifierGenerator _generator;
 
-    public SqlQueryModelVisitor ()
+    public SqlPreparationQueryModelVisitor ()
     {
       _sqlTable = new SqlTable ();
       _sqlPreparationContext = new SqlPreparationContext ();
@@ -56,7 +56,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
       _generator = queryModel.GetUniqueIdentfierGenerator();
-      _projectionExpression = SqlSelectExpressionVisitor.TranslateExpression (selectClause.Selector, _sqlPreparationContext);
+      _projectionExpression = SqlPreparationExpressionVisitor.TranslateExpression (selectClause.Selector, _sqlPreparationContext);
     }
 
     public override void VisitMainFromClause (MainFromClause fromClause, QueryModel queryModel)
