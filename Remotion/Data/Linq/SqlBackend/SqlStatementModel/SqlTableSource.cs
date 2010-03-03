@@ -50,7 +50,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       get { return _tableAlias; }
     }
 
-    public override Type Type
+    public override Type Type // TODO: Rename to "ItemType"
     {
       get { return _type; }
     }

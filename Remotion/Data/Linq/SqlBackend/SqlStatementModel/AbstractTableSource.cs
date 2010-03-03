@@ -23,7 +23,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   /// </summary>
   public abstract class AbstractTableSource
   {
-    public abstract Type Type { get; }
+    public abstract Type Type { get; } // TODO: Rename to "ItemType"
     public abstract AbstractTableSource Accept (ITableSourceVisitor visitor);
   }
 }

@@ -47,8 +47,8 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       _foreignKey = foreignKey;
       _type = type;
     }
-    
-    public override Type Type
+
+    public override Type Type // TODO: Rename to "ItemType"
     {
       get { return _type; }
     }

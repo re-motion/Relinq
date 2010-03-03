@@ -26,6 +26,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
   /// </summary>
   public class SqlStatementTextGenerator
   {
+    // TODO: Change to return both string and parameters. (Add a new struct type for this.)
     public string Build (SqlStatement sqlStatement)
     {
       ArgumentUtility.CheckNotNull ("sqlStatement", sqlStatement);
