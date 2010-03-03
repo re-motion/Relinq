@@ -77,6 +77,8 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       // TODO: Parameter name must be appended to _commandBuilder
       if (expression.Type == typeof (bool))
         _commandBuilder.AddParameter ((bool) expression.Value ? 1 : 0);
+      else if (expression.Value == null)
+        _commandBuilder.Append ("NULL");
       else
         _commandBuilder.AddParameter (expression.Value);
 
@@ -144,19 +146,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
         case ExpressionType.AndAlso:
           _commandBuilder.Append (" AND ");
           break;
-        case ExpressionType.ArrayLength:
-          throw new NotSupportedException();
         case ExpressionType.ArrayIndex:
-          throw new NotSupportedException();
-        case ExpressionType.Call:
-          throw new NotSupportedException();
-        case ExpressionType.Conditional:
-          throw new NotSupportedException();
-        case ExpressionType.Constant:
-          throw new NotSupportedException();
-        case ExpressionType.Convert:
-          throw new NotSupportedException();
-        case ExpressionType.ConvertChecked:
           throw new NotSupportedException();
         case ExpressionType.Divide:
           _commandBuilder.Append (" / ");
@@ -173,10 +163,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
         case ExpressionType.GreaterThanOrEqual:
           _commandBuilder.Append (" >= ");
           break;
-        case ExpressionType.Invoke:
-          throw new NotSupportedException();
-        case ExpressionType.Lambda:
-          throw new NotSupportedException();
         case ExpressionType.LeftShift:
           throw new NotSupportedException();
         case ExpressionType.LessThan:
@@ -185,12 +171,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
         case ExpressionType.LessThanOrEqual:
           _commandBuilder.Append (" <= ");
           break;
-        case ExpressionType.ListInit:
-          throw new NotSupportedException();
-        case ExpressionType.MemberAccess:
-          throw new NotSupportedException();
-        case ExpressionType.MemberInit:
-          throw new NotSupportedException();
         case ExpressionType.Modulo:
           _commandBuilder.Append (" % ");
           break;
@@ -198,20 +178,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
         case ExpressionType.MultiplyChecked:
           _commandBuilder.Append (" * ");
           break;
-        case ExpressionType.Negate:
-          throw new NotSupportedException();
-        case ExpressionType.UnaryPlus:
-          throw new NotSupportedException();
-        case ExpressionType.NegateChecked:
-          throw new NotSupportedException();
-        case ExpressionType.New:
-          throw new NotSupportedException();
-        case ExpressionType.NewArrayInit:
-          throw new NotSupportedException();
-        case ExpressionType.NewArrayBounds:
-          throw new NotSupportedException();
-        case ExpressionType.Not:
-          throw new NotSupportedException();
         case ExpressionType.NotEqual:
           _commandBuilder.Append (" <> ");
           break;
@@ -221,11 +187,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
         case ExpressionType.OrElse:
           _commandBuilder.Append (" OR ");
           break;
-        case ExpressionType.Parameter:
-          throw new NotSupportedException();
         case ExpressionType.Power:
-          throw new NotSupportedException();
-        case ExpressionType.Quote:
           throw new NotSupportedException();
         case ExpressionType.RightShift:
           throw new NotSupportedException();
@@ -233,10 +195,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
         case ExpressionType.SubtractChecked:
           _commandBuilder.Append (" - ");
           break;
-        case ExpressionType.TypeAs:
-          throw new NotSupportedException();
-        case ExpressionType.TypeIs:
-          throw new NotSupportedException();
         default:
           throw new ArgumentOutOfRangeException();
       }
