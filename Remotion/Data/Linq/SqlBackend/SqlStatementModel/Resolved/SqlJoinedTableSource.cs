@@ -25,12 +25,12 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
   public class SqlJoinedTableSource : AbstractTableSource
   {
     private readonly SqlTableSource _primaryTableSource;
-    private readonly SqlTableSource _foreignTableSource;
+    private readonly AbstractTableSource _foreignTableSource;
     private readonly string _primaryKey;
     private readonly string _foreignKey;
 
     // TODO: UseSqlColumnExpression for primary key and foreign key, remove primaryTableSource, make foreignTableSource an AbstractTableSource.
-    public SqlJoinedTableSource (SqlTableSource primaryTableSource, SqlTableSource foreignTableSource, string primaryKey, string foreignKey)
+    public SqlJoinedTableSource (SqlTableSource primaryTableSource, AbstractTableSource foreignTableSource, string primaryKey, string foreignKey)
     {
       ArgumentUtility.CheckNotNull ("primaryTableSource", primaryTableSource);
       ArgumentUtility.CheckNotNull ("foreignTableSource", foreignTableSource);
@@ -54,7 +54,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
       get { return _primaryTableSource; }
     }
 
-    public SqlTableSource ForeignTableSource
+    public AbstractTableSource ForeignTableSource
     {
       get { return _foreignTableSource; }
     }

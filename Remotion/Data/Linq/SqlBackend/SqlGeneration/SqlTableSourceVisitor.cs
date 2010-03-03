@@ -74,7 +74,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
       // TODO: Use tableSource.ForeignTableSource.Accept (this) instead
       _commandBuilder.Append ("[");
-      _commandBuilder.Append (tableSource.ForeignTableSource.TableName);
+      _commandBuilder.Append (((SqlTableSource)tableSource.ForeignTableSource).TableName);
       _commandBuilder.Append ("]");
 
       _commandBuilder.Append (" ON ");
@@ -84,7 +84,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       _commandBuilder.Append ("].[");
       _commandBuilder.Append (tableSource.PrimaryKey);
       _commandBuilder.Append ("] = [");
-      _commandBuilder.Append (tableSource.ForeignTableSource.TableAlias);
+      _commandBuilder.Append (((SqlTableSource)tableSource.ForeignTableSource).TableAlias);
       _commandBuilder.Append ("].[");
       _commandBuilder.Append (tableSource.ForeignKey);
       _commandBuilder.Append ("]");
