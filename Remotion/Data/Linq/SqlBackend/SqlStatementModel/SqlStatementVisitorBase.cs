@@ -26,7 +26,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   {
     public virtual void VisitSqlStatement (SqlStatement sqlStatement)
     {
-      sqlStatement.SelectProjection = VisitSelectProjection (sqlStatement.SelectProjection, sqlStatement.Generator);
+      sqlStatement.SelectProjection = VisitSelectProjection (sqlStatement.SelectProjection, sqlStatement.UniqueIdentifierGenerator);
       VisitSqlTable (sqlStatement.FromExpression);
     }
 
