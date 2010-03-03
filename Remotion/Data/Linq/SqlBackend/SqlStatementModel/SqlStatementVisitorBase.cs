@@ -30,7 +30,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       VisitSqlTable (sqlStatement.FromExpression);
     }
 
-    protected abstract Expression VisitSelectProjection (Expression selectProjection, UniqueIdentifierGenerator generator); // TODO: Rename to uniqueIdentifierGenerator
+    protected abstract Expression VisitSelectProjection (Expression selectProjection, UniqueIdentifierGenerator uniqueIdentifierGenerator);
     protected abstract void VisitSqlTable (SqlTable sqlTable);
   }
 }

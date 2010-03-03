@@ -35,12 +35,12 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
       _resolver = resolver;
     }
 
-    protected override Expression VisitSelectProjection (Expression selectProjection, UniqueIdentifierGenerator generator)
+    protected override Expression VisitSelectProjection (Expression selectProjection, UniqueIdentifierGenerator uniqueIdentifierGenerator)
     {
       ArgumentUtility.CheckNotNull ("selectProjection", selectProjection);
-      ArgumentUtility.CheckNotNull ("generator", generator);
+      ArgumentUtility.CheckNotNull ("uniqueIdentifierGenerator", uniqueIdentifierGenerator);
 
-      return ResolvingExpressionVisitor.ResolveExpressions (selectProjection, _resolver, generator);
+      return ResolvingExpressionVisitor.ResolveExpressions (selectProjection, _resolver, uniqueIdentifierGenerator);
     }
 
     protected override void VisitSqlTable (SqlTable sqlTable)
