@@ -66,13 +66,15 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
       var prefix = expression.OwningTableAlias;
       var columnName = expression.ColumnName;
-      _commandBuilder.Append (string.Format ("[{0}].[{1}]", prefix, columnName));
+      _commandBuilder.Append (string.Format ("[{0}].[{1}]", prefix, columnName)); // TODO: Add _commandBuilder.AppendFormat calling StringBuilder.AppendFormat
 
       return expression;
     }
 
     protected override Expression VisitConstantExpression (ConstantExpression expression)
     {
+      // TODO: Perform check for null values here
+      // TODO: Parameter name must be appended to _commandBuilder
       if (expression.Type == typeof (bool))
         _commandBuilder.AddParameter ((bool) expression.Value ? 1 : 0);
       else

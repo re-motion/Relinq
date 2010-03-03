@@ -25,7 +25,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
   /// <summary>
   /// <see cref="SqlQueryModelVisitor"/> generates a <see cref="SqlStatement"/> from a query model.
   /// </summary>
-  public class SqlQueryModelVisitor : QueryModelVisitorBase
+  public class SqlQueryModelVisitor : QueryModelVisitorBase // TODO: Rename to SqlPreparationQueryModelVisitor
   {
     private readonly SqlPreparationContext _sqlPreparationContext;
     private readonly SqlTable _sqlTable;
@@ -63,7 +63,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
-      // In the future, we'll probably need a visitor here as well when we support more complext FromExpressions.
+      // In the future, we'll probably need a visitor here as well when we support more complex FromExpressions.
       _sqlTable.TableSource = new ConstantTableSource ((ConstantExpression) fromClause.FromExpression);
       _sqlPreparationContext.AddQuerySourceMapping (fromClause, _sqlTable);
     }

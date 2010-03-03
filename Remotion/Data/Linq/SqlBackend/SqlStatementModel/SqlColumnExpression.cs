@@ -20,6 +20,7 @@ using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Utilities;
 
+// TODO: Move to SqlStatementModel.Resolved namespace
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
   /// <summary>

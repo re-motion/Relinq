@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using Remotion.Data.Linq.Utilities;
 
-namespace Remotion.Data.Linq.SqlBackend
+namespace Remotion.Data.Linq.SqlBackend // TODO: Doesn't belong in this namespace, move to Remotion.Data.Linq.
 {
   /// <summary>
   /// Generates unique identifiers based on a set of known identifiers.

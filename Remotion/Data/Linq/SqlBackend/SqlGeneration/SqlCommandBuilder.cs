@@ -24,7 +24,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 {
   public class SqlCommandBuilder
   {
-    private readonly StringBuilder _sb;
+    private readonly StringBuilder _sb; // TODO: As a field, rename to _stringBuilder
     private readonly List<CommandParameter> _parameters;
 
     private readonly List<Type> _supportedTypes;
@@ -34,6 +34,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       _sb = new StringBuilder();
       _parameters = new List<CommandParameter>();
 
+      // TODO: Remove type checks, we'll let ADO.NET take care of that. (Otherwise, we'd have to handle all types defined by SqlDbType...)
       _supportedTypes = new List<Type>();
       _supportedTypes.Add (typeof (string));
       _supportedTypes.Add (typeof (int));
@@ -66,7 +67,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
     public string GetCommandText ()
     {
-      return _sb.ToString(); //TODO: check parameter with null values, add to _sb
+      return _sb.ToString(); //TODO: check parameter with null values, add to _sb // TODO: Perform null value check in SqlGeneratingExpressionVisitor instead
     }
 
     public CommandParameter[] GetCommandParameters ()

@@ -26,8 +26,8 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   /// </summary>
   public class SqlTable
   {
-    private AbstractTableSource _tableSource;
-    private readonly Dictionary<MemberInfo, SqlTable> _joinedTables; //TODO: MultiDictionary really needed?
+    private AbstractTableSource _tableSource; // TODO: Initialize from ctor parameter
+    private readonly Dictionary<MemberInfo, SqlTable> _joinedTables;
     
     public SqlTable ()
     {
@@ -48,9 +48,9 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       }
     }
 
-    public SqlTable GetOrAddJoin (MemberInfo relationMember, AbstractTableSource tableSource)
+    public SqlTable GetOrAddJoin (MemberInfo relationMember, AbstractTableSource tableSource) // TODO: Change to JoinedTableSource
     {
-      if (relationMember.DeclaringType != tableSource.Type)
+      if (relationMember.DeclaringType != tableSource.Type) // TODO: Compare return type of relation member with type of tableSource (ReflectionUtility.GetFieldOrPropertyType)
       {
         string message = string.Format ("Type mismatch between {0} and {1}.",relationMember.DeclaringType.Name, tableSource.Type.Name);
         throw new InvalidOperationException (message);

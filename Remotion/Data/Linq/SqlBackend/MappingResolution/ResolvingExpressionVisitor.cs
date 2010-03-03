@@ -25,6 +25,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
   /// <summary>
   /// <see cref="ResolvingExpressionVisitor"/> implements <see cref="ISqlExpressionVisitor"/> and <see cref="ThrowingExpressionTreeVisitor"/>.
   /// </summary>
+  // TODO: ResolvingExpressionVisitor should simply ignore any expressions it cannot resolve; derive from ExpressionTreeVisitor rather than ThrowingExpressionTreeVisitor.
   public class ResolvingExpressionVisitor : ThrowingExpressionTreeVisitor, ISqlExpressionVisitor
   {
     private readonly ISqlStatementResolver _resolver;
@@ -64,6 +65,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
       return _resolver.ResolveMemberExpression (expression, _generator);
     }
 
+    // TODO: Remove
     protected override Exception CreateUnhandledItemException<T> (T unhandledItem, string visitMethod)
     {
       ArgumentUtility.CheckNotNull ("unhandledItem", unhandledItem);

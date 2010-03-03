@@ -26,13 +26,14 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   /// <summary>
   /// <see cref="SqlMemberExpression"/> represents a sql specific member expression.
   /// </summary>
+  // TODO: Move to SqlStatementModel.Unresolved namespace
   public class SqlMemberExpression : ExtensionExpression
   {
     private readonly SqlTable _sqlTable;
     private readonly MemberInfo _memberInfo;
 
     public SqlMemberExpression (SqlTable sqlTable, MemberInfo memberInfo)
-      : base (sqlTable.TableSource.Type)
+      : base (sqlTable.TableSource.Type) // TODO: Type of SqlMemberExpression is type of object returned by memberInfo. Use ReflectionUtility.GetFieldOrPropertyType
     {
       ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
 

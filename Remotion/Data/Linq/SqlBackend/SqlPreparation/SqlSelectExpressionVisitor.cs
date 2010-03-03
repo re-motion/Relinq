@@ -27,8 +27,10 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
   /// <see cref="SqlSelectExpressionVisitor"/> transforms the expressions stored by <see cref="SqlStatement.SelectProjection"/> to a SQL-specific
   /// format.
   /// </summary>
+  // TODO: Rename to SqlPreparationExpressionVisitor
+  // TODO: Sql preparation phase should ignore expression types that don't need to be prepared. Therefore, derive from ExpressionTreeVisitor instead.
   public class SqlSelectExpressionVisitor : ThrowingExpressionTreeVisitor
-  {
+  { 
     private readonly SqlPreparationContext _context;
 
     public static Expression TranslateExpression (Expression projection, SqlPreparationContext context)
@@ -50,7 +52,9 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
     protected override Expression VisitQuerySourceReferenceExpression (QuerySourceReferenceExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      return new SqlTableReferenceExpression (_context.GetSqlTableForQuerySource (expression.ReferencedQuerySource));
+      
+      var referencedTable = _context.GetSqlTableForQuerySource (expression.ReferencedQuerySource);
+      return new SqlTableReferenceExpression (referencedTable);
     }
 
     protected override Expression VisitMemberExpression (MemberExpression expression)
@@ -85,11 +89,12 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
             newExpressionAsSqlMemberExpression.MemberInfo, // "Cook"
             new JoinedTableSource (newExpressionAsSqlMemberExpression.MemberInfo));
 
-        return new SqlMemberExpression (originalSqlTable, expression.Member); // cookTable.FirstName
+        return new SqlMemberExpression (originalSqlTable, expression.Member); // cookTable.FirstName // TODO: Use join, not originalSqlTable.
       }
       return expression;
     }
 
+    // TODO: Remove
     protected override Exception CreateUnhandledItemException<T> (T unhandledItem, string visitMethod)
     {
       ArgumentUtility.CheckNotNull ("unhandledItem", unhandledItem);

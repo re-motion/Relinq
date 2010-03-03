@@ -22,6 +22,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   /// <summary>
   /// <see cref="SqlJoinedTableSource"/> represents a join between two database tables.
   /// </summary>
+  // TODO: Move to SqlStatementModel.Resolved namespace
   public class SqlJoinedTableSource : AbstractTableSource
   {
     private readonly Type _type;
@@ -30,6 +31,8 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
     private readonly string _primaryKey;
     private readonly string _foreignKey;
 
+    // TODO: No need to pass type here, use foreignTableSource.Type instead.
+    // TODO: UseSqlColumnExpression for primary key and foreign key, remove primaryTableSource, make foreignTableSource an AbstractTableSource.
     public SqlJoinedTableSource (SqlTableSource primaryTableSource, SqlTableSource foreignTableSource, string primaryKey, string foreignKey, Type type)
     {
       ArgumentUtility.CheckNotNull ("primaryTableSource", primaryTableSource);

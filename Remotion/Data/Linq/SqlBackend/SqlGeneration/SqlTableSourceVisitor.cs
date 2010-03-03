@@ -15,7 +15,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Text;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
 using Remotion.Data.Linq.Utilities;
 
@@ -26,9 +25,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
   /// </summary>
   public class SqlTableSourceVisitor : ITableSourceVisitor
   {
-    //private readonly StringBuilder _sb;
     private readonly SqlCommandBuilder _commandBuilder;
-
     
     public static void GenerateSql (SqlTable sqlTable, SqlCommandBuilder commandBuilder)
     {
@@ -72,10 +69,14 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
     public AbstractTableSource VisitSqlJoinedTableSource (SqlJoinedTableSource tableSource)
     {
       _commandBuilder.Append (" JOIN ");
+
+      // TODO: Use tableSource.ForeignTableSource.Accept (this) instead
       _commandBuilder.Append ("[");
       _commandBuilder.Append (tableSource.ForeignTableSource.TableName);
       _commandBuilder.Append ("]");
+
       _commandBuilder.Append (" ON ");
+      // TODO: Pass SqlGeneratingExpressionVisitor via ctor, use it to generate text for the primary key and foreign key column expressions (after refactoring SqlJoinedTableSource)
       _commandBuilder.Append ("[");
       _commandBuilder.Append (tableSource.PrimaryTableSource.TableAlias);
       _commandBuilder.Append ("].[");

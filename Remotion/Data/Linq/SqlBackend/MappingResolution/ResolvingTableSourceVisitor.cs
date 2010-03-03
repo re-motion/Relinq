@@ -28,13 +28,13 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
     private readonly ISqlStatementResolver _resolver;
     private readonly SqlTable _sqlTable;
 
-    public static void ResolveTableSource (SqlTable sqlTable, ISqlStatementResolver resolver)
+    public static void ResolveTableSource (SqlTable sqlTable, ISqlStatementResolver resolver) // TODO: Change signature to take and return AbstractTableSource
     {
       ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
       ArgumentUtility.CheckNotNull ("resolver", resolver);
 
       var visitor = new ResolvingTableSourceVisitor (resolver, sqlTable);
-      sqlTable.TableSource = visitor.VisitTableSource (sqlTable.TableSource);
+      sqlTable.TableSource = visitor.VisitTableSource (sqlTable.TableSource); // TODO: Move the assignment "sqlTable.TableSource = " to the caller.
     }
 
     protected ResolvingTableSourceVisitor (ISqlStatementResolver resolver, SqlTable sqlTable)
@@ -66,7 +66,8 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
     public AbstractTableSource VisitJoinedTableSource (JoinedTableSource tableSource)
     {
       ArgumentUtility.CheckNotNull ("tableSource", tableSource);
-      SqlTable joinTable = _sqlTable.GetOrAddJoin (tableSource.MemberInfo, tableSource);
+
+      var joinTable = _sqlTable.GetOrAddJoin (tableSource.MemberInfo, tableSource);
       return _resolver.ResolveJoinedTableSource (_sqlTable, joinTable);
     }
 

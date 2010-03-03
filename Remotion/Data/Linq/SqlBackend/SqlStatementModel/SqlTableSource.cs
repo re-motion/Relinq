@@ -17,6 +17,7 @@
 using System;
 using Remotion.Data.Linq.Utilities;
 
+// TODO: Move to SqlStatementModel.Resolved namespace
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
   /// <summary>

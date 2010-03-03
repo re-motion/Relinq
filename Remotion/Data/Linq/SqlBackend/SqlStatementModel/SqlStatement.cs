@@ -28,9 +28,9 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   {
     private Expression _selectProjection;
     private readonly SqlTable _fromExpression;
-    private readonly UniqueIdentifierGenerator _generator;
+    private readonly UniqueIdentifierGenerator _generator; // TODO: Rename to _uniqueIdentifierGenerator
 
-    public SqlStatement (Expression selectProjection, SqlTable fromExpression, UniqueIdentifierGenerator generator)
+    public SqlStatement (Expression selectProjection, SqlTable fromExpression, UniqueIdentifierGenerator generator) // TODO: Rename to uniqueIdentifierGenerator
     {
       ArgumentUtility.CheckNotNull ("selectProjection", selectProjection);
       ArgumentUtility.CheckNotNull ("fromExpression", fromExpression);

@@ -15,14 +15,13 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Utilities;
 
+// TODO: Move to SqlStatementModel.Resolved namespace
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
   /// <summary>
@@ -30,9 +29,9 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   /// </summary>
   public class SqlColumnListExpression : ExtensionExpression
   {
-    private SqlColumnExpression[] _columns;
+    private readonly SqlColumnExpression[] _columns;
 
-    public SqlColumnListExpression (Type type, SqlColumnExpression[] columns)
+    public SqlColumnListExpression (Type type, SqlColumnExpression[] columns) // TODO: consider making parameter a params[] for convenience
         : base (type)
     {
       ArgumentUtility.CheckNotNull ("columns", columns);
@@ -47,6 +46,14 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 
     protected internal override Expression VisitChildren (ExpressionTreeVisitor visitor)
     {
+      // TODO: Change tests to check that if the visitor changes the columns, a new SqlColumnListExpression is created
+      // TODO: Change code as follows:
+      // var originalColumns = Columns;
+      // var newColumns = visitor.VisitAndConvert (originalColumns);
+      // if (newColumns != originalColumns)
+      //   return new SqlColumnListExpression (Type, newColumns);
+      // else
+      //   return this;
       (visitor.VisitList (Columns, c => (SqlColumnExpression) visitor.VisitExpression (c))).CopyTo (_columns, 0);
       return this;
     }

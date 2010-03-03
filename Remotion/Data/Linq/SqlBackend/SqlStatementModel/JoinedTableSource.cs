@@ -18,6 +18,7 @@ using System;
 using System.Reflection;
 using Remotion.Data.Linq.Utilities;
 
+// TODO: Move to SqlStatementModel.Unresolved namespace
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
   /// <summary>
@@ -41,7 +42,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
     
     public override Type Type
     {
-      get { return _memberInfo.DeclaringType; }
+      get { return _memberInfo.DeclaringType; } // TODO: The type of a joined table source should be the type returned by the member; use ReflectionUtility.GetFieldOrPropertyType.
     }
 
     public override AbstractTableSource Accept (ITableSourceVisitor visitor)
