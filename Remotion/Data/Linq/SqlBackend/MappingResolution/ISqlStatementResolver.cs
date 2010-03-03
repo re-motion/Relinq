@@ -25,9 +25,11 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
   /// </summary>
   public interface ISqlStatementResolver
   {
+    // TODO: Return AbstractTableSource
     SqlTableSource ResolveConstantTableSource (ConstantTableSource tableSource);
     Expression ResolveTableReferenceExpression (SqlTableReferenceExpression tableReferenceExpression);
     Expression ResolveMemberExpression (SqlMemberExpression memberExpression, UniqueIdentifierGenerator generator);
+    // TODO: Return AbstractTableSource
     SqlJoinedTableSource ResolveJoinedTableSource (SqlTable sqlTable, SqlTable joinTable);
   }
 }

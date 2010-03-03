@@ -50,13 +50,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
     public CommandParameter AddParameter (object value)
     {
-      if (value == null) //TODO: handle special case (null values): inline in sql
-      {
-        var parameter = new CommandParameter ("@" + (_parameters.Count + 1), value);
-        _parameters.Add (parameter);
-        return parameter;
-      }
-
       if (IsSupportedType (value.GetType ()))
       {
         var parameter = new CommandParameter ("@" + (_parameters.Count + 1), value);

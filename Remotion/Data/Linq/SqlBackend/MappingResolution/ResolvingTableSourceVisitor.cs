@@ -67,7 +67,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
     {
       ArgumentUtility.CheckNotNull ("tableSource", tableSource);
 
-      var joinTable = _sqlTable.GetOrAddJoin (tableSource.MemberInfo, tableSource);
+      var joinTable = _sqlTable.GetOrAddJoin (tableSource.MemberInfo, tableSource); // TODO: Move to ResolveJoinedTableSource implementation
       return _resolver.ResolveJoinedTableSource (_sqlTable, joinTable); // TODO: Change ResolveJoinedTableSource to take the JoinedTableSource; do not create the joinTable here
     }
 

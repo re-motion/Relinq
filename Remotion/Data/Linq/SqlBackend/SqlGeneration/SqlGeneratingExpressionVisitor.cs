@@ -73,8 +73,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
     protected override Expression VisitConstantExpression (ConstantExpression expression)
     {
-      // TODO: Perform check for null values here
-      // TODO: Parameter name must be appended to _commandBuilder
       if (expression.Type == typeof (bool))
         _commandBuilder.AddParameter ((bool) expression.Value ? 1 : 0);
       else if (expression.Value == null)
