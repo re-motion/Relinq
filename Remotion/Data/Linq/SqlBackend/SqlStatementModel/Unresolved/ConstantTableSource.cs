@@ -38,7 +38,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved
 
     public ConstantExpression ConstantExpression { get; private set; }
     
-    public override Type ItemType // TODO: initialize via ctor (from initial FromClause.ItemType)
+    public override Type ItemType
     {
       get { return _itemType;  }
     }

@@ -365,7 +365,7 @@
     <Compile Include="QueryProviderBaseTest.cs" />
     <Compile Include="ReflectionUtilityTest.cs" />
     <Compile Include="SqlBackend\MappingResolution\ResolvingSqlStatementVisitorTest.cs" />
-    <Compile Include="SqlBackend\SqlBackendIntegrationTest.cs" />
+    <Compile Include="SqlBackend\SqlGeneration\SqlBackendIntegrationTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlCommandBuilderTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlGeneratingExpressionVisitorTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlStatementTextGeneratorTest.cs" />

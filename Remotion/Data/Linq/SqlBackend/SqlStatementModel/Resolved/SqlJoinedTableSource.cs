@@ -28,7 +28,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
     private readonly SqlColumnExpression _primaryColumn;
     private readonly SqlColumnExpression _foreignColumn;
 
-    // TODO: UseSqlColumnExpression for primary key and foreign key, remove primaryTableSource, make foreignTableSource an AbstractTableSource.
     public SqlJoinedTableSource (AbstractTableSource foreignTableSource, SqlColumnExpression primaryColumn, SqlColumnExpression foreignColumn)
     {
       ArgumentUtility.CheckNotNull ("foreignTableSource", foreignTableSource);

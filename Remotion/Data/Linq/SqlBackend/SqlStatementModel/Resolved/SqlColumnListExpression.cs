@@ -46,14 +46,11 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
 
     protected internal override Expression VisitChildren (ExpressionTreeVisitor visitor)
     {
-      //TODO: check fails always because Array.AsReadOnly returns a new instance
       var newColumns = visitor.VisitAndConvert (Columns, "VisitChildren");
       if (newColumns != Columns)
         return new SqlColumnListExpression (Type, newColumns.ToArray());
       else
         return this;
-      //(visitor.VisitList (Columns, c => (SqlColumnExpression) visitor.VisitExpression (c))).CopyTo (_columns, 0);
-      //return this;
     }
 
     public override Expression Accept (ExpressionTreeVisitor visitor)
