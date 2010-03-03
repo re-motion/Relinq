@@ -25,8 +25,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
   /// <summary>
   /// <see cref="ResolvingExpressionVisitor"/> implements <see cref="IUnresolvedSqlExpressionVisitor"/> and <see cref="ThrowingExpressionTreeVisitor"/>.
   /// </summary>
-  // TODO: ResolvingExpressionVisitor should simply ignore any expressions it cannot resolve; derive from ExpressionTreeVisitor rather than ThrowingExpressionTreeVisitor.
-  public class ResolvingExpressionVisitor : ThrowingExpressionTreeVisitor, IUnresolvedSqlExpressionVisitor
+  public class ResolvingExpressionVisitor : ExpressionTreeVisitor, IUnresolvedSqlExpressionVisitor
   {
     private readonly ISqlStatementResolver _resolver;
     private readonly UniqueIdentifierGenerator _generator;
@@ -65,17 +64,5 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
       return _resolver.ResolveMemberExpression (expression, _generator);
     }
 
-    // TODO: Remove
-    protected override Exception CreateUnhandledItemException<T> (T unhandledItem, string visitMethod)
-    {
-      ArgumentUtility.CheckNotNull ("unhandledItem", unhandledItem);
-      ArgumentUtility.CheckNotNullOrEmpty ("visitMethod", visitMethod);
-
-      var message = string.Format (
-          "The given expression type '{0}' is not supported in from clauses. (Expression: '{1}')",
-          unhandledItem.GetType ().Name,
-          unhandledItem);
-      throw new NotSupportedException (message);
-    }
   }
 }

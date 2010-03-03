@@ -28,8 +28,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
   /// <see cref="SqlPreparationExpressionVisitor"/> transforms the expressions stored by <see cref="SqlStatement.SelectProjection"/> to a SQL-specific
   /// format.
   /// </summary>
-  // TODO: Sql preparation phase should ignore expression types that don't need to be prepared. Therefore, derive from ExpressionTreeVisitor instead.
-  public class SqlPreparationExpressionVisitor : ThrowingExpressionTreeVisitor
+  public class SqlPreparationExpressionVisitor : ExpressionTreeVisitor
   { 
     private readonly SqlPreparationContext _context;
 
@@ -94,17 +93,5 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       return expression;
     }
 
-    // TODO: Remove
-    protected override Exception CreateUnhandledItemException<T> (T unhandledItem, string visitMethod)
-    {
-      ArgumentUtility.CheckNotNull ("unhandledItem", unhandledItem);
-      ArgumentUtility.CheckNotNullOrEmpty ("visitMethod", visitMethod);
-
-      var message = string.Format (
-          "The given expression type '{0}' is not supported in select clauses. (Expression: '{1}')",
-          unhandledItem.GetType().Name,
-          unhandledItem);
-      throw new NotSupportedException (message);
-    }
   }
 }

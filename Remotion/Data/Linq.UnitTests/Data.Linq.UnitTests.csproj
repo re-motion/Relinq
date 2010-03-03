@@ -379,8 +379,8 @@
     <Compile Include="SqlBackend\SqlStatementModel\Resolved\SqlColumnListExpressionTest.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\Resolved\SqlColumnExpressionTest.cs" />
     <Compile Include="SqlBackend\SqlPreparation\SqlPreparationContextTest.cs" />
-    <Compile Include="SqlBackend\SqlPreparation\SqlQueryModelVisitorTest.cs" />
-    <Compile Include="SqlBackend\SqlPreparation\SqlSelectExpressionVisitorTest.cs" />
+    <Compile Include="SqlBackend\SqlPreparation\SqlPreparationQueryModelVisitorTest.cs" />
+    <Compile Include="SqlBackend\SqlPreparation\SqlPreparationExpressionVisitorTest.cs" />
     <Compile Include="SqlBackend\SqlStatementResolverStub.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlStatementModelObjectMother.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\Unresolved\SqlTableReferenceExpressionTest.cs" />
