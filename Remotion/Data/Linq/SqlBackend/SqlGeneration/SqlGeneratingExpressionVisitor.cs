@@ -97,7 +97,8 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
         case ExpressionType.And:
           throw new NotSupportedException();
         case ExpressionType.AndAlso:
-          throw new NotSupportedException();
+          _commandBuilder.Append (" AND ");
+          break;
         case ExpressionType.ArrayLength:
           throw new NotSupportedException();
         case ExpressionType.ArrayIndex:
@@ -167,7 +168,8 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
         case ExpressionType.Or:
           throw new NotSupportedException();
         case ExpressionType.OrElse:
-          throw new NotSupportedException();
+          _commandBuilder.Append (" OR ");
+          break;
         case ExpressionType.Parameter:
           throw new NotSupportedException();
         case ExpressionType.Power:
