@@ -24,7 +24,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
   /// </summary>
   public class SqlTableSource : AbstractTableSource
   {
-    private readonly Type _type;
+    private readonly Type _itemType;
     private readonly string _tableName;
     private readonly string _tableAlias;
 
@@ -34,7 +34,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
       ArgumentUtility.CheckNotNullOrEmpty ("tableName", tableName);
       ArgumentUtility.CheckNotNullOrEmpty ("tableAlias", tableAlias);
 
-      _type = type;
+      _itemType = type;
       _tableName = tableName;
       _tableAlias = tableAlias;
     }
@@ -49,9 +49,9 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
       get { return _tableAlias; }
     }
 
-    public override Type Type // TODO: Rename to "ItemType"
+    public override Type ItemType
     {
-      get { return _type; }
+      get { return _itemType; }
     }
 
     public override AbstractTableSource Accept (ITableSourceVisitor visitor)

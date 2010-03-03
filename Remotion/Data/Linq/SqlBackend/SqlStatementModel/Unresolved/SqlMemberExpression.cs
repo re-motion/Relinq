@@ -32,7 +32,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved
     private readonly MemberInfo _memberInfo;
 
     public SqlMemberExpression (SqlTable sqlTable, MemberInfo memberInfo)
-        : base (sqlTable.TableSource.Type) // TODO: Type of SqlMemberExpression is type of object returned by memberInfo. Use ReflectionUtility.GetFieldOrPropertyType
+        : base (sqlTable.TableSource.ItemType) // TODO: Type of SqlMemberExpression is type of object returned by memberInfo. Use ReflectionUtility.GetFieldOrPropertyType
     {
       ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
 

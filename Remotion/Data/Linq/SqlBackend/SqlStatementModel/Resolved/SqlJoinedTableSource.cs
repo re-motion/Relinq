@@ -24,7 +24,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
   /// </summary>
   public class SqlJoinedTableSource : AbstractTableSource
   {
-    private readonly Type _type;
+    private readonly Type _itemType;
     private readonly SqlTableSource _primaryTableSource;
     private readonly SqlTableSource _foreignTableSource;
     private readonly string _primaryKey;
@@ -44,12 +44,12 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
       _foreignTableSource = foreignTableSource;
       _primaryKey = primaryKey;
       _foreignKey = foreignKey;
-      _type = type;
+      _itemType = type;
     }
 
-    public override Type Type // TODO: Rename to "ItemType"
+    public override Type ItemType
     {
-      get { return _type; }
+      get { return _itemType; }
     }
 
     public SqlTableSource PrimaryTableSource

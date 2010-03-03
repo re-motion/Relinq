@@ -30,7 +30,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved
     private readonly SqlTable _sqlTable;
     
     public SqlTableReferenceExpression (SqlTable sqlTable)
-        : base(sqlTable.TableSource.Type)
+        : base(sqlTable.TableSource.ItemType)
     {
       ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
 

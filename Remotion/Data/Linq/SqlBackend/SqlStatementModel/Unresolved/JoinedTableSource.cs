@@ -38,10 +38,10 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved
     {
       get { return _memberInfo; }
     }
-    
-    public override Type Type
+
+    public override Type ItemType
     {
-      get { return _memberInfo.DeclaringType; } // TODO: The type of a joined table source should be the type returned by the member; use ReflectionUtility.GetFieldOrPropertyType.
+      get { return ReflectionUtility.GetFieldOrPropertyType (_memberInfo); }
     }
 
     public override AbstractTableSource Accept (ITableSourceVisitor visitor)

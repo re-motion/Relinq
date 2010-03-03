@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved;
 using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
@@ -28,7 +29,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   {
     private AbstractTableSource _tableSource; // TODO: Initialize from ctor parameter
     private readonly Dictionary<MemberInfo, SqlTable> _joinedTables;
-    
+
     public SqlTable ()
     {
       _joinedTables = new Dictionary<MemberInfo, SqlTable>();
@@ -37,22 +38,24 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
     public AbstractTableSource TableSource
     {
       get { return _tableSource; }
-      set { 
+      set
+      {
         ArgumentUtility.CheckNotNull ("value", value);
         if (_tableSource != null)
         {
-          if (_tableSource.Type != value.Type)
-            throw new ArgumentTypeException ("value", _tableSource.Type, value.Type);
+          if (_tableSource.ItemType != value.ItemType)
+            throw new ArgumentTypeException ("value", _tableSource.ItemType, value.ItemType);
         }
         _tableSource = value;
       }
     }
 
-    public SqlTable GetOrAddJoin (MemberInfo relationMember, AbstractTableSource tableSource) // TODO: Change to JoinedTableSource
+    public SqlTable GetOrAddJoin (MemberInfo relationMember, JoinedTableSource tableSource)
     {
-      if (relationMember.DeclaringType != tableSource.Type) // TODO: Compare return type of relation member with type of tableSource (ReflectionUtility.GetFieldOrPropertyType)
+      if (ReflectionUtility.GetFieldOrPropertyType (relationMember) != tableSource.ItemType)
       {
-        string message = string.Format ("Type mismatch between {0} and {1}.",relationMember.DeclaringType.Name, tableSource.Type.Name);
+        string message = string.Format (
+            "Type mismatch between {0} and {1}.", ReflectionUtility.GetFieldOrPropertyType (relationMember).Name, tableSource.ItemType.Name);
         throw new InvalidOperationException (message);
       }
 
@@ -61,6 +64,5 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 
       return _joinedTables[relationMember];
     }
-
   }
 }
