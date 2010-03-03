@@ -25,18 +25,22 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved
   /// </summary>
   public class ConstantTableSource : AbstractTableSource
   {
-    public ConstantTableSource (ConstantExpression constantExpression)
+    private readonly Type _itemType;
+
+    public ConstantTableSource (ConstantExpression constantExpression, Type itemType)
     {
       ArgumentUtility.CheckNotNull ("constantExpression", constantExpression);
+      ArgumentUtility.CheckNotNull ("itemType", itemType);
 
       ConstantExpression = constantExpression;
+      _itemType = itemType;
     }
 
     public ConstantExpression ConstantExpression { get; private set; }
     
     public override Type ItemType // TODO: initialize via ctor (from initial FromClause.ItemType)
     {
-      get { return ConstantExpression.Type;  }
+      get { return _itemType;  }
     }
 
     public override AbstractTableSource Accept (ITableSourceVisitor visitor)
