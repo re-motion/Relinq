@@ -86,8 +86,18 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
     protected override Expression VisitBinaryExpression (BinaryExpression expression)
     {
       _commandBuilder.Append ("(");
-      VisitExpression (expression.Left);
 
+      if (expression.NodeType == ExpressionType.Coalesce)
+      {
+        _commandBuilder.Append ("COALESCE (");
+        VisitExpression (expression.Left);
+        _commandBuilder.Append (", ");
+        VisitExpression (expression.Right);
+        _commandBuilder.Append (")");
+        return expression;
+      }
+
+      VisitExpression (expression.Left);
       switch (expression.NodeType)
       {
         case ExpressionType.Add:
@@ -105,8 +115,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
         case ExpressionType.ArrayIndex:
           throw new NotSupportedException();
         case ExpressionType.Call:
-          throw new NotSupportedException();
-        case ExpressionType.Coalesce:
           throw new NotSupportedException();
         case ExpressionType.Conditional:
           throw new NotSupportedException();
