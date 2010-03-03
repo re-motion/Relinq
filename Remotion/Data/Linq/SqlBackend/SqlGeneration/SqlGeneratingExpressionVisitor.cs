@@ -120,14 +120,17 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
           _commandBuilder.Append (" / ");
           break;
         case ExpressionType.Equal:
-          throw new NotSupportedException();
+          _commandBuilder.Append (" = ");
+          break;
         case ExpressionType.ExclusiveOr:
           _commandBuilder.Append (" ^ ");
           break;
         case ExpressionType.GreaterThan:
-          throw new NotSupportedException();
+          _commandBuilder.Append (" > ");
+          break;
         case ExpressionType.GreaterThanOrEqual:
-          throw new NotSupportedException();
+          _commandBuilder.Append (" >= ");
+          break;
         case ExpressionType.Invoke:
           throw new NotSupportedException();
         case ExpressionType.Lambda:
@@ -135,9 +138,11 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
         case ExpressionType.LeftShift:
           throw new NotSupportedException();
         case ExpressionType.LessThan:
-          throw new NotSupportedException();
+          _commandBuilder.Append (" < ");
+          break;
         case ExpressionType.LessThanOrEqual:
-          throw new NotSupportedException();
+          _commandBuilder.Append (" <= ");
+          break;
         case ExpressionType.ListInit:
           throw new NotSupportedException();
         case ExpressionType.MemberAccess:
@@ -166,7 +171,8 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
         case ExpressionType.Not:
           throw new NotSupportedException();
         case ExpressionType.NotEqual:
-          throw new NotSupportedException();
+          _commandBuilder.Append (" <> ");
+          break;
         case ExpressionType.Or:
           _commandBuilder.Append (" | ");
           break;
