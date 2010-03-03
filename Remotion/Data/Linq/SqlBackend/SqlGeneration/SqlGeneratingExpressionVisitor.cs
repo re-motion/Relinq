@@ -97,6 +97,40 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
         return expression;
       }
 
+      if (IsNullConstant (expression.Left))
+      {
+        switch (expression.NodeType)
+        {
+          case ExpressionType.Equal:
+            VisitExpression (expression.Right);
+            _commandBuilder.Append (" IS NULL");
+            _commandBuilder.Append (")");
+            return expression;
+          case ExpressionType.NotEqual:
+            VisitExpression (expression.Right);
+            _commandBuilder.Append (" IS NOT NULL");
+            _commandBuilder.Append (")");
+            return expression;
+        }
+      }
+      
+      if (IsNullConstant (expression.Right))
+      {
+        switch (expression.NodeType)
+        {
+          case ExpressionType.Equal:
+            VisitExpression (expression.Left);
+            _commandBuilder.Append (" IS NULL");
+            _commandBuilder.Append (")");
+            return expression;
+          case ExpressionType.NotEqual:
+            VisitExpression (expression.Left);
+            _commandBuilder.Append (" IS NOT NULL");
+            _commandBuilder.Append (")");
+            return expression;
+        }
+      }
+
       VisitExpression (expression.Left);
       switch (expression.NodeType)
       {
@@ -210,6 +244,17 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       VisitExpression (expression.Right);
       _commandBuilder.Append (")");
       return expression;
+    }
+
+    private bool IsNullConstant (Expression expression)
+    {
+      var constantExpression = expression as ConstantExpression;
+      if (constantExpression != null)
+      {
+        if (constantExpression.Value == null)
+          return true;
+      }
+      return false;
     }
 
     protected override Exception CreateUnhandledItemException<T> (T unhandledItem, string visitMethod)
