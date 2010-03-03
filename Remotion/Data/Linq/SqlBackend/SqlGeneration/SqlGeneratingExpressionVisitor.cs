@@ -74,11 +74,17 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
     protected override Expression VisitConstantExpression (ConstantExpression expression)
     {
       if (expression.Type == typeof (bool))
-        _commandBuilder.AddParameter ((bool) expression.Value ? 1 : 0);
+      {
+        var parameter = _commandBuilder.AddParameter ((bool) expression.Value ? 1 : 0);
+        _commandBuilder.Append (parameter.Name);
+      }
       else if (expression.Value == null)
         _commandBuilder.Append ("NULL");
       else
-        _commandBuilder.AddParameter (expression.Value);
+      {
+        var parameter =_commandBuilder.AddParameter (expression.Value);
+        _commandBuilder.Append (parameter.Name);
+      }
 
       return expression;
     }

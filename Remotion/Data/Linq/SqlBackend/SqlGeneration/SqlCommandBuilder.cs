@@ -27,19 +27,10 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
     private readonly StringBuilder _sb; // TODO: As a field, rename to _stringBuilder
     private readonly List<CommandParameter> _parameters;
 
-    private readonly List<Type> _supportedTypes;
-
     public SqlCommandBuilder ()
     {
       _sb = new StringBuilder();
       _parameters = new List<CommandParameter>();
-
-      // TODO: Remove type checks, we'll let ADO.NET take care of that. (Otherwise, we'd have to handle all types defined by SqlDbType...)
-      _supportedTypes = new List<Type>();
-      _supportedTypes.Add (typeof (string));
-      _supportedTypes.Add (typeof (int));
-      _supportedTypes.Add (typeof (double));
-      _supportedTypes.Add (typeof (bool));
     }
 
     public void Append (string stringToAppend)
@@ -50,30 +41,20 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
     public CommandParameter AddParameter (object value)
     {
-      if (IsSupportedType (value.GetType ()))
-      {
-        var parameter = new CommandParameter ("@" + (_parameters.Count + 1), value);
-        _parameters.Add (parameter);
-        _sb.Append (parameter.Name);
-        return parameter;
-      }
-      throw new NotSupportedException (string.Format ("Specific type of '{0}' is not supported.", value.GetType().Name));
-    } 
+      var parameter = new CommandParameter ("@" + (_parameters.Count + 1), value);
+      _parameters.Add (parameter);
+      //_sb.Append (parameter.Name);
+      return parameter;
+    }
 
     public string GetCommandText ()
     {
-      return _sb.ToString(); //TODO: check parameter with null values, add to _sb
+      return _sb.ToString();
     }
 
     public CommandParameter[] GetCommandParameters ()
     {
       return _parameters.ToArray();
     }
-
-    private bool IsSupportedType (Type type)
-    {
-      return _supportedTypes.Contains (type);
-    }
-
   }
 }
