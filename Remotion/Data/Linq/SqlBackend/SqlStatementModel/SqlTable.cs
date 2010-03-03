@@ -27,12 +27,15 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   /// </summary>
   public class SqlTable
   {
-    private AbstractTableSource _tableSource; // TODO: Initialize from ctor parameter
+    private AbstractTableSource _tableSource;
     private readonly Dictionary<MemberInfo, SqlTable> _joinedTables;
 
-    public SqlTable ()
+    public SqlTable (AbstractTableSource tableSource)
     {
+      ArgumentUtility.CheckNotNull ("tableSource", tableSource);
+
       _joinedTables = new Dictionary<MemberInfo, SqlTable>();
+      _tableSource = tableSource;
     }
 
     public AbstractTableSource TableSource
@@ -60,7 +63,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       }
 
       if (!_joinedTables.ContainsKey (relationMember))
-        _joinedTables.Add (relationMember, new SqlTable { TableSource = tableSource });
+        _joinedTables.Add (relationMember, new SqlTable (tableSource ));
 
       return _joinedTables[relationMember];
     }

@@ -29,13 +29,12 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
   public class SqlPreparationQueryModelVisitor : QueryModelVisitorBase
   {
     private readonly SqlPreparationContext _sqlPreparationContext;
-    private readonly SqlTable _sqlTable;
+    private SqlTable _sqlTable;
     private Expression _projectionExpression;
     private UniqueIdentifierGenerator _generator;
 
     public SqlPreparationQueryModelVisitor ()
     {
-      _sqlTable = new SqlTable ();
       _sqlPreparationContext = new SqlPreparationContext ();
     }
 
@@ -65,7 +64,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
       // In the future, we'll probably need a visitor here as well when we support more complex FromExpressions.
-      _sqlTable.TableSource = new ConstantTableSource ((ConstantExpression) fromClause.FromExpression);
+      _sqlTable = new SqlTable (new ConstantTableSource ((ConstantExpression) fromClause.FromExpression));
       _sqlPreparationContext.AddQuerySourceMapping (fromClause, _sqlTable);
     }
     
