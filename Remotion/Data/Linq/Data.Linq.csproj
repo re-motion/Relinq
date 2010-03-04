@@ -145,6 +145,7 @@
     <Compile Include="Clauses\ExpressionTreeVisitors\FormattingExpressionTreeVisitor.cs" />
     <Compile Include="SqlBackend\MappingResolution\ResolvingSqlStatementVisitor.cs" />
     <Compile Include="SqlBackend\MappingResolution\ResolvingTableSourceVisitor.cs" />
+    <Compile Include="SqlBackend\SqlGeneration\SqlCommand.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlCommandBuilder.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\Resolved\IResolvedSqlExpressionVisitor.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlStatementTextGenerator.cs" />

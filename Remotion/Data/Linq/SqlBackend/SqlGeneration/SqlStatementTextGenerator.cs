@@ -26,8 +26,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
   /// </summary>
   public class SqlStatementTextGenerator
   {
-    // TODO: Change to return both string and parameters. (Add a new struct type for this.)
-    public string Build (SqlStatement sqlStatement)
+    public SqlCommand Build (SqlStatement sqlStatement)
     {
       ArgumentUtility.CheckNotNull ("sqlStatement", sqlStatement);
 
@@ -36,7 +35,8 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       BuildSelectPart (sqlStatement.SelectProjection, commandBuilder);
       commandBuilder.Append (" FROM ");
       BuildFromPart (sqlStatement.FromExpression, commandBuilder);
-      return commandBuilder.GetCommandText();
+
+      return  new SqlCommand(commandBuilder.GetCommandText(), commandBuilder.GetCommandParameters());
     }
 
     protected void BuildSelectPart (Expression expression, SqlCommandBuilder commandBuilder)
