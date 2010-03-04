@@ -238,8 +238,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
     protected override Expression VisitMethodCallExpression (MethodCallExpression expression)
     {
-      _methodCallRegistry.GetGenerator (expression.Method).GenerateSql (expression, _commandBuilder);
-      VisitExpression (expression.Object);
+      _methodCallRegistry.GetGenerator (expression.Method).GenerateSql (expression, _commandBuilder, this);
       return expression;
     }
 

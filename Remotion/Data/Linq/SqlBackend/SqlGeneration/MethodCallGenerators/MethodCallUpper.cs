@@ -17,14 +17,23 @@
 using System;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Parsing;
+using Remotion.Data.Linq.Utilities;
 
-namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
+namespace Remotion.Data.Linq.SqlBackend.SqlGeneration.MethodCallGenerators
 {
   /// <summary>
-  /// <see cref="IMethodCallSqlGenerator"/> provides method to generate sql text for method expressions.
+  /// <see cref="MethodCallUpper"/> implements <see cref="IMethodCallSqlGenerator"/> for the string upper method.
   /// </summary>
-  public interface IMethodCallSqlGenerator
+  public class MethodCallUpper : IMethodCallSqlGenerator
   {
-    void GenerateSql (MethodCallExpression methodCallExpression, SqlCommandBuilder commandBuilder, ExpressionTreeVisitor expressionTreeVisitor);
+    public void GenerateSql (MethodCallExpression methodCallExpression, SqlCommandBuilder commandBuilder, ExpressionTreeVisitor expressionTreeVisitor)
+    {
+      ArgumentUtility.CheckNotNull ("methodCallExpression", methodCallExpression);
+      ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);
+
+      commandBuilder.Append ("UPPER(");
+      expressionTreeVisitor.VisitExpression (methodCallExpression.Object);
+      commandBuilder.Append (")");
+    }
   }
 }
