@@ -17,7 +17,6 @@
 using System;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
-using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved;
 
 namespace Remotion.Data.Linq.SqlBackend.MappingResolution
@@ -27,11 +26,9 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
   /// </summary>
   public interface ISqlStatementResolver
   {
-    // TODO: Return AbstractTableSource
-    SqlTableSource ResolveConstantTableSource (ConstantTableSource tableSource);
+    AbstractTableSource ResolveConstantTableSource (ConstantTableSource tableSource);
     Expression ResolveTableReferenceExpression (SqlTableReferenceExpression tableReferenceExpression);
     Expression ResolveMemberExpression (SqlMemberExpression memberExpression, UniqueIdentifierGenerator generator);
-    // TODO: Return AbstractTableSource
-    SqlJoinedTableSource ResolveJoinedTableSource (SqlTable sqlTable, SqlTable joinTable);
+    AbstractTableSource ResolveJoinedTableSource (JoinedTableSource tableSource);
   }
 }

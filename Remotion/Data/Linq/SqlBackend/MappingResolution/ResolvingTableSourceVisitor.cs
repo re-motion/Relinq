@@ -28,23 +28,20 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
   public class ResolvingTableSourceVisitor : ITableSourceVisitor
   {
     private readonly ISqlStatementResolver _resolver;
-    private readonly SqlTable _sqlTable;
-
-    public static void ResolveTableSource (SqlTable sqlTable, ISqlStatementResolver resolver) // TODO: Change signature to take and return AbstractTableSource
+    
+    public static AbstractTableSource ResolveTableSource (AbstractTableSource tableSource, ISqlStatementResolver resolver)
     {
-      ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
+      ArgumentUtility.CheckNotNull ("tableSource", tableSource);
       ArgumentUtility.CheckNotNull ("resolver", resolver);
 
-      var visitor = new ResolvingTableSourceVisitor (resolver, sqlTable);
-      sqlTable.TableSource = visitor.VisitTableSource (sqlTable.TableSource); // TODO: Move the assignment "sqlTable.TableSource = " to the caller.
+      var visitor = new ResolvingTableSourceVisitor (resolver);
+      return visitor.VisitTableSource (tableSource); 
     }
 
-    protected ResolvingTableSourceVisitor (ISqlStatementResolver resolver, SqlTable sqlTable)
+    protected ResolvingTableSourceVisitor (ISqlStatementResolver resolver)
     {
       ArgumentUtility.CheckNotNull ("resolver", resolver);
-      ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
       _resolver = resolver;
-      _sqlTable = sqlTable;
     }
 
     public AbstractTableSource VisitTableSource (AbstractTableSource tableSource)
@@ -68,9 +65,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
     public AbstractTableSource VisitJoinedTableSource (JoinedTableSource tableSource)
     {
       ArgumentUtility.CheckNotNull ("tableSource", tableSource);
-
-      var joinTable = _sqlTable.GetOrAddJoin (tableSource.MemberInfo, tableSource); // TODO: Move to ResolveJoinedTableSource implementation
-      return _resolver.ResolveJoinedTableSource (_sqlTable, joinTable); // TODO: Change ResolveJoinedTableSource to take the JoinedTableSource; do not create the joinTable here
+      return _resolver.ResolveJoinedTableSource (tableSource);
     }
 
     public AbstractTableSource VisitSqlJoinedTableSource (SqlJoinedTableSource sqlTableSource)
