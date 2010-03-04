@@ -72,22 +72,12 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
     {
       _commandBuilder.Append (" JOIN ");
 
-      // TODO: Use tableSource.ForeignTableSource.Accept (this) instead
-      _commandBuilder.Append ("[");
-      _commandBuilder.Append (((SqlTableSource)tableSource.ForeignTableSource).TableName);
-      _commandBuilder.Append ("]");
-
+      tableSource.ForeignTableSource.Accept (this);
+      
       _commandBuilder.Append (" ON ");
-      // TODO: Pass SqlGeneratingExpressionVisitor via ctor, use it to generate text for the primary key and foreign key column expressions (after refactoring SqlJoinedTableSource)
-      _commandBuilder.Append ("[");
-      _commandBuilder.Append (tableSource.PrimaryColumn.OwningTableAlias);
-      _commandBuilder.Append ("].[");
-      _commandBuilder.Append (tableSource.PrimaryColumn.ColumnName);
-      _commandBuilder.Append ("] = [");
-      _commandBuilder.Append (((SqlTableSource)tableSource.ForeignTableSource).TableAlias);
-      _commandBuilder.Append ("].[");
-      _commandBuilder.Append (tableSource.ForeignColumn.ColumnName);
-      _commandBuilder.Append ("]");
+      SqlGeneratingExpressionVisitor.GenerateSql (tableSource.PrimaryColumn, _commandBuilder);
+      _commandBuilder.Append (" = ");
+      SqlGeneratingExpressionVisitor.GenerateSql (tableSource.ForeignColumn, _commandBuilder);
 
       return tableSource;
     }
