@@ -22,33 +22,19 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.SqlBackend.SqlGeneration.MethodCallGenerators
 {
   /// <summary>
-  /// <see cref="MethodCallRemove"/> implements <see cref="IMethodCallSqlGenerator"/> for the string remove method.
+  /// <see cref="MethodCallContains"/> implements <see cref="IMethodCallSqlGenerator"/> for the string like and contains method.
   /// </summary>
-  public class MethodCallRemove : IMethodCallSqlGenerator
+  public class MethodCallContains : IMethodCallSqlGenerator
   {
     public void GenerateSql (MethodCallExpression methodCallExpression, SqlCommandBuilder commandBuilder, ExpressionTreeVisitor expressionTreeVisitor)
     {
       ArgumentUtility.CheckNotNull ("methodCallExpression", methodCallExpression);
       ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);
       ArgumentUtility.CheckNotNull ("expressionTreeVisitor", expressionTreeVisitor);
-      
-      bool isFirst = true;
-      commandBuilder.Append ("STUFF(");
-      expressionTreeVisitor.VisitExpression (methodCallExpression.Object);
 
-      commandBuilder.Append (",");
-      foreach (var argument in methodCallExpression.Arguments)
-      {
-        expressionTreeVisitor.VisitExpression (argument);
-        if (isFirst)
-          commandBuilder.Append (",");
-        isFirst = false;
-
-      }
-      commandBuilder.Append (",LEN(");
+      commandBuilder.Append ("LIKE(%");
       expressionTreeVisitor.VisitExpression (methodCallExpression.Object);
-      commandBuilder.Append ("), \"\"");
-      commandBuilder.Append (")");
+      commandBuilder.Append ("%)");
     }
   }
 }
