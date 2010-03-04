@@ -236,6 +236,13 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       return expression;
     }
 
+    protected override Expression VisitMethodCallExpression (MethodCallExpression expression)
+    {
+      _methodCallRegistry.GetGenerator (expression.Method).GenerateSql (expression, _commandBuilder);
+      VisitExpression (expression.Object);
+      return expression;
+    }
+
     private bool IsNullConstant (Expression expression)
     {
       var constantExpression = expression as ConstantExpression;

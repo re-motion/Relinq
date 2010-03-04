@@ -25,6 +25,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
   /// </summary>
   public interface IMethodCallSqlGenerator
   {
-    void GenerateSql (MethodCallExpression methodCallExpression, SqlCommandBuilder commandBuilder, ExpressionTreeVisitor subExpressionVisitor);
+    void GenerateSql (MethodCallExpression methodCallExpression, SqlCommandBuilder commandBuilder);
   }
 }
