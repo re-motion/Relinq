@@ -146,6 +146,7 @@
     <Compile Include="SqlBackend\MappingResolution\ResolvingSqlStatementVisitor.cs" />
     <Compile Include="SqlBackend\MappingResolution\ResolvingTableSourceVisitor.cs" />
     <Compile Include="SqlBackend\SqlGeneration\IMethodCallSqlGenerator.cs" />
+    <Compile Include="SqlBackend\SqlGeneration\MethodCallGenerators\MethodCallConvert.cs" />
     <Compile Include="SqlBackend\SqlGeneration\MethodCallGenerators\MethodCallEndsWith.cs" />
     <Compile Include="SqlBackend\SqlGeneration\MethodCallGenerators\MethodCallContains.cs" />
     <Compile Include="SqlBackend\SqlGeneration\MethodCallGenerators\MethodCallLower.cs" />
