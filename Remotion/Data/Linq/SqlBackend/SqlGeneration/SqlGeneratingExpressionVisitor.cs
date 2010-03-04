@@ -66,7 +66,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
       var prefix = expression.OwningTableAlias;
       var columnName = expression.ColumnName;
-      _commandBuilder.Append (string.Format ("[{0}].[{1}]", prefix, columnName)); // TODO: Add _commandBuilder.AppendFormat calling StringBuilder.AppendFormat
+      _commandBuilder.AppendFormat ("[{0}].[{1}]", prefix, columnName);
 
       return expression;
     }

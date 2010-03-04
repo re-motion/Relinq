@@ -24,33 +24,41 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 {
   public class SqlCommandBuilder
   {
-    private readonly StringBuilder _sb; // TODO: As a field, rename to _stringBuilder
+    private readonly StringBuilder _stringBuilder;
     private readonly List<CommandParameter> _parameters;
 
     public SqlCommandBuilder ()
     {
-      _sb = new StringBuilder();
+      _stringBuilder = new StringBuilder();
       _parameters = new List<CommandParameter>();
     }
 
     public void Append (string stringToAppend)
     {
       ArgumentUtility.CheckNotNull ("stringToAppend", stringToAppend);
-      _sb.Append (stringToAppend);
+      _stringBuilder.Append (stringToAppend);
+    }
+
+    public void AppendFormat (string stringToAppend, params object[] parameters)
+    {
+      ArgumentUtility.CheckNotNull ("stringToAppend", stringToAppend);
+      
+      _stringBuilder.AppendFormat (stringToAppend, parameters);
     }
 
     public CommandParameter AddParameter (object value)
     {
       var parameter = new CommandParameter ("@" + (_parameters.Count + 1), value);
       _parameters.Add (parameter);
-      //_sb.Append (parameter.Name);
       return parameter;
     }
 
     public string GetCommandText ()
     {
-      return _sb.ToString();
+      return _stringBuilder.ToString();
     }
+
+    
 
     public CommandParameter[] GetCommandParameters ()
     {
