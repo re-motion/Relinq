@@ -28,6 +28,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   {
     private Expression _selectProjection;
     private readonly SqlTable _fromExpression;
+    private Expression _topExpression;
     private readonly UniqueIdentifierGenerator _uniqueIdentifierGenerator;
 
     public SqlStatement (Expression selectProjection, SqlTable fromExpression, UniqueIdentifierGenerator uniqueIdentifierGenerator)
@@ -35,10 +36,19 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       ArgumentUtility.CheckNotNull ("selectProjection", selectProjection);
       ArgumentUtility.CheckNotNull ("fromExpression", fromExpression);
       ArgumentUtility.CheckNotNull ("uniqueIdentifierGenerator", uniqueIdentifierGenerator);
-      
+
       _selectProjection = selectProjection;
       _fromExpression = fromExpression;
       _uniqueIdentifierGenerator = uniqueIdentifierGenerator;
+    }
+
+    public bool Count { get; set; }
+    public bool Distinct { get; set; }
+    
+    public Expression TopExpression
+    {
+      get { return _topExpression; }
+      set { _topExpression = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
     public Expression SelectProjection
