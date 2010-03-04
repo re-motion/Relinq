@@ -200,7 +200,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
           _commandBuilder.Append (" - ");
           break;
         default:
-          throw new ArgumentOutOfRangeException();
+          throw new NotSupportedException();
       }
 
       VisitExpression (expression.Right);
@@ -208,6 +208,29 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       return expression;
     }
 
+    protected override Expression VisitUnaryExpression (UnaryExpression expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+      switch (expression.NodeType)
+      {
+        case ExpressionType.Not:
+          _commandBuilder.Append ("NOT ");
+          break;
+        case ExpressionType.Negate:
+          _commandBuilder.Append ("-");
+          break;
+        case ExpressionType.UnaryPlus:
+          _commandBuilder.Append ("+");
+          break;
+        default:
+          throw new NotSupportedException();
+      }
+
+      VisitExpression (expression.Operand);
+      
+      return expression;
+    }
+    
     private bool IsNullConstant (Expression expression)
     {
       var constantExpression = expression as ConstantExpression;

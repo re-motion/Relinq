@@ -53,6 +53,11 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       }
     }
 
+    public Dictionary<MemberInfo, SqlTable> JoinedTables
+    {
+      get { return _joinedTables; }
+    }
+
     public SqlTable GetOrAddJoin (MemberInfo relationMember, JoinedTableSource tableSource)
     {
       if (ReflectionUtility.GetFieldOrPropertyType (relationMember) != tableSource.ItemType)
@@ -62,10 +67,10 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
         throw new InvalidOperationException (message);
       }
 
-      if (!_joinedTables.ContainsKey (relationMember))
-        _joinedTables.Add (relationMember, new SqlTable (tableSource ));
+      if (!JoinedTables.ContainsKey (relationMember))
+        JoinedTables.Add (relationMember, new SqlTable (tableSource ));
 
-      return _joinedTables[relationMember];
+      return JoinedTables[relationMember];
     }
   }
 }

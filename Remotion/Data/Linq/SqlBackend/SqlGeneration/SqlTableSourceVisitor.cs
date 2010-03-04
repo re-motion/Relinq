@@ -36,6 +36,10 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
       var visitor = new SqlTableSourceVisitor (commandBuilder);
       visitor.VisitTableSource (sqlTable.TableSource);
+      foreach (var table in sqlTable.JoinedTables)
+      {
+        visitor.VisitTableSource (table.Value.TableSource);
+      }
     }
 
     protected SqlTableSourceVisitor (SqlCommandBuilder commandBuilder)
