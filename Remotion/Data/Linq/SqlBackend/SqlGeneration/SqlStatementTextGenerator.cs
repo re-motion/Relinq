@@ -43,7 +43,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
     protected void BuildSelectPart (Expression expression, SqlCommandBuilder commandBuilder)
     {
-      SqlGeneratingExpressionVisitor.GenerateSql (expression, commandBuilder);
+      SqlGeneratingExpressionVisitor.GenerateSql (expression, commandBuilder, new MethodCallSqlGeneratorRegistry());
     }
 
     protected void BuildFromPart (SqlTable sqlTable, SqlCommandBuilder commandBuilder)

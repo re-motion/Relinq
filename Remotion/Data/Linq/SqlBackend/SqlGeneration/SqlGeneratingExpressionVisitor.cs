@@ -28,20 +28,25 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
   public class SqlGeneratingExpressionVisitor : ThrowingExpressionTreeVisitor, IResolvedSqlExpressionVisitor
   {
     private readonly SqlCommandBuilder _commandBuilder;
+    private readonly MethodCallSqlGeneratorRegistry _methodCallRegistry;
 
-    public static void GenerateSql (Expression expression, SqlCommandBuilder commandBuilder)
+    public static void GenerateSql (
+        Expression expression, SqlCommandBuilder commandBuilder, MethodCallSqlGeneratorRegistry methodCallRegistry)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);
+      ArgumentUtility.CheckNotNull ("methodCallRegistry", methodCallRegistry);
 
-      var visitor = new SqlGeneratingExpressionVisitor (commandBuilder);
+      var visitor = new SqlGeneratingExpressionVisitor (commandBuilder, methodCallRegistry);
       visitor.VisitExpression (expression);
     }
 
-    protected SqlGeneratingExpressionVisitor (SqlCommandBuilder commandBuilder)
+    protected SqlGeneratingExpressionVisitor (SqlCommandBuilder commandBuilder, MethodCallSqlGeneratorRegistry methodCallRegistry)
     {
       ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);
+      ArgumentUtility.CheckNotNull ("methodCallRegistry", methodCallRegistry);
       _commandBuilder = commandBuilder;
+      _methodCallRegistry = methodCallRegistry;
     }
 
     public Expression VisitSqlColumListExpression (SqlColumnListExpression expression)
@@ -82,7 +87,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
         _commandBuilder.Append ("NULL");
       else
       {
-        var parameter =_commandBuilder.AddParameter (expression.Value);
+        var parameter = _commandBuilder.AddParameter (expression.Value);
         _commandBuilder.Append (parameter.Name);
       }
 
@@ -119,7 +124,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
             return expression;
         }
       }
-      
+
       if (IsNullConstant (expression.Right))
       {
         switch (expression.NodeType)
@@ -227,10 +232,10 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       }
 
       VisitExpression (expression.Operand);
-      
+
       return expression;
     }
-    
+
     private bool IsNullConstant (Expression expression)
     {
       var constantExpression = expression as ConstantExpression;

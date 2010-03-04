@@ -79,9 +79,9 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       tableSource.ForeignTableSource.Accept (this);
       
       _commandBuilder.Append (" ON ");
-      SqlGeneratingExpressionVisitor.GenerateSql (tableSource.PrimaryColumn, _commandBuilder);
+      SqlGeneratingExpressionVisitor.GenerateSql (tableSource.PrimaryColumn, _commandBuilder, new MethodCallSqlGeneratorRegistry());
       _commandBuilder.Append (" = ");
-      SqlGeneratingExpressionVisitor.GenerateSql (tableSource.ForeignColumn, _commandBuilder);
+      SqlGeneratingExpressionVisitor.GenerateSql (tableSource.ForeignColumn, _commandBuilder, new MethodCallSqlGeneratorRegistry());
 
       return tableSource;
     }
