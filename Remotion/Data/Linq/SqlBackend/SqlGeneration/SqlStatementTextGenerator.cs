@@ -16,6 +16,7 @@
 // 
 using System;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.SqlBackend.SqlGeneration.MethodCallGenerators;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
 using Remotion.Data.Linq.Utilities;
 
@@ -26,12 +27,15 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
   /// </summary>
   public class SqlStatementTextGenerator
   {
+    private MethodCallSqlGeneratorRegistry _registry;
+
     public SqlCommand Build (SqlStatement sqlStatement)
     {
       ArgumentUtility.CheckNotNull ("sqlStatement", sqlStatement);
       
-      //TODO: register IMethodCallSqlGenerators
-      
+      GenerateSqlGeneratorRegistry();
+
+
       var commandBuilder = new SqlCommandBuilder();
       commandBuilder.Append ("SELECT ");
       BuildSelectPart (sqlStatement.SelectProjection, commandBuilder);
@@ -43,12 +47,52 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
     protected void BuildSelectPart (Expression expression, SqlCommandBuilder commandBuilder)
     {
-      SqlGeneratingExpressionVisitor.GenerateSql (expression, commandBuilder, new MethodCallSqlGeneratorRegistry());
+      SqlGeneratingExpressionVisitor.GenerateSql (expression, commandBuilder, _registry);
     }
 
     protected void BuildFromPart (SqlTable sqlTable, SqlCommandBuilder commandBuilder)
     {
       SqlTableSourceVisitor.GenerateSql (sqlTable, commandBuilder);
+    }
+
+    private void GenerateSqlGeneratorRegistry ()
+    {
+      _registry = new MethodCallSqlGeneratorRegistry ();
+
+      //TODO: Convert methods with all overloads
+      var containsMethod = typeof (string).GetMethod ("Contains", new Type[] { typeof (string) });
+      var convertToStringMethod = typeof (Convert).GetMethod ("ToString", new[] { typeof (int) });
+      var convertToBoolMethod = typeof (Convert).GetMethod ("ToBoolean", new[] { typeof (int) });
+      var convertToInt64Method = typeof (Convert).GetMethod ("ToInt64", new[] { typeof (int) });
+      var convertToDateTimeMethod = typeof (Convert).GetMethod ("ToDateTime", new[] { typeof (int) });
+      var convertToDoubleMethod = typeof (Convert).GetMethod ("ToDouble", new[] { typeof (int) });
+      var convertToIntMethod = typeof (Convert).GetMethod ("ToInt32", new[] { typeof (int) });
+      var convertToDecimalMethod = typeof (Convert).GetMethod ("ToDecimal", new[] { typeof (int) });
+      var convertToCharMethod = typeof (Convert).GetMethod ("ToChar", new[] { typeof (int) });
+      var convertToByteMethod = typeof (Convert).GetMethod ("ToByte", new[] { typeof (int) });
+      var endsWithMethod = typeof (string).GetMethod ("EndsWith", new Type[] { typeof (string) });
+      var lowerMethod = typeof (string).GetMethod ("ToLower", new Type[] { });
+      var removeMethod = typeof (string).GetMethod ("Remove", new Type[] { typeof (int), typeof (int) });
+      var startsWithMethod = typeof (string).GetMethod ("StartsWith", new Type[] { typeof (string) });
+      var substringMethod = typeof (string).GetMethod ("Substring", new Type[] { typeof (int), typeof (int) });
+      var toUpperMethod = typeof (string).GetMethod ("ToUpper", new Type[] { });
+
+      _registry.Register (containsMethod, new MethodCallContains ());
+      _registry.Register (convertToStringMethod, new MethodCallConvert ());
+      _registry.Register (convertToBoolMethod, new MethodCallConvert ());
+      _registry.Register (convertToInt64Method, new MethodCallConvert ());
+      _registry.Register (convertToDateTimeMethod, new MethodCallConvert ());
+      _registry.Register (convertToDoubleMethod, new MethodCallConvert ());
+      _registry.Register (convertToIntMethod, new MethodCallConvert ());
+      _registry.Register (convertToDecimalMethod, new MethodCallConvert ());
+      _registry.Register (convertToCharMethod, new MethodCallConvert ());
+      _registry.Register (convertToByteMethod, new MethodCallConvert ());
+      _registry.Register (endsWithMethod, new MethodCallEndsWith ());
+      _registry.Register (lowerMethod, new MethodCallLower ());
+      _registry.Register (removeMethod, new MethodCallRemove ());
+      _registry.Register (startsWithMethod, new MethodCallStartsWith ());
+      _registry.Register (substringMethod, new MethodCallSubstring ());
+      _registry.Register (toUpperMethod, new MethodCallUpper ());
     }
 
 
