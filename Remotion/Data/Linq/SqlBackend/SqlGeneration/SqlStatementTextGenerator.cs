@@ -29,6 +29,9 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
     public SqlCommand Build (SqlStatement sqlStatement)
     {
       ArgumentUtility.CheckNotNull ("sqlStatement", sqlStatement);
+      
+      //TODO: register IMethodCallSqlGenerators
+      
       var commandBuilder = new SqlCommandBuilder();
       commandBuilder.Append ("SELECT ");
       BuildSelectPart (sqlStatement.SelectProjection, commandBuilder);
