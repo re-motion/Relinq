@@ -17,6 +17,7 @@
 using System;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved;
 using Remotion.Data.Linq.Utilities;
@@ -32,6 +33,9 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
     private SqlTable _sqlTable;
     private Expression _projectionExpression;
     private UniqueIdentifierGenerator _generator;
+    private bool _count;
+    private bool _distinct;
+    private Expression _topExpression;
 
     public SqlPreparationQueryModelVisitor ()
     {
@@ -46,6 +50,10 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
     public SqlStatement GetSqlStatement ()
     {
       var sqlStatement = new SqlStatement (_projectionExpression, _sqlTable, _generator);
+      sqlStatement.Count = _count;
+      sqlStatement.Distinct = _distinct;
+      sqlStatement.TopExpression = _topExpression;
+
       return sqlStatement;
     }
 
@@ -66,6 +74,18 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       // In the future, we'll probably need a visitor here as well when we support more complex FromExpressions.
       _sqlTable = new SqlTable (new ConstantTableSource ((ConstantExpression) fromClause.FromExpression, fromClause.ItemType));
       _sqlPreparationContext.AddQuerySourceMapping (fromClause, _sqlTable);
+    }
+
+    public override void VisitResultOperator (ResultOperatorBase resultOperator, QueryModel queryModel, int index)
+    {
+      if (resultOperator is CountResultOperator)
+        _count = true;
+      else if (resultOperator is DistinctResultOperator)
+        _distinct = true;
+      else
+        throw new NotSupportedException (string.Format ("{0} is not supported.", resultOperator));
+
+      base.VisitResultOperator (resultOperator, queryModel, index);
     }
     
   }

@@ -92,6 +92,5 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       }
       return expression;
     }
-
   }
 }
