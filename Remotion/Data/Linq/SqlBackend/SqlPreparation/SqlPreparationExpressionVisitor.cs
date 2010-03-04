@@ -88,7 +88,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
             newExpressionAsSqlMemberExpression.MemberInfo, // "Cook"
             new JoinedTableSource (newExpressionAsSqlMemberExpression.MemberInfo));
 
-        return new SqlMemberExpression (originalSqlTable, expression.Member); // cookTable.FirstName // TODO: Use join, not originalSqlTable.
+        return new SqlMemberExpression (join, expression.Member); // cookTable.FirstName
       }
       return expression;
     }
