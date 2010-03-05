@@ -50,6 +50,14 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
       sqlTable.TableSource = ResolvingTableSourceVisitor.ResolveTableSource (sqlTable.TableSource, _resolver);
     }
 
+    protected override Expression VisitWhereCondition (Expression whereCondition, UniqueIdentifierGenerator uniqueIdentifierGenerator)
+    {
+      ArgumentUtility.CheckNotNull ("whereCondition", whereCondition);
+      ArgumentUtility.CheckNotNull ("uniqueIdentifierGenerator", uniqueIdentifierGenerator);
+
+      return ResolvingExpressionVisitor.ResolveExpressions (whereCondition, _resolver, uniqueIdentifierGenerator);
+    }
+
     protected override Expression VisitTopExpression (Expression topExpression, UniqueIdentifierGenerator uniqueIdentifierGenerator)
     {
       ArgumentUtility.CheckNotNull ("topExpression", topExpression);
