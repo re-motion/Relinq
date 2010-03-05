@@ -32,19 +32,19 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
     public SqlCommand Build (SqlStatement sqlStatement)
     {
       ArgumentUtility.CheckNotNull ("sqlStatement", sqlStatement);
-      
+
       GenerateSqlGeneratorRegistry();
-      
+
       var commandBuilder = new SqlCommandBuilder();
       commandBuilder.Append ("SELECT ");
       BuildSelectPart (sqlStatement.SelectProjection, sqlStatement.Count, sqlStatement.Distinct, sqlStatement.TopExpression, commandBuilder);
       commandBuilder.Append (" FROM ");
       BuildFromPart (sqlStatement.FromExpression, commandBuilder);
 
-      return  new SqlCommand(commandBuilder.GetCommandText(), commandBuilder.GetCommandParameters());
+      return new SqlCommand (commandBuilder.GetCommandText(), commandBuilder.GetCommandParameters());
     }
 
-    protected void BuildSelectPart (Expression expression,bool count, bool distinct, Expression topExpression, SqlCommandBuilder commandBuilder)
+    protected void BuildSelectPart (Expression expression, bool count, bool distinct, Expression topExpression, SqlCommandBuilder commandBuilder)
     {
       if (((count) && (topExpression != null)) || ((count) && (distinct)))
         throw new ArgumentException ("Wrong argument values. Check values for Count, Distinct and TopExpression.");
@@ -72,7 +72,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
     private void GenerateSqlGeneratorRegistry ()
     {
-      _registry = new MethodCallSqlGeneratorRegistry ();
+      _registry = new MethodCallSqlGeneratorRegistry();
 
       //TODO: Convert methods with all overloads
       var containsMethod = typeof (string).GetMethod ("Contains", new Type[] { typeof (string) });
@@ -92,25 +92,22 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       var substringMethod = typeof (string).GetMethod ("Substring", new Type[] { typeof (int), typeof (int) });
       var toUpperMethod = typeof (string).GetMethod ("ToUpper", new Type[] { });
 
-      _registry.Register (containsMethod, new MethodCallContains ());
-      _registry.Register (convertToStringMethod, new MethodCallConvert ());
-      _registry.Register (convertToBoolMethod, new MethodCallConvert ());
-      _registry.Register (convertToInt64Method, new MethodCallConvert ());
-      _registry.Register (convertToDateTimeMethod, new MethodCallConvert ());
-      _registry.Register (convertToDoubleMethod, new MethodCallConvert ());
-      _registry.Register (convertToIntMethod, new MethodCallConvert ());
-      _registry.Register (convertToDecimalMethod, new MethodCallConvert ());
-      _registry.Register (convertToCharMethod, new MethodCallConvert ());
-      _registry.Register (convertToByteMethod, new MethodCallConvert ());
-      _registry.Register (endsWithMethod, new MethodCallEndsWith ());
-      _registry.Register (lowerMethod, new MethodCallLower ());
-      _registry.Register (removeMethod, new MethodCallRemove ());
-      _registry.Register (startsWithMethod, new MethodCallStartsWith ());
-      _registry.Register (substringMethod, new MethodCallSubstring ());
-      _registry.Register (toUpperMethod, new MethodCallUpper ());
+      _registry.Register (containsMethod, new MethodCallContains());
+      _registry.Register (convertToStringMethod, new MethodCallConvert());
+      _registry.Register (convertToBoolMethod, new MethodCallConvert());
+      _registry.Register (convertToInt64Method, new MethodCallConvert());
+      _registry.Register (convertToDateTimeMethod, new MethodCallConvert());
+      _registry.Register (convertToDoubleMethod, new MethodCallConvert());
+      _registry.Register (convertToIntMethod, new MethodCallConvert());
+      _registry.Register (convertToDecimalMethod, new MethodCallConvert());
+      _registry.Register (convertToCharMethod, new MethodCallConvert());
+      _registry.Register (convertToByteMethod, new MethodCallConvert());
+      _registry.Register (endsWithMethod, new MethodCallEndsWith());
+      _registry.Register (lowerMethod, new MethodCallLower());
+      _registry.Register (removeMethod, new MethodCallRemove());
+      _registry.Register (startsWithMethod, new MethodCallStartsWith());
+      _registry.Register (substringMethod, new MethodCallSubstring());
+      _registry.Register (toUpperMethod, new MethodCallUpper());
     }
-
-
-    
   }
 }
