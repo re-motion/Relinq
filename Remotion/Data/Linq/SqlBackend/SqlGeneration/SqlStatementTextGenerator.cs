@@ -48,7 +48,21 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
     {
       if (((count) && (topExpression != null)) || ((count) && (distinct)))
         throw new ArgumentException ("Wrong argument values. Check values for Count, Distinct and TopExpression.");
-      SqlGeneratingExpressionVisitor.GenerateSql (expression, commandBuilder, _registry);
+
+      if (count)
+        commandBuilder.Append ("COUNT(*)");
+      else
+      {
+        if (distinct)
+          commandBuilder.Append ("DISTINCT ");
+        else if (topExpression != null)
+        {
+          commandBuilder.Append ("TOP(");
+          SqlGeneratingExpressionVisitor.GenerateSql (topExpression, commandBuilder, _registry);
+          commandBuilder.Append (") ");
+        }
+        SqlGeneratingExpressionVisitor.GenerateSql (expression, commandBuilder, _registry);
+      }
     }
 
     protected void BuildFromPart (SqlTable sqlTable, SqlCommandBuilder commandBuilder)
