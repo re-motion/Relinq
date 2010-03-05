@@ -34,19 +34,20 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       ArgumentUtility.CheckNotNull ("sqlStatement", sqlStatement);
       
       GenerateSqlGeneratorRegistry();
-
-
+      
       var commandBuilder = new SqlCommandBuilder();
       commandBuilder.Append ("SELECT ");
-      BuildSelectPart (sqlStatement.SelectProjection, commandBuilder);
+      BuildSelectPart (sqlStatement.SelectProjection, sqlStatement.Count, sqlStatement.Distinct, sqlStatement.TopExpression, commandBuilder);
       commandBuilder.Append (" FROM ");
       BuildFromPart (sqlStatement.FromExpression, commandBuilder);
 
       return  new SqlCommand(commandBuilder.GetCommandText(), commandBuilder.GetCommandParameters());
     }
 
-    protected void BuildSelectPart (Expression expression, SqlCommandBuilder commandBuilder)
+    protected void BuildSelectPart (Expression expression,bool count, bool distinct, Expression topExpression, SqlCommandBuilder commandBuilder)
     {
+      if (((count) && (topExpression != null)) || ((count) && (distinct)))
+        throw new ArgumentException ("Wrong argument values. Check values for Count, Distinct and TopExpression.");
       SqlGeneratingExpressionVisitor.GenerateSql (expression, commandBuilder, _registry);
     }
 
