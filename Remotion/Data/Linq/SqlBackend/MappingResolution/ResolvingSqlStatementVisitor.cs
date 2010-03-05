@@ -49,5 +49,13 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
       
       sqlTable.TableSource = ResolvingTableSourceVisitor.ResolveTableSource (sqlTable.TableSource, _resolver);
     }
+
+    protected override Expression VisitTopExpression (Expression topExpression, UniqueIdentifierGenerator uniqueIdentifierGenerator)
+    {
+      ArgumentUtility.CheckNotNull ("topExpression", topExpression);
+      ArgumentUtility.CheckNotNull ("uniqueIdentifierGenerator", uniqueIdentifierGenerator);
+
+      return ResolvingExpressionVisitor.ResolveExpressions (topExpression, _resolver, uniqueIdentifierGenerator);
+    }
   }
 }

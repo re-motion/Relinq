@@ -28,9 +28,13 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
     {
       sqlStatement.SelectProjection = VisitSelectProjection (sqlStatement.SelectProjection, sqlStatement.UniqueIdentifierGenerator);
       VisitSqlTable (sqlStatement.FromExpression);
+
+      if (sqlStatement.TopExpression != null)
+        VisitTopExpression (sqlStatement.TopExpression, sqlStatement.UniqueIdentifierGenerator);
     }
 
     protected abstract Expression VisitSelectProjection (Expression selectProjection, UniqueIdentifierGenerator uniqueIdentifierGenerator);
     protected abstract void VisitSqlTable (SqlTable sqlTable);
+    protected abstract Expression VisitTopExpression (Expression topExpression, UniqueIdentifierGenerator uniqueIdentifierGenerator);
   }
 }
