@@ -100,7 +100,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
     public override void VisitWhereClause (WhereClause whereClause, QueryModel queryModel, int index)
     {
       if (_whereCondition != null)
-        _whereCondition = Expression.And (
+        _whereCondition = Expression.AndAlso (
             _whereCondition, SqlPreparationExpressionVisitor.TranslateExpression (whereClause.Predicate, _sqlPreparationContext));
       else
         _whereCondition = SqlPreparationExpressionVisitor.TranslateExpression (whereClause.Predicate, _sqlPreparationContext);

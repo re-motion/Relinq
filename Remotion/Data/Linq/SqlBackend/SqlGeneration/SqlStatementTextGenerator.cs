@@ -40,6 +40,11 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       BuildSelectPart (sqlStatement.SelectProjection, sqlStatement.Count, sqlStatement.Distinct, sqlStatement.TopExpression, commandBuilder);
       commandBuilder.Append (" FROM ");
       BuildFromPart (sqlStatement.FromExpression, commandBuilder);
+      if ((sqlStatement.WhereCondition != null))
+      {
+        commandBuilder.Append (" WHERE ");
+        BuildWherePart (sqlStatement.WhereCondition, commandBuilder);
+      }
 
       return new SqlCommand (commandBuilder.GetCommandText(), commandBuilder.GetCommandParameters());
     }
@@ -68,6 +73,11 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
     protected void BuildFromPart (SqlTable sqlTable, SqlCommandBuilder commandBuilder)
     {
       SqlTableSourceVisitor.GenerateSql (sqlTable, commandBuilder);
+    }
+
+    private void BuildWherePart (Expression expression, SqlCommandBuilder commandBuilder)
+    {
+      SqlGeneratingExpressionVisitor.GenerateSql (expression, commandBuilder, _registry);
     }
 
     private void GenerateSqlGeneratorRegistry ()
