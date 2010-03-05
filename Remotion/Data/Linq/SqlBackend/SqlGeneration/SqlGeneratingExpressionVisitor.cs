@@ -96,6 +96,49 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
     protected override Expression VisitBinaryExpression (BinaryExpression expression)
     {
+      if(expression.NodeType==ExpressionType.AndAlso || expression.NodeType==ExpressionType.OrElse)
+      {
+        if (IsBool (expression.Left))
+        {
+          if (IsBinaryExpression (expression.Right))
+          {
+            VisitExpression (expression.Left);
+            _commandBuilder.Append (string.Format("=1 {0}", expression.NodeType == ExpressionType.AndAlso ? " AND " : " OR "));
+            VisitExpression (expression.Right);
+            return expression;
+          }
+        }
+
+        if (IsBool (expression.Right))
+        {
+          if (IsBinaryExpression (expression.Left))
+          {
+            VisitExpression (expression.Right);
+            _commandBuilder.Append (string.Format ("=1 {0}", expression.NodeType == ExpressionType.AndAlso ? " AND " : " OR "));
+            VisitExpression (expression.Left);
+            return expression;
+          }
+        }
+      }
+
+      //TODO: (IsAdult = 1)
+      //TODO: refactor checks
+      //TODO: check ExpressionType.OrElse for special cases
+
+      if (AreBoolConstants (expression.Left, expression.Right))
+      {
+        switch (expression.NodeType)
+        {
+          case ExpressionType.AndAlso:
+          {
+            VisitExpression (expression.Left);
+            _commandBuilder.Append ("=");
+            VisitExpression (expression.Right);
+            return expression;
+          }
+        }
+      }
+
       _commandBuilder.Append ("(");
 
       if (expression.NodeType == ExpressionType.Coalesce)
@@ -211,6 +254,23 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       VisitExpression (expression.Right);
       _commandBuilder.Append (")");
       return expression;
+    }
+
+    private bool IsBinaryExpression (Expression expression)
+    {
+      return (expression is BinaryExpression);
+    }
+
+    private bool IsBool (Expression expression)
+    {
+      return (expression.Type == typeof (bool));
+    }
+
+    private bool AreBoolConstants (Expression leftExpression, Expression rightExpression)
+    {
+      if ((leftExpression is ConstantExpression) && (rightExpression is ConstantExpression))
+        return (leftExpression.Type == typeof (Boolean)) && (rightExpression.Type == typeof (Boolean));
+      return false;
     }
 
     protected override Expression VisitUnaryExpression (UnaryExpression expression)
