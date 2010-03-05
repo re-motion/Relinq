@@ -84,7 +84,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
     {
       _registry = new MethodCallSqlGeneratorRegistry();
 
-      //TODO: Convert methods with all overloads
+      //TODO: Convert methods with all overloads needed
       var containsMethod = typeof (string).GetMethod ("Contains", new Type[] { typeof (string) });
       var convertToStringMethod = typeof (Convert).GetMethod ("ToString", new[] { typeof (int) });
       var convertToBoolMethod = typeof (Convert).GetMethod ("ToBoolean", new[] { typeof (int) });
