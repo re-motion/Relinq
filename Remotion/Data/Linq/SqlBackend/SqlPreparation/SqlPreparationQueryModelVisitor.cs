@@ -82,6 +82,15 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
         _count = true;
       else if (resultOperator is DistinctResultOperator)
         _distinct = true;
+      else if (resultOperator is FirstResultOperator)
+        _topExpression = Expression.Constant (1);
+      else if (resultOperator is SingleResultOperator)
+        _topExpression = Expression.Constant (1);
+      else if (resultOperator is TakeResultOperator)
+      {
+        var expression = ((TakeResultOperator) resultOperator).Count;
+        _topExpression = SqlPreparationExpressionVisitor.TranslateExpression (expression, _sqlPreparationContext);
+      }
       else
         throw new NotSupportedException (string.Format ("{0} is not supported.", resultOperator));
 
