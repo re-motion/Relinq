@@ -32,6 +32,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
     private readonly SqlPreparationContext _sqlPreparationContext;
     private SqlTable _sqlTable;
     private Expression _projectionExpression;
+    private Expression _whereCondition;
     private UniqueIdentifierGenerator _generator;
     private bool _count;
     private bool _distinct;
@@ -52,6 +53,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       var sqlStatement = new SqlStatement (_projectionExpression, _sqlTable, _generator);
       sqlStatement.Count = _count;
       sqlStatement.Distinct = _distinct;
+      sqlStatement.WhereCondition = _whereCondition;
       sqlStatement.TopExpression = _topExpression;
 
       return sqlStatement;
@@ -93,8 +95,11 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       }
       else
         throw new NotSupportedException (string.Format ("{0} is not supported.", resultOperator));
+    }
 
-      base.VisitResultOperator (resultOperator, queryModel, index);
+    public override void VisitWhereClause (WhereClause whereClause, QueryModel queryModel, int index)
+    {
+      _whereCondition = SqlPreparationExpressionVisitor.TranslateExpression (whereClause.Predicate, _sqlPreparationContext);
     }
     
   }

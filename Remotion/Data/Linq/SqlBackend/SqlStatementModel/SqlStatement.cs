@@ -28,6 +28,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   {
     private Expression _selectProjection;
     private readonly SqlTable _fromExpression;
+    private Expression _whereCondition;
     private readonly UniqueIdentifierGenerator _uniqueIdentifierGenerator;
 
     public SqlStatement (Expression selectProjection, SqlTable fromExpression, UniqueIdentifierGenerator uniqueIdentifierGenerator)
@@ -54,6 +55,19 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
     public SqlTable FromExpression
     {
       get { return _fromExpression; }
+    }
+
+    public Expression WhereCondition
+    {
+      get { return _whereCondition; }
+      set {
+        if (value != null)
+        {
+          if (value.Type != typeof (bool))
+            throw new ArgumentTypeException ("whereCondition", typeof (bool), value.Type);
+          _whereCondition = value;
+        }
+      }
     }
 
     public UniqueIdentifierGenerator UniqueIdentifierGenerator
