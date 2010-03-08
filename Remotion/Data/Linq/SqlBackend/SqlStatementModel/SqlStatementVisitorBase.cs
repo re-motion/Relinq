@@ -33,22 +33,27 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       _uniqueIdentifierGenerator = uniqueIdentifierGenerator;
     }
 
-    public virtual void VisitSqlStatement (SqlStatement sqlStatement)
+    public UniqueIdentifierGenerator UniqueIdentifierGenerator
     {
-      sqlStatement.SelectProjection = VisitSelectProjection (sqlStatement.SelectProjection, _uniqueIdentifierGenerator);
-
-      VisitSqlTable (sqlStatement.FromExpression);
-
-      if (sqlStatement.WhereCondition != null)
-        VisitWhereCondition (sqlStatement.WhereCondition, _uniqueIdentifierGenerator);
-
-      if (sqlStatement.TopExpression != null)
-        VisitTopExpression (sqlStatement.TopExpression, _uniqueIdentifierGenerator);
+      get { return _uniqueIdentifierGenerator; }
     }
 
-    protected abstract Expression VisitSelectProjection (Expression selectProjection, UniqueIdentifierGenerator uniqueIdentifierGenerator);
+    public virtual void VisitSqlStatement (SqlStatement sqlStatement)
+    {
+      VisitSqlTable (sqlStatement.FromExpression);
+
+      sqlStatement.SelectProjection = VisitSelectProjection (sqlStatement.SelectProjection);
+
+      if (sqlStatement.WhereCondition != null)
+        sqlStatement.WhereCondition = VisitWhereCondition (sqlStatement.WhereCondition);
+
+      if (sqlStatement.TopExpression != null)
+        sqlStatement.TopExpression = VisitTopExpression (sqlStatement.TopExpression);
+    }
+
+    protected abstract Expression VisitSelectProjection (Expression selectProjection);
     protected abstract void VisitSqlTable (SqlTable sqlTable);
-    protected abstract Expression VisitTopExpression (Expression topExpression, UniqueIdentifierGenerator uniqueIdentifierGenerator);
-    protected abstract Expression VisitWhereCondition (Expression whereCondition, UniqueIdentifierGenerator uniqueIdentifierGenerator);
+    protected abstract Expression VisitTopExpression (Expression topExpression);
+    protected abstract Expression VisitWhereCondition (Expression whereCondition);
   }
 }

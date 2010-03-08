@@ -26,9 +26,17 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
   /// </summary>
   public class ResolvingSqlStatementVisitor : SqlStatementVisitorBase
   {
+    public static void ResolveExpressions (SqlStatement statement, ISqlStatementResolver resolver, UniqueIdentifierGenerator uniqueIdentifierGenerator)
+    {
+      ArgumentUtility.CheckNotNull ("statement", statement);
+
+      var visitor = new ResolvingSqlStatementVisitor (resolver, uniqueIdentifierGenerator);
+      visitor.VisitSqlStatement (statement);
+    }
+
     private readonly ISqlStatementResolver _resolver;
 
-    public ResolvingSqlStatementVisitor (ISqlStatementResolver resolver, UniqueIdentifierGenerator uniqueIdentifierGenerator)
+    protected ResolvingSqlStatementVisitor (ISqlStatementResolver resolver, UniqueIdentifierGenerator uniqueIdentifierGenerator)
       : base (uniqueIdentifierGenerator)
     {
       ArgumentUtility.CheckNotNull ("resolver", resolver);
@@ -36,12 +44,11 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
       _resolver = resolver;
     }
 
-    protected override Expression VisitSelectProjection (Expression selectProjection, UniqueIdentifierGenerator uniqueIdentifierGenerator)
+    protected override Expression VisitSelectProjection (Expression selectProjection)
     {
       ArgumentUtility.CheckNotNull ("selectProjection", selectProjection);
-      ArgumentUtility.CheckNotNull ("uniqueIdentifierGenerator", uniqueIdentifierGenerator);
 
-      return ResolvingExpressionVisitor.ResolveExpressions (selectProjection, _resolver, uniqueIdentifierGenerator);
+      return ResolvingExpressionVisitor.ResolveExpression (selectProjection, _resolver, UniqueIdentifierGenerator);
     }
 
     protected override void VisitSqlTable (SqlTable sqlTable)
@@ -51,20 +58,18 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
       sqlTable.TableSource = ResolvingTableSourceVisitor.ResolveTableSource (sqlTable.TableSource, _resolver);
     }
 
-    protected override Expression VisitWhereCondition (Expression whereCondition, UniqueIdentifierGenerator uniqueIdentifierGenerator)
+    protected override Expression VisitWhereCondition (Expression whereCondition)
     {
       ArgumentUtility.CheckNotNull ("whereCondition", whereCondition);
-      ArgumentUtility.CheckNotNull ("uniqueIdentifierGenerator", uniqueIdentifierGenerator);
 
-      return ResolvingExpressionVisitor.ResolveExpressions (whereCondition, _resolver, uniqueIdentifierGenerator);
+      return ResolvingExpressionVisitor.ResolveExpression (whereCondition, _resolver, UniqueIdentifierGenerator);
     }
 
-    protected override Expression VisitTopExpression (Expression topExpression, UniqueIdentifierGenerator uniqueIdentifierGenerator)
+    protected override Expression VisitTopExpression (Expression topExpression)
     {
       ArgumentUtility.CheckNotNull ("topExpression", topExpression);
-      ArgumentUtility.CheckNotNull ("uniqueIdentifierGenerator", uniqueIdentifierGenerator);
 
-      return ResolvingExpressionVisitor.ResolveExpressions (topExpression, _resolver, uniqueIdentifierGenerator);
+      return ResolvingExpressionVisitor.ResolveExpression (topExpression, _resolver, UniqueIdentifierGenerator);
     }
   }
 }

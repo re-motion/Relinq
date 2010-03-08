@@ -30,7 +30,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
     private readonly ISqlStatementResolver _resolver;
     private readonly UniqueIdentifierGenerator _generator;
 
-    public static Expression ResolveExpressions (Expression expression, ISqlStatementResolver resolver, UniqueIdentifierGenerator generator)
+    public static Expression ResolveExpression (Expression expression, ISqlStatementResolver resolver, UniqueIdentifierGenerator generator)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       ArgumentUtility.CheckNotNull ("resolver", resolver);
