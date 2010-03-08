@@ -37,7 +37,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
       var commandBuilder = new SqlCommandBuilder();
       commandBuilder.Append ("SELECT ");
-      BuildSelectPart (sqlStatement.SelectProjection, sqlStatement.Count, sqlStatement.Distinct, sqlStatement.TopExpression, commandBuilder);
+      BuildSelectPart (sqlStatement.SelectProjection, sqlStatement.IsCountQuery, sqlStatement.IsDistinctQuery, sqlStatement.TopExpression, commandBuilder);
       commandBuilder.Append (" FROM ");
       BuildFromPart (sqlStatement.FromExpression, commandBuilder);
       if ((sqlStatement.WhereCondition != null))

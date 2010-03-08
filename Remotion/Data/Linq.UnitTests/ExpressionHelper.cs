@@ -168,6 +168,11 @@ namespace Remotion.Data.Linq.UnitTests
       return new SelectClause (selector);
     }
 
+    public static SelectClause CreateSelectClause (MainFromClause referencedClause)
+    {
+      return new SelectClause (new QuerySourceReferenceExpression (referencedClause));
+    }
+
     public static MethodCallExpression CreateMethodCallExpression (IQueryable<Cook> query)
     {
       var methodInfo = ReflectionUtility.GetMethod (() => query.Count ());

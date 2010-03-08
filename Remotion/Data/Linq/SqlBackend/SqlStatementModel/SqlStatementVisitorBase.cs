@@ -16,6 +16,7 @@
 // 
 using System;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
@@ -24,14 +25,25 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   /// </summary>
   public abstract class SqlStatementVisitorBase
   {
+    private readonly UniqueIdentifierGenerator _uniqueIdentifierGenerator;
+
+    protected SqlStatementVisitorBase (UniqueIdentifierGenerator uniqueIdentifierGenerator)
+    {
+      ArgumentUtility.CheckNotNull ("uniqueIdentifierGenerator", uniqueIdentifierGenerator);
+      _uniqueIdentifierGenerator = uniqueIdentifierGenerator;
+    }
+
     public virtual void VisitSqlStatement (SqlStatement sqlStatement)
     {
-      sqlStatement.SelectProjection = VisitSelectProjection (sqlStatement.SelectProjection, sqlStatement.UniqueIdentifierGenerator);
+      sqlStatement.SelectProjection = VisitSelectProjection (sqlStatement.SelectProjection, _uniqueIdentifierGenerator);
+
       VisitSqlTable (sqlStatement.FromExpression);
+
       if (sqlStatement.WhereCondition != null)
-        VisitWhereCondition (sqlStatement.WhereCondition, sqlStatement.UniqueIdentifierGenerator);
+        VisitWhereCondition (sqlStatement.WhereCondition, _uniqueIdentifierGenerator);
+
       if (sqlStatement.TopExpression != null)
-        VisitTopExpression (sqlStatement.TopExpression, sqlStatement.UniqueIdentifierGenerator);
+        VisitTopExpression (sqlStatement.TopExpression, _uniqueIdentifierGenerator);
     }
 
     protected abstract Expression VisitSelectProjection (Expression selectProjection, UniqueIdentifierGenerator uniqueIdentifierGenerator);

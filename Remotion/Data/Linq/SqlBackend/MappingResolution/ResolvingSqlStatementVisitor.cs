@@ -28,7 +28,8 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
   {
     private readonly ISqlStatementResolver _resolver;
 
-    public ResolvingSqlStatementVisitor (ISqlStatementResolver resolver)
+    public ResolvingSqlStatementVisitor (ISqlStatementResolver resolver, UniqueIdentifierGenerator uniqueIdentifierGenerator)
+      : base (uniqueIdentifierGenerator)
     {
       ArgumentUtility.CheckNotNull ("resolver", resolver);
 

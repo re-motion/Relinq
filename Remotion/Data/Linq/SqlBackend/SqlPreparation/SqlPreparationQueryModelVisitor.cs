@@ -29,43 +29,44 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
   /// </summary>
   public class SqlPreparationQueryModelVisitor : QueryModelVisitorBase
   {
-    private readonly SqlPreparationContext _sqlPreparationContext;
+    public static SqlStatement TransformQueryModel (QueryModel queryModel, SqlPreparationContext preparationContext)
+    {
+      var visitor = new SqlPreparationQueryModelVisitor (preparationContext);
+      queryModel.Accept (visitor);
+      return visitor.GetSqlStatement();
+    }
+
+    private readonly SqlPreparationContext _context;
+
     private SqlTable _sqlTable;
     private Expression _projectionExpression;
     private Expression _whereCondition;
-    private UniqueIdentifierGenerator _generator;
-    private bool _count;
-    private bool _distinct;
+    
+    private bool _isCountQuery;
+    private bool _isDistinctQuery;
     private Expression _topExpression;
 
-    public SqlPreparationQueryModelVisitor ()
+    protected SqlPreparationQueryModelVisitor (SqlPreparationContext context)
     {
-      _sqlPreparationContext = new SqlPreparationContext ();
+      ArgumentUtility.CheckNotNull ("context", context);
+      _context = context;
     }
 
-    public SqlPreparationContext SqlPreparationContext
+    public SqlPreparationContext Context
     {
-      get { return _sqlPreparationContext; }
+      get { return _context; }
     }
 
     public SqlStatement GetSqlStatement ()
     {
-      var sqlStatement = new SqlStatement (_projectionExpression, _sqlTable, _generator);
-      sqlStatement.Count = _count;
-      sqlStatement.Distinct = _distinct;
+      var sqlStatement = new SqlStatement (_projectionExpression, _sqlTable);
+
+      sqlStatement.IsCountQuery = _isCountQuery;
+      sqlStatement.IsDistinctQuery = _isDistinctQuery;
       sqlStatement.WhereCondition = _whereCondition;
       sqlStatement.TopExpression = _topExpression;
 
       return sqlStatement;
-    }
-
-    public override void VisitSelectClause (SelectClause selectClause, QueryModel queryModel)
-    {
-      ArgumentUtility.CheckNotNull ("selectClause", selectClause);
-      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
-
-      _generator = queryModel.GetUniqueIdentfierGenerator();
-      _projectionExpression = SqlPreparationExpressionVisitor.TranslateExpression (selectClause.Selector, _sqlPreparationContext);
     }
 
     public override void VisitMainFromClause (MainFromClause fromClause, QueryModel queryModel)
@@ -75,15 +76,35 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
 
       // In the future, we'll probably need a visitor here as well when we support more complex FromExpressions.
       _sqlTable = new SqlTable (new ConstantTableSource ((ConstantExpression) fromClause.FromExpression, fromClause.ItemType));
-      _sqlPreparationContext.AddQuerySourceMapping (fromClause, _sqlTable);
+      _context.AddQuerySourceMapping (fromClause, _sqlTable);
     }
 
+    public override void VisitWhereClause (WhereClause whereClause, QueryModel queryModel, int index)
+    {
+      var translatedExpression = SqlPreparationExpressionVisitor.TranslateExpression (whereClause.Predicate, _context);
+      if (_whereCondition != null)
+        _whereCondition = Expression.AndAlso (_whereCondition, translatedExpression);
+      else
+        _whereCondition = translatedExpression;
+    }
+
+    public override void VisitSelectClause (SelectClause selectClause, QueryModel queryModel)
+    {
+      ArgumentUtility.CheckNotNull ("selectClause", selectClause);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+
+      _projectionExpression = SqlPreparationExpressionVisitor.TranslateExpression (selectClause.Selector, _context);
+    }
+    
     public override void VisitResultOperator (ResultOperatorBase resultOperator, QueryModel queryModel, int index)
     {
+      ArgumentUtility.CheckNotNull ("resultOperator", resultOperator);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+
       if (resultOperator is CountResultOperator)
-        _count = true;
+        _isCountQuery = true;
       else if (resultOperator is DistinctResultOperator)
-        _distinct = true;
+        _isDistinctQuery = true;
       else if (resultOperator is FirstResultOperator)
         _topExpression = Expression.Constant (1);
       else if (resultOperator is SingleResultOperator)
@@ -91,20 +112,11 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       else if (resultOperator is TakeResultOperator)
       {
         var expression = ((TakeResultOperator) resultOperator).Count;
-        _topExpression = SqlPreparationExpressionVisitor.TranslateExpression (expression, _sqlPreparationContext);
+        _topExpression = SqlPreparationExpressionVisitor.TranslateExpression (expression, _context);
       }
       else
         throw new NotSupportedException (string.Format ("{0} is not supported.", resultOperator));
     }
-
-    public override void VisitWhereClause (WhereClause whereClause, QueryModel queryModel, int index)
-    {
-      if (_whereCondition != null)
-        _whereCondition = Expression.AndAlso (
-            _whereCondition, SqlPreparationExpressionVisitor.TranslateExpression (whereClause.Predicate, _sqlPreparationContext));
-      else
-        _whereCondition = SqlPreparationExpressionVisitor.TranslateExpression (whereClause.Predicate, _sqlPreparationContext);
-    }
-    
+   
   }
 }
