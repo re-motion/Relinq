@@ -25,7 +25,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
   /// <summary>
   /// <see cref="SqlTableSourceVisitor"/> generates sql-text for <see cref="SqlTableSource"/>.
   /// </summary>
-  public class SqlTableSourceVisitor : ITableSourceVisitor
+  public class SqlTableSourceVisitor : ITableSourceVisitor, IJoinInfoVisitor
   {
     private readonly SqlCommandBuilder _commandBuilder;
     
@@ -35,11 +35,11 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);
 
       var visitor = new SqlTableSourceVisitor (commandBuilder);
-      visitor.VisitTableSource (sqlTable.TableSource);
+      
+      sqlTable.TableSource.Accept (visitor);
+
       foreach (var table in sqlTable.JoinedTables)
-      {
-        visitor.VisitTableSource (table.Value.TableSource);
-      }
+        table.Value.JoinInfo.Accept (visitor);
     }
 
     protected SqlTableSourceVisitor (SqlCommandBuilder commandBuilder)
@@ -72,7 +72,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       return tableSource;
     }
 
-    public AbstractTableSource VisitSqlJoinedTableSource (SqlJoinedTableSource tableSource)
+    public AbstractJoinInfo VisitSqlJoinedTableSource (SqlJoinedTableSource tableSource)
     {
       _commandBuilder.Append (" JOIN ");
 
@@ -86,7 +86,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       return tableSource;
     }
 
-    public AbstractTableSource VisitJoinedTableSource (JoinedTableSource tableSource)
+    public AbstractJoinInfo VisitJoinedTableSource (JoinedTableSource tableSource)
     {
       throw new InvalidOperationException ("JoinedTableSource is not valid at this point.");
     }

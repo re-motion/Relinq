@@ -159,6 +159,9 @@
     <Compile Include="SqlBackend\SqlGeneration\MethodCallSqlGeneratorRegistry.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlCommand.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlCommandBuilder.cs" />
+    <Compile Include="SqlBackend\SqlStatementModel\AbstractJoinInfo.cs" />
+    <Compile Include="SqlBackend\SqlStatementModel\IJoinInfoVisitor.cs" />
+    <Compile Include="SqlBackend\SqlStatementModel\SqlJoinedTable.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\Resolved\IResolvedSqlExpressionVisitor.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlStatementTextGenerator.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlGeneratingExpressionVisitor.cs" />

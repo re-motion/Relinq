@@ -29,6 +29,6 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
     AbstractTableSource ResolveConstantTableSource (ConstantTableSource tableSource);
     Expression ResolveTableReferenceExpression (SqlTableReferenceExpression tableReferenceExpression);
     Expression ResolveMemberExpression (SqlMemberExpression memberExpression, UniqueIdentifierGenerator generator);
-    AbstractTableSource ResolveJoinedTableSource (JoinedTableSource tableSource);
+    AbstractJoinInfo ResolveJoinedTableSource (JoinedTableSource tableSource);
   }
 }

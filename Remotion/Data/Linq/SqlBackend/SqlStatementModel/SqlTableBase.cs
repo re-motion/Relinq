@@ -28,7 +28,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   /// </summary>
   public abstract class SqlTableBase
   {
-    private readonly Dictionary<MemberInfo, SqlTable> _joinedTables = new Dictionary<MemberInfo, SqlTable>();
+    private readonly Dictionary<MemberInfo, SqlJoinedTable> _joinedTables = new Dictionary<MemberInfo, SqlJoinedTable> ();
     private readonly Type _itemType;
 
     protected SqlTableBase (Type itemType)
@@ -45,12 +45,12 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       get { return _itemType; } 
     }
 
-      public Dictionary<MemberInfo, SqlTable> JoinedTables // TODO: Remove
+      public Dictionary<MemberInfo, SqlJoinedTable> JoinedTables // TODO: Remove
     {
       get { return _joinedTables; }
     }
 
-    public SqlTable GetOrAddJoin (MemberInfo relationMember, JoinedTableSource tableSource)
+      public SqlJoinedTable GetOrAddJoin (MemberInfo relationMember, JoinedTableSource tableSource)
     {
       if (ReflectionUtility.GetFieldOrPropertyType (relationMember) != tableSource.ItemType)
       {
@@ -60,12 +60,12 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       }
 
       if (!JoinedTables.ContainsKey (relationMember))
-        JoinedTables.Add (relationMember, new SqlTable (tableSource));
+        JoinedTables.Add (relationMember, new SqlJoinedTable (tableSource));
 
       return JoinedTables[relationMember];
     }
 
-    public SqlTable GetJoin (MemberInfo relationMember)
+      public SqlJoinedTable GetJoin (MemberInfo relationMember)
     {
       return JoinedTables[relationMember];
     }

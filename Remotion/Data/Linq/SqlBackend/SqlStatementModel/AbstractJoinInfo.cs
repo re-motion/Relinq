@@ -16,43 +16,16 @@
 // 
 using System;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved;
-using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
   /// <summary>
-  /// <see cref="SqlTable"/> represents a data source in a <see cref="SqlStatement"/>.
+  /// <see cref="AbstractJoinInfo"/> defines the details about a <see cref="SqlJoinedTable"/>.
   /// </summary>
-  public class SqlTable : SqlTableBase
+  public abstract class AbstractJoinInfo
   {
-    private AbstractTableSource _tableSource;
-
-    public SqlTable (AbstractTableSource tableSource) 
-        : base (tableSource.ItemType)
-    {
-      ArgumentUtility.CheckNotNull ("tableSource", tableSource);
-
-      _tableSource = tableSource;
-    }
-
-    public AbstractTableSource TableSource
-    {
-      get { return _tableSource; }
-      set
-      {
-        ArgumentUtility.CheckNotNull ("value", value);
-        if (_tableSource != null)
-        {
-          if (_tableSource.ItemType != value.ItemType)
-            throw new ArgumentTypeException ("value", _tableSource.ItemType, value.ItemType);
-        }
-        _tableSource = value;
-      }
-    }
-
-    public override SqlTableSource GetResolvedTableSource ()
-    {
-      return TableSource.GetResolvedTableSource();
-    }
+    public abstract Type ItemType { get; }
+    public abstract AbstractJoinInfo Accept (IJoinInfoVisitor visitor);
+    public abstract SqlTableSource GetResolvedTableSource ();
   }
 }

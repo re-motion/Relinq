@@ -22,7 +22,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
   /// <summary>
   /// <see cref="SqlJoinedTableSource"/> represents a join between two database tables.
   /// </summary>
-  public class SqlJoinedTableSource : AbstractTableSource
+  public class SqlJoinedTableSource : AbstractJoinInfo
   {
     private readonly SqlTableSource _foreignTableSource;
     private readonly SqlColumnExpression _primaryColumn;
@@ -59,7 +59,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
       get { return _foreignColumn; }
     }
 
-    public override AbstractTableSource Accept (ITableSourceVisitor visitor)
+    public override AbstractJoinInfo Accept (IJoinInfoVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       return visitor.VisitSqlJoinedTableSource (this);

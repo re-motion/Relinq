@@ -15,45 +15,44 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Reflection;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved;
 using Remotion.Data.Linq.Utilities;
 
-namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved
+namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
   /// <summary>
-  /// <see cref="JoinedTableSource"/> represents the table source defined by a join in a relational database.
+  /// <see cref="SqlTable"/> represents a data source in a <see cref="SqlStatement"/>.
   /// </summary>
-  public class JoinedTableSource : AbstractJoinInfo
+  public class SqlJoinedTable : SqlTableBase
   {
-    private readonly MemberInfo _memberInfo;
+    private AbstractJoinInfo _joinInfo;
 
-    public JoinedTableSource (MemberInfo memberInfo)
+    public SqlJoinedTable (AbstractJoinInfo joinInfo)
+      : base (joinInfo.ItemType)
     {
-      ArgumentUtility.CheckNotNull ("memberInfo", memberInfo);
+      ArgumentUtility.CheckNotNull ("joinInfo", joinInfo);
 
-      _memberInfo = memberInfo;
+      _joinInfo = joinInfo;
     }
 
-    public MemberInfo MemberInfo
+    public AbstractJoinInfo JoinInfo
     {
-      get { return _memberInfo; }
-    }
-
-    public override Type ItemType
-    {
-      get { return ReflectionUtility.GetFieldOrPropertyType (_memberInfo); }
-    }
-
-    public override AbstractJoinInfo Accept (IJoinInfoVisitor visitor)
-    {
-      ArgumentUtility.CheckNotNull ("visitor", visitor);
-      return visitor.VisitJoinedTableSource (this);
+      get { return _joinInfo; }
+      set
+      {
+        ArgumentUtility.CheckNotNull ("value", value);
+        if (_joinInfo != null)
+        {
+          if (_joinInfo.ItemType != value.ItemType)
+            throw new ArgumentTypeException ("value", _joinInfo.ItemType, value.ItemType);
+        }
+        _joinInfo = value;
+      }
     }
 
     public override SqlTableSource GetResolvedTableSource ()
     {
-      throw new InvalidOperationException ("This join has not yet been resolved; call the resolution step first.");
+      return JoinInfo.GetResolvedTableSource();
     }
   }
 }
