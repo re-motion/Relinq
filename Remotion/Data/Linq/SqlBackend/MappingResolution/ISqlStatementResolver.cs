@@ -26,10 +26,10 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
   /// </summary>
   public interface ISqlStatementResolver
   {
-    AbstractTableInfo ResolveTableInfo (UnresolvedTableInfo tableInfo);
-    AbstractJoinInfo ResolveJoinInfo (SqlTableBase originatingTable, UnresolvedJoinInfo joinInfo);
+    AbstractTableInfo ResolveTableInfo (UnresolvedTableInfo tableInfo, UniqueIdentifierGenerator generator);
+    AbstractJoinInfo ResolveJoinInfo (SqlTableBase originatingTable, UnresolvedJoinInfo joinInfo, UniqueIdentifierGenerator generator);
 
-    Expression ResolveTableReferenceExpression (SqlTableReferenceExpression tableReferenceExpression);
+    Expression ResolveTableReferenceExpression (SqlTableReferenceExpression tableReferenceExpression, UniqueIdentifierGenerator generator);
     Expression ResolveMemberExpression (SqlMemberExpression memberExpression, UniqueIdentifierGenerator generator);
   }
 }

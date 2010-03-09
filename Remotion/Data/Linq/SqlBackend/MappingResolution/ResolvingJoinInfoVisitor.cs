@@ -29,29 +29,32 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
   {
     private readonly ISqlStatementResolver _resolver;
     private readonly SqlTableBase _originatingTable;
+    private readonly UniqueIdentifierGenerator _generator;
 
-    public static AbstractJoinInfo ResolveJoinInfo (SqlTableBase originatingTable, AbstractJoinInfo joinInfo, ISqlStatementResolver resolver)
+    public static AbstractJoinInfo ResolveJoinInfo (SqlTableBase originatingTable, AbstractJoinInfo joinInfo, ISqlStatementResolver resolver, UniqueIdentifierGenerator generator)
     {
       ArgumentUtility.CheckNotNull ("originatingTable", originatingTable);
       ArgumentUtility.CheckNotNull ("joinInfo", joinInfo);
       ArgumentUtility.CheckNotNull ("resolver", resolver);
+      ArgumentUtility.CheckNotNull ("generator", generator);
 
-      var visitor = new ResolvingJoinInfoVisitor (originatingTable, resolver);
+      var visitor = new ResolvingJoinInfoVisitor (originatingTable, resolver, generator);
       return joinInfo.Accept (visitor);
     }
 
-    protected ResolvingJoinInfoVisitor (SqlTableBase originatingTable, ISqlStatementResolver resolver)
+    protected ResolvingJoinInfoVisitor (SqlTableBase originatingTable, ISqlStatementResolver resolver, UniqueIdentifierGenerator generator)
     {
       ArgumentUtility.CheckNotNull ("originatingTable", originatingTable);
       ArgumentUtility.CheckNotNull ("resolver", resolver);
       _originatingTable = originatingTable;
       _resolver = resolver;
+      _generator = generator;
     }
 
     public AbstractJoinInfo VisitUnresolvedJoinInfo (UnresolvedJoinInfo joinInfo)
     {
       ArgumentUtility.CheckNotNull ("joinInfo", joinInfo);
-      var result = _resolver.ResolveJoinInfo (_originatingTable, joinInfo); 
+      var result = _resolver.ResolveJoinInfo (_originatingTable, joinInfo, _generator); 
       if (result == joinInfo)
         return result;
       else

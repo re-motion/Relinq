@@ -28,26 +28,30 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
   public class ResolvingTableInfoVisitor : ITableInfoVisitor
   {
     private readonly ISqlStatementResolver _resolver;
-    
-    public static AbstractTableInfo ResolveTableInfo (AbstractTableInfo tableInfo, ISqlStatementResolver resolver)
+    private readonly UniqueIdentifierGenerator _generator;
+
+    public static AbstractTableInfo ResolveTableInfo (AbstractTableInfo tableInfo, ISqlStatementResolver resolver, UniqueIdentifierGenerator generator)
     {
       ArgumentUtility.CheckNotNull ("tableInfo", tableInfo);
       ArgumentUtility.CheckNotNull ("resolver", resolver);
 
-      var visitor = new ResolvingTableInfoVisitor (resolver);
+      var visitor = new ResolvingTableInfoVisitor (resolver, generator);
       return tableInfo.Accept (visitor);
     }
 
-    protected ResolvingTableInfoVisitor (ISqlStatementResolver resolver)
+    protected ResolvingTableInfoVisitor (ISqlStatementResolver resolver, UniqueIdentifierGenerator generator)
     {
+      ArgumentUtility.CheckNotNull ("generator", generator);
       ArgumentUtility.CheckNotNull ("resolver", resolver);
+
       _resolver = resolver;
+      _generator = generator;
     }
 
     public AbstractTableInfo VisitUnresolvedTableInfo (UnresolvedTableInfo tableInfo)
     {
       ArgumentUtility.CheckNotNull ("tableInfo", tableInfo);
-      var result =  _resolver.ResolveTableInfo (tableInfo); 
+      var result =  _resolver.ResolveTableInfo (tableInfo, _generator); 
       if (result == tableInfo)
         return result;
       else
