@@ -15,6 +15,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
@@ -25,5 +26,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   {
     public abstract Type ItemType { get; }
     public abstract AbstractTableSource Accept (ITableSourceVisitor visitor);
+    public abstract SqlTableSource GetResolvedTableSource ();
   }
 }

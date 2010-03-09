@@ -163,6 +163,7 @@
     <Compile Include="SqlBackend\SqlGeneration\SqlStatementTextGenerator.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlGeneratingExpressionVisitor.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlTableSourceVisitor.cs" />
+    <Compile Include="SqlBackend\SqlStatementModel\SqlTableBase.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\Unresolved\ConstantTableSource.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\Unresolved\IUnresolvedSqlExpressionVisitor.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\ITableSourceVisitor.cs" />

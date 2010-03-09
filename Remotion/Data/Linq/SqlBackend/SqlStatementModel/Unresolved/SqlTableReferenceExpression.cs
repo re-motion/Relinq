@@ -27,17 +27,17 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved
   /// </summary>
   public class SqlTableReferenceExpression : ExtensionExpression
   {
-    private readonly SqlTable _sqlTable;
-    
-    public SqlTableReferenceExpression (SqlTable sqlTable)
-        : base(sqlTable.TableSource.ItemType)
+    private readonly SqlTableBase _sqlTable;
+
+    public SqlTableReferenceExpression (SqlTableBase sqlTable)
+        : base(sqlTable.ItemType)
     {
       ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
 
       _sqlTable = sqlTable;
     }
 
-    public SqlTable SqlTable
+    public SqlTableBase SqlTable
     {
       get { return _sqlTable; }
     }

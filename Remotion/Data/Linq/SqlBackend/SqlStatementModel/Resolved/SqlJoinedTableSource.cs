@@ -24,11 +24,11 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
   /// </summary>
   public class SqlJoinedTableSource : AbstractTableSource
   {
-    private readonly AbstractTableSource _foreignTableSource;
+    private readonly SqlTableSource _foreignTableSource;
     private readonly SqlColumnExpression _primaryColumn;
     private readonly SqlColumnExpression _foreignColumn;
 
-    public SqlJoinedTableSource (AbstractTableSource foreignTableSource, SqlColumnExpression primaryColumn, SqlColumnExpression foreignColumn)
+    public SqlJoinedTableSource (SqlTableSource foreignTableSource, SqlColumnExpression primaryColumn, SqlColumnExpression foreignColumn)
     {
       ArgumentUtility.CheckNotNull ("foreignTableSource", foreignTableSource);
       ArgumentUtility.CheckNotNull ("primaryColumn", primaryColumn);
@@ -44,7 +44,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
       get { return _foreignTableSource.ItemType; }
     }
 
-    public AbstractTableSource ForeignTableSource
+    public SqlTableSource ForeignTableSource
     {
       get { return _foreignTableSource; }
     }
@@ -63,6 +63,11 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       return visitor.VisitSqlJoinedTableSource (this);
+    }
+
+    public override SqlTableSource GetResolvedTableSource ()
+    {
+      return ForeignTableSource;
     }
   }
 }

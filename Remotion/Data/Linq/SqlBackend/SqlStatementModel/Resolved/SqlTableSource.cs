@@ -59,5 +59,10 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       return visitor.VisitSqlTableSource (this);
     }
+
+    public override SqlTableSource GetResolvedTableSource ()
+    {
+      return this;
+    }
   }
 }

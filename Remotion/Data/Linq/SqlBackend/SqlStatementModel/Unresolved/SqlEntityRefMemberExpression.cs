@@ -28,10 +28,10 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved
   /// </summary>
   public class SqlEntityRefMemberExpression : ExtensionExpression
   {
-    private readonly SqlTable _sqlTable;
+    private readonly SqlTableBase _sqlTable;
     private readonly MemberInfo _memberInfo;
 
-    public SqlEntityRefMemberExpression (SqlTable sqlTable, MemberInfo memberInfo)
+    public SqlEntityRefMemberExpression (SqlTableBase sqlTable, MemberInfo memberInfo)
       : base (ReflectionUtility.GetFieldOrPropertyType (ArgumentUtility.CheckNotNull ("memberInfo", memberInfo)))
     {
       ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
@@ -41,7 +41,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved
       _memberInfo = memberInfo;
     }
 
-    public SqlTable SqlTable
+    public SqlTableBase SqlTable
     {
       get { return _sqlTable; }
     }

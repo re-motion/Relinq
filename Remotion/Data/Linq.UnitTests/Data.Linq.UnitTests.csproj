@@ -379,6 +379,8 @@
     <Compile Include="SqlBackend\SqlGeneration\SqlGeneratingExpressionVisitorTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlStatementTextGeneratorTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlTableSourceVisitorTest.cs" />
+    <Compile Include="SqlBackend\UnknownTableSource.cs" />
+    <Compile Include="SqlBackend\SqlStatementModel\Resolved\SqlJoinTableSourceTest.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlStatementTest.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\Unresolved\ConstantTableSourceTest.cs" />
     <Compile Include="Clauses\Expressions\ExtensionExpressionTestHelper.cs" />

@@ -15,9 +15,8 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Reflection;
-using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved;
+using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved;
 using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
@@ -25,16 +24,15 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   /// <summary>
   /// <see cref="SqlTable"/> represents a data source in a <see cref="SqlStatement"/>.
   /// </summary>
-  public class SqlTable
+  public class SqlTable : SqlTableBase
   {
     private AbstractTableSource _tableSource;
-    private readonly Dictionary<MemberInfo, SqlTable> _joinedTables;
 
-    public SqlTable (AbstractTableSource tableSource)
+    public SqlTable (AbstractTableSource tableSource) 
+        : base (tableSource.ItemType)
     {
       ArgumentUtility.CheckNotNull ("tableSource", tableSource);
 
-      _joinedTables = new Dictionary<MemberInfo, SqlTable>();
       _tableSource = tableSource;
     }
 
@@ -53,24 +51,9 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       }
     }
 
-    public Dictionary<MemberInfo, SqlTable> JoinedTables
+    public override SqlTableSource GetResolvedTableSource ()
     {
-      get { return _joinedTables; }
-    }
-
-    public SqlTable GetOrAddJoin (MemberInfo relationMember, JoinedTableSource tableSource)
-    {
-      if (ReflectionUtility.GetFieldOrPropertyType (relationMember) != tableSource.ItemType)
-      {
-        string message = string.Format (
-            "Type mismatch between {0} and {1}.", ReflectionUtility.GetFieldOrPropertyType (relationMember).Name, tableSource.ItemType.Name);
-        throw new InvalidOperationException (message);
-      }
-
-      if (!JoinedTables.ContainsKey (relationMember))
-        JoinedTables.Add (relationMember, new SqlTable (tableSource ));
-
-      return JoinedTables[relationMember];
+      return TableSource.GetResolvedTableSource();
     }
   }
 }

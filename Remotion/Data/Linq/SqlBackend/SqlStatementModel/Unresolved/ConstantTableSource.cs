@@ -16,6 +16,7 @@
 // 
 using System;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved;
 using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved
@@ -47,6 +48,11 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       return visitor.VisitConstantTableSource (this);
+    }
+
+    public override SqlTableSource GetResolvedTableSource ()
+    {
+      throw new InvalidOperationException ("This table has not yet been resolved; call the resolution step first.");
     }
   }
 }

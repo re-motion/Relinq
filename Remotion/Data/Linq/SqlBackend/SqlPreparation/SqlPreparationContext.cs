@@ -27,11 +27,11 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
   /// </summary>
   public class SqlPreparationContext
   {
-    private readonly Dictionary<IQuerySource, SqlTable> _mapping;
+    private readonly Dictionary<IQuerySource, SqlTableBase> _mapping;
 
     public SqlPreparationContext ()
     {
-      _mapping = new Dictionary<IQuerySource, SqlTable>();
+      _mapping = new Dictionary<IQuerySource, SqlTableBase>();
     }
 
     public int QuerySourceMappingCount
@@ -39,7 +39,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       get { return _mapping.Count; }
     }
 
-    public void AddQuerySourceMapping (IQuerySource source, SqlTable sqlTable)
+    public void AddQuerySourceMapping (IQuerySource source, SqlTableBase sqlTable)
     {
       ArgumentUtility.CheckNotNull ("source", source);
       ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
@@ -47,7 +47,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       _mapping.Add (source, sqlTable);
     }
 
-    public SqlTable GetSqlTableForQuerySource (IQuerySource source)
+    public SqlTableBase GetSqlTableForQuerySource (IQuerySource source)
     {
       ArgumentUtility.CheckNotNull ("source", source);
       return _mapping[source];
