@@ -84,9 +84,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
         var originalSqlTable = newExpressionAsSqlMemberExpression.SqlTable; // kitchenTable
         
         // create cookTable via join
-        var join = originalSqlTable.GetOrAddJoin (
-            newExpressionAsSqlMemberExpression.MemberInfo, // "Cook"
-            new UnresolvedJoinInfo (newExpressionAsSqlMemberExpression.MemberInfo));
+        var join = originalSqlTable.GetOrAddJoin (newExpressionAsSqlMemberExpression.MemberInfo); // "Cook"
 
         return new SqlMemberExpression (join, expression.Member); // cookTable.FirstName
       }

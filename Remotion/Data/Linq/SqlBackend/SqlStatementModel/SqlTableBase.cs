@@ -28,7 +28,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   /// </summary>
   public abstract class SqlTableBase
   {
-    private readonly Dictionary<MemberInfo, SqlJoinedTable> _joinedTables = new Dictionary<MemberInfo, SqlJoinedTable> ();
+    private readonly Dictionary<MemberInfo, SqlJoinedTable> _joinedTables = new Dictionary<MemberInfo, SqlJoinedTable>();
     private readonly Type _itemType;
 
     protected SqlTableBase (Type itemType)
@@ -40,32 +40,25 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 
     public abstract ResolvedTableInfo GetResolvedTableInfo ();
 
-    public Type ItemType 
-    { 
-      get { return _itemType; } 
+    public Type ItemType
+    {
+      get { return _itemType; }
     }
 
-      public Dictionary<MemberInfo, SqlJoinedTable> JoinedTables // TODO: Remove
+    public Dictionary<MemberInfo, SqlJoinedTable> JoinedTables // TODO: Remove
     {
       get { return _joinedTables; }
     }
 
-      public SqlJoinedTable GetOrAddJoin (MemberInfo relationMember, UnresolvedJoinInfo joinInfo)
+    public SqlJoinedTable GetOrAddJoin (MemberInfo relationMember)
     {
-      if (ReflectionUtility.GetFieldOrPropertyType (relationMember) != joinInfo.ItemType)
-      {
-        string message = string.Format (
-            "Type mismatch between {0} and {1}.", ReflectionUtility.GetFieldOrPropertyType (relationMember).Name, joinInfo.ItemType.Name);
-        throw new InvalidOperationException (message);
-      }
-
       if (!JoinedTables.ContainsKey (relationMember))
-        JoinedTables.Add (relationMember, new SqlJoinedTable (joinInfo));
+        JoinedTables.Add (relationMember, new SqlJoinedTable (new UnresolvedJoinInfo (relationMember)));
 
       return JoinedTables[relationMember];
     }
 
-      public SqlJoinedTable GetJoin (MemberInfo relationMember)
+    public SqlJoinedTable GetJoin (MemberInfo relationMember)
     {
       return JoinedTables[relationMember];
     }
