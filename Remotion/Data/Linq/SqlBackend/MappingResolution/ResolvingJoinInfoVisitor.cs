@@ -23,66 +23,41 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.SqlBackend.MappingResolution
 {
   /// <summary>
-  /// <see cref="ResolvingTableSourceVisitor"/> modifies <see cref="ConstantTableSource"/>s and generates <see cref="SqlTableSource"/>s.
+  /// <see cref="ResolvingJoinInfoVisitor"/> modifies <see cref="UnresolvedJoinInfo"/>s and generates <see cref="ResolvedJoinInfo"/>s.
   /// </summary>
-  public class ResolvingTableSourceVisitor : ITableSourceVisitor, IJoinInfoVisitor
+  public class ResolvingJoinInfoVisitor : IJoinInfoVisitor
   {
     private readonly ISqlStatementResolver _resolver;
     
-    public static AbstractTableSource ResolveTableSource (AbstractTableSource tableSource, ISqlStatementResolver resolver)
-    {
-      ArgumentUtility.CheckNotNull ("tableSource", tableSource);
-      ArgumentUtility.CheckNotNull ("resolver", resolver);
-
-      var visitor = new ResolvingTableSourceVisitor (resolver);
-      return tableSource.Accept (visitor);
-    }
-
     public static AbstractJoinInfo ResolveJoinInfo (AbstractJoinInfo joinInfo, ISqlStatementResolver resolver)
     {
       ArgumentUtility.CheckNotNull ("joinInfo", joinInfo);
       ArgumentUtility.CheckNotNull ("resolver", resolver);
 
-      var visitor = new ResolvingTableSourceVisitor (resolver);
+      var visitor = new ResolvingJoinInfoVisitor (resolver);
       return joinInfo.Accept (visitor);
     }
 
-    protected ResolvingTableSourceVisitor (ISqlStatementResolver resolver)
+    protected ResolvingJoinInfoVisitor (ISqlStatementResolver resolver)
     {
       ArgumentUtility.CheckNotNull ("resolver", resolver);
       _resolver = resolver;
     }
 
-    public AbstractTableSource VisitConstantTableSource (ConstantTableSource tableSource)
+    public AbstractJoinInfo VisitUnresolvedJoinInfo (UnresolvedJoinInfo joinInfo)
     {
-      ArgumentUtility.CheckNotNull ("tableSource", tableSource);
-      var result =  _resolver.ResolveConstantTableSource (tableSource); 
-      if (result == tableSource)
+      ArgumentUtility.CheckNotNull ("joinInfo", joinInfo);
+      var result = _resolver.ResolveJoinInfo (joinInfo); 
+      if (result == joinInfo)
         return result;
       else
         return result.Accept (this);
     }
 
-    public AbstractTableSource VisitSqlTableSource (SqlTableSource tableSource)
+    public AbstractJoinInfo VisitResolvedJoinInfo (ResolvedJoinInfo joinInfo)
     {
-      ArgumentUtility.CheckNotNull ("tableSource", tableSource);
-      return tableSource;
-    }
-
-    public AbstractJoinInfo VisitJoinedTableSource (JoinedTableSource tableSource)
-    {
-      ArgumentUtility.CheckNotNull ("tableSource", tableSource);
-      var result = _resolver.ResolveJoinedTableSource (tableSource); 
-      if (result == tableSource)
-        return result;
-      else
-        return result.Accept (this);
-    }
-
-    public AbstractJoinInfo VisitSqlJoinedTableSource (SqlJoinedTableSource sqlTableSource)
-    {
-      ArgumentUtility.CheckNotNull ("sqlTableSource", sqlTableSource);
-      return sqlTableSource;
+      ArgumentUtility.CheckNotNull ("joinInfo", joinInfo);
+      return joinInfo;
     }
   }
 }

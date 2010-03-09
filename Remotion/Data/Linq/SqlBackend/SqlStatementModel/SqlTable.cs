@@ -25,34 +25,34 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   /// </summary>
   public class SqlTable : SqlTableBase
   {
-    private AbstractTableSource _tableSource;
+    private AbstractTableInfo _tableInfo;
 
-    public SqlTable (AbstractTableSource tableSource) 
-        : base (tableSource.ItemType)
+    public SqlTable (AbstractTableInfo tableInfo) 
+        : base (tableInfo.ItemType)
     {
-      ArgumentUtility.CheckNotNull ("tableSource", tableSource);
+      ArgumentUtility.CheckNotNull ("tableInfo", tableInfo);
 
-      _tableSource = tableSource;
+      _tableInfo = tableInfo;
     }
 
-    public AbstractTableSource TableSource
+    public AbstractTableInfo TableInfo
     {
-      get { return _tableSource; }
+      get { return _tableInfo; }
       set
       {
         ArgumentUtility.CheckNotNull ("value", value);
-        if (_tableSource != null)
+        if (_tableInfo != null)
         {
-          if (_tableSource.ItemType != value.ItemType)
-            throw new ArgumentTypeException ("value", _tableSource.ItemType, value.ItemType);
+          if (_tableInfo.ItemType != value.ItemType)
+            throw new ArgumentTypeException ("value", _tableInfo.ItemType, value.ItemType);
         }
-        _tableSource = value;
+        _tableInfo = value;
       }
     }
 
-    public override SqlTableSource GetResolvedTableSource ()
+    public override ResolvedTableInfo GetResolvedTableInfo ()
     {
-      return TableSource.GetResolvedTableSource();
+      return TableInfo.GetResolvedTableInfo();
     }
   }
 }

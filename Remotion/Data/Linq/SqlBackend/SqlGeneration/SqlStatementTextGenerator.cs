@@ -87,7 +87,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       ArgumentUtility.CheckNotNull ("sqlStatement", sqlStatement);
       ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);
 
-      SqlTableSourceVisitor.GenerateSql (sqlStatement.FromExpression, commandBuilder);
+      SqlTableAndJoinTextGenerator.GenerateSql (sqlStatement.FromExpression, commandBuilder);
     }
 
     protected virtual void BuildWherePart (SqlStatement sqlStatement, SqlCommandBuilder commandBuilder)

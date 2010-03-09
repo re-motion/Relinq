@@ -21,7 +21,7 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
   /// <summary>
-  /// <see cref="SqlTable"/> represents a data source in a <see cref="SqlStatement"/>.
+  /// <see cref="SqlJoinedTable"/> represents a joined data source in a <see cref="SqlStatement"/>.
   /// </summary>
   public class SqlJoinedTable : SqlTableBase
   {
@@ -50,9 +50,9 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       }
     }
 
-    public override SqlTableSource GetResolvedTableSource ()
+    public override ResolvedTableInfo GetResolvedTableInfo ()
     {
-      return JoinInfo.GetResolvedTableSource();
+      return JoinInfo.GetResolvedTableInfo();
     }
   }
 }

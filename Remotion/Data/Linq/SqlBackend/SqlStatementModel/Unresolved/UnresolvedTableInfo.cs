@@ -15,54 +15,44 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Linq.Expressions;
+using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved;
 using Remotion.Data.Linq.Utilities;
 
-namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
+namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved
 {
   /// <summary>
-  /// <see cref="SqlTableSource"/> represents the data source defined by a table in a relational database.
+  /// <see cref="UnresolvedTableInfo"/> holds a <see cref="ConstantExpression"/> representing the data source defined by a LINQ query.
   /// </summary>
-  public class SqlTableSource : AbstractTableSource
+  public class UnresolvedTableInfo : AbstractTableInfo
   {
     private readonly Type _itemType;
-    private readonly string _tableName;
-    private readonly string _tableAlias;
 
-    public SqlTableSource (Type type, string tableName, string tableAlias)
+    public UnresolvedTableInfo (ConstantExpression constantExpression, Type itemType)
     {
-      ArgumentUtility.CheckNotNull ("type", type);
-      ArgumentUtility.CheckNotNullOrEmpty ("tableName", tableName);
-      ArgumentUtility.CheckNotNullOrEmpty ("tableAlias", tableAlias);
+      ArgumentUtility.CheckNotNull ("constantExpression", constantExpression);
+      ArgumentUtility.CheckNotNull ("itemType", itemType);
 
-      _itemType = type;
-      _tableName = tableName;
-      _tableAlias = tableAlias;
+      ConstantExpression = constantExpression;
+      _itemType = itemType;
     }
 
-    public string TableName
-    {
-      get { return _tableName; }
-    }
-
-    public string TableAlias
-    {
-      get { return _tableAlias; }
-    }
-
+    public ConstantExpression ConstantExpression { get; private set; }
+    
     public override Type ItemType
     {
-      get { return _itemType; }
+      get { return _itemType;  }
     }
 
-    public override AbstractTableSource Accept (ITableSourceVisitor visitor)
+    public override AbstractTableInfo Accept (ITableInfoVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
-      return visitor.VisitSqlTableSource (this);
+      return visitor.VisitUnresolvedTableInfo (this);
     }
 
-    public override SqlTableSource GetResolvedTableSource ()
+    public override ResolvedTableInfo GetResolvedTableInfo ()
     {
-      return this;
+      throw new InvalidOperationException ("This table has not yet been resolved; call the resolution step first.");
     }
   }
 }

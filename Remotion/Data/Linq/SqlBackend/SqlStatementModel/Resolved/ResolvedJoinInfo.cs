@@ -20,33 +20,33 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
 {
   /// <summary>
-  /// <see cref="SqlJoinedTableSource"/> represents a join between two database tables.
+  /// <see cref="ResolvedJoinInfo"/> represents a join between two database tables.
   /// </summary>
-  public class SqlJoinedTableSource : AbstractJoinInfo
+  public class ResolvedJoinInfo : AbstractJoinInfo
   {
-    private readonly SqlTableSource _foreignTableSource;
+    private readonly ResolvedTableInfo _foreignTableInfo;
     private readonly SqlColumnExpression _primaryColumn;
     private readonly SqlColumnExpression _foreignColumn;
 
-    public SqlJoinedTableSource (SqlTableSource foreignTableSource, SqlColumnExpression primaryColumn, SqlColumnExpression foreignColumn)
+    public ResolvedJoinInfo (ResolvedTableInfo foreignTableInfo, SqlColumnExpression primaryColumn, SqlColumnExpression foreignColumn)
     {
-      ArgumentUtility.CheckNotNull ("foreignTableSource", foreignTableSource);
+      ArgumentUtility.CheckNotNull ("foreignTableInfo", foreignTableInfo);
       ArgumentUtility.CheckNotNull ("primaryColumn", primaryColumn);
       ArgumentUtility.CheckNotNull ("foreignColumn", foreignColumn);
       
-      _foreignTableSource = foreignTableSource;
+      _foreignTableInfo = foreignTableInfo;
       _primaryColumn = primaryColumn;
       _foreignColumn = foreignColumn;
     }
 
     public override Type ItemType
     {
-      get { return _foreignTableSource.ItemType; }
+      get { return _foreignTableInfo.ItemType; }
     }
 
-    public SqlTableSource ForeignTableSource
+    public ResolvedTableInfo ForeignTableInfo
     {
-      get { return _foreignTableSource; }
+      get { return _foreignTableInfo; }
     }
 
     public SqlColumnExpression PrimaryColumn
@@ -62,12 +62,12 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
     public override AbstractJoinInfo Accept (IJoinInfoVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
-      return visitor.VisitSqlJoinedTableSource (this);
+      return visitor.VisitResolvedJoinInfo (this);
     }
 
-    public override SqlTableSource GetResolvedTableSource ()
+    public override ResolvedTableInfo GetResolvedTableInfo ()
     {
-      return ForeignTableSource;
+      return ForeignTableInfo;
     }
   }
 }

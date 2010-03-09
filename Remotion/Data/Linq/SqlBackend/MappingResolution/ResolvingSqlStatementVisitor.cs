@@ -55,7 +55,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
     {
       ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
       
-      sqlTable.TableSource = ResolvingTableSourceVisitor.ResolveTableSource (sqlTable.TableSource, _resolver);
+      sqlTable.TableInfo = ResolvingTableInfoVisitor.ResolveTableInfo (sqlTable.TableInfo, _resolver);
     }
 
     protected override Expression VisitWhereCondition (Expression whereCondition)

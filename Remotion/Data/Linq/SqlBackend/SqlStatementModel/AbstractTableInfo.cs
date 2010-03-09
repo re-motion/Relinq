@@ -14,17 +14,18 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+using System;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved;
-using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
   /// <summary>
-  /// Provides a visitor for implementations of <see cref="AbstractTableSource"/>.
+  /// <see cref="AbstractTableInfo"/> represents the actual data in a <see cref="SqlTable"/>.
   /// </summary>
-  public interface ITableSourceVisitor
+  public abstract class AbstractTableInfo
   {
-    AbstractTableSource VisitConstantTableSource (ConstantTableSource tableSource);
-    AbstractTableSource VisitSqlTableSource (SqlTableSource tableSource);
+    public abstract Type ItemType { get; }
+    public abstract AbstractTableInfo Accept (ITableInfoVisitor visitor);
+    public abstract ResolvedTableInfo GetResolvedTableInfo ();
   }
 }

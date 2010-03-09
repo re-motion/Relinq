@@ -38,7 +38,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       _itemType = itemType;
     }
 
-    public abstract SqlTableSource GetResolvedTableSource ();
+    public abstract ResolvedTableInfo GetResolvedTableInfo ();
 
     public Type ItemType 
     { 
@@ -50,17 +50,17 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       get { return _joinedTables; }
     }
 
-      public SqlJoinedTable GetOrAddJoin (MemberInfo relationMember, JoinedTableSource tableSource)
+      public SqlJoinedTable GetOrAddJoin (MemberInfo relationMember, UnresolvedJoinInfo joinInfo)
     {
-      if (ReflectionUtility.GetFieldOrPropertyType (relationMember) != tableSource.ItemType)
+      if (ReflectionUtility.GetFieldOrPropertyType (relationMember) != joinInfo.ItemType)
       {
         string message = string.Format (
-            "Type mismatch between {0} and {1}.", ReflectionUtility.GetFieldOrPropertyType (relationMember).Name, tableSource.ItemType.Name);
+            "Type mismatch between {0} and {1}.", ReflectionUtility.GetFieldOrPropertyType (relationMember).Name, joinInfo.ItemType.Name);
         throw new InvalidOperationException (message);
       }
 
       if (!JoinedTables.ContainsKey (relationMember))
-        JoinedTables.Add (relationMember, new SqlJoinedTable (tableSource));
+        JoinedTables.Add (relationMember, new SqlJoinedTable (joinInfo));
 
       return JoinedTables[relationMember];
     }

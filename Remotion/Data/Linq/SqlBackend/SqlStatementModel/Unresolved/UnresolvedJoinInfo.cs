@@ -15,44 +15,45 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Linq.Expressions;
+using System.Reflection;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved;
 using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved
 {
   /// <summary>
-  /// <see cref="ConstantTableSource"/> holds a <see cref="ConstantExpression"/> representing the data source defined by a LINQ query.
+  /// <see cref="UnresolvedJoinInfo"/> represents the data source defined by a member access in a LINQ expression.
   /// </summary>
-  public class ConstantTableSource : AbstractTableSource
+  public class UnresolvedJoinInfo : AbstractJoinInfo
   {
-    private readonly Type _itemType;
+    private readonly MemberInfo _memberInfo;
 
-    public ConstantTableSource (ConstantExpression constantExpression, Type itemType)
+    public UnresolvedJoinInfo (MemberInfo memberInfo)
     {
-      ArgumentUtility.CheckNotNull ("constantExpression", constantExpression);
-      ArgumentUtility.CheckNotNull ("itemType", itemType);
+      ArgumentUtility.CheckNotNull ("memberInfo", memberInfo);
 
-      ConstantExpression = constantExpression;
-      _itemType = itemType;
+      _memberInfo = memberInfo;
     }
 
-    public ConstantExpression ConstantExpression { get; private set; }
-    
+    public MemberInfo MemberInfo
+    {
+      get { return _memberInfo; }
+    }
+
     public override Type ItemType
     {
-      get { return _itemType;  }
+      get { return ReflectionUtility.GetFieldOrPropertyType (_memberInfo); }
     }
 
-    public override AbstractTableSource Accept (ITableSourceVisitor visitor)
+    public override AbstractJoinInfo Accept (IJoinInfoVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
-      return visitor.VisitConstantTableSource (this);
+      return visitor.VisitUnresolvedJoinInfo (this);
     }
 
-    public override SqlTableSource GetResolvedTableSource ()
+    public override ResolvedTableInfo GetResolvedTableInfo ()
     {
-      throw new InvalidOperationException ("This table has not yet been resolved; call the resolution step first.");
+      throw new InvalidOperationException ("This join has not yet been resolved; call the resolution step first.");
     }
   }
 }

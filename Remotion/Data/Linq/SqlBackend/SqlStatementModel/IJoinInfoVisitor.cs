@@ -20,11 +20,11 @@ using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved;
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
   /// <summary>
-  /// Provides a visitor for implementations of <see cref="AbstractTableSource"/>.
+  /// Provides a visitor for implementations of <see cref="AbstractTableInfo"/>.
   /// </summary>
   public interface IJoinInfoVisitor
   {
-    AbstractJoinInfo VisitJoinedTableSource (JoinedTableSource tableSource);
-    AbstractJoinInfo VisitSqlJoinedTableSource (SqlJoinedTableSource sqlTableSource);
+    AbstractJoinInfo VisitUnresolvedJoinInfo (UnresolvedJoinInfo joinInfo);
+    AbstractJoinInfo VisitResolvedJoinInfo (ResolvedJoinInfo joinInfo);
   }
 }

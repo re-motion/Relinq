@@ -23,9 +23,9 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 {
   /// <summary>
-  /// <see cref="SqlTableSourceVisitor"/> generates sql-text for <see cref="SqlTableSource"/>.
+  /// <see cref="SqlTableAndJoinTextGenerator"/> generates sql-text for <see cref="ResolvedTableInfo"/> and <see cref="ResolvedJoinInfo"/>.
   /// </summary>
-  public class SqlTableSourceVisitor : ITableSourceVisitor, IJoinInfoVisitor
+  public class SqlTableAndJoinTextGenerator : ITableInfoVisitor, IJoinInfoVisitor
   {
     private readonly SqlCommandBuilder _commandBuilder;
     
@@ -34,49 +34,43 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
       ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);
 
-      var visitor = new SqlTableSourceVisitor (commandBuilder);
+      var visitor = new SqlTableAndJoinTextGenerator (commandBuilder);
       
-      sqlTable.TableSource.Accept (visitor);
+      sqlTable.TableInfo.Accept (visitor);
 
       foreach (var table in sqlTable.JoinedTables)
         table.Value.JoinInfo.Accept (visitor);
     }
 
-    protected SqlTableSourceVisitor (SqlCommandBuilder commandBuilder)
+    protected SqlTableAndJoinTextGenerator (SqlCommandBuilder commandBuilder)
     {
       ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);
       _commandBuilder = commandBuilder;
     }
 
-    public AbstractTableSource VisitTableSource (AbstractTableSource tableSource)
+    public AbstractTableInfo VisitUnresolvedTableInfo (UnresolvedTableInfo tableInfo)
     {
-      ArgumentUtility.CheckNotNull ("tableSource", tableSource);
-      return tableSource.Accept (this);
+      throw new InvalidOperationException ("UnresolvedTableInfo is not valid at this point.");
     }
 
-    public AbstractTableSource VisitConstantTableSource (ConstantTableSource tableSource)
-    {
-      throw new InvalidOperationException ("ConstantTableSource is not valid at this point.");
-    }
-
-    public AbstractTableSource VisitSqlTableSource (SqlTableSource tableSource)
+    public AbstractTableInfo VisitResolvedTableInfo (ResolvedTableInfo tableInfo)
     {
       _commandBuilder.Append ("[");
-      _commandBuilder.Append (tableSource.TableName);
+      _commandBuilder.Append (tableInfo.TableName);
       _commandBuilder.Append ("]");
       _commandBuilder.Append (" AS ");
       _commandBuilder.Append ("[");
-      _commandBuilder.Append (tableSource.TableAlias);
+      _commandBuilder.Append (tableInfo.TableAlias);
       _commandBuilder.Append ("]");
 
-      return tableSource;
+      return tableInfo;
     }
 
-    public AbstractJoinInfo VisitSqlJoinedTableSource (SqlJoinedTableSource tableSource)
+    public AbstractJoinInfo VisitResolvedJoinInfo (ResolvedJoinInfo tableSource)
     {
       _commandBuilder.Append (" JOIN ");
 
-      tableSource.ForeignTableSource.Accept (this);
+      tableSource.ForeignTableInfo.Accept (this);
       
       _commandBuilder.Append (" ON ");
       SqlGeneratingExpressionVisitor.GenerateSql (tableSource.PrimaryColumn, _commandBuilder, new MethodCallSqlGeneratorRegistry());
@@ -86,9 +80,9 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       return tableSource;
     }
 
-    public AbstractJoinInfo VisitJoinedTableSource (JoinedTableSource tableSource)
+    public AbstractJoinInfo VisitUnresolvedJoinInfo (UnresolvedJoinInfo tableSource)
     {
-      throw new InvalidOperationException ("JoinedTableSource is not valid at this point.");
+      throw new InvalidOperationException ("UnresolvedJoinInfo is not valid at this point.");
     }
   }
 }
