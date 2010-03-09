@@ -74,7 +74,10 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
 
     public Expression VisitSqlEntityRefMemberExpression (SqlEntityRefMemberExpression expression)
     {
-      throw new NotImplementedException();
+      var join = expression.SqlTable.GetOrAddJoin (expression.MemberInfo, new JoinedTableSource(expression.MemberInfo));
+      join.TableSource = ResolvingTableSourceVisitor.ResolveTableSource (join.TableSource, _resolver);
+      var sqlTableReferenceExpression = new SqlTableReferenceExpression (join);
+      return VisitExpression (sqlTableReferenceExpression);
     }
   }
 }
