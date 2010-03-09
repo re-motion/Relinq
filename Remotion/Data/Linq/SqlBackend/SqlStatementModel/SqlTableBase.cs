@@ -45,22 +45,26 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       get { return _itemType; }
     }
 
-    public Dictionary<MemberInfo, SqlJoinedTable> JoinedTables // TODO: Remove
+    public IEnumerable<SqlJoinedTable> JoinedTables
     {
-      get { return _joinedTables; }
+      get { return _joinedTables.Values; }
     }
 
     public SqlJoinedTable GetOrAddJoin (MemberInfo relationMember)
     {
-      if (!JoinedTables.ContainsKey (relationMember))
-        JoinedTables.Add (relationMember, new SqlJoinedTable (new UnresolvedJoinInfo (relationMember)));
+      ArgumentUtility.CheckNotNull ("relationMember", relationMember);
 
-      return JoinedTables[relationMember];
+      if (!_joinedTables.ContainsKey (relationMember))
+        _joinedTables.Add (relationMember, new SqlJoinedTable (new UnresolvedJoinInfo (relationMember)));
+
+      return _joinedTables[relationMember];
     }
 
     public SqlJoinedTable GetJoin (MemberInfo relationMember)
     {
-      return JoinedTables[relationMember];
+      ArgumentUtility.CheckNotNull ("relationMember", relationMember);
+
+      return _joinedTables[relationMember];
     }
   }
 }
