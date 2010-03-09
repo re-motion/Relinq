@@ -27,7 +27,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
   public interface ISqlStatementResolver
   {
     AbstractTableInfo ResolveTableInfo (UnresolvedTableInfo tableInfo);
-    AbstractJoinInfo ResolveJoinInfo (UnresolvedJoinInfo joinInfo);
+    AbstractJoinInfo ResolveJoinInfo (SqlTableBase originatingTable, UnresolvedJoinInfo joinInfo);
 
     Expression ResolveTableReferenceExpression (SqlTableReferenceExpression tableReferenceExpression);
     Expression ResolveMemberExpression (SqlMemberExpression memberExpression, UniqueIdentifierGenerator generator);

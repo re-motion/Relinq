@@ -28,26 +28,30 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
   public class ResolvingJoinInfoVisitor : IJoinInfoVisitor
   {
     private readonly ISqlStatementResolver _resolver;
-    
-    public static AbstractJoinInfo ResolveJoinInfo (AbstractJoinInfo joinInfo, ISqlStatementResolver resolver)
+    private readonly SqlTableBase _originatingTable;
+
+    public static AbstractJoinInfo ResolveJoinInfo (SqlTableBase originatingTable, AbstractJoinInfo joinInfo, ISqlStatementResolver resolver)
     {
+      ArgumentUtility.CheckNotNull ("originatingTable", originatingTable);
       ArgumentUtility.CheckNotNull ("joinInfo", joinInfo);
       ArgumentUtility.CheckNotNull ("resolver", resolver);
 
-      var visitor = new ResolvingJoinInfoVisitor (resolver);
+      var visitor = new ResolvingJoinInfoVisitor (originatingTable, resolver);
       return joinInfo.Accept (visitor);
     }
 
-    protected ResolvingJoinInfoVisitor (ISqlStatementResolver resolver)
+    protected ResolvingJoinInfoVisitor (SqlTableBase originatingTable, ISqlStatementResolver resolver)
     {
+      ArgumentUtility.CheckNotNull ("originatingTable", originatingTable);
       ArgumentUtility.CheckNotNull ("resolver", resolver);
+      _originatingTable = originatingTable;
       _resolver = resolver;
     }
 
     public AbstractJoinInfo VisitUnresolvedJoinInfo (UnresolvedJoinInfo joinInfo)
     {
       ArgumentUtility.CheckNotNull ("joinInfo", joinInfo);
-      var result = _resolver.ResolveJoinInfo (joinInfo); 
+      var result = _resolver.ResolveJoinInfo (_originatingTable, joinInfo); 
       if (result == joinInfo)
         return result;
       else
