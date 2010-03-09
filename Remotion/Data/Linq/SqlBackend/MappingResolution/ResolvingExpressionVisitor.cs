@@ -54,15 +54,27 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      return _resolver.ResolveTableReferenceExpression (expression);
+      var newExpression = _resolver.ResolveTableReferenceExpression (expression);
+      if (newExpression == expression) 
+        return expression;
+      else
+        return VisitExpression (newExpression);
     }
 
     public Expression VisitSqlMemberExpression(SqlMemberExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       
-      return _resolver.ResolveMemberExpression (expression, _generator);
+      var newExpression = _resolver.ResolveMemberExpression (expression, _generator);
+      if (newExpression == expression)
+        return expression;
+      else
+        return VisitExpression (newExpression);
     }
 
+    public Expression VisitSqlEntityRefMemberExpression (SqlEntityRefMemberExpression expression)
+    {
+      throw new NotImplementedException();
+    }
   }
 }
