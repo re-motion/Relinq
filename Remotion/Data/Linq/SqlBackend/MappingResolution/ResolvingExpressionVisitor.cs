@@ -17,6 +17,7 @@
 using System;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Parsing;
+using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved;
 using Remotion.Data.Linq.Utilities;
 
@@ -74,8 +75,11 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
 
     public Expression VisitSqlEntityRefMemberExpression (SqlEntityRefMemberExpression expression)
     {
-      var join = expression.SqlTable.GetOrAddJoin (expression.MemberInfo, new JoinedTableSource(expression.MemberInfo));
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
+      var join = expression.SqlTable.GetOrAddJoin (expression.MemberInfo, new JoinedTableSource (expression.MemberInfo));
       join.TableSource = ResolvingTableSourceVisitor.ResolveTableSource (join.TableSource, _resolver);
+
       var sqlTableReferenceExpression = new SqlTableReferenceExpression (join);
       return VisitExpression (sqlTableReferenceExpression);
     }
