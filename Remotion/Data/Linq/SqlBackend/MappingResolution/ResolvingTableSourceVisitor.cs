@@ -53,7 +53,11 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
     public AbstractTableSource VisitConstantTableSource (ConstantTableSource tableSource)
     {
       ArgumentUtility.CheckNotNull ("tableSource", tableSource);
-      return  _resolver.ResolveConstantTableSource (tableSource); // TODO: if result is different, call Accept (this) again
+      var result =  _resolver.ResolveConstantTableSource (tableSource); 
+      if (result == tableSource)
+        return result;
+      else
+        return VisitTableSource (result);
     }
 
     public AbstractTableSource VisitSqlTableSource (SqlTableSource tableSource)
@@ -65,7 +69,11 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
     public AbstractTableSource VisitJoinedTableSource (JoinedTableSource tableSource)
     {
       ArgumentUtility.CheckNotNull ("tableSource", tableSource);
-      return _resolver.ResolveJoinedTableSource (tableSource); // TODO: if result is different, call Accept (this) again
+      var result = _resolver.ResolveJoinedTableSource (tableSource); 
+      if (result == tableSource)
+        return result;
+      else
+        return VisitTableSource (result);
     }
 
     public AbstractTableSource VisitSqlJoinedTableSource (SqlJoinedTableSource sqlTableSource)
