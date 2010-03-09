@@ -16,25 +16,26 @@
 // 
 using System;
 using System.Linq.Expressions;
+using System.Reflection;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Utilities;
-using System.Reflection;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved
 {
   /// <summary>
-  /// <see cref="SqlMemberExpression"/> represents a sql specific member expression.
+  /// Describes a member reference representing an entity rather than a simple column.
   /// </summary>
-  public class SqlMemberExpression : ExtensionExpression
+  public class SqlEntityRefMemberExpression : ExtensionExpression
   {
     private readonly SqlTable _sqlTable;
     private readonly MemberInfo _memberInfo;
 
-    public SqlMemberExpression (SqlTable sqlTable, MemberInfo memberInfo)
-        : base (ReflectionUtility.GetFieldOrPropertyType (ArgumentUtility.CheckNotNull ("memberInfo", memberInfo))) 
+    public SqlEntityRefMemberExpression (SqlTable sqlTable, MemberInfo memberInfo)
+      : base (ReflectionUtility.GetFieldOrPropertyType (ArgumentUtility.CheckNotNull ("memberInfo", memberInfo)))
     {
       ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
+      ArgumentUtility.CheckNotNull ("memberInfo", memberInfo);
 
       _sqlTable = sqlTable;
       _memberInfo = memberInfo;
@@ -52,18 +53,8 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved
 
     protected internal override Expression VisitChildren (ExpressionTreeVisitor visitor)
     {
-      return this;
-    }
-
-    public override Expression Accept (ExpressionTreeVisitor visitor)
-    {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
-
-      var specificVisitor = visitor as IUnresolvedSqlExpressionVisitor;
-      if (specificVisitor != null)
-        return specificVisitor.VisitSqlMemberExpression(this);
-      else
-        return base.Accept (visitor);
+      return this;
     }
   }
 }

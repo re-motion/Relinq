@@ -67,9 +67,9 @@ namespace Remotion.Data.Linq.UnitTests.Clauses.Expressions
       Assert.That (result, Is.SameAs (returnedExpression));
     }
 
-    public static object CallVisitChildren (object target, ExpressionTreeVisitor visitorMock)
+    public static Expression CallVisitChildren (ExtensionExpression target, ExpressionTreeVisitor visitor)
     {
-      return PrivateInvoke.InvokeNonPublicMethod (target, "VisitChildren", visitorMock);
+      return (Expression) PrivateInvoke.InvokeNonPublicMethod (target, "VisitChildren", visitor);
     }
   }
 }
