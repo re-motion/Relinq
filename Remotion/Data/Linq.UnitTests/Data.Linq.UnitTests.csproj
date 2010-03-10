@@ -366,6 +366,7 @@
     <Compile Include="ReflectionUtilityTest.cs" />
     <Compile Include="SqlBackend\MappingResolution\ResolvingJoinInfoVisitorTest.cs" />
     <Compile Include="SqlBackend\MappingResolution\ResolvingSqlStatementVisitorTest.cs" />
+    <Compile Include="SqlBackend\MappingResolution\TestableResolvingSqlStatementVisitor.cs" />
     <Compile Include="SqlBackend\SqlGeneration\MethodCallGenerators\MethodCallConvertTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\MethodCallGenerators\MethodCallEndsWithTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\MethodCallGenerators\MethodCallContainsTest.cs" />

@@ -54,8 +54,9 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
     protected override void VisitSqlTable (SqlTable sqlTable)
     {
       ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
-      
+
       sqlTable.TableInfo = ResolvingTableInfoVisitor.ResolveTableInfo (sqlTable.TableInfo, _resolver, UniqueIdentifierGenerator);
+      ResolveJoins(sqlTable);
     }
 
     protected override Expression VisitWhereCondition (Expression whereCondition)
@@ -70,6 +71,15 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
       ArgumentUtility.CheckNotNull ("topExpression", topExpression);
 
       return ResolvingExpressionVisitor.ResolveExpression (topExpression, _resolver, UniqueIdentifierGenerator);
+    }
+
+    private void ResolveJoins (SqlTableBase sqlTable)
+    {
+      foreach (var joinedTable in sqlTable.JoinedTables)
+      {
+        joinedTable.JoinInfo = ResolvingJoinInfoVisitor.ResolveJoinInfo (sqlTable, joinedTable.JoinInfo, _resolver, UniqueIdentifierGenerator);
+        ResolveJoins (joinedTable);
+      }
     }
   }
 }
