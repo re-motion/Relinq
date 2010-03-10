@@ -104,7 +104,11 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       if (resultOperator is CountResultOperator)
         _isCountQuery = true;
       else if (resultOperator is DistinctResultOperator)
+      {
+        if (_topExpression != null)
+          throw new NotImplementedException ("Distinct after Take is not yet implemented. TODO 2370");
         _isDistinctQuery = true;
+      }
       else if (resultOperator is FirstResultOperator)
         _topExpression = Expression.Constant (1);
       else if (resultOperator is SingleResultOperator)

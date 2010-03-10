@@ -115,7 +115,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       var convertToByteMethod = typeof (Convert).GetMethod ("ToByte", new[] { typeof (int) });
       var endsWithMethod = typeof (string).GetMethod ("EndsWith", new Type[] { typeof (string) });
       var lowerMethod = typeof (string).GetMethod ("ToLower", new Type[] { });
-      var removeMethod = typeof (string).GetMethod ("Remove", new Type[] { typeof (int), typeof (int) });
+      var removeMethod = typeof (string).GetMethod ("Remove", new Type[] { typeof (int) });
       var startsWithMethod = typeof (string).GetMethod ("StartsWith", new Type[] { typeof (string) });
       var substringMethod = typeof (string).GetMethod ("Substring", new Type[] { typeof (int), typeof (int) });
       var toUpperMethod = typeof (string).GetMethod ("ToUpper", new Type[] { });
@@ -132,7 +132,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       registry.Register (convertToByteMethod, new MethodCallConvert());
       registry.Register (endsWithMethod, new MethodCallEndsWith());
       registry.Register (lowerMethod, new MethodCallLower());
-      registry.Register (removeMethod, new MethodCallRemove());
+      registry.Register (removeMethod, new MethodCallRemove ());
       registry.Register (startsWithMethod, new MethodCallStartsWith());
       registry.Register (substringMethod, new MethodCallSubstring());
       registry.Register (toUpperMethod, new MethodCallUpper());
