@@ -74,7 +74,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
         }
         if (sqlStatement.TopExpression != null)
         {
-          commandBuilder.Append ("TOP(");
+          commandBuilder.Append ("TOP (");
           SqlGeneratingExpressionVisitor.GenerateSql (sqlStatement.TopExpression, commandBuilder, _registry);
           commandBuilder.Append (") ");
         }
