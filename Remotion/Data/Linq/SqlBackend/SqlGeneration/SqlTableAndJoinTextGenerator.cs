@@ -38,8 +38,16 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       
       sqlTable.TableInfo.Accept (visitor);
 
+      GenerateSqlForJoins(sqlTable, visitor);
+    }
+
+    private static void GenerateSqlForJoins (SqlTableBase sqlTable, SqlTableAndJoinTextGenerator visitor)
+    {
       foreach (var joinedTable in sqlTable.JoinedTables)
+      {
         joinedTable.JoinInfo.Accept (visitor);
+        GenerateSqlForJoins (joinedTable, visitor);
+      }
     }
 
     protected SqlTableAndJoinTextGenerator (SqlCommandBuilder commandBuilder)
