@@ -367,6 +367,12 @@
     <Compile Include="SqlBackend\MappingResolution\ResolvingJoinInfoVisitorTest.cs" />
     <Compile Include="SqlBackend\MappingResolution\ResolvingSqlStatementVisitorTest.cs" />
     <Compile Include="SqlBackend\MappingResolution\TestableResolvingSqlStatementVisitor.cs" />
+    <Compile Include="SqlBackend\SqlGeneration\IntegrationTests\BinaryExpressionSqlBackendIntegrationTest.cs" />
+    <Compile Include="SqlBackend\SqlGeneration\IntegrationTests\ResultOperatorsSqlBackendIntegrationTest.cs" />
+    <Compile Include="SqlBackend\SqlGeneration\IntegrationTests\MethodCallExpressionSqlBackendIntegrationTest.cs" />
+    <Compile Include="SqlBackend\SqlGeneration\IntegrationTests\UnaryExpressionSqlBackendIntegrationTest.cs" />
+    <Compile Include="SqlBackend\SqlGeneration\IntegrationTests\WhereConditionSqlBackendIntegrationTest.cs" />
+    <Compile Include="SqlBackend\SqlGeneration\IntegrationTests\MemberChainingSqlBackendIntegrationTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\MethodCallGenerators\MethodCallConvertTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\MethodCallGenerators\MethodCallEndsWithTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\MethodCallGenerators\MethodCallContainsTest.cs" />
@@ -376,7 +382,7 @@
     <Compile Include="SqlBackend\SqlGeneration\MethodCallGenerators\MethodCallSubstringTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\MethodCallGenerators\MethodCallUpperTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\MethodCallSqlGeneratorRegistryTest.cs" />
-    <Compile Include="SqlBackend\SqlGeneration\IntegrationTests\SqlBackendIntegrationTest.cs" />
+    <Compile Include="SqlBackend\SqlGeneration\IntegrationTests\SelectProjectionSqlBackendIntegrationTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\IntegrationTests\SqlBackendIntegrationTestBase.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlCommandBuilderTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlGeneratingExpressionVisitorTest.cs" />
