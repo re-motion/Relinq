@@ -146,6 +146,7 @@
     <Compile Include="SqlBackend\MappingResolution\ResolvingJoinInfoVisitor.cs" />
     <Compile Include="SqlBackend\MappingResolution\ResolvingSqlStatementVisitor.cs" />
     <Compile Include="SqlBackend\MappingResolution\ResolvingTableInfoVisitor.cs" />
+    <Compile Include="SqlBackend\SqlGeneration\BinaryExpressionTextGenerator.cs" />
     <Compile Include="SqlBackend\SqlGeneration\IMethodCallSqlGenerator.cs" />
     <Compile Include="SqlBackend\SqlGeneration\MethodCallGenerators\MethodCallContainsFreetext.cs" />
     <Compile Include="SqlBackend\SqlGeneration\MethodCallGenerators\MethodCallContainsFulltext.cs" />

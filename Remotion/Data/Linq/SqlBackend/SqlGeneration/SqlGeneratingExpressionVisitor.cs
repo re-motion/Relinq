@@ -27,9 +27,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
   /// </summary>
   public class SqlGeneratingExpressionVisitor : ThrowingExpressionTreeVisitor, IResolvedSqlExpressionVisitor
   {
-    private readonly SqlCommandBuilder _commandBuilder;
-    private readonly MethodCallSqlGeneratorRegistry _methodCallRegistry;
-
     public static void GenerateSql (
         Expression expression, SqlCommandBuilder commandBuilder, MethodCallSqlGeneratorRegistry methodCallRegistry)
     {
@@ -41,12 +38,18 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       visitor.VisitExpression (expression);
     }
 
+    private readonly SqlCommandBuilder _commandBuilder;
+    private readonly MethodCallSqlGeneratorRegistry _methodCallRegistry;
+    private readonly BinaryExpressionTextGenerator _binaryExpressionTextGenerator;
+
     protected SqlGeneratingExpressionVisitor (SqlCommandBuilder commandBuilder, MethodCallSqlGeneratorRegistry methodCallRegistry)
     {
       ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);
       ArgumentUtility.CheckNotNull ("methodCallRegistry", methodCallRegistry);
+
       _commandBuilder = commandBuilder;
       _methodCallRegistry = methodCallRegistry;
+      _binaryExpressionTextGenerator = new BinaryExpressionTextGenerator (commandBuilder, this);
     }
 
     public Expression VisitSqlColumListExpression (SqlColumnListExpression expression)
@@ -96,181 +99,10 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
     protected override Expression VisitBinaryExpression (BinaryExpression expression)
     {
-      //if(expression.NodeType==ExpressionType.AndAlso || expression.NodeType==ExpressionType.OrElse)
-      //{
-      //  if (IsBool (expression.Left))
-      //  {
-      //    if (IsBinaryExpression (expression.Right))
-      //    {
-      //      VisitExpression (expression.Left);
-      //      _commandBuilder.Append (string.Format("=1 {0}", expression.NodeType == ExpressionType.AndAlso ? " AND " : " OR "));
-      //      VisitExpression (expression.Right);
-      //      return expression;
-      //    }
-      //  }
-
-      //  if (IsBool (expression.Right))
-      //  {
-      //    if (IsBinaryExpression (expression.Left))
-      //    {
-      //      VisitExpression (expression.Right);
-      //      _commandBuilder.Append (string.Format ("=1 {0}", expression.NodeType == ExpressionType.AndAlso ? " AND " : " OR "));
-      //      VisitExpression (expression.Left);
-      //      return expression;
-      //    }
-      //  }
-      //}
-
-      //TODO: (IsAdult = 1)
-      //TODO: refactor checks
-      //TODO: check ExpressionType.OrElse for special cases
-
-      //if (AreBoolConstants (expression.Left, expression.Right))
-      //{
-      //  switch (expression.NodeType)
-      //  {
-      //    case ExpressionType.AndAlso:
-      //    {
-      //      VisitExpression (expression.Left);
-      //      _commandBuilder.Append ("=");
-      //      VisitExpression (expression.Right);
-      //      return expression;
-      //    }
-      //  }
-      //}
-
       _commandBuilder.Append ("(");
-
-      if (expression.NodeType == ExpressionType.Coalesce)
-      {
-        _commandBuilder.Append ("COALESCE (");
-        VisitExpression (expression.Left);
-        _commandBuilder.Append (", ");
-        VisitExpression (expression.Right);
-        _commandBuilder.Append (")");
-        return expression;
-      }
-
-      if (IsNullConstant (expression.Left))
-      {
-        switch (expression.NodeType)
-        {
-          case ExpressionType.Equal:
-            VisitExpression (expression.Right);
-            _commandBuilder.Append (" IS NULL");
-            _commandBuilder.Append (")");
-            return expression;
-          case ExpressionType.NotEqual:
-            VisitExpression (expression.Right);
-            _commandBuilder.Append (" IS NOT NULL");
-            _commandBuilder.Append (")");
-            return expression;
-        }
-      }
-
-      if (IsNullConstant (expression.Right))
-      {
-        switch (expression.NodeType)
-        {
-          case ExpressionType.Equal:
-            VisitExpression (expression.Left);
-            _commandBuilder.Append (" IS NULL");
-            _commandBuilder.Append (")");
-            return expression;
-          case ExpressionType.NotEqual:
-            VisitExpression (expression.Left);
-            _commandBuilder.Append (" IS NOT NULL");
-            _commandBuilder.Append (")");
-            return expression;
-        }
-      }
-
-      VisitExpression (expression.Left);
-      switch (expression.NodeType)
-      {
-        case ExpressionType.Add:
-        case ExpressionType.AddChecked:
-          _commandBuilder.Append (" + ");
-          break;
-        case ExpressionType.And:
-          _commandBuilder.Append (" & ");
-          break;
-        case ExpressionType.AndAlso:
-          _commandBuilder.Append (" AND ");
-          break;
-        case ExpressionType.ArrayIndex:
-          throw new NotSupportedException();
-        case ExpressionType.Divide:
-          _commandBuilder.Append (" / ");
-          break;
-        case ExpressionType.Equal:
-          _commandBuilder.Append (" = ");
-          break;
-        case ExpressionType.ExclusiveOr:
-          _commandBuilder.Append (" ^ ");
-          break;
-        case ExpressionType.GreaterThan:
-          _commandBuilder.Append (" > ");
-          break;
-        case ExpressionType.GreaterThanOrEqual:
-          _commandBuilder.Append (" >= ");
-          break;
-        case ExpressionType.LeftShift:
-          throw new NotSupportedException();
-        case ExpressionType.LessThan:
-          _commandBuilder.Append (" < ");
-          break;
-        case ExpressionType.LessThanOrEqual:
-          _commandBuilder.Append (" <= ");
-          break;
-        case ExpressionType.Modulo:
-          _commandBuilder.Append (" % ");
-          break;
-        case ExpressionType.Multiply:
-        case ExpressionType.MultiplyChecked:
-          _commandBuilder.Append (" * ");
-          break;
-        case ExpressionType.NotEqual:
-          _commandBuilder.Append (" <> ");
-          break;
-        case ExpressionType.Or:
-          _commandBuilder.Append (" | ");
-          break;
-        case ExpressionType.OrElse:
-          _commandBuilder.Append (" OR ");
-          break;
-        case ExpressionType.Power:
-          throw new NotSupportedException();
-        case ExpressionType.RightShift:
-          throw new NotSupportedException();
-        case ExpressionType.Subtract:
-        case ExpressionType.SubtractChecked:
-          _commandBuilder.Append (" - ");
-          break;
-        default:
-          throw new NotSupportedException();
-      }
-
-      VisitExpression (expression.Right);
+      _binaryExpressionTextGenerator.GenerateSqlForBinaryExpression (expression);
       _commandBuilder.Append (")");
       return expression;
-    }
-
-    private bool IsBinaryExpression (Expression expression)
-    {
-      return (expression is BinaryExpression);
-    }
-
-    private bool IsBool (Expression expression)
-    {
-      return (expression.Type == typeof (bool));
-    }
-
-    private bool AreBoolConstants (Expression leftExpression, Expression rightExpression)
-    {
-      if ((leftExpression is ConstantExpression) && (rightExpression is ConstantExpression))
-        return (leftExpression.Type == typeof (Boolean)) && (rightExpression.Type == typeof (Boolean));
-      return false;
     }
 
     protected override Expression VisitUnaryExpression (UnaryExpression expression)
@@ -300,17 +132,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
     {
       _methodCallRegistry.GetGenerator (expression.Method).GenerateSql (expression, _commandBuilder, this);
       return expression;
-    }
-
-    private bool IsNullConstant (Expression expression)
-    {
-      var constantExpression = expression as ConstantExpression;
-      if (constantExpression != null)
-      {
-        if (constantExpression.Value == null)
-          return true;
-      }
-      return false;
     }
 
     protected override Exception CreateUnhandledItemException<T> (T unhandledItem, string visitMethod)
