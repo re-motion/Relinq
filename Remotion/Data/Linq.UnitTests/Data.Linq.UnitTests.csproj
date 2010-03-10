@@ -376,7 +376,8 @@
     <Compile Include="SqlBackend\SqlGeneration\MethodCallGenerators\MethodCallSubstringTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\MethodCallGenerators\MethodCallUpperTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\MethodCallSqlGeneratorRegistryTest.cs" />
-    <Compile Include="SqlBackend\SqlGeneration\SqlBackendIntegrationTest.cs" />
+    <Compile Include="SqlBackend\SqlGeneration\IntegrationTests\SqlBackendIntegrationTest.cs" />
+    <Compile Include="SqlBackend\SqlGeneration\IntegrationTests\SqlBackendIntegrationTestBase.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlCommandBuilderTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlGeneratingExpressionVisitorTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlStatementTextGeneratorTest.cs" />
