@@ -29,7 +29,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration.BooleanSemantics
   /// </summary>
   public class BooleanSemanticsExpressionConverter : ThrowingExpressionTreeVisitor, IResolvedSqlExpressionVisitor
   {
-    public static Expression EnsureValueSemantics (Expression expression)
+    public static Expression ConvertBooleanExpressions (Expression expression, BooleanSemanticsKind initialSemantics)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
