@@ -91,7 +91,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration.BooleanSemantics
       return ConvertIntValue (expressionAsValue);
     }
 
-    public Expression VisitSqlCaseExpressionExpression (SqlCaseExpression expression)
+    public Expression VisitSqlCaseExpression (SqlCaseExpression expression)
     {
       Expression testPredicate;
       Expression thenValue;
@@ -113,7 +113,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration.BooleanSemantics
       else
         return expression;
     }
-
 
     protected override Expression VisitBinaryExpression (BinaryExpression expression)
     {
@@ -198,9 +197,12 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration.BooleanSemantics
 
     Expression IResolvedSqlExpressionVisitor.VisitSqlColumListExpression (SqlColumnListExpression expression)
     {
-      ArgumentUtility.CheckNotNull ("expression", expression);
-
       return base.VisitUnknownExpression (expression);
+    }
+
+    Expression ISqlSpecificExpressionVisitor.VisitSqlLiteralExpression (SqlLiteralExpression expression)
+    {
+      return VisitUnknownExpression (expression);
     }
 
     private Expression ConvertIntValue (Expression expressionAsValue)
@@ -210,7 +212,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration.BooleanSemantics
         case BooleanSemanticsKind.ValueRequired:
           return expressionAsValue;
         case BooleanSemanticsKind.PredicateRequired:
-          return Expression.Equal (expressionAsValue, Expression.Constant (1));
+          return Expression.Equal (expressionAsValue, new SqlLiteralExpression (1));
         default:
           throw new NotSupportedException ("Invalid enum value?");
       }
@@ -221,7 +223,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration.BooleanSemantics
       switch (_semantics.CurrentValue)
       {
         case BooleanSemanticsKind.ValueRequired:
-          return new SqlCaseExpression (expressionAsBool, Expression.Constant (1), Expression.Constant (0));
+          return new SqlCaseExpression (expressionAsBool, new SqlLiteralExpression (1), new SqlLiteralExpression (0));
         case BooleanSemanticsKind.PredicateRequired:
           return expressionAsBool;
         default:

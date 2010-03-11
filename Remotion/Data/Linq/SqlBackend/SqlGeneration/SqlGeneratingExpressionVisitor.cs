@@ -21,6 +21,7 @@ using Remotion.Data.Linq.SqlBackend.SqlGeneration.BooleanSemantics;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel.SqlSpecificExpressions;
 using Remotion.Data.Linq.Utilities;
+using System.Diagnostics;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 {
@@ -84,12 +85,9 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
     protected override Expression VisitConstantExpression (ConstantExpression expression)
     {
-      if (expression.Type == typeof (bool))
-      {
-        var parameter = _commandBuilder.AddParameter ((bool) expression.Value ? 1 : 0);
-        _commandBuilder.Append (parameter.Name);
-      }
-      else if (expression.Value == null)
+      Debug.Assert (expression.Type != typeof (bool), "Boolean constants should have been removed by BooleanSemanticsExpressionConverter.");
+
+      if (expression.Value == null)
         _commandBuilder.Append ("NULL");
       else
       {
@@ -97,6 +95,12 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
         _commandBuilder.Append (parameter.Name);
       }
 
+      return expression;
+    }
+
+    public Expression VisitSqlLiteralExpression (SqlLiteralExpression expression)
+    {
+      _commandBuilder.Append (expression.Value.ToString());
       return expression;
     }
 
@@ -146,7 +150,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
               unhandledItem.GetType().Name));
     }
 
-    public Expression VisitSqlCaseExpressionExpression (SqlCaseExpression expression)
+    public Expression VisitSqlCaseExpression (SqlCaseExpression expression)
     {
       _commandBuilder.Append ("CASE WHEN ");
       VisitExpression (expression.TestPredicate);
@@ -157,5 +161,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       _commandBuilder.Append (" END");
       return expression;
     }
+
   }
 }
