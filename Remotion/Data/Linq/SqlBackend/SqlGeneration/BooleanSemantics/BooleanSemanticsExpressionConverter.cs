@@ -27,7 +27,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration.BooleanSemantics
   /// <summary>
   /// Ensures that a given expression matches SQL server value semantics.
   /// </summary>
-  public class BooleanSemanticsExpressionConverter : ExpressionTreeVisitor, IResolvedSqlExpressionVisitor
+  public class BooleanSemanticsExpressionConverter : ExpressionTreeVisitor, IResolvedSqlExpressionVisitor, ISqlSpecificExpressionVisitor
   {
     public static Expression ConvertBooleanExpressions (Expression expression, BooleanSemanticsKind initialSemantics)
     {
@@ -90,6 +90,30 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration.BooleanSemantics
       var expressionAsValue = new SqlColumnExpression (typeof (int), expression.OwningTableAlias, expression.ColumnName);
       return ConvertIntValue (expressionAsValue);
     }
+
+    public Expression VisitSqlCaseExpressionExpression (SqlCaseExpression expression)
+    {
+      Expression testPredicate;
+      Expression thenValue;
+      Expression elseValue;
+
+      using (_semantics.SwitchTo (BooleanSemanticsKind.PredicateRequired))
+      {
+        testPredicate = VisitExpression (expression.TestPredicate);
+      }
+
+      using (_semantics.SwitchTo (BooleanSemanticsKind.ValueRequired))
+      {
+        thenValue = VisitExpression (expression.ThenValue);
+        elseValue = VisitExpression (expression.ElseValue);
+      }
+
+      if (testPredicate != expression.TestPredicate || thenValue != expression.ThenValue || elseValue != expression.ElseValue)
+        return new SqlCaseExpression (testPredicate, thenValue, elseValue);
+      else
+        return expression;
+    }
+
 
     protected override Expression VisitBinaryExpression (BinaryExpression expression)
     {

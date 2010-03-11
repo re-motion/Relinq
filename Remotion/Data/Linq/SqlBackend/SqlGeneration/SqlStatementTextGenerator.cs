@@ -16,6 +16,7 @@
 // 
 using System;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.SqlBackend.SqlGeneration.BooleanSemantics;
 using Remotion.Data.Linq.SqlBackend.SqlGeneration.MethodCallGenerators;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
 using Remotion.Data.Linq.Utilities;
@@ -75,10 +76,10 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
         if (sqlStatement.TopExpression != null)
         {
           commandBuilder.Append ("TOP (");
-          SqlGeneratingExpressionVisitor.GenerateSql (sqlStatement.TopExpression, commandBuilder, _registry);
+          SqlGeneratingExpressionVisitor.GenerateSql (sqlStatement.TopExpression, commandBuilder, _registry, BooleanSemanticsKind.ValueRequired);
           commandBuilder.Append (") ");
         }
-        SqlGeneratingExpressionVisitor.GenerateSql (sqlStatement.SelectProjection, commandBuilder, _registry);
+        SqlGeneratingExpressionVisitor.GenerateSql (sqlStatement.SelectProjection, commandBuilder, _registry, BooleanSemanticsKind.ValueRequired);
       }
     }
 
@@ -95,7 +96,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       ArgumentUtility.CheckNotNull ("sqlStatement", sqlStatement);
       ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);
 
-      SqlGeneratingExpressionVisitor.GenerateSql (sqlStatement.WhereCondition, commandBuilder, _registry);
+      SqlGeneratingExpressionVisitor.GenerateSql (sqlStatement.WhereCondition, commandBuilder, _registry, BooleanSemanticsKind.PredicateRequired);
     }
 
     protected virtual MethodCallSqlGeneratorRegistry GenerateSqlGeneratorRegistry ()

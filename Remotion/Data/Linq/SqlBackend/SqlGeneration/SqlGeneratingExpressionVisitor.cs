@@ -17,7 +17,9 @@
 using System;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Parsing;
+using Remotion.Data.Linq.SqlBackend.SqlGeneration.BooleanSemantics;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved;
+using Remotion.Data.Linq.SqlBackend.SqlStatementModel.SqlSpecificExpressions;
 using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
@@ -25,17 +27,18 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
   /// <summary>
   /// <see cref="SqlGeneratingExpressionVisitor"/> implements <see cref="ThrowingExpressionTreeVisitor"/> and <see cref="IResolvedSqlExpressionVisitor"/>.
   /// </summary>
-  public class SqlGeneratingExpressionVisitor : ThrowingExpressionTreeVisitor, IResolvedSqlExpressionVisitor
+  public class SqlGeneratingExpressionVisitor : ThrowingExpressionTreeVisitor, IResolvedSqlExpressionVisitor, ISqlSpecificExpressionVisitor
   {
-    public static void GenerateSql (
-        Expression expression, SqlCommandBuilder commandBuilder, MethodCallSqlGeneratorRegistry methodCallRegistry)
+    public static void GenerateSql (Expression expression, SqlCommandBuilder commandBuilder, MethodCallSqlGeneratorRegistry methodCallRegistry, BooleanSemanticsKind semanticsKind)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);
       ArgumentUtility.CheckNotNull ("methodCallRegistry", methodCallRegistry);
 
+      var expressionWithBooleanSemantics = BooleanSemanticsExpressionConverter.ConvertBooleanExpressions (expression, semanticsKind);
+
       var visitor = new SqlGeneratingExpressionVisitor (commandBuilder, methodCallRegistry);
-      visitor.VisitExpression (expression);
+      visitor.VisitExpression (expressionWithBooleanSemantics);
     }
 
     private readonly SqlCommandBuilder _commandBuilder;
@@ -141,6 +144,18 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
               "The expression '{0}' cannot be translated to SQL text by this SQL generator. Expression type '{1}' is not supported.",
               unhandledItem,
               unhandledItem.GetType().Name));
+    }
+
+    public Expression VisitSqlCaseExpressionExpression (SqlCaseExpression expression)
+    {
+      _commandBuilder.Append ("CASE WHEN ");
+      VisitExpression (expression.TestPredicate);
+      _commandBuilder.Append (" THEN ");
+      VisitExpression (expression.ThenValue);
+      _commandBuilder.Append (" ELSE ");
+      VisitExpression (expression.ElseValue);
+      _commandBuilder.Append (" END");
+      return expression;
     }
   }
 }
