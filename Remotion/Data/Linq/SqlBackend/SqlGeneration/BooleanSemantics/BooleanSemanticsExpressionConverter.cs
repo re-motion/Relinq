@@ -78,7 +78,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration.BooleanSemantics
 
       Expression expressionAsValue = expression.Value.Equals (true) ? Expression.Constant (1) : Expression.Constant (0);
 
-      return ConvertIntValue(expressionAsValue);
+      return ConvertIntValue (expressionAsValue);
     }
 
     public Expression VisitSqlColumnExpression (SqlColumnExpression expression)
@@ -126,6 +126,9 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration.BooleanSemantics
             right = VisitExpression (right);
           }
           break;
+        default:
+          Debug.Assert (false, string.Format ("Expression type '{0}' was not expected to have boolean type.", expression.NodeType));
+          break;
       }
 
       if (left != expression.Left || right != expression.Right)
@@ -133,15 +136,41 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration.BooleanSemantics
 
       Debug.Assert (expression.Type == typeof (bool)); // if the expression was boolean before, it must still be a boolean here
 
-      switch (_semantics.CurrentValue)
+      return ConvertBoolValue (expression);
+    }
+
+    protected override Expression VisitUnaryExpression (UnaryExpression expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
+      if (expression.Type != typeof (bool))
       {
-        case BooleanSemanticsKind.ValueRequired:
-          return new SqlCaseExpression (expression, Expression.Constant (1), Expression.Constant (0));
-        case BooleanSemanticsKind.PredicateRequired:
-          return expression;
-        default:
-          throw new NotSupportedException ("Invalid enum value?");
+        Debug.Assert (_semantics.CurrentValue == BooleanSemanticsKind.ValueRequired); // ensured by check in VisitExpression
+        return base.VisitUnaryExpression (expression);
       }
+
+      var operand = expression.Operand;
+
+      switch (expression.NodeType)
+      {
+        case ExpressionType.Not:
+          using (_semantics.SwitchTo (BooleanSemanticsKind.PredicateRequired))
+          {
+            operand = VisitExpression (operand);
+          }
+          break;
+
+        default:
+          var message = string.Format ("'{0}' expressions are not supported with boolean type.", expression.NodeType);
+          throw new NotSupportedException (message);
+      }
+
+      if (operand != expression.Operand)
+        expression = Expression.MakeUnary (expression.NodeType, operand, expression.Type, expression.Method);
+
+      Debug.Assert (expression.Type == typeof (bool)); // if the expression was boolean before, it must still be a boolean here
+
+      return ConvertBoolValue (expression);
     }
 
     Expression IResolvedSqlExpressionVisitor.VisitSqlColumListExpression (SqlColumnListExpression expression)
@@ -159,6 +188,19 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration.BooleanSemantics
           return expressionAsValue;
         case BooleanSemanticsKind.PredicateRequired:
           return Expression.Equal (expressionAsValue, Expression.Constant (1));
+        default:
+          throw new NotSupportedException ("Invalid enum value?");
+      }
+    }
+
+    private Expression ConvertBoolValue (Expression expressionAsBool)
+    {
+      switch (_semantics.CurrentValue)
+      {
+        case BooleanSemanticsKind.ValueRequired:
+          return new SqlCaseExpression (expressionAsBool, Expression.Constant (1), Expression.Constant (0));
+        case BooleanSemanticsKind.PredicateRequired:
+          return expressionAsBool;
         default:
           throw new NotSupportedException ("Invalid enum value?");
       }
