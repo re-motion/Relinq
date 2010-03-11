@@ -370,6 +370,7 @@
     <Compile Include="SqlBackend\SqlGeneration\BinaryExpressionTextGeneratorTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\BooleanSemantics\BooleanSemanticsHolderTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\BooleanSemantics\BooleanSemanticsExpressionConverterTest.cs" />
+    <Compile Include="SqlBackend\SqlGeneration\BooleanSemantics\TestableBooleanSemanticsConverter.cs" />
     <Compile Include="SqlBackend\SqlGeneration\IntegrationTests\BinaryExpressionSqlBackendIntegrationTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\IntegrationTests\ResultOperatorCombinationsSqlBackendIntegrationTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\IntegrationTests\ResultOperatorsSqlBackendIntegrationTest.cs" />
@@ -400,7 +401,7 @@
     <Compile Include="SqlBackend\SqlStatementModel\SqlStatementTest.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\Unresolved\UnresolvedTableInfoTest.cs" />
     <Compile Include="Clauses\Expressions\ExtensionExpressionTestHelper.cs" />
-    <Compile Include="SqlBackend\NotSupportedExpression.cs" />
+    <Compile Include="SqlBackend\CustomExpression.cs" />
     <Compile Include="SqlBackend\MappingResolution\ResolvingExpressionVisitorTest.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\Unresolved\UnresolvedJoinInfoTest.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\Resolved\SqlColumnListExpressionTest.cs" />

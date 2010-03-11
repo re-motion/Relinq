@@ -55,8 +55,8 @@ namespace Remotion.Data.Linq.Clauses.ExpressionTreeVisitors
 
     protected internal override Expression VisitUnknownExpression (Expression expression)
     {
-      //ignore
-      return expression;
+      ArgumentUtility.CheckNotNull ("expression", expression);
+      return Expression.Parameter (expression.Type, expression.ToString());
     }
   }
 }
