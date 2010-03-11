@@ -17,6 +17,7 @@
 using System;
 using System.Diagnostics;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel.SqlSpecificExpressions;
@@ -27,60 +28,76 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration.BooleanSemantics
   /// <summary>
   /// Ensures that a given expression matches SQL server value semantics.
   /// </summary>
-  public class BooleanSemanticsExpressionConverter : ThrowingExpressionTreeVisitor, IResolvedSqlExpressionVisitor
+  public class BooleanSemanticsExpressionConverter : ExpressionTreeVisitor, IResolvedSqlExpressionVisitor
   {
     public static Expression ConvertBooleanExpressions (Expression expression, BooleanSemanticsKind initialSemantics)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      var visitor = new BooleanSemanticsExpressionConverter ();
+      var visitor = new BooleanSemanticsExpressionConverter (initialSemantics);
       return visitor.VisitExpression (expression);
     }
 
-    // private bool _needsPredicateSemantics;
+    private readonly BooleanSemanticsHolder _semantics;
 
-    protected BooleanSemanticsExpressionConverter ()
+    protected BooleanSemanticsExpressionConverter (BooleanSemanticsKind initialSemantics)
     {
-      // _needsPredicateSemantics = needsPredicateSemantics;
+      _semantics = new BooleanSemanticsHolder (initialSemantics);
     }
 
     public override Expression VisitExpression (Expression expression)
     {
-      // TODO: Visit all
-      if (expression.Type != typeof (bool))
-        return expression;
+      if (expression.Type != typeof (bool) && _semantics.CurrentValue == BooleanSemanticsKind.PredicateRequired)
+      {
+        throw new InvalidOperationException ("It is not allowed to specify a non-boolean expression when a predicate is required.");
+      }
 
-      return base.VisitExpression (expression);
+      var result = base.VisitExpression (expression);
+
+      if (result.Type == typeof (bool) && _semantics.CurrentValue == BooleanSemanticsKind.ValueRequired)
+      {
+        string message = string.Format ("Expression type '{0}' was not expected to have boolean type.",  expression.GetType());
+        throw new NotSupportedException (message);
+      }
+
+      Debug.Assert (
+          (_semantics.CurrentValue == BooleanSemanticsKind.ValueRequired && result.Type != typeof (bool))
+          || (_semantics.CurrentValue == BooleanSemanticsKind.PredicateRequired && result.Type == typeof (bool)));
+      return result;
     }
 
     protected override Expression VisitConstantExpression (ConstantExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      //if (expression.Type == typeof (bool) && !_needsPredicateSemantics) TODO
-      //{
-      if (expression.Value.Equals (true))
-        return Expression.Constant (1);
-      else
-      {
-        Debug.Assert (expression.Value.Equals (false));
-        return Expression.Constant (0);
-      }
-      //}
-      //else if (expression.Type != typeof (bool) && _needsPredicateSemantics)
-      //{
-      //  // return expression == 1
-      //  throw new NotImplementedException(); // TODO
-      //}
-      //else
-      //{
-      //  return expression;
-      //}
+      if (expression.Type != typeof (bool))
+        return expression;
+
+      Expression expressionAsValue = expression.Value.Equals (true) ? Expression.Constant (1) : Expression.Constant (0);
+
+      return ConvertIntValue(expressionAsValue);
+    }
+
+    public Expression VisitSqlColumnExpression (SqlColumnExpression expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
+      if (expression.Type != typeof (bool))
+        return expression;
+
+      var expressionAsValue = new SqlColumnExpression (typeof (int), expression.OwningTableAlias, expression.ColumnName);
+      return ConvertIntValue (expressionAsValue);
     }
 
     protected override Expression VisitBinaryExpression (BinaryExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
+
+      if (expression.Type != typeof (bool))
+      {
+        Debug.Assert (_semantics.CurrentValue == BooleanSemanticsKind.ValueRequired); // ensured by check in VisitExpression
+        return expression; // TODO: return base.VisitBinaryExpression (expression);
+      }
 
       var left = expression.Left;
       var right = expression.Right;
@@ -89,11 +106,11 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration.BooleanSemantics
       {
         case ExpressionType.NotEqual:
         case ExpressionType.Equal:
-          //var oldSemantics = _needsPredicateSemantics;
-          //_needsPredicateSemantics = false;
-          left = VisitExpression (left);
-          right = VisitExpression (right);
-          //_needsPredicateSemantics = oldSemantics;
+          using (_semantics.SwitchTo (BooleanSemanticsKind.ValueRequired))
+          {
+            left = VisitExpression (left);
+            right = VisitExpression (right);
+          }
           break;
           //case ExpressionType.AndAlso:
           //case ExpressionType.OrElse:
@@ -118,39 +135,37 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration.BooleanSemantics
       if (left != expression.Left || right != expression.Right)
         expression = Expression.MakeBinary (expression.NodeType, left, right);
 
-      if (expression.Type == typeof (bool)) // && !_needsPredicateSemantics) // because of value conversion, type might now be int
-        return new SqlCaseExpression (expression, Expression.Constant (1), Expression.Constant (0));
-          // else if (expression.Type == typeof (int) && !_needsValueSemantics)
-          //   return expression == 1
-      else
-        return expression;
+      Debug.Assert (expression.Type == typeof (bool)); // if the expression was boolean before, it must still be a boolean here
+
+      switch (_semantics.CurrentValue)
+      {
+        case BooleanSemanticsKind.ValueRequired:
+          return new SqlCaseExpression (expression, Expression.Constant (1), Expression.Constant (0));
+        case BooleanSemanticsKind.PredicateRequired:
+          return expression;
+        default:
+          throw new NotSupportedException ("Invalid enum value?");
+      }
     }
 
-    public Expression VisitSqlColumListExpression (SqlColumnListExpression expression)
+    Expression IResolvedSqlExpressionVisitor.VisitSqlColumListExpression (SqlColumnListExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
       return base.VisitUnknownExpression (expression);
     }
 
-    public Expression VisitSqlColumnExpression (SqlColumnExpression expression)
+    private Expression ConvertIntValue (Expression expressionAsValue)
     {
-      ArgumentUtility.CheckNotNull ("expression", expression);
-
-      // if (expression.Type == typeof (bool) && !_needsPredicateSemantics) TODO
-      return new SqlColumnExpression (typeof (int), expression.OwningTableAlias, expression.ColumnName);
-      // else if (expression.Type == typeof (int) && _needsPredicateSemantics) TODO
-      // return expression == 1
-      // else
-      //  return expression;
-    }
-
-    protected override Exception CreateUnhandledItemException<T> (T unhandledItem, string visitMethod)
-    {
-      ArgumentUtility.CheckNotNullOrEmpty ("visitMethod", visitMethod);
-
-      string message = string.Format ("Expression type '{0}' was not expected to have boolean type.", typeof (T));
-      throw new NotSupportedException (message);
+      switch (_semantics.CurrentValue)
+      {
+        case BooleanSemanticsKind.ValueRequired:
+          return expressionAsValue;
+        case BooleanSemanticsKind.PredicateRequired:
+          return Expression.Equal (expressionAsValue, Expression.Constant (1));
+        default:
+          throw new NotSupportedException ("Invalid enum value?");
+      }
     }
   }
 }
