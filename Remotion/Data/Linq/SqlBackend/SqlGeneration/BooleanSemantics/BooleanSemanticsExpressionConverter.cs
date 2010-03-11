@@ -27,19 +27,19 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration.BooleanSemantics
   /// <summary>
   /// Ensures that a given expression matches SQL server value semantics.
   /// </summary>
-  public class ValueSemanticsExpressionConverter : ThrowingExpressionTreeVisitor, IResolvedSqlExpressionVisitor
+  public class BooleanSemanticsExpressionConverter : ThrowingExpressionTreeVisitor, IResolvedSqlExpressionVisitor
   {
     public static Expression EnsureValueSemantics (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      var visitor = new ValueSemanticsExpressionConverter ();
+      var visitor = new BooleanSemanticsExpressionConverter ();
       return visitor.VisitExpression (expression);
     }
 
     // private bool _needsPredicateSemantics;
 
-    protected ValueSemanticsExpressionConverter ()
+    protected BooleanSemanticsExpressionConverter ()
     {
       // _needsPredicateSemantics = needsPredicateSemantics;
     }

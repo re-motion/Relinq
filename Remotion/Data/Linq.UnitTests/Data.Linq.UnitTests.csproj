@@ -369,7 +369,7 @@
     <Compile Include="SqlBackend\MappingResolution\TestableResolvingSqlStatementVisitor.cs" />
     <Compile Include="SqlBackend\SqlGeneration\BinaryExpressionTextGeneratorTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\BooleanSemantics\BooleanSemanticsHolderTest.cs" />
-    <Compile Include="SqlBackend\SqlGeneration\BooleanSemantics\ValueSemanticsExpressionConverterTest.cs" />
+    <Compile Include="SqlBackend\SqlGeneration\BooleanSemantics\BooleanSemanticsExpressionConverterTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\IntegrationTests\BinaryExpressionSqlBackendIntegrationTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\IntegrationTests\ResultOperatorCombinationsSqlBackendIntegrationTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\IntegrationTests\ResultOperatorsSqlBackendIntegrationTest.cs" />
