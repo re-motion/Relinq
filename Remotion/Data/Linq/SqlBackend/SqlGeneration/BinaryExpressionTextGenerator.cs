@@ -41,23 +41,23 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
       _simpleOperatorRegistry = new Dictionary<ExpressionType, string>
                                 {
-                                    { ExpressionType.Add, "+" },
-                                    { ExpressionType.AddChecked, "+" },
-                                    { ExpressionType.And, "&" },
-                                    { ExpressionType.AndAlso, "AND" },
-                                    { ExpressionType.Divide, "/" },
-                                    { ExpressionType.ExclusiveOr, "^" },
-                                    { ExpressionType.GreaterThan, ">" },
-                                    { ExpressionType.GreaterThanOrEqual, ">=" },
-                                    { ExpressionType.LessThan, "<" },
-                                    { ExpressionType.LessThanOrEqual, "<=" },
-                                    { ExpressionType.Modulo, "%" },
-                                    { ExpressionType.Multiply, "*" },
-                                    { ExpressionType.MultiplyChecked, "*" },
-                                    { ExpressionType.Or, "|" },
-                                    { ExpressionType.OrElse, "OR" },
-                                    { ExpressionType.Subtract, "-" },
-                                    { ExpressionType.SubtractChecked, "-" }
+                                    { ExpressionType.Add, "+" },           // bool: impossible
+                                    { ExpressionType.AddChecked, "+" },    // bool: impossible
+                                    { ExpressionType.And, "&" },           // bool: predicate semantics
+                                    { ExpressionType.AndAlso, "AND" },     // bool: predicate semantics
+                                    { ExpressionType.Divide, "/" },        // bool: impossible
+                                    { ExpressionType.ExclusiveOr, "^" },   // bool: predicate semantics
+                                    { ExpressionType.GreaterThan, ">" },   // bool: impossible
+                                    { ExpressionType.GreaterThanOrEqual, ">=" }, // bool: impossible
+                                    { ExpressionType.LessThan, "<" },            // bool: impossible
+                                    { ExpressionType.LessThanOrEqual, "<=" },    // bool: impossible
+                                    { ExpressionType.Modulo, "%" },              // bool: impossible
+                                    { ExpressionType.Multiply, "*" },            // bool: impossible
+                                    { ExpressionType.MultiplyChecked, "*" },     // bool: impossible
+                                    { ExpressionType.Or, "|" },                  // bool: predicate semantics
+                                    { ExpressionType.OrElse, "OR" },             // bool: predicate semantics
+                                    { ExpressionType.Subtract, "-" },            // bool: impossible
+                                    { ExpressionType.SubtractChecked, "-" }      // bool: impossible
                                 };
     }
 

@@ -147,6 +147,7 @@
     <Compile Include="SqlBackend\MappingResolution\ResolvingSqlStatementVisitor.cs" />
     <Compile Include="SqlBackend\MappingResolution\ResolvingTableInfoVisitor.cs" />
     <Compile Include="SqlBackend\SqlGeneration\BinaryExpressionTextGenerator.cs" />
+    <Compile Include="SqlBackend\SqlGeneration\ValueSemanticsExpressionConverter.cs" />
     <Compile Include="SqlBackend\SqlGeneration\IMethodCallSqlGenerator.cs" />
     <Compile Include="SqlBackend\SqlGeneration\MethodCallGenerators\MethodCallContainsFreetext.cs" />
     <Compile Include="SqlBackend\SqlGeneration\MethodCallGenerators\MethodCallContainsFulltext.cs" />
@@ -163,6 +164,8 @@
     <Compile Include="SqlBackend\SqlGeneration\SqlCommandBuilder.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\AbstractJoinInfo.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\IJoinInfoVisitor.cs" />
+    <Compile Include="SqlBackend\SqlStatementModel\SqlSpecificExpressions\ISqlSpecificExpressionVisitor.cs" />
+    <Compile Include="SqlBackend\SqlStatementModel\SqlSpecificExpressions\SqlCaseExpression.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlJoinedTable.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\Resolved\IResolvedSqlExpressionVisitor.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlStatementTextGenerator.cs" />

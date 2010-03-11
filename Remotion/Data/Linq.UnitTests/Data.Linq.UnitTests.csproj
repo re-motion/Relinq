@@ -368,6 +368,7 @@
     <Compile Include="SqlBackend\MappingResolution\ResolvingSqlStatementVisitorTest.cs" />
     <Compile Include="SqlBackend\MappingResolution\TestableResolvingSqlStatementVisitor.cs" />
     <Compile Include="SqlBackend\SqlGeneration\BinaryExpressionTextGeneratorTest.cs" />
+    <Compile Include="SqlBackend\SqlGeneration\ValueSemanticsExpressionConverterTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\IntegrationTests\BinaryExpressionSqlBackendIntegrationTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\IntegrationTests\ResultOperatorCombinationsSqlBackendIntegrationTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\IntegrationTests\ResultOperatorsSqlBackendIntegrationTest.cs" />
@@ -390,6 +391,7 @@
     <Compile Include="SqlBackend\SqlGeneration\SqlGeneratingExpressionVisitorTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlStatementTextGeneratorTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlTableAndJoinTextGeneratorTest.cs" />
+    <Compile Include="SqlBackend\SqlStatementModel\SqlSpecificExpressions\SqlCaseExpressionTest.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlTableBaseTest.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlJoinedTableTest.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\Resolved\ResolvedJoinInfoTest.cs" />
