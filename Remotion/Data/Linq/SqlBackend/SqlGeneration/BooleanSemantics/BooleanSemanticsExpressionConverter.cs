@@ -47,6 +47,9 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration.BooleanSemantics
 
     public override Expression VisitExpression (Expression expression)
     {
+      if (expression == null)
+        return null;
+
       if (expression.Type != typeof (bool) && _semantics.CurrentValue == BooleanSemanticsKind.PredicateRequired)
       {
         throw new InvalidOperationException ("It is not allowed to specify a non-boolean expression when a predicate is required.");
@@ -96,7 +99,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration.BooleanSemantics
       if (expression.Type != typeof (bool))
       {
         Debug.Assert (_semantics.CurrentValue == BooleanSemanticsKind.ValueRequired); // ensured by check in VisitExpression
-        return expression; // TODO: return base.VisitBinaryExpression (expression);
+        return base.VisitBinaryExpression (expression);
       }
 
       var left = expression.Left;
@@ -112,24 +115,17 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration.BooleanSemantics
             right = VisitExpression (right);
           }
           break;
-          //case ExpressionType.AndAlso:
-          //case ExpressionType.OrElse:
-          //var oldSemantics = _needsPredicateSemantics;
-          //_needsPredicateSemantics = true;
-          //left = VisitExpression (left);
-          //right = VisitExpression (right);
-          //_needsPredicateSemantics = true;
-          //break;
-          //case ExpressionType.And:
-          //case ExpressionType.Or:
-          //case ExpressionType.ExclusiveOr:
-          // if (expression.Type == typeof (bool))
-          // {
-          //   var oldSemantics = _needsPredicateSemantics;
-          //   _needsPredicateSemantics = true;
-          //   // etc
-          // }
-          // else: _needsPredicateSemantics = false; etc.
+        case ExpressionType.AndAlso:
+        case ExpressionType.OrElse:
+        case ExpressionType.And:
+        case ExpressionType.Or:
+        case ExpressionType.ExclusiveOr:
+          using (_semantics.SwitchTo (BooleanSemanticsKind.PredicateRequired))
+          {
+            left = VisitExpression (left);
+            right = VisitExpression (right);
+          }
+          break;
       }
 
       if (left != expression.Left || right != expression.Right)
