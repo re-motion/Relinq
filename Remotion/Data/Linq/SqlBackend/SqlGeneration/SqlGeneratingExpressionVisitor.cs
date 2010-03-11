@@ -118,7 +118,10 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       switch (expression.NodeType)
       {
         case ExpressionType.Not:
-          _commandBuilder.Append ("NOT ");
+          if(expression.Operand.Type==typeof(bool))
+            _commandBuilder.Append ("NOT ");
+          else
+            _commandBuilder.Append ("~");
           break;
         case ExpressionType.Negate:
           _commandBuilder.Append ("-");

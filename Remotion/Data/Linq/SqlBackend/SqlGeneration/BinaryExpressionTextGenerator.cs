@@ -41,23 +41,25 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
       _simpleOperatorRegistry = new Dictionary<ExpressionType, string>
                                 {
-                                    { ExpressionType.Add, "+" },           // bool: impossible
-                                    { ExpressionType.AddChecked, "+" },    // bool: impossible
-                                    { ExpressionType.And, "&" },           // bool: predicate semantics
-                                    { ExpressionType.AndAlso, "AND" },     // bool: predicate semantics
-                                    { ExpressionType.Divide, "/" },        // bool: impossible
-                                    { ExpressionType.ExclusiveOr, "^" },   // bool: predicate semantics
-                                    { ExpressionType.GreaterThan, ">" },   // bool: impossible
-                                    { ExpressionType.GreaterThanOrEqual, ">=" }, // bool: impossible
-                                    { ExpressionType.LessThan, "<" },            // bool: impossible
-                                    { ExpressionType.LessThanOrEqual, "<=" },    // bool: impossible
-                                    { ExpressionType.Modulo, "%" },              // bool: impossible
-                                    { ExpressionType.Multiply, "*" },            // bool: impossible
-                                    { ExpressionType.MultiplyChecked, "*" },     // bool: impossible
-                                    { ExpressionType.Or, "|" },                  // bool: predicate semantics
-                                    { ExpressionType.OrElse, "OR" },             // bool: predicate semantics
-                                    { ExpressionType.Subtract, "-" },            // bool: impossible
-                                    { ExpressionType.SubtractChecked, "-" }      // bool: impossible
+                                    { ExpressionType.Add, "+" },           
+                                    { ExpressionType.AddChecked, "+" },    
+                                    { ExpressionType.And, "&" },           
+                                    { ExpressionType.AndAlso, "AND" },     
+                                    { ExpressionType.Divide, "/" },        
+                                    { ExpressionType.ExclusiveOr, "^" },   
+                                    { ExpressionType.GreaterThan, ">" },   
+                                    { ExpressionType.GreaterThanOrEqual, ">=" }, 
+                                    { ExpressionType.LessThan, "<" },            
+                                    { ExpressionType.LessThanOrEqual, "<=" },    
+                                    { ExpressionType.Modulo, "%" },              
+                                    { ExpressionType.Multiply, "*" },            
+                                    { ExpressionType.MultiplyChecked, "*" },     
+                                    { ExpressionType.Or, "|" },                  
+                                    { ExpressionType.OrElse, "OR" },             
+                                    { ExpressionType.Subtract, "-" },            
+                                    { ExpressionType.SubtractChecked, "-" },     
+                                    { ExpressionType.Coalesce, "COALESCE" },            
+                                    { ExpressionType.Power, "POWER" }                
                                 };
     }
 
@@ -109,7 +111,8 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       switch (expression.NodeType)
       {
         case ExpressionType.Coalesce:
-          GenerateSqlForCoalesce (expression.Left, expression.Right);
+        case ExpressionType.Power:
+          GenerateSqlForPrefixOperator (expression.Left, expression.Right, expression.NodeType);
           break;
         case ExpressionType.Equal:
           GenerateSqlForNullAwareOperator (expression.Left, expression.Right, "=", "IS NULL");
@@ -118,14 +121,16 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
           GenerateSqlForNullAwareOperator (expression.Left, expression.Right, "<>", "IS NOT NULL");
           break;
         default:
-          GenerateSqlForSimpleOperator (expression.Left, expression.Right, expression.NodeType);
+          GenerateSqlForInfixOperator (expression.Left, expression.Right, expression.NodeType);
           break;
       }
     }
 
-    private void GenerateSqlForCoalesce (Expression left, Expression right)
+    private void GenerateSqlForPrefixOperator (Expression left, Expression right, ExpressionType nodeType)
     {
-      _commandBuilder.Append ("COALESCE (");
+      string operatorString = GetRegisteredOperatorString (nodeType);
+      _commandBuilder.Append (operatorString);
+      _commandBuilder.Append (" (");
       _expressionVisitor.VisitExpression (left);
       _commandBuilder.Append (", ");
       _expressionVisitor.VisitExpression (right);
@@ -156,17 +161,23 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       }
     }
 
-    private void GenerateSqlForSimpleOperator (Expression left, Expression right, ExpressionType nodeType)
+    private void GenerateSqlForInfixOperator (Expression left, Expression right, ExpressionType nodeType)
     {
-      string operatorString;
-      if (!_simpleOperatorRegistry.TryGetValue (nodeType, out operatorString))
-        throw new NotSupportedException ("The binary operator '" + nodeType + "' is not supported.");
+      string operatorString = GetRegisteredOperatorString(nodeType);
 
       _expressionVisitor.VisitExpression (left);
       _commandBuilder.Append (" ");
       _commandBuilder.Append (operatorString);
       _commandBuilder.Append (" ");
       _expressionVisitor.VisitExpression (right);
+    }
+
+    private string GetRegisteredOperatorString (ExpressionType nodeType)
+    {
+      string operatorString;
+      if (!_simpleOperatorRegistry.TryGetValue (nodeType, out operatorString))
+        throw new NotSupportedException ("The binary operator '" + nodeType + "' is not supported.");
+      return operatorString;
     }
 
     private bool IsNullConstant (Expression expression)
