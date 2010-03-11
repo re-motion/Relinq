@@ -112,6 +112,8 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
     {
     }
 
+    // The Visit methods model the rules of where what kind of expression context is required
+
     public Expression VisitSqlCaseExpression (SqlCaseExpression expression)
     {
       var testPredicate = ApplySqlExpressionContext (expression.TestPredicate, SqlExpressionContext.PredicateRequired);
