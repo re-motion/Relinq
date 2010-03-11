@@ -15,7 +15,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Diagnostics;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved;
@@ -34,7 +33,8 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration.BooleanSemantics
       ArgumentUtility.CheckNotNull ("expression", expression);
 
       var visitor = new BooleanSemanticsExpressionConverter (initialSemantics);
-      return visitor.VisitExpression (expression);
+      var result = visitor.VisitExpression (expression);
+      return result;
     }
 
     private readonly BooleanSemanticsHolder _semantics;
@@ -56,7 +56,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration.BooleanSemantics
       else if (_semantics.CurrentValue == BooleanSemanticsKind.PredicateRequired)
         return EnsurePredicateSemantics (result);
       else
-        return result;
+        throw new NotImplementedException ("Invalid enum value: " + _semantics.CurrentValue);
     }
 
     protected override Expression VisitConstantExpression (ConstantExpression expression)
@@ -84,20 +84,9 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration.BooleanSemantics
 
     public Expression VisitSqlCaseExpression (SqlCaseExpression expression)
     {
-      Expression testPredicate;
-      Expression thenValue;
-      Expression elseValue;
-
-      using (_semantics.SwitchTo (BooleanSemanticsKind.PredicateRequired))
-      {
-        testPredicate = VisitExpression (expression.TestPredicate);
-      }
-
-      using (_semantics.SwitchTo (BooleanSemanticsKind.ValueRequired))
-      {
-        thenValue = VisitExpression (expression.ThenValue);
-        elseValue = VisitExpression (expression.ElseValue);
-      }
+      var testPredicate = ConvertBooleanExpressions (expression.TestPredicate, BooleanSemanticsKind.PredicateRequired);
+      var thenValue = ConvertBooleanExpressions (expression.ThenValue, BooleanSemanticsKind.ValueRequired);
+      var elseValue = ConvertBooleanExpressions (expression.ElseValue, BooleanSemanticsKind.ValueRequired);
 
       if (testPredicate != expression.TestPredicate || thenValue != expression.ThenValue || elseValue != expression.ElseValue)
         return new SqlCaseExpression (testPredicate, thenValue, elseValue);
@@ -110,39 +99,12 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration.BooleanSemantics
       ArgumentUtility.CheckNotNull ("expression", expression);
 
       if (expression.Type != typeof (bool))
-      {
-        Debug.Assert (_semantics.CurrentValue == BooleanSemanticsKind.ValueRequired); // ensured by check in VisitExpression
         return base.VisitBinaryExpression (expression);
-      }
 
-      var left = expression.Left;
-      var right = expression.Right;
+      var childSemantics = GetChildSemanticsForBoolExpression (expression.NodeType);
 
-      switch (expression.NodeType)
-      {
-        case ExpressionType.NotEqual:
-        case ExpressionType.Equal:
-          using (_semantics.SwitchTo (BooleanSemanticsKind.ValueRequired))
-          {
-            left = VisitExpression (left);
-            right = VisitExpression (right);
-          }
-          break;
-        case ExpressionType.AndAlso:
-        case ExpressionType.OrElse:
-        case ExpressionType.And:
-        case ExpressionType.Or:
-        case ExpressionType.ExclusiveOr:
-          using (_semantics.SwitchTo (BooleanSemanticsKind.PredicateRequired))
-          {
-            left = VisitExpression (left);
-            right = VisitExpression (right);
-          }
-          break;
-        default:
-          Debug.Assert (false, string.Format ("Expression type '{0}' was not expected to have boolean type.", expression.NodeType));
-          break;
-      }
+      var left = ConvertBooleanExpressions (expression.Left, childSemantics);
+      var right = ConvertBooleanExpressions (expression.Right, childSemantics);
 
       if (left != expression.Left || right != expression.Right)
         expression = Expression.MakeBinary (expression.NodeType, left, right);
@@ -155,26 +117,11 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration.BooleanSemantics
       ArgumentUtility.CheckNotNull ("expression", expression);
 
       if (expression.Type != typeof (bool))
-      {
-        Debug.Assert (_semantics.CurrentValue == BooleanSemanticsKind.ValueRequired); // ensured by check in VisitExpression
         return base.VisitUnaryExpression (expression);
-      }
 
-      var operand = expression.Operand;
+      var childSemantics = GetChildSemanticsForBoolExpression (expression.NodeType);
 
-      switch (expression.NodeType)
-      {
-        case ExpressionType.Not:
-          using (_semantics.SwitchTo (BooleanSemanticsKind.PredicateRequired))
-          {
-            operand = VisitExpression (operand);
-          }
-          break;
-
-        default:
-          var message = string.Format ("'{0}' expressions are not supported with boolean type.", expression.NodeType);
-          throw new NotSupportedException (message);
-      }
+      var operand = ConvertBooleanExpressions (expression.Operand, childSemantics);
 
       if (operand != expression.Operand)
         expression = Expression.MakeUnary (expression.NodeType, operand, expression.Type, expression.Method);
@@ -190,6 +137,33 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration.BooleanSemantics
     Expression ISqlSpecificExpressionVisitor.VisitSqlLiteralExpression (SqlLiteralExpression expression)
     {
       return VisitUnknownExpression (expression);
+    }
+
+    private BooleanSemanticsKind GetChildSemanticsForBoolExpression (ExpressionType expressionType)
+    {
+      switch (expressionType)
+      {
+        case ExpressionType.NotEqual:
+        case ExpressionType.Equal:
+          return BooleanSemanticsKind.ValueRequired;
+
+        case ExpressionType.AndAlso:
+        case ExpressionType.OrElse:
+        case ExpressionType.And:
+        case ExpressionType.Or:
+        case ExpressionType.ExclusiveOr:
+          return BooleanSemanticsKind.PredicateRequired;
+
+        case ExpressionType.Not:
+          return BooleanSemanticsKind.PredicateRequired;
+
+        case ExpressionType.Convert:
+          var message = string.Format ("'{0}' expressions are not supported with boolean type.", expressionType);
+          throw new NotSupportedException (message);
+
+        default:
+          return BooleanSemanticsKind.ValueRequired;
+      }
     }
 
     private static Expression EnsureValueSemantics (Expression expression)
