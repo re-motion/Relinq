@@ -147,7 +147,7 @@
     <Compile Include="SqlBackend\MappingResolution\ResolvingSqlStatementVisitor.cs" />
     <Compile Include="SqlBackend\MappingResolution\ResolvingTableInfoVisitor.cs" />
     <Compile Include="SqlBackend\SqlGeneration\BinaryExpressionTextGenerator.cs" />
-    <Compile Include="SqlBackend\SqlGeneration\SqlExpressionContextExpressionVisitor.cs" />
+    <Compile Include="SqlBackend\SqlGeneration\SqlContextExpressionVisitor.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlExpressionContext.cs" />
     <Compile Include="SqlBackend\SqlGeneration\IMethodCallSqlGenerator.cs" />
     <Compile Include="SqlBackend\SqlGeneration\MethodCallGenerators\MethodCallContainsFreetext.cs" />

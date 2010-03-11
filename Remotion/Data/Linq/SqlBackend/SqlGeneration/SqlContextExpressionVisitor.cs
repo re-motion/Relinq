@@ -28,15 +28,15 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
   /// Ensures that a given expression matches SQL server value semantics.
   /// </summary>
   /// <remarks>
-  /// <see cref="SqlExpressionContextExpressionVisitor"/> traverses an expression tree and ensures that the tree fits SQL server requirements for
+  /// <see cref="SqlContextExpressionVisitor"/> traverses an expression tree and ensures that the tree fits SQL server requirements for
   /// boolean expressions. In scenarios where a value is required as per SQL server standards, bool expressions are converted to integers using
   /// CASE WHEN expressions. In such situations, <see langword="true" /> and <see langword="false" /> constants are converted to 1 and 0 values,
   /// and boolean columns are interpreted as integer values. In scenarios where a predicate is required, boolean expressions are constructed by 
   /// comparing those integer values to 1 and 0 literals.
   /// </remarks>
-  public class SqlExpressionContextExpressionVisitor : ExpressionTreeVisitor, ISqlSpecificExpressionVisitor
+  public class SqlContextExpressionVisitor : ExpressionTreeVisitor, ISqlSpecificExpressionVisitor
   {
-    private static readonly SqlExpressionContextExpressionVisitor s_visitorInstance = new SqlExpressionContextExpressionVisitor ();
+    private static readonly SqlContextExpressionVisitor s_visitorInstance = new SqlContextExpressionVisitor ();
 
     public static Expression ApplySqlExpressionContext (Expression expression, SqlExpressionContext initialSemantics)
     {
@@ -108,7 +108,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       return EnsurePredicateSemantics (expressionAsValue); // int column == 1
     }
 
-    protected SqlExpressionContextExpressionVisitor ()
+    protected SqlContextExpressionVisitor ()
     {
     }
 

@@ -36,7 +36,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);
       ArgumentUtility.CheckNotNull ("methodCallRegistry", methodCallRegistry);
 
-      var expressionWithBooleanSemantics = SqlExpressionContextExpressionVisitor.ApplySqlExpressionContext (expression, context);
+      var expressionWithBooleanSemantics = SqlContextExpressionVisitor.ApplySqlExpressionContext (expression, context);
 
       var visitor = new SqlGeneratingExpressionVisitor (commandBuilder, methodCallRegistry);
       visitor.VisitExpression (expressionWithBooleanSemantics);
@@ -85,7 +85,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
     protected override Expression VisitConstantExpression (ConstantExpression expression)
     {
-      Debug.Assert (expression.Type != typeof (bool), "Boolean constants should have been removed by SqlExpressionContextExpressionVisitor.");
+      Debug.Assert (expression.Type != typeof (bool), "Boolean constants should have been removed by SqlContextExpressionVisitor.");
 
       if (expression.Value == null)
         _commandBuilder.Append ("NULL");
