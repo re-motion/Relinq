@@ -147,7 +147,9 @@
     <Compile Include="SqlBackend\MappingResolution\ResolvingSqlStatementVisitor.cs" />
     <Compile Include="SqlBackend\MappingResolution\ResolvingTableInfoVisitor.cs" />
     <Compile Include="SqlBackend\SqlGeneration\BinaryExpressionTextGenerator.cs" />
-    <Compile Include="SqlBackend\SqlGeneration\ValueSemanticsExpressionConverter.cs" />
+    <Compile Include="SqlBackend\SqlGeneration\BooleanSemantics\BooleanSemanticsHolder.cs" />
+    <Compile Include="SqlBackend\SqlGeneration\BooleanSemantics\BooleanSemanticsKind.cs" />
+    <Compile Include="SqlBackend\SqlGeneration\BooleanSemantics\ValueSemanticsExpressionConverter.cs" />
     <Compile Include="SqlBackend\SqlGeneration\IMethodCallSqlGenerator.cs" />
     <Compile Include="SqlBackend\SqlGeneration\MethodCallGenerators\MethodCallContainsFreetext.cs" />
     <Compile Include="SqlBackend\SqlGeneration\MethodCallGenerators\MethodCallContainsFulltext.cs" />

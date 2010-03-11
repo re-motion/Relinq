@@ -22,7 +22,7 @@ using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel.SqlSpecificExpressions;
 using Remotion.Data.Linq.Utilities;
 
-namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
+namespace Remotion.Data.Linq.SqlBackend.SqlGeneration.BooleanSemantics
 {
   /// <summary>
   /// Ensures that a given expression matches SQL server value semantics.
@@ -33,12 +33,20 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      var visitor = new ValueSemanticsExpressionConverter();
+      var visitor = new ValueSemanticsExpressionConverter ();
       return visitor.VisitExpression (expression);
+    }
+
+    // private bool _needsPredicateSemantics;
+
+    protected ValueSemanticsExpressionConverter ()
+    {
+      // _needsPredicateSemantics = needsPredicateSemantics;
     }
 
     public override Expression VisitExpression (Expression expression)
     {
+      // TODO: Visit all
       if (expression.Type != typeof (bool))
         return expression;
 
@@ -49,6 +57,8 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
+      //if (expression.Type == typeof (bool) && !_needsPredicateSemantics) TODO
+      //{
       if (expression.Value.Equals (true))
         return Expression.Constant (1);
       else
@@ -56,13 +66,21 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
         Debug.Assert (expression.Value.Equals (false));
         return Expression.Constant (0);
       }
+      //}
+      //else if (expression.Type != typeof (bool) && _needsPredicateSemantics)
+      //{
+      //  // return expression == 1
+      //  throw new NotImplementedException(); // TODO
+      //}
+      //else
+      //{
+      //  return expression;
+      //}
     }
 
     protected override Expression VisitBinaryExpression (BinaryExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-
-      Debug.Assert (expression.Type == typeof (bool));
 
       var left = expression.Left;
       var right = expression.Right;
@@ -71,22 +89,39 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       {
         case ExpressionType.NotEqual:
         case ExpressionType.Equal:
-          left = EnsureValueSemantics (left);
-          right = EnsureValueSemantics (right);
+          //var oldSemantics = _needsPredicateSemantics;
+          //_needsPredicateSemantics = false;
+          left = VisitExpression (left);
+          right = VisitExpression (right);
+          //_needsPredicateSemantics = oldSemantics;
           break;
-        //case ExpressionType.AndAlso:
-        //case ExpressionType.And:
-        //case ExpressionType.OrElse:
-        //case ExpressionType.Or:
-        //case ExpressionType.ExclusiveOr:
-        //  TODO
+          //case ExpressionType.AndAlso:
+          //case ExpressionType.OrElse:
+          //var oldSemantics = _needsPredicateSemantics;
+          //_needsPredicateSemantics = true;
+          //left = VisitExpression (left);
+          //right = VisitExpression (right);
+          //_needsPredicateSemantics = true;
+          //break;
+          //case ExpressionType.And:
+          //case ExpressionType.Or:
+          //case ExpressionType.ExclusiveOr:
+          // if (expression.Type == typeof (bool))
+          // {
+          //   var oldSemantics = _needsPredicateSemantics;
+          //   _needsPredicateSemantics = true;
+          //   // etc
+          // }
+          // else: _needsPredicateSemantics = false; etc.
       }
 
       if (left != expression.Left || right != expression.Right)
         expression = Expression.MakeBinary (expression.NodeType, left, right);
 
-      if (expression.Type == typeof (bool)) // because of value conversion, type might now be int
+      if (expression.Type == typeof (bool)) // && !_needsPredicateSemantics) // because of value conversion, type might now be int
         return new SqlCaseExpression (expression, Expression.Constant (1), Expression.Constant (0));
+          // else if (expression.Type == typeof (int) && !_needsValueSemantics)
+          //   return expression == 1
       else
         return expression;
     }
@@ -102,8 +137,12 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      Debug.Assert (expression.Type == typeof (bool));
+      // if (expression.Type == typeof (bool) && !_needsPredicateSemantics) TODO
       return new SqlColumnExpression (typeof (int), expression.OwningTableAlias, expression.ColumnName);
+      // else if (expression.Type == typeof (int) && _needsPredicateSemantics) TODO
+      // return expression == 1
+      // else
+      //  return expression;
     }
 
     protected override Exception CreateUnhandledItemException<T> (T unhandledItem, string visitMethod)
