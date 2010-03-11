@@ -21,7 +21,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration.BooleanSemantics
   /// <summary>
   /// Describes whether predicate or value semantics is required for boolean expressions in the current context.
   /// </summary>
-  public enum BooleanSemanticsKind
+  public enum SqlExpressionContext
   {
     ValueRequired,
     PredicateRequired

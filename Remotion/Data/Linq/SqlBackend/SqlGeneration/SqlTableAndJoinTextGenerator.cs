@@ -86,13 +86,13 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
           tableSource.PrimaryColumn, 
           _commandBuilder, 
           new MethodCallSqlGeneratorRegistry(), 
-          BooleanSemanticsKind.ValueRequired);
+          SqlExpressionContext.ValueRequired);
       _commandBuilder.Append (" = ");
       SqlGeneratingExpressionVisitor.GenerateSql (
           tableSource.ForeignColumn, 
           _commandBuilder, 
           new MethodCallSqlGeneratorRegistry (),
-          BooleanSemanticsKind.ValueRequired);
+          SqlExpressionContext.ValueRequired);
 
       return tableSource;
     }
