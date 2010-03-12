@@ -21,7 +21,6 @@ using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
-using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved;
 using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
@@ -136,11 +135,9 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
 
     private void AddFromClause (FromClauseBase fromClause)
     {
-      // In the future, we'll probably need a visitor here as well when we support more complex FromExpressions.
-
-      var sqlTable = new SqlTable (new UnresolvedTableInfo ((ConstantExpression) fromClause.FromExpression, fromClause.ItemType));
+      var sqlTable = SqlPreparationFromExpressionVisitor.GetTableForFromClause (fromClause);
       _context.AddQuerySourceMapping (fromClause, sqlTable);
-      _sqlTables.Add (sqlTable);
+      _sqlTables.Add ((SqlTable) sqlTable);
     }
   }
 }
