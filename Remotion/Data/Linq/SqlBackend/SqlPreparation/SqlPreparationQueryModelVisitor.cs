@@ -183,9 +183,13 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
     private void AddFromClause (FromClauseBase fromClause)
     {
       var preparedFromExpression = _stage.PrepareFromExpression (fromClause.FromExpression);
-      var sqlTable = _stage.GetTableForFromExpression (preparedFromExpression, fromClause.ItemType);
-      _context.AddQuerySourceMapping (fromClause, sqlTable);
-      _sqlTables.Add ((SqlTable) sqlTable);
+      var sqlTableOrJoin = _stage.GetTableForFromExpression (preparedFromExpression, fromClause.ItemType);
+
+      _context.AddQuerySourceMapping (fromClause, sqlTableOrJoin);
+
+      var topLevelSqlTable = sqlTableOrJoin as SqlTable;
+      if (topLevelSqlTable != null)
+        _sqlTables.Add (topLevelSqlTable);
     }
   }
 }
