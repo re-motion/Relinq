@@ -15,6 +15,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Utilities;
 using System.Collections.Generic;
@@ -39,8 +40,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 
       _selectProjection = selectProjection;
 
-      _fromExpressions = new List<SqlTable>();
-      _fromExpressions.AddRange (fromExpressions);
+      _fromExpressions = new List<SqlTable> (fromExpressions);
     }
 
     public bool IsCountQuery { get; set; }
@@ -54,9 +54,9 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       set { _selectProjection = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
-    public SqlTable[] FromExpressions
+    public ReadOnlyCollection<SqlTable> FromExpressions
     {
-      get { return _fromExpressions.ToArray(); }
+      get { return _fromExpressions.AsReadOnly(); }
     }
 
     public Expression WhereCondition

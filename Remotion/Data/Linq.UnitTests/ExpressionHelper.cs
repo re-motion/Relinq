@@ -356,5 +356,7 @@ namespace Remotion.Data.Linq.UnitTests
 
       return Expression.Lambda (resolvedBody, remainingParameters.ToArray());
     }
+
+
   }
 }

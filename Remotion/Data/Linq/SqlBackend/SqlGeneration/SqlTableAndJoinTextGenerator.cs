@@ -15,6 +15,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using Remotion.Data.Linq.SqlBackend.SqlGeneration.BooleanSemantics;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved;
@@ -30,7 +31,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
   {
     private readonly SqlCommandBuilder _commandBuilder;
     
-    public static void GenerateSql (SqlTable[] sqlTables, SqlCommandBuilder commandBuilder)
+    public static void GenerateSql (IEnumerable<SqlTable> sqlTables, SqlCommandBuilder commandBuilder)
     {
       ArgumentUtility.CheckNotNull ("sqlTable", sqlTables);
       ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);

@@ -16,6 +16,7 @@
 // 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ResultOperators;
@@ -39,7 +40,8 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
 
     private readonly SqlPreparationContext _context;
 
-    private List<SqlTable> _sqlTables;
+    private readonly List<SqlTable> _sqlTables;
+
     private Expression _projectionExpression;
     private Expression _whereCondition;
     
@@ -76,10 +78,9 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
-      // In the future, we'll probably need a visitor here as well when we support more complex FromExpressions.
-      var sqlTable = new SqlTable (new UnresolvedTableInfo ((ConstantExpression) fromClause.FromExpression, fromClause.ItemType));
-      _context.AddQuerySourceMapping (fromClause, sqlTable);
-      _sqlTables.Insert (0, sqlTable);
+      Debug.Assert (_sqlTables.Count == 0);
+
+      AddFromClause (fromClause);
     }
 
     public override void VisitAdditionalFromClause (AdditionalFromClause fromClause, QueryModel queryModel, int index)
@@ -87,9 +88,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
-      var sqlTable = new SqlTable (new UnresolvedTableInfo ((ConstantExpression) fromClause.FromExpression, fromClause.ItemType));
-      _context.AddQuerySourceMapping (fromClause, sqlTable);
-      _sqlTables.Add (sqlTable);
+      AddFromClause (fromClause);
     }
 
     public override void VisitWhereClause (WhereClause whereClause, QueryModel queryModel, int index)
@@ -134,6 +133,14 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       else
         throw new NotSupportedException (string.Format ("{0} is not supported.", resultOperator));
     }
-   
+
+    private void AddFromClause (FromClauseBase fromClause)
+    {
+      // In the future, we'll probably need a visitor here as well when we support more complex FromExpressions.
+
+      var sqlTable = new SqlTable (new UnresolvedTableInfo ((ConstantExpression) fromClause.FromExpression, fromClause.ItemType));
+      _context.AddQuerySourceMapping (fromClause, sqlTable);
+      _sqlTables.Add (sqlTable);
+    }
   }
 }
