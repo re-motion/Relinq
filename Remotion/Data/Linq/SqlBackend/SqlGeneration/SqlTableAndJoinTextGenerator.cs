@@ -30,16 +30,22 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
   {
     private readonly SqlCommandBuilder _commandBuilder;
     
-    public static void GenerateSql (SqlTable sqlTable, SqlCommandBuilder commandBuilder)
+    public static void GenerateSql (SqlTable[] sqlTables, SqlCommandBuilder commandBuilder)
     {
-      ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
+      ArgumentUtility.CheckNotNull ("sqlTable", sqlTables);
       ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);
 
       var visitor = new SqlTableAndJoinTextGenerator (commandBuilder);
-      
-      sqlTable.TableInfo.Accept (visitor);
 
-      GenerateSqlForJoins(sqlTable, visitor);
+      bool first = true;
+      foreach (var sqlTable in sqlTables)
+      {
+        if (!first)
+          commandBuilder.Append (" CROSS JOIN ");
+        sqlTable.TableInfo.Accept (visitor);
+        GenerateSqlForJoins (sqlTable, visitor);
+        first = false;
+      }
     }
 
     private static void GenerateSqlForJoins (SqlTableBase sqlTable, SqlTableAndJoinTextGenerator visitor)

@@ -17,6 +17,7 @@
 using System;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Utilities;
+using System.Collections.Generic;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
@@ -26,18 +27,20 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   /// </summary>
   public class SqlStatement
   {
-    private readonly SqlTable _fromExpression;
+    private readonly List<SqlTable> _fromExpressions;
 
     private Expression _selectProjection;
     private Expression _whereCondition;
 
-    public SqlStatement (Expression selectProjection, SqlTable fromExpression)
+    public SqlStatement (Expression selectProjection, SqlTable[] fromExpressions)
     {
       ArgumentUtility.CheckNotNull ("selectProjection", selectProjection);
-      ArgumentUtility.CheckNotNull ("fromExpression", fromExpression);
+      ArgumentUtility.CheckNotNull ("fromExpressions", fromExpressions);
 
       _selectProjection = selectProjection;
-      _fromExpression = fromExpression;
+
+      _fromExpressions = new List<SqlTable>();
+      _fromExpressions.AddRange (fromExpressions);
     }
 
     public bool IsCountQuery { get; set; }
@@ -51,9 +54,9 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       set { _selectProjection = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
-    public SqlTable FromExpression
+    public SqlTable[] FromExpressions
     {
-      get { return _fromExpression; }
+      get { return _fromExpressions.ToArray(); }
     }
 
     public Expression WhereCondition
@@ -68,5 +71,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
         }
       }
     }
+
+
   }
 }

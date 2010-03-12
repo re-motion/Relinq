@@ -40,8 +40,11 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 
     public virtual void VisitSqlStatement (SqlStatement sqlStatement)
     {
-      VisitSqlTable (sqlStatement.FromExpression);
-
+      foreach (var sqlTable in sqlStatement.FromExpressions)
+      {
+        VisitSqlTable (sqlTable);        
+      }
+      
       sqlStatement.SelectProjection = VisitSelectProjection (sqlStatement.SelectProjection);
 
       if (sqlStatement.WhereCondition != null)

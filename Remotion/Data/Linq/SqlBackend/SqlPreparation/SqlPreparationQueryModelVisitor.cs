@@ -15,6 +15,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ResultOperators;
@@ -38,7 +39,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
 
     private readonly SqlPreparationContext _context;
 
-    private SqlTable _sqlTable;
+    private List<SqlTable> _sqlTables;
     private Expression _projectionExpression;
     private Expression _whereCondition;
     
@@ -50,6 +51,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
     {
       ArgumentUtility.CheckNotNull ("context", context);
       _context = context;
+      _sqlTables = new List<SqlTable>();
     }
 
     public SqlPreparationContext Context
@@ -59,7 +61,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
 
     public SqlStatement GetSqlStatement ()
     {
-      var sqlStatement = new SqlStatement (_projectionExpression, _sqlTable);
+      var sqlStatement = new SqlStatement (_projectionExpression, _sqlTables.ToArray());
 
       sqlStatement.IsCountQuery = _isCountQuery;
       sqlStatement.IsDistinctQuery = _isDistinctQuery;
@@ -75,8 +77,19 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
       // In the future, we'll probably need a visitor here as well when we support more complex FromExpressions.
-      _sqlTable = new SqlTable (new UnresolvedTableInfo ((ConstantExpression) fromClause.FromExpression, fromClause.ItemType));
-      _context.AddQuerySourceMapping (fromClause, _sqlTable);
+      var sqlTable = new SqlTable (new UnresolvedTableInfo ((ConstantExpression) fromClause.FromExpression, fromClause.ItemType));
+      _context.AddQuerySourceMapping (fromClause, sqlTable);
+      _sqlTables.Insert (0, sqlTable);
+    }
+
+    public override void VisitAdditionalFromClause (AdditionalFromClause fromClause, QueryModel queryModel, int index)
+    {
+      ArgumentUtility.CheckNotNull ("fromClause", fromClause);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+
+      var sqlTable = new SqlTable (new UnresolvedTableInfo ((ConstantExpression) fromClause.FromExpression, fromClause.ItemType));
+      _context.AddQuerySourceMapping (fromClause, sqlTable);
+      _sqlTables.Add (sqlTable);
     }
 
     public override void VisitWhereClause (WhereClause whereClause, QueryModel queryModel, int index)
