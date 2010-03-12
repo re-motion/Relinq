@@ -163,6 +163,8 @@
     <Compile Include="SqlBackend\SqlGeneration\MethodCallSqlGeneratorRegistry.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlCommand.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlCommandBuilder.cs" />
+    <Compile Include="SqlBackend\SqlPreparation\DefaultSqlPreparationStage.cs" />
+    <Compile Include="SqlBackend\SqlPreparation\ISqlPreparationStage.cs" />
     <Compile Include="SqlBackend\SqlPreparation\SqlPreparationFromExpressionVisitor.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\AbstractJoinInfo.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\IJoinInfoVisitor.cs" />

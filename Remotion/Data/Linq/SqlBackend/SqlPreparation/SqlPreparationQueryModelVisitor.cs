@@ -30,14 +30,22 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
   /// </summary>
   public class SqlPreparationQueryModelVisitor : QueryModelVisitorBase
   {
-    public static SqlStatement TransformQueryModel (QueryModel queryModel, SqlPreparationContext preparationContext)
+    public static SqlStatement TransformQueryModel (
+        QueryModel queryModel, 
+        SqlPreparationContext preparationContext, 
+        DefaultSqlPreparationStage stage)
     {
-      var visitor = new SqlPreparationQueryModelVisitor (preparationContext);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+      ArgumentUtility.CheckNotNull ("preparationContext", preparationContext);
+      ArgumentUtility.CheckNotNull ("stage", stage);
+
+      var visitor = new SqlPreparationQueryModelVisitor (preparationContext, stage);
       queryModel.Accept (visitor);
       return visitor.GetSqlStatement();
     }
 
     private readonly SqlPreparationContext _context;
+    private readonly ISqlPreparationStage _stage;
 
     private readonly List<SqlTable> _sqlTables;
 
@@ -48,11 +56,15 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
     private bool _isDistinctQuery;
     private Expression _topExpression;
 
-    protected SqlPreparationQueryModelVisitor (SqlPreparationContext context)
+    protected SqlPreparationQueryModelVisitor (SqlPreparationContext context, ISqlPreparationStage stage)
     {
       ArgumentUtility.CheckNotNull ("context", context);
+      ArgumentUtility.CheckNotNull ("stage", stage);
+
       _context = context;
-      _sqlTables = new List<SqlTable>();
+      _stage = stage;
+
+      _sqlTables = new List<SqlTable> ();
     }
 
     public SqlPreparationContext Context
@@ -92,7 +104,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
 
     public override void VisitWhereClause (WhereClause whereClause, QueryModel queryModel, int index)
     {
-      var translatedExpression = SqlPreparationExpressionVisitor.TranslateExpression (whereClause.Predicate, _context);
+      var translatedExpression = _stage.PrepareWhereExpression (whereClause.Predicate);
       if (_whereCondition != null)
         _whereCondition = Expression.AndAlso (_whereCondition, translatedExpression);
       else
@@ -104,7 +116,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
-      _projectionExpression = SqlPreparationExpressionVisitor.TranslateExpression (selectClause.Selector, _context);
+      _projectionExpression = _stage.PrepareSelectExpression (selectClause.Selector);
     }
     
     public override void VisitResultOperator (ResultOperatorBase resultOperator, QueryModel queryModel, int index)
@@ -127,7 +139,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       else if (resultOperator is TakeResultOperator)
       {
         var expression = ((TakeResultOperator) resultOperator).Count;
-        _topExpression = SqlPreparationExpressionVisitor.TranslateExpression (expression, _context);
+        _topExpression = _stage.PrepareTopExpression (expression);
       }
       else
         throw new NotSupportedException (string.Format ("{0} is not supported.", resultOperator));
@@ -135,7 +147,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
 
     private void AddFromClause (FromClauseBase fromClause)
     {
-      var sqlTable = SqlPreparationFromExpressionVisitor.GetTableForFromExpression (fromClause.FromExpression, fromClause.ItemType);
+      var sqlTable = _stage.GetTableForFromExpression (fromClause.FromExpression, fromClause.ItemType);
       _context.AddQuerySourceMapping (fromClause, sqlTable);
       _sqlTables.Add ((SqlTable) sqlTable);
     }
