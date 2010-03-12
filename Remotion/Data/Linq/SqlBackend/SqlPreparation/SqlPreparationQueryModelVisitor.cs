@@ -72,7 +72,42 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       get { return _context; }
     }
 
-    public SqlStatement GetSqlStatement ()
+    protected Expression ProjectionExpression
+    {
+      get { return _projectionExpression; }
+    }
+
+    protected Expression WhereCondition
+    {
+      get { return _whereCondition; }
+    }
+
+    protected bool IsCountQuery
+    {
+      get { return _isCountQuery; }
+    }
+
+    protected bool IsDistinctQuery
+    {
+      get { return _isDistinctQuery; }
+    }
+
+    protected Expression TopExpression
+    {
+      get { return _topExpression; }
+    }
+
+    protected ISqlPreparationStage Stage
+    {
+      get { return _stage; }
+    }
+
+    protected List<SqlTable> SqlTables
+    {
+      get { return _sqlTables; }
+    }
+
+    public virtual SqlStatement GetSqlStatement ()
     {
       var sqlStatement = new SqlStatement (_projectionExpression, _sqlTables.ToArray());
 
@@ -133,9 +168,9 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
         _isDistinctQuery = true;
       }
       else if (resultOperator is FirstResultOperator)
-        _topExpression = Expression.Constant (1);
+        _topExpression = _stage.PrepareTopExpression (Expression.Constant (1));
       else if (resultOperator is SingleResultOperator)
-        _topExpression = Expression.Constant (1);
+        _topExpression = _stage.PrepareTopExpression (Expression.Constant (1));
       else if (resultOperator is TakeResultOperator)
       {
         var expression = ((TakeResultOperator) resultOperator).Count;
@@ -147,7 +182,8 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
 
     private void AddFromClause (FromClauseBase fromClause)
     {
-      var sqlTable = _stage.GetTableForFromExpression (fromClause.FromExpression, fromClause.ItemType);
+      var preparedFromExpression = _stage.PrepareFromExpression (fromClause.FromExpression);
+      var sqlTable = _stage.GetTableForFromExpression (preparedFromExpression, fromClause.ItemType);
       _context.AddQuerySourceMapping (fromClause, sqlTable);
       _sqlTables.Add ((SqlTable) sqlTable);
     }
