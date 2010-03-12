@@ -17,6 +17,7 @@
 using System;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Parsing;
+using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved;
 using Remotion.Data.Linq.Utilities;
 
@@ -76,7 +77,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      var join = expression.SqlTable.GetOrAddJoin (expression.MemberInfo);
+      var join = expression.SqlTable.GetOrAddJoin (expression.MemberInfo, JoinCardinality.One);
       join.JoinInfo = ResolvingJoinInfoVisitor.ResolveJoinInfo (expression.SqlTable, join.JoinInfo, _resolver, _generator);
 
       var sqlTableReferenceExpression = new SqlTableReferenceExpression (join);

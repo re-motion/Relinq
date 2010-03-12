@@ -50,12 +50,12 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       get { return _joinedTables.Values; }
     }
 
-    public SqlJoinedTable GetOrAddJoin (MemberInfo relationMember)
+    public SqlJoinedTable GetOrAddJoin (MemberInfo relationMember, JoinCardinality cardinality)
     {
       ArgumentUtility.CheckNotNull ("relationMember", relationMember);
 
       if (!_joinedTables.ContainsKey (relationMember))
-        _joinedTables.Add (relationMember, new SqlJoinedTable (new UnresolvedJoinInfo (relationMember)));
+        _joinedTables.Add (relationMember, new SqlJoinedTable (new UnresolvedJoinInfo (relationMember, cardinality)));
 
       return _joinedTables[relationMember];
     }

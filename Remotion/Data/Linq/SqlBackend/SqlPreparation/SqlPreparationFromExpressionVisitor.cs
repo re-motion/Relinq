@@ -17,8 +17,10 @@
 using System;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved;
+using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
 {
@@ -26,11 +28,60 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
   /// Analyzes the <see cref="FromClauseBase.FromExpression"/> of a <see cref="FromClauseBase"/> and returns a <see cref="SqlTableBase"/> that 
   /// represents the data source of the <see cref="FromClauseBase"/>.
   /// </summary>
-  public class SqlPreparationFromExpressionVisitor
+  public class SqlPreparationFromExpressionVisitor : ThrowingExpressionTreeVisitor, IUnresolvedSqlExpressionVisitor
   {
-    public static SqlTableBase GetTableForFromClause (FromClauseBase fromClause)
+    public static SqlTableBase GetTableForFromExpression (Expression fromExpression, Type itemType)
     {
-      return new SqlTable (new UnresolvedTableInfo ((ConstantExpression) fromClause.FromExpression, fromClause.ItemType));
+      ArgumentUtility.CheckNotNull ("fromExpression", fromExpression);
+      ArgumentUtility.CheckNotNull ("itemType", itemType);
+
+      var visitor = new SqlPreparationFromExpressionVisitor(itemType);
+      var result = (SqlTableReferenceExpression) visitor.VisitExpression (fromExpression);
+      return result.SqlTable;
+    }
+
+    private readonly Type _itemType;
+
+    protected SqlPreparationFromExpressionVisitor (Type itemType)
+    {
+      ArgumentUtility.CheckNotNull ("itemType", itemType);
+      _itemType = itemType;
+    }
+
+    protected override Expression VisitConstantExpression (ConstantExpression expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
+      var sqlTable = new SqlTable (new UnresolvedTableInfo (expression, _itemType));
+      return new SqlTableReferenceExpression (sqlTable);
+    }
+
+    public Expression VisitSqlMemberExpression (SqlMemberExpression expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
+      var joinedTable = expression.SqlTable.GetOrAddJoin (expression.MemberInfo, JoinCardinality.Many);
+
+      return new SqlTableReferenceExpression (joinedTable);
+    }
+
+    protected override Exception CreateUnhandledItemException<T> (T unhandledItem, string visitMethod)
+    {
+      ArgumentUtility.CheckNotNull ("unhandledItem", unhandledItem);
+      ArgumentUtility.CheckNotNullOrEmpty ("visitMethod", visitMethod);
+
+      var message = string.Format ("Expressions of type '{0}' cannot be used as the FromExpressions of a from clause.", unhandledItem.GetType().Name);
+      return new NotSupportedException (message);
+    }
+
+    Expression IUnresolvedSqlExpressionVisitor.VisitSqlTableReferenceExpression (SqlTableReferenceExpression expression)
+    {
+      throw new NotImplementedException (); // TODO
+    }
+
+    Expression IUnresolvedSqlExpressionVisitor.VisitSqlEntityRefMemberExpression (SqlEntityRefMemberExpression expression)
+    {
+      throw new NotImplementedException (); // TODO
     }
   }
 }

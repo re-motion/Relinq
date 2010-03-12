@@ -135,7 +135,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
 
     private void AddFromClause (FromClauseBase fromClause)
     {
-      var sqlTable = SqlPreparationFromExpressionVisitor.GetTableForFromClause (fromClause);
+      var sqlTable = SqlPreparationFromExpressionVisitor.GetTableForFromExpression (fromClause.FromExpression, fromClause.ItemType);
       _context.AddQuerySourceMapping (fromClause, sqlTable);
       _sqlTables.Add ((SqlTable) sqlTable);
     }

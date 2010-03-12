@@ -27,12 +27,21 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved
   public class UnresolvedJoinInfo : AbstractJoinInfo
   {
     private readonly MemberInfo _memberInfo;
+    private readonly JoinCardinality _cardinality;
+    private readonly Type _itemType;
 
-    public UnresolvedJoinInfo (MemberInfo memberInfo)
+    public UnresolvedJoinInfo (MemberInfo memberInfo, JoinCardinality cardinality)
     {
       ArgumentUtility.CheckNotNull ("memberInfo", memberInfo);
 
       _memberInfo = memberInfo;
+      _cardinality = cardinality;
+
+      var memberReturnType = ReflectionUtility.GetFieldOrPropertyType (memberInfo);
+      if (Cardinality == JoinCardinality.One)
+        _itemType = memberReturnType;
+      else
+        _itemType = ReflectionUtility.GetItemTypeOfIEnumerable (memberReturnType, "memberInfo");
     }
 
     public MemberInfo MemberInfo
@@ -40,9 +49,14 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved
       get { return _memberInfo; }
     }
 
+    public JoinCardinality Cardinality
+    {
+      get { return _cardinality; }
+    }
+
     public override Type ItemType
     {
-      get { return ReflectionUtility.GetFieldOrPropertyType (_memberInfo); }
+      get { return _itemType; }
     }
 
     public override AbstractJoinInfo Accept (IJoinInfoVisitor visitor)
