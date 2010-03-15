@@ -112,8 +112,17 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       foreach (var orderByClause in sqlStatement.OrderByClauses)
       {
         commandBuilder.Append (first ? " ORDER BY " : ", ");
-        SqlGeneratingExpressionVisitor.GenerateSql (orderByClause.Expression, commandBuilder, _registry, SqlExpressionContext.ValueRequired);
-        commandBuilder.Append (string.Format(" {0}", orderByClause.OrderingDirection.ToString().ToUpper()));
+        if (orderByClause.Expression.GetType () != typeof (ConstantExpression))
+        {
+          SqlGeneratingExpressionVisitor.GenerateSql (orderByClause.Expression, commandBuilder, _registry, SqlExpressionContext.ValueRequired);
+        }
+        else
+        {
+          commandBuilder.Append ("(SELECT ");
+          SqlGeneratingExpressionVisitor.GenerateSql (orderByClause.Expression, commandBuilder, _registry, SqlExpressionContext.ValueRequired);
+          commandBuilder.Append (")");
+        }
+        commandBuilder.Append (string.Format (" {0}", orderByClause.OrderingDirection.ToString ().ToUpper ()));
         first = false;
       }
     }
