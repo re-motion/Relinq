@@ -29,26 +29,36 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
   /// </summary>
   public class SqlEntityExpression : ExtensionExpression
   {
-    private readonly ReadOnlyCollection<SqlColumnExpression> _columns;
-
-    public SqlEntityExpression (Type type, params SqlColumnExpression[] columns)
+    private readonly SqlColumnExpression _primaryKeyColumn;
+    private readonly ReadOnlyCollection<SqlColumnExpression> _projectionColumns;
+    
+    public SqlEntityExpression (Type type, SqlColumnExpression primaryKeyColumn, params SqlColumnExpression[] projectionColumns)
         : base (type)
     {
-      ArgumentUtility.CheckNotNull ("columns", columns);
+      ArgumentUtility.CheckNotNull ("projectionColumns", projectionColumns);
+      ArgumentUtility.CheckNotNull ("primaryKeyColumn", primaryKeyColumn);
 
-      _columns = Array.AsReadOnly (columns);
+      //TODO: check if primaryKeyColumn does exist in projectionColumns collection !?
+
+      _projectionColumns = Array.AsReadOnly (projectionColumns);
+      _primaryKeyColumn = primaryKeyColumn;
     }
 
-    public ReadOnlyCollection<SqlColumnExpression> Columns
+    public SqlColumnExpression PrimaryKeyColumn
     {
-      get { return _columns; }
+      get { return _primaryKeyColumn; }
+    }
+
+    public ReadOnlyCollection<SqlColumnExpression> ProjectionColumns
+    {
+      get { return _projectionColumns; }
     }
 
     protected internal override Expression VisitChildren (ExpressionTreeVisitor visitor)
     {
-      var newColumns = visitor.VisitAndConvert (Columns, "VisitChildren");
-      if (newColumns != Columns)
-        return new SqlEntityExpression (Type, newColumns.ToArray());
+      var newColumns = visitor.VisitAndConvert (ProjectionColumns, "VisitChildren");
+      if (newColumns != ProjectionColumns)
+        return new SqlEntityExpression (Type, PrimaryKeyColumn, newColumns.ToArray());
       else
         return this;
     }

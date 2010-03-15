@@ -408,7 +408,7 @@
     <Compile Include="SqlBackend\CustomExpression.cs" />
     <Compile Include="SqlBackend\MappingResolution\ResolvingExpressionVisitorTest.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\Unresolved\UnresolvedJoinInfoTest.cs" />
-    <Compile Include="SqlBackend\SqlStatementModel\Resolved\SqlColumnListExpressionTest.cs" />
+    <Compile Include="SqlBackend\SqlStatementModel\Resolved\SqlEntityExpressionTest.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\Resolved\SqlColumnExpressionTest.cs" />
     <Compile Include="SqlBackend\SqlPreparation\SqlPreparationContextTest.cs" />
     <Compile Include="SqlBackend\SqlPreparation\SqlPreparationQueryModelVisitorTest.cs" />

@@ -61,7 +61,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       ArgumentUtility.CheckNotNull ("expression", expression);
 
       var first = true;
-      foreach (var column in expression.Columns)
+      foreach (var column in expression.ProjectionColumns)
       {
         if (!first)
           _commandBuilder.Append (",");
