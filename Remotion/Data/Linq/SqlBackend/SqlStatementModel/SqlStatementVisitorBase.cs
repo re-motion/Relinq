@@ -22,6 +22,7 @@ using System.Collections.Generic;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
+  // TODO Review: Unify with ResolvingSqlStatementVisitor, remove this class
   /// <summary>
   /// <see cref="SqlStatementVisitorBase"/> provides methods to visit sql-statement classes.
   /// </summary>

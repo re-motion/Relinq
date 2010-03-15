@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ResultOperators;
@@ -47,7 +48,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
     private readonly SqlPreparationContext _context;
     private readonly ISqlPreparationStage _stage;
     private readonly List<SqlTable> _sqlTables;
-    private List<Ordering> _orderByClauses;
+    private readonly List<Ordering> _orderByClauses;
 
     protected SqlPreparationQueryModelVisitor (SqlPreparationContext context, ISqlPreparationStage stage)
     {
@@ -66,17 +67,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       get { return _context; }
     }
 
-
-    public List<Ordering> OrderByClauses
-    {
-      get { return _orderByClauses; }
-      protected set
-      {
-        ArgumentUtility.CheckNotNull ("value", value);
-        _orderByClauses = value;
-      }
-    }
-
     protected ISqlPreparationStage Stage
     {
       get { return _stage; }
@@ -91,6 +81,11 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
     protected List<SqlTable> SqlTables
     {
       get { return _sqlTables; }
+    }
+
+    protected List<Ordering> OrderByClauses
+    {
+      get { return _orderByClauses; }
     }
 
     public virtual SqlStatement GetSqlStatement ()
@@ -146,12 +141,10 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       ArgumentUtility.CheckNotNull ("orderByClause", orderByClause);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
-      foreach (var clause in orderByClause.Orderings)
-      {
-        var orderByExpression = _stage.PrepareOrderByExpression (clause.Expression);
-        var ordering = new Ordering (orderByExpression, clause.OrderingDirection);
-        _orderByClauses.Add (ordering);
-      }
+      var orderings = from ordering in orderByClause.Orderings
+                      let orderByExpression = _stage.PrepareOrderByExpression (ordering.Expression)
+                      select new Ordering (orderByExpression, ordering.OrderingDirection);
+      _orderByClauses.InsertRange (0, orderings);
     }
 
     public override void VisitResultOperator (ResultOperatorBase resultOperator, QueryModel queryModel, int index)

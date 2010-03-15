@@ -111,8 +111,8 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       bool first = true;
       foreach (var orderByClause in sqlStatement.OrderByClauses)
       {
-        commandBuilder.Append (first ? " ORDER BY " : ", ");
-        if (orderByClause.Expression.GetType () != typeof (ConstantExpression))
+        commandBuilder.Append (first ? " ORDER BY " : ", "); // TODO Review: Append ORDER BY in outer Build method, change to: if (!first) ...
+        if (orderByClause.Expression.GetType () != typeof (ConstantExpression)) // TODO Review: Check Expression.NodeType != ExpressionType.Constant
         {
           SqlGeneratingExpressionVisitor.GenerateSql (orderByClause.Expression, commandBuilder, _registry, SqlExpressionContext.ValueRequired);
         }

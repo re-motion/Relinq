@@ -67,19 +67,43 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
     {
       switch (expression.NodeType)
       {
+        case ExpressionType.Equal:
+          GenerateSqlForEqualityOperator (expression.Left, expression.Right, "=", "IS NULL");
+          break;
+        case ExpressionType.NotEqual:
+          GenerateSqlForEqualityOperator (expression.Left, expression.Right, "<>", "IS NOT NULL");
+          break;
         case ExpressionType.Coalesce:
         case ExpressionType.Power:
           GenerateSqlForPrefixOperator (expression.Left, expression.Right, expression.NodeType);
           break;
-        case ExpressionType.Equal:
-          GenerateSqlForNullAwareOperator (expression.Left, expression.Right, "=", "IS NULL");
-          break;
-        case ExpressionType.NotEqual:
-          GenerateSqlForNullAwareOperator (expression.Left, expression.Right, "<>", "IS NOT NULL");
-          break;
         default:
           GenerateSqlForInfixOperator (expression.Left, expression.Right, expression.NodeType);
           break;
+      }
+    }
+
+    private void GenerateSqlForEqualityOperator (Expression left, Expression right, string ordinaryOperator, string nullOperator)
+    {
+      if (IsNullConstant (left))
+      {
+        _expressionVisitor.VisitExpression (right); // TODO Review: Extract into VisitEqualsOperand
+        _commandBuilder.Append (" ");
+        _commandBuilder.Append (nullOperator);
+      }
+      else if (IsNullConstant (right))
+      {
+        _expressionVisitor.VisitExpression (left); // TODO Review: Extract into VisitEqualsOperand
+        _commandBuilder.Append (" ");
+        _commandBuilder.Append (nullOperator);
+      }
+      else
+      {
+        _expressionVisitor.VisitExpression (left); // TODO Review: Extract into VisitEqualsOperand
+        _commandBuilder.Append (" ");
+        _commandBuilder.Append (ordinaryOperator);
+        _commandBuilder.Append (" ");
+        _expressionVisitor.VisitExpression (right); // TODO Review: Extract into VisitEqualsOperand
       }
     }
 
@@ -92,30 +116,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       _commandBuilder.Append (", ");
       _expressionVisitor.VisitExpression (right);
       _commandBuilder.Append (")");
-    }
-
-    private void GenerateSqlForNullAwareOperator (Expression left, Expression right, string ordinaryOperator, string nullOperator)
-    {
-      if (IsNullConstant (left))
-      {
-        _expressionVisitor.VisitExpression (right);
-        _commandBuilder.Append (" ");
-        _commandBuilder.Append (nullOperator);
-      }
-      else if (IsNullConstant (right))
-      {
-        _expressionVisitor.VisitExpression (left);
-        _commandBuilder.Append (" ");
-        _commandBuilder.Append (nullOperator);
-      }
-      else
-      {
-        _expressionVisitor.VisitExpression (left);
-        _commandBuilder.Append (" ");
-        _commandBuilder.Append (ordinaryOperator);
-        _commandBuilder.Append (" ");
-        _expressionVisitor.VisitExpression (right);
-      }
     }
 
     private void GenerateSqlForInfixOperator (Expression left, Expression right, ExpressionType nodeType)
