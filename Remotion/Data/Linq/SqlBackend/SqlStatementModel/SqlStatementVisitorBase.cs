@@ -54,6 +54,14 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 
       if (sqlStatement.TopExpression != null)
         sqlStatement.TopExpression = VisitTopExpression (sqlStatement.TopExpression);
+
+      if (sqlStatement.OrderByClauses.Count > 0)
+      {
+        foreach (var orderByClause in sqlStatement.OrderByClauses)
+        {
+          orderByClause.Expression = VisitOrderingExpression (orderByClause.Expression);
+        }
+      }
     }
 
     protected abstract Expression VisitSelectProjection (Expression selectProjection);
