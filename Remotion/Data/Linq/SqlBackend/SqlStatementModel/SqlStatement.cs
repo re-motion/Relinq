@@ -19,6 +19,7 @@ using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Utilities;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
@@ -28,19 +29,18 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   /// </summary>
   public class SqlStatement
   {
-    private readonly List<SqlTable> _fromExpressions;
+    private readonly SqlTable[] _fromExpressions;
 
     private Expression _selectProjection;
     private Expression _whereCondition;
 
-    public SqlStatement (Expression selectProjection, SqlTable[] fromExpressions)
+    public SqlStatement (Expression selectProjection, IEnumerable<SqlTable> fromExpressions)
     {
       ArgumentUtility.CheckNotNull ("selectProjection", selectProjection);
       ArgumentUtility.CheckNotNull ("fromExpressions", fromExpressions);
 
       _selectProjection = selectProjection;
-
-      _fromExpressions = new List<SqlTable> (fromExpressions);
+      _fromExpressions = fromExpressions.ToArray();
     }
 
     public bool IsCountQuery { get; set; }
@@ -56,19 +56,18 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 
     public ReadOnlyCollection<SqlTable> FromExpressions
     {
-      get { return _fromExpressions.AsReadOnly(); }
+      get { return Array.AsReadOnly (_fromExpressions); }
     }
 
     public Expression WhereCondition
     {
       get { return _whereCondition; }
-      set {
-        if (value != null)
-        {
-          if (value.Type != typeof (bool))
-            throw new ArgumentTypeException ("whereCondition", typeof (bool), value.Type);
-          _whereCondition = value;
-        }
+      set 
+      {
+        if (value != null && value.Type != typeof (bool))
+          throw new ArgumentTypeException ("whereCondition", typeof (bool), value.Type);
+
+        _whereCondition = value;
       }
     }
 

@@ -49,13 +49,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
 
     private readonly List<SqlTable> _sqlTables;
 
-    private Expression _projectionExpression;
-    private Expression _whereCondition;
-    
-    private bool _isCountQuery;
-    private bool _isDistinctQuery;
-    private Expression _topExpression;
-
     protected SqlPreparationQueryModelVisitor (SqlPreparationContext context, ISqlPreparationStage stage)
     {
       ArgumentUtility.CheckNotNull ("context", context);
@@ -72,35 +65,16 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       get { return _context; }
     }
 
-    protected Expression ProjectionExpression
-    {
-      get { return _projectionExpression; }
-    }
-
-    protected Expression WhereCondition
-    {
-      get { return _whereCondition; }
-    }
-
-    protected bool IsCountQuery
-    {
-      get { return _isCountQuery; }
-    }
-
-    protected bool IsDistinctQuery
-    {
-      get { return _isDistinctQuery; }
-    }
-
-    protected Expression TopExpression
-    {
-      get { return _topExpression; }
-    }
-
     protected ISqlPreparationStage Stage
     {
       get { return _stage; }
     }
+
+    protected Expression ProjectionExpression { get; set; }
+    protected Expression WhereCondition { get; set; }
+    protected bool IsCountQuery { get; set; }
+    protected bool IsDistinctQuery { get; set; }
+    protected Expression TopExpression { get; set; }
 
     protected List<SqlTable> SqlTables
     {
@@ -109,12 +83,12 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
 
     public virtual SqlStatement GetSqlStatement ()
     {
-      var sqlStatement = new SqlStatement (_projectionExpression, _sqlTables.ToArray());
+      var sqlStatement = new SqlStatement (ProjectionExpression, _sqlTables.ToArray());
 
-      sqlStatement.IsCountQuery = _isCountQuery;
-      sqlStatement.IsDistinctQuery = _isDistinctQuery;
-      sqlStatement.WhereCondition = _whereCondition;
-      sqlStatement.TopExpression = _topExpression;
+      sqlStatement.IsCountQuery = IsCountQuery;
+      sqlStatement.IsDistinctQuery = IsDistinctQuery;
+      sqlStatement.WhereCondition = WhereCondition;
+      sqlStatement.TopExpression = TopExpression;
 
       return sqlStatement;
     }
@@ -140,10 +114,10 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
     public override void VisitWhereClause (WhereClause whereClause, QueryModel queryModel, int index)
     {
       var translatedExpression = _stage.PrepareWhereExpression (whereClause.Predicate);
-      if (_whereCondition != null)
-        _whereCondition = Expression.AndAlso (_whereCondition, translatedExpression);
+      if (WhereCondition != null)
+        WhereCondition = Expression.AndAlso (WhereCondition, translatedExpression);
       else
-        _whereCondition = translatedExpression;
+        WhereCondition = translatedExpression;
     }
 
     public override void VisitSelectClause (SelectClause selectClause, QueryModel queryModel)
@@ -151,7 +125,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       ArgumentUtility.CheckNotNull ("selectClause", selectClause);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
-      _projectionExpression = _stage.PrepareSelectExpression (selectClause.Selector);
+      ProjectionExpression = _stage.PrepareSelectExpression (selectClause.Selector);
     }
     
     public override void VisitResultOperator (ResultOperatorBase resultOperator, QueryModel queryModel, int index)
@@ -160,21 +134,21 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
       if (resultOperator is CountResultOperator)
-        _isCountQuery = true;
+        IsCountQuery = true;
       else if (resultOperator is DistinctResultOperator)
       {
-        if (_topExpression != null)
+        if (TopExpression != null)
           throw new NotImplementedException ("Distinct after Take is not yet implemented. TODO 2370");
-        _isDistinctQuery = true;
+        IsDistinctQuery = true;
       }
       else if (resultOperator is FirstResultOperator)
-        _topExpression = _stage.PrepareTopExpression (Expression.Constant (1));
+        TopExpression = _stage.PrepareTopExpression (Expression.Constant (1));
       else if (resultOperator is SingleResultOperator)
-        _topExpression = _stage.PrepareTopExpression (Expression.Constant (1));
+        TopExpression = _stage.PrepareTopExpression (Expression.Constant (1));
       else if (resultOperator is TakeResultOperator)
       {
         var expression = ((TakeResultOperator) resultOperator).Count;
-        _topExpression = _stage.PrepareTopExpression (expression);
+        TopExpression = _stage.PrepareTopExpression (expression);
       }
       else
         throw new NotSupportedException (string.Format ("{0} is not supported.", resultOperator));
