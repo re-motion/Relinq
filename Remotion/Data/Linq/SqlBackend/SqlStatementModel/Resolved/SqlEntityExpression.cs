@@ -25,13 +25,13 @@ using System.Linq;
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
 {
   /// <summary>
-  /// <see cref="SqlColumnListExpression"/> holds a list of <see cref="SqlColumnExpression"/> instances.
+  /// <see cref="SqlEntityExpression"/> holds a list of <see cref="SqlColumnExpression"/> instances.
   /// </summary>
-  public class SqlColumnListExpression : ExtensionExpression
+  public class SqlEntityExpression : ExtensionExpression
   {
     private readonly ReadOnlyCollection<SqlColumnExpression> _columns;
 
-    public SqlColumnListExpression (Type type, params SqlColumnExpression[] columns)
+    public SqlEntityExpression (Type type, params SqlColumnExpression[] columns)
         : base (type)
     {
       ArgumentUtility.CheckNotNull ("columns", columns);
@@ -48,7 +48,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
     {
       var newColumns = visitor.VisitAndConvert (Columns, "VisitChildren");
       if (newColumns != Columns)
-        return new SqlColumnListExpression (Type, newColumns.ToArray());
+        return new SqlEntityExpression (Type, newColumns.ToArray());
       else
         return this;
     }

@@ -183,7 +183,7 @@
     <Compile Include="SqlBackend\SqlStatementModel\ITableInfoVisitor.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\Unresolved\UnresolvedJoinInfo.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\Resolved\SqlColumnExpression.cs" />
-    <Compile Include="SqlBackend\SqlStatementModel\Resolved\SqlColumnListExpression.cs" />
+    <Compile Include="SqlBackend\SqlStatementModel\Resolved\SqlEntityExpression.cs" />
     <Compile Include="SqlBackend\MappingResolution\ResolvingExpressionVisitor.cs" />
     <Compile Include="SqlBackend\SqlPreparation\SqlPreparationContext.cs" />
     <Compile Include="SqlBackend\SqlPreparation\SqlPreparationQueryModelVisitor.cs" />
