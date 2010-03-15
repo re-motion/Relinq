@@ -16,7 +16,9 @@
 // 
 using System;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Utilities;
+using System.Collections.Generic;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
@@ -58,5 +60,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
     protected abstract void VisitSqlTable (SqlTable sqlTable);
     protected abstract Expression VisitTopExpression (Expression topExpression);
     protected abstract Expression VisitWhereCondition (Expression whereCondition);
+    protected abstract Expression VisitOrderingExpression (Expression orderByExpression);
   }
 }

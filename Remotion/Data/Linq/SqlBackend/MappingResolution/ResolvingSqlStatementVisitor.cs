@@ -66,6 +66,13 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
       return ResolvingExpressionVisitor.ResolveExpression (whereCondition, _resolver, UniqueIdentifierGenerator);
     }
 
+    protected override Expression VisitOrderingExpression (Expression orderByExpression)
+    {
+      ArgumentUtility.CheckNotNull ("orderByExpression", orderByExpression);
+
+      return ResolvingExpressionVisitor.ResolveExpression (orderByExpression, _resolver, UniqueIdentifierGenerator);
+    }
+
     protected override Expression VisitTopExpression (Expression topExpression)
     {
       ArgumentUtility.CheckNotNull ("topExpression", topExpression);
