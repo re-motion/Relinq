@@ -84,7 +84,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
     public AbstractJoinInfo VisitResolvedJoinInfo (ResolvedJoinInfo tableSource)
     {
-      _commandBuilder.Append (" JOIN ");
+      _commandBuilder.Append (" LEFT OUTER JOIN ");
 
       tableSource.ForeignTableInfo.Accept (this);
       
