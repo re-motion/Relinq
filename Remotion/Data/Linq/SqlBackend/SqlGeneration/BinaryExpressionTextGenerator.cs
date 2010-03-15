@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Parsing;
+using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved;
 using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
@@ -87,24 +88,32 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
     {
       if (IsNullConstant (left))
       {
-        _expressionVisitor.VisitExpression (right); // TODO Review: Extract into VisitEqualsOperand
+        VisitEqualsOperand(right);
         _commandBuilder.Append (" ");
         _commandBuilder.Append (nullOperator);
       }
       else if (IsNullConstant (right))
       {
-        _expressionVisitor.VisitExpression (left); // TODO Review: Extract into VisitEqualsOperand
+        VisitEqualsOperand (left);
         _commandBuilder.Append (" ");
         _commandBuilder.Append (nullOperator);
       }
       else
       {
-        _expressionVisitor.VisitExpression (left); // TODO Review: Extract into VisitEqualsOperand
+        VisitEqualsOperand (left);
         _commandBuilder.Append (" ");
         _commandBuilder.Append (ordinaryOperator);
         _commandBuilder.Append (" ");
-        _expressionVisitor.VisitExpression (right); // TODO Review: Extract into VisitEqualsOperand
+        VisitEqualsOperand (right);
       }
+    }
+
+    private void VisitEqualsOperand (Expression expression)
+    {
+      if (expression is SqlEntityExpression)
+        _expressionVisitor.VisitExpression (((SqlEntityExpression) expression).PrimaryKeyColumn);
+      else
+        _expressionVisitor.VisitExpression (expression);
     }
 
     private void GenerateSqlForPrefixOperator (Expression left, Expression right, ExpressionType nodeType)
