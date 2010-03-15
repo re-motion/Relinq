@@ -51,6 +51,10 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
         commandBuilder.Append (" WHERE ");
         BuildWherePart (sqlStatement, commandBuilder);
       }
+      if (sqlStatement.OrderByClauses.Count > 0)
+      {
+        BuildOrderByPart (sqlStatement, commandBuilder);
+      }
 
       return new SqlCommand (commandBuilder.GetCommandText(), commandBuilder.GetCommandParameters());
     }
@@ -97,6 +101,21 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);
 
       SqlGeneratingExpressionVisitor.GenerateSql (sqlStatement.WhereCondition, commandBuilder, _registry, SqlExpressionContext.PredicateRequired);
+    }
+
+    protected virtual void BuildOrderByPart (SqlStatement sqlStatement, SqlCommandBuilder commandBuilder)
+    {
+      ArgumentUtility.CheckNotNull ("sqlStatement", sqlStatement);
+      ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);
+
+      bool first = true;
+      foreach (var orderByClause in sqlStatement.OrderByClauses)
+      {
+        commandBuilder.Append (first ? " ORDER BY " : ", ");
+        SqlGeneratingExpressionVisitor.GenerateSql (orderByClause.Expression, commandBuilder, _registry, SqlExpressionContext.ValueRequired);
+        commandBuilder.Append (string.Format(" {0}", orderByClause.OrderingDirection.ToString().ToUpper()));
+        first = false;
+      }
     }
 
     protected virtual MethodCallSqlGeneratorRegistry GenerateSqlGeneratorRegistry ()
