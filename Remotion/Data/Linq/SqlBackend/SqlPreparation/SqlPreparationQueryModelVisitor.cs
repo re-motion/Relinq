@@ -31,8 +31,8 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
   public class SqlPreparationQueryModelVisitor : QueryModelVisitorBase
   {
     public static SqlStatement TransformQueryModel (
-        QueryModel queryModel, 
-        SqlPreparationContext preparationContext, 
+        QueryModel queryModel,
+        SqlPreparationContext preparationContext,
         DefaultSqlPreparationStage stage)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
@@ -46,8 +46,8 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
 
     private readonly SqlPreparationContext _context;
     private readonly ISqlPreparationStage _stage;
-
     private readonly List<SqlTable> _sqlTables;
+    private List<Ordering> _orderByClauses;
 
     protected SqlPreparationQueryModelVisitor (SqlPreparationContext context, ISqlPreparationStage stage)
     {
@@ -57,12 +57,24 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       _context = context;
       _stage = stage;
 
-      _sqlTables = new List<SqlTable> ();
+      _sqlTables = new List<SqlTable>();
+      _orderByClauses = new List<Ordering>();
     }
 
     public SqlPreparationContext Context
     {
       get { return _context; }
+    }
+
+
+    public List<Ordering> OrderByClauses
+    {
+      get { return _orderByClauses; }
+      protected set
+      {
+        ArgumentUtility.CheckNotNull ("value", value);
+        _orderByClauses = value;
+      }
     }
 
     protected ISqlPreparationStage Stage
@@ -89,6 +101,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       sqlStatement.IsDistinctQuery = IsDistinctQuery;
       sqlStatement.WhereCondition = WhereCondition;
       sqlStatement.TopExpression = TopExpression;
+      sqlStatement.OrderByClauses = _orderByClauses;
 
       return sqlStatement;
     }
@@ -127,7 +140,20 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
 
       ProjectionExpression = _stage.PrepareSelectExpression (selectClause.Selector);
     }
-    
+
+    public override void VisitOrderByClause (OrderByClause orderByClause, QueryModel queryModel, int index)
+    {
+      ArgumentUtility.CheckNotNull ("orderByClause", orderByClause);
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+
+      foreach (var clause in orderByClause.Orderings)
+      {
+        var orderByExpression = _stage.PrepareOrderByExpression (clause.Expression);
+        var ordering = new Ordering (orderByExpression, clause.OrderingDirection);
+        _orderByClauses.Add (ordering);
+      }
+    }
+
     public override void VisitResultOperator (ResultOperatorBase resultOperator, QueryModel queryModel, int index)
     {
       ArgumentUtility.CheckNotNull ("resultOperator", resultOperator);

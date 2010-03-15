@@ -54,6 +54,11 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       return SqlPreparationExpressionVisitor.TranslateExpression (expression, _context);
     }
 
+    public Expression PrepareOrderByExpression (Expression expression)
+    {
+      return SqlPreparationExpressionVisitor.TranslateExpression(expression, _context);
+    }
+
     public SqlTableBase GetTableForFromExpression (Expression fromExpression, Type itemType)
     {
       return SqlPreparationFromExpressionVisitor.GetTableForFromExpression (fromExpression, itemType);

@@ -20,6 +20,7 @@ using System.Linq.Expressions;
 using Remotion.Data.Linq.Utilities;
 using System.Collections.Generic;
 using System.Linq;
+using Remotion.Data.Linq.Clauses;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
@@ -33,6 +34,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 
     private Expression _selectProjection;
     private Expression _whereCondition;
+    private List<Ordering> _orderByClauses;
 
     public SqlStatement (Expression selectProjection, IEnumerable<SqlTable> fromExpressions)
     {
@@ -41,6 +43,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 
       _selectProjection = selectProjection;
       _fromExpressions = fromExpressions.ToArray();
+      _orderByClauses = new List<Ordering>();
     }
 
     public bool IsCountQuery { get; set; }
@@ -71,6 +74,13 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       }
     }
 
-
+    public List<Ordering> OrderByClauses
+    {
+      get { return _orderByClauses; }
+      set {
+        ArgumentUtility.CheckNotNull ("value", value);
+        _orderByClauses = value; 
+      }
+    }
   }
 }
