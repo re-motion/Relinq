@@ -65,49 +65,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
     public void GenerateSqlForBinaryExpression (BinaryExpression expression)
     {
-      //if(expression.NodeType==ExpressionType.AndAlso || expression.NodeType==ExpressionType.OrElse)
-      //{
-      //  if (IsBool (expression.Left))
-      //  {
-      //    if (IsBinaryExpression (expression.Right))
-      //    {
-      //      VisitExpression (expression.Left);
-      //      _commandBuilder.Append (string.Format("=1 {0}", expression.NodeType == ExpressionType.AndAlso ? " AND " : " OR "));
-      //      VisitExpression (expression.Right);
-      //      return expression;
-      //    }
-      //  }
-
-      //  if (IsBool (expression.Right))
-      //  {
-      //    if (IsBinaryExpression (expression.Left))
-      //    {
-      //      VisitExpression (expression.Right);
-      //      _commandBuilder.Append (string.Format ("=1 {0}", expression.NodeType == ExpressionType.AndAlso ? " AND " : " OR "));
-      //      VisitExpression (expression.Left);
-      //      return expression;
-      //    }
-      //  }
-      //}
-
-      //TODO: (IsAdult = 1)
-      //TODO: refactor checks
-      //TODO: check ExpressionType.OrElse for special cases
-
-      //if (AreBoolConstants (expression.Left, expression.Right))
-      //{
-      //  switch (expression.NodeType)
-      //  {
-      //    case ExpressionType.AndAlso:
-      //    {
-      //      VisitExpression (expression.Left);
-      //      _commandBuilder.Append ("=");
-      //      VisitExpression (expression.Right);
-      //      return expression;
-      //    }
-      //  }
-      //}
-
       switch (expression.NodeType)
       {
         case ExpressionType.Coalesce:
