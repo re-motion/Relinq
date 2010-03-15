@@ -53,6 +53,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       }
       if (sqlStatement.OrderByClauses.Count > 0)
       {
+        commandBuilder.Append (" ORDER BY ");
         BuildOrderByPart (sqlStatement, commandBuilder);
       }
 
@@ -111,8 +112,9 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       bool first = true;
       foreach (var orderByClause in sqlStatement.OrderByClauses)
       {
-        commandBuilder.Append (first ? " ORDER BY " : ", "); // TODO Review: Append ORDER BY in outer Build method, change to: if (!first) ...
-        if (orderByClause.Expression.GetType () != typeof (ConstantExpression)) // TODO Review: Check Expression.NodeType != ExpressionType.Constant
+        if (!first)
+          commandBuilder.Append (", ");
+        if (orderByClause.Expression.NodeType != ExpressionType.Constant)
         {
           SqlGeneratingExpressionVisitor.GenerateSql (orderByClause.Expression, commandBuilder, _registry, SqlExpressionContext.ValueRequired);
         }
