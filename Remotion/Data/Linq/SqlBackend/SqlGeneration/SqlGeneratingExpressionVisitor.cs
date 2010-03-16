@@ -55,7 +55,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       _binaryExpressionTextGenerator = new BinaryExpressionTextGenerator (commandBuilder, this);
     }
 
-    public Expression VisitSqlColumnListExpression (SqlEntityExpression expression)
+    public Expression VisitSqlEntityExpression (SqlEntityExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
