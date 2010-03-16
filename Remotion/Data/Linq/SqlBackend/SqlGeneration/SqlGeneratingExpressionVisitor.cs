@@ -82,6 +82,15 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       return expression;
     }
 
+    public Expression VisitSqlEntityConstantExpression (SqlEntityConstantExpression expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
+      _commandBuilder.Append (expression.PrimaryKeyValue.ToString());
+
+      return expression;
+    }
+
     protected override Expression VisitConstantExpression (ConstantExpression expression)
     {
       Debug.Assert (expression.Type != typeof (bool), "Boolean constants should have been removed by SqlContextExpressionVisitor.");

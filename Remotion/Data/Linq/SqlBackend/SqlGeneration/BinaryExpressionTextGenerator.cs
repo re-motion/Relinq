@@ -156,22 +156,5 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       }
       return false;
     }
-
-    private bool IsBinaryExpression (Expression expression)
-    {
-      return (expression is BinaryExpression);
-    }
-
-    private bool IsBool (Expression expression)
-    {
-      return (expression.Type == typeof (bool));
-    }
-
-    private bool AreBoolConstants (Expression leftExpression, Expression rightExpression)
-    {
-      if ((leftExpression is ConstantExpression) && (rightExpression is ConstantExpression))
-        return (leftExpression.Type == typeof (Boolean)) && (rightExpression.Type == typeof (Boolean));
-      return false;
-    }
   }
 }
