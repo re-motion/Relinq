@@ -48,7 +48,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
     private readonly SqlPreparationContext _context;
     private readonly ISqlPreparationStage _stage;
     private readonly List<SqlTable> _sqlTables;
-    private readonly List<Ordering> _orderByClauses; // TODO Review 2401: Rename to _orderings
+    private readonly List<Ordering> _orderings;
 
     protected SqlPreparationQueryModelVisitor (SqlPreparationContext context, ISqlPreparationStage stage)
     {
@@ -59,7 +59,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       _stage = stage;
 
       _sqlTables = new List<SqlTable>();
-      _orderByClauses = new List<Ordering>();
+      _orderings = new List<Ordering>();
     }
 
     public SqlPreparationContext Context
@@ -83,20 +83,19 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       get { return _sqlTables; }
     }
 
-    protected List<Ordering> OrderByClauses // TODO Review 2401: Rename to Orderings
+    protected List<Ordering> Orderings
     {
-      get { return _orderByClauses; }
+      get { return _orderings; }
     }
 
     public virtual SqlStatement GetSqlStatement ()
     {
-      var sqlStatement = new SqlStatement (ProjectionExpression, _sqlTables.ToArray());
+      var sqlStatement = new SqlStatement (ProjectionExpression, _sqlTables, _orderings);
 
       sqlStatement.IsCountQuery = IsCountQuery;
       sqlStatement.IsDistinctQuery = IsDistinctQuery;
       sqlStatement.WhereCondition = WhereCondition;
       sqlStatement.TopExpression = TopExpression;
-      sqlStatement.OrderByClauses = _orderByClauses;
 
       return sqlStatement;
     }
@@ -144,7 +143,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       var orderings = from ordering in orderByClause.Orderings
                       let orderByExpression = _stage.PrepareOrderByExpression (ordering.Expression)
                       select new Ordering (orderByExpression, ordering.OrderingDirection);
-      _orderByClauses.InsertRange (0, orderings);
+      _orderings.InsertRange (0, orderings);
     }
 
     public override void VisitResultOperator (ResultOperatorBase resultOperator, QueryModel queryModel, int index)

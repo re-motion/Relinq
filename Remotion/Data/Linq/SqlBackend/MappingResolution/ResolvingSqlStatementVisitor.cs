@@ -95,7 +95,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
 
     protected virtual void VisitSqlStatement (SqlStatement sqlStatement)
     {
-      foreach (var sqlTable in sqlStatement.FromExpressions)
+      foreach (var sqlTable in sqlStatement.SqlTables)
         VisitSqlTable (sqlTable);
 
       sqlStatement.SelectProjection = VisitSelectProjection (sqlStatement.SelectProjection);
@@ -106,9 +106,9 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
       if (sqlStatement.TopExpression != null)
         sqlStatement.TopExpression = VisitTopExpression (sqlStatement.TopExpression);
 
-      if (sqlStatement.OrderByClauses.Count > 0)
+      if (sqlStatement.Orderings.Count > 0)
       {
-        foreach (var orderByClause in sqlStatement.OrderByClauses)
+        foreach (var orderByClause in sqlStatement.Orderings)
           orderByClause.Expression = VisitOrderingExpression (orderByClause.Expression);
       }
     }

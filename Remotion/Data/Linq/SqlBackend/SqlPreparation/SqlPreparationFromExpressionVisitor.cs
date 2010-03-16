@@ -70,7 +70,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       ArgumentUtility.CheckNotNull ("unhandledItem", unhandledItem);
       ArgumentUtility.CheckNotNullOrEmpty ("visitMethod", visitMethod);
 
-      var message = string.Format ("Expressions of type '{0}' cannot be used as the FromExpressions of a from clause.", unhandledItem.GetType().Name);
+      var message = string.Format ("Expressions of type '{0}' cannot be used as the SqlTables of a from clause.", unhandledItem.GetType().Name);
       return new NotSupportedException (message);
     }
 

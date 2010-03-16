@@ -49,7 +49,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
         commandBuilder.Append (" WHERE ");
         BuildWherePart (sqlStatement, commandBuilder);
       }
-      if (sqlStatement.OrderByClauses.Count > 0)
+      if (sqlStatement.Orderings.Count > 0)
       {
         commandBuilder.Append (" ORDER BY ");
         BuildOrderByPart (sqlStatement, commandBuilder);
@@ -91,7 +91,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       ArgumentUtility.CheckNotNull ("sqlStatement", sqlStatement);
       ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);
 
-      _stage.GenerateTextForFromTable (commandBuilder, sqlStatement.FromExpressions);
+      _stage.GenerateTextForFromTable (commandBuilder, sqlStatement.SqlTables);
     }
 
     protected virtual void BuildWherePart (SqlStatement sqlStatement, SqlCommandBuilder commandBuilder)
@@ -108,7 +108,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);
 
       bool first = true;
-      foreach (var orderByClause in sqlStatement.OrderByClauses)
+      foreach (var orderByClause in sqlStatement.Orderings)
       {
         if (!first)
           commandBuilder.Append (", ");

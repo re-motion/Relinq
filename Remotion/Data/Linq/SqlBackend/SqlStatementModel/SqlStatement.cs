@@ -30,20 +30,21 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   /// </summary>
   public class SqlStatement
   {
-    private readonly SqlTable[] _fromExpressions; // TODO Review: Rename to _sqlTables
+    private readonly SqlTable[] _sqlTables;
+    private readonly Ordering[] _orderings;
 
     private Expression _selectProjection;
     private Expression _whereCondition;
-    private List<Ordering> _orderByClauses; // TODO Review 2401: Store as Ordering[], initialize via ctor as an IEnumerable<Ordering> (similar to _fromExpressions)
-
-    public SqlStatement (Expression selectProjection, IEnumerable<SqlTable> fromExpressions) // TODO Review: Rename to sqlTables
+    
+    public SqlStatement (Expression selectProjection, IEnumerable<SqlTable> sqlTables, IEnumerable<Ordering> orderings)
     {
       ArgumentUtility.CheckNotNull ("selectProjection", selectProjection);
-      ArgumentUtility.CheckNotNull ("fromExpressions", fromExpressions);
+      ArgumentUtility.CheckNotNull ("fromExpressions", sqlTables);
+      ArgumentUtility.CheckNotNull ("orderings", orderings);
 
       _selectProjection = selectProjection;
-      _fromExpressions = fromExpressions.ToArray();
-      _orderByClauses = new List<Ordering>();
+      _sqlTables = sqlTables.ToArray();
+      _orderings = orderings.ToArray();
     }
 
     public bool IsCountQuery { get; set; }
@@ -57,9 +58,9 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       set { _selectProjection = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
-    public ReadOnlyCollection<SqlTable> FromExpressions // TODO Review: Rename to SqlTables
+    public ReadOnlyCollection<SqlTable> SqlTables
     {
-      get { return Array.AsReadOnly (_fromExpressions); }
+      get { return Array.AsReadOnly (_sqlTables); }
     }
 
     public Expression WhereCondition
@@ -74,14 +75,9 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       }
     }
 
-    // TODO Review 2401: Remove setter, rename to "Orderings", expose as ReadOnlyCollection<Ordering> (more symmetric to FromExpressions).
-    public List<Ordering> OrderByClauses
+    public ReadOnlyCollection<Ordering> Orderings
     {
-      get { return _orderByClauses; }
-      set {
-        ArgumentUtility.CheckNotNull ("value", value);
-        _orderByClauses = value; 
-      }
+      get { return Array.AsReadOnly(_orderings); }
     }
   }
 }
