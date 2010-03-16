@@ -16,7 +16,7 @@
 // 
 using System;
 
-namespace Remotion.Data.Linq.SqlBackend.SqlGeneration.BooleanSemantics
+namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 {
   /// <summary>
   /// Describes whether predicate or value semantics is required for boolean expressions in the current context.
