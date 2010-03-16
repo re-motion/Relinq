@@ -194,7 +194,6 @@
     <Compile Include="SqlBackend\SqlStatementModel\Unresolved\SqlMemberExpression.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlStatement.cs" />
     <Compile Include="SqlBackend\MappingResolution\ISqlStatementResolver.cs" />
-    <Compile Include="SqlBackend\SqlStatementModel\SqlStatementVisitorBase.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlTable.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\Unresolved\SqlTableReferenceExpression.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\AbstractTableInfo.cs" />

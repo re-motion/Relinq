@@ -22,11 +22,15 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.SqlBackend.MappingResolution
 {
   /// <summary>
-  /// <see cref="ResolvingSqlStatementVisitor"/> implements <see cref="SqlStatementVisitorBase"/>.
+  /// <see cref="ResolvingSqlStatementVisitor"/> provides methods to visit sql-statement classes.
   /// </summary>
-  public class ResolvingSqlStatementVisitor : SqlStatementVisitorBase
+  public class ResolvingSqlStatementVisitor
   {
-    public static void ResolveExpressions (SqlStatement statement, ISqlStatementResolver resolver, UniqueIdentifierGenerator uniqueIdentifierGenerator)
+    private readonly ISqlStatementResolver _resolver;
+    private readonly UniqueIdentifierGenerator _uniqueIdentifierGenerator;
+
+    public static void ResolveExpressions (
+        SqlStatement statement, ISqlStatementResolver resolver, UniqueIdentifierGenerator uniqueIdentifierGenerator)
     {
       ArgumentUtility.CheckNotNull ("statement", statement);
 
@@ -34,58 +38,78 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
       visitor.VisitSqlStatement (statement);
     }
 
-    private readonly ISqlStatementResolver _resolver;
-
     protected ResolvingSqlStatementVisitor (ISqlStatementResolver resolver, UniqueIdentifierGenerator uniqueIdentifierGenerator)
-      : base (uniqueIdentifierGenerator)
     {
       ArgumentUtility.CheckNotNull ("resolver", resolver);
+      ArgumentUtility.CheckNotNull ("uniqueIdentifierGenerator", uniqueIdentifierGenerator);
 
       _resolver = resolver;
+      _uniqueIdentifierGenerator = uniqueIdentifierGenerator;
     }
 
-    protected override Expression VisitSelectProjection (Expression selectProjection)
+    protected Expression VisitSelectProjection (Expression selectProjection)
     {
       ArgumentUtility.CheckNotNull ("selectProjection", selectProjection);
 
-      return ResolvingExpressionVisitor.ResolveExpression (selectProjection, _resolver, UniqueIdentifierGenerator);
+      return ResolvingExpressionVisitor.ResolveExpression (selectProjection, _resolver, _uniqueIdentifierGenerator);
     }
 
-    protected override void VisitSqlTable (SqlTable sqlTable)
+    protected void VisitSqlTable (SqlTable sqlTable)
     {
       ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
 
-      sqlTable.TableInfo = ResolvingTableInfoVisitor.ResolveTableInfo (sqlTable.TableInfo, _resolver, UniqueIdentifierGenerator);
-      ResolveJoins(sqlTable);
+      sqlTable.TableInfo = ResolvingTableInfoVisitor.ResolveTableInfo (sqlTable.TableInfo, _resolver, _uniqueIdentifierGenerator);
+      ResolveJoins (sqlTable);
     }
 
-    protected override Expression VisitWhereCondition (Expression whereCondition)
+    protected Expression VisitWhereCondition (Expression whereCondition)
     {
       ArgumentUtility.CheckNotNull ("whereCondition", whereCondition);
 
-      return ResolvingExpressionVisitor.ResolveExpression (whereCondition, _resolver, UniqueIdentifierGenerator);
+      return ResolvingExpressionVisitor.ResolveExpression (whereCondition, _resolver, _uniqueIdentifierGenerator);
     }
 
-    protected override Expression VisitOrderingExpression (Expression orderByExpression)
+    protected Expression VisitOrderingExpression (Expression orderByExpression)
     {
       ArgumentUtility.CheckNotNull ("orderByExpression", orderByExpression);
 
-      return ResolvingExpressionVisitor.ResolveExpression (orderByExpression, _resolver, UniqueIdentifierGenerator);
+      return ResolvingExpressionVisitor.ResolveExpression (orderByExpression, _resolver, _uniqueIdentifierGenerator);
     }
 
-    protected override Expression VisitTopExpression (Expression topExpression)
+    protected Expression VisitTopExpression (Expression topExpression)
     {
       ArgumentUtility.CheckNotNull ("topExpression", topExpression);
 
-      return ResolvingExpressionVisitor.ResolveExpression (topExpression, _resolver, UniqueIdentifierGenerator);
+      return ResolvingExpressionVisitor.ResolveExpression (topExpression, _resolver, _uniqueIdentifierGenerator);
     }
 
     private void ResolveJoins (SqlTableBase sqlTable)
     {
       foreach (var joinedTable in sqlTable.JoinedTables)
       {
-        joinedTable.JoinInfo = ResolvingJoinInfoVisitor.ResolveJoinInfo (sqlTable, joinedTable.JoinInfo, _resolver, UniqueIdentifierGenerator);
+        joinedTable.JoinInfo = ResolvingJoinInfoVisitor.ResolveJoinInfo (sqlTable, joinedTable.JoinInfo, _resolver, _uniqueIdentifierGenerator);
         ResolveJoins (joinedTable);
+      }
+    }
+
+
+    protected virtual void VisitSqlStatement (SqlStatement sqlStatement)
+    {
+      foreach (var sqlTable in sqlStatement.FromExpressions)
+        VisitSqlTable (sqlTable);
+
+      sqlStatement.SelectProjection = VisitSelectProjection (sqlStatement.SelectProjection);
+
+      if (sqlStatement.WhereCondition != null)
+        sqlStatement.WhereCondition = VisitWhereCondition (sqlStatement.WhereCondition);
+
+      if (sqlStatement.TopExpression != null)
+        sqlStatement.TopExpression = VisitTopExpression (sqlStatement.TopExpression);
+
+      if (sqlStatement.OrderByClauses.Count > 0)
+      {
+        foreach (var orderByClause in sqlStatement.OrderByClauses)
+          orderByClause.Expression = VisitOrderingExpression (orderByClause.Expression);
       }
     }
   }
