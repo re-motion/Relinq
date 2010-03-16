@@ -91,7 +91,14 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       ArgumentUtility.CheckNotNull ("sqlStatement", sqlStatement);
       ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);
 
-      _stage.GenerateTextForFromTable (commandBuilder, sqlStatement.SqlTables);
+      //_stage.GenerateTextForFromTable (commandBuilder, sqlStatement.SqlTables);
+
+      bool first = true;
+      foreach (var sqlTable in sqlStatement.SqlTables)
+      {
+        _stage.GenerateTextForFromTable (commandBuilder, sqlTable, first);
+        first = false;
+      }
     }
 
     protected virtual void BuildWherePart (SqlStatement sqlStatement, SqlCommandBuilder commandBuilder)

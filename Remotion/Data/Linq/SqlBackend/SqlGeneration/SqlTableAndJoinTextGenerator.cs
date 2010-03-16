@@ -15,7 +15,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved;
@@ -29,24 +28,19 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
   public class SqlTableAndJoinTextGenerator : ITableInfoVisitor, IJoinInfoVisitor
   {
     private readonly SqlCommandBuilder _commandBuilder;
-    
-    public static void GenerateSql (IEnumerable<SqlTable> sqlTables, SqlCommandBuilder commandBuilder)
+    private bool _first;
+
+    public static void GenerateSql (SqlTable sqlTable, SqlCommandBuilder commandBuilder, bool first)
     {
-      ArgumentUtility.CheckNotNull ("sqlTable", sqlTables);
+      ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
       ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);
 
-      var visitor = new SqlTableAndJoinTextGenerator (commandBuilder);
+      var visitor = new SqlTableAndJoinTextGenerator (commandBuilder, first);
 
-      // TODO Review: Move loop to SqlStatementTextGenerator; static method should only accept a single SqlTable and generate the text for that table + its left joins. Make first a parameter for this method.
-      bool first = true;
-      foreach (var sqlTable in sqlTables)
-      {
-        if (!first)
-          commandBuilder.Append (" CROSS JOIN "); // TODO Review: Move this line to VisitResolveTableInfo. Add "first" as a ctor parameter for the SqlTableAndJoinTextGenerator.
-        sqlTable.TableInfo.Accept (visitor);
-        GenerateSqlForJoins (sqlTable, visitor);
-        first = false;
-      }
+      if (!first)
+        commandBuilder.Append (" CROSS JOIN "); // TODO Review: Move this line to VisitResolveTableInfo. Add "first" as a ctor parameter for the SqlTableAndJoinTextGenerator.
+      sqlTable.TableInfo.Accept (visitor);
+      GenerateSqlForJoins (sqlTable, visitor);
     }
 
     private static void GenerateSqlForJoins (SqlTableBase sqlTable, SqlTableAndJoinTextGenerator visitor)
@@ -58,10 +52,12 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       }
     }
 
-    protected SqlTableAndJoinTextGenerator (SqlCommandBuilder commandBuilder)
+    protected SqlTableAndJoinTextGenerator (SqlCommandBuilder commandBuilder, bool first)
     {
       ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);
+
       _commandBuilder = commandBuilder;
+      _first = first;
     }
 
     public AbstractTableInfo VisitUnresolvedTableInfo (UnresolvedTableInfo tableInfo)
@@ -87,18 +83,18 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       _commandBuilder.Append (" LEFT OUTER JOIN ");
 
       tableSource.ForeignTableInfo.Accept (this);
-      
+
       _commandBuilder.Append (" ON ");
       SqlGeneratingExpressionVisitor.GenerateSql (
-          tableSource.PrimaryColumn, 
-          _commandBuilder, 
-          new MethodCallSqlGeneratorRegistry(), 
+          tableSource.PrimaryColumn,
+          _commandBuilder,
+          new MethodCallSqlGeneratorRegistry(),
           SqlExpressionContext.ValueRequired);
       _commandBuilder.Append (" = ");
       SqlGeneratingExpressionVisitor.GenerateSql (
-          tableSource.ForeignColumn, 
-          _commandBuilder, 
-          new MethodCallSqlGeneratorRegistry (),
+          tableSource.ForeignColumn,
+          _commandBuilder,
+          new MethodCallSqlGeneratorRegistry(),
           SqlExpressionContext.ValueRequired);
 
       return tableSource;
