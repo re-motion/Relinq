@@ -73,6 +73,12 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
         return VisitExpression (newExpression);
     }
 
+    protected override Expression VisitConstantExpression (ConstantExpression expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+      return _resolver.ResolveConstantExpression (expression);
+    }
+
     public Expression VisitSqlEntityRefMemberExpression (SqlEntityRefMemberExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
