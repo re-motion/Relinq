@@ -37,11 +37,12 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
       var visitor = new SqlTableAndJoinTextGenerator (commandBuilder);
 
+      // TODO Review: Move loop to SqlStatementTextGenerator; static method should only accept a single SqlTable and generate the text for that table + its left joins. Make first a parameter for this method.
       bool first = true;
       foreach (var sqlTable in sqlTables)
       {
         if (!first)
-          commandBuilder.Append (" CROSS JOIN ");
+          commandBuilder.Append (" CROSS JOIN "); // TODO Review: Move this line to VisitResolveTableInfo. Add "first" as a ctor parameter for the SqlTableAndJoinTextGenerator.
         sqlTable.TableInfo.Accept (visitor);
         GenerateSqlForJoins (sqlTable, visitor);
         first = false;
