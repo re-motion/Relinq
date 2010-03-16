@@ -28,8 +28,18 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
   public class SqlStatementTextGenerator
   {
     private readonly MethodCallSqlGeneratorRegistry _registry;
+    private ISqlGenerationStage _stage;
 
-    public SqlStatementTextGenerator ()
+    public SqlStatementTextGenerator (ISqlGenerationStage stage)
+    {
+      ArgumentUtility.CheckNotNull ("stage", stage);
+      // ReSharper disable DoNotCallOverridableMethodsInConstructor
+      _registry = GenerateSqlGeneratorRegistry (); //TODO: move to DefaultMappingResolutionStage
+      // ReSharper restore DoNotCallOverridableMethodsInConstructor
+      _stage = stage;
+    }
+
+    public SqlStatementTextGenerator () //TODO: remove
     {
 // ReSharper disable DoNotCallOverridableMethodsInConstructor
       _registry = GenerateSqlGeneratorRegistry();

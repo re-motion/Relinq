@@ -368,6 +368,7 @@
     <Compile Include="SqlBackend\MappingResolution\ResolvingSqlStatementVisitorTest.cs" />
     <Compile Include="SqlBackend\MappingResolution\TestableResolvingSqlStatementVisitor.cs" />
     <Compile Include="SqlBackend\SqlGeneration\BinaryExpressionTextGeneratorTest.cs" />
+    <Compile Include="SqlBackend\SqlGeneration\DefaultMappingResolutionStageTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\IntegrationTests\AdditionalFromClausesSqlBackendIntegrationTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\IntegrationTests\OrderByClausesSqlBackendIntegrationTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlContextExpressionVisitorTest.cs" />
