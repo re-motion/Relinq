@@ -82,6 +82,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       return expression;
     }
 
+    // TODO Review 2442: Append a parameter for the primary key value to avoid SQL injection vulnerabilities and improve query plan caching.
     public Expression VisitSqlEntityConstantExpression (SqlEntityConstantExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
