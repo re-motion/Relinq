@@ -48,7 +48,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
     private readonly SqlPreparationContext _context;
     private readonly ISqlPreparationStage _stage;
     private readonly List<SqlTable> _sqlTables;
-    private readonly List<Ordering> _orderByClauses;
+    private readonly List<Ordering> _orderByClauses; // TODO Review 2401: Rename to _orderings
 
     protected SqlPreparationQueryModelVisitor (SqlPreparationContext context, ISqlPreparationStage stage)
     {
@@ -83,7 +83,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       get { return _sqlTables; }
     }
 
-    protected List<Ordering> OrderByClauses
+    protected List<Ordering> OrderByClauses // TODO Review 2401: Rename to Orderings
     {
       get { return _orderByClauses; }
     }

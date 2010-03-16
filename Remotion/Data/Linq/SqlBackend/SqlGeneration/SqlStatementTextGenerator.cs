@@ -113,6 +113,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       {
         if (!first)
           commandBuilder.Append (", ");
+
         if (orderByClause.Expression.NodeType != ExpressionType.Constant)
         {
           SqlGeneratingExpressionVisitor.GenerateSql (orderByClause.Expression, commandBuilder, _registry, SqlExpressionContext.ValueRequired);

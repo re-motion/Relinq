@@ -30,13 +30,13 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   /// </summary>
   public class SqlStatement
   {
-    private readonly SqlTable[] _fromExpressions;
+    private readonly SqlTable[] _fromExpressions; // TODO Review: Rename to _sqlTables
 
     private Expression _selectProjection;
     private Expression _whereCondition;
-    private List<Ordering> _orderByClauses;
+    private List<Ordering> _orderByClauses; // TODO Review 2401: Store as Ordering[], initialize via ctor as an IEnumerable<Ordering> (similar to _fromExpressions)
 
-    public SqlStatement (Expression selectProjection, IEnumerable<SqlTable> fromExpressions)
+    public SqlStatement (Expression selectProjection, IEnumerable<SqlTable> fromExpressions) // TODO Review: Rename to sqlTables
     {
       ArgumentUtility.CheckNotNull ("selectProjection", selectProjection);
       ArgumentUtility.CheckNotNull ("fromExpressions", fromExpressions);
@@ -57,7 +57,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       set { _selectProjection = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
-    public ReadOnlyCollection<SqlTable> FromExpressions
+    public ReadOnlyCollection<SqlTable> FromExpressions // TODO Review: Rename to SqlTables
     {
       get { return Array.AsReadOnly (_fromExpressions); }
     }
@@ -74,6 +74,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       }
     }
 
+    // TODO Review 2401: Remove setter, rename to "Orderings", expose as ReadOnlyCollection<Ordering> (more symmetric to FromExpressions).
     public List<Ordering> OrderByClauses
     {
       get { return _orderByClauses; }
