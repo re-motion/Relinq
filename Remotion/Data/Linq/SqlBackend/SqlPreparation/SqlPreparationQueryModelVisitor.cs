@@ -34,7 +34,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
     public static SqlStatement TransformQueryModel (
         QueryModel queryModel,
         SqlPreparationContext preparationContext,
-        DefaultSqlPreparationStage stage)
+        ISqlPreparationStage stage)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
       ArgumentUtility.CheckNotNull ("preparationContext", preparationContext);
