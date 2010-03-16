@@ -38,8 +38,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
       ArgumentUtility.CheckNotNull ("projectionColumns", projectionColumns);
       ArgumentUtility.CheckNotNull ("primaryKeyColumn", primaryKeyColumn);
 
-      //TODO: check if primaryKeyColumn does exist in projectionColumns collection !?
-
       _projectionColumns = Array.AsReadOnly (projectionColumns);
       _primaryKeyColumn = primaryKeyColumn;
     }
