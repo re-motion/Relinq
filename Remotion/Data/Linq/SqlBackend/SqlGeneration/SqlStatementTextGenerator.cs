@@ -46,11 +46,10 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 // ReSharper restore DoNotCallOverridableMethodsInConstructor
     }
 
-    public SqlCommand Build (SqlStatement sqlStatement)
+    public SqlCommand Build (SqlStatement sqlStatement, SqlCommandBuilder commandBuilder)
     {
       ArgumentUtility.CheckNotNull ("sqlStatement", sqlStatement);
       
-      var commandBuilder = new SqlCommandBuilder();
       commandBuilder.Append ("SELECT ");
       BuildSelectPart (sqlStatement, commandBuilder);
       commandBuilder.Append (" FROM ");
