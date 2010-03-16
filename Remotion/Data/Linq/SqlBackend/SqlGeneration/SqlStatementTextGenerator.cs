@@ -27,23 +27,13 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
   /// </summary>
   public class SqlStatementTextGenerator
   {
-    private readonly MethodCallSqlGeneratorRegistry _registry;
-    private ISqlGenerationStage _stage;
+    private readonly ISqlGenerationStage _stage;
 
     public SqlStatementTextGenerator (ISqlGenerationStage stage)
     {
       ArgumentUtility.CheckNotNull ("stage", stage);
-      // ReSharper disable DoNotCallOverridableMethodsInConstructor
-      _registry = GenerateSqlGeneratorRegistry (); //TODO: move to DefaultMappingResolutionStage
-      // ReSharper restore DoNotCallOverridableMethodsInConstructor
+      
       _stage = stage;
-    }
-
-    public SqlStatementTextGenerator () //TODO: remove
-    {
-// ReSharper disable DoNotCallOverridableMethodsInConstructor
-      _registry = GenerateSqlGeneratorRegistry();
-// ReSharper restore DoNotCallOverridableMethodsInConstructor
     }
 
     public SqlCommand Build (SqlStatement sqlStatement, SqlCommandBuilder commandBuilder)
@@ -89,10 +79,10 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
         if (sqlStatement.TopExpression != null)
         {
           commandBuilder.Append ("TOP (");
-          SqlGeneratingExpressionVisitor.GenerateSql (sqlStatement.TopExpression, commandBuilder, _registry, SqlExpressionContext.ValueRequired);
+          _stage.GenerateTextForTopExpression (commandBuilder, sqlStatement.TopExpression);
           commandBuilder.Append (") ");
         }
-        SqlGeneratingExpressionVisitor.GenerateSql (sqlStatement.SelectProjection, commandBuilder, _registry, SqlExpressionContext.ValueRequired);
+        _stage.GenerateTextForSelectExpression (commandBuilder, sqlStatement.SelectProjection);
       }
     }
 
@@ -101,7 +91,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       ArgumentUtility.CheckNotNull ("sqlStatement", sqlStatement);
       ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);
 
-      SqlTableAndJoinTextGenerator.GenerateSql (sqlStatement.FromExpressions, commandBuilder);
+      _stage.GenerateTextForFromTable (commandBuilder, sqlStatement.FromExpressions);
     }
 
     protected virtual void BuildWherePart (SqlStatement sqlStatement, SqlCommandBuilder commandBuilder)
@@ -109,7 +99,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       ArgumentUtility.CheckNotNull ("sqlStatement", sqlStatement);
       ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);
 
-      SqlGeneratingExpressionVisitor.GenerateSql (sqlStatement.WhereCondition, commandBuilder, _registry, SqlExpressionContext.PredicateRequired);
+      _stage.GenerateTextForWhereExpression (commandBuilder, sqlStatement.WhereCondition);
     }
 
     protected virtual void BuildOrderByPart (SqlStatement sqlStatement, SqlCommandBuilder commandBuilder)
@@ -125,59 +115,17 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
         if (orderByClause.Expression.NodeType != ExpressionType.Constant)
         {
-          SqlGeneratingExpressionVisitor.GenerateSql (orderByClause.Expression, commandBuilder, _registry, SqlExpressionContext.ValueRequired);
+          _stage.GenerateTextForOrderByExpression (commandBuilder, orderByClause.Expression);
         }
         else
         {
           commandBuilder.Append ("(SELECT ");
-          SqlGeneratingExpressionVisitor.GenerateSql (orderByClause.Expression, commandBuilder, _registry, SqlExpressionContext.ValueRequired);
+          _stage.GenerateTextForOrderByExpression (commandBuilder, orderByClause.Expression);
           commandBuilder.Append (")");
         }
         commandBuilder.Append (string.Format (" {0}", orderByClause.OrderingDirection.ToString ().ToUpper ()));
         first = false;
       }
-    }
-
-    protected virtual MethodCallSqlGeneratorRegistry GenerateSqlGeneratorRegistry ()
-    {
-      var registry = new MethodCallSqlGeneratorRegistry();
-
-      //TODO: Convert methods with all overloads needed
-      var containsMethod = typeof (string).GetMethod ("Contains", new Type[] { typeof (string) });
-      var convertToStringMethod = typeof (Convert).GetMethod ("ToString", new[] { typeof (int) });
-      var convertToBoolMethod = typeof (Convert).GetMethod ("ToBoolean", new[] { typeof (int) });
-      var convertToInt64Method = typeof (Convert).GetMethod ("ToInt64", new[] { typeof (int) });
-      var convertToDateTimeMethod = typeof (Convert).GetMethod ("ToDateTime", new[] { typeof (int) });
-      var convertToDoubleMethod = typeof (Convert).GetMethod ("ToDouble", new[] { typeof (int) });
-      var convertToIntMethod = typeof (Convert).GetMethod ("ToInt32", new[] { typeof (int) });
-      var convertToDecimalMethod = typeof (Convert).GetMethod ("ToDecimal", new[] { typeof (int) });
-      var convertToCharMethod = typeof (Convert).GetMethod ("ToChar", new[] { typeof (int) });
-      var convertToByteMethod = typeof (Convert).GetMethod ("ToByte", new[] { typeof (int) });
-      var endsWithMethod = typeof (string).GetMethod ("EndsWith", new Type[] { typeof (string) });
-      var lowerMethod = typeof (string).GetMethod ("ToLower", new Type[] { });
-      var removeMethod = typeof (string).GetMethod ("Remove", new Type[] { typeof (int) });
-      var startsWithMethod = typeof (string).GetMethod ("StartsWith", new Type[] { typeof (string) });
-      var substringMethod = typeof (string).GetMethod ("Substring", new Type[] { typeof (int), typeof (int) });
-      var toUpperMethod = typeof (string).GetMethod ("ToUpper", new Type[] { });
-
-      registry.Register (containsMethod, new MethodCallContains());
-      registry.Register (convertToStringMethod, new MethodCallConvert());
-      registry.Register (convertToBoolMethod, new MethodCallConvert());
-      registry.Register (convertToInt64Method, new MethodCallConvert());
-      registry.Register (convertToDateTimeMethod, new MethodCallConvert());
-      registry.Register (convertToDoubleMethod, new MethodCallConvert());
-      registry.Register (convertToIntMethod, new MethodCallConvert());
-      registry.Register (convertToDecimalMethod, new MethodCallConvert());
-      registry.Register (convertToCharMethod, new MethodCallConvert());
-      registry.Register (convertToByteMethod, new MethodCallConvert());
-      registry.Register (endsWithMethod, new MethodCallEndsWith());
-      registry.Register (lowerMethod, new MethodCallLower());
-      registry.Register (removeMethod, new MethodCallRemove ());
-      registry.Register (startsWithMethod, new MethodCallStartsWith());
-      registry.Register (substringMethod, new MethodCallSubstring());
-      registry.Register (toUpperMethod, new MethodCallUpper());
-
-      return registry;
     }
   }
 }
