@@ -76,12 +76,12 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
 
     Expression IUnresolvedSqlExpressionVisitor.VisitSqlTableReferenceExpression (SqlTableReferenceExpression expression)
     {
-      throw new NotImplementedException (); // TODO Review: Write test expecting NotuUpportedException, implement by calling base.VisitUnknownExpression(expression)
+      return base.VisitUnknownExpression (expression);
     }
 
     Expression IUnresolvedSqlExpressionVisitor.VisitSqlEntityRefMemberExpression (SqlEntityRefMemberExpression expression)
     {
-      throw new NotImplementedException (); // TODO Review: Write test expecting NotuUpportedException, implement by calling base.VisitUnknownExpression(expression)
+      return base.VisitUnknownExpression (expression);
     }
   }
 }
