@@ -395,6 +395,7 @@
     <Compile Include="SqlBackend\SqlGeneration\SqlGeneratingExpressionVisitorTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlStatementTextGeneratorTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlTableAndJoinTextGeneratorTest.cs" />
+    <Compile Include="SqlBackend\SqlGeneration\TestableSqlStatementTextGenerator.cs" />
     <Compile Include="SqlBackend\SqlPreparation\DefaultSqlPreparationStageTest.cs" />
     <Compile Include="SqlBackend\SqlPreparation\SqlPreparationFromExpressionVisitorTest.cs" />
     <Compile Include="SqlBackend\SqlPreparation\TestableSqlPreparationQueryModelVisitor.cs" />
