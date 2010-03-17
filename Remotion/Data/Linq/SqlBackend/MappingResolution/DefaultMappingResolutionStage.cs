@@ -52,6 +52,13 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
       return ResolvingExpressionVisitor.ResolveExpression (expression, _resolver, _uniqueIdentifierGenerator);
     }
 
+    public Expression ResolveOrderingExpression (Expression expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
+      return ResolvingExpressionVisitor.ResolveExpression (expression, _resolver, _uniqueIdentifierGenerator);
+    }
+
     public Expression ResolveTopExpression (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
@@ -78,7 +85,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
     {
       ArgumentUtility.CheckNotNull ("sqlStatement", sqlStatement);
 
-      ResolvingSqlStatementVisitor.ResolveExpressions (sqlStatement, _resolver, _uniqueIdentifierGenerator);
+      ResolvingSqlStatementVisitor.ResolveExpressions (this, sqlStatement);
     }
   }
 }

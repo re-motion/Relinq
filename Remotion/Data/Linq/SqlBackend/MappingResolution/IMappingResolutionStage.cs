@@ -27,6 +27,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
   {
     Expression ResolveSelectExpression (Expression expression);
     Expression ResolveWhereExpression (Expression expression);
+    Expression ResolveOrderingExpression (Expression expression);
     Expression ResolveTopExpression (Expression expression);
     AbstractTableInfo ResolveTableInfo (AbstractTableInfo tableInfo);
     AbstractJoinInfo ResolveJoinInfo (SqlTableBase sqlTable, AbstractJoinInfo joinInfo);

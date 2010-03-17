@@ -26,39 +26,36 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
   /// </summary>
   public class ResolvingSqlStatementVisitor
   {
-    private readonly ISqlStatementResolver _resolver;
-    private readonly UniqueIdentifierGenerator _uniqueIdentifierGenerator;
+    private readonly IMappingResolutionStage _stage;
 
-    public static void ResolveExpressions (
-        SqlStatement statement, ISqlStatementResolver resolver, UniqueIdentifierGenerator uniqueIdentifierGenerator)
+    public static void ResolveExpressions (IMappingResolutionStage stage, SqlStatement statement)
     {
+      ArgumentUtility.CheckNotNull ("stage", stage);
       ArgumentUtility.CheckNotNull ("statement", statement);
-
-      var visitor = new ResolvingSqlStatementVisitor (resolver, uniqueIdentifierGenerator);
+      
+      var visitor = new ResolvingSqlStatementVisitor (stage);
       visitor.VisitSqlStatement (statement);
     }
 
-    protected ResolvingSqlStatementVisitor (ISqlStatementResolver resolver, UniqueIdentifierGenerator uniqueIdentifierGenerator)
+    protected ResolvingSqlStatementVisitor (IMappingResolutionStage stage)
     {
-      ArgumentUtility.CheckNotNull ("resolver", resolver);
-      ArgumentUtility.CheckNotNull ("uniqueIdentifierGenerator", uniqueIdentifierGenerator);
-
-      _resolver = resolver;
-      _uniqueIdentifierGenerator = uniqueIdentifierGenerator;
+      ArgumentUtility.CheckNotNull ("stage", stage);
+      
+      _stage = stage;
     }
 
     protected Expression VisitSelectProjection (Expression selectProjection)
     {
       ArgumentUtility.CheckNotNull ("selectProjection", selectProjection);
 
-      return ResolvingExpressionVisitor.ResolveExpression (selectProjection, _resolver, _uniqueIdentifierGenerator);
+      return _stage.ResolveSelectExpression (selectProjection);
     }
 
     protected void VisitSqlTable (SqlTable sqlTable)
     {
       ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
 
-      sqlTable.TableInfo = ResolvingTableInfoVisitor.ResolveTableInfo (sqlTable.TableInfo, _resolver, _uniqueIdentifierGenerator);
+      sqlTable.TableInfo = _stage.ResolveTableInfo (sqlTable.TableInfo);
       ResolveJoins (sqlTable);
     }
 
@@ -66,28 +63,28 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
     {
       ArgumentUtility.CheckNotNull ("whereCondition", whereCondition);
 
-      return ResolvingExpressionVisitor.ResolveExpression (whereCondition, _resolver, _uniqueIdentifierGenerator);
+      return _stage.ResolveWhereExpression (whereCondition);
     }
 
     protected Expression VisitOrderingExpression (Expression orderByExpression)
     {
       ArgumentUtility.CheckNotNull ("orderByExpression", orderByExpression);
 
-      return ResolvingExpressionVisitor.ResolveExpression (orderByExpression, _resolver, _uniqueIdentifierGenerator);
+      return _stage.ResolveOrderingExpression (orderByExpression);
     }
 
     protected Expression VisitTopExpression (Expression topExpression)
     {
       ArgumentUtility.CheckNotNull ("topExpression", topExpression);
 
-      return ResolvingExpressionVisitor.ResolveExpression (topExpression, _resolver, _uniqueIdentifierGenerator);
+      return _stage.ResolveTopExpression (topExpression);
     }
 
     private void ResolveJoins (SqlTableBase sqlTable)
     {
       foreach (var joinedTable in sqlTable.JoinedTables)
       {
-        joinedTable.JoinInfo = ResolvingJoinInfoVisitor.ResolveJoinInfo (sqlTable, joinedTable.JoinInfo, _resolver, _uniqueIdentifierGenerator);
+        joinedTable.JoinInfo = _stage.ResolveJoinInfo (sqlTable, joinedTable.JoinInfo);
         ResolveJoins (joinedTable);
       }
     }
@@ -97,18 +94,18 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
       foreach (var sqlTable in sqlStatement.SqlTables)
         VisitSqlTable (sqlTable);
 
-      sqlStatement.SelectProjection = VisitSelectProjection (sqlStatement.SelectProjection);
+      sqlStatement.SelectProjection = _stage.ResolveSelectExpression (sqlStatement.SelectProjection);
 
       if (sqlStatement.WhereCondition != null)
-        sqlStatement.WhereCondition = VisitWhereCondition (sqlStatement.WhereCondition);
+        sqlStatement.WhereCondition = _stage.ResolveWhereExpression (sqlStatement.WhereCondition);
 
       if (sqlStatement.TopExpression != null)
-        sqlStatement.TopExpression = VisitTopExpression (sqlStatement.TopExpression);
+        sqlStatement.TopExpression = _stage.ResolveTopExpression (sqlStatement.TopExpression);
 
       if (sqlStatement.Orderings.Count > 0)
       {
         foreach (var orderByClause in sqlStatement.Orderings)
-          orderByClause.Expression = VisitOrderingExpression (orderByClause.Expression);
+          orderByClause.Expression = _stage.ResolveOrderingExpression (orderByClause.Expression);
       }
     }
   }
