@@ -15,44 +15,55 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Parsing;
+using Remotion.Data.Linq.SqlBackend.MappingResolution;
+using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel.SqlSpecificExpressions;
 using Remotion.Data.Linq.Utilities;
-using System.Diagnostics;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 {
   /// <summary>
   /// <see cref="SqlGeneratingExpressionVisitor"/> implements <see cref="ThrowingExpressionTreeVisitor"/> and <see cref="IResolvedSqlExpressionVisitor"/>.
   /// </summary>
-  public class SqlGeneratingExpressionVisitor : ThrowingExpressionTreeVisitor, IResolvedSqlExpressionVisitor, ISqlSpecificExpressionVisitor
+  public class SqlGeneratingExpressionVisitor : ThrowingExpressionTreeVisitor, IResolvedSqlExpressionVisitor, ISqlSpecificExpressionVisitor, ISqlSubStatementExpressionVisitor
   {
-    public static void GenerateSql (Expression expression, SqlCommandBuilder commandBuilder, MethodCallSqlGeneratorRegistry methodCallRegistry, SqlExpressionContext context)
+    public static void GenerateSql (
+        Expression expression,
+        SqlCommandBuilder commandBuilder,
+        MethodCallSqlGeneratorRegistry methodCallRegistry,
+        SqlExpressionContext context,
+        ISqlGenerationStage stage)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);
       ArgumentUtility.CheckNotNull ("methodCallRegistry", methodCallRegistry);
+      ArgumentUtility.CheckNotNull ("stage", stage);
 
       var expressionWithBooleanSemantics = SqlContextExpressionVisitor.ApplySqlExpressionContext (expression, context);
 
-      var visitor = new SqlGeneratingExpressionVisitor (commandBuilder, methodCallRegistry);
+      var visitor = new SqlGeneratingExpressionVisitor (commandBuilder, methodCallRegistry, stage);
       visitor.VisitExpression (expressionWithBooleanSemantics);
     }
 
     private readonly SqlCommandBuilder _commandBuilder;
     private readonly MethodCallSqlGeneratorRegistry _methodCallRegistry;
     private readonly BinaryExpressionTextGenerator _binaryExpressionTextGenerator;
+    private readonly ISqlGenerationStage _stage;
 
-    protected SqlGeneratingExpressionVisitor (SqlCommandBuilder commandBuilder, MethodCallSqlGeneratorRegistry methodCallRegistry)
+    protected SqlGeneratingExpressionVisitor (SqlCommandBuilder commandBuilder, MethodCallSqlGeneratorRegistry methodCallRegistry, ISqlGenerationStage stage)
     {
       ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);
       ArgumentUtility.CheckNotNull ("methodCallRegistry", methodCallRegistry);
+      ArgumentUtility.CheckNotNull ("stage", stage);
 
       _commandBuilder = commandBuilder;
       _methodCallRegistry = methodCallRegistry;
       _binaryExpressionTextGenerator = new BinaryExpressionTextGenerator (commandBuilder, this);
+      _stage = stage;
     }
 
     public Expression VisitSqlEntityExpression (SqlEntityExpression expression)
@@ -127,7 +138,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       switch (expression.NodeType)
       {
         case ExpressionType.Not:
-          if(expression.Operand.Type==typeof(bool))
+          if (expression.Operand.Type == typeof (bool))
             _commandBuilder.Append ("NOT ");
           else
             _commandBuilder.Append ("~");
@@ -174,5 +185,12 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       return expression;
     }
 
+    public Expression VisitSqlSubStatementExpression (SqlSubStatementExpression expression)
+    {
+      _commandBuilder.Append ("(");
+      _stage.GenerateTextForSqlStatement (_commandBuilder, expression.SqlStatement);
+      _commandBuilder.Append (")");
+      return expression;
+    }
   }
 }

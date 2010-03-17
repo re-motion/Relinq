@@ -28,14 +28,15 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
   public class SqlTableAndJoinTextGenerator : ITableInfoVisitor, IJoinInfoVisitor
   {
     private readonly SqlCommandBuilder _commandBuilder;
-    private bool _first;
+    private ISqlGenerationStage _stage;
 
-    public static void GenerateSql (SqlTable sqlTable, SqlCommandBuilder commandBuilder, bool first)
+    public static void GenerateSql (SqlTable sqlTable, SqlCommandBuilder commandBuilder, ISqlGenerationStage stage, bool first)
     {
       ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
       ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);
+      ArgumentUtility.CheckNotNull ("stage", stage);
 
-      var visitor = new SqlTableAndJoinTextGenerator (commandBuilder, first);
+      var visitor = new SqlTableAndJoinTextGenerator (commandBuilder, stage, first);
 
       if (!first)
         commandBuilder.Append (" CROSS JOIN "); // TODO Review: Move this line to VisitResolveTableInfo. Add "first" as a ctor parameter for the SqlTableAndJoinTextGenerator.
@@ -52,12 +53,13 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       }
     }
 
-    protected SqlTableAndJoinTextGenerator (SqlCommandBuilder commandBuilder, bool first)
+    protected SqlTableAndJoinTextGenerator (SqlCommandBuilder commandBuilder, ISqlGenerationStage stage, bool first)
     {
       ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);
+      ArgumentUtility.CheckNotNull ("stage", stage);
 
       _commandBuilder = commandBuilder;
-      _first = first;
+      _stage = stage;
     }
 
     public AbstractTableInfo VisitUnresolvedTableInfo (UnresolvedTableInfo tableInfo)
@@ -89,13 +91,13 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
           tableSource.PrimaryColumn,
           _commandBuilder,
           new MethodCallSqlGeneratorRegistry(),
-          SqlExpressionContext.ValueRequired);
+          SqlExpressionContext.ValueRequired, _stage);
       _commandBuilder.Append (" = ");
       SqlGeneratingExpressionVisitor.GenerateSql (
           tableSource.ForeignColumn,
           _commandBuilder,
           new MethodCallSqlGeneratorRegistry(),
-          SqlExpressionContext.ValueRequired);
+          SqlExpressionContext.ValueRequired, _stage);
 
       return tableSource;
     }
