@@ -143,11 +143,13 @@
     <Compile Include="QueryModelBuilder.cs" />
     <Compile Include="QueryModelVisitorBase.cs" />
     <Compile Include="Clauses\ExpressionTreeVisitors\FormattingExpressionTreeVisitor.cs" />
+    <Compile Include="SqlBackend\MappingResolution\DefaultMappingResolutionStage.cs" />
+    <Compile Include="SqlBackend\MappingResolution\IMappingResolutionStage.cs" />
     <Compile Include="SqlBackend\MappingResolution\ResolvingJoinInfoVisitor.cs" />
     <Compile Include="SqlBackend\MappingResolution\ResolvingSqlStatementVisitor.cs" />
     <Compile Include="SqlBackend\MappingResolution\ResolvingTableInfoVisitor.cs" />
     <Compile Include="SqlBackend\SqlGeneration\BinaryExpressionTextGenerator.cs" />
-    <Compile Include="SqlBackend\SqlGeneration\DefaultMappingResolutionStage.cs" />
+    <Compile Include="SqlBackend\SqlGeneration\DefaultSqlGenerationStage.cs" />
     <Compile Include="SqlBackend\SqlGeneration\ISqlGenerationStage.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlContextExpressionVisitor.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlExpressionContext.cs" />

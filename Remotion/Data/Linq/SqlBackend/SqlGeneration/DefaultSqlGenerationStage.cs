@@ -26,11 +26,11 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
   /// <summary>
   /// Provides a default implementation of <see cref="ISqlGenerationStage"/>.
   /// </summary>
-  public class DefaultMappingResolutionStage : ISqlGenerationStage
+  public class DefaultSqlGenerationStage : ISqlGenerationStage
   {
     private readonly MethodCallSqlGeneratorRegistry _registry;
 
-    public DefaultMappingResolutionStage ()
+    public DefaultSqlGenerationStage ()
     {
       // ReSharper disable DoNotCallOverridableMethodsInConstructor
       _registry = GenerateSqlGeneratorRegistry();

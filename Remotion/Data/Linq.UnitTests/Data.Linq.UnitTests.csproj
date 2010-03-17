@@ -364,11 +364,12 @@
     <Compile Include="QueryModelVisitorBaseTest.cs" />
     <Compile Include="QueryProviderBaseTest.cs" />
     <Compile Include="ReflectionUtilityTest.cs" />
+    <Compile Include="SqlBackend\MappingResolution\DefaultMappingResolutionStageTest.cs" />
     <Compile Include="SqlBackend\MappingResolution\ResolvingJoinInfoVisitorTest.cs" />
     <Compile Include="SqlBackend\MappingResolution\ResolvingSqlStatementVisitorTest.cs" />
     <Compile Include="SqlBackend\MappingResolution\TestableResolvingSqlStatementVisitor.cs" />
     <Compile Include="SqlBackend\SqlGeneration\BinaryExpressionTextGeneratorTest.cs" />
-    <Compile Include="SqlBackend\SqlGeneration\DefaultMappingResolutionStageTest.cs" />
+    <Compile Include="SqlBackend\SqlGeneration\DefaultSqlGenerationStageTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\IntegrationTests\AdditionalFromClausesSqlBackendIntegrationTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\IntegrationTests\OrderByClausesSqlBackendIntegrationTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlContextExpressionVisitorTest.cs" />

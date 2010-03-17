@@ -92,7 +92,6 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
       }
     }
 
-
     protected virtual void VisitSqlStatement (SqlStatement sqlStatement)
     {
       foreach (var sqlTable in sqlStatement.SqlTables)
