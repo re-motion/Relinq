@@ -403,6 +403,7 @@
     <Compile Include="SqlBackend\SqlStatementModel\Resolved\SqlEntityConstantExpressionTest.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlSpecificExpressions\SqlLiteralExpressionTest.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlSpecificExpressions\SqlCaseExpressionTest.cs" />
+    <Compile Include="SqlBackend\SqlStatementModel\SqlSubStatementExpressionTest.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlTableBaseTest.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlJoinedTableTest.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\Resolved\ResolvedJoinInfoTest.cs" />

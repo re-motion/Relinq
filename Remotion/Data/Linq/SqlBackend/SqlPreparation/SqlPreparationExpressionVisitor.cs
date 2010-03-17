@@ -31,21 +31,26 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
   public class SqlPreparationExpressionVisitor : ExpressionTreeVisitor
   { 
     private readonly SqlPreparationContext _context;
+    private readonly ISqlPreparationStage _stage;
 
-    public static Expression TranslateExpression (Expression projection, SqlPreparationContext context)
+    public static Expression TranslateExpression (Expression projection, SqlPreparationContext context, ISqlPreparationStage stage)
     {
       ArgumentUtility.CheckNotNull ("projection", projection);
       ArgumentUtility.CheckNotNull ("context", context);
+      ArgumentUtility.CheckNotNull ("stage", stage);
 
-      var visitor = new SqlPreparationExpressionVisitor (context);
+      var visitor = new SqlPreparationExpressionVisitor (context, stage);
       var result = visitor.VisitExpression (projection);
       return result;
     }
 
-    protected SqlPreparationExpressionVisitor (SqlPreparationContext context)
+    protected SqlPreparationExpressionVisitor (SqlPreparationContext context, ISqlPreparationStage stage)
     {
       ArgumentUtility.CheckNotNull ("context", context);
+      ArgumentUtility.CheckNotNull ("stage", stage);
+      
       _context = context;
+      _stage = stage;
     }
 
     protected override Expression VisitQuerySourceReferenceExpression (QuerySourceReferenceExpression expression)
@@ -89,6 +94,12 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
         return new SqlMemberExpression (join, expression.Member); // cookTable.FirstName
       }
       return expression;
+    }
+
+    protected override Expression VisitSubQueryExpression (SubQueryExpression expression)
+    {
+      var sqlStatement = _stage.PrepareSqlStatement (expression.QueryModel);
+      return new SqlSubStatementExpression (sqlStatement, expression.QueryModel.GetOutputDataInfo ().DataType); //TODO: verify type
     }
   }
 }

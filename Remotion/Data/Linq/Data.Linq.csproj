@@ -182,6 +182,7 @@
     <Compile Include="SqlBackend\SqlGeneration\SqlGeneratingExpressionVisitor.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlTableAndJoinTextGenerator.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlSpecificExpressions\SqlLiteralExpression.cs" />
+    <Compile Include="SqlBackend\SqlStatementModel\SqlSubStatementExpression.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlTableBase.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\Unresolved\UnresolvedTableInfo.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\Unresolved\IUnresolvedSqlExpressionVisitor.cs" />

@@ -36,32 +36,37 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
 
     public Expression PrepareSelectExpression (Expression expression)
     {
-      return SqlPreparationExpressionVisitor.TranslateExpression (expression, _context);
+      return SqlPreparationExpressionVisitor.TranslateExpression (expression, _context, this);
     }
 
     public Expression PrepareWhereExpression (Expression expression)
     {
-      return SqlPreparationExpressionVisitor.TranslateExpression (expression, _context);
+      return SqlPreparationExpressionVisitor.TranslateExpression (expression, _context, this);
     }
 
     public Expression PrepareTopExpression (Expression expression)
     {
-      return SqlPreparationExpressionVisitor.TranslateExpression (expression, _context);
+      return SqlPreparationExpressionVisitor.TranslateExpression (expression, _context, this);
     }
 
     public Expression PrepareFromExpression (Expression expression)
     {
-      return SqlPreparationExpressionVisitor.TranslateExpression (expression, _context);
+      return SqlPreparationExpressionVisitor.TranslateExpression (expression, _context, this);
     }
 
     public Expression PrepareOrderByExpression (Expression expression)
     {
-      return SqlPreparationExpressionVisitor.TranslateExpression(expression, _context);
+      return SqlPreparationExpressionVisitor.TranslateExpression(expression, _context, this);
     }
 
     public SqlTableBase GetTableForFromExpression (Expression fromExpression, Type itemType)
     {
       return SqlPreparationFromExpressionVisitor.GetTableForFromExpression (fromExpression, itemType);
+    }
+
+    public SqlStatement PrepareSqlStatement (QueryModel queryModel)
+    {
+      return SqlPreparationQueryModelVisitor.TransformQueryModel (queryModel, _context, this);
     }
   }
 }
