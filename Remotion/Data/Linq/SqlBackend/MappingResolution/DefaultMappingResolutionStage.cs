@@ -42,28 +42,28 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      return ResolvingExpressionVisitor.ResolveExpression (expression, _resolver, _uniqueIdentifierGenerator);
+      return ResolvingExpressionVisitor.ResolveExpression (expression, _resolver, _uniqueIdentifierGenerator, this);
     }
 
     public Expression ResolveWhereExpression (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      return ResolvingExpressionVisitor.ResolveExpression (expression, _resolver, _uniqueIdentifierGenerator);
+      return ResolvingExpressionVisitor.ResolveExpression (expression, _resolver, _uniqueIdentifierGenerator, this);
     }
 
     public Expression ResolveOrderingExpression (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      return ResolvingExpressionVisitor.ResolveExpression (expression, _resolver, _uniqueIdentifierGenerator);
+      return ResolvingExpressionVisitor.ResolveExpression (expression, _resolver, _uniqueIdentifierGenerator, this);
     }
 
     public Expression ResolveTopExpression (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      return ResolvingExpressionVisitor.ResolveExpression (expression, _resolver, _uniqueIdentifierGenerator);
+      return ResolvingExpressionVisitor.ResolveExpression (expression, _resolver, _uniqueIdentifierGenerator, this);
     }
 
     public AbstractTableInfo ResolveTableInfo (AbstractTableInfo tableInfo)

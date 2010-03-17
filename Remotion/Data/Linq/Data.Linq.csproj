@@ -145,6 +145,7 @@
     <Compile Include="Clauses\ExpressionTreeVisitors\FormattingExpressionTreeVisitor.cs" />
     <Compile Include="SqlBackend\MappingResolution\DefaultMappingResolutionStage.cs" />
     <Compile Include="SqlBackend\MappingResolution\IMappingResolutionStage.cs" />
+    <Compile Include="SqlBackend\MappingResolution\ISqlSubStatementExpressionVisitor.cs" />
     <Compile Include="SqlBackend\MappingResolution\ResolvingJoinInfoVisitor.cs" />
     <Compile Include="SqlBackend\MappingResolution\ResolvingSqlStatementVisitor.cs" />
     <Compile Include="SqlBackend\MappingResolution\ResolvingTableInfoVisitor.cs" />

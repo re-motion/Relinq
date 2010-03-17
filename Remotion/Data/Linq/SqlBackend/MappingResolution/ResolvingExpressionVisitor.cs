@@ -26,29 +26,33 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
   /// <summary>
   /// <see cref="ResolvingExpressionVisitor"/> implements <see cref="IUnresolvedSqlExpressionVisitor"/> and <see cref="ThrowingExpressionTreeVisitor"/>.
   /// </summary>
-  public class ResolvingExpressionVisitor : ExpressionTreeVisitor, IUnresolvedSqlExpressionVisitor
+  public class ResolvingExpressionVisitor : ExpressionTreeVisitor, IUnresolvedSqlExpressionVisitor, ISqlSubStatementExpressionVisitor
   {
     private readonly ISqlStatementResolver _resolver;
     private readonly UniqueIdentifierGenerator _generator;
+    private IMappingResolutionStage _stage;
 
-    public static Expression ResolveExpression (Expression expression, ISqlStatementResolver resolver, UniqueIdentifierGenerator generator)
+    public static Expression ResolveExpression (Expression expression, ISqlStatementResolver resolver, UniqueIdentifierGenerator generator, IMappingResolutionStage stage)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       ArgumentUtility.CheckNotNull ("resolver", resolver);
       ArgumentUtility.CheckNotNull ("generator", generator);
+      ArgumentUtility.CheckNotNull ("stage", stage);
 
-      var visitor = new ResolvingExpressionVisitor (resolver, generator);
+      var visitor = new ResolvingExpressionVisitor (resolver, generator, stage);
       var result = visitor.VisitExpression (expression);
       return result;
     }
 
-    protected ResolvingExpressionVisitor (ISqlStatementResolver resolver, UniqueIdentifierGenerator generator)
+    protected ResolvingExpressionVisitor (ISqlStatementResolver resolver, UniqueIdentifierGenerator generator, IMappingResolutionStage stage)
     {
       ArgumentUtility.CheckNotNull ("resolver", resolver);
       ArgumentUtility.CheckNotNull ("generator", generator);
+      ArgumentUtility.CheckNotNull ("stage", stage);
 
       _resolver = resolver;
       _generator = generator;
+      _stage = stage;
     }
     
     public Expression VisitSqlTableReferenceExpression (SqlTableReferenceExpression expression)
@@ -88,6 +92,14 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
 
       var sqlTableReferenceExpression = new SqlTableReferenceExpression (join);
       return VisitExpression (sqlTableReferenceExpression);
+    }
+
+    public Expression VisitSqlSubStatementExpression (SqlSubStatementExpression expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
+      _stage.ResolveSqlStatement (expression.SqlStatement);
+      return expression;
     }
   }
 }

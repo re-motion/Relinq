@@ -18,6 +18,7 @@ using System;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
+using Remotion.Data.Linq.SqlBackend.MappingResolution;
 using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
@@ -50,7 +51,13 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 
     public override Expression Accept (ExpressionTreeVisitor visitor)
     {
-      throw new NotImplementedException();
+      ArgumentUtility.CheckNotNull ("visitor", visitor);
+
+      var specificVisitor = visitor as ISqlSubStatementExpressionVisitor;
+      if (specificVisitor != null)
+        return specificVisitor.VisitSqlSubStatementExpression(this);
+      else
+        return base.Accept (visitor);
     }
   }
 }
