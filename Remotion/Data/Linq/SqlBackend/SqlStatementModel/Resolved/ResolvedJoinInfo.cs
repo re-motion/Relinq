@@ -24,7 +24,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
   /// </summary>
   public class ResolvedJoinInfo : AbstractJoinInfo
   {
-    private readonly SimpleTableInfo _foreignTableInfo;
+    private readonly SimpleTableInfo _foreignTableInfo; // TODO 2459: This should be IResolvedTableInfo
     private readonly SqlColumnExpression _primaryColumn;
     private readonly SqlColumnExpression _foreignColumn;
 

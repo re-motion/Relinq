@@ -22,19 +22,20 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
   /// <summary>
   /// <see cref="SimpleTableInfo"/> represents the data source defined by a table in a relational database.
   /// </summary>
+  // TODO 2459: Probably, ResolvedSimpleTableInfo and ResolvedSubStatementTableInfo would be better names.
   public class SimpleTableInfo : AbstractTableInfo
   {
     private readonly Type _itemType;
     private readonly string _tableName;
     private readonly string _tableAlias;
 
-    public SimpleTableInfo (Type type, string tableName, string tableAlias)
+    public SimpleTableInfo (Type itemType, string tableName, string tableAlias)
     {
-      ArgumentUtility.CheckNotNull ("type", type);
+      ArgumentUtility.CheckNotNull ("itemType", itemType);
       ArgumentUtility.CheckNotNullOrEmpty ("tableName", tableName);
       ArgumentUtility.CheckNotNullOrEmpty ("tableAlias", tableAlias);
 
-      _itemType = type;
+      _itemType = itemType;
       _tableName = tableName;
       _tableAlias = tableAlias;
     }
