@@ -58,11 +58,14 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       return _stringBuilder.ToString();
     }
 
-    
-
     public CommandParameter[] GetCommandParameters ()
     {
       return _parameters.ToArray();
+    }
+
+    public SqlCommand GetCommand ()
+    {
+      return new SqlCommand(GetCommandText(), GetCommandParameters());
     }
   }
 }

@@ -35,8 +35,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       _stage = stage;
     }
 
-    // TODO Review 2418: With subqueries, the SqlCommand returned by the Build method is wrong. Change the method to return void. Give the SqlCommandBuilder a GetCommand() method that returns the SqlCommand.
-    public SqlCommand Build (SqlStatement sqlStatement, SqlCommandBuilder commandBuilder)
+    public void Build (SqlStatement sqlStatement, SqlCommandBuilder commandBuilder)
     {
       ArgumentUtility.CheckNotNull ("sqlStatement", sqlStatement);
       
@@ -54,8 +53,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
         commandBuilder.Append (" ORDER BY ");
         BuildOrderByPart (sqlStatement, commandBuilder);
       }
-
-      return new SqlCommand (commandBuilder.GetCommandText(), commandBuilder.GetCommandParameters());
     }
 
     protected virtual void BuildSelectPart (SqlStatement sqlStatement, SqlCommandBuilder commandBuilder)
