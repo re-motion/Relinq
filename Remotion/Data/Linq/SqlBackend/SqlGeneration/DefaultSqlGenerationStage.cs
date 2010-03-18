@@ -85,6 +85,14 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       sqlStatementTextGenerator.Build (sqlStatement, commandBuilder);
     }
 
+    public void GenerateTextForJoinKeyExpression (SqlCommandBuilder commandBuilder, Expression expression)
+    {
+      ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);
+      ArgumentUtility.CheckNotNull ("expression", expression);
+      
+      SqlGeneratingExpressionVisitor.GenerateSql (expression, commandBuilder, _registry, SqlExpressionContext.ValueRequired, this);
+    }
+
     protected virtual MethodCallSqlGeneratorRegistry GenerateSqlGeneratorRegistry ()
     {
       var registry = new MethodCallSqlGeneratorRegistry();

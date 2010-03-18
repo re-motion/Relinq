@@ -31,5 +31,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
     void GenerateTextForOrderByExpression (SqlCommandBuilder commandBuilder, Expression expression);
     void GenerateTextForTopExpression (SqlCommandBuilder commandBuilder, Expression expression);
     void GenerateTextForSqlStatement (SqlCommandBuilder commandBuilder, SqlStatement sqlStatement);
+    void GenerateTextForJoinKeyExpression (SqlCommandBuilder commandBuilder, Expression expression);
   }
 }
