@@ -20,34 +20,23 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
 {
   /// <summary>
-  /// <see cref="SimpleTableInfo"/> represents the data source defined by a table in a relational database.
+  /// <see cref="ResolvedSubStatementTableInfo"/> represents the data source defined by a table of a subquery in a relational database.
   /// </summary>
-  // TODO 2459: Probably, ResolvedSimpleTableInfo and ResolvedSubStatementTableInfo would be better names.
-  public class SimpleTableInfo : AbstractTableInfo, IResolvedTableInfo
+  public class ResolvedSubStatementTableInfo : AbstractTableInfo, IResolvedTableInfo
   {
     private readonly Type _itemType;
-    private readonly string _tableName;
     private readonly string _tableAlias;
+    private readonly SqlStatement _sqlStatement;
 
-    public SimpleTableInfo (Type itemType, string tableName, string tableAlias)
+    public ResolvedSubStatementTableInfo (Type itemType, string tableAlias, SqlStatement sqlStatement)
     {
       ArgumentUtility.CheckNotNull ("itemType", itemType);
-      ArgumentUtility.CheckNotNullOrEmpty ("tableName", tableName);
       ArgumentUtility.CheckNotNullOrEmpty ("tableAlias", tableAlias);
-
-      _itemType = itemType;
-      _tableName = tableName;
+      ArgumentUtility.CheckNotNull ("sqlStatement", sqlStatement);
+      
+      _sqlStatement = sqlStatement;
       _tableAlias = tableAlias;
-    }
-
-    public string TableName
-    {
-      get { return _tableName; }
-    }
-
-    public string TableAlias
-    {
-      get { return _tableAlias; }
+      _itemType = itemType;
     }
 
     public override Type ItemType
@@ -55,15 +44,24 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
       get { return _itemType; }
     }
 
-    public override AbstractTableInfo Accept (ITableInfoVisitor visitor)
+    public string TableAlias
     {
-      ArgumentUtility.CheckNotNull ("visitor", visitor);
-      return visitor.VisitSimpleTableInfo (this);
+      get { return _tableAlias;  }
+    }
+
+    public SqlStatement SqlStatement
+    {
+      get { return _sqlStatement; }
     }
 
     public override IResolvedTableInfo GetResolvedTableInfo ()
     {
       return this;
+    }
+
+    public override AbstractTableInfo Accept (ITableInfoVisitor visitor)
+    {
+      throw new NotImplementedException();
     }
   }
 }

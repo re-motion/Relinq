@@ -176,7 +176,7 @@
     <Compile Include="SqlBackend\SqlStatementModel\JoinCardinality.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\Resolved\IResolvedTableInfo.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\Resolved\SqlEntityConstantExpression.cs" />
-    <Compile Include="SqlBackend\SqlStatementModel\Resolved\SubStatementTableInfo.cs" />
+    <Compile Include="SqlBackend\SqlStatementModel\Resolved\ResolvedSubStatementTableInfo.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlSpecificExpressions\ISqlSpecificExpressionVisitor.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlSpecificExpressions\SqlCaseExpression.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlJoinedTable.cs" />
@@ -205,7 +205,7 @@
     <Compile Include="SqlBackend\SqlStatementModel\SqlTable.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\Unresolved\SqlTableReferenceExpression.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\AbstractTableInfo.cs" />
-    <Compile Include="SqlBackend\SqlStatementModel\Resolved\SimpleTableInfo.cs" />
+    <Compile Include="SqlBackend\SqlStatementModel\Resolved\ResolvedSimpleTableInfo.cs" />
     <Compile Include="Transformations\SubQueryFromClauseFlattener.cs" />
     <Compile Include="UniqueIdentifierGenerator.cs" />
     <Compile Include="EagerFetching\FetchOneRequest.cs" />

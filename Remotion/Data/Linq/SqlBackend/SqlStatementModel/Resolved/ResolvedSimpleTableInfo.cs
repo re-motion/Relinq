@@ -20,23 +20,33 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
 {
   /// <summary>
-  /// <see cref="SubStatementTableInfo"/> represents the data source defined by a table of a subquery in a relational database.
+  /// <see cref="ResolvedSimpleTableInfo"/> represents the data source defined by a table in a relational database.
   /// </summary>
-  public class SubStatementTableInfo : AbstractTableInfo, IResolvedTableInfo
+  public class ResolvedSimpleTableInfo : AbstractTableInfo, IResolvedTableInfo
   {
     private readonly Type _itemType;
+    private readonly string _tableName;
     private readonly string _tableAlias;
-    private readonly SqlStatement _sqlStatement;
 
-    public SubStatementTableInfo (Type itemType, string tableAlias, SqlStatement sqlStatement)
+    public ResolvedSimpleTableInfo (Type itemType, string tableName, string tableAlias)
     {
       ArgumentUtility.CheckNotNull ("itemType", itemType);
+      ArgumentUtility.CheckNotNullOrEmpty ("tableName", tableName);
       ArgumentUtility.CheckNotNullOrEmpty ("tableAlias", tableAlias);
-      ArgumentUtility.CheckNotNull ("sqlStatement", sqlStatement);
-      
-      _sqlStatement = sqlStatement;
-      _tableAlias = tableAlias;
+
       _itemType = itemType;
+      _tableName = tableName;
+      _tableAlias = tableAlias;
+    }
+
+    public string TableName
+    {
+      get { return _tableName; }
+    }
+
+    public string TableAlias
+    {
+      get { return _tableAlias; }
     }
 
     public override Type ItemType
@@ -44,24 +54,15 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
       get { return _itemType; }
     }
 
-    public string TableAlias
+    public override AbstractTableInfo Accept (ITableInfoVisitor visitor)
     {
-      get { return _tableAlias;  }
-    }
-
-    public SqlStatement SqlStatement
-    {
-      get { return _sqlStatement; }
+      ArgumentUtility.CheckNotNull ("visitor", visitor);
+      return visitor.VisitSimpleTableInfo (this);
     }
 
     public override IResolvedTableInfo GetResolvedTableInfo ()
     {
       return this;
-    }
-
-    public override AbstractTableInfo Accept (ITableInfoVisitor visitor)
-    {
-      throw new NotImplementedException();
     }
   }
 }

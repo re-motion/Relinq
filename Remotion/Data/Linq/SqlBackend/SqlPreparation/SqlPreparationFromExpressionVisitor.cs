@@ -75,7 +75,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
 
     public Expression VisitSqlSubStatementExpression (SqlSubStatementExpression expression)
     {
-      var sqlTable = new SqlTable (new SubStatementTableInfo (expression.Type, _generator.GetUniqueIdentifier ("q"), expression.SqlStatement));
+      var sqlTable = new SqlTable (new ResolvedSubStatementTableInfo (expression.Type, _generator.GetUniqueIdentifier ("q"), expression.SqlStatement));
       return new SqlTableReferenceExpression (sqlTable);
     }
 
