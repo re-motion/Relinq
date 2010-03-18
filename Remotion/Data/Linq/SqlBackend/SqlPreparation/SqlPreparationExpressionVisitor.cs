@@ -99,7 +99,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
     protected override Expression VisitSubQueryExpression (SubQueryExpression expression)
     {
       var sqlStatement = _stage.PrepareSqlStatement (expression.QueryModel);
-      return new SqlSubStatementExpression (sqlStatement, expression.QueryModel.GetOutputDataInfo ().DataType); //TODO: verify type
+      return new SqlSubStatementExpression (sqlStatement, expression.QueryModel.GetOutputDataInfo ().DataType); //TODO: verify type // TODO Review 2454: Use expression.Type instead, it's faster.
     }
   }
 }
