@@ -19,7 +19,7 @@ using System;
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
 {
   /// <summary>
-  /// <see cref="IResolvedTableInfo"/> 
+  /// <see cref="IResolvedTableInfo"/> provides nested members and methods for all kinds of tables. 
   /// </summary>
   public interface IResolvedTableInfo
   {

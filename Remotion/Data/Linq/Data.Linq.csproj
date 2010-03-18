@@ -176,6 +176,7 @@
     <Compile Include="SqlBackend\SqlStatementModel\JoinCardinality.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\Resolved\IResolvedTableInfo.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\Resolved\SqlEntityConstantExpression.cs" />
+    <Compile Include="SqlBackend\SqlStatementModel\Resolved\SubStatementTableInfo.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlSpecificExpressions\ISqlSpecificExpressionVisitor.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlSpecificExpressions\SqlCaseExpression.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlJoinedTable.cs" />
