@@ -27,11 +27,15 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
   public class DefaultSqlPreparationStage : ISqlPreparationStage
   {
     private readonly SqlPreparationContext _context;
+    private readonly UniqueIdentifierGenerator _generator;
 
-    public DefaultSqlPreparationStage (SqlPreparationContext context)
+    public DefaultSqlPreparationStage (SqlPreparationContext context, UniqueIdentifierGenerator generator)
     {
       ArgumentUtility.CheckNotNull ("context", context);
+      ArgumentUtility.CheckNotNull ("generator", generator);
+
       _context = context;
+      _generator = generator;
     }
 
     public Expression PrepareSelectExpression (Expression expression)
@@ -61,7 +65,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
 
     public SqlTableBase PrepareSqlTable (Expression fromExpression, Type itemType)
     {
-      return SqlPreparationFromExpressionVisitor.GetTableForFromExpression (fromExpression, itemType);
+      return SqlPreparationFromExpressionVisitor.GetTableForFromExpression (fromExpression, itemType, this, _generator);
     }
 
     public SqlStatement PrepareSqlStatement (QueryModel queryModel)

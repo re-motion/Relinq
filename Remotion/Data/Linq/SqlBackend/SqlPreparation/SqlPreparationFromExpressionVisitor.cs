@@ -18,7 +18,9 @@ using System;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing;
+using Remotion.Data.Linq.SqlBackend.MappingResolution;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
+using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved;
 using Remotion.Data.Linq.Utilities;
 
@@ -28,24 +30,30 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
   /// Analyzes the <see cref="FromClauseBase.FromExpression"/> of a <see cref="FromClauseBase"/> and returns a <see cref="SqlTableBase"/> that 
   /// represents the data source of the <see cref="FromClauseBase"/>.
   /// </summary>
-  public class SqlPreparationFromExpressionVisitor : ThrowingExpressionTreeVisitor, IUnresolvedSqlExpressionVisitor
+  public class SqlPreparationFromExpressionVisitor : ThrowingExpressionTreeVisitor, IUnresolvedSqlExpressionVisitor, ISqlSubStatementExpressionVisitor
   {
-    public static SqlTableBase GetTableForFromExpression (Expression fromExpression, Type itemType)
+    public static SqlTableBase GetTableForFromExpression (Expression fromExpression, Type itemType, ISqlPreparationStage stage, UniqueIdentifierGenerator generator)
     {
       ArgumentUtility.CheckNotNull ("fromExpression", fromExpression);
       ArgumentUtility.CheckNotNull ("itemType", itemType);
+      ArgumentUtility.CheckNotNull ("stage", stage);
+      ArgumentUtility.CheckNotNull ("generator", generator);
 
-      var visitor = new SqlPreparationFromExpressionVisitor(itemType);
+      var visitor = new SqlPreparationFromExpressionVisitor(itemType, generator);
       var result = (SqlTableReferenceExpression) visitor.VisitExpression (fromExpression);
       return result.SqlTable;
     }
 
     private readonly Type _itemType;
+    private readonly UniqueIdentifierGenerator _generator;
 
-    protected SqlPreparationFromExpressionVisitor (Type itemType)
+    protected SqlPreparationFromExpressionVisitor (Type itemType, UniqueIdentifierGenerator generator)
     {
       ArgumentUtility.CheckNotNull ("itemType", itemType);
+      ArgumentUtility.CheckNotNull ("generator", generator);
+
       _itemType = itemType;
+      _generator = generator;
     }
 
     protected override Expression VisitConstantExpression (ConstantExpression expression)
@@ -63,6 +71,12 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       var joinedTable = expression.SqlTable.GetOrAddJoin (expression.MemberInfo, JoinCardinality.Many);
 
       return new SqlTableReferenceExpression (joinedTable);
+    }
+
+    public Expression VisitSqlSubStatementExpression (SqlSubStatementExpression expression)
+    {
+      var sqlTable = new SqlTable (new SubStatementTableInfo (expression.Type, _generator.GetUniqueIdentifier ("q"), expression.SqlStatement));
+      return new SqlTableReferenceExpression (sqlTable);
     }
 
     protected override Exception CreateUnhandledItemException<T> (T unhandledItem, string visitMethod)
@@ -83,5 +97,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
     {
       return base.VisitUnknownExpression (expression);
     }
+
+
   }
 }
