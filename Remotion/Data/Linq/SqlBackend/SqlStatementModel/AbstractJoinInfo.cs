@@ -22,11 +22,10 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   /// <summary>
   /// <see cref="AbstractJoinInfo"/> defines the details about a <see cref="SqlJoinedTable"/>.
   /// </summary>
-  public abstract class AbstractJoinInfo : IResolvedTableInfo
+  public abstract class AbstractJoinInfo
   {
     public abstract Type ItemType { get; }
     public abstract AbstractJoinInfo Accept (IJoinInfoVisitor visitor);
-    public abstract string TableAlias {get; }
     public abstract IResolvedTableInfo GetResolvedTableInfo ();
   }
 }

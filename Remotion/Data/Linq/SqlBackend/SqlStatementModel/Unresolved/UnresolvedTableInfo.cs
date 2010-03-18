@@ -44,11 +44,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved
       get { return _itemType;  }
     }
 
-    public override string TableAlias
-    {
-      get { throw new NotImplementedException(); }
-    }
-
     public override AbstractTableInfo Accept (ITableInfoVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);

@@ -22,7 +22,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
   /// <summary>
   /// <see cref="SubStatementTableInfo"/> represents the data source defined by a table of a subquery in a relational database.
   /// </summary>
-  public class SubStatementTableInfo : AbstractTableInfo
+  public class SubStatementTableInfo : AbstractTableInfo, IResolvedTableInfo
   {
     private readonly Type _itemType;
     private readonly string _tableAlias;
@@ -44,7 +44,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
       get { return _itemType; }
     }
 
-    public override string TableAlias
+    public string TableAlias
     {
       get { return _tableAlias;  }
     }
