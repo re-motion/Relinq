@@ -25,6 +25,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   public interface ITableInfoVisitor
   {
     AbstractTableInfo VisitUnresolvedTableInfo (UnresolvedTableInfo tableInfo);
-    AbstractTableInfo VisitResolvedTableInfo (ResolvedTableInfo tableInfo);
+    AbstractTableInfo VisitSimpleTableInfo (SimpleTableInfo tableInfo);
   }
 }

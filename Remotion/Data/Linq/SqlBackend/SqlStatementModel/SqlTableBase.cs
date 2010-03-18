@@ -38,7 +38,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       _itemType = itemType;
     }
 
-    public abstract ResolvedTableInfo GetResolvedTableInfo ();
+    public abstract SimpleTableInfo GetResolvedTableInfo ();
 
     public Type ItemType
     {

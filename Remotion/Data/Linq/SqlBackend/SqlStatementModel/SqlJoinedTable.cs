@@ -50,7 +50,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       }
     }
 
-    public override ResolvedTableInfo GetResolvedTableInfo ()
+    public override SimpleTableInfo GetResolvedTableInfo ()
     {
       return JoinInfo.GetResolvedTableInfo();
     }

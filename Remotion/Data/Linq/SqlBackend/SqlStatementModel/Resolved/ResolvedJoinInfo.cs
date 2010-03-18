@@ -24,11 +24,11 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
   /// </summary>
   public class ResolvedJoinInfo : AbstractJoinInfo
   {
-    private readonly ResolvedTableInfo _foreignTableInfo;
+    private readonly SimpleTableInfo _foreignTableInfo;
     private readonly SqlColumnExpression _primaryColumn;
     private readonly SqlColumnExpression _foreignColumn;
 
-    public ResolvedJoinInfo (ResolvedTableInfo foreignTableInfo, SqlColumnExpression primaryColumn, SqlColumnExpression foreignColumn)
+    public ResolvedJoinInfo (SimpleTableInfo foreignTableInfo, SqlColumnExpression primaryColumn, SqlColumnExpression foreignColumn)
     {
       ArgumentUtility.CheckNotNull ("foreignTableInfo", foreignTableInfo);
       ArgumentUtility.CheckNotNull ("primaryColumn", primaryColumn);
@@ -44,7 +44,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
       get { return _foreignTableInfo.ItemType; }
     }
 
-    public ResolvedTableInfo ForeignTableInfo
+    public SimpleTableInfo ForeignTableInfo
     {
       get { return _foreignTableInfo; }
     }
@@ -65,7 +65,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
       return visitor.VisitResolvedJoinInfo (this);
     }
 
-    public override ResolvedTableInfo GetResolvedTableInfo ()
+    public override SimpleTableInfo GetResolvedTableInfo ()
     {
       return ForeignTableInfo;
     }

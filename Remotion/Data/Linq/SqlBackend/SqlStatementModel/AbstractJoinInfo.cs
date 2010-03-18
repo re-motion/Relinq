@@ -26,6 +26,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   {
     public abstract Type ItemType { get; }
     public abstract AbstractJoinInfo Accept (IJoinInfoVisitor visitor);
-    public abstract ResolvedTableInfo GetResolvedTableInfo ();
+    public abstract SimpleTableInfo GetResolvedTableInfo ();
   }
 }

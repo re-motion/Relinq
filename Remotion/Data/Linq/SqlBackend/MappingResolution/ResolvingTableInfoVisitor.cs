@@ -23,7 +23,7 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.SqlBackend.MappingResolution
 {
   /// <summary>
-  /// <see cref="ResolvingTableInfoVisitor"/> modifies <see cref="UnresolvedTableInfo"/>s and generates <see cref="ResolvedTableInfo"/>s.
+  /// <see cref="ResolvingTableInfoVisitor"/> modifies <see cref="UnresolvedTableInfo"/>s and generates <see cref="SimpleTableInfo"/>s.
   /// </summary>
   public class ResolvingTableInfoVisitor : ITableInfoVisitor
   {
@@ -58,7 +58,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
         return result.Accept (this);
     }
 
-    public AbstractTableInfo VisitResolvedTableInfo (ResolvedTableInfo tableInfo)
+    public AbstractTableInfo VisitSimpleTableInfo (SimpleTableInfo tableInfo)
     {
       ArgumentUtility.CheckNotNull ("tableInfo", tableInfo);
       return tableInfo;

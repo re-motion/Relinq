@@ -50,7 +50,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved
       return visitor.VisitUnresolvedTableInfo (this);
     }
 
-    public override ResolvedTableInfo GetResolvedTableInfo ()
+    public override SimpleTableInfo GetResolvedTableInfo ()
     {
       throw new InvalidOperationException ("This table has not yet been resolved; call the resolution step first.");
     }

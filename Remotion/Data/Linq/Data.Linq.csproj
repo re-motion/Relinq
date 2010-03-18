@@ -203,7 +203,7 @@
     <Compile Include="SqlBackend\SqlStatementModel\SqlTable.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\Unresolved\SqlTableReferenceExpression.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\AbstractTableInfo.cs" />
-    <Compile Include="SqlBackend\SqlStatementModel\Resolved\ResolvedTableInfo.cs" />
+    <Compile Include="SqlBackend\SqlStatementModel\Resolved\SimpleTableInfo.cs" />
     <Compile Include="Transformations\SubQueryFromClauseFlattener.cs" />
     <Compile Include="UniqueIdentifierGenerator.cs" />
     <Compile Include="EagerFetching\FetchOneRequest.cs" />

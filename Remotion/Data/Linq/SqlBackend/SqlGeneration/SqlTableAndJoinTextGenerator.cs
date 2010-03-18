@@ -23,12 +23,12 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 {
   /// <summary>
-  /// <see cref="SqlTableAndJoinTextGenerator"/> generates sql-text for <see cref="ResolvedTableInfo"/> and <see cref="ResolvedJoinInfo"/>.
+  /// <see cref="SqlTableAndJoinTextGenerator"/> generates sql-text for <see cref="SimpleTableInfo"/> and <see cref="ResolvedJoinInfo"/>.
   /// </summary>
   public class SqlTableAndJoinTextGenerator : ITableInfoVisitor, IJoinInfoVisitor
   {
     private readonly SqlCommandBuilder _commandBuilder;
-    private ISqlGenerationStage _stage;
+    private readonly ISqlGenerationStage _stage;
 
     public static void GenerateSql (SqlTable sqlTable, SqlCommandBuilder commandBuilder, ISqlGenerationStage stage, bool first)
     {
@@ -67,7 +67,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       throw new InvalidOperationException ("UnresolvedTableInfo is not valid at this point.");
     }
 
-    public AbstractTableInfo VisitResolvedTableInfo (ResolvedTableInfo tableInfo)
+    public AbstractTableInfo VisitSimpleTableInfo (SimpleTableInfo tableInfo)
     {
       _commandBuilder.Append ("[");
       _commandBuilder.Append (tableInfo.TableName);

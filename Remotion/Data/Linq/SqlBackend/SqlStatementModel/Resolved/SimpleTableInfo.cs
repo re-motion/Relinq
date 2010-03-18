@@ -20,15 +20,15 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
 {
   /// <summary>
-  /// <see cref="ResolvedTableInfo"/> represents the data source defined by a table in a relational database.
+  /// <see cref="SimpleTableInfo"/> represents the data source defined by a table in a relational database.
   /// </summary>
-  public class ResolvedTableInfo : AbstractTableInfo
+  public class SimpleTableInfo : AbstractTableInfo
   {
     private readonly Type _itemType;
     private readonly string _tableName;
     private readonly string _tableAlias;
 
-    public ResolvedTableInfo (Type type, string tableName, string tableAlias)
+    public SimpleTableInfo (Type type, string tableName, string tableAlias)
     {
       ArgumentUtility.CheckNotNull ("type", type);
       ArgumentUtility.CheckNotNullOrEmpty ("tableName", tableName);
@@ -57,10 +57,10 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
     public override AbstractTableInfo Accept (ITableInfoVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
-      return visitor.VisitResolvedTableInfo (this);
+      return visitor.VisitSimpleTableInfo (this);
     }
 
-    public override ResolvedTableInfo GetResolvedTableInfo ()
+    public override SimpleTableInfo GetResolvedTableInfo ()
     {
       return this;
     }
