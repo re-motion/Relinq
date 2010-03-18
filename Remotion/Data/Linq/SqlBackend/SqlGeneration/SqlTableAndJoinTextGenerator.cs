@@ -92,6 +92,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       tableSource.ForeignTableInfo.Accept (this);
 
       _commandBuilder.Append (" ON ");
+      // TODO Review 2456: Use stage here (add _stage.GenerateTextForJoinKeyExpression or something similar), adapt tests to use mock
       SqlGeneratingExpressionVisitor.GenerateSql (
           tableSource.PrimaryColumn,
           _commandBuilder,
