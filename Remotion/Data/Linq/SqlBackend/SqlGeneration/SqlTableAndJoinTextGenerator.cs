@@ -89,7 +89,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
     {
       _commandBuilder.Append (" LEFT OUTER JOIN ");
 
-      tableSource.ForeignTableInfo.Accept (this);
+      ((AbstractTableInfo) tableSource.ForeignTableInfo).Accept (this);
 
       _commandBuilder.Append (" ON ");
       // TODO Review 2456: Use stage here (add _stage.GenerateTextForJoinKeyExpression or something similar), adapt tests to use mock

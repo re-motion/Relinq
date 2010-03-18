@@ -24,11 +24,11 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
   /// </summary>
   public class ResolvedJoinInfo : AbstractJoinInfo
   {
-    private readonly SimpleTableInfo _foreignTableInfo; // TODO 2459: This should be IResolvedTableInfo
+    private readonly IResolvedTableInfo _foreignTableInfo;
     private readonly SqlColumnExpression _primaryColumn;
     private readonly SqlColumnExpression _foreignColumn;
 
-    public ResolvedJoinInfo (SimpleTableInfo foreignTableInfo, SqlColumnExpression primaryColumn, SqlColumnExpression foreignColumn)
+    public ResolvedJoinInfo (IResolvedTableInfo foreignTableInfo, SqlColumnExpression primaryColumn, SqlColumnExpression foreignColumn)
     {
       ArgumentUtility.CheckNotNull ("foreignTableInfo", foreignTableInfo);
       ArgumentUtility.CheckNotNull ("primaryColumn", primaryColumn);
@@ -41,10 +41,10 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
 
     public override Type ItemType
     {
-      get { return _foreignTableInfo.ItemType; }
+      get { return ((AbstractTableInfo) _foreignTableInfo).ItemType; }
     }
 
-    public SimpleTableInfo ForeignTableInfo
+    public IResolvedTableInfo ForeignTableInfo
     {
       get { return _foreignTableInfo; }
     }
