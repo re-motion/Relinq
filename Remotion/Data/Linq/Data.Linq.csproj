@@ -147,7 +147,7 @@
     <Compile Include="SqlBackend\MappingResolution\IMappingResolutionStage.cs" />
     <Compile Include="SqlBackend\MappingResolution\ISqlSubStatementExpressionVisitor.cs" />
     <Compile Include="SqlBackend\MappingResolution\ResolvingJoinInfoVisitor.cs" />
-    <Compile Include="SqlBackend\MappingResolution\ResolvingSqlStatementVisitor.cs" />
+    <Compile Include="SqlBackend\MappingResolution\SqlStatementResolver.cs" />
     <Compile Include="SqlBackend\MappingResolution\ResolvingTableInfoVisitor.cs" />
     <Compile Include="SqlBackend\SqlGeneration\BinaryExpressionTextGenerator.cs" />
     <Compile Include="SqlBackend\SqlGeneration\DefaultSqlGenerationStage.cs" />
@@ -201,7 +201,7 @@
     <Compile Include="SqlBackend\SqlStatementModel\Unresolved\SqlEntityRefMemberExpression.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\Unresolved\SqlMemberExpression.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlStatement.cs" />
-    <Compile Include="SqlBackend\MappingResolution\ISqlStatementResolver.cs" />
+    <Compile Include="SqlBackend\MappingResolution\IMappingResolver.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlTable.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\Unresolved\SqlTableReferenceExpression.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\AbstractTableInfo.cs" />

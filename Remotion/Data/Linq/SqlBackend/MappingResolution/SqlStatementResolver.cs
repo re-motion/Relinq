@@ -22,10 +22,9 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.SqlBackend.MappingResolution
 {
   /// <summary>
-  /// <see cref="ResolvingSqlStatementVisitor"/> provides methods to visit sql-statement classes.
+  /// <see cref="SqlStatementResolver"/> provides methods to visit sql-statement classes.
   /// </summary>
-  // TODO Review: Now that the visitor does not derive from the SqlStatementVisitorBase class any longer, call it SqlStatementResolver instead. Rename the ISqlStatementResolver interface to IMappingResolver and the SqlStatementResolverStub class to MappingResolverStub.
-  public class ResolvingSqlStatementVisitor
+  public class SqlStatementResolver
   {
     private readonly IMappingResolutionStage _stage;
 
@@ -34,11 +33,11 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
       ArgumentUtility.CheckNotNull ("stage", stage);
       ArgumentUtility.CheckNotNull ("statement", statement);
       
-      var visitor = new ResolvingSqlStatementVisitor (stage);
+      var visitor = new SqlStatementResolver (stage);
       visitor.VisitSqlStatement (statement);
     }
 
-    protected ResolvingSqlStatementVisitor (IMappingResolutionStage stage)
+    protected SqlStatementResolver (IMappingResolutionStage stage)
     {
       ArgumentUtility.CheckNotNull ("stage", stage);
       

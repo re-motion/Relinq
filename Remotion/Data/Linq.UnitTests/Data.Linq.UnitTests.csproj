@@ -420,7 +420,7 @@
     <Compile Include="SqlBackend\SqlPreparation\SqlPreparationQueryModelVisitorTest.cs" />
     <Compile Include="SqlBackend\SqlPreparation\SqlPreparationExpressionVisitorTest.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\Unresolved\SqlEntityRefMemberExpressionTest.cs" />
-    <Compile Include="SqlBackend\SqlStatementResolverStub.cs" />
+    <Compile Include="SqlBackend\MappingResolverStub.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\SqlStatementModelObjectMother.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\Unresolved\SqlTableReferenceExpressionTest.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\Resolved\ResolvedTableInfoTest.cs" />

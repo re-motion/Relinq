@@ -26,10 +26,10 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
   /// </summary>
   public class DefaultMappingResolutionStage : IMappingResolutionStage
   {
-    private readonly ISqlStatementResolver _resolver;
+    private readonly IMappingResolver _resolver;
     private readonly UniqueIdentifierGenerator _uniqueIdentifierGenerator;
 
-    public DefaultMappingResolutionStage (ISqlStatementResolver resolver, UniqueIdentifierGenerator uniqueIdentifierGenerator)
+    public DefaultMappingResolutionStage (IMappingResolver resolver, UniqueIdentifierGenerator uniqueIdentifierGenerator)
     {
       ArgumentUtility.CheckNotNull ("resolver", resolver);
       ArgumentUtility.CheckNotNull ("uniqueIdentifierGenerator", uniqueIdentifierGenerator);
@@ -85,7 +85,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
     {
       ArgumentUtility.CheckNotNull ("sqlStatement", sqlStatement);
 
-      ResolvingSqlStatementVisitor.ResolveExpressions (this, sqlStatement);
+      SqlStatementResolver.ResolveExpressions (this, sqlStatement);
     }
   }
 }

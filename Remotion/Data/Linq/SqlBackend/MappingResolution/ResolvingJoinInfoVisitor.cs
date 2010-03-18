@@ -27,11 +27,11 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
   /// </summary>
   public class ResolvingJoinInfoVisitor : IJoinInfoVisitor
   {
-    private readonly ISqlStatementResolver _resolver;
+    private readonly IMappingResolver _resolver;
     private readonly SqlTableBase _originatingTable;
     private readonly UniqueIdentifierGenerator _generator;
 
-    public static AbstractJoinInfo ResolveJoinInfo (SqlTableBase originatingTable, AbstractJoinInfo joinInfo, ISqlStatementResolver resolver, UniqueIdentifierGenerator generator)
+    public static AbstractJoinInfo ResolveJoinInfo (SqlTableBase originatingTable, AbstractJoinInfo joinInfo, IMappingResolver resolver, UniqueIdentifierGenerator generator)
     {
       ArgumentUtility.CheckNotNull ("originatingTable", originatingTable);
       ArgumentUtility.CheckNotNull ("joinInfo", joinInfo);
@@ -42,7 +42,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
       return joinInfo.Accept (visitor);
     }
 
-    protected ResolvingJoinInfoVisitor (SqlTableBase originatingTable, ISqlStatementResolver resolver, UniqueIdentifierGenerator generator)
+    protected ResolvingJoinInfoVisitor (SqlTableBase originatingTable, IMappingResolver resolver, UniqueIdentifierGenerator generator)
     {
       ArgumentUtility.CheckNotNull ("originatingTable", originatingTable);
       ArgumentUtility.CheckNotNull ("resolver", resolver);

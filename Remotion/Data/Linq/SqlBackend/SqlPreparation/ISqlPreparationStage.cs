@@ -30,9 +30,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
     Expression PrepareTopExpression (Expression expression);
     Expression PrepareFromExpression (Expression expression);
     Expression PrepareOrderByExpression (Expression expression);
-
-    SqlTableBase GetTableForFromExpression (Expression fromExpression, Type itemType); // TODO Review 2454: Rename to PrepareSqlTable for more symmetry with the other methods.
-
+    SqlTableBase PrepareSqlTable (Expression fromExpression, Type itemType);
     SqlStatement PrepareSqlStatement (QueryModel queryModel);
   }
 }

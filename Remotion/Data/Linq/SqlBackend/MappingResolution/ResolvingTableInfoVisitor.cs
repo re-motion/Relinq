@@ -27,10 +27,10 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
   /// </summary>
   public class ResolvingTableInfoVisitor : ITableInfoVisitor
   {
-    private readonly ISqlStatementResolver _resolver;
+    private readonly IMappingResolver _resolver;
     private readonly UniqueIdentifierGenerator _generator;
 
-    public static AbstractTableInfo ResolveTableInfo (AbstractTableInfo tableInfo, ISqlStatementResolver resolver, UniqueIdentifierGenerator generator)
+    public static AbstractTableInfo ResolveTableInfo (AbstractTableInfo tableInfo, IMappingResolver resolver, UniqueIdentifierGenerator generator)
     {
       ArgumentUtility.CheckNotNull ("tableInfo", tableInfo);
       ArgumentUtility.CheckNotNull ("resolver", resolver);
@@ -39,7 +39,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
       return tableInfo.Accept (visitor);
     }
 
-    protected ResolvingTableInfoVisitor (ISqlStatementResolver resolver, UniqueIdentifierGenerator generator)
+    protected ResolvingTableInfoVisitor (IMappingResolver resolver, UniqueIdentifierGenerator generator)
     {
       ArgumentUtility.CheckNotNull ("generator", generator);
       ArgumentUtility.CheckNotNull ("resolver", resolver);

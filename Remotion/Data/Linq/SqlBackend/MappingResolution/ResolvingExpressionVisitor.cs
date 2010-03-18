@@ -28,11 +28,11 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
   /// </summary>
   public class ResolvingExpressionVisitor : ExpressionTreeVisitor, IUnresolvedSqlExpressionVisitor, ISqlSubStatementExpressionVisitor
   {
-    private readonly ISqlStatementResolver _resolver;
+    private readonly IMappingResolver _resolver;
     private readonly UniqueIdentifierGenerator _generator;
     private IMappingResolutionStage _stage;
 
-    public static Expression ResolveExpression (Expression expression, ISqlStatementResolver resolver, UniqueIdentifierGenerator generator, IMappingResolutionStage stage)
+    public static Expression ResolveExpression (Expression expression, IMappingResolver resolver, UniqueIdentifierGenerator generator, IMappingResolutionStage stage)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       ArgumentUtility.CheckNotNull ("resolver", resolver);
@@ -44,7 +44,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
       return result;
     }
 
-    protected ResolvingExpressionVisitor (ISqlStatementResolver resolver, UniqueIdentifierGenerator generator, IMappingResolutionStage stage)
+    protected ResolvingExpressionVisitor (IMappingResolver resolver, UniqueIdentifierGenerator generator, IMappingResolutionStage stage)
     {
       ArgumentUtility.CheckNotNull ("resolver", resolver);
       ArgumentUtility.CheckNotNull ("generator", generator);

@@ -22,9 +22,9 @@ using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved;
 namespace Remotion.Data.Linq.SqlBackend.MappingResolution
 {
   /// <summary>
-  /// <see cref="ISqlStatementResolver"/> provides methods to resolve expressions and return database-specific information.
+  /// <see cref="IMappingResolver"/> provides methods to resolve expressions and return database-specific information.
   /// </summary>
-  public interface ISqlStatementResolver
+  public interface IMappingResolver
   {
     AbstractTableInfo ResolveTableInfo (UnresolvedTableInfo tableInfo, UniqueIdentifierGenerator generator);
     AbstractJoinInfo ResolveJoinInfo (SqlTableBase originatingTable, UnresolvedJoinInfo joinInfo, UniqueIdentifierGenerator generator);
