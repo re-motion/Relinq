@@ -36,21 +36,12 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       // ReSharper restore DoNotCallOverridableMethodsInConstructor
     }
 
-    // TODO Review 2418: Don't leave commented code in the source files. Just delete it; you can always retrieve it from the SVN logs.
-    //public void GenerateTextForFromTable (SqlCommandBuilder commandBuilder, IEnumerable<SqlTable> tables)
-    //{
-    //  ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);
-    //  ArgumentUtility.CheckNotNull ("tables", tables);
-
-    //  SqlTableAndJoinTextGenerator.GenerateSql (tables, commandBuilder);
-    //}
-
-    public void GenerateTextForFromTable (SqlCommandBuilder commandBuilder, SqlTable table, bool first)
+    public void GenerateTextForFromTable (SqlCommandBuilder commandBuilder, SqlTable table, bool isFirstTable)
     {
       ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);
       ArgumentUtility.CheckNotNull ("table", table);
 
-      SqlTableAndJoinTextGenerator.GenerateSql (table, commandBuilder, this, first);
+      SqlTableAndJoinTextGenerator.GenerateSql (table, commandBuilder, this, isFirstTable);
     }
 
     public void GenerateTextForSelectExpression (SqlCommandBuilder commandBuilder, Expression expression)
