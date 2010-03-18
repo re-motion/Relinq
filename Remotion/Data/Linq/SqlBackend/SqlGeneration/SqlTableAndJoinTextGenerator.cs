@@ -29,6 +29,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
   {
     private readonly SqlCommandBuilder _commandBuilder;
     private readonly ISqlGenerationStage _stage;
+    private bool _first;
 
     public static void GenerateSql (SqlTable sqlTable, SqlCommandBuilder commandBuilder, ISqlGenerationStage stage, bool first)
     {
@@ -38,8 +39,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
       var visitor = new SqlTableAndJoinTextGenerator (commandBuilder, stage, first);
 
-      if (!first)
-        commandBuilder.Append (" CROSS JOIN "); // TODO Review 2418: Move this line to VisitResolveTableInfo. Add "first" as a ctor parameter for the SqlTableAndJoinTextGenerator. This will be needed for subqueries in from clauses.
       sqlTable.TableInfo.Accept (visitor);
       GenerateSqlForJoins (sqlTable, visitor);
     }
@@ -60,6 +59,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
       _commandBuilder = commandBuilder;
       _stage = stage;
+      _first = first;
     }
 
     public AbstractTableInfo VisitUnresolvedTableInfo (UnresolvedTableInfo tableInfo)
@@ -69,6 +69,11 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
     public AbstractTableInfo VisitSimpleTableInfo (SimpleTableInfo tableInfo)
     {
+      if (!_first)
+      {
+        _commandBuilder.Append (" CROSS JOIN ");
+        _first = true;
+      }
       _commandBuilder.Append ("[");
       _commandBuilder.Append (tableInfo.TableName);
       _commandBuilder.Append ("]");
