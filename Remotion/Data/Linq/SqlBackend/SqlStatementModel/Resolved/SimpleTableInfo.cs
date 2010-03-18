@@ -44,7 +44,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
       get { return _tableName; }
     }
 
-    public string TableAlias
+    public override string TableAlias
     {
       get { return _tableAlias; }
     }
@@ -60,7 +60,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
       return visitor.VisitSimpleTableInfo (this);
     }
 
-    public override SimpleTableInfo GetResolvedTableInfo ()
+    public override IResolvedTableInfo GetResolvedTableInfo ()
     {
       return this;
     }

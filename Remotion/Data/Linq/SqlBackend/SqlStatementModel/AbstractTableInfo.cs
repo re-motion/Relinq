@@ -22,10 +22,12 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   /// <summary>
   /// <see cref="AbstractTableInfo"/> represents the actual data in a <see cref="SqlTable"/>.
   /// </summary>
-  public abstract class AbstractTableInfo
+  public abstract class AbstractTableInfo : IResolvedTableInfo
   {
     public abstract Type ItemType { get; }
+    public abstract string TableAlias { get; }
+
+    public abstract IResolvedTableInfo GetResolvedTableInfo ();
     public abstract AbstractTableInfo Accept (ITableInfoVisitor visitor);
-    public abstract SimpleTableInfo GetResolvedTableInfo ();
   }
 }

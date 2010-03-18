@@ -50,7 +50,12 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       }
     }
 
-    public override SimpleTableInfo GetResolvedTableInfo ()
+    public override string TableAlias
+    {
+      get { return _tableInfo.TableAlias; }
+    }
+
+    public override IResolvedTableInfo GetResolvedTableInfo ()
     {
       return TableInfo.GetResolvedTableInfo();
     }

@@ -59,13 +59,18 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved
       get { return _itemType; }
     }
 
+    public override string TableAlias
+    {
+      get { throw new NotSupportedException(); }
+    }
+
     public override AbstractJoinInfo Accept (IJoinInfoVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       return visitor.VisitUnresolvedJoinInfo (this);
     }
 
-    public override SimpleTableInfo GetResolvedTableInfo ()
+   public override IResolvedTableInfo GetResolvedTableInfo ()
     {
       throw new InvalidOperationException ("This join has not yet been resolved; call the resolution step first.");
     }

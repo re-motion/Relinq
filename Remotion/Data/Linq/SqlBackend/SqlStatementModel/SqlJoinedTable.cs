@@ -28,7 +28,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
     private AbstractJoinInfo _joinInfo;
 
     public SqlJoinedTable (AbstractJoinInfo joinInfo)
-      : base (joinInfo.ItemType)
+        : base (joinInfo.ItemType)
     {
       ArgumentUtility.CheckNotNull ("joinInfo", joinInfo);
 
@@ -50,7 +50,12 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       }
     }
 
-    public override SimpleTableInfo GetResolvedTableInfo ()
+    public override string TableAlias
+    {
+      get { return _joinInfo.TableAlias; } 
+    }
+
+    public override IResolvedTableInfo GetResolvedTableInfo ()
     {
       return JoinInfo.GetResolvedTableInfo();
     }

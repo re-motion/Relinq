@@ -26,7 +26,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   /// <summary>
   /// Provides a base class for SQL tables, both stand-alone tables and joined tables.
   /// </summary>
-  public abstract class SqlTableBase
+  public abstract class SqlTableBase : IResolvedTableInfo
   {
     private readonly Dictionary<MemberInfo, SqlJoinedTable> _joinedTables = new Dictionary<MemberInfo, SqlJoinedTable>();
     private readonly Type _itemType;
@@ -38,7 +38,9 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       _itemType = itemType;
     }
 
-    public abstract SimpleTableInfo GetResolvedTableInfo ();
+    public abstract string TableAlias { get; }
+    
+    public abstract IResolvedTableInfo GetResolvedTableInfo ();
 
     public Type ItemType
     {

@@ -59,13 +59,18 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
       get { return _foreignColumn; }
     }
 
+    public override string TableAlias
+    {
+      get { return _foreignTableInfo.TableAlias; }
+    }
+
     public override AbstractJoinInfo Accept (IJoinInfoVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       return visitor.VisitResolvedJoinInfo (this);
     }
 
-    public override SimpleTableInfo GetResolvedTableInfo ()
+   public override IResolvedTableInfo GetResolvedTableInfo ()
     {
       return ForeignTableInfo;
     }

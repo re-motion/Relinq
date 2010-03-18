@@ -15,18 +15,15 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved;
 
-namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
+namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
 {
   /// <summary>
-  /// <see cref="AbstractJoinInfo"/> defines the details about a <see cref="SqlJoinedTable"/>.
+  /// <see cref="IResolvedTableInfo"/> 
   /// </summary>
-  public abstract class AbstractJoinInfo : IResolvedTableInfo
+  public interface IResolvedTableInfo
   {
-    public abstract Type ItemType { get; }
-    public abstract AbstractJoinInfo Accept (IJoinInfoVisitor visitor);
-    public abstract string TableAlias {get; }
-    public abstract IResolvedTableInfo GetResolvedTableInfo ();
+    string TableAlias { get; }
+    IResolvedTableInfo GetResolvedTableInfo ();
   }
 }

@@ -44,13 +44,18 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved
       get { return _itemType;  }
     }
 
+    public override string TableAlias
+    {
+      get { throw new NotImplementedException(); }
+    }
+
     public override AbstractTableInfo Accept (ITableInfoVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       return visitor.VisitUnresolvedTableInfo (this);
     }
 
-    public override SimpleTableInfo GetResolvedTableInfo ()
+    public override IResolvedTableInfo GetResolvedTableInfo ()
     {
       throw new InvalidOperationException ("This table has not yet been resolved; call the resolution step first.");
     }
