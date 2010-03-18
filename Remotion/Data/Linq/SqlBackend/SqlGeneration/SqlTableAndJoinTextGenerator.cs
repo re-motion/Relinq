@@ -87,7 +87,13 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
     public AbstractTableInfo VisitSubStatementTableInfo (ResolvedSubStatementTableInfo tableInfo)
     {
-      throw new NotImplementedException();
+      _commandBuilder.Append (" CROSS APPLY ");
+      _commandBuilder.Append ("(");
+      _stage.GenerateTextForSqlStatement (_commandBuilder, tableInfo.SqlStatement);
+      _commandBuilder.Append (")");
+      _commandBuilder.Append (" AS ");
+      _commandBuilder.Append (tableInfo.TableAlias);
+      return tableInfo;
     }
 
     public AbstractJoinInfo VisitResolvedJoinInfo (ResolvedJoinInfo tableSource)
