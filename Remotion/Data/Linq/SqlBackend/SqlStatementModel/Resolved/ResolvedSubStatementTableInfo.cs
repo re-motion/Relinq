@@ -61,7 +61,8 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
 
     public override AbstractTableInfo Accept (ITableInfoVisitor visitor)
     {
-      throw new NotImplementedException();
+      ArgumentUtility.CheckNotNull ("visitor", visitor);
+      return visitor.VisitSubStatementTableInfo(this);
     }
   }
 }

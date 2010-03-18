@@ -29,23 +29,27 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
   {
     private readonly IMappingResolver _resolver;
     private readonly UniqueIdentifierGenerator _generator;
+    private IMappingResolutionStage _stage;
 
-    public static AbstractTableInfo ResolveTableInfo (AbstractTableInfo tableInfo, IMappingResolver resolver, UniqueIdentifierGenerator generator)
+    public static AbstractTableInfo ResolveTableInfo (AbstractTableInfo tableInfo, IMappingResolver resolver, UniqueIdentifierGenerator generator, IMappingResolutionStage stage)
     {
       ArgumentUtility.CheckNotNull ("tableInfo", tableInfo);
       ArgumentUtility.CheckNotNull ("resolver", resolver);
+      ArgumentUtility.CheckNotNull ("stage", stage);
 
-      var visitor = new ResolvingTableInfoVisitor (resolver, generator);
+      var visitor = new ResolvingTableInfoVisitor (resolver, generator, stage);
       return tableInfo.Accept (visitor);
     }
 
-    protected ResolvingTableInfoVisitor (IMappingResolver resolver, UniqueIdentifierGenerator generator)
+    protected ResolvingTableInfoVisitor (IMappingResolver resolver, UniqueIdentifierGenerator generator, IMappingResolutionStage stage)
     {
       ArgumentUtility.CheckNotNull ("generator", generator);
       ArgumentUtility.CheckNotNull ("resolver", resolver);
+      ArgumentUtility.CheckNotNull ("stage", stage);
 
       _resolver = resolver;
       _generator = generator;
+      _stage= stage;
     }
 
     public AbstractTableInfo VisitUnresolvedTableInfo (UnresolvedTableInfo tableInfo)
@@ -61,6 +65,14 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
     public AbstractTableInfo VisitSimpleTableInfo (ResolvedSimpleTableInfo tableInfo)
     {
       ArgumentUtility.CheckNotNull ("tableInfo", tableInfo);
+      return tableInfo;
+    }
+
+    public AbstractTableInfo VisitSubStatementTableInfo (ResolvedSubStatementTableInfo tableInfo)
+    {
+      ArgumentUtility.CheckNotNull ("tableInfo", tableInfo);
+
+      _stage.ResolveSqlStatement (tableInfo.SqlStatement);
       return tableInfo;
     }
   }

@@ -70,7 +70,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
     {
       ArgumentUtility.CheckNotNull ("tableInfo", tableInfo);
 
-      return ResolvingTableInfoVisitor.ResolveTableInfo (tableInfo, _resolver, _uniqueIdentifierGenerator);
+      return ResolvingTableInfoVisitor.ResolveTableInfo (tableInfo, _resolver, _uniqueIdentifierGenerator, this);
     }
 
     public AbstractJoinInfo ResolveJoinInfo (SqlTableBase sqlTable, AbstractJoinInfo joinInfo)

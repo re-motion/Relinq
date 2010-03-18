@@ -85,6 +85,11 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       return tableInfo;
     }
 
+    public AbstractTableInfo VisitSubStatementTableInfo (ResolvedSubStatementTableInfo tableInfo)
+    {
+      throw new NotImplementedException();
+    }
+
     public AbstractJoinInfo VisitResolvedJoinInfo (ResolvedJoinInfo tableSource)
     {
       _commandBuilder.Append (" LEFT OUTER JOIN ");
