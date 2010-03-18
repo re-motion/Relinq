@@ -39,7 +39,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       var visitor = new SqlTableAndJoinTextGenerator (commandBuilder, stage, first);
 
       if (!first)
-        commandBuilder.Append (" CROSS JOIN "); // TODO Review: Move this line to VisitResolveTableInfo. Add "first" as a ctor parameter for the SqlTableAndJoinTextGenerator.
+        commandBuilder.Append (" CROSS JOIN "); // TODO Review 2418: Move this line to VisitResolveTableInfo. Add "first" as a ctor parameter for the SqlTableAndJoinTextGenerator. This will be needed for subqueries in from clauses.
       sqlTable.TableInfo.Accept (visitor);
       GenerateSqlForJoins (sqlTable, visitor);
     }

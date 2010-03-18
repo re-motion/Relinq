@@ -15,9 +15,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Backend.SqlGeneration.SqlServer;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
@@ -27,8 +25,8 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
   /// </summary>
   public interface ISqlGenerationStage
   {
-    //void GenerateTextForFromTable (SqlCommandBuilder commandBuilder, IEnumerable<SqlTable> tables);
-    void GenerateTextForFromTable (SqlCommandBuilder commandBuilder, SqlTable table, bool first);
+    //void GenerateTextForFromTable (SqlCommandBuilder commandBuilder, IEnumerable<SqlTable> tables); // TODO Review 2418: Don't leave commented code in the source files. Just delete it; you can always retrieve it from the SVN logs.
+    void GenerateTextForFromTable (SqlCommandBuilder commandBuilder, SqlTable table, bool first); // TODO Review 2418: rename parameter to "isFirstTable"
     void GenerateTextForSelectExpression (SqlCommandBuilder commandBuilder, Expression expression);
     void GenerateTextForWhereExpression (SqlCommandBuilder commandBuilder, Expression expression);
     void GenerateTextForOrderByExpression (SqlCommandBuilder commandBuilder, Expression expression);

@@ -21,7 +21,7 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 {
   /// <summary>
-  /// <see cref="SqlCommand"/> contains sql command text and parameters for generating sql text.
+  /// <see cref="SqlCommand"/> contains the SQL command text and parameters generated for a LINQ query.
   /// </summary>
   public struct SqlCommand
   {

@@ -24,6 +24,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
   /// <summary>
   /// <see cref="ResolvingSqlStatementVisitor"/> provides methods to visit sql-statement classes.
   /// </summary>
+  // TODO Review: Now that the visitor does not derive from the SqlStatementVisitorBase class any longer, call it SqlStatementResolver instead. Rename the ISqlStatementResolver interface to IMappingResolver and the SqlStatementResolverStub class to MappingResolverStub.
   public class ResolvingSqlStatementVisitor
   {
     private readonly IMappingResolutionStage _stage;

@@ -16,7 +16,6 @@
 // 
 using System;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.SqlBackend.SqlGeneration.MethodCallGenerators;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
 using Remotion.Data.Linq.Utilities;
 
@@ -36,6 +35,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       _stage = stage;
     }
 
+    // TODO Review 2418: With subqueries, the SqlCommand returned by the Build method is wrong. Change the method to return void. Give the SqlCommandBuilder a GetCommand() method that returns the SqlCommand.
     public SqlCommand Build (SqlStatement sqlStatement, SqlCommandBuilder commandBuilder)
     {
       ArgumentUtility.CheckNotNull ("sqlStatement", sqlStatement);

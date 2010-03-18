@@ -15,7 +15,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.SqlBackend.SqlGeneration.MethodCallGenerators;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
@@ -37,6 +36,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       // ReSharper restore DoNotCallOverridableMethodsInConstructor
     }
 
+    // TODO Review 2418: Don't leave commented code in the source files. Just delete it; you can always retrieve it from the SVN logs.
     //public void GenerateTextForFromTable (SqlCommandBuilder commandBuilder, IEnumerable<SqlTable> tables)
     //{
     //  ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);
@@ -87,6 +87,9 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
     public void GenerateTextForSqlStatement (SqlCommandBuilder commandBuilder, SqlStatement sqlStatement)
     {
+      ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);
+      ArgumentUtility.CheckNotNull ("sqlStatement", sqlStatement);
+
       var sqlStatementTextGenerator = new SqlStatementTextGenerator (this);
       sqlStatementTextGenerator.Build (sqlStatement, commandBuilder);
     }
