@@ -47,10 +47,13 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
       if (initialSemantics == SqlExpressionContext.ValueRequired)
       {
+        // TODO Review 2469: Move this code block to EnsureValueSemantics. Throw a NotSupportedException instead of an InvalidOperationException.
+        // TODO Review 2469: This check is not enough for general subqueries. We need to check for any implementation of IEnumerable, e.g.: if (result.Type != typeof (string) && typeof (IEnumerable).IsAssignableFom (result.Type)) ... (String must be excluded because it implements IEnumerable, but still is a single value. Be sure to test this.)
+        // TODO Review 2469: Check all expressions, not only subqueries - member expressions, etc., are also a problem.
         if (expression is SqlSubStatementExpression && result.Type.IsGenericType)
         {
           if (result.Type.GetGenericTypeDefinition () == typeof (IQueryable<>))
-            throw new InvalidOperationException ("subquery selects a collection where a single value is expected.");
+            throw new InvalidOperationException ("subquery selects a collection where a single value is expected."); // TODO Review 2469: Exception messages should start with a capital letter.
         }
         return EnsureValueSemantics (result);
       }
