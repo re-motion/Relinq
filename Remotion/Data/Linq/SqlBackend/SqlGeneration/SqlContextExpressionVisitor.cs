@@ -15,8 +15,10 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Parsing;
+using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel.SqlSpecificExpressions;
 using Remotion.Data.Linq.Utilities;
@@ -44,7 +46,14 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       var result = s_visitorInstance.VisitExpression (expression);
 
       if (initialSemantics == SqlExpressionContext.ValueRequired)
+      {
+        if (expression is SqlSubStatementExpression && result.Type.IsGenericType)
+        {
+          if (result.Type.GetGenericTypeDefinition () == typeof (IQueryable<>))
+            throw new InvalidOperationException ("subquery selects a collection where a single value is expected.");
+        }
         return EnsureValueSemantics (result);
+      }
       else if (initialSemantics == SqlExpressionContext.PredicateRequired)
         return EnsurePredicateSemantics (result);
       else
