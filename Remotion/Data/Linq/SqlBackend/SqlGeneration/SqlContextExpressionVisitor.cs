@@ -15,10 +15,9 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Linq;
+using System.Collections;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Parsing;
-using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel.SqlSpecificExpressions;
 using Remotion.Data.Linq.Utilities;
@@ -47,14 +46,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
       if (initialSemantics == SqlExpressionContext.ValueRequired)
       {
-        // TODO Review 2469: Move this code block to EnsureValueSemantics. Throw a NotSupportedException instead of an InvalidOperationException.
-        // TODO Review 2469: This check is not enough for general subqueries. We need to check for any implementation of IEnumerable, e.g.: if (result.Type != typeof (string) && typeof (IEnumerable).IsAssignableFom (result.Type)) ... (String must be excluded because it implements IEnumerable, but still is a single value. Be sure to test this.)
-        // TODO Review 2469: Check all expressions, not only subqueries - member expressions, etc., are also a problem.
-        if (expression is SqlSubStatementExpression && result.Type.IsGenericType)
-        {
-          if (result.Type.GetGenericTypeDefinition () == typeof (IQueryable<>))
-            throw new InvalidOperationException ("subquery selects a collection where a single value is expected."); // TODO Review 2469: Exception messages should start with a capital letter.
-        }
         return EnsureValueSemantics (result);
       }
       else if (initialSemantics == SqlExpressionContext.PredicateRequired)
@@ -65,6 +56,12 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
     private static Expression EnsureValueSemantics (Expression expression)
     {
+      if (!(expression is SqlEntityExpression))
+      {
+        if (expression.Type != typeof (string) && typeof (IEnumerable).IsAssignableFrom (expression.Type))
+          throw new NotSupportedException ("Subquery selects a collection where a single value is expected.");
+      }
+
       if (expression.Type == typeof (bool))
       {
         if (expression.NodeType == ExpressionType.Constant)
