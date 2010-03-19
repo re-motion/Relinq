@@ -42,6 +42,8 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       ArgumentUtility.CheckNotNull ("fromExpressions", sqlTables);
       ArgumentUtility.CheckNotNull ("orderings", orderings);
 
+      // TODO Review 2469: Check that sqlTables is not empty.
+
       _selectProjection = selectProjection;
       _sqlTables = sqlTables.ToArray();
       _orderings = orderings.ToArray();
