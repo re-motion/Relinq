@@ -30,7 +30,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
     private readonly SqlCommandBuilder _commandBuilder;
     private readonly ISqlGenerationStage _stage;
     private bool _first;
-
+    
     public static void GenerateSql (SqlTable sqlTable, SqlCommandBuilder commandBuilder, ISqlGenerationStage stage, bool first)
     {
       ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
@@ -74,6 +74,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
         _commandBuilder.Append (" CROSS JOIN ");
         _first = true;
       }
+      
       _commandBuilder.Append ("[");
       _commandBuilder.Append (tableInfo.TableName);
       _commandBuilder.Append ("]");
@@ -87,12 +88,18 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
     public AbstractTableInfo VisitSubStatementTableInfo (ResolvedSubStatementTableInfo tableInfo)
     {
-      _commandBuilder.Append (" CROSS APPLY ");
+      if (!_first)
+      {
+        _commandBuilder.Append (" CROSS APPLY ");
+      }
+
       _commandBuilder.Append ("(");
       _stage.GenerateTextForSqlStatement (_commandBuilder, tableInfo.SqlStatement);
       _commandBuilder.Append (")");
       _commandBuilder.Append (" AS ");
+      _commandBuilder.Append ("[");
       _commandBuilder.Append (tableInfo.TableAlias);
+      _commandBuilder.Append ("]");
       return tableInfo;
     }
 
