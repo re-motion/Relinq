@@ -75,7 +75,13 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
 
     public Expression VisitSqlSubStatementExpression (SqlSubStatementExpression expression)
     {
-      var sqlTable = new SqlTable (new ResolvedSubStatementTableInfo (expression.Type, _generator.GetUniqueIdentifier ("q"), expression.SqlStatement));
+      // Note: This is a case where the SQL preparation stage already generates a resolved table info (including a table alias) rather than passing
+      // on an unresolved table info to the mapping resolution stage. Should we ever have the need to resolve subqueries in the mapping resolution 
+      // stage, we should refactor this into an UnresolvedSubStatemenTableInfo.
+      
+      // TODO Review 2460: Item type of the table info is not the same as expression.Type. Expression.Type will be a collection-valued type (e.g., IEnumerable<Cook>), ItemType should be the element type (e.g., Cook). Retrieve via ReflectionUtility.
+      var tableInfo = new ResolvedSubStatementTableInfo (expression.Type, _generator.GetUniqueIdentifier ("q"), expression.SqlStatement);
+      var sqlTable = new SqlTable (tableInfo);
       return new SqlTableReferenceExpression (sqlTable);
     }
 
