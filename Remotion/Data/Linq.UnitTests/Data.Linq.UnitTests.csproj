@@ -372,7 +372,7 @@
     <Compile Include="SqlBackend\SqlGeneration\DefaultSqlGenerationStageTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\IntegrationTests\AdditionalFromClausesSqlBackendIntegrationTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\IntegrationTests\OrderByClausesSqlBackendIntegrationTest.cs" />
-    <Compile Include="SqlBackend\SqlGeneration\IntegrationTests\SubQueriesSqlBackendIntegrationTest.cs" />
+    <Compile Include="SqlBackend\SqlGeneration\IntegrationTests\SubQuerySqlBackendIntegrationTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\SqlContextExpressionVisitorTest.cs" />
     <Compile Include="SqlBackend\SqlGeneration\TestableSqlExpressionContextExpressionVisitor.cs" />
     <Compile Include="SqlBackend\SqlGeneration\IntegrationTests\BinaryExpressionSqlBackendIntegrationTest.cs" />
