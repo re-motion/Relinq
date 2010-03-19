@@ -19,6 +19,7 @@ using System.Reflection;
 using Remotion.Data.Linq.Backend;
 using Remotion.Data.Linq.Backend.DataObjectModel;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.SqlBackend;
 
 namespace Remotion.Data.Linq.UnitTests.TestDomain
 {
