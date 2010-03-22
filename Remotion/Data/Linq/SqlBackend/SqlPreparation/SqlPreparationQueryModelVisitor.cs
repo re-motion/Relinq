@@ -185,20 +185,19 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
 
       _context.AddQuerySourceMapping (fromClause, sqlTableOrJoin);
 
-      //var sqlJoinedTable = sqlTableOrJoin as SqlJoinedTable;
-      //if (sqlJoinedTable != null)
-      //{
-      //  // from c in kitchen.Cooks
-
-      //  // => from c in Cooks where c.Kitchen = kitchen
-
-      //  var topLevelTableForJoin = new SqlTable (new UnresolvedTableInfo (null, sqlJoinedTable.ItemType));
-      //  AddWhereCondition (new UnresolvedJoinConditionExpression (sqlJoinedTable.JoinInfo));
-      //}
-
-      var topLevelSqlTable = sqlTableOrJoin as SqlTable;
-      if (topLevelSqlTable != null)
-        _sqlTables.Add (topLevelSqlTable);
+      var sqlJoinedTable = sqlTableOrJoin as SqlJoinedTable;
+      if (sqlJoinedTable != null)
+      {
+        var topLevelTableForJoin = new SqlTable (new UnresolvedTableInfo (sqlJoinedTable.ItemType));
+        AddWhereCondition (new UnresolvedJoinConditionExpression (sqlJoinedTable.JoinInfo));
+        _sqlTables.Add (topLevelTableForJoin);
+      }
+      else
+      {
+        var topLevelSqlTable = sqlTableOrJoin as SqlTable;
+        if (topLevelSqlTable != null)
+          _sqlTables.Add (topLevelSqlTable);
+      }
     }
   }
 }
