@@ -68,6 +68,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
+      // TODO var joinedTable = new SqlJoinedTable (new UnresolvedJoinInfo (expression.MemberInfo, JoinCardinality.Many));
       var joinedTable = expression.SqlTable.GetOrAddJoin (expression.MemberInfo, JoinCardinality.Many);
 
       return new SqlTableReferenceExpression (joinedTable);

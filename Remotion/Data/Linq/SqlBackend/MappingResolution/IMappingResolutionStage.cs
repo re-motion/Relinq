@@ -30,7 +30,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
     Expression ResolveOrderingExpression (Expression expression);
     Expression ResolveTopExpression (Expression expression);
     AbstractTableInfo ResolveTableInfo (AbstractTableInfo tableInfo);
-    AbstractJoinInfo ResolveJoinInfo (SqlTableBase sqlTable, AbstractJoinInfo joinInfo);
+    AbstractJoinInfo ResolveJoinInfo (SqlTableBase sqlTable, AbstractJoinInfo joinInfo); // TODO: Change to return ResolvedJoinInfo
     void ResolveSqlStatement (SqlStatement sqlStatement);
   }
 }

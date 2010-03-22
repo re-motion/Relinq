@@ -22,6 +22,7 @@ using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
+using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved;
 using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
@@ -178,6 +179,17 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       var sqlTableOrJoin = _stage.PrepareSqlTable (preparedFromExpression, fromClause.ItemType);
 
       _context.AddQuerySourceMapping (fromClause, sqlTableOrJoin);
+
+      //var sqlJoinedTable = sqlTableOrJoin as SqlJoinedTable;
+      //if (sqlJoinedTable != null)
+      //{
+      //  // from c in kitchen.Cooks
+
+      //  // => from c in Cooks where c.Kitchen = kitchen
+
+      //  var topLevelTableForJoin = new SqlTable (new UnresolvedTableInfo (null, sqlJoinedTable.ItemType));
+      //  AddWhereCondition (new UnresolvedJoinConditionExpression (sqlJoinedTable.JoinInfo));
+      //}
 
       var topLevelSqlTable = sqlTableOrJoin as SqlTable;
       if (topLevelSqlTable != null)

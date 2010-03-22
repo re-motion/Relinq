@@ -18,6 +18,7 @@ using System;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
+using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved;
 using Remotion.Data.Linq.Utilities;
 
@@ -30,7 +31,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
   {
     private readonly IMappingResolver _resolver;
     private readonly UniqueIdentifierGenerator _generator;
-    private IMappingResolutionStage _stage;
+    private readonly IMappingResolutionStage _stage;
 
     public static Expression ResolveExpression (Expression expression, IMappingResolver resolver, UniqueIdentifierGenerator generator, IMappingResolutionStage stage)
     {
@@ -101,5 +102,12 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
       _stage.ResolveSqlStatement (expression.SqlStatement);
       return expression;
     }
+
+    //public Expression VisitUnresolvedJoinConditionExpression (UnresolvedJoinConditionExpression expression)
+    //{
+    //  AbstractJoinInfo joinInfo = expression.JoinInfo;
+    //  ResolvedJoinInfo resolvedJoinInfo = _stage.ResolveJoinInfo (null, joinInfo);
+    //  return Expression.Equal (resolvedJoinInfo.PrimaryColumn, resolvedJoinInfo.ForeignColumn);
+    //}
   }
 }

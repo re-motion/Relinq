@@ -39,7 +39,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
       ArgumentUtility.CheckNotNull ("generator", generator);
 
       var visitor = new ResolvingJoinInfoVisitor (originatingTable, resolver, generator);
-      return joinInfo.Accept (visitor);
+      return joinInfo.Accept (visitor); // TODO: Return ResolvedJoinInfo
     }
 
     protected ResolvingJoinInfoVisitor (SqlTableBase originatingTable, IMappingResolver resolver, UniqueIdentifierGenerator generator)
@@ -56,7 +56,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
       ArgumentUtility.CheckNotNull ("joinInfo", joinInfo);
       var result = _resolver.ResolveJoinInfo (_originatingTable, joinInfo, _generator); 
       if (result == joinInfo)
-        return result;
+        return result; // TODO: Throw InvalidOperationException - cannot return an UnresolvedJoinInfo from resolution stage.
       else
         return result.Accept (this);
     }
