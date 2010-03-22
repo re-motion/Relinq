@@ -67,9 +67,8 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
     public Expression VisitSqlMemberExpression (SqlMemberExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-
-      // TODO var joinedTable = new SqlJoinedTable (new UnresolvedJoinInfo (expression.MemberInfo, JoinCardinality.Many));
-      var joinedTable = expression.SqlTable.GetOrAddJoin (expression.MemberInfo, JoinCardinality.Many);
+      
+      var joinedTable = new SqlJoinedTable (new UnresolvedJoinInfo(expression.SqlTable, expression.MemberInfo, JoinCardinality.Many));
 
       return new SqlTableReferenceExpression (joinedTable);
     }
