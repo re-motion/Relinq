@@ -29,11 +29,14 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved
     private readonly MemberInfo _memberInfo;
     private readonly JoinCardinality _cardinality;
     private readonly Type _itemType;
+    private readonly SqlTableBase _sqlTable;
 
-    public UnresolvedJoinInfo (MemberInfo memberInfo, JoinCardinality cardinality)
+    public UnresolvedJoinInfo (SqlTableBase sqlTable, MemberInfo memberInfo, JoinCardinality cardinality)
     {
+      ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
       ArgumentUtility.CheckNotNull ("memberInfo", memberInfo);
 
+      _sqlTable = sqlTable;
       _memberInfo = memberInfo;
       _cardinality = cardinality;
 
@@ -42,6 +45,11 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved
         _itemType = memberReturnType;
       else
         _itemType = ReflectionUtility.GetItemTypeOfIEnumerable (memberReturnType, "memberInfo");
+    }
+
+    public SqlTableBase SqlTable
+    {
+      get { return _sqlTable; }
     }
 
     public MemberInfo MemberInfo
