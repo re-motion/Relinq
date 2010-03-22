@@ -53,10 +53,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
     {
       ArgumentUtility.CheckNotNull ("joinInfo", joinInfo);
       var result = _resolver.ResolveJoinInfo (joinInfo, _generator); 
-      if (result == joinInfo)
-        return result; // TODO: Throw InvalidOperationException - cannot return an UnresolvedJoinInfo from resolution stage.
-      else
-        return result.Accept (this);
+      return result.Accept (this);
     }
 
     public AbstractJoinInfo VisitResolvedJoinInfo (ResolvedJoinInfo joinInfo)
