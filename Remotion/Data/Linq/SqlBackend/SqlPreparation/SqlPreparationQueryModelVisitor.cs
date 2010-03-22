@@ -122,10 +122,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
     public override void VisitWhereClause (WhereClause whereClause, QueryModel queryModel, int index)
     {
       var translatedExpression = _stage.PrepareWhereExpression (whereClause.Predicate);
-      if (WhereCondition != null)
-        WhereCondition = Expression.AndAlso (WhereCondition, translatedExpression);
-      else
-        WhereCondition = translatedExpression;
+      AddWhereCondition(translatedExpression);
     }
 
     public override void VisitSelectClause (SelectClause selectClause, QueryModel queryModel)
@@ -171,6 +168,14 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       }
       else
         throw new NotSupportedException (string.Format ("{0} is not supported.", resultOperator));
+    }
+
+    protected void AddWhereCondition (Expression translatedExpression)
+    {
+      if (WhereCondition != null)
+        WhereCondition = Expression.AndAlso (WhereCondition, translatedExpression);
+      else
+        WhereCondition = translatedExpression;
     }
 
     private void AddFromClause (FromClauseBase fromClause)
