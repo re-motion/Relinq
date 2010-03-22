@@ -60,7 +60,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      var sqlTable = new SqlTable (new UnresolvedTableInfo (expression, _itemType));
+      var sqlTable = new SqlTable (new UnresolvedTableInfo (_itemType));
       return new SqlTableReferenceExpression (sqlTable);
     }
 

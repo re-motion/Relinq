@@ -28,17 +28,13 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved
   {
     private readonly Type _itemType;
 
-    public UnresolvedTableInfo (ConstantExpression constantExpression, Type itemType)
+    public UnresolvedTableInfo (Type itemType)
     {
-      ArgumentUtility.CheckNotNull ("constantExpression", constantExpression);
       ArgumentUtility.CheckNotNull ("itemType", itemType);
 
-      ConstantExpression = constantExpression;
       _itemType = itemType;
     }
 
-    public ConstantExpression ConstantExpression { get; private set; }
-    
     public override Type ItemType
     {
       get { return _itemType;  }
