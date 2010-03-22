@@ -28,25 +28,23 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
   public class ResolvingJoinInfoVisitor : IJoinInfoVisitor
   {
     private readonly IMappingResolver _resolver;
-    private readonly SqlTableBase _originatingTable;
     private readonly UniqueIdentifierGenerator _generator;
 
-    public static ResolvedJoinInfo ResolveJoinInfo (SqlTableBase originatingTable, AbstractJoinInfo joinInfo, IMappingResolver resolver, UniqueIdentifierGenerator generator)
+    public static ResolvedJoinInfo ResolveJoinInfo (AbstractJoinInfo joinInfo, IMappingResolver resolver, UniqueIdentifierGenerator generator)
     {
-      ArgumentUtility.CheckNotNull ("originatingTable", originatingTable);
       ArgumentUtility.CheckNotNull ("joinInfo", joinInfo);
       ArgumentUtility.CheckNotNull ("resolver", resolver);
       ArgumentUtility.CheckNotNull ("generator", generator);
 
-      var visitor = new ResolvingJoinInfoVisitor (originatingTable, resolver, generator);
-      return (ResolvedJoinInfo) (joinInfo.Accept (visitor)); // TODO: Return ResolvedJoinInfo
+      var visitor = new ResolvingJoinInfoVisitor (resolver, generator);
+      return (ResolvedJoinInfo) (joinInfo.Accept (visitor));
     }
 
-    protected ResolvingJoinInfoVisitor (SqlTableBase originatingTable, IMappingResolver resolver, UniqueIdentifierGenerator generator)
+    protected ResolvingJoinInfoVisitor (IMappingResolver resolver, UniqueIdentifierGenerator generator)
     {
-      ArgumentUtility.CheckNotNull ("originatingTable", originatingTable);
       ArgumentUtility.CheckNotNull ("resolver", resolver);
-      _originatingTable = originatingTable;
+      ArgumentUtility.CheckNotNull ("generator", generator);
+      
       _resolver = resolver;
       _generator = generator;
     }
@@ -54,7 +52,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
     public AbstractJoinInfo VisitUnresolvedJoinInfo (UnresolvedJoinInfo joinInfo)
     {
       ArgumentUtility.CheckNotNull ("joinInfo", joinInfo);
-      var result = _resolver.ResolveJoinInfo (_originatingTable, joinInfo, _generator); 
+      var result = _resolver.ResolveJoinInfo (joinInfo, _generator); 
       if (result == joinInfo)
         return result; // TODO: Throw InvalidOperationException - cannot return an UnresolvedJoinInfo from resolution stage.
       else

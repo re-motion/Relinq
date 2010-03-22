@@ -42,12 +42,11 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
     /// The method takes a <see cref="SqlTableBase"/>, <see cref="UnresolvedJoinInfo"/> and an <see cref="UniqueIdentifierGenerator"/> to generate an
     /// <see cref="AbstractJoinInfo"/>. The method has to return a sql join between <see cref="SqlTableBase"/> and <see cref="UnresolvedJoinInfo"/>.
     /// </summary>
-    /// <param name="originatingTable">The <see cref="SqlTableBase"/> which represents the sql table which holds the primary key.</param>
     /// <param name="joinInfo">The <see cref="UnresolvedTableInfo"/> which represents the sql table which holds the foreign key. 
     /// The <see cref="UnresolvedTableInfo"/> has to be resolved to get the appropriate sql table.</param>
     /// <param name="generator">The <see cref="UniqueIdentifierGenerator"/> which is used to generate unique identifiers for resolved <see cref="AbstractJoinInfo"/>.</param>
     /// <returns>The method returns <see cref="AbstractJoinInfo"/> which represents a sql join between two sql tables.</returns>
-    AbstractJoinInfo ResolveJoinInfo (SqlTableBase originatingTable, UnresolvedJoinInfo joinInfo, UniqueIdentifierGenerator generator);
+    AbstractJoinInfo ResolveJoinInfo (UnresolvedJoinInfo joinInfo, UniqueIdentifierGenerator generator);
 
     /// <summary>
     /// The method analyses the <see cref="SqlTableReferenceExpression"/> and returns the <see cref="SqlEntityExpression"/> which holds a list
