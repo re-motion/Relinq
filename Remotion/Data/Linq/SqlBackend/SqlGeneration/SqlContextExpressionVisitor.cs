@@ -54,13 +54,14 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
         throw new NotImplementedException ("Invalid enum value: " + initialSemantics);
     }
 
+    // TODO: Add EnsureSingleValueSemantics (...)
+    // TODO: entityExpression = expression as SqlEntityExpression; if (entityExpression != null) { return entityExpression.PrimaryKeyColumn; }
+    // TODO: Else call EnsureValueSemtantics
+
     private static Expression EnsureValueSemantics (Expression expression)
     {
-      if (!(expression is SqlEntityExpression))
-      {
-        if (expression.Type != typeof (string) && typeof (IEnumerable).IsAssignableFrom (expression.Type))
-          throw new NotSupportedException ("Subquery selects a collection where a single value is expected.");
-      }
+      if (expression.Type != typeof (string) && typeof (IEnumerable).IsAssignableFrom (expression.Type))
+        throw new NotSupportedException ("Subquery selects a collection where a single value is expected.");
 
       if (expression.Type == typeof (bool))
       {
