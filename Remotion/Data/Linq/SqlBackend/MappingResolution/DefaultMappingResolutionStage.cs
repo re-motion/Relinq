@@ -17,6 +17,8 @@
 using System;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
+using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved;
+using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved;
 using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.SqlBackend.MappingResolution
@@ -73,12 +75,11 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
       return ResolvingTableInfoVisitor.ResolveTableInfo (tableInfo, _resolver, _uniqueIdentifierGenerator, this);
     }
 
-    public AbstractJoinInfo ResolveJoinInfo (SqlTableBase sqlTable, AbstractJoinInfo joinInfo)
+    public ResolvedJoinInfo ResolveJoinInfo (UnresolvedJoinInfo joinInfo)
     {
-      ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
       ArgumentUtility.CheckNotNull ("joinInfo", joinInfo);
 
-      return ResolvingJoinInfoVisitor.ResolveJoinInfo (sqlTable, joinInfo, _resolver, _uniqueIdentifierGenerator);
+      return ResolvingJoinInfoVisitor.ResolveJoinInfo (joinInfo.SqlTable, joinInfo, _resolver, _uniqueIdentifierGenerator);
     }
 
     public void ResolveSqlStatement (SqlStatement sqlStatement)

@@ -17,6 +17,8 @@
 using System;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
+using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved;
+using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved;
 
 namespace Remotion.Data.Linq.SqlBackend.MappingResolution
 {
@@ -30,7 +32,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
     Expression ResolveOrderingExpression (Expression expression);
     Expression ResolveTopExpression (Expression expression);
     AbstractTableInfo ResolveTableInfo (AbstractTableInfo tableInfo);
-    AbstractJoinInfo ResolveJoinInfo (SqlTableBase sqlTable, AbstractJoinInfo joinInfo); // TODO: Change to return ResolvedJoinInfo
+    ResolvedJoinInfo ResolveJoinInfo (UnresolvedJoinInfo joinInfo);
     void ResolveSqlStatement (SqlStatement sqlStatement);
   }
 }

@@ -17,6 +17,7 @@
 using System;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
+using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved;
 using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.SqlBackend.MappingResolution
@@ -84,7 +85,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
     {
       foreach (var joinedTable in sqlTable.JoinedTables)
       {
-        joinedTable.JoinInfo = _stage.ResolveJoinInfo (sqlTable, joinedTable.JoinInfo);
+        joinedTable.JoinInfo = _stage.ResolveJoinInfo ((UnresolvedJoinInfo) joinedTable.JoinInfo);
         ResolveJoins (joinedTable);
       }
     }
