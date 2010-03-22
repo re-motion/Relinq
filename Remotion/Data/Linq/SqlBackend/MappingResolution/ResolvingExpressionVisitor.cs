@@ -95,6 +95,13 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
       return VisitExpression (sqlTableReferenceExpression);
     }
 
+    public Expression VisitUnresolvedJoinConditionExpression (UnresolvedJoinConditionExpression expression)
+    {
+      var joinInfo = expression.JoinInfo;
+      var resolvedJoinInfo = _stage.ResolveJoinInfo ((UnresolvedJoinInfo) joinInfo);
+      return Expression.Equal (resolvedJoinInfo.PrimaryColumn, resolvedJoinInfo.ForeignColumn);
+    }
+
     public Expression VisitSqlSubStatementExpression (SqlSubStatementExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
@@ -103,11 +110,5 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
       return expression;
     }
 
-    //public Expression VisitUnresolvedJoinConditionExpression (UnresolvedJoinConditionExpression expression)
-    //{
-    //  AbstractJoinInfo joinInfo = expression.JoinInfo;
-    //  ResolvedJoinInfo resolvedJoinInfo = _stage.ResolveJoinInfo (null, joinInfo);
-    //  return Expression.Equal (resolvedJoinInfo.PrimaryColumn, resolvedJoinInfo.ForeignColumn);
-    //}
   }
 }
