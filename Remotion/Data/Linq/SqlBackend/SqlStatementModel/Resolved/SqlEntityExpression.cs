@@ -54,6 +54,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
 
     protected internal override Expression VisitChildren (ExpressionTreeVisitor visitor)
     {
+      // TODO: PrimaryKeyColumn must be visited.
       var newColumns = visitor.VisitAndConvert (ProjectionColumns, "VisitChildren");
       if (newColumns != ProjectionColumns)
         return new SqlEntityExpression (Type, PrimaryKeyColumn, newColumns.ToArray());
