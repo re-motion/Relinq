@@ -170,6 +170,7 @@
     <Compile Include="Backend\SqlGeneration\SqlServer\WhereBuilderTest.cs" />
     <Compile Include="Backend\SqlGeneration\SqlUtilityTest.cs" />
     <Compile Include="Backend\SqlGeneration\StubParameterCollection.cs" />
+    <Compile Include="SqlBackend\SqlStatementModel\Unresolved\UnresolvedJoinConditionExpressionTest.cs" />
     <Compile Include="SqlBackend\UnmappedItemExceptionTest.cs" />
     <Compile Include="Clauses\AdditionalFromClauseTest.cs" />
     <Compile Include="Clauses\Expressions\ExtensionExpressionIntegrationTest.cs" />
