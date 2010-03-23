@@ -15,6 +15,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections;
 
 namespace Remotion.Data.Linq.Utilities
 {
@@ -101,6 +102,34 @@ namespace Remotion.Data.Linq.Utilities
       }
 
       return actualType;
+    }
+
+    public static T CheckNotEmpty<T> (string argumentName, T enumerable)
+        where T : IEnumerable
+    {
+      // ReSharper disable CompareNonConstrainedGenericWithNull
+      if (enumerable != null)
+      // ReSharper restore CompareNonConstrainedGenericWithNull
+      {
+        var collection = enumerable as ICollection;
+        if (collection != null)
+        {
+          if (collection.Count == 0)
+            throw new ArgumentEmptyException (argumentName);
+          else
+            return enumerable;
+        }
+
+        IEnumerator enumerator = enumerable.GetEnumerator ();
+        var disposableEnumerator = enumerator as IDisposable;
+        using (disposableEnumerator) // using (null) is allowed in C#
+        {
+          if (!enumerator.MoveNext ())
+            throw new ArgumentEmptyException (argumentName);
+        }
+      }
+
+      return enumerable;
     }
   }
 }
