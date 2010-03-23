@@ -49,6 +49,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
     {
       ArgumentUtility.CheckNotNull ("methodInfo", methodInfo);
 
+      // TODO Review 2364: Move down to throw statement.
       string message = string.Format (
           "The method '{0}.{1}' is not supported by this code generator, and no custom generator has been registered.",
           methodInfo.DeclaringType.FullName,
@@ -59,6 +60,12 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
       if (methodInfo.IsGenericMethod && !methodInfo.IsGenericMethodDefinition)
         return GetGenerator (methodInfo.GetGenericMethodDefinition ());
+
+      // TODO Review 2364: To support generators registered for base methods, add the following:
+      //var baseMethod = methodInfo.GetBaseDefinition ();
+      //if (baseMethod != methodInfo)
+      //  return GetGenerator (baseMethod);
+      // TODO Review 2364: Test by registering a generator for object.ToString() and retrieving the generator using int.ToString(). This should not work without this code, but with the code, it should work.
 
       throw new NotSupportedException(message);
     }
