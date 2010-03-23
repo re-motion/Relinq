@@ -95,14 +95,6 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
       return VisitExpression (sqlTableReferenceExpression);
     }
 
-    // TODO: Remove this method, handle JoinConditionExpression in SqlStatementTextGenerator
-    //public Expression VisitUnresolvedJoinConditionExpression (JoinConditionExpression expression)
-    //{
-    //  var joinInfo = expression.JoinInfo;
-    //  var resolvedJoinInfo = _stage.ResolveJoinInfo ((UnresolvedJoinInfo) joinInfo);
-    //  return Expression.Equal (resolvedJoinInfo.PrimaryColumn, resolvedJoinInfo.ForeignColumn);
-    //}
-
     public Expression VisitSqlSubStatementExpression (SqlSubStatementExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);

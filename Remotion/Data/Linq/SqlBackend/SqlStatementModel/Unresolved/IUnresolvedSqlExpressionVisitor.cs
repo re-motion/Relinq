@@ -27,6 +27,5 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved
     Expression VisitSqlTableReferenceExpression (SqlTableReferenceExpression expression);
     Expression VisitSqlMemberExpression (SqlMemberExpression expression);
     Expression VisitSqlEntityRefMemberExpression (SqlEntityRefMemberExpression expression);
-    //Expression VisitUnresolvedJoinConditionExpression (JoinConditionExpression expression);
   }
 }
