@@ -186,9 +186,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       var sqlJoinedTable = sqlTableOrJoin as SqlJoinedTable;
       if (sqlJoinedTable != null)
       {
-        //TODO: use sqlJoinedTable
-        //TODO: 
-        //var topLevelTableForJoin = new SqlTable (new UnresolvedTableInfo (sqlJoinedTable.ItemType));
         _context.AddQuerySourceMapping (fromClause, sqlJoinedTable);
         AddWhereCondition (new JoinConditionExpression (sqlJoinedTable));
         _sqlTables.Add (sqlJoinedTable);
