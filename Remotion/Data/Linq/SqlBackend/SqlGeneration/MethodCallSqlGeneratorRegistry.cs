@@ -22,7 +22,7 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 {
   /// <summary>
-  /// <see cref="MethodCallSqlGeneratorRegistry"/> is used to register and get <see cref="IMethodCallSqlGenerator"/>s.
+  /// <see cref="MethodCallSqlGeneratorRegistry"/> is used to register and get <see cref="IMethodCallSqlGenerator"/> instances.
   /// </summary>
   public class MethodCallSqlGeneratorRegistry
   {
@@ -38,6 +38,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       ArgumentUtility.CheckNotNull ("methodInfo", methodInfo);
       ArgumentUtility.CheckNotNull ("generator", generator);
 
+      // TODO Review 2364: Just use "_generators[methodInfo] = generator", this works in all cases.
       if (!_generators.ContainsKey (methodInfo))
         _generators.Add (methodInfo, generator);
       else
@@ -49,7 +50,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       ArgumentUtility.CheckNotNull ("methodInfo", methodInfo);
 
       string message = string.Format (
-          "The method {0}.{1} is not supported by this code generator, and no custom generator has been registered.",
+          "The method '{0}.{1}' is not supported by this code generator, and no custom generator has been registered.",
           methodInfo.DeclaringType.FullName,
           methodInfo.Name);
 

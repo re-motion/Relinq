@@ -97,8 +97,20 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
     {
       var registry = new MethodCallSqlGeneratorRegistry();
 
+      // TODO Review 2364: For each specific method call generator, add a public static readonly array holding the methods supported by that generator, similar to how SelectExpressionNode does it. Add one unit test per node to check the contents of the field.
+      // TODO Review 2364: Add (and test) an overload of MethodCallSqlGeneratorRegistry.Register that takes an IEnumerable<MethodInfo>. That overload should iterate over the methods and register each of them with the given instance.
+      // TODO Review 2364: Then, add an automatic registration facility; see MethodCallExpressionNodeTypeRegistry.CreateDefault. (Create instances of the types using Activator.CreateInstance().)
+      // TODO Review 2364: Remove this method, instead inject the MethodCallExpressionNodeTypeRegistry via the ctor. Adapt usage in integration tests to supply the result of MethodCallExpressionNodeTypeRegistry.CreateDefault().
+
       //TODO: Convert methods with all overloads needed
-      var containsMethod = typeof (string).GetMethod ("Contains", new Type[] { typeof (string) });
+      var containsMethod = typeof (string).GetMethod ("Contains", new[] { typeof (string) });
+      var endsWithMethod = typeof (string).GetMethod ("EndsWith", new[] { typeof (string) });
+      var lowerMethod = typeof (string).GetMethod ("ToLower", new Type[] { });
+      var removeMethod = typeof (string).GetMethod ("Remove", new[] { typeof (int) });
+      var startsWithMethod = typeof (string).GetMethod ("StartsWith", new[] { typeof (string) });
+      var substringMethod = typeof (string).GetMethod ("Substring", new[] { typeof (int), typeof (int) });
+      var toUpperMethod = typeof (string).GetMethod ("ToUpper", new Type[] { });
+
       var convertToStringMethod = typeof (Convert).GetMethod ("ToString", new[] { typeof (int) });
       var convertToBoolMethod = typeof (Convert).GetMethod ("ToBoolean", new[] { typeof (int) });
       var convertToInt64Method = typeof (Convert).GetMethod ("ToInt64", new[] { typeof (int) });
@@ -108,12 +120,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       var convertToDecimalMethod = typeof (Convert).GetMethod ("ToDecimal", new[] { typeof (int) });
       var convertToCharMethod = typeof (Convert).GetMethod ("ToChar", new[] { typeof (int) });
       var convertToByteMethod = typeof (Convert).GetMethod ("ToByte", new[] { typeof (int) });
-      var endsWithMethod = typeof (string).GetMethod ("EndsWith", new Type[] { typeof (string) });
-      var lowerMethod = typeof (string).GetMethod ("ToLower", new Type[] { });
-      var removeMethod = typeof (string).GetMethod ("Remove", new Type[] { typeof (int) });
-      var startsWithMethod = typeof (string).GetMethod ("StartsWith", new Type[] { typeof (string) });
-      var substringMethod = typeof (string).GetMethod ("Substring", new Type[] { typeof (int), typeof (int) });
-      var toUpperMethod = typeof (string).GetMethod ("ToUpper", new Type[] { });
 
       registry.Register (containsMethod, new MethodCallContains());
       registry.Register (convertToStringMethod, new MethodCallConvert());

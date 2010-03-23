@@ -24,6 +24,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration.MethodCallGenerators
   /// <summary>
   /// <see cref="MethodCallContains"/> implements <see cref="IMethodCallSqlGenerator"/> for the string like and contains method.
   /// </summary>
+  // TODO Review 2364: Rename all generator classes to "...SqlGenerator", e.g., "ContainsSqlGenerator" or "ContainsMethodCallSqlGenerator".
   public class MethodCallContains : IMethodCallSqlGenerator
   {
     public void GenerateSql (MethodCallExpression methodCallExpression, SqlCommandBuilder commandBuilder, ExpressionTreeVisitor expressionTreeVisitor)

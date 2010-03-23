@@ -21,7 +21,7 @@ using Remotion.Data.Linq.Parsing;
 namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 {
   /// <summary>
-  /// <see cref="IMethodCallSqlGenerator"/> provides method to generate sql text for method expressions.
+  /// <see cref="IMethodCallSqlGenerator"/> is implemented by classes generating sql text for specific method calls.
   /// </summary>
   public interface IMethodCallSqlGenerator
   {
