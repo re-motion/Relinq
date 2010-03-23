@@ -36,7 +36,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       // ReSharper restore DoNotCallOverridableMethodsInConstructor
     }
 
-    public void GenerateTextForFromTable (SqlCommandBuilder commandBuilder, SqlTable table, bool isFirstTable)
+    public void GenerateTextForFromTable (SqlCommandBuilder commandBuilder, SqlTableBase table, bool isFirstTable)
     {
       ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);
       ArgumentUtility.CheckNotNull ("table", table);

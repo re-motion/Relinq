@@ -30,13 +30,13 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
   /// </summary>
   public class SqlStatement
   {
-    private readonly SqlTable[] _sqlTables;
+    private readonly SqlTableBase[] _sqlTables;
     private readonly Ordering[] _orderings;
 
     private Expression _selectProjection;
     private Expression _whereCondition;
     
-    public SqlStatement (Expression selectProjection, IEnumerable<SqlTable> sqlTables, IEnumerable<Ordering> orderings)
+    public SqlStatement (Expression selectProjection, IEnumerable<SqlTableBase> sqlTables, IEnumerable<Ordering> orderings)
     {
       ArgumentUtility.CheckNotNull ("selectProjection", selectProjection);
       ArgumentUtility.CheckNotNull ("fromExpressions", sqlTables);
@@ -60,7 +60,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       set { _selectProjection = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
-    public ReadOnlyCollection<SqlTable> SqlTables
+    public ReadOnlyCollection<SqlTableBase> SqlTables
     {
       get { return Array.AsReadOnly (_sqlTables); }
     }

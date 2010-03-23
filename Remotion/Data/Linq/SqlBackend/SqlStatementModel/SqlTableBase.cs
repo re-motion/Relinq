@@ -31,6 +31,8 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
     private readonly Dictionary<MemberInfo, SqlJoinedTable> _joinedTables = new Dictionary<MemberInfo, SqlJoinedTable>();
     private readonly Type _itemType;
 
+    public abstract AbstractTableInfo Accept (ITableInfoVisitor visitor);
+    
     protected SqlTableBase (Type itemType)
     {
       ArgumentUtility.CheckNotNull ("itemType", itemType);
@@ -66,5 +68,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 
       return _joinedTables[relationMember];
     }
+
   }
 }

@@ -29,7 +29,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
   {
     private readonly IMappingResolver _resolver;
     private readonly UniqueIdentifierGenerator _generator;
-    private IMappingResolutionStage _stage;
+    private readonly IMappingResolutionStage _stage;
 
     public static AbstractTableInfo ResolveTableInfo (AbstractTableInfo tableInfo, IMappingResolver resolver, UniqueIdentifierGenerator generator, IMappingResolutionStage stage)
     {

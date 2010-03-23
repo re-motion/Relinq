@@ -25,7 +25,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
   /// <summary>
   /// <see cref="SqlStatementResolver"/> provides methods to visit sql-statement classes.
   /// </summary>
-  public class SqlStatementResolver
+  public class SqlStatementResolver // TODO: : ISqlTableBaseVisitor
   {
     private readonly IMappingResolutionStage _stage;
 
@@ -45,18 +45,23 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
       _stage = stage;
     }
 
-    protected Expression VisitSelectProjection (Expression selectProjection)
+    protected Expression VisitSelectProjection (Expression selectProjection) // TODO: Rename all Visit methods to Resolve methods
     {
       ArgumentUtility.CheckNotNull ("selectProjection", selectProjection);
 
       return _stage.ResolveSelectExpression (selectProjection);
     }
 
-    protected void VisitSqlTable (SqlTable sqlTable)
+    // TODO: Implement ISqlTableBaseVisitor.VisitSqlTable by calling the method below
+    // TODO: Implement ISqlTableBaseVisitor.VisitSqlJoinedTable by calling the ResolveJoinedTable method
+
+    protected void ResolveSqlTable (SqlTableBase sqlTable)
     {
       ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
-
-      sqlTable.TableInfo = _stage.ResolveTableInfo (sqlTable.TableInfo);
+      
+      // TODO: 2487 work with GetResolvedTableInfo
+      //sqlTable.TableInfo = _stage.ResolveTableInfo (sqlTable.TableInfo);
+      ((SqlTable) sqlTable).TableInfo = _stage.ResolveTableInfo (((SqlTable) sqlTable).TableInfo);
       ResolveJoins (sqlTable);
     }
 
@@ -85,15 +90,21 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
     {
       foreach (var joinedTable in sqlTable.JoinedTables)
       {
-        joinedTable.JoinInfo = _stage.ResolveJoinInfo ((UnresolvedJoinInfo) joinedTable.JoinInfo);
+        ResolveJoinedTable(joinedTable);
         ResolveJoins (joinedTable);
       }
+    }
+
+    protected void ResolveJoinedTable (SqlJoinedTable joinedTable)
+    {
+      joinedTable.JoinInfo = _stage.ResolveJoinInfo ((UnresolvedJoinInfo) joinedTable.JoinInfo);
     }
 
     protected virtual void VisitSqlStatement (SqlStatement sqlStatement)
     {
       foreach (var sqlTable in sqlStatement.SqlTables)
-        VisitSqlTable (sqlTable);
+        //sqlTable.GetResolvedTableInfo();
+        ResolveSqlTable (sqlTable); //TODO: check call to ResolveSqlTable
 
       sqlStatement.SelectProjection = _stage.ResolveSelectExpression (sqlStatement.SelectProjection);
 

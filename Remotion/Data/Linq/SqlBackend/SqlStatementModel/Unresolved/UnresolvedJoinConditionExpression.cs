@@ -25,11 +25,12 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved
   /// <summary>
   /// <see cref="UnresolvedJoinConditionExpression"/> represents the data source defined by a member access in the from part of a linq expression.
   /// </summary>
+  // TODO: Rename to JoinConditionExpression
   public class UnresolvedJoinConditionExpression : ExtensionExpression
   {
     private readonly AbstractJoinInfo _joinInfo;
 
-    public UnresolvedJoinConditionExpression (AbstractJoinInfo joinInfo) : base(joinInfo.ItemType)
+    public UnresolvedJoinConditionExpression (AbstractJoinInfo joinInfo) : base(typeof(bool))
     {
       ArgumentUtility.CheckNotNull ("joinInfo", joinInfo);
 

@@ -48,7 +48,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
 
     private readonly SqlPreparationContext _context;
     private readonly ISqlPreparationStage _stage;
-    private readonly List<SqlTable> _sqlTables;
+    private readonly List<SqlTableBase> _sqlTables;
     private readonly List<Ordering> _orderings;
 
     protected SqlPreparationQueryModelVisitor (SqlPreparationContext context, ISqlPreparationStage stage)
@@ -59,7 +59,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       _context = context;
       _stage = stage;
 
-      _sqlTables = new List<SqlTable>();
+      _sqlTables = new List<SqlTableBase>();
       _orderings = new List<Ordering>();
     }
 
@@ -79,7 +79,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
     protected bool IsDistinctQuery { get; set; }
     protected Expression TopExpression { get; set; }
 
-    protected List<SqlTable> SqlTables
+    protected List<SqlTableBase> SqlTables
     {
       get { return _sqlTables; }
     }
@@ -183,17 +183,19 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       var preparedFromExpression = _stage.PrepareFromExpression (fromClause.FromExpression);
       var sqlTableOrJoin = _stage.PrepareSqlTable (preparedFromExpression, fromClause.ItemType);
 
-      _context.AddQuerySourceMapping (fromClause, sqlTableOrJoin);
-
       var sqlJoinedTable = sqlTableOrJoin as SqlJoinedTable;
       if (sqlJoinedTable != null)
       {
+        //TODO: use sqlJoinedTable
+        //TODO: 
         var topLevelTableForJoin = new SqlTable (new UnresolvedTableInfo (sqlJoinedTable.ItemType));
+        _context.AddQuerySourceMapping (fromClause, topLevelTableForJoin);
         AddWhereCondition (new UnresolvedJoinConditionExpression (sqlJoinedTable.JoinInfo));
         _sqlTables.Add (topLevelTableForJoin);
       }
       else
       {
+        _context.AddQuerySourceMapping (fromClause, sqlTableOrJoin);
         var topLevelSqlTable = sqlTableOrJoin as SqlTable;
         if (topLevelSqlTable != null)
           _sqlTables.Add (topLevelSqlTable);

@@ -31,7 +31,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
     private readonly ISqlGenerationStage _stage;
     private bool _first;
     
-    public static void GenerateSql (SqlTable sqlTable, SqlCommandBuilder commandBuilder, ISqlGenerationStage stage, bool first)
+    public static void GenerateSql (SqlTableBase sqlTable, SqlCommandBuilder commandBuilder, ISqlGenerationStage stage, bool first)
     {
       ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
       ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);
@@ -39,7 +39,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
       var visitor = new SqlTableAndJoinTextGenerator (commandBuilder, stage, first);
 
-      sqlTable.TableInfo.Accept (visitor);
+      sqlTable.Accept (visitor);
       GenerateSqlForJoins (sqlTable, visitor);
     }
 

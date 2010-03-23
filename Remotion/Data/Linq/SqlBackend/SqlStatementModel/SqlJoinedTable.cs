@@ -50,6 +50,11 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
       }
     }
 
+    public override AbstractTableInfo Accept (ITableInfoVisitor visitor)
+    {
+      throw new NotImplementedException();
+    }
+
     public override IResolvedTableInfo GetResolvedTableInfo ()
     {
       return JoinInfo.GetResolvedTableInfo();
