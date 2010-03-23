@@ -188,10 +188,10 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       {
         //TODO: use sqlJoinedTable
         //TODO: 
-        var topLevelTableForJoin = new SqlTable (new UnresolvedTableInfo (sqlJoinedTable.ItemType));
-        _context.AddQuerySourceMapping (fromClause, topLevelTableForJoin);
-        AddWhereCondition (new UnresolvedJoinConditionExpression (sqlJoinedTable.JoinInfo));
-        _sqlTables.Add (topLevelTableForJoin);
+        //var topLevelTableForJoin = new SqlTable (new UnresolvedTableInfo (sqlJoinedTable.ItemType));
+        _context.AddQuerySourceMapping (fromClause, sqlJoinedTable);
+        AddWhereCondition (new UnresolvedJoinConditionExpression (sqlJoinedTable));
+        _sqlTables.Add (sqlJoinedTable);
       }
       else
       {

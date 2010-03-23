@@ -104,9 +104,5 @@ namespace Remotion.Data.Linq.SqlBackend.SqlPreparation
       return base.VisitUnknownExpression (expression);
     }
 
-    Expression IUnresolvedSqlExpressionVisitor.VisitUnresolvedJoinConditionExpression (UnresolvedJoinConditionExpression expression)
-    {
-      return base.VisitUnknownExpression (expression);
-    }
   }
 }

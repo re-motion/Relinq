@@ -18,6 +18,7 @@ using System;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
+using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved;
 using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved
@@ -28,18 +29,18 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved
   // TODO: Rename to JoinConditionExpression
   public class UnresolvedJoinConditionExpression : ExtensionExpression
   {
-    private readonly AbstractJoinInfo _joinInfo;
+    private readonly SqlJoinedTable _sqlTable;
 
-    public UnresolvedJoinConditionExpression (AbstractJoinInfo joinInfo) : base(typeof(bool))
+    public UnresolvedJoinConditionExpression (SqlJoinedTable sqlTable) : base(typeof(bool))
     {
-      ArgumentUtility.CheckNotNull ("joinInfo", joinInfo);
+      ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
 
-      _joinInfo = joinInfo;
+      _sqlTable = sqlTable;
     }
 
-    public AbstractJoinInfo JoinInfo
+    public SqlJoinedTable JoinTable
     {
-      get { return _joinInfo; }
+      get { return _sqlTable; }
     }
 
     protected internal override Expression VisitChildren (ExpressionTreeVisitor visitor)
@@ -50,8 +51,8 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved
     public override Expression Accept (ExpressionTreeVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
-
-      var specificVisitor = visitor as IUnresolvedSqlExpressionVisitor;
+      
+      var specificVisitor = visitor as IResolvedSqlExpressionVisitor;
       if (specificVisitor != null)
         return specificVisitor.VisitUnresolvedJoinConditionExpression(this);
       else

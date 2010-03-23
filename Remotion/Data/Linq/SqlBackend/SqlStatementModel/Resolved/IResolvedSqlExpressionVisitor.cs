@@ -16,6 +16,7 @@
 // 
 using System;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
 {
@@ -27,5 +28,6 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
     Expression VisitSqlEntityExpression (SqlEntityExpression expression);
     Expression VisitSqlColumnExpression (SqlColumnExpression expression);
     Expression VisitSqlEntityConstantExpression (SqlEntityConstantExpression expression);
+    Expression VisitUnresolvedJoinConditionExpression (UnresolvedJoinConditionExpression expression);
   }
 }

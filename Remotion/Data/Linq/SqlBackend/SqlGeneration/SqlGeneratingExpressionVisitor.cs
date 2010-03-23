@@ -22,6 +22,7 @@ using Remotion.Data.Linq.SqlBackend.MappingResolution;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved;
 using Remotion.Data.Linq.SqlBackend.SqlStatementModel.SqlSpecificExpressions;
+using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved;
 using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
@@ -100,6 +101,17 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       var parameter = _commandBuilder.AddParameter (expression.PrimaryKeyValue);
       _commandBuilder.Append (parameter.Name);
 
+      return expression;
+    }
+
+    public Expression VisitUnresolvedJoinConditionExpression (UnresolvedJoinConditionExpression expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
+      var leftColumn = ((ResolvedJoinInfo) expression.JoinTable.JoinInfo).PrimaryColumn;
+      var rightColumn = ((ResolvedJoinInfo) expression.JoinTable.JoinInfo).ForeignColumn; 
+      var whereExpression =  Expression.Equal (leftColumn, rightColumn);
+      VisitExpression (whereExpression);
       return expression;
     }
 

@@ -96,12 +96,12 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
     }
 
     // TODO: Remove this method, handle UnresolvedJoinConditionExpression in SqlStatementTextGenerator
-    public Expression VisitUnresolvedJoinConditionExpression (UnresolvedJoinConditionExpression expression)
-    {
-      var joinInfo = expression.JoinInfo;
-      var resolvedJoinInfo = _stage.ResolveJoinInfo ((UnresolvedJoinInfo) joinInfo);
-      return Expression.Equal (resolvedJoinInfo.PrimaryColumn, resolvedJoinInfo.ForeignColumn);
-    }
+    //public Expression VisitUnresolvedJoinConditionExpression (UnresolvedJoinConditionExpression expression)
+    //{
+    //  var joinInfo = expression.JoinInfo;
+    //  var resolvedJoinInfo = _stage.ResolveJoinInfo ((UnresolvedJoinInfo) joinInfo);
+    //  return Expression.Equal (resolvedJoinInfo.PrimaryColumn, resolvedJoinInfo.ForeignColumn);
+    //}
 
     public Expression VisitSqlSubStatementExpression (SqlSubStatementExpression expression)
     {
