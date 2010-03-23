@@ -15,15 +15,13 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
 
-namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
+namespace Remotion.Data.Linq.SqlBackend.MappingResolution
 {
-  /// <summary>
-  /// <see cref="IResolvedTableInfo"/> provides nested members and methods for all kinds of tables. 
-  /// </summary>
-  public interface IResolvedTableInfo
+  public interface ISqlTableBaseVisitor
   {
-    AbstractTableInfo Accept (ITableInfoVisitor visitor);
-    string TableAlias { get; }
+    void VisitSqlTable (SqlTable sqlTable);
+    void VisitSqlJoinTable (SqlJoinedTable sqlTable);
   }
 }

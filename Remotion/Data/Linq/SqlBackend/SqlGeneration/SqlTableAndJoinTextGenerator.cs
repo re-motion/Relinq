@@ -39,7 +39,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
 
       var visitor = new SqlTableAndJoinTextGenerator (commandBuilder, stage, first);
 
-      sqlTable.Accept (visitor);
+      sqlTable.GetResolvedTableInfo().Accept (visitor);
       GenerateSqlForJoins (sqlTable, visitor);
     }
 

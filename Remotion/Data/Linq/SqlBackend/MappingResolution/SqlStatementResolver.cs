@@ -25,7 +25,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
   /// <summary>
   /// <see cref="SqlStatementResolver"/> provides methods to visit sql-statement classes.
   /// </summary>
-  public class SqlStatementResolver // TODO: : ISqlTableBaseVisitor
+  public class SqlStatementResolver : ISqlTableBaseVisitor
   {
     private readonly IMappingResolutionStage _stage;
 
@@ -45,6 +45,19 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
       _stage = stage;
     }
 
+    // TODO: Implement ISqlTableBaseVisitor.VisitSqlTable by calling ResolveSqlTable
+    // TODO: Implement ISqlTableBaseVisitor.VisitSqlJoinedTable by calling the ResolveJoinedTable method
+
+    void ISqlTableBaseVisitor.VisitSqlTable (SqlTable sqlTable)
+    {
+      ResolveSqlTable (sqlTable);
+    }
+
+    void ISqlTableBaseVisitor.VisitSqlJoinTable (SqlJoinedTable sqlTable)
+    {
+      ResolveJoinedTable (sqlTable);
+    }
+
     protected Expression VisitSelectProjection (Expression selectProjection) // TODO: Rename all Visit methods to Resolve methods
     {
       ArgumentUtility.CheckNotNull ("selectProjection", selectProjection);
@@ -52,16 +65,11 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
       return _stage.ResolveSelectExpression (selectProjection);
     }
 
-    // TODO: Implement ISqlTableBaseVisitor.VisitSqlTable by calling the method below
-    // TODO: Implement ISqlTableBaseVisitor.VisitSqlJoinedTable by calling the ResolveJoinedTable method
-
-    protected void ResolveSqlTable (SqlTableBase sqlTable)
+    protected void ResolveSqlTable (SqlTable sqlTable)
     {
       ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
       
-      // TODO: 2487 work with GetResolvedTableInfo
-      //sqlTable.TableInfo = _stage.ResolveTableInfo (sqlTable.TableInfo);
-      ((SqlTable) sqlTable).TableInfo = _stage.ResolveTableInfo (((SqlTable) sqlTable).TableInfo);
+      sqlTable.TableInfo = _stage.ResolveTableInfo (sqlTable.TableInfo);
       ResolveJoins (sqlTable);
     }
 
@@ -103,9 +111,8 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
     protected virtual void VisitSqlStatement (SqlStatement sqlStatement)
     {
       foreach (var sqlTable in sqlStatement.SqlTables)
-        //sqlTable.GetResolvedTableInfo();
-        ResolveSqlTable (sqlTable); //TODO: check call to ResolveSqlTable
-
+        sqlTable.Accept (this);
+        
       sqlStatement.SelectProjection = _stage.ResolveSelectExpression (sqlStatement.SelectProjection);
 
       if (sqlStatement.WhereCondition != null)
@@ -120,5 +127,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
           orderByClause.Expression = _stage.ResolveOrderingExpression (orderByClause.Expression);
       }
     }
+
+    
   }
 }

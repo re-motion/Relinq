@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Backend\ContainsFulltextExtensionMethod.cs" />
     <Compile Include="Backend\DetailParserUtility.cs" />
+    <Compile Include="SqlBackend\MappingResolution\ISqlTableBaseVisitor.cs" />
     <Compile Include="SqlBackend\SqlStatementModel\Unresolved\UnresolvedJoinConditionExpression.cs" />
     <Compile Include="SqlBackend\UnmappedItemException.cs" />
     <Compile Include="Clauses\AdditionalFromClause.cs" />
