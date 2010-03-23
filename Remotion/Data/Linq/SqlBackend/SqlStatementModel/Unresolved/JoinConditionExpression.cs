@@ -53,7 +53,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved
       
       var specificVisitor = visitor as IResolvedSqlExpressionVisitor;
       if (specificVisitor != null)
-        return specificVisitor.VisitUnresolvedJoinConditionExpression(this);
+        return specificVisitor.VisitJoinConditionExpression(this);
       else
         return base.Accept (visitor);
     }

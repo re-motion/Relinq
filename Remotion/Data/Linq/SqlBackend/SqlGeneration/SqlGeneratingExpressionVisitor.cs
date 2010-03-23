@@ -30,7 +30,8 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
   /// <summary>
   /// <see cref="SqlGeneratingExpressionVisitor"/> implements <see cref="ThrowingExpressionTreeVisitor"/> and <see cref="IResolvedSqlExpressionVisitor"/>.
   /// </summary>
-  public class SqlGeneratingExpressionVisitor : ThrowingExpressionTreeVisitor, IResolvedSqlExpressionVisitor, ISqlSpecificExpressionVisitor, ISqlSubStatementExpressionVisitor
+  public class SqlGeneratingExpressionVisitor
+      : ThrowingExpressionTreeVisitor, IResolvedSqlExpressionVisitor, ISqlSpecificExpressionVisitor, ISqlSubStatementExpressionVisitor
   {
     public static void GenerateSql (
         Expression expression,
@@ -55,7 +56,8 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
     private readonly BinaryExpressionTextGenerator _binaryExpressionTextGenerator;
     private readonly ISqlGenerationStage _stage;
 
-    protected SqlGeneratingExpressionVisitor (SqlCommandBuilder commandBuilder, MethodCallSqlGeneratorRegistry methodCallRegistry, ISqlGenerationStage stage)
+    protected SqlGeneratingExpressionVisitor (
+        SqlCommandBuilder commandBuilder, MethodCallSqlGeneratorRegistry methodCallRegistry, ISqlGenerationStage stage)
     {
       ArgumentUtility.CheckNotNull ("commandBuilder", commandBuilder);
       ArgumentUtility.CheckNotNull ("methodCallRegistry", methodCallRegistry);
@@ -104,13 +106,13 @@ namespace Remotion.Data.Linq.SqlBackend.SqlGeneration
       return expression;
     }
 
-    public Expression VisitUnresolvedJoinConditionExpression (JoinConditionExpression expression)
+    public Expression VisitJoinConditionExpression (JoinConditionExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      var leftColumn = ((ResolvedJoinInfo) expression.JoinTable.JoinInfo).PrimaryColumn;
-      var rightColumn = ((ResolvedJoinInfo) expression.JoinTable.JoinInfo).ForeignColumn; 
-      var whereExpression =  Expression.Equal (leftColumn, rightColumn);
+      var whereExpression = Expression.Equal (
+          ((ResolvedJoinInfo) expression.JoinTable.JoinInfo).PrimaryColumn, 
+          ((ResolvedJoinInfo) expression.JoinTable.JoinInfo).ForeignColumn);
       VisitExpression (whereExpression);
       return expression;
     }
