@@ -35,7 +35,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
       ArgumentUtility.CheckNotNull ("statement", statement);
       
       var visitor = new SqlStatementResolver (stage);
-      visitor.VisitSqlStatement (statement);
+      visitor.ResolveSqlStatement (statement);
     }
 
     protected SqlStatementResolver (IMappingResolutionStage stage)
@@ -44,9 +44,6 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
       
       _stage = stage;
     }
-
-    // TODO: Implement ISqlTableBaseVisitor.VisitSqlTable by calling ResolveSqlTable
-    // TODO: Implement ISqlTableBaseVisitor.VisitSqlJoinedTable by calling the ResolveJoinedTable method
 
     void ISqlTableBaseVisitor.VisitSqlTable (SqlTable sqlTable)
     {
@@ -58,7 +55,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
       ResolveJoinedTable (sqlTable);
     }
 
-    protected Expression VisitSelectProjection (Expression selectProjection) // TODO: Rename all Visit methods to Resolve methods
+    protected Expression ResolveSelectProjection (Expression selectProjection) 
     {
       ArgumentUtility.CheckNotNull ("selectProjection", selectProjection);
 
@@ -73,21 +70,21 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
       ResolveJoins (sqlTable);
     }
 
-    protected Expression VisitWhereCondition (Expression whereCondition)
+    protected Expression ResolveWhereCondition (Expression whereCondition)
     {
       ArgumentUtility.CheckNotNull ("whereCondition", whereCondition);
 
       return _stage.ResolveWhereExpression (whereCondition);
     }
 
-    protected Expression VisitOrderingExpression (Expression orderByExpression)
+    protected Expression ResolveOrderingExpression (Expression orderByExpression)
     {
       ArgumentUtility.CheckNotNull ("orderByExpression", orderByExpression);
 
       return _stage.ResolveOrderingExpression (orderByExpression);
     }
 
-    protected Expression VisitTopExpression (Expression topExpression)
+    protected Expression ResolveTopExpression (Expression topExpression)
     {
       ArgumentUtility.CheckNotNull ("topExpression", topExpression);
 
@@ -108,7 +105,7 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
       joinedTable.JoinInfo = _stage.ResolveJoinInfo ((UnresolvedJoinInfo) joinedTable.JoinInfo);
     }
 
-    protected virtual void VisitSqlStatement (SqlStatement sqlStatement)
+    protected virtual void ResolveSqlStatement (SqlStatement sqlStatement)
     {
       foreach (var sqlTable in sqlStatement.SqlTables)
         sqlTable.Accept (this);
