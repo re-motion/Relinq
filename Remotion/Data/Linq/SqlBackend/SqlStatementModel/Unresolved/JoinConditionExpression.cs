@@ -24,14 +24,14 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved
 {
   /// <summary>
-  /// <see cref="UnresolvedJoinConditionExpression"/> represents the data source defined by a member access in the from part of a linq expression.
+  /// <see cref="JoinConditionExpression"/> represents the data source defined by a member access in the from part of a linq expression.
   /// </summary>
   // TODO: Rename to JoinConditionExpression
-  public class UnresolvedJoinConditionExpression : ExtensionExpression
+  public class JoinConditionExpression : ExtensionExpression
   {
     private readonly SqlJoinedTable _sqlTable;
 
-    public UnresolvedJoinConditionExpression (SqlJoinedTable sqlTable) : base(typeof(bool))
+    public JoinConditionExpression (SqlJoinedTable sqlTable) : base(typeof(bool))
     {
       ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
 

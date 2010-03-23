@@ -95,8 +95,8 @@ namespace Remotion.Data.Linq.SqlBackend.MappingResolution
       return VisitExpression (sqlTableReferenceExpression);
     }
 
-    // TODO: Remove this method, handle UnresolvedJoinConditionExpression in SqlStatementTextGenerator
-    //public Expression VisitUnresolvedJoinConditionExpression (UnresolvedJoinConditionExpression expression)
+    // TODO: Remove this method, handle JoinConditionExpression in SqlStatementTextGenerator
+    //public Expression VisitUnresolvedJoinConditionExpression (JoinConditionExpression expression)
     //{
     //  var joinInfo = expression.JoinInfo;
     //  var resolvedJoinInfo = _stage.ResolveJoinInfo ((UnresolvedJoinInfo) joinInfo);
