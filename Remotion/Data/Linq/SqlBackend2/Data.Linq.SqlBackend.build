@@ -16,45 +16,41 @@
  ! along with re-motion; if not, see http://www.gnu.org/licenses.
 -->
 <!--EXTERNAL_PROPERTIES: build.outputdir;build.test.outputdir;project.output;project.extension;project.doc;build.debug;build.csc.define-->
-<project xmlns="nant-schema" name="Remotion.Data.UnitTests">
-  
+<project xmlns="nant-schema" name="Remotion.Data.Linq.SqlBackend">
+
   <target name="build" description="perform a build">
     <csc  target="library"
-          output="${build.test.outputdir}/${project.output}.${project.extension}"
+          output="${build.outputdir}/${project.output}.${project.extension}"
+          doc="${project.doc}"
           debug="${build.debug}"
           define="${build.csc.define}"
           keyfile="${solution.key-file}"
-          noconfig="true">
+          noconfig="true">          
       <nowarn>
+        <!-- missing XML comment -->
+        <warning number="1591" />
+        <!-- Ambiguous reference in cref attribute -->
+        <warning number="0419" />
         <!-- obsolete warning -->
         <warning number="0618" />
       </nowarn>
+      <warnaserror refid="doc-warn-as-error"/>
       <sources failonempty="true">
-        <include name="**/*.cs"/>
-        <exclude name="bin/**" />
-        <exclude name="Properties/AssemblyInfoTemplate.cs" />   
+        <include name="*.cs"/>
+        <include name="MappingResolution/**/*.cs"/>
+        <include name="SqlGeneration/**/*.cs"/>
+        <include name="SqlPreparation/**/*.cs"/>
+        <include name="SqlStatementModel/**/*.cs"/>
+        <exclude name="Properties/AssemblyInfoTemplate.cs" />
       </sources>
       <references failonempty="true">
-        <include asis="true" name="${build.test.outputdir}/log4net.dll"/>
-        <include asis="true" name="${build.test.outputdir}/nunit.framework.dll"/>
-        <include asis="true" name="${build.test.outputdir}/Rhino.Mocks.dll"/>
-        <include asis="true" name="${build.test.outputdir}/Remotion.Data.Linq.dll"/>
-        <include asis="true" name="${build.test.outputdir}/Remotion.Data.Linq.SqlBackend.dll"/>
         <include asis="true" name="System.dll"/>
         <include asis="true" name="System.Core.dll"/>
         <include asis="true" name="System.Data.dll"/>
-        <include asis="true" name="System.Xml.dll"/>
+        <include asis="true" name="System.Data.DataSetExtensions.dll"/>
+        <include asis="true" name="${build.outputdir}/Remotion.Data.Linq.dll"/>
       </references>
     </csc>
-
-    <copy todir="${build.test.outputdir}" overwrite="true">
-      <fileset>
-        <include name="**/*.xml" />
-        <exclude name="bin/**/*.xml" />
-        <exclude name="obj/**/*.xml" />
-      </fileset>
-    </copy>
-
   </target>
-  
+
 </project>

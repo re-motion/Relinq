@@ -52,7 +52,7 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
       get { return _projectionColumns; }
     }
 
-    protected internal override Expression VisitChildren (ExpressionTreeVisitor visitor)
+    protected override Expression VisitChildren (ExpressionTreeVisitor visitor)
     {
       // TODO: PrimaryKeyColumn must be visited.
       var newColumns = visitor.VisitAndConvert (ProjectionColumns, "VisitChildren");

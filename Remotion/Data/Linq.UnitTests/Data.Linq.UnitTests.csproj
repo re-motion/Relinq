@@ -103,6 +103,10 @@
       <Project>{DD9AA076-BE37-4A42-BA9E-C35ECC6955C9}</Project>
       <Name>Data.Linq</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Linq\SqlBackend2\Data.Linq.SqlBackend.csproj">
+      <Project>{F23F3422-D323-42CD-83D9-C0DEB2D3DC28}</Project>
+      <Name>Data.Linq.SqlBackend</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Backend\DataObjectModel\BinaryConditionTest.cs" />

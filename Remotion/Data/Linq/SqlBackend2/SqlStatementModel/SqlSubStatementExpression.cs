@@ -18,50 +18,46 @@ using System;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
+using Remotion.Data.Linq.SqlBackend.MappingResolution;
 using Remotion.Data.Linq.Utilities;
 
-namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
+namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
 {
   /// <summary>
-  /// <see cref="SqlEntityConstantExpression"/> holds the primary key for a constant entity.
+  /// <see cref="SqlSubStatementExpression"/> represents a SQL database subquery. The <see cref="QueryModel"/> of the subquery is translated to 
+  /// this model, and the <see cref="SqlSubStatementExpression"/> is transformed several times until it can easily be translated to SQL text.
   /// </summary>
-  public class SqlEntityConstantExpression : ExtensionExpression
+  public class SqlSubStatementExpression : ExtensionExpression
   {
-    private readonly object _value;
-    private readonly object _primaryKeyValue;
-
-    public SqlEntityConstantExpression (Type type, object value, object primaryKeyValue)
+    private readonly SqlStatement _sqlStatement;
+    
+    public SqlSubStatementExpression (SqlStatement sqlStatement, Type type)
         : base(type)
     {
-      ArgumentUtility.CheckNotNull ("value", value);
-      ArgumentUtility.CheckNotNull ("primaryKeyValue", primaryKeyValue);
+      ArgumentUtility.CheckNotNull ("sqlStatement", sqlStatement);
 
-      _value = value;
-      _primaryKeyValue = primaryKeyValue;
+      _sqlStatement = sqlStatement;
     }
 
-    public object Value
+    public SqlStatement SqlStatement
     {
-      get { return _value; }
+      get { return _sqlStatement; }
     }
 
-    public object PrimaryKeyValue
+    protected override Expression VisitChildren (ExpressionTreeVisitor visitor)
     {
-      get { return _primaryKeyValue; }
+      return this;
     }
 
     public override Expression Accept (ExpressionTreeVisitor visitor)
     {
-      var specificVisitor = visitor as IResolvedSqlExpressionVisitor;
+      ArgumentUtility.CheckNotNull ("visitor", visitor);
+
+      var specificVisitor = visitor as ISqlSubStatementExpressionVisitor;
       if (specificVisitor != null)
-        return specificVisitor.VisitSqlEntityConstantExpression (this);
+        return specificVisitor.VisitSqlSubStatementExpression(this);
       else
         return base.Accept (visitor);
-    }
-
-    protected internal override Expression VisitChildren (ExpressionTreeVisitor visitor)
-    {
-      return this;
     }
   }
 }

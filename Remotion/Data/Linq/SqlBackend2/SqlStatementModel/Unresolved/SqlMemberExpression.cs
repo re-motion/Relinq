@@ -19,22 +19,25 @@ using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Utilities;
+using System.Reflection;
 
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved
 {
   /// <summary>
-  /// <see cref="SqlTableReferenceExpression"/> represents a data row in a <see cref="SqlTable"/>.
+  /// <see cref="SqlMemberExpression"/> represents a sql specific member expression.
   /// </summary>
-  public class SqlTableReferenceExpression : ExtensionExpression
+  public class SqlMemberExpression : ExtensionExpression
   {
     private readonly SqlTableBase _sqlTable;
+    private readonly MemberInfo _memberInfo;
 
-    public SqlTableReferenceExpression (SqlTableBase sqlTable)
-        : base(sqlTable.ItemType)
+    public SqlMemberExpression (SqlTableBase sqlTable, MemberInfo memberInfo)
+        : base (ReflectionUtility.GetFieldOrPropertyType (ArgumentUtility.CheckNotNull ("memberInfo", memberInfo))) 
     {
       ArgumentUtility.CheckNotNull ("sqlTable", sqlTable);
 
       _sqlTable = sqlTable;
+      _memberInfo = memberInfo;
     }
 
     public SqlTableBase SqlTable
@@ -42,9 +45,13 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved
       get { return _sqlTable; }
     }
 
-    protected internal override Expression VisitChildren (ExpressionTreeVisitor visitor)
+    public MemberInfo MemberInfo
     {
-      ArgumentUtility.CheckNotNull ("visitor", visitor);
+      get { return _memberInfo; }
+    }
+
+    protected override Expression VisitChildren (ExpressionTreeVisitor visitor)
+    {
       return this;
     }
 
@@ -54,11 +61,9 @@ namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved
 
       var specificVisitor = visitor as IUnresolvedSqlExpressionVisitor;
       if (specificVisitor != null)
-        return specificVisitor.VisitSqlTableReferenceExpression (this);
+        return specificVisitor.VisitSqlMemberExpression(this);
       else
         return base.Accept (visitor);
     }
-
-
   }
 }

@@ -18,44 +18,48 @@ using System;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
-using Remotion.Data.Linq.SqlBackend.MappingResolution;
 using Remotion.Data.Linq.Utilities;
 
-namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel
+namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
 {
   /// <summary>
-  /// <see cref="SqlSubStatementExpression"/> represents a SQL database subquery. The <see cref="QueryModel"/> of the subquery is translated to 
-  /// this model, and the <see cref="SqlSubStatementExpression"/> is transformed several times until it can easily be translated to SQL text.
+  /// <see cref="SqlColumnExpression"/> represents a sql-specific column expression.
   /// </summary>
-  public class SqlSubStatementExpression : ExtensionExpression
+  public class SqlColumnExpression : ExtensionExpression
   {
-    private readonly SqlStatement _sqlStatement;
-    
-    public SqlSubStatementExpression (SqlStatement sqlStatement, Type type)
+    private readonly string _owningTableAlias;
+    private readonly string _columnName;
+
+    public SqlColumnExpression (Type type, string owningTableAlias, string columnName)
         : base(type)
     {
-      ArgumentUtility.CheckNotNull ("sqlStatement", sqlStatement);
+      ArgumentUtility.CheckNotNull ("owningTableAlias", owningTableAlias);
+      ArgumentUtility.CheckNotNullOrEmpty ("columnName", columnName);
 
-      _sqlStatement = sqlStatement;
+      _columnName = columnName;
+      _owningTableAlias = owningTableAlias;
     }
 
-    public SqlStatement SqlStatement
+    public string OwningTableAlias
     {
-      get { return _sqlStatement; }
+      get { return _owningTableAlias; }
     }
 
-    protected internal override Expression VisitChildren (ExpressionTreeVisitor visitor)
+    public string ColumnName
+    {
+      get { return _columnName; }
+    }
+
+    protected override Expression VisitChildren (ExpressionTreeVisitor visitor)
     {
       return this;
     }
 
     public override Expression Accept (ExpressionTreeVisitor visitor)
     {
-      ArgumentUtility.CheckNotNull ("visitor", visitor);
-
-      var specificVisitor = visitor as ISqlSubStatementExpressionVisitor;
-      if (specificVisitor != null)
-        return specificVisitor.VisitSqlSubStatementExpression(this);
+      var specificVisitor = visitor as IResolvedSqlExpressionVisitor;
+      if(specificVisitor!=null)
+        return specificVisitor.VisitSqlColumnExpression (this);
       else
         return base.Accept (visitor);
     }

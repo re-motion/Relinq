@@ -23,45 +23,45 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved
 {
   /// <summary>
-  /// <see cref="SqlColumnExpression"/> represents a sql-specific column expression.
+  /// <see cref="SqlEntityConstantExpression"/> holds the primary key for a constant entity.
   /// </summary>
-  public class SqlColumnExpression : ExtensionExpression
+  public class SqlEntityConstantExpression : ExtensionExpression
   {
-    private readonly string _owningTableAlias;
-    private readonly string _columnName;
+    private readonly object _value;
+    private readonly object _primaryKeyValue;
 
-    public SqlColumnExpression (Type type, string owningTableAlias, string columnName)
+    public SqlEntityConstantExpression (Type type, object value, object primaryKeyValue)
         : base(type)
     {
-      ArgumentUtility.CheckNotNull ("owningTableAlias", owningTableAlias);
-      ArgumentUtility.CheckNotNullOrEmpty ("columnName", columnName);
+      ArgumentUtility.CheckNotNull ("value", value);
+      ArgumentUtility.CheckNotNull ("primaryKeyValue", primaryKeyValue);
 
-      _columnName = columnName;
-      _owningTableAlias = owningTableAlias;
+      _value = value;
+      _primaryKeyValue = primaryKeyValue;
     }
 
-    public string OwningTableAlias
+    public object Value
     {
-      get { return _owningTableAlias; }
+      get { return _value; }
     }
 
-    public string ColumnName
+    public object PrimaryKeyValue
     {
-      get { return _columnName; }
-    }
-
-    protected internal override Expression VisitChildren (ExpressionTreeVisitor visitor)
-    {
-      return this;
+      get { return _primaryKeyValue; }
     }
 
     public override Expression Accept (ExpressionTreeVisitor visitor)
     {
       var specificVisitor = visitor as IResolvedSqlExpressionVisitor;
-      if(specificVisitor!=null)
-        return specificVisitor.VisitSqlColumnExpression (this);
+      if (specificVisitor != null)
+        return specificVisitor.VisitSqlEntityConstantExpression (this);
       else
         return base.Accept (visitor);
+    }
+
+    protected override Expression VisitChildren (ExpressionTreeVisitor visitor)
+    {
+      return this;
     }
   }
 }
