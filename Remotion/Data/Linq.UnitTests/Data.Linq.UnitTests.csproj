@@ -175,6 +175,7 @@
     <Compile Include="Linq\Core\Backend\SqlGeneration\SqlUtilityTest.cs" />
     <Compile Include="Linq\Core\Backend\SqlGeneration\StubParameterCollection.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\Unresolved\JoinConditionExpressionTest.cs" />
+    <Compile Include="Linq\SqlBackend\SqlStatementModel\Unresolved\SqlInExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\UnmappedItemExceptionTest.cs" />
     <Compile Include="Linq\Core\Clauses\AdditionalFromClauseTest.cs" />
     <Compile Include="Linq\Core\Clauses\Expressions\ExtensionExpressionIntegrationTest.cs" />
