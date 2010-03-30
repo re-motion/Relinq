@@ -372,8 +372,8 @@
     <Compile Include="Linq\Core\ReflectionUtilityTest.cs" />
     <Compile Include="Linq\SqlBackend\MappingResolution\DefaultMappingResolutionStageTest.cs" />
     <Compile Include="Linq\SqlBackend\MappingResolution\ResolvingJoinInfoVisitorTest.cs" />
-    <Compile Include="Linq\SqlBackend\MappingResolution\ResolvingSqlStatementVisitorTest.cs" />
-    <Compile Include="Linq\SqlBackend\MappingResolution\TestableResolvingSqlStatementVisitor.cs" />
+    <Compile Include="Linq\SqlBackend\MappingResolution\SqlStatementResolverTest.cs" />
+    <Compile Include="Linq\SqlBackend\MappingResolution\TestableSqlStatementResolver.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\BinaryExpressionTextGeneratorTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\DefaultSqlGenerationStageTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\AdditionalFromClausesSqlBackendIntegrationTest.cs" />
