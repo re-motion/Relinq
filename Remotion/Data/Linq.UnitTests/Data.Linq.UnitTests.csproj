@@ -175,10 +175,12 @@
     <Compile Include="Linq\Core\Backend\SqlGeneration\SqlUtilityTest.cs" />
     <Compile Include="Linq\Core\Backend\SqlGeneration\StubParameterCollection.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\MethodCallTransformers\ContainsMethodCallTransformerTest.cs" />
+    <Compile Include="Linq\SqlBackend\SqlGeneration\MethodCallTransformers\EndsWithMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\MethodCallTransformers\IndexOfMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\MethodCallTransformers\LowerMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\MethodCallTransformers\RemoveMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\MethodCallTransformers\ReplaceMethodCallTransformerTest.cs" />
+    <Compile Include="Linq\SqlBackend\SqlGeneration\MethodCallTransformers\StartsWithMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\MethodCallTransformers\SubstringMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\MethodCallTransformers\UpperMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\SqlSpecificExpressions\SqlFunctionExpressionTest.cs" />
