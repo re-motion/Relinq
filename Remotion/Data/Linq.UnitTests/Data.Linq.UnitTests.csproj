@@ -409,7 +409,7 @@
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallGenerators\StartsWithMethodCallSqlGeneratorTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallGenerators\SubstringMethodCallSqlGeneratorTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallGenerators\UpperMethodCallSqlGeneratorTest.cs" />
-    <Compile Include="Linq\SqlBackend\SqlGeneration\MethodCallSqlGeneratorRegistryTest.cs" />
+    <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformerRegistryTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\SelectProjectionSqlBackendIntegrationTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\SqlBackendIntegrationTestBase.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\SqlCommandBuilderTest.cs" />
