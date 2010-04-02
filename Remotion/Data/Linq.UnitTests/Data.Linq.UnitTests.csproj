@@ -177,6 +177,7 @@
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\ContainsFreetextMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\ContainsFulltextMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\ContainsMethodCallTransformerTest.cs" />
+    <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\ConvertMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\EndsWithMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\EscapeUtilityTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\IndexOfMethodCallTransformerTest.cs" />
