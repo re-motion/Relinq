@@ -187,6 +187,7 @@
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\ReplaceMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\StartsWithMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\SubstringMethodCallTransformerTest.cs" />
+    <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\ToStringMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\UpperMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\SqlSpecificExpressions\SqlConvertExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\SqlSpecificExpressions\SqlFunctionExpressionTest.cs" />
