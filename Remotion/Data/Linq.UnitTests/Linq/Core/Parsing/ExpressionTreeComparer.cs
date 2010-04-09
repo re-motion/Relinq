@@ -27,45 +27,45 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing
 {
   public class ExpressionTreeComparer
   {
-    public static void CheckAreEqualTrees(Expression expressionTree1, Expression expressionTree2)
+    public static void CheckAreEqualTrees (Expression expectedTree, Expression actualTree)
     {
-      ExpressionTreeComparer comparer = new ExpressionTreeComparer (expressionTree1, expressionTree2);
-      comparer.CheckAreEqualNodes (expressionTree1, expressionTree2);
+      var comparer = new ExpressionTreeComparer (expectedTree, actualTree);
+      comparer.CheckAreEqualNodes (expectedTree, actualTree);
     }
 
-    private readonly object _object1;
-    private readonly object _object2;
+    private readonly object _expectedInitial;
+    private readonly object _actualInitial;
 
-    public ExpressionTreeComparer (object object1, object object2)
+    public ExpressionTreeComparer (object expectedInitial, object actualInitial)
     {
-      ArgumentUtility.CheckNotNull ("object1", object1);
-      ArgumentUtility.CheckNotNull ("object2", object2);
+      ArgumentUtility.CheckNotNull ("expectedInitial", expectedInitial);
+      ArgumentUtility.CheckNotNull ("actualInitial", actualInitial);
 
-      _object1 = object1;
-      _object2 = object2;
+      _expectedInitial = expectedInitial;
+      _actualInitial = actualInitial;
     }
 
-    public void CheckAreEqualNodes (Expression e1, Expression e2)
+    public void CheckAreEqualNodes (Expression expected, Expression actual)
     {
-      if (e1 == null)
-        Assert.IsNull (e2, GetMessage (e1, e2, "Null nodes"));
+      if (expected == null)
+        Assert.IsNull (actual, GetMessage (expected, actual, "Null nodes"));
       else
       {
-        Assert.AreEqual (e1.NodeType, e2.NodeType, GetMessage (e1, e2, "NodeType"));
-        Assert.AreEqual (e1.Type, e2.Type, GetMessage (e1, e2, "Type"));
-        CheckAreEqualObjects(e1, e2);
+        Assert.AreEqual (expected.NodeType, actual.NodeType, GetMessage (expected, actual, "NodeType"));
+        Assert.AreEqual (expected.Type, actual.Type, GetMessage (expected, actual, "Type"));
+        CheckAreEqualObjects(expected, actual);
       }
     }
 
-    public void CheckAreEqualObjects (object e1, object e2)
+    public void CheckAreEqualObjects (object expected, object actual)
     {
-      Assert.AreEqual (e1.GetType(), e2.GetType(), GetMessage (e1, e2, "GetType()"));
+      Assert.AreEqual (expected.GetType(), actual.GetType(), GetMessage (expected, actual, "GetType()"));
 
-      foreach (PropertyInfo property in e1.GetType().GetProperties (BindingFlags.Instance | BindingFlags.Public))
+      foreach (PropertyInfo property in expected.GetType().GetProperties (BindingFlags.Instance | BindingFlags.Public))
       {
-        object value1 = property.GetValue (e1, null);
-        object value2 = property.GetValue (e2, null);
-        CheckAreEqualProperties (property, property.PropertyType, value1, value2, e1, e2);
+        object value1 = property.GetValue (expected, null);
+        object value2 = property.GetValue (actual, null);
+        CheckAreEqualProperties (property, property.PropertyType, value1, value2, expected, actual);
       }
     }
 
@@ -116,7 +116,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing
 
     private string GetMessage (object e1, object e2, string context)
     {
-      return string.Format ("Trees are not equal: {0}\nNode 1: {1}\nNode 2: {2}\nTree 1: {3}\nTree 2: {4}", context, e1, e2, _object1, _object2);
+      return string.Format ("Trees are not equal: {0}\nNode 1: {1}\nNode 2: {2}\nTree 1: {3}\nTree 2: {4}", context, e1, e2, _expectedInitial, _actualInitial);
     }
   }
 }
