@@ -204,10 +204,20 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
     {
       return CreateCookQueryable (s_executor);
     }
+
+    public static IQueryable<Chef> CreateChefQueryable ()
+    {
+      return CreateChefQueryable (s_executor);
+    }
         
     public static IQueryable<Cook> CreateCookQueryable (IQueryExecutor executor)
     {
       return new TestQueryable<Cook> (executor);
+    }
+
+    public static IQueryable<Chef> CreateChefQueryable (IQueryExecutor executor)
+    {
+      return new TestQueryable<Chef> (executor);
     }
 
     public static IQueryable<Kitchen> CreateKitchenQueryable()
