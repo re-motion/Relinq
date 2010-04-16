@@ -176,6 +176,7 @@
     <Compile Include="Linq\Core\Backend\SqlGeneration\StubParameterCollection.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\ExplicitJoinsSqlBackendIntegrationTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\SqlCompositeCustomTextGeneratorExpressionTest.cs" />
+    <Compile Include="Linq\SqlBackend\SqlGeneration\SqlCustomTextExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\ContainsFreetextMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\ContainsFulltextMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\ContainsMethodCallTransformerTest.cs" />
