@@ -199,6 +199,7 @@
     <Compile Include="Linq\SqlBackend\SqlStatementModel\SqlStatementBuilderTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\Unresolved\JoinConditionExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\Unresolved\SqlBinaryOperatorExpressionTest.cs" />
+    <Compile Include="Linq\SqlBackend\SqlStatementModel\Unresolved\UnresolvedCollectionJoinInfoTest.cs" />
     <Compile Include="Linq\SqlBackend\UnmappedItemExceptionTest.cs" />
     <Compile Include="Linq\Core\Clauses\AdditionalFromClauseTest.cs" />
     <Compile Include="Linq\Core\Clauses\Expressions\ExtensionExpressionIntegrationTest.cs" />
