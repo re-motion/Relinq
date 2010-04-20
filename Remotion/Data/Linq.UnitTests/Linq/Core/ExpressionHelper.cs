@@ -121,6 +121,11 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
       return CreateMainFromClause_Int ("s", typeof (Cook), CreateCookQueryable());
     }
 
+    public static MainFromClause CreateMainFromClause_Bool ()
+    {
+      return CreateMainFromClause_Int ("s", typeof (bool), CreateCookQueryable ());
+    }
+
     public static MainFromClause CreateMainFromClause_Kitchen ()
     {
       return CreateMainFromClause_Int ("sd", typeof (Kitchen), CreateKitchenQueryable ());
