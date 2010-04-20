@@ -37,7 +37,6 @@
       <warnaserror refid="doc-warn-as-error"/>
       <sources failonempty="true">
         <include name="*.cs"/>
-        <include name="Backend/**/*.cs"/>
         <include name="Clauses/**/*.cs"/>
         <include name="Collections/**/*.cs"/>
         <include name="EagerFetching/**/*.cs"/>

@@ -16,12 +16,11 @@
 // 
 using System;
 using System.Runtime.Serialization;
-using Remotion.Data.Linq.Backend;
 
 namespace Remotion.Data.Linq
 {
   /// <summary>
-  /// Thrown by implementations of <see cref="IDatabaseInfo"/> when the given item cannot be mapped to a database construct.
+  /// TODO: add summary
   /// </summary>
   [Serializable]
   public class UnmappedItemException : Exception

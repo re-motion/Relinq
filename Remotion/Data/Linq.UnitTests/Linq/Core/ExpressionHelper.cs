@@ -19,8 +19,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Remotion.Data.Linq.Backend.DataObjectModel;
-using Remotion.Data.Linq.Backend.FieldResolving;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultOperators;
@@ -276,36 +274,6 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
     {
       var parser = new QueryParser ();
       return parser.GetParsedQuery (queryExpression);
-    }
-
-    public static FieldDescriptor CreateFieldDescriptor (JoinedTableContext joinedTableContext, FromClauseBase fromClause, MemberInfo member)
-    {
-      return CreateFieldDescriptor(joinedTableContext, fromClause, member, member);
-    }
-
-    public static FieldDescriptor CreateFieldDescriptor (JoinedTableContext joinedTableContext, FromClauseBase fromClause, MemberInfo member, MemberInfo originalMember)
-    {
-      IColumnSource table = joinedTableContext.GetColumnSource (fromClause);
-      var column = StubDatabaseInfo.Instance.GetColumnForMember (table, member);
-      var sourcePath = new FieldSourcePath (table, new SingleJoin[0]);
-      var fieldDescriptor = new FieldDescriptor (originalMember, sourcePath, column);
-      return fieldDescriptor;
-    }
-
-    public static FieldSourcePath GetPathForNewTable ()
-    {
-      return new FieldSourcePath (new Table (), new SingleJoin[0]);
-    }
-
-    public static FieldSourcePath GetPathForNewTable (string name, string alias)
-    {
-      var table = new Table (name, alias);
-      return GetPathForTable(table);
-    }
-
-    public static FieldSourcePath GetPathForTable (Table table)
-    {
-      return new FieldSourcePath (table, new SingleJoin[0]);
     }
 
     public static MainFromClause CreateMainFromClause_Int (string itemName, Type itemType, IQueryable querySource)

@@ -49,8 +49,6 @@
     <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Backend\ContainsFulltextExtensionMethod.cs" />
-    <Compile Include="Backend\DetailParserUtility.cs" />
     <Compile Include="Clauses\AdditionalFromClause.cs" />
     <Compile Include="Clauses\CloneContext.cs" />
     <Compile Include="Clauses\Expressions\ExtensionExpression.cs" />
@@ -102,9 +100,6 @@
     <Compile Include="Collections\ObservableCollection.cs" />
     <Compile Include="Collections\ObservableCollectionChangedEventArgs.cs" />
     <Compile Include="DefaultQueryProvider.cs" />
-    <Compile Include="Backend\DetailParsing\SelectProjectionParsing\QuerySourceReferenceExpressionParser.cs" />
-    <Compile Include="Backend\DetailParsing\SelectProjectionParsing\SubQueryExpressionParser.cs" />
-    <Compile Include="Backend\DetailParsing\WhereConditionParsing\QuerySourceReferenceExpressionParser.cs" />
     <Compile Include="EagerFetching\FetchFilteringQueryModelVisitor.cs" />
     <Compile Include="EagerFetching\FetchQueryModelBuilder.cs" />
     <Compile Include="EagerFetching\Parsing\ThenFetchManyExpressionNode.cs" />
@@ -114,7 +109,6 @@
     <Compile Include="EagerFetching\Parsing\FetchOneExpressionNode.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\EvaluatableTreeFindingExpressionTreeVisitor.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\PartialEvaluationInfo.cs" />
-    <Compile Include="Backend\FieldResolving\FieldAccessInfo.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\AggregateExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\AverageExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ClauseGenerationContext.cs" />
@@ -150,58 +144,15 @@
     <Compile Include="EagerFetching\FetchRequestCollection.cs" />
     <Compile Include="Clauses\OrderingDirection.cs" />
     <Compile Include="Clauses\ResultOperatorBase.cs" />
-    <Compile Include="Backend\DataObjectModel\BinaryEvaluation.cs" />
-    <Compile Include="Backend\DataObjectModel\FieldSourcePath.cs" />
-    <Compile Include="Backend\DataObjectModel\IColumnSource.cs" />
-    <Compile Include="Backend\DataObjectModel\IEvaluation.cs" />
-    <Compile Include="Backend\DataObjectModel\IEvaluationVisitor.cs" />
-    <Compile Include="Backend\DataObjectModel\MethodCall.cs" />
-    <Compile Include="Backend\DataObjectModel\NewObject.cs" />
-    <Compile Include="Backend\DataObjectModel\SingleJoin.cs" />
-    <Compile Include="Backend\DataObjectModel\SourceMarkerEvaluation.cs" />
-    <Compile Include="Backend\DataObjectModel\SubQuery.cs" />
     <Compile Include="Clauses\Expressions\SubQueryExpression.cs" />
     <Compile Include="EagerFetching\FluentFetchRequest.cs" />
-    <Compile Include="Backend\DetailParsing\DetailParserRegistries.cs" />
-    <Compile Include="Backend\DetailParsing\IParser.cs" />
-    <Compile Include="Backend\DetailParsing\ParseContext.cs" />
-    <Compile Include="Backend\DetailParsing\ParserRegistry.cs" />
-    <Compile Include="Backend\DetailParsing\SelectProjectionParserRegistry.cs" />
-    <Compile Include="Backend\DetailParsing\SelectProjectionParsing\BinaryExpressionParser.cs" />
-    <Compile Include="Backend\DetailParsing\SelectProjectionParsing\ConstantExpressionParser.cs" />
-    <Compile Include="Backend\DetailParsing\SelectProjectionParsing\ISelectProjectionParser.cs" />
-    <Compile Include="Backend\DetailParsing\SelectProjectionParsing\MemberExpressionParser.cs" />
-    <Compile Include="Backend\DetailParsing\SelectProjectionParsing\MethodCallExpressionParser.cs" />
-    <Compile Include="Backend\DetailParsing\SelectProjectionParsing\NewExpressionParser.cs" />
-    <Compile Include="Backend\DetailParsing\WhereConditionParserRegistry.cs" />
-    <Compile Include="Backend\DetailParsing\WhereConditionParsing\ContainsFullTextParser.cs" />
-    <Compile Include="Backend\DetailParsing\WhereConditionParsing\IWhereConditionParser.cs" />
-    <Compile Include="Backend\DetailParsing\WhereConditionParsing\LikeParser.cs" />
-    <Compile Include="Backend\DetailParsing\WhereConditionParsing\MethodCallExpressionParser.cs" />
-    <Compile Include="Backend\DetailParsing\WhereConditionParsing\SubQueryExpressionParser.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\MemberBindings\FieldInfoBinding.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\MemberBindings\MemberBinding.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\MemberBindings\MethodInfoBinding.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\MemberBindings\PropertyInfoBinding.cs" />
-    <Compile Include="Backend\ParseMode.cs" />
-    <Compile Include="Backend\DetailParsing\WhereConditionParsing\BinaryExpressionParser.cs" />
-    <Compile Include="Backend\DetailParsing\WhereConditionParsing\ConstantExpressionParser.cs" />
-    <Compile Include="Backend\DetailParsing\WhereConditionParsing\MemberExpressionParser.cs" />
-    <Compile Include="Backend\DetailParsing\WhereConditionParsing\UnaryExpressionParser.cs" />
-    <Compile Include="Backend\FieldResolving\FieldAccessResolveException.cs" />
-    <Compile Include="Backend\FieldResolving\FieldSourcePathBuilder.cs" />
-    <Compile Include="Backend\FieldResolving\FieldResolver.cs" />
-    <Compile Include="Backend\FieldResolving\FieldResolverVisitor.cs" />
-    <Compile Include="Backend\FieldResolving\IResolveFieldAccessPolicy.cs" />
-    <Compile Include="Backend\FieldResolving\JoinedTableContext.cs" />
-    <Compile Include="Backend\FieldResolving\OrderingFieldAccessPolicy.cs" />
-    <Compile Include="Backend\DataObjectModel\FieldDescriptor.cs" />
     <Compile Include="Clauses\FromClauseBase.cs" />
     <Compile Include="Clauses\ResultOperators\GroupResultOperator.cs" />
     <Compile Include="Clauses\IBodyClause.cs" />
-    <Compile Include="Backend\DataObjectModel\OrderingField.cs" />
-    <Compile Include="Backend\FieldResolving\SelectFieldAccessPolicy.cs" />
-    <Compile Include="Backend\FieldResolving\WhereFieldAccessPolicy.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\ReplacingExpressionTreeVisitor.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ResultOperatorExpressionNodeBase.cs" />
     <Compile Include="Parsing\Structure\MethodCallExpressionNodeTypeRegistry.cs" />
@@ -228,8 +179,6 @@
     <Compile Include="Parsing\Structure\IntermediateModel\SelectManyExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\IExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\SelectExpressionNode.cs" />
-    <Compile Include="Backend\DataObjectModel\DatabaseInfoUtility.cs" />
-    <Compile Include="Backend\DataObjectModel\NotCriterion.cs" />
     <Compile Include="Clauses\IClause.cs" />
     <Compile Include="IQueryExecutor.cs" />
     <Compile Include="IQueryModelVisitor.cs" />
@@ -238,7 +187,6 @@
     <Compile Include="Clauses\Ordering.cs" />
     <Compile Include="ReflectionUtility.cs" />
     <Compile Include="Parsing\ParserException.cs" />
-    <Compile Include="Backend\DetailParsing\OrderingFieldParser.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\SubQueryFindingExpressionTreeVisitor.cs" />
     <Compile Include="Parsing\Structure\MethodCallExpressionParser.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\TransparentIdentifierRemovingExpressionTreeVisitor.cs" />
@@ -250,48 +198,6 @@
     <Compile Include="Clauses\SelectClause.cs" />
     <Compile Include="QueryProviderBase.cs" />
     <Compile Include="QueryableBase.cs" />
-    <Compile Include="Backend\DataObjectModel\BinaryCondition.cs" />
-    <Compile Include="Backend\DataObjectModel\ComplexCriterion.cs" />
-    <Compile Include="Backend\DataObjectModel\Column.cs" />
-    <Compile Include="Backend\DataObjectModel\Constant.cs" />
-    <Compile Include="Backend\DataObjectModel\ICriterion.cs" />
-    <Compile Include="Backend\DataObjectModel\Table.cs" />
-    <Compile Include="Backend\DataObjectModel\IValue.cs" />
-    <Compile Include="Backend\SqlGeneration\CommandData.cs" />
-    <Compile Include="Backend\SqlGeneration\CommandParameter.cs" />
-    <Compile Include="Backend\SqlGeneration\ISqlGenerationContext.cs" />
-    <Compile Include="Backend\SqlGeneration\ISqlGenerator.cs" />
-    <Compile Include="Backend\SqlGeneration\JoinCollection.cs" />
-    <Compile Include="Backend\SqlGeneration\IFromBuilder.cs" />
-    <Compile Include="Backend\SqlGeneration\IOrderByBuilder.cs" />
-    <Compile Include="Backend\SqlGeneration\ISelectBuilder.cs" />
-    <Compile Include="Backend\SqlGeneration\IWhereBuilder.cs" />
-    <Compile Include="Backend\SqlGeneration\SqlServer\MethodCallGenerators\MethodCallConvertTo.cs" />
-    <Compile Include="Backend\SqlGeneration\SqlServer\MethodCallGenerators\MethodCallLower.cs" />
-    <Compile Include="Backend\SqlGeneration\SqlServer\MethodCallGenerators\MethodCallRemove.cs" />
-    <Compile Include="Backend\SqlGeneration\SqlServer\MethodCallGenerators\MethodCallSubstring.cs" />
-    <Compile Include="Backend\SqlGeneration\SqlServer\MethodCallGenerators\MethodCallUpper.cs" />
-    <Compile Include="Backend\SqlGeneration\SelectedObjectActivator.cs" />
-    <Compile Include="Backend\SqlGeneration\SqlGenerationData.cs" />
-    <Compile Include="Backend\SqlGeneration\SqlGenerationException.cs" />
-    <Compile Include="Backend\SqlGeneration\SqlGeneratorBase.cs" />
-    <Compile Include="Backend\SqlGeneration\SqlServer\BinaryConditionBuilder.cs" />
-    <Compile Include="Backend\SqlGeneration\ICommandBuilder.cs" />
-    <Compile Include="Backend\SqlGeneration\IMethodCallSqlGenerator.cs" />
-    <Compile Include="Backend\SqlGeneration\SqlServer\InlineSqlServerGenerator.cs" />
-    <Compile Include="Backend\SqlGeneration\SqlServer\FromBuilder.cs" />
-    <Compile Include="Backend\SqlGeneration\MethodCallSqlGeneratorRegistry.cs" />
-    <Compile Include="Backend\SqlGeneration\SqlServer\OrderByBuilder.cs" />
-    <Compile Include="Backend\SqlGeneration\SqlServer\SelectBuilder.cs" />
-    <Compile Include="Backend\SqlGeneration\SqlServer\SqlServerEvaluationVisitor.cs" />
-    <Compile Include="Backend\SqlGeneration\SqlServer\SqlServerGenerationContext.cs" />
-    <Compile Include="Backend\SqlGeneration\SqlServer\SqlServerGenerator.cs" />
-    <Compile Include="Backend\SqlGeneration\SqlServer\SqlServerUtility.cs" />
-    <Compile Include="Backend\SqlGeneration\SqlServer\CommandBuilder.cs" />
-    <Compile Include="Backend\SqlGeneration\SqlServer\WhereBuilder.cs" />
-    <Compile Include="Backend\SqlGeneration\SqlUtility.cs" />
-    <Compile Include="Backend\IDatabaseInfo.cs" />
-    <Compile Include="Backend\SqlGeneration\SqlGeneratorVisitor.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitor.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\PartialEvaluatingExpressionTreeVisitor.cs" />
     <Compile Include="Clauses\WhereClause.cs" />
@@ -300,7 +206,6 @@
     <Compile Include="Utilities\ArgumentTypeException.cs" />
     <Compile Include="Utilities\ArgumentUtility.cs" />
     <Compile Include="Utilities\HashCodeUtility.cs" />
-    <Compile Include="Utilities\JoinedTableKey.cs" />
     <Compile Include="Utilities\MemberInfoChain.cs" />
     <Compile Include="Utilities\SeparatedStringBuilder.cs" />
   </ItemGroup>
@@ -309,7 +214,6 @@
       <Link>remotion.snk</Link>
     </None>
     <None Include="Data.Linq.build" />
-    <None Include="Backend\DataObjectModel\RelationalView.cd" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Doc\include\NamespaceDoc.xml" />
