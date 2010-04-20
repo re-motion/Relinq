@@ -174,6 +174,7 @@
     <Compile Include="Linq\Core\Backend\SqlGeneration\SqlServer\WhereBuilderTest.cs" />
     <Compile Include="Linq\Core\Backend\SqlGeneration\SqlUtilityTest.cs" />
     <Compile Include="Linq\Core\Backend\SqlGeneration\StubParameterCollection.cs" />
+    <Compile Include="Linq\Core\TestDomain\MetaID.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\ExplicitJoinsSqlBackendIntegrationTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\TypeIsExpressionSqlBackendIntegrationTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\SqlCompositeCustomTextGeneratorExpressionTest.cs" />
