@@ -206,7 +206,6 @@
     <Compile Include="Utilities\ArgumentTypeException.cs" />
     <Compile Include="Utilities\ArgumentUtility.cs" />
     <Compile Include="Utilities\HashCodeUtility.cs" />
-    <Compile Include="Utilities\MemberInfoChain.cs" />
     <Compile Include="Utilities\SeparatedStringBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
