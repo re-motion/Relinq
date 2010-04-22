@@ -110,6 +110,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Linq\Core\TestDomain\MetaID.cs" />
+    <Compile Include="Linq\SqlBackend\CustomCompositeExpression.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\ConditionalExpressionSqlBackendIntegrationTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\ExplicitJoinsSqlBackendIntegrationTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\TypeIsExpressionSqlBackendIntegrationTest.cs" />
@@ -345,7 +346,7 @@
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\OrderByClausesSqlBackendIntegrationTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\SubQuerySqlBackendIntegrationTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\SqlContextExpressionVisitorTest.cs" />
-    <Compile Include="Linq\SqlBackend\SqlGeneration\TestableSqlExpressionContextExpressionVisitor.cs" />
+    <Compile Include="Linq\SqlBackend\SqlGeneration\TestableSqlContextExpressionVisitor.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\BinaryExpressionSqlBackendIntegrationTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\ResultOperatorCombinationsSqlBackendIntegrationTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\ResultOperatorsSqlBackendIntegrationTest.cs" />
