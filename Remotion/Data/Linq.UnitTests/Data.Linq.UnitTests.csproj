@@ -113,6 +113,7 @@
     <Compile Include="Linq\SqlBackend\MappingResolution\DefaultSqlContextResolutionStageTest.cs" />
     <Compile Include="Linq\SqlBackend\CustomCompositeExpression.cs" />
     <Compile Include="Linq\SqlBackend\MappingResolution\SqlContextStatementVisitorTest.cs" />
+    <Compile Include="Linq\SqlBackend\MappingResolution\SqlContextTableVisitorTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\ConditionalExpressionSqlBackendIntegrationTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\ExplicitJoinsSqlBackendIntegrationTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\TypeIsExpressionSqlBackendIntegrationTest.cs" />
