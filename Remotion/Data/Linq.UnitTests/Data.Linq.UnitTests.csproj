@@ -109,6 +109,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Linq\Core\TestDomain\ISpecificCook.cs" />
     <Compile Include="Linq\Core\TestDomain\MetaID.cs" />
     <Compile Include="Linq\SqlBackend\CustomCompositeExpression.cs" />
     <Compile Include="Linq\SqlBackend\MappingResolution\SqlContextStatementVisitorTest.cs" />

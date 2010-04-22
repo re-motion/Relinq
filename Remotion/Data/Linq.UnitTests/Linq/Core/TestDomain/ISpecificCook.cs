@@ -15,28 +15,11 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain
 {
-  public class Cook : ISpecificCook
+  public interface ISpecificCook
   {
-    public MetaID MetaID { get; set; }
-    public string FirstName { get; set; }
-    public string Name { get; set; }
-    public int ID { get; set; }
-    public ArrayList Courses { get; set; }
-    public int[] IllnessDays { get; set; }
-    public List<int> Holidays { get; set; }
-    public IQueryable<Cook> Assistants { get; set; }
-    public string NonDBStringProperty { get; set; }
-    public bool NonDBBoolProperty { get; set; }
-    public bool IsFullTimeCook { get; set; }
-    public bool IsStarredCook { get; set; }
-    public Cook Substitution { get; set; }
-    public double Weight { get; set; }
-    public string SpecificInformation { get; set; }
+    string SpecificInformation { get; set; }
   }
 }
