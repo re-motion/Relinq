@@ -154,6 +154,7 @@
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\SubstringMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\ToStringMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\UpperMethodCallTransformerTest.cs" />
+    <Compile Include="Linq\SqlBackend\SqlStatementModel\Resolved\ResolvedSubStatementTableInfoTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\Resolved\SqlValueTableReferenceExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\SqlSpecificExpressions\SqlConvertExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\SqlSpecificExpressions\SqlFunctionExpressionTest.cs" />
