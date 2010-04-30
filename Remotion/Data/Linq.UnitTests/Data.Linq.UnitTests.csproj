@@ -155,6 +155,7 @@
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\ToStringMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\UpperMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlerRegistryTest.cs" />
+    <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlers\AllResultOperatorHandlerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlers\AnyResultOperatorHandlerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlers\CastResultOperatorHandlerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlers\ContainsResultOperatorHandlerTest.cs" />
