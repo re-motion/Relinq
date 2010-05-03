@@ -160,6 +160,7 @@
     <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlers\CastResultOperatorHandlerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlers\ContainsResultOperatorHandlerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlers\CountResultOperatorHandlerTest.cs" />
+    <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlers\DefaultIfEmptyResultOperatorHandlerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlers\DistinctResultOperatorHandlerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlers\FirstResultOperatorHandlerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlers\OfTypeResultOperatorHandlerTest.cs" />
