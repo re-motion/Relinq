@@ -39,12 +39,6 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     }
 
     [Test]
-    public void Initialization_Default ()
-    {
-      Assert.That (_queryParser.ExpressionTreeParser.NodeTypeRegistry.Count, Is.GreaterThan (0));
-    }
-
-    [Test]
     public void Initialization_InjectExpressionTreeParser ()
     {
       var expressionTreeParser = new ExpressionTreeParser (new MethodCallExpressionNodeTypeRegistry());

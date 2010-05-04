@@ -21,15 +21,15 @@ using System.Linq;
 namespace Remotion.Data.Linq.Utilities
 {
   /// <summary>
-  /// <see cref="RegistryBase{TRegistry,TKey,TItem}"/> provides code which is common in all registry classes.
+  /// <see cref="RegistryBase{TRegistry,TKey,TItem,TAssignable}"/> provides code which is common in all registry classes.
   /// </summary>
-  public abstract class RegistryBase<TRegistry, TKey, TItem>
-      where TRegistry: RegistryBase<TRegistry, TKey, TItem>, new()
+  public abstract class RegistryBase<TRegistry, TKey, TItem, TAssignable>
+      where TRegistry: RegistryBase<TRegistry, TKey, TItem, TAssignable>, new()
   {
     public static TRegistry CreateDefault ()
     {
-      var defaultItemTypes = from t in typeof (TRegistry).Assembly.GetTypes() 
-                             where typeof (TItem).IsAssignableFrom (t) && !t.IsAbstract
+      var defaultItemTypes = from t in typeof (TRegistry).Assembly.GetTypes()
+                             where typeof (TAssignable).IsAssignableFrom (t) && !t.IsAbstract
                              select t;
 
       var registry = new TRegistry();
@@ -47,7 +47,7 @@ namespace Remotion.Data.Linq.Utilities
       _items[key] = item;
     }
 
-    public void Register (IEnumerable<TKey> keys, TItem item)
+    public virtual void Register (IEnumerable<TKey> keys, TItem item)
     {
       ArgumentUtility.CheckNotNull ("keys", keys);
       ArgumentUtility.CheckNotNull ("item", item);

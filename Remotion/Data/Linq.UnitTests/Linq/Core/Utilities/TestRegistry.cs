@@ -20,7 +20,7 @@ using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.UnitTests.Linq.Core.Utilities
 {
-  public class TestRegistry : RegistryBase<TestRegistry, Type, ITestRegistry>
+  public class TestRegistry : RegistryBase<TestRegistry, Type, ITestRegistry, ITestRegistry>
   {
     public override ITestRegistry GetItem (Type key)
     {

@@ -29,7 +29,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Utilities
     [SetUp]
     public void SetUp ()
     {
-      _registry = RegistryBase<TestRegistry, Type, ITestRegistry>.CreateDefault();
+      _registry = RegistryBase<TestRegistry, Type, ITestRegistry, ITestRegistry>.CreateDefault();
     }
 
     [Test]

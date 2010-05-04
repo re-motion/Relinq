@@ -29,36 +29,21 @@ namespace Remotion.Data.Linq.Parsing.Structure
   /// types. This is used by <see cref="ExpressionTreeParser"/> when a <see cref="MethodCallExpression"/> is encountered to instantiate the
   /// right <see cref="IExpressionNode"/> for the given method.
   /// </summary>
-  public class MethodCallExpressionNodeTypeRegistry
+  public class MethodCallExpressionNodeTypeRegistry : RegistryBase<MethodCallExpressionNodeTypeRegistry, MethodInfo, Type, IExpressionNode>
   {
     /// <summary>
-    /// Creates a default <see cref="MethodCallExpressionNodeTypeRegistry"/>, which has all types implementing <see cref="IExpressionNode"/> from the
-    /// re-linq assembly automatically registered, as long as they offer a public static <c>SupportedMethods</c> field.
+    /// Initializes a new instance of the <see cref="MethodCallExpressionNodeTypeRegistry"/> class. Use 
+    /// <see cref="RegistryBase{TRegistry,TKey,TItem,TAssignable}.CreateDefault"/> to create an instance pre-initialized with the default types instead.
     /// </summary>
-    /// <returns>A default <see cref="MethodCallExpressionNodeTypeRegistry"/> with all <see cref="IExpressionNode"/> types with a <c>SupportedMethods</c>
-    /// field registered.</returns>
-    public static MethodCallExpressionNodeTypeRegistry CreateDefault ()
+    public MethodCallExpressionNodeTypeRegistry ()
     {
-      var expressionNodeTypes = from t in typeof (MethodCallExpressionNodeTypeRegistry).Assembly.GetTypes()
-                                where typeof (IExpressionNode).IsAssignableFrom (t)
-                                select t;
-
-      var supportedMethodsForTypes = from t in expressionNodeTypes
-                                     let supportedMethodsField = t.GetField ("SupportedMethods", BindingFlags.Static | BindingFlags.Public)
-                                     where supportedMethodsField != null
-                                     select new { Type = t, Methods = (IEnumerable<MethodInfo>) supportedMethodsField.GetValue (null) };
-
-      var registry = new MethodCallExpressionNodeTypeRegistry();
-      foreach (var methodsForType in supportedMethodsForTypes)
-        registry.Register (methodsForType.Methods, methodsForType.Type);
-
-      return registry;
+      
     }
 
     /// <summary>
     /// Gets the registerable method definition from a given <see cref="MethodInfo"/>. A registerable method is a <see cref="MethodInfo"/> object
     /// that can be registered via a call to <see cref="Register"/>. When the given <paramref name="method"/> is passed to 
-    /// <see cref="GetNodeType"/> and its corresponding registerable method was registered, the correct node type is returned.
+    /// <see cref="GetItem"/> and its corresponding registerable method was registered, the correct node type is returned.
     /// </summary>
     /// <param name="method">The method for which the registerable method should be retrieved.</param>
     /// <returns><paramref name="method"/> itself, unless it is a closed generic method or declared in a closed generic type. In the latter cases,
@@ -79,18 +64,11 @@ namespace Remotion.Data.Linq.Parsing.Structure
       }
     }
 
-    private readonly Dictionary<MethodInfo, Type> _registeredTypes = new Dictionary<MethodInfo, Type>();
-
-    public int Count
-    {
-      get { return _registeredTypes.Count; }
-    }
-
     /// <summary>
     /// Registers the specified <paramref name="methods"/> with the given <paramref name="nodeType"/>. The given methods must either be non-generic
     /// or open generic method definitions. If a method has already been registered before, the later registration overwrites the earlier one.
     /// </summary>
-    public void Register (IEnumerable<MethodInfo> methods, Type nodeType)
+    public override void Register (IEnumerable<MethodInfo> methods, Type nodeType)
     {
       ArgumentUtility.CheckNotNull ("methods", methods);
       ArgumentUtility.CheckNotNull ("nodeType", nodeType);
@@ -114,8 +92,39 @@ namespace Remotion.Data.Linq.Parsing.Structure
           throw new InvalidOperationException (message);
         }
 
-        _registeredTypes[method] = nodeType;
+        Register (method, nodeType);
       }
+    }
+
+    /// <summary>
+    /// Gets the type of <see cref="IExpressionNode"/> registered with this <see cref="MethodCallExpressionNodeTypeRegistry"/> instance that
+    /// matches the given <paramref name="key"/>, throwing a <see cref="KeyNotFoundException"/> if none can be found.
+    /// </summary>
+    public override Type GetItem (MethodInfo key)
+    {
+      ArgumentUtility.CheckNotNull ("key", key);
+
+      var methodDefinition = GetRegisterableMethodDefinition (key);
+      var nodeType = GetItemExact (methodDefinition);
+      if (nodeType != null)
+        return nodeType;
+
+      string message = string.Format (
+            "No corresponding expression node type was registered for method '{0}.{1}'.",
+            methodDefinition.DeclaringType.FullName,
+            methodDefinition.Name);
+        throw new KeyNotFoundException (message);
+    }
+
+    protected override void RegisterForTypes (IEnumerable<Type> itemTypes)
+    {
+      var supportedMethodsForTypes = from t in itemTypes
+                                     let supportedMethodsField = t.GetField ("SupportedMethods", BindingFlags.Static | BindingFlags.Public)
+                                     where supportedMethodsField != null
+                                     select new { Type = t, Methods = (IEnumerable<MethodInfo>) supportedMethodsField.GetValue (null) };
+
+      foreach (var methodsForType in supportedMethodsForTypes)
+        Register (methodsForType.Methods, methodsForType.Type);
     }
 
     /// <summary>
@@ -126,30 +135,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       ArgumentUtility.CheckNotNull ("method", method);
 
       var methodDefinition = GetRegisterableMethodDefinition (method);
-      return _registeredTypes.ContainsKey (methodDefinition);
-    }
-
-    /// <summary>
-    /// Gets the type of <see cref="IExpressionNode"/> registered with this <see cref="MethodCallExpressionNodeTypeRegistry"/> instance that
-    /// matches the given <paramref name="method"/>, throwing a <see cref="KeyNotFoundException"/> if none can be found.
-    /// </summary>
-    public Type GetNodeType (MethodInfo method)
-    {
-      ArgumentUtility.CheckNotNull ("method", method);
-
-      var methodDefinition = GetRegisterableMethodDefinition (method);
-      try
-      {
-        return _registeredTypes[methodDefinition];
-      }
-      catch (KeyNotFoundException ex)
-      {
-        string message = string.Format (
-            "No corresponding expression node type was registered for method '{0}.{1}'.",
-            methodDefinition.DeclaringType.FullName,
-            methodDefinition.Name);
-        throw new KeyNotFoundException (message, ex);
-      }
+      return GetItemExact (methodDefinition) != null;
     }
   }
 }

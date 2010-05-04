@@ -54,7 +54,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
     {
       try
       {
-        return _nodeTypeRegistry.GetNodeType (expressionToParse.Method);
+        return _nodeTypeRegistry.GetItem(expressionToParse.Method);
       }
       catch (KeyNotFoundException ex)
       {
