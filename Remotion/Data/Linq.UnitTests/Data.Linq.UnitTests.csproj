@@ -129,6 +129,10 @@
   <ItemGroup>
     <Compile Include="Linq\Core\TestDomain\ISpecificCook.cs" />
     <Compile Include="Linq\Core\TestDomain\MetaID.cs" />
+    <Compile Include="Linq\Core\Utilities\ITestRegistry.cs" />
+    <Compile Include="Linq\Core\Utilities\RegistryBaseTest.cs" />
+    <Compile Include="Linq\Core\Utilities\TestRegistry.cs" />
+    <Compile Include="Linq\Core\Utilities\TestRegistryImplementation.cs" />
     <Compile Include="Linq\SqlBackend\CustomCompositeExpression.cs" />
     <Compile Include="Linq\SqlBackend\MappingResolution\SqlContextStatementVisitorTest.cs" />
     <Compile Include="Linq\SqlBackend\MappingResolution\SqlContextTableVisitorTest.cs" />
