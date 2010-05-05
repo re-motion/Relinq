@@ -29,6 +29,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Utilities
     [SetUp]
     public void SetUp ()
     {
+      // TODO Review 2674: Use TestRegistry.CreateDefault (and set the ReSharper warning to "Hint"; it's really stupid)
       _registry = RegistryBase<TestRegistry, Type, ITestRegistry, ITestRegistry>.CreateDefault();
     }
 
@@ -43,5 +44,8 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Utilities
     {
       Assert.That (_registry.GetItem (typeof (TestRegistry)), Is.Null);
     }
+
+    // TODO Review 2674: Write tests for all operations: CreateDefault, Register single, Register sequence, GetItemExact
+    // TODO Review 2674: In the setup method, create an empty TestRegistry (new TestRegistry()), not a default one
   }
 }
