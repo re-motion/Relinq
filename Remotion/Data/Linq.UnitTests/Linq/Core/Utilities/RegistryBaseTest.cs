@@ -30,7 +30,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Utilities
     public void SetUp ()
     {
       // TODO Review 2674: Use TestRegistry.CreateDefault (and set the ReSharper warning to "Hint"; it's really stupid)
-      _registry = RegistryBase<TestRegistry, Type, ITestRegistry, ITestRegistry>.CreateDefault();
+      _registry = RegistryBase<TestRegistry, Type, ITestRegistry>.CreateDefault();
     }
 
     [Test]
