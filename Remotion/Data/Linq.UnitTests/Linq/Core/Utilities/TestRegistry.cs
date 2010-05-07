@@ -35,5 +35,10 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Utilities
         Register (itemType, handler);
       }
     }
+
+    public new ITestRegistry GetItemExact (Type key)
+    {
+      return base.GetItemExact (key);
+    }
   }
 }

@@ -58,7 +58,7 @@ namespace Remotion.Data.Linq.Utilities
 
     public abstract TItem GetItem (TKey key);
 
-    protected TItem GetItemExact (TKey key)
+    protected virtual TItem GetItemExact (TKey key)
     {
       TItem item;
       _items.TryGetValue (key, out item);

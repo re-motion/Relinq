@@ -29,23 +29,48 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Utilities
     [SetUp]
     public void SetUp ()
     {
-      // TODO Review 2674: Use TestRegistry.CreateDefault (and set the ReSharper warning to "Hint"; it's really stupid)
-      _registry = RegistryBase<TestRegistry, Type, ITestRegistry>.CreateDefault();
+      _registry = new TestRegistry();
     }
 
     [Test]
-    public void Initialization_GetRegisteredType ()
+    public void Initialization ()
     {
-      Assert.That (_registry.GetItem (typeof (TestRegistryImplementation)), Is.Not.Null);
+      Assert.That (_registry.GetItem (typeof (TestRegistryImplementation)), Is.Null);
     }
 
     [Test]
-    public void Initialization_GetUnRegisteredType ()
+    public void CreateDefault_GetItem ()
+    {
+      _registry = TestRegistry.CreateDefault();
+      Assert.That (_registry.GetItem (typeof (TestRegistryImplementation)), Is.TypeOf (typeof (TestRegistryImplementation)));
+    }
+
+    [Test]
+    public void CreateDefault_GetItemExact ()
+    {
+      _registry = TestRegistry.CreateDefault ();
+      Assert.That (_registry.GetItemExact (typeof (TestRegistryImplementation)), Is.TypeOf (typeof (TestRegistryImplementation)));
+    }
+
+    [Test]
+    public void CreateDefault_GetUnRegisteredType ()
     {
       Assert.That (_registry.GetItem (typeof (TestRegistry)), Is.Null);
     }
 
-    // TODO Review 2674: Write tests for all operations: CreateDefault, Register single, Register sequence, GetItemExact
-    // TODO Review 2674: In the setup method, create an empty TestRegistry (new TestRegistry()), not a default one
+    [Test]
+    public void RegisterTypeManually ()
+    {
+      _registry.Register (typeof (TestRegistryImplementation), new TestRegistryImplementation());
+      Assert.That (_registry.GetItem (typeof (TestRegistryImplementation)), Is.Not.Null);
+    }
+
+    [Test]
+    public void RegisterTypesManually ()
+    {
+      _registry.Register (new [] { typeof (TestRegistryImplementation) }, new TestRegistryImplementation ());
+      Assert.That (_registry.GetItem (typeof (TestRegistryImplementation)), Is.Not.Null);
+    }
+    
   }
 }
