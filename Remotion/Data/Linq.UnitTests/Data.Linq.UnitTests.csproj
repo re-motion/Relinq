@@ -181,7 +181,7 @@
     <Compile Include="Linq\SqlBackend\SqlPreparation\TestableSqlPreparationExpressionVisitorTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\NamedExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\Resolved\ResolvedSubStatementTableInfoTest.cs" />
-    <Compile Include="Linq\SqlBackend\SqlStatementModel\Resolved\SqlValueTableReferenceExpressionTest.cs" />
+    <Compile Include="Linq\SqlBackend\SqlStatementModel\Resolved\SqlValueReferenceExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\SqlSpecificExpressions\SqlConvertExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\SqlSpecificExpressions\SqlExistsExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\SqlSpecificExpressions\SqlFunctionExpressionTest.cs" />
