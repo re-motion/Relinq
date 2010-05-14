@@ -134,8 +134,9 @@
     <Compile Include="Linq\Core\Utilities\TestRegistry.cs" />
     <Compile Include="Linq\Core\Utilities\TestRegistryImplementation.cs" />
     <Compile Include="Linq\SqlBackend\CustomCompositeExpression.cs" />
+    <Compile Include="Linq\SqlBackend\MappingResolution\SqlContextJoinInfoVisitorTest.cs" />
     <Compile Include="Linq\SqlBackend\MappingResolution\SqlContextStatementVisitorTest.cs" />
-    <Compile Include="Linq\SqlBackend\MappingResolution\SqlContextTableVisitorTest.cs" />
+    <Compile Include="Linq\SqlBackend\MappingResolution\SqlContextTableInfoVisitorTest.cs" />
     <Compile Include="Linq\SqlBackend\MappingResolution\SqlTableReferenceResolverTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\ConditionalExpressionSqlBackendIntegrationTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\ExplicitJoinsSqlBackendIntegrationTest.cs" />
