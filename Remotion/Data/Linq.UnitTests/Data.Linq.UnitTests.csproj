@@ -162,6 +162,7 @@
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\ToStringMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\UpperMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlerRegistryTest.cs" />
+    <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlers\AggregationResultOperatorHandlerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlers\AllResultOperatorHandlerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlers\AnyResultOperatorHandlerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlers\AverageResultOperatorHandlerTest.cs" />
@@ -178,6 +179,7 @@
     <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlers\SingleResultOperatorHandlerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlers\SumResultOperatorHandlerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlers\TakeResultOperatorHandlerTest.cs" />
+    <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlers\TestableAggregationResultOperatorHandler.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlers\TestableResultOperatorHandler.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\TestableSqlPreparationExpressionVisitorTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\AggregationExpressionTest.cs" />
