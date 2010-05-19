@@ -186,6 +186,7 @@
     <Compile Include="Linq\SqlBackend\SqlStatementModel\AggregationExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\NamedExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\Resolved\ResolvedSubStatementTableInfoTest.cs" />
+    <Compile Include="Linq\SqlBackend\SqlStatementModel\Resolved\SqlColumnReferenceExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\Resolved\SqlValueReferenceExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\SqlSpecificExpressions\SqlConvertExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\SqlSpecificExpressions\SqlExistsExpressionTest.cs" />
@@ -433,7 +434,7 @@
     <Compile Include="Linq\SqlBackend\MappingResolution\ResolvingExpressionVisitorTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\Unresolved\UnresolvedJoinInfoTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\Resolved\SqlEntityDefinitionExpressionTest.cs" />
-    <Compile Include="Linq\SqlBackend\SqlStatementModel\Resolved\SqlColumnExpressionTest.cs" />
+    <Compile Include="Linq\SqlBackend\SqlStatementModel\Resolved\SqlColumnDefinitionExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\SqlPreparationContextTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\SqlPreparationQueryModelVisitorTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\SqlPreparationExpressionVisitorTest.cs" />
