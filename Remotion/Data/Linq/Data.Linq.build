@@ -25,7 +25,8 @@
           debug="${build.debug}"
           define="${build.csc.define}"
           keyfile="${solution.key-file}"
-          noconfig="true">          
+          noconfig="true"
+          warnaserror="true">          
       <nowarn>
         <!-- missing XML comment -->
         <warning number="1591" />
@@ -34,7 +35,6 @@
         <!-- obsolete warning -->
         <warning number="0618" />
       </nowarn>
-      <warnaserror refid="doc-warn-as-error"/>
       <sources failonempty="true">
         <include name="*.cs"/>
         <include name="Clauses/**/*.cs"/>

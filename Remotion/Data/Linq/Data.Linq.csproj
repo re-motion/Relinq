@@ -238,7 +238,9 @@
     <None Include="..\..\..\remotion.snk">
       <Link>remotion.snk</Link>
     </None>
-    <None Include="Data.Linq.build" />
+    <None Include="Data.Linq.build">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Doc\include\NamespaceDoc.xml" />

@@ -88,7 +88,8 @@
     <NoStdLib>false</NoStdLib>
     <NoWarn>
     </NoWarn>
-    <WarningsAsErrors></WarningsAsErrors>
+    <WarningsAsErrors>
+    </WarningsAsErrors>
     <Optimize>true</Optimize>
     <RegisterForComInterop>false</RegisterForComInterop>
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
@@ -478,7 +479,9 @@
     <Compile Include="Linq\Core\TestUtilities\TupleAbcd.cs" />
     <Compile Include="Linq\Core\Utilities\HashCodeUtilityTest.cs" />
     <Compile Include="Linq\Core\Utilities\SeparatedStringBuilderTest.cs" />
-    <None Include="Data.Linq.UnitTests.build" />
+    <None Include="Data.Linq.UnitTests.build">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Linq\Core\Parsing\ExpressionTrees\ExpressionTree_Grammar.docx" />
     <None Include="Properties\AssemblyInfoTemplate.cs">
       <SubType>Code</SubType>
