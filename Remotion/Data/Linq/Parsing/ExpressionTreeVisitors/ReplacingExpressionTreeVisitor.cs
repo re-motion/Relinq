@@ -43,7 +43,7 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
 
     public override Expression VisitExpression (Expression expression)
     {
-      if (expression == _replacedExpression)
+      if (expression==_replacedExpression)
         return _replacementExpression;
       else
         return base.VisitExpression (expression);
