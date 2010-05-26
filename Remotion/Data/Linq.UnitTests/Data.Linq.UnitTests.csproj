@@ -446,7 +446,7 @@
     <Compile Include="Linq\SqlBackend\MappingResolverStub.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\SqlStatementModelObjectMother.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\Unresolved\SqlTableReferenceExpressionTest.cs" />
-    <Compile Include="Linq\SqlBackend\SqlStatementModel\Resolved\ResolvedTableInfoTest.cs" />
+    <Compile Include="Linq\SqlBackend\SqlStatementModel\Resolved\ResolvedSimpleTableInfoTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\SqlTableTest.cs" />
     <Compile Include="Linq\SqlBackend\MappingResolution\ResolvingTableInfoVisitorTest.cs" />
     <Compile Include="Linq\Core\TestDomain\Chef.cs" />
