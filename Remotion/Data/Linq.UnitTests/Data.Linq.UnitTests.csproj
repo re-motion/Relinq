@@ -140,6 +140,7 @@
     <Compile Include="Linq\SqlBackend\MappingResolution\SqlContextSelectionAdjusterTest.cs" />
     <Compile Include="Linq\SqlBackend\MappingResolution\SqlContextTableInfoVisitorTest.cs" />
     <Compile Include="Linq\SqlBackend\MappingResolution\SqlTableReferenceResolverTest.cs" />
+    <Compile Include="Linq\SqlBackend\MappingResolution\SubStatementReferenceresolverTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\ConditionalExpressionSqlBackendIntegrationTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\ExplicitJoinsSqlBackendIntegrationTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\NamedEntitiesSqlBackendIntegrationTest.cs" />
