@@ -181,6 +181,7 @@
     <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlers\OfTypeResultOperatorHandlerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlers\ResultOperatorHandlerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlers\SingleResultOperatorHandlerTest.cs" />
+    <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlers\SkipResultOperatorHandlerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlers\SumResultOperatorHandlerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlers\TakeResultOperatorHandlerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlers\TestableAggregationResultOperatorHandler.cs" />
