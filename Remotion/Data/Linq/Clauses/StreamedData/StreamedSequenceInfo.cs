@@ -37,6 +37,9 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
       ArgumentUtility.CheckNotNull ("dataType", dataType);
       ArgumentUtility.CheckNotNull ("itemExpression", itemExpression);
 
+      if (!typeof (IEnumerable).IsAssignableFrom (dataType))
+        throw new InvalidOperationException (string.Format ("Data type '{0}' does not implement IEnumerable.", dataType.Name));
+
       var resultItemType = ReflectionUtility.TryGetItemTypeOfIEnumerable (dataType);
       if (itemExpression.Type != resultItemType)
       {
