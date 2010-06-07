@@ -41,7 +41,8 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.StreamedData
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Data type 'Int32' does not implement IEnumerable.")]
+    [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage =
+        "Expected a type implementing IEnumerable<T>, but found 'System.Int32'.\r\nParameter name: dataType")]
     public void Initialization_DataTypeIsnotAssignableFromIEnumerable ()
     {
       new StreamedSequenceInfo (typeof (int), _intExpression);
