@@ -136,6 +136,7 @@
     <Compile Include="Linq\Core\Utilities\TestRegistryImplementation.cs" />
     <Compile Include="Linq\SqlBackend\CustomCompositeExpression.cs" />
     <Compile Include="Linq\SqlBackend\MappingResolution\MappingResolutionContextTest.cs" />
+    <Compile Include="Linq\SqlBackend\MappingResolution\MemberAccessResolverTest.cs" />
     <Compile Include="Linq\SqlBackend\MappingResolution\SqlContextJoinInfoVisitorTest.cs" />
     <Compile Include="Linq\SqlBackend\MappingResolution\SqlContextSelectionAdjusterTest.cs" />
     <Compile Include="Linq\SqlBackend\MappingResolution\SqlContextTableInfoVisitorTest.cs" />
