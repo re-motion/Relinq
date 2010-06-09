@@ -255,9 +255,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
 
     public static IQueryExecutor CreateExecutor()
     {
-      var repository = new MockRepository();
-      var executor = repository.StrictMock<IQueryExecutor>();
-      return executor;
+      return new StubQueryExecutor();
     }
 
     public static object ExecuteLambda (LambdaExpression lambdaExpression, params object[] args)
@@ -339,7 +337,5 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
 
       return Expression.Lambda (resolvedBody, remainingParameters.ToArray());
     }
-
-
   }
 }

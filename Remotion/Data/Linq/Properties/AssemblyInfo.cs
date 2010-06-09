@@ -16,6 +16,7 @@
 // 
 using System;
 using System.Reflection;
+using System.Security;
 
 //
 // General Information about an assembly is controlled through the following 
@@ -32,6 +33,7 @@ using System.Reflection;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: CLSCompliant(true)]
+[assembly: AllowPartiallyTrustedCallers] // required for sandbox tests
 
 //
 // Version information for an assembly consists of the following four values:
