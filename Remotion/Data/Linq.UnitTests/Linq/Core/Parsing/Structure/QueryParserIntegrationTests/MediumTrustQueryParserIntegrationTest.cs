@@ -40,7 +40,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
       var testFixtureResults = SandboxTestRunner.RunTestFixturesInSandbox (
           types,
           permissions,
-          new[] { typeof (MediumTrustQueryParserIntegrationTest).Assembly }); // TODO: Remove full trust when NUnit supports partially trusted callers
+          null);
       var testResults = testFixtureResults.SelectMany (r => r.TestResults);
 
       foreach (var testResult in testResults)

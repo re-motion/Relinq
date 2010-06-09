@@ -32,8 +32,7 @@ namespace Remotion.Data.Linq.Sandboxing
     {
       ArgumentUtility.CheckNotNull ("testFixtureTypes", testFixtureTypes);
       ArgumentUtility.CheckNotNull ("permissions", permissions);
-      ArgumentUtility.CheckNotNull ("fullTrustAssemblies", fullTrustAssemblies);
-
+      
       using (var sandbox = Sandbox.CreateSandbox (permissions, fullTrustAssemblies))
       {
         var runner = sandbox.CreateSandboxedInstance<SandboxTestRunner> (permissions);

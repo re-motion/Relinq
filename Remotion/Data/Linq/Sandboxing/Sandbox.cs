@@ -33,7 +33,9 @@ namespace Remotion.Data.Linq.Sandboxing
       foreach (var permission in permissions)
         permissionSet.AddPermission (permission);
 
-      var fullTrustStrongNames = (from asm in fullTrustAssemblies
+      StrongName[] fullTrustStrongNames = null;
+      if(fullTrustAssemblies!=null && fullTrustAssemblies.Length>0)
+        fullTrustStrongNames = (from asm in fullTrustAssemblies
                                   let name = asm.GetName()
                                   let strongNamePublicKeyBlob = new StrongNamePublicKeyBlob (name.GetPublicKey())
                                   select new StrongName (strongNamePublicKeyBlob, name.Name, name.Version)).ToArray();
