@@ -117,6 +117,7 @@
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <ProjectReference Include="..\Linq.SqlBackend\Data.Linq.SqlBackend.csproj">
       <Project>{F23F3422-D323-42CD-83D9-C0DEB2D3DC28}</Project>
@@ -475,6 +476,12 @@
     <Compile Include="Linq\Core\TestQueryGenerators\TestQueryProvider.cs" />
     <Compile Include="Linq\Core\TestQueryGenerators\WhereTestQueryGenerator.cs" />
     <Compile Include="Linq\Core\Transformations\SubQueryFromClauseFlattenerTest.cs" />
+    <Compile Include="Sandboxing\PermissionSets.cs" />
+    <Compile Include="Sandboxing\Sandbox.cs" />
+    <Compile Include="Sandboxing\SandboxTestRunner.cs" />
+    <Compile Include="Sandboxing\TestFailedException.cs" />
+    <Compile Include="Sandboxing\TestFixtureResult.cs" />
+    <Compile Include="Sandboxing\TestResult.cs" />
     <Compile Include="UniqueIdentifierGeneratorTest.cs" />
     <Compile Include="Linq\Core\Utilities\ArgumentUtilityTest.cs" />
     <Compile Include="Linq\Core\TestUtilities\Dev.cs" />
