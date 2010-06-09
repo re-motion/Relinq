@@ -24,6 +24,9 @@ namespace Remotion.Data.Linq.Sandboxing
   [Serializable]
   public struct TestFixtureResult
   {
+    public readonly Type Type;
+    public readonly TestResult[] TestResults;
+
     public TestFixtureResult (Type type, TestResult[] testResults)
     {
       if (type == null)
@@ -32,8 +35,5 @@ namespace Remotion.Data.Linq.Sandboxing
       Type = type;
       TestResults = testResults;
     }
-
-    public readonly Type Type;
-    public readonly TestResult[] TestResults;
   }
 }
