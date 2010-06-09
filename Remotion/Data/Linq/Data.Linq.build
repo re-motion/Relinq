@@ -52,8 +52,7 @@
         <include asis="true" name="System.Core.dll"/>
         <include asis="true" name="System.Data.dll"/>
         <include asis="true" name="System.Data.DataSetExtensions.dll"/>
-		<include asis="true" name="System.Drawing.dll"/>
-      </references>
+	  </references>
     </csc>
   </target>
 

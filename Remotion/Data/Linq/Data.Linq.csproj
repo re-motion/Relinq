@@ -72,7 +72,6 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Clauses\AdditionalFromClause.cs" />
@@ -162,12 +161,6 @@
     <Compile Include="QueryModelBuilder.cs" />
     <Compile Include="QueryModelVisitorBase.cs" />
     <Compile Include="Clauses\ExpressionTreeVisitors\FormattingExpressionTreeVisitor.cs" />
-    <Compile Include="Sandboxing\PermissionSets.cs" />
-    <Compile Include="Sandboxing\Sandbox.cs" />
-    <Compile Include="Sandboxing\SandboxTestRunner.cs" />
-    <Compile Include="Sandboxing\TestFailedException.cs" />
-    <Compile Include="Sandboxing\TestFixtureResult.cs" />
-    <Compile Include="Sandboxing\TestResult.cs" />
     <Compile Include="Transformations\SubQueryFromClauseFlattener.cs" />
     <Compile Include="UniqueIdentifierGenerator.cs" />
     <Compile Include="EagerFetching\FetchOneRequest.cs" />
