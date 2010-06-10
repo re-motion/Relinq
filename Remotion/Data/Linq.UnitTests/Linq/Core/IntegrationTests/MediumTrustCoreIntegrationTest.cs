@@ -21,10 +21,10 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.UnitTests.Sandboxing;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegrationTests
+namespace Remotion.Data.Linq.UnitTests.Linq.Core.IntegrationTests
 {
   [TestFixture]
-  public class MediumTrustQueryParserIntegrationTest
+  public class MediumTrustCoreIntegrationTest
   {
     [Test]
     public void MediumTrust ()
@@ -32,10 +32,10 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
       var mediumTrust = PermissionSets.GetMediumTrust (AppDomain.CurrentDomain.BaseDirectory, Environment.MachineName);
       var permissions = mediumTrust.Concat (new[] { new ReflectionPermission (ReflectionPermissionFlag.MemberAccess) }).ToArray ();
 
-      var types = (from t in typeof (MediumTrustQueryParserIntegrationTest).Assembly.GetTypes ()
-                   where t.Namespace == typeof (MediumTrustQueryParserIntegrationTest).Namespace
-                       && t != typeof (MediumTrustQueryParserIntegrationTest)
-                       && !t.IsAbstract && t.IsDefined(typeof(TestFixtureAttribute), false)
+      var types = (from t in typeof (MediumTrustCoreIntegrationTest).Assembly.GetTypes ()
+                   where (t.Namespace ?? string.Empty).StartsWith(typeof (MediumTrustCoreIntegrationTest).Namespace)
+                       && t != typeof (MediumTrustCoreIntegrationTest)
+                       && !t.IsAbstract && t.IsDefined (typeof (TestFixtureAttribute), false)
                    select t).ToArray ();
 
       var testFixtureResults = SandboxTestRunner.RunTestFixturesInSandbox (

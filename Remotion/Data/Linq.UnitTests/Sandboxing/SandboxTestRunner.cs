@@ -21,6 +21,9 @@ using System.Reflection;
 using System.Security;
 using Remotion.Data.Linq.Utilities;
 
+// Note: This file is originally defined in Remotion.Development.UnitTesting.Sandboxing. It is duplicated by Remotion.Data.Linq.UnitTests.Sandboxing.
+// Note: Changes made to this file must be synchronized with all copies.
+
 namespace Remotion.Data.Linq.UnitTests.Sandboxing
 {
   /// <summary>

@@ -129,6 +129,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Linq\Core\IntegrationTests\MediumTrustCoreIntegrationTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\QueryParserIntegrationTests\MediumTrustQueryParserIntegrationTest.cs" />
     <Compile Include="Linq\Core\StubQueryExecutor.cs" />
     <Compile Include="Linq\Core\TestDomain\ISpecificCook.cs" />
