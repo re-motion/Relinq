@@ -34,7 +34,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
       var types = (from t in typeof (MediumTrustQueryParserIntegrationTest).Assembly.GetTypes ()
                    where t.Namespace == typeof (MediumTrustQueryParserIntegrationTest).Namespace
                        && t != typeof (MediumTrustQueryParserIntegrationTest)
-                       && !t.IsAbstract && !t.IsNested
+                       && !t.IsAbstract && !t.IsNested // TODO Review 2812: instead of !IsNested, check that TestFixtureAttribute is defined
                    select t).ToArray ();
 
       var testFixtureResults = SandboxTestRunner.RunTestFixturesInSandbox (
@@ -45,6 +45,9 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
 
       foreach (var testResult in testResults)
         testResult.EnsureNotFailed ();
+
+      // TODO Review 2812: Assert that number of succeeded tests > 0 (to ensure that we actually run anything)
+      // TODO Review 2812: Also add a medium trust test fixture for the Linq/Core/IntegrationTests (even though they are incoplete)
     }
   }
 }
