@@ -20,18 +20,24 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTe
 {
   internal class TypeForNewExpression
   {
+    public int C;
+
     public TypeForNewExpression (int a)
     {
-      A = a;
+      C = a;
     }
 
     public TypeForNewExpression (int a, int b)
     {
-      A = a;
+      C = a;
       B = b;
     }
 
-    public int A { get; set; }
+    public int A
+    {
+      get { return C; }
+      set { C = value; }
+    }
     public int B { get; set; }
   }
 }
