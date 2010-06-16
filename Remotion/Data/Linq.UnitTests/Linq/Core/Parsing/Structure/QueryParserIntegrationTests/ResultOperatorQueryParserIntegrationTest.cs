@@ -115,16 +115,6 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
     }
 
     [Test]
-    public void All_FollowingGroupBy ()
-    {
-      var expression = ExpressionHelper.MakeExpression (() => (from s in ExpressionHelper.CreateCookQueryable ()
-                                                               select s).GroupBy (c => c.Name, c => c.ID).All (group => group.Key != null));
-
-      var queryModel = QueryParser.GetParsedQuery (expression);
-      Console.WriteLine (queryModel);
-    }
-
-    [Test]
     public void TakeWithBackReference ()
     {
       var query =
