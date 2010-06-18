@@ -252,6 +252,26 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
     }
 
     [Test]
+    public void TransparentIdentifier_WithinSubQueries ()
+    {
+      // new AnonymousType { a = 5 }.a => 5
+      var memberExpression = Expression.MakeMemberAccess (
+          Expression.MemberInit (
+            _anonymousTypeNewExpression,
+            Expression.Bind (_anonymousTypeA, _assignedExpressionA)),
+          _anonymousTypeA);
+
+      var subQuery = ExpressionHelper.CreateQueryModel_Int();
+      subQuery.SelectClause.Selector = memberExpression;
+
+      var subQueryExpression = new SubQueryExpression (subQuery);
+
+      var result = (SubQueryExpression) TransparentIdentifierRemovingExpressionTreeVisitor.ReplaceTransparentIdentifiers (subQueryExpression);
+
+      Assert.That (result.QueryModel.SelectClause.Selector, Is.SameAs (_assignedExpressionA));
+    }
+
+    [Test]
     public void ReplaceableExpression_GivingAnotherReplaceableExpression ()
     {
       // new AnonymousType { a = (new AnonymousType { a = 5 }.a) }.a => 5

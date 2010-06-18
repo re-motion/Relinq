@@ -16,10 +16,16 @@
 // 
 using System;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
 {
+  /// <summary>
+  /// Replaces all nodes that equal a given <see cref="Expression"/> with a replacement node. Expressions are also replaced within subqueries; the 
+  /// <see cref="QueryModel"/> is changed by the replacement operations, it is not copied. The replacement node is not recursively searched for 
+  /// occurrences of the <see cref="Expression"/> to be resolved.
+  /// </summary>
   public class ReplacingExpressionTreeVisitor : ExpressionTreeVisitor
   {
     public static Expression Replace (Expression replacedExpression, Expression replacementExpression, Expression sourceTree)
@@ -43,10 +49,16 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
 
     public override Expression VisitExpression (Expression expression)
     {
-      if (expression==_replacedExpression || (expression!=null && expression.Equals(_replacedExpression)))
+      if (expression == _replacedExpression || (expression != null && expression.Equals (_replacedExpression)))
         return _replacementExpression;
       else
         return base.VisitExpression (expression);
+    }
+
+    protected override Expression VisitSubQueryExpression (SubQueryExpression expression)
+    {
+      expression.QueryModel.TransformExpressions (VisitExpression);
+      return expression; // Note that we modifiy the (mutable) QueryModel, we return an unchanged expression
     }
 
     protected internal override Expression VisitUnknownExpression (Expression expression)

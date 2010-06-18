@@ -18,7 +18,10 @@ using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
+using Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain;
 
 namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
 {
@@ -62,6 +65,22 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
 
       var expectedResult = Expression.MakeBinary (ExpressionType.Add, Expression.Constant (0), _replacementNode);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
+    }
+
+    [Test]
+    public void ReplacesTreePart_InSubQueries ()
+    {
+      var replacedNode = ExpressionHelper.CreateCookQueryable ().Expression;
+      var replacementNode = Expression.Constant (null, typeof (Cook[]));
+
+      var subQueryMainFromClause = new MainFromClause ("c", typeof (Cook), replacedNode);
+      var subQuery = ExpressionHelper.CreateQueryModel (subQueryMainFromClause);
+
+      var tree = new SubQueryExpression (subQuery);
+
+      ReplacingExpressionTreeVisitor.Replace (replacedNode, replacementNode, tree);
+
+      Assert.That (subQueryMainFromClause.FromExpression, Is.SameAs (replacementNode));
     }
 
     [Test]

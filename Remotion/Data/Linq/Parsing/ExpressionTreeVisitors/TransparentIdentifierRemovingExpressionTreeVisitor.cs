@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Utilities;
 using MemberBinding=Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.MemberBindings.MemberBinding;
 
@@ -26,6 +27,7 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
   /// <summary>
   /// Replaces expression patterns of the form <c>new T { x = 1, y = 2 }.x</c> (<see cref="MemberInitExpression"/>) or 
   /// <c>new T ( x = 1, y = 2 ).x</c> (<see cref="NewExpression"/>) to <c>1</c> (or <c>2</c> if <c>y</c> is accessed instead of <c>x</c>).
+  /// Expressions are also replaced within subqueries; the <see cref="QueryModel"/> is changed by the replacement operations, it is not copied. 
   /// </summary>
   public class TransparentIdentifierRemovingExpressionTreeVisitor : ExpressionTreeVisitor
   {
@@ -64,6 +66,12 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
         return base.VisitMemberExpression (memberExpression);
       else
         return matchingAssignment.AssociatedExpression;
+    }
+
+    protected override Expression VisitSubQueryExpression (SubQueryExpression expression)
+    {
+      expression.QueryModel.TransformExpressions (ReplaceTransparentIdentifiers);
+      return expression; // Note that we modifiy the (mutable) QueryModel, we return an unchanged expression
     }
 
     protected internal override Expression VisitUnknownExpression (Expression expression)
