@@ -75,45 +75,17 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateM
     }
 
     [Test]
-    public void GetResolvedExpression_DetectsSubQueries ()
+    public void GetResolvedExpression_WithSubQueries ()
     {
-      var unresolvedExpressionWithSubQuery = 
-          ExpressionHelper.CreateLambdaExpression<int, int> (i => (from x in ExpressionHelper.CreateCookQueryable () select i).Count());
-      var result = _expressionResolver.GetResolvedExpression (
-          unresolvedExpressionWithSubQuery.Body, unresolvedExpressionWithSubQuery.Parameters[0], ClauseGenerationContext);
+      var parameterExpression = Expression.Parameter (typeof (int), "i");
+      var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel_Int ());
+      subQueryExpression.QueryModel.SelectClause.Selector = parameterExpression;
 
-      Assert.That (result, Is.InstanceOfType (typeof (SubQueryExpression)));
-    }
+      var result = (SubQueryExpression) _expressionResolver.GetResolvedExpression (subQueryExpression, parameterExpression, ClauseGenerationContext);
 
-    [Test]
-    public void GetResolvedExpression_DetectsSubQueries_AfterResolving ()
-    {
-      var unresolvedExpressionWithSubQuery =
-          ExpressionHelper.CreateLambdaExpression<int, int> (i => (from x in ExpressionHelper.CreateCookQueryable () select i).Count ());
-      var result = _expressionResolver.GetResolvedExpression (
-          unresolvedExpressionWithSubQuery.Body, unresolvedExpressionWithSubQuery.Parameters[0], ClauseGenerationContext);
-
-      var subQueryExpression = (SubQueryExpression) result;
-      var subQuerySelector = subQueryExpression.QueryModel.SelectClause.Selector;
+      var subQuerySelector = result.QueryModel.SelectClause.Selector;
       Assert.That (subQuerySelector, Is.InstanceOfType (typeof (QuerySourceReferenceExpression)));
       Assert.That (((QuerySourceReferenceExpression) subQuerySelector).ReferencedQuerySource, Is.SameAs (SourceClause));
-    }
-
-    [Test]
-    public void GetResolvedExpression_UsesNodeTypeRegistry ()
-    {
-      var nodeTypeRegistry = new MethodCallExpressionNodeTypeRegistry ();
-      var context = new ClauseGenerationContext (nodeTypeRegistry);
-
-      SourceNode.Apply (null, context);
-
-      var unresolvedExpressionWithSubQuery =
-          ExpressionHelper.CreateLambdaExpression<int, int> (i => (from x in ExpressionHelper.CreateCookQueryable () select i).Count ());
-      var result = _expressionResolver.GetResolvedExpression (
-          unresolvedExpressionWithSubQuery.Body, unresolvedExpressionWithSubQuery.Parameters[0], context);
-
-      Assert.That (result, Is.InstanceOfType (typeof (MethodCallExpression)), 
-          "The given nodeTypeRegistry does not know any query methods, so no SubQueryExpression is generated.");
     }
   }
 }

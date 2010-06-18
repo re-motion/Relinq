@@ -20,7 +20,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
@@ -145,6 +145,37 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
       Assert.That (result, Is.InstanceOfType (typeof (JoinExpressionNode)));
       Assert.That (((JoinExpressionNode) result).Source, Is.SameAs (_source));
       Assert.That (((JoinExpressionNode) result).InnerSequence, Is.InstanceOfType (typeof (MemberExpression)));
+    }
+
+    [Test]
+    public void Parse_WithSubQuery ()
+    {
+      var expression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<Cook>, IQueryable<int>> (
+          q => q.Select (s => (from c in s.Assistants select s).Count ()));
+      var selector = ((UnaryExpression) expression.Arguments[1]).Operand;
+
+      var result = ParseMethodCallExpression (expression);
+
+      Assert.That (result, Is.InstanceOfType (typeof (SelectExpressionNode)));
+      Assert.That (((SelectExpressionNode) result).Selector, Is.Not.SameAs (selector));
+      Assert.That (((SelectExpressionNode) result).Selector.Body, Is.InstanceOfType (typeof (SubQueryExpression)));
+    }
+
+    [Test]
+    public void Parse_WithSubQuery_UsesNodeTypeRegistry ()
+    {
+      var emptyNodeTypeRegistry = new MethodCallExpressionNodeTypeRegistry ();
+      emptyNodeTypeRegistry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
+      var parser = new MethodCallExpressionParser (emptyNodeTypeRegistry);
+
+      var expression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<Cook>, IQueryable<int>> (
+          q => q.Select (s => s.Assistants.Count ()));
+
+      var result = parser.Parse ("t", _source, expression.Arguments.Skip (1), expression);
+
+      Assert.That (result, Is.InstanceOfType (typeof (SelectExpressionNode)));
+      Assert.That (((SelectExpressionNode) result).Selector, Is.Not.TypeOf (typeof (SubQueryExpression)),
+          "The given nodeTypeRegistry does not know any query methods, so no SubQueryExpression is generated.");
     }
 
     [Test]

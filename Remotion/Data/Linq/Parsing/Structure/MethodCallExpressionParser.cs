@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Data.Linq.Utilities;
 
@@ -42,9 +43,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       ArgumentUtility.CheckNotNull ("expressionToParse", expressionToParse);
 
       Type nodeType = GetNodeType (expressionToParse);
-      var additionalConstructorParameters = arguments
-          .Select (expr => ConvertExpressionToParameterValue (expr)) // convert the remaining argument expressions to their actual values
-          .ToArray();
+      var additionalConstructorParameters = arguments.Select (expr => ProcessArgumentExpression(expr)).ToArray();
 
       var parseInfo = new MethodCallExpressionParseInfo (associatedIdentifier, source, expressionToParse);
       return CreateExpressionNode (nodeType, parseInfo, additionalConstructorParameters);
@@ -67,7 +66,18 @@ namespace Remotion.Data.Linq.Parsing.Structure
       }
     }
 
-    private Expression ConvertExpressionToParameterValue (Expression expression)
+    private Expression ProcessArgumentExpression (Expression argumentExpression)
+    {
+      // First, convert the argument expressions to their actual values - this unwraps ConstantantExpressions and UnaryExpressions
+      var convertedParameters = UnwrapArgumentExpression (argumentExpression);
+      // Then, detect subqueries
+      var parametersWithSubQueriesDetected = SubQueryFindingExpressionTreeVisitor.ReplaceSubQueries (convertedParameters, _nodeTypeRegistry);
+
+      return parametersWithSubQueriesDetected;
+    }
+
+
+    private Expression UnwrapArgumentExpression (Expression expression)
     {
       // Each argument of a MethodCallExpression will either be a UnaryExpression/Quote, which represents an expression passed to a Queryable method,
       // a LambdaExpression, which represents an expression passed to an Enumerable method,
@@ -81,21 +91,6 @@ namespace Remotion.Data.Linq.Parsing.Structure
         return (Expression) ((ConstantExpression) expression).Value;
       else
         return expression;
-
-      //if (expression.NodeType == ExpressionType.Constant)
-      //  return ((ConstantExpression) expression).Value;
-      //else if (expression.NodeType == ExpressionType.Quote)
-      //  return ((UnaryExpression) expression).Operand;
-      //else if (expression.NodeType == ExpressionType.Lambda)
-      //  return expression;
-      //else
-      //{
-      //  var message = string.Format (
-      //      "The parameter expression type '{0}' is not supported by MethodCallExpressionParser. Only UnaryExpressions and ConstantExpressions are "
-      //      + "supported. To transform other expressions to ConstantExpressions, use PartialEvaluatingExpressionTreeVisitor to simplify the expression tree.",
-      //      expression.NodeType);
-      //  throw new ParserException (message);
-      //}
     }
 
     private IExpressionNode CreateExpressionNode (Type nodeType, MethodCallExpressionParseInfo parseInfo, object[] additionalConstructorParameters)

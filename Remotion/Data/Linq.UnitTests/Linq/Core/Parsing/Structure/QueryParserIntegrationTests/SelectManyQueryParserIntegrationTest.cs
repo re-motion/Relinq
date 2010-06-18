@@ -20,7 +20,6 @@ using System.Linq;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Data.Linq.UnitTests.Linq.Core.TestQueryGenerators;
 
@@ -82,24 +81,6 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
 
       var selectClause = queryModel.SelectClause;
       CheckResolvedExpression<Cook, Cook> (selectClause.Selector, queryModel.MainFromClause, s1 => s1);
-    }
-
-    [Test]
-    public void SimpleSubQueryInAdditionalFromClause ()
-    {
-      var expression = SubQueryTestQueryGenerator.CreateSimpleSubQueryInAdditionalFromClause (QuerySource).Expression;
-      var queryModel = QueryParser.GetParsedQuery (expression);
-
-      Assert.That (queryModel.BodyClauses.Count, Is.EqualTo (1));
-      var subQueryFromClause = (AdditionalFromClause) queryModel.BodyClauses[0];
-
-      var subQueryModel = ((SubQueryExpression) subQueryFromClause.FromExpression).QueryModel;
-      var subQueryMainFromClause = subQueryModel.MainFromClause;
-      Assert.That (subQueryMainFromClause.ItemName, Is.EqualTo ("s3"));
-      CheckConstantQuerySource (subQueryMainFromClause.FromExpression, QuerySource);
-
-      var subQuerySelectClause = subQueryModel.SelectClause;
-      CheckResolvedExpression<Cook, Cook> (subQuerySelectClause.Selector, subQueryMainFromClause, s3 => s3);
     }
 
     [Test]
