@@ -138,7 +138,6 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
     }
 
     [Test]
-    [Ignore ("TODO 2422")]
     public void TakeWithSubQuery ()
     {
       var query =
@@ -448,7 +447,6 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
     }
 
     [Test]
-    [Ignore ("TODO 2422")]
     public void ContainsWithSubQuery ()
     {
       var query =
