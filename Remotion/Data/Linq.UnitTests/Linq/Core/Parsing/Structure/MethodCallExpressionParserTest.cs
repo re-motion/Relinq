@@ -162,6 +162,25 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     }
 
     [Test]
+    public void Parse_WithSubQuery_WithinConstantExpression ()
+    {
+      Expression<Func<Cook, int>> subQuery = s => (from c in s.Assistants select s).Count ();
+      var selectMethod = ReflectionUtility.GetMethod (() => ((IQueryable<Cook>) null).Select (i => 5));
+      var methodCallExpression = Expression.Call (
+          selectMethod,
+          Expression.Parameter (typeof (IQueryable<Cook>), "e"),
+          Expression.Constant (subQuery));
+
+      var selector = ((ConstantExpression) methodCallExpression.Arguments[1]).Value;
+
+      var result = ParseMethodCallExpression (methodCallExpression);
+
+      Assert.That (result, Is.InstanceOfType (typeof (SelectExpressionNode)));
+      Assert.That (((SelectExpressionNode) result).Selector, Is.Not.SameAs (selector));
+      Assert.That (((SelectExpressionNode) result).Selector.Body, Is.InstanceOfType (typeof (SubQueryExpression)));
+    }
+
+    [Test]
     public void Parse_WithSubQuery_UsesNodeTypeRegistry ()
     {
       var emptyNodeTypeRegistry = new MethodCallExpressionNodeTypeRegistry ();
