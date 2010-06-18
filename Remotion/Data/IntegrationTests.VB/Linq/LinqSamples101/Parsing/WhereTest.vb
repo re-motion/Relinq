@@ -12,11 +12,11 @@ Namespace Remotion.Data.IntegrationTests.VB.Linq.LinqSamples101.Parsing
     Inherits TestBase
 
     <Test()> _
-    <Ignore("Should be 'from Customer c in Customers where ([c].City = ""London"") select [c]'")> _
+    <Ignore("TODO 2942: Should be 'from Customer c in Customers where VBCompareString([c].City = ""London"", False) select [c]'")> _
     Public Sub Test_01()
       CheckParsedQuery( _
           (Function() From c In QuerySource.Customers Where c.City = "London"), _
-          "from Customer c in Customers where (CompareString([c].City, ""London"", False) = 0) select [c]")
+          "from Customer c in Customers where VBCompareString([c].City = ""London"", False) select [c]")
     End Sub
 
   End Class
