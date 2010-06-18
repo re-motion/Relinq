@@ -138,6 +138,36 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
     }
 
     [Test]
+    [Ignore ("TODO 2422")]
+    public void TakeWithSubQuery ()
+    {
+      var query =
+          from s in QuerySource
+          from s1 in s.Assistants.Take (s.Assistants.Count() / 2)
+          select s1;
+
+      var queryModel = QueryParser.GetParsedQuery (query.Expression);
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Cook>)));
+
+      var mainFromClause = queryModel.MainFromClause;
+      var additionalFromClause = (AdditionalFromClause) queryModel.BodyClauses[0];
+
+      var subQueryModel = ((SubQueryExpression) additionalFromClause.FromExpression).QueryModel;
+      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (TakeResultOperator)));
+
+      var takeResultOperator = (TakeResultOperator) subQueryModel.ResultOperators[0];
+      Assert.That (takeResultOperator.Count.NodeType, Is.EqualTo (ExpressionType.Divide));
+      var takeDivideExpression = (BinaryExpression) takeResultOperator.Count;
+      Assert.That (takeDivideExpression.Left, Is.TypeOf (typeof (SubQueryExpression)));
+
+      var takeSubQueryModel = ((SubQueryExpression) takeDivideExpression.Left).QueryModel;
+      CheckResolvedExpression<Cook, IEnumerable<Cook>> (takeSubQueryModel.MainFromClause.FromExpression, mainFromClause, s => s.Assistants);
+      CheckResolvedExpression<Cook, Cook> (takeSubQueryModel.SelectClause.Selector, takeSubQueryModel.MainFromClause, a => a);
+      Assert.That (takeSubQueryModel.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (takeSubQueryModel.ResultOperators[0], Is.TypeOf (typeof (CountResultOperator)));
+    }
+
+    [Test]
     public void Average ()
     {
       var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
@@ -394,6 +424,55 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
       Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (ContainsResultOperator)));
       Assert.That (((ContainsResultOperator) queryModel.ResultOperators[0]).GetConstantItem<Cook>(), Is.SameAs (student));
+    }
+
+    [Test]
+    public void ContainsWithBackReference ()
+    {
+      var query =
+          from s in QuerySource
+          where s.Assistants.Contains (s)
+          select s;
+
+      var queryModel = QueryParser.GetParsedQuery (query.Expression);
+      Assert.That (queryModel.GetOutputDataInfo().DataType, Is.SameAs (typeof (IQueryable<Cook>)));
+
+      var mainFromClause = queryModel.MainFromClause;
+      var whereClause = (WhereClause) queryModel.BodyClauses[0];
+
+      var subQueryModel = ((SubQueryExpression) whereClause.Predicate).QueryModel;
+      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (ContainsResultOperator)));
+
+      var containsResultOperator = (ContainsResultOperator) subQueryModel.ResultOperators[0];
+      CheckResolvedExpression<Cook, Cook> (containsResultOperator.Item, mainFromClause, s => s);
+    }
+
+    [Test]
+    [Ignore ("TODO 2422")]
+    public void ContainsWithSubQuery ()
+    {
+      var query =
+          from s in QuerySource
+          where s.Assistants.Contains (s.Assistants.First())
+          select s;
+
+      var queryModel = QueryParser.GetParsedQuery (query.Expression);
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Cook>)));
+
+      var mainFromClause = queryModel.MainFromClause;
+      var whereClause = (WhereClause) queryModel.BodyClauses[0];
+
+      var subQueryModel = ((SubQueryExpression) whereClause.Predicate).QueryModel;
+      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (ContainsResultOperator)));
+
+      var containsResultOperator = (ContainsResultOperator) subQueryModel.ResultOperators[0];
+      Assert.That (containsResultOperator.Item, Is.TypeOf (typeof (SubQueryExpression)));
+
+      var containsSubQueryModel = ((SubQueryExpression) containsResultOperator.Item).QueryModel;
+      CheckResolvedExpression<Cook, IEnumerable<Cook>> (containsSubQueryModel.MainFromClause.FromExpression, mainFromClause, s => s.Assistants);
+      CheckResolvedExpression<Cook, Cook> (containsSubQueryModel.SelectClause.Selector, containsSubQueryModel.MainFromClause, a => a);
+      Assert.That (containsSubQueryModel.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (containsSubQueryModel.ResultOperators[0], Is.TypeOf (typeof (FirstResultOperator)));
     }
 
     [Test]
