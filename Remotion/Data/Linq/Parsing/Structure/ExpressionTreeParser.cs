@@ -30,14 +30,18 @@ namespace Remotion.Data.Linq.Parsing.Structure
   /// </summary>
   public class ExpressionTreeParser
   {
-    private readonly MethodCallExpressionNodeTypeRegistry _nodeTypeRegistry;
-    private readonly UniqueIdentifierGenerator _identifierGenerator = new UniqueIdentifierGenerator();
     private static readonly MethodInfo s_getArrayLengthMethod = typeof (Array).GetMethod ("get_Length");
+
+    private readonly UniqueIdentifierGenerator _identifierGenerator = new UniqueIdentifierGenerator ();
+    private readonly MethodCallExpressionNodeTypeRegistry _nodeTypeRegistry;
+    private readonly MethodCallExpressionParser _methodCallExpressionParser;
 
     public ExpressionTreeParser (MethodCallExpressionNodeTypeRegistry nodeTypeRegistry)
     {
       ArgumentUtility.CheckNotNull ("nodeTypeRegistry", nodeTypeRegistry);
+      
       _nodeTypeRegistry = nodeTypeRegistry;
+      _methodCallExpressionParser = new MethodCallExpressionParser (_nodeTypeRegistry);
     }
 
     /// <summary>
@@ -135,8 +139,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       }
 
       var source = ParseNode (sourceExpression, associatedIdentifierForSource);
-      var parser = new MethodCallExpressionParser (_nodeTypeRegistry);
-      return parser.Parse (associatedIdentifier, source, arguments, methodCallExpression);
+      return _methodCallExpressionParser.Parse (associatedIdentifier, source, arguments, methodCallExpression);
     }
 
     private IExpressionNode ParseNonQueryOperatorExpression (Expression expression, string associatedIdentifier)
@@ -171,13 +174,9 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
     private LambdaExpression GetLambdaArgument (MethodCallExpression methodCallExpression)
     {
-      foreach (var argument in methodCallExpression.Arguments)
-      {
-        var lambdaExpression = GetLambdaExpression(argument);
-        if (lambdaExpression != null)
-          return lambdaExpression;
-      }
-      return null;
+      return methodCallExpression.Arguments
+          .Select (argument => GetLambdaExpression (argument))
+          .FirstOrDefault (lambdaExpression => lambdaExpression != null);
     }
 
     private LambdaExpression GetLambdaExpression (Expression expression)
