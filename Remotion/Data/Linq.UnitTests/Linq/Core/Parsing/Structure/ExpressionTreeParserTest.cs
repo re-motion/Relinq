@@ -124,7 +124,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
 
       var result = _expressionTreeParser.ParseTree (expression);
 
-      Assert.That (((SelectExpressionNode) result).AssociatedIdentifier, NUnit.Framework.SyntaxHelpers.Text.StartsWith ("<generated>_"));
+      Assert.That (((SelectExpressionNode) result).AssociatedIdentifier, Text.StartsWith ("<generated>_"));
     }
 
     [Test]
