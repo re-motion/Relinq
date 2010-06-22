@@ -183,6 +183,7 @@
     <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlers\DefaultIfEmptyResultOperatorHandlerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlers\DistinctResultOperatorHandlerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlers\FirstResultOperatorHandlerTest.cs" />
+    <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlers\GroupResultOperatorHandlerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlers\MaxResultOperatorHandlerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlers\MinResultOperatorHandlerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlers\OfTypeResultOperatorHandlerTest.cs" />
