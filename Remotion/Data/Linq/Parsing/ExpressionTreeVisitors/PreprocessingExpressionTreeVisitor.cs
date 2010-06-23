@@ -58,6 +58,19 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
         return base.VisitExpression (expression);
     }
 
+    protected override Expression VisitBinaryExpression (BinaryExpression expression)
+    {
+      var leftSideAsMethodCallExpression = expression.Left as MethodCallExpression;
+      if (leftSideAsMethodCallExpression != null
+          && (leftSideAsMethodCallExpression.Method.DeclaringType.FullName + "." + leftSideAsMethodCallExpression.Method.Name
+              == "Microsoft.VisualBasic.CompilerServices.Operators.CompareString"))
+      {
+        var binaryExpression = Expression.Equal (leftSideAsMethodCallExpression.Arguments[0], leftSideAsMethodCallExpression.Arguments[1]);
+        return new VBStringComparisonExpression (binaryExpression, (bool) ((ConstantExpression) leftSideAsMethodCallExpression.Arguments[2]).Value);
+      }
+      return base.VisitBinaryExpression(expression);
+    }
+
     protected internal override Expression VisitUnknownExpression (Expression expression)
     {
       //ignore

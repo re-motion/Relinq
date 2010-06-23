@@ -17,6 +17,7 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using Microsoft.VisualBasic.CompilerServices;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.Expressions;
@@ -52,7 +53,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
     [Test]
     public void TreeWithSubquery ()
     {
-      Expression subQuery = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateCookQueryable ()).Expression;
+      Expression subQuery = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateCookQueryable()).Expression;
       Expression surroundingExpression = Expression.Lambda (subQuery);
 
       Expression newExpression = PreprocessingExpressionTreeVisitor.Process (surroundingExpression, _nodeTypeRegistry);
@@ -64,17 +65,18 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
       Assert.That (newLambdaExpression.Body, Is.InstanceOfType (typeof (SubQueryExpression)));
 
       var newSubQueryExpression = (SubQueryExpression) newLambdaExpression.Body;
-      Assert.That (((QuerySourceReferenceExpression) newSubQueryExpression.QueryModel.SelectClause.Selector).ReferencedQuerySource,
+      Assert.That (
+          ((QuerySourceReferenceExpression) newSubQueryExpression.QueryModel.SelectClause.Selector).ReferencedQuerySource,
           Is.SameAs (newSubQueryExpression.QueryModel.MainFromClause));
     }
 
     [Test]
     public void VisitorUsesNodeTypeRegistry_ToParseAndAnalyzeSubQueries ()
     {
-      Expression subQuery = ExpressionHelper.MakeExpression (() => CustomSelect (ExpressionHelper.CreateCookQueryable (), s => s));
+      Expression subQuery = ExpressionHelper.MakeExpression (() => CustomSelect (ExpressionHelper.CreateCookQueryable(), s => s));
       Expression surroundingExpression = Expression.Lambda (subQuery);
 
-      var emptyNodeTypeRegistry = new MethodCallExpressionNodeTypeRegistry ();
+      var emptyNodeTypeRegistry = new MethodCallExpressionNodeTypeRegistry();
       emptyNodeTypeRegistry.Register (new[] { ((MethodCallExpression) subQuery).Method }, typeof (SelectExpressionNode));
 
       var newLambdaExpression =
@@ -95,6 +97,29 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
     }
 
     [Test]
+    public void VisitBinaryExpression_LeftSideIsNoMethodCallExpression_ReturnsSameExpression ()
+    {
+      var expression = Expression.Equal (Expression.Constant(5), Expression.Constant (10));
+
+      var result = PreprocessingExpressionTreeVisitor.Process (expression, _nodeTypeRegistry);
+
+      Assert.That (result, Is.SameAs(expression));
+    }
+
+    [Test]
+    public void VisitBinaryExpression_LeftSideIsMethodCallExpression_ReturnsVBStringComparisonExpression ()
+    {
+      var left = Expression.Constant ("left");
+      var right = Expression.Constant ("right");
+      var expression = Expression.GreaterThan (
+          Expression.Call (typeof (Operators).GetMethod ("CompareString"), left, right, Expression.Constant (true)), Expression.Constant(10));
+      
+      var result = PreprocessingExpressionTreeVisitor.Process (expression, _nodeTypeRegistry);
+
+      Assert.That (result, Is.TypeOf (typeof (VBStringComparisonExpression)));
+    }
+
+    [Test]
     public void VisitUnknownExpression_Ignored ()
     {
       var expression = new UnknownExpression (typeof (object));
@@ -105,7 +130,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
 
     public static IQueryable<Cook> CustomSelect (IQueryable<Cook> source, Expression<Func<Cook, Cook>> selector)
     {
-      throw new NotImplementedException ();
+      throw new NotImplementedException();
     }
   }
 }
