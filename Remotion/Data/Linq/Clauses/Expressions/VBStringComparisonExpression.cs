@@ -15,6 +15,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.ComponentModel;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Parsing;
@@ -40,10 +41,10 @@ namespace Remotion.Data.Linq.Clauses.Expressions
   /// </remarks>
   public class VBStringComparisonExpression : ExtensionExpression
   {
-    private readonly BinaryExpression _comparison;
+    private readonly Expression _comparison;
     private readonly bool _textCompare;
 
-    public VBStringComparisonExpression (BinaryExpression comparison, bool textCompare)
+    public VBStringComparisonExpression (Expression comparison, bool textCompare)
         : base(typeof(bool))
     {
       ArgumentUtility.CheckNotNull ("comparison", comparison);
@@ -52,7 +53,7 @@ namespace Remotion.Data.Linq.Clauses.Expressions
       _textCompare = textCompare;
     }
 
-    public BinaryExpression Comparison
+    public Expression Comparison
     {
       get { return _comparison; }
     }
@@ -81,7 +82,7 @@ namespace Remotion.Data.Linq.Clauses.Expressions
 
       var newExpression = visitor.VisitExpression (_comparison);
       if (newExpression != _comparison)
-        return new VBStringComparisonExpression ((BinaryExpression)newExpression, _textCompare);
+        return new VBStringComparisonExpression (newExpression, _textCompare);
       else
         return this;
     }
