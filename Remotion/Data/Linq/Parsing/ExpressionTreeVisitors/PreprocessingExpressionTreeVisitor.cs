@@ -28,7 +28,7 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
   /// </summary>
   public class PreprocessingExpressionTreeVisitor : ExpressionTreeVisitor
   {
-    public static Expression ReplaceSubQueries (Expression expressionTree, MethodCallExpressionNodeTypeRegistry nodeTypeRegistry)
+    public static Expression Process (Expression expressionTree, MethodCallExpressionNodeTypeRegistry nodeTypeRegistry)
     {
       ArgumentUtility.CheckNotNull ("expressionTree", expressionTree);
       ArgumentUtility.CheckNotNull ("nodeTypeRegistry", nodeTypeRegistry);
