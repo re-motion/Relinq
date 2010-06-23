@@ -129,6 +129,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Linq\Core\Clauses\Expressions\VBStringComparisonExpressionTest.cs" />
     <Compile Include="Linq\Core\IntegrationTests\MediumTrustCoreIntegrationTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\QueryParserIntegrationTests\SubQueryQueryParserIntegrationTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\QueryParserIntegrationTests\MediumTrustQueryParserIntegrationTest.cs" />
@@ -152,6 +153,7 @@
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\MediumTrustSqlBackendIntegrationTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\NamedEntitiesSqlBackendIntegrationTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\TypeIsExpressionSqlBackendIntegrationTest.cs" />
+    <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\VBStringComparisonSqlBackendIntegrationTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\SqlCompositeCustomTextGeneratorExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\SqlCustomTextExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\SqlCustomTextGeneratorExpressionBaseTest.cs" />
