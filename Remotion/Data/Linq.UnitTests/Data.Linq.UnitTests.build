@@ -40,12 +40,13 @@
         <include asis="true" name="${build.test.outputdir}/nunit.framework.dll"/>
         <include asis="true" name="${build.test.outputdir}/Rhino.Mocks.dll"/>
         <include asis="true" name="${build.test.outputdir}/Remotion.Data.Linq.dll"/>
-        <include asis="true" name="${build.test.outputdir}/Remotion.Data.Linq.SqlBackend.dll"/>
+		<include asis="true" name="${build.test.outputdir}/Remotion.Data.Linq.SqlBackend.dll"/>
         <include asis="true" name="System.dll"/>
         <include asis="true" name="System.Core.dll"/>
         <include asis="true" name="System.Data.dll"/>
         <include asis="true" name="System.Xml.dll"/>
 		<include asis="true" name="System.Drawing.dll"/>
+		<include asis="true" name="Microsoft.VisualBasic.dll"/>
       </references>
     </csc>
 

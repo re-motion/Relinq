@@ -33,7 +33,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.Expressions
     [SetUp]
     public void SetUp ()
     {
-      _comparisonExpression = Expression.Equal (Expression.Constant ("string1"), Expression.Constant ("string"));
+      _comparisonExpression = Expression.Equal (Expression.Constant ("string1"), Expression.Constant ("string2"));
       _expression = new VBStringComparisonExpression (_comparisonExpression, true);
     }
 
@@ -98,6 +98,14 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.Expressions
     public void Accept_VisitorNotSupportingExpressionType ()
     {
       ExtensionExpressionTestHelper.CheckAcceptForVisitorNotSupportingType (_expression);
+    }
+
+    [Test]
+    public void To_String ()
+    {
+      var result = _expression.ToString();
+
+      Assert.That (result, Is.EqualTo ("VBCompareString((\"string1\" = \"string2\"), True)"));
     }
 
   }
