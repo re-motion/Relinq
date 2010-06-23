@@ -26,21 +26,21 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
   /// Parses an expression tree, looks for sub-queries in that tree (ie. expressions that themselves are LINQ queries), parses and registers them, and
   /// replaces them with an instance of <see cref="SubQueryExpression"/>.
   /// </summary>
-  public class SubQueryFindingExpressionTreeVisitor : ExpressionTreeVisitor
+  public class PreprocessingExpressionTreeVisitor : ExpressionTreeVisitor
   {
     public static Expression ReplaceSubQueries (Expression expressionTree, MethodCallExpressionNodeTypeRegistry nodeTypeRegistry)
     {
       ArgumentUtility.CheckNotNull ("expressionTree", expressionTree);
       ArgumentUtility.CheckNotNull ("nodeTypeRegistry", nodeTypeRegistry);
 
-      var visitor = new SubQueryFindingExpressionTreeVisitor (nodeTypeRegistry);
+      var visitor = new PreprocessingExpressionTreeVisitor (nodeTypeRegistry);
       return visitor.VisitExpression (expressionTree);
     }
 
     private readonly MethodCallExpressionNodeTypeRegistry _nodeTypeRegistry;
     private readonly QueryParser _innerParser;
 
-    private SubQueryFindingExpressionTreeVisitor (MethodCallExpressionNodeTypeRegistry nodeTypeRegistry)
+    private PreprocessingExpressionTreeVisitor (MethodCallExpressionNodeTypeRegistry nodeTypeRegistry)
     {
       ArgumentUtility.CheckNotNull ("nodeTypeRegistry", nodeTypeRegistry);
 

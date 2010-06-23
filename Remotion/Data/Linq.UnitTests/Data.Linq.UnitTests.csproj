@@ -320,7 +320,7 @@
     <Compile Include="Linq\Core\Parsing\ExpressionTreeVisitors\MemberBindings\PropertyInfoBindingTest.cs" />
     <Compile Include="Linq\Core\Parsing\ExpressionTreeVisitors\PartialEvaluatingExpressionTreeVisitorTest.cs" />
     <Compile Include="Linq\Core\Parsing\ExpressionTreeVisitors\ReplacingExpressionTreeVisitorTest.cs" />
-    <Compile Include="Linq\Core\Parsing\ExpressionTreeVisitors\SubQueryFindingExpressionTreeVisitorTest.cs" />
+    <Compile Include="Linq\Core\Parsing\ExpressionTreeVisitors\PreprocessingExpressionTreeVisitorTest.cs" />
     <Compile Include="Linq\Core\Parsing\ExpressionTreeVisitors\TransparentIdentifierRemovingExpressionTreeVisitorTest.cs" />
     <Compile Include="Linq\Core\Parsing\ExpressionTreeVisitors\TreeEvaluation\EvaluatableTreeFindingExpressionTreeVisitorTest.cs" />
     <Compile Include="Linq\Core\Parsing\ExpressionTreeVisitors\UnknownExpression.cs" />
