@@ -17,8 +17,11 @@
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.Expressions;
+using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests;
+using Rhino.Mocks;
 
 namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing
 {
@@ -32,6 +35,20 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing
     {
       _visitor = new TestThrowingExpressionTreeVisitor ();
     }
+
+    [Test]
+    public void ExtensionExpression_ReducedExpressionIsVisited ()
+    {
+      ExpressionTreeVisitor visitor =new TestThrowingConstantExpressionTreeVisitor();
+      var constantExpression = Expression.Constant (0);
+      var expression = new TestExtensionExpression (constantExpression);
+
+      var result = visitor.VisitExpression (expression);
+
+      Assert.That (result, Is.Not.SameAs (constantExpression));
+      Assert.That (((ConstantExpression) result).Value, Is.EqualTo("ConstantExpression was visited"));
+    }
+
 
     [Test]
     [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitUnknownExpression: [-1]")]
