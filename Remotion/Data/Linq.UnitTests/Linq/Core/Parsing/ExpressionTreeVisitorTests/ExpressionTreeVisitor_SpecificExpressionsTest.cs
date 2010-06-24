@@ -322,6 +322,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTe
     [Test]
     public void VisitNewExpression_ChangedArguments_NoMembers ()
     {
+      // TODO Review 2885: Constructor order is not defined, use GetConstructor (Type[]) and specify signature
       NewExpression expression = Expression.New (typeof (TypeForNewExpression).GetConstructors()[0], Expression.Constant (0));
 
       var newArguments = new List<Expression> { Expression.Constant (214578) }.AsReadOnly ();
@@ -335,6 +336,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTe
     [Test]
     public void VisitNewExpression_ChangedArguments_WithMembers ()
     {
+      // TODO Review 2885: Constructor order is not defined, use GetConstructor (Type[]) and specify signature
       NewExpression expression = Expression.New (
           typeof (TypeForNewExpression).GetConstructors()[0],
           new Expression[] { Expression.Constant (0) },
