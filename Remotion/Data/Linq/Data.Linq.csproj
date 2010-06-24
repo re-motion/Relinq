@@ -145,6 +145,7 @@
     <Compile Include="Parsing\Structure\IntermediateModel\AggregateFromSeedExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\DefaultIfEmptyExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ExceptExpressionNode.cs" />
+    <Compile Include="Parsing\Structure\IntermediateModel\ExpressionNodeInstantiationException.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ExpressionResolver.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\GroupByExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\GroupJoinExpressionNode.cs" />

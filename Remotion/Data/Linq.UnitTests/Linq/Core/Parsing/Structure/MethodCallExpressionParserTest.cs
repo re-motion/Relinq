@@ -22,6 +22,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
+using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel;
@@ -213,6 +214,21 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     public void Parse_UnknownOverload ()
     {
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (q => q.Select ((i, j) => i));
+
+      ParseMethodCallExpression (methodCallExpression);
+    }
+
+    [Test]
+    [ExpectedException (typeof (ParserException), ExpectedMessage =
+        "Could not parse expression 'q.Select(value(System.Func`2[System.Int32,System.Int32]))': Object of type "
+        + "'System.Linq.Expressions.ConstantExpression' cannot be converted to type 'System.Linq.Expressions.LambdaExpression'. If you tried to pass "
+        + "a delegate instead of a LambdaExpression, this is not supported because delegates are not parsable expressions.")]
+    public void Parse_InvalidParameters ()
+    {
+      Func<int, int> func = i => i;
+      var methodCallExpression = (MethodCallExpression) 
+          PartialEvaluatingExpressionTreeVisitor.EvaluateIndependentSubtrees (
+              ExpressionHelper.MakeExpression<IQueryable<int>, IEnumerable<int>> (q => q.Select (func)));
 
       ParseMethodCallExpression (methodCallExpression);
     }

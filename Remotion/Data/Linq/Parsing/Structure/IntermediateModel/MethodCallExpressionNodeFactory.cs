@@ -15,6 +15,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq.Utilities;
 
@@ -47,7 +48,29 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       }
 
       object[] constructorParameterArray = GetParameterArray (constructors[0], parseInfo, additionalConstructorParameters);
-      return (IExpressionNode) constructors[0].Invoke (constructorParameterArray);
+      try
+      {
+        return (IExpressionNode) constructors[0].Invoke (constructorParameterArray);
+      }
+      catch (ArgumentException ex)
+      {
+        var message = GetArgumentMismatchMessage (ex);
+        throw new ExpressionNodeInstantiationException (message, ex);
+      }
+    }
+
+    private static string GetArgumentMismatchMessage (ArgumentException ex)
+    {
+      if (ex.Message.Contains (typeof (LambdaExpression).Name) && ex.Message.Contains (typeof (ConstantExpression).Name))
+      {
+        return string.Format (
+            "{0} If you tried to pass a delegate instead of a LambdaExpression, this is not supported because delegates are not parsable expressions.",
+            ex.Message);
+      }
+      else
+      {
+        return  string.Format ("The given arguments did not match the expected arguments: {0}", ex.Message);
+      }
     }
 
     private static object[] GetParameterArray (
@@ -61,7 +84,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
             nodeTypeConstructor.DeclaringType.FullName,
             parameterInfos.Length,
             additionalConstructorParameters.Length + 1);
-        throw new ArgumentException (message, "additionalConstructorParameters");
+        throw new ExpressionNodeInstantiationException (message);
       }
 
       var constructorParameters = new object[parameterInfos.Length];

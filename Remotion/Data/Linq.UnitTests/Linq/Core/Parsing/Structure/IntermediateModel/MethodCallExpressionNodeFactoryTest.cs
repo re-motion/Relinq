@@ -15,6 +15,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
@@ -75,13 +76,34 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateM
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "The constructor of expression node type 'Remotion.Data.Linq.Parsing.Structure."
-          + "IntermediateModel.SelectExpressionNode' only takes 2 parameters, but you specified 3 (including the parse info parameter).\r\n"
-          + "Parameter name: additionalConstructorParameters")]
+    [ExpectedException (typeof (ExpressionNodeInstantiationException), ExpectedMessage = 
+        "The constructor of expression node type 'Remotion.Data.Linq.Parsing.Structure."
+        + "IntermediateModel.SelectExpressionNode' only takes 2 parameters, but you specified 3 (including the parse info parameter).")]
     public void CreateExpressionNode_TooManyParameters ()
     {
       var selector = ExpressionHelper.CreateLambdaExpression ();
       MethodCallExpressionNodeFactory.CreateExpressionNode (typeof (SelectExpressionNode), _parseInfo, new object[] { selector, selector });
+    }
+
+    [Test]
+    [ExpectedException (typeof (ExpressionNodeInstantiationException), ExpectedMessage =
+        "The given arguments did not match the expected arguments: Object of type "
+        + "'Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.TestExtensionExpression' cannot be converted to type "
+        + "'System.Linq.Expressions.LambdaExpression'.")]
+    public void CreateExpressionNode_InvalidNodeParameterType ()
+    {
+      var selector = new TestExtensionExpression (Expression.Constant (0));
+      MethodCallExpressionNodeFactory.CreateExpressionNode (typeof (SelectExpressionNode), _parseInfo, new object[] { selector });
+    }
+
+    [Test]
+    [ExpectedException (typeof (ExpressionNodeInstantiationException), ExpectedMessage = 
+        "Object of type 'System.Linq.Expressions.ConstantExpression' cannot be converted to type 'System.Linq.Expressions.LambdaExpression'. If you "
+        + "tried to pass a delegate instead of a LambdaExpression, this is not supported because delegates are not parsable expressions.")]
+    public void CreateExpressionNode_InvalidNodeParameterType_ConstantDelegateInsteadOfLambda ()
+    {
+      var selector = Expression.Constant ((Func<int, int>) (i => i));
+      MethodCallExpressionNodeFactory.CreateExpressionNode (typeof (SelectExpressionNode), _parseInfo, new object[] { selector });
     }
   }
 }

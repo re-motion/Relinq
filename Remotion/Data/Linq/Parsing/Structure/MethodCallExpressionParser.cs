@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Data.Linq.Utilities;
@@ -59,7 +60,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       {
         string message = string.Format (
             "Could not parse expression '{0}': This overload of the method '{1}.{2}' is currently not supported, but you can register your own parser if needed.",
-            expressionToParse,
+            FormattingExpressionTreeVisitor.Format (expressionToParse),
             expressionToParse.Method.DeclaringType.FullName,
             expressionToParse.Method.Name);
         throw new ParserException (message, ex);
@@ -93,9 +94,23 @@ namespace Remotion.Data.Linq.Parsing.Structure
         return expression;
     }
 
-    private IExpressionNode CreateExpressionNode (Type nodeType, MethodCallExpressionParseInfo parseInfo, object[] additionalConstructorParameters)
+    private IExpressionNode CreateExpressionNode (
+        Type nodeType, 
+        MethodCallExpressionParseInfo parseInfo, 
+        object[] additionalConstructorParameters)
     {
-      return MethodCallExpressionNodeFactory.CreateExpressionNode (nodeType, parseInfo, additionalConstructorParameters);
+      try
+      {
+        return MethodCallExpressionNodeFactory.CreateExpressionNode (nodeType, parseInfo, additionalConstructorParameters);
+      }
+      catch (ExpressionNodeInstantiationException ex)
+      {
+        string message = string.Format (
+            "Could not parse expression '{0}': {1}",
+            FormattingExpressionTreeVisitor.Format (parseInfo.ParsedExpression),
+            ex.Message);
+        throw new ParserException (message);
+      }
     }
   }
 }
