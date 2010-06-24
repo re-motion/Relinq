@@ -56,7 +56,7 @@ namespace Remotion.Data.Linq.Parsing
     {
       var expressionAsExtensionExpression = expression as ExtensionExpression;
       if (expressionAsExtensionExpression != null && expressionAsExtensionExpression.CanReduce)
-        return VisitExpression (expressionAsExtensionExpression.Reduce()); // TODO Review 2938: Use ReduceAndCheck - this will avoid endless loops (where Reduce returns the same expression)
+        return VisitExpression (expressionAsExtensionExpression.ReduceAndCheck()); 
 
       return VisitUnhandledItem<Expression, Expression> (expression, "VisitUnknownExpression", BaseVisitUnknownExpression);
     }
