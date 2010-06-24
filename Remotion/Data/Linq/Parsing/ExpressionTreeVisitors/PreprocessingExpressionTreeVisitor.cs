@@ -16,6 +16,7 @@
 // 
 using System;
 using System.Linq.Expressions;
+using System.Reflection;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Utilities;
@@ -23,8 +24,7 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
 {
   /// <summary>
-  /// Parses an expression tree, looks for sub-queries in that tree (ie. expressions that themselves are LINQ queries), parses and registers them, and
-  /// replaces them with an instance of <see cref="SubQueryExpression"/>.
+  /// Preprocesses an expression tree for parsing. The preprocessing involves detection of sub-queries and VB-specific expressions.
   /// </summary>
   public class PreprocessingExpressionTreeVisitor : ExpressionTreeVisitor
   {
@@ -61,10 +61,11 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
     protected override Expression VisitBinaryExpression (BinaryExpression expression)
     {
       var leftSideAsMethodCallExpression = expression.Left as MethodCallExpression;
-      if (leftSideAsMethodCallExpression != null
-          && (leftSideAsMethodCallExpression.Method.DeclaringType.FullName + "." + leftSideAsMethodCallExpression.Method.Name
-              == "Microsoft.VisualBasic.CompilerServices.Operators.CompareString"))
+      if (leftSideAsMethodCallExpression != null && (IsVBOperator (leftSideAsMethodCallExpression.Method, "CompareString")))
       {
+        // TODO Review 2942: Debug.Assert that the right side of expression is a constant with value 0 (this is how the VB compiler emits it), the code below will not work for any other comparisons.
+        // TODO Review 2942: The operator can also be called with <, >, <=, >= or != expressions, not only == expressions. Write a re-store-level integration test (in the VB project) for the other combinations. Then write one unit test for each other comparison kind and implement support for it.
+        // TODO Review 2942: Debug.Assert that leftSideAsMethodCallExpression.Arguments[2] is a ConstantExpression with bool value
         var binaryExpression = Expression.Equal (leftSideAsMethodCallExpression.Arguments[0], leftSideAsMethodCallExpression.Arguments[1]);
         return new VBStringComparisonExpression (binaryExpression, (bool) ((ConstantExpression) leftSideAsMethodCallExpression.Arguments[2]).Value);
       }
@@ -81,6 +82,11 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
     {
       QueryModel queryModel = _innerParser.GetParsedQuery (methodCallExpression);
       return new SubQueryExpression (queryModel);
+    }
+
+    private bool IsVBOperator (MethodInfo operatorMethod, string operatorName)
+    {
+      return operatorMethod.DeclaringType.FullName == "Microsoft.VisualBasic.CompilerServices.Operators" && operatorMethod.Name == operatorName;
     }
   }
 }

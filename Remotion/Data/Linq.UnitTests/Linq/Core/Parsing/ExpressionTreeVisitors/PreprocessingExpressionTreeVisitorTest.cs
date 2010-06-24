@@ -103,11 +103,14 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
 
       var result = PreprocessingExpressionTreeVisitor.Process (expression, _nodeTypeRegistry);
 
-      Assert.That (result, Is.SameAs(expression));
+      Assert.That (result, Is.SameAs (expression));
     }
 
+    // TODO Review 2942: Add a test for a method with wrong declaring type, but right name (i.e., add a CompareString method on some other type)
+    // TODO Review 2942: Add a test for a method with right declaring type, but wrong name
+
     [Test]
-    public void VisitBinaryExpression_LeftSideIsMethodCallExpression_ReturnsVBStringComparisonExpression ()
+    public void VisitBinaryExpression_LeftSideIsCompareStringExpression_ReturnsVBStringComparisonExpression ()
     {
       var left = Expression.Constant ("left");
       var right = Expression.Constant ("right");
@@ -117,6 +120,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
       var result = PreprocessingExpressionTreeVisitor.Process (expression, _nodeTypeRegistry);
 
       Assert.That (result, Is.TypeOf (typeof (VBStringComparisonExpression)));
+      // TODO Review 2942: Check inner expression and TextCompare
     }
 
     [Test]
