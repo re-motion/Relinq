@@ -24,6 +24,7 @@ using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
+using Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests;
 using Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.TestDomain;
 using Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Data.Linq.UnitTests.Linq.Core.TestQueryGenerators;
@@ -106,9 +107,32 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
       Assert.That (result, Is.SameAs (expression));
     }
 
-    // TODO Review 2942: Add a test for a method with wrong declaring type, but right name (i.e., add a CompareString method on some other type)
-    // TODO Review 2942: Add a test for a method with right declaring type, but wrong name
+    [Test]
+    public void VisitBinaryExpression_Equal_LeftSideIsCompareStringExpression_WrongDeclaringType_ReturnsSameExpression ()
+    {
+      var left = Expression.Constant ("left");
+      var right = Expression.Constant ("right");
+      var expression = Expression.Equal (
+          Expression.Call (typeof (TypeForNewExpression).GetMethod ("CompareString"), left, right, Expression.Constant (true)), Expression.Constant (0));
 
+      var result = PreprocessingExpressionTreeVisitor.Process (expression, _nodeTypeRegistry);
+
+      Assert.That (result, Is.SameAs(expression));
+    }
+
+    [Test]
+    public void VisitBinaryExpression_Equal_LeftSideIsCompareStringExpression_WrongMethodName_ReturnsSameExpression ()
+    {
+      var left = Expression.Constant ("left");
+      var right = Expression.Constant ("right");
+      var expression = Expression.Equal (
+          Expression.Call (typeof (Operators).GetMethod ("CompareObject"), left, right, Expression.Constant (true)), Expression.Constant (0));
+
+      var result = PreprocessingExpressionTreeVisitor.Process (expression, _nodeTypeRegistry);
+
+      Assert.That (result, Is.SameAs (expression));
+    }
+    
     [Test]
     public void VisitBinaryExpression_Equal_LeftSideIsCompareStringExpression_ReturnsVBStringComparisonExpression ()
     {

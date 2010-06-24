@@ -86,17 +86,17 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
       {
         case ExpressionType.Equal:
           binaryExpression = Expression.Equal (leftSideAsMethodCallExpression.Arguments[0], leftSideAsMethodCallExpression.Arguments[1]);
-          return new VBStringComparisonExpression (typeof (bool), binaryExpression, (bool) leftSideArgument2AsConstantExpression.Value);
+          return new VBStringComparisonExpression (binaryExpression, (bool) leftSideArgument2AsConstantExpression.Value);
         case ExpressionType.NotEqual:
           binaryExpression = Expression.NotEqual (leftSideAsMethodCallExpression.Arguments[0], leftSideAsMethodCallExpression.Arguments[1]);
-          return new VBStringComparisonExpression (typeof (bool), binaryExpression, (bool) leftSideArgument2AsConstantExpression.Value);
+          return new VBStringComparisonExpression (binaryExpression, (bool) leftSideArgument2AsConstantExpression.Value);
       }
 
       var methodCallExpression = MethodCallExpression.Call (
               leftSideAsMethodCallExpression.Arguments[0],
               typeof(string).GetMethod("CompareTo", new[] { typeof(string) }),
               leftSideAsMethodCallExpression.Arguments[1]);
-          var vbExpression = new VBStringComparisonExpression (typeof (int), methodCallExpression, (bool) leftSideArgument2AsConstantExpression.Value);
+          var vbExpression = new VBStringComparisonExpression (methodCallExpression, (bool) leftSideArgument2AsConstantExpression.Value);
 
       if(expression.NodeType==ExpressionType.GreaterThan)
         return Expression.GreaterThan (vbExpression, Expression.Constant(0));

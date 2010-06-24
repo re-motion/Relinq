@@ -44,8 +44,8 @@ namespace Remotion.Data.Linq.Clauses.Expressions
     private readonly Expression _comparison;
     private readonly bool _textCompare;
 
-    public VBStringComparisonExpression (Type type, Expression comparison, bool textCompare)
-        : base(type)
+    public VBStringComparisonExpression (Expression comparison, bool textCompare)
+        : base(comparison.Type)
     {
       ArgumentUtility.CheckNotNull ("comparison", comparison);
 
@@ -79,7 +79,7 @@ namespace Remotion.Data.Linq.Clauses.Expressions
 
       var newExpression = visitor.VisitExpression (_comparison);
       if (newExpression != _comparison)
-        return new VBStringComparisonExpression (typeof (bool), newExpression, _textCompare);
+        return new VBStringComparisonExpression (newExpression, _textCompare);
       else
         return this;
     }

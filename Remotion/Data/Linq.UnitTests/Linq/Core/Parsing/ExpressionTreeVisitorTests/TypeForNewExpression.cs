@@ -39,5 +39,10 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTe
       set { C = value; }
     }
     public int B { get; set; }
+
+    public static int CompareString (string s1, string s2, bool textCompare)
+    {
+      return s1.CompareTo (s2);
+    }
   }
 }
