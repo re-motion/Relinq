@@ -45,7 +45,7 @@ namespace Remotion.Data.Linq.Clauses.Expressions
     private readonly bool _textCompare;
 
     public VBStringComparisonExpression (Expression comparison, bool textCompare)
-        : base(typeof(bool))
+        : base (comparison.Type)
     {
       ArgumentUtility.CheckNotNull ("comparison", comparison);
 
@@ -65,10 +65,7 @@ namespace Remotion.Data.Linq.Clauses.Expressions
 
     public override bool CanReduce
     {
-      get
-      {
-        return true;
-      }
+      get { return true; }
     }
 
     public override Expression Reduce ()

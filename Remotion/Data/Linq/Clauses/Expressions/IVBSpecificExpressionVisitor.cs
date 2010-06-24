@@ -19,6 +19,9 @@ using System.Linq.Expressions;
 
 namespace Remotion.Data.Linq.Clauses.Expressions
 {
+  /// <summary>
+  /// This interface should be implemented by visitors that handle VB-specific expressions.
+  /// </summary>
   public interface IVBSpecificExpressionVisitor
   {
     Expression VisitVBStringComparisonExpression (VBStringComparisonExpression vbStringComparisonExpression);

@@ -38,6 +38,16 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.Expressions
     }
 
     [Test]
+    public void Initialization_TypeComesFromExpression ()
+    {
+      var boolExpression = new VBStringComparisonExpression (Expression.Equal (Expression.Constant ("string1"), Expression.Constant ("string2")), true);
+      var intExpression = new VBStringComparisonExpression (Expression.Constant (0), true);
+
+      Assert.That (boolExpression.Type, Is.SameAs (typeof (bool)));
+      Assert.That (intExpression.Type, Is.SameAs (typeof (int)));
+    }
+
+    [Test]
     public void CanReduce ()
     {
       Assert.That (_expression.CanReduce, Is.True);
@@ -68,7 +78,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.Expressions
     }
 
     [Test]
-    public void VisitChildren_ReturnsNewSqlInExpression ()
+    public void VisitChildren_ReturnsNewExpression ()
     {
       var newExpression = Expression.Equal (Expression.Constant ("string1"), Expression.Constant ("string"));
       var visitorMock = MockRepository.GenerateStrictMock<ExpressionTreeVisitor> ();
