@@ -110,17 +110,97 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
     // TODO Review 2942: Add a test for a method with right declaring type, but wrong name
 
     [Test]
-    public void VisitBinaryExpression_LeftSideIsCompareStringExpression_ReturnsVBStringComparisonExpression ()
+    public void VisitBinaryExpression_Equal_LeftSideIsCompareStringExpression_ReturnsVBStringComparisonExpression ()
     {
       var left = Expression.Constant ("left");
       var right = Expression.Constant ("right");
-      var expression = Expression.GreaterThan (
-          Expression.Call (typeof (Operators).GetMethod ("CompareString"), left, right, Expression.Constant (true)), Expression.Constant(10));
+      var expression = Expression.Equal(
+          Expression.Call (typeof (Operators).GetMethod ("CompareString"), left, right, Expression.Constant (true)), Expression.Constant(0));
       
       var result = PreprocessingExpressionTreeVisitor.Process (expression, _nodeTypeRegistry);
 
       Assert.That (result, Is.TypeOf (typeof (VBStringComparisonExpression)));
-      // TODO Review 2942: Check inner expression and TextCompare
+      Assert.That (((VBStringComparisonExpression) result).Comparison.NodeType, Is.EqualTo(ExpressionType.Equal));
+      Assert.That (((BinaryExpression) ((VBStringComparisonExpression) result).Comparison).Left, Is.SameAs (left));
+      Assert.That (((BinaryExpression) ((VBStringComparisonExpression) result).Comparison).Right, Is.SameAs (right));
+      Assert.That (((VBStringComparisonExpression) result).TextCompare, Is.True);
+    }
+
+    [Test]
+    public void VisitBinaryExpression_NotEqual_LeftSideIsCompareStringExpression_ReturnsVBStringComparisonExpression ()
+    {
+      var left = Expression.Constant ("left");
+      var right = Expression.Constant ("right");
+      var expression = Expression.NotEqual(
+          Expression.Call (typeof (Operators).GetMethod ("CompareString"), left, right, Expression.Constant (true)), Expression.Constant (0));
+
+      var result = PreprocessingExpressionTreeVisitor.Process (expression, _nodeTypeRegistry);
+
+      Assert.That (result, Is.TypeOf (typeof (VBStringComparisonExpression)));
+      Assert.That (((VBStringComparisonExpression) result).Comparison.NodeType, Is.EqualTo (ExpressionType.NotEqual));
+      Assert.That (((BinaryExpression) ((VBStringComparisonExpression) result).Comparison).Left, Is.SameAs (left));
+      Assert.That (((BinaryExpression) ((VBStringComparisonExpression) result).Comparison).Right, Is.SameAs (right));
+      Assert.That (((VBStringComparisonExpression) result).TextCompare, Is.True);
+    }
+
+    [Test]
+    public void VisitBinaryExpression_GreaterThan_LeftSideIsCompareStringExpression_ReturnsVBStringComparisonExpression ()
+    {
+      var left = Expression.Constant ("left");
+      var right = Expression.Constant ("right");
+      var expression = Expression.GreaterThan(
+          Expression.Call (typeof (Operators).GetMethod ("CompareString"), left, right, Expression.Constant (true)), Expression.Constant (0));
+
+      var result = PreprocessingExpressionTreeVisitor.Process (expression, _nodeTypeRegistry);
+
+      Assert.That (result, Is.TypeOf (typeof (BinaryExpression)));
+      Assert.That (result.NodeType, Is.EqualTo(ExpressionType.GreaterThan));
+      Assert.That (((VBStringComparisonExpression) ((BinaryExpression) result).Left).Comparison, Is.TypeOf(typeof(MethodCallExpression)));
+    }
+
+    [Test]
+    public void VisitBinaryExpression_GreaterThanOrEqual_LeftSideIsCompareStringExpression_ReturnsVBStringComparisonExpression ()
+    {
+      var left = Expression.Constant ("left");
+      var right = Expression.Constant ("right");
+      var expression = Expression.GreaterThanOrEqual (
+          Expression.Call (typeof (Operators).GetMethod ("CompareString"), left, right, Expression.Constant (true)), Expression.Constant (0));
+
+      var result = PreprocessingExpressionTreeVisitor.Process (expression, _nodeTypeRegistry);
+
+      Assert.That (result, Is.TypeOf (typeof (BinaryExpression)));
+      Assert.That (result.NodeType, Is.EqualTo (ExpressionType.GreaterThanOrEqual));
+      Assert.That (((VBStringComparisonExpression) ((BinaryExpression) result).Left).Comparison, Is.TypeOf (typeof (MethodCallExpression)));
+    }
+
+    [Test]
+    public void VisitBinaryExpression_LessThan_LeftSideIsCompareStringExpression_ReturnsVBStringComparisonExpression ()
+    {
+      var left = Expression.Constant ("left");
+      var right = Expression.Constant ("right");
+      var expression = Expression.LessThan (
+          Expression.Call (typeof (Operators).GetMethod ("CompareString"), left, right, Expression.Constant (true)), Expression.Constant (0));
+
+      var result = PreprocessingExpressionTreeVisitor.Process (expression, _nodeTypeRegistry);
+
+      Assert.That (result, Is.TypeOf (typeof (BinaryExpression)));
+      Assert.That (result.NodeType, Is.EqualTo (ExpressionType.LessThan));
+      Assert.That (((VBStringComparisonExpression) ((BinaryExpression) result).Left).Comparison, Is.TypeOf (typeof (MethodCallExpression)));
+    }
+
+    [Test]
+    public void VisitBinaryExpression_LessThanOrEqual_LeftSideIsCompareStringExpression_ReturnsVBStringComparisonExpression ()
+    {
+      var left = Expression.Constant ("left");
+      var right = Expression.Constant ("right");
+      var expression = Expression.LessThanOrEqual (
+          Expression.Call (typeof (Operators).GetMethod ("CompareString"), left, right, Expression.Constant (true)), Expression.Constant (0));
+
+      var result = PreprocessingExpressionTreeVisitor.Process (expression, _nodeTypeRegistry);
+
+      Assert.That (result, Is.TypeOf (typeof (BinaryExpression)));
+      Assert.That (result.NodeType, Is.EqualTo (ExpressionType.LessThanOrEqual));
+      Assert.That (((VBStringComparisonExpression) ((BinaryExpression) result).Left).Comparison, Is.TypeOf (typeof (MethodCallExpression)));
     }
 
     [Test]

@@ -15,6 +15,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq.Clauses.Expressions;
@@ -63,13 +64,50 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
       var leftSideAsMethodCallExpression = expression.Left as MethodCallExpression;
       if (leftSideAsMethodCallExpression != null && (IsVBOperator (leftSideAsMethodCallExpression.Method, "CompareString")))
       {
-        // TODO Review 2942: Debug.Assert that the right side of expression is a constant with value 0 (this is how the VB compiler emits it), the code below will not work for any other comparisons.
-        // TODO Review 2942: The operator can also be called with <, >, <=, >= or != expressions, not only == expressions. Write a re-store-level integration test (in the VB project) for the other combinations. Then write one unit test for each other comparison kind and implement support for it.
-        // TODO Review 2942: Debug.Assert that leftSideAsMethodCallExpression.Arguments[2] is a ConstantExpression with bool value
-        var binaryExpression = Expression.Equal (leftSideAsMethodCallExpression.Arguments[0], leftSideAsMethodCallExpression.Arguments[1]);
-        return new VBStringComparisonExpression (binaryExpression, (bool) ((ConstantExpression) leftSideAsMethodCallExpression.Arguments[2]).Value);
+        var rightSideAsConstantExpression = expression.Right as ConstantExpression;
+        Debug.Assert (
+            rightSideAsConstantExpression != null && rightSideAsConstantExpression.Value is Int32 && (int) rightSideAsConstantExpression.Value == 0,
+            "The right side of the binary expression has to be a constant expression with value 0.");
+
+        var leftSideArgument2AsConstantExpression = leftSideAsMethodCallExpression.Arguments[2] as ConstantExpression;
+        Debug.Assert (
+            leftSideArgument2AsConstantExpression != null && leftSideArgument2AsConstantExpression.Value is bool,
+            "The second argument of the method call expression has to be a constant expression with a boolean value.");
+
+       return GetExpressionForNodeType (expression, leftSideAsMethodCallExpression, leftSideArgument2AsConstantExpression);
       }
-      return base.VisitBinaryExpression(expression);
+      return base.VisitBinaryExpression (expression);
+    }
+
+    private Expression GetExpressionForNodeType (BinaryExpression expression, MethodCallExpression leftSideAsMethodCallExpression, ConstantExpression leftSideArgument2AsConstantExpression)
+    {
+      BinaryExpression binaryExpression;
+      switch (expression.NodeType)
+      {
+        case ExpressionType.Equal:
+          binaryExpression = Expression.Equal (leftSideAsMethodCallExpression.Arguments[0], leftSideAsMethodCallExpression.Arguments[1]);
+          return new VBStringComparisonExpression (typeof (bool), binaryExpression, (bool) leftSideArgument2AsConstantExpression.Value);
+        case ExpressionType.NotEqual:
+          binaryExpression = Expression.NotEqual (leftSideAsMethodCallExpression.Arguments[0], leftSideAsMethodCallExpression.Arguments[1]);
+          return new VBStringComparisonExpression (typeof (bool), binaryExpression, (bool) leftSideArgument2AsConstantExpression.Value);
+      }
+
+      var methodCallExpression = MethodCallExpression.Call (
+              leftSideAsMethodCallExpression.Arguments[0],
+              typeof(string).GetMethod("CompareTo", new[] { typeof(string) }),
+              leftSideAsMethodCallExpression.Arguments[1]);
+          var vbExpression = new VBStringComparisonExpression (typeof (int), methodCallExpression, (bool) leftSideArgument2AsConstantExpression.Value);
+
+      if(expression.NodeType==ExpressionType.GreaterThan)
+        return Expression.GreaterThan (vbExpression, Expression.Constant(0));
+      else if(expression.NodeType==ExpressionType.GreaterThanOrEqual)
+        return Expression.GreaterThanOrEqual (vbExpression, Expression.Constant (0));
+      else if(expression.NodeType==ExpressionType.LessThan)
+        return Expression.LessThan(vbExpression, Expression.Constant (0));
+      else if(expression.NodeType==ExpressionType.LessThanOrEqual)
+        return Expression.LessThanOrEqual (vbExpression, Expression.Constant (0));
+
+      throw new NotSupportedException (string.Format ("Binary expression with node type '{0}' is not supported.", expression.NodeType));
     }
 
     protected internal override Expression VisitUnknownExpression (Expression expression)

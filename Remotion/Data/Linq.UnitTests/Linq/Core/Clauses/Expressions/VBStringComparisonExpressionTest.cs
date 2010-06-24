@@ -34,14 +34,14 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.Expressions
     public void SetUp ()
     {
       _comparisonExpression = Expression.Equal (Expression.Constant ("string1"), Expression.Constant ("string2"));
-      _expression = new VBStringComparisonExpression (_comparisonExpression, true);
+      _expression = new VBStringComparisonExpression (typeof (bool), _comparisonExpression, true);
     }
 
     [Test]
-    public void Initialization_TypeComesFromExpression ()
+    public void Initialization_TypeComesFromCtorParameter ()
     {
-      var boolExpression = new VBStringComparisonExpression (Expression.Equal (Expression.Constant ("string1"), Expression.Constant ("string2")), true);
-      var intExpression = new VBStringComparisonExpression (Expression.Constant (0), true);
+      var boolExpression = new VBStringComparisonExpression (typeof(bool), Expression.Equal (Expression.Constant ("string1"), Expression.Constant ("string2")), true);
+      var intExpression = new VBStringComparisonExpression (typeof(int), Expression.Constant (0), true);
 
       Assert.That (boolExpression.Type, Is.SameAs (typeof (bool)));
       Assert.That (intExpression.Type, Is.SameAs (typeof (int)));
