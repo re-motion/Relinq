@@ -163,6 +163,7 @@
     <Compile Include="Linq\SqlBackend\SqlGeneration\SqlCustomTextGeneratorExpressionBaseTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\TestableSqlCustomTextGeneratorExpression.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\TestableSqlTableAndJoinTextGenerator.cs" />
+    <Compile Include="Linq\SqlBackend\SqlGeneration\TestExtensionExpressionWithoutChildren.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\ContainsFreetextMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\ContainsFulltextMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\ContainsMethodCallTransformerTest.cs" />
