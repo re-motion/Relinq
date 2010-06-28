@@ -147,6 +147,7 @@
     <Compile Include="Linq\SqlBackend\CustomCompositeExpression.cs" />
     <Compile Include="Linq\SqlBackend\MappingResolution\MappingResolutionContextTest.cs" />
     <Compile Include="Linq\SqlBackend\MappingResolution\MemberAccessResolverTest.cs" />
+    <Compile Include="Linq\SqlBackend\MappingResolution\NameCombiningExpressionVisitorTest.cs" />
     <Compile Include="Linq\SqlBackend\MappingResolution\SqlContextJoinInfoVisitorTest.cs" />
     <Compile Include="Linq\SqlBackend\MappingResolution\SqlContextSelectionAdjusterTest.cs" />
     <Compile Include="Linq\SqlBackend\MappingResolution\SqlContextTableInfoVisitorTest.cs" />
@@ -423,7 +424,7 @@
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\AdditionalFromClausesSqlBackendIntegrationTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\OrderByClausesSqlBackendIntegrationTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\SubQuerySqlBackendIntegrationTest.cs" />
-    <Compile Include="Linq\SqlBackend\SqlGeneration\SqlContextExpressionVisitorTest.cs" />
+    <Compile Include="Linq\SqlBackend\MappingResolution\SqlContextExpressionVisitorTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\TestableSqlContextExpressionVisitor.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\BinaryExpressionSqlBackendIntegrationTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\ResultOperatorCombinationsSqlBackendIntegrationTest.cs" />
