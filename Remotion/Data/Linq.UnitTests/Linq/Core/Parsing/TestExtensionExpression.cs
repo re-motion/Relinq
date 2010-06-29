@@ -54,7 +54,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing
 
     protected override Expression VisitChildren (ExpressionTreeVisitor visitor)
     {
-      throw new NotImplementedException();
+      return this;
     }
   }
 }
