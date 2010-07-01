@@ -17,6 +17,7 @@
 using System;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.Expressions;
+using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Utilities;
 
@@ -54,7 +55,16 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing
 
     protected override Expression VisitChildren (ExpressionTreeVisitor visitor)
     {
+      var result = visitor.VisitExpression (_constantExpression);
+      if (result != _constantExpression)
+        return new TestExtensionExpression (result);
+
       return this;
+    }
+
+    public override string ToString ()
+    {
+      return "Test(" + FormattingExpressionTreeVisitor.Format (_constantExpression) + ")";
     }
   }
 }
