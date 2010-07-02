@@ -163,6 +163,7 @@
     <Compile Include="Linq\SqlBackend\SqlGeneration\SqlCompositeCustomTextGeneratorExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\SqlCustomTextExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\SqlCustomTextGeneratorExpressionBaseTest.cs" />
+    <Compile Include="Linq\SqlBackend\SqlGeneration\SqlGeneratingOuterSelectExpressionVisitorTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\SqlGeneratingSelectExpressionVisitorTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\TestableSqlCustomTextGeneratorExpression.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\TestableSqlTableAndJoinTextGenerator.cs" />
