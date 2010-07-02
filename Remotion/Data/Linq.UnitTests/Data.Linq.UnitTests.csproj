@@ -166,6 +166,7 @@
     <Compile Include="Linq\SqlBackend\SqlGeneration\SqlGeneratingOuterSelectExpressionVisitorTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\SqlGeneratingSelectExpressionVisitorTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\TestableSqlCustomTextGeneratorExpression.cs" />
+    <Compile Include="Linq\SqlBackend\SqlGeneration\TestableSqlGeneratingOuterSelectExpressionVisitor.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\TestableSqlTableAndJoinTextGenerator.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\TestExtensionExpressionWithoutChildren.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\ContainsFreetextMethodCallTransformerTest.cs" />
