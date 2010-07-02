@@ -41,8 +41,7 @@ namespace Remotion.Data.Linq.Parsing
 
       return expressions
           .Reverse ()
-          .Aggregate (
-              (current, expression) => CreateTupleExpression (expression, current));
+          .Aggregate ((current, expression) => CreateTupleExpression (expression, current));
     }
 
     public static IEnumerable<Expression> GetExpressionsFromTuple (Expression tupleExpression)
