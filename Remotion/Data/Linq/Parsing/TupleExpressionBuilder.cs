@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.Parsing
 {
@@ -36,6 +37,8 @@ namespace Remotion.Data.Linq.Parsing
   {
     public static Expression AggregateExpressionsIntoTuple (IEnumerable<Expression> expressions)
     {
+      ArgumentUtility.CheckNotNull ("expressions", expressions);
+
       return expressions
           .Reverse ()
           .Aggregate (
@@ -44,6 +47,8 @@ namespace Remotion.Data.Linq.Parsing
 
     public static IEnumerable<Expression> GetExpressionsFromTuple (Expression tupleExpression)
     {
+      ArgumentUtility.CheckNotNull ("tupleExpression", tupleExpression);
+
       while (tupleExpression.Type.IsGenericType && tupleExpression.Type.GetGenericTypeDefinition() == typeof (KeyValuePair<,>))
       {
         yield return Expression.MakeMemberAccess (tupleExpression, tupleExpression.Type.GetProperty ("Key"));
