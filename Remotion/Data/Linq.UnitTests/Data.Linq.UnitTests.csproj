@@ -211,6 +211,7 @@
     <Compile Include="Linq\SqlBackend\SqlPreparation\SqlPreparationSubStatementTableFactoryTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\TestableSqlPreparationExpressionVisitorTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\AggregationExpressionTest.cs" />
+    <Compile Include="Linq\SqlBackend\SqlStatementModel\ConvertedBooleanExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\NamedExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\Resolved\ResolvedSubStatementTableInfoTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\Resolved\SqlColumnReferenceExpressionTest.cs" />
