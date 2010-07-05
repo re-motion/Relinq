@@ -58,6 +58,11 @@ namespace Remotion.Data.Linq.Utilities
 
     public abstract TItem GetItem (TKey key);
 
+    public virtual bool IsRegistered (TKey key)
+    {
+      return _items.ContainsKey (key);
+    }
+
     protected virtual TItem GetItemExact (TKey key)
     {
       TItem item;
