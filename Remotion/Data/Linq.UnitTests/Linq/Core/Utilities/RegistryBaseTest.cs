@@ -17,7 +17,7 @@
 using System;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests;
 
 namespace Remotion.Data.Linq.UnitTests.Linq.Core.Utilities
 {
@@ -70,6 +70,15 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Utilities
     {
       _registry.Register (new [] { typeof (TestRegistryImplementation) }, new TestRegistryImplementation ());
       Assert.That (_registry.GetItem (typeof (TestRegistryImplementation)), Is.Not.Null);
+    }
+
+    [Test]
+    public void IsRegistered ()
+    {
+      _registry.Register (new[] { typeof (TestRegistryImplementation) }, new TestRegistryImplementation ());
+
+      Assert.That (_registry.IsRegistered (typeof (TestRegistryImplementation)), Is.True);
+      Assert.That (_registry.IsRegistered (typeof (TypeForNewExpression)), Is.False);
     }
     
   }
