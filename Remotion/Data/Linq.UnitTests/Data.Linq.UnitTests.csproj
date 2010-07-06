@@ -208,6 +208,7 @@
     <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlers\TakeResultOperatorHandlerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlers\TestableAggregationResultOperatorHandler.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlers\TestableResultOperatorHandler.cs" />
+    <Compile Include="Linq\SqlBackend\SqlPreparation\SqlPreparationSelectExpressionVisitorTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\SqlPreparationSubStatementTableFactoryTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\TestableSqlPreparationExpressionVisitorTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\AggregationExpressionTest.cs" />
