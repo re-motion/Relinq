@@ -15,6 +15,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using Remotion.Data.Linq.Clauses.ResultOperators;
@@ -43,6 +44,31 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateM
     public void SupportedMethod_WithSelector ()
     {
       AssertSupportedMethod_Generic (MinExpressionNode.SupportedMethods, q => q.Min (i => i.ToString ()), e => e.Min (i => i.ToString ()));
+    }
+
+    [Test]
+    public void SupportedMethod_IEnumerableOverloads ()
+    {
+      AssertSupportedMethod_NonGeneric (MinExpressionNode.SupportedMethods, null, e => ((IEnumerable<decimal>) e).Min ());
+      AssertSupportedMethod_NonGeneric (MinExpressionNode.SupportedMethods, null, e => ((IEnumerable<decimal?>) e).Min ());
+      AssertSupportedMethod_NonGeneric (MinExpressionNode.SupportedMethods, null, e => ((IEnumerable<double>) e).Min ());
+      AssertSupportedMethod_NonGeneric (MinExpressionNode.SupportedMethods, null, e => ((IEnumerable<double?>) e).Min ());
+      AssertSupportedMethod_NonGeneric (MinExpressionNode.SupportedMethods, null, e => ((IEnumerable<int>) e).Min ());
+      AssertSupportedMethod_NonGeneric (MinExpressionNode.SupportedMethods, null, e => ((IEnumerable<int?>) e).Min ());
+      AssertSupportedMethod_NonGeneric (MinExpressionNode.SupportedMethods, null, e => ((IEnumerable<long>) e).Min ());
+      AssertSupportedMethod_NonGeneric (MinExpressionNode.SupportedMethods, null, e => ((IEnumerable<long?>) e).Min ());
+      AssertSupportedMethod_NonGeneric (MinExpressionNode.SupportedMethods, null, e => ((IEnumerable<float>) e).Min ());
+      AssertSupportedMethod_NonGeneric (MinExpressionNode.SupportedMethods, null, e => ((IEnumerable<float?>) e).Min ());
+      AssertSupportedMethod_Generic<object, decimal> (MinExpressionNode.SupportedMethods, null, e => e.Min (i => 0.0m));
+      AssertSupportedMethod_Generic<object, decimal?> (MinExpressionNode.SupportedMethods, null, e => e.Min (i => (decimal?) 0.0m));
+      AssertSupportedMethod_Generic<object, double> (MinExpressionNode.SupportedMethods, null, e => e.Min (i => 0.0));
+      AssertSupportedMethod_Generic<object, double?> (MinExpressionNode.SupportedMethods, null, e => e.Min (i => (double?) 0.0));
+      AssertSupportedMethod_Generic<object, int> (MinExpressionNode.SupportedMethods, null, e => e.Min (i => 0));
+      AssertSupportedMethod_Generic<object, int?> (MinExpressionNode.SupportedMethods, null, e => e.Min (i => (int?) 0));
+      AssertSupportedMethod_Generic<object, long> (MinExpressionNode.SupportedMethods, null, e => e.Min (i => 0L));
+      AssertSupportedMethod_Generic<object, long?> (MinExpressionNode.SupportedMethods, null, e => e.Min (i => (long?) 0L));
+      AssertSupportedMethod_Generic<object, float> (MinExpressionNode.SupportedMethods, null, e => e.Min (i => 0.0f));
+      AssertSupportedMethod_Generic<object, float?> (MinExpressionNode.SupportedMethods, null, e => e.Min (i => (float?) 0.0f));
     }
 
     [Test]

@@ -15,6 +15,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -37,7 +38,28 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Queryable.Max<object, object> (null, null)),
                                                                GetSupportedMethod (() => Enumerable.Max<object> (null)),
                                                                GetSupportedMethod (() => Enumerable.Max<object, object> (null, null)),
-                                                           };
+
+                                                               GetSupportedMethod (() => Enumerable.Max ((IEnumerable<decimal>) null)),
+                                                               GetSupportedMethod (() => Enumerable.Max ((IEnumerable<decimal?>) null)),
+                                                               GetSupportedMethod (() => Enumerable.Max ((IEnumerable<double>) null)),
+                                                               GetSupportedMethod (() => Enumerable.Max ((IEnumerable<double?>) null)),
+                                                               GetSupportedMethod (() => Enumerable.Max ((IEnumerable<int>) null)),
+                                                               GetSupportedMethod (() => Enumerable.Max ((IEnumerable<int?>) null)),
+                                                               GetSupportedMethod (() => Enumerable.Max ((IEnumerable<long>) null)),
+                                                               GetSupportedMethod (() => Enumerable.Max ((IEnumerable<long?>) null)),
+                                                               GetSupportedMethod (() => Enumerable.Max ((IEnumerable<float>) null)),
+                                                               GetSupportedMethod (() => Enumerable.Max ((IEnumerable<float?>) null)),
+                                                               GetSupportedMethod (() => Enumerable.Max<object> (null, o => (decimal) 0)),
+                                                               GetSupportedMethod (() => Enumerable.Max<object> (null, o => (decimal?) 0)),
+                                                               GetSupportedMethod (() => Enumerable.Max<object> (null, o => (double) 0)),
+                                                               GetSupportedMethod (() => Enumerable.Max<object> (null, o => (double?) 0)),
+                                                               GetSupportedMethod (() => Enumerable.Max<object> (null, o => (int) 0)),
+                                                               GetSupportedMethod (() => Enumerable.Max<object> (null, o => (int?) 0)),
+                                                               GetSupportedMethod (() => Enumerable.Max<object> (null, o => (long) 0)),
+                                                               GetSupportedMethod (() => Enumerable.Max<object> (null, o => (long?) 0)),
+                                                               GetSupportedMethod (() => Enumerable.Max<object> (null, o => (float) 0)),
+                                                               GetSupportedMethod (() => Enumerable.Max<object> (null, o => (float?) 0)),
+                                                          };
 
     public MaxExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalSelector)
         : base (parseInfo, null, optionalSelector)

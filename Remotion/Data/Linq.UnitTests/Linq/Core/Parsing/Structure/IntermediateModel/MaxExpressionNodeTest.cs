@@ -15,6 +15,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using Remotion.Data.Linq.Clauses.ResultOperators;
@@ -44,6 +45,32 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateM
     {
       AssertSupportedMethod_Generic (MaxExpressionNode.SupportedMethods, q => q.Max (i => i.ToString()), e => e.Max (i => i.ToString()));
     }
+
+    [Test]
+    public void SupportedMethod_IEnumerableOverloads ()
+    {
+      AssertSupportedMethod_NonGeneric (MaxExpressionNode.SupportedMethods, null, e => ((IEnumerable<decimal>) e).Max ());
+      AssertSupportedMethod_NonGeneric (MaxExpressionNode.SupportedMethods, null, e => ((IEnumerable<decimal?>) e).Max ());
+      AssertSupportedMethod_NonGeneric (MaxExpressionNode.SupportedMethods, null, e => ((IEnumerable<double>) e).Max ());
+      AssertSupportedMethod_NonGeneric (MaxExpressionNode.SupportedMethods, null, e => ((IEnumerable<double?>) e).Max ());
+      AssertSupportedMethod_NonGeneric (MaxExpressionNode.SupportedMethods, null, e => ((IEnumerable<int>) e).Max ());
+      AssertSupportedMethod_NonGeneric (MaxExpressionNode.SupportedMethods, null, e => ((IEnumerable<int?>) e).Max ());
+      AssertSupportedMethod_NonGeneric (MaxExpressionNode.SupportedMethods, null, e => ((IEnumerable<long>) e).Max ());
+      AssertSupportedMethod_NonGeneric (MaxExpressionNode.SupportedMethods, null, e => ((IEnumerable<long?>) e).Max ());
+      AssertSupportedMethod_NonGeneric (MaxExpressionNode.SupportedMethods, null, e => ((IEnumerable<float>) e).Max ());
+      AssertSupportedMethod_NonGeneric (MaxExpressionNode.SupportedMethods, null, e => ((IEnumerable<float?>) e).Max ());
+      AssertSupportedMethod_Generic<object, decimal> (MaxExpressionNode.SupportedMethods, null, e => e.Max (i => 0.0m));
+      AssertSupportedMethod_Generic<object, decimal?> (MaxExpressionNode.SupportedMethods, null, e => e.Max (i => (decimal?) 0.0m));
+      AssertSupportedMethod_Generic<object, double> (MaxExpressionNode.SupportedMethods, null, e => e.Max (i => 0.0));
+      AssertSupportedMethod_Generic<object, double?> (MaxExpressionNode.SupportedMethods, null, e => e.Max (i => (double?) 0.0));
+      AssertSupportedMethod_Generic<object, int> (MaxExpressionNode.SupportedMethods, null, e => e.Max (i => 0));
+      AssertSupportedMethod_Generic<object, int?> (MaxExpressionNode.SupportedMethods, null, e => e.Max (i => (int?) 0));
+      AssertSupportedMethod_Generic<object, long> (MaxExpressionNode.SupportedMethods, null, e => e.Max (i => 0L));
+      AssertSupportedMethod_Generic<object, long?> (MaxExpressionNode.SupportedMethods, null, e => e.Max (i => (long?) 0L));
+      AssertSupportedMethod_Generic<object, float> (MaxExpressionNode.SupportedMethods, null, e => e.Max (i => 0.0f));
+      AssertSupportedMethod_Generic<object, float?> (MaxExpressionNode.SupportedMethods, null, e => e.Max (i => (float?) 0.0f));
+    }
+
 
     [Test]
     [ExpectedException (typeof (InvalidOperationException))]

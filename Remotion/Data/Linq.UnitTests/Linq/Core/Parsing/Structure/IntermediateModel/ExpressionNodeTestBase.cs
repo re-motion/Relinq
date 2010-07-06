@@ -115,8 +115,11 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateM
         Expression<Func<IQueryable<object>, TResult1>> queryableMethodCall,
         Expression<Func<IEnumerable<object>, TResult2>> enumerableMethodCall)
     {
-      var queryableMethod = GetGenericMethodDefinition (queryableMethodCall);
-      Assert.That (supportedMethods, List.Contains (queryableMethod));
+      if (queryableMethodCall != null)
+      {
+        var queryableMethod = GetGenericMethodDefinition (queryableMethodCall);
+        Assert.That (supportedMethods, List.Contains (queryableMethod));
+      }
 
       var enumerableMethod = GetGenericMethodDefinition_Enumerable (enumerableMethodCall);
       Assert.That (supportedMethods, List.Contains (enumerableMethod));
@@ -127,11 +130,17 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateM
         Expression<Func<IQueryable<object>, TResult>> queryableMethodCall,
         Expression<Func<IEnumerable<object>, TResult>> enumerableMethodCall)
     {
-      var queryableMethod = GetMethod (queryableMethodCall);
-      Assert.That (supportedMethods, List.Contains (queryableMethod));
+      if (queryableMethodCall != null)
+      {
+        var queryableMethod = GetMethod (queryableMethodCall);
+        Assert.That (supportedMethods, List.Contains (queryableMethod));
+      }
 
-      var enumerableMethod = GetMethod_Enumerable (enumerableMethodCall);
-      Assert.That (supportedMethods, List.Contains (enumerableMethod));
+      if (enumerableMethodCall != null)
+      {
+        var enumerableMethod = GetMethod_Enumerable (enumerableMethodCall);
+        Assert.That (supportedMethods, List.Contains (enumerableMethod));
+      }
     }
   }
 }

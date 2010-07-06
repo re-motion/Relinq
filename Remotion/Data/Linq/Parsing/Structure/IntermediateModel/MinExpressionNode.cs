@@ -15,6 +15,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -37,6 +38,27 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Queryable.Min<object, object> (null, null)),
                                                                GetSupportedMethod (() => Enumerable.Min<object> (null)),
                                                                GetSupportedMethod (() => Enumerable.Min<object, object> (null, null)),
+
+                                                               GetSupportedMethod (() => Enumerable.Min ((IEnumerable<decimal>) null)),
+                                                               GetSupportedMethod (() => Enumerable.Min ((IEnumerable<decimal?>) null)),
+                                                               GetSupportedMethod (() => Enumerable.Min ((IEnumerable<double>) null)),
+                                                               GetSupportedMethod (() => Enumerable.Min ((IEnumerable<double?>) null)),
+                                                               GetSupportedMethod (() => Enumerable.Min ((IEnumerable<int>) null)),
+                                                               GetSupportedMethod (() => Enumerable.Min ((IEnumerable<int?>) null)),
+                                                               GetSupportedMethod (() => Enumerable.Min ((IEnumerable<long>) null)),
+                                                               GetSupportedMethod (() => Enumerable.Min ((IEnumerable<long?>) null)),
+                                                               GetSupportedMethod (() => Enumerable.Min ((IEnumerable<float>) null)),
+                                                               GetSupportedMethod (() => Enumerable.Min ((IEnumerable<float?>) null)),
+                                                               GetSupportedMethod (() => Enumerable.Min<object> (null, o => (decimal) 0)),
+                                                               GetSupportedMethod (() => Enumerable.Min<object> (null, o => (decimal?) 0)),
+                                                               GetSupportedMethod (() => Enumerable.Min<object> (null, o => (double) 0)),
+                                                               GetSupportedMethod (() => Enumerable.Min<object> (null, o => (double?) 0)),
+                                                               GetSupportedMethod (() => Enumerable.Min<object> (null, o => (int) 0)),
+                                                               GetSupportedMethod (() => Enumerable.Min<object> (null, o => (int?) 0)),
+                                                               GetSupportedMethod (() => Enumerable.Min<object> (null, o => (long) 0)),
+                                                               GetSupportedMethod (() => Enumerable.Min<object> (null, o => (long?) 0)),
+                                                               GetSupportedMethod (() => Enumerable.Min<object> (null, o => (float) 0)),
+                                                               GetSupportedMethod (() => Enumerable.Min<object> (null, o => (float?) 0)),
                                                            };
 
     public MinExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalSelector)
