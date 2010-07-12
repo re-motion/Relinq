@@ -35,6 +35,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing
       _constantExpression = constantExpression;
     }
 
+    // TODO Review: Rename to Expression
     public Expression ConstantExpression
     {
       get { return _constantExpression; }
