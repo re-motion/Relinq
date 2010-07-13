@@ -39,10 +39,14 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateM
 
       _keySelector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
       _elementSelector = ExpressionHelper.CreateLambdaExpression<int, string> (i => i.ToString ());
-      _resultSelector = ExpressionHelper.CreateLambdaExpression<bool, IGrouping<bool, int>, KeyValuePair<bool, int>> (
+      _resultSelector = ExpressionHelper.CreateLambdaExpression<bool, IEnumerable<string>, KeyValuePair<bool, int>> (
           (key, group) => new KeyValuePair<bool, int> (key, group.Count ()));
 
-      _nodeWithElementSelector = new GroupByWithResultSelectorExpressionNode (CreateParseInfo (SourceNode, "g"), _keySelector, _elementSelector, _resultSelector);
+      _nodeWithElementSelector = new GroupByWithResultSelectorExpressionNode (
+          CreateParseInfo (SourceNode, "g"), 
+          _keySelector, 
+          _elementSelector, 
+          _resultSelector);
     }
 
     [Test]
@@ -62,107 +66,23 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateM
     [Test]
     public void Initialization ()
     {
-      Assert.That (_nodeWithElementSelector.KeySelector, Is.SameAs (_keySelector));
-      Assert.That (_nodeWithElementSelector.OptionalElementSelector, Is.SameAs (_elementSelector));
-      Assert.That (_nodeWithElementSelector.ResultSelector, Is.SameAs (_resultSelector));
+      var expectedSelector = ExpressionHelper.CreateLambdaExpression<IGrouping<bool, string>, KeyValuePair<bool, int>> (
+          group => new KeyValuePair<bool, int> (group.Key, group.Count ()));
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedSelector, _nodeWithElementSelector.Selector);
+
+      Assert.That (((GroupByExpressionNode) _nodeWithElementSelector.Source).KeySelector, Is.SameAs (_keySelector));
+      Assert.That (((GroupByExpressionNode) _nodeWithElementSelector.Source).OptionalElementSelector, Is.SameAs (_elementSelector));
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException))]
-    public void Initialization_InvalidFirstArgument ()
+    [ExpectedException (
+        typeof (ArgumentException), 
+        ExpectedMessage = "ResultSelector must have exactly two parameters.", 
+        MatchType = MessageMatch.Contains)]
+    public void Initialization_InvalidResultSelector_WrongNumberOfParameters ()
     {
-      var keySelector = ExpressionHelper.CreateLambdaExpression<int, string, bool> ((i, s) => true);
-      new GroupByWithResultSelectorExpressionNode (CreateParseInfo (), keySelector, _elementSelector, _resultSelector);
-    }
-
-    [Test]
-    [ExpectedException (typeof (ArgumentException))]
-    public void Initialization_InvalidSecondArgument ()
-    {
-      var elementSelector = ExpressionHelper.CreateLambdaExpression<int, string, double, bool> ((i, s, d) => true);
-      new GroupByWithResultSelectorExpressionNode (CreateParseInfo (), _keySelector, elementSelector, _resultSelector);
-    }
-
-    [Test]
-    [ExpectedException (typeof (ArgumentException))]
-    public void Initialization_InvalidThirdArgument ()
-    {
-      var resultSelector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => true);
+      var resultSelector = ExpressionHelper.CreateLambdaExpression<int, string, double, bool> ((i, s, d) => true);
       new GroupByWithResultSelectorExpressionNode (CreateParseInfo (), _keySelector, _elementSelector, resultSelector);
     }
-
-    //[Test]
-    //public void Resolve ()
-    //{
-    //  Assert.Fail ("TODO");
-    //}
-
-    [Test]
-    public void GetResolvedKeySelector ()
-    {
-      var resolvedKeySelector = _nodeWithElementSelector.GetResolvedKeySelector (ClauseGenerationContext);
-
-      var expectedExpression = ExpressionHelper.Resolve<int, bool> (SourceClause, i => i > 5);
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, resolvedKeySelector);
-    }
-
-    [Test]
-    public void GetResolvedOptionalElementSelector ()
-    {
-      var resolvedElementSelector = _nodeWithElementSelector.GetResolvedOptionalElementSelector (ClauseGenerationContext);
-
-      var expectedExpression = ExpressionHelper.Resolve<int, string> (SourceClause, i => i.ToString ());
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, resolvedElementSelector);
-    }
-
-    //[Test]
-    //public void GetResolvedResultSelector ()
-    //{
-    //  var resolvedElementSelector = _nodeWithElementSelector.GetResolvedOptionalElementSelector (ClauseGenerationContext);
-
-    //  var expectedExpression = ExpressionHelper.Resolve<int, string> (SourceClause, i => i.ToString ());
-    //  ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, resolvedElementSelector);
-    //}
-
-    //[Test]
-    //public void GetResolvedOptionalElementSelector_Null ()
-    //{
-    //  var resolvedElementSelector = _nodeWithoutElementSelector.GetResolvedOptionalElementSelector (ClauseGenerationContext);
-    //  Assert.That (resolvedElementSelector, Is.Null);
-    //}
-
-    //[Test]
-    //public void Apply ()
-    //{
-    //  var newQueryModel = _nodeWithElementSelector.Apply (QueryModel, ClauseGenerationContext);
-
-    //  Assert.That (newQueryModel, Is.SameAs (QueryModel));
-
-    //  Assert.That (QueryModel.ResultOperators[0], Is.InstanceOfType (typeof (GroupResultOperator)));
-    //  var resultOperator = (GroupResultOperator) QueryModel.ResultOperators[0];
-
-    //  Assert.That (resultOperator.ItemName, Is.EqualTo (_nodeWithElementSelector.AssociatedIdentifier));
-    //  Assert.That (resultOperator.KeySelector, Is.SameAs (_nodeWithElementSelector.GetResolvedKeySelector (ClauseGenerationContext)));
-    //  Assert.That (resultOperator.ElementSelector, Is.SameAs (_nodeWithElementSelector.GetResolvedOptionalElementSelector (ClauseGenerationContext)));
-    //}
-
-    //[Test]
-    //public void Apply_AddsMapping ()
-    //{
-    //  _nodeWithElementSelector.Apply (QueryModel, ClauseGenerationContext);
-
-    //  var resultOperator = (GroupResultOperator) QueryModel.ResultOperators[0];
-    //  Assert.That (ClauseGenerationContext.GetContextInfo (_nodeWithElementSelector), Is.SameAs (resultOperator));
-    //}
-
-    //[Test]
-    //public void Apply_WithoutElementSelector_SuppliesStandardSelector ()
-    //{
-    //  _nodeWithoutElementSelector.Apply (QueryModel, ClauseGenerationContext);
-    //  var resultOperator = (GroupResultOperator) QueryModel.ResultOperators[0];
-
-    //  var expectedElementSelector = ExpressionHelper.Resolve<int, int> (QueryModel.MainFromClause, i => i);
-    //  ExpressionTreeComparer.CheckAreEqualTrees (expectedElementSelector, resultOperator.ElementSelector);
-    //}
   }
 }

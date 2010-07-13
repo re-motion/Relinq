@@ -73,13 +73,12 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
     }
 
     [Test]
-    [Ignore ("TODO 3027")]
     public void GroupBy_WithResultSelector_AfterElementSelector ()
     {
-      var query = QuerySource.GroupBy (s => s.IsStarredCook, s => s.ID, (key, group) => new KeyValuePair<bool, int> (key, group.Min()));
+      var query = QuerySource.GroupBy (s => s.IsStarredCook, s => s.ID, (key, group) => new KeyValuePair<bool, IEnumerable<int>> (key, group));
 
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
-      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<KeyValuePair<bool, int>>)));
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<KeyValuePair<bool, IEnumerable<int>>>)));
 
       var outerMainFromClause = queryModel.MainFromClause;
       Assert.That (outerMainFromClause.FromExpression, Is.InstanceOfType (typeof (SubQueryExpression)));
@@ -91,13 +90,13 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
 
       var outerSelectClause = queryModel.SelectClause;
 
-      CheckResolvedExpression<IGrouping<bool, int>, KeyValuePair<bool, int>> (
+      CheckResolvedExpression<IGrouping<bool, int>, KeyValuePair<bool, IEnumerable<int>>> (
           outerSelectClause.Selector, 
-          outerMainFromClause, 
-          x => new KeyValuePair<bool, int> (x.Key, x.Min()));
+          outerMainFromClause,
+          x => new KeyValuePair<bool, IEnumerable<int>> (x.Key, x));
 
       var innerQueryModel = ((SubQueryExpression) outerMainFromClause.FromExpression).QueryModel;
-      Assert.That (innerQueryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IGrouping<bool, int>)));
+      Assert.That (innerQueryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<IGrouping<bool, int>>)));
 
       var innerMainFromClause = innerQueryModel.MainFromClause;
       CheckConstantQuerySource (innerMainFromClause.FromExpression, QuerySource);
@@ -109,10 +108,10 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
       var innerSelectClause = innerQueryModel.SelectClause;
       CheckResolvedExpression<Cook, Cook> (innerSelectClause.Selector, innerMainFromClause, s => s);
 
-      Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
-      Assert.That (queryModel.ResultOperators[0], Is.TypeOf (typeof (GroupResultOperator)));
-      
-      var groupResultOperator = ((GroupResultOperator) queryModel.ResultOperators[0]);
+      Assert.That (innerQueryModel.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (innerQueryModel.ResultOperators[0], Is.TypeOf (typeof (GroupResultOperator)));
+
+      var groupResultOperator = ((GroupResultOperator) innerQueryModel.ResultOperators[0]);
 
       CheckResolvedExpression<Cook, bool> (groupResultOperator.KeySelector, innerMainFromClause, c => c.IsStarredCook);
       CheckResolvedExpression<Cook, int> (groupResultOperator.ElementSelector, innerMainFromClause, c => c.ID);
@@ -122,7 +121,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
     [Ignore ("TODO 3027")]
     public void GroupBy_WithResultSelector_NoElementSelector ()
     {
-      var query = QuerySource.GroupBy (s => s.IsStarredCook, (key, group) => new KeyValuePair<bool, int> (key, group.Count ()));
+      var query = QuerySource.GroupBy (s => s.IsStarredCook, (key, group) => new KeyValuePair<bool, IEnumerable<Cook>> (key, group));
 
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<KeyValuePair<bool, int>>)));
@@ -155,8 +154,8 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
       var innerSelectClause = innerQueryModel.SelectClause;
       CheckResolvedExpression<Cook, Cook> (innerSelectClause.Selector, innerMainFromClause, s => s);
 
-      Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
-      Assert.That (queryModel.ResultOperators[0], Is.TypeOf (typeof (GroupResultOperator)));
+      Assert.That (innerQueryModel.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (innerQueryModel.ResultOperators[0], Is.TypeOf (typeof (GroupResultOperator)));
 
       var groupResultOperator = ((GroupResultOperator) queryModel.ResultOperators[0]);
 
@@ -165,12 +164,11 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
     }
 
     [Test]
-    [Ignore ("TODO 3027")]
     public void GroupBy_WithResultSelector_BeforeAll ()
     {
       var queryExpression = ExpressionHelper.MakeExpression (
           () => QuerySource
-              .GroupBy (s => s.IsStarredCook, s => s.ID, (key, group) => new KeyValuePair<bool, int> (key, group.Min ()))
+              .GroupBy (s => s.IsStarredCook, s => s.ID, (key, group) => new KeyValuePair<bool, int> (key, group.GetHashCode()))
               .All (kvp => kvp.Value > 0));
 
       var queryModel = QueryParser.GetParsedQuery (queryExpression);
@@ -179,7 +177,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
       var outerMainFromClause = queryModel.MainFromClause;
       Assert.That (outerMainFromClause.FromExpression, Is.InstanceOfType (typeof (SubQueryExpression)));
       Assert.That (outerMainFromClause.ItemType, Is.SameAs (typeof (IGrouping<bool, int>)));
-      Assert.That (outerMainFromClause.ItemName, Is.EqualTo ("<generated>_0"));
+      Assert.That (outerMainFromClause.ItemName, Is.EqualTo ("kvp"));
 
       Assert.That (queryModel.BodyClauses.Count, Is.EqualTo (0));
 
@@ -188,7 +186,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
       CheckResolvedExpression<IGrouping<bool, int>, KeyValuePair<bool, int>> (
           outerSelectClause.Selector,
           outerMainFromClause,
-          x => new KeyValuePair<bool, int> (x.Key, x.Min ()));
+          x => new KeyValuePair<bool, int> (x.Key, x.GetHashCode()));
 
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
       Assert.That (queryModel.ResultOperators[0], Is.TypeOf (typeof (AllResultOperator)));
@@ -197,7 +195,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
       CheckResolvedExpression<IGrouping<bool, int>, bool> (
           allResultOperator.Predicate, 
           outerMainFromClause, 
-          x => new KeyValuePair<bool, int> (x.Key, x.Min ()).Value > 0);
+          x => new KeyValuePair<bool, int> (x.Key, x.GetHashCode()).Value > 0);
     }
 
     [Test]
