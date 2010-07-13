@@ -112,16 +112,9 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
       var sourceAsResultOperatorNode = Source as ResultOperatorExpressionNodeBase;
-      var sourceAsGroupByNode = Source as GroupByExpressionNode;
       if (sourceAsResultOperatorNode != null)
-      {
         return WrapQueryModel(queryModel, sourceAsResultOperatorNode.AssociatedIdentifier, clauseGenerationContext);
-      }
-      else if (sourceAsGroupByNode != null)
-      {
-        return WrapQueryModel (queryModel, sourceAsGroupByNode.AssociatedIdentifier, clauseGenerationContext);
-      }
-    else
+      else
         return queryModel;
     }
 
