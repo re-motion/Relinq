@@ -15,6 +15,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
@@ -72,6 +73,98 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
     }
 
     [Test]
+    [Ignore ("TODO 3027")]
+    public void GroupBy_WithResultSelector_AfterElementSelector ()
+    {
+      var query = QuerySource.GroupBy (s => s.IsStarredCook, s => s.ID, (key, group) => new KeyValuePair<bool, int> (key, group.Min()));
+
+      var queryModel = QueryParser.GetParsedQuery (query.Expression);
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<KeyValuePair<bool, int>>)));
+
+      var outerMainFromClause = queryModel.MainFromClause;
+      Assert.That (outerMainFromClause.FromExpression, Is.InstanceOfType (typeof (SubQueryExpression)));
+      Assert.That (outerMainFromClause.ItemType, Is.SameAs (typeof (IGrouping<bool, int>)));
+      Assert.That (outerMainFromClause.ItemName, Is.EqualTo ("<generated>_0"));
+
+      Assert.That (queryModel.BodyClauses.Count, Is.EqualTo (0));
+      Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (0));
+
+      var outerSelectClause = queryModel.SelectClause;
+
+      CheckResolvedExpression<IGrouping<bool, int>, KeyValuePair<bool, int>> (
+          outerSelectClause.Selector, 
+          outerMainFromClause, 
+          x => new KeyValuePair<bool, int> (x.Key, x.Min()));
+
+      var innerQueryModel = ((SubQueryExpression) outerMainFromClause.FromExpression).QueryModel;
+      Assert.That (innerQueryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IGrouping<bool, int>)));
+
+      var innerMainFromClause = innerQueryModel.MainFromClause;
+      CheckConstantQuerySource (innerMainFromClause.FromExpression, QuerySource);
+      Assert.That (innerMainFromClause.ItemType, Is.SameAs (typeof (Cook)));
+      Assert.That (innerMainFromClause.ItemName, Is.EqualTo ("s"));
+
+      Assert.That (innerQueryModel.BodyClauses.Count, Is.EqualTo (0));
+
+      var innerSelectClause = innerQueryModel.SelectClause;
+      CheckResolvedExpression<Cook, Cook> (innerSelectClause.Selector, innerMainFromClause, s => s);
+
+      Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (queryModel.ResultOperators[0], Is.TypeOf (typeof (GroupResultOperator)));
+      
+      var groupResultOperator = ((GroupResultOperator) queryModel.ResultOperators[0]);
+
+      CheckResolvedExpression<Cook, bool> (groupResultOperator.KeySelector, innerMainFromClause, c => c.IsStarredCook);
+      CheckResolvedExpression<Cook, int> (groupResultOperator.ElementSelector, innerMainFromClause, c => c.ID);
+    }
+
+    [Test]
+    [Ignore ("TODO 3027")]
+    public void GroupBy_WithResultSelector_NoElementSelector ()
+    {
+      var query = QuerySource.GroupBy (s => s.IsStarredCook, (key, group) => new KeyValuePair<bool, int> (key, group.Count ()));
+
+      var queryModel = QueryParser.GetParsedQuery (query.Expression);
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<KeyValuePair<bool, int>>)));
+
+      var outerMainFromClause = queryModel.MainFromClause;
+      Assert.That (outerMainFromClause.FromExpression, Is.InstanceOfType (typeof (SubQueryExpression)));
+      Assert.That (outerMainFromClause.ItemType, Is.SameAs (typeof (IGrouping<bool, int>)));
+      Assert.That (outerMainFromClause.ItemName, Is.EqualTo ("<generated>_0"));
+
+      Assert.That (queryModel.BodyClauses.Count, Is.EqualTo (0));
+      Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (0));
+
+      var outerSelectClause = queryModel.SelectClause;
+
+      CheckResolvedExpression<IGrouping<bool, Cook>, KeyValuePair<bool, int>> (
+          outerSelectClause.Selector,
+          outerMainFromClause,
+          x => new KeyValuePair<bool, int> (x.Key, x.Count ()));
+
+      var innerQueryModel = ((SubQueryExpression) outerMainFromClause.FromExpression).QueryModel;
+      Assert.That (innerQueryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IGrouping<bool, Cook>)));
+
+      var innerMainFromClause = innerQueryModel.MainFromClause;
+      CheckConstantQuerySource (innerMainFromClause.FromExpression, QuerySource);
+      Assert.That (innerMainFromClause.ItemType, Is.SameAs (typeof (Cook)));
+      Assert.That (innerMainFromClause.ItemName, Is.EqualTo ("s"));
+
+      Assert.That (innerQueryModel.BodyClauses.Count, Is.EqualTo (0));
+
+      var innerSelectClause = innerQueryModel.SelectClause;
+      CheckResolvedExpression<Cook, Cook> (innerSelectClause.Selector, innerMainFromClause, s => s);
+
+      Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (queryModel.ResultOperators[0], Is.TypeOf (typeof (GroupResultOperator)));
+
+      var groupResultOperator = ((GroupResultOperator) queryModel.ResultOperators[0]);
+
+      CheckResolvedExpression<Cook, bool> (groupResultOperator.KeySelector, innerMainFromClause, c => c.IsStarredCook);
+      CheckResolvedExpression<Cook, Cook> (groupResultOperator.ElementSelector, innerMainFromClause, c => c);
+    }
+
+    [Test]
     public void GroupIntoWithAggregate ()
     {
       var query = from s in QuerySource 
@@ -118,7 +211,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
       Assert.That (predicateLeftSide, Is.InstanceOfType (typeof (SubQueryExpression)));
       var predicateSubQueryModel = ((SubQueryExpression) predicateLeftSide).QueryModel;
       Assert.That (predicateSubQueryModel.MainFromClause.ItemType, Is.SameAs (typeof (int)));
-      Assert.That (predicateSubQueryModel.MainFromClause.ItemName, NUnit.Framework.SyntaxHelpers.Text.StartsWith ("<generated>"));
+      Assert.That (predicateSubQueryModel.MainFromClause.ItemName, Text.StartsWith ("<generated>"));
       Assert.That (((QuerySourceReferenceExpression) predicateSubQueryModel.MainFromClause.FromExpression).ReferencedQuerySource, Is.SameAs (mainFromClause));
       Assert.That (((QuerySourceReferenceExpression) predicateSubQueryModel.SelectClause.Selector).ReferencedQuerySource, 
                    Is.SameAs (predicateSubQueryModel.MainFromClause));
