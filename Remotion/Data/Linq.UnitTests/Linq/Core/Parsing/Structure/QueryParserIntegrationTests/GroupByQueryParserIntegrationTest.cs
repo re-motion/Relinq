@@ -165,6 +165,42 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
     }
 
     [Test]
+    [Ignore ("TODO 3027")]
+    public void GroupBy_WithResultSelector_BeforeAll ()
+    {
+      var queryExpression = ExpressionHelper.MakeExpression (
+          () => QuerySource
+              .GroupBy (s => s.IsStarredCook, s => s.ID, (key, group) => new KeyValuePair<bool, int> (key, group.Min ()))
+              .All (kvp => kvp.Value > 0));
+
+      var queryModel = QueryParser.GetParsedQuery (queryExpression);
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (bool)));
+
+      var outerMainFromClause = queryModel.MainFromClause;
+      Assert.That (outerMainFromClause.FromExpression, Is.InstanceOfType (typeof (SubQueryExpression)));
+      Assert.That (outerMainFromClause.ItemType, Is.SameAs (typeof (IGrouping<bool, int>)));
+      Assert.That (outerMainFromClause.ItemName, Is.EqualTo ("<generated>_0"));
+
+      Assert.That (queryModel.BodyClauses.Count, Is.EqualTo (0));
+
+      var outerSelectClause = queryModel.SelectClause;
+
+      CheckResolvedExpression<IGrouping<bool, int>, KeyValuePair<bool, int>> (
+          outerSelectClause.Selector,
+          outerMainFromClause,
+          x => new KeyValuePair<bool, int> (x.Key, x.Min ()));
+
+      Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (queryModel.ResultOperators[0], Is.TypeOf (typeof (AllResultOperator)));
+      
+      var allResultOperator = (AllResultOperator) queryModel.ResultOperators[0];
+      CheckResolvedExpression<IGrouping<bool, int>, bool> (
+          allResultOperator.Predicate, 
+          outerMainFromClause, 
+          x => new KeyValuePair<bool, int> (x.Key, x.Min ()).Value > 0);
+    }
+
+    [Test]
     public void GroupIntoWithAggregate ()
     {
       var query = from s in QuerySource 
