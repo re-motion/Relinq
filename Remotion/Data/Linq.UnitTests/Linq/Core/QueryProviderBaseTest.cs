@@ -209,7 +209,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
 
     [Test]
     [ExpectedException (typeof (ParserException), ExpectedMessage = "Could not parse expression 'TestQueryable<Cook>().Select(s => s)': This "
-        + "overload of the method 'System.Linq.Queryable.Select' is currently not supported, but you can register your own parser if needed.")]
+        + "overload of the method 'System.Linq.Queryable.Select' is currently not supported.")]
     public void Execute_WithSpecificRegistry ()
     {
       Expression expression = ExpressionHelper.MakeExpression (() => from s in ExpressionHelper.CreateCookQueryable () select s);

@@ -59,7 +59,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       catch (KeyNotFoundException ex)
       {
         string message = string.Format (
-            "Could not parse expression '{0}': This overload of the method '{1}.{2}' is currently not supported, but you can register your own parser if needed.",
+            "Could not parse expression '{0}': This overload of the method '{1}.{2}' is currently not supported.",
             FormattingExpressionTreeVisitor.Format (expressionToParse),
             expressionToParse.Method.DeclaringType.FullName,
             expressionToParse.Method.Name);

@@ -200,7 +200,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
 
     [Test]
     [ExpectedException (typeof (ParserException), ExpectedMessage = "Could not parse expression 'q.First()': This overload of the method 'System.Linq.Queryable.First' " 
-        + "is currently not supported, but you can register your own parser if needed.")]
+        + "is currently not supported.")]
     public void Parse_UnknownMethod ()
     {
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, int> (q => q.First());
@@ -210,7 +210,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
 
     [Test]
     [ExpectedException (typeof (ParserException), ExpectedMessage = "Could not parse expression 'q.Select((i, j) => i)': This overload of the method 'System.Linq.Queryable.Select' "
-        + "is currently not supported, but you can register your own parser if needed.")]
+        + "is currently not supported.")]
     public void Parse_UnknownOverload ()
     {
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (q => q.Select ((i, j) => i));
