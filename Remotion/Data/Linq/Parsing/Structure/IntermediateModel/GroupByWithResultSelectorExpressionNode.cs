@@ -46,40 +46,46 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public new static readonly MethodInfo[] SupportedMethods = new[]
                                                            {
                                                                GetSupportedMethod (() => Queryable.GroupBy<object, object, object, object> (null, o => null, o => null, (k, g) => null)),
+                                                               GetSupportedMethod (() => Queryable.GroupBy<object, object, object> (null, o => null, (k, g) => null)),
                                                                GetSupportedMethod (() => Enumerable.GroupBy<object, object, object, object> (null, o => null, o => null, (k, g) => null)),
+                                                               GetSupportedMethod (() => Enumerable.GroupBy<object, object, object> (null, o => null, (k, g) => null)),
                                                            };
 
     public GroupByWithResultSelectorExpressionNode (
         MethodCallExpressionParseInfo parseInfo, 
         LambdaExpression keySelector, 
-        LambdaExpression elementSelector, 
-        LambdaExpression resultSelector)
-      : base (CreateParseInfoWithGroupNode (
-          parseInfo, 
-          ArgumentUtility.CheckNotNull ("keySelector", keySelector), 
-          ArgumentUtility.CheckNotNull ("elementSelector", elementSelector)), 
+        LambdaExpression elementSelectorOrResultSelector, 
+        LambdaExpression resultSelectorOrNull)
+      : base (
+          CreateParseInfoWithGroupNode (
+              parseInfo,
+              ArgumentUtility.CheckNotNull ("keySelector", keySelector),
+              ArgumentUtility.CheckNotNull ("elementSelectorOrResultSelector", elementSelectorOrResultSelector),
+              resultSelectorOrNull), 
           CreateSelectorForSelectNode (
-              ArgumentUtility.CheckNotNull ("resultSelector", resultSelector), 
-              keySelector.Body.Type,
-              elementSelector.Body.Type))
+              keySelector,
+              elementSelectorOrResultSelector,
+              resultSelectorOrNull))
     {
     }
 
-    private static MethodCallExpressionParseInfo CreateParseInfoWithGroupNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression keySelector, LambdaExpression elementSelector)
+  
+    private static MethodCallExpressionParseInfo CreateParseInfoWithGroupNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression keySelector, LambdaExpression elementSelectorOrResultSelector, LambdaExpression resultSelectorOrNull)
     {
-      var groupBySourceNode = new GroupByExpressionNode (parseInfo, keySelector, elementSelector);
-      return new MethodCallExpressionParseInfo (
-          parseInfo.AssociatedIdentifier,
-          groupBySourceNode, 
-          parseInfo.ParsedExpression);
+      var optionalElementSelector = GetOptionalElementSelector (elementSelectorOrResultSelector, resultSelectorOrNull);
+      var groupBySourceNode = new GroupByExpressionNode (parseInfo, keySelector, optionalElementSelector);
+      return new MethodCallExpressionParseInfo (parseInfo.AssociatedIdentifier, groupBySourceNode, parseInfo.ParsedExpression);
     }
 
-    private static LambdaExpression CreateSelectorForSelectNode (LambdaExpression resultSelector, Type keyType, Type elementType)
+    private static LambdaExpression CreateSelectorForSelectNode (LambdaExpression keySelector, LambdaExpression elementSelectorOrResultSelector, LambdaExpression resultSelectorOrNull)
     {
-      if (resultSelector.Parameters.Count != 2)
-        throw new ArgumentException ("ResultSelector must have exactly two parameters.", "resultSelector");
+      var resultSelector = GetResultSelector (elementSelectorOrResultSelector, resultSelectorOrNull);
+      var optionalElementSelector = GetOptionalElementSelector (elementSelectorOrResultSelector, resultSelectorOrNull);
 
-      var groupingType = typeof (IGrouping<,>).MakeGenericType (keyType, elementType);
+      // If there is an element selector, the element type will be that returned by the element selector. Otherwise, it will be the type flowing into
+      // the key selector.
+      var elementType = optionalElementSelector != null ? optionalElementSelector.Body.Type : keySelector.Parameters[0].Type;
+      var groupingType = typeof (IGrouping<,>).MakeGenericType (keySelector.Body.Type, elementType);
       var keyProperty = groupingType.GetProperty ("Key");
 
       var groupParameter = Expression.Parameter (groupingType, "group");
@@ -88,6 +94,41 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       var bodyWithGroupingAndKeyReplaced = ReplacingExpressionTreeVisitor.Replace (resultSelector.Parameters[0], keyExpression, bodyWithGroupingReplaced);
       return Expression.Lambda (bodyWithGroupingAndKeyReplaced, groupParameter);
     }
+
+    private static LambdaExpression GetOptionalElementSelector (LambdaExpression elementSelectorOrResultSelector, LambdaExpression resultSelectorOrNull)
+    {
+      return resultSelectorOrNull == null ? null : elementSelectorOrResultSelector;
+    }
+
+    private static LambdaExpression GetResultSelector (LambdaExpression elementSelectorOrResultSelector, LambdaExpression resultSelectorOrNull)
+    {
+      if (resultSelectorOrNull != null)
+      {
+        if (resultSelectorOrNull.Parameters.Count != 2)
+          throw new ArgumentException ("ResultSelector must have exactly two parameters.", "resultSelectorOrNull");
+
+        return resultSelectorOrNull;
+      }
+      else
+      {
+        if (elementSelectorOrResultSelector.Parameters.Count != 2)
+          throw new ArgumentException ("ResultSelector must have exactly two parameters.", "elementSelectorOrResultSelector");
+        return elementSelectorOrResultSelector;
+      }
+    }
+
+    private static Type GetElementType (
+        LambdaExpression keySelector,
+        LambdaExpression elementSelectorOrResultSelector,
+        LambdaExpression resultSelectorOrNull)
+    {
+      var optionalElementSelector = GetOptionalElementSelector (elementSelectorOrResultSelector, resultSelectorOrNull);
+      if (optionalElementSelector != null)
+        return optionalElementSelector.Body.Type;
+      else
+        return keySelector.Parameters[0].Type;
+    }
+
 
   }
 }

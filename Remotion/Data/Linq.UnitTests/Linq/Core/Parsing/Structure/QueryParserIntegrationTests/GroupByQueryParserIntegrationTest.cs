@@ -118,17 +118,16 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
     }
 
     [Test]
-    [Ignore ("TODO 3027")]
     public void GroupBy_WithResultSelector_NoElementSelector ()
     {
       var query = QuerySource.GroupBy (s => s.IsStarredCook, (key, group) => new KeyValuePair<bool, IEnumerable<Cook>> (key, group));
 
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
-      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<KeyValuePair<bool, int>>)));
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<KeyValuePair<bool, IEnumerable<Cook>>>)));
 
       var outerMainFromClause = queryModel.MainFromClause;
       Assert.That (outerMainFromClause.FromExpression, Is.InstanceOfType (typeof (SubQueryExpression)));
-      Assert.That (outerMainFromClause.ItemType, Is.SameAs (typeof (IGrouping<bool, int>)));
+      Assert.That (outerMainFromClause.ItemType, Is.SameAs (typeof (IGrouping<bool, Cook>)));
       Assert.That (outerMainFromClause.ItemName, Is.EqualTo ("<generated>_0"));
 
       Assert.That (queryModel.BodyClauses.Count, Is.EqualTo (0));
@@ -136,13 +135,13 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
 
       var outerSelectClause = queryModel.SelectClause;
 
-      CheckResolvedExpression<IGrouping<bool, Cook>, KeyValuePair<bool, int>> (
+      CheckResolvedExpression<IGrouping<bool, Cook>, KeyValuePair<bool, IEnumerable<Cook>>> (
           outerSelectClause.Selector,
           outerMainFromClause,
-          x => new KeyValuePair<bool, int> (x.Key, x.Count ()));
+          x => new KeyValuePair<bool, IEnumerable<Cook>> (x.Key, x));
 
       var innerQueryModel = ((SubQueryExpression) outerMainFromClause.FromExpression).QueryModel;
-      Assert.That (innerQueryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IGrouping<bool, Cook>)));
+      Assert.That (innerQueryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<IGrouping<bool, Cook>>)));
 
       var innerMainFromClause = innerQueryModel.MainFromClause;
       CheckConstantQuerySource (innerMainFromClause.FromExpression, QuerySource);
@@ -157,7 +156,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
       Assert.That (innerQueryModel.ResultOperators.Count, Is.EqualTo (1));
       Assert.That (innerQueryModel.ResultOperators[0], Is.TypeOf (typeof (GroupResultOperator)));
 
-      var groupResultOperator = ((GroupResultOperator) queryModel.ResultOperators[0]);
+      var groupResultOperator = (GroupResultOperator) innerQueryModel.ResultOperators[0];
 
       CheckResolvedExpression<Cook, bool> (groupResultOperator.KeySelector, innerMainFromClause, c => c.IsStarredCook);
       CheckResolvedExpression<Cook, Cook> (groupResultOperator.ElementSelector, innerMainFromClause, c => c);

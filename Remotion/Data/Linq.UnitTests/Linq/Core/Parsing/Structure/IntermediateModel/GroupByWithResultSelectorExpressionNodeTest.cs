@@ -29,9 +29,11 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateM
   {
     private LambdaExpression _keySelector;
     private LambdaExpression _elementSelector;
-    private LambdaExpression _resultSelector;
+    private LambdaExpression _resultSelectorWithElementSelector;
+    private LambdaExpression _resultSelectorWithoutElementSelector;
 
     private GroupByWithResultSelectorExpressionNode _nodeWithElementSelector;
+    private GroupByWithResultSelectorExpressionNode _nodeWithoutElementSelector;
 
     public override void SetUp ()
     {
@@ -39,14 +41,22 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateM
 
       _keySelector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
       _elementSelector = ExpressionHelper.CreateLambdaExpression<int, string> (i => i.ToString ());
-      _resultSelector = ExpressionHelper.CreateLambdaExpression<bool, IEnumerable<string>, KeyValuePair<bool, int>> (
+      _resultSelectorWithElementSelector = ExpressionHelper.CreateLambdaExpression<bool, IEnumerable<string>, KeyValuePair<bool, int>> (
           (key, group) => new KeyValuePair<bool, int> (key, group.Count ()));
 
       _nodeWithElementSelector = new GroupByWithResultSelectorExpressionNode (
           CreateParseInfo (SourceNode, "g"), 
           _keySelector, 
           _elementSelector, 
-          _resultSelector);
+          _resultSelectorWithElementSelector);
+
+      _resultSelectorWithoutElementSelector = ExpressionHelper.CreateLambdaExpression<bool, IEnumerable<int>, KeyValuePair<bool, int>> (
+          (key, group) => new KeyValuePair<bool, int> (key, group.Count ()));
+      _nodeWithoutElementSelector = new GroupByWithResultSelectorExpressionNode (
+          CreateParseInfo (SourceNode, "g"),
+          _keySelector,
+          _resultSelectorWithoutElementSelector,
+          null);
     }
 
     [Test]
@@ -57,21 +67,28 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateM
           q => q.GroupBy (o => o.GetType (), o => o, (key, g) => 12),
           e => e.GroupBy (o => o.GetType (), o => o, (key, g) => 12));
 
-      //AssertSupportedMethod_Generic (
-      //    GroupByWithResultSelectorExpressionNode.SupportedMethods,
-      //    q => q.GroupBy (o => o.GetType (), (key, g) => 12),
-      //    e => e.GroupBy (o => o.GetType (), (key, g) => 12));
+      AssertSupportedMethod_Generic (
+          GroupByWithResultSelectorExpressionNode.SupportedMethods,
+          q => q.GroupBy (o => o.GetType (), (key, g) => 12),
+          e => e.GroupBy (o => o.GetType (), (key, g) => 12));
     }
 
     [Test]
     public void Initialization ()
     {
-      var expectedSelector = ExpressionHelper.CreateLambdaExpression<IGrouping<bool, string>, KeyValuePair<bool, int>> (
+      var expectedSelectorWithElementSelector = ExpressionHelper.CreateLambdaExpression<IGrouping<bool, string>, KeyValuePair<bool, int>> (
           group => new KeyValuePair<bool, int> (group.Key, group.Count ()));
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedSelector, _nodeWithElementSelector.Selector);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedSelectorWithElementSelector, _nodeWithElementSelector.Selector);
 
       Assert.That (((GroupByExpressionNode) _nodeWithElementSelector.Source).KeySelector, Is.SameAs (_keySelector));
       Assert.That (((GroupByExpressionNode) _nodeWithElementSelector.Source).OptionalElementSelector, Is.SameAs (_elementSelector));
+
+      var expectedSelectorWithoutElementSelector = ExpressionHelper.CreateLambdaExpression<IGrouping<bool, int>, KeyValuePair<bool, int>> (
+          group => new KeyValuePair<bool, int> (group.Key, group.Count ()));
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedSelectorWithoutElementSelector, _nodeWithoutElementSelector.Selector);
+
+      Assert.That (((GroupByExpressionNode) _nodeWithoutElementSelector.Source).KeySelector, Is.SameAs (_keySelector));
+      Assert.That (((GroupByExpressionNode) _nodeWithoutElementSelector.Source).OptionalElementSelector, Is.Null);
     }
 
     [Test]
