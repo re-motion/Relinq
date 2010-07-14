@@ -32,28 +32,35 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.TestUtilities
       if (arguments == null)
         arguments = new object[] { null };
 
-      return InvokeMember(methodName, BindingFlags.Instance | BindingFlags.NonPublic  | BindingFlags.InvokeMethod, target, arguments);
+      return InvokeMember(methodName, BindingFlags.Instance | BindingFlags.NonPublic  | BindingFlags.InvokeMethod, target, target.GetType (), arguments);
     }
 
     public static object GetNonPublicField (object target, string fieldName)
     {
       ArgumentUtility.CheckNotNull ("target", target);
 
-      return InvokeMember (fieldName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetField, target, null);
+      return GetNonPublicField (target, target.GetType(), fieldName);
+    }
+
+    public static object GetNonPublicField (object target, Type declaringType, string fieldName)
+    {
+      ArgumentUtility.CheckNotNull ("target", target);
+
+      return InvokeMember (fieldName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetField, target, declaringType, null);
     }
 
     public static void SetNonPublicField (object target, string fieldName, object value)
     {
       ArgumentUtility.CheckNotNull ("target", target);
 
-      InvokeMember (fieldName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.SetField, target, new[] { value });
+      InvokeMember (fieldName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.SetField, target, target.GetType (), new[] { value });
     }
 
-    private static object InvokeMember (string memberName, BindingFlags bindingFlags, object target, object[] arguments)
+    private static object InvokeMember (string memberName, BindingFlags bindingFlags, object target, Type type, object[] arguments)
     {
       try
       {
-        return target.GetType ().InvokeMember (memberName, bindingFlags, null, target, arguments);
+        return type.InvokeMember (memberName, bindingFlags, null, target, arguments);
       }
       catch (TargetInvocationException e)
       {
