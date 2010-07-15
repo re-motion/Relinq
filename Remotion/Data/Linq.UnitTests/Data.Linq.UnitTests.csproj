@@ -164,6 +164,7 @@
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\NamedEntitiesSqlBackendIntegrationTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\TypeIsExpressionSqlBackendIntegrationTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\VBStringComparisonSqlBackendIntegrationTest.cs" />
+    <Compile Include="Linq\SqlBackend\SqlGeneration\SqlCommandDataTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\SqlCompositeCustomTextGeneratorExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\SqlCustomTextExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\SqlCustomTextGeneratorExpressionBaseTest.cs" />
