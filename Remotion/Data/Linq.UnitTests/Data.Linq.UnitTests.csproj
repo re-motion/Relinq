@@ -125,7 +125,7 @@
       <Name>Data.Linq.SqlBackend</Name>
     </ProjectReference>
     <ProjectReference Include="..\LinqToSqlAdapter\Data.LinqToSqlAdapter.csproj">
-      <Project>{DD0BB5A1-7D83-42D7-A904-6EC2141C61E0}</Project>
+      <Project>{EDBD197D-2A1C-4EA7-BC7E-C09562E307A4}</Project>
       <Name>Data.LinqToSqlAdapter</Name>
     </ProjectReference>
     <ProjectReference Include="..\Linq\Data.Linq.csproj">
