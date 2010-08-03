@@ -464,7 +464,6 @@
     <Compile Include="Linq\SqlBackend\SqlPreparation\TestableSqlPreparationQueryModelVisitor.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\Resolved\SqlEntityConstantExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\SqlSpecificExpressions\SqlLiteralExpressionTest.cs" />
-    <Compile Include="Linq\SqlBackend\SqlStatementModel\SqlSpecificExpressions\SqlCaseExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\SqlSubStatementExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\SqlTableBaseTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\SqlJoinedTableTest.cs" />
