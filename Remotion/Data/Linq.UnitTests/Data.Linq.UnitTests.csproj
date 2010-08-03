@@ -124,12 +124,20 @@
       <Project>{F23F3422-D323-42CD-83D9-C0DEB2D3DC28}</Project>
       <Name>Data.Linq.SqlBackend</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LinqToSqlAdapter\Data.LinqToSqlAdapter.csproj">
+      <Project>{DD0BB5A1-7D83-42D7-A904-6EC2141C61E0}</Project>
+      <Name>Data.LinqToSqlAdapter</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Linq\Data.Linq.csproj">
       <Project>{DD9AA076-BE37-4A42-BA9E-C35ECC6955C9}</Project>
       <Name>Data.Linq</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LinqToSqlAdapter\SerializerTestClassWithFields.cs" />
+    <Compile Include="LinqToSqlAdapter\SerializerTestClassWithProperties.cs" />
+    <Compile Include="LinqToSqlAdapter\SerializerTestClassWithReferenceTypes.cs" />
+    <Compile Include="LinqToSqlAdapter\TestResultSerializerTest.cs" />
     <Compile Include="Linq\Core\Clauses\Expressions\VBStringComparisonExpressionTest.cs" />
     <Compile Include="Linq\Core\IntegrationTests\MediumTrustCoreIntegrationTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\IntermediateModel\GroupByWithResultSelectorExpressionNodeTest.cs" />
