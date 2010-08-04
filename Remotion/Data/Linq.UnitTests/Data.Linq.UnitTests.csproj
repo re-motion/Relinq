@@ -137,6 +137,7 @@
     <Compile Include="LinqToSqlAdapter\SerializerTestClassWithFields.cs" />
     <Compile Include="LinqToSqlAdapter\SerializerTestClassWithProperties.cs" />
     <Compile Include="LinqToSqlAdapter\SerializerTestClassWithReferenceTypes.cs" />
+    <Compile Include="LinqToSqlAdapter\TestResultCheckerTest.cs" />
     <Compile Include="LinqToSqlAdapter\TestResultSerializerTest.cs" />
     <Compile Include="Linq\Core\Clauses\Expressions\VBStringComparisonExpressionTest.cs" />
     <Compile Include="Linq\Core\IntegrationTests\MediumTrustCoreIntegrationTest.cs" />
