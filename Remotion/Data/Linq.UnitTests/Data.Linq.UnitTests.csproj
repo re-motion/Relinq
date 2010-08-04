@@ -120,6 +120,10 @@
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
+    <ProjectReference Include="..\Linq.LinqToSqlAdapter\Data.Linq.LinqToSqlAdapter.csproj">
+      <Project>{EDBD197D-2A1C-4EA7-BC7E-C09562E307A4}</Project>
+      <Name>Data.Linq.LinqToSqlAdapter</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Linq.SqlBackend\Data.Linq.SqlBackend.csproj">
       <Project>{F23F3422-D323-42CD-83D9-C0DEB2D3DC28}</Project>
       <Name>Data.Linq.SqlBackend</Name>
