@@ -35,12 +35,12 @@ namespace Remotion.Data.Linq.UnitTests
     [Test]
     public void ResoltutionTest01()
     {
-      string resolvedName=_db.Mapping.GetTable (typeof (Customer)).TableName;
+      string resolvedName=_db.Mapping.GetTable (typeof (Customer)).TableName; //This will return the mapped TableName of the Class Customer
       Assert.AreEqual ("dbo.Customers", resolvedName);
 
-      PropertyInfo name = typeof (Customer).GetProperty ("CompanyName");
-      string dataMemberName=_db.Mapping.GetTable (typeof (Customer)).RowType.GetDataMember (name).Name;
-      Assert.AreEqual (dataMemberName, "CompanyName");
+      PropertyInfo nameInfo = typeof (Customer).GetProperty ("CompanyName"); //Relection Method to get a Property of a Class
+      string resolvedRowName = _db.Mapping.GetTable (typeof (Customer)).RowType.GetDataMember (nameInfo).Name; //This will return the mapped RowName
+      Assert.AreEqual ("CompanyName", resolvedRowName);
     }
 
     [TearDown]
