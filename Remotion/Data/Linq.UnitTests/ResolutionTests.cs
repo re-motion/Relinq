@@ -38,9 +38,27 @@ namespace Remotion.Data.Linq.UnitTests
       string resolvedName=_db.Mapping.GetTable (typeof (Customer)).TableName; //This will return the mapped TableName of the Class Customer
       Assert.AreEqual ("dbo.Customers", resolvedName);
 
-      PropertyInfo nameInfo = typeof (Customer).GetProperty ("CompanyName"); //Relection Method to get a Property of a Class
+      PropertyInfo nameInfo = typeof (Customer).GetProperty ("CompanyName"); //Reflection Method to get a Property of a Class
       string resolvedRowName = _db.Mapping.GetTable (typeof (Customer)).RowType.GetDataMember (nameInfo).Name; //This will return the mapped RowName
       Assert.AreEqual ("CompanyName", resolvedRowName);
+    }
+
+    [Test]
+    public void ReturnTypeFromTableTest ()
+    {
+      //var x = _db.Mapping.GetMetaType (_db.GetType ().GetProperty ("Employees").PropertyType);
+
+      var tableCol = _db.Mapping.GetTables();
+      foreach (var table in tableCol)
+      {
+        //TODO: tableName startswith dbo. or not?
+        //if (x.TableName.Equals("dbo.Customers"))
+        if (table.RowType.Name.Equals ("Customers"))
+        {
+          Assert.IsTrue (table.GetType() == typeof (Customer));
+          break;
+        }
+      }
     }
 
     [TearDown]
