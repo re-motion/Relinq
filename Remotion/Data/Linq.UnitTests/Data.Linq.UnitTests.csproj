@@ -118,8 +118,13 @@
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
+    <ProjectReference Include="..\Linq.IntegrationTests\Data.Linq.IntegrationTests.csproj">
+      <Project>{DA8EFB63-353E-4E1A-9298-28B0C9302A2E}</Project>
+      <Name>Data.Linq.IntegrationTests</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Linq.LinqToSqlAdapter\Data.Linq.LinqToSqlAdapter.csproj">
       <Project>{EDBD197D-2A1C-4EA7-BC7E-C09562E307A4}</Project>
       <Name>Data.Linq.LinqToSqlAdapter</Name>
@@ -510,6 +515,7 @@
     <Compile Include="Linq\Core\TestQueryGenerators\TestQueryProvider.cs" />
     <Compile Include="Linq\Core\TestQueryGenerators\WhereTestQueryGenerator.cs" />
     <Compile Include="Linq\Core\Transformations\SubQueryFromClauseFlattenerTest.cs" />
+    <Compile Include="ResolutionTests.cs" />
     <Compile Include="Sandboxing\PermissionSets.cs" />
     <Compile Include="Sandboxing\Sandbox.cs" />
     <Compile Include="Sandboxing\SandboxTestRunner.cs" />
