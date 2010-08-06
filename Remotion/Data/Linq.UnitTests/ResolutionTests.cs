@@ -15,6 +15,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Reflection;
 using NUnit.Framework;
 using Remotion.Data.Linq.IntegrationTests.TestDomain.Northwind;
 
@@ -36,6 +37,10 @@ namespace Remotion.Data.Linq.UnitTests
     {
       string resolvedName=_db.Mapping.GetTable (typeof (Customer)).TableName;
       Assert.AreEqual ("dbo.Customers", resolvedName);
+
+      PropertyInfo name = typeof (Customer).GetProperty ("CompanyName");
+      string dataMemberName=_db.Mapping.GetTable (typeof (Customer)).RowType.GetDataMember (name).Name;
+      Assert.AreEqual (dataMemberName, "CompanyName");
     }
 
     [TearDown]
