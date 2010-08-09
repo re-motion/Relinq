@@ -15,57 +15,99 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Data.Linq.Mapping;
+using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using Remotion.Data.Linq.IntegrationTests.TestDomain.Northwind;
+using Remotion.Data.Linq.SqlBackend.MappingResolution;
+using Remotion.Data.Linq.SqlBackend.SqlStatementModel;
+using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Resolved;
+using Remotion.Data.Linq.SqlBackend.SqlStatementModel.Unresolved;
+using Remotion.Data.Linq.UnitTests.Linq.SqlBackend.SqlStatementModel;
 
 namespace Remotion.Data.Linq.UnitTests
 {
   [TestFixture]
   public class ResolutionTests
   {
-    private Northwind _db;
+    private UniqueIdentifierGenerator _uniqueIdentifierGenerator;
+    private UnresolvedTableInfo _unresolvedTableInfo;
+    private SqlTable _sqlTable;
+    private DefaultMappingResolutionStage _stage;
+    private IMappingResolutionContext _mappingResolutionContext;
 
     [SetUp]
-    public void SetUp()
+    public void SetUp ()
     {
-      _db = new Northwind ("Data Source=localhost;Initial Catalog=Northwind; Integrated Security=SSPI;");
+      _uniqueIdentifierGenerator = new UniqueIdentifierGenerator();
+
+      _unresolvedTableInfo = SqlStatementModelObjectMother.CreateUnresolvedTableInfo (typeof (Customer));
+      _sqlTable = SqlStatementModelObjectMother.CreateSqlTable (_unresolvedTableInfo);
+
+      _stage = new DefaultMappingResolutionStage (new MappingResolver(), _uniqueIdentifierGenerator);
+
+      _mappingResolutionContext = new MappingResolutionContext();
     }
 
     [Test]
-    public void ResoltutionTest01()
+    public void MappingResolverResolveTableInfoTest ()
     {
-      string resolvedName=_db.Mapping.GetTable (typeof (Customer)).TableName; //This will return the mapped TableName of the Class Customer
-      Assert.AreEqual ("dbo.Customers", resolvedName);
+      var result = _stage.ResolveTableInfo (_sqlTable.TableInfo, _mappingResolutionContext);
+      var excpectedResult = new ResolvedSimpleTableInfo (typeof (Customer), "dbo.Customers", "t0");
 
-      PropertyInfo nameInfo = typeof (Customer).GetProperty ("CompanyName"); //Reflection Method to get a Property of a Class
-      string resolvedRowName = _db.Mapping.GetTable (typeof (Customer)).RowType.GetDataMember (nameInfo).Name; //This will return the mapped RowName
-      Assert.AreEqual ("CompanyName", resolvedRowName);
+      Assert.AreEqual (result.ToString(), excpectedResult.ToString());
     }
+  }
 
-    [Test]
-    public void ReturnTypeFromTableTest ()
+  public class MappingResolver : IMappingResolver
+  {
+    private Northwind _db;
+    private Northwind DB
     {
-      //var x = _db.Mapping.GetMetaType (_db.GetType ().GetProperty ("Employees").PropertyType);
-
-      var tableCol = _db.Mapping.GetTables();
-      foreach (var table in tableCol)
+      get
       {
-        //TODO: tableName startswith dbo. or not?
-        //if (x.TableName.Equals("dbo.Customers"))
-        if (table.RowType.Name.Equals ("Customers"))
-        {
-          Assert.IsTrue (table.GetType() == typeof (Customer));
-          break;
-        }
+        if(_db==null)
+          _db = new Northwind ("Data Source=localhost;Initial Catalog=Northwind; Integrated Security=SSPI;");
+
+         return _db;
       }
     }
 
-    [TearDown]
-    public void TearDown()
+    public IResolvedTableInfo ResolveTableInfo (UnresolvedTableInfo tableInfo, UniqueIdentifierGenerator generator)
     {
-      _db.Dispose();
-      _db = null;
+      MetaTable resolvedTable = DB.Mapping.GetTable (tableInfo.ItemType); 
+      return new ResolvedSimpleTableInfo (tableInfo.ItemType, resolvedTable.TableName, generator.GetUniqueIdentifier ("t"));
+    }
+
+    public ResolvedJoinInfo ResolveJoinInfo (UnresolvedJoinInfo joinInfo, UniqueIdentifierGenerator generator)
+    {
+      throw new NotImplementedException();
+    }
+
+    public SqlEntityDefinitionExpression ResolveSimpleTableInfo (IResolvedTableInfo tableInfo, UniqueIdentifierGenerator generator)
+    {
+      throw new NotImplementedException();
+    }
+
+    public Expression ResolveMemberExpression (SqlEntityExpression originatingEntity, MemberInfo memberInfo)
+    {
+      throw new NotImplementedException();
+    }
+
+    public Expression ResolveMemberExpression (SqlColumnExpression sqlColumnExpression, MemberInfo memberInfo)
+    {
+      throw new NotImplementedException();
+    }
+
+    public Expression ResolveConstantExpression (ConstantExpression constantExpression)
+    {
+      throw new NotImplementedException();
+    }
+
+    public Expression ResolveTypeCheck (Expression expression, Type desiredType)
+    {
+      throw new NotImplementedException();
     }
   }
 }
