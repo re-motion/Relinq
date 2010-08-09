@@ -515,7 +515,6 @@
     <Compile Include="Linq\Core\TestQueryGenerators\TestQueryProvider.cs" />
     <Compile Include="Linq\Core\TestQueryGenerators\WhereTestQueryGenerator.cs" />
     <Compile Include="Linq\Core\Transformations\SubQueryFromClauseFlattenerTest.cs" />
-    <Compile Include="ResolutionTests.cs" />
     <Compile Include="Sandboxing\PermissionSets.cs" />
     <Compile Include="Sandboxing\Sandbox.cs" />
     <Compile Include="Sandboxing\SandboxTestRunner.cs" />
