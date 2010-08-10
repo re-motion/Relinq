@@ -194,6 +194,7 @@
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\SubstringMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\ToStringMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\UpperMethodCallTransformerTest.cs" />
+    <Compile Include="Linq\SqlBackend\SqlPreparation\MethodInfoBasedMethodCallTransformerRegistryTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\NameBasedMethodCallTransformerRegistryTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlerRegistryTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\ResultOperatorHandlers\AggregationResultOperatorHandlerTest.cs" />
