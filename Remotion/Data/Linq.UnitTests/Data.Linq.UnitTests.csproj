@@ -121,10 +121,6 @@
     <Reference Include="System.Data.Linq" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
-    <ProjectReference Include="..\Linq.IntegrationTests\Data.Linq.IntegrationTests.csproj">
-      <Project>{DA8EFB63-353E-4E1A-9298-28B0C9302A2E}</Project>
-      <Name>Data.Linq.IntegrationTests</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Linq.LinqToSqlAdapter\Data.Linq.LinqToSqlAdapter.csproj">
       <Project>{EDBD197D-2A1C-4EA7-BC7E-C09562E307A4}</Project>
       <Name>Data.Linq.LinqToSqlAdapter</Name>
@@ -140,12 +136,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LinqToSqlAdapter\DataContextTestClass.cs" />
-    <Compile Include="LinqToSqlAdapter\MappingResolverTest.cs" />
     <Compile Include="LinqToSqlAdapter\PersonTestClass.cs" />
     <Compile Include="LinqToSqlAdapter\QueryExecutorTest.cs" />
     <Compile Include="LinqToSqlAdapter\QueryResultRetrieverTest.cs" />
     <Compile Include="LinqToSqlAdapter\RowWrapperTest.cs" />
     <Compile Include="LinqToSqlAdapter\Utilities\ExpressionTreeComparer.cs" />
+    <Compile Include="LinqToSqlAdapter\MappingResolverTest.cs" />
     <Compile Include="Linq\Core\Clauses\Expressions\VBStringComparisonExpressionTest.cs" />
     <Compile Include="Linq\Core\IntegrationTests\MediumTrustCoreIntegrationTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\IntermediateModel\GroupByWithResultSelectorExpressionNodeTest.cs" />
