@@ -22,6 +22,7 @@ using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.TestDomain;
@@ -94,18 +95,18 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     }
 
     [Test]
-    public void Register ()
+    public void Register_WithMethodInfo ()
     {
-      Assert.That (_registry.Count, Is.EqualTo (0));
+      Assert.That (_registry.RegisteredMethodInfoCount, Is.EqualTo (0));
 
       _registry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
 
-      Assert.That(_registry.Count, Is.EqualTo (2));
+      Assert.That(_registry.RegisteredMethodInfoCount, Is.EqualTo (2));
     }
 
     [Test]
     [ExpectedException (typeof (InvalidOperationException))]
-    public void Register_ClosedGenericMethod_NotAllowed ()
+    public void Register_WithMethodInfoAndClosedGenericMethod_NotAllowed ()
     {
       var closedGenericMethod = SelectExpressionNode.SupportedMethods[0].MakeGenericMethod (typeof (int), typeof (int));
       _registry.Register (new[] { closedGenericMethod }, typeof (SelectExpressionNode));
@@ -113,20 +114,41 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
 
     [Test]
     [ExpectedException (typeof (InvalidOperationException))]
-    public void Register_MethodInClosedGenericType_NotAllowed ()
+    public void Register_WithMethodInfoAndMethodInClosedGenericType_NotAllowed ()
     {
       var methodInClosedGenericType = typeof (GenericClass<int>).GetMethod ("NonGenericMethod");
       _registry.Register (new[] { methodInClosedGenericType }, typeof (SelectExpressionNode));
     }
 
     [Test]
-    public void GetNodeType ()
+    public void Register_WithNames ()
+    {
+      Assert.That (_registry.RegisteredNamesCount, Is.EqualTo (0));
+
+      _registry.Register (new[] { "Test" }, typeof (SelectExpressionNode));
+
+      Assert.That (_registry.RegisteredNamesCount, Is.EqualTo (1));
+    }
+
+    [Test]
+    public void GetNodeType_WithMethodInfo ()
     {
       _registry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
 
       var type = _registry.GetNodeType (SelectExpressionNode.SupportedMethods[0]);
 
       Assert.That (type, Is.SameAs (typeof (SelectExpressionNode)));
+    }
+
+    [Test]
+    public void GetNodeType_WithNames ()
+    {
+      var methodInfo = typeof (string).GetMethod ("Concat", new[] { typeof (string), typeof (string) });
+      _registry.Register (new[] { "Concat" }, typeof (SelectExpressionNode));
+
+      var result = _registry.GetNodeType (methodInfo);
+
+      Assert.That (result, Is.SameAs (typeof (SelectExpressionNode)));
     }
 
     [Test]
@@ -249,10 +271,21 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     }
 
     [Test]
+    public void IsRegistered_WithNames ()
+    {
+      var methodInfo = typeof (string).GetMethod ("Concat", new[] { typeof (string), typeof (string) });
+      _registry.Register (new[] { "Concat" }, typeof (SelectExpressionNode));
+
+      Assert.That (_registry.IsRegistered (methodInfo), Is.True);
+    }
+
+    [Test]
     public void CreateDefault ()
     {
       MethodCallExpressionNodeTypeRegistry registry = MethodCallExpressionNodeTypeRegistry.CreateDefault ();
+      registry.Register (new[] { "Resolve" }, typeof (TestExpressionNode));
 
+      AssertAllMethodsRegistered (registry, typeof (TestExpressionNode));
       AssertAllMethodsRegistered (registry, typeof (CountExpressionNode));
       AssertAllMethodsRegistered (registry, typeof (SelectExpressionNode));
       AssertAllMethodsRegistered (registry, typeof (WhereExpressionNode));
@@ -275,11 +308,45 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
 
     private void AssertAllMethodsRegistered (MethodCallExpressionNodeTypeRegistry registry, Type type)
     {
-      var methodInfos = (MethodInfo[]) type.GetField ("SupportedMethods").GetValue (null);
-      Assert.That (methodInfos.Length, Is.GreaterThan (0));
+      var supportedMethodsField = type.GetField ("SupportedMethods");
+      if (supportedMethodsField != null)
+      {
+        var methodInfos = (MethodInfo[]) supportedMethodsField.GetValue (null);
+        Assert.That (methodInfos.Length, Is.GreaterThan (0));
 
-      foreach (var methodInfo in methodInfos)
-        Assert.That (registry.GetNodeType (methodInfo), Is.SameAs (type));
+        foreach (var methodInfo in methodInfos)
+          Assert.That (registry.GetNodeType (methodInfo), Is.SameAs (type));
+      }
+
+      var supportedMethodNamesField = type.GetField ("SupportedMethodNames");
+      if (supportedMethodNamesField != null)
+      {
+        var methodNames = (string[]) supportedMethodNamesField.GetValue (null);
+        Assert.That (methodNames.Length, Is.GreaterThan (0));
+
+        foreach (var methodName in methodNames)
+          Assert.That (registry.GetNodeType (type.GetMethod(methodName)), Is.SameAs (type));
+      }
+    }
+  }
+
+  internal class TestExpressionNode : ResultOperatorExpressionNodeBase
+  {
+    public static string[] SupportedMethodNames = { "Resolve" };
+
+    public TestExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalPredicate, LambdaExpression optionalSelector)
+        : base(parseInfo, optionalPredicate, optionalSelector)
+    {
+    }
+
+    public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
+    {
+      throw new NotImplementedException();
+    }
+
+    protected override ResultOperatorBase CreateResultOperator (ClauseGenerationContext clauseGenerationContext)
+    {
+      throw new NotImplementedException();
     }
   }
 }

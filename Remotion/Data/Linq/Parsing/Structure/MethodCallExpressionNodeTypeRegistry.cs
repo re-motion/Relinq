@@ -48,9 +48,18 @@ namespace Remotion.Data.Linq.Parsing.Structure
                                      where supportedMethodsField != null
                                      select new { Type = t, Methods = (IEnumerable<MethodInfo>) supportedMethodsField.GetValue (null) };
 
+      var supportedMethodNamesForTypes = from t in expressionNodeTypes
+                                         let supportedMethodNamesField = t.GetField ("SupportedMethodNames", BindingFlags.Static | BindingFlags.Public)
+                                         where supportedMethodNamesField != null
+                                         select new { Type = t, MethodNames = (IEnumerable<string>) supportedMethodNamesField.GetValue (null) };
+
       var registry = new MethodCallExpressionNodeTypeRegistry();
+
       foreach (var methodsForType in supportedMethodsForTypes)
         registry.Register (methodsForType.Methods, methodsForType.Type);
+
+      foreach (var methodNamesForType in supportedMethodNamesForTypes)
+        registry.Register (methodNamesForType.MethodNames, methodNamesForType.Type);
 
       return registry;
     }
@@ -79,11 +88,17 @@ namespace Remotion.Data.Linq.Parsing.Structure
       }
     }
 
-    private readonly Dictionary<MethodInfo, Type> _registeredTypes = new Dictionary<MethodInfo, Type>();
+    private readonly Dictionary<MethodInfo, Type> _registeredMethodInfoTypes = new Dictionary<MethodInfo, Type>();
+    private readonly Dictionary<string, Type> _registeredNamedTypes = new Dictionary<string, Type>();
 
-    public int Count
+    public int RegisteredMethodInfoCount
     {
-      get { return _registeredTypes.Count; }
+      get { return _registeredMethodInfoTypes.Count; }
+    }
+
+    public int RegisteredNamesCount
+    {
+      get { return _registeredNamedTypes.Count; }
     }
 
     /// <summary>
@@ -114,11 +129,20 @@ namespace Remotion.Data.Linq.Parsing.Structure
           throw new InvalidOperationException (message);
         }
 
-        _registeredTypes[method] = nodeType;
+        _registeredMethodInfoTypes[method] = nodeType;
       }
     }
 
-    /// <summary>
+    public void Register (IEnumerable<string> methodNames, Type nodeType)
+    {
+      ArgumentUtility.CheckNotNull ("methodNames", methodNames);
+      ArgumentUtility.CheckNotNull ("nodeType", nodeType);
+
+      foreach (var methodName in methodNames)
+        _registeredNamedTypes[methodName] = nodeType;
+    }
+
+   /// <summary>
     /// Determines whether the specified method was registered with this <see cref="MethodCallExpressionNodeTypeRegistry"/>.
     /// </summary>
     public bool IsRegistered (MethodInfo method)
@@ -126,9 +150,9 @@ namespace Remotion.Data.Linq.Parsing.Structure
       ArgumentUtility.CheckNotNull ("method", method);
 
       var methodDefinition = GetRegisterableMethodDefinition (method);
-      return _registeredTypes.ContainsKey (methodDefinition);
+      return _registeredMethodInfoTypes.ContainsKey (methodDefinition) || _registeredNamedTypes.ContainsKey(methodDefinition.Name);
     }
-
+    
     /// <summary>
     /// Gets the type of <see cref="IExpressionNode"/> registered with this <see cref="MethodCallExpressionNodeTypeRegistry"/> instance that
     /// matches the given <paramref name="method"/>, throwing a <see cref="KeyNotFoundException"/> if none can be found.
@@ -140,7 +164,11 @@ namespace Remotion.Data.Linq.Parsing.Structure
       var methodDefinition = GetRegisterableMethodDefinition (method);
       try
       {
-        return _registeredTypes[methodDefinition];
+        Type result;
+        if (_registeredMethodInfoTypes.TryGetValue (methodDefinition, out result))
+          return result;
+
+        return _registeredNamedTypes[methodDefinition.Name];
       }
       catch (KeyNotFoundException ex)
       {
