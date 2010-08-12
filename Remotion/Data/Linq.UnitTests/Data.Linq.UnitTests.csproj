@@ -535,7 +535,6 @@
     <Compile Include="Linq\Core\TestUtilities\TupleAbcd.cs" />
     <Compile Include="Linq\Core\Utilities\HashCodeUtilityTest.cs" />
     <Compile Include="Linq\Core\Utilities\SeparatedStringBuilderTest.cs" />
-    <None Include="ClassDiagram1.cd" />
     <None Include="Data.Linq.UnitTests.build">
       <SubType>Designer</SubType>
     </None>
