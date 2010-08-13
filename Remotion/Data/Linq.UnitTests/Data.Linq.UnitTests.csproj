@@ -135,6 +135,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LinqToSqlAdapter\ContactTestClass.cs" />
     <Compile Include="LinqToSqlAdapter\DataContextTestClass.cs" />
     <Compile Include="LinqToSqlAdapter\PersonTestClass.cs" />
     <Compile Include="LinqToSqlAdapter\QueryExecutorTest.cs" />
