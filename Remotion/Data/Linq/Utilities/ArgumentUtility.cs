@@ -60,48 +60,6 @@ namespace Remotion.Data.Linq.Utilities
       return actualValue;
     }
 
-    public static object CheckNull (string argumentName, object actualValue)
-    {
-      // ReSharper disable CompareNonConstrainedGenericWithNull
-      if (actualValue != null)
-        // ReSharper restore CompareNonConstrainedGenericWithNull
-        throw new ArgumentNullException (argumentName);
-
-      return actualValue;
-    }
-
-    //public static T CheckNull<T> (string argumentName, T actualValue)
-    //{
-    //  // ReSharper disable CompareNonConstrainedGenericWithNull
-    //  if (actualValue != null)
-    //    // ReSharper restore CompareNonConstrainedGenericWithNull
-    //    throw new ArgumentNullException (argumentName);
-
-    //  return actualValue;
-    //}
-
-//    [AssertionMethod]
-//    static public T AssertNotNull<T> (string argumentName, [AssertionCondition (AssertionConditionType.IS_NOT_NULL)] T actualValue)
-//    {
-//// ReSharper disable CompareNonConstrainedGenericWithNull
-//      if (actualValue == null)
-//// ReSharper restore CompareNonConstrainedGenericWithNull
-//        throw new ArgumentNullException (argumentName);
-
-//      return actualValue;
-//    }
-
-//    [AssertionMethod]
-//    static public T AssertNull<T> (string argumentName, [AssertionCondition (AssertionConditionType.IS_NULL)] T actualValue)
-//    {
-//      // ReSharper disable CompareNonConstrainedGenericWithNull
-//      if (actualValue != null)
-//        // ReSharper restore CompareNonConstrainedGenericWithNull
-//        throw new ArgumentNullException (argumentName);
-
-//      return actualValue;
-//    }
-
     // Copied from Remotion.Data.Linq.Utilities.ArgumentUtility
     public static string CheckNotNullOrEmpty (string argumentName, string actualValue)
     {
@@ -111,16 +69,6 @@ namespace Remotion.Data.Linq.Utilities
 
       return actualValue;
     }
-
-    //[AssertionMethod]
-    //static public string AssertNotNulOrEmpty (string argumentName, [AssertionCondition (AssertionConditionType.IS_NOT_NULL)] string actualValue)
-    //{
-    //  AssertNotNull (argumentName, actualValue);
-    //  if (actualValue.Length == 0)
-    //    throw new ArgumentNullException (argumentName);
-
-    //  return actualValue;
-    //}
 
     /// <summary>Returns the value itself if it is not <see langword="null"/> and of the specified value type.</summary>
     /// <typeparam name="TExpected"> The type that <paramref name="actualValue"/> must have. </typeparam>
@@ -137,16 +85,6 @@ namespace Remotion.Data.Linq.Utilities
         throw new ArgumentTypeException (argumentName, typeof (TExpected), actualValue.GetType());
       return (TExpected) actualValue;
     }
-
-    //[AssertionMethod]
-    //static public TExpected AssertNotNullAndType<TExpected> (string argumentName, [AssertionCondition (AssertionConditionType.IS_NOT_NULL)] object actualValue)
-    //{
-    //  AssertNotNull (argumentName, actualValue);
-    //  if (!(actualValue is TExpected))
-    //    throw new ArgumentTypeException (argumentName, typeof (TExpected), actualValue.GetType ());
-
-    //  return (TExpected) actualValue;
-    //}
 
     /// <summary>Checks whether <paramref name="actualType"/> can be assigned to <paramref name="expectedType"/>.</summary>
     /// <exception cref="ArgumentTypeException">The <paramref name="actualType"/> cannot be assigned to <paramref name="expectedType"/>.</exception>
@@ -165,22 +103,6 @@ namespace Remotion.Data.Linq.Utilities
 
       return actualType;
     }
-
-    //[AssertionMethod]
-    //public static Type AssertTypeIsAssignableFrom (string argumentName, Type actualType, [AssertionCondition (AssertionConditionType.IS_NOT_NULL)] Type expectedType)
-    //{
-    //  AssertNotNull ("expectedType", expectedType);
-    //  if (actualType != null)
-    //  {
-    //    if (!expectedType.IsAssignableFrom (actualType))
-    //    {
-    //      string message = string.Format ("Argument {0} is a {2}, which cannot be assigned to type {1}.", argumentName, expectedType, actualType);
-    //      throw new ArgumentTypeException (message, argumentName, expectedType, actualType);
-    //    }
-    //  }
-
-    //  return actualType;
-    //}
 
     public static T CheckNotEmpty<T> (string argumentName, T enumerable)
         where T : IEnumerable
@@ -209,34 +131,5 @@ namespace Remotion.Data.Linq.Utilities
 
       return enumerable;
     }
-
-    //[AssertionMethod]
-    //public static T AssertNotEmpty<T> (string argumentName, T enumerable)
-    //    where T : IEnumerable
-    //{
-    //  // ReSharper disable CompareNonConstrainedGenericWithNull
-    //  if (enumerable != null)
-    //  // ReSharper restore CompareNonConstrainedGenericWithNull
-    //  {
-    //    var collection = enumerable as ICollection;
-    //    if (collection != null)
-    //    {
-    //      if (collection.Count == 0)
-    //        throw new ArgumentEmptyException (argumentName);
-    //      else
-    //        return enumerable;
-    //    }
-
-    //    IEnumerator enumerator = enumerable.GetEnumerator ();
-    //    var disposableEnumerator = enumerator as IDisposable;
-    //    using (disposableEnumerator) // using (null) is allowed in C#
-    //    {
-    //      if (!enumerator.MoveNext ())
-    //        throw new ArgumentEmptyException (argumentName);
-    //    }
-    //  }
-
-    //  return enumerable;
-    //}
   }
 }
