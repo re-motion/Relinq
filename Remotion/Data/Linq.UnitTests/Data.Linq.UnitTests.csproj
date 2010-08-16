@@ -137,6 +137,7 @@
   <ItemGroup>
     <Compile Include="LinqToSqlAdapter\ContactTestClass.cs" />
     <Compile Include="LinqToSqlAdapter\DataContextTestClass.cs" />
+    <Compile Include="LinqToSqlAdapter\MetaDataMemberComparerTest.cs" />
     <Compile Include="LinqToSqlAdapter\PersonTestClass.cs" />
     <Compile Include="LinqToSqlAdapter\QueryExecutorTest.cs" />
     <Compile Include="LinqToSqlAdapter\QueryResultRetrieverTest.cs" />
