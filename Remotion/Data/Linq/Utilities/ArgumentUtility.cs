@@ -16,6 +16,7 @@
 // 
 using System;
 using System.Collections;
+using JetBrains.Annotations;
 
 namespace Remotion.Data.Linq.Utilities
 {
@@ -50,7 +51,8 @@ namespace Remotion.Data.Linq.Utilities
   public static class ArgumentUtility
   {
     // Copied from Remotion.Data.Linq.Utilities.ArgumentUtility
-    public static T CheckNotNull<T> (string argumentName, T actualValue)
+    [AssertionMethod]
+    public static T CheckNotNull<T> (string argumentName, [AssertionCondition (AssertionConditionType.IS_NOT_NULL)] T actualValue)
     {
       // ReSharper disable CompareNonConstrainedGenericWithNull
       if (actualValue == null)
@@ -61,7 +63,8 @@ namespace Remotion.Data.Linq.Utilities
     }
 
     // Copied from Remotion.Data.Linq.Utilities.ArgumentUtility
-    public static string CheckNotNullOrEmpty (string argumentName, string actualValue)
+    [AssertionMethod]
+    public static string CheckNotNullOrEmpty (string argumentName, [AssertionCondition (AssertionConditionType.IS_NOT_NULL)] string actualValue)
     {
       CheckNotNull (argumentName, actualValue);
       if (actualValue.Length == 0)
@@ -75,7 +78,8 @@ namespace Remotion.Data.Linq.Utilities
     /// <exception cref="ArgumentNullException">The <paramref name="actualValue"/> is a <see langword="null"/>.</exception>
     /// <exception cref="ArgumentTypeException">The <paramref name="actualValue"/> is an instance of another type.</exception>
     // Copied from Remotion.Data.Linq.Utilities.ArgumentUtility
-    public static TExpected CheckNotNullAndType<TExpected> (string argumentName, object actualValue)
+    [AssertionMethod]
+    public static TExpected CheckNotNullAndType<TExpected> (string argumentName, [AssertionCondition (AssertionConditionType.IS_NOT_NULL)] object actualValue)
         // where TExpected: struct
     {
       if (actualValue == null)
@@ -89,7 +93,8 @@ namespace Remotion.Data.Linq.Utilities
     /// <summary>Checks whether <paramref name="actualType"/> can be assigned to <paramref name="expectedType"/>.</summary>
     /// <exception cref="ArgumentTypeException">The <paramref name="actualType"/> cannot be assigned to <paramref name="expectedType"/>.</exception>
     // Copied from Remotion.Data.Linq.Utilities.ArgumentUtility
-    public static Type CheckTypeIsAssignableFrom (string argumentName, Type actualType, Type expectedType)
+    [AssertionMethod]
+    public static Type CheckTypeIsAssignableFrom (string argumentName, Type actualType, [AssertionCondition (AssertionConditionType.IS_NOT_NULL)] Type expectedType)
     {
       CheckNotNull ("expectedType", expectedType);
       if (actualType != null)
@@ -104,6 +109,7 @@ namespace Remotion.Data.Linq.Utilities
       return actualType;
     }
 
+    [AssertionMethod]
     public static T CheckNotEmpty<T> (string argumentName, T enumerable)
         where T : IEnumerable
     {

@@ -234,6 +234,9 @@
     <Compile Include="Utilities\ArgumentUtility.cs" />
     <Compile Include="Utilities\HashCodeUtility.cs" />
     <Compile Include="Utilities\RegistryBase.cs" />
+    <Compile Include="Utilities\ReSharperAnnotations\AssertionConditionAttribute.cs" />
+    <Compile Include="Utilities\ReSharperAnnotations\AssertionConditionType.cs" />
+    <Compile Include="Utilities\ReSharperAnnotations\AssertionMethodAttribute.cs" />
     <Compile Include="Utilities\SeparatedStringBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
