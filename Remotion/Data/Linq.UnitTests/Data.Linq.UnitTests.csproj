@@ -142,7 +142,6 @@
     <Compile Include="LinqToSqlAdapter\TestDomain\ContactTestClass.cs" />
     <Compile Include="LinqToSqlAdapter\TestDomain\DataContextTestClass.cs" />
     <Compile Include="LinqToSqlAdapter\TestDomain\PersonTestClass.cs" />
-    <Compile Include="LinqToSqlAdapter\Utilities\ExpressionTreeComparer.cs" />
     <Compile Include="LinqToSqlAdapter\MappingResolverTest.cs" />
     <Compile Include="Linq\Core\Clauses\Expressions\VBStringComparisonExpressionTest.cs" />
     <Compile Include="Linq\Core\IntegrationTests\MediumTrustCoreIntegrationTest.cs" />
