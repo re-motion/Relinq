@@ -135,13 +135,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LinqToSqlAdapter\ContactTestClass.cs" />
-    <Compile Include="LinqToSqlAdapter\DataContextTestClass.cs" />
     <Compile Include="LinqToSqlAdapter\MetaDataMemberComparerTest.cs" />
-    <Compile Include="LinqToSqlAdapter\PersonTestClass.cs" />
     <Compile Include="LinqToSqlAdapter\QueryExecutorTest.cs" />
     <Compile Include="LinqToSqlAdapter\QueryResultRetrieverTest.cs" />
     <Compile Include="LinqToSqlAdapter\RowWrapperTest.cs" />
+    <Compile Include="LinqToSqlAdapter\TestDomain\ContactTestClass.cs" />
+    <Compile Include="LinqToSqlAdapter\TestDomain\DataContextTestClass.cs" />
+    <Compile Include="LinqToSqlAdapter\TestDomain\PersonTestClass.cs" />
     <Compile Include="LinqToSqlAdapter\Utilities\ExpressionTreeComparer.cs" />
     <Compile Include="LinqToSqlAdapter\MappingResolverTest.cs" />
     <Compile Include="Linq\Core\Clauses\Expressions\VBStringComparisonExpressionTest.cs" />
