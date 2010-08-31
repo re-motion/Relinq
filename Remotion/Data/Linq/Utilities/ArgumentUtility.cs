@@ -52,7 +52,7 @@ namespace Remotion.Data.Linq.Utilities
   {
     // Copied from Remotion.Data.Linq.Utilities.ArgumentUtility
     [AssertionMethod]
-    public static T CheckNotNull<T> (string argumentName, [AssertionCondition (AssertionConditionType.IS_NOT_NULL)] T actualValue)
+    public static T CheckNotNull<T> ([InvokerParameterName] string argumentName, [AssertionCondition (AssertionConditionType.IS_NOT_NULL)] T actualValue)
     {
       // ReSharper disable CompareNonConstrainedGenericWithNull
       if (actualValue == null)
@@ -64,7 +64,7 @@ namespace Remotion.Data.Linq.Utilities
 
     // Copied from Remotion.Data.Linq.Utilities.ArgumentUtility
     [AssertionMethod]
-    public static string CheckNotNullOrEmpty (string argumentName, [AssertionCondition (AssertionConditionType.IS_NOT_NULL)] string actualValue)
+    public static string CheckNotNullOrEmpty ([InvokerParameterName] string argumentName, [AssertionCondition (AssertionConditionType.IS_NOT_NULL)] string actualValue)
     {
       CheckNotNull (argumentName, actualValue);
       if (actualValue.Length == 0)
@@ -79,7 +79,7 @@ namespace Remotion.Data.Linq.Utilities
     /// <exception cref="ArgumentTypeException">The <paramref name="actualValue"/> is an instance of another type.</exception>
     // Copied from Remotion.Data.Linq.Utilities.ArgumentUtility
     [AssertionMethod]
-    public static TExpected CheckNotNullAndType<TExpected> (string argumentName, [AssertionCondition (AssertionConditionType.IS_NOT_NULL)] object actualValue)
+    public static TExpected CheckNotNullAndType<TExpected> ([InvokerParameterName] string argumentName, [AssertionCondition (AssertionConditionType.IS_NOT_NULL)] object actualValue)
         // where TExpected: struct
     {
       if (actualValue == null)
@@ -94,7 +94,7 @@ namespace Remotion.Data.Linq.Utilities
     /// <exception cref="ArgumentTypeException">The <paramref name="actualType"/> cannot be assigned to <paramref name="expectedType"/>.</exception>
     // Copied from Remotion.Data.Linq.Utilities.ArgumentUtility
     [AssertionMethod]
-    public static Type CheckTypeIsAssignableFrom (string argumentName, Type actualType, [AssertionCondition (AssertionConditionType.IS_NOT_NULL)] Type expectedType)
+    public static Type CheckTypeIsAssignableFrom ([InvokerParameterName] string argumentName, Type actualType, [AssertionCondition (AssertionConditionType.IS_NOT_NULL)] Type expectedType)
     {
       CheckNotNull ("expectedType", expectedType);
       if (actualType != null)
@@ -110,7 +110,7 @@ namespace Remotion.Data.Linq.Utilities
     }
 
     [AssertionMethod]
-    public static T CheckNotEmpty<T> (string argumentName, T enumerable)
+    public static T CheckNotEmpty<T> ([InvokerParameterName] string argumentName, T enumerable)
         where T : IEnumerable
     {
       // ReSharper disable CompareNonConstrainedGenericWithNull
