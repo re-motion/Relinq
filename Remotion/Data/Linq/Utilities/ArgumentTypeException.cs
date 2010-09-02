@@ -16,6 +16,7 @@
 // 
 using System;
 using System.Runtime.Serialization;
+using JetBrains.Annotations;
 
 namespace Remotion.Data.Linq.Utilities
 {
@@ -28,7 +29,7 @@ namespace Remotion.Data.Linq.Utilities
     public readonly Type ExpectedType;
     public readonly Type ActualType;
 
-    public ArgumentTypeException (string message, string argumentName, Type expectedType, Type actualType)
+    public ArgumentTypeException (string message, [InvokerParameterName] string argumentName, Type expectedType, Type actualType)
         : base (message, argumentName)
     {
       ExpectedType = expectedType;
