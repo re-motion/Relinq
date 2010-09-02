@@ -139,6 +139,7 @@
     <Compile Include="LinqToSqlAdapter\QueryExecutorTest.cs" />
     <Compile Include="LinqToSqlAdapter\QueryResultRetrieverTest.cs" />
     <Compile Include="LinqToSqlAdapter\RowWrapperTest.cs" />
+    <Compile Include="LinqToSqlAdapter\ScalarRowWrapperTest.cs" />
     <Compile Include="LinqToSqlAdapter\TestDomain\ContactWithInheritanceHierarchy.cs" />
     <Compile Include="LinqToSqlAdapter\TestDomain\DataContextTestClass.cs" />
     <Compile Include="LinqToSqlAdapter\TestDomain\PersonTestClass.cs" />
