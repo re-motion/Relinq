@@ -233,5 +233,18 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
 
       Assert.That (result, Is.SameAs (expression));
     }
+
+    [Test]
+    [Ignore ("TODO 3197")]
+    public void EvaluateChildrenOfExtensionExpressions ()
+    {
+      var innerExpression = Expression.MakeBinary (ExpressionType.Equal, Expression.Constant (0), Expression.Constant (0));
+      var extensionExpression = new TestExtensionExpression (innerExpression);
+      
+      var result = PartialEvaluatingExpressionTreeVisitor.EvaluateIndependentSubtrees (extensionExpression);
+
+      var expected = new TestExtensionExpression (Expression.Constant (true));
+      ExpressionTreeComparer.CheckAreEqualTrees (expected, result);
+    }
   }
 }

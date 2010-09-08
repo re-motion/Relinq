@@ -236,6 +236,18 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
       Assert.That (result, Is.SameAs (expression));
     }
 
+    [Test]
+    [Ignore ("TODO 3197")]
+    public void VisitExtensionExpression_ChildrenAreEvaluated ()
+    {
+      var subQuery = ExpressionHelper.MakeExpression (() => (from s in ExpressionHelper.CreateCookQueryable () select s).Any());
+      var extensionExpression = new VBStringComparisonExpression (subQuery, true);
+
+      var result = PreprocessingExpressionTreeVisitor.Process (extensionExpression, _nodeTypeRegistry);
+
+      Assert.That (((VBStringComparisonExpression) result).Comparison, Is.TypeOf (typeof (SubQueryExpression)));
+    }
+
     public static IQueryable<Cook> CustomSelect (IQueryable<Cook> source, Expression<Func<Cook, Cook>> selector)
     {
       throw new NotImplementedException();

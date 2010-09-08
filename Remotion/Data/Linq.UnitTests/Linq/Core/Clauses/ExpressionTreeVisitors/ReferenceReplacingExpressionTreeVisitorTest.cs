@@ -21,6 +21,7 @@ using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
+using Remotion.Data.Linq.UnitTests.Linq.Core.Parsing;
 using Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors;
 
 namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.ExpressionTreeVisitors
@@ -110,6 +111,18 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.ExpressionTreeVisitors
       var result = ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (expression, _querySourceMapping, true);
 
       Assert.That (result, Is.SameAs (expression));
+    }
+
+    [Test]
+    [Ignore ("TODO 3197")]
+    public void VisitExtensionExpression_ChildrenAreProcessed ()
+    {
+      var extensionExpression = new TestExtensionExpression (new QuerySourceReferenceExpression (_oldFromClause));
+
+      var result = (TestExtensionExpression) ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (extensionExpression, _querySourceMapping, true);
+
+      var expectedExpression = new TestExtensionExpression (new QuerySourceReferenceExpression (_newFromClause));
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, result);
     }
 
     [Test]

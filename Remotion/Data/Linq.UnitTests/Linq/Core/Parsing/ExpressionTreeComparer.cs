@@ -51,6 +51,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing
         Assert.IsNull (actual, GetMessage (expected, actual, "Null nodes"));
       else
       {
+        Assert.AreEqual (expected.GetType (), actual.GetType (), GetMessage (expected, actual, "NodeType"));
         Assert.AreEqual (expected.NodeType, actual.NodeType, GetMessage (expected, actual, "NodeType"));
         Assert.AreEqual (expected.Type, actual.Type, GetMessage (expected, actual, "Type"));
         CheckAreEqualObjects(expected, actual);

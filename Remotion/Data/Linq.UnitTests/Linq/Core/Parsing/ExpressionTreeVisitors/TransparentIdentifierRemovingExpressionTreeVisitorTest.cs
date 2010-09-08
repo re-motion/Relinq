@@ -350,5 +350,22 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
 
       Assert.That (result, Is.SameAs (expression));
     }
+
+    [Test]
+    [Ignore ("TODO 3197")]
+    public void VisitExtensionExpression_ChildrenAreProcessed ()
+    {
+      // new TestExtensionExpression (new AnonymousType ( a = 5 ).a) => new TestExtensionExpression (5)
+      var memberExpression = Expression.MakeMemberAccess (
+          _anonymousTypeNewExpressionWithAssignments,
+          _anonymousTypeA);
+      var extensionExpression = new TestExtensionExpression (memberExpression);
+
+      var result = TransparentIdentifierRemovingExpressionTreeVisitor.ReplaceTransparentIdentifiers (extensionExpression);
+
+      var expectedExpression = new TestExtensionExpression (_assignedExpressionA);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, result);
+    }
+
   }
 }

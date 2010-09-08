@@ -94,6 +94,19 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.
     }
 
     [Test]
+    [Ignore ("TODO 3197")]
+    public void ExtensionExpressions_AreNotEvaluatable_ButChildrenMayBe ()
+    {
+      var innerExpression = Expression.MakeBinary (ExpressionType.Equal, Expression.Constant (0), Expression.Constant (0));
+      var extensionExpression = new TestExtensionExpression (innerExpression);
+      
+      var evaluationInfo = EvaluatableTreeFindingExpressionTreeVisitor.Analyze (extensionExpression);
+
+      Assert.That (evaluationInfo.IsEvaluatableExpression (extensionExpression), Is.False);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (innerExpression), Is.True);
+    }
+
+    [Test]
     public void NullExpression_InOtherExpression_IsIgnored ()
     {
       var expression = Expression.MakeBinary (

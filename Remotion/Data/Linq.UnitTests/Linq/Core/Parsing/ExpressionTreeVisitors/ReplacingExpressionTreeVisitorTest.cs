@@ -91,5 +91,17 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
 
       Assert.That (result, Is.SameAs (expression));
     }
+
+    [Test]
+    [Ignore ("TODO 3197")]
+    public void ReplacesNode_WithinExtensionNode ()
+    {
+      var tree = new VBStringComparisonExpression (_replacedNode, true);
+
+      var result = ReplacingExpressionTreeVisitor.Replace (_replacedNode, _replacementNode, tree);
+
+      var expected = new VBStringComparisonExpression (_replacementNode, true);
+      ExpressionTreeComparer.CheckAreEqualTrees (expected, result);
+    }
   }
 }
