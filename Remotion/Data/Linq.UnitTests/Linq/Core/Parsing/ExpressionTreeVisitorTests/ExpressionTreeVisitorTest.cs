@@ -51,9 +51,8 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTe
     [Test]
     public void VisitExpression_Unknown ()
     {
-      CheckDelegation ("VisitUnknownExpression", (ExpressionType) (-1));
+      CheckDelegation ("VisitUnknownNonExtensionExpression", (ExpressionType) (-1));
     }
-
 
     [Test]
     public void VisitExpression_Null ()

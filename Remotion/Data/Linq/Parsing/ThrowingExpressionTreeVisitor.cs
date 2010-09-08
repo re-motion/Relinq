@@ -52,18 +52,31 @@ namespace Remotion.Data.Linq.Parsing
       throw CreateUnhandledItemException (unhandledItem, visitMethod);
     }
 
-    protected internal override Expression VisitUnknownExpression (Expression expression)
+    protected internal override Expression VisitExtensionExpression (ExtensionExpression expression)
+    {
+      if (expression.CanReduce)
+        return VisitExpression (expression.ReduceAndCheck ());
+      else
+        return VisitUnhandledItem<ExtensionExpression, Expression> (expression, "VisitExtensionExpression", BaseVisitExtensionExpression);
+    }
+
+    protected Expression BaseVisitExtensionExpression (ExtensionExpression expression)
+    {
+      return base.VisitExtensionExpression (expression);
+    }
+
+    protected internal override Expression VisitUnknownNonExtensionExpression (Expression expression)
     {
       var expressionAsExtensionExpression = expression as ExtensionExpression;
       if (expressionAsExtensionExpression != null && expressionAsExtensionExpression.CanReduce)
         return VisitExpression (expressionAsExtensionExpression.ReduceAndCheck()); 
 
-      return VisitUnhandledItem<Expression, Expression> (expression, "VisitUnknownExpression", BaseVisitUnknownExpression);
+      return VisitUnhandledItem<Expression, Expression> (expression, "VisitUnknownNonExtensionExpression", BaseVisitUnknownNonExtensionExpression);
     }
 
-    protected Expression BaseVisitUnknownExpression (Expression expression)
+    protected Expression BaseVisitUnknownNonExtensionExpression (Expression expression)
     {
-      return base.VisitUnknownExpression (expression);
+      return base.VisitUnknownNonExtensionExpression (expression);
     }
 
     protected override Expression VisitUnaryExpression (UnaryExpression expression)

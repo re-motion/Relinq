@@ -49,12 +49,12 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.Expressions
     }
 
     [Test]
-    public void Accept_CallsVisitUnknownExpression ()
+    public void Accept_CallsVisitExtensionExpression ()
     {
       var visitorMock = _mockRepository.StrictMock<ExpressionTreeVisitor>();
 
       visitorMock
-          .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (visitorMock, "VisitUnknownExpression", _expression))
+          .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (visitorMock, "VisitExtensionExpression", _expression))
           .Return (_expression);
       visitorMock.Replay ();
 
@@ -64,13 +64,13 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.Expressions
     }
 
     [Test]
-    public void Accept_ReturnsResultOf_VisitUnknownExpression ()
+    public void Accept_ReturnsResultOf_VisitExtensionExpression ()
     {
       var visitorMock = _mockRepository.StrictMock<ExpressionTreeVisitor> ();
       var expectedResult = Expression.Constant (0);
 
       visitorMock
-          .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (visitorMock, "VisitUnknownExpression", _expression))
+          .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (visitorMock, "VisitExtensionExpression", _expression))
           .Return (expectedResult);
       visitorMock.Replay ();
 

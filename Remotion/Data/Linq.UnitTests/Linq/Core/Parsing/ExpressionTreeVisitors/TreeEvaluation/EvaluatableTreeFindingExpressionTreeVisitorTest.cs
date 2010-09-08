@@ -85,7 +85,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.
     }
 
     [Test]
-    public void NonStandardExpressions_AreNotEvaluatable ()
+    public void VisitUnknownExpression_NotEvaluatable ()
     {
       var expression = new SubQueryExpression (ExpressionHelper.CreateQueryModel_Cook());
       var evaluationInfo = EvaluatableTreeFindingExpressionTreeVisitor.Analyze (expression);
@@ -94,8 +94,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.
     }
 
     [Test]
-    [Ignore ("TODO 3197")]
-    public void ExtensionExpressions_AreNotEvaluatable_ButChildrenMayBe ()
+    public void VisitExtensionExpression_NotEvaluatable_ButChildrenMayBe ()
     {
       var innerExpression = Expression.MakeBinary (ExpressionType.Equal, Expression.Constant (0), Expression.Constant (0));
       var extensionExpression = new TestExtensionExpression (innerExpression);

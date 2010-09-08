@@ -228,7 +228,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
     }
 
     [Test]
-    public void VisitUnknownExpression_Ignored ()
+    public void VisitUnknownNonExtensionExpression_Ignored ()
     {
       var expression = new UnknownExpression (typeof (object));
       var result = PreprocessingExpressionTreeVisitor.Process (expression, _nodeTypeRegistry);
@@ -237,7 +237,6 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
     }
 
     [Test]
-    [Ignore ("TODO 3197")]
     public void VisitExtensionExpression_ChildrenAreEvaluated ()
     {
       var subQuery = ExpressionHelper.MakeExpression (() => (from s in ExpressionHelper.CreateCookQueryable () select s).Any());

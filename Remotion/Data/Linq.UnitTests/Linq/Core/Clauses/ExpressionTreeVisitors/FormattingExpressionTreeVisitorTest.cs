@@ -21,6 +21,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
+using Remotion.Data.Linq.UnitTests.Linq.Core.Parsing;
 using Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors;
 
 namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.ExpressionTreeVisitors
@@ -58,12 +59,21 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.ExpressionTreeVisitors
     }
 
     [Test]
-    public void VisitUnknownExpression_Ignored ()
+    public void VisitUnknownNonExtensionExpression ()
     {
       var expression = new UnknownExpression (typeof (object));
       var result = FormattingExpressionTreeVisitor.Format (expression);
 
       Assert.That (result, Is.EqualTo("[-1]"));
+    }
+
+    [Test]
+    public void VisitExtensionExpression ()
+    {
+      var expression = new TestExtensionExpression (Expression.Constant (0));
+      var result = FormattingExpressionTreeVisitor.Format (expression);
+
+      Assert.That (result, Is.EqualTo ("Test(0)"));
     }
   }
 }

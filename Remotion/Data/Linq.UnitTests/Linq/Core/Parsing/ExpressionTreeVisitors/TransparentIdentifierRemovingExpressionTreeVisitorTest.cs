@@ -343,7 +343,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
     }
 
     [Test]
-    public void VisitUnknownExpression_Ignored ()
+    public void VisitUnknownNonExtensionExpression_Ignored ()
     {
       var expression = new UnknownExpression (typeof (object));
       var result = TransparentIdentifierRemovingExpressionTreeVisitor.ReplaceTransparentIdentifiers(expression);
@@ -352,7 +352,6 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
     }
 
     [Test]
-    [Ignore ("TODO 3197")]
     public void VisitExtensionExpression_ChildrenAreProcessed ()
     {
       // new TestExtensionExpression (new AnonymousType ( a = 5 ).a) => new TestExtensionExpression (5)

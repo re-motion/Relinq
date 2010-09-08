@@ -84,7 +84,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
     }
 
     [Test]
-    public void VisitUnknownExpression_Ignored ()
+    public void VisitUnknownNonExtensionExpression_Ignored ()
     {
       var expression = new UnknownExpression (typeof (object));
       var result = ReplacingExpressionTreeVisitor.Replace (_replacedNode, _replacementNode, expression);
@@ -93,8 +93,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
     }
 
     [Test]
-    [Ignore ("TODO 3197")]
-    public void ReplacesNode_WithinExtensionNode ()
+    public void VisitExtensionExpression_DescendsIntoChildren ()
     {
       var tree = new VBStringComparisonExpression (_replacedNode, true);
 

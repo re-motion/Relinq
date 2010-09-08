@@ -109,7 +109,7 @@ namespace Remotion.Data.Linq.Parsing
           else if (expression is QuerySourceReferenceExpression)
             return VisitQuerySourceReferenceExpression ((QuerySourceReferenceExpression) expression);
           else
-            return VisitUnknownExpression (expression);
+            return VisitUnknownNonExtensionExpression (expression);
       }
     }
 
@@ -174,16 +174,18 @@ namespace Remotion.Data.Linq.Parsing
         return list;
     }
 
-    protected internal virtual Expression VisitUnknownExpression (Expression expression)
+    protected internal virtual Expression VisitExtensionExpression (ExtensionExpression expression)
     {
-      var extensionExpression = expression as ExtensionExpression;
-      if (extensionExpression != null)
-        return extensionExpression.VisitChildren (this);
-      else
-      {
-        var message = string.Format ("Expression type {0} is not supported by this {1}.", expression.NodeType, GetType().Name);
-        throw new NotSupportedException (message);
-      }
+      ArgumentUtility.CheckNotNull ("expression", expression);
+      return expression.VisitChildren (this);
+    }
+
+    protected internal virtual Expression VisitUnknownNonExtensionExpression (Expression expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
+      var message = string.Format ("Expression type '{0}' is not supported by this {1}.", expression.GetType().Name, GetType ().Name);
+      throw new NotSupportedException (message);
     }
 
     protected virtual Expression VisitUnaryExpression (UnaryExpression expression)
@@ -289,8 +291,14 @@ namespace Remotion.Data.Linq.Parsing
       ReadOnlyCollection<Expression> newArguments = VisitAndConvert (expression.Arguments, "VisitNewExpression");
       if (newArguments != expression.Arguments)
       {
+        // This ReSharper warning is wrong - expression.Members can be null
+
+        // ReSharper disable ConditionIsAlwaysTrueOrFalse
+        // ReSharper disable HeuristicUnreachableCode
         if (expression.Members == null)
           return Expression.New (expression.Constructor, newArguments);
+        // ReSharper restore HeuristicUnreachableCode
+        // ReSharper restore ConditionIsAlwaysTrueOrFalse
         else
           return Expression.New (expression.Constructor, newArguments, expression.Members);
       }
@@ -413,6 +421,12 @@ namespace Remotion.Data.Linq.Parsing
     protected virtual Expression VisitQuerySourceReferenceExpression (QuerySourceReferenceExpression expression)
     {
       return expression;
+    }
+
+    [Obsolete ("This method has been split. Use VisitExtensionExpression or VisitUnknownNonExtensionExpression instead. 1.13.75")]
+    protected internal virtual Expression VisitUnknownExpression (Expression expression)
+    {
+      throw new NotImplementedException ();
     }
   }
 }

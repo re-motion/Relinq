@@ -21,6 +21,7 @@ using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests;
+using Remotion.Data.Linq.UnitTests.Linq.Core.TestUtilities;
 using Rhino.Mocks;
 
 namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing
@@ -37,9 +38,9 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing
     }
 
     [Test]
-    public void ExtensionExpression_ReducedExpressionIsVisited ()
+    public void VisitExtensionExpression_ReducedExpressionIsVisited ()
     {
-      ExpressionTreeVisitor visitor =new TestThrowingConstantExpressionTreeVisitor();
+      ExpressionTreeVisitor visitor = new TestThrowingConstantExpressionTreeVisitor();
       var constantExpression = Expression.Constant (0);
       var expression = new TestExtensionExpression (constantExpression);
 
@@ -49,10 +50,26 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing
       Assert.That (((ConstantExpression) result).Value, Is.EqualTo("ConstantExpression was visited"));
     }
 
+    [Test]
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitExtensionExpression: Test")]
+    public void VisitExtensionExpression_NonReducibleExpression ()
+    {
+      ExpressionTreeVisitor visitor = new TestThrowingConstantExpressionTreeVisitor ();
+
+      var nonReducibleExpression = MockRepository.GenerateStub<ExtensionExpression> (typeof (int));
+      nonReducibleExpression
+          .Stub (stub => stub.Accept (Arg<ExpressionTreeVisitor>.Is.Anything))
+          .WhenCalled (mi => PrivateInvoke.InvokeNonPublicMethod (mi.Arguments[0], "VisitExtensionExpression", nonReducibleExpression))
+          .Return (nonReducibleExpression);
+      nonReducibleExpression.Stub (stub => stub.CanReduce).Return (false);
+      nonReducibleExpression.Stub (stub => stub.ToString ()).Return ("Test");
+      
+      visitor.VisitExpression (nonReducibleExpression);
+    }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitUnknownExpression: [-1]")]
-    public void VisitUnknownExpression ()
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitUnknownNonExtensionExpression: [-1]")]
+    public void VisitUnknownNonExtensionExpression ()
     {
       VisitExpression (_visitor, (ExpressionType) (-1));
     }

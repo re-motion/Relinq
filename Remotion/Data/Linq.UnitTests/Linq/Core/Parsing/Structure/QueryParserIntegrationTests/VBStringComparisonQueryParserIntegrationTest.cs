@@ -28,7 +28,6 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
   public class VBStringComparisonQueryParserIntegrationTest : QueryParserIntegrationTestBase
   {
     [Test]
-    [Ignore ("TODO 3197")]
     public void VBStringComparison_WithParameterInsideComparison ()
     {
       var predicateParameter = Expression.Parameter (typeof (Cook), "c");

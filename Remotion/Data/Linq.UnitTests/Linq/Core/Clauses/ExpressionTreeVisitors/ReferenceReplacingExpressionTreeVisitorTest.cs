@@ -105,7 +105,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.ExpressionTreeVisitors
     }
 
     [Test]
-    public void VisitUnknownExpression_Ignored ()
+    public void VisitUnknownNonExtensionExpression_Ignored ()
     {
       var expression = new UnknownExpression (typeof (object));
       var result = ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (expression, _querySourceMapping, true);
@@ -114,7 +114,6 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.ExpressionTreeVisitors
     }
 
     [Test]
-    [Ignore ("TODO 3197")]
     public void VisitExtensionExpression_ChildrenAreProcessed ()
     {
       var extensionExpression = new TestExtensionExpression (new QuerySourceReferenceExpression (_oldFromClause));

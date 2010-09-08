@@ -226,7 +226,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
     }
 
     [Test]
-    public void VisitUnknownExpression_Ignored ()
+    public void VisitUnknownNonExtensionExpression_Ignored ()
     {
       var expression = new UnknownExpression (typeof (object));
       var result = PartialEvaluatingExpressionTreeVisitor.EvaluateIndependentSubtrees (expression);
@@ -235,8 +235,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
     }
 
     [Test]
-    [Ignore ("TODO 3197")]
-    public void EvaluateChildrenOfExtensionExpressions ()
+    public void VisitExtensionExpression ()
     {
       var innerExpression = Expression.MakeBinary (ExpressionType.Equal, Expression.Constant (0), Expression.Constant (0));
       var extensionExpression = new TestExtensionExpression (innerExpression);

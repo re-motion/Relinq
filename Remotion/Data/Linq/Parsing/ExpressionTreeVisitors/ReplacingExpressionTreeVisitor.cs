@@ -49,7 +49,7 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
 
     public override Expression VisitExpression (Expression expression)
     {
-      if (expression == _replacedExpression || (expression != null && expression.Equals (_replacedExpression)))
+      if (Equals (expression, _replacedExpression))
         return _replacementExpression;
       else
         return base.VisitExpression (expression);
@@ -61,7 +61,7 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
       return expression; // Note that we modifiy the (mutable) QueryModel, we return an unchanged expression
     }
 
-    protected internal override Expression VisitUnknownExpression (Expression expression)
+    protected internal override Expression VisitUnknownNonExtensionExpression (Expression expression)
     {
       //ignore
       return expression;

@@ -110,7 +110,7 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
       throw new NotSupportedException (string.Format ("Binary expression with node type '{0}' is not supported.", expression.NodeType));
     }
 
-    protected internal override Expression VisitUnknownExpression (Expression expression)
+    protected internal override Expression VisitUnknownNonExtensionExpression (Expression expression)
     {
       //ignore
       return expression;

@@ -15,7 +15,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.ComponentModel;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Parsing;
@@ -31,11 +30,11 @@ namespace Remotion.Data.Linq.Clauses.Expressions
   /// <para>
   /// Subclasses of <see cref="ThrowingExpressionTreeVisitor"/> that do not implement <see cref="IVBSpecificExpressionVisitor"/> will, by default, 
   /// automatically reduce this expression type to <see cref="BinaryExpression"/> in the 
-  /// <see cref="ThrowingExpressionTreeVisitor.VisitUnknownExpression"/> method.
+  /// <see cref="ThrowingExpressionTreeVisitor.VisitExtensionExpression"/> method.
   /// </para>
   /// <para>
   /// Subclasses of <see cref="ExpressionTreeVisitor"/> that do not implement <see cref="IVBSpecificExpressionVisitor"/> will, by default, 
-  /// ignore this expression and visit its child expressions via the <see cref="ExpressionTreeVisitor.VisitUnknownExpression"/> and 
+  /// ignore this expression and visit its child expressions via the <see cref="ExpressionTreeVisitor.VisitExtensionExpression"/> and 
   /// <see cref="VisitChildren"/> methods.
   /// </para>
   /// </remarks>

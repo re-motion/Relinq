@@ -696,16 +696,16 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTe
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Expression type -1 is not supported by this ExpressionTreeVisitor.*\\.", MatchType = MessageMatch.Regex)]
-    public void VisitUnknownExpression ()
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Expression type 'SpecialExpressionNode' is not supported by this ExpressionTreeVisitor.*\\.", MatchType = MessageMatch.Regex)]
+    public void VisitUnknownNonExtensionExpression ()
     {
       var expressionNode = new SpecialExpressionNode ((ExpressionType) (-1), typeof (int));
-      Expect.Call (InvokeVisitMethod ("VisitUnknownExpression", expressionNode)).CallOriginalMethod (OriginalCallOptions.CreateExpectation);
+      Expect.Call (InvokeVisitMethod ("VisitUnknownNonExtensionExpression", expressionNode)).CallOriginalMethod (OriginalCallOptions.CreateExpectation);
       MockRepository.ReplayAll();
 
       try
       {
-        InvokeVisitMethod ("VisitUnknownExpression", expressionNode);
+        InvokeVisitMethod ("VisitUnknownNonExtensionExpression", expressionNode);
       }
       catch (TargetInvocationException ex)
       {
@@ -714,18 +714,18 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTe
     }
 
     [Test]
-    public void VisitUnknownExpression_ExtensionExpression_CallsVisitChildren ()
+    public void VisitExtensionExpression_CallsVisitChildren ()
     {
       var expectedResult = Expression.Constant (0);
 
       var extensionExpressionMock = MockRepository.StrictMock<ExtensionExpression> (typeof (int));
-      Expect.Call (InvokeVisitMethod ("VisitUnknownExpression", extensionExpressionMock)).CallOriginalMethod (OriginalCallOptions.CreateExpectation);
+      Expect.Call (InvokeVisitMethod ("VisitExtensionExpression", extensionExpressionMock)).CallOriginalMethod (OriginalCallOptions.CreateExpectation);
       extensionExpressionMock
           .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitChildren", VisitorMock))
           .Return (expectedResult);
       MockRepository.ReplayAll();
 
-      var result = InvokeVisitMethod ("VisitUnknownExpression", extensionExpressionMock);
+      var result = InvokeVisitMethod ("VisitExtensionExpression", extensionExpressionMock);
 
       MockRepository.VerifyAll ();
       Assert.That (result, Is.SameAs (expectedResult));
