@@ -67,7 +67,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.TestQueryGenerators
     public static IQueryable<Cook> CreateFromQueryWithMemberQuerySourceAndJoin (IQueryable<Company> source)
     {
       return from sdd in source
-             from s1 in sdd.Restaurant.Cooks
+             from s1 in sdd.MainRestaurant.Cooks
              select s1;
     }
 

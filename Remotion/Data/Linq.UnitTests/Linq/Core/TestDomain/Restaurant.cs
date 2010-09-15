@@ -24,5 +24,6 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain
     public int ID { get; set; }
     public Kitchen SubKitchen { get; set; }
     public IEnumerable<Cook> Cooks { get; set; }
+    public Company CompanyIfAny { get; set; }
   }
 }

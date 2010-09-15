@@ -15,12 +15,15 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Linq;
 
 namespace Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain
 {
   public class Company
   {
+    public int ID { get; set; }
     public Kitchen MainKitchen { get; set; }
-    public Restaurant Restaurant { get; set; }
+    public Restaurant MainRestaurant { get; set; }
+    public IQueryable<Restaurant> AllRestaurants { get; set; }
   }
 }

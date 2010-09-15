@@ -40,7 +40,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.TestQueryGenerators
 
     public static IQueryable<Company> CreateImplicitOrderByJoinWithMultipleJoins (IQueryable<Company> source)
     {
-      return from sdd in source orderby sdd.MainKitchen.Cook.FirstName, sdd.Restaurant.ID select sdd;
+      return from sdd in source orderby sdd.MainKitchen.Cook.FirstName, sdd.MainRestaurant.ID select sdd;
     }
 
     public static IQueryable<Company> CreateImplicitOrderByJoinCheckingCorrectNumberOfEntries (IQueryable<Company> source)
@@ -60,7 +60,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.TestQueryGenerators
 
     public static IQueryable<Tuple<string, int>> CreateComplexImplicitSelectJoin (IQueryable<Company> source)
     {
-      return from sdd in source select new Tuple<string, int> (sdd.MainKitchen.Cook.FirstName, sdd.Restaurant.ID);
+      return from sdd in source select new Tuple<string, int> (sdd.MainKitchen.Cook.FirstName, sdd.MainRestaurant.ID);
     }
 
     public static IQueryable<Kitchen> CreateSimpleImplicitWhereJoin (IQueryable<Kitchen> source)
