@@ -15,7 +15,9 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
@@ -58,6 +60,22 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
       var outerSubQuery = ((SubQueryExpression) outerSubQueryFromClause.FromExpression).QueryModel;
       var innerSubQueryFromClause = (AdditionalFromClause) outerSubQuery.BodyClauses[0];
       Assert.That (innerSubQueryFromClause.FromExpression, Is.TypeOf (typeof (SubQueryExpression)));
+    }
+
+    [Test]
+    [Ignore ("TODO 3207")]
+    public void SubQuery_InNewExpression_RetainsType ()
+    {
+      var queryable = from s in QuerySource select new { Result = from s2 in (IEnumerable<Cook>) QuerySource select s2 };
+      var queryModel = QueryParser.GetParsedQuery (queryable.Expression);
+
+      Assert.That (queryModel.SelectClause.Selector, Is.TypeOf (typeof (NewExpression)));
+      Assert.That (((NewExpression) queryModel.SelectClause.Selector).Arguments[0], Is.TypeOf (typeof (SubQueryExpression)));
+      Assert.That (((NewExpression) queryModel.SelectClause.Selector).Arguments[0].Type, Is.SameAs (typeof (IEnumerable<Cook>)));
+
+      var subQueryModel = ((SubQueryExpression) ((NewExpression) queryModel.SelectClause.Selector).Arguments[0]).QueryModel;
+      Assert.That (subQueryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IEnumerable<Cook>)));
+
     }
   }
 }

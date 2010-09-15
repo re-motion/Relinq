@@ -56,7 +56,7 @@ namespace Remotion.Data.Linq
     public QueryModel (MainFromClause mainFromClause, SelectClause selectClause)
     {
       ArgumentUtility.CheckNotNull ("mainFromClause", mainFromClause);
-      ArgumentUtility.CheckNotNull ("SelectOrGroupClause", selectClause);
+      ArgumentUtility.CheckNotNull ("selectClause", selectClause);
 
       _uniqueIdentifierGenerator = new UniqueIdentifierGenerator();
 
