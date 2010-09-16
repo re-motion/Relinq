@@ -43,5 +43,11 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.StreamedData
       Assert.That (_streamedForcedSingleValueInfoNoDefault.DataType, Is.EqualTo(typeof (Restaurant)));
       Assert.That (_streamedForcedSingleValueInfoNoDefault.ReturnDefaultWhenEmpty, Is.False);
     }
+
+    [Test]
+    public void AdjustDataInfo ()
+    {
+      Assert.That (_streamedForcedSingleValueInfoWithDefault.AdjustDataType (typeof (object)), Is.TypeOf (typeof (StreamedForcedSingleValueInfo)));
+    }
   }
 }

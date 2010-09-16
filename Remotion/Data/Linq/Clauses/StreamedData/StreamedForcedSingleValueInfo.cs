@@ -16,6 +16,7 @@
 // 
 using System;
 using Remotion.Data.Linq.Clauses.ResultOperators;
+using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.Clauses.StreamedData
 {
@@ -32,6 +33,10 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
 
     }
 
-
+    protected override StreamedValueInfo CloneWithNewDataType (Type dataType)
+    {
+      ArgumentUtility.CheckNotNull ("dataType", dataType);
+      return new StreamedForcedSingleValueInfo (dataType, ReturnDefaultWhenEmpty);
+    }
   }
 }
