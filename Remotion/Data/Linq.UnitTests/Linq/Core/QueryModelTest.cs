@@ -15,11 +15,11 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultOperators;
@@ -96,6 +96,31 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
       var outputDataInfo = _queryModel.GetOutputDataInfo ();
       Assert.That (outputDataInfo, Is.InstanceOfType (typeof (StreamedValueInfo)));
       Assert.That (outputDataInfo.DataType, Is.SameAs (typeof (int)));
+    }
+
+    [Test]
+    public void GetOutputDataInfo_WithResultTypeOverride ()
+    {
+      _queryModel.ResultTypeOverride = typeof (List<>);
+      
+      var outputDataInfo = _queryModel.GetOutputDataInfo ();
+      
+      Assert.That (outputDataInfo, Is.InstanceOfType (typeof (StreamedSequenceInfo)));
+      Assert.That (outputDataInfo.DataType, Is.SameAs (typeof (List<int>)));
+      Assert.That (((StreamedSequenceInfo) outputDataInfo).ItemExpression, Is.SameAs (_queryModel.SelectClause.Selector));
+    }
+
+    [Test]
+    public void GetOutputDataInfo_WithResultTypeOverride_Null ()
+    {
+      _queryModel.ResultTypeOverride = typeof (IEnumerable<object>);
+      _queryModel.ResultTypeOverride = null;
+
+      var outputDataInfo = _queryModel.GetOutputDataInfo ();
+
+      Assert.That (outputDataInfo, Is.InstanceOfType (typeof (StreamedSequenceInfo)));
+      Assert.That (outputDataInfo.DataType, Is.SameAs (typeof (IQueryable<int>)));
+      Assert.That (((StreamedSequenceInfo) outputDataInfo).ItemExpression, Is.SameAs (_queryModel.SelectClause.Selector));
     }
 
     [Test]

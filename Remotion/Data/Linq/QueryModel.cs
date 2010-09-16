@@ -72,6 +72,8 @@ namespace Remotion.Data.Linq
       ResultOperators.ItemSet += ResultOperators_ItemAdded;
     }
 
+    public Type ResultTypeOverride { get; set; }
+
     public Type GetResultType ()
     {
       return GetOutputDataInfo ().DataType;
@@ -91,12 +93,13 @@ namespace Remotion.Data.Linq
     /// </remarks>
     public IStreamedDataInfo GetOutputDataInfo ()
     {
-      IStreamedDataInfo outputDataInfo = SelectClause.GetOutputDataInfo ();
+      var outputDataInfo = ResultOperators
+          .Aggregate ((IStreamedDataInfo) SelectClause.GetOutputDataInfo (), (current, resultOperator) => resultOperator.GetOutputDataInfo (current));
 
-      foreach (var resultOperator in ResultOperators)
-        outputDataInfo = resultOperator.GetOutputDataInfo (outputDataInfo);
-
-      return outputDataInfo;
+      if (ResultTypeOverride != null)
+        return outputDataInfo.AdjustDataType (ResultTypeOverride);
+      else
+        return outputDataInfo;
     }
 
     /// <summary>
