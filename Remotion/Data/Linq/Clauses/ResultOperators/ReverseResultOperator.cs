@@ -32,7 +32,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   ///              select s).Reverse();
   /// </code>
   /// </example>
-  public class ReverseResultOperator : SequenceTypePreservingResultOperatorBase
+  public class ReverseResultOperator : SequenceTypePreservingResultOperatorBase // TODO 3207
   {
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {

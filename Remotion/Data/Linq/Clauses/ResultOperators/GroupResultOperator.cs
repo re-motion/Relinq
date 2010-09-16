@@ -38,7 +38,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   ///             group s by s.Country;
   /// </code>
   /// </example>
-  public class GroupResultOperator : SequenceFromSequenceResultOperatorBase, IQuerySource
+  public class GroupResultOperator : SequenceFromSequenceResultOperatorBase, IQuerySource // TODO 3207
   {
     private string _itemName;
 

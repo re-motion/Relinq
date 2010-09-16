@@ -45,7 +45,7 @@ namespace Remotion.Data.Linq.Clauses
     /// Initializes a new instance of the <see cref="SelectClause"/> class.
     /// </summary>
     /// <param name="selector">The selector that projects the data items.</param>
-    public SelectClause (Expression selector)
+    public SelectClause (Expression selector) // TODO 3207
     {
       ArgumentUtility.CheckNotNull ("selector", selector);
 

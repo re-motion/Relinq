@@ -36,7 +36,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   ///              select s).Intersect(students2);
   /// </code>
   /// </example>
-  public class IntersectResultOperator : SequenceTypePreservingResultOperatorBase
+  public class IntersectResultOperator : SequenceTypePreservingResultOperatorBase // TODO 3207
   {
     private Expression _source2;
 

@@ -38,7 +38,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   {
     private Type _castItemType;
 
-    public CastResultOperator (Type castItemType)
+    public CastResultOperator (Type castItemType) // TODO 3207
     {
       ArgumentUtility.CheckNotNull ("castItemType", castItemType);
       CastItemType = castItemType;

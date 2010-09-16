@@ -34,7 +34,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   ///              select s).Take(3);
   /// </code>
   /// </example>
-  public class TakeResultOperator : SequenceTypePreservingResultOperatorBase
+  public class TakeResultOperator : SequenceTypePreservingResultOperatorBase // TODO 3207
   {
     private Expression _count;
     

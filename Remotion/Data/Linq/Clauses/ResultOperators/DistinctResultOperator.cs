@@ -32,7 +32,7 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
   ///              select s).Distinct();
   /// </code>
   /// </example>
-  public class DistinctResultOperator : SequenceTypePreservingResultOperatorBase
+  public class DistinctResultOperator : SequenceTypePreservingResultOperatorBase // TODO 3207
   {
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
