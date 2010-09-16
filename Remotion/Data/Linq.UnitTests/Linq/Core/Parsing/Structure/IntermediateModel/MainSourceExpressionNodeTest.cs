@@ -82,6 +82,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateM
       Assert.That (queryModel.MainFromClause.FromExpression, Is.SameAs (_node.ParsedExpression));
       Assert.That (queryModel.SelectClause, Is.Not.Null);
       Assert.That (((QuerySourceReferenceExpression) queryModel.SelectClause.Selector).ReferencedQuerySource, Is.SameAs (queryModel.MainFromClause));
+      Assert.That (queryModel.ResultTypeOverride, Is.SameAs (typeof (int[])));
     }
 
     [Test]

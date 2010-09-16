@@ -63,7 +63,6 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
     }
 
     [Test]
-    [Ignore ("TODO 3207")]
     public void SubQuery_InNewExpression_RetainsType ()
     {
       var queryable = from s in QuerySource select new { Result = from s2 in (IEnumerable<Cook>) QuerySource select s2 };

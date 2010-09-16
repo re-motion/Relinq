@@ -19,7 +19,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultOperators;
@@ -46,7 +45,8 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateM
       
       var distinctMethod = ReflectionUtility.GetMethod (() => new int[0].Distinct ());
       _resultOperatorSource = new DistinctExpressionNode (CreateParseInfo (SourceNode, "distinct", distinctMethod));
-      _nodeWithResultOperatorSource = new TestMethodCallExpressionNode (CreateParseInfo (_resultOperatorSource, "test"), _clauseToAddInApply);
+      var method = ReflectionUtility.GetMethod (() => Queryable.Take<int> (null, 0));
+      _nodeWithResultOperatorSource = new TestMethodCallExpressionNode (CreateParseInfo (_resultOperatorSource, "test", method), _clauseToAddInApply);
       _queryModelWithResultOperator = QueryModel.Clone ();
       _queryModelWithResultOperator.ResultOperators.Add (new DistinctResultOperator ());
     }
@@ -115,6 +115,13 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateM
 
       var newSelector = (MethodCallExpression) newQueryModel.SelectClause.Selector;
       Assert.That (((QuerySourceReferenceExpression) newSelector.Object).ReferencedQuerySource, Is.SameAs (newQueryModel.MainFromClause));
+    }
+
+    [Test]
+    public void Apply_SetsResultTypeOverride ()
+    {
+      var newQueryModel = _node.Apply (QueryModel, ClauseGenerationContext);
+      Assert.That (newQueryModel.ResultTypeOverride, Is.SameAs (typeof (int)));
     }
   }
 }

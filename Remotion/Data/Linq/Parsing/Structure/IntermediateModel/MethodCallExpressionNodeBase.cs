@@ -50,6 +50,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     {
       AssociatedIdentifier = parseInfo.AssociatedIdentifier;
       Source = parseInfo.Source;
+      NodeResultType = parseInfo.ParsedExpression.Type;
     }
 
     public string AssociatedIdentifier { get; private set; }
@@ -59,6 +60,8 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       get { return _source; }
       protected set { _source = ArgumentUtility.CheckNotNull ("value", value); }
     }
+
+    public Type NodeResultType { get; private set; }
     
     public abstract Expression Resolve (
         ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext);
@@ -71,6 +74,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
       queryModel = WrapQueryModelAfterEndOfQuery (queryModel, clauseGenerationContext);
       queryModel = ApplyNodeSpecificSemantics (queryModel, clauseGenerationContext);
+      SetResultTypeOverride (queryModel);
       return queryModel;
     }
 
@@ -117,6 +121,25 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       else
         return queryModel;
     }
+
+    /// <summary>
+    /// Sets the result type override of the given <see cref="QueryModel"/>.
+    /// </summary>
+    /// <param name="queryModel">The query model to set the <see cref="QueryModel.ResultTypeOverride"/> of.</param>
+    /// <remarks>
+    /// By default, the result type override is set to <see cref="NodeResultType"/> in the <see cref="Apply"/> method. This ensures that the query
+    /// model represents the type of the query correctly. Specific node parsers can override this method to set the 
+    /// <see cref="QueryModel.ResultTypeOverride"/> to another value, or to clear it (set it to <see langword="null" />). Do not leave the
+    /// <see cref="QueryModel.ResultTypeOverride"/> unchanged when overriding this method, as a source node might have set it to a value that doesn't 
+    /// fit this node.
+    /// </remarks>
+    protected virtual void SetResultTypeOverride (QueryModel queryModel)
+    {
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+
+      queryModel.ResultTypeOverride = NodeResultType;
+    }
+
 
     private QueryModel WrapQueryModel (QueryModel queryModel, string associatedIdentifier, ClauseGenerationContext clauseGenerationContext)
     {

@@ -32,28 +32,43 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateM
     private LambdaExpression _resultSelectorWithElementSelector;
     private LambdaExpression _resultSelectorWithoutElementSelector;
 
+    private IEnumerable<int> _sourceEnumerable;
+
+    private MethodCallExpressionParseInfo _parseInfoWithElementSelector;
     private GroupByWithResultSelectorExpressionNode _nodeWithElementSelector;
     private GroupByWithResultSelectorExpressionNode _nodeWithoutElementSelector;
 
     public override void SetUp ()
     {
-      base.SetUp ();
+      base.SetUp();
 
       _keySelector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      _elementSelector = ExpressionHelper.CreateLambdaExpression<int, string> (i => i.ToString ());
+      _elementSelector = ExpressionHelper.CreateLambdaExpression<int, string> (i => i.ToString());
       _resultSelectorWithElementSelector = ExpressionHelper.CreateLambdaExpression<bool, IEnumerable<string>, KeyValuePair<bool, int>> (
-          (key, group) => new KeyValuePair<bool, int> (key, group.Count ()));
+          (key, group) => new KeyValuePair<bool, int> (key, group.Count()));
 
+      _sourceEnumerable = ExpressionHelper.CreateIntQueryable();
+
+      var methodCallExpressionWithElementSelector = (MethodCallExpression) ExpressionHelper.MakeExpression (
+          () => _sourceEnumerable.GroupBy (
+              i => i > 5,
+              i => i.ToString(),
+              (key, group) => new KeyValuePair<bool, int> (key, group.Count())));
+      _parseInfoWithElementSelector = new MethodCallExpressionParseInfo ("g", SourceNode, methodCallExpressionWithElementSelector);
       _nodeWithElementSelector = new GroupByWithResultSelectorExpressionNode (
-          CreateParseInfo (SourceNode, "g"), 
-          _keySelector, 
-          _elementSelector, 
+          _parseInfoWithElementSelector,
+          _keySelector,
+          _elementSelector,
           _resultSelectorWithElementSelector);
 
+      var methodCallExpressionWithoutElementSelector = (MethodCallExpression) ExpressionHelper.MakeExpression (
+          () => _sourceEnumerable.GroupBy (
+              i => i > 5,
+              (key, group) => new KeyValuePair<bool, int> (key, group.Count())));
       _resultSelectorWithoutElementSelector = ExpressionHelper.CreateLambdaExpression<bool, IEnumerable<int>, KeyValuePair<bool, int>> (
-          (key, group) => new KeyValuePair<bool, int> (key, group.Count ()));
+          (key, group) => new KeyValuePair<bool, int> (key, group.Count()));
       _nodeWithoutElementSelector = new GroupByWithResultSelectorExpressionNode (
-          CreateParseInfo (SourceNode, "g"),
+          new MethodCallExpressionParseInfo ("g", SourceNode, methodCallExpressionWithoutElementSelector),
           _keySelector,
           _resultSelectorWithoutElementSelector,
           null);
@@ -64,42 +79,57 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateM
     {
       AssertSupportedMethod_Generic (
           GroupByWithResultSelectorExpressionNode.SupportedMethods,
-          q => q.GroupBy (o => o.GetType (), o => o, (key, g) => 12),
-          e => e.GroupBy (o => o.GetType (), o => o, (key, g) => 12));
+          q => q.GroupBy (o => o.GetType(), o => o, (key, g) => 12),
+          e => e.GroupBy (o => o.GetType(), o => o, (key, g) => 12));
 
       AssertSupportedMethod_Generic (
           GroupByWithResultSelectorExpressionNode.SupportedMethods,
-          q => q.GroupBy (o => o.GetType (), (key, g) => 12),
-          e => e.GroupBy (o => o.GetType (), (key, g) => 12));
+          q => q.GroupBy (o => o.GetType(), (key, g) => 12),
+          e => e.GroupBy (o => o.GetType(), (key, g) => 12));
     }
 
     [Test]
-    public void Initialization ()
+    public void Initialization_WithElementSelector ()
     {
       var expectedSelectorWithElementSelector = ExpressionHelper.CreateLambdaExpression<IGrouping<bool, string>, KeyValuePair<bool, int>> (
-          group => new KeyValuePair<bool, int> (group.Key, group.Count ()));
+          group => new KeyValuePair<bool, int> (group.Key, group.Count()));
       ExpressionTreeComparer.CheckAreEqualTrees (expectedSelectorWithElementSelector, _nodeWithElementSelector.Selector);
 
       Assert.That (((GroupByExpressionNode) _nodeWithElementSelector.Source).KeySelector, Is.SameAs (_keySelector));
       Assert.That (((GroupByExpressionNode) _nodeWithElementSelector.Source).OptionalElementSelector, Is.SameAs (_elementSelector));
 
+      var expectedSimulatedGroupByCallWithElementSelector =
+          ExpressionHelper.MakeExpression (() => (_sourceEnumerable.GroupBy (i => i > 5, i => i.ToString())));
+      ExpressionTreeComparer.CheckAreEqualTrees (
+          expectedSimulatedGroupByCallWithElementSelector,
+          ((GroupByExpressionNode) _nodeWithElementSelector.Source).ParsedExpression);
+    }
+
+    [Test]
+    public void Initialization_WithoutElementSelector ()
+    {
       var expectedSelectorWithoutElementSelector = ExpressionHelper.CreateLambdaExpression<IGrouping<bool, int>, KeyValuePair<bool, int>> (
-          group => new KeyValuePair<bool, int> (group.Key, group.Count ()));
+          group => new KeyValuePair<bool, int> (group.Key, group.Count()));
       ExpressionTreeComparer.CheckAreEqualTrees (expectedSelectorWithoutElementSelector, _nodeWithoutElementSelector.Selector);
 
       Assert.That (((GroupByExpressionNode) _nodeWithoutElementSelector.Source).KeySelector, Is.SameAs (_keySelector));
       Assert.That (((GroupByExpressionNode) _nodeWithoutElementSelector.Source).OptionalElementSelector, Is.Null);
+
+      var expectedSimulatedGroupByCallWithoutElementSelector = ExpressionHelper.MakeExpression (() => (_sourceEnumerable.GroupBy (i => i > 5)));
+      ExpressionTreeComparer.CheckAreEqualTrees (
+          expectedSimulatedGroupByCallWithoutElementSelector,
+          ((GroupByExpressionNode) _nodeWithoutElementSelector.Source).ParsedExpression);
     }
 
     [Test]
     [ExpectedException (
-        typeof (ArgumentException), 
-        ExpectedMessage = "ResultSelector must have exactly two parameters.", 
+        typeof (ArgumentException),
+        ExpectedMessage = "ResultSelector must have exactly two parameters.",
         MatchType = MessageMatch.Contains)]
     public void Initialization_InvalidResultSelector_WrongNumberOfParameters ()
     {
       var resultSelector = ExpressionHelper.CreateLambdaExpression<int, string, double, bool> ((i, s, d) => true);
-      new GroupByWithResultSelectorExpressionNode (CreateParseInfo (), _keySelector, _elementSelector, resultSelector);
+      new GroupByWithResultSelectorExpressionNode (_parseInfoWithElementSelector, _keySelector, _elementSelector, resultSelector);
     }
   }
 }

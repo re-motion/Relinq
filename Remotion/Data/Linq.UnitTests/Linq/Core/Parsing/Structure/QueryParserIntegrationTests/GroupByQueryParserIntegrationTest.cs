@@ -96,7 +96,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
           x => new KeyValuePair<bool, IEnumerable<int>> (x.Key, x));
 
       var innerQueryModel = ((SubQueryExpression) outerMainFromClause.FromExpression).QueryModel;
-      Assert.That (innerQueryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<IGrouping<bool, int>>)));
+      Assert.That (innerQueryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IEnumerable<IGrouping<bool, int>>)));
 
       var innerMainFromClause = innerQueryModel.MainFromClause;
       CheckConstantQuerySource (innerMainFromClause.FromExpression, QuerySource);
@@ -141,7 +141,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
           x => new KeyValuePair<bool, IEnumerable<Cook>> (x.Key, x));
 
       var innerQueryModel = ((SubQueryExpression) outerMainFromClause.FromExpression).QueryModel;
-      Assert.That (innerQueryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<IGrouping<bool, Cook>>)));
+      Assert.That (innerQueryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IEnumerable<IGrouping<bool, Cook>>)));
 
       var innerMainFromClause = innerQueryModel.MainFromClause;
       CheckConstantQuerySource (innerMainFromClause.FromExpression, QuerySource);

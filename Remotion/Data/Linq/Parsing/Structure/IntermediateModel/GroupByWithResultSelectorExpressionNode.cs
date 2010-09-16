@@ -70,14 +70,48 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     }
 
   
-    private static MethodCallExpressionParseInfo CreateParseInfoWithGroupNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression keySelector, LambdaExpression elementSelectorOrResultSelector, LambdaExpression resultSelectorOrNull)
+    private static MethodCallExpressionParseInfo CreateParseInfoWithGroupNode (
+        MethodCallExpressionParseInfo parseInfo, 
+        LambdaExpression keySelector, 
+        LambdaExpression elementSelectorOrResultSelector, 
+        LambdaExpression resultSelectorOrNull)
     {
       var optionalElementSelector = GetOptionalElementSelector (elementSelectorOrResultSelector, resultSelectorOrNull);
-      var groupBySourceNode = new GroupByExpressionNode (parseInfo, keySelector, optionalElementSelector);
+
+      var sourceItemType = ReflectionUtility.GetItemTypeOfIEnumerable (
+          parseInfo.ParsedExpression.Arguments[0].Type, 
+          "parseInfo.ParsedExpression.Arguments[0].Type");
+
+      MethodCallExpression simulatedGroupByCallWithoutResultSelector;
+      if (optionalElementSelector == null)
+      {
+        simulatedGroupByCallWithoutResultSelector = Expression.Call (
+            typeof (Enumerable),
+            "GroupBy",
+            new[] { sourceItemType, keySelector.Body.Type },
+            parseInfo.ParsedExpression.Arguments[0],
+            keySelector);
+      }
+      else
+      {
+        simulatedGroupByCallWithoutResultSelector = Expression.Call (
+            typeof (Enumerable),
+            "GroupBy",
+            new[] { sourceItemType, keySelector.Body.Type, optionalElementSelector.Body.Type },
+            parseInfo.ParsedExpression.Arguments[0],
+            keySelector,
+            optionalElementSelector);
+      }
+
+      var simulatedParseInfo = new MethodCallExpressionParseInfo(parseInfo.AssociatedIdentifier, parseInfo.Source, simulatedGroupByCallWithoutResultSelector);
+      var groupBySourceNode = new GroupByExpressionNode (simulatedParseInfo, keySelector, optionalElementSelector);
       return new MethodCallExpressionParseInfo (parseInfo.AssociatedIdentifier, groupBySourceNode, parseInfo.ParsedExpression);
     }
 
-    private static LambdaExpression CreateSelectorForSelectNode (LambdaExpression keySelector, LambdaExpression elementSelectorOrResultSelector, LambdaExpression resultSelectorOrNull)
+    private static LambdaExpression CreateSelectorForSelectNode (
+        LambdaExpression keySelector, 
+        LambdaExpression elementSelectorOrResultSelector, 
+        LambdaExpression resultSelectorOrNull)
     {
       var resultSelector = GetResultSelector (elementSelectorOrResultSelector, resultSelectorOrNull);
       var optionalElementSelector = GetOptionalElementSelector (elementSelectorOrResultSelector, resultSelectorOrNull);
@@ -116,19 +150,5 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
         return elementSelectorOrResultSelector;
       }
     }
-
-    private static Type GetElementType (
-        LambdaExpression keySelector,
-        LambdaExpression elementSelectorOrResultSelector,
-        LambdaExpression resultSelectorOrNull)
-    {
-      var optionalElementSelector = GetOptionalElementSelector (elementSelectorOrResultSelector, resultSelectorOrNull);
-      if (optionalElementSelector != null)
-        return optionalElementSelector.Body.Type;
-      else
-        return keySelector.Parameters[0].Type;
-    }
-
-
   }
 }

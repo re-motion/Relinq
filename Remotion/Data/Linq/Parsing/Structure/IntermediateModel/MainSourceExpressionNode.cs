@@ -71,7 +71,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
       var mainFromClause = CreateMainFromClause (clauseGenerationContext);
       var defaultSelectClause = new SelectClause (new QuerySourceReferenceExpression (mainFromClause));
-      return new QueryModel (mainFromClause, defaultSelectClause);
+      return new QueryModel (mainFromClause, defaultSelectClause) { ResultTypeOverride = QuerySourceType };
     }
 
     private MainFromClause CreateMainFromClause (ClauseGenerationContext clauseGenerationContext)
