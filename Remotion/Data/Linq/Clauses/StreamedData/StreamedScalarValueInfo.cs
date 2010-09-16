@@ -49,6 +49,12 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
       return new StreamedValue (result, this);
     }
 
+    protected override StreamedValueInfo CloneWithNewDataType (Type dataType)
+    {
+      ArgumentUtility.CheckNotNull ("dataType", dataType);
+      return new StreamedScalarValueInfo (dataType);
+    }
+
     public object ExecuteScalarQueryModel<T> (QueryModel queryModel, IQueryExecutor executor)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);

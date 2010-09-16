@@ -56,6 +56,11 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
       return new StreamedValue (result, this);
     }
 
+    protected override StreamedValueInfo CloneWithNewDataType (Type dataType)
+    {
+      return new StreamedSingleValueInfo (dataType, _returnDefaultWhenEmpty);
+    }
+
     public object ExecuteSingleQueryModel<T> (QueryModel queryModel, IQueryExecutor executor)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);

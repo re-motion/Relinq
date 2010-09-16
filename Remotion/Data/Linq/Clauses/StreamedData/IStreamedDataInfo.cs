@@ -17,7 +17,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Remotion.Data.Linq.EagerFetching;
 
 namespace Remotion.Data.Linq.Clauses.StreamedData
 {
@@ -50,5 +49,17 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
     /// <param name="executor">The executor to use.</param>
     /// <returns>An <see cref="IStreamedData"/> object holding the results of the query execution.</returns>
     IStreamedData ExecuteQueryModel (QueryModel queryModel, IQueryExecutor executor);
+
+    /// <summary>
+    /// Returns a new <see cref="IStreamedDataInfo"/> of the same type as this instance, but with a new <see cref="DataType"/>.
+    /// </summary>
+    /// <param name="dataType">The type to use for the <see cref="DataType"/> property. The type must be compatible with the data described by this 
+    /// <see cref="IStreamedDataInfo"/>, otherwise an exception is thrown.
+    /// The type may be a generic type definition if the <see cref="IStreamedDataInfo"/> supports generic types; in this case,
+    /// the type definition is automatically closed with generic parameters to match the data described by this <see cref="IStreamedDataInfo"/>.</param>
+    /// <returns>A new <see cref="IStreamedDataInfo"/> of the same type as this instance, but with a new <see cref="DataType"/>.</returns>
+    /// <exception cref="ArgumentException">The <paramref name="dataType"/> is not compatible with the data described by this 
+    /// <see cref="IStreamedDataInfo"/>.</exception>
+    IStreamedDataInfo AdjustDataType (Type dataType);
   }
 }

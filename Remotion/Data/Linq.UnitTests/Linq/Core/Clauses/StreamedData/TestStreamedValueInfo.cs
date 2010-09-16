@@ -17,6 +17,7 @@
 using System;
 using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses.StreamedData;
+using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.StreamedData
 {
@@ -30,6 +31,12 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.StreamedData
     public override IStreamedData ExecuteQueryModel (QueryModel queryModel, IQueryExecutor executor)
     {
       throw new NotImplementedException();
+    }
+
+    protected override StreamedValueInfo CloneWithNewDataType (Type dataType)
+    {
+      ArgumentUtility.CheckNotNull ("dataType", dataType);
+      return new TestStreamedValueInfo (dataType);
     }
   }
 }

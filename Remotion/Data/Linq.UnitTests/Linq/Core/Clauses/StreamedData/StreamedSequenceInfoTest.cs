@@ -15,6 +15,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
@@ -59,6 +60,56 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.StreamedData
     public void DataType ()
     {
       Assert.That (_infoWithIntSequence.DataType, Is.SameAs (typeof (int[])));
+    }
+
+    [Test]
+    public void AdjustDataType_CompatibleType ()
+    {
+      var result = _infoWithIntSequence.AdjustDataType (typeof (IEnumerable<int>));
+
+      Assert.That (result, Is.Not.SameAs (_infoWithIntSequence));
+      Assert.That (result, Is.TypeOf (typeof (StreamedSequenceInfo)));
+      Assert.That (result.DataType, Is.SameAs (typeof (IEnumerable<int>)));
+      Assert.That (((StreamedSequenceInfo) result).ItemExpression, Is.SameAs (_infoWithIntSequence.ItemExpression));
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage =
+        "'System.Collections.Generic.IEnumerable`1[System.String]' cannot be used as the data type for a sequence with an ItemExpression of type "
+        + "'System.Int32'.\r\nParameter name: dataType")]
+    public void AdjustDataType_IncompatibleType ()
+    {
+      _infoWithIntSequence.AdjustDataType (typeof (IEnumerable<string>));
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage =
+        "'System.Int32' cannot be used as the data type for a sequence with an ItemExpression of type 'System.Int32'.\r\n"
+        + "Parameter name: dataType")]
+    public void AdjustDataType_NonEnumerableType ()
+    {
+      _infoWithIntSequence.AdjustDataType (typeof (int));
+    }
+
+    [Test]
+    public void AdjustDataType_GenericTypeDefinition ()
+    {
+      var result = _infoWithIntSequence.AdjustDataType (typeof (IEnumerable<>));
+
+      Assert.That (result, Is.Not.SameAs (_infoWithIntSequence));
+      Assert.That (result, Is.TypeOf (typeof (StreamedSequenceInfo)));
+      Assert.That (result.DataType, Is.SameAs (typeof (IEnumerable<int>)));
+      Assert.That (((StreamedSequenceInfo) result).ItemExpression, Is.SameAs (_infoWithIntSequence.ItemExpression));
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage =
+        "The generic type definition 'System.Collections.Generic.IDictionary`2[TKey,TValue]' could not be closed over the type of the ItemExpression "
+        + "('System.Int32'). The type or method has 2 generic parameter(s), but 1 generic argument(s) were provided. A generic argument must be "
+        + "provided for each generic parameter.\r\nParameter name: dataType")]
+    public void AdjustDataType_GenericTypeDefinition_WrongNumberOfArguments ()
+    {
+      _infoWithIntSequence.AdjustDataType (typeof (IDictionary<,>));
     }
 
     [Test]

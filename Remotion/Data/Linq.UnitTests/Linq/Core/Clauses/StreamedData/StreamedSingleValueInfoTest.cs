@@ -38,6 +38,19 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.StreamedData
     }
 
     [Test]
+    public void AdjustDataType ()
+    {
+      var result = _streamedSingleValueInfoWithDefault.AdjustDataType (typeof (object));
+
+      Assert.That (result, Is.Not.SameAs (_streamedSingleValueInfoWithDefault));
+      Assert.That (result, Is.TypeOf (typeof (StreamedSingleValueInfo)));
+      Assert.That (result.DataType, Is.SameAs (typeof (object)));
+      Assert.That (((StreamedSingleValueInfo) result).ReturnDefaultWhenEmpty, Is.True);
+
+      Assert.That (((StreamedSingleValueInfo) _streamedSingleValueInfoNoDefault.AdjustDataType (typeof (object))).ReturnDefaultWhenEmpty, Is.False);
+    }
+
+    [Test]
     public void ExecuteQueryModel_WithDefaultWhenEmpty ()
     {
       var queryModel = ExpressionHelper.CreateQueryModel_Cook ();

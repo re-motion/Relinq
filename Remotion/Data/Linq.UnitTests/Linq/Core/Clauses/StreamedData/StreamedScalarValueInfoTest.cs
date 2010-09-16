@@ -17,7 +17,6 @@
 using System;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses.StreamedData;
 using Rhino.Mocks;
 
@@ -32,6 +31,16 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.StreamedData
     public void SetUp ()
     {
       _streamedScalarValueInfo = new StreamedScalarValueInfo (typeof (int));
+    }
+
+    [Test]
+    public void AdjustDataType ()
+    {
+      var result = _streamedScalarValueInfo.AdjustDataType (typeof (object));
+
+      Assert.That (result, Is.Not.SameAs (_streamedScalarValueInfo));
+      Assert.That (result, Is.TypeOf (typeof (StreamedScalarValueInfo)));
+      Assert.That (result.DataType, Is.SameAs (typeof (object)));
     }
     
     [Test]

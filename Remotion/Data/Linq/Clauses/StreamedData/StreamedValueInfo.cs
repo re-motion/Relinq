@@ -37,8 +37,31 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
     /// </summary>
     public Type DataType { get; private set; }
 
+    /// <inheritdoc />
     public abstract IStreamedData ExecuteQueryModel (QueryModel queryModel, IQueryExecutor executor);
+    
+    /// <summary>
+    /// Returns a new instance of the same <see cref="StreamedValueInfo"/> type with a different <see cref="DataType"/>.
+    /// </summary>
+    /// <param name="dataType">The new data type.</param>
+    /// <exception cref="ArgumentException">The <paramref name="dataType"/> cannot be used for the clone.</exception>
+    /// <returns>A new instance of the same <see cref="StreamedValueInfo"/> type with the given <paramref name="dataType"/>.</returns>
+    protected abstract StreamedValueInfo CloneWithNewDataType (Type dataType);
 
+    /// <inheritdoc />
+    public virtual IStreamedDataInfo AdjustDataType (Type dataType)
+    {
+      ArgumentUtility.CheckNotNull ("dataType", dataType);
+
+      if (!dataType.IsAssignableFrom (DataType))
+      {
+        var message = string.Format ("'{0}' cannot be used as the new data type for a value of type '{1}'.", dataType, DataType);
+        throw new ArgumentException (message, "dataType");
+      }
+
+      return CloneWithNewDataType (dataType);
+    }
+    
     /// <summary>
     /// Takes the given <paramref name="genericMethodDefinition"/> and instantiates it, substituting its generic parameter with the value
     /// type of the value held by this object. The method must have exactly one generic parameter.

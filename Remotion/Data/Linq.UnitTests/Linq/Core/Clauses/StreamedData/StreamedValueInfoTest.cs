@@ -41,6 +41,24 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.StreamedData
     }
 
     [Test]
+    public void AdjustDataType_CompatibleType ()
+    {
+      var result = _infoWithIntValue.AdjustDataType (typeof (object));
+
+      Assert.That (result, Is.Not.SameAs (_infoWithIntValue));
+      Assert.That (result, Is.TypeOf (typeof (TestStreamedValueInfo)));
+      Assert.That (result.DataType, Is.SameAs (typeof (object)));
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage =
+        "'System.String' cannot be used as the new data type for a value of type 'System.Int32'.\r\nParameter name: dataType")]
+    public void AdjustDataType_IncompatibleType ()
+    {
+      _infoWithIntValue.AdjustDataType (typeof (string));
+    }
+
+    [Test]
     public void MakeClosedGenericExecuteMethod ()
     {
       var executeMethod = typeof (CountResultOperator).GetMethod ("ExecuteInMemory", new[] { typeof (StreamedSequence) });
