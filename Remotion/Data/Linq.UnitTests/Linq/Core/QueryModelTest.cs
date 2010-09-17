@@ -183,6 +183,16 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
     }
 
     [Test]
+    public void Clone_Keeps_ResultTypeOverride ()
+    {
+      var queryModel = ExpressionHelper.CreateQueryModel_Cook ();
+      queryModel.ResultTypeOverride = typeof (List<Cook>);
+      var clone = queryModel.Clone ();
+
+      Assert.That (clone.ResultTypeOverride, Is.SameAs (queryModel.ResultTypeOverride));
+    }
+
+    [Test]
     public void Clone_HasCloneForMainFromClause ()
     {
       var clone = _queryModel.Clone();

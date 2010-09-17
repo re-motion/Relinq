@@ -228,6 +228,7 @@ namespace Remotion.Data.Linq
 
       var clone = queryModelBuilder.Build ();
       clone.TransformExpressions (ex => CloningExpressionTreeVisitor.AdjustExpressionAfterCloning (ex, cloneContext.QuerySourceMapping));
+      clone.ResultTypeOverride = ResultTypeOverride;
       return clone;
     }
 
