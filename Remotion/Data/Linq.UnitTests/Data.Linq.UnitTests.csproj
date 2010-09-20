@@ -185,6 +185,7 @@
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\EndsWithMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\EqualsMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\IndexOfMethodCallTransformerTest.cs" />
+    <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\InsertMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\IsNullOrEmptyMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\LikeMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\LowerMethodCallTransformerTest.cs" />
@@ -194,6 +195,7 @@
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\StringLengthMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\SubstringMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\ToStringMethodCallTransformerTest.cs" />
+    <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\TrimMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\UpperMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodInfoBasedMethodCallTransformerRegistryTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\NameBasedMethodCallTransformerRegistryTest.cs" />
