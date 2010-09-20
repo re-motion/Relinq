@@ -184,7 +184,6 @@
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\ConvertMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\EndsWithMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\EqualsMethodCallTransformerTest.cs" />
-    <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\LikeEscapeUtilityTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\IndexOfMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\IsNullOrEmptyMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\LikeMethodCallTransformerTest.cs" />
