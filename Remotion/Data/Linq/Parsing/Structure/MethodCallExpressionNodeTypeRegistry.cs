@@ -96,20 +96,24 @@ namespace Remotion.Data.Linq.Parsing.Structure
     private readonly Dictionary<MethodInfo, Type> _registeredMethodInfoTypes = new Dictionary<MethodInfo, Type>();
     private readonly Dictionary<string, Type> _registeredNamedTypes = new Dictionary<string, Type>();
 
-    // TODO Review 3111: Add documentation to undocumented public properties and methods
-
+    /// <summary>
+    /// Returns the count of the registered <see cref="MethodInfo"/>s.
+    /// </summary>
     public int RegisteredMethodInfoCount
     {
       get { return _registeredMethodInfoTypes.Count; }
     }
 
+    /// <summary>
+    /// Returns the count of the registered method names.
+    /// </summary>
     public int RegisteredNamesCount
     {
       get { return _registeredNamedTypes.Count; }
     }
 
     /// <summary>
-    /// Registers the specified <paramref name="methods"/> with the given <paramref name="nodeType"/>. The given methods must either be non-generic
+    /// Registers the specific <paramref name="methods"/> with the given <paramref name="nodeType"/>. The given methods must either be non-generic
     /// or open generic method definitions. If a method has already been registered before, the later registration overwrites the earlier one.
     /// </summary>
     public void Register (IEnumerable<MethodInfo> methods, Type nodeType)
@@ -140,6 +144,12 @@ namespace Remotion.Data.Linq.Parsing.Structure
       }
     }
 
+    /// <summary>
+    /// Registers the specific method names with the givven <paramref name="nodeType"/>. If a nethod has already been registered before, the later
+    /// registrations overwrites the earlier one.
+    /// </summary>
+    /// <param name="methodNames"></param>
+    /// <param name="nodeType"></param>
     public void Register (IEnumerable<string> methodNames, Type nodeType)
     {
       ArgumentUtility.CheckNotNull ("methodNames", methodNames);
@@ -169,23 +179,19 @@ namespace Remotion.Data.Linq.Parsing.Structure
       ArgumentUtility.CheckNotNull ("method", method);
 
       var methodDefinition = GetRegisterableMethodDefinition (method);
-      try
-      {
-        Type result;
-        if (_registeredMethodInfoTypes.TryGetValue (methodDefinition, out result))
-          return result;
+      
+      Type result;
+      if (_registeredMethodInfoTypes.TryGetValue (methodDefinition, out result))
+        return result;
 
-        // TODO Review 3111: For symmetry, remove try/catch and check the second registry via TryGetValue as well.
-        return _registeredNamedTypes[methodDefinition.Name];
-      }
-      catch (KeyNotFoundException ex)
-      {
-        string message = string.Format (
-            "No corresponding expression node type was registered for method '{0}.{1}'.",
-            methodDefinition.DeclaringType.FullName,
-            methodDefinition.Name);
-        throw new KeyNotFoundException (message, ex);
-      }
+      if (_registeredNamedTypes.TryGetValue (methodDefinition.Name, out result))
+        return result;
+
+      string message = string.Format (
+          "No corresponding expression node type was registered for method '{0}.{1}'.",
+          methodDefinition.DeclaringType.FullName,
+          methodDefinition.Name);
+      throw new KeyNotFoundException (message);
     }
   }
 }
