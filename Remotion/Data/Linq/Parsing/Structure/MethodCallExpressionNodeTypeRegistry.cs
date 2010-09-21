@@ -45,28 +45,33 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
       var supportedMethodsForTypes = from t in expressionNodeTypes
                                      let supportedMethodsField = t.GetField ("SupportedMethods", BindingFlags.Static | BindingFlags.Public)
-                                     where supportedMethodsField != null
-                                     select new { Type = t, Methods = (IEnumerable<MethodInfo>) supportedMethodsField.GetValue (null) };
-
-      var supportedMethodNamesForTypes = from t in expressionNodeTypes
-                                         let supportedMethodNamesField = t.GetField ("SupportedMethodNames", BindingFlags.Static | BindingFlags.Public)
-                                         where supportedMethodNamesField != null
-                                         select new { Type = t, MethodNames = (IEnumerable<string>) supportedMethodNamesField.GetValue (null) };
+                                     let supportedMethodNamesField = t.GetField ("SupportedMethodNames", BindingFlags.Static | BindingFlags.Public)
+                                     select new { 
+                                        Type = t,
+                                        Methods = 
+                                            supportedMethodsField != null
+                                               ? (IEnumerable<MethodInfo>) supportedMethodsField.GetValue (null)
+                                               : Enumerable.Empty<MethodInfo>(),
+                                        MethodNames =
+                                            supportedMethodNamesField != null
+                                                ? ((IEnumerable<string>) supportedMethodNamesField.GetValue (null))
+                                                : Enumerable.Empty<string>()
+                                     };
 
       var registry = new MethodCallExpressionNodeTypeRegistry();
 
       foreach (var methodsForType in supportedMethodsForTypes)
+      {
         registry.Register (methodsForType.Methods, methodsForType.Type);
-
-      foreach (var methodNamesForType in supportedMethodNamesForTypes)
-        registry.Register (methodNamesForType.MethodNames, methodNamesForType.Type);
+        registry.Register (methodsForType.MethodNames, methodsForType.Type);
+      }
 
       return registry;
     }
 
     /// <summary>
     /// Gets the registerable method definition from a given <see cref="MethodInfo"/>. A registerable method is a <see cref="MethodInfo"/> object
-    /// that can be registered via a call to <see cref="Register"/>. When the given <paramref name="method"/> is passed to 
+    /// that can be registered via a call to <see cref="O:Register"/>. When the given <paramref name="method"/> is passed to 
     /// <see cref="GetNodeType"/> and its corresponding registerable method was registered, the correct node type is returned.
     /// </summary>
     /// <param name="method">The method for which the registerable method should be retrieved.</param>
@@ -90,6 +95,8 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
     private readonly Dictionary<MethodInfo, Type> _registeredMethodInfoTypes = new Dictionary<MethodInfo, Type>();
     private readonly Dictionary<string, Type> _registeredNamedTypes = new Dictionary<string, Type>();
+
+    // TODO Review 3111: Add documentation to undocumented public properties and methods
 
     public int RegisteredMethodInfoCount
     {
@@ -168,6 +175,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
         if (_registeredMethodInfoTypes.TryGetValue (methodDefinition, out result))
           return result;
 
+        // TODO Review 3111: For symmetry, remove try/catch and check the second registry via TryGetValue as well.
         return _registeredNamedTypes[methodDefinition.Name];
       }
       catch (KeyNotFoundException ex)
