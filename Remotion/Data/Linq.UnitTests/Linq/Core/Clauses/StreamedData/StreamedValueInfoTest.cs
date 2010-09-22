@@ -96,5 +96,20 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.StreamedData
       var executeMethod = typeof (TestResultOperator).GetMethod ("InvalidExecuteInMemory_TooManyGenericParameters");
       _infoWithIntValue.MakeClosedGenericExecuteMethod (executeMethod);
     }
+
+    [Test]
+    public void Equals ()
+    {
+      Assert.That (new TestStreamedValueInfo (typeof (int)).Equals (null), Is.False);
+      Assert.That (new TestStreamedValueInfo (typeof (int)).Equals (new TestStreamedValueInfo (typeof (int))), Is.True);
+      Assert.That (new TestStreamedValueInfo (typeof (int)).Equals (new TestStreamedValueInfo (typeof (bool))), Is.False);
+    }
+
+    [Test]
+    public void GetHashCodeTest ()
+    {
+      Assert.That (new TestStreamedValueInfo (typeof (int)).GetHashCode (), Is.EqualTo (new TestStreamedValueInfo (typeof (int)).GetHashCode ()));
+      Assert.That (new TestStreamedValueInfo (typeof (int)).GetHashCode (), Is.Not.EqualTo (new TestStreamedValueInfo (typeof (string)).GetHashCode ()));
+    }
   }
 }

@@ -68,5 +68,15 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
 
       return executor.ExecuteSingle<T> (queryModel, _returnDefaultWhenEmpty);
     }
+
+    public override bool Equals (object obj)
+    {
+      return base.Equals (obj) && ((StreamedSingleValueInfo)obj)._returnDefaultWhenEmpty==_returnDefaultWhenEmpty;
+    }
+
+    public override int GetHashCode ()
+    {
+      return base.GetHashCode () ^ _returnDefaultWhenEmpty.GetHashCode();
+    }
   }
 }

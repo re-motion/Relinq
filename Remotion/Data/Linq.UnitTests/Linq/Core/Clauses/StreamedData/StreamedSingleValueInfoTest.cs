@@ -115,5 +115,22 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.StreamedData
 
       _streamedSingleValueInfoWithDefault.ExecuteQueryModel (queryModel, executorMock);
     }
+
+    [Test]
+    public void Equals ()
+    {
+      Assert.That (new StreamedSingleValueInfo (typeof (int), false).Equals (null), Is.False);
+      Assert.That (new StreamedSingleValueInfo (typeof (int), false).Equals (new StreamedSingleValueInfo (typeof (int), false)), Is.True);
+      Assert.That (new StreamedSingleValueInfo (typeof (int), false).Equals (new StreamedSingleValueInfo (typeof (int), true)), Is.False);
+      Assert.That (new StreamedSingleValueInfo (typeof (int),false).Equals (new StreamedSingleValueInfo (typeof (bool), false)), Is.False);
+    }
+
+    [Test]
+    public void GetHashCodeTest ()
+    {
+      Assert.That (new StreamedSingleValueInfo (typeof (int), false).GetHashCode (), Is.EqualTo (new StreamedSingleValueInfo (typeof (int), false).GetHashCode ()));
+      Assert.That (new StreamedSingleValueInfo (typeof (int), false).GetHashCode (), Is.Not.EqualTo (new StreamedSingleValueInfo (typeof (int), true).GetHashCode ()));
+      Assert.That (new StreamedSingleValueInfo (typeof (int), false).GetHashCode (), Is.Not.EqualTo (new StreamedSingleValueInfo (typeof (string), false).GetHashCode ()));
+    }
   }
 }

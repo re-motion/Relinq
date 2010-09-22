@@ -150,5 +150,21 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
 
       return executor.ExecuteCollection<T> (queryModel);
     }
+
+    public override bool Equals (object obj)
+    {
+      if (obj == null)
+        return false;
+      if (GetType () != obj.GetType ())
+        return false;
+
+      var other = (StreamedSequenceInfo) obj;
+      return DataType.Equals (other.DataType) && ItemExpression.Equals(other.ItemExpression);
+    }
+
+    public override int GetHashCode ()
+    {
+      return DataType.GetHashCode () ^ ItemExpression.GetHashCode();
+    }
   }
 }

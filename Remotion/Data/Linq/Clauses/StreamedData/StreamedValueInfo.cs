@@ -83,5 +83,21 @@ namespace Remotion.Data.Linq.Clauses.StreamedData
 
       return genericMethodDefinition.MakeGenericMethod (DataType);
     }
+
+    public override bool Equals (object obj)
+    {
+      if (obj == null)
+        return false;
+      if (GetType () != obj.GetType ())
+        return false;
+
+      var other = (StreamedValueInfo) obj;
+      return DataType.Equals (other.DataType);
+    }
+
+    public override int GetHashCode ()
+    {
+      return DataType.GetHashCode();
+    }
   }
 }

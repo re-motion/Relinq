@@ -70,5 +70,20 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.StreamedData
 
       _streamedScalarValueInfo.ExecuteQueryModel (queryModel, executorMock);
     }
+
+    [Test]
+    public void Equals ()
+    {
+      Assert.That (new StreamedScalarValueInfo (typeof (int)).Equals (null), Is.False);
+      Assert.That (new StreamedScalarValueInfo (typeof (int)).Equals (new StreamedScalarValueInfo (typeof (int))), Is.True);
+      Assert.That (new StreamedScalarValueInfo (typeof (int)).Equals (new StreamedScalarValueInfo (typeof (bool))), Is.False);
+    }
+
+    [Test]
+    public void GetHashCodeTest ()
+    {
+      Assert.That (new StreamedScalarValueInfo (typeof (int)).GetHashCode (), Is.EqualTo (new StreamedScalarValueInfo (typeof (int)).GetHashCode ()));
+      Assert.That (new StreamedScalarValueInfo (typeof (int)).GetHashCode (), Is.Not.EqualTo (new StreamedScalarValueInfo (typeof (string)).GetHashCode ()));
+    }
   }
 }

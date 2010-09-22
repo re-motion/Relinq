@@ -38,7 +38,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.StreamedData
     public void SetUp ()
     {
       _intExpression = Expression.Constant (0);
-      _infoWithIntSequence = new StreamedSequenceInfo(typeof (int[]), _intExpression);
+      _infoWithIntSequence = new StreamedSequenceInfo (typeof (int[]), _intExpression);
     }
 
     [Test]
@@ -118,7 +118,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.StreamedData
       var executeMethod = typeof (CountResultOperator).GetMethod ("ExecuteInMemory", new[] { typeof (StreamedSequence) });
       var result = _infoWithIntSequence.MakeClosedGenericExecuteMethod (executeMethod);
 
-      Assert.That (result.GetGenericArguments (), Is.EqualTo (new[] { typeof (int) }));
+      Assert.That (result.GetGenericArguments(), Is.EqualTo (new[] { typeof (int) }));
     }
 
     [Test]
@@ -153,14 +153,14 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.StreamedData
     [Test]
     public void ExecuteQueryModel ()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel_Cook ();
+      var queryModel = ExpressionHelper.CreateQueryModel_Cook();
 
-      var executorMock = MockRepository.GenerateMock<IQueryExecutor> ();
+      var executorMock = MockRepository.GenerateMock<IQueryExecutor>();
       executorMock.Expect (mock => mock.ExecuteCollection<int> (queryModel)).Return (new[] { 1, 2, 3 });
 
       var streamedData = (StreamedSequence) _infoWithIntSequence.ExecuteQueryModel (queryModel, executorMock);
 
-      executorMock.VerifyAllExpectations ();
+      executorMock.VerifyAllExpectations();
 
       Assert.That (streamedData, Is.InstanceOfType (typeof (StreamedSequence)));
       Assert.That (streamedData.DataInfo.ItemExpression, Is.SameAs (_infoWithIntSequence.ItemExpression));
@@ -173,12 +173,42 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.StreamedData
     [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Test")]
     public void ExecuteQueryModel_WithException ()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel_Cook ();
+      var queryModel = ExpressionHelper.CreateQueryModel_Cook();
 
-      var executorMock = MockRepository.GenerateMock<IQueryExecutor> ();
+      var executorMock = MockRepository.GenerateMock<IQueryExecutor>();
       executorMock.Expect (mock => mock.ExecuteCollection<int> (queryModel)).Throw (new InvalidOperationException ("Test"));
 
       _infoWithIntSequence.ExecuteQueryModel (queryModel, executorMock);
+    }
+
+    [Test]
+    public void Equals ()
+    {
+      var constantExpression = Expression.Constant ("test");
+      Assert.That (new StreamedSequenceInfo (typeof (string[]), constantExpression).Equals (null), Is.False);
+      Assert.That (
+          new StreamedSequenceInfo (typeof (string[]), constantExpression).Equals (new StreamedSequenceInfo (typeof (string[]), constantExpression)),
+          Is.True);
+      Assert.That (
+          new StreamedSequenceInfo (typeof (string[]), constantExpression).Equals (
+              new StreamedSequenceInfo (typeof (string[]), Expression.Constant ("test"))),
+          Is.False);
+      Assert.That (
+          new StreamedSequenceInfo (typeof (string[]), constantExpression).Equals (
+              new StreamedSequenceInfo (typeof (char[]), Expression.Constant ('t'))),
+          Is.False);
+    }
+
+    [Test]
+    public void GetHashCodeTest ()
+    {
+      var constantExpression = Expression.Constant ("test");
+      Assert.That (
+          new StreamedSequenceInfo (typeof (string[]), constantExpression).GetHashCode(),
+          Is.EqualTo (new StreamedSequenceInfo (typeof (string[]), constantExpression).GetHashCode()));
+      Assert.That (
+          new StreamedSequenceInfo (typeof (string[]), Expression.Constant ("test")).GetHashCode(),
+          Is.Not.EqualTo (new StreamedSequenceInfo (typeof (string[]), Expression.Constant ("abc")).GetHashCode()));
     }
   }
 }
