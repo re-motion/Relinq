@@ -102,10 +102,12 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing
                 elementType1, 
                 elementType2, 
                 string.Format (
-                    "The item types of the items in the lists in {0} differ: One is '{1}', the other is '{2}'.", 
+                    "The item types of the items in the lists in {0} differ: One is '{1}', the other is '{2}'.\nTree 1: {3}\nTree 2: {4}", 
                     property.Name, 
                     elementType1, 
-                    elementType2));
+                    elementType2,
+                    _expectedInitial, 
+                    _actualInitial));
 
             CheckAreEqualProperties (property, elementType1, list1[i], list2[i], e1, e2);
           }
