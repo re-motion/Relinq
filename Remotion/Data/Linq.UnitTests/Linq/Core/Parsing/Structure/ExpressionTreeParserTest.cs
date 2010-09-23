@@ -91,6 +91,22 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     }
 
     [Test]
+    public void ParseTree_NonQueryOperatorExpression_IsPreprocessed ()
+    {
+      var expressionWithSubQuery = ExpressionHelper.MakeExpression (() => new { Result = _intSource.Select (i => i + 1) }.Result);
+
+      var result = _expressionTreeParser.ParseTree (expressionWithSubQuery);
+
+      Assert.That (result, Is.InstanceOfType (typeof (MainSourceExpressionNode)));
+      
+      var parsedExpression = ((MainSourceExpressionNode) result).ParsedExpression;
+      Assert.That (parsedExpression, Is.Not.SameAs (expressionWithSubQuery));
+
+      var argumentExpression = ((NewExpression) ((MemberExpression) parsedExpression).Expression).Arguments[0];
+      Assert.That (argumentExpression, Is.TypeOf (typeof (SubQueryExpression)));
+    }
+
+    [Test]
     [ExpectedException (typeof (ParserException), ExpectedMessage = "Cannot parse expression '0' as it has an unsupported type. Only query sources "
                                                                     + "(that is, expressions that implement IEnumerable) and query operators can be parsed.")]
     public void ParseTree_InvalidNonQueryOperatorExpression ()

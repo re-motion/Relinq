@@ -78,7 +78,6 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
     }
 
     [Test]
-    [Ignore ("TODO 3317")]
     public void SubQuery_InMainExpressionNode ()
     {
       var queryExpression = ExpressionHelper.MakeExpression (() => new { Result = (from k in QuerySource select k) }.Result.Count ());

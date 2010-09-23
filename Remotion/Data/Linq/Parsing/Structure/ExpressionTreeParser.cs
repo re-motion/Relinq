@@ -144,16 +144,18 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
     private IExpressionNode ParseNonQueryOperatorExpression (Expression expression, string associatedIdentifier)
     {
+      var preprocessedExpression = PreprocessingExpressionTreeVisitor.Process (expression, _nodeTypeRegistry);
+
       try
       {
-        return new MainSourceExpressionNode (associatedIdentifier, expression);
+        return new MainSourceExpressionNode (associatedIdentifier, preprocessedExpression);
       }
       catch (ArgumentTypeException ex)
       {
         var message = string.Format (
             "Cannot parse expression '{0}' as it has an unsupported type. Only query sources (that is, expressions that implement IEnumerable) "
             + "and query operators can be parsed.",
-            expression);
+            preprocessedExpression);
         throw new ParserException (message, ex);
       }
     }
