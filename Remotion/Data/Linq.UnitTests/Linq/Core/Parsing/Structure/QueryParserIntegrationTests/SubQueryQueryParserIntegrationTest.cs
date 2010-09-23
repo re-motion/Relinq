@@ -22,6 +22,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
+using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Data.Linq.UnitTests.Linq.Core.TestQueryGenerators;
 
@@ -74,7 +75,26 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
 
       var subQueryModel = ((SubQueryExpression) ((NewExpression) queryModel.SelectClause.Selector).Arguments[0]).QueryModel;
       Assert.That (subQueryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IEnumerable<Cook>)));
+    }
 
+    [Test]
+    [Ignore ("TODO 3317")]
+    public void SubQuery_InMainExpressionNode ()
+    {
+      var queryExpression = ExpressionHelper.MakeExpression (() => new { Result = (from k in QuerySource select k) }.Result.Count ());
+      var queryModel = QueryParser.GetParsedQuery (queryExpression);
+
+      Assert.That (queryModel.IsIdentityQuery (), Is.True);
+
+      Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (queryModel.ResultOperators[0], Is.TypeOf (typeof (CountResultOperator)));
+
+      var fromExpression = (MemberExpression) queryModel.MainFromClause.FromExpression;
+      var newExpression = (NewExpression) fromExpression.Expression;
+      
+      var innerSubQuery = (SubQueryExpression) newExpression.Arguments[0];
+      Assert.That (innerSubQuery.QueryModel.IsIdentityQuery (), Is.True);
+      CheckConstantQuerySource (innerSubQuery.QueryModel.MainFromClause.FromExpression, QuerySource);
     }
   }
 }
