@@ -100,16 +100,18 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.StreamedData
     [Test]
     public void Equals ()
     {
+      // ReSharper disable EqualExpressionComparison
       Assert.That (new TestStreamedValueInfo (typeof (int)).Equals (null), Is.False);
       Assert.That (new TestStreamedValueInfo (typeof (int)).Equals (new TestStreamedValueInfo (typeof (int))), Is.True);
       Assert.That (new TestStreamedValueInfo (typeof (int)).Equals (new TestStreamedValueInfo (typeof (bool))), Is.False);
+      Assert.That (new TestStreamedValueInfo (typeof (int)).Equals (new StreamedScalarValueInfo (typeof (int))), Is.False);
+      // ReSharper restore EqualExpressionComparison
     }
 
     [Test]
     public void GetHashCodeTest ()
     {
       Assert.That (new TestStreamedValueInfo (typeof (int)).GetHashCode (), Is.EqualTo (new TestStreamedValueInfo (typeof (int)).GetHashCode ()));
-      Assert.That (new TestStreamedValueInfo (typeof (int)).GetHashCode (), Is.Not.EqualTo (new TestStreamedValueInfo (typeof (string)).GetHashCode ()));
     }
   }
 }

@@ -184,19 +184,30 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.StreamedData
     [Test]
     public void Equals ()
     {
+      // ReSharper disable EqualExpressionComparison
       var constantExpression = Expression.Constant ("test");
       Assert.That (new StreamedSequenceInfo (typeof (string[]), constantExpression).Equals (null), Is.False);
       Assert.That (
           new StreamedSequenceInfo (typeof (string[]), constantExpression).Equals (new StreamedSequenceInfo (typeof (string[]), constantExpression)),
           Is.True);
+
+      // Object type
+      Assert.That (
+          new StreamedSequenceInfo (typeof (string[]), constantExpression).Equals (new TestStreamedValueInfo (typeof (string[]))),
+          Is.False);
+
+      // Expression
       Assert.That (
           new StreamedSequenceInfo (typeof (string[]), constantExpression).Equals (
               new StreamedSequenceInfo (typeof (string[]), Expression.Constant ("test"))),
           Is.False);
+
+      // Data type and expression (data type alone can't be tested because the ctor would throw)
       Assert.That (
           new StreamedSequenceInfo (typeof (string[]), constantExpression).Equals (
               new StreamedSequenceInfo (typeof (char[]), Expression.Constant ('t'))),
           Is.False);
+      // ReSharper restore EqualExpressionComparison
     }
 
     [Test]
@@ -206,9 +217,6 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.StreamedData
       Assert.That (
           new StreamedSequenceInfo (typeof (string[]), constantExpression).GetHashCode(),
           Is.EqualTo (new StreamedSequenceInfo (typeof (string[]), constantExpression).GetHashCode()));
-      Assert.That (
-          new StreamedSequenceInfo (typeof (string[]), Expression.Constant ("test")).GetHashCode(),
-          Is.Not.EqualTo (new StreamedSequenceInfo (typeof (string[]), Expression.Constant ("abc")).GetHashCode()));
     }
   }
 }
