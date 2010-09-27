@@ -21,6 +21,7 @@ using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
+using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing
@@ -29,7 +30,9 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing
   {
     public static void CheckAreEqualTrees (Expression expectedTree, Expression actualTree)
     {
-      var comparer = new ExpressionTreeComparer (expectedTree, actualTree);
+      var comparer = new ExpressionTreeComparer (
+          FormattingExpressionTreeVisitor.Format (expectedTree), 
+          FormattingExpressionTreeVisitor.Format (actualTree));
       comparer.CheckAreEqualNodes (expectedTree, actualTree);
     }
 
