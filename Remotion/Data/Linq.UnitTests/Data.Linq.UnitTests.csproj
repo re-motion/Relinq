@@ -249,6 +249,7 @@
     <Compile Include="Linq\SqlBackend\SqlStatementModel\SqlSpecificExpressions\SqlFunctionExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\SqlSpecificExpressions\SqlIsNotNullExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\SqlSpecificExpressions\SqlIsNullExpressionTest.cs" />
+    <Compile Include="Linq\SqlBackend\SqlStatementModel\SqlSpecificExpressions\SqlLengthExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\SqlSpecificExpressions\SqlLikeExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\SqlSpecificExpressions\SqlRowNumberExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\SqlStatementBuilderTest.cs" />
