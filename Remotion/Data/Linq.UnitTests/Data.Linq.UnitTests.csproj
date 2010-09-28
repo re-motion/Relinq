@@ -119,8 +119,6 @@
       <Name>System.Data</Name>
     </Reference>
     <Reference Include="System.Data.Linq" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml" />
     <ProjectReference Include="..\Linq.LinqToSqlAdapter\Data.Linq.LinqToSqlAdapter.csproj">
       <Project>{EDBD197D-2A1C-4EA7-BC7E-C09562E307A4}</Project>
       <Name>Data.Linq.LinqToSqlAdapter</Name>
@@ -133,6 +131,7 @@
       <Project>{DD9AA076-BE37-4A42-BA9E-C35ECC6955C9}</Project>
       <Name>Data.Linq</Name>
     </ProjectReference>
+    <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LinqToSqlAdapter\MetaDataMemberComparerTest.cs" />
