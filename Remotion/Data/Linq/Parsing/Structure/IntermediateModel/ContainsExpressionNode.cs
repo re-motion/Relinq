@@ -15,6 +15,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -35,7 +36,9 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     public static readonly MethodInfo[] SupportedMethods = new[]
                                                            {
                                                              GetSupportedMethod (() => Queryable.Contains<object> (null, null)),
-                                                             GetSupportedMethod (() => Enumerable.Contains<object>(null, null))
+                                                             GetSupportedMethod (() => Enumerable.Contains<object>(null, null)),
+                                                             typeof(ICollection<>).GetMethod("Contains"),
+                                                             typeof(List<>).GetMethod("Contains")
                                                            };
 
     public ContainsExpressionNode (MethodCallExpressionParseInfo parseInfo, Expression item)

@@ -46,6 +46,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
       _nodeTypeRegistry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
       _nodeTypeRegistry.Register (TakeExpressionNode.SupportedMethods, typeof (TakeExpressionNode));
       _nodeTypeRegistry.Register (CountExpressionNode.SupportedMethods, typeof (CountExpressionNode));
+      _nodeTypeRegistry.Register (ContainsExpressionNode.SupportedMethods, typeof (ContainsExpressionNode));
 
       _expressionTreeParser = new ExpressionTreeParser (_nodeTypeRegistry);
 
@@ -179,9 +180,6 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     [Test]
     public void ParseTree_MethodCallExpression_WithInstanceMethod_InGenericType ()
     {
-      var containsMethodInTypeDefinition = typeof (List<>).GetMethod ("Contains");
-      _nodeTypeRegistry.Register (new[] { containsMethodInTypeDefinition }, typeof (ContainsExpressionNode));
-
       var containsMethod = typeof (List<int>).GetMethod ("Contains");
       var querySourceExpression = Expression.Parameter (typeof (List<int>), "querySource");
       var itemExpression = Expression.Constant (4);
