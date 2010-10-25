@@ -189,6 +189,7 @@
     <Compile Include="Linq\SqlBackend\SqlGeneration\TestableSqlGeneratingOuterSelectExpressionVisitor.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\TestableSqlTableAndJoinTextGenerator.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\TestExtensionExpressionWithoutChildren.cs" />
+    <Compile Include="Linq\SqlBackend\SqlPreparation\AttributeBasedMethodCallTransformerProviderTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\ConcatMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\ContainsFreetextMethodCallTransformerTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformers\ContainsFulltextMethodCallTransformerTest.cs" />

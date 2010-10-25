@@ -21,5 +21,10 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain
   public class Chef : Cook
   {
     public string LetterOfRecommendation { get; set; }
+
+    public override string GetFullName ()
+    {
+      return base.GetFullName () + " (MBA)";
+    }
   }
 }

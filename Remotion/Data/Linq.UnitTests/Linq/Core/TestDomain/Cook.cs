@@ -18,6 +18,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.Expressions;
+using Remotion.Data.Linq.Clauses.ResultOperators;
+using Remotion.Data.Linq.SqlBackend.SqlPreparation;
+using Remotion.Data.Linq.SqlBackend.SqlStatementModel.SqlSpecificExpressions;
 
 namespace Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain
 {
@@ -38,5 +44,77 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain
     public Cook Substitution { get; set; }
     public double Weight { get; set; }
     public string SpecificInformation { get; set; }
+
+    [MethodCallTransformer (typeof (FullNameTransformer))]
+    public virtual string GetFullName ()
+    {
+      return FirstName + " " + Name;
+    }
+
+    public double WeightInLbs
+    {
+      [MethodCallTransformer (typeof (ToLbsTransformer))]
+      get { return Weight * 2.20462262; }
+    }
+
+    [MethodCallTransformer (typeof (AssistantCountTransformer))]
+    public int GetAssistantCount ()
+    {
+      return Assistants.Count ();
+    }
+
+    [MethodCallTransformer (typeof (FullNameEqualsTransformer))]
+    public bool Equals (Cook other)
+    {
+      return GetFullName () == other.GetFullName ();
+    }
+
+    public class FullNameTransformer : IMethodCallTransformer
+    {
+      public Expression Transform (MethodCallExpression methodCallExpression)
+      {
+        var concatMethod = typeof (string).GetMethod ("Concat", new[] { typeof (string), typeof (string), typeof (string) });
+        return Expression.Call (
+            concatMethod,
+            Expression.MakeMemberAccess (methodCallExpression.Object, typeof (Cook).GetProperty ("FirstName")),
+            new SqlLiteralExpression (" "),
+            Expression.MakeMemberAccess (methodCallExpression.Object, typeof (Cook).GetProperty ("Name")));
+      }
+    }
+
+    public class ToLbsTransformer : IMethodCallTransformer
+    {
+      public Expression Transform (MethodCallExpression methodCallExpression)
+      {
+        return Expression.Multiply (
+            Expression.MakeMemberAccess (methodCallExpression.Object, typeof (Cook).GetProperty ("Weight")),
+            new SqlLiteralExpression (2.20462262));
+      }
+    }
+
+    public class AssistantCountTransformer : IMethodCallTransformer
+    {
+      public Expression Transform (MethodCallExpression methodCallExpression)
+      {
+        var mainFromClause = new MainFromClause (
+            "a", 
+            typeof (Cook), 
+            Expression.MakeMemberAccess (methodCallExpression.Object, typeof (Cook).GetProperty ("Assistants")));
+        var selectClause = new SelectClause (new QuerySourceReferenceExpression (mainFromClause));
+        var countQueryModel = new QueryModel (mainFromClause, selectClause);
+        countQueryModel.ResultOperators.Add (new CountResultOperator ());
+        return new SubQueryExpression (countQueryModel);
+      }
+    }
+
+    public class FullNameEqualsTransformer : IMethodCallTransformer
+    {
+      public Expression Transform (MethodCallExpression methodCallExpression)
+      {
+        return Expression.Equal (
+            Expression.Call (methodCallExpression.Object, "GetFullName", Type.EmptyTypes),
+            Expression.Call (methodCallExpression.Arguments[0], "GetFullName", Type.EmptyTypes));
+      }
+    }
   }
 }
