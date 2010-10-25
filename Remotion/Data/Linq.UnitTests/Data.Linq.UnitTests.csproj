@@ -460,7 +460,7 @@
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\UnaryExpressionSqlBackendIntegrationTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\WhereConditionSqlBackendIntegrationTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\MemberChainingSqlBackendIntegrationTest.cs" />
-    <Compile Include="Linq\SqlBackend\SqlPreparation\MethodCallTransformerRegistryTest.cs" />
+    <Compile Include="Linq\SqlBackend\SqlPreparation\CompoundMethodCallTransformerProviderTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\SelectProjectionSqlBackendIntegrationTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\SqlBackendIntegrationTestBase.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\SqlCommandBuilderTest.cs" />
