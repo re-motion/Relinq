@@ -15,6 +15,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -38,6 +39,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                              GetSupportedMethod (() => Queryable.Contains<object> (null, null)),
                                                              GetSupportedMethod (() => Enumerable.Contains<object>(null, null)),
                                                              typeof(ICollection<>).GetMethod("Contains"),
+                                                             typeof(IList).GetMethod("Contains"),
                                                              typeof(List<>).GetMethod("Contains")
                                                            };
 

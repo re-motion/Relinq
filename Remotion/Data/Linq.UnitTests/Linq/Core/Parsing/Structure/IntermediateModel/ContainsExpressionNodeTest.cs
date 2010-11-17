@@ -38,6 +38,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateM
     public void SupportedMethods ()
     {
       AssertSupportedMethod_Generic (ContainsExpressionNode.SupportedMethods, q => q.Contains (null), e => e.Contains (null));
+      // TODO Review 3340: Also check for ICollection<>.Contains, IList.Contains, List<>.Contains (using Assert.That (ContainsExpressionNode.SupportedMethods, List.Contains (...))
     }
 
     [Test]

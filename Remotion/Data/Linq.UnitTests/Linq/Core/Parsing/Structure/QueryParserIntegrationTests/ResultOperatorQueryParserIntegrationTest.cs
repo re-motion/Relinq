@@ -15,6 +15,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -423,6 +424,86 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
       Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (ContainsResultOperator)));
       Assert.That (((ContainsResultOperator) queryModel.ResultOperators[0]).GetConstantItem<Cook>(), Is.SameAs (student));
+    }
+
+    [Test]
+    public void Contains_List ()
+    {
+      var list = new List<Cook> ();
+      var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
+                                                               select list.Contains (s)));
+
+      var queryModel = QueryParser.GetParsedQuery (expression);
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<bool>)));
+
+      Assert.That (queryModel.SelectClause.Selector, Is.TypeOf (typeof (SubQueryExpression)));
+      var subQueryModel = ((SubQueryExpression) queryModel.SelectClause.Selector).QueryModel;
+
+      Assert.That (subQueryModel.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (ContainsResultOperator)));
+
+      var exoectedItemExpression = new QuerySourceReferenceExpression (queryModel.MainFromClause);
+      ExpressionTreeComparer.CheckAreEqualTrees (exoectedItemExpression, ((ContainsResultOperator) subQueryModel.ResultOperators[0]).Item);
+    }
+
+    [Test]
+    public void Contains_GenericICollection ()
+    {
+      ICollection<Cook> list = new List<Cook> ();
+      var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
+                                                               select list.Contains (s)));
+
+      var queryModel = QueryParser.GetParsedQuery (expression);
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<bool>)));
+
+      Assert.That (queryModel.SelectClause.Selector, Is.TypeOf (typeof (SubQueryExpression)));
+      var subQueryModel = ((SubQueryExpression) queryModel.SelectClause.Selector).QueryModel;
+
+      Assert.That (subQueryModel.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (ContainsResultOperator)));
+
+      var exoectedItemExpression = new QuerySourceReferenceExpression (queryModel.MainFromClause);
+      ExpressionTreeComparer.CheckAreEqualTrees (exoectedItemExpression, ((ContainsResultOperator) subQueryModel.ResultOperators[0]).Item);
+    }
+
+    [Test]
+    public void Contains_GenericIList ()
+    {
+      IList<Cook> list = new List<Cook> ();
+      var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
+                                                               select list.Contains (s)));
+
+      var queryModel = QueryParser.GetParsedQuery (expression);
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<bool>)));
+
+      Assert.That (queryModel.SelectClause.Selector, Is.TypeOf (typeof (SubQueryExpression)));
+      var subQueryModel = ((SubQueryExpression) queryModel.SelectClause.Selector).QueryModel;
+
+      Assert.That (subQueryModel.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (ContainsResultOperator)));
+
+      var exoectedItemExpression = new QuerySourceReferenceExpression (queryModel.MainFromClause);
+      ExpressionTreeComparer.CheckAreEqualTrees (exoectedItemExpression, ((ContainsResultOperator) subQueryModel.ResultOperators[0]).Item);
+    }
+
+    [Test]
+    public void Contains_NonGenericIList ()
+    {
+      IList list = new List<Cook> ();
+      var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
+                                                               select list.Contains (s)));
+
+      var queryModel = QueryParser.GetParsedQuery (expression);
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<bool>)));
+
+      Assert.That (queryModel.SelectClause.Selector, Is.TypeOf (typeof (SubQueryExpression)));
+      var subQueryModel = ((SubQueryExpression) queryModel.SelectClause.Selector).QueryModel;
+
+      Assert.That (subQueryModel.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (ContainsResultOperator)));
+
+      var exoectedItemExpression = new QuerySourceReferenceExpression (queryModel.MainFromClause);
+      ExpressionTreeComparer.CheckAreEqualTrees (exoectedItemExpression, ((ContainsResultOperator) subQueryModel.ResultOperators[0]).Item);
     }
 
     [Test]
