@@ -50,7 +50,8 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     }
 
     /// <summary>
-    /// Gets or sets an expression yielding the item for which to be searched.
+    /// Gets or sets an expression yielding the item for which to be searched. This must be compatible with (ie., assignable to) the source sequence 
+    /// items.
     /// </summary>
     /// <value>The item expression.</value>
     public Expression Item
@@ -88,7 +89,16 @@ namespace Remotion.Data.Linq.Clauses.ResultOperators
     public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
     {
       var sequenceInfo = ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
-      CheckSequenceItemType (sequenceInfo, Item.Type);
+
+      if (!sequenceInfo.ItemExpression.Type.IsAssignableFrom (Item.Type))
+      {
+        var message = string.Format (
+            "The items of the input sequence of type '{0}' are not compatible with the item expression of type '{1}'.",
+            sequenceInfo.ItemExpression.Type,
+            Item.Type);
+
+        throw new ArgumentTypeException (message, "inputInfo", typeof (IEnumerable<>).MakeGenericType (Item.Type), sequenceInfo.ItemExpression.Type);
+      }
 
       return new StreamedScalarValueInfo (typeof (bool));
     }

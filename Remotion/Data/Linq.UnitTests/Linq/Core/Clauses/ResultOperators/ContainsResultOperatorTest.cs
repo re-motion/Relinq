@@ -80,13 +80,13 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage = "The input sequence must have items of type 'System.Int32', but it has "
-        + "items of type 'Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain.Cook'.\r\nParameter name: inputInfo")]
+    [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage = 
+        "The items of the input sequence of type 'Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain.Cook' are not compatible with the item expression "
+        + "of type 'System.Int32'.\r\nParameter name: inputInfo")]
     public void GetOutputDataInfo_InvalidInput_DoesntMatchItem ()
     {
       var input = new StreamedSequenceInfo (typeof (Cook[]), Expression.Constant (new Cook()));
       _resultOperator.GetOutputDataInfo (input);
-      Assert.Fail ("Expected exception.");
     }
 
     [Test]
