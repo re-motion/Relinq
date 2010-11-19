@@ -47,4 +47,4 @@ using Remotion.Development.Data.UnitTesting.DomainObjects.Linq;
 
 [assembly: AssemblyVersion("1.13.60.2")]
 
-[assembly: ApplyQueryExecutorMixin]
+//[assembly: ApplyQueryExecutorMixin]
