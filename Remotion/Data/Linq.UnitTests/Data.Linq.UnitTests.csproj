@@ -155,6 +155,7 @@
     <Compile Include="Linq\Core\StubQueryExecutor.cs" />
     <Compile Include="Linq\Core\TestDomain\ISpecificCook.cs" />
     <Compile Include="Linq\Core\TestDomain\MetaID.cs" />
+    <Compile Include="Linq\Core\Utilities\ArgumentTypeExceptionTest.cs" />
     <Compile Include="Linq\Core\Utilities\ITestRegistry.cs" />
     <Compile Include="Linq\Core\Utilities\RegistryBaseTest.cs" />
     <Compile Include="Linq\Core\Utilities\TestRegistry.cs" />

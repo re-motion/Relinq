@@ -48,6 +48,14 @@ namespace Remotion.Data.Linq.Utilities
       ActualType = (Type) info.GetValue ("ActualType", typeof (Type));
     }
 
+    public override void GetObjectData (SerializationInfo info, StreamingContext context)
+    {
+      base.GetObjectData (info, context);
+
+      info.AddValue ("ExpectedType", ExpectedType);
+      info.AddValue ("ActualType", ActualType);
+    }
+
     private static string FormatMessage (string argumentName, Type expectedType, Type actualType)
     {
       string actualTypeName = actualType != null ? actualType.ToString() : "<null>";
