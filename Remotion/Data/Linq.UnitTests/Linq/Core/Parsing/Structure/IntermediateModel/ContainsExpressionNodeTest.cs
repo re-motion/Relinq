@@ -15,9 +15,12 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 
@@ -38,7 +41,9 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateM
     public void SupportedMethods ()
     {
       AssertSupportedMethod_Generic (ContainsExpressionNode.SupportedMethods, q => q.Contains (null), e => e.Contains (null));
-      // TODO Review 3340: Also check for ICollection<>.Contains, IList.Contains, List<>.Contains (using Assert.That (ContainsExpressionNode.SupportedMethods, List.Contains (...))
+      Assert.That (ContainsExpressionNode.SupportedMethods, List.Contains (typeof (List<>).GetMethod ("Contains")));
+      Assert.That (ContainsExpressionNode.SupportedMethods, List.Contains (typeof (ICollection<>).GetMethod ("Contains")));
+      Assert.That (ContainsExpressionNode.SupportedMethods, List.Contains (typeof (IList).GetMethod ("Contains")));
     }
 
     [Test]
