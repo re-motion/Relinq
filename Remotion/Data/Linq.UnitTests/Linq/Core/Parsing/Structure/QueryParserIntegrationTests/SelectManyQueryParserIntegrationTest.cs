@@ -144,5 +144,22 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
       var selectClause = queryModel.SelectClause;
       CheckResolvedExpression<Cook, string> (selectClause.Selector, (AdditionalFromClause) queryModel.BodyClauses.Last(), s2 => s2.Name);
     }
+
+    [Test]
+    [Ignore ("TODO 3551")]
+    public void SelectMany_WithoutResultSelector ()
+    {
+      var expression = QuerySource.SelectMany (c => c.Assistants).Expression;
+      var queryModel = QueryParser.GetParsedQuery (expression);
+
+      var mainFromClause = queryModel.MainFromClause;
+      CheckConstantQuerySource (mainFromClause.FromExpression, QuerySource);
+
+      var additionalFromClause = (AdditionalFromClause) queryModel.BodyClauses[0];
+      CheckResolvedExpression<Cook, IEnumerable<Cook>> (additionalFromClause.FromExpression, mainFromClause, c => c.Assistants);
+
+      var selectClause = queryModel.SelectClause;
+      CheckResolvedExpression<Cook, Cook> (selectClause.Selector, additionalFromClause, x => x);
+    }
   }
 }
