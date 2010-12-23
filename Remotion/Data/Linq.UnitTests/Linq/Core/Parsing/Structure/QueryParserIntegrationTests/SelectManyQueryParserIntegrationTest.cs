@@ -146,7 +146,6 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
     }
 
     [Test]
-    [Ignore ("TODO 3551")]
     public void SelectMany_WithoutResultSelector ()
     {
       var expression = QuerySource.SelectMany (c => c.Assistants).Expression;

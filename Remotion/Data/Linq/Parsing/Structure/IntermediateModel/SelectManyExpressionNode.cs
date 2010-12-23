@@ -38,6 +38,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
                                                                    () => Queryable.SelectMany<object, object[], object> (null, o => null, null)),
                                                                GetSupportedMethod (
                                                                    () => Enumerable.SelectMany<object, object[], object> (null, o => null, null)),
+                                                               GetSupportedMethod (
+                                                                   () => Queryable.SelectMany<object, object[]> (null, o => null)),
+                                                               GetSupportedMethod (
+                                                                   () => Enumerable.SelectMany<object, object[]> (null, o => null)),
                                                            };
 
     private readonly ResolvedExpressionCache<Expression> _cachedCollectionSelector;
@@ -48,15 +52,26 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
         : base (parseInfo)
     {
       ArgumentUtility.CheckNotNull ("collectionSelector", collectionSelector);
-      ArgumentUtility.CheckNotNull ("resultSelector", resultSelector);
 
       if (collectionSelector.Parameters.Count != 1)
         throw new ArgumentException ("Collection selector must have exactly one parameter.", "collectionSelector");
-      if (resultSelector.Parameters.Count != 2)
-        throw new ArgumentException ("Result selector must have exactly two parameters.", "resultSelector");
 
       CollectionSelector = collectionSelector;
-      ResultSelector = resultSelector;
+
+      if (resultSelector != null)
+      {
+        if (resultSelector.Parameters.Count != 2)
+          throw new ArgumentException ("Result selector must have exactly two parameters.", "resultSelector");
+
+        ResultSelector = resultSelector;
+      }
+      else
+      {
+        var parameter1 = Expression.Parameter (collectionSelector.Parameters[0].Type, collectionSelector.Parameters[0].Name);
+        var itemType = ReflectionUtility.GetItemTypeOfIEnumerable (CollectionSelector.Body.Type, "collectionSelector");
+        var parameter2 = Expression.Parameter (itemType, parseInfo.AssociatedIdentifier);
+        ResultSelector = Expression.Lambda (parameter2, parameter1, parameter2);
+      }
 
       _cachedCollectionSelector = new ResolvedExpressionCache<Expression> (this);
       _cachedResultSelector = new ResolvedExpressionCache<Expression> (this);

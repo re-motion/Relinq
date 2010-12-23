@@ -28,23 +28,46 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateM
   [TestFixture]
   public class SelectManyExpressionNodeTest : ExpressionNodeTestBase
   {
-    private Expression<Func<int, bool>> _collectionSelector;
+    private Expression<Func<int, double[]>> _collectionSelector;
     private Expression<Func<int, int, bool>> _resultSelector;
-    private SelectManyExpressionNode _node;
+    private SelectManyExpressionNode _nodeWithResultSelector;
 
     public override void SetUp ()
     {
       base.SetUp();
 
-      _collectionSelector = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
+      _collectionSelector = ExpressionHelper.CreateLambdaExpression<int, double[]> (i => new double[1]);
       _resultSelector = ExpressionHelper.CreateLambdaExpression<int, int, bool> ((i, j) => i > j);
-      _node = new SelectManyExpressionNode (CreateParseInfo (SourceNode, "j"), _collectionSelector, _resultSelector);
+      _nodeWithResultSelector = new SelectManyExpressionNode (CreateParseInfo (SourceNode, "j"), _collectionSelector, _resultSelector);
     }
 
     [Test]
     public void SupportedMethod_WithoutPosition ()
     {
       AssertSupportedMethod_Generic (SelectManyExpressionNode.SupportedMethods, q => q.SelectMany (i => new[] { 1, 2, 3 }, (i, j) => new { i, j }), e => e.SelectMany (i => new[] { 1, 2, 3 }, (i, j) => new { i, j }));
+    }
+
+    [Test]
+    public void SupportedMethod_WithoutResultOperator ()
+    {
+      AssertSupportedMethod_Generic (SelectManyExpressionNode.SupportedMethods, q => q.SelectMany (i => new[] { 1, 2, 3 }), e => e.SelectMany (i => new[] { 1, 2, 3 }));
+    }
+
+    [Test]
+    public void Initialization_WithResultSelector ()
+    {
+      Assert.That (_nodeWithResultSelector.ResultSelector, Is.SameAs (_resultSelector));
+    }
+
+    [Test]
+    public void Initialization_WithoutResultSelector ()
+    {
+      var nodeWithoutWithResultSelector = new SelectManyExpressionNode (CreateParseInfo (SourceNode, "j"), _collectionSelector, null);
+      var expectedResultSelectorParameter1 = Expression.Parameter (typeof (int), "i");
+      var expectedResultSelectorParameter2 = Expression.Parameter (typeof (double), "j");
+      var expectedResultSelector = Expression.Lambda (expectedResultSelectorParameter2, expectedResultSelectorParameter1, expectedResultSelectorParameter2);
+
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedResultSelector, nodeWithoutWithResultSelector.ResultSelector);
     }
 
     [Test]
@@ -80,11 +103,11 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateM
     [Test]
     public void GetResolvedResultSelector ()
     {
-      _node.Apply (QueryModel, ClauseGenerationContext);
+      _nodeWithResultSelector.Apply (QueryModel, ClauseGenerationContext);
       var clause = (FromClauseBase) QueryModel.BodyClauses[0];
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, new QuerySourceReferenceExpression (clause));
 
-      var result = _node.GetResolvedResultSelector (ClauseGenerationContext);
+      var result = _nodeWithResultSelector.GetResolvedResultSelector (ClauseGenerationContext);
 
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
@@ -94,15 +117,15 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateM
         + "Be sure to call Apply before calling methods that require IQuerySources, and pass in the same QuerySourceClauseMapping to both.")]
     public void GetResolvedResultSelector_WithoutClause ()
     {
-      _node.GetResolvedResultSelector (ClauseGenerationContext);
+      _nodeWithResultSelector.GetResolvedResultSelector (ClauseGenerationContext);
     }
 
     [Test]
     public void GetResolvedCollectionSelector ()
     {
-      var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, SourceReference, Expression.Constant (5));
+      var expectedResult = Expression.NewArrayBounds (typeof (double), Expression.Constant (1));
 
-      var result = _node.GetResolvedCollectionSelector (ClauseGenerationContext);
+      var result = _nodeWithResultSelector.GetResolvedCollectionSelector (ClauseGenerationContext);
 
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
@@ -110,32 +133,32 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateM
     [Test]
     public void Apply ()
     {
-      var result = _node.Apply (QueryModel, ClauseGenerationContext);
+      var result = _nodeWithResultSelector.Apply (QueryModel, ClauseGenerationContext);
       Assert.That (result, Is.SameAs (QueryModel));
 
       var clause = (AdditionalFromClause) QueryModel.BodyClauses[0];
 
       Assert.That (clause.ItemName, Is.EqualTo ("j"));
       Assert.That (clause.ItemType, Is.SameAs (typeof (int)));
-      Assert.That (clause.FromExpression, Is.SameAs (_node.GetResolvedCollectionSelector (ClauseGenerationContext)));
+      Assert.That (clause.FromExpression, Is.SameAs (_nodeWithResultSelector.GetResolvedCollectionSelector (ClauseGenerationContext)));
     }
 
     [Test]
     public void Apply_AddsMapping ()
     {
-      _node.Apply (QueryModel, ClauseGenerationContext);
+      _nodeWithResultSelector.Apply (QueryModel, ClauseGenerationContext);
       var clause = (AdditionalFromClause) QueryModel.BodyClauses[0];
 
-      Assert.That (ClauseGenerationContext.GetContextInfo (_node), Is.SameAs (clause));
+      Assert.That (ClauseGenerationContext.GetContextInfo (_nodeWithResultSelector), Is.SameAs (clause));
     }
 
     [Test]
     public void Apply_AdaptsSelector ()
     {
-      _node.Apply (QueryModel, ClauseGenerationContext);
+      _nodeWithResultSelector.Apply (QueryModel, ClauseGenerationContext);
       var clause = QueryModel.SelectClause;
 
-      Assert.That (clause.Selector, Is.SameAs (_node.GetResolvedResultSelector (ClauseGenerationContext)));
+      Assert.That (clause.Selector, Is.SameAs (_nodeWithResultSelector.GetResolvedResultSelector (ClauseGenerationContext)));
     }
   }
 }
