@@ -74,6 +74,9 @@ namespace Remotion.Data.Linq
     public static Type TryGetItemTypeOfIEnumerable (Type possibleEnumerableType)
     {
       ArgumentUtility.CheckNotNull ("possibleEnumerableType", possibleEnumerableType);
+      
+      if (possibleEnumerableType.IsArray)
+        return possibleEnumerableType.GetElementType ();
 
       Type implementedEnumerableInterface = GetImplementedIEnumerableType (possibleEnumerableType);
       if (implementedEnumerableInterface == null)

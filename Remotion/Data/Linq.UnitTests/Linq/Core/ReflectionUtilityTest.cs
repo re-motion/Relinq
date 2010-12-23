@@ -17,9 +17,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using System.Linq;
 
 namespace Remotion.Data.Linq.UnitTests.Linq.Core
 {
@@ -65,6 +67,20 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
     public void GetItemTypeOfIEnumerable_InvalidType ()
     {
       ReflectionUtility.GetItemTypeOfIEnumerable (typeof (int), "x");
+    }
+
+    [Test]
+    public void TryGetItemTypeOfIEnumerable_ArgumentIsArray ()
+    {
+      Assert.That (ReflectionUtility.TryGetItemTypeOfIEnumerable (typeof (int[])), Is.SameAs (typeof (int)));
+      Assert.That (ReflectionUtility.TryGetItemTypeOfIEnumerable (typeof (double[])), Is.SameAs (typeof (double)));
+    }
+
+    [Test]
+    public void TryGetItemTypeOfIEnumerable_ArgumentIsArray_Strange ()
+    {
+      Expression<Func<int, IEnumerable<double>>> collectionSelector = x => new double[1];
+      Assert.That (ReflectionUtility.TryGetItemTypeOfIEnumerable (collectionSelector.Body.Type), Is.SameAs (typeof (double)));
     }
 
     [Test]
