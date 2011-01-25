@@ -91,8 +91,9 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
         return (ConstantExpression) subtree;
       else
       {
-        LambdaExpression lambdaWithoutParameters = Expression.Lambda (subtree);
-        object value = lambdaWithoutParameters.Compile ().DynamicInvoke ();
+        Expression<Func<object>> lambdaWithoutParameters = Expression.Lambda<Func<object>> (Expression.Convert (subtree, typeof (object)));
+
+        object value = lambdaWithoutParameters.Compile ()();
         return Expression.Constant (value, subtree.Type);
       }
     }
