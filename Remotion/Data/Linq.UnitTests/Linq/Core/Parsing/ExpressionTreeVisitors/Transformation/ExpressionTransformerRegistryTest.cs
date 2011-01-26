@@ -18,8 +18,10 @@ using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Data.Linq.Collections;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation;
 using System.Linq;
+using Remotion.Data.Linq.UnitTests.Linq.Core.TestUtilities;
 using Rhino.Mocks;
 
 namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Transformation
@@ -33,6 +35,15 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.
     public void SetUp ()
     {
       _registry = new ExpressionTransformerRegistry();
+    }
+     
+    [Test]
+    public void CreateDefault ()
+    {
+      var registry = ExpressionTransformerRegistry.CreateDefault();
+
+      var dictionary = (MultiDictionary<ExpressionType, ExpressionTransformation>) PrivateInvoke.GetNonPublicField (registry, "_transformations");
+      Assert.That (dictionary.CountValues(), Is.EqualTo (0));
     }
 
     [Test]

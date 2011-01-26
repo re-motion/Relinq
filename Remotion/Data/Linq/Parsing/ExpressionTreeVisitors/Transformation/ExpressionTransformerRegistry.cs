@@ -30,6 +30,19 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation
   /// </summary>
   public class ExpressionTransformerRegistry : IExpressionTranformationProvider
   {
+    /// <summary>
+    /// Creates an <see cref="ExpressionTransformerRegistry"/> with the default transformations provided by this library already registered.
+    /// New transformers can be registered by calling <see cref="Register{T}"/>.
+    /// </summary>
+    /// <returns> A default <see cref="ExpressionTransformerRegistry"/>.</returns>
+    /// <remarks>
+    /// Currently, the default registry contains no transformations.
+    /// </remarks>
+    public static ExpressionTransformerRegistry CreateDefault ()
+    {
+      return new ExpressionTransformerRegistry();
+    }
+
     private readonly MultiDictionary<ExpressionType, ExpressionTransformation> _transformations =
         new MultiDictionary<ExpressionType, ExpressionTransformation>();
 
