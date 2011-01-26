@@ -19,12 +19,12 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation;
 using Remotion.Data.Linq.Parsing.Structure;
+using Remotion.Data.Linq.Parsing.Structure.ExpressionTreeProcessingSteps;
 
 namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
 {
@@ -46,15 +46,24 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
           _queryParser.ExpressionTreeParser.NodeTypeRegistry.RegisteredMethodInfoCount, 
           Is.EqualTo (MethodCallExpressionNodeTypeRegistry.CreateDefault().RegisteredMethodInfoCount));
 
+      Assert.That (_queryParser.ExpressionTreeParser.ProcessingSteps.Length, Is.EqualTo (2));
+      Assert.That (_queryParser.ExpressionTreeParser.ProcessingSteps[0], Is.TypeOf (typeof (PartialEvaluationStep)));
+      Assert.That (_queryParser.ExpressionTreeParser.ProcessingSteps[1], Is.TypeOf (typeof (ExpressionTransformationStep)));
       Assert.That (
-          _queryParser.ExpressionTreeParser.TransformerRegistry.RegisteredTransformerCount,
+          ((ExpressionTransformationStep) _queryParser.ExpressionTreeParser.ProcessingSteps[1]).Provider,
+          Is.TypeOf (typeof (ExpressionTransformerRegistry)));
+      
+      var expressionTransformerRegistry = 
+          ((ExpressionTransformerRegistry) ((ExpressionTransformationStep) _queryParser.ExpressionTreeParser.ProcessingSteps[1]).Provider);
+      Assert.That (
+          expressionTransformerRegistry.RegisteredTransformerCount,
           Is.EqualTo (ExpressionTransformerRegistry.CreateDefault ().RegisteredTransformerCount));
     }
 
     [Test]
     public void Initialization_InjectExpressionTreeParser ()
     {
-      var expressionTreeParser = new ExpressionTreeParser (new MethodCallExpressionNodeTypeRegistry(), new ExpressionTransformerRegistry());
+      var expressionTreeParser = new ExpressionTreeParser (new MethodCallExpressionNodeTypeRegistry(), new IExpressionTreeProcessingStep[0]);
       var queryParser = new QueryParser (expressionTreeParser);
 
       Assert.That (queryParser.ExpressionTreeParser, Is.SameAs (expressionTreeParser));

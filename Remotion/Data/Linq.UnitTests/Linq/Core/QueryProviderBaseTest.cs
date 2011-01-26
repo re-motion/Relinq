@@ -25,6 +25,7 @@ using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation;
 using Remotion.Data.Linq.Parsing.Structure;
+using Remotion.Data.Linq.Parsing.Structure.ExpressionTreeProcessingSteps;
 using Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Data.Linq.UnitTests.Linq.Core.TestQueryGenerators;
 using Remotion.Data.Linq.Utilities;
@@ -68,8 +69,17 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
           queryProvider.ExpressionTreeParser.NodeTypeRegistry.RegisteredMethodInfoCount,
           Is.EqualTo (MethodCallExpressionNodeTypeRegistry.CreateDefault ().RegisteredMethodInfoCount));
 
+      Assert.That (queryProvider.ExpressionTreeParser.ProcessingSteps.Length, Is.EqualTo (2));
+      Assert.That (queryProvider.ExpressionTreeParser.ProcessingSteps[0], Is.TypeOf (typeof (PartialEvaluationStep)));
+      Assert.That (queryProvider.ExpressionTreeParser.ProcessingSteps[1], Is.TypeOf (typeof (ExpressionTransformationStep)));
       Assert.That (
-          queryProvider.ExpressionTreeParser.TransformerRegistry.RegisteredTransformerCount,
+          ((ExpressionTransformationStep) queryProvider.ExpressionTreeParser.ProcessingSteps[1]).Provider,
+          Is.TypeOf (typeof (ExpressionTransformerRegistry)));
+
+      var expressionTransformerRegistry =
+          ((ExpressionTransformerRegistry) ((ExpressionTransformationStep) queryProvider.ExpressionTreeParser.ProcessingSteps[1]).Provider);
+      Assert.That (
+          expressionTransformerRegistry.RegisteredTransformerCount,
           Is.EqualTo (ExpressionTransformerRegistry.CreateDefault ().RegisteredTransformerCount));
     }
 

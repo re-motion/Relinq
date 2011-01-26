@@ -20,6 +20,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation;
 using Remotion.Data.Linq.Parsing.Structure;
+using Remotion.Data.Linq.Parsing.Structure.ExpressionTreeProcessingSteps;
 using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq
@@ -56,7 +57,8 @@ namespace Remotion.Data.Linq
     {
       ArgumentUtility.CheckNotNull ("executor", executor);
       Executor = executor;
-      _expressionTreeParser = new ExpressionTreeParser (nodeTypeRegistry, ExpressionTransformerRegistry.CreateDefault());
+      // TODO 3693: Remove copy/pasted code
+      _expressionTreeParser = new ExpressionTreeParser (nodeTypeRegistry, ExpressionTreeParser.CreateDefaultProcessingSteps());
     }
 
     /// <summary>

@@ -19,7 +19,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
+
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation;
+using Remotion.Data.Linq.Parsing.Structure.ExpressionTreeProcessingSteps;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Data.Linq.Utilities;
 using System.Reflection;
@@ -27,24 +29,37 @@ using System.Reflection;
 namespace Remotion.Data.Linq.Parsing.Structure
 {
   /// <summary>
-  /// Parses an expression tree into a chain of <see cref="IExpressionNode"/> objects, partially evaluating expressions in the process.
+  /// Parses an expression tree into a chain of <see cref="IExpressionNode"/> objects after executing a sequence of 
+  /// <see cref="IExpressionTreeProcessingStep"/> objects.
   /// </summary>
   public class ExpressionTreeParser
   {
     private static readonly MethodInfo s_getArrayLengthMethod = typeof (Array).GetMethod ("get_Length");
 
+    public static ExpressionTreeParser CreateDefault ()
+    {
+      return new ExpressionTreeParser (MethodCallExpressionNodeTypeRegistry.CreateDefault (), CreateDefaultProcessingSteps());
+    }
+
+    public static IExpressionTreeProcessingStep[] CreateDefaultProcessingSteps ()
+    {
+      return new IExpressionTreeProcessingStep[] { 
+          new PartialEvaluationStep(), 
+          new ExpressionTransformationStep (ExpressionTransformerRegistry.CreateDefault()) };
+    }
+
     private readonly UniqueIdentifierGenerator _identifierGenerator = new UniqueIdentifierGenerator ();
     private readonly MethodCallExpressionNodeTypeRegistry _nodeTypeRegistry;
-    private readonly ExpressionTransformerRegistry _transformerRegistry;
+    private readonly IExpressionTreeProcessingStep[] _processingSteps;
     private readonly MethodCallExpressionParser _methodCallExpressionParser;
 
-    public ExpressionTreeParser (MethodCallExpressionNodeTypeRegistry nodeTypeRegistry, ExpressionTransformerRegistry transformerRegistry)
+    public ExpressionTreeParser (MethodCallExpressionNodeTypeRegistry nodeTypeRegistry, IExpressionTreeProcessingStep[] processingSteps)
     {
       ArgumentUtility.CheckNotNull ("nodeTypeRegistry", nodeTypeRegistry);
-      ArgumentUtility.CheckNotNull ("transformerRegistry", transformerRegistry);
+      ArgumentUtility.CheckNotNull ("processingSteps", processingSteps);
       
       _nodeTypeRegistry = nodeTypeRegistry;
-      _transformerRegistry = transformerRegistry;
+      _processingSteps = processingSteps;
       _methodCallExpressionParser = new MethodCallExpressionParser (_nodeTypeRegistry);
     }
 
@@ -58,12 +73,12 @@ namespace Remotion.Data.Linq.Parsing.Structure
     }
 
     /// <summary>
-    /// Gets the transformer registry used to transform the <see cref="Expression"/> tree prior to parsing.
+    /// Gets the processing steps used by <see cref="ParseTree"/> to process the <see cref="Expression"/> tree before analyzing its structure.
     /// </summary>
-    /// <value>The transformer registry.</value>
-    public ExpressionTransformerRegistry TransformerRegistry
+    /// <value>The processing steps.</value>
+    public IExpressionTreeProcessingStep[] ProcessingSteps
     {
-      get { return _transformerRegistry; }
+      get { return _processingSteps; }
     }
 
     /// <summary>
@@ -77,11 +92,10 @@ namespace Remotion.Data.Linq.Parsing.Structure
       ArgumentUtility.CheckNotNull ("expressionTree", expressionTree);
 
       if (expressionTree.Type == typeof (void))
-        throw new ParserException (string.Format ("Expressions of type void ('{0}') are not supported.", expressionTree));
+        throw new ParserException (String.Format ("Expressions of type void ('{0}') are not supported.", expressionTree));
 
-      var simplifiedExpressionTree = PartialEvaluatingExpressionTreeVisitor.EvaluateIndependentSubtrees (expressionTree);
-      var transformedExpreesionTree = TransformingExpressionTreeVisitor.Transform (simplifiedExpressionTree, _transformerRegistry);
-      return ParseNode (transformedExpreesionTree, null);
+      var processedExpressionTree = _processingSteps.Aggregate (expressionTree, (e, s) => s.Process (e));
+      return ParseNode (processedExpressionTree, null);
     }
 
     /// <summary>
@@ -166,7 +180,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       }
       catch (ArgumentTypeException ex)
       {
-        var message = string.Format (
+        var message = String.Format (
             "Cannot parse expression '{0}' as it has an unsupported type. Only query sources (that is, expressions that implement IEnumerable) "
             + "and query operators can be parsed.",
             preprocessedExpression);

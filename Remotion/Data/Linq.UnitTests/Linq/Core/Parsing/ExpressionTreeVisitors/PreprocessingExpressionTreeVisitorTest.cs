@@ -18,14 +18,12 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Microsoft.VisualBasic.CompilerServices;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
-using Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests;
 using Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.TestDomain;
 using Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Data.Linq.UnitTests.Linq.Core.TestQueryGenerators;
@@ -51,7 +49,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
           typeof (PreprocessingExpressionTreeVisitor), BindingFlags.NonPublic | BindingFlags.Instance, null, new[] { _nodeTypeRegistry }, null);
 
       var innerParser = (QueryParser) PrivateInvoke.GetNonPublicField (visitorInstance, "_innerParser");
-      Assert.That (innerParser.ExpressionTreeParser.TransformerRegistry.RegisteredTransformerCount, Is.EqualTo (0));
+      Assert.That (innerParser.ExpressionTreeParser.ProcessingSteps, Is.Empty);
     }
 
     [Test]
@@ -88,12 +86,14 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
     {
       Expression subQuery = ExpressionHelper.MakeExpression (() => CustomSelect (ExpressionHelper.CreateCookQueryable(), s => s));
       Expression surroundingExpression = Expression.Lambda (subQuery);
+      // evaluate the ExpressionHelper.CreateCookQueryable () method
+      var inputExpression = PartialEvaluatingExpressionTreeVisitor.EvaluateIndependentSubtrees (surroundingExpression);
 
       var emptyNodeTypeRegistry = new MethodCallExpressionNodeTypeRegistry();
       emptyNodeTypeRegistry.Register (new[] { ((MethodCallExpression) subQuery).Method }, typeof (SelectExpressionNode));
 
       var newLambdaExpression =
-          (LambdaExpression) PreprocessingExpressionTreeVisitor.Process (surroundingExpression, emptyNodeTypeRegistry);
+          (LambdaExpression) PreprocessingExpressionTreeVisitor.Process (inputExpression, emptyNodeTypeRegistry);
       Assert.That (newLambdaExpression.Body, Is.InstanceOfType (typeof (SubQueryExpression)));
     }
 
@@ -123,8 +123,10 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
     {
       var subQuery = ExpressionHelper.MakeExpression (() => (from s in ExpressionHelper.CreateCookQueryable () select s).Any());
       var extensionExpression = new VBStringComparisonExpression (subQuery, true);
+      // evaluate the ExpressionHelper.CreateCookQueryable () method
+      var inputExpression = PartialEvaluatingExpressionTreeVisitor.EvaluateIndependentSubtrees (extensionExpression);
 
-      var result = PreprocessingExpressionTreeVisitor.Process (extensionExpression, _nodeTypeRegistry);
+      var result = PreprocessingExpressionTreeVisitor.Process (inputExpression, _nodeTypeRegistry);
 
       Assert.That (((VBStringComparisonExpression) result).Comparison, Is.TypeOf (typeof (SubQueryExpression)));
     }

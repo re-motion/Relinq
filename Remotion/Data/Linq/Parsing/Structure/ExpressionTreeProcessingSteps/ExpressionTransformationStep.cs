@@ -45,7 +45,12 @@ namespace Remotion.Data.Linq.Parsing.Structure.ExpressionTreeProcessingSteps
 
       _provider = provider;
     }
-    
+
+    public IExpressionTranformationProvider Provider
+    {
+      get { return _provider; }
+    }
+
     public Expression Process (Expression expressionTree)
     {
       ArgumentUtility.CheckNotNull ("expressionTree", expressionTree);
