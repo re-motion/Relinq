@@ -17,6 +17,7 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using Microsoft.VisualBasic.CompilerServices;
 using NUnit.Framework;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
@@ -27,6 +28,34 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
   [TestFixture]
   public class VBStringComparisonQueryParserIntegrationTest : QueryParserIntegrationTestBase
   {
+    [Test]
+    public void VBStringComparison ()
+    {
+      var parameterExpression = Expression.Parameter (typeof (Cook), "c");
+      var vbCompareStringExpression =
+          Expression.Equal (
+              Expression.Call (
+                  typeof (Operators).GetMethod ("CompareString"),
+                  Expression.Constant ("string1"),
+                  Expression.MakeMemberAccess (parameterExpression, typeof (Cook).GetProperty ("Name")),
+                  Expression.Constant (true)),
+              Expression.Constant (0));
+      var query = QuerySource
+          .Where (Expression.Lambda<Func<Cook, bool>> (vbCompareStringExpression, parameterExpression))
+          .Select (c => c.Name);
+
+      var queryModel = QueryParser.GetParsedQuery (query.Expression);
+
+      var whereClause = (WhereClause) queryModel.BodyClauses[0];
+
+      var expectedExpression = new VBStringComparisonExpression (
+          Expression.Equal (
+              Expression.Constant ("string1"),
+              Expression.MakeMemberAccess (new QuerySourceReferenceExpression (queryModel.MainFromClause), typeof (Cook).GetProperty ("Name"))),
+          true);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, whereClause.Predicate);
+    }
+
     [Test]
     public void VBStringComparison_WithParameterInsideComparison ()
     {

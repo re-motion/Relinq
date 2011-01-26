@@ -271,6 +271,9 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
       var transformedExpression = Expression.Constant (false);
 
       transformerMock
+          .Stub (stub => stub.SupportedExpressionTypes)
+          .Return (new[] { ExpressionType.Constant });
+      transformerMock
           .Expect (mock => mock.Transform (Arg<ConstantExpression>.Matches (ce => ce.Value.Equals (true))))
           .Return (transformedExpression);
       transformerMock
@@ -280,7 +283,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
           .Repeat.Any();
       transformerMock.Replay();
 
-      _transformerRegistry.Register (transformerMock, ExpressionType.Constant);
+      _transformerRegistry.Register (transformerMock);
 
       var result = (WhereExpressionNode) _expressionTreeParser.ParseTree (expression);
 

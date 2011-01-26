@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Collections;
+using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations;
 using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation
@@ -36,11 +37,16 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation
     /// </summary>
     /// <returns> A default <see cref="ExpressionTransformerRegistry"/>.</returns>
     /// <remarks>
-    /// Currently, the default registry contains no transformations.
+    /// Currently, the default registry contains:
+    /// <list type="bullet">
+    /// <item><see cref="VBCompareStringExpressionTransformer"/></item>
+    /// </list>
     /// </remarks>
     public static ExpressionTransformerRegistry CreateDefault ()
     {
-      return new ExpressionTransformerRegistry();
+      var registry = new ExpressionTransformerRegistry();
+      registry.Register (new VBCompareStringExpressionTransformer());
+      return registry;
     }
 
     private readonly MultiDictionary<ExpressionType, ExpressionTransformation> _transformations =
@@ -49,6 +55,11 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation
     public int RegisteredTransformerCount
     {
       get { return _transformations.CountValues(); }
+    }
+
+    public ExpressionTransformation[] GetAllTransformations(ExpressionType expressionType)
+    {
+      return _transformations[expressionType].ToArray();
     }
 
     public IEnumerable<ExpressionTransformation> GetTransformations (Expression expression)
@@ -64,11 +75,14 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation
         return Enumerable.Empty<ExpressionTransformation>();
     }
 
-    public void Register<T> (IExpressionTransformer<T> transformer, ExpressionType nodeType) where T: Expression
+    public void Register<T> (IExpressionTransformer<T> transformer) where T: Expression
     {
       ArgumentUtility.CheckNotNull ("transformer", transformer);
 
-      _transformations.Add (nodeType, expr => TransformExpression (expr, transformer));
+      ExpressionTransformation transformation = expr => TransformExpression (expr, transformer);
+
+      foreach (var expressionType in transformer.SupportedExpressionTypes)
+        _transformations.Add (expressionType, transformation);
     }
 
     private static Expression TransformExpression<T> (Expression expression, IExpressionTransformer<T> transformer) where T: Expression

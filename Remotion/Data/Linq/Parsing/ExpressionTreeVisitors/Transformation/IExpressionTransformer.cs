@@ -39,6 +39,12 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation
   public interface IExpressionTransformer<T> where T : Expression
   {
     /// <summary>
+    /// Gets the expression types supported by this <see cref="IExpressionTransformer{T}"/>.
+    /// </summary>
+    /// <value>The supported expression types.</value>
+    ExpressionType[] SupportedExpressionTypes { get; }
+
+    /// <summary>
     /// Transforms a given <see cref="Expression"/>. If the implementation can handle the <see cref="Expression"/>,
     /// it should return a new, transformed <see cref="Expression"/> instance. Otherwise, it should return the input
     /// <paramref name="expression"/> instance.
@@ -47,5 +53,4 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation
     /// <returns>The result of the transformation, or <paramref name="expression"/> if no transformation was applied.</returns>
     Expression Transform (T expression);
   }
-  
 }

@@ -56,7 +56,7 @@ namespace Remotion.Data.Linq
     {
       ArgumentUtility.CheckNotNull ("executor", executor);
       Executor = executor;
-      _expressionTreeParser = new ExpressionTreeParser (nodeTypeRegistry, new ExpressionTransformerRegistry());
+      _expressionTreeParser = new ExpressionTreeParser (nodeTypeRegistry, ExpressionTransformerRegistry.CreateDefault());
     }
 
     /// <summary>

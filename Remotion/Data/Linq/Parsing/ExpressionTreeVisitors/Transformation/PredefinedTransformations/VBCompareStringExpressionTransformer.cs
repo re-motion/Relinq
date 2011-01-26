@@ -33,6 +33,22 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation.Prede
     private const string c_vbOperatorsClassName = "Microsoft.VisualBasic.CompilerServices.Operators";
     private const string c_vbCompareStringOperatorMethodName = "CompareString";
 
+    public ExpressionType[] SupportedExpressionTypes
+    {
+      get
+      {
+        return new[]
+               {
+                   ExpressionType.Equal,
+                   ExpressionType.NotEqual, 
+                   ExpressionType.LessThan,
+                   ExpressionType.GreaterThan, 
+                   ExpressionType.LessThanOrEqual,
+                   ExpressionType.GreaterThanOrEqual
+               };
+      }
+    }
+    
     public Expression Transform (BinaryExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
@@ -49,13 +65,14 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation.Prede
             leftSideArgument2AsConstantExpression != null && leftSideArgument2AsConstantExpression.Value is bool,
             "The second argument of the method call expression has to be a constant expression with a boolean value.");
 
-       return GetExpressionForNodeType (expression, leftSideAsMethodCallExpression, leftSideArgument2AsConstantExpression);
+        return GetExpressionForNodeType (expression, leftSideAsMethodCallExpression, leftSideArgument2AsConstantExpression);
       }
 
       return expression;
     }
 
-    private Expression GetExpressionForNodeType (BinaryExpression expression, MethodCallExpression leftSideAsMethodCallExpression, ConstantExpression leftSideArgument2AsConstantExpression)
+    private Expression GetExpressionForNodeType (
+        BinaryExpression expression, MethodCallExpression leftSideAsMethodCallExpression, ConstantExpression leftSideArgument2AsConstantExpression)
     {
       BinaryExpression binaryExpression;
       switch (expression.NodeType)
@@ -69,21 +86,22 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation.Prede
       }
 
       var methodCallExpression = MethodCallExpression.Call (
-              leftSideAsMethodCallExpression.Arguments[0],
-              typeof(string).GetMethod ("CompareTo", new[] { typeof(string) }),
-              leftSideAsMethodCallExpression.Arguments[1]);
-          var vbExpression = new VBStringComparisonExpression (methodCallExpression, (bool) leftSideArgument2AsConstantExpression.Value);
+          leftSideAsMethodCallExpression.Arguments[0],
+          typeof (string).GetMethod ("CompareTo", new[] { typeof (string) }),
+          leftSideAsMethodCallExpression.Arguments[1]);
+      var vbExpression = new VBStringComparisonExpression (methodCallExpression, (bool) leftSideArgument2AsConstantExpression.Value);
 
-      if(expression.NodeType==ExpressionType.GreaterThan)
-        return Expression.GreaterThan (vbExpression, Expression.Constant(0));
-      else if(expression.NodeType==ExpressionType.GreaterThanOrEqual)
+      if (expression.NodeType == ExpressionType.GreaterThan)
+        return Expression.GreaterThan (vbExpression, Expression.Constant (0));
+      else if (expression.NodeType == ExpressionType.GreaterThanOrEqual)
         return Expression.GreaterThanOrEqual (vbExpression, Expression.Constant (0));
-      else if(expression.NodeType==ExpressionType.LessThan)
-        return Expression.LessThan(vbExpression, Expression.Constant (0));
-      else if(expression.NodeType==ExpressionType.LessThanOrEqual)
+      else if (expression.NodeType == ExpressionType.LessThan)
+        return Expression.LessThan (vbExpression, Expression.Constant (0));
+      else if (expression.NodeType == ExpressionType.LessThanOrEqual)
         return Expression.LessThanOrEqual (vbExpression, Expression.Constant (0));
 
-      throw new NotSupportedException (string.Format ("Binary expression with node type '{0}' is not supported in a VB string comparison.", expression.NodeType));
+      throw new NotSupportedException (
+          string.Format ("Binary expression with node type '{0}' is not supported in a VB string comparison.", expression.NodeType));
     }
 
     private bool IsVBOperator (MethodInfo operatorMethod, string operatorName)

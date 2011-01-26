@@ -41,7 +41,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
     /// registered.
     /// </summary>
     public QueryParser ()
-        : this (new ExpressionTreeParser (MethodCallExpressionNodeTypeRegistry.CreateDefault(), new ExpressionTransformerRegistry()))
+        : this (new ExpressionTreeParser (MethodCallExpressionNodeTypeRegistry.CreateDefault(), ExpressionTransformerRegistry.CreateDefault()))
     {
     }
 

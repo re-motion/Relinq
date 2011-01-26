@@ -15,12 +15,15 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
+using Microsoft.VisualBasic.CompilerServices;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.Collections;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation;
 using System.Linq;
+using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations;
 using Remotion.Data.Linq.UnitTests.Linq.Core.TestUtilities;
 using Rhino.Mocks;
 
@@ -41,7 +44,12 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.
     public void CreateDefault ()
     {
       var registry = ExpressionTransformerRegistry.CreateDefault();
-      Assert.That (registry.RegisteredTransformerCount, Is.EqualTo (0));
+
+      Assert.That (registry.RegisteredTransformerCount, Is.EqualTo (6));
+      
+      var transformations = registry.GetAllTransformations (ExpressionType.Equal);
+      var transformers = GetTransformersFromTransformations (transformations);
+      Assert.That (transformers, List.Some.TypeOf (typeof (VBCompareStringExpressionTransformer)));
     }
 
     [Test]
@@ -49,18 +57,40 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.
     {
       Assert.That (_registry.RegisteredTransformerCount, Is.EqualTo (0));
 
-      var transformerStub = CreateTransformerStub<Expression> (1);
-      _registry.Register (transformerStub, ExpressionType.Constant);
+      var transformerStub = CreateTransformerStub<Expression> (1, ExpressionType.Constant);
+      _registry.Register (transformerStub);
 
       Assert.That (_registry.RegisteredTransformerCount, Is.EqualTo (1));
 
-      _registry.Register (transformerStub, ExpressionType.Constant);
+      _registry.Register (transformerStub);
 
       Assert.That (_registry.RegisteredTransformerCount, Is.EqualTo (2));
 
-      _registry.Register (transformerStub, ExpressionType.Equal);
+      var transformerStub2 = CreateTransformerStub<Expression> (2, ExpressionType.Equal);
+      _registry.Register (transformerStub2);
 
       Assert.That (_registry.RegisteredTransformerCount, Is.EqualTo (3));
+    }
+
+    [Test]
+    public void GetAllTransformations ()
+    {
+      Assert.That (_registry.GetAllTransformations (ExpressionType.Constant), Is.Empty);
+
+      var transformerStub1 = CreateTransformerStub<Expression> (1, ExpressionType.Constant);
+      _registry.Register (transformerStub1);
+
+      var transformerStub2 = CreateTransformerStub<Expression> (1, ExpressionType.Constant);
+      _registry.Register (transformerStub2);
+
+      var transformerStub3 = CreateTransformerStub<Expression> (1, ExpressionType.Equal);
+      _registry.Register (transformerStub3);
+
+      var transformationsForConstant = _registry.GetAllTransformations (ExpressionType.Constant);
+      Assert.That (GetTransformersFromTransformations (transformationsForConstant), Is.EqualTo (new[] { transformerStub1, transformerStub2 }));
+
+      var transformationsForEqual = _registry.GetAllTransformations (ExpressionType.Equal);
+      Assert.That (GetTransformersFromTransformations (transformationsForEqual), Is.EqualTo (new[] { transformerStub3 }));
     }
 
     [Test]
@@ -77,9 +107,9 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.
     public void GetTransformers_OneTransformerRegistered ()
     {
       var expression = CreateSimpleExpression (0);
-      var transformerStub = CreateTransformerStub<Expression> (1);
+      var transformerStub = CreateTransformerStub<Expression> (1, expression.NodeType);
       
-      _registry.Register (transformerStub, expression.NodeType);
+      _registry.Register (transformerStub);
 
       var result = _registry.GetTransformations (expression).ToArray();
 
@@ -91,9 +121,9 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.
     public void GetTransformers_UsesNodeTypeToMatchTransformers ()
     {
       var expression = CreateSimpleExpression (0);
-      var transformerStub = CreateTransformerStub<Expression> (1);
+      var transformerStub = CreateTransformerStub<Expression> (1, ExpressionType.OrElse);
 
-      _registry.Register (transformerStub, ExpressionType.OrElse);
+      _registry.Register (transformerStub);
 
       var result = _registry.GetTransformations (expression).ToArray ();
 
@@ -104,11 +134,11 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.
     public void GetTransformers_TwoTransformerRegistered ()
     {
       var expression = CreateSimpleExpression (0);
-      var transformerStub1 = CreateTransformerStub<Expression> (1);
-      var transformerStub2 = CreateTransformerStub<Expression> (2);
+      var transformerStub1 = CreateTransformerStub<Expression> (1, expression.NodeType);
+      var transformerStub2 = CreateTransformerStub<Expression> (2, expression.NodeType);
 
-      _registry.Register (transformerStub1, expression.NodeType);
-      _registry.Register (transformerStub2, expression.NodeType);
+      _registry.Register (transformerStub1);
+      _registry.Register (transformerStub2);
       
       var result = _registry.GetTransformations (expression).ToArray ();
 
@@ -118,27 +148,49 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.
     }
 
     [Test]
+    public void GetTransformers_TransformerRegisteredForTwoExpressionTypes ()
+    {
+      var expression1 = CreateSimpleExpression (0);
+      var expression2 = Expression.UnaryPlus (CreateSimpleExpression (1));
+      
+      var transformerStub = CreateTransformerStub<Expression> (1, expression1.NodeType, expression2.NodeType);
+
+      _registry.Register (transformerStub);
+
+      var result1 = _registry.GetTransformations (expression1).ToArray ();
+
+      Assert.That (result1.Length, Is.EqualTo (1));
+      CheckTransformationMatchesTransformer (result1[0], transformerStub);
+
+      var result2 = _registry.GetTransformations (expression2).ToArray ();
+
+      Assert.That (result2.Length, Is.EqualTo (1));
+      CheckTransformationMatchesTransformer (result2[0], transformerStub);
+    }
+
+    [Test]
     [ExpectedException (typeof (InvalidOperationException), ExpectedMessage =
         "A 'ConstantExpression' with node type 'Constant' cannot be handled by the IExpressionTransformer<BinaryExpression>. "
         + "The transformer was probably registered for a wrong ExpressionType.")]
     public void Register_AddsExpressionTypeCheck ()
     {
       var expression = CreateSimpleExpression (0);
-      var transformerStub = CreateTransformerStub<BinaryExpression> (1);
+      var transformerStub = CreateTransformerStub<BinaryExpression> (1, expression.NodeType);
 
-      _registry.Register (transformerStub, expression.NodeType);
+      _registry.Register (transformerStub);
 
       var result = _registry.GetTransformations (expression).ToArray ();
 
       result[0] (expression);
     }
 
-    private IExpressionTransformer<T> CreateTransformerStub<T> (int id) 
+    private IExpressionTransformer<T> CreateTransformerStub<T> (int id, params ExpressionType[] expressionTypes) 
         where T : Expression
     {
       var transformationResult = CreateSimpleExpression (id);
       var transformerStub = MockRepository.GenerateStub<IExpressionTransformer<T>>();
       transformerStub.Stub (stub => stub.Transform (Arg<T>.Is.Anything)).Return (transformationResult);
+      transformerStub.Stub (stub => stub.SupportedExpressionTypes).Return (expressionTypes);
       return transformerStub;
     }
 
@@ -155,6 +207,12 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.
     private Expression CreateSimpleExpression (int id)
     {
       return Expression.Constant (id);
+    }
+
+    private object[] GetTransformersFromTransformations (IEnumerable<ExpressionTransformation> transformations)
+    {
+      var targets = transformations.Select (t => t.Target);
+      return targets.Select (t => t.GetType ().GetField ("transformer").GetValue (t)).ToArray ();
     }
   }
 }

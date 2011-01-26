@@ -38,6 +38,22 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.
     }
 
     [Test]
+    public void SupportedExpressionTypes ()
+    {
+      var result = _transformer.SupportedExpressionTypes;
+
+      Assert.That (result.Length, Is.EqualTo (6));
+      Assert.That (
+          result,
+          Is.EquivalentTo (
+              new[]
+              {
+                  ExpressionType.Equal, ExpressionType.NotEqual, ExpressionType.LessThan, ExpressionType.GreaterThan, ExpressionType.LessThanOrEqual,
+                  ExpressionType.GreaterThanOrEqual
+              }));
+    }
+
+    [Test]
     public void Transform_LeftSideIsNoMethodCallExpression_ReturnsSameExpression ()
     {
       var expression = Expression.Equal (Expression.Constant (5), Expression.Constant (10));
@@ -179,5 +195,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.
 
       _transformer.Transform (expression);
     }
+
+    
   }
 }
