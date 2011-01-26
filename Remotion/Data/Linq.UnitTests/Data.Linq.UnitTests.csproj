@@ -147,6 +147,8 @@
     <Compile Include="Linq\Core\Parsing\ExpressionTreeVisitors\Transformation\ExpressionTransformerRegistryTest.cs" />
     <Compile Include="Linq\Core\Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\VBCompareStringExpressionTransformerTest.cs" />
     <Compile Include="Linq\Core\Parsing\ExpressionTreeVisitors\TransformingExpressionTreeVisitorTest.cs" />
+    <Compile Include="Linq\Core\Parsing\Structure\ExpressionTreeProcessingSteps\ExpressionTransformationStepTest.cs" />
+    <Compile Include="Linq\Core\Parsing\Structure\ExpressionTreeProcessingSteps\PartialEvaluationStepTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\IntermediateModel\GroupByWithResultSelectorExpressionNodeTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\QueryParserIntegrationTests\VBStringComparisonQueryParserIntegrationTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\QueryParserIntegrationTests\MiscQueryParserIntegrationTest.cs" />

@@ -136,6 +136,9 @@
     <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\VBCompareStringExpressionTransformer.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\EvaluatableTreeFindingExpressionTreeVisitor.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\PartialEvaluationInfo.cs" />
+    <Compile Include="Parsing\Structure\ExpressionTreeProcessingSteps\ExpressionTransformationStep.cs" />
+    <Compile Include="Parsing\Structure\ExpressionTreeProcessingSteps\PartialEvaluationStep.cs" />
+    <Compile Include="Parsing\Structure\IExpressionTreeProcessingStep.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\AggregateExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\AverageExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ClauseGenerationContext.cs" />
@@ -273,6 +276,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
