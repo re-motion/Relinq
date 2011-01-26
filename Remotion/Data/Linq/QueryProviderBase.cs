@@ -32,7 +32,7 @@ namespace Remotion.Data.Linq
   /// </summary>
   public abstract class QueryProviderBase : IQueryProvider
   {
-    private readonly ExpressionTreeParser _expressionTreeParser;
+    private readonly QueryParser _queryParser;
 
     private static readonly MethodInfo s_genericCreateQueryMethod =
         typeof (QueryProviderBase).GetMethods().Where (m => m.Name == "CreateQuery" && m.IsGenericMethod).Single();
@@ -58,7 +58,7 @@ namespace Remotion.Data.Linq
       ArgumentUtility.CheckNotNull ("executor", executor);
       Executor = executor;
       // TODO 3693: Remove copy/pasted code
-      _expressionTreeParser = new ExpressionTreeParser (nodeTypeRegistry, ExpressionTreeParser.CreateDefaultProcessingSteps());
+      _queryParser = new QueryParser (new ExpressionTreeParser (nodeTypeRegistry, ExpressionTreeParser.CreateDefaultProcessingSteps ()));
     }
 
     /// <summary>
@@ -67,14 +67,19 @@ namespace Remotion.Data.Linq
     /// <value>The executor used to execute queries.</value>
     public IQueryExecutor Executor { get; private set; }
 
-    /// <summary>
-    /// Gets the <see cref="ExpressionTreeParser"/> used by this <see cref="QueryProviderBase"/> to parse LINQ <see cref="Expression"/>
-    /// trees.
-    /// </summary>
-    /// <value>The expression tree parser.</value>
+    [Obsolete ("This property has been replaced by the QueryParser property. Use QueryParser.ExpresionTreeParser instead. (1.13.92)")]
     public ExpressionTreeParser ExpressionTreeParser
     {
-      get { return _expressionTreeParser; }
+      get { return _queryParser.ExpressionTreeParser; }
+    }
+
+    /// <summary>
+    /// Gets the <see cref="QueryParser"/> used by this <see cref="QueryProviderBase"/> to parse LINQ queries.
+    /// </summary>
+    /// <value>The query parser.</value>
+    public QueryParser QueryParser
+    {
+      get { return _queryParser; }
     }
 
     /// <summary>
@@ -137,8 +142,7 @@ namespace Remotion.Data.Linq
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      var parser = new QueryParser (_expressionTreeParser);
-      return parser.GetParsedQuery (expression);
+      return _queryParser.GetParsedQuery (expression);
     }
   }
 }
