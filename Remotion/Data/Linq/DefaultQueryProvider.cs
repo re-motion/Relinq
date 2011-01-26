@@ -41,6 +41,7 @@ namespace Remotion.Data.Linq
       _queryableType = queryableType;
     }
 
+    // TODO 3693: Inject IQueryParser here
     public DefaultQueryProvider (Type queryableType, IQueryExecutor executor, MethodCallExpressionNodeTypeRegistry nodeTypeRegistry)
         : base (ArgumentUtility.CheckNotNull ("executor", executor), ArgumentUtility.CheckNotNull ("nodeTypeRegistry", nodeTypeRegistry))
     {

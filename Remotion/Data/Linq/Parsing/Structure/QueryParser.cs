@@ -35,6 +35,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
   {
     private readonly ExpressionTreeParser _expressionTreeParser;
 
+    // TODO 3693: Make this a CreateDefault method.
     /// <summary>
     /// Initializes a new instance of the <see cref="QueryParser"/> class, using a default instance of <see cref="ExpressionTreeParser"/> to
     /// convert <see cref="Expression"/> instances into <see cref="IExpressionNode"/>s. The <see cref="MethodCallExpressionNodeTypeRegistry"/> 

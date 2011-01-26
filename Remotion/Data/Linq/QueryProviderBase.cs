@@ -57,7 +57,7 @@ namespace Remotion.Data.Linq
     {
       ArgumentUtility.CheckNotNull ("executor", executor);
       Executor = executor;
-      // TODO 3693: Remove copy/pasted code
+      // TODO 3693: Extract IQueryParser interface, inject here
       _queryParser = new QueryParser (new ExpressionTreeParser (nodeTypeRegistry, ExpressionTreeParser.CreateDefaultProcessingSteps ()));
     }
 
