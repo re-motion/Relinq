@@ -80,7 +80,8 @@ namespace Remotion.Data.Linq.Parsing.Structure
         throw new ParserException (string.Format ("Expressions of type void ('{0}') are not supported.", expressionTree));
 
       var simplifiedExpressionTree = PartialEvaluatingExpressionTreeVisitor.EvaluateIndependentSubtrees (expressionTree);
-      return ParseNode (simplifiedExpressionTree, null);
+      var transformedExpreesionTree = TransformingExpressionTreeVisitor.Transform (simplifiedExpressionTree, _transformerRegistry);
+      return ParseNode (transformedExpreesionTree, null);
     }
 
     /// <summary>

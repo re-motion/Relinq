@@ -144,6 +144,18 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
       Assert.That (result, Is.SameAs (transformedParentExpression));
     }
 
+    [Test]
+    public void Transform_NullExpression ()
+    {
+      var providerMock = MockRepository.GenerateStrictMock<IExpressionTranformationProvider> ();
+      providerMock.Replay ();
+
+      var result = TransformingExpressionTreeVisitor.Transform (null, providerMock);
+
+      providerMock.VerifyAllExpectations ();
+      Assert.That (result, Is.Null);
+    }
+
     private Expression CreateSimpleExpression (int id)
     {
       return Expression.Constant (id);

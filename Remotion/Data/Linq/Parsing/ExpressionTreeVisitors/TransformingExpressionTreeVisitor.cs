@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
+using System.Diagnostics;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation;
 using Remotion.Data.Linq.Utilities;
@@ -29,7 +30,6 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
   {
     public static Expression Transform (Expression expression, IExpressionTranformationProvider tranformationProvider)
     {
-      ArgumentUtility.CheckNotNull ("expression", expression);
       ArgumentUtility.CheckNotNull ("tranformationProvider", tranformationProvider);
       
       var visitor = new TransformingExpressionTreeVisitor (tranformationProvider);
@@ -48,12 +48,15 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
     public override Expression VisitExpression (Expression expression)
     {
       var newExpression = base.VisitExpression (expression);
+      if (newExpression == null)
+        return newExpression;
 
       var transformations = _tranformationProvider.GetTransformations (newExpression);
 
       foreach (var transformation in transformations)
       {
         var transformedExpression = transformation (newExpression);
+        Trace.Assert (transformedExpression != null);
         if (transformedExpression != newExpression)
           return VisitExpression (transformedExpression);
       }

@@ -28,6 +28,7 @@ using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.TestDomain;
 using Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Data.Linq.UnitTests.Linq.Core.TestUtilities;
+using Rhino.Mocks;
 
 namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
 {
@@ -258,6 +259,32 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
       var expression = _intSource.Where (i => 1 > outerI).Expression;
 
       var result = (WhereExpressionNode) _expressionTreeParser.ParseTree (expression);
+      Assert.That (((ConstantExpression) result.Predicate.Body).Value, Is.EqualTo (false));
+    }
+
+    [Test]
+    public void ParseTree_TransformsTree ()
+    {
+      var expression = _intSource.Where (i => true).Expression;
+
+      var transformerMock = MockRepository.GenerateStrictMock<IExpressionTransformer<ConstantExpression>>();
+      var transformedExpression = Expression.Constant (false);
+
+      transformerMock
+          .Expect (mock => mock.Transform (Arg<ConstantExpression>.Matches (ce => ce.Value.Equals (true))))
+          .Return (transformedExpression);
+      transformerMock
+          .Expect (mock => mock.Transform (Arg<ConstantExpression>.Matches (ce => !ce.Value.Equals (true))))
+          .Return (null)
+          .WhenCalled (mi => mi.ReturnValue = mi.Arguments[0])
+          .Repeat.Any();
+      transformerMock.Replay();
+
+      _transformerRegistry.Register (transformerMock, ExpressionType.Constant);
+
+      var result = (WhereExpressionNode) _expressionTreeParser.ParseTree (expression);
+
+      transformerMock.VerifyAllExpectations();
       Assert.That (((ConstantExpression) result.Predicate.Body).Value, Is.EqualTo (false));
     }
 
