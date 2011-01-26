@@ -144,6 +144,7 @@
     <Compile Include="LinqToSqlAdapter\TestDomain\PersonTestClass.cs" />
     <Compile Include="LinqToSqlAdapter\MappingResolverTest.cs" />
     <Compile Include="Linq\Core\Clauses\Expressions\VBStringComparisonExpressionTest.cs" />
+    <Compile Include="Linq\Core\Parsing\ExpressionTreeVisitors\Transformation\ExpressionTransformerRegistryTest.cs" />
     <Compile Include="Linq\Core\Parsing\ExpressionTreeVisitors\TransformingExpressionTreeVisitorTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\IntermediateModel\GroupByWithResultSelectorExpressionNodeTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\QueryParserIntegrationTests\VBStringComparisonQueryParserIntegrationTest.cs" />

@@ -15,7 +15,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.ExpressionTransformation;
+using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation;
 using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors

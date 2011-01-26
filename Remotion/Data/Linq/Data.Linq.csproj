@@ -130,8 +130,9 @@
     <Compile Include="EagerFetching\Parsing\FetchManyExpressionNode.cs" />
     <Compile Include="EagerFetching\Parsing\FetchExpressionNodeBase.cs" />
     <Compile Include="EagerFetching\Parsing\FetchOneExpressionNode.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\ExpressionTransformation\ExpressionTransformation.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\ExpressionTransformation\IExpressionTranformationProvider.cs" />
+    <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\ExpressionTransformation.cs" />
+    <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\ExpressionTransformerRegistry.cs" />
+    <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\IExpressionTranformationProvider.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\EvaluatableTreeFindingExpressionTreeVisitor.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\PartialEvaluationInfo.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\AggregateExpressionNode.cs" />
@@ -164,7 +165,7 @@
     <Compile Include="QueryModelBuilder.cs" />
     <Compile Include="QueryModelVisitorBase.cs" />
     <Compile Include="Clauses\ExpressionTreeVisitors\FormattingExpressionTreeVisitor.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\ExpressionTransformation\IExpressionTransformer.cs" />
+    <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\IExpressionTransformer.cs" />
     <Compile Include="Transformations\SubQueryFromClauseFlattener.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\TransformingExpressionTreeVisitor.cs" />
     <Compile Include="UniqueIdentifierGenerator.cs" />

@@ -16,12 +16,14 @@
 // 
 using System.Linq.Expressions;
 
-namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.ExpressionTransformation
+namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation
 {
   /// <summary>
   /// Transforms a given <see cref="Expression"/>. If the <see cref="ExpressionTransformation"/> can handle the <see cref="Expression"/>,
   /// it should return a new, transformed <see cref="Expression"/> instance. Otherwise, it should return the input <paramref name="expression"/> 
   /// instance.
   /// </summary>
+  /// <param name="expression">The expression to be transformed.</param>
+  /// <returns>The result of the transformation, or <paramref name="expression"/> if no transformation was applied.</returns>
   public delegate Expression ExpressionTransformation (Expression expression);
 }
