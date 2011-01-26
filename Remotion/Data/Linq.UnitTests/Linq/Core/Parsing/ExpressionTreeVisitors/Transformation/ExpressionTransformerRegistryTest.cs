@@ -41,9 +41,26 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.
     public void CreateDefault ()
     {
       var registry = ExpressionTransformerRegistry.CreateDefault();
+      Assert.That (registry.RegisteredTransformerCount, Is.EqualTo (0));
+    }
 
-      var dictionary = (MultiDictionary<ExpressionType, ExpressionTransformation>) PrivateInvoke.GetNonPublicField (registry, "_transformations");
-      Assert.That (dictionary.CountValues(), Is.EqualTo (0));
+    [Test]
+    public void RegisteredTransformerCount ()
+    {
+      Assert.That (_registry.RegisteredTransformerCount, Is.EqualTo (0));
+
+      var transformerStub = CreateTransformerStub<Expression> (1);
+      _registry.Register (transformerStub, ExpressionType.Constant);
+
+      Assert.That (_registry.RegisteredTransformerCount, Is.EqualTo (1));
+
+      _registry.Register (transformerStub, ExpressionType.Constant);
+
+      Assert.That (_registry.RegisteredTransformerCount, Is.EqualTo (2));
+
+      _registry.Register (transformerStub, ExpressionType.Equal);
+
+      Assert.That (_registry.RegisteredTransformerCount, Is.EqualTo (3));
     }
 
     [Test]

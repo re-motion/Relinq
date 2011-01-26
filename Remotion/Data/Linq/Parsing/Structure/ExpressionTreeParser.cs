@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
+using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Data.Linq.Utilities;
 using System.Reflection;
@@ -34,13 +35,16 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
     private readonly UniqueIdentifierGenerator _identifierGenerator = new UniqueIdentifierGenerator ();
     private readonly MethodCallExpressionNodeTypeRegistry _nodeTypeRegistry;
+    private readonly ExpressionTransformerRegistry _transformerRegistry;
     private readonly MethodCallExpressionParser _methodCallExpressionParser;
 
-    public ExpressionTreeParser (MethodCallExpressionNodeTypeRegistry nodeTypeRegistry)
+    public ExpressionTreeParser (MethodCallExpressionNodeTypeRegistry nodeTypeRegistry, ExpressionTransformerRegistry transformerRegistry)
     {
       ArgumentUtility.CheckNotNull ("nodeTypeRegistry", nodeTypeRegistry);
+      ArgumentUtility.CheckNotNull ("transformerRegistry", transformerRegistry);
       
       _nodeTypeRegistry = nodeTypeRegistry;
+      _transformerRegistry = transformerRegistry;
       _methodCallExpressionParser = new MethodCallExpressionParser (_nodeTypeRegistry);
     }
 
@@ -52,7 +56,16 @@ namespace Remotion.Data.Linq.Parsing.Structure
     {
       get { return _nodeTypeRegistry; }
     }
-    
+
+    /// <summary>
+    /// Gets the transformer registry used to transform the <see cref="Expression"/> tree prior to parsing.
+    /// </summary>
+    /// <value>The transformer registry.</value>
+    public ExpressionTransformerRegistry TransformerRegistry
+    {
+      get { return _transformerRegistry; }
+    }
+
     /// <summary>
     /// Parses the given <paramref name="expressionTree"/> into a chain of <see cref="IExpressionNode"/> instances, using 
     /// <see cref="MethodCallExpressionNodeTypeRegistry"/> to convert expressions to nodes.

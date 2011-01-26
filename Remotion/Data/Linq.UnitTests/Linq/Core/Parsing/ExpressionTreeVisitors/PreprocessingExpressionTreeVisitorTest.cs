@@ -17,6 +17,7 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using Microsoft.VisualBasic.CompilerServices;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
@@ -28,6 +29,7 @@ using Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests;
 using Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.TestDomain;
 using Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Data.Linq.UnitTests.Linq.Core.TestQueryGenerators;
+using Remotion.Data.Linq.UnitTests.Linq.Core.TestUtilities;
 
 namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
 {
@@ -40,6 +42,16 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
     public void SetUp ()
     {
       _nodeTypeRegistry = MethodCallExpressionNodeTypeRegistry.CreateDefault();
+    }
+
+    [Test]
+    public void Initialization_InnerParserHasNoTransformations ()
+    {
+      var visitorInstance = Activator.CreateInstance (
+          typeof (PreprocessingExpressionTreeVisitor), BindingFlags.NonPublic | BindingFlags.Instance, null, new[] { _nodeTypeRegistry }, null);
+
+      var innerParser = (QueryParser) PrivateInvoke.GetNonPublicField (visitorInstance, "_innerParser");
+      Assert.That (innerParser.ExpressionTreeParser.TransformerRegistry.RegisteredTransformerCount, Is.EqualTo (0));
     }
 
     [Test]

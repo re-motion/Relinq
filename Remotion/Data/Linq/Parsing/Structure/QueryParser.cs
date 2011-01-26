@@ -18,6 +18,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Data.Linq.Utilities;
 
@@ -40,7 +41,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
     /// registered.
     /// </summary>
     public QueryParser ()
-        : this (new ExpressionTreeParser (MethodCallExpressionNodeTypeRegistry.CreateDefault()))
+        : this (new ExpressionTreeParser (MethodCallExpressionNodeTypeRegistry.CreateDefault(), new ExpressionTransformerRegistry()))
     {
     }
 

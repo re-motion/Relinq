@@ -19,6 +19,7 @@ using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq.Clauses.Expressions;
+using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Utilities;
 
@@ -46,7 +47,7 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
       ArgumentUtility.CheckNotNull ("nodeTypeRegistry", nodeTypeRegistry);
 
       _nodeTypeRegistry = nodeTypeRegistry;
-      _innerParser = new QueryParser (new ExpressionTreeParser (_nodeTypeRegistry));
+      _innerParser = new QueryParser (new ExpressionTreeParser (_nodeTypeRegistry, new ExpressionTransformerRegistry()));
     }
 
     public override Expression VisitExpression (Expression expression)

@@ -23,6 +23,7 @@ using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultOperators;
+using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation;
 using Remotion.Data.Linq.Parsing.Structure;
 
 namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
@@ -41,13 +42,19 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     [Test]
     public void Initialization_Default ()
     {
-      Assert.That (_queryParser.ExpressionTreeParser.NodeTypeRegistry.RegisteredMethodInfoCount, Is.GreaterThan (0));
+      Assert.That (
+          _queryParser.ExpressionTreeParser.NodeTypeRegistry.RegisteredMethodInfoCount, 
+          Is.EqualTo (MethodCallExpressionNodeTypeRegistry.CreateDefault().RegisteredMethodInfoCount));
+
+      Assert.That (
+          _queryParser.ExpressionTreeParser.TransformerRegistry.RegisteredTransformerCount,
+          Is.EqualTo (ExpressionTransformerRegistry.CreateDefault ().RegisteredTransformerCount));
     }
 
     [Test]
     public void Initialization_InjectExpressionTreeParser ()
     {
-      var expressionTreeParser = new ExpressionTreeParser (new MethodCallExpressionNodeTypeRegistry());
+      var expressionTreeParser = new ExpressionTreeParser (new MethodCallExpressionNodeTypeRegistry(), new ExpressionTransformerRegistry());
       var queryParser = new QueryParser (expressionTreeParser);
 
       Assert.That (queryParser.ExpressionTreeParser, Is.SameAs (expressionTreeParser));

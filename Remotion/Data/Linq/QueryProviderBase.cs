@@ -18,6 +18,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Utilities;
 
@@ -42,9 +43,6 @@ namespace Remotion.Data.Linq
     protected QueryProviderBase (IQueryExecutor executor)
         : this (executor, MethodCallExpressionNodeTypeRegistry.CreateDefault())
     {
-      ArgumentUtility.CheckNotNull ("executor", executor);
-      Executor = executor;
-      _expressionTreeParser = new ExpressionTreeParser (MethodCallExpressionNodeTypeRegistry.CreateDefault());
     }
 
     /// <summary>
@@ -58,7 +56,7 @@ namespace Remotion.Data.Linq
     {
       ArgumentUtility.CheckNotNull ("executor", executor);
       Executor = executor;
-      _expressionTreeParser = new ExpressionTreeParser (nodeTypeRegistry);
+      _expressionTreeParser = new ExpressionTreeParser (nodeTypeRegistry, new ExpressionTransformerRegistry());
     }
 
     /// <summary>

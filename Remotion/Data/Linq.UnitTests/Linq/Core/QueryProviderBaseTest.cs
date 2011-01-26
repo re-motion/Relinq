@@ -23,6 +23,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
+using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Data.Linq.UnitTests.Linq.Core.TestQueryGenerators;
@@ -56,6 +57,20 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
     public void Initialization()
     {
       Assert.IsNotNull (_queryProvider);
+    }
+
+    [Test]
+    public void Initialization_WithDefaults ()
+    {
+      var queryProvider = new TestQueryProvider (_executorMock);
+      
+      Assert.That (
+          queryProvider.ExpressionTreeParser.NodeTypeRegistry.RegisteredMethodInfoCount,
+          Is.EqualTo (MethodCallExpressionNodeTypeRegistry.CreateDefault ().RegisteredMethodInfoCount));
+
+      Assert.That (
+          queryProvider.ExpressionTreeParser.TransformerRegistry.RegisteredTransformerCount,
+          Is.EqualTo (ExpressionTransformerRegistry.CreateDefault ().RegisteredTransformerCount));
     }
 
     [Test]

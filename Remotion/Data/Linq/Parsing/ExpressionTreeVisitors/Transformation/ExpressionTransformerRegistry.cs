@@ -46,6 +46,11 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation
     private readonly MultiDictionary<ExpressionType, ExpressionTransformation> _transformations =
         new MultiDictionary<ExpressionType, ExpressionTransformation>();
 
+    public int RegisteredTransformerCount
+    {
+      get { return _transformations.CountValues(); }
+    }
+
     public IEnumerable<ExpressionTransformation> GetTransformations (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
