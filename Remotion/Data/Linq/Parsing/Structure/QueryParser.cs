@@ -19,8 +19,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation;
-using Remotion.Data.Linq.Parsing.Structure.ExpressionTreeProcessingSteps;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Data.Linq.Utilities;
 
@@ -32,7 +30,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
   /// <see cref="MainSourceExpressionNode.CreateMainFromClause"/> and <see cref="IExpressionNode.Apply"/> in order to instantiate all the 
   /// <see cref="IClause"/>s. With those, a <see cref="QueryModel"/> is created and returned.
   /// </summary>
-  public class QueryParser
+  public class QueryParser : IQueryParser
   {
     private readonly ExpressionTreeParser _expressionTreeParser;
 
