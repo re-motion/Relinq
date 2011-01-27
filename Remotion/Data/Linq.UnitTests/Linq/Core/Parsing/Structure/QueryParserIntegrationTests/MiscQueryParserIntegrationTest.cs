@@ -15,8 +15,10 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Linq.Expressions;
 using NUnit.Framework;
 using System.Linq;
+using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain;
 
@@ -36,5 +38,29 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
       var query = QuerySource.Select (c => c.Assistants.Select (expression));
       QueryParser.GetParsedQuery (query.Expression);
    }
+
+    [Test]
+    [Ignore("TODO RM-3656")]
+    public void InvocationExpression_AppliedToLambdaExpression ()
+    {
+      Expression<Func<Cook, bool>> predicate1 = c => c.ID > 100;
+      Expression<Func<Cook, bool>> predicate2 = c => c.Name != null;
+
+      // c => c.ID > 100 && ((c1 => c1.Name != null) (c))
+      var combinedPredicate =
+          Expression.Lambda<Func<Cook, bool>> (
+              Expression.AndAlso (
+                  predicate1.Body,
+                  Expression.Invoke (predicate2, predicate1.Parameters.Cast<Expression> ())
+              ),
+          predicate1.Parameters);
+
+      var query = QuerySource.Where (combinedPredicate);
+
+      var queryModel = QueryParser.GetParsedQuery (query.Expression);
+
+      var predicate = ((WhereClause) queryModel.BodyClauses[0]).Predicate;
+      CheckResolvedExpression<Cook, bool> (predicate, queryModel.MainFromClause, c => c.ID > 100 && c.Name != null);
+    }
   }
 }
