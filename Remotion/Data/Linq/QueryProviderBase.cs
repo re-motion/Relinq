@@ -33,16 +33,8 @@ namespace Remotion.Data.Linq
     private static readonly MethodInfo s_genericCreateQueryMethod =
         typeof (QueryProviderBase).GetMethods().Where (m => m.Name == "CreateQuery" && m.IsGenericMethod).Single();
 
+    private readonly IQueryExecutor _executor;
     private readonly IQueryParser _queryParser;
-
-    /// <summary>
-    /// Initializes a new instance of <see cref="QueryProviderBase"/> using a default <see cref="QueryParser"/>.
-    /// </summary>
-    /// <param name="executor">The <see cref="IQueryExecutor"/> used to execute queries against a specific query backend.</param>
-    protected QueryProviderBase (IQueryExecutor executor)
-        : this (executor, Parsing.Structure.QueryParser.CreateDefault())
-    {
-    }
 
     /// <summary>
     /// Initializes a new instance of <see cref="QueryProviderBase"/> using a custom <see cref="IQueryParser"/>. Use this
@@ -56,15 +48,18 @@ namespace Remotion.Data.Linq
       ArgumentUtility.CheckNotNull ("executor", executor);
       ArgumentUtility.CheckNotNull ("queryParser", queryParser);
 
-      Executor = executor;
+      _executor = executor;
       _queryParser = queryParser;
     }
-
+    
     /// <summary>
     /// Gets or sets the implementation of <see cref="IQueryExecutor"/> used to execute queries created via <see cref="CreateQuery{T}"/>.
     /// </summary>
     /// <value>The executor used to execute queries.</value>
-    public IQueryExecutor Executor { get; private set; }
+    public IQueryExecutor Executor
+    {
+      get { return _executor; }
+    }
 
     [Obsolete ("This property has been replaced by the QueryParser property. Use QueryParser instead. (1.13.92)", true)]
     public ExpressionTreeParser ExpressionTreeParser

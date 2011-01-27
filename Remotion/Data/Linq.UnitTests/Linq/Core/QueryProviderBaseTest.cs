@@ -22,9 +22,7 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.Expressions;
-using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation;
 using Remotion.Data.Linq.Parsing.Structure;
-using Remotion.Data.Linq.Parsing.Structure.ExpressionTreeProcessingSteps;
 using Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Data.Linq.UnitTests.Linq.Core.TestQueryGenerators;
 using Remotion.Data.Linq.Utilities;
@@ -39,9 +37,11 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
     private IQueryExecutor _executorMock;
     private IQueryParser _queryParserMock;
 
-    private QueryProviderBase _queryProvider;
+    // private TestQueryProvider _queryProvider;
+    private TestQueryProvider _queryProvider;
+
     private TestQueryable<Cook> _queryableWithExecutorMock;
-    private TestQueryProvider _queryProviderWithParserMock;
+    private QueryModel _fakeQueryModel;
 
     [SetUp]
     public void SetUp()
@@ -49,39 +49,19 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
       _mockRepository = new MockRepository();
       _executorMock = _mockRepository.StrictMock<IQueryExecutor>();
       _queryParserMock = _mockRepository.StrictMock<IQueryParser>();
-      
-      _queryProvider = new TestQueryProvider (_executorMock);
-      _queryProviderWithParserMock = new TestQueryProvider (_executorMock, _queryParserMock);
+
+      // _queryProvider = new TestQueryProvider (_executorMock, QueryParser.CreateDefault());
+      _queryProvider = new TestQueryProvider (_executorMock, _queryParserMock);
+    
       _queryableWithExecutorMock = new TestQueryable<Cook> (_executorMock);
+      _fakeQueryModel = ExpressionHelper.CreateQueryModel_Cook ();
     }
 
     [Test]
     public void Initialization()
     {
-      Assert.IsNotNull (_queryProvider);
-    }
-
-    [Test]
-    public void Initialization_WithDefaults ()
-    {
-      var queryProvider = new TestQueryProvider (_executorMock);
-      
-      Assert.That (
-          queryProvider.QueryParser.NodeTypeRegistry.RegisteredMethodInfoCount,
-          Is.EqualTo (MethodCallExpressionNodeTypeRegistry.CreateDefault ().RegisteredMethodInfoCount));
-
-      Assert.That (queryProvider.QueryParser.ProcessingSteps.Count, Is.EqualTo (2));
-      Assert.That (queryProvider.QueryParser.ProcessingSteps[0], Is.TypeOf (typeof (PartialEvaluationStep)));
-      Assert.That (queryProvider.QueryParser.ProcessingSteps[1], Is.TypeOf (typeof (ExpressionTransformationStep)));
-      Assert.That (
-          ((ExpressionTransformationStep) queryProvider.QueryParser.ProcessingSteps[1]).Provider,
-          Is.TypeOf (typeof (ExpressionTransformerRegistry)));
-
-      var expressionTransformerRegistry =
-          ((ExpressionTransformerRegistry) ((ExpressionTransformationStep) queryProvider.QueryParser.ProcessingSteps[1]).Provider);
-      Assert.That (
-          expressionTransformerRegistry.RegisteredTransformerCount,
-          Is.EqualTo (ExpressionTransformerRegistry.CreateDefault ().RegisteredTransformerCount));
+      Assert.AreSame (_executorMock, _queryProvider.Executor);
+      Assert.AreSame (_queryParserMock, _queryProvider.QueryParser);
     }
 
     [Test]
@@ -118,10 +98,16 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
     public void GenerateQueryModel ()
     {
       Expression expression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateCookQueryable ());
+
+      _queryParserMock
+          .Expect (mock => mock.GetParsedQuery (expression))
+          .Return (_fakeQueryModel);
+      _queryParserMock.Replay ();
+
       var queryModel = _queryProvider.GenerateQueryModel (expression);
 
-      Assert.That (((QuerySourceReferenceExpression) queryModel.SelectClause.Selector).ReferencedQuerySource,
-          Is.SameAs (queryModel.MainFromClause));
+      _queryParserMock.VerifyAllExpectations();
+      Assert.That (queryModel, Is.SameAs (_fakeQueryModel));
     }
 
     [Test]
@@ -129,13 +115,21 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
     {
       var expectedResult = new Cook[0];
       Expression expression = (from s in _queryableWithExecutorMock select s).Expression;
-      _executorMock.Expect (mock => mock.ExecuteCollection<Cook> (
-          Arg<QueryModel>.Is.Anything)).Return (expectedResult);
 
+      _queryParserMock
+          .Expect (mock => mock.GetParsedQuery (expression))
+          .Return (_fakeQueryModel);
+      _queryParserMock.Replay();
+
+      _executorMock
+          .Expect (mock => mock.ExecuteCollection<Cook> (_fakeQueryModel))
+          .Return (expectedResult);
       _executorMock.Replay ();
-      var result = _queryProvider.Execute<IEnumerable<Cook>> (expression);
-      _executorMock.VerifyAllExpectations ();
 
+      var result = _queryProvider.Execute<IEnumerable<Cook>> (expression);
+
+      _queryParserMock.VerifyAllExpectations();
+      _executorMock.VerifyAllExpectations ();
       Assert.That (result.ToArray(), Is.EqualTo (expectedResult));
     }
 
@@ -144,13 +138,21 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
     {
       var expectedResult = new Cook[0];
       Expression expression = (from s in _queryableWithExecutorMock select s).Expression;
-      _executorMock.Expect (mock => mock.ExecuteCollection<Cook> (
-          Arg<QueryModel>.Is.Anything)).Return (new Cook[0]);
+      
+      _queryParserMock
+          .Expect (mock => mock.GetParsedQuery (expression))
+          .Return (_fakeQueryModel);
+      _queryParserMock.Replay ();
 
+      _executorMock
+          .Expect (mock => mock.ExecuteCollection<Cook> (_fakeQueryModel))
+          .Return (new Cook[0]);
       _executorMock.Replay ();
-      var result = ((IQueryProvider)_queryProvider).Execute (expression);
-      _executorMock.VerifyAllExpectations ();
 
+      var result = ((IQueryProvider)_queryProvider).Execute (expression);
+
+      _queryParserMock.VerifyAllExpectations();
+      _executorMock.VerifyAllExpectations ();
       Assert.That (((IEnumerable<Cook>)result).ToArray (), Is.EqualTo (expectedResult));
     }
 
@@ -219,38 +221,6 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
       _executorMock.VerifyAllExpectations();
 
       Assert.That (result, Is.EqualTo (7));
-    }
-
-    [Test]
-    public void Execute_WithDefaultRegistry ()
-    {
-      Expression expression = ExpressionHelper.MakeExpression (() => from s in ExpressionHelper.CreateCookQueryable () select s);
-      _executorMock
-          .Expect (mock => mock.ExecuteCollection<Cook> (Arg<QueryModel>.Is.Anything))
-          .Return (new Cook[0]);
-      _executorMock.Replay ();
-      _queryProvider.Execute<IEnumerable<Cook>> (expression);
-      _executorMock.VerifyAllExpectations ();
-    }
-
-    [Test]
-    public void Execute_WithSpecificQueryParser ()
-    {
-      Expression expression = ExpressionHelper.MakeExpression (() => from s in ExpressionHelper.CreateCookQueryable () select s);
-      var fakeQueryModel = ExpressionHelper.CreateQueryModel_Cook();
-      _queryParserMock
-          .Expect (mock => mock.GetParsedQuery (expression))
-          .Return (fakeQueryModel);
-      _queryParserMock.Replay();
-      _executorMock
-          .Expect (mock => mock.ExecuteCollection<Cook> (fakeQueryModel))
-          .Return (new Cook[0]);
-      _executorMock.Replay ();
-
-      _queryProviderWithParserMock.Execute<IEnumerable<Cook>> (expression);
-      
-      _queryParserMock.VerifyAllExpectations ();
-      _executorMock.VerifyAllExpectations ();
     }
   }
 }

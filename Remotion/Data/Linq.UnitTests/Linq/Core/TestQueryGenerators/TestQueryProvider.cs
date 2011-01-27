@@ -17,7 +17,6 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using Remotion.Data.Linq;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain;
 
@@ -25,11 +24,6 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.TestQueryGenerators
 {
   public class TestQueryProvider : QueryProviderBase
   {
-    public TestQueryProvider (IQueryExecutor executor)
-        : base (executor)
-    {
-    }
-
     public TestQueryProvider (IQueryExecutor executor, IQueryParser queryParser)
       : base (executor, queryParser)
     {

@@ -41,7 +41,7 @@ namespace Remotion.Data.Linq
     /// </param>
     /// <param name="executor">The <see cref="IQueryExecutor"/> used to execute queries against a specific query backend.</param>
     public DefaultQueryProvider (Type queryableType, IQueryExecutor executor)
-        : base (ArgumentUtility.CheckNotNull ("executor", executor))
+        : base (ArgumentUtility.CheckNotNull ("executor", executor), Parsing.Structure.QueryParser.CreateDefault())
     {
       ArgumentUtility.CheckNotNull ("queryableType", queryableType);
       CheckQueryableType (queryableType);
