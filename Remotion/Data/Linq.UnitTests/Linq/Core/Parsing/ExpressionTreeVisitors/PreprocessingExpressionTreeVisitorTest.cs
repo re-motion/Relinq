@@ -48,8 +48,8 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
       var visitorInstance = Activator.CreateInstance (
           typeof (PreprocessingExpressionTreeVisitor), BindingFlags.NonPublic | BindingFlags.Instance, null, new[] { _nodeTypeRegistry }, null);
 
-      var innerParser = (QueryParser) PrivateInvoke.GetNonPublicField (visitorInstance, "_innerParser");
-      Assert.That (innerParser.ExpressionTreeParser.ProcessingSteps, Is.Empty);
+      var innerParser = (QueryParser) PrivateInvoke.GetNonPublicField (visitorInstance, "_queryParser");
+      Assert.That (innerParser.ProcessingSteps, Is.Empty);
     }
 
     [Test]

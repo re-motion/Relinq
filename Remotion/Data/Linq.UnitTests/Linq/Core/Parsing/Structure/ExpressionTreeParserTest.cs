@@ -64,7 +64,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
           parser.NodeTypeRegistry.RegisteredMethodInfoCount,
           Is.EqualTo (MethodCallExpressionNodeTypeRegistry.CreateDefault ().RegisteredMethodInfoCount));
 
-      Assert.That (parser.ProcessingSteps.Length, Is.EqualTo (2));
+      Assert.That (parser.ProcessingSteps.Count, Is.EqualTo (2));
       Assert.That (parser.ProcessingSteps[0], Is.TypeOf (typeof (PartialEvaluationStep)));
       Assert.That (parser.ProcessingSteps[1], Is.TypeOf (typeof (ExpressionTransformationStep)));
       Assert.That (

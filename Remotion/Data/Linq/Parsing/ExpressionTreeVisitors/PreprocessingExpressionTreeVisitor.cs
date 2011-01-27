@@ -37,21 +37,22 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
     }
 
     private readonly MethodCallExpressionNodeTypeRegistry _nodeTypeRegistry;
-    private readonly QueryParser _innerParser;
+    private readonly ExpressionTreeParser _expressionTreeParser;
+    private readonly QueryParser _queryParser;
 
     private PreprocessingExpressionTreeVisitor (MethodCallExpressionNodeTypeRegistry nodeTypeRegistry)
     {
       ArgumentUtility.CheckNotNull ("nodeTypeRegistry", nodeTypeRegistry);
 
       _nodeTypeRegistry = nodeTypeRegistry;
-      _innerParser = new QueryParser (new ExpressionTreeParser (_nodeTypeRegistry, new IExpressionTreeProcessingStep[0]));
+      _expressionTreeParser = new ExpressionTreeParser (_nodeTypeRegistry, new IExpressionTreeProcessingStep[0]);
+      _queryParser = new QueryParser (_expressionTreeParser);
     }
 
     public override Expression VisitExpression (Expression expression)
     {
-      var potentialQueryOperatorExpression = _innerParser.ExpressionTreeParser.GetQueryOperatorExpression (expression);
-      if (potentialQueryOperatorExpression != null
-          && _innerParser.ExpressionTreeParser.NodeTypeRegistry.IsRegistered (potentialQueryOperatorExpression.Method))
+      var potentialQueryOperatorExpression = _expressionTreeParser.GetQueryOperatorExpression (expression);
+      if (potentialQueryOperatorExpression != null && _nodeTypeRegistry.IsRegistered (potentialQueryOperatorExpression.Method))
         return CreateSubQueryNode (potentialQueryOperatorExpression);
       else
         return base.VisitExpression (expression);
@@ -65,7 +66,7 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
 
     private SubQueryExpression CreateSubQueryNode (MethodCallExpression methodCallExpression)
     {
-      QueryModel queryModel = _innerParser.GetParsedQuery (methodCallExpression);
+      QueryModel queryModel = _queryParser.GetParsedQuery (methodCallExpression);
       return new SubQueryExpression (queryModel);
     }
   }

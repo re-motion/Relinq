@@ -67,10 +67,10 @@ namespace Remotion.Data.Linq
     /// <value>The executor used to execute queries.</value>
     public IQueryExecutor Executor { get; private set; }
 
-    [Obsolete ("This property has been replaced by the QueryParser property. Use QueryParser.ExpresionTreeParser instead. (1.13.92)")]
+    [Obsolete ("This property has been replaced by the QueryParser property. Use QueryParser instead. (1.13.92)", true)]
     public ExpressionTreeParser ExpressionTreeParser
     {
-      get { return _queryParser.ExpressionTreeParser; }
+      get { throw new NotImplementedException(); }
     }
 
     /// <summary>

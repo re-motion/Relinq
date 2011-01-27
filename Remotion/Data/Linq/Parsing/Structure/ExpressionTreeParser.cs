@@ -16,6 +16,7 @@
 // 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
@@ -76,9 +77,9 @@ namespace Remotion.Data.Linq.Parsing.Structure
     /// Gets the processing steps used by <see cref="ParseTree"/> to process the <see cref="Expression"/> tree before analyzing its structure.
     /// </summary>
     /// <value>The processing steps.</value>
-    public IExpressionTreeProcessingStep[] ProcessingSteps
+    public ReadOnlyCollection<IExpressionTreeProcessingStep> ProcessingSteps
     {
-      get { return _processingSteps; }
+      get { return Array.AsReadOnly (_processingSteps); }
     }
 
     /// <summary>

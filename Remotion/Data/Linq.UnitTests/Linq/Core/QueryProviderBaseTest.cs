@@ -66,18 +66,18 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
       var queryProvider = new TestQueryProvider (_executorMock);
       
       Assert.That (
-          queryProvider.QueryParser.ExpressionTreeParser.NodeTypeRegistry.RegisteredMethodInfoCount,
+          queryProvider.QueryParser.NodeTypeRegistry.RegisteredMethodInfoCount,
           Is.EqualTo (MethodCallExpressionNodeTypeRegistry.CreateDefault ().RegisteredMethodInfoCount));
 
-      Assert.That (queryProvider.QueryParser.ExpressionTreeParser.ProcessingSteps.Length, Is.EqualTo (2));
-      Assert.That (queryProvider.QueryParser.ExpressionTreeParser.ProcessingSteps[0], Is.TypeOf (typeof (PartialEvaluationStep)));
-      Assert.That (queryProvider.QueryParser.ExpressionTreeParser.ProcessingSteps[1], Is.TypeOf (typeof (ExpressionTransformationStep)));
+      Assert.That (queryProvider.QueryParser.ProcessingSteps.Count, Is.EqualTo (2));
+      Assert.That (queryProvider.QueryParser.ProcessingSteps[0], Is.TypeOf (typeof (PartialEvaluationStep)));
+      Assert.That (queryProvider.QueryParser.ProcessingSteps[1], Is.TypeOf (typeof (ExpressionTransformationStep)));
       Assert.That (
-          ((ExpressionTransformationStep) queryProvider.QueryParser.ExpressionTreeParser.ProcessingSteps[1]).Provider,
+          ((ExpressionTransformationStep) queryProvider.QueryParser.ProcessingSteps[1]).Provider,
           Is.TypeOf (typeof (ExpressionTransformerRegistry)));
 
       var expressionTransformerRegistry =
-          ((ExpressionTransformerRegistry) ((ExpressionTransformationStep) queryProvider.QueryParser.ExpressionTreeParser.ProcessingSteps[1]).Provider);
+          ((ExpressionTransformerRegistry) ((ExpressionTransformationStep) queryProvider.QueryParser.ProcessingSteps[1]).Provider);
       Assert.That (
           expressionTransformerRegistry.RegisteredTransformerCount,
           Is.EqualTo (ExpressionTransformerRegistry.CreateDefault ().RegisteredTransformerCount));

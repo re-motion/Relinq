@@ -43,18 +43,18 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     public void Initialization_Default ()
     {
       Assert.That (
-          _queryParser.ExpressionTreeParser.NodeTypeRegistry.RegisteredMethodInfoCount, 
+          _queryParser.NodeTypeRegistry.RegisteredMethodInfoCount, 
           Is.EqualTo (MethodCallExpressionNodeTypeRegistry.CreateDefault().RegisteredMethodInfoCount));
 
-      Assert.That (_queryParser.ExpressionTreeParser.ProcessingSteps.Length, Is.EqualTo (2));
-      Assert.That (_queryParser.ExpressionTreeParser.ProcessingSteps[0], Is.TypeOf (typeof (PartialEvaluationStep)));
-      Assert.That (_queryParser.ExpressionTreeParser.ProcessingSteps[1], Is.TypeOf (typeof (ExpressionTransformationStep)));
+      Assert.That (_queryParser.ProcessingSteps.Count, Is.EqualTo (2));
+      Assert.That (_queryParser.ProcessingSteps[0], Is.TypeOf (typeof (PartialEvaluationStep)));
+      Assert.That (_queryParser.ProcessingSteps[1], Is.TypeOf (typeof (ExpressionTransformationStep)));
       Assert.That (
-          ((ExpressionTransformationStep) _queryParser.ExpressionTreeParser.ProcessingSteps[1]).Provider,
+          ((ExpressionTransformationStep) _queryParser.ProcessingSteps[1]).Provider,
           Is.TypeOf (typeof (ExpressionTransformerRegistry)));
       
       var expressionTransformerRegistry = 
-          ((ExpressionTransformerRegistry) ((ExpressionTransformationStep) _queryParser.ExpressionTreeParser.ProcessingSteps[1]).Provider);
+          ((ExpressionTransformerRegistry) ((ExpressionTransformationStep) _queryParser.ProcessingSteps[1]).Provider);
       Assert.That (
           expressionTransformerRegistry.RegisteredTransformerCount,
           Is.EqualTo (ExpressionTransformerRegistry.CreateDefault ().RegisteredTransformerCount));

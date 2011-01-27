@@ -15,6 +15,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses;
@@ -61,6 +62,24 @@ namespace Remotion.Data.Linq.Parsing.Structure
     public ExpressionTreeParser ExpressionTreeParser
     {
       get { return _expressionTreeParser; }
+    }
+
+    /// <summary>
+    /// Gets the node type registry used to parse <see cref="MethodCallExpression"/> instances in <see cref="GetParsedQuery"/>.
+    /// </summary>
+    /// <value>The node type registry.</value>
+    public MethodCallExpressionNodeTypeRegistry NodeTypeRegistry
+    {
+      get { return _expressionTreeParser.NodeTypeRegistry; }
+    }
+
+    /// <summary>
+    /// Gets the processing steps used by <see cref="GetParsedQuery"/> to process the <see cref="Expression"/> tree before analyzing its structure.
+    /// </summary>
+    /// <value>The processing steps.</value>
+    public ReadOnlyCollection<IExpressionTreeProcessingStep> ProcessingSteps
+    {
+      get { return _expressionTreeParser.ProcessingSteps; }
     }
 
     /// <summary>
