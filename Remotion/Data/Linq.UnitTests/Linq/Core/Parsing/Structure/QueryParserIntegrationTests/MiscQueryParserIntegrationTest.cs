@@ -40,7 +40,6 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
    }
 
     [Test]
-    [Ignore("TODO RM-3656")]
     public void InvocationExpression_AppliedToLambdaExpression ()
     {
       Expression<Func<Cook, bool>> predicate1 = c => c.ID > 100;
@@ -61,6 +60,18 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
 
       var predicate = ((WhereClause) queryModel.BodyClauses[0]).Predicate;
       CheckResolvedExpression<Cook, bool> (predicate, queryModel.MainFromClause, c => c.ID > 100 && c.Name != null);
+    }
+
+    [Test]
+    [Ignore ("TODO RM-3656")]
+    public void InvocationExpression_AppliedToInlineLambdaExpression ()
+    {
+      var query = QuerySource.Where (c => ((Func<Cook, bool>) (c1 => c1.Name != null)) (c)).Select (c => c.FirstName);
+
+      var queryModel = QueryParser.GetParsedQuery (query.Expression);
+
+      var predicate = ((WhereClause) queryModel.BodyClauses[0]).Predicate;
+      CheckResolvedExpression<Cook, bool> (predicate, queryModel.MainFromClause, c => c.Name != null);
     }
   }
 }
