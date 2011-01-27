@@ -25,14 +25,14 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
   /// <summary>
   /// Preprocesses an expression tree for parsing. The preprocessing involves detection of sub-queries and VB-specific expressions.
   /// </summary>
-  public class PreprocessingExpressionTreeVisitor : ExpressionTreeVisitor
+  public class SubQueryFindingExpressionTreeVisitor : ExpressionTreeVisitor
   {
     public static Expression Process (Expression expressionTree, MethodCallExpressionNodeTypeRegistry nodeTypeRegistry)
     {
       ArgumentUtility.CheckNotNull ("expressionTree", expressionTree);
       ArgumentUtility.CheckNotNull ("nodeTypeRegistry", nodeTypeRegistry);
 
-      var visitor = new PreprocessingExpressionTreeVisitor (nodeTypeRegistry);
+      var visitor = new SubQueryFindingExpressionTreeVisitor (nodeTypeRegistry);
       return visitor.VisitExpression (expressionTree);
     }
 
@@ -40,7 +40,7 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
     private readonly ExpressionTreeParser _expressionTreeParser;
     private readonly QueryParser _queryParser;
 
-    private PreprocessingExpressionTreeVisitor (MethodCallExpressionNodeTypeRegistry nodeTypeRegistry)
+    private SubQueryFindingExpressionTreeVisitor (MethodCallExpressionNodeTypeRegistry nodeTypeRegistry)
     {
       ArgumentUtility.CheckNotNull ("nodeTypeRegistry", nodeTypeRegistry);
 

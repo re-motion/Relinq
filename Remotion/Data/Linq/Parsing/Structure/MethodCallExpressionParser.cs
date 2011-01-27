@@ -72,7 +72,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       // First, convert the argument expressions to their actual values - this unwraps ConstantantExpressions and UnaryExpressions
       var convertedParameters = UnwrapArgumentExpression (argumentExpression);
       // Then, detect subqueries
-      var parametersWithSubQueriesDetected = PreprocessingExpressionTreeVisitor.Process (convertedParameters, _nodeTypeRegistry);
+      var parametersWithSubQueriesDetected = SubQueryFindingExpressionTreeVisitor.Process (convertedParameters, _nodeTypeRegistry);
 
       return parametersWithSubQueriesDetected;
     }

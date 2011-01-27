@@ -173,7 +173,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
     private IExpressionNode ParseNonQueryOperatorExpression (Expression expression, string associatedIdentifier)
     {
-      var preprocessedExpression = PreprocessingExpressionTreeVisitor.Process (expression, _nodeTypeRegistry);
+      var preprocessedExpression = SubQueryFindingExpressionTreeVisitor.Process (expression, _nodeTypeRegistry);
 
       try
       {

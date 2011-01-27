@@ -223,7 +223,7 @@
     <Compile Include="Clauses\Ordering.cs" />
     <Compile Include="ReflectionUtility.cs" />
     <Compile Include="Parsing\ParserException.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\PreprocessingExpressionTreeVisitor.cs" />
+    <Compile Include="Parsing\ExpressionTreeVisitors\SubQueryFindingExpressionTreeVisitor.cs" />
     <Compile Include="Parsing\Structure\MethodCallExpressionParser.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\TransparentIdentifierRemovingExpressionTreeVisitor.cs" />
     <Compile Include="Parsing\Structure\QueryParser.cs" />
