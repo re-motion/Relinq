@@ -38,7 +38,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
       QuerySource = ExpressionHelper.CreateCookQueryable ();
       IndustrialSectorQuerySource = ExpressionHelper.CreateRestaurantQueryable();
       DetailQuerySource = ExpressionHelper.CreateKitchenQueryable ();
-      QueryParser = new QueryParser ();
+      QueryParser = QueryParser.CreateDefault();
     }
 
     protected void CheckResolvedExpression<TParameter, TResult> (Expression expressionToCheck, IQuerySource clauseToReference, Expression<Func<TParameter, TResult>> expectedUnresolvedExpression)

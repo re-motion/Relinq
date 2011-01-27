@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
@@ -24,7 +23,7 @@ using Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Data.Linq.Utilities;
 using Rhino.Mocks;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Linq.Core
+namespace Remotion.Data.Linq.UnitTests.Linq.Core
 {
   [TestFixture]
   public class DefaultQueryProviderTest
@@ -67,9 +66,9 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Linq.Core
 
     [Test]
     [ExpectedException (typeof (ArgumentTypeException))]
-    public void Initialization_RegistryCtor_AlsoPerformsTypeChecks ()
+    public void Initialization_ParserCtor_AlsoPerformsTypeChecks ()
     {
-      new DefaultQueryProvider (typeof (int), _executorStub, MethodCallExpressionNodeTypeRegistry.CreateDefault());
+      new DefaultQueryProvider (typeof (int), _executorStub, QueryParser.CreateDefault());
     }
 
     [Test]

@@ -18,9 +18,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation;
 using Remotion.Data.Linq.Parsing.Structure;
-using Remotion.Data.Linq.Parsing.Structure.ExpressionTreeProcessingSteps;
 using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq
@@ -32,33 +30,34 @@ namespace Remotion.Data.Linq
   /// </summary>
   public abstract class QueryProviderBase : IQueryProvider
   {
-    private readonly QueryParser _queryParser;
-
     private static readonly MethodInfo s_genericCreateQueryMethod =
         typeof (QueryProviderBase).GetMethods().Where (m => m.Name == "CreateQuery" && m.IsGenericMethod).Single();
 
+    private readonly IQueryParser _queryParser;
+
     /// <summary>
-    /// Initializes a new instance of <see cref="QueryProviderBase"/> using the default <see cref="MethodCallExpressionNodeTypeRegistry"/>.
+    /// Initializes a new instance of <see cref="QueryProviderBase"/> using a default <see cref="QueryParser"/>.
     /// </summary>
     /// <param name="executor">The <see cref="IQueryExecutor"/> used to execute queries against a specific query backend.</param>
     protected QueryProviderBase (IQueryExecutor executor)
-        : this (executor, MethodCallExpressionNodeTypeRegistry.CreateDefault())
+        : this (executor, Parsing.Structure.QueryParser.CreateDefault())
     {
     }
 
     /// <summary>
-    /// Initializes a new instance of <see cref="QueryProviderBase"/> using a custom <see cref="MethodCallExpressionNodeTypeRegistry"/>. Use this
-    /// constructor to specify a specific set of parsers to use when analyzing the query.
+    /// Initializes a new instance of <see cref="QueryProviderBase"/> using a custom <see cref="IQueryParser"/>. Use this
+    /// constructor to customize how queries are parsed.
     /// </summary>
     /// <param name="executor">The <see cref="IQueryExecutor"/> used to execute queries against a specific query backend.</param>
-    /// <param name="nodeTypeRegistry">The <see cref="MethodCallExpressionNodeTypeRegistry"/> containing the <see cref="MethodCallExpression"/>
-    /// parsers that should be used when parsing queries.</param>
-    protected QueryProviderBase (IQueryExecutor executor, MethodCallExpressionNodeTypeRegistry nodeTypeRegistry)
+    /// <param name="queryParser">The <see cref="IQueryParser"/> used to parse queries. Specify an instance of <see cref="Parsing.Structure.QueryParser"/>
+    /// for default behavior.</param>
+    protected QueryProviderBase (IQueryExecutor executor, IQueryParser queryParser)
     {
       ArgumentUtility.CheckNotNull ("executor", executor);
+      ArgumentUtility.CheckNotNull ("queryParser", queryParser);
+
       Executor = executor;
-      // TODO 3693: Extract IQueryParser interface, inject here
-      _queryParser = new QueryParser (new ExpressionTreeParser (nodeTypeRegistry, ExpressionTreeParser.CreateDefaultProcessingSteps ()));
+      _queryParser = queryParser;
     }
 
     /// <summary>
@@ -77,7 +76,7 @@ namespace Remotion.Data.Linq
     /// Gets the <see cref="QueryParser"/> used by this <see cref="QueryProviderBase"/> to parse LINQ queries.
     /// </summary>
     /// <value>The query parser.</value>
-    public QueryParser QueryParser
+    public IQueryParser QueryParser
     {
       get { return _queryParser; }
     }

@@ -32,23 +32,22 @@ namespace Remotion.Data.Linq.Parsing.Structure
   /// </summary>
   public class QueryParser : IQueryParser
   {
-    private readonly ExpressionTreeParser _expressionTreeParser;
-
-    // TODO 3693: Make this a CreateDefault method.
     /// <summary>
-    /// Initializes a new instance of the <see cref="QueryParser"/> class, using a default instance of <see cref="ExpressionTreeParser"/> to
-    /// convert <see cref="Expression"/> instances into <see cref="IExpressionNode"/>s. The <see cref="MethodCallExpressionNodeTypeRegistry"/> 
-    /// used has all relevant methods of the <see cref="Queryable"/> class automatically 
-    /// registered.
+    /// Initializes a new instance of the <see cref="QueryParser"/> class, using default parameters for parsing. 
+    /// The <see cref="NodeTypeRegistry"/> used has all relevant methods of the <see cref="Queryable"/> class automatically registered, and the
+    /// <see cref="ProcessingSteps"/> comprise partial evaluation, and default expression transformations.
     /// </summary>
-    public QueryParser ()
-        : this (ExpressionTreeParser.CreateDefault())
+    public static QueryParser CreateDefault ()
     {
+      return new QueryParser(ExpressionTreeParser.CreateDefault());
     }
+
+    private readonly ExpressionTreeParser _expressionTreeParser;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="QueryParser"/> class, using the given <paramref name="expressionTreeParser"/> to
-    /// convert <see cref="Expression"/> instances into <see cref="IExpressionNode"/>s.
+    /// convert <see cref="Expression"/> instances into <see cref="IExpressionNode"/>s. Use this constructor if you wish to customize the
+    /// parser. To use a default parser (with the possibility to register custom node types), use the <see cref="CreateDefault"/> method.
     /// </summary>
     /// <param name="expressionTreeParser">The expression tree parser.</param>
     public QueryParser (ExpressionTreeParser expressionTreeParser)

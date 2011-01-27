@@ -30,8 +30,8 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.TestQueryGenerators
     {
     }
 
-    public TestQueryProvider (IQueryExecutor executor, MethodCallExpressionNodeTypeRegistry nodeTypeRegistry)
-        : base(executor, nodeTypeRegistry)
+    public TestQueryProvider (IQueryExecutor executor, IQueryParser queryParser)
+      : base (executor, queryParser)
     {
     }
 

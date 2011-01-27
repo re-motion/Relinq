@@ -270,7 +270,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
 
     public static QueryModel ParseQuery (Expression queryExpression)
     {
-      var parser = new QueryParser ();
+      var parser = QueryParser.CreateDefault();
       return parser.GetParsedQuery (queryExpression);
     }
 

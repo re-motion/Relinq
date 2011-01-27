@@ -36,7 +36,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     [SetUp]
     public void SetUp ()
     {
-      _queryParser = new QueryParser();
+      _queryParser = QueryParser.CreateDefault();
     }
 
     [Test]

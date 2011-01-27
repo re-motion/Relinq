@@ -22,7 +22,6 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.Expressions;
-using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.ExpressionTreeProcessingSteps;
@@ -37,20 +36,22 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
   public class QueryProviderBaseTest
   {
     private MockRepository _mockRepository;
-    private QueryProviderBase _queryProvider;
     private IQueryExecutor _executorMock;
+    private IQueryParser _queryParserMock;
+
+    private QueryProviderBase _queryProvider;
     private TestQueryable<Cook> _queryableWithExecutorMock;
-    private MethodCallExpressionNodeTypeRegistry _nodeTypeRegistry;
-    private TestQueryProvider _queryProviderWithSpecificRegistry;
+    private TestQueryProvider _queryProviderWithParserMock;
 
     [SetUp]
     public void SetUp()
     {
       _mockRepository = new MockRepository();
       _executorMock = _mockRepository.StrictMock<IQueryExecutor>();
+      _queryParserMock = _mockRepository.StrictMock<IQueryParser>();
+      
       _queryProvider = new TestQueryProvider (_executorMock);
-      _nodeTypeRegistry = new MethodCallExpressionNodeTypeRegistry ();
-      _queryProviderWithSpecificRegistry = new TestQueryProvider (_executorMock, _nodeTypeRegistry);
+      _queryProviderWithParserMock = new TestQueryProvider (_executorMock, _queryParserMock);
       _queryableWithExecutorMock = new TestQueryable<Cook> (_executorMock);
     }
 
@@ -233,16 +234,22 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Could not parse expression 'TestQueryable<Cook>().Select(s => s)': This "
-        + "overload of the method 'System.Linq.Queryable.Select' is currently not supported.")]
-    public void Execute_WithSpecificRegistry ()
+    public void Execute_WithSpecificQueryParser ()
     {
       Expression expression = ExpressionHelper.MakeExpression (() => from s in ExpressionHelper.CreateCookQueryable () select s);
+      var fakeQueryModel = ExpressionHelper.CreateQueryModel_Cook();
+      _queryParserMock
+          .Expect (mock => mock.GetParsedQuery (expression))
+          .Return (fakeQueryModel);
+      _queryParserMock.Replay();
       _executorMock
-          .Expect (mock => mock.ExecuteCollection<Cook> (Arg<QueryModel>.Is.Anything))
+          .Expect (mock => mock.ExecuteCollection<Cook> (fakeQueryModel))
           .Return (new Cook[0]);
       _executorMock.Replay ();
-      _queryProviderWithSpecificRegistry.Execute<IEnumerable<Cook>> (expression);
+
+      _queryProviderWithParserMock.Execute<IEnumerable<Cook>> (expression);
+      
+      _queryParserMock.VerifyAllExpectations ();
       _executorMock.VerifyAllExpectations ();
     }
   }
