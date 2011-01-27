@@ -42,11 +42,15 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.
     {
       var registry = ExpressionTransformerRegistry.CreateDefault();
 
-      Assert.That (registry.RegisteredTransformerCount, Is.EqualTo (6));
+      Assert.That (registry.RegisteredTransformerCount, Is.EqualTo (7));
       
-      var transformations = registry.GetAllTransformations (ExpressionType.Equal);
-      var transformers = GetTransformersFromTransformations (transformations);
-      Assert.That (transformers, List.Some.TypeOf (typeof (VBCompareStringExpressionTransformer)));
+      var equalTranformations = registry.GetAllTransformations (ExpressionType.Equal);
+      var equalTransformers = GetTransformersFromTransformations (equalTranformations);
+      Assert.That (equalTransformers, List.Some.TypeOf (typeof (VBCompareStringExpressionTransformer)));
+
+      var callTranformations = registry.GetAllTransformations (ExpressionType.Call);
+      var callTransformers = GetTransformersFromTransformations (callTranformations);
+      Assert.That (callTransformers, List.Some.TypeOf (typeof (VBInformationIsNothingExpressionTransformer)));
     }
 
     [Test]

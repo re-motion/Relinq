@@ -40,12 +40,14 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation
     /// Currently, the default registry contains:
     /// <list type="bullet">
     /// <item><see cref="VBCompareStringExpressionTransformer"/></item>
+    /// <item><see cref="VBInformationIsNothingExpressionTransformer"/></item>
     /// </list>
     /// </remarks>
     public static ExpressionTransformerRegistry CreateDefault ()
     {
       var registry = new ExpressionTransformerRegistry();
       registry.Register (new VBCompareStringExpressionTransformer());
+      registry.Register (new VBInformationIsNothingExpressionTransformer());
       return registry;
     }
 

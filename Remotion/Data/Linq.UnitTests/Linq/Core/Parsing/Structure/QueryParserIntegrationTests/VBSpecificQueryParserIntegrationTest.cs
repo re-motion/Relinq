@@ -17,6 +17,7 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using NUnit.Framework;
 using Remotion.Data.Linq.Clauses;
@@ -26,7 +27,7 @@ using Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain;
 namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegrationTests
 {
   [TestFixture]
-  public class VBStringComparisonQueryParserIntegrationTest : QueryParserIntegrationTestBase
+  public class VBSpecificQueryParserIntegrationTest : QueryParserIntegrationTestBase
   {
     [Test]
     public void VBStringComparison ()
@@ -70,6 +71,24 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
           Expression.Equal (new QuerySourceReferenceExpression (queryModel.MainFromClause), 
           Expression.Constant (null)), true);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, ((WhereClause) queryModel.BodyClauses[0]).Predicate);
+    }
+
+    [Test]
+    public void VBIsNothing ()
+    {
+      var parameterExpression = Expression.Parameter (typeof (Cook), "c");
+      var vbIsNothingExpression = Expression.Call (typeof (Information).GetMethod ("IsNothing"), parameterExpression);
+              
+      var query = QuerySource
+          .Where (Expression.Lambda<Func<Cook, bool>> (vbIsNothingExpression, parameterExpression))
+          .Select (c => c.Name);
+
+      var queryModel = QueryParser.GetParsedQuery (query.Expression);
+
+      var whereClause = (WhereClause) queryModel.BodyClauses[0];
+
+      var expectedExpression = Expression.Equal (new QuerySourceReferenceExpression (queryModel.MainFromClause), Expression.Constant (null));
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, whereClause.Predicate);
     }
   }
 }
