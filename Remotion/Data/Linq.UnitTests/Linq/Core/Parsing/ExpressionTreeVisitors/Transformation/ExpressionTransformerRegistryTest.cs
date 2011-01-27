@@ -17,14 +17,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Microsoft.VisualBasic.CompilerServices;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation;
 using System.Linq;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations;
-using Remotion.Data.Linq.UnitTests.Linq.Core.TestUtilities;
 using Rhino.Mocks;
 
 namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Transformation
@@ -166,6 +163,67 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.
 
       Assert.That (result2.Length, Is.EqualTo (1));
       CheckTransformationMatchesTransformer (result2[0], transformerStub);
+    }
+
+    [Test]
+    public void GetTransformers_OnlyGenericTransformersRegistered ()
+    {
+      var expression1 = CreateSimpleExpression (0);
+      var expression2 = Expression.UnaryPlus (CreateSimpleExpression (1));
+
+      var transformerStub1 = CreateTransformerStub<Expression> (2, null);
+      var transformerStub2 = CreateTransformerStub<Expression> (3, null);
+
+      _registry.Register (transformerStub1);
+      _registry.Register (transformerStub2);
+
+      var result1 = _registry.GetTransformations (expression1).ToArray ();
+      var result2 = _registry.GetTransformations (expression2).ToArray ();
+      
+      Assert.That (result1.Length, Is.EqualTo (2));
+      CheckTransformationMatchesTransformer (result1[0], transformerStub1);
+      CheckTransformationMatchesTransformer (result1[1], transformerStub2);
+      Assert.That (result2.Length, Is.EqualTo (2));
+      CheckTransformationMatchesTransformer (result2[0], transformerStub1);
+      CheckTransformationMatchesTransformer (result2[1], transformerStub2);
+    }
+
+    [Test]
+    public void GetTransformers_GenericAndSpecificTransformersRegistered ()
+    {
+      var expression1 = CreateSimpleExpression (0);
+      var expression2 = Expression.UnaryPlus (CreateSimpleExpression (1));
+
+      var transformerStub1 = CreateTransformerStub<Expression> (2, null);
+      var transformerStub2 = CreateTransformerStub<Expression> (3, null);
+      var transformerStub3 = CreateTransformerStub<Expression> (3, ExpressionType.Constant);
+
+      _registry.Register (transformerStub1);
+      _registry.Register (transformerStub2);
+      _registry.Register (transformerStub3);
+
+      var result1 = _registry.GetTransformations (expression1).ToArray ();
+      var result2 = _registry.GetTransformations (expression2).ToArray ();
+
+      Assert.That (result1.Length, Is.EqualTo (3));
+      CheckTransformationMatchesTransformer (result1[0], transformerStub3);
+      CheckTransformationMatchesTransformer (result1[1], transformerStub1);
+      CheckTransformationMatchesTransformer (result1[2], transformerStub2);
+
+      Assert.That (result2.Length, Is.EqualTo (2));
+      CheckTransformationMatchesTransformer (result2[0], transformerStub1);
+      CheckTransformationMatchesTransformer (result2[1], transformerStub2);
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage = 
+      "Cannot register an IExpressionTransformer<BinaryExpression> as a generic transformer. Generic transformers must implement "
+      +"IExpressionTransformer<Expression>.\r\nParameter name: transformer")]
+    public void Register_CheckGenericHandlerType ()
+    {
+      var transformerStub = CreateTransformerStub<BinaryExpression> (1, null);
+
+      _registry.Register (transformerStub);
     }
 
     [Test]

@@ -41,7 +41,9 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation
     /// <summary>
     /// Gets the expression types supported by this <see cref="IExpressionTransformer{T}"/>.
     /// </summary>
-    /// <value>The supported expression types.</value>
+    /// <value>The supported expression types. Return <see langword="null" /> to support all expression types. (This is only sensible when
+    /// <typeparamref name="T"/> is <see cref="Expression"/>.)
+    /// </value>
     ExpressionType[] SupportedExpressionTypes { get; }
 
     /// <summary>

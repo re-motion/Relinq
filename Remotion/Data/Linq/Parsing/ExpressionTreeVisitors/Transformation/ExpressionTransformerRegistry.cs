@@ -52,12 +52,15 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation
     private readonly MultiDictionary<ExpressionType, ExpressionTransformation> _transformations =
         new MultiDictionary<ExpressionType, ExpressionTransformation>();
 
+    private readonly List<ExpressionTransformation> _genericTransformations = new List<ExpressionTransformation>();
+
+
     public int RegisteredTransformerCount
     {
       get { return _transformations.CountValues(); }
     }
 
-    public ExpressionTransformation[] GetAllTransformations(ExpressionType expressionType)
+    public ExpressionTransformation[] GetAllTransformations (ExpressionType expressionType)
     {
       return _transformations[expressionType].ToArray();
     }
@@ -70,9 +73,9 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation
       _transformations.TryGetValue (expression.NodeType, out matchingTransformations);
 
       if (matchingTransformations != null)
-        return matchingTransformations;
+        return matchingTransformations.Concat (_genericTransformations);
       else
-        return Enumerable.Empty<ExpressionTransformation>();
+        return _genericTransformations;
     }
 
     public void Register<T> (IExpressionTransformer<T> transformer) where T: Expression
@@ -81,8 +84,24 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation
 
       ExpressionTransformation transformation = expr => TransformExpression (expr, transformer);
 
-      foreach (var expressionType in transformer.SupportedExpressionTypes)
-        _transformations.Add (expressionType, transformation);
+      if (transformer.SupportedExpressionTypes == null)
+      {
+        if (typeof (T) != typeof (Expression))
+        {
+          var message = string.Format (
+              "Cannot register an IExpressionTransformer<{0}> as a generic transformer. Generic transformers must implement "
+              + "IExpressionTransformer<Expression>.",
+              typeof (T).Name);
+          throw new ArgumentException (message, "transformer");
+        }
+
+        _genericTransformations.Add (transformation);
+      }
+      else
+      {
+        foreach (var expressionType in transformer.SupportedExpressionTypes)
+          _transformations.Add (expressionType, transformation);
+      }
     }
 
     private static Expression TransformExpression<T> (Expression expression, IExpressionTransformer<T> transformer) where T: Expression
