@@ -103,13 +103,13 @@ namespace Remotion.Data.Linq.Parsing
         case ExpressionType.TypeIs:
           return VisitTypeBinaryExpression ((TypeBinaryExpression) expression);
 
+        case SubQueryExpression.ExpressionType:
+          return VisitSubQueryExpression ((SubQueryExpression) expression);
+        case QuerySourceReferenceExpression.ExpressionType:
+          return VisitQuerySourceReferenceExpression ((QuerySourceReferenceExpression) expression);
+
         default:
-          if (expression is SubQueryExpression)
-            return VisitSubQueryExpression ((SubQueryExpression) expression);
-          else if (expression is QuerySourceReferenceExpression)
-            return VisitQuerySourceReferenceExpression ((QuerySourceReferenceExpression) expression);
-          else
-            return VisitUnknownNonExtensionExpression (expression);
+          return VisitUnknownNonExtensionExpression (expression);
       }
     }
 
