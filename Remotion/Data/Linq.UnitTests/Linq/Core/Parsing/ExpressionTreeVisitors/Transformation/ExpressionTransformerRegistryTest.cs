@@ -216,6 +216,21 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.
     }
 
     [Test]
+    public void GetTransformers_GenericTransformerRegistered_WithCustomExpressionType ()
+    {
+      var expression = new UnknownExpression (typeof (int));
+
+      var transformerStub = CreateTransformerStub<Expression> (2, null);
+
+      _registry.Register (transformerStub);
+
+      var result1 = _registry.GetTransformations (expression).ToArray ();
+
+      Assert.That (result1.Length, Is.EqualTo (1));
+      CheckTransformationMatchesTransformer (result1[0], transformerStub);
+    }
+
+    [Test]
     [ExpectedException (typeof (ArgumentException), ExpectedMessage = 
       "Cannot register an IExpressionTransformer<BinaryExpression> as a generic transformer. Generic transformers must implement "
       +"IExpressionTransformer<Expression>.\r\nParameter name: transformer")]

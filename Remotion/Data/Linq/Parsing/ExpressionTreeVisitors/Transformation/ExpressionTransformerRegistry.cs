@@ -78,6 +78,34 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation
         return _genericTransformations;
     }
 
+    /// <summary>
+    /// Registers the specified <see cref="IExpressionTransformer{T}"/> for the transformer's 
+    /// <see cref="IExpressionTransformer{T}.SupportedExpressionTypes"/>. If <see cref="IExpressionTransformer{T}.SupportedExpressionTypes"/>
+    /// returns <see langword="null" />, the <paramref name="transformer"/> is registered as a generic transformer which will be applied to all
+    /// <see cref="Expression"/> nodes.
+    /// </summary>
+    /// <typeparam name="T">The type of expressions handled by the <paramref name="transformer"/>. This should be a type implemented by all
+    /// expressions identified by <see cref="IExpressionTransformer{T}.SupportedExpressionTypes"/>. For generic transformers, <typeparamref name="T"/> 
+    /// must be <see cref="Expression"/>.</typeparam>
+    /// <param name="transformer">The transformer to register.</param>
+    /// <remarks>
+    /// <para>
+    /// The order in which transformers are registered is the same order on which they will later be applied by 
+    /// <see cref="TransformingExpressionTreeVisitor"/>. When more than one transformer is registered for a certain <see cref="ExpressionType"/>,
+    /// each of them will get a chance to transform a given <see cref="Expression"/>, until the first one returns a new <see cref="Expression"/>.
+    /// At that point, the transformation will start again with the new <see cref="Expression"/> (and, if the expression's type has changed, potentially 
+    /// different transformers).
+    /// </para>
+    /// <para>
+    /// When generic transformers are registered, they act as if they had been registered for all <see cref="ExpressionType"/> values (including
+    /// custom ones). They will be applied in the order registered, but only after all respective specific transformers have run (without modifying 
+    /// the expression, which would restart the transformation process with the new expression as explained above).
+    /// </para>
+    /// <para>
+    /// When an <see cref="IExpressionTransformer{T}"/> is registered for an incompatible <see cref="ExpressionType"/>, this is not detected until 
+    /// the transformer is actually applied to an <see cref="Expression"/> of that <see cref="ExpressionType"/>.
+    /// </para>
+    /// </remarks>
     public void Register<T> (IExpressionTransformer<T> transformer) where T: Expression
     {
       ArgumentUtility.CheckNotNull ("transformer", transformer);
