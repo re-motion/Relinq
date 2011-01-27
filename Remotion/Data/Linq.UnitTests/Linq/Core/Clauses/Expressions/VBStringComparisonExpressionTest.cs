@@ -38,6 +38,19 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.Expressions
     }
 
     [Test]
+    public void NodeType ()
+    {
+      Assert.That (VBStringComparisonExpression.ExpressionType, Is.EqualTo ((ExpressionType) 0x100003));
+      ExtensionExpressionTestHelper.CheckUniqueNodeType (typeof (VBStringComparisonExpression), VBStringComparisonExpression.ExpressionType);
+    }
+
+    [Test]
+    public void Initialization ()
+    {
+      Assert.That (_expression.NodeType, Is.EqualTo (VBStringComparisonExpression.ExpressionType));
+    }
+
+    [Test]
     public void Initialization_TypeComesFromComparison ()
     {
       var boolExpression = new VBStringComparisonExpression (Expression.Equal (Expression.Constant ("string1"), Expression.Constant ("string2")), true);

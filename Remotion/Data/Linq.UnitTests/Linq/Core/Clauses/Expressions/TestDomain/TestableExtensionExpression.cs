@@ -28,7 +28,11 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.Expressions.TestDomain
     {
     }
 
-
+    public TestableExtensionExpression (Type type, ExpressionType nodeType)
+        : base (type, nodeType)
+    {
+    }
+    
     protected override Expression VisitChildren (ExpressionTreeVisitor visitor)
     {
       return this;

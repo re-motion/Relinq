@@ -15,6 +15,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.Expressions;
@@ -26,10 +27,18 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.Expressions
   public class QuerySourceReferenceExpressionTest : ExpressionNodeTestBase
   {
     [Test]
+    public void NodeType ()
+    {
+      Assert.That (QuerySourceReferenceExpression.ExpressionType, Is.EqualTo ((ExpressionType) 0x100001));
+      ExtensionExpressionTestHelper.CheckUniqueNodeType (typeof (QuerySourceReferenceExpression), QuerySourceReferenceExpression.ExpressionType);
+    }
+
+    [Test]
     public void Initialization ()
     {
       var referenceExpression = new QuerySourceReferenceExpression (SourceClause);
       Assert.That (referenceExpression.Type, Is.SameAs (typeof (int)));
+      Assert.That (referenceExpression.NodeType, Is.EqualTo (QuerySourceReferenceExpression.ExpressionType));
     }
 
     [Test]
