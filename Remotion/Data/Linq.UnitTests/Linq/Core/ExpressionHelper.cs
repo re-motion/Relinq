@@ -309,15 +309,25 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
 
     public static Expression Resolve<TParameter1, TParameter2, TResult> (IQuerySource sourceToReference1, IQuerySource sourceToReference2, Expression<Func<TParameter1, TParameter2, TResult>> expressionToBeResolved)
     {
-      var result1 = ReplacingExpressionTreeVisitor.Replace (expressionToBeResolved.Parameters[0], new QuerySourceReferenceExpression (sourceToReference1), expressionToBeResolved.Body);
-      return ReplacingExpressionTreeVisitor.Replace (expressionToBeResolved.Parameters[1], new QuerySourceReferenceExpression (sourceToReference2), result1);
+      var expressionMapping = new Dictionary<Expression, Expression> (2)
+                              {
+                                  { expressionToBeResolved.Parameters[0], new QuerySourceReferenceExpression (sourceToReference1) },
+                                  { expressionToBeResolved.Parameters[1], new QuerySourceReferenceExpression (sourceToReference2) }
+                              };
+      var result = MultiReplacingExpressionTreeVisitor.Replace (expressionMapping, expressionToBeResolved.Body);
+      return result;
     }
 
     public static Expression Resolve<TParameter1, TParameter2, TParameter3, TResult> (IQuerySource sourceToReference1, IQuerySource sourceToReference2, IQuerySource sourceToReference3, Expression<Func<TParameter1, TParameter2, TParameter3, TResult>> expressionToBeResolved)
     {
-      var result1 = ReplacingExpressionTreeVisitor.Replace (expressionToBeResolved.Parameters[0], new QuerySourceReferenceExpression (sourceToReference1), expressionToBeResolved.Body);
-      var result2 = ReplacingExpressionTreeVisitor.Replace (expressionToBeResolved.Parameters[1], new QuerySourceReferenceExpression (sourceToReference2), result1);
-      return ReplacingExpressionTreeVisitor.Replace (expressionToBeResolved.Parameters[2], new QuerySourceReferenceExpression (sourceToReference3), result2);
+      var expressionMapping = new Dictionary<Expression, Expression> (3)
+                              {
+                                  { expressionToBeResolved.Parameters[0], new QuerySourceReferenceExpression (sourceToReference1) },
+                                  { expressionToBeResolved.Parameters[1], new QuerySourceReferenceExpression (sourceToReference2) },
+                                  { expressionToBeResolved.Parameters[2], new QuerySourceReferenceExpression (sourceToReference3) },
+                              };
+      var result = MultiReplacingExpressionTreeVisitor.Replace (expressionMapping, expressionToBeResolved.Body);
+      return result;
     }
 
     public static Expression ResolveLambdaParameter<TParameter1, TParameter2, TResult> (

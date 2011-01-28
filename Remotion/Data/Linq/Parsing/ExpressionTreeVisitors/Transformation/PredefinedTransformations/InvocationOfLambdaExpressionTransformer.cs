@@ -15,6 +15,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq.Expressions;
@@ -65,17 +66,14 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation.Prede
     private Expression InlineLambdaExpression (LambdaExpression lambdaExpression, ReadOnlyCollection<Expression> arguments)
     {
       Debug.Assert (lambdaExpression.Parameters.Count == arguments.Count);
+
+      var mapping = new Dictionary<Expression, Expression> (arguments.Count);
       
       var body = lambdaExpression.Body;
       for (int i = 0; i < lambdaExpression.Parameters.Count; i++)
-      {
-        var parameter = lambdaExpression.Parameters[i];
-        var argument = arguments[i];
+        mapping.Add (lambdaExpression.Parameters[i], arguments[i]);
 
-        body = ReplacingExpressionTreeVisitor.Replace (parameter, argument, body);
-      }
-      return body;
+      return MultiReplacingExpressionTreeVisitor.Replace (mapping, body);
     }
-
   }
 }

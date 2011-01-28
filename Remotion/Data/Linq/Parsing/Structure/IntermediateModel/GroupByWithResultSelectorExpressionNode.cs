@@ -15,6 +15,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -124,8 +125,13 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
 
       var groupParameter = Expression.Parameter (groupingType, "group");
       var keyExpression = Expression.MakeMemberAccess (groupParameter, keyProperty);
-      var bodyWithGroupingReplaced = ReplacingExpressionTreeVisitor.Replace (resultSelector.Parameters[1], groupParameter, resultSelector.Body);
-      var bodyWithGroupingAndKeyReplaced = ReplacingExpressionTreeVisitor.Replace (resultSelector.Parameters[0], keyExpression, bodyWithGroupingReplaced);
+
+      var expressionMapping = new Dictionary<Expression, Expression> (2)
+                              {
+                                  { resultSelector.Parameters[1], groupParameter },
+                                  { resultSelector.Parameters[0], keyExpression }
+                              };
+      var bodyWithGroupingAndKeyReplaced = MultiReplacingExpressionTreeVisitor.Replace (expressionMapping, resultSelector.Body);
       return Expression.Lambda (bodyWithGroupingAndKeyReplaced, groupParameter);
     }
 
