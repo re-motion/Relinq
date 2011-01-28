@@ -39,14 +39,18 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
     public static ExpressionTreeParser CreateDefault ()
     {
-      return new ExpressionTreeParser (MethodCallExpressionNodeTypeRegistry.CreateDefault (), CreateDefaultProcessingSteps());
+      return new ExpressionTreeParser (
+          MethodCallExpressionNodeTypeRegistry.CreateDefault (), 
+          CreateDefaultProcessingSteps (ExpressionTransformerRegistry.CreateDefault()));
     }
 
-    public static IExpressionTreeProcessingStep[] CreateDefaultProcessingSteps ()
+    public static IExpressionTreeProcessingStep[] CreateDefaultProcessingSteps (ExpressionTransformerRegistry transformerRegistry)
     {
+      ArgumentUtility.CheckNotNull ("transformerRegistry", transformerRegistry);
+
       return new IExpressionTreeProcessingStep[] { 
           new PartialEvaluationStep(), 
-          new ExpressionTransformationStep (ExpressionTransformerRegistry.CreateDefault()) };
+          new ExpressionTransformationStep (transformerRegistry) };
     }
 
     private readonly UniqueIdentifierGenerator _identifierGenerator = new UniqueIdentifierGenerator ();

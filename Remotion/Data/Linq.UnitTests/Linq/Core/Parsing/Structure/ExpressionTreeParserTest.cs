@@ -81,7 +81,8 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     [Test]
     public void CreateDefaultProcessingSteps ()
     {
-      var steps = ExpressionTreeParser.CreateDefaultProcessingSteps ();
+      var inputTransformerRegistry = ExpressionTransformerRegistry.CreateDefault();
+      var steps = ExpressionTreeParser.CreateDefaultProcessingSteps (inputTransformerRegistry);
 
       Assert.That (steps.Length, Is.EqualTo (2));
       Assert.That (steps[0], Is.TypeOf (typeof (PartialEvaluationStep)));
@@ -90,10 +91,8 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
           ((ExpressionTransformationStep) steps[1]).Provider,
           Is.TypeOf (typeof (ExpressionTransformerRegistry)));
 
-      var expressionTransformerRegistry = ((ExpressionTransformerRegistry) ((ExpressionTransformationStep) steps[1]).Provider);
-      Assert.That (
-          expressionTransformerRegistry.RegisteredTransformerCount,
-          Is.EqualTo (ExpressionTransformerRegistry.CreateDefault ().RegisteredTransformerCount));
+      var createdTransformerRegistry = ((ExpressionTransformerRegistry) ((ExpressionTransformationStep) steps[1]).Provider);
+      Assert.That (createdTransformerRegistry, Is.SameAs (inputTransformerRegistry));
     }
 
     [Test]
