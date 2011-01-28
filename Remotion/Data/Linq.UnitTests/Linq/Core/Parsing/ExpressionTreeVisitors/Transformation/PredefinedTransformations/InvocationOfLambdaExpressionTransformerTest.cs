@@ -42,17 +42,91 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.
     [Test]
     public void Transform_InnerLambdaExpression ()
     {
-      Expression<Func<int, double, string>> innerExpression = (p1, p2) => (p1 + p2).ToString();
-      var invokeExpression = Expression.Invoke (innerExpression, Expression.Constant (1), Expression.Constant (2.0));
+      // Input: ((p1, p2) => (p1 + p2).ToString()) (1.0, 2.0)
+      Expression<Func<double, double, string>> innerExpression = (p1, p2) => (p1 + p2).ToString();
+      var invokeExpression = Expression.Invoke (innerExpression, Expression.Constant (1.0), Expression.Constant (2.0));
 
       var result = _transformer.Transform (invokeExpression);
 
+      // Output: (1.0 + 2.0).ToString()
       var expectedExpression = Expression.Call (
           Expression.Add (
-              Expression.Convert (Expression.Constant (1), typeof (double)), 
+              Expression.Constant (1.0), 
               Expression.Constant (2.0)),
           typeof (double).GetMethod ("ToString", Type.EmptyTypes));
       ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, result);
+    }
+    
+    [Test]
+    public void Transform_InnerLambdaExpression_WrappedInTrivialConvert ()
+    {
+      // Input: ((Func<double, double, string>) ((p1, p2) => (p1 + p2).ToString())) (1.0, 2.0)
+      Expression<Func<double, double, string>> innerExpression = (p1, p2) => (p1 + p2).ToString ();
+      var invokeExpression = Expression.Invoke (
+          Expression.Convert (innerExpression, innerExpression.Type), 
+          Expression.Constant (1.0), 
+          Expression.Constant (2.0));
+
+      var result = _transformer.Transform (invokeExpression);
+
+      // Output: (1.0 + 2.0).ToString()
+      var expectedExpression = Expression.Call (
+          Expression.Add (
+              Expression.Constant (1.0),
+              Expression.Constant (2.0)),
+          typeof (double).GetMethod ("ToString", Type.EmptyTypes));
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, result);
+    }
+
+    [Test]
+    public void Transform_InnerLambdaExpression_WrappedInTrivialConvert_MultipleConverts ()
+    {
+      // Input: ((Func<double, double, string>) (Func<double, double, string>) ((p1, p2) => (p1 + p2).ToString())) (1.0, 2.0)
+      Expression<Func<double, double, string>> innerExpression = (p1, p2) => (p1 + p2).ToString ();
+      var invokeExpression = Expression.Invoke (
+          Expression.Convert (Expression.Convert (innerExpression, innerExpression.Type), innerExpression.Type),
+          Expression.Constant (1.0),
+          Expression.Constant (2.0));
+
+      var result = _transformer.Transform (invokeExpression);
+
+      // Output: (1.0 + 2.0).ToString()
+      var expectedExpression = Expression.Call (
+          Expression.Add (
+              Expression.Constant (1.0),
+              Expression.Constant (2.0)),
+          typeof (double).GetMethod ("ToString", Type.EmptyTypes));
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, result);
+    }
+
+    [Test]
+    public void Transform_InnerLambdaExpression_WrappedInTrivialConvert_WithCastMethod ()
+    {
+      // Input: ((Func<double, double, string>) ((p1, p2) => (p1 + p2).ToString())) (1.0, 2.0), with custom cast operator
+      Expression<Func<double, double, string>> innerExpression = (p1, p2) => (p1 + p2).ToString ();
+      var invokeExpression = Expression.Invoke (
+          Expression.Convert (innerExpression, innerExpression.Type, GetType().GetMethod ("TrivialCastMethod")),
+          Expression.Constant (1.0),
+          Expression.Constant (2.0));
+
+      var result = _transformer.Transform (invokeExpression);
+
+      Assert.That (result, Is.SameAs (invokeExpression));
+    }
+
+    [Test]
+    public void Transform_InnerLambdaExpression_WrappedInNonTrivialConvert ()
+    {
+      // Input: (((Func<double, double, string>) (object) (Func<double, double, string>) ((p1, p2) => (p1 + p2).ToString())) (1.0, 2.0)
+      Expression<Func<double, double, string>> innerExpression = (p1, p2) => (p1 + p2).ToString ();
+      var invokeExpression = Expression.Invoke (
+          Expression.Convert (Expression.Convert (innerExpression, typeof (object)), innerExpression.Type),
+          Expression.Constant (1.0),
+          Expression.Constant (2.0));
+
+      var result = _transformer.Transform (invokeExpression);
+
+      Assert.That (result, Is.SameAs (invokeExpression));
     }
 
     [Test]
@@ -64,6 +138,11 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.
       var result = _transformer.Transform (invokeExpression);
 
       Assert.That (result, Is.SameAs (invokeExpression));
+    }
+
+    public static Func<double, double, string> TrivialCastMethod (Func<double, double, string> argument)
+    {
+      return argument;
     }
   }
 }

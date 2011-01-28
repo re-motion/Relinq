@@ -15,6 +15,8 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Utilities;
 
@@ -40,20 +42,40 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation.Prede
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      var innerExpressionAsLambda = expression.Expression as LambdaExpression;
-      if (innerExpressionAsLambda!=null)
-      {
-        var body = innerExpressionAsLambda.Body;
-        for (int i = 0; i < innerExpressionAsLambda.Parameters.Count; i++)
-        {
-          var parameter = innerExpressionAsLambda.Parameters[i];
-          var argument = expression.Arguments[i];
+      Expression invokedExpression = StripTrivialConversions (expression.Expression);
 
-          body = ReplacingExpressionTreeVisitor.Replace (parameter, argument, body);
-        }
-        return body;
-      }
-      return expression;
+      var innerExpressionAsLambda = invokedExpression as LambdaExpression;
+      if (innerExpressionAsLambda != null)
+        return InlineLambdaExpression (innerExpressionAsLambda, expression.Arguments);
+      else
+        return expression;
     }
+
+    private Expression StripTrivialConversions (Expression invokedExpression)
+    {
+      while (invokedExpression.NodeType == ExpressionType.Convert
+             && invokedExpression.Type == ((UnaryExpression) invokedExpression).Operand.Type
+             && ((UnaryExpression) invokedExpression).Method == null)
+      {
+        invokedExpression = ((UnaryExpression) invokedExpression).Operand;
+      }
+      return invokedExpression;
+    }
+
+    private Expression InlineLambdaExpression (LambdaExpression lambdaExpression, ReadOnlyCollection<Expression> arguments)
+    {
+      Debug.Assert (lambdaExpression.Parameters.Count == arguments.Count);
+      
+      var body = lambdaExpression.Body;
+      for (int i = 0; i < lambdaExpression.Parameters.Count; i++)
+      {
+        var parameter = lambdaExpression.Parameters[i];
+        var argument = arguments[i];
+
+        body = ReplacingExpressionTreeVisitor.Replace (parameter, argument, body);
+      }
+      return body;
+    }
+
   }
 }
