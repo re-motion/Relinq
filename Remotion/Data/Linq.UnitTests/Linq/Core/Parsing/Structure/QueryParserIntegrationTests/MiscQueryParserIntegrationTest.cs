@@ -77,12 +77,28 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
     [Ignore ("TODO 3577")]
     public void NullableHasValue_ReplacedByNullCheck ()
     {
-      var query = DetailQuerySource.Where (c => c.LastCleaningDay.HasValue);
+      var query = DetailQuerySource.Where (k => k.LastCleaningDay.HasValue);
 
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
 
       var predicate = ((WhereClause) queryModel.BodyClauses[0]).Predicate;
-      CheckResolvedExpression<Kitchen, bool> (predicate, queryModel.MainFromClause, k => k.Name != null);
+      CheckResolvedExpression<Kitchen, bool> (predicate, queryModel.MainFromClause, k => k.LastCleaningDay != null);
+    }
+
+    [Test]
+    [Ignore ("TODO 3577")]
+    public void NullableValue_ReplacedByCast ()
+    {
+// ReSharper disable PossibleInvalidOperationException
+      var query = DetailQuerySource.Select (k => k.LastCleaningDay.Value);
+// ReSharper restore PossibleInvalidOperationException
+
+      var queryModel = QueryParser.GetParsedQuery (query.Expression);
+
+      var selector = queryModel.SelectClause.Selector;
+// ReSharper disable PossibleInvalidOperationException
+      CheckResolvedExpression<Kitchen, DateTime> (selector, queryModel.MainFromClause, k => (DateTime) k.LastCleaningDay);
+// ReSharper restore PossibleInvalidOperationException
     }
   }
 }
