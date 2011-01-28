@@ -130,6 +130,7 @@
     <Compile Include="EagerFetching\Parsing\FetchManyExpressionNode.cs" />
     <Compile Include="EagerFetching\Parsing\FetchExpressionNodeBase.cs" />
     <Compile Include="EagerFetching\Parsing\FetchOneExpressionNode.cs" />
+    <Compile Include="Parsing\ExpressionTreeVisitors\MultiReplacingExpressionTreeVisitor.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\ExpressionTransformation.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\ExpressionTransformerRegistry.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\IExpressionTranformationProvider.cs" />

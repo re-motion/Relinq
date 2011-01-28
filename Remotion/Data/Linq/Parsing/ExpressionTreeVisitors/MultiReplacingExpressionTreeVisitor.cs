@@ -15,6 +15,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Utilities;
@@ -22,35 +23,35 @@ using Remotion.Data.Linq.Utilities;
 namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
 {
   /// <summary>
-  /// Replaces all nodes that equal a given <see cref="Expression"/> with a replacement node. Expressions are also replaced within subqueries; the 
+  /// Replaces <see cref="Expression"/> nodes according to a given mapping specification. Expressions are also replaced within subqueries; the 
   /// <see cref="QueryModel"/> is changed by the replacement operations, it is not copied. The replacement node is not recursively searched for 
-  /// occurrences of the <see cref="Expression"/> to be replaced.
+  /// occurrences of <see cref="Expression"/> nodes to be replaced.
   /// </summary>
-  public class ReplacingExpressionTreeVisitor : ExpressionTreeVisitor
+  public class MultiReplacingExpressionTreeVisitor : ExpressionTreeVisitor
   {
-    public static Expression Replace (Expression replacedExpression, Expression replacementExpression, Expression sourceTree)
+    private readonly IDictionary<Expression, Expression> _expressionMapping;
+
+    public static Expression Replace (IDictionary<Expression, Expression> expressionMapping, Expression sourceTree)
     {
-      ArgumentUtility.CheckNotNull ("replacedExpression", replacedExpression);
-      ArgumentUtility.CheckNotNull ("replacementExpression", replacementExpression);
+      ArgumentUtility.CheckNotNull ("expressionMapping", expressionMapping);
       ArgumentUtility.CheckNotNull ("sourceTree", sourceTree);
 
-      var visitor = new ReplacingExpressionTreeVisitor (replacedExpression, replacementExpression);
+      var visitor = new MultiReplacingExpressionTreeVisitor (expressionMapping);
       return visitor.VisitExpression (sourceTree);
     }
 
-    private readonly Expression _replacedExpression;
-    private readonly Expression _replacementExpression;
-
-    private ReplacingExpressionTreeVisitor (Expression replacedExpression, Expression replacementExpression)
+    private MultiReplacingExpressionTreeVisitor (IDictionary<Expression, Expression> expressionMapping)
     {
-      _replacedExpression = replacedExpression;
-      _replacementExpression = replacementExpression;
+      ArgumentUtility.CheckNotNull ("expressionMapping", expressionMapping);
+
+      _expressionMapping = expressionMapping;
     }
 
     public override Expression VisitExpression (Expression expression)
     {
-      if (Equals (expression, _replacedExpression))
-        return _replacementExpression;
+      Expression replacementExpression;
+      if (expression != null && _expressionMapping.TryGetValue (expression, out replacementExpression))
+        return replacementExpression;
       else
         return base.VisitExpression (expression);
     }
