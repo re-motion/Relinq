@@ -40,7 +40,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.Expressions
     [Test]
     public void NodeType ()
     {
-      Assert.That (VBStringComparisonExpression.ExpressionType, Is.EqualTo ((ExpressionType) 0x100003));
+      Assert.That (VBStringComparisonExpression.ExpressionType, Is.EqualTo ((ExpressionType) 100003));
       ExtensionExpressionTestHelper.CheckUniqueNodeType (typeof (VBStringComparisonExpression), VBStringComparisonExpression.ExpressionType);
     }
 

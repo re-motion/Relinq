@@ -44,7 +44,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.Expressions
     [Test]
     public void NodeType ()
     {
-      Assert.That (ExtensionExpression.DefaultExtensionExpressionNodeType, Is.EqualTo ((ExpressionType) 0x150000));
+      Assert.That (ExtensionExpression.DefaultExtensionExpressionNodeType, Is.EqualTo ((ExpressionType) 150000));
       ExtensionExpressionTestHelper.CheckUniqueNodeType (typeof (ExtensionExpression), ExtensionExpression.DefaultExtensionExpressionNodeType);
     }
 
@@ -58,9 +58,9 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.Expressions
     [Test]
     public void Initialize_WithNodeType ()
     {
-      var expression = new TestableExtensionExpression (typeof (int), (ExpressionType) 0x150001);
+      var expression = new TestableExtensionExpression (typeof (int), (ExpressionType) 150001);
       Assert.That (expression.Type, Is.SameAs (typeof (int)));
-      Assert.That (expression.NodeType, Is.EqualTo ((ExpressionType) 0x150001));
+      Assert.That (expression.NodeType, Is.EqualTo ((ExpressionType) 150001));
     }
 
     [Test]

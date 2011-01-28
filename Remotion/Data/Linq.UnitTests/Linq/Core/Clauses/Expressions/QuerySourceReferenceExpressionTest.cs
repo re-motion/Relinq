@@ -29,7 +29,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.Expressions
     [Test]
     public void NodeType ()
     {
-      Assert.That (QuerySourceReferenceExpression.ExpressionType, Is.EqualTo ((ExpressionType) 0x100001));
+      Assert.That (QuerySourceReferenceExpression.ExpressionType, Is.EqualTo ((ExpressionType) 100001));
       ExtensionExpressionTestHelper.CheckUniqueNodeType (typeof (QuerySourceReferenceExpression), QuerySourceReferenceExpression.ExpressionType);
     }
 

@@ -31,7 +31,7 @@ namespace Remotion.Data.Linq.Clauses.Expressions
   /// </remarks>
   public class QuerySourceReferenceExpression : Expression
   {
-    public const ExpressionType ExpressionType = (ExpressionType) 0x100001;
+    public const ExpressionType ExpressionType = (ExpressionType) 100001;
 
     public QuerySourceReferenceExpression (IQuerySource querySource)
         : base (ExpressionType, ArgumentUtility.CheckNotNull ("querySource", querySource).ItemType)

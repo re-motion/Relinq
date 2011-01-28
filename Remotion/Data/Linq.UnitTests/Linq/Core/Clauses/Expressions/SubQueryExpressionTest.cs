@@ -31,7 +31,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.Expressions
     [Test]
     public void NodeType ()
     {
-      Assert.That (SubQueryExpression.ExpressionType, Is.EqualTo ((ExpressionType) 0x100002));
+      Assert.That (SubQueryExpression.ExpressionType, Is.EqualTo ((ExpressionType) 100002));
       ExtensionExpressionTestHelper.CheckUniqueNodeType (typeof (SubQueryExpression), SubQueryExpression.ExpressionType);
     }
 

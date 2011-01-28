@@ -40,7 +40,7 @@ namespace Remotion.Data.Linq.Clauses.Expressions
   /// </remarks>
   public class VBStringComparisonExpression : ExtensionExpression
   {
-    public const ExpressionType ExpressionType = (ExpressionType) 0x100003;
+    public const ExpressionType ExpressionType = (ExpressionType) 100003;
 
     private readonly Expression _comparison;
     private readonly bool _textCompare;

@@ -25,7 +25,7 @@ namespace Remotion.Data.Linq.Clauses.Expressions
   /// </summary>
   public class SubQueryExpression : Expression
   {
-    public const ExpressionType ExpressionType = (ExpressionType) 0x100002;
+    public const ExpressionType ExpressionType = (ExpressionType) 100002;
 
     public SubQueryExpression (QueryModel queryModel)
         : base (ExpressionType, queryModel.GetOutputDataInfo().DataType)

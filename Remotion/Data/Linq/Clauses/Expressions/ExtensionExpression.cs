@@ -27,7 +27,7 @@ namespace Remotion.Data.Linq.Clauses.Expressions
   /// </summary>
   /// <remarks>
   /// Custom extension expressions can specify their own <see cref="ExpressionType"/> or use a default one. re-linq reserves 
-  /// <see cref="ExpressionType"/> values from 0x100000 to 0x150000 for its own expressions. Custom LINQ providers can use 0x150001 and above.
+  /// <see cref="ExpressionType"/> values from 100000 to 150000 for its own expressions. Custom LINQ providers can use 150001 and above.
   /// </remarks>
   public abstract class ExtensionExpression : Expression
   {
@@ -35,7 +35,7 @@ namespace Remotion.Data.Linq.Clauses.Expressions
     /// Defines a standard <see cref="ExpressionType"/> value that is used by all <see cref="ExtensionExpression"/> subclasses unless they specify
     /// their own <see cref="ExpressionType"/> value.
     /// </summary>
-    public const ExpressionType DefaultExtensionExpressionNodeType = (ExpressionType) 0x150000;
+    public const ExpressionType DefaultExtensionExpressionNodeType = (ExpressionType) 150000;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ExtensionExpression"/> class with a default <see cref="ExpressionType"/> value.
@@ -51,7 +51,7 @@ namespace Remotion.Data.Linq.Clauses.Expressions
     /// </summary>
     /// <param name="type">The type of the value represented by the <see cref="ExtensionExpression"/>.</param>
     /// <param name="nodeType">The <see cref="ExpressionType"/> value to use as this expression's <see cref="Expression.NodeType"/> value.
-    /// LINQ providers should use values starting from 0x150001 and above.</param>
+    /// LINQ providers should use values starting from 150001 and above.</param>
     protected ExtensionExpression (Type type, ExpressionType nodeType)
         : base (nodeType, ArgumentUtility.CheckNotNull ("", type))
     {
