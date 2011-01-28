@@ -18,9 +18,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation;
 using Remotion.Data.Linq.Parsing.Structure;
-using Remotion.Data.Linq.Parsing.Structure.ExpressionTreeProcessingSteps;
 using Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Data.Linq.Utilities;
 using Rhino.Mocks;
@@ -31,77 +29,47 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
   public class DefaultQueryProviderTest
   {
     private IQueryExecutor _executorStub;
+    private IQueryParser _parserStub;
 
     [SetUp]
     public void SetUp ()
     {
       _executorStub = MockRepository.GenerateStub<IQueryExecutor> ();
+      _parserStub = MockRepository.GenerateStub<IQueryParser> ();
     }
-
-    [Test]
-    public void Initialization_WithDefaults ()
-    {
-      var queryProvider = new DefaultQueryProvider (typeof (TestQueryable<>), _executorStub);
-
-      Assert.That (
-          queryProvider.QueryParser.NodeTypeRegistry.RegisteredMethodInfoCount,
-          Is.EqualTo (MethodCallExpressionNodeTypeRegistry.CreateDefault ().RegisteredMethodInfoCount));
-
-      Assert.That (queryProvider.QueryParser.ProcessingSteps.Count, Is.EqualTo (2));
-      Assert.That (queryProvider.QueryParser.ProcessingSteps[0], Is.TypeOf (typeof (PartialEvaluationStep)));
-      Assert.That (queryProvider.QueryParser.ProcessingSteps[1], Is.TypeOf (typeof (ExpressionTransformationStep)));
-      Assert.That (
-          ((ExpressionTransformationStep) queryProvider.QueryParser.ProcessingSteps[1]).Provider,
-          Is.TypeOf (typeof (ExpressionTransformerRegistry)));
-
-      var expressionTransformerRegistry =
-          ((ExpressionTransformerRegistry) ((ExpressionTransformationStep) queryProvider.QueryParser.ProcessingSteps[1]).Provider);
-      Assert.That (
-          expressionTransformerRegistry.RegisteredTransformerCount,
-          Is.EqualTo (ExpressionTransformerRegistry.CreateDefault ().RegisteredTransformerCount));
-    }
-
 
     [Test]
     [ExpectedException (typeof (ArgumentTypeException))]
     public void Initialization_NonGeneric ()
     {
-      new DefaultQueryProvider (typeof (int), _executorStub);
+      new DefaultQueryProvider (typeof (int), _executorStub, _parserStub);
     }
 
     [Test]
     [ExpectedException (typeof (ArgumentTypeException))]
     public void Initialization_NonGenericTypeDefinition ()
     {
-      new DefaultQueryProvider (typeof (TestQueryable<int>), _executorStub);
+      new DefaultQueryProvider (typeof (TestQueryable<int>), _executorStub, _parserStub);
     }
 
     [Test]
     [ExpectedException (typeof (ArgumentTypeException))]
     public void Initialization_TooManyGenericArguments ()
     {
-      new DefaultQueryProvider (typeof (QueryableWithTooManyArguments<,>), _executorStub);
+      new DefaultQueryProvider (typeof (QueryableWithTooManyArguments<,>), _executorStub, _parserStub);
     }
 
     [Test]
     [ExpectedException (typeof (ArgumentTypeException))]
     public void Initialization_NonQueryable ()
     {
-      new DefaultQueryProvider (typeof (List<int>), _executorStub);
-    }
-
-    [Test]
-    [ExpectedException (typeof (ArgumentTypeException))]
-    public void Initialization_ParserCtor_AlsoPerformsTypeChecks ()
-    {
-      new DefaultQueryProvider (typeof (int), _executorStub, QueryParser.CreateDefault());
+      new DefaultQueryProvider (typeof (List<int>), _executorStub, _parserStub);
     }
 
     [Test]
     public void CreateQueryable ()
     {
-      var executorStub = _executorStub;
-      var provider = new DefaultQueryProvider (typeof (TestQueryable<>), executorStub);
+      var provider = new DefaultQueryProvider (typeof (TestQueryable<>), _executorStub, _parserStub);
       var expression = Expression.Constant (new[] {0});
 
       var queryable = provider.CreateQuery<int> (expression);

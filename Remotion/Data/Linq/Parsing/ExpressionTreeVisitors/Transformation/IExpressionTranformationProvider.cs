@@ -21,7 +21,8 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation
 {
   /// <summary>
   /// <see cref="IExpressionTranformationProvider"/> defines an API for classes returning <see cref="ExpressionTransformation"/> instances for specific 
-  /// <see cref="Expression"/> objects.
+  /// <see cref="Expression"/> objects. Usually, the <see cref="ExpressionTransformerRegistry"/> will be used when an implementation of this
+  /// interface is needed.
   /// </summary>
   public interface IExpressionTranformationProvider
   {

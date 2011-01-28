@@ -19,6 +19,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq
@@ -43,7 +44,7 @@ namespace Remotion.Data.Linq
     {
       ArgumentUtility.CheckNotNull ("executor", executor);
 
-      _queryProvider = new DefaultQueryProvider (GetType().GetGenericTypeDefinition(), executor);
+      _queryProvider = new DefaultQueryProvider (GetType().GetGenericTypeDefinition(), executor, QueryParser.CreateDefault());
       Expression = Expression.Constant (this);
     }
 
