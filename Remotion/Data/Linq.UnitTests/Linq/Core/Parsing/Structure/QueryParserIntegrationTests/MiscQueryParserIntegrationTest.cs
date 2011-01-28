@@ -72,5 +72,17 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
       var predicate = ((WhereClause) queryModel.BodyClauses[0]).Predicate;
       CheckResolvedExpression<Cook, bool> (predicate, queryModel.MainFromClause, c => c.Name != null);
     }
+
+    [Test]
+    [Ignore ("TODO 3577")]
+    public void NullableHasValue_ReplacedByNullCheck ()
+    {
+      var query = DetailQuerySource.Where (c => c.LastCleaningDay.HasValue);
+
+      var queryModel = QueryParser.GetParsedQuery (query.Expression);
+
+      var predicate = ((WhereClause) queryModel.BodyClauses[0]).Predicate;
+      CheckResolvedExpression<Kitchen, bool> (predicate, queryModel.MainFromClause, k => k.Name != null);
+    }
   }
 }
