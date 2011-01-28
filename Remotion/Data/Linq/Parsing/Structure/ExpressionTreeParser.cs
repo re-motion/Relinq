@@ -44,13 +44,13 @@ namespace Remotion.Data.Linq.Parsing.Structure
           CreateDefaultProcessingSteps (ExpressionTransformerRegistry.CreateDefault()));
     }
 
-    public static IExpressionTreeProcessingStep[] CreateDefaultProcessingSteps (ExpressionTransformerRegistry transformerRegistry)
+    public static IExpressionTreeProcessingStep[] CreateDefaultProcessingSteps (IExpressionTranformationProvider tranformationProvider)
     {
-      ArgumentUtility.CheckNotNull ("transformerRegistry", transformerRegistry);
+      ArgumentUtility.CheckNotNull ("tranformationProvider", tranformationProvider);
 
       return new IExpressionTreeProcessingStep[] { 
           new PartialEvaluationStep(), 
-          new ExpressionTransformationStep (transformerRegistry) };
+          new ExpressionTransformationStep (tranformationProvider) };
     }
 
     private readonly UniqueIdentifierGenerator _identifierGenerator = new UniqueIdentifierGenerator ();
