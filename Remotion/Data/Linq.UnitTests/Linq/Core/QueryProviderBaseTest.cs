@@ -34,8 +34,8 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
   public class QueryProviderBaseTest
   {
     private MockRepository _mockRepository;
-    private IQueryExecutor _executorMock;
     private IQueryParser _queryParserMock;
+    private IQueryExecutor _executorMock;
 
     // private TestQueryProvider _queryProvider;
     private TestQueryProvider _queryProvider;
@@ -47,11 +47,10 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
     public void SetUp()
     {
       _mockRepository = new MockRepository();
-      _executorMock = _mockRepository.StrictMock<IQueryExecutor>();
-      _queryParserMock = _mockRepository.StrictMock<IQueryParser>();
+      _queryParserMock = _mockRepository.StrictMock<IQueryParser> ();
+      _executorMock = _mockRepository.StrictMock<IQueryExecutor> ();
 
-      // _queryProvider = new TestQueryProvider (_executorMock, QueryParser.CreateDefault());
-      _queryProvider = new TestQueryProvider (_executorMock, _queryParserMock);
+      _queryProvider = new TestQueryProvider (_queryParserMock, _executorMock);
     
       _queryableWithExecutorMock = new TestQueryable<Cook> (_executorMock);
       _fakeQueryModel = ExpressionHelper.CreateQueryModel_Cook ();

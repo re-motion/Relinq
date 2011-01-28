@@ -24,8 +24,8 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.TestQueryGenerators
 {
   public class TestQueryProvider : QueryProviderBase
   {
-    public TestQueryProvider (IQueryExecutor executor, IQueryParser queryParser)
-      : base (executor, queryParser)
+    public TestQueryProvider (IQueryParser queryParser, IQueryExecutor executor)
+      : base (queryParser, executor)
     {
     }
 

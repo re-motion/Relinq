@@ -28,48 +28,48 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
   [TestFixture]
   public class DefaultQueryProviderTest
   {
-    private IQueryExecutor _executorStub;
     private IQueryParser _parserStub;
+    private IQueryExecutor _executorStub;
 
     [SetUp]
     public void SetUp ()
     {
-      _executorStub = MockRepository.GenerateStub<IQueryExecutor> ();
       _parserStub = MockRepository.GenerateStub<IQueryParser> ();
+      _executorStub = MockRepository.GenerateStub<IQueryExecutor> ();
     }
 
     [Test]
     [ExpectedException (typeof (ArgumentTypeException))]
     public void Initialization_NonGeneric ()
     {
-      new DefaultQueryProvider (typeof (int), _executorStub, _parserStub);
+      new DefaultQueryProvider (typeof (int), _parserStub, _executorStub);
     }
 
     [Test]
     [ExpectedException (typeof (ArgumentTypeException))]
     public void Initialization_NonGenericTypeDefinition ()
     {
-      new DefaultQueryProvider (typeof (TestQueryable<int>), _executorStub, _parserStub);
+      new DefaultQueryProvider (typeof (TestQueryable<int>), _parserStub, _executorStub);
     }
 
     [Test]
     [ExpectedException (typeof (ArgumentTypeException))]
     public void Initialization_TooManyGenericArguments ()
     {
-      new DefaultQueryProvider (typeof (QueryableWithTooManyArguments<,>), _executorStub, _parserStub);
+      new DefaultQueryProvider (typeof (QueryableWithTooManyArguments<,>), _parserStub, _executorStub);
     }
 
     [Test]
     [ExpectedException (typeof (ArgumentTypeException))]
     public void Initialization_NonQueryable ()
     {
-      new DefaultQueryProvider (typeof (List<int>), _executorStub, _parserStub);
+      new DefaultQueryProvider (typeof (List<int>), _parserStub, _executorStub);
     }
 
     [Test]
     public void CreateQueryable ()
     {
-      var provider = new DefaultQueryProvider (typeof (TestQueryable<>), _executorStub, _parserStub);
+      var provider = new DefaultQueryProvider (typeof (TestQueryable<>), _parserStub, _executorStub);
       var expression = Expression.Constant (new[] {0});
 
       var queryable = provider.CreateQuery<int> (expression);

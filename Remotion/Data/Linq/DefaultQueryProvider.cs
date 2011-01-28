@@ -36,14 +36,14 @@ namespace Remotion.Data.Linq
     /// Initializes a new instance of <see cref="DefaultQueryProvider"/> using a custom <see cref="IQueryParser"/>.
     /// </summary>
     /// <param name="queryableType">
-    /// A type implementing <see cref="IQueryable{T}"/>. This type is used to construct the chain of query operators. Must be a generic type
-    /// definition.
+    ///   A type implementing <see cref="IQueryable{T}"/>. This type is used to construct the chain of query operators. Must be a generic type
+    ///   definition.
     /// </param>
-    /// <param name="executor">The <see cref="IQueryExecutor"/> used to execute queries against a specific query backend.</param>
     /// <param name="queryParser">The <see cref="IQueryParser"/> used to parse queries. Specify an instance of 
-    /// <see cref="Parsing.Structure.QueryParser"/> for default behavior. See also <see cref="QueryParser.CreateDefault"/>.</param>
-    public DefaultQueryProvider (Type queryableType, IQueryExecutor executor, IQueryParser queryParser)
-      : base (ArgumentUtility.CheckNotNull ("executor", executor), ArgumentUtility.CheckNotNull ("queryParser", queryParser))
+    ///   <see cref="Parsing.Structure.QueryParser"/> for default behavior. See also <see cref="QueryParser.CreateDefault"/>.</param>
+    /// <param name="executor">The <see cref="IQueryExecutor"/> used to execute queries against a specific query backend.</param>
+    public DefaultQueryProvider (Type queryableType, IQueryParser queryParser, IQueryExecutor executor)
+      : base (ArgumentUtility.CheckNotNull ("queryParser", queryParser), ArgumentUtility.CheckNotNull ("executor", executor))
     {
       ArgumentUtility.CheckNotNull ("queryableType", queryableType);
       CheckQueryableType (queryableType);

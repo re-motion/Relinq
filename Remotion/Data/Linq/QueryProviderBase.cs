@@ -33,25 +33,34 @@ namespace Remotion.Data.Linq
     private static readonly MethodInfo s_genericCreateQueryMethod =
         typeof (QueryProviderBase).GetMethods().Where (m => m.Name == "CreateQuery" && m.IsGenericMethod).Single();
 
-    private readonly IQueryExecutor _executor;
     private readonly IQueryParser _queryParser;
+    private readonly IQueryExecutor _executor;
 
     /// <summary>
     /// Initializes a new instance of <see cref="QueryProviderBase"/> using a custom <see cref="IQueryParser"/>. Use this
     /// constructor to customize how queries are parsed.
     /// </summary>
-    /// <param name="executor">The <see cref="IQueryExecutor"/> used to execute queries against a specific query backend.</param>
     /// <param name="queryParser">The <see cref="IQueryParser"/> used to parse queries. Specify an instance of <see cref="Parsing.Structure.QueryParser"/>
-    /// for default behavior.</param>
-    protected QueryProviderBase (IQueryExecutor executor, IQueryParser queryParser)
+    ///   for default behavior.</param>
+    /// <param name="executor">The <see cref="IQueryExecutor"/> used to execute queries against a specific query backend.</param>
+    protected QueryProviderBase (IQueryParser queryParser, IQueryExecutor executor)
     {
-      ArgumentUtility.CheckNotNull ("executor", executor);
       ArgumentUtility.CheckNotNull ("queryParser", queryParser);
+      ArgumentUtility.CheckNotNull ("executor", executor);
 
-      _executor = executor;
       _queryParser = queryParser;
+      _executor = executor;
     }
-    
+
+    /// <summary>
+    /// Gets the <see cref="QueryParser"/> used by this <see cref="QueryProviderBase"/> to parse LINQ queries.
+    /// </summary>
+    /// <value>The query parser.</value>
+    public IQueryParser QueryParser
+    {
+      get { return _queryParser; }
+    }
+
     /// <summary>
     /// Gets or sets the implementation of <see cref="IQueryExecutor"/> used to execute queries created via <see cref="CreateQuery{T}"/>.
     /// </summary>
@@ -65,15 +74,6 @@ namespace Remotion.Data.Linq
     public ExpressionTreeParser ExpressionTreeParser
     {
       get { throw new NotImplementedException(); }
-    }
-
-    /// <summary>
-    /// Gets the <see cref="QueryParser"/> used by this <see cref="QueryProviderBase"/> to parse LINQ queries.
-    /// </summary>
-    /// <value>The query parser.</value>
-    public IQueryParser QueryParser
-    {
-      get { return _queryParser; }
     }
 
     /// <summary>
