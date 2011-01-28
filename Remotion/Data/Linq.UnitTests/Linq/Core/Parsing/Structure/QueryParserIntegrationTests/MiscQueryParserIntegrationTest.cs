@@ -19,6 +19,7 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using System.Linq;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain;
 
@@ -74,7 +75,6 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
     }
 
     [Test]
-    [Ignore ("TODO 3577")]
     public void NullableHasValue_ReplacedByNullCheck ()
     {
       var query = DetailQuerySource.Where (k => k.LastCleaningDay.HasValue);
@@ -82,11 +82,16 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
 
       var predicate = ((WhereClause) queryModel.BodyClauses[0]).Predicate;
-      CheckResolvedExpression<Kitchen, bool> (predicate, queryModel.MainFromClause, k => k.LastCleaningDay != null);
+      var expectedExpression =
+          Expression.NotEqual (
+              Expression.MakeMemberAccess (
+                  new QuerySourceReferenceExpression (queryModel.MainFromClause), 
+                  typeof (Kitchen).GetProperty ("LastCleaningDay")),
+              Expression.Constant (null, typeof (DateTime?)));
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, predicate);
     }
 
     [Test]
-    [Ignore ("TODO 3577")]
     public void NullableValue_ReplacedByCast ()
     {
 // ReSharper disable PossibleInvalidOperationException

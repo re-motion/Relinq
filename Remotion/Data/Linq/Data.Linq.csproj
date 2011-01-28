@@ -135,6 +135,7 @@
     <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\ExpressionTransformerRegistry.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\IExpressionTranformationProvider.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\InvocationOfLambdaExpressionTransformer.cs" />
+    <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\NullableValueTransformer.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\VBCompareStringExpressionTransformer.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\VBInformationIsNothingExpressionTransformer.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\EvaluatableTreeFindingExpressionTreeVisitor.cs" />

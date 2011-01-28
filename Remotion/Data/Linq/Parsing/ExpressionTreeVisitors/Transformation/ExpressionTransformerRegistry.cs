@@ -50,6 +50,7 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation
       registry.Register (new VBCompareStringExpressionTransformer());
       registry.Register (new VBInformationIsNothingExpressionTransformer());
       registry.Register (new InvocationOfLambdaExpressionTransformer());
+      registry.Register (new NullableValueTransformer());
       return registry;
     }
 

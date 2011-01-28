@@ -42,7 +42,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.
     {
       var registry = ExpressionTransformerRegistry.CreateDefault();
 
-      Assert.That (registry.RegisteredTransformerCount, Is.EqualTo (8));
+      Assert.That (registry.RegisteredTransformerCount, Is.EqualTo (9));
       
       var equalTranformations = registry.GetAllTransformations (ExpressionType.Equal);
       var equalTransformers = GetTransformersFromTransformations (equalTranformations);
@@ -55,6 +55,10 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.
       var invocationTranformations = registry.GetAllTransformations (ExpressionType.Invoke);
       var invocationTransformers = GetTransformersFromTransformations (invocationTranformations);
       Assert.That (invocationTransformers, List.Some.TypeOf (typeof (InvocationOfLambdaExpressionTransformer)));
+
+      var nullableTranformations = registry.GetAllTransformations (ExpressionType.MemberAccess);
+      var nullableTransformers = GetTransformersFromTransformations (nullableTranformations);
+      Assert.That (nullableTransformers, List.Some.TypeOf (typeof (NullableValueTransformer)));
     }
 
     [Test]
