@@ -58,11 +58,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.
       var memberTransformers = GetTransformersFromTransformations (memberTranformations);
       Assert.That (memberTransformers, List.Some.TypeOf (typeof (NullableValueTransformer)));
 
-      var constantTranformations = registry.GetAllTransformations (ExpressionType.Constant);
-      var constantTransformers = GetTransformersFromTransformations (constantTranformations);
-      Assert.That (constantTransformers, List.Some.TypeOf (typeof (QueryableConstantExpressionTransformer)));
-
-      Assert.That (registry.RegisteredTransformerCount, Is.EqualTo (10));
+      Assert.That (registry.RegisteredTransformerCount, Is.EqualTo (9));
     }
 
     [Test]

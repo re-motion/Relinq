@@ -149,7 +149,6 @@
     <Compile Include="Linq\Core\Parsing\ExpressionTreeVisitors\Transformation\ExpressionTransformerRegistryTest.cs" />
     <Compile Include="Linq\Core\Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\InvocationOfLambdaExpressionTransformerTest.cs" />
     <Compile Include="Linq\Core\Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\NullableValueTransformerTest.cs" />
-    <Compile Include="Linq\Core\Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\QueryableConstantExpressionTransformerTest.cs" />
     <Compile Include="Linq\Core\Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\VBCompareStringExpressionTransformerTest.cs" />
     <Compile Include="Linq\Core\Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\VBInformationIsNothingExpressionTransformerTest.cs" />
     <Compile Include="Linq\Core\Parsing\ExpressionTreeVisitors\TransformingExpressionTreeVisitorTest.cs" />

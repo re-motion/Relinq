@@ -15,6 +15,7 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation;
 using Remotion.Data.Linq.Utilities;
@@ -71,7 +72,13 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
       if (expression == null)
         return null;
       else if (expression.NodeType != ExpressionType.Lambda && _partialEvaluationInfo.IsEvaluatableExpression (expression))
-        return EvaluateSubtree (expression);
+      {
+        var evaluatedExpression = EvaluateSubtree (expression);
+        if (evaluatedExpression != expression)
+          return EvaluateIndependentSubtrees (evaluatedExpression);
+        else
+          return evaluatedExpression;
+      }
       else
         return base.VisitExpression (expression);
     }
@@ -83,17 +90,24 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
     /// </summary>
     /// <param name="subtree">The subtree to be evaluated.</param>
     /// <returns>A <see cref="ConstantExpression"/> holding the result of the evaluation.</returns>
-    protected ConstantExpression EvaluateSubtree (Expression subtree)
+    protected Expression EvaluateSubtree (Expression subtree)
     {
       ArgumentUtility.CheckNotNull ("subtree", subtree);
 
       if (subtree.NodeType == ExpressionType.Constant)
-        return (ConstantExpression) subtree;
+      {
+        var constantExpression = (ConstantExpression) subtree;
+        var valueAsIQueryable = constantExpression.Value as IQueryable;
+        if (valueAsIQueryable != null && valueAsIQueryable.Expression != constantExpression)
+          return valueAsIQueryable.Expression;
+
+        return constantExpression;
+      }
       else
       {
         Expression<Func<object>> lambdaWithoutParameters = Expression.Lambda<Func<object>> (Expression.Convert (subtree, typeof (object)));
 
-        object value = lambdaWithoutParameters.Compile ()();
+        object value = lambdaWithoutParameters.Compile () ();
         return Expression.Constant (value, subtree.Type);
       }
     }

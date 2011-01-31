@@ -43,7 +43,6 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation
     /// <item><see cref="VBInformationIsNothingExpressionTransformer"/></item>
     /// <item><see cref="InvocationOfLambdaExpressionTransformer"/></item>
     /// <item><see cref="NullableValueTransformer"/></item>
-    /// <item><see cref="QueryableConstantExpressionTransformer"/></item>
     /// </list>
     /// </remarks>
     public static ExpressionTransformerRegistry CreateDefault ()
@@ -53,7 +52,6 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation
       registry.Register (new VBInformationIsNothingExpressionTransformer ());
       registry.Register (new InvocationOfLambdaExpressionTransformer ());
       registry.Register (new NullableValueTransformer ());
-      registry.Register (new QueryableConstantExpressionTransformer());
       return registry;
     }
 

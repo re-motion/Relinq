@@ -226,6 +226,57 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
     }
 
     [Test]
+    public void EvaluateOrdinaryConstant_Ignored ()
+    {
+      var expression = Expression.Constant (0);
+
+      var result = PartialEvaluatingExpressionTreeVisitor.EvaluateIndependentSubtrees (expression);
+
+      Assert.That (result, Is.SameAs (expression));
+    }
+
+    [Test]
+    public void EvalueQueryableConstant_Inlined ()
+    {
+      var query = ExpressionHelper.CreateCookQueryable ();
+      var expression = Expression.Constant (query);
+
+      var result = PartialEvaluatingExpressionTreeVisitor.EvaluateIndependentSubtrees (expression);
+
+      Assert.That (result, Is.SameAs (query.Expression));
+    }
+
+    [Test]
+    public void EvaluateQueryableConstant_InlinedPart_IsPartiallyEvaluated ()
+    {
+      var querySource = ExpressionHelper.CreateCookQueryable ();
+      var query = querySource.Where (c => "1" == 1.ToString ());
+      var expression = Expression.Constant (query);
+
+      var result = PartialEvaluatingExpressionTreeVisitor.EvaluateIndependentSubtrees (expression);
+
+      var expectedExpression = querySource.Where (c => true).Expression;
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, result);
+    }
+
+    [Test]
+    public void EvaluateQueryableConstant_InClosureMember ()
+    {
+      var innerQuery = from c in ExpressionHelper.CreateCookQueryable() where c != null select c;
+      var outerExpression = ExpressionHelper.MakeExpression (() => innerQuery);
+      Assert.That (outerExpression.NodeType, Is.EqualTo (ExpressionType.MemberAccess));
+
+      // outerExpression: <DisplayClass>.innerQuery
+      // innerQuery.Expression: constantCookQueryable.Where (c => c != null)
+
+      // transformation 1: constantInnerQuery
+      // transformation 2: constantCookQueryable.Where (c => c != null)
+
+      var result = PartialEvaluatingExpressionTreeVisitor.EvaluateIndependentSubtrees (outerExpression);
+      Assert.That (result, Is.SameAs (innerQuery.Expression));
+    }
+
+    [Test]
     public void VisitUnknownNonExtensionExpression_Ignored ()
     {
       var expression = new UnknownExpression (typeof (object));

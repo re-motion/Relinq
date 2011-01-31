@@ -116,7 +116,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
       var result = _expressionTreeParser.ParseTree (constantExpression);
 
       Assert.That (result, Is.InstanceOfType (typeof (MainSourceExpressionNode)));
-      Assert.That (((MainSourceExpressionNode) result).ParsedExpression, Is.SameAs (constantExpression));
+      Assert.That (((MainSourceExpressionNode) result).ParsedExpression, Is.SameAs (_intSource.Expression));
       Assert.That (((MainSourceExpressionNode) result).QuerySourceElementType, Is.SameAs (typeof (int)));
       Assert.That (((MainSourceExpressionNode) result).AssociatedIdentifier, Is.EqualTo ("<generated>_0"));
     }
