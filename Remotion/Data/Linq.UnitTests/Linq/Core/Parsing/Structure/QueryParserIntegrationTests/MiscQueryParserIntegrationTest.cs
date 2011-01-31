@@ -109,10 +109,9 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
     }
 
     [Test]
-    [Ignore ("TODO 3474")]
-    public void ConstantReferenceToOtherQuery_IsInlined ()
+    public void ConstantReferenceToOtherQuery_IsInlined_AndPartiallyEvaluated ()
     {
-      var query1 = from c in QuerySource select c;
+      var query1 = from c in QuerySource where 1.ToString() == "1" select c;
       var query2 = from k in DetailQuerySource where query1.Contains (k.Cook) select k;
 
       // Handle this as if someone had written: from k in DetailQuerySource where (from c in QuerySource select c).Contains (k.Cook) select k;
@@ -126,6 +125,10 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
 
       CheckConstantQuerySource (subQuery.MainFromClause.FromExpression, QuerySource);
       CheckResolvedExpression<Cook, Cook> (subQuery.SelectClause.Selector, subQuery.MainFromClause, c => c);
+      
+      var subQueryWhereClause = (WhereClause) subQuery.BodyClauses[0];
+      var expectedSubQueryWherePredicate = Expression.Constant (true);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedSubQueryWherePredicate, subQueryWhereClause.Predicate);
 
       Assert.That (subQuery.ResultOperators.Count, Is.EqualTo (1));
       Assert.That (subQuery.ResultOperators[0], Is.TypeOf (typeof (ContainsResultOperator)));

@@ -42,8 +42,6 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.
     {
       var registry = ExpressionTransformerRegistry.CreateDefault();
 
-      Assert.That (registry.RegisteredTransformerCount, Is.EqualTo (9));
-      
       var equalTranformations = registry.GetAllTransformations (ExpressionType.Equal);
       var equalTransformers = GetTransformersFromTransformations (equalTranformations);
       Assert.That (equalTransformers, List.Some.TypeOf (typeof (VBCompareStringExpressionTransformer)));
@@ -56,9 +54,15 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.
       var invocationTransformers = GetTransformersFromTransformations (invocationTranformations);
       Assert.That (invocationTransformers, List.Some.TypeOf (typeof (InvocationOfLambdaExpressionTransformer)));
 
-      var nullableTranformations = registry.GetAllTransformations (ExpressionType.MemberAccess);
-      var nullableTransformers = GetTransformersFromTransformations (nullableTranformations);
-      Assert.That (nullableTransformers, List.Some.TypeOf (typeof (NullableValueTransformer)));
+      var memberTranformations = registry.GetAllTransformations (ExpressionType.MemberAccess);
+      var memberTransformers = GetTransformersFromTransformations (memberTranformations);
+      Assert.That (memberTransformers, List.Some.TypeOf (typeof (NullableValueTransformer)));
+
+      var constantTranformations = registry.GetAllTransformations (ExpressionType.Constant);
+      var constantTransformers = GetTransformersFromTransformations (constantTranformations);
+      Assert.That (constantTransformers, List.Some.TypeOf (typeof (QueryableConstantExpressionTransformer)));
+
+      Assert.That (registry.RegisteredTransformerCount, Is.EqualTo (10));
     }
 
     [Test]
