@@ -15,13 +15,16 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations
 {
+  /// <summary>
+  /// Replaces calls to <see cref="Nullable{T}.Value"/> and <see cref="Nullable{T}.HasValue"/> with casts and null checks. This allows LINQ providers
+  /// to treat nullables like reference types.
+  /// </summary>
   public class NullableValueTransformer : IExpressionTransformer<MemberExpression>
   {
     public ExpressionType[] SupportedExpressionTypes
@@ -33,19 +36,17 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation.Prede
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      if ((expression.Member.Name == "Value" || expression.Member.Name == "HasValue") 
-        && (expression.Member.DeclaringType.IsGenericType && expression.Member.DeclaringType.GetGenericTypeDefinition() == typeof (Nullable<>)))
-      {
-        if (expression.Member.Name == "HasValue")
-          return Expression.NotEqual (expression.Expression, Expression.Constant (null, expression.Member.DeclaringType));
-
-        if (expression.Member.Name == "Value")
-          return Expression.Convert (expression.Expression, expression.Type);
-
-        throw new NotImplementedException();
-      }
-
+      if (expression.Member.Name == "Value" && IsDeclaredByNullableType(expression.Member))
+        return Expression.Convert (expression.Expression, expression.Type);
+      else if (expression.Member.Name == "HasValue" && IsDeclaredByNullableType (expression.Member))
+        return Expression.NotEqual (expression.Expression, Expression.Constant (null, expression.Member.DeclaringType));
+      else
       return expression;
+    }
+
+    private bool IsDeclaredByNullableType (MemberInfo memberInfo)
+    {
+      return memberInfo.DeclaringType.IsGenericType && memberInfo.DeclaringType.GetGenericTypeDefinition() == typeof (Nullable<>);
     }
   }
 }

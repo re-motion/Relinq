@@ -42,6 +42,7 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation
     /// <item><see cref="VBCompareStringExpressionTransformer"/></item>
     /// <item><see cref="VBInformationIsNothingExpressionTransformer"/></item>
     /// <item><see cref="InvocationOfLambdaExpressionTransformer"/></item>
+    /// <item><see cref="NullableValueTransformer"/></item>
     /// </list>
     /// </remarks>
     public static ExpressionTransformerRegistry CreateDefault ()
