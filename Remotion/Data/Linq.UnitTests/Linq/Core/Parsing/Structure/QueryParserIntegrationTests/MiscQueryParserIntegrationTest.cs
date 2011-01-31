@@ -18,8 +18,10 @@ using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using System.Linq;
+using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
+using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Parsing;
 using Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain;
 
@@ -104,6 +106,31 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
 // ReSharper disable PossibleInvalidOperationException
       CheckResolvedExpression<Kitchen, DateTime> (selector, queryModel.MainFromClause, k => (DateTime) k.LastCleaningDay);
 // ReSharper restore PossibleInvalidOperationException
+    }
+
+    [Test]
+    [Ignore ("TODO 3474")]
+    public void ConstantReferenceToOtherQuery_IsInlined ()
+    {
+      var query1 = from c in QuerySource select c;
+      var query2 = from k in DetailQuerySource where query1.Contains (k.Cook) select k;
+
+      // Handle this as if someone had written: from k in DetailQuerySource where (from c in QuerySource select c).Contains (k.Cook) select k;
+
+      var queryModel = QueryParser.GetParsedQuery (query2.Expression);
+
+      var whereClause = (WhereClause) queryModel.BodyClauses[0];
+      Assert.That (whereClause.Predicate, Is.TypeOf (typeof (SubQueryExpression)));
+
+      var subQuery = ((SubQueryExpression) whereClause.Predicate).QueryModel;
+
+      CheckConstantQuerySource (subQuery.MainFromClause.FromExpression, QuerySource);
+      CheckResolvedExpression<Cook, Cook> (subQuery.SelectClause.Selector, subQuery.MainFromClause, c => c);
+
+      Assert.That (subQuery.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (subQuery.ResultOperators[0], Is.TypeOf (typeof (ContainsResultOperator)));
+
+      CheckResolvedExpression<Kitchen, Cook> (((ContainsResultOperator) subQuery.ResultOperators[0]).Item, queryModel.MainFromClause, k => k.Cook);
     }
   }
 }
