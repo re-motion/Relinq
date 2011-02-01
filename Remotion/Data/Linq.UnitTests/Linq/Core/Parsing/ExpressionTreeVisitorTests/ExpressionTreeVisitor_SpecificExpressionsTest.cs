@@ -350,6 +350,31 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTe
     }
 
     [Test]
+    public void VisitNewExpression_ChangedArguments_WithMembers_AndConversionRequired ()
+    {
+      NewExpression expression = Expression.New (
+          typeof (KeyValuePair<object, object>).GetConstructor (new[] { typeof (object), typeof (object) }),
+          new Expression[] { Expression.Constant (null), Expression.Constant (null) },
+          typeof (KeyValuePair<object, object>).GetProperty ("Key"), typeof (KeyValuePair<object, object>).GetProperty ("Value"));
+
+      var newArguments = new List<Expression> { Expression.Constant ("testKey"), Expression.Constant ("testValue") }.AsReadOnly ();
+      Expect.Call (VisitorMock.VisitAndConvert (expression.Arguments, "VisitNewExpression")).Return (newArguments);
+      
+      var result = (NewExpression) InvokeAndCheckVisitExpression ("VisitNewExpression", expression);
+
+      Assert.That (result, Is.Not.SameAs (expression));
+      Assert.That (result.NodeType, Is.EqualTo (ExpressionType.New));
+      
+      Assert.That (result.Arguments.Count, Is.EqualTo (2));
+      var expectedArgument1 = Expression.Convert (newArguments[0], typeof (object));
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedArgument1, result.Arguments[0]);
+      var expectedArgument2 = Expression.Convert (newArguments[1], typeof (object));
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedArgument2, result.Arguments[1]);
+      
+      Assert.That (result.Members, Is.SameAs (expression.Members));
+    }
+
+    [Test]
     public void VisitNewArrayExpression_Unchanged ()
     {
       var expression = (NewArrayExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.NewArrayInit);

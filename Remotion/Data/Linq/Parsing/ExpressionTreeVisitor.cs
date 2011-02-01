@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq.Expressions;
+using System.Reflection;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Utilities;
 
@@ -31,6 +32,32 @@ namespace Remotion.Data.Linq.Parsing
   /// </summary>
   public abstract class ExpressionTreeVisitor
   {
+    /// <summary>
+    /// Adjusts the arguments for a <see cref="NewExpression"/> so that they match the given members.
+    /// </summary>
+    /// <param name="arguments">The arguments to adjust.</param>
+    /// <param name="members">The members defining the required argument types.</param>
+    /// <returns>
+    /// A sequence of expressions that are equivalent to <paramref name="arguments"/>, but converted to the associated member's
+    /// result type if needed.
+    /// </returns>
+    public static IEnumerable<Expression> AdjustArgumentsForNewExpression (IList<Expression> arguments, IList<MemberInfo> members)
+    {
+      ArgumentUtility.CheckNotNull ("arguments", arguments);
+      ArgumentUtility.CheckNotNull ("members", members);
+
+      Trace.Assert (arguments.Count == members.Count);
+
+      for (int i = 0; i < arguments.Count; ++i)
+      {
+        var memberReturnType = ReflectionUtility.GetMemberReturnType (members[i]);
+        if (arguments[i].Type == memberReturnType)
+          yield return arguments[i];
+        else
+          yield return Expression.Convert (arguments[i], memberReturnType);
+      }
+    }
+
     public virtual Expression VisitExpression (Expression expression)
     {
       if (expression == null)
@@ -300,7 +327,7 @@ namespace Remotion.Data.Linq.Parsing
         // ReSharper restore HeuristicUnreachableCode
         // ReSharper restore ConditionIsAlwaysTrueOrFalse
         else
-          return Expression.New (expression.Constructor, newArguments, expression.Members);
+          return Expression.New (expression.Constructor, AdjustArgumentsForNewExpression (newArguments, expression.Members), expression.Members);
       }
       return expression;
     }
