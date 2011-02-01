@@ -40,7 +40,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
     public static ExpressionTreeParser CreateDefault ()
     {
       return new ExpressionTreeParser (
-          MethodInfoBasedNodeTypeRegistry.CreateDefault (), 
+          CompoundNodeTypeProvider.CreateDefault (), 
           CreateDefaultProcessingSteps (ExpressionTransformerRegistry.CreateDefault()));
     }
 

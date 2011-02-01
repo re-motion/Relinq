@@ -42,9 +42,9 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     [Test]
     public void Initialization_Default ()
     {
-      Assert.That (
-          ((MethodInfoBasedNodeTypeRegistry) _queryParser.NodeTypeProvider).RegisteredMethodInfoCount, 
-          Is.EqualTo (MethodInfoBasedNodeTypeRegistry.CreateDefault().RegisteredMethodInfoCount));
+      Assert.That (_queryParser.NodeTypeProvider, Is.TypeOf (typeof (CompoundNodeTypeProvider)));
+      Assert.That (((CompoundNodeTypeProvider) _queryParser.NodeTypeProvider).InnerProviders[0], Is.TypeOf (typeof (MethodInfoBasedNodeTypeRegistry)));
+      Assert.That (((CompoundNodeTypeProvider) _queryParser.NodeTypeProvider).InnerProviders[1], Is.TypeOf (typeof (MethodNameBasedNodeTypeRegistry)));
 
       Assert.That (_queryParser.ProcessingSteps.Count, Is.EqualTo (2));
       Assert.That (_queryParser.ProcessingSteps[0], Is.TypeOf (typeof (PartialEvaluationStep)));

@@ -60,9 +60,9 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     public void CreateDefault ()
     {
       var parser = ExpressionTreeParser.CreateDefault();
-      Assert.That (
-          ((MethodInfoBasedNodeTypeRegistry) parser.NodeTypeProvider).RegisteredMethodInfoCount,
-          Is.EqualTo (MethodInfoBasedNodeTypeRegistry.CreateDefault ().RegisteredMethodInfoCount));
+      Assert.That (parser.NodeTypeProvider, Is.TypeOf (typeof (CompoundNodeTypeProvider)));
+      Assert.That (((CompoundNodeTypeProvider) parser.NodeTypeProvider).InnerProviders[0], Is.TypeOf (typeof (MethodInfoBasedNodeTypeRegistry)));
+      Assert.That (((CompoundNodeTypeProvider) parser.NodeTypeProvider).InnerProviders[1], Is.TypeOf (typeof (MethodNameBasedNodeTypeRegistry)));
 
       Assert.That (parser.ProcessingSteps.Count, Is.EqualTo (2));
       Assert.That (parser.ProcessingSteps[0], Is.TypeOf (typeof (PartialEvaluationStep)));
