@@ -54,27 +54,27 @@ namespace Remotion.Data.Linq.Parsing.Structure
     }
 
     private readonly UniqueIdentifierGenerator _identifierGenerator = new UniqueIdentifierGenerator ();
-    private readonly MethodCallExpressionNodeTypeRegistry _nodeTypeRegistry;
+    private readonly MethodCallExpressionNodeTypeRegistry _nodeTypeProvider;
     private readonly IExpressionTreeProcessingStep[] _processingSteps;
     private readonly MethodCallExpressionParser _methodCallExpressionParser;
 
-    public ExpressionTreeParser (MethodCallExpressionNodeTypeRegistry nodeTypeRegistry, IExpressionTreeProcessingStep[] processingSteps)
+    public ExpressionTreeParser (MethodCallExpressionNodeTypeRegistry nodeTypeProvider, IExpressionTreeProcessingStep[] processingSteps)
     {
-      ArgumentUtility.CheckNotNull ("nodeTypeRegistry", nodeTypeRegistry);
+      ArgumentUtility.CheckNotNull ("nodeTypeProvider", nodeTypeProvider);
       ArgumentUtility.CheckNotNull ("processingSteps", processingSteps);
       
-      _nodeTypeRegistry = nodeTypeRegistry;
+      _nodeTypeProvider = nodeTypeProvider;
       _processingSteps = processingSteps;
-      _methodCallExpressionParser = new MethodCallExpressionParser (_nodeTypeRegistry);
+      _methodCallExpressionParser = new MethodCallExpressionParser (_nodeTypeProvider);
     }
 
     /// <summary>
-    /// Gets the node type registry used to parse <see cref="MethodCallExpression"/> instances in <see cref="ParseTree"/>.
+    /// Gets the node type provider used to parse <see cref="MethodCallExpression"/> instances in <see cref="ParseTree"/>.
     /// </summary>
-    /// <value>The node type registry.</value>
-    public MethodCallExpressionNodeTypeRegistry NodeTypeRegistry
+    /// <value>The node type provider.</value>
+    public IMethodCallExpressionNodeTypeProvider NodeTypeProvider
     {
-      get { return _nodeTypeRegistry; }
+      get { return _nodeTypeProvider; }
     }
 
     /// <summary>
@@ -106,7 +106,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
     /// <summary>
     /// Gets the query operator <see cref="MethodCallExpression"/> represented by <paramref name="expression"/>. If <paramref name="expression"/>
     /// is already a <see cref="MethodCallExpression"/>, that is the assumed query operator. If <paramref name="expression"/> is a 
-    /// <see cref="MemberExpression"/> and the member's getter is registered with <see cref="NodeTypeRegistry"/>, a corresponding 
+    /// <see cref="MemberExpression"/> and the member's getter is registered with <see cref="NodeTypeProvider"/>, a corresponding 
     /// <see cref="MethodCallExpression"/> is constructed and returned. Otherwise, <see langword="null" /> is returned.
     /// </summary>
     /// <param name="expression">The expression to get a query operator expression for.</param>
@@ -126,7 +126,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
           return null;
 
         var getterMethod = propertyInfo.GetGetMethod ();
-        if (getterMethod == null || !_nodeTypeRegistry.IsRegistered (getterMethod))
+        if (getterMethod == null || !_nodeTypeProvider.IsRegistered (getterMethod))
           return null;
 
         return Expression.Call (memberExpression.Expression, getterMethod);
@@ -135,7 +135,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       var unaryExpression = expression as UnaryExpression;
       if (unaryExpression != null)
       {
-        if (unaryExpression.NodeType == ExpressionType.ArrayLength && _nodeTypeRegistry.IsRegistered (s_getArrayLengthMethod))
+        if (unaryExpression.NodeType == ExpressionType.ArrayLength && _nodeTypeProvider.IsRegistered (s_getArrayLengthMethod))
           return Expression.Call (unaryExpression.Operand, s_getArrayLengthMethod);
       }
 
@@ -177,7 +177,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
     private IExpressionNode ParseNonQueryOperatorExpression (Expression expression, string associatedIdentifier)
     {
-      var preprocessedExpression = SubQueryFindingExpressionTreeVisitor.Process (expression, _nodeTypeRegistry);
+      var preprocessedExpression = SubQueryFindingExpressionTreeVisitor.Process (expression, _nodeTypeProvider);
 
       try
       {

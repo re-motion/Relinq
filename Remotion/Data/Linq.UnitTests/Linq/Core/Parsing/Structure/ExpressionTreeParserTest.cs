@@ -61,7 +61,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     {
       var parser = ExpressionTreeParser.CreateDefault();
       Assert.That (
-          parser.NodeTypeRegistry.RegisteredMethodInfoCount,
+          ((MethodCallExpressionNodeTypeRegistry) parser.NodeTypeProvider).RegisteredMethodInfoCount,
           Is.EqualTo (MethodCallExpressionNodeTypeRegistry.CreateDefault ().RegisteredMethodInfoCount));
 
       Assert.That (parser.ProcessingSteps.Count, Is.EqualTo (2));

@@ -67,7 +67,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
     /// <value>The node type registry.</value>
     public IMethodCallExpressionNodeTypeProvider NodeTypeProvider
     {
-      get { return _expressionTreeParser.NodeTypeRegistry; }
+      get { return _expressionTreeParser.NodeTypeProvider; }
     }
 
     /// <summary>
@@ -89,7 +89,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       ArgumentUtility.CheckNotNull ("expressionTreeRoot", expressionTreeRoot);
 
       var node = _expressionTreeParser.ParseTree (expressionTreeRoot);
-      var clauseGenerationContext = new ClauseGenerationContext (_expressionTreeParser.NodeTypeRegistry);
+      var clauseGenerationContext = new ClauseGenerationContext (_expressionTreeParser.NodeTypeProvider);
 
       QueryModel queryModel = ApplyAllNodes (node, clauseGenerationContext);
       return queryModel;
