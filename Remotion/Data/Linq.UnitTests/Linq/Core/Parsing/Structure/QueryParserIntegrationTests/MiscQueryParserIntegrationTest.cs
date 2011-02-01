@@ -18,6 +18,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Reflection;
 using NUnit.Framework;
 using System.Linq;
 using NUnit.Framework.SyntaxHelpers;
@@ -154,28 +155,41 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
 
       var selector = (NewExpression) queryModel.SelectClause.Selector;
       Assert.That (selector.Arguments.Count, Is.EqualTo (3));
+      Assert.That (selector.Members, Is.Not.Null);
       Assert.That (selector.Members.Count, Is.EqualTo (3));
-      Assert.That (selector.Members[0], Is.EqualTo (selector.Type.GetMethod ("get_KVP")));
-      Assert.That (selector.Members[1], Is.EqualTo (selector.Type.GetMethod ("get_DE")));
-      Assert.That (selector.Members[2], Is.EqualTo (selector.Type.GetMethod ("get_Tuple")));
+      CheckMemberInNewExpression (selector.Type, "KVP", selector.Members[0]);
+      CheckMemberInNewExpression (selector.Type, "DE", selector.Members[1]);
+      CheckMemberInNewExpression (selector.Type, "Tuple", selector.Members[2]);
 
       var kvpArgument = (NewExpression) selector.Arguments[0];
       Assert.That (kvpArgument.Arguments.Count, Is.EqualTo (2));
+      Assert.That (kvpArgument.Members, Is.Not.Null);
       Assert.That (kvpArgument.Members.Count, Is.EqualTo (2));
-      Assert.That (kvpArgument.Members[0], Is.EqualTo (typeof (KeyValuePair<string, int>).GetProperty ("Key")));
-      Assert.That (kvpArgument.Members[1], Is.EqualTo (typeof (KeyValuePair<string, int>).GetProperty ("Value")));
+      CheckMemberInNewExpression (typeof(KeyValuePair<string, int>), "Key", kvpArgument.Members[0]);
+      CheckMemberInNewExpression (typeof (KeyValuePair<string, int>), "Value", kvpArgument.Members[1]);
 
       var deArgument = (NewExpression) selector.Arguments[1];
       Assert.That (deArgument.Arguments.Count, Is.EqualTo (2));
+      Assert.That (deArgument.Members, Is.Not.Null);
       Assert.That (deArgument.Members.Count, Is.EqualTo (2));
-      Assert.That (deArgument.Members[0], Is.EqualTo (typeof (DictionaryEntry).GetProperty ("Key")));
-      Assert.That (deArgument.Members[1], Is.EqualTo (typeof (DictionaryEntry).GetProperty ("Value")));
+      CheckMemberInNewExpression (typeof (DictionaryEntry), "Key", deArgument.Members[0]);
+      CheckMemberInNewExpression (typeof (DictionaryEntry), "Value", deArgument.Members[1]);
 
       var tupleArgument = (NewExpression) selector.Arguments[2];
       Assert.That (tupleArgument.Arguments.Count, Is.EqualTo (2));
+      Assert.That (tupleArgument.Members, Is.Not.Null);
       Assert.That (tupleArgument.Members.Count, Is.EqualTo (2));
-      Assert.That (tupleArgument.Members[0], Is.EqualTo (typeof (Tuple<string, int>).GetProperty ("Item1")));
-      Assert.That (tupleArgument.Members[1], Is.EqualTo (typeof (Tuple<string, int>).GetProperty ("Item2")));
+      CheckMemberInNewExpression (typeof (Tuple<string, int>), "Item1", tupleArgument.Members[0]);
+      CheckMemberInNewExpression (typeof (Tuple<string, int>), "item2", tupleArgument.Members[1]);
+    }
+
+    private void CheckMemberInNewExpression (Type expectedDeclaringType, string expectedPropertyName, MemberInfo actualMemberInfo)
+    {
+      var expectedProperty = expectedDeclaringType.GetProperty (expectedPropertyName);
+      if (typeof (object).Assembly.GetName ().Version.Major < 4)
+        Assert.That (actualMemberInfo, Is.EqualTo (expectedProperty.GetGetMethod()));
+      else
+        Assert.That (actualMemberInfo, Is.EqualTo (expectedProperty));
     }
   }
 }
