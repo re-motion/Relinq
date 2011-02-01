@@ -15,9 +15,10 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 #if NET_3_5
-using System;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.TestUtilities
+// Simulate System Tuple types from .NET 4 in .NET 3.5
+
+namespace System
 {
   [Serializable]
   internal struct Tuple<T1, T2, T3> : IEquatable<Tuple<T1, T2, T3>>
