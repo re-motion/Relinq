@@ -89,8 +89,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing
         IList list2 = (IList) value2;
         if (list1 == null || list2 == null)
         {
-          Assert.IsNull (list1, "One of the lists in " + property.Name + " is null.");
-          Assert.IsNull (list2, "One of the lists in " + property.Name + " is null.");
+          Assert.AreEqual (list1, list2, "One of the lists in " + property.Name + " is null.");
         }
         else
         {
