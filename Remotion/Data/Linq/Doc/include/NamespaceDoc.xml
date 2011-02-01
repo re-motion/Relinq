@@ -79,7 +79,7 @@ public static class EagerFetchingExtensionMethods
     <para>
       Then, register those extension methods from within your implementation of <see cref="Remotion.Data.Linq.QueryableBase{T}"/>:
       <code>
-var nodeTypeProvider = NodeTypeRegistry.CreateDefault();
+var nodeTypeProvider = MethodInfoBasedNodeTypeRegistry.CreateDefault();
 
 nodeTypeProvider.Register (new[] { typeof (EagerFetchingExtensionMethods).GetMethod ("FetchOne") }, typeof (FetchOneExpressionNode));
 nodeTypeProvider.Register (new[] { typeof (EagerFetchingExtensionMethods).GetMethod ("FetchMany") }, typeof (FetchManyExpressionNode));

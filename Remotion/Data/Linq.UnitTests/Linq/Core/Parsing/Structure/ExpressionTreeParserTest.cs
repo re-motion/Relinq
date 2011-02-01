@@ -36,22 +36,22 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
   [TestFixture]
   public class ExpressionTreeParserTest
   {
-    private NodeTypeRegistry _nodeTypeRegistry;
+    private MethodInfoBasedNodeTypeRegistry _methodInfoBasedNodeTypeRegistry;
     private ExpressionTreeParser _expressionTreeParser;
     private IQueryable<int> _intSource;
 
     [SetUp]
     public void SetUp ()
     {
-      _nodeTypeRegistry = new NodeTypeRegistry();
+      _methodInfoBasedNodeTypeRegistry = new MethodInfoBasedNodeTypeRegistry();
 
-      _nodeTypeRegistry.Register (WhereExpressionNode.SupportedMethods, typeof (WhereExpressionNode));
-      _nodeTypeRegistry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
-      _nodeTypeRegistry.Register (TakeExpressionNode.SupportedMethods, typeof (TakeExpressionNode));
-      _nodeTypeRegistry.Register (CountExpressionNode.SupportedMethods, typeof (CountExpressionNode));
-      _nodeTypeRegistry.Register (ContainsExpressionNode.SupportedMethods, typeof (ContainsExpressionNode));
+      _methodInfoBasedNodeTypeRegistry.Register (WhereExpressionNode.SupportedMethods, typeof (WhereExpressionNode));
+      _methodInfoBasedNodeTypeRegistry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
+      _methodInfoBasedNodeTypeRegistry.Register (TakeExpressionNode.SupportedMethods, typeof (TakeExpressionNode));
+      _methodInfoBasedNodeTypeRegistry.Register (CountExpressionNode.SupportedMethods, typeof (CountExpressionNode));
+      _methodInfoBasedNodeTypeRegistry.Register (ContainsExpressionNode.SupportedMethods, typeof (ContainsExpressionNode));
 
-      _expressionTreeParser = new ExpressionTreeParser (_nodeTypeRegistry, new IExpressionTreeProcessingStep[] { new PartialEvaluationStep() } );
+      _expressionTreeParser = new ExpressionTreeParser (_methodInfoBasedNodeTypeRegistry, new IExpressionTreeProcessingStep[] { new PartialEvaluationStep() } );
 
       _intSource = new[] { 1, 2, 3 }.AsQueryable ();
     }
@@ -61,8 +61,8 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     {
       var parser = ExpressionTreeParser.CreateDefault();
       Assert.That (
-          ((NodeTypeRegistry) parser.NodeTypeProvider).RegisteredMethodInfoCount,
-          Is.EqualTo (NodeTypeRegistry.CreateDefault ().RegisteredMethodInfoCount));
+          ((MethodInfoBasedNodeTypeRegistry) parser.NodeTypeProvider).RegisteredMethodInfoCount,
+          Is.EqualTo (MethodInfoBasedNodeTypeRegistry.CreateDefault ().RegisteredMethodInfoCount));
 
       Assert.That (parser.ProcessingSteps.Count, Is.EqualTo (2));
       Assert.That (parser.ProcessingSteps[0], Is.TypeOf (typeof (PartialEvaluationStep)));
@@ -203,7 +203,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     public void ParseTree_MethodCallExpression_WithInstanceMethod ()
     {
       var instanceMethod = typeof (NonGenericFakeCollection).GetMethod ("Contains"); // use non-generic class
-      _nodeTypeRegistry.Register (new[] { instanceMethod }, typeof (ContainsExpressionNode));
+      _methodInfoBasedNodeTypeRegistry.Register (new[] { instanceMethod }, typeof (ContainsExpressionNode));
 
       var querySourceExpression = Expression.Parameter (typeof (NonGenericFakeCollection), "querySource");
       var itemExpression = Expression.Constant (null);
@@ -262,7 +262,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     [Test]
     public void ParseTree_MemberExpression_WithProperty ()
     {
-      _nodeTypeRegistry.Register (new[] { typeof (QueryableFakeWithCount<>).GetMethod ("get_Count") }, typeof (CountExpressionNode));
+      _methodInfoBasedNodeTypeRegistry.Register (new[] { typeof (QueryableFakeWithCount<>).GetMethod ("get_Count") }, typeof (CountExpressionNode));
       var querySource = new QueryableFakeWithCount<int> ();
       var expression = ExpressionHelper.MakeExpression (() => querySource.Count);
 
@@ -304,7 +304,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
       stepMock2.Expect (mock => mock.Process (transformedExpression1)).Return (transformedExpression2);
       stepMock2.Replay();
 
-      var parser = new ExpressionTreeParser (_nodeTypeRegistry, new[] { stepMock1, stepMock2 });
+      var parser = new ExpressionTreeParser (_methodInfoBasedNodeTypeRegistry, new[] { stepMock1, stepMock2 });
       
       var result = (WhereExpressionNode) parser.ParseTree (inputExpression);
 
@@ -410,7 +410,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     [Test]
     public void GetQueryOperatorExpression_MemberExpression_NotRegistered ()
     {
-      var expressionTreeParser = new ExpressionTreeParser (new NodeTypeRegistry (), new IExpressionTreeProcessingStep[0]);
+      var expressionTreeParser = new ExpressionTreeParser (new MethodInfoBasedNodeTypeRegistry (), new IExpressionTreeProcessingStep[0]);
       var memberExpression = (MemberExpression) ExpressionHelper.MakeExpression (() => new List<int> ().Count);
       var queryOperatorExpression = expressionTreeParser.GetQueryOperatorExpression (memberExpression);
 
@@ -448,7 +448,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     [Test]
     public void GetQueryOperatorExpression_ArrayLength_NotRegistered ()
     {
-      var expressionTreeParser = new ExpressionTreeParser (new NodeTypeRegistry (), new IExpressionTreeProcessingStep[0]);
+      var expressionTreeParser = new ExpressionTreeParser (new MethodInfoBasedNodeTypeRegistry (), new IExpressionTreeProcessingStep[0]);
       var memberExpression = (UnaryExpression) ExpressionHelper.MakeExpression (() => new int[0].Length);
       var queryOperatorExpression = expressionTreeParser.GetQueryOperatorExpression (memberExpression);
 
@@ -458,7 +458,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     [Test]
     public void GetQueryOperatorExpression_ArrayLongLength ()
     {
-      _nodeTypeRegistry.Register (LongCountExpressionNode.SupportedMethods, typeof (LongCountExpressionNode));
+      _methodInfoBasedNodeTypeRegistry.Register (LongCountExpressionNode.SupportedMethods, typeof (LongCountExpressionNode));
       var memberExpression = (MemberExpression) ExpressionHelper.MakeExpression (() => new int[0].LongLength);
       var queryOperatorExpression = _expressionTreeParser.GetQueryOperatorExpression (memberExpression);
 

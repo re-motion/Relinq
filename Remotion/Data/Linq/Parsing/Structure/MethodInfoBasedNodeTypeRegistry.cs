@@ -29,17 +29,17 @@ namespace Remotion.Data.Linq.Parsing.Structure
   /// types. This is used by <see cref="ExpressionTreeParser"/> when a <see cref="MethodCallExpression"/> is encountered to instantiate the
   /// right <see cref="IExpressionNode"/> for the given method.
   /// </summary>
-  public class NodeTypeRegistry : INodeTypeProvider
+  public class MethodInfoBasedNodeTypeRegistry : INodeTypeProvider
   {
     /// <summary>
-    /// Creates a default <see cref="NodeTypeRegistry"/>, which has all types implementing <see cref="IExpressionNode"/> from the
+    /// Creates a default <see cref="MethodInfoBasedNodeTypeRegistry"/>, which has all types implementing <see cref="IExpressionNode"/> from the
     /// re-linq assembly automatically registered, as long as they offer a public static <c>SupportedMethods</c> field.
     /// </summary>
-    /// <returns>A default <see cref="NodeTypeRegistry"/> with all <see cref="IExpressionNode"/> types with a <c>SupportedMethods</c>
+    /// <returns>A default <see cref="MethodInfoBasedNodeTypeRegistry"/> with all <see cref="IExpressionNode"/> types with a <c>SupportedMethods</c>
     /// field registered.</returns>
-    public static NodeTypeRegistry CreateDefault ()
+    public static MethodInfoBasedNodeTypeRegistry CreateDefault ()
     {
-      var expressionNodeTypes = from t in typeof (NodeTypeRegistry).Assembly.GetTypes()
+      var expressionNodeTypes = from t in typeof (MethodInfoBasedNodeTypeRegistry).Assembly.GetTypes()
                                 where typeof (IExpressionNode).IsAssignableFrom (t)
                                 select t;
 
@@ -51,19 +51,14 @@ namespace Remotion.Data.Linq.Parsing.Structure
                                         Methods = 
                                             supportedMethodsField != null
                                                ? (IEnumerable<MethodInfo>) supportedMethodsField.GetValue (null)
-                                               : Enumerable.Empty<MethodInfo>(),
-                                        MethodNames =
-                                            supportedMethodNamesField != null
-                                                ? ((IEnumerable<string>) supportedMethodNamesField.GetValue (null))
-                                                : Enumerable.Empty<string>()
+                                               : Enumerable.Empty<MethodInfo>()
                                      };
 
-      var registry = new NodeTypeRegistry();
+      var registry = new MethodInfoBasedNodeTypeRegistry();
 
       foreach (var methodsForType in supportedMethodsForTypes)
       {
         registry.Register (methodsForType.Methods, methodsForType.Type);
-        registry.Register (methodsForType.MethodNames, methodsForType.Type);
       }
 
       return registry;
@@ -94,7 +89,6 @@ namespace Remotion.Data.Linq.Parsing.Structure
     }
 
     private readonly Dictionary<MethodInfo, Type> _registeredMethodInfoTypes = new Dictionary<MethodInfo, Type>();
-    private readonly Dictionary<string, Type> _registeredNamedTypes = new Dictionary<string, Type>();
 
     /// <summary>
     /// Returns the count of the registered <see cref="MethodInfo"/>s.
@@ -102,14 +96,6 @@ namespace Remotion.Data.Linq.Parsing.Structure
     public int RegisteredMethodInfoCount
     {
       get { return _registeredMethodInfoTypes.Count; }
-    }
-
-    /// <summary>
-    /// Returns the count of the registered method names.
-    /// </summary>
-    public int RegisteredNamesCount
-    {
-      get { return _registeredNamedTypes.Count; }
     }
 
     /// <summary>
@@ -144,34 +130,19 @@ namespace Remotion.Data.Linq.Parsing.Structure
       }
     }
 
-    /// <summary>
-    /// Registers the specific method names with the givven <paramref name="nodeType"/>. If a nethod has already been registered before, the later
-    /// registrations overwrites the earlier one.
-    /// </summary>
-    /// <param name="methodNames"></param>
-    /// <param name="nodeType"></param>
-    public void Register (IEnumerable<string> methodNames, Type nodeType)
-    {
-      ArgumentUtility.CheckNotNull ("methodNames", methodNames);
-      ArgumentUtility.CheckNotNull ("nodeType", nodeType);
-
-      foreach (var methodName in methodNames)
-        _registeredNamedTypes[methodName] = nodeType;
-    }
-
    /// <summary>
-    /// Determines whether the specified method was registered with this <see cref="NodeTypeRegistry"/>.
+    /// Determines whether the specified method was registered with this <see cref="MethodInfoBasedNodeTypeRegistry"/>.
     /// </summary>
     public bool IsRegistered (MethodInfo method)
     {
       ArgumentUtility.CheckNotNull ("method", method);
 
       var methodDefinition = GetRegisterableMethodDefinition (method);
-      return _registeredMethodInfoTypes.ContainsKey (methodDefinition) || _registeredNamedTypes.ContainsKey(methodDefinition.Name);
+      return _registeredMethodInfoTypes.ContainsKey (methodDefinition);
     }
     
     /// <summary>
-    /// Gets the type of <see cref="IExpressionNode"/> registered with this <see cref="NodeTypeRegistry"/> instance that
+    /// Gets the type of <see cref="IExpressionNode"/> registered with this <see cref="MethodInfoBasedNodeTypeRegistry"/> instance that
     /// matches the given <paramref name="method"/>, throwing a <see cref="KeyNotFoundException"/> if none can be found.
     /// </summary>
     public Type GetNodeType (MethodInfo method)
@@ -182,9 +153,6 @@ namespace Remotion.Data.Linq.Parsing.Structure
       
       Type result;
       if (_registeredMethodInfoTypes.TryGetValue (methodDefinition, out result))
-        return result;
-
-      if (_registeredNamedTypes.TryGetValue (methodDefinition.Name, out result))
         return result;
 
       string message = string.Format (

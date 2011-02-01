@@ -35,7 +35,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateM
     public void SetUp ()
     {
       _node = ExpressionNodeObjectMother.CreateMainSource ();
-      _context = new ClauseGenerationContext (new NodeTypeRegistry ());
+      _context = new ClauseGenerationContext (new MethodInfoBasedNodeTypeRegistry ());
       _clause = ExpressionHelper.CreateMainFromClause_Int ();
     }
 

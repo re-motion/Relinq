@@ -1,20 +1,4 @@
-// This file is part of the re-motion Core Framework (www.re-motion.org)
-// Copyright (C) 2005-2009 rubicon informationstechnologie gmbh, www.rubicon.eu
-// 
-// The re-motion Core Framework is free software; you can redistribute it 
-// and/or modify it under the terms of the GNU Lesser General Public License 
-// as published by the Free Software Foundation; either version 2.1 of the 
-// License, or (at your option) any later version.
-// 
-// re-motion is distributed in the hope that it will be useful, 
-// but WITHOUT ANY WARRANTY; without even the implied warranty of 
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-// GNU Lesser General Public License for more details.
-// 
-// You should have received a copy of the GNU Lesser General Public License
-// along with re-motion; if not, see http://www.gnu.org/licenses.
-// 
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -29,21 +13,21 @@ using Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.TestDomain;
 namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
 {
   [TestFixture]
-  public class NodeTypeRegistryTest
+  public class MethodInfoBasedNodeTypeRegistryTest
   {
-    private NodeTypeRegistry _registry;
+    private MethodInfoBasedNodeTypeRegistry _registry;
 
     [SetUp]
     public void SetUp ()
     {
-      _registry = new NodeTypeRegistry ();
+      _registry = new MethodInfoBasedNodeTypeRegistry ();
     }
 
     [Test]
     public void GetRegisterableMethodDefinition_OrdinaryMethod ()
     {
       var method = typeof (object).GetMethod ("Equals", BindingFlags.Public | BindingFlags.Instance);
-      var registerableMethod = NodeTypeRegistry.GetRegisterableMethodDefinition (method);
+      var registerableMethod = MethodInfoBasedNodeTypeRegistry.GetRegisterableMethodDefinition (method);
 
       Assert.That (registerableMethod, Is.SameAs (method));
     }
@@ -52,7 +36,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     public void GetRegisterableMethodDefinition_GenericMethodDefinition ()
     {
       var method = ReflectionUtility.GetMethod (() => Queryable.Count<object> (null)).GetGenericMethodDefinition();
-      var registerableMethod = NodeTypeRegistry.GetRegisterableMethodDefinition (method);
+      var registerableMethod = MethodInfoBasedNodeTypeRegistry.GetRegisterableMethodDefinition (method);
 
       Assert.That (registerableMethod, Is.SameAs (method));
     }
@@ -61,7 +45,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     public void GetRegisterableMethodDefinition_ClosedGenericMethod ()
     {
       var method = ReflectionUtility.GetMethod (() => Queryable.Count<object> (null));
-      var registerableMethod = NodeTypeRegistry.GetRegisterableMethodDefinition (method);
+      var registerableMethod = MethodInfoBasedNodeTypeRegistry.GetRegisterableMethodDefinition (method);
 
       Assert.That (registerableMethod, Is.SameAs (method.GetGenericMethodDefinition()));
     }
@@ -70,7 +54,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     public void GetRegisterableMethodDefinition_NonGenericMethod_InGenericTypeDefinition ()
     {
       var method = typeof (GenericClass<>).GetMethod ("NonGenericMethod");
-      var registerableMethod = NodeTypeRegistry.GetRegisterableMethodDefinition (method);
+      var registerableMethod = MethodInfoBasedNodeTypeRegistry.GetRegisterableMethodDefinition (method);
 
       Assert.That (registerableMethod, Is.SameAs (method));
     }
@@ -79,7 +63,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     public void GetRegisterableMethodDefinition_NonGenericMethod_InClosedGenericType ()
     {
       var method = typeof (GenericClass<int>).GetMethod ("NonGenericMethod");
-      var registerableMethod = NodeTypeRegistry.GetRegisterableMethodDefinition (method);
+      var registerableMethod = MethodInfoBasedNodeTypeRegistry.GetRegisterableMethodDefinition (method);
 
       Assert.That (registerableMethod, Is.SameAs (typeof (GenericClass<>).GetMethod ("NonGenericMethod")));
     }
@@ -88,7 +72,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     public void GetRegisterableMethodDefinition_ClosedGenericMethod_InClosedGenericType ()
     {
       var method = typeof (GenericClass<int>).GetMethod ("GenericMethod").MakeGenericMethod (typeof (string));
-      var registerableMethod = NodeTypeRegistry.GetRegisterableMethodDefinition (method);
+      var registerableMethod = MethodInfoBasedNodeTypeRegistry.GetRegisterableMethodDefinition (method);
 
       Assert.That (registerableMethod, Is.SameAs (typeof (GenericClass<>).GetMethod ("GenericMethod")));
     }
@@ -120,16 +104,6 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     }
 
     [Test]
-    public void Register_WithNames ()
-    {
-      Assert.That (_registry.RegisteredNamesCount, Is.EqualTo (0));
-
-      _registry.Register (new[] { "Test" }, typeof (SelectExpressionNode));
-
-      Assert.That (_registry.RegisteredNamesCount, Is.EqualTo (1));
-    }
-
-    [Test]
     public void GetNodeType_WithMethodInfo ()
     {
       _registry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
@@ -137,17 +111,6 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
       var type = _registry.GetNodeType (SelectExpressionNode.SupportedMethods[0]);
 
       Assert.That (type, Is.SameAs (typeof (SelectExpressionNode)));
-    }
-
-    [Test]
-    public void GetNodeType_WithNames ()
-    {
-      var methodInfo = typeof (string).GetMethod ("Concat", new[] { typeof (string), typeof (string) });
-      _registry.Register (new[] { "Concat" }, typeof (SelectExpressionNode));
-
-      var result = _registry.GetNodeType (methodInfo);
-
-      Assert.That (result, Is.SameAs (typeof (SelectExpressionNode)));
     }
 
     [Test]
@@ -270,19 +233,10 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     }
 
     [Test]
-    public void IsRegistered_WithNames ()
-    {
-      var methodInfo = typeof (string).GetMethod ("Concat", new[] { typeof (string), typeof (string) });
-      _registry.Register (new[] { "Concat" }, typeof (SelectExpressionNode));
-
-      Assert.That (_registry.IsRegistered (methodInfo), Is.True);
-    }
-
-    [Test]
     public void CreateDefault ()
     {
-      NodeTypeRegistry registry = NodeTypeRegistry.CreateDefault ();
-      registry.Register (new[] { "Resolve" }, typeof (TestExpressionNode));
+      MethodInfoBasedNodeTypeRegistry registry = MethodInfoBasedNodeTypeRegistry.CreateDefault ();
+      registry.Register (TestExpressionNode.SupportedMethods, typeof (TestExpressionNode));
 
       AssertAllMethodsRegistered (registry, typeof (TestExpressionNode));
       AssertAllMethodsRegistered (registry, typeof (CountExpressionNode));
@@ -305,7 +259,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
       AssertAllMethodsRegistered (registry, typeof (GroupByExpressionNode));
     }
 
-    private void AssertAllMethodsRegistered (NodeTypeRegistry registry, Type type)
+    private void AssertAllMethodsRegistered (MethodInfoBasedNodeTypeRegistry registry, Type type)
     {
       var supportedMethodsField = type.GetField ("SupportedMethods");
       if (supportedMethodsField != null)
@@ -327,25 +281,25 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
           Assert.That (registry.GetNodeType (type.GetMethod(methodName)), Is.SameAs (type));
       }
     }
-  }
 
-  internal class TestExpressionNode : ResultOperatorExpressionNodeBase
-  {
-    public static string[] SupportedMethodNames = { "Resolve" };
-
-    public TestExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalPredicate, LambdaExpression optionalSelector)
-        : base(parseInfo, optionalPredicate, optionalSelector)
+    internal class TestExpressionNode : ResultOperatorExpressionNodeBase
     {
-    }
+      public static MethodInfo[] SupportedMethods = new[] { typeof (TestExpressionNode).GetMethod ("Resolve") };
 
-    public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
-    {
-      throw new NotImplementedException();
-    }
+      public TestExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalPredicate, LambdaExpression optionalSelector)
+        : base (parseInfo, optionalPredicate, optionalSelector)
+      {
+      }
 
-    protected override ResultOperatorBase CreateResultOperator (ClauseGenerationContext clauseGenerationContext)
-    {
-      throw new NotImplementedException();
+      public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
+      {
+        throw new NotImplementedException ();
+      }
+
+      protected override ResultOperatorBase CreateResultOperator (ClauseGenerationContext clauseGenerationContext)
+      {
+        throw new NotImplementedException ();
+      }
     }
   }
 }

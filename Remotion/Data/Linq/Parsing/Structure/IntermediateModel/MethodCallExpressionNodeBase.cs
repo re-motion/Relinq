@@ -33,7 +33,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
     /// <summary>
     /// Gets the <see cref="MethodInfo"/> from a given <see cref="LambdaExpression"/> that has to wrap a <see cref="MethodCallExpression"/>.
     /// If the method is a generic method, its open generic method definition is returned.
-    /// This method can be used for registration of the node type with an <see cref="NodeTypeRegistry"/>.
+    /// This method can be used for registration of the node type with an <see cref="MethodInfoBasedNodeTypeRegistry"/>.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="methodCall">The method call.</param>
@@ -43,7 +43,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       ArgumentUtility.CheckNotNull ("methodCall", methodCall);
 
       var method = ReflectionUtility.GetMethod (methodCall);
-      return NodeTypeRegistry.GetRegisterableMethodDefinition (method);
+      return MethodInfoBasedNodeTypeRegistry.GetRegisterableMethodDefinition (method);
     }
 
     protected MethodCallExpressionNodeBase (MethodCallExpressionParseInfo parseInfo)

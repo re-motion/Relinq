@@ -33,22 +33,22 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
   [TestFixture]
   public class MethodCallExpressionParserTest
   {
-    private NodeTypeRegistry _nodeTypeRegistry;
+    private MethodInfoBasedNodeTypeRegistry _methodInfoBasedNodeTypeRegistry;
     private MethodCallExpressionParser _parser;
     private MainSourceExpressionNode _source;
 
     [SetUp]
     public void SetUp ()
     {
-      _nodeTypeRegistry = new NodeTypeRegistry ();
+      _methodInfoBasedNodeTypeRegistry = new MethodInfoBasedNodeTypeRegistry ();
 
-      _nodeTypeRegistry.Register (WhereExpressionNode.SupportedMethods, typeof (WhereExpressionNode));
-      _nodeTypeRegistry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
-      _nodeTypeRegistry.Register (TakeExpressionNode.SupportedMethods, typeof (TakeExpressionNode));
-      _nodeTypeRegistry.Register (CountExpressionNode.SupportedMethods, typeof (CountExpressionNode));
-      _nodeTypeRegistry.Register (JoinExpressionNode.SupportedMethods, typeof (JoinExpressionNode));
+      _methodInfoBasedNodeTypeRegistry.Register (WhereExpressionNode.SupportedMethods, typeof (WhereExpressionNode));
+      _methodInfoBasedNodeTypeRegistry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
+      _methodInfoBasedNodeTypeRegistry.Register (TakeExpressionNode.SupportedMethods, typeof (TakeExpressionNode));
+      _methodInfoBasedNodeTypeRegistry.Register (CountExpressionNode.SupportedMethods, typeof (CountExpressionNode));
+      _methodInfoBasedNodeTypeRegistry.Register (JoinExpressionNode.SupportedMethods, typeof (JoinExpressionNode));
 
-      _parser = new MethodCallExpressionParser (_nodeTypeRegistry);
+      _parser = new MethodCallExpressionParser (_methodInfoBasedNodeTypeRegistry);
 
       _source = ExpressionNodeObjectMother.CreateMainSource();
     }
@@ -184,7 +184,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     [Test]
     public void Parse_WithSubQuery_UsesNodeTypeRegistry ()
     {
-      var emptyNodeTypeRegistry = new NodeTypeRegistry ();
+      var emptyNodeTypeRegistry = new MethodInfoBasedNodeTypeRegistry ();
       emptyNodeTypeRegistry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
       var parser = new MethodCallExpressionParser (emptyNodeTypeRegistry);
 

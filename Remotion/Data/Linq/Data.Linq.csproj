@@ -144,6 +144,7 @@
     <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\VBInformationIsNothingExpressionTransformer.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\EvaluatableTreeFindingExpressionTreeVisitor.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\PartialEvaluationInfo.cs" />
+    <Compile Include="Parsing\Structure\MethodNameBasedNodeTypeRegistry.cs" />
     <Compile Include="Parsing\Structure\ExpressionTreeProcessingSteps\ExpressionTransformationStep.cs" />
     <Compile Include="Parsing\Structure\ExpressionTreeProcessingSteps\PartialEvaluationStep.cs" />
     <Compile Include="Parsing\Structure\IExpressionTreeProcessingStep.cs" />
@@ -200,7 +201,7 @@
     <Compile Include="Clauses\IBodyClause.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\ReplacingExpressionTreeVisitor.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ResultOperatorExpressionNodeBase.cs" />
-    <Compile Include="Parsing\Structure\NodeTypeRegistry.cs" />
+    <Compile Include="Parsing\Structure\MethodInfoBasedNodeTypeRegistry.cs" />
     <Compile Include="Parsing\Structure\ExpressionTreeParser.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\MethodCallExpressionNodeFactory.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\MainSourceExpressionNode.cs" />

@@ -155,6 +155,8 @@
     <Compile Include="Linq\Core\Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\VBCompareStringExpressionTransformerTest.cs" />
     <Compile Include="Linq\Core\Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\VBInformationIsNothingExpressionTransformerTest.cs" />
     <Compile Include="Linq\Core\Parsing\ExpressionTreeVisitors\TransformingExpressionTreeVisitorTest.cs" />
+    <Compile Include="Linq\Core\Parsing\Structure\MethodInfoBasedNodeTypeRegistryTest.cs" />
+    <Compile Include="Linq\Core\Parsing\Structure\MethodNameBasedNodeTypeRegistryTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\ExpressionTreeProcessingSteps\ExpressionTransformationStepTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\ExpressionTreeProcessingSteps\PartialEvaluationStepTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\IntermediateModel\GroupByWithResultSelectorExpressionNodeTest.cs" />
@@ -434,7 +436,6 @@
     <Compile Include="Linq\Core\Parsing\Structure\IntermediateModel\ThenByExpressionNodeTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\IntermediateModel\UnionExpressionNodeTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\IntermediateModel\WhereExpressionNodeTest.cs" />
-    <Compile Include="Linq\Core\Parsing\Structure\NodeTypeRegistryTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\MethodCallExpressionParserTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\QueryParserIntegrationTests\GroupByQueryParserIntegrationTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\QueryParserIntegrationTests\GroupJoinQueryParserIntegrationTest.cs" />

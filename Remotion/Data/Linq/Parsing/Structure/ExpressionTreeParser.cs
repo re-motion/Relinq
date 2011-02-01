@@ -40,7 +40,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
     public static ExpressionTreeParser CreateDefault ()
     {
       return new ExpressionTreeParser (
-          NodeTypeRegistry.CreateDefault (), 
+          MethodInfoBasedNodeTypeRegistry.CreateDefault (), 
           CreateDefaultProcessingSteps (ExpressionTransformerRegistry.CreateDefault()));
     }
 
@@ -88,7 +88,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
     /// <summary>
     /// Parses the given <paramref name="expressionTree"/> into a chain of <see cref="IExpressionNode"/> instances, using 
-    /// <see cref="NodeTypeRegistry"/> to convert expressions to nodes.
+    /// <see cref="MethodInfoBasedNodeTypeRegistry"/> to convert expressions to nodes.
     /// </summary>
     /// <param name="expressionTree">The expression tree to parse.</param>
     /// <returns>A chain of <see cref="IExpressionNode"/> instances representing the <paramref name="expressionTree"/>.</returns>
