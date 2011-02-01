@@ -21,7 +21,6 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using System.Linq;
 
 namespace Remotion.Data.Linq.UnitTests.Linq.Core
 {
@@ -115,31 +114,40 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
     }
 
     [Test]
-    public void GetFieldOrPropertyType_Field ()
+    public void GetMemberReturnType_Field ()
     {
       var memberInfo = typeof (DateTime).GetField ("MinValue");
 
-      var type = ReflectionUtility.GetFieldOrPropertyType (memberInfo);
+      var type = ReflectionUtility.GetMemberReturnType (memberInfo);
       Assert.That (type, Is.SameAs (typeof (DateTime)));
     }
 
     [Test]
-    public void GetFieldOrPropertyType_Property ()
+    public void GetMemberReturnType_Property ()
     {
       var memberInfo = typeof (DateTime).GetProperty ("Now");
 
-      var type = ReflectionUtility.GetFieldOrPropertyType (memberInfo);
+      var type = ReflectionUtility.GetMemberReturnType (memberInfo);
+      Assert.That (type, Is.SameAs (typeof (DateTime)));
+    }
+
+    [Test]
+    public void GetMemberReturnType_Method ()
+    {
+      var memberInfo = typeof (DateTime).GetMethod ("get_Now");
+
+      var type = ReflectionUtility.GetMemberReturnType (memberInfo);
       Assert.That (type, Is.SameAs (typeof (DateTime)));
     }
 
     [Test]
     [ExpectedException (typeof (ArgumentException), ExpectedMessage = 
-        "Argument must be FieldInfo or PropertyInfo.\r\nParameter name: fieldOrProperty")]
-    public void GetFieldOrPropertyType_Other_Throws ()
+        "Argument must be FieldInfo, PropertyInfo, or MethodInfo.\r\nParameter name: member")]
+    public void GetMemberReturnType_Other_Throws ()
     {
-      var memberInfo = typeof (DateTime).GetMethod ("get_Now");
+      var memberInfo = typeof (DateTime);
 
-      ReflectionUtility.GetFieldOrPropertyType (memberInfo);
+      ReflectionUtility.GetMemberReturnType (memberInfo);
     }
   }
 }

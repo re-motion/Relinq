@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq.Utilities;
@@ -78,13 +80,31 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation.Prede
 
       if (CanAddMembers (expression.Type, expression.Arguments))
       {
+        var members = GetMembers (expression.Constructor, expression.Arguments);
         return Expression.New (
             expression.Constructor,
-            expression.Arguments,
-            GetMembers (expression.Constructor, expression.Arguments));
+            AdjustTypes (expression.Arguments, members),
+            members);
       }
 
       return expression;
+    }
+
+    private IEnumerable<Expression> AdjustTypes (ReadOnlyCollection<Expression> arguments, MemberInfo[] members)
+    {
+      // Because the arguments must have exactly the same types as the members (no assignment compatibility), this method is needed
+      // to convert the expressions to the respective member types.
+
+      Trace.Assert (arguments.Count == members.Length);
+      
+      for (int i = 0; i < arguments.Count; ++i)
+      {
+        var memberReturnType = ReflectionUtility.GetMemberReturnType (members[i]);
+        if (arguments[i].Type == memberReturnType)
+          yield return arguments[i];
+        else
+          yield return Expression.Convert (arguments[i], memberReturnType);
+      }
     }
 
     protected MemberInfo GetMemberForNewExpression (Type instantiatedType, string propertyName)

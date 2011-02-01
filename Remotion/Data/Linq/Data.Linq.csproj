@@ -134,6 +134,7 @@
     <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\ExpressionTransformation.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\ExpressionTransformerRegistry.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\IExpressionTranformationProvider.cs" />
+    <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\DictionaryEntryNewExpressionTransformer.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\InvocationOfLambdaExpressionTransformer.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\KeyValuePairNewExpressionTransformer.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\MemberAddingNewExpressionTransformerBase.cs" />
