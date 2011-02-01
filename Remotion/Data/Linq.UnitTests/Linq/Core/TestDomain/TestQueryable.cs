@@ -28,8 +28,8 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain
     {
     }
 
-    public TestQueryable (IQueryExecutor executor)
-        : base (QueryParser.CreateDefault(), executor)
+    public TestQueryable (IQueryParser queryParser, IQueryExecutor executor)
+        : base (queryParser, executor)
     {
     }
 

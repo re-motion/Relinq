@@ -34,7 +34,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
   {
     /// <summary>
     /// Initializes a new instance of the <see cref="QueryParser"/> class, using default parameters for parsing. 
-    /// The <see cref="NodeTypeRegistry"/> used has all relevant methods of the <see cref="Queryable"/> class automatically registered, and the
+    /// The <see cref="NodeTypeProvider"/> used has all relevant methods of the <see cref="Queryable"/> class automatically registered, and the
     /// <see cref="ProcessingSteps"/> comprise partial evaluation, and default expression transformations.
     /// </summary>
     public static QueryParser CreateDefault ()
@@ -62,10 +62,10 @@ namespace Remotion.Data.Linq.Parsing.Structure
     }
 
     /// <summary>
-    /// Gets the node type registry used to parse <see cref="MethodCallExpression"/> instances in <see cref="GetParsedQuery"/>.
+    /// Gets the node type provider used by <see cref="GetParsedQuery"/> to parse <see cref="MethodCallExpression"/> instances.
     /// </summary>
     /// <value>The node type registry.</value>
-    public MethodCallExpressionNodeTypeRegistry NodeTypeRegistry
+    public IMethodCallExpressionNodeTypeProvider NodeTypeProvider
     {
       get { return _expressionTreeParser.NodeTypeRegistry; }
     }

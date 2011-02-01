@@ -40,7 +40,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
     // private TestQueryProvider _queryProvider;
     private TestQueryProvider _queryProvider;
 
-    private TestQueryable<Cook> _queryableWithExecutorMock;
+    private TestQueryable<Cook> _queryableWithDefaultParser;
     private QueryModel _fakeQueryModel;
 
     [SetUp]
@@ -52,7 +52,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
 
       _queryProvider = new TestQueryProvider (_queryParserMock, _executorMock);
     
-      _queryableWithExecutorMock = new TestQueryable<Cook> (_executorMock);
+      _queryableWithDefaultParser = new TestQueryable<Cook> (QueryParser.CreateDefault(), _executorMock);
       _fakeQueryModel = ExpressionHelper.CreateQueryModel_Cook ();
     }
 
@@ -113,7 +113,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
     public void Execute_Generic ()
     {
       var expectedResult = new Cook[0];
-      Expression expression = (from s in _queryableWithExecutorMock select s).Expression;
+      Expression expression = (from s in _queryableWithDefaultParser select s).Expression;
 
       _queryParserMock
           .Expect (mock => mock.GetParsedQuery (expression))
@@ -136,7 +136,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
     public void Execute_NonGeneric ()
     {
       var expectedResult = new Cook[0];
-      Expression expression = (from s in _queryableWithExecutorMock select s).Expression;
+      Expression expression = (from s in _queryableWithDefaultParser select s).Expression;
       
       _queryParserMock
           .Expect (mock => mock.GetParsedQuery (expression))
@@ -158,7 +158,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
     [Test]
     public void Execute_IntegrationWithGenericEnumerable ()
     {
-      var queryable = from s in _queryableWithExecutorMock select s;
+      var queryable = from s in _queryableWithDefaultParser select s;
 
       var expectedResult = new[] { new Cook () };
       _executorMock
@@ -175,7 +175,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
     [Test]
     public void Execute_IntegrationWithNonGenericEnumerable ()
     {
-      var queryable = from s in _queryableWithExecutorMock select s;
+      var queryable = from s in _queryableWithDefaultParser select s;
 
       var expectedResult = new[] { new Cook () };
       _executorMock
@@ -202,7 +202,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
                 .Return (expectedResult);
 
       _executorMock.Replay ();
-      var result = (from s in _queryableWithExecutorMock select s).Single();
+      var result = (from s in _queryableWithDefaultParser select s).Single();
       _executorMock.VerifyAllExpectations ();
 
       Assert.That (result, Is.SameAs(expectedResult));
@@ -216,7 +216,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
                 .Return (7);
 
       _executorMock.Replay ();
-      var result = (from s in _queryableWithExecutorMock select s).Count ();
+      var result = (from s in _queryableWithDefaultParser select s).Count ();
       _executorMock.VerifyAllExpectations();
 
       Assert.That (result, Is.EqualTo (7));

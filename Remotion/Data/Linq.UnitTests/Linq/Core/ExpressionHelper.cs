@@ -25,7 +25,6 @@ using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain;
-using Rhino.Mocks;
 
 namespace Remotion.Data.Linq.UnitTests.Linq.Core
 {
@@ -200,7 +199,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
 
     public static IQueryable<int> CreateIntQueryable ()
     {
-      return new TestQueryable<int> (s_executor);
+      return new TestQueryable<int> (QueryParser.CreateDefault(), s_executor);
     }
 
     public static IQueryable<Cook> CreateCookQueryable()
@@ -215,12 +214,12 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
         
     public static IQueryable<Cook> CreateCookQueryable (IQueryExecutor executor)
     {
-      return new TestQueryable<Cook> (executor);
+      return new TestQueryable<Cook> (QueryParser.CreateDefault (), executor);
     }
 
     public static IQueryable<Chef> CreateChefQueryable (IQueryExecutor executor)
     {
-      return new TestQueryable<Chef> (executor);
+      return new TestQueryable<Chef> (QueryParser.CreateDefault (), executor);
     }
 
     public static IQueryable<Kitchen> CreateKitchenQueryable()
@@ -230,7 +229,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
 
     public static IQueryable<Kitchen> CreateKitchenQueryable (IQueryExecutor executor)
     {
-      return new TestQueryable<Kitchen> (executor);
+      return new TestQueryable<Kitchen> (QueryParser.CreateDefault (), executor);
     }
 
     public static IQueryable<Company> CreateCompanyQueryable ()
@@ -240,7 +239,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
 
     public static IQueryable<Company> CreateCompanyQueryable (IQueryExecutor executor)
     {
-      return new TestQueryable<Company> (executor);
+      return new TestQueryable<Company> (QueryParser.CreateDefault (), executor);
     }
 
     public static  IQueryable<Restaurant> CreateRestaurantQueryable ()
@@ -250,7 +249,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
 
     public static IQueryable<Restaurant> CreateRestaurantQueryable( IQueryExecutor executor)
     {
-      return new TestQueryable<Restaurant> (executor);
+      return new TestQueryable<Restaurant> (QueryParser.CreateDefault (), executor);
     }
 
     public static IQueryExecutor CreateExecutor()

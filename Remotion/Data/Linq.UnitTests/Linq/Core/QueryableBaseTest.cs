@@ -68,37 +68,20 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core
     }
 
     [Test]
-    public void Initialize_WithExecutor ()
+    public void Initialize_WithParserAndExecutor ()
     {
-      var executor = _mockRepository.StrictMock<IQueryExecutor> ();
-      QueryableBase<int> queryable = new TestQueryable<int> (executor);
+      var fakeExecutor = _mockRepository.Stub<IQueryExecutor>();
+      var fakeParser = _mockRepository.Stub<IQueryParser> ();
+      QueryableBase<int> queryable = new TestQueryable<int> (fakeParser, fakeExecutor);
 
       Assert.That (queryable.Expression, Is.Not.Null);
       Assert.That (queryable.Expression.NodeType, Is.EqualTo (ExpressionType.Constant));
       Assert.That (queryable.Provider, Is.InstanceOfType (typeof (DefaultQueryProvider)));
 
       var queryProvider = ((DefaultQueryProvider) queryable.Provider);
-      Assert.That (queryProvider.Executor, Is.SameAs (executor));
+      Assert.That (queryProvider.Executor, Is.SameAs (fakeExecutor));
       Assert.That (queryProvider.QueryableType, Is.SameAs (typeof (TestQueryable<>)));
-      Assert.That (queryProvider.QueryParser, Is.TypeOf(typeof (QueryParser)));
-      
-      var queryParser = (QueryParser) queryProvider.QueryParser;
-      Assert.That (
-          queryParser.NodeTypeRegistry.RegisteredMethodInfoCount,
-          Is.EqualTo (MethodCallExpressionNodeTypeRegistry.CreateDefault ().RegisteredMethodInfoCount));
-
-      Assert.That (queryParser.ProcessingSteps.Count, Is.EqualTo (2));
-      Assert.That (queryParser.ProcessingSteps[0], Is.TypeOf (typeof (PartialEvaluationStep)));
-      Assert.That (queryParser.ProcessingSteps[1], Is.TypeOf (typeof (ExpressionTransformationStep)));
-      Assert.That (
-          ((ExpressionTransformationStep) queryParser.ProcessingSteps[1]).Provider,
-          Is.TypeOf (typeof (ExpressionTransformerRegistry)));
-
-      var expressionTransformerRegistry =
-          ((ExpressionTransformerRegistry) ((ExpressionTransformationStep) queryParser.ProcessingSteps[1]).Provider);
-      Assert.That (
-          expressionTransformerRegistry.RegisteredTransformerCount,
-          Is.EqualTo (ExpressionTransformerRegistry.CreateDefault ().RegisteredTransformerCount));
+      Assert.That (queryProvider.QueryParser, Is.SameAs (fakeParser));
     }
 
     [Test]

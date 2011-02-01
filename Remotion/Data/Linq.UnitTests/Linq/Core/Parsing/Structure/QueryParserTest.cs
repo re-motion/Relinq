@@ -43,7 +43,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     public void Initialization_Default ()
     {
       Assert.That (
-          _queryParser.NodeTypeRegistry.RegisteredMethodInfoCount, 
+          ((MethodCallExpressionNodeTypeRegistry) _queryParser.NodeTypeProvider).RegisteredMethodInfoCount, 
           Is.EqualTo (MethodCallExpressionNodeTypeRegistry.CreateDefault().RegisteredMethodInfoCount));
 
       Assert.That (_queryParser.ProcessingSteps.Count, Is.EqualTo (2));

@@ -29,7 +29,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
   /// types. This is used by <see cref="ExpressionTreeParser"/> when a <see cref="MethodCallExpression"/> is encountered to instantiate the
   /// right <see cref="IExpressionNode"/> for the given method.
   /// </summary>
-  public class MethodCallExpressionNodeTypeRegistry
+  public class MethodCallExpressionNodeTypeRegistry : IMethodCallExpressionNodeTypeProvider
   {
     /// <summary>
     /// Creates a default <see cref="MethodCallExpressionNodeTypeRegistry"/>, which has all types implementing <see cref="IExpressionNode"/> from the
