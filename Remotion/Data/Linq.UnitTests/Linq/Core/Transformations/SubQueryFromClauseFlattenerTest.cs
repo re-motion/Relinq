@@ -60,7 +60,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Transformations
                        select sector.SubKitchen)
                   from s2 in s1.Assistants
                   where sd.Name == "Maths"
-                  select new Tuple<Cook, Kitchen> (s1, sd);
+                  select new NonTransformedTuple<Cook, Kitchen> (s1, sd);
       _queryModel = ExpressionHelper.ParseQuery (query);
 
       _mainFromClause = _queryModel.MainFromClause;
@@ -127,10 +127,10 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Transformations
           ExpressionHelper.Resolve<Restaurant, bool> (_additionalFromClause1, sector => sector.SubKitchen.Name == "Maths");
       ExpressionTreeComparer.CheckAreEqualTrees (expectedPredicate, _whereClause.Predicate);
 
-      var expectedSelector = ExpressionHelper.Resolve<Cook, Restaurant, Tuple<Cook, Kitchen>> (
+      var expectedSelector = ExpressionHelper.Resolve<Cook, Restaurant, NonTransformedTuple<Cook, Kitchen>> (
           _mainFromClause,
           _additionalFromClause1,
-          (s1, sector) => new Tuple<Cook, Kitchen> (s1, sector.SubKitchen));
+          (s1, sector) => new NonTransformedTuple<Cook, Kitchen> (s1, sector.SubKitchen));
       ExpressionTreeComparer.CheckAreEqualTrees (expectedSelector, _selectClause.Selector);
     }
 
@@ -195,8 +195,8 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Transformations
                   from s3 in
                     (from a in s1.Assistants
                      from b in sd.Cook.Assistants
-                     select new Tuple<Cook, Cook> (a, b))
-                  select new Tuple<Cook, Kitchen, Cook, Cook> (s1, sd, s3.Item1, s3.Item2);
+                     select new NonTransformedTuple<Cook, Cook> (a, b))
+                  select new NonTransformedTuple<Cook, Kitchen, Cook> (s1, sd, s3.Item1);
 
       var queryModel = ExpressionHelper.ParseQuery (query);
       var mainFromSubQuery = from sd in _detailSource
@@ -215,11 +215,10 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Transformations
                           where sector.SubKitchen.Name == "Maths"
                           from a in sd.Cook.Assistants
                           from b in sector.SubKitchen.Cook.Assistants
-                          select new Tuple<Cook, Kitchen, Cook, Cook> (
+                          select new NonTransformedTuple<Cook, Kitchen, Cook> (
                               sd.Cook, 
                               sector.SubKitchen, 
-                              new Tuple<Cook, Cook> (a, b).Item1, 
-                              new Tuple<Cook, Cook> (a, b).Item2);
+                              new NonTransformedTuple<Cook, Cook> (a, b).Item1);
 
       var expectedQueryModel = ExpressionHelper.ParseQuery (expectedQuery);
       Assert.That (expectedQueryModel.ToString(), Is.EqualTo (queryModel.ToString()));

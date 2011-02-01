@@ -94,17 +94,40 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.
           new Expression[] { Expression.Constant ("test"), Expression.Constant (0), Expression.Constant (true) },
           new MemberInfo[]
           {
-              typeof (Tuple<string, int, bool>).GetMethod ("get_Item1"), 
+              typeof (Tuple<string, int, bool>).GetMethod ("get_Item1"),
               typeof (Tuple<string, int, bool>).GetMethod ("get_Item2"),
               typeof (Tuple<string, int, bool>).GetMethod ("get_Item3")
           });
       ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression35, result35);
 
       var expectedExpression40 = Expression.New (
-          typeof (Tuple<string, int, bool>).GetConstructor (new[] { typeof (string), typeof (int), typeof(bool) }),
-          new Expression[] { Expression.Constant ("test"), Expression.Constant (0), Expression.Constant(true) },
-          new MemberInfo[] { typeof (Tuple<string, int, bool>).GetProperty ("Item1"), typeof (Tuple<string, int, bool>).GetProperty ("Item2"), typeof (Tuple<string, int, bool>).GetProperty ("Item3")  });
+          typeof (Tuple<string, int, bool>).GetConstructor (new[] { typeof (string), typeof (int), typeof (bool) }),
+          new Expression[] { Expression.Constant ("test"), Expression.Constant (0), Expression.Constant (true) },
+          new MemberInfo[]
+          {
+              typeof (Tuple<string, int, bool>).GetProperty ("Item1"), 
+              typeof (Tuple<string, int, bool>).GetProperty ("Item2"),
+              typeof (Tuple<string, int, bool>).GetProperty ("Item3")
+          });
       ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression40, result40);
+    }
+
+    [Test]
+    public void Transform_Tuple_ValueCtor_WithMembers_IsIgnored ()
+    {
+      var expression = Expression.New (
+          typeof (Tuple<string, int, bool>).GetConstructor (new[] { typeof (string), typeof (int), typeof (bool) }),
+          new Expression[] { Expression.Constant ("test"), Expression.Constant (0), Expression.Constant (true) },
+          new MemberInfo[]
+          {
+              typeof (Tuple<string, int, bool>).GetProperty ("Item1"), 
+              typeof (Tuple<string, int, bool>).GetProperty ("Item2"),
+              typeof (Tuple<string, int, bool>).GetProperty ("Item3")
+          });
+
+      var result = _transformer35.Transform (expression);
+
+      Assert.That (result, Is.SameAs (expression));
     }
   }
 }

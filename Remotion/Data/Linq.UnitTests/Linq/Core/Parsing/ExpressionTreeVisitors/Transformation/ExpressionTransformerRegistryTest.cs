@@ -58,7 +58,17 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.
       var memberTransformers = GetTransformersFromTransformations (memberTranformations);
       Assert.That (memberTransformers, List.Some.TypeOf (typeof (NullableValueTransformer)));
 
-      Assert.That (registry.RegisteredTransformerCount, Is.EqualTo (9));
+      var newTranformations = registry.GetAllTransformations (ExpressionType.New);
+      var newTransformers = GetTransformersFromTransformations (newTranformations);
+      Assert.That (newTransformers, List.Some.TypeOf (typeof (KeyValuePairNewExpressionTransformer)));
+      Assert.That (newTransformers, List.Some.TypeOf (typeof (DictionaryEntryNewExpressionTransformer)));
+      Assert.That (newTransformers, List.Some.TypeOf (typeof (TupleNewExpressionTransformer)));
+
+      var memberAddingTransformers = newTransformers.OfType<MemberAddingNewExpressionTransformerBase>().ToArray();
+      Assert.That (memberAddingTransformers.Length, Is.EqualTo (3));
+      Assert.That (memberAddingTransformers.All(t => t.FrameworkVersion == typeof (object).Assembly.GetName().Version), Is.True);
+
+      Assert.That (registry.RegisteredTransformerCount, Is.EqualTo (12));
     }
 
     [Test]

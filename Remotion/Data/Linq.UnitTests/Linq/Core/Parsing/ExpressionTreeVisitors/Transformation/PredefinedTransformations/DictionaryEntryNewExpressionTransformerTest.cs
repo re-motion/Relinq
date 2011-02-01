@@ -87,5 +87,18 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.
           new MemberInfo[] { typeof (DictionaryEntry).GetProperty ("Key"), typeof (DictionaryEntry).GetProperty ("Value") });
       ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression40, result40);
     }
+
+    [Test]
+    public void Transform_DictionaryEntry_ValueCtor_WithMembers_IsIgnored ()
+    {
+      var expression = Expression.New (
+          typeof (DictionaryEntry).GetConstructor (new[] { typeof (object), typeof (object) }),
+          new Expression[] { Expression.Convert (Expression.Constant ("test"), typeof (object)), Expression.Convert (Expression.Constant ("v"), typeof (object)) },
+          new MemberInfo[] { typeof (DictionaryEntry).GetMethod ("get_Key"), typeof (DictionaryEntry).GetMethod ("get_Value") });
+
+      var result = _transformer35.Transform (expression);
+
+      Assert.That (result, Is.SameAs (expression));
+    }
   }
 }

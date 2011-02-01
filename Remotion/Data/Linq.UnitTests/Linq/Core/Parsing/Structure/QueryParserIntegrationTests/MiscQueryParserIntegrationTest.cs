@@ -140,7 +140,6 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
     }
 
     [Test]
-    [Ignore ("TODO 3631")]
     public void KeyValuePair_And_TupleCtors_GetMemberInfo ()
     {
       var query = from c in QuerySource 
@@ -180,13 +179,13 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
       Assert.That (tupleArgument.Members, Is.Not.Null);
       Assert.That (tupleArgument.Members.Count, Is.EqualTo (2));
       CheckMemberInNewExpression (typeof (Tuple<string, int>), "Item1", tupleArgument.Members[0]);
-      CheckMemberInNewExpression (typeof (Tuple<string, int>), "item2", tupleArgument.Members[1]);
+      CheckMemberInNewExpression (typeof (Tuple<string, int>), "Item2", tupleArgument.Members[1]);
     }
 
     private void CheckMemberInNewExpression (Type expectedDeclaringType, string expectedPropertyName, MemberInfo actualMemberInfo)
     {
       var expectedProperty = expectedDeclaringType.GetProperty (expectedPropertyName);
-      if (typeof (object).Assembly.GetName ().Version.Major < 4)
+      if (Environment.Version.Major < 4)
         Assert.That (actualMemberInfo, Is.EqualTo (expectedProperty.GetGetMethod()));
       else
         Assert.That (actualMemberInfo, Is.EqualTo (expectedProperty));

@@ -19,11 +19,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain;
+using Remotion.Data.Linq.UnitTests.Linq.Core.TestUtilities;
+using Is = NUnit.Framework.SyntaxHelpers.Is;
+using Text = NUnit.Framework.SyntaxHelpers.Text;
 
 namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegrationTests
 {
@@ -75,10 +77,10 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
     [Test]
     public void GroupBy_WithResultSelector_AfterElementSelector ()
     {
-      var query = QuerySource.GroupBy (s => s.IsStarredCook, s => s.ID, (key, group) => new KeyValuePair<bool, IEnumerable<int>> (key, group));
+      var query = QuerySource.GroupBy (s => s.IsStarredCook, s => s.ID, (key, group) => new NonTransformedTuple<bool, IEnumerable<int>> (key, group));
 
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
-      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<KeyValuePair<bool, IEnumerable<int>>>)));
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<NonTransformedTuple<bool, IEnumerable<int>>>)));
 
       var outerMainFromClause = queryModel.MainFromClause;
       Assert.That (outerMainFromClause.FromExpression, Is.InstanceOfType (typeof (SubQueryExpression)));
@@ -90,10 +92,10 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
 
       var outerSelectClause = queryModel.SelectClause;
 
-      CheckResolvedExpression<IGrouping<bool, int>, KeyValuePair<bool, IEnumerable<int>>> (
+      CheckResolvedExpression<IGrouping<bool, int>, NonTransformedTuple<bool, IEnumerable<int>>> (
           outerSelectClause.Selector, 
           outerMainFromClause,
-          x => new KeyValuePair<bool, IEnumerable<int>> (x.Key, x));
+          x => new NonTransformedTuple<bool, IEnumerable<int>> (x.Key, x));
 
       var innerQueryModel = ((SubQueryExpression) outerMainFromClause.FromExpression).QueryModel;
       Assert.That (innerQueryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IEnumerable<IGrouping<bool, int>>)));
@@ -120,10 +122,10 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
     [Test]
     public void GroupBy_WithResultSelector_NoElementSelector ()
     {
-      var query = QuerySource.GroupBy (s => s.IsStarredCook, (key, group) => new KeyValuePair<bool, IEnumerable<Cook>> (key, group));
+      var query = QuerySource.GroupBy (s => s.IsStarredCook, (key, group) => new NonTransformedTuple<bool, IEnumerable<Cook>> (key, group));
 
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
-      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<KeyValuePair<bool, IEnumerable<Cook>>>)));
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<NonTransformedTuple<bool, IEnumerable<Cook>>>)));
 
       var outerMainFromClause = queryModel.MainFromClause;
       Assert.That (outerMainFromClause.FromExpression, Is.InstanceOfType (typeof (SubQueryExpression)));
@@ -135,10 +137,10 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
 
       var outerSelectClause = queryModel.SelectClause;
 
-      CheckResolvedExpression<IGrouping<bool, Cook>, KeyValuePair<bool, IEnumerable<Cook>>> (
+      CheckResolvedExpression<IGrouping<bool, Cook>, NonTransformedTuple<bool, IEnumerable<Cook>>> (
           outerSelectClause.Selector,
           outerMainFromClause,
-          x => new KeyValuePair<bool, IEnumerable<Cook>> (x.Key, x));
+          x => new NonTransformedTuple<bool, IEnumerable<Cook>> (x.Key, x));
 
       var innerQueryModel = ((SubQueryExpression) outerMainFromClause.FromExpression).QueryModel;
       Assert.That (innerQueryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IEnumerable<IGrouping<bool, Cook>>)));
@@ -167,8 +169,8 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
     {
       var queryExpression = ExpressionHelper.MakeExpression (
           () => QuerySource
-              .GroupBy (s => s.IsStarredCook, s => s.ID, (key, group) => new KeyValuePair<bool, int> (key, group.GetHashCode()))
-              .All (kvp => kvp.Value > 0));
+              .GroupBy (s => s.IsStarredCook, s => s.ID, (key, group) => new NonTransformedTuple<bool, int> (key, group.GetHashCode()))
+              .All (kvp => kvp.Item2 > 0));
 
       var queryModel = QueryParser.GetParsedQuery (queryExpression);
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (bool)));
@@ -182,10 +184,10 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
 
       var outerSelectClause = queryModel.SelectClause;
 
-      CheckResolvedExpression<IGrouping<bool, int>, KeyValuePair<bool, int>> (
+      CheckResolvedExpression<IGrouping<bool, int>, NonTransformedTuple<bool, int>> (
           outerSelectClause.Selector,
           outerMainFromClause,
-          x => new KeyValuePair<bool, int> (x.Key, x.GetHashCode()));
+          x => new NonTransformedTuple<bool, int> (x.Key, x.GetHashCode()));
 
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
       Assert.That (queryModel.ResultOperators[0], Is.TypeOf (typeof (AllResultOperator)));
@@ -194,7 +196,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
       CheckResolvedExpression<IGrouping<bool, int>, bool> (
           allResultOperator.Predicate, 
           outerMainFromClause, 
-          x => new KeyValuePair<bool, int> (x.Key, x.GetHashCode()).Value > 0);
+          x => new NonTransformedTuple<bool, int> (x.Key, x.GetHashCode()).Item2 > 0);
     }
 
     [Test]

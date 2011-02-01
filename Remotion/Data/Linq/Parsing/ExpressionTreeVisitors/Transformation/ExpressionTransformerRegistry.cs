@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using Remotion.Data.Linq.Collections;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations;
 using Remotion.Data.Linq.Utilities;
@@ -43,6 +44,9 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation
     /// <item><see cref="VBInformationIsNothingExpressionTransformer"/></item>
     /// <item><see cref="InvocationOfLambdaExpressionTransformer"/></item>
     /// <item><see cref="NullableValueTransformer"/></item>
+    /// <item><see cref="KeyValuePairNewExpressionTransformer"/></item>
+    /// <item><see cref="DictionaryEntryNewExpressionTransformer"/></item>
+    /// <item><see cref="TupleNewExpressionTransformer"/></item>
     /// </list>
     /// </remarks>
     public static ExpressionTransformerRegistry CreateDefault ()
@@ -52,6 +56,16 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation
       registry.Register (new VBInformationIsNothingExpressionTransformer ());
       registry.Register (new InvocationOfLambdaExpressionTransformer ());
       registry.Register (new NullableValueTransformer ());
+
+      // typeof (object).Assembly.GetName() will throw an exception in medium trust.
+      // Therefore, scan references to detect the  referenced framework version.
+      var mscorlibReference = Assembly.GetExecutingAssembly().GetReferencedAssemblies().Single (name => name.Name == "mscorlib");
+      var referencedFrameworkVersion = mscorlibReference.Version;
+
+      registry.Register (new KeyValuePairNewExpressionTransformer (referencedFrameworkVersion));
+      registry.Register (new DictionaryEntryNewExpressionTransformer (referencedFrameworkVersion));
+      registry.Register (new TupleNewExpressionTransformer (referencedFrameworkVersion));
+      
       return registry;
     }
 

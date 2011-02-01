@@ -38,11 +38,11 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
       var query = from s in
                       (from sd1 in DetailQuerySource select sd1.Cook).Take (5)
                   from sd in DetailQuerySource
-                  select new Tuple<Cook, Kitchen> ( s, sd );
+                  select new NonTransformedTuple<Cook, Kitchen> ( s, sd );
       var expression = query.Expression;
       var queryModel = QueryParser.GetParsedQuery (expression);
 
-      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Tuple<Cook, Kitchen>>)));
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<NonTransformedTuple<Cook, Kitchen>>)));
 
       var mainFromClause = queryModel.MainFromClause;
       Assert.That (mainFromClause.FromExpression, Is.InstanceOfType (typeof (SubQueryExpression)));
@@ -55,11 +55,11 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
       
       var selectClause = queryModel.SelectClause;
       var additionalFromClause = (AdditionalFromClause) queryModel.BodyClauses[0];
-      CheckResolvedExpression<Cook, Kitchen, Tuple<Cook, Kitchen>> (
+      CheckResolvedExpression<Cook, Kitchen, NonTransformedTuple<Cook, Kitchen>> (
           selectClause.Selector, 
           mainFromClause, 
           additionalFromClause, 
-          (s, sd) => new Tuple<Cook, Kitchen> (s, sd));
+          (s, sd) => new NonTransformedTuple<Cook, Kitchen> (s, sd));
     }
 
     [Test]
