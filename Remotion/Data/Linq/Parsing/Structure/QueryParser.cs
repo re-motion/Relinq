@@ -65,7 +65,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
     /// Gets the node type provider used by <see cref="GetParsedQuery"/> to parse <see cref="MethodCallExpression"/> instances.
     /// </summary>
     /// <value>The node type registry.</value>
-    public IMethodCallExpressionNodeTypeProvider NodeTypeProvider
+    public INodeTypeProvider NodeTypeProvider
     {
       get { return _expressionTreeParser.NodeTypeProvider; }
     }

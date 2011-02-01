@@ -40,7 +40,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
     public static ExpressionTreeParser CreateDefault ()
     {
       return new ExpressionTreeParser (
-          MethodCallExpressionNodeTypeRegistry.CreateDefault (), 
+          NodeTypeRegistry.CreateDefault (), 
           CreateDefaultProcessingSteps (ExpressionTransformerRegistry.CreateDefault()));
     }
 
@@ -54,11 +54,11 @@ namespace Remotion.Data.Linq.Parsing.Structure
     }
 
     private readonly UniqueIdentifierGenerator _identifierGenerator = new UniqueIdentifierGenerator ();
-    private readonly IMethodCallExpressionNodeTypeProvider _nodeTypeProvider;
+    private readonly INodeTypeProvider _nodeTypeProvider;
     private readonly IExpressionTreeProcessingStep[] _processingSteps;
     private readonly MethodCallExpressionParser _methodCallExpressionParser;
 
-    public ExpressionTreeParser (IMethodCallExpressionNodeTypeProvider nodeTypeProvider, IExpressionTreeProcessingStep[] processingSteps)
+    public ExpressionTreeParser (INodeTypeProvider nodeTypeProvider, IExpressionTreeProcessingStep[] processingSteps)
     {
       ArgumentUtility.CheckNotNull ("nodeTypeProvider", nodeTypeProvider);
       ArgumentUtility.CheckNotNull ("processingSteps", processingSteps);
@@ -72,7 +72,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
     /// Gets the node type provider used to parse <see cref="MethodCallExpression"/> instances in <see cref="ParseTree"/>.
     /// </summary>
     /// <value>The node type provider.</value>
-    public IMethodCallExpressionNodeTypeProvider NodeTypeProvider
+    public INodeTypeProvider NodeTypeProvider
     {
       get { return _nodeTypeProvider; }
     }
@@ -88,7 +88,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
     /// <summary>
     /// Parses the given <paramref name="expressionTree"/> into a chain of <see cref="IExpressionNode"/> instances, using 
-    /// <see cref="MethodCallExpressionNodeTypeRegistry"/> to convert expressions to nodes.
+    /// <see cref="NodeTypeRegistry"/> to convert expressions to nodes.
     /// </summary>
     /// <param name="expressionTree">The expression tree to parse.</param>
     /// <returns>A chain of <see cref="IExpressionNode"/> instances representing the <paramref name="expressionTree"/>.</returns>

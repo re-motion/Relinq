@@ -147,7 +147,7 @@
     <Compile Include="Parsing\Structure\ExpressionTreeProcessingSteps\ExpressionTransformationStep.cs" />
     <Compile Include="Parsing\Structure\ExpressionTreeProcessingSteps\PartialEvaluationStep.cs" />
     <Compile Include="Parsing\Structure\IExpressionTreeProcessingStep.cs" />
-    <Compile Include="Parsing\Structure\IMethodCallExpressionNodeTypeProvider.cs" />
+    <Compile Include="Parsing\Structure\INodeTypeProvider.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\AggregateExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\AverageExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ClauseGenerationContext.cs" />
@@ -200,7 +200,7 @@
     <Compile Include="Clauses\IBodyClause.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\ReplacingExpressionTreeVisitor.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ResultOperatorExpressionNodeBase.cs" />
-    <Compile Include="Parsing\Structure\MethodCallExpressionNodeTypeRegistry.cs" />
+    <Compile Include="Parsing\Structure\NodeTypeRegistry.cs" />
     <Compile Include="Parsing\Structure\ExpressionTreeParser.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\MethodCallExpressionNodeFactory.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\MainSourceExpressionNode.cs" />

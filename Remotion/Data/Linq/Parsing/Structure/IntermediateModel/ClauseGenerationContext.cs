@@ -26,10 +26,10 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   public struct ClauseGenerationContext
   {
     private readonly Dictionary<IExpressionNode, object> _lookup;
-    private readonly IMethodCallExpressionNodeTypeProvider _nodeTypeProvider;
+    private readonly INodeTypeProvider _nodeTypeProvider;
 
     public ClauseGenerationContext (
-        IMethodCallExpressionNodeTypeProvider nodeTypeProvider)
+        INodeTypeProvider nodeTypeProvider)
         : this()
     {
       ArgumentUtility.CheckNotNull ("nodeTypeProvider", nodeTypeProvider);
@@ -38,7 +38,7 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
       _nodeTypeProvider = nodeTypeProvider;
     }
 
-    public IMethodCallExpressionNodeTypeProvider NodeTypeProvider
+    public INodeTypeProvider NodeTypeProvider
     {
       get { return _nodeTypeProvider; }
     }

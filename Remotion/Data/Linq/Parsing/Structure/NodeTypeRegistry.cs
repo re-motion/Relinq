@@ -29,17 +29,17 @@ namespace Remotion.Data.Linq.Parsing.Structure
   /// types. This is used by <see cref="ExpressionTreeParser"/> when a <see cref="MethodCallExpression"/> is encountered to instantiate the
   /// right <see cref="IExpressionNode"/> for the given method.
   /// </summary>
-  public class MethodCallExpressionNodeTypeRegistry : IMethodCallExpressionNodeTypeProvider
+  public class NodeTypeRegistry : INodeTypeProvider
   {
     /// <summary>
-    /// Creates a default <see cref="MethodCallExpressionNodeTypeRegistry"/>, which has all types implementing <see cref="IExpressionNode"/> from the
+    /// Creates a default <see cref="NodeTypeRegistry"/>, which has all types implementing <see cref="IExpressionNode"/> from the
     /// re-linq assembly automatically registered, as long as they offer a public static <c>SupportedMethods</c> field.
     /// </summary>
-    /// <returns>A default <see cref="MethodCallExpressionNodeTypeRegistry"/> with all <see cref="IExpressionNode"/> types with a <c>SupportedMethods</c>
+    /// <returns>A default <see cref="NodeTypeRegistry"/> with all <see cref="IExpressionNode"/> types with a <c>SupportedMethods</c>
     /// field registered.</returns>
-    public static MethodCallExpressionNodeTypeRegistry CreateDefault ()
+    public static NodeTypeRegistry CreateDefault ()
     {
-      var expressionNodeTypes = from t in typeof (MethodCallExpressionNodeTypeRegistry).Assembly.GetTypes()
+      var expressionNodeTypes = from t in typeof (NodeTypeRegistry).Assembly.GetTypes()
                                 where typeof (IExpressionNode).IsAssignableFrom (t)
                                 select t;
 
@@ -58,7 +58,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
                                                 : Enumerable.Empty<string>()
                                      };
 
-      var registry = new MethodCallExpressionNodeTypeRegistry();
+      var registry = new NodeTypeRegistry();
 
       foreach (var methodsForType in supportedMethodsForTypes)
       {
@@ -160,7 +160,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
     }
 
    /// <summary>
-    /// Determines whether the specified method was registered with this <see cref="MethodCallExpressionNodeTypeRegistry"/>.
+    /// Determines whether the specified method was registered with this <see cref="NodeTypeRegistry"/>.
     /// </summary>
     public bool IsRegistered (MethodInfo method)
     {
@@ -171,7 +171,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
     }
     
     /// <summary>
-    /// Gets the type of <see cref="IExpressionNode"/> registered with this <see cref="MethodCallExpressionNodeTypeRegistry"/> instance that
+    /// Gets the type of <see cref="IExpressionNode"/> registered with this <see cref="NodeTypeRegistry"/> instance that
     /// matches the given <paramref name="method"/>, throwing a <see cref="KeyNotFoundException"/> if none can be found.
     /// </summary>
     public Type GetNodeType (MethodInfo method)

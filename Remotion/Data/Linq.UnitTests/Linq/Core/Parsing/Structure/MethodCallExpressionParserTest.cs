@@ -33,14 +33,14 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
   [TestFixture]
   public class MethodCallExpressionParserTest
   {
-    private MethodCallExpressionNodeTypeRegistry _nodeTypeRegistry;
+    private NodeTypeRegistry _nodeTypeRegistry;
     private MethodCallExpressionParser _parser;
     private MainSourceExpressionNode _source;
 
     [SetUp]
     public void SetUp ()
     {
-      _nodeTypeRegistry = new MethodCallExpressionNodeTypeRegistry ();
+      _nodeTypeRegistry = new NodeTypeRegistry ();
 
       _nodeTypeRegistry.Register (WhereExpressionNode.SupportedMethods, typeof (WhereExpressionNode));
       _nodeTypeRegistry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
@@ -184,7 +184,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     [Test]
     public void Parse_WithSubQuery_UsesNodeTypeRegistry ()
     {
-      var emptyNodeTypeRegistry = new MethodCallExpressionNodeTypeRegistry ();
+      var emptyNodeTypeRegistry = new NodeTypeRegistry ();
       emptyNodeTypeRegistry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
       var parser = new MethodCallExpressionParser (emptyNodeTypeRegistry);
 

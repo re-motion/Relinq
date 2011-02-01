@@ -36,14 +36,14 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
   [TestFixture]
   public class ExpressionTreeParserTest
   {
-    private MethodCallExpressionNodeTypeRegistry _nodeTypeRegistry;
+    private NodeTypeRegistry _nodeTypeRegistry;
     private ExpressionTreeParser _expressionTreeParser;
     private IQueryable<int> _intSource;
 
     [SetUp]
     public void SetUp ()
     {
-      _nodeTypeRegistry = new MethodCallExpressionNodeTypeRegistry();
+      _nodeTypeRegistry = new NodeTypeRegistry();
 
       _nodeTypeRegistry.Register (WhereExpressionNode.SupportedMethods, typeof (WhereExpressionNode));
       _nodeTypeRegistry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
@@ -61,8 +61,8 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     {
       var parser = ExpressionTreeParser.CreateDefault();
       Assert.That (
-          ((MethodCallExpressionNodeTypeRegistry) parser.NodeTypeProvider).RegisteredMethodInfoCount,
-          Is.EqualTo (MethodCallExpressionNodeTypeRegistry.CreateDefault ().RegisteredMethodInfoCount));
+          ((NodeTypeRegistry) parser.NodeTypeProvider).RegisteredMethodInfoCount,
+          Is.EqualTo (NodeTypeRegistry.CreateDefault ().RegisteredMethodInfoCount));
 
       Assert.That (parser.ProcessingSteps.Count, Is.EqualTo (2));
       Assert.That (parser.ProcessingSteps[0], Is.TypeOf (typeof (PartialEvaluationStep)));
@@ -410,7 +410,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     [Test]
     public void GetQueryOperatorExpression_MemberExpression_NotRegistered ()
     {
-      var expressionTreeParser = new ExpressionTreeParser (new MethodCallExpressionNodeTypeRegistry (), new IExpressionTreeProcessingStep[0]);
+      var expressionTreeParser = new ExpressionTreeParser (new NodeTypeRegistry (), new IExpressionTreeProcessingStep[0]);
       var memberExpression = (MemberExpression) ExpressionHelper.MakeExpression (() => new List<int> ().Count);
       var queryOperatorExpression = expressionTreeParser.GetQueryOperatorExpression (memberExpression);
 
@@ -448,7 +448,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     [Test]
     public void GetQueryOperatorExpression_ArrayLength_NotRegistered ()
     {
-      var expressionTreeParser = new ExpressionTreeParser (new MethodCallExpressionNodeTypeRegistry (), new IExpressionTreeProcessingStep[0]);
+      var expressionTreeParser = new ExpressionTreeParser (new NodeTypeRegistry (), new IExpressionTreeProcessingStep[0]);
       var memberExpression = (UnaryExpression) ExpressionHelper.MakeExpression (() => new int[0].Length);
       var queryOperatorExpression = expressionTreeParser.GetQueryOperatorExpression (memberExpression);
 

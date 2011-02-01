@@ -43,8 +43,8 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     public void Initialization_Default ()
     {
       Assert.That (
-          ((MethodCallExpressionNodeTypeRegistry) _queryParser.NodeTypeProvider).RegisteredMethodInfoCount, 
-          Is.EqualTo (MethodCallExpressionNodeTypeRegistry.CreateDefault().RegisteredMethodInfoCount));
+          ((NodeTypeRegistry) _queryParser.NodeTypeProvider).RegisteredMethodInfoCount, 
+          Is.EqualTo (NodeTypeRegistry.CreateDefault().RegisteredMethodInfoCount));
 
       Assert.That (_queryParser.ProcessingSteps.Count, Is.EqualTo (2));
       Assert.That (_queryParser.ProcessingSteps[0], Is.TypeOf (typeof (PartialEvaluationStep)));
@@ -63,7 +63,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     [Test]
     public void Initialization_InjectExpressionTreeParser ()
     {
-      var expressionTreeParser = new ExpressionTreeParser (new MethodCallExpressionNodeTypeRegistry(), new IExpressionTreeProcessingStep[0]);
+      var expressionTreeParser = new ExpressionTreeParser (new NodeTypeRegistry(), new IExpressionTreeProcessingStep[0]);
       var queryParser = new QueryParser (expressionTreeParser);
 
       Assert.That (queryParser.ExpressionTreeParser, Is.SameAs (expressionTreeParser));

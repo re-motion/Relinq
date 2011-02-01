@@ -34,12 +34,12 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
   [TestFixture]
   public class SubQueryFindingExpressionTreeVisitorTest
   {
-    private MethodCallExpressionNodeTypeRegistry _nodeTypeRegistry;
+    private NodeTypeRegistry _nodeTypeRegistry;
 
     [SetUp]
     public void SetUp ()
     {
-      _nodeTypeRegistry = MethodCallExpressionNodeTypeRegistry.CreateDefault();
+      _nodeTypeRegistry = NodeTypeRegistry.CreateDefault();
     }
 
     [Test]
@@ -89,7 +89,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
       // evaluate the ExpressionHelper.CreateCookQueryable () method
       var inputExpression = PartialEvaluatingExpressionTreeVisitor.EvaluateIndependentSubtrees (surroundingExpression);
 
-      var emptyNodeTypeRegistry = new MethodCallExpressionNodeTypeRegistry();
+      var emptyNodeTypeRegistry = new NodeTypeRegistry();
       emptyNodeTypeRegistry.Register (new[] { ((MethodCallExpression) subQuery).Method }, typeof (SelectExpressionNode));
 
       var newLambdaExpression =

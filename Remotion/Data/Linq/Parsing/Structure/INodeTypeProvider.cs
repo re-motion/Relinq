@@ -11,11 +11,11 @@ namespace Remotion.Data.Linq.Parsing.Structure
   /// type. Implementations are used by <see cref="ExpressionTreeParser"/> when a <see cref="MethodCallExpression"/> is encountered to 
   /// instantiate the right <see cref="IExpressionNode"/> for the given method.
   /// </summary>
-  public interface IMethodCallExpressionNodeTypeProvider
+  public interface INodeTypeProvider
   {
     /// <summary>
     /// Determines whether a node type for the given <see cref="MethodInfo"/> can be returned by this 
-    /// <see cref="IMethodCallExpressionNodeTypeProvider"/>.
+    /// <see cref="INodeTypeProvider"/>.
     /// </summary>
     bool IsRegistered (MethodInfo method);
 

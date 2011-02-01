@@ -31,9 +31,9 @@ namespace Remotion.Data.Linq.Parsing.Structure
   /// </summary>
   public class MethodCallExpressionParser
   {
-    private readonly IMethodCallExpressionNodeTypeProvider _nodeTypeProvider;
+    private readonly INodeTypeProvider _nodeTypeProvider;
 
-    public MethodCallExpressionParser (IMethodCallExpressionNodeTypeProvider nodeTypeProvider)
+    public MethodCallExpressionParser (INodeTypeProvider nodeTypeProvider)
     {
       ArgumentUtility.CheckNotNull ("nodeTypeProvider", nodeTypeProvider);
       _nodeTypeProvider = nodeTypeProvider;

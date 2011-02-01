@@ -434,7 +434,7 @@
     <Compile Include="Linq\Core\Parsing\Structure\IntermediateModel\ThenByExpressionNodeTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\IntermediateModel\UnionExpressionNodeTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\IntermediateModel\WhereExpressionNodeTest.cs" />
-    <Compile Include="Linq\Core\Parsing\Structure\MethodCallExpressionNodeTypeRegistryTest.cs" />
+    <Compile Include="Linq\Core\Parsing\Structure\NodeTypeRegistryTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\MethodCallExpressionParserTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\QueryParserIntegrationTests\GroupByQueryParserIntegrationTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\QueryParserIntegrationTests\GroupJoinQueryParserIntegrationTest.cs" />

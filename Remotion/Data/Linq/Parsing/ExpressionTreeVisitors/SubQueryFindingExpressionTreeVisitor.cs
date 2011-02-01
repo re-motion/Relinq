@@ -27,7 +27,7 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
   /// </summary>
   public class SubQueryFindingExpressionTreeVisitor : ExpressionTreeVisitor
   {
-    public static Expression Process (Expression expressionTree, IMethodCallExpressionNodeTypeProvider nodeTypeProvider)
+    public static Expression Process (Expression expressionTree, INodeTypeProvider nodeTypeProvider)
     {
       ArgumentUtility.CheckNotNull ("expressionTree", expressionTree);
       ArgumentUtility.CheckNotNull ("nodeTypeProvider", nodeTypeProvider);
@@ -36,11 +36,11 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
       return visitor.VisitExpression (expressionTree);
     }
 
-    private readonly IMethodCallExpressionNodeTypeProvider _nodeTypeProvider;
+    private readonly INodeTypeProvider _nodeTypeProvider;
     private readonly ExpressionTreeParser _expressionTreeParser;
     private readonly QueryParser _queryParser;
 
-    private SubQueryFindingExpressionTreeVisitor (IMethodCallExpressionNodeTypeProvider nodeTypeProvider)
+    private SubQueryFindingExpressionTreeVisitor (INodeTypeProvider nodeTypeProvider)
     {
       ArgumentUtility.CheckNotNull ("nodeTypeProvider", nodeTypeProvider);
 

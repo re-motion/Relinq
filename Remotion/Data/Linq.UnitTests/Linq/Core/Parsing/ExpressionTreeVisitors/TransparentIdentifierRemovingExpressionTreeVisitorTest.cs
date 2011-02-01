@@ -315,13 +315,13 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
                   where a.ID > 5
                   select a.ID;
 
-      var nodeTypeRegistry = new MethodCallExpressionNodeTypeRegistry ();
+      var nodeTypeRegistry = new NodeTypeRegistry ();
       nodeTypeRegistry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
       nodeTypeRegistry.Register (SelectManyExpressionNode.SupportedMethods, typeof (SelectManyExpressionNode));
       nodeTypeRegistry.Register (WhereExpressionNode.SupportedMethods, typeof (WhereExpressionNode));
 
       var selectNode = (SelectExpressionNode) new ExpressionTreeParser (nodeTypeRegistry, new IExpressionTreeProcessingStep[0]).ParseTree (query.Expression);
-      var clauseGenerationContext = new ClauseGenerationContext (new MethodCallExpressionNodeTypeRegistry());
+      var clauseGenerationContext = new ClauseGenerationContext (new NodeTypeRegistry());
 
       var selectManyNode = (SelectManyExpressionNode) selectNode.Source.Source;
       var mainSourceExpressionNode = (MainSourceExpressionNode) selectManyNode.Source;

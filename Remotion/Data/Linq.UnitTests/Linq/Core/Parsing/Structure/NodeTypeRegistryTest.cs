@@ -21,7 +21,6 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
@@ -30,21 +29,21 @@ using Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.TestDomain;
 namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
 {
   [TestFixture]
-  public class MethodCallExpressionNodeTypeRegistryTest
+  public class NodeTypeRegistryTest
   {
-    private MethodCallExpressionNodeTypeRegistry _registry;
+    private NodeTypeRegistry _registry;
 
     [SetUp]
     public void SetUp ()
     {
-      _registry = new MethodCallExpressionNodeTypeRegistry ();
+      _registry = new NodeTypeRegistry ();
     }
 
     [Test]
     public void GetRegisterableMethodDefinition_OrdinaryMethod ()
     {
       var method = typeof (object).GetMethod ("Equals", BindingFlags.Public | BindingFlags.Instance);
-      var registerableMethod = MethodCallExpressionNodeTypeRegistry.GetRegisterableMethodDefinition (method);
+      var registerableMethod = NodeTypeRegistry.GetRegisterableMethodDefinition (method);
 
       Assert.That (registerableMethod, Is.SameAs (method));
     }
@@ -53,7 +52,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     public void GetRegisterableMethodDefinition_GenericMethodDefinition ()
     {
       var method = ReflectionUtility.GetMethod (() => Queryable.Count<object> (null)).GetGenericMethodDefinition();
-      var registerableMethod = MethodCallExpressionNodeTypeRegistry.GetRegisterableMethodDefinition (method);
+      var registerableMethod = NodeTypeRegistry.GetRegisterableMethodDefinition (method);
 
       Assert.That (registerableMethod, Is.SameAs (method));
     }
@@ -62,7 +61,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     public void GetRegisterableMethodDefinition_ClosedGenericMethod ()
     {
       var method = ReflectionUtility.GetMethod (() => Queryable.Count<object> (null));
-      var registerableMethod = MethodCallExpressionNodeTypeRegistry.GetRegisterableMethodDefinition (method);
+      var registerableMethod = NodeTypeRegistry.GetRegisterableMethodDefinition (method);
 
       Assert.That (registerableMethod, Is.SameAs (method.GetGenericMethodDefinition()));
     }
@@ -71,7 +70,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     public void GetRegisterableMethodDefinition_NonGenericMethod_InGenericTypeDefinition ()
     {
       var method = typeof (GenericClass<>).GetMethod ("NonGenericMethod");
-      var registerableMethod = MethodCallExpressionNodeTypeRegistry.GetRegisterableMethodDefinition (method);
+      var registerableMethod = NodeTypeRegistry.GetRegisterableMethodDefinition (method);
 
       Assert.That (registerableMethod, Is.SameAs (method));
     }
@@ -80,7 +79,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     public void GetRegisterableMethodDefinition_NonGenericMethod_InClosedGenericType ()
     {
       var method = typeof (GenericClass<int>).GetMethod ("NonGenericMethod");
-      var registerableMethod = MethodCallExpressionNodeTypeRegistry.GetRegisterableMethodDefinition (method);
+      var registerableMethod = NodeTypeRegistry.GetRegisterableMethodDefinition (method);
 
       Assert.That (registerableMethod, Is.SameAs (typeof (GenericClass<>).GetMethod ("NonGenericMethod")));
     }
@@ -89,7 +88,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     public void GetRegisterableMethodDefinition_ClosedGenericMethod_InClosedGenericType ()
     {
       var method = typeof (GenericClass<int>).GetMethod ("GenericMethod").MakeGenericMethod (typeof (string));
-      var registerableMethod = MethodCallExpressionNodeTypeRegistry.GetRegisterableMethodDefinition (method);
+      var registerableMethod = NodeTypeRegistry.GetRegisterableMethodDefinition (method);
 
       Assert.That (registerableMethod, Is.SameAs (typeof (GenericClass<>).GetMethod ("GenericMethod")));
     }
@@ -282,7 +281,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     [Test]
     public void CreateDefault ()
     {
-      MethodCallExpressionNodeTypeRegistry registry = MethodCallExpressionNodeTypeRegistry.CreateDefault ();
+      NodeTypeRegistry registry = NodeTypeRegistry.CreateDefault ();
       registry.Register (new[] { "Resolve" }, typeof (TestExpressionNode));
 
       AssertAllMethodsRegistered (registry, typeof (TestExpressionNode));
@@ -306,7 +305,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
       AssertAllMethodsRegistered (registry, typeof (GroupByExpressionNode));
     }
 
-    private void AssertAllMethodsRegistered (MethodCallExpressionNodeTypeRegistry registry, Type type)
+    private void AssertAllMethodsRegistered (NodeTypeRegistry registry, Type type)
     {
       var supportedMethodsField = type.GetField ("SupportedMethods");
       if (supportedMethodsField != null)
