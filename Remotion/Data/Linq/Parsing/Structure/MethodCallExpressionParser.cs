@@ -31,12 +31,12 @@ namespace Remotion.Data.Linq.Parsing.Structure
   /// </summary>
   public class MethodCallExpressionParser
   {
-    private readonly MethodCallExpressionNodeTypeRegistry _nodeTypeRegistry;
+    private readonly IMethodCallExpressionNodeTypeProvider _nodeTypeProvider;
 
-    public MethodCallExpressionParser (MethodCallExpressionNodeTypeRegistry nodeTypeRegistry)
+    public MethodCallExpressionParser (IMethodCallExpressionNodeTypeProvider nodeTypeProvider)
     {
-      ArgumentUtility.CheckNotNull ("nodeTypeRegistry", nodeTypeRegistry);
-      _nodeTypeRegistry = nodeTypeRegistry;
+      ArgumentUtility.CheckNotNull ("nodeTypeProvider", nodeTypeProvider);
+      _nodeTypeProvider = nodeTypeProvider;
     }
 
     public IExpressionNode Parse (string associatedIdentifier, IExpressionNode source, IEnumerable<Expression> arguments, MethodCallExpression expressionToParse)
@@ -54,7 +54,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
     {
       try
       {
-        return _nodeTypeRegistry.GetNodeType (expressionToParse.Method);
+        return _nodeTypeProvider.GetNodeType (expressionToParse.Method);
       }
       catch (KeyNotFoundException ex)
       {
@@ -72,7 +72,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       // First, convert the argument expressions to their actual values - this unwraps ConstantantExpressions and UnaryExpressions
       var convertedParameters = UnwrapArgumentExpression (argumentExpression);
       // Then, detect subqueries
-      var parametersWithSubQueriesDetected = SubQueryFindingExpressionTreeVisitor.Process (convertedParameters, _nodeTypeRegistry);
+      var parametersWithSubQueriesDetected = SubQueryFindingExpressionTreeVisitor.Process (convertedParameters, _nodeTypeProvider);
 
       return parametersWithSubQueriesDetected;
     }

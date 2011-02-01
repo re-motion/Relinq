@@ -27,32 +27,32 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
   /// </summary>
   public class SubQueryFindingExpressionTreeVisitor : ExpressionTreeVisitor
   {
-    public static Expression Process (Expression expressionTree, MethodCallExpressionNodeTypeRegistry nodeTypeRegistry)
+    public static Expression Process (Expression expressionTree, IMethodCallExpressionNodeTypeProvider nodeTypeProvider)
     {
       ArgumentUtility.CheckNotNull ("expressionTree", expressionTree);
-      ArgumentUtility.CheckNotNull ("nodeTypeRegistry", nodeTypeRegistry);
+      ArgumentUtility.CheckNotNull ("nodeTypeProvider", nodeTypeProvider);
 
-      var visitor = new SubQueryFindingExpressionTreeVisitor (nodeTypeRegistry);
+      var visitor = new SubQueryFindingExpressionTreeVisitor (nodeTypeProvider);
       return visitor.VisitExpression (expressionTree);
     }
 
-    private readonly MethodCallExpressionNodeTypeRegistry _nodeTypeRegistry;
+    private readonly IMethodCallExpressionNodeTypeProvider _nodeTypeProvider;
     private readonly ExpressionTreeParser _expressionTreeParser;
     private readonly QueryParser _queryParser;
 
-    private SubQueryFindingExpressionTreeVisitor (MethodCallExpressionNodeTypeRegistry nodeTypeRegistry)
+    private SubQueryFindingExpressionTreeVisitor (IMethodCallExpressionNodeTypeProvider nodeTypeProvider)
     {
-      ArgumentUtility.CheckNotNull ("nodeTypeRegistry", nodeTypeRegistry);
+      ArgumentUtility.CheckNotNull ("nodeTypeProvider", nodeTypeProvider);
 
-      _nodeTypeRegistry = nodeTypeRegistry;
-      _expressionTreeParser = new ExpressionTreeParser (_nodeTypeRegistry, new IExpressionTreeProcessingStep[0]);
+      _nodeTypeProvider = nodeTypeProvider;
+      _expressionTreeParser = new ExpressionTreeParser (_nodeTypeProvider, new IExpressionTreeProcessingStep[0]);
       _queryParser = new QueryParser (_expressionTreeParser);
     }
 
     public override Expression VisitExpression (Expression expression)
     {
       var potentialQueryOperatorExpression = _expressionTreeParser.GetQueryOperatorExpression (expression);
-      if (potentialQueryOperatorExpression != null && _nodeTypeRegistry.IsRegistered (potentialQueryOperatorExpression.Method))
+      if (potentialQueryOperatorExpression != null && _nodeTypeProvider.IsRegistered (potentialQueryOperatorExpression.Method))
         return CreateSubQueryNode (potentialQueryOperatorExpression);
       else
         return base.VisitExpression (expression);

@@ -54,11 +54,11 @@ namespace Remotion.Data.Linq.Parsing.Structure
     }
 
     private readonly UniqueIdentifierGenerator _identifierGenerator = new UniqueIdentifierGenerator ();
-    private readonly MethodCallExpressionNodeTypeRegistry _nodeTypeProvider;
+    private readonly IMethodCallExpressionNodeTypeProvider _nodeTypeProvider;
     private readonly IExpressionTreeProcessingStep[] _processingSteps;
     private readonly MethodCallExpressionParser _methodCallExpressionParser;
 
-    public ExpressionTreeParser (MethodCallExpressionNodeTypeRegistry nodeTypeProvider, IExpressionTreeProcessingStep[] processingSteps)
+    public ExpressionTreeParser (IMethodCallExpressionNodeTypeProvider nodeTypeProvider, IExpressionTreeProcessingStep[] processingSteps)
     {
       ArgumentUtility.CheckNotNull ("nodeTypeProvider", nodeTypeProvider);
       ArgumentUtility.CheckNotNull ("processingSteps", processingSteps);
