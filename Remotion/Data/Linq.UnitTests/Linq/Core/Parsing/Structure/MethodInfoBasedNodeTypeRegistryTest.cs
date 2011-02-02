@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -256,6 +255,19 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
       AssertAllMethodsRegistered (registry, typeof (TakeExpressionNode));
       AssertAllMethodsRegistered (registry, typeof (CastExpressionNode));
       AssertAllMethodsRegistered (registry, typeof (GroupByExpressionNode));
+    }
+
+    [Test]
+    public void CreateFromTypes ()
+    {
+      MethodInfoBasedNodeTypeRegistry registry = MethodInfoBasedNodeTypeRegistry.CreateFromTypes (
+          new[] { typeof (SelectExpressionNode), typeof (WhereExpressionNode) });
+
+      Assert.That (registry.RegisteredMethodInfoCount, 
+          Is.EqualTo (SelectExpressionNode.SupportedMethods.Length + WhereExpressionNode.SupportedMethods.Length));
+
+      AssertAllMethodsRegistered (registry, typeof (SelectExpressionNode));
+      AssertAllMethodsRegistered (registry, typeof (WhereExpressionNode));
     }
 
     private void AssertAllMethodsRegistered (MethodInfoBasedNodeTypeRegistry registry, Type type)

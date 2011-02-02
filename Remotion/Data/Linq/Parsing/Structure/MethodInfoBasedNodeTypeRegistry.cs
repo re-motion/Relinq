@@ -39,19 +39,32 @@ namespace Remotion.Data.Linq.Parsing.Structure
     /// field registered.</returns>
     public static MethodInfoBasedNodeTypeRegistry CreateDefault ()
     {
-      var expressionNodeTypes = from t in typeof (MethodInfoBasedNodeTypeRegistry).Assembly.GetTypes()
+      var searchedTypes = typeof (MethodInfoBasedNodeTypeRegistry).Assembly.GetTypes();
+      return CreateFromTypes (searchedTypes);
+    }
+
+    /// <summary>
+    /// Creates a <see cref="MethodInfoBasedNodeTypeRegistry"/> and automatically registers all types implementing <see cref="IExpressionNode"/> 
+    /// from a given type sequence that offer a public static <c>SupportedMethods</c> field.
+    /// </summary>
+    /// <returns>A <see cref="MethodInfoBasedNodeTypeRegistry"/> with all <see cref="IExpressionNode"/> types with a <c>SupportedMethods</c>
+    /// field registered.</returns>
+    public static MethodInfoBasedNodeTypeRegistry CreateFromTypes (IEnumerable<Type> searchedTypes)
+    {
+      ArgumentUtility.CheckNotNull ("searchedTypes", searchedTypes);
+
+      var expressionNodeTypes = from t in searchedTypes
                                 where typeof (IExpressionNode).IsAssignableFrom (t)
                                 select t;
 
       var supportedMethodsForTypes = from t in expressionNodeTypes
                                      let supportedMethodsField = t.GetField ("SupportedMethods", BindingFlags.Static | BindingFlags.Public)
-                                     let supportedMethodNamesField = t.GetField ("SupportedMethodNames", BindingFlags.Static | BindingFlags.Public)
                                      select new { 
-                                        Type = t,
-                                        Methods = 
-                                            supportedMethodsField != null
-                                               ? (IEnumerable<MethodInfo>) supportedMethodsField.GetValue (null)
-                                               : Enumerable.Empty<MethodInfo>()
+                                         Type = t,
+                                         Methods = 
+                                         supportedMethodsField != null
+                                             ? (IEnumerable<MethodInfo>) supportedMethodsField.GetValue (null)
+                                             : Enumerable.Empty<MethodInfo>()
                                      };
 
       var registry = new MethodInfoBasedNodeTypeRegistry();
