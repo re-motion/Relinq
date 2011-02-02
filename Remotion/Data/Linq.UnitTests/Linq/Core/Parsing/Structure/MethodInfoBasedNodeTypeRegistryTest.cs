@@ -4,7 +4,6 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.TestDomain;
@@ -231,33 +230,6 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     }
 
     [Test]
-    public void CreateDefault ()
-    {
-      MethodInfoBasedNodeTypeRegistry registry = MethodInfoBasedNodeTypeRegistry.CreateDefault ();
-      registry.Register (TestExpressionNode.SupportedMethods, typeof (TestExpressionNode));
-
-      AssertAllMethodsRegistered (registry, typeof (TestExpressionNode));
-      AssertAllMethodsRegistered (registry, typeof (CountExpressionNode));
-      AssertAllMethodsRegistered (registry, typeof (SelectExpressionNode));
-      AssertAllMethodsRegistered (registry, typeof (WhereExpressionNode));
-      AssertAllMethodsRegistered (registry, typeof (SelectManyExpressionNode));
-      AssertAllMethodsRegistered (registry, typeof (SumExpressionNode));
-      AssertAllMethodsRegistered (registry, typeof (FirstExpressionNode));
-      AssertAllMethodsRegistered (registry, typeof (LastExpressionNode));
-      AssertAllMethodsRegistered (registry, typeof (MinExpressionNode));
-      AssertAllMethodsRegistered (registry, typeof (MaxExpressionNode));
-      AssertAllMethodsRegistered (registry, typeof (OrderByExpressionNode));
-      AssertAllMethodsRegistered (registry, typeof (OrderByDescendingExpressionNode));
-      AssertAllMethodsRegistered (registry, typeof (ThenByExpressionNode));
-      AssertAllMethodsRegistered (registry, typeof (ThenByDescendingExpressionNode));
-      AssertAllMethodsRegistered (registry, typeof (DistinctExpressionNode));
-      AssertAllMethodsRegistered (registry, typeof (SingleExpressionNode));
-      AssertAllMethodsRegistered (registry, typeof (TakeExpressionNode));
-      AssertAllMethodsRegistered (registry, typeof (CastExpressionNode));
-      AssertAllMethodsRegistered (registry, typeof (GroupByExpressionNode));
-    }
-
-    [Test]
     public void CreateFromTypes ()
     {
       MethodInfoBasedNodeTypeRegistry registry = MethodInfoBasedNodeTypeRegistry.CreateFromTypes (
@@ -290,26 +262,6 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
 
         foreach (var methodName in methodNames)
           Assert.That (registry.GetNodeType (type.GetMethod(methodName)), Is.SameAs (type));
-      }
-    }
-
-    internal class TestExpressionNode : ResultOperatorExpressionNodeBase
-    {
-      public static MethodInfo[] SupportedMethods = new[] { typeof (TestExpressionNode).GetMethod ("Resolve") };
-
-      public TestExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalPredicate, LambdaExpression optionalSelector)
-        : base (parseInfo, optionalPredicate, optionalSelector)
-      {
-      }
-
-      public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
-      {
-        throw new NotImplementedException ();
-      }
-
-      protected override ResultOperatorBase CreateResultOperator (ClauseGenerationContext clauseGenerationContext)
-      {
-        throw new NotImplementedException ();
       }
     }
   }

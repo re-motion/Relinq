@@ -39,7 +39,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
     [SetUp]
     public void SetUp ()
     {
-      _methodInfoBasedNodeTypeRegistry = MethodInfoBasedNodeTypeRegistry.CreateDefault();
+      _methodInfoBasedNodeTypeRegistry = MethodInfoBasedNodeTypeRegistry.CreateFromTypes (typeof(SelectExpressionNode).Assembly.GetTypes());
     }
 
     [Test]

@@ -30,9 +30,10 @@ namespace Remotion.Data.Linq.Parsing.Structure
   {
     public static CompoundNodeTypeProvider CreateDefault ()
     {
+      var searchedTypes = typeof (MethodInfoBasedNodeTypeRegistry).Assembly.GetTypes();
       var innerProviders = new INodeTypeProvider[]
                            {
-                               MethodInfoBasedNodeTypeRegistry.CreateDefault(),
+                               MethodInfoBasedNodeTypeRegistry.CreateFromTypes (searchedTypes),
                                MethodNameBasedNodeTypeRegistry.CreateDefault()
                            };
       return new CompoundNodeTypeProvider (innerProviders);

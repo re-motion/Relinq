@@ -32,18 +32,6 @@ namespace Remotion.Data.Linq.Parsing.Structure
   public class MethodInfoBasedNodeTypeRegistry : INodeTypeProvider
   {
     /// <summary>
-    /// Creates a default <see cref="MethodInfoBasedNodeTypeRegistry"/>, which has all types implementing <see cref="IExpressionNode"/> from the
-    /// re-linq assembly automatically registered, as long as they offer a public static <c>SupportedMethods</c> field.
-    /// </summary>
-    /// <returns>A default <see cref="MethodInfoBasedNodeTypeRegistry"/> with all <see cref="IExpressionNode"/> types with a <c>SupportedMethods</c>
-    /// field registered.</returns>
-    public static MethodInfoBasedNodeTypeRegistry CreateDefault ()
-    {
-      var searchedTypes = typeof (MethodInfoBasedNodeTypeRegistry).Assembly.GetTypes();
-      return CreateFromTypes (searchedTypes);
-    }
-
-    /// <summary>
     /// Creates a <see cref="MethodInfoBasedNodeTypeRegistry"/> and automatically registers all types implementing <see cref="IExpressionNode"/> 
     /// from a given type sequence that offer a public static <c>SupportedMethods</c> field.
     /// </summary>
