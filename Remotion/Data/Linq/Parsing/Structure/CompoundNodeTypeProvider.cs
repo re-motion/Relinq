@@ -34,7 +34,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       var innerProviders = new INodeTypeProvider[]
                            {
                                MethodInfoBasedNodeTypeRegistry.CreateFromTypes (searchedTypes),
-                               MethodNameBasedNodeTypeRegistry.CreateDefault()
+                               MethodNameBasedNodeTypeRegistry.CreateFromTypes(searchedTypes)
                            };
       return new CompoundNodeTypeProvider (innerProviders);
     }
