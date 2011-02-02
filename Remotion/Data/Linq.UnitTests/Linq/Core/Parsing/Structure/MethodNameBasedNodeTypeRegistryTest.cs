@@ -37,20 +37,54 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     }
 
     [Test]
-    public void Register_WithNames ()
+    public void Register ()
     {
       Assert.That (_registry.RegisteredNamesCount, Is.EqualTo (0));
 
-      _registry.Register (new[] { "Test" }, typeof (SelectExpressionNode));
+      _registry.Register (new[] { new NameBasedRegistrationInfo ("Test", mi => true) }, typeof (SelectExpressionNode));
 
       Assert.That (_registry.RegisteredNamesCount, Is.EqualTo (1));
     }
 
     [Test]
-    public void GetNodeType_WithNames ()
+    public void GetNodeType_MatchingMethod ()
     {
       var methodInfo = typeof (string).GetMethod ("Concat", new[] { typeof (string), typeof (string) });
-      _registry.Register (new[] { "Concat" }, typeof (SelectExpressionNode));
+      _registry.Register (new[] { new NameBasedRegistrationInfo ("Concat", mi => true) }, typeof (SelectExpressionNode));
+      
+      var result = _registry.GetNodeType (methodInfo);
+
+      Assert.That (result, Is.SameAs (typeof (SelectExpressionNode)));
+    }
+
+    [Test]
+    public void GetNodeType_NonMatchingMethod_NameDoesntMatch ()
+    {
+      var methodInfo = typeof (string).GetMethod ("Concat", new[] { typeof (string), typeof (string) });
+      _registry.Register (new[] { new NameBasedRegistrationInfo ("Select", mi => true) }, typeof (SelectExpressionNode));
+
+      var result = _registry.GetNodeType (methodInfo);
+
+      Assert.That (result, Is.Null);
+    }
+
+    [Test]
+    public void GetNodeType_NonMatchingMethod_FilterReturnsFalse ()
+    {
+      var methodInfo = typeof (string).GetMethod ("Concat", new[] { typeof (string), typeof (string) });
+      _registry.Register (new[] { new NameBasedRegistrationInfo ("Concat", mi => false) }, typeof (SelectExpressionNode));
+
+      var result = _registry.GetNodeType (methodInfo);
+
+      Assert.That (result, Is.Null);
+    }
+
+    [Test]
+    public void GetNodeType_TwoWithSameName_FirstMatches ()
+    {
+      var methodInfo = typeof (string).GetMethod ("Concat", new[] { typeof (string), typeof (string) });
+      _registry.Register (new[] { new NameBasedRegistrationInfo ("Concat", mi => true) }, typeof (SelectExpressionNode));
+      _registry.Register (new[] { new NameBasedRegistrationInfo ("Concat", mi => true) }, typeof (WhereExpressionNode));
 
       var result = _registry.GetNodeType (methodInfo);
 
@@ -58,69 +92,90 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     }
 
     [Test]
-    public void GetNodeType_UnknownMethod ()
+    public void GetNodeType_TwoWithSameName_SecondMatches ()
     {
-      var result = _registry.GetNodeType (SelectExpressionNode.SupportedMethods[0]);
+      var methodInfo = typeof (string).GetMethod ("Concat", new[] { typeof (string), typeof (string) });
+      _registry.Register (new[] { new NameBasedRegistrationInfo ("Concat", mi => false) }, typeof (SelectExpressionNode));
+      _registry.Register (new[] { new NameBasedRegistrationInfo ("Concat", mi => true) }, typeof (WhereExpressionNode));
 
-      Assert.That (result, Is.Null);
+      var result = _registry.GetNodeType (methodInfo);
+
+      Assert.That (result, Is.SameAs (typeof (WhereExpressionNode)));
     }
 
     [Test]
-    public void Register_SameMethodTwice_OverridesPreviousNodeType ()
+    public void IsRegistered_MatchingMethod ()
     {
-      var registry = _registry;
-      registry.Register (new[] { "Where" }, typeof (SelectExpressionNode));
-      registry.Register (new[] { "Where" }, typeof (WhereExpressionNode));
+      var methodInfo = typeof (string).GetMethod ("Concat", new[] { typeof (string), typeof (string) });
+      _registry.Register (new[] { new NameBasedRegistrationInfo ("Concat", mi => true) }, typeof (SelectExpressionNode));
 
-      var type = registry.GetNodeType (WhereExpressionNode.SupportedMethods[0]);
-      Assert.That (type, Is.SameAs (typeof (WhereExpressionNode)));
-    }
+      var result = _registry.IsRegistered (methodInfo);
 
-    [Test]
-    public void IsRegistered_True ()
-    {
-      var registry = _registry;
-      registry.Register (new[] { "Select" }, typeof (SelectExpressionNode));
-
-      var result = registry.IsRegistered (SelectExpressionNode.SupportedMethods[0]);
       Assert.That (result, Is.True);
     }
 
     [Test]
-    public void IsRegistered_False ()
+    public void IsRegistered_NonMatchingMethod_NameDoesntMatch ()
     {
-      var registry = _registry;
-      var result = registry.IsRegistered (SelectExpressionNode.SupportedMethods[0]);
+      var methodInfo = typeof (string).GetMethod ("Concat", new[] { typeof (string), typeof (string) });
+      _registry.Register (new[] { new NameBasedRegistrationInfo ("Select", mi => true) }, typeof (SelectExpressionNode));
+
+      var result = _registry.IsRegistered (methodInfo);
+
       Assert.That (result, Is.False);
     }
 
     [Test]
-    [Ignore ("TODO 3343: Contains should be registered by name")]
-    public void CreateDefault ()
+    public void IsRegistered_NonMatchingMethod_FilterReturnsFalse ()
     {
-      MethodNameBasedNodeTypeRegistry registry = MethodNameBasedNodeTypeRegistry.CreateDefault ();
-      registry.Register (new[] { "Resolve" }, typeof (TestExpressionNode));
+      var methodInfo = typeof (string).GetMethod ("Concat", new[] { typeof (string), typeof (string) });
+      _registry.Register (new[] { new NameBasedRegistrationInfo ("Concat", mi => false) }, typeof (SelectExpressionNode));
 
-      AssertAllMethodsRegistered (registry, typeof (TestExpressionNode));
-      AssertAllMethodsRegistered (registry, typeof (ContainsExpressionNode));
+      var result = _registry.IsRegistered (methodInfo);
+
+      Assert.That (result, Is.False);
     }
 
-    private void AssertAllMethodsRegistered (MethodNameBasedNodeTypeRegistry registry, Type type)
+    [Test]
+    public void IsRegistered_TwoWithSameName_FirstMatches ()
     {
-      var supportedMethodNamesField = type.GetField ("SupportedMethodNames");
-      if (supportedMethodNamesField != null)
-      {
-        var methodNames = (string[]) supportedMethodNamesField.GetValue (null);
-        Assert.That (methodNames.Length, Is.GreaterThan (0));
+      var methodInfo = typeof (string).GetMethod ("Concat", new[] { typeof (string), typeof (string) });
+      _registry.Register (new[] { new NameBasedRegistrationInfo ("Concat", mi => true) }, typeof (SelectExpressionNode));
+      _registry.Register (new[] { new NameBasedRegistrationInfo ("Concat", mi => true) }, typeof (WhereExpressionNode));
 
-        foreach (var methodName in methodNames)
-          Assert.That (registry.GetNodeType (type.GetMethod(methodName)), Is.SameAs (type));
-      }
+      var result = _registry.IsRegistered (methodInfo);
+
+      Assert.That (result, Is.True);
+    }
+
+    [Test]
+    public void IsRegistered_TwoWithSameName_SecondMatches ()
+    {
+      var methodInfo = typeof (string).GetMethod ("Concat", new[] { typeof (string), typeof (string) });
+      _registry.Register (new[] { new NameBasedRegistrationInfo ("Concat", mi => false) }, typeof (SelectExpressionNode));
+      _registry.Register (new[] { new NameBasedRegistrationInfo ("Concat", mi => true) }, typeof (WhereExpressionNode));
+
+      var result = _registry.IsRegistered (methodInfo);
+
+      Assert.That (result, Is.True);
+    }
+
+    [Test]
+    public void CreateFromTypes ()
+    {
+      var registry = MethodNameBasedNodeTypeRegistry.CreateFromTypes (new[] { typeof (TestExpressionNode) });
+
+      Assert.That (registry.RegisteredNamesCount, Is.EqualTo (2));
+
+      Assert.That (registry.GetNodeType (typeof (TestExpressionNode).GetMethod ("Resolve")), Is.SameAs (typeof (TestExpressionNode)));
     }
 
     internal class TestExpressionNode : ResultOperatorExpressionNodeBase
     {
-      public static string[] SupportedMethodNames = { "Resolve" };
+      public static NameBasedRegistrationInfo[] SupportedMethodNames = {
+          new NameBasedRegistrationInfo ("Resolve", mi => true),
+          new NameBasedRegistrationInfo ("CreateResultOperator", mi => false),
+      };
 
       public TestExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalPredicate, LambdaExpression optionalSelector)
         : base (parseInfo, optionalPredicate, optionalSelector)
