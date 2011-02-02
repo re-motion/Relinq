@@ -58,12 +58,11 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     }
 
     [Test]
-    [ExpectedException (typeof (KeyNotFoundException), 
-        ExpectedMessage = "No corresponding expression node type was registered for method 'System.Linq.Queryable.Select'.")]
     public void GetNodeType_UnknownMethod ()
     {
-      var registry = _registry;
-      registry.GetNodeType (SelectExpressionNode.SupportedMethods[0]);
+      var result = _registry.GetNodeType (SelectExpressionNode.SupportedMethods[0]);
+
+      Assert.That (result, Is.Null);
     }
 
     [Test]

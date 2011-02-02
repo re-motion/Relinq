@@ -62,14 +62,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
     {
       ArgumentUtility.CheckNotNull ("method", method);
 
-      foreach (var innerProvider in InnerProviders)
-      {
-        if (innerProvider.IsRegistered (method))
-          return innerProvider.GetNodeType (method);
-      }
-
-      var message = string.Format ("No corresponding expression node type was found for method '{0}.{1}'.", method.DeclaringType.FullName, method.Name);
-      throw new KeyNotFoundException (message);
+      return InnerProviders.Select (p => p.GetNodeType (method)).FirstOrDefault (t => t != null);
     }
   }
 }

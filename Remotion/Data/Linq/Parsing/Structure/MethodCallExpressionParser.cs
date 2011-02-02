@@ -39,12 +39,13 @@ namespace Remotion.Data.Linq.Parsing.Structure
       _nodeTypeProvider = nodeTypeProvider;
     }
 
-    public IExpressionNode Parse (string associatedIdentifier, IExpressionNode source, IEnumerable<Expression> arguments, MethodCallExpression expressionToParse)
+    public IExpressionNode Parse (
+        string associatedIdentifier, IExpressionNode source, IEnumerable<Expression> arguments, MethodCallExpression expressionToParse)
     {
       ArgumentUtility.CheckNotNull ("expressionToParse", expressionToParse);
 
       Type nodeType = GetNodeType (expressionToParse);
-      var additionalConstructorParameters = arguments.Select (expr => ProcessArgumentExpression(expr)).ToArray();
+      var additionalConstructorParameters = arguments.Select (expr => ProcessArgumentExpression (expr)).ToArray();
 
       var parseInfo = new MethodCallExpressionParseInfo (associatedIdentifier, source, expressionToParse);
       return CreateExpressionNode (nodeType, parseInfo, additionalConstructorParameters);
@@ -52,19 +53,17 @@ namespace Remotion.Data.Linq.Parsing.Structure
 
     private Type GetNodeType (MethodCallExpression expressionToParse)
     {
-      try
-      {
-        return _nodeTypeProvider.GetNodeType (expressionToParse.Method);
-      }
-      catch (KeyNotFoundException ex)
+      var nodeType = _nodeTypeProvider.GetNodeType (expressionToParse.Method);
+      if (nodeType == null)
       {
         string message = string.Format (
             "Could not parse expression '{0}': This overload of the method '{1}.{2}' is currently not supported.",
             FormattingExpressionTreeVisitor.Format (expressionToParse),
             expressionToParse.Method.DeclaringType.FullName,
             expressionToParse.Method.Name);
-        throw new ParserException (message, ex);
+        throw new ParserException (message);
       }
+      return nodeType;
     }
 
     private Expression ProcessArgumentExpression (Expression argumentExpression)
@@ -95,8 +94,8 @@ namespace Remotion.Data.Linq.Parsing.Structure
     }
 
     private IExpressionNode CreateExpressionNode (
-        Type nodeType, 
-        MethodCallExpressionParseInfo parseInfo, 
+        Type nodeType,
+        MethodCallExpressionParseInfo parseInfo,
         object[] additionalConstructorParameters)
     {
       try

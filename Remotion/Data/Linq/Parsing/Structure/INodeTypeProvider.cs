@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
@@ -20,8 +19,8 @@ namespace Remotion.Data.Linq.Parsing.Structure
     bool IsRegistered (MethodInfo method);
 
     /// <summary>
-    /// Gets the type of <see cref="IExpressionNode"/> that matches the given <paramref name="method"/>, throwing a 
-    /// <see cref="KeyNotFoundException"/> if none can be found.
+    /// Gets the type of <see cref="IExpressionNode"/> that matches the given <paramref name="method"/>, returning <see langword="null" /> 
+    /// if none can be found.
     /// </summary>
     Type GetNodeType (MethodInfo method);
   }

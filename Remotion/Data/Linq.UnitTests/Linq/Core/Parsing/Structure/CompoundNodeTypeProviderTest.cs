@@ -121,9 +121,6 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     public void GetNodeType_FirstReturnsType ()
     {
       _nodeTypeProviderMock1
-          .Expect (mock => mock.IsRegistered (_methodInfo))
-          .Return (true);
-      _nodeTypeProviderMock1
           .Expect (mock => mock.GetNodeType (_methodInfo))
           .Return (typeof (string));
       _nodeTypeProviderMock1.Replay ();
@@ -132,7 +129,6 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
       var result = _compoundProvider.GetNodeType (_methodInfo);
 
       _nodeTypeProviderMock1.VerifyAllExpectations ();
-      _nodeTypeProviderMock2.AssertWasNotCalled (mock => mock.IsRegistered (Arg<MethodInfo>.Is.Anything));
       _nodeTypeProviderMock2.AssertWasNotCalled (mock => mock.GetNodeType (Arg<MethodInfo>.Is.Anything));
       Assert.That (result, Is.SameAs (typeof (string)));
     }
@@ -141,11 +137,8 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     public void GetNodetype_SecondReturnsType ()
     {
       _nodeTypeProviderMock1
-          .Expect (mock => mock.IsRegistered (_methodInfo))
-          .Return (false);
-      _nodeTypeProviderMock2
-          .Expect (mock => mock.IsRegistered (_methodInfo))
-          .Return (true);
+          .Expect (mock => mock.GetNodeType (_methodInfo))
+          .Return (null);
       _nodeTypeProviderMock2
           .Expect (mock => mock.GetNodeType (_methodInfo))
           .Return (typeof(string));
@@ -154,28 +147,28 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
 
       var result = _compoundProvider.GetNodeType (_methodInfo);
 
-      _nodeTypeProviderMock1.AssertWasNotCalled (mock => mock.GetNodeType (Arg<MethodInfo>.Is.Anything));
       _nodeTypeProviderMock1.VerifyAllExpectations ();
       _nodeTypeProviderMock2.VerifyAllExpectations ();
-
       Assert.That (result, Is.SameAs(typeof(string)));
     }
 
     [Test]
-    [ExpectedException (typeof (KeyNotFoundException), ExpectedMessage = 
-        "No corresponding expression node type was found for method 'System.Object.ToString'.")]
     public void GetNodeType_NoneReturnsType ()
     {
       _nodeTypeProviderMock1
-          .Expect (mock => mock.IsRegistered (_methodInfo))
-          .Return (false);
+          .Expect (mock => mock.GetNodeType (_methodInfo))
+          .Return (null);
       _nodeTypeProviderMock2
-          .Expect (mock => mock.IsRegistered (_methodInfo))
-          .Return (false);
+          .Expect (mock => mock.GetNodeType (_methodInfo))
+          .Return (null);
       _nodeTypeProviderMock1.Replay ();
       _nodeTypeProviderMock2.Replay ();
 
-      _compoundProvider.GetNodeType (_methodInfo);
+      var result = _compoundProvider.GetNodeType (_methodInfo);
+
+      _nodeTypeProviderMock1.VerifyAllExpectations();
+      _nodeTypeProviderMock2.VerifyAllExpectations();
+      Assert.That (result, Is.Null);
     }
   }
 }

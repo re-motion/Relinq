@@ -100,21 +100,15 @@ namespace Remotion.Data.Linq.Parsing.Structure
     
     /// <summary>
     /// Gets the type of <see cref="IExpressionNode"/> registered with this <see cref="MethodInfoBasedNodeTypeRegistry"/> instance that
-    /// matches the given <paramref name="method"/>, throwing a <see cref="KeyNotFoundException"/> if none can be found.
+    /// matches the given <paramref name="method"/>, returning <see langword="null" /> if none can be found.
     /// </summary>
     public Type GetNodeType (MethodInfo method)
     {
       ArgumentUtility.CheckNotNull ("method", method);
 
       Type result;
-      if (_registeredNamedTypes.TryGetValue (method.Name, out result))
-        return result;
-
-      string message = string.Format (
-          "No corresponding expression node type was registered for method '{0}.{1}'.",
-          method.DeclaringType.FullName,
-          method.Name);
-      throw new KeyNotFoundException (message);
+      _registeredNamedTypes.TryGetValue (method.Name, out result);
+      return result;
     }
   }
 }
