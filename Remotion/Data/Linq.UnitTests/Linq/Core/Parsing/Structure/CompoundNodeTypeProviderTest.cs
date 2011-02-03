@@ -44,9 +44,12 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     [Test]
     public void InnerProviders ()
     {
-      var result = _compoundProvider.InnerProviders;
+      Assert.That (_compoundProvider.InnerProviders, Is.EqualTo (new[] { _nodeTypeProviderMock1, _nodeTypeProviderMock2 }));
 
-      Assert.That (result, Is.EqualTo (new[] { _nodeTypeProviderMock1, _nodeTypeProviderMock2 }));
+      var fakeProvider = MockRepository.GenerateStub<INodeTypeProvider>();
+      _compoundProvider.InnerProviders.Add (fakeProvider);
+
+      Assert.That (_compoundProvider.InnerProviders, Is.EqualTo (new[] { _nodeTypeProviderMock1, _nodeTypeProviderMock2, fakeProvider }));
     }
 
     [Test]

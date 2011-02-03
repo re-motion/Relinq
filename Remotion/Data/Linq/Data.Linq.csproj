@@ -145,6 +145,7 @@
     <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\EvaluatableTreeFindingExpressionTreeVisitor.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\PartialEvaluationInfo.cs" />
     <Compile Include="Parsing\Structure\CompoundNodeTypeProvider.cs" />
+    <Compile Include="Parsing\Structure\CompoundProcessingStep.cs" />
     <Compile Include="Parsing\Structure\MethodNameBasedNodeTypeRegistry.cs" />
     <Compile Include="Parsing\Structure\ExpressionTreeProcessingSteps\ExpressionTransformationStep.cs" />
     <Compile Include="Parsing\Structure\ExpressionTreeProcessingSteps\PartialEvaluationStep.cs" />

@@ -156,6 +156,7 @@
     <Compile Include="Linq\Core\Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\VBInformationIsNothingExpressionTransformerTest.cs" />
     <Compile Include="Linq\Core\Parsing\ExpressionTreeVisitors\TransformingExpressionTreeVisitorTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\CompoundNodeTypeProviderTest.cs" />
+    <Compile Include="Linq\Core\Parsing\Structure\CompoundProcessingStepTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\MethodInfoBasedNodeTypeRegistryTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\MethodNameBasedNodeTypeRegistryTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\ExpressionTreeProcessingSteps\ExpressionTransformationStepTest.cs" />
