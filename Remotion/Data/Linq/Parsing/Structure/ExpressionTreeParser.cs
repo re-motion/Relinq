@@ -45,6 +45,23 @@ namespace Remotion.Data.Linq.Parsing.Structure
       throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// Creates a default <see cref="CompoundNodeTypeProvider"/> that already has all expression node parser defined by the re-linq assembly 
+    /// registered. Users can add inner providers to register their own expression node parsers.
+    /// </summary>
+    /// <returns>A default <see cref="CompoundNodeTypeProvider"/> that already has all expression node parser defined by the re-linq assembly 
+    /// registered.</returns>
+    public static CompoundNodeTypeProvider CreateDefaultNodeTypeProvider ()
+    {
+      var searchedTypes = typeof (MethodInfoBasedNodeTypeRegistry).Assembly.GetTypes ();
+      var innerProviders = new INodeTypeProvider[]
+                           {
+                               MethodInfoBasedNodeTypeRegistry.CreateFromTypes (searchedTypes),
+                               MethodNameBasedNodeTypeRegistry.CreateFromTypes(searchedTypes)
+                           };
+      return new CompoundNodeTypeProvider (innerProviders);
+    }
+
     public static IExpressionTreeProcessingStep[] CreateDefaultProcessingSteps (IExpressionTranformationProvider tranformationProvider)
     {
       ArgumentUtility.CheckNotNull ("tranformationProvider", tranformationProvider);

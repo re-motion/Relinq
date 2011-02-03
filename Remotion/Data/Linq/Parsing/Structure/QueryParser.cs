@@ -42,7 +42,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
     {
       var transformerRegistry = ExpressionTransformerRegistry.CreateDefault();
       var expressionTreeParser = new ExpressionTreeParser (
-          CompoundNodeTypeProvider.CreateDefault (), 
+          ExpressionTreeParser.CreateDefaultNodeTypeProvider (), 
           ExpressionTreeParser.CreateDefaultProcessingSteps (transformerRegistry));
       return new QueryParser(expressionTreeParser);
     }

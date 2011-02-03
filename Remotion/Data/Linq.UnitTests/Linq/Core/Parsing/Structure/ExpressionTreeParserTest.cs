@@ -57,6 +57,19 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     }
 
     [Test]
+    public void CreateDefaultNodeTypeProvider ()
+    {
+      var result = ExpressionTreeParser.CreateDefaultNodeTypeProvider ();
+
+      Assert.That (result.InnerProviders.Count, Is.EqualTo (2));
+      Assert.That (result.InnerProviders[0], Is.TypeOf (typeof (MethodInfoBasedNodeTypeRegistry)));
+      Assert.That (result.InnerProviders[1], Is.TypeOf (typeof (MethodNameBasedNodeTypeRegistry)));
+
+      Assert.That (((MethodInfoBasedNodeTypeRegistry) result.InnerProviders[0]).RegisteredMethodInfoCount, Is.GreaterThan (0));
+      Assert.That (((MethodNameBasedNodeTypeRegistry) result.InnerProviders[1]).RegisteredNamesCount, Is.EqualTo(0));
+    }
+
+    [Test]
     public void CreateDefaultProcessingSteps ()
     {
       var inputTransformerRegistry = ExpressionTransformerRegistry.CreateDefault();

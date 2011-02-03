@@ -28,17 +28,6 @@ namespace Remotion.Data.Linq.Parsing.Structure
   /// </summary>
   public class CompoundNodeTypeProvider : INodeTypeProvider
   {
-    public static CompoundNodeTypeProvider CreateDefault ()
-    {
-      var searchedTypes = typeof (MethodInfoBasedNodeTypeRegistry).Assembly.GetTypes();
-      var innerProviders = new INodeTypeProvider[]
-                           {
-                               MethodInfoBasedNodeTypeRegistry.CreateFromTypes (searchedTypes),
-                               MethodNameBasedNodeTypeRegistry.CreateFromTypes(searchedTypes)
-                           };
-      return new CompoundNodeTypeProvider (innerProviders);
-    }
-
     private readonly List<INodeTypeProvider> _innerProviders;
 
     public CompoundNodeTypeProvider (IEnumerable<INodeTypeProvider> innerProviders)

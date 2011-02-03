@@ -34,7 +34,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateM
     public virtual void SetUp ()
     {
       SourceNode = ExpressionNodeObjectMother.CreateMainSource();
-      ClauseGenerationContext = new ClauseGenerationContext(CompoundNodeTypeProvider.CreateDefault());
+      ClauseGenerationContext = new ClauseGenerationContext(ExpressionTreeParser.CreateDefaultNodeTypeProvider());
 
       QueryModel = SourceNode.Apply (null, ClauseGenerationContext);
       SourceClause = QueryModel.MainFromClause;

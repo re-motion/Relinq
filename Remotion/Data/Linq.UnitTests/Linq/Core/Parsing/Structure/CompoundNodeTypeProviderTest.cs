@@ -50,20 +50,6 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     }
 
     [Test]
-    [Ignore ("TODO 3343: Enable when name-based node exists")]
-    public void CreateDefault ()
-    {
-      var result = CompoundNodeTypeProvider.CreateDefault();
-
-      Assert.That (result.InnerProviders.Count, Is.EqualTo (2));
-      Assert.That (result.InnerProviders[0], Is.TypeOf (typeof (MethodInfoBasedNodeTypeRegistry)));
-      Assert.That (result.InnerProviders[1], Is.TypeOf (typeof (MethodNameBasedNodeTypeRegistry)));
-
-      Assert.That (((MethodInfoBasedNodeTypeRegistry) result.InnerProviders[0]).RegisteredMethodInfoCount, Is.GreaterThan (0));
-      Assert.That (((MethodNameBasedNodeTypeRegistry) result.InnerProviders[1]).RegisteredNamesCount, Is.GreaterThan (0));
-    }
-
-    [Test]
     public void IsRegistered_FirstReturnsTrue ()
     {
       _nodeTypeProviderMock1
