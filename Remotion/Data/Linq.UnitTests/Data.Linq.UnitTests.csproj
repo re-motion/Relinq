@@ -156,12 +156,12 @@
     <Compile Include="Linq\Core\Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\VBInformationIsNothingExpressionTransformerTest.cs" />
     <Compile Include="Linq\Core\Parsing\ExpressionTreeVisitors\TransformingExpressionTreeVisitorTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\CompoundNodeTypeProviderTest.cs" />
-    <Compile Include="Linq\Core\Parsing\Structure\CompoundProcessingStepTest.cs" />
-    <Compile Include="Linq\Core\Parsing\Structure\ExpressionTreeProcessingSteps\NullStepTest.cs" />
+    <Compile Include="Linq\Core\Parsing\Structure\ExpressionTreeProcessors\CompoundExpressionTreeProcessorTest.cs" />
+    <Compile Include="Linq\Core\Parsing\Structure\ExpressionTreeProcessors\NullExpressionTreeProcessorTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\MethodInfoBasedNodeTypeRegistryTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\MethodNameBasedNodeTypeRegistryTest.cs" />
-    <Compile Include="Linq\Core\Parsing\Structure\ExpressionTreeProcessingSteps\ExpressionTransformationStepTest.cs" />
-    <Compile Include="Linq\Core\Parsing\Structure\ExpressionTreeProcessingSteps\PartialEvaluationStepTest.cs" />
+    <Compile Include="Linq\Core\Parsing\Structure\ExpressionTreeProcessors\TransformingExpressionProcessorTest.cs" />
+    <Compile Include="Linq\Core\Parsing\Structure\ExpressionTreeProcessors\PartialEvaluatingExpressionTreeProcessorTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\IntermediateModel\GroupByWithResultSelectorExpressionNodeTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\QueryParserIntegrationTests\VBSpecificQueryParserIntegrationTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\QueryParserIntegrationTests\MiscQueryParserIntegrationTest.cs" />

@@ -35,9 +35,9 @@ namespace Remotion.Data.Linq.Parsing.Structure
     /// <summary>
     /// Initializes a new instance of the <see cref="QueryParser"/> class, using default parameters for parsing. 
     /// The <see cref="Structure.ExpressionTreeParser.NodeTypeProvider"/> used has all relevant methods of the <see cref="Queryable"/> class 
-    /// automatically registered, and the <see cref="Structure.ExpressionTreeParser.ProcessingStep"/> comprises partial evaluation, and default 
+    /// automatically registered, and the <see cref="Structure.ExpressionTreeParser.Processor"/> comprises partial evaluation, and default 
     /// expression transformations. See <see cref="Structure.ExpressionTreeParser.CreateDefaultNodeTypeProvider"/>, 
-    /// <see cref="Structure.ExpressionTreeParser.CreateDefaultProcessingStep"/>, and <see cref="ExpressionTransformerRegistry.CreateDefault"/>
+    /// <see cref="Structure.ExpressionTreeParser.CreateDefaultProcessor"/>, and <see cref="ExpressionTransformerRegistry.CreateDefault"/>
     /// for details.
     /// </summary>
     public static QueryParser CreateDefault ()
@@ -45,7 +45,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       var transformerRegistry = ExpressionTransformerRegistry.CreateDefault();
       var expressionTreeParser = new ExpressionTreeParser (
           ExpressionTreeParser.CreateDefaultNodeTypeProvider (), 
-          ExpressionTreeParser.CreateDefaultProcessingStep (transformerRegistry));
+          ExpressionTreeParser.CreateDefaultProcessor (transformerRegistry));
       return new QueryParser(expressionTreeParser);
     }
 
@@ -78,13 +78,13 @@ namespace Remotion.Data.Linq.Parsing.Structure
     }
 
     /// <summary>
-    /// Gets the <see cref="IExpressionTreeProcessingStep"/> used by <see cref="GetParsedQuery"/> to process the <see cref="Expression"/> tree 
+    /// Gets the <see cref="IExpressionTreeProcessor"/> used by <see cref="GetParsedQuery"/> to process the <see cref="Expression"/> tree 
     /// before analyzing its structure.
     /// </summary>
-    /// <value>The processing step.</value>
-    public IExpressionTreeProcessingStep ProcessingStep
+    /// <value>The processor.</value>
+    public IExpressionTreeProcessor Processor
     {
-      get { return _expressionTreeParser.ProcessingStep; }
+      get { return _expressionTreeParser.Processor; }
     }
 
     /// <summary>

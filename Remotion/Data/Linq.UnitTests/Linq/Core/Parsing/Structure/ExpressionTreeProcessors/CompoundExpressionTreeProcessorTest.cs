@@ -14,38 +14,38 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-using System;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Parsing.Structure;
+using Remotion.Data.Linq.Parsing.Structure.ExpressionTreeProcessors;
 using Rhino.Mocks;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
+namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.ExpressionTreeProcessors
 {
   [TestFixture]
-  public class CompoundProcessingStepTest
+  public class CompoundExpressionTreeProcessorTest
   {
-    private IExpressionTreeProcessingStep _stepMock2;
-    private IExpressionTreeProcessingStep _stepMock1;
-    private CompoundProcessingStep _compoundStep;
+    private IExpressionTreeProcessor _stepMock2;
+    private IExpressionTreeProcessor _stepMock1;
+    private CompoundExpressionTreeProcessor _compoundExpressionTreeProcessor;
 
     [SetUp]
     public void SetUp ()
     {
-      _stepMock1 = MockRepository.GenerateStrictMock<IExpressionTreeProcessingStep> ();
-      _stepMock2 = MockRepository.GenerateStrictMock<IExpressionTreeProcessingStep> ();
-      _compoundStep = new CompoundProcessingStep (new[] { _stepMock1, _stepMock2 });
+      _stepMock1 = MockRepository.GenerateStrictMock<IExpressionTreeProcessor> ();
+      _stepMock2 = MockRepository.GenerateStrictMock<IExpressionTreeProcessor> ();
+      _compoundExpressionTreeProcessor = new CompoundExpressionTreeProcessor (new[] { _stepMock1, _stepMock2 });
     }
 
     [Test]
     public void InnerSteps ()
     {
-      Assert.That (_compoundStep.InnerSteps, Is.EqualTo (new[] { _stepMock1, _stepMock2 }));
+      Assert.That (_compoundExpressionTreeProcessor.InnerProcessors, Is.EqualTo (new[] { _stepMock1, _stepMock2 }));
 
-      var fakeStep = MockRepository.GenerateStub<IExpressionTreeProcessingStep> ();
-      _compoundStep.InnerSteps.Add (fakeStep);
+      var fakeStep = MockRepository.GenerateStub<IExpressionTreeProcessor> ();
+      _compoundExpressionTreeProcessor.InnerProcessors.Add (fakeStep);
 
-      Assert.That (_compoundStep.InnerSteps, Is.EqualTo (new[] { _stepMock1, _stepMock2, fakeStep }));
+      Assert.That (_compoundExpressionTreeProcessor.InnerProcessors, Is.EqualTo (new[] { _stepMock1, _stepMock2, fakeStep }));
     }
 
     [Test]
@@ -64,7 +64,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
       _stepMock1.Replay();
       _stepMock2.Replay();
 
-      var result = _compoundStep.Process (inputTree);
+      var result = _compoundExpressionTreeProcessor.Process (inputTree);
 
       _stepMock1.VerifyAllExpectations();
       _stepMock2.VerifyAllExpectations();

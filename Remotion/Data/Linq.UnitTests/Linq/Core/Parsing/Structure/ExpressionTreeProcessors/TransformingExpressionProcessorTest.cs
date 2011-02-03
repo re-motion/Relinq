@@ -14,18 +14,17 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation;
-using Remotion.Data.Linq.Parsing.Structure.ExpressionTreeProcessingSteps;
+using Remotion.Data.Linq.Parsing.Structure.ExpressionTreeProcessors;
 using Rhino.Mocks;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.ExpressionTreeProcessingSteps
+namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.ExpressionTreeProcessors
 {
   [TestFixture]
-  public class ExpressionTransformationStepTest
+  public class TransformingExpressionProcessorTest
   {
     [Test]
     public void Process ()
@@ -41,9 +40,9 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.ExpressionTre
           .Return (new ExpressionTransformation[0]);
       transformationProviderMock.Replay();
       
-      var step = new ExpressionTransformationStep (transformationProviderMock);
+      var processor = new TransformingExpressionTreeProcessor (transformationProviderMock);
 
-      var result = step.Process (inputExpression);
+      var result = processor.Process (inputExpression);
 
       transformationProviderMock.VerifyAllExpectations();
       Assert.That (result, Is.SameAs (transformedExpression));

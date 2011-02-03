@@ -145,12 +145,12 @@
     <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\EvaluatableTreeFindingExpressionTreeVisitor.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\PartialEvaluationInfo.cs" />
     <Compile Include="Parsing\Structure\CompoundNodeTypeProvider.cs" />
-    <Compile Include="Parsing\Structure\CompoundProcessingStep.cs" />
-    <Compile Include="Parsing\Structure\ExpressionTreeProcessingSteps\NullStep.cs" />
+    <Compile Include="Parsing\Structure\ExpressionTreeProcessors\CompoundExpressionTreeProcessor.cs" />
+    <Compile Include="Parsing\Structure\ExpressionTreeProcessors\NullExpressionTreeProcessor.cs" />
     <Compile Include="Parsing\Structure\MethodNameBasedNodeTypeRegistry.cs" />
-    <Compile Include="Parsing\Structure\ExpressionTreeProcessingSteps\ExpressionTransformationStep.cs" />
-    <Compile Include="Parsing\Structure\ExpressionTreeProcessingSteps\PartialEvaluationStep.cs" />
-    <Compile Include="Parsing\Structure\IExpressionTreeProcessingStep.cs" />
+    <Compile Include="Parsing\Structure\ExpressionTreeProcessors\TransformingExpressionTreeProcessor.cs" />
+    <Compile Include="Parsing\Structure\ExpressionTreeProcessors\PartialEvaluatingExpressionTreeProcessor.cs" />
+    <Compile Include="Parsing\Structure\IExpressionTreeProcessor.cs" />
     <Compile Include="Parsing\Structure\INodeTypeProvider.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\AggregateExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\AverageExpressionNode.cs" />

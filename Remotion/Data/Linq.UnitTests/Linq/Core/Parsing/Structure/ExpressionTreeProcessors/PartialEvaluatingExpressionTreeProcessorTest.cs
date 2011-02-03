@@ -14,25 +14,26 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-using System;
+using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.Parsing.Structure.ExpressionTreeProcessingSteps;
+using Remotion.Data.Linq.Parsing.Structure.ExpressionTreeProcessors;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.ExpressionTreeProcessingSteps
+namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.ExpressionTreeProcessors
 {
   [TestFixture]
-  public class NullStepTest
+  public class PartialEvaluatingExpressionTreeProcessorTest
   {
     [Test]
     public void Process ()
     {
-      var step = new NullStep();
-      var input = ExpressionHelper.CreateExpression();
+      var expression = Expression.Add (Expression.Constant (1), Expression.Constant (1));
+      var processor = new PartialEvaluatingExpressionTreeProcessor();
 
-      var result = step.Process (input);
+      var result = processor.Process (expression);
 
-      Assert.That (result, Is.SameAs (input));
+      Assert.That (result, Is.TypeOf (typeof (ConstantExpression)));
+      Assert.That (((ConstantExpression) result).Value, Is.EqualTo(2));
     }
   }
 }
