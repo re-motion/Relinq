@@ -42,19 +42,21 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     [Test]
     public void Initialization_Default ()
     {
-      Assert.That (_queryParser.NodeTypeProvider, Is.TypeOf (typeof (CompoundNodeTypeProvider)));
-      Assert.That (((CompoundNodeTypeProvider) _queryParser.NodeTypeProvider).InnerProviders[0], Is.TypeOf (typeof (MethodInfoBasedNodeTypeRegistry)));
-      Assert.That (((CompoundNodeTypeProvider) _queryParser.NodeTypeProvider).InnerProviders[1], Is.TypeOf (typeof (MethodNameBasedNodeTypeRegistry)));
+      var expressionTreeParser = _queryParser.ExpressionTreeParser;
+      Assert.That (expressionTreeParser.NodeTypeProvider, Is.TypeOf (typeof (CompoundNodeTypeProvider)));
+      var nodeTypeProviders = ((CompoundNodeTypeProvider) expressionTreeParser.NodeTypeProvider).InnerProviders;
+      Assert.That (nodeTypeProviders[0], Is.TypeOf (typeof (MethodInfoBasedNodeTypeRegistry)));
+      Assert.That (nodeTypeProviders[1], Is.TypeOf (typeof (MethodNameBasedNodeTypeRegistry)));
 
-      Assert.That (_queryParser.ProcessingSteps.Count, Is.EqualTo (2));
-      Assert.That (_queryParser.ProcessingSteps[0], Is.TypeOf (typeof (PartialEvaluationStep)));
-      Assert.That (_queryParser.ProcessingSteps[1], Is.TypeOf (typeof (ExpressionTransformationStep)));
-      Assert.That (
-          ((ExpressionTransformationStep) _queryParser.ProcessingSteps[1]).Provider,
-          Is.TypeOf (typeof (ExpressionTransformerRegistry)));
+      Assert.That (expressionTreeParser.ProcessingStep, Is.TypeOf (typeof (CompoundProcessingStep)));
+      var processingSteps = ((CompoundProcessingStep) expressionTreeParser.ProcessingStep).InnerSteps;
+      Assert.That (processingSteps.Count, Is.EqualTo (2));
+      Assert.That (processingSteps[0], Is.TypeOf (typeof (PartialEvaluationStep)));
+      Assert.That (processingSteps[1], Is.TypeOf (typeof (ExpressionTransformationStep)));
+      Assert.That (((ExpressionTransformationStep) processingSteps[1]).Provider, Is.TypeOf (typeof (ExpressionTransformerRegistry)));
       
-      var expressionTransformerRegistry = 
-          ((ExpressionTransformerRegistry) ((ExpressionTransformationStep) _queryParser.ProcessingSteps[1]).Provider);
+      var expressionTransformerRegistry =
+          ((ExpressionTransformerRegistry) ((ExpressionTransformationStep) processingSteps[1]).Provider);
       Assert.That (
           expressionTransformerRegistry.RegisteredTransformerCount,
           Is.EqualTo (ExpressionTransformerRegistry.CreateDefault ().RegisteredTransformerCount));
@@ -63,7 +65,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     [Test]
     public void Initialization_InjectExpressionTreeParser ()
     {
-      var expressionTreeParser = new ExpressionTreeParser (new MethodInfoBasedNodeTypeRegistry(), new IExpressionTreeProcessingStep[0]);
+      var expressionTreeParser = new ExpressionTreeParser (new MethodInfoBasedNodeTypeRegistry(), new NullStep());
       var queryParser = new QueryParser (expressionTreeParser);
 
       Assert.That (queryParser.ExpressionTreeParser, Is.SameAs (expressionTreeParser));

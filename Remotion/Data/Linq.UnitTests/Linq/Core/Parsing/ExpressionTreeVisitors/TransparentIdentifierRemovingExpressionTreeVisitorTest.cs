@@ -24,6 +24,7 @@ using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Parsing.Structure;
+using Remotion.Data.Linq.Parsing.Structure.ExpressionTreeProcessingSteps;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 
 namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
@@ -320,7 +321,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
       nodeTypeRegistry.Register (SelectManyExpressionNode.SupportedMethods, typeof (SelectManyExpressionNode));
       nodeTypeRegistry.Register (WhereExpressionNode.SupportedMethods, typeof (WhereExpressionNode));
 
-      var selectNode = (SelectExpressionNode) new ExpressionTreeParser (nodeTypeRegistry, new IExpressionTreeProcessingStep[0]).ParseTree (query.Expression);
+      var selectNode = (SelectExpressionNode) new ExpressionTreeParser (nodeTypeRegistry, new NullStep()).ParseTree (query.Expression);
       var clauseGenerationContext = new ClauseGenerationContext (new MethodInfoBasedNodeTypeRegistry());
 
       var selectManyNode = (SelectManyExpressionNode) selectNode.Source.Source;

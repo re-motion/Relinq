@@ -24,7 +24,8 @@ namespace Remotion.Data.Linq.Parsing.Structure
 {
   /// <summary>
   /// Implements <see cref="INodeTypeProvider"/> by storing a list of inner <see cref="INodeTypeProvider"/> instances.
-  /// The <see cref="IsRegistered"/> and <see cref="GetNodeType"/> methods delegate to these inner instances.
+  /// The <see cref="IsRegistered"/> and <see cref="GetNodeType"/> methods delegate to these inner instances. This is an
+  /// implementation of the Composite Pattern.
   /// </summary>
   public class CompoundNodeTypeProvider : INodeTypeProvider
   {

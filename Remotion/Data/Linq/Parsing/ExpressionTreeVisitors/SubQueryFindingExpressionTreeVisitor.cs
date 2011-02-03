@@ -18,6 +18,7 @@ using System;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.Structure;
+using Remotion.Data.Linq.Parsing.Structure.ExpressionTreeProcessingSteps;
 using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
@@ -45,7 +46,7 @@ namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
       ArgumentUtility.CheckNotNull ("nodeTypeProvider", nodeTypeProvider);
 
       _nodeTypeProvider = nodeTypeProvider;
-      _expressionTreeParser = new ExpressionTreeParser (_nodeTypeProvider, new IExpressionTreeProcessingStep[0]);
+      _expressionTreeParser = new ExpressionTreeParser (_nodeTypeProvider, new NullStep());
       _queryParser = new QueryParser (_expressionTreeParser);
     }
 

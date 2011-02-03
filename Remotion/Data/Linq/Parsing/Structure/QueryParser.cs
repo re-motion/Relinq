@@ -15,7 +15,6 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses;
@@ -35,15 +34,18 @@ namespace Remotion.Data.Linq.Parsing.Structure
   {
     /// <summary>
     /// Initializes a new instance of the <see cref="QueryParser"/> class, using default parameters for parsing. 
-    /// The <see cref="NodeTypeProvider"/> used has all relevant methods of the <see cref="Queryable"/> class automatically registered, and the
-    /// <see cref="ProcessingSteps"/> comprise partial evaluation, and default expression transformations.
+    /// The <see cref="Structure.ExpressionTreeParser.NodeTypeProvider"/> used has all relevant methods of the <see cref="Queryable"/> class 
+    /// automatically registered, and the <see cref="Structure.ExpressionTreeParser.ProcessingStep"/> comprises partial evaluation, and default 
+    /// expression transformations. See <see cref="Structure.ExpressionTreeParser.CreateDefaultNodeTypeProvider"/>, 
+    /// <see cref="Structure.ExpressionTreeParser.CreateDefaultProcessingStep"/>, and <see cref="ExpressionTransformerRegistry.CreateDefault"/>
+    /// for details.
     /// </summary>
     public static QueryParser CreateDefault ()
     {
       var transformerRegistry = ExpressionTransformerRegistry.CreateDefault();
       var expressionTreeParser = new ExpressionTreeParser (
           ExpressionTreeParser.CreateDefaultNodeTypeProvider (), 
-          ExpressionTreeParser.CreateDefaultProcessingSteps (transformerRegistry));
+          ExpressionTreeParser.CreateDefaultProcessingStep (transformerRegistry));
       return new QueryParser(expressionTreeParser);
     }
 
@@ -67,7 +69,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
     }
 
     /// <summary>
-    /// Gets the node type provider used by <see cref="GetParsedQuery"/> to parse <see cref="MethodCallExpression"/> instances.
+    /// Gets the <see cref="INodeTypeProvider"/> used by <see cref="GetParsedQuery"/> to parse <see cref="MethodCallExpression"/> instances.
     /// </summary>
     /// <value>The node type registry.</value>
     public INodeTypeProvider NodeTypeProvider
@@ -76,12 +78,13 @@ namespace Remotion.Data.Linq.Parsing.Structure
     }
 
     /// <summary>
-    /// Gets the processing steps used by <see cref="GetParsedQuery"/> to process the <see cref="Expression"/> tree before analyzing its structure.
+    /// Gets the <see cref="IExpressionTreeProcessingStep"/> used by <see cref="GetParsedQuery"/> to process the <see cref="Expression"/> tree 
+    /// before analyzing its structure.
     /// </summary>
-    /// <value>The processing steps.</value>
-    public ReadOnlyCollection<IExpressionTreeProcessingStep> ProcessingSteps
+    /// <value>The processing step.</value>
+    public IExpressionTreeProcessingStep ProcessingStep
     {
-      get { return _expressionTreeParser.ProcessingSteps; }
+      get { return _expressionTreeParser.ProcessingStep; }
     }
 
     /// <summary>

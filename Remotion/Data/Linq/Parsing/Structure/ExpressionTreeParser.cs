@@ -16,7 +16,6 @@
 // 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
@@ -62,27 +61,56 @@ namespace Remotion.Data.Linq.Parsing.Structure
       return new CompoundNodeTypeProvider (innerProviders);
     }
 
-    public static IExpressionTreeProcessingStep[] CreateDefaultProcessingSteps (IExpressionTranformationProvider tranformationProvider)
+    /// <summary>
+    /// Creates a default <see cref="CompoundProcessingStep"/> that already has the expression tree processing steps defined by the re-linq assembly
+    /// registered. Users can insert additional processing steps.
+    /// </summary>
+    /// <param name="tranformationProvider">The tranformation provider to be used by the <see cref="ExpressionTransformationStep"/> included
+    /// in the result set. Use <see cref="ExpressionTransformerRegistry.CreateDefault"/> to create a default provider.</param>
+    /// <returns>
+    /// A default <see cref="CompoundProcessingStep"/> that already has all expression tree processing steps defined by the re-linq assembly
+    /// registered.
+    /// </returns>
+    /// <remarks>
+    /// The following steps are included:
+    /// <list type="bullet">
+    /// 		<item><see cref="PartialEvaluationStep"/></item>
+    /// 		<item><see cref="ExpressionTransformationStep"/> (parameterized with <paramref name="tranformationProvider"/>)</item>
+    /// 	</list>
+    /// </remarks>
+    public static CompoundProcessingStep CreateDefaultProcessingStep (IExpressionTranformationProvider tranformationProvider)
     {
       ArgumentUtility.CheckNotNull ("tranformationProvider", tranformationProvider);
 
-      return new IExpressionTreeProcessingStep[] { 
+      return new CompoundProcessingStep (new IExpressionTreeProcessingStep[] { 
           new PartialEvaluationStep(), 
-          new ExpressionTransformationStep (tranformationProvider) };
+          new ExpressionTransformationStep (tranformationProvider) });
     }
 
     private readonly UniqueIdentifierGenerator _identifierGenerator = new UniqueIdentifierGenerator ();
     private readonly INodeTypeProvider _nodeTypeProvider;
-    private readonly IExpressionTreeProcessingStep[] _processingSteps;
+    private readonly IExpressionTreeProcessingStep _processingStep;
     private readonly MethodCallExpressionParser _methodCallExpressionParser;
 
-    public ExpressionTreeParser (INodeTypeProvider nodeTypeProvider, IExpressionTreeProcessingStep[] processingSteps)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ExpressionTreeParser"/> class with a custom <see cref="INodeTypeProvider"/> and 
+    /// <see cref="IExpressionTreeProcessingStep"/> implementation.
+    /// </summary>
+    /// <param name="nodeTypeProvider">The node type provider to use when parsing <see cref="Expression"/> trees. Use 
+    /// <see cref="CreateDefaultNodeTypeProvider"/> to create an instance of <see cref="CompoundNodeTypeProvider"/> that already includes all
+    /// default node types. (The <see cref="CompoundNodeTypeProvider"/> can be customized as needed by adding or removing 
+    /// <see cref="CompoundNodeTypeProvider.InnerProviders"/>).</param>
+    /// <param name="processingStep">The processing step to apply to <see cref="Expression"/> trees before parsing their nodes. Use
+    /// <see cref="CreateDefaultProcessingStep"/> to create an instance of <see cref="CompoundProcessingStep"/> that already includes
+    /// the default steps. (The <see cref="CompoundProcessingStep"/> can be customized as needed by adding or removing 
+    /// <see cref="CompoundProcessingStep.InnerSteps"/>).</param>
+    public ExpressionTreeParser (INodeTypeProvider nodeTypeProvider, IExpressionTreeProcessingStep processingStep)
     {
       ArgumentUtility.CheckNotNull ("nodeTypeProvider", nodeTypeProvider);
-      ArgumentUtility.CheckNotNull ("processingSteps", processingSteps);
+      ArgumentUtility.CheckNotNull ("processingStep", processingStep);
       
       _nodeTypeProvider = nodeTypeProvider;
-      _processingSteps = processingSteps;
+      _processingStep = processingStep;
       _methodCallExpressionParser = new MethodCallExpressionParser (_nodeTypeProvider);
     }
 
@@ -99,9 +127,9 @@ namespace Remotion.Data.Linq.Parsing.Structure
     /// Gets the processing steps used by <see cref="ParseTree"/> to process the <see cref="Expression"/> tree before analyzing its structure.
     /// </summary>
     /// <value>The processing steps.</value>
-    public ReadOnlyCollection<IExpressionTreeProcessingStep> ProcessingSteps
+    public IExpressionTreeProcessingStep ProcessingStep
     {
-      get { return Array.AsReadOnly (_processingSteps); }
+      get { return _processingStep; }
     }
 
     /// <summary>
@@ -117,7 +145,7 @@ namespace Remotion.Data.Linq.Parsing.Structure
       if (expressionTree.Type == typeof (void))
         throw new ParserException (String.Format ("Expressions of type void ('{0}') are not supported.", expressionTree));
 
-      var processedExpressionTree = _processingSteps.Aggregate (expressionTree, (e, s) => s.Process (e));
+      var processedExpressionTree = _processingStep.Process (expressionTree);
       return ParseNode (processedExpressionTree, null);
     }
 

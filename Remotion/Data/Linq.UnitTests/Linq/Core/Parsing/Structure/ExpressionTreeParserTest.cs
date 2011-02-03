@@ -51,7 +51,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
       _methodInfoBasedNodeTypeRegistry.Register (CountExpressionNode.SupportedMethods, typeof (CountExpressionNode));
       _methodInfoBasedNodeTypeRegistry.Register (ContainsExpressionNode.SupportedMethods, typeof (ContainsExpressionNode));
 
-      _expressionTreeParser = new ExpressionTreeParser (_methodInfoBasedNodeTypeRegistry, new IExpressionTreeProcessingStep[] { new PartialEvaluationStep() } );
+      _expressionTreeParser = new ExpressionTreeParser (_methodInfoBasedNodeTypeRegistry, new PartialEvaluationStep() );
 
       _intSource = new[] { 1, 2, 3 }.AsQueryable ();
     }
@@ -73,16 +73,16 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     public void CreateDefaultProcessingSteps ()
     {
       var inputTransformerRegistry = ExpressionTransformerRegistry.CreateDefault();
-      var steps = ExpressionTreeParser.CreateDefaultProcessingSteps (inputTransformerRegistry);
+      var step = ExpressionTreeParser.CreateDefaultProcessingStep (inputTransformerRegistry);
 
-      Assert.That (steps.Length, Is.EqualTo (2));
-      Assert.That (steps[0], Is.TypeOf (typeof (PartialEvaluationStep)));
-      Assert.That (steps[1], Is.TypeOf (typeof (ExpressionTransformationStep)));
+      Assert.That (step.InnerSteps.Count, Is.EqualTo (2));
+      Assert.That (step.InnerSteps[0], Is.TypeOf (typeof (PartialEvaluationStep)));
+      Assert.That (step.InnerSteps[1], Is.TypeOf (typeof (ExpressionTransformationStep)));
       Assert.That (
-          ((ExpressionTransformationStep) steps[1]).Provider,
+          ((ExpressionTransformationStep) step.InnerSteps[1]).Provider,
           Is.TypeOf (typeof (ExpressionTransformerRegistry)));
 
-      var createdTransformerRegistry = ((ExpressionTransformerRegistry) ((ExpressionTransformationStep) steps[1]).Provider);
+      var createdTransformerRegistry = ((ExpressionTransformerRegistry) ((ExpressionTransformationStep) step.InnerSteps[1]).Provider);
       Assert.That (createdTransformerRegistry, Is.SameAs (inputTransformerRegistry));
     }
 
@@ -282,26 +282,20 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     public void ParseTree_AppliesProcessingSteps ()
     {
       var inputExpression = Expression.Constant (0);
-      var transformedExpression1 = Expression.Constant (1);
-      
-      Expression<Func<int, bool>> transformedExpression2Predicate = i => i > 5;
-      var transformedExpression2 = _intSource.Where (transformedExpression2Predicate).Expression;
+      Expression<Func<int, bool>> predicate = i => i > 5;
+      var transformedExpression = _intSource.Where (predicate).Expression;
 
       var stepMock1 = MockRepository.GenerateStrictMock<IExpressionTreeProcessingStep> ();
-      stepMock1.Expect (mock => mock.Process (inputExpression)).Return (transformedExpression1);
+      stepMock1.Expect (mock => mock.Process (inputExpression)).Return (transformedExpression);
       stepMock1.Replay();
 
-      var stepMock2 = MockRepository.GenerateStrictMock<IExpressionTreeProcessingStep> ();
-      stepMock2.Expect (mock => mock.Process (transformedExpression1)).Return (transformedExpression2);
-      stepMock2.Replay();
 
-      var parser = new ExpressionTreeParser (_methodInfoBasedNodeTypeRegistry, new[] { stepMock1, stepMock2 });
+      var parser = new ExpressionTreeParser (_methodInfoBasedNodeTypeRegistry, stepMock1);
       
       var result = (WhereExpressionNode) parser.ParseTree (inputExpression);
 
       stepMock1.VerifyAllExpectations ();
-      stepMock2.VerifyAllExpectations ();
-      Assert.That (result.Predicate, Is.SameAs (transformedExpression2Predicate));
+      Assert.That (result.Predicate, Is.SameAs (predicate));
     }
 
     [Test]
@@ -401,7 +395,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     [Test]
     public void GetQueryOperatorExpression_MemberExpression_NotRegistered ()
     {
-      var expressionTreeParser = new ExpressionTreeParser (new MethodInfoBasedNodeTypeRegistry (), new IExpressionTreeProcessingStep[0]);
+      var expressionTreeParser = new ExpressionTreeParser (new MethodInfoBasedNodeTypeRegistry (), new NullStep ());
       var memberExpression = (MemberExpression) ExpressionHelper.MakeExpression (() => new List<int> ().Count);
       var queryOperatorExpression = expressionTreeParser.GetQueryOperatorExpression (memberExpression);
 
@@ -439,7 +433,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     [Test]
     public void GetQueryOperatorExpression_ArrayLength_NotRegistered ()
     {
-      var expressionTreeParser = new ExpressionTreeParser (new MethodInfoBasedNodeTypeRegistry (), new IExpressionTreeProcessingStep[0]);
+      var expressionTreeParser = new ExpressionTreeParser (new MethodInfoBasedNodeTypeRegistry (), new NullStep ());
       var memberExpression = (UnaryExpression) ExpressionHelper.MakeExpression (() => new int[0].Length);
       var queryOperatorExpression = expressionTreeParser.GetQueryOperatorExpression (memberExpression);
 
