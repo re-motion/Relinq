@@ -57,28 +57,6 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
     }
 
     [Test]
-    public void CreateDefault ()
-    {
-      var parser = ExpressionTreeParser.CreateDefault();
-      Assert.That (parser.NodeTypeProvider, Is.TypeOf (typeof (CompoundNodeTypeProvider)));
-      Assert.That (((CompoundNodeTypeProvider) parser.NodeTypeProvider).InnerProviders[0], Is.TypeOf (typeof (MethodInfoBasedNodeTypeRegistry)));
-      Assert.That (((CompoundNodeTypeProvider) parser.NodeTypeProvider).InnerProviders[1], Is.TypeOf (typeof (MethodNameBasedNodeTypeRegistry)));
-
-      Assert.That (parser.ProcessingSteps.Count, Is.EqualTo (2));
-      Assert.That (parser.ProcessingSteps[0], Is.TypeOf (typeof (PartialEvaluationStep)));
-      Assert.That (parser.ProcessingSteps[1], Is.TypeOf (typeof (ExpressionTransformationStep)));
-      Assert.That (
-          ((ExpressionTransformationStep) parser.ProcessingSteps[1]).Provider,
-          Is.TypeOf (typeof (ExpressionTransformerRegistry)));
-
-      var expressionTransformerRegistry =
-          ((ExpressionTransformerRegistry) ((ExpressionTransformationStep) parser.ProcessingSteps[1]).Provider);
-      Assert.That (
-          expressionTransformerRegistry.RegisteredTransformerCount,
-          Is.EqualTo (ExpressionTransformerRegistry.CreateDefault ().RegisteredTransformerCount));
-    }
-
-    [Test]
     public void CreateDefaultProcessingSteps ()
     {
       var inputTransformerRegistry = ExpressionTransformerRegistry.CreateDefault();

@@ -37,11 +37,12 @@ namespace Remotion.Data.Linq.Parsing.Structure
   {
     private static readonly MethodInfo s_getArrayLengthMethod = typeof (Array).GetMethod ("get_Length");
 
+    [Obsolete (
+        "This method has been removed. Use QueryParser.CreateDefault, or create a customized ExpressionTreeParser using the constructor. (1.13.93)", 
+        true)]
     public static ExpressionTreeParser CreateDefault ()
     {
-      return new ExpressionTreeParser (
-          CompoundNodeTypeProvider.CreateDefault (), 
-          CreateDefaultProcessingSteps (ExpressionTransformerRegistry.CreateDefault()));
+      throw new NotImplementedException();
     }
 
     public static IExpressionTreeProcessingStep[] CreateDefaultProcessingSteps (IExpressionTranformationProvider tranformationProvider)

@@ -19,6 +19,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Data.Linq.Clauses;
+using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Data.Linq.Utilities;
 
@@ -39,7 +40,11 @@ namespace Remotion.Data.Linq.Parsing.Structure
     /// </summary>
     public static QueryParser CreateDefault ()
     {
-      return new QueryParser(ExpressionTreeParser.CreateDefault());
+      var transformerRegistry = ExpressionTransformerRegistry.CreateDefault();
+      var expressionTreeParser = new ExpressionTreeParser (
+          CompoundNodeTypeProvider.CreateDefault (), 
+          ExpressionTreeParser.CreateDefaultProcessingSteps (transformerRegistry));
+      return new QueryParser(expressionTreeParser);
     }
 
     private readonly ExpressionTreeParser _expressionTreeParser;
