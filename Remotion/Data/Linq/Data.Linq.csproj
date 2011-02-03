@@ -144,10 +144,10 @@
     <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\VBInformationIsNothingExpressionTransformer.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\EvaluatableTreeFindingExpressionTreeVisitor.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\PartialEvaluationInfo.cs" />
-    <Compile Include="Parsing\Structure\CompoundNodeTypeProvider.cs" />
+    <Compile Include="Parsing\Structure\NodeTypeProviders\CompoundNodeTypeProvider.cs" />
     <Compile Include="Parsing\Structure\ExpressionTreeProcessors\CompoundExpressionTreeProcessor.cs" />
     <Compile Include="Parsing\Structure\ExpressionTreeProcessors\NullExpressionTreeProcessor.cs" />
-    <Compile Include="Parsing\Structure\MethodNameBasedNodeTypeRegistry.cs" />
+    <Compile Include="Parsing\Structure\NodeTypeProviders\MethodNameBasedNodeTypeRegistry.cs" />
     <Compile Include="Parsing\Structure\ExpressionTreeProcessors\TransformingExpressionTreeProcessor.cs" />
     <Compile Include="Parsing\Structure\ExpressionTreeProcessors\PartialEvaluatingExpressionTreeProcessor.cs" />
     <Compile Include="Parsing\Structure\IExpressionTreeProcessor.cs" />
@@ -178,7 +178,7 @@
     <Compile Include="Parsing\Structure\IntermediateModel\CastExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\IExpressionNodeParseInfo.cs" />
     <Compile Include="Parsing\Structure\IQueryParser.cs" />
-    <Compile Include="Parsing\Structure\NameBasedRegistrationInfo.cs" />
+    <Compile Include="Parsing\Structure\NodeTypeProviders\NameBasedRegistrationInfo.cs" />
     <Compile Include="Parsing\ThrowingExpressionTreeVisitor.cs" />
     <Compile Include="Parsing\TupleExpressionBuilder.cs" />
     <Compile Include="QueryModelBuilder.cs" />
@@ -205,7 +205,7 @@
     <Compile Include="Clauses\IBodyClause.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\ReplacingExpressionTreeVisitor.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ResultOperatorExpressionNodeBase.cs" />
-    <Compile Include="Parsing\Structure\MethodInfoBasedNodeTypeRegistry.cs" />
+    <Compile Include="Parsing\Structure\NodeTypeProviders\MethodInfoBasedNodeTypeRegistry.cs" />
     <Compile Include="Parsing\Structure\ExpressionTreeParser.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\MethodCallExpressionNodeFactory.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\MainSourceExpressionNode.cs" />

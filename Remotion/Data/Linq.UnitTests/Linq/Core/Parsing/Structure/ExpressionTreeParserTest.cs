@@ -26,6 +26,7 @@ using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.ExpressionTreeProcessors;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
+using Remotion.Data.Linq.Parsing.Structure.NodeTypeProviders;
 using Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.TestDomain;
 using Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Data.Linq.UnitTests.Linq.Core.TestUtilities;

@@ -4,11 +4,11 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
+using Remotion.Data.Linq.Parsing.Structure.NodeTypeProviders;
 using Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.TestDomain;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
+namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.NodeTypeProviders
 {
   [TestFixture]
   public class MethodInfoBasedNodeTypeRegistryTest

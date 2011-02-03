@@ -23,7 +23,7 @@ using Remotion.Data.Linq.Collections;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Data.Linq.Utilities;
 
-namespace Remotion.Data.Linq.Parsing.Structure
+namespace Remotion.Data.Linq.Parsing.Structure.NodeTypeProviders
 {
   /// <summary>
   /// Maps the <see cref="MethodInfo"/> objects used in <see cref="MethodCallExpression"/> objects to the respective <see cref="IExpressionNode"/>

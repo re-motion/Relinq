@@ -18,7 +18,7 @@ using System;
 using System.Reflection;
 using Remotion.Data.Linq.Utilities;
 
-namespace Remotion.Data.Linq.Parsing.Structure
+namespace Remotion.Data.Linq.Parsing.Structure.NodeTypeProviders
 {
   /// <summary>
   /// Defines a name and a filter predicate used when determining the matching expression node type by <see cref="MethodNameBasedNodeTypeRegistry"/>.

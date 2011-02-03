@@ -23,6 +23,7 @@ using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation;
 using Remotion.Data.Linq.Parsing.Structure.ExpressionTreeProcessors;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
+using Remotion.Data.Linq.Parsing.Structure.NodeTypeProviders;
 using Remotion.Data.Linq.Utilities;
 using System.Reflection;
 

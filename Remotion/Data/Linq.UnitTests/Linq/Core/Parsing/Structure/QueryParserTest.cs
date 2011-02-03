@@ -25,6 +25,7 @@ using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.ExpressionTreeProcessors;
+using Remotion.Data.Linq.Parsing.Structure.NodeTypeProviders;
 
 namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
 {

@@ -15,15 +15,14 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
+using Remotion.Data.Linq.Parsing.Structure.NodeTypeProviders;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
+namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.NodeTypeProviders
 {
   [TestFixture]
   public class MethodNameBasedNodeTypeRegistryTest

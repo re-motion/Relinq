@@ -20,7 +20,7 @@ using System.Reflection;
 using Remotion.Data.Linq.Utilities;
 using System.Linq;
 
-namespace Remotion.Data.Linq.Parsing.Structure
+namespace Remotion.Data.Linq.Parsing.Structure.NodeTypeProviders
 {
   /// <summary>
   /// Implements <see cref="INodeTypeProvider"/> by storing a list of inner <see cref="INodeTypeProvider"/> instances.
