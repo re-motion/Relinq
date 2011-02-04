@@ -77,16 +77,22 @@ public static class EagerFetchingExtensionMethods
     </para>
     
     <para>
-      Then, register those extension methods from within your implementation of <see cref="Remotion.Data.Linq.QueryableBase{T}"/>:
+      Then, register those extension methods when instantiating your <see cref="Remotion.Data.Linq.Parsing.Structure.QueryParser"/>:
       <code>
-var nodeTypeProvider = MethodInfoBasedNodeTypeRegistry.CreateDefault();
+var customNodeTypeRegistry = new MethodInfoBasedNodeTypeRegistry();
 
-nodeTypeProvider.Register (new[] { typeof (EagerFetchingExtensionMethods).GetMethod ("FetchOne") }, typeof (FetchOneExpressionNode));
-nodeTypeProvider.Register (new[] { typeof (EagerFetchingExtensionMethods).GetMethod ("FetchMany") }, typeof (FetchManyExpressionNode));
-nodeTypeProvider.Register (new[] { typeof (EagerFetchingExtensionMethods).GetMethod ("ThenFetchOne") }, typeof (ThenFetchOneExpressionNode));
-nodeTypeProvider.Register (new[] { typeof (EagerFetchingExtensionMethods).GetMethod ("ThenFetchMany") }, typeof (ThenFetchManyExpressionNode));
+customNodeTypeRegistry.Register (new[] { typeof (EagerFetchingExtensionMethods).GetMethod ("FetchOne") }, typeof (FetchOneExpressionNode));
+customNodeTypeRegistry.Register (new[] { typeof (EagerFetchingExtensionMethods).GetMethod ("FetchMany") }, typeof (FetchManyExpressionNode));
+customNodeTypeRegistry.Register (new[] { typeof (EagerFetchingExtensionMethods).GetMethod ("ThenFetchOne") }, typeof (ThenFetchOneExpressionNode));
+customNodeTypeRegistry.Register (new[] { typeof (EagerFetchingExtensionMethods).GetMethod ("ThenFetchMany") }, typeof (ThenFetchManyExpressionNode));
 
-return new DefaultQueryProvider (typeof (MyQueryable&lt;&gt;), executor, nodeTypeProvider);
+var nodeTypeProvider = ExpressionTreeParser.CreateDefaultNodeTypeProvider ();
+nodeTypeProvider.InnerProviders.Add (customNodeTypeRegistry);
+
+var transformerRegistry = ExpressionTransformerRegistry.CreateDefault ();
+var processor = ExpressionTreeParser.CreateDefaultProcessor (transformerRegistry);
+var expressionTreeParser = new ExpressionTreeParser (nodeTypeProvider, processor);
+var queryParser = new QueryParser (expressionTreeParser);
       </code>
       (Pass that query provider to <see cref="Remotion.Data.Linq.QueryableBase{T}"/>'s base constructor from your queryable class.)
     </para>
