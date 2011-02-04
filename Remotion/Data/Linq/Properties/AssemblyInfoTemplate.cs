@@ -24,8 +24,8 @@ using System.Security;
 // associated with an assembly.
 //
 
-[assembly: AssemblyTitle("Remotion Linq Library")]
-[assembly: AssemblyDescription("Framework for working with linq queries.")]
+[assembly: AssemblyTitle("re-linq front-end Library")]
+[assembly: AssemblyDescription("Library for parsing and transforming LINQ queries.")]
 [assembly: AssemblyConfiguration("@buildinfo@")]
 [assembly: AssemblyCompany("@company@")]
 [assembly: AssemblyProduct("@productname@")]
