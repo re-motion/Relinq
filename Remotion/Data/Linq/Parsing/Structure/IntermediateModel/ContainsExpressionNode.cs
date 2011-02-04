@@ -22,6 +22,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.ResultOperators;
+using Remotion.Data.Linq.Parsing.Structure.NodeTypeProviders;
 using Remotion.Data.Linq.Utilities;
 
 namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
@@ -35,13 +36,18 @@ namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
   public class ContainsExpressionNode : ResultOperatorExpressionNodeBase
   {
     public static readonly MethodInfo[] SupportedMethods = new[]
-                                                           {
-                                                             GetSupportedMethod (() => Queryable.Contains<object> (null, null)),
-                                                             GetSupportedMethod (() => Enumerable.Contains<object>(null, null)),
-                                                             typeof(ICollection<>).GetMethod("Contains"),
-                                                             typeof(IList).GetMethod("Contains"),
-                                                             typeof(List<>).GetMethod("Contains")
-                                                           };
+        {
+          GetSupportedMethod (() => Queryable.Contains<object> (null, null)),
+          GetSupportedMethod (() => Enumerable.Contains<object>(null, null)),
+        };
+
+    public static readonly NameBasedRegistrationInfo[] SupportedMethodNames = new[]
+        {
+          new NameBasedRegistrationInfo (
+              "Contains",
+              mi => mi.DeclaringType != typeof (string) && typeof (IEnumerable).IsAssignableFrom (mi.DeclaringType)
+                  && (mi.IsStatic && mi.GetParameters().Length == 2 || !mi.IsStatic && mi.GetParameters().Length == 1))
+        };
 
     public ContainsExpressionNode (MethodCallExpressionParseInfo parseInfo, Expression item)
         : base(parseInfo, null, null)

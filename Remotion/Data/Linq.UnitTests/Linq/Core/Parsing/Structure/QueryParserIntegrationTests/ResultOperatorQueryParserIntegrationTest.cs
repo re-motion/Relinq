@@ -427,7 +427,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
     }
 
     [Test]
-    public void Contains_List ()
+    public void Contains_TypeImplementingIList ()
     {
       var list = new List<Cook> ();
       var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource

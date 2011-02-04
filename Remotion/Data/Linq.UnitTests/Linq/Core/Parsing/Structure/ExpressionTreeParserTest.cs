@@ -67,7 +67,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
       Assert.That (result.InnerProviders[1], Is.TypeOf (typeof (MethodNameBasedNodeTypeRegistry)));
 
       Assert.That (((MethodInfoBasedNodeTypeRegistry) result.InnerProviders[0]).RegisteredMethodInfoCount, Is.GreaterThan (0));
-      Assert.That (((MethodNameBasedNodeTypeRegistry) result.InnerProviders[1]).RegisteredNamesCount, Is.EqualTo(0));
+      Assert.That (((MethodNameBasedNodeTypeRegistry) result.InnerProviders[1]).RegisteredNamesCount, Is.GreaterThan (0));
     }
 
     [Test]
@@ -218,6 +218,10 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
       var querySourceExpression = Expression.Parameter (typeof (List<int>), "querySource");
       var itemExpression = Expression.Constant (4);
       var expression = Expression.Call (querySourceExpression, containsMethod, itemExpression);
+
+      _methodInfoBasedNodeTypeRegistry.Register (
+          new[] { MethodInfoBasedNodeTypeRegistry.GetRegisterableMethodDefinition(containsMethod) }, 
+          typeof (ContainsExpressionNode));
 
       var result = _expressionTreeParser.ParseTree (expression);
 

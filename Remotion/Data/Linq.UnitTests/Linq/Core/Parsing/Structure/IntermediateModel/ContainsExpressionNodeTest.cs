@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Data.Linq.Clauses.ResultOperators;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
 
@@ -41,9 +40,19 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateM
     public void SupportedMethods ()
     {
       AssertSupportedMethod_Generic (ContainsExpressionNode.SupportedMethods, q => q.Contains (null), e => e.Contains (null));
-      Assert.That (ContainsExpressionNode.SupportedMethods, List.Contains (typeof (List<>).GetMethod ("Contains")));
-      Assert.That (ContainsExpressionNode.SupportedMethods, List.Contains (typeof (ICollection<>).GetMethod ("Contains")));
-      Assert.That (ContainsExpressionNode.SupportedMethods, List.Contains (typeof (IList).GetMethod ("Contains")));
+    }
+
+    [Test]
+    public void SupportedMethodNames ()
+    {
+      AssertSupportedMethods_ByName (
+          ContainsExpressionNode.SupportedMethodNames,
+          () => ((IList<int>) null).Contains (0),
+          () => ((ICollection<int>) null).Contains (1),
+          () => ((IList) null).Contains (2),
+          () => ((List<int>) null).Contains (3));
+
+      AssertNotSupportedMethods_ByName (ContainsExpressionNode.SupportedMethodNames, () => ((string) null).Contains ("x"));
     }
 
     [Test]

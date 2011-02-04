@@ -25,6 +25,7 @@ using Remotion.Data.Linq.Clauses;
 using Remotion.Data.Linq.Clauses.Expressions;
 using Remotion.Data.Linq.Parsing.Structure;
 using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
+using Remotion.Data.Linq.Parsing.Structure.NodeTypeProviders;
 
 namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
 {
@@ -139,6 +140,36 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateM
       {
         var enumerableMethod = GetMethod_Enumerable (enumerableMethodCall);
         Assert.That (supportedMethods, List.Contains (enumerableMethod));
+      }
+    }
+
+    protected void AssertSupportedMethods_ByName<T> (IEnumerable<NameBasedRegistrationInfo> supportedMethodNames, params Expression<Func<T>>[] methodExpressions)
+    {
+      var nameBasedRegistry = new MethodNameBasedNodeTypeRegistry();
+      nameBasedRegistry.Register (supportedMethodNames, typeof (object));
+
+      foreach (var methodExpression in methodExpressions)
+      {
+        var methodInfo = ((MethodCallExpression) methodExpression.Body).Method;
+        Assert.That (
+            nameBasedRegistry.GetNodeType (methodInfo), 
+            Is.Not.Null, 
+            string.Format ("Method '{0}.{1}' is not supported ('{2}').", methodInfo.DeclaringType.Name, methodInfo.Name, methodExpression));
+      }
+    }
+
+    protected void AssertNotSupportedMethods_ByName<T> (IEnumerable<NameBasedRegistrationInfo> supportedMethodNames, params Expression<Func<T>>[] methodExpressions)
+    {
+      var nameBasedRegistry = new MethodNameBasedNodeTypeRegistry ();
+      nameBasedRegistry.Register (supportedMethodNames, typeof (object));
+
+      foreach (var methodExpression in methodExpressions)
+      {
+        var methodInfo = ((MethodCallExpression) methodExpression.Body).Method;
+        Assert.That (
+            nameBasedRegistry.GetNodeType (methodInfo),
+            Is.Null,
+            string.Format ("Method '{0}.{1}' is supported.", methodInfo.DeclaringType.Name, methodInfo.Name));
       }
     }
   }
