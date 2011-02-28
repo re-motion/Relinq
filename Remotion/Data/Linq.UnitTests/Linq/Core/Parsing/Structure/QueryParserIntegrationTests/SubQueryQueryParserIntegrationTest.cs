@@ -95,5 +95,34 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIn
       Assert.That (innerSubQuery.QueryModel.IsIdentityQuery (), Is.True);
       CheckConstantQuerySource (innerSubQuery.QueryModel.MainFromClause.FromExpression, QuerySource);
     }
+
+    [Test]
+    public void SubQuery_InAggregateResultOperatpr ()
+    {
+      var queryExpression = ExpressionHelper.MakeExpression (() => (
+          from c in QuerySource 
+          select c).Aggregate (0, (sum, current) => sum + current.Assistants.Count()));
+      var queryModel = QueryParser.GetParsedQuery (queryExpression);
+
+      Assert.That (queryModel.IsIdentityQuery (), Is.True);
+
+      Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (queryModel.ResultOperators[0], Is.TypeOf (typeof (AggregateFromSeedResultOperator)));
+
+      var aggregatorFunc = ((AggregateFromSeedResultOperator) queryModel.ResultOperators[0]).Func;
+      Assert.That (aggregatorFunc.Body, Is.TypeOf (typeof (BinaryExpression)));
+      Assert.That (((BinaryExpression) aggregatorFunc.Body).Left, Is.SameAs (aggregatorFunc.Parameters[0]));
+      Assert.That (((BinaryExpression) aggregatorFunc.Body).Right, Is.TypeOf (typeof (SubQueryExpression)));
+
+      var subQuery = ((SubQueryExpression) ((BinaryExpression) aggregatorFunc.Body).Right).QueryModel;
+      Assert.That (subQuery.IsIdentityQuery (), Is.True);
+      CheckResolvedExpression<Cook, IQueryable<Cook>> (
+          subQuery.MainFromClause.FromExpression, 
+          queryModel.MainFromClause, 
+          current => current.Assistants);
+
+      Assert.That (subQuery.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (subQuery.ResultOperators[0], Is.TypeOf (typeof (CountResultOperator)));
+    }
   }
 }
