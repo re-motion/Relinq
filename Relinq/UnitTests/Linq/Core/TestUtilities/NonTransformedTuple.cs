@@ -16,7 +16,7 @@
 // 
 using System;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.TestUtilities
+namespace Remotion.Linq.UnitTests.Linq.Core.TestUtilities
 {
   // Like Tuple, but not handled by TupleNewExpressionTransformer.
   // (Makes it easier to write unit tests with expected expressions.)

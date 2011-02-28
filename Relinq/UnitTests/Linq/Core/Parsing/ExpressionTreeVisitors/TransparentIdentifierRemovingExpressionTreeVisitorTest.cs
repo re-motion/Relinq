@@ -28,7 +28,7 @@ using Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Linq.Parsing.Structure.NodeTypeProviders;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
+namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
 {
   [TestFixture]
   public class TransparentIdentifierRemovingExpressionTreeVisitorTest

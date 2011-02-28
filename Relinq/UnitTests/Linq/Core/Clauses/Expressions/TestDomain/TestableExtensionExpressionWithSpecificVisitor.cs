@@ -19,7 +19,7 @@ using System.Linq.Expressions;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Parsing;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.Expressions.TestDomain
+namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.Expressions.TestDomain
 {
   public class TestableExtensionExpressionWithSpecificVisitor : ExtensionExpression
   {

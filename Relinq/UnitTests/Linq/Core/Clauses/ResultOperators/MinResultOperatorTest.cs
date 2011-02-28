@@ -23,7 +23,7 @@ using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
+namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
 {
   [TestFixture]
   public class MinResultOperatorTest

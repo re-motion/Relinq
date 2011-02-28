@@ -16,7 +16,7 @@
 // 
 using System;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.TestUtilities
+namespace Remotion.Linq.UnitTests.Linq.Core.TestUtilities
 {
   public static class Dev
   {

@@ -22,7 +22,7 @@ using Remotion.Linq.Clauses;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Linq.Parsing.Structure.NodeTypeProviders;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.NodeTypeProviders
+namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.NodeTypeProviders
 {
   [TestFixture]
   public class MethodNameBasedNodeTypeRegistryTest

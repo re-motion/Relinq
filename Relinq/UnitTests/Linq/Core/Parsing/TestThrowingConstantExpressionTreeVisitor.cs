@@ -18,7 +18,7 @@ using System;
 using System.Linq.Expressions;
 using Remotion.Linq.Parsing;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing
+namespace Remotion.Linq.UnitTests.Linq.Core.Parsing
 {
   public class TestThrowingConstantExpressionTreeVisitor : ThrowingExpressionTreeVisitor
   {

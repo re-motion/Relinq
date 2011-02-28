@@ -17,7 +17,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
+namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
 {
   public class SimpleClass
   {

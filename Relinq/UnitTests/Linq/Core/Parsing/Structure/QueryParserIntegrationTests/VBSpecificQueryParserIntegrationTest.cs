@@ -20,11 +20,11 @@ using System.Linq.Expressions;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using NUnit.Framework;
-using Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain;
+using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegrationTests
+namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegrationTests
 {
   [TestFixture]
   public class VBSpecificQueryParserIntegrationTest : QueryParserIntegrationTestBase

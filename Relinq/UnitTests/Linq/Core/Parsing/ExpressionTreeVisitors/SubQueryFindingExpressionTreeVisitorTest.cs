@@ -20,10 +20,10 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.TestDomain;
-using Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain;
-using Remotion.Data.Linq.UnitTests.Linq.Core.TestQueryGenerators;
-using Remotion.Data.Linq.UnitTests.Linq.Core.TestUtilities;
+using Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.TestDomain;
+using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
+using Remotion.Linq.UnitTests.Linq.Core.TestQueryGenerators;
+using Remotion.Linq.UnitTests.Linq.Core.TestUtilities;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Linq.Parsing.Structure;
@@ -31,7 +31,7 @@ using Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Linq.Parsing.Structure.NodeTypeProviders;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
+namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
 {
   [TestFixture]
   public class SubQueryFindingExpressionTreeVisitorTest

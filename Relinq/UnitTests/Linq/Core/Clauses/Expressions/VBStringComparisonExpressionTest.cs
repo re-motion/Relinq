@@ -22,7 +22,7 @@ using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Parsing;
 using Rhino.Mocks;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.Expressions
+namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.Expressions
 {
   [TestFixture]
   public class VBStringComparisonExpressionTest

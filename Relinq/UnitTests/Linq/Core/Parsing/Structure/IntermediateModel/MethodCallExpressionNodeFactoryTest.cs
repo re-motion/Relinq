@@ -18,11 +18,11 @@ using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel.TestDomain;
+using Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel.TestDomain;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
+namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
 {
   [TestFixture]
   public class MethodCallExpressionNodeFactoryTest
@@ -67,7 +67,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateM
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "Expression node type 'Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure."
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "Expression node type 'Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure."
         + "IntermediateModel.TestDomain.ExpressionNodeWithTooManyCtors' contains too many constructors. It must only contain a single constructor, allowing null "
         + "to be passed for any optional arguments.\r\nParameter name: nodeType")]
     public void CreateExpressionNode_MoreThanOneCtor ()
@@ -77,7 +77,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateM
 
     [Test]
     [ExpectedException (typeof (ExpressionNodeInstantiationException), ExpectedMessage = 
-        "The constructor of expression node type 'Remotion.Data.Linq.Parsing.Structure."
+        "The constructor of expression node type 'Remotion.Linq.Parsing.Structure."
         + "IntermediateModel.SelectExpressionNode' only takes 2 parameters, but you specified 3 (including the parse info parameter).")]
     public void CreateExpressionNode_TooManyParameters ()
     {
@@ -88,7 +88,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateM
     [Test]
     [ExpectedException (typeof (ExpressionNodeInstantiationException), ExpectedMessage =
         "The given arguments did not match the expected arguments: Object of type "
-        + "'Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.TestExtensionExpression' cannot be converted to type "
+        + "'Remotion.Linq.UnitTests.Linq.Core.Parsing.TestExtensionExpression' cannot be converted to type "
         + "'System.Linq.Expressions.LambdaExpression'.")]
     public void CreateExpressionNode_InvalidNodeParameterType ()
     {

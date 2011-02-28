@@ -18,7 +18,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq;
 
-namespace Remotion.Data.Linq.UnitTests
+namespace Remotion.Linq.UnitTests
 {
   [TestFixture]
   public class UniqueIdentifierGeneratorTest

@@ -19,14 +19,14 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.Expressions.TestDomain;
-using Remotion.Data.Linq.UnitTests.Linq.Core.Parsing;
+using Remotion.Linq.UnitTests.Linq.Core.Clauses.Expressions.TestDomain;
+using Remotion.Linq.UnitTests.Linq.Core.Parsing;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Parsing;
 using Rhino.Mocks;
-using Remotion.Data.Linq.UnitTests.Linq.Core.TestUtilities;
+using Remotion.Linq.UnitTests.Linq.Core.TestUtilities;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.Expressions
+namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.Expressions
 {
   [TestFixture]
   public class ExtensionExpressionTest

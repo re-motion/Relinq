@@ -20,13 +20,13 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain;
+using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
+namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
 {
   [TestFixture]
   public class OfTypeResultOperatorTest
@@ -94,7 +94,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
     [Test]
     public new void ToString ()
     {
-      Assert.That (_resultOperator.ToString (), Is.EqualTo ("OfType<Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain.Chef>()"));
+      Assert.That (_resultOperator.ToString (), Is.EqualTo ("OfType<Remotion.Linq.UnitTests.Linq.Core.TestDomain.Chef>()"));
     }
   }
 }

@@ -20,7 +20,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using Remotion.Linq.Utilities;
 
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.TestUtilities
+namespace Remotion.Linq.UnitTests.Linq.Core.TestUtilities
 {
   /// <summary>
   /// Provides quick serialization and deserialization functionality for unit tests.

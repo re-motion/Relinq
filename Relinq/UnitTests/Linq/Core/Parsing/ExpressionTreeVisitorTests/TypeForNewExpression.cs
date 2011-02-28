@@ -16,7 +16,7 @@
 // 
 using System;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
+namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
 {
   internal class TypeForNewExpression
   {

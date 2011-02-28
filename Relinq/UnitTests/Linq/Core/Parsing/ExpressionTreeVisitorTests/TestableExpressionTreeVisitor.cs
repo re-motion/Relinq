@@ -16,7 +16,7 @@
 // 
 using Remotion.Linq.Parsing;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
+namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
 {
   public class TestableExpressionTreeVisitor : ExpressionTreeVisitor
   {

@@ -24,9 +24,9 @@ using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.Clauses.Expressions;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;
-using Remotion.Data.Linq.UnitTests.Linq.Core.TestUtilities;
+using Remotion.Linq.UnitTests.Linq.Core.TestUtilities;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
+namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
 {
   [TestFixture]
   public class ExpressionTreeVisitor_SpecificExpressionsTest : ExpressionTreeVisitorTestBase

@@ -16,7 +16,7 @@
 // 
 using System;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain
+namespace Remotion.Linq.UnitTests.Linq.Core.TestDomain
 {
   public class Kitchen
   {

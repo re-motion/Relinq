@@ -19,14 +19,14 @@ using System.Collections;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain;
+using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
+namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
 {
   [TestFixture]
   public class ContainsResultOperatorTest
@@ -81,7 +81,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
 
     [Test]
     [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage = 
-        "The items of the input sequence of type 'Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain.Cook' are not compatible with the item expression "
+        "The items of the input sequence of type 'Remotion.Linq.UnitTests.Linq.Core.TestDomain.Cook' are not compatible with the item expression "
         + "of type 'System.Int32'.\r\nParameter name: inputInfo")]
     public void GetOutputDataInfo_InvalidInput_DoesntMatchItem ()
     {

@@ -21,7 +21,7 @@ using Remotion.Linq.Parsing.Structure;
 using Remotion.Linq.Parsing.Structure.NodeTypeProviders;
 using Rhino.Mocks;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.NodeTypeProviders
+namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.NodeTypeProviders
 {
   [TestFixture]
   public class CompoundNodeTypeProviderTest

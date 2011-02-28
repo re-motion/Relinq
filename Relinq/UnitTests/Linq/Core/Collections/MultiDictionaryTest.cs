@@ -20,7 +20,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.Collections;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Collections
+namespace Remotion.Linq.UnitTests.Linq.Core.Collections
 {
   [TestFixture]
   public class MultiDictionaryTest

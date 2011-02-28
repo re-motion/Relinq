@@ -18,11 +18,11 @@ using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain;
-using Remotion.Data.Linq.UnitTests.Linq.Core.TestQueryGenerators;
+using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
+using Remotion.Linq.UnitTests.Linq.Core.TestQueryGenerators;
 using Remotion.Linq.Clauses;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegrationTests
+namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegrationTests
 {
   [TestFixture]
   public class OrderByQueryParserIntegrationTest : QueryParserIntegrationTestBase

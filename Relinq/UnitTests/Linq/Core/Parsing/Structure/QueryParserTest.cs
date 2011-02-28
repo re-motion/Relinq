@@ -28,7 +28,7 @@ using Remotion.Linq.Parsing.Structure;
 using Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors;
 using Remotion.Linq.Parsing.Structure.NodeTypeProviders;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure
+namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
 {
   [TestFixture]
   public class QueryParserTest

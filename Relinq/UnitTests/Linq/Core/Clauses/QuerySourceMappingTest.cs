@@ -21,7 +21,7 @@ using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses
+namespace Remotion.Linq.UnitTests.Linq.Core.Clauses
 {
   [TestFixture]
   public class QuerySourceMappingTest

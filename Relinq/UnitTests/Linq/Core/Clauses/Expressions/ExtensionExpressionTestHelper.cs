@@ -20,13 +20,13 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.UnitTests.Linq.Core.TestUtilities;
+using Remotion.Linq.UnitTests.Linq.Core.TestUtilities;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Parsing;
 using Remotion.Linq.Utilities;
 using Rhino.Mocks;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.Expressions
+namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.Expressions
 {
   public static class ExtensionExpressionTestHelper
   {

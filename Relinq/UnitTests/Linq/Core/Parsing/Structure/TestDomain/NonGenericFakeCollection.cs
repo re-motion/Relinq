@@ -19,7 +19,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.TestDomain
+namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.TestDomain
 {
   public class NonGenericFakeCollection : ArrayList, IEnumerable<object>
   {

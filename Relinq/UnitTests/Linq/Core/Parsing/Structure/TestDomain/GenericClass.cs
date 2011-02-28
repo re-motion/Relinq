@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.TestDomain
+namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.TestDomain
 {
   public class GenericClass<T>
   {

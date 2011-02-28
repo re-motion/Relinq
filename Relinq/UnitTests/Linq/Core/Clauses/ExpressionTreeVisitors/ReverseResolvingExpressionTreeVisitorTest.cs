@@ -18,13 +18,13 @@ using System;
 using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
-using Remotion.Data.Linq.UnitTests.Linq.Core.Parsing;
-using Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain;
+using Remotion.Linq.UnitTests.Linq.Core.Parsing;
+using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ExpressionTreeVisitors;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.ExpressionTreeVisitors
+namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ExpressionTreeVisitors
 {
   [TestFixture]
   public class ReverseResolvingExpressionTreeVisitorTest

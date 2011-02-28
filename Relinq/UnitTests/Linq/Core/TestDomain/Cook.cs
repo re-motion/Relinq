@@ -26,7 +26,7 @@ using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.SqlBackend.SqlPreparation;
 using Remotion.Linq.SqlBackend.SqlStatementModel.SqlSpecificExpressions;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain
+namespace Remotion.Linq.UnitTests.Linq.Core.TestDomain
 {
   public class Cook : ISpecificCook
   {

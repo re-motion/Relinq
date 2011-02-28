@@ -20,7 +20,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain;
+using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Linq;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
@@ -28,7 +28,7 @@ using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
 using Rhino.Mocks;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core
+namespace Remotion.Linq.UnitTests.Linq.Core
 {
   [TestFixture]
   public class QueryModelTest

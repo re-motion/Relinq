@@ -16,12 +16,10 @@
 // 
 using System;
 using System.Linq.Expressions;
-using Remotion.Data.Linq;
-using Remotion.Linq;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel.TestDomain
+namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel.TestDomain
 {
   public class ExpressionNodeWithTooManyCtors : IExpressionNode
   {

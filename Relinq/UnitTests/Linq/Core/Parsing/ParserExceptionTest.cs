@@ -17,10 +17,10 @@
 using System;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.UnitTests.Linq.Core.TestUtilities;
+using Remotion.Linq.UnitTests.Linq.Core.TestUtilities;
 using Remotion.Linq.Parsing;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing
+namespace Remotion.Linq.UnitTests.Linq.Core.Parsing
 {
   [TestFixture]
   public class ParserExceptionTest

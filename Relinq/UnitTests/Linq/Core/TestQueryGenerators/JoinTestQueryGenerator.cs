@@ -16,10 +16,10 @@
 // 
 using System;
 using System.Linq;
-using Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain;
-using Remotion.Data.Linq.UnitTests.Linq.Core.TestUtilities;
+using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
+using Remotion.Linq.UnitTests.Linq.Core.TestUtilities;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.TestQueryGenerators
+namespace Remotion.Linq.UnitTests.Linq.Core.TestQueryGenerators
 {
   internal static class JoinTestQueryGenerator
   {

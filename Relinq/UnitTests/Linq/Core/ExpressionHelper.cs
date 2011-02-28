@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain;
+using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Linq;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
@@ -27,7 +27,7 @@ using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Linq.Parsing.Structure;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core
+namespace Remotion.Linq.UnitTests.Linq.Core
 {
   public static class ExpressionHelper
   {

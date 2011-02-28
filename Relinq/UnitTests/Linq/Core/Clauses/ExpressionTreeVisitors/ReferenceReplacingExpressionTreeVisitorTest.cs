@@ -18,13 +18,13 @@ using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.UnitTests.Linq.Core.Parsing;
-using Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors;
+using Remotion.Linq.UnitTests.Linq.Core.Parsing;
+using Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ExpressionTreeVisitors;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.ExpressionTreeVisitors
+namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ExpressionTreeVisitors
 {
   [TestFixture]
   public class ReferenceReplacingExpressionTreeVisitorTest

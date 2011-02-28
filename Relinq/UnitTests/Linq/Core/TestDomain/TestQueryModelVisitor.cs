@@ -19,7 +19,7 @@ using Remotion.Linq;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Collections;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain
+namespace Remotion.Linq.UnitTests.Linq.Core.TestDomain
 {
   public class TestQueryModelVisitor : QueryModelVisitorBase
   {

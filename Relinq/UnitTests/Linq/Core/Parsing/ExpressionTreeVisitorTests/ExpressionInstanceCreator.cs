@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
+namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
 {
   public static class ExpressionInstanceCreator
   {

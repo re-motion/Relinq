@@ -18,7 +18,7 @@ using System;
 using System.Linq.Expressions;
 using Remotion.Linq.Parsing;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.Expressions.TestDomain
+namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.Expressions.TestDomain
 {
   public class SpecificVisitor : ExpressionTreeVisitor, ISpecificVisitor
   {

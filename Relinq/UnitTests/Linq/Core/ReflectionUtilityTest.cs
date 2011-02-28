@@ -23,7 +23,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core
+namespace Remotion.Linq.UnitTests.Linq.Core
 {
   [TestFixture]
   public class ReflectionUtilityTest

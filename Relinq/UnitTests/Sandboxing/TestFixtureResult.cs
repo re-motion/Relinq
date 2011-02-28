@@ -16,10 +16,10 @@
 // 
 using System;
 
-// Note: This file is originally defined in Remotion.Development.UnitTesting.Sandboxing. It is duplicated by Remotion.Data.Linq.UnitTests.Sandboxing.
+// Note: This file is originally defined in Remotion.Development.UnitTesting.Sandboxing. It is duplicated by Remotion.Linq.UnitTests.Sandboxing.
 // Note: Changes made to this file must be synchronized with all copies.
 
-namespace Remotion.Data.Linq.UnitTests.Sandboxing
+namespace Remotion.Linq.UnitTests.Sandboxing
 {
   /// <summary>
   /// <see cref="TestFixtureResult"/> holds the type of the test class and the result of the test methods.

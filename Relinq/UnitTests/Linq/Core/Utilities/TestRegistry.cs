@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Utilities
+namespace Remotion.Linq.UnitTests.Linq.Core.Utilities
 {
   public class TestRegistry : RegistryBase<TestRegistry, Type, ITestRegistry>
   {

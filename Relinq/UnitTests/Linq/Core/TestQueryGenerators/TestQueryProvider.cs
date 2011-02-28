@@ -17,11 +17,11 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain;
+using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Linq;
 using Remotion.Linq.Parsing.Structure;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.TestQueryGenerators
+namespace Remotion.Linq.UnitTests.Linq.Core.TestQueryGenerators
 {
   public class TestQueryProvider : QueryProviderBase
   {

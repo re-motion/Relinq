@@ -18,11 +18,11 @@ using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.Expressions.TestDomain;
-using Remotion.Data.Linq.UnitTests.Linq.Core.Parsing;
+using Remotion.Linq.UnitTests.Linq.Core.Clauses.Expressions.TestDomain;
+using Remotion.Linq.UnitTests.Linq.Core.Parsing;
 using Rhino.Mocks;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.Expressions
+namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.Expressions
 {
   [TestFixture]
   public class ExtensionExpressionIntegrationTest

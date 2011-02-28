@@ -23,7 +23,7 @@ using Remotion.Linq.Parsing;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
+namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
 {
   public class ExpressionTreeVisitorTestBase
   {

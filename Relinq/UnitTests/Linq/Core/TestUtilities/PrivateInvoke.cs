@@ -18,7 +18,7 @@ using System;
 using System.Reflection;
 using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.TestUtilities
+namespace Remotion.Linq.UnitTests.Linq.Core.TestUtilities
 {
   /// <summary>
   /// Provides utility functions for accessing non-public members.

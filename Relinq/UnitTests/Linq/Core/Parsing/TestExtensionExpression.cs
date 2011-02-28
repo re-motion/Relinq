@@ -21,7 +21,7 @@ using Remotion.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Linq.Parsing;
 using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing
+namespace Remotion.Linq.UnitTests.Linq.Core.Parsing
 {
   public class TestExtensionExpression : ExtensionExpression
   {

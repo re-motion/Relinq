@@ -21,10 +21,10 @@ using System.Reflection;
 using System.Security;
 using Remotion.Linq.Utilities;
 
-// Note: This file is originally defined in Remotion.Development.UnitTesting.Sandboxing. It is duplicated by Remotion.Data.Linq.UnitTests.Sandboxing.
+// Note: This file is originally defined in Remotion.Development.UnitTesting.Sandboxing. It is duplicated by Remotion.Linq.UnitTests.Sandboxing.
 // Note: Changes made to this file must be synchronized with all copies.
 
-namespace Remotion.Data.Linq.UnitTests.Sandboxing
+namespace Remotion.Linq.UnitTests.Sandboxing
 {
   /// <summary>
   /// <see cref="SandboxTestRunner"/> executes unit tests for the given types.

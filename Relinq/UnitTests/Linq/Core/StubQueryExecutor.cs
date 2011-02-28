@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using Remotion.Linq;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core
+namespace Remotion.Linq.UnitTests.Linq.Core
 {
   public class StubQueryExecutor : IQueryExecutor
   {

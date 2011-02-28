@@ -20,7 +20,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain;
+using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ResultOperators;
@@ -28,7 +28,7 @@ using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
+namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
 {
   [TestFixture]
   public class AggregateResultOperatorTest
@@ -119,7 +119,7 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
 
     [Test]
     [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage = "The input sequence must have items of type 'System.Int32', but it has "
-        + "items of type 'Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain.Cook'.\r\nParameter name: inputInfo")]
+        + "items of type 'Remotion.Linq.UnitTests.Linq.Core.TestDomain.Cook'.\r\nParameter name: inputInfo")]
     public void GetOutputDataInfo_InvalidInput_DoesntMatchItem ()
     {
       var input = new StreamedSequenceInfo (typeof (Cook[]), Expression.Constant (new Cook ()));

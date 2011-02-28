@@ -19,9 +19,9 @@ using System.Linq;
 using System.Security.Permissions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.UnitTests.Sandboxing;
+using Remotion.Linq.UnitTests.Sandboxing;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegrationTests
+namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegrationTests
 {
   [TestFixture]
   public class MediumTrustQueryParserIntegrationTest

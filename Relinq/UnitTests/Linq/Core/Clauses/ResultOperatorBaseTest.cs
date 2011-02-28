@@ -19,13 +19,11 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq;
-using Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.ResultOperators;
-using Remotion.Linq;
+using Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
 using Rhino.Mocks;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses
+namespace Remotion.Linq.UnitTests.Linq.Core.Clauses
 {
   [TestFixture]
   public class ResultOperatorBaseTest
@@ -101,8 +99,8 @@ namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses
 
     [Test]
     [ExpectedException (typeof (ArgumentException), ExpectedMessage = "Cannot call method 'ExecuteMethodWithNonMatchingArgumentType' on input of type "
-        + "'Remotion.Data.Linq.Clauses.StreamedData.StreamedSequence': Object of type 'Remotion.Data.Linq.Clauses.StreamedData."
-        + "StreamedSequence' cannot be converted to type 'Remotion.Data.Linq.Clauses.StreamedData.StreamedValue'."
+        + "'Remotion.Linq.Clauses.StreamedData.StreamedSequence': Object of type 'Remotion.Linq.Clauses.StreamedData."
+        + "StreamedSequence' cannot be converted to type 'Remotion.Linq.Clauses.StreamedData.StreamedValue'."
         + "\r\nParameter name: method")]
     public void InvokeGenericExecuteMethod_NonMatchingArgument ()
     {

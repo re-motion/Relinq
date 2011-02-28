@@ -17,9 +17,9 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain;
+using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.TestQueryGenerators
+namespace Remotion.Linq.UnitTests.Linq.Core.TestQueryGenerators
 {
   public static class DistinctTestQueryGenerator
   {

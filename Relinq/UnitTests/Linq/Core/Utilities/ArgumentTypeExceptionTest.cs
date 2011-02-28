@@ -17,10 +17,10 @@
 using System;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.UnitTests.Linq.Core.TestUtilities;
+using Remotion.Linq.UnitTests.Linq.Core.TestUtilities;
 using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Utilities
+namespace Remotion.Linq.UnitTests.Linq.Core.Utilities
 {
   [TestFixture]
   public class ArgumentTypeExceptionTest

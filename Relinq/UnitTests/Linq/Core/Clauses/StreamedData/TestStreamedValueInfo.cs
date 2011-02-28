@@ -15,12 +15,10 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using Remotion.Data.Linq;
-using Remotion.Linq;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.StreamedData
+namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.StreamedData
 {
   public class TestStreamedValueInfo : StreamedValueInfo
   {

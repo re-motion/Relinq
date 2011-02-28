@@ -16,16 +16,14 @@
 // 
 using System;
 using NUnit.Framework;
-using Remotion.Data.Linq;
-using Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain;
-using Remotion.Data.Linq.UnitTests.Linq.Core.TestUtilities;
-using Remotion.Linq;
+using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
+using Remotion.Linq.UnitTests.Linq.Core.TestUtilities;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Collections;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core
+namespace Remotion.Linq.UnitTests.Linq.Core
 {
   [TestFixture]
   public class QueryModelVisitorBaseTest

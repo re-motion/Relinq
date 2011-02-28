@@ -18,7 +18,7 @@ using System;
 using System.Linq.Expressions;
 using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.UnitTests.Linq.Core
+namespace Remotion.Linq.UnitTests.Linq.Core
 {
   public class ExpressionTreeNavigator
   {

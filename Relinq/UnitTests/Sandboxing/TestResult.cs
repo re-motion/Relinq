@@ -17,10 +17,10 @@
 using System;
 using System.Reflection;
 
-// Note: This file is originally defined in Remotion.Development.UnitTesting.Sandboxing. It is duplicated by Remotion.Data.Linq.UnitTests.Sandboxing.
+// Note: This file is originally defined in Remotion.Development.UnitTesting.Sandboxing. It is duplicated by Remotion.Linq.UnitTests.Sandboxing.
 // Note: Changes made to this file must be synchronized with all copies.
 
-namespace Remotion.Data.Linq.UnitTests.Sandboxing
+namespace Remotion.Linq.UnitTests.Sandboxing
 {
   public enum TestStatus { Succeeded, Ignored, Failed, FailedInSetUp, FailedInTearDown };
 
