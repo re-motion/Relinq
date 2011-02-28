@@ -4,7 +4,7 @@
     <ProjectType>Local</ProjectType>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{1D56FFB7-8118-463A-81EA-37A8668BCD31}</ProjectGuid>
+    <ProjectGuid>{17484781-E537-4442-9915-CA47AC5F6858}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ApplicationIcon>
@@ -31,7 +31,7 @@
     </UpgradeBackupLocation>
     <OldToolsVersion>3.5</OldToolsVersion>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\..\..\remotion.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\..\remotion.snk</AssemblyOriginatorKeyFile>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -101,9 +101,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="nunit.framework">
-      <Name>nunit.framework</Name>
-      <HintPath>..\..\..\prereq\Assemblies\nunit.framework.dll</HintPath>
+    <Reference Include="nunit.framework, Version=2.5.2.9222, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\prereq\Assemblies\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="Rhino.Mocks, Version=2.8.7.11026, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -119,18 +119,6 @@
       <Name>System.Data</Name>
     </Reference>
     <Reference Include="System.Data.Linq" />
-    <ProjectReference Include="..\Linq.LinqToSqlAdapter\Data.Linq.LinqToSqlAdapter.csproj">
-      <Project>{EDBD197D-2A1C-4EA7-BC7E-C09562E307A4}</Project>
-      <Name>Data.Linq.LinqToSqlAdapter</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Linq.SqlBackend\Data.Linq.SqlBackend.csproj">
-      <Project>{F23F3422-D323-42CD-83D9-C0DEB2D3DC28}</Project>
-      <Name>Data.Linq.SqlBackend</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Linq\Data.Linq.csproj">
-      <Project>{DD9AA076-BE37-4A42-BA9E-C35ECC6955C9}</Project>
-      <Name>Data.Linq</Name>
-    </ProjectReference>
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
@@ -555,15 +543,15 @@
     <Compile Include="Linq\Core\TestUtilities\TupleAbcd.cs" />
     <Compile Include="Linq\Core\Utilities\HashCodeUtilityTest.cs" />
     <Compile Include="Linq\Core\Utilities\SeparatedStringBuilderTest.cs" />
+    <None Include="..\..\remotion.snk">
+      <Link>remotion.snk</Link>
+    </None>
     <None Include="Data.Linq.UnitTests.build">
       <SubType>Designer</SubType>
     </None>
     <None Include="Linq\Core\Parsing\ExpressionTrees\ExpressionTree_Grammar.docx" />
     <None Include="Properties\AssemblyInfoTemplate.cs">
       <SubType>Code</SubType>
-    </None>
-    <None Include="..\..\..\remotion.snk">
-      <Link>remotion.snk</Link>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -608,7 +596,20 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Linq.Core.csproj">
+      <Project>{028E7899-0D5F-49C8-9EB6-8B051E02F1E0}</Project>
+      <Name>Linq.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LinqToSqlAdapter\Linq.LinqToSqlAdapter.csproj">
+      <Project>{6A28082C-F2B7-40A3-9E32-0AB28E7DA46E}</Project>
+      <Name>Linq.LinqToSqlAdapter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SqlBackend\Linq.SqlBackend.csproj">
+      <Project>{EBA04D26-8D5B-4EF5-9898-C2D90373149C}</Project>
+      <Name>Linq.SqlBackend</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

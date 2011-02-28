@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{DD9AA076-BE37-4A42-BA9E-C35ECC6955C9}</ProjectGuid>
+    <ProjectGuid>{028E7899-0D5F-49C8-9EB6-8B051E02F1E0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Remotion.Data.Linq</RootNamespace>
@@ -13,7 +13,7 @@
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\..\..\remotion.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\..\remotion.snk</AssemblyOriginatorKeyFile>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
@@ -243,6 +243,9 @@
     <Compile Include="Parsing\Structure\QueryParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Clauses\MainFromClause.cs" />
+    <None Include="..\..\remotion.snk">
+      <Link>remotion.snk</Link>
+    </None>
     <None Include="Properties\AssemblyInfoTemplate.cs" />
     <Compile Include="QueryModel.cs" />
     <Compile Include="Clauses\SelectClause.cs" />
@@ -264,9 +267,6 @@
     <Compile Include="Utilities\SeparatedStringBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\remotion.snk">
-      <Link>remotion.snk</Link>
-    </None>
     <None Include="Data.Linq.build">
       <SubType>Designer</SubType>
     </None>
