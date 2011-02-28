@@ -14,12 +14,11 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-using System;
 using System.Linq.Expressions;
 using System.Reflection;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations
+namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations
 {
   /// <summary>
   /// Detects expressions calling the Information.IsNothing (...) method used by Visual Basic .NET, and replaces them with 

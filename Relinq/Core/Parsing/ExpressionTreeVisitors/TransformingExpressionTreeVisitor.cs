@@ -16,10 +16,10 @@
 // 
 using System.Diagnostics;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation;
+using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
+namespace Remotion.Linq.Parsing.ExpressionTreeVisitors
 {
   /// <summary>
   /// Applies <see cref="ExpressionTransformation"/> delegates obtained from an <see cref="IExpressionTranformationProvider"/> to an expression tree. 

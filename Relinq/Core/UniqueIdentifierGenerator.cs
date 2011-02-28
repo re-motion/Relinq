@@ -14,11 +14,10 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-using System;
 using System.Collections.Generic;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq
+namespace Remotion.Linq
 {
   /// <summary>
   /// Generates unique identifiers based on a set of known identifiers.

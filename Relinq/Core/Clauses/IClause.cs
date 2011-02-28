@@ -17,7 +17,7 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Remotion.Data.Linq.Clauses
+namespace Remotion.Linq.Clauses
 {
   /// <summary>
   /// Represents a clause within the <see cref="QueryModel"/>. Implemented by <see cref="MainFromClause"/>, <see cref="SelectClause"/>, 

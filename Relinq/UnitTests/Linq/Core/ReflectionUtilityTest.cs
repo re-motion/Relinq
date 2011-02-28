@@ -21,6 +21,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Remotion.Linq;
 
 namespace Remotion.Data.Linq.UnitTests.Linq.Core
 {

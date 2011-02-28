@@ -17,9 +17,9 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Clauses.StreamedData;
+using Remotion.Linq.Clauses.StreamedData;
 
-namespace Remotion.Data.Linq.Clauses.ResultOperators
+namespace Remotion.Linq.Clauses.ResultOperators
 {
   /// <summary>
   /// Represents reversing the sequence of items returned by of a query. 

@@ -15,9 +15,9 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.Parsing.Structure.ExpressionTreeProcessors
+namespace Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors
 {
   /// <summary>
   /// Implements the <see cref="IExpressionTreeProcessor"/> interface by doing nothing in the <see cref="Process"/> method. This is an

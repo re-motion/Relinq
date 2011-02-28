@@ -20,10 +20,10 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
-using Remotion.Data.Linq.Clauses.Expressions;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Linq.Clauses.Expressions;
+using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.Parsing
+namespace Remotion.Linq.Parsing
 {
   /// <summary>
   /// Provides a base class that can be used for visiting and optionally transforming each node of an <see cref="Expression"/> tree in a 

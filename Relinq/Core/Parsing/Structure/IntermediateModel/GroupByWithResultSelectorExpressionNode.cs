@@ -19,10 +19,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Linq.Parsing.ExpressionTreeVisitors;
+using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
+namespace Remotion.Linq.Parsing.Structure.IntermediateModel
 {
   /// <summary>
   /// Represents a <see cref="MethodCallExpression"/> for the different <see cref="O:Queryable.GroupBy"/> 

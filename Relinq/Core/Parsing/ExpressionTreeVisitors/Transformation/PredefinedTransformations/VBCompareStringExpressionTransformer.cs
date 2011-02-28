@@ -18,10 +18,10 @@ using System;
 using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
-using Remotion.Data.Linq.Clauses.Expressions;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Linq.Clauses.Expressions;
+using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations
+namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations
 {
   /// <summary>
   /// Detects expressions calling the CompareString method used by Visual Basic .NET, and replaces them with 

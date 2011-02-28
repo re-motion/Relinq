@@ -16,7 +16,7 @@
 // 
 using System;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Linq.Utilities;
 
 namespace Remotion.Data.Linq.UnitTests.Linq.Core
 {

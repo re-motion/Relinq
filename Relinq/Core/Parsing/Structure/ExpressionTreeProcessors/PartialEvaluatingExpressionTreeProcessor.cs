@@ -15,10 +15,10 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Linq.Parsing.ExpressionTreeVisitors;
+using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.Parsing.Structure.ExpressionTreeProcessors
+namespace Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors
 {
   /// <summary>
   /// Analyzes an <see cref="Expression"/> tree for sub-trees that are evaluatable in-memory, and evaluates those sub-trees.

@@ -17,16 +17,16 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Clauses.Expressions;
-using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
-using Remotion.Data.Linq.Clauses.ResultOperators;
-using Remotion.Data.Linq.Clauses.StreamedData;
-using Remotion.Data.Linq.Collections;
-using Remotion.Data.Linq.Parsing.Structure;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Linq.Clauses;
+using Remotion.Linq.Clauses.Expressions;
+using Remotion.Linq.Clauses.ExpressionTreeVisitors;
+using Remotion.Linq.Clauses.ResultOperators;
+using Remotion.Linq.Clauses.StreamedData;
+using Remotion.Linq.Collections;
+using Remotion.Linq.Parsing.Structure;
+using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq
+namespace Remotion.Linq
 {
   /// <summary>
   /// Provides an abstraction of an expression tree created for a LINQ query. <see cref="QueryModel"/> instances are passed to LINQ providers based

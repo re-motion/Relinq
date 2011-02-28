@@ -16,10 +16,10 @@
 // 
 using System;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Clauses.Expressions;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Linq.Clauses.Expressions;
+using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.Parsing
+namespace Remotion.Linq.Parsing
 {
   /// <summary>
   /// Implements an <see cref="ExpressionTreeVisitor"/> that throws an exception for every expression type that is not explicitly supported.

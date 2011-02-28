@@ -16,9 +16,9 @@
 // 
 using System;
 using System.Reflection;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.Clauses.StreamedData
+namespace Remotion.Linq.Clauses.StreamedData
 {
   /// <summary>
   /// Describes a single or scalar value streamed out of a <see cref="QueryModel"/> or <see cref="ResultOperatorBase"/>.

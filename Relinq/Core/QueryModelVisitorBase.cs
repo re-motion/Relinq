@@ -14,12 +14,11 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-using System;
-using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Collections;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Linq.Clauses;
+using Remotion.Linq.Collections;
+using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq
+namespace Remotion.Linq
 {
   /// <summary>
   /// Provides a default implementation of <see cref="IQueryModelVisitor"/> which automatically visits child items. That is, the default 

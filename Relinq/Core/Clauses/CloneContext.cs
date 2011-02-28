@@ -14,11 +14,10 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-using System;
-using Remotion.Data.Linq.Clauses.Expressions;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Linq.Clauses.Expressions;
+using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.Clauses
+namespace Remotion.Linq.Clauses
 {
   /// <summary>
   /// Aggregates all objects needed in the process of cloning a <see cref="QueryModel"/> and its clauses.

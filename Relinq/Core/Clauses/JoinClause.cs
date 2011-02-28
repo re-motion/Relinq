@@ -17,11 +17,11 @@
 using System;
 using System.Diagnostics;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Clauses.Expressions;
-using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Linq.Clauses.Expressions;
+using Remotion.Linq.Clauses.ExpressionTreeVisitors;
+using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.Clauses
+namespace Remotion.Linq.Clauses
 {
   /// <summary>
   /// Represents the join part of a query, adding new data items and joining them with data items from previous clauses. This can either
@@ -127,7 +127,7 @@ namespace Remotion.Data.Linq.Clauses
     }
 
     /// <summary>
-    /// Accepts the specified visitor by calling its <see cref="IQueryModelVisitor.VisitJoinClause(Remotion.Data.Linq.Clauses.JoinClause,Remotion.Data.Linq.QueryModel,int)"/> 
+    /// Accepts the specified visitor by calling its <see cref="IQueryModelVisitor.VisitJoinClause(Remotion.Linq.Clauses.JoinClause,Remotion.Linq.QueryModel,int)"/> 
     /// method.
     /// </summary>
     /// <param name="visitor">The visitor to accept.</param>
@@ -142,7 +142,7 @@ namespace Remotion.Data.Linq.Clauses
     }
 
    /// <summary>
-   /// Accepts the specified visitor by calling its <see cref="IQueryModelVisitor.VisitJoinClause(Remotion.Data.Linq.Clauses.JoinClause,Remotion.Data.Linq.QueryModel,Remotion.Data.Linq.Clauses.GroupJoinClause)"/> 
+   /// Accepts the specified visitor by calling its <see cref="IQueryModelVisitor.VisitJoinClause(Remotion.Linq.Clauses.JoinClause,Remotion.Linq.QueryModel,Remotion.Linq.Clauses.GroupJoinClause)"/> 
    /// method. This overload is used when visiting a <see cref="JoinClause"/> that is held by a <see cref="GroupJoinClause"/>.
    /// </summary>
    /// <param name="visitor">The visitor to accept.</param>

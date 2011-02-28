@@ -18,10 +18,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
-using Remotion.Data.Linq.Parsing;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Linq.Parsing;
+using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.Clauses.ExpressionTreeVisitors
+namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
 {
   /// <summary>
   /// Constructs a <see cref="LambdaExpression"/> that is able to extract a specific simple expression from a complex <see cref="NewExpression"/>

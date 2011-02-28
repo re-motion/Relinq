@@ -20,10 +20,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Remotion.Data.Linq.Clauses.StreamedData;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Linq.Clauses.StreamedData;
+using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.Clauses.ResultOperators
+namespace Remotion.Linq.Clauses.ResultOperators
 {
   /// <summary>
   /// Represents a calculation of an average value from the items returned by a query.

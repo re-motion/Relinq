@@ -1,7 +1,6 @@
-using System;
 using System.Linq.Expressions;
 
-namespace Remotion.Data.Linq.Parsing.Structure
+namespace Remotion.Linq.Parsing.Structure
 {
   /// <summary>
   /// <see cref="IQueryParser"/> is implemented by classes taking an <see cref="Expression"/> tree and parsing it into a <see cref="QueryModel"/>.

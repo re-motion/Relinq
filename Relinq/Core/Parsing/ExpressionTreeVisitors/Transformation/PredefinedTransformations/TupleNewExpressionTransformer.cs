@@ -20,7 +20,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Linq;
 
-namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations
+namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations
 {
   /// <summary>
   /// Detects <see cref="NewExpression"/> nodes for the .NET tuple types and adds <see cref="MemberInfo"/> metadata to those nodes.

@@ -19,11 +19,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Remotion.Data.Linq.Collections;
-using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Linq.Collections;
+using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations;
+using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation
+namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation
 {
   /// <summary>
   /// Manages registration and lookup of <see cref="IExpressionTransformer{T}"/> objects, and converts them to 

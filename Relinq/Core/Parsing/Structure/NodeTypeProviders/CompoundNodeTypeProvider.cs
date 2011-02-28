@@ -17,10 +17,10 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Remotion.Data.Linq.Utilities;
 using System.Linq;
+using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.Parsing.Structure.NodeTypeProviders
+namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
 {
   /// <summary>
   /// Implements <see cref="INodeTypeProvider"/> by storing a list of inner <see cref="INodeTypeProvider"/> instances.

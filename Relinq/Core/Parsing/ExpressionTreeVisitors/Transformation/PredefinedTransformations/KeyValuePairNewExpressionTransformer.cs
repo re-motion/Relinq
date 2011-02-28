@@ -20,7 +20,7 @@ using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations
+namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations
 {
   /// <summary>
   /// Detects <see cref="NewExpression"/> nodes for <see cref="KeyValuePair{TKey,TValue}"/> and adds <see cref="MemberInfo"/> metadata to those nodes.

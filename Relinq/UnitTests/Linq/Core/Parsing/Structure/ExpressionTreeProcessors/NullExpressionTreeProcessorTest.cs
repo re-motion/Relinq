@@ -16,7 +16,7 @@
 // 
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.Parsing.Structure.ExpressionTreeProcessors;
+using Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors;
 
 namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.ExpressionTreeProcessors
 {

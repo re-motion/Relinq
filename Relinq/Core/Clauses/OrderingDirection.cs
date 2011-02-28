@@ -14,9 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-using System;
-
-namespace Remotion.Data.Linq.Clauses
+namespace Remotion.Linq.Clauses
 {
   /// <summary>
   /// Specifies the direction used to sort the result items in a query using an <see cref="OrderByClause"/>.

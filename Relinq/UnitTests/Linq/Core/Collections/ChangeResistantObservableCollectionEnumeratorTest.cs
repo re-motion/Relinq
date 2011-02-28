@@ -17,8 +17,8 @@
 using System;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.Collections;
 using Remotion.Data.Linq.UnitTests.Linq.Core.TestUtilities;
+using Remotion.Linq.Collections;
 
 namespace Remotion.Data.Linq.UnitTests.Linq.Core.Collections
 {

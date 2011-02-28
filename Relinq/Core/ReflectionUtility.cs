@@ -20,9 +20,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq
+namespace Remotion.Linq
 {
   public static class ReflectionUtility
   {

@@ -17,10 +17,10 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation;
+using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors
+namespace Remotion.Linq.Parsing.ExpressionTreeVisitors
 {
   /// <summary>
   /// Takes an expression tree and first analyzes it for evaluatable subtrees (using <see cref="EvaluatableTreeFindingExpressionTreeVisitor"/>), i.e.

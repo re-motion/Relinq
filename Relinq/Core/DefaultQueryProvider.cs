@@ -17,10 +17,10 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Parsing.Structure;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Linq.Parsing.Structure;
+using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq
+namespace Remotion.Linq
 {
   /// <summary>
   /// Represents a default implementation of <see cref="QueryProviderBase"/> that is automatically used by <see cref="QueryableBase{T}"/>

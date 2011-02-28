@@ -16,9 +16,9 @@
 // 
 using System;
 using System.Collections;
-using JetBrains.Annotations;
+using Remotion.Linq.Utilities.ReSharperAnnotations;
 
-namespace Remotion.Data.Linq.Utilities
+namespace Remotion.Linq.Utilities
 {
   /// <summary>
   /// This utility class provides methods for checking arguments.

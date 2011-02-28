@@ -16,10 +16,10 @@
 // 
 using System;
 using System.Reflection;
-using Remotion.Data.Linq.Clauses.ResultOperators;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Linq.Clauses.ResultOperators;
+using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.Clauses.StreamedData
+namespace Remotion.Linq.Clauses.StreamedData
 {
   /// <summary>
   /// Describes a single value streamed out of a <see cref="QueryModel"/> or <see cref="ResultOperatorBase"/>. A single value corresponds to one

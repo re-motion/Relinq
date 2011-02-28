@@ -14,10 +14,9 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation
+namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation
 {
   /// <summary>
   /// <see cref="IExpressionTransformer{T}"/> is implemented by classes that transform <see cref="Expression"/> instances. The 

@@ -17,10 +17,11 @@
 using System;
 using NUnit.Framework;
 using Remotion.Data.Linq;
-using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Collections;
 using Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Data.Linq.UnitTests.Linq.Core.TestUtilities;
+using Remotion.Linq;
+using Remotion.Linq.Clauses;
+using Remotion.Linq.Collections;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;
 

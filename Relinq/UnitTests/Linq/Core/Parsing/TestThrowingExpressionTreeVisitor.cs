@@ -21,7 +21,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.Parsing;
+using Remotion.Linq.Parsing;
 
 namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing
 {

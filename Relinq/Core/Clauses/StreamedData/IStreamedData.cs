@@ -14,9 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-using System;
-
-namespace Remotion.Data.Linq.Clauses.StreamedData
+namespace Remotion.Linq.Clauses.StreamedData
 {
   /// <summary>
   /// Holds the data needed to represent the output or input of a part of a query in memory. This is mainly used for 

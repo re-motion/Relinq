@@ -16,7 +16,7 @@
 // 
 using System;
 
-namespace JetBrains.Annotations
+namespace Remotion.Linq.Utilities.ReSharperAnnotations
 {
   /// <summary>
   /// Indicates that the marked method is assertion method, i.e. it halts control flow if one of the conditions is satisfied. 

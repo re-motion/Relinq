@@ -16,11 +16,11 @@
 // 
 using System;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Clauses.Expressions;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Linq.Clauses;
+using Remotion.Linq.Clauses.Expressions;
+using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
+namespace Remotion.Linq.Parsing.Structure.IntermediateModel
 {
   /// <summary>
   /// Represents the first expression in a LINQ query, which acts as the main query source.

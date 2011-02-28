@@ -17,9 +17,9 @@
 using System;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.Parsing
+namespace Remotion.Linq.Parsing
 {
   [Serializable]
   public class ParserException : Exception

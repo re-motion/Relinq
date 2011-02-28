@@ -17,9 +17,9 @@
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations
+namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations
 {
   /// <summary>
   /// Replaces calls to <see cref="Nullable{T}.Value"/> and <see cref="Nullable{T}.HasValue"/> with casts and null checks. This allows LINQ providers

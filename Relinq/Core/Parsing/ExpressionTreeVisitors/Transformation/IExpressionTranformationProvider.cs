@@ -17,7 +17,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation
+namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation
 {
   /// <summary>
   /// <see cref="IExpressionTranformationProvider"/> defines an API for classes returning <see cref="ExpressionTransformation"/> instances for specific 

@@ -21,7 +21,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.Clauses.Expressions;
+using Remotion.Linq.Clauses.Expressions;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;
 using Remotion.Data.Linq.UnitTests.Linq.Core.TestUtilities;

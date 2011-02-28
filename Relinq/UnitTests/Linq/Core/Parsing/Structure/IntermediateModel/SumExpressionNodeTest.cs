@@ -18,8 +18,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using Remotion.Data.Linq.Clauses.ResultOperators;
-using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
+using Remotion.Linq.Clauses.ResultOperators;
+using Remotion.Linq.Parsing.Structure.IntermediateModel;
 
 namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
 {

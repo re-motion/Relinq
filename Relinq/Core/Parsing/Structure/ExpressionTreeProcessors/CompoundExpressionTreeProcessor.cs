@@ -16,10 +16,10 @@
 // 
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Utilities;
 using System.Linq;
+using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.Parsing.Structure.ExpressionTreeProcessors
+namespace Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors
 {
   /// <summary>
   /// Implements <see cref="IExpressionTreeProcessor"/> by storing a list of inner <see cref="IExpressionTreeProcessor"/> instances.

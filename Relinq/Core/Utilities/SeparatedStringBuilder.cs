@@ -17,7 +17,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Remotion.Data.Linq.Utilities
+namespace Remotion.Linq.Utilities
 {
   /// <summary>
   /// Builds a string from a sequence, separating each item with a given separator string.

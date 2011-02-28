@@ -16,7 +16,7 @@
 // 
 using System;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Parsing;
+using Remotion.Linq.Parsing;
 
 namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.Expressions.TestDomain
 {

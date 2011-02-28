@@ -15,12 +15,11 @@
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Linq;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Collections;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Linq.Collections;
+using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.Clauses
+namespace Remotion.Linq.Clauses
 {
   /// <summary>
   /// Represents the orderby part of a query, ordering data items according to some <see cref="Orderings"/>.

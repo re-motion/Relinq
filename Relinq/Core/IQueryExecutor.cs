@@ -16,10 +16,9 @@
 // 
 using System;
 using System.Collections.Generic;
-using Remotion.Data.Linq.Clauses.ResultOperators;
-using Remotion.Data.Linq.EagerFetching;
+using Remotion.Linq.Clauses.ResultOperators;
 
-namespace Remotion.Data.Linq
+namespace Remotion.Linq
 {
   /// <summary>
   /// Constitutes the bridge between re-linq and a concrete query provider implementation. Concrete providers implement this interface

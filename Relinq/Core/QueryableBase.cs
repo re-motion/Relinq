@@ -19,10 +19,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Parsing.Structure;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Linq.Parsing.Structure;
+using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq
+namespace Remotion.Linq
 {
   /// <summary>
   /// Acts as a common base class for <see cref="IQueryable{T}"/> implementations based on re-linq. In a specific LINQ provider, a custom queryable

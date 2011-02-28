@@ -14,12 +14,11 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-using System;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.Transformation;
-using Remotion.Data.Linq.Parsing.Structure.ExpressionTreeProcessors;
+using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation;
+using Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors;
 
-namespace Remotion.Data.Linq.Parsing.Structure
+namespace Remotion.Linq.Parsing.Structure
 {
   /// <summary>
   /// <see cref="IExpressionTreeProcessor"/> is implemented by classes that represent steps in the process of parsing the structure

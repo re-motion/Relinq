@@ -19,9 +19,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Parsing;
-using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
+using Remotion.Linq.Clauses;
+using Remotion.Linq.Parsing;
+using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Rhino.Mocks;
 
 namespace Remotion.Data.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel

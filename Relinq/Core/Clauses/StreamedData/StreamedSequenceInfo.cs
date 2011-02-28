@@ -18,11 +18,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
-using Remotion.Data.Linq.Utilities;
 using System.Collections;
 using System.Linq;
+using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.Clauses.StreamedData
+namespace Remotion.Linq.Clauses.StreamedData
 {
   /// <summary>
   /// Describes sequence data streamed out of a <see cref="QueryModel"/> or <see cref="ResultOperatorBase"/>. Sequence data can be held by an object

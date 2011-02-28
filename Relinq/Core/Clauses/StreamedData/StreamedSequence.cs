@@ -18,9 +18,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.Clauses.StreamedData
+namespace Remotion.Linq.Clauses.StreamedData
 {
   /// <summary>
   /// Holds the data needed to represent the output or input of a part of a query in memory. This is mainly used for 

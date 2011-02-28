@@ -16,10 +16,10 @@
 // 
 using System;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Parsing;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Linq.Parsing;
+using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.Clauses.Expressions
+namespace Remotion.Linq.Clauses.Expressions
 {
   /// <summary>
   /// Acts as a base class for custom extension expressions, providing advanced visitor support. Also allows extension expressions to be reduced to 

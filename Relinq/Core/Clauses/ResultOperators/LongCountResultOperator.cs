@@ -17,10 +17,10 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Clauses.StreamedData;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Linq.Clauses.StreamedData;
+using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.Clauses.ResultOperators
+namespace Remotion.Linq.Clauses.ResultOperators
 {
   /// <summary>
   /// Represents counting the number of items returned by a query as a 64-bit number.

@@ -17,7 +17,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Remotion.Data.Linq.Utilities
+namespace Remotion.Linq.Utilities
 {
   /// <summary>
   /// Provides functionality to calculate hash codes from values and sequences.

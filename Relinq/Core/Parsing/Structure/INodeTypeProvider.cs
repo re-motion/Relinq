@@ -1,9 +1,9 @@
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
-using Remotion.Data.Linq.Parsing.Structure.IntermediateModel;
+using Remotion.Linq.Parsing.Structure.IntermediateModel;
 
-namespace Remotion.Data.Linq.Parsing.Structure
+namespace Remotion.Linq.Parsing.Structure
 {
   /// <summary>
   /// Provides a common interface for classes mapping a <see cref="MethodInfo"/> to the respective <see cref="IExpressionNode"/>

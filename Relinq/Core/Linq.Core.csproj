@@ -8,8 +8,8 @@
     <ProjectGuid>{028E7899-0D5F-49C8-9EB6-8B051E02F1E0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Remotion.Data.Linq</RootNamespace>
-    <AssemblyName>Remotion.Data.Linq</AssemblyName>
+    <RootNamespace>Remotion.Linq</RootNamespace>
+    <AssemblyName>Remotion.Linq</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SignAssembly>true</SignAssembly>
@@ -42,7 +42,7 @@
     <DefineConstants>TRACE;DEBUG;NET_3_5</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\Remotion.Data.Linq.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\Remotion.Linq.xml</DocumentationFile>
     <NoWarn>1591;419</NoWarn>
     <WarningsAsErrors>
     </WarningsAsErrors>
@@ -56,7 +56,7 @@
     <DefineConstants>TRACE;NET_3_5</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\Remotion.Data.Linq.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\Remotion.Linq.xml</DocumentationFile>
     <NoWarn>1591;419</NoWarn>
     <WarningsAsErrors>
     </WarningsAsErrors>

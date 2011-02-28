@@ -17,9 +17,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Clauses.StreamedData;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Linq.Clauses;
+using Remotion.Linq.Clauses.StreamedData;
+using Remotion.Linq.Utilities;
 
 namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
 {

@@ -18,9 +18,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.Collections
+namespace Remotion.Linq.Collections
 {
   /// <summary>
   /// Extends <see cref="Collection{T}"/> with events that indicate when the collection was changed.

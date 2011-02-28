@@ -16,15 +16,15 @@
 // 
 using System;
 using System.Linq;
-using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Clauses.Expressions;
-using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
-using Remotion.Data.Linq.Clauses.ResultOperators;
-using Remotion.Data.Linq.Collections;
-using Remotion.Data.Linq.Parsing.Structure;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Linq.Clauses;
+using Remotion.Linq.Clauses.Expressions;
+using Remotion.Linq.Clauses.ExpressionTreeVisitors;
+using Remotion.Linq.Clauses.ResultOperators;
+using Remotion.Linq.Collections;
+using Remotion.Linq.Parsing.Structure;
+using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.Transformations
+namespace Remotion.Linq.Transformations
 {
   /// <summary>
   /// Takes a <see cref="QueryModel"/> and transforms it by replacing its <see cref="FromClauseBase"/> instances (<see cref="MainFromClause"/> and

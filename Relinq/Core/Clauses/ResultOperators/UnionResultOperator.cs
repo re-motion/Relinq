@@ -19,11 +19,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
-using Remotion.Data.Linq.Clauses.StreamedData;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Linq.Clauses.ExpressionTreeVisitors;
+using Remotion.Linq.Clauses.StreamedData;
+using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.Clauses.ResultOperators
+namespace Remotion.Linq.Clauses.ResultOperators
 {
   /// <summary>
   /// Represents forming the mathematical union of  a given set of items and the items returned by a query. 

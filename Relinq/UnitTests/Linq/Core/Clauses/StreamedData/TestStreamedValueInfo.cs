@@ -16,8 +16,9 @@
 // 
 using System;
 using Remotion.Data.Linq;
-using Remotion.Data.Linq.Clauses.StreamedData;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Linq;
+using Remotion.Linq.Clauses.StreamedData;
+using Remotion.Linq.Utilities;
 
 namespace Remotion.Data.Linq.UnitTests.Linq.Core.Clauses.StreamedData
 {

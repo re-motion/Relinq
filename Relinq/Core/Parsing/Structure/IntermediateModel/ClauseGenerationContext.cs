@@ -16,9 +16,9 @@
 // 
 using System;
 using System.Collections.Generic;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
+namespace Remotion.Linq.Parsing.Structure.IntermediateModel
 {
   /// <summary>
   /// Encapsulates contextual information used while generating clauses from <see cref="IExpressionNode"/> instances.

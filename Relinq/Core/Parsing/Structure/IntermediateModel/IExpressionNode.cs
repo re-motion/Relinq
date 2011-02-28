@@ -16,10 +16,10 @@
 // 
 using System;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Clauses;
-using Remotion.Data.Linq.Clauses.Expressions;
+using Remotion.Linq.Clauses;
+using Remotion.Linq.Clauses.Expressions;
 
-namespace Remotion.Data.Linq.Parsing.Structure.IntermediateModel
+namespace Remotion.Linq.Parsing.Structure.IntermediateModel
 {
   /// <summary>
   /// Interface for classes representing structural parts of an <see cref="Expression"/> tree.

@@ -14,11 +14,10 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-using System;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.MemberBindings
+namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.MemberBindings
 {
   /// <summary>
   /// Represents a <see cref="MethodInfo"/> being bound to an associated <see cref="Expression"/> instance. 

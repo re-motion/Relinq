@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Security;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Linq.Utilities;
 
 // Note: This file is originally defined in Remotion.Development.UnitTesting.Sandboxing. It is duplicated by Remotion.Data.Linq.UnitTests.Sandboxing.
 // Note: Changes made to this file must be synchronized with all copies.

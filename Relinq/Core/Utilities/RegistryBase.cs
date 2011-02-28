@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Remotion.Data.Linq.Utilities
+namespace Remotion.Linq.Utilities
 {
   /// <summary>
   /// <see cref="RegistryBase{TRegistry,TKey,TItem}"/> provides code which is common in all registry classes.

@@ -14,13 +14,12 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-motion; if not, see http://www.gnu.org/licenses.
 // 
-using System;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Clauses.ExpressionTreeVisitors;
-using Remotion.Data.Linq.Parsing;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Linq.Clauses.ExpressionTreeVisitors;
+using Remotion.Linq.Parsing;
+using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.Clauses.Expressions
+namespace Remotion.Linq.Clauses.Expressions
 {
   /// <summary>
   /// Represents a VB-specific comparison expression. To explicitly support this expression type, implement <see cref="IVBSpecificExpressionVisitor"/>.

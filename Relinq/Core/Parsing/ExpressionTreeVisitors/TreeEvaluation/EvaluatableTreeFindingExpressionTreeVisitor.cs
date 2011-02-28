@@ -17,9 +17,9 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.Utilities;
+using Remotion.Linq.Utilities;
 
-namespace Remotion.Data.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation
+namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation
 {
   /// <summary>
   /// Analyzes an expression tree by visiting each of its nodes, finding those subtrees that can be evaluated without modifying the meaning of

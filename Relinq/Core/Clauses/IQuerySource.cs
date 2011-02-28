@@ -16,7 +16,7 @@
 // 
 using System;
 
-namespace Remotion.Data.Linq.Clauses
+namespace Remotion.Linq.Clauses
 {
   /// <summary>
   /// Represents a clause or result operator that generates items which are streamed to the following clauses or operators.
