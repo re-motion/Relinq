@@ -19,12 +19,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Remotion.Data.Linq.SqlBackend.SqlPreparation;
-using Remotion.Data.Linq.SqlBackend.SqlStatementModel.SqlSpecificExpressions;
 using Remotion.Linq;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ResultOperators;
+using Remotion.Linq.SqlBackend.SqlPreparation;
+using Remotion.Linq.SqlBackend.SqlStatementModel.SqlSpecificExpressions;
 
 namespace Remotion.Data.Linq.UnitTests.Linq.Core.TestDomain
 {
