@@ -16,7 +16,6 @@
 // 
 using System;
 using System.Reflection;
-using Remotion.Development.Data.UnitTesting.DomainObjects.Linq;
 
 //
 // General Information about an assembly is controlled through the following 
@@ -26,11 +25,6 @@ using Remotion.Development.Data.UnitTesting.DomainObjects.Linq;
 
 [assembly: AssemblyTitle("Unit Tests for Remotion DomainObjects Library")]
 [assembly: AssemblyDescription("Unit Tests for Remotion DomainObjects Library")]
-[assembly: AssemblyConfiguration(".NET Framework: net-3.5, build type: debug")]
-[assembly: AssemblyCompany("rubicon informationstechnologie gmbh")]
-[assembly: AssemblyProduct("re-motion core framework (www.re-motion.org)")]
-[assembly: AssemblyCopyright("(c) 2005 - 2009 rubicon informationstechnologie gmbh, www.rubicon.eu")]
-[assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]		
 [assembly: CLSCompliant(true)]
 
@@ -44,7 +38,5 @@ using Remotion.Development.Data.UnitTesting.DomainObjects.Linq;
 //
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
-
-[assembly: AssemblyVersion("1.13.60.2")]
 
 //[assembly: ApplyQueryExecutorMixin]
