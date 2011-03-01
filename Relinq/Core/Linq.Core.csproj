@@ -70,6 +70,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\AssemblyInfoShared.cs">
+      <Link>Properties\AssemblyInfoShared.cs</Link>
+    </Compile>
     <Compile Include="Clauses\AdditionalFromClause.cs" />
     <Compile Include="Clauses\CloneContext.cs" />
     <Compile Include="Clauses\Expressions\ExtensionExpression.cs" />
@@ -246,7 +249,6 @@
     <None Include="..\..\remotion.snk">
       <Link>remotion.snk</Link>
     </None>
-    <None Include="Properties\AssemblyInfoTemplate.cs" />
     <Compile Include="QueryModel.cs" />
     <Compile Include="Clauses\SelectClause.cs" />
     <Compile Include="QueryProviderBase.cs" />
