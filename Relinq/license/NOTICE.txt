@@ -1,8 +1,0 @@
-**
-**  NOTICE file corresponding to the section 4 (4) of the Apache License, 
-**  Version 2.0.
-**
-
-re-motion Framework
-www.re-motion.org
-Copyright (C) 2005 - 2009 rubicon informationstechnologie gmbh, www.rubicon.eu
