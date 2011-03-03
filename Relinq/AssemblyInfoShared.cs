@@ -1,4 +1,4 @@
-// This file is part of the re-motion Core Framework (www.re-motion.org)
+﻿// This file is part of the re-motion Core Framework (www.re-motion.org)
 // Copyright (C) 2005-2009 rubicon informationstechnologie gmbh, www.rubicon.eu
 // 
 // The re-motion Core Framework is free software; you can redistribute it 
@@ -16,7 +16,6 @@
 // 
 using System;
 using System.Reflection;
-using System.Security;
 
 //
 // General Information about an assembly is controlled through the following 
@@ -24,11 +23,11 @@ using System.Security;
 // associated with an assembly.
 //
 
-[assembly: AssemblyConfiguration(".NET Framework: net-3.5, build type: debug")]
+[assembly: AssemblyConfiguration(".NET Framework: net-3.5, build type: Doc")]
 [assembly: AssemblyCompany("rubicon informationstechnologie gmbh")]
 [assembly: AssemblyProduct("re-motion core framework (www.re-motion.org)")]
-[assembly: AssemblyCopyright("(c) 2005 - 2009 rubicon informationstechnologie gmbh, www.rubicon.eu")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCopyright ("(c) 2005 - 2011 rubicon informationstechnologie gmbh, www.rubicon.eu")]
+[assembly: AssemblyTrademark ("")]
 
 //
 // Version information for an assembly consists of the following four values:
@@ -41,4 +40,5 @@ using System.Security;
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("1.13.60.2")]
+[assembly: AssemblyVersion("1.13.97.0")]
+[assembly: AssemblyFileVersion ("1.13.97.0")]
