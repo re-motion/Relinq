@@ -26,7 +26,7 @@ using System.Reflection;
 [assembly: AssemblyConfiguration(".NET Framework: net-3.5, build type: Doc")]
 [assembly: AssemblyCompany("rubicon informationstechnologie gmbh")]
 [assembly: AssemblyProduct("re-motion core framework (www.re-motion.org)")]
-[assembly: AssemblyCopyright ("(c) 2005 - 2011 rubicon informationstechnologie gmbh, www.rubicon.eu")]
+[assembly: AssemblyCopyright ("(c) 2005 - 2011 rubicon informationstechnologie gmbh, www.rubicon.eu - Licensed under GNU LGPL 2.1 (or later)")]
 [assembly: AssemblyTrademark ("")]
 
 //
