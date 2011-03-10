@@ -23,7 +23,7 @@ using System.Reflection;
 // associated with an assembly.
 //
 
-[assembly: AssemblyConfiguration(".NET Framework: net-3.5, build type: Doc")]
+[assembly: AssemblyConfiguration(".NET Framework: net-3.5, build type: Debug")]
 [assembly: AssemblyCompany("rubicon informationstechnologie gmbh")]
 [assembly: AssemblyProduct("re-motion core framework (www.re-motion.org)")]
 [assembly: AssemblyCopyright ("(c) 2005 - 2011 rubicon informationstechnologie gmbh, www.rubicon.eu - Licensed under GNU LGPL 2.1 (or later)")]
@@ -40,5 +40,5 @@ using System.Reflection;
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("1.13.97.0")]
-[assembly: AssemblyFileVersion ("1.13.97.0")]
+[assembly: AssemblyVersion("1.39.97.2")]
+[assembly: AssemblyFileVersion ("1.39.97.2")]
