@@ -549,9 +549,6 @@
     <None Include="..\..\remotion.snk">
       <Link>remotion.snk</Link>
     </None>
-    <None Include="Data.Linq.UnitTests.build">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="Linq\Core\Parsing\ExpressionTrees\ExpressionTree_Grammar.docx" />
   </ItemGroup>
   <ItemGroup>
