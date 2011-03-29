@@ -57,10 +57,9 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation
       registry.Register (new InvocationOfLambdaExpressionTransformer ());
       registry.Register (new NullableValueTransformer ());
 
-      // typeof (object).Assembly.GetName() will throw an exception in medium trust.
-      // Therefore, scan references to detect the  referenced framework version.
-      var mscorlibReference = Assembly.GetExecutingAssembly().GetReferencedAssemblies().Single (name => name.Name == "mscorlib");
-      var referencedFrameworkVersion = mscorlibReference.Version;
+      // typeof (object).Assembly.GetName().Version will throw an exception in medium trust.
+      // Therefore, parse full name to detect the referenced framework version.
+      var referencedFrameworkVersion = new AssemblyName (typeof (object).Assembly.FullName).Version;
 
       registry.Register (new KeyValuePairNewExpressionTransformer (referencedFrameworkVersion));
       registry.Register (new DictionaryEntryNewExpressionTransformer (referencedFrameworkVersion));
