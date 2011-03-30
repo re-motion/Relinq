@@ -27,20 +27,18 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Trans
   [TestFixture]
   public class TupleNewExpressionTransformerTest
   {
-    private TupleNewExpressionTransformer _transformer35;
-    private TupleNewExpressionTransformer _transformer40;
+    private TupleNewExpressionTransformer _transformer;
 
     [SetUp]
     public void SetUp ()
     {
-      _transformer35 = new TupleNewExpressionTransformer (new Version (2, 0));
-      _transformer40 = new TupleNewExpressionTransformer (new Version (4, 0));
+      _transformer = new TupleNewExpressionTransformer ();
     }
 
     [Test]
     public void SupportedExpressionTypes ()
     {
-      Assert.That (_transformer35.SupportedExpressionTypes, Is.EqualTo (new[] { ExpressionType.New }));
+      Assert.That (_transformer.SupportedExpressionTypes, Is.EqualTo (new[] { ExpressionType.New }));
     }
 
     [Test]
@@ -48,7 +46,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Trans
     {
       var expression = Expression.New (typeof (List<int>).GetConstructor (new[] { typeof (int) }), Expression.Constant (0));
 
-      var result = _transformer35.Transform (expression);
+      var result = _transformer.Transform (expression);
 
       Assert.That (result, Is.SameAs (expression));
     }
@@ -61,20 +59,24 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Trans
           Expression.Constant ("test"),
           Expression.Constant (0));
 
-      var result35 = _transformer35.Transform (expression);
-      var result40 = _transformer40.Transform (expression);
+      var result = _transformer.Transform (expression);
 
-      var expectedExpression35 = Expression.New (
-          typeof (Tuple<string, int>).GetConstructor (new[] { typeof (string), typeof (int) }),
-          new Expression[] { Expression.Constant ("test"), Expression.Constant (0) },
-          new MemberInfo[] { typeof (Tuple<string, int>).GetMethod ("get_Item1"), typeof (Tuple<string, int>).GetMethod ("get_Item2") });
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression35, result35);
-
-      var expectedExpression40 = Expression.New (
-          typeof (Tuple<string, int>).GetConstructor (new[] { typeof (string), typeof (int) }),
-          new Expression[] { Expression.Constant ("test"), Expression.Constant (0) },
-          new MemberInfo[] { typeof (Tuple<string, int>).GetProperty ("Item1"), typeof (Tuple<string, int>).GetProperty ("Item2") });
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression40, result40);
+      if (Environment.Version.Major == 2)
+      {
+        var expectedExpression35 = Expression.New (
+            typeof (Tuple<string, int>).GetConstructor (new[] { typeof (string), typeof (int) }),
+            new Expression[] { Expression.Constant ("test"), Expression.Constant (0) },
+            new MemberInfo[] { typeof (Tuple<string, int>).GetMethod ("get_Item1"), typeof (Tuple<string, int>).GetMethod ("get_Item2") });
+        ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression35, result);
+      }
+      else
+      {
+        var expectedExpression40 = Expression.New (
+            typeof (Tuple<string, int>).GetConstructor (new[] { typeof (string), typeof (int) }),
+            new Expression[] { Expression.Constant ("test"), Expression.Constant (0) },
+            new MemberInfo[] { typeof (Tuple<string, int>).GetProperty ("Item1"), typeof (Tuple<string, int>).GetProperty ("Item2") });
+        ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression40, result);
+      }
     }
 
     [Test]
@@ -86,30 +88,34 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Trans
           Expression.Constant (0),
           Expression.Constant (true));
 
-      var result35 = _transformer35.Transform (expression);
-      var result40 = _transformer40.Transform (expression);
+      var result = _transformer.Transform (expression);
 
-      var expectedExpression35 = Expression.New (
-          typeof (Tuple<string, int, bool>).GetConstructor (new[] { typeof (string), typeof (int), typeof (bool) }),
-          new Expression[] { Expression.Constant ("test"), Expression.Constant (0), Expression.Constant (true) },
-          new MemberInfo[]
-          {
-              typeof (Tuple<string, int, bool>).GetMethod ("get_Item1"),
-              typeof (Tuple<string, int, bool>).GetMethod ("get_Item2"),
-              typeof (Tuple<string, int, bool>).GetMethod ("get_Item3")
-          });
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression35, result35);
-
-      var expectedExpression40 = Expression.New (
-          typeof (Tuple<string, int, bool>).GetConstructor (new[] { typeof (string), typeof (int), typeof (bool) }),
-          new Expression[] { Expression.Constant ("test"), Expression.Constant (0), Expression.Constant (true) },
-          new MemberInfo[]
-          {
-              typeof (Tuple<string, int, bool>).GetProperty ("Item1"), 
-              typeof (Tuple<string, int, bool>).GetProperty ("Item2"),
-              typeof (Tuple<string, int, bool>).GetProperty ("Item3")
-          });
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression40, result40);
+      if (Environment.Version.Major == 2)
+      {
+        var expectedExpression35 = Expression.New (
+            typeof (Tuple<string, int, bool>).GetConstructor (new[] { typeof (string), typeof (int), typeof (bool) }),
+            new Expression[] { Expression.Constant ("test"), Expression.Constant (0), Expression.Constant (true) },
+            new MemberInfo[]
+            {
+                typeof (Tuple<string, int, bool>).GetMethod ("get_Item1"),
+                typeof (Tuple<string, int, bool>).GetMethod ("get_Item2"),
+                typeof (Tuple<string, int, bool>).GetMethod ("get_Item3")
+            });
+        ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression35, result);
+      }
+      else
+      {
+        var expectedExpression40 = Expression.New (
+            typeof (Tuple<string, int, bool>).GetConstructor (new[] { typeof (string), typeof (int), typeof (bool) }),
+            new Expression[] { Expression.Constant ("test"), Expression.Constant (0), Expression.Constant (true) },
+            new MemberInfo[]
+            {
+                typeof (Tuple<string, int, bool>).GetProperty ("Item1"),
+                typeof (Tuple<string, int, bool>).GetProperty ("Item2"),
+                typeof (Tuple<string, int, bool>).GetProperty ("Item3")
+            });
+        ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression40, result);
+      }
     }
 
     [Test]
@@ -125,7 +131,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Trans
               typeof (Tuple<string, int, bool>).GetProperty ("Item3")
           });
 
-      var result = _transformer35.Transform (expression);
+      var result = _transformer.Transform (expression);
 
       Assert.That (result, Is.SameAs (expression));
     }

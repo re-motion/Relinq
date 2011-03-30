@@ -18,7 +18,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using Remotion.Linq.Collections;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations;
 using Remotion.Linq.Utilities;
@@ -57,13 +56,9 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation
       registry.Register (new InvocationOfLambdaExpressionTransformer ());
       registry.Register (new NullableValueTransformer ());
 
-      // typeof (object).Assembly.GetName().Version will throw an exception in medium trust.
-      // Therefore, parse full name to detect the referenced framework version.
-      var referencedFrameworkVersion = new AssemblyName (typeof (object).Assembly.FullName).Version;
-
-      registry.Register (new KeyValuePairNewExpressionTransformer (referencedFrameworkVersion));
-      registry.Register (new DictionaryEntryNewExpressionTransformer (referencedFrameworkVersion));
-      registry.Register (new TupleNewExpressionTransformer (referencedFrameworkVersion));
+      registry.Register (new KeyValuePairNewExpressionTransformer());
+      registry.Register (new DictionaryEntryNewExpressionTransformer());
+      registry.Register (new TupleNewExpressionTransformer());
       
       return registry;
     }

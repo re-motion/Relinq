@@ -28,20 +28,18 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Trans
   [TestFixture]
   public class DictionaryEntryNewExpressionTransformerTest
   {
-    private DictionaryEntryNewExpressionTransformer _transformer35;
-    private DictionaryEntryNewExpressionTransformer _transformer40;
+    private DictionaryEntryNewExpressionTransformer _transformer;
 
     [SetUp]
     public void SetUp ()
     {
-      _transformer35 = new DictionaryEntryNewExpressionTransformer (new Version (2, 0));
-      _transformer40 = new DictionaryEntryNewExpressionTransformer (new Version (4, 0));
+      _transformer = new DictionaryEntryNewExpressionTransformer();
     }
 
     [Test]
     public void SupportedExpressionTypes ()
     {
-      Assert.That (_transformer35.SupportedExpressionTypes, Is.EqualTo (new[] { ExpressionType.New }));
+      Assert.That (_transformer.SupportedExpressionTypes, Is.EqualTo (new[] { ExpressionType.New }));
     }
 
     [Test]
@@ -49,7 +47,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Trans
     {
       var expression = Expression.New (typeof (List<int>).GetConstructor (new[] { typeof (int) }), Expression.Constant (0));
 
-      var result = _transformer35.Transform (expression);
+      var result = _transformer.Transform (expression);
 
       Assert.That (result, Is.SameAs (expression));
     }
@@ -59,7 +57,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Trans
     {
       var expression = Expression.New (typeof (DictionaryEntry));
 
-      var result = _transformer35.Transform (expression);
+      var result = _transformer.Transform (expression);
 
       Assert.That (result, Is.SameAs (expression));
     }
@@ -72,20 +70,25 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Trans
           Expression.Constant ("test"),
           Expression.Constant ("v"));
 
-      var result35 = _transformer35.Transform (expression);
-      var result40 = _transformer40.Transform (expression);
+      var result = _transformer.Transform (expression);
 
-      var expectedExpression35 = Expression.New (
-          typeof (DictionaryEntry).GetConstructor (new[] { typeof (object), typeof (object) }),
-          new Expression[] { Expression.Convert (Expression.Constant ("test"), typeof (object)), Expression.Convert (Expression.Constant ("v"), typeof (object)) },
-          new MemberInfo[] { typeof (DictionaryEntry).GetMethod ("get_Key"), typeof (DictionaryEntry).GetMethod ("get_Value") });
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression35, result35);
-      
-      var expectedExpression40 = Expression.New (
-          typeof (DictionaryEntry).GetConstructor (new[] { typeof (object), typeof (object) }),
-          new Expression[] { Expression.Convert (Expression.Constant ("test"), typeof (object)), Expression.Convert (Expression.Constant ("v"), typeof (object)) },
-          new MemberInfo[] { typeof (DictionaryEntry).GetProperty ("Key"), typeof (DictionaryEntry).GetProperty ("Value") });
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression40, result40);
+      if (Environment.Version.Major == 2)
+      {
+        var expectedExpression35 = Expression.New (
+            typeof (DictionaryEntry).GetConstructor (new[] { typeof (object), typeof (object) }),
+            new Expression[] { Expression.Convert (Expression.Constant ("test"), typeof (object)), Expression.Convert (Expression.Constant ("v"), typeof (object)) },
+            new MemberInfo[] { typeof (DictionaryEntry).GetMethod ("get_Key"), typeof (DictionaryEntry).GetMethod ("get_Value") });
+        ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression35, result);
+      }
+      else
+      {
+        var expectedExpression40 = Expression.New (
+            typeof (DictionaryEntry).GetConstructor (new[] { typeof (object), typeof (object) }),
+            new Expression[]
+            { Expression.Convert (Expression.Constant ("test"), typeof (object)), Expression.Convert (Expression.Constant ("v"), typeof (object)) },
+            new MemberInfo[] { typeof (DictionaryEntry).GetProperty ("Key"), typeof (DictionaryEntry).GetProperty ("Value") });
+        ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression40, result);
+      }
     }
 
     [Test]
@@ -96,7 +99,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Trans
           new Expression[] { Expression.Convert (Expression.Constant ("test"), typeof (object)), Expression.Convert (Expression.Constant ("v"), typeof (object)) },
           new MemberInfo[] { typeof (DictionaryEntry).GetMethod ("get_Key"), typeof (DictionaryEntry).GetMethod ("get_Value") });
 
-      var result = _transformer35.Transform (expression);
+      var result = _transformer.Transform (expression);
 
       Assert.That (result, Is.SameAs (expression));
     }

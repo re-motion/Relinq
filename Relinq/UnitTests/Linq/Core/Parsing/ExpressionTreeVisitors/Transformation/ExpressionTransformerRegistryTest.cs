@@ -66,7 +66,6 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Trans
 
       var memberAddingTransformers = newTransformers.OfType<MemberAddingNewExpressionTransformerBase>().ToArray();
       Assert.That (memberAddingTransformers.Length, Is.EqualTo (3));
-      Assert.That (memberAddingTransformers.All(t => t.FrameworkVersion == typeof (object).Assembly.GetName().Version), Is.True);
 
       Assert.That (registry.RegisteredTransformerCount, Is.EqualTo (12));
     }

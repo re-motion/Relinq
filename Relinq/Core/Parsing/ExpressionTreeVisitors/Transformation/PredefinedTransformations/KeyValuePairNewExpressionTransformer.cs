@@ -26,21 +26,8 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.Predefined
   /// Detects <see cref="NewExpression"/> nodes for <see cref="KeyValuePair{TKey,TValue}"/> and adds <see cref="MemberInfo"/> metadata to those nodes.
   /// This allows LINQ providers to match member access and constructor arguments more easily.
   /// </summary>
-  /// <remarks>
-  /// <para>
-  /// The <see cref="KeyValuePairNewExpressionTransformer"/> tries to mimic the expressions created by the C# compiler when
-  /// an anonymous type is instantiated. This means that in .NET 3.5, getter methods are associated with the constructor
-  /// arguments; in .NET 4, the respective <see cref="PropertyInfo"/> instances are associated with the constructor arguments.
-  /// See <see cref="MemberAddingNewExpressionTransformerBase"/> for an example.
-  /// </para>
-  /// </remarks>
   public class KeyValuePairNewExpressionTransformer : MemberAddingNewExpressionTransformerBase
   {
-    public KeyValuePairNewExpressionTransformer (Version frameworkVersion)
-        : base(frameworkVersion)
-    {
-    }
-
     protected override MemberInfo[] GetMembers (ConstructorInfo constructorInfo, ReadOnlyCollection<Expression> arguments)
     {
       return new[] 
