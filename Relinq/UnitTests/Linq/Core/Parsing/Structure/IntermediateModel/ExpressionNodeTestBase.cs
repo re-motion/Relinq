@@ -20,7 +20,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
@@ -77,7 +76,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
       Assert.That (result, Is.SameAs (QueryModel));
       
       Assert.That (QueryModel.ResultOperators.Count, Is.EqualTo (1));
-      Assert.That (QueryModel.ResultOperators[0], Is.InstanceOfType (expectedResultOperatorType));
+      Assert.That (QueryModel.ResultOperators[0], Is.InstanceOf (expectedResultOperatorType));
     }
 
     protected MethodCallExpressionParseInfo CreateParseInfo ()
@@ -119,11 +118,11 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
       if (queryableMethodCall != null)
       {
         var queryableMethod = GetGenericMethodDefinition (queryableMethodCall);
-        Assert.That (supportedMethods, List.Contains (queryableMethod));
+        Assert.That (supportedMethods, Has.Member (queryableMethod));
       }
 
       var enumerableMethod = GetGenericMethodDefinition_Enumerable (enumerableMethodCall);
-      Assert.That (supportedMethods, List.Contains (enumerableMethod));
+      Assert.That (supportedMethods, Has.Member (enumerableMethod));
     }
 
     protected void AssertSupportedMethod_NonGeneric<TResult> (
@@ -134,13 +133,13 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
       if (queryableMethodCall != null)
       {
         var queryableMethod = GetMethod (queryableMethodCall);
-        Assert.That (supportedMethods, List.Contains (queryableMethod));
+        Assert.That (supportedMethods, Has.Member (queryableMethod));
       }
 
       if (enumerableMethodCall != null)
       {
         var enumerableMethod = GetMethod_Enumerable (enumerableMethodCall);
-        Assert.That (supportedMethods, List.Contains (enumerableMethod));
+        Assert.That (supportedMethods, Has.Member (enumerableMethod));
       }
     }
 

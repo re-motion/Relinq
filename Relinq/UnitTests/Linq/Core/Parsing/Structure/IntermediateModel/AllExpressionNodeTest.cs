@@ -18,7 +18,6 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 
@@ -71,7 +70,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
       Assert.That (result, Is.SameAs (QueryModel));
 
       Assert.That (QueryModel.ResultOperators.Count, Is.EqualTo (1));
-      Assert.That (QueryModel.ResultOperators[0], Is.InstanceOfType (typeof (AllResultOperator)));
+      Assert.That (QueryModel.ResultOperators[0], Is.InstanceOf (typeof (AllResultOperator)));
 
       var resultOperator = ((AllResultOperator) QueryModel.ResultOperators[0]);
       Assert.That (resultOperator.Predicate, Is.EqualTo (_node.GetResolvedPredicate (ClauseGenerationContext)));

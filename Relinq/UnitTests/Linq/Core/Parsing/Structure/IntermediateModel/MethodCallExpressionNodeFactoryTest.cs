@@ -17,7 +17,6 @@
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel.TestDomain;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Linq.Utilities;
@@ -43,7 +42,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
       var selector = ExpressionHelper.CreateLambdaExpression<int, int> (i => i);
       var result = MethodCallExpressionNodeFactory.CreateExpressionNode (typeof (SelectExpressionNode), _parseInfo, new object[] { selector });
 
-      Assert.That (result, Is.InstanceOfType (typeof (SelectExpressionNode)));
+      Assert.That (result, Is.InstanceOf (typeof (SelectExpressionNode)));
       Assert.That (((SelectExpressionNode) result).Source, Is.SameAs (_source));
       Assert.That (((SelectExpressionNode) result).Selector, Is.SameAs (selector));
       Assert.That (((SelectExpressionNode) result).AssociatedIdentifier, Is.EqualTo ("foo"));
@@ -54,7 +53,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
     {
       var result = MethodCallExpressionNodeFactory.CreateExpressionNode (typeof (FirstExpressionNode), _parseInfo, new object[0]);
 
-      Assert.That (result, Is.InstanceOfType (typeof (FirstExpressionNode)));
+      Assert.That (result, Is.InstanceOf (typeof (FirstExpressionNode)));
       Assert.That (((FirstExpressionNode) result).Source, Is.SameAs (_source));
       Assert.That (((FirstExpressionNode) result).Source, Is.SameAs (_parseInfo.Source));
     }

@@ -19,7 +19,6 @@ using System.Collections;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.ResultOperators;
@@ -46,7 +45,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
       var cloneContext = new CloneContext (clonedClauseMapping);
       var clone = _resultOperator.Clone (cloneContext);
 
-      Assert.That (clone, Is.InstanceOfType (typeof (CastResultOperator)));
+      Assert.That (clone, Is.InstanceOf (typeof (CastResultOperator)));
       Assert.That (((CastResultOperator) clone).CastItemType, Is.SameAs (_resultOperator.CastItemType));
     }
 
@@ -74,9 +73,9 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
       var input = new StreamedSequenceInfo (typeof (Cook[]), studentExpression);
       var result = _resultOperator.GetOutputDataInfo (input);
 
-      Assert.That (result, Is.InstanceOfType (typeof (StreamedSequenceInfo)));
+      Assert.That (result, Is.InstanceOf (typeof (StreamedSequenceInfo)));
       Assert.That (result.DataType, Is.SameAs (typeof (IQueryable<Chef>)));
-      Assert.That (((StreamedSequenceInfo) result).ItemExpression, Is.InstanceOfType (typeof (UnaryExpression)));
+      Assert.That (((StreamedSequenceInfo) result).ItemExpression, Is.InstanceOf (typeof (UnaryExpression)));
       Assert.That (((StreamedSequenceInfo) result).ItemExpression.NodeType, Is.EqualTo (ExpressionType.Convert));
       Assert.That (((StreamedSequenceInfo) result).ItemExpression.Type, Is.SameAs (typeof (Chef)));
       Assert.That (((UnaryExpression) ((StreamedSequenceInfo) result).ItemExpression).Operand, Is.SameAs (input.ItemExpression));

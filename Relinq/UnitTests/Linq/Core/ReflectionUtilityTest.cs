@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq;
 
 namespace Remotion.Linq.UnitTests.Linq.Core

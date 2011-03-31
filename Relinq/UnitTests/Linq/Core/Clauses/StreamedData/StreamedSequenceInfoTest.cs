@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators;
 using Remotion.Linq;
 using Remotion.Linq.Clauses.ResultOperators;
@@ -163,11 +162,11 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.StreamedData
 
       executorMock.VerifyAllExpectations();
 
-      Assert.That (streamedData, Is.InstanceOfType (typeof (StreamedSequence)));
+      Assert.That (streamedData, Is.InstanceOf (typeof (StreamedSequence)));
       Assert.That (streamedData.DataInfo.ItemExpression, Is.SameAs (_infoWithIntSequence.ItemExpression));
       Assert.That (typeof (IQueryable<int>).IsAssignableFrom (streamedData.DataInfo.DataType), Is.True);
       Assert.That (streamedData.GetTypedSequence<int>().ToArray(), Is.EqualTo (new[] { 1, 2, 3 }));
-      Assert.That (streamedData.Sequence, Is.InstanceOfType (typeof (IQueryable<int>)));
+      Assert.That (streamedData.Sequence, Is.InstanceOf (typeof (IQueryable<int>)));
     }
 
     [Test]

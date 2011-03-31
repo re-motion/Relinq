@@ -18,7 +18,6 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Linq.Utilities;
@@ -43,7 +42,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
       var input = new StreamedSequenceInfo (typeof (Cook[]), studentExpression);
       var result = _resultOperator.GetOutputDataInfo (input);
 
-      Assert.That (result, Is.InstanceOfType (typeof (StreamedSequenceInfo)));
+      Assert.That (result, Is.InstanceOf (typeof (StreamedSequenceInfo)));
       Assert.That (result, Is.Not.SameAs (input));
       Assert.That (result.DataType, Is.SameAs (typeof (IQueryable<Cook>)));
       Assert.That (((StreamedSequenceInfo) result).ItemExpression, Is.SameAs (studentExpression));

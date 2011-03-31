@@ -17,7 +17,6 @@
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
@@ -52,7 +51,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
     public void Initialization_WithPredicate ()
     {
       Assert.That (_nodeWithPredicate.Source, Is.Not.SameAs (SourceNode));
-      Assert.That (_nodeWithPredicate.Source, Is.InstanceOfType (typeof (WhereExpressionNode)));
+      Assert.That (_nodeWithPredicate.Source, Is.InstanceOf (typeof (WhereExpressionNode)));
 
       var source = (WhereExpressionNode) _nodeWithPredicate.Source;
       Assert.That (source.Source, Is.SameAs (SourceNode));
@@ -63,7 +62,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
     public void Initialization_WithSelector ()
     {
       Assert.That (_nodeWithSelector.Source, Is.Not.SameAs (SourceNode));
-      Assert.That (_nodeWithSelector.Source, Is.InstanceOfType (typeof (SelectExpressionNode)));
+      Assert.That (_nodeWithSelector.Source, Is.InstanceOf (typeof (SelectExpressionNode)));
 
       var source = (SelectExpressionNode) _nodeWithSelector.Source;
       Assert.That (source.Source, Is.SameAs (SourceNode));
@@ -74,11 +73,11 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
     public void Initialization_WithPredicateAndSelector ()
     {
       Assert.That (_nodeWithBothOptionals.Source, Is.Not.SameAs (SourceNode));
-      Assert.That (_nodeWithBothOptionals.Source, Is.InstanceOfType (typeof (SelectExpressionNode)));
+      Assert.That (_nodeWithBothOptionals.Source, Is.InstanceOf (typeof (SelectExpressionNode)));
 
       var selectSource = (SelectExpressionNode) _nodeWithBothOptionals.Source;
       Assert.That (selectSource.Selector, Is.SameAs (_selector));
-      Assert.That (selectSource.Source, Is.InstanceOfType (typeof (WhereExpressionNode)));
+      Assert.That (selectSource.Source, Is.InstanceOf (typeof (WhereExpressionNode)));
 
       var source = (WhereExpressionNode) selectSource.Source;
       Assert.That (source.Predicate, Is.SameAs (_predicate));
@@ -99,7 +98,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
       _nodeWithPredicate.Source.Apply (QueryModel, ClauseGenerationContext);
       _nodeWithPredicate.Apply (QueryModel, ClauseGenerationContext);
 
-      Assert.That (QueryModel.BodyClauses[0], Is.InstanceOfType (typeof (WhereClause)));
+      Assert.That (QueryModel.BodyClauses[0], Is.InstanceOf (typeof (WhereClause)));
 
       var whereClause = (WhereClause) QueryModel.BodyClauses[0];
       var expectedNewPredicate = ExpressionHelper.Resolve<int, bool> (SourceClause, i => i > 5);

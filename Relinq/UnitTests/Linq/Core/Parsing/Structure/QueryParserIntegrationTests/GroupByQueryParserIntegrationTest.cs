@@ -24,8 +24,6 @@ using Remotion.Linq.UnitTests.Linq.Core.TestUtilities;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ResultOperators;
-using Is = NUnit.Framework.SyntaxHelpers.Is;
-using Text = NUnit.Framework.SyntaxHelpers.Text;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegrationTests
 {
@@ -83,7 +81,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<NonTransformedTuple<bool, IEnumerable<int>>>)));
 
       var outerMainFromClause = queryModel.MainFromClause;
-      Assert.That (outerMainFromClause.FromExpression, Is.InstanceOfType (typeof (SubQueryExpression)));
+      Assert.That (outerMainFromClause.FromExpression, Is.InstanceOf (typeof (SubQueryExpression)));
       Assert.That (outerMainFromClause.ItemType, Is.SameAs (typeof (IGrouping<bool, int>)));
       Assert.That (outerMainFromClause.ItemName, Is.EqualTo ("<generated>_0"));
 
@@ -128,7 +126,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<NonTransformedTuple<bool, IEnumerable<Cook>>>)));
 
       var outerMainFromClause = queryModel.MainFromClause;
-      Assert.That (outerMainFromClause.FromExpression, Is.InstanceOfType (typeof (SubQueryExpression)));
+      Assert.That (outerMainFromClause.FromExpression, Is.InstanceOf (typeof (SubQueryExpression)));
       Assert.That (outerMainFromClause.ItemType, Is.SameAs (typeof (IGrouping<bool, Cook>)));
       Assert.That (outerMainFromClause.ItemName, Is.EqualTo ("<generated>_0"));
 
@@ -176,7 +174,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (bool)));
 
       var outerMainFromClause = queryModel.MainFromClause;
-      Assert.That (outerMainFromClause.FromExpression, Is.InstanceOfType (typeof (SubQueryExpression)));
+      Assert.That (outerMainFromClause.FromExpression, Is.InstanceOf (typeof (SubQueryExpression)));
       Assert.That (outerMainFromClause.ItemType, Is.SameAs (typeof (IGrouping<bool, int>)));
       Assert.That (outerMainFromClause.ItemName, Is.EqualTo ("kvp"));
 
@@ -226,7 +224,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<IGrouping<bool, int>>)));
 
       var mainFromClause = queryModel.MainFromClause;
-      Assert.That (mainFromClause.FromExpression, Is.InstanceOfType (typeof (SubQueryExpression)));
+      Assert.That (mainFromClause.FromExpression, Is.InstanceOf (typeof (SubQueryExpression)));
       Assert.That (mainFromClause.ItemType, Is.SameAs (typeof (IGrouping<bool, int>)));
       Assert.That (mainFromClause.ItemName, Is.EqualTo ("x"));
 
@@ -241,16 +239,16 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       Assert.That (subQueryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<IGrouping<bool, int>>)));
 
       var whereClause = (WhereClause) queryModel.BodyClauses[0];
-      Assert.That (whereClause.Predicate, Is.InstanceOfType (typeof (BinaryExpression)));
+      Assert.That (whereClause.Predicate, Is.InstanceOf (typeof (BinaryExpression)));
       var predicateLeftSide = ((BinaryExpression) whereClause.Predicate).Left;
-      Assert.That (predicateLeftSide, Is.InstanceOfType (typeof (SubQueryExpression)));
+      Assert.That (predicateLeftSide, Is.InstanceOf (typeof (SubQueryExpression)));
       var predicateSubQueryModel = ((SubQueryExpression) predicateLeftSide).QueryModel;
       Assert.That (predicateSubQueryModel.MainFromClause.ItemType, Is.SameAs (typeof (int)));
-      Assert.That (predicateSubQueryModel.MainFromClause.ItemName, Text.StartsWith ("<generated>"));
+      Assert.That (predicateSubQueryModel.MainFromClause.ItemName, Is.StringStarting ("<generated>"));
       Assert.That (((QuerySourceReferenceExpression) predicateSubQueryModel.MainFromClause.FromExpression).ReferencedQuerySource, Is.SameAs (mainFromClause));
       Assert.That (((QuerySourceReferenceExpression) predicateSubQueryModel.SelectClause.Selector).ReferencedQuerySource, 
                    Is.SameAs (predicateSubQueryModel.MainFromClause));
-      Assert.That (predicateSubQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (CountResultOperator)));
+      Assert.That (predicateSubQueryModel.ResultOperators[0], Is.InstanceOf (typeof (CountResultOperator)));
       
       var selectClause = queryModel.SelectClause;
       Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedQuerySource, Is.SameAs (mainFromClause));
@@ -266,7 +264,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<IGrouping<bool, Cook>>)));
 
       var mainFromClause = queryModel.MainFromClause;
-      Assert.That (mainFromClause.FromExpression, Is.InstanceOfType (typeof (SubQueryExpression)));
+      Assert.That (mainFromClause.FromExpression, Is.InstanceOf (typeof (SubQueryExpression)));
       Assert.That (mainFromClause.ItemType, Is.SameAs (typeof (IGrouping<bool, Cook>)));
       Assert.That (mainFromClause.ItemName, Is.EqualTo ("g"));
 
@@ -274,7 +272,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       var subQuerySelectClause = subQueryModel.SelectClause;
       CheckResolvedExpression<Cook, Cook> (subQuerySelectClause.Selector, subQueryModel.MainFromClause, s => s);
 
-      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (GroupResultOperator)));
+      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOf (typeof (GroupResultOperator)));
 
       Assert.That (subQueryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<IGrouping<bool, Cook>>)));
 

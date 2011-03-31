@@ -18,7 +18,6 @@ using System;
 using System.Collections;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
@@ -52,7 +51,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
       var cloneContext = new CloneContext (clonedClauseMapping);
       var clone = _resultOperator.Clone (cloneContext);
 
-      Assert.That (clone, Is.InstanceOfType (typeof (AllResultOperator)));
+      Assert.That (clone, Is.InstanceOf (typeof (AllResultOperator)));
       Assert.That (((AllResultOperator) clone).Predicate, Is.SameAs (_resultOperator.Predicate));
     }
 
@@ -83,7 +82,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
       var input = new StreamedSequenceInfo (typeof (int[]), itemExpression);
       var result = _resultOperator.GetOutputDataInfo (input);
 
-      Assert.That (result, Is.InstanceOfType (typeof (StreamedValueInfo)));
+      Assert.That (result, Is.InstanceOf (typeof (StreamedValueInfo)));
       Assert.That (result.DataType, Is.SameAs (typeof (bool)));
     }
 

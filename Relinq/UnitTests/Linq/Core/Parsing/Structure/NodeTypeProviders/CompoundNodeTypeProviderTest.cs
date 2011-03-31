@@ -16,7 +16,6 @@
 // 
 using System.Reflection;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.Parsing.Structure;
 using Remotion.Linq.Parsing.Structure.NodeTypeProviders;
 using Rhino.Mocks;

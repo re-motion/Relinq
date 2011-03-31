@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Linq;
 using Remotion.Linq.Clauses;
@@ -73,7 +72,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core
     public void GetOutputDataInfo_FromSelectClause ()
     {
       var outputDataInfo = _queryModel.GetOutputDataInfo ();
-      Assert.That (outputDataInfo, Is.InstanceOfType (typeof (StreamedSequenceInfo)));
+      Assert.That (outputDataInfo, Is.InstanceOf (typeof (StreamedSequenceInfo)));
       Assert.That (outputDataInfo.DataType, Is.SameAs (typeof (IQueryable<int>)));
       Assert.That (((StreamedSequenceInfo) outputDataInfo).ItemExpression, Is.SameAs (_queryModel.SelectClause.Selector));
     }
@@ -84,7 +83,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core
       _queryModel.ResultOperators.Add (new CountResultOperator ());
 
       var outputDataInfo = _queryModel.GetOutputDataInfo ();
-      Assert.That (outputDataInfo, Is.InstanceOfType (typeof (StreamedValueInfo)));
+      Assert.That (outputDataInfo, Is.InstanceOf (typeof (StreamedValueInfo)));
       Assert.That (outputDataInfo.DataType, Is.SameAs (typeof (int)));
     }
 
@@ -95,7 +94,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core
       _queryModel.ResultOperators.Add (new SingleResultOperator (false));
 
       var outputDataInfo = _queryModel.GetOutputDataInfo ();
-      Assert.That (outputDataInfo, Is.InstanceOfType (typeof (StreamedValueInfo)));
+      Assert.That (outputDataInfo, Is.InstanceOf (typeof (StreamedValueInfo)));
       Assert.That (outputDataInfo.DataType, Is.SameAs (typeof (int)));
     }
 
@@ -106,7 +105,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core
       
       var outputDataInfo = _queryModel.GetOutputDataInfo ();
       
-      Assert.That (outputDataInfo, Is.InstanceOfType (typeof (StreamedSequenceInfo)));
+      Assert.That (outputDataInfo, Is.InstanceOf (typeof (StreamedSequenceInfo)));
       Assert.That (outputDataInfo.DataType, Is.SameAs (typeof (List<int>)));
       Assert.That (((StreamedSequenceInfo) outputDataInfo).ItemExpression, Is.SameAs (_queryModel.SelectClause.Selector));
     }
@@ -119,7 +118,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core
 
       var outputDataInfo = _queryModel.GetOutputDataInfo ();
 
-      Assert.That (outputDataInfo, Is.InstanceOfType (typeof (StreamedSequenceInfo)));
+      Assert.That (outputDataInfo, Is.InstanceOf (typeof (StreamedSequenceInfo)));
       Assert.That (outputDataInfo.DataType, Is.SameAs (typeof (IQueryable<int>)));
       Assert.That (((StreamedSequenceInfo) outputDataInfo).ItemExpression, Is.SameAs (_queryModel.SelectClause.Selector));
     }
@@ -430,7 +429,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core
 
       Assert.That (_queryModel.SelectClause, Is.SameAs (_selectClause));
       Assert.That (_queryModel.BodyClauses.Count, Is.EqualTo (1));
-      Assert.That (_queryModel.BodyClauses, List.Contains (orderByClause));
+      Assert.That (_queryModel.BodyClauses, Has.Member (orderByClause));
     }
 
     [Test]
@@ -453,7 +452,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core
       _queryModel.BodyClauses.Add (clause);
 
       Assert.That (_queryModel.BodyClauses.Count, Is.EqualTo (1));
-      Assert.That (_queryModel.BodyClauses, List.Contains (clause));
+      Assert.That (_queryModel.BodyClauses, Has.Member (clause));
     }
 
     [Test]

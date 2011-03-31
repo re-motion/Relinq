@@ -16,7 +16,6 @@
 // 
 using System;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.Collections;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Collections
@@ -80,7 +79,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Collections
     {
       _collection.Add (7);
 
-      _collection.ItemInserted += (sender, e) => Assert.That (_collection, List.Contains (8));
+      _collection.ItemInserted += (sender, e) => Assert.That (_collection, Has.Member (8));
 
       _collection.Add (8);
     }
@@ -126,7 +125,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Collections
     {
       _collection.Add (7);
 
-      _collection.ItemRemoved += (sender, e) => Assert.That (_collection, List.Not.Contains (7));
+      _collection.ItemRemoved += (sender, e) => Assert.That (_collection, Has.No.Contains (7));
 
       _collection.Remove (7);
     }
@@ -173,7 +172,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Collections
     {
       _collection.Add (7);
 
-      _collection.ItemSet += (sender, e) => Assert.That (_collection, List.Contains (8));
+      _collection.ItemSet += (sender, e) => Assert.That (_collection, Has.Member (8));
 
       _collection[0] = 8;
     }
@@ -190,7 +189,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Collections
     {
       using (var enumerator = _collection.AsChangeResistantEnumerable ().GetEnumerator ())
       {
-        Assert.That (enumerator, Is.InstanceOfType (typeof (ChangeResistantObservableCollectionEnumerator<int>)));
+        Assert.That (enumerator, Is.InstanceOf (typeof (ChangeResistantObservableCollectionEnumerator<int>)));
       }
     }
 

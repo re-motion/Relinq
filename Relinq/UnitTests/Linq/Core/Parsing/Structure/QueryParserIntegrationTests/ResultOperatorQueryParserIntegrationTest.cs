@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Linq.UnitTests.Linq.Core.TestUtilities;
 using Remotion.Linq.Clauses;
@@ -45,12 +44,12 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<NonTransformedTuple<Cook, Kitchen>>)));
 
       var mainFromClause = queryModel.MainFromClause;
-      Assert.That (mainFromClause.FromExpression, Is.InstanceOfType (typeof (SubQueryExpression)));
+      Assert.That (mainFromClause.FromExpression, Is.InstanceOf (typeof (SubQueryExpression)));
       Assert.That (mainFromClause.ItemType, Is.SameAs (typeof (Cook)));
       Assert.That (mainFromClause.ItemName, Is.EqualTo("s"));
 
       var subQueryModel = ((SubQueryExpression) mainFromClause.FromExpression).QueryModel;
-      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (TakeResultOperator)));
+      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOf (typeof (TakeResultOperator)));
       Assert.That (subQueryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Cook>)));
       
       var selectClause = queryModel.SelectClause;
@@ -73,12 +72,12 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Cook>)));
 
       var mainFromClause = queryModel.MainFromClause;
-      Assert.That (mainFromClause.FromExpression, Is.InstanceOfType (typeof (SubQueryExpression)));
+      Assert.That (mainFromClause.FromExpression, Is.InstanceOf (typeof (SubQueryExpression)));
       Assert.That (mainFromClause.ItemType, Is.SameAs (typeof (Cook)));
       Assert.That (mainFromClause.ItemName, Is.EqualTo ("x"));
 
       var subQueryModel = ((SubQueryExpression) mainFromClause.FromExpression).QueryModel;
-      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (DistinctResultOperator)));
+      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOf (typeof (DistinctResultOperator)));
       Assert.That (subQueryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Cook>)));
 
       var whereClause = (WhereClause) queryModel.BodyClauses[0];
@@ -98,12 +97,12 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (int)));
 
       var mainFromClause = queryModel.MainFromClause;
-      Assert.That (mainFromClause.FromExpression, Is.InstanceOfType (typeof (SubQueryExpression)));
+      Assert.That (mainFromClause.FromExpression, Is.InstanceOf (typeof (SubQueryExpression)));
       Assert.That (mainFromClause.ItemType, Is.SameAs (typeof (Cook)));
       Assert.That (mainFromClause.ItemName, Is.EqualTo ("x"));
 
       var subQueryModel = ((SubQueryExpression) mainFromClause.FromExpression).QueryModel;
-      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (DistinctResultOperator)));
+      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOf (typeof (DistinctResultOperator)));
       Assert.That (subQueryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Cook>)));
 
       var whereClause = (WhereClause) queryModel.BodyClauses[0];
@@ -112,7 +111,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       var selectClause = queryModel.SelectClause;
       Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedQuerySource, Is.SameAs (mainFromClause));
 
-      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (CountResultOperator)));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOf (typeof (CountResultOperator)));
     }
 
     [Test]
@@ -130,7 +129,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       var additionalFromClause = (AdditionalFromClause) queryModel.BodyClauses[0];
 
       var subQueryModel = ((SubQueryExpression) additionalFromClause.FromExpression).QueryModel;
-      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (TakeResultOperator)));
+      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOf (typeof (TakeResultOperator)));
 
       var takeResultOperator = (TakeResultOperator) subQueryModel.ResultOperators[0];
       CheckResolvedExpression<Cook, int> (takeResultOperator.Count, mainFromClause, s => s.ID);
@@ -153,7 +152,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       var additionalFromClause = (AdditionalFromClause) queryModel.BodyClauses[0];
 
       var subQueryModel = ((SubQueryExpression) additionalFromClause.FromExpression).QueryModel;
-      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (TakeResultOperator)));
+      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOf (typeof (TakeResultOperator)));
 
       var takeResultOperator = (TakeResultOperator) subQueryModel.ResultOperators[0];
       Assert.That (takeResultOperator.Count.NodeType, Is.EqualTo (ExpressionType.Divide));
@@ -181,7 +180,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       CheckConstantQuerySource (mainFromClause.FromExpression, QuerySource);
 
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
-      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (AverageResultOperator)));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOf (typeof (AverageResultOperator)));
       
       CheckResolvedExpression<Cook, int> (queryModel.SelectClause.Selector, mainFromClause, s => s.ID);
     }
@@ -200,7 +199,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       CheckConstantQuerySource (mainFromClause.FromExpression, QuerySource);
 
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
-      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (LongCountResultOperator)));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOf (typeof (LongCountResultOperator)));
 
       CheckResolvedExpression<Cook, int> (queryModel.SelectClause.Selector, mainFromClause, s => s.ID);
     }
@@ -214,11 +213,11 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       var queryModel = QueryParser.GetParsedQuery (expression);
 
       var selectClause = queryModel.SelectClause;
-      Assert.That (selectClause.Selector, Is.InstanceOfType (typeof (SubQueryExpression)));
+      Assert.That (selectClause.Selector, Is.InstanceOf (typeof (SubQueryExpression)));
 
       var subQueryModel = ((SubQueryExpression) selectClause.Selector).QueryModel;
       Assert.That (subQueryModel.ResultOperators.Count, Is.EqualTo (1));
-      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (CountResultOperator)));
+      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOf (typeof (CountResultOperator)));
     }
 
     [Test]
@@ -230,7 +229,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       var queryModel = QueryParser.GetParsedQuery (expression);
 
       var selectClause = queryModel.SelectClause;
-      Assert.That (selectClause.Selector, Is.InstanceOfType (typeof (ConstantExpression)));
+      Assert.That (selectClause.Selector, Is.InstanceOf (typeof (ConstantExpression)));
       Assert.That (((ConstantExpression) selectClause.Selector).Value, Is.EqualTo (0));
     }
 
@@ -243,11 +242,11 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       var queryModel = QueryParser.GetParsedQuery (expression);
 
       var selectClause = queryModel.SelectClause;
-      Assert.That (selectClause.Selector, Is.InstanceOfType (typeof (SubQueryExpression)));
+      Assert.That (selectClause.Selector, Is.InstanceOf (typeof (SubQueryExpression)));
 
       var subQueryModel = ((SubQueryExpression) selectClause.Selector).QueryModel;
       Assert.That (subQueryModel.ResultOperators.Count, Is.EqualTo (1));
-      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (CountResultOperator)));
+      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOf (typeof (CountResultOperator)));
     }
 
     [Test]
@@ -259,11 +258,11 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       var queryModel = QueryParser.GetParsedQuery (expression);
 
       var selectClause = queryModel.SelectClause;
-      Assert.That (selectClause.Selector, Is.InstanceOfType (typeof (SubQueryExpression)));
+      Assert.That (selectClause.Selector, Is.InstanceOf (typeof (SubQueryExpression)));
 
       var subQueryModel = ((SubQueryExpression) selectClause.Selector).QueryModel;
       Assert.That (subQueryModel.ResultOperators.Count, Is.EqualTo (1));
-      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (CountResultOperator)));
+      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOf (typeof (CountResultOperator)));
     }
 
     [Test]
@@ -275,11 +274,11 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       var queryModel = QueryParser.GetParsedQuery (expression);
 
       var selectClause = queryModel.SelectClause;
-      Assert.That (selectClause.Selector, Is.InstanceOfType (typeof (SubQueryExpression)));
+      Assert.That (selectClause.Selector, Is.InstanceOf (typeof (SubQueryExpression)));
 
       var subQueryModel = ((SubQueryExpression) selectClause.Selector).QueryModel;
       Assert.That (subQueryModel.ResultOperators.Count, Is.EqualTo (1));
-      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (LongCountResultOperator)));
+      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOf (typeof (LongCountResultOperator)));
     }
 
     [Test]
@@ -294,7 +293,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       var mainFromClause = queryModel.MainFromClause;
 
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
-      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (SkipResultOperator)));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOf (typeof (SkipResultOperator)));
       var skipResultOperator = (SkipResultOperator) queryModel.ResultOperators[0];
       CheckResolvedExpression<int,int> (skipResultOperator.Count, mainFromClause, i => 1);
     }
@@ -311,7 +310,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       var mainFromClause = queryModel.MainFromClause;
 
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
-      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (ReverseResultOperator)));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOf (typeof (ReverseResultOperator)));
       var skipResultOperator = (ReverseResultOperator) queryModel.ResultOperators[0];
       Assert.That (skipResultOperator, Is.Not.Null);
 
@@ -332,7 +331,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       var mainFromClause = queryModel.MainFromClause;
 
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
-      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (ExceptResultOperator)));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOf (typeof (ExceptResultOperator)));
       Assert.That (((ExceptResultOperator) queryModel.ResultOperators[0]).GetConstantSource2(), Is.SameAs (students));
       
       var selectClause = queryModel.SelectClause;
@@ -352,7 +351,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       var mainFromClause = queryModel.MainFromClause;
 
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
-      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (IntersectResultOperator)));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOf (typeof (IntersectResultOperator)));
       Assert.That (((IntersectResultOperator) queryModel.ResultOperators[0]).GetConstantSource2 (), Is.SameAs (students));
       
       var selectClause = queryModel.SelectClause;
@@ -373,7 +372,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       var mainFromClause = queryModel.MainFromClause;
 
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
-      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (UnionResultOperator)));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOf (typeof (UnionResultOperator)));
       Assert.That (((UnionResultOperator) queryModel.ResultOperators[0]).GetConstantSource2 (), Is.SameAs (students));
       
       var selectClause = queryModel.SelectClause;
@@ -391,7 +390,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Cook>)));
 
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
-      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (DefaultIfEmptyResultOperator)));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOf (typeof (DefaultIfEmptyResultOperator)));
       Assert.That (((DefaultIfEmptyResultOperator) queryModel.ResultOperators[0]).GetConstantOptionalDefaultValue(), Is.SameAs (student));
     }
 
@@ -408,7 +407,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       Assert.That (castResultOperator.CastItemType, Is.SameAs (typeof (double)));
 
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
-      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (CastResultOperator)));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOf (typeof (CastResultOperator)));
     }
 
     [Test]
@@ -422,7 +421,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (bool)));
 
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
-      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (ContainsResultOperator)));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOf (typeof (ContainsResultOperator)));
       Assert.That (((ContainsResultOperator) queryModel.ResultOperators[0]).GetConstantItem<Cook>(), Is.SameAs (student));
     }
 
@@ -440,7 +439,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       var subQueryModel = ((SubQueryExpression) queryModel.SelectClause.Selector).QueryModel;
 
       Assert.That (subQueryModel.ResultOperators.Count, Is.EqualTo (1));
-      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (ContainsResultOperator)));
+      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOf (typeof (ContainsResultOperator)));
 
       var exoectedItemExpression = new QuerySourceReferenceExpression (queryModel.MainFromClause);
       ExpressionTreeComparer.CheckAreEqualTrees (exoectedItemExpression, ((ContainsResultOperator) subQueryModel.ResultOperators[0]).Item);
@@ -460,7 +459,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       var subQueryModel = ((SubQueryExpression) queryModel.SelectClause.Selector).QueryModel;
 
       Assert.That (subQueryModel.ResultOperators.Count, Is.EqualTo (1));
-      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (ContainsResultOperator)));
+      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOf (typeof (ContainsResultOperator)));
 
       var exoectedItemExpression = new QuerySourceReferenceExpression (queryModel.MainFromClause);
       ExpressionTreeComparer.CheckAreEqualTrees (exoectedItemExpression, ((ContainsResultOperator) subQueryModel.ResultOperators[0]).Item);
@@ -480,7 +479,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       var subQueryModel = ((SubQueryExpression) queryModel.SelectClause.Selector).QueryModel;
 
       Assert.That (subQueryModel.ResultOperators.Count, Is.EqualTo (1));
-      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (ContainsResultOperator)));
+      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOf (typeof (ContainsResultOperator)));
 
       var exoectedItemExpression = new QuerySourceReferenceExpression (queryModel.MainFromClause);
       ExpressionTreeComparer.CheckAreEqualTrees (exoectedItemExpression, ((ContainsResultOperator) subQueryModel.ResultOperators[0]).Item);
@@ -500,7 +499,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       var subQueryModel = ((SubQueryExpression) queryModel.SelectClause.Selector).QueryModel;
 
       Assert.That (subQueryModel.ResultOperators.Count, Is.EqualTo (1));
-      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (ContainsResultOperator)));
+      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOf (typeof (ContainsResultOperator)));
 
       var exoectedItemExpression = new QuerySourceReferenceExpression (queryModel.MainFromClause);
       ExpressionTreeComparer.CheckAreEqualTrees (exoectedItemExpression, ((ContainsResultOperator) subQueryModel.ResultOperators[0]).Item);
@@ -521,7 +520,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       var whereClause = (WhereClause) queryModel.BodyClauses[0];
 
       var subQueryModel = ((SubQueryExpression) whereClause.Predicate).QueryModel;
-      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (ContainsResultOperator)));
+      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOf (typeof (ContainsResultOperator)));
 
       var containsResultOperator = (ContainsResultOperator) subQueryModel.ResultOperators[0];
       CheckResolvedExpression<Cook, Cook> (containsResultOperator.Item, mainFromClause, s => s);
@@ -542,7 +541,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       var whereClause = (WhereClause) queryModel.BodyClauses[0];
 
       var subQueryModel = ((SubQueryExpression) whereClause.Predicate).QueryModel;
-      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (ContainsResultOperator)));
+      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOf (typeof (ContainsResultOperator)));
 
       var containsResultOperator = (ContainsResultOperator) subQueryModel.ResultOperators[0];
       Assert.That (containsResultOperator.Item, Is.TypeOf (typeof (SubQueryExpression)));
@@ -564,7 +563,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (bool)));
 
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
-      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (AllResultOperator)));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOf (typeof (AllResultOperator)));
 
       CheckResolvedExpression<Cook, bool> (((AllResultOperator) queryModel.ResultOperators[0]).Predicate, queryModel.MainFromClause, s => s.IsFullTimeCook);
     }
@@ -581,7 +580,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       CheckConstantQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
       
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
-      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (AnyResultOperator)));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOf (typeof (AnyResultOperator)));
     }
 
     [Test]
@@ -596,12 +595,12 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       CheckConstantQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
 
       Assert.That (queryModel.BodyClauses.Count, Is.EqualTo (1));
-      Assert.That (queryModel.BodyClauses[0], Is.InstanceOfType (typeof (WhereClause)));
+      Assert.That (queryModel.BodyClauses[0], Is.InstanceOf (typeof (WhereClause)));
 
       CheckResolvedExpression<Cook, bool> (((WhereClause) queryModel.BodyClauses[0]).Predicate, queryModel.MainFromClause, s => s.IsFullTimeCook);
       
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
-      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (AnyResultOperator)));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOf (typeof (AnyResultOperator)));
     }
 
     [Test]
@@ -616,7 +615,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       CheckConstantQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
 
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
-      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (AggregateResultOperator)));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOf (typeof (AggregateResultOperator)));
 
       var resultOperator = (AggregateResultOperator) queryModel.ResultOperators[0];
 
@@ -639,7 +638,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       CheckConstantQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
 
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
-      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (AggregateFromSeedResultOperator)));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOf (typeof (AggregateFromSeedResultOperator)));
 
       var resultOperator = (AggregateFromSeedResultOperator) queryModel.ResultOperators[0];
       Assert.That (resultOperator.GetConstantSeed<int> (), Is.EqualTo (0));
@@ -665,7 +664,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       CheckConstantQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
 
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
-      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (AggregateFromSeedResultOperator)));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOf (typeof (AggregateFromSeedResultOperator)));
 
       var resultOperator = (AggregateFromSeedResultOperator) queryModel.ResultOperators[0];
       Assert.That (resultOperator.GetConstantSeed<int> (), Is.EqualTo (0));

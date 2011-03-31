@@ -19,7 +19,6 @@ using System.Collections;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ResultOperators;
@@ -67,7 +66,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
       var cloneContext = new CloneContext (clonedClauseMapping);
       var clone = _resultOperatorWithDefaultValue.Clone (cloneContext);
 
-      Assert.That (clone, Is.InstanceOfType (typeof (DefaultIfEmptyResultOperator)));
+      Assert.That (clone, Is.InstanceOf (typeof (DefaultIfEmptyResultOperator)));
       Assert.That (((DefaultIfEmptyResultOperator) clone).OptionalDefaultValue, Is.SameAs (_resultOperatorWithDefaultValue.OptionalDefaultValue));
     }
 

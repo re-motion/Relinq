@@ -18,7 +18,6 @@ using System;
 using System.Collections;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
@@ -43,7 +42,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
       var cloneContext = new CloneContext (clonedClauseMapping);
       var clone = _resultOperator.Clone (cloneContext);
 
-      Assert.That (clone, Is.InstanceOfType (typeof (MinResultOperator)));
+      Assert.That (clone, Is.InstanceOf (typeof (MinResultOperator)));
     }
 
     [Test]

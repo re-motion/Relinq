@@ -18,7 +18,6 @@ using System;
 using System.Collections;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
@@ -47,7 +46,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
     {
       var clone = _resultOperatorWithDefault.Clone (_cloneContext);
 
-      Assert.That (clone, Is.InstanceOfType (typeof (LastResultOperator)));
+      Assert.That (clone, Is.InstanceOf (typeof (LastResultOperator)));
       Assert.That (((LastResultOperator) clone).ReturnDefaultWhenEmpty, Is.True);
     }
 
@@ -56,7 +55,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
     {
       var clone = _resultOperatorNoDefault.Clone (_cloneContext);
 
-      Assert.That (clone, Is.InstanceOfType (typeof (LastResultOperator)));
+      Assert.That (clone, Is.InstanceOf (typeof (LastResultOperator)));
       Assert.That (((LastResultOperator) clone).ReturnDefaultWhenEmpty, Is.False);
     }
 

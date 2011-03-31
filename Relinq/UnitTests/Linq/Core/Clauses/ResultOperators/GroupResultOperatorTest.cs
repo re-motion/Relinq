@@ -19,7 +19,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.UnitTests.Linq.Core.Parsing;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Linq.Clauses;
@@ -111,7 +110,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
       Assert.That (resultArray[1].ToArray (), Is.EqualTo (new[] { "222", "555" }));
       Assert.That (resultArray[2].ToArray (), Is.EqualTo (new[] { "333" }));
 
-      Assert.That (result.DataInfo.ItemExpression, Is.InstanceOfType (typeof (QuerySourceReferenceExpression)));
+      Assert.That (result.DataInfo.ItemExpression, Is.InstanceOf (typeof (QuerySourceReferenceExpression)));
       Assert.That (((QuerySourceReferenceExpression) result.DataInfo.ItemExpression).ReferencedQuerySource, Is.SameAs (_resultOperator));
     }
 
@@ -122,9 +121,9 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
       var input = new StreamedSequenceInfo (typeof (int[]), studentExpression);
       var result = _resultOperator.GetOutputDataInfo (input);
 
-      Assert.That (result, Is.InstanceOfType (typeof (StreamedSequenceInfo)));
+      Assert.That (result, Is.InstanceOf (typeof (StreamedSequenceInfo)));
       Assert.That (result.DataType, Is.SameAs (typeof (IQueryable<IGrouping<int, string>>)));
-      Assert.That (((StreamedSequenceInfo) result).ItemExpression, Is.InstanceOfType (typeof (QuerySourceReferenceExpression)));
+      Assert.That (((StreamedSequenceInfo) result).ItemExpression, Is.InstanceOf (typeof (QuerySourceReferenceExpression)));
       Assert.That (((QuerySourceReferenceExpression) ((StreamedSequenceInfo) result).ItemExpression).ReferencedQuerySource,
           Is.SameAs (_resultOperator));
     }

@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.UnitTests.Linq.Core.Parsing;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Linq.UnitTests.Linq.Core.TestUtilities;
@@ -93,7 +92,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Transformations
       _visitor.VisitAdditionalFromClause (_additionalFromClause1, _queryModel, 0);
 
       Assert.That (_queryModel.BodyClauses[0], Is.SameAs (_additionalFromClause1));
-      Assert.That (_additionalFromClause1.FromExpression, Is.Not.InstanceOfType (typeof (SubQueryExpression)));
+      Assert.That (_additionalFromClause1.FromExpression, Is.Not.InstanceOf (typeof (SubQueryExpression)));
       Assert.That (_additionalFromClause1.FromExpression, Is.SameAs (_innerMainFromClauseA.FromExpression));
       Assert.That (_additionalFromClause1.ItemName, Is.EqualTo ("sector"));
       Assert.That (_additionalFromClause1.ItemType, Is.SameAs (typeof (Restaurant)));
@@ -178,7 +177,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Transformations
 
       var expectedSelector = ExpressionHelper.Resolve<Kitchen, string> (parsedQuery.MainFromClause, sd => sd.Cook.FirstName);
 
-      Assert.That (parsedQuery.MainFromClause.FromExpression, Is.Not.InstanceOfType (typeof (SubQueryExpression)));
+      Assert.That (parsedQuery.MainFromClause.FromExpression, Is.Not.InstanceOf (typeof (SubQueryExpression)));
       Assert.That (parsedQuery.BodyClauses.Count, Is.EqualTo (1));
       ExpressionTreeComparer.CheckAreEqualTrees (expectedSelector, parsedQuery.SelectClause.Selector);
     }

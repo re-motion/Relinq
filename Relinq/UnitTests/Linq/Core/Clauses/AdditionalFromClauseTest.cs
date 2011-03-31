@@ -16,7 +16,6 @@
 // 
 using System;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
@@ -51,7 +50,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses
     [Test]
     public void ImplementInterface_IFromLetWhereClause ()
     {
-      Assert.That (_additionalFromClause, Is.InstanceOfType (typeof (IBodyClause)));
+      Assert.That (_additionalFromClause, Is.InstanceOf (typeof (IBodyClause)));
     }
 
     [Test]

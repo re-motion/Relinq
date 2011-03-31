@@ -18,7 +18,6 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel.TestDomain;
 using Remotion.Linq;
 using Remotion.Linq.Clauses;
@@ -75,7 +74,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
       Assert.That (newQueryModel, Is.Not.SameAs (_queryModelWithResultOperator));
       Assert.That (newQueryModel.MainFromClause.ItemType, Is.SameAs (typeof (int))); // because SourceNode is of type int[]
       Assert.That (newQueryModel.MainFromClause.ItemName, Is.EqualTo ("distinct"));
-      Assert.That (newQueryModel.MainFromClause.FromExpression, Is.InstanceOfType (typeof (SubQueryExpression)));
+      Assert.That (newQueryModel.MainFromClause.FromExpression, Is.InstanceOf (typeof (SubQueryExpression)));
       Assert.That (((SubQueryExpression) newQueryModel.MainFromClause.FromExpression).QueryModel, Is.SameAs (_queryModelWithResultOperator));
 
       var newSelectClause = newQueryModel.SelectClause;

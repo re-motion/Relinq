@@ -17,7 +17,6 @@
 using System;
 using System.Linq;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 
@@ -43,7 +42,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
     [Test]
     public void SupportedMethods_WithoutPredicate_ForArrays ()
     {
-      Assert.That (LongCountExpressionNode.SupportedMethods, List.Contains (typeof (Array).GetProperty ("LongLength").GetGetMethod ()));
+      Assert.That (LongCountExpressionNode.SupportedMethods, Has.Member (typeof (Array).GetProperty ("LongLength").GetGetMethod ()));
     }
 
     [Test]

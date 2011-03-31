@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.TestDomain;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Linq.UnitTests.Linq.Core.TestUtilities;
@@ -94,7 +93,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
 
       var result = _expressionTreeParser.ParseTree (expression);
 
-      Assert.That (result, Is.InstanceOfType (typeof (MainSourceExpressionNode)));
+      Assert.That (result, Is.InstanceOf (typeof (MainSourceExpressionNode)));
       Assert.That (((MainSourceExpressionNode) result).ParsedExpression, Is.SameAs (expression));
       Assert.That (((MainSourceExpressionNode) result).QuerySourceElementType, Is.SameAs (typeof (Cook)));
       Assert.That (((MainSourceExpressionNode) result).AssociatedIdentifier, Is.EqualTo ("<generated>_0"));
@@ -107,7 +106,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
 
       var result = _expressionTreeParser.ParseTree (constantExpression);
 
-      Assert.That (result, Is.InstanceOfType (typeof (MainSourceExpressionNode)));
+      Assert.That (result, Is.InstanceOf (typeof (MainSourceExpressionNode)));
       Assert.That (((MainSourceExpressionNode) result).ParsedExpression, Is.SameAs (_intSource.Expression));
       Assert.That (((MainSourceExpressionNode) result).QuerySourceElementType, Is.SameAs (typeof (int)));
       Assert.That (((MainSourceExpressionNode) result).AssociatedIdentifier, Is.EqualTo ("<generated>_0"));
@@ -132,7 +131,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
 
       var result = _expressionTreeParser.ParseTree (expressionWithSubQuery);
 
-      Assert.That (result, Is.InstanceOfType (typeof (MainSourceExpressionNode)));
+      Assert.That (result, Is.InstanceOf (typeof (MainSourceExpressionNode)));
       
       var parsedExpression = ((MainSourceExpressionNode) result).ParsedExpression;
       Assert.That (parsedExpression, Is.Not.SameAs (expressionWithSubQuery));
@@ -158,11 +157,11 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
 
       var result = _expressionTreeParser.ParseTree (expression);
 
-      Assert.That (result, Is.InstanceOfType (typeof (SelectExpressionNode)));
+      Assert.That (result, Is.InstanceOf (typeof (SelectExpressionNode)));
       Assert.That (((SelectExpressionNode) result).Selector, Is.SameAs (selector));
 
       var source = ((SelectExpressionNode) result).Source;
-      Assert.That (source, Is.InstanceOfType (typeof (MainSourceExpressionNode)));
+      Assert.That (source, Is.InstanceOf (typeof (MainSourceExpressionNode)));
       Assert.That (((ConstantExpression) ((MainSourceExpressionNode) source).ParsedExpression).Value, Is.SameAs (querySource));
     }
 
@@ -175,7 +174,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
 
       var result = _expressionTreeParser.ParseTree (expression);
 
-      Assert.That (((SelectExpressionNode) result).AssociatedIdentifier, Text.StartsWith ("<generated>_"));
+      Assert.That (((SelectExpressionNode) result).AssociatedIdentifier, Is.StringStarting ("<generated>_"));
     }
 
     [Test]
@@ -187,7 +186,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
       var result = _expressionTreeParser.ParseTree (expression);
 
       var source = ((SelectExpressionNode) result).Source;
-      Assert.That (source, Is.InstanceOfType (typeof (MainSourceExpressionNode)));
+      Assert.That (source, Is.InstanceOf (typeof (MainSourceExpressionNode)));
       Assert.That (((MainSourceExpressionNode) source).AssociatedIdentifier, Is.EqualTo ("s"));
     }
 
@@ -203,11 +202,11 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
 
       var result = _expressionTreeParser.ParseTree (expression);
 
-      Assert.That (result, Is.InstanceOfType (typeof (ContainsExpressionNode)));
+      Assert.That (result, Is.InstanceOf (typeof (ContainsExpressionNode)));
       Assert.That (((ContainsExpressionNode) result).Item, Is.SameAs (itemExpression));
 
       var source = ((ContainsExpressionNode) result).Source;
-      Assert.That (source, Is.InstanceOfType (typeof (MainSourceExpressionNode)));
+      Assert.That (source, Is.InstanceOf (typeof (MainSourceExpressionNode)));
       Assert.That (((MainSourceExpressionNode) source).ParsedExpression, Is.SameAs (querySourceExpression));
     }
 
@@ -225,11 +224,11 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
 
       var result = _expressionTreeParser.ParseTree (expression);
 
-      Assert.That (result, Is.InstanceOfType (typeof (ContainsExpressionNode)));
+      Assert.That (result, Is.InstanceOf (typeof (ContainsExpressionNode)));
       Assert.That (((ContainsExpressionNode) result).Item, Is.SameAs (itemExpression));
 
       var source = ((ContainsExpressionNode) result).Source;
-      Assert.That (source, Is.InstanceOfType (typeof (MainSourceExpressionNode)));
+      Assert.That (source, Is.InstanceOf (typeof (MainSourceExpressionNode)));
       Assert.That (((MainSourceExpressionNode) source).ParsedExpression, Is.SameAs (querySourceExpression));
     }
 
@@ -243,15 +242,15 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
 
       var result = _expressionTreeParser.ParseTree (expression);
 
-      Assert.That (result, Is.InstanceOfType (typeof (SelectExpressionNode)));
+      Assert.That (result, Is.InstanceOf (typeof (SelectExpressionNode)));
       Assert.That (((SelectExpressionNode) result).Selector, Is.SameAs (selector));
 
       var where = ((SelectExpressionNode) result).Source;
-      Assert.That (where, Is.InstanceOfType (typeof (WhereExpressionNode)));
+      Assert.That (where, Is.InstanceOf (typeof (WhereExpressionNode)));
       Assert.That (((WhereExpressionNode) where).Predicate, Is.SameAs (predicate));
 
       var source = ((WhereExpressionNode) where).Source;
-      Assert.That (source, Is.InstanceOfType (typeof (MainSourceExpressionNode)));
+      Assert.That (source, Is.InstanceOf (typeof (MainSourceExpressionNode)));
       Assert.That (((ConstantExpression) ((MainSourceExpressionNode) source).ParsedExpression).Value, Is.SameAs (querySource));
     }
 
@@ -264,7 +263,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
 
       var result = _expressionTreeParser.ParseTree (expression);
 
-      Assert.That (result, Is.InstanceOfType (typeof (CountExpressionNode)));
+      Assert.That (result, Is.InstanceOf (typeof (CountExpressionNode)));
     }
 
     [Test]
@@ -318,7 +317,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
     public void InferAssociatedIdentifierForSource_NoUnaryExpression ()
     {
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression (() => _intSource.Take (5));
-      Assert.That (methodCallExpression.Arguments[1], Is.Not.InstanceOfType (typeof (UnaryExpression)));
+      Assert.That (methodCallExpression.Arguments[1], Is.Not.InstanceOf (typeof (UnaryExpression)));
 
       var identifier = (string) PrivateInvoke.InvokeNonPublicMethod (_expressionTreeParser, "InferAssociatedIdentifierForSource", methodCallExpression);
 
@@ -329,7 +328,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
     public void InferAssociatedIdentifierForSource_NoLambdaInUnaryExpression ()
     {
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression (() => _intSource.Take (new [] {1, 2, 3}.Length));
-      Assert.That (((UnaryExpression) methodCallExpression.Arguments[1]).Operand, Is.Not.InstanceOfType (typeof (LambdaExpression)));
+      Assert.That (((UnaryExpression) methodCallExpression.Arguments[1]).Operand, Is.Not.InstanceOf (typeof (LambdaExpression)));
 
       var identifier = (string) PrivateInvoke.InvokeNonPublicMethod (_expressionTreeParser, "InferAssociatedIdentifierForSource", methodCallExpression);
 

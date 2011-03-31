@@ -18,7 +18,6 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
@@ -84,7 +83,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
       Assert.That (queryModel.SelectClause, Is.Not.Null);
       
       var newSelector = queryModel.SelectClause.Selector;
-      Assert.That (newSelector, Is.InstanceOfType (typeof (QuerySourceReferenceExpression)));
+      Assert.That (newSelector, Is.InstanceOf (typeof (QuerySourceReferenceExpression)));
       Assert.That (((QuerySourceReferenceExpression) newSelector).ReferencedQuerySource, Is.SameAs (queryModel.MainFromClause));
     }
 
@@ -110,7 +109,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
       QueryModel queryModel = _queryParser.GetParsedQuery (expressionTree);
 
       Assert.That (queryModel.SelectClause, Is.Not.Null);
-      Assert.That (queryModel.SelectClause.Selector, Is.InstanceOfType (typeof (MethodCallExpression)));
+      Assert.That (queryModel.SelectClause.Selector, Is.InstanceOf (typeof (MethodCallExpression)));
       Assert.That (((MethodCallExpression)queryModel.SelectClause.Selector).Method.Name, Is.EqualTo("ToString"));
     }
 
@@ -138,7 +137,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
       Assert.That (queryModel.SelectClause, Is.Not.Null);
 
       var newSelector = queryModel.SelectClause.Selector;
-      Assert.That (newSelector, Is.InstanceOfType (typeof (QuerySourceReferenceExpression)));
+      Assert.That (newSelector, Is.InstanceOf (typeof (QuerySourceReferenceExpression)));
       Assert.That (((QuerySourceReferenceExpression) newSelector).ReferencedQuerySource, Is.SameAs (queryModel.MainFromClause));
     }
 
@@ -165,8 +164,8 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
       QueryModel queryModel = _queryParser.GetParsedQuery (expressionTree);
 
       Assert.That (queryModel.BodyClauses.Count, Is.EqualTo (2));
-      Assert.That (queryModel.BodyClauses[0], Is.InstanceOfType (typeof (WhereClause)));
-      Assert.That (queryModel.BodyClauses[1], Is.InstanceOfType (typeof (OrderByClause)));
+      Assert.That (queryModel.BodyClauses[0], Is.InstanceOf (typeof (WhereClause)));
+      Assert.That (queryModel.BodyClauses[1], Is.InstanceOf (typeof (OrderByClause)));
     }
 
     [Test]
@@ -178,8 +177,8 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
       QueryModel queryModel = _queryParser.GetParsedQuery (expressionTree);
 
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (2));
-      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (DistinctResultOperator)));
-      Assert.That (queryModel.ResultOperators[1], Is.InstanceOfType (typeof (CountResultOperator)));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOf (typeof (DistinctResultOperator)));
+      Assert.That (queryModel.ResultOperators[1], Is.InstanceOf (typeof (CountResultOperator)));
     }
 
     [Test]
@@ -190,7 +189,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
 
       QueryModel queryModel = _queryParser.GetParsedQuery (expressionTree);
 
-      Assert.That (queryModel.BodyClauses[0], Is.InstanceOfType (typeof (WhereClause)));
+      Assert.That (queryModel.BodyClauses[0], Is.InstanceOf (typeof (WhereClause)));
     }
 
     [Test]
@@ -203,7 +202,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
       var whereClause = (WhereClause) result.BodyClauses[0];
       var predicateBody = (BinaryExpression) whereClause.Predicate;
       var subQuerySelector = ((SubQueryExpression) predicateBody.Left).QueryModel.SelectClause.Selector;
-      Assert.That (subQuerySelector, Is.InstanceOfType (typeof (QuerySourceReferenceExpression)));
+      Assert.That (subQuerySelector, Is.InstanceOf (typeof (QuerySourceReferenceExpression)));
       Assert.That (((QuerySourceReferenceExpression)subQuerySelector).ReferencedQuerySource, Is.SameAs (result.MainFromClause));
     }
 
@@ -258,8 +257,8 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
       var expectedSelector = ExpressionHelper.Resolve<int, int> (queryModel.MainFromClause, i => i + 1);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedSelector, selectClause.Selector);
 
-      Assert.That (queryModel.ResultOperators[0], Is.InstanceOfType (typeof (DistinctResultOperator)));
-      Assert.That (queryModel.ResultOperators[1], Is.InstanceOfType (typeof (CountResultOperator)));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOf (typeof (DistinctResultOperator)));
+      Assert.That (queryModel.ResultOperators[1], Is.InstanceOf (typeof (CountResultOperator)));
     }
 
     [Test]
@@ -284,7 +283,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
       ExpressionTreeComparer.CheckAreEqualTrees (expectedSubSelector, subSelectClause.Selector);
 
       Assert.That (subQueryModel.ResultOperators.Count, Is.EqualTo (1));
-      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOfType (typeof (DistinctResultOperator)));
+      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOf (typeof (DistinctResultOperator)));
     }
   }
 }

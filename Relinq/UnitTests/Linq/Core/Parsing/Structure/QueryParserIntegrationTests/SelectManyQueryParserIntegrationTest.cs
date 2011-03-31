@@ -18,7 +18,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Linq.UnitTests.Linq.Core.TestQueryGenerators;
 using Remotion.Linq.Clauses;
@@ -74,7 +73,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       Assert.That (mainFromClause.ItemName, Is.EqualTo ("s1"));
       Assert.That (mainFromClause.ItemType, Is.SameAs (typeof (Cook)));
 
-      Assert.That (queryModel.BodyClauses[0], Is.InstanceOfType (typeof (AdditionalFromClause)));
+      Assert.That (queryModel.BodyClauses[0], Is.InstanceOf (typeof (AdditionalFromClause)));
       var additionalFromClause = (AdditionalFromClause) queryModel.BodyClauses[0];
       Assert.That (additionalFromClause.ItemName, Is.EqualTo ("s2"));
       CheckConstantQuerySource (additionalFromClause.FromExpression, QuerySource);

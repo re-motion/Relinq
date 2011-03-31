@@ -18,7 +18,6 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel.TestDomain;
 using Remotion.Linq.UnitTests.Linq.Core.TestUtilities;
 using Remotion.Linq.Clauses.Expressions;
@@ -83,7 +82,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
       var result = (SubQueryExpression) _expressionResolver.GetResolvedExpression (subQueryExpression, parameterExpression, ClauseGenerationContext);
 
       var subQuerySelector = result.QueryModel.SelectClause.Selector;
-      Assert.That (subQuerySelector, Is.InstanceOfType (typeof (QuerySourceReferenceExpression)));
+      Assert.That (subQuerySelector, Is.InstanceOf (typeof (QuerySourceReferenceExpression)));
       Assert.That (((QuerySourceReferenceExpression) subQuerySelector).ReferencedQuerySource, Is.SameAs (SourceClause));
     }
   }

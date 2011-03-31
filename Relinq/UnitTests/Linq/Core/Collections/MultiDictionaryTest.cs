@@ -17,7 +17,6 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.Collections;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Collections
@@ -258,8 +257,8 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Collections
       Assert.That (array[0], Is.EqualTo (default (KeyValuePair<string, IList<string>>)));
       Assert.That (array[3], Is.EqualTo (default (KeyValuePair<string, IList<string>>)));
 
-      Assert.That (array, List.Contains (_item1));
-      Assert.That (array, List.Contains (_item2));
+      Assert.That (array, Has.Member (_item1));
+      Assert.That (array, Has.Member (_item2));
     }
 
   }

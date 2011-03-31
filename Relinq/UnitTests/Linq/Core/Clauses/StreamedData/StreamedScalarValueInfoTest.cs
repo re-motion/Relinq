@@ -16,7 +16,6 @@
 // 
 using System;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq;
 using Remotion.Linq.Clauses.StreamedData;
 using Rhino.Mocks;
@@ -55,7 +54,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.StreamedData
 
       executorMock.VerifyAllExpectations ();
 
-      Assert.That (streamedData, Is.InstanceOfType(typeof(StreamedValue)));
+      Assert.That (streamedData, Is.InstanceOf(typeof(StreamedValue)));
       Assert.That (streamedData.DataInfo, Is.SameAs (_streamedScalarValueInfo));
       Assert.That (streamedData.Value, Is.EqualTo (1));
     }

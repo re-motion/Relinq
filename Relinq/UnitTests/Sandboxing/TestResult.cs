@@ -22,7 +22,7 @@ using System.Reflection;
 
 namespace Remotion.Linq.UnitTests.Sandboxing
 {
-  public enum TestStatus { Succeeded, Ignored, Failed, FailedInSetUp, FailedInTearDown };
+  public enum SandboxTestStatus { Succeeded, Ignored, Failed, FailedInSetUp, FailedInTearDown };
 
   /// <summary>
   /// <see cref="TestResult"/> represents a single result for a test method.
@@ -34,14 +34,14 @@ namespace Remotion.Linq.UnitTests.Sandboxing
     {
       if (methodInfo == null)
         throw new ArgumentNullException ("methodInfo"); // avoid ArgumentUtility, it doesn't support partial trust ATM
-      return new TestResult (methodInfo, TestStatus.Succeeded, null);
+      return new TestResult (methodInfo, SandboxTestStatus.Succeeded, null);
     }
 
     public static TestResult CreateIgnored (MethodInfo methodInfo)
     {
       if (methodInfo == null)
         throw new ArgumentNullException ("methodInfo"); // avoid ArgumentUtility, it doesn't support partial trust ATM
-      return new TestResult (methodInfo, TestStatus.Ignored, null);
+      return new TestResult (methodInfo, SandboxTestStatus.Ignored, null);
     }
 
     public static TestResult CreateFailed (MethodInfo methodInfo, Exception exception)
@@ -49,7 +49,7 @@ namespace Remotion.Linq.UnitTests.Sandboxing
       if (methodInfo == null)
         throw new ArgumentNullException ("methodInfo"); // avoid ArgumentUtility, it doesn't support partial trust ATM
       
-      return new TestResult (methodInfo, TestStatus.Failed, exception);
+      return new TestResult (methodInfo, SandboxTestStatus.Failed, exception);
     }
 
     public static TestResult CreateFailedInSetUp (MethodInfo methodInfo, Exception exception)
@@ -59,7 +59,7 @@ namespace Remotion.Linq.UnitTests.Sandboxing
       if (exception == null)
         throw new ArgumentNullException ("exception"); // avoid ArgumentUtility, it doesn't support partial trust ATM
 
-      return new TestResult (methodInfo, TestStatus.FailedInSetUp, exception);
+      return new TestResult (methodInfo, SandboxTestStatus.FailedInSetUp, exception);
     }
 
     public static TestResult CreateFailedInTearDown (MethodInfo methodInfo, Exception exception)
@@ -69,14 +69,14 @@ namespace Remotion.Linq.UnitTests.Sandboxing
       if (exception == null)
         throw new ArgumentNullException ("exception"); // avoid ArgumentUtility, it doesn't support partial trust ATM
 
-      return new TestResult (methodInfo, TestStatus.FailedInTearDown, exception);
+      return new TestResult (methodInfo, SandboxTestStatus.FailedInTearDown, exception);
     }
 
     public readonly MethodInfo MethodInfo;
-    public readonly TestStatus Status;
+    public readonly SandboxTestStatus Status;
     public readonly Exception Exception;
 
-    private TestResult (MethodInfo methodInfo, TestStatus status, Exception exception)
+    private TestResult (MethodInfo methodInfo, SandboxTestStatus status, Exception exception)
     {
       if (methodInfo == null)
         throw new ArgumentNullException ("methodInfo"); // avoid ArgumentUtility, it doesn't support partial trust ATM
@@ -88,7 +88,7 @@ namespace Remotion.Linq.UnitTests.Sandboxing
 
     public void EnsureNotFailed ()
     {
-      if (Status > TestStatus.Ignored)
+      if (Status > SandboxTestStatus.Ignored)
         throw new TestFailedException (MethodInfo.DeclaringType, MethodInfo.Name, Status, Exception);
     }
   }

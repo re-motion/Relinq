@@ -17,7 +17,6 @@
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.ResultOperators;
@@ -44,7 +43,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
       var cloneContext = new CloneContext (clonedClauseMapping);
       var clone = _resultOperator.Clone (cloneContext);
 
-      Assert.That (clone, Is.InstanceOfType (typeof (AverageResultOperator)));
+      Assert.That (clone, Is.InstanceOf (typeof (AverageResultOperator)));
     }
 
     [Test]
@@ -53,7 +52,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
       var input = new StreamedSequence (new[] { 1, 2, 3 }, new StreamedSequenceInfo (typeof (int[]), Expression.Constant (0)));
       var result = _resultOperator.ExecuteInMemory<int> (input);
 
-      Assert.That (result.Value, Is.InstanceOfType (typeof (double)));
+      Assert.That (result.Value, Is.InstanceOf (typeof (double)));
       Assert.That (result.Value, Is.EqualTo (2.0));
     }
 
@@ -72,7 +71,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
       var input = new StreamedSequenceInfo (typeof (Cook[]), studentExpression);
       var result = _resultOperator.GetOutputDataInfo (input);
 
-      Assert.That (result, Is.InstanceOfType (typeof (StreamedValueInfo)));
+      Assert.That (result, Is.InstanceOf (typeof (StreamedValueInfo)));
       Assert.That (result.DataType, Is.SameAs (typeof (Cook)));
     }
 
@@ -99,7 +98,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
       var inputInfo = new StreamedSequenceInfo (itemType.MakeArrayType(), itemExpression);
       var outputInfo = _resultOperator.GetOutputDataInfo (inputInfo);
 
-      Assert.That (outputInfo, Is.InstanceOfType (typeof (StreamedValueInfo)));
+      Assert.That (outputInfo, Is.InstanceOf (typeof (StreamedValueInfo)));
       Assert.That (outputInfo.DataType, Is.SameAs (expectedOutputType));
     }
   }

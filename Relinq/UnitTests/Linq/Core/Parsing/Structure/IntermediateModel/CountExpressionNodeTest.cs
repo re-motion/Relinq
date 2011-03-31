@@ -18,7 +18,6 @@ using System;
 using System.Collections;
 using System.Linq;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using System.Collections.Generic;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
@@ -45,11 +44,11 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
     [Test]
     public void SupportedMethods_WithoutPredicate_FromCollections ()
     {
-      Assert.That (CountExpressionNode.SupportedMethods, List.Contains (typeof (List<>).GetProperty ("Count").GetGetMethod()));
-      Assert.That (CountExpressionNode.SupportedMethods, List.Contains (typeof (ArrayList).GetProperty ("Count").GetGetMethod ()));
-      Assert.That (CountExpressionNode.SupportedMethods, List.Contains (typeof (ICollection<>).GetProperty ("Count").GetGetMethod ()));
-      Assert.That (CountExpressionNode.SupportedMethods, List.Contains (typeof (ICollection).GetProperty ("Count").GetGetMethod ()));
-      Assert.That (CountExpressionNode.SupportedMethods, List.Contains (typeof (Array).GetProperty ("Length").GetGetMethod ()));
+      Assert.That (CountExpressionNode.SupportedMethods, Has.Member (typeof (List<>).GetProperty ("Count").GetGetMethod()));
+      Assert.That (CountExpressionNode.SupportedMethods, Has.Member (typeof (ArrayList).GetProperty ("Count").GetGetMethod ()));
+      Assert.That (CountExpressionNode.SupportedMethods, Has.Member (typeof (ICollection<>).GetProperty ("Count").GetGetMethod ()));
+      Assert.That (CountExpressionNode.SupportedMethods, Has.Member (typeof (ICollection).GetProperty ("Count").GetGetMethod ()));
+      Assert.That (CountExpressionNode.SupportedMethods, Has.Member (typeof (Array).GetProperty ("Length").GetGetMethod ()));
     }
 
     [Test]
@@ -65,7 +64,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
       var predicate = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
       var node = new CountExpressionNode (parseInfo, predicate);
 
-      Assert.That (node.Source, Is.InstanceOfType (typeof (WhereExpressionNode)));
+      Assert.That (node.Source, Is.InstanceOf (typeof (WhereExpressionNode)));
       Assert.That (((WhereExpressionNode) node.Source).Predicate, Is.SameAs (predicate));
       Assert.That (((WhereExpressionNode) node.Source).Source, Is.SameAs (SourceNode));
     }

@@ -18,7 +18,6 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.UnitTests.Linq.Core.TestUtilities;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
@@ -124,7 +123,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
 
       Assert.That (newQueryModel, Is.SameAs (QueryModel));
 
-      Assert.That (QueryModel.ResultOperators[0], Is.InstanceOfType (typeof (GroupResultOperator)));
+      Assert.That (QueryModel.ResultOperators[0], Is.InstanceOf (typeof (GroupResultOperator)));
       var resultOperator = (GroupResultOperator) QueryModel.ResultOperators[0];
 
       Assert.That (resultOperator.ItemName, Is.EqualTo (_nodeWithElementSelector.AssociatedIdentifier));

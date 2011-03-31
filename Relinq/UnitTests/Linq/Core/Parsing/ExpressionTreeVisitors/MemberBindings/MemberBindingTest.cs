@@ -16,7 +16,6 @@
 // 
 using System;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors.MemberBindings;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.MemberBindings
@@ -29,7 +28,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Membe
     {
       var binding = MemberBinding.Bind (Method, AssociatedExpression);
 
-      Assert.That (binding, Is.InstanceOfType (typeof (MethodInfoBinding)));
+      Assert.That (binding, Is.InstanceOf (typeof (MethodInfoBinding)));
       Assert.That (binding.BoundMember, Is.SameAs (Method));
       Assert.That (binding.AssociatedExpression, Is.SameAs (AssociatedExpression));
     }
@@ -39,7 +38,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Membe
     {
       var binding = MemberBinding.Bind (Property, AssociatedExpression);
 
-      Assert.That (binding, Is.InstanceOfType (typeof (PropertyInfoBinding)));
+      Assert.That (binding, Is.InstanceOf (typeof (PropertyInfoBinding)));
       Assert.That (binding.BoundMember, Is.SameAs (Property));
       Assert.That (binding.AssociatedExpression, Is.SameAs (AssociatedExpression));
     }
@@ -49,7 +48,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Membe
     {
       var binding = MemberBinding.Bind (Field, AssociatedExpression);
 
-      Assert.That (binding, Is.InstanceOfType (typeof (FieldInfoBinding)));
+      Assert.That (binding, Is.InstanceOf (typeof (FieldInfoBinding)));
       Assert.That (binding.BoundMember, Is.SameAs (Field));
       Assert.That (binding.AssociatedExpression, Is.SameAs (AssociatedExpression));
     }

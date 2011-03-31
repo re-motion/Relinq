@@ -16,7 +16,6 @@
 // 
 using System;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Utilities;
@@ -98,7 +97,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core
     public void AddResultOperator ()
     {
       _builder.AddResultOperator (_resultOperator1);
-      Assert.That (_builder.ResultOperators, List.Contains (_resultOperator1));
+      Assert.That (_builder.ResultOperators, Has.Member (_resultOperator1));
     }
 
     [Test]

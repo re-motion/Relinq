@@ -19,7 +19,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.TestDomain;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Linq.UnitTests.Linq.Core.TestQueryGenerators;
@@ -72,10 +71,10 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
       Expression newExpression = SubQueryFindingExpressionTreeVisitor.Process (surroundingExpression, _methodInfoBasedNodeTypeRegistry);
 
       Assert.That (newExpression, Is.Not.SameAs (surroundingExpression));
-      Assert.That (newExpression, Is.InstanceOfType (typeof (LambdaExpression)));
+      Assert.That (newExpression, Is.InstanceOf (typeof (LambdaExpression)));
 
       var newLambdaExpression = (LambdaExpression) newExpression;
-      Assert.That (newLambdaExpression.Body, Is.InstanceOfType (typeof (SubQueryExpression)));
+      Assert.That (newLambdaExpression.Body, Is.InstanceOf (typeof (SubQueryExpression)));
 
       var newSubQueryExpression = (SubQueryExpression) newLambdaExpression.Body;
       Assert.That (
@@ -96,7 +95,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
 
       var newLambdaExpression =
           (LambdaExpression) SubQueryFindingExpressionTreeVisitor.Process (inputExpression, emptyNodeTypeRegistry);
-      Assert.That (newLambdaExpression.Body, Is.InstanceOfType (typeof (SubQueryExpression)));
+      Assert.That (newLambdaExpression.Body, Is.InstanceOf (typeof (SubQueryExpression)));
     }
 
     [Test]
@@ -108,7 +107,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
 
       var newLambdaExpression =
           (LambdaExpression) SubQueryFindingExpressionTreeVisitor.Process (surroundingExpression, _methodInfoBasedNodeTypeRegistry);
-      Assert.That (newLambdaExpression.Body, Is.InstanceOfType (typeof (SubQueryExpression)));
+      Assert.That (newLambdaExpression.Body, Is.InstanceOf (typeof (SubQueryExpression)));
     }
 
     [Test]

@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Linq;
 using Remotion.Linq.Parsing.Structure;
@@ -75,7 +74,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core
 
       Assert.That (queryable.Expression, Is.Not.Null);
       Assert.That (queryable.Expression.NodeType, Is.EqualTo (ExpressionType.Constant));
-      Assert.That (queryable.Provider, Is.InstanceOfType (typeof (DefaultQueryProvider)));
+      Assert.That (queryable.Provider, Is.InstanceOf (typeof (DefaultQueryProvider)));
 
       var queryProvider = ((DefaultQueryProvider) queryable.Provider);
       Assert.That (queryProvider.Executor, Is.SameAs (fakeExecutor));

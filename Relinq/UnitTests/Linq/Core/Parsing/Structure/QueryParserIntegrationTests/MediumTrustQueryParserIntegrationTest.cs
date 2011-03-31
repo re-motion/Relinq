@@ -18,7 +18,6 @@ using System;
 using System.Linq;
 using System.Security.Permissions;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.UnitTests.Sandboxing;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegrationTests
@@ -46,7 +45,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
 
       foreach (var testResult in testResults)
         testResult.EnsureNotFailed ();
-      Assert.That (testResults.Count (r => r.Status == TestStatus.Succeeded), Is.GreaterThan (0));
+      Assert.That (testResults.Count (r => r.Status == SandboxTestStatus.Succeeded), Is.GreaterThan (0));
     }
   }
 }

@@ -18,7 +18,6 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Parsing.Structure;
@@ -55,7 +54,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
 
     protected void CheckConstantQuerySource (Expression expression, object expectedQuerySource)
     {
-      Assert.That (expression, Is.InstanceOfType (typeof (ConstantExpression)));
+      Assert.That (expression, Is.InstanceOf (typeof (ConstantExpression)));
       Assert.That (((ConstantExpression) expression).Value, Is.SameAs (expectedQuerySource));
     }
   }

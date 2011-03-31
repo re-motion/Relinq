@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Linq.UnitTests.Linq.Core.TestUtilities;
 using Remotion.Linq.Clauses.Expressions;
@@ -210,7 +209,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
       var queryExpression = ExpressionHelper.MakeExpression<int, AnonymousType> (i => new AnonymousType { a = 2, b = 1 });
 
       var partiallyEvaluatedExpression = PartialEvaluatingExpressionTreeVisitor.EvaluateIndependentSubtrees (queryExpression);
-      Assert.That (((ConstantExpression) partiallyEvaluatedExpression).Value, Is.InstanceOfType (typeof (AnonymousType)));
+      Assert.That (((ConstantExpression) partiallyEvaluatedExpression).Value, Is.InstanceOf (typeof (AnonymousType)));
       Assert.That (((AnonymousType) ((ConstantExpression) partiallyEvaluatedExpression).Value).a, Is.EqualTo (2));
       Assert.That (((AnonymousType) ((ConstantExpression) partiallyEvaluatedExpression).Value).b, Is.EqualTo (1));
     }
@@ -221,7 +220,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
       var queryExpression = ExpressionHelper.MakeExpression<int, List<int>> (i => new List<int> { 2, 1 });
 
       var partiallyEvaluatedExpression = PartialEvaluatingExpressionTreeVisitor.EvaluateIndependentSubtrees (queryExpression);
-      Assert.That (((ConstantExpression) partiallyEvaluatedExpression).Value, Is.InstanceOfType (typeof (List<int>)));
+      Assert.That (((ConstantExpression) partiallyEvaluatedExpression).Value, Is.InstanceOf (typeof (List<int>)));
       Assert.That (((ConstantExpression) partiallyEvaluatedExpression).Value, Is.EqualTo (new[] {2, 1}));
     }
 

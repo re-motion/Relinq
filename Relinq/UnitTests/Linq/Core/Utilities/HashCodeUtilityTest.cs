@@ -16,7 +16,6 @@
 // 
 using System;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.Utilities;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Utilities

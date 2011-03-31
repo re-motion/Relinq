@@ -20,7 +20,6 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Reflection.Emit;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.Parsing;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Parsing

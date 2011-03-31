@@ -18,7 +18,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.UnitTests.Linq.Core.Clauses.Expressions.TestDomain;
 using Remotion.Linq.UnitTests.Linq.Core.Parsing;
 using Remotion.Linq.Clauses.Expressions;

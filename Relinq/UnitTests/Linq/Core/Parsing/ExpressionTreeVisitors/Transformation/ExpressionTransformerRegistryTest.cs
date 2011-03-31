@@ -18,7 +18,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using System.Linq;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations;
@@ -44,25 +43,25 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Trans
 
       var equalTranformations = registry.GetAllTransformations (ExpressionType.Equal);
       var equalTransformers = GetTransformersFromTransformations (equalTranformations);
-      Assert.That (equalTransformers, List.Some.TypeOf (typeof (VBCompareStringExpressionTransformer)));
+      Assert.That (equalTransformers, Has.Some.TypeOf (typeof (VBCompareStringExpressionTransformer)));
 
       var callTranformations = registry.GetAllTransformations (ExpressionType.Call);
       var callTransformers = GetTransformersFromTransformations (callTranformations);
-      Assert.That (callTransformers, List.Some.TypeOf (typeof (VBInformationIsNothingExpressionTransformer)));
+      Assert.That (callTransformers, Has.Some.TypeOf (typeof (VBInformationIsNothingExpressionTransformer)));
 
       var invocationTranformations = registry.GetAllTransformations (ExpressionType.Invoke);
       var invocationTransformers = GetTransformersFromTransformations (invocationTranformations);
-      Assert.That (invocationTransformers, List.Some.TypeOf (typeof (InvocationOfLambdaExpressionTransformer)));
+      Assert.That (invocationTransformers, Has.Some.TypeOf (typeof (InvocationOfLambdaExpressionTransformer)));
 
       var memberTranformations = registry.GetAllTransformations (ExpressionType.MemberAccess);
       var memberTransformers = GetTransformersFromTransformations (memberTranformations);
-      Assert.That (memberTransformers, List.Some.TypeOf (typeof (NullableValueTransformer)));
+      Assert.That (memberTransformers, Has.Some.TypeOf (typeof (NullableValueTransformer)));
 
       var newTranformations = registry.GetAllTransformations (ExpressionType.New);
       var newTransformers = GetTransformersFromTransformations (newTranformations);
-      Assert.That (newTransformers, List.Some.TypeOf (typeof (KeyValuePairNewExpressionTransformer)));
-      Assert.That (newTransformers, List.Some.TypeOf (typeof (DictionaryEntryNewExpressionTransformer)));
-      Assert.That (newTransformers, List.Some.TypeOf (typeof (TupleNewExpressionTransformer)));
+      Assert.That (newTransformers, Has.Some.TypeOf (typeof (KeyValuePairNewExpressionTransformer)));
+      Assert.That (newTransformers, Has.Some.TypeOf (typeof (DictionaryEntryNewExpressionTransformer)));
+      Assert.That (newTransformers, Has.Some.TypeOf (typeof (TupleNewExpressionTransformer)));
 
       var memberAddingTransformers = newTransformers.OfType<MemberAddingNewExpressionTransformerBase>().ToArray();
       Assert.That (memberAddingTransformers.Length, Is.EqualTo (3));

@@ -17,7 +17,6 @@
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.Clauses;
 using Rhino.Mocks;
 
@@ -48,7 +47,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses
     [Test]
     public void ImplementInterface()
     {
-      Assert.That (_whereClause, Is.InstanceOfType (typeof (IBodyClause)));
+      Assert.That (_whereClause, Is.InstanceOf (typeof (IBodyClause)));
     }
     
     [Test]

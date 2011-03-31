@@ -20,7 +20,6 @@ using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.Clauses.Expressions;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;

@@ -17,7 +17,6 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Linq;
 using Remotion.Linq.Parsing.Structure;
@@ -75,7 +74,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core
 
       var queryable = provider.CreateQuery<int> (expression);
 
-      Assert.That (queryable, Is.InstanceOfType (typeof (TestQueryable<int>)));
+      Assert.That (queryable, Is.InstanceOf (typeof (TestQueryable<int>)));
       Assert.That (queryable.Provider, Is.SameAs (provider));
       Assert.That (queryable.Expression, Is.SameAs (expression));
     }

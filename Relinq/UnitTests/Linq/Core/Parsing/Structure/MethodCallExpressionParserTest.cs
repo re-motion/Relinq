@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Linq;
@@ -63,7 +62,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
       var result = ParseMethodCallExpression (methodCallExpression);
 
       var whereCondition = (LambdaExpression) ((UnaryExpression) methodCallExpression.Arguments[1]).Operand;
-      Assert.That (result, Is.InstanceOfType (typeof (WhereExpressionNode)));
+      Assert.That (result, Is.InstanceOf (typeof (WhereExpressionNode)));
       Assert.That (((WhereExpressionNode) result).AssociatedIdentifier, Is.EqualTo ("x"));
       Assert.That (((WhereExpressionNode) result).Source, Is.SameAs (_source));
       Assert.That (((WhereExpressionNode) result).Predicate, Is.SameAs (whereCondition));
@@ -76,7 +75,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
 
       var result = ParseMethodCallExpression (methodCallExpression);
 
-      Assert.That (result, Is.InstanceOfType (typeof (SelectExpressionNode)));
+      Assert.That (result, Is.InstanceOf (typeof (SelectExpressionNode)));
       Assert.That (((SelectExpressionNode) result).AssociatedIdentifier, Is.EqualTo ("x"));
       Assert.That (((SelectExpressionNode) result).Source, Is.SameAs (_source));
 
@@ -92,7 +91,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
 
       var result = ParseMethodCallExpression (methodCallExpression);
 
-      Assert.That (result, Is.InstanceOfType (typeof (SelectExpressionNode)));
+      Assert.That (result, Is.InstanceOf (typeof (SelectExpressionNode)));
       Assert.That (((SelectExpressionNode) result).Source, Is.SameAs (_source));
       Assert.That (((SelectExpressionNode) result).Selector, Is.SameAs (selectProjection));
     }
@@ -114,9 +113,9 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
 
       var result = ParseMethodCallExpression (methodCallExpression);
 
-      Assert.That (result, Is.InstanceOfType (typeof (JoinExpressionNode)));
+      Assert.That (result, Is.InstanceOf (typeof (JoinExpressionNode)));
       Assert.That (((JoinExpressionNode) result).Source, Is.SameAs (_source));
-      Assert.That (((JoinExpressionNode) result).InnerSequence, Is.InstanceOfType (typeof (MethodCallExpression)));
+      Assert.That (((JoinExpressionNode) result).InnerSequence, Is.InstanceOf (typeof (MethodCallExpression)));
     }
 
     [Test]
@@ -131,9 +130,9 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
 
       var result = ParseMethodCallExpression (methodCallExpression);
 
-      Assert.That (result, Is.InstanceOfType (typeof (SelectExpressionNode)));
+      Assert.That (result, Is.InstanceOf (typeof (SelectExpressionNode)));
       Assert.That (((SelectExpressionNode) result).Source, Is.SameAs (_source));
-      Assert.That (((SelectExpressionNode) result).Selector, Is.InstanceOfType (typeof (LambdaExpression)));
+      Assert.That (((SelectExpressionNode) result).Selector, Is.InstanceOf (typeof (LambdaExpression)));
     }
 
     [Test]
@@ -145,9 +144,9 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
 
       var result = ParseMethodCallExpression(methodCallExpression);
 
-      Assert.That (result, Is.InstanceOfType (typeof (JoinExpressionNode)));
+      Assert.That (result, Is.InstanceOf (typeof (JoinExpressionNode)));
       Assert.That (((JoinExpressionNode) result).Source, Is.SameAs (_source));
-      Assert.That (((JoinExpressionNode) result).InnerSequence, Is.InstanceOfType (typeof (MemberExpression)));
+      Assert.That (((JoinExpressionNode) result).InnerSequence, Is.InstanceOf (typeof (MemberExpression)));
     }
 
     [Test]
@@ -159,9 +158,9 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
 
       var result = ParseMethodCallExpression (expression);
 
-      Assert.That (result, Is.InstanceOfType (typeof (SelectExpressionNode)));
+      Assert.That (result, Is.InstanceOf (typeof (SelectExpressionNode)));
       Assert.That (((SelectExpressionNode) result).Selector, Is.Not.SameAs (selector));
-      Assert.That (((SelectExpressionNode) result).Selector.Body, Is.InstanceOfType (typeof (SubQueryExpression)));
+      Assert.That (((SelectExpressionNode) result).Selector.Body, Is.InstanceOf (typeof (SubQueryExpression)));
     }
 
     [Test]
@@ -178,9 +177,9 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
 
       var result = ParseMethodCallExpression (methodCallExpression);
 
-      Assert.That (result, Is.InstanceOfType (typeof (SelectExpressionNode)));
+      Assert.That (result, Is.InstanceOf (typeof (SelectExpressionNode)));
       Assert.That (((SelectExpressionNode) result).Selector, Is.Not.SameAs (selector));
-      Assert.That (((SelectExpressionNode) result).Selector.Body, Is.InstanceOfType (typeof (SubQueryExpression)));
+      Assert.That (((SelectExpressionNode) result).Selector.Body, Is.InstanceOf (typeof (SubQueryExpression)));
     }
 
     [Test]
@@ -195,7 +194,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
 
       var result = parser.Parse ("t", _source, expression.Arguments.Skip (1), expression);
 
-      Assert.That (result, Is.InstanceOfType (typeof (SelectExpressionNode)));
+      Assert.That (result, Is.InstanceOf (typeof (SelectExpressionNode)));
       Assert.That (((SelectExpressionNode) result).Selector, Is.Not.TypeOf (typeof (SubQueryExpression)),
           "The given nodeTypeRegistry does not know any query methods, so no SubQueryExpression is generated.");
     }
