@@ -16,7 +16,6 @@
 // 
 using System;
 using System.Collections.Generic;
-using Remotion.Linq;
 
 namespace Remotion.Linq.UnitTests.Linq.Core
 {
@@ -24,17 +23,17 @@ namespace Remotion.Linq.UnitTests.Linq.Core
   {
     public T ExecuteScalar<T> (QueryModel queryModel)
     {
-      throw new NotImplementedException();
+      throw new NotImplementedException ("ExecuteScalar<" + typeof (T).Name + "> (" + queryModel + ")");
     }
 
     public T ExecuteSingle<T> (QueryModel queryModel, bool returnDefaultWhenEmpty)
     {
-      throw new NotImplementedException();
+      throw new NotImplementedException ("ExecuteSingle<" + typeof (T).Name + "> (" + queryModel + ", " + returnDefaultWhenEmpty + ")");
     }
 
     public IEnumerable<T> ExecuteCollection<T> (QueryModel queryModel)
     {
-      throw new NotImplementedException();
+      throw new NotImplementedException ("ExecuteCollection<" + typeof (T).Name + "> (" + queryModel + ")");
     }
   }
 }
