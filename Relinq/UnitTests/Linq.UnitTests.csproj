@@ -546,6 +546,9 @@
     <Compile Include="Linq\Core\TestUtilities\TupleAbcd.cs" />
     <Compile Include="Linq\Core\Utilities\HashCodeUtilityTest.cs" />
     <Compile Include="Linq\Core\Utilities\SeparatedStringBuilderTest.cs" />
+    <None Include="..\..\license-headers\Remotion Core LGPL.licenseheader">
+      <Link>Remotion Core LGPL.licenseheader</Link>
+    </None>
     <None Include="..\..\remotion.snk">
       <Link>remotion.snk</Link>
     </None>
