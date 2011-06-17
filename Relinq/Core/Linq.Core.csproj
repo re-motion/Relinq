@@ -246,8 +246,8 @@
     <Compile Include="Parsing\Structure\QueryParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Clauses\MainFromClause.cs" />
-    <None Include="..\..\license-headers\Remotion Core LGPL.licenseheader">
-      <Link>Remotion Core LGPL.licenseheader</Link>
+    <None Include="..\Relinq LGPL.licenseheader">
+      <Link>Relinq LGPL.licenseheader</Link>
     </None>
     <None Include="..\..\remotion.snk">
       <Link>remotion.snk</Link>
