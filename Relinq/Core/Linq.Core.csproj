@@ -272,6 +272,7 @@
     <Compile Include="Utilities\SeparatedStringBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Doc\include\GettingStartedWithRelinqTemplate.html" />
     <Content Include="Doc\include\NamespaceDoc.xml" />
   </ItemGroup>
   <ItemGroup>
