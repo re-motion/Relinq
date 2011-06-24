@@ -184,7 +184,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
       ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
 
       var aggregatedType = Func.Type.GetGenericArguments ()[0];
-      if (aggregatedType != Seed.Type)
+      if (!aggregatedType.IsAssignableFrom (Seed.Type))
       {
         var message = string.Format (
             "The seed expression and the aggregating function don't have matching types. The seed is of type '{0}', but the function aggregates '{1}'.",

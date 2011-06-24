@@ -203,6 +203,24 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
     }
 
     [Test]
+    public void GetOutputDataInfo_WithDifferentAssignableSeedType ()
+    {
+      var itemExpression = Expression.Constant (0);
+      var input = new StreamedSequenceInfo (typeof (int[]), itemExpression);
+
+      var seed = Expression.Constant ("string");
+      var func = Expression.Lambda (
+          Expression.Constant (null, typeof (object)), 
+          Expression.Parameter (typeof (object), "acc"));
+      var resultOperator = new AggregateFromSeedResultOperator (seed, func, null);
+
+      var result = resultOperator.GetOutputDataInfo (input);
+
+      Assert.That (result, Is.InstanceOf (typeof (StreamedScalarValueInfo)));
+      Assert.That (result.DataType, Is.SameAs (typeof (object)));
+    }
+
+    [Test]
     [ExpectedException (typeof (ArgumentTypeException))]
     public void GetOutputDataInfo_InvalidInput ()
     {
