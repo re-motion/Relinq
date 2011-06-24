@@ -25,5 +25,5 @@ Imports System.Security
 ' You can specify all the values or you can default the Build and Revision Numbers 
 ' by using the '*' as shown below:
 
-<Assembly: AssemblyVersion("1.13.97.2")> 
-<Assembly: AssemblyFileVersion("1.13.97.2")> 
+<Assembly: AssemblyVersion("1.13.111.2")> 
+<Assembly: AssemblyFileVersion("1.13.111.2")> 
