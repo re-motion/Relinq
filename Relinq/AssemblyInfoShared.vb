@@ -11,7 +11,7 @@ Imports System.Security
 
 <Assembly: AssemblyConfiguration(".NET Framework: net-3.5, build type: Debug")> 
 <Assembly: AssemblyCompany("rubicon informationstechnologie gmbh")> 
-<Assembly: AssemblyProduct("re-motion core framework (www.re-motion.org)")> 
+<Assembly: AssemblyProduct("re-linq project (relinq.codeplex.com)")> 
 <Assembly: AssemblyCopyright("(c) 2005 - 2011 rubicon informationstechnologie gmbh, www.rubicon.eu - Licensed under GNU LGPL 2.1 (or later)")> 
 <Assembly: AssemblyTrademark("")> 
 
