@@ -109,7 +109,30 @@ namespace Remotion.Linq.UnitTests.Linq.Core
     }
 
     [Test]
-    public void Execute_Generic ()
+    public void Execute ()
+    {
+      var expectedResult = new Cook[0];
+      Expression expression = (from s in _queryableWithDefaultParser select s).Expression;
+
+      _queryParserMock
+          .Expect (mock => mock.GetParsedQuery (expression))
+          .Return (_fakeQueryModel);
+      _queryParserMock.Replay ();
+
+      _executorMock
+          .Expect (mock => mock.ExecuteCollection<Cook> (_fakeQueryModel))
+          .Return (expectedResult);
+      _executorMock.Replay ();
+
+      var result = _queryProvider.Execute (expression);
+
+      _queryParserMock.VerifyAllExpectations ();
+      _executorMock.VerifyAllExpectations ();
+      Assert.That (result.Value, Is.EqualTo (expectedResult));
+    }
+
+    [Test]
+    public void Execute_Explicit_Generic ()
     {
       var expectedResult = new Cook[0];
       Expression expression = (from s in _queryableWithDefaultParser select s).Expression;
@@ -124,7 +147,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core
           .Return (expectedResult);
       _executorMock.Replay ();
 
-      var result = _queryProvider.Execute<IEnumerable<Cook>> (expression);
+      var result = ((IQueryProvider) _queryProvider).Execute<IEnumerable<Cook>> (expression);
 
       _queryParserMock.VerifyAllExpectations();
       _executorMock.VerifyAllExpectations ();
@@ -132,7 +155,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core
     }
 
     [Test]
-    public void Execute_NonGeneric ()
+    public void Execute_Explicit_NonGeneric ()
     {
       var expectedResult = new Cook[0];
       Expression expression = (from s in _queryableWithDefaultParser select s).Expression;
@@ -152,6 +175,29 @@ namespace Remotion.Linq.UnitTests.Linq.Core
       _queryParserMock.VerifyAllExpectations();
       _executorMock.VerifyAllExpectations ();
       Assert.That (((IEnumerable<Cook>)result).ToArray (), Is.EqualTo (expectedResult));
+    }
+
+    [Test]
+    public void Execute_Explicit_NonGeneric_WithExpressionTreeReturningSpecificQueryableType ()
+    {
+      var expectedResult = new Cook[0];
+      Expression expression = _queryableWithDefaultParser.Expression;
+
+      _queryParserMock
+          .Expect (mock => mock.GetParsedQuery (expression))
+          .Return (_fakeQueryModel);
+      _queryParserMock.Replay ();
+
+      _executorMock
+          .Expect (mock => mock.ExecuteCollection<Cook> (_fakeQueryModel))
+          .Return (new Cook[0]);
+      _executorMock.Replay ();
+
+      var result = ((IQueryProvider) _queryProvider).Execute (expression);
+
+      _queryParserMock.VerifyAllExpectations ();
+      _executorMock.VerifyAllExpectations ();
+      Assert.That (((IEnumerable<Cook>) result).ToArray (), Is.EqualTo (expectedResult));
     }
 
     [Test]
@@ -175,6 +221,27 @@ namespace Remotion.Linq.UnitTests.Linq.Core
     public void Execute_IntegrationWithNonGenericEnumerable ()
     {
       var queryable = from s in _queryableWithDefaultParser select s;
+
+      var expectedResult = new[] { new Cook () };
+      _executorMock
+          .Expect (mock => mock.ExecuteCollection<Cook> (Arg<QueryModel>.Is.Anything))
+          .Return (expectedResult);
+
+      _executorMock.Replay ();
+
+      var result = new List<object> ();
+      foreach (var s in (IEnumerable) queryable)
+        result.Add (s);
+
+      _executorMock.VerifyAllExpectations ();
+
+      Assert.That (result, Is.EqualTo (expectedResult));
+    }
+
+    [Test]
+    public void Execute_IntegrationWithNonGenericEnumerable_ExpressionReturnsQueryableType ()
+    {
+      var queryable = _queryableWithDefaultParser;
 
       var expectedResult = new[] { new Cook () };
       _executorMock

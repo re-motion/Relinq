@@ -18,6 +18,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Linq.Parsing.Structure;
 using Remotion.Linq.Utilities;
 
@@ -105,26 +106,59 @@ namespace Remotion.Linq
     /// <summary>
     /// Executes the query defined by the specified expression by parsing it with a 
     /// <see cref="QueryParser"/> and then running it through the <see cref="Executor"/>.
-    /// This method is invoked through the <see cref="IQueryProvider"/> interface by methods such as 
+    /// This method is invoked through the <see cref="IQueryProvider"/> interface methods, for example by 
     /// <see cref="Queryable.First{TSource}(System.Linq.IQueryable{TSource})"/> and 
-    /// <see cref="Queryable.Count{TSource}(System.Linq.IQueryable{TSource})"/>, and it's also invoked by <see cref="QueryableBase{T}"/>
+    /// <see cref="Queryable.Count{TSource}(System.Linq.IQueryable{TSource})"/>, and it's also used by <see cref="QueryableBase{T}"/>
     /// when the <see cref="IQueryable{T}"/> is enumerated.
     /// </summary>
-    public virtual TResult Execute<TResult> (Expression expression)
+    /// <remarks>
+    /// Override this method to replace the query execution mechanism by a custom implementation.
+    /// </remarks>
+    public virtual IStreamedData Execute (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
       var queryModel = GenerateQueryModel (expression);
-
-      var result = queryModel.Execute (Executor);
-      return (TResult) result.Value;
+      return queryModel.Execute (Executor);
     }
 
+    /// <summary>
+    /// Executes the query defined by the specified expression by parsing it with a
+    /// <see cref="QueryParser"/> and then running it through the <see cref="Executor"/>.
+    /// The result is cast to <typeparamref name="TResult"/>.
+    /// </summary>
+    /// <typeparam name="TResult">The type of the query result.</typeparam>
+    /// <param name="expression">The query expression to be executed.</param>
+    /// <returns>The result of the query cast to <typeparamref name="TResult"/>.</returns>
+    /// <remarks>
+    /// This method is called by the standard query operators that return a single value, such as 
+    /// <see cref="Queryable.Count{TSource}(System.Linq.IQueryable{TSource})"/> or 
+    /// <see cref="Queryable.First{TSource}(System.Linq.IQueryable{TSource})"/>.
+    /// In addition, it is called by <see cref="QueryableBase{T}"/> to execute queries that return sequences.
+    /// </remarks>
+    TResult IQueryProvider.Execute<TResult> (Expression expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
+      var resultData = Execute (expression);
+      return (TResult) resultData.Value;
+    }
+
+    /// <summary>
+    /// Executes the query defined by the specified expression by parsing it with a
+    /// <see cref="QueryParser"/> and then running it through the <see cref="Executor"/>.
+    /// </summary>
+    /// <param name="expression">The query expression to be executed.</param>
+    /// <returns>The result of the query.</returns>
+    /// <remarks>
+    /// This method is similar to the <see cref="IQueryProvider.Execute{TResult}"/> method, but without the cast to a defined return type.
+    /// </remarks>
     object IQueryProvider.Execute (Expression expression)
     {
-      var executeMethod =
-          typeof (QueryProviderBase).GetMethod ("Execute", BindingFlags.Public | BindingFlags.Instance).MakeGenericMethod (expression.Type);
-      return executeMethod.Invoke (this, new object[] { expression });
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
+      var resultData = Execute (expression);
+      return resultData.Value;
     }
 
     /// <summary>

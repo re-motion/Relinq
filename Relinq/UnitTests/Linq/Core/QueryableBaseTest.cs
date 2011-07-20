@@ -21,7 +21,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
-using Remotion.Linq;
 using Remotion.Linq.Parsing.Structure;
 using Remotion.Linq.Utilities;
 using Rhino.Mocks;
@@ -103,7 +102,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core
     [Test]
     public void GetEnumerator()
     {
-      _providerMock.Expect (mock => mock.Execute (_intArrayExpression)).Return (new List<int>());
+      _providerMock.Expect (mock => mock.Execute<IEnumerable> (_intArrayExpression)).Return (new List<int>());
 
       _providerMock.Replay ();
       QueryableBase<int> queryable = new TestQueryable<int> (_providerMock, _intArrayExpression);

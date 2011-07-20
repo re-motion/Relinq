@@ -134,7 +134,7 @@ namespace Remotion.Linq
 
     IEnumerator IEnumerable.GetEnumerator ()
     {
-      return ((IEnumerable) _queryProvider.Execute (Expression)).GetEnumerator();
+      return _queryProvider.Execute<IEnumerable> (Expression).GetEnumerator();
     }
   }
 }
