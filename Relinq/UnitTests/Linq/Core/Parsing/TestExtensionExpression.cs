@@ -25,20 +25,19 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing
 {
   public class TestExtensionExpression : ExtensionExpression
   {
-    private readonly Expression _constantExpression;
+    private readonly Expression _expression;
 
-    public TestExtensionExpression (Expression constantExpression)
-        : base(constantExpression.Type)
+    public TestExtensionExpression (Expression expression)
+        : base(expression.Type)
     {
-      ArgumentUtility.CheckNotNull ("constantExpression", constantExpression);
+      ArgumentUtility.CheckNotNull ("constantExpression", expression);
 
-      _constantExpression = constantExpression;
+      _expression = expression;
     }
 
-    // TODO Review: Rename to Expression
-    public Expression ConstantExpression
+    public Expression Expression
     {
-      get { return _constantExpression; }
+      get { return _expression; }
     }
 
     public override bool CanReduce
@@ -51,13 +50,13 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing
 
     public override Expression Reduce ()
     {
-      return _constantExpression;
+      return _expression;
     }
 
     protected override Expression VisitChildren (ExpressionTreeVisitor visitor)
     {
-      var result = visitor.VisitExpression (_constantExpression);
-      if (result != _constantExpression)
+      var result = visitor.VisitExpression (_expression);
+      if (result != _expression)
         return new TestExtensionExpression (result);
 
       return this;
@@ -65,7 +64,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing
 
     public override string ToString ()
     {
-      return "Test(" + FormattingExpressionTreeVisitor.Format (_constantExpression) + ")";
+      return "Test(" + FormattingExpressionTreeVisitor.Format (_expression) + ")";
     }
   }
 }

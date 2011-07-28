@@ -180,7 +180,6 @@
     <Compile Include="Linq\SqlBackend\MappingResolution\SqlContextJoinInfoVisitorTest.cs" />
     <Compile Include="Linq\SqlBackend\MappingResolution\SqlContextSelectionAdjusterTest.cs" />
     <Compile Include="Linq\SqlBackend\MappingResolution\SqlContextTableInfoVisitorTest.cs" />
-    <Compile Include="Linq\SqlBackend\MappingResolution\SqlTableReferenceResolverTest.cs" />
     <Compile Include="Linq\SqlBackend\MappingResolution\SubStatementReferenceResolverTest.cs" />
     <Compile Include="Linq\SqlBackend\MappingResolution\TestableGroupAggregateSimplifier.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\ConditionalExpressionSqlBackendIntegrationTest.cs" />
