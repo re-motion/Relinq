@@ -535,5 +535,31 @@ namespace Remotion.Linq.UnitTests.Linq.Core
       var queryModel = new QueryModel (_mainFromClause, new SelectClause (new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int())));
       Assert.That (queryModel.IsIdentityQuery (), Is.False);
     }
+
+    [Test]
+    public void ConvertToSubquery ()
+    {
+      var queryModel = new QueryModel (_mainFromClause, new SelectClause (new QuerySourceReferenceExpression (_mainFromClause)));
+
+      var result = queryModel.ConvertToSubQuery ("test");
+
+      Assert.That (result.MainFromClause.ItemName, Is.EqualTo ("test"));
+      Assert.That (result.MainFromClause.ItemType, Is.SameAs(typeof(int)));
+      Assert.That (result.MainFromClause.FromExpression, Is.TypeOf(typeof (SubQueryExpression)));
+      Assert.That (((SubQueryExpression) result.MainFromClause.FromExpression).QueryModel, Is.SameAs(queryModel));
+      Assert.That (result.SelectClause.Selector, Is.TypeOf(typeof(QuerySourceReferenceExpression)));
+      Assert.That (((QuerySourceReferenceExpression) result.SelectClause.Selector).ReferencedQuerySource, Is.SameAs (result.MainFromClause));
+    }
+
+    [Test]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = 
+      "The query must return a sequence of items, but it selects a single object of type 'System.Int32'.")]
+    public void ConvertToSubquery_NoStreamedSequenceInfo ()
+    {
+      var queryModel = new QueryModel (_mainFromClause, new SelectClause (new QuerySourceReferenceExpression (_mainFromClause)));
+      queryModel.ResultOperators.Add (new CountResultOperator());
+
+      queryModel.ConvertToSubQuery ("test");
+    }
   }
 }
