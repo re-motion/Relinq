@@ -318,5 +318,36 @@ namespace Remotion.Linq
              && SelectClause.Selector is QuerySourceReferenceExpression
              && ((QuerySourceReferenceExpression) SelectClause.Selector).ReferencedQuerySource == MainFromClause;
     }
+
+    // TODO 4210: Add test.
+    /// <summary>
+    /// Creates a new <see cref="QueryModel"/> that has this <see cref="QueryModel"/> as a sub-query in its <see cref="MainFromClause"/>.
+    /// </summary>
+    /// <param name="itemName">The name of the new <see cref="QueryModel"/>'s <see cref="FromClauseBase.ItemName"/>.</param>
+    /// <returns>A new <see cref="QueryModel"/> whose <see cref="MainFromClause"/>'s <see cref="FromClauseBase.FromExpression"/> is a 
+    /// <see cref="SubQueryExpression"/> that holds this <see cref="QueryModel"/> instance.</returns>
+    public QueryModel ConvertToSubQuery (string itemName)
+    {
+      ArgumentUtility.CheckNotNullOrEmpty ("itemName", itemName);
+
+      var outputDataInfo = GetOutputDataInfo() as StreamedSequenceInfo;
+      if (outputDataInfo == null)
+      {
+        var message = string.Format (
+            "The query must return a sequence of items, but it selects a single object of type '{0}'.",
+            GetOutputDataInfo ().DataType);
+        throw new InvalidOperationException (message);
+      }
+
+      // from x in (sourceItemQuery)
+      // select x
+
+      var mainFromClause = new MainFromClause (
+          itemName, 
+          outputDataInfo.ItemExpression.Type, 
+          new SubQueryExpression (this));
+      var selectClause = new SelectClause (new QuerySourceReferenceExpression (mainFromClause));
+      return new QueryModel (mainFromClause, selectClause);
+    }
   }
 }
