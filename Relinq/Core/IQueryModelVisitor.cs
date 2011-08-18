@@ -25,7 +25,7 @@ namespace Remotion.Linq
   /// <para>
   /// When implement this interface, implement <see cref="VisitQueryModel"/>, then call <c>Accept</c> on every clause that should
   /// be visited. Child clauses, joins, orderings, and result operators are not visited automatically; they always need to be explicitly visited 
-  /// via <see cref="IBodyClause.Accept"/>, <see cref="O:JoinClause.Accept"/>, <see cref="Ordering.Accept"/>, 
+  /// via <see cref="IBodyClause.Accept"/>, <see cref="JoinClause.Accept(IQueryModelVisitor, QueryModel, int)"/>, <see cref="Ordering.Accept"/>, 
   /// <see cref="ResultOperatorBase.Accept"/>, and so on.
   /// </para>
   /// <para>

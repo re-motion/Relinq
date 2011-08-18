@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="fbb75bd0-0e66-4a3a-90aa-8202e1afedde" revisionNumber="1">
+  <developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <introduction>
+      <legacyBold>Getting Started With re-linq</legacyBold>
+    </introduction>
+
+
+	<section>
+        <title>
+            Remotion.Linq
+       	</title>
+        <content>
+          <para>
+            The <legacyBold>Remotion.Linq</legacyBold> namespace and its sub namespaces contain interfaces and classes to be used for building a Linq provider.
+          </para>
+          <para>
+            See the <codeEntityReference qualifyhint="true">N:Remotion.Linq</codeEntityReference> namespace documentation for 
+            the starting points for working with the Linq framework.
+          </para>
+        </content>
+    </section>
+    
+    <section>
+        <title>
+            Remotion.Linq.SqlBackend
+        </title>
+        <content>
+          <para>
+            The <legacyBold>Remotion.Linq.SqlBackend</legacyBold> namespace and its sub namespaces contain interfaces and classes to be used for building a Linq provider that targets SQL based databases.
+          </para>
+          <para>
+            See the <codeEntityReference qualifyhint="true">N:Remotion.Linq.SqlBackend</codeEntityReference> namespace documentation for the starting points for working with the Linq framework's SQL provider.
+          </para>
+        </content>
+	</section>
+    
+        <!--<alert class="note">
+          	<para>
+                In case of the .NET Framework SDK links being broken, they can be fixed by supplying the correct Help2 namespace. Look in the help files's 
+                index and you will find a topic called 'SDK Link Manager'. Open this topic and correct the namespace in the input field provided, and then 
+                navigate to another page. The corrected namespace will be persisted provided that the help file is not moved to another directory in the 
+                file-system.
+            </para>
+            <para>
+                Prefix for .NET Framework SDK dokumentation: ms-help://MS.NETDEVFX.v20.en<para/>
+                Prefix for MSDN documentation for August 2006: ms-help://MS.VSCC.v80/MS.MSDN.vAug06.en<para/>
+                You can also find out the prefix by checking the URL of any help contents displayed in your local MSDN documentation.
+          	</para>
+      	</alert>-->
+
+  </developerConceptualDocument>
+</topic>

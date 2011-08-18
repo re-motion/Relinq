@@ -67,7 +67,7 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
 
     /// <summary>
     /// Gets the registerable method definition from a given <see cref="MethodInfo"/>. A registerable method is a <see cref="MethodInfo"/> object
-    /// that can be registered via a call to <see cref="O:Register"/>. When the given <paramref name="method"/> is passed to 
+    /// that can be registered via a call to <see cref="Register"/>. When the given <paramref name="method"/> is passed to 
     /// <see cref="GetNodeType"/> and its corresponding registerable method was registered, the correct node type is returned.
     /// </summary>
     /// <param name="method">The method for which the registerable method should be retrieved.</param>
