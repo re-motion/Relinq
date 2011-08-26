@@ -270,10 +270,10 @@
     <Compile Include="Utilities\ReSharperAnnotations\AssertionMethodAttribute.cs" />
     <Compile Include="Utilities\ReSharperAnnotations\InvokerParameterNameAttribute.cs" />
     <Compile Include="Utilities\SeparatedStringBuilder.cs" />
+    <None Include="Doc\include\GettingStartedWithRelinq.aml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Doc\include\GettingStartedWithRelinqTemplate.html" />
-    <Content Include="Doc\include\NamespaceDoc.xml" />
+    <Content Include="Doc\include\Remotion.Linq.NamespaceDoc.xml" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
