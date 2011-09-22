@@ -69,9 +69,9 @@ namespace Remotion.Linq.Clauses.StreamedData
       return executor.ExecuteSingle<T> (queryModel, _returnDefaultWhenEmpty);
     }
 
-    public override bool Equals (object obj)
+    public override bool Equals (IStreamedDataInfo obj)
     {
-      return base.Equals (obj) && ((StreamedSingleValueInfo)obj)._returnDefaultWhenEmpty==_returnDefaultWhenEmpty;
+      return base.Equals (obj) && ((StreamedSingleValueInfo)obj)._returnDefaultWhenEmpty == _returnDefaultWhenEmpty;
     }
 
     public override int GetHashCode ()

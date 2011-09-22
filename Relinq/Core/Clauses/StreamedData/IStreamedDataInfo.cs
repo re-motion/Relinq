@@ -23,7 +23,7 @@ namespace Remotion.Linq.Clauses.StreamedData
   /// <summary>
   /// Describes the data streamed out of a <see cref="QueryModel"/> or <see cref="ResultOperatorBase"/>.
   /// </summary>
-  public interface IStreamedDataInfo
+  public interface IStreamedDataInfo : IEquatable<IStreamedDataInfo>
   {
     /// <summary>
     /// Gets the type of the data described by this <see cref="IStreamedDataInfo"/> instance. For a sequence, this is a type implementing 

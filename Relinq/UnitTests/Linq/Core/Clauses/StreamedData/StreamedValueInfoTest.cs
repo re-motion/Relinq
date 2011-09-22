@@ -100,10 +100,10 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.StreamedData
     public void Equals ()
     {
       // ReSharper disable EqualExpressionComparison
-      Assert.That (new TestStreamedValueInfo (typeof (int)).Equals (null), Is.False);
-      Assert.That (new TestStreamedValueInfo (typeof (int)).Equals (new TestStreamedValueInfo (typeof (int))), Is.True);
-      Assert.That (new TestStreamedValueInfo (typeof (int)).Equals (new TestStreamedValueInfo (typeof (bool))), Is.False);
-      Assert.That (new TestStreamedValueInfo (typeof (int)).Equals (new StreamedScalarValueInfo (typeof (int))), Is.False);
+      Assert.That (new TestStreamedValueInfo (typeof (int)).Equals ((object) null), Is.False);
+      Assert.That (new TestStreamedValueInfo (typeof (int)).Equals ((object) new TestStreamedValueInfo (typeof (int))), Is.True);
+      Assert.That (new TestStreamedValueInfo (typeof (int)).Equals ((object) new TestStreamedValueInfo (typeof (bool))), Is.False);
+      Assert.That (new TestStreamedValueInfo (typeof (int)).Equals ((object) new StreamedScalarValueInfo (typeof (int))), Is.False);
       // ReSharper restore EqualExpressionComparison
     }
 

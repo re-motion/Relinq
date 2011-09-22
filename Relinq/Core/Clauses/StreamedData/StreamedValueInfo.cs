@@ -84,10 +84,16 @@ namespace Remotion.Linq.Clauses.StreamedData
       return genericMethodDefinition.MakeGenericMethod (DataType);
     }
 
-    public override bool Equals (object obj)
+    public override sealed bool Equals (object obj)
+    {
+      return Equals (obj as IStreamedDataInfo);
+    }
+
+    public virtual bool Equals (IStreamedDataInfo obj)
     {
       if (obj == null)
         return false;
+    
       if (GetType () != obj.GetType ())
         return false;
 

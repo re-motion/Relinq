@@ -20,7 +20,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators;
-using Remotion.Linq;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Linq.Utilities;
@@ -186,26 +185,26 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.StreamedData
     {
       // ReSharper disable EqualExpressionComparison
       var constantExpression = Expression.Constant ("test");
-      Assert.That (new StreamedSequenceInfo (typeof (string[]), constantExpression).Equals (null), Is.False);
+      Assert.That (new StreamedSequenceInfo (typeof (string[]), constantExpression).Equals ((object) null), Is.False);
       Assert.That (
-          new StreamedSequenceInfo (typeof (string[]), constantExpression).Equals (new StreamedSequenceInfo (typeof (string[]), constantExpression)),
+          new StreamedSequenceInfo (typeof (string[]), constantExpression).Equals ((object) new StreamedSequenceInfo (typeof (string[]), constantExpression)),
           Is.True);
 
       // Object type
       Assert.That (
-          new StreamedSequenceInfo (typeof (string[]), constantExpression).Equals (new TestStreamedValueInfo (typeof (string[]))),
+          new StreamedSequenceInfo (typeof (string[]), constantExpression).Equals ((object) new TestStreamedValueInfo (typeof (string[]))),
           Is.False);
 
       // Expression
       Assert.That (
           new StreamedSequenceInfo (typeof (string[]), constantExpression).Equals (
-              new StreamedSequenceInfo (typeof (string[]), Expression.Constant ("test"))),
+              (object) new StreamedSequenceInfo (typeof (string[]), Expression.Constant ("test"))),
           Is.False);
 
       // Data type and expression (data type alone can't be tested because the ctor would throw)
       Assert.That (
           new StreamedSequenceInfo (typeof (string[]), constantExpression).Equals (
-              new StreamedSequenceInfo (typeof (char[]), Expression.Constant ('t'))),
+              (object) new StreamedSequenceInfo (typeof (char[]), Expression.Constant ('t'))),
           Is.False);
       // ReSharper restore EqualExpressionComparison
     }

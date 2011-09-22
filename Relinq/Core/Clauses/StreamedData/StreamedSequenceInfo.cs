@@ -151,15 +151,22 @@ namespace Remotion.Linq.Clauses.StreamedData
       return executor.ExecuteCollection<T> (queryModel);
     }
 
-    public override bool Equals (object obj)
+    public override sealed bool Equals (object obj)
+    {
+      var other = obj as IStreamedDataInfo;
+      return Equals (other);
+    }
+
+    public virtual bool Equals (IStreamedDataInfo obj)
     {
       if (obj == null)
         return false;
+
       if (GetType () != obj.GetType ())
         return false;
 
       var other = (StreamedSequenceInfo) obj;
-      return DataType.Equals (other.DataType) && ItemExpression.Equals(other.ItemExpression);
+      return DataType.Equals (other.DataType) && ItemExpression.Equals (other.ItemExpression);
     }
 
     public override int GetHashCode ()
