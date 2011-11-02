@@ -20,9 +20,9 @@ using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
-using Remotion.Linq;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Parsing;
+using Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;
 using System.Linq;
@@ -32,6 +32,119 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
   [TestFixture]
   public class ExpressionTreeVisitorTest : ExpressionTreeVisitorTestBase
   {
+    [Test]
+    public void IsSupportedStandardExpression_True ()
+    {
+      var supportedExpressionTypeValues = 
+          new[]
+          {
+              ExpressionType.ArrayLength, ExpressionType.Convert, ExpressionType.ConvertChecked, ExpressionType.Negate, ExpressionType.NegateChecked,
+              ExpressionType.Not, ExpressionType.Quote, ExpressionType.TypeAs, ExpressionType.UnaryPlus, ExpressionType.Add, ExpressionType.AddChecked,
+              ExpressionType.Divide, ExpressionType.Modulo, ExpressionType.Multiply, ExpressionType.MultiplyChecked, ExpressionType.Power,
+              ExpressionType.Subtract, ExpressionType.SubtractChecked, ExpressionType.And, ExpressionType.Or, ExpressionType.ExclusiveOr,
+              ExpressionType.LeftShift, ExpressionType.RightShift, ExpressionType.AndAlso, ExpressionType.OrElse, ExpressionType.Equal,
+              ExpressionType.NotEqual, ExpressionType.GreaterThanOrEqual, ExpressionType.GreaterThan, ExpressionType.LessThan,
+              ExpressionType.LessThanOrEqual, ExpressionType.Coalesce, ExpressionType.ArrayIndex, ExpressionType.Conditional, ExpressionType.Constant,
+              ExpressionType.Invoke, ExpressionType.Lambda, ExpressionType.MemberAccess, ExpressionType.Call, ExpressionType.New,
+              ExpressionType.NewArrayBounds, ExpressionType.NewArrayInit, ExpressionType.MemberInit, ExpressionType.ListInit, ExpressionType.Parameter, 
+              ExpressionType.TypeIs,
+          };
+
+      var visitMethodExpressionTypes = new HashSet<Type> (
+          from m in typeof (ExpressionTreeVisitor).GetMethods (BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+          where m.Name.StartsWith ("Visit")
+          let parameters = m.GetParameters()
+          where parameters.Length == 1
+          let expressionType = parameters.Single().ParameterType
+          where expressionType != typeof (Expression)
+          select expressionType);
+      Assert.That (visitMethodExpressionTypes.Count > 0);
+
+      foreach (var expressionType in supportedExpressionTypeValues)
+      {
+        var expressionInstance = ExpressionInstanceCreator.GetExpressionInstance (expressionType);
+        Assert.That (
+            visitMethodExpressionTypes.Any (t => t.IsAssignableFrom (expressionInstance.GetType ())), 
+            Is.True, 
+            "Visit method for {0}", 
+            expressionInstance.GetType ());
+        Assert.That (ExpressionTreeVisitor.IsSupportedStandardExpression (expressionInstance), Is.True);
+      }
+    }
+
+    [Test]
+    public void IsSupportedStandardExpression_False ()
+    {
+      var extensionExpression = new TestExtensionExpression (Expression.Constant (0));
+      Assert.That (ExpressionTreeVisitor.IsSupportedStandardExpression (extensionExpression), Is.False);
+
+      var unknownExpression = new UnknownExpression (typeof (int));
+      Assert.That (ExpressionTreeVisitor.IsSupportedStandardExpression (unknownExpression), Is.False);
+
+      var querySourceReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int());
+      Assert.That (ExpressionTreeVisitor.IsSupportedStandardExpression (querySourceReferenceExpression), Is.False);
+
+      var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel_Cook());
+      Assert.That (ExpressionTreeVisitor.IsSupportedStandardExpression (subQueryExpression), Is.False);
+    }
+
+    [Test]
+    public void IsRelinqExpression ()
+    {
+      var querySourceReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ());
+      Assert.That (ExpressionTreeVisitor.IsRelinqExpression (querySourceReferenceExpression), Is.True);
+
+      var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel_Cook ());
+      Assert.That (ExpressionTreeVisitor.IsRelinqExpression (subQueryExpression), Is.True);
+
+      var standardExpression = Expression.Constant (0);
+      Assert.That (ExpressionTreeVisitor.IsRelinqExpression (standardExpression), Is.False);
+      
+      var extensionExpression = new TestExtensionExpression (Expression.Constant (0));
+      Assert.That (ExpressionTreeVisitor.IsRelinqExpression (extensionExpression), Is.False);
+
+      var unknownExpression = new UnknownExpression (typeof (int));
+      Assert.That (ExpressionTreeVisitor.IsRelinqExpression (unknownExpression), Is.False);
+    }
+
+    [Test]
+    public void IsExtensionExpression ()
+    {
+      var extensionExpression = new TestExtensionExpression (Expression.Constant (0));
+      Assert.That (ExpressionTreeVisitor.IsExtensionExpression (extensionExpression), Is.True);
+
+      var standardExpression = Expression.Constant (0);
+      Assert.That (ExpressionTreeVisitor.IsExtensionExpression (standardExpression), Is.False);
+
+      var unknownExpression = new UnknownExpression (typeof (int));
+      Assert.That (ExpressionTreeVisitor.IsExtensionExpression (unknownExpression), Is.False);
+
+      var querySourceReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ());
+      Assert.That (ExpressionTreeVisitor.IsExtensionExpression (querySourceReferenceExpression), Is.False);
+
+      var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel_Cook ());
+      Assert.That (ExpressionTreeVisitor.IsExtensionExpression (subQueryExpression), Is.False);
+    }
+
+    [Test]
+    public void IsUnknownNonExtensionExpression ()
+    {
+      var unknownExpression = new UnknownExpression (typeof (int));
+      Assert.That (ExpressionTreeVisitor.IsUnknownNonExtensionExpression (unknownExpression), Is.True);
+
+      var standardExpression = Expression.Constant (0);
+      Assert.That (ExpressionTreeVisitor.IsUnknownNonExtensionExpression (standardExpression), Is.False);
+
+      var extensionExpression = new TestExtensionExpression (Expression.Constant (0));
+      Assert.That (ExpressionTreeVisitor.IsUnknownNonExtensionExpression (extensionExpression), Is.False);
+
+      var querySourceReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ());
+      Assert.That (ExpressionTreeVisitor.IsUnknownNonExtensionExpression (querySourceReferenceExpression), Is.False);
+
+      var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel_Cook ());
+      Assert.That (ExpressionTreeVisitor.IsUnknownNonExtensionExpression (subQueryExpression), Is.False);
+    }
+
     [Test]
     public void AdjustArgumentsForNewExpression ()
     {
@@ -75,7 +188,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
     [Test]
     public void VisitExpression_Null ()
     {
-      ExpressionTreeVisitor visitor = MockRepository.PartialMock<ExpressionTreeVisitor>();
+      var visitor = MockRepository.PartialMock<ExpressionTreeVisitor>();
       MockRepository.ReplayAll();
       Assert.IsNull (visitor.VisitExpression (null));
     }
@@ -343,7 +456,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
 
     private void CheckDelegation (string methodName, params ExpressionType[] expressionTypes)
     {
-      Expression[] expressions = Array.ConvertAll<ExpressionType, Expression> (expressionTypes, ExpressionInstanceCreator.GetExpressionInstance);
+      Expression[] expressions = Array.ConvertAll (expressionTypes, ExpressionInstanceCreator.GetExpressionInstance);
 
       CheckDelegation (methodName, expressions);
     }

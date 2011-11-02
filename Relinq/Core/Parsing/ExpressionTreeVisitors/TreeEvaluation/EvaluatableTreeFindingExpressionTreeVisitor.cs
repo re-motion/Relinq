@@ -64,7 +64,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation
       // To find these nodes, first assume that the current subtree is evaluatable iff it is one of the standard nodes. Store the evaluatability 
       // of the parent node for later.
       bool isParentNodeEvaluatable = _isCurrentSubtreeEvaluatable;
-      _isCurrentSubtreeEvaluatable = IsStandardNode (expression);
+      _isCurrentSubtreeEvaluatable = IsSupportedStandardExpression (expression);
 
       // Then call the specific Visit... method for this expression. This will determine if this node by itself is not evaluatable by setting 
       // _isCurrentSubtreeEvaluatable to false if it isn't. It will also investigate the evaluatability info of the child nodes and set 
@@ -81,11 +81,6 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation
       //   - the current subtree (i.e. the child of the parent node) is evaluatable.
       _isCurrentSubtreeEvaluatable &= isParentNodeEvaluatable; // the _isCurrentSubtreeEvaluatable flag now relates to the parent node again
       return visitedExpression;
-    }
-
-    private bool IsStandardNode (Expression node)
-    {
-      return Enum.IsDefined (typeof (ExpressionType), node.NodeType);
     }
 
     protected override Expression VisitParameterExpression (ParameterExpression expression)

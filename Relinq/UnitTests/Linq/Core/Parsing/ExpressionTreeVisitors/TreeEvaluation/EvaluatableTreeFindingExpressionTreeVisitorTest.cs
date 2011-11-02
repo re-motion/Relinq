@@ -23,6 +23,10 @@ using Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.TestDomain;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation;
 
+#if NET_4_0
+using Microsoft.CSharp.RuntimeBinder;
+#endif
+
 namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.TreeEvaluation
 {
   [TestFixture]
@@ -196,5 +200,30 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.TreeE
 
       Assert.That (result.IsEvaluatableExpression (expression), Is.False);
     }
+
+#if NET_4_0
+    [Test]
+    public void VisitDynamicExpression_WithParameterReference_NonEvaluable ()
+    {
+      var parameterExpression = Expression.Parameter (typeof (object), "x");
+
+      var dynamicExpressionWithParameterReference =
+          Expression.Dynamic (
+              Binder.GetMember (
+                  CSharpBinderFlags.InvokeSimpleName,
+                  "colour",
+                  typeof (object),
+                  new[] { CSharpArgumentInfo.Create (CSharpArgumentInfoFlags.None, null) }),
+              typeof (object),
+              parameterExpression);
+
+      var body = Expression.MakeBinary (ExpressionType.Equal, dynamicExpressionWithParameterReference, Expression.Constant ("orange"));
+      
+      var result = EvaluatableTreeFindingExpressionTreeVisitor.Analyze (body);
+
+      Assert.That (result.IsEvaluatableExpression (body), Is.False);
+    }
+
+#endif
   }
 }

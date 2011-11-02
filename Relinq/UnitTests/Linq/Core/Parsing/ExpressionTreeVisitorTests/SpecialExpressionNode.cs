@@ -21,9 +21,17 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
 {
   public class SpecialExpressionNode : Expression
   {
+#if NET_4_0
+#pragma warning disable 0618
+#endif
+
     public SpecialExpressionNode (ExpressionType nodeType, Type type)
         : base (nodeType, type)
     {
     }
+
+#if NET_4_0
+#pragma warning restore 0618
+#endif
   }
 }

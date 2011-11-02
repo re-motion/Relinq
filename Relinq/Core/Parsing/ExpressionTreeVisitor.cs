@@ -33,6 +33,130 @@ namespace Remotion.Linq.Parsing
   public abstract class ExpressionTreeVisitor
   {
     /// <summary>
+    /// Determines whether the given <see cref="Expression"/> is one of the expressions defined by <see cref="ExpressionType"/> for which
+    /// <see cref="ExpressionTreeVisitor"/> has a Visit method. <see cref="VisitExpression"/> handles those by calling the respective Visit method.
+    /// </summary>
+    /// <param name="expression">The expression to check. Must not be <see langword="null" />.</param>
+    /// <returns>
+    /// 	<see langword="true"/> if <paramref name="expression"/> is one of the expressions defined by <see cref="ExpressionType"/> and 
+    ///   <see cref="ExpressionTreeVisitor"/> has a Visit method for it; otherwise, <see langword="false"/>.
+    /// </returns>
+    // Note: Do not use Enum.IsDefined here - this method must only return true if we have a dedicated Visit method. (Which may not be the case for
+    // future extensions of ExpressionType.)
+    public static bool IsSupportedStandardExpression (Expression expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
+      switch (expression.NodeType)
+      {
+        case ExpressionType.ArrayLength:
+        case ExpressionType.Convert:
+        case ExpressionType.ConvertChecked:
+        case ExpressionType.Negate:
+        case ExpressionType.NegateChecked:
+        case ExpressionType.Not:
+        case ExpressionType.Quote:
+        case ExpressionType.TypeAs:
+        case ExpressionType.UnaryPlus:
+        case ExpressionType.Add:
+        case ExpressionType.AddChecked:
+        case ExpressionType.Divide:
+        case ExpressionType.Modulo:
+        case ExpressionType.Multiply:
+        case ExpressionType.MultiplyChecked:
+        case ExpressionType.Power:
+        case ExpressionType.Subtract:
+        case ExpressionType.SubtractChecked:
+        case ExpressionType.And:
+        case ExpressionType.Or:
+        case ExpressionType.ExclusiveOr:
+        case ExpressionType.LeftShift:
+        case ExpressionType.RightShift:
+        case ExpressionType.AndAlso:
+        case ExpressionType.OrElse:
+        case ExpressionType.Equal:
+        case ExpressionType.NotEqual:
+        case ExpressionType.GreaterThanOrEqual:
+        case ExpressionType.GreaterThan:
+        case ExpressionType.LessThan:
+        case ExpressionType.LessThanOrEqual:
+        case ExpressionType.Coalesce:
+        case ExpressionType.ArrayIndex:
+        case ExpressionType.Conditional:
+        case ExpressionType.Constant:
+        case ExpressionType.Invoke:
+        case ExpressionType.Lambda:
+        case ExpressionType.MemberAccess:
+        case ExpressionType.Call:
+        case ExpressionType.New:
+        case ExpressionType.NewArrayBounds:
+        case ExpressionType.NewArrayInit:
+        case ExpressionType.MemberInit:
+        case ExpressionType.ListInit:
+        case ExpressionType.Parameter:
+        case ExpressionType.TypeIs:
+          return true;
+      }
+      return false;
+    }
+
+    /// <summary>
+    /// Determines whether the given <see cref="Expression"/> is one of the base expressions defined by re-linq. 
+    /// <see cref="VisitExpression"/> handles those by calling the respective Visit method.
+    /// </summary>
+    /// <param name="expression">The expression to check.</param>
+    /// <returns>
+    /// 	<see langword="true"/> if <paramref name="expression"/> is a re-linq base expression (<see cref="SubQueryExpression"/>, 
+    ///   <see cref="QuerySourceReferenceExpression"/>) for which <see cref="ExpressionTreeVisitor"/> has dedicated Visit methods;
+    ///   otherwise, <see langword="false"/>.
+    /// </returns>
+    public static bool IsRelinqExpression (Expression expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
+      switch (expression.NodeType)
+      {
+        case SubQueryExpression.ExpressionType:
+        case QuerySourceReferenceExpression.ExpressionType:
+          return true;
+
+        default:
+          return false;
+      }
+    }
+
+    /// <summary>
+    /// Determines whether the given <see cref="Expression"/> is an <see cref="ExtensionExpression"/>. <see cref="VisitExpression"/> handles such
+    /// expressions by calling <see cref="ExtensionExpression.Accept"/>.
+    /// </summary>
+    /// <param name="expression">The expression to check.</param>
+    /// <returns>
+    /// 	<see langword="true"/> if <paramref name="expression"/> is an <see cref="ExtensionExpression"/>; otherwise, <see langword="false"/>.
+    /// </returns>
+    public static bool IsExtensionExpression (Expression expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
+      return expression is ExtensionExpression;
+    }
+
+    /// <summary>
+    /// Determines whether the given <see cref="Expression"/> is an unknown expression not derived from <see cref="ExtensionExpression"/>. 
+    /// <see cref="VisitExpression"/> cannot handle such expressions at all and will call <see cref="VisitUnknownNonExtensionExpression"/> for them.
+    /// </summary>
+    /// <param name="expression">The expression to check.</param>
+    /// <returns>
+    /// 	<see langword="true"/> if <paramref name="expression"/> is an unknown expression not derived from <see cref="ExtensionExpression"/>; 
+    ///   otherwise, <see langword="false"/>.
+    /// </returns>
+    public static bool IsUnknownNonExtensionExpression (Expression expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
+      return !IsSupportedStandardExpression (expression) && !IsExtensionExpression (expression) && !IsRelinqExpression (expression);
+    }
+
+    /// <summary>
     /// Adjusts the arguments for a <see cref="NewExpression"/> so that they match the given members.
     /// </summary>
     /// <param name="arguments">The arguments to adjust.</param>
@@ -324,8 +448,8 @@ namespace Remotion.Linq.Parsing
         // ReSharper disable HeuristicUnreachableCode
         if (expression.Members == null)
           return Expression.New (expression.Constructor, newArguments);
-        // ReSharper restore HeuristicUnreachableCode
-        // ReSharper restore ConditionIsAlwaysTrueOrFalse
+            // ReSharper restore HeuristicUnreachableCode
+            // ReSharper restore ConditionIsAlwaysTrueOrFalse
         else
           return Expression.New (expression.Constructor, AdjustArgumentsForNewExpression (newArguments, expression.Members), expression.Members);
       }

@@ -22,8 +22,19 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
   public class UnknownExpression : Expression
   {
     public UnknownExpression (Type type)
-        : base ((ExpressionType) (-1), type)
+      : this (type, (ExpressionType) (-1))
     {
     }
+
+#if NET_4_0
+#pragma warning disable 0618
+#endif
+    public UnknownExpression (Type type, ExpressionType nodeType)
+      : base (nodeType, type)
+    {
+    }
+#if NET_4_0
+#pragma warning restore 0618
+#endif
   }
 }
