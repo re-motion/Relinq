@@ -161,7 +161,6 @@
     <Compile Include="Linq\Core\Parsing\TestExtensionExpression.cs" />
     <Compile Include="Linq\Core\Parsing\TestThrowingConstantExpressionTreeVisitor.cs" />
     <Compile Include="Linq\Core\Parsing\TupleExpressionBuilderTest.cs" />
-    <Compile Include="Linq\Core\QueryModelIntegrationTest.cs" />
     <Compile Include="Linq\Core\StubQueryExecutor.cs" />
     <Compile Include="Linq\Core\TestDomain\ISpecificCook.cs" />
     <Compile Include="Linq\Core\TestDomain\MetaID.cs" />

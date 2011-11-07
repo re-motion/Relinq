@@ -56,14 +56,6 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.StreamedData
     }
 
     [Test]
-    public void Initialization_CurrentSequence_AssignableItemExpression ()
-    {
-      var result = new StreamedSequenceInfo (typeof (object[]), Expression.Constant ("", typeof (string)));
-      Assert.That (result.DataType, Is.SameAs (typeof (object[])));
-      Assert.That (result.ItemExpression.Type, Is.SameAs (typeof (string)));
-    }
-
-    [Test]
     public void DataType ()
     {
       Assert.That (_infoWithIntSequence.DataType, Is.SameAs (typeof (int[])));
