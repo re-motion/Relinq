@@ -38,7 +38,7 @@ namespace Remotion.Linq.Clauses.StreamedData
       ArgumentUtility.CheckNotNull ("itemExpression", itemExpression);
 
       var resultItemType = ReflectionUtility.GetItemTypeOfIEnumerable (dataType, "dataType");
-      if (itemExpression.Type != resultItemType)
+      if (!resultItemType.IsAssignableFrom (itemExpression.Type))
       {
         var message = string.Format ("ItemExpression is of type {0} but should be {1}.", itemExpression.Type, resultItemType);
         throw new ArgumentTypeException (message, "itemExpression", resultItemType, itemExpression.Type);
