@@ -24,7 +24,7 @@ using System.Reflection;
 //
 
 [assembly: AssemblyConfiguration(".NET Framework: net-3.5, build type: Debug")]
-[assembly: AssemblyCompany("rubicon informationstechnologie gmbh")]
+[assembly: AssemblyCompany("rubicon IT GmbH")]
 [assembly: AssemblyProduct ("re-linq project (relinq.codeplex.com)")]
 [assembly: AssemblyCopyright ("(c) rubicon IT GmbH, www.rubicon.eu - Licensed under GNU LGPL 2.1 (or later)")]
 [assembly: AssemblyTrademark ("")]
