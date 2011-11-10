@@ -1,5 +1,5 @@
 ﻿// This file is part of the re-linq project (relinq.codeplex.com)
-// Copyright (C) 2005-2009 rubicon informationstechnologie gmbh, www.rubicon.eu
+// Copyright (C) rubicon IT GmbH, www.rubicon.eu
 // 
 // re-linq is free software; you can redistribute it and/or modify it under 
 // the terms of the GNU Lesser General Public License as published by the 
