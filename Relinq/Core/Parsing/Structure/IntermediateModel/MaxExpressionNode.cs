@@ -76,7 +76,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       throw CreateResolveNotSupportedException();
     }
 
-    protected override ResultOperatorBase CreateResultOperator (ClauseGenerationContext clauseGenerationContext)
+    protected override ResultOperatorBase CreateResultOperator (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
       return new MaxResultOperator();
     }

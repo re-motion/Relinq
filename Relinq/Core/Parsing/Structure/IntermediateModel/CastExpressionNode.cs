@@ -64,7 +64,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       return Source.Resolve (inputParameter, expressionWithCast, clauseGenerationContext);
     }
 
-    protected override ResultOperatorBase CreateResultOperator (ClauseGenerationContext clauseGenerationContext)
+    protected override ResultOperatorBase CreateResultOperator (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
       var castItemType = CastItemType;
       return new CastResultOperator (castItemType);

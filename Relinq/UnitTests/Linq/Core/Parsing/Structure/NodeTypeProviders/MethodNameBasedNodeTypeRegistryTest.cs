@@ -185,7 +185,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.NodeTypeProviders
         throw new NotImplementedException ();
       }
 
-      protected override ResultOperatorBase CreateResultOperator (ClauseGenerationContext clauseGenerationContext)
+      protected override ResultOperatorBase CreateResultOperator (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
       {
         throw new NotImplementedException ();
       }

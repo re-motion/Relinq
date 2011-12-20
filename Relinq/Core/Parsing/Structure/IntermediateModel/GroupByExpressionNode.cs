@@ -91,7 +91,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
           clauseGenerationContext);
     }
 
-    protected override ResultOperatorBase CreateResultOperator (ClauseGenerationContext clauseGenerationContext)
+    protected override ResultOperatorBase CreateResultOperator (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
       var resolvedKeySelector = GetResolvedKeySelector (clauseGenerationContext);
 

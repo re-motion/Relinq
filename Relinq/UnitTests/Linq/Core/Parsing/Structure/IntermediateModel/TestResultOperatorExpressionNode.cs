@@ -36,7 +36,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
       throw new NotImplementedException();
     }
 
-    protected override ResultOperatorBase CreateResultOperator (ClauseGenerationContext clauseGenerationContext)
+    protected override ResultOperatorBase CreateResultOperator (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
       return new TakeResultOperator (Expression.Constant (100));
     }
