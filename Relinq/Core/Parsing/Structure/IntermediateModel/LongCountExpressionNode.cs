@@ -56,7 +56,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       throw CreateResolveNotSupportedException();
     }
 
-    protected override ResultOperatorBase CreateResultOperator (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
+    protected override ResultOperatorBase CreateResultOperator (ClauseGenerationContext clauseGenerationContext)
     {
       return new LongCountResultOperator();
     }
