@@ -128,6 +128,8 @@
     <Compile Include="DefaultQueryProvider.cs" />
     <Compile Include="EagerFetching\FetchFilteringQueryModelVisitor.cs" />
     <Compile Include="EagerFetching\FetchQueryModelBuilder.cs" />
+    <Compile Include="EagerFetching\Parsing\OuterFetchExpressionNodeBase.cs" />
+    <Compile Include="EagerFetching\Parsing\ThenFetchExpressionNodeBase.cs" />
     <Compile Include="EagerFetching\Parsing\ThenFetchManyExpressionNode.cs" />
     <Compile Include="EagerFetching\Parsing\ThenFetchOneExpressionNode.cs" />
     <Compile Include="EagerFetching\Parsing\FetchManyExpressionNode.cs" />
