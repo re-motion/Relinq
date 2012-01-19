@@ -319,7 +319,6 @@ namespace Remotion.Linq
              && ((QuerySourceReferenceExpression) SelectClause.Selector).ReferencedQuerySource == MainFromClause;
     }
 
-    // TODO 4210: Add test.
     /// <summary>
     /// Creates a new <see cref="QueryModel"/> that has this <see cref="QueryModel"/> as a sub-query in its <see cref="MainFromClause"/>.
     /// </summary>
