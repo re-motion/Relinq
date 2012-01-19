@@ -24,7 +24,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   /// Represents a <see cref="SequenceFromSequenceResultOperatorBase"/> that is executed on a sequence, returning a new sequence with the same
   /// item type as its result.
   /// </summary>
-  public abstract class SequenceTypePreservingResultOperatorBase : SequenceFromSequenceResultOperatorBase // TODO 3207
+  public abstract class SequenceTypePreservingResultOperatorBase : SequenceFromSequenceResultOperatorBase
   {
     public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
     {

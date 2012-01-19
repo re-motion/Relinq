@@ -36,7 +36,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   ///              select s).Union(students2);
   /// </code>
   /// </example>
-  public class UnionResultOperator : SequenceTypePreservingResultOperatorBase // TODO 3207
+  public class UnionResultOperator : SequenceTypePreservingResultOperatorBase
   {
     private Expression _source2;
     

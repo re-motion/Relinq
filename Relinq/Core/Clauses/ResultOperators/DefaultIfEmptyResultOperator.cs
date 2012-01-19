@@ -37,7 +37,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   /// </example>
   public class DefaultIfEmptyResultOperator : SequenceTypePreservingResultOperatorBase
   {
-    public DefaultIfEmptyResultOperator (Expression optionalDefaultValue) // TODO 3207
+    public DefaultIfEmptyResultOperator (Expression optionalDefaultValue)
     {
       OptionalDefaultValue = optionalDefaultValue;
     }

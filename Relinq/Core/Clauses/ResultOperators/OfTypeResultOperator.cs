@@ -34,7 +34,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   ///              select s.ID).OfType&lt;int&gt;();
   /// </code>
   /// </example>
-  public class OfTypeResultOperator : SequenceFromSequenceResultOperatorBase // TODO 3207
+  public class OfTypeResultOperator : SequenceFromSequenceResultOperatorBase
   {
     private Type _searchedItemType;
 
