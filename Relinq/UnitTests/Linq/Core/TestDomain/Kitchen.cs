@@ -26,5 +26,6 @@ namespace Remotion.Linq.UnitTests.Linq.Core.TestDomain
     public int RoomNumber { get; set; }
     public Restaurant Restaurant { get; set; }
     public DateTime? LastCleaningDay { get; set; }
+    public bool? PassedLastInspection { get; set; }
   }
 }
