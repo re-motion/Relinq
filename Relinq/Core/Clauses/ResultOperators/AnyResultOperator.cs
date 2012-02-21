@@ -39,7 +39,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   /// </example>
   public class AnyResultOperator : ValueFromSequenceResultOperatorBase
   {
-    /// <inheritdoc />
+    /// <inheritdoc cref="ResultOperatorBase.ExecuteInMemory" />
     public override StreamedValue ExecuteInMemory<T> (StreamedSequence input)
     {
       ArgumentUtility.CheckNotNull ("input", input);

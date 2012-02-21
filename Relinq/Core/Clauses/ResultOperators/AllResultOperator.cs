@@ -61,7 +61,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
       set { _predicate = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="ResultOperatorBase.ExecuteInMemory" />
     public override StreamedValue ExecuteInMemory<T> (StreamedSequence input)
     {
       ArgumentUtility.CheckNotNull ("input", input);

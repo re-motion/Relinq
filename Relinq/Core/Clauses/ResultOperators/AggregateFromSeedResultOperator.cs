@@ -127,7 +127,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
       return GetConstantValueFromExpression<T> ("seed", Seed);
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="ResultOperatorBase.ExecuteInMemory" />
     public override StreamedValue ExecuteInMemory<TInput> (StreamedSequence input)
     {
       ArgumentUtility.CheckNotNull ("input", input);
