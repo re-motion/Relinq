@@ -20,8 +20,10 @@
 
 namespace System
 {
-  [Serializable]
-  internal struct Tuple<T1, T2, T3> : IEquatable<Tuple<T1, T2, T3>>
+  /// <summary>
+  /// Only simulates structure of .NET 4.0 Tuple, not behavior.
+  /// </summary>
+  internal class Tuple<T1, T2, T3>
   {
     private readonly T1 _item1;
     private readonly T2 _item2;
@@ -49,14 +51,19 @@ namespace System
       get { return _item3; }
     }
 
-    public bool Equals (Tuple<T1, T2, T3> other)
-    {
-      return Equals ((object) other);
-    }
-
     public override string ToString ()
     {
       return string.Format ("<{0}, {1}, {2}>", _item1, _item2, _item3);
+    }
+
+    public override bool Equals (object obj)
+    {
+      throw new NotSupportedException ("Tuple<,,> only simulates structure of tuple, not behavior.");
+    }
+
+    public override int GetHashCode ()
+    {
+      throw new NotSupportedException ("Tuple<,,> only simulates structure of tuple, not behavior.");
     }
   }
 }

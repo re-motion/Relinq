@@ -14,14 +14,18 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
+using System;
+
 #if NET_3_5
 
 // Simulate System Tuple types from .NET 4 in .NET 3.5
 
 namespace System
 {
-  [Serializable]
-  internal struct Tuple<T1, T2> : IEquatable<Tuple<T1, T2>>
+  /// <summary>
+  /// Only simulates structure of .NET 4.0 Tuple, not behavior.
+  /// </summary>
+  internal class Tuple<T1, T2>
   {
     private readonly T1 _item1;
     private readonly T2 _item2;
@@ -42,15 +46,21 @@ namespace System
       get { return _item2; }
     }
 
-    public bool Equals (Tuple<T1, T2> other)
-    {
-      return Equals ((object) other);
-    }
-
     public override string ToString ()
     {
       return string.Format ("<{0}, {1}>", _item1, _item2);
     }
+
+    public override bool Equals (object obj)
+    {
+      throw new NotSupportedException ("Tuple<,> only simulates structure of tuple, not behavior.");
+    }
+
+    public override int GetHashCode ()
+    {
+      throw new NotSupportedException ("Tuple<,> only simulates structure of tuple, not behavior.");
+    }
   }
 }
+
 #endif
