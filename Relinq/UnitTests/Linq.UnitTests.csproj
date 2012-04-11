@@ -186,6 +186,7 @@
     <Compile Include="Linq\SqlBackend\MappingResolution\SubStatementReferenceResolverTest.cs" />
     <Compile Include="Linq\SqlBackend\MappingResolution\TestableGroupAggregateSimplifier.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\ConditionalExpressionSqlBackendIntegrationTest.cs" />
+    <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\DelegateInvocationSqlBackendIntegrationTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\GroupBySqlBackendIntegrationTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\ExplicitJoinsSqlBackendIntegrationTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\MediumTrustSqlBackendIntegrationTest.cs" />
