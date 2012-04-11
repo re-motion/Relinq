@@ -129,6 +129,24 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Trans
     }
 
     [Test]
+    [Ignore ("TODO 4769")]
+    public void Transform_InnerLambdaExpression_WithCompile ()
+    {
+      Expression<Func<double, double, string>> innerExpression = (p1, p2) => (p1 + p2).ToString ();
+      var invokeExpression = (InvocationExpression) ExpressionHelper.MakeExpression (() => innerExpression.Compile() (1.0, 2.0));
+
+      var result = _transformer.Transform (invokeExpression);
+
+      // Output: (1.0 + 2.0).ToString()
+      var expectedExpression = Expression.Call (
+          Expression.Add (
+              Expression.Constant (1.0),
+              Expression.Constant (2.0)),
+          typeof (double).GetMethod ("ToString", Type.EmptyTypes));
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, result);
+    }
+
+    [Test]
     public void Transform_OtherInnerExpression ()
     {
       Func<int, double, string> innerDelegate = (p1, p2) => (p1 + p2).ToString ();
