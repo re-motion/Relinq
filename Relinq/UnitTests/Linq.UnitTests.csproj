@@ -154,8 +154,11 @@
     <Compile Include="Linq\Core\Parsing\Structure\ExpressionTreeProcessors\TransformingExpressionProcessorTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\ExpressionTreeProcessors\PartialEvaluatingExpressionTreeProcessorTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\IntermediateModel\GroupByWithResultSelectorExpressionNodeTest.cs" />
+    <Compile Include="Linq\Core\Parsing\Structure\QueryParserIntegrationTests\DelegateInvocationQueryParserIntegrationTest.cs" />
+    <Compile Include="Linq\Core\Parsing\Structure\QueryParserIntegrationTests\NullableQueryParserIntegrationTest.cs" />
+    <Compile Include="Linq\Core\Parsing\Structure\QueryParserIntegrationTests\PartialEvaluationQueryParserIntegrationTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\QueryParserIntegrationTests\VBSpecificQueryParserIntegrationTest.cs" />
-    <Compile Include="Linq\Core\Parsing\Structure\QueryParserIntegrationTests\MiscQueryParserIntegrationTest.cs" />
+    <Compile Include="Linq\Core\Parsing\Structure\QueryParserIntegrationTests\NewWithAddedMembersQueryParserIntegrationTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\QueryParserIntegrationTests\SubQueryQueryParserIntegrationTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\QueryParserIntegrationTests\MediumTrustQueryParserIntegrationTest.cs" />
     <Compile Include="Linq\Core\Parsing\TestExtensionExpression.cs" />
