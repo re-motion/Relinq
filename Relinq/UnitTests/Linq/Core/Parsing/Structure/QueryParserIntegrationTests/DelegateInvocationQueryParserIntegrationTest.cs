@@ -76,5 +76,20 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       var predicate = ((WhereClause) queryModel.BodyClauses[0]).Predicate;
       CheckResolvedExpression<Cook, bool> (predicate, queryModel.MainFromClause, c => c.Name != null);
     }
+
+    [Test]
+    [Ignore ("TODO 4769")]
+    public void CompileInvokeCombination ()
+    {
+      Expression<Func<Cook, bool>> predicate1 = c => c.ID > 100;
+      Expression<Func<Cook, bool>> predicate2 = c => c.Name != null;
+
+      var query = QuerySource.Where (c => predicate1.Compile () (c) && predicate2.Compile () (c));
+
+      var queryModel = QueryParser.GetParsedQuery (query.Expression);
+
+      var predicate = ((WhereClause) queryModel.BodyClauses[0]).Predicate;
+      CheckResolvedExpression<Cook, bool> (predicate, queryModel.MainFromClause, c => c.ID > 100 && c.Name != null);
+    }
   }
 }
