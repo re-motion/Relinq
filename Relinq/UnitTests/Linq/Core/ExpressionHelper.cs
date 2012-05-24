@@ -20,7 +20,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
-using Remotion.Linq;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ResultOperators;
@@ -36,6 +35,15 @@ namespace Remotion.Linq.UnitTests.Linq.Core
     public static Expression CreateExpression ()
     {
       return CreateNewIntArrayExpression();
+    }
+
+    public static Expression CreateExpression (Type type)
+    {
+      object value = null;
+      if (type.IsValueType)
+        value = Activator.CreateInstance (type);
+
+      return Expression.Constant (value, type);
     }
 
     public static LambdaExpression CreateLambdaExpression ()
@@ -63,12 +71,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core
       return Expression.NewArrayInit (typeof (int));
     }
 
-    public static ParameterExpression CreateParameterExpression ()
-    {
-      return CreateParameterExpression ("i");
-    }
-
-    public static ParameterExpression CreateParameterExpression (string identifier)
+    public static ParameterExpression CreateParameterExpression (string identifier = "i")
     {
       return Expression.Parameter (typeof (int), identifier);
     }
