@@ -64,7 +64,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
     {
       var sequenceInfo = ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
 
-      Type resultType = GetResultType (sequenceInfo.ItemExpression.Type);
+      Type resultType = GetResultType (sequenceInfo.ResultItemType);
       return new StreamedScalarValueInfo (resultType);
     }
 

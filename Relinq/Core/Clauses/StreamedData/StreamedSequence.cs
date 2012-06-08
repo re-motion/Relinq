@@ -84,7 +84,7 @@ namespace Remotion.Linq.Clauses.StreamedData
         string message = string.Format (
             "Cannot retrieve the current value as a sequence with item type '{0}' because its items are of type '{1}'.",
             typeof (T).FullName,
-            DataInfo.ItemExpression.Type.FullName);
+            DataInfo.ResultItemType.FullName);
 
         throw new InvalidOperationException (message, ex);
       }

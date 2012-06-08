@@ -62,7 +62,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
 
       var sequence = result.GetTypedSequence<Chef>();
       Assert.That (sequence.ToArray (), Is.EquivalentTo (new[] { student1, student2 }));
-      Assert.That (result.DataInfo.ItemExpression.Type, Is.EqualTo (typeof (Chef)));
+      Assert.That (result.DataInfo.ResultItemType, Is.EqualTo (typeof (Chef)));
       Assert.That (((UnaryExpression) result.DataInfo.ItemExpression).Operand, Is.SameAs (itemExpression));
     }
 
@@ -77,7 +77,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
       Assert.That (result.DataType, Is.SameAs (typeof (IQueryable<Chef>)));
       Assert.That (((StreamedSequenceInfo) result).ItemExpression, Is.InstanceOf (typeof (UnaryExpression)));
       Assert.That (((StreamedSequenceInfo) result).ItemExpression.NodeType, Is.EqualTo (ExpressionType.Convert));
-      Assert.That (((StreamedSequenceInfo) result).ItemExpression.Type, Is.SameAs (typeof (Chef)));
+      Assert.That (((StreamedSequenceInfo) result).ResultItemType, Is.SameAs (typeof (Chef)));
       Assert.That (((UnaryExpression) ((StreamedSequenceInfo) result).ItemExpression).Operand, Is.SameAs (input.ItemExpression));
     }
 

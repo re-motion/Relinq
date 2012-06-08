@@ -164,14 +164,14 @@ namespace Remotion.Linq.Clauses
     /// <exception cref="ArgumentTypeException">The items don't match the expected type.</exception>
     protected void CheckSequenceItemType (StreamedSequenceInfo sequenceInfo, Type expectedItemType)
     {
-      if (sequenceInfo.ItemExpression.Type != expectedItemType)
+      if (sequenceInfo.ResultItemType != expectedItemType)
       {
         var message = string.Format (
             "The input sequence must have items of type '{0}', but it has items of type '{1}'.",
             expectedItemType,
-            sequenceInfo.ItemExpression.Type);
+            sequenceInfo.ResultItemType);
 
-        throw new ArgumentTypeException (message, "inputInfo", typeof (IEnumerable<>).MakeGenericType (expectedItemType), sequenceInfo.ItemExpression.Type);
+        throw new ArgumentTypeException (message, "inputInfo", typeof (IEnumerable<>).MakeGenericType (expectedItemType), sequenceInfo.ResultItemType);
       }
     }
 

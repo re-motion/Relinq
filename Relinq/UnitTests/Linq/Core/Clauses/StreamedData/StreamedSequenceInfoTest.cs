@@ -54,6 +54,15 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.StreamedData
     {
       new StreamedSequenceInfo (typeof (string[]), _intExpression);
     }
+    
+    [Test]
+    public void Initialization_CurrentSequence_Assignable ()
+    {
+        var stringExpression = Expression.Constant ("");
+        var sequence = new StreamedSequenceInfo (typeof (object[]), stringExpression);
+
+        Assert.That(sequence.ResultItemType, Is.EqualTo(typeof(object)));
+    }
 
     [Test]
     public void DataType ()

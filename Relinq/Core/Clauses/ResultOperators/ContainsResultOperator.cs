@@ -90,14 +90,14 @@ namespace Remotion.Linq.Clauses.ResultOperators
     {
       var sequenceInfo = ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
 
-      if (!sequenceInfo.ItemExpression.Type.IsAssignableFrom (Item.Type))
+      if (!sequenceInfo.ResultItemType.IsAssignableFrom (Item.Type))
       {
         var message = string.Format (
             "The items of the input sequence of type '{0}' are not compatible with the item expression of type '{1}'.",
-            sequenceInfo.ItemExpression.Type,
+            sequenceInfo.ResultItemType,
             Item.Type);
 
-        throw new ArgumentTypeException (message, "inputInfo", typeof (IEnumerable<>).MakeGenericType (Item.Type), sequenceInfo.ItemExpression.Type);
+        throw new ArgumentTypeException (message, "inputInfo", typeof (IEnumerable<>).MakeGenericType (Item.Type), sequenceInfo.ResultItemType);
       }
 
       return new StreamedScalarValueInfo (typeof (bool));
