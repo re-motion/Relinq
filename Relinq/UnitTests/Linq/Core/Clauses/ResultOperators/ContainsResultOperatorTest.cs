@@ -62,8 +62,10 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
     [Test]
     public void GetOutputDataInfo ()
     {
-      var itemExpression = Expression.Constant (0);
-      var input = new StreamedSequenceInfo (typeof (int[]), itemExpression);
+      var itemExpression = Expression.Constant (Expression.Constant (new Cook ()));
+      var input = new StreamedSequenceInfo (typeof (object[]), itemExpression);
+      
+      // Works because int is assignable to object - the ItemExpression of type Cook isn't checked here
       var result = _resultOperator.GetOutputDataInfo (input);
 
       Assert.That (result, Is.InstanceOf (typeof (StreamedScalarValueInfo)));

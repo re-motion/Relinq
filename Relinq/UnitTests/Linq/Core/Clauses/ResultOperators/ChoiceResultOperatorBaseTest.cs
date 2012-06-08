@@ -40,11 +40,11 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
     public void GetOutputDataInfo ()
     {
       var studentExpression = Expression.Constant (new Cook ());
-      var input = new StreamedSequenceInfo (typeof (Cook[]), studentExpression);
+      var input = new StreamedSequenceInfo (typeof (object[]), studentExpression);
       var result = _resultOperatorNoDefaultWhenEmpty.GetOutputDataInfo (input);
 
       Assert.That (result, Is.InstanceOf (typeof (StreamedSingleValueInfo)));
-      Assert.That (result.DataType, Is.SameAs (typeof (Cook)));
+      Assert.That (result.DataType, Is.SameAs (typeof (object)));
     }
 
     [Test]

@@ -25,24 +25,24 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.StreamedData
   [TestFixture]
   public class StreamedSequenceTest
   {
-    private ConstantExpression _intExpression;
-    private int[] _intSequence;
-    private StreamedSequence _dataWithIntSequence;
+    private ConstantExpression _stringExpression;
+    private string[] _stringSequence;
+    private StreamedSequence _dataWithCovariantSequence;
 
     [SetUp]
     public void SetUp ()
     {
-      _intExpression = Expression.Constant (0);
-      _intSequence = new[] { 0, 0, 0 };
+      _stringExpression = Expression.Constant (0);
+      _stringSequence = new[] { "a", "b", "c" };
 
-      _dataWithIntSequence = new StreamedSequence (_intSequence, new StreamedSequenceInfo (typeof (int[]), _intExpression));
+      _dataWithCovariantSequence = new StreamedSequence (_stringSequence, new StreamedSequenceInfo (typeof (object[]), _stringExpression));
     }
 
     [Test]
     [ExpectedException (typeof (ArgumentNullException))]
     public void Initialization_CurrentSequence_WithoutItemExpression ()
     {
-      new StreamedSequence (_intSequence, null);
+      new StreamedSequence (_stringSequence, null);
     }
 
     [Test]
@@ -50,29 +50,33 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.StreamedData
         "Argument sequence has type System.String[] when type System.Int32[] was expected.\r\nParameter name: sequence")]
     public void Initialization_CurrentSequence_WrongItemExpression ()
     {
-      new StreamedSequence (new[] { "1", "2", "3" }, new StreamedSequenceInfo (typeof (int[]), _intExpression));
+      new StreamedSequence (new[] { "1", "2", "3" }, new StreamedSequenceInfo (typeof (int[]), _stringExpression));
     }
 
     [Test]
     public void DataInfo ()
     {
-      Assert.That (_dataWithIntSequence.DataInfo.DataType, Is.SameAs (typeof (int[])));
-      Assert.That (_dataWithIntSequence.DataInfo.ItemExpression, Is.SameAs (_intExpression));
+      Assert.That (_dataWithCovariantSequence.DataInfo.DataType, Is.SameAs (typeof (object[])));
+      Assert.That (_dataWithCovariantSequence.DataInfo.ResultItemType, Is.SameAs (typeof (object)));
+      Assert.That (_dataWithCovariantSequence.DataInfo.ItemExpression, Is.SameAs (_stringExpression));
     }
 
     [Test]
     public void GetTypedSequence ()
     {
-      var sequenceData = _dataWithIntSequence.GetTypedSequence<int> ();
-      Assert.That (sequenceData, Is.SameAs (_intSequence));
+      var sequenceData = _dataWithCovariantSequence.GetTypedSequence<string> ();
+      Assert.That (sequenceData, Is.SameAs (_stringSequence));
+
+      var covariantSequenceData = _dataWithCovariantSequence.GetTypedSequence<object> ();
+      Assert.That (covariantSequenceData, Is.SameAs (_stringSequence));
     }
 
     [Test]
     [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = 
-        "Cannot retrieve the current value as a sequence with item type 'System.String' because its items are of type 'System.Int32'.")]
+        "Cannot retrieve the current value as a sequence with item type 'System.Int32' because its items are of type 'System.Object'.")]
     public void GetTypedSequence_InvalidItemType ()
     {
-      _dataWithIntSequence.GetTypedSequence<string>();
+      _dataWithCovariantSequence.GetTypedSequence<int>();
     }
   }
 }

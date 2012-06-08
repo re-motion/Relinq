@@ -16,6 +16,7 @@
 // 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Collections;
@@ -37,10 +38,10 @@ namespace Remotion.Linq.Clauses.StreamedData
       ArgumentUtility.CheckNotNull ("dataType", dataType);
       ArgumentUtility.CheckNotNull ("itemExpression", itemExpression);
 
-      ResultItemType = ReflectionUtility.GetItemTypeOfIEnumerable(dataType, "dataType");
-      if (itemExpression.Type != ResultItemType && !ResultItemType.IsAssignableFrom(itemExpression.Type))
+      ResultItemType = ReflectionUtility.GetItemTypeOfIEnumerable (dataType, "dataType");
+      if (!ResultItemType.IsAssignableFrom (itemExpression.Type))
       {
-        var message = string.Format ("ItemExpression is of type {0} but should inherit from {1}.", itemExpression.Type, ResultItemType);
+        var message = string.Format ("ItemExpression is of type '{0}', but should be '{1}' (or derived from it).", itemExpression.Type, ResultItemType);
         throw new ArgumentTypeException (message, "itemExpression", ResultItemType, itemExpression.Type);
       }
 
@@ -49,7 +50,9 @@ namespace Remotion.Linq.Clauses.StreamedData
     }
 
     /// <summary>
-    /// Gets the type of the IEnumerable represented by <c cref="DataType"/>.
+    /// Gets the type of the items returned by the sequence described by this object, as defined by <see cref="DataType"/>. Note that because 
+    /// <see cref="IEnumerable{T}"/> is covariant starting from .NET 4.0, this may be a more abstract type than what's returned by 
+    /// <see cref="ItemExpression"/>'s <see cref="Expression.Type"/> property.
     /// </summary>
     public Type ResultItemType { get; private set; }
 
@@ -89,7 +92,7 @@ namespace Remotion.Linq.Clauses.StreamedData
         catch (ArgumentException ex)
         {
           var message = string.Format (
-              "The generic type definition '{0}' could not be closed over the type of the ItemExpression ('{1}'). {2}", 
+              "The generic type definition '{0}' could not be closed over the type of the ResultItemType ('{1}'). {2}", 
               dataType,
               ResultItemType, 
               ex.Message);

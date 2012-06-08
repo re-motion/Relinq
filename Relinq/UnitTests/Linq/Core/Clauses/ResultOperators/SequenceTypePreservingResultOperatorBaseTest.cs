@@ -38,14 +38,15 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
     [Test]
     public void GetOutputDataInfo ()
     {
-      var studentExpression = Expression.Constant (new Cook ());
-      var input = new StreamedSequenceInfo (typeof (Cook[]), studentExpression);
+      var cookExpression = Expression.Constant (new Cook ());
+      var input = new StreamedSequenceInfo (typeof (object[]), cookExpression);
       var result = _resultOperator.GetOutputDataInfo (input);
 
       Assert.That (result, Is.InstanceOf (typeof (StreamedSequenceInfo)));
       Assert.That (result, Is.Not.SameAs (input));
-      Assert.That (result.DataType, Is.SameAs (typeof (IQueryable<Cook>)));
-      Assert.That (((StreamedSequenceInfo) result).ItemExpression, Is.SameAs (studentExpression));
+      Assert.That (result.DataType, Is.SameAs (typeof (IQueryable<object>)));
+      Assert.That (((StreamedSequenceInfo) result).ItemExpression, Is.SameAs (cookExpression));
+      Assert.That (((StreamedSequenceInfo) result).ResultItemType, Is.SameAs (typeof (object)));
     }
 
     [Test]
