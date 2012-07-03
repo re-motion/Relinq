@@ -16,7 +16,6 @@
 // 
 using System;
 using System.Linq;
-using System.Security.Permissions;
 using NUnit.Framework;
 using Remotion.Linq.UnitTests.Sandboxing;
 
@@ -29,7 +28,6 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
     public void MediumTrust ()
     {
       var mediumTrust = PermissionSets.GetMediumTrust (AppDomain.CurrentDomain.BaseDirectory, Environment.MachineName);
-      var permissions = mediumTrust.Concat (new[] { new ReflectionPermission (ReflectionPermissionFlag.MemberAccess) }).ToArray ();
 
       var types = (from t in typeof (MediumTrustQueryParserIntegrationTest).Assembly.GetTypes ()
                    where t.Namespace == typeof (MediumTrustQueryParserIntegrationTest).Namespace
@@ -37,10 +35,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
                        && !t.IsAbstract && t.IsDefined(typeof(TestFixtureAttribute), false)
                    select t).ToArray ();
 
-      var testFixtureResults = SandboxTestRunner.RunTestFixturesInSandbox (
-          types,
-          permissions,
-          null);
+      var testFixtureResults = SandboxTestRunner.RunTestFixturesInSandbox (types, mediumTrust, null);
       var testResults = testFixtureResults.SelectMany (r => r.TestResults);
 
       foreach (var testResult in testResults)
