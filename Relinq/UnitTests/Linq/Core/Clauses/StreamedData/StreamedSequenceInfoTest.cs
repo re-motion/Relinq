@@ -30,14 +30,22 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.StreamedData
   [TestFixture]
   public class StreamedSequenceInfoTest
   {
-    private ConstantExpression _intExpression;
-    private StreamedSequenceInfo _infoWithIntSequence;
+    private ConstantExpression _stringExpression;
+    private StreamedSequenceInfo _infoWithStringSequence;
 
     [SetUp]
     public void SetUp ()
     {
-      _intExpression = Expression.Constant (0);
-      _infoWithIntSequence = new StreamedSequenceInfo (typeof (int[]), _intExpression);
+      _stringExpression = Expression.Constant ("dummy");
+      _infoWithStringSequence = new StreamedSequenceInfo (typeof (string[]), _stringExpression);
+    }
+
+    [Test]
+    public void Initialization ()
+    {
+      Assert.That (_infoWithStringSequence.DataType, Is.SameAs (typeof (string[])));
+      Assert.That (_infoWithStringSequence.ResultItemType, Is.SameAs (typeof (string)));
+      Assert.That (_infoWithStringSequence.ItemExpression, Is.SameAs (_stringExpression));
     }
 
     [Test]
@@ -45,79 +53,119 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.StreamedData
         "Expected a type implementing IEnumerable<T>, but found 'System.Int32'.\r\nParameter name: dataType")]
     public void Initialization_DataTypeIsnotAssignableFromIEnumerable ()
     {
-      new StreamedSequenceInfo (typeof (int), _intExpression);
+      new StreamedSequenceInfo (typeof (int), _stringExpression);
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentTypeException))]
+    [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage = 
+        "ItemExpression is of type 'System.String', but should be 'System.Int32' (or derived from it).\r\nParameter name: itemExpression")]
     public void Initialization_CurrentSequence_WrongItemExpression ()
     {
-      new StreamedSequenceInfo (typeof (string[]), _intExpression);
+      new StreamedSequenceInfo (typeof (int[]), _stringExpression);
+    }
+    
+    [Test]
+    public void Initialization_CurrentSequence_Assignable ()
+    {
+        var sequence = new StreamedSequenceInfo (typeof (object[]), _stringExpression);
+
+        Assert.That (sequence.ResultItemType, Is.EqualTo (typeof (object)));
+        Assert.That (sequence.ItemExpression.Type, Is.EqualTo (typeof (string)));
     }
 
     [Test]
-    public void DataType ()
+    public void AdjustDataType_SameType ()
     {
-      Assert.That (_infoWithIntSequence.DataType, Is.SameAs (typeof (int[])));
-    }
+      var result = _infoWithStringSequence.AdjustDataType (typeof (IEnumerable<string>));
 
-    [Test]
-    public void AdjustDataType_CompatibleType ()
-    {
-      var result = _infoWithIntSequence.AdjustDataType (typeof (IEnumerable<int>));
-
-      Assert.That (result, Is.Not.SameAs (_infoWithIntSequence));
+      Assert.That (result, Is.Not.SameAs (_infoWithStringSequence));
       Assert.That (result, Is.TypeOf (typeof (StreamedSequenceInfo)));
-      Assert.That (result.DataType, Is.SameAs (typeof (IEnumerable<int>)));
-      Assert.That (((StreamedSequenceInfo) result).ItemExpression, Is.SameAs (_infoWithIntSequence.ItemExpression));
+      Assert.That (result.DataType, Is.SameAs (typeof (IEnumerable<string>)));
+      Assert.That (((StreamedSequenceInfo) result).ItemExpression, Is.SameAs (_infoWithStringSequence.ItemExpression));
+      Assert.That (((StreamedSequenceInfo) result).ResultItemType, Is.SameAs (typeof (string)));
+    }
+
+    [Test]
+    public void AdjustDataType_MoreGenericType ()
+    {
+      var result = _infoWithStringSequence.AdjustDataType (typeof (IEnumerable<object>));
+
+      Assert.That (result, Is.Not.SameAs (_infoWithStringSequence));
+      Assert.That (result, Is.TypeOf (typeof (StreamedSequenceInfo)));
+      Assert.That (result.DataType, Is.SameAs (typeof (IEnumerable<object>)));
+      Assert.That (((StreamedSequenceInfo) result).ItemExpression, Is.SameAs (_infoWithStringSequence.ItemExpression));
+      Assert.That (((StreamedSequenceInfo) result).ResultItemType, Is.SameAs (typeof (object)));
     }
 
     [Test]
     [ExpectedException (typeof (ArgumentException), ExpectedMessage =
-        "'System.Collections.Generic.IEnumerable`1[System.String]' cannot be used as the data type for a sequence with an ItemExpression of type "
-        + "'System.Int32'.\r\nParameter name: dataType")]
+        "'System.Collections.Generic.IEnumerable`1[System.Int32]' cannot be used as the data type for a sequence with an ItemExpression of type "
+        + "'System.String'.\r\nParameter name: dataType")]
     public void AdjustDataType_IncompatibleType ()
     {
-      _infoWithIntSequence.AdjustDataType (typeof (IEnumerable<string>));
+      _infoWithStringSequence.AdjustDataType (typeof (IEnumerable<int>));
     }
 
     [Test]
     [ExpectedException (typeof (ArgumentException), ExpectedMessage =
-        "'System.Int32' cannot be used as the data type for a sequence with an ItemExpression of type 'System.Int32'.\r\n"
+        "'System.Int32' cannot be used as the data type for a sequence with an ItemExpression of type 'System.String'.\r\n"
         + "Parameter name: dataType")]
     public void AdjustDataType_NonEnumerableType ()
     {
-      _infoWithIntSequence.AdjustDataType (typeof (int));
+      _infoWithStringSequence.AdjustDataType (typeof (int));
     }
 
     [Test]
     public void AdjustDataType_GenericTypeDefinition ()
     {
-      var result = _infoWithIntSequence.AdjustDataType (typeof (IEnumerable<>));
+      var result = _infoWithStringSequence.AdjustDataType (typeof (IQueryable<>));
 
-      Assert.That (result, Is.Not.SameAs (_infoWithIntSequence));
+      Assert.That (result, Is.Not.SameAs (_infoWithStringSequence));
       Assert.That (result, Is.TypeOf (typeof (StreamedSequenceInfo)));
-      Assert.That (result.DataType, Is.SameAs (typeof (IEnumerable<int>)));
-      Assert.That (((StreamedSequenceInfo) result).ItemExpression, Is.SameAs (_infoWithIntSequence.ItemExpression));
+      Assert.That (result.DataType, Is.SameAs (typeof (IQueryable<string>)));
+    }
+
+    [Test]
+    public void AdjustDataType_GenericTypeDefinition_FromCovariantDataType ()
+    {
+      var info = new StreamedSequenceInfo (typeof (IEnumerable<object>), _stringExpression);
+      var result = info.AdjustDataType (typeof (IQueryable<>));
+
+      Assert.That (result, Is.Not.SameAs (info));
+      Assert.That (result, Is.TypeOf (typeof (StreamedSequenceInfo)));
+      Assert.That (result.DataType, Is.SameAs (typeof (IQueryable<object>)));
+      Assert.That (((StreamedSequenceInfo) result).ResultItemType, Is.SameAs (typeof (object)));
+      Assert.That (((StreamedSequenceInfo) result).ItemExpression, Is.SameAs (_stringExpression));
     }
 
     [Test]
     [ExpectedException (typeof (ArgumentException), ExpectedMessage =
-        "The generic type definition 'System.Collections.Generic.IDictionary`2[TKey,TValue]' could not be closed over the type of the ItemExpression "
-        + "('System.Int32'). The type or method has 2 generic parameter(s), but 1 generic argument(s) were provided. A generic argument must be "
+        "The generic type definition 'System.Collections.Generic.IDictionary`2[TKey,TValue]' could not be closed over the type of the ResultItemType "
+        + "('System.String'). The type or method has 2 generic parameter(s), but 1 generic argument(s) were provided. A generic argument must be "
         + "provided for each generic parameter.\r\nParameter name: dataType")]
     public void AdjustDataType_GenericTypeDefinition_WrongNumberOfArguments ()
     {
-      _infoWithIntSequence.AdjustDataType (typeof (IDictionary<,>));
+      _infoWithStringSequence.AdjustDataType (typeof (IDictionary<,>));
     }
 
     [Test]
     public void MakeClosedGenericExecuteMethod ()
     {
       var executeMethod = typeof (CountResultOperator).GetMethod ("ExecuteInMemory", new[] { typeof (StreamedSequence) });
-      var result = _infoWithIntSequence.MakeClosedGenericExecuteMethod (executeMethod);
+      var result = _infoWithStringSequence.MakeClosedGenericExecuteMethod (executeMethod);
 
-      Assert.That (result.GetGenericArguments(), Is.EqualTo (new[] { typeof (int) }));
+      Assert.That (result.GetGenericArguments(), Is.EqualTo (new[] { typeof (string) }));
+    }
+
+    [Test]
+    public void MakeClosedGenericExecuteMethod_WithCovariantDataType ()
+    {
+      var info = new StreamedSequenceInfo (typeof (IEnumerable<object>), _stringExpression);
+
+      var executeMethod = typeof (CountResultOperator).GetMethod ("ExecuteInMemory", new[] { typeof (StreamedSequence) });
+      var result = info.MakeClosedGenericExecuteMethod (executeMethod);
+
+      Assert.That (result.GetGenericArguments (), Is.EqualTo (new[] { typeof (object) }));
     }
 
     [Test]
@@ -126,7 +174,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.StreamedData
     public void MakeClosedGenericExecuteMethod_NonGenericMethod ()
     {
       var executeMethod = typeof (CountResultOperator).GetMethod ("ExecuteInMemory", new[] { typeof (IStreamedData) });
-      _infoWithIntSequence.MakeClosedGenericExecuteMethod (executeMethod);
+      _infoWithStringSequence.MakeClosedGenericExecuteMethod (executeMethod);
     }
 
     [Test]
@@ -136,8 +184,8 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.StreamedData
     {
       var executeMethod = typeof (CountResultOperator)
           .GetMethod ("ExecuteInMemory", new[] { typeof (StreamedSequence) })
-          .MakeGenericMethod (typeof (int));
-      _infoWithIntSequence.MakeClosedGenericExecuteMethod (executeMethod);
+          .MakeGenericMethod (typeof (string));
+      _infoWithStringSequence.MakeClosedGenericExecuteMethod (executeMethod);
     }
 
     [Test]
@@ -146,7 +194,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.StreamedData
     public void MakeClosedGenericExecuteMethod_WrongNumberOfGenericParameters ()
     {
       var executeMethod = typeof (TestResultOperator).GetMethod ("InvalidExecuteInMemory_TooManyGenericParameters");
-      _infoWithIntSequence.MakeClosedGenericExecuteMethod (executeMethod);
+      _infoWithStringSequence.MakeClosedGenericExecuteMethod (executeMethod);
     }
 
     [Test]
@@ -155,17 +203,17 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.StreamedData
       var queryModel = ExpressionHelper.CreateQueryModel_Cook();
 
       var executorMock = MockRepository.GenerateMock<IQueryExecutor>();
-      executorMock.Expect (mock => mock.ExecuteCollection<int> (queryModel)).Return (new[] { 1, 2, 3 });
+      executorMock.Expect (mock => mock.ExecuteCollection<string> (queryModel)).Return (new[] { "a", "b", "c" });
 
-      var streamedData = (StreamedSequence) _infoWithIntSequence.ExecuteQueryModel (queryModel, executorMock);
+      var streamedData = (StreamedSequence) _infoWithStringSequence.ExecuteQueryModel (queryModel, executorMock);
 
       executorMock.VerifyAllExpectations();
 
       Assert.That (streamedData, Is.InstanceOf (typeof (StreamedSequence)));
-      Assert.That (streamedData.DataInfo.ItemExpression, Is.SameAs (_infoWithIntSequence.ItemExpression));
-      Assert.That (typeof (IQueryable<int>).IsAssignableFrom (streamedData.DataInfo.DataType), Is.True);
-      Assert.That (streamedData.GetTypedSequence<int>().ToArray(), Is.EqualTo (new[] { 1, 2, 3 }));
-      Assert.That (streamedData.Sequence, Is.InstanceOf (typeof (IQueryable<int>)));
+      Assert.That (streamedData.DataInfo.ItemExpression, Is.SameAs (_infoWithStringSequence.ItemExpression));
+      Assert.That (typeof (IQueryable<string>).IsAssignableFrom (streamedData.DataInfo.DataType), Is.True);
+      Assert.That (streamedData.GetTypedSequence<string> ().ToArray (), Is.EqualTo (new[] { "a", "b", "c" }));
+      Assert.That (streamedData.Sequence, Is.InstanceOf (typeof (IQueryable<string>)));
     }
 
     [Test]
@@ -175,9 +223,9 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.StreamedData
       var queryModel = ExpressionHelper.CreateQueryModel_Cook();
 
       var executorMock = MockRepository.GenerateMock<IQueryExecutor>();
-      executorMock.Expect (mock => mock.ExecuteCollection<int> (queryModel)).Throw (new InvalidOperationException ("Test"));
+      executorMock.Expect (mock => mock.ExecuteCollection<string> (queryModel)).Throw (new InvalidOperationException ("Test"));
 
-      _infoWithIntSequence.ExecuteQueryModel (queryModel, executorMock);
+      _infoWithStringSequence.ExecuteQueryModel (queryModel, executorMock);
     }
 
     [Test]

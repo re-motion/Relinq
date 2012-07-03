@@ -343,7 +343,7 @@ namespace Remotion.Linq
 
       var mainFromClause = new MainFromClause (
           itemName, 
-          outputDataInfo.ItemExpression.Type, 
+          outputDataInfo.ResultItemType, 
           new SubQueryExpression (this));
       var selectClause = new SelectClause (new QuerySourceReferenceExpression (mainFromClause));
       return new QueryModel (mainFromClause, selectClause);

@@ -33,7 +33,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
     public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
     {
       var inputSequenceInfo = ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo>("inputInfo", inputInfo);
-      return new StreamedSequenceInfo (typeof (IEnumerable<>).MakeGenericType (inputSequenceInfo.ItemExpression.Type), inputSequenceInfo.ItemExpression);
+      return new StreamedSequenceInfo (typeof (IEnumerable<>).MakeGenericType (inputSequenceInfo.ResultItemType), inputSequenceInfo.ItemExpression);
     }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)
@@ -51,6 +51,11 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
       where TResult : IStreamedData 
     {
       return base.InvokeGenericExecuteMethod (input, genericMethodCaller);
+    }
+
+    public new void CheckSequenceItemType (StreamedSequenceInfo sequenceInfo, Type expectedItemType)
+    {
+      base.CheckSequenceItemType (sequenceInfo, expectedItemType);
     }
 
     public StreamedSequence DistinctExecuteMethod<T> (StreamedSequence input)

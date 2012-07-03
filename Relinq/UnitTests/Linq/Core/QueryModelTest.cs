@@ -552,6 +552,21 @@ namespace Remotion.Linq.UnitTests.Linq.Core
     }
 
     [Test]
+    public void ConvertToSubquery_CovariantSubquery ()
+    {
+      var queryModel = new QueryModel (_mainFromClause, new SelectClause (new QuerySourceReferenceExpression (_mainFromClause)));
+      queryModel.ResultTypeOverride = typeof (IEnumerable<object>);
+
+      var result = queryModel.ConvertToSubQuery ("test");
+
+      Assert.That (result.MainFromClause.ItemName, Is.EqualTo ("test"));
+      Assert.That (result.MainFromClause.ItemType, Is.SameAs (typeof (object)));
+      Assert.That (result.MainFromClause.FromExpression, Is.TypeOf (typeof (SubQueryExpression)));
+      Assert.That (((SubQueryExpression) result.MainFromClause.FromExpression).QueryModel, Is.SameAs (queryModel));
+      Assert.That (result.SelectClause.Selector.Type, Is.SameAs (typeof (object)));
+    }
+
+    [Test]
     [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = 
       "The query must return a sequence of items, but it selects a single object of type 'System.Int32'.")]
     public void ConvertToSubquery_NoStreamedSequenceInfo ()

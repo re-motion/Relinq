@@ -16,6 +16,7 @@
 // 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Collections;
@@ -37,16 +38,23 @@ namespace Remotion.Linq.Clauses.StreamedData
       ArgumentUtility.CheckNotNull ("dataType", dataType);
       ArgumentUtility.CheckNotNull ("itemExpression", itemExpression);
 
-      var resultItemType = ReflectionUtility.GetItemTypeOfIEnumerable (dataType, "dataType");
-      if (itemExpression.Type != resultItemType)
+      ResultItemType = ReflectionUtility.GetItemTypeOfIEnumerable (dataType, "dataType");
+      if (!ResultItemType.IsAssignableFrom (itemExpression.Type))
       {
-        var message = string.Format ("ItemExpression is of type {0} but should be {1}.", itemExpression.Type, resultItemType);
-        throw new ArgumentTypeException (message, "itemExpression", resultItemType, itemExpression.Type);
+        var message = string.Format ("ItemExpression is of type '{0}', but should be '{1}' (or derived from it).", itemExpression.Type, ResultItemType);
+        throw new ArgumentTypeException (message, "itemExpression", ResultItemType, itemExpression.Type);
       }
 
       DataType = dataType;
       ItemExpression = itemExpression;
     }
+
+    /// <summary>
+    /// Gets the type of the items returned by the sequence described by this object, as defined by <see cref="DataType"/>. Note that because 
+    /// <see cref="IEnumerable{T}"/> is covariant starting from .NET 4.0, this may be a more abstract type than what's returned by 
+    /// <see cref="ItemExpression"/>'s <see cref="Expression.Type"/> property.
+    /// </summary>
+    public Type ResultItemType { get; private set; }
 
     /// <summary>
     /// Gets an expression that describes the structure of the items held by the sequence described by this object.
@@ -79,14 +87,14 @@ namespace Remotion.Linq.Clauses.StreamedData
       {
         try
         {
-          dataType = dataType.MakeGenericType (ItemExpression.Type);
+          dataType = dataType.MakeGenericType (ResultItemType);
         }
         catch (ArgumentException ex)
         {
           var message = string.Format (
-              "The generic type definition '{0}' could not be closed over the type of the ItemExpression ('{1}'). {2}", 
+              "The generic type definition '{0}' could not be closed over the type of the ResultItemType ('{1}'). {2}", 
               dataType,
-              ItemExpression.Type, 
+              ResultItemType, 
               ex.Message);
           throw new ArgumentException (message, "dataType");
         }
@@ -101,7 +109,7 @@ namespace Remotion.Linq.Clauses.StreamedData
         var message = string.Format (
               "'{0}' cannot be used as the data type for a sequence with an ItemExpression of type '{1}'.",
               dataType,
-              ItemExpression.Type);
+              ResultItemType);
         throw new ArgumentException (message, "dataType");
       }
     }
@@ -125,7 +133,7 @@ namespace Remotion.Linq.Clauses.StreamedData
       if (genericMethodDefinition.GetGenericArguments ().Length != 1)
         throw new ArgumentException ("GenericMethodDefinition must have exactly one generic parameter.", "genericMethodDefinition");
 
-      return genericMethodDefinition.MakeGenericMethod (ItemExpression.Type);
+      return genericMethodDefinition.MakeGenericMethod (ResultItemType);
     }
 
     public IStreamedData ExecuteQueryModel (QueryModel queryModel, IQueryExecutor executor)
@@ -133,7 +141,7 @@ namespace Remotion.Linq.Clauses.StreamedData
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
       ArgumentUtility.CheckNotNull ("executor", executor);
 
-      var executeMethod = s_executeMethod.MakeGenericMethod (ItemExpression.Type);
+      var executeMethod = s_executeMethod.MakeGenericMethod (ResultItemType);
 
       // wrap executeMethod into a delegate instead of calling Invoke in order to allow for exceptions that are bubbled up correctly
       var func = (Func<QueryModel, IQueryExecutor, IEnumerable>)

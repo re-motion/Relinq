@@ -34,7 +34,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
     public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
     {
       var inputSequenceInfo = ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
-      return new StreamedSingleValueInfo (inputSequenceInfo.ItemExpression.Type, ReturnDefaultWhenEmpty);
+      return new StreamedSingleValueInfo (inputSequenceInfo.ResultItemType, ReturnDefaultWhenEmpty);
     }
   }
 }

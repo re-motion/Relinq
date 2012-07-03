@@ -104,7 +104,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
       var expectedItemType = GetExpectedItemType();
       CheckSequenceItemType (sequenceInfo, expectedItemType);
 
-      return new StreamedScalarValueInfo (sequenceInfo.ItemExpression.Type);
+      return new StreamedScalarValueInfo (Func.Body.Type);
     }
 
     public override void TransformExpressions (Func<Expression, Expression> transformation)

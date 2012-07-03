@@ -60,7 +60,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
     public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
     {
       var sequenceInfo = ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
-      return new StreamedScalarValueInfo (sequenceInfo.ItemExpression.Type);
+      return new StreamedScalarValueInfo (sequenceInfo.ResultItemType);
     }
 
     /// <inheritdoc />

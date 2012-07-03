@@ -74,6 +74,17 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
     }
 
     [Test]
+    public void GetOutputDataInfo_CovariantSequence ()
+    {
+      var studentExpression = Expression.Constant (0.0f);
+      var input = new StreamedSequenceInfo (typeof (object[]), studentExpression);
+      var result = _resultOperator.GetOutputDataInfo (input);
+
+      Assert.That (result, Is.InstanceOf (typeof (StreamedValueInfo)));
+      Assert.That (result.DataType, Is.SameAs (typeof (object)));
+    }
+
+    [Test]
     [ExpectedException (typeof (ArgumentTypeException))]
     public void GetOutputDataInfo_InvalidInput ()
     {
