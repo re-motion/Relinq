@@ -108,23 +108,5 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses
           _executeInMemoryInput,
           _resultOperator.ExecuteMethodWithNonMatchingArgumentType<object>);
     }
-
-    [Test]
-    public void CheckSequenceItemType_SameType ()
-    {
-      var sequenceInfo = new StreamedSequenceInfo (typeof (object[]), Expression.Constant ("test"));
-      
-      _resultOperator.CheckSequenceItemType (sequenceInfo, typeof (object));
-    }
-
-    [Test]
-    [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage = 
-        "The input sequence must have items of type 'System.String', but it has items of type 'System.Object'.\r\nParameter name: inputInfo")]
-    public void CheckSequenceItemType_WrongType ()
-    {
-      var sequenceInfo = new StreamedSequenceInfo (typeof (object[]), Expression.Constant ("test"));
-
-      _resultOperator.CheckSequenceItemType (sequenceInfo, typeof (string));
-    }
   }
 }

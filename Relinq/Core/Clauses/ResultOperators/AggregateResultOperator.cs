@@ -15,6 +15,7 @@
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Linq;
 using Remotion.Linq.Clauses.Expressions;
@@ -126,12 +127,25 @@ namespace Remotion.Linq.Clauses.ResultOperators
         return false;
 
       var genericArguments = funcType.GetGenericArguments ();
-      return genericArguments[0] == genericArguments[1];
+      return genericArguments[0].IsAssignableFrom (genericArguments[1]);
     }
 
     private Type GetExpectedItemType ()
     {
       return Func.Type.GetGenericArguments ()[0];
+    }
+
+    private void CheckSequenceItemType (StreamedSequenceInfo sequenceInfo, Type expectedItemType)
+    {
+      if (!expectedItemType.IsAssignableFrom (sequenceInfo.ResultItemType))
+      {
+        var message = string.Format (
+            "The input sequence must have items of type '{0}', but it has items of type '{1}'.",
+            expectedItemType,
+            sequenceInfo.ResultItemType);
+
+        throw new ArgumentTypeException (message, "inputInfo", typeof (IEnumerable<>).MakeGenericType (expectedItemType), sequenceInfo.ResultItemType);
+      }
     }
   }
 }

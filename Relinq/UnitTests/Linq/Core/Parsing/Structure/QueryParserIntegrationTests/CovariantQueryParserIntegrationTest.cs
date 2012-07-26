@@ -71,6 +71,30 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       Assert.That (queryOutputInfo.ResultItemType, Is.SameAs (typeof (Cook)));
       Assert.That (queryOutputInfo.DataType, Is.SameAs (typeof (IQueryable<Cook>)));
     }
+
+    [Test]
+    public void Aggregate_NoSeed_MoreGeneralFunc ()
+    {
+      var expression = ExpressionHelper.MakeExpression (
+          () => (from s in QuerySource
+                 select s.Name).Aggregate<IComparable> ((allNames, name) => allNames + name.ToString ()));
+
+      var queryModel = QueryParser.GetParsedQuery (expression);
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IComparable)));
+
+      CheckConstantQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
+
+      Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOf (typeof (AggregateResultOperator)));
+
+      var resultOperator = (AggregateResultOperator) queryModel.ResultOperators[0];
+
+      var expectedFunc = ExpressionHelper.ResolveLambdaParameter<IComparable, Cook, string> (
+          1,
+          queryModel.MainFromClause,
+          (allNames, cook) => allNames + cook.Name.ToString ());
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedFunc, resultOperator.Func);
+    }
   }
 }
 #endif

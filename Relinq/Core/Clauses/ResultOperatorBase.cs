@@ -156,26 +156,6 @@ namespace Remotion.Linq.Clauses
     }
 
     /// <summary>
-    /// Checks the type of the items retrieved by the sequence, throwing an <see cref="ArgumentTypeException"/> if the items don't match the
-    /// expected type.
-    /// </summary>
-    /// <param name="sequenceInfo">The <see cref="StreamedSequenceInfo"/> object describing the sequence.</param>
-    /// <param name="expectedItemType">The expected item type.</param>
-    /// <exception cref="ArgumentTypeException">The items don't match the expected type.</exception>
-    protected void CheckSequenceItemType (StreamedSequenceInfo sequenceInfo, Type expectedItemType)
-    {
-      if (sequenceInfo.ResultItemType != expectedItemType)
-      {
-        var message = string.Format (
-            "The input sequence must have items of type '{0}', but it has items of type '{1}'.",
-            expectedItemType,
-            sequenceInfo.ResultItemType);
-
-        throw new ArgumentTypeException (message, "inputInfo", typeof (IEnumerable<>).MakeGenericType (expectedItemType), sequenceInfo.ResultItemType);
-      }
-    }
-
-    /// <summary>
     /// Gets the constant value of the given expression, assuming it is a <see cref="ConstantExpression"/>. If it is
     /// not, an <see cref="InvalidOperationException"/> is thrown.
     /// </summary>

@@ -44,10 +44,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
       _querySource = ExpressionHelper.CreateMainFromClause_Int ();
       _sourceExpression = new QuerySourceReferenceExpression (_querySource);
 
-      var originalFunc = ExpressionHelper.CreateLambdaExpression<int, int, int> ((total, i) => total + i);
-      _func = Expression.Lambda (
-          ReplacingExpressionTreeVisitor.Replace (originalFunc.Parameters[1], _sourceExpression, originalFunc.Body), 
-          originalFunc.Parameters[0]);
+      _func = CreateFunc<int, int, int> ((total, i) => total + i);
       _resultOperator = new AggregateResultOperator (_func);
     }
 
@@ -55,6 +52,15 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
     public void Func ()
     {
       var func = Expression.Lambda (typeof (Func<int, int>), Expression.Constant (0), Expression.Parameter (typeof (int), "i"));
+      _resultOperator.Func = func;
+
+      Assert.That (_resultOperator.Func, Is.SameAs (func));
+    }
+
+    [Test]
+    public void Func_ResultTypeAssignableToParameterType ()
+    {
+      var func = Expression.Lambda (typeof (Func<IComparable, string>), Expression.Constant ("test"), Expression.Parameter (typeof (IComparable), "i"));
       _resultOperator.Func = func;
 
       Assert.That (_resultOperator.Func, Is.SameAs (func));
@@ -106,6 +112,20 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
 
       Assert.That (result, Is.InstanceOf (typeof (StreamedScalarValueInfo)));
       Assert.That (result.DataType, Is.SameAs (typeof (int)));
+    }
+
+    [Test]
+    public void GetOutputDataInfo_Covariant ()
+    {
+      var func = CreateFunc<IComparable, IComparable, string> ((i1, i2) => null);
+      var resultOperator = new AggregateResultOperator (func);
+
+      var itemExpression = Expression.Constant ("test");
+      var input = new StreamedSequenceInfo (typeof (string[]), itemExpression);
+      var result = resultOperator.GetOutputDataInfo (input);
+
+      Assert.That (result, Is.InstanceOf (typeof (StreamedScalarValueInfo)));
+      Assert.That (result.DataType, Is.SameAs (typeof (string)));
     }
 
     [Test]
@@ -165,6 +185,14 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
     {
       Assert.That (_resultOperator.ToString (), Is.EqualTo ("Aggregate(total => (total + [main]))"));
     }
+
+    private LambdaExpression CreateFunc<TA1, TA2, TR> (Expression<Func<TA1, TA2, TR>> originalFunc)
+    {
+      return Expression.Lambda (
+          ReplacingExpressionTreeVisitor.Replace (originalFunc.Parameters[1], _sourceExpression, originalFunc.Body),
+          originalFunc.Parameters[0]);
+    }
+
 
   }
 }
