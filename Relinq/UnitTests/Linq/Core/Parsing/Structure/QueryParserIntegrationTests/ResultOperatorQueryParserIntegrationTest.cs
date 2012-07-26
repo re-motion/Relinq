@@ -19,6 +19,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using NUnit.Framework;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Linq.UnitTests.Linq.Core.TestUtilities;
@@ -677,6 +678,26 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
 
       var expectedResultSelector = ExpressionHelper.CreateLambdaExpression<int, string> (totalIDs => totalIDs.ToString ());
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResultSelector, resultOperator.OptionalResultSelector);
+    }
+
+    [Test]
+    public void Aggregate_Seed_FuncParameterAssignableFromSeedValue ()
+    {
+      var expression = ExpressionHelper.MakeExpression (
+          () => (from s in QuerySource
+                 select s).Aggregate<Cook, IConvertible> ("12", (convertible, s) => convertible.ToInt32 (Thread.CurrentThread.CurrentCulture) + s.ID));
+
+      var queryModel = QueryParser.GetParsedQuery (expression);
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IConvertible)));
+
+      CheckConstantQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
+
+      Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOf (typeof (AggregateFromSeedResultOperator)));
+
+      var resultOperator = (AggregateFromSeedResultOperator) queryModel.ResultOperators[0];
+      Assert.That (resultOperator.Seed.Type, Is.SameAs (typeof (string)));
+      Assert.That (resultOperator.Func.Parameters[0].Type, Is.SameAs (typeof (IConvertible)));
     }
   }
 }
