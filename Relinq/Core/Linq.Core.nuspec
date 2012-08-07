@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-	<id>Remotion.Linq</id>
+    <id>Remotion.Linq</id>
     <version>$version$</version>
     <title>re-linq - re-motion Linq Library</title>
     <authors>Fabian Schmied et al,$author$</authors>
