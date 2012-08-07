@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+	<id>Remotion.Linq</id>
+    <version>$version$</version>
+    <title>re-linq - re-motion Linq Library</title>
+    <authors>Fabian Schmied et al,$author$</authors>
+    <owners>Fabian Schmied</owners>
+    <licenseUrl>http://relinq.codeplex.com/license</licenseUrl>
+    <projectUrl>http://relinq.codeplex.com</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>With re-linq, it's now easier than ever to create full-featured LINQ providers.</description>
+    <copyright>Copyright (c) rubicon IT GmbH, www.rubicon.eu</copyright>
+    <tags>re-motion linq expression trees</tags>
+  </metadata>
+</package>

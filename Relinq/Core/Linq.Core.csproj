@@ -273,6 +273,7 @@
     <Compile Include="Utilities\ReSharperAnnotations\InvokerParameterNameAttribute.cs" />
     <Compile Include="Utilities\SeparatedStringBuilder.cs" />
     <None Include="Doc\include\GettingStartedWithRelinq.aml" />
+    <None Include="Linq.Core.nuspec" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Doc\include\Remotion.Linq.NamespaceDoc.xml" />
