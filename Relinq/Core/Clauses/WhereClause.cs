@@ -50,7 +50,7 @@ namespace Remotion.Linq.Clauses
     /// <summary>
     /// Gets the predicate, the expression representing the where condition by which the data items are filtered
     /// </summary>
-    [DebuggerDisplay ("{Remotion.Data.Linq.Clauses.ExpressionTreeVisitors.FormattingExpressionTreeVisitor.Format (Predicate),nq}")]
+    [DebuggerDisplay ("{Remotion.Linq.Clauses.ExpressionTreeVisitors.FormattingExpressionTreeVisitor.Format (Predicate),nq}")]
     public Expression Predicate
     {
       get { return _predicate; }
