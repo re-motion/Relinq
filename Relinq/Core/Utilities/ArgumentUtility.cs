@@ -50,7 +50,7 @@ namespace Remotion.Linq.Utilities
   /// </remarks>
   public static class ArgumentUtility
   {
-    // Copied from Remotion.Data.Linq.Utilities.ArgumentUtility
+    // Copied from Remotion.Linq.Utilities.ArgumentUtility
     [AssertionMethod]
     public static T CheckNotNull<T> ([InvokerParameterName] string argumentName, [AssertionCondition (AssertionConditionType.IS_NOT_NULL)] T actualValue)
     {
@@ -62,7 +62,7 @@ namespace Remotion.Linq.Utilities
       return actualValue;
     }
 
-    // Copied from Remotion.Data.Linq.Utilities.ArgumentUtility
+    // Copied from Remotion.Linq.Utilities.ArgumentUtility
     [AssertionMethod]
     public static string CheckNotNullOrEmpty ([InvokerParameterName] string argumentName, [AssertionCondition (AssertionConditionType.IS_NOT_NULL)] string actualValue)
     {
@@ -77,7 +77,7 @@ namespace Remotion.Linq.Utilities
     /// <typeparam name="TExpected"> The type that <paramref name="actualValue"/> must have. </typeparam>
     /// <exception cref="ArgumentNullException">The <paramref name="actualValue"/> is a <see langword="null"/>.</exception>
     /// <exception cref="ArgumentTypeException">The <paramref name="actualValue"/> is an instance of another type.</exception>
-    // Copied from Remotion.Data.Linq.Utilities.ArgumentUtility
+    // Copied from Remotion.Linq.Utilities.ArgumentUtility
     [AssertionMethod]
     public static TExpected CheckNotNullAndType<TExpected> ([InvokerParameterName] string argumentName, [AssertionCondition (AssertionConditionType.IS_NOT_NULL)] object actualValue)
         // where TExpected: struct
@@ -92,7 +92,7 @@ namespace Remotion.Linq.Utilities
 
     /// <summary>Checks whether <paramref name="actualType"/> can be assigned to <paramref name="expectedType"/>.</summary>
     /// <exception cref="ArgumentTypeException">The <paramref name="actualType"/> cannot be assigned to <paramref name="expectedType"/>.</exception>
-    // Copied from Remotion.Data.Linq.Utilities.ArgumentUtility
+    // Copied from Remotion.Linq.Utilities.ArgumentUtility
     [AssertionMethod]
     public static Type CheckTypeIsAssignableFrom ([InvokerParameterName] string argumentName, Type actualType, [AssertionCondition (AssertionConditionType.IS_NOT_NULL)] Type expectedType)
     {
