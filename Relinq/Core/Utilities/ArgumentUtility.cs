@@ -16,7 +16,7 @@
 // 
 using System;
 using System.Collections;
-using Remotion.Linq.Utilities.ReSharperAnnotations;
+using JetBrains.Annotations;
 
 namespace Remotion.Linq.Utilities
 {
@@ -52,7 +52,7 @@ namespace Remotion.Linq.Utilities
   {
     // Copied from Remotion.Linq.Utilities.ArgumentUtility
     [AssertionMethod]
-    public static T CheckNotNull<T> ([InvokerParameterName] string argumentName, [AssertionCondition (AssertionConditionType.IS_NOT_NULL)] T actualValue)
+    public static T CheckNotNull<T> ([InvokerParameterName] string argumentName, [AssertionCondition (AssertionConditionType.IS_NOT_NULL)] [NoEnumeration] T actualValue)
     {
       // ReSharper disable CompareNonConstrainedGenericWithNull
       if (actualValue == null)
@@ -79,7 +79,7 @@ namespace Remotion.Linq.Utilities
     /// <exception cref="ArgumentTypeException">The <paramref name="actualValue"/> is an instance of another type.</exception>
     // Copied from Remotion.Linq.Utilities.ArgumentUtility
     [AssertionMethod]
-    public static TExpected CheckNotNullAndType<TExpected> ([InvokerParameterName] string argumentName, [AssertionCondition (AssertionConditionType.IS_NOT_NULL)] object actualValue)
+    public static TExpected CheckNotNullAndType<TExpected> ([InvokerParameterName] string argumentName, [AssertionCondition (AssertionConditionType.IS_NOT_NULL)] [NoEnumeration] object actualValue)
         // where TExpected: struct
     {
       if (actualValue == null)

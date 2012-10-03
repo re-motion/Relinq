@@ -16,7 +16,7 @@
 // 
 using System;
 
-namespace Remotion.Linq.Utilities.ReSharperAnnotations
+namespace JetBrains.Annotations
 {
   /// <summary>
   /// Indicates the condition parameter of the assertion method. 

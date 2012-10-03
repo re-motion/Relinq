@@ -271,6 +271,7 @@
     <Compile Include="Utilities\ReSharperAnnotations\AssertionConditionType.cs" />
     <Compile Include="Utilities\ReSharperAnnotations\AssertionMethodAttribute.cs" />
     <Compile Include="Utilities\ReSharperAnnotations\InvokerParameterNameAttribute.cs" />
+    <Compile Include="Utilities\ReSharperAnnotations\NoEnumerationAttribute.cs" />
     <Compile Include="Utilities\SeparatedStringBuilder.cs" />
     <None Include="Doc\include\GettingStartedWithRelinq.aml" />
     <None Include="Linq.Core.nuspec" />

@@ -16,7 +16,7 @@
 // 
 using System;
 using System.Runtime.Serialization;
-using Remotion.Linq.Utilities.ReSharperAnnotations;
+using JetBrains.Annotations;
 
 namespace Remotion.Linq.Utilities
 {
