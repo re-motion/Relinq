@@ -55,5 +55,32 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
 
       CheckResolvedExpression<Kitchen, Cook> (((ContainsResultOperator) subQuery.ResultOperators[0]).Item, queryModel.MainFromClause, k => k.Cook);
     }
+
+    [Test]
+    [Ignore ("TODO 4771")]
+    public void NullValue_InEvaluableSubExpression ()
+    {
+      string nullValue = null;
+      var query =  from c in QuerySource where nullValue != null && nullValue.Length > c.ID select c.Name;
+
+      var queryModel = QueryParser.GetParsedQuery (query.Expression);
+
+      var whereClause = (WhereClause) queryModel.BodyClauses[0];
+      Assert.That (whereClause.Predicate, Is.InstanceOf<BinaryExpression>().With.Property ("NodeType").EqualTo (ExpressionType.AndAlso));
+
+      var leftSide = ((BinaryExpression) whereClause.Predicate).Left;
+      var expectedLeftSide = ExpressionHelper.MakeExpression (() => false);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedLeftSide, leftSide);
+
+      var rightSide = ((BinaryExpression) whereClause.Predicate).Right;
+      Assert.That (rightSide, Is.InstanceOf<BinaryExpression>().With.Property ("NodeType").EqualTo (ExpressionType.GreaterThan));
+      CheckResolvedExpression<Cook, int> (((BinaryExpression) rightSide).Right, queryModel.MainFromClause, c => c.ID);
+      Assert.Fail ("TODO 4771");
+      // Assert.That (((BinaryExpression) rightSide).Left, Is.TypeOf<PartialEvaluationExceptionExpression>());
+      // var exceptionExpression = (PartialEvaluationExceptionExpression) ((BinaryExpression) rightSide).Left;
+      // Assert.That (exceptionExpression.Exception, Is.InstanceOf<NullReferenceException>());
+      // var expectedThrowingExpression = ExpressionHelper.MakeExpression (() => nullValue.Length);
+      // ExpressionTreeComparer.CheckAreEqualTrees (expectedThrowingExpression, exceptionExpression.ThrowingExpression);
+    }
   }
 }
