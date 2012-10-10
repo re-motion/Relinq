@@ -17,6 +17,7 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation;
 using Remotion.Linq.Utilities;
 
@@ -106,8 +107,18 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors
       else
       {
         Expression<Func<object>> lambdaWithoutParameters = Expression.Lambda<Func<object>> (Expression.Convert (subtree, typeof (object)));
+        var compiledLambda = lambdaWithoutParameters.Compile();
 
-        object value = lambdaWithoutParameters.Compile () ();
+        object value;
+        try
+        {
+          value = compiledLambda ();
+        }
+        catch (Exception ex)
+        {
+          return new PartialEvaluationExceptionExpression (ex, subtree);
+        }
+
         return Expression.Constant (value, subtree.Type);
       }
     }

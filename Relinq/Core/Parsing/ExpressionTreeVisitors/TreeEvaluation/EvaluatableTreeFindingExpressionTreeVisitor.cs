@@ -17,6 +17,7 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Utilities;
 
 namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation
@@ -38,7 +39,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation
   /// should usually be translated into the target query syntax.
   /// Non-standard expressions are not evaluatable because they cannot be compiled and evaluated by LINQ.
   /// </remarks>
-  public class EvaluatableTreeFindingExpressionTreeVisitor : ExpressionTreeVisitor
+  public class EvaluatableTreeFindingExpressionTreeVisitor : ExpressionTreeVisitor, IPartialEvaluationExceptionExpressionVisitor
   {
     public static PartialEvaluationInfo Analyze (Expression expressionTree)
     {
@@ -155,6 +156,13 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation
     private bool IsQueryableExpression (Expression expression)
     {
       return expression != null && typeof (IQueryable).IsAssignableFrom (expression.Type);
+    }
+
+    public Expression VisitPartialEvaluationExceptionExpression (PartialEvaluationExceptionExpression partialEvaluationExceptionExpression)
+    {
+      // PartialEvaluationExceptionExpression is not evaluable, and its children aren't either (so we don't visit them).
+      _isCurrentSubtreeEvaluatable = false;
+      return partialEvaluationExceptionExpression;
     }
   }
 }

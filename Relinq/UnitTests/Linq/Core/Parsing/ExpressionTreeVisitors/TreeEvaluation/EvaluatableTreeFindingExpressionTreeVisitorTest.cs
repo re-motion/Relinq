@@ -225,5 +225,17 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.TreeE
     }
 
 #endif
+
+    [Test]
+    public void PartialEvaluationExceptionExpression_NotEvaluable_AndChildrenNeither ()
+    {
+      var inner = Expression.Constant (0);
+      var partialEvaluationExceptionExpression = new PartialEvaluationExceptionExpression (new Exception(), inner);
+
+      var evaluationInfo = EvaluatableTreeFindingExpressionTreeVisitor.Analyze (partialEvaluationExceptionExpression);
+
+      Assert.That (evaluationInfo.IsEvaluatableExpression (partialEvaluationExceptionExpression), Is.False);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (inner), Is.False);
+    }
   }
 }

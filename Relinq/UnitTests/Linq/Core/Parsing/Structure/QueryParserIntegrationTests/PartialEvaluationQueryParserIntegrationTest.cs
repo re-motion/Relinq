@@ -57,7 +57,6 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
     }
 
     [Test]
-    [Ignore ("TODO 4771")]
     public void NullValue_InEvaluableSubExpression ()
     {
       string nullValue = null;
@@ -75,12 +74,11 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       var rightSide = ((BinaryExpression) whereClause.Predicate).Right;
       Assert.That (rightSide, Is.InstanceOf<BinaryExpression>().With.Property ("NodeType").EqualTo (ExpressionType.GreaterThan));
       CheckResolvedExpression<Cook, int> (((BinaryExpression) rightSide).Right, queryModel.MainFromClause, c => c.ID);
-      Assert.Fail ("TODO 4771");
-      // Assert.That (((BinaryExpression) rightSide).Left, Is.TypeOf<PartialEvaluationExceptionExpression>());
-      // var exceptionExpression = (PartialEvaluationExceptionExpression) ((BinaryExpression) rightSide).Left;
-      // Assert.That (exceptionExpression.Exception, Is.InstanceOf<NullReferenceException>());
-      // var expectedThrowingExpression = ExpressionHelper.MakeExpression (() => nullValue.Length);
-      // ExpressionTreeComparer.CheckAreEqualTrees (expectedThrowingExpression, exceptionExpression.ThrowingExpression);
+      Assert.That (((BinaryExpression) rightSide).Left, Is.TypeOf<PartialEvaluationExceptionExpression> ());
+      var exceptionExpression = (PartialEvaluationExceptionExpression) ((BinaryExpression) rightSide).Left;
+      Assert.That (exceptionExpression.Exception, Is.InstanceOf<NullReferenceException> ());
+      var expectedThrowingExpression = ExpressionHelper.MakeExpression (() => nullValue.Length);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedThrowingExpression, exceptionExpression.EvaluatedExpression);
     }
   }
 }

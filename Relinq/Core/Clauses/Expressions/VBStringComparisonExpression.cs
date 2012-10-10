@@ -22,10 +22,13 @@ using Remotion.Linq.Utilities;
 namespace Remotion.Linq.Clauses.Expressions
 {
   /// <summary>
-  /// Represents a VB-specific comparison expression. To explicitly support this expression type, implement <see cref="IVBSpecificExpressionVisitor"/>.
-  /// To treat this expression as if it were an ordinary <see cref="BinaryExpression"/>, call its <see cref="Reduce"/> method and visit the result.
+  /// Represents a VB-specific comparison expression.
   /// </summary>
   /// <remarks>
+  /// <para>
+  /// To explicitly support this expression type, implement <see cref="IVBSpecificExpressionVisitor"/>.
+  /// To treat this expression as if it were an ordinary <see cref="BinaryExpression"/>, call its <see cref="Reduce"/> method and visit the result.
+  /// </para>
   /// <para>
   /// Subclasses of <see cref="ThrowingExpressionTreeVisitor"/> that do not implement <see cref="IVBSpecificExpressionVisitor"/> will, by default, 
   /// automatically reduce this expression type to <see cref="BinaryExpression"/> in the 

@@ -20,7 +20,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
-using Remotion.Linq.UnitTests.Linq.Core.TestUtilities;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors;
 
@@ -54,7 +53,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
     {
       Expression treeRoot = Expression.Lambda (Expression.Constant (0), Expression.Parameter (typeof (string), "s"));
       Expression result = PartialEvaluatingExpressionTreeVisitor.EvaluateIndependentSubtrees (treeRoot);
-      Assert.AreSame (result, result);
+      Assert.That (result, Is.SameAs (result));
     }
 
     [Test]
@@ -91,7 +90,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
       LambdaExpression lambdaExpression = Expression.Lambda (outsideParameter);
 
       Expression result = PartialEvaluatingExpressionTreeVisitor.EvaluateIndependentSubtrees (lambdaExpression);
-      Assert.AreSame (lambdaExpression, result);
+      Assert.That (result, Is.SameAs (lambdaExpression));
     }
 
     [Test]
@@ -101,7 +100,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
       LambdaExpression lambdaExpression = Expression.Lambda (subQuery);
 
       Expression result = PartialEvaluatingExpressionTreeVisitor.EvaluateIndependentSubtrees (lambdaExpression);
-      Assert.AreSame (lambdaExpression, result);
+      Assert.That (result, Is.SameAs (lambdaExpression));
     }
 
     [Test]
@@ -183,6 +182,26 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
       var countMethodCallExpression = (MethodCallExpression) partiallyEvaluatedExpression;
 
       Assert.That (countMethodCallExpression.Method.Name, Is.EqualTo ("Count"));
+    }
+
+    [Test]
+    public void EvaluateExpression_WithException ()
+    {
+      // "p && null.Length > 0" becomes "p && Exception (NullReferenceException, null.Length > 0)"
+      var nullExpression = Expression.Constant (null, typeof (string));
+      var throwingExpression = Expression.Property (nullExpression, "Length");
+      var evaluatableOuterExpression = Expression.GreaterThan (throwingExpression, Expression.Constant (0));
+      var nonEvaluatableOutermostExpression = Expression.AndAlso (Expression.Parameter (typeof (bool), "p"), evaluatableOuterExpression);
+
+      Expression result = PartialEvaluatingExpressionTreeVisitor.EvaluateIndependentSubtrees (nonEvaluatableOutermostExpression);
+
+      Assert.That (result, Is.InstanceOf<BinaryExpression> ());
+      Assert.That (((BinaryExpression) result).Left, Is.SameAs (nonEvaluatableOutermostExpression.Left));
+      Assert.That (((BinaryExpression) result).Right, Is.TypeOf<PartialEvaluationExceptionExpression> ());
+      var exceptionExpression = (PartialEvaluationExceptionExpression) ((BinaryExpression) result).Right;
+      Assert.That (exceptionExpression.Type, Is.SameAs (typeof (bool)));
+      Assert.That (exceptionExpression.Exception, Is.InstanceOf<NullReferenceException> ());
+      Assert.That (exceptionExpression.EvaluatedExpression, Is.SameAs (evaluatableOuterExpression));
     }
 
     [Test]

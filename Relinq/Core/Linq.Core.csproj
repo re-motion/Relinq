@@ -76,6 +76,7 @@
     <Compile Include="Clauses\AdditionalFromClause.cs" />
     <Compile Include="Clauses\CloneContext.cs" />
     <Compile Include="Clauses\Expressions\ExtensionExpression.cs" />
+    <Compile Include="Clauses\Expressions\IPartialEvaluationExceptionExpressionVisitor.cs" />
     <Compile Include="Clauses\Expressions\IVBSpecificExpressionVisitor.cs" />
     <Compile Include="Clauses\Expressions\VBStringComparisonExpression.cs" />
     <Compile Include="Clauses\ExpressionTreeVisitors\ReverseResolvingExpressionTreeVisitor.cs" />
@@ -136,6 +137,7 @@
     <Compile Include="EagerFetching\Parsing\FetchExpressionNodeBase.cs" />
     <Compile Include="EagerFetching\Parsing\FetchOneExpressionNode.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\MultiReplacingExpressionTreeVisitor.cs" />
+    <Compile Include="Clauses\Expressions\PartialEvaluationExceptionExpression.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\ExpressionTransformation.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\ExpressionTransformerRegistry.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\IExpressionTranformationProvider.cs" />
