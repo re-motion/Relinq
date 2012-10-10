@@ -72,16 +72,27 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors
       // lambda expressions (even if you could), we want to analyze those later on.
       if (expression == null)
         return null;
-      else if (expression.NodeType != ExpressionType.Lambda && _partialEvaluationInfo.IsEvaluatableExpression (expression))
-      {
-        var evaluatedExpression = EvaluateSubtree (expression);
-        if (evaluatedExpression != expression)
-          return EvaluateIndependentSubtrees (evaluatedExpression);
-        else
-          return evaluatedExpression;
-      }
-      else
+
+      if (expression.NodeType == ExpressionType.Lambda || !_partialEvaluationInfo.IsEvaluatableExpression (expression))
         return base.VisitExpression (expression);
+
+      Expression evaluatedExpression;
+      try
+      {
+        evaluatedExpression = EvaluateSubtree (expression);
+      }
+      catch (Exception ex)
+      {
+        // Evaluation caused an exception. Skip evaluation of this expression and proceed as if it weren't evaluable.
+        var baseVisitedExpression = base.VisitExpression (expression);
+        // Then wrap the result to capture the exception for the back-end.
+        return new PartialEvaluationExceptionExpression (ex, baseVisitedExpression);
+      }
+
+      if (evaluatedExpression != expression)
+        return EvaluateIndependentSubtrees (evaluatedExpression);
+      
+      return evaluatedExpression;
     }
 
     /// <summary>
@@ -109,16 +120,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors
         Expression<Func<object>> lambdaWithoutParameters = Expression.Lambda<Func<object>> (Expression.Convert (subtree, typeof (object)));
         var compiledLambda = lambdaWithoutParameters.Compile();
 
-        object value;
-        try
-        {
-          value = compiledLambda ();
-        }
-        catch (Exception ex)
-        {
-          return new PartialEvaluationExceptionExpression (ex, subtree);
-        }
-
+        object value = compiledLambda ();
         return Expression.Constant (value, subtree.Type);
       }
     }

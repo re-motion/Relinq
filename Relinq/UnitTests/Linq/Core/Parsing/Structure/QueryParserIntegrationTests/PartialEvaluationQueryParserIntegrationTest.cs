@@ -57,28 +57,27 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
     }
 
     [Test]
-    public void NullValue_InEvaluableSubExpression ()
+    public void Exception_InEvaluableSubExpression ()
     {
       string nullValue = null;
-      var query =  from c in QuerySource where nullValue != null && nullValue.Length > c.ID select c.Name;
+      var query = from c in QuerySource where nullValue != null && c.ID > nullValue.Length select c.Name;
 
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
 
       var whereClause = (WhereClause) queryModel.BodyClauses[0];
-      Assert.That (whereClause.Predicate, Is.InstanceOf<BinaryExpression>().With.Property ("NodeType").EqualTo (ExpressionType.AndAlso));
 
-      var leftSide = ((BinaryExpression) whereClause.Predicate).Left;
-      var expectedLeftSide = ExpressionHelper.MakeExpression (() => false);
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedLeftSide, leftSide);
-
-      var rightSide = ((BinaryExpression) whereClause.Predicate).Right;
-      Assert.That (rightSide, Is.InstanceOf<BinaryExpression>().With.Property ("NodeType").EqualTo (ExpressionType.GreaterThan));
-      CheckResolvedExpression<Cook, int> (((BinaryExpression) rightSide).Right, queryModel.MainFromClause, c => c.ID);
-      Assert.That (((BinaryExpression) rightSide).Left, Is.TypeOf<PartialEvaluationExceptionExpression> ());
-      var exceptionExpression = (PartialEvaluationExceptionExpression) ((BinaryExpression) rightSide).Left;
-      Assert.That (exceptionExpression.Exception, Is.InstanceOf<NullReferenceException> ());
-      var expectedThrowingExpression = ExpressionHelper.MakeExpression (() => nullValue.Length);
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedThrowingExpression, exceptionExpression.EvaluatedExpression);
+      // Expected: false && c.ID > Exception (nullValue.Length)
+      Assert.That (whereClause.Predicate, Is.TypeOf<BinaryExpression>().With.Property ("NodeType").EqualTo (ExpressionType.AndAlso));
+      var outerBinary = ((BinaryExpression) whereClause.Predicate);
+      CheckResolvedExpression<Cook, bool> (outerBinary.Left, queryModel.MainFromClause, c => false);
+      Assert.That (outerBinary.Right, Is.TypeOf<BinaryExpression> ().With.Property ("NodeType").EqualTo (ExpressionType.GreaterThan));
+      var innerBinary = (BinaryExpression) outerBinary.Right;
+      CheckResolvedExpression<Cook, int> (innerBinary.Left, queryModel.MainFromClause, c => c.ID);
+      Assert.That (
+          innerBinary.Right, 
+          Is.TypeOf<PartialEvaluationExceptionExpression>().With.Property ("Exception").InstanceOf<NullReferenceException>());
+      CheckResolvedExpression<Cook, int> (
+          ((PartialEvaluationExceptionExpression) innerBinary.Right).EvaluatedExpression, queryModel.MainFromClause, c => ((string) null).Length);
     }
   }
 }

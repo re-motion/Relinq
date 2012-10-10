@@ -185,23 +185,38 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
     }
 
     [Test]
-    public void EvaluateExpression_WithException ()
+    public void EvaluateExpression_WithException_BacksOut_AndEvaluatesAsMuchAsPossible ()
     {
-      // "p && null.Length > 0" becomes "p && Exception (NullReferenceException, null.Length > 0)"
-      var nullExpression = Expression.Constant (null, typeof (string));
+      // "p && <nullVariableHolder.Item1>.Length > (0 + 3)" becomes "p && Exception (NullReferenceException, Exception (NullReferenceException, null.Length) > 3)"
+      var nullVariableHolder = Tuple.Create ((string) null, (string) null);
+      var nullExpression = Expression.Property (Expression.Constant (nullVariableHolder), "Item1");
       var throwingExpression = Expression.Property (nullExpression, "Length");
-      var evaluatableOuterExpression = Expression.GreaterThan (throwingExpression, Expression.Constant (0));
+      var evaluatableOuterExpression = Expression.GreaterThan (throwingExpression, Expression.Add (Expression.Constant (0), Expression.Constant (3)));
       var nonEvaluatableOutermostExpression = Expression.AndAlso (Expression.Parameter (typeof (bool), "p"), evaluatableOuterExpression);
 
-      Expression result = PartialEvaluatingExpressionTreeVisitor.EvaluateIndependentSubtrees (nonEvaluatableOutermostExpression);
+      var result = PartialEvaluatingExpressionTreeVisitor.EvaluateIndependentSubtrees (nonEvaluatableOutermostExpression);
 
+      // p && Exception (...)
       Assert.That (result, Is.InstanceOf<BinaryExpression> ());
       Assert.That (((BinaryExpression) result).Left, Is.SameAs (nonEvaluatableOutermostExpression.Left));
       Assert.That (((BinaryExpression) result).Right, Is.TypeOf<PartialEvaluationExceptionExpression> ());
-      var exceptionExpression = (PartialEvaluationExceptionExpression) ((BinaryExpression) result).Right;
-      Assert.That (exceptionExpression.Type, Is.SameAs (typeof (bool)));
-      Assert.That (exceptionExpression.Exception, Is.InstanceOf<NullReferenceException> ());
-      Assert.That (exceptionExpression.EvaluatedExpression, Is.SameAs (evaluatableOuterExpression));
+
+      // Exception (NullReferenceException, Exception (...) > 3)
+      var exceptionExpression1 = (PartialEvaluationExceptionExpression) ((BinaryExpression) result).Right;
+      Assert.That (exceptionExpression1.Exception, Is.InstanceOf<NullReferenceException>());
+      var evaluatedExpression1 = exceptionExpression1.EvaluatedExpression;
+
+      Assert.That (evaluatedExpression1, Is.TypeOf<BinaryExpression> ());
+      Assert.That (((BinaryExpression) evaluatedExpression1).Left, Is.TypeOf<PartialEvaluationExceptionExpression>());
+      Assert.That (((BinaryExpression) evaluatedExpression1).Right, Is.InstanceOf<ConstantExpression> ().With.Property ("Value").EqualTo (3));
+
+      // Exception (NullReferenceException, null.Length)
+      var exceptionExpression2 = (PartialEvaluationExceptionExpression) ((BinaryExpression) evaluatedExpression1).Left;
+      Assert.That (exceptionExpression2.Exception, Is.InstanceOf<NullReferenceException> ());
+      Assert.That (exceptionExpression2.EvaluatedExpression, Is.InstanceOf<MemberExpression> ());
+      var memberExpression = ((MemberExpression) exceptionExpression2.EvaluatedExpression);
+      Assert.That (memberExpression.Expression, Is.InstanceOf<ConstantExpression>().With.Property ("Value").EqualTo (null));
+      Assert.That (memberExpression.Member, Is.EqualTo (typeof (string).GetProperty ("Length")));
     }
 
     [Test]
