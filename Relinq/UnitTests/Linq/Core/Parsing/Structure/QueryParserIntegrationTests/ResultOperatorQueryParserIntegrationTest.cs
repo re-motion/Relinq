@@ -555,6 +555,38 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
     }
 
     [Test]
+    [Ignore ("TODO 3753")]
+    public void Contains_IDictionary_IsNotTranslatedAsAContainsResultOperator ()
+    {
+      IDictionary dictionary = new Dictionary<string, int> ();
+      var query = from c in QuerySource
+                  where dictionary.Contains (c.Name)
+                  select c;
+
+      var queryModel = QueryParser.GetParsedQuery (query.Expression);
+
+      var whereClause = (WhereClause) queryModel.BodyClauses.Single();
+      Assert.That (whereClause.Predicate, Is.Not.InstanceOf<SubQueryExpression>());
+      CheckResolvedExpression<Cook, bool> (whereClause.Predicate, queryModel.MainFromClause, c => dictionary.Contains (c.Name));
+    }
+
+    [Test]
+    [Ignore ("TODO 3753")]
+    public void Contains_IDictionary_Implementation_IsNotTranslatedAsAContainsResultOperator ()
+    {
+      var dictionary = new Hashtable();
+      var query = from c in QuerySource
+                  where dictionary.Contains (c.Name)
+                  select c;
+
+      var queryModel = QueryParser.GetParsedQuery (query.Expression);
+
+      var whereClause = (WhereClause) queryModel.BodyClauses.Single ();
+      Assert.That (whereClause.Predicate, Is.Not.InstanceOf<SubQueryExpression> ());
+      CheckResolvedExpression<Cook, bool> (whereClause.Predicate, queryModel.MainFromClause, c => dictionary.Contains (c.Name));
+    }
+
+    [Test]
     public void All ()
     {
       var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
