@@ -555,7 +555,6 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
     }
 
     [Test]
-    [Ignore ("TODO 3753")]
     public void Contains_IDictionary_IsNotTranslatedAsAContainsResultOperator ()
     {
       IDictionary dictionary = new Dictionary<string, int> ();
@@ -566,12 +565,11 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
 
       var whereClause = (WhereClause) queryModel.BodyClauses.Single();
-      Assert.That (whereClause.Predicate, Is.Not.InstanceOf<SubQueryExpression>());
-      CheckResolvedExpression<Cook, bool> (whereClause.Predicate, queryModel.MainFromClause, c => dictionary.Contains (c.Name));
+      Assert.That (whereClause.Predicate, Is.Not.InstanceOf<SubQueryExpression> ());
+      Assert.That (whereClause.Predicate, Is.InstanceOf<MethodCallExpression> ());
     }
 
     [Test]
-    [Ignore ("TODO 3753")]
     public void Contains_IDictionary_Implementation_IsNotTranslatedAsAContainsResultOperator ()
     {
       var dictionary = new Hashtable();
@@ -583,7 +581,25 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
 
       var whereClause = (WhereClause) queryModel.BodyClauses.Single ();
       Assert.That (whereClause.Predicate, Is.Not.InstanceOf<SubQueryExpression> ());
-      CheckResolvedExpression<Cook, bool> (whereClause.Predicate, queryModel.MainFromClause, c => dictionary.Contains (c.Name));
+      Assert.That (whereClause.Predicate, Is.InstanceOf<MethodCallExpression> ());
+    }
+
+    [Test]
+    public void Contains_Enumerable_OnDictionary_IsTranslatedAsAContainsResultOperator ()
+    {
+      var dictionary = new Dictionary<string, int>();
+      var query = from c in QuerySource
+                  where dictionary.Contains (new KeyValuePair<string, int> (c.Name, c.ID))
+                  select c;
+
+      var queryModel = QueryParser.GetParsedQuery (query.Expression);
+
+      var whereClause = (WhereClause) queryModel.BodyClauses.Single ();
+      Assert.That (whereClause.Predicate, Is.InstanceOf<SubQueryExpression> ());
+
+      var subQueryModel = ((SubQueryExpression) whereClause.Predicate).QueryModel;
+      Assert.That (subQueryModel.ResultOperators, Has.Count.EqualTo (1));
+      Assert.That (subQueryModel.ResultOperators.Single(), Is.TypeOf<ContainsResultOperator>());
     }
 
     [Test]

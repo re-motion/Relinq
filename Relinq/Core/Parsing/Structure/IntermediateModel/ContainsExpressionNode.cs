@@ -36,14 +36,18 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
     public static readonly MethodInfo[] SupportedMethods = new[]
         {
           GetSupportedMethod (() => Queryable.Contains<object> (null, null)),
-          GetSupportedMethod (() => Enumerable.Contains<object>(null, null)),
+          GetSupportedMethod (() => Enumerable.Contains<object>(null, null))
         };
 
     public static readonly NameBasedRegistrationInfo[] SupportedMethodNames = new[]
         {
+          // Note: We only detect supported/unsupported types heuristically - real interface implementation checks (via GetInterfaceMap) would be
+          // too costly.
           new NameBasedRegistrationInfo (
               "Contains",
-              mi => mi.DeclaringType != typeof (string) && typeof (IEnumerable).IsAssignableFrom (mi.DeclaringType)
+              mi => mi.DeclaringType != typeof (string) 
+                  && typeof (IEnumerable).IsAssignableFrom (mi.DeclaringType)
+                  && !typeof (IDictionary).IsAssignableFrom (mi.DeclaringType)
                   && (mi.IsStatic && mi.GetParameters().Length == 2 || !mi.IsStatic && mi.GetParameters().Length == 1))
         };
 

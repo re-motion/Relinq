@@ -53,6 +53,8 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
           () => ((List<int>) null).Contains (3));
 
       AssertNotSupportedMethods_ByName (ContainsExpressionNode.SupportedMethodNames, () => ((string) null).Contains ("x"));
+      AssertNotSupportedMethods_ByName (ContainsExpressionNode.SupportedMethodNames, () => ((IDictionary) null).Contains ("x"));
+      AssertNotSupportedMethods_ByName (ContainsExpressionNode.SupportedMethodNames, () => ((Hashtable) null).Contains ("x"));
     }
 
     [Test]
