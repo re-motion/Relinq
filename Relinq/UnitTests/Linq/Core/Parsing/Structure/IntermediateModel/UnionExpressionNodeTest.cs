@@ -20,7 +20,6 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
-using Rhino.Mocks;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
 {
@@ -34,7 +33,8 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
     {
       base.SetUp ();
       _source2 = Expression.Constant (new[] { "test1", "test2" });
-      _node = new UnionExpressionNode (CreateParseInfo (), _source2);
+      _node = new UnionExpressionNode (
+          CreateParseInfo (SourceNode, "u", UnionExpressionNode.SupportedMethods[0].MakeGenericMethod (typeof (int))), _source2);
     }
 
     [Test]
@@ -44,19 +44,23 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void Resolve_PassesExpressionToSource ()
+    public void Initialization ()
     {
-      var sourceMock = MockRepository.GenerateMock<IExpressionNode> ();
-      var node = new UnionExpressionNode (CreateParseInfo (sourceMock), _source2);
-      var expression = ExpressionHelper.CreateLambdaExpression ();
-      var parameter = ExpressionHelper.CreateParameterExpression ();
-      var expectedResult = ExpressionHelper.CreateExpression ();
-      sourceMock.Expect (mock => mock.Resolve (parameter, expression, ClauseGenerationContext)).Return (expectedResult);
+      Assert.That (_node.ItemType, Is.SameAs (typeof (int)));
+    }
 
-      var result = node.Resolve (parameter, expression, ClauseGenerationContext);
+    [Test]
+    public void Resolve ()
+    {
+      var querySource = ExpressionHelper.CreateUnionResultOperator ();
+      ClauseGenerationContext.AddContextInfo (_node, querySource);
 
-      sourceMock.VerifyAllExpectations ();
-      Assert.That (result, Is.SameAs (expectedResult));
+      var lambdaExpression = ExpressionHelper.CreateLambdaExpression<int, string> (u => u.ToString());
+
+      var result = _node.Resolve (lambdaExpression.Parameters[0], lambdaExpression.Body, ClauseGenerationContext);
+
+      var expectedResult = ExpressionHelper.Resolve<int, string> (querySource, u => u.ToString());
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
 
     [Test]
@@ -65,7 +69,18 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
       var result = _node.Apply (QueryModel, ClauseGenerationContext);
       Assert.That (result, Is.SameAs (QueryModel));
 
+      Assert.That (((UnionResultOperator) QueryModel.ResultOperators[0]).ItemName, Is.EqualTo ("u"));
+      Assert.That (((UnionResultOperator) QueryModel.ResultOperators[0]).ItemType, Is.SameAs (typeof (int)));
       Assert.That (((UnionResultOperator) QueryModel.ResultOperators[0]).Source2, Is.SameAs (_source2));
+    }
+
+    [Test]
+    public void Apply_AddsMapping ()
+    {
+      _node.Apply (QueryModel, ClauseGenerationContext);
+
+      var resultOperator = (UnionResultOperator) QueryModel.ResultOperators[0];
+      Assert.That (ClauseGenerationContext.GetContextInfo (_node), Is.SameAs (resultOperator));
     }
   }
 }

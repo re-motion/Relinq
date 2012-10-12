@@ -117,8 +117,8 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
     [Test]
     public void GetOutputDataInfo ()
     {
-      var studentExpression = Expression.Constant (0);
-      var input = new StreamedSequenceInfo (typeof (int[]), studentExpression);
+      var intExpression = Expression.Constant (0);
+      var input = new StreamedSequenceInfo (typeof (int[]), intExpression);
       var result = _resultOperator.GetOutputDataInfo (input);
 
       Assert.That (result, Is.InstanceOf (typeof (StreamedSequenceInfo)));

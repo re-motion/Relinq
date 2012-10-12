@@ -53,6 +53,11 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
       return base.InvokeGenericExecuteMethod (input, genericMethodCaller);
     }
 
+    public new void CheckSequenceItemType (StreamedSequenceInfo sequenceInfo, Type expectedItemType)
+    {
+      base.CheckSequenceItemType (sequenceInfo, expectedItemType);
+    }
+
     public StreamedSequence DistinctExecuteMethod<T> (StreamedSequence input)
     {
       var currentSequence = input.GetTypedSequence<T>();

@@ -21,6 +21,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using NUnit.Framework;
+using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Linq.UnitTests.Linq.Core.TestUtilities;
 using Remotion.Linq.Clauses;
@@ -323,8 +324,8 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
     public void Except ()
     {
       IEnumerable<Cook> students = new[] { new Cook() };
-      var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
-                                                               select s).Except (students));
+      var expression = ExpressionHelper.MakeExpression (() => (from c in QuerySource
+                                                               select c).Except (students));
       
       var queryModel = QueryParser.GetParsedQuery (expression);
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Cook>)));
@@ -333,18 +334,44 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
 
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
       Assert.That (queryModel.ResultOperators[0], Is.InstanceOf (typeof (ExceptResultOperator)));
-      Assert.That (((ExceptResultOperator) queryModel.ResultOperators[0]).GetConstantSource2(), Is.SameAs (students));
+      var exceptResultOperator = ((ExceptResultOperator) queryModel.ResultOperators[0]);
+      Assert.That (exceptResultOperator.GetConstantSource2(), Is.SameAs (students));
       
       var selectClause = queryModel.SelectClause;
       Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedQuerySource, Is.SameAs (mainFromClause));
+
+      var outputDataInfo = (StreamedSequenceInfo) queryModel.GetOutputDataInfo ();
+      Assert.That (outputDataInfo.DataType, Is.SameAs (typeof (IQueryable<Cook>)));
+      CheckResolvedExpression<Cook, Cook> (outputDataInfo.ItemExpression, mainFromClause, c => c);
+    }
+
+    [Test]
+    public void Except_FollowedByAll ()
+    {
+      IEnumerable<Cook> cooks = new[] { new Cook () };
+      var expression = ExpressionHelper.MakeExpression (() => (from c in QuerySource
+                                                               select c)
+                                                               .Except (cooks)
+                                                               .All (c => c.IsFullTimeCook));
+
+
+      var queryModel = QueryParser.GetParsedQuery (expression);
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (bool)));
+
+      Assert.That (queryModel.ResultOperators, Has.Count.EqualTo (2));
+      Assert.That (queryModel.ResultOperators[0], Is.TypeOf<ExceptResultOperator> ());
+      Assert.That (queryModel.ResultOperators[1], Is.TypeOf<AllResultOperator> ());
+
+      var allResultOperator = (AllResultOperator) queryModel.ResultOperators[1];
+      CheckResolvedExpression<Cook, bool> (allResultOperator.Predicate, queryModel.MainFromClause, c => c.IsFullTimeCook);
     }
 
     [Test]
     public void Intersect ()
     {
       IEnumerable<Cook> students = new[] { new Cook () };
-      var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
-                                                               select s).Intersect (students));
+      var expression = ExpressionHelper.MakeExpression (() => (from c in QuerySource
+                                                               select c).Intersect (students));
 
       var queryModel = QueryParser.GetParsedQuery (expression);
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Cook>)));
@@ -353,10 +380,36 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
 
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
       Assert.That (queryModel.ResultOperators[0], Is.InstanceOf (typeof (IntersectResultOperator)));
-      Assert.That (((IntersectResultOperator) queryModel.ResultOperators[0]).GetConstantSource2 (), Is.SameAs (students));
+      var intersectResultOperator = ((IntersectResultOperator) queryModel.ResultOperators[0]);
+      Assert.That (intersectResultOperator.GetConstantSource2 (), Is.SameAs (students));
       
       var selectClause = queryModel.SelectClause;
       Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedQuerySource, Is.SameAs (mainFromClause));
+
+      var outputDataInfo = (StreamedSequenceInfo) queryModel.GetOutputDataInfo ();
+      Assert.That (outputDataInfo.DataType, Is.SameAs (typeof (IQueryable<Cook>)));
+      CheckResolvedExpression<Cook, Cook> (outputDataInfo.ItemExpression, mainFromClause, c => c);
+    }
+
+    [Test]
+    public void Intersect_FollowedByAll ()
+    {
+      IEnumerable<Cook> cooks = new[] { new Cook () };
+      var expression = ExpressionHelper.MakeExpression (() => (from c in QuerySource
+                                                               select c)
+                                                               .Intersect (cooks)
+                                                               .All (c => c.IsFullTimeCook));
+
+
+      var queryModel = QueryParser.GetParsedQuery (expression);
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (bool)));
+
+      Assert.That (queryModel.ResultOperators, Has.Count.EqualTo (2));
+      Assert.That (queryModel.ResultOperators[0], Is.TypeOf<IntersectResultOperator> ());
+      Assert.That (queryModel.ResultOperators[1], Is.TypeOf<AllResultOperator> ());
+
+      var allResultOperator = (AllResultOperator) queryModel.ResultOperators[1];
+      CheckResolvedExpression<Cook, bool> (allResultOperator.Predicate, queryModel.MainFromClause, c => c.IsFullTimeCook);
     }
 
     [Test]
@@ -366,18 +419,43 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
                                                                select s).Union (students));
 
-
       var queryModel = QueryParser.GetParsedQuery (expression);
-      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Cook>)));
-
       var mainFromClause = queryModel.MainFromClause;
+
+      var selectClause = queryModel.SelectClause;
+      Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedQuerySource, Is.SameAs (mainFromClause));
 
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
       Assert.That (queryModel.ResultOperators[0], Is.InstanceOf (typeof (UnionResultOperator)));
-      Assert.That (((UnionResultOperator) queryModel.ResultOperators[0]).GetConstantSource2 (), Is.SameAs (students));
+      var unionResultOperator = ((UnionResultOperator) queryModel.ResultOperators[0]);
+      Assert.That (unionResultOperator.GetConstantSource2 (), Is.SameAs (students));
       
-      var selectClause = queryModel.SelectClause;
-      Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedQuerySource, Is.SameAs (mainFromClause));
+      var outputDataInfo = (StreamedSequenceInfo) queryModel.GetOutputDataInfo();
+      Assert.That (outputDataInfo.DataType, Is.SameAs (typeof (IQueryable<Cook>)));
+      CheckResolvedExpression<Cook, Cook> (outputDataInfo.ItemExpression, unionResultOperator, c => c);
+    }
+
+    [Test]
+    public void Union_FollowedByAll ()
+    {
+      IEnumerable<Cook> cooks = new[] { new Cook () };
+      var expression = ExpressionHelper.MakeExpression (() => (from c in QuerySource
+                                                               select c)
+                                                               .Union (cooks)
+                                                               .All (c => c.IsFullTimeCook));
+
+
+      var queryModel = QueryParser.GetParsedQuery (expression);
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (bool)));
+
+      Assert.That (queryModel.ResultOperators, Has.Count.EqualTo (2));
+      Assert.That (queryModel.ResultOperators[0], Is.TypeOf<UnionResultOperator> ());
+      Assert.That (queryModel.ResultOperators[1], Is.TypeOf<AllResultOperator> ());
+
+      var unionResultOperator = (UnionResultOperator) queryModel.ResultOperators[0];
+      var allResultOperator = (AllResultOperator) queryModel.ResultOperators[1];
+
+      CheckResolvedExpression<Cook, bool> (allResultOperator.Predicate, unionResultOperator, c => c.IsFullTimeCook);
     }
 
     [Test]

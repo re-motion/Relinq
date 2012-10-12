@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Linq.Clauses.ExpressionTreeVisitors;
+using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Linq.Utilities;
 
@@ -36,14 +37,34 @@ namespace Remotion.Linq.Clauses.ResultOperators
   ///              select s).Union(students2);
   /// </code>
   /// </example>
-  public class UnionResultOperator : SequenceTypePreservingResultOperatorBase
+  public class UnionResultOperator : SequenceFromSequenceResultOperatorBase, IQuerySource
   {
+    private string _itemName;
+    private Type _itemType;
+
     private Expression _source2;
-    
-    public UnionResultOperator (Expression source2)
+
+    public UnionResultOperator (string itemName, Type itemType, Expression source2)
     {
+      ArgumentUtility.CheckNotNullOrEmpty ("itemName", itemName);
+      ArgumentUtility.CheckNotNull ("itemType", itemType);
       ArgumentUtility.CheckNotNull ("source2", source2);
+      
+      ItemName = itemName;
+      ItemType = itemType;
       Source2 = source2;
+    }
+
+    public string ItemName
+    {
+      get { return _itemName; }
+      set { _itemName = ArgumentUtility.CheckNotNullOrEmpty ("value", value); }
+    }
+
+    public Type ItemType
+    {
+      get { return _itemType; }
+      set { _itemType = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
     /// <summary>
@@ -52,13 +73,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
     public Expression Source2
     {
       get { return _source2; }
-      set 
-      {
-        ArgumentUtility.CheckNotNull ("value", value);
-        ReflectionUtility.GetItemTypeOfIEnumerable (value.Type, "value"); // check that Source2 really is an IEnumerable<T>
-
-        _source2 = value; 
-      }
+      set  { _source2 = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
     /// <summary>
@@ -73,7 +88,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
-      return new UnionResultOperator (Source2);
+      return new UnionResultOperator (_itemName, _itemType, _source2);
     }
 
     public override StreamedSequence ExecuteInMemory<T> (StreamedSequence input)
@@ -81,6 +96,13 @@ namespace Remotion.Linq.Clauses.ResultOperators
       var sequence = input.GetTypedSequence<T> ();
       var result = sequence.Union ((IEnumerable<T>) GetConstantSource2 ());
       return new StreamedSequence (result.AsQueryable (), (StreamedSequenceInfo) GetOutputDataInfo (input.DataInfo));
+    }
+
+    public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
+    {
+      var sequenceInfo = ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
+      CheckSequenceItemType (sequenceInfo, _itemType);
+      return new StreamedSequenceInfo (typeof (IQueryable<>).MakeGenericType (_itemType), new QuerySourceReferenceExpression (this));
     }
 
     public override void TransformExpressions (Func<Expression, Expression> transformation)
@@ -93,6 +115,5 @@ namespace Remotion.Linq.Clauses.ResultOperators
     {
       return "Union(" + FormattingExpressionTreeVisitor.Format (Source2) + ")";
     }
-    
   }
 }

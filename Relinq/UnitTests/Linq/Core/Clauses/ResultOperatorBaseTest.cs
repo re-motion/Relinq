@@ -108,5 +108,47 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses
           _executeInMemoryInput,
           _resultOperator.ExecuteMethodWithNonMatchingArgumentType<object>);
     }
+
+    [Test]
+    public void CheckSequenceItemType_SameType ()
+    {
+      var sequenceInfo = new StreamedSequenceInfo (typeof (int[]), Expression.Constant (0));
+      var expectedItemType = typeof (int);
+
+      Assert.That (() => _resultOperator.CheckSequenceItemType (sequenceInfo, expectedItemType), Throws.Nothing);
+    }
+
+    [Test]
+    public void CheckSequenceItemType_ExpectedAssignableFromSequenceItem ()
+    {
+      var sequenceInfo = new StreamedSequenceInfo (typeof (string[]), Expression.Constant ("t"));
+      var expectedItemType = typeof (object);
+
+      Assert.That (() => _resultOperator.CheckSequenceItemType (sequenceInfo, expectedItemType), Throws.Nothing);
+    }
+
+    [Test]
+    public void CheckSequenceItemType_SequenceItemAssignableFromExpected ()
+    {
+      var sequenceInfo = new StreamedSequenceInfo (typeof (object[]), Expression.Constant (null, typeof (object)));
+      var expectedItemType = typeof (string);
+
+      Assert.That (
+          () => _resultOperator.CheckSequenceItemType (sequenceInfo, expectedItemType), 
+          Throws.TypeOf<ArgumentTypeException>().With.Message.EqualTo (
+              "The input sequence must have items of type 'System.String', but it has items of type 'System.Object'.\r\nParameter name: inputInfo"));
+    }
+
+    [Test]
+    public void CheckSequenceItemType_DifferentTypes ()
+    {
+      var sequenceInfo = new StreamedSequenceInfo (typeof (string[]), Expression.Constant ("t"));
+      var expectedItemType = typeof (int);
+
+      Assert.That (
+          () => _resultOperator.CheckSequenceItemType (sequenceInfo, expectedItemType),
+          Throws.TypeOf<ArgumentTypeException> ().With.Message.EqualTo (
+              "The input sequence must have items of type 'System.Int32', but it has items of type 'System.String'.\r\nParameter name: inputInfo"));
+    }
   }
 }

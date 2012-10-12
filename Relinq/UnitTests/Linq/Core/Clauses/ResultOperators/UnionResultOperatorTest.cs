@@ -20,8 +20,11 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Linq.Clauses;
+using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
+using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
+using Remotion.Linq.Utilities;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
 {
@@ -35,7 +38,15 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
     public void SetUp ()
     {
       _source2 = Expression.Constant (new[] { 2 });
-      _resultOperator = new UnionResultOperator (_source2);
+      _resultOperator = new UnionResultOperator ("itemName", typeof (int), _source2);
+    }
+
+    [Test]
+    public void Initialization ()
+    {
+      Assert.That (_resultOperator.ItemName, Is.EqualTo ("itemName"));
+      Assert.That (_resultOperator.Source2, Is.EqualTo (_source2));
+      Assert.That (_resultOperator.ItemType, Is.EqualTo (typeof (int)));
     }
 
     [Test]
@@ -48,7 +59,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
     [ExpectedException (typeof (InvalidOperationException))]
     public void GetConstantSource2_NoConstantExpression ()
     {
-      var resultOperator = new UnionResultOperator (Expression.Parameter (typeof (IEnumerable<string>), "ss"));
+      var resultOperator = new UnionResultOperator ("i", typeof (string), Expression.Parameter (typeof (IEnumerable<string>), "ss"));
       resultOperator.GetConstantSource2 ();
     }
 
@@ -60,7 +71,9 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
       var clone = _resultOperator.Clone (cloneContext);
 
       Assert.That (clone, Is.InstanceOf (typeof (UnionResultOperator)));
+      Assert.That (((UnionResultOperator) clone).ItemName, Is.EqualTo ("itemName"));
       Assert.That (((UnionResultOperator) clone).Source2, Is.SameAs (_source2));
+      Assert.That (((UnionResultOperator) clone).ItemType, Is.SameAs (typeof (int)));
     }
 
     [Test]
@@ -74,11 +87,57 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
     }
 
     [Test]
+    public void GetOutputDataInfo ()
+    {
+      var intExpression = Expression.Constant (0);
+      var input = new StreamedSequenceInfo (typeof (int[]), intExpression);
+      var result = _resultOperator.GetOutputDataInfo (input);
+
+      Assert.That (result, Is.InstanceOf (typeof (StreamedSequenceInfo)));
+      Assert.That (result.DataType, Is.SameAs (typeof (IQueryable<int>)));
+      Assert.That (((StreamedSequenceInfo) result).ItemExpression, Is.InstanceOf (typeof (QuerySourceReferenceExpression)));
+      Assert.That (
+          ((QuerySourceReferenceExpression) ((StreamedSequenceInfo) result).ItemExpression).ReferencedQuerySource,
+          Is.SameAs (_resultOperator));
+    }
+
+    [Test]
+    public void GetOutputDataInfo_AssignableSource2 ()
+    {
+      var resultOperator = new UnionResultOperator ("i", typeof (object), Expression.Constant (new[] { "string" }));
+
+      var cookExpression = Expression.Constant (null, typeof (Cook));
+      var input = new StreamedSequenceInfo (typeof (Cook[]), cookExpression);
+
+      var result = resultOperator.GetOutputDataInfo (input);
+
+      Assert.That (result, Is.InstanceOf (typeof (StreamedSequenceInfo)));
+      Assert.That (result.DataType, Is.SameAs (typeof (IQueryable<object>)));
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentTypeException))]
+    public void GetOutputDataInfo_InvalidInputType ()
+    {
+      var input = new StreamedScalarValueInfo (typeof (int));
+      _resultOperator.GetOutputDataInfo (input);
+    }
+
+    [Test]
+    [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage = 
+        "The input sequence must have items of type 'System.Int32', but it has items of type 'System.String'.\r\nParameter name: inputInfo")]
+    public void GetOutputDataInfo_InvalidInputItemType ()
+    {
+      var input = new StreamedSequenceInfo (typeof (string[]), Expression.Constant (""));
+      _resultOperator.GetOutputDataInfo (input);
+    }
+
+    [Test]
     public void TransformExpressions ()
     {
       var oldExpression = ExpressionHelper.CreateExpression ();
       var newExpression = ExpressionHelper.CreateExpression ();
-      var resultOperator = new UnionResultOperator (oldExpression);
+      var resultOperator = new UnionResultOperator ("i", typeof (int), oldExpression);
 
       resultOperator.TransformExpressions (ex =>
       {

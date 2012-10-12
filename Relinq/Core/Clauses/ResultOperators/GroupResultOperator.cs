@@ -169,7 +169,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
     public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
     {
       ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
-      return new StreamedSequenceInfo (typeof (IQueryable<>).MakeGenericType (ItemType), GetNewItemExpression());
+      return new StreamedSequenceInfo (typeof (IQueryable<>).MakeGenericType (ItemType), new QuerySourceReferenceExpression (this));
     }
 
     public override string ToString ()
@@ -179,11 +179,5 @@ namespace Remotion.Linq.Clauses.ResultOperators
           FormattingExpressionTreeVisitor.Format (KeySelector), 
           FormattingExpressionTreeVisitor.Format (ElementSelector));
     }
-
-    private QuerySourceReferenceExpression GetNewItemExpression ()
-    {
-      return new QuerySourceReferenceExpression (this);
-    }
-
   }
 }

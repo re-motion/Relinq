@@ -158,6 +158,11 @@ namespace Remotion.Linq.UnitTests.Linq.Core
       return new GroupResultOperator ("groupings", keySelector, elementSelector);
     }
 
+    public static UnionResultOperator CreateUnionResultOperator ()
+    {
+      return new UnionResultOperator ("union", typeof (int), Expression.Constant (new [] { 1, 2 }));
+    }
+
     public static Ordering CreateOrdering ()
     {
       return new Ordering (CreateExpression (), OrderingDirection.Asc);
