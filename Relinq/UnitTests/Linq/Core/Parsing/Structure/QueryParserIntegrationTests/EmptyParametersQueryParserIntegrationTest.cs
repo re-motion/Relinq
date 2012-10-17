@@ -28,7 +28,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
   {
     [Test]
     [Ignore ("TODO 5107")]
-    public void AmptyParameters ()
+    public void EmptyParameterNames_CanBeParsed ()
     {
       var parameterExpression = Expression.Parameter (typeof (Cook), "");
       var predicate =
