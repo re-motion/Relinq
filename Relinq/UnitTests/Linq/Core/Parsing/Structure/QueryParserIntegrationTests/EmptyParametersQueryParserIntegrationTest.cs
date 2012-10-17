@@ -27,7 +27,6 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
   public class DynamicLinqQueryParserIntegrationTest : QueryParserIntegrationTestBase
   {
     [Test]
-    [Ignore ("TODO 5107")]
     public void EmptyParameterNames_CanBeParsed ()
     {
       var parameterExpression = Expression.Parameter (typeof (Cook), "");

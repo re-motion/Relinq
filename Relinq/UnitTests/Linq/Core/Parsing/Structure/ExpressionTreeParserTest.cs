@@ -191,6 +191,25 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
     }
 
     [Test]
+    public void ParseTree_MethodCallExpression_PropagatesNameToSourceNode_EmptyNameIsReplacedByGenerated ()
+    {
+      var querySource = ExpressionHelper.CreateCookQueryable ();
+      var parameterWithEmptyName = Expression.Parameter (typeof (Cook), "");
+      var expression = Expression.Call (
+          typeof (Enumerable),
+          "Select",
+          new[] { typeof (Cook), typeof (string) },
+          querySource.Expression,
+          Expression.Lambda<Func<Cook, string>> (Expression.Property (parameterWithEmptyName, "Name"), parameterWithEmptyName));
+
+      var result = _expressionTreeParser.ParseTree (expression);
+
+      var source = ((SelectExpressionNode) result).Source;
+      Assert.That (source, Is.InstanceOf (typeof (MainSourceExpressionNode)));
+      Assert.That (((MainSourceExpressionNode) source).AssociatedIdentifier, Is.StringStarting ("<generated>_"));
+    }
+
+    [Test]
     public void ParseTree_MethodCallExpression_WithInstanceMethod ()
     {
       var instanceMethod = typeof (NonGenericFakeCollection).GetMethod ("Contains"); // use non-generic class

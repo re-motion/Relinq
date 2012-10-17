@@ -190,7 +190,7 @@ namespace Remotion.Linq.Parsing.Structure
 
     private IExpressionNode ParseNode (Expression expression, string associatedIdentifier)
     {
-      if (associatedIdentifier == null)
+      if (string.IsNullOrEmpty (associatedIdentifier))
         associatedIdentifier = _identifierGenerator.GetUniqueIdentifier ("<generated>_");
 
       var methodCallExpression = GetQueryOperatorExpression(expression);
