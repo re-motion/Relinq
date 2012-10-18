@@ -45,6 +45,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.TestDomain
     public Cook Substitution { get; set; }
     public double Weight { get; set; }
     public string SpecificInformation { get; set; }
+    public Kitchen Kitchen { get; set; }
 
     [MethodCallTransformer (typeof (FullNameTransformer))]
     public virtual string GetFullName ()
