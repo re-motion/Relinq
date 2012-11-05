@@ -28,6 +28,7 @@ using System.Reflection;
 [assembly: AssemblyProduct ("re-linq project (relinq.codeplex.com)")]
 [assembly: AssemblyCopyright ("(c) rubicon IT GmbH, www.rubicon.eu - Licensed under GNU LGPL 2.1 (or later)")]
 [assembly: AssemblyTrademark ("")]
+[assembly: AssemblyInformationalVersion ("")]
 
 //
 // Version information for an assembly consists of the following four values:
