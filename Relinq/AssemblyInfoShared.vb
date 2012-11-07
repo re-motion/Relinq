@@ -14,7 +14,7 @@ Imports System.Security
 <Assembly: AssemblyProduct("re-linq project (relinq.codeplex.com)")> 
 <Assembly: AssemblyCopyright("(c) rubicon IT GmbH, www.rubicon.eu - Licensed under GNU LGPL 2.1 (or later)")> 
 <Assembly: AssemblyTrademark("")> 
-<Assembly: AssemblyInformationalVersion("")>
+<Assembly: AssemblyInformationalVersion("1.13.173.0")>
 
 ' Version information for an assembly consists of the following four values:
 '
