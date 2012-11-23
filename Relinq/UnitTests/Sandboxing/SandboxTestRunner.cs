@@ -35,7 +35,7 @@ namespace Remotion.Linq.UnitTests.Sandboxing
     {
       ArgumentUtility.CheckNotNull ("testFixtureTypes", testFixtureTypes);
       ArgumentUtility.CheckNotNull ("permissions", permissions);
-     
+
       using (var sandbox = Sandbox.CreateSandbox (permissions, fullTrustAssemblies))
       {
         var runner = sandbox.CreateSandboxedInstance<SandboxTestRunner> (permissions);
@@ -48,7 +48,7 @@ namespace Remotion.Linq.UnitTests.Sandboxing
       if (testFixtureTypes == null)
         throw new ArgumentNullException ("testFixtureTypes"); // avoid ArgumentUtility, it doesn't support partial trust ATM
 
-      return testFixtureTypes.Select (t => RunTestFixture (t)).ToArray();
+      return testFixtureTypes.Select (t => RunTestFixture (t)).ToArray ();
     }
 
     public TestFixtureResult RunTestFixture (Type type)
@@ -62,24 +62,24 @@ namespace Remotion.Linq.UnitTests.Sandboxing
       var tearDownMethod = type.GetMethods ().Where (m => IsDefined (m, "NUnit.Framework.TearDownAttribute")).SingleOrDefault ();
       var testMethods = type.GetMethods ().Where (m => IsDefined (m, "NUnit.Framework.TestAttribute"));
 
-      var testResults = testMethods.Select (testMethod => RunTestMethod (testFixtureInstance, testMethod, setupMethod, tearDownMethod)).ToArray();
-      return new TestFixtureResult(type, testResults);
+      var testResults = testMethods.Select (testMethod => RunTestMethod (testFixtureInstance, testMethod, setupMethod, tearDownMethod)).ToArray ();
+      return new TestFixtureResult (type, testResults);
     }
 
     public TestResult RunTestMethod (object testFixtureInstance, MethodInfo testMethod, MethodInfo setupMethod, MethodInfo tearDownMethod)
     {
       Exception exception;
-      if (IsDefined (testMethod, "NUnit.Framework.IgnoreAttribute"))
+      if (IsDefined (testMethod, "NUnit.Framework.IgnoreAttribute") || IsDefined (testMethod.DeclaringType, "NUnit.Framework.IgnoreAttribute"))
         return TestResult.CreateIgnored (testMethod);
 
-      if (setupMethod!=null && !(TryInvokeMethod (setupMethod, testFixtureInstance, out exception)))
+      if (setupMethod != null && !(TryInvokeMethod (setupMethod, testFixtureInstance, out exception)))
         return TestResult.CreateFailedInSetUp (setupMethod, exception);
 
       TestResult result;
       if (IsDefined (testMethod, "NUnit.Framework.ExpectedExceptionAttribute"))
       {
         var exceptionType = (Type) GetAttribute (testMethod, "NUnit.Framework.ExpectedExceptionAttribute").ConstructorArguments[0].Value;
-        if (!TryInvokeMethod (testMethod, testFixtureInstance, out exception) && exception.GetType() == exceptionType)
+        if (!TryInvokeMethod (testMethod, testFixtureInstance, out exception) && exception.GetType () == exceptionType)
           result = TestResult.CreateSucceeded (testMethod);
         else
           result = TestResult.CreateFailed (testMethod, exception);
@@ -92,7 +92,7 @@ namespace Remotion.Linq.UnitTests.Sandboxing
           result = TestResult.CreateFailed (testMethod, exception);
       }
 
-      if (tearDownMethod!=null && !TryInvokeMethod (tearDownMethod, testFixtureInstance, out exception))
+      if (tearDownMethod != null && !TryInvokeMethod (tearDownMethod, testFixtureInstance, out exception))
         return TestResult.CreateFailedInTearDown (tearDownMethod, exception);
       else
         return result;
