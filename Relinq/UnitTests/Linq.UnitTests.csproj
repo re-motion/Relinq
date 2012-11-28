@@ -176,6 +176,7 @@
     <Compile Include="Linq\Core\Utilities\RegistryBaseTest.cs" />
     <Compile Include="Linq\Core\Utilities\TestRegistry.cs" />
     <Compile Include="Linq\Core\Utilities\TestRegistryImplementation.cs" />
+    <Compile Include="Linq\SqlBackend\BooleanUtilityTest.cs" />
     <Compile Include="Linq\SqlBackend\CustomCompositeExpression.cs" />
     <Compile Include="Linq\SqlBackend\ConversionUtilityTest.cs" />
     <Compile Include="Linq\SqlBackend\MappingResolution\GroupAggregateSimplifierTest.cs" />
@@ -259,12 +260,13 @@
     <Compile Include="Linq\SqlBackend\SqlPreparation\TestableSqlPreparationExpressionVisitorTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlPreparation\TestableSqlPreparationFromExpressionVisitor.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\AggregationExpressionTest.cs" />
-    <Compile Include="Linq\SqlBackend\SqlStatementModel\ConvertedBooleanExpressionTest.cs" />
+    <Compile Include="Linq\SqlBackend\SqlStatementModel\Resolved\SqlConvertedBooleanExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\NamedExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\Resolved\ResolvedJoinedGroupingTableInfoTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\Resolved\ResolvedSubStatementTableInfoTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\Resolved\SqlColumnReferenceExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\Resolved\SqlEntityReferenceExpressionTest.cs" />
+    <Compile Include="Linq\SqlBackend\SqlStatementModel\Resolved\SqlPredicateAsValueExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\SqlGroupingSelectExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\SqlSpecificExpressions\SqlConvertExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\SqlSpecificExpressions\SqlExistsExpressionTest.cs" />
