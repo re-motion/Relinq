@@ -16,10 +16,12 @@
 // 
 using System;
 using System.Collections;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using Remotion.Linq.Clauses.ExpressionTreeVisitors;
+using Remotion.Linq.SqlBackend.SqlStatementModel.SqlSpecificExpressions;
 using Remotion.Linq.Utilities;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Parsing
@@ -49,7 +51,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing
     public void CheckAreEqualNodes (Expression expected, Expression actual)
     {
       if (expected == null)
-        Assert.IsNull (actual, GetMessage (expected, actual, "Null nodes"));
+        Assert.IsNull (actual, GetMessage (null, actual, "Null nodes"));
       else
       {
         Assert.AreEqual (expected.GetType (), actual.GetType (), GetMessage (expected, actual, "NodeType"));
@@ -73,13 +75,14 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing
 
     private void CheckAreEqualProperties (PropertyInfo property, Type valueType, object value1, object value2, object e1, object e2)
     {
+      var structurallyComparedTypes = new[] { typeof (MemberBinding), typeof (ElementInit), typeof (SqlCaseExpression.CaseWhenPair) };
       if (typeof (Expression).IsAssignableFrom (valueType))
       {
         Expression subNode1 = (Expression) value1;
         Expression subNode2 = (Expression) value2;
         CheckAreEqualNodes (subNode1, subNode2);
       }
-      else if (typeof (MemberBinding).IsAssignableFrom (valueType) || typeof (ElementInit).IsAssignableFrom (valueType))
+      else if (structurallyComparedTypes.Any (t => t.IsAssignableFrom (valueType)))
       {
         CheckAreEqualObjects (value1, value2);
       }
