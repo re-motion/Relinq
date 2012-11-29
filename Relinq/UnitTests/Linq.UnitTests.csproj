@@ -266,7 +266,6 @@
     <Compile Include="Linq\SqlBackend\SqlStatementModel\Resolved\ResolvedSubStatementTableInfoTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\Resolved\SqlColumnReferenceExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\Resolved\SqlEntityReferenceExpressionTest.cs" />
-    <Compile Include="Linq\SqlBackend\SqlStatementModel\Resolved\SqlPredicateAsValueExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\SqlGroupingSelectExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\SqlSpecificExpressions\SqlConvertExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\SqlSpecificExpressions\SqlExistsExpressionTest.cs" />
