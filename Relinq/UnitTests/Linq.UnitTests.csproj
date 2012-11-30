@@ -125,6 +125,18 @@
     <Compile Include="..\AssemblyInfoShared.cs">
       <Link>Properties\AssemblyInfoShared.cs</Link>
     </Compile>
+    <Compile Include="..\Core\Utilities\ReSharperAnnotations\ImplicitUseKindFlags.cs">
+      <Link>ReSharperAnnotations\ImplicitUseKindFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\Core\Utilities\ReSharperAnnotations\ImplicitUseTargetFlags.cs">
+      <Link>ReSharperAnnotations\ImplicitUseTargetFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\Core\Utilities\ReSharperAnnotations\MeansImplicitUseAttribute.cs">
+      <Link>ReSharperAnnotations\MeansImplicitUseAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\Core\Utilities\ReSharperAnnotations\UsedImplicitlyAttribute.cs">
+      <Link>ReSharperAnnotations\UsedImplicitlyAttribute.cs</Link>
+    </Compile>
     <Compile Include="LinqToSqlAdapter\MetaDataMemberComparerTest.cs" />
     <Compile Include="LinqToSqlAdapter\QueryExecutorTest.cs" />
     <Compile Include="LinqToSqlAdapter\QueryResultRetrieverTest.cs" />

@@ -24,7 +24,7 @@ namespace JetBrains.Annotations
   /// </summary>
   /// <seealso cref="AssertionConditionAttribute"/>
   [AttributeUsage (AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
-  public sealed class AssertionMethodAttribute : Attribute
+  internal sealed class AssertionMethodAttribute : Attribute
   {
   }
 }

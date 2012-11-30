@@ -20,7 +20,7 @@ namespace JetBrains.Annotations
   /// Specifies assertion type. If the assertion method argument satisifes the condition, then the execution continues. 
   /// Otherwise, execution is assumed to be halted
   /// </summary>
-  public enum AssertionConditionType
+  internal enum AssertionConditionType
   {
     /// <summary>
     /// Indicates that the marked parameter should be evaluated to true

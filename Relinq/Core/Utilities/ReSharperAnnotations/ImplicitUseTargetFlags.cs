@@ -14,36 +14,29 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
+
 using System;
 
 namespace JetBrains.Annotations
 {
   /// <summary>
-  /// Indicates the condition parameter of the assertion method. 
-  /// The method itself should be marked by <see cref="AssertionMethodAttribute"/> attribute.
-  /// The mandatory argument of the attribute is the assertion type.
+  /// Specify what is considered used implicitly when marked with <see cref="MeansImplicitUseAttribute"/> or <see cref="UsedImplicitlyAttribute"/>
   /// </summary>
-  /// <seealso cref="AssertionConditionType"/>
-  [AttributeUsage (AttributeTargets.Parameter, AllowMultiple = false, Inherited = true)]
-  internal sealed class AssertionConditionAttribute : Attribute
+  [Flags]
+  internal enum ImplicitUseTargetFlags
   {
-    private readonly AssertionConditionType myConditionType;
+    Default = Itself,
+
+    Itself = 1,
 
     /// <summary>
-    /// Initializes new instance of AssertionConditionAttribute
+    /// Members of entity marked with attribute are considered used
     /// </summary>
-    /// <param name="conditionType">Specifies condition type</param>
-    public AssertionConditionAttribute (AssertionConditionType conditionType)
-    {
-      myConditionType = conditionType;
-    }
+    Members = 2,
 
     /// <summary>
-    /// Gets condition type
+    /// Entity marked with attribute and all its members considered used
     /// </summary>
-    public AssertionConditionType ConditionType
-    {
-      get { return myConditionType; }
-    }
+    WithMembers = Itself | Members
   }
 }

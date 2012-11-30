@@ -23,7 +23,7 @@ namespace JetBrains.Annotations
   /// 
   /// </summary>
   [AttributeUsage (AttributeTargets.Parameter)]
-  public sealed class NoEnumerationAttribute : Attribute
+  internal sealed class NoEnumerationAttribute : Attribute
   {
   }
 }

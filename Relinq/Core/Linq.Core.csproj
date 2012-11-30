@@ -272,8 +272,12 @@
     <Compile Include="Utilities\ReSharperAnnotations\AssertionConditionAttribute.cs" />
     <Compile Include="Utilities\ReSharperAnnotations\AssertionConditionType.cs" />
     <Compile Include="Utilities\ReSharperAnnotations\AssertionMethodAttribute.cs" />
+    <Compile Include="Utilities\ReSharperAnnotations\ImplicitUseKindFlags.cs" />
+    <Compile Include="Utilities\ReSharperAnnotations\ImplicitUseTargetFlags.cs" />
     <Compile Include="Utilities\ReSharperAnnotations\InvokerParameterNameAttribute.cs" />
+    <Compile Include="Utilities\ReSharperAnnotations\MeansImplicitUseAttribute.cs" />
     <Compile Include="Utilities\ReSharperAnnotations\NoEnumerationAttribute.cs" />
+    <Compile Include="Utilities\ReSharperAnnotations\UsedImplicitlyAttribute.cs" />
     <Compile Include="Utilities\SeparatedStringBuilder.cs" />
     <None Include="Doc\include\GettingStartedWithRelinq.aml" />
     <None Include="Linq.Core.nuspec" />

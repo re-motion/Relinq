@@ -23,7 +23,7 @@ namespace JetBrains.Annotations
   /// For example, <see cref="ArgumentNullException"/> has such parameter.
   /// </summary>
   [AttributeUsage (AttributeTargets.Parameter, AllowMultiple = false, Inherited = true)]
-  public sealed class InvokerParameterNameAttribute : Attribute
+  internal sealed class InvokerParameterNameAttribute : Attribute
   {
   }
 }

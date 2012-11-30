@@ -14,36 +14,35 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
+
 using System;
 
 namespace JetBrains.Annotations
 {
-  /// <summary>
-  /// Indicates the condition parameter of the assertion method. 
-  /// The method itself should be marked by <see cref="AssertionMethodAttribute"/> attribute.
-  /// The mandatory argument of the attribute is the assertion type.
-  /// </summary>
-  /// <seealso cref="AssertionConditionType"/>
-  [AttributeUsage (AttributeTargets.Parameter, AllowMultiple = false, Inherited = true)]
-  internal sealed class AssertionConditionAttribute : Attribute
+  [Flags]
+  internal enum ImplicitUseKindFlags
   {
-    private readonly AssertionConditionType myConditionType;
+    Default = Access | Assign | InstantiatedWithFixedConstructorSignature,
 
     /// <summary>
-    /// Initializes new instance of AssertionConditionAttribute
+    /// Only entity marked with attribute considered used
     /// </summary>
-    /// <param name="conditionType">Specifies condition type</param>
-    public AssertionConditionAttribute (AssertionConditionType conditionType)
-    {
-      myConditionType = conditionType;
-    }
+    Access = 1,
 
     /// <summary>
-    /// Gets condition type
+    /// Indicates implicit assignment to a member
     /// </summary>
-    public AssertionConditionType ConditionType
-    {
-      get { return myConditionType; }
-    }
+    Assign = 2,
+
+    /// <summary>
+    /// Indicates implicit instantiation of a type with fixed constructor signature.
+    /// That means any unused constructor parameters won't be reported as such.
+    /// </summary>
+    InstantiatedWithFixedConstructorSignature = 4,
+
+    /// <summary>
+    /// Indicates implicit instantiation of a type
+    /// </summary>
+    InstantiatedNoFixedConstructorSignature = 8,
   }
 }
