@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
-<package >
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Remotion.Linq</id>
-    <version>$version$</version>
+    <version>0.0.0.0</version>
     <title>re-linq - re-motion Linq Library</title>
-    <authors>Fabian Schmied et al,$author$</authors>
+    <authors>rubicon IT GmbH</authors>
     <owners>Fabian Schmied</owners>
     <licenseUrl>http://relinq.codeplex.com/license</licenseUrl>
     <projectUrl>http://relinq.codeplex.com</projectUrl>
