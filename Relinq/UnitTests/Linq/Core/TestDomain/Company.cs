@@ -22,6 +22,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.TestDomain
   public class Company
   {
     public int ID { get; set; }
+    public DateTime DateOfIncorporation { get; set; }
     public Kitchen MainKitchen { get; set; }
     public Restaurant MainRestaurant { get; set; }
     public IQueryable<Restaurant> AllRestaurants { get; set; }

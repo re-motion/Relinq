@@ -203,6 +203,7 @@
     <Compile Include="Linq\SqlBackend\MappingResolution\TestableGroupAggregateSimplifier.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\ConditionalExpressionSqlBackendIntegrationTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\MethodCalls\ConversionMethodCallExpressionSqlBackendIntegrationTest.cs" />
+    <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\MethodCalls\DateTimeMethodCallExpressionSqlBackendIntegrationTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\MethodCalls\TransformedMethodCallExpressionSqlBackendIntegrationTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\MethodCalls\EqualsMethodCallExpressionSqlBackendIntegrationTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\ResultOperators\ContainsResultOperatorSqlBackendIntegrationTest.cs" />
