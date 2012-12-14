@@ -43,6 +43,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.TestDomain
     public bool IsFullTimeCook { get; set; }
     public bool IsStarredCook { get; set; }
     public Cook Substitution { get; set; }
+    public Cook Substituted { get; set; }
     public double Weight { get; set; }
     public string SpecificInformation { get; set; }
     public Kitchen Kitchen { get; set; }
