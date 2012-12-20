@@ -17,6 +17,8 @@
 using System;
 using System.Linq;
 using NUnit.Framework;
+using Remotion.Linq.Clauses.Expressions;
+using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegrationTests
@@ -63,5 +65,20 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
           selectClause.Selector, queryModel.MainFromClause, c => (c.FirstName + " " + c.Name) == (other.FirstName + " " + other.Name));
     }
 
+    [Test]
+    public void Transformation_IntroducingSubQuery ()
+    {
+      var query = QuerySource.Select (c => c.GetAssistantCount());
+
+      var queryModel = QueryParser.GetParsedQuery (query.Expression);
+
+      var selectClause = queryModel.SelectClause;
+
+      Assert.That (selectClause.Selector, Is.TypeOf<SubQueryExpression>());
+      var subQueryModel = ((SubQueryExpression) selectClause.Selector).QueryModel;
+
+      CheckResolvedExpression<Cook, IQueryable<Cook>> (subQueryModel.MainFromClause.FromExpression, queryModel.MainFromClause, c => c.Assistants);
+      Assert.That (subQueryModel.ResultOperators, Has.Some.TypeOf<CountResultOperator>());
+    }
   }
 }
