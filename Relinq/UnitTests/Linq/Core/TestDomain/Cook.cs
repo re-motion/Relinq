@@ -19,11 +19,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Remotion.Linq;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation;
+using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations;
 using Remotion.Linq.SqlBackend.SqlPreparation;
 using Remotion.Linq.SqlBackend.SqlStatementModel.SqlSpecificExpressions;
 
@@ -55,7 +55,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.TestDomain
       return FirstName + " " + Name;
     }
 
-    // TODO 5302: Attribute
+    [MethodCallExpressionTransformer (typeof (FullNameTransformer))]
     public virtual string GetFullName ()
     {
       return FirstName + " " + Name;
@@ -67,13 +67,13 @@ namespace Remotion.Linq.UnitTests.Linq.Core.TestDomain
       get { return Weight * 2.20462262; }
     }
 
-    // TODO 5302: Attribute
     public double WeightInLbs
     {
+      [MethodCallExpressionTransformer (typeof (ToLbsTransformer))]
       get { return Weight * 2.20462262; }
     }
 
-    // TODO 5302: Attribute
+    [MethodCallExpressionTransformer (typeof (AssistantCountTransformer))]
     public int GetAssistantCount ()
     {
       return Assistants.Count ();
@@ -85,7 +85,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.TestDomain
       return Assistants.Count ();
     }
 
-    // TODO 5302: Attribute
+    [FullNameEqualsTransformer]
     public bool Equals (Cook other)
     {
       return GetFullName() == other.GetFullName();
@@ -192,21 +192,27 @@ namespace Remotion.Linq.UnitTests.Linq.Core.TestDomain
       }
     }
 
-    public class FullNameEqualsTransformer : IExpressionTransformer<MethodCallExpression>
+    public class FullNameEqualsTransformerAttribute : Attribute, AttributeEvaluatingMethodCallExpressionTransformer.IMethodCallExpressionTransformerProvider
     {
-      public ExpressionType[] SupportedExpressionTypes
+      public class FullNameEqualsTransformer : IExpressionTransformer<MethodCallExpression>
       {
-        get { throw new NotImplementedException(); }
+        public ExpressionType[] SupportedExpressionTypes
+        {
+          get { throw new NotImplementedException(); }
+        }
+
+        public Expression Transform (MethodCallExpression methodCallExpression)
+        {
+          return Expression.Equal (
+              Expression.Call (methodCallExpression.Object, "GetFullName", Type.EmptyTypes),
+              Expression.Call (methodCallExpression.Arguments[0], "GetFullName", Type.EmptyTypes));
+        }
       }
 
-      public Expression Transform (MethodCallExpression methodCallExpression)
+      public IExpressionTransformer<MethodCallExpression> GetExpressionTransformer (MethodCallExpression expression)
       {
-        return Expression.Equal (
-            Expression.Call (methodCallExpression.Object, "GetFullName_SqlTransformed", Type.EmptyTypes),
-            Expression.Call (methodCallExpression.Arguments[0], "GetFullName_SqlTransformed", Type.EmptyTypes));
+        return new FullNameEqualsTransformer();
       }
     }
-
-    
   }
 }

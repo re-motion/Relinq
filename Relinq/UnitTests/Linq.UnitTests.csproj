@@ -151,6 +151,8 @@
     <Compile Include="Linq\Core\Parsing\ExpressionTreeVisitors\MultiReplacingExpressionTreeVisitorTest.cs" />
     <Compile Include="Linq\Core\Clauses\Expressions\PartialEvaluationExceptionExpressionTest.cs" />
     <Compile Include="Linq\Core\Parsing\ExpressionTreeVisitors\Transformation\ExpressionTransformerRegistryTest.cs" />
+    <Compile Include="Linq\Core\Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\AttributeEvaluatingMethodCallExpressionTransformerTest.cs" />
+    <Compile Include="Linq\Core\Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\MethodCallExpressionTransformerAttributeTest.cs" />
     <Compile Include="Linq\Core\Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\TupleNewExpressionTransformerTest.cs" />
     <Compile Include="Linq\Core\Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\DictionaryEntryNewExpressionTransformerTest.cs" />
     <Compile Include="Linq\Core\Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\InvocationOfLambdaExpressionTransformerTest.cs" />
