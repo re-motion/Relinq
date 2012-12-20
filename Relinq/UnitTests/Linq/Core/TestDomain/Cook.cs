@@ -192,8 +192,13 @@ namespace Remotion.Linq.UnitTests.Linq.Core.TestDomain
       }
     }
 
-    public class FullNameEqualsTransformer : IMethodCallTransformer
+    public class FullNameEqualsTransformer : IExpressionTransformer<MethodCallExpression>
     {
+      public ExpressionType[] SupportedExpressionTypes
+      {
+        get { throw new NotImplementedException(); }
+      }
+
       public Expression Transform (MethodCallExpression methodCallExpression)
       {
         return Expression.Equal (
