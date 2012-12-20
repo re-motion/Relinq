@@ -167,6 +167,7 @@
     <Compile Include="Linq\Core\Parsing\Structure\ExpressionTreeProcessors\TransformingExpressionProcessorTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\ExpressionTreeProcessors\PartialEvaluatingExpressionTreeProcessorTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\IntermediateModel\GroupByWithResultSelectorExpressionNodeTest.cs" />
+    <Compile Include="Linq\Core\Parsing\Structure\QueryParserIntegrationTests\AttributeTransformationIntegrationTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\QueryParserIntegrationTests\CovariantQueryParserIntegrationTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\QueryParserIntegrationTests\DelegateInvocationQueryParserIntegrationTest.cs" />
     <Compile Include="Linq\Core\Parsing\Structure\QueryParserIntegrationTests\EmptyParametersQueryParserIntegrationTest.cs" />

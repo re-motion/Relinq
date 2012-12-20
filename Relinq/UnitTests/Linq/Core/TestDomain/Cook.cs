@@ -23,6 +23,7 @@ using Remotion.Linq;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ResultOperators;
+using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation;
 using Remotion.Linq.SqlBackend.SqlPreparation;
 using Remotion.Linq.SqlBackend.SqlStatementModel.SqlSpecificExpressions;
 
@@ -49,27 +50,45 @@ namespace Remotion.Linq.UnitTests.Linq.Core.TestDomain
     public Kitchen Kitchen { get; set; }
 
     [MethodCallTransformer (typeof (FullNameTransformer))]
+    public virtual string GetFullName_SqlTransformed ()
+    {
+      return FirstName + " " + Name;
+    }
+
+    // TODO 5302: Attribute
     public virtual string GetFullName ()
     {
       return FirstName + " " + Name;
     }
 
-    public double WeightInLbs
+    public double WeightInLbs_SqlTransformed
     {
       [MethodCallTransformer (typeof (ToLbsTransformer))]
       get { return Weight * 2.20462262; }
     }
 
+    // TODO 5302: Attribute
+    public double WeightInLbs
+    {
+      get { return Weight * 2.20462262; }
+    }
+
     [MethodCallTransformer (typeof (AssistantCountTransformer))]
-    public int GetAssistantCount ()
+    public int GetAssistantCount_SqlTransformed ()
     {
       return Assistants.Count ();
     }
 
-    [MethodCallTransformer (typeof (FullNameEqualsTransformer))]
+    // TODO 5302: Attribute
     public bool Equals (Cook other)
     {
-      return GetFullName () == other.GetFullName ();
+      return GetFullName() == other.GetFullName();
+    }
+
+    [MethodCallTransformer (typeof (FullNameEqualsTransformer))]
+    public bool Equals_SqlTransformed (Cook other)
+    {
+      return GetFullName_SqlTransformed () == other.GetFullName_SqlTransformed ();
     }
 
     public class FullNameTransformer : IMethodCallTransformer
@@ -115,8 +134,8 @@ namespace Remotion.Linq.UnitTests.Linq.Core.TestDomain
       public Expression Transform (MethodCallExpression methodCallExpression)
       {
         return Expression.Equal (
-            Expression.Call (methodCallExpression.Object, "GetFullName", Type.EmptyTypes),
-            Expression.Call (methodCallExpression.Arguments[0], "GetFullName", Type.EmptyTypes));
+            Expression.Call (methodCallExpression.Object, "GetFullName_SqlTransformed", Type.EmptyTypes),
+            Expression.Call (methodCallExpression.Arguments[0], "GetFullName_SqlTransformed", Type.EmptyTypes));
       }
     }
   }
