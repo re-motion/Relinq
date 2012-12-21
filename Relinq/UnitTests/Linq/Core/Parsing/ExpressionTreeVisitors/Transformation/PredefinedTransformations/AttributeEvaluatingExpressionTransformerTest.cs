@@ -191,7 +191,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Trans
     }
 
     [AttributeUsage (AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
-    private class TransformerAttribute : Attribute, AttributeEvaluatingExpressionTransformer.IMethodCallExpressionTransformerProvider
+    private class TransformerAttribute : Attribute, AttributeEvaluatingExpressionTransformer.IMethodCallExpressionTransformerAttribute
     {
       public IExpressionTransformer<MethodCallExpression> GetExpressionTransformer (MethodCallExpression expression)
       {
@@ -224,7 +224,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Trans
     }
 
     [AttributeUsage (AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
-    private class NullTransformerAttribute : Attribute, AttributeEvaluatingExpressionTransformer.IMethodCallExpressionTransformerProvider
+    private class NullTransformerAttribute : Attribute, AttributeEvaluatingExpressionTransformer.IMethodCallExpressionTransformerAttribute
     {
       public IExpressionTransformer<MethodCallExpression> GetExpressionTransformer (MethodCallExpression expression)
       {

@@ -25,7 +25,7 @@ using System.Linq;
 namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations
 {
   /// <summary>
-  /// Dynamically discovers attributes implementing the <see cref="IMethodCallExpressionTransformerProvider"/> interface on methods and get accessors
+  /// Dynamically discovers attributes implementing the <see cref="IMethodCallExpressionTransformerAttribute"/> interface on methods and get accessors
   /// invoked by <see cref="MethodCallExpression"/> or <see cref="MemberExpression"/> instances and applies the respective 
   /// <see cref="IExpressionTransformer{T}"/>.
   /// </summary>
@@ -40,11 +40,11 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.Predefined
     /// and uses the <see cref="IExpressionTransformer{T}"/> returned by <see cref="GetExpressionTransformer"/> to modify the expressions.
     /// </para>
     /// <para>
-    /// Only one attribute instance implementing <see cref="IMethodCallExpressionTransformerProvider"/> must be applied to a single method or property
+    /// Only one attribute instance implementing <see cref="IMethodCallExpressionTransformerAttribute"/> must be applied to a single method or property
     /// get accessor.
     /// </para>
     /// </remarks>
-    public interface IMethodCallExpressionTransformerProvider
+    public interface IMethodCallExpressionTransformerAttribute
     {
       IExpressionTransformer<MethodCallExpression> GetExpressionTransformer (MethodCallExpression expression);
     }
@@ -81,10 +81,10 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.Predefined
       return expression;
     }
 
-    private static IMethodCallExpressionTransformerProvider GetTransformerProvider (MethodInfo methodInfo)
+    private static IMethodCallExpressionTransformerAttribute GetTransformerProvider (MethodInfo methodInfo)
     {
       var attributes =
-          (IMethodCallExpressionTransformerProvider[]) methodInfo.GetCustomAttributes (typeof (IMethodCallExpressionTransformerProvider), true);
+          (IMethodCallExpressionTransformerAttribute[]) methodInfo.GetCustomAttributes (typeof (IMethodCallExpressionTransformerAttribute), true);
 
       if (attributes.Length > 1)
       {
@@ -98,7 +98,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.Predefined
       return attributes.SingleOrDefault();
     }
 
-    private static Expression ApplyTransformer (IMethodCallExpressionTransformerProvider provider, MethodCallExpression methodCallExpression)
+    private static Expression ApplyTransformer (IMethodCallExpressionTransformerAttribute provider, MethodCallExpression methodCallExpression)
     {
       var expressionTransformer = provider.GetExpressionTransformer (methodCallExpression);
       if (expressionTransformer == null)

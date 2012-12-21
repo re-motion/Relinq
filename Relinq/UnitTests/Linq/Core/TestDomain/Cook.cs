@@ -19,13 +19,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Remotion.Linq.Clauses;
-using Remotion.Linq.Clauses.Expressions;
-using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations;
-using Remotion.Linq.SqlBackend.SqlPreparation;
-using Remotion.Linq.SqlBackend.SqlStatementModel.SqlSpecificExpressions;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.TestDomain
 {
@@ -49,22 +44,10 @@ namespace Remotion.Linq.UnitTests.Linq.Core.TestDomain
     public string SpecificInformation { get; set; }
     public Kitchen Kitchen { get; set; }
 
-    [MethodCallTransformer (typeof (FullNameSqlTransformer))]
-    public virtual string GetFullName_SqlTransformed ()
-    {
-      return FirstName + " " + Name;
-    }
-
     [MethodCallExpressionTransformer (typeof (FullNameTransformer))]
     public virtual string GetFullName ()
     {
       return FirstName + " " + Name;
-    }
-
-    public double WeightInLbs_SqlTransformed
-    {
-      [MethodCallTransformer (typeof (ToLbsSqlTransformer))]
-      get { return Weight * 2.20462262; }
     }
 
     public double WeightInLbs
@@ -85,70 +68,10 @@ namespace Remotion.Linq.UnitTests.Linq.Core.TestDomain
       return Assistants.Count ();
     }
 
-    [MethodCallTransformer (typeof (AssistantCountSqlTransformer))]
-    public int GetAssistantCount_SqlTransformed ()
-    {
-      return Assistants.Count ();
-    }
-
     [FullNameEqualsTransformer]
     public bool Equals (Cook other)
     {
       return GetFullName() == other.GetFullName();
-    }
-
-    [MethodCallTransformer (typeof (FullNameEqualsSqlTransformer))]
-    public bool Equals_SqlTransformed (Cook other)
-    {
-      return GetFullName_SqlTransformed () == other.GetFullName_SqlTransformed ();
-    }
-
-    public class FullNameSqlTransformer : IMethodCallTransformer
-    {
-      public Expression Transform (MethodCallExpression methodCallExpression)
-      {
-        var concatMethod = typeof (string).GetMethod ("Concat", new[] { typeof (string), typeof (string), typeof (string) });
-        return Expression.Call (
-            concatMethod,
-            Expression.MakeMemberAccess (methodCallExpression.Object, typeof (Cook).GetProperty ("FirstName")),
-            new SqlLiteralExpression (" "),
-            Expression.MakeMemberAccess (methodCallExpression.Object, typeof (Cook).GetProperty ("Name")));
-      }
-    }
-
-    public class ToLbsSqlTransformer : IMethodCallTransformer
-    {
-      public Expression Transform (MethodCallExpression methodCallExpression)
-      {
-        return Expression.Multiply (
-            Expression.MakeMemberAccess (methodCallExpression.Object, typeof (Cook).GetProperty ("Weight")),
-            new SqlLiteralExpression (2.20462262));
-      }
-    }
-
-    public class AssistantCountSqlTransformer : IMethodCallTransformer
-    {
-      public Expression Transform (MethodCallExpression methodCallExpression)
-      {
-        var mainFromClause = new MainFromClause (
-            "a", 
-            typeof (Cook), 
-            Expression.MakeMemberAccess (methodCallExpression.Object, typeof (Cook).GetProperty ("Assistants")));
-        var selectClause = new SelectClause (new QuerySourceReferenceExpression (mainFromClause));
-        var countQueryModel = new QueryModel (mainFromClause, selectClause);
-        countQueryModel.ResultOperators.Add (new CountResultOperator ());
-        return new SubQueryExpression (countQueryModel);
-      }
-    }
-
-    public class FullNameEqualsSqlTransformer : IMethodCallTransformer
-    {
-      public Expression Transform (MethodCallExpression methodCallExpression)
-      {
-        return Expression.Equal (
-            Expression.Call (methodCallExpression.Object, "GetFullName_SqlTransformed", Type.EmptyTypes),
-            Expression.Call (methodCallExpression.Arguments[0], "GetFullName_SqlTransformed", Type.EmptyTypes));
-      }
     }
 
     public class FullNameTransformer : IExpressionTransformer<MethodCallExpression>
@@ -215,7 +138,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.TestDomain
       }
     }
 
-    public class FullNameEqualsTransformerAttribute : Attribute, AttributeEvaluatingExpressionTransformer.IMethodCallExpressionTransformerProvider
+    public class FullNameEqualsTransformerAttribute : Attribute, AttributeEvaluatingExpressionTransformer.IMethodCallExpressionTransformerAttribute
     {
       public class FullNameEqualsTransformer : IExpressionTransformer<MethodCallExpression>
       {
