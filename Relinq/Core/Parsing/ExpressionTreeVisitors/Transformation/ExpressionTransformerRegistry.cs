@@ -59,6 +59,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation
       registry.Register (new KeyValuePairNewExpressionTransformer());
       registry.Register (new DictionaryEntryNewExpressionTransformer());
       registry.Register (new TupleNewExpressionTransformer());
+      registry.Register (new AttributeEvaluatingExpressionTransformer ());
       
       return registry;
     }

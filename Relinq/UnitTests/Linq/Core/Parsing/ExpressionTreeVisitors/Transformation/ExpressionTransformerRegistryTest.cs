@@ -48,6 +48,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Trans
       var callTranformations = registry.GetAllTransformations (ExpressionType.Call);
       var callTransformers = GetTransformersFromTransformations (callTranformations);
       Assert.That (callTransformers, Has.Some.TypeOf (typeof (VBInformationIsNothingExpressionTransformer)));
+      Assert.That (callTransformers, Has.Some.TypeOf (typeof (AttributeEvaluatingExpressionTransformer)));
 
       var invocationTranformations = registry.GetAllTransformations (ExpressionType.Invoke);
       var invocationTransformers = GetTransformersFromTransformations (invocationTranformations);
@@ -56,6 +57,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Trans
       var memberTranformations = registry.GetAllTransformations (ExpressionType.MemberAccess);
       var memberTransformers = GetTransformersFromTransformations (memberTranformations);
       Assert.That (memberTransformers, Has.Some.TypeOf (typeof (NullableValueTransformer)));
+      Assert.That (memberTransformers, Has.Some.TypeOf (typeof (AttributeEvaluatingExpressionTransformer)));
 
       var newTranformations = registry.GetAllTransformations (ExpressionType.New);
       var newTransformers = GetTransformersFromTransformations (newTranformations);
@@ -66,7 +68,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Trans
       var memberAddingTransformers = newTransformers.OfType<MemberAddingNewExpressionTransformerBase>().ToArray();
       Assert.That (memberAddingTransformers.Length, Is.EqualTo (3));
 
-      Assert.That (registry.RegisteredTransformerCount, Is.EqualTo (12));
+      Assert.That (registry.RegisteredTransformerCount, Is.EqualTo (14));
     }
 
     [Test]

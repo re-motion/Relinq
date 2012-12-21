@@ -154,12 +154,14 @@ namespace Remotion.Linq.UnitTests.Linq.Core.TestDomain
 
       public Expression Transform (MethodCallExpression methodCallExpression)
       {
-        var concatMethod = typeof (string).GetMethod ("Concat", new[] { typeof (string), typeof (string), typeof (string) });
-        return Expression.Call (
-            concatMethod,
-            Expression.MakeMemberAccess (methodCallExpression.Object, typeof (Cook).GetProperty ("FirstName")),
-            Expression.Constant (" "),
-            Expression.MakeMemberAccess (methodCallExpression.Object, typeof (Cook).GetProperty ("Name")));
+        var concatMethod = typeof (string).GetMethod ("Concat", new[] { typeof (string), typeof (string) });
+        return Expression.Add (
+            Expression.Add (
+                Expression.MakeMemberAccess (methodCallExpression.Object, typeof (Cook).GetProperty ("FirstName")),
+                Expression.Constant (" "),
+                concatMethod),
+            Expression.MakeMemberAccess (methodCallExpression.Object, typeof (Cook).GetProperty ("Name")),
+            concatMethod);
       }
     }
 
@@ -192,7 +194,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.TestDomain
       }
     }
 
-    public class FullNameEqualsTransformerAttribute : Attribute, AttributeEvaluatingMethodCallExpressionTransformer.IMethodCallExpressionTransformerProvider
+    public class FullNameEqualsTransformerAttribute : Attribute, AttributeEvaluatingExpressionTransformer.IMethodCallExpressionTransformerProvider
     {
       public class FullNameEqualsTransformer : IExpressionTransformer<MethodCallExpression>
       {

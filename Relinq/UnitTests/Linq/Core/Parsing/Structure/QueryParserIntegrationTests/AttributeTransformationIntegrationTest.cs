@@ -17,6 +17,7 @@
 using System;
 using System.Linq;
 using NUnit.Framework;
+using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
@@ -24,7 +25,6 @@ using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegrationTests
 {
   [TestFixture]
-  [Ignore ("TODO 5302")]
   public class AttributeTransformationIntegrationTest : QueryParserIntegrationTestBase
   {
     [Test]
@@ -54,15 +54,19 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
     [Test]
     public void Transformation_Recursively ()
     {
-      var other = new Cook();
-      var query = QuerySource.Select (c => c.Equals (other));
+      var query = from c in QuerySource
+                  from a in c.Assistants
+                  select c.Equals (a);
 
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
 
       var selectClause = queryModel.SelectClause;
 
-      CheckResolvedExpression<Cook, bool> (
-          selectClause.Selector, queryModel.MainFromClause, c => (c.FirstName + " " + c.Name) == (other.FirstName + " " + other.Name));
+      CheckResolvedExpression<Cook, Cook, bool> (
+          selectClause.Selector,
+          queryModel.MainFromClause,
+          (AdditionalFromClause) queryModel.BodyClauses[0],
+          (c, a) => (c.FirstName + " " + c.Name) == (a.FirstName + " " + a.Name));
     }
 
     [Test]
