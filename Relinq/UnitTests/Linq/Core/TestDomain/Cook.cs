@@ -73,6 +73,12 @@ namespace Remotion.Linq.UnitTests.Linq.Core.TestDomain
       get { return Weight * 2.20462262; }
     }
 
+    public Cook this[int assistantIndex]
+    {
+      [MethodCallExpressionTransformer (typeof (IndexerTransformer))]
+      get { return Assistants.Take (assistantIndex).First(); }
+    }
+
     [MethodCallExpressionTransformer (typeof (AssistantCountTransformer))]
     public int GetAssistantCount ()
     {
@@ -191,6 +197,21 @@ namespace Remotion.Linq.UnitTests.Linq.Core.TestDomain
       {
         var assistantsMember = Expression.MakeMemberAccess (methodCallExpression.Object, typeof (Cook).GetProperty ("Assistants"));
         return Expression.Call (typeof (Enumerable), "Count", new[] { typeof (Cook) }, assistantsMember);
+      }
+    }
+
+    public class IndexerTransformer : IExpressionTransformer<MethodCallExpression>
+    {
+      public ExpressionType[] SupportedExpressionTypes
+      {
+        get { throw new NotImplementedException (); }
+      }
+
+      public Expression Transform (MethodCallExpression methodCallExpression)
+      {
+        var assistantsMember = Expression.MakeMemberAccess (methodCallExpression.Object, typeof (Cook).GetProperty ("Assistants"));
+        var takenAssistants = Expression.Call (typeof (Enumerable), "Take", new[] { typeof (Cook) }, assistantsMember, methodCallExpression.Arguments.Single());
+        return Expression.Call (typeof (Enumerable), "First", new[] { typeof (Cook) }, takenAssistants);
       }
     }
 

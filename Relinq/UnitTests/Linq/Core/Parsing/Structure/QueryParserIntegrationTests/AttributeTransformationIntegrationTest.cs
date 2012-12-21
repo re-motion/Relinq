@@ -16,6 +16,7 @@
 // 
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
@@ -83,6 +84,25 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
 
       CheckResolvedExpression<Cook, IQueryable<Cook>> (subQueryModel.MainFromClause.FromExpression, queryModel.MainFromClause, c => c.Assistants);
       Assert.That (subQueryModel.ResultOperators, Has.Some.TypeOf<CountResultOperator>());
+    }
+
+    [Test]
+    public void Transformation_ViaAttributedIndexedProperty ()
+    {
+      var query = QuerySource.Select (c => c[7]);
+
+      var queryModel = QueryParser.GetParsedQuery (query.Expression);
+
+      var selectClause = queryModel.SelectClause;
+
+      Assert.That (selectClause.Selector, Is.TypeOf<SubQueryExpression>());
+      var subQueryModel = ((SubQueryExpression) selectClause.Selector).QueryModel;
+
+      CheckResolvedExpression<Cook, IQueryable<Cook>> (subQueryModel.MainFromClause.FromExpression, queryModel.MainFromClause, c => c.Assistants);
+      Assert.That (subQueryModel.ResultOperators[0], Is.TypeOf<TakeResultOperator> ());
+      Assert.That (
+          ((TakeResultOperator) subQueryModel.ResultOperators[0]).Count, Is.InstanceOf<ConstantExpression>().With.Property ("Value").EqualTo (7));
+      Assert.That (subQueryModel.ResultOperators[1], Is.TypeOf<FirstResultOperator>());
     }
   }
 }
