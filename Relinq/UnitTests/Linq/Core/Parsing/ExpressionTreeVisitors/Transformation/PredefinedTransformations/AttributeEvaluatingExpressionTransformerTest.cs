@@ -24,20 +24,20 @@ using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTran
 namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations
 {
   [TestFixture]
-  public class AttributeEvaluatingMethodCallExpressionTransformerTest
+  public class AttributeEvaluatingExpressionTransformerTest
   {
-    private AttributeEvaluatingMethodCallExpressionTransformer _transformer;
+    private AttributeEvaluatingExpressionTransformer _transformer;
 
     [SetUp]
     public void SetUp ()
     {
-      _transformer = new AttributeEvaluatingMethodCallExpressionTransformer();
+      _transformer = new AttributeEvaluatingExpressionTransformer();
     }
 
     [Test]
     public void SupportedExpressionTypes ()
     {
-      Assert.That (_transformer.SupportedExpressionTypes, Is.EqualTo (new[] { ExpressionType.Call }));
+      Assert.That (_transformer.SupportedExpressionTypes, Is.EqualTo (new[] { ExpressionType.Call, ExpressionType.MemberAccess }));
     }
 
     [Test]
@@ -72,7 +72,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Trans
           () => _transformer.Transform (expression),
           Throws.InvalidOperationException.With.Message.EqualTo (
               "There is more than one attribute providing transformers declared for method "
-              + "'Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations.AttributeEvaluatingMethodCallExpressionTransformerTest+DomainType.MethodWithTwoAttributes'."));
+              + "'Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations.AttributeEvaluatingExpressionTransformerTest+DomainType.MethodWithTwoAttributes'."));
     }
 
     [Test]
@@ -97,8 +97,54 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Trans
           () => _transformer.Transform (expression),
           Throws.InvalidOperationException.With.Message.EqualTo (
               "The 'NullTransformerAttribute' on method "
-              + "'Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations.AttributeEvaluatingMethodCallExpressionTransformerTest+DomainType.MethodWithNullTransformer'"
+              + "'Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations.AttributeEvaluatingExpressionTransformerTest+DomainType.MethodWithNullTransformer'"
               + " returned 'null' instead of a transformer."));
+    }
+
+    [Test]
+    public void Transform_Property_NoAttribute ()
+    {
+      var instance = Expression.Constant (null, typeof (DomainType));
+      var expression = Expression.Property (instance, "PropertyWithoutTransformer");
+
+      var result = _transformer.Transform (expression);
+
+      Assert.That (result, Is.SameAs (expression));
+    }
+
+    [Test]
+    public void Transform_Property_WithAttribute ()
+    {
+      var instance = Expression.Constant (null, typeof (DomainType));
+      var expression = Expression.Property (instance, "PropertyWithTransformer");
+
+      var result = _transformer.Transform (expression);
+
+      Assert.That (result, Is.Not.SameAs (expression));
+      Assert.That (result, Is.InstanceOf<ConstantExpression> ().With.Property ("Value").EqualTo ("Replaced!"));
+    }
+
+    [Test]
+    public void Transform_Property_WithAttribute_PrivateGetter ()
+    {
+      var instance = Expression.Constant (null, typeof (DomainType));
+      var expression = Expression.Property (instance, "PropertyWithTransformerAndPrivateGetter");
+
+      var result = _transformer.Transform (expression);
+
+      Assert.That (result, Is.Not.SameAs (expression));
+      Assert.That (result, Is.InstanceOf<ConstantExpression> ().With.Property ("Value").EqualTo ("Replaced!"));
+    }
+
+    [Test]
+    public void Transform_Field ()
+    {
+      var instance = Expression.Constant (null, typeof (DomainType));
+      var expression = Expression.Field (instance, "Field");
+
+      var result = _transformer.Transform (expression);
+
+      Assert.That (result, Is.SameAs (expression));
     }
 
     public class DomainType
@@ -124,6 +170,15 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Trans
       {
         return 0;
       }
+
+      [UsedImplicitly]
+      public int PropertyWithoutTransformer { get; set; }
+      [UsedImplicitly]
+      public int PropertyWithTransformer { [Transformer] get; set; }
+      [UsedImplicitly]
+      public int PropertyWithTransformerAndPrivateGetter { [Transformer] private get; set; }
+
+      public int Field;
     }
 
     public class DerivedDomainType : DomainType
@@ -136,7 +191,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Trans
     }
 
     [AttributeUsage (AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
-    private class TransformerAttribute : Attribute, AttributeEvaluatingMethodCallExpressionTransformer.IMethodCallExpressionTransformerProvider
+    private class TransformerAttribute : Attribute, AttributeEvaluatingExpressionTransformer.IMethodCallExpressionTransformerProvider
     {
       public IExpressionTransformer<MethodCallExpression> GetExpressionTransformer (MethodCallExpression expression)
       {
@@ -169,7 +224,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Trans
     }
 
     [AttributeUsage (AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
-    private class NullTransformerAttribute : Attribute, AttributeEvaluatingMethodCallExpressionTransformer.IMethodCallExpressionTransformerProvider
+    private class NullTransformerAttribute : Attribute, AttributeEvaluatingExpressionTransformer.IMethodCallExpressionTransformerProvider
     {
       public IExpressionTransformer<MethodCallExpression> GetExpressionTransformer (MethodCallExpression expression)
       {

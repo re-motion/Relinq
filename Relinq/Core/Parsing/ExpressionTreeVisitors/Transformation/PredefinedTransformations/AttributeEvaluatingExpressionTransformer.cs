@@ -16,8 +16,11 @@
 // 
 
 using System;
+using System.Diagnostics;
 using System.Linq.Expressions;
+using System.Reflection;
 using Remotion.Linq.Utilities;
+using System.Linq;
 
 namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations
 {
@@ -26,14 +29,14 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.Predefined
   /// invoked by <see cref="MethodCallExpression"/> or <see cref="MemberExpression"/> instances and applies the respective 
   /// <see cref="IExpressionTransformer{T}"/>.
   /// </summary>
-  public class AttributeEvaluatingMethodCallExpressionTransformer : IExpressionTransformer<MethodCallExpression>
+  public class AttributeEvaluatingExpressionTransformer : IExpressionTransformer<Expression>
   {
     /// <summary>
     /// Defines an interface for attributes providing an <see cref="IExpressionTransformer{T}"/> for a given <see cref="MethodCallExpression"/>.
     /// </summary>
     /// <remarks>
     /// <para>
-    /// <see cref="AttributeEvaluatingMethodCallExpressionTransformer"/> detects attributes implementing this interface while expressions are parsed 
+    /// <see cref="AttributeEvaluatingExpressionTransformer"/> detects attributes implementing this interface while expressions are parsed 
     /// and uses the <see cref="IExpressionTransformer{T}"/> returned by <see cref="GetExpressionTransformer"/> to modify the expressions.
     /// </para>
     /// <para>
@@ -48,38 +51,67 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.Predefined
 
     public ExpressionType[] SupportedExpressionTypes
     {
-      get { return new[] { ExpressionType.Call }; }
+      get { return new[] { ExpressionType.Call, ExpressionType.MemberAccess }; }
     }
 
-    public Expression Transform (MethodCallExpression expression)
+    public Expression Transform (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
+      var memberExpression = expression as MemberExpression;
+      if (memberExpression != null && memberExpression.Member.MemberType == MemberTypes.Property)
+      {
+        var property = (PropertyInfo) memberExpression.Member;
+        var getter = property.GetGetMethod (true);
+        Trace.Assert (getter != null);
+
+        var methodCallExpressionTransformerProvider = GetTransformerProvider (getter);
+        if (methodCallExpressionTransformerProvider != null)
+          return ApplyTransformer (methodCallExpressionTransformerProvider, Expression.Call (memberExpression.Expression, getter));
+      }
+
+      var methodCallExpression = expression as MethodCallExpression;
+      if (methodCallExpression != null)
+      {
+        var methodCallExpressionTransformerProvider = GetTransformerProvider (methodCallExpression.Method);
+        if (methodCallExpressionTransformerProvider != null)
+            return ApplyTransformer (methodCallExpressionTransformerProvider, methodCallExpression);
+      }
+
+      return expression;
+    }
+
+    private static IMethodCallExpressionTransformerProvider GetTransformerProvider (MethodInfo methodInfo)
+    {
       var attributes =
-          (IMethodCallExpressionTransformerProvider[]) expression.Method.GetCustomAttributes (typeof (IMethodCallExpressionTransformerProvider), true);
-      if (attributes.Length == 0)
-        return expression;
+          (IMethodCallExpressionTransformerProvider[]) methodInfo.GetCustomAttributes (typeof (IMethodCallExpressionTransformerProvider), true);
+
       if (attributes.Length > 1)
       {
         var message = string.Format (
-              "There is more than one attribute providing transformers declared for method '{0}.{1}'.",
-              expression.Method.DeclaringType,
-              expression.Method.Name);
+            "There is more than one attribute providing transformers declared for method '{0}.{1}'.",
+            methodInfo.DeclaringType,
+            methodInfo.Name);
         throw new InvalidOperationException (message);
       }
 
-      var expressionTransformer = attributes[0].GetExpressionTransformer (expression);
+      return attributes.SingleOrDefault();
+    }
+
+    private static Expression ApplyTransformer (IMethodCallExpressionTransformerProvider provider, MethodCallExpression methodCallExpression)
+    {
+      var expressionTransformer = provider.GetExpressionTransformer (methodCallExpression);
       if (expressionTransformer == null)
       {
         var message = string.Format (
             "The '{0}' on method '{1}.{2}' returned 'null' instead of a transformer.",
-            attributes[0].GetType().Name,
-            expression.Method.DeclaringType,
-            expression.Method.Name);
+            provider.GetType().Name,
+            methodCallExpression.Method.DeclaringType,
+            methodCallExpression.Method.Name);
         throw new InvalidOperationException (message);
       }
 
-      return expressionTransformer.Transform (expression);
+      return expressionTransformer.Transform (methodCallExpression);
     }
   }
 }

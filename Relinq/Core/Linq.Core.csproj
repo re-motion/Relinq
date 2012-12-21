@@ -141,7 +141,7 @@
     <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\ExpressionTransformation.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\ExpressionTransformerRegistry.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\IExpressionTranformationProvider.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\AttributeEvaluatingMethodCallExpressionTransformer.cs" />
+    <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\AttributeEvaluatingExpressionTransformer.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\MethodCallExpressionTransformerAttribute.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\TupleNewExpressionTransformer.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\DictionaryEntryNewExpressionTransformer.cs" />

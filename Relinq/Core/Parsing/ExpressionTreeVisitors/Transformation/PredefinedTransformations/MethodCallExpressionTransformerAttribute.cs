@@ -27,11 +27,11 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.Predefined
   /// <remarks>
   /// The <see cref="IExpressionTransformer{T}"/> must have a default constructor. To choose a transformer that does not have a default constructor,
   /// create your own custom attribute class implementing 
-  /// <see cref="AttributeEvaluatingMethodCallExpressionTransformer.IMethodCallExpressionTransformerProvider"/>.
+  /// <see cref="AttributeEvaluatingExpressionTransformer.IMethodCallExpressionTransformerProvider"/>.
   /// </remarks>
   [AttributeUsage (AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
   public class MethodCallExpressionTransformerAttribute 
-      : Attribute, AttributeEvaluatingMethodCallExpressionTransformer.IMethodCallExpressionTransformerProvider
+      : Attribute, AttributeEvaluatingExpressionTransformer.IMethodCallExpressionTransformerProvider
   {
     private readonly Type _transformerType;
 
