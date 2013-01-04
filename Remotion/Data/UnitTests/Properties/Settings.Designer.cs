@@ -34,7 +34,7 @@ namespace Remotion.Data.UnitTests.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Databases")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\databases")]
         public string DatabaseDirectory {
             get {
                 return ((string)(this["DatabaseDirectory"]));

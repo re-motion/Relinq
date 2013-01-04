@@ -6,7 +6,7 @@
       <Value Profile="(Default)">localhost</Value>
     </Setting>
     <Setting Name="DatabaseDirectory" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">C:\Databases</Value>
+      <Value Profile="(Default)">C:\databases</Value>
     </Setting>
   </Settings>
 </SettingsFile>
